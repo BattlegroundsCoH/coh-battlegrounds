@@ -9,7 +9,11 @@ namespace coh2_battlegrounds_bin {
     /// </summary>
     public static class Pathfinder {
     
+        static Pathfinder() {
 
+
+
+        }
 
     }
 

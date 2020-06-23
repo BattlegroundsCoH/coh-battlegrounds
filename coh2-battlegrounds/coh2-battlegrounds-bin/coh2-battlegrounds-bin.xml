@@ -4,7 +4,184 @@
         <name>coh2-battlegrounds-bin</name>
     </assembly>
     <members>
+        <member name="T:coh2_battlegrounds_bin.ByteUtil">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:coh2_battlegrounds_bin.ByteUtil.Match(System.Byte[],System.String)">
+            <summary>
+            
+            </summary>
+            <param name="barray"></param>
+            <param name="content"></param>
+            <returns></returns>
+        </member>
+        <member name="T:coh2_battlegrounds_bin.Chunk">
+            <summary>
+            Represents a chunk of data in a <see cref="T:coh2_battlegrounds_bin.ChunkyFile"/>.
+            </summary>
+        </member>
+        <member name="T:coh2_battlegrounds_bin.Chunk.ChunkyType">
+            <summary>
+            The <see cref="T:coh2_battlegrounds_bin.Chunk"/> type
+            </summary>
+        </member>
+        <member name="F:coh2_battlegrounds_bin.Chunk.ChunkyType.Unknown">
+            <summary>
+            Unknown (Invalid)
+            </summary>
+        </member>
+        <member name="F:coh2_battlegrounds_bin.Chunk.ChunkyType.FOLD">
+            <summary>
+            Folder -> Has subtypes
+            </summary>
+        </member>
+        <member name="F:coh2_battlegrounds_bin.Chunk.ChunkyType.DATA">
+            <summary>
+            Data chunk -> Contains raw data
+            </summary>
+        </member>
+        <member name="P:coh2_battlegrounds_bin.Chunk.Data">
+            <summary>
+            Raw data contained within the chunk
+            </summary>
+        </member>
+        <member name="P:coh2_battlegrounds_bin.Chunk.Name">
+            <summary>
+            The name of the chunk
+            </summary>
+        </member>
+        <member name="P:coh2_battlegrounds_bin.Chunk.Descriptor">
+            <summary>
+            The descriptive text of the chunk
+            </summary>
+        </member>
+        <member name="M:coh2_battlegrounds_bin.Chunk.#ctor(System.Int32)">
+            <summary>
+            Create a new <see cref="T:coh2_battlegrounds_bin.Chunk"/> with parent file version supplied
+            </summary>
+            <param name="chunkyVersion"><see cref="T:coh2_battlegrounds_bin.ChunkyFile"/> parent version</param>
+        </member>
+        <member name="M:coh2_battlegrounds_bin.Chunk.ReadChunk(System.IO.BinaryReader)">
+            <summary>
+            Read a chunk from a <see cref="T:System.IO.BinaryReader"/>.
+            </summary>
+            <param name="stream">Stream to read chunk data from</param>
+        </member>
         <member name="T:coh2_battlegrounds_bin.ChunkyFile">
+            <summary>
+            Represents a chunky file containing <see cref="T:coh2_battlegrounds_bin.Chunk"/> data.
+            </summary>
+        </member>
+        <member name="P:coh2_battlegrounds_bin.ChunkyFile.Chunks">
+            <summary>
+            Found chunk elements in <see cref="T:coh2_battlegrounds_bin.ChunkyFile"/>.
+            </summary>
+        </member>
+        <member name="M:coh2_battlegrounds_bin.ChunkyFile.#ctor">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:coh2_battlegrounds_bin.ChunkyFile.LoadFile(System.String)">
+            <summary>
+            
+            </summary>
+            <param name="filepath"></param>
+            <returns></returns>
+        </member>
+        <member name="M:coh2_battlegrounds_bin.ChunkyFile.LoadFile(System.IO.BinaryReader)">
+            <summary>
+            
+            </summary>
+            <param name="stream"></param>
+            <returns></returns>
+        </member>
+        <member name="M:coh2_battlegrounds_bin.ChunkyFile.Dump">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:coh2_battlegrounds_bin.ChunkyFile.Dump(System.IO.Stream)">
+            <summary>
+            
+            </summary>
+            <param name="stream"></param>
+        </member>
+        <member name="T:coh2_battlegrounds_bin.Game.DLCPack">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:coh2_battlegrounds_bin.Game.Gameplay.Faction">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:coh2_battlegrounds_bin.Game.Gameplay.Faction.UID">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:coh2_battlegrounds_bin.Game.Gameplay.Faction.Name">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:coh2_battlegrounds_bin.Game.Gameplay.Faction.IsAllied">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:coh2_battlegrounds_bin.Game.Gameplay.Faction.RequiredDLC">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:coh2_battlegrounds_bin.Game.Gameplay.Faction.Soviet">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:coh2_battlegrounds_bin.Game.Gameplay.Faction.Wehrmacht">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:coh2_battlegrounds_bin.Game.Gameplay.Faction.America">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:coh2_battlegrounds_bin.Game.Gameplay.Faction.OberkommandoWest">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:coh2_battlegrounds_bin.Game.Gameplay.Faction.British">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:coh2_battlegrounds_bin.Game.Gameplay.Faction.FromName(System.String)">
+            <summary>
+            
+            </summary>
+            <param name="name"></param>
+            <returns></returns>
+        </member>
+        <member name="T:coh2_battlegrounds_bin.Game.Gameplay.Player">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:coh2_battlegrounds_bin.Game.Gameplay.Wincondition">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:coh2_battlegrounds_bin.Game.ScenarioDescription">
             <summary>
             
             </summary>
@@ -15,6 +192,61 @@
             </summary>
         </member>
         <member name="T:coh2_battlegrounds_bin.ReplayFile">
+            <summary>
+            Represents a CoH2 replay file
+            </summary>
+        </member>
+        <member name="T:coh2_battlegrounds_bin.ReplayFile.ReplayerHeader">
+            <summary>
+            Represents a header of a <see cref="T:coh2_battlegrounds_bin.ReplayFile"/>
+            </summary>
+        </member>
+        <member name="F:coh2_battlegrounds_bin.ReplayFile.ReplayerHeader.version">
+            <summary>
+            The replay version
+            </summary>
+        </member>
+        <member name="F:coh2_battlegrounds_bin.ReplayFile.ReplayerHeader.gamename">
+            <summary>
+            The game version
+            </summary>
+        </member>
+        <member name="F:coh2_battlegrounds_bin.ReplayFile.ReplayerHeader.date">
+            <summary>
+            The date of replay save
+            </summary>
+        </member>
+        <member name="M:coh2_battlegrounds_bin.ReplayFile.ReplayerHeader.#ctor(System.UInt32,System.String,System.String)">
+            <summary>
+            Create instance of replay header with specified values
+            </summary>
+            <param name="v"></param>
+            <param name="n"></param>
+            <param name="d"></param>
+        </member>
+        <member name="P:coh2_battlegrounds_bin.ReplayFile.IsParsed">
+            <summary>
+            Check if the <see cref="T:coh2_battlegrounds_bin.ReplayFile"/> has been loaded and parsed.
+            </summary>
+        </member>
+        <member name="P:coh2_battlegrounds_bin.ReplayFile.Header">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:coh2_battlegrounds_bin.ReplayFile.#ctor(System.String)">
+            <summary>
+            
+            </summary>
+            <param name="file"></param>
+        </member>
+        <member name="M:coh2_battlegrounds_bin.ReplayFile.LoadReplay">
+            <summary>
+            Load the replay file from the given file path
+            </summary>
+            <returns>True if no errors occured</returns>
+        </member>
+        <member name="M:coh2_battlegrounds_bin.ReplayFile.Dump">
             <summary>
             
             </summary>
