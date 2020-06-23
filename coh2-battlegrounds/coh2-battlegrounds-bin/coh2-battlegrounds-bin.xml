@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>coh2-battlegrounds-bin</name>
+    </assembly>
+    <members>
+        <member name="T:coh2_battlegrounds_bin.ChunkyFile">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:coh2_battlegrounds_bin.Pathfinder">
+            <summary>
+            Pathfinder for finding the paths to relevant paths (eg. CoH2's documents folder)
+            </summary>
+        </member>
+        <member name="T:coh2_battlegrounds_bin.ReplayFile">
+            <summary>
+            
+            </summary>
+        </member>
+    </members>
+</doc>

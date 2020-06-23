@@ -1,11 +1,30 @@
 {
   "version": 3,
   "targets": {
-    ".NETCoreApp,Version=v3.1": {}
+    ".NETCoreApp,Version=v3.1": {
+      "coh2-battlegrounds-bin/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v3.1",
+        "compile": {
+          "bin/placeholder/coh2-battlegrounds-bin.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/coh2-battlegrounds-bin.dll": {}
+        }
+      }
+    }
   },
-  "libraries": {},
+  "libraries": {
+    "coh2-battlegrounds-bin/1.0.0": {
+      "type": "project",
+      "path": "../coh2-battlegrounds-bin/coh2-battlegrounds-bin.csproj",
+      "msbuildProject": "../coh2-battlegrounds-bin/coh2-battlegrounds-bin.csproj"
+    }
+  },
   "projectFileDependencyGroups": {
-    ".NETCoreApp,Version=v3.1": []
+    ".NETCoreApp,Version=v3.1": [
+      "coh2-battlegrounds-bin >= 1.0.0"
+    ]
   },
   "packageFolders": {
     "C:\\Users\\Jakob\\.nuget\\packages\\": {},
@@ -36,7 +55,11 @@
       },
       "frameworks": {
         "netcoreapp3.1": {
-          "projectReferences": {}
+          "projectReferences": {
+            "E:\\coh2_battlegrounds\\coh2-battlegrounds\\coh2-battlegrounds-bin\\coh2-battlegrounds-bin.csproj": {
+              "projectPath": "E:\\coh2_battlegrounds\\coh2-battlegrounds\\coh2-battlegrounds-bin\\coh2-battlegrounds-bin.csproj"
+            }
+          }
         }
       },
       "warningProperties": {

@@ -17,3 +17,8 @@ E:\coh2_battlegrounds\coh2-battlegrounds\coh2-battlegrounds\obj\Debug\netcoreapp
 E:\coh2_battlegrounds\coh2-battlegrounds\coh2-battlegrounds\obj\Debug\netcoreapp3.1\coh2-battlegrounds.dll
 E:\coh2_battlegrounds\coh2-battlegrounds\coh2-battlegrounds\obj\Debug\netcoreapp3.1\coh2-battlegrounds.pdb
 E:\coh2_battlegrounds\coh2-battlegrounds\coh2-battlegrounds\obj\Debug\netcoreapp3.1\coh2-battlegrounds.genruntimeconfig.cache
+E:\coh2_battlegrounds\coh2-battlegrounds\coh2-battlegrounds\bin\Debug\netcoreapp3.1\coh2-battlegrounds-bin.dll
+E:\coh2_battlegrounds\coh2-battlegrounds\coh2-battlegrounds\bin\Debug\netcoreapp3.1\coh2-battlegrounds-bin.pdb
+E:\coh2_battlegrounds\coh2-battlegrounds\coh2-battlegrounds\obj\Debug\netcoreapp3.1\coh2-battlegrounds.csproj.CopyComplete
+E:\coh2_battlegrounds\coh2-battlegrounds\coh2-battlegrounds\bin\Debug\netcoreapp3.1\coh2-battlegrounds.xml
+E:\coh2_battlegrounds\coh2-battlegrounds\coh2-battlegrounds\bin\Debug\netcoreapp3.1\coh2-battlegrounds-bin.xml

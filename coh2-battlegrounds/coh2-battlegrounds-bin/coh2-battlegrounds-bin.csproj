@@ -5,4 +5,8 @@
     <RootNamespace>coh2_battlegrounds_bin</RootNamespace>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DocumentationFile>E:\coh2_battlegrounds\coh2-battlegrounds\coh2-battlegrounds-bin\coh2-battlegrounds-bin.xml</DocumentationFile>
+  </PropertyGroup>
+
 </Project>
