@@ -27,7 +27,7 @@ namespace coh2_battlegrounds_bin.Game {
         /// <summary>
         /// 
         /// </summary>
-        public ushort PlayerID { get; }
+        public byte PlayerID { get; }
 
         /// <summary>
         /// 
@@ -48,38 +48,33 @@ namespace coh2_battlegrounds_bin.Game {
             this.FirstPosition = null;
             this.SecondPosition = null;
 
-            if (eventData.Length > 16) {
+            this.Type = eventData[0];
+            this.PlayerID = eventData[3];
 
-                this.Type = eventData[2];
+            ushort index = BitConverter.ToUInt16(eventData, 4);
+            ushort category = BitConverter.ToUInt16(eventData, 6);
+            ushort objectId = BitConverter.ToUInt16(eventData, 8);
 
-                this.PlayerID = BitConverter.ToUInt16(eventData[4..6]);
-                this.UnitID = BitConverter.ToUInt16(eventData[10..12]);
-                this.ActionID = BitConverter.ToUInt16(eventData[14..16]);
+            ushort id = this.FindID(eventData, category);
 
-                Console.WriteLine(this.PlayerID);
-
-                if (eventData.Length > 29) { // positional
-
-                    this.FirstPosition = new GamePosition(
-                        BitConverter.ToSingle(eventData[18..22]), 
-                        BitConverter.ToSingle(eventData[22..26]), 
-                        BitConverter.ToSingle(eventData[26..30])
-                        );
-
-                    if (eventData.Length > 41) { // targetted
-
-                        this.SecondPosition = new GamePosition(
-                        BitConverter.ToSingle(eventData[30..34]),
-                        BitConverter.ToSingle(eventData[34..38]),
-                        BitConverter.ToSingle(eventData[38..42])
-                        );
-
-                    }
-
-                }
-
+            if (this.Type < (byte)GameEventType.PCMD_COUNT) {
+                Console.WriteLine(((GameEventType)this.Type).ToString() + " : " + id + " : " + objectId + " : " + index);
+            } else {
+                //Console.WriteLine(this.Type);
             }
 
+        }
+
+        private ushort FindID(byte[] eventData, ushort category) {
+            ushort num = (ushort)((uint)category & 15U);
+            ushort id = this.toUInt16(eventData, num == (ushort)0 ? 12 : (int)(ushort)(4 * (int)num + 9));
+            id = id  == (ushort)195 ? (ushort)314 : id;
+            id = id <= (ushort)2000 || this.Type != (byte)GameEventType.SCMD_Ability ? id : (ushort)314;
+            return id;
+        }
+
+        protected ushort toUInt16(byte[] eventData, int offset) {
+            return offset + 1 < eventData.Length ? BitConverter.ToUInt16(eventData, offset) : ushort.MaxValue;
         }
 
     }

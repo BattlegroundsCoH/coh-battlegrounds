@@ -303,17 +303,34 @@ namespace coh2_battlegrounds_bin {
 
                     while (!reader.HasReachedEOS()) {
 
-                        if (reader.ReadUInt32() == 1) {
+                        uint dataType = reader.ReadUInt32();
+
+                        if (reader.ReadUInt32() == 0)
+                            return false;
+
+                        if (dataType == 1) {
 
                             // Skip the message (we don't care about that)
-                            reader.Skip(reader.ReadUInt32());
-                            
-                        } else {
+                            reader.Skip(8);
+
+                            string a = reader.ReadUTF8String();
+                            string b = reader.ReadUTF8String();
+
+                            Console.WriteLine($"{a}: {b}");
+
+                            reader.Skip(10);
+
+                        } else if (dataType == 0) {
 
                             GameTick tick = new GameTick();
                             tick.Parse(reader);
 
                             this.m_tickList.Add(tick);
+
+                        } else {
+
+                            reader.Skip(12);
+                            return false;
 
                         }
 
