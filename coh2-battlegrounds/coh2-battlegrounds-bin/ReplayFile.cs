@@ -12,7 +12,7 @@ namespace coh2_battlegrounds_bin {
         /// <summary>
         /// Represents a header of a <see cref="ReplayFile"/>
         /// </summary>
-        public struct ReplayerHeader {
+        public struct ReplayHeader {
 
             /// <summary>
             /// The replay version
@@ -35,14 +35,14 @@ namespace coh2_battlegrounds_bin {
             /// <param name="v"></param>
             /// <param name="n"></param>
             /// <param name="d"></param>
-            public ReplayerHeader(uint v, string n, string d) {
+            public ReplayHeader(uint v, string n, string d) {
                 this.version = v;
                 this.gamename = n;
                 this.date = d;
             }
         }
 
-        private ReplayerHeader m_replayHeader;
+        private ReplayHeader m_replayHeader;
 
         private byte[] m_header;
         private string m_replayfile;
@@ -58,14 +58,15 @@ namespace coh2_battlegrounds_bin {
         public bool IsParsed => this.m_isParsed;
 
         /// <summary>
-        /// 
+        /// The header read when the file was parsed
         /// </summary>
-        public ReplayerHeader Header => this.m_replayHeader;
+        public ReplayHeader Header => (this.m_isParsed) ? this.m_replayHeader : throw new Exception("Replayfile has not been loaded and parsed sucessfully");
 
         /// <summary>
-        /// 
+        /// New instance of a <see cref="ReplayFile"/> from a given file path
         /// </summary>
-        /// <param name="file"></param>
+        /// <param name="file">The file path to use when loading the file</param>
+        /// <exception cref="FileNotFoundException"/>
         public ReplayFile(string file) {
             this.m_isParsed = false;
             if (File.Exists(file)) {
@@ -76,9 +77,11 @@ namespace coh2_battlegrounds_bin {
         }
 
         /// <summary>
-        /// Load the replay file from the given file path
+        /// Load the replay file from the given file path at instantiation.
         /// </summary>
         /// <returns>True if no errors occured</returns>
+        /// <exception cref="ArgumentException"/>
+        /// <exception cref="IOException"/>
         public bool LoadReplay() {
 
             using (FileStream fs = File.OpenRead(this.m_replayfile)) {
@@ -135,9 +138,11 @@ namespace coh2_battlegrounds_bin {
                 i += 2;
             }
 
-            this.m_replayHeader = new ReplayerHeader(version, name, dateBuilder.ToString());
+            // Create header
+            this.m_replayHeader = new ReplayHeader(version, name, dateBuilder.ToString());
 
-            return true;
+            // Return true if i was not out of bounds and the game name is "COH2_REC"
+            return i < this.m_header.Length && name.Equals("COH2_REC");
 
         }
 

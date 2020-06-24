@@ -257,27 +257,27 @@
             Represents a CoH2 replay file
             </summary>
         </member>
-        <member name="T:coh2_battlegrounds_bin.ReplayFile.ReplayerHeader">
+        <member name="T:coh2_battlegrounds_bin.ReplayFile.ReplayHeader">
             <summary>
             Represents a header of a <see cref="T:coh2_battlegrounds_bin.ReplayFile"/>
             </summary>
         </member>
-        <member name="F:coh2_battlegrounds_bin.ReplayFile.ReplayerHeader.version">
+        <member name="F:coh2_battlegrounds_bin.ReplayFile.ReplayHeader.version">
             <summary>
             The replay version
             </summary>
         </member>
-        <member name="F:coh2_battlegrounds_bin.ReplayFile.ReplayerHeader.gamename">
+        <member name="F:coh2_battlegrounds_bin.ReplayFile.ReplayHeader.gamename">
             <summary>
             The game version
             </summary>
         </member>
-        <member name="F:coh2_battlegrounds_bin.ReplayFile.ReplayerHeader.date">
+        <member name="F:coh2_battlegrounds_bin.ReplayFile.ReplayHeader.date">
             <summary>
             The date of replay save
             </summary>
         </member>
-        <member name="M:coh2_battlegrounds_bin.ReplayFile.ReplayerHeader.#ctor(System.UInt32,System.String,System.String)">
+        <member name="M:coh2_battlegrounds_bin.ReplayFile.ReplayHeader.#ctor(System.UInt32,System.String,System.String)">
             <summary>
             Create instance of replay header with specified values
             </summary>
@@ -292,20 +292,23 @@
         </member>
         <member name="P:coh2_battlegrounds_bin.ReplayFile.Header">
             <summary>
-            
+            The header read when the file was parsed
             </summary>
         </member>
         <member name="M:coh2_battlegrounds_bin.ReplayFile.#ctor(System.String)">
             <summary>
-            
+            New instance of a <see cref="T:coh2_battlegrounds_bin.ReplayFile"/> from a given file path
             </summary>
-            <param name="file"></param>
+            <param name="file">The file path to use when loading the file</param>
+            <exception cref="T:System.IO.FileNotFoundException"/>
         </member>
         <member name="M:coh2_battlegrounds_bin.ReplayFile.LoadReplay">
             <summary>
-            Load the replay file from the given file path
+            Load the replay file from the given file path at instantiation.
             </summary>
             <returns>True if no errors occured</returns>
+            <exception cref="T:System.ArgumentException"/>
+            <exception cref="T:System.IO.IOException"/>
         </member>
         <member name="M:coh2_battlegrounds_bin.ReplayFile.Dump">
             <summary>
