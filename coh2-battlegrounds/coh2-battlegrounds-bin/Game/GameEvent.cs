@@ -59,6 +59,12 @@ namespace coh2_battlegrounds_bin.Game {
 
             if (this.Type < (byte)GameEventType.PCMD_COUNT) {
                 Console.WriteLine(((GameEventType)this.Type).ToString() + " : " + id + " : " + objectId + " : " + index);
+                if (this.Type == (byte)GameEventType.CMD_BuildSquad || this.Type == (byte)GameEventType.CMD_Upgrade || this.Type == (byte)GameEventType.SCMD_Upgrade) {
+
+                    uint pbgid = BitConverter.ToUInt32(eventData, 13);
+
+                    Console.WriteLine(pbgid);
+                }
             } else {
                 //Console.WriteLine(this.Type);
             }
