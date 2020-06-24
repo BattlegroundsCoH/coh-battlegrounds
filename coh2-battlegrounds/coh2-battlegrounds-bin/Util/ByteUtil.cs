@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Linq;
 
 namespace coh2_battlegrounds_bin.Util {
     
@@ -24,6 +21,20 @@ namespace coh2_battlegrounds_bin.Util {
                     }
                 }
                 return true;
+            } else {
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="a"></param>
+        /// <param name="b"></param>
+        /// <returns></returns>
+        public static bool Match(byte[] a, byte[] b) {
+            if (a.Length == b.Length) {
+                return a.Zip(b).All((z) => z.First == z.Second);
             } else {
                 return false;
             }

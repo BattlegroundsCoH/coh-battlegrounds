@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 
 namespace coh2_battlegrounds_bin.Util {
@@ -75,6 +77,44 @@ namespace coh2_battlegrounds_bin.Util {
         /// <returns>True if the stream position is equal or greater than the stream length</returns>
         public static bool HasReachedEOS(this BinaryReader reader)
             => reader.BaseStream.Position >= reader.BaseStream.Length;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="reader"></param>
+        /// <param name="barray"></param>
+        public static void SkipUntil(this BinaryReader reader, byte[] barray) {
+
+            while (!reader.HasReachedEOS()) {
+
+                byte[] arr = reader.ReadBytes(barray.Length);
+
+                if (ByteUtil.Match(arr, barray)) {
+                    break;
+                } else {
+                    reader.BaseStream.Position -= (barray.Length - 1);
+                }
+
+            }
+
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="reader"></param>
+        /// <returns></returns>
+        public static byte[] ReadToEnd(this BinaryReader reader) {
+            List<byte> content = new List<byte>();
+            while (!reader.HasReachedEOS()) {
+                if (reader.BaseStream.Position + 256 <= reader.BaseStream.Length) {
+                    content.AddRange(reader.ReadBytes(256));
+                } else {
+                    content.AddRange(reader.ReadBytes((int)(reader.BaseStream.Length - reader.BaseStream.Position)));
+                }
+            }
+            return content.ToArray();
+        }
 
     }
 

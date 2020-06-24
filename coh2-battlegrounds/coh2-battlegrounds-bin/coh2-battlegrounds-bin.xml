@@ -171,6 +171,47 @@
             The British Forces
             </summary>
         </member>
+        <member name="T:coh2_battlegrounds_bin.Game.GameEvent">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:coh2_battlegrounds_bin.Game.GameEvent.FirstPosition">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:coh2_battlegrounds_bin.Game.GameEvent.SecondPosition">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:coh2_battlegrounds_bin.Game.GameEvent.Type">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:coh2_battlegrounds_bin.Game.GameEvent.PlayerID">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:coh2_battlegrounds_bin.Game.GameEvent.ActionID">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:coh2_battlegrounds_bin.Game.GameEvent.UnitID">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:coh2_battlegrounds_bin.Game.GameEvent.#ctor(System.Byte[])">
+            <summary>
+            
+            </summary>
+            <param name="eventData"></param>
+        </member>
         <member name="T:coh2_battlegrounds_bin.Game.Gameplay.Faction">
             <summary>
             
@@ -238,6 +279,58 @@
             
             </summary>
         </member>
+        <member name="T:coh2_battlegrounds_bin.Game.GamePosition">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:coh2_battlegrounds_bin.Game.GamePosition.X">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:coh2_battlegrounds_bin.Game.GamePosition.Y">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:coh2_battlegrounds_bin.Game.GamePosition.Z">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:coh2_battlegrounds_bin.Game.GamePosition.#ctor(System.Single,System.Single)">
+            <summary>
+            
+            </summary>
+            <param name="x"></param>
+            <param name="y"></param>
+        </member>
+        <member name="M:coh2_battlegrounds_bin.Game.GamePosition.#ctor(System.Single,System.Single,System.Single)">
+            <summary>
+            
+            </summary>
+            <param name="x"></param>
+            <param name="y"></param>
+            <param name="z"></param>
+        </member>
+        <member name="M:coh2_battlegrounds_bin.Game.GamePosition.ToString">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:coh2_battlegrounds_bin.Game.GameTick">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:coh2_battlegrounds_bin.Game.GameTick.Parse(System.IO.BinaryReader)">
+            <summary>
+            
+            </summary>
+            <param name="reader"></param>
+        </member>
         <member name="T:coh2_battlegrounds_bin.Game.ScenarioDescription">
             <summary>
             
@@ -269,6 +362,11 @@
             </summary>
         </member>
         <member name="P:coh2_battlegrounds_bin.Game.ScenarioDescription.Abbreviation">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:coh2_battlegrounds_bin.Game.ScenarioDescription.Gamemode">
             <summary>
             
             </summary>
@@ -411,6 +509,20 @@
             <param name="reader">The stream to check</param>
             <returns>True if the stream position is equal or greater than the stream length</returns>
         </member>
+        <member name="M:coh2_battlegrounds_bin.Util.BinaryReaderExt.SkipUntil(System.IO.BinaryReader,System.Byte[])">
+            <summary>
+            
+            </summary>
+            <param name="reader"></param>
+            <param name="barray"></param>
+        </member>
+        <member name="M:coh2_battlegrounds_bin.Util.BinaryReaderExt.ReadToEnd(System.IO.BinaryReader)">
+            <summary>
+            
+            </summary>
+            <param name="reader"></param>
+            <returns></returns>
+        </member>
         <member name="T:coh2_battlegrounds_bin.Util.ByteUtil">
             <summary>
             
@@ -423,6 +535,14 @@
             <param name="barray">Byte array to check for matching content</param>
             <param name="content">The string content to compare against</param>
             <returns>True if the contents of the byte array matches the content of the string.</returns>
+        </member>
+        <member name="M:coh2_battlegrounds_bin.Util.ByteUtil.Match(System.Byte[],System.Byte[])">
+            <summary>
+            
+            </summary>
+            <param name="a"></param>
+            <param name="b"></param>
+            <returns></returns>
         </member>
     </members>
 </doc>

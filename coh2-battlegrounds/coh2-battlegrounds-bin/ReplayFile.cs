@@ -51,8 +51,10 @@ namespace coh2_battlegrounds_bin {
         private ScenarioDescription m_sdsc;
 
         private List<Player> m_playerlist;
+        private List<GameTick> m_tickList;
 
         private byte[] m_header;
+        private byte[] m_replaycontent;
         private string m_replayfile;
 
         private bool m_isParsed;
@@ -85,6 +87,7 @@ namespace coh2_battlegrounds_bin {
         public ReplayFile(string file) {
             this.m_isParsed = false;
             this.m_playerlist = new List<Player>();
+            this.m_tickList = new List<GameTick>();
             if (File.Exists(file)) {
                 this.m_replayfile = file;
             } else {
@@ -122,6 +125,8 @@ namespace coh2_battlegrounds_bin {
                         Console.WriteLine("Failed to read outro");
                         return false;
                     }
+
+                    m_replaycontent = bin.ReadToEnd();
 
                     if (!this.ParseScenarioDescription()) {
                         return false;
@@ -223,7 +228,6 @@ namespace coh2_battlegrounds_bin {
 
             // Get the important chunk data
             Chunk gameinfoChunk = this.m_replayEventsChunkyFile["INFO"]["DATA"];
-            Chunk playbackChunk = this.m_replayEventsChunkyFile["INFO"]["PLAS"];
 
             // Parse the player data
             if (!this.ParseMatchdata(gameinfoChunk)) {
@@ -231,7 +235,7 @@ namespace coh2_battlegrounds_bin {
             }
 
             // Parse the recorded data
-            if (!this.ParseRecordedData(playbackChunk)) {
+            if (!this.ParseRecordedData()) {
                 return false;
             }
 
@@ -244,13 +248,20 @@ namespace coh2_battlegrounds_bin {
             using (MemoryStream stream = new MemoryStream(infoChunk.Data)) {
                 using (BinaryReader reader = new BinaryReader(stream)) {
 
-                    int potentialPlayerCount = reader.ReadInt32(); // potentially the player count
+                    // potentially the player count
+                    int potentialPlayerCount = reader.ReadInt32();
 
+                    // Skip 19 bytes
                     reader.Skip(19);
 
-                    Player p = this.ParsePlayerInfo(reader);
-
-                    Console.WriteLine("");
+                    // Read player data
+                    do {
+                        this.m_playerlist.Add(this.ParsePlayerInfo(reader));
+                        int peak = reader.PeekChar();
+                        if (peak == 65533) {
+                            break;
+                        }
+                    } while (!reader.HasReachedEOS());
 
                 }
             }
@@ -271,13 +282,45 @@ namespace coh2_battlegrounds_bin {
 
             string aiprofile = reader.ReadASCIIString();
 
-            return new Player(playerID, name, Faction.FromName(faction), aiprofile);
+            bool isAI = reader.ReadInt32() == 1;
+
+            // Skip inventory stuff
+            reader.SkipUntil(new byte[] { 255, 255, 255, 255 });
+
+            uint p = (uint)reader.PeekChar();
+            if (p != 65533) { // not FF FF FF FF
+                reader.Skip(5); // So we have to skip 5 bytes
+            }
+
+            return new Player(playerID, name, Faction.FromName(faction), (isAI) ? aiprofile : null);
 
         }
 
-        private bool ParseRecordedData(Chunk playbackChunk) {
+        private bool ParseRecordedData() {
 
+            using (MemoryStream stream = new MemoryStream(this.m_replaycontent)) {
+                using (BinaryReader reader = new BinaryReader(stream)) {
 
+                    while (!reader.HasReachedEOS()) {
+
+                        if (reader.ReadUInt32() == 1) {
+
+                            // Skip the message (we don't care about that)
+                            reader.Skip(reader.ReadUInt32());
+                            
+                        } else {
+
+                            GameTick tick = new GameTick();
+                            tick.Parse(reader);
+
+                            this.m_tickList.Add(tick);
+
+                        }
+
+                    }
+
+                }
+            }
 
             return true;
 

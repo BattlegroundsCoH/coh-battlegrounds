@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using coh2_battlegrounds_bin.Game.Gameplay;
 
 namespace coh2_battlegrounds_bin.Game {
     
@@ -38,6 +39,11 @@ namespace coh2_battlegrounds_bin.Game {
         /// 
         /// </summary>
         public string Abbreviation { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public Wincondition Gamemode { get; set; }
 
         /// <summary>
         /// 
