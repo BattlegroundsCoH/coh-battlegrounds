@@ -7,7 +7,7 @@ namespace coh2_battlegrounds_bin {
     /// <summary>
     /// Represents a CoH2 replay file
     /// </summary>
-    public class ReplayFile {
+    public sealed class ReplayFile {
 
         /// <summary>
         /// Represents a header of a <see cref="ReplayFile"/>
@@ -55,12 +55,12 @@ namespace coh2_battlegrounds_bin {
         /// <summary>
         /// Check if the <see cref="ReplayFile"/> has been loaded and parsed.
         /// </summary>
-        public bool IsParsed => m_isParsed;
+        public bool IsParsed => this.m_isParsed;
 
         /// <summary>
         /// 
         /// </summary>
-        public ReplayerHeader Header => m_replayHeader;
+        public ReplayerHeader Header => this.m_replayHeader;
 
         /// <summary>
         /// 
@@ -119,14 +119,14 @@ namespace coh2_battlegrounds_bin {
 
         private bool ParseHeader() {
 
-            uint version = BitConverter.ToUInt32(m_header[0 .. 4]); // read version (unsigned 32-bit integer ==> 4 bytes)
-            string name = Encoding.ASCII.GetString(m_header[4..12]); // read game version (ASCII, 1 char = 1 byte, length is fixed and equal to 8)
+            uint version = BitConverter.ToUInt32(this.m_header[0 .. 4]); // read version (unsigned 32-bit integer ==> 4 bytes)
+            string name = Encoding.ASCII.GetString(this.m_header[4..12]); // read game version (ASCII, 1 char = 1 byte, length is fixed and equal to 8)
             
             StringBuilder dateBuilder = new StringBuilder();
 
             int i = 12; // start position
-            while (i < m_header.Length) { // UTF-8 encoding (1 char = 2 byte)
-                ushort u = BitConverter.ToUInt16(m_header[i..(i + 2)]);
+            while (i < this.m_header.Length) { // UTF-8 encoding (1 char = 2 byte)
+                ushort u = BitConverter.ToUInt16(this.m_header[i..(i + 2)]);
                 if (u == 0) {
                     break;
                 } else {
@@ -135,7 +135,7 @@ namespace coh2_battlegrounds_bin {
                 i += 2;
             }
 
-            m_replayHeader = new ReplayerHeader(version, name, dateBuilder.ToString());
+            this.m_replayHeader = new ReplayerHeader(version, name, dateBuilder.ToString());
 
             return true;
 

@@ -111,7 +111,68 @@
         </member>
         <member name="T:coh2_battlegrounds_bin.Game.DLCPack">
             <summary>
+            Represents a DLC tied to Company of Heroes 2
+            </summary>
+        </member>
+        <member name="T:coh2_battlegrounds_bin.Game.DLCPack.DLCType">
+            <summary>
+            The type of DLC a <see cref="T:coh2_battlegrounds_bin.Game.DLCPack"/> may be of
+            </summary>
+        </member>
+        <member name="F:coh2_battlegrounds_bin.Game.DLCPack.DLCType.Faction">
+            <summary>
+            Faction that unlocks and army
+            </summary>
+        </member>
+        <member name="F:coh2_battlegrounds_bin.Game.DLCPack.DLCType.Skin">
+            <summary>
+            Vehicle Skin
+            </summary>
+        </member>
+        <member name="F:coh2_battlegrounds_bin.Game.DLCPack.DLCType.Commander">
+            <summary>
+            Ingame commander
+            </summary>
+        </member>
+        <member name="P:coh2_battlegrounds_bin.Game.DLCPack.Name">
+            <summary>
+            The name of the DLC pack
+            </summary>
+        </member>
+        <member name="P:coh2_battlegrounds_bin.Game.DLCPack.SteamAppID">
+            <summary>
+            Unique app ID assigned to this pack
+            </summary>
+        </member>
+        <member name="P:coh2_battlegrounds_bin.Game.DLCPack.Type">
+            <summary>
+            The type of DLC
+            </summary>
+        </member>
+        <member name="M:coh2_battlegrounds_bin.Game.DLCPack.ToString">
+            <summary>
             
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="P:coh2_battlegrounds_bin.Game.DLCPack.Base">
+            <summary>
+            The base game (with multiplayer access)
+            </summary>
+        </member>
+        <member name="P:coh2_battlegrounds_bin.Game.DLCPack.WesternFrontArmiesUSA">
+            <summary>
+            The Western Front Armies (USA)
+            </summary>
+        </member>
+        <member name="P:coh2_battlegrounds_bin.Game.DLCPack.WesternFrontArmiesOKW">
+            <summary>
+            The Western Front Armies (OKW)
+            </summary>
+        </member>
+        <member name="P:coh2_battlegrounds_bin.Game.DLCPack.UKF">
+            <summary>
+            The British Forces
             </summary>
         </member>
         <member name="T:coh2_battlegrounds_bin.Game.Gameplay.Faction">
@@ -249,6 +310,11 @@
         <member name="M:coh2_battlegrounds_bin.ReplayFile.Dump">
             <summary>
             
+            </summary>
+        </member>
+        <member name="T:coh2_battlegrounds_bin.Steam.SteamUser">
+            <summary>
+            Represents a Steam user
             </summary>
         </member>
     </members>

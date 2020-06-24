@@ -7,7 +7,7 @@ namespace coh2_battlegrounds_bin.Game.Gameplay {
     /// <summary>
     /// 
     /// </summary>
-    public class Faction {
+    public sealed class Faction {
 
         /// <summary>
         /// 

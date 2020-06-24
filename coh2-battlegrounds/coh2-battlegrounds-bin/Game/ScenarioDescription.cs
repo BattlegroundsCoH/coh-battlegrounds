@@ -7,7 +7,7 @@ namespace coh2_battlegrounds_bin.Game {
     /// <summary>
     /// 
     /// </summary>
-    public class ScenarioDescription {
+    public sealed class ScenarioDescription {
     
 
 
