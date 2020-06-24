@@ -1,7 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using System.Linq;
+
+using coh2_battlegrounds_bin.Util;
 
 namespace coh2_battlegrounds_bin {
     
@@ -64,6 +66,13 @@ namespace coh2_battlegrounds_bin {
             this.m_name = "DATA";
             this.m_chunkyVersion = chunkyVersion;
         }
+
+        /// <summary>
+        /// Lookup a root chunk by name in the chunk file
+        /// </summary>
+        /// <param name="name">The name of the chunk to find</param>
+        /// <returns>The first chunk with name or null</returns>
+        public Chunk this[string name] => this.m_childChunks.FirstOrDefault(x => x.Name.CompareTo(name) == 0);
 
         /// <summary>
         /// Read a chunk from a <see cref="BinaryReader"/>.

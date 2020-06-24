@@ -1,6 +1,11 @@
 ﻿using System;
 using System.IO;
 using System.Text;
+using System.Collections.Generic;
+
+using coh2_battlegrounds_bin.Game;
+using coh2_battlegrounds_bin.Game.Gameplay;
+using coh2_battlegrounds_bin.Util;
 
 namespace coh2_battlegrounds_bin {
 
@@ -43,6 +48,9 @@ namespace coh2_battlegrounds_bin {
         }
 
         private ReplayHeader m_replayHeader;
+        private ScenarioDescription m_sdsc;
+
+        private List<Player> m_playerlist;
 
         private byte[] m_header;
         private string m_replayfile;
@@ -60,7 +68,14 @@ namespace coh2_battlegrounds_bin {
         /// <summary>
         /// The header read when the file was parsed
         /// </summary>
-        public ReplayHeader Header => (this.m_isParsed) ? this.m_replayHeader : throw new Exception("Replayfile has not been loaded and parsed sucessfully");
+        /// <exception cref="InvalidDataException"/>
+        public ReplayHeader Header => (this.m_isParsed) ? this.m_replayHeader : throw new InvalidDataException("Replayfile has not been loaded and parsed sucessfully.");
+
+        /// <summary>
+        /// The scenario used in the replay
+        /// </summary>
+        /// <exception cref="InvalidDataException"/>
+        public ScenarioDescription Scenario => (this.m_isParsed) ? this.m_sdsc : throw new InvalidDataException("Replayfile has not been loaded and parsed sucessfully.");
 
         /// <summary>
         /// New instance of a <see cref="ReplayFile"/> from a given file path
@@ -69,6 +84,7 @@ namespace coh2_battlegrounds_bin {
         /// <exception cref="FileNotFoundException"/>
         public ReplayFile(string file) {
             this.m_isParsed = false;
+            this.m_playerlist = new List<Player>();
             if (File.Exists(file)) {
                 this.m_replayfile = file;
             } else {
@@ -107,9 +123,13 @@ namespace coh2_battlegrounds_bin {
                         return false;
                     }
 
-                    // TODO: Parse chunk data
+                    if (!this.ParseScenarioDescription()) {
+                        return false;
+                    }
 
-
+                    if (!this.ParseReplayContent()) {
+                        return false;
+                    }
 
                     this.m_isParsed = true;
 
@@ -143,6 +163,123 @@ namespace coh2_battlegrounds_bin {
 
             // Return true if i was not out of bounds and the game name is "COH2_REC"
             return i < this.m_header.Length && name.Equals("COH2_REC");
+
+        }
+
+        private bool ParseScenarioDescription() {
+
+            // Get the scenario target chunk
+            Chunk scenarioChunk = this.m_replayEventsChunkyFile["SDSC"];
+
+            // Read data
+            using (MemoryStream stream = new MemoryStream(scenarioChunk.Data)) {
+                using (BinaryReader reader = new BinaryReader(stream)) {
+
+                    // Skip first 28 bytes (no idea what that is yet)
+                    reader.Skip(28);
+
+                    // Scenario path
+                    string scenariopath = reader.ReadASCIIString();
+
+                    // Skip another 28 bytes
+                    reader.Skip(28);
+
+                    // Read the scenario name
+                    string scenarioname = reader.ReadUTF8String();
+
+                    reader.Skip(4);
+
+                    // Read the scenario description
+                    string scenariodesc = reader.ReadUTF8String();
+
+                    reader.Skip(4);
+
+                    // Read the scenario dimensions
+                    uint[] scenariodimensions = new uint[2]; // Player count could potentially be just before this
+                    scenariodimensions[0] = reader.ReadUInt32();
+                    scenariodimensions[1] = reader.ReadUInt32();
+
+                    reader.Skip(4);
+
+                    // Read the scenario abbreviation
+                    string scenarioabbr = reader.ReadUTF8String(reader.ReadUInt32());
+
+                    // If we continue to read, we can get some mod data (asset packs)
+
+                    // Create scenario description
+                    this.m_sdsc = new ScenarioDescription(scenariopath, scenarioname, (int)scenariodimensions[0], (int)scenariodimensions[1]) { 
+                        Description = scenariodesc,
+                        Abbreviation = scenarioabbr
+                    };
+
+                }
+            }
+
+            return true;
+
+        }
+
+        private bool ParseReplayContent() {
+
+            // Get the important chunk data
+            Chunk gameinfoChunk = this.m_replayEventsChunkyFile["INFO"]["DATA"];
+            Chunk playbackChunk = this.m_replayEventsChunkyFile["INFO"]["PLAS"];
+
+            // Parse the player data
+            if (!this.ParseMatchdata(gameinfoChunk)) {
+                return false;
+            }
+
+            // Parse the recorded data
+            if (!this.ParseRecordedData(playbackChunk)) {
+                return false;
+            }
+
+            return true;
+
+        }
+
+        private bool ParseMatchdata(Chunk infoChunk) {
+
+            using (MemoryStream stream = new MemoryStream(infoChunk.Data)) {
+                using (BinaryReader reader = new BinaryReader(stream)) {
+
+                    int potentialPlayerCount = reader.ReadInt32(); // potentially the player count
+
+                    reader.Skip(19);
+
+                    Player p = this.ParsePlayerInfo(reader);
+
+                    Console.WriteLine("");
+
+                }
+            }
+
+            return true;
+
+        }
+
+        private Player ParsePlayerInfo(BinaryReader reader) {
+
+            string name = reader.ReadUTF8String(reader.ReadUInt32());
+
+            uint playerID = reader.ReadUInt32();
+
+            string faction = reader.ReadASCIIString();
+
+            reader.Skip(8);
+
+            string aiprofile = reader.ReadASCIIString();
+
+            return new Player(playerID, name, Faction.FromName(faction), aiprofile);
+
+        }
+
+        private bool ParseRecordedData(Chunk playbackChunk) {
+
+
+
+            return true;
 
         }
 

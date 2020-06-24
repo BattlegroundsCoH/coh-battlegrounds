@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using coh2_battlegrounds_bin.Util;
 
 namespace coh2_battlegrounds_bin {
     
@@ -13,11 +15,6 @@ namespace coh2_battlegrounds_bin {
         protected byte[] m_unknowns;
         protected int m_version;
         protected List<Chunk> m_chunks;
-
-        /// <summary>
-        /// Found chunk elements in <see cref="ChunkyFile"/>.
-        /// </summary>
-        public Chunk[] Chunks => m_chunks.ToArray();
 
         /// <summary>
         /// 
@@ -103,6 +100,13 @@ namespace coh2_battlegrounds_bin {
 
 
         }
+
+        /// <summary>
+        /// Lookup a root chunk by name in the chunk file
+        /// </summary>
+        /// <param name="name">The name of the chunk to find</param>
+        /// <returns>The first chunk with name or null</returns>
+        public Chunk this[string name] => this.m_chunks.FirstOrDefault(x => x.Name.CompareTo(name) == 0);
 
     }
 
