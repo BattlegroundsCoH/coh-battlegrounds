@@ -50,6 +50,9 @@ namespace coh2_battlegrounds_bin.Game.Battlegrounds {
         /// </summary>
         public virtual void EvaluateResult() {
 
+            // Log out what we're doing
+            Console.WriteLine($"Evaluating match results for match on: {this.m_matchRecord.Scenario.Name}.");
+
             // Get the players
             Player[] players = this.m_matchRecord.Players;
 
@@ -81,18 +84,28 @@ namespace coh2_battlegrounds_bin.Game.Battlegrounds {
                     foreach (GameEvent e in ticks[i].Events) {
 
                         // We don't care about AI players
-                        if (players[e.PlayerID].IsAIPlayer)
-                            continue;
+                        //if (players[e.PlayerID].IsAIPlayer)
+                        //    continue;
 
                         if (e.Type <= (byte)GameEventType.PCMD_COUNT) {
 
                             //Console.WriteLine(e.EventType);
 
-                            if (e.TargetType == 32) {
+                            if (e.TargetType == 16) {
 
-                                Console.WriteLine($"{e.EventType}: Player={e.PlayerID}; ID={e.UnitID}");
+                                if (e.EventType == GameEventType.CMD_BuildSquad || e.EventType == GameEventType.CMD_Upgrade) {
+                                    Console.WriteLine($"Entity: {e.EventType}; Player={e.PlayerID}; ID={e.UnitID}; BP={e.BlueprintID}");
+                                } else {
+                                    Console.WriteLine($"Entity: {e.EventType}; Player={e.PlayerID}; ID={e.UnitID}");
+                                }
 
+                            } else if (e.TargetType == 32) {
 
+                                if (e.EventType == GameEventType.SCMD_Upgrade || e.EventType == GameEventType.SCMD_InstantUpgrade) {
+                                    Console.WriteLine($"Squad: {e.EventType}; Player={e.PlayerID}; ID={e.UnitID}; BP={e.BlueprintID}");
+                                } else {
+                                    Console.WriteLine($"Squad: {e.EventType}; Player={e.PlayerID}; ID={e.UnitID}");
+                                }
 
                             }
 

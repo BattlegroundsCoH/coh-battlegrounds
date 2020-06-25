@@ -1,0 +1,102 @@
+import("ScarUtil.scar")
+import("Fatalities/Fatalities.scar")
+import("Prototype/WorldEntityCollector.scar")
+import("Prototype/SpecialAEFunctions.scar")
+
+-- This is what imports the battlegrounds script
+import("WinConditions/auxiliary_scripts/shared_handler.scar"); -- Your mod must also import this
+
+-- This function exists for old saved games that are referencing and old rule that was registered
+function WinCondition_CheckAnnihilation()
+	Annihilate_CheckAnnihilation()
+end
+
+function Annihilate_GameOver(winningTeam, losingTeam)
+	--Callback for special win conditions. Should be declared within the win conditions .scar file (.../Scar/WinConditions/) or a scenario script
+	if(scartype(WinConditionEndCallback) == ST_FUNCTION) then
+		WinConditionEndCallback(winningTeam)
+	else
+		-- Set the winning team (this will fire win/loss events for each player)
+		World_SetTeamWin(winningTeam)
+		
+		local winningPlayers = Team_GetPlayers(winningTeam)
+		local losingPlayers = Team_GetPlayers(losingTeam)
+		
+		Fatality_Execute(winningPlayers, losingPlayers)
+	end
+end
+
+function Annihilate_CheckAnnihilation()
+	local results = {}
+	-- Check every player on each team for ownership of the "annihilation_condition" entity
+	-- If at least one player on a given team owns an entity of this type, then that team has not yet lost
+	for i = 1, World_GetPlayerCount() do
+		local player = World_GetPlayerAt(i)
+		local team = Player_GetTeam(player)
+	
+		results[team] = results[team] or { surrender_count = 0, annihilation_condition_count = 0 }
+		
+		-- If any player on a team has surrendered, that team loses
+		if(Player_IsSurrendered(player)) then
+			results[team].surrender_count = results[team].surrender_count + 1
+		end
+		
+		if(Player_IsAlive(player)) then
+			local entities = Player_GetEntities(player)
+			for entityCount = 1, EGroup_CountSpawned(entities) do
+				local entity = EGroup_GetSpawnedEntityAt(entities, entityCount)
+				if (Entity_IsOfType(entity, "annihilation_condition")) then
+					results[team].annihilation_condition_count = results[team].annihilation_condition_count + 1
+					break
+				end
+			end
+		end
+	end
+	
+	-- Check if any team has lost
+	for team,result in pairs(results) do
+		if(result.surrender_count > 0 or result.annihilation_condition_count == 0) then
+			Rule_RemoveAll()
+			
+			-- We have a winner!
+			local losingTeam = team
+			local winningTeam = Team_GetEnemyTeam(losingTeam)
+			
+			-- If this Scenario has a custom victory action/message (e.g. various ToW scenarios), call that
+			if (VPVictoryMessage) and (scartype(VPVictoryMessage) == ST_FUNCTION) then
+				-- Only fire the function if a human player's team has won
+				if(Team_HasHuman(winningTeam)) then
+					VPVictoryMessage()
+					Event_Timer(Annihilate_DelayedWin, {winningTeam = winningTeam, losingTeam = losingTeam}, 1)
+				else
+					Game_SetMode(UI_Normal)
+					Annihilate_GameOver(winningTeam, losingTeam)
+				end
+			else
+				Annihilate_GameOver(winningTeam, losingTeam)
+			end
+		end
+	end
+end
+
+function Annihilate_DelayedWin(data)
+	if not Event_IsAnyRunning() then
+		--Callback for special win conditions. Should be declared within the win conditions .scar file (.../Scar/WinConditions/) or a scenario script
+		if(scartype(WinConditionEndCallback) == ST_FUNCTION) then
+			WinConditionEndCallback(data.winningTeam)
+		else
+			Rule_RemoveAll()
+			Game_SetMode(UI_Normal)
+			Camera_SetInputEnabled(true)
+			World_SetTeamWin(data.winningTeam)
+		end
+	else
+		Event_Timer(Annihilate_DelayedWin, data, 1)
+	end
+end
+
+local function init()
+	Rule_AddInterval(Annihilate_CheckAnnihilation, 3)
+end
+
+Scar_AddInit(init)

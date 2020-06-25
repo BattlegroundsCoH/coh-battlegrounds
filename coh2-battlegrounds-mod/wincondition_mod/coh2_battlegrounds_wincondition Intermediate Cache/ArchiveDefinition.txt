@@ -10,8 +10,14 @@ TOCStart name="data" alias="data" path="" relativeroot="data"
 		Override wildcard=".*\.(smf)$" minsize="-1" maxsize="-1" vt="none" ct="store"
 		Override wildcard=".*\.(bsc)$" minsize="-1" maxsize="-1" vt="none" ct="buffer_compress"
 	FileSettingsEnd
-	E:\coh2_battlegrounds\coh2-battlegrounds-mod\wincondition_mod\coh2_battlegrounds_wincondition Intermediate Cache\Intermediate Files\data\game\winconditions\coh2_battlegrounds_wincondition.win
-	E:\coh2_battlegrounds\coh2-battlegrounds-mod\wincondition_mod\coh2_battlegrounds_wincondition Intermediate Cache\Intermediate Files\data\scar\winconditions\coh2_battlegrounds_wincondition.scar
+	E:\coh2_battlegrounds\coh2-battlegrounds-mod\wincondition_mod\coh2_battlegrounds_wincondition Intermediate Cache\Intermediate Files\data\game\winconditions\coh2_battlegrounds_annihilate.win
+	E:\coh2_battlegrounds\coh2-battlegrounds-mod\wincondition_mod\coh2_battlegrounds_wincondition Intermediate Cache\Intermediate Files\data\game\winconditions\coh2_battlegrounds_vp.win
+	E:\coh2_battlegrounds\coh2-battlegrounds-mod\wincondition_mod\coh2_battlegrounds_wincondition Intermediate Cache\Intermediate Files\data\scar\winconditions\auxiliary_scripts\client_divisionloader.scar
+	E:\coh2_battlegrounds\coh2-battlegrounds-mod\wincondition_mod\coh2_battlegrounds_wincondition Intermediate Cache\Intermediate Files\data\scar\winconditions\auxiliary_scripts\shared_handler.scar
+	E:\coh2_battlegrounds\coh2-battlegrounds-mod\wincondition_mod\coh2_battlegrounds_wincondition Intermediate Cache\Intermediate Files\data\scar\winconditions\auxiliary_scripts\shared_units.scar
+	E:\coh2_battlegrounds\coh2-battlegrounds-mod\wincondition_mod\coh2_battlegrounds_wincondition Intermediate Cache\Intermediate Files\data\scar\winconditions\auxiliary_scripts\shared_util.scar
+	E:\coh2_battlegrounds\coh2-battlegrounds-mod\wincondition_mod\coh2_battlegrounds_wincondition Intermediate Cache\Intermediate Files\data\scar\winconditions\coh2_battlegrounds_vp.scar
+	E:\coh2_battlegrounds\coh2-battlegrounds-mod\wincondition_mod\coh2_battlegrounds_wincondition Intermediate Cache\Intermediate Files\data\scar\winconditions\coh2_battlegrounds_annihilate.scar
 	E:\coh2_battlegrounds\coh2-battlegrounds-mod\wincondition_mod\coh2_battlegrounds_wincondition Intermediate Cache\Intermediate Files\data\ui\Bin\6a0a13b89555402ca75b85dc30f5cb04.gfx
 TOCEnd
 TOCStart name="info" alias="info" path="" relativeroot="info"
@@ -20,6 +26,18 @@ TOCStart name="info" alias="info" path="" relativeroot="info"
 	FileSettingsEnd
 	E:\coh2_battlegrounds\coh2-battlegrounds-mod\wincondition_mod\coh2_battlegrounds_wincondition Intermediate Cache\Intermediate Files\info\6a0a13b89555402ca75b85dc30f5cb04.info
 	E:\coh2_battlegrounds\coh2-battlegrounds-mod\wincondition_mod\coh2_battlegrounds_wincondition Intermediate Cache\Intermediate Files\info\coh2_battlegrounds_wincondition_preview.dds
+TOCEnd
+TOCStart name="attrib" alias="attrib" path="" relativeroot="attrib"
+	FileSettingsStart defverification="sha1_blocks" defcompression="stream_compress"
+		Override wildcard=".*\.(rgd)$" minsize="-1" maxsize="-1" vt="sha1_blocks" ct="buffer_compress"
+	FileSettingsEnd
+	E:\coh2_battlegrounds\coh2-battlegrounds-mod\wincondition_mod\coh2_battlegrounds_wincondition Intermediate Cache\Intermediate Files\attrib\attrib\upgrade\battlegrounds\event_squad_killed.rgd
+	E:\coh2_battlegrounds\coh2-battlegrounds-mod\wincondition_mod\coh2_battlegrounds_wincondition Intermediate Cache\Intermediate Files\attrib\attrib\upgrade\battlegrounds\event_squad_spawned.rgd
+	E:\coh2_battlegrounds\coh2-battlegrounds-mod\wincondition_mod\coh2_battlegrounds_wincondition Intermediate Cache\Intermediate Files\attrib\attrib\upgrade\battlegrounds\event_squad_vet1.rgd
+	E:\coh2_battlegrounds\coh2-battlegrounds-mod\wincondition_mod\coh2_battlegrounds_wincondition Intermediate Cache\Intermediate Files\attrib\attrib\upgrade\battlegrounds\event_squad_vet2.rgd
+	E:\coh2_battlegrounds\coh2-battlegrounds-mod\wincondition_mod\coh2_battlegrounds_wincondition Intermediate Cache\Intermediate Files\attrib\attrib\upgrade\battlegrounds\event_squad_vet3.rgd
+	E:\coh2_battlegrounds\coh2-battlegrounds-mod\wincondition_mod\coh2_battlegrounds_wincondition Intermediate Cache\Intermediate Files\attrib\attrib\upgrade\battlegrounds\event_squad_vet4.rgd
+	E:\coh2_battlegrounds\coh2-battlegrounds-mod\wincondition_mod\coh2_battlegrounds_wincondition Intermediate Cache\Intermediate Files\attrib\attrib\upgrade\battlegrounds\event_squad_vet5.rgd
 TOCEnd
 TOCStart name="locale" alias="locale" path="" relativeroot="locale"
 	FileSettingsStart defverification="crc_blocks" defcompression="stream_compress"

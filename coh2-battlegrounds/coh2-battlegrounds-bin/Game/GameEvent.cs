@@ -9,7 +9,9 @@ namespace coh2_battlegrounds_bin.Game {
     public class GameEvent {
 
         // Static dictionary used to test ID
-       // public static Dictionary<uint, Dictionary<GameEventType, uint>> test = new Dictionary<uint, Dictionary<GameEventType, uint>>();
+        // public static Dictionary<uint, Dictionary<GameEventType, uint>> test = new Dictionary<uint, Dictionary<GameEventType, uint>>();
+
+        //public static HashSet<byte> unknowns = new HashSet<byte>();
 
         /// <summary>
         /// The first <see cref="GamePosition"/> argument given to the <see cref="GameEvent"/>.

@@ -1,0 +1,21 @@
+------------------------------------------------------------------------------------
+-- Important Constants
+------------------------------------------------------------------------------------
+_bg_guid = "6a0a13b89555402ca75b85dc30f5cb04"; -- GUID for the mod
+
+_bg_custom = {}; -- Custom data
+
+------------------------------------------------------------------------------------
+-- Imports
+------------------------------------------------------------------------------------
+import("WinConditions/auxiliary_scripts/client_divisionloader.scar")
+import("WinConditions/auxiliary_scripts/shared_units.scar")
+import("WinConditions/auxiliary_scripts/shared_util.scar")
+
+function BG_Init()
+
+    -- Do stuff :D
+
+end
+
+Scar_AddInit(BG_Init);

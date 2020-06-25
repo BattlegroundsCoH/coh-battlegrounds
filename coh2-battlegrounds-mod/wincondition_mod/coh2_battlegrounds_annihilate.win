@@ -1,0 +1,7 @@
+name = "battlegrounds_annihilate"
+scar_file = "data:scar/winconditions/coh2_battlegrounds_annihilate.scar"
+fe_name = "Battlegrounds - Annihilation"
+fe_priority = 1
+score_display = timer
+show_time = true
+requires_vp_ticker = false

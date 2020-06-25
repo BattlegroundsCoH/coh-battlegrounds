@@ -10,30 +10,60 @@
 							<Children>
 								<d2p1:anyType i:type="BurnFile">
 									<BurnSettings i:nil="true" />
-									<RelativeName>coh2_battlegrounds_wincondition.win</RelativeName>
+									<RelativeName>coh2_battlegrounds_annihilate.win</RelativeName>
+								</d2p1:anyType>
+								<d2p1:anyType i:type="BurnFile">
+									<BurnSettings i:nil="true" />
+									<RelativeName>coh2_battlegrounds_vp.win</RelativeName>
 								</d2p1:anyType>
 							</Children>
-							<IsExpanded>false</IsExpanded>
+							<IsExpanded>true</IsExpanded>
 							<Name>winconditions</Name>
 						</d2p1:anyType>
 					</Children>
-					<IsExpanded>false</IsExpanded>
+					<IsExpanded>true</IsExpanded>
 					<Name>game</Name>
 				</d2p1:anyType>
 				<d2p1:anyType i:type="Folder">
 					<Children>
 						<d2p1:anyType i:type="Folder">
 							<Children>
+								<d2p1:anyType i:type="Folder">
+									<Children>
+										<d2p1:anyType i:type="BurnFile">
+											<BurnSettings i:nil="true" />
+											<RelativeName>auxiliary_scripts\client_divisionloader.scar</RelativeName>
+										</d2p1:anyType>
+										<d2p1:anyType i:type="BurnFile">
+											<BurnSettings i:nil="true" />
+											<RelativeName>auxiliary_scripts\shared_handler.scar</RelativeName>
+										</d2p1:anyType>
+										<d2p1:anyType i:type="BurnFile">
+											<BurnSettings i:nil="true" />
+											<RelativeName>auxiliary_scripts\shared_units.scar</RelativeName>
+										</d2p1:anyType>
+										<d2p1:anyType i:type="BurnFile">
+											<BurnSettings i:nil="true" />
+											<RelativeName>auxiliary_scripts\shared_util.scar</RelativeName>
+										</d2p1:anyType>
+									</Children>
+									<IsExpanded>true</IsExpanded>
+									<Name>auxiliary_scripts</Name>
+								</d2p1:anyType>
 								<d2p1:anyType i:type="BurnFile">
 									<BurnSettings i:nil="true" />
-									<RelativeName>coh2_battlegrounds_wincondition.scar</RelativeName>
+									<RelativeName>coh2_battlegrounds_vp.scar</RelativeName>
+								</d2p1:anyType>
+								<d2p1:anyType i:type="BurnFile">
+									<BurnSettings i:nil="true" />
+									<RelativeName>coh2_battlegrounds_annihilate.scar</RelativeName>
 								</d2p1:anyType>
 							</Children>
-							<IsExpanded>false</IsExpanded>
+							<IsExpanded>true</IsExpanded>
 							<Name>winconditions</Name>
 						</d2p1:anyType>
 					</Children>
-					<IsExpanded>false</IsExpanded>
+					<IsExpanded>true</IsExpanded>
 					<Name>scar</Name>
 				</d2p1:anyType>
 				<d2p1:anyType i:type="Folder">

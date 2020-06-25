@@ -11,7 +11,7 @@ namespace coh2_battlegrounds_console {
             string latest = $"{Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)}\\my games\\company of heroes 2\\playback\\temp.rec";
 
             Match match = new Match();
-            if (match.LoadMatch($"{Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)}\\my games\\company of heroes 2\\playback\\testo.rec")) {
+            if (match.LoadMatch($"{Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)}\\my games\\company of heroes 2\\playback\\jello.rec")) {
                 match.EvaluateResult();
             } else {
                 Console.WriteLine("Failed to load replayfile...");

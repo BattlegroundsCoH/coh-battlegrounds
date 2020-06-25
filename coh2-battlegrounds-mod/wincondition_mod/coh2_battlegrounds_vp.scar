@@ -1,0 +1,11 @@
+
+import("ScarUtil.scar")
+import("Fatalities/Fatalities.scar")
+import("Prototype/WorldEntityCollector.scar")
+import("Prototype/VPTickerWin-Annihilate_Functions.scar")
+import("Prototype/SpecialAEFunctions.scar")
+import("PrintOnScreen.scar")
+import("WinConditions/coh2_battlegrounds_annihilate.scar")
+
+SetGlobals()
+Scar_AddInit( VPTicker_OnInit )
