@@ -1,10 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿namespace coh2_battlegrounds_bin.Game {
 
-namespace coh2_battlegrounds_bin.Game {
-    
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+
+    /// <summary>
+    /// Represents a game event
+    /// </summary>
     public enum GameEventType : byte {
+
+        /**
+         * Entity/Generic Commands 
+         */
 
         CMD_DefaultAction,
         CMD_Stop,
@@ -44,6 +49,11 @@ namespace coh2_battlegrounds_bin.Game {
         CMD_AttackFromHold,
         CMD_Vault,
         CMD_COUNT,
+
+        /**
+         * Squad Commands 
+         */
+
         SCMD_Move,
         SCMD_Stop,
         SCMD_Destroy,
@@ -85,6 +95,11 @@ namespace coh2_battlegrounds_bin.Game {
         SCMD_Merge,
         SCMD_Pilfer,
         SCMD_COUNT,
+
+        /**
+         * Player Commands 
+         */
+
         PCMD_ConstructStructure,
         PCMD_ManpowerDonation,
         PCMD_FuelDonation,
@@ -110,4 +125,5 @@ namespace coh2_battlegrounds_bin.Game {
 
     }
 
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 }

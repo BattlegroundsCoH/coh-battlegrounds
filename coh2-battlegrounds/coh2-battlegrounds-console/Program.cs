@@ -1,5 +1,6 @@
 ﻿using System;
 using coh2_battlegrounds_bin;
+using coh2_battlegrounds_bin.Game.Battlegrounds;
 
 namespace coh2_battlegrounds_console {
     
@@ -7,11 +8,11 @@ namespace coh2_battlegrounds_console {
         
         static void Main(string[] args) {
 
-            string latest = $"{Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)}\\my games\\company of heroes 2\\playback\\temp_mod.rec";
+            string latest = $"{Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)}\\my games\\company of heroes 2\\playback\\temp.rec";
 
-            ReplayFile replay = new ReplayFile($"{Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)}\\my games\\company of heroes 2\\playback\\temp_mod.rec");
-            if (replay.LoadReplay()) {
-                replay.Dump();
+            Match match = new Match();
+            if (match.LoadMatch($"{Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)}\\my games\\company of heroes 2\\playback\\temp_mod.rec")) {
+                match.EvaluateResult();
             } else {
                 Console.WriteLine("Failed to load replayfile...");
             }

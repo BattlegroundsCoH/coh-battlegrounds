@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Text;
 
 namespace coh2_battlegrounds_bin.Util {
@@ -79,10 +78,10 @@ namespace coh2_battlegrounds_bin.Util {
             => reader.BaseStream.Position >= reader.BaseStream.Length;
 
         /// <summary>
-        /// 
+        /// Skip all bytes until a specific byte array match is found
         /// </summary>
-        /// <param name="reader"></param>
-        /// <param name="barray"></param>
+        /// <param name="reader">The stream to advance memory pointer in</param>
+        /// <param name="barray">The byte array to find and read</param>
         public static void SkipUntil(this BinaryReader reader, byte[] barray) {
 
             while (!reader.HasReachedEOS()) {
@@ -100,10 +99,10 @@ namespace coh2_battlegrounds_bin.Util {
         }
 
         /// <summary>
-        /// 
+        /// Read all bytes remaining in the <see cref="BinaryReader"/> object
         /// </summary>
-        /// <param name="reader"></param>
-        /// <returns></returns>
+        /// <param name="reader">The stream to read to end</param>
+        /// <returns>Byte array containing all the bytes remaining in the stream</returns>
         public static byte[] ReadToEnd(this BinaryReader reader) {
             List<byte> content = new List<byte>();
             while (!reader.HasReachedEOS()) {

@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using coh2_battlegrounds_bin.Game;
 using coh2_battlegrounds_bin.Game.Gameplay;
 using coh2_battlegrounds_bin.Util;
+using System.Linq;
 
 namespace coh2_battlegrounds_bin {
 
@@ -78,6 +79,16 @@ namespace coh2_battlegrounds_bin {
         /// </summary>
         /// <exception cref="InvalidDataException"/>
         public ScenarioDescription Scenario => (this.m_isParsed) ? this.m_sdsc : throw new InvalidDataException("Replayfile has not been loaded and parsed sucessfully.");
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public Player[] Players => (this.m_isParsed) ? this.m_playerlist.ToArray() : throw new InvalidDataException("Replayfile has not been loaded and parsed sucessfully.");
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public GameTick[] Ticks => (this.m_isParsed)?this.m_tickList.OrderBy(x => x.TimeStamp).ToArray() : throw new InvalidDataException("Replayfile has not been loaded and parsed sucessfully.");
 
         /// <summary>
         /// New instance of a <see cref="ReplayFile"/> from a given file path
