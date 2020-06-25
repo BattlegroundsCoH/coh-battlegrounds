@@ -1,0 +1,55 @@
+function BG_HookUnitSystem()
+
+    -- Call every tick...
+    Rule_Add(BG_UpdateUnitCounts);
+
+end
+
+function BG_UpdateUnitCounts()
+
+    -- Loop through all players
+    for i=1, #_bg_playerData do
+
+        -- Get the new units (if any)
+        local unitset = bg_set:from_sgroup(Player_GetSquads(_bg_playerData[i].player));
+        local newunits = bg_set:diff(unitset, _bg_playerData[i].squads);
+
+        -- Apply updates if needed
+        if (#newunits > 0) then
+            
+            -- Add new squads
+            for j=1, #newunits do
+                BG_AddSquad(_bg_playerData[i].player, newunits[j]);
+            end
+
+            -- Update set
+            _bg_playerData[i].squads = unitset;
+
+        end
+
+    end
+
+end
+
+function BG_AddSquad(player, sid)
+
+    -- Retrieve basic data
+    local squad = Squad_FromWorldID(sid);
+    local pbgid = BP_GetName(Squad_GetBlueprint(squad));
+
+    -- Grant Spawn upgrade
+    --Command_SquadUpgrade(player, SGroup_FromSquad(sid), BP_GetUpgradeBlueprint("6a0a13b89555402ca75b85dc30f5cb04:event_squad_spawned"), true, false);
+
+    Command_PlayerBroadcastMessage(Game_GetLocalPlayer(), Game_GetLocalPlayer(), _bg_message_type_unit_spawned, "S[" .. sid .. "," .. pbgid  .. "]")
+
+    -- Add "on death" event
+    Rule_AddSquadEvent(BG_OnSquadDeath, squad, GE_SquadKilled);
+
+end
+
+function BG_OnSquadDeath(sid)
+
+    Command_PlayerBroadcastMessage(Game_GetLocalPlayer(), Game_GetLocalPlayer(), _bg_message_type_unit_killed, "K[" .. Squad_GetGameID(sid) .. "]")
+
+
+end

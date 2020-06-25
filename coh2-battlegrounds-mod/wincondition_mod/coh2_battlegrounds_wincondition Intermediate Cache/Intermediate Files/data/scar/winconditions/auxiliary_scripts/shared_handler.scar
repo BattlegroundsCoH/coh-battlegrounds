@@ -5,6 +5,11 @@ _bg_guid = "6a0a13b89555402ca75b85dc30f5cb04"; -- GUID for the mod
 
 _bg_custom = {}; -- Custom data
 
+_bg_playerData = {};
+    
+_bg_message_type_unit_killed = 41.0;
+_bg_message_type_unit_spawned = 42.0;
+
 ------------------------------------------------------------------------------------
 -- Imports
 ------------------------------------------------------------------------------------
@@ -13,6 +18,26 @@ import("WinConditions/auxiliary_scripts/shared_units.scar")
 import("WinConditions/auxiliary_scripts/shared_util.scar")
 
 function BG_Init()
+
+    local j = 1;
+
+    for i = 1, World_GetPlayerCount() do
+        local player = World_GetPlayerAt(i);
+        if not AI_IsAIPlayer(player) then -- Make sure it's a player ==> Don't care for AI players
+            _bg_playerData[j] = {};
+            _bg_playerData[j].player = player;
+            _bg_playerData[j].playerID = Player_GetID(player);
+            _bg_playerData[j].squads = {};
+            _bg_playerData[j].entities = {};
+            j = j + 1;
+        end
+    end
+
+    -- Load the client division
+    BG_LoadDivision();
+
+    -- Activate the unit system
+    BG_HookUnitSystem();
 
     -- Do stuff :D
 

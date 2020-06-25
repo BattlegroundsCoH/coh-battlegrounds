@@ -11,19 +11,19 @@
 		</BurnInfo>
 		<BurnInfo>
 			<FileName>E:\coh2_battlegrounds\coh2-battlegrounds-mod\wincondition_mod\auxiliary_scripts\client_divisionloader.scar</FileName>
-			<FileHash>d41d8cd98f00b204e9800998ecf8427e</FileHash>
+			<FileHash>7e7b266162f919028f809f9f8391196e</FileHash>
 		</BurnInfo>
 		<BurnInfo>
 			<FileName>E:\coh2_battlegrounds\coh2-battlegrounds-mod\wincondition_mod\auxiliary_scripts\shared_handler.scar</FileName>
-			<FileHash>e096bd9a9a2b96b83ac320e4f407f83c</FileHash>
+			<FileHash>7917af6a540706cc5b7a104ba3b35eaf</FileHash>
 		</BurnInfo>
 		<BurnInfo>
 			<FileName>E:\coh2_battlegrounds\coh2-battlegrounds-mod\wincondition_mod\auxiliary_scripts\shared_units.scar</FileName>
-			<FileHash>d41d8cd98f00b204e9800998ecf8427e</FileHash>
+			<FileHash>02c4f40e2658a004ce4d2b041ac9e986</FileHash>
 		</BurnInfo>
 		<BurnInfo>
 			<FileName>E:\coh2_battlegrounds\coh2-battlegrounds-mod\wincondition_mod\auxiliary_scripts\shared_util.scar</FileName>
-			<FileHash>d41d8cd98f00b204e9800998ecf8427e</FileHash>
+			<FileHash>d0301f132c987e49a10aa2b4c9561f1f</FileHash>
 		</BurnInfo>
 		<BurnInfo>
 			<FileName>E:\coh2_battlegrounds\coh2-battlegrounds-mod\wincondition_mod\coh2_battlegrounds_vp.scar</FileName>
@@ -40,6 +40,14 @@
 		<BurnInfo>
 			<FileName>E:\coh2_battlegrounds\coh2-battlegrounds-mod\wincondition_mod\coh2_battlegrounds_wincondition_attrib.xml</FileName>
 			<FileHash>f21743d6572c5cd68362a674fd304426</FileHash>
+		</BurnInfo>
+		<BurnInfo>
+			<FileName>E:\coh2_battlegrounds\coh2-battlegrounds-mod\wincondition_mod\instances\upgrade\battlegrounds\event_player_lost.xml</FileName>
+			<FileHash>7381813a3548f10b9f399e57ceed8369</FileHash>
+		</BurnInfo>
+		<BurnInfo>
+			<FileName>E:\coh2_battlegrounds\coh2-battlegrounds-mod\wincondition_mod\instances\upgrade\battlegrounds\event_player_won.xml</FileName>
+			<FileHash>8a1cce2d0a8c068a11ed6615369a9860</FileHash>
 		</BurnInfo>
 		<BurnInfo>
 			<FileName>E:\coh2_battlegrounds\coh2-battlegrounds-mod\wincondition_mod\instances\upgrade\battlegrounds\event_squad_killed.xml</FileName>

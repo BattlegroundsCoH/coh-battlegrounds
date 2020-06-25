@@ -1,0 +1,62 @@
+------------------------------------------------------------
+-- Math Set Functionality
+------------------------------------------------------------
+bg_set = {
+    from_sgroup = function(self, sgroupTarget)
+        local set = {};
+        local __sgeach = function(sgroupid, itemindex, squadID)
+            table.insert(set, Squad_GetGameID(squadID));
+        end
+        SGroup_ForEach(sgroupTarget, __sgeach);
+        return set;
+    end,
+    union = function(self, a, b)
+        local set = {};
+        for i=1, #a do
+            table.insert(set, a[i]);
+        end
+        for i=1, #b do
+            if not self:contains(set, b[i]) then
+                table.insert(set, b[i]);
+            end
+        end
+        return set;
+    end,
+    intersect = function(self, a, b)
+        local set = {};
+        for i=1, #a do
+            if self:contains(b, a[i]) then
+                table.insert(set, a[i]);
+            end
+        end
+        return set;
+    end,
+    diff = function(self, a, b)
+        local set = {};
+        for i=1, #a do
+            if not self:contains(b, a[i]) then
+                table.insert(set, a[i]);
+            end
+        end
+        return set;
+    end,
+    contains = function(self, set, element)
+        for i=1, #set do
+            if (set[i] == element) then
+                return true;
+            end
+        end
+        return false;
+    end,
+};
+
+------------------------------------------------------------
+-- SGroup functions
+------------------------------------------------------------
+
+function SGroup_FromSquad(squad)
+    sg_temp = SGroup_CreateIfNotFound("sg_temp");
+    SGroup_Clear(sg_temp);
+    SGroup_Add(sg_temp, squad);
+    return sg_temp;
+end
