@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace coh2_battlegrounds_bin.Game {
     
@@ -6,6 +7,9 @@ namespace coh2_battlegrounds_bin.Game {
     /// Represents an event that occured in a <see cref="GameTick"/>.
     /// </summary>
     public class GameEvent {
+
+        // Static dictionary used to test ID
+       // public static Dictionary<uint, Dictionary<GameEventType, uint>> test = new Dictionary<uint, Dictionary<GameEventType, uint>>();
 
         /// <summary>
         /// The first <see cref="GamePosition"/> argument given to the <see cref="GameEvent"/>.
@@ -52,6 +56,11 @@ namespace coh2_battlegrounds_bin.Game {
         public TimeSpan TimeStamp { get; }
 
         /// <summary>
+        /// The type the issued command will target (??? = ???, 16 = entity, 32 = squad, ??? = ???)
+        /// </summary>
+        public ushort TargetType { get; }
+
+        /// <summary>
         /// 
         /// </summary>
         /// <param name="timeStamp"></param>
@@ -70,21 +79,53 @@ namespace coh2_battlegrounds_bin.Game {
             // Read player ID (a simple byte)
             this.PlayerID = eventData[3];
 
+            // The target type
+            this.TargetType = BitConverter.ToUInt16(eventData[6..8]); // Most likely an enum
+                // 16 = Entity
+                // 32 = Squad
+                // 64 = ???
+                // ... = ...
+                // ??? = ???
+
             // Read type-specific content
             if (this.Type <= (byte)GameEventType.PCMD_COUNT) {
                 switch (this.EventType) {
                     case GameEventType.CMD_BuildSquad:
                     case GameEventType.CMD_Upgrade:
                     case GameEventType.SCMD_Upgrade:
+                        this.UnitID = BitConverter.ToUInt16(eventData[8..10]);
                         this.BlueprintID = BitConverter.ToUInt32(eventData[13..17]);
                         break;
+                    case GameEventType.SCMD_Move:
+                        this.UnitID = BitConverter.ToUInt16(eventData[8..10]);
+                        break;
                         // TODO: Other important cases here
+                    // These load unit ID differently:
+                    // SCMD_STOP
+                    // SCMD_ATTACK
+                    // SCMD_RETREAT
+                    // SCMD_REINFORCEUNIT
+                    // ...
                     default: break;
                 }
 
             }
 
         }
+
+        /*private static void testInc(uint u, GameEventType t) {
+            if (test.ContainsKey(u)) {
+                if (test[u].ContainsKey(t)) {
+                    test[u][t]++;
+                } else {
+                    test[u].Add(t, 1);
+                }
+            } else {
+                Dictionary<GameEventType, uint> counter = new Dictionary<GameEventType, uint>();
+                counter.Add(t, 1);
+                test.Add(u, counter);
+            }
+        }*/
 
     }
 

@@ -11,6 +11,8 @@ namespace coh2_battlegrounds_bin.Game.Gameplay {
 
         public uint ID { get; }
 
+        public uint TeamID { get; }
+
         public string Name { get; }
 
         public string Profile { get; }
@@ -19,8 +21,9 @@ namespace coh2_battlegrounds_bin.Game.Gameplay {
 
         public bool IsAIPlayer { get; }
 
-        public Player(uint id, string name, Faction faction, string aiprofile) {
+        public Player(uint id, uint tID, string name, Faction faction, string aiprofile) {
             this.ID = id;
+            this.TeamID = tID;
             this.Name = name;
             this.Army = faction;
             this.Profile = aiprofile;

@@ -1,0 +1,38 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<BurnInfoRoot xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<BurnInfo>
+		<BurnInfo>
+			<FileName>E:\coh2_battlegrounds\coh2-battlegrounds-mod\wincondition_mod\coh2_battlegrounds_wincondition.win</FileName>
+			<FileHash>8d8041996bd1c6a042a272b4e78d5838</FileHash>
+		</BurnInfo>
+		<BurnInfo>
+			<FileName>E:\coh2_battlegrounds\coh2-battlegrounds-mod\wincondition_mod\coh2_battlegrounds_wincondition.scar</FileName>
+			<FileHash>17223396cefd989ad29ce2043bb4a7dc</FileHash>
+		</BurnInfo>
+		<BurnInfo>
+			<FileName>E:\coh2_battlegrounds\coh2-battlegrounds-mod\wincondition_mod\coh2_battlegrounds_wincondition Intermediate Cache\Intermediate Files\info\6a0a13b89555402ca75b85dc30f5cb04.info</FileName>
+			<FileHash>0b36227ec3164bde130a2ae59c50f144</FileHash>
+		</BurnInfo>
+		<BurnInfo>
+			<FileName>E:\coh2_battlegrounds\coh2-battlegrounds-mod\wincondition_mod\locale\english\english.ucs</FileName>
+			<FileHash>f3b25701fe362ec84616a93a45ce9998</FileHash>
+		</BurnInfo>
+	</BurnInfo>
+	<BurnInfoExtendedInfo>
+		<BurnInfoExtendedInfo>
+			<FileName>E:\coh2_battlegrounds\coh2-battlegrounds-mod\wincondition_mod\coh2_battlegrounds_wincondition Intermediate Cache\Intermediate Files\info\coh2_battlegrounds_wincondition_preview.dds</FileName>
+			<FileInfo>
+				<Inputs>
+					<BurnInfo>
+						<FileName>E:\coh2_battlegrounds\coh2-battlegrounds-mod\wincondition_mod\coh2_battlegrounds_wincondition_preview.tga</FileName>
+						<FileHash>16fdcb16eca1a04536e669fb029a60ed</FileHash>
+					</BurnInfo>
+				</Inputs>
+				<Outputs>
+					<string>E:\coh2_battlegrounds\coh2-battlegrounds-mod\wincondition_mod\coh2_battlegrounds_wincondition Intermediate Cache\Intermediate Files\info\coh2_battlegrounds_wincondition_preview.dds</string>
+				</Outputs>
+				<HashCode>-1286723142</HashCode>
+			</FileInfo>
+		</BurnInfoExtendedInfo>
+	</BurnInfoExtendedInfo>
+</BurnInfoRoot>

@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 using coh2_battlegrounds_bin.Game.Gameplay;
 
 namespace coh2_battlegrounds_bin.Game.Battlegrounds {
@@ -41,30 +39,22 @@ namespace coh2_battlegrounds_bin.Game.Battlegrounds {
         /// <summary>
         /// 
         /// </summary>
-        public void AddSquad() {
-
-        }
+        public void AddSquad(Squad squad) => this.m_activeSquads.Add(squad);
 
         /// <summary>
         /// 
         /// </summary>
-        public void RemoveSquad() {
-
-        }
+        public void RemoveSquad(Squad squad) => this.m_activeSquads.Remove(squad);
 
         /// <summary>
         /// 
         /// </summary>
-        public void AddEntity() {
-
-        }
+        public void AddEntity(Entity entity) => this.m_activeEntities.Add(entity);
 
         /// <summary>
         /// 
         /// </summary>
-        public void RemoveEntity() {
-
-        }
+        public void RemoveEntity(Entity entity) => this.m_activeEntities.Remove(entity);
 
     }
 

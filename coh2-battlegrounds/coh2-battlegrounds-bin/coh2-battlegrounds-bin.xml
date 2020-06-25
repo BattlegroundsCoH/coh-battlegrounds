@@ -158,25 +158,113 @@
             </summary>
             <param name="player"></param>
         </member>
-        <member name="M:coh2_battlegrounds_bin.Game.Battlegrounds.PlayerResult.AddSquad">
+        <member name="M:coh2_battlegrounds_bin.Game.Battlegrounds.PlayerResult.AddSquad(coh2_battlegrounds_bin.Game.Gameplay.Squad)">
             <summary>
             
             </summary>
         </member>
-        <member name="M:coh2_battlegrounds_bin.Game.Battlegrounds.PlayerResult.RemoveSquad">
+        <member name="M:coh2_battlegrounds_bin.Game.Battlegrounds.PlayerResult.RemoveSquad(coh2_battlegrounds_bin.Game.Gameplay.Squad)">
             <summary>
             
             </summary>
         </member>
-        <member name="M:coh2_battlegrounds_bin.Game.Battlegrounds.PlayerResult.AddEntity">
+        <member name="M:coh2_battlegrounds_bin.Game.Battlegrounds.PlayerResult.AddEntity(coh2_battlegrounds_bin.Game.Gameplay.Entity)">
             <summary>
             
             </summary>
         </member>
-        <member name="M:coh2_battlegrounds_bin.Game.Battlegrounds.PlayerResult.RemoveEntity">
+        <member name="M:coh2_battlegrounds_bin.Game.Battlegrounds.PlayerResult.RemoveEntity(coh2_battlegrounds_bin.Game.Gameplay.Entity)">
             <summary>
             
             </summary>
+        </member>
+        <member name="T:coh2_battlegrounds_bin.Game.Database.Blueprint">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:coh2_battlegrounds_bin.Game.Database.Blueprint.PBGID">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:coh2_battlegrounds_bin.Game.Database.BlueprintType">
+            <summary>
+            The type a <see cref="T:coh2_battlegrounds_bin.Game.Database.Blueprint"/> may represent in the <see cref="T:coh2_battlegrounds_bin.Game.Database.BlueprintManager"/>.
+            </summary>
+        </member>
+        <member name="F:coh2_battlegrounds_bin.Game.Database.BlueprintType.ABP">
+            <summary>
+            Ability Blueprint
+            </summary>
+        </member>
+        <member name="F:coh2_battlegrounds_bin.Game.Database.BlueprintType.UBP">
+            <summary>
+            Upgrade Blueprint
+            </summary>
+        </member>
+        <member name="F:coh2_battlegrounds_bin.Game.Database.BlueprintType.CBP">
+            <summary>
+            Commander Blueprint
+            </summary>
+        </member>
+        <member name="F:coh2_battlegrounds_bin.Game.Database.BlueprintType.EBP">
+            <summary>
+            Entity Blueprint
+            </summary>
+        </member>
+        <member name="F:coh2_battlegrounds_bin.Game.Database.BlueprintType.SBP">
+            <summary>
+            Squad Blueprint
+            </summary>
+        </member>
+        <member name="T:coh2_battlegrounds_bin.Game.Database.BlueprintManager">
+            <summary>
+            Database over all relevant blueprints in use
+            </summary>
+        </member>
+        <member name="M:coh2_battlegrounds_bin.Game.Database.BlueprintManager.CreateDatabase">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:coh2_battlegrounds_bin.Game.Database.BlueprintManager.LoadJsonDatabase(System.String,coh2_battlegrounds_bin.Game.Database.BlueprintType)">
+            <summary>
+            
+            </summary>
+            <param name="jsonfile"></param>
+            <param name="bType"></param>
+            <returns></returns>
+        </member>
+        <member name="M:coh2_battlegrounds_bin.Game.Database.BlueprintManager.FromPbgId(System.UInt16,coh2_battlegrounds_bin.Game.Database.BlueprintType)">
+            <summary>
+            
+            </summary>
+            <param name="id"></param>
+            <param name="bType"></param>
+            <exception cref="T:System.ArgumentException"/>
+            <exception cref="T:System.ArgumentNullException"/>
+            <exception cref="T:System.Collections.Generic.KeyNotFoundException"/>
+            <returns></returns>
+        </member>
+        <member name="T:coh2_battlegrounds_bin.Game.Database.json.IJsonOjbect">
+            <summary>
+            Json interface for converting object to and from a Json object
+            </summary>
+        </member>
+        <member name="M:coh2_battlegrounds_bin.Game.Database.json.IJsonOjbect.Serialize">
+            <summary>
+            Serialize self into a json object
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:coh2_battlegrounds_bin.Game.Database.json.IJsonOjbect.Deserialize``1(System.String)">
+            <summary>
+            Derserialize a json string representing an object into the C# requivalent.
+            </summary>
+            <typeparam name="T">The object type to deserialize to</typeparam>
+            <param name="json">The input string to deserialize</param>
+            <returns>A deserialized instance of the json input string</returns>
         </member>
         <member name="T:coh2_battlegrounds_bin.Game.DLCPack">
             <summary>
@@ -290,6 +378,11 @@
             The calculated time in which the event occured
             </summary>
         </member>
+        <member name="P:coh2_battlegrounds_bin.Game.GameEvent.TargetType">
+            <summary>
+            The type the issued command will target (??? = ???, 16 = entity, 32 = squad, ??? = ???)
+            </summary>
+        </member>
         <member name="M:coh2_battlegrounds_bin.Game.GameEvent.#ctor(System.TimeSpan,System.Byte[])">
             <summary>
             
@@ -315,6 +408,29 @@
             <summary>
             
             </summary>
+        </member>
+        <member name="P:coh2_battlegrounds_bin.Game.Gameplay.Entity.EntityID">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:coh2_battlegrounds_bin.Game.Gameplay.Entity.PlayerOwner">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:coh2_battlegrounds_bin.Game.Gameplay.Entity.Blueprint">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:coh2_battlegrounds_bin.Game.Gameplay.Entity.#ctor(System.UInt16,coh2_battlegrounds_bin.Game.Gameplay.Player,coh2_battlegrounds_bin.Game.Database.Blueprint)">
+            <summary>
+            
+            </summary>
+            <param name="eId"></param>
+            <param name="owner"></param>
+            <param name="bp"></param>
         </member>
         <member name="T:coh2_battlegrounds_bin.Game.Gameplay.Faction">
             <summary>
@@ -378,10 +494,38 @@
             
             </summary>
         </member>
+        <member name="T:coh2_battlegrounds_bin.Game.Gameplay.ProductionQueue">
+            <summary>
+            
+            </summary>
+        </member>
         <member name="T:coh2_battlegrounds_bin.Game.Gameplay.Squad">
             <summary>
             
             </summary>
+        </member>
+        <member name="P:coh2_battlegrounds_bin.Game.Gameplay.Squad.SquadID">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:coh2_battlegrounds_bin.Game.Gameplay.Squad.PlayerOwner">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:coh2_battlegrounds_bin.Game.Gameplay.Squad.Blueprint">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:coh2_battlegrounds_bin.Game.Gameplay.Squad.#ctor(System.UInt16,coh2_battlegrounds_bin.Game.Gameplay.Player,coh2_battlegrounds_bin.Game.Database.Blueprint)">
+            <summary>
+            
+            </summary>
+            <param name="squadID"></param>
+            <param name="owner"></param>
+            <param name="squadBlueprint"></param>
         </member>
         <member name="T:coh2_battlegrounds_bin.Game.Gameplay.Wincondition">
             <summary>
@@ -566,12 +710,12 @@
         </member>
         <member name="P:coh2_battlegrounds_bin.ReplayFile.Players">
             <summary>
-            
+            Array containing all players in the replay
             </summary>
         </member>
         <member name="P:coh2_battlegrounds_bin.ReplayFile.Ticks">
             <summary>
-            
+            Sorted array containing all game ticks in the replay
             </summary>
         </member>
         <member name="M:coh2_battlegrounds_bin.ReplayFile.#ctor(System.String)">
@@ -588,11 +732,6 @@
             <returns>True if no errors occured</returns>
             <exception cref="T:System.ArgumentException"/>
             <exception cref="T:System.IO.IOException"/>
-        </member>
-        <member name="M:coh2_battlegrounds_bin.ReplayFile.Dump">
-            <summary>
-            
-            </summary>
         </member>
         <member name="T:coh2_battlegrounds_bin.Steam.SteamUser">
             <summary>

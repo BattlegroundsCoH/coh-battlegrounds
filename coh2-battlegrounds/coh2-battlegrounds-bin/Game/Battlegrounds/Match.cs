@@ -22,7 +22,7 @@ namespace coh2_battlegrounds_bin.Game.Battlegrounds {
         /// 
         /// </summary>
         public Match() {
-
+            m_matchPlayerResults = new PlayerResult[0];
         }
 
         /// <summary>
@@ -64,6 +64,10 @@ namespace coh2_battlegrounds_bin.Game.Battlegrounds {
                 };
             }
 
+            // Create containers for storing all spawned entities and squads
+            Dictionary<uint, Entity> allEntities = new Dictionary<uint, Entity>();
+            Dictionary<uint, Squad> allSquads = new Dictionary<uint, Squad>();
+
             // Get the tick array
             var ticks = this.m_matchRecord.Ticks;
 
@@ -76,12 +80,17 @@ namespace coh2_battlegrounds_bin.Game.Battlegrounds {
                     // Loop through all the gave events in tick
                     foreach (GameEvent e in ticks[i].Events) {
 
+                        // We don't care about AI players
+                        if (players[e.PlayerID].IsAIPlayer)
+                            continue;
+
                         if (e.Type <= (byte)GameEventType.PCMD_COUNT) {
 
-                            Console.WriteLine(e.EventType);
+                            //Console.WriteLine(e.EventType);
 
-                            // If a squad was built
-                            if (e.EventType == GameEventType.CMD_BuildSquad) {
+                            if (e.TargetType == 32) {
+
+                                Console.WriteLine($"{e.EventType}: Player={e.PlayerID}; ID={e.UnitID}");
 
 
 
@@ -91,11 +100,12 @@ namespace coh2_battlegrounds_bin.Game.Battlegrounds {
 
                     }
 
-                    Console.WriteLine(ticks[i].TimeStamp);
-
                 }
 
             }
+
+            Console.WriteLine($"Registered {allSquads.Count} squads at end of match");
+            Console.WriteLine($"Registered {allEntities.Count} entities at end of match");
 
         }
 

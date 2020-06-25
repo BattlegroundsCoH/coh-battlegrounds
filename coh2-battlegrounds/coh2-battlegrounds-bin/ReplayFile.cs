@@ -72,23 +72,27 @@ namespace coh2_battlegrounds_bin {
         /// The header read when the file was parsed
         /// </summary>
         /// <exception cref="InvalidDataException"/>
-        public ReplayHeader Header => (this.m_isParsed) ? this.m_replayHeader : throw new InvalidDataException("Replayfile has not been loaded and parsed sucessfully.");
+        public ReplayHeader Header 
+            => (this.m_isParsed) ? this.m_replayHeader : throw new InvalidDataException("Replayfile has not been loaded and parsed sucessfully.");
 
         /// <summary>
         /// The scenario used in the replay
         /// </summary>
         /// <exception cref="InvalidDataException"/>
-        public ScenarioDescription Scenario => (this.m_isParsed) ? this.m_sdsc : throw new InvalidDataException("Replayfile has not been loaded and parsed sucessfully.");
+        public ScenarioDescription Scenario 
+            => (this.m_isParsed) ? this.m_sdsc : throw new InvalidDataException("Replayfile has not been loaded and parsed sucessfully.");
 
         /// <summary>
-        /// 
+        /// Array containing all players in the replay
         /// </summary>
-        public Player[] Players => (this.m_isParsed) ? this.m_playerlist.ToArray() : throw new InvalidDataException("Replayfile has not been loaded and parsed sucessfully.");
+        public Player[] Players 
+            => (this.m_isParsed) ? this.m_playerlist.ToArray() : throw new InvalidDataException("Replayfile has not been loaded and parsed sucessfully.");
 
         /// <summary>
-        /// 
+        /// Sorted array containing all game ticks in the replay
         /// </summary>
-        public GameTick[] Ticks => (this.m_isParsed)?this.m_tickList.OrderBy(x => x.TimeStamp).ToArray() : throw new InvalidDataException("Replayfile has not been loaded and parsed sucessfully.");
+        public GameTick[] Ticks 
+            => (this.m_isParsed)?this.m_tickList.OrderBy(x => x.TimeStamp).ToArray() : throw new InvalidDataException("Replayfile has not been loaded and parsed sucessfully.");
 
         /// <summary>
         /// New instance of a <see cref="ReplayFile"/> from a given file path
@@ -217,15 +221,11 @@ namespace coh2_battlegrounds_bin {
 
                     reader.Skip(4);
 
-                    // Read the scenario abbreviation
-                    string scenarioabbr = reader.ReadUTF8String(reader.ReadUInt32());
-
                     // If we continue to read, we can get some mod data (asset packs)
 
                     // Create scenario description
                     this.m_sdsc = new ScenarioDescription(scenariopath, scenarioname, (int)scenariodimensions[0], (int)scenariodimensions[1]) { 
                         Description = scenariodesc,
-                        Abbreviation = scenarioabbr
                     };
 
                 }
@@ -283,9 +283,10 @@ namespace coh2_battlegrounds_bin {
 
         private Player ParsePlayerInfo(BinaryReader reader) {
 
+            // Read player name
             string name = reader.ReadUTF8String(reader.ReadUInt32());
 
-            uint playerID = reader.ReadUInt32();
+            uint teamID = reader.ReadUInt32();
 
             string faction = reader.ReadASCIIString();
 
@@ -293,7 +294,15 @@ namespace coh2_battlegrounds_bin {
 
             string aiprofile = reader.ReadASCIIString();
 
+            uint playerID = reader.ReadUInt32();
+
             bool isAI = reader.ReadInt32() == 1;
+
+            /*reader.Skip(103);
+             // The Steam ID is somewhere in this range - but there's some data here that's currently not readable
+             // It follwos a pattern of 00 00 00 00 (4 bytes) and then 8 bytes, matching the steam ID
+            ulong steamID = reader.ReadUInt64();
+            */
 
             // Skip inventory stuff
             reader.SkipUntil(new byte[] { 255, 255, 255, 255 });
@@ -303,7 +312,8 @@ namespace coh2_battlegrounds_bin {
                 reader.Skip(5); // So we have to skip 5 bytes
             }
 
-            return new Player(playerID, name, Faction.FromName(faction), (isAI) ? aiprofile : null);
+            // Return the player we read
+            return new Player(playerID, teamID, name, Faction.FromName(faction), (isAI) ? aiprofile : null);
 
         }
 
@@ -352,14 +362,6 @@ namespace coh2_battlegrounds_bin {
 
             return true;
 
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public void Dump() {
-            this.m_scenarioChunkyFile.Dump();
-            this.m_replayEventsChunkyFile.Dump();
         }
 
     }
