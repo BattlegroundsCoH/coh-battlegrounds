@@ -105,6 +105,35 @@
             <param name="name">The name of the chunk to find</param>
             <returns>The first chunk with name or null</returns>
         </member>
+        <member name="T:Battlegrounds.Compiler.CompanyCompiler">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Battlegrounds.Compiler.CompanyCompiler.#ctor">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Battlegrounds.Compiler.CompanyCompiler.CompileToLua(System.String)">
+            <summary>
+            
+            </summary>
+            <param name="output"></param>
+        </member>
+        <member name="T:Battlegrounds.Compiler.WinconditionCompiler">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Battlegrounds.Compiler.WinconditionCompiler.CompileToSga(System.String,System.String)">
+            <summary>
+            
+            </summary>
+            <param name="workdir"></param>
+            <param name="companyfile"></param>
+            <returns></returns>
+        </member>
         <member name="T:Battlegrounds.Game.Battlegrounds.GameMatch">
             <summary>
             
@@ -187,6 +216,21 @@
             
             </summary>
             <returns></returns>
+        </member>
+        <member name="T:Battlegrounds.Game.CoH2Launcher">
+            <summary>
+            Static class for launching Company of Heroes 2 with the proper set of arguments.
+            </summary>
+        </member>
+        <member name="F:Battlegrounds.Game.CoH2Launcher.GameAppID">
+            <summary>
+            The steam app ID for Company of Heroes 2.
+            </summary>
+        </member>
+        <member name="M:Battlegrounds.Game.CoH2Launcher.Launch">
+            <summary>
+            Launch Company of Heroes 2 through Steam
+            </summary>
         </member>
         <member name="T:Battlegrounds.Game.Database.Blueprint">
             <summary>
@@ -522,6 +566,52 @@
             
             </summary>
         </member>
+        <member name="P:Battlegrounds.Game.Gameplay.Player.ID">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:Battlegrounds.Game.Gameplay.Player.TeamID">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:Battlegrounds.Game.Gameplay.Player.Name">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:Battlegrounds.Game.Gameplay.Player.Profile">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:Battlegrounds.Game.Gameplay.Player.Army">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:Battlegrounds.Game.Gameplay.Player.IsAIPlayer">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Battlegrounds.Game.Gameplay.Player.#ctor(System.UInt32,System.UInt32,System.String,Battlegrounds.Game.Gameplay.Faction,System.String)">
+            <summary>
+            
+            </summary>
+            <param name="id"></param>
+            <param name="tID"></param>
+            <param name="name"></param>
+            <param name="faction"></param>
+            <param name="aiprofile"></param>
+        </member>
+        <member name="M:Battlegrounds.Game.Gameplay.Player.ToString">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
         <member name="T:Battlegrounds.Game.Gameplay.Squad">
             <summary>
             Representation of a Squad
@@ -705,10 +795,33 @@
             <param name="width"></param>
             <param name="length"></param>
         </member>
+        <member name="T:Battlegrounds.Online.SourceDownloader">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Battlegrounds.Online.SourceDownloader.DownloadSourceCode(System.String)">
+            <summary>
+            
+            </summary>
+            <param name="urlpath"></param>
+            <returns></returns>
+        </member>
         <member name="T:Battlegrounds.Pathfinder">
             <summary>
             Pathfinder for finding the paths to relevant paths (eg. CoH2's documents folder)
             </summary>
+        </member>
+        <member name="P:Battlegrounds.Pathfinder.SteamPath">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Battlegrounds.Pathfinder.GetOrFindSteamPath">
+            <summary>
+            
+            </summary>
+            <returns></returns>
         </member>
         <member name="T:Battlegrounds.ReplayFile">
             <summary>
@@ -873,6 +986,40 @@
             <param name="a"></param>
             <param name="b"></param>
             <returns></returns>
+        </member>
+        <member name="T:Battlegrounds.Util.TxtBuilder">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Battlegrounds.Util.TxtBuilder.#ctor">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Battlegrounds.Util.TxtBuilder.AppendLine(System.Object)">
+            <summary>
+            
+            </summary>
+            <param name="content"></param>
+        </member>
+        <member name="M:Battlegrounds.Util.TxtBuilder.Append(System.Object)">
+            <summary>
+            
+            </summary>
+            <param name="content"></param>
+        </member>
+        <member name="M:Battlegrounds.Util.TxtBuilder.GetContent">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Battlegrounds.Util.TxtBuilder.Save(System.String)">
+            <summary>
+            
+            </summary>
+            <param name="path"></param>
         </member>
     </members>
 </doc>

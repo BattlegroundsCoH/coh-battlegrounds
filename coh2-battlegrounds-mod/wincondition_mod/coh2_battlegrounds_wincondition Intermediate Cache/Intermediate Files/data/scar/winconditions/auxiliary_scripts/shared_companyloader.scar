@@ -1,0 +1,6 @@
+function BG_LoadCompanies()
+
+    -- Import the company file
+    --import("");
+
+end

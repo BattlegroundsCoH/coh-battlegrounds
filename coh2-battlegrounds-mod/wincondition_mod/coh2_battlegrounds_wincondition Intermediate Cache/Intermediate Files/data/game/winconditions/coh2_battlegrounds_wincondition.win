@@ -1,7 +1,0 @@
-name = "battlegrounds_wincondition"
-scar_file = "data:scar/winconditions/coh2_battlegrounds_wincondition.scar"
-fe_name = "Battlegrounds Wincondition"
-fe_priority = 0
-score_display = vp_ticker
-show_time = true
-requires_vp_ticker = true

@@ -6,16 +6,17 @@ _bg_guid = "6a0a13b89555402ca75b85dc30f5cb04"; -- GUID for the mod
 _bg_custom = {}; -- Custom data
 
 _bg_playerData = {};
-    
+
 _bg_message_type_unit_killed = 41.0;
 _bg_message_type_unit_spawned = 42.0;
 
 ------------------------------------------------------------------------------------
 -- Imports
 ------------------------------------------------------------------------------------
-import("WinConditions/auxiliary_scripts/client_divisionloader.scar")
+import("WinConditions/auxiliary_scripts/shared_companyloader.scar")
 import("WinConditions/auxiliary_scripts/shared_units.scar")
 import("WinConditions/auxiliary_scripts/shared_util.scar")
+import("WinConditions/auxiliary_scripts/client_companyui.scar")
 
 function BG_Init()
 
@@ -34,12 +35,15 @@ function BG_Init()
     end
 
     -- Load the client division
-    BG_LoadDivision();
+    BG_LoadCompanies();
 
     -- Activate the unit system
     BG_HookUnitSystem();
 
-    -- Do stuff :D
+    -- Create the UI
+    BGC_CreateCallInUI();
+
+    -- Game_QuitApp -- call this after each match
 
 end
 

@@ -6,7 +6,7 @@ namespace Battlegrounds.Game.Battlegrounds {
     /// <summary>
     /// Class the keeps track of <see cref="Gameplay.Player"/> data throughout a <see cref="GameMatch"/>.
     /// </summary>
-    public sealed class PlayerResult {
+    public class PlayerResult {
 
         private HashSet<Squad> m_activeSquads;
         private HashSet<Squad> m_lostSquads;

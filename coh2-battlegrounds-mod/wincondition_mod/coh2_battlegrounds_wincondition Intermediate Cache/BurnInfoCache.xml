@@ -10,20 +10,24 @@
 			<FileHash>ebfc6e4f729c353daa91a349c357073e</FileHash>
 		</BurnInfo>
 		<BurnInfo>
-			<FileName>E:\coh2_battlegrounds\coh2-battlegrounds-mod\wincondition_mod\auxiliary_scripts\client_divisionloader.scar</FileName>
-			<FileHash>7e7b266162f919028f809f9f8391196e</FileHash>
-		</BurnInfo>
-		<BurnInfo>
 			<FileName>E:\coh2_battlegrounds\coh2-battlegrounds-mod\wincondition_mod\auxiliary_scripts\shared_handler.scar</FileName>
-			<FileHash>7917af6a540706cc5b7a104ba3b35eaf</FileHash>
+			<FileHash>fd471f911bf317e13b11b54d9206d98f</FileHash>
 		</BurnInfo>
 		<BurnInfo>
 			<FileName>E:\coh2_battlegrounds\coh2-battlegrounds-mod\wincondition_mod\auxiliary_scripts\shared_units.scar</FileName>
-			<FileHash>02c4f40e2658a004ce4d2b041ac9e986</FileHash>
+			<FileHash>65b578ea3c65208bdab217e8e91f5c54</FileHash>
 		</BurnInfo>
 		<BurnInfo>
 			<FileName>E:\coh2_battlegrounds\coh2-battlegrounds-mod\wincondition_mod\auxiliary_scripts\shared_util.scar</FileName>
 			<FileHash>d0301f132c987e49a10aa2b4c9561f1f</FileHash>
+		</BurnInfo>
+		<BurnInfo>
+			<FileName>E:\coh2_battlegrounds\coh2-battlegrounds-mod\wincondition_mod\auxiliary_scripts\client_companyui.scar</FileName>
+			<FileHash>db091beb62634d7ffe877f403e35c669</FileHash>
+		</BurnInfo>
+		<BurnInfo>
+			<FileName>E:\coh2_battlegrounds\coh2-battlegrounds-mod\wincondition_mod\auxiliary_scripts\shared_companyloader.scar</FileName>
+			<FileHash>2171408e98bc70377d45809dcf161bd1</FileHash>
 		</BurnInfo>
 		<BurnInfo>
 			<FileName>E:\coh2_battlegrounds\coh2-battlegrounds-mod\wincondition_mod\coh2_battlegrounds_vp.scar</FileName>
@@ -36,46 +40,6 @@
 		<BurnInfo>
 			<FileName>E:\coh2_battlegrounds\coh2-battlegrounds-mod\wincondition_mod\coh2_battlegrounds_wincondition Intermediate Cache\Intermediate Files\info\6a0a13b89555402ca75b85dc30f5cb04.info</FileName>
 			<FileHash>0b36227ec3164bde130a2ae59c50f144</FileHash>
-		</BurnInfo>
-		<BurnInfo>
-			<FileName>E:\coh2_battlegrounds\coh2-battlegrounds-mod\wincondition_mod\coh2_battlegrounds_wincondition_attrib.xml</FileName>
-			<FileHash>f21743d6572c5cd68362a674fd304426</FileHash>
-		</BurnInfo>
-		<BurnInfo>
-			<FileName>E:\coh2_battlegrounds\coh2-battlegrounds-mod\wincondition_mod\instances\upgrade\battlegrounds\event_player_lost.xml</FileName>
-			<FileHash>7381813a3548f10b9f399e57ceed8369</FileHash>
-		</BurnInfo>
-		<BurnInfo>
-			<FileName>E:\coh2_battlegrounds\coh2-battlegrounds-mod\wincondition_mod\instances\upgrade\battlegrounds\event_player_won.xml</FileName>
-			<FileHash>8a1cce2d0a8c068a11ed6615369a9860</FileHash>
-		</BurnInfo>
-		<BurnInfo>
-			<FileName>E:\coh2_battlegrounds\coh2-battlegrounds-mod\wincondition_mod\instances\upgrade\battlegrounds\event_squad_killed.xml</FileName>
-			<FileHash>a546d455954862ad82ca814889fda53c</FileHash>
-		</BurnInfo>
-		<BurnInfo>
-			<FileName>E:\coh2_battlegrounds\coh2-battlegrounds-mod\wincondition_mod\instances\upgrade\battlegrounds\event_squad_spawned.xml</FileName>
-			<FileHash>f730505adb518f1ec891300c38755c8b</FileHash>
-		</BurnInfo>
-		<BurnInfo>
-			<FileName>E:\coh2_battlegrounds\coh2-battlegrounds-mod\wincondition_mod\instances\upgrade\battlegrounds\event_squad_vet1.xml</FileName>
-			<FileHash>fde76e0140d7ea150c4f0ba4a06d92cb</FileHash>
-		</BurnInfo>
-		<BurnInfo>
-			<FileName>E:\coh2_battlegrounds\coh2-battlegrounds-mod\wincondition_mod\instances\upgrade\battlegrounds\event_squad_vet2.xml</FileName>
-			<FileHash>94aefced9289c31fc2d4f8a6571508f1</FileHash>
-		</BurnInfo>
-		<BurnInfo>
-			<FileName>E:\coh2_battlegrounds\coh2-battlegrounds-mod\wincondition_mod\instances\upgrade\battlegrounds\event_squad_vet3.xml</FileName>
-			<FileHash>d92f23e7dfd8934bdcfe8c17886480ab</FileHash>
-		</BurnInfo>
-		<BurnInfo>
-			<FileName>E:\coh2_battlegrounds\coh2-battlegrounds-mod\wincondition_mod\instances\upgrade\battlegrounds\event_squad_vet4.xml</FileName>
-			<FileHash>993cdf1ace8bf511f5009ed944fd0766</FileHash>
-		</BurnInfo>
-		<BurnInfo>
-			<FileName>E:\coh2_battlegrounds\coh2-battlegrounds-mod\wincondition_mod\instances\upgrade\battlegrounds\event_squad_vet5.xml</FileName>
-			<FileHash>f838ea8a17e58b77fefe281aba4cf171</FileHash>
 		</BurnInfo>
 		<BurnInfo>
 			<FileName>E:\coh2_battlegrounds\coh2-battlegrounds-mod\wincondition_mod\locale\english\english.ucs</FileName>

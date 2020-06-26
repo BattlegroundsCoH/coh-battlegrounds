@@ -1,5 +1,12 @@
 function BG_LoadDivision()
 
-    
+    function late()
 
+    local j = Misc_GetCommandLineString("bg_matchid") .. ":" .. Misc_GetCommandLineString("bg_map") .. ":" ..Misc_GetCommandLineString("-bg_data")
+    fatal(j)
+
+    end
+
+    Rule_AddOneShot(late, 2);
+    
 end

@@ -32,10 +32,6 @@
 									<Children>
 										<d2p1:anyType i:type="BurnFile">
 											<BurnSettings i:nil="true" />
-											<RelativeName>auxiliary_scripts\client_divisionloader.scar</RelativeName>
-										</d2p1:anyType>
-										<d2p1:anyType i:type="BurnFile">
-											<BurnSettings i:nil="true" />
 											<RelativeName>auxiliary_scripts\shared_handler.scar</RelativeName>
 										</d2p1:anyType>
 										<d2p1:anyType i:type="BurnFile">
@@ -45,6 +41,14 @@
 										<d2p1:anyType i:type="BurnFile">
 											<BurnSettings i:nil="true" />
 											<RelativeName>auxiliary_scripts\shared_util.scar</RelativeName>
+										</d2p1:anyType>
+										<d2p1:anyType i:type="BurnFile">
+											<BurnSettings i:nil="true" />
+											<RelativeName>auxiliary_scripts\client_companyui.scar</RelativeName>
+										</d2p1:anyType>
+										<d2p1:anyType i:type="BurnFile">
+											<BurnSettings i:nil="true" />
+											<RelativeName>auxiliary_scripts\shared_companyloader.scar</RelativeName>
 										</d2p1:anyType>
 									</Children>
 									<IsExpanded>true</IsExpanded>
@@ -106,21 +110,6 @@
 				</d2p1:anyType>
 			</Children>
 			<IsExpanded>true</IsExpanded>
-		</d2p1:anyType>
-		<d2p1:anyType i:type="TableOfContents">
-			<Alias>Attrib</Alias>
-			<Children>
-				<d2p1:anyType i:type="Folder">
-					<Children>
-						<d2p1:anyType i:type="BurnAttributes">
-							<RelativeName>coh2_battlegrounds_wincondition_attrib.xml</RelativeName>
-						</d2p1:anyType>
-					</Children>
-					<IsExpanded>false</IsExpanded>
-					<Name>attrib</Name>
-				</d2p1:anyType>
-			</Children>
-			<IsExpanded>false</IsExpanded>
 		</d2p1:anyType>
 		<d2p1:anyType i:type="TableOfContents">
 			<Alias>Locale</Alias>

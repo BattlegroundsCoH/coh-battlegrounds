@@ -18,6 +18,8 @@ namespace coh2_battlegrounds_console {
                 Console.WriteLine("Failed to load replayfile...");
             }
 
+            //Battlegrounds.Game.CoH2Launcher.Launch();
+
             Console.WriteLine("Press any key to exit...");
             Console.Read();
 
