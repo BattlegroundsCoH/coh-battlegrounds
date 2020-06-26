@@ -1,4 +1,5 @@
 ﻿using System;
+using Battlegrounds.Compiler;
 using Battlegrounds.Game.Battlegrounds;
 
 namespace coh2_battlegrounds_console {
@@ -17,6 +18,8 @@ namespace coh2_battlegrounds_console {
             } else {
                 Console.WriteLine("Failed to load replayfile...");
             }
+
+            WinconditionCompiler.CompileToSga("temp_build", "session.scar");
 
             //Battlegrounds.Game.CoH2Launcher.Launch();
 

@@ -45,13 +45,13 @@ namespace Battlegrounds.Compiler {
         /// <returns></returns>
         public static bool CompileToSga(string workdir, string companyfile) {
 
-            // Clear the directory we're going to work in
-            if (!Directory.Exists(workdir)) {
-                Directory.CreateDirectory(workdir);
-            } else {
-                Directory.Delete(workdir);
-                Directory.CreateDirectory(workdir);
+            // Fix potential missing '\'
+            if (!workdir.EndsWith("\\")) {
+                workdir += "\\";
             }
+
+            // Create the workspace
+            CreateWorkspace(workdir);
 
             // The archive definition to use when compiling
             TxtBuilder archiveDef = new TxtBuilder();
@@ -71,17 +71,27 @@ namespace Battlegrounds.Compiler {
             archiveDef.AppendLine("\tFileSettingsEnd");
 
             // Get the scar files
-            string[] scarfiles = DownloadFiles[0..8];
+            string[] winfiles = DownloadFiles[8..10];
 
             // Add and compile scar files
-            foreach (string file in scarfiles) {
-                if (!AddScarFile(archiveDef, workdir, file)) {
+            foreach (string file in winfiles) {
+                if (!AddFile(archiveDef, "data\\game\\winconditions\\", workdir, file)) {
                     return false;
                 }
             }
 
-            // Add the company scarfile
-            AddScarFile(archiveDef, workdir, companyfile);
+            // Add the company file
+            AddLocalFile(archiveDef, companyfile, "data\\scar\\winconditions\\auxiliary_scripts\\", workdir);
+
+            // Get the scar files
+            string[] scarfiles = DownloadFiles[0..8];
+
+            // Add and compile scar files
+            foreach (string file in scarfiles) {
+                if (!AddFile(archiveDef, "data\\scar\\winconditions\\", workdir, file)) {
+                    return false;
+                }
+            }
 
             // Info TOC section
             archiveDef.AppendLine("TOCEnd");
@@ -90,15 +100,13 @@ namespace Battlegrounds.Compiler {
             archiveDef.AppendLine("\t\tOverride wildcard=\".*\\.(lua)$\" minsize=\"-1\" maxsize=\"-1\" vt=\"crc_blocks\" ct=\"buffer_compress\"");
             archiveDef.AppendLine("\tFileSettingsEnd");
 
-            // Get the info files
-            string[] infofiles = new string[] { DownloadFiles[8], "" };
-
-            // Add and compile info files
-            foreach (string file in infofiles) {
-                if (!AddInfoFile(archiveDef, workdir, file)) {
-                    return false;
-                }
+            // Add and compile info file
+            if (!AddInfoFile(archiveDef, workdir, DownloadFiles[10])) {
+                return false;
             }
+
+            // Add the info preview file
+            AddLocalFile(archiveDef, "coh2_battlegrounds_wincondition_preview.dds", "info\\", workdir);
 
             // Locale TOC section
             archiveDef.AppendLine("TOCEnd");
@@ -107,11 +115,11 @@ namespace Battlegrounds.Compiler {
             archiveDef.AppendLine("\tFileSettingsEnd");
 
             // Get all locale files
-            string[] localefiles = DownloadFiles[9..^1];
+            string[] localefiles = DownloadFiles[11..^0];
 
             // Add and compile info files
             foreach (string file in localefiles) {
-                if (!AddLocaleFile(archiveDef, workdir, file)) {
+                if (!AddFile(archiveDef, "", workdir, file)) {
                     return false;
                 }
             }
@@ -126,12 +134,42 @@ namespace Battlegrounds.Compiler {
 
         }
 
-        private static bool AddScarFile(TxtBuilder builder, string workdir, string file) {
+        private static void CreateWorkspace(string workdir) {
+
+            // Clear the directory we're going to work in
+            if (Directory.Exists(workdir)) {
+                Directory.Delete(workdir, true);
+            }
+
+            // Create directories
+            Directory.CreateDirectory(workdir);
+            Directory.CreateDirectory($"{workdir}data\\");
+            Directory.CreateDirectory($"{workdir}data\\game");
+            Directory.CreateDirectory($"{workdir}data\\game\\winconditions");
+            Directory.CreateDirectory($"{workdir}data\\scar");
+            Directory.CreateDirectory($"{workdir}data\\scar\\winconditions");
+            Directory.CreateDirectory($"{workdir}data\\scar\\winconditions\\auxiliary_scripts");
+            Directory.CreateDirectory($"{workdir}info");
+            Directory.CreateDirectory($"{workdir}locale");
+            Directory.CreateDirectory($"{workdir}locale\\english");
+
+        }
+
+        private static string path_cut = "https://raw.githubusercontent.com/JustCodiex/coh2-battlegrounds/master/coh2-battlegrounds-mod/wincondition_mod/";
+
+        private static bool AddFile(TxtBuilder builder, string rpath, string workdir, string file) {
 
             string fileContent = SourceDownloader.DownloadSourceCode(file);
             if (fileContent == string.Empty) {
                 return false;
             }
+
+            string relpath = rpath + file.Substring(path_cut.Length);
+            string abspath = Path.GetFullPath(workdir + relpath.Replace("/", "\\"));
+
+            builder.AppendLine($"\t{abspath}");
+
+            File.WriteAllText(abspath, fileContent);
 
             return true;
 
@@ -144,18 +182,29 @@ namespace Battlegrounds.Compiler {
                 return false;
             }
 
+            string relpath = file.Substring("https://raw.githubusercontent.com/JustCodiex/coh2-battlegrounds/master/coh2-battlegrounds-mod/wincondition_mod/coh2_battlegrounds_wincondition%20Intermediate%20Cache/Intermediate%20Files".Length);
+            string abspath = Path.GetFullPath(workdir + relpath.Replace("/", "\\"));
+
+            builder.AppendLine($"\t{abspath}");
+
+            File.WriteAllText(abspath, fileContent);
+
             return true;
 
         }
 
-        private static bool AddLocaleFile(TxtBuilder builder, string workdir, string file) {
+        private static void AddLocalFile(TxtBuilder builder, string localfile, string relpath, string workdir) {
 
-            string fileContent = SourceDownloader.DownloadSourceCode(file);
-            if (fileContent == string.Empty) {
-                return false;
-            }
 
-            return true;
+            // Get path to copy company file to
+            string companyCopyFile = Path.GetFullPath($"{workdir}{relpath}{ Path.GetFileName(localfile)}");
+
+            // Add the company scarfile
+            builder.AppendLine($"\t{companyCopyFile}");
+
+            // Copy scar file
+            File.Copy(Path.GetFullPath(localfile), companyCopyFile);
+
 
         }
 
