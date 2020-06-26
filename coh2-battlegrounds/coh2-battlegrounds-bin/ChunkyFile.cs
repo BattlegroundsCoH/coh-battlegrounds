@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using coh2_battlegrounds_bin.Util;
+using Battlegrounds.Util;
 
-namespace coh2_battlegrounds_bin {
+namespace Battlegrounds {
     
     /// <summary>
     /// Represents a chunky file containing <see cref="Chunk"/> data.

@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using coh2_battlegrounds_bin.Game.Database;
+using Battlegrounds.Game.Database;
 
-namespace coh2_battlegrounds_bin.Game.Gameplay {
+namespace Battlegrounds.Game.Gameplay {
     
     /// <summary>
     /// 

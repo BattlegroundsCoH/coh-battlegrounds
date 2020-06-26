@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace coh2_battlegrounds_bin.Game.Gameplay {
+namespace Battlegrounds.Game.Gameplay {
     
     /// <summary>
     /// 

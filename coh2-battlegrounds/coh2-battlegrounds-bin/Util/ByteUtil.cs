@@ -1,6 +1,6 @@
 ﻿using System.Linq;
 
-namespace coh2_battlegrounds_bin.Util {
+namespace Battlegrounds.Util {
     
     /// <summary>
     /// 

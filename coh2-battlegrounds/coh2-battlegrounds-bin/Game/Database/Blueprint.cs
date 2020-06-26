@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using coh2_battlegrounds_bin.Game.Database.json;
+using Battlegrounds.Game.Database.json;
 
-namespace coh2_battlegrounds_bin.Game.Database {
+namespace Battlegrounds.Game.Database {
     
     /// <summary>
     /// 
@@ -14,6 +14,11 @@ namespace coh2_battlegrounds_bin.Game.Database {
         /// 
         /// </summary>
         public ulong PBGID { get; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public string Name { get; }
 
     }
 

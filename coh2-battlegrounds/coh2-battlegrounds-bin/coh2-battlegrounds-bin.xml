@@ -4,231 +4,246 @@
         <name>coh2-battlegrounds-bin</name>
     </assembly>
     <members>
-        <member name="T:coh2_battlegrounds_bin.Chunk">
+        <member name="T:Battlegrounds.Chunk">
             <summary>
-            Represents a chunk of data in a <see cref="T:coh2_battlegrounds_bin.ChunkyFile"/>.
+            Represents a chunk of data in a <see cref="T:Battlegrounds.ChunkyFile"/>.
             </summary>
         </member>
-        <member name="T:coh2_battlegrounds_bin.Chunk.ChunkyType">
+        <member name="T:Battlegrounds.Chunk.ChunkyType">
             <summary>
-            The <see cref="T:coh2_battlegrounds_bin.Chunk"/> type
+            The <see cref="T:Battlegrounds.Chunk"/> type
             </summary>
         </member>
-        <member name="F:coh2_battlegrounds_bin.Chunk.ChunkyType.Unknown">
+        <member name="F:Battlegrounds.Chunk.ChunkyType.Unknown">
             <summary>
             Unknown (Invalid)
             </summary>
         </member>
-        <member name="F:coh2_battlegrounds_bin.Chunk.ChunkyType.FOLD">
+        <member name="F:Battlegrounds.Chunk.ChunkyType.FOLD">
             <summary>
             Folder -> Has subtypes
             </summary>
         </member>
-        <member name="F:coh2_battlegrounds_bin.Chunk.ChunkyType.DATA">
+        <member name="F:Battlegrounds.Chunk.ChunkyType.DATA">
             <summary>
             Data chunk -> Contains raw data
             </summary>
         </member>
-        <member name="P:coh2_battlegrounds_bin.Chunk.Data">
+        <member name="P:Battlegrounds.Chunk.Data">
             <summary>
             Raw data contained within the chunk
             </summary>
         </member>
-        <member name="P:coh2_battlegrounds_bin.Chunk.Name">
+        <member name="P:Battlegrounds.Chunk.Name">
             <summary>
             The name of the chunk
             </summary>
         </member>
-        <member name="P:coh2_battlegrounds_bin.Chunk.Descriptor">
+        <member name="P:Battlegrounds.Chunk.Descriptor">
             <summary>
             The descriptive text of the chunk
             </summary>
         </member>
-        <member name="M:coh2_battlegrounds_bin.Chunk.#ctor(System.Int32)">
+        <member name="M:Battlegrounds.Chunk.#ctor(System.Int32)">
             <summary>
-            Create a new <see cref="T:coh2_battlegrounds_bin.Chunk"/> with parent file version supplied
+            Create a new <see cref="T:Battlegrounds.Chunk"/> with parent file version supplied
             </summary>
-            <param name="chunkyVersion"><see cref="T:coh2_battlegrounds_bin.ChunkyFile"/> parent version</param>
+            <param name="chunkyVersion"><see cref="T:Battlegrounds.ChunkyFile"/> parent version</param>
         </member>
-        <member name="P:coh2_battlegrounds_bin.Chunk.Item(System.String)">
+        <member name="P:Battlegrounds.Chunk.Item(System.String)">
             <summary>
             Lookup a root chunk by name in the chunk file
             </summary>
             <param name="name">The name of the chunk to find</param>
             <returns>The first chunk with name or null</returns>
         </member>
-        <member name="M:coh2_battlegrounds_bin.Chunk.ReadChunk(System.IO.BinaryReader)">
+        <member name="M:Battlegrounds.Chunk.ReadChunk(System.IO.BinaryReader)">
             <summary>
             Read a chunk from a <see cref="T:System.IO.BinaryReader"/>.
             </summary>
             <param name="stream">Stream to read chunk data from</param>
         </member>
-        <member name="T:coh2_battlegrounds_bin.ChunkyFile">
+        <member name="T:Battlegrounds.ChunkyFile">
             <summary>
-            Represents a chunky file containing <see cref="T:coh2_battlegrounds_bin.Chunk"/> data.
+            Represents a chunky file containing <see cref="T:Battlegrounds.Chunk"/> data.
             </summary>
         </member>
-        <member name="M:coh2_battlegrounds_bin.ChunkyFile.#ctor">
+        <member name="M:Battlegrounds.ChunkyFile.#ctor">
             <summary>
             
             </summary>
         </member>
-        <member name="M:coh2_battlegrounds_bin.ChunkyFile.LoadFile(System.String)">
+        <member name="M:Battlegrounds.ChunkyFile.LoadFile(System.String)">
             <summary>
             
             </summary>
             <param name="filepath"></param>
             <returns></returns>
         </member>
-        <member name="M:coh2_battlegrounds_bin.ChunkyFile.LoadFile(System.IO.BinaryReader)">
+        <member name="M:Battlegrounds.ChunkyFile.LoadFile(System.IO.BinaryReader)">
             <summary>
             
             </summary>
             <param name="stream"></param>
             <returns></returns>
         </member>
-        <member name="M:coh2_battlegrounds_bin.ChunkyFile.Dump">
+        <member name="M:Battlegrounds.ChunkyFile.Dump">
             <summary>
             
             </summary>
         </member>
-        <member name="M:coh2_battlegrounds_bin.ChunkyFile.Dump(System.IO.Stream)">
+        <member name="M:Battlegrounds.ChunkyFile.Dump(System.IO.Stream)">
             <summary>
             
             </summary>
             <param name="stream"></param>
         </member>
-        <member name="P:coh2_battlegrounds_bin.ChunkyFile.Item(System.String)">
+        <member name="P:Battlegrounds.ChunkyFile.Item(System.String)">
             <summary>
             Lookup a root chunk by name in the chunk file
             </summary>
             <param name="name">The name of the chunk to find</param>
             <returns>The first chunk with name or null</returns>
         </member>
-        <member name="T:coh2_battlegrounds_bin.Game.Battlegrounds.Match">
+        <member name="T:Battlegrounds.Game.Battlegrounds.GameMatch">
             <summary>
             
             </summary>
         </member>
-        <member name="P:coh2_battlegrounds_bin.Game.Battlegrounds.Match.Players">
+        <member name="P:Battlegrounds.Game.Battlegrounds.GameMatch.Players">
             <summary>
             
             </summary>
         </member>
-        <member name="M:coh2_battlegrounds_bin.Game.Battlegrounds.Match.#ctor">
+        <member name="M:Battlegrounds.Game.Battlegrounds.GameMatch.#ctor">
             <summary>
             
             </summary>
         </member>
-        <member name="M:coh2_battlegrounds_bin.Game.Battlegrounds.Match.LoadMatch(System.String)">
+        <member name="M:Battlegrounds.Game.Battlegrounds.GameMatch.LoadMatch(System.String)">
             <summary>
             
             </summary>
             <param name="replayFilepath"></param>
             <returns></returns>
         </member>
-        <member name="M:coh2_battlegrounds_bin.Game.Battlegrounds.Match.EvaluateResult">
+        <member name="M:Battlegrounds.Game.Battlegrounds.GameMatch.EvaluateResult">
             <summary>
             Evaluate the result of the match based on the replay file
             </summary>
         </member>
-        <member name="T:coh2_battlegrounds_bin.Game.Battlegrounds.PlayerResult">
+        <member name="T:Battlegrounds.Game.Battlegrounds.PlayerResult">
+            <summary>
+            Class the keeps track of <see cref="T:Battlegrounds.Game.Gameplay.Player"/> data throughout a <see cref="T:Battlegrounds.Game.Battlegrounds.GameMatch"/>.
+            </summary>
+        </member>
+        <member name="P:Battlegrounds.Game.Battlegrounds.PlayerResult.IsOnWinningTeam">
+            <summary>
+            Was this player on the winning team
+            </summary>
+        </member>
+        <member name="P:Battlegrounds.Game.Battlegrounds.PlayerResult.TotalLosses">
+            <summary>
+            The total amount of losses in squads (NOT squad members).
+            </summary>
+        </member>
+        <member name="P:Battlegrounds.Game.Battlegrounds.PlayerResult.Player">
+            <summary>
+            The <see cref="P:Battlegrounds.Game.Battlegrounds.PlayerResult.Player"/> the <see cref="T:Battlegrounds.Game.Battlegrounds.PlayerResult"/> data is about.
+            </summary>
+        </member>
+        <member name="M:Battlegrounds.Game.Battlegrounds.PlayerResult.#ctor(Battlegrounds.Game.Gameplay.Player)">
+            <summary>
+            Creates a new result container for the player.
+            </summary>
+            <param name="player">The player to keep all results about.</param>
+        </member>
+        <member name="M:Battlegrounds.Game.Battlegrounds.PlayerResult.AddSquad(Battlegrounds.Game.Gameplay.Squad)">
+            <summary>
+            Add a <see cref="T:Battlegrounds.Game.Gameplay.Squad"/> to the active squad list for the player.
+            </summary>
+            <param name="squad">The new <see cref="T:Battlegrounds.Game.Gameplay.Squad"/> to add to player squad set</param>
+        </member>
+        <member name="M:Battlegrounds.Game.Battlegrounds.PlayerResult.RemoveSquad(Battlegrounds.Game.Gameplay.Squad)">
+            <summary>
+            Remove a squad from the active squad list for the player and move it to the lost squads list.
+            </summary>
+            <param name="squad">The <see cref="T:Battlegrounds.Game.Gameplay.Squad"/> to remove from the player squad list.</param>
+        </member>
+        <member name="M:Battlegrounds.Game.Battlegrounds.PlayerResult.AddEntity(Battlegrounds.Game.Gameplay.Entity)">
+            <summary>
+            
+            </summary>
+            <param name="entity"></param>
+        </member>
+        <member name="M:Battlegrounds.Game.Battlegrounds.PlayerResult.RemoveEntity(Battlegrounds.Game.Gameplay.Entity)">
+            <summary>
+            
+            </summary>
+            <param name="entity"></param>
+        </member>
+        <member name="M:Battlegrounds.Game.Battlegrounds.PlayerResult.ToString">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:Battlegrounds.Game.Database.Blueprint">
             <summary>
             
             </summary>
         </member>
-        <member name="P:coh2_battlegrounds_bin.Game.Battlegrounds.PlayerResult.IsOnWinningTeam">
+        <member name="P:Battlegrounds.Game.Database.Blueprint.PBGID">
             <summary>
             
             </summary>
         </member>
-        <member name="P:coh2_battlegrounds_bin.Game.Battlegrounds.PlayerResult.TotalLosses">
+        <member name="P:Battlegrounds.Game.Database.Blueprint.Name">
             <summary>
             
             </summary>
         </member>
-        <member name="P:coh2_battlegrounds_bin.Game.Battlegrounds.PlayerResult.Player">
+        <member name="T:Battlegrounds.Game.Database.BlueprintType">
             <summary>
-            
+            The type a <see cref="T:Battlegrounds.Game.Database.Blueprint"/> may represent in the <see cref="T:Battlegrounds.Game.Database.BlueprintManager"/>.
             </summary>
         </member>
-        <member name="M:coh2_battlegrounds_bin.Game.Battlegrounds.PlayerResult.#ctor(coh2_battlegrounds_bin.Game.Gameplay.Player)">
-            <summary>
-            
-            </summary>
-            <param name="player"></param>
-        </member>
-        <member name="M:coh2_battlegrounds_bin.Game.Battlegrounds.PlayerResult.AddSquad(coh2_battlegrounds_bin.Game.Gameplay.Squad)">
-            <summary>
-            
-            </summary>
-        </member>
-        <member name="M:coh2_battlegrounds_bin.Game.Battlegrounds.PlayerResult.RemoveSquad(coh2_battlegrounds_bin.Game.Gameplay.Squad)">
-            <summary>
-            
-            </summary>
-        </member>
-        <member name="M:coh2_battlegrounds_bin.Game.Battlegrounds.PlayerResult.AddEntity(coh2_battlegrounds_bin.Game.Gameplay.Entity)">
-            <summary>
-            
-            </summary>
-        </member>
-        <member name="M:coh2_battlegrounds_bin.Game.Battlegrounds.PlayerResult.RemoveEntity(coh2_battlegrounds_bin.Game.Gameplay.Entity)">
-            <summary>
-            
-            </summary>
-        </member>
-        <member name="T:coh2_battlegrounds_bin.Game.Database.Blueprint">
-            <summary>
-            
-            </summary>
-        </member>
-        <member name="P:coh2_battlegrounds_bin.Game.Database.Blueprint.PBGID">
-            <summary>
-            
-            </summary>
-        </member>
-        <member name="T:coh2_battlegrounds_bin.Game.Database.BlueprintType">
-            <summary>
-            The type a <see cref="T:coh2_battlegrounds_bin.Game.Database.Blueprint"/> may represent in the <see cref="T:coh2_battlegrounds_bin.Game.Database.BlueprintManager"/>.
-            </summary>
-        </member>
-        <member name="F:coh2_battlegrounds_bin.Game.Database.BlueprintType.ABP">
+        <member name="F:Battlegrounds.Game.Database.BlueprintType.ABP">
             <summary>
             Ability Blueprint
             </summary>
         </member>
-        <member name="F:coh2_battlegrounds_bin.Game.Database.BlueprintType.UBP">
+        <member name="F:Battlegrounds.Game.Database.BlueprintType.UBP">
             <summary>
             Upgrade Blueprint
             </summary>
         </member>
-        <member name="F:coh2_battlegrounds_bin.Game.Database.BlueprintType.CBP">
+        <member name="F:Battlegrounds.Game.Database.BlueprintType.CBP">
             <summary>
             Commander Blueprint
             </summary>
         </member>
-        <member name="F:coh2_battlegrounds_bin.Game.Database.BlueprintType.EBP">
+        <member name="F:Battlegrounds.Game.Database.BlueprintType.EBP">
             <summary>
             Entity Blueprint
             </summary>
         </member>
-        <member name="F:coh2_battlegrounds_bin.Game.Database.BlueprintType.SBP">
+        <member name="F:Battlegrounds.Game.Database.BlueprintType.SBP">
             <summary>
             Squad Blueprint
             </summary>
         </member>
-        <member name="T:coh2_battlegrounds_bin.Game.Database.BlueprintManager">
+        <member name="T:Battlegrounds.Game.Database.BlueprintManager">
             <summary>
             Database over all relevant blueprints in use
             </summary>
         </member>
-        <member name="M:coh2_battlegrounds_bin.Game.Database.BlueprintManager.CreateDatabase">
+        <member name="M:Battlegrounds.Game.Database.BlueprintManager.CreateDatabase">
             <summary>
             
             </summary>
         </member>
-        <member name="M:coh2_battlegrounds_bin.Game.Database.BlueprintManager.LoadJsonDatabase(System.String,coh2_battlegrounds_bin.Game.Database.BlueprintType)">
+        <member name="M:Battlegrounds.Game.Database.BlueprintManager.LoadJsonDatabase(System.String,Battlegrounds.Game.Database.BlueprintType)">
             <summary>
             
             </summary>
@@ -236,7 +251,7 @@
             <param name="bType"></param>
             <returns></returns>
         </member>
-        <member name="M:coh2_battlegrounds_bin.Game.Database.BlueprintManager.FromPbgId(System.UInt16,coh2_battlegrounds_bin.Game.Database.BlueprintType)">
+        <member name="M:Battlegrounds.Game.Database.BlueprintManager.FromPbgId(System.UInt16,Battlegrounds.Game.Database.BlueprintType)">
             <summary>
             
             </summary>
@@ -247,18 +262,26 @@
             <exception cref="T:System.Collections.Generic.KeyNotFoundException"/>
             <returns></returns>
         </member>
-        <member name="T:coh2_battlegrounds_bin.Game.Database.json.IJsonOjbect">
+        <member name="M:Battlegrounds.Game.Database.BlueprintManager.FromBlueprintName(System.String,Battlegrounds.Game.Database.BlueprintType)">
+            <summary>
+            
+            </summary>
+            <param name="id"></param>
+            <param name="bType"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Battlegrounds.Game.Database.json.IJsonOjbect">
             <summary>
             Json interface for converting object to and from a Json object
             </summary>
         </member>
-        <member name="M:coh2_battlegrounds_bin.Game.Database.json.IJsonOjbect.Serialize">
+        <member name="M:Battlegrounds.Game.Database.json.IJsonOjbect.Serialize">
             <summary>
             Serialize self into a json object
             </summary>
             <returns></returns>
         </member>
-        <member name="M:coh2_battlegrounds_bin.Game.Database.json.IJsonOjbect.Deserialize``1(System.String)">
+        <member name="M:Battlegrounds.Game.Database.json.IJsonOjbect.Deserialize``1(System.String)">
             <summary>
             Derserialize a json string representing an object into the C# requivalent.
             </summary>
@@ -266,165 +289,170 @@
             <param name="json">The input string to deserialize</param>
             <returns>A deserialized instance of the json input string</returns>
         </member>
-        <member name="T:coh2_battlegrounds_bin.Game.DLCPack">
+        <member name="T:Battlegrounds.Game.DLCPack">
             <summary>
             Represents a DLC tied to Company of Heroes 2
             </summary>
         </member>
-        <member name="T:coh2_battlegrounds_bin.Game.DLCPack.DLCType">
+        <member name="T:Battlegrounds.Game.DLCPack.DLCType">
             <summary>
-            The type of DLC a <see cref="T:coh2_battlegrounds_bin.Game.DLCPack"/> may be of
+            The type of DLC a <see cref="T:Battlegrounds.Game.DLCPack"/> may be of
             </summary>
         </member>
-        <member name="F:coh2_battlegrounds_bin.Game.DLCPack.DLCType.Faction">
+        <member name="F:Battlegrounds.Game.DLCPack.DLCType.Faction">
             <summary>
             Faction that unlocks and army
             </summary>
         </member>
-        <member name="F:coh2_battlegrounds_bin.Game.DLCPack.DLCType.Skin">
+        <member name="F:Battlegrounds.Game.DLCPack.DLCType.Skin">
             <summary>
             Vehicle Skin
             </summary>
         </member>
-        <member name="F:coh2_battlegrounds_bin.Game.DLCPack.DLCType.Commander">
+        <member name="F:Battlegrounds.Game.DLCPack.DLCType.Commander">
             <summary>
             Ingame commander
             </summary>
         </member>
-        <member name="P:coh2_battlegrounds_bin.Game.DLCPack.Name">
+        <member name="P:Battlegrounds.Game.DLCPack.Name">
             <summary>
             The name of the DLC pack
             </summary>
         </member>
-        <member name="P:coh2_battlegrounds_bin.Game.DLCPack.SteamAppID">
+        <member name="P:Battlegrounds.Game.DLCPack.SteamAppID">
             <summary>
             Unique app ID assigned to this pack
             </summary>
         </member>
-        <member name="P:coh2_battlegrounds_bin.Game.DLCPack.Type">
+        <member name="P:Battlegrounds.Game.DLCPack.Type">
             <summary>
             The type of DLC
             </summary>
         </member>
-        <member name="M:coh2_battlegrounds_bin.Game.DLCPack.ToString">
+        <member name="M:Battlegrounds.Game.DLCPack.ToString">
             <summary>
             
             </summary>
             <returns></returns>
         </member>
-        <member name="P:coh2_battlegrounds_bin.Game.DLCPack.Base">
+        <member name="P:Battlegrounds.Game.DLCPack.Base">
             <summary>
             The base game (with multiplayer access)
             </summary>
         </member>
-        <member name="P:coh2_battlegrounds_bin.Game.DLCPack.WesternFrontArmiesUSA">
+        <member name="P:Battlegrounds.Game.DLCPack.WesternFrontArmiesUSA">
             <summary>
             The Western Front Armies (USA)
             </summary>
         </member>
-        <member name="P:coh2_battlegrounds_bin.Game.DLCPack.WesternFrontArmiesOKW">
+        <member name="P:Battlegrounds.Game.DLCPack.WesternFrontArmiesOKW">
             <summary>
             The Western Front Armies (OKW)
             </summary>
         </member>
-        <member name="P:coh2_battlegrounds_bin.Game.DLCPack.UKF">
+        <member name="P:Battlegrounds.Game.DLCPack.UKF">
             <summary>
             The British Forces
             </summary>
         </member>
-        <member name="T:coh2_battlegrounds_bin.Game.GameEvent">
+        <member name="T:Battlegrounds.Game.GameEvent">
             <summary>
-            Represents an event that occured in a <see cref="T:coh2_battlegrounds_bin.Game.GameTick"/>.
+            Represents an event that occured in a <see cref="T:Battlegrounds.Game.GameTick"/>.
             </summary>
         </member>
-        <member name="P:coh2_battlegrounds_bin.Game.GameEvent.FirstPosition">
+        <member name="P:Battlegrounds.Game.GameEvent.FirstPosition">
             <summary>
-            The first <see cref="T:coh2_battlegrounds_bin.Game.GamePosition"/> argument given to the <see cref="T:coh2_battlegrounds_bin.Game.GameEvent"/>.
+            The first <see cref="T:Battlegrounds.Game.GamePosition"/> argument given to the <see cref="T:Battlegrounds.Game.GameEvent"/>.
             </summary>
         </member>
-        <member name="P:coh2_battlegrounds_bin.Game.GameEvent.SecondPosition">
+        <member name="P:Battlegrounds.Game.GameEvent.SecondPosition">
             <summary>
-            The second <see cref="T:coh2_battlegrounds_bin.Game.GamePosition"/> argument given to the <see cref="T:coh2_battlegrounds_bin.Game.GameEvent"/>.
+            The second <see cref="T:Battlegrounds.Game.GamePosition"/> argument given to the <see cref="T:Battlegrounds.Game.GameEvent"/>.
             </summary>
         </member>
-        <member name="P:coh2_battlegrounds_bin.Game.GameEvent.Type">
+        <member name="P:Battlegrounds.Game.GameEvent.Type">
             <summary>
-            The byte representation of the <see cref="T:coh2_battlegrounds_bin.Game.GameEvent"/> type
+            The byte representation of the <see cref="T:Battlegrounds.Game.GameEvent"/> type
             </summary>
         </member>
-        <member name="P:coh2_battlegrounds_bin.Game.GameEvent.EventType">
+        <member name="P:Battlegrounds.Game.GameEvent.EventType">
             <summary>
-            The <see cref="T:coh2_battlegrounds_bin.Game.GameEventType"/> representation of the Type. Make sure the <see cref="T:coh2_battlegrounds_bin.Game.GameEvent"/> is within range before using.
+            The <see cref="T:Battlegrounds.Game.GameEventType"/> representation of the Type. Make sure the <see cref="T:Battlegrounds.Game.GameEvent"/> is within range before using.
             </summary>
             <exception cref="T:System.ArgumentOutOfRangeException"/>
         </member>
-        <member name="P:coh2_battlegrounds_bin.Game.GameEvent.PlayerID">
+        <member name="P:Battlegrounds.Game.GameEvent.PlayerID">
             <summary>
-            The byte-ID of the player who triggered or was affected by the <see cref="T:coh2_battlegrounds_bin.Game.GameEvent"/>.
+            The byte-ID of the player who triggered or was affected by the <see cref="T:Battlegrounds.Game.GameEvent"/>.
             </summary>
         </member>
-        <member name="P:coh2_battlegrounds_bin.Game.GameEvent.UnitID">
+        <member name="P:Battlegrounds.Game.GameEvent.UnitID">
             <summary>
             The 16-bit ID representation of the affected unit
             </summary>
         </member>
-        <member name="P:coh2_battlegrounds_bin.Game.GameEvent.BlueprintID">
+        <member name="P:Battlegrounds.Game.GameEvent.BlueprintID">
             <summary>
-            The 32-bit ID of a blueprint ID that was given as argument to the <see cref="T:coh2_battlegrounds_bin.Game.GameEvent"/>. Depending on <see cref="P:coh2_battlegrounds_bin.Game.GameEvent.EventType"/>, this may be null.
+            The 32-bit ID of a blueprint ID that was given as argument to the <see cref="T:Battlegrounds.Game.GameEvent"/>. Depending on <see cref="P:Battlegrounds.Game.GameEvent.EventType"/>, this may be null.
             </summary>
         </member>
-        <member name="P:coh2_battlegrounds_bin.Game.GameEvent.TimeStamp">
+        <member name="P:Battlegrounds.Game.GameEvent.TimeStamp">
             <summary>
             The calculated time in which the event occured
             </summary>
         </member>
-        <member name="P:coh2_battlegrounds_bin.Game.GameEvent.TargetType">
+        <member name="P:Battlegrounds.Game.GameEvent.TargetType">
             <summary>
             The type the issued command will target (??? = ???, 16 = entity, 32 = squad, ??? = ???)
             </summary>
         </member>
-        <member name="M:coh2_battlegrounds_bin.Game.GameEvent.#ctor(System.TimeSpan,System.Byte[])">
+        <member name="P:Battlegrounds.Game.GameEvent.AttachedMessage">
+            <summary>
+            The attached message to a <see cref="T:Battlegrounds.Game.GameEvent"/> of type <see cref="F:Battlegrounds.Game.GameEventType.PCMD_BroadcastMessage"/>.
+            </summary>
+        </member>
+        <member name="M:Battlegrounds.Game.GameEvent.#ctor(System.TimeSpan,System.Byte[])">
             <summary>
             
             </summary>
             <param name="timeStamp"></param>
             <param name="eventData"></param>
         </member>
-        <member name="T:coh2_battlegrounds_bin.Game.GameEventType">
+        <member name="T:Battlegrounds.Game.GameEventType">
             <summary>
             Represents a game event
             </summary>
         </member>
-        <member name="F:coh2_battlegrounds_bin.Game.GameEventType.CMD_DefaultAction">
+        <member name="F:Battlegrounds.Game.GameEventType.CMD_DefaultAction">
             Entity/Generic Commands 
         </member>
-        <member name="F:coh2_battlegrounds_bin.Game.GameEventType.SCMD_Move">
+        <member name="F:Battlegrounds.Game.GameEventType.SCMD_Move">
             Squad Commands 
         </member>
-        <member name="F:coh2_battlegrounds_bin.Game.GameEventType.PCMD_ConstructStructure">
+        <member name="F:Battlegrounds.Game.GameEventType.PCMD_ConstructStructure">
             Player Commands 
         </member>
-        <member name="T:coh2_battlegrounds_bin.Game.Gameplay.Entity">
+        <member name="T:Battlegrounds.Game.Gameplay.Entity">
             <summary>
             
             </summary>
         </member>
-        <member name="P:coh2_battlegrounds_bin.Game.Gameplay.Entity.EntityID">
+        <member name="P:Battlegrounds.Game.Gameplay.Entity.EntityID">
             <summary>
             
             </summary>
         </member>
-        <member name="P:coh2_battlegrounds_bin.Game.Gameplay.Entity.PlayerOwner">
+        <member name="P:Battlegrounds.Game.Gameplay.Entity.PlayerOwner">
             <summary>
             
             </summary>
         </member>
-        <member name="P:coh2_battlegrounds_bin.Game.Gameplay.Entity.Blueprint">
+        <member name="P:Battlegrounds.Game.Gameplay.Entity.Blueprint">
             <summary>
             
             </summary>
         </member>
-        <member name="M:coh2_battlegrounds_bin.Game.Gameplay.Entity.#ctor(System.UInt16,coh2_battlegrounds_bin.Game.Gameplay.Player,coh2_battlegrounds_bin.Game.Database.Blueprint)">
+        <member name="M:Battlegrounds.Game.Gameplay.Entity.#ctor(System.UInt16,Battlegrounds.Game.Gameplay.Player,Battlegrounds.Game.Database.Blueprint)">
             <summary>
             
             </summary>
@@ -432,219 +460,243 @@
             <param name="owner"></param>
             <param name="bp"></param>
         </member>
-        <member name="T:coh2_battlegrounds_bin.Game.Gameplay.Faction">
+        <member name="T:Battlegrounds.Game.Gameplay.Faction">
             <summary>
             
             </summary>
         </member>
-        <member name="P:coh2_battlegrounds_bin.Game.Gameplay.Faction.UID">
+        <member name="P:Battlegrounds.Game.Gameplay.Faction.UID">
             <summary>
             
             </summary>
         </member>
-        <member name="P:coh2_battlegrounds_bin.Game.Gameplay.Faction.Name">
+        <member name="P:Battlegrounds.Game.Gameplay.Faction.Name">
             <summary>
             
             </summary>
         </member>
-        <member name="P:coh2_battlegrounds_bin.Game.Gameplay.Faction.IsAllied">
+        <member name="P:Battlegrounds.Game.Gameplay.Faction.IsAllied">
             <summary>
             
             </summary>
         </member>
-        <member name="P:coh2_battlegrounds_bin.Game.Gameplay.Faction.RequiredDLC">
+        <member name="P:Battlegrounds.Game.Gameplay.Faction.RequiredDLC">
             <summary>
             
             </summary>
         </member>
-        <member name="P:coh2_battlegrounds_bin.Game.Gameplay.Faction.Soviet">
+        <member name="P:Battlegrounds.Game.Gameplay.Faction.Soviet">
             <summary>
             
             </summary>
         </member>
-        <member name="P:coh2_battlegrounds_bin.Game.Gameplay.Faction.Wehrmacht">
+        <member name="P:Battlegrounds.Game.Gameplay.Faction.Wehrmacht">
             <summary>
             
             </summary>
         </member>
-        <member name="P:coh2_battlegrounds_bin.Game.Gameplay.Faction.America">
+        <member name="P:Battlegrounds.Game.Gameplay.Faction.America">
             <summary>
             
             </summary>
         </member>
-        <member name="P:coh2_battlegrounds_bin.Game.Gameplay.Faction.OberkommandoWest">
+        <member name="P:Battlegrounds.Game.Gameplay.Faction.OberkommandoWest">
             <summary>
             
             </summary>
         </member>
-        <member name="P:coh2_battlegrounds_bin.Game.Gameplay.Faction.British">
+        <member name="P:Battlegrounds.Game.Gameplay.Faction.British">
             <summary>
             
             </summary>
         </member>
-        <member name="M:coh2_battlegrounds_bin.Game.Gameplay.Faction.FromName(System.String)">
+        <member name="M:Battlegrounds.Game.Gameplay.Faction.FromName(System.String)">
             <summary>
             
             </summary>
             <param name="name"></param>
             <returns></returns>
         </member>
-        <member name="T:coh2_battlegrounds_bin.Game.Gameplay.Player">
+        <member name="T:Battlegrounds.Game.Gameplay.Player">
             <summary>
             
             </summary>
         </member>
-        <member name="T:coh2_battlegrounds_bin.Game.Gameplay.ProductionQueue">
+        <member name="T:Battlegrounds.Game.Gameplay.Squad">
+            <summary>
+            Representation of a Squad
+            </summary>
+        </member>
+        <member name="P:Battlegrounds.Game.Gameplay.Squad.SquadID">
+            <summary>
+            The unique squad ID used to identify the <see cref="T:Battlegrounds.Game.Gameplay.Squad"/>.
+            </summary>
+        </member>
+        <member name="P:Battlegrounds.Game.Gameplay.Squad.PlayerOwner">
+            <summary>
+            The player who (currently) owns the <see cref="T:Battlegrounds.Game.Gameplay.Squad"/>.
+            </summary>
+        </member>
+        <member name="P:Battlegrounds.Game.Gameplay.Squad.Blueprint">
+            <summary>
+            The <see cref="T:Battlegrounds.Game.Database.Blueprint"/> the <see cref="T:Battlegrounds.Game.Gameplay.Squad"/> is a type of.
+            </summary>
+        </member>
+        <member name="P:Battlegrounds.Game.Gameplay.Squad.VeterancyRank">
+            <summary>
+            The achieved veterancy rank of a <see cref="T:Battlegrounds.Game.Gameplay.Squad"/>
+            </summary>
+        </member>
+        <member name="P:Battlegrounds.Game.Gameplay.Squad.VeterancyProgress">
+            <summary>
+            The current veterancy progress of a <see cref="T:Battlegrounds.Game.Gameplay.Squad"/>
+            </summary>
+        </member>
+        <member name="M:Battlegrounds.Game.Gameplay.Squad.#ctor(System.UInt16,Battlegrounds.Game.Gameplay.Player,Battlegrounds.Game.Database.Blueprint)">
+            <summary>
+            Create new <see cref="T:Battlegrounds.Game.Gameplay.Squad"/> instance with a unique squad ID, a <see cref="T:Battlegrounds.Game.Gameplay.Player"/> owner and a <see cref="T:Battlegrounds.Game.Database.Blueprint"/>.
+            </summary>
+            <param name="squadID">The unique squad ID used to identify the squad</param>
+            <param name="owner">The <see cref="T:Battlegrounds.Game.Gameplay.Player"/> who owns the squad</param>
+            <param name="squadBlueprint">The <see cref="T:Battlegrounds.Game.Database.Blueprint"/> the squad is an instance of</param>
+        </member>
+        <member name="M:Battlegrounds.Game.Gameplay.Squad.SetVeterancy(System.Byte,System.Byte)">
+            <summary>
+            Set the veterancy of the <see cref="T:Battlegrounds.Game.Gameplay.Squad"/>. The rank and progress is not checked with the blueprint - any veterancy level can be achieved here.
+            </summary>
+            <param name="rank">The rank (or level) the squad has achieved.</param>
+            <param name="progress">The current progress towards the next veterancy level</param>
+        </member>
+        <member name="M:Battlegrounds.Game.Gameplay.Squad.AddUpgrade(Battlegrounds.Game.Database.Blueprint)">
+            <summary>
+            Add an upgrade to the squad
+            </summary>
+            <param name="upgradeBP">The upgrade blueprint to add</param>
+        </member>
+        <member name="M:Battlegrounds.Game.Gameplay.Squad.AddSlotItem(Battlegrounds.Game.Database.Blueprint)">
+            <summary>
+            Add a slot item to the squad
+            </summary>
+            <param name="slotItemBP">The slot item blueprint to add</param>
+        </member>
+        <member name="T:Battlegrounds.Game.Gameplay.Wincondition">
             <summary>
             
             </summary>
         </member>
-        <member name="T:coh2_battlegrounds_bin.Game.Gameplay.Squad">
-            <summary>
-            
-            </summary>
-        </member>
-        <member name="P:coh2_battlegrounds_bin.Game.Gameplay.Squad.SquadID">
-            <summary>
-            
-            </summary>
-        </member>
-        <member name="P:coh2_battlegrounds_bin.Game.Gameplay.Squad.PlayerOwner">
-            <summary>
-            
-            </summary>
-        </member>
-        <member name="P:coh2_battlegrounds_bin.Game.Gameplay.Squad.Blueprint">
-            <summary>
-            
-            </summary>
-        </member>
-        <member name="M:coh2_battlegrounds_bin.Game.Gameplay.Squad.#ctor(System.UInt16,coh2_battlegrounds_bin.Game.Gameplay.Player,coh2_battlegrounds_bin.Game.Database.Blueprint)">
-            <summary>
-            
-            </summary>
-            <param name="squadID"></param>
-            <param name="owner"></param>
-            <param name="squadBlueprint"></param>
-        </member>
-        <member name="T:coh2_battlegrounds_bin.Game.Gameplay.Wincondition">
-            <summary>
-            
-            </summary>
-        </member>
-        <member name="T:coh2_battlegrounds_bin.Game.GamePosition">
+        <member name="T:Battlegrounds.Game.GamePosition">
             <summary>
             Represents a world position in the game using X,Y,Z variables
             </summary>
         </member>
-        <member name="P:coh2_battlegrounds_bin.Game.GamePosition.X">
+        <member name="P:Battlegrounds.Game.GamePosition.X">
             <summary>
             The X-coordinate
             </summary>
         </member>
-        <member name="P:coh2_battlegrounds_bin.Game.GamePosition.Y">
+        <member name="P:Battlegrounds.Game.GamePosition.Y">
             <summary>
             The Y-coordinate
             </summary>
         </member>
-        <member name="P:coh2_battlegrounds_bin.Game.GamePosition.Z">
+        <member name="P:Battlegrounds.Game.GamePosition.Z">
             <summary>
             The Z-coordinate
             </summary>
         </member>
-        <member name="M:coh2_battlegrounds_bin.Game.GamePosition.#ctor(System.Single,System.Single)">
+        <member name="M:Battlegrounds.Game.GamePosition.#ctor(System.Single,System.Single)">
             <summary>
-            New instance of a <see cref="T:coh2_battlegrounds_bin.Game.GamePosition"/> using only the two first coordinates (XY) - a 2D position
+            New instance of a <see cref="T:Battlegrounds.Game.GamePosition"/> using only the two first coordinates (XY) - a 2D position
             </summary>
             <param name="x">The X-coordinate</param>
             <param name="y">The Y-coordinate</param>
         </member>
-        <member name="M:coh2_battlegrounds_bin.Game.GamePosition.#ctor(System.Single,System.Single,System.Single)">
+        <member name="M:Battlegrounds.Game.GamePosition.#ctor(System.Single,System.Single,System.Single)">
             <summary>
-            New instance of a <see cref="T:coh2_battlegrounds_bin.Game.GamePosition"/> using all three coordinates (XYZ) - a 3D position
+            New instance of a <see cref="T:Battlegrounds.Game.GamePosition"/> using all three coordinates (XYZ) - a 3D position
             </summary>
             <param name="x"></param>
             <param name="y"></param>
             <param name="z"></param>
         </member>
-        <member name="M:coh2_battlegrounds_bin.Game.GamePosition.ToString">
+        <member name="M:Battlegrounds.Game.GamePosition.ToString">
             <summary>
             Returns a string that represents the current object.
             </summary>
             <returns>A string that represents the current object.</returns>
         </member>
-        <member name="P:coh2_battlegrounds_bin.Game.GamePosition.Naught">
+        <member name="P:Battlegrounds.Game.GamePosition.Naught">
             <summary>
             The game position at (0, 0, 0)
             </summary>
         </member>
-        <member name="T:coh2_battlegrounds_bin.Game.GameTick">
+        <member name="T:Battlegrounds.Game.GameTick">
             <summary>
             Class representation of a tick (update) in the game
             </summary>
         </member>
-        <member name="P:coh2_battlegrounds_bin.Game.GameTick.TimeStamp">
+        <member name="P:Battlegrounds.Game.GameTick.TimeStamp">
             <summary>
-            The timestamp of the <see cref="T:coh2_battlegrounds_bin.Game.GameTick"/>.
+            The timestamp of the <see cref="T:Battlegrounds.Game.GameTick"/>.
             </summary>
         </member>
-        <member name="P:coh2_battlegrounds_bin.Game.GameTick.Events">
+        <member name="P:Battlegrounds.Game.GameTick.Events">
             <summary>
-            The events that occured within the span of the <see cref="T:coh2_battlegrounds_bin.Game.GameTick"/>.
+            The events that occured within the span of the <see cref="T:Battlegrounds.Game.GameTick"/>.
             </summary>
         </member>
-        <member name="M:coh2_battlegrounds_bin.Game.GameTick.#ctor">
+        <member name="M:Battlegrounds.Game.GameTick.#ctor">
             <summary>
-            Create a new <see cref="T:coh2_battlegrounds_bin.Game.GameTick"/> instance
+            Create a new <see cref="T:Battlegrounds.Game.GameTick"/> instance
             </summary>
         </member>
-        <member name="M:coh2_battlegrounds_bin.Game.GameTick.Parse(System.IO.BinaryReader)">
+        <member name="M:Battlegrounds.Game.GameTick.Parse(System.IO.BinaryReader)">
             <summary>
-            Parse a <see cref="T:coh2_battlegrounds_bin.Game.GameTick"/> using a <see cref="T:System.IO.BinaryReader"/> to extract the budled data and populate the <see cref="T:coh2_battlegrounds_bin.Game.GameEvent"/> list with results.
+            Parse a <see cref="T:Battlegrounds.Game.GameTick"/> using a <see cref="T:System.IO.BinaryReader"/> to extract the budled data and populate the <see cref="T:Battlegrounds.Game.GameEvent"/> list with results.
             </summary>
             <param name="reader"></param>
         </member>
-        <member name="T:coh2_battlegrounds_bin.Game.ScenarioDescription">
+        <member name="T:Battlegrounds.Game.ScenarioDescription">
             <summary>
             
             </summary>
         </member>
-        <member name="P:coh2_battlegrounds_bin.Game.ScenarioDescription.Width">
+        <member name="P:Battlegrounds.Game.ScenarioDescription.Width">
             <summary>
             
             </summary>
         </member>
-        <member name="P:coh2_battlegrounds_bin.Game.ScenarioDescription.Length">
+        <member name="P:Battlegrounds.Game.ScenarioDescription.Length">
             <summary>
             
             </summary>
         </member>
-        <member name="P:coh2_battlegrounds_bin.Game.ScenarioDescription.File">
+        <member name="P:Battlegrounds.Game.ScenarioDescription.File">
             <summary>
             
             </summary>
         </member>
-        <member name="P:coh2_battlegrounds_bin.Game.ScenarioDescription.Name">
+        <member name="P:Battlegrounds.Game.ScenarioDescription.Name">
             <summary>
             
             </summary>
         </member>
-        <member name="P:coh2_battlegrounds_bin.Game.ScenarioDescription.Description">
+        <member name="P:Battlegrounds.Game.ScenarioDescription.Description">
             <summary>
             
             </summary>
         </member>
-        <member name="P:coh2_battlegrounds_bin.Game.ScenarioDescription.Abbreviation">
+        <member name="P:Battlegrounds.Game.ScenarioDescription.Abbreviation">
             <summary>
             
             </summary>
         </member>
-        <member name="P:coh2_battlegrounds_bin.Game.ScenarioDescription.Gamemode">
+        <member name="P:Battlegrounds.Game.ScenarioDescription.Gamemode">
             <summary>
             
             </summary>
         </member>
-        <member name="M:coh2_battlegrounds_bin.Game.ScenarioDescription.#ctor(System.String,System.String,System.Int32,System.Int32)">
+        <member name="M:Battlegrounds.Game.ScenarioDescription.#ctor(System.String,System.String,System.Int32,System.Int32)">
             <summary>
             
             </summary>
@@ -653,37 +705,37 @@
             <param name="width"></param>
             <param name="length"></param>
         </member>
-        <member name="T:coh2_battlegrounds_bin.Pathfinder">
+        <member name="T:Battlegrounds.Pathfinder">
             <summary>
             Pathfinder for finding the paths to relevant paths (eg. CoH2's documents folder)
             </summary>
         </member>
-        <member name="T:coh2_battlegrounds_bin.ReplayFile">
+        <member name="T:Battlegrounds.ReplayFile">
             <summary>
             Represents a CoH2 replay file
             </summary>
         </member>
-        <member name="T:coh2_battlegrounds_bin.ReplayFile.ReplayHeader">
+        <member name="T:Battlegrounds.ReplayFile.ReplayHeader">
             <summary>
-            Represents a header of a <see cref="T:coh2_battlegrounds_bin.ReplayFile"/>
+            Represents a header of a <see cref="T:Battlegrounds.ReplayFile"/>
             </summary>
         </member>
-        <member name="F:coh2_battlegrounds_bin.ReplayFile.ReplayHeader.version">
+        <member name="F:Battlegrounds.ReplayFile.ReplayHeader.version">
             <summary>
             The replay version
             </summary>
         </member>
-        <member name="F:coh2_battlegrounds_bin.ReplayFile.ReplayHeader.gamename">
+        <member name="F:Battlegrounds.ReplayFile.ReplayHeader.gamename">
             <summary>
             The game version
             </summary>
         </member>
-        <member name="F:coh2_battlegrounds_bin.ReplayFile.ReplayHeader.date">
+        <member name="F:Battlegrounds.ReplayFile.ReplayHeader.date">
             <summary>
             The date of replay save
             </summary>
         </member>
-        <member name="M:coh2_battlegrounds_bin.ReplayFile.ReplayHeader.#ctor(System.UInt32,System.String,System.String)">
+        <member name="M:Battlegrounds.ReplayFile.ReplayHeader.#ctor(System.UInt32,System.String,System.String)">
             <summary>
             Create instance of replay header with specified values
             </summary>
@@ -691,41 +743,41 @@
             <param name="n"></param>
             <param name="d"></param>
         </member>
-        <member name="P:coh2_battlegrounds_bin.ReplayFile.IsParsed">
+        <member name="P:Battlegrounds.ReplayFile.IsParsed">
             <summary>
-            Check if the <see cref="T:coh2_battlegrounds_bin.ReplayFile"/> has been loaded and parsed.
+            Check if the <see cref="T:Battlegrounds.ReplayFile"/> has been loaded and parsed.
             </summary>
         </member>
-        <member name="P:coh2_battlegrounds_bin.ReplayFile.Header">
+        <member name="P:Battlegrounds.ReplayFile.Header">
             <summary>
             The header read when the file was parsed
             </summary>
             <exception cref="T:System.IO.InvalidDataException"/>
         </member>
-        <member name="P:coh2_battlegrounds_bin.ReplayFile.Scenario">
+        <member name="P:Battlegrounds.ReplayFile.Scenario">
             <summary>
             The scenario used in the replay
             </summary>
             <exception cref="T:System.IO.InvalidDataException"/>
         </member>
-        <member name="P:coh2_battlegrounds_bin.ReplayFile.Players">
+        <member name="P:Battlegrounds.ReplayFile.Players">
             <summary>
             Array containing all players in the replay
             </summary>
         </member>
-        <member name="P:coh2_battlegrounds_bin.ReplayFile.Ticks">
+        <member name="P:Battlegrounds.ReplayFile.Ticks">
             <summary>
             Sorted array containing all game ticks in the replay
             </summary>
         </member>
-        <member name="M:coh2_battlegrounds_bin.ReplayFile.#ctor(System.String)">
+        <member name="M:Battlegrounds.ReplayFile.#ctor(System.String)">
             <summary>
-            New instance of a <see cref="T:coh2_battlegrounds_bin.ReplayFile"/> from a given file path
+            New instance of a <see cref="T:Battlegrounds.ReplayFile"/> from a given file path
             </summary>
             <param name="file">The file path to use when loading the file</param>
             <exception cref="T:System.IO.FileNotFoundException"/>
         </member>
-        <member name="M:coh2_battlegrounds_bin.ReplayFile.LoadReplay">
+        <member name="M:Battlegrounds.ReplayFile.LoadReplay">
             <summary>
             Load the replay file from the given file path at instantiation.
             </summary>
@@ -733,24 +785,24 @@
             <exception cref="T:System.ArgumentException"/>
             <exception cref="T:System.IO.IOException"/>
         </member>
-        <member name="T:coh2_battlegrounds_bin.Steam.SteamUser">
+        <member name="T:Battlegrounds.Steam.SteamUser">
             <summary>
             Represents a Steam user
             </summary>
         </member>
-        <member name="T:coh2_battlegrounds_bin.Util.BinaryReaderExt">
+        <member name="T:Battlegrounds.Util.BinaryReaderExt">
             <summary>
             Extension class for extending the utilities of <see cref="T:System.IO.BinaryReader"/>
             </summary>
         </member>
-        <member name="M:coh2_battlegrounds_bin.Util.BinaryReaderExt.ReadASCIIString(System.IO.BinaryReader)">
+        <member name="M:Battlegrounds.Util.BinaryReaderExt.ReadASCIIString(System.IO.BinaryReader)">
             <summary>
             Read an ASCII string from a length that's given before the string
             </summary>
             <param name="reader">The stream to read string from</param>
             <returns>The read string</returns>
         </member>
-        <member name="M:coh2_battlegrounds_bin.Util.BinaryReaderExt.ReadASCIIString(System.IO.BinaryReader,System.Int32)">
+        <member name="M:Battlegrounds.Util.BinaryReaderExt.ReadASCIIString(System.IO.BinaryReader,System.Int32)">
             <summary>
             Read an ASCII string from a known length
             </summary>
@@ -758,14 +810,14 @@
             <param name="length"></param>
             <returns>The read string</returns>
         </member>
-        <member name="M:coh2_battlegrounds_bin.Util.BinaryReaderExt.ReadUTF8String(System.IO.BinaryReader)">
+        <member name="M:Battlegrounds.Util.BinaryReaderExt.ReadUTF8String(System.IO.BinaryReader)">
             <summary>
             Read a UTF-8 string of unknown length
             </summary>
             <param name="reader">The stream to read string from</param>
             <returns></returns>
         </member>
-        <member name="M:coh2_battlegrounds_bin.Util.BinaryReaderExt.ReadUTF8String(System.IO.BinaryReader,System.UInt32)">
+        <member name="M:Battlegrounds.Util.BinaryReaderExt.ReadUTF8String(System.IO.BinaryReader,System.UInt32)">
             <summary>
             Read a UTF-8 of known character count
             </summary>
@@ -773,40 +825,40 @@
             <param name="characterCount">The amount of UTF-8 characters to read</param>
             <returns></returns>
         </member>
-        <member name="M:coh2_battlegrounds_bin.Util.BinaryReaderExt.Skip(System.IO.BinaryReader,System.Int64)">
+        <member name="M:Battlegrounds.Util.BinaryReaderExt.Skip(System.IO.BinaryReader,System.Int64)">
             <summary>
             Extension method: Skips the specified amount of bytes
             </summary>
             <param name="reader">The stream to skip bytes in</param>
             <param name="count">The amount of bytes to skip</param>
         </member>
-        <member name="M:coh2_battlegrounds_bin.Util.BinaryReaderExt.HasReachedEOS(System.IO.BinaryReader)">
+        <member name="M:Battlegrounds.Util.BinaryReaderExt.HasReachedEOS(System.IO.BinaryReader)">
             <summary>
             Has the stream reached the end of stream (EOS)
             </summary>
             <param name="reader">The stream to check</param>
             <returns>True if the stream position is equal or greater than the stream length</returns>
         </member>
-        <member name="M:coh2_battlegrounds_bin.Util.BinaryReaderExt.SkipUntil(System.IO.BinaryReader,System.Byte[])">
+        <member name="M:Battlegrounds.Util.BinaryReaderExt.SkipUntil(System.IO.BinaryReader,System.Byte[])">
             <summary>
             Skip all bytes until a specific byte array match is found
             </summary>
             <param name="reader">The stream to advance memory pointer in</param>
             <param name="barray">The byte array to find and read</param>
         </member>
-        <member name="M:coh2_battlegrounds_bin.Util.BinaryReaderExt.ReadToEnd(System.IO.BinaryReader)">
+        <member name="M:Battlegrounds.Util.BinaryReaderExt.ReadToEnd(System.IO.BinaryReader)">
             <summary>
             Read all bytes remaining in the <see cref="T:System.IO.BinaryReader"/> object
             </summary>
             <param name="reader">The stream to read to end</param>
             <returns>Byte array containing all the bytes remaining in the stream</returns>
         </member>
-        <member name="T:coh2_battlegrounds_bin.Util.ByteUtil">
+        <member name="T:Battlegrounds.Util.ByteUtil">
             <summary>
             
             </summary>
         </member>
-        <member name="M:coh2_battlegrounds_bin.Util.ByteUtil.Match(System.Byte[],System.String)">
+        <member name="M:Battlegrounds.Util.ByteUtil.Match(System.Byte[],System.String)">
             <summary>
             Check if a byte array matches the contents of the string.
             </summary>
@@ -814,7 +866,7 @@
             <param name="content">The string content to compare against</param>
             <returns>True if the contents of the byte array matches the content of the string.</returns>
         </member>
-        <member name="M:coh2_battlegrounds_bin.Util.ByteUtil.Match(System.Byte[],System.Byte[])">
+        <member name="M:Battlegrounds.Util.ByteUtil.Match(System.Byte[],System.Byte[])">
             <summary>
             
             </summary>

@@ -37,9 +37,7 @@ function BG_AddSquad(player, sid)
     local squad = Squad_FromWorldID(sid);
     local pbgid = BP_GetName(Squad_GetBlueprint(squad));
 
-    -- Grant Spawn upgrade
-    --Command_SquadUpgrade(player, SGroup_FromSquad(sid), BP_GetUpgradeBlueprint("6a0a13b89555402ca75b85dc30f5cb04:event_squad_spawned"), true, false);
-
+    -- Broadcast that a unit was spawned
     Command_PlayerBroadcastMessage(Game_GetLocalPlayer(), Game_GetLocalPlayer(), _bg_message_type_unit_spawned, "S[" .. sid .. "," .. pbgid  .. "]")
 
     -- Add "on death" event
@@ -49,7 +47,7 @@ end
 
 function BG_OnSquadDeath(sid)
 
+    -- Broadcast that the unit was killed
     Command_PlayerBroadcastMessage(Game_GetLocalPlayer(), Game_GetLocalPlayer(), _bg_message_type_unit_killed, "K[" .. Squad_GetGameID(sid) .. "]")
-
 
 end

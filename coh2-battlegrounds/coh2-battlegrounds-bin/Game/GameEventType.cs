@@ -1,4 +1,4 @@
-﻿namespace coh2_battlegrounds_bin.Game {
+﻿namespace Battlegrounds.Game {
 
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
 
@@ -122,6 +122,14 @@
         PCMD_AIPlayer_ObjectiveNotification,
         PCMD_SetCommander,
         PCMD_COUNT,
+        
+        _UNKNOWN1,
+
+        PCMD_BroadcastMessage,
+
+
+
+        EVENT_MAX
 
     }
 

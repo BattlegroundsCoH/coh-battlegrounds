@@ -1,4 +1,4 @@
-﻿namespace coh2_battlegrounds_bin.Game {
+﻿namespace Battlegrounds.Game {
     
     /// <summary>
     /// Represents a world position in the game using X,Y,Z variables

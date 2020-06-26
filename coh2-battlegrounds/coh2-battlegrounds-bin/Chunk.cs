@@ -3,9 +3,9 @@ using System.IO;
 using System.Text;
 using System.Linq;
 
-using coh2_battlegrounds_bin.Util;
+using Battlegrounds.Util;
 
-namespace coh2_battlegrounds_bin {
+namespace Battlegrounds {
     
     /// <summary>
     /// Represents a chunk of data in a <see cref="ChunkyFile"/>.

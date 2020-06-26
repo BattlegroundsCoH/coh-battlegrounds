@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace coh2_battlegrounds_bin.Steam {
+namespace Battlegrounds.Steam {
 
     /// <summary>
     /// Represents a Steam user

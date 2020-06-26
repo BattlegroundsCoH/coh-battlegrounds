@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace coh2_battlegrounds_bin.Game.Database.json {
+namespace Battlegrounds.Game.Database.json {
     
     /// <summary>
     /// Json interface for converting object to and from a Json object

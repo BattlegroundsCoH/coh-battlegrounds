@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 
-namespace coh2_battlegrounds_bin.Util {
+namespace Battlegrounds.Util {
     
     /// <summary>
     /// Extension class for extending the utilities of <see cref="BinaryReader"/>

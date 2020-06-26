@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.IO;
 
-using coh2_battlegrounds_bin.Util;
+using Battlegrounds.Util;
 
-namespace coh2_battlegrounds_bin.Game {
+namespace Battlegrounds.Game {
     
     /// <summary>
     /// Class representation of a tick (update) in the game

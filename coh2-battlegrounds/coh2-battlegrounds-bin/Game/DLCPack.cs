@@ -1,4 +1,4 @@
-﻿namespace coh2_battlegrounds_bin.Game {
+﻿namespace Battlegrounds.Game {
     
     /// <summary>
     /// Represents a DLC tied to Company of Heroes 2

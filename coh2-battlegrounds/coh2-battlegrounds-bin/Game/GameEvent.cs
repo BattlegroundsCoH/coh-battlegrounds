@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text;
 
-namespace coh2_battlegrounds_bin.Game {
+namespace Battlegrounds.Game {
     
     /// <summary>
     /// Represents an event that occured in a <see cref="GameTick"/>.
@@ -33,7 +34,7 @@ namespace coh2_battlegrounds_bin.Game {
         /// </summary>
         /// <exception cref="ArgumentOutOfRangeException"/>
         public GameEventType EventType 
-            => (this.Type <= (byte)GameEventType.PCMD_COUNT) ? 
+            => (this.Type < (byte)GameEventType.EVENT_MAX) ? 
             ((GameEventType)this.Type) : 
             throw new ArgumentOutOfRangeException($"The event type {this.Type} is out of range and cannot be interpreted.");
 
@@ -63,14 +64,21 @@ namespace coh2_battlegrounds_bin.Game {
         public ushort TargetType { get; }
 
         /// <summary>
+        /// The attached message to a <see cref="GameEvent"/> of type <see cref="GameEventType.PCMD_BroadcastMessage"/>.
+        /// </summary>
+        public string AttachedMessage { get; }
+
+        /// <summary>
         /// 
         /// </summary>
         /// <param name="timeStamp"></param>
         /// <param name="eventData"></param>
         public GameEvent(TimeSpan timeStamp, byte[] eventData) {
 
+            // Set values to null
             this.FirstPosition = null;
             this.SecondPosition = null;
+            this.AttachedMessage = null;
 
             // Add timestamp
             this.TimeStamp = timeStamp;
@@ -83,14 +91,14 @@ namespace coh2_battlegrounds_bin.Game {
 
             // The target type
             this.TargetType = BitConverter.ToUInt16(eventData[6..8]); // Most likely an enum
-                // 16 = Entity
-                // 32 = Squad
-                // 64 = ???
-                // ... = ...
-                // ??? = ???
+                                                                      // 16 = Entity
+                                                                      // 32 = Squad
+                                                                      // 64 = ???
+                                                                      // ... = ...
+                                                                      // ??? = ???
 
             // Read type-specific content
-            if (this.Type <= (byte)GameEventType.PCMD_COUNT) {
+            if (this.Type < (byte)GameEventType.EVENT_MAX) {
                 switch (this.EventType) {
                     case GameEventType.CMD_BuildSquad:
                     case GameEventType.CMD_Upgrade:
@@ -101,17 +109,24 @@ namespace coh2_battlegrounds_bin.Game {
                     case GameEventType.SCMD_Move:
                         this.UnitID = BitConverter.ToUInt16(eventData[8..10]);
                         break;
-                        // TODO: Other important cases here
+                    // TODO: Other important cases here
                     // These load unit ID differently:
                     // SCMD_STOP
                     // SCMD_ATTACK
                     // SCMD_RETREAT
                     // SCMD_REINFORCEUNIT
                     // ...
+                    case GameEventType.PCMD_BroadcastMessage:
+                        int messageLength = (int)BitConverter.ToUInt32(eventData[20..24]);
+                        this.AttachedMessage = Encoding.ASCII.GetString(eventData[24..(24 + messageLength)]);
+                        break;
                     default: break;
                 }
-
-            }
+            } /*else {
+                if (this.Type != 104 && this.Type != 105) {
+                    Console.WriteLine(this.Type);
+                }
+            }*/
 
         }
 

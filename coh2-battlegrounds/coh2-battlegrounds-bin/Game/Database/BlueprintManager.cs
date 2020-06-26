@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
-namespace coh2_battlegrounds_bin.Game.Database {
+namespace Battlegrounds.Game.Database {
 
     /// <summary>
     /// The type a <see cref="Blueprint"/> may represent in the <see cref="BlueprintManager"/>.
@@ -93,6 +94,24 @@ namespace coh2_battlegrounds_bin.Game.Database {
                 BlueprintType.EBP => __entities[id],
                 BlueprintType.SBP => __squads[id],
                 BlueprintType.UBP => __upgrades[id],
+                _ => throw new ArgumentException(),
+            };
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="bType"></param>
+        /// <returns></returns>
+        public static Blueprint FromBlueprintName(string id, BlueprintType bType) {
+            return bType switch
+            {
+                BlueprintType.ABP => __abilities.FirstOrDefault(x => (x.Value.Name ?? "") == id).Value,
+                BlueprintType.CBP => __commanders.FirstOrDefault(x => (x.Value.Name ?? "") == id).Value,
+                BlueprintType.EBP => __entities.FirstOrDefault(x => (x.Value.Name ?? "") == id).Value,
+                BlueprintType.SBP => __squads.FirstOrDefault(x => (x.Value.Name ?? "") == id).Value,
+                BlueprintType.UBP => __upgrades.FirstOrDefault(x => (x.Value.Name ?? "") == id).Value,
                 _ => throw new ArgumentException(),
             };
         }
