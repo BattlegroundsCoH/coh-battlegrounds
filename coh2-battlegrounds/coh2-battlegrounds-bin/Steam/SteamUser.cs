@@ -9,7 +9,24 @@ namespace Battlegrounds.Steam {
     /// </summary>
     public sealed class SteamUser {
     
+        /// <summary>
+        /// 
+        /// </summary>
+        public string Name { get; }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        public ulong ID { get; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="steamUID"></param>
+        public SteamUser(ulong steamUID) {
+            this.ID = steamUID;
+            this.Name = "";
+        }
 
     }
 

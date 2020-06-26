@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Collections.Immutable;
 using Battlegrounds.Game.Database;
 
 namespace Battlegrounds.Game.Gameplay {
@@ -9,7 +10,7 @@ namespace Battlegrounds.Game.Gameplay {
     public class Squad {
 
         byte m_veterancyRank;
-        byte m_veterancyProgress;
+        float m_veterancyProgress;
 
         private HashSet<Blueprint> m_upgrades;
         private HashSet<Blueprint> m_slotItems;
@@ -37,7 +38,17 @@ namespace Battlegrounds.Game.Gameplay {
         /// <summary>
         /// The current veterancy progress of a <see cref="Squad"/>
         /// </summary>
-        public byte VeterancyProgress => this.m_veterancyProgress;
+        public float VeterancyProgress => this.m_veterancyProgress;
+
+        /// <summary>
+        /// The current upgrades applied to a <see cref="Squad"/>
+        /// </summary>
+        public ImmutableArray<Blueprint> Upgrades => m_upgrades.ToImmutableArray();
+
+        /// <summary>
+        /// The current slot items carried by the <see cref="Squad"/>
+        /// </summary>
+        public ImmutableArray<Blueprint> SlotItems => m_slotItems.ToImmutableArray();
 
         /// <summary>
         /// Create new <see cref="Squad"/> instance with a unique squad ID, a <see cref="Player"/> owner and a <see cref="Database.Blueprint"/>.
@@ -58,7 +69,7 @@ namespace Battlegrounds.Game.Gameplay {
         /// </summary>
         /// <param name="rank">The rank (or level) the squad has achieved.</param>
         /// <param name="progress">The current progress towards the next veterancy level</param>
-        public void SetVeterancy(byte rank, byte progress = 0) {
+        public void SetVeterancy(byte rank, float progress = 0.0f) {
             this.m_veterancyRank = rank;
             this.m_veterancyProgress = progress;
         }

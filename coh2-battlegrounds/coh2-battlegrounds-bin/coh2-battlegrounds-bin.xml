@@ -115,11 +115,36 @@
             
             </summary>
         </member>
-        <member name="M:Battlegrounds.Compiler.CompanyCompiler.CompileToLua(System.String)">
+        <member name="M:Battlegrounds.Compiler.CompanyCompiler.CompileToLua(Battlegrounds.Game.Battlegrounds.Company,System.Int32)">
             <summary>
             
             </summary>
-            <param name="output"></param>
+            <param name="company"></param>
+            <param name="indent"></param>
+        </member>
+        <member name="M:Battlegrounds.Compiler.CompanyCompiler.CompileUnit(Battlegrounds.Util.TxtBuilder,Battlegrounds.Game.Gameplay.Squad)">
+            <summary>
+            
+            </summary>
+            <param name="builder"></param>
+            <param name="squad"></param>
+        </member>
+        <member name="T:Battlegrounds.Compiler.SessionCompiler">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Battlegrounds.Compiler.SessionCompiler.#ctor">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Battlegrounds.Compiler.SessionCompiler.CompileSession(Battlegrounds.Game.Battlegrounds.Session)">
+            <summary>
+            
+            </summary>
+            <param name="session"></param>
+            <returns></returns>
         </member>
         <member name="T:Battlegrounds.Compiler.WinconditionCompiler">
             <summary>
@@ -142,6 +167,39 @@
             <param name="relativepath"></param>
             <param name="output"></param>
             <returns></returns>
+        </member>
+        <member name="T:Battlegrounds.Game.Battlegrounds.Company">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:Battlegrounds.Game.Battlegrounds.Company.Name">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:Battlegrounds.Game.Battlegrounds.Company.Army">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:Battlegrounds.Game.Battlegrounds.Company.Owner">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:Battlegrounds.Game.Battlegrounds.Company.Units">
+            <summary>
+            The units of the company
+            </summary>
+        </member>
+        <member name="M:Battlegrounds.Game.Battlegrounds.Company.#ctor(Battlegrounds.Steam.SteamUser,System.String,Battlegrounds.Game.Gameplay.Faction)">
+            <summary>
+            
+            </summary>
+            <param name="user"></param>
+            <param name="name"></param>
+            <param name="army"></param>
         </member>
         <member name="T:Battlegrounds.Game.Battlegrounds.GameMatch">
             <summary>
@@ -225,6 +283,16 @@
             
             </summary>
             <returns></returns>
+        </member>
+        <member name="T:Battlegrounds.Game.Battlegrounds.Session">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Battlegrounds.Game.Battlegrounds.Session.#ctor">
+            <summary>
+            
+            </summary>
         </member>
         <member name="T:Battlegrounds.Game.CoH2Launcher">
             <summary>
@@ -651,6 +719,16 @@
             The current veterancy progress of a <see cref="T:Battlegrounds.Game.Gameplay.Squad"/>
             </summary>
         </member>
+        <member name="P:Battlegrounds.Game.Gameplay.Squad.Upgrades">
+            <summary>
+            The current upgrades applied to a <see cref="T:Battlegrounds.Game.Gameplay.Squad"/>
+            </summary>
+        </member>
+        <member name="P:Battlegrounds.Game.Gameplay.Squad.SlotItems">
+            <summary>
+            The current slot items carried by the <see cref="T:Battlegrounds.Game.Gameplay.Squad"/>
+            </summary>
+        </member>
         <member name="M:Battlegrounds.Game.Gameplay.Squad.#ctor(System.UInt16,Battlegrounds.Game.Gameplay.Player,Battlegrounds.Game.Database.Blueprint)">
             <summary>
             Create new <see cref="T:Battlegrounds.Game.Gameplay.Squad"/> instance with a unique squad ID, a <see cref="T:Battlegrounds.Game.Gameplay.Player"/> owner and a <see cref="T:Battlegrounds.Game.Database.Blueprint"/>.
@@ -659,7 +737,7 @@
             <param name="owner">The <see cref="T:Battlegrounds.Game.Gameplay.Player"/> who owns the squad</param>
             <param name="squadBlueprint">The <see cref="T:Battlegrounds.Game.Database.Blueprint"/> the squad is an instance of</param>
         </member>
-        <member name="M:Battlegrounds.Game.Gameplay.Squad.SetVeterancy(System.Byte,System.Byte)">
+        <member name="M:Battlegrounds.Game.Gameplay.Squad.SetVeterancy(System.Byte,System.Single)">
             <summary>
             Set the veterancy of the <see cref="T:Battlegrounds.Game.Gameplay.Squad"/>. The rank and progress is not checked with the blueprint - any veterancy level can be achieved here.
             </summary>
@@ -930,6 +1008,22 @@
             Represents a Steam user
             </summary>
         </member>
+        <member name="P:Battlegrounds.Steam.SteamUser.Name">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:Battlegrounds.Steam.SteamUser.ID">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Battlegrounds.Steam.SteamUser.#ctor(System.UInt64)">
+            <summary>
+            
+            </summary>
+            <param name="steamUID"></param>
+        </member>
         <member name="T:Battlegrounds.Util.BinaryReaderExt">
             <summary>
             Extension class for extending the utilities of <see cref="T:System.IO.BinaryReader"/>
@@ -1020,6 +1114,22 @@
             </summary>
         </member>
         <member name="M:Battlegrounds.Util.TxtBuilder.#ctor">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Battlegrounds.Util.TxtBuilder.SetIndent(System.Int32)">
+            <summary>
+            
+            </summary>
+            <param name="indent"></param>
+        </member>
+        <member name="M:Battlegrounds.Util.TxtBuilder.IncreaseIndent">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Battlegrounds.Util.TxtBuilder.DecreaseIndent">
             <summary>
             
             </summary>
