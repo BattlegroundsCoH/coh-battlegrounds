@@ -51,3 +51,60 @@ function BG_OnSquadDeath(sid)
     Command_PlayerBroadcastMessage(Game_GetLocalPlayer(), Game_GetLocalPlayer(), _bg_message_type_unit_killed, "K[" .. Squad_GetGameID(sid) .. "]")
 
 end
+
+function BG_DeploySquad(player, unit_id)
+
+    -- Get unit data
+    local unit_data = _bg_playerData[BG_GetPlayerID(player)].company.units[unit_id];
+
+    -- Make sure we don't spawn in something twice
+    if not unit_data.spawned then
+
+        -- Get position data
+        local gotopos = Player_GetStartingPosition(player);
+        local spawnfrom = Player_GetNearestMapEntry(player, gotopos);
+
+        -- Create the squad
+        local squad = Squad_CreateAndSpawnToward(BP_GetSquadBlueprint(unit_data.bp_name), player, 0, spawnfrom, gotopos );
+        local sg_temp = SGroup_FromSquad(squad);
+
+        -- Give move order
+        Command_SquadPos(player, sg_temp, SCMD_Move, gotopos, false )
+
+        -- Apply veterancy rank
+        if (unit_data.veterancy_rank > 0) then
+            Squad_IncreaseVeterancyRank(squad, unit_data.veterancy_rank, true );
+        end
+
+        -- Apply veterancy progress
+        if (unit_data.veterancy_progress > 0) then
+            Squad_IncreaseVeterancyExperience(squad, unit_data.veterancy_progress, true, true );
+        end
+
+        -- Add upgrades
+        for i=1, #unit_data.upgrades do
+            Command_SquadUpgrade(player, sg_temp, BP_GetUpgradeBlueprint(unit_data.upgrades[i]), true, false );
+        end
+
+        -- Add slot_items
+        for i=1, #unit_data.slot_items do
+            -- TODO: Implement
+        end
+
+        -- Add modifiers
+        for i=1, #unit_data.modifiers do
+            -- TODO: Implement
+        end
+
+        -- Mark spawned
+        unit_data.spawned = true;
+
+    end
+
+end
+
+function BG_RecallSquad(player, unit_id)
+
+
+
+end

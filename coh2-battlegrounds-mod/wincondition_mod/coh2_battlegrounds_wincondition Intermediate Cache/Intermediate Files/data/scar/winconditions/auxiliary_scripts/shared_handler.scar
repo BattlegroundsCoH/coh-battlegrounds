@@ -13,6 +13,7 @@ _bg_message_type_unit_spawned = 42.0;
 ------------------------------------------------------------------------------------
 -- Imports
 ------------------------------------------------------------------------------------
+import("WinConditions/auxiliary_scripts/session.scar");
 import("WinConditions/auxiliary_scripts/shared_companyloader.scar")
 import("WinConditions/auxiliary_scripts/shared_units.scar")
 import("WinConditions/auxiliary_scripts/shared_util.scar")
@@ -27,6 +28,7 @@ function BG_Init()
         if not AI_IsAIPlayer(player) then -- Make sure it's a player ==> Don't care for AI players
             _bg_playerData[j] = {};
             _bg_playerData[j].player = player;
+            _bg_playerData[j].name = Player_GetDisplayName(player)[1];
             _bg_playerData[j].playerID = Player_GetID(player);
             _bg_playerData[j].squads = {};
             _bg_playerData[j].entities = {};
@@ -34,8 +36,14 @@ function BG_Init()
         end
     end
 
-    -- Load the client division
-    BG_LoadCompanies();
+    -- Load the player companies
+    local companyError = BG_LoadCompanies();
+
+    -- Check to see if a company error was found
+    if companyError ~= true then
+        -- TODO: Handle the error
+        return;
+    end
 
     -- Activate the unit system
     BG_HookUnitSystem();
@@ -45,6 +53,28 @@ function BG_Init()
 
     -- Game_QuitApp -- call this after each match
 
+    Rule_AddOneShot(dummy_spawn, 5); -- Disable when not testing callin functionality
+
 end
 
 Scar_AddInit(BG_Init);
+
+function dummy_spawn()
+
+    -- Test the deploy squad function
+    BG_DeploySquad(_bg_playerData[1].player, 1);
+    BG_DeploySquad(_bg_playerData[1].player, 2);
+    BG_DeploySquad(_bg_playerData[1].player, 3);
+    BG_DeploySquad(_bg_playerData[1].player, 4);
+    BG_DeploySquad(_bg_playerData[1].player, 5);
+
+end
+
+function BG_GetPlayerID(player)
+    for i=1, #_bg_playerData do
+        if _bg_playerData[i].player == player then
+            return i;
+        end
+    end
+    return -1;
+end

@@ -1,9 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Threading;
 using System.Diagnostics;
+
 using Battlegrounds.Online;
 using Battlegrounds.Util;
 
@@ -195,7 +195,7 @@ namespace Battlegrounds.Compiler {
                     return false;
                 }
 
-            } catch (Exception e) {
+            } catch {
                 archiveProcess.Dispose();
                 return false;
             }

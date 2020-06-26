@@ -1,7 +1,8 @@
 name = "battlegrounds_vp"
 scar_file = "data:scar/winconditions/coh2_battlegrounds_vp.scar"
 fe_name = "Battlegrounds - Victory Points"
-fe_priority = 0
+fe_priority = 1
 score_display = vp_ticker
 show_time = true
 requires_vp_ticker = true
+permitted_categories = skin_pack + vehicle_decal

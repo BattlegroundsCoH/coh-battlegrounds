@@ -60,3 +60,49 @@ function SGroup_FromSquad(squad)
     SGroup_Add(sg_temp, squad);
     return sg_temp;
 end
+
+------------------------------------------------------------
+-- LocString functions
+------------------------------------------------------------
+
+function Util_CreateLocString(text)
+	local tmpstr = LOC(text)
+	tmpstr[1] = text
+	return tmpstr
+end
+
+------------------------------------------------------------
+-- Player functions
+------------------------------------------------------------
+
+___mapentrypoints = {}
+function BG_UTIL_collect_map_entries()
+    local bp_mapentry1 = BP_GetEntityBlueprint("map_entry_point");
+    local bp_mapentry2 = BP_GetEntityBlueprint("map_entry_point_player");
+    for i = 0, World_GetNumEntities() - 1 do
+        local entity = World_GetEntity(i);
+        local ebp = Entity_GetBlueprint(entity);
+        if (ebp == bp_mapentry1 or ebp == bp_mapentry2) then
+            table.insert(___mapentrypoints, { pos = Entity_GetPosition(entity), owner = Entity_GetPlayerOwner(entity) });
+        end
+    end
+end
+
+function Player_GetNearestMapEntry(player, refpoint)
+    if (#___mapentrypoints == 0) then
+        BG_UTIL_collect_map_entries();
+    end
+    local available = {};
+    for i=1, #___mapentrypoints do
+        if Player_GetRelationship(player, ___mapentrypoints[i].owner) ~= R_ENEMY then
+            table.insert(available, ___mapentrypoints[i].pos);
+        end
+    end
+    local j = 1;
+    for i=1, #available do
+        if (Util_GetDistance(refpoint, available[i] ) < Util_GetDistance(refpoint, available[j] )) then
+            j = i;
+        end
+    end
+    return available[j];
+end
