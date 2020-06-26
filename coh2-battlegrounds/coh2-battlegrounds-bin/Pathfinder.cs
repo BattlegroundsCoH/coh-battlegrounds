@@ -10,14 +10,23 @@ namespace Battlegrounds {
     /// </summary>
     public static class Pathfinder {
 
+        private static string[] steampaths;
+
         /// <summary>
         /// 
         /// </summary>
         public static string SteamPath { get; private set; }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        public static string CoHPath { get; private set; }
+
         static Pathfinder() {
 
+            steampaths = new string[0];
             SteamPath = string.Empty;
+            CoHPath = string.Empty;
 
         }
 
@@ -31,7 +40,6 @@ namespace Battlegrounds {
                 return SteamPath;
             }
 
-
             short A = (short)'A';
             short Z = (short)'Z';
 
@@ -42,6 +50,8 @@ namespace Battlegrounds {
                     paths.Add(GetSteamPath((char)c, t));
                 }
             }
+
+            steampaths = paths.ToArray();
 
             string steampath = paths.Find(x => File.Exists(x + "Steam.exe"));
 
@@ -82,6 +92,31 @@ namespace Battlegrounds {
                 $"{c}:\\Program Files (x86)\\Steam\\",
             };
             return ex[t];
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public static string GetOrFindCoHPath() {
+
+            if (CoHPath != string.Empty) {
+                return CoHPath;
+            }
+
+            if (steampaths.Length == 0) {
+                GetOrFindSteamPath();
+            }
+
+            for (int i = 0; i < steampaths.Length; i++) {
+                if (Directory.Exists(steampaths[i] + "Steamapps\\Common\\Company of Heroes 2\\")) {
+                    CoHPath = steampaths[i] + "Steamapps\\Common\\Company of Heroes 2\\";
+                    return CoHPath;
+                }
+            }
+
+            return CoHPath;
+
         }
 
     }

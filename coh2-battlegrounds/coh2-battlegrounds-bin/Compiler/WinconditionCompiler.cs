@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using System.Threading;
+using System.Diagnostics;
 using Battlegrounds.Online;
 using Battlegrounds.Util;
 
@@ -75,7 +77,7 @@ namespace Battlegrounds.Compiler {
 
             // Add and compile scar files
             foreach (string file in winfiles) {
-                if (!AddFile(archiveDef, "data\\game\\winconditions\\", workdir, file)) {
+                if (!AddURLFile(archiveDef, "data\\game\\winconditions\\", workdir, file)) {
                     return false;
                 }
             }
@@ -88,7 +90,7 @@ namespace Battlegrounds.Compiler {
 
             // Add and compile scar files
             foreach (string file in scarfiles) {
-                if (!AddFile(archiveDef, "data\\scar\\winconditions\\", workdir, file)) {
+                if (!AddURLFile(archiveDef, "data\\scar\\winconditions\\", workdir, file)) {
                     return false;
                 }
             }
@@ -119,19 +121,94 @@ namespace Battlegrounds.Compiler {
 
             // Add and compile info files
             foreach (string file in localefiles) {
-                if (!AddFile(archiveDef, "", workdir, file)) {
+                if (!AddURLFile(archiveDef, "", workdir, file, true)) {
                     return false;
                 }
             }
 
+            // Add end TOC
             archiveDef.AppendLine("TOCEnd");
 
+            // Generate the path
+            string archiveDefTxtPath = workdir + "ArchiveDefinition.txt";
+
             // Save the archive definition
-            archiveDef.Save(workdir + "ArchiveDefinition.txt");
+            archiveDef.Save(archiveDefTxtPath);
+
+            string outputArchive = $"{Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)}\\my games\\Company of Heroes 2\\mods\\gamemode\\coh2_battlegrounds_wincondition.sga";
+
+            // Call the archive
+            if (!InvokeArchiver(archiveDefTxtPath, workdir, outputArchive)) {
+                return false;
+            }
 
             // Return true
             return true;
 
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="archdef"></param>
+        /// <param name="relativepath"></param>
+        /// <param name="output"></param>
+        /// <returns></returns>
+        public static bool InvokeArchiver(string archdef, string relativepath, string output) {
+
+            string cmdarg = $" -c \"{archdef}\" -a \"{output}\" -v -r \"{relativepath}\\\"";
+
+            Process archiveProcess = new Process {
+                StartInfo = new ProcessStartInfo() {
+                    FileName = Pathfinder.GetOrFindCoHPath() + "Archive.exe",
+                    Arguments = cmdarg,
+                    RedirectStandardOutput = true,
+                    RedirectStandardInput = false,
+                    RedirectStandardError = true,
+                    CreateNoWindow = true,
+                    UseShellExecute = false,
+                },
+                EnableRaisingEvents = true,
+            };
+
+            archiveProcess.OutputDataReceived += ArchiveProcess_OutputDataReceived;
+
+            try {
+
+                if (!archiveProcess.Start()) {
+                    archiveProcess.Dispose();
+                    return false;
+                } else {
+                    archiveProcess.BeginOutputReadLine();
+                }
+
+                Thread.Sleep(1000);
+
+                do {
+                    Thread.Sleep(100);
+                } while (!archiveProcess.HasExited);
+
+                if (archiveProcess.ExitCode != 0) {
+                    int eCode = archiveProcess.ExitCode;
+                    Trace.WriteLine($"Archiver has finished with error code = {eCode}");
+                    archiveProcess.Dispose();
+                    return false;
+                }
+
+            } catch (Exception e) {
+                archiveProcess.Dispose();
+                return false;
+            }
+
+            archiveProcess.Dispose();
+
+            return true;
+
+        }
+
+        private static void ArchiveProcess_OutputDataReceived(object sender, DataReceivedEventArgs e) {
+            if (e.Data != null && e.Data != string.Empty && e.Data != " ")
+                Console.WriteLine($"{e.Data}");
         }
 
         private static void CreateWorkspace(string workdir) {
@@ -157,9 +234,16 @@ namespace Battlegrounds.Compiler {
 
         private static string path_cut = "https://raw.githubusercontent.com/JustCodiex/coh2-battlegrounds/master/coh2-battlegrounds-mod/wincondition_mod/";
 
-        private static bool AddFile(TxtBuilder builder, string rpath, string workdir, string file) {
+        private static bool AddURLFile(TxtBuilder builder, string rpath, string workdir, string file, bool useBytes = false) {
 
-            string fileContent = SourceDownloader.DownloadSourceCode(file);
+            string fileContent;
+
+            if (useBytes) {
+                fileContent = Encoding.UTF8.GetString(SourceDownloader.DownloadSourceFile(file));
+            } else {
+                fileContent = SourceDownloader.DownloadSourceCode(file);
+            }
+
             if (fileContent == string.Empty) {
                 return false;
             }

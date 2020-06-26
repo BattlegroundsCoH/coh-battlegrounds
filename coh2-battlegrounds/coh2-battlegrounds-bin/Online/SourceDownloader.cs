@@ -27,6 +27,24 @@ namespace Battlegrounds.Online {
 
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="urlpath"></param>
+        /// <returns></returns>
+        public static byte[] DownloadSourceFile(string urlpath) {
+
+            try {
+                using (var client = new WebClient()) {
+                    return Encoding.UTF8.GetBytes(client.DownloadString(urlpath));
+                }
+            } catch {
+                return new byte[0];
+            }
+
+
+        }
+
     }
 
 }

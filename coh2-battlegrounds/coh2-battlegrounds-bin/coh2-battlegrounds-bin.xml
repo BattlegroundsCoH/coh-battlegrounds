@@ -134,6 +134,15 @@
             <param name="companyfile"></param>
             <returns></returns>
         </member>
+        <member name="M:Battlegrounds.Compiler.WinconditionCompiler.InvokeArchiver(System.String,System.String,System.String)">
+            <summary>
+            
+            </summary>
+            <param name="archdef"></param>
+            <param name="relativepath"></param>
+            <param name="output"></param>
+            <returns></returns>
+        </member>
         <member name="T:Battlegrounds.Game.Battlegrounds.GameMatch">
             <summary>
             
@@ -807,6 +816,13 @@
             <param name="urlpath"></param>
             <returns></returns>
         </member>
+        <member name="M:Battlegrounds.Online.SourceDownloader.DownloadSourceFile(System.String)">
+            <summary>
+            
+            </summary>
+            <param name="urlpath"></param>
+            <returns></returns>
+        </member>
         <member name="T:Battlegrounds.Pathfinder">
             <summary>
             Pathfinder for finding the paths to relevant paths (eg. CoH2's documents folder)
@@ -817,7 +833,18 @@
             
             </summary>
         </member>
+        <member name="P:Battlegrounds.Pathfinder.CoHPath">
+            <summary>
+            
+            </summary>
+        </member>
         <member name="M:Battlegrounds.Pathfinder.GetOrFindSteamPath">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Battlegrounds.Pathfinder.GetOrFindCoHPath">
             <summary>
             
             </summary>
