@@ -1,47 +1,108 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Text;
 using System.Threading.Tasks;
 using Battlegrounds.Compiler;
 
 namespace Battlegrounds.Game.Battlegrounds {
     
-    public enum SessionStatus {
-        S_None = -2,
-        S_Invalid = -1,
-        S_Success,
-        S_Compiling,
-        S_FailedCompile,
-        S_FiledPlay,
-        S_Playing,
-    }
-
     /// <summary>
     /// 
     /// </summary>
-    public static class SessionManager {
-    
+    public enum SessionStatus {
+
         /// <summary>
         /// 
+        /// </summary>
+        S_Invalid = -1,
+
+        /// <summary>
+        /// 
+        /// </summary>
+        S_Success,
+
+        /// <summary>
+        /// 
+        /// </summary>
+        S_Compiling,
+
+        /// <summary>
+        /// 
+        /// </summary>
+        S_FailedCompile,
+
+        /// <summary>
+        /// 
+        /// </summary>
+        S_FailedPlay,
+
+        /// <summary>
+        /// 
+        /// </summary>
+        S_GameNotLaunched,
+
+        /// <summary>
+        /// 
+        /// </summary>
+        S_GamePlayedWithoutCrash,
+
+        /// <summary>
+        /// 
+        /// </summary>
+        S_Analyzing,
+
+        /// <summary>
+        /// 
+        /// </summary>
+        S_AnalysisFailed,
+
+        /// <summary>
+        /// 
+        /// </summary>
+        S_NoPlayback,
+
+        /// <summary>
+        /// 
+        /// </summary>
+        S_Playing,
+
+    }
+
+    /// <summary>
+    /// Static management class for playing a <see cref="Session"/> in the proper order.
+    /// </summary>
+    public static class SessionManager {
+
+        /// <summary>
+        /// The instance of the currently active <see cref="Session"/>.
         /// </summary>
         public static Session ActiveSession { get; private set; }
 
         /// <summary>
-        /// 
+        /// The current status of the <see cref="SessionManager"/>.
         /// </summary>
-        public static SessionStatus SessionStatus { get; private set; } = SessionStatus.S_None;
+        public static SessionStatus SessionStatus { get; private set; } = SessionStatus.S_Success;
 
         /// <summary>
-        /// 
+        /// Plays a <see cref="Session"/> in a controlled flow of execution wherein callbacks are used to report on the status of the <see cref="Session"/>. Once done, a <see cref="GameMatch"/> instance can be retrieved to see match results.
         /// </summary>
-        /// <typeparam name="TCompanyCompilerType"></typeparam>
-        /// <param name="session"></param>
-        /// <param name="statusChangedCallback"></param>
-        public static async void PlaySession<TCompanyCompilerType>(Session session, Action<SessionStatus, Session> statusChangedCallback)
+        /// <typeparam name="TSessionCompilerType">The session compiler type</typeparam>
+        /// <typeparam name="TCompanyCompilerType">The company compiler type</typeparam>
+        /// <param name="session">The <see cref="Session"/> instance to play and analyze.</param>
+        /// <param name="statusChangedCallback">Callback for whenever the status of the play session has changed</param>
+        /// <param name="matchAnalyzedCallback">Callback called only when the match has been played and analyzed</param>
+        public static async void PlaySession<TSessionCompilerType, TCompanyCompilerType>(Session session, Action<SessionStatus, Session> statusChangedCallback, Action<GameMatch> matchAnalyzedCallback)
+            where TSessionCompilerType : SessionCompiler<TCompanyCompilerType>
             where TCompanyCompilerType : CompanyCompiler {
 
-            if (SessionStatus != SessionStatus.S_None) {
+            // Make sure no session is active
+            if (SessionStatus == SessionStatus.S_Playing || SessionStatus == SessionStatus.S_Analyzing || 
+                SessionStatus == SessionStatus.S_Compiling || SessionStatus == SessionStatus.S_GamePlayedWithoutCrash) {
+                return;
+            }
+
+            // Make sure we've been given a valid session
+            if (session == null) {
+                UpdateStatus(SessionStatus.S_Invalid, statusChangedCallback);
                 return;
             }
 
@@ -49,30 +110,73 @@ namespace Battlegrounds.Game.Battlegrounds {
             ActiveSession = session;
 
             // Set session status
-            SessionStatus = SessionStatus.S_Compiling;
+            UpdateStatus(SessionStatus.S_Compiling, statusChangedCallback);
 
             // Play session
             await Task.Run(() => {
 
                 // Compile
-                if (!CompileSession<TCompanyCompilerType>()) {
+                if (!CompileSession<TSessionCompilerType, TCompanyCompilerType>()) {
                     UpdateStatus(SessionStatus.S_FailedCompile, statusChangedCallback);
+                    return;
+                }
+
+                // Launch the game
+                if (!CoH2Launcher.Launch()) {
+                    UpdateStatus(SessionStatus.S_GameNotLaunched, statusChangedCallback);
+                    return;
                 }
 
                 // Update status to playing
                 UpdateStatus(SessionStatus.S_Playing, statusChangedCallback);
 
-                // Launch
-                CoH2Launcher.Launch();
+                // Watch the CoH2 process (wait for it to exit)
+                int p = CoH2Launcher.WatchProcess();
+
+                // Did it fail?
+                if (p == 1) {
+                    UpdateStatus(SessionStatus.S_GameNotLaunched, statusChangedCallback);
+                    return;
+                }
+
+                // Let the callback know the game was played without a crash
+                UpdateStatus(SessionStatus.S_GamePlayedWithoutCrash, statusChangedCallback);
+
+                // Make sure the .rec file exists and is valid
+                if (!HasPlayback()) {
+                    UpdateStatus(SessionStatus.S_NoPlayback, statusChangedCallback);
+                }
 
             });
 
+            // Update status
+            UpdateStatus(SessionStatus.S_Analyzing, statusChangedCallback);
+
+            // Create the match object
+            GameMatch match = new GameMatch();
+
+            // Load the match
+            if (!match.LoadMatch($"{Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)}\\my games\\company of heroes 2\\playback\\temp.rec")) {
+                UpdateStatus(SessionStatus.S_AnalysisFailed, statusChangedCallback);
+            }
+
+            // Evaluate the result
+            match.EvaluateResult();
+
+            // Invoke the analyzed callback.
+            matchAnalyzedCallback?.Invoke(match);
+
+            // Reset status
+            UpdateStatus(SessionStatus.S_Success, statusChangedCallback);
+
         }
 
-        private static bool CompileSession<T>() where T : CompanyCompiler {
+        private static bool CompileSession<TSessionCompilerType, TCompanyCompilerType>()
+            where TSessionCompilerType : SessionCompiler<TCompanyCompilerType>
+            where TCompanyCompilerType : CompanyCompiler {
 
             // Create compiler
-            SessionCompiler<T> compiler = new SessionCompiler<T>();
+            TSessionCompilerType compiler = Activator.CreateInstance<TSessionCompilerType>();
 
             // Try the following
             try {
@@ -94,6 +198,9 @@ namespace Battlegrounds.Game.Battlegrounds {
             return WinconditionCompiler.CompileToSga("temp_build", "session.scar");
 
         }
+
+        private static bool HasPlayback() 
+            => File.Exists($"{Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)}\\my games\\company of heroes 2\\playback\\temp.rec");
 
         private static void UpdateStatus(SessionStatus status, Action<SessionStatus, Session> callback) {
             SessionStatus = status;

@@ -35,11 +35,10 @@ namespace coh2_battlegrounds_console {
 
             Session session = Session.CreateSession("", companies, new Battlegrounds.Game.Gameplay.Wincondition(), true);
 
-            SessionManager.PlaySession<CompanyCompiler>(session, (a,b) => { Console.WriteLine(a); });
+            SessionManager.PlaySession<SessionCompiler<CompanyCompiler>, CompanyCompiler>(session, (a,b) => { Console.WriteLine(a); }, null);
 
             //Battlegrounds.Game.CoH2Launcher.Launch();
 
-            Console.WriteLine("Press any key to exit...");
             Console.Read();
 
         }

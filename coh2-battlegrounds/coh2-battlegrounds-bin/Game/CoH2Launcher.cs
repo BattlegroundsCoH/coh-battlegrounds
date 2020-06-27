@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics;
 using System.Text;
+using System.Threading;
 
 namespace Battlegrounds.Game {
     
@@ -33,6 +34,55 @@ namespace Battlegrounds.Game {
             }
 
             return true;
+
+        }
+
+        /// <summary>
+        /// Watch the RelicCoH2.exe process
+        /// </summary>
+        /// <returns>Integer value representing the result of the operation (0 = OK, 1 = Not found)</returns>
+        public static int WatchProcess() {
+
+            // The attempts counter
+            int attemps = 0;
+
+            // The processes
+            Process[] processes = new Process[0];
+
+            // While we havent found it and there are still attempts to make
+            while (attemps < 1000) {
+
+                // Try and find it
+                processes = Process.GetProcessesByName("RelicCoH2");
+
+                // If found - break
+                if (processes.Length > 0) {
+                    break;
+                }
+
+                // Wait 5ms
+                Thread.Sleep(5);
+
+                // Increase attempts so it's not an endless loop
+                attemps++;
+
+            }
+
+            // None found?
+            if (processes.Length == 0) {
+                return 1;
+            }
+
+            // Get the process
+            Process coh2Process = processes[0];
+
+            // Wait for exit
+            coh2Process.WaitForExit();
+
+            // Wait 0.5s
+            Thread.Sleep(500);
+
+            return 0;
 
         }
 

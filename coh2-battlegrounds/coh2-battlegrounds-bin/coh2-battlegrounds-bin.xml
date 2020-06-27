@@ -363,28 +363,90 @@
             <param name="enableAI"></param>
             <returns></returns>
         </member>
-        <member name="T:Battlegrounds.Game.Battlegrounds.SessionManager">
+        <member name="T:Battlegrounds.Game.Battlegrounds.SessionStatus">
             <summary>
             
+            </summary>
+        </member>
+        <member name="F:Battlegrounds.Game.Battlegrounds.SessionStatus.S_Invalid">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:Battlegrounds.Game.Battlegrounds.SessionStatus.S_Success">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:Battlegrounds.Game.Battlegrounds.SessionStatus.S_Compiling">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:Battlegrounds.Game.Battlegrounds.SessionStatus.S_FailedCompile">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:Battlegrounds.Game.Battlegrounds.SessionStatus.S_FailedPlay">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:Battlegrounds.Game.Battlegrounds.SessionStatus.S_GameNotLaunched">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:Battlegrounds.Game.Battlegrounds.SessionStatus.S_GamePlayedWithoutCrash">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:Battlegrounds.Game.Battlegrounds.SessionStatus.S_Analyzing">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:Battlegrounds.Game.Battlegrounds.SessionStatus.S_AnalysisFailed">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:Battlegrounds.Game.Battlegrounds.SessionStatus.S_NoPlayback">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:Battlegrounds.Game.Battlegrounds.SessionStatus.S_Playing">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:Battlegrounds.Game.Battlegrounds.SessionManager">
+            <summary>
+            Static management class for playing a <see cref="T:Battlegrounds.Game.Battlegrounds.Session"/> in the proper order.
             </summary>
         </member>
         <member name="P:Battlegrounds.Game.Battlegrounds.SessionManager.ActiveSession">
             <summary>
-            
+            The instance of the currently active <see cref="T:Battlegrounds.Game.Battlegrounds.Session"/>.
             </summary>
         </member>
         <member name="P:Battlegrounds.Game.Battlegrounds.SessionManager.SessionStatus">
             <summary>
-            
+            The current status of the <see cref="T:Battlegrounds.Game.Battlegrounds.SessionManager"/>.
             </summary>
         </member>
-        <member name="M:Battlegrounds.Game.Battlegrounds.SessionManager.PlaySession``1(Battlegrounds.Game.Battlegrounds.Session,System.Action{Battlegrounds.Game.Battlegrounds.SessionStatus,Battlegrounds.Game.Battlegrounds.Session})">
+        <member name="M:Battlegrounds.Game.Battlegrounds.SessionManager.PlaySession``2(Battlegrounds.Game.Battlegrounds.Session,System.Action{Battlegrounds.Game.Battlegrounds.SessionStatus,Battlegrounds.Game.Battlegrounds.Session},System.Action{Battlegrounds.Game.Battlegrounds.GameMatch})">
             <summary>
-            
+            Plays a <see cref="T:Battlegrounds.Game.Battlegrounds.Session"/> in a controlled flow of execution wherein callbacks are used to report on the status of the <see cref="T:Battlegrounds.Game.Battlegrounds.Session"/>. Once done, a <see cref="T:Battlegrounds.Game.Battlegrounds.GameMatch"/> instance can be retrieved to see match results.
             </summary>
-            <typeparam name="TCompanyCompilerType"></typeparam>
-            <param name="session"></param>
-            <param name="statusChangedCallback"></param>
+            <typeparam name="TSessionCompilerType">The session compiler type</typeparam>
+            <typeparam name="TCompanyCompilerType">The company compiler type</typeparam>
+            <param name="session">The <see cref="T:Battlegrounds.Game.Battlegrounds.Session"/> instance to play and analyze.</param>
+            <param name="statusChangedCallback">Callback for whenever the status of the play session has changed</param>
+            <param name="matchAnalyzedCallback">Callback called only when the match has been played and analyzed</param>
         </member>
         <member name="T:Battlegrounds.Game.CoH2Launcher">
             <summary>
@@ -400,6 +462,12 @@
             <summary>
             Launch Company of Heroes 2 through Steam
             </summary>
+        </member>
+        <member name="M:Battlegrounds.Game.CoH2Launcher.WatchProcess">
+            <summary>
+            Watch the RelicCoH2.exe process
+            </summary>
+            <returns>Integer value representing the result of the operation (0 = OK, 1 = Not found)</returns>
         </member>
         <member name="T:Battlegrounds.Game.Database.Blueprint">
             <summary>
