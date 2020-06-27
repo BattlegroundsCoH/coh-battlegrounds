@@ -18,6 +18,8 @@ TOCStart name="data" alias="data" path="" relativeroot="data"
 	E:\coh2_battlegrounds\coh2-battlegrounds-mod\wincondition_mod\coh2_battlegrounds_wincondition Intermediate Cache\Intermediate Files\data\scar\winconditions\auxiliary_scripts\client_companyui.scar
 	E:\coh2_battlegrounds\coh2-battlegrounds-mod\wincondition_mod\coh2_battlegrounds_wincondition Intermediate Cache\Intermediate Files\data\scar\winconditions\auxiliary_scripts\shared_companyloader.scar
 	E:\coh2_battlegrounds\coh2-battlegrounds-mod\wincondition_mod\coh2_battlegrounds_wincondition Intermediate Cache\Intermediate Files\data\scar\winconditions\auxiliary_scripts\session.scar
+	E:\coh2_battlegrounds\coh2-battlegrounds-mod\wincondition_mod\coh2_battlegrounds_wincondition Intermediate Cache\Intermediate Files\data\scar\winconditions\auxiliary_scripts\api_ui.scar
+	E:\coh2_battlegrounds\coh2-battlegrounds-mod\wincondition_mod\coh2_battlegrounds_wincondition Intermediate Cache\Intermediate Files\data\scar\winconditions\auxiliary_scripts\client_overrideui.scar
 	E:\coh2_battlegrounds\coh2-battlegrounds-mod\wincondition_mod\coh2_battlegrounds_wincondition Intermediate Cache\Intermediate Files\data\scar\winconditions\coh2_battlegrounds_vp.scar
 	E:\coh2_battlegrounds\coh2-battlegrounds-mod\wincondition_mod\coh2_battlegrounds_wincondition Intermediate Cache\Intermediate Files\data\scar\winconditions\coh2_battlegrounds_annihilate.scar
 	E:\coh2_battlegrounds\coh2-battlegrounds-mod\wincondition_mod\coh2_battlegrounds_wincondition Intermediate Cache\Intermediate Files\data\ui\Bin\6a0a13b89555402ca75b85dc30f5cb04.gfx

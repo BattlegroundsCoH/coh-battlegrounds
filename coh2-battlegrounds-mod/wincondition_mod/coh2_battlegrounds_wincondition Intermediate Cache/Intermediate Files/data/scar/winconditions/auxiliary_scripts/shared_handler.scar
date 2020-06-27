@@ -13,10 +13,12 @@ _bg_message_type_no_actions_required = 42.0;
 -- Imports
 ------------------------------------------------------------------------------------
 import("WinConditions/auxiliary_scripts/session.scar");
-import("WinConditions/auxiliary_scripts/shared_companyloader.scar")
-import("WinConditions/auxiliary_scripts/shared_units.scar")
-import("WinConditions/auxiliary_scripts/shared_util.scar")
-import("WinConditions/auxiliary_scripts/client_companyui.scar")
+import("WinConditions/auxiliary_scripts/shared_companyloader.scar");
+import("WinConditions/auxiliary_scripts/shared_units.scar");
+import("WinConditions/auxiliary_scripts/shared_util.scar");
+import("WinConditions/auxiliary_scripts/api_ui.scar");
+import("WinConditions/auxiliary_scripts/client_companyui.scar");
+import("WinConditions/auxiliary_scripts/client_overrideui.scar");
 
 function BG_Init()
 
@@ -69,18 +71,6 @@ function BG_Init()
 end
 
 Scar_AddInit(BG_Init);
-
-function OnGameSetup()
-
-    if _bg_playerData ~= nil then
-
-        for i=1, #_bg_playerData do
-            Setup_SetPlayerName(_bg_playerData[i].player, Util_CreateLocString(_bg_playerData[i].company.name)); -- Simply test if this will stil work
-        end
-
-    end
-
-end
 
 function dummy_spawn()
 

@@ -11,7 +11,7 @@
 		</BurnInfo>
 		<BurnInfo>
 			<FileName>E:\coh2_battlegrounds\coh2-battlegrounds-mod\wincondition_mod\auxiliary_scripts\shared_handler.scar</FileName>
-			<FileHash>b6e81c85790da5b203fcea3944950440</FileHash>
+			<FileHash>032608dda01fdd793d1038867af894e0</FileHash>
 		</BurnInfo>
 		<BurnInfo>
 			<FileName>E:\coh2_battlegrounds\coh2-battlegrounds-mod\wincondition_mod\auxiliary_scripts\shared_units.scar</FileName>
@@ -32,6 +32,14 @@
 		<BurnInfo>
 			<FileName>E:\coh2_battlegrounds\coh2-battlegrounds-mod\wincondition_mod\auxiliary_scripts\session.scar</FileName>
 			<FileHash>088e74d90abf2643735d9814c6a3eb4b</FileHash>
+		</BurnInfo>
+		<BurnInfo>
+			<FileName>E:\coh2_battlegrounds\coh2-battlegrounds-mod\wincondition_mod\auxiliary_scripts\api_ui.scar</FileName>
+			<FileHash>d41d8cd98f00b204e9800998ecf8427e</FileHash>
+		</BurnInfo>
+		<BurnInfo>
+			<FileName>E:\coh2_battlegrounds\coh2-battlegrounds-mod\wincondition_mod\auxiliary_scripts\client_overrideui.scar</FileName>
+			<FileHash>d41d8cd98f00b204e9800998ecf8427e</FileHash>
 		</BurnInfo>
 		<BurnInfo>
 			<FileName>E:\coh2_battlegrounds\coh2-battlegrounds-mod\wincondition_mod\coh2_battlegrounds_vp.scar</FileName>

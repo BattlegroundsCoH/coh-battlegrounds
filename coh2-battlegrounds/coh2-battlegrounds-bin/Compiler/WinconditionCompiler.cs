@@ -18,24 +18,25 @@ namespace Battlegrounds.Compiler {
         private static string[] DownloadFiles = new string[] {
             
             // Scar files
-            "https://raw.githubusercontent.com/JustCodiex/coh2-battlegrounds/master/coh2-battlegrounds-mod/wincondition_mod/auxiliary_scripts/shared_util.scar",
-            "https://raw.githubusercontent.com/JustCodiex/coh2-battlegrounds/master/coh2-battlegrounds-mod/wincondition_mod/auxiliary_scripts/shared_units.scar",
-            "https://raw.githubusercontent.com/JustCodiex/coh2-battlegrounds/master/coh2-battlegrounds-mod/wincondition_mod/auxiliary_scripts/shared_handler.scar",
-            "https://raw.githubusercontent.com/JustCodiex/coh2-battlegrounds/master/coh2-battlegrounds-mod/wincondition_mod/auxiliary_scripts/shared_companyloader.scar",
-            "https://raw.githubusercontent.com/JustCodiex/coh2-battlegrounds/master/coh2-battlegrounds-mod/wincondition_mod/auxiliary_scripts/shared_companyloader.scar",
-            "https://raw.githubusercontent.com/JustCodiex/coh2-battlegrounds/master/coh2-battlegrounds-mod/wincondition_mod/auxiliary_scripts/client_companyui.scar",
-            "https://raw.githubusercontent.com/JustCodiex/coh2-battlegrounds/master/coh2-battlegrounds-mod/wincondition_mod/coh2_battlegrounds_annihilate.scar",
-            "https://raw.githubusercontent.com/JustCodiex/coh2-battlegrounds/master/coh2-battlegrounds-mod/wincondition_mod/coh2_battlegrounds_vp.scar",
+            "https://raw.githubusercontent.com/JustCodiex/coh2-battlegrounds/master/coh2-battlegrounds-mod/wincondition_mod/auxiliary_scripts/shared_util.scar", // 0
+            "https://raw.githubusercontent.com/JustCodiex/coh2-battlegrounds/master/coh2-battlegrounds-mod/wincondition_mod/auxiliary_scripts/shared_units.scar", // 1
+            "https://raw.githubusercontent.com/JustCodiex/coh2-battlegrounds/master/coh2-battlegrounds-mod/wincondition_mod/auxiliary_scripts/shared_handler.scar", // 2
+            "https://raw.githubusercontent.com/JustCodiex/coh2-battlegrounds/master/coh2-battlegrounds-mod/wincondition_mod/auxiliary_scripts/shared_companyloader.scar", // 3
+            "https://raw.githubusercontent.com/JustCodiex/coh2-battlegrounds/master/coh2-battlegrounds-mod/wincondition_mod/auxiliary_scripts/client_companyui.scar", // 4
+            "https://raw.githubusercontent.com/JustCodiex/coh2-battlegrounds/master/coh2-battlegrounds-mod/wincondition_mod/auxiliary_scripts/client_overrideui.scar", // 5
+            "https://raw.githubusercontent.com/JustCodiex/coh2-battlegrounds/master/coh2-battlegrounds-mod/wincondition_mod/auxiliary_scripts/api_ui.scar", // 6
+            "https://raw.githubusercontent.com/JustCodiex/coh2-battlegrounds/master/coh2-battlegrounds-mod/wincondition_mod/coh2_battlegrounds_annihilate.scar", // 7
+            "https://raw.githubusercontent.com/JustCodiex/coh2-battlegrounds/master/coh2-battlegrounds-mod/wincondition_mod/coh2_battlegrounds_vp.scar", // 8
 
             // Win files
-            "https://raw.githubusercontent.com/JustCodiex/coh2-battlegrounds/master/coh2-battlegrounds-mod/wincondition_mod/coh2_battlegrounds_annihilate.win",
-            "https://raw.githubusercontent.com/JustCodiex/coh2-battlegrounds/master/coh2-battlegrounds-mod/wincondition_mod/coh2_battlegrounds_vp.win",
+            "https://raw.githubusercontent.com/JustCodiex/coh2-battlegrounds/master/coh2-battlegrounds-mod/wincondition_mod/coh2_battlegrounds_annihilate.win", // 9
+            "https://raw.githubusercontent.com/JustCodiex/coh2-battlegrounds/master/coh2-battlegrounds-mod/wincondition_mod/coh2_battlegrounds_vp.win", // 10
 
             // Info files
-            "https://raw.githubusercontent.com/JustCodiex/coh2-battlegrounds/master/coh2-battlegrounds-mod/wincondition_mod/coh2_battlegrounds_wincondition%20Intermediate%20Cache/Intermediate%20Files/info/6a0a13b89555402ca75b85dc30f5cb04.info",
+            "https://raw.githubusercontent.com/JustCodiex/coh2-battlegrounds/master/coh2-battlegrounds-mod/wincondition_mod/coh2_battlegrounds_wincondition%20Intermediate%20Cache/Intermediate%20Files/info/6a0a13b89555402ca75b85dc30f5cb04.info", // 11
 
             // Locale file
-            "https://raw.githubusercontent.com/JustCodiex/coh2-battlegrounds/master/coh2-battlegrounds-mod/wincondition_mod/locale/english/english.ucs",
+            "https://raw.githubusercontent.com/JustCodiex/coh2-battlegrounds/master/coh2-battlegrounds-mod/wincondition_mod/locale/english/english.ucs", //12
         
         };
 
@@ -73,7 +74,7 @@ namespace Battlegrounds.Compiler {
             archiveDef.AppendLine("\tFileSettingsEnd");
 
             // Get the scar files
-            string[] winfiles = DownloadFiles[8..10];
+            string[] winfiles = DownloadFiles[9..11];
 
             // Add and compile scar files
             foreach (string file in winfiles) {
@@ -86,7 +87,7 @@ namespace Battlegrounds.Compiler {
             AddLocalFile(archiveDef, companyfile, "data\\scar\\winconditions\\auxiliary_scripts\\", workdir);
 
             // Get the scar files
-            string[] scarfiles = DownloadFiles[0..8];
+            string[] scarfiles = DownloadFiles[0..9];
 
             // Add and compile scar files
             foreach (string file in scarfiles) {
@@ -103,7 +104,7 @@ namespace Battlegrounds.Compiler {
             archiveDef.AppendLine("\tFileSettingsEnd");
 
             // Add and compile info file
-            if (!AddInfoFile(archiveDef, workdir, DownloadFiles[10])) {
+            if (!AddInfoFile(archiveDef, workdir, DownloadFiles[11])) {
                 return false;
             }
 
@@ -117,7 +118,7 @@ namespace Battlegrounds.Compiler {
             archiveDef.AppendLine("\tFileSettingsEnd");
 
             // Get all locale files
-            string[] localefiles = DownloadFiles[11..^0];
+            string[] localefiles = DownloadFiles[12..^0];
 
             // Add and compile info files
             foreach (string file in localefiles) {

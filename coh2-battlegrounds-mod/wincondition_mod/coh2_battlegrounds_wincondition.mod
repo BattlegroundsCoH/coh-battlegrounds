@@ -54,6 +54,14 @@
 											<BurnSettings i:nil="true" />
 											<RelativeName>auxiliary_scripts\session.scar</RelativeName>
 										</d2p1:anyType>
+										<d2p1:anyType i:type="BurnFile">
+											<BurnSettings i:nil="true" />
+											<RelativeName>auxiliary_scripts\api_ui.scar</RelativeName>
+										</d2p1:anyType>
+										<d2p1:anyType i:type="BurnFile">
+											<BurnSettings i:nil="true" />
+											<RelativeName>auxiliary_scripts\client_overrideui.scar</RelativeName>
+										</d2p1:anyType>
 									</Children>
 									<IsExpanded>true</IsExpanded>
 									<Name>auxiliary_scripts</Name>
