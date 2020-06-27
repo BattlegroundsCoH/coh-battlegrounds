@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Linq;
 using Battlegrounds.Game.Database;
 using Battlegrounds.Game.Database.json;
 using Battlegrounds.Game.Gameplay;
@@ -108,6 +109,21 @@ namespace Battlegrounds.Game.Battlegrounds {
             return true;
 
         }
+
+        /// <summary>
+        /// Get the company <see cref="Squad"/> by its company index.
+        /// </summary>
+        /// <param name="squadID">The index of the squad to get</param>
+        /// <returns>The squad with squad id matching requested squad ID or null.</returns>
+        public Squad GetSquadByIndex(ushort squadID)
+            => m_squads.FirstOrDefault(x => x.SquadID == squadID);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="squadId"></param>
+        public bool RemoveSquad(ushort squadId)
+            => m_squads.RemoveAll(x => x.SquadID == squadId) == 1;
 
     }
 

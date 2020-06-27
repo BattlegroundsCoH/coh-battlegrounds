@@ -223,9 +223,22 @@
             <param name="verify"></param>
             <returns></returns>
         </member>
-        <member name="T:Battlegrounds.Game.Battlegrounds.GameMatch">
+        <member name="M:Battlegrounds.Game.Battlegrounds.Company.GetSquadByIndex(System.UInt16)">
+            <summary>
+            Get the company <see cref="T:Battlegrounds.Game.Gameplay.Squad"/> by its company index.
+            </summary>
+            <param name="squadID">The index of the squad to get</param>
+            <returns>The squad with squad id matching requested squad ID or null.</returns>
+        </member>
+        <member name="M:Battlegrounds.Game.Battlegrounds.Company.RemoveSquad(System.UInt16)">
             <summary>
             
+            </summary>
+            <param name="squadId"></param>
+        </member>
+        <member name="T:Battlegrounds.Game.Battlegrounds.GameMatch">
+            <summary>
+            Representation of a match wherein the results of the match can be evaluated and verified within the <see cref="T:Battlegrounds.Game.Battlegrounds.Session"/> the match was played.
             </summary>
         </member>
         <member name="P:Battlegrounds.Game.Battlegrounds.GameMatch.Players">
@@ -233,7 +246,7 @@
             
             </summary>
         </member>
-        <member name="M:Battlegrounds.Game.Battlegrounds.GameMatch.#ctor">
+        <member name="M:Battlegrounds.Game.Battlegrounds.GameMatch.#ctor(Battlegrounds.Game.Battlegrounds.Session)">
             <summary>
             
             </summary>
@@ -268,6 +281,16 @@
         <member name="P:Battlegrounds.Game.Battlegrounds.PlayerResult.Player">
             <summary>
             The <see cref="P:Battlegrounds.Game.Battlegrounds.PlayerResult.Player"/> the <see cref="T:Battlegrounds.Game.Battlegrounds.PlayerResult"/> data is about.
+            </summary>
+        </member>
+        <member name="P:Battlegrounds.Game.Battlegrounds.PlayerResult.Losses">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:Battlegrounds.Game.Battlegrounds.PlayerResult.Alive">
+            <summary>
+            
             </summary>
         </member>
         <member name="M:Battlegrounds.Game.Battlegrounds.PlayerResult.#ctor(Battlegrounds.Game.Gameplay.Player)">

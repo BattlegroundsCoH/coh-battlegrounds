@@ -9,11 +9,12 @@ using Battlegrounds.Game.Database;
 namespace Battlegrounds.Game.Battlegrounds {
 
     /// <summary>
-    /// 
+    /// Representation of a match wherein the results of the match can be evaluated and verified within the <see cref="Session"/> the match was played.
     /// </summary>
     public class GameMatch {
 
         ReplayFile m_matchRecord;
+        Session m_gameSession;
         PlayerResult[] m_matchPlayerResults;
 
         /// <summary>
@@ -24,8 +25,9 @@ namespace Battlegrounds.Game.Battlegrounds {
         /// <summary>
         /// 
         /// </summary>
-        public GameMatch() {
+        public GameMatch(Session session) {
             m_matchPlayerResults = new PlayerResult[0];
+            m_gameSession = session;
         }
 
         /// <summary>
@@ -98,7 +100,10 @@ namespace Battlegrounds.Game.Battlegrounds {
 
             }
 
+            Console.WriteLine("Updating companies");
 
+            // Update all companies
+            this.UpdateCompanies();
 
         }
 
@@ -106,37 +111,66 @@ namespace Battlegrounds.Game.Battlegrounds {
 
             if (msg.Length > 0) {
 
-                char msgtype = char.ToUpper(msg[0]); // Always bump it to upper (incase it's forgotten in Scar script)
+                Match messageMatchResult = Regex.Match(msg, @"(?<cmdtype>\w)\[(?<msg>\S+|\d+)*\]");
 
-                if (msgtype == 'S') {
+                char msgtype = char.ToUpper(messageMatchResult.Groups["cmdtype"].Value[0]); // Always bump it to upper (incase it's forgotten in Scar script)
 
-                    Match result = Regex.Match(msg.Substring(1), @"\[(?<uid>\d+),(?<bp>\S+)\]");
+                if (msgtype == 'D') {
 
-                    ushort uid = ushort.Parse(result.Groups["uid"].Value);
-                    string bp = result.Groups["bp"].Value;
-
-                    Squad squad = new Squad(uid, player.Player, BlueprintManager.FromBlueprintName(bp, BlueprintType.SBP));
+                    Squad squad = new Squad(ushort.Parse(messageMatchResult.Groups["msg"].Value), player.Player, null);
                     allsquads.Add(squad);
                     player.AddSquad(squad);
 
+                    Console.WriteLine("Player " + player.Player.Name + " deployed " + squad.SquadID);
+
                 } else if (msgtype == 'K') {
 
-                    Match result = Regex.Match(msg.Substring(1), @"\[(?<uid>\d+)\]");
-                    ushort uid = ushort.Parse(result.Groups["uid"].Value);
+                    ushort squadID = ushort.Parse(messageMatchResult.Groups["msg"].Value);
+                    Squad squad = allsquads.FirstOrDefault(x => x.SquadID == squadID);
 
-                    Squad s = allsquads.FirstOrDefault(x => x.SquadID == uid);
+                    if (squad != null) {
 
-                    if (s != null) {
+                        allsquads.Remove(squad);
+                        player.RemoveSquad(squad);
 
-                        player.RemoveSquad(s);
-                        allsquads.Remove(s);
+                        Console.WriteLine("Player " + player.Player.Name + " lost " + squad.SquadID);
 
                     }
 
-                }
+                } // Other commands here
 
             } else {
                 // Some sort of error?
+            }
+
+        }
+
+        private void UpdateCompanies() {
+
+            for (int i = 0; i < m_matchPlayerResults.Length; i++) {
+
+                Company company = m_gameSession.Companies.FirstOrDefault(x => x.Owner.Name == m_matchPlayerResults[i].Player.Name);
+
+                if (company == null) {
+                    // some error?
+                }
+
+                // We now remove all the squads lost
+                foreach (Squad squad in m_matchPlayerResults[i].Losses) {
+                    if (!company.RemoveSquad(squad.SquadID)) {
+                        Console.WriteLine("Lost a squad that was not deployed by player!");
+                    }
+                }
+
+                // And we now update squads
+                foreach (Squad squad in m_matchPlayerResults[i].Alive) {
+
+                    Squad companySquad = company.GetSquadByIndex(squad.SquadID);
+
+                    // TODO: Increase rank, add upgrades, slot items etc.
+
+                }
+
             }
 
         }

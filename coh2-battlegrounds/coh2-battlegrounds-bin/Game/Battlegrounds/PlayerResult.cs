@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Collections.Immutable;
 using Battlegrounds.Game.Gameplay;
 
 namespace Battlegrounds.Game.Battlegrounds {
@@ -26,6 +27,16 @@ namespace Battlegrounds.Game.Battlegrounds {
         /// The <see cref="Player"/> the <see cref="PlayerResult"/> data is about.
         /// </summary>
         public Player Player { get; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public ImmutableHashSet<Squad> Losses => m_lostSquads.ToImmutableHashSet();
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public ImmutableHashSet<Squad> Alive => m_activeSquads.ToImmutableHashSet();
 
         /// <summary>
         /// Creates a new result container for the player.

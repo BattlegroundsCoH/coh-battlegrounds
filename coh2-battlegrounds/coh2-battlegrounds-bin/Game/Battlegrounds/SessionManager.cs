@@ -153,7 +153,7 @@ namespace Battlegrounds.Game.Battlegrounds {
             UpdateStatus(SessionStatus.S_Analyzing, statusChangedCallback);
 
             // Create the match object
-            GameMatch match = new GameMatch();
+            GameMatch match = new GameMatch(ActiveSession);
 
             // Load the match
             if (!match.LoadMatch($"{Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)}\\my games\\company of heroes 2\\playback\\temp.rec")) {
