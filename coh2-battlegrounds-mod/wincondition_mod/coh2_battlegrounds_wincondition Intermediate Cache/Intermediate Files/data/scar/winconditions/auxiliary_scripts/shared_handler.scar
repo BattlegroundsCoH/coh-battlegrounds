@@ -8,7 +8,7 @@ _bg_custom = {}; -- Custom data
 _bg_playerData = {};
 
 _bg_message_type_unit_killed = 41.0;
-_bg_message_type_unit_spawned = 42.0;
+_bg_message_type_unit_deployed = 42.0;
 
 ------------------------------------------------------------------------------------
 -- Imports
@@ -32,6 +32,7 @@ function BG_Init()
             _bg_playerData[j].playerID = Player_GetID(player);
             _bg_playerData[j].squads = {};
             _bg_playerData[j].entities = {};
+            _bg_playerData[j].deployed = {};
             j = j + 1;
         end
     end

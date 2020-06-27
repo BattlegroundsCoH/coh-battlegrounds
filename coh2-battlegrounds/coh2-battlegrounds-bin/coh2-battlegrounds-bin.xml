@@ -131,29 +131,29 @@
         </member>
         <member name="T:Battlegrounds.Compiler.SessionCompiler`1">
             <summary>
-            
+            Basic <see cref="T:Battlegrounds.Game.Battlegrounds.Session"/> to Lua code compiler. Can be inherited to add custom features.
             </summary>
-            <typeparam name="T"></typeparam>
+            <typeparam name="T">The type of <see cref="T:Battlegrounds.Compiler.CompanyCompiler"/> to use to compile a <see cref="T:Battlegrounds.Game.Battlegrounds.Company"/> to Lua code.</typeparam>
         </member>
         <member name="M:Battlegrounds.Compiler.SessionCompiler`1.#ctor">
             <summary>
-            
+            Create a new <see cref="T:Battlegrounds.Compiler.SessionCompiler`1"/> instance.
             </summary>
         </member>
         <member name="M:Battlegrounds.Compiler.SessionCompiler`1.CompileSession(Battlegrounds.Game.Battlegrounds.Session)">
             <summary>
-            
+            Compile a <see cref="T:Battlegrounds.Game.Battlegrounds.Session"/> into Lua Source Code.
             </summary>
-            <param name="session"></param>
-            <returns></returns>
+            <param name="session">The <see cref="T:Battlegrounds.Game.Battlegrounds.Session"/> instance to compile.</param>
+            <returns>A formatted string containing Lua Source Code.</returns>
         </member>
         <member name="M:Battlegrounds.Compiler.SessionCompiler`1.WriteSetting(Battlegrounds.Util.TxtBuilder,System.String,System.Object)">
             <summary>
-            
+            Writes a setting to the <see cref="T:Battlegrounds.Util.TxtBuilder"/>.
             </summary>
-            <param name="lua"></param>
-            <param name="setting"></param>
-            <param name="value"></param>
+            <param name="lua">The lua code to append setting to</param>
+            <param name="setting">The name of the setting to set</param>
+            <param name="value">The C# value of the setting to set. The value is automatically converted to its Lua Source Code equivalent</param>
         </member>
         <member name="T:Battlegrounds.Compiler.WinconditionCompiler">
             <summary>
@@ -365,62 +365,62 @@
         </member>
         <member name="T:Battlegrounds.Game.Battlegrounds.SessionStatus">
             <summary>
-            
+            Status code for a <see cref="T:Battlegrounds.Game.Battlegrounds.Session"/> being run in the <see cref="T:Battlegrounds.Game.Battlegrounds.SessionManager"/>.
             </summary>
         </member>
         <member name="F:Battlegrounds.Game.Battlegrounds.SessionStatus.S_Invalid">
             <summary>
-            
+            Invalid session (Session was null)
             </summary>
         </member>
         <member name="F:Battlegrounds.Game.Battlegrounds.SessionStatus.S_Success">
             <summary>
-            
+            Session was completed without errors
             </summary>
         </member>
         <member name="F:Battlegrounds.Game.Battlegrounds.SessionStatus.S_Compiling">
             <summary>
-            
+            The session is currently compiling
             </summary>
         </member>
         <member name="F:Battlegrounds.Game.Battlegrounds.SessionStatus.S_FailedCompile">
             <summary>
-            
+            The session failed to compile
             </summary>
         </member>
         <member name="F:Battlegrounds.Game.Battlegrounds.SessionStatus.S_FailedPlay">
             <summary>
-            
+            The session failed to play
             </summary>
         </member>
         <member name="F:Battlegrounds.Game.Battlegrounds.SessionStatus.S_GameNotLaunched">
             <summary>
-            
+            The game was not launched
             </summary>
         </member>
         <member name="F:Battlegrounds.Game.Battlegrounds.SessionStatus.S_GamePlayedWithoutCrash">
             <summary>
-            
+            The game was played without causing a crash
             </summary>
         </member>
         <member name="F:Battlegrounds.Game.Battlegrounds.SessionStatus.S_Analyzing">
             <summary>
-            
+            The played match is currently being analyzed
             </summary>
         </member>
         <member name="F:Battlegrounds.Game.Battlegrounds.SessionStatus.S_AnalysisFailed">
             <summary>
-            
+            The analysis of the match failed
             </summary>
         </member>
         <member name="F:Battlegrounds.Game.Battlegrounds.SessionStatus.S_NoPlayback">
             <summary>
-            
+            The playback file was found
             </summary>
         </member>
         <member name="F:Battlegrounds.Game.Battlegrounds.SessionStatus.S_Playing">
             <summary>
-            
+            The session is currently being played.
             </summary>
         </member>
         <member name="T:Battlegrounds.Game.Battlegrounds.SessionManager">

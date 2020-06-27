@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using Battlegrounds.Game.Database.json;
 
 namespace Battlegrounds.Game.Database {

@@ -1,7 +1,7 @@
 function BG_HookUnitSystem()
 
     -- Call every tick...
-    Rule_Add(BG_UpdateUnitCounts);
+    --Rule_Add(BG_UpdateUnitCounts);
 
 end
 
@@ -19,7 +19,7 @@ function BG_UpdateUnitCounts()
             
             -- Add new squads
             for j=1, #newunits do
-                BG_AddSquad(_bg_playerData[i].player, newunits[j]);
+                --BG_AddSquad(_bg_playerData[i].player, newunits[j]);
             end
 
             -- Update set
@@ -31,31 +31,21 @@ function BG_UpdateUnitCounts()
 
 end
 
-function BG_AddSquad(player, sid)
-
-    -- Retrieve basic data
-    local squad = Squad_FromWorldID(sid);
-    local pbgid = BP_GetName(Squad_GetBlueprint(squad));
-
-    -- Broadcast that a unit was spawned
-    Command_PlayerBroadcastMessage(Game_GetLocalPlayer(), Game_GetLocalPlayer(), _bg_message_type_unit_spawned, "S[" .. sid .. "," .. pbgid  .. "]")
-
-    -- Add "on death" event
-    Rule_AddSquadEvent(BG_OnSquadDeath, squad, GE_SquadKilled);
-
-end
-
-function BG_OnSquadDeath(sid)
-
-    -- Broadcast that the unit was killed
-    Command_PlayerBroadcastMessage(Game_GetLocalPlayer(), Game_GetLocalPlayer(), _bg_message_type_unit_killed, "K[" .. Squad_GetGameID(sid) .. "]")
-
-end
+--function BG_AddSquad(player, sid)
+--
+--    -- Retrieve basic data
+--    local squad = Squad_FromWorldID(sid);
+--    local pbgid = BP_GetName(Squad_GetBlueprint(squad));
+--
+--end
 
 function BG_DeploySquad(player, unit_id)
 
+    -- Get the player reference id
+    local playerRefID = BG_GetPlayerID(player);
+
     -- Get unit data
-    local unit_data = _bg_playerData[BG_GetPlayerID(player)].company.units[unit_id];
+    local unit_data = _bg_playerData[playerRefID].company.units[unit_id];
 
     -- Make sure we don't spawn in something twice
     if not unit_data.spawned then
@@ -96,10 +86,31 @@ function BG_DeploySquad(player, unit_id)
             -- TODO: Implement
         end
 
+        -- Register the unit
+        _bg_playerData[playerRefID].deployed[Squad_GetGameID(squad)] = unit_data.company_id;
+
+        -- Broadcast that a unit was spawned
+        Command_PlayerBroadcastMessage(Game_GetLocalPlayer(), Game_GetLocalPlayer(), _bg_message_type_unit_deployed, "D["..unit_data.company_id.."]");
+
+        -- Add "on death" event
+        Rule_AddSquadEvent(BG_OnSquadDeath, squad, GE_SquadKilled);
+
         -- Mark spawned
         unit_data.spawned = true;
 
     end
+
+end
+
+function BG_OnSquadDeath(sid)
+
+    -- Get required info
+    local playerOwner = Squad_GetPlayerOwner(sid);
+    local playerRefID = BG_GetPlayerID(playerOwner);
+    local id = Squad_GetGameID(sid);
+
+    -- Broadcast that the unit was killed
+    Command_PlayerBroadcastMessage(Game_GetLocalPlayer(), Game_GetLocalPlayer(), _bg_message_type_unit_killed, "K[" .. _bg_playerData[playerRefID].deployed[id] .. "]")
 
 end
 

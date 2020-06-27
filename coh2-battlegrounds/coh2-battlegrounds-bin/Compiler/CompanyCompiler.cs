@@ -67,6 +67,7 @@ namespace Battlegrounds.Compiler {
             builder.IncreaseIndent();
 
             builder.AppendLine($"bp_name = \"{squad.Blueprint.Name}\",");
+            builder.AppendLine($"company_id = {squad.SquadID},");
             builder.AppendLine($"veterancy_rank = {squad.VeterancyRank},");
             builder.AppendLine($"veterancy_progress = {squad.VeterancyProgress:0.00},");
 

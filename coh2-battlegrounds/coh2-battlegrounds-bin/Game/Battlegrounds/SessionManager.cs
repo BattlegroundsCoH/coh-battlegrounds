@@ -6,62 +6,62 @@ using Battlegrounds.Compiler;
 namespace Battlegrounds.Game.Battlegrounds {
     
     /// <summary>
-    /// 
+    /// Status code for a <see cref="Session"/> being run in the <see cref="SessionManager"/>.
     /// </summary>
     public enum SessionStatus {
 
         /// <summary>
-        /// 
+        /// Invalid session (Session was null)
         /// </summary>
         S_Invalid = -1,
 
         /// <summary>
-        /// 
+        /// Session was completed without errors
         /// </summary>
         S_Success,
 
         /// <summary>
-        /// 
+        /// The session is currently compiling
         /// </summary>
         S_Compiling,
 
         /// <summary>
-        /// 
+        /// The session failed to compile
         /// </summary>
         S_FailedCompile,
 
         /// <summary>
-        /// 
+        /// The session failed to play
         /// </summary>
         S_FailedPlay,
 
         /// <summary>
-        /// 
+        /// The game was not launched
         /// </summary>
         S_GameNotLaunched,
 
         /// <summary>
-        /// 
+        /// The game was played without causing a crash
         /// </summary>
         S_GamePlayedWithoutCrash,
 
         /// <summary>
-        /// 
+        /// The played match is currently being analyzed
         /// </summary>
         S_Analyzing,
 
         /// <summary>
-        /// 
+        /// The analysis of the match failed
         /// </summary>
         S_AnalysisFailed,
 
         /// <summary>
-        /// 
+        /// The playback file was found
         /// </summary>
         S_NoPlayback,
 
         /// <summary>
-        /// 
+        /// The session is currently being played.
         /// </summary>
         S_Playing,
 

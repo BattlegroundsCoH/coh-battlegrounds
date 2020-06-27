@@ -1,29 +1,25 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using Battlegrounds.Game.Battlegrounds;
 using Battlegrounds.Util;
 
 namespace Battlegrounds.Compiler {
     
     /// <summary>
-    /// 
+    /// Basic <see cref="Session"/> to Lua code compiler. Can be inherited to add custom features.
     /// </summary>
-    /// <typeparam name="T"></typeparam>
+    /// <typeparam name="T">The type of <see cref="CompanyCompiler"/> to use to compile a <see cref="Company"/> to Lua code.</typeparam>
     public class SessionCompiler<T> where T : CompanyCompiler {
 
         /// <summary>
-        /// 
+        /// Create a new <see cref="SessionCompiler{T}"/> instance.
         /// </summary>
-        public SessionCompiler() {
-
-        }
+        public SessionCompiler() {}
 
         /// <summary>
-        /// 
+        /// Compile a <see cref="Session"/> into Lua Source Code.
         /// </summary>
-        /// <param name="session"></param>
-        /// <returns></returns>
+        /// <param name="session">The <see cref="Session"/> instance to compile.</param>
+        /// <returns>A formatted string containing Lua Source Code.</returns>
         public virtual string CompileSession(Session session) {
 
             // Create the compiler instance
@@ -71,15 +67,17 @@ namespace Battlegrounds.Compiler {
         }
 
         /// <summary>
-        /// 
+        /// Writes a setting to the <see cref="TxtBuilder"/>.
         /// </summary>
-        /// <param name="lua"></param>
-        /// <param name="setting"></param>
-        /// <param name="value"></param>
+        /// <param name="lua">The lua code to append setting to</param>
+        /// <param name="setting">The name of the setting to set</param>
+        /// <param name="value">The C# value of the setting to set. The value is automatically converted to its Lua Source Code equivalent</param>
         protected virtual void WriteSetting(TxtBuilder lua, string setting, object value) {
 
             string strval = value switch
             {
+                double d => d.ToString("0.00"),
+                float f => f.ToString("0.00"),
                 bool b => (b) ? "true" : "false",
                 string s => $"\"{s}\"",
                 _ => value.ToString(),
