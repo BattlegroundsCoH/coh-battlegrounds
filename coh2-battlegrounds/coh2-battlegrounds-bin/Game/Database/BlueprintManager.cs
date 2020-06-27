@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Battlegrounds.Game.Database.json;
 
 namespace Battlegrounds.Game.Database {
 
@@ -26,6 +27,11 @@ namespace Battlegrounds.Game.Database {
         CBP,
 
         /// <summary>
+        /// Slot Item Blueprint
+        /// </summary>
+        IBP,
+
+        /// <summary>
         /// Entity Blueprint
         /// </summary>
         EBP = 16,
@@ -42,11 +48,12 @@ namespace Battlegrounds.Game.Database {
     /// </summary>
     public static class BlueprintManager {
 
-        private static Dictionary<ushort, Blueprint> __entities;
-        private static Dictionary<ushort, Blueprint> __squads;
-        private static Dictionary<ushort, Blueprint> __abilities;
-        private static Dictionary<ushort, Blueprint> __upgrades;
-        private static Dictionary<ushort, Blueprint> __commanders;
+        private static Dictionary<ulong, Blueprint> __entities;
+        private static Dictionary<ulong, Blueprint> __squads;
+        private static Dictionary<ulong, Blueprint> __abilities;
+        private static Dictionary<ulong, Blueprint> __upgrades;
+        private static Dictionary<ulong, Blueprint> __commanders;
+        private static Dictionary<ulong, Blueprint> __slotitems;
 
         /// <summary>
         /// 
@@ -54,14 +61,22 @@ namespace Battlegrounds.Game.Database {
         public static void CreateDatabase() {
 
             // Create Dictionaries
-            __entities = new Dictionary<ushort, Blueprint>();
-            __squads = new Dictionary<ushort, Blueprint>();
-            __abilities = new Dictionary<ushort, Blueprint>();
-            __upgrades = new Dictionary<ushort, Blueprint>();
-            __commanders = new Dictionary<ushort, Blueprint>();
+            __entities = new Dictionary<ulong, Blueprint>();
+            __squads = new Dictionary<ulong, Blueprint>();
+            __abilities = new Dictionary<ulong, Blueprint>();
+            __upgrades = new Dictionary<ulong, Blueprint>();
+            __commanders = new Dictionary<ulong, Blueprint>();
+            __slotitems = new Dictionary<ulong, Blueprint>();
 
             // Load data here
-                // TODO: Load it...
+            bool sbpdb = LoadJsonDatabase("data\\json-db\\vcoh-sbp-db.json", BlueprintType.SBP); // load the squad blueprint database
+            bool ubpdb = LoadJsonDatabase("data\\json-db\\vcoh-ubp-db.json", BlueprintType.UBP); // load the upgrade blueprint database
+
+            // TODO: Load more here...
+
+            if (!sbpdb || !ubpdb) {
+                throw new Exception();
+            }
 
         }
 
@@ -72,6 +87,42 @@ namespace Battlegrounds.Game.Database {
         /// <param name="bType"></param>
         /// <returns></returns>
         public static bool LoadJsonDatabase(string jsonfile, BlueprintType bType) {
+
+            // Parse the file
+            var ls = JsonParser.Parse(jsonfile);
+
+            // If Empty
+            if (ls.Count == 0) {
+                return false;
+            }
+
+            // Make sure we got a json array
+            if (ls.First() is JsonArray content) {
+
+                // Get the target dictionary
+                var targetDictionary = bType switch
+                {
+                    BlueprintType.ABP => __abilities,
+                    BlueprintType.CBP => __commanders,
+                    BlueprintType.EBP => __entities,
+                    BlueprintType.SBP => __squads,
+                    BlueprintType.UBP => __upgrades,
+                    BlueprintType.IBP => __slotitems,
+                    _ => throw new ArgumentException(),
+                };
+
+                // Add all the found elements
+                foreach (IJsonElement element in content) {
+                    if (element is Blueprint bp) {
+                        targetDictionary.Add(bp.PBGID, bp);
+                    } else {
+                        return false;
+                    }
+                }
+
+            } else {
+                return false;
+            }
 
             return true;
 
@@ -94,6 +145,7 @@ namespace Battlegrounds.Game.Database {
                 BlueprintType.EBP => __entities[id],
                 BlueprintType.SBP => __squads[id],
                 BlueprintType.UBP => __upgrades[id],
+                BlueprintType.IBP => __slotitems[id],
                 _ => throw new ArgumentException(),
             };
         }
@@ -112,6 +164,7 @@ namespace Battlegrounds.Game.Database {
                 BlueprintType.EBP => __entities.FirstOrDefault(x => (x.Value.Name ?? "") == id).Value,
                 BlueprintType.SBP => __squads.FirstOrDefault(x => (x.Value.Name ?? "") == id).Value,
                 BlueprintType.UBP => __upgrades.FirstOrDefault(x => (x.Value.Name ?? "") == id).Value,
+                BlueprintType.IBP => __slotitems.FirstOrDefault(x => (x.Value.Name ?? "") == id).Value,
                 _ => throw new ArgumentException(),
             };
         }

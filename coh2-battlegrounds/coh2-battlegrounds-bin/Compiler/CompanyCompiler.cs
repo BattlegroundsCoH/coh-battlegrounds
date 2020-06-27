@@ -68,10 +68,11 @@ namespace Battlegrounds.Compiler {
 
             builder.AppendLine($"bp_name = \"{squad.Blueprint.Name}\",");
             builder.AppendLine($"veterancy_rank = {squad.VeterancyRank},");
-            builder.AppendLine($"veterancy_progress = {squad.VeterancyProgress:X.XX},");
+            builder.AppendLine($"veterancy_progress = {squad.VeterancyProgress:0.00},");
 
             CompileList(builder, "upgrades", squad.Upgrades, x => x.Name);
             CompileList(builder, "slot_items", squad.SlotItems, x => x.Name);
+            CompileList(builder, "modifiers", (new string[0]).ToImmutableArray(), x => x);
 
             builder.AppendLine($"spawned = false,");
 
@@ -83,11 +84,15 @@ namespace Battlegrounds.Compiler {
         private void CompileList<T>(TxtBuilder builder, string table, ImmutableArray<T> source, Func<T, string> func) {
             builder.AppendLine($"{table} = {{");
             builder.IncreaseIndent();
-            foreach (T t in source) {
-                builder.Append($"\"{func(t)}\",");
+            if (source.Length > 0) {
+                builder.Append(""); // Apply indentation here
+                foreach (T t in source) {
+                    builder.Append($"\"{func(t)}\",", false);
+                }
+                builder.Append("\n", false);
             }
             builder.DecreaseIndent();
-            builder.AppendLine("\n},");
+            builder.AppendLine("},");
         }
 
     }

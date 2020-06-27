@@ -57,9 +57,9 @@ namespace Battlegrounds.Game.Gameplay {
         }
 
         /// <summary>
-        /// 
+        /// Returns a string that represents the current object.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>A string that represents the current object.</returns>
         public override string ToString() => $"{Name} ({Army.Name})";
 
     }

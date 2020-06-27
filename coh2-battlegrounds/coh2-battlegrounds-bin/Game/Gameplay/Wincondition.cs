@@ -9,7 +9,10 @@ namespace Battlegrounds.Game.Gameplay {
     /// </summary>
     public sealed class Wincondition {
     
-
+        /// <summary>
+        /// 
+        /// </summary>
+        public string Name { get; }
 
     }
 
