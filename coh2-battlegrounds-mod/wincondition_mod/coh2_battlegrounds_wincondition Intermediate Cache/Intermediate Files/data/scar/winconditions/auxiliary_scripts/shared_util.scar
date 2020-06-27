@@ -106,3 +106,16 @@ function Player_GetNearestMapEntry(player, refpoint)
     end
     return available[j];
 end
+
+------------------------------------------------------------
+-- Team functions
+------------------------------------------------------------
+
+function Team_ForEachPlayer(team, func)
+    for i=1, World_GetPlayerCount() do
+        local p = World_GetPlayerAt(i);
+        if (Player_GetTeam(p) == team) then
+            func(p);
+        end
+    end
+end

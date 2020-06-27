@@ -90,10 +90,11 @@ function BG_DeploySquad(player, unit_id)
         _bg_playerData[playerRefID].deployed[Squad_GetGameID(squad)] = unit_data.company_id;
 
         -- Broadcast that a unit was spawned
-        Command_PlayerBroadcastMessage(Game_GetLocalPlayer(), Game_GetLocalPlayer(), _bg_message_type_unit_deployed, "D["..unit_data.company_id.."]");
+        Command_PlayerBroadcastMessage(Game_GetLocalPlayer(), Game_GetLocalPlayer(), _bg_message_type_no_actions_required, "D["..unit_data.company_id.."]");
 
-        -- Add "on death" event
+        -- Add events
         Rule_AddSquadEvent(BG_OnSquadDeath, squad, GE_SquadKilled);
+        Rule_AddSquadEvent(BG_OnSquadUpgrade, squad, GE_UpgradeComplete);
 
         -- Mark spawned
         unit_data.spawned = true;
@@ -102,20 +103,40 @@ function BG_DeploySquad(player, unit_id)
 
 end
 
-function BG_OnSquadDeath(sid)
+function BG_OnSquadDeath(squad)
 
     -- Get required info
-    local playerOwner = Squad_GetPlayerOwner(sid);
+    local playerOwner = Squad_GetPlayerOwner(squad);
     local playerRefID = BG_GetPlayerID(playerOwner);
-    local id = Squad_GetGameID(sid);
+    local id = Squad_GetGameID(squad);
 
     -- Broadcast that the unit was killed
-    Command_PlayerBroadcastMessage(Game_GetLocalPlayer(), Game_GetLocalPlayer(), _bg_message_type_unit_killed, "K[" .. _bg_playerData[playerRefID].deployed[id] .. "]")
+    Command_PlayerBroadcastMessage(Game_GetLocalPlayer(), Game_GetLocalPlayer(), _bg_message_type_no_actions_required, "K[" .. _bg_playerData[playerRefID].deployed[id] .. "]")
+
+end
+
+function BG_OnSquadUpgrade(squad)
+
+    -- Get required info
+    local playerOwner = Squad_GetPlayerOwner(squad);
+    local playerRefID = BG_GetPlayerID(playerOwner);
+    local id = Squad_GetGameID(squad);
+
+    -- Broadcast that the unit was killed
+    Command_PlayerBroadcastMessage(Game_GetLocalPlayer(), Game_GetLocalPlayer(), _bg_message_type_no_actions_required, "U[" .. _bg_playerData[playerRefID].deployed[id] .. "]")
 
 end
 
 function BG_RecallSquad(player, unit_id)
 
 
+
+end
+
+function BG_SurrenderSquad(squad)
+
+end
+
+function BG_SaveSquad(squad)
 
 end

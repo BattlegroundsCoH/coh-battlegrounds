@@ -7,8 +7,7 @@ _bg_custom = {}; -- Custom data
 
 _bg_playerData = {};
 
-_bg_message_type_unit_killed = 41.0;
-_bg_message_type_unit_deployed = 42.0;
+_bg_message_type_no_actions_required = 42.0;
 
 ------------------------------------------------------------------------------------
 -- Imports
@@ -23,6 +22,7 @@ function BG_Init()
 
     local j = 1;
 
+    -- Create player data (for relevant players)
     for i = 1, World_GetPlayerCount() do
         local player = World_GetPlayerAt(i);
         if not AI_IsAIPlayer(player) then -- Make sure it's a player ==> Don't care for AI players
@@ -46,19 +46,41 @@ function BG_Init()
         return;
     end
 
+    -- Verify match validity
+    local matchValidity = BG_VerifyMatch();
+
+    -- Did the match validifier fail?
+    if matchValidity ~= true then
+        -- TODO: Handle the error
+        return;
+    end
+
     -- Activate the unit system
     BG_HookUnitSystem();
 
     -- Create the UI
     BGC_CreateCallInUI();
 
-    -- Game_QuitApp -- call this after each match
-
     Rule_AddOneShot(dummy_spawn, 5); -- Disable when not testing callin functionality
+
+    -- Add overrides to victory
+    Rule_AddOneShot(BG_OverrideGameEndingFunctionCalls, 1);
 
 end
 
 Scar_AddInit(BG_Init);
+
+function OnGameSetup()
+
+    if _bg_playerData ~= nil then
+
+        for i=1, #_bg_playerData do
+            Setup_SetPlayerName(_bg_playerData[i].player, Util_CreateLocString(_bg_playerData[i].company.name)); -- Simply test if this will stil work
+        end
+
+    end
+
+end
 
 function dummy_spawn()
 
@@ -78,4 +100,47 @@ function BG_GetPlayerID(player)
         end
     end
     return -1;
+end
+
+function BG_BroadcastVictory(player)
+    local refp = BG_GetPlayerID(player);
+    if (refp ~= -1) then
+        Command_PlayerBroadcastMessage(Game_GetLocalPlayer(), Game_GetLocalPlayer(), _bg_message_type_no_actions_required, "V["..BG_GetPlayerID(player).."]");
+    end
+end
+
+function BG_OverrideGameEndingFunctionCalls()
+
+    World_SetTeamWin = function(team)
+
+        -- Broadcast victory for each player
+        Team_ForEachPlayer(team, BG_BroadcastVictory);
+
+        -- Do our own stuff here
+
+    end
+
+    -- Game_QuitApp -- call this after each match
+
+end
+
+function BG_VerifyMatch()
+
+
+
+    return true;
+
+end
+
+function BG_PlayerSurrender(player)
+
+    -- The player surrenders
+    -- Some % of units are "lost" --> They surrender to the enemy, the rest withdraw safely
+
+end
+
+function BG_TeamWithdraw(player)
+
+    -- The "objective" of the game changes --> The team must withdraw as many units as possible
+
 end
