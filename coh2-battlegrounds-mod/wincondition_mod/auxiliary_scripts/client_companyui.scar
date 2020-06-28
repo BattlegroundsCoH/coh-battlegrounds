@@ -83,10 +83,11 @@ end
 
 function BG_ShowCompanyCategory(category)
 
-    -- Show the view
-    bg_companyView:setPos(_BG_UI_CompanyViewX, _BG_UI_CompanyViewY);
-
+    -- Do this locally for the player
     Player_CallLocal(Game_GetLocalPlayer(), function(player)
+
+        -- Show the view
+        bg_companyView:setPos(_BG_UI_CompanyViewX, _BG_UI_CompanyViewY);
 
         -- Clear the container
         bg_company_container:clear();
@@ -245,12 +246,34 @@ function BG_UnitCardClicked(tag)
             _bg_playerData[refPlayerID].company.units[i].isDeploying = true;
             _bg_playerData[refPlayerID].company.units[i].deploy_time = 20; -- This value could be read or calculated from somewhere else
             BG_RefreshCompanyView();
+            Game_SendMessage(_bg_message_type_player_request_deploy, tag); -- Publish we've requested this unit
+            local mp = (-_bg_playerData[refPlayerID].company.units[i].cost.manpower);
+            local mu = (-_bg_playerData[refPlayerID].company.units[i].cost.munitions);
+            local fu = (-_bg_playerData[refPlayerID].company.units[i].cost.fuel);
+            local ps = mp..","..mu..","..fu;
+            Game_SendMessage(_bg_message_type_player_resource, ps); -- Subtrack the resources
+            break;
         end
     end
 end
 
 function BG_UnitCardCancelClicked(tag)
-
+    -- TODO: Add timer click check here (just so a button isn't clicked accidentally twice)
+    local refPlayerID = BG_GetPlayerID(Game_GetLocalPlayer());
+    for i=1, #_bg_playerData[refPlayerID].company.units do
+        if _bg_playerData[refPlayerID].company.units[i].company_id == tonumber(tag) and _bg_playerData[refPlayerID].company.units[i].isDeploying == true then
+            _bg_playerData[refPlayerID].company.units[i].isDeploying = false;
+            _bg_playerData[refPlayerID].company.units[i].deploy_time = nil;
+            BG_RefreshCompanyView();
+            Game_SendMessage(_bg_message_type_player_cancel_deploy, tag); -- Published we've cancelled this unit
+            local mp = (_bg_playerData[refPlayerID].company.units[i].cost.manpower);
+            local mu = (_bg_playerData[refPlayerID].company.units[i].cost.munitions);
+            local fu = (_bg_playerData[refPlayerID].company.units[i].cost.fuel);
+            local ps = mp..","..mu..","..fu;
+            Game_SendMessage(_bg_message_type_player_resource, ps); -- Get our resources back
+            break;
+        end
+    end
 end
 
 function BG_UpdateDeploymentTimers()

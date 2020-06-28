@@ -7,10 +7,16 @@ _bg_custom = {}; -- Custom data
 
 _bg_playerData = {};
 
-_bg_message_type_no_actions_required = 42.0;
-_bg_message_type_player_surrender = 43.0;
-_bg_message_type_player_deploy = 44.0;
-_bg_message_type_team_withdraw = 45.0;
+_bg_message_type_no_actions_required = 42.0; -- This is just for making it easier for the 3rd party app to interpret the data
+_bg_message_type_player_surrender = 43.0; -- Player surrenders: ""
+_bg_message_type_player_deploy = 44.0; -- Actual Deploy Command: "company_id"
+_bg_message_type_player_request_deploy = 45.0; -- Deploy request: "company_id"
+_bg_message_type_player_cancel_deploy = 46.0; -- Deploy cancelled: "company_id"
+_bg_message_type_player_resource = 47.0; -- Modify resources: arg = "manpower,munition,fuel"
+_bg_message_type_team_request_withdraw = 67.0; -- A player requests withdrawal
+_bg_message_type_team_vote_no_withdraw = 68.0; -- A player voted no to witdraw
+_bg_message_type_team_vote_yes_withdraw = 69.0; -- A player votes yes to withdraw
+_bg_message_type_team_do_withdraw = 70.0; -- A team has decided to withdraw
 
 ------------------------------------------------------------------------------------
 -- Imports
@@ -69,7 +75,7 @@ function BG_Init()
         BG_CreateAndDisplayMultiplayerActionsScreenOverride(Game_GetLocalPlayer()); -- Game actions (Vote on withdraw, Surrender)
     end);
 
-    Rule_AddOneShot(dummy_spawn, 5); -- Disable when not testing callin functionality
+    --Rule_AddOneShot(dummy_spawn, 5); -- Disable when not testing callin functionality
 
     -- Add overrides to victory
     Rule_AddOneShot(BG_OverrideGameEndingFunctionCalls, 1);
@@ -186,5 +192,12 @@ end
 function BG_GameBroadcastMessageReceived(sender, messageType, message)
     if messageType == _bg_message_type_player_deploy then
         BG_DeploySquad(sender, tonumber(message));
+    elseif messageType == _bg_message_type_player_resource then
+        local resources = Str_CmdParse(message);
+        Player_ChangeResources(sender, resources[1], resources[2], resources[3]);
+    elseif messageType == _bg_message_type_player_request_deploy then
+        UI_TeamEventCue(sender, Util_CreateLocString("** Unit Request **"), Util_CreateLocString("PlayerName has requested '' for deployment."));
+    elseif messageType == _bg_message_type_player_cancel_deploy then
+        UI_TeamEventCue(sender, Util_CreateLocString("** Unit Cancelled **"), Util_CreateLocString("PlayerName has cancelled the deployment of ''."));
     end
 end

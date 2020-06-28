@@ -82,3 +82,14 @@ end
 function UI_Centre(_x, _y)
 	return { x = (UI_GetScreenWidth() / 2.0) + _x, y = (UI_GetScreenHeight() / 2.0) + _y };
 end
+
+function UI_TeamEventCue(player, title, description, iconPath)
+	if (iconPath == nil) then
+		iconPath = ""
+	end
+	Player_CallLocal(Game_GetLocalPlayer(), function(locPlayer)
+		if (Player_GetTeam(player) == Player_GetTeam(locPlayer)) then
+			UI_CreateEventCue(iconPath, "", title, description, nil, true );
+		end
+	end);
+end

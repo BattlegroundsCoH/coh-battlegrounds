@@ -1,10 +1,23 @@
 bg_settings = {
 	playercount = 1,
 	guid = "a6d136f5-1d40-4395-92fc-26fd13882ecd",
+	tuning_mod = {
+		mod_name = "",
+		mod_guid = "",
+		mod_verify_upg = "",
+	},
 	map = "",
-	gamemode = "",
+	gamemode = "victory_points",
 	gameoptions = {
+		vp_setting = 1,
 	}
+	team_setup = {
+		["allies"] = {
+			"CoDiEx",
+		},
+		["axis"] = {
+		},
+	},
 };
 bg_companies = {
 		["CoDiEx"] = {

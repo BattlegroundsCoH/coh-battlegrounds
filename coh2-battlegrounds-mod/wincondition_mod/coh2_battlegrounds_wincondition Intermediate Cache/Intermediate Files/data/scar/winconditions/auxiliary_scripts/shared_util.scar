@@ -115,6 +115,12 @@ function Player_CallLocal(player, func)
     end
 end
 
+function Player_ChangeResources(player, man, mun, ful)
+    Player_AddResource(player, RT_Manpower, man);
+    Player_AddResource(player, RT_Munition, mun);
+    Player_AddResource(player, RT_Fuel, ful);
+end
+
 ------------------------------------------------------------
 -- Team functions
 ------------------------------------------------------------
@@ -126,4 +132,22 @@ function Team_ForEachPlayer(team, func)
             func(p);
         end
     end
+end
+
+------------------------------------------------------------
+-- String functions
+------------------------------------------------------------
+function Str_CmdParse(str)
+    local t_result = {};
+    for w in string.gmatch(str, "([%w-_]+)") do
+        table.insert(t_result, w);
+    end
+    return t_result;
+end
+
+------------------------------------------------------------
+-- Game functions
+------------------------------------------------------------
+function Game_SendMessage(msgType, msg)
+    Command_PlayerBroadcastMessage(Game_GetLocalPlayer(), Game_GetLocalPlayer(), msgType, msg);
 end
