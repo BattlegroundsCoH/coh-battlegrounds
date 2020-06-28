@@ -1,3 +1,281 @@
-function BGC_CreateCallInUI()
+local _bg_local_category = "infantry";
+local _bg_local_companyIsVisible = false;
+local _bg_local_show_from = 1;
+local _bg_local_show_to = -1;
+local _bg_local_show_max = 12;
 
+_BG_UI_CompanyViewX = 0;
+_BG_UI_CompanyViewY = -612;
+
+_BG_UI_UpdateInterval = 0.25;
+
+function BG_CreateCallInUI(player)
+
+    -- The position
+    local callinPos = UI_BottomRight(355, 326);
+
+    -- Create the root panel
+    bg_call_ui = RootPanel();
+    bg_call_ui:setPos(UI_UnpackPosition(callinPos));
+
+    -- Create 'Show Company' button
+    BG_CreateShowCompanyButon();
+
+    -- Create the company view
+    BG_CreateCompanyView();
+
+    -- Add a function update deployment
+    Rule_AddInterval(BG_UpdateDeploymentTimers, _BG_UI_UpdateInterval);
+
+end
+
+function BG_CreateShowCompanyButon()
+
+    local show_deployment_bkg = Panel();
+    show_deployment_bkg:setBounds(0, 0, 360, 72);
+
+    local show_deployment_bkg_ico = Icon("ModIcons_6a0a13b89555402ca75b85dc30f5cb04_button_background", 360, 72, 0, 0);
+    show_deployment_bkg:add(show_deployment_bkg_ico);
+
+    -- Button for show/hide deployment menu
+    bg_show_company = Button("Show Company", "ModIcons_6a0a13b89555402ca75b85dc30f5cb04_button_simple");
+    bg_show_company:setBounds(24, 12, 310, 32);
+    bg_show_company:setCallback(function()
+        _bg_local_companyIsVisible = not _bg_local_companyIsVisible; -- Negate the value
+        if (_bg_local_companyIsVisible) then -- Should we show it?
+            BG_ShowCompanyCategory(_bg_local_category); -- This will also show it
+        else -- Hide it
+            BG_HideCompanyView();
+        end
+    end);
+
+    -- Add callin button
+    show_deployment_bkg:add(bg_show_company);
+
+    -- Add callin button
+    bg_call_ui:add(show_deployment_bkg);
+
+end
+
+function BG_CreateCompanyView()
+
+    -- The panel containing the stuff
+    bg_companyView = Panel();
+    bg_companyView:setPos(_BG_UI_CompanyViewX, _BG_UI_CompanyViewY);
+
+    -- The background
+    local longpanel_bkg_ico = Icon("ModIcons_6a0a13b89555402ca75b85dc30f5cb04_company_overview_clean", 360, 576, 0, 56);
+    bg_companyView:add(longpanel_bkg_ico);
+
+    -- The categories background
+    local longpanel_cat_bkg_ico = Icon("ModIcons_6a0a13b89555402ca75b85dc30f5cb04_button_background", 360, 72, 0, 0);
+    bg_companyView:add(longpanel_cat_bkg_ico);
+
+    -- Create the company container
+    bg_company_container = Panel();
+    bg_company_container:setPos(24, 80); -- y = 56 + 24
+    bg_companyView:add(bg_company_container);
+
+    -- Add panel
+    bg_call_ui:add(bg_companyView);
+
+end
+
+function BG_ShowCompanyCategory(category)
+
+    -- Show the view
+    bg_companyView:setPos(_BG_UI_CompanyViewX, _BG_UI_CompanyViewY);
+
+    Player_CallLocal(Game_GetLocalPlayer(), function(player)
+
+        -- Clear the container
+        bg_company_container:clear();
+
+        -- Get player ID
+        local bgPlayerID = BG_GetPlayerID(player);
+
+        -- Set max to show (TODO: Implement proper logic for handling this)
+        _bg_local_show_from = 1;
+        _bg_local_show_to = #_bg_playerData[bgPlayerID].company.units;
+        if (_bg_local_show_to > _bg_local_show_max) then
+            _bg_local_show_to = _bg_local_show_max;
+        end
+
+        -- Keep track of the y-offset
+        local yOffset = 0.0
+
+        -- For each unit in company unit
+        for i=1, #_bg_playerData[bgPlayerID].company.units do
+            -- TODO: Do this properly...
+            if not _bg_playerData[bgPlayerID].company.units[i].spawned then
+
+                local unitcard = BG_CreateUnitcard(_bg_playerData[bgPlayerID].company.units[i], yOffset);
+                bg_company_container:add(unitcard);
+
+                yOffset = yOffset + 40;
+
+            end
+        end
+
+    end);
+
+end
+
+function BG_HideCompanyView()
+    bg_companyView:setPos(-9999, -9999);
+end
+
+function BG_CreateUnitcard(unit, yoffset)
+
+    -- Create the card container panel
+    local cardPanel = Panel();
+    cardPanel:setPos(0, yoffset);
+
+    -- Add clickable background
+    local backgroundBttn = Button(Util_CreateLocString(""), "ModIcons_6a0a13b89555402ca75b85dc30f5cb04_unitbackground");
+    backgroundBttn:setBounds(0, 0, 312, 40);
+    backgroundBttn:setTag(unit.company_id);
+    backgroundBttn:setCallback(BG_UnitCardClicked);
+    cardPanel:add(backgroundBttn);
+
+    local symbolBttn = Button(Util_CreateLocString(""), unit.symbol);
+    symbolBttn:setBounds(3, 3, 36, 36);
+    symbolBttn:setTag(unit.company_id);
+    symbolBttn:setCallback(BG_UnitCardClicked);
+    cardPanel:add(symbolBttn);
+
+    local xPositiveOffset = 40;
+
+    if (unit.cost.manpower ~= nil and unit.cost.manpower > 0) then
+        xPositiveOffset = BG_CreateCost("ModIcons_6a0a13b89555402ca75b85dc30f5cb04_manpower_24x24", xPositiveOffset, 6, unit.cost.manpower, cardPanel);
+    end
+
+    if (unit.cost.munitions ~= nil and unit.cost.munitions > 0) then
+        xPositiveOffset = BG_CreateCost("ModIcons_6a0a13b89555402ca75b85dc30f5cb04_munitions_24x24", xPositiveOffset, 6, unit.cost.munitions, cardPanel);
+    elseif (unit.cost.fuel ~= nil and unit.cost.fuel > 0) then
+        xPositiveOffset = BG_CreateCost("ModIcons_6a0a13b89555402ca75b85dc30f5cb04_fuel_24x24", xPositiveOffset, 6, unit.cost.fuel, cardPanel);
+    end
+
+    if unit.isDeploying == nil or unit.isDeploying == false then
+        BG_CreateUnitStats(unit, cardPanel);
+    else
+        BG_CreateUnitDeployProgress(unit, cardPanel);
+    end
+
+    -- Return the card
+    return cardPanel;
+
+end
+
+function BG_CreateUnitStats(unit, card)
+
+    -- The x-offset in the "negative direction"
+    local xNegativeOffset = 290;
+
+    -- If any veterancy
+    if (unit.veterancy_rank > 0) then
+        for i=1, unit.veterancy_rank do
+            local vetstar_ico = Icon("ModIcons_6a0a13b89555402ca75b85dc30f5cb04_vstar", 16, 16, xNegativeOffset, 10);
+            card:add(vetstar_ico);
+            xNegativeOffset = xNegativeOffset - 16;
+        end
+    end
+
+    -- Weapon symbol to display
+    local wpn_symbol = nil;
+
+    -- Do we have a mixed situation?
+    if (#unit.upgrades > 1 or #unit.slot_items > 1 or (#unit.upgrades >= 1 and #unit.slot_items >= 1)) then
+        -- TODO: Set wpn_symbol to the mixed weapons icon
+    elseif (#unit.upgrades == 1 and #unit.slot_items == 0) then
+        wpn_symbol = unit.upgrades[1].symbol;
+    elseif (#unit.upgrades == 0 and #unit.slot_items == 1) then
+        -- TODO: Implement
+    end
+
+    -- Do we have a weapon symbol to display?
+    if (wpn_symbol ~= nil) then
+        xNegativeOffset = xNegativeOffset - 34;
+        local vetstar_ico = Icon(wpn_symbol, 48, 16, xNegativeOffset, 12);
+        card:add(vetstar_ico);
+    end
+
+end
+
+function BG_CreateCost(iconName, x, y, price, owner)
+
+    local ico = Icon(iconName, 24, 24, x, y);
+    owner:add(ico);
+    x = x + 24;
+
+    local cost = Label(Util_CreateLocString(price));
+    cost:setBounds(x, y, 46, 28);
+    cost:setFontSize(14.0);
+    cost:setColor(Color.White);
+    owner:add(cost);
+
+    x = x + 46;
+
+    return x;
+
+end
+
+function BG_CreateUnitDeployProgress(unit, card)
+
+    local progress_frame = Icon("ModIcons_6a0a13b89555402ca75b85dc30f5cb04_progress_bar_small_frame", 155, 28, 160, 6);
+    card:add(progress_frame);
+
+    unit.deploy_visual = Icon("ModIcons_6a0a13b89555402ca75b85dc30f5cb04_progress_bar_small", 0, 12, 174, 12);
+    card:add(unit.deploy_visual);
+
+    -- Add clickable background
+    local cancelBttn = Button(Util_CreateLocString(""), "ModIcons_6a0a13b89555402ca75b85dc30f5cb04_cancel_button");
+    cancelBttn:setBounds(284, 0, 38, 38);
+    cancelBttn:setTag(unit.company_id);
+    cancelBttn:setCallback(BG_UnitCardCancelClicked);
+    card:add(cancelBttn);
+
+end
+
+function BG_UnitCardClicked(tag)
+    -- TODO: Add timer click check here (just so a button isn't clicked accidentally twice)
+    local refPlayerID = BG_GetPlayerID(Game_GetLocalPlayer());
+    for i=1, #_bg_playerData[refPlayerID].company.units do
+        if _bg_playerData[refPlayerID].company.units[i].company_id == tonumber(tag) then
+            _bg_playerData[refPlayerID].company.units[i].isDeploying = true;
+            _bg_playerData[refPlayerID].company.units[i].deploy_time = 20; -- This value could be read or calculated from somewhere else
+            BG_RefreshCompanyView();
+        end
+    end
+end
+
+function BG_UnitCardCancelClicked(tag)
+
+end
+
+function BG_UpdateDeploymentTimers()
+    Player_CallLocal(Game_GetLocalPlayer(), function(player)
+        local refPlayerID = BG_GetPlayerID(player);
+        for i=1, #_bg_playerData[refPlayerID].company.units do
+            if _bg_playerData[refPlayerID].company.units[i].deploy_time ~= nil then
+                _bg_playerData[refPlayerID].company.units[i].deploy_time = _bg_playerData[refPlayerID].company.units[i].deploy_time - _BG_UI_UpdateInterval;
+                if _bg_playerData[refPlayerID].company.units[i].deploy_time <= 0 then
+                    Command_PlayerBroadcastMessage(Game_GetLocalPlayer(), Game_GetLocalPlayer(), _bg_message_type_player_deploy, tostring(_bg_playerData[refPlayerID].company.units[i].company_id));
+                    BG_RefreshCompanyView();
+                    _bg_playerData[refPlayerID].company.units[i].deploy_time = nil;
+                    _bg_playerData[refPlayerID].company.units[i].isDeploying = false;
+                else
+                    if _bg_local_companyIsVisible then
+                        _bg_playerData[refPlayerID].company.units[i].deploy_visual:setSize((20 - _bg_playerData[refPlayerID].company.units[i].deploy_time) / 20 * 136, 12);
+                    end
+                end
+            end
+        end
+    end)
+end
+
+function BG_RefreshCompanyView()
+    if _bg_local_companyIsVisible then
+        BG_ShowCompanyCategory(_bg_local_category); -- Trigger a complete redraw
+    end
 end

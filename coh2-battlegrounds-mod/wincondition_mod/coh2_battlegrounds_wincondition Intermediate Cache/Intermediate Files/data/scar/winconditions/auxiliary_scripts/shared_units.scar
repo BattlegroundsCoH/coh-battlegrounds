@@ -16,7 +16,7 @@ function BG_UpdateUnitCounts()
 
         -- Apply updates if needed
         if (#newunits > 0) then
-            
+
             -- Add new squads
             for j=1, #newunits do
                 --BG_AddSquad(_bg_playerData[i].player, newunits[j]);
@@ -39,13 +39,27 @@ end
 --
 --end
 
+function BG_FindSquadInCompany(playerID, unitID)
+    for i=1, #_bg_playerData[playerID].company.units do
+        if (_bg_playerData[playerID].company.units[i].company_id == unitID) then
+            return _bg_playerData[playerID].company.units[i];
+        end
+    end
+    return nil;
+end
+
 function BG_DeploySquad(player, unit_id)
 
     -- Get the player reference id
     local playerRefID = BG_GetPlayerID(player);
 
     -- Get unit data
-    local unit_data = _bg_playerData[playerRefID].company.units[unit_id];
+    local unit_data = BG_FindSquadInCompany(playerRefID, unit_id);
+
+    -- Not a valid unit for us to spawn
+    if unit_data == nil then
+        return;
+    end
 
     -- Make sure we don't spawn in something twice
     if not unit_data.spawned then
@@ -73,7 +87,7 @@ function BG_DeploySquad(player, unit_id)
 
         -- Add upgrades
         for i=1, #unit_data.upgrades do
-            Command_SquadUpgrade(player, sg_temp, BP_GetUpgradeBlueprint(unit_data.upgrades[i]), true, false );
+            Command_SquadUpgrade(player, sg_temp, BP_GetUpgradeBlueprint(unit_data.upgrades[i].bp), true, false );
         end
 
         -- Add slot_items
@@ -98,6 +112,11 @@ function BG_DeploySquad(player, unit_id)
 
         -- Mark spawned
         unit_data.spawned = true;
+
+        -- Was it the local player who spawned this unit?
+        if player == Game_GetLocalPlayer() then
+            BG_RefreshCompanyView();
+        end
 
     end
 

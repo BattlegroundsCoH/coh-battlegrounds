@@ -1,0 +1,84 @@
+---------------------------------------------------------------------------
+-- UI API
+-- Credits: Eliw00d
+-- https://github.com/eliw00d/ui-control-api
+---------------------------------------------------------------------------
+import("WinConditions/ui_api/class.scar");
+import("WinConditions/ui_api/color.scar");
+import("WinConditions/ui_api/control.scar");
+import("WinConditions/ui_api/panel.scar");
+import("WinConditions/ui_api/rootpanel.scar");
+import("WinConditions/ui_api/button.scar");
+import("WinConditions/ui_api/icon.scar");
+import("WinConditions/ui_api/label.scar");
+
+---------------------------------------------------------------------------
+-- UI API - Helper functions
+-- Developed by CoDiEx & Ragnar
+---------------------------------------------------------------------------
+gui_inits = {};
+gui_issetup = false;
+gui_oninitfuncname = "__UI_IS_SETUP________";
+function UI_AddSetupFunction(func)
+	if gui_issetup then
+		func();
+		return;
+	end
+	table.insert(gui_inits, func);
+	if _G[gui_oninitfuncname] == nil then
+		_G[gui_oninitfuncname] = function()
+			if UI_GetViewportWidth() > 1 and UI_GetViewportHeight() > 1 then
+				UI_GetScreenWidth = UI_GetViewportWidth;
+				UI_GetScreenHeight = UI_GetViewportHeight;
+				gui_issetup = true;
+				for i=1, #gui_inits do
+					gui_inits[i]();
+				end
+				Rule_Remove(_G[gui_oninitfuncname]);
+			end
+		end
+		Rule_Add(_G[gui_oninitfuncname]);
+	end
+end
+
+function UI_GetPosition(_x, _y)
+	local w = UI_GetScreenWidth(); -- Width
+	local h = UI_GetScreenHeight(); -- Height
+	local p = {
+		x = (_x / 1920) * w, -- x / max_width * width
+		y = h - _y -- height - max_height + y
+	};
+	--if (p.y < 0) then
+	--	p.y = 0;
+	--end
+	return p;
+end
+
+function UI_UnpackPosition(p)
+	return p.x, p.y;
+end
+
+-- Returns the position relative to bottom right [W,H]
+function UI_BottomRight(_x, _y)
+	return { x = UI_GetScreenWidth() - _x, y = UI_GetScreenHeight() - _y };
+end
+
+-- Returns the position relative to bottom left [0,H]
+function UI_BottomLeft(_x, _y)
+	return { x = _x, y = UI_GetScreenHeight() - _y };
+end
+
+-- Returns the position relative to top right [W,0]
+function UI_TopRight(_x, _y)
+	return { x = UI_GetScreenWidth() - _x, y = _y };
+end
+
+-- Returns the position relative to top left [0, 0]
+function UI_TopLeft(_x, _y)
+	return { x = 0, y = 0 };
+end
+
+-- Returns the position of the centre of the screen
+function UI_Centre(_x, _y)
+	return { x = (UI_GetScreenWidth() / 2.0) + _x, y = (UI_GetScreenHeight() / 2.0) + _y };
+end

@@ -1,0 +1,18 @@
+function BG_CreateAndDisplayGameOverScreenOverride(locplayer, callback)
+
+    callback(); -- For now... juse call the callback...
+
+end
+
+function BG_CreateAndDisplayMultiplayerActionsScreenOverride(player)
+
+
+
+end
+
+-- The 'override' for a 'fatal scar error'
+function BG_CreateAndShowMatchError(message)
+
+
+
+end

@@ -13,11 +13,16 @@ bg_companies = {
 		units = {
 			{
 				bp_name = "conscript_squad_mp",
+				symbol = "Icons_symbols_unit_soviet_conscript_03_symbol",
 				company_id = 0,
 				veterancy_rank = 0,
 				veterancy_progress = 0.00,
+				cost = {
+					manpower = 240,
+					munitions = 40,
+				},
 				upgrades = {
-					"ppsh-41_sub_machine_gun_upgrade_mp",
+					{ bp = "ppsh-41_sub_machine_gun_upgrade_mp", symbol = "Icons_weapons_weapon_pps" },
 				},
 				slot_items = {
 				},
@@ -27,9 +32,14 @@ bg_companies = {
 			},
 			{
 				bp_name = "conscript_squad_mp",
+				symbol = "Icons_symbols_unit_soviet_conscript_03_symbol",
 				company_id = 1,
 				veterancy_rank = 2,
 				veterancy_progress = 0.00,
+				cost = {
+					manpower = 240,
+					munitions = 0,
+				},
 				upgrades = {
 				},
 				slot_items = {
@@ -40,11 +50,16 @@ bg_companies = {
 			},
 			{
 				bp_name = "conscript_squad_mp",
+				symbol = "Icons_symbols_unit_soviet_conscript_03_symbol",
 				company_id = 2,
 				veterancy_rank = 3,
 				veterancy_progress = 0.00,
+				cost = {
+					manpower = 260,
+					munitions = 40,
+				},
 				upgrades = {
-					"ppsh-41_sub_machine_gun_upgrade_mp",
+					{ bp = "ppsh-41_sub_machine_gun_upgrade_mp", symbol = "Icons_weapons_weapon_pps" },
 				},
 				slot_items = {
 				},
@@ -54,9 +69,14 @@ bg_companies = {
 			},
 			{
 				bp_name = "t_34_85_squad_mp",
+				symbol = "Icons_symbols_vehicle_soviet_t34_85_symbol",
 				company_id = 3,
 				veterancy_rank = 2,
 				veterancy_progress = 0.00,
+				cost = {
+					manpower = 380,
+					fuel = 140,
+				},
 				upgrades = {
 				},
 				slot_items = {
@@ -67,9 +87,14 @@ bg_companies = {
 			},
 			{
 				bp_name = "t_34_85_squad_mp",
+				symbol = "Icons_symbols_vehicle_soviet_t34_85_symbol",
 				company_id = 4,
 				veterancy_rank = 2,
 				veterancy_progress = 0.00,
+				cost = {
+					manpower = 380,
+					fuel = 140,
+				},
 				upgrades = {
 				},
 				slot_items = {
@@ -80,9 +105,14 @@ bg_companies = {
 			},
 			{
 				bp_name = "t_34_85_squad_mp",
+				symbol = "Icons_symbols_vehicle_soviet_t34_85_symbol",
 				company_id = 5,
 				veterancy_rank = 3,
 				veterancy_progress = 0.00,
+				cost = {
+					manpower = 380,
+					fuel = 180,
+				},
 				upgrades = {
 				},
 				slot_items = {

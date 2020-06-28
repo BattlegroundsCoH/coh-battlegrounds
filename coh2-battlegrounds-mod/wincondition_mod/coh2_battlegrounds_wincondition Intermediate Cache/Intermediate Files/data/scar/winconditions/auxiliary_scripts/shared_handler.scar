@@ -8,6 +8,9 @@ _bg_custom = {}; -- Custom data
 _bg_playerData = {};
 
 _bg_message_type_no_actions_required = 42.0;
+_bg_message_type_player_surrender = 43.0;
+_bg_message_type_player_deploy = 44.0;
+_bg_message_type_team_withdraw = 45.0;
 
 ------------------------------------------------------------------------------------
 -- Imports
@@ -44,7 +47,7 @@ function BG_Init()
 
     -- Check to see if a company error was found
     if companyError ~= true then
-        -- TODO: Handle the error
+        BG_CreateAndShowMatchError(companyError);
         return;
     end
 
@@ -53,7 +56,7 @@ function BG_Init()
 
     -- Did the match validifier fail?
     if matchValidity ~= true then
-        -- TODO: Handle the error
+        BG_CreateAndShowMatchError(matchValidity);
         return;
     end
 
@@ -61,25 +64,47 @@ function BG_Init()
     BG_HookUnitSystem();
 
     -- Create the UI
-    BGC_CreateCallInUI();
+    UI_AddSetupFunction(function()
+        BG_CreateCallInUI(Game_GetLocalPlayer()); -- Call-in / Deploy UI
+        BG_CreateAndDisplayMultiplayerActionsScreenOverride(Game_GetLocalPlayer()); -- Game actions (Vote on withdraw, Surrender)
+    end);
 
     Rule_AddOneShot(dummy_spawn, 5); -- Disable when not testing callin functionality
 
     -- Add overrides to victory
     Rule_AddOneShot(BG_OverrideGameEndingFunctionCalls, 1);
 
+    -- Hide the CP meter (Perhaps display company name and statistics here...)
+    UI_SetCPMeterVisibility(false);
+
+    -- Add the broadcast event callback
+    Rule_AddGlobalEvent(BG_GameBroadcastMessageReceived, GE_BroadcastMessage);
+
 end
 
 Scar_AddInit(BG_Init);
 
+function BG_VerifyMatch()
+
+    -- Get the scenario name
+    local name = Stats_GetScenarioName();
+    if (name ~= bg_settings.map) then
+        --return "The played map does not match the selected map!"; -- TODO: Localize
+    end
+
+    -- Return true, match verified
+    return true;
+
+end
+
 function dummy_spawn()
 
     -- Test the deploy squad function
+    BG_DeploySquad(_bg_playerData[1].player, 0);
     BG_DeploySquad(_bg_playerData[1].player, 1);
     BG_DeploySquad(_bg_playerData[1].player, 2);
     BG_DeploySquad(_bg_playerData[1].player, 3);
     BG_DeploySquad(_bg_playerData[1].player, 4);
-    BG_DeploySquad(_bg_playerData[1].player, 5);
 
 end
 
@@ -101,24 +126,43 @@ end
 
 function BG_OverrideGameEndingFunctionCalls()
 
+    -- Create a backup "pointer" just in case
+    BG_WorldSetTeamWin = World_SetTeamWin;
+
+    -- Override the game function (Any call to this)
     World_SetTeamWin = function(team)
+
+        -- Stop the fighting
+        BG_StopAll();
+
+        -- Collect end of match data (vet rank, progress etc)
+        BG_CollectEndofMatchData();
 
         -- Broadcast victory for each player
         Team_ForEachPlayer(team, BG_BroadcastVictory);
 
-        -- Do our own stuff here
+        -- Create and display gameover message
+        BG_CreateAndDisplayGameOverScreenOverride(Game_GetLocalPlayer(), BG_SaveAndExit);
 
     end
 
-    -- Game_QuitApp -- call this after each match
+end
+
+function BG_StopAll()
+
+    -- Set global flag
+    _bg_matchStopped = true;
+
+    -- TODO: Force-stop fighting
 
 end
 
-function BG_VerifyMatch()
+function BG_SaveAndExit()
 
+    -- TODO: Experiment with winning - but then force-shutting the game
 
-
-    return true;
+    -- Quit the game (No rematches --> Let the app handle the rest)
+    Game_QuitApp();
 
 end
 
@@ -133,4 +177,14 @@ function BG_TeamWithdraw(player)
 
     -- The "objective" of the game changes --> The team must withdraw as many units as possible
 
+end
+
+function BG_CollectEndofMatchData()
+
+end
+
+function BG_GameBroadcastMessageReceived(sender, messageType, message)
+    if messageType == _bg_message_type_player_deploy then
+        BG_DeploySquad(sender, tonumber(message));
+    end
 end

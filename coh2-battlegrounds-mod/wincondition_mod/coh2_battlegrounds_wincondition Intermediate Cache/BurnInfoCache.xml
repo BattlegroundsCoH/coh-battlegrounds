@@ -11,19 +11,19 @@
 		</BurnInfo>
 		<BurnInfo>
 			<FileName>E:\coh2_battlegrounds\coh2-battlegrounds-mod\wincondition_mod\auxiliary_scripts\shared_handler.scar</FileName>
-			<FileHash>032608dda01fdd793d1038867af894e0</FileHash>
+			<FileHash>e70b88ed60783cd60fcfc9105f0e8813</FileHash>
 		</BurnInfo>
 		<BurnInfo>
 			<FileName>E:\coh2_battlegrounds\coh2-battlegrounds-mod\wincondition_mod\auxiliary_scripts\shared_units.scar</FileName>
-			<FileHash>0374594a06e1c030c9c60e3c96b1f593</FileHash>
+			<FileHash>5098fa9da72214400e7a734395c09e30</FileHash>
 		</BurnInfo>
 		<BurnInfo>
 			<FileName>E:\coh2_battlegrounds\coh2-battlegrounds-mod\wincondition_mod\auxiliary_scripts\shared_util.scar</FileName>
-			<FileHash>c7160553429eaf9f0cbc93afa8aaa825</FileHash>
+			<FileHash>0870788ad9e3a6a0f7d11b7b8499a4de</FileHash>
 		</BurnInfo>
 		<BurnInfo>
 			<FileName>E:\coh2_battlegrounds\coh2-battlegrounds-mod\wincondition_mod\auxiliary_scripts\client_companyui.scar</FileName>
-			<FileHash>db091beb62634d7ffe877f403e35c669</FileHash>
+			<FileHash>55883f45ae7907ea961b16d640590dc7</FileHash>
 		</BurnInfo>
 		<BurnInfo>
 			<FileName>E:\coh2_battlegrounds\coh2-battlegrounds-mod\wincondition_mod\auxiliary_scripts\shared_companyloader.scar</FileName>
@@ -31,15 +31,15 @@
 		</BurnInfo>
 		<BurnInfo>
 			<FileName>E:\coh2_battlegrounds\coh2-battlegrounds-mod\wincondition_mod\auxiliary_scripts\session.scar</FileName>
-			<FileHash>088e74d90abf2643735d9814c6a3eb4b</FileHash>
+			<FileHash>610f1a648384675d39ee3f6a96149936</FileHash>
 		</BurnInfo>
 		<BurnInfo>
 			<FileName>E:\coh2_battlegrounds\coh2-battlegrounds-mod\wincondition_mod\auxiliary_scripts\api_ui.scar</FileName>
-			<FileHash>d41d8cd98f00b204e9800998ecf8427e</FileHash>
+			<FileHash>35d591cfea81b1103025a86bdef9bc90</FileHash>
 		</BurnInfo>
 		<BurnInfo>
 			<FileName>E:\coh2_battlegrounds\coh2-battlegrounds-mod\wincondition_mod\auxiliary_scripts\client_overrideui.scar</FileName>
-			<FileHash>d41d8cd98f00b204e9800998ecf8427e</FileHash>
+			<FileHash>8308c44ca4d5705b1b0bc7d1b83fc30f</FileHash>
 		</BurnInfo>
 		<BurnInfo>
 			<FileName>E:\coh2_battlegrounds\coh2-battlegrounds-mod\wincondition_mod\coh2_battlegrounds_vp.scar</FileName>
@@ -48,6 +48,86 @@
 		<BurnInfo>
 			<FileName>E:\coh2_battlegrounds\coh2-battlegrounds-mod\wincondition_mod\coh2_battlegrounds_annihilate.scar</FileName>
 			<FileHash>4157502b6b54156bdb25245a07bbd66a</FileHash>
+		</BurnInfo>
+		<BurnInfo>
+			<FileName>E:\coh2_battlegrounds\coh2-battlegrounds-mod\wincondition_mod\ui_api\button.scar</FileName>
+			<FileHash>e433c32686f6d564413f2369819d1013</FileHash>
+		</BurnInfo>
+		<BurnInfo>
+			<FileName>E:\coh2_battlegrounds\coh2-battlegrounds-mod\wincondition_mod\ui_api\class.scar</FileName>
+			<FileHash>e11ef6c8f76cec00c94b0cc5143d00c1</FileHash>
+		</BurnInfo>
+		<BurnInfo>
+			<FileName>E:\coh2_battlegrounds\coh2-battlegrounds-mod\wincondition_mod\ui_api\color.scar</FileName>
+			<FileHash>f3679c3df71fa5e99bbab93d460740cc</FileHash>
+		</BurnInfo>
+		<BurnInfo>
+			<FileName>E:\coh2_battlegrounds\coh2-battlegrounds-mod\wincondition_mod\ui_api\control.scar</FileName>
+			<FileHash>583ec41d35d2fc131d10a8875de45f50</FileHash>
+		</BurnInfo>
+		<BurnInfo>
+			<FileName>E:\coh2_battlegrounds\coh2-battlegrounds-mod\wincondition_mod\ui_api\icon.scar</FileName>
+			<FileHash>bf7c7809f400fd8474dbf16745e4cb24</FileHash>
+		</BurnInfo>
+		<BurnInfo>
+			<FileName>E:\coh2_battlegrounds\coh2-battlegrounds-mod\wincondition_mod\ui_api\label.scar</FileName>
+			<FileHash>3fc60046b5e0b18c06e9d401bb88d733</FileHash>
+		</BurnInfo>
+		<BurnInfo>
+			<FileName>E:\coh2_battlegrounds\coh2-battlegrounds-mod\wincondition_mod\ui_api\panel.scar</FileName>
+			<FileHash>2901cc31c06cd62b54f60d50a294832e</FileHash>
+		</BurnInfo>
+		<BurnInfo>
+			<FileName>E:\coh2_battlegrounds\coh2-battlegrounds-mod\wincondition_mod\ui_api\rootpanel.scar</FileName>
+			<FileHash>513ebd9c3e9c69dc32fa879404fb87e2</FileHash>
+		</BurnInfo>
+		<BurnInfo>
+			<FileName>E:\coh2_battlegrounds\coh2-battlegrounds-mod\wincondition_mod\ui_api\statusindicator.scar</FileName>
+			<FileHash>42d51f0ae86d4e5a95e5c1f3c318a820</FileHash>
+		</BurnInfo>
+		<BurnInfo>
+			<FileName>E:\coh2_battlegrounds\coh2-battlegrounds-mod\wincondition_mod\art\button_background.png</FileName>
+			<FileHash>15f7c2b40025f159ee9ad3995cfdd65b</FileHash>
+		</BurnInfo>
+		<BurnInfo>
+			<FileName>E:\coh2_battlegrounds\coh2-battlegrounds-mod\wincondition_mod\art\button_simple.png</FileName>
+			<FileHash>d311cc1787dd559418e904005ea78875</FileHash>
+		</BurnInfo>
+		<BurnInfo>
+			<FileName>E:\coh2_battlegrounds\coh2-battlegrounds-mod\wincondition_mod\art\cancel_button.png</FileName>
+			<FileHash>9b4de1d561c241e1a866b17be1c6f244</FileHash>
+		</BurnInfo>
+		<BurnInfo>
+			<FileName>E:\coh2_battlegrounds\coh2-battlegrounds-mod\wincondition_mod\art\company_overview_clean.png</FileName>
+			<FileHash>9c274f6ae98249efa75d3b63864754c7</FileHash>
+		</BurnInfo>
+		<BurnInfo>
+			<FileName>E:\coh2_battlegrounds\coh2-battlegrounds-mod\wincondition_mod\art\fuel_24x24.png</FileName>
+			<FileHash>d698054bf2e6d618ae236da6e7c5eca3</FileHash>
+		</BurnInfo>
+		<BurnInfo>
+			<FileName>E:\coh2_battlegrounds\coh2-battlegrounds-mod\wincondition_mod\art\manpower_24x24.png</FileName>
+			<FileHash>af184eb3e79f4fb8a711f8265ad56309</FileHash>
+		</BurnInfo>
+		<BurnInfo>
+			<FileName>E:\coh2_battlegrounds\coh2-battlegrounds-mod\wincondition_mod\art\munitions_24x24.png</FileName>
+			<FileHash>ed746e57af34ecb76389a6d9ecf2c377</FileHash>
+		</BurnInfo>
+		<BurnInfo>
+			<FileName>E:\coh2_battlegrounds\coh2-battlegrounds-mod\wincondition_mod\art\progress_bar_small.png</FileName>
+			<FileHash>9d54eb2274236f5741c7dff340da3c94</FileHash>
+		</BurnInfo>
+		<BurnInfo>
+			<FileName>E:\coh2_battlegrounds\coh2-battlegrounds-mod\wincondition_mod\art\progress_bar_small_frame.png</FileName>
+			<FileHash>8f12ce471dd6ce38cc51072ea670debf</FileHash>
+		</BurnInfo>
+		<BurnInfo>
+			<FileName>E:\coh2_battlegrounds\coh2-battlegrounds-mod\wincondition_mod\art\unitbackground.png</FileName>
+			<FileHash>849ef8fce847ddb134048f9b2d56bd04</FileHash>
+		</BurnInfo>
+		<BurnInfo>
+			<FileName>E:\coh2_battlegrounds\coh2-battlegrounds-mod\wincondition_mod\art\vstar.png</FileName>
+			<FileHash>e67bbb62f8f5ca22cd80a383a77df119</FileHash>
 		</BurnInfo>
 		<BurnInfo>
 			<FileName>E:\coh2_battlegrounds\coh2-battlegrounds-mod\wincondition_mod\coh2_battlegrounds_wincondition Intermediate Cache\Intermediate Files\info\6a0a13b89555402ca75b85dc30f5cb04.info</FileName>

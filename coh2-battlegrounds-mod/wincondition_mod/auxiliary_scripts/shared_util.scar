@@ -107,6 +107,14 @@ function Player_GetNearestMapEntry(player, refpoint)
     return available[j];
 end
 
+function Player_CallLocal(player, func)
+    for i=1, World_GetPlayerCount() do
+        if (World_GetPlayerAt(i) == player) then
+            func(player);
+        end
+    end
+end
+
 ------------------------------------------------------------
 -- Team functions
 ------------------------------------------------------------

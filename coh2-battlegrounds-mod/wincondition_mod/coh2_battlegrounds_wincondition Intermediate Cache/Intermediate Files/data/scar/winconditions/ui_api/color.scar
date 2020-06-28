@@ -1,0 +1,23 @@
+Color = Class(nil, function(self, red, green, blue, alpha)
+    self._red = red or 0;
+    self._green = green or 0;
+    self._blue = blue or 0;
+    self._alpha = alpha or 255;
+end)
+Color.Red = Color(255, 0, 0);
+Color.Green = Color(0, 255, 0);
+Color.Blue = Color(0, 0, 255);
+Color.Black = Color(0, 0, 0);
+Color.White = Color(255,255,255);
+function Color:getRed()
+    return self._red;
+end
+function Color:getGreen()
+    return self._green;
+end
+function Color:getBlue()
+    return self._blue;
+end
+function Color:getAlpha()
+    return self._alpha;
+end

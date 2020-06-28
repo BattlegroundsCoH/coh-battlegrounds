@@ -1,0 +1,25 @@
+Icon = Class(Control, function(self, icon, width, height, x, y)
+    Control._constructor(self);
+    Icon._count = Icon._count + 1;
+    self._name = "i" .. Icon._count;
+    self._icon = icon or "";
+    self._width = width or "";
+    self._height = height or "";
+    self._x = x or 0;
+    self._y = y or 0;
+end)
+Icon._count = 0;
+function Icon:getIcon()
+    return self._icon;
+end
+function Icon:setIcon(icon)
+    self._icon = icon;
+    if self._path ~= "" then
+        UI_IconSetIcon(self._path, self._icon);
+	end
+end
+function Icon:onAdd(path)
+	Control.onAdd(self, path);
+	UI_IconAdd(path, self._name, self._x, self._y, self._width, self._height, self._icon);
+	self:setColor();
+end
