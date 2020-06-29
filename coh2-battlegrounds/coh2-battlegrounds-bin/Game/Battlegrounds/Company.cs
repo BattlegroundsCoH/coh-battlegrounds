@@ -1,18 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.IO;
 using System.Linq;
 using Battlegrounds.Game.Database;
 using Battlegrounds.Game.Database.json;
 using Battlegrounds.Game.Gameplay;
 using Battlegrounds.Steam;
+using Battlegrounds.Verification;
 
 namespace Battlegrounds.Game.Battlegrounds {
     
     /// <summary>
     /// Represents a Company. Implements <see cref="IJsonObject"/>.
     /// </summary>
-    public class Company : IJsonObject {
+    public class Company : IJsonObject, IChecksumItem {
 
         private ushort m_nextSquadId;
         private List<Squad> m_squads;
@@ -30,11 +32,13 @@ namespace Battlegrounds.Game.Battlegrounds {
         /// <summary>
         /// The <see cref="SteamUser"/> who owns the <see cref="Company"/>.
         /// </summary>
+        [JsonIgnore]
         public SteamUser Owner { get; }
 
         /// <summary>
         /// <see cref="ImmutableArray{T}"/> representation of the units in the <see cref="Company"/>.
         /// </summary>
+        [JsonIgnore]
         public ImmutableArray<Squad> Units => m_squads.ToImmutableArray();
 
         /// <summary>
@@ -124,6 +128,19 @@ namespace Battlegrounds.Game.Battlegrounds {
         /// <param name="squadId"></param>
         public bool RemoveSquad(ushort squadId)
             => m_squads.RemoveAll(x => x.SquadID == squadId) == 1;
+
+        /// <summary>
+        /// Get the complete checksum in string format.
+        /// </summary>
+        /// <returns>The string representation of the checksum.</returns>
+        public string GetChecksum() => throw new NotImplementedException();
+
+        /// <summary>
+        /// Save all <see cref="Company"/> data to a Json file.
+        /// </summary>
+        /// <param name="jsonfile">The path of the file to save <see cref="Company"/> data into.</param>
+        public void SaveToFile(string jsonfile) 
+            => File.WriteAllText(jsonfile, (this as IJsonObject).Serialize());
 
     }
 

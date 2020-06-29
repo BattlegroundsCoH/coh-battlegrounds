@@ -244,6 +244,18 @@
             </summary>
             <param name="squadId"></param>
         </member>
+        <member name="M:Battlegrounds.Game.Battlegrounds.Company.GetChecksum">
+            <summary>
+            Get the complete checksum in string format.
+            </summary>
+            <returns>The string representation of the checksum.</returns>
+        </member>
+        <member name="M:Battlegrounds.Game.Battlegrounds.Company.SaveToFile(System.String)">
+            <summary>
+            Save all <see cref="T:Battlegrounds.Game.Battlegrounds.Company"/> data to a Json file.
+            </summary>
+            <param name="jsonfile">The path of the file to save <see cref="T:Battlegrounds.Game.Battlegrounds.Company"/> data into.</param>
+        </member>
         <member name="T:Battlegrounds.Game.Battlegrounds.GameMatch">
             <summary>
             Representation of a match wherein the results of the match can be evaluated and verified within the <see cref="T:Battlegrounds.Game.Battlegrounds.Session"/> the match was played.
@@ -698,6 +710,11 @@
             
             </summary>
             <returns></returns>
+        </member>
+        <member name="T:Battlegrounds.Game.Database.json.JsonIgnoreAttribute">
+            <summary>
+            
+            </summary>
         </member>
         <member name="T:Battlegrounds.Game.Database.json.IJsonObject">
             <summary>
@@ -1238,6 +1255,12 @@
             </summary>
             <returns>The cost of the squad.</returns>
         </member>
+        <member name="M:Battlegrounds.Game.Gameplay.Squad.GetChecksum">
+            <summary>
+            Get the complete checksum in string format.
+            </summary>
+            <returns>The string representation of the checksum.</returns>
+        </member>
         <member name="T:Battlegrounds.Game.Gameplay.Wincondition">
             <summary>
             
@@ -1678,6 +1701,17 @@
             Save all the contents of a <see cref="T:Battlegrounds.Util.TxtBuilder"/> to a specified file.
             </summary>
             <param name="path">The path of the file to write contents to.</param>
+        </member>
+        <member name="T:Battlegrounds.Verification.IChecksumItem">
+            <summary>
+            Interface for calculating a checksum for a C# data object.
+            </summary>
+        </member>
+        <member name="M:Battlegrounds.Verification.IChecksumItem.GetChecksum">
+            <summary>
+            Get the complete checksum in string format.
+            </summary>
+            <returns>The string representation of the checksum.</returns>
         </member>
     </members>
 </doc>

@@ -3,13 +3,15 @@ using System.Linq;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using Battlegrounds.Game.Database;
+using Battlegrounds.Game.Database.json;
+using Battlegrounds.Verification;
 
 namespace Battlegrounds.Game.Gameplay {
     
     /// <summary>
     /// Representation of a Squad
     /// </summary>
-    public class Squad {
+    public class Squad : IJsonObject, IChecksumItem {
 
         byte m_veterancyRank;
         float m_veterancyProgress;
@@ -109,6 +111,13 @@ namespace Battlegrounds.Game.Gameplay {
             return c;
 
         }
+
+        /// <summary>
+        /// Get the complete checksum in string format.
+        /// </summary>
+        /// <returns>The string representation of the checksum.</returns>
+        public string GetChecksum() => throw new NotImplementedException();
+
     }
 
 }

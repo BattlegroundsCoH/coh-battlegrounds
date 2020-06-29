@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
+using Battlegrounds.Util;
 
 namespace Battlegrounds.Game.Database.json {
     
@@ -17,10 +18,61 @@ namespace Battlegrounds.Game.Database.json {
         /// <returns></returns>
         public virtual string Serialize() {
 
-            string json = string.Empty;
+            Type il_type = this.GetType();
+            TxtBuilder jsonbuilder = new TxtBuilder();
 
-            return json;
+            // Get all the fields
+            IEnumerable<FieldInfo> fields = il_type.GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.FlattenHierarchy)
+                .Where(x => x.GetCustomAttribute<JsonIgnoreAttribute>() is null && !x.Name.Contains("_BackingField"));
 
+            // Get all the properties
+            IEnumerable<PropertyInfo> properties = il_type.GetProperties(BindingFlags.FlattenHierarchy | BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)
+                .Where(x => x.GetCustomAttribute<JsonIgnoreAttribute>() is null);
+
+            jsonbuilder.AppendLine("{");
+            jsonbuilder.IncreaseIndent();
+
+            jsonbuilder.AppendLine($"\"jsdb-type\": \"{il_type.FullName}\"{((fields.Count() + properties.Count() > 0) ? "," : "")}");
+
+            foreach (FieldInfo finfo in fields) {
+                WriteKeyValuePair(jsonbuilder, finfo.FieldType, finfo.Name, finfo.GetValue(this), finfo != fields.Last() || properties.Count() > 0);
+            }
+
+            foreach (PropertyInfo pinfo in properties) {
+                WriteKeyValuePair(jsonbuilder, pinfo.PropertyType, pinfo.Name, pinfo.GetValue(this), pinfo != properties.Last());
+            }
+
+            jsonbuilder.DecreaseIndent();
+            jsonbuilder.AppendLine("}");
+
+            return jsonbuilder.GetContent();
+
+        }
+
+        private static void WriteKeyValuePair(TxtBuilder jsonbuilder, Type type, string name, object val, bool appendComma) {
+            if (type.IsPrimitive || val is string) {
+                jsonbuilder.AppendLine($"\"{name}\": \"{val}\"{((appendComma)?",":"")}");
+            } else {
+                if (type.IsAssignableFrom(typeof(IJsonObject))) {
+
+                } else if (type.GenericTypeArguments.Length > 0 && type.GetInterfaces().Contains(typeof(IEnumerable<>).MakeGenericType(type.GenericTypeArguments))) {
+                    jsonbuilder.AppendLine($"\"{name}\": [");
+                    dynamic dynVal = val; // CAREFUL!
+                    foreach (dynamic c in dynVal) {
+                        Type t = c.GetType();
+                        if (t.IsPrimitive || c is string) {
+                            Console.WriteLine();
+                        } else if (c is IJsonObject jso) {
+                            string str = jso.Serialize();
+                            Console.WriteLine();
+                        }
+                    }
+                    jsonbuilder.AppendLine($"]{((appendComma)?", ":"")}");
+                } else {
+                    jsonbuilder.AppendLine($"\"{name}\": \"{val}\"{((appendComma) ? "," : "")}");
+                }
+
+            }
         }
 
         /// <summary>
