@@ -151,3 +151,18 @@ end
 function Game_SendMessage(msgType, msg)
     Command_PlayerBroadcastMessage(Game_GetLocalPlayer(), Game_GetLocalPlayer(), msgType, msg);
 end
+
+------------------------------------------------------------
+-- Battlegrounds helper functions
+------------------------------------------------------------
+function Battlegrounds_FormatResources(cost, negate)
+    local mp = cost.manpower or 0;
+    local mu = cost.munitions or 0;
+    local fu = cost.fuel or 0;
+    if (negate) then
+        mp = -mp;
+        mu = -mp;
+        fu = -fu;
+    end
+    return tostring(mp)..","..tostring(mu)..","..tostring(fu);
+end

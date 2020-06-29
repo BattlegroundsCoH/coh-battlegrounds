@@ -224,7 +224,7 @@ function BG_CollectEndofMatchData()
                 -- For each slot item
                 for i=1, Squad_GetSlotItemCount(squad) do
                     local item = Squad_GetSlotItemAt(squad, i);
-                    Game_SendMessage(_bg_message_type_no_actions_required, "I["..company_id..","..item.."]");
+                    Game_SendMessage(_bg_message_type_no_actions_required, "I["..company_id..","..BP_GetName(item).."]");
                 end
 
             end

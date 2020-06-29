@@ -226,7 +226,7 @@ function BG_CreateUnitDeployProgress(unit, card)
     local progress_frame = Icon("ModIcons_6a0a13b89555402ca75b85dc30f5cb04_progress_bar_small_frame", 155, 28, 160, 6);
     card:add(progress_frame);
 
-    unit.deploy_visual = Icon("ModIcons_6a0a13b89555402ca75b85dc30f5cb04_progress_bar_small", 0, 12, 174, 12);
+    unit.deploy_visual = Icon("ModIcons_6a0a13b89555402ca75b85dc30f5cb04_progress_bar_small", BG_GetDeploytimeBar(unit), 12, 174, 12);
     card:add(unit.deploy_visual);
 
     -- Add clickable background
@@ -244,13 +244,10 @@ function BG_UnitCardClicked(tag)
     for i=1, #_bg_playerData[refPlayerID].company.units do
         if _bg_playerData[refPlayerID].company.units[i].company_id == tonumber(tag) then
             _bg_playerData[refPlayerID].company.units[i].isDeploying = true;
-            _bg_playerData[refPlayerID].company.units[i].deploy_time = 20; -- This value could be read or calculated from somewhere else
+            _bg_playerData[refPlayerID].company.units[i].deploy_time = _bg_playerData[refPlayerID].company.units[i].cost.fieldtime;
             BG_RefreshCompanyView();
             Game_SendMessage(_bg_message_type_player_request_deploy, tag); -- Publish we've requested this unit
-            local mp = (-_bg_playerData[refPlayerID].company.units[i].cost.manpower);
-            local mu = (-_bg_playerData[refPlayerID].company.units[i].cost.munitions);
-            local fu = (-_bg_playerData[refPlayerID].company.units[i].cost.fuel);
-            local ps = mp..","..mu..","..fu;
+            local ps = Battlegrounds_FormatResources(_bg_playerData[refPlayerID].company.units[i].cost, true);
             Game_SendMessage(_bg_message_type_player_resource, ps); -- Subtrack the resources
             break;
         end
@@ -266,10 +263,7 @@ function BG_UnitCardCancelClicked(tag)
             _bg_playerData[refPlayerID].company.units[i].deploy_time = nil;
             BG_RefreshCompanyView();
             Game_SendMessage(_bg_message_type_player_cancel_deploy, tag); -- Published we've cancelled this unit
-            local mp = (_bg_playerData[refPlayerID].company.units[i].cost.manpower);
-            local mu = (_bg_playerData[refPlayerID].company.units[i].cost.munitions);
-            local fu = (_bg_playerData[refPlayerID].company.units[i].cost.fuel);
-            local ps = mp..","..mu..","..fu;
+            local ps = Battlegrounds_FormatResources(_bg_playerData[refPlayerID].company.units[i].cost, false);
             Game_SendMessage(_bg_message_type_player_resource, ps); -- Get our resources back
             break;
         end
@@ -289,12 +283,22 @@ function BG_UpdateDeploymentTimers()
                     _bg_playerData[refPlayerID].company.units[i].isDeploying = false;
                 else
                     if _bg_local_companyIsVisible then
-                        _bg_playerData[refPlayerID].company.units[i].deploy_visual:setSize((20 - _bg_playerData[refPlayerID].company.units[i].deploy_time) / 20 * 120, 12);
+                        local p = BG_GetDeploytimeBar(_bg_playerData[refPlayerID].company.units[i]);
+                        _bg_playerData[refPlayerID].company.units[i].deploy_visual:setSize(p, 12);
                     end
                 end
             end
         end
     end)
+end
+
+function BG_GetDeploytimeBar(unit)
+    if unit.isDeploying then
+        local maxTime = unit.cost.fieldtime;
+        return (maxTime - unit.deploy_time) / maxTime * 115;
+    else
+        return 0;
+    end
 end
 
 function BG_RefreshCompanyView()

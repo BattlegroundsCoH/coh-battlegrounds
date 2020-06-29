@@ -144,8 +144,11 @@ namespace Battlegrounds.Game.Battlegrounds {
 
                     } else if (msgtype == 'R') {
 
-                        Console.WriteLine();
+                        ushort companyID = ushort.Parse(values[0]);
+                        byte vetChange = byte.Parse(values[1]);
+                        float vetExp = byte.Parse(values[2]);
 
+                        Console.WriteLine(companyID + ":" + vetChange + ":" + vetExp);
 
                     } else if (msgtype == 'U') {
 

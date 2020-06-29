@@ -129,12 +129,20 @@ function BG_OnSquadDeath(squad)
     local playerRefID = BG_GetPlayerID(playerOwner);
     local id = Squad_GetGameID(squad);
 
-    -- Broadcast that the unit was killed
-    Command_PlayerBroadcastMessage(Game_GetLocalPlayer(), Game_GetLocalPlayer(), _bg_message_type_no_actions_required, "K[" .. _bg_playerData[playerRefID].deployed[id] .. "]")
+    -- Make sure it's a valid unit
+    if _bg_playerData[playerRefID].deployed[id] ~= nil then
+
+        -- Broadcast that the unit was killed
+        Command_PlayerBroadcastMessage(Game_GetLocalPlayer(), Game_GetLocalPlayer(), _bg_message_type_no_actions_required, "K[" .. _bg_playerData[playerRefID].deployed[id] .. "]")
+
+        -- Remove from deployed list
+        _bg_playerData[playerRefID].deployed[id] = nil;
+
+    end
 
 end
 
-function BG_OnSquadUpgrade(squad)
+function BG_OnSquadUpgrade(squad, bp)
 
     -- Get required info
     local playerOwner = Squad_GetPlayerOwner(squad);
@@ -153,9 +161,5 @@ function BG_RecallSquad(player, unit_id)
 end
 
 function BG_SurrenderSquad(squad)
-
-end
-
-function BG_SaveSquad(squad)
 
 end

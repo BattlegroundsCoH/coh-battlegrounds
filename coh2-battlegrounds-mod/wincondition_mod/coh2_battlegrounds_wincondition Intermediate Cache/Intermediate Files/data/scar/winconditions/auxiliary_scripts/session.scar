@@ -1,10 +1,23 @@
 bg_settings = {
 	playercount = 1,
-	guid = "a6d136f5-1d40-4395-92fc-26fd13882ecd",
+	session_guid = "a6d136f5-1d40-4395-92fc-26fd13882ecd",
+	tuning_mod = {
+		mod_name = "",
+		mod_guid = "",
+		mod_verify_upg = "",
+	},
 	map = "",
-	gamemode = "",
+	gamemode = "victory_points",
 	gameoptions = {
-	}
+		vp_setting = 1,
+	},
+	team_setup = {
+		["allies"] = {
+			"CoDiEx",
+		},
+		["axis"] = {
+		},
+	},
 };
 bg_companies = {
 		["CoDiEx"] = {
@@ -20,6 +33,7 @@ bg_companies = {
 				cost = {
 					manpower = 240,
 					munitions = 40,
+					fieldtime = 15.00,
 				},
 				upgrades = {
 					{ bp = "ppsh-41_sub_machine_gun_upgrade_mp", symbol = "Icons_weapons_weapon_pps" },
@@ -39,6 +53,7 @@ bg_companies = {
 				cost = {
 					manpower = 240,
 					munitions = 0,
+					fieldtime = 15.00,
 				},
 				upgrades = {
 				},
@@ -57,6 +72,7 @@ bg_companies = {
 				cost = {
 					manpower = 260,
 					munitions = 40,
+					fieldtime = 15.00,
 				},
 				upgrades = {
 					{ bp = "ppsh-41_sub_machine_gun_upgrade_mp", symbol = "Icons_weapons_weapon_pps" },
@@ -76,6 +92,7 @@ bg_companies = {
 				cost = {
 					manpower = 380,
 					fuel = 140,
+					fieldtime = 15.00,
 				},
 				upgrades = {
 				},
@@ -94,6 +111,7 @@ bg_companies = {
 				cost = {
 					manpower = 380,
 					fuel = 140,
+					fieldtime = 15.00,
 				},
 				upgrades = {
 				},
@@ -112,6 +130,7 @@ bg_companies = {
 				cost = {
 					manpower = 380,
 					fuel = 180,
+					fieldtime = 15.00,
 				},
 				upgrades = {
 				},
