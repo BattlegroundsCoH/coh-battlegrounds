@@ -195,19 +195,16 @@ function BG_CollectEndofMatchData()
     for i=1, #_bg_playerData do
 
         -- For all deployed units
-        for k, v in pairs(_bg_playerData[i].deployed) do
+        for squadID, company_id in pairs(_bg_playerData[i].deployed) do
 
             -- Make sure the unit is available
-            if (v ~= nil) then
-
-                -- Get the company ID
-                local company_id = v;
+            if (company_id ~= nil) then
 
                 -- Get the actual squad
-                local squad = Squad_FromWorldID(k);
+                local squad = Squad_FromWorldID(squadID);
 
                 -- Get the initial unit
-                local inital = BG_FindSquadInCompany(i, v);
+                local inital = BG_FindSquadInCompany(i, company_id);
 
                 -- The unit message (The message to save)
                 local unit_message = tostring(company_id);

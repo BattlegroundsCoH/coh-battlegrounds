@@ -109,7 +109,7 @@ namespace Battlegrounds.Game.Battlegrounds {
 
             if (msg.Length > 0) {
 
-                Match messageMatchResult = Regex.Match(msg, @"(?<cmdtype>\w)\[(?<content>(?<msg>\w+|\d+)|,|\s)*\]");
+                Match messageMatchResult = Regex.Match(msg, @"(?<cmdtype>\w)\[(?<content>(?<msg>(\w|_|-|\.|\d)+)|,|\s)*\]");
 
                 if (messageMatchResult.Success) {
 

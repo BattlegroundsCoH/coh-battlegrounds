@@ -1,6 +1,6 @@
 function BG_CreateAndDisplayGameOverScreenOverride(locplayer, callback)
 
-    callback(); -- For now... juse call the callback...
+    Rule_AddOneShot(callback, 2); -- For now... juse call the callback...
 
 end
 
