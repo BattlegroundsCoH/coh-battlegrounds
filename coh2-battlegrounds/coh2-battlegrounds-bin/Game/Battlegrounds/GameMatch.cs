@@ -100,8 +100,6 @@ namespace Battlegrounds.Game.Battlegrounds {
 
             }
 
-            Console.WriteLine("Updating companies");
-
             // Update all companies
             this.UpdateCompanies();
 

@@ -10,7 +10,7 @@ using Battlegrounds.Steam;
 namespace Battlegrounds.Game.Battlegrounds {
     
     /// <summary>
-    /// 
+    /// Represents a Company. Implements <see cref="IJsonObject"/>.
     /// </summary>
     public class Company : IJsonObject {
 
@@ -18,22 +18,22 @@ namespace Battlegrounds.Game.Battlegrounds {
         private List<Squad> m_squads;
 
         /// <summary>
-        /// 
+        /// The name of the company.
         /// </summary>
         public string Name { get; set; }
 
         /// <summary>
-        /// 
+        /// The <see cref="Faction"/> this company is associated with.
         /// </summary>
         public Faction Army { get; }
 
         /// <summary>
-        /// 
+        /// The <see cref="SteamUser"/> who owns the <see cref="Company"/>.
         /// </summary>
         public SteamUser Owner { get; }
 
         /// <summary>
-        /// The units of the company
+        /// <see cref="ImmutableArray{T}"/> representation of the units in the <see cref="Company"/>.
         /// </summary>
         public ImmutableArray<Squad> Units => m_squads.ToImmutableArray();
 

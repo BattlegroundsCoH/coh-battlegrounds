@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Linq;
+using System.Collections.Generic;
 using System.Collections.Immutable;
 using Battlegrounds.Game.Database;
 
@@ -31,8 +33,9 @@ namespace Battlegrounds.Game.Gameplay {
         public Blueprint Blueprint { get; }
 
         /// <summary>
-        /// 
+        /// The <see cref="Blueprint"/> in a <see cref="SquadBlueprint"/> form.
         /// </summary>
+        /// <exception cref="System.InvalidCastException"/>
         public SquadBlueprint SBP => this.Blueprint as SquadBlueprint;
 
         /// <summary>
@@ -91,6 +94,21 @@ namespace Battlegrounds.Game.Gameplay {
         /// <param name="slotItemBP">The slot item blueprint to add</param>
         public void AddSlotItem(Blueprint slotItemBP) => this.m_slotItems.Add(slotItemBP);
 
+
+        /// <summary>
+        /// Calculate the actual cost of a <see cref="Squad"/>.
+        /// </summary>
+        /// <returns>The cost of the squad.</returns>
+        public Cost GetCost() {
+
+            Cost c = new Cost(SBP.Cost.Manpower, SBP.Cost.Munitions, SBP.Cost.Fuel, SBP.Cost.FieldTime);
+            c = this.m_upgrades.Select(x => (x as UpgradeBlueprint).Cost).Aggregate(c, (a, b) => a + b);
+
+            // TODO: More here
+
+            return c;
+
+        }
     }
 
 }

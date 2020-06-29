@@ -68,6 +68,15 @@ namespace Battlegrounds.Game.Gameplay {
             $"{{Manpower = {this.Manpower}, Munitions = {this.Munitions}, Fuel = {this.Fuel}, FieldTime = {this.FieldTime}s}}" : 
             $"{{Manpower = {this.Manpower}, Munitions = {this.Munitions}, Fuel = {this.Fuel}}}";
 
+        /// <summary>
+        /// Add two costs together.
+        /// </summary>
+        /// <param name="a">Left operand</param>
+        /// <param name="b">Right operand</param>
+        /// <returns>The sum of the two operands.</returns>
+        public static Cost operator +(Cost a, Cost b)
+            => new Cost((ushort)(a.Manpower + b.Manpower), (ushort)(a.Munitions + b.Munitions), (ushort)(a.Fuel + b.Fuel), a.FieldTime + b.FieldTime);
+
     }
 
 }

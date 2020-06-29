@@ -155,18 +155,26 @@
             <param name="setting">The name of the setting to set</param>
             <param name="value">The C# value of the setting to set. The value is automatically converted to its Lua Source Code equivalent</param>
         </member>
+        <member name="M:Battlegrounds.Compiler.SessionCompiler`1.WriteTeam(Battlegrounds.Util.TxtBuilder,System.String,System.Collections.Generic.IEnumerable{Battlegrounds.Steam.SteamUser})">
+            <summary>
+            Writes the team setup for a specific side (axis or allies)
+            </summary>
+            <param name="lua">The lua code to append team data to.</param>
+            <param name="team">The string name of the team.</param>
+            <param name="players">The players on the team.</param>
+        </member>
         <member name="T:Battlegrounds.Compiler.WinconditionCompiler">
             <summary>
-            
+            Helper class for compiling a win condition in a JIT-style.
             </summary>
         </member>
         <member name="M:Battlegrounds.Compiler.WinconditionCompiler.CompileToSga(System.String,System.String)">
             <summary>
-            
+            Compile a session into a sga archive file.
             </summary>
-            <param name="workdir"></param>
-            <param name="companyfile"></param>
-            <returns></returns>
+            <param name="workdir">The temporary work directory.</param>
+            <param name="sessionFile">The session file to include</param>
+            <returns>True of the archive file was created sucessfully. False if any error occured.</returns>
         </member>
         <member name="M:Battlegrounds.Compiler.WinconditionCompiler.InvokeArchiver(System.String,System.String,System.String)">
             <summary>
@@ -179,27 +187,27 @@
         </member>
         <member name="T:Battlegrounds.Game.Battlegrounds.Company">
             <summary>
-            
+            Represents a Company. Implements <see cref="T:Battlegrounds.Game.Database.json.IJsonObject"/>.
             </summary>
         </member>
         <member name="P:Battlegrounds.Game.Battlegrounds.Company.Name">
             <summary>
-            
+            The name of the company.
             </summary>
         </member>
         <member name="P:Battlegrounds.Game.Battlegrounds.Company.Army">
             <summary>
-            
+            The <see cref="T:Battlegrounds.Game.Gameplay.Faction"/> this company is associated with.
             </summary>
         </member>
         <member name="P:Battlegrounds.Game.Battlegrounds.Company.Owner">
             <summary>
-            
+            The <see cref="T:Battlegrounds.Steam.SteamUser"/> who owns the <see cref="T:Battlegrounds.Game.Battlegrounds.Company"/>.
             </summary>
         </member>
         <member name="P:Battlegrounds.Game.Battlegrounds.Company.Units">
             <summary>
-            The units of the company
+            <see cref="T:System.Collections.Immutable.ImmutableArray`1"/> representation of the units in the <see cref="T:Battlegrounds.Game.Battlegrounds.Company"/>.
             </summary>
         </member>
         <member name="M:Battlegrounds.Game.Battlegrounds.Company.#ctor(Battlegrounds.Steam.SteamUser,System.String,Battlegrounds.Game.Gameplay.Faction)">
@@ -331,60 +339,55 @@
         </member>
         <member name="T:Battlegrounds.Game.Battlegrounds.Session">
             <summary>
-            
+            Represents a game session where a match will take place between players with a pre-selected <see cref="T:Battlegrounds.Game.Battlegrounds.Company"/> and using a set of preset settings. Implements <see cref="T:Battlegrounds.Game.Database.json.IJsonObject"/>.
             </summary>
         </member>
         <member name="P:Battlegrounds.Game.Battlegrounds.Session.Companies">
             <summary>
-            
+            The <see cref="T:Battlegrounds.Game.Battlegrounds.Company"/> objects representing the companies within this session.
             </summary>
         </member>
         <member name="P:Battlegrounds.Game.Battlegrounds.Session.Scenario">
             <summary>
-            
+            The name of the scenario file to play.
             </summary>
         </member>
         <member name="P:Battlegrounds.Game.Battlegrounds.Session.Gamemode">
             <summary>
-            
+            The <see cref="T:Battlegrounds.Game.Gameplay.Wincondition"/> to use when playing.
             </summary>
         </member>
         <member name="P:Battlegrounds.Game.Battlegrounds.Session.AllowAI">
             <summary>
-            
+            Allow AI to take part in the <see cref="T:Battlegrounds.Game.Battlegrounds.Session"/>.
             </summary>
         </member>
         <member name="P:Battlegrounds.Game.Battlegrounds.Session.Settings">
             <summary>
-            
+            A list of all settings to apply for the <see cref="T:Battlegrounds.Game.Battlegrounds.Session"/>.
             </summary>
         </member>
         <member name="P:Battlegrounds.Game.Battlegrounds.Session.SessionID">
             <summary>
-            
-            </summary>
-        </member>
-        <member name="M:Battlegrounds.Game.Battlegrounds.Session.#ctor(System.String,Battlegrounds.Game.Battlegrounds.Company[],Battlegrounds.Game.Gameplay.Wincondition,System.Boolean)">
-            <summary>
-            
+            The unique GUID to use to verify match data.
             </summary>
         </member>
         <member name="M:Battlegrounds.Game.Battlegrounds.Session.AddSetting(System.String,System.Object)">
             <summary>
-            
+            Add a custom setting to the <see cref="T:Battlegrounds.Game.Battlegrounds.Session"/>.
             </summary>
-            <param name="setting"></param>
-            <param name="value"></param>
+            <param name="setting">The name of the setting to add.</param>
+            <param name="value">The value of the setting (Automatically converted to a Lua code equivalent).</param>
         </member>
         <member name="M:Battlegrounds.Game.Battlegrounds.Session.CreateSession(System.String,Battlegrounds.Game.Battlegrounds.Company[],Battlegrounds.Game.Gameplay.Wincondition,System.Boolean)">
             <summary>
-            
+            Create a new <see cref="T:Battlegrounds.Game.Battlegrounds.Session"/> instance with a unique <see cref="T:System.Guid"/>.
             </summary>
-            <param name="scenario"></param>
-            <param name="companies"></param>
-            <param name="gamemode"></param>
-            <param name="enableAI"></param>
-            <returns></returns>
+            <param name="scenario">The map name of the scenario to play on.</param>
+            <param name="companies">All the companies who will take part in the <see cref="T:Battlegrounds.Game.Battlegrounds.Session"/>.</param>
+            <param name="gamemode">The gamemode to play with.</param>
+            <param name="enableAI">Allow AI players in this <see cref="T:Battlegrounds.Game.Battlegrounds.Session"/>.</param>
+            <returns>New <see cref="T:Battlegrounds.Game.Battlegrounds.Session"/> with the given data.</returns>
         </member>
         <member name="T:Battlegrounds.Game.Battlegrounds.SessionStatus">
             <summary>
@@ -996,6 +999,14 @@
             </summary>
             <returns>A string that represents the current object.</returns>
         </member>
+        <member name="M:Battlegrounds.Game.Gameplay.Cost.op_Addition(Battlegrounds.Game.Gameplay.Cost,Battlegrounds.Game.Gameplay.Cost)">
+            <summary>
+            Add two costs together.
+            </summary>
+            <param name="a">Left operand</param>
+            <param name="b">Right operand</param>
+            <returns>The sum of the two operands.</returns>
+        </member>
         <member name="T:Battlegrounds.Game.Gameplay.Entity">
             <summary>
             
@@ -1160,8 +1171,9 @@
         </member>
         <member name="P:Battlegrounds.Game.Gameplay.Squad.SBP">
             <summary>
-            
+            The <see cref="P:Battlegrounds.Game.Gameplay.Squad.Blueprint"/> in a <see cref="T:Battlegrounds.Game.Database.SquadBlueprint"/> form.
             </summary>
+            <exception cref="T:System.InvalidCastException"/>
         </member>
         <member name="P:Battlegrounds.Game.Gameplay.Squad.VeterancyRank">
             <summary>
@@ -1209,6 +1221,12 @@
             Add a slot item to the squad
             </summary>
             <param name="slotItemBP">The slot item blueprint to add</param>
+        </member>
+        <member name="M:Battlegrounds.Game.Gameplay.Squad.GetCost">
+            <summary>
+            Calculate the actual cost of a <see cref="T:Battlegrounds.Game.Gameplay.Squad"/>.
+            </summary>
+            <returns>The cost of the squad.</returns>
         </member>
         <member name="T:Battlegrounds.Game.Gameplay.Wincondition">
             <summary>

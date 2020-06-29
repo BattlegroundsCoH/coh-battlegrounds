@@ -72,14 +72,18 @@ namespace Battlegrounds.Compiler {
             builder.AppendLine($"veterancy_rank = {squad.VeterancyRank},");
             builder.AppendLine($"veterancy_progress = {squad.VeterancyProgress:0.00},");
 
+            // Get the squad cost
+            Cost fCost = squad.GetCost();
+
             builder.AppendLine($"cost = {{");
             builder.IncreaseIndent();
-            builder.AppendLine($"manpower = {squad.SBP.Cost.Manpower},");
+            builder.AppendLine($"manpower = {fCost.Manpower},");
             if (squad.SBP.Cost.Munitions > 0) {
-                builder.AppendLine($"munitions = {squad.SBP.Cost.Munitions},");
-            } else {
-                builder.AppendLine($"fuel = {squad.SBP.Cost.Fuel},");
+                builder.AppendLine($"munitions = {fCost.Munitions},");
+            } else if (squad.SBP.Cost.Fuel > 0) {
+                builder.AppendLine($"fuel = {fCost.Fuel},");
             }
+            builder.AppendLine($"fieldtime = {fCost.FieldTime:0.00},");
             builder.DecreaseIndent();
             builder.AppendLine("},");
 

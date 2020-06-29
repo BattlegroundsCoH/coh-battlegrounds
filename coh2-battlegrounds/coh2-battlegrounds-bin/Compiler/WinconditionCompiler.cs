@@ -10,7 +10,7 @@ using Battlegrounds.Util;
 namespace Battlegrounds.Compiler {
     
     /// <summary>
-    /// 
+    /// Helper class for compiling a win condition in a JIT-style.
     /// </summary>
     public static class WinconditionCompiler {
 
@@ -51,12 +51,12 @@ namespace Battlegrounds.Compiler {
         };
 
         /// <summary>
-        /// 
+        /// Compile a session into a sga archive file.
         /// </summary>
-        /// <param name="workdir"></param>
-        /// <param name="companyfile"></param>
-        /// <returns></returns>
-        public static bool CompileToSga(string workdir, string companyfile) {
+        /// <param name="workdir">The temporary work directory.</param>
+        /// <param name="sessionFile">The session file to include</param>
+        /// <returns>True of the archive file was created sucessfully. False if any error occured.</returns>
+        public static bool CompileToSga(string workdir, string sessionFile) {
 
             // Fix potential missing '\'
             if (!workdir.EndsWith("\\")) {
@@ -94,7 +94,7 @@ namespace Battlegrounds.Compiler {
             }
 
             // Add the company file
-            AddLocalFile(archiveDef, companyfile, "data\\scar\\winconditions\\auxiliary_scripts\\", workdir);
+            AddLocalFile(archiveDef, sessionFile, "data\\scar\\winconditions\\auxiliary_scripts\\", workdir);
 
             // Get the scar files
             string[] scarfiles = ScarFiles;
