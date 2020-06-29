@@ -254,6 +254,16 @@
             
             </summary>
         </member>
+        <member name="P:Battlegrounds.Game.Battlegrounds.GameMatch.HasVictor">
+            <summary>
+            Does this match have a player or a team that has won?
+            </summary>
+        </member>
+        <member name="P:Battlegrounds.Game.Battlegrounds.GameMatch.PlayedWithSession">
+            <summary>
+            Was the <see cref="T:Battlegrounds.Game.Battlegrounds.GameMatch"/> played with the session?
+            </summary>
+        </member>
         <member name="M:Battlegrounds.Game.Battlegrounds.GameMatch.#ctor(Battlegrounds.Game.Battlegrounds.Session)">
             <summary>
             

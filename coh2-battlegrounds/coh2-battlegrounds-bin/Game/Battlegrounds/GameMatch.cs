@@ -13,21 +13,33 @@ namespace Battlegrounds.Game.Battlegrounds {
     /// </summary>
     public class GameMatch {
 
-        ReplayFile m_matchRecord;
-        Session m_gameSession;
-        PlayerResult[] m_matchPlayerResults;
+        private ReplayFile m_matchRecord;
+        private Session m_gameSession;
+        private PlayerResult[] m_matchPlayerResults;
+        private bool m_hasVictor;
 
         /// <summary>
         /// 
         /// </summary>
-        public PlayerResult[] Players => m_matchPlayerResults;
+        public PlayerResult[] Players => this.m_matchPlayerResults;
+
+        /// <summary>
+        /// Does this match have a player or a team that has won?
+        /// </summary>
+        public bool HasVictor => m_hasVictor;
+
+        /// <summary>
+        /// Was the <see cref="GameMatch"/> played with the session?
+        /// </summary>
+        public bool PlayedWithSession { get; private set; }
 
         /// <summary>
         /// 
         /// </summary>
         public GameMatch(Session session) {
-            m_matchPlayerResults = new PlayerResult[0];
-            m_gameSession = session;
+            this.m_matchPlayerResults = new PlayerResult[0];
+            this.m_gameSession = session;
+            this.m_hasVictor = false;
         }
 
         /// <summary>
@@ -105,6 +117,9 @@ namespace Battlegrounds.Game.Battlegrounds {
 
         }
 
+        private Squad FindFirstSquad(PlayerResult player, HashSet<Squad> allsquads, ushort squadID)
+            => allsquads.FirstOrDefault(x => x.SquadID == squadID && x.PlayerOwner == player.Player);
+
         private void ParseBroadcastMessage(string msg, PlayerResult player, HashSet<Squad> allsquads) {
 
             if (msg.Length > 0) {
@@ -127,7 +142,7 @@ namespace Battlegrounds.Game.Battlegrounds {
                     } else if (msgtype == 'K') {
 
                         ushort squadID = ushort.Parse(values[0]);
-                        Squad squad = allsquads.FirstOrDefault(x => x.SquadID == squadID);
+                        Squad squad = FindFirstSquad(player, allsquads, squadID);
 
                         if (squad != null) {
 
@@ -138,33 +153,64 @@ namespace Battlegrounds.Game.Battlegrounds {
 
                         }
 
-                    } else if (msgtype == 'V') {
-
-                        Console.WriteLine();
-
+                    } else if (msgtype == 'V') { // Victory marker
+                        this.m_hasVictor = true;
+                        if (int.Parse(values[0]) - 1 == player.Player.ID) {
+                            player.IsOnWinningTeam = true;
+                        }
                     } else if (msgtype == 'R') {
 
-                        ushort companyID = ushort.Parse(values[0]);
+                        ushort squadID = ushort.Parse(values[0]);
                         byte vetChange = byte.Parse(values[1]);
-                        float vetExp = byte.Parse(values[2]);
+                        float vetExp = float.Parse(values[2]);
 
-                        Console.WriteLine(companyID + ":" + vetChange + ":" + vetExp);
+                        Squad squad = FindFirstSquad(player, allsquads, squadID);
+                        if (squad != null) {
+                            if (vetChange > 0) {
+                                squad.SetVeterancy((byte)(squad.VeterancyRank + vetChange), vetExp);
+                                Console.WriteLine(squadID + " increased veterancy rank by " + vetChange);
+                            }
+                        } else {
+                            // error?
+                        }
 
                     } else if (msgtype == 'U') {
 
                         Console.WriteLine();
 
 
-                    } else if (msgtype == 'U') {
+                    } else if (msgtype == 'I') {
 
-                        Console.WriteLine();
+                        ushort squadID = ushort.Parse(values[0]);
+                        string slot_item_bp = values[1];
 
+                        Squad squad = FindFirstSquad(player, allsquads, squadID);
+                        if (squad != null) {
+                            Blueprint bp = BlueprintManager.FromBlueprintName(slot_item_bp, BlueprintType.IBP);
+                            if (bp != null) {
+                                squad.AddSlotItem(bp);
+                                Console.WriteLine(squadID + " picked up " + slot_item_bp);
+                            }
+                        } else {
+                            // error?
+                        }
 
-                    }// Other commands here
+                    } else if (msgtype == 'G') {
+                        
+                        // Verify GUID
+                        this.PlayedWithSession = values[0].CompareTo(this.m_gameSession.SessionID.ToString()) == 0;
+
+                        // Verify the session
+                        if (!this.PlayedWithSession) {
+                            Console.WriteLine("Fatal error during match validation!");
+                            Console.WriteLine($"\"{values[0]}\" != \"{this.m_gameSession.SessionID}\"");
+                        }
+
+                    } // Other commands here
 
                 } else {
 
-                    Console.WriteLine($"Failed to parse: \"{msg}\"");
+                    //Console.WriteLine($"Failed to parse: \"{msg}\"");
 
                 }
 
