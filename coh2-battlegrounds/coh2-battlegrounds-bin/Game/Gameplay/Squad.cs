@@ -16,8 +16,8 @@ namespace Battlegrounds.Game.Gameplay {
         byte m_veterancyRank;
         float m_veterancyProgress;
 
-        private HashSet<Blueprint> m_upgrades;
-        private HashSet<Blueprint> m_slotItems;
+        [JsonReference] private HashSet<Blueprint> m_upgrades;
+        [JsonReference] private HashSet<Blueprint> m_slotItems;
 
         /// <summary>
         /// The unique squad ID used to identify the <see cref="Squad"/>.
@@ -27,37 +27,44 @@ namespace Battlegrounds.Game.Gameplay {
         /// <summary>
         /// The player who (currently) owns the <see cref="Squad"/>.
         /// </summary>
+        [JsonIgnore]
         public Player PlayerOwner { get; }
 
         /// <summary>
         /// The <see cref="Database.Blueprint"/> the <see cref="Squad"/> is a type of.
         /// </summary>
+        [JsonReference]
         public Blueprint Blueprint { get; }
 
         /// <summary>
         /// The <see cref="Blueprint"/> in a <see cref="SquadBlueprint"/> form.
         /// </summary>
-        /// <exception cref="System.InvalidCastException"/>
+        /// <exception cref="InvalidCastException"/>
+        [JsonIgnore]
         public SquadBlueprint SBP => this.Blueprint as SquadBlueprint;
 
         /// <summary>
         /// The achieved veterancy rank of a <see cref="Squad"/>
         /// </summary>
+        [JsonIgnore]
         public byte VeterancyRank => this.m_veterancyRank;
 
         /// <summary>
         /// The current veterancy progress of a <see cref="Squad"/>
         /// </summary>
+        [JsonIgnore]
         public float VeterancyProgress => this.m_veterancyProgress;
 
         /// <summary>
         /// The current upgrades applied to a <see cref="Squad"/>
         /// </summary>
+        [JsonIgnore]
         public ImmutableArray<Blueprint> Upgrades => m_upgrades.ToImmutableArray();
 
         /// <summary>
         /// The current slot items carried by the <see cref="Squad"/>
         /// </summary>
+        [JsonIgnore]
         public ImmutableArray<Blueprint> SlotItems => m_slotItems.ToImmutableArray();
 
         /// <summary>
@@ -96,7 +103,6 @@ namespace Battlegrounds.Game.Gameplay {
         /// <param name="slotItemBP">The slot item blueprint to add</param>
         public void AddSlotItem(Blueprint slotItemBP) => this.m_slotItems.Add(slotItemBP);
 
-
         /// <summary>
         /// Calculate the actual cost of a <see cref="Squad"/>.
         /// </summary>
@@ -117,6 +123,12 @@ namespace Battlegrounds.Game.Gameplay {
         /// </summary>
         /// <returns>The string representation of the checksum.</returns>
         public string GetChecksum() => throw new NotImplementedException();
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public string ToJsonReference() => this.SquadID.ToString();
 
     }
 

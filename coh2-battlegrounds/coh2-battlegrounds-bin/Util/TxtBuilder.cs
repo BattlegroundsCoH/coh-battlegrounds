@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Text;
 
 namespace Battlegrounds.Util {
@@ -73,6 +74,12 @@ namespace Battlegrounds.Util {
         /// </summary>
         /// <param name="path">The path of the file to write contents to.</param>
         public void Save(string path) => File.WriteAllText(path, this.GetContent());
+
+        /// <summary>
+        /// Get the current indentation level of the builder.
+        /// </summary>
+        /// <returns>Integer value representing the indentation level.</returns>
+        public int GetIndent() => this.m_indentLvl;
 
     }
 

@@ -16,10 +16,18 @@ namespace Battlegrounds.Game.Database.json {
         /// Serialize self into a json object
         /// </summary>
         /// <returns></returns>
-        public virtual string Serialize() {
+        public virtual string Serialize()
+            => this.Serialize(0);
+
+        /// <summary>
+        /// Serialize self into a json object
+        /// </summary>
+        /// <returns></returns>
+        public virtual string Serialize(int indent) {
 
             Type il_type = this.GetType();
             TxtBuilder jsonbuilder = new TxtBuilder();
+            jsonbuilder.SetIndent(indent);
 
             // Get all the fields
             IEnumerable<FieldInfo> fields = il_type.GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.FlattenHierarchy)
@@ -35,11 +43,25 @@ namespace Battlegrounds.Game.Database.json {
             jsonbuilder.AppendLine($"\"jsdb-type\": \"{il_type.FullName}\"{((fields.Count() + properties.Count() > 0) ? "," : "")}");
 
             foreach (FieldInfo finfo in fields) {
-                WriteKeyValuePair(jsonbuilder, finfo.FieldType, finfo.Name, finfo.GetValue(this), finfo != fields.Last() || properties.Count() > 0);
+                WriteKeyValuePair(
+                    jsonbuilder,
+                    finfo.FieldType,
+                    finfo.GetCustomAttribute<JsonReferenceAttribute>() is JsonReferenceAttribute,
+                    finfo.Name,
+                    finfo.GetValue(this),
+                    finfo != fields.Last() || properties.Count() > 0
+                    );
             }
 
             foreach (PropertyInfo pinfo in properties) {
-                WriteKeyValuePair(jsonbuilder, pinfo.PropertyType, pinfo.Name, pinfo.GetValue(this), pinfo != properties.Last());
+                WriteKeyValuePair(
+                    jsonbuilder,
+                    pinfo.PropertyType,
+                    pinfo.GetCustomAttribute<JsonReferenceAttribute>() is JsonReferenceAttribute,
+                    pinfo.Name,
+                    pinfo.GetValue(this),
+                    pinfo != properties.Last()
+                    );
             }
 
             jsonbuilder.DecreaseIndent();
@@ -49,31 +71,52 @@ namespace Battlegrounds.Game.Database.json {
 
         }
 
-        private static void WriteKeyValuePair(TxtBuilder jsonbuilder, Type type, string name, object val, bool appendComma) {
+        private static void WriteKeyValuePair(TxtBuilder jsonbuilder, Type type, bool useRef, string name, object val, bool appendComma) {
             if (type.IsPrimitive || val is string) {
                 jsonbuilder.AppendLine($"\"{name}\": \"{val}\"{((appendComma)?",":"")}");
             } else {
-                if (type.IsAssignableFrom(typeof(IJsonObject))) {
-
+                if (val is IJsonObject jso) {
+                    if (useRef) {
+                        jsonbuilder.AppendLine($"\"{name}\": \"{jso.ToJsonReference()}\"{((appendComma) ? "," : "")}");
+                    } else {
+                        jsonbuilder.AppendLine($"\"{name}\": \"{jso.Serialize(jsonbuilder.GetIndent())}\"{((appendComma) ? "," : "")}");
+                    }
                 } else if (type.GenericTypeArguments.Length > 0 && type.GetInterfaces().Contains(typeof(IEnumerable<>).MakeGenericType(type.GenericTypeArguments))) {
                     jsonbuilder.AppendLine($"\"{name}\": [");
+                    jsonbuilder.IncreaseIndent();
                     dynamic dynVal = val; // CAREFUL!
+                    int i = 0;
+                    int j = dynVal.Count - 1;
                     foreach (dynamic c in dynVal) {
                         Type t = c.GetType();
                         if (t.IsPrimitive || c is string) {
-                            Console.WriteLine();
-                        } else if (c is IJsonObject jso) {
-                            string str = jso.Serialize();
-                            Console.WriteLine();
+                            jsonbuilder.Append($"\"{name}\"{((i < j) ? "," : "")}");
+                        } else if (c is IJsonObject jso2) {
+                            if (useRef) {
+                                jsonbuilder.Append($"\"{jso2.ToJsonReference()}\"{((i < j) ? "," : "")}");
+                            } else {
+                                jsonbuilder.Append($"{jso2.Serialize(jsonbuilder.GetIndent()).TrimEnd('\n')}{((i < j) ? ",\n" : "")}", false);
+                            }
                         }
+                        i++;
                     }
-                    jsonbuilder.AppendLine($"]{((appendComma)?", ":"")}");
+                    if (j >= 0) {
+                        jsonbuilder.Append("\n", false);
+                    }
+                    jsonbuilder.DecreaseIndent();
+                    jsonbuilder.AppendLine($"]{((appendComma)?",":"")}");
                 } else {
                     jsonbuilder.AppendLine($"\"{name}\": \"{val}\"{((appendComma) ? "," : "")}");
                 }
 
             }
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public string ToJsonReference();
 
         /// <summary>
         /// Derserialize a json string representing an object into the C# requivalent.

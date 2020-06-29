@@ -80,6 +80,12 @@ namespace Battlegrounds.Game.Battlegrounds {
 
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public string ToJsonReference() => this.SessionID.ToString();
+
     }
 
 }

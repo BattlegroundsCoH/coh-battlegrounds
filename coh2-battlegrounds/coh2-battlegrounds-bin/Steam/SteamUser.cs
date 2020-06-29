@@ -77,6 +77,12 @@ namespace Battlegrounds.Steam {
 
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public string ToJsonReference() => this.ID.ToString();
+
     }
 
 }

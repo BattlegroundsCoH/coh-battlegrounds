@@ -21,6 +21,12 @@ namespace Battlegrounds.Game.Database {
         public string Name { get; set; }
 
         /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public string ToJsonReference() => this.PBGID.ToString();
+
+        /// <summary>
         /// Returns a string that represents the current object.
         /// </summary>
         /// <returns>A string that represents the current object.</returns>

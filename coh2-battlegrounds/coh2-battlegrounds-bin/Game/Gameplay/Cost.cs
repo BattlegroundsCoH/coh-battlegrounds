@@ -69,6 +69,12 @@ namespace Battlegrounds.Game.Gameplay {
             $"{{Manpower = {this.Manpower}, Munitions = {this.Munitions}, Fuel = {this.Fuel}}}";
 
         /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public string ToJsonReference() => this.ToString();
+
+        /// <summary>
         /// Add two costs together.
         /// </summary>
         /// <param name="a">Left operand</param>

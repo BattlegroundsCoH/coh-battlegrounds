@@ -32,7 +32,7 @@ namespace Battlegrounds.Game.Battlegrounds {
         /// <summary>
         /// The <see cref="SteamUser"/> who owns the <see cref="Company"/>.
         /// </summary>
-        [JsonIgnore]
+        [JsonReference]
         public SteamUser Owner { get; }
 
         /// <summary>
@@ -141,6 +141,12 @@ namespace Battlegrounds.Game.Battlegrounds {
         /// <param name="jsonfile">The path of the file to save <see cref="Company"/> data into.</param>
         public void SaveToFile(string jsonfile) 
             => File.WriteAllText(jsonfile, (this as IJsonObject).Serialize());
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public string ToJsonReference() => this.Name;
 
     }
 
