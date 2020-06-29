@@ -295,7 +295,7 @@ end
 function BG_GetDeploytimeBar(unit)
     if unit.isDeploying then
         local maxTime = unit.cost.fieldtime;
-        return (maxTime - unit.deploy_time) / maxTime * 110;
+        return (maxTime - unit.deploy_time) / maxTime * 115;
     else
         return 0;
     end

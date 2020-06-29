@@ -109,15 +109,16 @@ namespace Battlegrounds.Game.Battlegrounds {
 
             if (msg.Length > 0) {
 
-                Match messageMatchResult = Regex.Match(msg, @"(?<cmdtype>\w)\[(?<msg>\S+|\d+)*\]");
+                Match messageMatchResult = Regex.Match(msg, @"(?<cmdtype>\w)\[(?<content>(?<msg>\w+|\d+)|,|\s)*\]");
 
                 if (messageMatchResult.Success) {
 
                     char msgtype = char.ToUpper(messageMatchResult.Groups["cmdtype"].Value[0]); // Always bump it to upper (incase it's forgotten in Scar script)
+                    string[] values = messageMatchResult.Groups["content"].Captures.ToList().Where(x => x.Value != "," && x.Value != " ").Select(x => x.Value).ToArray();
 
                     if (msgtype == 'D') {
 
-                        Squad squad = new Squad(ushort.Parse(messageMatchResult.Groups["msg"].Value), player.Player, null);
+                        Squad squad = new Squad(ushort.Parse(values[0]), player.Player, null);
                         allsquads.Add(squad);
                         player.AddSquad(squad);
 
@@ -125,7 +126,7 @@ namespace Battlegrounds.Game.Battlegrounds {
 
                     } else if (msgtype == 'K') {
 
-                        ushort squadID = ushort.Parse(messageMatchResult.Groups["msg"].Value);
+                        ushort squadID = ushort.Parse(values[0]);
                         Squad squad = allsquads.FirstOrDefault(x => x.SquadID == squadID);
 
                         if (squad != null) {
@@ -137,7 +138,30 @@ namespace Battlegrounds.Game.Battlegrounds {
 
                         }
 
-                    } // Other commands here
+                    } else if (msgtype == 'V') {
+
+                        Console.WriteLine();
+
+                    } else if (msgtype == 'R') {
+
+                        Console.WriteLine();
+
+
+                    } else if (msgtype == 'U') {
+
+                        Console.WriteLine();
+
+
+                    } else if (msgtype == 'U') {
+
+                        Console.WriteLine();
+
+
+                    }// Other commands here
+
+                } else {
+
+                    Console.WriteLine($"Failed to parse: \"{msg}\"");
 
                 }
 

@@ -9,13 +9,10 @@ namespace coh2_battlegrounds_console {
         
         static void Main(string[] args) {
 
+            // Important this is done
             Battlegrounds.Game.Database.BlueprintManager.CreateDatabase();
 
-            string latest = $"{Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)}\\my games\\company of heroes 2\\playback\\temp.rec";
-
-            // Test this
-            //WinconditionCompiler.CompileToSga("temp_build", "session.scar");
-
+            // Create a dummy company
             Company testCompany = new Company(SteamUser.FromID(76561198003529969UL), "26th Rifle Guards Division", Battlegrounds.Game.Gameplay.Faction.Soviet);
             testCompany.AddSquad("conscript_squad_mp", 0, 0, new string[] { "ppsh-41_sub_machine_gun_upgrade_mp" }, null, false);
             testCompany.AddSquad("conscript_squad_mp", 2, 0, null, null, false);
@@ -31,16 +28,11 @@ namespace coh2_battlegrounds_console {
 
             Session session = Session.CreateSession("2p_angoville", companies, new Battlegrounds.Game.Gameplay.Wincondition(), true);
 
-            /*GameMatch match = new GameMatch(session);
-            if (match.LoadMatch($"{Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)}\\my games\\company of heroes 2\\playback\\temp.rec")) {
-                match.EvaluateResult();
-            } else {
-                Console.WriteLine("Failed to load replayfile...");
-            }*/
-
+            /*GameMatch m = new GameMatch(session);
+            m.LoadMatch($"{Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)}\\my games\\company of heroes 2\\playback\\temp.rec");
+            m.EvaluateResult();
+            */
             SessionManager.PlaySession<SessionCompiler<CompanyCompiler>, CompanyCompiler>(session, (a,b) => { Console.WriteLine(a); }, null);
-
-            //Battlegrounds.Game.CoH2Launcher.Launch();
 
             Console.Read();
 

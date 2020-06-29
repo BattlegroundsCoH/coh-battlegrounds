@@ -99,6 +99,9 @@ function BG_VerifyMatch()
         --return "The played map does not match the selected map!"; -- TODO: Localize
     end
 
+    -- Broadcast the GUID
+    Game_SendMessage(_bg_message_type_no_actions_required, "G[" .. bg_settings.session_guid .. "]")
+
     -- Return true, match verified
     return true;
 
@@ -127,7 +130,7 @@ end
 function BG_BroadcastVictory(player)
     local refp = BG_GetPlayerID(player);
     if (refp ~= -1) then
-        Command_PlayerBroadcastMessage(Game_GetLocalPlayer(), Game_GetLocalPlayer(), _bg_message_type_no_actions_required, "V["..BG_GetPlayerID(player).."]");
+        Game_SendMessage(_bg_message_type_no_actions_required, "V["..BG_GetPlayerID(player).."]");
     end
 end
 
@@ -187,6 +190,48 @@ function BG_TeamWithdraw(player)
 end
 
 function BG_CollectEndofMatchData()
+
+    -- Loop through all the players
+    for i=1, #_bg_playerData do
+
+        -- For all deployed units
+        for k, v in pairs(_bg_playerData[i].deployed) do
+
+            -- Make sure the unit is available
+            if (v ~= nil) then
+
+                -- Get the company ID
+                local company_id = v;
+
+                -- Get the actual squad
+                local squad = Squad_FromWorldID(k);
+
+                -- Get the initial unit
+                local inital = BG_FindSquadInCompany(i, v);
+
+                -- The unit message (The message to save)
+                local unit_message = tostring(company_id);
+
+                -- Get the rank increase
+                unit_message = unit_message..","..tostring(Squad_GetVeterancyRank(squad) - inital.veterancy_rank);
+
+                -- Get the experience of the unit
+                unit_message = unit_message..","..Squad_GetVeterancyExperience(squad);
+
+                -- Broadcast the change
+                Game_SendMessage(_bg_message_type_no_actions_required, "R["..unit_message.."]");
+
+                -- For each slot item
+                for i=1, Squad_GetSlotItemCount(squad) do
+                    local item = Squad_GetSlotItemAt(squad, i);
+                    Game_SendMessage(_bg_message_type_no_actions_required, "I["..company_id..","..item.."]");
+                end
+
+            end
+
+        end
+
+    end
 
 end
 
