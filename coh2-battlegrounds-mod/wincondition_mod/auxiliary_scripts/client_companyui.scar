@@ -247,10 +247,7 @@ function BG_UnitCardClicked(tag)
             _bg_playerData[refPlayerID].company.units[i].deploy_time = 20; -- This value could be read or calculated from somewhere else
             BG_RefreshCompanyView();
             Game_SendMessage(_bg_message_type_player_request_deploy, tag); -- Publish we've requested this unit
-            local mp = (-_bg_playerData[refPlayerID].company.units[i].cost.manpower);
-            local mu = (-_bg_playerData[refPlayerID].company.units[i].cost.munitions);
-            local fu = (-_bg_playerData[refPlayerID].company.units[i].cost.fuel);
-            local ps = mp..","..mu..","..fu;
+            local ps = Battlegrounds_FormatResources(_bg_playerData[refPlayerID].company.units[i].cost, true);
             Game_SendMessage(_bg_message_type_player_resource, ps); -- Subtrack the resources
             break;
         end
@@ -266,10 +263,7 @@ function BG_UnitCardCancelClicked(tag)
             _bg_playerData[refPlayerID].company.units[i].deploy_time = nil;
             BG_RefreshCompanyView();
             Game_SendMessage(_bg_message_type_player_cancel_deploy, tag); -- Published we've cancelled this unit
-            local mp = (_bg_playerData[refPlayerID].company.units[i].cost.manpower);
-            local mu = (_bg_playerData[refPlayerID].company.units[i].cost.munitions);
-            local fu = (_bg_playerData[refPlayerID].company.units[i].cost.fuel);
-            local ps = mp..","..mu..","..fu;
+            local ps = Battlegrounds_FormatResources(_bg_playerData[refPlayerID].company.units[i].cost, false);
             Game_SendMessage(_bg_message_type_player_resource, ps); -- Get our resources back
             break;
         end

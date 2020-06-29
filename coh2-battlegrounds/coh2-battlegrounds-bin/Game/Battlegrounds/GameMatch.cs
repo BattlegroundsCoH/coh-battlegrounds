@@ -113,31 +113,35 @@ namespace Battlegrounds.Game.Battlegrounds {
 
                 Match messageMatchResult = Regex.Match(msg, @"(?<cmdtype>\w)\[(?<msg>\S+|\d+)*\]");
 
-                char msgtype = char.ToUpper(messageMatchResult.Groups["cmdtype"].Value[0]); // Always bump it to upper (incase it's forgotten in Scar script)
+                if (messageMatchResult.Success) {
 
-                if (msgtype == 'D') {
+                    char msgtype = char.ToUpper(messageMatchResult.Groups["cmdtype"].Value[0]); // Always bump it to upper (incase it's forgotten in Scar script)
 
-                    Squad squad = new Squad(ushort.Parse(messageMatchResult.Groups["msg"].Value), player.Player, null);
-                    allsquads.Add(squad);
-                    player.AddSquad(squad);
+                    if (msgtype == 'D') {
 
-                    Console.WriteLine("Player " + player.Player.Name + " deployed " + squad.SquadID);
+                        Squad squad = new Squad(ushort.Parse(messageMatchResult.Groups["msg"].Value), player.Player, null);
+                        allsquads.Add(squad);
+                        player.AddSquad(squad);
 
-                } else if (msgtype == 'K') {
+                        Console.WriteLine("Player " + player.Player.Name + " deployed " + squad.SquadID);
 
-                    ushort squadID = ushort.Parse(messageMatchResult.Groups["msg"].Value);
-                    Squad squad = allsquads.FirstOrDefault(x => x.SquadID == squadID);
+                    } else if (msgtype == 'K') {
 
-                    if (squad != null) {
+                        ushort squadID = ushort.Parse(messageMatchResult.Groups["msg"].Value);
+                        Squad squad = allsquads.FirstOrDefault(x => x.SquadID == squadID);
 
-                        allsquads.Remove(squad);
-                        player.RemoveSquad(squad);
+                        if (squad != null) {
 
-                        Console.WriteLine("Player " + player.Player.Name + " lost " + squad.SquadID);
+                            allsquads.Remove(squad);
+                            player.RemoveSquad(squad);
 
-                    }
+                            Console.WriteLine("Player " + player.Player.Name + " lost " + squad.SquadID);
 
-                } // Other commands here
+                        }
+
+                    } // Other commands here
+
+                }
 
             } else {
                 // Some sort of error?

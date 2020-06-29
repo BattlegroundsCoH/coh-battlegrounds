@@ -27,9 +27,9 @@ namespace Battlegrounds.Compiler {
         public virtual string CompileToLua(Company company, int indent = 1) {
 
             TxtBuilder lua = new TxtBuilder();
-            lua.SetIndent(indent);
 
             lua.AppendLine($"[\"{company.Owner.Name}\"] = {{");
+            lua.SetIndent(indent);
             lua.IncreaseIndent();
 
             { // Company data
@@ -66,13 +66,25 @@ namespace Battlegrounds.Compiler {
             builder.AppendLine("{");
             builder.IncreaseIndent();
 
-            builder.AppendLine($"bp_name = \"{squad.Blueprint.Name}\",");
+            builder.AppendLine($"bp_name = \"{squad.SBP.Name}\",");
+            builder.AppendLine($"symbol = \"{squad.SBP.Symbol}\",");
             builder.AppendLine($"company_id = {squad.SquadID},");
             builder.AppendLine($"veterancy_rank = {squad.VeterancyRank},");
             builder.AppendLine($"veterancy_progress = {squad.VeterancyProgress:0.00},");
 
-            CompileList(builder, "upgrades", squad.Upgrades, x => x.Name);
-            CompileList(builder, "slot_items", squad.SlotItems, x => x.Name);
+            builder.AppendLine($"cost = {{");
+            builder.IncreaseIndent();
+            builder.AppendLine($"manpower = {squad.SBP.Cost.Manpower},");
+            if (squad.SBP.Cost.Munitions > 0) {
+                builder.AppendLine($"munitions = {squad.SBP.Cost.Munitions},");
+            } else {
+                builder.AppendLine($"fuel = {squad.SBP.Cost.Fuel},");
+            }
+            builder.DecreaseIndent();
+            builder.AppendLine("},");
+
+            CompileList(builder, "upgrades", squad.Upgrades, x => { UpgradeBlueprint y = x as UpgradeBlueprint; return $"{{ bp=\"{y.Name}\", symbol=\"{y.Symbol}\" }}"; });
+            CompileList(builder, "slot_items", squad.SlotItems, x => $"\"{x}\"");
             CompileList(builder, "modifiers", (new string[0]).ToImmutableArray(), x => x);
 
             builder.AppendLine($"spawned = false,");
@@ -88,7 +100,7 @@ namespace Battlegrounds.Compiler {
             if (source.Length > 0) {
                 builder.Append(""); // Apply indentation here
                 foreach (T t in source) {
-                    builder.Append($"\"{func(t)}\",", false);
+                    builder.Append($"{func(t)},", false);
                 }
                 builder.Append("\n", false);
             }

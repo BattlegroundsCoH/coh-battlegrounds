@@ -92,8 +92,31 @@ namespace Battlegrounds.Game.Database.json {
                             ln.Append(s);
                         }
                     } else {
-                        // TODO: Handle
-                        throw new NotImplementedException();
+                        if (o is IJsonElement e) {
+
+                            if (ln.Length > 0) {
+
+                                // Use regex to find the key
+                                Match r = Regex.Match(ln.ToString(), @"\s*\""(?<key>\S*)\""\s*:\s*");
+
+                                // Clear the string builder
+                                ln.Clear();
+
+                                // If success
+                                if (r.Success) {
+                                    value_set.Add(r.Groups["key"].Value, e);
+                                } else {
+                                    throw new JsonSyntaxException("Expected key but found value!");
+                                }
+
+                            } else {
+                                throw new JsonSyntaxException("Expected key but found value!");
+                            }
+
+                        } else {
+                            // TODO: Handle
+                            throw new NotImplementedException();
+                        }
                     }
 
                     if (ln.ToString().EndsWith(',') && ln.ToString().Count(x => x == '\"') % 2 == 0) {

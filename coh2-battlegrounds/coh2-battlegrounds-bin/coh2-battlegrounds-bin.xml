@@ -724,14 +724,80 @@
             <param name="jsonfile"></param>
             <returns>A <see cref="T:System.Collections.Generic.List`1"/> containing all top-level elements in the json file.</returns>
         </member>
+        <member name="T:Battlegrounds.Game.Database.json.JsonSyntaxException">
+            <summary>
+            <see cref="T:System.Exception"/> subtype representing a syntax-error in a json file.
+            </summary>
+        </member>
+        <member name="M:Battlegrounds.Game.Database.json.JsonSyntaxException.#ctor(System.String)">
+            <summary>
+            <see cref="T:Battlegrounds.Game.Database.json.JsonSyntaxException"/> instance with a custom message.
+            </summary>
+            <param name="message">The custom message to give when throwing the error.</param>
+        </member>
         <member name="T:Battlegrounds.Game.Database.SquadBlueprint">
             <summary>
-            
+            Representation of a <see cref="T:Battlegrounds.Game.Database.Blueprint"/> with <see cref="T:Battlegrounds.Game.Gameplay.Squad"/> specific values. Inherits from <see cref="T:Battlegrounds.Game.Database.Blueprint"/>. This class cannot be inheritted.
+            </summary>
+        </member>
+        <member name="P:Battlegrounds.Game.Database.SquadBlueprint.Symbol">
+            <summary>
+            The UI symbol used in-game to show unit type
+            </summary>
+        </member>
+        <member name="P:Battlegrounds.Game.Database.SquadBlueprint.Icon">
+            <summary>
+            The UI icon of the squad
+            </summary>
+        </member>
+        <member name="P:Battlegrounds.Game.Database.SquadBlueprint.Army">
+            <summary>
+            The army the <see cref="T:Battlegrounds.Game.Database.SquadBlueprint"/> can be used by.
+            </summary>
+        </member>
+        <member name="P:Battlegrounds.Game.Database.SquadBlueprint.LocaleName">
+            <summary>
+            The localized string ID for the display name of the <see cref="T:Battlegrounds.Game.Database.SquadBlueprint"/>.
+            </summary>
+        </member>
+        <member name="P:Battlegrounds.Game.Database.SquadBlueprint.LocaleDescription">
+            <summary>
+            The localized string ID for the description of the <see cref="T:Battlegrounds.Game.Database.SquadBlueprint"/>.
+            </summary>
+        </member>
+        <member name="P:Battlegrounds.Game.Database.SquadBlueprint.Cost">
+            <summary>
+            The base <see cref="T:Battlegrounds.Game.Gameplay.Cost"/> to field instances of the <see cref="T:Battlegrounds.Game.Database.SquadBlueprint"/>.
             </summary>
         </member>
         <member name="T:Battlegrounds.Game.Database.UpgradeBlueprint">
             <summary>
-            
+            Representation of a <see cref="T:Battlegrounds.Game.Database.Blueprint"/> with upgrade specific values. Inherits from <see cref="T:Battlegrounds.Game.Database.Blueprint"/>. This class cannot be inheritted.
+            </summary>
+        </member>
+        <member name="P:Battlegrounds.Game.Database.UpgradeBlueprint.Symbol">
+            <summary>
+            The UI symbol used in-game to show unit type
+            </summary>
+        </member>
+        <member name="P:Battlegrounds.Game.Database.UpgradeBlueprint.Icon">
+            <summary>
+            The UI icon of the squad
+            </summary>
+        </member>
+        <member name="P:Battlegrounds.Game.Database.UpgradeBlueprint.LocaleName">
+            <summary>
+            The localized string ID for the display name of the <see cref="T:Battlegrounds.Game.Database.SquadBlueprint"/>.
+            </summary>
+        </member>
+        <member name="P:Battlegrounds.Game.Database.UpgradeBlueprint.LocaleDescription">
+            <summary>
+            The localized string ID for the description of the <see cref="T:Battlegrounds.Game.Database.SquadBlueprint"/>.
+            </summary>
+        </member>
+        <member name="P:Battlegrounds.Game.Database.UpgradeBlueprint.Cost">
+            <summary>
+            The base <see cref="T:Battlegrounds.Game.Gameplay.Cost"/> to field instances of the <see cref="T:Battlegrounds.Game.Database.SquadBlueprint"/>.
             </summary>
         </member>
         <member name="T:Battlegrounds.Game.DLCPack">
@@ -876,6 +942,59 @@
         </member>
         <member name="F:Battlegrounds.Game.GameEventType.PCMD_ConstructStructure">
             Player Commands 
+        </member>
+        <member name="T:Battlegrounds.Game.Gameplay.Cost">
+            <summary>
+            Represents a cost using the three CoH2 resources and an additional field time. Implements <see cref="T:Battlegrounds.Game.Database.json.IJsonObject"/>
+            </summary>
+        </member>
+        <member name="P:Battlegrounds.Game.Gameplay.Cost.Manpower">
+            <summary>
+            Manpower cost of the <see cref="T:Battlegrounds.Game.Gameplay.Cost"/> data.
+            </summary>
+        </member>
+        <member name="P:Battlegrounds.Game.Gameplay.Cost.Munitions">
+            <summary>
+            Munitions cost of the <see cref="T:Battlegrounds.Game.Gameplay.Cost"/> data.
+            </summary>
+        </member>
+        <member name="P:Battlegrounds.Game.Gameplay.Cost.Fuel">
+            <summary>
+            Fuel cost of the <see cref="T:Battlegrounds.Game.Gameplay.Cost"/> data.
+            </summary>
+        </member>
+        <member name="P:Battlegrounds.Game.Gameplay.Cost.FieldTime">
+            <summary>
+            The amount of time it takes to field something.
+            </summary>
+        </member>
+        <member name="M:Battlegrounds.Game.Gameplay.Cost.#ctor">
+            <summary>
+            Default values for a new instance of the <see cref="T:Battlegrounds.Game.Gameplay.Cost"/> data.
+            </summary>
+        </member>
+        <member name="M:Battlegrounds.Game.Gameplay.Cost.#ctor(System.UInt16,System.UInt16,System.UInt16)">
+            <summary>
+            New <see cref="T:Battlegrounds.Game.Gameplay.Cost"/> data instance with resource values.
+            </summary>
+            <param name="man">The manpower value</param>
+            <param name="mun">The munitions value</param>
+            <param name="ful">The fuel value</param>
+        </member>
+        <member name="M:Battlegrounds.Game.Gameplay.Cost.#ctor(System.UInt16,System.UInt16,System.UInt16,System.Double)">
+            <summary>
+            New <see cref="T:Battlegrounds.Game.Gameplay.Cost"/> data instance with resource values and field time.
+            </summary>
+            <param name="man">The manpower value</param>
+            <param name="mun">The munitions value</param>
+            <param name="ful">The fuel value</param>
+            <param name="fti">The field time value</param>
+        </member>
+        <member name="M:Battlegrounds.Game.Gameplay.Cost.ToString">
+            <summary>
+            Returns a string that represents the current object.
+            </summary>
+            <returns>A string that represents the current object.</returns>
         </member>
         <member name="T:Battlegrounds.Game.Gameplay.Entity">
             <summary>
@@ -1037,6 +1156,11 @@
         <member name="P:Battlegrounds.Game.Gameplay.Squad.Blueprint">
             <summary>
             The <see cref="T:Battlegrounds.Game.Database.Blueprint"/> the <see cref="T:Battlegrounds.Game.Gameplay.Squad"/> is a type of.
+            </summary>
+        </member>
+        <member name="P:Battlegrounds.Game.Gameplay.Squad.SBP">
+            <summary>
+            
             </summary>
         </member>
         <member name="P:Battlegrounds.Game.Gameplay.Squad.VeterancyRank">
@@ -1219,21 +1343,30 @@
         </member>
         <member name="T:Battlegrounds.Online.SourceDownloader">
             <summary>
-            
+            Utility for downloading content from a URL address.
             </summary>
         </member>
         <member name="M:Battlegrounds.Online.SourceDownloader.DownloadSourceCode(System.String)">
             <summary>
-            
+            Download the source code (the raw string content) found at the url path.
             </summary>
-            <param name="urlpath"></param>
-            <returns></returns>
+            <param name="urlpath">The full URL of the source code to download.</param>
+            <returns>The string content found at the  URL or the empty string if the download failed.</returns>
         </member>
-        <member name="M:Battlegrounds.Online.SourceDownloader.DownloadSourceFile(System.String)">
+        <member name="M:Battlegrounds.Online.SourceDownloader.DownloadSourceFile(System.String,System.Boolean)">
+            <summary>
+            Download the file in binary format found at the url path.
+            </summary>
+            <param name="urlpath">The full URL of the source file to download.</param>
+            <param name="encodeAsUTF8">Encode the binary content as UTF-8</param>
+            <returns>A byte array containing the found content or a byte array of length 0 if no data was downloaded.</returns>
+        </member>
+        <member name="M:Battlegrounds.Online.SourceDownloader.DownloadToFile(System.String,System.String)">
             <summary>
             
             </summary>
             <param name="urlpath"></param>
+            <param name="filepath"></param>
             <returns></returns>
         </member>
         <member name="T:Battlegrounds.Pathfinder">

@@ -31,6 +31,11 @@ namespace Battlegrounds.Game.Gameplay {
         public Blueprint Blueprint { get; }
 
         /// <summary>
+        /// 
+        /// </summary>
+        public SquadBlueprint SBP => this.Blueprint as SquadBlueprint;
+
+        /// <summary>
         /// The achieved veterancy rank of a <see cref="Squad"/>
         /// </summary>
         public byte VeterancyRank => this.m_veterancyRank;

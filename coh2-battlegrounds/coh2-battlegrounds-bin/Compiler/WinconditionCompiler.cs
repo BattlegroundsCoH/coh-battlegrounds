@@ -37,12 +37,6 @@ namespace Battlegrounds.Compiler {
         };
 
         // URLs to the most up-to-date win files (Will need a separate branch for this later)
-        private static string[] GraphicsFiles = new string[] {
-            "https://github.com/JustCodiex/coh2-battlegrounds/raw/master/coh2-battlegrounds-mod/wincondition_mod/coh2_battlegrounds_wincondition%20Intermediate%20Cache/Intermediate%20Files/data/ui/Assets/Textures/6a0a13b89555402ca75b85dc30f5cb04_I1.dds",
-            "https://github.com/JustCodiex/coh2-battlegrounds/raw/master/coh2-battlegrounds-mod/wincondition_mod/coh2_battlegrounds_wincondition%20Intermediate%20Cache/6a0a13b89555402ca75b85dc30f5cb04.gfx",
-        };
-
-        // URLs to the most up-to-date win files (Will need a separate branch for this later)
         private static string[] WinFiles = new string[] {
             "https://raw.githubusercontent.com/JustCodiex/coh2-battlegrounds/master/coh2-battlegrounds-mod/wincondition_mod/coh2_battlegrounds_annihilate.win",
             "https://raw.githubusercontent.com/JustCodiex/coh2-battlegrounds/master/coh2-battlegrounds-mod/wincondition_mod/coh2_battlegrounds_vp.win",
@@ -112,7 +106,8 @@ namespace Battlegrounds.Compiler {
                 }
             }
 
-            // TODO: Add GFX data here...
+            // Add the graphic files
+            AddGraphics(archiveDef, workdir);
 
             // Info TOC section
             archiveDef.AppendLine("TOCEnd");
@@ -160,6 +155,11 @@ namespace Battlegrounds.Compiler {
             if (!InvokeArchiver(archiveDefTxtPath, workdir, outputArchive)) {
                 return false;
             }
+
+#if RELEASE
+            // Delete the temp_build directory
+            Directory.Delete(workdir, true);
+#endif
 
             // Return true
             return true;
@@ -245,9 +245,10 @@ namespace Battlegrounds.Compiler {
             Directory.CreateDirectory($"{workdir}data\\scar");
             Directory.CreateDirectory($"{workdir}data\\scar\\winconditions");
             Directory.CreateDirectory($"{workdir}data\\scar\\winconditions\\auxiliary_scripts");
+            Directory.CreateDirectory($"{workdir}data\\scar\\winconditions\\ui_api");
             Directory.CreateDirectory($"{workdir}data\\ui\\");
             Directory.CreateDirectory($"{workdir}data\\ui\\Assets\\");
-            Directory.CreateDirectory($"{workdir}data\\ui\\Assets\\Texturs\\");
+            Directory.CreateDirectory($"{workdir}data\\ui\\Assets\\Textures\\");
             Directory.CreateDirectory($"{workdir}data\\ui\\Bin\\");
             Directory.CreateDirectory($"{workdir}info");
             Directory.CreateDirectory($"{workdir}locale");
@@ -302,16 +303,30 @@ namespace Battlegrounds.Compiler {
 
         private static void AddLocalFile(TxtBuilder builder, string localfile, string relpath, string workdir) {
 
+            // Get path to copy file to
+            string copyFile = Path.GetFullPath($"{workdir}{relpath}{ Path.GetFileName(localfile)}");
 
-            // Get path to copy company file to
-            string companyCopyFile = Path.GetFullPath($"{workdir}{relpath}{ Path.GetFileName(localfile)}");
+            // Add the local file
+            builder.AppendLine($"\t{copyFile}");
 
-            // Add the company scarfile
-            builder.AppendLine($"\t{companyCopyFile}");
+            // Copy file
+            File.Copy(Path.GetFullPath(localfile), copyFile);
 
-            // Copy scar file
-            File.Copy(Path.GetFullPath(localfile), companyCopyFile);
+        }
 
+        private static void AddGraphics(TxtBuilder builder, string workdir) {
+
+            // Get the absolute paths
+            string gfxabspath = Path.GetFullPath(workdir + "data\\ui\\Bin\\6a0a13b89555402ca75b85dc30f5cb04.gfx");
+            string ddsabspath = Path.GetFullPath(workdir + "data\\ui\\Assets\\Textures\\6a0a13b89555402ca75b85dc30f5cb04_I1.dds");
+
+            // Add the gfx and dds files
+            builder.AppendLine($"\t{gfxabspath}");
+            builder.AppendLine($"\t{ddsabspath}");
+
+            // Copy the files
+            File.Copy(Path.GetFullPath("6a0a13b89555402ca75b85dc30f5cb04.gfx"), gfxabspath);
+            File.Copy(Path.GetFullPath("6a0a13b89555402ca75b85dc30f5cb04_I1.dds"), ddsabspath);
 
         }
 
