@@ -113,6 +113,7 @@ namespace Battlegrounds.Game.Database {
                 // Add all the found elements
                 foreach (IJsonElement element in content) {
                     if (element is Blueprint bp) {
+                        bp.BlueprintType = bType;
                         targetDictionary.Add(bp.PBGID, bp);
                     } else {
                         return false;
@@ -167,6 +168,14 @@ namespace Battlegrounds.Game.Database {
                 _ => throw new ArgumentException(),
             };
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="jsonReference"></param>
+        /// <returns></returns>
+        public static IJsonObject JsonDereference(string jsonReference) 
+            => FromPbgId(ushort.Parse(jsonReference.Substring(4)), (BlueprintType)Enum.Parse(typeof(BlueprintType), jsonReference.Substring(0, 3)));
 
     }
 

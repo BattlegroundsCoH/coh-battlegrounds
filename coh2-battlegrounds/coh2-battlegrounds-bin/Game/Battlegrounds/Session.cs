@@ -86,6 +86,12 @@ namespace Battlegrounds.Game.Battlegrounds {
         /// <returns></returns>
         public string ToJsonReference() => this.SessionID.ToString();
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="jsonReference"></param>
+        public void FromJsonReference(string jsonReference) => throw new NotSupportedException();
+
     }
 
 }

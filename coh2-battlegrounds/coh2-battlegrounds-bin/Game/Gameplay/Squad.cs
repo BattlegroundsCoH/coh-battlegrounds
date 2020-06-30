@@ -4,20 +4,19 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using Battlegrounds.Game.Database;
 using Battlegrounds.Game.Database.json;
-using Battlegrounds.Verification;
 
 namespace Battlegrounds.Game.Gameplay {
     
     /// <summary>
-    /// Representation of a Squad
+    /// Representation of a Squad. Implements <see cref="IJsonObject"/>.
     /// </summary>
-    public class Squad : IJsonObject, IChecksumItem {
+    public class Squad : IJsonObject {
 
-        byte m_veterancyRank;
-        float m_veterancyProgress;
+        private byte m_veterancyRank;
+        private float m_veterancyProgress;
 
-        [JsonReference] private HashSet<Blueprint> m_upgrades;
-        [JsonReference] private HashSet<Blueprint> m_slotItems;
+        [JsonReference(typeof(BlueprintManager))] private HashSet<Blueprint> m_upgrades;
+        [JsonReference(typeof(BlueprintManager))] private HashSet<Blueprint> m_slotItems;
 
         /// <summary>
         /// The unique squad ID used to identify the <see cref="Squad"/>.
@@ -33,7 +32,7 @@ namespace Battlegrounds.Game.Gameplay {
         /// <summary>
         /// The <see cref="Database.Blueprint"/> the <see cref="Squad"/> is a type of.
         /// </summary>
-        [JsonReference]
+        [JsonReference(typeof(BlueprintManager))]
         public Blueprint Blueprint { get; }
 
         /// <summary>
@@ -66,6 +65,17 @@ namespace Battlegrounds.Game.Gameplay {
         /// </summary>
         [JsonIgnore]
         public ImmutableArray<Blueprint> SlotItems => m_slotItems.ToImmutableArray();
+
+        /// <summary>
+        /// Create a basic <see cref="Squad"/> instance without any identifying values.
+        /// </summary>
+        public Squad() {
+            this.SquadID = 0;
+            this.PlayerOwner = null;
+            this.Blueprint = null;
+            this.m_slotItems = new HashSet<Blueprint>();
+            this.m_upgrades = new HashSet<Blueprint>();
+        }
 
         /// <summary>
         /// Create new <see cref="Squad"/> instance with a unique squad ID, a <see cref="Player"/> owner and a <see cref="Database.Blueprint"/>.
@@ -119,17 +129,17 @@ namespace Battlegrounds.Game.Gameplay {
         }
 
         /// <summary>
-        /// Get the complete checksum in string format.
-        /// </summary>
-        /// <returns>The string representation of the checksum.</returns>
-        public string GetChecksum() => throw new NotImplementedException();
-        
-        /// <summary>
         /// 
         /// </summary>
         /// <returns></returns>
         public string ToJsonReference() => this.SquadID.ToString();
 
+        /// <summary>
+        /// Returns a string that represents the current object.
+        /// </summary>
+        /// <returns>A string that represents the current object.</returns>
+        public override string ToString() => $"{this.SBP.Name}${this.SquadID}";
+        
     }
 
 }

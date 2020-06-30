@@ -75,6 +75,12 @@ namespace Battlegrounds.Game.Gameplay {
         public string ToJsonReference() => this.ToString();
 
         /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="jsonReference"></param>
+        public void FromJsonReference(string jsonReference) => throw new System.NotSupportedException();
+
+        /// <summary>
         /// Add two costs together.
         /// </summary>
         /// <param name="a">Left operand</param>

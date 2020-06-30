@@ -187,7 +187,7 @@
         </member>
         <member name="T:Battlegrounds.Game.Battlegrounds.Company">
             <summary>
-            Represents a Company. Implements <see cref="T:Battlegrounds.Game.Database.json.IJsonObject"/>.
+            Represents a Company. Implements <see cref="T:Battlegrounds.Game.Database.json.IJsonObject"/> and <see cref="T:Battlegrounds.Verification.IChecksumItem"/>.
             </summary>
         </member>
         <member name="P:Battlegrounds.Game.Battlegrounds.Company.Name">
@@ -210,13 +210,23 @@
             <see cref="T:System.Collections.Immutable.ImmutableArray`1"/> representation of the units in the <see cref="T:Battlegrounds.Game.Battlegrounds.Company"/>.
             </summary>
         </member>
-        <member name="M:Battlegrounds.Game.Battlegrounds.Company.#ctor(Battlegrounds.Steam.SteamUser,System.String,Battlegrounds.Game.Gameplay.Faction)">
+        <member name="P:Battlegrounds.Game.Battlegrounds.Company.Checksum">
             <summary>
             
             </summary>
-            <param name="user"></param>
-            <param name="name"></param>
-            <param name="army"></param>
+        </member>
+        <member name="M:Battlegrounds.Game.Battlegrounds.Company.#ctor">
+            <summary>
+            New empty <see cref="T:Battlegrounds.Game.Battlegrounds.Company"/> instance. (Do not use).
+            </summary>
+        </member>
+        <member name="M:Battlegrounds.Game.Battlegrounds.Company.#ctor(Battlegrounds.Steam.SteamUser,System.String,Battlegrounds.Game.Gameplay.Faction)">
+            <summary>
+            New <see cref="T:Battlegrounds.Game.Battlegrounds.Company"/> instance with a <see cref="T:Battlegrounds.Steam.SteamUser"/> assigned.
+            </summary>
+            <param name="user">The <see cref="T:Battlegrounds.Steam.SteamUser"/> who can use the <see cref="T:Battlegrounds.Game.Battlegrounds.Company"/>.</param>
+            <param name="name">The name of the company.</param>
+            <param name="army">The <see cref="T:Battlegrounds.Game.Gameplay.Faction"/> that can use the <see cref="T:Battlegrounds.Game.Battlegrounds.Company"/>.</param>
             <exception cref="T:System.ArgumentNullException"/>
         </member>
         <member name="M:Battlegrounds.Game.Battlegrounds.Company.AddSquad(System.String,System.Byte,System.Single,System.String[],System.String[],System.Boolean)">
@@ -250,6 +260,12 @@
             </summary>
             <returns>The string representation of the checksum.</returns>
         </member>
+        <member name="M:Battlegrounds.Game.Battlegrounds.Company.VerifyChecksum">
+            <summary>
+            Verify the checksum of the object.
+            </summary>
+            <returns>true if the checksum is valid. False if the checksum does not match.</returns>
+        </member>
         <member name="M:Battlegrounds.Game.Battlegrounds.Company.SaveToFile(System.String)">
             <summary>
             Save all <see cref="T:Battlegrounds.Game.Battlegrounds.Company"/> data to a Json file.
@@ -260,6 +276,19 @@
             <summary>
             
             </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Battlegrounds.Game.Battlegrounds.Company.ToString">
+            <summary>
+            Returns a string that represents the current object.
+            </summary>
+            <returns>A string that represents the current object.</returns>
+        </member>
+        <member name="M:Battlegrounds.Game.Battlegrounds.Company.ReadCompanyFromFile(System.String)">
+            <summary>
+            
+            </summary>
+            <param name="jsonfilepath"></param>
             <returns></returns>
         </member>
         <member name="T:Battlegrounds.Game.Battlegrounds.GameMatch">
@@ -423,6 +452,12 @@
             </summary>
             <returns></returns>
         </member>
+        <member name="M:Battlegrounds.Game.Battlegrounds.Session.FromJsonReference(System.String)">
+            <summary>
+            
+            </summary>
+            <param name="jsonReference"></param>
+        </member>
         <member name="T:Battlegrounds.Game.Battlegrounds.SessionStatus">
             <summary>
             Status code for a <see cref="T:Battlegrounds.Game.Battlegrounds.Session"/> being run in the <see cref="T:Battlegrounds.Game.Battlegrounds.SessionManager"/>.
@@ -544,6 +579,11 @@
             The name of the <see cref="T:Battlegrounds.Game.Database.Blueprint"/> file in the game files (See the instances folder in the mod tools).
             </summary>
         </member>
+        <member name="P:Battlegrounds.Game.Database.Blueprint.BlueprintType">
+            <summary>
+            
+            </summary>
+        </member>
         <member name="M:Battlegrounds.Game.Database.Blueprint.ToJsonReference">
             <summary>
             
@@ -628,6 +668,13 @@
             <param name="bType"></param>
             <returns></returns>
         </member>
+        <member name="M:Battlegrounds.Game.Database.BlueprintManager.JsonDereference(System.String)">
+            <summary>
+            
+            </summary>
+            <param name="jsonReference"></param>
+            <returns></returns>
+        </member>
         <member name="T:Battlegrounds.Game.Database.json.IJsonElement">
             <summary>
             Interface of a Json element.
@@ -635,45 +682,57 @@
         </member>
         <member name="T:Battlegrounds.Game.Database.json.JsonArray">
             <summary>
-            
+            Represents an array for <see cref="T:Battlegrounds.Game.Database.json.IJsonElement"/> elements. Implements <see cref="T:System.Collections.IList"/> and <see cref="T:Battlegrounds.Game.Database.json.IJsonElement"/>.
             </summary>
         </member>
         <member name="P:Battlegrounds.Game.Database.json.JsonArray.First">
             <summary>
-            The first <see cref="T:Battlegrounds.Game.Database.json.IJsonElement"/> in the array
+            The first <see cref="T:Battlegrounds.Game.Database.json.IJsonElement"/> in the array.
             </summary>
         </member>
         <member name="M:Battlegrounds.Game.Database.json.JsonArray.#ctor">
             <summary>
-            
+            Create new empty <see cref="T:Battlegrounds.Game.Database.json.JsonArray"/> instance.
             </summary>
+        </member>
+        <member name="M:Battlegrounds.Game.Database.json.JsonArray.Populate(System.Object,System.Type,System.Func{System.String,System.Object})">
+            <summary>
+            Populate an enumerable with all the contents from the <see cref="T:Battlegrounds.Game.Database.json.JsonArray"/>.
+            </summary>
+            <param name="enumerable">The enumerable to populate with array elements.</param>
+            <param name="objType">The object type expected by the enumerable.</param>
+            <param name="refMethod">The json dereference method when adding the element.</param>
+            <remarks>The 'enumerable' object must have an 'Add' method with one argument. The result value of the 'Add' method is ignored.</remarks>
+            <exception cref="T:System.ArgumentNullException"/>
+            <exception cref="T:System.ArgumentException"/>
         </member>
         <member name="P:Battlegrounds.Game.Database.json.JsonArray.Item(System.Int32)">
             <summary>
-            
+            Get or set the <see cref="T:Battlegrounds.Game.Database.json.IJsonElement"/> found at the specified index position in the array.
             </summary>
-            <param name="index"></param>
-            <returns></returns>
+            <param name="index">The index of the element to get or set value of.</param>
+            <returns>The <see cref="T:Battlegrounds.Game.Database.json.IJsonElement"/> found at specified array index.</returns>
+            <exception cref="T:System.ArgumentOutOfRangeException"/>
         </member>
         <member name="P:Battlegrounds.Game.Database.json.JsonArray.Count">
             <summary>
-            
+            Get the current amount of items in the array.
             </summary>
         </member>
         <member name="P:Battlegrounds.Game.Database.json.JsonArray.IsReadOnly">
             <summary>
-            
+            Is this array considered to be readonly.
             </summary>
         </member>
         <member name="M:Battlegrounds.Game.Database.json.JsonArray.Add(Battlegrounds.Game.Database.json.IJsonElement)">
             <summary>
-            
+            Adds the <see cref="T:Battlegrounds.Game.Database.json.IJsonElement"/> to the first available position in the array.
             </summary>
-            <param name="item"></param>
+            <param name="item">The new <see cref="T:Battlegrounds.Game.Database.json.IJsonElement"/> to add to the array.</param>
         </member>
         <member name="M:Battlegrounds.Game.Database.json.JsonArray.Clear">
             <summary>
-            
+            Clears the array of all elements.
             </summary>
         </member>
         <member name="M:Battlegrounds.Game.Database.json.JsonArray.Contains(Battlegrounds.Game.Database.json.IJsonElement)">
@@ -692,38 +751,44 @@
         </member>
         <member name="M:Battlegrounds.Game.Database.json.JsonArray.GetEnumerator">
             <summary>
-            
+            Returns an enumerator that iterates through the <see cref="T:Battlegrounds.Game.Database.json.JsonArray"/>.
             </summary>
-            <returns></returns>
+            <returns>An <see cref="T:System.Collections.IEnumerator"/> object that can be used to iterate through the collection.</returns>
         </member>
         <member name="M:Battlegrounds.Game.Database.json.JsonArray.IndexOf(Battlegrounds.Game.Database.json.IJsonElement)">
             <summary>
-            
+            Finds the index position of the <see cref="T:Battlegrounds.Game.Database.json.IJsonElement"/> element.
             </summary>
-            <param name="item"></param>
-            <returns></returns>
+            <param name="item">The <see cref="T:Battlegrounds.Game.Database.json.IJsonElement"/> to find the index of.</param>
+            <returns>The index position if it was found. Otherwise -1 if the position was not found.</returns>
         </member>
         <member name="M:Battlegrounds.Game.Database.json.JsonArray.Insert(System.Int32,Battlegrounds.Game.Database.json.IJsonElement)">
             <summary>
-            
+            Insert a <see cref="T:Battlegrounds.Game.Database.json.IJsonElement"/> at specified index.
             </summary>
-            <param name="index"></param>
-            <param name="item"></param>
+            <param name="index">The non-negative index to insert item at.</param>
+            <param name="item">The <see cref="T:Battlegrounds.Game.Database.json.IJsonElement"/> to insert.</param>
         </member>
         <member name="M:Battlegrounds.Game.Database.json.JsonArray.Remove(Battlegrounds.Game.Database.json.IJsonElement)">
             <summary>
-            
+            Remove the <see cref="T:Battlegrounds.Game.Database.json.IJsonElement"/> from the array.
             </summary>
-            <param name="item"></param>
-            <returns></returns>
+            <param name="item">The item to remove from the array.</param>
+            <returns>true if the item was successfully removed.</returns>
         </member>
         <member name="M:Battlegrounds.Game.Database.json.JsonArray.RemoveAt(System.Int32)">
             <summary>
-            
+            Remove the array element at the specified position.
             </summary>
-            <param name="index"></param>
+            <param name="index">The index of the <see cref="T:Battlegrounds.Game.Database.json.IJsonElement"/> to remove.</param>
         </member>
         <member name="M:Battlegrounds.Game.Database.json.JsonArray.System#Collections#IEnumerable#GetEnumerator">
+            <summary>
+            Returns an enumerator that iterates through the <see cref="T:Battlegrounds.Game.Database.json.JsonArray"/>.
+            </summary>
+            <returns>An <see cref="T:System.Collections.IEnumerator"/> object that can be used to iterate through the collection.</returns>
+        </member>
+        <member name="M:Battlegrounds.Game.Database.json.JsonArray.ToString">
             <summary>
             
             </summary>
@@ -739,31 +804,23 @@
             Json interface for converting object to and from a Json object. Implements <see cref="T:Battlegrounds.Game.Database.json.IJsonElement"/>.
             </summary>
         </member>
+        <member name="M:Battlegrounds.Game.Database.json.IJsonObject.ToJsonReference">
+            <summary>
+            Get instance as a json reference string.
+            </summary>
+            <returns>Instance in json reference string form.</returns>
+        </member>
         <member name="M:Battlegrounds.Game.Database.json.IJsonObject.Serialize">
             <summary>
             Serialize self into a json object
             </summary>
-            <returns></returns>
+            <returns>The json string representation of the <see cref="T:Battlegrounds.Game.Database.json.IJsonObject"/>.</returns>
         </member>
         <member name="M:Battlegrounds.Game.Database.json.IJsonObject.Serialize(System.Int32)">
             <summary>
             Serialize self into a json object
             </summary>
-            <returns></returns>
-        </member>
-        <member name="M:Battlegrounds.Game.Database.json.IJsonObject.ToJsonReference">
-            <summary>
-            
-            </summary>
-            <returns></returns>
-        </member>
-        <member name="M:Battlegrounds.Game.Database.json.IJsonObject.Deserialize``1(System.String)">
-            <summary>
-            Derserialize a json string representing an object into the C# requivalent.
-            </summary>
-            <typeparam name="T">The object type to deserialize to</typeparam>
-            <param name="json">The input string to deserialize</param>
-            <returns>A deserialized instance of the json input string</returns>
+            <returns>The json string representation of the <see cref="T:Battlegrounds.Game.Database.json.IJsonObject"/>.</returns>
         </member>
         <member name="M:Battlegrounds.Game.Database.json.IJsonObject.Deserialize(System.Collections.Generic.Dictionary{System.String,System.Object})">
             <summary>
@@ -786,8 +843,31 @@
         </member>
         <member name="T:Battlegrounds.Game.Database.json.JsonReferenceAttribute">
             <summary>
-            
+            <see cref="T:System.Attribute"/> for marking a field as using the Json reference value when serializing.
             </summary>
+        </member>
+        <member name="P:Battlegrounds.Game.Database.json.JsonReferenceAttribute.DereferenceType">
+            <summary>
+            The <see cref="T:System.Type"/> that contains the derefence method.
+            </summary>
+        </member>
+        <member name="M:Battlegrounds.Game.Database.json.JsonReferenceAttribute.#ctor">
+            <summary>
+            Referencable json attribute without a dereference method type defined.
+            </summary>
+        </member>
+        <member name="M:Battlegrounds.Game.Database.json.JsonReferenceAttribute.#ctor(System.Type)">
+            <summary>
+            Referencable json attribute with a type containing a dereference method.
+            </summary>
+            <param name="derefType">The type of object with dereference method.</param>
+            <exception cref="T:System.ArgumentException"/>
+        </member>
+        <member name="M:Battlegrounds.Game.Database.json.JsonReferenceAttribute.GetReferenceFunction">
+            <summary>
+            Get a static method pointer to the dereference method.
+            </summary>
+            <returns>A reference to the dereference method. Null if no type is specified.</returns>
         </member>
         <member name="T:Battlegrounds.Game.Database.json.JsonSyntaxException">
             <summary>
@@ -799,6 +879,149 @@
             <see cref="T:Battlegrounds.Game.Database.json.JsonSyntaxException"/> instance with a custom message.
             </summary>
             <param name="message">The custom message to give when throwing the error.</param>
+        </member>
+        <member name="T:Battlegrounds.Game.Database.json.JsonValue">
+            <summary>
+            A single unnamed Json value. Implements <see cref="T:Battlegrounds.Game.Database.json.IJsonElement"/> and <see cref="T:System.IConvertible"/>. This class cannot be inherited.
+            </summary>
+        </member>
+        <member name="P:Battlegrounds.Game.Database.json.JsonValue.StringValue">
+            <summary>
+            The string representation of the <see cref="T:Battlegrounds.Game.Database.json.JsonValue"/>.
+            </summary>
+        </member>
+        <member name="M:Battlegrounds.Game.Database.json.JsonValue.#ctor(System.String)">
+            <summary>
+            Create a simple <see cref="T:Battlegrounds.Game.Database.json.JsonValue"/> instance with an immutable value.
+            </summary>
+            <param name="val">The immutable value in string form.</param>
+        </member>
+        <member name="M:Battlegrounds.Game.Database.json.JsonValue.ToString">
+            <summary>
+            Returns a string that represents the current object.
+            </summary>
+            <returns>A string that represents the current object.</returns>
+        </member>
+        <member name="M:Battlegrounds.Game.Database.json.JsonValue.GetTypeCode">
+            <summary>
+            Returns the <see cref="T:System.TypeCode"/> for this instance.
+            </summary>
+            <returns>The enumerated constant that is the <see cref="T:System.TypeCode"/> of the class or value type that implements this interface.</returns>
+        </member>
+        <member name="M:Battlegrounds.Game.Database.json.JsonValue.ToBoolean(System.IFormatProvider)">
+            <summary>
+            Converts the value of this instance to an equivalent Boolean value using the specified culture-specific formatting information.
+            </summary>
+            <param name="provider">An <see cref="T:System.IFormatProvider"/> interface implementation that supplies culture-specific formatting information.</param>
+            <returns>A Boolean value equivalent to the value of this instance.</returns>
+        </member>
+        <member name="M:Battlegrounds.Game.Database.json.JsonValue.ToByte(System.IFormatProvider)">
+            <summary>
+            Converts the value of this instance to an equivalent 8-bit unsigned integer using the specified culture-specific formatting information.
+            </summary>
+            <param name="provider">An <see cref="T:System.IFormatProvider"/> interface implementation that supplies culture-specific formatting information.</param>
+            <returns>An 8-bit unsigned integer equivalent to the value of this instance.</returns>
+        </member>
+        <member name="M:Battlegrounds.Game.Database.json.JsonValue.ToChar(System.IFormatProvider)">
+            <summary>
+            An System.IFormatProvider interface implementation that supplies culture-specific formatting information.
+            </summary>
+            <param name="provider">An <see cref="T:System.IFormatProvider"/> interface implementation that supplies culture-specific formatting information.</param>
+            <returns>A Unicode character equivalent to the value of this instance.</returns>
+        </member>
+        <member name="M:Battlegrounds.Game.Database.json.JsonValue.ToDateTime(System.IFormatProvider)">
+            <summary>
+            Converts the value of this instance to an equivalent <see cref="T:System.DateTime"/> using the specified culture-specific formatting information.
+            </summary>
+            <param name="provider">An <see cref="T:System.IFormatProvider"/> interface implementation that supplies culture-specific formatting information.</param>
+            <exception cref="T:System.NotImplementedException"/>
+        </member>
+        <member name="M:Battlegrounds.Game.Database.json.JsonValue.ToDecimal(System.IFormatProvider)">
+            <summary>
+            Converts the value of this instance to an equivalent <see cref="T:System.Decimal"/> number using the specified culture-specific formatting information.
+            </summary>
+            <param name="provider">An <see cref="T:System.IFormatProvider"/> interface implementation that supplies culture-specific formatting information.</param>
+            <returns>A <see cref="T:System.Decimal"/> number equivalent to the value of this instance.</returns>
+        </member>
+        <member name="M:Battlegrounds.Game.Database.json.JsonValue.ToDouble(System.IFormatProvider)">
+            <summary>
+            Converts the value of this instance to an equivalent 64-bit floating point using the specified culture-specific formatting information.
+            </summary>
+            <param name="provider">An <see cref="T:System.IFormatProvider"/> interface implementation that supplies culture-specific formatting information.</param>
+            <returns>A double-precision floating-point number equivalent to the value of this instance.</returns>
+        </member>
+        <member name="M:Battlegrounds.Game.Database.json.JsonValue.ToInt16(System.IFormatProvider)">
+            <summary>
+            Converts the value of this instance to an equivalent 16-bit signed integer using the specified culture-specific formatting information.
+            </summary>
+            <param name="provider">An <see cref="T:System.IFormatProvider"/> interface implementation that supplies culture-specific formatting information.</param>
+            <returns>An 16-bit signed integer equivalent to the value of this instance.</returns>
+        </member>
+        <member name="M:Battlegrounds.Game.Database.json.JsonValue.ToInt32(System.IFormatProvider)">
+            <summary>
+            Converts the value of this instance to an equivalent 32-bit signed integer using the specified culture-specific formatting information.
+            </summary>
+            <param name="provider">An <see cref="T:System.IFormatProvider"/> interface implementation that supplies culture-specific formatting information.</param>
+            <returns>An 32-bit signed integer equivalent to the value of this instance.</returns>
+        </member>
+        <member name="M:Battlegrounds.Game.Database.json.JsonValue.ToInt64(System.IFormatProvider)">
+            <summary>
+            Converts the value of this instance to an equivalent 64-bit signed integer using the specified culture-specific formatting information.
+            </summary>
+            <param name="provider">An <see cref="T:System.IFormatProvider"/> interface implementation that supplies culture-specific formatting information.</param>
+            <returns>An 64-bit signed integer equivalent to the value of this instance.</returns>
+        </member>
+        <member name="M:Battlegrounds.Game.Database.json.JsonValue.ToSByte(System.IFormatProvider)">
+            <summary>
+            Converts the value of this instance to an equivalent 8-bit signed integer using the specified culture-specific formatting information.
+            </summary>
+            <param name="provider">An <see cref="T:System.IFormatProvider"/> interface implementation that supplies culture-specific formatting information.</param>
+            <returns>An 8-bit signed integer equivalent to the value of this instance.</returns>
+        </member>
+        <member name="M:Battlegrounds.Game.Database.json.JsonValue.ToSingle(System.IFormatProvider)">
+            <summary>
+            Converts the value of this instance to an equivalent 32-bit floating point using the specified culture-specific formatting information.
+            </summary>
+            <param name="provider">An <see cref="T:System.IFormatProvider"/> interface implementation that supplies culture-specific formatting information.</param>
+            <returns>A single-precision floating-point number equivalent to the value of this instance.</returns>
+        </member>
+        <member name="M:Battlegrounds.Game.Database.json.JsonValue.ToString(System.IFormatProvider)">
+            <summary>
+            Converts the value of this instance to the internal <see cref="T:System.String"/> value.
+            </summary>
+            <param name="provider">An <see cref="T:System.IFormatProvider"/> interface implementation that supplies culture-specific formatting information.</param>
+            <returns>A <see cref="T:System.String"/> instance equivalent to the value of this instance.</returns>
+        </member>
+        <member name="M:Battlegrounds.Game.Database.json.JsonValue.ToType(System.Type,System.IFormatProvider)">
+            <summary>
+            Converts the value of this instance to an System.Object of the specified System.Type
+            that has an equivalent value, using the specified culture-specific formatting
+            information. This method will throw a <see cref="T:System.NotImplementedException"/>.
+            </summary>
+            <param name="conversionType">The <see cref="T:System.Type"/> to which the value of this instance is converted.</param>
+            <param name="provider">An <see cref="T:System.IFormatProvider"/> interface implementation that supplies culture-specific formatting information.</param>
+            <exception cref="T:System.NotImplementedException"/>
+        </member>
+        <member name="M:Battlegrounds.Game.Database.json.JsonValue.ToUInt16(System.IFormatProvider)">
+            <summary>
+            Converts the value of this instance to an equivalent 8-bit unsigned integer using the specified culture-specific formatting information.
+            </summary>
+            <param name="provider">An <see cref="T:System.IFormatProvider"/> interface implementation that supplies culture-specific formatting information.</param>
+            <returns>An 16-bit unsigned integer equivalent to the value of this instance.</returns>
+        </member>
+        <member name="M:Battlegrounds.Game.Database.json.JsonValue.ToUInt32(System.IFormatProvider)">
+            <summary>
+            Converts the value of this instance to an equivalent 32-bit unsigned integer using the specified culture-specific formatting information.
+            </summary>
+            <param name="provider">An <see cref="T:System.IFormatProvider"/> interface implementation that supplies culture-specific formatting information.</param>
+            <returns>An 32-bit unsigned integer equivalent to the value of this instance.</returns>
+        </member>
+        <member name="M:Battlegrounds.Game.Database.json.JsonValue.ToUInt64(System.IFormatProvider)">
+            <summary>
+            Converts the value of this instance to an equivalent 64-bit unsigned integer using the specified culture-specific formatting information.
+            </summary>
+            <param name="provider">An <see cref="T:System.IFormatProvider"/> interface implementation that supplies culture-specific formatting information.</param>
+            <returns>An 64-bit unsigned integer equivalent to the value of this instance.</returns>
         </member>
         <member name="T:Battlegrounds.Game.Database.SquadBlueprint">
             <summary>
@@ -1067,6 +1290,12 @@
             </summary>
             <returns></returns>
         </member>
+        <member name="M:Battlegrounds.Game.Gameplay.Cost.FromJsonReference(System.String)">
+            <summary>
+            
+            </summary>
+            <param name="jsonReference"></param>
+        </member>
         <member name="M:Battlegrounds.Game.Gameplay.Cost.op_Addition(Battlegrounds.Game.Gameplay.Cost,Battlegrounds.Game.Gameplay.Cost)">
             <summary>
             Add two costs together.
@@ -1166,6 +1395,13 @@
             <param name="name"></param>
             <returns></returns>
         </member>
+        <member name="M:Battlegrounds.Game.Gameplay.Faction.JsonDereference(System.String)">
+            <summary>
+            
+            </summary>
+            <param name="jsonReference"></param>
+            <returns></returns>
+        </member>
         <member name="T:Battlegrounds.Game.Gameplay.Player">
             <summary>
             
@@ -1219,7 +1455,7 @@
         </member>
         <member name="T:Battlegrounds.Game.Gameplay.Squad">
             <summary>
-            Representation of a Squad
+            Representation of a Squad. Implements <see cref="T:Battlegrounds.Game.Database.json.IJsonObject"/>.
             </summary>
         </member>
         <member name="P:Battlegrounds.Game.Gameplay.Squad.SquadID">
@@ -1263,6 +1499,11 @@
             The current slot items carried by the <see cref="T:Battlegrounds.Game.Gameplay.Squad"/>
             </summary>
         </member>
+        <member name="M:Battlegrounds.Game.Gameplay.Squad.#ctor">
+            <summary>
+            Create a basic <see cref="T:Battlegrounds.Game.Gameplay.Squad"/> instance without any identifying values.
+            </summary>
+        </member>
         <member name="M:Battlegrounds.Game.Gameplay.Squad.#ctor(System.UInt16,Battlegrounds.Game.Gameplay.Player,Battlegrounds.Game.Database.Blueprint)">
             <summary>
             Create new <see cref="T:Battlegrounds.Game.Gameplay.Squad"/> instance with a unique squad ID, a <see cref="T:Battlegrounds.Game.Gameplay.Player"/> owner and a <see cref="T:Battlegrounds.Game.Database.Blueprint"/>.
@@ -1296,17 +1537,17 @@
             </summary>
             <returns>The cost of the squad.</returns>
         </member>
-        <member name="M:Battlegrounds.Game.Gameplay.Squad.GetChecksum">
-            <summary>
-            Get the complete checksum in string format.
-            </summary>
-            <returns>The string representation of the checksum.</returns>
-        </member>
         <member name="M:Battlegrounds.Game.Gameplay.Squad.ToJsonReference">
             <summary>
             
             </summary>
             <returns></returns>
+        </member>
+        <member name="M:Battlegrounds.Game.Gameplay.Squad.ToString">
+            <summary>
+            Returns a string that represents the current object.
+            </summary>
+            <returns>A string that represents the current object.</returns>
         </member>
         <member name="T:Battlegrounds.Game.Gameplay.Wincondition">
             <summary>
@@ -1571,7 +1812,7 @@
         </member>
         <member name="T:Battlegrounds.Steam.SteamUser">
             <summary>
-            Represents a Steam User by ID and name. Can be serialised as a Json object. This class cannot be inherited.
+            Represents a Steam User by ID and name. Implements <see cref="T:Battlegrounds.Game.Database.json.IJsonObject"/>. This class cannot be inherited.
             </summary>
         </member>
         <member name="P:Battlegrounds.Steam.SteamUser.Name">
@@ -1597,16 +1838,23 @@
         </member>
         <member name="M:Battlegrounds.Steam.SteamUser.FromID(System.UInt64)">
             <summary>
-            Find a user by their ID
+            Find a user by their steam 64-bit ID.
             </summary>
-            <param name="id"></param>
-            <returns></returns>
+            <param name="id">The unique steam ID to use when retrieving basic user data.</param>
+            <returns>The <see cref="T:Battlegrounds.Steam.SteamUser"/> with steam ID.</returns>
+            <exception cref="T:System.ArgumentException"/>
         </member>
         <member name="M:Battlegrounds.Steam.SteamUser.ToJsonReference">
             <summary>
-            
+            Get the json string reference value.
             </summary>
-            <returns></returns>
+            <returns>Json string reference value.</returns>
+        </member>
+        <member name="M:Battlegrounds.Steam.SteamUser.JsonDereference(System.String)">
+            <summary>
+            Dereference a json string into a the proper <see cref="T:Battlegrounds.Steam.SteamUser"/> equivalent.
+            </summary>
+            <param name="jsonReference">The json reference value.</param>
         </member>
         <member name="T:Battlegrounds.Util.BinaryReaderExt">
             <summary>
@@ -1761,6 +2009,16 @@
             </summary>
             <returns>Integer value representing the indentation level.</returns>
         </member>
+        <member name="T:Battlegrounds.Verification.ChecksumViolationException">
+            <summary>
+            <see cref="T:System.Exception"/> thrown when a <see cref="T:Battlegrounds.Verification.IChecksumItem"/> failed to verify its checksum.
+            </summary>
+        </member>
+        <member name="M:Battlegrounds.Verification.ChecksumViolationException.#ctor">
+            <summary>
+            New <see cref="T:Battlegrounds.Verification.ChecksumViolationException"/> instance.
+            </summary>
+        </member>
         <member name="T:Battlegrounds.Verification.IChecksumItem">
             <summary>
             Interface for calculating a checksum for a C# data object.
@@ -1771,6 +2029,12 @@
             Get the complete checksum in string format.
             </summary>
             <returns>The string representation of the checksum.</returns>
+        </member>
+        <member name="M:Battlegrounds.Verification.IChecksumItem.VerifyChecksum">
+            <summary>
+            Verify the checksum.
+            </summary>
+            <returns>true if the checksum is valid.</returns>
         </member>
     </members>
 </doc>

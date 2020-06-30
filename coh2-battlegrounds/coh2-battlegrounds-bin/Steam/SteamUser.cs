@@ -6,7 +6,7 @@ using Battlegrounds.Online;
 namespace Battlegrounds.Steam {
 
     /// <summary>
-    /// Represents a Steam User by ID and name. Can be serialised as a Json object. This class cannot be inherited.
+    /// Represents a Steam User by ID and name. Implements <see cref="IJsonObject"/>. This class cannot be inherited.
     /// </summary>
     public sealed class SteamUser : IJsonObject {
     
@@ -58,10 +58,11 @@ namespace Battlegrounds.Steam {
         public override string ToString() => this.Name;
 
         /// <summary>
-        /// Find a user by their ID
+        /// Find a user by their steam 64-bit ID.
         /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
+        /// <param name="id">The unique steam ID to use when retrieving basic user data.</param>
+        /// <returns>The <see cref="SteamUser"/> with steam ID.</returns>
+        /// <exception cref="ArgumentException"/>
         public static SteamUser FromID(ulong id) {
 
             // Create the user
@@ -78,10 +79,16 @@ namespace Battlegrounds.Steam {
         }
 
         /// <summary>
-        /// 
+        /// Get the json string reference value.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>Json string reference value.</returns>
         public string ToJsonReference() => this.ID.ToString();
+
+        /// <summary>
+        /// Dereference a json string into a the proper <see cref="SteamUser"/> equivalent.
+        /// </summary>
+        /// <param name="jsonReference">The json reference value.</param>
+        public static SteamUser JsonDereference(string jsonReference) => FromID(ulong.Parse(jsonReference));
 
     }
 

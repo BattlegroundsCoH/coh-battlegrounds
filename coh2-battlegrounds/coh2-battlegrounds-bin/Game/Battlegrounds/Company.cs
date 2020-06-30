@@ -10,12 +10,13 @@ using Battlegrounds.Steam;
 using Battlegrounds.Verification;
 
 namespace Battlegrounds.Game.Battlegrounds {
-    
+
     /// <summary>
-    /// Represents a Company. Implements <see cref="IJsonObject"/>.
+    /// Represents a Company. Implements <see cref="IJsonObject"/> and <see cref="IChecksumItem"/>.
     /// </summary>
     public class Company : IJsonObject, IChecksumItem {
 
+        private string m_checksum;
         private ushort m_nextSquadId;
         private List<Squad> m_squads;
 
@@ -27,12 +28,13 @@ namespace Battlegrounds.Game.Battlegrounds {
         /// <summary>
         /// The <see cref="Faction"/> this company is associated with.
         /// </summary>
+        [JsonReference(typeof(Faction))]
         public Faction Army { get; }
 
         /// <summary>
         /// The <see cref="SteamUser"/> who owns the <see cref="Company"/>.
         /// </summary>
-        [JsonReference]
+        [JsonReference(typeof(SteamUser))]
         public SteamUser Owner { get; }
 
         /// <summary>
@@ -44,9 +46,21 @@ namespace Battlegrounds.Game.Battlegrounds {
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="user"></param>
-        /// <param name="name"></param>
-        /// <param name="army"></param>
+        [JsonIgnore]
+        public string Checksum => m_checksum;
+
+        /// <summary>
+        /// New empty <see cref="Company"/> instance. (Do not use).
+        /// </summary>
+        [Obsolete("Please use the constructor requiring a SteamUser, name, and faction.")]
+        public Company() { }
+
+        /// <summary>
+        /// New <see cref="Company"/> instance with a <see cref="SteamUser"/> assigned.
+        /// </summary>
+        /// <param name="user">The <see cref="SteamUser"/> who can use the <see cref="Company"/>.</param>
+        /// <param name="name">The name of the company.</param>
+        /// <param name="army">The <see cref="Faction"/> that can use the <see cref="Company"/>.</param>
         /// <exception cref="ArgumentNullException"/>
         public Company(SteamUser user, string name, Faction army) {
 
@@ -64,7 +78,7 @@ namespace Battlegrounds.Game.Battlegrounds {
             this.Name = name;
             this.Owner = user;
             this.Army = army;
-            
+
             // Prepare squad list
             this.m_squads = new List<Squad>();
             this.m_nextSquadId = 0;
@@ -91,10 +105,10 @@ namespace Battlegrounds.Game.Battlegrounds {
             // Create squad
             Squad squad = new Squad(m_nextSquadId++, null, BlueprintManager.FromBlueprintName(bp, BlueprintType.SBP));
             squad.SetVeterancy(vet, vetprog);
-            
+
             // Add upgrades
             if (upgrades != null) {
-                foreach(string upg in upgrades) {
+                foreach (string upg in upgrades) {
                     squad.AddUpgrade(BlueprintManager.FromBlueprintName(upg, BlueprintType.UBP));
                 }
             }
@@ -133,20 +147,78 @@ namespace Battlegrounds.Game.Battlegrounds {
         /// Get the complete checksum in string format.
         /// </summary>
         /// <returns>The string representation of the checksum.</returns>
-        public string GetChecksum() => throw new NotImplementedException();
+        public string GetChecksum() {
+            long aggr = System.Text.Encoding.UTF8.GetBytes((this as IJsonObject).Serialize()).Aggregate<byte, long>(0, (a, b) => a += b + (a % b));
+            aggr &= 0xffff;
+            return aggr.ToString("X8");
+        }
+
+        /// <summary>
+        /// Verify the checksum of the object.
+        /// </summary>
+        /// <returns>true if the checksum is valid. False if the checksum does not match.</returns>
+        public bool VerifyChecksum() {
+            
+            // Backup and reset checksum
+            string checksum = this.m_checksum;
+            this.m_checksum = string.Empty;
+
+            // Calculate checksum
+            bool result = (this.GetChecksum().CompareTo(checksum) == 0);
+
+            // Restore checksum
+            this.m_checksum = checksum;
+
+            // Return result
+            return result;
+
+        }
 
         /// <summary>
         /// Save all <see cref="Company"/> data to a Json file.
         /// </summary>
         /// <param name="jsonfile">The path of the file to save <see cref="Company"/> data into.</param>
-        public void SaveToFile(string jsonfile) 
-            => File.WriteAllText(jsonfile, (this as IJsonObject).Serialize());
+        public void SaveToFile(string jsonfile) {
+            this.m_checksum = string.Empty;
+            this.m_checksum = this.GetChecksum();
+            File.WriteAllText(jsonfile, (this as IJsonObject).Serialize());
+        }
 
         /// <summary>
         /// 
         /// </summary>
         /// <returns></returns>
         public string ToJsonReference() => this.Name;
+
+        /// <summary>
+        /// Returns a string that represents the current object.
+        /// </summary>
+        /// <returns>A string that represents the current object.</returns>
+        public override string ToString() => this.Name;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="jsonfilepath"></param>
+        /// <returns></returns>
+        public static Company ReadCompanyFromFile(string jsonfilepath) {
+
+            List<IJsonElement> elements = JsonParser.Parse(jsonfilepath);
+            if (elements.FirstOrDefault() is Company c) {
+                if (c.VerifyChecksum()) {
+                    return c;
+                } else {
+#if RELEASE
+                    throw new ChecksumViolationException();
+#else
+                    return null;
+#endif
+                }
+            } else {
+                throw new Exception();
+            }
+
+        }
 
     }
 

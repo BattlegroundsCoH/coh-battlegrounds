@@ -23,14 +23,19 @@ namespace Battlegrounds.Game.Database {
         /// <summary>
         /// 
         /// </summary>
+        public BlueprintType BlueprintType { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <returns></returns>
-        public string ToJsonReference() => this.PBGID.ToString();
+        public string ToJsonReference() => $"{this.BlueprintType}:{this.PBGID}";
 
         /// <summary>
         /// Returns a string that represents the current object.
         /// </summary>
         /// <returns>A string that represents the current object.</returns>
-        public override string ToString() => this.Name;
+        public override string ToString() => $"{BlueprintType}:{this.Name}";
 
     }
 

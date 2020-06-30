@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
 using Battlegrounds.Util;
@@ -13,16 +12,22 @@ namespace Battlegrounds.Game.Database.json {
     public interface IJsonObject : IJsonElement {
 
         /// <summary>
+        /// Get instance as a json reference string.
+        /// </summary>
+        /// <returns>Instance in json reference string form.</returns>
+        public string ToJsonReference();
+
+        /// <summary>
         /// Serialize self into a json object
         /// </summary>
-        /// <returns></returns>
+        /// <returns>The json string representation of the <see cref="IJsonObject"/>.</returns>
         public virtual string Serialize()
             => this.Serialize(0);
 
         /// <summary>
         /// Serialize self into a json object
         /// </summary>
-        /// <returns></returns>
+        /// <returns>The json string representation of the <see cref="IJsonObject"/>.</returns>
         public virtual string Serialize(int indent) {
 
             Type il_type = this.GetType();
@@ -31,7 +36,7 @@ namespace Battlegrounds.Game.Database.json {
 
             // Get all the fields
             IEnumerable<FieldInfo> fields = il_type.GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.FlattenHierarchy)
-                .Where(x => x.GetCustomAttribute<JsonIgnoreAttribute>() is null && !x.Name.Contains("_BackingField"));
+                .Where(x => x.GetCustomAttribute<JsonIgnoreAttribute>() is null && !x.Name.EndsWith("_BackingField"));
 
             // Get all the properties
             IEnumerable<PropertyInfo> properties = il_type.GetProperties(BindingFlags.FlattenHierarchy | BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)
@@ -113,34 +118,13 @@ namespace Battlegrounds.Game.Database.json {
         }
 
         /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
-        public string ToJsonReference();
-
-        /// <summary>
-        /// Derserialize a json string representing an object into the C# requivalent.
-        /// </summary>
-        /// <typeparam name="T">The object type to deserialize to</typeparam>
-        /// <param name="json">The input string to deserialize</param>
-        /// <returns>A deserialized instance of the json input string</returns>
-        public static T Deserialize<T>(string json) where T : IJsonObject {
-
-            T t = Activator.CreateInstance<T>();
-
-            return t;
-
-        }
-
-        /// <summary>
         /// Derserialize a json string representing an object into the C# requivalent.
         /// </summary>
         /// <param name="parsedJson">The parsed input of a json object</param>
         /// <returns>A deserialized instance of the json input string</returns>
         internal static object Deserialize(Dictionary<string, object> parsedJson) {
 
-            object type;
-            if (!parsedJson.TryGetValue("jsdb-type", out type)) {
+            if (!parsedJson.TryGetValue("jsdb-type", out object type)) {
                 throw new ArgumentException();
             } else {
                 parsedJson.Remove("jsdb-type");
@@ -161,21 +145,85 @@ namespace Battlegrounds.Game.Database.json {
             // Set the value (fields expected!)
             foreach (var pair in parsedJson) {
 
+                // Define the reference attribute (it may be used)
+                JsonReferenceAttribute attrib;
+
                 if (fields.FirstOrDefault(x => x.Name == pair.Key) is FieldInfo finfo) { // Is Field?
 
-                    // Set value
-                    finfo.SetValue(source, Convert.ChangeType(pair.Value, finfo.FieldType));
+                    // Get the reference attribute
+                    attrib = finfo.GetCustomAttribute<JsonReferenceAttribute>();
 
-                } else if (properties.FirstOrDefault(x => x.Name == pair.Key) is PropertyInfo pinfo) { // Is property?
+                    // Use the reference method
+                    bool useRef = !(attrib is null);
 
-                    // Set value
-                    pinfo.SetValue(source, Convert.ChangeType(pair.Value, pinfo.PropertyType));
+                    // Set the field value.
+                    SetValue(source, pair.Value, finfo.FieldType, useRef, finfo.SetValue, attrib?.GetReferenceFunction());
+
+                } else if (properties.FirstOrDefault(x => x.Name == pair.Key) is PropertyInfo pinfo) { // Is Property?
+
+                    // Get the reference attribute
+                    attrib = pinfo.GetCustomAttribute<JsonReferenceAttribute>();
+
+                    // Use the reference method
+                    bool useRef = !(attrib is null);
+
+                    // Do we have a set method?
+                    if (pinfo.SetMethod != null) {
+
+                        // Set value using the 'SetMethod'
+                        SetValue(source, pair.Value, pinfo.PropertyType, useRef, pinfo.SetValue, attrib?.GetReferenceFunction());
+
+                    } else {
+
+                        // Get the backing field
+                        FieldInfo backingField = il_type.GetField($"<{pinfo.Name}>k__BackingField", BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.FlattenHierarchy);
+
+                        // Set the value of the backing field.
+                        SetValue(source, pair.Value, backingField.FieldType, useRef, backingField.SetValue, attrib?.GetReferenceFunction());
+
+                    }
 
                 }
 
             }
 
             return source;
+
+        }
+
+        internal static void SetValue(object instance, object value, Type valueType, bool byReference, 
+            Action<object, object> setValueMethod, Func<string, object> derefMethood) {
+
+            // Is it an array?
+            if (value is JsonArray jsa) {
+
+                // Create enumerable and populate
+                object enumerableType = Activator.CreateInstance(valueType);
+                jsa.Populate(enumerableType, valueType.GenericTypeArguments[0], derefMethood);
+
+                // Set the value using the enumerable
+                setValueMethod.Invoke(instance, enumerableType);
+
+            } else {
+
+                // By reference?
+                if (byReference) {
+
+                    // Get the value
+                    object val = derefMethood.Invoke(value as string);
+
+                    // Set value
+                    setValueMethod.Invoke(instance, val);
+
+                } else { // Ordinary set-value
+
+                    // Set value
+                    setValueMethod.Invoke(instance, Convert.ChangeType(value, valueType));
+
+                }
+
+            }
+
 
         }
 

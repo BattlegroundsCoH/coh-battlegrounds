@@ -11,6 +11,12 @@
         /// <returns>The string representation of the checksum.</returns>
         public string GetChecksum();
 
+        /// <summary>
+        /// Verify the checksum.
+        /// </summary>
+        /// <returns>true if the checksum is valid.</returns>
+        public bool VerifyChecksum();
+
     }
 
 }

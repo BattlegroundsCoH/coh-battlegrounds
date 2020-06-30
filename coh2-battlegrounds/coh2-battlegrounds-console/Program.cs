@@ -13,6 +13,8 @@ namespace coh2_battlegrounds_console {
             // Important this is done
             Battlegrounds.Game.Database.BlueprintManager.CreateDatabase();
 
+            Company company = Company.ReadCompanyFromFile("test_company.json");
+
             // Create a dummy company
             Company testCompany = new Company(SteamUser.FromID(76561198003529969UL), "26th Rifle Guards Division", Battlegrounds.Game.Gameplay.Faction.Soviet);
             testCompany.AddSquad("conscript_squad_mp", 0, 0, new string[] { "ppsh-41_sub_machine_gun_upgrade_mp" }, null, false);
@@ -26,6 +28,8 @@ namespace coh2_battlegrounds_console {
             Company[] companies = new Company[] {
                 testCompany
             };
+
+            string bCheck = testCompany.GetChecksum();
 
             Session session = Session.CreateSession("2p_angoville", companies, new Battlegrounds.Game.Gameplay.Wincondition(), true);
 

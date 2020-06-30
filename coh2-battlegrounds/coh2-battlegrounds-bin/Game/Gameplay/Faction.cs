@@ -110,6 +110,13 @@ namespace Battlegrounds.Game.Gameplay {
             };
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="jsonReference"></param>
+        /// <returns></returns>
+        public static object JsonDereference(string jsonReference)  => FromName(jsonReference);
+
         #endregion
 
     }

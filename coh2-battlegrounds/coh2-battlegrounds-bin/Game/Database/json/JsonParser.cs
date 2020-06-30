@@ -48,23 +48,32 @@ namespace Battlegrounds.Game.Database.json {
             if (contents[i] == '[') {
 
                 i++;
+
                 JsonArray array = new JsonArray();
+                StringBuilder sb = new StringBuilder();
 
                 while (i < contents.Length) {
-
-                    if (contents[i] == ']') {
-                        i++;
-                        break;
-                    }
 
                     ParseNext(ref i, contents, out object o);
 
                     if (o is IJsonElement e) {
                         array.Add(e);
+                    } else {
+                        if (contents[i] == ']') {
+                            i++;
+                            break;
+                        } else if (contents[i] == ',') {
+                            array.Add(new JsonValue(sb.ToString().Trim('\"')));
+                            sb.Clear();
+                        } else if (!char.IsWhiteSpace(contents[i]) && contents[i] != '{' && contents[i] != '}') {
+                            sb.Append(contents[i]);
+                        }
                     }
 
-                    i++;
+                }
 
+                if (sb.Length > 0) {
+                    array.Add(new JsonValue(sb.ToString().Trim('\"')));
                 }
 
                 result = array;
@@ -78,26 +87,20 @@ namespace Battlegrounds.Game.Database.json {
 
                 while (i < contents.Length) {
 
-                    if (contents[i] == '}') {
-                        i++;
-                        break;
-                    }
-
-
                     ParseNext(ref i, contents, out object o);
 
                     if (o is string) {
-                        string s = (o as string).Trim();
+                        string s = (o as string);
                         if (s.Length > 0) {
                             ln.Append(s);
                         }
                     } else {
                         if (o is IJsonElement e) {
 
-                            if (ln.Length > 0) {
+                            if (ln.Length > 1) {
 
                                 // Use regex to find the key
-                                Match r = Regex.Match(ln.ToString(), @"\s*\""(?<key>\S*)\""\s*:\s*");
+                                Match r = Regex.Match(ln.ToString(), @"\s*\""(?<key>\S*|\s*)\""\s*:\s*");
 
                                 // Clear the string builder
                                 ln.Clear();
@@ -119,7 +122,12 @@ namespace Battlegrounds.Game.Database.json {
                         }
                     }
 
-                    if (ln.ToString().EndsWith(',') && ln.ToString().Count(x => x == '\"') % 2 == 0) {
+                    if (contents[i] == '}') {
+                        i++;
+                        break;
+                    }
+
+                    if (ln.ToString().EndsWith(',') && ln.ToString().Count(x => x == '\"') % 2 == 0 && ln.Length > 2) {
 
                         var kv = ParseKV(ln.ToString());
                         value_set.Add(kv.Key, kv.Value);
@@ -145,11 +153,14 @@ namespace Battlegrounds.Game.Database.json {
 
         private static KeyValuePair<string, object> ParseKV(string kv) {
 
-            Match v = Regex.Match(kv, @"(?<key>\s*\""\S*\""\s*):(?<val>(\s*\""\S*\""\s*)|(\s*\d*\s*))");
+            // Match with regular expression
+            Match v = Regex.Match(kv, @"\s*(?<key>\s*\""\S*\"")\s*:\s*(?<val>(\""(\s|\S)*\"")|(\d*))\s*");
 
+            // Find the key and the value
             string key = v.Groups["key"].Value.Trim('\"');
             string value = v.Groups["val"].Value.Trim('\"');
 
+            // Return key value pair
             return new KeyValuePair<string, object>(key, value);
 
         }
