@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Battlegrounds.Game.Database.json {
+namespace Battlegrounds.Json {
 
     /// <summary>
     /// <see cref="Attribute"/> for marking a field as using the Json reference value when serializing.

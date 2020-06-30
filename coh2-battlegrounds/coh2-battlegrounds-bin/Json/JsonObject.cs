@@ -4,7 +4,7 @@ using System.Linq;
 using System.Reflection;
 using Battlegrounds.Util;
 
-namespace Battlegrounds.Game.Database.json {
+namespace Battlegrounds.Json {
     
     /// <summary>
     /// Json interface for converting object to and from a Json object. Implements <see cref="IJsonElement"/>.

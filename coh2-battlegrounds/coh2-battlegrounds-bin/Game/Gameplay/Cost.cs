@@ -1,4 +1,4 @@
-﻿using Battlegrounds.Game.Database.json;
+﻿using Battlegrounds.Json;
 
 namespace Battlegrounds.Game.Gameplay {
 

@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using Battlegrounds.Game.Database.json;
+using Battlegrounds.Json;
 using Battlegrounds.Game.Gameplay;
 
 namespace Battlegrounds.Game.Battlegrounds {

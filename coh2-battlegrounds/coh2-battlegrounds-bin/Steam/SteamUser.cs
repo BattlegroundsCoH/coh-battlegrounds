@@ -1,6 +1,6 @@
 ﻿using System;
 
-using Battlegrounds.Game.Database.json;
+using Battlegrounds.Json;
 using Battlegrounds.Online;
 
 namespace Battlegrounds.Steam {

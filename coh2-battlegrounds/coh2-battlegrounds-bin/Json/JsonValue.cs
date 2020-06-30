@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Battlegrounds.Game.Database.json {
+namespace Battlegrounds.Json {
 
     /// <summary>
     /// A single unnamed Json value. Implements <see cref="IJsonElement"/> and <see cref="IConvertible"/>. This class cannot be inherited.

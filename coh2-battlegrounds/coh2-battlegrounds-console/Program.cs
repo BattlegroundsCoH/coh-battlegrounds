@@ -1,5 +1,4 @@
 ﻿using System;
-using Battlegrounds.Verification;
 using Battlegrounds.Compiler;
 using Battlegrounds.Game.Battlegrounds;
 using Battlegrounds.Steam;
@@ -29,15 +28,14 @@ namespace coh2_battlegrounds_console {
                 testCompany
             };
 
-            string bCheck = testCompany.GetChecksum();
-
             Session session = Session.CreateSession("2p_angoville", companies, new Battlegrounds.Game.Gameplay.Wincondition(), true);
 
             /*GameMatch m = new GameMatch(session);
             m.LoadMatch($"{Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)}\\my games\\company of heroes 2\\playback\\temp.rec");
             m.EvaluateResult();
             */
-            //SessionManager.PlaySession<SessionCompiler<CompanyCompiler>, CompanyCompiler>(session, (a,b) => { Console.WriteLine(a); }, null);
+            
+            SessionManager.PlaySession<SessionCompiler<CompanyCompiler>, CompanyCompiler>(session, (a,b) => { Console.WriteLine(a); }, null);
 
             // Save json
             testCompany.SaveToFile("test_company.json");

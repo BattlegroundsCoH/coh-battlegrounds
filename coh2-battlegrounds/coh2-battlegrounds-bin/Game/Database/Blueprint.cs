@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using Battlegrounds.Game.Database.json;
+using Battlegrounds.Json;
 
 namespace Battlegrounds.Game.Database {
     

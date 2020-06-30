@@ -1,13 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace Battlegrounds.Game.Database.json {
+namespace Battlegrounds.Json {
 
     /// <summary>
-    /// 
+    /// Tells the <see cref="IJsonObject"/> serializer to ignore this member.
     /// </summary>
     [AttributeUsage(AttributeTargets.Field | AttributeTargets.Property, AllowMultiple = false, Inherited = true)]
-    class JsonIgnoreAttribute : Attribute {}
+    public class JsonIgnoreAttribute : Attribute {}
 
 }

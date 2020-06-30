@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.IO;
 using System.Linq;
+
 using Battlegrounds.Game.Database;
-using Battlegrounds.Game.Database.json;
+using Battlegrounds.Json;
 using Battlegrounds.Game.Gameplay;
 using Battlegrounds.Steam;
 using Battlegrounds.Verification;

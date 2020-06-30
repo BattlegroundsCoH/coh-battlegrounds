@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Battlegrounds.Game.Database.json {
+namespace Battlegrounds.Json {
     
     /// <summary>
     /// <see cref="Exception"/> subtype representing a syntax-error in a json file.

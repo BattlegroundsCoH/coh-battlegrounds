@@ -3,7 +3,7 @@ using System.Reflection;
 using System.Collections;
 using System.Collections.Generic;
 
-namespace Battlegrounds.Game.Database.json {
+namespace Battlegrounds.Json {
     
     /// <summary>
     /// Represents an array for <see cref="IJsonElement"/> elements. Implements <see cref="IList"/> and <see cref="IJsonElement"/>.

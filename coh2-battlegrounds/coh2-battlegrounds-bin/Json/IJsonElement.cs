@@ -1,4 +1,4 @@
-﻿namespace Battlegrounds.Game.Database.json {
+﻿namespace Battlegrounds.Json {
     
     /// <summary>
     /// Interface of a Json element.

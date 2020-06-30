@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 
-namespace Battlegrounds.Game.Database.json {
+namespace Battlegrounds.Json {
     
     /// <summary>
     /// Static utility class for parsing a Json file.
