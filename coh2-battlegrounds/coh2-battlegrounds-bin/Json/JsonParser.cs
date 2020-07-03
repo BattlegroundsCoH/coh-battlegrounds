@@ -11,18 +11,41 @@ namespace Battlegrounds.Json {
     /// Static utility class for parsing a Json file.
     /// </summary>
     public static class JsonParser {
-    
+
+        /// <summary>
+        /// Parse a json file (Will only parse it - may parse syntactically incorrect json files!) and extract the top-level item.
+        /// </summary>
+        /// <typeparam name="T">The object type to retrieve from the file. Implements <see cref="IJsonObject"/>.</typeparam>
+        /// <param name="jsonfile">The path of the Json file to open and parse.</param>
+        /// <returns>The default value if parsing failed. Otherwise the object that was expected.</returns>
+        public static T Parse<T>(string jsonfile) where T : IJsonObject {
+            if (File.Exists(jsonfile)) {
+                List<IJsonElement> topElements = Parse(jsonfile);
+                if (topElements.Count == 1) {
+                    return (T)(topElements[0] as IJsonObject);
+                } else {
+                    return default;
+                }
+            } else {
+                return default;
+            }
+        }
+
         /// <summary>
         /// Parse a json file (Will only parse it - may parse syntactically incorrect json files!)
         /// </summary>
-        /// <param name="jsonfile"></param>
+        /// <param name="jsonfile">The path of the Json file to open and parse.</param>
         /// <returns>A <see cref="List{IJsonElement}"/> containing all top-level elements in the json file.</returns>
         public static List<IJsonElement> Parse(string jsonfile) {
 
+            List<IJsonElement> objs = new List<IJsonElement>();
+
+            if (!File.Exists(jsonfile)) {
+                return objs;
+            }
+
             // All contents
             string contents = File.ReadAllText(jsonfile);
-
-            List<IJsonElement> objs = new List<IJsonElement>();
 
             int i = 0;
             while(i < contents.Length) {

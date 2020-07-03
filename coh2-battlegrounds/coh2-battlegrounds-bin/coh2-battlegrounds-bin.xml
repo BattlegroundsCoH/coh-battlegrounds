@@ -4,6 +4,52 @@
         <name>coh2-battlegrounds-bin</name>
     </assembly>
     <members>
+        <member name="T:Battlegrounds.BattlegroundsInstance">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:Battlegrounds.BattlegroundsInstance.InternalInstance">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:Battlegrounds.BattlegroundsInstance.InternalInstance.User">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Battlegrounds.BattlegroundsInstance.InternalInstance.#ctor">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Battlegrounds.BattlegroundsInstance.InternalInstance.ToJsonReference">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="P:Battlegrounds.BattlegroundsInstance.LocalSteamuser">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:Battlegrounds.BattlegroundsInstance.BattlegroundHubAddress">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Battlegrounds.BattlegroundsInstance.LoadInstance">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Battlegrounds.BattlegroundsInstance.SaveInstance">
+            <summary>
+            
+            </summary>
+        </member>
         <member name="T:Battlegrounds.Chunk">
             <summary>
             Represents a chunk of data in a <see cref="T:Battlegrounds.ChunkyFile"/>.
@@ -193,6 +239,11 @@
         <member name="P:Battlegrounds.Game.Battlegrounds.Company.Name">
             <summary>
             The name of the company.
+            </summary>
+        </member>
+        <member name="P:Battlegrounds.Game.Battlegrounds.Company.TuningGUID">
+            <summary>
+            The GUID of the tuning mod.
             </summary>
         </member>
         <member name="P:Battlegrounds.Game.Battlegrounds.Company.Army">
@@ -679,6 +730,11 @@
             </summary>
             <param name="jsonReference"></param>
             <returns></returns>
+        </member>
+        <member name="T:Battlegrounds.Game.Database.CriticalBlueprint">
+            <summary>
+            
+            </summary>
         </member>
         <member name="T:Battlegrounds.Game.Database.EntityBlueprint">
             <summary>
@@ -1357,6 +1413,36 @@
             Interface of a Json element.
             </summary>
         </member>
+        <member name="T:Battlegrounds.Json.IJsonObject">
+            <summary>
+            Json interface for converting object to and from a Json object. Implements <see cref="T:Battlegrounds.Json.IJsonElement"/>.
+            </summary>
+        </member>
+        <member name="M:Battlegrounds.Json.IJsonObject.ToJsonReference">
+            <summary>
+            Get instance as a json reference string.
+            </summary>
+            <returns>Instance in json reference string form.</returns>
+        </member>
+        <member name="M:Battlegrounds.Json.IJsonObject.Serialize">
+            <summary>
+            Serialize self into a json object
+            </summary>
+            <returns>The json string representation of the <see cref="T:Battlegrounds.Json.IJsonObject"/>.</returns>
+        </member>
+        <member name="M:Battlegrounds.Json.IJsonObject.Serialize(System.Int32)">
+            <summary>
+            Serialize self into a json object
+            </summary>
+            <returns>The json string representation of the <see cref="T:Battlegrounds.Json.IJsonObject"/>.</returns>
+        </member>
+        <member name="M:Battlegrounds.Json.IJsonObject.Deserialize(System.Collections.Generic.Dictionary{System.String,System.Object})">
+            <summary>
+            Derserialize a json string representing an object into the C# requivalent.
+            </summary>
+            <param name="parsedJson">The parsed input of a json object</param>
+            <returns>A deserialized instance of the json input string</returns>
+        </member>
         <member name="T:Battlegrounds.Json.JsonArray">
             <summary>
             Represents an array for <see cref="T:Battlegrounds.Json.IJsonElement"/> elements. Implements <see cref="T:System.Collections.IList"/> and <see cref="T:Battlegrounds.Json.IJsonElement"/>.
@@ -1476,46 +1562,24 @@
             Tells the <see cref="T:Battlegrounds.Json.IJsonObject"/> serializer to ignore this member.
             </summary>
         </member>
-        <member name="T:Battlegrounds.Json.IJsonObject">
-            <summary>
-            Json interface for converting object to and from a Json object. Implements <see cref="T:Battlegrounds.Json.IJsonElement"/>.
-            </summary>
-        </member>
-        <member name="M:Battlegrounds.Json.IJsonObject.ToJsonReference">
-            <summary>
-            Get instance as a json reference string.
-            </summary>
-            <returns>Instance in json reference string form.</returns>
-        </member>
-        <member name="M:Battlegrounds.Json.IJsonObject.Serialize">
-            <summary>
-            Serialize self into a json object
-            </summary>
-            <returns>The json string representation of the <see cref="T:Battlegrounds.Json.IJsonObject"/>.</returns>
-        </member>
-        <member name="M:Battlegrounds.Json.IJsonObject.Serialize(System.Int32)">
-            <summary>
-            Serialize self into a json object
-            </summary>
-            <returns>The json string representation of the <see cref="T:Battlegrounds.Json.IJsonObject"/>.</returns>
-        </member>
-        <member name="M:Battlegrounds.Json.IJsonObject.Deserialize(System.Collections.Generic.Dictionary{System.String,System.Object})">
-            <summary>
-            Derserialize a json string representing an object into the C# requivalent.
-            </summary>
-            <param name="parsedJson">The parsed input of a json object</param>
-            <returns>A deserialized instance of the json input string</returns>
-        </member>
         <member name="T:Battlegrounds.Json.JsonParser">
             <summary>
             Static utility class for parsing a Json file.
             </summary>
         </member>
+        <member name="M:Battlegrounds.Json.JsonParser.Parse``1(System.String)">
+            <summary>
+            Parse a json file (Will only parse it - may parse syntactically incorrect json files!) and extract the top-level item.
+            </summary>
+            <typeparam name="T">The object type to retrieve from the file. Implements <see cref="T:Battlegrounds.Json.IJsonObject"/>.</typeparam>
+            <param name="jsonfile">The path of the Json file to open and parse.</param>
+            <returns>The default value if parsing failed. Otherwise the object that was expected.</returns>
+        </member>
         <member name="M:Battlegrounds.Json.JsonParser.Parse(System.String)">
             <summary>
             Parse a json file (Will only parse it - may parse syntactically incorrect json files!)
             </summary>
-            <param name="jsonfile"></param>
+            <param name="jsonfile">The path of the Json file to open and parse.</param>
             <returns>A <see cref="T:System.Collections.Generic.List`1"/> containing all top-level elements in the json file.</returns>
         </member>
         <member name="T:Battlegrounds.Json.JsonReferenceAttribute">
@@ -1730,6 +1794,280 @@
             
             </summary>
         </member>
+        <member name="T:Battlegrounds.Online.Connection">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:Battlegrounds.Online.Connection.ConnectionSocket">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:Battlegrounds.Online.Connection.IsConnected">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="E:Battlegrounds.Online.Connection.OnMessage">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Battlegrounds.Online.Connection.#ctor(System.Net.Sockets.Socket)">
+            <summary>
+            
+            </summary>
+            <param name="socket"></param>
+        </member>
+        <member name="M:Battlegrounds.Online.Connection.#ctor(System.Net.Sockets.Socket,System.Boolean)">
+            <summary>
+            
+            </summary>
+            <param name="socket"></param>
+            <param name="startListening"></param>
+        </member>
+        <member name="M:Battlegrounds.Online.Connection.SendMessage(Battlegrounds.Online.Message)">
+            <summary>
+            
+            </summary>
+            <param name="message"></param>
+        </member>
+        <member name="M:Battlegrounds.Online.Connection.Start">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Battlegrounds.Online.Connection.Stop">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:Battlegrounds.Online.MessageSender">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Battlegrounds.Online.MessageSender.SendMessage(System.Net.IPEndPoint,Battlegrounds.Online.Message,System.Action{System.Net.Sockets.Socket,Battlegrounds.Online.Message})">
+            <summary>
+            
+            </summary>
+            <param name="endpoint"></param>
+            <param name="message"></param>
+            <param name="response"></param>
+        </member>
+        <member name="M:Battlegrounds.Online.MessageSender.SendMessage(System.Net.Sockets.Socket,Battlegrounds.Online.Message,System.Action{System.Net.Sockets.Socket,Battlegrounds.Online.Message})">
+            <summary>
+            
+            </summary>
+            <param name="socket"></param>
+            <param name="message"></param>
+            <param name="response"></param>
+        </member>
+        <member name="M:Battlegrounds.Online.MessageSender.WaitForMessage(System.Net.Sockets.Socket,System.Action{System.Net.Sockets.Socket,Battlegrounds.Online.Message})">
+            <summary>
+            
+            </summary>
+            <param name="socket"></param>
+            <param name="response"></param>
+        </member>
+        <member name="T:Battlegrounds.Online.Services.ConnectableLobby">
+            <summary>
+            Represents a lobby that can be connected to.
+            </summary>
+        </member>
+        <member name="F:Battlegrounds.Online.Services.ConnectableLobby.lobby_guid">
+            <summary>
+            The server-assigned GUID given to the lobby.
+            </summary>
+        </member>
+        <member name="F:Battlegrounds.Online.Services.ConnectableLobby.lobby_name">
+            <summary>
+            The name of the lobby.
+            </summary>
+        </member>
+        <member name="F:Battlegrounds.Online.Services.ConnectableLobby.lobby_passwordProtected">
+            <summary>
+            Is the lobby password protected.
+            </summary>
+        </member>
+        <member name="T:Battlegrounds.Online.Services.LobbyHub">
+            <summary>
+            Instance of a lobby hub (Free service).
+            </summary>
+        </member>
+        <member name="M:Battlegrounds.Online.Services.LobbyHub.CanConnect">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Battlegrounds.Online.Services.LobbyHub.GetConnectableLobbies">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Battlegrounds.Online.Services.LobbyHub.Connect(System.Action{System.Boolean,Battlegrounds.Online.Connection})">
+            <summary>
+            
+            </summary>
+            <param name="connectionResponse"></param>
+        </member>
+        <member name="T:Battlegrounds.Online.Services.ManagedLobby">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="E:Battlegrounds.Online.Services.ManagedLobby.OnPlayerEvent">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="E:Battlegrounds.Online.Services.ManagedLobby.OnLocalEvent">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:Battlegrounds.Online.Services.ManagedLobby.IsHost">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Battlegrounds.Online.Services.ManagedLobby.SendChatMessage(System.String)">
+            <summary>
+            
+            </summary>
+            <param name="chatMessage"></param>
+        </member>
+        <member name="M:Battlegrounds.Online.Services.ManagedLobby.Leave">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Battlegrounds.Online.Services.ManagedLobby.Host(Battlegrounds.Online.Services.LobbyHub,System.String,System.String,Battlegrounds.Online.Services.ManagedLobbyConnectCallback)">
+            <summary>
+            
+            </summary>
+            <param name="hub"></param>
+            <param name="lobbyName"></param>
+            <param name="lobbyPassword"></param>
+            <param name="managedCallback"></param>
+        </member>
+        <member name="M:Battlegrounds.Online.Services.ManagedLobby.Join(Battlegrounds.Online.Services.LobbyHub,Battlegrounds.Online.Services.ConnectableLobby,System.String,Battlegrounds.Online.Services.ManagedLobbyConnectCallback)">
+            <summary>
+            
+            </summary>
+            <param name="hub"></param>
+            <param name="lobby"></param>
+            <param name="password"></param>
+            <param name="managedCallback"></param>
+        </member>
+        <member name="M:Battlegrounds.Online.Services.ManagedLobby.Join(Battlegrounds.Online.Services.LobbyHub,System.String,System.String,Battlegrounds.Online.Services.ManagedLobbyConnectCallback)">
+            <summary>
+            
+            </summary>
+            <param name="hub"></param>
+            <param name="lobbyGUID"></param>
+            <param name="password"></param>
+            <param name="managedCallback"></param>
+        </member>
+        <member name="T:Battlegrounds.Online.Services.ManagedLobbyPlayerEventType">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:Battlegrounds.Online.Services.ManagedLobbyPlayerEventType.Join">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:Battlegrounds.Online.Services.ManagedLobbyPlayerEventType.Leave">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:Battlegrounds.Online.Services.ManagedLobbyPlayerEventType.Kicked">
+            <summary>
+            Sent when a player was kicked
+            </summary>
+        </member>
+        <member name="F:Battlegrounds.Online.Services.ManagedLobbyPlayerEventType.Message">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:Battlegrounds.Online.Services.ManagedLobbyPlayerEvent">
+            <summary>
+            
+            </summary>
+            <param name="type"></param>
+            <param name="from"></param>
+            <param name="message"></param>
+        </member>
+        <member name="T:Battlegrounds.Online.Services.ManagedLobbyLocalEventType">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:Battlegrounds.Online.Services.ManagedLobbyLocalEventType.HOST">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:Battlegrounds.Online.Services.ManagedLobbyLocalEventType.KICKED">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:Battlegrounds.Online.Services.ManagedLobbyLocalEvent">
+            <summary>
+            
+            </summary>
+            <param name="type"></param>
+            <param name="message"></param>
+        </member>
+        <member name="T:Battlegrounds.Online.Services.ManagedLobbyConnectCallback">
+            <summary>
+            
+            </summary>
+            <param name="status"></param>
+            <param name="lobby"></param>
+        </member>
+        <member name="T:Battlegrounds.Online.Services.ManagedLobbyStatus">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:Battlegrounds.Online.Services.ManagedLobbyStatus.Success">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:Battlegrounds.Online.Services.ManagedLobbyStatus.Message">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Battlegrounds.Online.Services.ManagedLobbyStatus.#ctor(System.Boolean)">
+            <summary>
+            
+            </summary>
+            <param name="_s"></param>
+        </member>
+        <member name="M:Battlegrounds.Online.Services.ManagedLobbyStatus.#ctor(System.Boolean,System.String)">
+            <summary>
+            
+            </summary>
+            <param name="_s"></param>
+            <param name="_m"></param>
+        </member>
+        <member name="M:Battlegrounds.Online.Services.ManagedLobbyStatus.ToString">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
         <member name="T:Battlegrounds.Online.SourceDownloader">
             <summary>
             Utility for downloading content from a URL address.
@@ -1905,6 +2243,7 @@
             Dereference a json string into a the proper <see cref="T:Battlegrounds.Steam.SteamUser"/> equivalent.
             </summary>
             <param name="jsonReference">The json reference value.</param>
+            <returns>The steam user identified by the reference value. Null if no user could be found or the reference value is invalid.</returns>
         </member>
         <member name="T:Battlegrounds.Util.BinaryReaderExt">
             <summary>

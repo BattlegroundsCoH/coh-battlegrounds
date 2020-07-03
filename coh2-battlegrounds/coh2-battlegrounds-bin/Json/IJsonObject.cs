@@ -45,18 +45,7 @@ namespace Battlegrounds.Json {
             jsonbuilder.AppendLine("{");
             jsonbuilder.IncreaseIndent();
 
-            jsonbuilder.AppendLine($"\"jsdb-type\": \"{il_type.FullName}\"{((fields.Count() + properties.Count() > 0) ? "," : "")}");
-
-            foreach (FieldInfo finfo in fields) {
-                WriteKeyValuePair(
-                    jsonbuilder,
-                    finfo.FieldType,
-                    finfo.GetCustomAttribute<JsonReferenceAttribute>() is JsonReferenceAttribute,
-                    finfo.Name,
-                    finfo.GetValue(this),
-                    finfo != fields.Last() || properties.Count() > 0
-                    );
-            }
+            jsonbuilder.AppendLine($"\"jsdbtype\": \"{il_type.FullName}\"{((fields.Count() + properties.Count() > 0) ? "," : "")}");
 
             foreach (PropertyInfo pinfo in properties) {
                 WriteKeyValuePair(
@@ -65,7 +54,18 @@ namespace Battlegrounds.Json {
                     pinfo.GetCustomAttribute<JsonReferenceAttribute>() is JsonReferenceAttribute,
                     pinfo.Name,
                     pinfo.GetValue(this),
-                    pinfo != properties.Last()
+                    pinfo != properties.Last() || fields.Count() > 0
+                    );
+            }
+
+            foreach (FieldInfo finfo in fields) {
+                WriteKeyValuePair(
+                    jsonbuilder,
+                    finfo.FieldType,
+                    finfo.GetCustomAttribute<JsonReferenceAttribute>() is JsonReferenceAttribute,
+                    finfo.Name,
+                    finfo.GetValue(this),
+                    finfo != fields.Last()
                     );
             }
 
@@ -124,10 +124,10 @@ namespace Battlegrounds.Json {
         /// <returns>A deserialized instance of the json input string</returns>
         internal static object Deserialize(Dictionary<string, object> parsedJson) {
 
-            if (!parsedJson.TryGetValue("jsdb-type", out object type)) {
+            if (!parsedJson.TryGetValue("jsdbtype", out object type)) {
                 throw new ArgumentException();
             } else {
-                parsedJson.Remove("jsdb-type");
+                parsedJson.Remove("jsdbtype");
             }
 
             // Get the type

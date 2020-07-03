@@ -1,6 +1,10 @@
 ﻿using System;
+using System.Linq;
+using System.Threading;
 using Battlegrounds.Compiler;
 using Battlegrounds.Game.Battlegrounds;
+using Battlegrounds.Online;
+using Battlegrounds.Online.Services;
 using Battlegrounds.Steam;
 
 namespace coh2_battlegrounds_console {
@@ -9,13 +13,16 @@ namespace coh2_battlegrounds_console {
         
         static void Main(string[] args) {
 
+            Battlegrounds.BattlegroundsInstance.LoadInstance();
+            Battlegrounds.BattlegroundsInstance.LocalSteamuser = SteamUser.FromID(76561198003529969UL);
+
             // Important this is done
             Battlegrounds.Game.Database.BlueprintManager.CreateDatabase();
 
             Company company = Company.ReadCompanyFromFile("test_company.json");
 
             // Create a dummy company
-            Company testCompany = new Company(SteamUser.FromID(76561198003529969UL), "26th Rifle Guards Division", Battlegrounds.Game.Gameplay.Faction.Soviet);
+            Company testCompany = new Company(Battlegrounds.BattlegroundsInstance.LocalSteamuser, "26th Rifle Guards Division", Battlegrounds.Game.Gameplay.Faction.Soviet);
             testCompany.AddSquad("conscript_squad_mp", 0, 0, new string[] { "ppsh-41_sub_machine_gun_upgrade_mp" }, null, false);
             testCompany.AddSquad("conscript_squad_mp", 2, 0, null, null, false);
             testCompany.AddSquad("conscript_squad_mp", 3, 0, new string[] { "ppsh-41_sub_machine_gun_upgrade_mp" }, null, false);
@@ -35,12 +42,70 @@ namespace coh2_battlegrounds_console {
             m.EvaluateResult();
             */
             
-            SessionManager.PlaySession<SessionCompiler<CompanyCompiler>, CompanyCompiler>(session, (a,b) => { Console.WriteLine(a); }, null);
+            //SessionManager.PlaySession<SessionCompiler<CompanyCompiler>, CompanyCompiler>(session, (a,b) => { Console.WriteLine(a); }, null);
 
             // Save json
             testCompany.SaveToFile("test_company.json");
 
-            Console.Read();
+            LobbyHub hub = new LobbyHub();
+            if (!hub.CanConnect()) {
+                Console.WriteLine("Unable to reach server hub");
+            } else {
+
+                var lobbies = hub.GetConnectableLobbies();
+                if (lobbies.Count == 0) {
+                    HostTest(hub);
+                } else {
+                    ClientTest(hub, lobbies.First());
+                }
+
+            }
+
+            Battlegrounds.BattlegroundsInstance.SaveInstance();
+
+            Console.ReadLine();
+
+        }
+
+        private static void HostTest(LobbyHub hub) {
+
+            Console.WriteLine("Running hosting test");
+
+            ManagedLobby.Host(hub, "Battlegrounds Test", string.Empty, OnMessageLoop);
+
+        }
+
+        private static void ClientTest(LobbyHub hub, ConnectableLobby lob) {
+
+            Console.WriteLine("Running client test");
+
+            ManagedLobby.Join(hub, lob, string.Empty, OnMessageLoop);
+
+        }
+
+        private static void OnMessageLoop(ManagedLobbyStatus status, ManagedLobby result) {
+
+            if (status.Success) {
+
+                Console.WriteLine("Connection was established!");
+
+                result.OnPlayerEvent += (a, b, c) => {
+                    if (a == ManagedLobbyPlayerEventType.Message) {
+                        Console.WriteLine($"{b}: {c}");
+                    } else {
+                        string word = (a == ManagedLobbyPlayerEventType.Leave) ? "Left" : (a == ManagedLobbyPlayerEventType.Kicked ? "Was kicked" : "Joined");
+                        Console.WriteLine($"{b} {word}");
+                    }
+                };
+
+                if (!result.IsHost) {
+                    result.SendChatMessage("Hello World");
+                }
+
+            } else {
+                Console.WriteLine(status.Message);
+            }
+
 
         }
 

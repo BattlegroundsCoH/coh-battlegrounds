@@ -88,7 +88,14 @@ namespace Battlegrounds.Steam {
         /// Dereference a json string into a the proper <see cref="SteamUser"/> equivalent.
         /// </summary>
         /// <param name="jsonReference">The json reference value.</param>
-        public static SteamUser JsonDereference(string jsonReference) => FromID(ulong.Parse(jsonReference));
+        /// <returns>The steam user identified by the reference value. Null if no user could be found or the reference value is invalid.</returns>
+        public static SteamUser JsonDereference(string jsonReference) {
+            if (ulong.TryParse(jsonReference, out ulong i)) {
+                return FromID(i);
+            } else {
+                return null;
+            }
+        }
 
     }
 

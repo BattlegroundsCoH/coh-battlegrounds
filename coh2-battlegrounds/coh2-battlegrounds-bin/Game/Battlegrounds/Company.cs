@@ -27,6 +27,11 @@ namespace Battlegrounds.Game.Battlegrounds {
         public string Name { get; set; }
 
         /// <summary>
+        /// The GUID of the tuning mod.
+        /// </summary>
+        public string TuningGUID { get; set; }
+
+        /// <summary>
         /// The <see cref="Faction"/> this company is associated with.
         /// </summary>
         [JsonReference(typeof(Faction))]
@@ -79,6 +84,7 @@ namespace Battlegrounds.Game.Battlegrounds {
             this.Name = name;
             this.Owner = user;
             this.Army = army;
+            this.TuningGUID = string.Empty; // TODO: Take this as a parameter as well.
 
             // Prepare squad list
             this.m_squads = new List<Squad>();
@@ -216,7 +222,7 @@ namespace Battlegrounds.Game.Battlegrounds {
 #endif
                 }
             } else {
-                throw new Exception();
+                return null;
             }
 
         }
