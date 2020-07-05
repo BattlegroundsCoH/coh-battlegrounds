@@ -6,6 +6,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Net.NetworkInformation;
 using System.Threading;
+using Battlegrounds.Steam;
 
 namespace Battlegrounds.Online.Services {
 
@@ -13,6 +14,11 @@ namespace Battlegrounds.Online.Services {
     /// Instance of a lobby hub (Free service).
     /// </summary>
     public class LobbyHub {
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public SteamUser User { get; set; }
 
         /// <summary>
         /// 
@@ -91,7 +97,7 @@ namespace Battlegrounds.Online.Services {
         public void Connect(Action<bool, Connection> connectionResponse) {
 
             // The connect message
-            Message addUserMessage = new Message(Message_Type.USER_SETUSERDATA, BattlegroundsInstance.LocalSteamuser.Name, BattlegroundsInstance.LocalSteamuser.ID.ToString());
+            Message addUserMessage = new Message(Message_Type.USER_SETUSERDATA, this.User.Name, this.User.ID.ToString());
 
             void OnResponse(Socket socket, Message response) {
                 if (response.Descriptor == Message_Type.CONFIRMATION_MESSAGE) {

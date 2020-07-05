@@ -1,5 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using System.Net;
+using System.Net.Sockets;
 using System.Text;
 
 namespace Battlegrounds.Online {
@@ -26,7 +30,7 @@ namespace Battlegrounds.Online {
 
         LOBBY_KICK, // User was kicked (To players in lobby: *player* was kicked)
 
-        LOBBY_KICKED, // The user was kicked (self was kicked)
+        LOBBY_KICKED, // The user was kicked (Sent to the player who was kicked - to let them know they were kicked)
 
         LOBBY_INFO, // Get lobby info
 
@@ -36,9 +40,13 @@ namespace Battlegrounds.Online {
 
         LOBBY_METAMESSAGE, // Send metamessage
 
-        LOBBY_UPLOAD, // Upload file in lobby
+        LOBBY_SENDFILE, // Send file
 
-        LOBBY_DOWNLOAD, // Download file in lobby
+        LOBBY_REQUEST_COMPANY,
+
+        LOBBY_REQUEST_RESULTS,
+
+        LOBBY_COMPILE,
 
         LOBBY_STARTMATCH, // Tell clients to start match
 
@@ -48,17 +56,21 @@ namespace Battlegrounds.Online {
 
         LOBBY_GETSTATE,
 
-        LOBBY_SETHOST,
+        LOBBY_SETHOST, // Message sent to client that they're now the host.
 
         USER_SETUSERDATA, // Set the user data
 
         SERVER_CLOSE, // Close the server
+
+        FILE_CONTENT
 
     }
 
     public sealed class Message {
 
         public const string MESSAGE_INVALID_REQUEST = "Invalid Request";
+
+        public int Identifier;
 
         public Message_Type Descriptor;
 
@@ -69,26 +81,37 @@ namespace Battlegrounds.Online {
 
         public Message() {
             this.Descriptor = Message_Type.ERROR_MESSAGE;
+            this.Identifier = -1;
             this.Argument1 = string.Empty;
             this.Argument2 = string.Empty;
         }
 
         public Message(Message_Type type) {
             this.Descriptor = type;
+            this.Identifier = -1;
             this.Argument1 = string.Empty;
             this.Argument2 = string.Empty;
         }
 
         public Message(Message_Type type, string arg1) {
             this.Descriptor = type;
+            this.Identifier = -1;
             this.Argument1 = arg1;
             this.Argument2 = string.Empty;
         }
 
         public Message(Message_Type type, string arg1, string arg2) {
             this.Descriptor = type;
+            this.Identifier = -1;
             this.Argument1 = arg1;
             this.Argument2 = arg2;
+        }
+
+        public Message CreateResponse(Message_Type type, string arg1 = "", string arg2 = "") {
+            Message message = new Message(type, arg1, arg2) {
+                Identifier = this.Identifier
+            };
+            return message;
         }
 
         public void EncodeStringAsFile(string content)
@@ -99,17 +122,28 @@ namespace Battlegrounds.Online {
             MemoryStream ms = new MemoryStream();
             using (BinaryWriter binaryWriter = new BinaryWriter(ms)) {
 
-                binaryWriter.Write((byte)this.Descriptor);
-
                 byte[] arg1 = Encoding.ASCII.GetBytes(this.Argument1);
+                byte[] arg2 = Encoding.ASCII.GetBytes(this.Argument2);
+
                 int len1 = arg1.Length;
+                int len2 = arg2.Length;
+                int len3 = (FileData == null) ? 0 : FileData.Length + sizeof(Int32);
+
+                int totalSize = len1 + len2 + len3 + ((sizeof(Int32) * 3) + (sizeof(byte) * 3) + sizeof(bool));
+
+                binaryWriter.Write((Int32)totalSize);
+                binaryWriter.Write((byte)this.Descriptor);
+                binaryWriter.Write((Int32)this.Identifier);
+
                 binaryWriter.Write((Int32)len1);
                 binaryWriter.Write(arg1);
 
-                byte[] arg2 = Encoding.ASCII.GetBytes(this.Argument2);
-                int len2 = arg2.Length;
                 binaryWriter.Write((Int32)len2);
                 binaryWriter.Write(arg2);
+
+                if (FileData != null && FileData.Length == 0) {
+                    FileData = null;
+                }
 
                 binaryWriter.Write(FileData != null);
 
@@ -128,27 +162,64 @@ namespace Battlegrounds.Online {
 
         }
 
-        public static Message GetMessage(byte[] bytes) {
+        public static List<Message> GetMessages(byte[] bytes) {
 
-            Message m = new Message();
+            List<Message> messages = new List<Message>();
 
             try {
+
                 using BinaryReader reader = new BinaryReader(new MemoryStream(bytes));
-                m.Descriptor = (Message_Type)reader.ReadByte();
-                m.Argument1 = Encoding.ASCII.GetString(reader.ReadBytes(reader.ReadInt32()));
-                m.Argument2 = Encoding.ASCII.GetString(reader.ReadBytes(reader.ReadInt32()));
-                if (reader.ReadBoolean()) {
-                    m.FileData = reader.ReadBytes(reader.ReadInt32());
+
+                while (reader.BaseStream.Position < reader.BaseStream.Length) {
+
+                    Message m = new Message();
+                    try {
+
+                        int size = reader.ReadInt32();
+
+                        using BinaryReader subReader = new BinaryReader(new MemoryStream(reader.ReadBytes(size)));
+
+                        m.Descriptor = (Message_Type)subReader.ReadByte();
+                        m.Identifier = subReader.ReadInt32();
+                        m.Argument1 = Encoding.ASCII.GetString(subReader.ReadBytes(subReader.ReadInt32()));
+                        m.Argument2 = Encoding.ASCII.GetString(subReader.ReadBytes(subReader.ReadInt32()));
+                        if (subReader.ReadBoolean()) {
+                            m.FileData = subReader.ReadBytes(subReader.ReadInt32());
+                        }
+
+                    } catch {
+                        m.Descriptor = Message_Type.ERROR_MESSAGE;
+                        m.Argument1 = "Failed to read message";
+                    }
+
+                    messages.Add(m);
+
                 }
+
             } catch {
-                m.Descriptor = Message_Type.ERROR_MESSAGE;
-                m.Argument1 = "Failed to read message";
+
             }
 
-            return m;
+            return messages;
 
         }
 
+        public static void SetIdentifier(Socket socket, Message message) {
+            if (message.Identifier != -1) { // ignore if already assigned
+                return;
+            }
+            try {
+                string tosum = (socket.RemoteEndPoint as IPEndPoint).Address.ToString() + DateTime.UtcNow.TimeOfDay.ToString();
+                message.Identifier = Encoding.ASCII.GetBytes(tosum).Aggregate(0, (a, b) => a += b);
+            } catch (Exception e) {
+                Console.WriteLine(e);
+            }
+        }
+
+    }
+
+    public static class MessageListExtension {
+        public static void Invoke(this List<Message> messages, Action<Message> action) => messages.ForEach(x => action(x));
     }
 
 }

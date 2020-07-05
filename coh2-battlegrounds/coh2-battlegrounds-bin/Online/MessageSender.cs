@@ -60,21 +60,24 @@ namespace Battlegrounds.Online {
         /// <param name="socket"></param>
         /// <param name="response"></param>
         public static void WaitForMessage(Socket socket, Action<Socket, Message> response) {
-            byte[] buffer = new byte[1024];
+            byte[] buffer = new byte[2048];
             List<byte> backBuffer = new List<byte>();
             void Received(IAsyncResult result) {
                 int received = socket.EndReceive(result);
                 if (received > 0) {
                     backBuffer.AddRange(buffer[0..received]);
                     if (backBuffer.Count > 2 && backBuffer[^1] == 0x06 && backBuffer[^2] == 0x04) {
-                        response(socket, Message.GetMessage(backBuffer.ToArray()));
-                        backBuffer.Clear();
+                        Message.GetMessages(backBuffer.ToArray()).Invoke(x => response(socket, x));
                     } else {
-                        socket.BeginReceive(buffer, 0, 1024, 0, Received, null);
+                        socket.BeginReceive(buffer, 0, 2048, 0, Received, null);
+                    }
+                } else {
+                    if (backBuffer.Count > 0) {
+                        Console.WriteLine("Backbuffer contains content...");
                     }
                 }
             }
-            socket.BeginReceive(buffer, 0, 1024, 0, Received, null);
+            socket.BeginReceive(buffer, 0, 2048, 0, Received, null);
         }
 
     }

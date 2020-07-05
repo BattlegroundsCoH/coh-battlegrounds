@@ -1,6 +1,8 @@
 ﻿using System;
+using System.IO;
 using System.Linq;
 using System.Threading;
+using Battlegrounds;
 using Battlegrounds.Compiler;
 using Battlegrounds.Game.Battlegrounds;
 using Battlegrounds.Online;
@@ -13,8 +15,9 @@ namespace coh2_battlegrounds_console {
         
         static void Main(string[] args) {
 
-            Battlegrounds.BattlegroundsInstance.LoadInstance();
-            Battlegrounds.BattlegroundsInstance.LocalSteamuser = SteamUser.FromID(76561198003529969UL);
+
+            BattlegroundsInstance.LoadInstance();
+            BattlegroundsInstance.LocalSteamuser = SteamUser.FromID(76561198003529969UL);
 
             // Important this is done
             Battlegrounds.Game.Database.BlueprintManager.CreateDatabase();
@@ -54,14 +57,16 @@ namespace coh2_battlegrounds_console {
 
                 var lobbies = hub.GetConnectableLobbies();
                 if (lobbies.Count == 0) {
+                    hub.User = BattlegroundsInstance.LocalSteamuser;
                     HostTest(hub);
                 } else {
+                    hub.User = SteamUser.FromID(76561198157626935UL);
                     ClientTest(hub, lobbies.First());
                 }
 
             }
 
-            Battlegrounds.BattlegroundsInstance.SaveInstance();
+            BattlegroundsInstance.SaveInstance();
 
             Console.ReadLine();
 
@@ -85,6 +90,11 @@ namespace coh2_battlegrounds_console {
 
         private static void OnMessageLoop(ManagedLobbyStatus status, ManagedLobby result) {
 
+            static void OnCompanyFileReceived(string from, byte[] content) {
+                Console.WriteLine("Received company data");
+                File.WriteAllBytes("hello.json", content);
+            }
+
             if (status.Success) {
 
                 Console.WriteLine("Connection was established!");
@@ -92,9 +102,18 @@ namespace coh2_battlegrounds_console {
                 result.OnPlayerEvent += (a, b, c) => {
                     if (a == ManagedLobbyPlayerEventType.Message) {
                         Console.WriteLine($"{b}: {c}");
+                        Console.WriteLine("Requesting company data");
+                        result.GetCompanyFileFrom(b, OnCompanyFileReceived);
                     } else {
                         string word = (a == ManagedLobbyPlayerEventType.Leave) ? "Left" : (a == ManagedLobbyPlayerEventType.Kicked ? "Was kicked" : "Joined");
                         Console.WriteLine($"{b} {word}");
+                    }
+                };
+
+                result.OnFileRequest += (a, b, c, d) => {
+                    if (c.CompareTo("CompanyData") == 0) {
+                        Console.WriteLine("Received request for company data using identifier " + d);
+                        result.SendFile(b, "test_company.json", d);
                     }
                 };
 

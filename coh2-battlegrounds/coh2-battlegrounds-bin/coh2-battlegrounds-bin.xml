@@ -35,7 +35,7 @@
             
             </summary>
         </member>
-        <member name="F:Battlegrounds.BattlegroundsInstance.BattlegroundHubAddress">
+        <member name="P:Battlegrounds.BattlegroundsInstance.BattlegroundHubAddress">
             <summary>
             
             </summary>
@@ -1827,6 +1827,11 @@
             <param name="socket"></param>
             <param name="startListening"></param>
         </member>
+        <member name="M:Battlegrounds.Online.Connection.Listen">
+            <summary>
+            
+            </summary>
+        </member>
         <member name="M:Battlegrounds.Online.Connection.SendMessage(Battlegrounds.Online.Message)">
             <summary>
             
@@ -1842,6 +1847,27 @@
             <summary>
             
             </summary>
+        </member>
+        <member name="M:Battlegrounds.Online.Connection.SetIdentifierReceiver(System.Int32,System.Action{Battlegrounds.Online.Message})">
+            <summary>
+            
+            </summary>
+            <param name="identifier"></param>
+            <param name="onMessage"></param>
+        </member>
+        <member name="M:Battlegrounds.Online.Connection.ClearIdentifierReceiver(System.Int32)">
+            <summary>
+            
+            </summary>
+            <param name="identifier"></param>
+        </member>
+        <member name="M:Battlegrounds.Online.Connection.SendFile(System.String,System.String,System.Int32)">
+            <summary>
+            
+            </summary>
+            <param name="receiver"></param>
+            <param name="filepath"></param>
+            <param name="identifier"></param>
         </member>
         <member name="T:Battlegrounds.Online.MessageSender">
             <summary>
@@ -1896,6 +1922,11 @@
             Instance of a lobby hub (Free service).
             </summary>
         </member>
+        <member name="P:Battlegrounds.Online.Services.LobbyHub.User">
+            <summary>
+            
+            </summary>
+        </member>
         <member name="M:Battlegrounds.Online.Services.LobbyHub.CanConnect">
             <summary>
             
@@ -1919,12 +1950,32 @@
             
             </summary>
         </member>
+        <member name="F:Battlegrounds.Online.Services.ManagedLobby.SEND_ALL">
+            <summary>
+            
+            </summary>
+        </member>
         <member name="E:Battlegrounds.Online.Services.ManagedLobby.OnPlayerEvent">
             <summary>
             
             </summary>
         </member>
         <member name="E:Battlegrounds.Online.Services.ManagedLobby.OnLocalEvent">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="E:Battlegrounds.Online.Services.ManagedLobby.OnFileRequest">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="E:Battlegrounds.Online.Services.ManagedLobby.OnDataRequest">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="E:Battlegrounds.Online.Services.ManagedLobby.OnFileReceived">
             <summary>
             
             </summary>
@@ -1939,6 +1990,48 @@
             
             </summary>
             <param name="chatMessage"></param>
+        </member>
+        <member name="M:Battlegrounds.Online.Services.ManagedLobby.SendMetaMessage(System.String)">
+            <summary>
+            
+            </summary>
+            <param name="metaMessage"></param>
+        </member>
+        <member name="M:Battlegrounds.Online.Services.ManagedLobby.GetLobbyInformation(System.String,Battlegrounds.Online.Services.ManagedLobbyQueryResponse)">
+            <summary>
+            
+            </summary>
+            <param name="lobbyInformation"></param>
+            <param name="reponse"></param>
+        </member>
+        <member name="M:Battlegrounds.Online.Services.ManagedLobby.SetLobbyInformation(System.String,System.String)">
+            <summary>
+            
+            </summary>
+            <param name="lobbyInformation"></param>
+            <param name="lobbyInformationValue"></param>
+        </member>
+        <member name="M:Battlegrounds.Online.Services.ManagedLobby.SendFile(System.String,System.String)">
+            <summary>
+            
+            </summary>
+            <param name="receiver"></param>
+            <param name="filepath"></param>
+        </member>
+        <member name="M:Battlegrounds.Online.Services.ManagedLobby.SendFile(System.String,System.String,System.Int32)">
+            <summary>
+            
+            </summary>
+            <param name="receiver"></param>
+            <param name="filepath"></param>
+            <param name="identifier"></param>
+        </member>
+        <member name="M:Battlegrounds.Online.Services.ManagedLobby.GetCompanyFileFrom(System.String,Battlegrounds.Online.Services.ManagedLobbyFileReceived)">
+            <summary>
+            
+            </summary>
+            <param name="from"></param>
+            <param name="response"></param>
         </member>
         <member name="M:Battlegrounds.Online.Services.ManagedLobby.Leave">
             <summary>
@@ -1997,6 +2090,11 @@
             
             </summary>
         </member>
+        <member name="F:Battlegrounds.Online.Services.ManagedLobbyPlayerEventType.Meta">
+            <summary>
+            
+            </summary>
+        </member>
         <member name="T:Battlegrounds.Online.Services.ManagedLobbyPlayerEvent">
             <summary>
             
@@ -2027,12 +2125,45 @@
             <param name="type"></param>
             <param name="message"></param>
         </member>
+        <member name="T:Battlegrounds.Online.Services.ManagedLobbyHostEventType">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:Battlegrounds.Online.Services.ManagedLobbyHostEvent">
+            <summary>
+            
+            </summary>
+        </member>
         <member name="T:Battlegrounds.Online.Services.ManagedLobbyConnectCallback">
             <summary>
             
             </summary>
             <param name="status"></param>
             <param name="lobby"></param>
+        </member>
+        <member name="T:Battlegrounds.Online.Services.ManagedLobbyQueryResponse">
+            <summary>
+            
+            </summary>
+            <param name="arg1"></param>
+            <param name="arg2"></param>
+        </member>
+        <member name="T:Battlegrounds.Online.Services.ManagedLobbyQuery">
+            <summary>
+            
+            </summary>
+            <param name="isFileRequest"></param>
+            <param name="asker"></param>
+            <param name="requestData"></param>
+            <param name="identifier"></param>
+        </member>
+        <member name="T:Battlegrounds.Online.Services.ManagedLobbyFileReceived">
+            <summary>
+            
+            </summary>
+            <param name="from"></param>
+            <param name="file"></param>
         </member>
         <member name="T:Battlegrounds.Online.Services.ManagedLobbyStatus">
             <summary>

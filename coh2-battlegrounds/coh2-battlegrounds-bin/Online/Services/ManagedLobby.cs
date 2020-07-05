@@ -10,6 +10,11 @@ namespace Battlegrounds.Online.Services {
     /// </summary>
     public sealed class ManagedLobby {
 
+        /// <summary>
+        /// 
+        /// </summary>
+        public const string SEND_ALL = "ALL";
+
         Connection m_underlyingConnection;
         bool m_isHost;
 
@@ -22,6 +27,21 @@ namespace Battlegrounds.Online.Services {
         /// 
         /// </summary>
         public event ManagedLobbyLocalEvent OnLocalEvent;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public event ManagedLobbyQuery OnFileRequest;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public event ManagedLobbyQuery OnDataRequest;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public event ManagedLobbyFileReceived OnFileReceived;
 
         /// <summary>
         /// 
@@ -53,6 +73,76 @@ namespace Battlegrounds.Online.Services {
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="metaMessage"></param>
+        public void SendMetaMessage(string metaMessage) {
+            if (m_underlyingConnection != null && m_underlyingConnection.IsConnected) {
+                m_underlyingConnection.SendMessage(new Message(Message_Type.LOBBY_METAMESSAGE, metaMessage));
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="lobbyInformation"></param>
+        /// <param name="reponse"></param>
+        public void GetLobbyInformation(string lobbyInformation, ManagedLobbyQueryResponse reponse) {
+
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="lobbyInformation"></param>
+        /// <param name="lobbyInformationValue"></param>
+        public void SetLobbyInformation(string lobbyInformation, string lobbyInformationValue) {
+
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="receiver"></param>
+        /// <param name="filepath"></param>
+        public void SendFile(string receiver, string filepath)
+            => this.SendFile(receiver, filepath, -1);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="receiver"></param>
+        /// <param name="filepath"></param>
+        /// <param name="identifier"></param>
+        public void SendFile(string receiver, string filepath, int identifier) {
+            if (m_underlyingConnection != null && m_underlyingConnection.IsConnected) {
+                m_underlyingConnection.SendFile(receiver, filepath, identifier);
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="from"></param>
+        /// <param name="response"></param>
+        public void GetCompanyFileFrom(string from, ManagedLobbyFileReceived response) {
+            if (m_underlyingConnection != null && m_underlyingConnection.IsConnected) {
+                Message message = new Message(Message_Type.LOBBY_REQUEST_COMPANY, from);
+                Message.SetIdentifier(m_underlyingConnection.ConnectionSocket, message);
+                void OnMessage(Message msg) {
+                    if (msg.Descriptor == Message_Type.LOBBY_SENDFILE) {
+                        Console.WriteLine("Received a file");
+                    } else {
+                        Console.WriteLine("Yo?!");
+                    }
+                }
+                m_underlyingConnection.SetIdentifierReceiver(message.Identifier, OnMessage);
+                m_underlyingConnection.SendMessage(message);
+                Console.WriteLine("Sent 'GetCompanyFileFrom' request with ID " + message.Identifier);
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         public void Leave() {
             if (m_underlyingConnection != null) {
                 m_underlyingConnection.SendMessage(new Message(Message_Type.LOBBY_LEAVE));
@@ -65,6 +155,9 @@ namespace Battlegrounds.Online.Services {
             switch (incomingMessage.Descriptor) {
                 case Message_Type.LOBBY_CHATMESSAGE:
                     this.OnPlayerEvent?.Invoke(ManagedLobbyPlayerEventType.Message, incomingMessage.Argument2, incomingMessage.Argument1);
+                    break;
+                case Message_Type.LOBBY_METAMESSAGE:
+                    this.OnPlayerEvent?.Invoke(ManagedLobbyPlayerEventType.Meta, incomingMessage.Argument2, incomingMessage.Argument1);
                     break;
                 case Message_Type.LOBBY_JOIN:
                     this.OnPlayerEvent?.Invoke(ManagedLobbyPlayerEventType.Join, incomingMessage.Argument1, string.Empty);
@@ -81,7 +174,13 @@ namespace Battlegrounds.Online.Services {
                 case Message_Type.LOBBY_SETHOST:
                     this.OnLocalEvent?.Invoke(ManagedLobbyLocalEventType.HOST, string.Empty);
                     break;
-                default: break;
+                case Message_Type.LOBBY_REQUEST_COMPANY:
+                    this.OnFileRequest?.Invoke(true, incomingMessage.Argument1, "CompanyData", incomingMessage.Identifier);
+                    break;
+                case Message_Type.LOBBY_REQUEST_RESULTS:
+                    this.OnFileRequest?.Invoke(true, incomingMessage.Argument1, "MatchData", incomingMessage.Identifier);
+                    break;
+                default: Console.WriteLine(incomingMessage.Descriptor + ":" + incomingMessage.Identifier); break;
             }
         }
 

@@ -1,13 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Dynamic;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Text;
 using Battlegrounds.Json;
 using Battlegrounds.Steam;
 
 namespace Battlegrounds {
-    
+
     /// <summary>
     /// 
     /// </summary>
@@ -35,7 +37,7 @@ namespace Battlegrounds {
             /// </summary>
             /// <returns></returns>
             public string ToJsonReference() => throw new NotImplementedException();
-            
+
         }
 
         private static InternalInstance __instance;
@@ -51,7 +53,7 @@ namespace Battlegrounds {
         /// <summary>
         /// 
         /// </summary>
-        public const string BattlegroundHubAddress = "194.37.80.249";
+        public static string BattlegroundHubAddress => "194.37.80.249";
 
         /// <summary>
         /// 
