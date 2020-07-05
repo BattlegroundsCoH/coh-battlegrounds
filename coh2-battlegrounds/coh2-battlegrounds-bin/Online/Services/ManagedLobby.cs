@@ -1,7 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Net.Sockets;
 using System.Text;
+using System.Threading.Tasks;
+using Battlegrounds.Compiler;
+using Battlegrounds.Game.Battlegrounds;
+using Battlegrounds.Game.Gameplay;
 
 namespace Battlegrounds.Online.Services {
     
@@ -11,7 +16,7 @@ namespace Battlegrounds.Online.Services {
     public sealed class ManagedLobby {
 
         /// <summary>
-        /// 
+        /// Send a file to all lobby members.
         /// </summary>
         public const string SEND_ALL = "ALL";
 
@@ -31,17 +36,22 @@ namespace Battlegrounds.Online.Services {
         /// <summary>
         /// 
         /// </summary>
-        public event ManagedLobbyQuery OnFileRequest;
-
-        /// <summary>
-        /// 
-        /// </summary>
         public event ManagedLobbyQuery OnDataRequest;
 
         /// <summary>
         /// 
         /// </summary>
         public event ManagedLobbyFileReceived OnFileReceived;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public event Action OnStartMatchReceived;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public event Func<string, object> OnLocalDataRequested;
 
         /// <summary>
         /// 
@@ -53,6 +63,7 @@ namespace Battlegrounds.Online.Services {
             // Assign the underlying connection and start listening for messages
             this.m_underlyingConnection = connection;
             this.m_underlyingConnection.OnMessage += this.ManagedLobbyInternal_MessageReceived;
+            this.m_underlyingConnection.OnFile += x => this.OnFileReceived?.Invoke(x.Argument1, x.FileData != null, x.FileData);
             this.m_underlyingConnection.Start();
 
             // Assign hostship
@@ -86,7 +97,16 @@ namespace Battlegrounds.Online.Services {
         /// <param name="lobbyInformation"></param>
         /// <param name="reponse"></param>
         public void GetLobbyInformation(string lobbyInformation, ManagedLobbyQueryResponse reponse) {
-
+            if (m_underlyingConnection != null && m_underlyingConnection.IsConnected) {
+                Message queryMessage = new Message(Message_Type.LOBBY_INFO, lobbyInformation);
+                Message.SetIdentifier(m_underlyingConnection.ConnectionSocket, queryMessage);
+                void OnResponse(Message message) {
+                    m_underlyingConnection.ClearIdentifierReceiver(message.Identifier);
+                    reponse?.Invoke(message.Argument1, message.Argument2);
+                }
+                m_underlyingConnection.SetIdentifierReceiver(queryMessage.Identifier, OnResponse);
+                m_underlyingConnection.SendMessage(queryMessage);
+            }
         }
 
         /// <summary>
@@ -95,7 +115,11 @@ namespace Battlegrounds.Online.Services {
         /// <param name="lobbyInformation"></param>
         /// <param name="lobbyInformationValue"></param>
         public void SetLobbyInformation(string lobbyInformation, string lobbyInformationValue) {
-
+            if (m_isHost) {
+                if (m_underlyingConnection != null && m_underlyingConnection.IsConnected) {
+                    m_underlyingConnection.SendMessage(new Message(Message_Type.LOBBY_UPDATE, lobbyInformation, lobbyInformationValue));
+                }
+            }
         }
 
         /// <summary>
@@ -103,7 +127,7 @@ namespace Battlegrounds.Online.Services {
         /// </summary>
         /// <param name="receiver"></param>
         /// <param name="filepath"></param>
-        public void SendFile(string receiver, string filepath)
+        public int SendFile(string receiver, string filepath)
             => this.SendFile(receiver, filepath, -1);
 
         /// <summary>
@@ -112,9 +136,11 @@ namespace Battlegrounds.Online.Services {
         /// <param name="receiver"></param>
         /// <param name="filepath"></param>
         /// <param name="identifier"></param>
-        public void SendFile(string receiver, string filepath, int identifier) {
+        public int SendFile(string receiver, string filepath, int identifier) {
             if (m_underlyingConnection != null && m_underlyingConnection.IsConnected) {
-                m_underlyingConnection.SendFile(receiver, filepath, identifier);
+                return m_underlyingConnection.SendFile(receiver, filepath, identifier);
+            } else {
+                return -1;
             }
         }
 
@@ -130,13 +156,15 @@ namespace Battlegrounds.Online.Services {
                 void OnMessage(Message msg) {
                     if (msg.Descriptor == Message_Type.LOBBY_SENDFILE) {
                         response?.Invoke(from, true, msg.FileData);
+                        if (from.CompareTo(SEND_ALL) != 0) {
+                            m_underlyingConnection.ClearIdentifierReceiver(msg.Identifier);
+                        }
                     } else {
                         response?.Invoke(from, false, null);
                     }
                 }
                 m_underlyingConnection.SetIdentifierReceiver(message.Identifier, OnMessage);
                 m_underlyingConnection.SendMessage(message);
-                Console.WriteLine("Sent 'GetCompanyFileFrom' request with ID " + message.Identifier);
             }
         }
 
@@ -149,6 +177,147 @@ namespace Battlegrounds.Online.Services {
                 m_underlyingConnection.Stop();
                 m_underlyingConnection = null;
             }
+        }
+
+        private Company GetLocalCompany() {
+            try {
+                object val = this.OnLocalDataRequested?.Invoke("CompanyData");
+                if (val is Company c) {
+                    return c;
+                } else if (val is string s) {
+                    return Company.ReadCompanyFromFile(s);
+                }
+            } catch {}
+            return null;
+        }
+
+        private async Task<(List<Company>, bool)> GetLobbyCompanies() {
+
+            int expected = 1;
+            DateTime start = DateTime.Now;
+            List<byte[]> companyFiles = new List<byte[]>();
+
+            void OnCompanyFileReceived(string from, bool wasReceived, byte[] filedata) {
+                if (wasReceived) {
+                    companyFiles.Add(filedata);
+                }
+            }
+
+            this.GetCompanyFileFrom(SEND_ALL, OnCompanyFileReceived);
+
+            while (companyFiles.Count != expected && (DateTime.Now - start).Minutes < 5) {
+                await Task.Yield();
+            }
+
+            if ((DateTime.Now - start).Minutes >= 5) {
+                return (null, false);
+            }
+
+            List<Company> companies = new List<Company>();
+
+            foreach (byte[] companyData in companyFiles) {
+                try {
+                    companies.Add(Company.ReadCompanyFromBytes(companyData));
+                } catch {
+                    return (null, false);
+                }
+            }
+
+            return (companies, true);
+
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="operationCancelled"></param>
+        public async void CompileAndStartMatch(Action<string> operationCancelled) {
+
+            Company ownCompany = GetLocalCompany();
+            if (ownCompany == null) {
+                operationCancelled?.Invoke("Failed to load own company!");
+                return;
+            }
+
+            (List<Company> lobbyCompanies, bool success) = await GetLobbyCompanies();
+
+            if (success) {
+
+                lobbyCompanies.Add(ownCompany);
+
+                Company[] companies = lobbyCompanies.ToArray();
+
+                Session session = null;
+
+                try {
+
+                    session = Session.CreateSession(
+                        this.OnLocalDataRequested?.Invoke("Scenario") as string ?? string.Empty,
+                        companies,
+                        this.OnLocalDataRequested?.Invoke("Gamemode") as Wincondition ?? null,
+                        (bool?)this.OnLocalDataRequested?.Invoke("EnableAI") ?? false);
+
+                } catch (Exception e) {
+                    operationCancelled?.Invoke(e.Message);
+                }
+
+                // Play the session
+                SessionManager.PlaySession<SessionCompiler<CompanyCompiler>, CompanyCompiler>(
+                    session,
+                    this.ManagedLobbyInternal_GameSessionStatusChanged,
+                    this.ManagedLobbyInternal_GameMatchAnalyzed,
+                    async () => {
+                        return await this.ManagedLobbyInternal_GameOnGamemodeCompiled(lobbyCompanies.Count, operationCancelled);
+                    });
+
+            } else {
+                operationCancelled?.Invoke("Failed to get lobby companies");
+            }
+
+        }
+
+        async Task<bool> ManagedLobbyInternal_GameOnGamemodeCompiled(int expected, Action<string> operationCancelled) {
+
+            string sgapath = $"{Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)}\\my games\\Company of Heroes 2\\mods\\gamemode\\coh2_battlegrounds_wincondition.sga";
+
+            if (File.Exists(sgapath)) {
+
+                int confirmations = 0;
+
+                // Send the message
+                int confirmIdentifier = this.SendFile(SEND_ALL, sgapath);
+                this.m_underlyingConnection.SetIdentifierReceiver(confirmIdentifier, x => {
+                    if (x.Descriptor == Message_Type.CONFIRMATION_MESSAGE) {
+                        confirmations++;
+                    } else {
+                        operationCancelled?.Invoke("Failed to send .sga to one or more players!"); // TODO: Resend protocol
+                    }
+                });
+
+                // Yield as long as we've not confirmed all cases.
+                while (confirmations < expected) {
+                    await Task.Yield();
+                }
+
+                // Send the start match...
+                this.m_underlyingConnection.SendMessage(new Message(Message_Type.LOBBY_STARTMATCH));
+
+                return true;
+
+            } else {
+                operationCancelled?.Invoke("Failed to compile!");
+            }
+
+            return false;
+
+        }
+
+        void ManagedLobbyInternal_GameSessionStatusChanged(SessionStatus status, Session s) {
+            // TODO: Implement
+        }
+
+        void ManagedLobbyInternal_GameMatchAnalyzed(GameMatch results) {
+            // TODO: Sync
         }
 
         private void ManagedLobbyInternal_MessageReceived(Message incomingMessage) {
@@ -175,10 +344,16 @@ namespace Battlegrounds.Online.Services {
                     this.OnLocalEvent?.Invoke(ManagedLobbyLocalEventType.HOST, string.Empty);
                     break;
                 case Message_Type.LOBBY_REQUEST_COMPANY:
-                    this.OnFileRequest?.Invoke(true, incomingMessage.Argument1, "CompanyData", incomingMessage.Identifier);
+                    this.OnDataRequest?.Invoke(true, incomingMessage.Argument1, "CompanyData", incomingMessage.Identifier);
                     break;
                 case Message_Type.LOBBY_REQUEST_RESULTS:
-                    this.OnFileRequest?.Invoke(true, incomingMessage.Argument1, "MatchData", incomingMessage.Identifier);
+                    this.OnDataRequest?.Invoke(true, incomingMessage.Argument1, "MatchData", incomingMessage.Identifier);
+                    break;
+                case Message_Type.LOBBY_STARTMATCH:
+                    this.OnStartMatchReceived?.Invoke();
+                    break;
+                case Message_Type.LOBBY_SENDFILE:
+
                     break;
                 default: Console.WriteLine(incomingMessage.Descriptor + ":" + incomingMessage.Identifier); break;
             }

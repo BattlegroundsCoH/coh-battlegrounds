@@ -90,7 +90,13 @@ namespace Battlegrounds.Game.Battlegrounds {
         /// <param name="session">The <see cref="Session"/> instance to play and analyze.</param>
         /// <param name="statusChangedCallback">Callback for whenever the status of the play session has changed</param>
         /// <param name="matchAnalyzedCallback">Callback called only when the match has been played and analyzed</param>
-        public static async void PlaySession<TSessionCompilerType, TCompanyCompilerType>(Session session, Action<SessionStatus, Session> statusChangedCallback, Action<GameMatch> matchAnalyzedCallback)
+        /// <param name="matchCompileAndWait"></param>
+        public static async void PlaySession<TSessionCompilerType, TCompanyCompilerType>(
+            Session session, 
+            Action<SessionStatus, Session> statusChangedCallback, 
+            Action<GameMatch> matchAnalyzedCallback,
+            Func<Task<bool>> matchCompileAndWait
+            )
             where TSessionCompilerType : SessionCompiler<TCompanyCompilerType>
             where TCompanyCompilerType : CompanyCompiler {
 
@@ -113,11 +119,17 @@ namespace Battlegrounds.Game.Battlegrounds {
             UpdateStatus(SessionStatus.S_Compiling, statusChangedCallback);
 
             // Play session
-            await Task.Run(() => {
+            await Task.Run(async () => {
 
                 // Compile
                 if (!CompileSession<TSessionCompilerType, TCompanyCompilerType>()) {
                     UpdateStatus(SessionStatus.S_FailedCompile, statusChangedCallback);
+                    return;
+                }
+
+                // Wait for compile done
+                if (!(await matchCompileAndWait())) {
+                    UpdateStatus(SessionStatus.S_GameNotLaunched, statusChangedCallback);
                     return;
                 }
 

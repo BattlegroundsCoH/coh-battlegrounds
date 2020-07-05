@@ -9,6 +9,7 @@ using Battlegrounds.Json;
 using Battlegrounds.Game.Gameplay;
 using Battlegrounds.Steam;
 using Battlegrounds.Verification;
+using System.Text;
 
 namespace Battlegrounds.Game.Battlegrounds {
 
@@ -225,6 +226,24 @@ namespace Battlegrounds.Game.Battlegrounds {
                 return null;
             }
 
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="jsonbytes"></param>
+        /// <returns></returns>
+        public static Company ReadCompanyFromBytes(byte[] jsonbytes) {
+            Company company = JsonParser.ParseString<Company>(Encoding.ASCII.GetString(jsonbytes));
+            if (company.VerifyChecksum()) {
+                return company;
+            } else {
+#if RELEASE
+                throw new ChecksumViolationException();
+#else
+                return null;
+#endif
+            }
         }
 
     }

@@ -342,6 +342,13 @@
             <param name="jsonfilepath"></param>
             <returns></returns>
         </member>
+        <member name="M:Battlegrounds.Game.Battlegrounds.Company.ReadCompanyFromBytes(System.Byte[])">
+            <summary>
+            
+            </summary>
+            <param name="jsonbytes"></param>
+            <returns></returns>
+        </member>
         <member name="T:Battlegrounds.Game.Battlegrounds.GameMatch">
             <summary>
             Representation of a match wherein the results of the match can be evaluated and verified within the <see cref="T:Battlegrounds.Game.Battlegrounds.Session"/> the match was played.
@@ -584,7 +591,7 @@
             The current status of the <see cref="T:Battlegrounds.Game.Battlegrounds.SessionManager"/>.
             </summary>
         </member>
-        <member name="M:Battlegrounds.Game.Battlegrounds.SessionManager.PlaySession``2(Battlegrounds.Game.Battlegrounds.Session,System.Action{Battlegrounds.Game.Battlegrounds.SessionStatus,Battlegrounds.Game.Battlegrounds.Session},System.Action{Battlegrounds.Game.Battlegrounds.GameMatch})">
+        <member name="M:Battlegrounds.Game.Battlegrounds.SessionManager.PlaySession``2(Battlegrounds.Game.Battlegrounds.Session,System.Action{Battlegrounds.Game.Battlegrounds.SessionStatus,Battlegrounds.Game.Battlegrounds.Session},System.Action{Battlegrounds.Game.Battlegrounds.GameMatch},System.Func{System.Threading.Tasks.Task{System.Boolean}})">
             <summary>
             Plays a <see cref="T:Battlegrounds.Game.Battlegrounds.Session"/> in a controlled flow of execution wherein callbacks are used to report on the status of the <see cref="T:Battlegrounds.Game.Battlegrounds.Session"/>. Once done, a <see cref="T:Battlegrounds.Game.Battlegrounds.GameMatch"/> instance can be retrieved to see match results.
             </summary>
@@ -593,6 +600,7 @@
             <param name="session">The <see cref="T:Battlegrounds.Game.Battlegrounds.Session"/> instance to play and analyze.</param>
             <param name="statusChangedCallback">Callback for whenever the status of the play session has changed</param>
             <param name="matchAnalyzedCallback">Callback called only when the match has been played and analyzed</param>
+            <param name="matchCompileAndWait"></param>
         </member>
         <member name="T:Battlegrounds.Game.CoH2Launcher">
             <summary>
@@ -1575,12 +1583,27 @@
             <param name="jsonfile">The path of the Json file to open and parse.</param>
             <returns>The default value if parsing failed. Otherwise the object that was expected.</returns>
         </member>
+        <member name="M:Battlegrounds.Json.JsonParser.ParseString``1(System.String)">
+            <summary>
+            Parse a json string (Will only parse it - may parse syntactically incorrect json!) and extract the top-level item.
+            </summary>
+            <typeparam name="T">The object type to retrieve from the file. Implements <see cref="T:Battlegrounds.Json.IJsonObject"/>.</typeparam>
+            <param name="jsoncontent">The json string parse and interpret.</param>
+            <returns>The default value if parsing failed. Otherwise the object that was expected.</returns>
+        </member>
         <member name="M:Battlegrounds.Json.JsonParser.Parse(System.String)">
             <summary>
             Parse a json file (Will only parse it - may parse syntactically incorrect json files!)
             </summary>
             <param name="jsonfile">The path of the Json file to open and parse.</param>
             <returns>A <see cref="T:System.Collections.Generic.List`1"/> containing all top-level elements in the json file.</returns>
+        </member>
+        <member name="M:Battlegrounds.Json.JsonParser.ParseString(System.String)">
+            <summary>
+            Parse a json string (Will only parse it - may parse syntactically incorrect json!)
+            </summary>
+            <param name="jsonstring">The Json string to parse and interpret.</param>
+            <returns>A <see cref="T:System.Collections.Generic.List`1"/> containing all top-level elements in the json string.</returns>
         </member>
         <member name="T:Battlegrounds.Json.JsonReferenceAttribute">
             <summary>
@@ -1901,34 +1924,7 @@
             <exception cref="T:System.IO.FileNotFoundException"/>
             <exception cref="T:System.NotSupportedException"/>
             <exception cref="T:System.Security.SecurityException"/>
-        </member>
-        <member name="T:Battlegrounds.Online.MessageSender">
-            <summary>
-            
-            </summary>
-        </member>
-        <member name="M:Battlegrounds.Online.MessageSender.SendMessage(System.Net.IPEndPoint,Battlegrounds.Online.Message,System.Action{System.Net.Sockets.Socket,Battlegrounds.Online.Message})">
-            <summary>
-            
-            </summary>
-            <param name="endpoint"></param>
-            <param name="message"></param>
-            <param name="response"></param>
-        </member>
-        <member name="M:Battlegrounds.Online.MessageSender.SendMessage(System.Net.Sockets.Socket,Battlegrounds.Online.Message,System.Action{System.Net.Sockets.Socket,Battlegrounds.Online.Message})">
-            <summary>
-            
-            </summary>
-            <param name="socket"></param>
-            <param name="message"></param>
-            <param name="response"></param>
-        </member>
-        <member name="M:Battlegrounds.Online.MessageSender.WaitForMessage(System.Net.Sockets.Socket,System.Action{System.Net.Sockets.Socket,Battlegrounds.Online.Message})">
-            <summary>
-            
-            </summary>
-            <param name="socket"></param>
-            <param name="response"></param>
+            <returns>The identifier used to send the file.</returns>
         </member>
         <member name="T:Battlegrounds.Online.Services.ConnectableLobby">
             <summary>
@@ -1985,7 +1981,7 @@
         </member>
         <member name="F:Battlegrounds.Online.Services.ManagedLobby.SEND_ALL">
             <summary>
-            
+            Send a file to all lobby members.
             </summary>
         </member>
         <member name="E:Battlegrounds.Online.Services.ManagedLobby.OnPlayerEvent">
@@ -1998,17 +1994,22 @@
             
             </summary>
         </member>
-        <member name="E:Battlegrounds.Online.Services.ManagedLobby.OnFileRequest">
-            <summary>
-            
-            </summary>
-        </member>
         <member name="E:Battlegrounds.Online.Services.ManagedLobby.OnDataRequest">
             <summary>
             
             </summary>
         </member>
         <member name="E:Battlegrounds.Online.Services.ManagedLobby.OnFileReceived">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="E:Battlegrounds.Online.Services.ManagedLobby.OnStartMatchReceived">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="E:Battlegrounds.Online.Services.ManagedLobby.OnLocalDataRequested">
             <summary>
             
             </summary>
@@ -2070,6 +2071,12 @@
             <summary>
             
             </summary>
+        </member>
+        <member name="M:Battlegrounds.Online.Services.ManagedLobby.CompileAndStartMatch(System.Action{System.String})">
+            <summary>
+            
+            </summary>
+            <param name="operationCancelled"></param>
         </member>
         <member name="M:Battlegrounds.Online.Services.ManagedLobby.Host(Battlegrounds.Online.Services.LobbyHub,System.String,System.String,Battlegrounds.Online.Services.ManagedLobbyConnectCallback)">
             <summary>

@@ -207,7 +207,8 @@ namespace Battlegrounds.Online {
         /// <exception cref="FileNotFoundException"/>
         /// <exception cref="NotSupportedException"/>
         /// <exception cref="System.Security.SecurityException"/>
-        public void SendFile(string arg2, string filepath, int identifier = -1) {
+        /// <returns>The identifier used to send the file.</returns>
+        public int SendFile(string arg2, string filepath, int identifier = -1) {
 
             long len = new FileInfo(filepath).Length;
             if (len >= 64000000) {
@@ -221,6 +222,9 @@ namespace Battlegrounds.Online {
             Message.SetIdentifier(this.m_socket, message);
 
             this.m_messageQueue.Enqueue(message);
+
+            // Return the identifier
+            return message.Identifier;
 
         }
 

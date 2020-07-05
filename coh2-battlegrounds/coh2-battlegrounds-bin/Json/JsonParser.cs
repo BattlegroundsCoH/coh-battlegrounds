@@ -32,25 +32,52 @@ namespace Battlegrounds.Json {
         }
 
         /// <summary>
+        /// Parse a json string (Will only parse it - may parse syntactically incorrect json!) and extract the top-level item.
+        /// </summary>
+        /// <typeparam name="T">The object type to retrieve from the file. Implements <see cref="IJsonObject"/>.</typeparam>
+        /// <param name="jsoncontent">The json string parse and interpret.</param>
+        /// <returns>The default value if parsing failed. Otherwise the object that was expected.</returns>
+        public static T ParseString<T>(string jsoncontent) where T : IJsonObject {
+            List<IJsonElement> topElements = ParseString(jsoncontent);
+            if (topElements.Count == 1) {
+                return (T)(topElements[0] as IJsonObject);
+            } else {
+                return default;
+            }
+        }
+
+        /// <summary>
         /// Parse a json file (Will only parse it - may parse syntactically incorrect json files!)
         /// </summary>
         /// <param name="jsonfile">The path of the Json file to open and parse.</param>
         /// <returns>A <see cref="List{IJsonElement}"/> containing all top-level elements in the json file.</returns>
         public static List<IJsonElement> Parse(string jsonfile) {
 
-            List<IJsonElement> objs = new List<IJsonElement>();
-
             if (!File.Exists(jsonfile)) {
-                return objs;
+                return new List<IJsonElement>();
             }
 
             // All contents
             string contents = File.ReadAllText(jsonfile);
 
-            int i = 0;
-            while(i < contents.Length) {
+            // Parse the string
+            return ParseString(contents);
 
-                ParseNext(ref i, contents, out object result);
+        }
+
+        /// <summary>
+        /// Parse a json string (Will only parse it - may parse syntactically incorrect json!)
+        /// </summary>
+        /// <param name="jsonstring">The Json string to parse and interpret.</param>
+        /// <returns>A <see cref="List{IJsonElement}"/> containing all top-level elements in the json string.</returns>
+        public static List<IJsonElement> ParseString(string jsonstring) {
+
+            List<IJsonElement> objs = new List<IJsonElement>();
+
+            int i = 0;
+            while (i < jsonstring.Length) {
+
+                ParseNext(ref i, jsonstring, out object result);
 
                 if (result is IJsonElement jsle) {
                     objs.Add(jsle);

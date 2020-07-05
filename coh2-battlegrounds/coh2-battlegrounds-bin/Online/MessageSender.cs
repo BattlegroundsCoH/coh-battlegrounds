@@ -2,22 +2,12 @@
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
-using System.Text;
 
 namespace Battlegrounds.Online {
     
-    /// <summary>
-    /// 
-    /// </summary>
-    public static class MessageSender {
-    
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="endpoint"></param>
-        /// <param name="message"></param>
-        /// <param name="response"></param>
-        public static void SendMessage(IPEndPoint endpoint, Message message, Action<Socket, Message> response) {
+    internal static class MessageSender {
+
+        internal static void SendMessage(IPEndPoint endpoint, Message message, Action<Socket, Message> response) {
 
             Socket sender = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
 
@@ -35,13 +25,7 @@ namespace Battlegrounds.Online {
 
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="socket"></param>
-        /// <param name="message"></param>
-        /// <param name="response"></param>
-        public static void SendMessage(Socket socket, Message message, Action<Socket, Message> response) {
+        internal static void SendMessage(Socket socket, Message message, Action<Socket, Message> response) {
 
             try {
 
@@ -54,30 +38,29 @@ namespace Battlegrounds.Online {
 
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="socket"></param>
-        /// <param name="response"></param>
-        public static void WaitForMessage(Socket socket, Action<Socket, Message> response) {
-            byte[] buffer = new byte[2048];
-            List<byte> backBuffer = new List<byte>();
-            void Received(IAsyncResult result) {
-                int received = socket.EndReceive(result);
-                if (received > 0) {
-                    backBuffer.AddRange(buffer[0..received]);
-                    if (backBuffer.Count > 2 && backBuffer[^1] == 0x06 && backBuffer[^2] == 0x04) {
-                        Message.GetMessages(backBuffer.ToArray()).Invoke(x => response(socket, x));
-                    } else {
-                        socket.BeginReceive(buffer, 0, 2048, 0, Received, null);
-                    }
-                } else {
-                    if (backBuffer.Count > 0) {
-                        Console.WriteLine("Backbuffer contains content...");
-                    }
+        internal static void WaitForMessage(Socket socket, Action<Socket, Message> response) {
+            try {
+                byte[] buffer = new byte[2048];
+                List<byte> backBuffer = new List<byte>();
+                void Received(IAsyncResult result) {
+                    try {
+                        int received = socket.EndReceive(result);
+                        if (received > 0) {
+                            backBuffer.AddRange(buffer[0..received]);
+                            if (backBuffer.Count > 2 && backBuffer[^1] == 0x06 && backBuffer[^2] == 0x04) {
+                                Message.GetMessages(backBuffer.ToArray()).Invoke(x => response(socket, x));
+                            } else {
+                                socket.BeginReceive(buffer, 0, 2048, 0, Received, null);
+                            }
+                        } else {
+                            if (backBuffer.Count > 0) {
+                                Console.WriteLine("Backbuffer contains content...");
+                            }
+                        }
+                    } catch { }
                 }
-            }
-            socket.BeginReceive(buffer, 0, 2048, 0, Received, null);
+                socket.BeginReceive(buffer, 0, 2048, 0, Received, null);
+            } catch { }
         }
 
     }
