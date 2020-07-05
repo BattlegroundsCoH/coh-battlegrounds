@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using Battlegrounds.Json;
 using Battlegrounds.Modding;
 
 namespace Battlegrounds.Game.Gameplay {
@@ -8,7 +9,7 @@ namespace Battlegrounds.Game.Gameplay {
     /// <summary>
     /// 
     /// </summary>
-    public sealed class Wincondition : IWinconditionMod {
+    public sealed class Wincondition : IWinconditionMod, IJsonObject {
     
         /// <summary>
         /// 
@@ -18,7 +19,9 @@ namespace Battlegrounds.Game.Gameplay {
         /// <summary>
         /// 
         /// </summary>
-        public Guid Guid => throw new NotImplementedException();
+        public Guid Guid => Guid.NewGuid(); // TODO: Actually implement...
+
+        public string ToJsonReference() => this.Guid.ToString();
 
     }
 

@@ -1,0 +1,30 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<BurnInfoRoot xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<BurnInfo>
+		<BurnInfo>
+			<FileName>E:\coh2_battlegrounds\coh2-battlegrounds-mod\asset_mod\locale\english\english.ucs</FileName>
+			<FileHash>f3b25701fe362ec84616a93a45ce9998</FileHash>
+		</BurnInfo>
+		<BurnInfo>
+			<FileName>E:\coh2_battlegrounds\coh2-battlegrounds-mod\asset_mod\coh2_battlegrounds_asset Intermediate Cache\Intermediate Files\info\f0c3cb74008447268cad2804e3b9d565.info</FileName>
+			<FileHash>1beea61431a8c6ff47730496df9b1767</FileHash>
+		</BurnInfo>
+	</BurnInfo>
+	<BurnInfoExtendedInfo>
+		<BurnInfoExtendedInfo>
+			<FileName>E:\coh2_battlegrounds\coh2-battlegrounds-mod\asset_mod\coh2_battlegrounds_asset Intermediate Cache\Intermediate Files\info\coh2_battlegrounds_asset_preview.dds</FileName>
+			<FileInfo>
+				<Inputs>
+					<BurnInfo>
+						<FileName>E:\coh2_battlegrounds\coh2-battlegrounds-mod\asset_mod\coh2_battlegrounds_asset_preview.tga</FileName>
+						<FileHash>16fdcb16eca1a04536e669fb029a60ed</FileHash>
+					</BurnInfo>
+				</Inputs>
+				<Outputs>
+					<string>E:\coh2_battlegrounds\coh2-battlegrounds-mod\asset_mod\coh2_battlegrounds_asset Intermediate Cache\Intermediate Files\info\coh2_battlegrounds_asset_preview.dds</string>
+				</Outputs>
+				<HashCode>-1286723142</HashCode>
+			</FileInfo>
+		</BurnInfoExtendedInfo>
+	</BurnInfoExtendedInfo>
+</BurnInfoRoot>

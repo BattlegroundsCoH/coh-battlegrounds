@@ -1,0 +1,6 @@
+hidden = false
+name = "Battlegrounds"
+description = "Some dope description"
+dependencies = 
+{
+}

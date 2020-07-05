@@ -1,0 +1,13 @@
+[
+    {
+        "jsdbtype" : "Battlegrounds.Game.Database.Scenario",
+        "Name": "",
+        "Description": "",
+        "RelativeFilename": "",
+        "MaxPlayers": "0",
+        "Theatre": "EasternFront",
+        "IsWintermap": "False",
+        "Gamemodes": [
+        ]
+    }
+]

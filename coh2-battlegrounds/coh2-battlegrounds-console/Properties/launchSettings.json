@@ -1,8 +1,7 @@
 {
   "profiles": {
     "coh2-battlegrounds-console": {
-      "commandName": "Project",
-      "commandLineArgs": "-local"
+      "commandName": "Project"
     }
   }
 }

@@ -1,0 +1,38 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<BurnInfoRoot xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<BurnInfo>
+		<BurnInfo>
+			<FileName>E:\coh2_battlegrounds\coh2-battlegrounds-mod\tuning_mod\coh2_battlegrounds_tuning_attributes.xml</FileName>
+			<FileHash>ec27d8efe41e513c5e0c3d4db191ec79</FileHash>
+		</BurnInfo>
+		<BurnInfo>
+			<FileName>E:\coh2_battlegrounds\coh2-battlegrounds-mod\tuning_mod\instances\abilities\battlegrounds_generic\bg_withdraw_unit.xml</FileName>
+			<FileHash>4a0b41de2c3cdabfca781f6dd45544e2</FileHash>
+		</BurnInfo>
+		<BurnInfo>
+			<FileName>E:\coh2_battlegrounds\coh2-battlegrounds-mod\tuning_mod\locale\english\english.ucs</FileName>
+			<FileHash>f3b25701fe362ec84616a93a45ce9998</FileHash>
+		</BurnInfo>
+		<BurnInfo>
+			<FileName>E:\coh2_battlegrounds\coh2-battlegrounds-mod\tuning_mod\coh2_battlegrounds_tuning Intermediate Cache\Intermediate Files\info\142b113740474c82a60b0a428bd553d5.info</FileName>
+			<FileHash>91c55df5b72e789fce7d2d19e4198e4e</FileHash>
+		</BurnInfo>
+	</BurnInfo>
+	<BurnInfoExtendedInfo>
+		<BurnInfoExtendedInfo>
+			<FileName>E:\coh2_battlegrounds\coh2-battlegrounds-mod\tuning_mod\coh2_battlegrounds_tuning Intermediate Cache\Intermediate Files\info\coh2_battlegrounds_tuning_preview.dds</FileName>
+			<FileInfo>
+				<Inputs>
+					<BurnInfo>
+						<FileName>E:\coh2_battlegrounds\coh2-battlegrounds-mod\tuning_mod\coh2_battlegrounds_tuning_preview.tga</FileName>
+						<FileHash>16fdcb16eca1a04536e669fb029a60ed</FileHash>
+					</BurnInfo>
+				</Inputs>
+				<Outputs>
+					<string>E:\coh2_battlegrounds\coh2-battlegrounds-mod\tuning_mod\coh2_battlegrounds_tuning Intermediate Cache\Intermediate Files\info\coh2_battlegrounds_tuning_preview.dds</string>
+				</Outputs>
+				<HashCode>-1286723142</HashCode>
+			</FileInfo>
+		</BurnInfoExtendedInfo>
+	</BurnInfoExtendedInfo>
+</BurnInfoRoot>

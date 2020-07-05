@@ -1,0 +1,13 @@
+Archive name="f0c3cb74008447268cad2804e3b9d565" blocksize="262144"
+TOCStart name="locale" alias="locale" path="" relativeroot="locale"
+	FileSettingsStart defverification="crc_blocks" defcompression="stream_compress"
+	FileSettingsEnd
+	E:\coh2_battlegrounds\coh2-battlegrounds-mod\asset_mod\coh2_battlegrounds_asset Intermediate Cache\Intermediate Files\locale\english\english.ucs
+TOCEnd
+TOCStart name="info" alias="info" path="" relativeroot="info"
+	FileSettingsStart defverification="crc_blocks" defcompression="stream_compress"
+		Override wildcard=".*\.(lua)$" minsize="-1" maxsize="-1" vt="crc_blocks" ct="buffer_compress"
+	FileSettingsEnd
+	E:\coh2_battlegrounds\coh2-battlegrounds-mod\asset_mod\coh2_battlegrounds_asset Intermediate Cache\Intermediate Files\info\f0c3cb74008447268cad2804e3b9d565.info
+	E:\coh2_battlegrounds\coh2-battlegrounds-mod\asset_mod\coh2_battlegrounds_asset Intermediate Cache\Intermediate Files\info\coh2_battlegrounds_asset_preview.dds
+TOCEnd

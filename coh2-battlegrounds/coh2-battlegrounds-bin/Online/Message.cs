@@ -213,12 +213,14 @@ namespace Battlegrounds.Online {
                 return;
             }
             try {
-                string tosum = (socket.RemoteEndPoint as IPEndPoint).Address.ToString() + DateTime.UtcNow.TimeOfDay.ToString();
-                message.Identifier = Encoding.ASCII.GetBytes(tosum).Aggregate(0, (a, b) => a += b);
+                message.Identifier = GetIdentifier(socket);
             } catch (Exception e) {
                 Console.WriteLine(e);
             }
         }
+
+        internal static int GetIdentifier(Socket socket)
+            => Encoding.ASCII.GetBytes((socket.RemoteEndPoint as IPEndPoint).Address.ToString() + DateTime.UtcNow.TimeOfDay.ToString()).Aggregate(0, (a, b) => a += b);
 
     }
 

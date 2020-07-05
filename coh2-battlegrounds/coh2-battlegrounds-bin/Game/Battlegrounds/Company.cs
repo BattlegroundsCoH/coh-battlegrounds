@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.IO;
 using System.Linq;
+using System.Text;
 
 using Battlegrounds.Game.Database;
 using Battlegrounds.Json;
 using Battlegrounds.Game.Gameplay;
 using Battlegrounds.Steam;
 using Battlegrounds.Verification;
-using System.Text;
 
 namespace Battlegrounds.Game.Battlegrounds {
 
@@ -60,7 +60,9 @@ namespace Battlegrounds.Game.Battlegrounds {
         /// New empty <see cref="Company"/> instance. (Do not use).
         /// </summary>
         [Obsolete("Please use the constructor requiring a SteamUser, name, and faction.")]
-        public Company() { }
+        public Company() {
+            this.m_squads = new List<Squad>();
+        }
 
         /// <summary>
         /// New <see cref="Company"/> instance with a <see cref="SteamUser"/> assigned.

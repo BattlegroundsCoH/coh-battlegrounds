@@ -1,0 +1,6 @@
+hidden = false
+name = "Battlegrounds Asset"
+description = "Some other dope description"
+dependencies = 
+{
+}

@@ -43,11 +43,6 @@ namespace Battlegrounds.Game {
         /// <summary>
         /// 
         /// </summary>
-        public Wincondition Gamemode { get; set; }
-
-        /// <summary>
-        /// 
-        /// </summary>
         /// <param name="file"></param>
         /// <param name="name"></param>
         /// <param name="width"></param>
