@@ -5,7 +5,7 @@ winexe
 C#
 .cs
 E:\coh2_battlegrounds\coh2-battlegrounds\coh2-battlegrounds\obj\Debug\netcoreapp3.1\
-coh2_battlegrounds
+BattlegroundsApp
 none
 false
 TRACE;DEBUG;NETCOREAPP;NETCOREAPP3_1
@@ -16,5 +16,5 @@ E:\coh2_battlegrounds\coh2-battlegrounds\coh2-battlegrounds\App.xaml
 193-2102048381
 MainWindow.xaml;
 
-True
+False
 
