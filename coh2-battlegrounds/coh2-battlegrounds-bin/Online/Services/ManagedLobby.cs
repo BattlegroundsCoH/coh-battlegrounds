@@ -314,6 +314,7 @@ namespace Battlegrounds.Online.Services {
 
         void ManagedLobbyInternal_GameSessionStatusChanged(SessionStatus status, Session s) {
             // TODO: Implement
+            Console.WriteLine("Session update: " + status.ToString());
         }
 
         void ManagedLobbyInternal_GameMatchAnalyzed(GameMatch results) {

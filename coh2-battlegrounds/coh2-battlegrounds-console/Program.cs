@@ -14,8 +14,7 @@ namespace coh2_battlegrounds_console {
     class Program {
         
         static void Main(string[] args) {
-
-
+           
             BattlegroundsInstance.LoadInstance();
             BattlegroundsInstance.LocalSteamuser = SteamUser.FromID(76561198003529969UL);
 

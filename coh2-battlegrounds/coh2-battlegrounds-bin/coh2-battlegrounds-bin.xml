@@ -1295,6 +1295,11 @@
             
             </summary>
         </member>
+        <member name="P:Battlegrounds.Game.Gameplay.Wincondition.Guid">
+            <summary>
+            
+            </summary>
+        </member>
         <member name="T:Battlegrounds.Game.GamePosition">
             <summary>
             Represents a world position in the game using X,Y,Z variables
