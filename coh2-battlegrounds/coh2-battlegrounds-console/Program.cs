@@ -90,7 +90,7 @@ namespace coh2_battlegrounds_console {
 
         private static void OnMessageLoop(ManagedLobbyStatus status, ManagedLobby result) {
 
-            static void OnCompanyFileReceived(string from, bool received, byte[] content) {
+            static void OnCompanyFileReceived(string from, string name, bool received, byte[] content) {
                 Console.WriteLine("Received company data");
                 if (received) {
                     File.WriteAllBytes("hello.json", content);

@@ -63,7 +63,7 @@ namespace Battlegrounds.Online.Services {
             // Assign the underlying connection and start listening for messages
             this.m_underlyingConnection = connection;
             this.m_underlyingConnection.OnMessage += this.ManagedLobbyInternal_MessageReceived;
-            this.m_underlyingConnection.OnFile += x => this.OnFileReceived?.Invoke(x.Argument1, x.FileData != null, x.FileData);
+            this.m_underlyingConnection.OnFile += this.ManagedLobbyInternal_FileReceived;
             this.m_underlyingConnection.Start();
 
             // Assign hostship
@@ -155,12 +155,12 @@ namespace Battlegrounds.Online.Services {
                 Message.SetIdentifier(m_underlyingConnection.ConnectionSocket, message);
                 void OnMessage(Message msg) {
                     if (msg.Descriptor == Message_Type.LOBBY_SENDFILE) {
-                        response?.Invoke(from, true, msg.FileData);
+                        response?.Invoke(from, msg.Argument1, true, msg.FileData);
                         if (from.CompareTo(SEND_ALL) != 0) {
                             m_underlyingConnection.ClearIdentifierReceiver(msg.Identifier);
                         }
                     } else {
-                        response?.Invoke(from, false, null);
+                        response?.Invoke(from, null, false, null);
                     }
                 }
                 m_underlyingConnection.SetIdentifierReceiver(message.Identifier, OnMessage);
@@ -197,7 +197,7 @@ namespace Battlegrounds.Online.Services {
             DateTime start = DateTime.Now;
             List<byte[]> companyFiles = new List<byte[]>();
 
-            void OnCompanyFileReceived(string from, bool wasReceived, byte[] filedata) {
+            void OnCompanyFileReceived(string from, string filename, bool wasReceived, byte[] filedata) {
                 if (wasReceived) {
                     companyFiles.Add(filedata);
                 }
@@ -296,7 +296,7 @@ namespace Battlegrounds.Online.Services {
 
                 // Yield as long as we've not confirmed all cases.
                 while (confirmations < expected) {
-                    await Task.Yield();
+                    await Task.Delay(1);
                 }
 
                 // Send the start match...
@@ -356,6 +356,13 @@ namespace Battlegrounds.Online.Services {
 
                     break;
                 default: Console.WriteLine(incomingMessage.Descriptor + ":" + incomingMessage.Identifier); break;
+            }
+        }
+
+        private void ManagedLobbyInternal_FileReceived(Message incomingFileMessage) {
+            this.OnFileReceived?.Invoke(incomingFileMessage.Argument2, incomingFileMessage.Argument1, incomingFileMessage.FileData != null, incomingFileMessage.FileData);
+            if (incomingFileMessage.Argument1.CompareTo("coh2_battlegrounds_wincondition.sga") == 0) {
+                this.m_underlyingConnection.SendMessage(incomingFileMessage.CreateResponse(Message_Type.CONFIRMATION_MESSAGE, incomingFileMessage.Argument2, "Received .sga"));
             }
         }
 

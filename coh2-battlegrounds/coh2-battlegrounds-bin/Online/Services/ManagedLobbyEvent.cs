@@ -90,9 +90,10 @@
     /// <summary>
     /// Event delegate triggered when a file was received (or failed to be received).
     /// </summary>
-    /// <param name="from">The username of the user who sent the file.</param>
+    /// <param name="sender">The username of the user who sent the file.</param>
+    /// <param name="filename">The name of the file that was sent.</param>
     /// <param name="received">Boolean flag describing the 'received' state of the file.</param>
     /// <param name="file">The full byte-file-content that was received. May by null if no file was successfully received.</param>
-    public delegate void ManagedLobbyFileReceived(string from, bool received, byte[] file);
+    public delegate void ManagedLobbyFileReceived(string sender, string filename, bool received, byte[] file);
 
 }

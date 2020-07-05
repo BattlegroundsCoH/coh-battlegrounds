@@ -15,6 +15,7 @@ using System.Text;
 namespace Battlegrounds.Online {
 
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+
     public enum Message_Type : byte {
 
         ERROR_MESSAGE, // Error message
@@ -53,8 +54,6 @@ namespace Battlegrounds.Online {
 
         LOBBY_REQUEST_RESULTS,
 
-        LOBBY_COMPILE,
-
         LOBBY_STARTMATCH, // Tell clients to start match
 
         LOBBY_SYNCMATCH, // Tell clients to sync match
@@ -68,8 +67,6 @@ namespace Battlegrounds.Online {
         USER_SETUSERDATA, // Set the user data
 
         SERVER_CLOSE, // Close the server
-
-        FILE_CONTENT
 
     }
 
