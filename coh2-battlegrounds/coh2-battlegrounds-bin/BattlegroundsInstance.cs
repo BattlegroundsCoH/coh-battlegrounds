@@ -36,7 +36,7 @@ namespace Battlegrounds {
             /// 
             /// </summary>
             /// <returns></returns>
-            public string ToJsonReference() => throw new NotImplementedException();
+            public string ToJsonReference() => throw new NotSupportedException();
 
         }
 

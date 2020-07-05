@@ -1796,78 +1796,111 @@
         </member>
         <member name="T:Battlegrounds.Online.Connection">
             <summary>
-            
+            Represents a server-client connection. Provides abstraction for <see cref="T:System.Net.Sockets.Socket"/> send and receive methods. This class cannot be inherited.
             </summary>
         </member>
         <member name="P:Battlegrounds.Online.Connection.ConnectionSocket">
             <summary>
-            
+            The <see cref="T:System.Net.Sockets.Socket"/> the <see cref="T:Battlegrounds.Online.Connection"/> instance is using.
             </summary>
         </member>
         <member name="P:Battlegrounds.Online.Connection.IsConnected">
             <summary>
-            
+            Flag for connection state.
             </summary>
         </member>
         <member name="E:Battlegrounds.Online.Connection.OnMessage">
             <summary>
-            
+            The event to trigger when a <see cref="T:Battlegrounds.Online.Message"/> has been received.
+            </summary>
+        </member>
+        <member name="E:Battlegrounds.Online.Connection.OnFile">
+            <summary>
+            The event to trigger when a <see cref="T:Battlegrounds.Online.Message"/> with descriptor <see cref="F:Battlegrounds.Online.Message_Type.LOBBY_SENDFILE"/> has been received.
             </summary>
         </member>
         <member name="M:Battlegrounds.Online.Connection.#ctor(System.Net.Sockets.Socket)">
             <summary>
-            
+            Create a new <see cref="T:Battlegrounds.Online.Connection"/> instance for a <see cref="T:System.Net.Sockets.Socket"/>.
             </summary>
-            <param name="socket"></param>
+            <param name="socket">The socket to base <see cref="T:Battlegrounds.Online.Connection"/> on.</param>
+            <exception cref="T:System.ArgumentException"/>
+            <exception cref="T:System.Threading.ThreadStartException"/>
+            <exception cref="T:System.OutOfMemoryException"/>
         </member>
         <member name="M:Battlegrounds.Online.Connection.#ctor(System.Net.Sockets.Socket,System.Boolean)">
             <summary>
-            
+            Create a new <see cref="T:Battlegrounds.Online.Connection"/> instance for a <see cref="T:System.Net.Sockets.Socket"/>. Can start or wait with listening for messages.
             </summary>
-            <param name="socket"></param>
-            <param name="startListening"></param>
+            <param name="socket">The socket to base <see cref="T:Battlegrounds.Online.Connection"/> on.</param>
+            <param name="startListening">Start listening for new messages once instantiated.</param>
+            <exception cref="T:System.ArgumentException"/>
+            <exception cref="T:System.Threading.ThreadStartException"/>
+            <exception cref="T:System.OutOfMemoryException"/>
         </member>
         <member name="M:Battlegrounds.Online.Connection.Listen">
             <summary>
-            
+            Start listening for <see cref="T:Battlegrounds.Online.Message"/> data.
             </summary>
         </member>
         <member name="M:Battlegrounds.Online.Connection.SendMessage(Battlegrounds.Online.Message)">
             <summary>
-            
+            Enqueue a <see cref="T:Battlegrounds.Online.Message"/> to be send as soon as possible.
             </summary>
             <param name="message"></param>
         </member>
         <member name="M:Battlegrounds.Online.Connection.Start">
             <summary>
-            
+            Start listening and sending <see cref="T:Battlegrounds.Online.Message"/> data.
             </summary>
+            <exception cref="T:System.ArgumentException"/>
+            <exception cref="T:System.Threading.ThreadStartException"/>
+            <exception cref="T:System.OutOfMemoryException"/>
         </member>
         <member name="M:Battlegrounds.Online.Connection.Stop">
             <summary>
-            
+            Stop listening for and sending <see cref="T:Battlegrounds.Online.Message"/> data.
             </summary>
+            <exception cref="T:System.PlatformNotSupportedException"/>
+            <exception cref="T:System.Threading.ThreadStartException"/>
+            <exception cref="T:System.Net.Sockets.SocketException"/>
+            <exception cref="T:System.ObjectDisposedException"/>
+            <exception cref="T:System.Security.SecurityException"/>
         </member>
         <member name="M:Battlegrounds.Online.Connection.SetIdentifierReceiver(System.Int32,System.Action{Battlegrounds.Online.Message})">
             <summary>
-            
+            Set intercepting <see cref="T:Battlegrounds.Online.Message"/> identifier callback. When used, messages with identifier will be intercepted and the action invoked.
+            This will bypass the <see cref="E:Battlegrounds.Online.Connection.OnMessage"/> and <see cref="E:Battlegrounds.Online.Connection.OnFile"/> events.
             </summary>
-            <param name="identifier"></param>
-            <param name="onMessage"></param>
+            <param name="identifier">The integer used to identify the message.</param>
+            <param name="onMessage">The callback action to trigger when receiving message with identifier.</param>
+            <exception cref="T:System.ArgumentException"/>
+            <remarks>Remember to use <see cref="M:Battlegrounds.Online.Connection.ClearIdentifierReceiver(System.Int32)"/> when done.</remarks>
         </member>
         <member name="M:Battlegrounds.Online.Connection.ClearIdentifierReceiver(System.Int32)">
             <summary>
-            
+            Clear the callback associated with an identifier.
             </summary>
-            <param name="identifier"></param>
+            <param name="identifier">The identifier callback to remove.</param>
         </member>
         <member name="M:Battlegrounds.Online.Connection.SendFile(System.String,System.String,System.Int32)">
             <summary>
-            
+            Send the contents of a file to another user. The file is sent as a <see cref="T:Battlegrounds.Online.Message"/> with the FileData byte array being the file contents.
             </summary>
-            <param name="receiver"></param>
-            <param name="filepath"></param>
-            <param name="identifier"></param>
+            <remarks>It is not possible to send files larger than 64 MB.</remarks>
+            <param name="arg2">The second string argument in the <see cref="T:Battlegrounds.Online.Message"/>.</param>
+            <param name="filepath">The path of the file to send.</param>
+            <param name="identifier">The optional identifier to attach to the <see cref="T:Battlegrounds.Online.Message"/>.</param>
+            <exception cref="T:System.ArgumentException"/>
+            <exception cref="T:System.ArgumentNullException"/>
+            <exception cref="T:System.ArgumentOutOfRangeException"/>
+            <exception cref="T:System.IO.PathTooLongException"/>
+            <exception cref="T:System.IO.DirectoryNotFoundException"/>
+            <exception cref="T:System.IO.IOException"/>
+            <exception cref="T:System.UnauthorizedAccessException"/>
+            <exception cref="T:System.IO.FileNotFoundException"/>
+            <exception cref="T:System.NotSupportedException"/>
+            <exception cref="T:System.Security.SecurityException"/>
         </member>
         <member name="T:Battlegrounds.Online.MessageSender">
             <summary>
@@ -2065,139 +2098,156 @@
             <param name="password"></param>
             <param name="managedCallback"></param>
         </member>
+        <member name="T:Battlegrounds.Online.Services.ManagedLobbyConnectCallback">
+            <summary>
+            Callback event for handling a connection request to a <see cref="T:Battlegrounds.Online.Services.ManagedLobby"/>.
+            </summary>
+            <param name="status">The status report on the <see cref="T:Battlegrounds.Online.Services.ManagedLobby"/> connection request.</param>
+            <param name="lobby">The managed lobby instance that was created. This may be null depending on the query result.</param>
+        </member>
         <member name="T:Battlegrounds.Online.Services.ManagedLobbyPlayerEventType">
             <summary>
-            
+            Event type triggered by a player event in a <see cref="T:Battlegrounds.Online.Services.ManagedLobby"/>.
             </summary>
         </member>
         <member name="F:Battlegrounds.Online.Services.ManagedLobbyPlayerEventType.Join">
             <summary>
-            
+            A player has joined the lobby.
             </summary>
         </member>
         <member name="F:Battlegrounds.Online.Services.ManagedLobbyPlayerEventType.Leave">
             <summary>
-            
+            A player has voluntarily left the lobby (or unexpectedly lost connection to the server).
             </summary>
         </member>
         <member name="F:Battlegrounds.Online.Services.ManagedLobbyPlayerEventType.Kicked">
             <summary>
-            Sent when a player was kicked
+            P player was kicked from the server by the host.
             </summary>
         </member>
         <member name="F:Battlegrounds.Online.Services.ManagedLobbyPlayerEventType.Message">
             <summary>
-            
+            A message was sent from a player.
             </summary>
         </member>
         <member name="F:Battlegrounds.Online.Services.ManagedLobbyPlayerEventType.Meta">
             <summary>
-            
+            A meta-message (small data) was sent from a player.
             </summary>
         </member>
         <member name="T:Battlegrounds.Online.Services.ManagedLobbyPlayerEvent">
             <summary>
-            
+            Event delegate for handling a <see cref="T:Battlegrounds.Online.Services.ManagedLobby"/> player event.
             </summary>
-            <param name="type"></param>
-            <param name="from"></param>
-            <param name="message"></param>
+            <param name="type">The type of event that triggered the event.</param>
+            <param name="from">The player who triggered the event.</param>
+            <param name="message">The message attached to the event.</param>
         </member>
         <member name="T:Battlegrounds.Online.Services.ManagedLobbyLocalEventType">
             <summary>
-            
+            Event type triggered when a <see cref="T:Battlegrounds.Online.Services.ManagedLobby"/> receives a local-oriented message.
             </summary>
         </member>
         <member name="F:Battlegrounds.Online.Services.ManagedLobbyLocalEventType.HOST">
             <summary>
-            
+            The local client was upgrades to host.
             </summary>
         </member>
         <member name="F:Battlegrounds.Online.Services.ManagedLobbyLocalEventType.KICKED">
             <summary>
-            
+            The local client was kicked from the lobby.
             </summary>
         </member>
         <member name="T:Battlegrounds.Online.Services.ManagedLobbyLocalEvent">
             <summary>
-            
+            Event delegate for handling a <see cref="T:Battlegrounds.Online.Services.ManagedLobby"/> local-targeted event.
             </summary>
-            <param name="type"></param>
-            <param name="message"></param>
-        </member>
-        <member name="T:Battlegrounds.Online.Services.ManagedLobbyHostEventType">
-            <summary>
-            
-            </summary>
-        </member>
-        <member name="T:Battlegrounds.Online.Services.ManagedLobbyHostEvent">
-            <summary>
-            
-            </summary>
-        </member>
-        <member name="T:Battlegrounds.Online.Services.ManagedLobbyConnectCallback">
-            <summary>
-            
-            </summary>
-            <param name="status"></param>
-            <param name="lobby"></param>
+            <param name="type">The type of event that triggered the event.</param>
+            <param name="message">The message attached to the local event.</param>
         </member>
         <member name="T:Battlegrounds.Online.Services.ManagedLobbyQueryResponse">
             <summary>
-            
+            Event delegate for a simple response to a <see cref="T:Battlegrounds.Online.Services.ManagedLobby"/> query.
             </summary>
-            <param name="arg1"></param>
-            <param name="arg2"></param>
+            <param name="arg1">The first argument of the response.</param>
+            <param name="arg2">The second argument of the response. May be empty.</param>
         </member>
         <member name="T:Battlegrounds.Online.Services.ManagedLobbyQuery">
             <summary>
-            
+            Event delegate for queries sent to the local client by a <see cref="T:Battlegrounds.Online.Services.ManagedLobby"/> instance.
             </summary>
-            <param name="isFileRequest"></param>
-            <param name="asker"></param>
-            <param name="requestData"></param>
-            <param name="identifier"></param>
+            <param name="isFileRequest">Boolean flag marking whether it's a file request or an information request.</param>
+            <param name="asker">The username of the user who asked for this information.</param>
+            <param name="requestData">The specific data that was requested.</param>
+            <param name="identifier">The unique response identifier used for this query. To respond to the query, use this identifier when responding.</param>
         </member>
         <member name="T:Battlegrounds.Online.Services.ManagedLobbyFileReceived">
             <summary>
-            
+            Event delegate triggered when a file was received (or failed to be received).
             </summary>
-            <param name="from"></param>
-            <param name="file"></param>
+            <param name="from">The username of the user who sent the file.</param>
+            <param name="received">Boolean flag describing the 'received' state of the file.</param>
+            <param name="file">The full byte-file-content that was received. May by null if no file was successfully received.</param>
         </member>
         <member name="T:Battlegrounds.Online.Services.ManagedLobbyStatus">
             <summary>
-            
+            Represents a status report on a <see cref="T:Battlegrounds.Online.Services.ManagedLobby"/> query.
             </summary>
         </member>
         <member name="P:Battlegrounds.Online.Services.ManagedLobbyStatus.Success">
             <summary>
-            
+            Was query a success.
             </summary>
         </member>
         <member name="P:Battlegrounds.Online.Services.ManagedLobbyStatus.Message">
             <summary>
-            
+            The given message returned by the query.
             </summary>
         </member>
         <member name="M:Battlegrounds.Online.Services.ManagedLobbyStatus.#ctor(System.Boolean)">
             <summary>
-            
+            Create new <see cref="T:Battlegrounds.Online.Services.ManagedLobbyStatus"/> instance with a boolean flag telling the success state of the query.
             </summary>
-            <param name="_s"></param>
+            <param name="_s">The boolean success flag to set.</param>
         </member>
         <member name="M:Battlegrounds.Online.Services.ManagedLobbyStatus.#ctor(System.Boolean,System.String)">
             <summary>
-            
+            Create new <see cref="T:Battlegrounds.Online.Services.ManagedLobbyStatus"/> instance with a boolean flag telling the success state of the query, and the message that was returned.
             </summary>
-            <param name="_s"></param>
-            <param name="_m"></param>
+            <param name="_s">The boolean success flag to set.</param>
+            <param name="_m">The attached message from the query.</param>
         </member>
         <member name="M:Battlegrounds.Online.Services.ManagedLobbyStatus.ToString">
             <summary>
-            
+            Returns a string that represents the current object.
             </summary>
-            <returns></returns>
+            <returns>A string that represents the current object.</returns>
+        </member>
+        <member name="T:Battlegrounds.Online.SocketExtension">
+            <summary>
+            Extension class to <see cref="T:System.Net.Sockets.Socket"/>.
+            </summary>
+        </member>
+        <member name="M:Battlegrounds.Online.SocketExtension.SendAll(System.Net.Sockets.Socket,System.Byte[])">
+            <summary>
+            Send all the byte content in an ordered manner.
+            </summary>
+            <param name="socket">The socket to use when sending the byte content.</param>
+            <param name="content">The byte content to send.</param>
+            <exception cref="T:System.ArgumentNullException"/>
+            <exception cref="T:System.Net.Sockets.SocketException"/>
+            <exception cref="T:System.ObjectDisposedException"/>
+        </member>
+        <member name="M:Battlegrounds.Online.SocketExtension.SendAllAsync(System.Net.Sockets.Socket,System.Byte[])">
+            <summary>
+            Send all the byte content in an ordered and asynchronous manner.
+            </summary>
+            <param name="socket">The socket to use when sending the byte content.</param>
+            <param name="content">The byte content to send.</param>
+            <returns>The total amount of bytes sent or 0 if no bytes were sent.</returns>
+            <exception cref="T:System.ArgumentNullException"/>
+            <exception cref="T:System.Net.Sockets.SocketException"/>
+            <exception cref="T:System.ObjectDisposedException"/>
         </member>
         <member name="T:Battlegrounds.Online.SourceDownloader">
             <summary>

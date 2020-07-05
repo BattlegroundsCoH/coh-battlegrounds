@@ -6,8 +6,15 @@ using System.Net;
 using System.Net.Sockets;
 using System.Text;
 
+/*
+ * This file was copied directly from the serverside.
+ * Do not modify this code.
+ * - CoDiEx
+ */
+
 namespace Battlegrounds.Online {
 
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public enum Message_Type : byte {
 
         ERROR_MESSAGE, // Error message
@@ -223,3 +230,5 @@ namespace Battlegrounds.Online {
     }
 
 }
+
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member

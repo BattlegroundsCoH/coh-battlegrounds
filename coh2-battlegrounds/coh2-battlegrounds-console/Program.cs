@@ -25,7 +25,7 @@ namespace coh2_battlegrounds_console {
             Company company = Company.ReadCompanyFromFile("test_company.json");
 
             // Create a dummy company
-            Company testCompany = new Company(Battlegrounds.BattlegroundsInstance.LocalSteamuser, "26th Rifle Guards Division", Battlegrounds.Game.Gameplay.Faction.Soviet);
+            Company testCompany = new Company(BattlegroundsInstance.LocalSteamuser, "26th Rifle Guards Division", Battlegrounds.Game.Gameplay.Faction.Soviet);
             testCompany.AddSquad("conscript_squad_mp", 0, 0, new string[] { "ppsh-41_sub_machine_gun_upgrade_mp" }, null, false);
             testCompany.AddSquad("conscript_squad_mp", 2, 0, null, null, false);
             testCompany.AddSquad("conscript_squad_mp", 3, 0, new string[] { "ppsh-41_sub_machine_gun_upgrade_mp" }, null, false);
@@ -90,9 +90,11 @@ namespace coh2_battlegrounds_console {
 
         private static void OnMessageLoop(ManagedLobbyStatus status, ManagedLobby result) {
 
-            static void OnCompanyFileReceived(string from, byte[] content) {
+            static void OnCompanyFileReceived(string from, bool received, byte[] content) {
                 Console.WriteLine("Received company data");
-                File.WriteAllBytes("hello.json", content);
+                if (received) {
+                    File.WriteAllBytes("hello.json", content);
+                }
             }
 
             if (status.Success) {

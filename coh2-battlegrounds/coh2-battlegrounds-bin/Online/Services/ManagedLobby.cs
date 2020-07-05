@@ -129,9 +129,9 @@ namespace Battlegrounds.Online.Services {
                 Message.SetIdentifier(m_underlyingConnection.ConnectionSocket, message);
                 void OnMessage(Message msg) {
                     if (msg.Descriptor == Message_Type.LOBBY_SENDFILE) {
-                        Console.WriteLine("Received a file");
+                        response?.Invoke(from, true, msg.FileData);
                     } else {
-                        Console.WriteLine("Yo?!");
+                        response?.Invoke(from, false, null);
                     }
                 }
                 m_underlyingConnection.SetIdentifierReceiver(message.Identifier, OnMessage);
