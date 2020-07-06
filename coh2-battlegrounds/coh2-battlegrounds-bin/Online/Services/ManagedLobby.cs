@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Net.Sockets;
 using System.Threading.Tasks;
+
 using Battlegrounds.Compiler;
+using Battlegrounds.Functional;
 using Battlegrounds.Game.Battlegrounds;
 using Battlegrounds.Game.Gameplay;
 
@@ -21,6 +23,11 @@ namespace Battlegrounds.Online.Services {
 
         Connection m_underlyingConnection;
         bool m_isHost;
+
+        /// <summary>
+        /// The worker <see cref="Connection"/> used to connect to files. This is only available to the DLL.
+        /// </summary>
+        internal Connection WorkerConnection => this.m_underlyingConnection;
 
         /// <summary>
         /// Event triggered when a player-specific event was received.
@@ -45,12 +52,17 @@ namespace Battlegrounds.Online.Services {
         /// <summary>
         /// Event triggered when the host has sent the <see cref="Message_Type.LOBBY_STARTMATCH"/> message.
         /// </summary>
-        public event Action OnStartMatchReceived;
+        public event ManagedLobbyMatchStart OnStartMatchReceived;
+
+        /// <summary>
+        /// Event triggered when the host has updated an information value in the lobby.
+        /// </summary>
+        public event ManagedLobbyInfoChanged OnLobbyInfoChanged;
 
         /// <summary>
         /// Function to solve local data requests. May return requested object or filepath to load object.
         /// </summary>
-        public event Func<string, object> OnLocalDataRequested;
+        public event ManagedLobbyLocalDataRequest OnLocalDataRequested;
 
         /// <summary>
         /// Is the instance of <see cref="ManagedLobby"/> considered to be the host of the lobby.
@@ -88,6 +100,54 @@ namespace Battlegrounds.Online.Services {
             if (m_underlyingConnection != null && m_underlyingConnection.IsConnected) {
                 m_underlyingConnection.SendMessage(new Message(Message_Type.LOBBY_METAMESSAGE, metaMessage));
             }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="response"></param>
+        public void GetPlayersInLobby(Action<int> response) {
+            if (m_underlyingConnection != null && m_underlyingConnection.IsConnected) {
+                this.GetLobbyInformation("players", (a, b) => response.Invoke(int.Parse(a)));
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public async Task<int> GetPlayersInLobbyAsync() {
+            int result = 0;
+            bool done = false;
+            this.GetPlayersInLobby(x => { result = x; done = true; });
+            while (!done) {
+                await Task.Delay(1);
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="response"></param>
+        public void GetLobbyCapacity(Action<int> response) {
+            if (m_underlyingConnection != null && m_underlyingConnection.IsConnected) {
+                this.GetLobbyInformation("capacity", (a, b) => response.Invoke(int.Parse(a)));
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public async Task<int> GetLobbyCapacityAsync() {
+            int result = 0;
+            bool done = false;
+            this.GetLobbyCapacity(x => { result = x; done = true; });
+            while (!done) {
+                await Task.Delay(1);
+            }
+            return result;
         }
 
         /// <summary>
@@ -189,6 +249,43 @@ namespace Battlegrounds.Online.Services {
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public async Task<string[]> GetPlayerNamesAsync() {
+
+            string[] playernames = null;
+            bool alldone = false;
+
+            void OnMessage(Message response) {
+                if (response.Descriptor == Message_Type.LOBBY_PLAYERNAMES) {
+                    playernames = response.Argument1.Split(';', StringSplitOptions.RemoveEmptyEntries).ForEach(x => x.Replace("\"", ""));
+                }
+                alldone = true; // do this even if false...
+            }
+
+            Message playersQueryMessage = new Message(Message_Type.LOBBY_PLAYERNAMES);
+            Message.SetIdentifier(m_underlyingConnection.ConnectionSocket, playersQueryMessage);
+            m_underlyingConnection.SetIdentifierReceiver(playersQueryMessage.Identifier, OnMessage);
+            m_underlyingConnection.SendMessage(playersQueryMessage);
+            m_underlyingConnection.Listen(); // For some reason it just stops listening here...
+
+            while (!alldone) {
+                await Task.Yield();
+            }
+
+            return playernames;
+
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public string[] GetPlayerNames() 
+            => this.GetPlayerNamesAsync().Result;
+
         private Company GetLocalCompany() {
             try {
                 object val = this.OnLocalDataRequested?.Invoke("CompanyData");
@@ -201,58 +298,31 @@ namespace Battlegrounds.Online.Services {
             return null;
         }
 
-        private async Task<(List<Company>, bool)> GetLobbyCompanies() {
+        private (List<Company>, bool) GetLobbyCompanies() {
 
-            int expected = 1;
-            int sendallIdentifier = -1;
-            DateTime start = DateTime.Now;
-            List<byte[]> companyFiles = new List<byte[]>();
+            FileSync sync = new FileSync(this, new Message(Message_Type.LOBBY_REQUEST_COMPANY, SEND_ALL));
+            if (sync.IsSynced) {
 
-            void OnCompanyFileReceived(string from, string filename, bool wasReceived, byte[] filedata, int identifier) {
-                if (sendallIdentifier == -1) {
-                    sendallIdentifier = identifier;
+                List<Company> companies = new List<Company>();
+
+                foreach (FileSync.SyncFile file in sync.SyncedFiles) {
+                    companies.Add(Company.ReadCompanyFromBytes(file.Data));
                 }
-                if (wasReceived) {
-                    lock (companyFiles) {
-                        companyFiles.Add(filedata);
-                    }
-                }
-            }
 
-            this.GetCompanyFileFrom(SEND_ALL, OnCompanyFileReceived);
+                return (companies, true);
 
-            while (companyFiles.Count != expected && (DateTime.Now - start).Minutes < 5) {
-                Console.WriteLine($"Waiting for files to be received [{companyFiles.Count}]");
-                await Task.Delay(250);
-            }
-
-            if ((DateTime.Now - start).Minutes >= 5) {
+            } else {
                 return (null, false);
             }
-
-            // Clear the sendall identifier
-            this.m_underlyingConnection.ClearIdentifierReceiver(sendallIdentifier);
-
-            List<Company> companies = new List<Company>();
-
-            foreach (byte[] companyData in companyFiles) {
-                try {
-                    companies.Add(Company.ReadCompanyFromBytes(companyData));
-                } catch {
-                    return (null, false);
-                }
-            }
-
-            return (companies, true);
 
         }
 
         /// <summary>
         /// Compile the win condition using data from the lobby members and begin the match with all lobby members.<br/>This will start Company of Heroes 2 if completed.
         /// </summary>
-        /// <remarks>The method is asynchronous and make take several minutes to complete.</remarks>
+        /// <remarks>The method is synchronous and make take several minutes to complete. (Use in a <see cref="Task.Run(Action)"/> context to maintain responsiveness).</remarks>
         /// <param name="operationCancelled">The <see cref="Action{T}"/> invoked if the execution of the method is cancelled. The <see cref="string"/> argument describes what caused the cancellation.</param>
-        public async void CompileAndStartMatch(Action<string> operationCancelled) {
+        public void CompileAndStartMatch(Action<string> operationCancelled) {
 
             // Make sure we're the host
             if (!m_isHost) {
@@ -265,7 +335,7 @@ namespace Battlegrounds.Online.Services {
                 return;
             }
 
-            (List<Company> lobbyCompanies, bool success) = await GetLobbyCompanies();
+            (List<Company> lobbyCompanies, bool success) = GetLobbyCompanies();
 
             if (success) {
 
@@ -292,9 +362,7 @@ namespace Battlegrounds.Online.Services {
                     session,
                     this.ManagedLobbyInternal_GameSessionStatusChanged,
                     this.ManagedLobbyInternal_GameMatchAnalyzed,
-                    async () => {
-                        return await this.ManagedLobbyInternal_GameOnGamemodeCompiled(lobbyCompanies.Count - 1, operationCancelled);
-                    });
+                    async () => await Task.Run(() => this.ManagedLobbyInternal_GameOnGamemodeCompiled(operationCancelled)));
 
             } else {
                 operationCancelled?.Invoke("Failed to get lobby companies");
@@ -302,32 +370,15 @@ namespace Battlegrounds.Online.Services {
 
         }
 
-        async Task<bool> ManagedLobbyInternal_GameOnGamemodeCompiled(int expected, Action<string> operationCancelled) {
+        bool ManagedLobbyInternal_GameOnGamemodeCompiled(Action<string> operationCancelled) {
 
             string sgapath = $"{Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)}\\my games\\Company of Heroes 2\\mods\\gamemode\\coh2_battlegrounds_wincondition.sga";
 
             if (File.Exists(sgapath)) {
 
-                int confirmations = 0;
-                DateTime start = DateTime.Now;
-
-                // Send the message
-                int confirmIdentifier = this.SendFile(SEND_ALL, sgapath);
-                this.m_underlyingConnection.SetIdentifierReceiver(confirmIdentifier, x => {
-                    if (x.Descriptor == Message_Type.CONFIRMATION_MESSAGE) {
-                        confirmations++;
-                    } else {
-                        operationCancelled?.Invoke("Failed to send .sga to one or more players!"); // TODO: Resend protocol
-                    }
-                });
-
-                // Yield as long as we've not confirmed all cases.
-                while (confirmations < expected && (DateTime.Now - start).Minutes < 5) {
-                    Console.WriteLine($"Waiting for confirmations... [{confirmations}/{expected}]");
-                    await Task.Delay(250);
-                }
-
-                if ((DateTime.Now - start).Minutes >= 5) {
+                FileSync sgaSync = new FileSync(this, sgapath);
+                if (sgaSync.SyncFailed) {
+                    operationCancelled?.Invoke("Failed send .sga to all participants.");
                     return false;
                 }
 
@@ -371,10 +422,13 @@ namespace Battlegrounds.Online.Services {
                     this.OnPlayerEvent?.Invoke(ManagedLobbyPlayerEventType.Kicked, incomingMessage.Argument1, incomingMessage.Argument2);
                     break;
                 case Message_Type.LOBBY_KICKED:
-                    this.OnLocalEvent?.Invoke(ManagedLobbyLocalEventType.KICKED, incomingMessage.Argument1);
+                    this.OnLocalEvent?.Invoke(ManagedLobbyLocalEventType.Kicked, incomingMessage.Argument1);
                     break;
                 case Message_Type.LOBBY_SETHOST:
-                    this.OnLocalEvent?.Invoke(ManagedLobbyLocalEventType.HOST, string.Empty);
+                    this.OnLocalEvent?.Invoke(ManagedLobbyLocalEventType.Host, string.Empty);
+                    break;
+                case Message_Type.LOBBY_INFO:
+                    this.OnLobbyInfoChanged?.Invoke(incomingMessage.Argument1, incomingMessage.Argument2);
                     break;
                 case Message_Type.LOBBY_REQUEST_COMPANY:
                     this.OnDataRequest?.Invoke(true, incomingMessage.Argument1, "CompanyData", incomingMessage.Identifier);
@@ -386,10 +440,10 @@ namespace Battlegrounds.Online.Services {
                     this.OnStartMatchReceived?.Invoke();
                     break;
                 case Message_Type.LOBBY_SENDFILE:
-                    Console.WriteLine("got it here");
+
                     break;
                 case Message_Type.CONFIRMATION_MESSAGE:
-                    Console.WriteLine("Received OK here...");
+
                     break;
                 default: Console.WriteLine(incomingMessage.Descriptor + ":" + incomingMessage.Identifier); break;
             }

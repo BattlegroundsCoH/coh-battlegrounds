@@ -55,12 +55,12 @@
         /// <summary>
         /// The local client was upgrades to host.
         /// </summary>
-        HOST,
+        Host,
 
         /// <summary>
         /// The local client was kicked from the lobby.
         /// </summary>
-        KICKED,
+        Kicked,
 
     }
 
@@ -70,6 +70,13 @@
     /// <param name="type">The type of event that triggered the event.</param>
     /// <param name="message">The message attached to the local event.</param>
     public delegate void ManagedLobbyLocalEvent(ManagedLobbyLocalEventType type, string message);
+
+    /// <summary>
+    /// Event delegate for handling lobby information updates.
+    /// </summary>
+    /// <param name="info">The information that was updated.</param>
+    /// <param name="value">The new value of the information.</param>
+    public delegate void ManagedLobbyInfoChanged(string info, string value);
 
     /// <summary>
     /// Event delegate for a simple response to a <see cref="ManagedLobby"/> query.
@@ -96,5 +103,17 @@
     /// <param name="file">The full byte-file-content that was received. May by null if no file was successfully received.</param>
     /// <param name="identifier">The identifier used to send the file.</param>
     public delegate void ManagedLobbyFileReceived(string sender, string filename, bool received, byte[] file, int identifier);
+
+    /// <summary>
+    /// Event delegate triggered when the host has sent the start match message.
+    /// </summary>
+    public delegate void ManagedLobbyMatchStart();
+
+    /// <summary>
+    /// Event delegate triggered when local data was requested internally by a <see cref="ManagedLobby"/> process.
+    /// </summary>
+    /// <param name="arg">The string name identifier for the type of data that was requested.</param>
+    /// <returns>Any <see cref="System.Object"/> that is a pointer-or-direct value of the requested data.</returns>
+    public delegate object ManagedLobbyLocalDataRequest(string arg); 
 
 }

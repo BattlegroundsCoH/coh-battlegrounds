@@ -62,6 +62,8 @@ namespace Battlegrounds.Online {
 
         LOBBY_GETSTATE,
 
+        LOBBY_PLAYERNAMES,
+
         LOBBY_SETHOST, // Message sent to client that they're now the host.
 
         USER_SETUSERDATA, // Set the user data
@@ -131,7 +133,7 @@ namespace Battlegrounds.Online {
 
                 int len1 = arg1.Length;
                 int len2 = arg2.Length;
-                int len3 = (FileData == null) ? 0 : FileData.Length + sizeof(Int32);
+                int len3 = (FileData == null) ? 0 : FileData.Length + sizeof(UInt16);
 
                 ushort totalSize = (ushort)(len1 + len2 + len3 + (sizeof(Int32) + (sizeof(byte) * 5) + sizeof(bool)));
 
@@ -152,7 +154,7 @@ namespace Battlegrounds.Online {
                 binaryWriter.Write(FileData != null);
 
                 if (FileData != null) {
-                    binaryWriter.Write((Int32)FileData.Length);
+                    binaryWriter.Write((UInt16)FileData.Length);
                     binaryWriter.Write(FileData);
                 }
 
@@ -193,7 +195,7 @@ namespace Battlegrounds.Online {
                         byte l2 = subReader.ReadByte();
                         m.Argument2 = Encoding.ASCII.GetString(subReader.ReadBytes(l2));
                         if (subReader.ReadBoolean()) {
-                            m.FileData = subReader.ReadBytes(subReader.ReadInt32());
+                            m.FileData = subReader.ReadBytes(subReader.ReadUInt16());
                         }
 
                     } catch (Exception e) {
@@ -225,7 +227,10 @@ namespace Battlegrounds.Online {
         }
 
         internal static int GetIdentifier(Socket socket)
-            => Encoding.ASCII.GetBytes((socket.RemoteEndPoint as IPEndPoint).Address.ToString() + DateTime.UtcNow.TimeOfDay.ToString()).Aggregate(0, (a, b) => a += b);
+            => Encoding.ASCII.GetBytes(
+                (socket.RemoteEndPoint as IPEndPoint).Address.ToString() + 
+                DateTime.UtcNow.TimeOfDay.ToString() + 
+                Guid.NewGuid().ToString()).Aggregate(0, (a, b) => a += b);
 
     }
 

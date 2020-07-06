@@ -15,20 +15,20 @@ namespace Battlegrounds.Online.Services {
     public class LobbyHub {
 
         /// <summary>
-        /// 
+        /// The <see cref="SteamUser"/> who will be connecting to the <see cref="LobbyHub"/>.<br/>At no point are users verified on the server - Security risk!!!
         /// </summary>
         public SteamUser User { get; set; }
 
         /// <summary>
-        /// 
+        /// Can the local machine establish a connection to the server machine.
         /// </summary>
-        /// <returns></returns>
+        /// <remarks>This method does not guarantee server connection. Only that the server machine is active.</remarks>
+        /// <returns>True if the server machine was pinged with success. False if no ping-back was received.</returns>
         public bool CanConnect() {
-
-            Ping ping = new Ping();
 
             try {
 
+                Ping ping = new Ping();
                 PingReply reply = ping.Send(BattlegroundsInstance.BattlegroundHubAddress);
 
                 if (reply.Status == IPStatus.Success) {
@@ -41,10 +41,27 @@ namespace Battlegrounds.Online.Services {
 
         }
 
+        private ConnectableLobby? GetLobby(string serverStringResponse) {
+
+            var match = Regex.Match(serverStringResponse, @"\[(?<guid>\S{36});\""(?<name>(\S|\s)*)\"";(?<password>True|False)\]");
+
+            if (match.Success) {
+                return new ConnectableLobby {
+                    lobby_guid = match.Groups["guid"].Value,
+                    lobby_name = match.Groups["name"].Value,
+                    lobby_passwordProtected = match.Groups["password"].Value.CompareTo("True") == 0,
+                };
+            } else {
+                return null;
+            }
+
+        }
+
         /// <summary>
-        /// 
+        /// Get a list of all <see cref="ConnectableLobby"/> instances available on the server in a synchronous manner.
         /// </summary>
-        /// <returns></returns>
+        /// <remarks>Blocks execution until all <see cref="ConnectableLobby"/> instances have been received.</remarks>
+        /// <returns>A list of <see cref="ConnectableLobby"/> instances representing the lobbies on the server.</returns>
         public List<ConnectableLobby> GetConnectableLobbies() {
 
             List<ConnectableLobby> connectableLobbies = new List<ConnectableLobby>();
@@ -58,13 +75,10 @@ namespace Battlegrounds.Online.Services {
                     MessageSender.WaitForMessage(x, OnLobby);
                 }
 
-                var match = Regex.Match(y.Argument1, @"\[(?<guid>\S{36});\""(?<name>(\S|\s)*)\"";(?<password>True|False)\]");
-
-                connectableLobbies.Add(new ConnectableLobby {
-                    lobby_guid = match.Groups["guid"].Value,
-                    lobby_name = match.Groups["name"].Value,
-                    lobby_passwordProtected = match.Groups["password"].Value.CompareTo("True") == 0,
-                });
+                ConnectableLobby? lobby = this.GetLobby(y.Argument1);
+                if (lobby != null) {
+                    connectableLobbies.Add(lobby.Value);
+                }
 
                 if (y.Argument2 == "False") {
                     gotAll = true;
@@ -90,9 +104,34 @@ namespace Battlegrounds.Online.Services {
         }
 
         /// <summary>
-        /// 
+        /// Get a list of all <see cref="ConnectableLobby"/> instances available on the server in an asynchronous manner.
         /// </summary>
-        /// <param name="connectionResponse"></param>
+        /// <param name="callback">The callback to invoke wheneer a new <see cref="ConnectableLobby"/> instance was discovered.</param>
+        public void GetConnectableLobbies(Action<ConnectableLobby> callback) {
+
+            Message message = new Message(Message_Type.GET_LOBBIES);
+
+            void OnLobby(Socket x, Message y) {
+
+                if (y.Argument2 == "True") {
+                    MessageSender.WaitForMessage(x, OnLobby);
+                }
+
+                ConnectableLobby? lobby = this.GetLobby(y.Argument1);
+                if (lobby != null) {
+                    callback?.Invoke(lobby.Value);
+                }
+
+            }
+
+            MessageSender.SendMessage(new IPEndPoint(IPAddress.Parse(BattlegroundsInstance.BattlegroundHubAddress), 11000), message, OnLobby);
+
+        }
+
+        /// <summary>
+        /// Establish a continuous connection to the server.
+        /// </summary>
+        /// <param name="connectionResponse">The server response to connection attempt.</param>
         public void Connect(Action<bool, Connection> connectionResponse) {
 
             // The connect message
