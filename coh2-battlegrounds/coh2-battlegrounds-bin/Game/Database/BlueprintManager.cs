@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 using Battlegrounds.Json;
 
 namespace Battlegrounds.Game.Database {
@@ -67,14 +69,34 @@ namespace Battlegrounds.Game.Database {
             __commanders = new Dictionary<ulong, Blueprint>();
             __slotitems = new Dictionary<ulong, Blueprint>();
 
+            // Load the vcoh database
+            LoadDatabaseWithMod("vcoh");
+
+        }
+
+        public static void LoadDatabaseWithMod(string mod) {
+
+            // Get the database path
+            string dbpath = DatabaseManager.SolveDatabasepath();
+
             // Load data here
-            bool sbpdb = LoadJsonDatabase("data\\json-db\\vcoh-sbp-db.json", BlueprintType.SBP); // load the squad blueprint database
-            bool ubpdb = LoadJsonDatabase("data\\json-db\\vcoh-ubp-db.json", BlueprintType.UBP); // load the upgrade blueprint database
+            string[] db_paths = Directory.GetFiles(dbpath, "*.json");
+            int failCounter = 0;
 
-            // TODO: Load more here...
+            for (int i = 0; i < db_paths.Length; i++) {
+                Match match = Regex.Match(db_paths[i], $@"{mod}-(?<type>\w{{3}})-db");
+                if (match.Success) {
+                    string toUpper = match.Groups["type"].Value.ToUpper();
+                    if (Enum.TryParse(toUpper, out BlueprintType t)) {
+                        if (!LoadJsonDatabase(db_paths[i], t)) {
+                            failCounter++;
+                        }
+                    }
+                }
+            }
 
-            if (!sbpdb || !ubpdb) {
-                throw new Exception();
+            if (failCounter > 0) {
+                throw new Exception("Failed to load one or more databases!");
             }
 
         }

@@ -12,7 +12,7 @@ namespace Battlegrounds.Game.Database {
         /// <summary>
         /// 
         /// </summary>
-        public static void LoadDatabase() {
+        public static void LoadList() {
 
         }
 

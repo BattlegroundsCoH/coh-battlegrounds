@@ -5,6 +5,7 @@ using System.Threading;
 using Battlegrounds;
 using Battlegrounds.Compiler;
 using Battlegrounds.Game.Battlegrounds;
+using Battlegrounds.Game.Database;
 using Battlegrounds.Online;
 using Battlegrounds.Online.Services;
 using Battlegrounds.Steam;
@@ -19,7 +20,11 @@ namespace coh2_battlegrounds_console {
             BattlegroundsInstance.LocalSteamuser = SteamUser.FromID(76561198003529969UL);
 
             // Important this is done
-            Battlegrounds.Game.Database.BlueprintManager.CreateDatabase();
+            DatabaseManager.LoadAllDatabases(null);
+
+            while (!DatabaseManager.DatabaseLoaded) {
+                Thread.Sleep(1);
+            }
 
             Company company = Company.ReadCompanyFromFile("test_company.json");
 

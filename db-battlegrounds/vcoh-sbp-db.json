@@ -1,0 +1,36 @@
+[
+    {
+        "jsdbtype" : "Battlegrounds.Game.Database.SquadBlueprint",
+        "PBGID": "108",
+        "Name": "conscript_squad_mp",
+        "LocaleName": "11006679",
+        "LocaleDescription": "11007044",
+        "Army": "soviet",
+        "Icon": "Icons_units_unit_soviet_conscript_03",
+        "Symbol": "Icons_symbols_unit_soviet_conscript_03_symbol",
+        "Cost": {
+            "jsdbtype" : "Battlegrounds.Game.Gameplay.Cost",
+            "Manpower": "240",
+            "Munitions": "0",
+            "Fuel": "0",
+            "FieldTime": "15"
+        }
+    },
+    {
+        "jsdbtype" : "Battlegrounds.Game.Database.SquadBlueprint",
+        "PBGID": "186",
+        "Name": "t_34_85_squad_mp",
+        "LocaleName": "11048080",
+        "LocaleDescription": "11007407",
+        "Army": "soviet",
+        "Icon": "Icons_vehicles_vehicle_soviet_t34_85",
+        "Symbol": "Icons_symbols_vehicle_soviet_t34_85_symbol",
+        "Cost": {
+            "jsdbtype" : "Battlegrounds.Game.Gameplay.Cost",
+            "Manpower": "360",
+            "Munitions": "0",
+            "Fuel": "30",
+            "FieldTime": "30"
+        }
+    }
+]
