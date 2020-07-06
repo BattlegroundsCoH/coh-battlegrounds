@@ -94,6 +94,7 @@
     /// <param name="filename">The name of the file that was sent.</param>
     /// <param name="received">Boolean flag describing the 'received' state of the file.</param>
     /// <param name="file">The full byte-file-content that was received. May by null if no file was successfully received.</param>
-    public delegate void ManagedLobbyFileReceived(string sender, string filename, bool received, byte[] file);
+    /// <param name="identifier">The identifier used to send the file.</param>
+    public delegate void ManagedLobbyFileReceived(string sender, string filename, bool received, byte[] file, int identifier);
 
 }

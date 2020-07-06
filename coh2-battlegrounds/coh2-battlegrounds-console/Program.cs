@@ -111,11 +111,22 @@ namespace coh2_battlegrounds_console {
                 result.OnPlayerEvent += (a, b, c) => {
                     if (a == ManagedLobbyPlayerEventType.Message) {
                         Console.WriteLine($"{b}: {c}");
-                        Console.WriteLine("Requesting company data");
-                        result.GetCompanyFileFrom(b, OnCompanyFileReceived);
+                        Console.WriteLine("Testing launch feature");
+                        result.CompileAndStartMatch(x => Console.WriteLine(x));
+                        //result.GetCompanyFileFrom(b, OnCompanyFileReceived);
                     } else {
                         string word = (a == ManagedLobbyPlayerEventType.Leave) ? "Left" : (a == ManagedLobbyPlayerEventType.Kicked ? "Was kicked" : "Joined");
                         Console.WriteLine($"{b} {word}");
+                    }
+                };
+
+                result.OnLocalDataRequested += (a) => {
+                    if (a.CompareTo("CompanyData") == 0) {
+                        return Company.ReadCompanyFromFile("test_company.json");
+                    } else if (a.CompareTo("Gamemode") == 0) {
+                        return WinconditionList.GetWinconditionByName("Victory Points");
+                    } else {
+                        return null;
                     }
                 };
 
@@ -123,7 +134,7 @@ namespace coh2_battlegrounds_console {
                     if (c.CompareTo("CompanyData") == 0) {
                         Console.WriteLine("Received request for company data using identifier " + d);
                         result.SendFile(b, "test_company.json", d);
-                    }
+                    } 
                 };
 
                 if (!result.IsHost) {

@@ -50,7 +50,7 @@ namespace Battlegrounds.Online.Services {
         /// <summary>
         /// Function to solve local data requests. May return requested object or filepath to load object.
         /// </summary>
-        public Func<string, object> OnLocalDataRequested;
+        public event Func<string, object> OnLocalDataRequested;
 
         /// <summary>
         /// Is the instance of <see cref="ManagedLobby"/> considered to be the host of the lobby.
@@ -163,16 +163,17 @@ namespace Battlegrounds.Online.Services {
                 Message.SetIdentifier(m_underlyingConnection.ConnectionSocket, message);
                 void OnMessage(Message msg) {
                     if (msg.Descriptor == Message_Type.LOBBY_SENDFILE) {
-                        response?.Invoke(from, msg.Argument1, true, msg.FileData);
+                        response?.Invoke(msg.Argument2, msg.Argument1, true, msg.FileData, msg.Identifier);
                         if (from.CompareTo(SEND_ALL) != 0) {
                             m_underlyingConnection.ClearIdentifierReceiver(msg.Identifier);
                         }
                     } else {
-                        response?.Invoke(from, null, false, null);
+                        response?.Invoke(from, null, false, null, msg.Identifier);
                     }
                 }
                 m_underlyingConnection.SetIdentifierReceiver(message.Identifier, OnMessage);
                 m_underlyingConnection.SendMessage(message);
+                Console.WriteLine("Sent request for getting company files.");
             }
         }
 
@@ -203,24 +204,34 @@ namespace Battlegrounds.Online.Services {
         private async Task<(List<Company>, bool)> GetLobbyCompanies() {
 
             int expected = 1;
+            int sendallIdentifier = -1;
             DateTime start = DateTime.Now;
             List<byte[]> companyFiles = new List<byte[]>();
 
-            void OnCompanyFileReceived(string from, string filename, bool wasReceived, byte[] filedata) {
+            void OnCompanyFileReceived(string from, string filename, bool wasReceived, byte[] filedata, int identifier) {
+                if (sendallIdentifier == -1) {
+                    sendallIdentifier = identifier;
+                }
                 if (wasReceived) {
-                    companyFiles.Add(filedata);
+                    lock (companyFiles) {
+                        companyFiles.Add(filedata);
+                    }
                 }
             }
 
             this.GetCompanyFileFrom(SEND_ALL, OnCompanyFileReceived);
 
             while (companyFiles.Count != expected && (DateTime.Now - start).Minutes < 5) {
-                await Task.Yield();
+                Console.WriteLine($"Waiting for files to be received [{companyFiles.Count}]");
+                await Task.Delay(250);
             }
 
             if ((DateTime.Now - start).Minutes >= 5) {
                 return (null, false);
             }
+
+            // Clear the sendall identifier
+            this.m_underlyingConnection.ClearIdentifierReceiver(sendallIdentifier);
 
             List<Company> companies = new List<Company>();
 
@@ -282,7 +293,7 @@ namespace Battlegrounds.Online.Services {
                     this.ManagedLobbyInternal_GameSessionStatusChanged,
                     this.ManagedLobbyInternal_GameMatchAnalyzed,
                     async () => {
-                        return await this.ManagedLobbyInternal_GameOnGamemodeCompiled(lobbyCompanies.Count, operationCancelled);
+                        return await this.ManagedLobbyInternal_GameOnGamemodeCompiled(lobbyCompanies.Count - 1, operationCancelled);
                     });
 
             } else {
@@ -298,6 +309,7 @@ namespace Battlegrounds.Online.Services {
             if (File.Exists(sgapath)) {
 
                 int confirmations = 0;
+                DateTime start = DateTime.Now;
 
                 // Send the message
                 int confirmIdentifier = this.SendFile(SEND_ALL, sgapath);
@@ -310,8 +322,13 @@ namespace Battlegrounds.Online.Services {
                 });
 
                 // Yield as long as we've not confirmed all cases.
-                while (confirmations < expected) {
-                    await Task.Delay(1);
+                while (confirmations < expected && (DateTime.Now - start).Minutes < 5) {
+                    Console.WriteLine($"Waiting for confirmations... [{confirmations}/{expected}]");
+                    await Task.Delay(250);
+                }
+
+                if ((DateTime.Now - start).Minutes >= 5) {
+                    return false;
                 }
 
                 // Send the start match...
@@ -369,16 +386,21 @@ namespace Battlegrounds.Online.Services {
                     this.OnStartMatchReceived?.Invoke();
                     break;
                 case Message_Type.LOBBY_SENDFILE:
-
+                    Console.WriteLine("got it here");
+                    break;
+                case Message_Type.CONFIRMATION_MESSAGE:
+                    Console.WriteLine("Received OK here...");
                     break;
                 default: Console.WriteLine(incomingMessage.Descriptor + ":" + incomingMessage.Identifier); break;
             }
         }
 
         private void ManagedLobbyInternal_FileReceived(Message incomingFileMessage) {
-            this.OnFileReceived?.Invoke(incomingFileMessage.Argument2, incomingFileMessage.Argument1, incomingFileMessage.FileData != null, incomingFileMessage.FileData);
+            this.OnFileReceived?.Invoke(incomingFileMessage.Argument2, incomingFileMessage.Argument1, incomingFileMessage.FileData != null, incomingFileMessage.FileData, incomingFileMessage.Identifier);
             if (incomingFileMessage.Argument1.CompareTo("coh2_battlegrounds_wincondition.sga") == 0) {
-                this.m_underlyingConnection.SendMessage(incomingFileMessage.CreateResponse(Message_Type.CONFIRMATION_MESSAGE, incomingFileMessage.Argument2, "Received .sga"));
+                Console.WriteLine("Received .sga -- returning OK message to " + incomingFileMessage.Argument2);
+                this.m_underlyingConnection.SendMessage(
+                    incomingFileMessage.CreateResponse(Message_Type.CONFIRMATION_MESSAGE, incomingFileMessage.Argument2, "Received .sga"));
             }
         }
 

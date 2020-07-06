@@ -133,16 +133,16 @@ namespace Battlegrounds.Online {
                 int len2 = arg2.Length;
                 int len3 = (FileData == null) ? 0 : FileData.Length + sizeof(Int32);
 
-                int totalSize = len1 + len2 + len3 + ((sizeof(Int32) * 3) + (sizeof(byte) * 3) + sizeof(bool));
+                ushort totalSize = (ushort)(len1 + len2 + len3 + (sizeof(Int32) + (sizeof(byte) * 5) + sizeof(bool)));
 
-                binaryWriter.Write((Int32)totalSize);
+                binaryWriter.Write((UInt16)totalSize);
                 binaryWriter.Write((byte)this.Descriptor);
                 binaryWriter.Write((Int32)this.Identifier);
 
-                binaryWriter.Write((Int32)len1);
+                binaryWriter.Write((byte)len1);
                 binaryWriter.Write(arg1);
 
-                binaryWriter.Write((Int32)len2);
+                binaryWriter.Write((byte)len2);
                 binaryWriter.Write(arg2);
 
                 if (FileData != null && FileData.Length == 0) {
@@ -177,23 +177,28 @@ namespace Battlegrounds.Online {
                 while (reader.BaseStream.Position < reader.BaseStream.Length) {
 
                     Message m = new Message();
-                    try {
 
-                        int size = reader.ReadInt32();
+                    ushort size = reader.ReadUInt16();
+
+                    try {
 
                         using BinaryReader subReader = new BinaryReader(new MemoryStream(reader.ReadBytes(size)));
 
                         m.Descriptor = (Message_Type)subReader.ReadByte();
                         m.Identifier = subReader.ReadInt32();
-                        m.Argument1 = Encoding.ASCII.GetString(subReader.ReadBytes(subReader.ReadInt32()));
-                        m.Argument2 = Encoding.ASCII.GetString(subReader.ReadBytes(subReader.ReadInt32()));
+
+                        byte l1 = subReader.ReadByte();
+                        m.Argument1 = Encoding.ASCII.GetString(subReader.ReadBytes(l1));
+
+                        byte l2 = subReader.ReadByte();
+                        m.Argument2 = Encoding.ASCII.GetString(subReader.ReadBytes(l2));
                         if (subReader.ReadBoolean()) {
                             m.FileData = subReader.ReadBytes(subReader.ReadInt32());
                         }
 
-                    } catch {
+                    } catch (Exception e) {
                         m.Descriptor = Message_Type.ERROR_MESSAGE;
-                        m.Argument1 = "Failed to read message";
+                        m.Argument1 = $"Failed to read message of length {size} - {e.Message}";
                     }
 
                     messages.Add(m);
