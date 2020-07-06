@@ -272,7 +272,7 @@ namespace Battlegrounds.Online.Services {
             m_underlyingConnection.Listen(); // For some reason it just stops listening here...
 
             while (!alldone) {
-                await Task.Yield();
+                await Task.Delay(1);
             }
 
             return playernames;
@@ -445,7 +445,7 @@ namespace Battlegrounds.Online.Services {
                 case Message_Type.CONFIRMATION_MESSAGE:
 
                     break;
-                default: Console.WriteLine(incomingMessage.Descriptor + ":" + incomingMessage.Identifier); break;
+                default: Console.WriteLine(incomingMessage.Descriptor + ":" + incomingMessage.Argument1 + " [" + incomingMessage.Identifier + "]"); break;
             }
         }
 

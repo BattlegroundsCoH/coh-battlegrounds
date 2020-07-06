@@ -45,7 +45,7 @@ namespace Battlegrounds.Online.Services {
         /// <summary>
         /// The time in milliseconds before a re-send operation can be considered.
         /// </summary>
-        public int SyncResendAttempt { get; set; } = 75000;
+        public int SyncResendAttempt { get; set; } = 7500;
 
         /// <summary>
         /// 
@@ -80,7 +80,7 @@ namespace Battlegrounds.Online.Services {
             string[] playernames = this.m_lobbySync.GetPlayerNames();
             m_syncStates = new List<FileSyncUserState>();
 
-            for (int i = 0; i < m_syncStates.Count; i++) {
+            for (int i = 0; i < playernames.Length; i++) {
                 m_syncStates.Add(new FileSyncUserState {
                     userID = playernames[i],
                     userDone = false
@@ -104,8 +104,6 @@ namespace Battlegrounds.Online.Services {
                             Name = x.Argument1,
                         });
                     }
-                } else {
-                    Console.WriteLine("Wut");
                 }
             }
 
@@ -146,7 +144,6 @@ namespace Battlegrounds.Online.Services {
             }
 
             this.m_lobbySync.WorkerConnection.ClearIdentifierReceiver(lookForIdentifier);
-            Console.WriteLine($"Files synced [{this.m_syncStates.Count}/{this.m_syncStates.Count}]");
 
         }
 
@@ -167,7 +164,7 @@ namespace Battlegrounds.Online.Services {
             this.m_lobbySync.WorkerConnection.SetIdentifierReceiver(lookForIdentifier, response);
 
             while (!this.m_isDone) {
-
+                Console.WriteLine("Attempting to sync...");
                 int waitMinutes = (DateTime.Now - start).Minutes;
                 if (waitMinutes >= this.SyncMaxTimeoutMinutes) {
                     this.m_isDone = this.m_syncFailed = true;
@@ -178,6 +175,7 @@ namespace Battlegrounds.Online.Services {
                     lock (this.m_syncStates) {
                         receivedACK = this.m_syncStates.Count(x => x.userDone);
                     }
+                    Console.WriteLine($"Files synced [{receivedACK}/{this.m_syncStates.Count}]");
                     if (receivedACK != this.m_syncStates.Count) {
                         Thread.Sleep(this.SyncResendAttempt);
                         lock (this.m_syncStates) {
