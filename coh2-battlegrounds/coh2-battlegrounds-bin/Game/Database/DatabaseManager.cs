@@ -5,10 +5,10 @@ using System.Threading.Tasks;
 namespace Battlegrounds.Game.Database {
 
     /// <summary>
-    /// 
+    /// Callback handler for the <see cref="DatabaseManager"/> being done loading databases.
     /// </summary>
-    /// <param name="db_loaded"></param>
-    /// <param name="db_failed"></param>
+    /// <param name="db_loaded">The amount of databases that were loaded.</param>
+    /// <param name="db_failed">The amount of databases that failed to load.</param>
     public delegate void DatabaseLoadedCallbackHandler(int db_loaded, int db_failed);
 
     /// <summary>
@@ -51,6 +51,8 @@ namespace Battlegrounds.Game.Database {
                     // Load the battlegrounds DB
                     BlueprintManager.LoadDatabaseWithMod("battlegrounds");
 
+                    // TODO: Load more here if needed
+
                 });
 
                 // Increment the loaded count
@@ -74,6 +76,10 @@ namespace Battlegrounds.Game.Database {
                 failed++;
             }
 
+            // Create the win condition list (less troublesome)
+            await Task.Run(WinconditionList.CreateAndLoadDatabase);
+            loaded++;
+
             // Set database loaded
             m_databasesLoaded = true;
 
@@ -82,6 +88,10 @@ namespace Battlegrounds.Game.Database {
 
         }
 
+        /// <summary>
+        /// Try and solve (find) a valid path to the database.
+        /// </summary>
+        /// <returns>The first valid database path found or the empty string if no path is found.</returns>
         public static string SolveDatabasepath() {
             if (m_databaseFoundPath != null) {
                 return m_databaseFoundPath;
@@ -91,7 +101,7 @@ namespace Battlegrounds.Game.Database {
                     "..\\..\\..\\..\\db-battlegrounds\\",
                     "..\\..\\..\\db-battlegrounds\\",
                     "db-battlegrounds\\",
-                    "data\\json-db\\",
+                    "data\\json-db\\", // should be the place for release builds!
                 };
                 foreach (string path in testPaths) {
                     if (Directory.Exists(path)) {

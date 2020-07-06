@@ -90,7 +90,7 @@ namespace Battlegrounds.Game.Battlegrounds {
         /// <param name="session">The <see cref="Session"/> instance to play and analyze.</param>
         /// <param name="statusChangedCallback">Callback for whenever the status of the play session has changed</param>
         /// <param name="matchAnalyzedCallback">Callback called only when the match has been played and analyzed</param>
-        /// <param name="matchCompileAndWait"></param>
+        /// <param name="matchCompileAndWait">Callback called when the compilation is done and is waiting for the session go-ahead.</param>
         public static async void PlaySession<TSessionCompilerType, TCompanyCompilerType>(
             Session session, 
             Action<SessionStatus, Session> statusChangedCallback, 
@@ -127,8 +127,11 @@ namespace Battlegrounds.Game.Battlegrounds {
                     return;
                 }
 
+                // Wait for go-ahead
+                bool? continueProc = await matchCompileAndWait?.Invoke();
+
                 // Wait for compile done
-                if (!(await matchCompileAndWait())) {
+                if (!continueProc.GetValueOrDefault(true)) {
                     UpdateStatus(SessionStatus.S_GameNotLaunched, statusChangedCallback);
                     return;
                 }

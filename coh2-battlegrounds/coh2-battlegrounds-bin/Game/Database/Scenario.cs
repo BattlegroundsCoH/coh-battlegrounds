@@ -7,7 +7,7 @@ using Battlegrounds.Json;
 namespace Battlegrounds.Game.Database {
 
     /// <summary>
-    /// The theatre of war
+    /// The theatre of war a scenario is taking place in.
     /// </summary>
     public enum ScenarioTheatre {
         
@@ -56,6 +56,7 @@ namespace Battlegrounds.Game.Database {
         /// <summary>
         /// 
         /// </summary>
+        [JsonEnum(typeof(ScenarioTheatre))]
         public ScenarioTheatre Theatre { get; set; }
 
         /// <summary>

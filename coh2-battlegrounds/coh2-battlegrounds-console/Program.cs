@@ -6,6 +6,7 @@ using Battlegrounds;
 using Battlegrounds.Compiler;
 using Battlegrounds.Game.Battlegrounds;
 using Battlegrounds.Game.Database;
+using Battlegrounds.Game.Gameplay;
 using Battlegrounds.Online;
 using Battlegrounds.Online.Services;
 using Battlegrounds.Steam;
@@ -15,7 +16,9 @@ namespace coh2_battlegrounds_console {
     class Program {
         
         static void Main(string[] args) {
-           
+
+            SteamUser loc = SteamUser.FromLocalInstall();
+
             BattlegroundsInstance.LoadInstance();
             BattlegroundsInstance.LocalSteamuser = SteamUser.FromID(76561198003529969UL);
 
@@ -29,7 +32,7 @@ namespace coh2_battlegrounds_console {
             Company company = Company.ReadCompanyFromFile("test_company.json");
 
             // Create a dummy company
-            Company testCompany = new Company(BattlegroundsInstance.LocalSteamuser, "26th Rifle Guards Division", Battlegrounds.Game.Gameplay.Faction.Soviet);
+            Company testCompany = new Company(BattlegroundsInstance.LocalSteamuser, "26th Rifle Guards Division", Faction.Soviet);
             testCompany.AddSquad("conscript_squad_mp", 0, 0, new string[] { "ppsh-41_sub_machine_gun_upgrade_mp" }, null, false);
             testCompany.AddSquad("conscript_squad_mp", 2, 0, null, null, false);
             testCompany.AddSquad("conscript_squad_mp", 3, 0, new string[] { "ppsh-41_sub_machine_gun_upgrade_mp" }, null, false);
@@ -42,7 +45,7 @@ namespace coh2_battlegrounds_console {
                 testCompany
             };
 
-            Session session = Session.CreateSession("2p_angoville", companies, new Battlegrounds.Game.Gameplay.Wincondition(), true);
+            Session session = Session.CreateSession("2p_angoville", companies, WinconditionList.GetWinconditionByName("Victory Points"), true);
 
             /*GameMatch m = new GameMatch(session);
             m.LoadMatch($"{Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)}\\my games\\company of heroes 2\\playback\\temp.rec");

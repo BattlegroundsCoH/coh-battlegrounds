@@ -1,5 +1,6 @@
 ﻿using System;
-
+using System.IO;
+using System.Text.RegularExpressions;
 using Battlegrounds.Json;
 using Battlegrounds.Online;
 
@@ -75,6 +76,34 @@ namespace Battlegrounds.Steam {
 
             // Return user
             return user;
+
+        }
+
+        /// <summary>
+        /// Fetch the <see cref="SteamUser"/> from the local instance of the Steam client.
+        /// </summary>
+        /// <returns>The <see cref="SteamUser"/> using the machine or null if it was not possible.</returns>
+        public static SteamUser FromLocalInstall() {
+
+            string steaminstall = Pathfinder.GetOrFindSteamPath().Replace("Steam.exe", "config\\loginusers.vdf");
+            string contents = File.ReadAllText(steaminstall);
+
+            var idCollection = Regex.Matches(contents, @"\""(?<id>\d+)\""\s*\{(?<body>(\s|\w|\d|\"")*)\}");
+
+            foreach (Match idMatch in idCollection) {
+
+                ulong id = ulong.Parse(idMatch.Groups["id"].Value);
+
+                Match name = Regex.Match(idMatch.Groups["body"].Value, @"\""PersonaName\""\s*\""(?<name>(\s|\w|\d)*)\""");
+                Match recent = Regex.Match(idMatch.Groups["body"].Value, @"\""mostrecent\""\s*\""(?<recent>1|0)\""");
+
+                if (recent.Groups["recent"].Value.CompareTo("1") == 0) {
+                    return new SteamUser(id) { Name = name.Groups["name"].Value };
+                }
+
+            }
+
+            return null;
 
         }
 
