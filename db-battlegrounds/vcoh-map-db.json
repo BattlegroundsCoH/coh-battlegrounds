@@ -1,11 +1,11 @@
 [
     {
         "jsdbtype" : "Battlegrounds.Game.Database.Scenario",
-        "Name": "",
-        "Description": "",
-        "RelativeFilename": "",
-        "MaxPlayers": "0",
-        "Theatre": "EasternFront",
+        "Name": "Angoville Farms (1v1)",
+        "Description": "This is a description",
+        "RelativeFilename": "2p_angoville_farms\\2p_angoville_farms",
+        "MaxPlayers": "2",
+        "Theatre": "WesternFront",
         "IsWintermap": "False",
         "Gamemodes": [
         ]

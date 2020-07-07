@@ -48,7 +48,7 @@ namespace coh2_battlegrounds_console {
             SessionInfo sessionInfo = new SessionInfo() {
                 SelectedGamemode = WinconditionList.GetWinconditionByName("Victory Points"),
                 SelectedGamemodeOption = 1,
-                SelectedScenario = ScenarioList.FromRelativePath("2p_angoville"),
+                SelectedScenario = ScenarioList.FromFilename("2p_angoville_farms"),
                 SelectedTuningMod = new BattlegroundsTuning(),
                 Allies = new string[] { "CoDiEx" },
                 Axis = new string[] {},
