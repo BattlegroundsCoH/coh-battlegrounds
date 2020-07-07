@@ -1,23 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "E:\\coh2_battlegrounds\\coh2-battlegrounds\\coh2-battlegrounds\\coh2-battlegrounds.csproj": {}
+    "D:\\coh2_projects\\coh2-battlegrounds\\coh2-battlegrounds\\coh2-battlegrounds\\coh2-battlegrounds.csproj": {}
   },
   "projects": {
-    "E:\\coh2_battlegrounds\\coh2-battlegrounds\\coh2-battlegrounds-bin\\coh2-battlegrounds-bin.csproj": {
+    "D:\\coh2_projects\\coh2-battlegrounds\\coh2-battlegrounds\\coh2-battlegrounds-bin\\coh2-battlegrounds-bin.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "E:\\coh2_battlegrounds\\coh2-battlegrounds\\coh2-battlegrounds-bin\\coh2-battlegrounds-bin.csproj",
+        "projectUniqueName": "D:\\coh2_projects\\coh2-battlegrounds\\coh2-battlegrounds\\coh2-battlegrounds-bin\\coh2-battlegrounds-bin.csproj",
         "projectName": "coh2-battlegrounds-bin",
-        "projectPath": "E:\\coh2_battlegrounds\\coh2-battlegrounds\\coh2-battlegrounds-bin\\coh2-battlegrounds-bin.csproj",
-        "packagesPath": "C:\\Users\\Jakob\\.nuget\\packages\\",
-        "outputPath": "E:\\coh2_battlegrounds\\coh2-battlegrounds\\coh2-battlegrounds-bin\\obj\\",
+        "projectPath": "D:\\coh2_projects\\coh2-battlegrounds\\coh2-battlegrounds\\coh2-battlegrounds-bin\\coh2-battlegrounds-bin.csproj",
+        "packagesPath": "C:\\Users\\uzivatel\\.nuget\\packages\\",
+        "outputPath": "D:\\coh2_projects\\coh2-battlegrounds\\coh2-battlegrounds\\coh2-battlegrounds-bin\\obj\\",
         "projectStyle": "PackageReference",
-        "fallbackFolders": [
-          "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
-        ],
         "configFilePaths": [
-          "C:\\Users\\Jakob\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\uzivatel\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -55,24 +52,21 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.1.301\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.1.100\\RuntimeIdentifierGraph.json"
         }
       }
     },
-    "E:\\coh2_battlegrounds\\coh2-battlegrounds\\coh2-battlegrounds\\coh2-battlegrounds.csproj": {
+    "D:\\coh2_projects\\coh2-battlegrounds\\coh2-battlegrounds\\coh2-battlegrounds\\coh2-battlegrounds.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "E:\\coh2_battlegrounds\\coh2-battlegrounds\\coh2-battlegrounds\\coh2-battlegrounds.csproj",
+        "projectUniqueName": "D:\\coh2_projects\\coh2-battlegrounds\\coh2-battlegrounds\\coh2-battlegrounds\\coh2-battlegrounds.csproj",
         "projectName": "coh2-battlegrounds",
-        "projectPath": "E:\\coh2_battlegrounds\\coh2-battlegrounds\\coh2-battlegrounds\\coh2-battlegrounds.csproj",
-        "packagesPath": "C:\\Users\\Jakob\\.nuget\\packages\\",
-        "outputPath": "E:\\coh2_battlegrounds\\coh2-battlegrounds\\coh2-battlegrounds\\obj\\",
+        "projectPath": "D:\\coh2_projects\\coh2-battlegrounds\\coh2-battlegrounds\\coh2-battlegrounds\\coh2-battlegrounds.csproj",
+        "packagesPath": "C:\\Users\\uzivatel\\.nuget\\packages\\",
+        "outputPath": "D:\\coh2_projects\\coh2-battlegrounds\\coh2-battlegrounds\\coh2-battlegrounds\\obj\\",
         "projectStyle": "PackageReference",
-        "fallbackFolders": [
-          "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
-        ],
         "configFilePaths": [
-          "C:\\Users\\Jakob\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\uzivatel\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -85,8 +79,8 @@
         "frameworks": {
           "netcoreapp3.1": {
             "projectReferences": {
-              "E:\\coh2_battlegrounds\\coh2-battlegrounds\\coh2-battlegrounds-bin\\coh2-battlegrounds-bin.csproj": {
-                "projectPath": "E:\\coh2_battlegrounds\\coh2-battlegrounds\\coh2-battlegrounds-bin\\coh2-battlegrounds-bin.csproj"
+              "D:\\coh2_projects\\coh2-battlegrounds\\coh2-battlegrounds\\coh2-battlegrounds-bin\\coh2-battlegrounds-bin.csproj": {
+                "projectPath": "D:\\coh2_projects\\coh2-battlegrounds\\coh2-battlegrounds\\coh2-battlegrounds-bin\\coh2-battlegrounds-bin.csproj"
               }
             }
           }
@@ -117,7 +111,7 @@
               "privateAssets": "none"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.1.301\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.1.100\\RuntimeIdentifierGraph.json"
         }
       }
     }
