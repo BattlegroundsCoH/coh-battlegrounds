@@ -6,7 +6,7 @@ using System.Threading;
 namespace Battlegrounds.Online.Services {
     
     /// <summary>
-    /// 
+    /// Utility class for synchronizing files between a <see cref="ManagedLobby"/> by resending requests until all players have reported positively back. This clss cannot be inherited.
     /// </summary>
     public sealed class FileSync {
     
@@ -15,6 +15,9 @@ namespace Battlegrounds.Online.Services {
             public bool userDone;
         }
 
+        /// <summary>
+        /// Synchronized file.
+        /// </summary>
         public class SyncFile {
             public byte[] Data;
             public string Name;
@@ -28,12 +31,12 @@ namespace Battlegrounds.Online.Services {
         bool m_syncFailed;
 
         /// <summary>
-        /// 
+        /// Are all files synced.
         /// </summary>
         public bool IsSynced => this.m_isDone;
 
         /// <summary>
-        /// 
+        /// This the sync fail (one or more lobby members failed to send or retrieve files after the max sync time expired.
         /// </summary>
         public bool SyncFailed => this.m_syncFailed;
 
@@ -48,10 +51,15 @@ namespace Battlegrounds.Online.Services {
         public int SyncResendAttempt { get; set; } = 7500;
 
         /// <summary>
-        /// 
+        /// All the files that were synced.
         /// </summary>
         public SyncFile[] SyncedFiles => this.m_syncedFiledata?.ToArray();
 
+        /// <summary>
+        /// Send a file to all <see cref="ManagedLobby"/> members.
+        /// </summary>
+        /// <param name="lobby">The lobby instance to sync.</param>
+        /// <param name="fileToSync">The path of the file to sync.</param>
         public FileSync(ManagedLobby lobby, string fileToSync) {
 
             this.m_isDone = false;
@@ -63,6 +71,11 @@ namespace Battlegrounds.Online.Services {
 
         }
 
+        /// <summary>
+        /// Retrieve a file from all members of a <see cref="ManagedLobby"/> (caller excepted).
+        /// </summary>
+        /// <param name="lobby">The lobby instance to sync</param>
+        /// <param name="getterMessage">The message to send to retrieve file.</param>
         public FileSync(ManagedLobby lobby, Message getterMessage) {
 
             this.m_isDone = false;

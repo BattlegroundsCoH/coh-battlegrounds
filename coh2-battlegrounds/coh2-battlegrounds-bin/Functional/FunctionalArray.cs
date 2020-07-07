@@ -38,6 +38,22 @@ namespace Battlegrounds.Functional {
             return array;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="U"></typeparam>
+        /// <typeparam name="V"></typeparam>
+        /// <param name="array"></param>
+        /// <param name="converter"></param>
+        /// <returns></returns>
+        public static V[] Convert<U, V>(this U[] array, Func<U, V> converter) {
+            V[] result = new V[array.Length];
+            for (int i = 0; i < array.Length; i++) {
+                result[i] = converter(array[i]);
+            }
+            return result;
+        }
+
     }
 
 }

@@ -16,6 +16,13 @@ namespace Battlegrounds.Game.Database {
 
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="v"></param>
+        /// <returns></returns>
+        public static Scenario FromRelativePath(string v) => null;
+
     }
 
 }

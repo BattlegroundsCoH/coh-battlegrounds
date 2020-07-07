@@ -1,7 +1,9 @@
 ﻿using System;
+using System.IO;
 using System.Collections.Generic;
 using System.Linq;
 using Battlegrounds.Game.Battlegrounds;
+using Battlegrounds.Modding;
 using Battlegrounds.Steam;
 using Battlegrounds.Util;
 
@@ -35,14 +37,11 @@ namespace Battlegrounds.Compiler {
 
             lua.AppendLine($"playercount = {session.Companies.Length},");
             lua.AppendLine($"session_guid = \"{session.SessionID}\",");
-            lua.AppendLine($"map = \"{session.Scenario}\",");
-            lua.AppendLine($"tuning_mod = {{");
-            lua.IncreaseIndent();
-            lua.AppendLine($"mod_name = \"{string.Empty}\",");
-            lua.AppendLine($"mod_guid = \"{string.Empty}\",");
-            lua.AppendLine($"mod_verify_upg = \"{string.Empty}\",");
-            lua.DecreaseIndent();
-            lua.AppendLine("},");
+            lua.AppendLine($"map = \"{Path.GetFileNameWithoutExtension(session.Scenario.RelativeFilename)}\",");
+
+            // Write the tuning data
+            this.WriteTuningData(lua, session.TuningMod);
+
             lua.AppendLine($"gamemode = \"{session.Gamemode.Name}\",");
             lua.AppendLine($"gameoptions = {{");
             lua.IncreaseIndent();
@@ -78,6 +77,25 @@ namespace Battlegrounds.Compiler {
             lua.AppendLine("};");
 
             return lua.GetContent();
+
+        }
+
+        protected virtual void WriteTuningData(TxtBuilder lua, ITuningMod tuning) {
+
+            lua.AppendLine($"tuning_mod = {{");
+
+            // Only write the tuning data if it exists.
+            if (tuning != null) {
+
+                lua.IncreaseIndent();
+                lua.AppendLine($"mod_name = \"{tuning.Name}\",");
+                lua.AppendLine($"mod_guid = \"{tuning.Guid.ToString().Replace("-", "")}\",");
+                lua.AppendLine($"mod_verify_upg = \"{tuning.VerificationUpgrade}\",");
+
+            }
+
+            lua.DecreaseIndent();
+            lua.AppendLine("},");
 
         }
 

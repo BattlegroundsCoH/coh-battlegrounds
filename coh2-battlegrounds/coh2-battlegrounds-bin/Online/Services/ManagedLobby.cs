@@ -8,6 +8,7 @@ using Battlegrounds.Compiler;
 using Battlegrounds.Functional;
 using Battlegrounds.Game.Battlegrounds;
 using Battlegrounds.Game.Gameplay;
+using Battlegrounds.Modding;
 
 namespace Battlegrounds.Online.Services {
     
@@ -347,11 +348,11 @@ namespace Battlegrounds.Online.Services {
 
                 try {
 
-                    session = Session.CreateSession(
-                        this.OnLocalDataRequested?.Invoke("Scenario") as string ?? string.Empty,
-                        companies,
-                        this.OnLocalDataRequested?.Invoke("Gamemode") as Wincondition ?? null,
-                        (bool?)this.OnLocalDataRequested?.Invoke("EnableAI") ?? false);
+                    if (this.OnLocalDataRequested?.Invoke("MatchInfo") is SessionInfo info) {
+                        session = Session.CreateSession(info, companies);
+                    } else {
+                        throw new Exception("Failed to get a valid SessionInfo");
+                    }
 
                 } catch (Exception e) {
                     operationCancelled?.Invoke(e.Message);

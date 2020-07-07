@@ -89,6 +89,15 @@ namespace Battlegrounds.Game.Gameplay {
         public static Cost operator +(Cost a, Cost b)
             => new Cost((ushort)(a.Manpower + b.Manpower), (ushort)(a.Munitions + b.Munitions), (ushort)(a.Fuel + b.Fuel), a.FieldTime + b.FieldTime);
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="a"></param>
+        /// <param name="b"></param>
+        /// <returns></returns>
+        public static Cost operator *(Cost a, float b)
+            => new Cost((ushort)(a.Manpower * b), (ushort)(a.Munitions * b), (ushort)(a.Fuel * b), a.FieldTime * b);
+
     }
 
 }

@@ -70,6 +70,20 @@ namespace Battlegrounds.Compiler {
             builder.AppendLine($"veterancy_rank = {squad.VeterancyRank},");
             builder.AppendLine($"veterancy_progress = {squad.VeterancyProgress:0.00},");
 
+            // Write the support blueprint - if any
+            if (squad.SupportBlueprint != null) {
+                builder.AppendLine($"transport = {{");
+                builder.IncreaseIndent();
+                if (squad.SupportBlueprint is EntityBlueprint ebp) {
+                    builder.AppendLine($"ebp = \"{ebp.Name}\",");
+                } else if (squad.SupportBlueprint is SquadBlueprint sbp) {
+                    builder.AppendLine($"sbp = \"{sbp.Name}\",");
+                    builder.AppendLine($"exit = {(squad.DeployAndExit ? "true" : "false")},");
+                }
+                builder.DecreaseIndent();
+                builder.AppendLine("},");
+            }
+
             // Get the squad cost
             Cost fCost = squad.GetCost();
 

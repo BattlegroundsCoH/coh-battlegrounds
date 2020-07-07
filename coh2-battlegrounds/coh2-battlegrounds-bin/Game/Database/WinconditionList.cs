@@ -2,20 +2,19 @@
 using System.Collections.Generic;
 using System.Linq;
 using Battlegrounds.Game.Gameplay;
-
-using static Battlegrounds.Game.Gameplay.Wincondition;
+using Battlegrounds.Modding;
 
 namespace Battlegrounds.Game.Database {
     
     /// <summary>
-    /// 
+    /// A small static class-database over all relevant <see cref="Wincondition"/> instances.
     /// </summary>
     public static class WinconditionList {
 
         static Dictionary<string, Wincondition> __winconditions;
 
         /// <summary>
-        /// 
+        /// Create and load the <see cref="WinconditionList"/>.
         /// </summary>
         public static void CreateAndLoadDatabase() {
 
@@ -36,7 +35,7 @@ namespace Battlegrounds.Game.Database {
         }
 
         /// <summary>
-        /// 
+        /// Register a new <see cref="Wincondition"/> in the database.
         /// </summary>
         /// <param name="wincondition"></param>
         public static void AddWincondition(Wincondition wincondition) => __winconditions.Add(wincondition.Guid.ToString(), wincondition);

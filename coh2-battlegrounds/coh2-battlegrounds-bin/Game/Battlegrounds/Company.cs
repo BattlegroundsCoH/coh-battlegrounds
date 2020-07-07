@@ -10,6 +10,7 @@ using Battlegrounds.Json;
 using Battlegrounds.Game.Gameplay;
 using Battlegrounds.Steam;
 using Battlegrounds.Verification;
+using Battlegrounds.Functional;
 
 namespace Battlegrounds.Game.Battlegrounds {
 
@@ -17,6 +18,11 @@ namespace Battlegrounds.Game.Battlegrounds {
     /// Represents a Company. Implements <see cref="IJsonObject"/> and <see cref="IChecksumItem"/>.
     /// </summary>
     public class Company : IJsonObject, IChecksumItem {
+
+        /// <summary>
+        /// The maximum size of a company.
+        /// </summary>
+        public const int MAX_SIZE = 40;
 
         private string m_checksum;
         private ushort m_nextSquadId;
@@ -28,7 +34,7 @@ namespace Battlegrounds.Game.Battlegrounds {
         public string Name { get; set; }
 
         /// <summary>
-        /// The GUID of the tuning mod.
+        /// The GUID of the tuning mod used to create this company.
         /// </summary>
         public string TuningGUID { get; set; }
 
@@ -101,40 +107,144 @@ namespace Battlegrounds.Game.Battlegrounds {
         /// <param name="bp"></param>
         /// <param name="vet"></param>
         /// <param name="vetprog"></param>
+        /// <returns></returns>
+        public int AddSquad(string bp, byte vet, float vetprog)
+            => this.AddSquad(bp, string.Empty, false, vet, vetprog, null, null, null);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="bp"></param>
+        /// <param name="vet"></param>
+        /// <param name="vetprog"></param>
+        /// <param name="upgrades"></param>
+        /// <returns></returns>
+        public int AddSquad(string bp, byte vet, float vetprog, string[] upgrades)
+            => this.AddSquad(bp, string.Empty, false, vet, vetprog, upgrades, null, null);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="bp"></param>
+        /// <param name="vet"></param>
+        /// <param name="vetprog"></param>
+        /// <param name="upgrades"></param>
+        /// <param name="slotiems"></param>
+        /// <returns></returns>
+        public int AddSquad(string bp, byte vet, float vetprog, string[] upgrades, string[] slotiems)
+            => this.AddSquad(bp, string.Empty, false, vet, vetprog, upgrades, slotiems, null);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="mainBP"></param>
+        /// <param name="supportBP"></param>
+        /// <param name="vet"></param>
+        /// <param name="vetprog"></param>
+        /// <returns></returns>
+        public int AddSquad(string mainBP, string supportBP, byte vet, float vetprog)
+            => this.AddSquad(mainBP, supportBP, false, vet, vetprog, null, null, null);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="mainBP"></param>
+        /// <param name="supportBP"></param>
+        /// <param name="vet"></param>
+        /// <param name="vetprog"></param>
+        /// <param name="upgrades"></param>
+        /// <returns></returns>
+        public int AddSquad(string mainBP, string supportBP, byte vet, float vetprog, string[] upgrades)
+            => this.AddSquad(mainBP, supportBP, false, vet, vetprog, upgrades, null, null);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="mainBP"></param>
+        /// <param name="supportBP"></param>
+        /// <param name="vet"></param>
+        /// <param name="vetprog"></param>
+        /// <param name="upgrades"></param>
+        /// <param name="slotiems"></param>
+        /// <returns></returns>
+        public int AddSquad(string mainBP, string supportBP, byte vet, float vetprog, string[] upgrades, string[] slotiems)
+            => this.AddSquad(mainBP, supportBP, false, vet, vetprog, upgrades, slotiems, null);
+
+        /// <summary>
+        /// Add a new <see cref="Squad"/> instance to the company with veterancy, upgrades, and slot items pre-applied.
+        /// </summary>
+        /// <param name="bp">The name of the <see cref="SquadBlueprint"/> to give the squad.</param>
+        /// <param name="vet">The amount of veterancy the squad will have.</param>
+        /// <param name="vetprog">The progress towards the next veterancy level.</param>
+        /// <param name="upgrades">The pre-set upgrades.</param>
+        /// <param name="slotitems">The pre-set slot items.</param>
+        /// <returns>The squad index given to the squad.</returns>
+        public int AddSquad(string bp, string supportBP, bool deployExit, byte vet, float vetprog, string[] upgrades, string[] slotitems, Modifier[] modifiers) {
+
+            // Make sure there's something to work with
+            if (upgrades == null) {
+                upgrades = new string[0];
+            }
+
+            // Make sure there is a workable slotitem array
+            if (slotitems == null) {
+                slotitems = new string[0];
+            }
+
+            // Make sure there's a workable modifier array
+            if (modifiers == null) {
+                modifiers = new Modifier[0];
+            }
+
+            // Cast arrays
+            UpgradeBlueprint[] ubps = upgrades.Convert(x => BlueprintManager.FromBlueprintName(x, BlueprintType.UBP) as UpgradeBlueprint);
+            SlotItemBlueprint[] ibps = slotitems.Convert(x => BlueprintManager.FromBlueprintName(x, BlueprintType.IBP) as SlotItemBlueprint);
+
+            // Get the 
+            SquadBlueprint sbp = BlueprintManager.FromBlueprintName(bp, BlueprintType.SBP) as SquadBlueprint;
+            Blueprint supportBlueprint = null;
+
+            // Get support blueprint if any
+            if (supportBP.CompareTo(string.Empty) != 0) {
+                if (BlueprintManager.FromBlueprintName(supportBP, BlueprintType.EBP) is Blueprint b1) { // always try with ebp first
+                    supportBlueprint = b1;
+                } else if (BlueprintManager.FromBlueprintName(supportBP, BlueprintType.SBP) is Blueprint b2) {
+                    supportBlueprint = b2;
+                }
+            }
+
+            // Return squad index
+            return this.AddSquad(sbp, supportBlueprint, deployExit, vet, vetprog, ubps, ibps, modifiers);
+
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="main"></param>
+        /// <param name="supprt"></param>
+        /// <param name="deployAndExit"></param>
+        /// <param name="vet"></param>
+        /// <param name="vetprog"></param>
         /// <param name="upgrades"></param>
         /// <param name="slotitems"></param>
-        /// <param name="verify"></param>
+        /// <param name="modifiers"></param>
         /// <returns></returns>
-        public bool AddSquad(string bp, byte vet, float vetprog, string[] upgrades = null, string[] slotitems = null, bool verify = true) {
+        public int AddSquad(
+            SquadBlueprint main, Blueprint supprt, bool deployAndExit, byte vet, float vetprog, 
+            UpgradeBlueprint[] upgrades, SlotItemBlueprint[] slotitems, Modifier[] modifiers) {
 
-            // If we're to verify, we do it here
-            if (verify) {
-                // Verify we can do this
-            }
-
-            // Create squad
-            Squad squad = new Squad(m_nextSquadId++, null, BlueprintManager.FromBlueprintName(bp, BlueprintType.SBP));
+            Squad squad = new Squad(m_nextSquadId++, null, main);
             squad.SetVeterancy(vet, vetprog);
+            squad.SetDeploymentMethod(supprt, deployAndExit);
 
-            // Add upgrades
-            if (upgrades != null) {
-                foreach (string upg in upgrades) {
-                    squad.AddUpgrade(BlueprintManager.FromBlueprintName(upg, BlueprintType.UBP));
-                }
-            }
+            upgrades.ForEach(x => squad.AddUpgrade(x));
+            slotitems.ForEach(x => squad.AddSlotItem(x));
+            modifiers.ForEach(x => squad.AddModifier(x));
 
-            // Add items
-            if (slotitems != null) {
-                foreach (string item in slotitems) {
-                    squad.AddUpgrade(BlueprintManager.FromBlueprintName(item, BlueprintType.IBP));
-                }
-            }
-
-            // Add to list of available squads
             m_squads.Add(squad);
 
-            // Return true
-            return true;
+            return squad.SquadID;
 
         }
 
@@ -152,6 +262,22 @@ namespace Battlegrounds.Game.Battlegrounds {
         /// <param name="squadId"></param>
         public bool RemoveSquad(ushort squadId)
             => m_squads.RemoveAll(x => x.SquadID == squadId) == 1;
+
+        /// <summary>
+        /// Reset the squads of the company.
+        /// </summary>
+        public void ResetSquads() {
+            this.m_squads.Clear();
+            this.m_nextSquadId = 0;
+        }
+
+        /// <summary>
+        /// Reset most of the company data.
+        /// </summary>
+        public void ResetCompany() {
+            this.ResetSquads();
+            this.Name = string.Empty;
+        }
 
         /// <summary>
         /// Get the complete checksum in string format.

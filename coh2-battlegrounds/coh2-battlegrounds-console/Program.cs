@@ -29,34 +29,45 @@ namespace coh2_battlegrounds_console {
                 Thread.Sleep(1);
             }
 
-            Company company = Company.ReadCompanyFromFile("test_company.json");
-
             // Create a dummy company
-            Company testCompany = new Company(BattlegroundsInstance.LocalSteamuser, "26th Rifle Guards Division", Faction.Soviet);
-            testCompany.AddSquad("conscript_squad_mp", 0, 0, new string[] { "ppsh-41_sub_machine_gun_upgrade_mp" }, null, false);
-            testCompany.AddSquad("conscript_squad_mp", 2, 0, null, null, false);
-            testCompany.AddSquad("conscript_squad_mp", 3, 0, new string[] { "ppsh-41_sub_machine_gun_upgrade_mp" }, null, false);
-            testCompany.AddSquad("conscript_squad_mp", 3, 0, new string[] { "ppsh-41_sub_machine_gun_upgrade_mp" }, null, false);
-            testCompany.AddSquad("t_34_85_squad_mp", 2, 0, null, null, false);
-            testCompany.AddSquad("t_34_85_squad_mp", 2, 0, null, null, false);
-            testCompany.AddSquad("t_34_85_squad_mp", 3, 0, null, null, false);
+            Company testCompany = new Company(BattlegroundsInstance.LocalSteamuser, "26th Rifle Division", Faction.Soviet);
+            testCompany.AddSquad("conscript_squad_mp", 0, 0, new string[] { "ppsh-41_sub_machine_gun_upgrade_mp" });
+            testCompany.AddSquad("conscript_squad_mp", 2, 0);
+            testCompany.AddSquad("conscript_squad_mp", 0, 120.0f);
+            testCompany.AddSquad("conscript_squad_mp", 3, 0, new string[] { "ppsh-41_sub_machine_gun_upgrade_mp" });
+            testCompany.AddSquad("conscript_squad_mp", 3, 0, new string[] { "ppsh-41_sub_machine_gun_upgrade_mp" });
+            testCompany.AddSquad("t_34_85_squad_mp", 2, 0);
+            testCompany.AddSquad("t_34_85_squad_mp", 2, 0);
+            testCompany.AddSquad("t_34_85_squad_mp", 3, 0);
+            testCompany.AddSquad("t_34_85_squad_mp", 3, 0);
 
             Company[] companies = new Company[] {
                 testCompany
             };
 
-            Session session = Session.CreateSession("2p_angoville", companies, WinconditionList.GetWinconditionByName("Victory Points"), true);
+            SessionInfo sessionInfo = new SessionInfo() {
+                SelectedGamemode = WinconditionList.GetWinconditionByName("Victory Points"),
+                SelectedGamemodeOption = 1,
+                SelectedScenario = ScenarioList.FromRelativePath("2p_angoville"),
+                SelectedTuningMod = new BattlegroundsTuning(),
+                Allies = new string[] { "CoDiEx" },
+                Axis = new string[] {},
+                FillAI = true,
+            };
+
+            Session session = Session.CreateSession(sessionInfo, companies);
 
             /*GameMatch m = new GameMatch(session);
             m.LoadMatch($"{Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)}\\my games\\company of heroes 2\\playback\\temp.rec");
             m.EvaluateResult();
             */
             
-            //SessionManager.PlaySession<SessionCompiler<CompanyCompiler>, CompanyCompiler>(session, (a,b) => { Console.WriteLine(a); }, null);
+            SessionManager.PlaySession<SessionCompiler<CompanyCompiler>, CompanyCompiler>(session, (a,b) => { Console.WriteLine(a); }, null, null);
 
             // Save json
             testCompany.SaveToFile("test_company.json");
 
+            /*
             LobbyHub hub = new LobbyHub();
             if (!hub.CanConnect()) {
                 Console.WriteLine("Unable to reach server hub");
@@ -72,9 +83,9 @@ namespace coh2_battlegrounds_console {
                 }
 
             }
-
+            */
             BattlegroundsInstance.SaveInstance();
-
+            
             Console.ReadLine();
 
         }
