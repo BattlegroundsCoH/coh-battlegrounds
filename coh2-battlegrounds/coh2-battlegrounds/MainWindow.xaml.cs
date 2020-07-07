@@ -13,6 +13,9 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
+using Battlegrounds.Online;
+using Battlegrounds.Online.Services;
+
 namespace coh2_battlegrounds
 {
     /// <summary>
@@ -23,6 +26,26 @@ namespace coh2_battlegrounds
         public MainWindow()
         {
             InitializeComponent();
+        }
+
+        private void createLobby_Click(object sender, RoutedEventArgs e)
+        {
+            
+        }
+
+        private void joinLobby_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void refreshLobbyList_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void LobbyList_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+
         }
     }
 }

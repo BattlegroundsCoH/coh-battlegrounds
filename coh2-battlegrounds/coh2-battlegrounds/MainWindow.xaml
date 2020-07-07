@@ -4,9 +4,42 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:coh2_battlegrounds"
-        mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        mc:Ignorable="d" FontSize="12" FontFamily="Segoe UI Light"
+        Title="Battlegrounds" Height="350" Width="525">
     <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="20" />
+            <ColumnDefinition Width="auto" />
+            <ColumnDefinition Width="auto" />
+            <ColumnDefinition Width="auto" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="20" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="20" />
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="20" />
+        </Grid.RowDefinitions>
+
+        <TextBlock Grid.Column="1" Grid.Row="1" FontSize="18" FontWeight="SemiBold"
+                   FontFamily="Segoe UI" Text="Game Browser"/>
+
+        <ListView x:Name="LobbyList" Grid.Column="1" Grid.Row="2" Grid.ColumnSpan="2" Grid.RowSpan="5"
+                  Width="350" Height="250" SelectionChanged="LobbyList_SelectionChanged"/>
+
+        <Button x:Name="CreateLobbyButton" Grid.Column="3" Grid.Row="4" Content="Create Lobby"
+                Click="createLobby_Click"/>
+
+        <Button x:Name="JoinLobbyButton" Grid.Column="3" Grid.Row="3" Content="Join Lobby"
+                Click="joinLobby_Click" IsEnabled="False" />
+
+        <Button x:Name="RefreshLobbyListButton" Grid.Column="3" Grid.Row="2" Content="Refresh"
+                Click="refreshLobbyList_Click"/>
 
     </Grid>
 </Window>
