@@ -95,6 +95,10 @@ namespace Battlegrounds.Json {
 
             result = "";
 
+            if (i >= contents.Length) {
+                return;
+            }
+
             if (contents[i] == '[') {
 
                 i++;
@@ -172,8 +176,12 @@ namespace Battlegrounds.Json {
                         }
                     }
 
-                    if (contents[i] == '}') {
-                        i++;
+                    if (i < contents.Length) {
+                        if (contents[i] == '}') {
+                            i++;
+                            break;
+                        }
+                    } else {
                         break;
                     }
 

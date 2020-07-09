@@ -127,13 +127,15 @@ namespace Battlegrounds.Game.Battlegrounds {
                     return;
                 }
 
-                // Wait for go-ahead
-                bool? continueProc = await matchCompileAndWait?.Invoke();
+                // If there's a "blocking" method - execute it and wait for it to finish.
+                if (matchCompileAndWait != null) {
 
-                // Wait for compile done
-                if (!continueProc.GetValueOrDefault(true)) {
-                    UpdateStatus(SessionStatus.S_GameNotLaunched, statusChangedCallback);
-                    return;
+                    // Wait for compile done
+                    if (!(await matchCompileAndWait.Invoke())) {
+                        UpdateStatus(SessionStatus.S_GameNotLaunched, statusChangedCallback);
+                        return;
+                    }
+
                 }
 
                 // Launch the game

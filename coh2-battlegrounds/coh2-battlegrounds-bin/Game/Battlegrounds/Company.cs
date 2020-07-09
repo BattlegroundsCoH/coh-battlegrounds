@@ -94,7 +94,7 @@ namespace Battlegrounds.Game.Battlegrounds {
             this.Name = name;
             this.Owner = user;
             this.Army = army;
-            this.TuningGUID = tuningGUID;
+            this.TuningGUID = tuningGUID.Replace("-", "");
 
             // Prepare squad list
             this.m_squads = new List<Squad>();

@@ -88,6 +88,7 @@ namespace Battlegrounds.Game.Database {
             // Load data here
             string[] db_paths = Directory.GetFiles(dbpath, "*.json");
             int failCounter = 0;
+            int loadCounter = 0;
 
             // loop through all the json paths
             for (int i = 0; i < db_paths.Length; i++) {
@@ -97,12 +98,14 @@ namespace Battlegrounds.Game.Database {
                     if (Enum.TryParse(toUpper, out BlueprintType t)) { // try and parse to blueprint type
                         if (!LoadJsonDatabase(db_paths[i], t, guid)) { // load the db
                             failCounter++; // we failed, so increment fail counter.
+                        } else {
+                            loadCounter++;
                         }
                     }
                 }
             }
 
-            if (failCounter > 0) {
+            if (failCounter > 0 || loadCounter == 0) {
                 throw new Exception("Failed to load one or more blueprint databases!");
             }
 

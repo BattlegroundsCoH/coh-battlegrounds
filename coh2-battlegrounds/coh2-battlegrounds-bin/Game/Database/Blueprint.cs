@@ -38,7 +38,7 @@ namespace Battlegrounds.Game.Database {
             if (this.ModGUID.CompareTo(string.Empty) == 0) {
                 return $"\"{this.Name}\"";
             } else {
-                return $"\"{this.ModGUID}:{this.Name}\"";
+                return $"\"{this.ModGUID.Replace("-", "")}:{this.Name}\"";
             }
         }
 
