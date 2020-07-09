@@ -72,14 +72,26 @@ namespace Battlegrounds.Compiler {
 
             // Write the support blueprint - if any
             if (squad.SupportBlueprint != null) {
-                builder.AppendLine($"transport = {{");
+                builder.AppendLine("transport = {");
                 builder.IncreaseIndent();
-                if (squad.SupportBlueprint is EntityBlueprint ebp) {
-                    builder.AppendLine($"ebp = {ebp.ToScar()},");
-                } else if (squad.SupportBlueprint is SquadBlueprint sbp) {
-                    builder.AppendLine($"sbp = {sbp.ToScar()},");
-                    builder.AppendLine($"exit = {(squad.DeployAndExit ? "true" : "false")},");
-                }
+                builder.AppendLine($"sbp = {squad.SupportBlueprint.ToScar()},");
+                builder.AppendLine($"mode = {(int)squad.DeploymentMethod},");
+                builder.DecreaseIndent();
+                builder.AppendLine("},");
+            }
+
+            // Write the crew data - if any
+            if (squad.Crew is Squad crew) {
+                builder.AppendLine("crew = {");
+                builder.IncreaseIndent();
+                builder.AppendLine($"company_id = {crew.SquadID},");
+                builder.AppendLine($"veterancy_rank = {crew.VeterancyRank},");
+                builder.AppendLine($"veterancy_progress = {crew.VeterancyProgress:0.0},");
+
+                CompileList(builder, "upgrades", crew.Upgrades, x => { UpgradeBlueprint y = x as UpgradeBlueprint; return y.ToScar(); });
+                CompileList(builder, "slot_items", crew.SlotItems, x => { SlotItemBlueprint y = x as SlotItemBlueprint; return y.ToScar(); });
+                CompileList(builder, "modifiers", (new string[0]).ToImmutableArray(), x => x);
+
                 builder.DecreaseIndent();
                 builder.AppendLine("},");
             }
@@ -99,8 +111,8 @@ namespace Battlegrounds.Compiler {
             builder.DecreaseIndent();
             builder.AppendLine("},");
 
-            CompileList(builder, "upgrades", squad.Upgrades, x => { UpgradeBlueprint y = x as UpgradeBlueprint; return $"{{ bp=\"{y.Name}\", symbol=\"{y.Symbol}\" }}"; });
-            CompileList(builder, "slot_items", squad.SlotItems, x => $"\"{x}\"");
+            CompileList(builder, "upgrades", squad.Upgrades, x => { UpgradeBlueprint y = x as UpgradeBlueprint; return $"{{ bp={y.ToScar()}, symbol=\"{y.Symbol}\" }}"; });
+            CompileList(builder, "slot_items", squad.SlotItems, x => { SlotItemBlueprint y = x as SlotItemBlueprint; return $"{y.ToScar()}"; });
             CompileList(builder, "modifiers", (new string[0]).ToImmutableArray(), x => x);
 
             builder.AppendLine($"spawned = false,");

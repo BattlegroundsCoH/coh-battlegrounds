@@ -2,20 +2,55 @@
 using System.Linq;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+
 using Battlegrounds.Game.Database;
 using Battlegrounds.Json;
 
 namespace Battlegrounds.Game.Gameplay {
-    
+
+    /// <summary>
+    /// The method in which to deploy a <see cref="Squad"/>.
+    /// </summary>
+    public enum DeploymentMethod {
+
+        /// <summary>
+        /// No special method is defined (units walks unto the battlefield)
+        /// </summary>
+        None,
+
+        /// <summary>
+        /// The unit is transported unto the battlefield using the support blueprint. The transport will then leave the battlefield.
+        /// </summary>
+        DeployAndExit,
+
+        /// <summary>
+        /// The unit will be transported unto the battlefield using the support blueprint.
+        /// </summary>
+        DeployAndStay,
+
+        /// <summary>
+        /// The unit is dropped from the skies using a parachute.
+        /// </summary>
+        Paradrop,
+
+        /// <summary>
+        /// The unit is deployed using a glider.
+        /// </summary>
+        Glider,
+
+    }
+
     /// <summary>
     /// Representation of a Squad. Implements <see cref="IJsonObject"/>.
     /// </summary>
     public class Squad : IJsonObject {
 
+        private bool m_isCrewSquad;
         private byte m_veterancyRank;
         private float m_veterancyProgress;
-        private bool m_deployAndExit;
+        private DeploymentMethod m_deployMode;
 
+        [JsonIgnoreIfNull] private Squad m_crewSquad;
         [JsonReference(typeof(BlueprintManager))] private Blueprint m_deployBp;
 
         [JsonReference(typeof(BlueprintManager))] private HashSet<Blueprint> m_upgrades;
@@ -49,7 +84,19 @@ namespace Battlegrounds.Game.Gameplay {
         /// Deploy the unit and exit when deployed.
         /// </summary>
         [JsonIgnore]
-        public bool DeployAndExit => this.m_deployAndExit;
+        public DeploymentMethod DeploymentMethod => this.m_deployMode;
+
+        /// <summary>
+        /// The squad data for the crew.
+        /// </summary>
+        [JsonIgnore]
+        public Squad Crew => this.m_crewSquad;
+
+        /// <summary>
+        /// Is the <see cref="Squad"/> the crew for another <see cref="Squad"/> instance.
+        /// </summary>
+        [JsonIgnore]
+        public bool IsCrew => this.m_isCrewSquad;
 
         /// <summary>
         /// The <see cref="Blueprint"/> in a <see cref="SquadBlueprint"/> form.
@@ -98,6 +145,8 @@ namespace Battlegrounds.Game.Gameplay {
             this.m_slotItems = new HashSet<Blueprint>();
             this.m_upgrades = new HashSet<Blueprint>();
             this.m_modifiers = new HashSet<Modifier>();
+            this.m_deployMode = DeploymentMethod.None;
+            this.m_crewSquad = null;
         }
 
         /// <summary>
@@ -113,6 +162,8 @@ namespace Battlegrounds.Game.Gameplay {
             this.m_slotItems = new HashSet<Blueprint>();
             this.m_upgrades = new HashSet<Blueprint>();
             this.m_modifiers = new HashSet<Modifier>();
+            this.m_deployMode = DeploymentMethod.None;
+            this.m_crewSquad = null;
         }
 
         /// <summary>
@@ -130,10 +181,25 @@ namespace Battlegrounds.Game.Gameplay {
         /// </summary>
         /// <param name="transportBlueprint"></param>
         /// <param name="deployAndExit"></param>
-        public void SetDeploymentMethod(Blueprint transportBlueprint, bool deployAndExit) {
-            this.m_deployAndExit = deployAndExit;
+        public void SetDeploymentMethod(Blueprint transportBlueprint, DeploymentMethod deployMode) {
+            this.m_deployMode = deployMode;
             this.m_deployBp = transportBlueprint;
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="crew"></param>
+        public void SetCrew(Squad crew) {
+            this.m_crewSquad = crew;
+            this.m_crewSquad.SetIsCrew(true);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="isCrew"></param>
+        public void SetIsCrew(bool isCrew) => m_isCrewSquad = isCrew;
 
         /// <summary>
         /// Add an upgrade to the squad
@@ -169,7 +235,7 @@ namespace Battlegrounds.Game.Gameplay {
             c = this.m_upgrades.Select(x => (x as UpgradeBlueprint).Cost).Aggregate(c, (a, b) => a + b);
 
             if (this.m_deployBp is SquadBlueprint sbp) {
-                c += sbp.Cost * (this.m_deployAndExit ? 0.15f : 0.25f);
+                c += sbp.Cost * (this.DeploymentMethod == DeploymentMethod.DeployAndExit ? 0.15f : 0.25f);
             }
 
             // TODO: More here

@@ -52,6 +52,7 @@ namespace Battlegrounds.Json {
                     jsonbuilder,
                     pinfo.PropertyType,
                     pinfo.GetCustomAttribute<JsonReferenceAttribute>() is JsonReferenceAttribute,
+                    pinfo.GetCustomAttribute<JsonIgnoreIfNullAttribute>() is JsonIgnoreIfNullAttribute,
                     pinfo.Name,
                     pinfo.GetValue(this),
                     pinfo != properties.Last() || fields.Count() > 0
@@ -63,6 +64,7 @@ namespace Battlegrounds.Json {
                     jsonbuilder,
                     finfo.FieldType,
                     finfo.GetCustomAttribute<JsonReferenceAttribute>() is JsonReferenceAttribute,
+                    finfo.GetCustomAttribute<JsonIgnoreIfNullAttribute>() is JsonIgnoreIfNullAttribute,
                     finfo.Name,
                     finfo.GetValue(this),
                     finfo != fields.Last()
@@ -76,7 +78,10 @@ namespace Battlegrounds.Json {
 
         }
 
-        private static void WriteKeyValuePair(TxtBuilder jsonbuilder, Type type, bool useRef, string name, object val, bool appendComma) {
+        private static void WriteKeyValuePair(TxtBuilder jsonbuilder, Type type, bool useRef, bool ignoreIfNull, string name, object val, bool appendComma) {
+            if (val is null && ignoreIfNull) {
+                return;
+            }
             if (type.IsPrimitive || val is string) {
                 jsonbuilder.AppendLine($"\"{name}\": \"{val}\"{((appendComma)?",":"")}");
             } else {

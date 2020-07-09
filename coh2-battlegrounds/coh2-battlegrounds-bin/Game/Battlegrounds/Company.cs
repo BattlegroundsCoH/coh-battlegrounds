@@ -110,7 +110,7 @@ namespace Battlegrounds.Game.Battlegrounds {
         /// <param name="vetprog"></param>
         /// <returns></returns>
         public int AddSquad(string bp, byte vet, float vetprog)
-            => this.AddSquad(bp, string.Empty, false, vet, vetprog, null, null, null);
+            => this.AddSquad(bp, string.Empty, DeploymentMethod.None, vet, vetprog, null, null, null);
 
         /// <summary>
         /// 
@@ -121,7 +121,7 @@ namespace Battlegrounds.Game.Battlegrounds {
         /// <param name="upgrades"></param>
         /// <returns></returns>
         public int AddSquad(string bp, byte vet, float vetprog, string[] upgrades)
-            => this.AddSquad(bp, string.Empty, false, vet, vetprog, upgrades, null, null);
+            => this.AddSquad(bp, string.Empty, DeploymentMethod.None, vet, vetprog, upgrades, null, null);
 
         /// <summary>
         /// 
@@ -133,7 +133,7 @@ namespace Battlegrounds.Game.Battlegrounds {
         /// <param name="slotiems"></param>
         /// <returns></returns>
         public int AddSquad(string bp, byte vet, float vetprog, string[] upgrades, string[] slotiems)
-            => this.AddSquad(bp, string.Empty, false, vet, vetprog, upgrades, slotiems, null);
+            => this.AddSquad(bp, string.Empty, DeploymentMethod.None, vet, vetprog, upgrades, slotiems, null);
 
         /// <summary>
         /// 
@@ -144,7 +144,7 @@ namespace Battlegrounds.Game.Battlegrounds {
         /// <param name="vetprog"></param>
         /// <returns></returns>
         public int AddSquad(string mainBP, string supportBP, byte vet, float vetprog)
-            => this.AddSquad(mainBP, supportBP, false, vet, vetprog, null, null, null);
+            => this.AddSquad(mainBP, supportBP, DeploymentMethod.None, vet, vetprog, null, null, null);
 
         /// <summary>
         /// 
@@ -156,7 +156,7 @@ namespace Battlegrounds.Game.Battlegrounds {
         /// <param name="upgrades"></param>
         /// <returns></returns>
         public int AddSquad(string mainBP, string supportBP, byte vet, float vetprog, string[] upgrades)
-            => this.AddSquad(mainBP, supportBP, false, vet, vetprog, upgrades, null, null);
+            => this.AddSquad(mainBP, supportBP, DeploymentMethod.None, vet, vetprog, upgrades, null, null);
 
         /// <summary>
         /// 
@@ -169,18 +169,21 @@ namespace Battlegrounds.Game.Battlegrounds {
         /// <param name="slotiems"></param>
         /// <returns></returns>
         public int AddSquad(string mainBP, string supportBP, byte vet, float vetprog, string[] upgrades, string[] slotiems)
-            => this.AddSquad(mainBP, supportBP, false, vet, vetprog, upgrades, slotiems, null);
+            => this.AddSquad(mainBP, supportBP, DeploymentMethod.None, vet, vetprog, upgrades, slotiems, null);
 
         /// <summary>
         /// Add a new <see cref="Squad"/> instance to the company with veterancy, upgrades, and slot items pre-applied.
         /// </summary>
         /// <param name="bp">The name of the <see cref="SquadBlueprint"/> to give the squad.</param>
+        /// <param name="supportBP">The supporting blueprint to use when deploying.</param>
+        /// <param name="deployMode">The method used when deploying the unit.</param>
         /// <param name="vet">The amount of veterancy the squad will have.</param>
         /// <param name="vetprog">The progress towards the next veterancy level.</param>
         /// <param name="upgrades">The pre-set upgrades.</param>
         /// <param name="slotitems">The pre-set slot items.</param>
+        /// <param name="modifiers">The pre-set modifiers.</param>
         /// <returns>The squad index given to the squad.</returns>
-        public int AddSquad(string bp, string supportBP, bool deployExit, byte vet, float vetprog, string[] upgrades, string[] slotitems, Modifier[] modifiers) {
+        public int AddSquad(string bp, string supportBP, DeploymentMethod deployMode, byte vet, float vetprog, string[] upgrades, string[] slotitems, Modifier[] modifiers) {
 
             // Make sure there's something to work with
             if (upgrades == null) {
@@ -201,7 +204,7 @@ namespace Battlegrounds.Game.Battlegrounds {
             UpgradeBlueprint[] ubps = upgrades.Convert(x => BlueprintManager.FromBlueprintName(x, BlueprintType.UBP) as UpgradeBlueprint);
             SlotItemBlueprint[] ibps = slotitems.Convert(x => BlueprintManager.FromBlueprintName(x, BlueprintType.IBP) as SlotItemBlueprint);
 
-            // Get the 
+            // Get the blueprints
             SquadBlueprint sbp = BlueprintManager.FromBlueprintName(bp, BlueprintType.SBP) as SquadBlueprint;
             Blueprint supportBlueprint = null;
 
@@ -215,7 +218,7 @@ namespace Battlegrounds.Game.Battlegrounds {
             }
 
             // Return squad index
-            return this.AddSquad(sbp, supportBlueprint, deployExit, vet, vetprog, ubps, ibps, modifiers);
+            return this.AddSquad(sbp, supportBlueprint, deployMode, vet, vetprog, ubps, ibps, modifiers);
 
         }
 
@@ -224,7 +227,7 @@ namespace Battlegrounds.Game.Battlegrounds {
         /// </summary>
         /// <param name="main"></param>
         /// <param name="supprt"></param>
-        /// <param name="deployAndExit"></param>
+        /// <param name="deployMode"></param>
         /// <param name="vet"></param>
         /// <param name="vetprog"></param>
         /// <param name="upgrades"></param>
@@ -232,12 +235,12 @@ namespace Battlegrounds.Game.Battlegrounds {
         /// <param name="modifiers"></param>
         /// <returns></returns>
         public int AddSquad(
-            SquadBlueprint main, Blueprint supprt, bool deployAndExit, byte vet, float vetprog, 
+            SquadBlueprint main, Blueprint supprt, DeploymentMethod deployMode, byte vet, float vetprog, 
             UpgradeBlueprint[] upgrades, SlotItemBlueprint[] slotitems, Modifier[] modifiers) {
 
             Squad squad = new Squad(m_nextSquadId++, null, main);
             squad.SetVeterancy(vet, vetprog);
-            squad.SetDeploymentMethod(supprt, deployAndExit);
+            squad.SetDeploymentMethod(supprt, deployMode);
 
             upgrades.ForEach(x => squad.AddUpgrade(x));
             slotitems.ForEach(x => squad.AddSlotItem(x));
