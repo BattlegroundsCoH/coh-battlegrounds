@@ -54,11 +54,49 @@ bg_set = {
 -- SGroup functions
 ------------------------------------------------------------
 
-function SGroup_FromSquad(squad)
-    sg_temp = SGroup_CreateIfNotFound("sg_temp");
+function SGroup_FromSquad(squad, temp_name)
+    if temp_name == nil then
+        temp_name = "sg_temp";
+    end
+    sg_temp = SGroup_CreateIfNotFound(temp_name);
     SGroup_Clear(sg_temp);
     SGroup_Add(sg_temp, squad);
     return sg_temp;
+end
+
+__removewhennear = {}
+
+function SGroup_MoveAndDespawn(squad, pos)
+
+    -- Move to the position
+    Cmd_Move(squad, pos);
+
+    -- Add to near table
+    table.insert(__removewhennear, { target = squad, location = pos });
+
+    if not Rule_Exists(__SGREMOVE_WHEN_NEAR) then
+        Rule_Add(__SGREMOVE_WHEN_NEAR);
+    end
+
+end
+
+function __SGREMOVE_WHEN_NEAR()
+    if #__removewhennear == 0 then
+        Rule_RemoveMe();
+    else
+        for i=1, #__removewhennear do
+            if SGroup_Count(__removewhennear[i].target) == 0 then
+                table.remove(__removewhennear, i);
+                break;
+            else
+                if Util_GetDistance(__removewhennear[i].location, SGroup_GetPosition(__removewhennear[i].target)) < 5 then
+                    SGroup_DeSpawn(__removewhennear[i].target);
+                    table.remove(__removewhennear, i);
+                    break;
+                end
+            end
+        end
+    end
 end
 
 ------------------------------------------------------------

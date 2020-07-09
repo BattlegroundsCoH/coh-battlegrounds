@@ -75,6 +75,7 @@ namespace Battlegrounds.Compiler {
                 builder.AppendLine("transport = {");
                 builder.IncreaseIndent();
                 builder.AppendLine($"sbp = {squad.SupportBlueprint.ToScar()},");
+                builder.AppendLine($"symbol = \"{(squad.SupportBlueprint as SquadBlueprint).Symbol}\",");
                 builder.AppendLine($"mode = {(int)squad.DeploymentMethod},");
                 builder.DecreaseIndent();
                 builder.AppendLine("},");

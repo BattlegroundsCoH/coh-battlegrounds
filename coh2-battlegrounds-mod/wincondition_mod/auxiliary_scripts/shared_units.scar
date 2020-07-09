@@ -78,11 +78,16 @@ function BG_DeploySquad(player, unit_id)
             if unit_data.transport.mode == 1 or unit_data.transport.mode == 2 then
 
                 local transportSquad = Squad_CreateAndSpawnToward(BP_GetSquadBlueprint(unit_data.transport.sbp), player, 0, spawnfrom, gotopos );
-                local sg_transport_temp = SGroup_FromSquad(transportSquad);
+                local sg_transport_temp = SGroup_FromSquad(transportSquad, "sg_transport_temp" .. unit_data.company_id);
+                SGroup_Add(sg_transport_temp, transportSquad);
 
                 Cmd_Garrison(sg_temp, sg_transport_temp, true, false, true);
 
                 Command_SquadPos(player, sg_transport_temp, SCMD_UnloadSquads, gotopos, false);
+
+                if unit_data.transport.mode == 1 then
+                    BG_DeployAndExit(sg_transport_temp);
+                end
 
             else
 
@@ -192,5 +197,20 @@ function BG_RecallSquad(player, unit_id)
 end
 
 function BG_SurrenderSquad(squad)
+
+end
+
+__deployexittable = {}
+
+function BG_DeployAndExit(group)
+
+    -- Hide the unit as much as possible - Should note, we can't easily exit a vehicle - we may need to add a "oh sh*t gotta get outta here mechanic"
+    SGroup_SetSelectable(group, false);
+    SGroup_EnableUIDecorator(group, false);
+
+    Event_IsHoldingAny(function()
+        local pos = Player_GetNearestMapEntry(Util_GetPlayerOwner(group), Util_GetPosition(group));
+        SGroup_MoveAndDespawn(group, pos);
+    end, nil, group, true, 0.5)
 
 end

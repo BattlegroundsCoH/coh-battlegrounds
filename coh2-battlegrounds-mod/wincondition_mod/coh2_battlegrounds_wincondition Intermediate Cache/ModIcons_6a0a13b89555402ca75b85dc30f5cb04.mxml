@@ -24,6 +24,16 @@
 		public static var unitbackground:Class;
 		[Embed(source='E:/coh2_battlegrounds/coh2-battlegrounds-mod/wincondition_mod/art/vstar.png')]
 		public static var vstar:Class;
+		[Embed(source='E:/coh2_battlegrounds/coh2-battlegrounds-mod/wincondition_mod/art/vstar1.png')]
+		public static var vstar1:Class;
+		[Embed(source='E:/coh2_battlegrounds/coh2-battlegrounds-mod/wincondition_mod/art/vstar2.png')]
+		public static var vstar2:Class;
+		[Embed(source='E:/coh2_battlegrounds/coh2-battlegrounds-mod/wincondition_mod/art/vstar3.png')]
+		public static var vstar3:Class;
+		[Embed(source='E:/coh2_battlegrounds/coh2-battlegrounds-mod/wincondition_mod/art/vstar4.png')]
+		public static var vstar4:Class;
+		[Embed(source='E:/coh2_battlegrounds/coh2-battlegrounds-mod/wincondition_mod/art/vstar5.png')]
+		public static var vstar5:Class;
 		]]>
 	</fx:Script>
 </display:MovieClip>

@@ -147,6 +147,13 @@ function BG_CreateUnitcard(unit, yoffset)
 
     local xPositiveOffset = 40;
 
+    -- If the unit has transport...
+    if unit.transport ~= nil then
+        local transport_symbol = Icon(unit.transport.symbol, 36, 36, xPositiveOffset - 2, 2);
+        cardPanel:add(transport_symbol);
+        xPositiveOffset = xPositiveOffset + 38;
+    end
+
     if (unit.cost.manpower ~= nil and unit.cost.manpower > 0) then
         xPositiveOffset = BG_CreateCost("ModIcons_6a0a13b89555402ca75b85dc30f5cb04_manpower_24x24", xPositiveOffset, 6, unit.cost.manpower, cardPanel);
     end
@@ -168,18 +175,20 @@ function BG_CreateUnitcard(unit, yoffset)
 
 end
 
+function BG_GetVStar(rank)
+    return "ModIcons_6a0a13b89555402ca75b85dc30f5cb04_vstar" .. rank;
+end
+
 function BG_CreateUnitStats(unit, card)
 
     -- The x-offset in the "negative direction"
-    local xNegativeOffset = 290;
+    local xNegativeOffset = 268;
 
     -- If any veterancy
     if (unit.veterancy_rank > 0) then
-        for i=1, unit.veterancy_rank do
-            local vetstar_ico = Icon("ModIcons_6a0a13b89555402ca75b85dc30f5cb04_vstar", 16, 16, xNegativeOffset, 10);
-            card:add(vetstar_ico);
-            xNegativeOffset = xNegativeOffset - 16;
-        end
+        local vetstar_ico = Icon(BG_GetVStar(unit.veterancy_rank), 36, 22, xNegativeOffset, 7);
+        card:add(vetstar_ico);
+        xNegativeOffset = xNegativeOffset - 24;
     end
 
     -- Weapon symbol to display
@@ -215,7 +224,7 @@ function BG_CreateCost(iconName, x, y, price, owner)
     cost:setColor(Color.White);
     owner:add(cost);
 
-    x = x + 46;
+    x = x + 40;
 
     return x;
 
@@ -223,10 +232,10 @@ end
 
 function BG_CreateUnitDeployProgress(unit, card)
 
-    local progress_frame = Icon("ModIcons_6a0a13b89555402ca75b85dc30f5cb04_progress_bar_small_frame", 155, 28, 160, 6);
+    local progress_frame = Icon("ModIcons_6a0a13b89555402ca75b85dc30f5cb04_progress_bar_small_frame", 135, 28, 180, 6);
     card:add(progress_frame);
 
-    unit.deploy_visual = Icon("ModIcons_6a0a13b89555402ca75b85dc30f5cb04_progress_bar_small", BG_GetDeploytimeBar(unit), 12, 174, 12);
+    unit.deploy_visual = Icon("ModIcons_6a0a13b89555402ca75b85dc30f5cb04_progress_bar_small", BG_GetDeploytimeBar(unit), 12, 194, 12);
     card:add(unit.deploy_visual);
 
     -- Add clickable background
@@ -295,7 +304,7 @@ end
 function BG_GetDeploytimeBar(unit)
     if unit.isDeploying then
         local maxTime = unit.cost.fieldtime;
-        return (maxTime - unit.deploy_time) / maxTime * 115;
+        return (maxTime - unit.deploy_time) / maxTime * 95;
     else
         return 0;
     end
