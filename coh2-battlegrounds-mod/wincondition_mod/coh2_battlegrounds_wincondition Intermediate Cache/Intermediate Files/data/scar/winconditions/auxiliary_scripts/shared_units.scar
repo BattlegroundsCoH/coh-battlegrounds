@@ -65,7 +65,7 @@ function BG_DeploySquad(player, unit_id)
     if not unit_data.spawned then
 
         -- Get position data
-        local gotopos = Player_GetStartingPosition(player); -- TODO: Find a better way of getting the position
+        local gotopos = _bg_playerData[playerRefID].last_callin_point or Player_GetStartingPosition(player);
         local spawnfrom = Player_GetNearestMapEntry(player, gotopos);
 
         -- Create the squad

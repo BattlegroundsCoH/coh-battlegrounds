@@ -187,6 +187,13 @@ function BG_TeamWithdraw(player)
 
 end
 
+function BG_SetCallinPoint(executer, target)
+    if scartype(executer) == ST_PLAYER then
+        local pid = BG_GetPlayerID(executer);
+        _bg_playerData[pid].last_callin_point = target;
+    end
+end
+
 function BG_CollectEndofMatchData()
 
     -- Loop through all the players

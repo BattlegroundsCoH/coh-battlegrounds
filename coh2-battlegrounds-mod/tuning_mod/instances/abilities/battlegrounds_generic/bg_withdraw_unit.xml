@@ -49,7 +49,7 @@
 		<float name="move_back_distance" value="5" />
 		<float name="range" value="9999" />
 		<bool name="range_ignore" value="False" />
-		<float name="recharge_time" value="5" />
+		<float name="recharge_time" value="10" />
 		<bool name="refundable" value="True" />
 		<bool name="require_no_shot_block" value="False" />
 		<enum name="shared_timer" value="" />

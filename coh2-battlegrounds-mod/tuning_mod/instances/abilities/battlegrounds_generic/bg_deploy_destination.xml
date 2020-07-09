@@ -9,15 +9,15 @@
 			</list>
 			<list name="start_target_actions">
 				<template_reference name="action" value="action\scar_function_call">
-					<string name="function_name" value="" />
+					<string name="function_name" value="BG_SetCallinPoint" />
 					<uniqueid name="id" value="1073741826" />
 				</template_reference>
 			</list>
 		</group>
-		<enum name="activation" value="" />
-		<bool name="can_interrupt" value="True" />
-		<bool name="can_target_in_fow" value="False" />
-		<float name="caster_close_in_distance" value="0" />
+		<enum name="activation" value="targeted" />
+		<bool name="can_interrupt" value="False" />
+		<bool name="can_target_in_fow" value="True" />
+		<float name="caster_close_in_distance" value="2" />
 		<bool name="casters_can_evacuate" value="False" />
 		<group name="cost">
 			<float name="action" value="0" />
@@ -27,30 +27,30 @@
 			<float name="munition" value="0" />
 			<float name="popcap" value="0" />
 		</group>
-		<string name="cursor_ghost_blueprint" value="" />
+		<string name="cursor_ghost_blueprint" value="environment\objects\base_perimeter\team_flagpole\team_flagpole" />
 		<float name="cursor_ghost_blueprint_angle" value="0" />
 		<bool name="disable_combat" value="False" />
-		<bool name="disable_when_active" value="False" />
+		<bool name="disable_when_active" value="True" />
 		<float name="duration_time" value="-1" />
 		<bool name="enable_in_building" value="False" />
 		<bool name="enable_in_vehicle" value="False" />
-		<bool name="engage_combat" value="False" />
+		<bool name="engage_combat" value="True" />
 		<float name="entity_busy_time" value="0" />
 		<float name="facing_angle" value="5" />
 		<bool name="facing_ignore" value="False" />
 		<float name="final_close_in_distance" value="0" />
-		<bool name="fire_and_forget" value="False" />
+		<bool name="fire_and_forget" value="True" />
 		<bool name="garrison_target" value="False" />
-		<bool name="has_speech_code" value="True" />
+		<bool name="has_speech_code" value="False" />
 		<float name="initial_delay_time" value="0" />
 		<bool name="initial_recharge" value="False" />
 		<bool name="is_default_action" value="False" />
 		<bool name="move_back" value="False" />
-		<float name="move_back_distance" value="10" />
-		<float name="range" value="0" />
+		<float name="move_back_distance" value="5" />
+		<float name="range" value="9999" />
 		<bool name="range_ignore" value="False" />
-		<float name="recharge_time" value="0" />
-		<bool name="refundable" value="True" />
+		<float name="recharge_time" value="15" />
+		<bool name="refundable" value="False" />
 		<bool name="require_no_shot_block" value="False" />
 		<enum name="shared_timer" value="" />
 		<bool name="shared_timer_player_wide" value="False" />
@@ -73,8 +73,8 @@
 		<float name="toggled_recharge_time_off" value="0" />
 		<float name="toggled_recharge_time_on" value="0" />
 		<group name="ui_cursor">
-			<string name="cursor_bad" value="" />
-			<string name="cursor_good" value="" />
+			<string name="cursor_bad" value="modal_ability_cancel" />
+			<string name="cursor_good" value="modal_ability" />
 			<string name="cursor_nonmodal_good" value="" />
 		</group>
 		<group name="ui_info">
@@ -98,11 +98,11 @@
 		<list name="requirements">
 		</list>
 		<enum name="ability_super" value="tp_none" />
-		<int name="ui_position" value="-1" />
+		<int name="ui_position" value="22" />
 		<bool name="ui_mini_map_capture" value="False" />
 		<bool name="facing_ignore_during_active" value="False" />
-		<instance_reference name="ui_range" value="" />
-		<instance_reference name="ui_reticule" value="" />
+		<instance_reference name="ui_range" value="ui_reticule\minimap_only" />
+		<instance_reference name="ui_reticule" value="ui_reticule\ability_target_commander" />
 		<float name="ui_reticule_radius_min" value="1" />
 		<float name="ui_reticule_radius_max" value="1" />
 		<enum name="pending_ability_out_of_range_behaviour" value="chase" />
