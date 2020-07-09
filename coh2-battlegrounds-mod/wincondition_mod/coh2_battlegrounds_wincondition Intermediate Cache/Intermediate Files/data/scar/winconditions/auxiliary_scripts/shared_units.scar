@@ -65,15 +65,42 @@ function BG_DeploySquad(player, unit_id)
     if not unit_data.spawned then
 
         -- Get position data
-        local gotopos = Player_GetStartingPosition(player);
+        local gotopos = Player_GetStartingPosition(player); -- TODO: Find a better way of getting the position
         local spawnfrom = Player_GetNearestMapEntry(player, gotopos);
 
         -- Create the squad
         local squad = Squad_CreateAndSpawnToward(BP_GetSquadBlueprint(unit_data.bp_name), player, 0, spawnfrom, gotopos );
         local sg_temp = SGroup_FromSquad(squad);
 
-        -- Give move order
-        Command_SquadPos(player, sg_temp, SCMD_Move, gotopos, false )
+        -- Was a transport method specified?
+        if unit_data.transport ~= nil then
+
+            if unit_data.transport.mode == 1 or unit_data.transport.mode == 2 then
+
+                local transportSquad = Squad_CreateAndSpawnToward(BP_GetSquadBlueprint(unit_data.transport.sbp), player, 0, spawnfrom, gotopos );
+                local sg_transport_temp = SGroup_FromSquad(transportSquad);
+
+                Cmd_Garrison(sg_temp, sg_transport_temp, true, false, true);
+
+                Command_SquadPos(player, sg_transport_temp, SCMD_UnloadSquads, gotopos, false);
+
+            else
+
+                -- TODO: Implement
+
+            end
+
+        else
+
+            -- Give move order
+            Command_SquadPos(player, sg_temp, SCMD_Move, gotopos, false )
+
+        end
+
+        -- If crew is valid
+        if unit_data.crew ~= nil then
+            -- TODO: Implement...
+        end
 
         -- Apply veterancy rank
         if (unit_data.veterancy_rank > 0) then

@@ -79,7 +79,7 @@ function BG_Init()
     Rule_AddOneShot(BG_OverrideGameEndingFunctionCalls, 1);
 
     -- Hide the CP meter (Perhaps display company name and statistics here...)
-    UI_SetAbilityCardVisibility(false);
+    UI_SetAbilityCardVisibility(true);
     UI_SetCPMeterVisibility(false);
     UI_SetAllowLoadAndSave(false);
 

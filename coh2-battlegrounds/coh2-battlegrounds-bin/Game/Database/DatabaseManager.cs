@@ -40,7 +40,7 @@ namespace Battlegrounds.Game.Database {
             int loaded = 0;
             int failed = 0;
 
-           try {
+            try {
 
                 // Wait for the blueprint database to load
                 await Task.Run(BlueprintManager.CreateDatabase);
