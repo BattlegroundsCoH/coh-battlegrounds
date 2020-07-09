@@ -66,13 +66,16 @@ end
 
 __removewhennear = {}
 
-function SGroup_MoveAndDespawn(squad, pos)
+function SGroup_MoveAndDespawn(squad, pos, callback)
+
+    -- Tell the squad to stop first.
+    Cmd_Stop(squad);
 
     -- Move to the position
     Cmd_Move(squad, pos);
 
     -- Add to near table
-    table.insert(__removewhennear, { target = squad, location = pos });
+    table.insert(__removewhennear, { target = squad, location = pos, callbackfunc = callback });
 
     if not Rule_Exists(__SGREMOVE_WHEN_NEAR) then
         Rule_Add(__SGREMOVE_WHEN_NEAR);
@@ -90,6 +93,9 @@ function __SGREMOVE_WHEN_NEAR()
                 break;
             else
                 if Util_GetDistance(__removewhennear[i].location, SGroup_GetPosition(__removewhennear[i].target)) < 5 then
+                    if __removewhennear[i].callbackfunc ~= nil then
+                        __removewhennear[i].callbackfunc(__removewhennear[i].target);
+                    end
                     SGroup_DeSpawn(__removewhennear[i].target);
                     table.remove(__removewhennear, i);
                     break;

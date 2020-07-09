@@ -164,10 +164,12 @@ function BG_CreateUnitcard(unit, yoffset)
         xPositiveOffset = BG_CreateCost("ModIcons_6a0a13b89555402ca75b85dc30f5cb04_fuel_24x24", xPositiveOffset, 6, unit.cost.fuel, cardPanel);
     end
 
-    if unit.isDeploying == nil or unit.isDeploying == false then
-        BG_CreateUnitStats(unit, cardPanel);
-    else
+    if unit.isDeploying == true then
         BG_CreateUnitDeployProgress(unit, cardPanel);
+    elseif unit.isRecallDelayed == true then
+        BG_CreateUnitRecallProgress(unit, cardPanel);
+    else
+        BG_CreateUnitStats(unit, cardPanel);
     end
 
     -- Return the card
@@ -247,6 +249,16 @@ function BG_CreateUnitDeployProgress(unit, card)
 
 end
 
+function BG_CreateUnitRecallProgress(unit, card)
+
+    local progress_frame = Icon("ModIcons_6a0a13b89555402ca75b85dc30f5cb04_progress_bar_small_frame", 135, 28, 180, 6);
+    card:add(progress_frame);
+
+    unit.recall_visual = Icon("ModIcons_6a0a13b89555402ca75b85dc30f5cb04_progress_bar_small", BG_GetRecallTimeBar(unit), 12, 194, 12);
+    card:add(unit.recall_visual);
+
+end
+
 function BG_UnitCardClicked(tag)
     -- TODO: Add timer click check here (just so a button isn't clicked accidentally twice)
     local refPlayerID = BG_GetPlayerID(Game_GetLocalPlayer());
@@ -287,13 +299,25 @@ function BG_UpdateDeploymentTimers()
                 _bg_playerData[refPlayerID].company.units[i].deploy_time = _bg_playerData[refPlayerID].company.units[i].deploy_time - _BG_UI_UpdateInterval;
                 if _bg_playerData[refPlayerID].company.units[i].deploy_time <= 0 then
                     Command_PlayerBroadcastMessage(Game_GetLocalPlayer(), Game_GetLocalPlayer(), _bg_message_type_player_deploy, tostring(_bg_playerData[refPlayerID].company.units[i].company_id));
-                    BG_RefreshCompanyView();
                     _bg_playerData[refPlayerID].company.units[i].deploy_time = nil;
                     _bg_playerData[refPlayerID].company.units[i].isDeploying = false;
+                    BG_RefreshCompanyView();
                 else
                     if _bg_local_companyIsVisible then
                         local p = BG_GetDeploytimeBar(_bg_playerData[refPlayerID].company.units[i]);
                         _bg_playerData[refPlayerID].company.units[i].deploy_visual:setSize(p, 12);
+                    end
+                end
+            elseif _bg_playerData[refPlayerID].company.units[i].isRecallDelayed == true then
+                _bg_playerData[refPlayerID].company.units[i].recall_wait_time = _bg_playerData[refPlayerID].company.units[i].recall_wait_time - _BG_UI_UpdateInterval;
+                if _bg_playerData[refPlayerID].company.units[i].recall_wait_time <= 0 then
+                    _bg_playerData[refPlayerID].company.units[i].recall_wait_time = nil;
+                    _bg_playerData[refPlayerID].company.units[i].isRecallDelayed = false;
+                    BG_RefreshCompanyView();
+                else
+                    if _bg_local_companyIsVisible then
+                        local p = BG_GetRecallTimeBar(_bg_playerData[refPlayerID].company.units[i]);
+                        _bg_playerData[refPlayerID].company.units[i].recall_visual:setSize(p, 12);
                     end
                 end
             end
@@ -304,7 +328,16 @@ end
 function BG_GetDeploytimeBar(unit)
     if unit.isDeploying then
         local maxTime = unit.cost.fieldtime;
-        return (maxTime - unit.deploy_time) / maxTime * 95;
+        return (maxTime - unit.deploy_time) / maxTime * 94;
+    else
+        return 0;
+    end
+end
+
+function BG_GetRecallTimeBar(unit)
+    if unit.isRecallDelayed then
+        local maxTime = unit.recall_wait_time_max;
+        return unit.recall_wait_time / maxTime * 102;
     else
         return 0;
     end
