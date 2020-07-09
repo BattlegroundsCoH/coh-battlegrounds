@@ -1,27 +1,27 @@
 [
     {
-      "jsdbtype": "Battlegrounds.Game.Database.SquadBlueprint",
+      "jsdbtype": "Battlegrounds.Game.Database.EntityBlueprint",
       "PBGID": "1073741823",
-      "Name": "conscript_squad_bg",
-      "LocaleName": "11006679",
-      "LocaleDescription": "11007044",
+      "Name": "conscript_soldier_bg",
+      "LocaleName": "0",
+      "LocaleDescription": "11007040",
       "Army": "soviet",
-      "Icon": "Icons_units_unit_soviet_conscript_03",
-      "Symbol": "Icons_symbols_unit_soviet_conscript_03_symbol",
+      "Icon": "Icons_units_unit_soviet_conscript_02",
+      "Symbol": "Icons_symbols_unit_soviet_conscript_02_symbol",
       "Cost": {
         "jsdbtype": "Battlegrounds.Game.Gameplay.Cost",
-        "Manpower": "240",
+        "Manpower": "40",
         "Munition": "0",
         "Fuel": "0",
-        "FieldTime": "15"
+        "BuildTime": "4"
       }
     },
     {
-      "jsdbtype": "Battlegrounds.Game.Database.SquadBlueprint",
-      "PBGID": "1073741826",
-      "Name": "t_34_76_squad_bg",
-      "LocaleName": "11006678",
-      "LocaleDescription": "11006868",
+      "jsdbtype": "Battlegrounds.Game.Database.EntityBlueprint",
+      "PBGID": "1073741825",
+      "Name": "t_34_76_bg",
+      "LocaleName": "11038350",
+      "LocaleDescription": "11048086",
       "Army": "soviet",
       "Icon": "Icons_vehicles_vehicle_soviet_t34_76_heavy_tank",
       "Symbol": "Icons_symbols_vehicle_soviet_t34_76_heavy_tank_symbol",
@@ -30,32 +30,32 @@
         "Manpower": "300",
         "Munition": "0",
         "Fuel": "90",
-        "FieldTime": "15"
+        "BuildTime": "50"
       }
     },
     {
-      "jsdbtype": "Battlegrounds.Game.Database.SquadBlueprint",
-      "PBGID": "1073741825",
-      "Name": "t_34_85_squad_bg",
+      "jsdbtype": "Battlegrounds.Game.Database.EntityBlueprint",
+      "PBGID": "1073741826",
+      "Name": "t_34_85_bg",
       "LocaleName": "11048080",
-      "LocaleDescription": "11007407",
+      "LocaleDescription": "11048084",
       "Army": "soviet",
-      "Icon": "Icons_vehicles_vehicle_soviet_t34_85",
-      "Symbol": "Icons_symbols_vehicle_soviet_t34_85_symbol",
+      "Icon": "Icons_vehicles_vehicle_soviet_t34_76_heavy_tank",
+      "Symbol": "Icons_symbols_vehicle_soviet_t34_76_heavy_tank_symbol",
       "Cost": {
         "jsdbtype": "Battlegrounds.Game.Gameplay.Cost",
         "Manpower": "380",
         "Munition": "0",
         "Fuel": "130",
-        "FieldTime": "15"
+        "BuildTime": "45"
       }
     },
     {
-      "jsdbtype": "Battlegrounds.Game.Database.SquadBlueprint",
+      "jsdbtype": "Battlegrounds.Game.Database.EntityBlueprint",
       "PBGID": "1073741824",
-      "Name": "zis_6_transport_truck_bg",
-      "LocaleName": "11048638",
-      "LocaleDescription": "11048650",
+      "Name": "zis_6_transport_bg",
+      "LocaleName": "11048639",
+      "LocaleDescription": "0",
       "Army": "soviet",
       "Icon": "Icons_vehicles_vehicle_soviet_su6_truck",
       "Symbol": "Icons_symbols_vehicle_soviet_su6_truck_symbol",
@@ -64,7 +64,7 @@
         "Manpower": "120",
         "Munition": "0",
         "Fuel": "30",
-        "FieldTime": "15"
+        "BuildTime": "30"
       }
     }
     ]

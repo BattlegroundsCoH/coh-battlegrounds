@@ -1,0 +1,33 @@
+[
+    {
+      "jsdbtype": "Battlegrounds.Game.Database.AbilityBlueprint",
+      "PBGID": "1073741824",
+      "Name": "bg_deploy_destination",
+      "LocaleName": "1",
+      "LocaleDescription": "0",
+      "Army": "battlegrounds_generic",
+      "Icon": "",
+      "Cost": {
+        "jsdbtype": "Battlegrounds.Game.Gameplay.Cost",
+        "Manpower": "0",
+        "Munition": "0",
+        "Fuel": "0"
+      }
+    },
+    {
+      "jsdbtype": "Battlegrounds.Game.Database.AbilityBlueprint",
+      "PBGID": "1073741823",
+      "Name": "bg_withdraw_unit",
+      "LocaleName": "2",
+      "LocaleDescription": "0",
+      "Army": "battlegrounds_generic",
+      "Icon": "",
+      "Cost": {
+        "jsdbtype": "Battlegrounds.Game.Gameplay.Cost",
+        "Manpower": "0",
+        "Munition": "0",
+        "Fuel": "0"
+      }
+    }
+    ]
+    

@@ -157,6 +157,7 @@ namespace CoH2XML2JSON
             } catch (Exception e)
             {
                 Console.WriteLine(e.ToString());
+                Console.ReadLine();
             }
         }
 
@@ -292,6 +293,7 @@ namespace CoH2XML2JSON
             catch (Exception e)
             {
                 Console.WriteLine(e.ToString());
+                Console.ReadLine();
             }
         }
 
@@ -381,6 +383,7 @@ namespace CoH2XML2JSON
             catch (Exception e)
             {
                 Console.WriteLine(e.ToString());
+                Console.ReadLine();
             }
         }
 
@@ -471,6 +474,7 @@ namespace CoH2XML2JSON
             catch (Exception e)
             {
                 Console.WriteLine(e.ToString());
+                Console.ReadLine();
             }
         }
 
@@ -593,6 +597,7 @@ namespace CoH2XML2JSON
             catch (Exception e)
             {
                 Console.WriteLine(e.ToString());
+                Console.ReadLine();
             }
         }
 
@@ -717,6 +722,7 @@ namespace CoH2XML2JSON
             catch (Exception e)
             {
                 Console.WriteLine(e.ToString());
+                Console.ReadLine();
             }
         }
 
@@ -757,6 +763,10 @@ namespace CoH2XML2JSON
             CreateCriticalDatabase();
             CreateSlotItemDatabase();
             CreateUpgradeDatabase();
+
+            Console.WriteLine("Created databases - Press any key to exit");
+            Console.Read();
+
         }
     }
 }

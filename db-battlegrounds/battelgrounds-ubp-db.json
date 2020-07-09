@@ -1,0 +1,18 @@
+[
+    {
+      "jsdbtype": "Battlegrounds.Game.Database.UpgradeBlueprint",
+      "PBGID": "1073741823",
+      "Name": "bg_verify",
+      "LocaleName": "0",
+      "LocaleDescription": "0",
+      "Icon": "",
+      "Cost": {
+        "jsdbtype": "Battlegrounds.Game.Gameplay.Cost",
+        "Manpower": "0",
+        "Munition": "0",
+        "Fuel": "0"
+      },
+      "SlotItem": []
+    }
+    ]
+    
