@@ -6,12 +6,60 @@
 			<FileHash>ec27d8efe41e513c5e0c3d4db191ec79</FileHash>
 		</BurnInfo>
 		<BurnInfo>
+			<FileName>E:\coh2_battlegrounds\coh2-battlegrounds-mod\tuning_mod\instances\abilities\battlegrounds_generic\bg_deploy_destination.xml</FileName>
+			<FileHash>0807b662e863ce87cb2cb2556c6d76a9</FileHash>
+		</BurnInfo>
+		<BurnInfo>
 			<FileName>E:\coh2_battlegrounds\coh2-battlegrounds-mod\tuning_mod\instances\abilities\battlegrounds_generic\bg_withdraw_unit.xml</FileName>
-			<FileHash>4a0b41de2c3cdabfca781f6dd45544e2</FileHash>
+			<FileHash>09711cbf9d4dd9fda44887c0e81da070</FileHash>
+		</BurnInfo>
+		<BurnInfo>
+			<FileName>E:\coh2_battlegrounds\coh2-battlegrounds-mod\tuning_mod\instances\army\aef.xml</FileName>
+			<FileHash>2daa1c02e460d4dfc757ab41d52bd150</FileHash>
+		</BurnInfo>
+		<BurnInfo>
+			<FileName>E:\coh2_battlegrounds\coh2-battlegrounds-mod\tuning_mod\instances\army\british.xml</FileName>
+			<FileHash>826d1d8721ee56445cfd9d1acb33d097</FileHash>
+		</BurnInfo>
+		<BurnInfo>
+			<FileName>E:\coh2_battlegrounds\coh2-battlegrounds-mod\tuning_mod\instances\army\german.xml</FileName>
+			<FileHash>904189a3acdeeaa4d2be64f45ee23e4a</FileHash>
+		</BurnInfo>
+		<BurnInfo>
+			<FileName>E:\coh2_battlegrounds\coh2-battlegrounds-mod\tuning_mod\instances\army\soviet.xml</FileName>
+			<FileHash>24a7e8281e5e165a6925c87aa6eb89b3</FileHash>
+		</BurnInfo>
+		<BurnInfo>
+			<FileName>E:\coh2_battlegrounds\coh2-battlegrounds-mod\tuning_mod\instances\army\west_german.xml</FileName>
+			<FileHash>6f850acf20aca5cc8e2be70eb2072ca8</FileHash>
+		</BurnInfo>
+		<BurnInfo>
+			<FileName>E:\coh2_battlegrounds\coh2-battlegrounds-mod\tuning_mod\instances\racebps\aef.xml</FileName>
+			<FileHash>0664bd6f01f16cd1d4f412fed3df3134</FileHash>
+		</BurnInfo>
+		<BurnInfo>
+			<FileName>E:\coh2_battlegrounds\coh2-battlegrounds-mod\tuning_mod\instances\racebps\british.xml</FileName>
+			<FileHash>7cbede143dd385a283fb8f04fbd75c09</FileHash>
+		</BurnInfo>
+		<BurnInfo>
+			<FileName>E:\coh2_battlegrounds\coh2-battlegrounds-mod\tuning_mod\instances\racebps\german.xml</FileName>
+			<FileHash>4f8b011fe167d18ec3078efa6ba87121</FileHash>
+		</BurnInfo>
+		<BurnInfo>
+			<FileName>E:\coh2_battlegrounds\coh2-battlegrounds-mod\tuning_mod\instances\racebps\soviet.xml</FileName>
+			<FileHash>17f9f302554c0c5e0c23a7f64c1b5916</FileHash>
+		</BurnInfo>
+		<BurnInfo>
+			<FileName>E:\coh2_battlegrounds\coh2-battlegrounds-mod\tuning_mod\instances\racebps\west_german.xml</FileName>
+			<FileHash>2a2fe188b919457e3d27b56cf26fc5e5</FileHash>
+		</BurnInfo>
+		<BurnInfo>
+			<FileName>E:\coh2_battlegrounds\coh2-battlegrounds-mod\tuning_mod\instances\upgrade\bg_verify.xml</FileName>
+			<FileHash>176a5f1d4ffb849acf4900b30894b20a</FileHash>
 		</BurnInfo>
 		<BurnInfo>
 			<FileName>E:\coh2_battlegrounds\coh2-battlegrounds-mod\tuning_mod\locale\english\english.ucs</FileName>
-			<FileHash>f3b25701fe362ec84616a93a45ce9998</FileHash>
+			<FileHash>dea8dc07a9a3f646f01b79187d231907</FileHash>
 		</BurnInfo>
 		<BurnInfo>
 			<FileName>E:\coh2_battlegrounds\coh2-battlegrounds-mod\tuning_mod\coh2_battlegrounds_tuning Intermediate Cache\Intermediate Files\info\142b113740474c82a60b0a428bd553d5.info</FileName>

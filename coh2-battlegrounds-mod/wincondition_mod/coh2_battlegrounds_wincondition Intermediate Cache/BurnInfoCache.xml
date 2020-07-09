@@ -2,20 +2,16 @@
 <BurnInfoRoot xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 	<BurnInfo>
 		<BurnInfo>
-			<FileName>E:\coh2_battlegrounds\coh2-battlegrounds-mod\wincondition_mod\coh2_battlegrounds_annihilate.win</FileName>
-			<FileHash>1a8a3d21f98a2ea26a6aa8bceb850df7</FileHash>
-		</BurnInfo>
-		<BurnInfo>
 			<FileName>E:\coh2_battlegrounds\coh2-battlegrounds-mod\wincondition_mod\coh2_battlegrounds_vp.win</FileName>
 			<FileHash>c3fe8ef4e127c1507540272f03d07a6b</FileHash>
 		</BurnInfo>
 		<BurnInfo>
 			<FileName>E:\coh2_battlegrounds\coh2-battlegrounds-mod\wincondition_mod\auxiliary_scripts\shared_handler.scar</FileName>
-			<FileHash>cbe59776ad8c143925cee7c0d523312e</FileHash>
+			<FileHash>d37517adeed8c35293b1e4680052e73a</FileHash>
 		</BurnInfo>
 		<BurnInfo>
 			<FileName>E:\coh2_battlegrounds\coh2-battlegrounds-mod\wincondition_mod\auxiliary_scripts\shared_units.scar</FileName>
-			<FileHash>03d8bba4f319d3b874a5e4613e15aae3</FileHash>
+			<FileHash>72b5ec0b276395c61b7a30ed4ca5cef8</FileHash>
 		</BurnInfo>
 		<BurnInfo>
 			<FileName>E:\coh2_battlegrounds\coh2-battlegrounds-mod\wincondition_mod\auxiliary_scripts\shared_util.scar</FileName>
@@ -44,10 +40,6 @@
 		<BurnInfo>
 			<FileName>E:\coh2_battlegrounds\coh2-battlegrounds-mod\wincondition_mod\coh2_battlegrounds_vp.scar</FileName>
 			<FileHash>02b260b3903e7f4f40fa5de390c4e12e</FileHash>
-		</BurnInfo>
-		<BurnInfo>
-			<FileName>E:\coh2_battlegrounds\coh2-battlegrounds-mod\wincondition_mod\coh2_battlegrounds_annihilate.scar</FileName>
-			<FileHash>4157502b6b54156bdb25245a07bbd66a</FileHash>
 		</BurnInfo>
 		<BurnInfo>
 			<FileName>E:\coh2_battlegrounds\coh2-battlegrounds-mod\wincondition_mod\ui_api\button.scar</FileName>

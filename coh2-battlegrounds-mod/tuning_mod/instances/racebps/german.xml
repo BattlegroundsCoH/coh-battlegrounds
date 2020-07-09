@@ -1,0 +1,26 @@
+<instance description="Wehrmacht" template="racebps">
+	<group name="race_bag">
+		<locstring name="name" value="2099451" />
+		<locstring name="description" value="2099450" />
+		<enum name="race_type" value="axis" />
+		<int name="ui_priority" value="1" />
+		<instance_reference name="store_item" value="thq_store\races\german" />
+		<template_reference name="server_item" value="server_item">
+			<uniqueid name="server_id" value="1073741825" />
+			<list name="search_tags">
+			</list>
+			<enum name="rarity" value="other" />
+			<list name="races">
+			</list>
+			<bool name="is_in_default_bundle" value="False" />
+			<list name="default_metadata">
+			</list>
+			<instance_reference name="inventory_item_category" value="" />
+		</template_reference>
+		<enum name="battlefront" value="Eastern" />
+		<instance_reference name="default_army" value="army\german" mod="142b113740474c82a60b0a428bd553d5" />
+		<locstring name="name_abbreviated" value="2099452" />
+		<string name="path_name" value="german" />
+	</group>
+	<uniqueid name="pbgid" value="0" />
+</instance>

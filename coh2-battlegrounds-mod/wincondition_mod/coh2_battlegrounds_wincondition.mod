@@ -10,10 +10,6 @@
 							<Children>
 								<d2p1:anyType i:type="BurnFile">
 									<BurnSettings i:nil="true" />
-									<RelativeName>coh2_battlegrounds_annihilate.win</RelativeName>
-								</d2p1:anyType>
-								<d2p1:anyType i:type="BurnFile">
-									<BurnSettings i:nil="true" />
 									<RelativeName>coh2_battlegrounds_vp.win</RelativeName>
 								</d2p1:anyType>
 							</Children>
@@ -69,10 +65,6 @@
 								<d2p1:anyType i:type="BurnFile">
 									<BurnSettings i:nil="true" />
 									<RelativeName>coh2_battlegrounds_vp.scar</RelativeName>
-								</d2p1:anyType>
-								<d2p1:anyType i:type="BurnFile">
-									<BurnSettings i:nil="true" />
-									<RelativeName>coh2_battlegrounds_annihilate.scar</RelativeName>
 								</d2p1:anyType>
 								<d2p1:anyType i:type="Folder">
 									<Children>

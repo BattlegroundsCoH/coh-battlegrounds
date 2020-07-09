@@ -154,6 +154,10 @@ function BG_OnSquadUpgrade(squad, bp)
 
 end
 
+function BGAE_RecallSquad(...)
+
+end
+
 function BG_RecallSquad(player, unit_id)
 
 

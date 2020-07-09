@@ -75,14 +75,13 @@ function BG_Init()
         BG_CreateAndDisplayMultiplayerActionsScreenOverride(Game_GetLocalPlayer()); -- Game actions (Vote on withdraw, Surrender)
     end);
 
-    --Rule_AddOneShot(dummy_spawn, 5); -- Disable when not testing callin functionality
-
     -- Add overrides to victory
     Rule_AddOneShot(BG_OverrideGameEndingFunctionCalls, 1);
 
     -- Hide the CP meter (Perhaps display company name and statistics here...)
     UI_SetAbilityCardVisibility(false);
     UI_SetCPMeterVisibility(false);
+    UI_SetAllowLoadAndSave(false);
 
     -- Add the broadcast event callback
     Rule_AddGlobalEvent(BG_GameBroadcastMessageReceived, GE_BroadcastMessage);
@@ -99,22 +98,16 @@ function BG_VerifyMatch()
         --return "The played map does not match the selected map!"; -- TODO: Localize
     end
 
+    -- Verify upgrade
+    if not pcall(BP_GetUpgradeBlueprint, bg_settings.tuning_mod.mod_verify_upg) then
+        -- return "The played match is not using the selected tuning mod"; -- TODO: Localize
+    end
+
     -- Broadcast the GUID
     Game_SendMessage(_bg_message_type_no_actions_required, "G[" .. bg_settings.session_guid .. "]")
 
     -- Return true, match verified
     return true;
-
-end
-
-function dummy_spawn()
-
-    -- Test the deploy squad function
-    BG_DeploySquad(_bg_playerData[1].player, 0);
-    BG_DeploySquad(_bg_playerData[1].player, 1);
-    BG_DeploySquad(_bg_playerData[1].player, 2);
-    BG_DeploySquad(_bg_playerData[1].player, 3);
-    BG_DeploySquad(_bg_playerData[1].player, 4);
 
 end
 

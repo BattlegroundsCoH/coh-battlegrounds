@@ -1,0 +1,26 @@
+<instance description="Soviet" template="racebps">
+	<group name="race_bag">
+		<locstring name="name" value="2099401" />
+		<locstring name="description" value="2099400" />
+		<enum name="race_type" value="allies" />
+		<int name="ui_priority" value="0" />
+		<instance_reference name="store_item" value="thq_store\races\soviet" />
+		<template_reference name="server_item" value="server_item">
+			<uniqueid name="server_id" value="1073741826" />
+			<list name="search_tags">
+			</list>
+			<enum name="rarity" value="other" />
+			<list name="races">
+			</list>
+			<bool name="is_in_default_bundle" value="False" />
+			<list name="default_metadata">
+			</list>
+			<instance_reference name="inventory_item_category" value="" />
+		</template_reference>
+		<enum name="battlefront" value="Eastern" />
+		<instance_reference name="default_army" value="army\soviet" mod="142b113740474c82a60b0a428bd553d5" />
+		<locstring name="name_abbreviated" value="2099402" />
+		<string name="path_name" value="soviet" />
+	</group>
+	<uniqueid name="pbgid" value="1" />
+</instance>

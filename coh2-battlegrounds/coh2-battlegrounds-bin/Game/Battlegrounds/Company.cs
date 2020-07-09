@@ -5,12 +5,12 @@ using System.IO;
 using System.Linq;
 using System.Text;
 
+using Battlegrounds.Functional;
 using Battlegrounds.Game.Database;
-using Battlegrounds.Json;
 using Battlegrounds.Game.Gameplay;
+using Battlegrounds.Json;
 using Battlegrounds.Steam;
 using Battlegrounds.Verification;
-using Battlegrounds.Functional;
 
 namespace Battlegrounds.Game.Battlegrounds {
 
@@ -76,8 +76,9 @@ namespace Battlegrounds.Game.Battlegrounds {
         /// <param name="user">The <see cref="SteamUser"/> who can use the <see cref="Company"/>.</param>
         /// <param name="name">The name of the company.</param>
         /// <param name="army">The <see cref="Faction"/> that can use the <see cref="Company"/>.</param>
+        /// <param name="tuningGUID">The GUID of the tuning mod the <see cref="Company"/> is using blueprints from.</param>
         /// <exception cref="ArgumentNullException"/>
-        public Company(SteamUser user, string name, Faction army) {
+        public Company(SteamUser user, string name, Faction army, string tuningGUID) {
 
             // Make sure the user is 'valid'
             if (user == null) {
@@ -93,7 +94,7 @@ namespace Battlegrounds.Game.Battlegrounds {
             this.Name = name;
             this.Owner = user;
             this.Army = army;
-            this.TuningGUID = string.Empty; // TODO: Take this as a parameter as well.
+            this.TuningGUID = tuningGUID;
 
             // Prepare squad list
             this.m_squads = new List<Squad>();

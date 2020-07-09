@@ -146,32 +146,35 @@ namespace Battlegrounds.Json {
             foreach (var pair in parsedJson) {
 
                 // Define the reference attribute (it may be used)
-                JsonReferenceAttribute attrib;
+                JsonReferenceAttribute refAttrib;
+                JsonEnumAttribute enumAttrib;
 
                 if (fields.FirstOrDefault(x => x.Name == pair.Key) is FieldInfo finfo) { // Is Field?
 
                     // Get the reference attribute
-                    attrib = finfo.GetCustomAttribute<JsonReferenceAttribute>();
+                    refAttrib = finfo.GetCustomAttribute<JsonReferenceAttribute>();
+                    enumAttrib = finfo.GetCustomAttribute<JsonEnumAttribute>();
 
                     // Use the reference method
-                    bool useRef = !(attrib is null);
+                    bool useRef = !(refAttrib is null);
 
                     // Set the field value.
-                    SetValue(source, pair.Value, finfo.FieldType, useRef, finfo.SetValue, attrib?.GetReferenceFunction());
+                    SetValue(source, pair.Value, finfo.FieldType, useRef, finfo.SetValue, refAttrib?.GetReferenceFunction(), enumAttrib);
 
                 } else if (properties.FirstOrDefault(x => x.Name == pair.Key) is PropertyInfo pinfo) { // Is Property?
 
                     // Get the reference attribute
-                    attrib = pinfo.GetCustomAttribute<JsonReferenceAttribute>();
+                    refAttrib = pinfo.GetCustomAttribute<JsonReferenceAttribute>();
+                    enumAttrib = pinfo.GetCustomAttribute<JsonEnumAttribute>();
 
                     // Use the reference method
-                    bool useRef = !(attrib is null);
+                    bool useRef = !(refAttrib is null);
 
                     // Do we have a set method?
                     if (pinfo.SetMethod != null) {
 
                         // Set value using the 'SetMethod'
-                        SetValue(source, pair.Value, pinfo.PropertyType, useRef, pinfo.SetValue, attrib?.GetReferenceFunction());
+                        SetValue(source, pair.Value, pinfo.PropertyType, useRef, pinfo.SetValue, refAttrib?.GetReferenceFunction(), enumAttrib);
 
                     } else {
 
@@ -179,7 +182,7 @@ namespace Battlegrounds.Json {
                         FieldInfo backingField = il_type.GetField($"<{pinfo.Name}>k__BackingField", BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.FlattenHierarchy);
 
                         // Set the value of the backing field.
-                        SetValue(source, pair.Value, backingField.FieldType, useRef, backingField.SetValue, attrib?.GetReferenceFunction());
+                        SetValue(source, pair.Value, backingField.FieldType, useRef, backingField.SetValue, refAttrib?.GetReferenceFunction(), enumAttrib);
 
                     }
 
@@ -192,7 +195,7 @@ namespace Battlegrounds.Json {
         }
 
         internal static void SetValue(object instance, object value, Type valueType, bool byReference, 
-            Action<object, object> setValueMethod, Func<string, object> derefMethood) {
+            Action<object, object> setValueMethod, Func<string, object> derefMethood, JsonEnumAttribute eAttrib) {
 
             // Is it an array?
             if (value is JsonArray jsa) {
@@ -217,8 +220,29 @@ namespace Battlegrounds.Json {
 
                 } else { // Ordinary set-value
 
-                    // Set value
-                    setValueMethod.Invoke(instance, Convert.ChangeType(value, valueType));
+                    // If the attribute is not valid
+                    if (eAttrib is null) {
+
+                        // Set value
+                        setValueMethod.Invoke(instance, Convert.ChangeType(value, valueType));
+
+                    } else {
+
+                        if (eAttrib.IsNetEnum) {
+
+                            if (Enum.TryParse(eAttrib.EnumType, value as string, out object enumValue)) {
+                                setValueMethod.Invoke(instance, enumValue);
+                            } else {
+                                throw new InvalidCastException();
+                            }
+
+                        } else {
+
+                            throw new NotImplementedException();
+
+                        }
+
+                    }
 
                 }
 

@@ -338,3 +338,13 @@ ASALocalRun/
 
 # BeatPulse healthcheck temp database
 healthchecksdb
+
+# Company of Heroes 2 Files
+*.rgd
+*.sga
+BurnInfoCache.xml
+*-LinkReport.xml
+*-FlexConfig.xml
+*-Config.xml
+
+Intermediate Files/[Aa]ttrib/

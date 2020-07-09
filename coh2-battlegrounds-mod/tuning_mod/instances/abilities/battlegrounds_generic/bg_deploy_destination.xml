@@ -1,4 +1,4 @@
-<instance description="Withdraws a unit from the front line." template="abilities">
+<instance description="Set the deploy destination for a player." template="abilities">
 	<group name="ability_bag">
 		<group name="action_list">
 			<list name="end_self_actions">
@@ -9,8 +9,8 @@
 			</list>
 			<list name="start_target_actions">
 				<template_reference name="action" value="action\scar_function_call">
-					<string name="function_name" value="BGAE_RecallSquad" />
-					<uniqueid name="id" value="1073741823" />
+					<string name="function_name" value="" />
+					<uniqueid name="id" value="1073741826" />
 				</template_reference>
 			</list>
 		</group>
@@ -64,8 +64,8 @@
 			<string name="code_2" value="" />
 			<string name="code_3" value="" />
 		</group>
-		<enum name="squad_caster" value="squad" />
-		<enum name="target" value="tp_squad" />
+		<enum name="squad_caster" value="all_entities" />
+		<enum name="target" value="tp_position_in_territory" />
 		<group name="target_special_validation">
 			<template_reference name="target_special_validation" value="type_ability_target_type\all">
 			</template_reference>
@@ -84,7 +84,7 @@
 			<icon name="icon_name" value="" />
 			<string name="overlay_name" value="" />
 			<bool name="reveal_for_decryption" value="False" />
-			<locstring name="screen_name" value="2" mod="142b113740474c82a60b0a428bd553d5" />
+			<locstring name="screen_name" value="1" mod="142b113740474c82a60b0a428bd553d5" />
 			<icon name="icon_alternate_name" value="" />
 			<locstring name="brief_text" value="0" />
 			<locstring name="help_text_alternate" value="0" />
@@ -130,5 +130,5 @@
 		<bool name="can_cast_outside_active_battle_field" value="False" />
 		<bool name="ability_super_event_cue" value="False" />
 	</group>
-	<uniqueid name="pbgid" value="1073741823" />
+	<uniqueid name="pbgid" value="1073741824" />
 </instance>

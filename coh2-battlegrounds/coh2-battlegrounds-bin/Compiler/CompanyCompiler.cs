@@ -64,7 +64,7 @@ namespace Battlegrounds.Compiler {
             builder.AppendLine("{");
             builder.IncreaseIndent();
 
-            builder.AppendLine($"bp_name = \"{squad.SBP.Name}\",");
+            builder.AppendLine($"bp_name = {squad.SBP.ToScar()},");
             builder.AppendLine($"symbol = \"{squad.SBP.Symbol}\",");
             builder.AppendLine($"company_id = {squad.SquadID},");
             builder.AppendLine($"veterancy_rank = {squad.VeterancyRank},");
@@ -75,9 +75,9 @@ namespace Battlegrounds.Compiler {
                 builder.AppendLine($"transport = {{");
                 builder.IncreaseIndent();
                 if (squad.SupportBlueprint is EntityBlueprint ebp) {
-                    builder.AppendLine($"ebp = \"{ebp.Name}\",");
+                    builder.AppendLine($"ebp = {ebp.ToScar()},");
                 } else if (squad.SupportBlueprint is SquadBlueprint sbp) {
-                    builder.AppendLine($"sbp = \"{sbp.Name}\",");
+                    builder.AppendLine($"sbp = {sbp.ToScar()},");
                     builder.AppendLine($"exit = {(squad.DeployAndExit ? "true" : "false")},");
                 }
                 builder.DecreaseIndent();

@@ -5,7 +5,9 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Text;
+using Battlegrounds.Game.Battlegrounds;
 using Battlegrounds.Json;
+using Battlegrounds.Modding;
 using Battlegrounds.Steam;
 
 namespace Battlegrounds {
@@ -55,6 +57,10 @@ namespace Battlegrounds {
         /// </summary>
         public static string BattlegroundHubAddress => "194.37.80.249";
 
+        private static ITuningMod __bgTuningInstance;
+
+        public static ITuningMod BattleGroundsTuningMod => __bgTuningInstance;
+
         /// <summary>
         /// 
         /// </summary>
@@ -64,6 +70,8 @@ namespace Battlegrounds {
             if (__instance == null) {
                 __instance = new InternalInstance();
             }
+
+            __bgTuningInstance = new BattlegroundsTuning();
 
         }
 

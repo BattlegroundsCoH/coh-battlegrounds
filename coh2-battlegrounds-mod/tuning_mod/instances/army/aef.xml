@@ -1,0 +1,426 @@
+<instance description="US Forces" template="army">
+	<group name="army_bag">
+		<group name="actions">
+			<string name="ability_ally_reinforcement_action_name" value="ui/command/coh2_troop_deployment_flag" />
+			<string name="ability_self_reinforcement_action_name" value="ui/command/coh2_troop_deployment_flag" />
+			<string name="ally_attack_here_action_name" value="ui/coh2_team_attack_here" />
+			<string name="ally_capture_here_action_name" value="ui/coh2_team_capture_here" />
+			<string name="ally_defend_here_action_name" value="ui/coh2_team_defend_here" />
+			<string name="fx_rally_point_action_name" value="ui/command/coh2_rallypoint_deployment_flag" />
+			<string name="self_attack_here_action_name" value="ui/coh2_team_attack_here" />
+			<string name="self_capture_here_action_name" value="ui/coh2_team_capture_here" />
+			<string name="self_defend_here_action_name" value="ui/coh2_team_defend_here" />
+		</group>
+		<group name="casualties">
+			<int name="number_of_casualties_until_spawn" value="5" />
+			<instance_reference name="squad_to_spawn" value="" />
+		</group>
+		<group name="income_cap">
+			<float name="action" value="20" />
+			<float name="command" value="0" />
+			<float name="fuel" value="10" />
+			<float name="manpower" value="20" />
+			<float name="munition" value="10" />
+			<float name="popcap" value="0" />
+		</group>
+		<int name="num_slots" value="6" />
+		<group name="population_upkeep_threshold">
+			<float name="medic" value="1000" />
+			<float name="personnel" value="0" />
+			<float name="vehicle" value="1000" />
+		</group>
+		<group name="speech">
+			<group name="speech_code">
+				<string name="code_1" value="a" />
+				<string name="code_2" value="" />
+				<string name="code_3" value="" />
+			</group>
+			<group name="speech_def_generic">
+				<string name="code_1" value="int" />
+				<string name="code_2" value="" />
+				<string name="code_3" value="" />
+			</group>
+			<string name="speech_path" value="aef" />
+		</group>
+		<group name="race_population_cap_table">
+			<float name="base_medic_cap" value="6" />
+			<float name="base_personnel_cap" value="100" />
+			<float name="base_vehicle_cap" value="0" />
+			<float name="max_medic_cap" value="8" />
+			<float name="max_personnel_cap" value="106" />
+			<float name="max_vehicle_cap" value="0" />
+		</group>
+		<group name="starting_resources">
+			<float name="action" value="0" />
+			<float name="command" value="0" />
+			<float name="fuel" value="20" />
+			<float name="manpower" value="400" />
+			<float name="munition" value="0" />
+			<float name="popcap" value="0" />
+		</group>
+		<list name="start_actions">
+			<template_reference name="action" value="action\apply_modifiers_action">
+				<float name="duration" value="0" />
+				<bool name="permanent" value="False" />
+				<list name="modifiers">
+					<template_reference name="modifier" value="modifiers\income_manpower_player_modifier">
+						<enum name="application_type" value="apply_to_player" />
+						<bool name="exclusive" value="False" />
+						<string name="modifier_id" value="" />
+						<string name="target_type_name" value="" />
+						<enum name="usage_type" value="addition" />
+						<float name="value" value="0.625" />
+						<instance_reference name="tooltip" value="modifier_tooltip\income_manpower_player_modifier" />
+					</template_reference>
+					<template_reference name="modifier" value="modifiers\income_combat_player_modifier">
+						<enum name="application_type" value="apply_to_player" />
+						<bool name="exclusive" value="False" />
+						<string name="modifier_id" value="" />
+						<string name="target_type_name" value="" />
+						<enum name="usage_type" value="addition" />
+						<float name="value" value="0.3075" />
+						<instance_reference name="tooltip" value="modifier_tooltip\income_combat_player_modifier" />
+					</template_reference>
+					<template_reference name="modifier" value="modifiers\income_fuel_player_modifier">
+						<enum name="application_type" value="apply_to_player" />
+						<bool name="exclusive" value="False" />
+						<string name="modifier_id" value="" />
+						<string name="target_type_name" value="" />
+						<enum name="usage_type" value="addition" />
+						<float name="value" value="0.008333334" />
+						<instance_reference name="tooltip" value="modifier_tooltip\income_fuel_player_modifier" />
+					</template_reference>
+					<template_reference name="modifier" value="modifiers\income_munition_player_modifier">
+						<enum name="application_type" value="apply_to_player" />
+						<bool name="exclusive" value="False" />
+						<string name="modifier_id" value="" />
+						<string name="target_type_name" value="" />
+						<enum name="usage_type" value="addition" />
+						<float name="value" value="0.01251" />
+						<instance_reference name="tooltip" value="modifier_tooltip\income_munition_player_modifier" />
+					</template_reference>
+				</list>
+				<uniqueid name="id" value="1073741840" />
+			</template_reference>
+			<template_reference name="action" value="action\player_target_action">
+				<bool name="allies" value="False" />
+				<bool name="enemies" value="False" />
+				<bool name="neutral" value="False" />
+				<bool name="self" value="True" />
+				<list name="subactions">
+					<template_reference name="action" value="action\upgrade_add">
+						<bool name="apply_to_entities_in_squad" value="False" />
+						<bool name="trigger_publish_event" value="False" />
+						<instance_reference name="upgrade" value="upgrade\army_items\infantry_discount_mp" />
+						<uniqueid name="id" value="1073741841" />
+					</template_reference>
+				</list>
+				<uniqueid name="id" value="1073741842" />
+			</template_reference>
+		</list>
+		<list name="abilities">
+			<instance_reference name="ability" value="abilities\aef\modal_ability\dispatch_ability\paradrops_anti_tank_gun" />
+			<instance_reference name="ability" value="abilities\aef\modal_ability\dispatch_ability\paradrop_machine_gun" />
+			<instance_reference name="ability" value="abilities\aef\modal_ability\dispatch_ability\aef_hq_engineer_call_in" />
+			<instance_reference name="ability" value="abilities\aef\modal_ability\dispatch_ability\priest_dispatch" />
+			<instance_reference name="ability" value="abilities\aef\modal_ability\dispatch_ability\sherman_easy8_dispatch" />
+			<instance_reference name="ability" value="abilities\aef\modal_ability\dispatch_ability\sherman_bulldozer_dispatch" />
+			<instance_reference name="ability" value="abilities\aef\modal_ability\dispatch_ability\assault_engineer_dispatch" />
+			<instance_reference name="ability" value="abilities\aef\modal_ability\dispatch_ability\m10_deploy" />
+			<instance_reference name="ability" value="abilities\aef\modal_ability\commander_ability\siege_240mm_barrage" />
+			<instance_reference name="ability" value="abilities\aef\modal_ability\commander_ability\passive_ability\elite_vehicle_crews" />
+			<instance_reference name="ability" value="abilities\aef\modal_ability\commander_ability\passive_ability\riflemen_30_caliber_lmg" />
+			<instance_reference name="ability" value="abilities\aef\modal_ability\dispatch_ability\m21_mortar_halftrack_dispatch" />
+			<instance_reference name="ability" value="abilities\aef\modal_ability\commander_ability\time_on_target_artillery" />
+			<instance_reference name="ability" value="abilities\aef\modal_ability\commander_ability\p47_rocket_attack" />
+			<instance_reference name="ability" value="abilities\aef\modal_ability\commander_ability\passive_ability\riflemen_defensive_buildings" />
+			<instance_reference name="ability" value="abilities\aef\modal_ability\dispatch_ability\pathfinders_dispatch" />
+			<instance_reference name="ability" value="abilities\aef\modal_ability\dispatch_ability\air_drop_combat_group" />
+			<instance_reference name="ability" value="abilities\aef\modal_ability\dispatch_ability\greyhound_recon_dispatch" />
+			<instance_reference name="ability" value="abilities\aef\modal_ability\commander_ability\passive_ability\riflemen_flamethrowers" />
+			<instance_reference name="ability" value="abilities\aef\modal_ability\commander_ability\artillery_smoke_barrage" />
+			<instance_reference name="ability" value="abilities\aef\modal_ability\commander_ability\passive_ability\riflemen_flares" />
+			<instance_reference name="ability" value="abilities\aef\modal_ability\dispatch_ability\pathfinders_recon_dispatch" />
+			<instance_reference name="ability" value="abilities\aef\modal_ability\dispatch_ability\sherman_modifications" />
+			<instance_reference name="ability" value="abilities\aef\timed_ability\commander_ability\raid_tactics" />
+			<instance_reference name="ability" value="abilities\aef\modal_ability\commander_ability\airdropped_mines_mp" />
+			<instance_reference name="ability" value="abilities\aef\modal_ability\commander_ability\passive_ability\mechanized_group_mp" />
+			<instance_reference name="ability" value="abilities\aef\modal_ability\dispatch_ability\cavalry_riflemen_dispatch" />
+			<instance_reference name="ability" value="abilities\aef\modal_ability\commander_ability\cover_to_cover" />
+			<instance_reference name="ability" value="abilities\aef\modal_ability\commander_ability\passive_ability\urban_assault_kit" />
+			<instance_reference name="ability" value="abilities\aef\modal_ability\commander_ability\passive_ability\sherman_urban_assault_package" />
+			<instance_reference name="ability" value="abilities\aef\modal_ability\dispatch_ability\paratroopers_paradrop_mp" />
+			<instance_reference name="ability" value="abilities\aef\modal_ability\dispatch_ability\paratroopers_paradrop" />
+		</list>
+		<group name="resource_max_cap">
+			<template_reference name="resource" value="tables\resource_table">
+				<float name="action" value="-1" />
+				<float name="command" value="32" />
+				<float name="fuel" value="-1" />
+				<float name="manpower" value="-1" />
+				<float name="munition" value="-1" />
+				<float name="soviet_progression" value="100" />
+				<float name="soviet_227" value="100" />
+				<float name="popcap" value="-1" />
+			</template_reference>
+		</group>
+		<string name="badge_path" value="DATA:\art\armies\aef\badges\default_dif" />
+		<list name="production_buildings">
+			<group name="production_building">
+				<group name="builder">
+					<locstring name="screen_name" value="0" />
+					<icon name="symbol_icon_name" value="" />
+					<enum name="unit_type" value="" />
+					<icon name="icon_name" value="" />
+					<locstring name="help_text" value="0" />
+					<instance_reference name="dispatch_ability" value="" />
+				</group>
+				<group name="building">
+					<locstring name="screen_name" value="11051139" />
+					<icon name="symbol_icon_name" value="Icons_taskbar_coh_taskbar_aef_rifle_company_and_support_platoon" />
+					<enum name="unit_type" value="hq" />
+					<icon name="icon_name" value="Icons_tooltips_tab_01_aef_barrack" />
+					<locstring name="help_text" value="0" />
+					<instance_reference name="self_destruct_ability" value="" />
+				</group>
+			</group>
+			<group name="production_building">
+				<group name="builder">
+					<locstring name="screen_name" value="0" />
+					<icon name="symbol_icon_name" value="" />
+					<enum name="unit_type" value="" />
+					<icon name="icon_name" value="" />
+					<locstring name="help_text" value="0" />
+					<instance_reference name="dispatch_ability" value="" />
+				</group>
+				<group name="building">
+					<locstring name="screen_name" value="11051208" />
+					<icon name="symbol_icon_name" value="Icons_taskbar_coh_taskbar_aef_lieutenant_building" />
+					<enum name="unit_type" value="barracks" />
+					<icon name="icon_name" value="Icons_tooltips_tab_02_aef_platoon_command_post" />
+					<locstring name="help_text" value="0" />
+					<instance_reference name="self_destruct_ability" value="" />
+				</group>
+			</group>
+			<group name="production_building">
+				<group name="builder">
+					<locstring name="screen_name" value="0" />
+					<icon name="symbol_icon_name" value="" />
+					<enum name="unit_type" value="" />
+					<icon name="icon_name" value="" />
+					<locstring name="help_text" value="0" />
+					<instance_reference name="dispatch_ability" value="" />
+				</group>
+				<group name="building">
+					<locstring name="screen_name" value="11051213" />
+					<icon name="symbol_icon_name" value="Icons_taskbar_coh_taskbar_aef_captain_building" />
+					<enum name="unit_type" value="armory" />
+					<icon name="icon_name" value="Icons_tooltips_tab_03_aef_company_command_post" />
+					<locstring name="help_text" value="0" />
+					<instance_reference name="self_destruct_ability" value="" />
+				</group>
+			</group>
+			<group name="production_building">
+				<group name="builder">
+					<locstring name="screen_name" value="0" />
+					<icon name="symbol_icon_name" value="" />
+					<enum name="unit_type" value="" />
+					<icon name="icon_name" value="" />
+					<locstring name="help_text" value="0" />
+					<instance_reference name="dispatch_ability" value="" />
+				</group>
+				<group name="building">
+					<locstring name="screen_name" value="11051205" />
+					<icon name="symbol_icon_name" value="Icons_taskbar_coh_taskbar_aef_major_building" />
+					<enum name="unit_type" value="motor_pool_light" />
+					<icon name="icon_name" value="Icons_tooltips_tab_04_aef_battallion_command_post" />
+					<locstring name="help_text" value="0" />
+					<instance_reference name="self_destruct_ability" value="" />
+				</group>
+			</group>
+		</list>
+		<group name="ai_production_info">
+			<list name="base_building_list">
+				<instance_reference name="base_building" value="ebps\races\aef\buildings\base_building\armored_rifle_command_mp" />
+				<instance_reference name="base_building" value="ebps\races\aef\buildings\base_building\armor_command_mp" />
+				<instance_reference name="base_building" value="ebps\races\aef\buildings\base_building\company_weapons_pool_mp" />
+				<instance_reference name="base_building" value="ebps\races\aef\buildings\base_building\rifle_command_mp" />
+			</list>
+			<list name="unlocking_upgrade_list">
+				<group name="unlocking_upgrade_info">
+					<instance_reference name="upgrade_pbg" value="upgrade\aef\research\weapon_rack_upgrade_mp" />
+					<instance_reference name="unlocked_ability" value="" />
+					<instance_reference name="unlocked_building" value="ebps\races\aef\buildings\weapon_racks\aef_weapon_rack_bazooka_mp" />
+					<list name="upgraded_squads">
+						<instance_reference name="upgraded_squad" value="sbps\races\aef\soldiers\riflemen_squad\riflemen_squad_mp" />
+						<instance_reference name="upgraded_squad" value="sbps\races\aef\soldiers\rear_echelon_squad\rear_echelon_squad_mp" />
+						<instance_reference name="upgraded_squad" value="sbps\races\aef\soldiers\paratrooper_squad\paratrooper_squad_mp" />
+						<instance_reference name="upgraded_squad" value="sbps\races\aef\soldiers\pathfinder_squad\pathfinder_squad_mp" />
+					</list>
+				</group>
+				<group name="unlocking_upgrade_info">
+					<instance_reference name="upgrade_pbg" value="upgrade\aef\research\weapon_rack_upgrade_mp" />
+					<instance_reference name="unlocked_ability" value="" />
+					<instance_reference name="unlocked_building" value="ebps\races\aef\buildings\weapon_racks\aef_weapon_rack_browning_automatic_rifle_mp" />
+					<list name="upgraded_squads">
+						<instance_reference name="upgraded_squad" value="sbps\races\aef\soldiers\riflemen_squad\riflemen_squad_mp" />
+						<instance_reference name="upgraded_squad" value="sbps\races\aef\soldiers\rear_echelon_squad\rear_echelon_squad_mp" />
+						<instance_reference name="upgraded_squad" value="sbps\races\aef\soldiers\paratrooper_squad\paratrooper_squad_mp" />
+						<instance_reference name="upgraded_squad" value="sbps\races\aef\soldiers\pathfinder_squad\pathfinder_squad_mp" />
+					</list>
+				</group>
+				<group name="unlocking_upgrade_info">
+					<instance_reference name="upgrade_pbg" value="upgrade\aef\research\rifle_command_grenade_mp" />
+					<instance_reference name="unlocked_ability" value="abilities\aef\modal_ability\grenades\mk2_fragmentation_grenade_mp" />
+					<instance_reference name="unlocked_building" value="" />
+					<list name="upgraded_squads">
+						<instance_reference name="upgraded_squad" value="sbps\races\aef\soldiers\riflemen_squad\riflemen_squad_mp" />
+						<instance_reference name="upgraded_squad" value="sbps\races\aef\soldiers\lieutenant_squad\lieutenant_squad_mp" />
+					</list>
+				</group>
+				<group name="unlocking_upgrade_info">
+					<instance_reference name="upgrade_pbg" value="upgrade\aef\commander\passive\riflemen_30_caliber_lmg" />
+					<instance_reference name="unlocked_ability" value="" />
+					<instance_reference name="unlocked_building" value="ebps\races\aef\buildings\weapon_racks\aef_weapon_rack_m1919_lmg" />
+					<list name="upgraded_squads">
+						<instance_reference name="upgraded_squad" value="sbps\races\aef\soldiers\riflemen_squad\riflemen_squad_mp" />
+						<instance_reference name="upgraded_squad" value="sbps\races\aef\soldiers\rear_echelon_squad\rear_echelon_squad_mp" />
+						<instance_reference name="upgraded_squad" value="sbps\races\aef\soldiers\paratrooper_squad\paratrooper_squad_mp" />
+						<instance_reference name="upgraded_squad" value="sbps\races\aef\soldiers\pathfinder_squad\pathfinder_squad_mp" />
+					</list>
+				</group>
+			</list>
+			<group name="builder_squads">
+				<instance_reference name="base_builder_squad" value="sbps\races\aef\soldiers\rear_echelon_squad\rear_echelon_squad_mp" />
+				<instance_reference name="obs_post_builder_squad" value="sbps\races\aef\soldiers\rear_echelon_squad\rear_echelon_squad_mp" />
+				<instance_reference name="defense_builder_squad" value="sbps\races\aef\soldiers\rear_echelon_squad\rear_echelon_squad_mp" />
+			</group>
+		</group>
+		<list name="team_size_point_resource_multiplier">
+			<template_reference name="resource_multiplier" value="tables\resource_table">
+				<float name="action" value="1" />
+				<float name="command" value="1" />
+				<float name="fuel" value="1" />
+				<float name="manpower" value="1" />
+				<float name="munition" value="1" />
+				<float name="soviet_progression" value="1" />
+				<float name="soviet_227" value="1" />
+				<float name="popcap" value="1" />
+			</template_reference>
+			<template_reference name="resource_multiplier" value="tables\resource_table">
+				<float name="action" value="1" />
+				<float name="command" value="1" />
+				<float name="fuel" value="1" />
+				<float name="manpower" value="1" />
+				<float name="munition" value="1" />
+				<float name="soviet_progression" value="1" />
+				<float name="soviet_227" value="1" />
+				<float name="popcap" value="1" />
+			</template_reference>
+			<template_reference name="resource_multiplier" value="tables\resource_table">
+				<float name="action" value="1" />
+				<float name="command" value="1" />
+				<float name="fuel" value="1" />
+				<float name="manpower" value="1" />
+				<float name="munition" value="1" />
+				<float name="soviet_progression" value="1" />
+				<float name="soviet_227" value="1" />
+				<float name="popcap" value="1" />
+			</template_reference>
+			<template_reference name="resource_multiplier" value="tables\resource_table">
+				<float name="action" value="1" />
+				<float name="command" value="1" />
+				<float name="fuel" value="1" />
+				<float name="manpower" value="1" />
+				<float name="munition" value="1" />
+				<float name="soviet_progression" value="1" />
+				<float name="soviet_227" value="1" />
+				<float name="popcap" value="1" />
+			</template_reference>
+		</list>
+		<list name="starting_buildings">
+			<group name="starting_building">
+				<string name="key" value="default" />
+				<instance_reference name="building" value="ebps\races\aef\buildings\base_building\aef_base_stamper" />
+				<list name="starting_squads">
+					<group name="starting_squad">
+						<instance_reference name="squad" value="sbps\races\aef\soldiers\rear_echelon_squad\rear_echelon_squad_mp" />
+						<bool name="check_requirements" value="False" />
+					</group>
+				</list>
+				<list name="player_upgrades">
+				</list>
+			</group>
+			<group name="starting_building">
+				<string name="key" value="default_mp" />
+				<instance_reference name="building" value="ebps\races\aef\buildings\base_building\aef_base_stamper" />
+				<list name="starting_squads">
+					<group name="starting_squad">
+						<instance_reference name="squad" value="sbps\races\aef\soldiers\rear_echelon_squad\rear_echelon_squad_mp" />
+						<bool name="check_requirements" value="False" />
+					</group>
+				</list>
+				<list name="player_upgrades">
+				</list>
+			</group>
+			<group name="starting_building">
+				<string name="key" value="bunker" />
+				<instance_reference name="building" value="ebps\races\aef\buildings\defensive_structures\aef_mg_nest_perimeter_mp" />
+				<list name="starting_squads">
+				</list>
+				<list name="player_upgrades">
+				</list>
+			</group>
+			<group name="starting_building">
+				<string name="key" value="tier1" />
+				<instance_reference name="building" value="" />
+				<list name="starting_squads">
+				</list>
+				<list name="player_upgrades">
+				</list>
+			</group>
+			<group name="starting_building">
+				<string name="key" value="tier2" />
+				<instance_reference name="building" value="" />
+				<list name="starting_squads">
+				</list>
+				<list name="player_upgrades">
+				</list>
+			</group>
+			<group name="starting_building">
+				<string name="key" value="tier3" />
+				<instance_reference name="building" value="" />
+				<list name="starting_squads">
+				</list>
+				<list name="player_upgrades">
+				</list>
+			</group>
+			<group name="starting_building">
+				<string name="key" value="tier4" />
+				<instance_reference name="building" value="" />
+				<list name="starting_squads">
+				</list>
+				<list name="player_upgrades">
+				</list>
+			</group>
+			<group name="starting_building">
+				<string name="key" value="prebuilt_mp" />
+				<instance_reference name="building" value="ebps\races\aef\buildings\base_building\aef_base_stamper" />
+				<list name="starting_squads">
+					<group name="starting_squad">
+						<instance_reference name="squad" value="sbps\races\aef\soldiers\rear_echelon_squad\rear_echelon_squad_mp" />
+						<bool name="check_requirements" value="False" />
+					</group>
+				</list>
+				<list name="player_upgrades">
+					<instance_reference name="player_upgrade" value="upgrade\aef\research\lieutenant_dispatched_upgrade_mp" />
+					<instance_reference name="player_upgrade" value="upgrade\aef\research\captain_dispatched_upgrade_mp" />
+					<instance_reference name="player_upgrade" value="upgrade\aef\research\major_dispatched_upgrade_mp" />
+				</list>
+			</group>
+		</list>
+		<list name="field_support_production_styles">
+		</list>
+	</group>
+	<uniqueid name="pbgid" value="3" />
+</instance>

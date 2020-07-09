@@ -49,7 +49,7 @@ namespace Battlegrounds.Game.Database {
                 await Task.Run(() => {
 
                     // Load the battlegrounds DB
-                    BlueprintManager.LoadDatabaseWithMod("battlegrounds");
+                    BlueprintManager.LoadDatabaseWithMod("battlegrounds", BattlegroundsInstance.BattleGroundsTuningMod.Guid.ToString());
 
                     // TODO: Load more here if needed
 

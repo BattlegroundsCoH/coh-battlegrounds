@@ -30,7 +30,7 @@ namespace coh2_battlegrounds_console {
             }
 
             // Create a dummy company
-            Company testCompany = new Company(BattlegroundsInstance.LocalSteamuser, "26th Rifle Division", Faction.Soviet);
+            Company testCompany = new Company(BattlegroundsInstance.LocalSteamuser, "26th Rifle Division", Faction.Soviet, BattlegroundsInstance.BattleGroundsTuningMod.Guid.ToString());
             testCompany.AddSquad("conscript_squad_mp", 0, 0, new string[] { "ppsh-41_sub_machine_gun_upgrade_mp" });
             testCompany.AddSquad("conscript_squad_mp", 2, 0);
             testCompany.AddSquad("conscript_squad_mp", 0, 120.0f);
@@ -62,7 +62,7 @@ namespace coh2_battlegrounds_console {
             m.EvaluateResult();
             */
             
-            SessionManager.PlaySession<SessionCompiler<CompanyCompiler>, CompanyCompiler>(session, (a,b) => { Console.WriteLine(a); }, null, null);
+            //SessionManager.PlaySession<SessionCompiler<CompanyCompiler>, CompanyCompiler>(session, (a,b) => { Console.WriteLine(a); }, null, null);
 
             // Save json
             testCompany.SaveToFile("test_company.json");

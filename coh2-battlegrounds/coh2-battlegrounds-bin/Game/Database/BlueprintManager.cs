@@ -71,7 +71,7 @@ namespace Battlegrounds.Game.Database {
             __slotitems = new Dictionary<ulong, Blueprint>();
 
             // Load the vcoh database
-            LoadDatabaseWithMod("vcoh");
+            LoadDatabaseWithMod("vcoh", string.Empty);
 
         }
 
@@ -79,7 +79,8 @@ namespace Battlegrounds.Game.Database {
         /// Load a database for a specific mod.
         /// </summary>
         /// <param name="mod">The name of the mod to load.</param>
-        public static void LoadDatabaseWithMod(string mod) {
+        /// <param name="guid">The GUID of the mod to load.</param>
+        public static void LoadDatabaseWithMod(string mod, string guid) {
 
             // Get the database path
             string dbpath = DatabaseManager.SolveDatabasepath();
@@ -94,7 +95,7 @@ namespace Battlegrounds.Game.Database {
                 if (match.Success) { // If match found
                     string toUpper = match.Groups["type"].Value.ToUpper(); // get the type in upper form
                     if (Enum.TryParse(toUpper, out BlueprintType t)) { // try and parse to blueprint type
-                        if (!LoadJsonDatabase(db_paths[i], t)) { // load the db
+                        if (!LoadJsonDatabase(db_paths[i], t, guid)) { // load the db
                             failCounter++; // we failed, so increment fail counter.
                         }
                     }
@@ -102,12 +103,12 @@ namespace Battlegrounds.Game.Database {
             }
 
             if (failCounter > 0) {
-                throw new Exception("Failed to load one or more databases!");
+                throw new Exception("Failed to load one or more blueprint databases!");
             }
 
         }
 
-        internal static bool LoadJsonDatabase(string jsonfile, BlueprintType bType) {
+        internal static bool LoadJsonDatabase(string jsonfile, BlueprintType bType, string guid) {
 
             // Parse the file
             var ls = JsonParser.Parse(jsonfile);
@@ -136,6 +137,7 @@ namespace Battlegrounds.Game.Database {
                 foreach (IJsonElement element in content) {
                     if (element is Blueprint bp) {
                         bp.BlueprintType = bType;
+                        bp.ModGUID = guid;
                         targetDictionary.Add(bp.PBGID, bp);
                     } else {
                         return false;
