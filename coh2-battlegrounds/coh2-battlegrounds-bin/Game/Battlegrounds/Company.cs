@@ -223,41 +223,55 @@ namespace Battlegrounds.Game.Battlegrounds {
         }
 
         /// <summary>
-        /// 
+        /// Add a new squad to the company with deployment method and pre-set values for veterancy, upgrades, slot items, and modifiers. This method will throw an exception if the company is already full.
         /// </summary>
-        /// <param name="main"></param>
-        /// <param name="supprt"></param>
-        /// <param name="deployMode"></param>
-        /// <param name="vet"></param>
-        /// <param name="vetprog"></param>
-        /// <param name="upgrades"></param>
-        /// <param name="slotitems"></param>
-        /// <param name="modifiers"></param>
-        /// <returns></returns>
+        /// <param name="main">The main (core) blueprint - the actual unit to deploy.</param>
+        /// <param name="supprt">The supporting blueprint to utilize when deploying.</param>
+        /// <param name="deployMode">The method to use when deploying.</param>
+        /// <param name="vet">The already-achieved rank of the squad.</param>
+        /// <param name="vetprog">The already-achieved veterancy progress of the squad.</param>
+        /// <param name="upgrades">The upgrades already applied to the squad.</param>
+        /// <param name="slotitems">The slot items already applied to the squad.</param>
+        /// <param name="modifiers">The modifiers already applied to the squad.</param>
+        /// <returns>The company squad index of the newly created squad.</returns>
+        /// <exception cref="ArgumentOutOfRangeException"/>
+        /// <exception cref="ArgumentNullException"/>
         public int AddSquad(
             SquadBlueprint main, Blueprint supprt, DeploymentMethod deployMode, byte vet, float vetprog, 
             UpgradeBlueprint[] upgrades, SlotItemBlueprint[] slotitems, Modifier[] modifiers) {
 
-            Squad squad = new Squad(m_nextSquadId++, null, main);
-            squad.SetVeterancy(vet, vetprog);
-            squad.SetDeploymentMethod(supprt, deployMode);
-
-            if (main.HasCrew) {
-
-                Squad crew = new Squad(m_nextSquadId++, null, null);
-                crew.SetVeterancy(vet, vetprog);
-
-                squad.SetCrew(crew);
-
+            if (main is null) {
+                throw new ArgumentNullException($"The squad blueprint was null");
             }
 
-            upgrades.ForEach(x => squad.AddUpgrade(x));
-            slotitems.ForEach(x => squad.AddSlotItem(x));
-            modifiers.ForEach(x => squad.AddModifier(x));
+            if (this.m_squads.Count + 1 >= MAX_SIZE) {
 
-            m_squads.Add(squad);
+                Squad squad = new Squad(m_nextSquadId++, null, main);
+                squad.SetVeterancy(vet, vetprog);
+                squad.SetDeploymentMethod(supprt, deployMode);
 
-            return squad.SquadID;
+                if (main.HasCrew) {
+
+                    Squad crew = new Squad(m_nextSquadId++, null, null);
+                    crew.SetVeterancy(vet, vetprog);
+
+                    squad.SetCrew(crew);
+
+                }
+
+                upgrades.ForEach(x => squad.AddUpgrade(x));
+                slotitems.ForEach(x => squad.AddSlotItem(x));
+                modifiers.ForEach(x => squad.AddModifier(x));
+
+                m_squads.Add(squad);
+
+                return squad.SquadID;
+
+            } else {
+
+                throw new ArgumentOutOfRangeException($"Unable to add new squad {main.ToScar()} - max company size reached!");
+
+            }
 
         }
 

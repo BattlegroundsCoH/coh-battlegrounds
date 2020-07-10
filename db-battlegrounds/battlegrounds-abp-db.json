@@ -4,9 +4,9 @@
     "PBGID": "1073741824",
     "Name": "bg_deploy_destination",
     "LocaleName": "1",
-    "LocaleDescription": "0",
+    "LocaleDescription": "13",
     "Army": "battlegrounds_generic",
-    "Icon": "",
+    "Icon": "Icons_buildings_building_common_radio_tower",
     "Cost": {
       "jsdbtype": "Battlegrounds.Game.Gameplay.Cost",
       "Manpower": "0",

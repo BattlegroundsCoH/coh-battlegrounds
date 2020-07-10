@@ -34,6 +34,8 @@ namespace coh2_battlegrounds_console {
             testCompany.AddSquad("conscript_squad_bg", 0, 0, new string[] { "ppsh-41_sub_machine_gun_upgrade_mp" });
             testCompany.AddSquad("conscript_squad_bg", 2, 0);
             testCompany.AddSquad("conscript_squad_bg", 0, 120.0f);
+            testCompany.AddSquad("conscript_squad_bg", 2, 0, new string[] { "dp-28_lmg_upgrade_bg" });
+            testCompany.AddSquad("conscript_squad_bg", 3, 0, new string[] { "dp-28_lmg_upgrade_bg" });
             testCompany.AddSquad("conscript_squad_bg", 5, 0, new string[] { "ppsh-41_sub_machine_gun_upgrade_mp" });
             testCompany.AddSquad("conscript_squad_bg", "zis_6_transport_truck_bg", DeploymentMethod.DeployAndExit, 3, 0, new string[] { "ppsh-41_sub_machine_gun_upgrade_mp" }, null, null);
             testCompany.AddSquad("conscript_squad_bg", "zis_6_transport_truck_bg", DeploymentMethod.DeployAndExit, 3, 0, new string[] { "ppsh-41_sub_machine_gun_upgrade_mp" }, null, null);

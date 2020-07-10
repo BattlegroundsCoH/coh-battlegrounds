@@ -1,39 +1,255 @@
 [
   {
     "jsdbtype": "Battlegrounds.Game.Database.SquadBlueprint",
-    "PBGID": "1073741823",
-    "Name": "conscript_squad_bg",
-    "LocaleName": "11006679",
-    "LocaleDescription": "11007044",
+    "PBGID": "1073741837",
+    "Name": "m1937_53-k_45mm_at_gun_squad_bg",
+    "LocaleName": "11006681",
+    "LocaleDescription": "11007433",
     "Army": "soviet",
-    "Icon": "Icons_units_unit_soviet_conscript_03",
-    "Symbol": "Icons_symbols_unit_soviet_conscript_03_symbol",
+    "Icon": "Icons_vehicles_vehicle_soviet_m1942_at_gun",
+    "Symbol": "Icons_symbols_vehicle_soviet_m1942_at_gun_symbol",
+    "Cost": {
+      "jsdbtype": "Battlegrounds.Game.Gameplay.Cost",
+      "Manpower": "0",
+      "Munition": "0",
+      "Fuel": "0",
+      "FieldTime": "0"
+    },
+    "HasCrew": "False"
+  },
+  {
+    "jsdbtype": "Battlegrounds.Game.Database.SquadBlueprint",
+    "PBGID": "1073741838",
+    "Name": "m1942_zis-3_76mm_at_gun_squad_bg",
+    "LocaleName": "11006973",
+    "LocaleDescription": "11006972",
+    "Army": "soviet",
+    "Icon": "Icons_vehicles_vehicle_soviet_m1942_76mm_at_gun",
+    "Symbol": "Icons_symbols_vehicle_soviet_m1942_76mm_at_gun_symbol",
+    "Cost": {
+      "jsdbtype": "Battlegrounds.Game.Gameplay.Cost",
+      "Manpower": "0",
+      "Munition": "0",
+      "Fuel": "0",
+      "FieldTime": "0"
+    },
+    "HasCrew": "False"
+  },
+  {
+    "jsdbtype": "Battlegrounds.Game.Database.SquadBlueprint",
+    "PBGID": "1073741836",
+    "Name": "76mm_sherman_lend_lease_bg",
+    "LocaleName": "11072112",
+    "LocaleDescription": "11072111",
+    "Army": "soviet",
+    "Icon": "Icons_vehicles_vehicle_aef_m4a3_sherman_76mm",
+    "Symbol": "Icons_symbols_vehicle_aef_m4a3_sherman_76mm_symbol",
+    "Cost": {
+      "jsdbtype": "Battlegrounds.Game.Gameplay.Cost",
+      "Manpower": "380",
+      "Munition": "0",
+      "Fuel": "125",
+      "FieldTime": "15"
+    },
+    "HasCrew": "True"
+  },
+  {
+    "jsdbtype": "Battlegrounds.Game.Database.SquadBlueprint",
+    "PBGID": "1073741828",
+    "Name": "is-2_bg",
+    "LocaleName": "11006769",
+    "LocaleDescription": "11007369",
+    "Army": "soviet",
+    "Icon": "Icons_vehicles_vehicle_soviet_is2",
+    "Symbol": "Icons_symbols_vehicle_soviet_is2_symbol",
+    "Cost": {
+      "jsdbtype": "Battlegrounds.Game.Gameplay.Cost",
+      "Manpower": "640",
+      "Munition": "0",
+      "Fuel": "230",
+      "FieldTime": "15"
+    },
+    "HasCrew": "True"
+  },
+  {
+    "jsdbtype": "Battlegrounds.Game.Database.SquadBlueprint",
+    "PBGID": "1073741829",
+    "Name": "isu-152_bg",
+    "LocaleName": "11006770",
+    "LocaleDescription": "11007371",
+    "Army": "soviet",
+    "Icon": "Icons_vehicles_vehicle_soviet_isu152",
+    "Symbol": "Icons_symbols_vehicle_soviet_isu152_symbol",
+    "Cost": {
+      "jsdbtype": "Battlegrounds.Game.Gameplay.Cost",
+      "Manpower": "680",
+      "Munition": "0",
+      "Fuel": "260",
+      "FieldTime": "15"
+    },
+    "HasCrew": "True"
+  },
+  {
+    "jsdbtype": "Battlegrounds.Game.Database.SquadBlueprint",
+    "PBGID": "1073741830",
+    "Name": "katyusha_rocket_truck_bg",
+    "LocaleName": "11007512",
+    "LocaleDescription": "11006871",
+    "Army": "soviet",
+    "Icon": "Icons_vehicles_vehicle_soviet_katyush_rocket_truck",
+    "Symbol": "Icons_symbols_vehicle_soviet_katyush_rocket_truck_symbol",
+    "Cost": {
+      "jsdbtype": "Battlegrounds.Game.Gameplay.Cost",
+      "Manpower": "360",
+      "Munition": "0",
+      "Fuel": "85",
+      "FieldTime": "15"
+    },
+    "HasCrew": "True"
+  },
+  {
+    "jsdbtype": "Battlegrounds.Game.Database.SquadBlueprint",
+    "PBGID": "1073741831",
+    "Name": "kv-1_bg",
+    "LocaleName": "11007079",
+    "LocaleDescription": "11007327",
+    "Army": "soviet",
+    "Icon": "Icons_vehicles_vehicle_soviet_kv1_heavy_tank",
+    "Symbol": "Icons_symbols_vehicle_soviet_kv1_heavy_tank_symbol",
+    "Cost": {
+      "jsdbtype": "Battlegrounds.Game.Gameplay.Cost",
+      "Manpower": "600",
+      "Munition": "0",
+      "Fuel": "75",
+      "FieldTime": "15"
+    },
+    "HasCrew": "True"
+  },
+  {
+    "jsdbtype": "Battlegrounds.Game.Database.SquadBlueprint",
+    "PBGID": "1073741832",
+    "Name": "kv-2_bg",
+    "LocaleName": "11052242",
+    "LocaleDescription": "11052246",
+    "Army": "soviet",
+    "Icon": "Icons_vehicles_vehicle_soviet_kv2_heavy_tank",
+    "Symbol": "Icons_symbols_vehicle_soviet_kv2_heavy_tank_symbol",
+    "Cost": {
+      "jsdbtype": "Battlegrounds.Game.Gameplay.Cost",
+      "Manpower": "630",
+      "Munition": "0",
+      "Fuel": "230",
+      "FieldTime": "15"
+    },
+    "HasCrew": "True"
+  },
+  {
+    "jsdbtype": "Battlegrounds.Game.Database.SquadBlueprint",
+    "PBGID": "1073741833",
+    "Name": "kv-8_bg",
+    "LocaleName": "11035124",
+    "LocaleDescription": "11038409",
+    "Army": "soviet",
+    "Icon": "Icons_vehicles_vehicle_soviet_kv8_flame",
+    "Symbol": "Icons_symbols_vehicle_soviet_kv8_symbol",
+    "Cost": {
+      "jsdbtype": "Battlegrounds.Game.Gameplay.Cost",
+      "Manpower": "390",
+      "Munition": "0",
+      "Fuel": "145",
+      "FieldTime": "15"
+    },
+    "HasCrew": "True"
+  },
+  {
+    "jsdbtype": "Battlegrounds.Game.Database.SquadBlueprint",
+    "PBGID": "1073741834",
+    "Name": "m3a1_scout_car_squad_bg",
+    "LocaleName": "11007084",
+    "LocaleDescription": "11007323",
+    "Army": "soviet",
+    "Icon": "Icons_vehicles_vehicle_soviet_m3a1_armored_personnel_carrier",
+    "Symbol": "Icons_symbols_vehicle_soviet_m3a1_armored_personnel_carrier_symbol",
+    "Cost": {
+      "jsdbtype": "Battlegrounds.Game.Gameplay.Cost",
+      "Manpower": "190",
+      "Munition": "0",
+      "Fuel": "15",
+      "FieldTime": "15"
+    },
+    "HasCrew": "True"
+  },
+  {
+    "jsdbtype": "Battlegrounds.Game.Database.SquadBlueprint",
+    "PBGID": "1073741835",
+    "Name": "m5_halftrack_squad_bg",
+    "LocaleName": "11007075",
+    "LocaleDescription": "11168854",
+    "Army": "soviet",
+    "Icon": "Icons_vehicles_vehicle_soviet_m5_halftrack",
+    "Symbol": "Icons_symbols_vehicle_soviet_m5_halftrack_symbol",
     "Cost": {
       "jsdbtype": "Battlegrounds.Game.Gameplay.Cost",
       "Manpower": "240",
       "Munition": "0",
-      "Fuel": "0",
+      "Fuel": "30",
       "FieldTime": "15"
     },
-    "HasCrew": "false"
+    "HasCrew": "True"
   },
   {
     "jsdbtype": "Battlegrounds.Game.Database.SquadBlueprint",
-    "PBGID": "1073741827",
-    "Name": "soviet_male_vehicle_crew_bg",
-    "LocaleName": "11006670",
-    "LocaleDescription": "11007043",
+    "PBGID": "1073741839",
+    "Name": "su-76m_bg",
+    "LocaleName": "11007080",
+    "LocaleDescription": "11007362",
     "Army": "soviet",
-    "Icon": "Icons_units_unit_soviet_engineer",
-    "Symbol": "Icons_symbols_unit_soviet_engineer_symbol",
+    "Icon": "Icons_vehicles_vehicle_soviet_su76m_assault_gun",
+    "Symbol": "Icons_symbols_vehicle_soviet_su76m_assault_gun_symbol",
     "Cost": {
       "jsdbtype": "Battlegrounds.Game.Gameplay.Cost",
-      "Manpower": "170",
+      "Manpower": "280",
       "Munition": "0",
-      "Fuel": "0",
+      "Fuel": "75",
       "FieldTime": "15"
     },
-    "HasCrew": "false"
+    "HasCrew": "True"
+  },
+  {
+    "jsdbtype": "Battlegrounds.Game.Database.SquadBlueprint",
+    "PBGID": "1073741840",
+    "Name": "su-85_bg",
+    "LocaleName": "11006721",
+    "LocaleDescription": "11006870",
+    "Army": "soviet",
+    "Icon": "Icons_vehicles_vehicle_soviet_su85_tank_destroyer",
+    "Symbol": "Icons_symbols_vehicle_soviet_su85_tank_destroyer_symbol",
+    "Cost": {
+      "jsdbtype": "Battlegrounds.Game.Gameplay.Cost",
+      "Manpower": "350",
+      "Munition": "0",
+      "Fuel": "130",
+      "FieldTime": "15"
+    },
+    "HasCrew": "True"
+  },
+  {
+    "jsdbtype": "Battlegrounds.Game.Database.SquadBlueprint",
+    "PBGID": "1073741841",
+    "Name": "t-70m_bg",
+    "LocaleName": "11006768",
+    "LocaleDescription": "11006869",
+    "Army": "soviet",
+    "Icon": "Icons_vehicles_vehicle_soviet_t70m_light_tank",
+    "Symbol": "Icons_symbols_vehicle_soviet_t70m_light_tank_symbol",
+    "Cost": {
+      "jsdbtype": "Battlegrounds.Game.Gameplay.Cost",
+      "Manpower": "260",
+      "Munition": "0",
+      "Fuel": "70",
+      "FieldTime": "15"
+    },
+    "HasCrew": "True"
   },
   {
     "jsdbtype": "Battlegrounds.Game.Database.SquadBlueprint",
@@ -51,7 +267,7 @@
       "Fuel": "90",
       "FieldTime": "15"
     },
-    "HasCrew": "false"
+    "HasCrew": "True"
   },
   {
     "jsdbtype": "Battlegrounds.Game.Database.SquadBlueprint",
@@ -69,7 +285,7 @@
       "Fuel": "130",
       "FieldTime": "15"
     },
-    "HasCrew": "true"
+    "HasCrew": "True"
   },
   {
     "jsdbtype": "Battlegrounds.Game.Database.SquadBlueprint",
@@ -87,7 +303,61 @@
       "Fuel": "30",
       "FieldTime": "15"
     },
-    "HasCrew": "false"
+    "HasCrew": "False"
+  },
+  {
+    "jsdbtype": "Battlegrounds.Game.Database.SquadBlueprint",
+    "PBGID": "1073741823",
+    "Name": "conscript_squad_bg",
+    "LocaleName": "11006679",
+    "LocaleDescription": "11007044",
+    "Army": "soviet",
+    "Icon": "Icons_units_unit_soviet_conscript_03",
+    "Symbol": "Icons_symbols_unit_soviet_conscript_03_symbol",
+    "Cost": {
+      "jsdbtype": "Battlegrounds.Game.Gameplay.Cost",
+      "Manpower": "240",
+      "Munition": "0",
+      "Fuel": "0",
+      "FieldTime": "15"
+    },
+    "HasCrew": "False"
+  },
+  {
+    "jsdbtype": "Battlegrounds.Game.Database.SquadBlueprint",
+    "PBGID": "1073741842",
+    "Name": "soviet_male_vehicle_2_crew_bg",
+    "LocaleName": "8",
+    "LocaleDescription": "10",
+    "Army": "soviet",
+    "Icon": "Icons_units_unit_soviet_engineer",
+    "Symbol": "Icons_symbols_unit_soviet_engineer_symbol",
+    "Cost": {
+      "jsdbtype": "Battlegrounds.Game.Gameplay.Cost",
+      "Manpower": "84",
+      "Munition": "0",
+      "Fuel": "0",
+      "FieldTime": "15"
+    },
+    "HasCrew": "False"
+  },
+  {
+    "jsdbtype": "Battlegrounds.Game.Database.SquadBlueprint",
+    "PBGID": "1073741827",
+    "Name": "soviet_male_vehicle_crew_bg",
+    "LocaleName": "3",
+    "LocaleDescription": "7",
+    "Army": "soviet",
+    "Icon": "Icons_units_unit_soviet_engineer",
+    "Symbol": "Icons_symbols_unit_soviet_engineer_symbol",
+    "Cost": {
+      "jsdbtype": "Battlegrounds.Game.Gameplay.Cost",
+      "Manpower": "168",
+      "Munition": "0",
+      "Fuel": "0",
+      "FieldTime": "15"
+    },
+    "HasCrew": "False"
   }
   ]
   

@@ -1045,8 +1045,8 @@
 					<instance_reference name="ext_key" value="" />
 					<group name="info">
 						<instance_reference name="capture_squad_blueprint" value="sbps\races\soviet\vehicles\t_34_85_squad_bg" mod="142b113740474c82a60b0a428bd553d5" />
-						<float name="max_capture_crew_size" value="3" />
-						<float name="min_capture_crew_size" value="3" />
+						<float name="max_capture_crew_size" value="4" />
+						<float name="min_capture_crew_size" value="4" />
 						<list name="recrew_penalties_list">
 						</list>
 						<float name="abandon_animation_seconds" value="2.5" />

@@ -1,18 +1,52 @@
 [
-    {
-      "jsdbtype": "Battlegrounds.Game.Database.UpgradeBlueprint",
-      "PBGID": "1073741823",
-      "Name": "bg_verify",
-      "LocaleName": "0",
-      "LocaleDescription": "0",
-      "Icon": "",
-      "Cost": {
-        "jsdbtype": "Battlegrounds.Game.Gameplay.Cost",
-        "Manpower": "0",
-        "Munition": "0",
-        "Fuel": "0"
-      },
-      "SlotItem": []
-    }
+  {
+    "jsdbtype": "Battlegrounds.Game.Database.UpgradeBlueprint",
+    "PBGID": "1073741823",
+    "Name": "bg_verify",
+    "LocaleName": "0",
+    "LocaleDescription": "0",
+    "Icon": "",
+    "Cost": {
+      "jsdbtype": "Battlegrounds.Game.Gameplay.Cost",
+      "Manpower": "0",
+      "Munition": "0",
+      "Fuel": "0"
+    },
+    "SlotItem": []
+  },
+  {
+    "jsdbtype": "Battlegrounds.Game.Database.UpgradeBlueprint",
+    "PBGID": "1073741825",
+    "Name": "dp-28_lmg_upgrade_bg",
+    "LocaleName": "15",
+    "LocaleDescription": "16",
+    "Icon": "Icons_upgrades_icon_upgrade_soviet_dp28_lmg",
+    "Cost": {
+      "jsdbtype": "Battlegrounds.Game.Gameplay.Cost",
+      "Manpower": "0",
+      "Munition": "75",
+      "Fuel": "0"
+    },
+    "SlotItem": [
+      "slot_item\\soviet\\small_arms\\dp-28_light_machine_gun_package_mp"
     ]
-    
+  },
+  {
+    "jsdbtype": "Battlegrounds.Game.Database.UpgradeBlueprint",
+    "PBGID": "1073741824",
+    "Name": "ppsh-41_sub_machine_gun_upgrade_bg",
+    "LocaleName": "11008975",
+    "LocaleDescription": "11008976",
+    "Icon": "Icons_upgrades_icon_upgrade_soviet_conscript_assault_package",
+    "Cost": {
+      "jsdbtype": "Battlegrounds.Game.Gameplay.Cost",
+      "Manpower": "0",
+      "Munition": "60",
+      "Fuel": "0"
+    },
+    "SlotItem": [
+      "slot_item\\soviet\\small_arms\\ppsh41_assault_package_dummy_item_mp"
+    ]
+  }
+  ]
+  

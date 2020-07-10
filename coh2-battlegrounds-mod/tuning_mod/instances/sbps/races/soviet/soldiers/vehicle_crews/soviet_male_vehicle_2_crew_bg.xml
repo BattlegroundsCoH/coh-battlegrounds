@@ -7,16 +7,16 @@
 				<group name="race_data">
 					<group name="info">
 						<bool name="allow_spawner_production" value="False" />
-						<locstring name="extra_text" value="6" mod="142b113740474c82a60b0a428bd553d5" />
+						<locstring name="extra_text" value="11" mod="142b113740474c82a60b0a428bd553d5" />
 						<bool name="has_speech_code" value="True" />
-						<locstring name="help_text" value="7" mod="142b113740474c82a60b0a428bd553d5" />
+						<locstring name="help_text" value="10" mod="142b113740474c82a60b0a428bd553d5" />
 						<string name="hotkey_name" value="E" />
 						<icon name="icon_name" value="Icons_units_unit_soviet_engineer" />
 						<bool name="minimap_team_only" value="False" />
 						<icon name="minimap_texture" value="" />
 						<instance_reference name="modal_ability" value="" />
 						<bool name="reveal_for_decryption" value="True" />
-						<locstring name="screen_name" value="3" mod="142b113740474c82a60b0a428bd553d5" />
+						<locstring name="screen_name" value="8" mod="142b113740474c82a60b0a428bd553d5" />
 						<string name="selection_group" value="crew" />
 						<group name="speaker_generic">
 							<string name="code_1" value="gs" />
@@ -49,8 +49,8 @@
 						</group>
 						<icon name="portrait_name_summer" value="Icons_portraits_unit_soviet_combat_engineer_s_portrait" />
 						<float name="minimap_texture_scale" value="1" />
-						<locstring name="brief_text" value="5" mod="142b113740474c82a60b0a428bd553d5" />
-						<locstring name="screen_name_short" value="4" mod="142b113740474c82a60b0a428bd553d5" />
+						<locstring name="brief_text" value="12" mod="142b113740474c82a60b0a428bd553d5" />
+						<locstring name="screen_name_short" value="9" mod="142b113740474c82a60b0a428bd553d5" />
 						<enum name="map_rotation_type_override" value="no_override" />
 						<bool name="decoratable" value="True" />
 						<bool name="show_in_build_log" value="False" />
@@ -161,7 +161,7 @@
 		<template_reference name="squadexts" value="sbpextensions\squad_loadout_ext">
 			<list name="unit_list">
 				<group name="loadout_data">
-					<float name="num" value="4" />
+					<float name="num" value="2" />
 					<instance_reference name="type" value="ebps\races\soviet\soldiers\vehicle_crew\vehicle_crew_male_bg" mod="142b113740474c82a60b0a428bd553d5" />
 				</group>
 			</list>
@@ -289,7 +289,7 @@
 								<instance_reference name="tooltip" value="modifier_tooltip\move_enable_modifier" />
 							</template_reference>
 						</list>
-						<uniqueid name="id" value="1073741952" />
+						<uniqueid name="id" value="1073742293" />
 					</template_reference>
 					<template_reference name="action" value="action\delay">
 						<float name="delay" value="10" />
@@ -311,10 +311,10 @@
 										<instance_reference name="tooltip" value="modifier_tooltip\received_accuracy_modifier" />
 									</template_reference>
 								</list>
-								<uniqueid name="id" value="1073741953" />
+								<uniqueid name="id" value="1073742294" />
 							</template_reference>
 						</list>
-						<uniqueid name="id" value="1073741954" />
+						<uniqueid name="id" value="1073742295" />
 						<bool name="can_prevent_refund" value="True" />
 					</template_reference>
 					<template_reference name="action" value="action\animator_set_state">
@@ -323,7 +323,7 @@
 						<bool name="retrigger" value="False" />
 						<string name="state_machine_name" value="suppression" />
 						<string name="undo_action_state_name" value="normal" />
-						<uniqueid name="id" value="1073741955" />
+						<uniqueid name="id" value="1073742296" />
 					</template_reference>
 				</list>
 				<list name="suppressed_activate_actions">
@@ -368,7 +368,7 @@
 								<instance_reference name="tooltip" value="modifier_tooltip\accuracy_weapon_modifier" />
 							</template_reference>
 						</list>
-						<uniqueid name="id" value="1073741956" />
+						<uniqueid name="id" value="1073742297" />
 					</template_reference>
 				</list>
 			</group>
@@ -457,7 +457,7 @@
 												<instance_reference name="tooltip" value="modifier_tooltip\blank_tooltip" />
 											</template_reference>
 										</list>
-										<uniqueid name="id" value="1073741959" />
+										<uniqueid name="id" value="1073742298" />
 									</template_reference>
 								</list>
 								<list name="squad_entity_actions">
@@ -487,7 +487,7 @@
 												<instance_reference name="tooltip" value="modifier_tooltip\blank_tooltip" />
 											</template_reference>
 										</list>
-										<uniqueid name="id" value="1073741960" />
+										<uniqueid name="id" value="1073742299" />
 									</template_reference>
 								</list>
 								<list name="squad_entity_actions">
@@ -505,7 +505,7 @@
 												<instance_reference name="tooltip" value="modifier_tooltip\accuracy_weapon_modifier" />
 											</template_reference>
 										</list>
-										<uniqueid name="id" value="1073741961" />
+										<uniqueid name="id" value="1073742300" />
 									</template_reference>
 								</list>
 							</group>
@@ -523,7 +523,7 @@
 										<bool name="apply_to_entities_in_squad" value="False" />
 										<bool name="trigger_publish_event" value="False" />
 										<instance_reference name="upgrade" value="upgrade\max_vet" />
-										<uniqueid name="id" value="1073741962" />
+										<uniqueid name="id" value="1073742301" />
 									</template_reference>
 									<template_reference name="action" value="action\apply_modifiers_action">
 										<float name="duration" value="0" />
@@ -539,7 +539,7 @@
 												<instance_reference name="tooltip" value="modifier_tooltip\blank_tooltip" />
 											</template_reference>
 										</list>
-										<uniqueid name="id" value="1073741963" />
+										<uniqueid name="id" value="1073742302" />
 									</template_reference>
 								</list>
 								<list name="squad_entity_actions">
@@ -566,7 +566,7 @@
 												<instance_reference name="tooltip" value="modifier_tooltip\cooldown_weapon_modifier" />
 											</template_reference>
 										</list>
-										<uniqueid name="id" value="1073741964" />
+										<uniqueid name="id" value="1073742303" />
 									</template_reference>
 								</list>
 							</group>
@@ -639,7 +639,7 @@
 			<list name="actions">
 				<template_reference name="action" value="action\suppression">
 					<float name="suppression" value="0" />
-					<uniqueid name="id" value="1073741965" />
+					<uniqueid name="id" value="1073742304" />
 					<float name="supressionrecovertime" value="0" />
 				</template_reference>
 			</list>
@@ -750,5 +750,5 @@
 			<enum name="shared_veterancy_type" value="tp_commonwealth_infantry" />
 		</template_reference>
 	</list>
-	<uniqueid name="pbgid" value="1073741827" />
+	<uniqueid name="pbgid" value="1073741842" />
 </instance>

@@ -812,11 +812,28 @@
 		<template_reference name="exts" value="ebpextensions\recrewable_ext">
 			<list name="race_list">
 				<group name="race_data">
+					<instance_reference name="ext_key" value="racebps\soviet" />
+					<group name="info">
+						<instance_reference name="capture_squad_blueprint" value="sbps\races\soviet\vehicles\kv-1_bg" mod="142b113740474c82a60b0a428bd553d5" />
+						<float name="max_capture_crew_size" value="4" />
+						<float name="min_capture_crew_size" value="4" />
+						<list name="recrew_penalties_list">
+						</list>
+						<float name="abandon_animation_seconds" value="2.5" />
+						<int name="recrew_max_squad_size" value="1" />
+						<bool name="abandoned_allows_pass_through" value="False" />
+						<list name="apply_to_driver_action">
+						</list>
+						<float name="driver_death_chance_on_entity_death" value="1" />
+						<instance_reference name="driver_squad_blueprint" value="sbps\races\soviet\soldiers\vehicle_crews\soviet_male_vehicle_crew_bg" mod="142b113740474c82a60b0a428bd553d5" />
+					</group>
+				</group>
+				<group name="race_data">
 					<instance_reference name="ext_key" value="" />
 					<group name="info">
-						<instance_reference name="capture_squad_blueprint" value="sbps\races\soviet\vehicles\kv-1\kv-1_mp" />
-						<float name="max_capture_crew_size" value="3" />
-						<float name="min_capture_crew_size" value="3" />
+						<instance_reference name="capture_squad_blueprint" value="sbps\races\soviet\vehicles\kv-1_bg" mod="142b113740474c82a60b0a428bd553d5" />
+						<float name="max_capture_crew_size" value="4" />
+						<float name="min_capture_crew_size" value="4" />
 						<list name="recrew_penalties_list">
 						</list>
 						<float name="abandon_animation_seconds" value="2.5" />

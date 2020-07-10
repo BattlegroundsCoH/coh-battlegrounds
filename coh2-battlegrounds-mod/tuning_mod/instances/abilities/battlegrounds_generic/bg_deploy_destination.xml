@@ -27,7 +27,7 @@
 			<float name="munition" value="0" />
 			<float name="popcap" value="0" />
 		</group>
-		<string name="cursor_ghost_blueprint" value="environment\objects\base_perimeter\team_flagpole\team_flagpole" />
+		<string name="cursor_ghost_blueprint" value="gameplay\fx_entities\ui_arrow_blue\ui_arrow_blue" />
 		<float name="cursor_ghost_blueprint_angle" value="0" />
 		<bool name="disable_combat" value="False" />
 		<bool name="disable_when_active" value="True" />
@@ -78,10 +78,10 @@
 			<string name="cursor_nonmodal_good" value="" />
 		</group>
 		<group name="ui_info">
-			<locstring name="extra_text" value="0" />
-			<locstring name="help_text" value="0" />
+			<locstring name="extra_text" value="14" mod="142b113740474c82a60b0a428bd553d5" />
+			<locstring name="help_text" value="13" mod="142b113740474c82a60b0a428bd553d5" />
 			<string name="hotkey_name" value="" />
-			<icon name="icon_name" value="" />
+			<icon name="icon_name" value="Icons_buildings_building_common_radio_tower" />
 			<string name="overlay_name" value="" />
 			<bool name="reveal_for_decryption" value="False" />
 			<locstring name="screen_name" value="1" mod="142b113740474c82a60b0a428bd553d5" />
