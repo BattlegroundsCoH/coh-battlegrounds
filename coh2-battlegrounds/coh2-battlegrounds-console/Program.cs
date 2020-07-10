@@ -34,14 +34,15 @@ namespace coh2_battlegrounds_console {
             testCompany.AddSquad("conscript_squad_bg", 0, 0, new string[] { "ppsh-41_sub_machine_gun_upgrade_mp" });
             testCompany.AddSquad("conscript_squad_bg", 2, 0);
             testCompany.AddSquad("conscript_squad_bg", 0, 120.0f);
-            testCompany.AddSquad("conscript_squad_bg", 3, 0, new string[] { "ppsh-41_sub_machine_gun_upgrade_mp" });
-            testCompany.AddSquad("conscript_squad_bg", 3, 0, new string[] { "ppsh-41_sub_machine_gun_upgrade_mp" });
             testCompany.AddSquad("conscript_squad_bg", 5, 0, new string[] { "ppsh-41_sub_machine_gun_upgrade_mp" });
+            testCompany.AddSquad("conscript_squad_bg", "zis_6_transport_truck_bg", DeploymentMethod.DeployAndExit, 3, 0, new string[] { "ppsh-41_sub_machine_gun_upgrade_mp" }, null, null);
+            testCompany.AddSquad("conscript_squad_bg", "zis_6_transport_truck_bg", DeploymentMethod.DeployAndExit, 3, 0, new string[] { "ppsh-41_sub_machine_gun_upgrade_mp" }, null, null);
+            testCompany.AddSquad("conscript_squad_bg", "zis_6_transport_truck_bg", DeploymentMethod.DeployAndExit, 5, 0, new string[] { "ppsh-41_sub_machine_gun_upgrade_mp" }, null, null);
             testCompany.AddSquad("conscript_squad_bg", "zis_6_transport_truck_bg", DeploymentMethod.DeployAndExit, 5, 0, new string[] { "ppsh-41_sub_machine_gun_upgrade_mp" }, null, null);
             testCompany.AddSquad("t_34_85_squad_bg", 2, 0);
-            testCompany.AddSquad("t_34_85_squad_bg", 2, 0);
             testCompany.AddSquad("t_34_85_squad_bg", 3, 0);
-            testCompany.AddSquad("t_34_85_squad_bg", 3, 0);
+            testCompany.AddSquad("t_34_85_squad_bg", 4, 0);
+            testCompany.AddSquad("t_34_85_squad_bg", 5, 0);
 
             Company[] companies = new Company[] {
                 testCompany
@@ -64,7 +65,7 @@ namespace coh2_battlegrounds_console {
             m.EvaluateResult();
             */
             
-            //SessionManager.PlaySession<SessionCompiler<CompanyCompiler>, CompanyCompiler>(session, (a,b) => { Console.WriteLine(a); }, null, null);
+            SessionManager.PlaySession<SessionCompiler<CompanyCompiler>, CompanyCompiler>(session, (a,b) => { Console.WriteLine(a); }, null, null);
 
             // Save json
             testCompany.SaveToFile("test_company.json");

@@ -122,19 +122,19 @@ namespace Battlegrounds.Game.Gameplay {
         /// The current upgrades applied to a <see cref="Squad"/>.
         /// </summary>
         [JsonIgnore]
-        public ImmutableArray<Blueprint> Upgrades => m_upgrades.ToImmutableArray();
+        public ImmutableHashSet<Blueprint> Upgrades => m_upgrades.ToImmutableHashSet();
 
         /// <summary>
         /// The current slot items carried by the <see cref="Squad"/>.
         /// </summary>
         [JsonIgnore]
-        public ImmutableArray<Blueprint> SlotItems => m_slotItems.ToImmutableArray();
+        public ImmutableHashSet<Blueprint> SlotItems => m_slotItems.ToImmutableHashSet();
 
         /// <summary>
         /// The current modifiers applied to the <see cref="Squad"/>.
         /// </summary>
         [JsonIgnore]
-        public ImmutableArray<Modifier> Modifiers => m_modifiers.ToImmutableArray();
+        public ImmutableHashSet<Modifier> Modifiers => m_modifiers.ToImmutableHashSet();
 
         /// <summary>
         /// Create a basic <see cref="Squad"/> instance without any identifying values.

@@ -15,7 +15,7 @@ namespace Battlegrounds.Util {
         private string IN => (m_indentLvl > 0) ? new string('\t', m_indentLvl) : string.Empty;
 
         /// <summary>
-        /// 
+        /// The length (character count) of the internal string content.
         /// </summary>
         public int Length => this.m_internalStringBuilder.Length;
 
@@ -81,18 +81,18 @@ namespace Battlegrounds.Util {
         public void Save(string path) => File.WriteAllText(path, this.GetContent());
 
         /// <summary>
-        /// 
+        /// Check if the contents of the builder ends with a string.
         /// </summary>
-        /// <param name="endStr"></param>
-        /// <returns></returns>
+        /// <param name="endStr">The ending string to check for.</param>
+        /// <returns>True if the contents end with string.</returns>
         public bool EndsWith(string endStr) => this.EndsWith(endStr, false);
 
         /// <summary>
-        /// 
+        /// Check if the contents of the builder ends with a string.
         /// </summary>
-        /// <param name="endStr"></param>
-        /// <param name="ignoreWhitespace"></param>
-        /// <returns></returns>
+        /// <param name="endStr">The ending string to check for.</param>
+        /// <param name="ignoreWhitespace">Ignore whitespace characters.</param>
+        /// <returns>True if the contents end with string.</returns>
         public bool EndsWith(string endStr, bool ignoreWhitespace) {
             string content = this.GetContent();
             if (ignoreWhitespace) {
@@ -102,16 +102,17 @@ namespace Battlegrounds.Util {
         }
 
         /// <summary>
-        /// 
+        /// Pop a specified amount of characters from the end of the string.
         /// </summary>
-        /// <param name="amount"></param>
+        /// <param name="amount">The amount of characters to remove.</param>
+        /// <exception cref="ArgumentOutOfRangeException"/>
         public void Popback(int amount) => this.m_internalStringBuilder.Remove(this.m_internalStringBuilder.Length - amount, amount);
 
         /// <summary>
-        /// 
+        /// Get the index of the last occurence of a character.
         /// </summary>
-        /// <param name="character"></param>
-        /// <returns></returns>
+        /// <param name="character">The character to find the content of.</param>
+        /// <returns>The index of the last occurance of the specified character. -1 if no character could be found.</returns>
         public int LastIndexOf(char character) => this.GetContent().LastIndexOf(character);
 
         /// <summary>

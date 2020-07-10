@@ -91,7 +91,7 @@ namespace Battlegrounds.Compiler {
 
                 CompileList(builder, "upgrades", crew.Upgrades, x => { UpgradeBlueprint y = x as UpgradeBlueprint; return y.ToScar(); });
                 CompileList(builder, "slot_items", crew.SlotItems, x => { SlotItemBlueprint y = x as SlotItemBlueprint; return y.ToScar(); });
-                CompileList(builder, "modifiers", (new string[0]).ToImmutableArray(), x => x);
+                CompileList(builder, "modifiers", (new string[0]).ToImmutableHashSet(), x => x);
 
                 builder.DecreaseIndent();
                 builder.AppendLine("},");
@@ -114,7 +114,7 @@ namespace Battlegrounds.Compiler {
 
             CompileList(builder, "upgrades", squad.Upgrades, x => { UpgradeBlueprint y = x as UpgradeBlueprint; return $"{{ bp={y.ToScar()}, symbol=\"{y.Symbol}\" }}"; });
             CompileList(builder, "slot_items", squad.SlotItems, x => { SlotItemBlueprint y = x as SlotItemBlueprint; return $"{y.ToScar()}"; });
-            CompileList(builder, "modifiers", (new string[0]).ToImmutableArray(), x => x);
+            CompileList(builder, "modifiers", (new string[0]).ToImmutableHashSet(), x => x);
 
             builder.AppendLine($"spawned = false,");
 
@@ -123,10 +123,10 @@ namespace Battlegrounds.Compiler {
 
         }
 
-        private void CompileList<T>(TxtBuilder builder, string table, ImmutableArray<T> source, Func<T, string> func) {
+        private void CompileList<T>(TxtBuilder builder, string table, ImmutableHashSet<T> source, Func<T, string> func) {
             builder.AppendLine($"{table} = {{");
             builder.IncreaseIndent();
-            if (source.Length > 0) {
+            if (source.Count > 0) {
                 builder.Append(""); // Apply indentation here
                 foreach (T t in source) {
                     builder.Append($"{func(t)},", false);
