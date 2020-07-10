@@ -79,7 +79,7 @@ function BG_Init()
     Rule_AddOneShot(BG_OverrideGameEndingFunctionCalls, 1);
 
     -- Fix some UI stuff
-    Rule_AddOneShot(BG_FixUI, 0.1);
+    Rule_AddOneShot(BG_FixUI, 1);
 
     -- Add the broadcast event callback
     Rule_AddGlobalEvent(BG_GameBroadcastMessageReceived, GE_BroadcastMessage);

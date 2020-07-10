@@ -2,7 +2,7 @@ local _bg_local_category = "infantry";
 local _bg_local_companyIsVisible = false;
 local _bg_local_show_from = 1;
 local _bg_local_show_to = -1;
-local _bg_local_show_max = 12;
+local _bg_local_show_max = 13;
 
 _BG_UI_CompanyViewX = 0;
 _BG_UI_CompanyViewY = -612;
@@ -104,9 +104,11 @@ function BG_ShowCompanyCategory(category)
 
         -- Keep track of the y-offset
         local yOffset = 0.0
+        local j = 0;
 
         -- For each unit in company unit
         for i=1, #_bg_playerData[bgPlayerID].company.units do
+            j = j + 1;
             -- TODO: Do this properly...
             if not _bg_playerData[bgPlayerID].company.units[i].spawned then
 
@@ -115,6 +117,9 @@ function BG_ShowCompanyCategory(category)
 
                 yOffset = yOffset + 40;
 
+            end
+            if j >= _bg_local_show_max then
+                break;
             end
         end
 
@@ -354,12 +359,15 @@ function BG_RefreshCompanyView()
 end
 
 function BG_VerifyPurcharse(cost)
-    return Player_CanBuy(Game_GetLocalPlayer(), cost.manpower or 0, cost.munitions or 0, cost.fuel or 0);
+    local man = cost.manpower or 0;
+    local mun = cost.munitions or 0;
+    local ful = cost.fuel or 0;
+    return Player_CanBuy(Game_GetLocalPlayer(), man, mun, ful);
 end
 
 function BG_ShowInsufficientFundsWarning()
     BG_ClearWarnings();
-    g_uiWarningIndex = UIWarning_Show(Loc("Insufficient Funds!"));
+    g_uiWarningIndex = UIWarning_Show(LOC("Insufficient Funds!"));
     if not Rule_Exists(BG_ClearWarnings) then
         Rule_AddOneShot(BG_ClearWarnings, 5);
     end

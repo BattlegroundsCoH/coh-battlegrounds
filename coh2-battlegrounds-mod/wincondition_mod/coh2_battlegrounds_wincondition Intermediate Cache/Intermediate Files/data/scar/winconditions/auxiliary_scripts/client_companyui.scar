@@ -2,7 +2,7 @@ local _bg_local_category = "infantry";
 local _bg_local_companyIsVisible = false;
 local _bg_local_show_from = 1;
 local _bg_local_show_to = -1;
-local _bg_local_show_max = 12;
+local _bg_local_show_max = 13;
 
 _BG_UI_CompanyViewX = 0;
 _BG_UI_CompanyViewY = -612;
@@ -38,7 +38,7 @@ function BG_CreateShowCompanyButon()
     show_deployment_bkg:add(show_deployment_bkg_ico);
 
     -- Button for show/hide deployment menu
-    bg_show_company = Button("Show Company", "ModIcons_6a0a13b89555402ca75b85dc30f5cb04_button_simple");
+    bg_show_company = Button(Util_CreateLocString(_bg_playerData[BG_GetPlayerID(Game_GetLocalPlayer())].company.name), "ModIcons_6a0a13b89555402ca75b85dc30f5cb04_button_simple");
     bg_show_company:setBounds(24, 12, 310, 32);
     bg_show_company:setCallback(function()
         _bg_local_companyIsVisible = not _bg_local_companyIsVisible; -- Negate the value
@@ -104,9 +104,11 @@ function BG_ShowCompanyCategory(category)
 
         -- Keep track of the y-offset
         local yOffset = 0.0
+        local j = 0;
 
         -- For each unit in company unit
         for i=1, #_bg_playerData[bgPlayerID].company.units do
+            j = j + 1;
             -- TODO: Do this properly...
             if not _bg_playerData[bgPlayerID].company.units[i].spawned then
 
@@ -115,6 +117,9 @@ function BG_ShowCompanyCategory(category)
 
                 yOffset = yOffset + 40;
 
+            end
+            if j >= _bg_local_show_max then
+                break;
             end
         end
 
@@ -264,12 +269,16 @@ function BG_UnitCardClicked(tag)
     local refPlayerID = BG_GetPlayerID(Game_GetLocalPlayer());
     for i=1, #_bg_playerData[refPlayerID].company.units do
         if _bg_playerData[refPlayerID].company.units[i].company_id == tonumber(tag) then
-            _bg_playerData[refPlayerID].company.units[i].isDeploying = true;
-            _bg_playerData[refPlayerID].company.units[i].deploy_time = _bg_playerData[refPlayerID].company.units[i].cost.fieldtime;
-            BG_RefreshCompanyView();
-            Game_SendMessage(_bg_message_type_player_request_deploy, tag); -- Publish we've requested this unit
-            local ps = Battlegrounds_FormatResources(_bg_playerData[refPlayerID].company.units[i].cost, true);
-            Game_SendMessage(_bg_message_type_player_resource, ps); -- Subtrack the resources
+            if BG_VerifyPurcharse(_bg_playerData[refPlayerID].company.units[i].cost) then
+                _bg_playerData[refPlayerID].company.units[i].isDeploying = true;
+                _bg_playerData[refPlayerID].company.units[i].deploy_time = _bg_playerData[refPlayerID].company.units[i].cost.fieldtime;
+                BG_RefreshCompanyView();
+                Game_SendMessage(_bg_message_type_player_request_deploy, tag); -- Publish we've requested this unit
+                local ps = Battlegrounds_FormatResources(_bg_playerData[refPlayerID].company.units[i].cost, true);
+                Game_SendMessage(_bg_message_type_player_resource, ps); -- Subtrack the resources
+            else
+                BG_ShowInsufficientFundsWarning();
+            end
             break;
         end
     end
@@ -346,5 +355,27 @@ end
 function BG_RefreshCompanyView()
     if _bg_local_companyIsVisible then
         BG_ShowCompanyCategory(_bg_local_category); -- Trigger a complete redraw
+    end
+end
+
+function BG_VerifyPurcharse(cost)
+    local man = cost.manpower or 0;
+    local mun = cost.munitions or 0;
+    local ful = cost.fuel or 0;
+    return Player_CanBuy(Game_GetLocalPlayer(), man, mun, ful);
+end
+
+function BG_ShowInsufficientFundsWarning()
+    BG_ClearWarnings();
+    g_uiWarningIndex = UIWarning_Show(LOC("Insufficient Funds!"));
+    if not Rule_Exists(BG_ClearWarnings) then
+        Rule_AddOneShot(BG_ClearWarnings, 5);
+    end
+end
+
+function BG_ClearWarnings()
+    if g_uiWarningIndex ~= nil then
+        UI_TitleDestroy(g_uiWarningIndex);
+        Rule_RemoveIfExist(BG_ClearWarnings);
     end
 end

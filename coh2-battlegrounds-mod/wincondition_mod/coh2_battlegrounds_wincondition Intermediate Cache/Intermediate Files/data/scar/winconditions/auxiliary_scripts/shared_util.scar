@@ -165,6 +165,10 @@ function Player_ChangeResources(player, man, mun, ful)
     Player_AddResource(player, RT_Fuel, ful);
 end
 
+function Player_CanBuy(player, man, mun, ful)
+    return Player_GetResource(player, RT_Manpower) >= man and Player_GetResource(player, RT_Munition) >= mun and Player_GetResource(player, RT_Fuel) >= ful;
+end
+
 ------------------------------------------------------------
 -- Team functions
 ------------------------------------------------------------
