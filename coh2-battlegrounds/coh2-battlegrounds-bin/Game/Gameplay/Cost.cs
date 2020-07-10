@@ -10,22 +10,22 @@ namespace Battlegrounds.Game.Gameplay {
         /// <summary>
         /// Manpower cost of the <see cref="Cost"/> data.
         /// </summary>
-        public ushort Manpower { get; set; }
+        public float Manpower { get; set; }
 
         /// <summary>
         /// Munitions cost of the <see cref="Cost"/> data.
         /// </summary>
-        public ushort Munitions { get; set; }
+        public float Munitions { get; set; }
 
         /// <summary>
         /// Fuel cost of the <see cref="Cost"/> data.
         /// </summary>
-        public ushort Fuel { get; set; }
+        public float Fuel { get; set; }
 
         /// <summary>
         /// The amount of time it takes to field something.
         /// </summary>
-        public double FieldTime { get; set; }
+        public float FieldTime { get; set; }
 
         /// <summary>
         /// Default values for a new instance of the <see cref="Cost"/> data.
@@ -34,7 +34,7 @@ namespace Battlegrounds.Game.Gameplay {
             this.Manpower = 0;
             this.Munitions = 0;
             this.Fuel = 0;
-            this.FieldTime = -1.0;
+            this.FieldTime = -1.0f;
         }
 
         /// <summary>
@@ -43,7 +43,7 @@ namespace Battlegrounds.Game.Gameplay {
         /// <param name="man">The manpower value</param>
         /// <param name="mun">The munitions value</param>
         /// <param name="ful">The fuel value</param>
-        public Cost(ushort man, ushort mun, ushort ful) : this() {
+        public Cost(float man, float mun, float ful) : this() {
             this.Manpower = man;
             this.Munitions = mun;
             this.Fuel = ful;
@@ -56,7 +56,7 @@ namespace Battlegrounds.Game.Gameplay {
         /// <param name="mun">The munitions value</param>
         /// <param name="ful">The fuel value</param>
         /// <param name="fti">The field time value</param>
-        public Cost(ushort man, ushort mun, ushort ful, double fti) : this(man, mun, ful) {
+        public Cost(float man, float mun, float ful, float fti) : this(man, mun, ful) {
             this.FieldTime = fti;
         }
 
@@ -87,7 +87,7 @@ namespace Battlegrounds.Game.Gameplay {
         /// <param name="b">Right operand</param>
         /// <returns>The sum of the two operands.</returns>
         public static Cost operator +(Cost a, Cost b)
-            => new Cost((ushort)(a.Manpower + b.Manpower), (ushort)(a.Munitions + b.Munitions), (ushort)(a.Fuel + b.Fuel), a.FieldTime + b.FieldTime);
+            => new Cost((float)(a.Manpower + b.Manpower), (float)(a.Munitions + b.Munitions), (float)(a.Fuel + b.Fuel), a.FieldTime + b.FieldTime);
 
         /// <summary>
         /// 
@@ -96,7 +96,7 @@ namespace Battlegrounds.Game.Gameplay {
         /// <param name="b"></param>
         /// <returns></returns>
         public static Cost operator *(Cost a, float b)
-            => new Cost((ushort)(a.Manpower * b), (ushort)(a.Munitions * b), (ushort)(a.Fuel * b), a.FieldTime * b);
+            => new Cost((float)(a.Manpower * b), (float)(a.Munitions * b), (float)(a.Fuel * b), a.FieldTime * b);
 
     }
 

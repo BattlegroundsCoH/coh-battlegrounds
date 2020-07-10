@@ -6,14 +6,21 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
 
-namespace CoH2XML2JSON
-{
-    class Program
-    {
+namespace CoH2XML2JSON {
+    class Program {
 
         static string dirPath;
         static string instancesPath;
         static Dictionary<string, (float, float, float, float)> entityCost = new Dictionary<string, (float, float, float, float)>();
+        static Dictionary<string, bool> entityCrewed = new Dictionary<string, bool>();
+
+        static string[] racebps = new string[] {
+            "racebps\\soviet",
+            "racebps\\aef",
+            "racebps\\british",
+            "racebps\\german",
+            "racebps\\west_german",
+        };
 
         private static void CreateSbpsDatabase()
         {
@@ -104,18 +111,26 @@ namespace CoH2XML2JSON
                                 string costMunition = "0";
                                 string costFuel = "0";
                                 string costFieldTime = "0";
+                                string hasCrew = "False";
 
                                 foreach (var s in squad)
                                 {
-                                    costManpower = ((entityCost[s.Item1].Item1) * s.Item2).ToString();
-                                    costMunition = ((entityCost[s.Item1].Item2) * s.Item2).ToString();
-                                    costFuel = ((entityCost[s.Item1].Item3) * s.Item2).ToString();
-                                    if ((Math.Ceiling(((entityCost[s.Item1].Item4) * s.Item2) * 0.06)) < 15)
-                                    {
-                                        costFieldTime = "15";
-                                    } else
-                                    {
-                                        costFieldTime = (Math.Ceiling(((entityCost[s.Item1].Item4) * s.Item2) * 0.06)).ToString();
+                                    if (entityCost.TryGetValue(s.Item1, out (float,float,float,float) costTuple)) { 
+                                        // Safer way of getting the value (in case the specific ebp has not been loaded).
+                                        // The other method was also correct but would throw KeyNotFound exceptions if ebp wasn't in the lookup table.
+
+                                        costManpower = ((costTuple.Item1) * s.Item2).ToString();
+                                        costMunition = ((costTuple.Item2) * s.Item2).ToString();
+                                        costFuel = ((costTuple.Item3) * s.Item2).ToString();
+                                        if ((Math.Ceiling(((costTuple.Item4) * s.Item2) * 0.06)) < 15) {
+                                            costFieldTime = "15";
+                                        } else {
+                                            costFieldTime = (Math.Ceiling(((costTuple.Item4) * s.Item2) * 0.06)).ToString();
+                                        }
+
+                                    }
+                                    if (entityCrewed.TryGetValue(s.Item1, out bool crew)) {
+                                        hasCrew = crew.ToString();
                                     }
                                 }
 
@@ -134,6 +149,7 @@ namespace CoH2XML2JSON
                                 sbps.Cost.Munition = costMunition;
                                 sbps.Cost.Fuel = costFuel;
                                 sbps.Cost.FieldTime = costFieldTime;
+                                sbps.HasCrew = hasCrew;
 
                                 string sbpsJson = JsonConvert.SerializeObject(sbps, Newtonsoft.Json.Formatting.Indented);
 
@@ -252,6 +268,32 @@ namespace CoH2XML2JSON
                                 }
 
                                 entityCost.Add(name, (SafeParse(costManpower), SafeParse(costMunition), SafeParse(costFuel), SafeParse(costTime)));
+
+                                if (document.SelectSingleNode(@"//template_reference[@name='exts'] [@value='ebpextensions\recrewable_ext']") is XmlNode recrewNode) {
+
+                                    bool any = false;
+
+                                    for (int i = 0; i < racebps.Length; i++) {
+                                        if (racebps[i].Contains(army)) {
+                                            if (recrewNode.SelectSingleNode($@"//instance_reference[@name='ext_key'] [@value='{racebps[i]}']") is XmlNode instRef) {
+                                                if (instRef.SelectSingleNode($@"//instance_reference[@name='driver_squad_blueprint']") is XmlNode driverBp) {
+                                                    if (driverBp.Attributes["value"].Value.CompareTo(string.Empty) != 0) {
+                                                        entityCrewed.Add(name, true);
+                                                        any = true;
+                                                        break;
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+
+                                    if (!any) {
+                                        entityCrewed.Add(name, false);
+                                    }
+
+                                } else {
+                                    entityCrewed.Add(name, false);
+                                }
 
                                 dynamic ebps = new JObject();
                                 ebps.jsdbtype = jsdbType;
@@ -744,6 +786,11 @@ namespace CoH2XML2JSON
 
             while (!Directory.Exists(dirPath))
             {
+                if (dirPath.CompareTo(string.Empty) == 0) { // Because I'm lazy - this is a quick method to simply use the directory of the .exe
+                    Console.WriteLine($"Using: {Environment.CurrentDirectory}");
+                    dirPath = Environment.CurrentDirectory;
+                    break;
+                }
                 Console.WriteLine("Invalid path! Try again: ");
                 dirPath = Console.ReadLine();
             }
@@ -756,6 +803,8 @@ namespace CoH2XML2JSON
                 Console.WriteLine("Invalid path! Try again: ");
                 instancesPath = Console.ReadLine();
             }
+
+            Console.WriteLine();
 
             CreateAbilityDatabase();
             CreateEbpsDatabase();

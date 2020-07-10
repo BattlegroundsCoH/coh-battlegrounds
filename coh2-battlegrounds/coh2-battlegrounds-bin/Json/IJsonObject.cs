@@ -11,6 +11,44 @@ namespace Battlegrounds.Json {
     /// </summary>
     public interface IJsonObject : IJsonElement {
 
+        private struct JsonAttributeSet {
+            private JsonIgnoreIfValueAttribute IgnoreIfValueAttribute;
+            private JsonIgnoreIfEmptyAttribute IgnoreIfEmptyAttribute;
+            private JsonIgnoreIfNullAttribute IgnoreIfNullAttribute;
+            private JsonIgnoreAttribute IgnoreAttribute;
+            private JsonEnumAttribute EnumAttribute;
+            private JsonReferenceAttribute ReferenceAttribute;
+
+            public bool IgnoreIfNull => this.IgnoreIfNullAttribute is JsonIgnoreIfNullAttribute;
+
+            public bool IgnoreAlways => this.IgnoreAttribute is JsonIgnoreAttribute;
+
+            public bool UseRef => this.ReferenceAttribute is JsonReferenceAttribute;
+
+            public bool IgnoreIfValue => this.IgnoreIfValueAttribute is JsonIgnoreIfValueAttribute;
+
+            public object IgnoreValue => this.IgnoreIfValueAttribute.Value;
+
+            public bool IgnoreIfEmpty => this.IgnoreIfEmptyAttribute is JsonIgnoreIfEmptyAttribute;
+
+            public JsonAttributeSet(PropertyInfo pinfo) {
+                this.IgnoreIfEmptyAttribute = pinfo.GetCustomAttribute<JsonIgnoreIfEmptyAttribute>();
+                this.IgnoreIfValueAttribute = pinfo.GetCustomAttribute<JsonIgnoreIfValueAttribute>();
+                this.IgnoreIfNullAttribute = pinfo.GetCustomAttribute<JsonIgnoreIfNullAttribute>();
+                this.IgnoreAttribute = pinfo.GetCustomAttribute<JsonIgnoreAttribute>();
+                this.EnumAttribute = pinfo.GetCustomAttribute<JsonEnumAttribute>();
+                this.ReferenceAttribute = pinfo.GetCustomAttribute<JsonReferenceAttribute>();
+            }
+            public JsonAttributeSet(FieldInfo finfo) {
+                this.IgnoreIfEmptyAttribute = finfo.GetCustomAttribute<JsonIgnoreIfEmptyAttribute>();
+                this.IgnoreIfValueAttribute = finfo.GetCustomAttribute<JsonIgnoreIfValueAttribute>();
+                this.IgnoreIfNullAttribute = finfo.GetCustomAttribute<JsonIgnoreIfNullAttribute>();
+                this.IgnoreAttribute = finfo.GetCustomAttribute<JsonIgnoreAttribute>();
+                this.EnumAttribute = finfo.GetCustomAttribute<JsonEnumAttribute>();
+                this.ReferenceAttribute = finfo.GetCustomAttribute<JsonReferenceAttribute>();
+            }
+        }
+
         /// <summary>
         /// Get instance as a json reference string.
         /// </summary>
@@ -51,8 +89,7 @@ namespace Battlegrounds.Json {
                 WriteKeyValuePair(
                     jsonbuilder,
                     pinfo.PropertyType,
-                    pinfo.GetCustomAttribute<JsonReferenceAttribute>() is JsonReferenceAttribute,
-                    pinfo.GetCustomAttribute<JsonIgnoreIfNullAttribute>() is JsonIgnoreIfNullAttribute,
+                    new JsonAttributeSet(pinfo),
                     pinfo.Name,
                     pinfo.GetValue(this),
                     pinfo != properties.Last() || fields.Count() > 0
@@ -63,12 +100,17 @@ namespace Battlegrounds.Json {
                 WriteKeyValuePair(
                     jsonbuilder,
                     finfo.FieldType,
-                    finfo.GetCustomAttribute<JsonReferenceAttribute>() is JsonReferenceAttribute,
-                    finfo.GetCustomAttribute<JsonIgnoreIfNullAttribute>() is JsonIgnoreIfNullAttribute,
+                    new JsonAttributeSet(finfo),
                     finfo.Name,
                     finfo.GetValue(this),
                     finfo != fields.Last()
                     );
+            }
+
+            if (jsonbuilder.EndsWith(",", true)) {
+                int lComma = jsonbuilder.LastIndexOf(',');
+                jsonbuilder.Popback(jsonbuilder.Length - lComma);
+                jsonbuilder.Append("\n", false);
             }
 
             jsonbuilder.DecreaseIndent();
@@ -78,18 +120,29 @@ namespace Battlegrounds.Json {
 
         }
 
-        private static void WriteKeyValuePair(TxtBuilder jsonbuilder, Type type, bool useRef, bool ignoreIfNull, string name, object val, bool appendComma) {
-            if (val is null && ignoreIfNull) {
+        private static void WriteKeyValuePair(TxtBuilder jsonbuilder, Type type, JsonAttributeSet attributeSet, string name, object val, bool appendComma) {
+            if (val is null && attributeSet.IgnoreIfNull) {
                 return;
+            }
+            if (attributeSet.IgnoreIfValue && val.Equals(attributeSet.IgnoreValue)) {
+                return;
+            }
+            if (attributeSet.IgnoreIfEmpty) {
+                try {
+                    dynamic col = val;
+                    if (col.Count == 0) {
+                        return;
+                    }
+                } catch { }
             }
             if (type.IsPrimitive || val is string) {
                 jsonbuilder.AppendLine($"\"{name}\": \"{val}\"{((appendComma)?",":"")}");
             } else {
                 if (val is IJsonObject jso) {
-                    if (useRef) {
+                    if (attributeSet.UseRef) {
                         jsonbuilder.AppendLine($"\"{name}\": \"{jso.ToJsonReference()}\"{((appendComma) ? "," : "")}");
                     } else {
-                        jsonbuilder.AppendLine($"\"{name}\": \"{jso.Serialize(jsonbuilder.GetIndent())}\"{((appendComma) ? "," : "")}");
+                        jsonbuilder.AppendLine($"\"{name}\": {jso.Serialize(jsonbuilder.GetIndent()).Trim('\t', '\n')}{((appendComma) ? "," : "")}");
                     }
                 } else if (type.GenericTypeArguments.Length > 0 && type.GetInterfaces().Contains(typeof(IEnumerable<>).MakeGenericType(type.GenericTypeArguments))) {
                     jsonbuilder.AppendLine($"\"{name}\": [");
@@ -102,7 +155,7 @@ namespace Battlegrounds.Json {
                         if (t.IsPrimitive || c is string) {
                             jsonbuilder.Append($"\"{name}\"{((i < j) ? "," : "")}");
                         } else if (c is IJsonObject jso2) {
-                            if (useRef) {
+                            if (attributeSet.UseRef) {
                                 jsonbuilder.Append($"\"{jso2.ToJsonReference()}\"{((i < j) ? "," : "")}");
                             } else {
                                 jsonbuilder.Append($"{jso2.Serialize(jsonbuilder.GetIndent()).TrimEnd('\n')}{((i < j) ? ",\n" : "")}", false);

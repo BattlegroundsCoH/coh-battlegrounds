@@ -242,6 +242,15 @@ namespace Battlegrounds.Game.Battlegrounds {
             squad.SetVeterancy(vet, vetprog);
             squad.SetDeploymentMethod(supprt, deployMode);
 
+            if (main.HasCrew) {
+
+                Squad crew = new Squad(m_nextSquadId++, null, null);
+                crew.SetVeterancy(vet, vetprog);
+
+                squad.SetCrew(crew);
+
+            }
+
             upgrades.ForEach(x => squad.AddUpgrade(x));
             slotitems.ForEach(x => squad.AddSlotItem(x));
             modifiers.ForEach(x => squad.AddModifier(x));

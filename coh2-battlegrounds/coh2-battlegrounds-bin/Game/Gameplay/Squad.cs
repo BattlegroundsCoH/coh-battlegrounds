@@ -45,17 +45,17 @@ namespace Battlegrounds.Game.Gameplay {
     /// </summary>
     public class Squad : IJsonObject {
 
-        private bool m_isCrewSquad;
-        private byte m_veterancyRank;
-        private float m_veterancyProgress;
-        private DeploymentMethod m_deployMode;
+        [JsonIgnoreIfValue((byte)0)]private byte m_veterancyRank;
+        [JsonIgnoreIfValue(0.0f)] private float m_veterancyProgress;
 
+        [JsonIgnoreIfValue(false)] private bool m_isCrewSquad;
+        [JsonIgnoreIfValue(DeploymentMethod.None)] private DeploymentMethod m_deployMode;
         [JsonIgnoreIfNull] private Squad m_crewSquad;
-        [JsonReference(typeof(BlueprintManager))] private Blueprint m_deployBp;
+        [JsonReference(typeof(BlueprintManager))][JsonIgnoreIfNull] private Blueprint m_deployBp;
 
-        [JsonReference(typeof(BlueprintManager))] private HashSet<Blueprint> m_upgrades;
-        [JsonReference(typeof(BlueprintManager))] private HashSet<Blueprint> m_slotItems;
-        private HashSet<Modifier> m_modifiers;
+        [JsonReference(typeof(BlueprintManager))][JsonIgnoreIfEmpty] private HashSet<Blueprint> m_upgrades;
+        [JsonReference(typeof(BlueprintManager))][JsonIgnoreIfEmpty] private HashSet<Blueprint> m_slotItems;
+        [JsonIgnoreIfEmpty] private HashSet<Modifier> m_modifiers;
 
         /// <summary>
         /// The unique squad ID used to identify the <see cref="Squad"/>.
@@ -72,6 +72,7 @@ namespace Battlegrounds.Game.Gameplay {
         /// The (crew if squad is a vehicle) <see cref="Database.Blueprint"/> the <see cref="Squad"/> is a type of.
         /// </summary>
         [JsonReference(typeof(BlueprintManager))]
+        [JsonIgnoreIfNull]
         public Blueprint Blueprint { get; }
 
         /// <summary>

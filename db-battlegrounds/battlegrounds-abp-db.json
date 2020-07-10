@@ -1,33 +1,48 @@
 [
-    {
-      "jsdbtype": "Battlegrounds.Game.Database.AbilityBlueprint",
-      "PBGID": "1073741824",
-      "Name": "bg_deploy_destination",
-      "LocaleName": "1",
-      "LocaleDescription": "0",
-      "Army": "battlegrounds_generic",
-      "Icon": "",
-      "Cost": {
-        "jsdbtype": "Battlegrounds.Game.Gameplay.Cost",
-        "Manpower": "0",
-        "Munition": "0",
-        "Fuel": "0"
-      }
-    },
-    {
-      "jsdbtype": "Battlegrounds.Game.Database.AbilityBlueprint",
-      "PBGID": "1073741823",
-      "Name": "bg_withdraw_unit",
-      "LocaleName": "2",
-      "LocaleDescription": "0",
-      "Army": "battlegrounds_generic",
-      "Icon": "",
-      "Cost": {
-        "jsdbtype": "Battlegrounds.Game.Gameplay.Cost",
-        "Manpower": "0",
-        "Munition": "0",
-        "Fuel": "0"
-      }
+  {
+    "jsdbtype": "Battlegrounds.Game.Database.AbilityBlueprint",
+    "PBGID": "1073741824",
+    "Name": "bg_deploy_destination",
+    "LocaleName": "1",
+    "LocaleDescription": "0",
+    "Army": "battlegrounds_generic",
+    "Icon": "",
+    "Cost": {
+      "jsdbtype": "Battlegrounds.Game.Gameplay.Cost",
+      "Manpower": "0",
+      "Munition": "0",
+      "Fuel": "0"
     }
-    ]
-    
+  },
+  {
+    "jsdbtype": "Battlegrounds.Game.Database.AbilityBlueprint",
+    "PBGID": "1073741823",
+    "Name": "bg_withdraw_unit",
+    "LocaleName": "11036222",
+    "LocaleDescription": "11036223",
+    "Army": "battlegrounds_generic",
+    "Icon": "Icons_abilities_ability_soviet_transfer_orders",
+    "Cost": {
+      "jsdbtype": "Battlegrounds.Game.Gameplay.Cost",
+      "Manpower": "0",
+      "Munition": "0",
+      "Fuel": "0"
+    }
+  },
+  {
+    "jsdbtype": "Battlegrounds.Game.Database.AbilityBlueprint",
+    "PBGID": "1073741825",
+    "Name": "vehicle_decrew_vehicle_crew_bg",
+    "LocaleName": "11072165",
+    "LocaleDescription": "11072161",
+    "Army": "battlegrounds_generic",
+    "Icon": "Icons_abilities_ability_aef_abandon_vehicle",
+    "Cost": {
+      "jsdbtype": "Battlegrounds.Game.Gameplay.Cost",
+      "Manpower": "0",
+      "Munition": "0",
+      "Fuel": "0"
+    }
+  }
+  ]
+  

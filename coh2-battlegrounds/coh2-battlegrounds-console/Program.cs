@@ -64,7 +64,7 @@ namespace coh2_battlegrounds_console {
             m.EvaluateResult();
             */
             
-            SessionManager.PlaySession<SessionCompiler<CompanyCompiler>, CompanyCompiler>(session, (a,b) => { Console.WriteLine(a); }, null, null);
+            //SessionManager.PlaySession<SessionCompiler<CompanyCompiler>, CompanyCompiler>(session, (a,b) => { Console.WriteLine(a); }, null, null);
 
             // Save json
             testCompany.SaveToFile("test_company.json");

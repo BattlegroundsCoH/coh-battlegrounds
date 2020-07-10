@@ -37,6 +37,11 @@ namespace Battlegrounds.Game.Database {
         /// </summary>
         public Cost Cost { get; set; }
 
+        /// <summary>
+        /// Does the squad the bluperint is for, require a crew.
+        /// </summary>
+        public bool HasCrew { get; set; }
+
     }
 
 }

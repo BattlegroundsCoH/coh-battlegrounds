@@ -15,6 +15,11 @@ namespace Battlegrounds.Util {
         private string IN => (m_indentLvl > 0) ? new string('\t', m_indentLvl) : string.Empty;
 
         /// <summary>
+        /// 
+        /// </summary>
+        public int Length => this.m_internalStringBuilder.Length;
+
+        /// <summary>
         /// Create an empty instance of a <see cref="TxtBuilder"/> with no indentation.
         /// </summary>
         public TxtBuilder() {
@@ -74,6 +79,40 @@ namespace Battlegrounds.Util {
         /// </summary>
         /// <param name="path">The path of the file to write contents to.</param>
         public void Save(string path) => File.WriteAllText(path, this.GetContent());
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="endStr"></param>
+        /// <returns></returns>
+        public bool EndsWith(string endStr) => this.EndsWith(endStr, false);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="endStr"></param>
+        /// <param name="ignoreWhitespace"></param>
+        /// <returns></returns>
+        public bool EndsWith(string endStr, bool ignoreWhitespace) {
+            string content = this.GetContent();
+            if (ignoreWhitespace) {
+                content = content.Trim('\n', '\t');
+            }
+            return content.EndsWith(endStr);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="amount"></param>
+        public void Popback(int amount) => this.m_internalStringBuilder.Remove(this.m_internalStringBuilder.Length - amount, amount);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="character"></param>
+        /// <returns></returns>
+        public int LastIndexOf(char character) => this.GetContent().LastIndexOf(character);
 
         /// <summary>
         /// Get the current indentation level of the builder.
