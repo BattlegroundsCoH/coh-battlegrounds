@@ -354,7 +354,7 @@ function BG_RefreshCompanyView()
 end
 
 function BG_VerifyPurcharse(cost)
-    return Player_CanBuy(Game_GetLocalPlayer(), cost.manpower, cost.munitions, cost.fuel);
+    return Player_CanBuy(Game_GetLocalPlayer(), cost.manpower or 0, cost.munitions or 0, cost.fuel or 0);
 end
 
 function BG_ShowInsufficientFundsWarning()

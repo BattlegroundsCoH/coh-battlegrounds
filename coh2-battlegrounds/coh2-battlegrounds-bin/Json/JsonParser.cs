@@ -107,27 +107,27 @@ namespace Battlegrounds.Json {
                 StringBuilder sb = new StringBuilder();
 
                 while (i < contents.Length) {
+                    
+                    if (contents[i] == ']') {
+
+                        if (sb.Length > 0) {
+                            array.Add(new JsonValue(sb.ToString().Trim('\"')));
+                        }
+
+                        i++;
+                        break;
+                    }
 
                     ParseNext(ref i, contents, out object o);
 
                     if (o is IJsonElement e) {
                         array.Add(e);
-                    } else {
-                        if (contents[i] == ']') {
-                            i++;
-                            break;
-                        } else if (contents[i] == ',') {
-                            array.Add(new JsonValue(sb.ToString().Trim('\"')));
-                            sb.Clear();
-                        } else if (!char.IsWhiteSpace(contents[i]) && contents[i] != '{' && contents[i] != '}') {
-                            sb.Append(contents[i]);
-                        }
+                        sb.Clear();
+                    } else if (contents[i] == ',') {
+                        array.Add(new JsonValue(sb.ToString().Trim('\"')));
+                        sb.Clear();
                     }
 
-                }
-
-                if (sb.Length > 0) {
-                    array.Add(new JsonValue(sb.ToString().Trim('\"')));
                 }
 
                 result = array;
@@ -140,6 +140,11 @@ namespace Battlegrounds.Json {
                 StringBuilder ln = new StringBuilder();
 
                 while (i < contents.Length) {
+                    
+                    if (contents[i] == '}') {
+                        i++;
+                        break;
+                    }
 
                     ParseNext(ref i, contents, out object o);
 
@@ -174,15 +179,6 @@ namespace Battlegrounds.Json {
                             // TODO: Handle
                             throw new NotImplementedException();
                         }
-                    }
-
-                    if (i < contents.Length) {
-                        if (contents[i] == '}') {
-                            i++;
-                            break;
-                        }
-                    } else {
-                        break;
                     }
 
                     if (ln.ToString().EndsWith(',') && ln.ToString().Count(x => x == '\"') % 2 == 0 && ln.Length > 2) {

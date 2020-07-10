@@ -244,7 +244,7 @@ namespace Battlegrounds.Game.Battlegrounds {
                 throw new ArgumentNullException($"The squad blueprint was null");
             }
 
-            if (this.m_squads.Count + 1 >= MAX_SIZE) {
+            if (this.m_squads.Count + 1 <= MAX_SIZE) {
 
                 Squad squad = new Squad(m_nextSquadId++, null, main);
                 squad.SetVeterancy(vet, vetprog);
