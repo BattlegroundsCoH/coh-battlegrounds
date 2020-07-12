@@ -75,18 +75,39 @@ function BG_DeploySquad(player, unit_id)
         -- Was a transport method specified?
         if unit_data.transport ~= nil then
 
-            if unit_data.transport.mode == 1 or unit_data.transport.mode == 2 then
+            if (unit_data.transport.mode == 1 or unit_data.transport.mode == 2)  then
 
                 local transportSquad = Squad_CreateAndSpawnToward(BP_GetSquadBlueprint(unit_data.transport.sbp), player, 0, spawnfrom, gotopos );
                 local sg_transport_temp = SGroup_FromSquad(transportSquad, "sg_transport_temp" .. unit_data.company_id);
                 SGroup_Add(sg_transport_temp, transportSquad);
 
-                Cmd_Garrison(sg_temp, sg_transport_temp, true, false, true);
+                -- If not a tow-squad (standard infantry)
+                if unit_data.tow == nil or unit_data.tow == false then
 
-                Command_SquadPos(player, sg_transport_temp, SCMD_UnloadSquads, gotopos, false);
+                    -- Garrison the squad
+                    Cmd_Garrison(sg_temp, sg_transport_temp, true, false, true);
 
-                if unit_data.transport.mode == 1 then
-                    BG_DeployAndExit(sg_transport_temp);
+                    -- Tell transport to go to position and drop of squad
+                    Command_SquadPos(player, sg_transport_temp, SCMD_UnloadSquads, gotopos, false);
+
+                    -- If deploy and exit - tell squad to exit once squad is deployed.
+                    if unit_data.transport.mode == 1 then
+                        BG_DeployAndExit(sg_transport_temp, nil);
+                    end
+
+                else
+
+                    -- Transport from off-map
+                    Battlegrounds_TowFromOffmap(transportSquad, squad);
+
+                    -- Command to move
+                    Command_SquadPos(player, sg_transport_temp, SCMD_Move, gotopos, false);
+
+                    -- If deploy and exit - tell squad to exit once squad is deployed.
+                    if unit_data.transport.mode == 1 then
+                        BG_DeployAndExit(sg_transport_temp, gotopos);
+                    end
+
                 end
 
             else
@@ -223,15 +244,24 @@ end
 
 __deployexittable = {}
 
-function BG_DeployAndExit(group)
+function BG_DeployAndExit(group, deployPos)
 
     -- Hide the unit as much as possible - Should note, we can't easily exit a vehicle - we may need to add a "oh sh*t gotta get outta here mechanic"
     SGroup_SetSelectable(group, false);
     SGroup_EnableUIDecorator(group, false);
 
-    Event_IsHoldingAny(function()
-        local pos = Player_GetNearestMapEntry(Util_GetPlayerOwner(group), Util_GetPosition(group));
-        SGroup_MoveAndDespawn(group, pos);
-    end, nil, group, true, 0.5)
+    -- Depending on method we use different events (When emptied or reached destination)
+    if deployPos == nil then
+        Event_IsHoldingAny(function()
+            local pos = Player_GetNearestMapEntry(Util_GetPlayerOwner(group), Util_GetPosition(group));
+            SGroup_MoveAndDespawn(group, pos);
+        end, nil, group, true, 0.5)
+    else
+        Event_Proximity(function()
+            Battlegrounds_TowDetach(SGroup_GetSpawnedSquadAt(group, 1)); -- Detach and get rid of the squad.
+            local pos = Player_GetNearestMapEntry(Util_GetPlayerOwner(group), Util_GetPosition(group));
+            SGroup_MoveAndDespawn(group, pos);
+        end, nil, group, deployPos, 5, nil, 0.5 );
+    end
 
 end

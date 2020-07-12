@@ -1,4 +1,7 @@
-﻿using Battlegrounds.Game.Gameplay;
+﻿using System.Linq;
+using Battlegrounds.Functional;
+using Battlegrounds.Game.Gameplay;
+using Battlegrounds.Json;
 
 namespace Battlegrounds.Game.Database {
     
@@ -41,6 +44,21 @@ namespace Battlegrounds.Game.Database {
         /// Does the squad the bluperint is for, require a crew.
         /// </summary>
         public bool HasCrew { get; set; }
+
+        /// <summary>
+        /// Array of types bound to the <see cref="SquadBlueprint"/>.
+        /// </summary>
+        public string[] Types { get; set; }
+
+        /// <summary>
+        /// Can the <see cref="SquadBlueprint"/> be considered a heavy artillery piece.
+        /// </summary>
+        [JsonIgnore] public bool IsHeavyArtillery => this.Types.ContainsWithout("team_weapon", "wg_team_weapons", "mortar", "hmg"); // 'wg_team_weapons' is to block the raketenwerfer be considered a heavy artillery piece
+
+        /// <summary>
+        /// Can the <see cref="SquadBlueprint"/> be considered an anti-tank gun.
+        /// </summary>
+        [JsonIgnore] public bool IsAntiTank => this.Types.Contains("at_gun");
 
     }
 

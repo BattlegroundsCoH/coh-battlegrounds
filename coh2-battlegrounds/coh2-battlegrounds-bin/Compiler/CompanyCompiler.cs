@@ -66,6 +66,7 @@ namespace Battlegrounds.Compiler {
 
             builder.AppendLine($"bp_name = {squad.SBP.ToScar()},");
             builder.AppendLine($"symbol = \"{squad.SBP.Symbol}\",");
+            builder.AppendLine($"category = \"{squad.GetCategory(true)}\",");
             builder.AppendLine($"company_id = {squad.SquadID},");
             builder.AppendLine($"veterancy_rank = {squad.VeterancyRank},");
             builder.AppendLine($"veterancy_progress = {squad.VeterancyProgress:0.00},");
@@ -77,6 +78,9 @@ namespace Battlegrounds.Compiler {
                 builder.AppendLine($"sbp = {squad.SupportBlueprint.ToScar()},");
                 builder.AppendLine($"symbol = \"{(squad.SupportBlueprint as SquadBlueprint).Symbol}\",");
                 builder.AppendLine($"mode = {(int)squad.DeploymentMethod},");
+                if (squad.DeploymentMethod != DeploymentMethod.None && (squad.SBP.IsHeavyArtillery || (!squad.SBP.IsHeavyArtillery && squad.SBP.IsAntiTank))) {
+                    builder.AppendLine("tow = true,");
+                }
                 builder.DecreaseIndent();
                 builder.AppendLine("},");
             }

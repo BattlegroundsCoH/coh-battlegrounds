@@ -25,7 +25,7 @@ function BG_CreateCallInUI(player)
     BG_CreateCompanyView();
 
     -- Add a function update deployment
-    Rule_AddInterval(BG_UpdateDeploymentTimers, _BG_UI_UpdateInterval);
+    Rule_AddInterval(BG_UpdateCompanyUIValues, _BG_UI_UpdateInterval);
 
 end
 
@@ -300,9 +300,12 @@ function BG_UnitCardCancelClicked(tag)
     end
 end
 
-function BG_UpdateDeploymentTimers()
+function BG_UpdateCompanyUIValues()
     Player_CallLocal(Game_GetLocalPlayer(), function(player)
+
+        -- The player ID
         local refPlayerID = BG_GetPlayerID(player);
+
         for i=1, #_bg_playerData[refPlayerID].company.units do
             if _bg_playerData[refPlayerID].company.units[i].deploy_time ~= nil then
                 _bg_playerData[refPlayerID].company.units[i].deploy_time = _bg_playerData[refPlayerID].company.units[i].deploy_time - _BG_UI_UpdateInterval;
@@ -331,6 +334,10 @@ function BG_UpdateDeploymentTimers()
                 end
             end
         end
+
+        -- Update the company button
+        BG_UpdateCompanyButtonView(_bg_playerData[refPlayerID].player, _bg_playerData[refPlayerID].company.name);
+
     end)
 end
 
@@ -379,4 +386,9 @@ function BG_ClearWarnings()
         Rule_RemoveIfExist(BG_ClearWarnings);
         g_uiWarningIndex = nil;
     end
+end
+
+function BG_UpdateCompanyButtonView(player, name)
+    local locstr = BG_LocStringFormat(7, name, Player_GetSquadCount(player), 16);
+    bg_show_company:setText(locstr);
 end

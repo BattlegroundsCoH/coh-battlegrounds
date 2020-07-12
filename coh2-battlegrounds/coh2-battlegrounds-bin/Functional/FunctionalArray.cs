@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace Battlegrounds.Functional {
@@ -53,6 +54,18 @@ namespace Battlegrounds.Functional {
             }
             return result;
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="array"></param>
+        /// <param name="elem"></param>
+        /// <param name="except"></param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentNullException"/>
+        public static bool ContainsWithout<T>(this T[] array, T elem, params T[] except) 
+            => array.Contains(elem) && !array.Any(x => except.Contains(x));
 
     }
 

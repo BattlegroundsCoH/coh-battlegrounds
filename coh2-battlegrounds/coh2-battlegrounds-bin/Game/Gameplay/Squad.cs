@@ -247,6 +247,29 @@ namespace Battlegrounds.Game.Gameplay {
         }
 
         /// <summary>
+        /// Get the category the squad belongs to. This may change depending on certain parameters.
+        /// </summary>
+        /// <param name="simplified">Use a simplified (3) category system (team_weapon, vehicle, or infantry).</param>
+        /// <returns>The matching category in string format. If no matching category is found, 'infantry' or 'main_infantry' is returned depending on the simplified parameter.</returns>
+        public string GetCategory(bool simplified) {
+
+            if (simplified) {
+
+                if (this.SBP.IsAntiTank || this.SBP.IsHeavyArtillery) {
+                    return "team_weapon";
+                } else if (this.SBP.Types.Contains("vehicle")) {
+                    return "vehicle";
+                } else {
+                    return "infantry";
+                }
+
+            } else {
+                return "main_infantry";
+            }
+
+        }
+
+        /// <summary>
         /// 
         /// </summary>
         /// <returns></returns>
