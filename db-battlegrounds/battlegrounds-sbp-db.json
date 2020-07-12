@@ -15,7 +15,10 @@
       "Fuel": "0",
       "FieldTime": "15"
     },
-    "HasCrew": "False"
+    "HasCrew": "False",
+    "Types": [
+      "team_weapon"
+    ]
   },
   {
     "jsdbtype": "Battlegrounds.Game.Database.SquadBlueprint",
@@ -33,7 +36,13 @@
       "Fuel": "0",
       "FieldTime": "0"
     },
-    "HasCrew": "False"
+    "HasCrew": "False",
+    "Types": [
+      "53k_at_gun",
+      "at_gun",
+      "soviet_team_weapons",
+      "team_weapon"
+    ]
   },
   {
     "jsdbtype": "Battlegrounds.Game.Database.SquadBlueprint",
@@ -51,7 +60,13 @@
       "Fuel": "0",
       "FieldTime": "0"
     },
-    "HasCrew": "False"
+    "HasCrew": "False",
+    "Types": [
+      "zis-3_at_gun",
+      "at_gun",
+      "soviet_team_weapons",
+      "team_weapon"
+    ]
   },
   {
     "jsdbtype": "Battlegrounds.Game.Database.SquadBlueprint",
@@ -69,7 +84,12 @@
       "Fuel": "125",
       "FieldTime": "15"
     },
-    "HasCrew": "True"
+    "HasCrew": "True",
+    "Types": [
+      "medium_tank",
+      "vehicle",
+      "heavy_vehicle"
+    ]
   },
   {
     "jsdbtype": "Battlegrounds.Game.Database.SquadBlueprint",
@@ -87,7 +107,14 @@
       "Fuel": "230",
       "FieldTime": "15"
     },
-    "HasCrew": "True"
+    "HasCrew": "True",
+    "Types": [
+      "is-2",
+      "heavy_tank",
+      "vehicle",
+      "heavy_vehicle",
+      "heavy_vehicle_icon"
+    ]
   },
   {
     "jsdbtype": "Battlegrounds.Game.Database.SquadBlueprint",
@@ -105,7 +132,14 @@
       "Fuel": "260",
       "FieldTime": "15"
     },
-    "HasCrew": "True"
+    "HasCrew": "True",
+    "Types": [
+      "isu-152",
+      "assault_gun",
+      "vehicle",
+      "heavy_vehicle",
+      "heavy_vehicle_icon"
+    ]
   },
   {
     "jsdbtype": "Battlegrounds.Game.Database.SquadBlueprint",
@@ -123,7 +157,12 @@
       "Fuel": "85",
       "FieldTime": "15"
     },
-    "HasCrew": "True"
+    "HasCrew": "True",
+    "Types": [
+      "katyusha",
+      "artillery",
+      "vehicle"
+    ]
   },
   {
     "jsdbtype": "Battlegrounds.Game.Database.SquadBlueprint",
@@ -141,7 +180,13 @@
       "Fuel": "75",
       "FieldTime": "15"
     },
-    "HasCrew": "True"
+    "HasCrew": "True",
+    "Types": [
+      "kv-1",
+      "heavy_tank",
+      "vehicle",
+      "heavy_vehicle"
+    ]
   },
   {
     "jsdbtype": "Battlegrounds.Game.Database.SquadBlueprint",
@@ -159,7 +204,13 @@
       "Fuel": "230",
       "FieldTime": "15"
     },
-    "HasCrew": "True"
+    "HasCrew": "True",
+    "Types": [
+      "kv-8",
+      "heavy_tank",
+      "vehicle",
+      "heavy_vehicle"
+    ]
   },
   {
     "jsdbtype": "Battlegrounds.Game.Database.SquadBlueprint",
@@ -177,7 +228,13 @@
       "Fuel": "145",
       "FieldTime": "15"
     },
-    "HasCrew": "True"
+    "HasCrew": "True",
+    "Types": [
+      "kv-8",
+      "heavy_tank",
+      "vehicle",
+      "heavy_vehicle"
+    ]
   },
   {
     "jsdbtype": "Battlegrounds.Game.Database.SquadBlueprint",
@@ -195,7 +252,12 @@
       "Fuel": "15",
       "FieldTime": "15"
     },
-    "HasCrew": "True"
+    "HasCrew": "True",
+    "Types": [
+      "m3a1_scout_car",
+      "light_vehicle",
+      "vehicle"
+    ]
   },
   {
     "jsdbtype": "Battlegrounds.Game.Database.SquadBlueprint",
@@ -213,7 +275,12 @@
       "Fuel": "30",
       "FieldTime": "15"
     },
-    "HasCrew": "True"
+    "HasCrew": "True",
+    "Types": [
+      "m5_halftrack",
+      "light_vehicle",
+      "vehicle"
+    ]
   },
   {
     "jsdbtype": "Battlegrounds.Game.Database.SquadBlueprint",
@@ -231,7 +298,13 @@
       "Fuel": "75",
       "FieldTime": "15"
     },
-    "HasCrew": "True"
+    "HasCrew": "True",
+    "Types": [
+      "su-76",
+      "assault_gun",
+      "vehicle",
+      "light_vehicle"
+    ]
   },
   {
     "jsdbtype": "Battlegrounds.Game.Database.SquadBlueprint",
@@ -249,7 +322,13 @@
       "Fuel": "130",
       "FieldTime": "15"
     },
-    "HasCrew": "True"
+    "HasCrew": "True",
+    "Types": [
+      "su-85",
+      "assault_gun",
+      "vehicle",
+      "heavy_vehicle"
+    ]
   },
   {
     "jsdbtype": "Battlegrounds.Game.Database.SquadBlueprint",
@@ -267,7 +346,12 @@
       "Fuel": "70",
       "FieldTime": "15"
     },
-    "HasCrew": "True"
+    "HasCrew": "True",
+    "Types": [
+      "t-70m",
+      "light_vehicle",
+      "vehicle"
+    ]
   },
   {
     "jsdbtype": "Battlegrounds.Game.Database.SquadBlueprint",
@@ -285,7 +369,13 @@
       "Fuel": "90",
       "FieldTime": "15"
     },
-    "HasCrew": "True"
+    "HasCrew": "True",
+    "Types": [
+      "t3476",
+      "medium_tank",
+      "vehicle",
+      "heavy_vehicle"
+    ]
   },
   {
     "jsdbtype": "Battlegrounds.Game.Database.SquadBlueprint",
@@ -303,7 +393,13 @@
       "Fuel": "130",
       "FieldTime": "15"
     },
-    "HasCrew": "True"
+    "HasCrew": "True",
+    "Types": [
+      "t3485",
+      "medium_tank",
+      "vehicle",
+      "heavy_vehicle"
+    ]
   },
   {
     "jsdbtype": "Battlegrounds.Game.Database.SquadBlueprint",
@@ -321,7 +417,12 @@
       "Fuel": "30",
       "FieldTime": "15"
     },
-    "HasCrew": "False"
+    "HasCrew": "False",
+    "Types": [
+      "m5_halftrack",
+      "light_vehicle",
+      "vehicle"
+    ]
   },
   {
     "jsdbtype": "Battlegrounds.Game.Database.SquadBlueprint",
@@ -339,7 +440,14 @@
       "Fuel": "0",
       "FieldTime": "15"
     },
-    "HasCrew": "False"
+    "HasCrew": "False",
+    "Types": [
+      "conscripts",
+      "infantry",
+      "tank_detection",
+      "rapid_conscription",
+      "mobile_infantry"
+    ]
   },
   {
     "jsdbtype": "Battlegrounds.Game.Database.SquadBlueprint",
@@ -352,12 +460,18 @@
     "Symbol": "Icons_symbols_unit_soviet_engineer_symbol",
     "Cost": {
       "jsdbtype": "Battlegrounds.Game.Gameplay.Cost",
-      "Manpower": "84",
+      "Manpower": "85",
       "Munition": "0",
       "Fuel": "0",
       "FieldTime": "15"
     },
-    "HasCrew": "False"
+    "HasCrew": "False",
+    "Types": [
+      "combat_engineer",
+      "infantry",
+      "rapid_conscription",
+      "mobile_infantry"
+    ]
   },
   {
     "jsdbtype": "Battlegrounds.Game.Database.SquadBlueprint",
@@ -370,12 +484,18 @@
     "Symbol": "Icons_symbols_unit_soviet_engineer_symbol",
     "Cost": {
       "jsdbtype": "Battlegrounds.Game.Gameplay.Cost",
-      "Manpower": "168",
+      "Manpower": "170",
       "Munition": "0",
       "Fuel": "0",
       "FieldTime": "15"
     },
-    "HasCrew": "False"
+    "HasCrew": "False",
+    "Types": [
+      "combat_engineer",
+      "infantry",
+      "rapid_conscription",
+      "mobile_infantry"
+    ]
   }
   ]
   

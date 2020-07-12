@@ -81,12 +81,19 @@ namespace CoH2XML2JSON {
                                 }
 
                                 string army = path.Substring(path.IndexOf("races") + 6, path.Length - path.IndexOf("races") - 6).Split("\\")[0];
-                                if (army == "soviets")
-                                {
-                                    army = army.Replace("soviets", "soviet");
-                                } else if (army == "brits")
-                                {
-                                    army = army.Replace("brits", "british");
+                                if (army == "soviets") {
+                                    army = "soviet";
+                                } else if (army == "brits") {
+                                    army = "british";
+                                }
+
+                                List<string> squadTypeData = new List<string>();
+
+                                if (document.SelectSingleNode(@"//template_reference[@name='squadexts'] [@value='sbpextensions\squad_type_ext']") is XmlNode squadTypeList) {
+                                    XmlNode typeList = squadTypeList.SelectSingleNode(@"//list[@name='squad_type_list']");
+                                    foreach (XmlNode type in typeList) {
+                                        squadTypeData.Add(type.Attributes["value"].Value);
+                                    }
                                 }
 
                                 string costJsdbType = "Battlegrounds.Game.Gameplay.Cost";
@@ -150,6 +157,7 @@ namespace CoH2XML2JSON {
                                 sbps.Cost.Fuel = costFuel;
                                 sbps.Cost.FieldTime = costFieldTime;
                                 sbps.HasCrew = hasCrew;
+                                sbps.Types = new JArray(squadTypeData);
 
                                 string sbpsJson = JsonConvert.SerializeObject(sbps, Newtonsoft.Json.Formatting.Indented);
 
