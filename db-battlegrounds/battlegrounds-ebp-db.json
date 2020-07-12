@@ -35,6 +35,40 @@
   },
   {
     "jsdbtype": "Battlegrounds.Game.Database.EntityBlueprint",
+    "PBGID": "1073741843",
+    "Name": "howitzer_crew_soviet_bg",
+    "LocaleName": "0",
+    "LocaleDescription": "0",
+    "Army": "soviet",
+    "Icon": "",
+    "Symbol": "",
+    "Cost": {
+      "jsdbtype": "Battlegrounds.Game.Gameplay.Cost",
+      "Manpower": "60",
+      "Munition": "0",
+      "Fuel": "0",
+      "BuildTime": "6"
+    }
+  },
+  {
+    "jsdbtype": "Battlegrounds.Game.Database.EntityBlueprint",
+    "PBGID": "1073741842",
+    "Name": "m1931_203mm_b-4_howitzer_artillery_bg",
+    "LocaleName": "11035152",
+    "LocaleDescription": "11047596",
+    "Army": "soviet",
+    "Icon": "Icons_vehicles_vehicle_soviet_b4_artillery_gun",
+    "Symbol": "Icons_symbols_vehicle_soviet_b4_artillery_gun_symbol",
+    "Cost": {
+      "jsdbtype": "Battlegrounds.Game.Gameplay.Cost",
+      "Manpower": "300",
+      "Munition": "0",
+      "Fuel": "0",
+      "BuildTime": "30"
+    }
+  },
+  {
+    "jsdbtype": "Battlegrounds.Game.Database.EntityBlueprint",
     "PBGID": "1073741841",
     "Name": "is-2_heavy_tank_bg",
     "LocaleName": "11038336",

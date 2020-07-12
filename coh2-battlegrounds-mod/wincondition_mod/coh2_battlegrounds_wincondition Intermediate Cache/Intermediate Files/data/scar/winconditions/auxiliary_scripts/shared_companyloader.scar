@@ -2,7 +2,7 @@ function BG_LoadCompanies()
 
     -- Make sure the player count is matching
     if #_bg_playerData ~= bg_settings.playercount then
-        return "The amount of players does not match the player count specified by the Battlegrounds launcher."; -- TODO: Localize
+        return BG_LocString(4); -- TODO: Localize
     end
 
     -- Run through all players and set this up
@@ -10,19 +10,16 @@ function BG_LoadCompanies()
 
         -- Make sure the player is valid
         if bg_companies[_bg_playerData[i].name] == nil then
-            return "Unexpected player " .._bg_playerData[i].name; -- TODO: Localize
+            return BG_LocStringFormat(5, _bg_playerData[i].name);
         else
-            
+
             -- "Copy" the company data
             _bg_playerData[i].company = bg_companies[_bg_playerData[i].name];
 
             -- Make sure they've picked the correct faction
             if Player_GetRaceName(_bg_playerData[i].player) ~= _bg_playerData[i].company.army then
-                return "Player " .._bg_playerData[i].name .." has picked the incorrect faction (expected " .._bg_playerData[i].company.army ..")"; -- TODO: Localize
+                return BG_LocString(6, _bg_playerData[i].name, Player_GetRaceName(_bg_playerData[i].player), _bg_playerData[i].company.army);
             end
-
-            -- Set the player name to the company name
-            --Setup_SetPlayerName(_bg_playerData[i].player, Util_CreateLocString(_bg_playerData[i].company.name) ); -- (Still possible in OnGameSetup?)
 
         end
 

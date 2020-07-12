@@ -31,6 +31,36 @@
   },
   {
     "jsdbtype": "Battlegrounds.Game.Database.AbilityBlueprint",
+    "PBGID": "1073741826",
+    "Name": "transport_heavy_vehicle_bg",
+    "LocaleName": "18",
+    "LocaleDescription": "19",
+    "Army": "battlegrounds_generic",
+    "Icon": "Icons_tooltips_pick_up_item",
+    "Cost": {
+      "jsdbtype": "Battlegrounds.Game.Gameplay.Cost",
+      "Manpower": "0",
+      "Munition": "0",
+      "Fuel": "0"
+    }
+  },
+  {
+    "jsdbtype": "Battlegrounds.Game.Database.AbilityBlueprint",
+    "PBGID": "1073741827",
+    "Name": "detach_tow_bg",
+    "LocaleName": "21",
+    "LocaleDescription": "23",
+    "Army": "battlegrounds_generic",
+    "Icon": "Icons_abilities_ability_german_lockdown_enable",
+    "Cost": {
+      "jsdbtype": "Battlegrounds.Game.Gameplay.Cost",
+      "Manpower": "0",
+      "Munition": "0",
+      "Fuel": "0"
+    }
+  },
+  {
+    "jsdbtype": "Battlegrounds.Game.Database.AbilityBlueprint",
     "PBGID": "1073741825",
     "Name": "vehicle_decrew_vehicle_crew_bg",
     "LocaleName": "11072165",

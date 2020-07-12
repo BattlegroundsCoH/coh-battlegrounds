@@ -1,6 +1,24 @@
 [
   {
     "jsdbtype": "Battlegrounds.Game.Database.SquadBlueprint",
+    "PBGID": "1073741843",
+    "Name": "m1931_203mm_b-4_howitzer_artillery_bg",
+    "LocaleName": "11038377",
+    "LocaleDescription": "11038376",
+    "Army": "soviet",
+    "Icon": "Icons_vehicles_vehicle_soviet_b4_artillery_gun",
+    "Symbol": "Icons_symbols_vehicle_soviet_b4_artillery_gun_symbol",
+    "Cost": {
+      "jsdbtype": "Battlegrounds.Game.Gameplay.Cost",
+      "Manpower": "300",
+      "Munition": "0",
+      "Fuel": "0",
+      "FieldTime": "15"
+    },
+    "HasCrew": "False"
+  },
+  {
+    "jsdbtype": "Battlegrounds.Game.Database.SquadBlueprint",
     "PBGID": "1073741837",
     "Name": "m1937_53-k_45mm_at_gun_squad_bg",
     "LocaleName": "11006681",

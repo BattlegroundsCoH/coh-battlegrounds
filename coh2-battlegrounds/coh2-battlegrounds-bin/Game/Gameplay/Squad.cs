@@ -230,13 +230,14 @@ namespace Battlegrounds.Game.Gameplay {
         /// Calculate the actual cost of a <see cref="Squad"/>.
         /// </summary>
         /// <returns>The cost of the squad.</returns>
+        /// <exception cref="NullReferenceException"/>
         public Cost GetCost() {
 
             Cost c = new Cost(SBP.Cost.Manpower, SBP.Cost.Munitions, SBP.Cost.Fuel, SBP.Cost.FieldTime);
             c = this.m_upgrades.Select(x => (x as UpgradeBlueprint).Cost).Aggregate(c, (a, b) => a + b);
 
             if (this.m_deployBp is SquadBlueprint sbp) {
-                c += sbp.Cost * (this.DeploymentMethod == DeploymentMethod.DeployAndExit ? 0.15f : 0.25f);
+                c += sbp.Cost * (this.DeploymentMethod == DeploymentMethod.DeployAndExit ? 0.25f : 0.65f);
             }
 
             // TODO: More here

@@ -367,7 +367,7 @@ end
 
 function BG_ShowInsufficientFundsWarning()
     BG_ClearWarnings();
-    g_uiWarningIndex = UIWarning_Show(LOC("Insufficient Funds!"));
+    g_uiWarningIndex = UIWarning_Show(BG_LocString(3));
     if not Rule_Exists(BG_ClearWarnings) then
         Rule_AddOneShot(BG_ClearWarnings, 5);
     end
@@ -377,5 +377,6 @@ function BG_ClearWarnings()
     if g_uiWarningIndex ~= nil then
         UI_TitleDestroy(g_uiWarningIndex);
         Rule_RemoveIfExist(BG_ClearWarnings);
+        g_uiWarningIndex = nil;
     end
 end

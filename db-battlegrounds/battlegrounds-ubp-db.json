@@ -16,6 +16,36 @@
   },
   {
     "jsdbtype": "Battlegrounds.Game.Database.UpgradeBlueprint",
+    "PBGID": "1073741827",
+    "Name": "is_towed",
+    "LocaleName": "0",
+    "LocaleDescription": "0",
+    "Icon": "",
+    "Cost": {
+      "jsdbtype": "Battlegrounds.Game.Gameplay.Cost",
+      "Manpower": "0",
+      "Munition": "0",
+      "Fuel": "0"
+    },
+    "SlotItem": []
+  },
+  {
+    "jsdbtype": "Battlegrounds.Game.Database.UpgradeBlueprint",
+    "PBGID": "1073741826",
+    "Name": "is_towing",
+    "LocaleName": "0",
+    "LocaleDescription": "0",
+    "Icon": "",
+    "Cost": {
+      "jsdbtype": "Battlegrounds.Game.Gameplay.Cost",
+      "Manpower": "0",
+      "Munition": "0",
+      "Fuel": "0"
+    },
+    "SlotItem": []
+  },
+  {
+    "jsdbtype": "Battlegrounds.Game.Database.UpgradeBlueprint",
     "PBGID": "1073741825",
     "Name": "dp-28_lmg_upgrade_bg",
     "LocaleName": "15",
@@ -48,4 +78,5 @@
       "slot_item\\soviet\\small_arms\\ppsh41_assault_package_dummy_item_mp"
     ]
   }
-] 
+  ]
+  

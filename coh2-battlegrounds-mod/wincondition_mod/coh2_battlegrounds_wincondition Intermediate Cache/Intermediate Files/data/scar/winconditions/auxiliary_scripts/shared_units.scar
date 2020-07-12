@@ -198,20 +198,22 @@ function BG_RecallSquad(playerID, squadID)
         local exit_pos = Player_GetNearestMapEntry(_bg_playerData[playerID].player, Util_GetPosition(squadID));
         local gameID = Squad_GetGameID(squadID);
         local companyID = _bg_playerData[playerID].deployed[gameID];
-        local sg_temp = SGroup_FromSquad(squadID, "sg_recall_temp" .. companyID);
-        SGroup_SetSelectable(sg_temp, false);
-        SGroup_EnableUIDecorator(sg_temp, false);
-        SGroup_MoveAndDespawn(sg_temp, exit_pos, function(squad)
-            Command_PlayerBroadcastMessage(Game_GetLocalPlayer(), Game_GetLocalPlayer(), _bg_message_type_no_actions_required, "R[" .. companyID .. "]");
-            local unit_data = BG_FindSquadInCompany(playerID, companyID);
-            unit_data.spawned = false;
-            unit_data.isRecallDelayed = true;
-            unit_data.recall_wait_time_max = 40;
-            unit_data.recall_wait_time = 40;
-            if (_bg_playerData[playerID].player == Game_GetLocalPlayer()) then
-                BG_RefreshCompanyView();
-            end
-        end);
+        if (companyID ~= nil) then
+            local sg_temp = SGroup_FromSquad(squadID, "sg_recall_temp" .. companyID);
+            SGroup_SetSelectable(sg_temp, false);
+            SGroup_EnableUIDecorator(sg_temp, false);
+            SGroup_MoveAndDespawn(sg_temp, exit_pos, function(squad)
+                Command_PlayerBroadcastMessage(Game_GetLocalPlayer(), Game_GetLocalPlayer(), _bg_message_type_no_actions_required, "R[" .. companyID .. "]");
+                local unit_data = BG_FindSquadInCompany(playerID, companyID);
+                unit_data.spawned = false;
+                unit_data.isRecallDelayed = true;
+                unit_data.recall_wait_time_max = 40;
+                unit_data.recall_wait_time = 40;
+                if (_bg_playerData[playerID].player == Game_GetLocalPlayer()) then
+                    BG_RefreshCompanyView();
+                end
+            end);
+        end
     end
 end
 

@@ -48,13 +48,15 @@ function BG_Init()
         end
     end
 
+    Rule_AddOneShot(_tow_test, 1);
+
     -- Load the player companies
     local companyError = BG_LoadCompanies();
 
     -- Check to see if a company error was found
     if companyError ~= true then
         BG_CreateAndShowMatchError(companyError);
-        return;
+        --return;
     end
 
     -- Verify match validity
@@ -63,7 +65,7 @@ function BG_Init()
     -- Did the match validifier fail?
     if matchValidity ~= true then
         BG_CreateAndShowMatchError(matchValidity);
-        return;
+        --return;
     end
 
     -- Activate the unit system
@@ -79,10 +81,26 @@ function BG_Init()
     Rule_AddOneShot(BG_OverrideGameEndingFunctionCalls, 1);
 
     -- Fix some UI stuff
-    Rule_AddOneShot(BG_FixUI, 0.1);
+    Rule_AddOneShot(BG_FixUI, 1);
 
     -- Add the broadcast event callback
     Rule_AddGlobalEvent(BG_GameBroadcastMessageReceived, GE_BroadcastMessage);
+
+end
+
+function _tow_test()
+
+    local gotopos = Player_GetStartingPosition(Game_GetLocalPlayer());
+    local startpos = Player_GetNearestMapEntry(Game_GetLocalPlayer(), gotopos);
+
+    local tow_transport = Squad_CreateAndSpawnToward(BP_GetSquadBlueprint("142b113740474c82a60b0a428bd553d5:zis_6_transport_truck_bg"), Game_GetLocalPlayer(), 0, startpos, gotopos ) ;
+    local tow_target = Squad_CreateAndSpawnToward(BP_GetSquadBlueprint("142b113740474c82a60b0a428bd553d5:m1931_203mm_b-4_howitzer_artillery_bg"), Game_GetLocalPlayer(), 0, startpos, gotopos ) ;
+
+    local test_a = SGroup_FromSquad(tow_transport, "sg_tow_transport_test");
+
+    Cmd_Move(test_a, gotopos, true);
+
+    Battlegrounds_TowFromOffmap(tow_transport, tow_target);
 
 end
 
@@ -100,12 +118,12 @@ function BG_VerifyMatch()
     -- Get the scenario name
     local name = Stats_GetScenarioName();
     if (name ~= bg_settings.map) then
-        --return "The played map does not match the selected map!"; -- TODO: Localize
+        return BG_LocString(1);
     end
 
     -- Verify upgrade
     if not pcall(BP_GetUpgradeBlueprint, bg_settings.tuning_mod.mod_verify_upg) then
-        -- return "The played match is not using the selected tuning mod"; -- TODO: Localize
+        return BG_LocString(2);
     end
 
     -- Broadcast the GUID

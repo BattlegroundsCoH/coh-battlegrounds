@@ -49,7 +49,43 @@ bg_set = {
         return false;
     end,
 };
+------------------------------------------------------------
+-- Vector (Position) Functionality
+------------------------------------------------------------
+function Vec3(_x, _y, _z)
+    local vec = {
+        x = _x,
+        y = _y,
+        z = _z,
+        add = function(self, other)
+            return Vec3(self.x + other.x, self.y + other.y, self.z + other.z);
+        end,
+        sub = function(self, other)
+            return Vec3(other.x - self.x, other.y - self.y, other.z - self.z);
+        end,
+        mul = function(self, v)
+        	return Vec3(self.x * v, self.y * v, self.z * v);
+        end,
+        negate = function(self)
+            return Vec3(-self.x, -self.y, -self.z);
+        end,
+    	length = function(self)
+    		return math.sqrt(self.x^2 + self.y^2 + self.z^2);
+    	end,
+    	unit = function(self)
+    		local len = self:length();
+    		return Vec3(self.x / len, self.y / len, self.z / len);
+        end,
+        toscar = function(self)
+            return World_Pos(self.x, self.y, self.z);
+        end,
+    };
+    return vec;
+end
 
+function Vec3Scar(pos)
+    return Vec3(pos.x, pos.y, pos.z);
+end
 ------------------------------------------------------------
 -- SGroup functions
 ------------------------------------------------------------
@@ -106,6 +142,20 @@ function __SGREMOVE_WHEN_NEAR()
 end
 
 ------------------------------------------------------------
+-- Squad functions
+------------------------------------------------------------
+
+function Squad_GetSyncWeapon(squad)
+    for i=0, Squad_Count(squad) - 1 do
+        local e = Squad_EntityAt(squad, i);
+        if (Entity_IsSyncWeapon(e)) then
+            return e;
+        end
+    end
+    return nil;
+end
+
+------------------------------------------------------------
 -- LocString functions
 ------------------------------------------------------------
 
@@ -113,6 +163,14 @@ function Util_CreateLocString(text)
 	local tmpstr = LOC(text)
 	tmpstr[1] = text
 	return tmpstr
+end
+
+function BG_LocString(locID)
+    return _bg_guid .. ":" .. tostring(locID);
+end
+
+function BG_LocStringFormat(locID, arg1, arg2, arg3, arg4)
+    return Loc_FormatText( _bg_guid .. ":" .. tostring(locID), arg1, arg2, arg3, arg4);
 end
 
 ------------------------------------------------------------
@@ -200,6 +258,47 @@ function Game_SendMessage(msgType, msg)
     Command_PlayerBroadcastMessage(Game_GetLocalPlayer(), Game_GetLocalPlayer(), msgType, msg);
 end
 
+-- Dumps the type of the object. This is purely for debugging purposes
+function Util_DumpObjectType(obj)
+	if (obj == nil) then
+		return;
+	end
+	local typeOfObject = scartype(obj);
+	local resultOfOperation = "";
+	if (typeOfObject == ST_UNKNOWN) then
+		resultOfOperation = "Unkown";
+	elseif (typeOfObject == ST_TABLE) then
+		resultOfOperation = "Table (" .. #obj .. ")";
+	elseif (typeOfObject == ST_STRING) then
+		resultOfOperation = "String";
+	elseif (typeOfObject == ST_SQUAD) then
+		resultOfOperation = "Squad";
+	elseif (typeOfObject == ST_SGROUP) then
+		resultOfOperation = "SGroup";
+	elseif (typeOfObject == ST_SCARPOS) then
+		resultOfOperation = "Pos";
+	elseif (typeOfObject == ST_PLAYER) then
+		resultOfOperation = "Player";
+	elseif (typeOfObject == ST_PBG) then
+		resultOfOperation = "PBG (Blueprint)";
+	elseif (typeOfObject == ST_MARKER) then
+		resultOfOperation = "Marker";
+	elseif (typeOfObject == ST_FUNCTION) then
+		resultOfOperation = "Function";
+	elseif (typeOfObject == ST_ENTITY) then
+		resultOfOperation = "Entity";
+	elseif (typeOfObject == ST_EGROUP) then
+		resultOfOperation = "EGroup";
+	elseif (typeOfObject == ST_CONSTPLAYER) then
+		resultOfOperation = "ConstPlayer";
+	elseif (typeOfObject == ST_BOOL) then
+		resultOfOperation = "Bool";
+	elseif (typeOfObject == ST_NUMBER) then
+		resultOfOperation = "Number";
+	end
+	return resultOfOperation;
+end
+
 ------------------------------------------------------------
 -- Battlegrounds helper functions
 ------------------------------------------------------------
@@ -213,4 +312,83 @@ function Battlegrounds_FormatResources(cost, negate)
         fu = -fu;
     end
     return tostring(mp)..","..tostring(mu)..","..tostring(fu);
+end
+
+
+------------------------------------------------------------
+-- Battlegrounds Tow System
+------------------------------------------------------------
+__BGTOWObjects = {};
+__BGTOWIndexer = 0;
+
+function Battlegrounds_TowFromOffmap(transportSquad, towTarget)
+
+    local sg_tow_transport = SGroup_FromSquad(transportSquad, "sg_tow_transport_offmap" .. __BGTOWIndexer);
+    local sg_tow_target = SGroup_FromSquad(towTarget, "sg_tow_target_offmap" .. __BGTOWIndexer);
+
+    Modify_UnitSpeed( sg_tow_transport, 0.325);
+
+    Cmd_InstantUpgrade( sg_tow_transport, BP_GetUpgradeBlueprint("142b113740474c82a60b0a428bd553d5:is_towing") );
+    Cmd_InstantUpgrade( sg_tow_target, BP_GetUpgradeBlueprint("142b113740474c82a60b0a428bd553d5:is_towed") );
+
+    Battlegrounds_TowAttach(transportSquad, towTarget);
+
+end
+
+function Battlegrounds_AETowAttach(executer, target)
+    if scartype(target) == ST_ENTITY then
+        Battlegrounds_TowAttach(executer, Entity_GetSquad(target));
+    else
+        Battlegrounds_TowAttach(executer, target);
+    end
+end
+
+function Battlegrounds_TowAttach(executer, target)
+    local tow_data = {
+        tow_transport = executer,
+        tow_transport_id = Squad_GetGameID(executer),
+        tow_target = Squad_GetSyncWeapon(target),
+        tow_target_id = Squad_GetGameID(target),
+        tow_offset = -8.75,
+    };
+    local pos, dir = Battlegrounds_GetTowCoordinates(tow_data.tow_transport, tow_data.tow_offset);
+    Entity_SetPosition(tow_data.tow_target, pos);
+    Entity_SetHeading(tow_data.tow_target, dir, false);
+    __BGTOWIndexer = __BGTOWIndexer + 1;
+    table.insert(__BGTOWObjects, tow_data);
+    if not Rule_Exists(__BgUpdateTOW) then
+        Rule_Add(__BgUpdateTOW);
+    end
+end
+
+function Battlegrounds_TowDetach(executer)
+    for i=1, #__BGTOWObjects do
+        if __BGTOWObjects[i].tow_transport == executer then
+            table.remove(__BGTOWObjects, i);
+            break;
+        end
+    end
+end
+
+function __BgUpdateTOW()
+    if #__BGTOWObjects == 0 then
+        Rule_RemoveMe();
+    else
+        for i=1, #__BGTOWObjects do
+            local isTransportAlive = Squad_IsValid(__BGTOWObjects[i].tow_transport_id);
+            local isTargetAlive = Squad_IsValid(__BGTOWObjects[i].tow_target_id);
+            if isTargetAlive and isTargetAlive then
+                local pos, dir = Battlegrounds_GetTowCoordinates(__BGTOWObjects[i].tow_transport, __BGTOWObjects[i].tow_offset);
+                Entity_SetPosition(__BGTOWObjects[i].tow_target, pos);
+                Entity_SetHeading(__BGTOWObjects[i].tow_target, dir, true);
+            end
+        end
+    end
+end
+
+function Battlegrounds_GetTowCoordinates(transport, off)
+    local tow_transport_pos = Vec3Scar(Squad_GetPosition(transport));
+    local tow_transport_dir = Vec3Scar(Squad_GetHeading(transport)):unit();
+    local tow_target_pos = tow_transport_dir:mul(off):add(tow_transport_pos);
+    return tow_target_pos:toscar(), tow_transport_dir:negate():toscar();
 end
