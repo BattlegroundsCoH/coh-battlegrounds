@@ -4,6 +4,7 @@
 _bg_guid = "6a0a13b89555402ca75b85dc30f5cb04"; -- GUID for the mod
 
 _bg_custom = {}; -- Custom data
+_bg_custom.max_squad_count = 24;
 
 _bg_playerData = {};
 
@@ -36,6 +37,7 @@ function BG_Init()
     -- Create player data (for relevant players)
     for i = 1, World_GetPlayerCount() do
         local player = World_GetPlayerAt(i);
+        Player_SetPopCapOverride(player, 260);
         if not AI_IsAIPlayer(player) then -- Make sure it's a player ==> Don't care for AI players
             _bg_playerData[j] = {};
             _bg_playerData[j].player = player;

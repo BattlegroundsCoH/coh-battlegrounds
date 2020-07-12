@@ -166,11 +166,19 @@ function Util_CreateLocString(text)
 end
 
 function BG_LocString(locID)
-    return _bg_guid .. ":" .. tostring(locID);
+    return "$" .. _bg_guid .. ":" .. locID;
 end
 
 function BG_LocStringFormat(locID, arg1, arg2, arg3, arg4)
-    return Loc_FormatText( _bg_guid .. ":" .. tostring(locID), arg1, arg2, arg3, arg4);
+    if arg2 == nil then
+        return Loc_FormatText("$" .. _bg_guid .. ":" .. locID, arg1)[1];
+    elseif arg3 == nil then
+        return Loc_FormatText("$" .. _bg_guid .. ":" .. locID, arg1, arg2)[1];
+    elseif arg4 == nil then
+        return Loc_FormatText("$" .. _bg_guid .. ":" .. locID, arg1, arg2, arg3)[1];
+    else
+        return Loc_FormatText("$" .. _bg_guid .. ":" .. locID, arg1, arg2, arg3, arg4)[1];
+    end
 end
 
 ------------------------------------------------------------

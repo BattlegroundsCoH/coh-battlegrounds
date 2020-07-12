@@ -83,7 +83,7 @@ function BG_DeploySquad(player, unit_id)
                 SGroup_Add(sg_transport_temp, transportSquad);
 
                 -- If not a tow-squad (standard infantry)
-                if unit_data.tow == nil or unit_data.tow == false then
+                if unit_data.transport.tow == nil or unit_data.transport.tow == false then
 
                     -- Garrison the squad
                     Cmd_Garrison(sg_temp, sg_transport_temp, true, false, true);
