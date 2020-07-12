@@ -123,9 +123,15 @@ namespace Battlegrounds.Json {
                     if (o is IJsonElement e) {
                         array.Add(e);
                         sb.Clear();
+                        i++;
                     } else if (contents[i] == ',') {
                         array.Add(new JsonValue(sb.ToString().Trim('\"')));
                         sb.Clear();
+                        i++;
+                    } else {
+                        if (!char.IsWhiteSpace((o as string)[0])) {
+                            sb.Append(o as string);
+                        }
                     }
 
                 }

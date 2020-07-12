@@ -50,7 +50,7 @@ namespace Battlegrounds.Game.Database {
         /// <summary>
         /// Array of types bound to the <see cref="SquadBlueprint"/>.
         /// </summary>
-        public List<string> Types { get; set; }
+        public HashSet<string> Types { get; set; }
 
         /// <summary>
         /// Can the <see cref="SquadBlueprint"/> be considered a heavy artillery piece.
@@ -61,10 +61,6 @@ namespace Battlegrounds.Game.Database {
         /// Can the <see cref="SquadBlueprint"/> be considered an anti-tank gun.
         /// </summary>
         [JsonIgnore] public bool IsAntiTank => this.Types.Contains("at_gun");
-
-        public SquadBlueprint() {
-            this.Types = new List<string>();
-        }
 
     }
 
