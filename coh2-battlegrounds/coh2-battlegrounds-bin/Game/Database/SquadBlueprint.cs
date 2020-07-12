@@ -1,4 +1,6 @@
-﻿using System.Linq;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using Battlegrounds.Functional;
 using Battlegrounds.Game.Gameplay;
 using Battlegrounds.Json;
@@ -48,17 +50,21 @@ namespace Battlegrounds.Game.Database {
         /// <summary>
         /// Array of types bound to the <see cref="SquadBlueprint"/>.
         /// </summary>
-        public string[] Types { get; set; }
+        public List<string> Types { get; set; }
 
         /// <summary>
         /// Can the <see cref="SquadBlueprint"/> be considered a heavy artillery piece.
         /// </summary>
-        [JsonIgnore] public bool IsHeavyArtillery => this.Types.ContainsWithout("team_weapon", "wg_team_weapons", "mortar", "hmg"); // 'wg_team_weapons' is to block the raketenwerfer be considered a heavy artillery piece
+        [JsonIgnore] public bool IsHeavyArtillery => this.Types.ToArray().ContainsWithout("team_weapon", "wg_team_weapons", "mortar", "hmg"); // 'wg_team_weapons' is to block the raketenwerfer be considered a heavy artillery piece
 
         /// <summary>
         /// Can the <see cref="SquadBlueprint"/> be considered an anti-tank gun.
         /// </summary>
         [JsonIgnore] public bool IsAntiTank => this.Types.Contains("at_gun");
+
+        public SquadBlueprint() {
+            this.Types = new List<string>();
+        }
 
     }
 
