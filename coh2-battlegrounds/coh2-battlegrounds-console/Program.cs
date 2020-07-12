@@ -58,9 +58,9 @@ namespace coh2_battlegrounds_console {
             testCompany.AddSquad("t_34_85_squad_bg", 5, 0);
 
             // Artillery
+            testCompany.AddSquad("m1931_203mm_b-4_howitzer_artillery_bg", "zis_6_transport_truck_bg", DeploymentMethod.DeployAndStay, 1, 0, null, null, null);
             testCompany.AddSquad("m1931_203mm_b-4_howitzer_artillery_bg", "zis_6_transport_truck_bg", DeploymentMethod.DeployAndExit, 1, 0, null, null, null);
-            testCompany.AddSquad("m1931_203mm_b-4_howitzer_artillery_bg", "zis_6_transport_truck_bg", DeploymentMethod.DeployAndExit, 1, 0, null, null, null);
-            testCompany.AddSquad("m1931_203mm_b-4_howitzer_artillery_bg", "zis_6_transport_truck_bg", DeploymentMethod.DeployAndStay, 2, 0, null, null, null);
+            testCompany.AddSquad("m1931_203mm_b-4_howitzer_artillery_bg", "zis_6_transport_truck_bg", DeploymentMethod.DeployAndExit, 2, 0, null, null, null);
 
             Company[] companies = new Company[] {
                 testCompany
