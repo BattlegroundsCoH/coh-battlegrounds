@@ -325,12 +325,11 @@ function Battlegrounds_FormatResources(cost, negate)
     local fu = cost.fuel or 0;
     if (negate) then
         mp = -mp;
-        mu = -mp;
+        mu = -mu;
         fu = -fu;
     end
     return tostring(mp)..","..tostring(mu)..","..tostring(fu);
 end
-
 
 ------------------------------------------------------------
 -- Battlegrounds Tow System

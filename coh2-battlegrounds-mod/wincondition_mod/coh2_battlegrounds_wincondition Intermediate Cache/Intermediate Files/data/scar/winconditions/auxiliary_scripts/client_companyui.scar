@@ -304,7 +304,7 @@ function BG_UnitCardClicked(tag)
     local refPlayerID = BG_GetPlayerID(Game_GetLocalPlayer());
     for i=1, #_bg_playerData[refPlayerID].company.units do
         if _bg_playerData[refPlayerID].company.units[i].company_id == tonumber(tag) then
-            if BG_VerifyPurcharse(_bg_playerData[refPlayerID].company.units[i].cost) then
+            if BG_VerifyPurchase(_bg_playerData[refPlayerID].company.units[i].cost) then
                 _bg_playerData[refPlayerID].company.units[i].isDeploying = true;
                 _bg_playerData[refPlayerID].company.units[i].deploy_time = _bg_playerData[refPlayerID].company.units[i].cost.fieldtime;
                 BG_RefreshCompanyView();
@@ -400,7 +400,7 @@ function BG_RefreshCompanyView()
     end
 end
 
-function BG_VerifyPurcharse(cost)
+function BG_VerifyPurchase(cost)
     local man = cost.manpower or 0;
     local mun = cost.munitions or 0;
     local ful = cost.fuel or 0;

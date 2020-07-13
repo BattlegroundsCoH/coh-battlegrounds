@@ -833,8 +833,6 @@
 				<instance_reference name="ability" value="abilities\soviet\modal_ability\repair_ability\soviet_conscript_repair_ability_mp" />
 				<instance_reference name="ability" value="abilities\global\cold\blizzard_effect" />
 				<instance_reference name="ability" value="abilities\soviet\modal_ability\fieldcraft_trip_flare_mp" />
-				<instance_reference name="ability" value="abilities\soviet\modal_ability\grenades\anti_tank_grenade_mp" />
-				<instance_reference name="ability" value="abilities\soviet\modal_ability\grenades\conscript_molotov_cocktail_vet_mp" />
 				<instance_reference name="ability" value="abilities\soviet\always_on_ability\conscript_in_cover_stationary_camouflage_mp" />
 				<instance_reference name="ability" value="abilities\soviet\modal_ability\conscript_tank_detection_mp" />
 				<instance_reference name="ability" value="abilities\german\toggle_ability\commander_ability\ambush_camo_hold_fire_mp" />

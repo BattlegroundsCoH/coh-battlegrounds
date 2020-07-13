@@ -222,7 +222,7 @@
   {
     "jsdbtype": "Battlegrounds.Game.Database.SquadBlueprint",
     "PBGID": "1073741863",
-    "Name": "churchill_lend_lease_squad_mp",
+    "Name": "churchill_lend_lease_squad_bg",
     "LocaleName": "11077206",
     "LocaleDescription": "11083412",
     "Army": "soviet",
@@ -235,7 +235,7 @@
       "Fuel": "165",
       "FieldTime": "15"
     },
-    "HasCrew": "False",
+    "HasCrew": "True",
     "Types": [
       "heavy_tank",
       "vehicle",
@@ -570,7 +570,7 @@
       "Fuel": "80",
       "FieldTime": "15"
     },
-    "HasCrew": "False",
+    "HasCrew": "True",
     "Types": [
       "medium_tank",
       "vehicle",
@@ -594,7 +594,7 @@
       "Fuel": "80",
       "FieldTime": "15"
     },
-    "HasCrew": "False",
+    "HasCrew": "True",
     "Types": [
       "medium_tank",
       "vehicle",
@@ -680,8 +680,8 @@
     "LocaleName": "11006679",
     "LocaleDescription": "11007044",
     "Army": "soviet",
-    "Icon": "Icons_units_unit_soviet_conscript_03",
-    "Symbol": "Icons_symbols_unit_soviet_conscript_03_symbol",
+    "Icon": "Icons_units_unit_soviet_conscript_02",
+    "Symbol": "Icons_symbols_unit_soviet_conscript_02_symbol",
     "Cost": {
       "jsdbtype": "Battlegrounds.Game.Gameplay.Cost",
       "Manpower": "280",

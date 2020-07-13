@@ -11,7 +11,7 @@
 						<bool name="has_speech_code" value="True" />
 						<locstring name="help_text" value="11007044" />
 						<string name="hotkey_name" value="C" />
-						<icon name="icon_name" value="Icons_units_unit_soviet_conscript_03" />
+						<icon name="icon_name" value="Icons_units_unit_soviet_conscript_02" />
 						<bool name="minimap_team_only" value="False" />
 						<icon name="minimap_texture" value="" />
 						<instance_reference name="modal_ability" value="" />
@@ -54,7 +54,7 @@
 						<enum name="map_rotation_type_override" value="no_override" />
 						<bool name="decoratable" value="True" />
 						<bool name="show_in_build_log" value="True" />
-						<icon name="symbol_icon_name" value="Icons_symbols_unit_soviet_conscript_03_symbol" />
+						<icon name="symbol_icon_name" value="Icons_symbols_unit_soviet_conscript_02_symbol" />
 						<bool name="speaker_highest_priority" value="False" />
 						<enum name="ui_style" value="default" />
 						<string name="cover_level_icon_postfix" value="" />
@@ -833,8 +833,6 @@
 				<instance_reference name="ability" value="abilities\soviet\modal_ability\repair_ability\soviet_conscript_repair_ability_mp" />
 				<instance_reference name="ability" value="abilities\global\cold\blizzard_effect" />
 				<instance_reference name="ability" value="abilities\soviet\modal_ability\fieldcraft_trip_flare_mp" />
-				<instance_reference name="ability" value="abilities\soviet\modal_ability\grenades\anti_tank_grenade_mp" />
-				<instance_reference name="ability" value="abilities\soviet\modal_ability\grenades\conscript_molotov_cocktail_vet_mp" />
 				<instance_reference name="ability" value="abilities\soviet\always_on_ability\conscript_in_cover_stationary_camouflage_mp" />
 				<instance_reference name="ability" value="abilities\soviet\modal_ability\conscript_tank_detection_mp" />
 				<instance_reference name="ability" value="abilities\german\toggle_ability\commander_ability\ambush_camo_hold_fire_mp" />
