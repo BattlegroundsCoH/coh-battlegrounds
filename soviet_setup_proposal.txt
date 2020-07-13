@@ -1,0 +1,50 @@
+* = command unit
+
+Combat Engineers (5 men)
+Sappers (4 men)
+
+Conscripts (7 men)
+Frontoviki (5 men)
+
+Scout team (3 men)
+Sniper Team (2 men) [Male/Female variants]
+
+Commissar Squad* (4 men)
+Soviet Officer* (4 men)
+
+Guards Rifles (6 men)
+VDV Section (5 men)
+NKVD Frontline Squad* (4 men)
+Penal Battalion (6 men)
+Shock Troops (5 men)
+Tank Busters (4 men)
+
+Vehicle Crew (2 men) [Male/Female variants]
+Tank Crew (4 men) [Male/Female variants]
+
+DSHK-38 HMG (4 men)
+Maxim HMG (4 men)
+HM-120 Mortar (4 men)
+PM-82 Mortar (4 men)
+45mm AT gun (4 men - towable)
+Zis-3 AT gun (5 men - towable)
+ML-20 Howitzer (5 men - towable)
+B4-Howitzer (5 men - towable)
+
+Sherman - Lend Lease
+IS-2
+ISU-152
+Katyusha
+KV-1
+KV-2
+KV-8
+M3A1 Scout Car (+transport)
+M5 Halftrack (+transport)
+SU-76
+SU-85
+T-34/76 [Male/Female variants]
+T-34/85 [Male/Female variants]
+T-70
+Zis-6 (+transport)
+Valentine* - Lend Lease (?)
+Churchill - Lend Lease (?)

@@ -58,8 +58,9 @@
       "Fuel": "0"
     },
     "SlotItem": [
-      "slot_item\\soviet\\small_arms\\dp-28_light_machine_gun_package_mp"
-    ]
+      "dp-28_light_machine_gun_package_bg"
+    ],
+    "Symbol": "Icons_weapons_weapon_dp_28_lmg"
   },
   {
     "jsdbtype": "Battlegrounds.Game.Database.UpgradeBlueprint",
@@ -75,8 +76,9 @@
       "Fuel": "0"
     },
     "SlotItem": [
-      "slot_item\\soviet\\small_arms\\ppsh41_assault_package_dummy_item_mp"
-    ]
+      "ppsh41_assault_package_dummy_item_bg"
+    ],
+    "Symbol": "Icons_weapons_weapon_pps"
   }
   ]
   

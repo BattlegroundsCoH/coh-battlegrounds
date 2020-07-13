@@ -48,6 +48,9 @@ bg_set = {
         end
         return false;
     end,
+    size = function(self, set)
+        return #set;
+    end,
 };
 ------------------------------------------------------------
 -- Vector (Position) Functionality
@@ -226,9 +229,15 @@ function Player_CallLocal(player, func)
 end
 
 function Player_ChangeResources(player, man, mun, ful)
-    Player_AddResource(player, RT_Manpower, man);
-    Player_AddResource(player, RT_Munition, mun);
-    Player_AddResource(player, RT_Fuel, ful);
+    if man ~= 0 then
+        Player_SetResource(player, RT_Manpower, Player_GetResource(player, RT_Manpower) + man );
+    end
+    if mun ~= 0 then
+        Player_SetResource(player, RT_Munition, Player_GetResource(player, RT_Munition) + mun );
+    end
+    if ful ~= 0 then
+        Player_SetResource(player, RT_Fuel, Player_GetResource(player, RT_Fuel) + ful );
+    end
 end
 
 function Player_CanBuy(player, man, mun, ful)
@@ -336,7 +345,7 @@ function Battlegrounds_TowFromOffmap(transportSquad, towTarget)
 
     Modify_UnitSpeed( sg_tow_transport, 0.325);
 
-    Cmd_InstantUpgrade( sg_tow_transport, BP_GetUpgradeBlueprint("142b113740474c82a60b0a428bd553d5:is_towing") );
+    Cmd_InstantUpgrade( sg_tow_transport, BP_GetUpgradeBlueprint("142b113740474c82a60b0a428bd553d5:is_towing") ); -- TODO: Read these upgrades from session.scar
     Cmd_InstantUpgrade( sg_tow_target, BP_GetUpgradeBlueprint("142b113740474c82a60b0a428bd553d5:is_towed") );
 
     Battlegrounds_TowAttach(transportSquad, towTarget);

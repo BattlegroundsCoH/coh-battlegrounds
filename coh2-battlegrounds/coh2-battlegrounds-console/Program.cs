@@ -33,33 +33,39 @@ namespace coh2_battlegrounds_console {
             Company testCompany = new Company(BattlegroundsInstance.LocalSteamuser, "26th Rifle Division", Faction.Soviet, BattlegroundsInstance.BattleGroundsTuningMod.Guid.ToString());
             
             // Basic infantry
-            testCompany.AddSquad("conscript_squad_bg", 0, 0, new string[] { "ppsh-41_sub_machine_gun_upgrade_bg" });
-            testCompany.AddSquad("conscript_squad_bg", 2, 0);
-            testCompany.AddSquad("conscript_squad_bg", 0, 120.0f);
+            testCompany.AddSquad("conscript_squad_bg", 0, 0);
+            testCompany.AddSquad("conscript_squad_bg", 0, 0);
             testCompany.AddSquad("conscript_squad_bg", 2, 0, new string[] { "dp-28_lmg_upgrade_bg" });
-            testCompany.AddSquad("conscript_squad_bg", 3, 0, new string[] { "dp-28_lmg_upgrade_bg" });
-            testCompany.AddSquad("conscript_squad_bg", 5, 0, new string[] { "ppsh-41_sub_machine_gun_upgrade_bg" });
+            testCompany.AddSquad("conscript_squad_bg", 2, 0, new string[] { "dp-28_lmg_upgrade_bg" });
+            testCompany.AddSquad("conscript_squad_bg", 4, 0, new string[] { "ppsh-41_sub_machine_gun_upgrade_bg" });
             
             // Transported Infantry
-            testCompany.AddSquad("conscript_squad_bg", "zis_6_transport_truck_bg", DeploymentMethod.DeployAndExit, 3, 0, new string[] { "ppsh-41_sub_machine_gun_upgrade_bg" }, null, null);
-            testCompany.AddSquad("conscript_squad_bg", "zis_6_transport_truck_bg", DeploymentMethod.DeployAndExit, 3, 0, new string[] { "ppsh-41_sub_machine_gun_upgrade_bg" }, null, null);
+            testCompany.AddSquad("conscript_squad_bg", "zis_6_transport_truck_bg", DeploymentMethod.DeployAndExit, 0, 0, null, null, null);
+            testCompany.AddSquad("conscript_squad_bg", "zis_6_transport_truck_bg", DeploymentMethod.DeployAndExit, 3, 0, null, null, null);
+            testCompany.AddSquad("conscript_squad_bg", "zis_6_transport_truck_bg", DeploymentMethod.DeployAndExit, 4, 0, new string[] { "ppsh-41_sub_machine_gun_upgrade_bg" }, null, null);
             testCompany.AddSquad("conscript_squad_bg", "zis_6_transport_truck_bg", DeploymentMethod.DeployAndExit, 5, 0, new string[] { "ppsh-41_sub_machine_gun_upgrade_bg" }, null, null);
-            testCompany.AddSquad("conscript_squad_bg", "zis_6_transport_truck_bg", DeploymentMethod.DeployAndExit, 5, 0, new string[] { "ppsh-41_sub_machine_gun_upgrade_bg" }, null, null);
+            testCompany.AddSquad("frontoviki_squad_bg", "m5_halftrack_squad_bg", DeploymentMethod.DeployAndExit, 0, 0, new string[] { "ppsh-41_sub_machine_gun_upgrade_bg" }, null, null);
+            testCompany.AddSquad("frontoviki_squad_bg", "m5_halftrack_squad_bg", DeploymentMethod.DeployAndExit, 1, 0, new string[] { "ppsh-41_sub_machine_gun_upgrade_bg" }, null, null);
 
             // Support Weapons
+            testCompany.AddSquad("m1942_zis-3_76mm_at_gun_squad_bg", "zis_6_transport_truck_bg", DeploymentMethod.DeployAndExit, 0, 0, null, null, null);
+            testCompany.AddSquad("m1942_zis-3_76mm_at_gun_squad_bg", "zis_6_transport_truck_bg", DeploymentMethod.DeployAndExit, 0, 0, null, null, null);
+            testCompany.AddSquad("m1910_maxim_heavy_machine_gun_squad_bg", 0, 0);
+            testCompany.AddSquad("m1910_maxim_heavy_machine_gun_squad_bg", 0, 0);
+            testCompany.AddSquad("pm-82_41_mortar_squad_bg", 0, 0);
 
             // Vehicles
             testCompany.AddSquad("t_34_76_squad_bg", 2, 0);
             testCompany.AddSquad("t_34_76_squad_bg", 2, 0);
             testCompany.AddSquad("t_34_76_squad_bg", 2, 0);
-            testCompany.AddSquad("t_34_85_squad_bg", 2, 0);
-            testCompany.AddSquad("t_34_85_squad_bg", 3, 0);
             testCompany.AddSquad("t_34_85_squad_bg", 4, 0);
             testCompany.AddSquad("t_34_85_squad_bg", 5, 0);
+            testCompany.AddSquad("kv-1_bg", 2, 0);
+            testCompany.AddSquad("kv-1_bg", 2, 0);
+            testCompany.AddSquad("valentine_lend_lease_command_bg", 0, 0);
 
             // Artillery
             testCompany.AddSquad("m1931_203mm_b-4_howitzer_artillery_bg", "zis_6_transport_truck_bg", DeploymentMethod.DeployAndStay, 1, 0, null, null, null);
-            testCompany.AddSquad("m1931_203mm_b-4_howitzer_artillery_bg", "zis_6_transport_truck_bg", DeploymentMethod.DeployAndExit, 1, 0, null, null, null);
             testCompany.AddSquad("m1931_203mm_b-4_howitzer_artillery_bg", "zis_6_transport_truck_bg", DeploymentMethod.DeployAndExit, 2, 0, null, null, null);
 
             Company[] companies = new Company[] {
@@ -78,12 +84,12 @@ namespace coh2_battlegrounds_console {
 
             Session session = Session.CreateSession(sessionInfo, companies);
 
-            /*GameMatch m = new GameMatch(session);
+            GameMatch m = new GameMatch(session);
             m.LoadMatch($"{Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)}\\my games\\company of heroes 2\\playback\\temp.rec");
             m.EvaluateResult();
-            */
             
-            SessionManager.PlaySession<SessionCompiler<CompanyCompiler>, CompanyCompiler>(session, (a,b) => { Console.WriteLine(a); }, null, null);
+            
+            //SessionManager.PlaySession<SessionCompiler<CompanyCompiler>, CompanyCompiler>(session, (a,b) => { Console.WriteLine(a); }, null, null);
 
             // Save json
             testCompany.SaveToFile("test_company.json");

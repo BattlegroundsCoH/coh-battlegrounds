@@ -88,7 +88,7 @@
 				<uniqueid name="id" value="1073742015" />
 			</template_reference>
 			<template_reference name="action" value="action\slot_item_add">
-				<instance_reference name="slot_item" value="slot_item\soviet\small_arms\ppsh41_assault_package_dummy_item_mp" />
+				<instance_reference name="slot_item" value="slot_item\soviet\small_arms\ppsh41_assault_package_dummy_item_bg" mod="142b113740474c82a60b0a428bd553d5" />
 				<bool name="permanent" value="True" />
 				<uniqueid name="id" value="1073742016" />
 			</template_reference>

@@ -770,6 +770,62 @@
 			<list name="actions">
 			</list>
 			<list name="squad_entity_actions">
+				<template_reference name="action" value="action\requirement_action">
+					<bool name="check_self" value="True" />
+					<bool name="global_fire_and_forget_on_success" value="False" />
+					<bool name="instant_requirement_check" value="False" />
+					<bool name="kill_action_on_failed_requirements" value="False" />
+					<bool name="no_retrigger" value="False" />
+					<bool name="validate_all_sub_actions" value="True" />
+					<list name="requirement_table">
+						<template_reference name="required" value="requirements\required_squad_upgrade">
+							<enum name="reason" value="usage" />
+							<locstring name="ui_name" value="0" />
+							<bool name="include_queued" value="False" />
+							<bool name="is_present" value="True" />
+							<instance_reference name="upgrade_name" value="upgrade\is_towed" mod="142b113740474c82a60b0a428bd553d5" />
+						</template_reference>
+						<template_reference name="required" value="requirements\required_in_state">
+							<enum name="reason" value="usage" />
+							<locstring name="ui_name" value="0" />
+							<bool name="garrisoned" value="False" />
+							<bool name="healed" value="False" />
+							<float name="in_combat_since" value="-1" />
+							<bool name="injured" value="False" />
+							<bool name="leader" value="False" />
+							<bool name="not_moving" value="False" />
+							<bool name="not_retreating" value="False" />
+							<bool name="pinned" value="False" />
+							<bool name="suppressed" value="False" />
+							<bool name="camouflaged" value="False" />
+						</template_reference>
+					</list>
+					<list name="action_table">
+						<template_reference name="action" value="action\animator_set_variable">
+							<string name="variable_name" value="turn_rate" />
+							<uniqueid name="id" value="1073742957" />
+							<template_reference name="set_variable_option" value="options\action\animator_set_variable\animator_set_variable">
+								<float name="variable_value" value="-108" />
+								<float name="variable_increment_per_tick" value="0" />
+								<float name="variable_cap" value="0" />
+							</template_reference>
+						</template_reference>
+						<template_reference name="action" value="action\animator_set_state">
+							<bool name="apply_to_leader_only" value="False" />
+							<string name="do_action_state_name" value="mobile" />
+							<bool name="retrigger" value="False" />
+							<string name="state_machine_name" value="artillery_state" />
+							<string name="undo_action_state_name" value="" />
+							<uniqueid name="id" value="1073742958" />
+						</template_reference>
+					</list>
+					<uniqueid name="id" value="1073742956" />
+					<bool name="fire_and_forget_non_global" value="False" />
+					<template_reference name="ui_help_text" value="tables\help_text_phrase">
+						<int name="phrase_order" value="0" />
+						<locstring name="phrase" value="0" />
+					</template_reference>
+				</template_reference>
 			</list>
 		</template_reference>
 		<template_reference name="squadexts" value="sbpextensions\squad_retreat_ext">

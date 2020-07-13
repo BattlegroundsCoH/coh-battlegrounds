@@ -1,0 +1,66 @@
+<instance description="" template="slot_item">
+	<group name="slot_item_bag">
+		<bool name="always_pick_up" value="False" />
+		<bool name="can_stack" value="False" />
+		<float name="can_stack_max" value="1" />
+		<instance_reference name="drop_item_entity" value="ebps\gameplay\props\dp28_lmg_item" />
+		<float name="drop_rate" value="0.1" />
+		<float name="hardpoint" value="1" />
+		<bool name="has_speech_code" value="True" />
+		<bool name="is_entity_user" value="False" />
+		<float name="item_uses" value="0" />
+		<enum name="owner_type" value="squad" />
+		<icon name="package_icon" value="" />
+		<float name="recharge_time" value="0" />
+		<float name="slot_size" value="1" />
+		<group name="speech_code_2">
+			<string name="code_1" value="42" />
+			<string name="code_2" value="" />
+			<string name="code_3" value="" />
+		</group>
+		<group name="speech_code_3">
+			<string name="code_1" value="d28" />
+			<string name="code_2" value="" />
+			<string name="code_3" value="" />
+		</group>
+		<group name="ui_info">
+			<locstring name="extra_text" value="11046270" />
+			<locstring name="help_text" value="11046271" />
+			<string name="hotkey_name" value="" />
+			<icon name="icon_name" value="Icons_weapons_weapon_dp_28_lmg" />
+			<string name="overlay_name" value="" />
+			<bool name="reveal_for_decryption" value="False" />
+			<locstring name="screen_name" value="11007104" />
+		</group>
+		<group name="weapon">
+			<group name="heading">
+				<float name="x" value="0" />
+				<float name="y" value="0" />
+				<float name="z" value="1" />
+			</group>
+			<float name="length" value="0" />
+			<group name="origin">
+				<float name="x" value="0" />
+				<float name="y" value="1.5" />
+				<float name="z" value="0" />
+			</group>
+			<enum name="type" value="squad" />
+			<instance_reference name="weapon" value="weapon\soviet\small_arms\machine_gun\light_machine_gun\guard_troop_dp-28_light_machine_gun_mp" />
+		</group>
+		<list name="on_add_actions">
+		</list>
+		<list name="on_drop_actions">
+			<template_reference name="action" value="action\upgrade_remove">
+				<bool name="apply_to_entities_in_squad" value="False" />
+				<instance_reference name="upgrade" value="upgrade\soviet\items\guard_dp-28_lmg_package_1_mp" />
+				<uniqueid name="id" value="1073742618" />
+			</template_reference>
+			<template_reference name="action" value="action\upgrade_remove">
+				<bool name="apply_to_entities_in_squad" value="False" />
+				<instance_reference name="upgrade" value="upgrade\soviet\items\guard_dp-28_lmg_package_mp" />
+				<uniqueid name="id" value="1073742619" />
+			</template_reference>
+		</list>
+	</group>
+	<uniqueid name="pbgid" value="1073741824" />
+</instance>

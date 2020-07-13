@@ -15,10 +15,9 @@
 		</template_reference>
 		<template_reference name="exts" value="ebpextensions\ability_ext">
 			<list name="abilities">
-				<instance_reference name="ability" value="abilities\soviet\modal_ability\grenades\conscript_molotov_cocktail_mp" />
+				<instance_reference name="ability" value="abilities\soviet\modal_ability\grenades\conscript_molotov_cocktail_bg" mod="142b113740474c82a60b0a428bd553d5" />
 				<instance_reference name="ability" value="abilities\global\cold\blizzard_effect_deep_snow_camo" />
 				<instance_reference name="ability" value="abilities\global\army_item_abilities\army_item_global_cover_training" />
-				<instance_reference name="ability" value="abilities\soviet\modal_ability\grenades\conscript_anti_tank_grenade_assault_mp" />
 				<instance_reference name="ability" value="abilities\global\custom_commander\heal_in_cover" />
 			</list>
 		</template_reference>
@@ -509,21 +508,6 @@
 			</list>
 			<int name="sight_hardpoint" value="-1" />
 			<list name="kill_actions">
-				<template_reference name="action" value="action\modify_resources">
-					<template_reference name="resource_to_modify" value="tables\resource_table">
-						<float name="action" value="0" />
-						<float name="command" value="0" />
-						<float name="fuel" value="0" />
-						<float name="manpower" value="0" />
-						<float name="munition" value="0" />
-						<float name="soviet_progression" value="3" />
-						<float name="soviet_227" value="0" />
-						<float name="popcap" value="0" />
-					</template_reference>
-					<bool name="modify_per_second" value="False" />
-					<bool name="ignore_resource_cap" value="False" />
-					<uniqueid name="id" value="1073741888" />
-				</template_reference>
 			</list>
 		</template_reference>
 		<template_reference name="exts" value="ebpextensions\cover_ext">

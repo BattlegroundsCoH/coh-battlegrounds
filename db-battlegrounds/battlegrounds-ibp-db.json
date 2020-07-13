@@ -1,0 +1,35 @@
+[
+    {
+      "jsdbtype": "Battlegrounds.Game.Database.SlotItemBlueprint",
+      "PBGID": "1073741824",
+      "Name": "dp-28_light_machine_gun_package_bg",
+      "LocaleName": "11007104",
+      "LocaleDescription": "11046271",
+      "Icon": "Icons_weapons_weapon_dp_28_lmg"
+    },
+    {
+      "jsdbtype": "Battlegrounds.Game.Database.SlotItemBlueprint",
+      "PBGID": "1073741823",
+      "Name": "ppsh41_assault_package_bg",
+      "LocaleName": "11046314",
+      "LocaleDescription": "11046265",
+      "Icon": "Icons_weapons_weapon_pps"
+    },
+    {
+      "jsdbtype": "Battlegrounds.Game.Database.SlotItemBlueprint",
+      "PBGID": "1073741826",
+      "Name": "ppsh41_assault_package_dummy_item_bg",
+      "LocaleName": "0",
+      "LocaleDescription": "0",
+      "Icon": "Icons_weapons_weapon_pps"
+    },
+    {
+      "jsdbtype": "Battlegrounds.Game.Database.SlotItemBlueprint",
+      "PBGID": "1073741825",
+      "Name": "svt_bg",
+      "LocaleName": "0",
+      "LocaleDescription": "0",
+      "Icon": "Icons_weapons_svt_weapon"
+    }
+    ]
+    

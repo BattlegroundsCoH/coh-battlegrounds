@@ -8,3 +8,4 @@
 ###############################################################################
 *.scar linguist-language=Lua
 *.win linguist-language=Lua
+*.ucs text=auto

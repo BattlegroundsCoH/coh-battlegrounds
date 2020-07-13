@@ -447,11 +447,11 @@
 			<list name="unit_list">
 				<group name="loadout_data">
 					<float name="num" value="1" />
-					<instance_reference name="type" value="ebps\races\soviet\team_weapons\soviet_at_guns\m1937_53-k_45mm_at_gun_mp" />
+					<instance_reference name="type" value="ebps\races\soviet\team_weapons\soviet_at_guns\m1937_53-k_45mm_at_gun_bg" mod="142b113740474c82a60b0a428bd553d5" />
 				</group>
 				<group name="loadout_data">
-					<float name="num" value="6" />
-					<instance_reference name="type" value="ebps\races\soviet\soldiers\weapon_crew\atgunzis_crew_mp" />
+					<float name="num" value="4" />
+					<instance_reference name="type" value="ebps\races\soviet\soldiers\weapon_crew\atgunzis_crew_bg" mod="142b113740474c82a60b0a428bd553d5" />
 				</group>
 			</list>
 			<float name="squad_female_chance" value="0" />

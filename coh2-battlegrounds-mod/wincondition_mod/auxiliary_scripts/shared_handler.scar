@@ -262,6 +262,7 @@ function BG_GameBroadcastMessageReceived(sender, messageType, message)
         BG_DeploySquad(sender, tonumber(message));
     elseif messageType == _bg_message_type_player_resource then
         local resources = Str_CmdParse(message);
+        PrintOnScreen(resources[1] .. ";" ..resources[2] ..";"..resources[3]);
         Player_ChangeResources(sender, resources[1], resources[2], resources[3]);
     elseif messageType == _bg_message_type_player_request_deploy then
         UI_TeamEventCue(sender, Util_CreateLocString("** Unit Request **"), Util_CreateLocString("PlayerName has requested '' for deployment."));

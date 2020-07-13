@@ -13,6 +13,7 @@ namespace CoH2XML2JSON {
         static string instancesPath;
         static Dictionary<string, (float, float, float, float)> entityCost = new Dictionary<string, (float, float, float, float)>();
         static Dictionary<string, bool> entityCrewed = new Dictionary<string, bool>();
+        static Dictionary<string, string> slotItemSymbols = new Dictionary<string, string>();
 
         static string[] racebps = new string[] {
             "racebps\\soviet",
@@ -499,6 +500,8 @@ namespace CoH2XML2JSON {
                                 slotItem.LocaleDescription = localeDescription;
                                 slotItem.Icon = icon;
 
+                                slotItemSymbols.Add(name, icon);
+
                                 string slotItemJson = JsonConvert.SerializeObject(slotItem, Newtonsoft.Json.Formatting.Indented);
 
                                 proccessedFiles++;
@@ -604,7 +607,7 @@ namespace CoH2XML2JSON {
                                 XmlNodeList e_slotItems = document.SelectNodes("//instance_reference[@name='slot_item']");
                                 foreach (XmlNode slotItem in e_slotItems)
                                 {
-                                    slotItems.Add(slotItem.Attributes["value"].Value);
+                                    slotItems.Add(Path.GetFileNameWithoutExtension(slotItem.Attributes["value"].Value));
                                 }
                                 IEnumerable<string> uniqueSlotItems = slotItems.Distinct<string>();
 
@@ -621,6 +624,12 @@ namespace CoH2XML2JSON {
                                 upgrade.Cost.Munition = costMunition;
                                 upgrade.Cost.Fuel = costFuel;
                                 upgrade.SlotItem = new JArray(uniqueSlotItems);
+
+                                if (slotItems.FirstOrDefault() is string item) {
+                                    if (slotItemSymbols.TryGetValue(item, out string itemSymbol)) {
+                                        upgrade.Symbol = itemSymbol;
+                                    }
+                                }
 
                                 string upgradeJson = JsonConvert.SerializeObject(upgrade, Newtonsoft.Json.Formatting.Indented);
 

@@ -187,7 +187,7 @@ function BG_OnSquadDeath(squad)
     if _bg_playerData[playerRefID].deployed[id] ~= nil then
 
         -- Broadcast that the unit was killed
-        Command_PlayerBroadcastMessage(Game_GetLocalPlayer(), Game_GetLocalPlayer(), _bg_message_type_no_actions_required, "K[" .. _bg_playerData[playerRefID].deployed[id] .. "]")
+        Game_SendMessage( _bg_message_type_no_actions_required, "K[" .. _bg_playerData[playerRefID].deployed[id] .. "]")
 
         -- Remove from deployed list
         _bg_playerData[playerRefID].deployed[id] = nil;
@@ -203,8 +203,8 @@ function BG_OnSquadUpgrade(squad, bp)
     local playerRefID = BG_GetPlayerID(playerOwner);
     local id = Squad_GetGameID(squad);
 
-    -- Broadcast that the unit was killed
-    Command_PlayerBroadcastMessage(Game_GetLocalPlayer(), Game_GetLocalPlayer(), _bg_message_type_no_actions_required, "U[" .. _bg_playerData[playerRefID].deployed[id] .. "]")
+    -- Broadcast that the unit was upgraded
+    Game_SendMessage(_bg_message_type_no_actions_required, "U[" .. _bg_playerData[playerRefID].deployed[id] .. "]")
 
 end
 
@@ -225,12 +225,18 @@ function BG_RecallSquad(playerID, squadID)
             SGroup_SetSelectable(sg_temp, false);
             SGroup_EnableUIDecorator(sg_temp, false);
             SGroup_MoveAndDespawn(sg_temp, exit_pos, function(squad)
-                Command_PlayerBroadcastMessage(Game_GetLocalPlayer(), Game_GetLocalPlayer(), _bg_message_type_no_actions_required, "R[" .. companyID .. "]");
                 local unit_data = BG_FindSquadInCompany(playerID, companyID);
+                local vet_rank_diff = unit_data.veterancy_rank - Squad_GetVeterancyRank(squadID);
+                local vet_rank_progress = Squad_GetVeterancyExperience(squadID);
+                Game_SendMessage(_bg_message_type_no_actions_required, "R[" .. companyID .. "," .. vet_rank_diff .. "," .. vet_rank_progress .."]");
                 unit_data.spawned = false;
+                unit_data.transport = nil; -- We no longer allow this unit to be brought in with transport (Infinite transports would be possible here).
                 unit_data.isRecallDelayed = true;
                 unit_data.recall_wait_time_max = 40;
                 unit_data.recall_wait_time = 40;
+                unit_data.veterancy_rank = unit_data.veterancy_rank + vet_rank_diff;
+                unit_data.vet_rank_progress = vet_rank_progress;
+                -- TODO: Set slot-items etc....
                 if (_bg_playerData[playerID].player == Game_GetLocalPlayer()) then
                     BG_RefreshCompanyView();
                 end
@@ -242,8 +248,6 @@ end
 function BG_SurrenderSquad(squad)
 
 end
-
-__deployexittable = {}
 
 function BG_DeployAndExit(group, deployPos)
 

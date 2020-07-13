@@ -73,6 +73,81 @@
       "Munition": "0",
       "Fuel": "0"
     }
+  },
+  {
+    "jsdbtype": "Battlegrounds.Game.Database.AbilityBlueprint",
+    "PBGID": "1073741831",
+    "Name": "anti_tank_grenade_bg",
+    "LocaleName": "11025826",
+    "LocaleDescription": "11025827",
+    "Army": "soviet",
+    "Icon": "Icons_abilities_ability_soviet_rpg_43_at_grenade",
+    "Cost": {
+      "jsdbtype": "Battlegrounds.Game.Gameplay.Cost",
+      "Manpower": "0",
+      "Munition": "25",
+      "Fuel": "0"
+    }
+  },
+  {
+    "jsdbtype": "Battlegrounds.Game.Database.AbilityBlueprint",
+    "PBGID": "1073741828",
+    "Name": "conscript_molotov_cocktail_bg",
+    "LocaleName": "11006607",
+    "LocaleDescription": "11006747",
+    "Army": "soviet",
+    "Icon": "Icons_abilities_ability_soviet_molotov_cocktail",
+    "Cost": {
+      "jsdbtype": "Battlegrounds.Game.Gameplay.Cost",
+      "Manpower": "0",
+      "Munition": "20",
+      "Fuel": "0"
+    }
+  },
+  {
+    "jsdbtype": "Battlegrounds.Game.Database.AbilityBlueprint",
+    "PBGID": "1073741829",
+    "Name": "rgd_1_smoke_grenade_bg",
+    "LocaleName": "11032146",
+    "LocaleDescription": "11032147",
+    "Army": "soviet",
+    "Icon": "Icons_abilities_ability_soviet_rgd_1_smoke_grenade",
+    "Cost": {
+      "jsdbtype": "Battlegrounds.Game.Gameplay.Cost",
+      "Manpower": "0",
+      "Munition": "15",
+      "Fuel": "0"
+    }
+  },
+  {
+    "jsdbtype": "Battlegrounds.Game.Database.AbilityBlueprint",
+    "PBGID": "1073741830",
+    "Name": "rg_42_anti_personnel_grenade_bg",
+    "LocaleName": "11008244",
+    "LocaleDescription": "11008245",
+    "Army": "soviet",
+    "Icon": "Icons_abilities_ability_soviet_rg_42_grenade",
+    "Cost": {
+      "jsdbtype": "Battlegrounds.Game.Gameplay.Cost",
+      "Manpower": "0",
+      "Munition": "30",
+      "Fuel": "0"
+    }
+  },
+  {
+    "jsdbtype": "Battlegrounds.Game.Database.AbilityBlueprint",
+    "PBGID": "1073741832",
+    "Name": "satchel_charge_throw_ability_bg",
+    "LocaleName": "11145736",
+    "LocaleDescription": "11140709",
+    "Army": "soviet",
+    "Icon": "Icons_abilities_ability_soviet_satchel_charge",
+    "Cost": {
+      "jsdbtype": "Battlegrounds.Game.Gameplay.Cost",
+      "Manpower": "0",
+      "Munition": "45",
+      "Fuel": "0"
+    }
   }
   ]
   
