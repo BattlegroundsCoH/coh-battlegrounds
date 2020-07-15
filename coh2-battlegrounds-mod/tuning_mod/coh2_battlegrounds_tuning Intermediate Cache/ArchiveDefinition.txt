@@ -18,6 +18,47 @@ TOCStart name="attrib" alias="attrib" path="" relativeroot="attrib"
 	E:\coh2_battlegrounds\coh2-battlegrounds-mod\tuning_mod\coh2_battlegrounds_tuning Intermediate Cache\Intermediate Files\attrib\attrib\army\german.rgd
 	E:\coh2_battlegrounds\coh2-battlegrounds-mod\tuning_mod\coh2_battlegrounds_tuning Intermediate Cache\Intermediate Files\attrib\attrib\army\soviet.rgd
 	E:\coh2_battlegrounds\coh2-battlegrounds-mod\tuning_mod\coh2_battlegrounds_tuning Intermediate Cache\Intermediate Files\attrib\attrib\army\west_german.rgd
+	E:\coh2_battlegrounds\coh2-battlegrounds-mod\tuning_mod\coh2_battlegrounds_tuning Intermediate Cache\Intermediate Files\attrib\attrib\ebps\races\german\soldiers\grenadiers\grenadiers_bg.rgd
+	E:\coh2_battlegrounds\coh2-battlegrounds-mod\tuning_mod\coh2_battlegrounds_tuning Intermediate Cache\Intermediate Files\attrib\attrib\ebps\races\german\soldiers\officer\artillery_officer_bg.rgd
+	E:\coh2_battlegrounds\coh2-battlegrounds-mod\tuning_mod\coh2_battlegrounds_tuning Intermediate Cache\Intermediate Files\attrib\attrib\ebps\races\german\soldiers\officer\luftwaffe_officer_bg.rgd
+	E:\coh2_battlegrounds\coh2-battlegrounds-mod\tuning_mod\coh2_battlegrounds_tuning Intermediate Cache\Intermediate Files\attrib\attrib\ebps\races\german\soldiers\ostruppen_soldier\ostruppen_soldier_bg.rgd
+	E:\coh2_battlegrounds\coh2-battlegrounds-mod\tuning_mod\coh2_battlegrounds_tuning Intermediate Cache\Intermediate Files\attrib\attrib\ebps\races\german\soldiers\panzer_grenadiers\panzer_grenadiers_bg.rgd
+	E:\coh2_battlegrounds\coh2-battlegrounds-mod\tuning_mod\coh2_battlegrounds_tuning Intermediate Cache\Intermediate Files\attrib\attrib\ebps\races\german\soldiers\pioneer\pioneer_bg.rgd
+	E:\coh2_battlegrounds\coh2-battlegrounds-mod\tuning_mod\coh2_battlegrounds_tuning Intermediate Cache\Intermediate Files\attrib\attrib\ebps\races\german\soldiers\sniper\sniper_soldier_bg.rgd
+	E:\coh2_battlegrounds\coh2-battlegrounds-mod\tuning_mod\coh2_battlegrounds_tuning Intermediate Cache\Intermediate Files\attrib\attrib\ebps\races\german\soldiers\stormtroopers\stormtroopers_bg.rgd
+	E:\coh2_battlegrounds\coh2-battlegrounds-mod\tuning_mod\coh2_battlegrounds_tuning Intermediate Cache\Intermediate Files\attrib\attrib\ebps\races\german\soldiers\vehicle_crew\german_vehicle_crew_mp.rgd
+	E:\coh2_battlegrounds\coh2-battlegrounds-mod\tuning_mod\coh2_battlegrounds_tuning Intermediate Cache\Intermediate Files\attrib\attrib\ebps\races\german\soldiers\weapon_crew\atgun88_crew_bg.rgd
+	E:\coh2_battlegrounds\coh2-battlegrounds-mod\tuning_mod\coh2_battlegrounds_tuning Intermediate Cache\Intermediate Files\attrib\attrib\ebps\races\german\soldiers\weapon_crew\atgun_crew_bg.rgd
+	E:\coh2_battlegrounds\coh2-battlegrounds-mod\tuning_mod\coh2_battlegrounds_tuning Intermediate Cache\Intermediate Files\attrib\attrib\ebps\races\german\soldiers\weapon_crew\howitzer_crew_bg.rgd
+	E:\coh2_battlegrounds\coh2-battlegrounds-mod\tuning_mod\coh2_battlegrounds_tuning Intermediate Cache\Intermediate Files\attrib\attrib\ebps\races\german\soldiers\weapon_crew\mg_crew_bg.rgd
+	E:\coh2_battlegrounds\coh2-battlegrounds-mod\tuning_mod\coh2_battlegrounds_tuning Intermediate Cache\Intermediate Files\attrib\attrib\ebps\races\german\soldiers\weapon_crew\mortar_crew_bg.rgd
+	E:\coh2_battlegrounds\coh2-battlegrounds-mod\tuning_mod\coh2_battlegrounds_tuning Intermediate Cache\Intermediate Files\attrib\attrib\ebps\races\german\team_weapons\granatewerfer_34_81mm_mortar_bg.rgd
+	E:\coh2_battlegrounds\coh2-battlegrounds-mod\tuning_mod\coh2_battlegrounds_tuning Intermediate Cache\Intermediate Files\attrib\attrib\ebps\races\german\team_weapons\howitzer_105mm_le_fh18_bg.rgd
+	E:\coh2_battlegrounds\coh2-battlegrounds-mod\tuning_mod\coh2_battlegrounds_tuning Intermediate Cache\Intermediate Files\attrib\attrib\ebps\races\german\team_weapons\mg42_hmg_bg.rgd
+	E:\coh2_battlegrounds\coh2-battlegrounds-mod\tuning_mod\coh2_battlegrounds_tuning Intermediate Cache\Intermediate Files\attrib\attrib\ebps\races\german\team_weapons\pak40_75mm_at_gun_bg.rgd
+	E:\coh2_battlegrounds\coh2-battlegrounds-mod\tuning_mod\coh2_battlegrounds_tuning Intermediate Cache\Intermediate Files\attrib\attrib\ebps\races\german\team_weapons\pak43_88mm_at_gun_bg.rgd
+	E:\coh2_battlegrounds\coh2-battlegrounds-mod\tuning_mod\coh2_battlegrounds_tuning Intermediate Cache\Intermediate Files\attrib\attrib\ebps\races\german\vehicles\brummbar_sturmpanzer_iv_sdkfz_166\brummbar_sturmpanzer_iv_sdkfz_166_bg.rgd
+	E:\coh2_battlegrounds\coh2-battlegrounds-mod\tuning_mod\coh2_battlegrounds_tuning Intermediate Cache\Intermediate Files\attrib\attrib\ebps\races\german\vehicles\elefant_sdkfz_184\elefant_sdkfz_184_bg.rgd
+	E:\coh2_battlegrounds\coh2-battlegrounds-mod\tuning_mod\coh2_battlegrounds_tuning Intermediate Cache\Intermediate Files\attrib\attrib\ebps\races\german\vehicles\opel_blitz_truck\opel_blitz_supply_truck_bg.rgd
+	E:\coh2_battlegrounds\coh2-battlegrounds-mod\tuning_mod\coh2_battlegrounds_tuning Intermediate Cache\Intermediate Files\attrib\attrib\ebps\races\german\vehicles\opel_blitz_truck\opel_blitz_transport_truck_bg.rgd
+	E:\coh2_battlegrounds\coh2-battlegrounds-mod\tuning_mod\coh2_battlegrounds_tuning Intermediate Cache\Intermediate Files\attrib\attrib\ebps\races\german\vehicles\ostwind_flak_panzer\ostwind_flak_panzer_bg.rgd
+	E:\coh2_battlegrounds\coh2-battlegrounds-mod\tuning_mod\coh2_battlegrounds_tuning Intermediate Cache\Intermediate Files\attrib\attrib\ebps\races\german\vehicles\panther_sdkfz_171\panther_sdkfz_171_bg.rgd
+	E:\coh2_battlegrounds\coh2-battlegrounds-mod\tuning_mod\coh2_battlegrounds_tuning Intermediate Cache\Intermediate Files\attrib\attrib\ebps\races\german\vehicles\panther_sdkfz_171\panther_sdkfz_171_command_bg.rgd
+	E:\coh2_battlegrounds\coh2-battlegrounds-mod\tuning_mod\coh2_battlegrounds_tuning Intermediate Cache\Intermediate Files\attrib\attrib\ebps\races\german\vehicles\panzerwerfer_sdkfz_4_1\panzerwerfer_sdkfz_4_1_bg.rgd
+	E:\coh2_battlegrounds\coh2-battlegrounds-mod\tuning_mod\coh2_battlegrounds_tuning Intermediate Cache\Intermediate Files\attrib\attrib\ebps\races\german\vehicles\panzer_iv_sdkfz_161\panzer_iv_commander_sdkfz_161_bg.rgd
+	E:\coh2_battlegrounds\coh2-battlegrounds-mod\tuning_mod\coh2_battlegrounds_tuning Intermediate Cache\Intermediate Files\attrib\attrib\ebps\races\german\vehicles\panzer_iv_sdkfz_161\panzer_iv_sdkfz_161_bg.rgd
+	E:\coh2_battlegrounds\coh2-battlegrounds-mod\tuning_mod\coh2_battlegrounds_tuning Intermediate Cache\Intermediate Files\attrib\attrib\ebps\races\german\vehicles\panzer_iv_sdkfz_161\panzer_iv_sdkfz_ausf1_bg.rgd
+	E:\coh2_battlegrounds\coh2-battlegrounds-mod\tuning_mod\coh2_battlegrounds_tuning Intermediate Cache\Intermediate Files\attrib\attrib\ebps\races\german\vehicles\sdkfz\armored_car_sdkfz_221_bg.rgd
+	E:\coh2_battlegrounds\coh2-battlegrounds-mod\tuning_mod\coh2_battlegrounds_tuning Intermediate Cache\Intermediate Files\attrib\attrib\ebps\races\german\vehicles\sdkfz\armored_car_sdkfz_221_command_bg.rgd
+	E:\coh2_battlegrounds\coh2-battlegrounds-mod\tuning_mod\coh2_battlegrounds_tuning Intermediate Cache\Intermediate Files\attrib\attrib\ebps\races\german\vehicles\sdkfz\armored_car_sdkfz_222_bg.rgd
+	E:\coh2_battlegrounds\coh2-battlegrounds-mod\tuning_mod\coh2_battlegrounds_tuning Intermediate Cache\Intermediate Files\attrib\attrib\ebps\races\german\vehicles\sdkfz\halftrack_sdkfz_250_bg.rgd
+	E:\coh2_battlegrounds\coh2-battlegrounds-mod\tuning_mod\coh2_battlegrounds_tuning Intermediate Cache\Intermediate Files\attrib\attrib\ebps\races\german\vehicles\sdkfz\halftrack_sdkfz_251_bg.rgd
+	E:\coh2_battlegrounds\coh2-battlegrounds-mod\tuning_mod\coh2_battlegrounds_tuning Intermediate Cache\Intermediate Files\attrib\attrib\ebps\races\german\vehicles\sdkfz\mortar_light_halftrack_250_7_bg.rgd
+	E:\coh2_battlegrounds\coh2-battlegrounds-mod\tuning_mod\coh2_battlegrounds_tuning Intermediate Cache\Intermediate Files\attrib\attrib\ebps\races\german\vehicles\sdkfz\puma_234_armoured_car_ostheer_bg.rgd
+	E:\coh2_battlegrounds\coh2-battlegrounds-mod\tuning_mod\coh2_battlegrounds_tuning Intermediate Cache\Intermediate Files\attrib\attrib\ebps\races\german\vehicles\stug_iii_sdkfz_141_1\stug_iii_e_sdkfz_141_1_bg.rgd
+	E:\coh2_battlegrounds\coh2-battlegrounds-mod\tuning_mod\coh2_battlegrounds_tuning Intermediate Cache\Intermediate Files\attrib\attrib\ebps\races\german\vehicles\stug_iii_sdkfz_141_1\stug_iii_g_sdkfz_141_1_bg.rgd
+	E:\coh2_battlegrounds\coh2-battlegrounds-mod\tuning_mod\coh2_battlegrounds_tuning Intermediate Cache\Intermediate Files\attrib\attrib\ebps\races\german\vehicles\tiger_sdkfz_181\tiger_sdkfz_181_bg.rgd
+	E:\coh2_battlegrounds\coh2-battlegrounds-mod\tuning_mod\coh2_battlegrounds_tuning Intermediate Cache\Intermediate Files\attrib\attrib\ebps\races\german\vehicles\tiger_sdkfz_181\tiger_sdkfz_181_command_bg.rgd
 	E:\coh2_battlegrounds\coh2-battlegrounds-mod\tuning_mod\coh2_battlegrounds_tuning Intermediate Cache\Intermediate Files\attrib\attrib\ebps\races\soviet\soldiers\combat_engineer\combat_engineer_bg.rgd
 	E:\coh2_battlegrounds\coh2-battlegrounds-mod\tuning_mod\coh2_battlegrounds_tuning Intermediate Cache\Intermediate Files\attrib\attrib\ebps\races\soviet\soldiers\combat_engineer\sapper_soldier_bg.rgd
 	E:\coh2_battlegrounds\coh2-battlegrounds-mod\tuning_mod\coh2_battlegrounds_tuning Intermediate Cache\Intermediate Files\attrib\attrib\ebps\races\soviet\soldiers\commander_troops\guard_troops_bg.rgd
@@ -69,6 +110,45 @@ TOCStart name="attrib" alias="attrib" path="" relativeroot="attrib"
 	E:\coh2_battlegrounds\coh2-battlegrounds-mod\tuning_mod\coh2_battlegrounds_tuning Intermediate Cache\Intermediate Files\attrib\attrib\racebps\german.rgd
 	E:\coh2_battlegrounds\coh2-battlegrounds-mod\tuning_mod\coh2_battlegrounds_tuning Intermediate Cache\Intermediate Files\attrib\attrib\racebps\soviet.rgd
 	E:\coh2_battlegrounds\coh2-battlegrounds-mod\tuning_mod\coh2_battlegrounds_tuning Intermediate Cache\Intermediate Files\attrib\attrib\racebps\west_german.rgd
+	E:\coh2_battlegrounds\coh2-battlegrounds-mod\tuning_mod\coh2_battlegrounds_tuning Intermediate Cache\Intermediate Files\attrib\attrib\sbps\races\german\soldiers\grenadier_squad\grenadier_squad_bg.rgd
+	E:\coh2_battlegrounds\coh2-battlegrounds-mod\tuning_mod\coh2_battlegrounds_tuning Intermediate Cache\Intermediate Files\attrib\attrib\sbps\races\german\soldiers\officer_squad\assault_officer_squad_bg.rgd
+	E:\coh2_battlegrounds\coh2-battlegrounds-mod\tuning_mod\coh2_battlegrounds_tuning Intermediate Cache\Intermediate Files\attrib\attrib\sbps\races\german\soldiers\officer_squad\luftwaffe_officer_squad_bg.rgd
+	E:\coh2_battlegrounds\coh2-battlegrounds-mod\tuning_mod\coh2_battlegrounds_tuning Intermediate Cache\Intermediate Files\attrib\attrib\sbps\races\german\soldiers\ostruppen_squad\ostruppen_squad_bg.rgd
+	E:\coh2_battlegrounds\coh2-battlegrounds-mod\tuning_mod\coh2_battlegrounds_tuning Intermediate Cache\Intermediate Files\attrib\attrib\sbps\races\german\soldiers\panzer_grenadier_squad\panzer_grenadier_squad_bg.rgd
+	E:\coh2_battlegrounds\coh2-battlegrounds-mod\tuning_mod\coh2_battlegrounds_tuning Intermediate Cache\Intermediate Files\attrib\attrib\sbps\races\german\soldiers\pioneer_squad\pioneer_squad_bg.rgd
+	E:\coh2_battlegrounds\coh2-battlegrounds-mod\tuning_mod\coh2_battlegrounds_tuning Intermediate Cache\Intermediate Files\attrib\attrib\sbps\races\german\soldiers\sniper_squad\sniper_squad_bg.rgd
+	E:\coh2_battlegrounds\coh2-battlegrounds-mod\tuning_mod\coh2_battlegrounds_tuning Intermediate Cache\Intermediate Files\attrib\attrib\sbps\races\german\soldiers\stormtrooper_squad\ost_luftwaffe_ground_forces_bg.rgd
+	E:\coh2_battlegrounds\coh2-battlegrounds-mod\tuning_mod\coh2_battlegrounds_tuning Intermediate Cache\Intermediate Files\attrib\attrib\sbps\races\german\soldiers\stormtrooper_squad\ost_tankhunter_squad_bg.rgd
+	E:\coh2_battlegrounds\coh2-battlegrounds-mod\tuning_mod\coh2_battlegrounds_tuning Intermediate Cache\Intermediate Files\attrib\attrib\sbps\races\german\soldiers\stormtrooper_squad\stormtrooper_squad_bg.rgd
+	E:\coh2_battlegrounds\coh2-battlegrounds-mod\tuning_mod\coh2_battlegrounds_tuning Intermediate Cache\Intermediate Files\attrib\attrib\sbps\races\german\soldiers\vehicle_crew\german_tank_crew_bg.rgd
+	E:\coh2_battlegrounds\coh2-battlegrounds-mod\tuning_mod\coh2_battlegrounds_tuning Intermediate Cache\Intermediate Files\attrib\attrib\sbps\races\german\soldiers\vehicle_crew\german_vehicle_crew_bg.rgd
+	E:\coh2_battlegrounds\coh2-battlegrounds-mod\tuning_mod\coh2_battlegrounds_tuning Intermediate Cache\Intermediate Files\attrib\attrib\sbps\races\german\team_weapons\howitzer_105mm_le_fh18_artillery_bg.rgd
+	E:\coh2_battlegrounds\coh2-battlegrounds-mod\tuning_mod\coh2_battlegrounds_tuning Intermediate Cache\Intermediate Files\attrib\attrib\sbps\races\german\team_weapons\mg42_heavy_machine_gun_squad_bg.rgd
+	E:\coh2_battlegrounds\coh2-battlegrounds-mod\tuning_mod\coh2_battlegrounds_tuning Intermediate Cache\Intermediate Files\attrib\attrib\sbps\races\german\team_weapons\mortar_team_81mm_bg.rgd
+	E:\coh2_battlegrounds\coh2-battlegrounds-mod\tuning_mod\coh2_battlegrounds_tuning Intermediate Cache\Intermediate Files\attrib\attrib\sbps\races\german\team_weapons\pak40_75mm_at_gun_squad_bg.rgd
+	E:\coh2_battlegrounds\coh2-battlegrounds-mod\tuning_mod\coh2_battlegrounds_tuning Intermediate Cache\Intermediate Files\attrib\attrib\sbps\races\german\team_weapons\pak43_88mm_at_gun_squad_bg.rgd
+	E:\coh2_battlegrounds\coh2-battlegrounds-mod\tuning_mod\coh2_battlegrounds_tuning Intermediate Cache\Intermediate Files\attrib\attrib\sbps\races\german\vehicles\brummbar_squad_bg.rgd
+	E:\coh2_battlegrounds\coh2-battlegrounds-mod\tuning_mod\coh2_battlegrounds_tuning Intermediate Cache\Intermediate Files\attrib\attrib\sbps\races\german\vehicles\elefant_tank_destroyer_squad_bg.rgd
+	E:\coh2_battlegrounds\coh2-battlegrounds-mod\tuning_mod\coh2_battlegrounds_tuning Intermediate Cache\Intermediate Files\attrib\attrib\sbps\races\german\vehicles\mortar_250_halftrack_squad_bg.rgd
+	E:\coh2_battlegrounds\coh2-battlegrounds-mod\tuning_mod\coh2_battlegrounds_tuning Intermediate Cache\Intermediate Files\attrib\attrib\sbps\races\german\vehicles\opel_blitz_supply_squad_bg.rgd
+	E:\coh2_battlegrounds\coh2-battlegrounds-mod\tuning_mod\coh2_battlegrounds_tuning Intermediate Cache\Intermediate Files\attrib\attrib\sbps\races\german\vehicles\opel_blitz_transport_squad_bg.rgd
+	E:\coh2_battlegrounds\coh2-battlegrounds-mod\tuning_mod\coh2_battlegrounds_tuning Intermediate Cache\Intermediate Files\attrib\attrib\sbps\races\german\vehicles\ostwind_squad_bg.rgd
+	E:\coh2_battlegrounds\coh2-battlegrounds-mod\tuning_mod\coh2_battlegrounds_tuning Intermediate Cache\Intermediate Files\attrib\attrib\sbps\races\german\vehicles\panther_command_squad_bg.rgd
+	E:\coh2_battlegrounds\coh2-battlegrounds-mod\tuning_mod\coh2_battlegrounds_tuning Intermediate Cache\Intermediate Files\attrib\attrib\sbps\races\german\vehicles\panther_squad_bg.rgd
+	E:\coh2_battlegrounds\coh2-battlegrounds-mod\tuning_mod\coh2_battlegrounds_tuning Intermediate Cache\Intermediate Files\attrib\attrib\sbps\races\german\vehicles\panzerwerfer_squad_bg.rgd
+	E:\coh2_battlegrounds\coh2-battlegrounds-mod\tuning_mod\coh2_battlegrounds_tuning Intermediate Cache\Intermediate Files\attrib\attrib\sbps\races\german\vehicles\panzer_iv_command_squad_bg.rgd
+	E:\coh2_battlegrounds\coh2-battlegrounds-mod\tuning_mod\coh2_battlegrounds_tuning Intermediate Cache\Intermediate Files\attrib\attrib\sbps\races\german\vehicles\panzer_iv_squad_bg.rgd
+	E:\coh2_battlegrounds\coh2-battlegrounds-mod\tuning_mod\coh2_battlegrounds_tuning Intermediate Cache\Intermediate Files\attrib\attrib\sbps\races\german\vehicles\panzer_iv_stubby_squad_bg.rgd
+	E:\coh2_battlegrounds\coh2-battlegrounds-mod\tuning_mod\coh2_battlegrounds_tuning Intermediate Cache\Intermediate Files\attrib\attrib\sbps\races\german\vehicles\sdkfz_221_bg.rgd
+	E:\coh2_battlegrounds\coh2-battlegrounds-mod\tuning_mod\coh2_battlegrounds_tuning Intermediate Cache\Intermediate Files\attrib\attrib\sbps\races\german\vehicles\sdkfz_221_command_bg.rgd
+	E:\coh2_battlegrounds\coh2-battlegrounds-mod\tuning_mod\coh2_battlegrounds_tuning Intermediate Cache\Intermediate Files\attrib\attrib\sbps\races\german\vehicles\sdkfz_222_bg.rgd
+	E:\coh2_battlegrounds\coh2-battlegrounds-mod\tuning_mod\coh2_battlegrounds_tuning Intermediate Cache\Intermediate Files\attrib\attrib\sbps\races\german\vehicles\sdkfz_234_puma_ost_bg.rgd
+	E:\coh2_battlegrounds\coh2-battlegrounds-mod\tuning_mod\coh2_battlegrounds_tuning Intermediate Cache\Intermediate Files\attrib\attrib\sbps\races\german\vehicles\sdkfz_250_halftrack_bg.rgd
+	E:\coh2_battlegrounds\coh2-battlegrounds-mod\tuning_mod\coh2_battlegrounds_tuning Intermediate Cache\Intermediate Files\attrib\attrib\sbps\races\german\vehicles\sdkfz_251_halftrack_squad_bg.rgd
+	E:\coh2_battlegrounds\coh2-battlegrounds-mod\tuning_mod\coh2_battlegrounds_tuning Intermediate Cache\Intermediate Files\attrib\attrib\sbps\races\german\vehicles\stug_iii_e_squad_bg.rgd
+	E:\coh2_battlegrounds\coh2-battlegrounds-mod\tuning_mod\coh2_battlegrounds_tuning Intermediate Cache\Intermediate Files\attrib\attrib\sbps\races\german\vehicles\stug_iii_squad_bg.rgd
+	E:\coh2_battlegrounds\coh2-battlegrounds-mod\tuning_mod\coh2_battlegrounds_tuning Intermediate Cache\Intermediate Files\attrib\attrib\sbps\races\german\vehicles\tiger_command_squad_bg.rgd
+	E:\coh2_battlegrounds\coh2-battlegrounds-mod\tuning_mod\coh2_battlegrounds_tuning Intermediate Cache\Intermediate Files\attrib\attrib\sbps\races\german\vehicles\tiger_squad_bg.rgd
 	E:\coh2_battlegrounds\coh2-battlegrounds-mod\tuning_mod\coh2_battlegrounds_tuning Intermediate Cache\Intermediate Files\attrib\attrib\sbps\races\soviet\soldiers\engineer_squad\combat_engineer_squad_bg.rgd
 	E:\coh2_battlegrounds\coh2-battlegrounds-mod\tuning_mod\coh2_battlegrounds_tuning Intermediate Cache\Intermediate Files\attrib\attrib\sbps\races\soviet\soldiers\engineer_squad\soviet_sapper_squad_bg.rgd
 	E:\coh2_battlegrounds\coh2-battlegrounds-mod\tuning_mod\coh2_battlegrounds_tuning Intermediate Cache\Intermediate Files\attrib\attrib\sbps\races\soviet\soldiers\main_infantry\conscript_squad_bg.rgd
@@ -94,7 +174,7 @@ TOCStart name="attrib" alias="attrib" path="" relativeroot="attrib"
 	E:\coh2_battlegrounds\coh2-battlegrounds-mod\tuning_mod\coh2_battlegrounds_tuning Intermediate Cache\Intermediate Files\attrib\attrib\sbps\races\soviet\team_weapons\m1942_zis-3_76mm_at_gun_squad_bg.rgd
 	E:\coh2_battlegrounds\coh2-battlegrounds-mod\tuning_mod\coh2_battlegrounds_tuning Intermediate Cache\Intermediate Files\attrib\attrib\sbps\races\soviet\team_weapons\pm-82_41_mortar_squad_bg.rgd
 	E:\coh2_battlegrounds\coh2-battlegrounds-mod\tuning_mod\coh2_battlegrounds_tuning Intermediate Cache\Intermediate Files\attrib\attrib\sbps\races\soviet\vehicles\76mm_sherman_lend_lease_bg.rgd
-	E:\coh2_battlegrounds\coh2-battlegrounds-mod\tuning_mod\coh2_battlegrounds_tuning Intermediate Cache\Intermediate Files\attrib\attrib\sbps\races\soviet\vehicles\churchill_lend_lease_squad_mp.rgd
+	E:\coh2_battlegrounds\coh2-battlegrounds-mod\tuning_mod\coh2_battlegrounds_tuning Intermediate Cache\Intermediate Files\attrib\attrib\sbps\races\soviet\vehicles\churchill_lend_lease_squad_bg.rgd
 	E:\coh2_battlegrounds\coh2-battlegrounds-mod\tuning_mod\coh2_battlegrounds_tuning Intermediate Cache\Intermediate Files\attrib\attrib\sbps\races\soviet\vehicles\is-2_bg.rgd
 	E:\coh2_battlegrounds\coh2-battlegrounds-mod\tuning_mod\coh2_battlegrounds_tuning Intermediate Cache\Intermediate Files\attrib\attrib\sbps\races\soviet\vehicles\isu-152_bg.rgd
 	E:\coh2_battlegrounds\coh2-battlegrounds-mod\tuning_mod\coh2_battlegrounds_tuning Intermediate Cache\Intermediate Files\attrib\attrib\sbps\races\soviet\vehicles\katyusha_rocket_truck_bg.rgd

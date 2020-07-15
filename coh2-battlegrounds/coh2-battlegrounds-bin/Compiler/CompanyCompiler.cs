@@ -22,17 +22,18 @@ namespace Battlegrounds.Compiler {
         /// </summary>
         /// <param name="company"></param>
         /// <param name="indent"></param>
-        public virtual string CompileToLua(Company company, int indent = 1) {
+        public virtual string CompileToLua(Company company, byte indexOnTeam, int indent = 1) {
 
             TxtBuilder lua = new TxtBuilder();
 
-            lua.AppendLine($"[\"{company.Owner.Name}\"] = {{");
+            lua.AppendLine($"[\"{company.Owner}\"] = {{");
             lua.SetIndent(indent);
             lua.IncreaseIndent();
 
             { // Company data
 
                 lua.AppendLine($"name = \"{company.Name}\",");
+                lua.AppendLine($"index = {indexOnTeam},");
                 lua.AppendLine($"army = \"{company.Army.Name}\",");
 
                 lua.AppendLine($"units = {{");

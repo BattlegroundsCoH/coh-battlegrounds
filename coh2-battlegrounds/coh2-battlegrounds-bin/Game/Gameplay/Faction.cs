@@ -116,6 +116,28 @@ namespace Battlegrounds.Game.Gameplay {
         }
 
         /// <summary>
+        /// Returns the complementary faction of the given faction (eg. Wehrmacht - Soviet).
+        /// </summary>
+        /// <param name="faction">The faction to find the complement of.</param>
+        /// <returns>The comlementary faction.</returns>
+        /// <exception cref="ArgumentException"/>
+        public static Faction GetComplementaryFaction(Faction faction) {
+            if (faction == Soviet) {
+                return Wehrmacht;
+            } else if (faction == America) {
+                return OberkommandoWest;
+            } else if (faction == British) {
+                return OberkommandoWest;
+            } else if (faction == OberkommandoWest) {
+                return America;
+            } else if (faction == Wehrmacht) {
+                return Soviet;
+            } else {
+                throw new ArgumentException("Unknown or custom faction - Not allowed!");
+            }
+        }
+
+        /// <summary>
         /// 
         /// </summary>
         /// <param name="jsonReference"></param>

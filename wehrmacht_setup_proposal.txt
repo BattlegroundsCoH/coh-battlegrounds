@@ -1,0 +1,47 @@
+* = command unit or has command unit variant
+
+Grenadiers (5 men)
+Panzergrenadiers (4 men)
+Stormtroopers (4 men)
+
+Pioneers (3 men)
+
+Jaeger Light Infantry (5 men)
+Tank Hunter Section (3 men) 
+Luftwaffe Ground Forces (5 men)
+
+Ostruppen (6 men)
+
+Sniper (1 man)
+
+Luftwaffe Field Officer* (3 men)
+Artillery Officer* (4 men)
+
+MG-34 (3 men)
+MG-42 (3 men)
+Mortar (3 men)
+Pak-40 (4 men - towable)
+Pak-43 (5 men - towable)
+LefH-18 Howitzer (5 men - towable)
+
+Opel Blitz (+Transport)
+Sdkfz. 250 (+Transport)
+Sdkfz. 250 (Mortar)
+Sdkfz. 251 (+Transport)
+
+Sdkfz 221*
+Sdkfz 222
+Sdkfz 234 'Puma'
+
+Panzerwerfer
+
+Ostwind
+
+Stug III [and variants]
+Brummbar
+Elefant Tank Destroyer
+
+Panzer IV [and variants]*
+Panzer V 'Panther' [and variants]*
+Panzer VI 'Tiger'*
+Panzer VII 'Königstiger'*

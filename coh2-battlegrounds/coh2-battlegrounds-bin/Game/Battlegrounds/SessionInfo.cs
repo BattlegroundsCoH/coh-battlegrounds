@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Battlegrounds.Game.Database;
+﻿using Battlegrounds.Game.Database;
 using Battlegrounds.Modding;
 
 namespace Battlegrounds.Game.Battlegrounds {
@@ -10,11 +7,6 @@ namespace Battlegrounds.Game.Battlegrounds {
     /// Info struct used by a <see cref="Session"/> instance to infer information.
     /// </summary>
     public struct SessionInfo {
-
-        public const string AI_Easy = "AI - Easy\x03";
-        public const string AI_Standard = "AI - Standard\x03";
-        public const string AI_Hard = "AI - Hard\x03";
-        public const string AI_Expert = "AI - Expert\x03";
 
         /// <summary>
         /// The selected game mode.
@@ -37,19 +29,24 @@ namespace Battlegrounds.Game.Battlegrounds {
         public ITuningMod SelectedTuningMod { get; set; }
 
         /// <summary>
-        /// The allied players.
+        /// The Allied players participating in the <see cref="Session"/>.
         /// </summary>
-        public string[] Allies { get; set; }
+        public SessionParticipant[] Allies { get; set; }
 
         /// <summary>
-        /// The axis players.
+        /// The Axis players participating in the <see cref="Session"/>.
         /// </summary>
-        public string[] Axis { get; set; }
+        public SessionParticipant[] Axis { get; set; }
 
         /// <summary>
         /// Fill in AI players if there are not enough players on one team.
         /// </summary>
         public bool FillAI { get; set; }
+
+        /// <summary>
+        /// The default difficulty to give the AI being filled in.
+        /// </summary>
+        public AIDifficulty DefaultDifficulty { get; set; }
 
     }
 

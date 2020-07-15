@@ -137,7 +137,7 @@ namespace Battlegrounds.Game.Battlegrounds {
                         allsquads.Add(squad);
                         player.AddSquad(squad);
 
-                        Console.WriteLine("Player " + player.Player.Name + " deployed " + squad.SquadID);
+                        Console.WriteLine(player.Player.Name + " deployed " + squad.SquadID);
 
                     } else if (msgtype == 'K') {
 
@@ -149,7 +149,7 @@ namespace Battlegrounds.Game.Battlegrounds {
                             allsquads.Remove(squad);
                             player.RemoveSquad(squad);
 
-                            Console.WriteLine("Player " + player.Player.Name + " lost " + squad.SquadID);
+                            Console.WriteLine(player.Player.Name + " lost " + squad.SquadID);
 
                         }
 
@@ -157,6 +157,7 @@ namespace Battlegrounds.Game.Battlegrounds {
                         this.m_hasVictor = true;
                         if (int.Parse(values[0]) - 1 == player.Player.ID) {
                             player.IsOnWinningTeam = true;
+                            Console.WriteLine(player.Player.Name + " was on the winning team.");
                         }
                     } else if (msgtype == 'R') {
 
@@ -166,6 +167,7 @@ namespace Battlegrounds.Game.Battlegrounds {
 
                         Squad squad = FindFirstSquad(player, allsquads, squadID);
                         if (squad != null) {
+                            Console.WriteLine(squadID + " was withdrawn by " + player.Player.Name);
                             if (vetChange > 0) {
                                 squad.SetVeterancy((byte)(squad.VeterancyRank + vetChange), vetExp);
                                 Console.WriteLine(squadID + " increased veterancy rank by " + vetChange);
@@ -222,23 +224,31 @@ namespace Battlegrounds.Game.Battlegrounds {
 
         private void UpdateCompanies() {
 
-            for (int i = 0; i < m_matchPlayerResults.Length; i++) {
+            if (!this.m_gameSession.AllowPersistency) {
+                Console.WriteLine("The game session didn't allow for persistency - thus no changes are applied to the companies.");
+                return;
+            }
 
-                Company company = m_gameSession.Companies.FirstOrDefault(x => x.Owner.Name == m_matchPlayerResults[i].Player.Name);
+            for (int i = 0; i < this.m_matchPlayerResults.Length; i++) {
+
+                // Find the player
+                Company company = this.m_gameSession.FindCompany(this.m_matchPlayerResults[i].Player.Name, this.m_matchPlayerResults[i].Player.Army);
 
                 if (company == null) {
+                    Console.WriteLine($"Unable to find company for player '{this.m_matchPlayerResults[i].Player.Name}'");
                     // some error?
+                    continue;
                 }
 
                 // We now remove all the squads lost
-                foreach (Squad squad in m_matchPlayerResults[i].Losses) {
+                foreach (Squad squad in this.m_matchPlayerResults[i].Losses) {
                     if (!company.RemoveSquad(squad.SquadID)) {
                         Console.WriteLine("Lost a squad that was not deployed by player!");
                     }
                 }
 
                 // And we now update squads
-                foreach (Squad squad in m_matchPlayerResults[i].Alive) {
+                foreach (Squad squad in this.m_matchPlayerResults[i].Alive) {
 
                     Squad companySquad = company.GetSquadByIndex(squad.SquadID);
 

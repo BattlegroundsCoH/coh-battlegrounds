@@ -342,14 +342,18 @@ namespace Battlegrounds.Online.Services {
 
                 lobbyCompanies.Add(ownCompany);
 
-                Company[] companies = lobbyCompanies.ToArray();
-
                 Session session = null;
 
                 try {
 
                     if (this.OnLocalDataRequested?.Invoke("MatchInfo") is SessionInfo info) {
-                        session = Session.CreateSession(info, companies);
+
+                        // Zip/Map the companies to their respective SessionParticipant instances.
+                        Session.ZipCompanies(lobbyCompanies.ToArray(), ref info);
+
+                        // Create the session properly.
+                        session = Session.CreateSession(info);
+
                     } else {
                         throw new Exception("Failed to get a valid SessionInfo");
                     }
@@ -466,18 +470,17 @@ namespace Battlegrounds.Online.Services {
         /// <param name="lobbyName">The name of the lobby.</param>
         /// <param name="lobbyPassword">The password of the lobby. Can be <see cref="string.Empty"/> if no password is desired.</param>
         /// <param name="managedCallback">The callback to invoke when the server has responded to the host request.</param>
-        /// <exception cref="ArgumentNullException"/>
         /// <exception cref="ArgumentException"/>
         public static void Host(LobbyHub hub, string lobbyName, string lobbyPassword, ManagedLobbyConnectCallback managedCallback) {
 
             // Make sure lobby name is valid
-            if (lobbyName == null) {
-                throw new ArgumentNullException("Must have a valid lobby name!");
+            if (string.IsNullOrEmpty(lobbyName)) {
+                throw new ArgumentException("Must have a valid lobby name!");
             }
 
-            // Make sure it's not empty
-            if (lobbyName.CompareTo(string.Empty) == 0) {
-                throw new ArgumentException("Lobby name cannot be empty!");
+            // Just to be safe
+            if (lobbyPassword == null) {
+                lobbyPassword = string.Empty;
             }
 
             // Callback for establishing connection

@@ -26,12 +26,19 @@ namespace Battlegrounds.Game.Battlegrounds {
 
         private string m_checksum;
         private ushort m_nextSquadId;
-        private List<Squad> m_squads;
+        [JsonIgnoreIfEmpty] private List<Squad> m_squads;
+        [JsonIgnoreIfEmpty] private List<Blueprint> m_inventry;
 
         /// <summary>
         /// The name of the company.
         /// </summary>
         public string Name { get; set; }
+
+        /// <summary>
+        /// The <see cref="CompanyType"/> that can be used to describe the <see cref="Company"/> characteristics.
+        /// </summary>
+        [JsonEnum(typeof(CompanyType))]
+        public CompanyType Type { get; }
 
         /// <summary>
         /// The GUID of the tuning mod used to create this company.
@@ -45,16 +52,21 @@ namespace Battlegrounds.Game.Battlegrounds {
         public Faction Army { get; }
 
         /// <summary>
-        /// The <see cref="SteamUser"/> who owns the <see cref="Company"/>.
+        /// The display name of who owns the <see cref="Company"/>.
         /// </summary>
-        [JsonReference(typeof(SteamUser))]
-        public SteamUser Owner { get; }
+        public string Owner { get; set; }
 
         /// <summary>
         /// <see cref="ImmutableArray{T}"/> representation of the units in the <see cref="Company"/>.
         /// </summary>
         [JsonIgnore]
         public ImmutableArray<Squad> Units => m_squads.ToImmutableArray();
+
+        /// <summary>
+        /// <see cref="ImmutableArray{T}"/> representation of a <see cref="Company"/> inventory of stored <see cref="Blueprint"/> objects.
+        /// </summary>
+        [JsonIgnore]
+        public ImmutableArray<Blueprint> Inventory => m_inventry.ToImmutableArray();
 
         /// <summary>
         /// 
@@ -68,38 +80,52 @@ namespace Battlegrounds.Game.Battlegrounds {
         [Obsolete("Please use the constructor requiring a SteamUser, name, and faction.")]
         public Company() {
             this.m_squads = new List<Squad>();
+            this.m_inventry = new List<Blueprint>();
+            this.Type = CompanyType.Unspecified;
         }
 
         /// <summary>
         /// New <see cref="Company"/> instance with a <see cref="SteamUser"/> assigned.
         /// </summary>
-        /// <param name="user">The <see cref="SteamUser"/> who can use the <see cref="Company"/>.</param>
+        /// <param name="user">The <see cref="SteamUser"/> who can use the <see cref="Company"/>. (Can be null).</param>
         /// <param name="name">The name of the company.</param>
         /// <param name="army">The <see cref="Faction"/> that can use the <see cref="Company"/>.</param>
         /// <param name="tuningGUID">The GUID of the tuning mod the <see cref="Company"/> is using blueprints from.</param>
         /// <exception cref="ArgumentNullException"/>
         public Company(SteamUser user, string name, Faction army, string tuningGUID) {
 
-            // Make sure the user is 'valid'
-            if (user == null) {
-                throw new ArgumentNullException();
-            }
-
             // Make sure it's a valid army
             if (army == null) {
                 throw new ArgumentNullException();
             }
 
-            // Assign
+            // Assign base values
             this.Name = name;
-            this.Owner = user;
+            this.Owner = user?.Name ?? "Unknown Player";
             this.Army = army;
             this.TuningGUID = tuningGUID.Replace("-", "");
+            this.Type = CompanyType.Unspecified;
 
             // Prepare squad list
             this.m_squads = new List<Squad>();
             this.m_nextSquadId = 0;
 
+            // Misc stuff
+            this.m_inventry = new List<Blueprint>();
+
+        }
+
+        /// <summary>
+        /// New instance of <see cref="Company"/> with a specific <see cref="CompanyType"/> and pre-assigned <see cref="SteamUser"/>.
+        /// </summary>
+        /// <param name="user">The <see cref="SteamUser"/> who can use the <see cref="Company"/>.</param>
+        /// <param name="name">The name of the company.</param>
+        /// <param name="type">The <see cref="CompanyType"/> to assign the <see cref="Company"/>.</param>
+        /// <param name="army">The <see cref="Faction"/> that can use the <see cref="Company"/>.</param>
+        /// <param name="tuningGUID">The GUID of the tuning mod the <see cref="Company"/> is using blueprints from.</param>
+        /// <exception cref="ArgumentNullException"/>
+        public Company(SteamUser user, string name, CompanyType type, Faction army, string tuningGUID) : this(user, name, army, tuningGUID) {
+            this.Type = type;
         }
 
         /// <summary>

@@ -50,7 +50,7 @@ function BG_Init()
         end
     end
 
-    Rule_AddOneShot(_tow_test, 1);
+    --Rule_AddOneShot(_tow_test, 1);
 
     -- Load the player companies
     local companyError = BG_LoadCompanies();

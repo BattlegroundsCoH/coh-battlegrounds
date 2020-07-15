@@ -1,6 +1,644 @@
 [
   {
     "jsdbtype": "Battlegrounds.Game.Database.SquadBlueprint",
+    "PBGID": "1073741886",
+    "Name": "howitzer_105mm_le_fh18_artillery_bg",
+    "LocaleName": "11031938",
+    "LocaleDescription": "11031937",
+    "Army": "german",
+    "Icon": "Icons_vehicles_vehicle_german_howitzer",
+    "Symbol": "Icons_symbols_vehicle_german_howitzer_symbol",
+    "Cost": {
+      "jsdbtype": "Battlegrounds.Game.Gameplay.Cost",
+      "Manpower": "160",
+      "Munition": "0",
+      "Fuel": "50",
+      "FieldTime": "15"
+    },
+    "HasCrew": "False",
+    "Types": [
+      "fh18_howitzer",
+      "artillery",
+      "team_weapon"
+    ]
+  },
+  {
+    "jsdbtype": "Battlegrounds.Game.Database.SquadBlueprint",
+    "PBGID": "1073741866",
+    "Name": "mg42_heavy_machine_gun_squad_bg",
+    "LocaleName": "11007136",
+    "LocaleDescription": "11007137",
+    "Army": "german",
+    "Icon": "Icons_units_unit_german_m1910_hmg",
+    "Symbol": "Icons_symbols_unit_german_m1910_hmg_symbol",
+    "Cost": {
+      "jsdbtype": "Battlegrounds.Game.Gameplay.Cost",
+      "Manpower": "135",
+      "Munition": "0",
+      "Fuel": "0",
+      "FieldTime": "15"
+    },
+    "HasCrew": "False",
+    "Types": [
+      "mg42_hmg",
+      "hmg",
+      "german_team_weapons",
+      "team_weapon",
+      "infantry"
+    ]
+  },
+  {
+    "jsdbtype": "Battlegrounds.Game.Database.SquadBlueprint",
+    "PBGID": "1073741867",
+    "Name": "mortar_team_81mm_bg",
+    "LocaleName": "11007542",
+    "LocaleDescription": "11007543",
+    "Army": "german",
+    "Icon": "Icons_units_unit_german_granatwerfer_34_mortar",
+    "Symbol": "Icons_symbols_unit_german_granatwerfer_34_mortar_symbol",
+    "Cost": {
+      "jsdbtype": "Battlegrounds.Game.Gameplay.Cost",
+      "Manpower": "135",
+      "Munition": "0",
+      "Fuel": "0",
+      "FieldTime": "15"
+    },
+    "HasCrew": "False",
+    "Types": [
+      "81mm_german_mortar",
+      "mortar",
+      "german_team_weapons",
+      "team_weapon",
+      "infantry"
+    ]
+  },
+  {
+    "jsdbtype": "Battlegrounds.Game.Database.SquadBlueprint",
+    "PBGID": "1073741879",
+    "Name": "pak40_75mm_at_gun_squad_bg",
+    "LocaleName": "11007004",
+    "LocaleDescription": "11007016",
+    "Army": "german",
+    "Icon": "Icons_vehicles_vehicle_german_pak_40_75mm_at_gun",
+    "Symbol": "Icons_symbols_vehicle_german_pak_40_75mm_at_gun_symbol",
+    "Cost": {
+      "jsdbtype": "Battlegrounds.Game.Gameplay.Cost",
+      "Manpower": "180",
+      "Munition": "0",
+      "Fuel": "0",
+      "FieldTime": "15"
+    },
+    "HasCrew": "False",
+    "Types": [
+      "pak40_at_gun",
+      "at_gun",
+      "german_team_weapons",
+      "team_weapon"
+    ]
+  },
+  {
+    "jsdbtype": "Battlegrounds.Game.Database.SquadBlueprint",
+    "PBGID": "1073741880",
+    "Name": "pak43_88mm_at_gun_squad_bg",
+    "LocaleName": "11007007",
+    "LocaleDescription": "11007024",
+    "Army": "german",
+    "Icon": "Icons_vehicles_vehicle_german_pak_43_at_gun",
+    "Symbol": "Icons_symbols_vehicle_german_pak_43_at_gun_symbol",
+    "Cost": {
+      "jsdbtype": "Battlegrounds.Game.Gameplay.Cost",
+      "Manpower": "225",
+      "Munition": "0",
+      "Fuel": "0",
+      "FieldTime": "15"
+    },
+    "HasCrew": "False",
+    "Types": [
+      "pak43_at_gun",
+      "at_gun",
+      "german_team_weapons",
+      "team_weapon"
+    ]
+  },
+  {
+    "jsdbtype": "Battlegrounds.Game.Database.SquadBlueprint",
+    "PBGID": "1073741881",
+    "Name": "brummbar_squad_bg",
+    "LocaleName": "11007030",
+    "LocaleDescription": "11007022",
+    "Army": "german",
+    "Icon": "Icons_vehicles_vehicle_german_sturmpanzer",
+    "Symbol": "Icons_symbols_vehicle_german_sturmpanzer_symbol",
+    "Cost": {
+      "jsdbtype": "Battlegrounds.Game.Gameplay.Cost",
+      "Manpower": "420",
+      "Munition": "0",
+      "Fuel": "150",
+      "FieldTime": "15"
+    },
+    "HasCrew": "True",
+    "Types": [
+      "brummbar",
+      "assault_gun",
+      "vehicle",
+      "heavy_vehicle",
+      "heavy_vehicle_icon"
+    ]
+  },
+  {
+    "jsdbtype": "Battlegrounds.Game.Database.SquadBlueprint",
+    "PBGID": "1073741882",
+    "Name": "elefant_tank_destroyer_squad_bg",
+    "LocaleName": "11007744",
+    "LocaleDescription": "11007824",
+    "Army": "german",
+    "Icon": "Icons_vehicles_vehicle_german_elefant_tank_destroyer",
+    "Symbol": "Icons_symbols_vehicle_german_elefant_tank_destroyer_symbol",
+    "Cost": {
+      "jsdbtype": "Battlegrounds.Game.Gameplay.Cost",
+      "Manpower": "720",
+      "Munition": "0",
+      "Fuel": "245",
+      "FieldTime": "15"
+    },
+    "HasCrew": "True",
+    "Types": [
+      "elefant",
+      "heavy_tank",
+      "vehicle",
+      "heavy_vehicle",
+      "heavy_vehicle_icon"
+    ]
+  },
+  {
+    "jsdbtype": "Battlegrounds.Game.Database.SquadBlueprint",
+    "PBGID": "1073741883",
+    "Name": "mortar_250_halftrack_squad_bg",
+    "LocaleName": "11026002",
+    "LocaleDescription": "11019367",
+    "Army": "german",
+    "Icon": "Icons_vehicles_vehicle_german_251_mortar_halftrack",
+    "Symbol": "Icons_symbols_vehicle_german_251_mortar_halftrack_symbol",
+    "Cost": {
+      "jsdbtype": "Battlegrounds.Game.Gameplay.Cost",
+      "Manpower": "200",
+      "Munition": "0",
+      "Fuel": "30",
+      "FieldTime": "15"
+    },
+    "HasCrew": "False",
+    "Types": [
+      "250_mortar_halftrack",
+      "light_vehicle",
+      "vehicle"
+    ]
+  },
+  {
+    "jsdbtype": "Battlegrounds.Game.Database.SquadBlueprint",
+    "PBGID": "1073741888",
+    "Name": "opel_blitz_supply_squad_bg",
+    "LocaleName": "11035438",
+    "LocaleDescription": "11035439",
+    "Army": "german",
+    "Icon": "Icons_vehicles_cargo_truck",
+    "Symbol": "Icons_symbols_vehicle_german_opel_blitz_symbol",
+    "Cost": {
+      "jsdbtype": "Battlegrounds.Game.Gameplay.Cost",
+      "Manpower": "300",
+      "Munition": "0",
+      "Fuel": "0",
+      "FieldTime": "15"
+    },
+    "HasCrew": "False",
+    "Types": []
+  },
+  {
+    "jsdbtype": "Battlegrounds.Game.Database.SquadBlueprint",
+    "PBGID": "1073741887",
+    "Name": "opel_blitz_transport_squad_bg",
+    "LocaleName": "11035438",
+    "LocaleDescription": "11035439",
+    "Army": "german",
+    "Icon": "Icons_vehicles_cargo_truck",
+    "Symbol": "Icons_symbols_vehicle_german_opel_blitz_symbol",
+    "Cost": {
+      "jsdbtype": "Battlegrounds.Game.Gameplay.Cost",
+      "Manpower": "300",
+      "Munition": "0",
+      "Fuel": "0",
+      "FieldTime": "15"
+    },
+    "HasCrew": "False",
+    "Types": []
+  },
+  {
+    "jsdbtype": "Battlegrounds.Game.Database.SquadBlueprint",
+    "PBGID": "1073741889",
+    "Name": "ostwind_squad_bg",
+    "LocaleName": "11007743",
+    "LocaleDescription": "11007828",
+    "Army": "german",
+    "Icon": "Icons_vehicles_vehicle_german_ostwind_flak_panzer",
+    "Symbol": "Icons_symbols_vehicle_german_ostwind_flak_panzer_symbol",
+    "Cost": {
+      "jsdbtype": "Battlegrounds.Game.Gameplay.Cost",
+      "Manpower": "300",
+      "Munition": "0",
+      "Fuel": "100",
+      "FieldTime": "15"
+    },
+    "HasCrew": "True",
+    "Types": [
+      "ostwind",
+      "medium_tank",
+      "vehicle",
+      "heavy_vehicle"
+    ]
+  },
+  {
+    "jsdbtype": "Battlegrounds.Game.Database.SquadBlueprint",
+    "PBGID": "1073741903",
+    "Name": "panther_command_squad_bg",
+    "LocaleName": "11007009",
+    "LocaleDescription": "11007023",
+    "Army": "german",
+    "Icon": "Icons_vehicles_vehicle_german_panther",
+    "Symbol": "Icons_symbols_vehicle_german_panther_symbol",
+    "Cost": {
+      "jsdbtype": "Battlegrounds.Game.Gameplay.Cost",
+      "Manpower": "490",
+      "Munition": "0",
+      "Fuel": "185",
+      "FieldTime": "15"
+    },
+    "HasCrew": "True",
+    "Types": [
+      "panther",
+      "medium_tank",
+      "vehicle",
+      "heavy_vehicle",
+      "heavy_vehicle_icon"
+    ]
+  },
+  {
+    "jsdbtype": "Battlegrounds.Game.Database.SquadBlueprint",
+    "PBGID": "1073741890",
+    "Name": "panther_squad_bg",
+    "LocaleName": "11007009",
+    "LocaleDescription": "11007023",
+    "Army": "german",
+    "Icon": "Icons_vehicles_vehicle_german_panther",
+    "Symbol": "Icons_symbols_vehicle_german_panther_symbol",
+    "Cost": {
+      "jsdbtype": "Battlegrounds.Game.Gameplay.Cost",
+      "Manpower": "490",
+      "Munition": "0",
+      "Fuel": "185",
+      "FieldTime": "15"
+    },
+    "HasCrew": "True",
+    "Types": [
+      "panther",
+      "medium_tank",
+      "vehicle",
+      "heavy_vehicle",
+      "heavy_vehicle_icon"
+    ]
+  },
+  {
+    "jsdbtype": "Battlegrounds.Game.Database.SquadBlueprint",
+    "PBGID": "1073741894",
+    "Name": "panzerwerfer_squad_bg",
+    "LocaleName": "11007751",
+    "LocaleDescription": "11007827",
+    "Army": "german",
+    "Icon": "Icons_vehicles_vehicle_german_panzerwerfer",
+    "Symbol": "Icons_symbols_vehicle_german_panzerwerfer_symbol",
+    "Cost": {
+      "jsdbtype": "Battlegrounds.Game.Gameplay.Cost",
+      "Manpower": "360",
+      "Munition": "0",
+      "Fuel": "85",
+      "FieldTime": "15"
+    },
+    "HasCrew": "True",
+    "Types": [
+      "panzerwerfer",
+      "artillery",
+      "vehicle"
+    ]
+  },
+  {
+    "jsdbtype": "Battlegrounds.Game.Database.SquadBlueprint",
+    "PBGID": "1073741893",
+    "Name": "panzer_iv_command_squad_bg",
+    "LocaleName": "11035442",
+    "LocaleDescription": "11035443",
+    "Army": "german",
+    "Icon": "Icons_vehicles_vehicle_german_panzer_iv_command_tank",
+    "Symbol": "Icons_symbols_vehicle_german_panzer_iv_command_tank_symbol",
+    "Cost": {
+      "jsdbtype": "Battlegrounds.Game.Gameplay.Cost",
+      "Manpower": "360",
+      "Munition": "0",
+      "Fuel": "100",
+      "FieldTime": "15"
+    },
+    "HasCrew": "True",
+    "Types": [
+      "panzeriv",
+      "medium_tank",
+      "vehicle",
+      "heavy_vehicle",
+      "panzer_command_tank"
+    ]
+  },
+  {
+    "jsdbtype": "Battlegrounds.Game.Database.SquadBlueprint",
+    "PBGID": "1073741892",
+    "Name": "panzer_iv_squad_bg",
+    "LocaleName": "11007029",
+    "LocaleDescription": "11007021",
+    "Army": "german",
+    "Icon": "Icons_vehicles_vehicle_german_panzer_iv",
+    "Symbol": "Icons_symbols_vehicle_german_panzer_iv_symbol",
+    "Cost": {
+      "jsdbtype": "Battlegrounds.Game.Gameplay.Cost",
+      "Manpower": "350",
+      "Munition": "0",
+      "Fuel": "120",
+      "FieldTime": "15"
+    },
+    "HasCrew": "True",
+    "Types": [
+      "panzeriv",
+      "medium_tank",
+      "vehicle",
+      "heavy_vehicle"
+    ]
+  },
+  {
+    "jsdbtype": "Battlegrounds.Game.Database.SquadBlueprint",
+    "PBGID": "1073741891",
+    "Name": "panzer_iv_stubby_squad_bg",
+    "LocaleName": "11048702",
+    "LocaleDescription": "11048703",
+    "Army": "german",
+    "Icon": "Icons_vehicles_vehicle_german_panzer_iv_f1",
+    "Symbol": "Icons_symbols_vehicle_german_panzer_iv_f1_symbol",
+    "Cost": {
+      "jsdbtype": "Battlegrounds.Game.Gameplay.Cost",
+      "Manpower": "480",
+      "Munition": "0",
+      "Fuel": "120",
+      "FieldTime": "15"
+    },
+    "HasCrew": "True",
+    "Types": [
+      "panzeriv",
+      "medium_tank",
+      "vehicle",
+      "heavy_vehicle"
+    ]
+  },
+  {
+    "jsdbtype": "Battlegrounds.Game.Database.SquadBlueprint",
+    "PBGID": "1073741896",
+    "Name": "sdkfz_221_bg",
+    "LocaleName": "11097449",
+    "LocaleDescription": "11008216",
+    "Army": "german",
+    "Icon": "Icons_vehicles_vehicle_german_222_armored_car",
+    "Symbol": "Icons_symbols_vehicle_german_222_armored_car_symbol",
+    "Cost": {
+      "jsdbtype": "Battlegrounds.Game.Gameplay.Cost",
+      "Manpower": "200",
+      "Munition": "0",
+      "Fuel": "30",
+      "FieldTime": "15"
+    },
+    "HasCrew": "True",
+    "Types": [
+      "222_armored_car",
+      "light_vehicle",
+      "vehicle"
+    ]
+  },
+  {
+    "jsdbtype": "Battlegrounds.Game.Database.SquadBlueprint",
+    "PBGID": "1073741898",
+    "Name": "sdkfz_221_command_bg",
+    "LocaleName": "11097449",
+    "LocaleDescription": "11008216",
+    "Army": "german",
+    "Icon": "Icons_vehicles_vehicle_german_222_armored_car",
+    "Symbol": "Icons_symbols_vehicle_german_222_armored_car_symbol",
+    "Cost": {
+      "jsdbtype": "Battlegrounds.Game.Gameplay.Cost",
+      "Manpower": "200",
+      "Munition": "0",
+      "Fuel": "30",
+      "FieldTime": "15"
+    },
+    "HasCrew": "True",
+    "Types": [
+      "222_armored_car",
+      "light_vehicle",
+      "vehicle"
+    ]
+  },
+  {
+    "jsdbtype": "Battlegrounds.Game.Database.SquadBlueprint",
+    "PBGID": "1073741897",
+    "Name": "sdkfz_222_bg",
+    "LocaleName": "11097449",
+    "LocaleDescription": "11008216",
+    "Army": "german",
+    "Icon": "Icons_vehicles_vehicle_german_222_armored_car",
+    "Symbol": "Icons_symbols_vehicle_german_222_armored_car_symbol",
+    "Cost": {
+      "jsdbtype": "Battlegrounds.Game.Gameplay.Cost",
+      "Manpower": "200",
+      "Munition": "0",
+      "Fuel": "30",
+      "FieldTime": "15"
+    },
+    "HasCrew": "True",
+    "Types": [
+      "222_armored_car",
+      "light_vehicle",
+      "vehicle"
+    ]
+  },
+  {
+    "jsdbtype": "Battlegrounds.Game.Database.SquadBlueprint",
+    "PBGID": "1073741895",
+    "Name": "sdkfz_234_puma_ost_bg",
+    "LocaleName": "11072073",
+    "LocaleDescription": "11072072",
+    "Army": "german",
+    "Icon": "Icons_vehicles_vehicle_west_german_234_puma_armored_car",
+    "Symbol": "Icons_symbols_vehicle_west_german_234_puma_armored_car_symbol",
+    "Cost": {
+      "jsdbtype": "Battlegrounds.Game.Gameplay.Cost",
+      "Manpower": "270",
+      "Munition": "0",
+      "Fuel": "70",
+      "FieldTime": "15"
+    },
+    "HasCrew": "True",
+    "Types": [
+      "222_armored_car",
+      "light_vehicle",
+      "vehicle"
+    ]
+  },
+  {
+    "jsdbtype": "Battlegrounds.Game.Database.SquadBlueprint",
+    "PBGID": "1073741884",
+    "Name": "sdkfz_250_halftrack_bg",
+    "LocaleName": "11051325",
+    "LocaleDescription": "11051326",
+    "Army": "german",
+    "Icon": "Icons_vehicles_vehicle_german_250_halftrack",
+    "Symbol": "Icons_symbols_vehicle_german_250_halftrack_symbol",
+    "Cost": {
+      "jsdbtype": "Battlegrounds.Game.Gameplay.Cost",
+      "Manpower": "210",
+      "Munition": "0",
+      "Fuel": "20",
+      "FieldTime": "15"
+    },
+    "HasCrew": "False",
+    "Types": [
+      "250_mortar_halftrack",
+      "light_vehicle",
+      "vehicle"
+    ]
+  },
+  {
+    "jsdbtype": "Battlegrounds.Game.Database.SquadBlueprint",
+    "PBGID": "1073741885",
+    "Name": "sdkfz_251_halftrack_squad_bg",
+    "LocaleName": "11007036",
+    "LocaleDescription": "11007018",
+    "Army": "german",
+    "Icon": "Icons_vehicles_vehicle_german_251_halftrack",
+    "Symbol": "Icons_symbols_vehicle_german_251_halftrack_symbol",
+    "Cost": {
+      "jsdbtype": "Battlegrounds.Game.Gameplay.Cost",
+      "Manpower": "200",
+      "Munition": "0",
+      "Fuel": "30",
+      "FieldTime": "15"
+    },
+    "HasCrew": "False",
+    "Types": [
+      "251_halftrack",
+      "light_vehicle",
+      "vehicle"
+    ]
+  },
+  {
+    "jsdbtype": "Battlegrounds.Game.Database.SquadBlueprint",
+    "PBGID": "1073741899",
+    "Name": "stug_iii_e_squad_bg",
+    "LocaleName": "11024608",
+    "LocaleDescription": "11024609",
+    "Army": "german",
+    "Icon": "Icons_vehicles_vehicle_german_stug_iii_e",
+    "Symbol": "Icons_symbols_vehicle_german_stug_iii_e_symbol",
+    "Cost": {
+      "jsdbtype": "Battlegrounds.Game.Gameplay.Cost",
+      "Manpower": "320",
+      "Munition": "0",
+      "Fuel": "25",
+      "FieldTime": "15"
+    },
+    "HasCrew": "True",
+    "Types": [
+      "stug_iii",
+      "assault_gun",
+      "vehicle",
+      "heavy_vehicle"
+    ]
+  },
+  {
+    "jsdbtype": "Battlegrounds.Game.Database.SquadBlueprint",
+    "PBGID": "1073741900",
+    "Name": "stug_iii_squad_bg",
+    "LocaleName": "11007006",
+    "LocaleDescription": "11007020",
+    "Army": "german",
+    "Icon": "Icons_vehicles_vehicle_german_stug_iii_g",
+    "Symbol": "Icons_symbols_vehicle_german_stug_iii_g_symbol",
+    "Cost": {
+      "jsdbtype": "Battlegrounds.Game.Gameplay.Cost",
+      "Manpower": "280",
+      "Munition": "0",
+      "Fuel": "90",
+      "FieldTime": "15"
+    },
+    "HasCrew": "True",
+    "Types": [
+      "stug_iii",
+      "assault_gun",
+      "vehicle",
+      "heavy_vehicle"
+    ]
+  },
+  {
+    "jsdbtype": "Battlegrounds.Game.Database.SquadBlueprint",
+    "PBGID": "1073741902",
+    "Name": "tiger_command_squad_bg",
+    "LocaleName": "2092402",
+    "LocaleDescription": "2092401",
+    "Army": "german",
+    "Icon": "Icons_vehicles_vehicle_german_tiger",
+    "Symbol": "Icons_symbols_vehicle_german_tiger_symbol",
+    "Cost": {
+      "jsdbtype": "Battlegrounds.Game.Gameplay.Cost",
+      "Manpower": "640",
+      "Munition": "0",
+      "Fuel": "230",
+      "FieldTime": "15"
+    },
+    "HasCrew": "True",
+    "Types": [
+      "tiger",
+      "heavy_tank",
+      "vehicle",
+      "heavy_vehicle",
+      "heavy_vehicle_icon"
+    ]
+  },
+  {
+    "jsdbtype": "Battlegrounds.Game.Database.SquadBlueprint",
+    "PBGID": "1073741901",
+    "Name": "tiger_squad_bg",
+    "LocaleName": "2092402",
+    "LocaleDescription": "2092401",
+    "Army": "german",
+    "Icon": "Icons_vehicles_vehicle_german_tiger",
+    "Symbol": "Icons_symbols_vehicle_german_tiger_symbol",
+    "Cost": {
+      "jsdbtype": "Battlegrounds.Game.Gameplay.Cost",
+      "Manpower": "640",
+      "Munition": "0",
+      "Fuel": "230",
+      "FieldTime": "15"
+    },
+    "HasCrew": "True",
+    "Types": [
+      "tiger",
+      "heavy_tank",
+      "vehicle",
+      "heavy_vehicle",
+      "heavy_vehicle_icon"
+    ]
+  },
+  {
+    "jsdbtype": "Battlegrounds.Game.Database.SquadBlueprint",
     "PBGID": "1073741853",
     "Name": "dshk_38_hmg_squad_bg",
     "LocaleName": "11048751",
@@ -623,6 +1261,273 @@
       "m5_halftrack",
       "light_vehicle",
       "vehicle"
+    ]
+  },
+  {
+    "jsdbtype": "Battlegrounds.Game.Database.SquadBlueprint",
+    "PBGID": "1073741864",
+    "Name": "grenadier_squad_bg",
+    "LocaleName": "11006996",
+    "LocaleDescription": "11007013",
+    "Army": "german",
+    "Icon": "Icons_units_unit_german_grenadier",
+    "Symbol": "Icons_symbols_unit_german_grenadier_symbol",
+    "Cost": {
+      "jsdbtype": "Battlegrounds.Game.Gameplay.Cost",
+      "Manpower": "300",
+      "Munition": "0",
+      "Fuel": "0",
+      "FieldTime": "15"
+    },
+    "HasCrew": "False",
+    "Types": [
+      "grenadiers",
+      "infantry"
+    ]
+  },
+  {
+    "jsdbtype": "Battlegrounds.Game.Database.SquadBlueprint",
+    "PBGID": "1073741869",
+    "Name": "assault_officer_squad_bg",
+    "LocaleName": "11035436",
+    "LocaleDescription": "11035437",
+    "Army": "german",
+    "Icon": "Icons_units_unit_german_officer",
+    "Symbol": "Icons_symbols_unit_german_officer_symbol",
+    "Cost": {
+      "jsdbtype": "Battlegrounds.Game.Gameplay.Cost",
+      "Manpower": "180",
+      "Munition": "0",
+      "Fuel": "0",
+      "FieldTime": "15"
+    },
+    "HasCrew": "False",
+    "Types": [
+      "pz_grenadiers",
+      "infantry"
+    ]
+  },
+  {
+    "jsdbtype": "Battlegrounds.Game.Database.SquadBlueprint",
+    "PBGID": "1073741868",
+    "Name": "luftwaffe_officer_squad_bg",
+    "LocaleName": "11053774",
+    "LocaleDescription": "11053772",
+    "Army": "german",
+    "Icon": "Icons_units_unit_german_officer",
+    "Symbol": "Icons_symbols_unit_german_officer_symbol",
+    "Cost": {
+      "jsdbtype": "Battlegrounds.Game.Gameplay.Cost",
+      "Manpower": "120",
+      "Munition": "0",
+      "Fuel": "0",
+      "FieldTime": "15"
+    },
+    "HasCrew": "False",
+    "Types": [
+      "pz_grenadiers",
+      "infantry"
+    ]
+  },
+  {
+    "jsdbtype": "Battlegrounds.Game.Database.SquadBlueprint",
+    "PBGID": "1073741870",
+    "Name": "ostruppen_squad_bg",
+    "LocaleName": "11010409",
+    "LocaleDescription": "11052756",
+    "Army": "german",
+    "Icon": "Icons_units_unit_german_ostruppen",
+    "Symbol": "Icons_symbols_unit_german_ostruppen_symbol",
+    "Cost": {
+      "jsdbtype": "Battlegrounds.Game.Gameplay.Cost",
+      "Manpower": "199.99982",
+      "Munition": "0",
+      "Fuel": "0",
+      "FieldTime": "15"
+    },
+    "HasCrew": "False",
+    "Types": [
+      "pz_grenadiers",
+      "infantry"
+    ]
+  },
+  {
+    "jsdbtype": "Battlegrounds.Game.Database.SquadBlueprint",
+    "PBGID": "1073741871",
+    "Name": "panzer_grenadier_squad_bg",
+    "LocaleName": "11007025",
+    "LocaleDescription": "11007026",
+    "Army": "german",
+    "Icon": "Icons_units_unit_german_panzer_grenadier",
+    "Symbol": "Icons_symbols_unit_german_panzer_grenadier_symbol",
+    "Cost": {
+      "jsdbtype": "Battlegrounds.Game.Gameplay.Cost",
+      "Manpower": "340",
+      "Munition": "0",
+      "Fuel": "0",
+      "FieldTime": "15"
+    },
+    "HasCrew": "False",
+    "Types": [
+      "pz_grenadiers",
+      "infantry"
+    ]
+  },
+  {
+    "jsdbtype": "Battlegrounds.Game.Database.SquadBlueprint",
+    "PBGID": "1073741872",
+    "Name": "pioneer_squad_bg",
+    "LocaleName": "11006988",
+    "LocaleDescription": "11007011",
+    "Army": "german",
+    "Icon": "Icons_units_unit_german_pioneer",
+    "Symbol": "Icons_symbols_unit_german_pioneer_symbol",
+    "Cost": {
+      "jsdbtype": "Battlegrounds.Game.Gameplay.Cost",
+      "Manpower": "150",
+      "Munition": "0",
+      "Fuel": "0",
+      "FieldTime": "15"
+    },
+    "HasCrew": "False",
+    "Types": [
+      "pioneer",
+      "infantry"
+    ]
+  },
+  {
+    "jsdbtype": "Battlegrounds.Game.Database.SquadBlueprint",
+    "PBGID": "1073741873",
+    "Name": "sniper_squad_bg",
+    "LocaleName": "11006997",
+    "LocaleDescription": "11007014",
+    "Army": "german",
+    "Icon": "Icons_units_unit_german_sniper",
+    "Symbol": "Icons_symbols_unit_german_sniper_symbol",
+    "Cost": {
+      "jsdbtype": "Battlegrounds.Game.Gameplay.Cost",
+      "Manpower": "360",
+      "Munition": "0",
+      "Fuel": "0",
+      "FieldTime": "15"
+    },
+    "HasCrew": "False",
+    "Types": [
+      "infantry",
+      "sniper_german"
+    ]
+  },
+  {
+    "jsdbtype": "Battlegrounds.Game.Database.SquadBlueprint",
+    "PBGID": "1073741876",
+    "Name": "ost_luftwaffe_ground_forces_bg",
+    "LocaleName": "11052710",
+    "LocaleDescription": "11052711",
+    "Army": "german",
+    "Icon": "Icons_units_unit_german_stormtroopers",
+    "Symbol": "Icons_symbols_unit_german_stormtroopers_symbol",
+    "Cost": {
+      "jsdbtype": "Battlegrounds.Game.Gameplay.Cost",
+      "Manpower": "337.5",
+      "Munition": "0",
+      "Fuel": "0",
+      "FieldTime": "15"
+    },
+    "HasCrew": "False",
+    "Types": [
+      "pz_grenadiers",
+      "infantry",
+      "stormtrooper"
+    ]
+  },
+  {
+    "jsdbtype": "Battlegrounds.Game.Database.SquadBlueprint",
+    "PBGID": "1073741875",
+    "Name": "ost_tankhunter_squad_bg",
+    "LocaleName": "11052710",
+    "LocaleDescription": "11052711",
+    "Army": "german",
+    "Icon": "Icons_units_unit_german_stormtroopers",
+    "Symbol": "Icons_symbols_unit_german_stormtroopers_symbol",
+    "Cost": {
+      "jsdbtype": "Battlegrounds.Game.Gameplay.Cost",
+      "Manpower": "202.5",
+      "Munition": "0",
+      "Fuel": "0",
+      "FieldTime": "15"
+    },
+    "HasCrew": "False",
+    "Types": [
+      "pz_grenadiers",
+      "infantry",
+      "stormtrooper"
+    ]
+  },
+  {
+    "jsdbtype": "Battlegrounds.Game.Database.SquadBlueprint",
+    "PBGID": "1073741874",
+    "Name": "stormtrooper_squad_bg",
+    "LocaleName": "11052710",
+    "LocaleDescription": "11052711",
+    "Army": "german",
+    "Icon": "Icons_units_unit_german_stormtroopers",
+    "Symbol": "Icons_symbols_unit_german_stormtroopers_symbol",
+    "Cost": {
+      "jsdbtype": "Battlegrounds.Game.Gameplay.Cost",
+      "Manpower": "337.5",
+      "Munition": "0",
+      "Fuel": "0",
+      "FieldTime": "15"
+    },
+    "HasCrew": "False",
+    "Types": [
+      "pz_grenadiers",
+      "infantry",
+      "stormtrooper"
+    ]
+  },
+  {
+    "jsdbtype": "Battlegrounds.Game.Database.SquadBlueprint",
+    "PBGID": "1073741878",
+    "Name": "german_tank_crew_bg",
+    "LocaleName": "11006988",
+    "LocaleDescription": "11007011",
+    "Army": "german",
+    "Icon": "Icons_units_unit_german_pioneer",
+    "Symbol": "Icons_symbols_unit_german_pioneer_symbol",
+    "Cost": {
+      "jsdbtype": "Battlegrounds.Game.Gameplay.Cost",
+      "Manpower": "200",
+      "Munition": "0",
+      "Fuel": "0",
+      "FieldTime": "15"
+    },
+    "HasCrew": "False",
+    "Types": [
+      "pioneer",
+      "infantry"
+    ]
+  },
+  {
+    "jsdbtype": "Battlegrounds.Game.Database.SquadBlueprint",
+    "PBGID": "1073741877",
+    "Name": "german_vehicle_crew_bg",
+    "LocaleName": "11006988",
+    "LocaleDescription": "11007011",
+    "Army": "german",
+    "Icon": "Icons_units_unit_german_pioneer",
+    "Symbol": "Icons_symbols_unit_german_pioneer_symbol",
+    "Cost": {
+      "jsdbtype": "Battlegrounds.Game.Gameplay.Cost",
+      "Manpower": "100",
+      "Munition": "0",
+      "Fuel": "0",
+      "FieldTime": "15"
+    },
+    "HasCrew": "False",
+    "Types": [
+      "pioneer",
+      "infantry"
     ]
   },
   {

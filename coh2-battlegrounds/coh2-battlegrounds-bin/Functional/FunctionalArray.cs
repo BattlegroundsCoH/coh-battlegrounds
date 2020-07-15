@@ -67,6 +67,15 @@ namespace Battlegrounds.Functional {
         public static bool ContainsWithout<T>(this T[] array, T elem, params T[] except) 
             => array.Contains(elem) && !array.Any(x => except.Contains(x));
 
+        public static int IndexOf<T>(this T[] array, Predicate<T> predicate) {
+            for (int i = 0; i < array.Length; i++) {
+                if (predicate(array[i])) {
+                    return i;
+                }
+            }
+            return -1;
+        }
+
     }
 
 }

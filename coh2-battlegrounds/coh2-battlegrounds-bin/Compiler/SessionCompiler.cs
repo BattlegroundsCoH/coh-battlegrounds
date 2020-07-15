@@ -2,9 +2,9 @@
 using System.IO;
 using System.Collections.Generic;
 using System.Linq;
+
 using Battlegrounds.Game.Battlegrounds;
 using Battlegrounds.Modding;
-using Battlegrounds.Steam;
 using Battlegrounds.Util;
 
 namespace Battlegrounds.Compiler {
@@ -35,7 +35,7 @@ namespace Battlegrounds.Compiler {
             lua.AppendLine($"bg_settings = {{");
             lua.IncreaseIndent();
 
-            lua.AppendLine($"playercount = {session.Companies.Length},");
+            lua.AppendLine($"playercount = {session.Participants.Length},");
             lua.AppendLine($"session_guid = \"{session.SessionID}\",");
             lua.AppendLine($"map = \"{Path.GetFileNameWithoutExtension(session.Scenario.RelativeFilename)}\",");
 
@@ -57,20 +57,20 @@ namespace Battlegrounds.Compiler {
             lua.IncreaseIndent();
 
             // Write the teams
-            this.WriteTeam(lua, "allies", session.Companies.Where(x => x.Army.IsAllied).Select(x => x.Owner));
-            this.WriteTeam(lua, "axis", session.Companies.Where(x => !x.Army.IsAllied).Select(x => x.Owner));
+            this.WriteTeam(lua, "allies", session.Participants.Where(x => x.ParticipantFaction.IsAllied));
+            this.WriteTeam(lua, "axis", session.Participants.Where(x => x.ParticipantFaction.IsAxis));
 
             lua.DecreaseIndent();
             lua.AppendLine("},");
 
             lua.DecreaseIndent();
-            lua.AppendLine("};");
+            lua.AppendLine("};\n");
 
             lua.AppendLine($"bg_companies = {{");
             lua.IncreaseIndent();
 
-            foreach (Company company in session.Companies) {
-                lua.AppendLine(compiler.CompileToLua(company));
+            foreach (SessionParticipant participant in session.Participants) {
+                lua.AppendLine(compiler.CompileToLua(participant.ParticipantCompany, participant.PlayerIndexOnTeam));
             }
 
             lua.DecreaseIndent();
@@ -109,14 +109,16 @@ namespace Battlegrounds.Compiler {
 
             string strval = value switch
             {
+                int i => i.ToString(),
+                byte by => by.ToString(),
                 double d => d.ToString("0.00"),
                 float f => f.ToString("0.00"),
-                bool b => (b) ? "true" : "false",
+                bool b => b ? "true" : "false",
                 string s => $"\"{s}\"",
                 _ => value.ToString(),
             };
 
-            lua.AppendLine($"{setting} = {strval}");
+            lua.AppendLine($"{setting} = {strval},");
 
         }
 
@@ -126,13 +128,13 @@ namespace Battlegrounds.Compiler {
         /// <param name="lua">The lua code to append team data to.</param>
         /// <param name="team">The string name of the team.</param>
         /// <param name="players">The players on the team.</param>
-        protected virtual void WriteTeam(TxtBuilder lua, string team, IEnumerable<SteamUser> players) {
+        protected virtual void WriteTeam(TxtBuilder lua, string team, IEnumerable<SessionParticipant> players) {
 
             lua.AppendLine($"[\"{team}\"] = {{");
             lua.IncreaseIndent();
 
-            foreach (SteamUser user in players) {
-                lua.AppendLine($"\"{user.Name}\",");
+            foreach (SessionParticipant player in players) {
+                lua.AppendLine($"{{ display_name = \"{player.GetName()}\", ai_value = {(byte)player.Difficulty}, id = {player.PlayerIndexOnTeam}, }},");
             }
 
             lua.DecreaseIndent();

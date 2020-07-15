@@ -68,34 +68,34 @@ namespace coh2_battlegrounds_console {
             testCompany.AddSquad("m1931_203mm_b-4_howitzer_artillery_bg", "zis_6_transport_truck_bg", DeploymentMethod.DeployAndStay, 1, 0, null, null, null);
             testCompany.AddSquad("m1931_203mm_b-4_howitzer_artillery_bg", "zis_6_transport_truck_bg", DeploymentMethod.DeployAndExit, 2, 0, null, null, null);
 
-            Company[] companies = new Company[] {
-                testCompany
-            };
-
             SessionInfo sessionInfo = new SessionInfo() {
                 SelectedGamemode = WinconditionList.GetWinconditionByName("Victory Points"),
                 SelectedGamemodeOption = 1,
                 SelectedScenario = ScenarioList.FromFilename("2p_angoville_farms"),
                 SelectedTuningMod = new BattlegroundsTuning(),
-                Allies = new string[] { "CoDiEx" },
-                Axis = new string[] {},
+                Allies = new SessionParticipant[] { new SessionParticipant(BattlegroundsInstance.LocalSteamuser, testCompany, 0, 0) },
+                Axis = null,
                 FillAI = true,
+                DefaultDifficulty = Battlegrounds.Game.AIDifficulty.AI_Hard,
             };
 
-            Session session = Session.CreateSession(sessionInfo, companies);
+            Session session = Session.CreateSession(sessionInfo);
+
+            SessionCompiler<CompanyCompiler> sessionCompiler = new SessionCompiler<CompanyCompiler>();
+            File.WriteAllText("test_session.lua", sessionCompiler.CompileSession(session));
 
             /*GameMatch m = new GameMatch(session);
             m.LoadMatch($"{Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)}\\my games\\company of heroes 2\\playback\\temp.rec");
             m.EvaluateResult();
             */
             
-            SessionManager.PlaySession<SessionCompiler<CompanyCompiler>, CompanyCompiler>(session, (a,b) => { Console.WriteLine(a); }, null, null);
+            //SessionManager.PlaySession<SessionCompiler<CompanyCompiler>, CompanyCompiler>(session, (a,b) => { Console.WriteLine(a); }, null, null);
 
             // Save json
             testCompany.SaveToFile("test_company.json");
 
-            /*
-            LobbyHub hub = new LobbyHub();
+            
+            /*LobbyHub hub = new LobbyHub();
             if (!hub.CanConnect()) {
                 Console.WriteLine("Unable to reach server hub");
             } else {
@@ -110,9 +110,9 @@ namespace coh2_battlegrounds_console {
                 }
 
             }
-            */
-            BattlegroundsInstance.SaveInstance();
             
+            BattlegroundsInstance.SaveInstance();
+            */
             Console.ReadLine();
 
         }
