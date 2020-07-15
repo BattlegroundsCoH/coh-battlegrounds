@@ -35,7 +35,7 @@ namespace Battlegrounds.Compiler {
             lua.AppendLine($"bg_settings = {{");
             lua.IncreaseIndent();
 
-            lua.AppendLine($"playercount = {session.Participants.Length},");
+            lua.AppendLine($"playercount = {session.Participants.Count(x => x.IsHumanParticipant)},");
             lua.AppendLine($"session_guid = \"{session.SessionID}\",");
             lua.AppendLine($"map = \"{Path.GetFileNameWithoutExtension(session.Scenario.RelativeFilename)}\",");
 
@@ -70,7 +70,7 @@ namespace Battlegrounds.Compiler {
             lua.IncreaseIndent();
 
             foreach (SessionParticipant participant in session.Participants) {
-                lua.AppendLine(compiler.CompileToLua(participant.ParticipantCompany, participant.PlayerIndexOnTeam));
+                lua.AppendLine(compiler.CompileToLua(participant.ParticipantCompany, !participant.IsHumanParticipant, participant.PlayerIndexOnTeam));
             }
 
             lua.DecreaseIndent();

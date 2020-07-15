@@ -55,12 +55,70 @@ namespace Battlegrounds.Game.Database {
         /// <summary>
         /// Can the <see cref="SquadBlueprint"/> be considered a heavy artillery piece.
         /// </summary>
-        [JsonIgnore] public bool IsHeavyArtillery => this.Types.ToArray().ContainsWithout("team_weapon", "wg_team_weapons", "mortar", "hmg"); // 'wg_team_weapons' is to block the raketenwerfer be considered a heavy artillery piece
+        [JsonIgnore] public bool IsHeavyArtillery 
+            => this.Types.ToArray().ContainsWithout("team_weapon", "wg_team_weapons", "mortar", "hmg"); // 'wg_team_weapons' is to block the raketenwerfer be considered a heavy artillery piece
 
         /// <summary>
         /// Can the <see cref="SquadBlueprint"/> be considered an anti-tank gun.
         /// </summary>
         [JsonIgnore] public bool IsAntiTank => this.Types.Contains("at_gun");
+
+        /// <summary>
+        /// Can the <see cref="SquadBlueprint"/> be considered infantry.
+        /// </summary>
+        [JsonIgnore] public bool IsInfantry => this.Types.Contains("infantry") && !IsTeamWeapon;
+
+        /// <summary>
+        /// Can the <see cref="SquadBlueprint"/> be considered a team weapon.
+        /// </summary>
+        [JsonIgnore] public bool IsTeamWeapon => this.Types.Contains("team_weapon") || this.Types.Contains("250_mortar_halftrack");
+
+        /// <summary>
+        /// Can the <see cref="SquadBlueprint"/> be considered a vehicle (not a tank).
+        /// </summary>
+        [JsonIgnore] public bool IsVehicle 
+            => ((!IsArmour && this.Types.Contains("vehicle")) || this.Types.Contains("light_vehicle")) && !this.Types.Contains("250_mortar_halftrack"); // Remove the change of mortar vehicles in this category
+
+        /// <summary>
+        /// Can the <see cref="SquadBlueprint"/> be considered a tank.
+        /// </summary>
+        [JsonIgnore] public bool IsArmour => this.Types.Contains("vehicle") && !this.Types.Contains("light_vehicle") && !IsHeavyArmour;
+
+        /// <summary>
+        /// Can the <see cref="SquadBlueprint"/> be considered a heavy tank.
+        /// </summary>
+        [JsonIgnore] public bool IsHeavyArmour => this.Types.Contains("heavy_tank");
+
+        /// <summary>
+        /// Can the <see cref="SquadBlueprint"/> be considered a vehicle crew.
+        /// </summary>
+        [JsonIgnore] public bool IsVehicleCrew => this.Types.Contains("aef_vehicle_crew");
+
+        /// <summary>
+        /// Can the <see cref="SquadBlueprint"/> be considered a special (elite) infantry.
+        /// </summary>
+        [JsonIgnore] public bool IsSpecialInfantry 
+            => this.Types.Contains("guard_troops") || this.Types.Contains("shock_troops") || this.Types.Contains("stormtrooper");
+
+        /// <summary>
+        /// Can the <see cref="SquadBlueprint"/> be considered to be an officer unit.
+        /// </summary>
+        [JsonIgnore] public bool IsOfficer => this.Types.Contains("sov_officer");
+
+        /// <summary>
+        /// Can the <see cref="SquadBlueprint"/> be considered to be a command unit.
+        /// </summary>
+        [JsonIgnore] public bool IsCommandUnit => IsOfficer || this.Types.Contains("command_panzer");
+
+        /// <summary>
+        /// Can the <see cref="SquadBlueprint"/> be considered to be artillery.
+        /// </summary>
+        [JsonIgnore] public bool IsArtillery => this.Types.Contains("artillery");
+
+        /// <summary>
+        /// Can the <see cref="SquadBlueprint"/> be considered a sniper unit.
+        /// </summary>
+        [JsonIgnore] public bool IsSniper => this.Types.Contains("sniper_soviet") || this.Types.Contains("sniper_german");
 
     }
 

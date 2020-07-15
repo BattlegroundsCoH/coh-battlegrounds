@@ -1,0 +1,11 @@
+
+import("ScarUtil.scar")
+import("Fatalities/Fatalities.scar")
+import("Prototype/WorldEntityCollector.scar")
+import("Prototype/SpecialAEFunctions.scar")
+import("PrintOnScreen.scar")
+
+-- Battlegrounds file(s)
+import("WinConditions/auxiliary_scripts/shared_handler.scar") -- This will handle most if not all of "external" data processing.
+
+-- TODO: Add custom gamemode code here...

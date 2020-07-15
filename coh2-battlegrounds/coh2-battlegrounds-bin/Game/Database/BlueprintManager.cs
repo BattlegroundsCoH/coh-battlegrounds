@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
-
+using Battlegrounds.Game.Gameplay;
 using Battlegrounds.Json;
 
 namespace Battlegrounds.Game.Database {
@@ -57,6 +57,8 @@ namespace Battlegrounds.Game.Database {
         private static Dictionary<ulong, Blueprint> __criticals;
         private static Dictionary<ulong, Blueprint> __slotitems;
 
+        private static List<Dictionary<ulong, Blueprint>> __selfList;
+
         /// <summary>
         /// Create the database (or clear it) and load the vcoh database.
         /// </summary>
@@ -69,6 +71,16 @@ namespace Battlegrounds.Game.Database {
             __upgrades = new Dictionary<ulong, Blueprint>();
             __criticals = new Dictionary<ulong, Blueprint>();
             __slotitems = new Dictionary<ulong, Blueprint>();
+
+            // Create list over self
+            __selfList = new List<Dictionary<ulong, Blueprint>>() {
+                __abilities,
+                __criticals,
+                __entities,
+                __slotitems,
+                __squads,
+                __upgrades,
+            };
 
             // Load the vcoh database
             LoadDatabaseWithMod("vcoh", string.Empty);
@@ -155,6 +167,18 @@ namespace Battlegrounds.Game.Database {
 
         }
 
+        public static List<Blueprint> Select(Predicate<Blueprint> predicate) {
+            // TODO: Make a more optimized and specific version of this...
+            List<Blueprint> blueprints = new List<Blueprint>();
+
+            foreach (var type in __selfList) {
+                blueprints.AddRange(type.Values.Where(x => predicate(x)));
+            }
+            
+            return blueprints;
+
+        }
+
         /// <summary>
         /// Get a <see cref="Blueprint"/> instance by its unique ID and <see cref="BlueprintType"/>.
         /// </summary>
@@ -210,7 +234,6 @@ namespace Battlegrounds.Game.Database {
         /// <exception cref="FormatException"/>
         public static IJsonObject JsonDereference(string jsonReference) 
             => FromPbgId(ushort.Parse(jsonReference.Substring(4)), (BlueprintType)Enum.Parse(typeof(BlueprintType), jsonReference.Substring(0, 3)));
-
     }
 
 }

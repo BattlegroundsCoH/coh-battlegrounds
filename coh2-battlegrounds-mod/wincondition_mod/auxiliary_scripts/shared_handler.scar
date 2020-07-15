@@ -7,6 +7,7 @@ _bg_custom = {}; -- Custom data
 _bg_custom.max_squad_count = 24;
 
 _bg_playerData = {};
+_bg_aiData = {};
 
 _bg_message_type_no_actions_required = 42.0; -- This is just for making it easier for the 3rd party app to interpret the data
 _bg_message_type_player_surrender = 43.0; -- Player surrenders: ""
@@ -23,31 +24,21 @@ _bg_message_type_team_do_withdraw = 70.0; -- A team has decided to withdraw
 -- Imports
 ------------------------------------------------------------------------------------
 import("WinConditions/auxiliary_scripts/session.scar");
-import("WinConditions/auxiliary_scripts/shared_companyloader.scar");
-import("WinConditions/auxiliary_scripts/shared_units.scar");
 import("WinConditions/auxiliary_scripts/shared_util.scar");
+import("WinConditions/auxiliary_scripts/shared_sessionloader.scar");
+import("WinConditions/auxiliary_scripts/shared_units.scar");
+import("WinConditions/auxiliary_scripts/shared_ai.scar");
 import("WinConditions/auxiliary_scripts/api_ui.scar");
 import("WinConditions/auxiliary_scripts/client_companyui.scar");
 import("WinConditions/auxiliary_scripts/client_overrideui.scar");
 
 function BG_Init()
 
-    local j = 1;
-
-    -- Create player data (for relevant players)
-    for i = 1, World_GetPlayerCount() do
-        local player = World_GetPlayerAt(i);
-        Player_SetPopCapOverride(player, 260);
-        if not AI_IsAIPlayer(player) then -- Make sure it's a player ==> Don't care for AI players
-            _bg_playerData[j] = {};
-            _bg_playerData[j].player = player;
-            _bg_playerData[j].name = Player_GetDisplayName(player)[1];
-            _bg_playerData[j].playerID = Player_GetID(player);
-            _bg_playerData[j].squads = {};
-            _bg_playerData[j].entities = {};
-            _bg_playerData[j].deployed = {};
-            j = j + 1;
-        end
+    -- Load important session data
+    local sessionLoadError = BG_LoadSessionData();
+    if sessionLoadError ~= true then
+        BG_CreateAndShowMatchError(sessionLoadErrors);
+        return;
     end
 
     --Rule_AddOneShot(_tow_test, 1);
@@ -61,6 +52,14 @@ function BG_Init()
         --return;
     end
 
+    -- Load the AI data
+    local aiCompanyError = BG_LoadAIData();
+
+    -- Load the company data
+    if aiCompanyError ~= true then
+        BG_CreateAndShowMatchError(aiCompanyError);
+    end
+
     -- Verify match validity
     local matchValidity = BG_VerifyMatch();
 
@@ -72,6 +71,9 @@ function BG_Init()
 
     -- Activate the unit system
     BG_HookUnitSystem();
+
+    -- Properly set up win condition data
+    BG_SetupWincondition();
 
     -- Create the UI
     UI_AddSetupFunction(function()

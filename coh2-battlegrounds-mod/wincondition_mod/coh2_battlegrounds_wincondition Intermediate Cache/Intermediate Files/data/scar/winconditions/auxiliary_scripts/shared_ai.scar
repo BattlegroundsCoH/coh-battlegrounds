@@ -1,0 +1,7 @@
+function BGAI_RegisterAIPlayer(player)
+
+end
+
+function BGAI_GetAIPlayerID(player)
+
+end

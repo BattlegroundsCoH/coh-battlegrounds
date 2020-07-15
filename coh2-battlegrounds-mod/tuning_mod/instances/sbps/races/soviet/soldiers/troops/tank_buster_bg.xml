@@ -1006,10 +1006,9 @@
 		</template_reference>
 		<template_reference name="squadexts" value="sbpextensions\squad_type_ext">
 			<list name="squad_type_list">
-				<enum name="squad_type" value="conscripts" />
+				<enum name="squad_type" value="guard_troops" />
 				<enum name="squad_type" value="infantry" />
 				<enum name="squad_type" value="tank_detection" />
-				<enum name="squad_type" value="rapid_conscription" />
 				<enum name="squad_type" value="mobile_infantry" />
 			</list>
 		</template_reference>

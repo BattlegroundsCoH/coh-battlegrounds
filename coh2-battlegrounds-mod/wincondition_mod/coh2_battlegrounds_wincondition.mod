@@ -10,7 +10,7 @@
 							<Children>
 								<d2p1:anyType i:type="BurnFile">
 									<BurnSettings i:nil="true" />
-									<RelativeName>coh2_battlegrounds_vp.win</RelativeName>
+									<RelativeName>coh2_battlegrounds.win</RelativeName>
 								</d2p1:anyType>
 							</Children>
 							<IsExpanded>true</IsExpanded>
@@ -44,10 +44,6 @@
 										</d2p1:anyType>
 										<d2p1:anyType i:type="BurnFile">
 											<BurnSettings i:nil="true" />
-											<RelativeName>auxiliary_scripts\shared_companyloader.scar</RelativeName>
-										</d2p1:anyType>
-										<d2p1:anyType i:type="BurnFile">
-											<BurnSettings i:nil="true" />
 											<RelativeName>auxiliary_scripts\session.scar</RelativeName>
 										</d2p1:anyType>
 										<d2p1:anyType i:type="BurnFile">
@@ -58,13 +54,17 @@
 											<BurnSettings i:nil="true" />
 											<RelativeName>auxiliary_scripts\client_overrideui.scar</RelativeName>
 										</d2p1:anyType>
+										<d2p1:anyType i:type="BurnFile">
+											<BurnSettings i:nil="true" />
+											<RelativeName>auxiliary_scripts\shared_ai.scar</RelativeName>
+										</d2p1:anyType>
+										<d2p1:anyType i:type="BurnFile">
+											<BurnSettings i:nil="true" />
+											<RelativeName>auxiliary_scripts\shared_sessionloader.scar</RelativeName>
+										</d2p1:anyType>
 									</Children>
 									<IsExpanded>true</IsExpanded>
 									<Name>auxiliary_scripts</Name>
-								</d2p1:anyType>
-								<d2p1:anyType i:type="BurnFile">
-									<BurnSettings i:nil="true" />
-									<RelativeName>coh2_battlegrounds_vp.scar</RelativeName>
 								</d2p1:anyType>
 								<d2p1:anyType i:type="Folder">
 									<Children>
@@ -107,6 +107,10 @@
 									</Children>
 									<IsExpanded>true</IsExpanded>
 									<Name>ui_api</Name>
+								</d2p1:anyType>
+								<d2p1:anyType i:type="BurnFile">
+									<BurnSettings i:nil="true" />
+									<RelativeName>coh2_battlegrounds.scar</RelativeName>
 								</d2p1:anyType>
 							</Children>
 							<IsExpanded>true</IsExpanded>

@@ -994,7 +994,6 @@
 		</template_reference>
 		<template_reference name="squadexts" value="sbpextensions\squad_type_ext">
 			<list name="squad_type_list">
-				<enum name="squad_type" value="pz_grenadiers" />
 				<enum name="squad_type" value="infantry" />
 				<enum name="squad_type" value="stormtrooper" />
 			</list>

@@ -11,6 +11,7 @@ namespace CoH2XML2JSON {
 
         static string dirPath;
         static string instancesPath;
+        static string modguid;
         static Dictionary<string, (float, float, float, float)> entityCost = new Dictionary<string, (float, float, float, float)>();
         static Dictionary<string, bool> entityCrewed = new Dictionary<string, bool>();
         static Dictionary<string, string> slotItemSymbols = new Dictionary<string, string>();
@@ -145,6 +146,7 @@ namespace CoH2XML2JSON {
                                 dynamic sbps = new JObject();
                                 sbps.jsdbtype = jsdbType;
                                 sbps.PBGID = pbgid;
+                                sbps.ModGUID = modguid;
                                 sbps.Name = name;
                                 sbps.LocaleName = localeName;
                                 sbps.LocaleDescription = localeDescription;
@@ -307,6 +309,7 @@ namespace CoH2XML2JSON {
                                 dynamic ebps = new JObject();
                                 ebps.jsdbtype = jsdbType;
                                 ebps.PBGID = pbgid;
+                                ebps.ModGUID = modguid;
                                 ebps.Name = name;
                                 ebps.LocaleName = localeName;
                                 ebps.LocaleDescription = localeDescription;
@@ -405,6 +408,7 @@ namespace CoH2XML2JSON {
                                 dynamic critical = new JObject();
                                 critical.jsdbtype = jsdbType;
                                 critical.PBGID = pbgid;
+                                critical.ModGUID = modguid;
                                 critical.Name = name;
                                 critical.LocaleName = localeName;
                                 critical.LocaleDescription = localeDescription;
@@ -495,6 +499,7 @@ namespace CoH2XML2JSON {
                                 dynamic slotItem = new JObject();
                                 slotItem.jsdbtype = jsdbType;
                                 slotItem.PBGID = pbgid;
+                                slotItem.ModGUID = modguid;
                                 slotItem.Name = name;
                                 slotItem.LocaleName = localeName;
                                 slotItem.LocaleDescription = localeDescription;
@@ -614,6 +619,7 @@ namespace CoH2XML2JSON {
                                 dynamic upgrade = new JObject();
                                 upgrade.jsdbtype = jsdbType;
                                 upgrade.PBGID = pbgid;
+                                upgrade.ModGUID = modguid;
                                 upgrade.Name = name;
                                 upgrade.LocaleName = localeName;
                                 upgrade.LocaleDescription = localeDescription;
@@ -745,6 +751,7 @@ namespace CoH2XML2JSON {
                                 dynamic ability = new JObject();
                                 ability.jsdbtype = jsdbType;
                                 ability.PBGID = pbgid;
+                                ability.ModGUID = modguid;
                                 ability.Name = name;
                                 ability.LocaleName = localeName;
                                 ability.LocaleDescription = localeDescription;
@@ -819,6 +826,12 @@ namespace CoH2XML2JSON {
             {
                 Console.WriteLine("Invalid path! Try again: ");
                 instancesPath = Console.ReadLine();
+            }
+
+            Console.WriteLine("Mod GUID (Leave empty if not desired/available):");
+            modguid = Console.ReadLine().Replace("-", "");
+            if (modguid.Length != 32) {
+                modguid = string.Empty;
             }
 
             Console.WriteLine();

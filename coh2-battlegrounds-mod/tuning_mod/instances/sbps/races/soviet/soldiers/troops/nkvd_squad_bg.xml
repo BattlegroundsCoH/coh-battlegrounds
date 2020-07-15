@@ -558,6 +558,14 @@
 			</list>
 			<instance_reference name="vaulting_formation" value="squad_formations\vaulting" />
 		</template_reference>
+		<template_reference name="squadexts" value="sbpextensions\squad_type_ext">
+			<list name="squad_type_list">
+				<enum name="squad_type" value="infantry" />
+				<enum name="squad_type" value="attrition_infantry" />
+				<enum name="squad_type" value="tank_detection" />
+				<enum name="squad_type" value="mobile_infantry" />
+			</list>
+		</template_reference>
 	</list>
 	<uniqueid name="pbgid" value="1073741849" />
 </instance>

@@ -2,6 +2,7 @@
   {
     "jsdbtype": "Battlegrounds.Game.Database.EntityBlueprint",
     "PBGID": "1073741886",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
     "Name": "granatewerfer_34_81mm_mortar_bg",
     "LocaleName": "2153101",
     "LocaleDescription": "2153100",
@@ -19,6 +20,7 @@
   {
     "jsdbtype": "Battlegrounds.Game.Database.EntityBlueprint",
     "PBGID": "1073741887",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
     "Name": "howitzer_105mm_le_fh18_bg",
     "LocaleName": "11026031",
     "LocaleDescription": "11026032",
@@ -36,6 +38,7 @@
   {
     "jsdbtype": "Battlegrounds.Game.Database.EntityBlueprint",
     "PBGID": "1073741885",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
     "Name": "mg42_hmg_bg",
     "LocaleName": "2153001",
     "LocaleDescription": "2153000",
@@ -53,6 +56,7 @@
   {
     "jsdbtype": "Battlegrounds.Game.Database.EntityBlueprint",
     "PBGID": "1073741889",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
     "Name": "pak40_75mm_at_gun_bg",
     "LocaleName": "11043016",
     "LocaleDescription": "11044776",
@@ -70,6 +74,7 @@
   {
     "jsdbtype": "Battlegrounds.Game.Database.EntityBlueprint",
     "PBGID": "1073741888",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
     "Name": "pak43_88mm_at_gun_bg",
     "LocaleName": "11011328",
     "LocaleDescription": "11011327",
@@ -87,6 +92,7 @@
   {
     "jsdbtype": "Battlegrounds.Game.Database.EntityBlueprint",
     "PBGID": "1073741860",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
     "Name": "dhsk_38_machine_gun_bg",
     "LocaleName": "11041983",
     "LocaleDescription": "11044783",
@@ -104,6 +110,7 @@
   {
     "jsdbtype": "Battlegrounds.Game.Database.EntityBlueprint",
     "PBGID": "1073741861",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
     "Name": "hm-120_38_mortar_bg",
     "LocaleName": "11041985",
     "LocaleDescription": "11044785",
@@ -121,6 +128,7 @@
   {
     "jsdbtype": "Battlegrounds.Game.Database.EntityBlueprint",
     "PBGID": "1073741862",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
     "Name": "m1910_maxim_heavy_machine_gun_bg",
     "LocaleName": "11007106",
     "LocaleDescription": "11007105",
@@ -138,6 +146,7 @@
   {
     "jsdbtype": "Battlegrounds.Game.Database.EntityBlueprint",
     "PBGID": "1073741863",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
     "Name": "pm41_82mm_mortar_bg",
     "LocaleName": "11041987",
     "LocaleDescription": "11044786",
@@ -155,6 +164,7 @@
   {
     "jsdbtype": "Battlegrounds.Game.Database.EntityBlueprint",
     "PBGID": "1073741871",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
     "Name": "grenadiers_bg",
     "LocaleName": "0",
     "LocaleDescription": "0",
@@ -172,6 +182,7 @@
   {
     "jsdbtype": "Battlegrounds.Game.Database.EntityBlueprint",
     "PBGID": "1073741872",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
     "Name": "artillery_officer_bg",
     "LocaleName": "0",
     "LocaleDescription": "0",
@@ -189,6 +200,7 @@
   {
     "jsdbtype": "Battlegrounds.Game.Database.EntityBlueprint",
     "PBGID": "1073741873",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
     "Name": "luftwaffe_officer_bg",
     "LocaleName": "0",
     "LocaleDescription": "0",
@@ -206,6 +218,7 @@
   {
     "jsdbtype": "Battlegrounds.Game.Database.EntityBlueprint",
     "PBGID": "1073741874",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
     "Name": "ostruppen_soldier_bg",
     "LocaleName": "0",
     "LocaleDescription": "0",
@@ -223,6 +236,7 @@
   {
     "jsdbtype": "Battlegrounds.Game.Database.EntityBlueprint",
     "PBGID": "1073741875",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
     "Name": "panzer_grenadiers_bg",
     "LocaleName": "0",
     "LocaleDescription": "0",
@@ -240,6 +254,7 @@
   {
     "jsdbtype": "Battlegrounds.Game.Database.EntityBlueprint",
     "PBGID": "1073741876",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
     "Name": "pioneer_bg",
     "LocaleName": "0",
     "LocaleDescription": "0",
@@ -257,6 +272,7 @@
   {
     "jsdbtype": "Battlegrounds.Game.Database.EntityBlueprint",
     "PBGID": "1073741883",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
     "Name": "sniper_soldier_bg",
     "LocaleName": "0",
     "LocaleDescription": "0",
@@ -274,6 +290,7 @@
   {
     "jsdbtype": "Battlegrounds.Game.Database.EntityBlueprint",
     "PBGID": "1073741882",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
     "Name": "stormtroopers_bg",
     "LocaleName": "0",
     "LocaleDescription": "0",
@@ -291,6 +308,7 @@
   {
     "jsdbtype": "Battlegrounds.Game.Database.EntityBlueprint",
     "PBGID": "1073741884",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
     "Name": "german_vehicle_crew_mp",
     "LocaleName": "0",
     "LocaleDescription": "0",
@@ -308,6 +326,7 @@
   {
     "jsdbtype": "Battlegrounds.Game.Database.EntityBlueprint",
     "PBGID": "1073741878",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
     "Name": "atgun88_crew_bg",
     "LocaleName": "0",
     "LocaleDescription": "0",
@@ -325,6 +344,7 @@
   {
     "jsdbtype": "Battlegrounds.Game.Database.EntityBlueprint",
     "PBGID": "1073741877",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
     "Name": "atgun_crew_bg",
     "LocaleName": "0",
     "LocaleDescription": "0",
@@ -342,6 +362,7 @@
   {
     "jsdbtype": "Battlegrounds.Game.Database.EntityBlueprint",
     "PBGID": "1073741879",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
     "Name": "howitzer_crew_bg",
     "LocaleName": "0",
     "LocaleDescription": "0",
@@ -359,6 +380,7 @@
   {
     "jsdbtype": "Battlegrounds.Game.Database.EntityBlueprint",
     "PBGID": "1073741880",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
     "Name": "mg_crew_bg",
     "LocaleName": "0",
     "LocaleDescription": "0",
@@ -376,6 +398,7 @@
   {
     "jsdbtype": "Battlegrounds.Game.Database.EntityBlueprint",
     "PBGID": "1073741881",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
     "Name": "mortar_crew_bg",
     "LocaleName": "0",
     "LocaleDescription": "0",
@@ -393,6 +416,7 @@
   {
     "jsdbtype": "Battlegrounds.Game.Database.EntityBlueprint",
     "PBGID": "1073741892",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
     "Name": "brummbar_sturmpanzer_iv_sdkfz_166_bg",
     "LocaleName": "11046559",
     "LocaleDescription": "11046558",
@@ -410,6 +434,7 @@
   {
     "jsdbtype": "Battlegrounds.Game.Database.EntityBlueprint",
     "PBGID": "1073741893",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
     "Name": "elefant_sdkfz_184_bg",
     "LocaleName": "11046559",
     "LocaleDescription": "11046558",
@@ -427,6 +452,7 @@
   {
     "jsdbtype": "Battlegrounds.Game.Database.EntityBlueprint",
     "PBGID": "1073741897",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
     "Name": "opel_blitz_supply_truck_bg",
     "LocaleName": "2141650",
     "LocaleDescription": "11038258",
@@ -444,6 +470,7 @@
   {
     "jsdbtype": "Battlegrounds.Game.Database.EntityBlueprint",
     "PBGID": "1073741898",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
     "Name": "opel_blitz_transport_truck_bg",
     "LocaleName": "2141650",
     "LocaleDescription": "11038258",
@@ -461,6 +488,7 @@
   {
     "jsdbtype": "Battlegrounds.Game.Database.EntityBlueprint",
     "PBGID": "1073741899",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
     "Name": "ostwind_flak_panzer_bg",
     "LocaleName": "11046559",
     "LocaleDescription": "11046558",
@@ -478,6 +506,7 @@
   {
     "jsdbtype": "Battlegrounds.Game.Database.EntityBlueprint",
     "PBGID": "1073741900",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
     "Name": "panther_sdkfz_171_bg",
     "LocaleName": "11046559",
     "LocaleDescription": "11046558",
@@ -495,6 +524,7 @@
   {
     "jsdbtype": "Battlegrounds.Game.Database.EntityBlueprint",
     "PBGID": "1073741910",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
     "Name": "panther_sdkfz_171_command_bg",
     "LocaleName": "11046559",
     "LocaleDescription": "11046558",
@@ -512,6 +542,7 @@
   {
     "jsdbtype": "Battlegrounds.Game.Database.EntityBlueprint",
     "PBGID": "1073741904",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
     "Name": "panzerwerfer_sdkfz_4_1_bg",
     "LocaleName": "11038330",
     "LocaleDescription": "11038268",
@@ -529,6 +560,7 @@
   {
     "jsdbtype": "Battlegrounds.Game.Database.EntityBlueprint",
     "PBGID": "1073741901",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
     "Name": "panzer_iv_commander_sdkfz_161_bg",
     "LocaleName": "11046559",
     "LocaleDescription": "11046558",
@@ -546,6 +578,7 @@
   {
     "jsdbtype": "Battlegrounds.Game.Database.EntityBlueprint",
     "PBGID": "1073741902",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
     "Name": "panzer_iv_sdkfz_161_bg",
     "LocaleName": "11046559",
     "LocaleDescription": "11046558",
@@ -563,6 +596,7 @@
   {
     "jsdbtype": "Battlegrounds.Game.Database.EntityBlueprint",
     "PBGID": "1073741903",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
     "Name": "panzer_iv_sdkfz_ausf1_bg",
     "LocaleName": "11046559",
     "LocaleDescription": "11046558",
@@ -580,6 +614,7 @@
   {
     "jsdbtype": "Battlegrounds.Game.Database.EntityBlueprint",
     "PBGID": "1073741890",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
     "Name": "armored_car_sdkfz_221_bg",
     "LocaleName": "11038240",
     "LocaleDescription": "11038237",
@@ -597,6 +632,7 @@
   {
     "jsdbtype": "Battlegrounds.Game.Database.EntityBlueprint",
     "PBGID": "1073741911",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
     "Name": "armored_car_sdkfz_221_command_bg",
     "LocaleName": "11038240",
     "LocaleDescription": "11038237",
@@ -614,6 +650,7 @@
   {
     "jsdbtype": "Battlegrounds.Game.Database.EntityBlueprint",
     "PBGID": "1073741891",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
     "Name": "armored_car_sdkfz_222_bg",
     "LocaleName": "11038240",
     "LocaleDescription": "11038237",
@@ -631,6 +668,7 @@
   {
     "jsdbtype": "Battlegrounds.Game.Database.EntityBlueprint",
     "PBGID": "1073741896",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
     "Name": "halftrack_sdkfz_250_bg",
     "LocaleName": "11053278",
     "LocaleDescription": "11053282",
@@ -648,6 +686,7 @@
   {
     "jsdbtype": "Battlegrounds.Game.Database.EntityBlueprint",
     "PBGID": "1073741894",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
     "Name": "halftrack_sdkfz_251_bg",
     "LocaleName": "11038252",
     "LocaleDescription": "11038250",
@@ -665,6 +704,7 @@
   {
     "jsdbtype": "Battlegrounds.Game.Database.EntityBlueprint",
     "PBGID": "1073741895",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
     "Name": "mortar_light_halftrack_250_7_bg",
     "LocaleName": "11025917",
     "LocaleDescription": "11038254",
@@ -682,6 +722,7 @@
   {
     "jsdbtype": "Battlegrounds.Game.Database.EntityBlueprint",
     "PBGID": "1073741905",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
     "Name": "puma_234_armoured_car_ostheer_bg",
     "LocaleName": "11072076",
     "LocaleDescription": "11072075",
@@ -699,6 +740,7 @@
   {
     "jsdbtype": "Battlegrounds.Game.Database.EntityBlueprint",
     "PBGID": "1073741906",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
     "Name": "stug_iii_e_sdkfz_141_1_bg",
     "LocaleName": "11046559",
     "LocaleDescription": "11046558",
@@ -716,6 +758,7 @@
   {
     "jsdbtype": "Battlegrounds.Game.Database.EntityBlueprint",
     "PBGID": "1073741907",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
     "Name": "stug_iii_g_sdkfz_141_1_bg",
     "LocaleName": "11046559",
     "LocaleDescription": "11046558",
@@ -733,6 +776,7 @@
   {
     "jsdbtype": "Battlegrounds.Game.Database.EntityBlueprint",
     "PBGID": "1073741908",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
     "Name": "tiger_sdkfz_181_bg",
     "LocaleName": "11046559",
     "LocaleDescription": "11046558",
@@ -750,6 +794,7 @@
   {
     "jsdbtype": "Battlegrounds.Game.Database.EntityBlueprint",
     "PBGID": "1073741909",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
     "Name": "tiger_sdkfz_181_command_bg",
     "LocaleName": "11046559",
     "LocaleDescription": "11046558",
@@ -767,6 +812,7 @@
   {
     "jsdbtype": "Battlegrounds.Game.Database.EntityBlueprint",
     "PBGID": "1073741844",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
     "Name": "combat_engineer_bg",
     "LocaleName": "11045410",
     "LocaleDescription": "11007039",
@@ -784,6 +830,7 @@
   {
     "jsdbtype": "Battlegrounds.Game.Database.EntityBlueprint",
     "PBGID": "1073741846",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
     "Name": "sapper_soldier_bg",
     "LocaleName": "11045410",
     "LocaleDescription": "11007039",
@@ -801,6 +848,7 @@
   {
     "jsdbtype": "Battlegrounds.Game.Database.EntityBlueprint",
     "PBGID": "1073741849",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
     "Name": "guard_troops_bg",
     "LocaleName": "0",
     "LocaleDescription": "0",
@@ -818,6 +866,7 @@
   {
     "jsdbtype": "Battlegrounds.Game.Database.EntityBlueprint",
     "PBGID": "1073741850",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
     "Name": "penal_battalion_troops_bg",
     "LocaleName": "0",
     "LocaleDescription": "0",
@@ -835,6 +884,7 @@
   {
     "jsdbtype": "Battlegrounds.Game.Database.EntityBlueprint",
     "PBGID": "1073741851",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
     "Name": "shock_troops_bg",
     "LocaleName": "0",
     "LocaleDescription": "11007041",
@@ -852,6 +902,7 @@
   {
     "jsdbtype": "Battlegrounds.Game.Database.EntityBlueprint",
     "PBGID": "1073741847",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
     "Name": "commissar_bg",
     "LocaleName": "0",
     "LocaleDescription": "0",
@@ -869,6 +920,7 @@
   {
     "jsdbtype": "Battlegrounds.Game.Database.EntityBlueprint",
     "PBGID": "1073741848",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
     "Name": "nkvd_bg",
     "LocaleName": "0",
     "LocaleDescription": "0",
@@ -886,6 +938,7 @@
   {
     "jsdbtype": "Battlegrounds.Game.Database.EntityBlueprint",
     "PBGID": "1073741867",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
     "Name": "nkvd_leader_bg",
     "LocaleName": "0",
     "LocaleDescription": "0",
@@ -903,6 +956,7 @@
   {
     "jsdbtype": "Battlegrounds.Game.Database.EntityBlueprint",
     "PBGID": "1073741823",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
     "Name": "conscript_soldier_bg",
     "LocaleName": "0",
     "LocaleDescription": "11007040",
@@ -920,6 +974,7 @@
   {
     "jsdbtype": "Battlegrounds.Game.Database.EntityBlueprint",
     "PBGID": "1073741845",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
     "Name": "frontovik_bg",
     "LocaleName": "0",
     "LocaleDescription": "11007040",
@@ -937,6 +992,7 @@
   {
     "jsdbtype": "Battlegrounds.Game.Database.EntityBlueprint",
     "PBGID": "1073741866",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
     "Name": "tank_buster_soldier_bg",
     "LocaleName": "0",
     "LocaleDescription": "11007040",
@@ -954,6 +1010,7 @@
   {
     "jsdbtype": "Battlegrounds.Game.Database.EntityBlueprint",
     "PBGID": "1073741853",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
     "Name": "recon_bg",
     "LocaleName": "2198050",
     "LocaleDescription": "11007042",
@@ -971,6 +1028,7 @@
   {
     "jsdbtype": "Battlegrounds.Game.Database.EntityBlueprint",
     "PBGID": "1073741852",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
     "Name": "sniper_bg",
     "LocaleName": "2198050",
     "LocaleDescription": "11007042",
@@ -988,6 +1046,7 @@
   {
     "jsdbtype": "Battlegrounds.Game.Database.EntityBlueprint",
     "PBGID": "1073741829",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
     "Name": "vehicle_crew_male_bg",
     "LocaleName": "11045410",
     "LocaleDescription": "11007039",
@@ -1005,6 +1064,7 @@
   {
     "jsdbtype": "Battlegrounds.Game.Database.EntityBlueprint",
     "PBGID": "1073741855",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
     "Name": "atgunzis_crew_bg",
     "LocaleName": "0",
     "LocaleDescription": "0",
@@ -1022,6 +1082,7 @@
   {
     "jsdbtype": "Battlegrounds.Game.Database.EntityBlueprint",
     "PBGID": "1073741857",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
     "Name": "dshk_weapon_crew_bg",
     "LocaleName": "0",
     "LocaleDescription": "0",
@@ -1039,6 +1100,7 @@
   {
     "jsdbtype": "Battlegrounds.Game.Database.EntityBlueprint",
     "PBGID": "1073741843",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
     "Name": "howitzer_crew_soviet_bg",
     "LocaleName": "0",
     "LocaleDescription": "0",
@@ -1056,6 +1118,7 @@
   {
     "jsdbtype": "Battlegrounds.Game.Database.EntityBlueprint",
     "PBGID": "1073741856",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
     "Name": "maxim_weapon_crew_bg",
     "LocaleName": "0",
     "LocaleDescription": "0",
@@ -1073,6 +1136,7 @@
   {
     "jsdbtype": "Battlegrounds.Game.Database.EntityBlueprint",
     "PBGID": "1073741858",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
     "Name": "mortar_120mm_weapon_crew_bg",
     "LocaleName": "0",
     "LocaleDescription": "0",
@@ -1090,6 +1154,7 @@
   {
     "jsdbtype": "Battlegrounds.Game.Database.EntityBlueprint",
     "PBGID": "1073741854",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
     "Name": "mortar_weapon_crew_bg",
     "LocaleName": "0",
     "LocaleDescription": "0",
@@ -1107,6 +1172,7 @@
   {
     "jsdbtype": "Battlegrounds.Game.Database.EntityBlueprint",
     "PBGID": "1073741864",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
     "Name": "m1937_53-k_45mm_at_gun_bg",
     "LocaleName": "11041977",
     "LocaleDescription": "11044798",
@@ -1124,6 +1190,7 @@
   {
     "jsdbtype": "Battlegrounds.Game.Database.EntityBlueprint",
     "PBGID": "1073741865",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
     "Name": "m1942_76mm_divisional_gun_zis-3_bg",
     "LocaleName": "11041979",
     "LocaleDescription": "11044796",
@@ -1141,6 +1208,7 @@
   {
     "jsdbtype": "Battlegrounds.Game.Database.EntityBlueprint",
     "PBGID": "1073741842",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
     "Name": "m1931_203mm_b-4_howitzer_artillery_bg",
     "LocaleName": "11035152",
     "LocaleDescription": "11047596",
@@ -1158,6 +1226,7 @@
   {
     "jsdbtype": "Battlegrounds.Game.Database.EntityBlueprint",
     "PBGID": "1073741859",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
     "Name": "m1937_152mm_ml_20_artillery_bg",
     "LocaleName": "11008238",
     "LocaleDescription": "11031931",
@@ -1175,6 +1244,7 @@
   {
     "jsdbtype": "Battlegrounds.Game.Database.EntityBlueprint",
     "PBGID": "1073741870",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
     "Name": "churchill_lend_lease_mp",
     "LocaleName": "11077621",
     "LocaleDescription": "11077620",
@@ -1192,6 +1262,7 @@
   {
     "jsdbtype": "Battlegrounds.Game.Database.EntityBlueprint",
     "PBGID": "1073741841",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
     "Name": "is-2_heavy_tank_bg",
     "LocaleName": "11038336",
     "LocaleDescription": "11038299",
@@ -1209,6 +1280,7 @@
   {
     "jsdbtype": "Battlegrounds.Game.Database.EntityBlueprint",
     "PBGID": "1073741840",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
     "Name": "isu_152_spg_bg",
     "LocaleName": "11038338",
     "LocaleDescription": "11038301",
@@ -1226,6 +1298,7 @@
   {
     "jsdbtype": "Battlegrounds.Game.Database.EntityBlueprint",
     "PBGID": "1073741839",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
     "Name": "katyusha_bm-13n_bg",
     "LocaleName": "11038340",
     "LocaleDescription": "11038303",
@@ -1243,6 +1316,7 @@
   {
     "jsdbtype": "Battlegrounds.Game.Database.EntityBlueprint",
     "PBGID": "1073741838",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
     "Name": "kv-1_bg",
     "LocaleName": "11007078",
     "LocaleDescription": "11038305",
@@ -1260,6 +1334,7 @@
   {
     "jsdbtype": "Battlegrounds.Game.Database.EntityBlueprint",
     "PBGID": "1073741837",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
     "Name": "kv-2_bg",
     "LocaleName": "11050858",
     "LocaleDescription": "0",
@@ -1277,6 +1352,7 @@
   {
     "jsdbtype": "Battlegrounds.Game.Database.EntityBlueprint",
     "PBGID": "1073741836",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
     "Name": "kv-8_bg",
     "LocaleName": "11038342",
     "LocaleDescription": "11038307",
@@ -1294,6 +1370,7 @@
   {
     "jsdbtype": "Battlegrounds.Game.Database.EntityBlueprint",
     "PBGID": "1073741835",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
     "Name": "m3a1_scout_car_bg",
     "LocaleName": "11038344",
     "LocaleDescription": "11038309",
@@ -1311,6 +1388,7 @@
   {
     "jsdbtype": "Battlegrounds.Game.Database.EntityBlueprint",
     "PBGID": "1073741834",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
     "Name": "m5_halftrack_bg",
     "LocaleName": "11038346",
     "LocaleDescription": "11038311",
@@ -1328,6 +1406,7 @@
   {
     "jsdbtype": "Battlegrounds.Game.Database.EntityBlueprint",
     "PBGID": "1073741833",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
     "Name": "sherman_76mm_lend_lease_bg",
     "LocaleName": "11075083",
     "LocaleDescription": "11075081",
@@ -1345,6 +1424,7 @@
   {
     "jsdbtype": "Battlegrounds.Game.Database.EntityBlueprint",
     "PBGID": "1073741832",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
     "Name": "su_76m_bg",
     "LocaleName": "11038348",
     "LocaleDescription": "11038313",
@@ -1362,6 +1442,7 @@
   {
     "jsdbtype": "Battlegrounds.Game.Database.EntityBlueprint",
     "PBGID": "1073741831",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
     "Name": "su_85_bg",
     "LocaleName": "11006720",
     "LocaleDescription": "11038315",
@@ -1379,6 +1460,7 @@
   {
     "jsdbtype": "Battlegrounds.Game.Database.EntityBlueprint",
     "PBGID": "1073741825",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
     "Name": "t_34_76_bg",
     "LocaleName": "11038350",
     "LocaleDescription": "11048086",
@@ -1396,6 +1478,7 @@
   {
     "jsdbtype": "Battlegrounds.Game.Database.EntityBlueprint",
     "PBGID": "1073741826",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
     "Name": "t_34_85_bg",
     "LocaleName": "11048080",
     "LocaleDescription": "11048084",
@@ -1413,6 +1496,7 @@
   {
     "jsdbtype": "Battlegrounds.Game.Database.EntityBlueprint",
     "PBGID": "1073741830",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
     "Name": "t_70m_bg",
     "LocaleName": "11038225",
     "LocaleDescription": "11038226",
@@ -1430,6 +1514,7 @@
   {
     "jsdbtype": "Battlegrounds.Game.Database.EntityBlueprint",
     "PBGID": "1073741868",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
     "Name": "valentine_bg",
     "LocaleName": "11095126",
     "LocaleDescription": "11095125",
@@ -1447,6 +1532,7 @@
   {
     "jsdbtype": "Battlegrounds.Game.Database.EntityBlueprint",
     "PBGID": "1073741869",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
     "Name": "valentine_command_bg",
     "LocaleName": "11095126",
     "LocaleDescription": "11095125",
@@ -1464,6 +1550,7 @@
   {
     "jsdbtype": "Battlegrounds.Game.Database.EntityBlueprint",
     "PBGID": "1073741824",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
     "Name": "zis_6_transport_bg",
     "LocaleName": "11048639",
     "LocaleDescription": "0",

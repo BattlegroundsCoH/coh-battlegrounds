@@ -2,6 +2,7 @@
   {
     "jsdbtype": "Battlegrounds.Game.Database.UpgradeBlueprint",
     "PBGID": "1073741823",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
     "Name": "bg_verify",
     "LocaleName": "0",
     "LocaleDescription": "0",
@@ -17,6 +18,7 @@
   {
     "jsdbtype": "Battlegrounds.Game.Database.UpgradeBlueprint",
     "PBGID": "1073741827",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
     "Name": "is_towed",
     "LocaleName": "0",
     "LocaleDescription": "0",
@@ -32,6 +34,7 @@
   {
     "jsdbtype": "Battlegrounds.Game.Database.UpgradeBlueprint",
     "PBGID": "1073741826",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
     "Name": "is_towing",
     "LocaleName": "0",
     "LocaleDescription": "0",
@@ -47,6 +50,7 @@
   {
     "jsdbtype": "Battlegrounds.Game.Database.UpgradeBlueprint",
     "PBGID": "1073741825",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
     "Name": "dp-28_lmg_upgrade_bg",
     "LocaleName": "15",
     "LocaleDescription": "16",
@@ -65,6 +69,7 @@
   {
     "jsdbtype": "Battlegrounds.Game.Database.UpgradeBlueprint",
     "PBGID": "1073741824",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
     "Name": "ppsh-41_sub_machine_gun_upgrade_bg",
     "LocaleName": "11008975",
     "LocaleDescription": "11008976",

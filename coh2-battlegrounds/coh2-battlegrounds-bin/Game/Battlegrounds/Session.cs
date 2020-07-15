@@ -141,7 +141,7 @@ namespace Battlegrounds.Game.Battlegrounds {
                 byte pIndex = currentIndex++;
                 Faction complementary = Faction.GetComplementaryFaction(complementaryFunc(i));
                 Company aiCompany = CompanyGenerator.Generate(complementary, sinfo.SelectedTuningMod.Guid.ToString().Replace("-", ""), false, true, false);
-                aiCompany.Owner = sinfo.DefaultDifficulty.GetIngameDisplayName();
+                aiCompany.Owner = "AIPlayer";
                 session.m_participants[pIndex] = new SessionParticipant(sinfo.DefaultDifficulty, aiCompany, team, playerTeamIndex++);
             }
         }

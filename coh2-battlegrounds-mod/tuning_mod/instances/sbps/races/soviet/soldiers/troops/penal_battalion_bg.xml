@@ -843,7 +843,6 @@
 				<enum name="squad_type" value="infantry" />
 				<enum name="squad_type" value="penal_battalion" />
 				<enum name="squad_type" value="tank_detection" />
-				<enum name="squad_type" value="rapid_conscription" />
 				<enum name="squad_type" value="mobile_infantry" />
 			</list>
 		</template_reference>

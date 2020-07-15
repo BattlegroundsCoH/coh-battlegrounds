@@ -813,7 +813,6 @@
 		<template_reference name="squadexts" value="sbpextensions\squad_type_ext">
 			<list name="squad_type_list">
 				<enum name="squad_type" value="kv-8" />
-				<enum name="squad_type" value="heavy_tank" />
 				<enum name="squad_type" value="vehicle" />
 				<enum name="squad_type" value="heavy_vehicle" />
 			</list>

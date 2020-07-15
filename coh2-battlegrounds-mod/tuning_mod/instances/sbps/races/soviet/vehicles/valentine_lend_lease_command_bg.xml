@@ -637,7 +637,6 @@
 				<enum name="squad_type" value="medium_tank" />
 				<enum name="squad_type" value="vehicle" />
 				<enum name="squad_type" value="heavy_vehicle" />
-				<enum name="squad_type" value="british_unit" />
 			</list>
 		</template_reference>
 		<template_reference name="squadexts" value="sbpextensions\squad_capture_strategic_point_ext">

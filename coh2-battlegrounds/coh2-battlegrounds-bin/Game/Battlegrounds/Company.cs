@@ -270,6 +270,18 @@ namespace Battlegrounds.Game.Battlegrounds {
                 throw new ArgumentNullException($"The squad blueprint was null");
             }
 
+            if (upgrades == null) {
+                upgrades = new UpgradeBlueprint[0];
+            }
+
+            if (slotitems == null) {
+                slotitems = new SlotItemBlueprint[0];
+            }
+
+            if (modifiers == null) {
+                modifiers = new Modifier[0];
+            }
+
             if (this.m_squads.Count + 1 <= MAX_SIZE) {
 
                 Squad squad = new Squad(m_nextSquadId++, null, main);

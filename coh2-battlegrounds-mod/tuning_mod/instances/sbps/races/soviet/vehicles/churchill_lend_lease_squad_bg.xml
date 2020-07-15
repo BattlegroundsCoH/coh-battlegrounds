@@ -672,7 +672,6 @@
 				<enum name="squad_type" value="heavy_tank" />
 				<enum name="squad_type" value="vehicle" />
 				<enum name="squad_type" value="heavy_vehicle" />
-				<enum name="squad_type" value="british_unit" />
 				<enum name="squad_type" value="heavy_vehicle_icon" />
 			</list>
 		</template_reference>

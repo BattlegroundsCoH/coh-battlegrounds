@@ -2,6 +2,7 @@
   {
     "jsdbtype": "Battlegrounds.Game.Database.AbilityBlueprint",
     "PBGID": "1073741824",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
     "Name": "bg_deploy_destination",
     "LocaleName": "1",
     "LocaleDescription": "13",
@@ -17,6 +18,7 @@
   {
     "jsdbtype": "Battlegrounds.Game.Database.AbilityBlueprint",
     "PBGID": "1073741823",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
     "Name": "bg_withdraw_unit",
     "LocaleName": "11036222",
     "LocaleDescription": "11036223",
@@ -32,6 +34,7 @@
   {
     "jsdbtype": "Battlegrounds.Game.Database.AbilityBlueprint",
     "PBGID": "1073741826",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
     "Name": "transport_heavy_vehicle_bg",
     "LocaleName": "18",
     "LocaleDescription": "19",
@@ -47,6 +50,7 @@
   {
     "jsdbtype": "Battlegrounds.Game.Database.AbilityBlueprint",
     "PBGID": "1073741827",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
     "Name": "detach_tow_bg",
     "LocaleName": "21",
     "LocaleDescription": "23",
@@ -62,6 +66,7 @@
   {
     "jsdbtype": "Battlegrounds.Game.Database.AbilityBlueprint",
     "PBGID": "1073741825",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
     "Name": "vehicle_decrew_vehicle_crew_bg",
     "LocaleName": "11072165",
     "LocaleDescription": "11072161",
@@ -77,6 +82,7 @@
   {
     "jsdbtype": "Battlegrounds.Game.Database.AbilityBlueprint",
     "PBGID": "1073741831",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
     "Name": "anti_tank_grenade_bg",
     "LocaleName": "11025826",
     "LocaleDescription": "11025827",
@@ -92,6 +98,7 @@
   {
     "jsdbtype": "Battlegrounds.Game.Database.AbilityBlueprint",
     "PBGID": "1073741828",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
     "Name": "conscript_molotov_cocktail_bg",
     "LocaleName": "11006607",
     "LocaleDescription": "11006747",
@@ -107,6 +114,7 @@
   {
     "jsdbtype": "Battlegrounds.Game.Database.AbilityBlueprint",
     "PBGID": "1073741829",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
     "Name": "rgd_1_smoke_grenade_bg",
     "LocaleName": "11032146",
     "LocaleDescription": "11032147",
@@ -122,6 +130,7 @@
   {
     "jsdbtype": "Battlegrounds.Game.Database.AbilityBlueprint",
     "PBGID": "1073741830",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
     "Name": "rg_42_anti_personnel_grenade_bg",
     "LocaleName": "11008244",
     "LocaleDescription": "11008245",
@@ -137,6 +146,7 @@
   {
     "jsdbtype": "Battlegrounds.Game.Database.AbilityBlueprint",
     "PBGID": "1073741832",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
     "Name": "satchel_charge_throw_ability_bg",
     "LocaleName": "11145736",
     "LocaleDescription": "11140709",

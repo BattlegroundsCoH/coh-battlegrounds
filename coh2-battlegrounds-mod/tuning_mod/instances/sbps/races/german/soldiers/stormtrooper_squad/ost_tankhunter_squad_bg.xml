@@ -997,6 +997,7 @@
 				<enum name="squad_type" value="pz_grenadiers" />
 				<enum name="squad_type" value="infantry" />
 				<enum name="squad_type" value="stormtrooper" />
+				<enum name="squad_type" value="tank_detection" />
 			</list>
 		</template_reference>
 		<template_reference name="squadexts" value="sbpextensions\squad_engineer_ext">

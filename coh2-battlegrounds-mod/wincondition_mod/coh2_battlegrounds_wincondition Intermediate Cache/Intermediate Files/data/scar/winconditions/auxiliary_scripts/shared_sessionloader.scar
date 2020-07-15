@@ -1,0 +1,126 @@
+function BG_LoadSessionData()
+
+    local j = 1;
+    local k = 1;
+
+    -- Create player data (for relevant players)
+    for i = 1, World_GetPlayerCount() do
+        local player = World_GetPlayerAt(i);
+        Player_SetPopCapOverride(player, 260);
+        if not AI_IsAIPlayer(player) then -- Make sure it's a player
+            _bg_playerData[j] = {};
+            _bg_playerData[j].player = player;
+            _bg_playerData[j].name = Player_GetDisplayName(player)[1];
+            _bg_playerData[j].playerID = Player_GetID(player);
+            _bg_playerData[j].race = Player_GetRaceName(player);
+            _bg_playerData[j].squads = {};
+            _bg_playerData[j].entities = {};
+            _bg_playerData[j].deployed = {};
+            if not BG_VerifyPlayer(_bg_playerData[j].name, _bg_playerData[j].race, false) then
+                return BG_LocString(0); -- TODO: Localize
+            end
+            j = j + 1;
+        else
+            _bg_aiData[k] = {};
+            _bg_aiData[k].player = player;
+            _bg_aiData[k].name = Player_GetDisplayName(player)[1];
+            _bg_aiData[k].playerID = Player_GetID(player);
+            _bg_aiData[k].race = Player_GetRaceName(player);
+            local result, diff, pos = BG_VerifyPlayer(_bg_aiData[k].name, _bg_aiData[k].race, true);
+            if not result then
+                return BG_LocString(0); -- TODO: Localize
+            else
+                _bg_aiData[k].difficulty = diff;
+                _bg_aiData[k].aiIndex = pos;
+            end
+            BGAI_RegisterAIPlayer(player);
+            k = k + 1;
+        end
+    end
+
+    return true;
+
+end
+
+function BG_VerifyPlayer(name, race, isAI)
+
+    local side = "allies";
+
+    if race == "german" or race == "west_german" then
+        side = "axis";
+    end
+
+    for i=1, #bg_settings.team_setup[side] do
+        if not isAI then
+            if bg_settings.team_setup[side][i].display_name == name and bg_settings.team_setup[side][i].ai_value == 0 then
+                return true;
+            end
+        elseif bg_settings.team_setup[side][i].ai_value ~= 0 then
+            return true, bg_settings.team_setup[side][i].ai_value, bg_settings.team_setup[side][i].id;
+        end
+    end
+
+    return false;
+
+end
+
+function BG_SetupWincondition()
+
+    if bg_settings.gamemode == "Victory Points" then
+
+        -- Import the VP ticker code
+        import("Prototype/VPTickerWin-Annihilate_Functions.scar")
+
+        -- Override this method
+        Setup_GetWinConditionOption = function()
+            return bg_settings.gameoptions.gamemode_setting;
+        end
+
+        -- Call the set globals
+        SetGlobals();
+
+        -- Call the OnInit
+        VPTicker_OnInit();
+
+    end -- Add more gamemodes here!
+
+end
+
+function BG_LoadCompanies()
+
+    -- Make sure the player count is matching
+    if #_bg_playerData ~= bg_settings.playercount then
+        return BG_LocString(4);
+    end
+
+    -- Run through all players and set this up
+    for i = 1, #_bg_playerData do
+
+        -- Make sure the player is valid
+        if bg_companies[_bg_playerData[i].name] == nil then
+            return BG_LocStringFormat(5, _bg_playerData[i].name);
+        else
+
+            -- "Copy" the company data
+            _bg_playerData[i].company = bg_companies[_bg_playerData[i].name];
+
+            -- Make sure they've picked the correct faction
+            if Player_GetRaceName(_bg_playerData[i].player) ~= _bg_playerData[i].company.army then
+                return BG_LocString(6, _bg_playerData[i].name, Player_GetRaceName(_bg_playerData[i].player), _bg_playerData[i].company.army);
+            end
+
+        end
+
+    end
+
+    return true;
+
+end
+
+function BG_LoadAIData()
+
+
+
+    return true;
+
+end

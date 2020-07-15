@@ -30,7 +30,7 @@ namespace Battlegrounds.Game.Battlegrounds {
         /// <summary>
         /// The <see cref="SteamUser"/> profile of the human user.
         /// </summary>
-        [JsonIgnoreIfValue("")]public string UserDisplayname { get; }
+        [JsonIgnoreIfValue("")] public string UserDisplayname { get; }
 
         /// <summary>
         /// Is the <see cref="SessionParticipant"/> instance a human player.

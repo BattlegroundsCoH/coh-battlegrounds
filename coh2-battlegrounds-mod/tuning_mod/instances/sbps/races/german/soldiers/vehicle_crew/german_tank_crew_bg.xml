@@ -879,8 +879,8 @@
 		</template_reference>
 		<template_reference name="squadexts" value="sbpextensions\squad_type_ext">
 			<list name="squad_type_list">
-				<enum name="squad_type" value="pioneer" />
 				<enum name="squad_type" value="infantry" />
+				<enum name="squad_type" value="aef_vehicle_crew" />
 			</list>
 		</template_reference>
 		<template_reference name="squadexts" value="sbpextensions\squad_plant_demolition_ext">

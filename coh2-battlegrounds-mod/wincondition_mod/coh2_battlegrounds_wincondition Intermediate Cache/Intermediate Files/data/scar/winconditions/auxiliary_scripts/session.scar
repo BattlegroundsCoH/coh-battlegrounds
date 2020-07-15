@@ -1,6 +1,6 @@
 bg_settings = {
 	playercount = 1,
-	session_guid = "a5c42eb8-b8a4-44cd-99b8-2ec77b710812",
+	session_guid = "ca2c271e-e442-4fff-91b6-e248d1802f1f",
 	map = "2p_angoville_farms",
 	tuning_mod = {
 		mod_name = "Battlegrounds",
@@ -9,34 +9,36 @@ bg_settings = {
 	},
 	gamemode = "Victory Points",
 	gameoptions = {
-		gamemode_setting = 500
+		gamemode_setting = 500,
 	},
 	team_setup = {
 		["allies"] = {
-			"CoDiEx",
+			{ display_name = "CoDiEx", ai_value = 0, id = 0, },
 		},
 		["axis"] = {
+			{ display_name = "AI - Hard", ai_value = 3, id = 0, },
 		},
 	},
 };
+
 bg_companies = {
 	["CoDiEx"] = {
 		name = "26th Rifle Division",
+		index = 0,
 		army = "soviet",
 		units = {
 			{
 				bp_name = "142b113740474c82a60b0a428bd553d5:conscript_squad_bg",
-				symbol = "Icons_symbols_unit_soviet_conscript_03_symbol",
+				symbol = "Icons_symbols_unit_soviet_conscript_02_symbol",
 				category = "infantry",
 				company_id = 0,
 				veterancy_rank = 0,
 				veterancy_progress = 0.00,
 				cost = {
-					manpower = 240.00,
-					fieldtime = 14.00,
+					manpower = 280.00,
+					fieldtime = 15.00,
 				},
 				upgrades = {
-					{ bp="142b113740474c82a60b0a428bd553d5:ppsh-41_sub_machine_gun_upgrade_bg", symbol="" },
 				},
 				slot_items = {
 				},
@@ -46,16 +48,36 @@ bg_companies = {
 			},
 			{
 				bp_name = "142b113740474c82a60b0a428bd553d5:conscript_squad_bg",
-				symbol = "Icons_symbols_unit_soviet_conscript_03_symbol",
+				symbol = "Icons_symbols_unit_soviet_conscript_02_symbol",
 				category = "infantry",
 				company_id = 1,
+				veterancy_rank = 0,
+				veterancy_progress = 0.00,
+				cost = {
+					manpower = 280.00,
+					fieldtime = 15.00,
+				},
+				upgrades = {
+				},
+				slot_items = {
+				},
+				modifiers = {
+				},
+				spawned = false,
+			},
+			{
+				bp_name = "142b113740474c82a60b0a428bd553d5:conscript_squad_bg",
+				symbol = "Icons_symbols_unit_soviet_conscript_02_symbol",
+				category = "infantry",
+				company_id = 2,
 				veterancy_rank = 2,
 				veterancy_progress = 0.00,
 				cost = {
-					manpower = 240.00,
-					fieldtime = 15.00,
+					manpower = 280.00,
+					fieldtime = 14.00,
 				},
 				upgrades = {
+					{ bp="142b113740474c82a60b0a428bd553d5:dp-28_lmg_upgrade_bg", symbol="Icons_weapons_weapon_dp_28_lmg" },
 				},
 				slot_items = {
 				},
@@ -65,36 +87,17 @@ bg_companies = {
 			},
 			{
 				bp_name = "142b113740474c82a60b0a428bd553d5:conscript_squad_bg",
-				symbol = "Icons_symbols_unit_soviet_conscript_03_symbol",
-				category = "infantry",
-				company_id = 2,
-				veterancy_rank = 0,
-				veterancy_progress = 120.00,
-				cost = {
-					manpower = 240.00,
-					fieldtime = 15.00,
-				},
-				upgrades = {
-				},
-				slot_items = {
-				},
-				modifiers = {
-				},
-				spawned = false,
-			},
-			{
-				bp_name = "142b113740474c82a60b0a428bd553d5:conscript_squad_bg",
-				symbol = "Icons_symbols_unit_soviet_conscript_03_symbol",
+				symbol = "Icons_symbols_unit_soviet_conscript_02_symbol",
 				category = "infantry",
 				company_id = 3,
 				veterancy_rank = 2,
 				veterancy_progress = 0.00,
 				cost = {
-					manpower = 240.00,
+					manpower = 280.00,
 					fieldtime = 14.00,
 				},
 				upgrades = {
-					{ bp="142b113740474c82a60b0a428bd553d5:dp-28_lmg_upgrade_bg", symbol="" },
+					{ bp="142b113740474c82a60b0a428bd553d5:dp-28_lmg_upgrade_bg", symbol="Icons_weapons_weapon_dp_28_lmg" },
 				},
 				slot_items = {
 				},
@@ -104,17 +107,17 @@ bg_companies = {
 			},
 			{
 				bp_name = "142b113740474c82a60b0a428bd553d5:conscript_squad_bg",
-				symbol = "Icons_symbols_unit_soviet_conscript_03_symbol",
+				symbol = "Icons_symbols_unit_soviet_conscript_02_symbol",
 				category = "infantry",
 				company_id = 4,
-				veterancy_rank = 3,
+				veterancy_rank = 4,
 				veterancy_progress = 0.00,
 				cost = {
-					manpower = 240.00,
+					manpower = 280.00,
 					fieldtime = 14.00,
 				},
 				upgrades = {
-					{ bp="142b113740474c82a60b0a428bd553d5:dp-28_lmg_upgrade_bg", symbol="" },
+					{ bp="142b113740474c82a60b0a428bd553d5:ppsh-41_sub_machine_gun_upgrade_bg", symbol="Icons_weapons_weapon_pps" },
 				},
 				slot_items = {
 				},
@@ -124,17 +127,21 @@ bg_companies = {
 			},
 			{
 				bp_name = "142b113740474c82a60b0a428bd553d5:conscript_squad_bg",
-				symbol = "Icons_symbols_unit_soviet_conscript_03_symbol",
+				symbol = "Icons_symbols_unit_soviet_conscript_02_symbol",
 				category = "infantry",
 				company_id = 5,
-				veterancy_rank = 5,
+				veterancy_rank = 0,
 				veterancy_progress = 0.00,
+				transport = {
+					sbp = "142b113740474c82a60b0a428bd553d5:zis_6_transport_truck_bg",
+					symbol = "Icons_symbols_vehicle_soviet_su6_truck_symbol",
+					mode = 1,
+				},
 				cost = {
-					manpower = 240.00,
-					fieldtime = 14.00,
+					manpower = 310.00,
+					fieldtime = 18.75,
 				},
 				upgrades = {
-					{ bp="142b113740474c82a60b0a428bd553d5:ppsh-41_sub_machine_gun_upgrade_bg", symbol="" },
 				},
 				slot_items = {
 				},
@@ -144,7 +151,7 @@ bg_companies = {
 			},
 			{
 				bp_name = "142b113740474c82a60b0a428bd553d5:conscript_squad_bg",
-				symbol = "Icons_symbols_unit_soviet_conscript_03_symbol",
+				symbol = "Icons_symbols_unit_soviet_conscript_02_symbol",
 				category = "infantry",
 				company_id = 6,
 				veterancy_rank = 3,
@@ -155,11 +162,10 @@ bg_companies = {
 					mode = 1,
 				},
 				cost = {
-					manpower = 270.00,
-					fieldtime = 17.75,
+					manpower = 310.00,
+					fieldtime = 18.75,
 				},
 				upgrades = {
-					{ bp="142b113740474c82a60b0a428bd553d5:ppsh-41_sub_machine_gun_upgrade_bg", symbol="" },
 				},
 				slot_items = {
 				},
@@ -169,10 +175,10 @@ bg_companies = {
 			},
 			{
 				bp_name = "142b113740474c82a60b0a428bd553d5:conscript_squad_bg",
-				symbol = "Icons_symbols_unit_soviet_conscript_03_symbol",
+				symbol = "Icons_symbols_unit_soviet_conscript_02_symbol",
 				category = "infantry",
 				company_id = 7,
-				veterancy_rank = 3,
+				veterancy_rank = 4,
 				veterancy_progress = 0.00,
 				transport = {
 					sbp = "142b113740474c82a60b0a428bd553d5:zis_6_transport_truck_bg",
@@ -180,11 +186,11 @@ bg_companies = {
 					mode = 1,
 				},
 				cost = {
-					manpower = 270.00,
+					manpower = 310.00,
 					fieldtime = 17.75,
 				},
 				upgrades = {
-					{ bp="142b113740474c82a60b0a428bd553d5:ppsh-41_sub_machine_gun_upgrade_bg", symbol="" },
+					{ bp="142b113740474c82a60b0a428bd553d5:ppsh-41_sub_machine_gun_upgrade_bg", symbol="Icons_weapons_weapon_pps" },
 				},
 				slot_items = {
 				},
@@ -194,7 +200,7 @@ bg_companies = {
 			},
 			{
 				bp_name = "142b113740474c82a60b0a428bd553d5:conscript_squad_bg",
-				symbol = "Icons_symbols_unit_soviet_conscript_03_symbol",
+				symbol = "Icons_symbols_unit_soviet_conscript_02_symbol",
 				category = "infantry",
 				company_id = 8,
 				veterancy_rank = 5,
@@ -205,11 +211,11 @@ bg_companies = {
 					mode = 1,
 				},
 				cost = {
-					manpower = 270.00,
+					manpower = 310.00,
 					fieldtime = 17.75,
 				},
 				upgrades = {
-					{ bp="142b113740474c82a60b0a428bd553d5:ppsh-41_sub_machine_gun_upgrade_bg", symbol="" },
+					{ bp="142b113740474c82a60b0a428bd553d5:ppsh-41_sub_machine_gun_upgrade_bg", symbol="Icons_weapons_weapon_pps" },
 				},
 				slot_items = {
 				},
@@ -218,52 +224,71 @@ bg_companies = {
 				spawned = false,
 			},
 			{
-				bp_name = "142b113740474c82a60b0a428bd553d5:conscript_squad_bg",
+				bp_name = "142b113740474c82a60b0a428bd553d5:frontoviki_squad_bg",
 				symbol = "Icons_symbols_unit_soviet_conscript_03_symbol",
 				category = "infantry",
 				company_id = 9,
-				veterancy_rank = 5,
+				veterancy_rank = 0,
+				veterancy_progress = 0.00,
+				transport = {
+					sbp = "142b113740474c82a60b0a428bd553d5:m5_halftrack_squad_bg",
+					symbol = "Icons_symbols_vehicle_soviet_m5_halftrack_symbol",
+					mode = 1,
+				},
+				cost = {
+					manpower = 260.00,
+					fieldtime = 17.75,
+				},
+				upgrades = {
+					{ bp="142b113740474c82a60b0a428bd553d5:ppsh-41_sub_machine_gun_upgrade_bg", symbol="Icons_weapons_weapon_pps" },
+				},
+				slot_items = {
+				},
+				modifiers = {
+				},
+				spawned = false,
+			},
+			{
+				bp_name = "142b113740474c82a60b0a428bd553d5:frontoviki_squad_bg",
+				symbol = "Icons_symbols_unit_soviet_conscript_03_symbol",
+				category = "infantry",
+				company_id = 10,
+				veterancy_rank = 1,
+				veterancy_progress = 0.00,
+				transport = {
+					sbp = "142b113740474c82a60b0a428bd553d5:m5_halftrack_squad_bg",
+					symbol = "Icons_symbols_vehicle_soviet_m5_halftrack_symbol",
+					mode = 1,
+				},
+				cost = {
+					manpower = 260.00,
+					fieldtime = 17.75,
+				},
+				upgrades = {
+					{ bp="142b113740474c82a60b0a428bd553d5:ppsh-41_sub_machine_gun_upgrade_bg", symbol="Icons_weapons_weapon_pps" },
+				},
+				slot_items = {
+				},
+				modifiers = {
+				},
+				spawned = false,
+			},
+			{
+				bp_name = "142b113740474c82a60b0a428bd553d5:m1942_zis-3_76mm_at_gun_squad_bg",
+				symbol = "Icons_symbols_vehicle_soviet_m1942_76mm_at_gun_symbol",
+				category = "team_weapon",
+				company_id = 11,
+				veterancy_rank = 0,
 				veterancy_progress = 0.00,
 				transport = {
 					sbp = "142b113740474c82a60b0a428bd553d5:zis_6_transport_truck_bg",
 					symbol = "Icons_symbols_vehicle_soviet_su6_truck_symbol",
 					mode = 1,
+					tow = true,
 				},
 				cost = {
-					manpower = 270.00,
-					fieldtime = 17.75,
-				},
-				upgrades = {
-					{ bp="142b113740474c82a60b0a428bd553d5:ppsh-41_sub_machine_gun_upgrade_bg", symbol="" },
-				},
-				slot_items = {
-				},
-				modifiers = {
-				},
-				spawned = false,
-			},
-			{
-				bp_name = "142b113740474c82a60b0a428bd553d5:t_34_76_squad_bg",
-				symbol = "Icons_symbols_vehicle_soviet_t34_76_heavy_tank_symbol",
-				category = "vehicle",
-				company_id = 10,
-				veterancy_rank = 2,
-				veterancy_progress = 0.00,
-				crew = {
-					company_id = 11,
-					veterancy_rank = 2,
-					veterancy_progress = 0.0,
-					upgrades = {
-					},
-					slot_items = {
-					},
-					modifiers = {
-					},
-				},
-				cost = {
-					manpower = 300.00,
-					fuel = 90.00,
-					fieldtime = 15.00,
+					manpower = 180.00,
+					fieldtime = 18.75,
 				},
 				upgrades = {
 				},
@@ -274,26 +299,77 @@ bg_companies = {
 				spawned = false,
 			},
 			{
-				bp_name = "142b113740474c82a60b0a428bd553d5:t_34_76_squad_bg",
-				symbol = "Icons_symbols_vehicle_soviet_t34_76_heavy_tank_symbol",
-				category = "vehicle",
+				bp_name = "142b113740474c82a60b0a428bd553d5:m1942_zis-3_76mm_at_gun_squad_bg",
+				symbol = "Icons_symbols_vehicle_soviet_m1942_76mm_at_gun_symbol",
+				category = "team_weapon",
 				company_id = 12,
-				veterancy_rank = 2,
+				veterancy_rank = 0,
 				veterancy_progress = 0.00,
-				crew = {
-					company_id = 13,
-					veterancy_rank = 2,
-					veterancy_progress = 0.0,
-					upgrades = {
-					},
-					slot_items = {
-					},
-					modifiers = {
-					},
+				transport = {
+					sbp = "142b113740474c82a60b0a428bd553d5:zis_6_transport_truck_bg",
+					symbol = "Icons_symbols_vehicle_soviet_su6_truck_symbol",
+					mode = 1,
+					tow = true,
 				},
 				cost = {
-					manpower = 300.00,
-					fuel = 90.00,
+					manpower = 180.00,
+					fieldtime = 18.75,
+				},
+				upgrades = {
+				},
+				slot_items = {
+				},
+				modifiers = {
+				},
+				spawned = false,
+			},
+			{
+				bp_name = "142b113740474c82a60b0a428bd553d5:m1910_maxim_heavy_machine_gun_squad_bg",
+				symbol = "Icons_symbols_unit_soviet_mg_symbol",
+				category = "team_weapon",
+				company_id = 13,
+				veterancy_rank = 0,
+				veterancy_progress = 0.00,
+				cost = {
+					manpower = 160.00,
+					fieldtime = 15.00,
+				},
+				upgrades = {
+				},
+				slot_items = {
+				},
+				modifiers = {
+				},
+				spawned = false,
+			},
+			{
+				bp_name = "142b113740474c82a60b0a428bd553d5:m1910_maxim_heavy_machine_gun_squad_bg",
+				symbol = "Icons_symbols_unit_soviet_mg_symbol",
+				category = "team_weapon",
+				company_id = 14,
+				veterancy_rank = 0,
+				veterancy_progress = 0.00,
+				cost = {
+					manpower = 160.00,
+					fieldtime = 15.00,
+				},
+				upgrades = {
+				},
+				slot_items = {
+				},
+				modifiers = {
+				},
+				spawned = false,
+			},
+			{
+				bp_name = "142b113740474c82a60b0a428bd553d5:pm-82_41_mortar_squad_bg",
+				symbol = "Icons_symbols_unit_soviet_mortar_symbol",
+				category = "team_weapon",
+				company_id = 15,
+				veterancy_rank = 0,
+				veterancy_progress = 0.00,
+				cost = {
+					manpower = 120.00,
 					fieldtime = 15.00,
 				},
 				upgrades = {
@@ -307,37 +383,6 @@ bg_companies = {
 			{
 				bp_name = "142b113740474c82a60b0a428bd553d5:t_34_76_squad_bg",
 				symbol = "Icons_symbols_vehicle_soviet_t34_76_heavy_tank_symbol",
-				category = "vehicle",
-				company_id = 14,
-				veterancy_rank = 2,
-				veterancy_progress = 0.00,
-				crew = {
-					company_id = 15,
-					veterancy_rank = 2,
-					veterancy_progress = 0.0,
-					upgrades = {
-					},
-					slot_items = {
-					},
-					modifiers = {
-					},
-				},
-				cost = {
-					manpower = 300.00,
-					fuel = 90.00,
-					fieldtime = 15.00,
-				},
-				upgrades = {
-				},
-				slot_items = {
-				},
-				modifiers = {
-				},
-				spawned = false,
-			},
-			{
-				bp_name = "142b113740474c82a60b0a428bd553d5:t_34_85_squad_bg",
-				symbol = "Icons_symbols_vehicle_soviet_t34_85_symbol",
 				category = "vehicle",
 				company_id = 16,
 				veterancy_rank = 2,
@@ -354,8 +399,8 @@ bg_companies = {
 					},
 				},
 				cost = {
-					manpower = 380.00,
-					fuel = 130.00,
+					manpower = 300.00,
+					fuel = 90.00,
 					fieldtime = 15.00,
 				},
 				upgrades = {
@@ -367,15 +412,15 @@ bg_companies = {
 				spawned = false,
 			},
 			{
-				bp_name = "142b113740474c82a60b0a428bd553d5:t_34_85_squad_bg",
-				symbol = "Icons_symbols_vehicle_soviet_t34_85_symbol",
+				bp_name = "142b113740474c82a60b0a428bd553d5:t_34_76_squad_bg",
+				symbol = "Icons_symbols_vehicle_soviet_t34_76_heavy_tank_symbol",
 				category = "vehicle",
 				company_id = 18,
-				veterancy_rank = 3,
+				veterancy_rank = 2,
 				veterancy_progress = 0.00,
 				crew = {
 					company_id = 19,
-					veterancy_rank = 3,
+					veterancy_rank = 2,
 					veterancy_progress = 0.0,
 					upgrades = {
 					},
@@ -385,8 +430,39 @@ bg_companies = {
 					},
 				},
 				cost = {
-					manpower = 380.00,
-					fuel = 130.00,
+					manpower = 300.00,
+					fuel = 90.00,
+					fieldtime = 15.00,
+				},
+				upgrades = {
+				},
+				slot_items = {
+				},
+				modifiers = {
+				},
+				spawned = false,
+			},
+			{
+				bp_name = "142b113740474c82a60b0a428bd553d5:t_34_76_squad_bg",
+				symbol = "Icons_symbols_vehicle_soviet_t34_76_heavy_tank_symbol",
+				category = "vehicle",
+				company_id = 20,
+				veterancy_rank = 2,
+				veterancy_progress = 0.00,
+				crew = {
+					company_id = 21,
+					veterancy_rank = 2,
+					veterancy_progress = 0.0,
+					upgrades = {
+					},
+					slot_items = {
+					},
+					modifiers = {
+					},
+				},
+				cost = {
+					manpower = 300.00,
+					fuel = 90.00,
 					fieldtime = 15.00,
 				},
 				upgrades = {
@@ -401,11 +477,11 @@ bg_companies = {
 				bp_name = "142b113740474c82a60b0a428bd553d5:t_34_85_squad_bg",
 				symbol = "Icons_symbols_vehicle_soviet_t34_85_symbol",
 				category = "vehicle",
-				company_id = 20,
+				company_id = 22,
 				veterancy_rank = 4,
 				veterancy_progress = 0.00,
 				crew = {
-					company_id = 21,
+					company_id = 23,
 					veterancy_rank = 4,
 					veterancy_progress = 0.0,
 					upgrades = {
@@ -432,11 +508,11 @@ bg_companies = {
 				bp_name = "142b113740474c82a60b0a428bd553d5:t_34_85_squad_bg",
 				symbol = "Icons_symbols_vehicle_soviet_t34_85_symbol",
 				category = "vehicle",
-				company_id = 22,
+				company_id = 24,
 				veterancy_rank = 5,
 				veterancy_progress = 0.00,
 				crew = {
-					company_id = 23,
+					company_id = 25,
 					veterancy_rank = 5,
 					veterancy_progress = 0.0,
 					upgrades = {
@@ -460,10 +536,103 @@ bg_companies = {
 				spawned = false,
 			},
 			{
+				bp_name = "142b113740474c82a60b0a428bd553d5:kv-1_bg",
+				symbol = "Icons_symbols_vehicle_soviet_kv1_heavy_tank_symbol",
+				category = "vehicle",
+				company_id = 26,
+				veterancy_rank = 2,
+				veterancy_progress = 0.00,
+				crew = {
+					company_id = 27,
+					veterancy_rank = 2,
+					veterancy_progress = 0.0,
+					upgrades = {
+					},
+					slot_items = {
+					},
+					modifiers = {
+					},
+				},
+				cost = {
+					manpower = 600.00,
+					fuel = 75.00,
+					fieldtime = 15.00,
+				},
+				upgrades = {
+				},
+				slot_items = {
+				},
+				modifiers = {
+				},
+				spawned = false,
+			},
+			{
+				bp_name = "142b113740474c82a60b0a428bd553d5:kv-1_bg",
+				symbol = "Icons_symbols_vehicle_soviet_kv1_heavy_tank_symbol",
+				category = "vehicle",
+				company_id = 28,
+				veterancy_rank = 2,
+				veterancy_progress = 0.00,
+				crew = {
+					company_id = 29,
+					veterancy_rank = 2,
+					veterancy_progress = 0.0,
+					upgrades = {
+					},
+					slot_items = {
+					},
+					modifiers = {
+					},
+				},
+				cost = {
+					manpower = 600.00,
+					fuel = 75.00,
+					fieldtime = 15.00,
+				},
+				upgrades = {
+				},
+				slot_items = {
+				},
+				modifiers = {
+				},
+				spawned = false,
+			},
+			{
+				bp_name = "142b113740474c82a60b0a428bd553d5:valentine_lend_lease_command_bg",
+				symbol = "Icons_symbols_vehicle_british_valentine_symbol",
+				category = "vehicle",
+				company_id = 30,
+				veterancy_rank = 0,
+				veterancy_progress = 0.00,
+				crew = {
+					company_id = 31,
+					veterancy_rank = 0,
+					veterancy_progress = 0.0,
+					upgrades = {
+					},
+					slot_items = {
+					},
+					modifiers = {
+					},
+				},
+				cost = {
+					manpower = 300.00,
+					fuel = 80.00,
+					fieldtime = 15.00,
+				},
+				upgrades = {
+				},
+				slot_items = {
+				},
+				modifiers = {
+				},
+				spawned = false,
+			},
+			{
 				bp_name = "142b113740474c82a60b0a428bd553d5:m1931_203mm_b-4_howitzer_artillery_bg",
 				symbol = "Icons_symbols_vehicle_soviet_b4_artillery_gun_symbol",
 				category = "team_weapon",
-				company_id = 24,
+				company_id = 32,
 				veterancy_rank = 1,
 				veterancy_progress = 0.00,
 				transport = {
@@ -488,8 +657,8 @@ bg_companies = {
 				bp_name = "142b113740474c82a60b0a428bd553d5:m1931_203mm_b-4_howitzer_artillery_bg",
 				symbol = "Icons_symbols_vehicle_soviet_b4_artillery_gun_symbol",
 				category = "team_weapon",
-				company_id = 25,
-				veterancy_rank = 1,
+				company_id = 33,
+				veterancy_rank = 2,
 				veterancy_progress = 0.00,
 				transport = {
 					sbp = "142b113740474c82a60b0a428bd553d5:zis_6_transport_truck_bg",
@@ -509,22 +678,842 @@ bg_companies = {
 				},
 				spawned = false,
 			},
+		}
+	},
+
+	["AIPlayer#0"] = {
+		name = "Auto-Generated Company",
+		index = 0,
+		army = "german",
+		units = {
 			{
-				bp_name = "142b113740474c82a60b0a428bd553d5:m1931_203mm_b-4_howitzer_artillery_bg",
-				symbol = "Icons_symbols_vehicle_soviet_b4_artillery_gun_symbol",
-				category = "team_weapon",
-				company_id = 26,
-				veterancy_rank = 2,
+				bp_name = "142b113740474c82a60b0a428bd553d5:german_vehicle_crew_bg",
+				symbol = "Icons_symbols_unit_german_pioneer_symbol",
+				category = "infantry",
+				company_id = 0,
+				veterancy_rank = 4,
 				veterancy_progress = 0.00,
-				transport = {
-					sbp = "142b113740474c82a60b0a428bd553d5:zis_6_transport_truck_bg",
-					symbol = "Icons_symbols_vehicle_soviet_su6_truck_symbol",
-					mode = 1,
-					tow = true,
+				cost = {
+					manpower = 100.00,
+					fieldtime = 15.00,
+				},
+				upgrades = {
+				},
+				slot_items = {
+				},
+				modifiers = {
+				},
+				spawned = false,
+			},
+			{
+				bp_name = "142b113740474c82a60b0a428bd553d5:sniper_squad_bg",
+				symbol = "Icons_symbols_unit_german_sniper_symbol",
+				category = "infantry",
+				company_id = 1,
+				veterancy_rank = 1,
+				veterancy_progress = 0.00,
+				cost = {
+					manpower = 360.00,
+					fieldtime = 15.00,
+				},
+				upgrades = {
+				},
+				slot_items = {
+				},
+				modifiers = {
+				},
+				spawned = false,
+			},
+			{
+				bp_name = "142b113740474c82a60b0a428bd553d5:grenadier_squad_bg",
+				symbol = "Icons_symbols_unit_german_grenadier_symbol",
+				category = "infantry",
+				company_id = 2,
+				veterancy_rank = 0,
+				veterancy_progress = 0.00,
+				cost = {
+					manpower = 300.00,
+					fieldtime = 15.00,
+				},
+				upgrades = {
+				},
+				slot_items = {
+				},
+				modifiers = {
+				},
+				spawned = false,
+			},
+			{
+				bp_name = "142b113740474c82a60b0a428bd553d5:sdkfz_221_command_bg",
+				symbol = "Icons_symbols_vehicle_german_222_armored_car_symbol",
+				category = "vehicle",
+				company_id = 3,
+				veterancy_rank = 4,
+				veterancy_progress = 0.00,
+				crew = {
+					company_id = 4,
+					veterancy_rank = 4,
+					veterancy_progress = 0.0,
+					upgrades = {
+					},
+					slot_items = {
+					},
+					modifiers = {
+					},
 				},
 				cost = {
-					manpower = 330.00,
-					fieldtime = 18.75,
+					manpower = 200.00,
+					fuel = 30.00,
+					fieldtime = 15.00,
+				},
+				upgrades = {
+				},
+				slot_items = {
+				},
+				modifiers = {
+				},
+				spawned = false,
+			},
+			{
+				bp_name = "142b113740474c82a60b0a428bd553d5:sniper_squad_bg",
+				symbol = "Icons_symbols_unit_german_sniper_symbol",
+				category = "infantry",
+				company_id = 5,
+				veterancy_rank = 1,
+				veterancy_progress = 0.00,
+				cost = {
+					manpower = 360.00,
+					fieldtime = 15.00,
+				},
+				upgrades = {
+				},
+				slot_items = {
+				},
+				modifiers = {
+				},
+				spawned = false,
+			},
+			{
+				bp_name = "142b113740474c82a60b0a428bd553d5:mortar_team_81mm_bg",
+				symbol = "Icons_symbols_unit_german_granatwerfer_34_mortar_symbol",
+				category = "team_weapon",
+				company_id = 6,
+				veterancy_rank = 4,
+				veterancy_progress = 0.00,
+				cost = {
+					manpower = 135.00,
+					fieldtime = 15.00,
+				},
+				upgrades = {
+				},
+				slot_items = {
+				},
+				modifiers = {
+				},
+				spawned = false,
+			},
+			{
+				bp_name = "142b113740474c82a60b0a428bd553d5:tiger_command_squad_bg",
+				symbol = "Icons_symbols_vehicle_german_tiger_symbol",
+				category = "vehicle",
+				company_id = 7,
+				veterancy_rank = 5,
+				veterancy_progress = 0.00,
+				crew = {
+					company_id = 8,
+					veterancy_rank = 5,
+					veterancy_progress = 0.0,
+					upgrades = {
+					},
+					slot_items = {
+					},
+					modifiers = {
+					},
+				},
+				cost = {
+					manpower = 640.00,
+					fuel = 230.00,
+					fieldtime = 15.00,
+				},
+				upgrades = {
+				},
+				slot_items = {
+				},
+				modifiers = {
+				},
+				spawned = false,
+			},
+			{
+				bp_name = "142b113740474c82a60b0a428bd553d5:sniper_squad_bg",
+				symbol = "Icons_symbols_unit_german_sniper_symbol",
+				category = "infantry",
+				company_id = 9,
+				veterancy_rank = 0,
+				veterancy_progress = 0.00,
+				cost = {
+					manpower = 360.00,
+					fieldtime = 15.00,
+				},
+				upgrades = {
+				},
+				slot_items = {
+				},
+				modifiers = {
+				},
+				spawned = false,
+			},
+			{
+				bp_name = "142b113740474c82a60b0a428bd553d5:german_vehicle_crew_bg",
+				symbol = "Icons_symbols_unit_german_pioneer_symbol",
+				category = "infantry",
+				company_id = 10,
+				veterancy_rank = 3,
+				veterancy_progress = 0.00,
+				cost = {
+					manpower = 100.00,
+					fieldtime = 15.00,
+				},
+				upgrades = {
+				},
+				slot_items = {
+				},
+				modifiers = {
+				},
+				spawned = false,
+			},
+			{
+				bp_name = "142b113740474c82a60b0a428bd553d5:stug_iii_e_squad_bg",
+				symbol = "Icons_symbols_vehicle_german_stug_iii_e_symbol",
+				category = "vehicle",
+				company_id = 11,
+				veterancy_rank = 3,
+				veterancy_progress = 0.00,
+				crew = {
+					company_id = 12,
+					veterancy_rank = 3,
+					veterancy_progress = 0.0,
+					upgrades = {
+					},
+					slot_items = {
+					},
+					modifiers = {
+					},
+				},
+				cost = {
+					manpower = 320.00,
+					fuel = 25.00,
+					fieldtime = 15.00,
+				},
+				upgrades = {
+				},
+				slot_items = {
+				},
+				modifiers = {
+				},
+				spawned = false,
+			},
+			{
+				bp_name = "142b113740474c82a60b0a428bd553d5:panzer_grenadier_squad_bg",
+				symbol = "Icons_symbols_unit_german_panzer_grenadier_symbol",
+				category = "infantry",
+				company_id = 13,
+				veterancy_rank = 2,
+				veterancy_progress = 0.00,
+				cost = {
+					manpower = 340.00,
+					fieldtime = 15.00,
+				},
+				upgrades = {
+				},
+				slot_items = {
+				},
+				modifiers = {
+				},
+				spawned = false,
+			},
+			{
+				bp_name = "142b113740474c82a60b0a428bd553d5:pioneer_squad_bg",
+				symbol = "Icons_symbols_unit_german_pioneer_symbol",
+				category = "infantry",
+				company_id = 14,
+				veterancy_rank = 2,
+				veterancy_progress = 0.00,
+				cost = {
+					manpower = 150.00,
+					fieldtime = 15.00,
+				},
+				upgrades = {
+				},
+				slot_items = {
+				},
+				modifiers = {
+				},
+				spawned = false,
+			},
+			{
+				bp_name = "142b113740474c82a60b0a428bd553d5:ostruppen_squad_bg",
+				symbol = "Icons_symbols_unit_german_ostruppen_symbol",
+				category = "infantry",
+				company_id = 15,
+				veterancy_rank = 5,
+				veterancy_progress = 0.00,
+				cost = {
+					manpower = 200.00,
+					fieldtime = 15.00,
+				},
+				upgrades = {
+				},
+				slot_items = {
+				},
+				modifiers = {
+				},
+				spawned = false,
+			},
+			{
+				bp_name = "142b113740474c82a60b0a428bd553d5:ostruppen_squad_bg",
+				symbol = "Icons_symbols_unit_german_ostruppen_symbol",
+				category = "infantry",
+				company_id = 16,
+				veterancy_rank = 3,
+				veterancy_progress = 0.00,
+				cost = {
+					manpower = 200.00,
+					fieldtime = 15.00,
+				},
+				upgrades = {
+				},
+				slot_items = {
+				},
+				modifiers = {
+				},
+				spawned = false,
+			},
+			{
+				bp_name = "142b113740474c82a60b0a428bd553d5:mg42_heavy_machine_gun_squad_bg",
+				symbol = "Icons_symbols_unit_german_m1910_hmg_symbol",
+				category = "team_weapon",
+				company_id = 17,
+				veterancy_rank = 1,
+				veterancy_progress = 0.00,
+				cost = {
+					manpower = 135.00,
+					fieldtime = 15.00,
+				},
+				upgrades = {
+				},
+				slot_items = {
+				},
+				modifiers = {
+				},
+				spawned = false,
+			},
+			{
+				bp_name = "142b113740474c82a60b0a428bd553d5:mortar_250_halftrack_squad_bg",
+				symbol = "Icons_symbols_vehicle_german_251_mortar_halftrack_symbol",
+				category = "vehicle",
+				company_id = 18,
+				veterancy_rank = 2,
+				veterancy_progress = 0.00,
+				cost = {
+					manpower = 200.00,
+					fuel = 30.00,
+					fieldtime = 15.00,
+				},
+				upgrades = {
+				},
+				slot_items = {
+				},
+				modifiers = {
+				},
+				spawned = false,
+			},
+			{
+				bp_name = "142b113740474c82a60b0a428bd553d5:panther_command_squad_bg",
+				symbol = "Icons_symbols_vehicle_german_panther_symbol",
+				category = "vehicle",
+				company_id = 19,
+				veterancy_rank = 5,
+				veterancy_progress = 0.00,
+				crew = {
+					company_id = 20,
+					veterancy_rank = 5,
+					veterancy_progress = 0.0,
+					upgrades = {
+					},
+					slot_items = {
+					},
+					modifiers = {
+					},
+				},
+				cost = {
+					manpower = 490.00,
+					fuel = 185.00,
+					fieldtime = 15.00,
+				},
+				upgrades = {
+				},
+				slot_items = {
+				},
+				modifiers = {
+				},
+				spawned = false,
+			},
+			{
+				bp_name = "142b113740474c82a60b0a428bd553d5:panzer_grenadier_squad_bg",
+				symbol = "Icons_symbols_unit_german_panzer_grenadier_symbol",
+				category = "infantry",
+				company_id = 21,
+				veterancy_rank = 4,
+				veterancy_progress = 0.00,
+				cost = {
+					manpower = 340.00,
+					fieldtime = 15.00,
+				},
+				upgrades = {
+				},
+				slot_items = {
+				},
+				modifiers = {
+				},
+				spawned = false,
+			},
+			{
+				bp_name = "142b113740474c82a60b0a428bd553d5:sniper_squad_bg",
+				symbol = "Icons_symbols_unit_german_sniper_symbol",
+				category = "infantry",
+				company_id = 22,
+				veterancy_rank = 4,
+				veterancy_progress = 0.00,
+				cost = {
+					manpower = 360.00,
+					fieldtime = 15.00,
+				},
+				upgrades = {
+				},
+				slot_items = {
+				},
+				modifiers = {
+				},
+				spawned = false,
+			},
+			{
+				bp_name = "142b113740474c82a60b0a428bd553d5:assault_officer_squad_bg",
+				symbol = "Icons_symbols_unit_german_officer_symbol",
+				category = "infantry",
+				company_id = 23,
+				veterancy_rank = 1,
+				veterancy_progress = 0.00,
+				cost = {
+					manpower = 180.00,
+					fieldtime = 15.00,
+				},
+				upgrades = {
+				},
+				slot_items = {
+				},
+				modifiers = {
+				},
+				spawned = false,
+			},
+			{
+				bp_name = "142b113740474c82a60b0a428bd553d5:panzer_grenadier_squad_bg",
+				symbol = "Icons_symbols_unit_german_panzer_grenadier_symbol",
+				category = "infantry",
+				company_id = 24,
+				veterancy_rank = 2,
+				veterancy_progress = 0.00,
+				cost = {
+					manpower = 340.00,
+					fieldtime = 15.00,
+				},
+				upgrades = {
+				},
+				slot_items = {
+				},
+				modifiers = {
+				},
+				spawned = false,
+			},
+			{
+				bp_name = "142b113740474c82a60b0a428bd553d5:pak40_75mm_at_gun_squad_bg",
+				symbol = "Icons_symbols_vehicle_german_pak_40_75mm_at_gun_symbol",
+				category = "team_weapon",
+				company_id = 25,
+				veterancy_rank = 4,
+				veterancy_progress = 0.00,
+				cost = {
+					manpower = 180.00,
+					fieldtime = 15.00,
+				},
+				upgrades = {
+				},
+				slot_items = {
+				},
+				modifiers = {
+				},
+				spawned = false,
+			},
+			{
+				bp_name = "142b113740474c82a60b0a428bd553d5:sniper_squad_bg",
+				symbol = "Icons_symbols_unit_german_sniper_symbol",
+				category = "infantry",
+				company_id = 26,
+				veterancy_rank = 1,
+				veterancy_progress = 0.00,
+				cost = {
+					manpower = 360.00,
+					fieldtime = 15.00,
+				},
+				upgrades = {
+				},
+				slot_items = {
+				},
+				modifiers = {
+				},
+				spawned = false,
+			},
+			{
+				bp_name = "142b113740474c82a60b0a428bd553d5:pioneer_squad_bg",
+				symbol = "Icons_symbols_unit_german_pioneer_symbol",
+				category = "infantry",
+				company_id = 27,
+				veterancy_rank = 1,
+				veterancy_progress = 0.00,
+				cost = {
+					manpower = 150.00,
+					fieldtime = 15.00,
+				},
+				upgrades = {
+				},
+				slot_items = {
+				},
+				modifiers = {
+				},
+				spawned = false,
+			},
+			{
+				bp_name = "142b113740474c82a60b0a428bd553d5:assault_officer_squad_bg",
+				symbol = "Icons_symbols_unit_german_officer_symbol",
+				category = "infantry",
+				company_id = 28,
+				veterancy_rank = 4,
+				veterancy_progress = 0.00,
+				cost = {
+					manpower = 180.00,
+					fieldtime = 15.00,
+				},
+				upgrades = {
+				},
+				slot_items = {
+				},
+				modifiers = {
+				},
+				spawned = false,
+			},
+			{
+				bp_name = "142b113740474c82a60b0a428bd553d5:ost_tankhunter_squad_bg",
+				symbol = "Icons_symbols_unit_german_stormtroopers_symbol",
+				category = "infantry",
+				company_id = 29,
+				veterancy_rank = 3,
+				veterancy_progress = 0.00,
+				cost = {
+					manpower = 202.50,
+					fieldtime = 15.00,
+				},
+				upgrades = {
+				},
+				slot_items = {
+				},
+				modifiers = {
+				},
+				spawned = false,
+			},
+			{
+				bp_name = "142b113740474c82a60b0a428bd553d5:mortar_250_halftrack_squad_bg",
+				symbol = "Icons_symbols_vehicle_german_251_mortar_halftrack_symbol",
+				category = "vehicle",
+				company_id = 30,
+				veterancy_rank = 0,
+				veterancy_progress = 0.00,
+				cost = {
+					manpower = 200.00,
+					fuel = 30.00,
+					fieldtime = 15.00,
+				},
+				upgrades = {
+				},
+				slot_items = {
+				},
+				modifiers = {
+				},
+				spawned = false,
+			},
+			{
+				bp_name = "142b113740474c82a60b0a428bd553d5:sdkfz_250_halftrack_bg",
+				symbol = "Icons_symbols_vehicle_german_250_halftrack_symbol",
+				category = "vehicle",
+				company_id = 31,
+				veterancy_rank = 0,
+				veterancy_progress = 0.00,
+				cost = {
+					manpower = 210.00,
+					fuel = 20.00,
+					fieldtime = 15.00,
+				},
+				upgrades = {
+				},
+				slot_items = {
+				},
+				modifiers = {
+				},
+				spawned = false,
+			},
+			{
+				bp_name = "142b113740474c82a60b0a428bd553d5:panzer_grenadier_squad_bg",
+				symbol = "Icons_symbols_unit_german_panzer_grenadier_symbol",
+				category = "infantry",
+				company_id = 32,
+				veterancy_rank = 5,
+				veterancy_progress = 0.00,
+				cost = {
+					manpower = 340.00,
+					fieldtime = 15.00,
+				},
+				upgrades = {
+				},
+				slot_items = {
+				},
+				modifiers = {
+				},
+				spawned = false,
+			},
+			{
+				bp_name = "142b113740474c82a60b0a428bd553d5:grenadier_squad_bg",
+				symbol = "Icons_symbols_unit_german_grenadier_symbol",
+				category = "infantry",
+				company_id = 33,
+				veterancy_rank = 0,
+				veterancy_progress = 0.00,
+				cost = {
+					manpower = 300.00,
+					fieldtime = 15.00,
+				},
+				upgrades = {
+				},
+				slot_items = {
+				},
+				modifiers = {
+				},
+				spawned = false,
+			},
+			{
+				bp_name = "142b113740474c82a60b0a428bd553d5:tiger_command_squad_bg",
+				symbol = "Icons_symbols_vehicle_german_tiger_symbol",
+				category = "vehicle",
+				company_id = 34,
+				veterancy_rank = 3,
+				veterancy_progress = 0.00,
+				crew = {
+					company_id = 35,
+					veterancy_rank = 3,
+					veterancy_progress = 0.0,
+					upgrades = {
+					},
+					slot_items = {
+					},
+					modifiers = {
+					},
+				},
+				cost = {
+					manpower = 640.00,
+					fuel = 230.00,
+					fieldtime = 15.00,
+				},
+				upgrades = {
+				},
+				slot_items = {
+				},
+				modifiers = {
+				},
+				spawned = false,
+			},
+			{
+				bp_name = "142b113740474c82a60b0a428bd553d5:howitzer_105mm_le_fh18_artillery_bg",
+				symbol = "Icons_symbols_vehicle_german_howitzer_symbol",
+				category = "team_weapon",
+				company_id = 36,
+				veterancy_rank = 0,
+				veterancy_progress = 0.00,
+				cost = {
+					manpower = 160.00,
+					fuel = 50.00,
+					fieldtime = 15.00,
+				},
+				upgrades = {
+				},
+				slot_items = {
+				},
+				modifiers = {
+				},
+				spawned = false,
+			},
+			{
+				bp_name = "142b113740474c82a60b0a428bd553d5:grenadier_squad_bg",
+				symbol = "Icons_symbols_unit_german_grenadier_symbol",
+				category = "infantry",
+				company_id = 37,
+				veterancy_rank = 5,
+				veterancy_progress = 0.00,
+				cost = {
+					manpower = 300.00,
+					fieldtime = 15.00,
+				},
+				upgrades = {
+				},
+				slot_items = {
+				},
+				modifiers = {
+				},
+				spawned = false,
+			},
+			{
+				bp_name = "142b113740474c82a60b0a428bd553d5:elefant_tank_destroyer_squad_bg",
+				symbol = "Icons_symbols_vehicle_german_elefant_tank_destroyer_symbol",
+				category = "vehicle",
+				company_id = 38,
+				veterancy_rank = 0,
+				veterancy_progress = 0.00,
+				crew = {
+					company_id = 39,
+					veterancy_rank = 0,
+					veterancy_progress = 0.0,
+					upgrades = {
+					},
+					slot_items = {
+					},
+					modifiers = {
+					},
+				},
+				cost = {
+					manpower = 720.00,
+					fuel = 245.00,
+					fieldtime = 15.00,
+				},
+				upgrades = {
+				},
+				slot_items = {
+				},
+				modifiers = {
+				},
+				spawned = false,
+			},
+			{
+				bp_name = "142b113740474c82a60b0a428bd553d5:pioneer_squad_bg",
+				symbol = "Icons_symbols_unit_german_pioneer_symbol",
+				category = "infantry",
+				company_id = 40,
+				veterancy_rank = 3,
+				veterancy_progress = 0.00,
+				cost = {
+					manpower = 150.00,
+					fieldtime = 15.00,
+				},
+				upgrades = {
+				},
+				slot_items = {
+				},
+				modifiers = {
+				},
+				spawned = false,
+			},
+			{
+				bp_name = "142b113740474c82a60b0a428bd553d5:grenadier_squad_bg",
+				symbol = "Icons_symbols_unit_german_grenadier_symbol",
+				category = "infantry",
+				company_id = 41,
+				veterancy_rank = 1,
+				veterancy_progress = 0.00,
+				cost = {
+					manpower = 300.00,
+					fieldtime = 15.00,
+				},
+				upgrades = {
+				},
+				slot_items = {
+				},
+				modifiers = {
+				},
+				spawned = false,
+			},
+			{
+				bp_name = "142b113740474c82a60b0a428bd553d5:grenadier_squad_bg",
+				symbol = "Icons_symbols_unit_german_grenadier_symbol",
+				category = "infantry",
+				company_id = 42,
+				veterancy_rank = 4,
+				veterancy_progress = 0.00,
+				cost = {
+					manpower = 300.00,
+					fieldtime = 15.00,
+				},
+				upgrades = {
+				},
+				slot_items = {
+				},
+				modifiers = {
+				},
+				spawned = false,
+			},
+			{
+				bp_name = "142b113740474c82a60b0a428bd553d5:ostruppen_squad_bg",
+				symbol = "Icons_symbols_unit_german_ostruppen_symbol",
+				category = "infantry",
+				company_id = 43,
+				veterancy_rank = 2,
+				veterancy_progress = 0.00,
+				cost = {
+					manpower = 200.00,
+					fieldtime = 15.00,
+				},
+				upgrades = {
+				},
+				slot_items = {
+				},
+				modifiers = {
+				},
+				spawned = false,
+			},
+			{
+				bp_name = "142b113740474c82a60b0a428bd553d5:ostruppen_squad_bg",
+				symbol = "Icons_symbols_unit_german_ostruppen_symbol",
+				category = "infantry",
+				company_id = 44,
+				veterancy_rank = 0,
+				veterancy_progress = 0.00,
+				cost = {
+					manpower = 200.00,
+					fieldtime = 15.00,
+				},
+				upgrades = {
+				},
+				slot_items = {
+				},
+				modifiers = {
+				},
+				spawned = false,
+			},
+			{
+				bp_name = "142b113740474c82a60b0a428bd553d5:howitzer_105mm_le_fh18_artillery_bg",
+				symbol = "Icons_symbols_vehicle_german_howitzer_symbol",
+				category = "team_weapon",
+				company_id = 45,
+				veterancy_rank = 4,
+				veterancy_progress = 0.00,
+				cost = {
+					manpower = 160.00,
+					fuel = 50.00,
+					fieldtime = 15.00,
 				},
 				upgrades = {
 				},
