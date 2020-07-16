@@ -1,7 +1,132 @@
-function BGAI_RegisterAIPlayer(player)
+function BGAI_RegisterAIPlayer(index, player)
+
+    -- Get the difficulty
+    local difficulty = BGAI_GetDifficultyFromValue(_bg_aiData[index].difficulty);
+
+    -- Set the difficulty
+    AI_SetDifficulty(player, difficulty);
+
+    -- Get the update time
+    local updateTime = 60 - (difficulty * 15);
+
+    -- Set update interval
+    _bg_aiData[index].update_interval = updateTime;
+    _bg_aiData[index].update_time = updateTime + (_bg_aiData[index].aiIndex * 5); -- index * 5 ==> Update offset
+
+    -- Add AI update if none
+    if not Rule_Exists(BGAI_UpdateAIPlayers) then
+        Rule_AddInterval(BGAI_UpdateAIPlayers, 5);
+    end
+
+    -- Add the AI oneshot (if none)
+    if not Rule_Exists(BGAI_EvalAllInitial) then
+        Rule_AddOneShot(BGAI_EvalAllInitial, 5);
+    end
 
 end
 
+function BGAI_GetDifficultyFromValue(d)
+    if d == 1 then
+        return AD_Easy;
+    elseif d == 2 then
+        return AD_Standard;
+    elseif d == 3 then
+        return AD_Hard;
+    else
+        return AD_Hardest;
+    end
+end
+
 function BGAI_GetAIPlayerID(player)
+    for i=1, #_bg_aiData do
+        if _bg_aiData[i].player == player then
+            return i;
+        end
+    end
+    return -1;
+end
+
+function BGAI_EvalAllInitial()
+    for i=1, #_bg_aiData do
+        BGAI_EvalProduction(i);
+    end
+end
+
+function BGAI_UpdateAIPlayers()
+
+    for i=1, #_bg_aiData do
+
+        _bg_aiData[i].update_time = _bg_aiData[i].update_time - 5;
+
+        if _bg_aiData[i].update_time <= 0 then
+
+            -- Evaluate production
+            BGAI_EvalProduction(i);
+
+            _bg_aiData[i].update_time = _bg_aiData[i].update_interval;
+
+        end
+
+    end
+
+end
+
+function BGAI_EvalProduction(index)
+
+    local squadCount = Player_GetSquadCount(_bg_aiData[index].player);
+
+    if (squadCount <= 4) then -- The 'Get something unto the field' threshold
+
+        local affordable_units = BGAI_FindAffordableUnits(index, "infantry"); -- Will just be infantry for now.
+
+        if bg_set:size(affordable_units) > 0 then
+            BGAI_BuyRandom(index, affordable_units);
+        end
+
+    else -- Be smart about calling in units
+
+        -- Consider encountered enemy units
+
+    end
+
+end
+
+function BGAI_FindAffordableUnits(index, type)
+
+    local manpower = Player_GetResource(_bg_aiData[index].player, RT_Manpower);
+    local munitions = Player_GetResource(_bg_aiData[index].player, RT_Munition);
+    local fuel = Player_GetResource(_bg_aiData[index].player, RT_Fuel);
+    local affordable_set = {}
+
+    for i=1, #_bg_aiData[index].company.units do
+
+        if (not _bg_aiData[index].company.units[i].spawned) and (type == nil or _bg_aiData[index].company.units[i].category == type) then
+
+            local costManpower = _bg_aiData[index].company.units[i].cost.manpower or 0;
+            local costMunitions = _bg_aiData[index].company.units[i].cost.munitions or 0;
+            local costFuel = _bg_aiData[index].company.units[i].cost.fuel or 0;
+
+            if manpower >= costManpower and munitions >= costMunitions and fuel >= costFuel then
+                bg_set:add(affordable_set, _bg_aiData[index].company.units[i]);
+            end
+
+        end
+
+    end
+
+    return affordable_set;
+
+end
+
+function BGAI_BuyRandom(index, set)
+
+    local i = World_GetRand(1, bg_set:size(set));
+
+    local player = _bg_aiData[index].player;
+    local gotopos = Player_GetStartingPosition(player);
+    local spawnfrom = Player_GetNearestMapEntry(player, gotopos);
+
+    -- Call in the unit
+    BG_CallInUnit(set[i], player, gotopos, spawnfrom);
 
 end

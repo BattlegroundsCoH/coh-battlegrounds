@@ -10,6 +10,11 @@ bg_set = {
         SGroup_ForEach(sgroupTarget, __sgeach);
         return set;
     end,
+    add = function(self, a, e)
+        if not self:contains(a, e) then
+            table.insert(a, e);
+        end
+    end,
     union = function(self, a, b)
         local set = {};
         for i=1, #a do
@@ -135,7 +140,7 @@ function __SGREMOVE_WHEN_NEAR()
                     if __removewhennear[i].callbackfunc ~= nil then
                         __removewhennear[i].callbackfunc(__removewhennear[i].target);
                     end
-                    SGroup_DeSpawn(__removewhennear[i].target);
+                    SGroup_DestroyAllSquads(__removewhennear[i].target); -- NOTE: We don't despawn, we actually destroy here
                     table.remove(__removewhennear, i);
                     break;
                 end

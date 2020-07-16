@@ -68,91 +68,8 @@ function BG_DeploySquad(player, unit_id)
         local gotopos = _bg_playerData[playerRefID].last_callin_point or Player_GetStartingPosition(player);
         local spawnfrom = Player_GetNearestMapEntry(player, gotopos);
 
-        -- Create the squad
-        local squad = Squad_CreateAndSpawnToward(BP_GetSquadBlueprint(unit_data.bp_name), player, 0, spawnfrom, gotopos );
-        local sg_temp = SGroup_FromSquad(squad);
-
-        -- Was a transport method specified?
-        if unit_data.transport ~= nil then
-
-            -- One of the 'deploy with land transport' methods
-            if (unit_data.transport.mode == 1 or unit_data.transport.mode == 2)  then
-
-                local transportSquad = Squad_CreateAndSpawnToward(BP_GetSquadBlueprint(unit_data.transport.sbp), player, 0, spawnfrom, gotopos );
-                local sg_transport_temp = SGroup_FromSquad(transportSquad, "sg_transport_temp" .. unit_data.company_id);
-                SGroup_Add(sg_transport_temp, transportSquad);
-
-                -- If not a tow-squad (standard infantry)
-                if unit_data.transport.tow == nil or unit_data.transport.tow == false then
-
-                    -- Garrison the squad
-                    Cmd_Garrison(sg_temp, sg_transport_temp, true, false, true);
-
-                    -- Tell transport to go to position and drop of squad
-                    Command_SquadPos(player, sg_transport_temp, SCMD_UnloadSquads, gotopos, false);
-
-                    -- If deploy and exit - tell squad to exit once squad is deployed.
-                    if unit_data.transport.mode == 1 then
-                        BG_DeployAndExit(sg_transport_temp, nil);
-                    end
-
-                else
-
-                    -- Command to move
-                    Command_SquadPos(player, sg_transport_temp, SCMD_Move, gotopos, false);
-
-                    -- Tow-transport from off-map
-                    Battlegrounds_TowFromOffmap(transportSquad, squad);
-
-                    -- If deploy and exit - tell squad to exit once squad is deployed.
-                    if unit_data.transport.mode == 1 then
-                        BG_DeployAndExit(sg_transport_temp, gotopos);
-                    end
-
-                end
-
-            else
-
-                -- TODO: Implement
-
-            end
-
-        else
-
-            -- Give move order
-            Command_SquadPos(player, sg_temp, SCMD_Move, gotopos, false )
-
-        end
-
-        -- If crew is valid
-        if unit_data.crew ~= nil then
-            -- TODO: Implement...
-        end
-
-        -- Apply veterancy rank
-        if (unit_data.veterancy_rank > 0) then
-            Squad_IncreaseVeterancyRank(squad, unit_data.veterancy_rank, true );
-        end
-
-        -- Apply veterancy progress
-        if (unit_data.veterancy_progress > 0) then
-            Squad_IncreaseVeterancyExperience(squad, unit_data.veterancy_progress, true, true );
-        end
-
-        -- Add upgrades
-        for i=1, #unit_data.upgrades do
-            Command_SquadUpgrade(player, sg_temp, BP_GetUpgradeBlueprint(unit_data.upgrades[i].bp), true, false );
-        end
-
-        -- Add slot_items
-        for i=1, #unit_data.slot_items do
-            -- TODO: Implement
-        end
-
-        -- Add modifiers
-        for i=1, #unit_data.modifiers do
-            -- TODO: Implement
-        end
+        -- Call in the unit
+        local squad = BG_CallInUnit(unit_data, player, gotopos, spawnfrom);
 
         -- Register the unit
         _bg_playerData[playerRefID].deployed[Squad_GetGameID(squad)] = unit_data.company_id;
@@ -164,15 +81,114 @@ function BG_DeploySquad(player, unit_id)
         Rule_AddSquadEvent(BG_OnSquadDeath, squad, GE_SquadKilled);
         Rule_AddSquadEvent(BG_OnSquadUpgrade, squad, GE_UpgradeComplete);
 
-        -- Mark spawned
-        unit_data.spawned = true;
-
         -- Was it the local player who spawned this unit?
         if player == Game_GetLocalPlayer() then
             BG_RefreshCompanyView();
         end
 
     end
+
+end
+
+function BG_CallInUnit(unit_data, player, gotopos, spawnfrom)
+
+    -- Create the squad
+    local squad = Squad_CreateAndSpawnToward(BP_GetSquadBlueprint(unit_data.bp_name), player, 0, spawnfrom, gotopos );
+    local sg_temp = SGroup_FromSquad(squad);
+
+    -- Was a transport method specified?
+    if unit_data.transport ~= nil then
+
+        -- One of the 'deploy with land transport' methods
+        if (unit_data.transport.mode == 1 or unit_data.transport.mode == 2)  then
+
+            -- Create transport squad
+            local transportSquad = Squad_CreateAndSpawnToward(BP_GetSquadBlueprint(unit_data.transport.sbp), player, 0, spawnfrom, gotopos );
+            local sg_transport_temp = SGroup_FromSquad(transportSquad, "sg_transport_temp" .. unit_data.company_id);
+            SGroup_Add(sg_transport_temp, transportSquad);
+
+            -- Gotta lock the transport in case of AI (We don't want it taking over and screwing up something).
+            if AI_IsEnabled(player) then
+                AI_LockSquad(player, transportSquad);
+            end
+
+            -- If not a tow-squad (standard infantry)
+            if unit_data.transport.tow == nil or unit_data.transport.tow == false then
+
+                -- Garrison the squad
+                Cmd_Garrison(sg_temp, sg_transport_temp, true, false, true);
+
+                -- Tell transport to go to position and drop of squad
+                Command_SquadPos(player, sg_transport_temp, SCMD_UnloadSquads, gotopos, false);
+
+                -- If deploy and exit - tell squad to exit once squad is deployed.
+                if unit_data.transport.mode == 1 then
+                    BG_DeployAndExit(sg_transport_temp, nil);
+                end
+
+            else
+
+                -- Command to move
+                Command_SquadPos(player, sg_transport_temp, SCMD_Move, gotopos, false);
+
+                -- Tow-transport from off-map
+                Battlegrounds_TowFromOffmap(transportSquad, squad);
+
+                -- If deploy and exit - tell squad to exit once squad is deployed.
+                if unit_data.transport.mode == 1 then
+                    BG_DeployAndExit(sg_transport_temp, gotopos);
+                end
+
+            end
+
+        else
+
+            -- TODO: Implement
+
+        end
+
+    else
+
+        -- Give move order
+        Command_SquadPos(player, sg_temp, SCMD_Move, gotopos, false )
+
+    end
+
+    -- If crew is valid
+    if unit_data.crew ~= nil then
+        -- TODO: Implement...
+    end
+
+    -- Apply veterancy rank
+    if (unit_data.veterancy_rank > 0) then
+        Squad_IncreaseVeterancyRank(squad, unit_data.veterancy_rank, true );
+    end
+
+    -- Apply veterancy progress
+    if (unit_data.veterancy_progress > 0) then
+        Squad_IncreaseVeterancyExperience(squad, unit_data.veterancy_progress, true, true );
+    end
+
+    -- Add upgrades
+    for i=1, #unit_data.upgrades do
+        Command_SquadUpgrade(player, sg_temp, BP_GetUpgradeBlueprint(unit_data.upgrades[i].bp), true, false );
+    end
+
+    -- Add slot_items
+    for i=1, #unit_data.slot_items do
+        -- TODO: Implement
+    end
+
+    -- Add modifiers
+    for i=1, #unit_data.modifiers do
+        -- TODO: Implement
+    end
+
+    -- Mark spawned
+    unit_data.spawned = true;
+
+    -- Return the squad
+    return squad;
 
 end
 

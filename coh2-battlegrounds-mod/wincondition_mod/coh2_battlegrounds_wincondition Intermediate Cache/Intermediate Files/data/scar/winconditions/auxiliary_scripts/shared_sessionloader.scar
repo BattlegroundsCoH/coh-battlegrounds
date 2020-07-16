@@ -13,11 +13,12 @@ function BG_LoadSessionData()
             _bg_playerData[j].name = Player_GetDisplayName(player)[1];
             _bg_playerData[j].playerID = Player_GetID(player);
             _bg_playerData[j].race = Player_GetRaceName(player);
-            _bg_playerData[j].squads = {};
-            _bg_playerData[j].entities = {};
+            --_bg_playerData[j].squads = {};
+            --_bg_playerData[j].entities = {};
             _bg_playerData[j].deployed = {};
-            if not BG_VerifyPlayer(_bg_playerData[j].name, _bg_playerData[j].race, false) then
-                return BG_LocString(0); -- TODO: Localize
+            _bg_playerData[j].teamStr = BG_GetTeamString(_bg_playerData[j].race);
+            if not BG_VerifyPlayer(_bg_playerData[j].name, _bg_playerData[j].teamStr, false) then
+                return BG_LocStringFormat(9, Player_GetDisplayName(player));
             end
             j = j + 1;
         else
@@ -26,14 +27,17 @@ function BG_LoadSessionData()
             _bg_aiData[k].name = Player_GetDisplayName(player)[1];
             _bg_aiData[k].playerID = Player_GetID(player);
             _bg_aiData[k].race = Player_GetRaceName(player);
-            local result, diff, pos = BG_VerifyPlayer(_bg_aiData[k].name, _bg_aiData[k].race, true);
+            _bg_aiData[k].teamStr = BG_GetTeamString(_bg_aiData[k].race);
+            _bg_aiData[k].deployed = {};
+            _bg_aiData[k].encountered = {};
+            local result, diff, pos = BG_VerifyPlayer(_bg_aiData[k].name, _bg_aiData[k].teamStr, true);
             if not result then
-                return BG_LocString(0); -- TODO: Localize
+                return BG_LocString(10);
             else
                 _bg_aiData[k].difficulty = diff;
                 _bg_aiData[k].aiIndex = pos;
             end
-            BGAI_RegisterAIPlayer(player);
+            BGAI_RegisterAIPlayer(k, player);
             k = k + 1;
         end
     end
@@ -42,13 +46,15 @@ function BG_LoadSessionData()
 
 end
 
-function BG_VerifyPlayer(name, race, isAI)
-
-    local side = "allies";
-
+function BG_GetTeamString(race)
     if race == "german" or race == "west_german" then
-        side = "axis";
+        return "axis";
+    else
+        return "allies";
     end
+end
+
+function BG_VerifyPlayer(name, side, isAI)
 
     for i=1, #bg_settings.team_setup[side] do
         if not isAI then
@@ -119,7 +125,28 @@ end
 
 function BG_LoadAIData()
 
+    local counters = {
+        ["allies"] = 0,
+        ["axis"] = 0,
+    }
 
+    for i = 1, #_bg_aiData do
+
+        local side = _bg_aiData[i].teamStr;
+
+        for k,v in pairs(bg_companies) do
+            if k == "AIPlayer#" ..tostring(counters[side]) then
+                _bg_aiData[i].company = v;
+                counters[side] = counters[side] + 1;
+                break;
+            end
+        end
+
+        if _bg_aiData[i].company == nil then
+            return BG_LocString(11);
+        end
+
+    end
 
     return true;
 
