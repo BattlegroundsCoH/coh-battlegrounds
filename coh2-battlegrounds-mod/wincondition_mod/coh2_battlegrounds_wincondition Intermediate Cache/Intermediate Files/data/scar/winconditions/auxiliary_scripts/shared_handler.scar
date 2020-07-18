@@ -225,7 +225,7 @@ function BG_CollectEndofMatchData()
         for squadID, company_id in pairs(_bg_playerData[i].deployed) do
 
             -- Make sure the unit is available
-            if (company_id ~= nil) then
+            if (company_id ~= nil and Squad_IsValid(squadID)) then
 
                 -- Get the actual squad
                 local squad = Squad_FromWorldID(squadID);

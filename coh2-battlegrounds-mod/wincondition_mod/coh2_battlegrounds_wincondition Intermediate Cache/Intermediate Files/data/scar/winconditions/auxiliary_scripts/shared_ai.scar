@@ -1,3 +1,46 @@
+_bg_AISettings = {
+    thresholds = {
+        [1] = {
+            smart_thinking = 4,
+            trigger_callin = 7,
+            max_deployed = 8, -- max deployed at a time
+        },
+        [2] = {
+            smart_thinking = 3,
+            trigger_callin = 5,
+            max_deployed = 10,
+        },
+        [3] = {
+            smart_thinking = 2,
+            trigger_callin = 3,
+            max_deployed = 12,
+        },
+        [4] = {
+            smart_thinking = 1,
+            trigger_callin = 2,
+            max_deployed = 15,
+        }
+    },
+    modifiers = {
+        [1] = {
+            aggressive_factor = 0.75,
+            call_mod = 2.75,
+        },
+        [2] = {
+            aggressive_factor = 1,
+            call_mod = 2.1,
+        },
+        [3] = {
+            aggressive_factor = 2,
+            call_mod = 1.2,
+        },
+        [4] = {
+            aggressive_factor = 3,
+            call_mod = 0.9,
+        }
+    }
+};
+
 function BGAI_RegisterAIPlayer(index, player)
 
     -- Get the difficulty
@@ -5,6 +48,12 @@ function BGAI_RegisterAIPlayer(index, player)
 
     -- Set the difficulty
     AI_SetDifficulty(player, difficulty);
+
+    -- Set some basics
+    _bg_aiData[index].demand_vehicle = 0;
+    _bg_aiData[index].demand_heavy = 0;
+    _bg_aiData[index].demand_support = 0;
+    _bg_aiData[index].demand_any = 1;
 
     -- Get the update time
     local updateTime = 60 - (difficulty * 15);
@@ -60,9 +109,13 @@ function BGAI_UpdateAIPlayers()
 
         if _bg_aiData[i].update_time <= 0 then
 
+            -- Evaluate own units
+            BGAI_EvalUnits(i);
+
             -- Evaluate production
             BGAI_EvalProduction(i);
 
+            -- Reset update interval
             _bg_aiData[i].update_time = _bg_aiData[i].update_interval;
 
         end
@@ -71,22 +124,131 @@ function BGAI_UpdateAIPlayers()
 
 end
 
+function BGAI_EvalUnits(index)
+
+    local sg_player = Player_GetSquads(_bg_aiData[index].player);
+
+    local sg_aitemp = SGroup_CreateIfNotFound("sg_aitemp");
+    SGroup_Clear(sg_aitemp);
+
+    local squad_eval = function(sgroupid, itemindex, squadID)
+
+        if Squad_IsUnderAttack(squadID, 5) then
+            Squad_GetLastAttackers(squadID, sg_aitemp, 5);
+        end
+
+    end
+
+    SGroup_ForEach(sg_player, squad_eval);
+
+    if SGroup_Count(sg_aitemp) > 0 then
+        BGAI_EvalAttackers(index, sg_aitemp);
+    end
+
+end
+
+function BGAI_EvalAttackers(index, attackGroup)
+
+    local attacker_eval = function(sgroupid, itemindex, squadID)
+        if Squad_HasTeamWeapon(squadID) then
+            _bg_aiData[index].demand_vehicle = _bg_aiData[index].demand_vehicle + (0.5 *_bg_AISettings.modifiers[_bg_aiData[index].difficulty].aggressive_factor);
+            _bg_aiData[index].demand_support = _bg_aiData[index].demand_support + (0.75 *_bg_AISettings.modifiers[_bg_aiData[index].difficulty].aggressive_factor);
+        elseif Squad_IsVehicleSquad(squadID) then
+            _bg_aiData[index].demand_vehicle = _bg_aiData[index].demand_vehicle + (0.75 *_bg_AISettings.modifiers[_bg_aiData[index].difficulty].aggressive_factor);
+            _bg_aiData[index].demand_support = _bg_aiData[index].demand_support + (0.35 *_bg_AISettings.modifiers[_bg_aiData[index].difficulty].aggressive_factor);
+            _bg_aiData[index].demand_heavy = _bg_aiData[index].demand_heavy + (0.25 *_bg_AISettings.modifiers[_bg_aiData[index].difficulty].aggressive_factor);
+        end
+        _bg_aiData[index].demand_any = _bg_aiData[index].demand_any + 1;
+    end
+
+    SGroup_ForEach(attackGroup, attacker_eval);
+
+end
+
 function BGAI_EvalProduction(index)
 
     local squadCount = Player_GetSquadCount(_bg_aiData[index].player);
 
-    if (squadCount <= 4) then -- The 'Get something unto the field' threshold
+    if (squadCount <= _bg_AISettings.thresholds[_bg_aiData[index].difficulty].smart_thinking) then -- The 'Get something unto the field' threshold
 
-        local affordable_units = BGAI_FindAffordableUnits(index, "infantry"); -- Will just be infantry for now.
+        BGAI_BuySomething(index, "infantry");-- Will just be infantry for now.
 
-        if bg_set:size(affordable_units) > 0 then
-            BGAI_BuyRandom(index, affordable_units);
+    elseif squadCount <= _bg_AISettings.thresholds[_bg_aiData[index].difficulty].max_deployed then
+
+        if _bg_aiData[index].demand_any > _bg_AISettings.thresholds[_bg_aiData[index].difficulty].trigger_callin then
+
+            local skipHeavyVehicle = false;
+            local skipVehicle = false;
+            local skipSupport = false;
+            local pCounter = 0;
+
+            local triggerThreshold = (_bg_AISettings.thresholds[_bg_aiData[index].difficulty].trigger_callin * _bg_AISettings.modifiers[_bg_aiData[index].difficulty].call_mod);
+
+            while pCounter < 10 do
+
+                if _bg_aiData[index].demand_heavy > triggerThreshold + 3 and not skipHeavyVehicle then
+                    if BGAI_BuySomething(index, "vehicle") then -- TODO: Buy only something fitting the "heavy" category
+                        _bg_aiData[index].demand_heavy = 0;
+                        break;
+                    else
+                        skipHeavyVehicle = true;
+                    end
+                elseif _bg_aiData[index].demand_vehicle > triggerThreshold + 2 and not skipVehicle then
+                    if BGAI_BuySomething(index, "vehicle") then
+                        _bg_aiData[index].demand_vehicle = 0;
+                        break;
+                    else
+                        skipVehicle = true;
+                    end
+                elseif _bg_aiData[index].demand_support > triggerThreshold + 1 and not skipSupport then
+                    if BGAI_BuySomething(index, "team_weapon") then
+                        _bg_aiData[index].demand_support = 0;
+                        break;
+                    else
+                        skipSupport = true;
+                    end
+                else
+                    local randomVal = World_GetRand(1,10);
+                    if randomVal <= 4 then
+                        if BGAI_BuySomething(index, "infantry") then
+                            _bg_aiData[index].demand_vehicle = _bg_aiData[index].demand_vehicle + 0.5;
+                            break;
+                        end
+                    elseif randomVal <= 7 then
+                        if BGAI_BuySomething(index, "vehicle") then
+                            _bg_aiData[index].demand_support = _bg_aiData[index].demand_support + 0.5;
+                            break;
+                        end
+                    else
+                        if BGAI_BuySomething(index, "team_weapon") then
+                            break;
+                        end
+                    end
+                end
+
+                pCounter = pCounter + 1;
+
+            end
+
+            _bg_aiData[index].demand_any = 0;
+
+        else
+            _bg_aiData[index].demand_any =  _bg_aiData[index].demand_any + 0.5 * _bg_AISettings.modifiers[_bg_aiData[index].difficulty].call_mod;
         end
 
-    else -- Be smart about calling in units
+    end
 
-        -- Consider encountered enemy units
+end
 
+function BGAI_BuySomething(index, type)
+
+    local affordable_units = BGAI_FindAffordableUnits(index, type);
+
+    if bg_set:size(affordable_units) > 0 then
+        BGAI_BuyRandom(index, affordable_units);
+        return true;
+    else
+        return false;
     end
 
 end
@@ -120,8 +282,10 @@ end
 
 function BGAI_BuyRandom(index, set)
 
+    -- Get the index of random unit
     local i = World_GetRand(1, bg_set:size(set));
 
+    -- Get basic data to use
     local player = _bg_aiData[index].player;
     local gotopos = Player_GetStartingPosition(player);
     local spawnfrom = Player_GetNearestMapEntry(player, gotopos);

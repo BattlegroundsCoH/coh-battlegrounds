@@ -9,14 +9,14 @@
 						<bool name="allow_spawner_production" value="False" />
 						<locstring name="extra_text" value="11052712" />
 						<bool name="has_speech_code" value="True" />
-						<locstring name="help_text" value="11052711" />
+						<locstring name="help_text" value="38" mod="142b113740474c82a60b0a428bd553d5" />
 						<string name="hotkey_name" value="G" />
 						<icon name="icon_name" value="Icons_units_unit_german_stormtroopers" />
 						<bool name="minimap_team_only" value="False" />
 						<icon name="minimap_texture" value="" />
 						<instance_reference name="modal_ability" value="" />
 						<bool name="reveal_for_decryption" value="True" />
-						<locstring name="screen_name" value="11052710" />
+						<locstring name="screen_name" value="37" mod="142b113740474c82a60b0a428bd553d5" />
 						<string name="selection_group" value="Stormtroopers" />
 						<group name="speaker_generic">
 							<string name="code_1" value="xs" />

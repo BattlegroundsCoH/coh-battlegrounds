@@ -163,6 +163,18 @@ function Squad_GetSyncWeapon(squad)
     return nil;
 end
 
+function Squad_IsVehicleSquad(squad)
+    return Entity_IsVehicle(Squad_EntityAt(squad, 0));
+end
+
+function Squad_IsInfantrySquad(squad)
+    if Squad_HasTeamWeapon(squad) then
+        return false;
+    else
+        return not Squad_IsVehicleSquad(squad);
+    end
+end
+
 ------------------------------------------------------------
 -- LocString functions
 ------------------------------------------------------------

@@ -69,7 +69,7 @@ function BG_DeploySquad(player, unit_id)
         local spawnfrom = Player_GetNearestMapEntry(player, gotopos);
 
         -- Call in the unit
-        BG_CallInUnit(unit_data, player, gotopos, spawnfrom);
+        local squad = BG_CallInUnit(unit_data, player, gotopos, spawnfrom);
 
         -- Register the unit
         _bg_playerData[playerRefID].deployed[Squad_GetGameID(squad)] = unit_data.company_id;
@@ -186,6 +186,9 @@ function BG_CallInUnit(unit_data, player, gotopos, spawnfrom)
 
     -- Mark spawned
     unit_data.spawned = true;
+
+    -- Return the squad
+    return squad;
 
 end
 

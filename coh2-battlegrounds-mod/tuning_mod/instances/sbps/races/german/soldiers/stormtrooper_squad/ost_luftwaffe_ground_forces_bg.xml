@@ -16,7 +16,7 @@
 						<icon name="minimap_texture" value="" />
 						<instance_reference name="modal_ability" value="" />
 						<bool name="reveal_for_decryption" value="True" />
-						<locstring name="screen_name" value="11052710" />
+						<locstring name="screen_name" value="36" mod="142b113740474c82a60b0a428bd553d5" />
 						<string name="selection_group" value="Stormtroopers" />
 						<group name="speaker_generic">
 							<string name="code_1" value="xs" />
