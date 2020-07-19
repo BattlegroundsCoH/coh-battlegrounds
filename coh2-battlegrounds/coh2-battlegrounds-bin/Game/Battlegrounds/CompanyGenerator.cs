@@ -52,6 +52,7 @@ namespace Battlegrounds.Game.Battlegrounds {
             int max_heavy_tank = 3 + (type == CompanyType.Armoured ? 1 : 0);
             int max_support = 6 + (type == CompanyType.Engineer ? 2 : 0);
             int max_artillery = 4 + (type == CompanyType.Artillery ? 2 : 0);
+            int max_transport_use = 4 + ((type == CompanyType.Motorized || type == CompanyType.Mechanized) ? 5 : 0);
 
             // While we can add a unit
             while (remaining > 0) {
@@ -62,14 +63,32 @@ namespace Battlegrounds.Game.Battlegrounds {
                 if (unit_type >= 10 && unit_type <= 28) { // infantry
 
                     SquadBlueprint inf_blueprint = blueprintPool.Where(x => x.IsInfantry && !x.IsVehicleCrew && !x.IsSpecialInfantry && !x.IsCommandUnit && !x.IsSniper).Random(__random);
-                    company.AddSquad(inf_blueprint, null, DeploymentMethod.None, vet_level, 0, null, null, null);
+                    SquadBlueprint transportbp = null;
+                    DeploymentMethod deployMethod = DeploymentMethod.None;
+
+                    if (__random.Next(0, 50) <= 24 && max_transport_use > 0) {
+                        transportbp = blueprintPool.Where(x => x.IsTransportVehicle).Random(__random);
+                        deployMethod = (type == CompanyType.Motorized) ? DeploymentMethod.DeployAndExit : DeploymentMethod.DeployAndStay;
+                        max_transport_use--;
+                    }
+
+                    company.AddSquad(inf_blueprint, transportbp, deployMethod, vet_level, 0, null, null, null);
 
                     remaining--;
 
                 } else if (unit_type >= 3 && unit_type <= 9 && max_specialized_infantry > 0) { // special infantry
 
                     SquadBlueprint sinf_blueprint = blueprintPool.Where(x => x.IsSpecialInfantry || x.IsSniper).Random(__random);
-                    company.AddSquad(sinf_blueprint, null, DeploymentMethod.None, vet_level, 0, null, null, null);
+                    SquadBlueprint transportbp = null;
+                    DeploymentMethod deployMethod = DeploymentMethod.None;
+
+                    if (__random.Next(0, 40) <= 24 && max_transport_use > 0) {
+                        transportbp = blueprintPool.Where(x => x.IsTransportVehicle).Random(__random);
+                        deployMethod = (type == CompanyType.Motorized) ? DeploymentMethod.DeployAndExit : DeploymentMethod.DeployAndStay;
+                        max_transport_use--;
+                    }
+
+                    company.AddSquad(sinf_blueprint, transportbp, deployMethod, vet_level, 0, null, null, null);
 
                     max_specialized_infantry--;
                     remaining--;
@@ -88,7 +107,16 @@ namespace Battlegrounds.Game.Battlegrounds {
                 } else if (unit_type >= 29 && unit_type <= 34 && max_support > 0) { // support
 
                     SquadBlueprint support = blueprintPool.Where(x => x.IsTeamWeapon).Random(__random);
-                    company.AddSquad(support, null, DeploymentMethod.None, vet_level, 0, null, null, null);
+                    SquadBlueprint transport_blueprint = null;
+                    DeploymentMethod deployMethod = DeploymentMethod.None;
+
+                    if (support.IsAntiTank &&__random.Next(0, 50) <= 24 && max_transport_use > 0) {
+                        transport_blueprint = blueprintPool.Where(x => x.IsTransportVehicle).Random(__random);
+                        deployMethod = DeploymentMethod.DeployAndStay;
+                        max_transport_use--;
+                    }
+
+                    company.AddSquad(support, transport_blueprint, deployMethod, vet_level, 0, null, null, null);
 
                     max_support--;
                     remaining--;
@@ -96,7 +124,15 @@ namespace Battlegrounds.Game.Battlegrounds {
                 } else if (unit_type >= 35 && unit_type <= 39 && max_artillery > 0) { // artillery
 
                     SquadBlueprint arty_blueprint = blueprintPool.Where(x => x.IsHeavyArtillery || x.IsArtillery).Random(__random);
-                    company.AddSquad(arty_blueprint, null, DeploymentMethod.None, vet_level, 0, null, null, null);
+                    SquadBlueprint transport_blueprint = null;
+                    DeploymentMethod deployMethod = DeploymentMethod.None;
+
+                    if (arty_blueprint.IsHeavyArtillery) { // freebie for heavy artillery (no transport use "penalty")
+                        transport_blueprint = blueprintPool.Where(x => x.IsTransportVehicle).Random(__random);
+                        deployMethod = DeploymentMethod.DeployAndStay;
+                    }
+
+                    company.AddSquad(arty_blueprint, transport_blueprint, deployMethod, vet_level, 0, null, null, null);
 
                     max_artillery--;
                     remaining--;

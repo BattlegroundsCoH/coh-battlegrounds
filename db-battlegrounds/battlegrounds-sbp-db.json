@@ -219,7 +219,11 @@
       "FieldTime": "15"
     },
     "HasCrew": "False",
-    "Types": []
+    "Types": [
+      "light_vehicle",
+      "vehicle",
+      "251_halftrack"
+    ]
   },
   {
     "jsdbtype": "Battlegrounds.Game.Database.SquadBlueprint",
@@ -239,7 +243,11 @@
       "FieldTime": "15"
     },
     "HasCrew": "False",
-    "Types": []
+    "Types": [
+      "light_vehicle",
+      "vehicle",
+      "251_halftrack"
+    ]
   },
   {
     "jsdbtype": "Battlegrounds.Game.Database.SquadBlueprint",
@@ -533,7 +541,7 @@
     },
     "HasCrew": "False",
     "Types": [
-      "250_mortar_halftrack",
+      "251_halftrack",
       "light_vehicle",
       "vehicle"
     ]
@@ -1480,7 +1488,7 @@
     "PBGID": "1073741876",
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
     "Name": "ost_luftwaffe_ground_forces_bg",
-    "LocaleName": "11052710",
+    "LocaleName": "36",
     "LocaleDescription": "11052711",
     "Army": "german",
     "Icon": "Icons_units_unit_german_stormtroopers",
@@ -1505,8 +1513,8 @@
     "PBGID": "1073741875",
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
     "Name": "ost_tankhunter_squad_bg",
-    "LocaleName": "11052710",
-    "LocaleDescription": "11052711",
+    "LocaleName": "37",
+    "LocaleDescription": "38",
     "Army": "german",
     "Icon": "Icons_units_unit_german_stormtroopers",
     "Symbol": "Icons_symbols_unit_german_stormtroopers_symbol",
@@ -1553,7 +1561,7 @@
     "PBGID": "1073741878",
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
     "Name": "german_tank_crew_bg",
-    "LocaleName": "11006988",
+    "LocaleName": "34",
     "LocaleDescription": "11007011",
     "Army": "german",
     "Icon": "Icons_units_unit_german_pioneer",
@@ -1576,7 +1584,7 @@
     "PBGID": "1073741877",
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
     "Name": "german_vehicle_crew_bg",
-    "LocaleName": "11006988",
+    "LocaleName": "35",
     "LocaleDescription": "11007011",
     "Army": "german",
     "Icon": "Icons_units_unit_german_pioneer",

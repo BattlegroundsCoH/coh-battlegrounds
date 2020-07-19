@@ -180,8 +180,6 @@
 		<template_reference name="squadexts" value="sbpextensions\squad_upgrade_ext">
 			<float name="number_of_slots" value="-1" />
 			<list name="upgrades">
-				<instance_reference name="upgrade" value="upgrade\soviet\items\engineer_flamethrower_mp" />
-				<instance_reference name="upgrade" value="upgrade\soviet\items\engineer_minesweeper_mp" />
 			</list>
 		</template_reference>
 		<template_reference name="squadexts" value="sbpextensions\squad_combat_behaviour_ext">

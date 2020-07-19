@@ -605,6 +605,13 @@
 			</list>
 			<bool name="withdraw_only" value="True" />
 		</template_reference>
+		<template_reference name="squadexts" value="sbpextensions\squad_type_ext">
+			<list name="squad_type_list">
+				<enum name="squad_type" value="light_vehicle" />
+				<enum name="squad_type" value="vehicle" />
+				<enum name="squad_type" value="251_halftrack" />
+			</list>
+		</template_reference>
 	</list>
 	<uniqueid name="pbgid" value="1073741888" />
 </instance>

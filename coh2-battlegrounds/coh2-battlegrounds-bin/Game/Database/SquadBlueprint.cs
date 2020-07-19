@@ -120,6 +120,11 @@ namespace Battlegrounds.Game.Database {
         /// </summary>
         [JsonIgnore] public bool IsSniper => this.Types.Contains("sniper_soviet") || this.Types.Contains("sniper_german");
 
+        /// <summary>
+        /// Can the <see cref="SquadBlueprint"/> be considered a transport unit.
+        /// </summary>
+        [JsonIgnore] public bool IsTransportVehicle => this.Types.Contains("m5_halftrack") || this.Types.Contains("m3a1_scout_car") || this.Types.Contains("251_halftrack");
+
     }
 
 }

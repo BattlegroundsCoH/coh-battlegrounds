@@ -188,10 +188,6 @@
 		<template_reference name="squadexts" value="sbpextensions\squad_upgrade_ext">
 			<float name="number_of_slots" value="-1" />
 			<list name="upgrades">
-				<instance_reference name="upgrade" value="upgrade\german\items\pioneer_minesweeper_mp" />
-				<instance_reference name="upgrade" value="upgrade\german\items\pioneer_flamethrower_mp" />
-				<instance_reference name="upgrade" value="upgrade\german\items\pioneer_veteran_squad_leader_mp" />
-				<instance_reference name="upgrade" value="upgrade\german\items\pioneer_breakthrough_package_mp" />
 			</list>
 		</template_reference>
 		<template_reference name="squadexts" value="sbpextensions\squad_action_apply_ext">

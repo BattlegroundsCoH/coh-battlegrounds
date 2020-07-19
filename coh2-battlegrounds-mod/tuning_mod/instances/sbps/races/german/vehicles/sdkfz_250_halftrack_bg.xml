@@ -640,7 +640,7 @@
 		</template_reference>
 		<template_reference name="squadexts" value="sbpextensions\squad_type_ext">
 			<list name="squad_type_list">
-				<enum name="squad_type" value="250_mortar_halftrack" />
+				<enum name="squad_type" value="251_halftrack" />
 				<enum name="squad_type" value="light_vehicle" />
 				<enum name="squad_type" value="vehicle" />
 			</list>

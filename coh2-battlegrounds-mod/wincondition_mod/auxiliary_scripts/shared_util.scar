@@ -266,11 +266,22 @@ end
 ------------------------------------------------------------
 
 function Team_ForEachPlayer(team, func)
+    if team < 1 or team > 2 then
+        fatal("Invalid team index '" .. team .. "' expected 1 or 2.");
+    end
     for i=1, World_GetPlayerCount() do
         local p = World_GetPlayerAt(i);
         if (Player_GetTeam(p) == team) then
             func(p);
         end
+    end
+end
+
+function Team_GetOppositeTeam(team)
+    if team == 1 then
+        return 2;
+    else
+        return 1;
     end
 end
 

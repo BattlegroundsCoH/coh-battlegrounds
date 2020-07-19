@@ -5,11 +5,13 @@ _bg_guid = "6a0a13b89555402ca75b85dc30f5cb04"; -- GUID for the mod
 
 _bg_custom = {}; -- Custom data
 _bg_custom.max_squad_count = 24;
+_bg_custom.dead_players = {};
+_bg_custom.teams = {};
 
 _bg_playerData = {};
 _bg_aiData = {};
 
-_bg_message_type_no_actions_required = 42.0; -- This is just for making it easier for the 3rd party app to interpret the data
+_bg_message_type_no_actions_required = 42.0; -- This is just for making it easier for the app to interpret the data
 _bg_message_type_player_surrender = 43.0; -- Player surrenders: ""
 _bg_message_type_player_deploy = 44.0; -- Actual Deploy Command: "company_id"
 _bg_message_type_player_request_deploy = 45.0; -- Deploy request: "company_id"

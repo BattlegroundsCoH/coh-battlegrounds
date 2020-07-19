@@ -193,10 +193,6 @@
 		<template_reference name="squadexts" value="sbpextensions\squad_upgrade_ext">
 			<float name="number_of_slots" value="-1" />
 			<list name="upgrades">
-				<instance_reference name="upgrade" value="upgrade\german\items\grenadier_mg42_lmg_mp" />
-				<instance_reference name="upgrade" value="upgrade\german\commander\ability\light_infantry_package" />
-				<instance_reference name="upgrade" value="upgrade\german\commander\ability\ambush_camou_package" />
-				<instance_reference name="upgrade" value="upgrade\german\items\grenadier_veteran_squad_leader_mp" />
 			</list>
 		</template_reference>
 		<template_reference name="squadexts" value="sbpextensions\squad_action_apply_ext">
