@@ -33,6 +33,7 @@ namespace Battlegrounds.Compiler {
             { // Company data
 
                 lua.AppendLine($"name = \"{company.Name}\",");
+                lua.AppendLine($"style = \"{company.Type}\",");
                 lua.AppendLine($"army = \"{company.Army.Name}\",");
 
                 lua.AppendLine($"units = {{");

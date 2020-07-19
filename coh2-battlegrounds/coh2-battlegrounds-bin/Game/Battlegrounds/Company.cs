@@ -78,7 +78,7 @@ namespace Battlegrounds.Game.Battlegrounds {
         /// New empty <see cref="Company"/> instance. (Do not use).
         /// </summary>
         [Obsolete("Please use the constructor requiring a SteamUser, name, and faction.")]
-        public Company() {
+        internal Company() {
             this.m_squads = new List<Squad>();
             this.m_inventry = new List<Blueprint>();
             this.Type = CompanyType.Unspecified;
@@ -92,6 +92,7 @@ namespace Battlegrounds.Game.Battlegrounds {
         /// <param name="army">The <see cref="Faction"/> that can use the <see cref="Company"/>.</param>
         /// <param name="tuningGUID">The GUID of the tuning mod the <see cref="Company"/> is using blueprints from.</param>
         /// <exception cref="ArgumentNullException"/>
+        [Obsolete("Please use the CompanyBuilder to create a company")]
         public Company(SteamUser user, string name, Faction army, string tuningGUID) {
 
             // Make sure it's a valid army
@@ -124,8 +125,15 @@ namespace Battlegrounds.Game.Battlegrounds {
         /// <param name="army">The <see cref="Faction"/> that can use the <see cref="Company"/>.</param>
         /// <param name="tuningGUID">The GUID of the tuning mod the <see cref="Company"/> is using blueprints from.</param>
         /// <exception cref="ArgumentNullException"/>
+        [Obsolete("Please use the CompanyBuilder to create a company")]
         public Company(SteamUser user, string name, CompanyType type, Faction army, string tuningGUID) : this(user, name, army, tuningGUID) {
             this.Type = type;
+        }
+
+        public ushort AddSquad(UnitBuilder builder) {
+            ushort id = this.m_nextSquadId++;
+            Squad squad = builder.Build(id);
+            return id;
         }
 
         /// <summary>
@@ -286,7 +294,7 @@ namespace Battlegrounds.Game.Battlegrounds {
 
                 Squad squad = new Squad(m_nextSquadId++, null, main);
                 squad.SetVeterancy(vet, vetprog);
-                squad.SetDeploymentMethod(supprt, deployMode);
+                squad.SetDeploymentMethod(supprt, deployMode, DeploymentPhase.PhaseA);
 
                 if (main.HasCrew) {
 

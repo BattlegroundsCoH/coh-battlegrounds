@@ -49,7 +49,7 @@ namespace Battlegrounds.Game.Battlegrounds {
             int max_vehicles = 4;
             int max_command_units = 1;
             int max_specialized_infantry = 4 + (type == CompanyType.Infantry || type == CompanyType.Airborne ? 4 : 0);
-            int max_heavy_tank = 3 + (type == CompanyType.Armoured ? 1 : 0);
+            int max_heavy_tank = 2 + (type == CompanyType.Armoured ? 1 : 0);
             int max_support = 6 + (type == CompanyType.Engineer ? 2 : 0);
             int max_artillery = 4 + (type == CompanyType.Artillery ? 2 : 0);
             int max_transport_use = 4 + ((type == CompanyType.Motorized || type == CompanyType.Mechanized) ? 5 : 0);

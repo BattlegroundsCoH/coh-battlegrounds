@@ -41,6 +41,38 @@ namespace Battlegrounds.Game.Gameplay {
     }
 
     /// <summary>
+    /// The phase in which a <see cref="Squad"/> can be deployed.
+    /// </summary>
+    public enum DeploymentPhase {
+
+        /// <summary>
+        /// No phase - <see cref="Squad"/> may not be deployed in any standard way.
+        /// </summary>
+        PhaseNone,
+
+        /// <summary>
+        /// Deployed in the initial starting phase of a match.
+        /// </summary>
+        PhaseInitial,
+
+        /// <summary>
+        /// Deployment is available in the first (early-game) phase.
+        /// </summary>
+        PhaseA,
+
+        /// <summary>
+        /// Deployment is available in the second (mid-game) phase.
+        /// </summary>
+        PhaseB,
+
+        /// <summary>
+        /// Deployment is available in the third and final (late-game) phase.
+        /// </summary>
+        PhaseC,
+
+    }
+
+    /// <summary>
     /// Representation of a Squad. Implements <see cref="IJsonObject"/>.
     /// </summary>
     public class Squad : IJsonObject {
@@ -49,7 +81,8 @@ namespace Battlegrounds.Game.Gameplay {
         [JsonIgnoreIfValue(0.0f)] private float m_veterancyProgress;
 
         [JsonIgnoreIfValue(false)] private bool m_isCrewSquad;
-        [JsonIgnoreIfValue(DeploymentMethod.None)] private DeploymentMethod m_deployMode;
+        [JsonIgnoreIfValue(DeploymentMethod.None)][JsonEnum(typeof(DeploymentMethod))] private DeploymentMethod m_deployMode;
+        [JsonIgnoreIfValue(DeploymentPhase.PhaseNone)][JsonEnum(typeof(DeploymentPhase))] private DeploymentPhase m_deployPhase;
         [JsonIgnoreIfNull] private Squad m_crewSquad;
         [JsonReference(typeof(BlueprintManager))][JsonIgnoreIfNull] private Blueprint m_deployBp;
 
@@ -82,10 +115,16 @@ namespace Battlegrounds.Game.Gameplay {
         public Blueprint SupportBlueprint => this.m_deployBp;
 
         /// <summary>
-        /// Deploy the unit and exit when deployed.
+        /// The method to use when deploying a <see cref="Squad"/>.
         /// </summary>
         [JsonIgnore]
         public DeploymentMethod DeploymentMethod => this.m_deployMode;
+
+        /// <summary>
+        /// The phase in which a squad can be deployed.
+        /// </summary>
+        [JsonIgnore]
+        public DeploymentPhase DeploymentPhase => this.m_deployPhase;
 
         /// <summary>
         /// The squad data for the crew.
@@ -147,6 +186,7 @@ namespace Battlegrounds.Game.Gameplay {
             this.m_upgrades = new HashSet<Blueprint>();
             this.m_modifiers = new HashSet<Modifier>();
             this.m_deployMode = DeploymentMethod.None;
+            this.m_deployPhase = DeploymentPhase.PhaseNone;
             this.m_crewSquad = null;
         }
 
@@ -164,6 +204,7 @@ namespace Battlegrounds.Game.Gameplay {
             this.m_upgrades = new HashSet<Blueprint>();
             this.m_modifiers = new HashSet<Modifier>();
             this.m_deployMode = DeploymentMethod.None;
+            this.m_deployPhase = DeploymentPhase.PhaseNone;
             this.m_crewSquad = null;
         }
 
@@ -178,13 +219,15 @@ namespace Battlegrounds.Game.Gameplay {
         }
 
         /// <summary>
-        /// 
+        /// Set the deployment method used by a <see cref="Squad"/>.
         /// </summary>
-        /// <param name="transportBlueprint"></param>
-        /// <param name="deployAndExit"></param>
-        public void SetDeploymentMethod(Blueprint transportBlueprint, DeploymentMethod deployMode) {
+        /// <param name="transportBlueprint">The <see cref="Database.Blueprint"/> to use as transport unit.</param>
+        /// <param name="deployMode">The mode used to deploy a <see cref="Squad"/>.</param>
+        /// <param name="phase">The deployment phase</param>
+        public void SetDeploymentMethod(Blueprint transportBlueprint, DeploymentMethod deployMode, DeploymentPhase phase) {
             this.m_deployMode = deployMode;
             this.m_deployBp = transportBlueprint;
+            this.m_deployPhase = phase;
         }
 
         /// <summary>

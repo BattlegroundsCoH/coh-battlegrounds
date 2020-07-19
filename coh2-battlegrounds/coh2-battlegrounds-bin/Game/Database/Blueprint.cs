@@ -48,6 +48,14 @@ namespace Battlegrounds.Game.Database {
         /// <returns>A string that represents the current object.</returns>
         public override string ToString() => $"{this.BlueprintType}:{this.Name}";
 
+        public override bool Equals(object obj) { 
+            if (obj is Blueprint bp && this != null) {
+                return bp.BlueprintType == this.BlueprintType && bp.PBGID == this.PBGID && bp.ModGUID.CompareTo(this.ModGUID) == 0;
+            } else {
+                return false;
+            }
+        }
+
     }
 
 }
