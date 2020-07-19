@@ -266,8 +266,8 @@ end
 ------------------------------------------------------------
 
 function Team_ForEachPlayer(team, func)
-    if team < 1 or team > 2 then
-        fatal("Invalid team index '" .. team .. "' expected 1 or 2.");
+    if team >= 2 then
+        fatal("Invalid team index '" .. team .. "' expected 0 or 1.");
     end
     for i=1, World_GetPlayerCount() do
         local p = World_GetPlayerAt(i);
@@ -279,7 +279,7 @@ end
 
 function Team_GetOppositeTeam(team)
     if team == 1 then
-        return 2;
+        return 0;
     else
         return 1;
     end
@@ -419,13 +419,20 @@ function __BgUpdateTOW()
         Rule_RemoveMe();
     else
         for i=1, #__BGTOWObjects do
-            local isTransportAlive = Squad_IsValid(__BGTOWObjects[i].tow_transport_id);
-            local isTargetAlive = Squad_IsValid(__BGTOWObjects[i].tow_target_id);
-            if isTargetAlive and isTargetAlive then
-                local pos, dir = Battlegrounds_GetTowCoordinates(__BGTOWObjects[i].tow_transport, __BGTOWObjects[i].tow_offset);
+            if not Squad_IsValid(__BGTOWObjects[i].tow_transport_id) then
+                table.remove(__BGTOWObjects, i);
+                return;
+            end
+            if not Squad_IsValid(__BGTOWObjects[i].tow_target_id) then
+                table.remove(__BGTOWObjects, i);
+                return;
+            end
+            local pos, dir = Battlegrounds_GetTowCoordinates(__BGTOWObjects[i].tow_transport, __BGTOWObjects[i].tow_offset);
+            local try_ = function()
                 Entity_SetPosition(__BGTOWObjects[i].tow_target, pos);
                 Entity_SetHeading(__BGTOWObjects[i].tow_target, dir, true);
             end
+            pcall(try);
         end
     end
 end

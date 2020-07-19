@@ -50,8 +50,8 @@ function BG_Init()
 
     -- Check to see if a company error was found
     if companyError ~= true then
-        BG_CreateAndShowMatchError(companyError);
-        --return;
+        BG_CreateAndShowMatchError(BG_LocString(12), companyError);
+        return;
     end
 
     -- Load the AI data
@@ -59,7 +59,8 @@ function BG_Init()
 
     -- Load the company data
     if aiCompanyError ~= true then
-        BG_CreateAndShowMatchError(aiCompanyError);
+        BG_CreateAndShowMatchError(BG_LocString(12), aiCompanyError);
+        return;
     end
 
     -- Verify match validity
@@ -67,8 +68,8 @@ function BG_Init()
 
     -- Did the match validifier fail?
     if matchValidity ~= true then
-        BG_CreateAndShowMatchError(matchValidity);
-        --return;
+        BG_CreateAndShowMatchError(BG_LocString(12), matchValidity);
+        return;
     end
 
     -- Activate the unit system

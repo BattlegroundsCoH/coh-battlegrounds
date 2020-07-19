@@ -10,9 +10,29 @@ function BG_CreateAndDisplayMultiplayerActionsScreenOverride(player)
 
 end
 
+function BG_OnShowMatchErrorButtonClicked(bttn)
+
+    -- Go to front end
+    Misc_AbortToFE();
+
+end
+
 -- The 'override' for a 'fatal scar error'
-function BG_CreateAndShowMatchError(message)
+function BG_CreateAndShowMatchError(title, message)
 
+    -- Fix message
+    if message == nil then
+        message = title;
+        title = BG_LocString(13);
+    end
 
+    -- Set the message box text
+    UI_MessageBoxSetText(title, message);
+
+    -- Add the close button
+    UI_MessageBoxSetButton(DB_Button2, BG_LocString(14), BG_LocString(15), "", true);
+
+    -- Show the message box
+    UI_MessageBoxShow(DC_Default, BG_OnShowMatchErrorButtonClicked);
 
 end

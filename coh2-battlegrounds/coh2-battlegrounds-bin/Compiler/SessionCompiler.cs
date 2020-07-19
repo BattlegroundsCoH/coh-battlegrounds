@@ -87,10 +87,12 @@ namespace Battlegrounds.Compiler {
             // Only write the tuning data if it exists.
             if (tuning != null) {
 
+                string guid = tuning.Guid.ToString().Replace("-", "");
+
                 lua.IncreaseIndent();
                 lua.AppendLine($"mod_name = \"{tuning.Name}\",");
-                lua.AppendLine($"mod_guid = \"{tuning.Guid.ToString().Replace("-", "")}\",");
-                lua.AppendLine($"mod_verify_upg = \"{tuning.VerificationUpgrade}\",");
+                lua.AppendLine($"mod_guid = \"{guid}\",");
+                lua.AppendLine($"mod_verify_upg = \"{guid}:{tuning.VerificationUpgrade}\",");
 
             }
 

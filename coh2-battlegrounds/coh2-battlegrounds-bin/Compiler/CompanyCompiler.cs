@@ -33,7 +33,6 @@ namespace Battlegrounds.Compiler {
             { // Company data
 
                 lua.AppendLine($"name = \"{company.Name}\",");
-                //lua.AppendLine($"index = {indexOnTeam},");
                 lua.AppendLine($"army = \"{company.Army.Name}\",");
 
                 lua.AppendLine($"units = {{");
@@ -71,6 +70,9 @@ namespace Battlegrounds.Compiler {
             builder.AppendLine($"company_id = {squad.SquadID},");
             builder.AppendLine($"veterancy_rank = {squad.VeterancyRank},");
             builder.AppendLine($"veterancy_progress = {squad.VeterancyProgress:0.00},");
+            if (squad.SBP.IsHeavyArmour) {
+                builder.AppendLine("heavy = true,");
+            }
 
             // Write the support blueprint - if any
             if (squad.SupportBlueprint != null) {
