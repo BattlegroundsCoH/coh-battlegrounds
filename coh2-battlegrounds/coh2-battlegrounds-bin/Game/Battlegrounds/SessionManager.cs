@@ -65,6 +65,11 @@ namespace Battlegrounds.Game.Battlegrounds {
         /// </summary>
         S_Playing,
 
+        /// <summary>
+        /// The session encountered a scar error
+        /// </summary>
+        S_ScarError,
+
     }
 
     /// <summary>
@@ -169,6 +174,11 @@ namespace Battlegrounds.Game.Battlegrounds {
             // Update status
             UpdateStatus(SessionStatus.S_Analyzing, statusChangedCallback);
 
+            if (GotFatalScarError()) {
+                UpdateStatus(SessionStatus.S_ScarError, statusChangedCallback);
+                return;
+            }
+
             // Create the match object
             GameMatch match = new GameMatch(ActiveSession);
 
@@ -213,6 +223,20 @@ namespace Battlegrounds.Game.Battlegrounds {
 
             // Return the result of the win condition compilation
             return WinconditionCompiler.CompileToSga("temp_build", "session.scar");
+
+        }
+
+        private static bool GotFatalScarError() {
+
+            string logPath = $"{Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)}\\my games\\company of heroes 2\\warnings.log";
+
+            if (File.Exists(logPath)) {
+                if (File.ReadAllText(logPath).Contains("GameObj::OnFatalScarError: [FATAL Scar Error! - Execution has been paused.")) {
+                    return true;
+                }
+            }
+
+            return false;
 
         }
 

@@ -69,6 +69,34 @@ function Battlegrounds_TotalAnnihilation(teamIndex)
 
 end
 
+function Battlegrounds_check_periodically()
+
+    for i = 1, World_GetPlayerCount() do
+        local player = World_GetPlayerAt(i);
+        if Battlegrounds_PlayerIsAlive(player) then
+            if not Battlegrounds_CheckPlayerValidity(player) then
+
+                -- Get player team
+                local t = Player_GetTeam(player);
+
+                -- Subtract player from team counter
+                _bg_custom.teams[t] = _bg_custom.teams[t] - 1;
+
+                -- Set player to having lost
+                Battlegrounds_PlayerLose(player);
+
+            end
+        end
+    end
+
+    for k,v in pairs(_bg_custom.teams) do
+        if v == 0 then
+            Battlegrounds_TotalAnnihilation(k);
+        end
+    end
+
+end
+
 function Battlegrounds_OnGamemodeInit()
 
     if _bg_custom == nil then
@@ -78,41 +106,13 @@ function Battlegrounds_OnGamemodeInit()
         };
     end
 
-    local _check_periodically = function()
-
-        for i = 1, World_GetPlayerCount() do
-            local player = World_GetPlayerAt(i);
-            if Battlegrounds_PlayerIsAlive(player) then
-                if not Battlegrounds_CheckPlayerValidity(player) then
-
-                    -- Get player team
-                    local t = Player_GetTeam(player);
-
-                    -- Subtract player from team counter
-                    _bg_custom.teams[t] = _bg_custom.teams[t] - 1;
-
-                    -- Set player to having lost
-                    Battlegrounds_PlayerLose(player);
-
-                end
-            end
-        end
-
-        for k,v in pairs(_bg_custom.teams) do
-            if v == 0 then
-                Battlegrounds_TotalAnnihilation(k);
-            end
-        end
-
-    end
-
     for i = 1, World_GetPlayerCount() do
         local p = World_GetPlayerAt(i);
         local t = Player_GetTeam(p);
         _bg_custom.teams[t] = (_bg_custom.teams[t] or 0) + 1;
     end
 
-    Rule_AddInterval(_check_periodically, 5);
+    Rule_AddInterval(Battlegrounds_check_periodically, 5);
 
 end
 

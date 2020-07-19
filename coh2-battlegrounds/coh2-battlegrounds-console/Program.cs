@@ -62,7 +62,6 @@ namespace coh2_battlegrounds_console {
             testCompany.AddSquad("t_34_85_squad_bg", 5, 0);
             testCompany.AddSquad("kv-1_bg", 2, 0);
             testCompany.AddSquad("kv-1_bg", 2, 0);
-            testCompany.AddSquad("valentine_lend_lease_command_bg", 0, 0);
 
             // Artillery
             testCompany.AddSquad("m1931_203mm_b-4_howitzer_artillery_bg", "zis_6_transport_truck_bg", DeploymentMethod.DeployAndStay, 1, 0, null, null, null);
@@ -89,7 +88,7 @@ namespace coh2_battlegrounds_console {
             m.EvaluateResult();
             */
             
-            //SessionManager.PlaySession<SessionCompiler<CompanyCompiler>, CompanyCompiler>(session, (a,b) => { Console.WriteLine(a); }, null, null);
+            SessionManager.PlaySession<SessionCompiler<CompanyCompiler>, CompanyCompiler>(session, (a,b) => { Console.WriteLine(a); }, null, null);
 
             // Save json
             testCompany.SaveToFile("test_company.json");
