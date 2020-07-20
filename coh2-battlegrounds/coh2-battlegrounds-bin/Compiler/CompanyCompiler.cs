@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Immutable;
+using System.Linq;
 using Battlegrounds.Game.Battlegrounds;
 using Battlegrounds.Game.Database;
 using Battlegrounds.Game.Gameplay;
@@ -39,7 +40,10 @@ namespace Battlegrounds.Compiler {
                 lua.AppendLine($"units = {{");
                 lua.IncreaseIndent();
 
-                foreach (Squad squad in company.Units) {
+                // Sort the units (important for how they're displayed ingame)
+                var units = company.Units.Sort((a, b) => this.CompareUnit(a, b));
+
+                foreach (Squad squad in units) {
                     this.CompileUnit(lua, squad);
                 }
 
@@ -70,7 +74,7 @@ namespace Battlegrounds.Compiler {
             builder.AppendLine($"company_id = {squad.SquadID},");
             builder.AppendLine($"symbol = \"{squad.SBP.Symbol}\",");
             builder.AppendLine($"category = \"{squad.GetCategory(true)}\",");
-            builder.AppendLine($"phase = {squad.DeploymentPhase - 1},");
+            builder.AppendLine($"phase = {(int)(squad.DeploymentPhase - 1)},");
             builder.AppendLine($"veterancy_rank = {squad.VeterancyRank},");
             builder.AppendLine($"veterancy_progress = {squad.VeterancyProgress:0.00},");
 
@@ -157,6 +161,27 @@ namespace Battlegrounds.Compiler {
             }
             builder.DecreaseIndent();
             builder.AppendLine("},");
+        }
+
+        private int CompareUnit(Squad lhs, Squad rhs) {
+            string catlhs = lhs.GetCategory(true);
+            string catrhs = rhs.GetCategory(true);
+            int cilhs = (catlhs.CompareTo("infantry") == 0 ? 0 : (catlhs.CompareTo("team_weapon") == 0 ? 1 : 2));
+            int cirhs = (catrhs.CompareTo("infantry") == 0 ? 0 : (catrhs.CompareTo("team_weapon") == 0 ? 1 : 2));
+            if (cirhs == cilhs) {
+                int order = lhs.Blueprint.Name.CompareTo(rhs.Blueprint.Name);
+                if (order == 0) {
+                    return lhs.VeterancyRank - rhs.VeterancyRank;
+                } else {
+                    if (lhs.SBP.IsCommandUnit) {
+                        return 999;
+                    } else {
+                        return order;
+                    }
+                }
+            } else {
+                return cilhs - cirhs;
+            }
         }
 
     }

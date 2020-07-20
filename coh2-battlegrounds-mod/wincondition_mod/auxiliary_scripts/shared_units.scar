@@ -251,7 +251,7 @@ function BG_RecallSquad(playerID, squadID)
                 unit_data.recall_wait_time_max = 40;
                 unit_data.recall_wait_time = 40;
                 unit_data.veterancy_rank = unit_data.veterancy_rank + vet_rank_diff;
-                unit_data.vet_rank_progress = vet_rank_progress;
+                unit_data.veterancy_progress = vet_rank_progress;
                 -- TODO: Set slot-items etc....
                 if (_bg_playerData[playerID].player == Game_GetLocalPlayer()) then
                     BG_RefreshCompanyView();

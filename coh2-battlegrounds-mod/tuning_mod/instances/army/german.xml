@@ -13,7 +13,7 @@
 		</group>
 		<group name="casualties">
 			<int name="number_of_casualties_until_spawn" value="4" />
-			<instance_reference name="squad_to_spawn" value="sbps\races\german\soldiers\grenadier_squad\grenadier_squad" />
+			<instance_reference name="squad_to_spawn" value="sbps\races\german\soldiers\grenadier_squad\grenadier_squad_bg" mod="142b113740474c82a60b0a428bd553d5" />
 		</group>
 		<group name="income_cap">
 			<float name="action" value="20" />
@@ -185,6 +185,8 @@
 			<instance_reference name="ability" value="abilities\german\modal_ability\commander_ability\passive_ability\mobile_observation_post" />
 			<instance_reference name="ability" value="abilities\german\modal_ability\dispatch_ability\panzer_iv_j_deploy" />
 			<instance_reference name="ability" value="abilities\german\modal_ability\commander_ability\passive_ability\breakthrough_package" />
+			<instance_reference name="ability" value="abilities\battlegrounds_generic\bg_deploy_destination" mod="142b113740474c82a60b0a428bd553d5" />
+			<instance_reference name="ability" value="abilities\battlegrounds_generic\bg_withdraw_unit" mod="142b113740474c82a60b0a428bd553d5" />
 		</list>
 		<group name="resource_max_cap">
 			<template_reference name="resource" value="tables\resource_table">
@@ -293,18 +295,13 @@
 		</list>
 		<group name="ai_production_info">
 			<list name="base_building_list">
-				<instance_reference name="base_building" value="ebps\races\german\buildings\base_building\hq\german_hq" />
-				<instance_reference name="base_building" value="ebps\races\german\buildings\base_building\bereich_festung" />
-				<instance_reference name="base_building" value="ebps\races\german\buildings\base_building\dolch_aktionen" />
-				<instance_reference name="base_building" value="ebps\races\german\buildings\base_building\hintere_panzerwerk" />
-				<instance_reference name="base_building" value="ebps\races\german\buildings\base_building\schweres_kriegswerk" />
 			</list>
 			<list name="unlocking_upgrade_list">
 			</list>
 			<group name="builder_squads">
-				<instance_reference name="base_builder_squad" value="sbps\races\german\soldiers\pioneer_squad\pioneer_squad" />
-				<instance_reference name="obs_post_builder_squad" value="sbps\races\german\soldiers\pioneer_squad\pioneer_squad" />
-				<instance_reference name="defense_builder_squad" value="sbps\races\german\soldiers\pioneer_squad\pioneer_squad" />
+				<instance_reference name="base_builder_squad" value="sbps\races\german\soldiers\pioneer_squad\pioneer_squad_bg" mod="142b113740474c82a60b0a428bd553d5" />
+				<instance_reference name="obs_post_builder_squad" value="sbps\races\german\soldiers\pioneer_squad\pioneer_squad_bg" mod="142b113740474c82a60b0a428bd553d5" />
+				<instance_reference name="defense_builder_squad" value="sbps\races\german\soldiers\pioneer_squad\pioneer_squad_bg" mod="142b113740474c82a60b0a428bd553d5" />
 			</group>
 		</group>
 		<list name="team_size_point_resource_multiplier">

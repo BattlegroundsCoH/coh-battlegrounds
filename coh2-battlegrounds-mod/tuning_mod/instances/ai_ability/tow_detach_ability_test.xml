@@ -6,10 +6,10 @@
 		<group name="ai_tactic">
 			<string name="entity_target_filter" value="" />
 			<string name="position_target_filter" value="" />
-			<float name="priority" value="-1" />
+			<float name="priority" value="15" />
 			<string name="squad_target_filter" value="" />
 			<string name="tactic_filter_start" value="TacticFilter_NotInRecentCombatOrMoving" />
-			<float name="tactic_max_range_override" value="0" />
+			<float name="tactic_max_range_override" value="-1" />
 			<enum_table name="class">
 				<bool name="tactic_Combat" value="False" />
 				<bool name="tactic_OnTask" value="False" />

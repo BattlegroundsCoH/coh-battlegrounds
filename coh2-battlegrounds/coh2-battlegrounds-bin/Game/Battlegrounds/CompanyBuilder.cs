@@ -14,6 +14,7 @@ namespace Battlegrounds.Game.Battlegrounds {
         private CompanyType m_companyType;
         private string m_companyName;
         private string m_companyGUID;
+        private string m_companyUsername;
         private Stack<UnitBuilder> m_uncommittedSquads;
         private Stack<UnitBuilder> m_redo;
 
@@ -108,6 +109,16 @@ namespace Battlegrounds.Game.Battlegrounds {
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        public CompanyBuilder ChangeUser(string name) {
+            this.m_companyUsername = name;
+            return this;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <param name="tuningGUID"></param>
         /// <returns></returns>
         public CompanyBuilder ChangeTuningMod(string tuningGUID) {
@@ -129,6 +140,7 @@ namespace Battlegrounds.Game.Battlegrounds {
             this.m_companyTarget.SetType(this.m_companyType);
             this.m_companyTarget.Name = this.m_companyName;
             this.m_companyTarget.TuningGUID = this.m_companyGUID;
+            this.m_companyTarget.Owner = this.m_companyUsername;
 
             // While there are squads to add
             while(this.m_uncommittedSquads.Count > 0) {

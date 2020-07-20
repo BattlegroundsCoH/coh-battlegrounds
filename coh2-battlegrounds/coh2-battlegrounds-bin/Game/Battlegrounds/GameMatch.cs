@@ -128,6 +128,8 @@ namespace Battlegrounds.Game.Battlegrounds {
 
                 if (messageMatchResult.Success) {
 
+                    Console.WriteLine(msg);
+
                     char msgtype = char.ToUpper(messageMatchResult.Groups["cmdtype"].Value[0]); // Always bump it to upper (incase it's forgotten in Scar script)
                     string[] values = messageMatchResult.Groups["content"].Captures.ToList().Where(x => x.Value != "," && x.Value != " ").Select(x => x.Value).ToArray();
 
@@ -162,18 +164,24 @@ namespace Battlegrounds.Game.Battlegrounds {
                     } else if (msgtype == 'R') {
 
                         ushort squadID = ushort.Parse(values[0]);
-                        byte vetChange = byte.Parse(values[1]);
-                        float vetExp = float.Parse(values[2]);
 
-                        Squad squad = FindFirstSquad(player, allsquads, squadID);
-                        if (squad != null) {
-                            Console.WriteLine(squadID + " was withdrawn by " + player.Player.Name);
-                            if (vetChange > 0) {
-                                squad.SetVeterancy((byte)(squad.VeterancyRank + vetChange), vetExp);
-                                Console.WriteLine(squadID + " increased veterancy rank by " + vetChange);
+                        if (byte.TryParse(values[1], out byte vetChange)) {
+
+                            float vetExp = float.Parse(values[2]);
+
+                            Squad squad = FindFirstSquad(player, allsquads, squadID);
+                            if (squad != null) {
+                                Console.WriteLine(squadID + " was withdrawn by " + player.Player.Name);
+                                if (vetChange > 0) {
+                                    squad.SetVeterancy((byte)(squad.VeterancyRank + vetChange), vetExp);
+                                    Console.WriteLine(squadID + " increased veterancy rank by " + vetChange);
+                                }
+                            } else {
+                                // error?
                             }
+
                         } else {
-                            // error?
+                            Console.WriteLine("Failed to properly detect withdrawal of unit " + squadID + " by " + player.Player.Name);
                         }
 
                     } else if (msgtype == 'U') {

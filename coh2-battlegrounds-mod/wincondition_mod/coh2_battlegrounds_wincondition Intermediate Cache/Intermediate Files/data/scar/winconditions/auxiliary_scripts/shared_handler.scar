@@ -7,6 +7,9 @@ _bg_custom = {}; -- Custom data
 _bg_custom.max_squad_count = 24;
 _bg_custom.dead_players = {};
 _bg_custom.teams = {};
+_bg_custom.phase_current = 1;
+_bg_custom.phase_time_left = 420; -- 7 minutes
+_bg_custom.phase_time = 420;
 
 _bg_playerData = {};
 _bg_aiData = {};
@@ -89,6 +92,12 @@ function BG_Init()
 
     -- Fix some UI stuff
     Rule_AddOneShot(BG_FixUI, 1);
+
+    -- Call in all initial squads
+    Rule_AddOneShot(BG_CallInInitials, 1);
+
+    -- Add phase update
+    Rule_AddInterval(BG_PhaseUpdate, 1);
 
     -- Add the broadcast event callback
     Rule_AddGlobalEvent(BG_GameBroadcastMessageReceived, GE_BroadcastMessage);
@@ -194,8 +203,13 @@ function BG_SaveAndExit()
 
     -- TODO: Experiment with winning - but then force-shutting the game
 
-    -- Quit the game (No rematches --> Let the app handle the rest)
-    Game_QuitApp();
+    -- Make sure it's not a replay.
+    if not World_IsReplay() then
+
+        -- Quit the game (No rematches --> Let the app handle the rest)
+        Game_QuitApp();
+
+    end
 
 end
 
@@ -272,5 +286,44 @@ function BG_GameBroadcastMessageReceived(sender, messageType, message)
         UI_TeamEventCue(sender, Util_CreateLocString("** Unit Request **"), Util_CreateLocString("PlayerName has requested '' for deployment."));
     elseif messageType == _bg_message_type_player_cancel_deploy then
         UI_TeamEventCue(sender, Util_CreateLocString("** Unit Cancelled **"), Util_CreateLocString("PlayerName has cancelled the deployment of ''."));
+    end
+end
+
+function BG_CallInInitials()
+
+    for i=1, #_bg_playerData do
+
+        for k,v in pairs(_bg_playerData[i].company.units) do
+            if v.phase == 0 then
+                BG_DeploySquad(_bg_playerData[i].player, v.company_id);
+            end
+        end
+
+    end
+
+end
+
+function BG_PhaseUpdate()
+
+    if _bg_custom.phase_current < 3 then
+
+        _bg_custom.phase_time_left = _bg_custom.phase_time_left - 1;
+
+        if _bg_custom.phase_time_left == 0 then
+            _bg_custom.phase_current = _bg_custom.phase_current + 1;
+            _bg_custom.phase_time = _bg_custom.phase_time * 1.4;
+            _bg_custom.phase_time_left = _bg_custom.phase_time;
+            BG_OnEnterNewPhase();
+        end
+
+    end
+
+end
+
+function BG_OnEnterNewPhase()
+    if _bg_custom.phase_current == 2 then -- Could do more messages here (Within context of the player's sitution)
+        Util_MissionTitle(BG_LocString(16), 3, 8, 2 );
+    else
+        Util_MissionTitle(BG_LocString(17), 3, 8, 2 );
     end
 end

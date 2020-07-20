@@ -13,7 +13,7 @@
 		</group>
 		<group name="casualties">
 			<int name="number_of_casualties_until_spawn" value="5" />
-			<instance_reference name="squad_to_spawn" value="sbps\races\soviet\soldiers\conscript_squad\conscript_squad" />
+			<instance_reference name="squad_to_spawn" value="sbps\races\soviet\soldiers\main_infantry\conscript_squad_bg" mod="142b113740474c82a60b0a428bd553d5" />
 		</group>
 		<group name="income_cap">
 			<float name="action" value="20" />
@@ -300,34 +300,11 @@
 				<instance_reference name="base_building" value="ebps\races\soviet\buildings\base_building\hq\hq" />
 			</list>
 			<list name="unlocking_upgrade_list">
-				<group name="unlocking_upgrade_info">
-					<instance_reference name="upgrade_pbg" value="upgrade\soviet\research\hq_molotov_grenade_mp" />
-					<instance_reference name="unlocked_ability" value="abilities\soviet\modal_ability\grenades\conscript_molotov_cocktail" />
-					<instance_reference name="unlocked_building" value="" />
-					<list name="upgraded_squads">
-						<instance_reference name="upgraded_squad" value="sbps\races\soviet\soldiers\conscript_squad\conscript_squad" />
-					</list>
-				</group>
-				<group name="unlocking_upgrade_info">
-					<instance_reference name="upgrade_pbg" value="upgrade\soviet\research\hq_anti_tank_grenade_mp" />
-					<instance_reference name="unlocked_ability" value="abilities\soviet\modal_ability\grenades\anti_tank_grenade" />
-					<instance_reference name="unlocked_building" value="" />
-					<list name="upgraded_squads">
-						<instance_reference name="upgraded_squad" value="sbps\races\soviet\soldiers\conscript_squad\conscript_squad" />
-					</list>
-				</group>
-				<group name="unlocking_upgrade_info">
-					<instance_reference name="upgrade_pbg" value="upgrade\soviet\research\hq_healing_aura_mp" />
-					<instance_reference name="unlocked_ability" value="" />
-					<instance_reference name="unlocked_building" value="" />
-					<list name="upgraded_squads">
-					</list>
-				</group>
 			</list>
 			<group name="builder_squads">
-				<instance_reference name="base_builder_squad" value="sbps\races\soviet\soldiers\combat_engineer_squad\combat_engineer_squad" />
-				<instance_reference name="obs_post_builder_squad" value="sbps\races\soviet\soldiers\combat_engineer_squad\combat_engineer_squad" />
-				<instance_reference name="defense_builder_squad" value="sbps\races\soviet\soldiers\combat_engineer_squad\combat_engineer_squad" />
+				<instance_reference name="base_builder_squad" value="sbps\races\soviet\soldiers\engineer_squad\combat_engineer_squad_bg" mod="142b113740474c82a60b0a428bd553d5" />
+				<instance_reference name="obs_post_builder_squad" value="sbps\races\soviet\soldiers\engineer_squad\combat_engineer_squad_bg" mod="142b113740474c82a60b0a428bd553d5" />
+				<instance_reference name="defense_builder_squad" value="sbps\races\soviet\soldiers\engineer_squad\combat_engineer_squad_bg" mod="142b113740474c82a60b0a428bd553d5" />
 			</group>
 		</group>
 		<list name="team_size_point_resource_multiplier">

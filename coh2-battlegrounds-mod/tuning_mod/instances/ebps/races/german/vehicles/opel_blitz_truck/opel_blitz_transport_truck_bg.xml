@@ -1138,6 +1138,142 @@
 		<template_reference name="exts" value="ebpextensions\supply_ext">
 			<bool name="default_on" value="False" />
 		</template_reference>
+		<template_reference name="exts" value="ebpextensions\hold_ext">
+			<group name="acceptable_types">
+				<enum name="acceptable_type_01" value="hold_infantry" />
+				<enum name="acceptable_type_02" value="hold_sniper" />
+				<enum name="acceptable_type_03" value="hold_heavy_machine_gun" />
+				<enum name="acceptable_type_04" value="hold_mortar" />
+				<enum name="acceptable_type_05" value="" />
+			</group>
+			<bool name="attach_passenger_animator" value="False" />
+			<bool name="can_attack_occupant" value="False" />
+			<bool name="can_do_facing_on_load" value="False" />
+			<bool name="despawn_on_load" value="True" />
+			<bool name="disable_area_effect_on_overflow_slot" value="False" />
+			<bool name="disable_unload" value="False" />
+			<bool name="disallow_load_command" value="False" />
+			<bool name="enable_trigger_abilities_in_hold" value="True" />
+			<bool name="enable_trigger_attack_in_hold" value="False" />
+			<bool name="holds_produced_squads" value="False" />
+			<bool name="keep_abandoned_team_weapon" value="False" />
+			<float name="load_seconds" value="1" />
+			<float name="max_load_seconds" value="2" />
+			<float name="min_hold_seconds" value="1" />
+			<float name="num_slots" value="12" />
+			<float name="num_squad_slots" value="2" />
+			<float name="percent_unload_on_death" value="0.5" />
+			<bool name="revert_ownership" value="False" />
+			<bool name="scavenge_enabled" value="False" />
+			<group name="scavenge_resource">
+				<float name="action" value="0" />
+				<float name="command" value="0" />
+				<float name="fuel" value="0" />
+				<float name="manpower" value="0" />
+				<float name="munition" value="0" />
+				<float name="popcap" value="0" />
+			</group>
+			<bool name="shared_with_other_same_type_units" value="False" />
+			<float name="unload_seconds" value="0.125" />
+			<bool name="use_building_target_scan_radius" value="True" />
+			<bool name="use_crouching_posture" value="False" />
+			<list name="on_loaded_hold_actions">
+			</list>
+			<list name="on_loading_modifiers">
+				<template_reference name="modifier" value="modifiers\speed_maximum_modifier">
+					<enum name="application_type" value="apply_to_entity" />
+					<bool name="exclusive" value="False" />
+					<string name="modifier_id" value="" />
+					<string name="target_type_name" value="" />
+					<enum name="usage_type" value="multiplication" />
+					<float name="value" value="0.01" />
+					<instance_reference name="tooltip" value="modifier_tooltip\speed_maximum_modifier" />
+				</template_reference>
+				<template_reference name="modifier" value="modifiers\rotation_speed_modifier">
+					<enum name="application_type" value="apply_to_entity" />
+					<bool name="exclusive" value="False" />
+					<string name="modifier_id" value="" />
+					<string name="target_type_name" value="" />
+					<enum name="usage_type" value="multiplication" />
+					<float name="value" value="0.01" />
+					<instance_reference name="tooltip" value="modifier_tooltip\speed_maximum_modifier" />
+				</template_reference>
+			</list>
+			<list name="on_loaded_squad_actions">
+				<template_reference name="action" value="action\requirement_action">
+					<bool name="check_self" value="True" />
+					<bool name="global_fire_and_forget_on_success" value="False" />
+					<bool name="instant_requirement_check" value="False" />
+					<bool name="kill_action_on_failed_requirements" value="False" />
+					<bool name="no_retrigger" value="False" />
+					<bool name="validate_all_sub_actions" value="True" />
+					<list name="requirement_table">
+						<template_reference name="required" value="requirements\required_not">
+							<enum name="reason" value="usage" />
+							<locstring name="ui_name" value="0" />
+							<list name="requirement_table">
+								<template_reference name="required" value="requirements\required_in_state">
+									<enum name="reason" value="usage" />
+									<locstring name="ui_name" value="0" />
+									<bool name="garrisoned" value="False" />
+									<bool name="healed" value="False" />
+									<float name="in_combat_since" value="10" />
+									<bool name="injured" value="False" />
+									<bool name="leader" value="False" />
+									<bool name="not_moving" value="False" />
+									<bool name="not_retreating" value="False" />
+									<bool name="pinned" value="False" />
+									<bool name="suppressed" value="False" />
+									<bool name="camouflaged" value="False" />
+								</template_reference>
+							</list>
+						</template_reference>
+					</list>
+					<list name="action_table">
+						<template_reference name="action" value="action\apply_modifiers_action">
+							<float name="duration" value="0" />
+							<bool name="permanent" value="False" />
+							<list name="modifiers">
+								<template_reference name="modifier" value="modifiers\health_regeneration_modifier">
+									<enum name="application_type" value="apply_to_squad" />
+									<bool name="exclusive" value="False" />
+									<string name="modifier_id" value="" />
+									<string name="target_type_name" value="" />
+									<enum name="usage_type" value="addition" />
+									<float name="value" value="0.4" />
+									<instance_reference name="tooltip" value="modifier_tooltip\health_regeneration_modifier" />
+								</template_reference>
+							</list>
+							<uniqueid name="id" value="1073744388" />
+						</template_reference>
+						<template_reference name="action" value="action\animator_set_state">
+							<bool name="apply_to_leader_only" value="False" />
+							<string name="do_action_state_name" value="on" />
+							<bool name="retrigger" value="True" />
+							<string name="state_machine_name" value="ability_heal_state" />
+							<string name="undo_action_state_name" value="off" />
+							<uniqueid name="id" value="1073744389" />
+						</template_reference>
+						<template_reference name="action" value="action\ui_unit_modifier_action">
+							<bool name="die_with_creator" value="False" />
+							<template_reference name="ui_info" value="tables\ui_info">
+								<locstring name="screen_name" value="11069235" />
+								<locstring name="help_text" value="11069236" />
+								<icon name="icon_name" value="Icons_abilities_ability_west_german_medical_field_kit" />
+								<string name="hotkey_name" value="" />
+							</template_reference>
+							<uniqueid name="id" value="1073744390" />
+						</template_reference>
+					</list>
+					<uniqueid name="id" value="1073744391" />
+					<bool name="fire_and_forget_non_global" value="False" />
+					<template_reference name="ui_help_text" value="tables\help_text_phrase">
+						<int name="phrase_order" value="0" />
+						<locstring name="phrase" value="0" />
+					</template_reference>
+				</template_reference>
+			</list>
+		</template_reference>
 	</list>
 	<uniqueid name="pbgid" value="1073741898" />
 </instance>

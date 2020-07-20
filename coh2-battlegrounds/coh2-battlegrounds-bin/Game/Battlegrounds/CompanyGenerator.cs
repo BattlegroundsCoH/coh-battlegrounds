@@ -71,7 +71,7 @@ namespace Battlegrounds.Game.Battlegrounds {
 
                     if (__random.Next(0, 50) <= 24 && max_transport_use > 0) {
                         transportbp = blueprintPool.Where(x => x.IsTransportVehicle).Random(__random);
-                        deployMethod = (type == CompanyType.Motorized) ? DeploymentMethod.DeployAndExit : DeploymentMethod.DeployAndStay;
+                        deployMethod = (type != CompanyType.Mechanized) ? DeploymentMethod.DeployAndExit : DeploymentMethod.DeployAndStay;
                         max_transport_use--;
                     }
 
@@ -116,7 +116,7 @@ namespace Battlegrounds.Game.Battlegrounds {
 
                     if (support.IsAntiTank &&__random.Next(0, 50) <= 24 && max_transport_use > 0) {
                         transport_blueprint = blueprintPool.Where(x => x.IsTransportVehicle).Random(__random);
-                        deployMethod = DeploymentMethod.DeployAndStay;
+                        deployMethod = DeploymentMethod.DeployAndExit;
                         max_transport_use--;
                     }
 
@@ -127,7 +127,7 @@ namespace Battlegrounds.Game.Battlegrounds {
 
                 } else if (unit_type >= 35 && unit_type <= 37 && max_artillery > 0) { // artillery
 
-                    SquadBlueprint arty_blueprint = blueprintPool.Where(x => x.IsHeavyArtillery || x.IsArtillery).Random(__random);
+                    /*SquadBlueprint arty_blueprint = blueprintPool.Where(x => x.IsHeavyArtillery || x.IsArtillery).Random(__random);
                     SquadBlueprint transport_blueprint = null;
                     DeploymentMethod deployMethod = DeploymentMethod.None;
 
@@ -140,7 +140,7 @@ namespace Battlegrounds.Game.Battlegrounds {
 
                     max_artillery--;
                     remaining--;
-
+                    */
                 } else if (unit_type >= 38 && unit_type <= 45 && max_tanks > 0) { // tanks
 
                     SquadBlueprint tank_blueprint = blueprintPool.Where(x => x.IsArmour || !x.IsVehicle).Random(__random);

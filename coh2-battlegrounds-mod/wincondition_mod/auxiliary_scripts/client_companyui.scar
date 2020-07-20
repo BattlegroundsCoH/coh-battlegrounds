@@ -140,15 +140,17 @@ function BG_ShowCompanyCategory(category)
         -- For each unit in company unit
         for i=1, #_bg_playerData[bgPlayerID].company.units do
             -- TODO: Do this properly...
-            if (not _bg_playerData[bgPlayerID].company.units[i].spawned) and _bg_playerData[bgPlayerID].company.units[i].category == category then
+            if _bg_playerData[bgPlayerID].company.units[i].category == category and _bg_playerData[bgPlayerID].company.units[i].phase <= _bg_custom.phase_current then
+                if (not _bg_playerData[bgPlayerID].company.units[i].spawned) then
 
-                local unitcard = BG_CreateUnitcard(_bg_playerData[bgPlayerID].company.units[i], yOffset);
-                bg_company_container:add(unitcard);
+                    local unitcard = BG_CreateUnitcard(_bg_playerData[bgPlayerID].company.units[i], yOffset);
+                    bg_company_container:add(unitcard);
 
-                yOffset = yOffset + 40;
+                    yOffset = yOffset + 40;
 
-                j = j + 1;
+                    j = j + 1;
 
+                end
             end
             if j >= _bg_local_show_max then
                 break;

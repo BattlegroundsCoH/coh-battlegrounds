@@ -2,41 +2,53 @@ _bg_AISettings = {
     thresholds = {
         [1] = {
             smart_thinking = 4,
-            trigger_callin = 7,
-            max_deployed = 8, -- max deployed at a time
+            trigger_callin = 9,
+            max_deployed = 12, -- max deployed at a time
         },
         [2] = {
             smart_thinking = 3,
-            trigger_callin = 5,
-            max_deployed = 10,
+            trigger_callin = 7,
+            max_deployed = 14,
         },
         [3] = {
             smart_thinking = 2,
-            trigger_callin = 3,
-            max_deployed = 12,
+            trigger_callin = 4,
+            max_deployed = 20,
         },
         [4] = {
             smart_thinking = 1,
-            trigger_callin = 2,
-            max_deployed = 15,
+            trigger_callin = 3,
+            max_deployed = 24,
         }
     },
     modifiers = {
         [1] = {
             aggressive_factor = 1,
             call_mod = 2.75,
+            manpower_income = 1.1,
+            munitions_income = 1.3,
+            fuel_income = 1.1,
         },
         [2] = {
             aggressive_factor = 1.5,
             call_mod = 2.1,
+            manpower_income = 1.2,
+            munitions_income = 1.6,
+            fuel_income = 1.3,
         },
         [3] = {
             aggressive_factor = 2.5,
             call_mod = 1.2,
+            manpower_income = 1.4,
+            munitions_income = 2.1,
+            fuel_income = 2.3,
         },
         [4] = {
             aggressive_factor = 3.25,
             call_mod = 0.9,
+            manpower_income = 1.6,
+            munitions_income = 2.3,
+            fuel_income = 2.8,
         }
     }
 };
@@ -54,6 +66,13 @@ function BGAI_RegisterAIPlayer(index, player)
     _bg_aiData[index].demand_heavy = 0;
     _bg_aiData[index].demand_support = 0;
     _bg_aiData[index].demand_any = 1;
+
+    -- Apply resource modifiers
+    _bg_aiData[index].resource_mods = {
+        manpower_mod = Modify_PlayerResourceRate(player, RT_Manpower, _bg_AISettings.modifiers[_bg_aiData[index].difficulty].manpower_income),
+        munitions_mod = Modify_PlayerResourceRate(player, RT_Munition, _bg_AISettings.modifiers[_bg_aiData[index].difficulty].munitions_income),
+        fuel_mod = Modify_PlayerResourceRate(player, RT_Fuel, _bg_AISettings.modifiers[_bg_aiData[index].difficulty].fuel_income),
+    };
 
     -- Get the update time
     local updateTime = 60 - (difficulty * 15);
@@ -145,20 +164,22 @@ function BGAI_EvalUnits(index)
         BGAI_EvalAttackers(index, sg_aitemp);
     end
 
+    -- Always increase the demand for something
+    _bg_aiData[index].demand_any = _bg_aiData[index].demand_any + (1 * _bg_AISettings.modifiers[_bg_aiData[index].difficulty].aggressive_factor);
+
 end
 
 function BGAI_EvalAttackers(index, attackGroup)
 
-    local attacker_eval = function(sgroupid, itemindex, squadID)
+    local attacker_eval = function(sgroupid, itemindex, squadID) -- Increase demand for specific unit counters
         if Squad_HasTeamWeapon(squadID) then
             _bg_aiData[index].demand_vehicle = _bg_aiData[index].demand_vehicle + (0.5 *_bg_AISettings.modifiers[_bg_aiData[index].difficulty].aggressive_factor);
             _bg_aiData[index].demand_support = _bg_aiData[index].demand_support + (0.75 *_bg_AISettings.modifiers[_bg_aiData[index].difficulty].aggressive_factor);
         elseif Squad_IsVehicleSquad(squadID) then
-            _bg_aiData[index].demand_vehicle = _bg_aiData[index].demand_vehicle + (0.75 *_bg_AISettings.modifiers[_bg_aiData[index].difficulty].aggressive_factor);
+            _bg_aiData[index].demand_vehicle = _bg_aiData[index].demand_vehicle + (1.75 *_bg_AISettings.modifiers[_bg_aiData[index].difficulty].aggressive_factor);
             _bg_aiData[index].demand_support = _bg_aiData[index].demand_support + (0.35 *_bg_AISettings.modifiers[_bg_aiData[index].difficulty].aggressive_factor);
             _bg_aiData[index].demand_heavy = _bg_aiData[index].demand_heavy + (0.25 *_bg_AISettings.modifiers[_bg_aiData[index].difficulty].aggressive_factor);
         end
-        _bg_aiData[index].demand_any = _bg_aiData[index].demand_any + (1 * _bg_AISettings.modifiers[_bg_aiData[index].difficulty].aggressive_factor);
     end
 
     SGroup_ForEach(attackGroup, attacker_eval);
@@ -171,7 +192,13 @@ function BGAI_EvalProduction(index)
 
     if (squadCount <= _bg_AISettings.thresholds[_bg_aiData[index].difficulty].smart_thinking) then -- The 'Get something unto the field' threshold
 
-        BGAI_BuySomething(index, "infantry");-- Will just be infantry for now.
+        if not BGAI_BuySomething(index, "infantry") then -- always try to buy infantry
+            if not BGAI_BuySomething(index, "vehicle") then -- Then vehicles
+                if not BGAI_BuySomething(index, "vehicle", true) then  -- Then heavy vehicles
+                    BGAI_BuySomething(index, "team_weapon"); -- Then team weapons
+                end
+            end
+        end
 
     elseif squadCount <= _bg_AISettings.thresholds[_bg_aiData[index].difficulty].max_deployed then
 
@@ -187,7 +214,7 @@ function BGAI_EvalProduction(index)
             while pCounter < 10 do
 
                 if _bg_aiData[index].demand_heavy > triggerThreshold + 5 and not skipHeavyVehicle then
-                    if BGAI_BuySomething(index, "vehicle") then -- TODO: Buy only something fitting the "heavy" category
+                    if BGAI_BuySomething(index, "vehicle", true) then
                         _bg_aiData[index].demand_heavy = 0;
                         break;
                     else
@@ -211,16 +238,17 @@ function BGAI_EvalProduction(index)
                     local randomVal = World_GetRand(1,10);
                     if randomVal <= 4 then
                         if BGAI_BuySomething(index, "infantry") then
-                            _bg_aiData[index].demand_vehicle = _bg_aiData[index].demand_vehicle + 0.5;
+                            _bg_aiData[index].demand_vehicle = _bg_aiData[index].demand_vehicle + 1.5;
                             break;
                         end
                     elseif randomVal <= 7 then
                         if BGAI_BuySomething(index, "vehicle") then
-                            _bg_aiData[index].demand_support = _bg_aiData[index].demand_support + 0.5;
+                            _bg_aiData[index].demand_support = _bg_aiData[index].demand_support + 1.5;
                             break;
                         end
                     else
                         if BGAI_BuySomething(index, "team_weapon") then
+                            _bg_aiData[index].demand_vehicle = _bg_aiData[index].demand_vehicle + 0.35;
                             break;
                         end
                     end
@@ -232,17 +260,15 @@ function BGAI_EvalProduction(index)
 
             _bg_aiData[index].demand_any = 0;
 
-        else
-            _bg_aiData[index].demand_any =  _bg_aiData[index].demand_any + 0.5 * _bg_AISettings.modifiers[_bg_aiData[index].difficulty].call_mod;
         end
 
     end
 
 end
 
-function BGAI_BuySomething(index, type)
+function BGAI_BuySomething(index, type, heavy)
 
-    local affordable_units = BGAI_FindAffordableUnits(index, type);
+    local affordable_units = BGAI_FindAffordableUnits(index, type, heavy);
 
     if bg_set:size(affordable_units) > 0 then
         BGAI_BuyRandom(index, affordable_units);
@@ -253,7 +279,7 @@ function BGAI_BuySomething(index, type)
 
 end
 
-function BGAI_FindAffordableUnits(index, type)
+function BGAI_FindAffordableUnits(index, type, heavy)
 
     local manpower = Player_GetResource(_bg_aiData[index].player, RT_Manpower);
     local munitions = Player_GetResource(_bg_aiData[index].player, RT_Munition);
@@ -262,7 +288,10 @@ function BGAI_FindAffordableUnits(index, type)
 
     for i=1, #_bg_aiData[index].company.units do
 
-        if (not _bg_aiData[index].company.units[i].spawned) and (type == nil or _bg_aiData[index].company.units[i].category == type) then
+        local heavyProperty = _bg_aiData[index].company.units[i].heavy or false;
+        local heavyCondition = (heavy and heavyProperty) or ((heavy == false or heavy == nil) and heavyProperty);
+
+        if (not _bg_aiData[index].company.units[i].spawned) and (type == nil or _bg_aiData[index].company.units[i].category == type) and heavyCondition then
 
             local costManpower = _bg_aiData[index].company.units[i].cost.manpower or 0;
             local costMunitions = _bg_aiData[index].company.units[i].cost.munitions or 0;
@@ -294,3 +323,5 @@ function BGAI_BuyRandom(index, set)
     BG_CallInUnit(set[i], player, gotopos, spawnfrom);
 
 end
+
+-- Note: The AI will ignore call-in phases

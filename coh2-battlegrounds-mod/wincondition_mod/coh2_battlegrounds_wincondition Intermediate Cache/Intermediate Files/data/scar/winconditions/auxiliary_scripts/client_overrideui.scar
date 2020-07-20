@@ -30,7 +30,7 @@ function BG_CreateAndShowMatchError(title, message)
     UI_MessageBoxSetText(title, message);
 
     -- Add the close button
-    UI_MessageBoxSetButton(DB_Button2, BG_LocString(14), BG_LocString(15), "", true);
+    UI_MessageBoxSetButton(DB_Close, BG_LocString(14), BG_LocString(15), "", true);
 
     -- Show the message box
     UI_MessageBoxShow(DC_Default, BG_OnShowMatchErrorButtonClicked);
