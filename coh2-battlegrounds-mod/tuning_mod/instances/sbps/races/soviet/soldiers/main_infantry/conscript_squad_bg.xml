@@ -772,14 +772,10 @@
 		</template_reference>
 		<template_reference name="squadexts" value="sbpextensions\squad_ability_ext">
 			<list name="abilities">
-				<instance_reference name="ability" value="abilities\soviet\timed_ability\conscript_oorah_mp" />
+				<instance_reference name="ability" value="abilities\soviet\timed_ability\conscript_oorah_bg" mod="142b113740474c82a60b0a428bd553d5" />
 				<instance_reference name="ability" value="abilities\soviet\modal_ability\merge_ability_mp" />
-				<instance_reference name="ability" value="abilities\soviet\toggle_ability\conscript_evasive_tactics_mp" />
-				<instance_reference name="ability" value="abilities\soviet\modal_ability\repair_ability\soviet_conscript_repair_ability_mp" />
 				<instance_reference name="ability" value="abilities\global\cold\blizzard_effect" />
-				<instance_reference name="ability" value="abilities\soviet\modal_ability\fieldcraft_trip_flare_mp" />
 				<instance_reference name="ability" value="abilities\soviet\always_on_ability\conscript_in_cover_stationary_camouflage_mp" />
-				<instance_reference name="ability" value="abilities\soviet\modal_ability\conscript_tank_detection_mp" />
 				<instance_reference name="ability" value="abilities\german\toggle_ability\commander_ability\ambush_camo_hold_fire_mp" />
 				<instance_reference name="ability" value="abilities\soviet\always_on_ability\conscript_cover_combat_bonus" />
 			</list>

@@ -161,8 +161,12 @@
 		<template_reference name="squadexts" value="sbpextensions\squad_loadout_ext">
 			<list name="unit_list">
 				<group name="loadout_data">
-					<float name="num" value="3" />
-					<instance_reference name="type" value="ebps\races\german\soldiers\stormtroopers\stormtroopers_bg" mod="142b113740474c82a60b0a428bd553d5" />
+					<float name="num" value="2" />
+					<instance_reference name="type" value="ebps\races\german\soldiers\stormtroopers\tankhunter_bg" mod="142b113740474c82a60b0a428bd553d5" />
+				</group>
+				<group name="loadout_data">
+					<float name="num" value="1" />
+					<instance_reference name="type" value="ebps\races\german\soldiers\stormtroopers\tankhunter_rifle_bg" mod="142b113740474c82a60b0a428bd553d5" />
 				</group>
 			</list>
 			<float name="squad_female_chance" value="0" />
@@ -833,6 +837,34 @@
 										</list>
 										<uniqueid name="id" value="1073743306" />
 									</template_reference>
+								</list>
+							</group>
+							<group name="veterancy_rank">
+								<float name="experience_value" value="20000" />
+								<bool name="hide_ingame_veterancy_art" value="False" />
+								<locstring name="screen_name" value="0" />
+								<bool name="single_player_only" value="False" />
+								<list name="leader_actions">
+								</list>
+								<list name="non_leader_actions">
+								</list>
+								<list name="squad_actions">
+								</list>
+								<list name="squad_entity_actions">
+								</list>
+							</group>
+							<group name="veterancy_rank">
+								<float name="experience_value" value="30000" />
+								<bool name="hide_ingame_veterancy_art" value="False" />
+								<locstring name="screen_name" value="0" />
+								<bool name="single_player_only" value="False" />
+								<list name="leader_actions">
+								</list>
+								<list name="non_leader_actions">
+								</list>
+								<list name="squad_actions">
+								</list>
+								<list name="squad_entity_actions">
 								</list>
 							</group>
 						</list>

@@ -77,7 +77,7 @@ namespace Battlegrounds.Game.Gameplay {
     /// </summary>
     public class Squad : IJsonObject {
 
-        [JsonIgnoreIfValue((byte)0)]private byte m_veterancyRank;
+        [JsonIgnoreIfValue((byte)0)] private byte m_veterancyRank;
         [JsonIgnoreIfValue(0.0f)] private float m_veterancyProgress;
 
         [JsonIgnoreIfValue(false)] private bool m_isCrewSquad;
