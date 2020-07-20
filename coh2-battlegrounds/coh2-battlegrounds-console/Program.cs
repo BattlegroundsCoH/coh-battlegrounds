@@ -30,42 +30,111 @@ namespace coh2_battlegrounds_console {
             }
 
             // Create a dummy company
-            Company testCompany = new Company(BattlegroundsInstance.LocalSteamuser, "26th Rifle Division", Faction.Soviet, BattlegroundsInstance.BattleGroundsTuningMod.Guid.ToString());
-            
+            CompanyBuilder companyBuilder = new CompanyBuilder().NewCompany(Faction.Soviet)
+                .ChangeName("26th Rifle Division")
+                .ChangeTuningMod(BattlegroundsInstance.BattleGroundsTuningMod.Guid.ToString());
+            UnitBuilder unitBuilder = new UnitBuilder();
+
             // Basic infantry
-            testCompany.AddSquad("conscript_squad_bg", 0, 0);
-            testCompany.AddSquad("conscript_squad_bg", 0, 0);
-            testCompany.AddSquad("conscript_squad_bg", 2, 0, new string[] { "dp-28_lmg_upgrade_bg" });
-            testCompany.AddSquad("conscript_squad_bg", 2, 0, new string[] { "dp-28_lmg_upgrade_bg" });
-            testCompany.AddSquad("conscript_squad_bg", 4, 0, new string[] { "ppsh-41_sub_machine_gun_upgrade_bg" });
-            
+            companyBuilder.AddUnit(unitBuilder.SetBlueprint("conscript_squad_bg").GetAndReset().SetDeploymentPhase(DeploymentPhase.PhaseInitial));
+            companyBuilder.AddUnit(unitBuilder.SetBlueprint("conscript_squad_bg").GetAndReset().SetDeploymentPhase(DeploymentPhase.PhaseInitial));
+            companyBuilder.AddUnit(unitBuilder.SetBlueprint("conscript_squad_bg").SetVeterancyRank(2).AddUpgrade("dp-28_lmg_upgrade_bg").GetAndReset());
+            companyBuilder.AddUnit(unitBuilder.SetBlueprint("conscript_squad_bg").SetVeterancyRank(2).AddUpgrade("dp-28_lmg_upgrade_bg").GetAndReset());
+            companyBuilder.AddUnit(unitBuilder.SetBlueprint("conscript_squad_bg").SetVeterancyRank(4).AddUpgrade("ppsh-41_sub_machine_gun_upgrade_bg").GetAndReset());
+
             // Transported Infantry
-            testCompany.AddSquad("conscript_squad_bg", "zis_6_transport_truck_bg", DeploymentMethod.DeployAndExit, 0, 0, null, null, null);
-            testCompany.AddSquad("conscript_squad_bg", "zis_6_transport_truck_bg", DeploymentMethod.DeployAndExit, 3, 0, null, null, null);
-            testCompany.AddSquad("conscript_squad_bg", "zis_6_transport_truck_bg", DeploymentMethod.DeployAndExit, 4, 0, new string[] { "ppsh-41_sub_machine_gun_upgrade_bg" }, null, null);
-            testCompany.AddSquad("conscript_squad_bg", "zis_6_transport_truck_bg", DeploymentMethod.DeployAndExit, 5, 0, new string[] { "ppsh-41_sub_machine_gun_upgrade_bg" }, null, null);
-            testCompany.AddSquad("frontoviki_squad_bg", "m5_halftrack_squad_bg", DeploymentMethod.DeployAndExit, 0, 0, new string[] { "ppsh-41_sub_machine_gun_upgrade_bg" }, null, null);
-            testCompany.AddSquad("frontoviki_squad_bg", "m5_halftrack_squad_bg", DeploymentMethod.DeployAndExit, 1, 0, new string[] { "ppsh-41_sub_machine_gun_upgrade_bg" }, null, null);
+            companyBuilder.AddUnit(unitBuilder.SetBlueprint("conscript_squad_bg")
+                .SetTransportBlueprint("zis_6_transport_truck_bg")
+                .SetDeploymentMethod(DeploymentMethod.DeployAndExit)
+                .GetAndReset());
+            companyBuilder.AddUnit(unitBuilder.SetBlueprint("conscript_squad_bg")
+                .SetTransportBlueprint("zis_6_transport_truck_bg")
+                .SetDeploymentMethod(DeploymentMethod.DeployAndExit)
+                .SetVeterancyRank(3)
+                .GetAndReset());
+            companyBuilder.AddUnit(unitBuilder.SetBlueprint("conscript_squad_bg")
+                .SetTransportBlueprint("zis_6_transport_truck_bg")
+                .SetDeploymentMethod(DeploymentMethod.DeployAndExit)
+                .SetVeterancyRank(4)
+                .AddUpgrade("ppsh-41_sub_machine_gun_upgrade_bg")
+                .GetAndReset());
+            companyBuilder.AddUnit(unitBuilder.SetBlueprint("conscript_squad_bg")
+                .SetTransportBlueprint("zis_6_transport_truck_bg")
+                .SetDeploymentMethod(DeploymentMethod.DeployAndExit)
+                .SetVeterancyRank(5)
+                .AddUpgrade("ppsh-41_sub_machine_gun_upgrade_bg")
+                .GetAndReset());
+            companyBuilder.AddUnit(unitBuilder.SetBlueprint("frontoviki_squad_bg")
+                .SetTransportBlueprint("m5_halftrack_squad_bg")
+                .SetDeploymentMethod(DeploymentMethod.DeployAndExit)
+                .SetVeterancyRank(0)
+                .AddUpgrade("ppsh-41_sub_machine_gun_upgrade_bg")
+                .GetAndReset());
+            companyBuilder.AddUnit(unitBuilder.SetBlueprint("frontoviki_squad_bg")
+                .SetTransportBlueprint("m5_halftrack_squad_bg")
+                .SetDeploymentMethod(DeploymentMethod.DeployAndExit)
+                .SetVeterancyRank(1)
+                .AddUpgrade("ppsh-41_sub_machine_gun_upgrade_bg")
+                .GetAndReset());
 
             // Support Weapons
-            testCompany.AddSquad("m1942_zis-3_76mm_at_gun_squad_bg", "zis_6_transport_truck_bg", DeploymentMethod.DeployAndExit, 0, 0, null, null, null);
-            testCompany.AddSquad("m1942_zis-3_76mm_at_gun_squad_bg", "zis_6_transport_truck_bg", DeploymentMethod.DeployAndExit, 0, 0, null, null, null);
-            testCompany.AddSquad("m1910_maxim_heavy_machine_gun_squad_bg", 0, 0);
-            testCompany.AddSquad("m1910_maxim_heavy_machine_gun_squad_bg", 0, 0);
-            testCompany.AddSquad("pm-82_41_mortar_squad_bg", 0, 0);
+            companyBuilder.AddUnit(unitBuilder.SetBlueprint("m1942_zis-3_76mm_at_gun_squad_bg")
+                .SetTransportBlueprint("zis_6_transport_truck_bg")
+                .SetDeploymentMethod(DeploymentMethod.DeployAndExit)
+                .GetAndReset());
+            companyBuilder.AddUnit(unitBuilder.SetBlueprint("m1942_zis-3_76mm_at_gun_squad_bg")
+                .SetTransportBlueprint("zis_6_transport_truck_bg")
+                .SetDeploymentMethod(DeploymentMethod.DeployAndExit)
+                .GetAndReset());
+            companyBuilder.AddUnit(unitBuilder.SetBlueprint("m1910_maxim_heavy_machine_gun_squad_bg")
+                .GetAndReset());
+            companyBuilder.AddUnit(unitBuilder.SetBlueprint("m1910_maxim_heavy_machine_gun_squad_bg")
+                .GetAndReset());
+            companyBuilder.AddUnit(unitBuilder.SetBlueprint("pm-82_41_mortar_squad_bg")
+                .GetAndReset());
 
             // Vehicles
-            testCompany.AddSquad("t_34_76_squad_bg", 2, 0);
-            testCompany.AddSquad("t_34_76_squad_bg", 2, 0);
-            testCompany.AddSquad("t_34_76_squad_bg", 2, 0);
-            testCompany.AddSquad("t_34_85_squad_bg", 4, 0);
-            testCompany.AddSquad("t_34_85_squad_bg", 5, 0);
-            testCompany.AddSquad("kv-1_bg", 2, 0);
-            testCompany.AddSquad("kv-1_bg", 2, 0);
+            companyBuilder.AddUnit(unitBuilder.SetBlueprint("t_34_76_squad_bg")
+                .SetVeterancyRank(2)
+                .GetAndReset());
+            companyBuilder.AddUnit(unitBuilder.SetBlueprint("t_34_76_squad_bg")
+                .SetVeterancyRank(2)
+                .GetAndReset());
+            companyBuilder.AddUnit(unitBuilder.SetBlueprint("t_34_76_squad_bg")
+                .SetVeterancyRank(2)
+                .GetAndReset());
+            companyBuilder.AddUnit(unitBuilder.SetBlueprint("t_34_85_squad_bg")
+                .SetVeterancyRank(4)
+                .GetAndReset());
+            companyBuilder.AddUnit(unitBuilder.SetBlueprint("t_34_85_squad_bg")
+                .SetVeterancyRank(5)
+                .GetAndReset());
+            companyBuilder.AddUnit(unitBuilder.SetBlueprint("kv-1_bg")
+                .SetVeterancyRank(2)
+                .GetAndReset());
+            companyBuilder.AddUnit(unitBuilder.SetBlueprint("kv-1_bg")
+                .SetVeterancyRank(2)
+                .GetAndReset());
+            companyBuilder.AddUnit(unitBuilder.SetBlueprint("kv-1_bg")
+                .SetVeterancyRank(3)
+                .GetAndReset());
 
             // Artillery
-            testCompany.AddSquad("m1931_203mm_b-4_howitzer_artillery_bg", "zis_6_transport_truck_bg", DeploymentMethod.DeployAndStay, 1, 0, null, null, null);
-            testCompany.AddSquad("m1931_203mm_b-4_howitzer_artillery_bg", "zis_6_transport_truck_bg", DeploymentMethod.DeployAndExit, 2, 0, null, null, null);
+            companyBuilder.AddUnit(unitBuilder.SetBlueprint("m1931_203mm_b-4_howitzer_artillery_bg")
+                .SetTransportBlueprint("zis_6_transport_truck_bg")
+                .SetDeploymentMethod(DeploymentMethod.DeployAndStay)
+                .SetVeterancyRank(1)
+                .GetAndReset());
+            companyBuilder.AddUnit(unitBuilder.SetBlueprint("m1931_203mm_b-4_howitzer_artillery_bg")
+                .SetTransportBlueprint("zis_6_transport_truck_bg")
+                .SetDeploymentMethod(DeploymentMethod.DeployAndExit)
+                .SetVeterancyRank(2)
+                .GetAndReset());
+
+            // Commit changes
+            companyBuilder.Commit();
+
+            Company testCompany = companyBuilder.Result;
 
             SessionInfo sessionInfo = new SessionInfo() {
                 SelectedGamemode = WinconditionList.GetWinconditionByName("Victory Points"),

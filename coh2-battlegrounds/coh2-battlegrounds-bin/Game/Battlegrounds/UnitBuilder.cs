@@ -8,7 +8,7 @@ using Battlegrounds.Game.Gameplay;
 namespace Battlegrounds.Game.Battlegrounds {
     
     /// <summary>
-    /// Builder class for building a <see cref="Squad"/> instance with serial-style methods.
+    /// Builder class for building a <see cref="Squad"/> instance with serial-style methods. Can be cleared for re-use.
     /// </summary>
     public class UnitBuilder {
 
@@ -45,8 +45,8 @@ namespace Battlegrounds.Game.Battlegrounds {
         /// </summary>
         /// <param name="squad">The <see cref="Squad"/> instance to copy the unit data from.</param>
         /// <remarks>This will not modify the <see cref="Squad"/> instance.</remarks>
-        public UnitBuilder(Squad squad) {
-            this.m_hasOverrideIndex = true;
+        public UnitBuilder(Squad squad, bool overrideIndex = true) {
+            this.m_hasOverrideIndex = overrideIndex;
             this.m_overrideIndex = squad.SquadID;
             this.m_modifiers = squad.Modifiers.ToHashSet();
             this.m_upgrades = squad.Upgrades.Select(x => x as UpgradeBlueprint).ToHashSet();
@@ -58,7 +58,7 @@ namespace Battlegrounds.Game.Battlegrounds {
             this.m_deploymentPhase = squad.DeploymentPhase;
             this.m_deploymentMethod = squad.DeploymentMethod;
             if (squad.Crew != null) {
-                this.m_crewBuilder = new UnitBuilder(squad.Crew);
+                this.m_crewBuilder = new UnitBuilder(squad.Crew, overrideIndex);
             }
         }
 
@@ -67,7 +67,7 @@ namespace Battlegrounds.Game.Battlegrounds {
         /// </summary>
         /// <returns>A cloned instance of the <see cref="UnitBuilder"/> instance.</returns>
         public virtual UnitBuilder Clone()
-            => new UnitBuilder(this.Build(0));
+            => new UnitBuilder(this.Build(0), this.m_hasOverrideIndex);
 
         /// <summary>
         /// Set the veterancy rank of the <see cref="Squad"/> instance being built.
@@ -101,6 +101,19 @@ namespace Battlegrounds.Game.Battlegrounds {
         }
 
         /// <summary>
+        /// Set the <see cref="SquadBlueprint"/> the <see cref="Squad"/> instance being built will use.
+        /// </summary>
+        /// <remarks>
+        /// This must be called before certain other methods.
+        /// </remarks>
+        /// <param name="sbpName">The blueprint name to use when finding the <see cref="Blueprint"/>.</param>
+        /// <returns>The modified instance the method is invoked with.</returns>
+        public virtual UnitBuilder SetBlueprint(string sbpName) {
+            this.m_blueprint = BlueprintManager.FromBlueprintName(sbpName, BlueprintType.SBP) as SquadBlueprint;
+            return this;
+        }
+
+        /// <summary>
         /// Set the transport <see cref="SquadBlueprint"/> of the <see cref="Squad"/> instance being built will use when entering the battlefield.
         /// </summary>
         /// <remarks>
@@ -110,6 +123,19 @@ namespace Battlegrounds.Game.Battlegrounds {
         /// <returns>The modified instance the method is invoked with.</returns>
         public virtual UnitBuilder SetTransportBlueprint(SquadBlueprint sbp) {
             this.m_transportBlueprint = sbp;
+            return this;
+        }
+
+        /// <summary>
+        /// Set the transport <see cref="SquadBlueprint"/> of the <see cref="Squad"/> instance being built will use when entering the battlefield.
+        /// </summary>
+        /// <remarks>
+        /// This must be called before certain other methods.
+        /// </remarks>
+        /// <param name="sbpName">The blueprint name to use when finding the <see cref="Blueprint"/>.</param>
+        /// <returns>The modified instance the method is invoked with.</returns>
+        public virtual UnitBuilder SetTransportBlueprint(string sbpName) {
+            this.m_transportBlueprint = BlueprintManager.FromBlueprintName(sbpName, BlueprintType.SBP) as SquadBlueprint;
             return this;
         }
 
@@ -149,10 +175,50 @@ namespace Battlegrounds.Game.Battlegrounds {
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="upbs"></param>
+        /// <returns>The modified instance the method is invoked with.</returns>
+        public virtual UnitBuilder AddUpgrade(UpgradeBlueprint[] upbs) {
+            upbs.ForEach(x => this.m_upgrades.Add(x));
+            return this;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="upb"></param>
+        /// <returns>The modified instance the method is invoked with.</returns>
+        public virtual UnitBuilder AddUpgrade(string upb) {
+            this.m_upgrades.Add(BlueprintManager.FromBlueprintName(upb, BlueprintType.UBP) as UpgradeBlueprint);
+            return this;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="upbs"></param>
+        /// <returns>The modified instance the method is invoked with.</returns>
+        public virtual UnitBuilder AddUpgrade(string[] upbs) {
+            upbs.ForEach(x => this.AddUpgrade(x));
+            return this;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <param name="ibp"></param>
         /// <returns>The modified instance the method is invoked with.</returns>
         public virtual UnitBuilder AddSlotItem(SlotItemBlueprint ibp) {
             this.m_slotitems.Add(ibp);
+            return this;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="ibp"></param>
+        /// <returns>The modified instance the method is invoked with.</returns>
+        public virtual UnitBuilder AddSlotItem(string ibp) {
+            this.m_slotitems.Add(BlueprintManager.FromBlueprintName(ibp, BlueprintType.IBP) as SlotItemBlueprint);
             return this;
         }
 
@@ -230,8 +296,12 @@ namespace Battlegrounds.Game.Battlegrounds {
             squad.SetDeploymentMethod(this.m_transportBlueprint, this.m_deploymentMethod, this.m_deploymentPhase);
             squad.SetVeterancy(this.m_vetrank, this.m_vetexperience);
 
+            if (this.m_blueprint?.HasCrew ?? false && this.m_crewBuilder == null) {
+                this.CreateAndGetCrew();
+            }
+
             if (this.m_crewBuilder != null) {
-                squad.SetCrew(this.m_crewBuilder.Build(ID++));
+                squad.SetCrew(this.m_crewBuilder.Build((ushort)(ID + 1)));
             }
 
             this.m_upgrades.ToArray().ForEach(x => squad.AddUpgrade(x));
@@ -239,6 +309,37 @@ namespace Battlegrounds.Game.Battlegrounds {
             this.m_modifiers.ToArray().ForEach(x => squad.AddModifier(x));
 
             return squad;
+
+        }
+
+        /// <summary>
+        /// Reset all the values set by the <see cref="UnitBuilder"/>.
+        /// </summary>
+        public virtual void Reset() {
+
+            this.m_blueprint = null;
+            this.m_crewBuilder = null;
+            this.m_deploymentMethod = DeploymentMethod.None;
+            this.m_deploymentPhase = DeploymentPhase.PhaseNone;
+            this.m_hasOverrideIndex = false;
+            this.m_modifiers.Clear();
+            this.m_overrideIndex = 0;
+            this.m_slotitems.Clear();
+            this.m_transportBlueprint = null;
+            this.m_upgrades.Clear();
+            this.m_vetexperience = 0;
+            this.m_vetrank = 0;
+
+        }
+
+        /// <summary>
+        /// Clone self and resets the current instance.
+        /// </summary>
+        /// <returns>The cloned instance.</returns>
+        public UnitBuilder GetAndReset() {
+            UnitBuilder clone = this.Clone();
+            this.Reset();
+            return clone;
         }
 
     }

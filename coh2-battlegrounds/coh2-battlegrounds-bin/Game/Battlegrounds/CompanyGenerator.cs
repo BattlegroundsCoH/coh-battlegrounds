@@ -28,7 +28,7 @@ namespace Battlegrounds.Game.Battlegrounds {
         public static Company Generate(Faction army, CompanyType type, string tuningGUID, bool borrowVanilla, bool allowVeterancy, bool allowCapturedEquipment) {
 
             // Create the company
-            Company company = new Company(null, "Auto-Generated Company", type, army, tuningGUID);
+            CompanyBuilder builder = new CompanyBuilder().NewCompany(army).ChangeName("Auto-generated Company").ChangeTuningMod(tuningGUID).ChangeType(type);
 
             // Our selection query
             bool selectQuery(Blueprint x) {
@@ -54,8 +54,11 @@ namespace Battlegrounds.Game.Battlegrounds {
             int max_artillery = 4 + (type == CompanyType.Artillery ? 2 : 0);
             int max_transport_use = 4 + ((type == CompanyType.Motorized || type == CompanyType.Mechanized) ? 5 : 0);
 
+            // The builder
+            UnitBuilder unit = new UnitBuilder();
+
             // While we can add a unit
-            while (remaining > 0) {
+            while (remaining >= 0) {
 
                 int unit_type = __random.Next(0, 52);
                 byte vet_level = (allowVeterancy) ? (byte)__random.Next(0, 6) : (byte)0;
@@ -72,7 +75,7 @@ namespace Battlegrounds.Game.Battlegrounds {
                         max_transport_use--;
                     }
 
-                    company.AddSquad(inf_blueprint, transportbp, deployMethod, vet_level, 0, null, null, null);
+                    builder.AddUnit(unit.SetBlueprint(inf_blueprint).SetVeterancyRank(vet_level).SetTransportBlueprint(transportbp).SetDeploymentMethod(deployMethod).GetAndReset());
 
                     remaining--;
 
@@ -88,7 +91,7 @@ namespace Battlegrounds.Game.Battlegrounds {
                         max_transport_use--;
                     }
 
-                    company.AddSquad(sinf_blueprint, transportbp, deployMethod, vet_level, 0, null, null, null);
+                    builder.AddUnit(unit.SetBlueprint(sinf_blueprint).SetVeterancyRank(vet_level).SetTransportBlueprint(transportbp).SetDeploymentMethod(deployMethod).GetAndReset());
 
                     max_specialized_infantry--;
                     remaining--;
@@ -97,7 +100,8 @@ namespace Battlegrounds.Game.Battlegrounds {
 
                     SquadBlueprint cmd_bp = blueprintPool.Where(x => x.IsCommandUnit).Random(__random);
                     if (cmd_bp != null) {
-                        company.AddSquad(cmd_bp, null, DeploymentMethod.None, vet_level, 0, null, null, null);
+
+                        builder.AddUnit(unit.SetBlueprint(cmd_bp).SetVeterancyRank(vet_level).SetDeploymentMethod(DeploymentMethod.None).GetAndReset());
 
                         max_command_units--;
                         remaining--;
@@ -116,12 +120,12 @@ namespace Battlegrounds.Game.Battlegrounds {
                         max_transport_use--;
                     }
 
-                    company.AddSquad(support, transport_blueprint, deployMethod, vet_level, 0, null, null, null);
+                    builder.AddUnit(unit.SetBlueprint(support).SetVeterancyRank(vet_level).SetTransportBlueprint(transport_blueprint).SetDeploymentMethod(deployMethod).GetAndReset());
 
                     max_support--;
                     remaining--;
 
-                } else if (unit_type >= 35 && unit_type <= 39 && max_artillery > 0) { // artillery
+                } else if (unit_type >= 35 && unit_type <= 37 && max_artillery > 0) { // artillery
 
                     SquadBlueprint arty_blueprint = blueprintPool.Where(x => x.IsHeavyArtillery || x.IsArtillery).Random(__random);
                     SquadBlueprint transport_blueprint = null;
@@ -132,23 +136,23 @@ namespace Battlegrounds.Game.Battlegrounds {
                         deployMethod = DeploymentMethod.DeployAndStay;
                     }
 
-                    company.AddSquad(arty_blueprint, transport_blueprint, deployMethod, vet_level, 0, null, null, null);
+                    builder.AddUnit(unit.SetBlueprint(arty_blueprint).SetVeterancyRank(vet_level).SetTransportBlueprint(transport_blueprint).SetDeploymentMethod(deployMethod).GetAndReset());
 
                     max_artillery--;
                     remaining--;
 
-                } else if (unit_type >= 40 && unit_type <= 46 && max_tanks > 0) { // tanks
+                } else if (unit_type >= 38 && unit_type <= 45 && max_tanks > 0) { // tanks
 
                     SquadBlueprint tank_blueprint = blueprintPool.Where(x => x.IsArmour || !x.IsVehicle).Random(__random);
-                    company.AddSquad(tank_blueprint, null, DeploymentMethod.None, vet_level, 0, null, null, null);
+                    builder.AddUnit(unit.SetBlueprint(tank_blueprint).SetVeterancyRank(vet_level).SetDeploymentMethod(DeploymentMethod.None).GetAndReset());
 
                     max_tanks--;
                     remaining--;
 
-                } else if (unit_type >= 47 && unit_type <= 50 && max_vehicles > 0) { // vehicles
+                } else if (unit_type >= 46 && unit_type <= 50 && max_vehicles > 0) { // vehicles
 
-                    SquadBlueprint tank_blueprint = blueprintPool.Where(x => !x.IsArmour || x.IsVehicle).Random(__random);
-                    company.AddSquad(tank_blueprint, null, DeploymentMethod.None, vet_level, 0, null, null, null);
+                    SquadBlueprint vehicle_blueprint = blueprintPool.Where(x => !x.IsArmour || x.IsVehicle).Random(__random);
+                    builder.AddUnit(unit.SetBlueprint(vehicle_blueprint).SetVeterancyRank(vet_level).SetDeploymentMethod(DeploymentMethod.None).GetAndReset());
 
                     max_vehicles--;
                     remaining--;
@@ -156,7 +160,7 @@ namespace Battlegrounds.Game.Battlegrounds {
                 } else if (max_heavy_tank > 0) { // heavy tank
 
                     SquadBlueprint hv_blueprint = blueprintPool.Where(x => x.IsHeavyArmour).Random(__random);
-                    company.AddSquad(hv_blueprint, null, DeploymentMethod.None, vet_level, 0, null, null, null);
+                    builder.AddUnit(unit.SetBlueprint(hv_blueprint).SetVeterancyRank(vet_level).SetDeploymentMethod(DeploymentMethod.None).GetAndReset());
 
                     max_heavy_tank--;
                     remaining--;
@@ -165,8 +169,11 @@ namespace Battlegrounds.Game.Battlegrounds {
 
             }
 
+            // Commit changes
+            builder.Commit();
+
             // Return the company
-            return company;
+            return builder.Result;
 
         }
 

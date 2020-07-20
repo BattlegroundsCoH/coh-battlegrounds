@@ -65,14 +65,28 @@ namespace Battlegrounds.Compiler {
             builder.AppendLine("{");
             builder.IncreaseIndent();
 
+            // Write the basics of the units
             builder.AppendLine($"bp_name = {squad.SBP.ToScar()},");
+            builder.AppendLine($"company_id = {squad.SquadID},");
             builder.AppendLine($"symbol = \"{squad.SBP.Symbol}\",");
             builder.AppendLine($"category = \"{squad.GetCategory(true)}\",");
-            builder.AppendLine($"company_id = {squad.SquadID},");
+            builder.AppendLine($"phase = {squad.DeploymentPhase - 1},");
             builder.AppendLine($"veterancy_rank = {squad.VeterancyRank},");
             builder.AppendLine($"veterancy_progress = {squad.VeterancyProgress:0.00},");
-            if (squad.SBP.IsHeavyArmour) {
+
+            // If heavy armour or heavy artillery
+            if (squad.SBP.IsHeavyArmour || squad.SBP.IsHeavyArtillery) {
                 builder.AppendLine("heavy = true,");
+            }
+
+            // If command
+            if (squad.SBP.IsCommandUnit) {
+                builder.AppendLine("command = true,");
+            }
+
+            // If specialized infantry
+            if (squad.SBP.IsSniper || squad.SBP.IsSpecialInfantry) {
+                builder.AppendLine("special = true,");
             }
 
             // Write the support blueprint - if any

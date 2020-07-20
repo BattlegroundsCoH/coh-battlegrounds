@@ -27,7 +27,10 @@ namespace Battlegrounds.Game.Battlegrounds {
         private string m_checksum;
         private ushort m_nextSquadId;
         [JsonIgnoreIfEmpty] private List<Squad> m_squads;
-        [JsonIgnoreIfEmpty] private List<Blueprint> m_inventry;
+        [JsonIgnoreIfEmpty] private List<Blueprint> m_inventory;
+
+        [JsonEnum(typeof(CompanyType))] private CompanyType m_companyType;
+        [JsonReference(typeof(Faction))] private Faction m_companyArmy;
 
         /// <summary>
         /// The name of the company.
@@ -37,8 +40,8 @@ namespace Battlegrounds.Game.Battlegrounds {
         /// <summary>
         /// The <see cref="CompanyType"/> that can be used to describe the <see cref="Company"/> characteristics.
         /// </summary>
-        [JsonEnum(typeof(CompanyType))]
-        public CompanyType Type { get; }
+        [JsonIgnore]
+        public CompanyType Type => m_companyType;
 
         /// <summary>
         /// The GUID of the tuning mod used to create this company.
@@ -48,12 +51,13 @@ namespace Battlegrounds.Game.Battlegrounds {
         /// <summary>
         /// The <see cref="Faction"/> this company is associated with.
         /// </summary>
-        [JsonReference(typeof(Faction))]
-        public Faction Army { get; }
+        [JsonIgnore]
+        public Faction Army => m_companyArmy;
 
         /// <summary>
-        /// The display name of who owns the <see cref="Company"/>.
+        /// The display name of who owns the <see cref="Company"/>. This property is used by the compilers. This will be overriden.
         /// </summary>
+        [JsonIgnore]
         public string Owner { get; set; }
 
         /// <summary>
@@ -66,7 +70,7 @@ namespace Battlegrounds.Game.Battlegrounds {
         /// <see cref="ImmutableArray{T}"/> representation of a <see cref="Company"/> inventory of stored <see cref="Blueprint"/> objects.
         /// </summary>
         [JsonIgnore]
-        public ImmutableArray<Blueprint> Inventory => m_inventry.ToImmutableArray();
+        public ImmutableArray<Blueprint> Inventory => m_inventory.ToImmutableArray();
 
         /// <summary>
         /// 
@@ -75,13 +79,12 @@ namespace Battlegrounds.Game.Battlegrounds {
         public string Checksum => m_checksum;
 
         /// <summary>
-        /// New empty <see cref="Company"/> instance. (Do not use).
+        /// New empty <see cref="Company"/> instance.
         /// </summary>
-        [Obsolete("Please use the constructor requiring a SteamUser, name, and faction.")]
         internal Company() {
             this.m_squads = new List<Squad>();
-            this.m_inventry = new List<Blueprint>();
-            this.Type = CompanyType.Unspecified;
+            this.m_inventory = new List<Blueprint>();
+            this.m_companyType = CompanyType.Unspecified;
         }
 
         /// <summary>
@@ -103,222 +106,32 @@ namespace Battlegrounds.Game.Battlegrounds {
             // Assign base values
             this.Name = name;
             this.Owner = user?.Name ?? "Unknown Player";
-            this.Army = army;
+            this.m_companyArmy = army;
             this.TuningGUID = tuningGUID.Replace("-", "");
-            this.Type = CompanyType.Unspecified;
+            this.m_companyType = CompanyType.Unspecified;
 
             // Prepare squad list
             this.m_squads = new List<Squad>();
             this.m_nextSquadId = 0;
 
             // Misc stuff
-            this.m_inventry = new List<Blueprint>();
+            this.m_inventory = new List<Blueprint>();
 
         }
 
         /// <summary>
-        /// New instance of <see cref="Company"/> with a specific <see cref="CompanyType"/> and pre-assigned <see cref="SteamUser"/>.
+        /// 
         /// </summary>
-        /// <param name="user">The <see cref="SteamUser"/> who can use the <see cref="Company"/>.</param>
-        /// <param name="name">The name of the company.</param>
-        /// <param name="type">The <see cref="CompanyType"/> to assign the <see cref="Company"/>.</param>
-        /// <param name="army">The <see cref="Faction"/> that can use the <see cref="Company"/>.</param>
-        /// <param name="tuningGUID">The GUID of the tuning mod the <see cref="Company"/> is using blueprints from.</param>
-        /// <exception cref="ArgumentNullException"/>
-        [Obsolete("Please use the CompanyBuilder to create a company")]
-        public Company(SteamUser user, string name, CompanyType type, Faction army, string tuningGUID) : this(user, name, army, tuningGUID) {
-            this.Type = type;
-        }
-
+        /// <param name="builder"></param>
+        /// <returns></returns>
         public ushort AddSquad(UnitBuilder builder) {
             ushort id = this.m_nextSquadId++;
             Squad squad = builder.Build(id);
+            if (squad.Crew != null) {
+                this.m_nextSquadId++;
+            }
+            this.m_squads.Add(squad);
             return id;
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="bp"></param>
-        /// <param name="vet"></param>
-        /// <param name="vetprog"></param>
-        /// <returns></returns>
-        public int AddSquad(string bp, byte vet, float vetprog)
-            => this.AddSquad(bp, string.Empty, DeploymentMethod.None, vet, vetprog, null, null, null);
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="bp"></param>
-        /// <param name="vet"></param>
-        /// <param name="vetprog"></param>
-        /// <param name="upgrades"></param>
-        /// <returns></returns>
-        public int AddSquad(string bp, byte vet, float vetprog, string[] upgrades)
-            => this.AddSquad(bp, string.Empty, DeploymentMethod.None, vet, vetprog, upgrades, null, null);
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="bp"></param>
-        /// <param name="vet"></param>
-        /// <param name="vetprog"></param>
-        /// <param name="upgrades"></param>
-        /// <param name="slotiems"></param>
-        /// <returns></returns>
-        public int AddSquad(string bp, byte vet, float vetprog, string[] upgrades, string[] slotiems)
-            => this.AddSquad(bp, string.Empty, DeploymentMethod.None, vet, vetprog, upgrades, slotiems, null);
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="mainBP"></param>
-        /// <param name="supportBP"></param>
-        /// <param name="vet"></param>
-        /// <param name="vetprog"></param>
-        /// <returns></returns>
-        public int AddSquad(string mainBP, string supportBP, byte vet, float vetprog)
-            => this.AddSquad(mainBP, supportBP, DeploymentMethod.None, vet, vetprog, null, null, null);
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="mainBP"></param>
-        /// <param name="supportBP"></param>
-        /// <param name="vet"></param>
-        /// <param name="vetprog"></param>
-        /// <param name="upgrades"></param>
-        /// <returns></returns>
-        public int AddSquad(string mainBP, string supportBP, byte vet, float vetprog, string[] upgrades)
-            => this.AddSquad(mainBP, supportBP, DeploymentMethod.None, vet, vetprog, upgrades, null, null);
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="mainBP"></param>
-        /// <param name="supportBP"></param>
-        /// <param name="vet"></param>
-        /// <param name="vetprog"></param>
-        /// <param name="upgrades"></param>
-        /// <param name="slotiems"></param>
-        /// <returns></returns>
-        public int AddSquad(string mainBP, string supportBP, byte vet, float vetprog, string[] upgrades, string[] slotiems)
-            => this.AddSquad(mainBP, supportBP, DeploymentMethod.None, vet, vetprog, upgrades, slotiems, null);
-
-        /// <summary>
-        /// Add a new <see cref="Squad"/> instance to the company with veterancy, upgrades, and slot items pre-applied.
-        /// </summary>
-        /// <param name="bp">The name of the <see cref="SquadBlueprint"/> to give the squad.</param>
-        /// <param name="supportBP">The supporting blueprint to use when deploying.</param>
-        /// <param name="deployMode">The method used when deploying the unit.</param>
-        /// <param name="vet">The amount of veterancy the squad will have.</param>
-        /// <param name="vetprog">The progress towards the next veterancy level.</param>
-        /// <param name="upgrades">The pre-set upgrades.</param>
-        /// <param name="slotitems">The pre-set slot items.</param>
-        /// <param name="modifiers">The pre-set modifiers.</param>
-        /// <returns>The squad index given to the squad.</returns>
-        public int AddSquad(string bp, string supportBP, DeploymentMethod deployMode, byte vet, float vetprog, string[] upgrades, string[] slotitems, Modifier[] modifiers) {
-
-            // Make sure there's something to work with
-            if (upgrades == null) {
-                upgrades = new string[0];
-            }
-
-            // Make sure there is a workable slotitem array
-            if (slotitems == null) {
-                slotitems = new string[0];
-            }
-
-            // Make sure there's a workable modifier array
-            if (modifiers == null) {
-                modifiers = new Modifier[0];
-            }
-
-            // Cast arrays
-            UpgradeBlueprint[] ubps = upgrades.Convert(x => BlueprintManager.FromBlueprintName(x, BlueprintType.UBP) as UpgradeBlueprint);
-            SlotItemBlueprint[] ibps = slotitems.Convert(x => BlueprintManager.FromBlueprintName(x, BlueprintType.IBP) as SlotItemBlueprint);
-
-            // Get the blueprints
-            SquadBlueprint sbp = BlueprintManager.FromBlueprintName(bp, BlueprintType.SBP) as SquadBlueprint;
-            Blueprint supportBlueprint = null;
-
-            // Get support blueprint if any
-            if (supportBP.CompareTo(string.Empty) != 0) {
-                if (BlueprintManager.FromBlueprintName(supportBP, BlueprintType.EBP) is Blueprint b1) { // always try with ebp first
-                    supportBlueprint = b1;
-                } else if (BlueprintManager.FromBlueprintName(supportBP, BlueprintType.SBP) is Blueprint b2) {
-                    supportBlueprint = b2;
-                }
-            }
-
-            // Return squad index
-            return this.AddSquad(sbp, supportBlueprint, deployMode, vet, vetprog, ubps, ibps, modifiers);
-
-        }
-
-        /// <summary>
-        /// Add a new squad to the company with deployment method and pre-set values for veterancy, upgrades, slot items, and modifiers. This method will throw an exception if the company is already full.
-        /// </summary>
-        /// <param name="main">The main (core) blueprint - the actual unit to deploy.</param>
-        /// <param name="supprt">The supporting blueprint to utilize when deploying.</param>
-        /// <param name="deployMode">The method to use when deploying.</param>
-        /// <param name="vet">The already-achieved rank of the squad.</param>
-        /// <param name="vetprog">The already-achieved veterancy progress of the squad.</param>
-        /// <param name="upgrades">The upgrades already applied to the squad.</param>
-        /// <param name="slotitems">The slot items already applied to the squad.</param>
-        /// <param name="modifiers">The modifiers already applied to the squad.</param>
-        /// <returns>The company squad index of the newly created squad.</returns>
-        /// <exception cref="ArgumentOutOfRangeException"/>
-        /// <exception cref="ArgumentNullException"/>
-        public int AddSquad(
-            SquadBlueprint main, Blueprint supprt, DeploymentMethod deployMode, byte vet, float vetprog, 
-            UpgradeBlueprint[] upgrades, SlotItemBlueprint[] slotitems, Modifier[] modifiers) {
-
-            if (main is null) {
-                throw new ArgumentNullException($"The squad blueprint was null");
-            }
-
-            if (upgrades == null) {
-                upgrades = new UpgradeBlueprint[0];
-            }
-
-            if (slotitems == null) {
-                slotitems = new SlotItemBlueprint[0];
-            }
-
-            if (modifiers == null) {
-                modifiers = new Modifier[0];
-            }
-
-            if (this.m_squads.Count + 1 <= MAX_SIZE) {
-
-                Squad squad = new Squad(m_nextSquadId++, null, main);
-                squad.SetVeterancy(vet, vetprog);
-                squad.SetDeploymentMethod(supprt, deployMode, DeploymentPhase.PhaseA);
-
-                if (main.HasCrew) {
-
-                    Squad crew = new Squad(m_nextSquadId++, null, null);
-                    crew.SetVeterancy(vet, vetprog);
-
-                    squad.SetCrew(crew);
-
-                }
-
-                upgrades.ForEach(x => squad.AddUpgrade(x));
-                slotitems.ForEach(x => squad.AddSlotItem(x));
-                modifiers.ForEach(x => squad.AddModifier(x));
-
-                m_squads.Add(squad);
-
-                return squad.SquadID;
-
-            } else {
-
-                throw new ArgumentOutOfRangeException($"Unable to add new squad {main.ToScar()} - max company size reached!");
-
-            }
-
         }
 
         /// <summary>
@@ -392,6 +205,10 @@ namespace Battlegrounds.Game.Battlegrounds {
             this.m_checksum = this.GetChecksum();
             File.WriteAllText(jsonfile, (this as IJsonObject).Serialize());
         }
+
+        internal void SetType(CompanyType type) => this.m_companyType = type;
+
+        internal void SetArmy(Faction faction) => this.m_companyArmy = faction;
 
         /// <summary>
         /// 
