@@ -13,6 +13,7 @@ function BG_LoadSessionData()
             _bg_playerData[j].name = Player_GetDisplayName(player)[1];
             _bg_playerData[j].playerID = Player_GetID(player);
             _bg_playerData[j].race = Player_GetRaceName(player);
+            _bg_playerData[j].total_deployed = 0;
             --_bg_playerData[j].squads = {};
             --_bg_playerData[j].entities = {};
             _bg_playerData[j].deployed = {};

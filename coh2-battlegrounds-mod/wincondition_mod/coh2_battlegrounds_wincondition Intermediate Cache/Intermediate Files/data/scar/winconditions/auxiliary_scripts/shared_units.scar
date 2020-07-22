@@ -73,6 +73,7 @@ function BG_DeploySquad(player, unit_id)
 
         -- Register the unit
         _bg_playerData[playerRefID].deployed[Squad_GetGameID(squad)] = unit_data.company_id;
+        _bg_playerData[playerRefID].total_deployed = _bg_playerData[playerRefID].total_deployed + 1;
 
         -- Broadcast that a unit was spawned
         Command_PlayerBroadcastMessage(Game_GetLocalPlayer(), Game_GetLocalPlayer(), _bg_message_type_no_actions_required, "D["..unit_data.company_id.."]");

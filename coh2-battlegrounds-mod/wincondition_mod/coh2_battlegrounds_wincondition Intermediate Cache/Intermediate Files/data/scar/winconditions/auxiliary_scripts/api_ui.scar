@@ -93,3 +93,27 @@ function UI_TeamEventCue(player, title, description, iconPath)
 		end
 	end);
 end
+
+function UI_CentreAlignWidth(obj_with, container_width)
+	return (container_width / 2.0) - (obj_with / 2.0);
+end
+
+function BG_GetVStar(rank)
+    return "ModIcons_6a0a13b89555402ca75b85dc30f5cb04_vstar" .. rank;
+end
+
+function BGUI_HideAll()
+
+	if bg_call_ui ~= nil then
+		bg_call_ui:setPos(9999, 9999);
+	end
+
+	if bg_overrideui ~= nil then
+		bg_overrideui:setPos(9999, 9999);
+	end
+
+	if bg_gameoverscreen ~= nil then
+		bg_gameoverscreen:setPos(9999, 9999);
+	end
+
+end

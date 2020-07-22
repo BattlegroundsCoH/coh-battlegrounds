@@ -189,6 +189,16 @@ namespace Battlegrounds.Game.Battlegrounds {
                         Console.WriteLine();
 
 
+                    } else if (msgtype == 'S') { // Surrender
+
+                        Console.WriteLine();
+
+
+                    } else if (msgtype == 'W') { // Withdraw
+
+                        Console.WriteLine();
+
+
                     } else if (msgtype == 'I') {
 
                         ushort squadID = ushort.Parse(values[0]);

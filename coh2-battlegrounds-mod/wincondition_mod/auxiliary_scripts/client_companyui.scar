@@ -219,10 +219,6 @@ function BG_CreateUnitcard(unit, yoffset)
 
 end
 
-function BG_GetVStar(rank)
-    return "ModIcons_6a0a13b89555402ca75b85dc30f5cb04_vstar" .. rank;
-end
-
 function BG_CreateUnitStats(unit, card)
 
     -- The x-offset in the "negative direction"

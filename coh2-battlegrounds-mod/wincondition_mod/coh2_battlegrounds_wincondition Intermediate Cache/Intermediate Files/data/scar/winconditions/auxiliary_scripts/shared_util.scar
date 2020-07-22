@@ -175,6 +175,10 @@ function Squad_IsInfantrySquad(squad)
     end
 end
 
+function Squad_Surrender(squad)
+
+end
+
 ------------------------------------------------------------
 -- LocString functions
 ------------------------------------------------------------
@@ -261,6 +265,23 @@ function Player_CanBuy(player, man, mun, ful)
     return Player_GetResource(player, RT_Manpower) >= man and Player_GetResource(player, RT_Munition) >= mun and Player_GetResource(player, RT_Fuel) >= ful;
 end
 
+function Player_LoopSquadsWhile(player, squadFunc, condition)
+
+    local playerSquads = Player_GetSquads(player);
+    local count = SGroup_CountSpawned(playerSquads);
+    local i = 1;
+
+    if condition == nil then
+        condition = function() return true end;
+    end
+
+    while condition() and i < count do
+        squadFunc(SGroup_GetSpawnedSquadAt(playerSquads, i), i, count);
+        i = i + 1;
+    end
+
+end
+
 ------------------------------------------------------------
 -- Team functions
 ------------------------------------------------------------
@@ -283,6 +304,16 @@ function Team_GetOppositeTeam(team)
     else
         return 1;
     end
+end
+
+function Team_GetSize(team)
+    local count = 0;
+    for i = 1, World_GetPlayerCount() do
+        if Player_GetTeam(World_GetPlayerAt(i)) == team then
+            count = count + 1;
+        end
+    end
+    return count;
 end
 
 ------------------------------------------------------------

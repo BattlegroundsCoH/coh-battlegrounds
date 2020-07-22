@@ -30,7 +30,8 @@ TOCStart name="data" alias="data" path="" relativeroot="data"
 	E:\coh2_battlegrounds\coh2-battlegrounds-mod\wincondition_mod\coh2_battlegrounds_wincondition Intermediate Cache\Intermediate Files\data\scar\winconditions\ui_api\rootpanel.scar
 	E:\coh2_battlegrounds\coh2-battlegrounds-mod\wincondition_mod\coh2_battlegrounds_wincondition Intermediate Cache\Intermediate Files\data\scar\winconditions\ui_api\statusindicator.scar
 	E:\coh2_battlegrounds\coh2-battlegrounds-mod\wincondition_mod\coh2_battlegrounds_wincondition Intermediate Cache\Intermediate Files\data\scar\winconditions\coh2_battlegrounds.scar
-	E:\coh2_battlegrounds\coh2-battlegrounds-mod\wincondition_mod\coh2_battlegrounds_wincondition Intermediate Cache\Intermediate Files\data\ui\Assets\Textures\6a0a13b89555402ca75b85dc30f5cb04_I1.dds
+	E:\coh2_battlegrounds\coh2-battlegrounds-mod\wincondition_mod\coh2_battlegrounds_wincondition Intermediate Cache\Intermediate Files\data\ui\Assets\Textures\6a0a13b89555402ca75b85dc30f5cb04_I1C.dds
+	E:\coh2_battlegrounds\coh2-battlegrounds-mod\wincondition_mod\coh2_battlegrounds_wincondition Intermediate Cache\Intermediate Files\data\ui\Assets\Textures\6a0a13b89555402ca75b85dc30f5cb04_I3.dds
 	E:\coh2_battlegrounds\coh2-battlegrounds-mod\wincondition_mod\coh2_battlegrounds_wincondition Intermediate Cache\Intermediate Files\data\ui\Bin\6a0a13b89555402ca75b85dc30f5cb04.gfx
 TOCEnd
 TOCStart name="info" alias="info" path="" relativeroot="info"

@@ -501,7 +501,7 @@
 								<float name="z" value="0" />
 							</group>
 							<enum name="type" value="default" />
-							<instance_reference name="weapon" value="weapon\soviet\small_arms\single_fire\rifle\mosin_nagant_rifle_conscript_mp" />
+							<instance_reference name="weapon" value="weapon\soviet\small_arms\machine_gun\sub_machine_gun\conscript_ppsh-41_sub_machine_gun_mp" />
 						</group>
 					</list>
 					<bool name="receives_attack_commands" value="False" />
