@@ -6,7 +6,7 @@
 		<group name="ai_tactic">
 			<string name="entity_target_filter" value="" />
 			<string name="position_target_filter" value="" />
-			<float name="priority" value="80" />
+			<float name="priority" value="35" />
 			<string name="squad_target_filter" value="SquadTargetFilter_FirstLowHealthyFriendlyNonVehicle" />
 			<string name="tactic_filter_start" value="TacticFilter_HealthLow" />
 			<float name="tactic_max_range_override" value="-1" />

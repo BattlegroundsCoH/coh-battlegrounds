@@ -9,6 +9,9 @@ _BG_UI_CompanyViewY = -612;
 
 _BG_UI_UpdateInterval = 0.25;
 
+_BG_UI_UNIT_CARD_CLICKED = 42;
+_BG_UI_UNIT_CARD_CANCEL_CLICKED = 43;
+
 function BG_CreateCallInUI(player)
 
     -- The position
@@ -232,16 +235,7 @@ function BG_CreateUnitStats(unit, card)
     end
 
     -- Weapon symbol to display
-    local wpn_symbol = nil;
-
-    -- Do we have a mixed situation?
-    if (#unit.upgrades > 1 or #unit.slot_items > 1 or (#unit.upgrades >= 1 and #unit.slot_items >= 1)) then
-        -- TODO: Set wpn_symbol to the mixed weapons icon
-    elseif (#unit.upgrades == 1 and #unit.slot_items == 0) then
-        wpn_symbol = unit.upgrades[1].symbol;
-    elseif (#unit.upgrades == 0 and #unit.slot_items == 1) then
-        -- TODO: Implement
-    end
+    local wpn_symbol = BG_GetUnitItemIcon(unit);
 
     -- Do we have a weapon symbol to display?
     if (wpn_symbol ~= nil) then
@@ -298,7 +292,10 @@ function BG_CreateUnitRecallProgress(unit, card)
 end
 
 function BG_UnitCardClicked(tag)
-    -- TODO: Add timer click check here (just so a button isn't clicked accidentally twice)
+    -- Make sure we can click it
+    if not UI_ButtonCheck(_BG_UI_UNIT_CARD_CLICKED) then
+        return;
+    end
     local refPlayerID = BG_GetPlayerID(Game_GetLocalPlayer());
     for i=1, #_bg_playerData[refPlayerID].company.units do
         if _bg_playerData[refPlayerID].company.units[i].company_id == tonumber(tag) then
@@ -318,7 +315,10 @@ function BG_UnitCardClicked(tag)
 end
 
 function BG_UnitCardCancelClicked(tag)
-    -- TODO: Add timer click check here (just so a button isn't clicked accidentally twice)
+    -- Make sure we can click it
+    if not UI_ButtonCheck(_BG_UI_UNIT_CARD_CANCEL_CLICKED) then
+        return;
+    end
     local refPlayerID = BG_GetPlayerID(Game_GetLocalPlayer());
     for i=1, #_bg_playerData[refPlayerID].company.units do
         if _bg_playerData[refPlayerID].company.units[i].company_id == tonumber(tag) and _bg_playerData[refPlayerID].company.units[i].isDeploying == true then

@@ -86,7 +86,7 @@ function BG_Init()
     UI_AddSetupFunction(function()
         BG_CreateCallInUI(Game_GetLocalPlayer()); -- Call-in / Deploy UI
         BG_CreateAndDisplayMultiplayerActionsScreenOverride(Game_GetLocalPlayer()); -- Game actions (Vote on withdraw, Surrender)
-        _endgame_test(); -- DISABLE WHEN DONE
+        --_endgame_test(); -- DISABLE WHEN DONE
     end);
 
     -- Add overrides to victory
@@ -109,48 +109,45 @@ end
 function _endgame_test()
 
     _bg_playerData[BG_GetPlayerID(Game_GetLocalPlayer())].lossData = {
-        soldiers_lost = 1000,
-        units_lost = {
-            {
-                company_id = 100,
-                symbol = "Icons_symbols_unit_soviet_conscript_02_symbol",
-                rank = 5,
-                item_symbol = "Icons_weapons_weapon_pps",
-            },
-            {
-                company_id = 101,
-                symbol = "Icons_symbols_unit_soviet_conscript_02_symbol",
-                rank = 3,
-            },
-            {
-                company_id = 102,
-                symbol = "Icons_symbols_unit_soviet_conscript_02_symbol",
-                rank = 0,
-                item_symbol = "Icons_weapons_weapon_pps",
-            },
-            {
-                company_id = 103,
-                symbol = "Icons_symbols_unit_soviet_conscript_02_symbol",
-                rank = 5,
-                item_symbol = "Icons_weapons_weapon_pps",
-            },
-            {
-                company_id = 104,
-                symbol = "Icons_symbols_unit_soviet_conscript_02_symbol",
-                rank = 4,
-                item_symbol = "Icons_weapons_weapon_pps",
-            },
-            {
-                company_id = 105,
-                symbol = "Icons_symbols_unit_soviet_conscript_02_symbol",
-                rank = 1,
-                item_symbol = "Icons_weapons_weapon_pps",
-            },
-            {
-                company_id = 106,
-                symbol = "Icons_symbols_unit_soviet_conscript_02_symbol",
-                rank = 2,
-            },
+        {
+            company_id = 100,
+            symbol = "Icons_symbols_unit_soviet_conscript_02_symbol",
+            rank = 5,
+            item_symbol = "Icons_weapons_weapon_pps",
+        },
+        {
+            company_id = 101,
+            symbol = "Icons_symbols_unit_soviet_conscript_02_symbol",
+            rank = 3,
+        },
+        {
+            company_id = 102,
+            symbol = "Icons_symbols_unit_soviet_conscript_02_symbol",
+            rank = 0,
+            item_symbol = "Icons_weapons_weapon_pps",
+        },
+        {
+            company_id = 103,
+            symbol = "Icons_symbols_unit_soviet_conscript_02_symbol",
+            rank = 5,
+            item_symbol = "Icons_weapons_weapon_pps",
+        },
+        {
+            company_id = 104,
+            symbol = "Icons_symbols_unit_soviet_conscript_02_symbol",
+            rank = 4,
+            item_symbol = "Icons_weapons_weapon_pps",
+        },
+        {
+            company_id = 105,
+            symbol = "Icons_symbols_unit_soviet_conscript_02_symbol",
+            rank = 1,
+            item_symbol = "Icons_weapons_weapon_pps",
+        },
+        {
+            company_id = 106,
+            symbol = "Icons_symbols_unit_soviet_conscript_02_symbol",
+            rank = 2,
         },
     };
     _bg_playerData[BG_GetPlayerID(Game_GetLocalPlayer())].gainsData = {
@@ -273,9 +270,7 @@ end
 
 function BG_SaveAndExit()
 
-    -- TODO: Experiment with winning - but then force-shutting the game
-
-    -- Make sure it's not a replay.
+    -- Make sure it's not a replay. (Would otherwise also close the game)
     if not World_IsReplay() then
 
         -- Quit the game (No rematches --> Let the app handle the rest)
@@ -375,31 +370,64 @@ function BG_CollectEndofMatchData()
         for squadID, company_id in pairs(_bg_playerData[i].deployed) do
 
             -- Make sure the unit is available
-            if (company_id ~= nil and Squad_IsValid(squadID)) then
+            if ((company_id or -1) >= 0 and Squad_IsValid(squadID)) then
 
                 -- Get the actual squad
                 local squad = Squad_FromWorldID(squadID);
+                local squadVetRank = Squad_GetVeterancyRank(squad);
 
                 -- Get the initial unit
-                local inital = BG_FindSquadInCompany(i, company_id);
+                local initial = BG_FindSquadInCompany(i, company_id);
 
-                -- The unit message (The message to save)
+                -- If the veterancy rank has increased
+                if initial.veterancy_rank < squadVetRank then
+                    local gData = {
+                        type = 3,
+                        symbol = initial.symbol,
+                        rank = initial.veterancy_rank, -- Starting rank
+                        now = squadVetRank,
+                        item_symbol = BG_GetUnitItemIcon(initial),
+                    };
+                    table.insert(_bg_playerData[i].gainsData, gData);
+                end
+
+                -- Compose the unit message (The message to save)
                 local unit_message = tostring(company_id);
-
-                -- Get the rank increase
-                unit_message = unit_message..","..tostring(Squad_GetVeterancyRank(squad) - inital.veterancy_rank);
-
-                -- Get the experience of the unit
+                unit_message = unit_message..","..tostring(squadVetRank - initial.veterancy_rank);
                 unit_message = unit_message..","..Squad_GetVeterancyExperience(squad);
 
                 -- Broadcast the change
                 Game_SendMessage(_bg_message_type_no_actions_required, "R["..unit_message.."]");
 
-                -- For each slot item
-                for i=1, Squad_GetSlotItemCount(squad) do
-                    local item = Squad_GetSlotItemAt(squad, i);
-                    Game_SendMessage(_bg_message_type_no_actions_required, "I["..company_id..","..BP_GetName(item).."]");
+                -- Save new slot items
+                local lastPickup = BG_SaveSlotItems(initial, squad);
+                if lastPickup ~= nil then
+                    local gData = {
+                        type = 2,
+                        symbol = initial.symbol,
+                        item_symbol = BG_FindItemIcon(lastPickup),
+                    };
+                    table.insert(_bg_playerData[i].gainsData, gData);
                 end
+
+            elseif company_id == -1 and Squad_IsValid(squadID) then -- Captured equipment
+
+                -- Get the actual squad
+                local squad = Squad_FromWorldID(squadID);
+                local squadBP = BP_GetName(Squad_GetBlueprint(squad));
+
+                -- The capture message
+                local capture_message = "T[" .. squadBP .."]";
+
+                -- Broadcast the message
+                Game_SendMessage(_bg_message_type_no_actions_required, capture_message);
+
+                -- Add to the captured
+                local cData = {
+                    type = 1,
+                    symbol = BG_FindCapturedIcon(squadBP),
+                };
+                table.insert(_bg_playerData[i].gainsData, gData);
 
             end
 
@@ -430,7 +458,7 @@ function BG_GameBroadcastMessageReceived(sender, messageType, message)
             BG_TeamWithdraw(sender);
         elseif _bg_custom.team_voting[t].yes + _bg_custom.team_voting[t].no >= tsize then
             _bg_custom.team_voting[t] = nil;
-            -- TODO: Tell other team we're not withdrawing
+            -- TODO: Tell other team we're withdrawing
         end
     elseif messageType == _bg_message_type_team_vote_no_withdraw then
         _bg_custom.team_voting[t].no = _bg_custom.team_voting[t].no + 1

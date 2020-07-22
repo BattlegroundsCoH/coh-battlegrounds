@@ -10,13 +10,16 @@ function BG_LoadSessionData()
         if not AI_IsAIPlayer(player) then -- Make sure it's a player
             _bg_playerData[j] = {};
             _bg_playerData[j].player = player;
+            _bg_playerData[j].selfID = j;
             _bg_playerData[j].name = Player_GetDisplayName(player)[1];
             _bg_playerData[j].playerID = Player_GetID(player);
             _bg_playerData[j].race = Player_GetRaceName(player);
             _bg_playerData[j].total_deployed = 0;
-            --_bg_playerData[j].squads = {};
-            --_bg_playerData[j].entities = {};
+            _bg_playerData[j].squads = {};
             _bg_playerData[j].deployed = {};
+            _bg_playerData[j].captured = {};
+            _bg_playerData[j].gainsData = {};
+            _bg_playerData[j].lossData = {};
             _bg_playerData[j].teamStr = BG_GetTeamString(_bg_playerData[j].race);
             if not BG_VerifyPlayer(_bg_playerData[j].name, _bg_playerData[j].teamStr, false) then
                 return BG_LocStringFormat(9, Player_GetDisplayName(player));
@@ -42,6 +45,9 @@ function BG_LoadSessionData()
             k = k + 1;
         end
     end
+
+    -- Create the item icon database.
+    BG_CreateItemIconDatabase();
 
     return true;
 
@@ -151,4 +157,17 @@ function BG_LoadAIData()
 
     return true;
 
+end
+
+
+function BG_CreateItemIconDatabase()
+
+end
+
+function BG_FindItemIcon(item)
+    return nil;
+end
+
+function BG_FindCapturedIcon(item)
+    return nil;
 end

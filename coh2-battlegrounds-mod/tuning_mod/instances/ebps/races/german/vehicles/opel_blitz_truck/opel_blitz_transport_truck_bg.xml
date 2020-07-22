@@ -1089,11 +1089,28 @@
 		<template_reference name="exts" value="ebpextensions\recrewable_ext">
 			<list name="race_list">
 				<group name="race_data">
+					<instance_reference name="ext_key" value="racebps\german" />
+					<group name="info">
+						<instance_reference name="capture_squad_blueprint" value="sbps\races\german\vehicles\opel_blitz_transport_squad_bg" mod="142b113740474c82a60b0a428bd553d5" />
+						<float name="max_capture_crew_size" value="1" />
+						<float name="min_capture_crew_size" value="1" />
+						<list name="recrew_penalties_list">
+						</list>
+						<float name="abandon_animation_seconds" value="2" />
+						<int name="recrew_max_squad_size" value="1" />
+						<bool name="abandoned_allows_pass_through" value="False" />
+						<list name="apply_to_driver_action">
+						</list>
+						<float name="driver_death_chance_on_entity_death" value="1" />
+						<instance_reference name="driver_squad_blueprint" value="sbps\races\german\soldiers\vehicle_crew\german_vehicle_driver_bg" mod="142b113740474c82a60b0a428bd553d5" />
+					</group>
+				</group>
+				<group name="race_data">
 					<instance_reference name="ext_key" value="" />
 					<group name="info">
 						<instance_reference name="capture_squad_blueprint" value="sbps\races\german\vehicles\opel_blitz_transport_squad_bg" mod="142b113740474c82a60b0a428bd553d5" />
-						<float name="max_capture_crew_size" value="2" />
-						<float name="min_capture_crew_size" value="2" />
+						<float name="max_capture_crew_size" value="1" />
+						<float name="min_capture_crew_size" value="1" />
 						<list name="recrew_penalties_list">
 						</list>
 						<float name="abandon_animation_seconds" value="2" />

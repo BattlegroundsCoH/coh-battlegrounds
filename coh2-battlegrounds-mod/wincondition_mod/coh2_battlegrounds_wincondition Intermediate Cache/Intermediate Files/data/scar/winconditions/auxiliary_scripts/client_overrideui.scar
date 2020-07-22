@@ -8,7 +8,7 @@ function BG_CreateAndDisplayGameOverScreenOverride(locplayer, callback, victory)
     Camera_SetInputEnabled(false);
 
     -- Reveral FOW
-    FOW_RevealAll();
+    FOW_Enable(false);
 
     -- Goto enemy base?
     -- Make defeated player units retreat?
@@ -225,11 +225,11 @@ function BG_CreateLossStats(refPlayer, root)
     -- The loss counter
     local counter = 1;
 
-    if _bg_playerData[refPlayer].lossData == nil or #_bg_playerData[refPlayer].lossData.units_lost == 0 then
+    if _bg_playerData[refPlayer].lossData == nil or #_bg_playerData[refPlayer].lossData == 0 then
         -- TODO: Show a "No units lost" label
     else
 
-        for k,v in pairs(_bg_playerData[refPlayer].lossData.units_lost) do
+        for k,v in pairs(_bg_playerData[refPlayer].lossData) do
 
             v.show_page = _bg_gameoverLossContent.max_page;
             counter = counter + 1;
@@ -264,7 +264,7 @@ function BG_ShowLossPageUnits(refPlayer, page)
 
     local offset = 0;
 
-    for k,v in pairs(_bg_playerData[refPlayer].lossData.units_lost) do
+    for k,v in pairs(_bg_playerData[refPlayer].lossData) do
 
         if v.show_page == page then
             BG_CreateLostUnitCard(_bg_gameoverLossContent.container, offset, v);

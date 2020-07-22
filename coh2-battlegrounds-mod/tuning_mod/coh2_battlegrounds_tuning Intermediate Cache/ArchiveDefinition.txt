@@ -7,7 +7,9 @@ TOCStart name="attrib" alias="attrib" path="" relativeroot="attrib"
 	E:\coh2_battlegrounds\coh2-battlegrounds-mod\tuning_mod\coh2_battlegrounds_tuning Intermediate Cache\Intermediate Files\attrib\attrib\abilities\battlegrounds_generic\bg_withdraw_unit.rgd
 	E:\coh2_battlegrounds\coh2-battlegrounds-mod\tuning_mod\coh2_battlegrounds_tuning Intermediate Cache\Intermediate Files\attrib\attrib\abilities\battlegrounds_generic\modal_ability\transport_heavy_vehicle_bg.rgd
 	E:\coh2_battlegrounds\coh2-battlegrounds-mod\tuning_mod\coh2_battlegrounds_tuning Intermediate Cache\Intermediate Files\attrib\attrib\abilities\battlegrounds_generic\timed_ability\detach_tow_bg.rgd
+	E:\coh2_battlegrounds\coh2-battlegrounds-mod\tuning_mod\coh2_battlegrounds_tuning Intermediate Cache\Intermediate Files\attrib\attrib\abilities\battlegrounds_generic\timed_ability\vehicle_abandon_vehicle_bg.rgd
 	E:\coh2_battlegrounds\coh2-battlegrounds-mod\tuning_mod\coh2_battlegrounds_tuning Intermediate Cache\Intermediate Files\attrib\attrib\abilities\battlegrounds_generic\timed_ability\vehicle_decrew_vehicle_crew_bg.rgd
+	E:\coh2_battlegrounds\coh2-battlegrounds-mod\tuning_mod\coh2_battlegrounds_tuning Intermediate Cache\Intermediate Files\attrib\attrib\abilities\soviet\modal_ability\merge_ability_bg.rgd
 	E:\coh2_battlegrounds\coh2-battlegrounds-mod\tuning_mod\coh2_battlegrounds_tuning Intermediate Cache\Intermediate Files\attrib\attrib\abilities\soviet\modal_ability\grenades\anti_tank_grenade_bg.rgd
 	E:\coh2_battlegrounds\coh2-battlegrounds-mod\tuning_mod\coh2_battlegrounds_tuning Intermediate Cache\Intermediate Files\attrib\attrib\abilities\soviet\modal_ability\grenades\conscript_molotov_cocktail_bg.rgd
 	E:\coh2_battlegrounds\coh2-battlegrounds-mod\tuning_mod\coh2_battlegrounds_tuning Intermediate Cache\Intermediate Files\attrib\attrib\abilities\soviet\modal_ability\grenades\rgd_1_smoke_grenade_bg.rgd
@@ -130,6 +132,7 @@ TOCStart name="attrib" alias="attrib" path="" relativeroot="attrib"
 	E:\coh2_battlegrounds\coh2-battlegrounds-mod\tuning_mod\coh2_battlegrounds_tuning Intermediate Cache\Intermediate Files\attrib\attrib\sbps\races\german\soldiers\stormtrooper_squad\stormtrooper_squad_bg.rgd
 	E:\coh2_battlegrounds\coh2-battlegrounds-mod\tuning_mod\coh2_battlegrounds_tuning Intermediate Cache\Intermediate Files\attrib\attrib\sbps\races\german\soldiers\vehicle_crew\german_tank_crew_bg.rgd
 	E:\coh2_battlegrounds\coh2-battlegrounds-mod\tuning_mod\coh2_battlegrounds_tuning Intermediate Cache\Intermediate Files\attrib\attrib\sbps\races\german\soldiers\vehicle_crew\german_vehicle_crew_bg.rgd
+	E:\coh2_battlegrounds\coh2-battlegrounds-mod\tuning_mod\coh2_battlegrounds_tuning Intermediate Cache\Intermediate Files\attrib\attrib\sbps\races\german\soldiers\vehicle_crew\german_vehicle_driver_bg.rgd
 	E:\coh2_battlegrounds\coh2-battlegrounds-mod\tuning_mod\coh2_battlegrounds_tuning Intermediate Cache\Intermediate Files\attrib\attrib\sbps\races\german\team_weapons\howitzer_105mm_le_fh18_artillery_bg.rgd
 	E:\coh2_battlegrounds\coh2-battlegrounds-mod\tuning_mod\coh2_battlegrounds_tuning Intermediate Cache\Intermediate Files\attrib\attrib\sbps\races\german\team_weapons\mg42_heavy_machine_gun_squad_bg.rgd
 	E:\coh2_battlegrounds\coh2-battlegrounds-mod\tuning_mod\coh2_battlegrounds_tuning Intermediate Cache\Intermediate Files\attrib\attrib\sbps\races\german\team_weapons\mortar_team_81mm_bg.rgd
@@ -173,6 +176,7 @@ TOCStart name="attrib" alias="attrib" path="" relativeroot="attrib"
 	E:\coh2_battlegrounds\coh2-battlegrounds-mod\tuning_mod\coh2_battlegrounds_tuning Intermediate Cache\Intermediate Files\attrib\attrib\sbps\races\soviet\soldiers\troops\vdv_troops_bg.rgd
 	E:\coh2_battlegrounds\coh2-battlegrounds-mod\tuning_mod\coh2_battlegrounds_tuning Intermediate Cache\Intermediate Files\attrib\attrib\sbps\races\soviet\soldiers\vehicle_crews\soviet_male_vehicle_2_crew_bg.rgd
 	E:\coh2_battlegrounds\coh2-battlegrounds-mod\tuning_mod\coh2_battlegrounds_tuning Intermediate Cache\Intermediate Files\attrib\attrib\sbps\races\soviet\soldiers\vehicle_crews\soviet_male_vehicle_crew_bg.rgd
+	E:\coh2_battlegrounds\coh2-battlegrounds-mod\tuning_mod\coh2_battlegrounds_tuning Intermediate Cache\Intermediate Files\attrib\attrib\sbps\races\soviet\soldiers\vehicle_crews\soviet_male_vehicle_driver_bg.rgd
 	E:\coh2_battlegrounds\coh2-battlegrounds-mod\tuning_mod\coh2_battlegrounds_tuning Intermediate Cache\Intermediate Files\attrib\attrib\sbps\races\soviet\team_weapons\dshk_38_hmg_squad_bg.rgd
 	E:\coh2_battlegrounds\coh2-battlegrounds-mod\tuning_mod\coh2_battlegrounds_tuning Intermediate Cache\Intermediate Files\attrib\attrib\sbps\races\soviet\team_weapons\hm-120_38_mortar_squad_bg.rgd
 	E:\coh2_battlegrounds\coh2-battlegrounds-mod\tuning_mod\coh2_battlegrounds_tuning Intermediate Cache\Intermediate Files\attrib\attrib\sbps\races\soviet\team_weapons\m1910_maxim_heavy_machine_gun_squad_bg.rgd
