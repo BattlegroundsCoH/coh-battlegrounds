@@ -27,7 +27,7 @@ namespace BattlegroundsApp
                         string joinMessage = $"[Lobby] {mainWindow.user.Name} has joined.\n";
                         mainWindow.chatBox.Text = mainWindow.chatBox.Text + joinMessage;
 
-                        //Add player method here
+                        mainWindow.AddPlayer();
 
                         break;
                     }
@@ -36,7 +36,7 @@ namespace BattlegroundsApp
                         string leaveMessage = $"[Lobby] {mainWindow.user.Name} has left.\n";
                         mainWindow.chatBox.Text = mainWindow.chatBox.Text + leaveMessage;
 
-                        //Remove player method here
+                        mainWindow.RemovePlayer();
 
                         break;
                     }
@@ -45,7 +45,7 @@ namespace BattlegroundsApp
                         string kickMessage = $"[Lobby] {mainWindow.user.Name} has been kicked.\n";
                         mainWindow.chatBox.Text = mainWindow.chatBox.Text + kickMessage;
 
-                        //Remove player method here
+                        mainWindow.RemovePlayer();
 
                         break;
                     }

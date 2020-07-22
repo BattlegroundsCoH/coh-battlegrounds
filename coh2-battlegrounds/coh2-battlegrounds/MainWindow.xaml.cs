@@ -108,9 +108,20 @@ namespace coh2_battlegrounds
 
         }
 
-        private void AddPlayer()
+        internal void AddPlayer()
         {
             LobbyTeam1.Items.Add(user.Name);
+        }
+
+        internal void RemovePlayer()
+        {
+            if (LobbyTeam1.Items.Contains(user.Name))
+            {
+                LobbyTeam1.Items.Remove(LobbyTeam1.Items.IndexOf(user.Name));
+            } else
+            {
+                LobbyTeam2.Items.Remove(LobbyTeam1.Items.IndexOf(user.Name));
+            }
         }
     }
 }
