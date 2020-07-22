@@ -1,4 +1,5 @@
-﻿using Battlegrounds.Steam;
+﻿using Battlegrounds.Online.Services;
+using Battlegrounds.Steam;
 using BattlegroundsApp;
 using System;
 using System.Collections.Generic;
@@ -23,6 +24,9 @@ namespace coh2_battlegrounds
     /// </summary>
     public partial class MainWindow : Window
     {
+
+        public SteamUser user = SteamUser.FromLocalInstall();
+
         public void GetLobbyList()
         {
             var lobbies = ServerMessageHandler.hub.GetConnectableLobbies();
@@ -49,6 +53,11 @@ namespace coh2_battlegrounds
 
             if (dialog.DialogResult.Equals(true))
             {
+                string _lobbyName = dialog.lobbyName.Text;
+                string _lobbyPassword = dialog.lobbyPassword.Text;
+
+                ManagedLobby.Host(ServerMessageHandler.hub, _lobbyName, _lobbyPassword, ServerMessageHandler.OnServerResponse);
+
                 GameBrowser.Visibility = Visibility.Collapsed;
                 LobbyView.Visibility = Visibility.Visible;
             }
@@ -79,7 +88,6 @@ namespace coh2_battlegrounds
 
         private void sendMessage_Click(object sender, RoutedEventArgs e)
         {
-            SteamUser user = SteamUser.FromLocalInstall();
             string messageContent = messageText.Text;
             string messageSender = user.Name;
 
@@ -98,6 +106,11 @@ namespace coh2_battlegrounds
             LobbyTeam1.Items.Clear();
             LobbyTeam2.Items.Clear();
 
+        }
+
+        private void AddPlayer()
+        {
+            LobbyTeam1.Items.Add(user.Name);
         }
     }
 }
