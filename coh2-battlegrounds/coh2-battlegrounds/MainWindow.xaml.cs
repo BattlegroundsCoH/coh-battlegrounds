@@ -1,4 +1,5 @@
-﻿using BattlegroundsApp;
+﻿using Battlegrounds.Steam;
+using BattlegroundsApp;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -34,6 +35,7 @@ namespace coh2_battlegrounds
 
         public MainWindow()
         {
+            
             InitializeComponent();
 
             GetLobbyList();
@@ -44,6 +46,12 @@ namespace coh2_battlegrounds
         {
             HostGameDialogWindow dialog = new HostGameDialogWindow();
             dialog.ShowDialog();
+
+            if (dialog.DialogResult.Equals(true))
+            {
+                GameBrowser.Visibility = Visibility.Collapsed;
+                LobbyView.Visibility = Visibility.Visible;
+            }
         }
 
         private void joinLobby_Click(object sender, RoutedEventArgs e)
@@ -59,6 +67,36 @@ namespace coh2_battlegrounds
 
         private void LobbyList_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+
+        }
+
+        private void leaveLobby_Click(object sender, RoutedEventArgs e)
+        {
+            LobbyView.Visibility = Visibility.Collapsed;
+            GameBrowser.Visibility = Visibility.Visible;
+            ClearLobby();
+        }
+
+        private void sendMessage_Click(object sender, RoutedEventArgs e)
+        {
+            SteamUser user = SteamUser.FromLocalInstall();
+            string messageContent = messageText.Text;
+            string messageSender = user.Name;
+
+            string message = $"{messageSender}: {messageContent}";
+
+            chatBox.Text = chatBox.Text += $"{message}\n";
+            chatBox.ScrollToEnd();
+
+            messageText.Clear();
+        }
+
+        private void ClearLobby()
+        {
+            chatBox.Clear();
+            messageText.Clear();
+            LobbyTeam1.Items.Clear();
+            LobbyTeam2.Items.Clear();
 
         }
     }

@@ -2,6 +2,7 @@
 using coh2_battlegrounds;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -34,7 +35,10 @@ namespace BattlegroundsApp
             string _lobbyName = lobbyName.Text;
             string _lobbyPassword = lobbyPassword.Text;
 
-            ManagedLobby.Host(ServerMessageHandler.hub, _lobbyName, _lobbyPassword, ServerMessageHandler.OnServerResponse);
+            //ManagedLobby.Host(ServerMessageHandler.hub, _lobbyName, _lobbyPassword, ServerMessageHandler.OnServerResponse);
+
+            this.DialogResult = true;
+            this.Close();
         }
     }
 }

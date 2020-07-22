@@ -5,47 +5,122 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:coh2_battlegrounds"
         mc:Ignorable="d" FontSize="12" FontFamily="Segoe UI Light"
-        Title="Battlegrounds" Height="350" Width="525" WindowStartupLocation="CenterScreen">
-    <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="20" />
-            <ColumnDefinition Width="auto" />
-            <ColumnDefinition Width="auto" />
-            <ColumnDefinition Width="auto" />
-            <ColumnDefinition Width="*" />
-            <ColumnDefinition Width="20" />
-        </Grid.ColumnDefinitions>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="20" />
-            <RowDefinition Height="auto" />
-            <RowDefinition Height="auto" />
-            <RowDefinition Height="auto" />
-            <RowDefinition Height="auto" />
-            <RowDefinition Height="auto" />
-            <RowDefinition Height="*" />
-            <RowDefinition Height="20" />
-        </Grid.RowDefinitions>
+        Title="Battlegrounds" Height="450" Width="625" WindowStartupLocation="CenterScreen">
+    <DockPanel>
 
-        <TextBlock Grid.Column="1" Grid.Row="1" FontSize="18" FontWeight="SemiBold"
-                   FontFamily="Segoe UI" Text="Game Browser"/>
+        <Grid x:Name="GameBrowser" Visibility="Visible" DockPanel.Dock="Top">
 
-        <Button x:Name="HostGameButton" Grid.Column="3" Grid.Row="4" Content="Host Game"
-                Click="hostGame_Click"/>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="20" />
+                <ColumnDefinition Width="auto" />
+                <ColumnDefinition Width="auto" />
+                <ColumnDefinition Width="auto" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="20" />
+            </Grid.ColumnDefinitions>
 
-        <Button x:Name="JoinLobbyButton" Grid.Column="3" Grid.Row="3" Content="Join Lobby"
-                Click="joinLobby_Click" IsEnabled="False" />
+            <Grid.RowDefinitions>
+                <RowDefinition Height="20" />
+                <RowDefinition Height="auto" />
+                <RowDefinition Height="auto" />
+                <RowDefinition Height="auto" />
+                <RowDefinition Height="auto" />
+                <RowDefinition Height="auto" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="20" />
+            </Grid.RowDefinitions>
+            
+            <TextBlock FontSize="18" FontWeight="SemiBold" Grid.Column="1" Grid.Row="1"
+                       FontFamily="Segoe UI" Text="Game Browser"/>
 
-        <Button x:Name="RefreshLobbyListButton" Grid.Column="3" Grid.Row="2" Content="Refresh"
-                Click="refreshLobbyList_Click"/>
+            <ListView x:Name="LobbyList" Grid.Column="1" Grid.Row="2"
+                      Width="521" Height="296">
+                <ListView.View>
+                    <GridView>
+                        <GridViewColumn Header="Name" DisplayMemberBinding="{Binding _lobbyName}" Width="455" />
+                        <GridViewColumn Header="Password" DisplayMemberBinding="{Binding _lobbyPasswordProtected}"/>
+                    </GridView>
+                </ListView.View>
+            </ListView>
 
-        <ListView x:Name="LobbyList" Grid.Column="1" Grid.Row="2" Grid.ColumnSpan="2" Grid.RowSpan="5"
-                  Width="350" Height="250">
-            <ListView.View>
-                <GridView>
-                    <GridViewColumn Header="Name" DisplayMemberBinding="{Binding _lobbyName}"/>
-                    <GridViewColumn Header="Password" DisplayMemberBinding="{Binding _lobbyPasswordProtected}"/>
-                </GridView>
-            </ListView.View>
-        </ListView>
-    </Grid>
+            <Button x:Name="HostGameButton" Content="Host Game" Grid.Column="1" Grid.Row="3"
+                    Click="hostGame_Click"/>
+
+            <Button x:Name="JoinLobbyButton" Content="Join Lobby" Grid.Column="1" Grid.Row="4"
+                    Click="joinLobby_Click" IsEnabled="False" />
+
+            <Button x:Name="RefreshLobbyListButton" Content="Refresh" Grid.Column="1" Grid.Row="5"
+                    Click="refreshLobbyList_Click"/>
+            
+        </Grid>
+
+        <Grid x:Name="LobbyView" Visibility="Collapsed" DockPanel.Dock="Top">
+            
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="20" />
+                <ColumnDefinition Width="auto" />
+                <ColumnDefinition Width="auto" />
+                <ColumnDefinition Width="auto" />
+                <ColumnDefinition Width="auto" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="20" />
+            </Grid.ColumnDefinitions>
+
+            <Grid.RowDefinitions>
+                <RowDefinition Height="20" />
+                <RowDefinition Height="auto" />
+                <RowDefinition Height="auto" />
+                <RowDefinition Height="auto" />
+                <RowDefinition Height="auto" />
+                <RowDefinition Height="auto" />
+                <RowDefinition Height="auto" />
+                <RowDefinition Height="auto" />
+                <RowDefinition Height="auto" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="20" />
+            </Grid.RowDefinitions>
+
+            <TextBlock FontSize="18" FontWeight="SemiBold" Grid.Column="1" Grid.Row="1"
+                       FontFamily="Segoe UI" Text="Lobby"/>
+
+            <TextBlock FontWeight="SemiBold" Grid.Column="1" Grid.Row="2" Margin="0,2,0,0"
+                       FontFamily="Segoe UI" Text="Team 1"/>
+
+            <ListView x:Name="LobbyTeam1" Grid.Column="1" Grid.Row="3" Grid.ColumnSpan="3"
+                      Height="125" Width="200">
+                <ListView.View>
+                    <GridView>
+                        <GridViewColumn Header="Player"/>
+                    </GridView>
+                </ListView.View>
+            </ListView>
+
+            <TextBlock FontWeight="SemiBold" Grid.Column="1" Grid.Row="4" Margin="0,2,0,0"
+                       FontFamily="Segoe UI" Text="Team 2"/>
+
+            <ListView x:Name="LobbyTeam2" Grid.Column="1" Grid.Row="5" Grid.ColumnSpan="3"
+                      Height="125" Width="200">
+                <ListView.View>
+                    <GridView>
+                        <GridViewColumn Header="Player"/>
+                    </GridView>
+                </ListView.View>
+            </ListView>
+
+            <Button x:Name="LeaveLobbyButton" Content="Leave Lobby" Grid.Column="1" Grid.Row="6" Margin="0,2,0,0"
+                    Click="leaveLobby_Click"/>
+
+            <TextBox Grid.Column="4" Grid.Row="5" Height="100" Margin="2,2,0,0" Name="chatBox" Width="375" 
+                     IsReadOnly="True" VerticalScrollBarVisibility="Visible" VerticalAlignment="Bottom"/>
+
+            <TextBlock Grid.Column="4" Grid.Row="6" Text="Message:" Width="50" HorizontalAlignment="Left" Margin="2,2,0,0"/>
+
+            <TextBox Grid.Column="4" Grid.Row="6" Margin="50,2,0,0" Name="messageText" HorizontalAlignment="Left" Width="230"/>
+
+            <Button Grid.Column="4" Grid.Row="6" HorizontalAlignment="Right" Width="95" Content="Send" Margin="0,2,0,0" Name="sendMessageButton" Click="sendMessage_Click"
+                    IsEnabled="{Binding ElementName=messageText, Path=Text.Length, Mode=OneWay}"/>
+
+        </Grid>
+
+    </DockPanel>
 </Window>
