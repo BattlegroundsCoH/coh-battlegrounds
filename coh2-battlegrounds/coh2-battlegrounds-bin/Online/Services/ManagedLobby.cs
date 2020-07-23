@@ -316,7 +316,10 @@ namespace Battlegrounds.Online.Services {
                 List<Company> companies = new List<Company>();
 
                 foreach (FileSync.SyncFile file in sync.SyncedFiles) {
-                    companies.Add(Company.ReadCompanyFromBytes(file.Data));
+                    Trace.WriteLine(file.From + ":" + file.Name + ":" + file.Data.Length);
+                    if (file.Data.Length > 0) {
+                        companies.Add(Company.ReadCompanyFromBytes(file.Data));
+                    }
                 }
 
                 return (companies, true);

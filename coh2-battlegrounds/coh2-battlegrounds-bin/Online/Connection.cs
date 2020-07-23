@@ -235,7 +235,7 @@ namespace Battlegrounds.Online {
                     throw new ArgumentOutOfRangeException($"Attempt to send file of size {len / 1000.0 / 1000.0} MB, this is not allowed!. Only files smaller than 64MB can be sent.");
                 }
 
-                data = File.ReadAllBytes(filepath);
+                data = File.ReadAllBytes(filepath); // TODO: Always read as UTF-8
 
             } else {
                 data = new byte[0];

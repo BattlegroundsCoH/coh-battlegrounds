@@ -101,7 +101,7 @@ namespace Battlegrounds.Game.Battlegrounds {
 
             // Make sure it's a valid army
             if (army == null) {
-                throw new ArgumentNullException();
+                throw new ArgumentNullException("Army was null");
             }
 
             // Assign base values
@@ -253,7 +253,7 @@ namespace Battlegrounds.Game.Battlegrounds {
         /// <param name="jsonbytes"></param>
         /// <returns></returns>
         public static Company ReadCompanyFromBytes(byte[] jsonbytes) {
-            Company company = JsonParser.ParseString<Company>(Encoding.ASCII.GetString(jsonbytes));
+            Company company = JsonParser.ParseString<Company>(Encoding.UTF8.GetString(jsonbytes));
             if (company.VerifyChecksum()) {
                 return company;
             } else {

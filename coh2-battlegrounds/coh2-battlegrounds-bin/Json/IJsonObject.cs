@@ -194,6 +194,10 @@ namespace Battlegrounds.Json {
                 parsedJson.Remove("jsdbtype");
             }
 
+            if (type is null) {
+                throw new ArgumentNullException("The given 'jsdbtype' was null!");
+            }
+
             // Get the type
             Type il_type = Type.GetType(type as string);
 
