@@ -416,6 +416,7 @@ namespace Battlegrounds.Online.Services {
         }
 
         private void ManagedLobbyInternal_MessageReceived(Message incomingMessage) {
+            Trace.WriteLine($"Received: [{incomingMessage}]");
             switch (incomingMessage.Descriptor) {
                 case Message_Type.LOBBY_CHATMESSAGE:
                     this.OnPlayerEvent?.Invoke(ManagedLobbyPlayerEventType.Message, incomingMessage.Argument2, incomingMessage.Argument1);
