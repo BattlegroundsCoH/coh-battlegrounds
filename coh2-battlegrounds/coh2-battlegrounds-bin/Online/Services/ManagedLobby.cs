@@ -241,7 +241,7 @@ namespace Battlegrounds.Online.Services {
                 }
                 m_underlyingConnection.SetIdentifierReceiver(message.Identifier, OnMessage);
                 m_underlyingConnection.SendMessage(message);
-                Console.WriteLine("Sent request for getting company files.");
+                Trace.WriteLine("Sent request for getting company files.");
             }
         }
 
@@ -253,7 +253,6 @@ namespace Battlegrounds.Online.Services {
             if (m_underlyingConnection != null) {
                 m_underlyingConnection.SendMessage(new Message(Message_Type.LOBBY_LEAVE));
                 m_underlyingConnection.Stop();
-                //m_underlyingConnection = null;
             }
         }
 
@@ -287,13 +286,6 @@ namespace Battlegrounds.Online.Services {
             return playernames;
 
         }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
-        public string[] GetPlayerNames() 
-            => this.GetPlayerNamesAsync().Result;
 
         private Company GetLocalCompany() {
             object val = this.OnLocalDataRequested?.Invoke("CompanyData");
@@ -362,6 +354,7 @@ namespace Battlegrounds.Online.Services {
 
                 try {
 
+                    // Get match data (A SessionInfo object)
                     if (this.OnLocalDataRequested?.Invoke("MatchInfo") is SessionInfo info) {
 
                         // Zip/Map the companies to their respective SessionParticipant instances.
@@ -469,22 +462,26 @@ namespace Battlegrounds.Online.Services {
                     this.OnStartMatchReceived?.Invoke();
                     break;
                 case Message_Type.LOBBY_SENDFILE:
-
                     break;
                 case Message_Type.CONFIRMATION_MESSAGE:
-
                     break;
-                default: Console.WriteLine(incomingMessage.Descriptor + ":" + incomingMessage.Argument1 + " [" + incomingMessage.Identifier + "]"); break;
+                default: Trace.WriteLine($"Unhandled type {incomingMessage.Descriptor}"); break;
             }
         }
 
         private void ManagedLobbyInternal_FileReceived(Message incomingFileMessage) {
-            this.OnFileReceived?.Invoke(incomingFileMessage.Argument2, incomingFileMessage.Argument1, incomingFileMessage.FileData != null, incomingFileMessage.FileData, incomingFileMessage.Identifier);
             if (incomingFileMessage.Argument1.CompareTo("coh2_battlegrounds_wincondition.sga") == 0) {
-                Console.WriteLine("Received .sga -- returning OK message to " + incomingFileMessage.Argument2);
+                Trace.WriteLine($"Received .sga -- returning OK message to {incomingFileMessage.Argument2}");
                 this.m_underlyingConnection.SendMessage(
                     incomingFileMessage.CreateResponse(Message_Type.CONFIRMATION_MESSAGE, incomingFileMessage.Argument2, "Received .sga"));
             }
+            this.OnFileReceived?.Invoke(
+                incomingFileMessage.Argument2, 
+                incomingFileMessage.Argument1, 
+                !(incomingFileMessage.FileData is null), 
+                incomingFileMessage.FileData, 
+                incomingFileMessage.Identifier
+                );
         }
 
         /// <summary>

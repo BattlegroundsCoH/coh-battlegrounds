@@ -42,7 +42,7 @@ namespace Battlegrounds.Compiler {
             // Write the tuning data
             this.WriteTuningData(lua, session.TuningMod);
 
-            lua.AppendLine($"gamemode = \"{session.Gamemode.Name}\",");
+            lua.AppendLine($"gamemode = \"{session.Gamemode?.Name ?? "Victory Points"}\",");
             lua.AppendLine($"gameoptions = {{");
             lua.IncreaseIndent();
 

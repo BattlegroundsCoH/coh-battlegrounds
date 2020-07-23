@@ -2,7 +2,6 @@
 using Battlegrounds.Online.Services;
 using Battlegrounds.Steam;
 using Battlegrounds.Game.Database;
-using BattlegroundsApp;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -18,9 +17,10 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Diagnostics;
 
-namespace coh2_battlegrounds
-{
+namespace BattlegroundsApp {
+
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
@@ -51,8 +51,9 @@ namespace coh2_battlegrounds
             this.user = SteamUser.FromLocalInstall();
 
             // Then create lobby and assign user
-            this.hub = new LobbyHub();
-            this.hub.User = this.user;
+            this.hub = new LobbyHub {
+                User = this.user
+            };
 
             // Create list of all players
             this.m_allPlayers = new List<string>();
@@ -70,19 +71,18 @@ namespace coh2_battlegrounds
             }
         }
 
-        private void hostGame_Click(object sender, RoutedEventArgs e)
-        {
-            HostGameDialogWindow dialog = new HostGameDialogWindow();
-            dialog.ShowDialog();
+        private void hostGame_Click(object sender, RoutedEventArgs e) {
 
-            if (dialog.DialogResult.Equals(true))
-            {
+            HostGameDialogWindow dialog = new HostGameDialogWindow();
+
+            if (dialog.ShowDialog() is true) {
                 string _lobbyName = dialog.lobbyName.Text;
                 string _lobbyPassword = dialog.lobbyPassword.Text;
 
                 ManagedLobby.Host(hub, _lobbyName, _lobbyPassword, ServerMessageHandler.OnServerResponse);
 
             }
+
         }
 
         private void joinLobby_Click(object sender, RoutedEventArgs e)
@@ -182,7 +182,7 @@ namespace coh2_battlegrounds
 
         }
 
-        private void ClearLobby()
+        public void ClearLobby()
         {
             chatBox.Clear();
             messageText.Clear();
@@ -233,19 +233,12 @@ namespace coh2_battlegrounds
             }
         }
 
-        private void BroadcastTeamChange(bool changeToTeam2) {
-
-        }
-
         private void OnStartMatchCancelled(string reason) {
-
+            Trace.WriteLine(reason);
         }
 
-        private void startMatch_Click(object sender, RoutedEventArgs e)
-        {
+        private void startMatch_Click(object sender, RoutedEventArgs e) 
+            => ServerMessageHandler.CurrentLobby.CompileAndStartMatch(this.OnStartMatchCancelled);
 
-            ServerMessageHandler.CurrentLobby.CompileAndStartMatch(this.OnStartMatchCancelled);
-
-        }
     }
 }

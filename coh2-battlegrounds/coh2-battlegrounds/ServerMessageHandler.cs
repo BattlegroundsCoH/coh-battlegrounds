@@ -22,48 +22,31 @@ namespace BattlegroundsApp {
 
         private static void OnPlayerEvent(ManagedLobbyPlayerEventType type, string from, string message) {
             var mainWindow = MainWindow.Instance;
-            Trace.WriteLine(type + ": " + from + " " + message);
+            Trace.WriteLine($"[ManagedLobbyPlayerEventType.{type}] {from}: \"{message}\"");
             mainWindow.Dispatcher.Invoke(() => {
                 switch (type) {
-                    case ManagedLobbyPlayerEventType.Join: {
-                            string joinMessage = $"[Lobby] {from} has joined.\n";
-                            mainWindow.chatBox.Text = mainWindow.chatBox.Text + joinMessage;
-
-                            mainWindow.AddPlayer(from);
-
-                            break;
-                        }
-                    case ManagedLobbyPlayerEventType.Leave: {
-                            string leaveMessage = $"[Lobby] {from} has left.\n";
-                            mainWindow.chatBox.Text = mainWindow.chatBox.Text + leaveMessage;
-
-                            mainWindow.RemovePlayer(from);
-
-                            break;
-                        }
-                    case ManagedLobbyPlayerEventType.Kicked: {
-                            string kickMessage = $"[Lobby] {from} has been kicked.\n";
-                            mainWindow.chatBox.Text = mainWindow.chatBox.Text + kickMessage;
-
-                            mainWindow.RemovePlayer(from);
-
-                            break;
-                        }
-                    case ManagedLobbyPlayerEventType.Message: {
-                            string messageMessage = $"{from}: {message}\n";
-                            mainWindow.chatBox.Text = mainWindow.chatBox.Text + messageMessage;
-
-                            break;
-                        }
-                    case ManagedLobbyPlayerEventType.Meta: {
-                            string metaMessage = $"{from}: {message}";
-                            Console.WriteLine(metaMessage);
-                            break;
-                        }
-                    default: {
-                            Console.WriteLine("Something went wrong.");
-                            break;
-                        }
+                    case ManagedLobbyPlayerEventType.Join:
+                        mainWindow.chatBox.Text += $"[Lobby] {from} has joined.\n";
+                        mainWindow.AddPlayer(from);
+                        break;
+                    case ManagedLobbyPlayerEventType.Leave:
+                        mainWindow.chatBox.Text += $"[Lobby] {from} has left.\n";
+                        mainWindow.RemovePlayer(from);
+                        break;
+                    case ManagedLobbyPlayerEventType.Kicked:
+                        mainWindow.chatBox.Text += $"[Lobby] {from} has been kicked.\n";
+                        mainWindow.RemovePlayer(from);
+                        break;
+                    case ManagedLobbyPlayerEventType.Message:
+                        mainWindow.chatBox.Text += $"{from}: {message}\n";
+                        break;
+                    case ManagedLobbyPlayerEventType.Meta:
+                        string metaMessage = $"{from}: {message}";
+                        Trace.WriteLine(metaMessage);
+                        break;
+                    default:
+                        Trace.WriteLine($"Unhandled event type \"ManagedLobbyPlayerEventType.{type}\"");
+                        break;
                 }
             });
         }
@@ -91,7 +74,9 @@ namespace BattlegroundsApp {
 
         public static void OnDataRequest(bool isFileRequest, string asker, string requestedData, int id) {
             if (requestedData.CompareTo("CompanyData") == 0) {
-                __LobbyInstance.SendFile(asker, "test_company.json", id);
+                if (__LobbyInstance.SendFile(asker, "test_company.json", id) == -1) {
+                    Trace.WriteLine("Failed to send test company");
+                }
             }
         }
 
@@ -120,7 +105,8 @@ namespace BattlegroundsApp {
                 // Write all byte content
                 File.WriteAllBytes(sgapath, content);
 
-                MainWindow.Instance.chatBox.Text += "[Lobby] Received wincondition from host.";
+                // Let the user know we've received the win condition
+                MainWindow.Instance.chatBox.Text += "[Lobby] Received wincondition file from host.\n";
 
                 // Write a log message
                 Trace.WriteLine("Received and saved .sga");
@@ -131,12 +117,30 @@ namespace BattlegroundsApp {
 
         }
 
+        private static void OnLocalEvent(ManagedLobbyLocalEventType type, string message) {
+            var mainWindow = MainWindow.Instance;
+            Trace.WriteLine($"[ManagedLobbyLocalEventType.{type}] \"{message}\"");
+            switch (type) {
+                case ManagedLobbyLocalEventType.Host:
+                    MainWindow.Instance.chatBox.Text += "[Lobby] You have been assigned as host.\n";
+                    break;
+                case ManagedLobbyLocalEventType.Kicked:
+                    mainWindow.ClearLobby();
+                    // TODO: Messagebox for this
+                    break;
+                default:
+                    Trace.WriteLine($"Unhandled event type \"ManagedLobbyLocalEventType.{type}\"");
+                    break;
+            }
+        }
+
         public static void OnServerResponse(ManagedLobbyStatus status, ManagedLobby result) {
             if (status.Success) {
 
                 __LobbyInstance = result;
 
                 __LobbyInstance.OnPlayerEvent += OnPlayerEvent;
+                __LobbyInstance.OnLocalEvent += OnLocalEvent;
                 __LobbyInstance.OnLocalDataRequested += OnLocalDataRequest;
                 __LobbyInstance.OnDataRequest += OnDataRequest;
                 __LobbyInstance.OnStartMatchReceived += StartMatchCommandReceived;

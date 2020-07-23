@@ -27,6 +27,61 @@ namespace coh2_battlegrounds_console {
                 Thread.Sleep(1);
             }
 
+            Company testCompany = CreateSovietCompany();
+            Company germanCompany = CreateGermanCompany();
+            germanCompany.SaveToFile("deutsches_kompanie.json");
+
+            SessionInfo sessionInfo = new SessionInfo() {
+                SelectedGamemode = WinconditionList.GetWinconditionByName("Victory Points"),
+                SelectedGamemodeOption = 1,
+                SelectedScenario = ScenarioList.FromFilename("2p_angoville_farms"),
+                SelectedTuningMod = new BattlegroundsTuning(),
+                Allies = new SessionParticipant[] { new SessionParticipant(BattlegroundsInstance.LocalSteamuser, testCompany, 0, 0) },
+                Axis = null,
+                FillAI = true,
+                DefaultDifficulty = Battlegrounds.Game.AIDifficulty.AI_Hard,
+            };
+
+            Session session = Session.CreateSession(sessionInfo);
+
+            SessionCompiler<CompanyCompiler> sessionCompiler = new SessionCompiler<CompanyCompiler>();
+            File.WriteAllText("test_session.lua", sessionCompiler.CompileSession(session));
+
+            /*GameMatch m = new GameMatch(session);
+            m.LoadMatch($"{Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)}\\my games\\company of heroes 2\\playback\\temp.rec");
+            m.EvaluateResult();
+            */
+            
+            //SessionManager.PlaySession<SessionCompiler<CompanyCompiler>, CompanyCompiler>(session, (a,b) => { Console.WriteLine(a); }, null, null);
+
+            // Save json
+            testCompany.SaveToFile("test_company.json");
+
+            
+            /*LobbyHub hub = new LobbyHub();
+            if (!hub.CanConnect()) {
+                Console.WriteLine("Unable to reach server hub");
+            } else {
+
+                var lobbies = hub.GetConnectableLobbies();
+                if (lobbies.Count == 0) {
+                    hub.User = BattlegroundsInstance.LocalSteamuser;
+                    HostTest(hub);
+                } else {
+                    hub.User = SteamUser.FromID(76561198157626935UL);
+                    ClientTest(hub, lobbies.First());
+                }
+
+            }
+            
+            BattlegroundsInstance.SaveInstance();
+            */
+            Console.ReadLine();
+
+        }
+
+        private static Company CreateSovietCompany() {
+
             // Create a dummy company
             CompanyBuilder companyBuilder = new CompanyBuilder().NewCompany(Faction.Soviet)
                 .ChangeName("26th Rifle Division")
@@ -161,56 +216,191 @@ namespace coh2_battlegrounds_console {
 
             // Commit changes
             companyBuilder.Commit();
+            return companyBuilder.Result;
+        }
 
-            Company testCompany = companyBuilder.Result;
+        private static Company CreateGermanCompany() {
 
-            SessionInfo sessionInfo = new SessionInfo() {
-                SelectedGamemode = WinconditionList.GetWinconditionByName("Victory Points"),
-                SelectedGamemodeOption = 1,
-                SelectedScenario = ScenarioList.FromFilename("2p_angoville_farms"),
-                SelectedTuningMod = new BattlegroundsTuning(),
-                Allies = new SessionParticipant[] { new SessionParticipant(BattlegroundsInstance.LocalSteamuser, testCompany, 0, 0) },
-                Axis = null,
-                FillAI = true,
-                DefaultDifficulty = Battlegrounds.Game.AIDifficulty.AI_Hard,
-            };
+            // Create a dummy company
+            CompanyBuilder companyBuilder = new CompanyBuilder().NewCompany(Faction.Wehrmacht)
+                .ChangeName("69th Panzer Regiment")
+                .ChangeUser("Ragnar")
+                .ChangeTuningMod(BattlegroundsInstance.BattleGroundsTuningMod.Guid.ToString());
+            UnitBuilder unitBuilder = new UnitBuilder();
 
-            Session session = Session.CreateSession(sessionInfo);
+            // Basic infantry
+            companyBuilder.AddUnit(unitBuilder.SetBlueprint("pioneer_squad_bg").SetDeploymentPhase(DeploymentPhase.PhaseInitial).GetAndReset());
+            companyBuilder.AddUnit(unitBuilder.SetBlueprint("pioneer_squad_bg").SetDeploymentPhase(DeploymentPhase.PhaseA).GetAndReset());
+            companyBuilder.AddUnit(unitBuilder.SetBlueprint("pioneer_squad_bg").SetDeploymentPhase(DeploymentPhase.PhaseA).GetAndReset());
+            companyBuilder.AddUnit(unitBuilder.SetBlueprint("pioneer_squad_bg").SetDeploymentPhase(DeploymentPhase.PhaseA).GetAndReset());
+            companyBuilder.AddUnit(unitBuilder.SetBlueprint("sniper_squad_bg").SetDeploymentPhase(DeploymentPhase.PhaseInitial).GetAndReset());
+            companyBuilder.AddUnit(unitBuilder.SetBlueprint("sniper_squad_bg").SetDeploymentPhase(DeploymentPhase.PhaseA).GetAndReset());
 
-            SessionCompiler<CompanyCompiler> sessionCompiler = new SessionCompiler<CompanyCompiler>();
-            File.WriteAllText("test_session.lua", sessionCompiler.CompileSession(session));
+            // Transported Infantry
+            companyBuilder.AddUnit(unitBuilder.SetBlueprint("grenadier_squad_bg")
+                .SetTransportBlueprint("sdkfz_251_halftrack_squad_bg")
+                .SetDeploymentMethod(DeploymentMethod.DeployAndStay)
+                .SetDeploymentPhase(DeploymentPhase.PhaseA)
+                .GetAndReset());
+            companyBuilder.AddUnit(unitBuilder.SetBlueprint("grenadier_squad_bg")
+                .SetTransportBlueprint("sdkfz_251_halftrack_squad_bg")
+                .SetDeploymentMethod(DeploymentMethod.DeployAndStay)
+                .SetDeploymentPhase(DeploymentPhase.PhaseA)
+                .GetAndReset());
+            companyBuilder.AddUnit(unitBuilder.SetBlueprint("grenadier_squad_bg")
+                .SetTransportBlueprint("sdkfz_251_halftrack_squad_bg")
+                .SetDeploymentMethod(DeploymentMethod.DeployAndStay)
+                .SetDeploymentPhase(DeploymentPhase.PhaseA)
+                .GetAndReset());
+            companyBuilder.AddUnit(unitBuilder.SetBlueprint("grenadier_squad_bg")
+                .SetTransportBlueprint("sdkfz_251_halftrack_squad_bg")
+                .SetDeploymentMethod(DeploymentMethod.DeployAndStay)
+                .SetDeploymentPhase(DeploymentPhase.PhaseA)
+                .GetAndReset());
 
-            /*GameMatch m = new GameMatch(session);
-            m.LoadMatch($"{Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)}\\my games\\company of heroes 2\\playback\\temp.rec");
-            m.EvaluateResult();
-            */
-            
-            SessionManager.PlaySession<SessionCompiler<CompanyCompiler>, CompanyCompiler>(session, (a,b) => { Console.WriteLine(a); }, null, null);
+            companyBuilder.AddUnit(unitBuilder.SetBlueprint("grenadier_squad_bg")
+                .SetTransportBlueprint("opel_blitz_transport_squad_bg")
+                .SetDeploymentMethod(DeploymentMethod.DeployAndExit)
+                .SetVeterancyRank(2)
+                .SetDeploymentPhase(DeploymentPhase.PhaseA)
+                .GetAndReset());
+            companyBuilder.AddUnit(unitBuilder.SetBlueprint("grenadier_squad_bg")
+                .SetTransportBlueprint("opel_blitz_transport_squad_bg")
+                .SetDeploymentMethod(DeploymentMethod.DeployAndExit)
+                .SetVeterancyRank(2)
+                .SetDeploymentPhase(DeploymentPhase.PhaseA)
+                .GetAndReset());
+            companyBuilder.AddUnit(unitBuilder.SetBlueprint("grenadier_squad_bg")
+                .SetTransportBlueprint("opel_blitz_transport_squad_bg")
+                .SetDeploymentMethod(DeploymentMethod.DeployAndExit)
+                .SetVeterancyRank(2)
+                .SetDeploymentPhase(DeploymentPhase.PhaseA)
+                .GetAndReset());
+            companyBuilder.AddUnit(unitBuilder.SetBlueprint("grenadier_squad_bg")
+                .SetTransportBlueprint("opel_blitz_transport_squad_bg")
+                .SetDeploymentMethod(DeploymentMethod.DeployAndExit)
+                .SetVeterancyRank(2)
+                .SetDeploymentPhase(DeploymentPhase.PhaseA)
+                .GetAndReset());
 
-            // Save json
-            testCompany.SaveToFile("test_company.json");
+            companyBuilder.AddUnit(unitBuilder.SetBlueprint("panzer_grenadier_squad_bg")
+                .SetTransportBlueprint("opel_blitz_transport_squad_bg")
+                .SetDeploymentMethod(DeploymentMethod.DeployAndExit)
+                .SetVeterancyRank(3)
+                .SetDeploymentPhase(DeploymentPhase.PhaseA)
+                .GetAndReset());
+            companyBuilder.AddUnit(unitBuilder.SetBlueprint("panzer_grenadier_squad_bg")
+                .SetTransportBlueprint("opel_blitz_transport_squad_bg")
+                .SetDeploymentMethod(DeploymentMethod.DeployAndExit)
+                .SetVeterancyRank(3)
+                .SetDeploymentPhase(DeploymentPhase.PhaseA)
+                .GetAndReset());
+            companyBuilder.AddUnit(unitBuilder.SetBlueprint("panzer_grenadier_squad_bg")
+                .SetTransportBlueprint("opel_blitz_transport_squad_bg")
+                .SetDeploymentMethod(DeploymentMethod.DeployAndExit)
+                .SetVeterancyRank(3)
+                .SetDeploymentPhase(DeploymentPhase.PhaseA)
+                .GetAndReset());
 
-            
-            /*LobbyHub hub = new LobbyHub();
-            if (!hub.CanConnect()) {
-                Console.WriteLine("Unable to reach server hub");
-            } else {
+            // Support Weapons
+            companyBuilder.AddUnit(unitBuilder.SetBlueprint("pak40_75mm_at_gun_squad_bg")
+                .SetTransportBlueprint("opel_blitz_transport_squad_bg")
+                .SetDeploymentMethod(DeploymentMethod.DeployAndExit)
+                .SetDeploymentPhase(DeploymentPhase.PhaseA)
+                .GetAndReset());
+            companyBuilder.AddUnit(unitBuilder.SetBlueprint("pak40_75mm_at_gun_squad_bg")
+                .SetTransportBlueprint("opel_blitz_transport_squad_bg")
+                .SetDeploymentMethod(DeploymentMethod.DeployAndExit)
+                .SetDeploymentPhase(DeploymentPhase.PhaseA)
+                .GetAndReset());
+            companyBuilder.AddUnit(unitBuilder.SetBlueprint("pak40_75mm_at_gun_squad_bg")
+                .SetTransportBlueprint("opel_blitz_transport_squad_bg")
+                .SetDeploymentMethod(DeploymentMethod.DeployAndExit)
+                .SetDeploymentPhase(DeploymentPhase.PhaseA)
+                .GetAndReset());
+            companyBuilder.AddUnit(unitBuilder.SetBlueprint("mg42_heavy_machine_gun_squad_bg")
+                .SetDeploymentPhase(DeploymentPhase.PhaseInitial)
+                .GetAndReset());
+            companyBuilder.AddUnit(unitBuilder.SetBlueprint("mg42_heavy_machine_gun_squad_bg")
+                .SetDeploymentPhase(DeploymentPhase.PhaseA)
+                .GetAndReset());
+            companyBuilder.AddUnit(unitBuilder.SetBlueprint("mg42_heavy_machine_gun_squad_bg")
+                .SetDeploymentPhase(DeploymentPhase.PhaseA)
+                .GetAndReset());
+            companyBuilder.AddUnit(unitBuilder.SetBlueprint("mg42_heavy_machine_gun_squad_bg")
+                .SetDeploymentPhase(DeploymentPhase.PhaseA)
+                .GetAndReset());
 
-                var lobbies = hub.GetConnectableLobbies();
-                if (lobbies.Count == 0) {
-                    hub.User = BattlegroundsInstance.LocalSteamuser;
-                    HostTest(hub);
-                } else {
-                    hub.User = SteamUser.FromID(76561198157626935UL);
-                    ClientTest(hub, lobbies.First());
-                }
+            companyBuilder.AddUnit(unitBuilder.SetBlueprint("mortar_team_81mm_bg").SetDeploymentPhase(DeploymentPhase.PhaseA).GetAndReset());
+            companyBuilder.AddUnit(unitBuilder.SetBlueprint("mortar_team_81mm_bg").SetDeploymentPhase(DeploymentPhase.PhaseA).GetAndReset());
 
-            }
-            
-            BattlegroundsInstance.SaveInstance();
-            */
-            Console.ReadLine();
+            // Vehicles
+            companyBuilder.AddUnit(unitBuilder.SetBlueprint("sdkfz_234_puma_ost_bg")
+                .SetVeterancyRank(1)
+                .SetDeploymentPhase(DeploymentPhase.PhaseA)
+                .GetAndReset());
+            companyBuilder.AddUnit(unitBuilder.SetBlueprint("sdkfz_234_puma_ost_bg")
+                .SetVeterancyRank(1)
+                .SetDeploymentPhase(DeploymentPhase.PhaseA)
+                .GetAndReset());
 
+            companyBuilder.AddUnit(unitBuilder.SetBlueprint("panther_squad_bg")
+                .SetVeterancyRank(1)
+                .SetDeploymentPhase(DeploymentPhase.PhaseA)
+                .GetAndReset());
+
+            companyBuilder.AddUnit(unitBuilder.SetBlueprint("panzer_iv_squad_bg")
+                .SetDeploymentPhase(DeploymentPhase.PhaseA)
+                .GetAndReset());
+            companyBuilder.AddUnit(unitBuilder.SetBlueprint("panzer_iv_squad_bg")
+                .SetDeploymentPhase(DeploymentPhase.PhaseA)
+                .GetAndReset());
+            companyBuilder.AddUnit(unitBuilder.SetBlueprint("panzer_iv_squad_bg")
+                .SetDeploymentPhase(DeploymentPhase.PhaseA)
+                .GetAndReset());
+            companyBuilder.AddUnit(unitBuilder.SetBlueprint("panzer_iv_squad_bg")
+                .SetDeploymentPhase(DeploymentPhase.PhaseA)
+                .GetAndReset());
+
+            companyBuilder.AddUnit(unitBuilder.SetBlueprint("ostwind_squad_bg")
+                .SetDeploymentPhase(DeploymentPhase.PhaseA)
+                .GetAndReset());
+            companyBuilder.AddUnit(unitBuilder.SetBlueprint("ostwind_squad_bg")
+                .SetDeploymentPhase(DeploymentPhase.PhaseA)
+                .GetAndReset());
+
+            companyBuilder.AddUnit(unitBuilder.SetBlueprint("tiger_squad_bg")
+                .SetDeploymentPhase(DeploymentPhase.PhaseA)
+                .GetAndReset());
+            companyBuilder.AddUnit(unitBuilder.SetBlueprint("tiger_squad_bg")
+                .SetDeploymentPhase(DeploymentPhase.PhaseA)
+                .GetAndReset());
+            companyBuilder.AddUnit(unitBuilder.SetBlueprint("tiger_squad_bg")
+                .SetDeploymentPhase(DeploymentPhase.PhaseA)
+                .GetAndReset());
+
+            companyBuilder.AddUnit(unitBuilder.SetBlueprint("brummbar_squad_bg")
+                .SetDeploymentPhase(DeploymentPhase.PhaseA)
+                .SetVeterancyRank(3)
+                .GetAndReset());
+
+            // Artillery
+            companyBuilder.AddUnit(unitBuilder.SetBlueprint("howitzer_105mm_le_fh18_artillery_bg")
+                .SetTransportBlueprint("opel_blitz_transport_squad_bg")
+                .SetDeploymentMethod(DeploymentMethod.DeployAndStay)
+                .SetVeterancyRank(3)
+                .SetDeploymentPhase(DeploymentPhase.PhaseA)
+                .GetAndReset());
+            companyBuilder.AddUnit(unitBuilder.SetBlueprint("howitzer_105mm_le_fh18_artillery_bg")
+                .SetTransportBlueprint("opel_blitz_transport_squad_bg")
+                .SetDeploymentMethod(DeploymentMethod.DeployAndStay)
+                .SetVeterancyRank(3)
+                .SetDeploymentPhase(DeploymentPhase.PhaseA)
+                .GetAndReset());
+
+            // Commit changes
+            companyBuilder.Commit();
+            return companyBuilder.Result;
         }
 
         private static void HostTest(LobbyHub hub) {

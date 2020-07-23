@@ -129,7 +129,12 @@ namespace Battlegrounds.Game.Battlegrounds {
             AddAIPlayers(sessionInfo, session, TEAM_AXIS, axisFillAI, ref currentIndex, ref playerTeamIndex, x => sessionInfo.Allies[sessionInfo.Axis?.Length ?? 1 - 1 + x].ParticipantFaction);
 
             // Set the game mode
-            session.AddSetting("gamemode_setting", sessionInfo.SelectedGamemode.Options[sessionInfo.SelectedGamemodeOption].Value);
+            if (sessionInfo.SelectedGamemode != null) {
+                session.AddSetting("gamemode_setting", sessionInfo.SelectedGamemode.Options[sessionInfo.SelectedGamemodeOption].Value);
+            } else {
+                Trace.WriteLine("Failed to read selected gamemode - using 500 as default");
+                session.AddSetting("gamemode_setting", 500);
+            }
 
             // Return the new session
             return session;

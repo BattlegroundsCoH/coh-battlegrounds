@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -45,7 +46,7 @@ namespace Battlegrounds.Online.Services {
         /// <summary>
         /// The maximum amount of minutes to wait before declaring failure to sync.
         /// </summary>
-        public int SyncMaxTimeoutMinutes { get; set; } = 5;
+        public int SyncMaxTimeoutMinutes { get; set; } = 2;
 
         /// <summary>
         /// The time in milliseconds before a re-send operation can be considered.
@@ -141,7 +142,7 @@ namespace Battlegrounds.Online.Services {
             this.m_lobbySync.WorkerConnection.SendMessage(getterMessage);
 
             while (!this.m_isDone) {
-                Console.WriteLine("Attempting to sync...");
+                Trace.WriteLine("Attempting to sync...");
                 int waitMinutes = (DateTime.Now - start).Minutes;
                 if (waitMinutes >= this.SyncMaxTimeoutMinutes) {
                     this.m_isDone = this.m_syncFailed = true;
@@ -152,7 +153,7 @@ namespace Battlegrounds.Online.Services {
                     lock (this.m_syncStates) {
                         receivedACK = this.m_syncStates.Count(x => x.userDone);
                     }
-                    Console.WriteLine($"Files synced [{receivedACK}/{this.m_syncStates.Count}]");
+                    Trace.WriteLine($"Files synced [{receivedACK}/{this.m_syncStates.Count}]");
                     if (receivedACK != this.m_syncStates.Count) {
                         Thread.Sleep(this.SyncResendAttempt);
                         lock (this.m_syncStates) {
@@ -194,7 +195,7 @@ namespace Battlegrounds.Online.Services {
             this.m_lobbySync.WorkerConnection.SetIdentifierReceiver(lookForIdentifier, response);
 
             while (!this.m_isDone) {
-                Console.WriteLine("Attempting to sync...");
+                Trace.WriteLine("Attempting to sync...");
                 int waitMinutes = (DateTime.Now - start).Minutes;
                 if (waitMinutes >= this.SyncMaxTimeoutMinutes) {
                     this.m_isDone = this.m_syncFailed = true;
@@ -205,7 +206,7 @@ namespace Battlegrounds.Online.Services {
                     lock (this.m_syncStates) {
                         receivedACK = this.m_syncStates.Count(x => x.userDone);
                     }
-                    Console.WriteLine($"Files synced [{receivedACK}/{this.m_syncStates.Count}]");
+                    Trace.WriteLine($"Files synced [{receivedACK}/{this.m_syncStates.Count}]");
                     if (receivedACK != this.m_syncStates.Count) {
                         Thread.Sleep(this.SyncResendAttempt);
                         lock (this.m_syncStates) {
