@@ -318,7 +318,9 @@ namespace Battlegrounds.Online.Services {
                 foreach (FileSync.SyncFile file in sync.SyncedFiles) {
                     Trace.WriteLine(file.From + ":" + file.Name + ":" + file.Data.Length);
                     if (file.Data.Length > 0) {
-                        companies.Add(Company.ReadCompanyFromBytes(file.Data));
+                        Company readcompany = Company.ReadCompanyFromBytes(file.Data);
+                        readcompany.Owner = file.From;
+                        companies.Add(readcompany);
                     }
                 }
 
@@ -346,6 +348,8 @@ namespace Battlegrounds.Online.Services {
             if (ownCompany == null) {
                 operationCancelled?.Invoke("Failed to load own company!");
                 return;
+            } else {
+                ownCompany.Owner = BattlegroundsInstance.LocalSteamuser.Name;
             }
 
             (List<Company> lobbyCompanies, bool success) = await GetLobbyCompanies();

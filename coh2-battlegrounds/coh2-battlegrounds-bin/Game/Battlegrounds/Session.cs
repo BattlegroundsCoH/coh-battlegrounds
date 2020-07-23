@@ -9,6 +9,7 @@ using Battlegrounds.Game.Database;
 
 using static Battlegrounds.Game.Battlegrounds.SessionParticipantTeam;
 using Battlegrounds.Functional;
+using System.Diagnostics;
 
 namespace Battlegrounds.Game.Battlegrounds {
     
@@ -182,12 +183,20 @@ namespace Battlegrounds.Game.Battlegrounds {
                 if (allCompanies[i].Army.IsAllied) {
 
                     int j = sessionInfo.Allies.IndexOf(x => x.GetName().CompareTo(allCompanies[i].Owner) == 0 && x.Difficulty == AIDifficulty.Human);
-                    sessionInfo.Allies[j] = new SessionParticipant(sessionInfo.Allies[j].UserDisplayname, allCompanies[i], TEAM_ALLIES, 0);
+                    if (j >= 0) {
+                        sessionInfo.Allies[j] = new SessionParticipant(sessionInfo.Allies[j].UserDisplayname, allCompanies[i], TEAM_ALLIES, 0);
+                    } else {
+                        Trace.WriteLine($"Failed to pair '{allCompanies[i].Name}' with a player...");
+                    }
 
                 } else {
 
                     int j = sessionInfo.Axis.IndexOf(x => x.GetName().CompareTo(allCompanies[i].Owner) == 0 && x.Difficulty == AIDifficulty.Human);
-                    sessionInfo.Axis[j] = new SessionParticipant(sessionInfo.Axis[j].UserDisplayname, allCompanies[i], TEAM_AXIS, 0);
+                    if (j >= 0) {
+                        sessionInfo.Axis[j] = new SessionParticipant(sessionInfo.Axis[j].UserDisplayname, allCompanies[i], TEAM_AXIS, 0);
+                    } else {
+                        Trace.WriteLine($"Failed to pair '{allCompanies[i].Name}' with a player...");
+                    }
 
                 }
 
