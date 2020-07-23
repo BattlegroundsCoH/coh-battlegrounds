@@ -81,7 +81,8 @@ namespace Battlegrounds.Game.Battlegrounds {
         /// <summary>
         /// New empty <see cref="Company"/> instance.
         /// </summary>
-        internal Company() {
+        [Obsolete("Please use the CompanyBuilder to create a company")]
+        public Company() {
             this.m_squads = new List<Squad>();
             this.m_inventory = new List<Blueprint>();
             this.m_companyType = CompanyType.Unspecified;

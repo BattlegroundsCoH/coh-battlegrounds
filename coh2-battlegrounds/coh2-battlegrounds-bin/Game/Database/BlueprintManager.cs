@@ -232,8 +232,14 @@ namespace Battlegrounds.Game.Database {
         /// <exception cref="ArgumentOutOfRangeException"/>
         /// <exception cref="OverflowException"/>
         /// <exception cref="FormatException"/>
-        public static IJsonObject JsonDereference(string jsonReference) 
-            => FromPbgId(ushort.Parse(jsonReference.Substring(4)), (BlueprintType)Enum.Parse(typeof(BlueprintType), jsonReference.Substring(0, 3)));
+        public static IJsonObject JsonDereference(string jsonReference) {
+            BlueprintType type = (BlueprintType)Enum.Parse(typeof(BlueprintType), jsonReference.Substring(0, 3));
+            if (ushort.TryParse(jsonReference.Substring(4), out ushort result)) {
+                return FromPbgId(result, type);
+            } else {
+                return FromBlueprintName(jsonReference.Substring(4), type);
+            }
+        }
     }
 
 }
