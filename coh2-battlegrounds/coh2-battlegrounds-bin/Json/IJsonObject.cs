@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -136,7 +137,9 @@ namespace Battlegrounds.Json {
                     if (col.Count == 0) {
                         return;
                     }
-                } catch { }
+                } catch (Exception e) {
+                    Trace.WriteLine(e);
+                }
             }
             if (type.IsPrimitive || val is string) {
                 jsonbuilder.AppendLine($"\"{name}\": \"{val}\"{((appendComma)?",":"")}");

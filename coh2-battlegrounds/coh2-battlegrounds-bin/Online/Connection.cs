@@ -231,9 +231,17 @@ namespace Battlegrounds.Online {
                 throw new ArgumentOutOfRangeException($"Attempt to send file of size {len / 1000.0 / 1000.0} MB, this is not allowed!. Only files smaller than 64MB can be sent.");
             }
 
+            byte[] data = null;
+            if (File.Exists(filepath)) {
+                data = File.ReadAllBytes(filepath);
+            } else {
+                data = new byte[0];
+                Trace.WriteLine($"The file @ \"{filepath}\" does not exist");
+            }
+
             Message message = new Message(Message_Type.LOBBY_SENDFILE, Path.GetFileName(filepath), arg2) {
                 Identifier = identifier,
-                FileData = File.ReadAllBytes(filepath)
+                FileData = data
             };
             Message.SetIdentifier(this.m_socket, message);
 

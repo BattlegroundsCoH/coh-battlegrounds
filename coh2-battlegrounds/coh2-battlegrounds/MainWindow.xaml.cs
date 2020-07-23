@@ -58,7 +58,6 @@ namespace coh2_battlegrounds
             this.m_allPlayers = new List<string>();
 
             GetLobbyList();
-
         }
 
         public void GetLobbyList()
@@ -91,11 +90,8 @@ namespace coh2_battlegrounds
 
             if (LobbyList.SelectedItem is Lobby lobby)
             {
-                //if (lobby._lobbyPasswordProtected == true)
-                //{
-                //     show dialog
+                //TODO: Password check 
 
-                //}
                 string lobbyToJoin = lobby._lobbyGuid;
                 ManagedLobby.Join(hub, lobbyToJoin, String.Empty, ServerMessageHandler.OnServerResponse);
 
