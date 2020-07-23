@@ -1,6 +1,7 @@
 ﻿using Battlegrounds;
 using Battlegrounds.Online.Services;
 using Battlegrounds.Steam;
+using Battlegrounds.Game.Database;
 using BattlegroundsApp;
 using System;
 using System.Collections.Generic;
@@ -37,6 +38,9 @@ namespace coh2_battlegrounds
         {
 
             Instance = this;
+
+            // Load the database(s)
+            DatabaseManager.LoadAllDatabases(null);
 
             InitializeComponent();
 
@@ -201,7 +205,8 @@ namespace coh2_battlegrounds
                 LobbyTeam1.Items.Add(_user);
             } else {
                 LobbyTeam2.Items.Add(_user);
-            }
+            }
+
         }
 
         internal void RemovePlayer(string _user)
