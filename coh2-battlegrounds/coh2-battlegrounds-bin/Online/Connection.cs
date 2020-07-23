@@ -152,8 +152,11 @@ namespace Battlegrounds.Online {
         public void Stop() {
 
             this.m_isOpen = false;
-            this.m_processThread.Abort();
-            
+
+            try {
+                this.m_processThread.Abort();
+            } catch { }
+
             if (this.m_socket != null) {
                 
                 this.m_socket.Shutdown(SocketShutdown.Both);
