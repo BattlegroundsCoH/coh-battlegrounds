@@ -157,6 +157,10 @@ namespace coh2_battlegrounds
             LobbyView.Visibility = Visibility.Collapsed;
             GameBrowser.Visibility = Visibility.Visible;
             ClearLobby();
+            if (ServerMessageHandler.CurrentLobby != null) {
+                ServerMessageHandler.CurrentLobby.Leave();
+                ServerMessageHandler.CurrentLobby = null;
+            }
         }
 
         private void sendMessage_Click(object sender, RoutedEventArgs e)
@@ -170,6 +174,10 @@ namespace coh2_battlegrounds
             chatBox.ScrollToEnd();
 
             messageText.Clear();
+
+            // Send message to server (so other players can see)
+            ServerMessageHandler.CurrentLobby.SendChatMessage(messageContent);
+
         }
 
         private void ClearLobby()

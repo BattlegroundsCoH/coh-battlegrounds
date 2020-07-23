@@ -22,7 +22,7 @@ namespace BattlegroundsApp
         private static void OnPlayerEvent(ManagedLobbyPlayerEventType type, string from, string message)
         {
             var mainWindow = MainWindow.Instance;
-
+            Console.WriteLine(type + ": " + from + " " + message);
             switch (type)
             {
                 case ManagedLobbyPlayerEventType.Join:
