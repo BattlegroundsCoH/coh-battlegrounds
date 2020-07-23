@@ -126,7 +126,7 @@ namespace coh2_battlegrounds
             m_allPlayers.AddRange(await ServerMessageHandler.CurrentLobby.GetPlayerNamesAsync());
 
             // Get max capacity
-            int maxCapacity = await ServerMessageHandler.CurrentLobby.GetLobbyCapacityAsync();
+            /*int maxCapacity = await ServerMessageHandler.CurrentLobby.GetLobbyCapacityAsync();
 
             for (int i = 0; i < maxCapacity; i++)
             {
@@ -140,7 +140,7 @@ namespace coh2_battlegrounds
                     this.Dispatcher.Invoke(() => { this.AddPlayer(x, i); } );
                 });
 
-            }
+            }*/
                 
         }
 
