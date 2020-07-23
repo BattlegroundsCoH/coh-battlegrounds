@@ -31,7 +31,7 @@ namespace coh2_battlegrounds
 
         private List<string> m_allPlayers;
 
-        public SteamUser user;
+        public SteamUser user; // TODO: Replace all references to this with BattlegroundsInstance.LocalSteamuser
         private LobbyHub hub;
 
         public MainWindow()
@@ -39,12 +39,15 @@ namespace coh2_battlegrounds
 
             Instance = this;
 
+            // Create local BG instance and find user
+            BattlegroundsInstance.LoadInstance();
+            this.user = BattlegroundsInstance.LocalSteamuser = SteamUser.FromLocalInstall();
+
             // Load the database(s)
             DatabaseManager.LoadAllDatabases(null);
 
             InitializeComponent();
 
-            // Create (find) user first
             this.user = SteamUser.FromLocalInstall();
 
             // Then create lobby and assign user
