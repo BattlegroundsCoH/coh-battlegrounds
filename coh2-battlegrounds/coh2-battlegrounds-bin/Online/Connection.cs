@@ -226,14 +226,17 @@ namespace Battlegrounds.Online {
         /// <returns>The identifier used to send the file.</returns>
         public int SendFile(string arg2, string filepath, int identifier = -1) {
 
-            long len = new FileInfo(filepath).Length;
-            if (len >= 64000000) {
-                throw new ArgumentOutOfRangeException($"Attempt to send file of size {len / 1000.0 / 1000.0} MB, this is not allowed!. Only files smaller than 64MB can be sent.");
-            }
+            byte[] data;
 
-            byte[] data = null;
             if (File.Exists(filepath)) {
+
+                long len = new FileInfo(filepath).Length;
+                if (len >= 64000000) {
+                    throw new ArgumentOutOfRangeException($"Attempt to send file of size {len / 1000.0 / 1000.0} MB, this is not allowed!. Only files smaller than 64MB can be sent.");
+                }
+
                 data = File.ReadAllBytes(filepath);
+
             } else {
                 data = new byte[0];
                 Trace.WriteLine($"The file @ \"{filepath}\" does not exist");
