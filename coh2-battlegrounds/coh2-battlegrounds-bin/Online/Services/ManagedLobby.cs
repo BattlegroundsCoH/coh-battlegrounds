@@ -134,7 +134,13 @@ namespace Battlegrounds.Online.Services {
         /// <param name="response"></param>
         public void GetLobbyCapacity(Action<int> response) {
             if (m_underlyingConnection != null && m_underlyingConnection.IsConnected) {
-                this.GetLobbyInformation("capacity", (a, b) => response.Invoke(int.Parse(a)));
+                this.GetLobbyInformation("capacity", (a, b) => {
+                    if (int.TryParse(a, out int c)) {
+                        response.Invoke(c);
+                    } else {
+                        response.Invoke(-1);
+                    }
+                });
             }
         }
 
