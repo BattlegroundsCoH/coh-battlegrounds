@@ -64,7 +64,7 @@ namespace Battlegrounds.Json {
                     } else {
 
                         // Invoke add method where value is changed
-                        addMethod.Invoke(enumerable, new object[] { Convert.ChangeType(elem, objType) });
+                        addMethod.Invoke(enumerable, new object[] { Convert.ChangeType(elem, objType, IJsonObject.JsonStandardFormatter) });
 
                     }
 
