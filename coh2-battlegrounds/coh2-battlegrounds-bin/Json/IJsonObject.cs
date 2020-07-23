@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using Battlegrounds.Util;
@@ -10,6 +11,8 @@ namespace Battlegrounds.Json {
     /// Json interface for converting object to and from a Json object. Implements <see cref="IJsonElement"/>.
     /// </summary>
     public interface IJsonObject : IJsonElement {
+
+        public static IFormatProvider JsonStandardFormatter = new CultureInfo("en-GB");
 
         private struct JsonAttributeSet {
             private JsonIgnoreIfValueAttribute IgnoreIfValueAttribute;
@@ -282,7 +285,7 @@ namespace Battlegrounds.Json {
                     if (eAttrib is null) {
 
                         // Set value
-                        setValueMethod.Invoke(instance, Convert.ChangeType(value, valueType));
+                        setValueMethod.Invoke(instance, Convert.ChangeType(value, valueType, JsonStandardFormatter));
 
                     } else {
 
