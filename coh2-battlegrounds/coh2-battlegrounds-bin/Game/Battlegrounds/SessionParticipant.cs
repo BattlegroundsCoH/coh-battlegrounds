@@ -72,9 +72,6 @@ namespace Battlegrounds.Game.Battlegrounds {
         /// <exception cref="ArgumentNullException"/>
         public SessionParticipant(SteamUser user, Company company, SessionParticipantTeam tIndex, byte pIndex) {
 
-            if (company is null)
-                throw new ArgumentNullException();
-
             this.UserDisplayname = user.Name;
             this.IsHumanParticipant = true;
             this.ParticipantCompany = company;
@@ -91,9 +88,6 @@ namespace Battlegrounds.Game.Battlegrounds {
         /// <param name="tIndex"></param>
         /// <param name="pIndex"></param>
         public SessionParticipant(string user, Company company, SessionParticipantTeam tIndex, byte pIndex) {
-
-            if (company is null)
-                throw new ArgumentNullException();
 
             this.UserDisplayname = user;
             this.IsHumanParticipant = true;
@@ -115,11 +109,8 @@ namespace Battlegrounds.Game.Battlegrounds {
         /// <exception cref="ArgumentException"/>
         public SessionParticipant(AIDifficulty difficulty, Company company, SessionParticipantTeam tIndex, byte pIndex) {
 
-            if (company is null)
-                throw new ArgumentNullException();
-
             if (difficulty == AIDifficulty.Human)
-                throw new ArgumentException();
+                throw new ArgumentException("Attempted to create AI participant with human settings!");
 
             this.UserDisplayname = string.Empty;
             this.IsHumanParticipant = false;

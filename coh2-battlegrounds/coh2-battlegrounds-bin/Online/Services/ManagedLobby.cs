@@ -374,6 +374,10 @@ namespace Battlegrounds.Online.Services {
                     operationCancelled?.Invoke(e.Message);
                 }
 
+                if (session is null) {
+                    operationCancelled?.Invoke("Failed to create session");
+                }
+
                 // Play the session
                 SessionManager.PlaySession<SessionCompiler<CompanyCompiler>, CompanyCompiler>(
                     session,

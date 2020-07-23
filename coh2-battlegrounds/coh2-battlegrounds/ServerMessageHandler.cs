@@ -8,67 +8,63 @@ using System;
 using System.IO;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.IO;
 using System.Linq;
 using System.Text;
 using System.Windows;
 
-namespace BattlegroundsApp
-{
-    internal static class ServerMessageHandler
-    {
+namespace BattlegroundsApp {
+
+    internal static class ServerMessageHandler {
 
         private static ManagedLobby __LobbyInstance;
 
         public static ManagedLobby CurrentLobby => __LobbyInstance;
 
-        private static void OnPlayerEvent(ManagedLobbyPlayerEventType type, string from, string message)
-        {
+        private static void OnPlayerEvent(ManagedLobbyPlayerEventType type, string from, string message) {
             var mainWindow = MainWindow.Instance;
             Trace.WriteLine(type + ": " + from + " " + message);
-            mainWindow.Dispatcher.Invoke(() =>
-            {
-                switch (type)     {
-                        case ManagedLobbyPlayerEventType.Join:     {
-                                string joinMessage = $"[Lobby] {from} has joined.\n";
-                                mainWindow.chatBox.Text = mainWindow.chatBox.Text + joinMessage;
+            mainWindow.Dispatcher.Invoke(() => {
+                switch (type) {
+                    case ManagedLobbyPlayerEventType.Join: {
+                            string joinMessage = $"[Lobby] {from} has joined.\n";
+                            mainWindow.chatBox.Text = mainWindow.chatBox.Text + joinMessage;
 
-                                mainWindow.AddPlayer(from);
+                            mainWindow.AddPlayer(from);
 
-                                break;
-                            }
-                        case ManagedLobbyPlayerEventType.Leave:     {
-                                string leaveMessage = $"[Lobby] {from} has left.\n";
-                                mainWindow.chatBox.Text = mainWindow.chatBox.Text + leaveMessage;
+                            break;
+                        }
+                    case ManagedLobbyPlayerEventType.Leave: {
+                            string leaveMessage = $"[Lobby] {from} has left.\n";
+                            mainWindow.chatBox.Text = mainWindow.chatBox.Text + leaveMessage;
 
-                                mainWindow.RemovePlayer(from);
+                            mainWindow.RemovePlayer(from);
 
-                                break;
-                            }
-                        case ManagedLobbyPlayerEventType.Kicked:     {
-                                string kickMessage = $"[Lobby] {from} has been kicked.\n";
-                                mainWindow.chatBox.Text = mainWindow.chatBox.Text + kickMessage;
+                            break;
+                        }
+                    case ManagedLobbyPlayerEventType.Kicked: {
+                            string kickMessage = $"[Lobby] {from} has been kicked.\n";
+                            mainWindow.chatBox.Text = mainWindow.chatBox.Text + kickMessage;
 
-                                mainWindow.RemovePlayer(from);
+                            mainWindow.RemovePlayer(from);
 
-                                break;
-                            }
-                        case ManagedLobbyPlayerEventType.Message:     {
-                                string messageMessage = $"{from}: {message}\n";
-                                mainWindow.chatBox.Text = mainWindow.chatBox.Text + messageMessage;
+                            break;
+                        }
+                    case ManagedLobbyPlayerEventType.Message: {
+                            string messageMessage = $"{from}: {message}\n";
+                            mainWindow.chatBox.Text = mainWindow.chatBox.Text + messageMessage;
 
-                                break;
-                            }
-                        case ManagedLobbyPlayerEventType.Meta:     {
-                                string metaMessage = $"{from}: {message}";
-                                Console.WriteLine(metaMessage);
-                                break;
-                            }
-                        default:     {
-                                Console.WriteLine("Something went wrong.");
-                                break;
-                            }
-                    }
+                            break;
+                        }
+                    case ManagedLobbyPlayerEventType.Meta: {
+                            string metaMessage = $"{from}: {message}";
+                            Console.WriteLine(metaMessage);
+                            break;
+                        }
+                    default: {
+                            Console.WriteLine("Something went wrong.");
+                            break;
+                        }
+                }
             });
         }
 
@@ -82,10 +78,10 @@ namespace BattlegroundsApp
                     SelectedGamemodeOption = 1,
                     SelectedScenario = ScenarioList.FromFilename("2p_angoville_farms"),
                     SelectedTuningMod = new BattlegroundsTuning(),
-                    Allies = new SessionParticipant[] { new SessionParticipant(BattlegroundsInstance.LocalSteamuser, null, 0, 0) }, // Should not be using LocalSteamuser here, will have to figure something out
-                    Axis = new SessionParticipant[] { new SessionParticipant(BattlegroundsInstance.LocalSteamuser, null, 0, 0) },
+                    Allies = new SessionParticipant[] { new SessionParticipant("CoDiEx", null, 0, 0) }, // We'll have to solve this later
+                    Axis = new SessionParticipant[] { new SessionParticipant("Ragnar", null, 0, 0) },
                     FillAI = false,
-                    DefaultDifficulty = Battlegrounds.Game.AIDifficulty.AI_Hard,
+                    DefaultDifficulty = AIDifficulty.AI_Hard,
                 };
             } else {
                 return null;
@@ -135,8 +131,7 @@ namespace BattlegroundsApp
 
         }
 
-        public static void OnServerResponse(ManagedLobbyStatus status, ManagedLobby result)
-        {
+        public static void OnServerResponse(ManagedLobbyStatus status, ManagedLobby result) {
             if (status.Success) {
 
                 __LobbyInstance = result;
@@ -147,7 +142,7 @@ namespace BattlegroundsApp
                 __LobbyInstance.OnStartMatchReceived += StartMatchCommandReceived;
                 __LobbyInstance.OnFileReceived += OnFileReceived;
 
-                MainWindow.Instance.Dispatcher.Invoke(() => MainWindow.Instance.OnLobbyEnter(__LobbyInstance) );
+                MainWindow.Instance.Dispatcher.Invoke(() => MainWindow.Instance.OnLobbyEnter(__LobbyInstance));
 
                 Trace.WriteLine("Server responded with OK");
 

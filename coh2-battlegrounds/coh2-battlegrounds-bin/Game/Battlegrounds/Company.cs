@@ -260,6 +260,7 @@ namespace Battlegrounds.Game.Battlegrounds {
 #if RELEASE
                 throw new ChecksumViolationException();
 #else
+                File.WriteAllBytes("errCompanyData.json", jsonbytes);
                 return null;
 #endif
             }
