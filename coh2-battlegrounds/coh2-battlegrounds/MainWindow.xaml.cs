@@ -158,7 +158,7 @@ namespace coh2_battlegrounds
             GameBrowser.Visibility = Visibility.Visible;
             ClearLobby();
             if (ServerMessageHandler.CurrentLobby != null) {
-                ServerMessageHandler.CurrentLobby.Leave();
+                ServerMessageHandler.LeaveLobby();
             }
         }
 

@@ -1,9 +1,11 @@
 ﻿using Battlegrounds;
+using Battlegrounds.Game;
 using Battlegrounds.Game.Battlegrounds;
 using Battlegrounds.Game.Database;
 using Battlegrounds.Online.Services;
 using coh2_battlegrounds;
 using System;
+using System.IO;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -28,26 +30,26 @@ namespace BattlegroundsApp
             {
                 switch (type)     {
                         case ManagedLobbyPlayerEventType.Join:     {
-                                string joinMessage = $"[Lobby] {mainWindow.user.Name} has joined.\n";
+                                string joinMessage = $"[Lobby] {from} has joined.\n";
                                 mainWindow.chatBox.Text = mainWindow.chatBox.Text + joinMessage;
 
-                                mainWindow.AddPlayer(mainWindow.user.Name);
+                                mainWindow.AddPlayer(from);
 
                                 break;
                             }
                         case ManagedLobbyPlayerEventType.Leave:     {
-                                string leaveMessage = $"[Lobby] {mainWindow.user.Name} has left.\n";
+                                string leaveMessage = $"[Lobby] {from} has left.\n";
                                 mainWindow.chatBox.Text = mainWindow.chatBox.Text + leaveMessage;
 
-                                mainWindow.RemovePlayer(mainWindow.user.Name);
+                                mainWindow.RemovePlayer(from);
 
                                 break;
                             }
                         case ManagedLobbyPlayerEventType.Kicked:     {
-                                string kickMessage = $"[Lobby] {mainWindow.user.Name} has been kicked.\n";
+                                string kickMessage = $"[Lobby] {from} has been kicked.\n";
                                 mainWindow.chatBox.Text = mainWindow.chatBox.Text + kickMessage;
 
-                                mainWindow.RemovePlayer(mainWindow.user.Name);
+                                mainWindow.RemovePlayer(from);
 
                                 break;
                             }
@@ -97,6 +99,42 @@ namespace BattlegroundsApp
             }
         }
 
+        public static void StartMatchCommandReceived() {
+
+            // Statrt the game
+            if (!CoH2Launcher.Launch()) {
+                Trace.WriteLine("Failed to launch Company of Heroes 2...");
+            }
+
+        }
+
+        public static void OnFileReceived(string sender, string filename, bool received, byte[] content, int id) {
+
+            // Did we receive the battlegrounds .sga
+            if (received && filename.CompareTo("coh2_battlegrounds_wincondition.sga") == 0) {
+
+                // Path to the sga file we'll write to
+                string sgapath = $"{Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)}\\my games\\Company of Heroes 2\\mods\\gamemode\\coh2_battlegrounds_wincondition.sga";
+
+                // Delete file if it already exists
+                if (File.Exists(sgapath)) {
+                    File.Delete(sgapath);
+                }
+
+                // Write all byte content
+                File.WriteAllBytes(sgapath, content);
+
+                MainWindow.Instance.chatBox.Text += "[Lobby] Received wincondition from host.";
+
+                // Write a log message
+                Trace.WriteLine("Received and saved .sga");
+
+            } else {
+                // TODO: Handle other cases
+            }
+
+        }
+
         public static void OnServerResponse(ManagedLobbyStatus status, ManagedLobby result)
         {
             if (status.Success) {
@@ -106,6 +144,8 @@ namespace BattlegroundsApp
                 __LobbyInstance.OnPlayerEvent += OnPlayerEvent;
                 __LobbyInstance.OnLocalDataRequested += OnLocalDataRequest;
                 __LobbyInstance.OnDataRequest += OnDataRequest;
+                __LobbyInstance.OnStartMatchReceived += StartMatchCommandReceived;
+                __LobbyInstance.OnFileReceived += OnFileReceived;
 
                 MainWindow.Instance.Dispatcher.Invoke(() => MainWindow.Instance.OnLobbyEnter(__LobbyInstance) );
 
@@ -118,8 +158,8 @@ namespace BattlegroundsApp
 
         public static void LeaveLobby() {
             if (__LobbyInstance != null) {
-                __LobbyInstance.Leave();
-                __LobbyInstance = null;
+                __LobbyInstance.Leave(); // Async... will need a callback for this when done.
+                //__LobbyInstance = null;
             }
         }
 

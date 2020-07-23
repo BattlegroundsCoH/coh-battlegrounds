@@ -8,7 +8,7 @@
         Title="Battlegrounds" Height="450" Width="625" WindowStartupLocation="CenterScreen">
     <DockPanel>
 
-        <Grid x:Name="GameBrowser" Visibility="Collapsed" DockPanel.Dock="Top">
+        <Grid x:Name="GameBrowser" Visibility="Visible" DockPanel.Dock="Top">
 
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="20" />
@@ -54,7 +54,7 @@
             
         </Grid>
 
-        <Grid x:Name="LobbyView" Visibility="Visible" DockPanel.Dock="Top">
+        <Grid x:Name="LobbyView" Visibility="Collapsed" DockPanel.Dock="Top">
             
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="20" />

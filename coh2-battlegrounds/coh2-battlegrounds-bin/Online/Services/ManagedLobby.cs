@@ -246,7 +246,7 @@ namespace Battlegrounds.Online.Services {
             if (m_underlyingConnection != null) {
                 m_underlyingConnection.SendMessage(new Message(Message_Type.LOBBY_LEAVE));
                 m_underlyingConnection.Stop();
-                m_underlyingConnection = null;
+                //m_underlyingConnection = null;
             }
         }
 
