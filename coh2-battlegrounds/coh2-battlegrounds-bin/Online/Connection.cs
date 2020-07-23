@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Net.Sockets;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace Battlegrounds.Online {
     
@@ -17,6 +19,7 @@ namespace Battlegrounds.Online {
         volatile Dictionary<int, Action<Message>> m_identifierCallback;
         volatile Socket m_socket;
         volatile bool m_isOpen;
+        volatile bool m_isListening;
 
         /// <summary>
         /// The <see cref="Socket"/> the <see cref="Connection"/> instance is using.
@@ -51,6 +54,7 @@ namespace Battlegrounds.Online {
             this.m_isOpen = true;
             this.m_identifierCallback = new Dictionary<int, Action<Message>>();
             this.m_messageQueue = new Queue<Message>();
+            this.m_isListening = false;
 
             this.Start();
 
@@ -70,6 +74,7 @@ namespace Battlegrounds.Online {
             this.m_isOpen = startListening;
             this.m_identifierCallback = new Dictionary<int, Action<Message>>();
             this.m_messageQueue = new Queue<Message>();
+            this.m_isListening = false;
 
             if (m_isOpen) {
                 this.Start();
@@ -78,6 +83,7 @@ namespace Battlegrounds.Online {
         }
 
         private void MessageReceived(Socket source, Message message) {
+            this.m_isListening = false;
             if (this.m_identifierCallback?.ContainsKey(message.Identifier) ?? false) {
                 this.m_identifierCallback[message.Identifier].Invoke(message);
             } else {
@@ -96,20 +102,20 @@ namespace Battlegrounds.Online {
         }
 
         private void InternalProccessor() {
-            while (this.m_isOpen) {
-
+            while (this.m_isOpen || this.m_messageQueue.Count > 0) {
                 if (this.m_messageQueue.Count > 0) {
 
                     Message topMessage = this.m_messageQueue.Dequeue();
 
                     lock (this.m_socket) {
                         this.m_socket.SendAll(topMessage.ToBytes());
+                        Trace.WriteLine($"Sent: [{topMessage}]");
                     }
 
-                    Thread.Sleep(50);
+                    Thread.Sleep(10);
 
                 } else {
-                    Thread.Sleep(100);
+                    Thread.Sleep(15);
                 }
 
             }
@@ -118,8 +124,12 @@ namespace Battlegrounds.Online {
         /// <summary>
         /// Start listening for <see cref="Message"/> data.
         /// </summary>
-        public void Listen()
-            => MessageSender.WaitForMessage(this.m_socket, this.MessageReceived);
+        public void Listen() {
+            if (!m_isListening) {
+                MessageSender.WaitForMessage(this.m_socket, this.MessageReceived);
+                m_isListening = true;
+            }
+        }
 
         /// <summary>
         /// Enqueue a <see cref="Message"/> to be send as soon as possible.
@@ -138,6 +148,7 @@ namespace Battlegrounds.Online {
             this.m_isOpen = true;
             this.m_processThread = new Thread(this.InternalProccessor);
             this.m_processThread.Start();
+            this.m_isListening = false; // reset in next func call
             this.Listen();
         }
 
@@ -152,16 +163,18 @@ namespace Battlegrounds.Online {
         public void Stop() {
 
             this.m_isOpen = false;
-
-            try {
-                this.m_processThread.Abort();
-            } catch { }
+            this.m_isListening = false;
 
             if (this.m_socket != null) {
-                
-                this.m_socket.Shutdown(SocketShutdown.Both);
-                this.m_socket.Close();
-                this.m_socket = null;
+
+                Task.Run(async () => { 
+                    while (this.m_processThread.IsAlive) {
+                        await Task.Delay(1);
+                    }
+                    this.m_socket.Shutdown(SocketShutdown.Both);
+                    this.m_socket.Close();
+                    this.m_socket = null;
+                });
 
             }
 

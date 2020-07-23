@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Net.Sockets;
 using System.Threading.Tasks;
@@ -260,6 +261,7 @@ namespace Battlegrounds.Online.Services {
             bool alldone = false;
 
             void OnMessage(Message response) {
+                Trace.WriteLine(response);
                 if (response.Descriptor == Message_Type.LOBBY_PLAYERNAMES) {
                     playernames = response.Argument1.Split(';', StringSplitOptions.RemoveEmptyEntries).ForEach(x => x.Replace("\"", ""));
                 }
@@ -297,9 +299,12 @@ namespace Battlegrounds.Online.Services {
             return null;
         }
 
-        private (List<Company>, bool) GetLobbyCompanies() {
+        private async Task<(List<Company>, bool)> GetLobbyCompanies() {
 
             FileSync sync = new FileSync(this, new Message(Message_Type.LOBBY_REQUEST_COMPANY, SEND_ALL));
+
+            await sync.Sync();
+
             if (sync.IsSynced) {
 
                 List<Company> companies = new List<Company>();
@@ -321,7 +326,7 @@ namespace Battlegrounds.Online.Services {
         /// </summary>
         /// <remarks>The method is synchronous and make take several minutes to complete. (Use in a <see cref="Task.Run(Action)"/> context to maintain responsiveness).</remarks>
         /// <param name="operationCancelled">The <see cref="Action{T}"/> invoked if the execution of the method is cancelled. The <see cref="string"/> argument describes what caused the cancellation.</param>
-        public void CompileAndStartMatch(Action<string> operationCancelled) {
+        public async void CompileAndStartMatch(Action<string> operationCancelled) {
 
             // Make sure we're the host
             if (!m_isHost) {
@@ -334,7 +339,7 @@ namespace Battlegrounds.Online.Services {
                 return;
             }
 
-            (List<Company> lobbyCompanies, bool success) = GetLobbyCompanies();
+            (List<Company> lobbyCompanies, bool success) = await GetLobbyCompanies();
 
             if (success) {
 
@@ -365,7 +370,7 @@ namespace Battlegrounds.Online.Services {
                     session,
                     this.ManagedLobbyInternal_GameSessionStatusChanged,
                     this.ManagedLobbyInternal_GameMatchAnalyzed,
-                    async () => await Task.Run(() => this.ManagedLobbyInternal_GameOnGamemodeCompiled(operationCancelled)));
+                    async () => await this.ManagedLobbyInternal_GameOnGamemodeCompiled(operationCancelled));
 
             } else {
                 operationCancelled?.Invoke("Failed to get lobby companies");
@@ -373,13 +378,16 @@ namespace Battlegrounds.Online.Services {
 
         }
 
-        bool ManagedLobbyInternal_GameOnGamemodeCompiled(Action<string> operationCancelled) {
+        async Task<bool> ManagedLobbyInternal_GameOnGamemodeCompiled(Action<string> operationCancelled) {
 
             string sgapath = $"{Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)}\\my games\\Company of Heroes 2\\mods\\gamemode\\coh2_battlegrounds_wincondition.sga";
 
             if (File.Exists(sgapath)) {
 
                 FileSync sgaSync = new FileSync(this, sgapath);
+
+                await sgaSync.Sync();
+
                 if (sgaSync.SyncFailed) {
                     operationCancelled?.Invoke("Failed send .sga to all participants.");
                     return false;

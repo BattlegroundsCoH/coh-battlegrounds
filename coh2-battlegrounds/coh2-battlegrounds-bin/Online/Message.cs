@@ -232,6 +232,8 @@ namespace Battlegrounds.Online {
                 DateTime.UtcNow.TimeOfDay.ToString() + 
                 Guid.NewGuid().ToString()).Aggregate(0, (a, b) => a += b);
 
+        public override string ToString() => $"{this.Descriptor}: \"{this.Argument1}\" : \"{this.Argument2}\"";
+
     }
 
     public static class MessageListExtension {

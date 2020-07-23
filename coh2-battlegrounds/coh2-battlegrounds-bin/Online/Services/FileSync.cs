@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace Battlegrounds.Online.Services {
     
@@ -26,6 +27,7 @@ namespace Battlegrounds.Online.Services {
 
         List<SyncFile> m_syncedFiledata;
         List<FileSyncUserState> m_syncStates;
+        Func<Task<bool>> m_action;
         ManagedLobby m_lobbySync;
         bool m_isDone;
         bool m_syncFailed;
@@ -66,8 +68,11 @@ namespace Battlegrounds.Online.Services {
             this.m_syncFailed = false;
             this.m_lobbySync = lobby;
 
-            this.SetupUsers();
-            this.SyncSend(fileToSync);
+            this.m_action = async () => {
+                await this.SetupUsers();
+                await this.SyncSend(fileToSync);
+                return true;
+            };
 
         }
 
@@ -82,15 +87,23 @@ namespace Battlegrounds.Online.Services {
             this.m_syncFailed = false;
             this.m_lobbySync = lobby;
             this.m_syncedFiledata = new List<SyncFile>();
-            this.SetupUsers();
 
-            this.SyncGet(getterMessage);
+            this.m_action = async () => {
+                await this.SetupUsers();
+                await this.SyncGet(getterMessage);
+                return true;
+            };
 
         }
 
-        private void SetupUsers() {
+        public async Task<bool> Sync() {
+            bool result = await this.m_action.Invoke();
+            return result; // TODO: Timeout stuff
+        }
 
-            string[] playernames = this.m_lobbySync.GetPlayerNames();
+        private async Task<bool> SetupUsers() {
+
+            string[] playernames = await this.m_lobbySync.GetPlayerNamesAsync();
             m_syncStates = new List<FileSyncUserState>();
 
             for (int i = 0; i < playernames.Length; i++) {
@@ -100,9 +113,11 @@ namespace Battlegrounds.Online.Services {
                 });
             }
 
+            return true;
+
         }
 
-        private void SyncGet(Message getterMessage) {
+        private async Task<bool> SyncGet(Message getterMessage) {
 
             DateTime start = DateTime.Now;
 
@@ -153,14 +168,16 @@ namespace Battlegrounds.Online.Services {
                     }
 
                 }
-
+                await Task.Delay(1);
             }
 
             this.m_lobbySync.WorkerConnection.ClearIdentifierReceiver(lookForIdentifier);
 
+            return true;
+
         }
 
-        private void SyncSend(string file) {
+        private async Task<bool> SyncSend(string file) {
 
             DateTime start = DateTime.Now;
 
@@ -204,10 +221,12 @@ namespace Battlegrounds.Online.Services {
                     }
 
                 }
-
+                await Task.Delay(1);
             }
 
             this.m_lobbySync.WorkerConnection.ClearIdentifierReceiver(lookForIdentifier);
+
+            return true;
 
         }
 
