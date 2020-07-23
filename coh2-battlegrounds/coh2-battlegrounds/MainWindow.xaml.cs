@@ -159,7 +159,7 @@ namespace coh2_battlegrounds
             ClearLobby();
             if (ServerMessageHandler.CurrentLobby != null) {
                 ServerMessageHandler.CurrentLobby.Leave();
-                ServerMessageHandler.CurrentLobby = null;
+                //ServerMessageHandler.CurrentLobby = null;
             }
         }
 

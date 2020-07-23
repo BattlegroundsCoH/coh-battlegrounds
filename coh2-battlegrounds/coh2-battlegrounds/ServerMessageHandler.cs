@@ -117,5 +117,14 @@ namespace BattlegroundsApp
                 Console.WriteLine(status.Message);
             }
         }
+
+        public static void LeaveLobby() {
+            if (__LobbyInstance != null) {
+                __LobbyInstance.Leave();
+                __LobbyInstance = null;
+            }
+        }
+
     }
+
 }
