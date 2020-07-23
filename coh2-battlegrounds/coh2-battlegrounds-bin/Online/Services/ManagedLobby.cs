@@ -288,14 +288,12 @@ namespace Battlegrounds.Online.Services {
             => this.GetPlayerNamesAsync().Result;
 
         private Company GetLocalCompany() {
-            try {
-                object val = this.OnLocalDataRequested?.Invoke("CompanyData");
-                if (val is Company c) {
-                    return c;
-                } else if (val is string s) {
-                    return Company.ReadCompanyFromFile(s);
-                }
-            } catch {}
+            object val = this.OnLocalDataRequested?.Invoke("CompanyData");
+            if (val is Company c) {
+                return c;
+            } else if (val is string s) {
+                return Company.ReadCompanyFromFile(s);
+            }
             return null;
         }
 
