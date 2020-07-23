@@ -5,6 +5,7 @@ using Battlegrounds.Online.Services;
 using coh2_battlegrounds;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -22,55 +23,51 @@ namespace BattlegroundsApp
         private static void OnPlayerEvent(ManagedLobbyPlayerEventType type, string from, string message)
         {
             var mainWindow = MainWindow.Instance;
-            Console.WriteLine(type + ": " + from + " " + message);
-            switch (type)
+            Trace.WriteLine(type + ": " + from + " " + message);
+            mainWindow.Dispatcher.Invoke(() =>
             {
-                case ManagedLobbyPlayerEventType.Join:
-                    {
-                        string joinMessage = $"[Lobby] {mainWindow.user.Name} has joined.\n";
-                        mainWindow.chatBox.Text = mainWindow.chatBox.Text + joinMessage;
+                switch (type)     {
+                        case ManagedLobbyPlayerEventType.Join:     {
+                                string joinMessage = $"[Lobby] {mainWindow.user.Name} has joined.\n";
+                                mainWindow.chatBox.Text = mainWindow.chatBox.Text + joinMessage;
 
-                        mainWindow.AddPlayer(mainWindow.user.Name);
+                                mainWindow.AddPlayer(mainWindow.user.Name);
 
-                        break;
+                                break;
+                            }
+                        case ManagedLobbyPlayerEventType.Leave:     {
+                                string leaveMessage = $"[Lobby] {mainWindow.user.Name} has left.\n";
+                                mainWindow.chatBox.Text = mainWindow.chatBox.Text + leaveMessage;
+
+                                mainWindow.RemovePlayer(mainWindow.user.Name);
+
+                                break;
+                            }
+                        case ManagedLobbyPlayerEventType.Kicked:     {
+                                string kickMessage = $"[Lobby] {mainWindow.user.Name} has been kicked.\n";
+                                mainWindow.chatBox.Text = mainWindow.chatBox.Text + kickMessage;
+
+                                mainWindow.RemovePlayer(mainWindow.user.Name);
+
+                                break;
+                            }
+                        case ManagedLobbyPlayerEventType.Message:     {
+                                string messageMessage = $"{from}: {message}\n";
+                                mainWindow.chatBox.Text = mainWindow.chatBox.Text + messageMessage;
+
+                                break;
+                            }
+                        case ManagedLobbyPlayerEventType.Meta:     {
+                                string metaMessage = $"{from}: {message}";
+                                Console.WriteLine(metaMessage);
+                                break;
+                            }
+                        default:     {
+                                Console.WriteLine("Something went wrong.");
+                                break;
+                            }
                     }
-                case ManagedLobbyPlayerEventType.Leave:
-                    {
-                        string leaveMessage = $"[Lobby] {mainWindow.user.Name} has left.\n";
-                        mainWindow.chatBox.Text = mainWindow.chatBox.Text + leaveMessage;
-
-                        mainWindow.RemovePlayer(mainWindow.user.Name);
-
-                        break;
-                    }
-                case ManagedLobbyPlayerEventType.Kicked:
-                    {
-                        string kickMessage = $"[Lobby] {mainWindow.user.Name} has been kicked.\n";
-                        mainWindow.chatBox.Text = mainWindow.chatBox.Text + kickMessage;
-
-                        mainWindow.RemovePlayer(mainWindow.user.Name);
-
-                        break;
-                    }
-                case ManagedLobbyPlayerEventType.Message:
-                    {
-                        string messageMessage = $"{from}: {message}\n";
-                        mainWindow.chatBox.Text = mainWindow.chatBox.Text + messageMessage;
-
-                        break;
-                    }
-                case ManagedLobbyPlayerEventType.Meta:
-                    {
-                        string metaMessage = $"{from}: {message}";
-                        Console.WriteLine(metaMessage);
-                        break;
-                    }
-                default:
-                    {
-                        Console.WriteLine("Something went wrong.");
-                        break;
-                    }
-            }
+            });
         }
 
         public static object OnLocalDataRequest(string type) {
@@ -106,15 +103,16 @@ namespace BattlegroundsApp
 
                 __LobbyInstance = result;
 
-                MainWindow.Instance.Dispatcher.Invoke(() => MainWindow.Instance.OnLobbyEnter(result) );
-
                 __LobbyInstance.OnPlayerEvent += OnPlayerEvent;
-
                 __LobbyInstance.OnLocalDataRequested += OnLocalDataRequest;
                 __LobbyInstance.OnDataRequest += OnDataRequest;
 
+                MainWindow.Instance.Dispatcher.Invoke(() => MainWindow.Instance.OnLobbyEnter(__LobbyInstance) );
+
+                Trace.WriteLine("Server responded with OK");
+
             } else {
-                Console.WriteLine(status.Message);
+                Trace.WriteLine(status.Message);
             }
         }
 
