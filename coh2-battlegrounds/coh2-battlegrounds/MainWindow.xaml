@@ -8,7 +8,7 @@
         Title="Battlegrounds" Height="450" Width="625" WindowStartupLocation="CenterScreen">
     <DockPanel>
 
-        <Grid x:Name="GameBrowser" Visibility="Visible" DockPanel.Dock="Top">
+        <Grid x:Name="GameBrowser" Visibility="Collapsed" DockPanel.Dock="Top">
 
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="20" />
@@ -34,7 +34,7 @@
                        FontFamily="Segoe UI" Text="Game Browser"/>
 
             <ListView x:Name="LobbyList" Grid.Column="1" Grid.Row="2"
-                      Width="521" Height="296">
+                      Width="521" Height="296" SelectionMode="Single">
                 <ListView.View>
                     <GridView>
                         <GridViewColumn Header="Name" DisplayMemberBinding="{Binding _lobbyName}" Width="455" />
@@ -47,14 +47,14 @@
                     Click="hostGame_Click"/>
 
             <Button x:Name="JoinLobbyButton" Content="Join Lobby" Grid.Column="1" Grid.Row="4"
-                    Click="joinLobby_Click" IsEnabled="False" />
+                    Click="joinLobby_Click" IsEnabled="True"/>
 
             <Button x:Name="RefreshLobbyListButton" Content="Refresh" Grid.Column="1" Grid.Row="5"
                     Click="refreshLobbyList_Click"/>
             
         </Grid>
 
-        <Grid x:Name="LobbyView" Visibility="Collapsed" DockPanel.Dock="Top">
+        <Grid x:Name="LobbyView" Visibility="Visible" DockPanel.Dock="Top">
             
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="20" />
@@ -76,6 +76,7 @@
                 <RowDefinition Height="auto" />
                 <RowDefinition Height="auto" />
                 <RowDefinition Height="auto" />
+                <RowDefinition Height="auto" />
                 <RowDefinition Height="*" />
                 <RowDefinition Height="20" />
             </Grid.RowDefinitions>
@@ -87,7 +88,7 @@
                        FontFamily="Segoe UI" Text="Team 1"/>
 
             <ListView x:Name="LobbyTeam1" Grid.Column="1" Grid.Row="3" Grid.ColumnSpan="3"
-                      Height="125" Width="200">
+                      Height="125" Width="200" SelectionMode="Single">
                 <ListView.View>
                     <GridView>
                         <GridViewColumn Header="Player"/>
@@ -99,7 +100,7 @@
                        FontFamily="Segoe UI" Text="Team 2"/>
 
             <ListView x:Name="LobbyTeam2" Grid.Column="1" Grid.Row="5" Grid.ColumnSpan="3"
-                      Height="125" Width="200">
+                      Height="125" Width="200" SelectionMode="Single">
                 <ListView.View>
                     <GridView>
                         <GridViewColumn Header="Player"/>
@@ -107,7 +108,13 @@
                 </ListView.View>
             </ListView>
 
-            <Button x:Name="LeaveLobbyButton" Content="Leave Lobby" Grid.Column="1" Grid.Row="6" Margin="0,2,0,0"
+            <Button x:Name="ChangeTeamButton" Content="Change Team" Grid.Column="1" Grid.Row="6" Margin="0,2,0,0"
+                    Click="changeTeam_Click"/>
+
+            <Button x:Name="StartMatchButton" Content="Start Match" Grid.Column="1" Grid.Row="7" Margin="0,2,0,0"
+                    Click="startMatch_Click"/>
+
+            <Button x:Name="LeaveLobbyButton" Content="Leave Lobby" Grid.Column="1" Grid.Row="8" Margin="0,2,0,0"
                     Click="leaveLobby_Click"/>
 
             <TextBox Grid.Column="4" Grid.Row="5" Height="100" Margin="2,2,0,0" Name="chatBox" Width="375" 
