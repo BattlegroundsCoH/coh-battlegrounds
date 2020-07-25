@@ -59,16 +59,22 @@ namespace BattlegroundsApp {
             this.m_allPlayers = new List<string>();
 
             GetLobbyList();
+
         }
 
-        public void GetLobbyList()
-        {
-            var lobbies = hub.GetConnectableLobbies();
+        public void UpdateGUI(Action a) => this.Dispatcher.BeginInvoke(a);
 
-            foreach (var lobby in lobbies)
-            {
-                LobbyList.Items.Add(new Lobby { _lobbyName = lobby.lobby_name, _lobbyPasswordProtected = lobby.lobby_passwordProtected, _lobbyGuid = lobby.lobby_guid });
-            }
+        public void GetLobbyList() {
+
+            // Clear list
+            LobbyList.Items.Clear();
+
+            // Get lobby list async
+            hub.GetConnectableLobbies(x => this.UpdateGUI(() => { 
+                this.LobbyList.Items.Add(new Lobby { _lobbyName = x.lobby_name, _lobbyPasswordProtected = x.lobby_passwordProtected, _lobbyGuid = x.lobby_guid 
+                }); 
+            }));
+
         }
 
         private void hostGame_Click(object sender, RoutedEventArgs e) {
@@ -145,10 +151,7 @@ namespace BattlegroundsApp {
         }
 
         private void refreshLobbyList_Click(object sender, RoutedEventArgs e)
-        {
-            LobbyList.Items.Clear();
-            GetLobbyList();
-        }
+            => this.GetLobbyList();
 
         private void LobbyList_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {

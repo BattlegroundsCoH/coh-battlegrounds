@@ -54,7 +54,7 @@
 						<enum name="map_rotation_type_override" value="no_override" />
 						<bool name="decoratable" value="True" />
 						<bool name="show_in_build_log" value="False" />
-						<icon name="symbol_icon_name" value="Icons_symbols_unit_soviet_engineer_symbol" />
+						<icon name="symbol_icon_name" value="Icons_symbols_building_soviet_heavy_factory_symbol" />
 						<bool name="speaker_highest_priority" value="False" />
 						<enum name="ui_style" value="default" />
 						<string name="cover_level_icon_postfix" value="" />

@@ -9,5 +9,27 @@
         "IsWintermap": "False",
         "Gamemodes": [
         ]
+    },
+    {
+        "jsdbtype" : "Battlegrounds.Game.Database.Scenario",
+        "Name": "Crossing in the Woods (2v2)",
+        "Description": "This is a description",
+        "RelativeFilename": "4p_crossing_in_the_woods\\4p_crossing_in_the_woods",
+        "MaxPlayers": "4",
+        "Theatre": "EasternFront",
+        "IsWintermap": "False",
+        "Gamemodes": [
+        ]
+    },
+    {
+        "jsdbtype" : "Battlegrounds.Game.Database.Scenario",
+        "Name": "Ettelbruck Station (1v1)",
+        "Description": "This is a description",
+        "RelativeFilename": "4p_ettelbruck_station\\4p_ettelbruck_station",
+        "MaxPlayers": "4",
+        "Theatre": "WesternFront",
+        "IsWintermap": "False",
+        "Gamemodes": [
+        ]
     }
 ]

@@ -54,7 +54,7 @@
 						<enum name="map_rotation_type_override" value="no_override" />
 						<bool name="decoratable" value="True" />
 						<bool name="show_in_build_log" value="True" />
-						<icon name="symbol_icon_name" value="Icons_symbols_unit_soviet_conscript_03_symbol" />
+						<icon name="symbol_icon_name" value="Icons_symbols_unit_soviet_conscript_01_symbol" />
 						<bool name="speaker_highest_priority" value="False" />
 						<enum name="ui_style" value="default" />
 						<string name="cover_level_icon_postfix" value="" />
@@ -445,136 +445,13 @@
 		</template_reference>
 		<template_reference name="squadexts" value="sbpextensions\squad_action_apply_ext">
 			<list name="actions">
-				<template_reference name="action" value="action\requirement_action">
-					<bool name="check_self" value="False" />
-					<bool name="global_fire_and_forget_on_success" value="False" />
-					<bool name="instant_requirement_check" value="False" />
-					<bool name="kill_action_on_failed_requirements" value="False" />
-					<bool name="no_retrigger" value="False" />
-					<bool name="validate_all_sub_actions" value="True" />
-					<list name="requirement_table">
-						<template_reference name="required" value="requirements\required_squad_upgrade">
-							<enum name="reason" value="usage" />
-							<locstring name="ui_name" value="0" />
-							<bool name="include_queued" value="False" />
-							<bool name="is_present" value="True" />
-							<instance_reference name="upgrade_name" value="upgrade\soviet\items\mobilize_reserves_conscript" />
-						</template_reference>
-					</list>
-					<list name="action_table">
-						<template_reference name="action" value="action\add_to_squad_loadout_action">
-							<uniqueid name="id" value="1073742593" />
-							<instance_reference name="unit_type" value="ebps\races\soviet\soldiers\conscript_soldier\conscript_soldier_seargent_mp" />
-							<int name="count" value="1" />
-						</template_reference>
-						<template_reference name="action" value="action\apply_modifiers_action">
-							<float name="duration" value="0" />
-							<bool name="permanent" value="False" />
-							<list name="modifiers">
-								<template_reference name="modifier" value="modifiers\squad_cost_manpower_modifier">
-									<enum name="application_type" value="apply_to_squad" />
-									<bool name="exclusive" value="False" />
-									<string name="modifier_id" value="" />
-									<string name="target_type_name" value="" />
-									<enum name="usage_type" value="multiplication" />
-									<float name="value" value="0.9" />
-									<instance_reference name="tooltip" value="modifier_tooltip\squad_cost_manpower_modifier" />
-								</template_reference>
-								<template_reference name="modifier" value="modifiers\received_experience_squad_modifier">
-									<enum name="application_type" value="apply_to_squad" />
-									<bool name="exclusive" value="False" />
-									<string name="modifier_id" value="" />
-									<string name="target_type_name" value="" />
-									<enum name="usage_type" value="multiplication" />
-									<float name="value" value="1.2" />
-									<instance_reference name="tooltip" value="modifier_tooltip\received_experience_squad_modifier" />
-								</template_reference>
-							</list>
-							<uniqueid name="id" value="1073742594" />
-						</template_reference>
-					</list>
-					<uniqueid name="id" value="1073742595" />
-					<bool name="fire_and_forget_non_global" value="False" />
-					<template_reference name="ui_help_text" value="tables\help_text_phrase">
-						<int name="phrase_order" value="0" />
-						<locstring name="phrase" value="0" />
-					</template_reference>
+				<template_reference name="action" value="action\slot_item_add">
+					<instance_reference name="slot_item" value="slot_item\soviet\anti_tank_weapon\ptrs_41_anti_tank_rifle_dummy_bg" mod="142b113740474c82a60b0a428bd553d5" />
+					<bool name="permanent" value="True" />
+					<uniqueid name="id" value="1073744477" />
 				</template_reference>
 			</list>
 			<list name="squad_entity_actions">
-				<template_reference name="action" value="action\requirement_action">
-					<bool name="check_self" value="False" />
-					<bool name="global_fire_and_forget_on_success" value="False" />
-					<bool name="instant_requirement_check" value="False" />
-					<bool name="kill_action_on_failed_requirements" value="False" />
-					<bool name="no_retrigger" value="False" />
-					<bool name="validate_all_sub_actions" value="True" />
-					<list name="requirement_table">
-						<template_reference name="required" value="requirements\required_squad_upgrade">
-							<enum name="reason" value="usage" />
-							<locstring name="ui_name" value="0" />
-							<bool name="include_queued" value="False" />
-							<bool name="is_present" value="True" />
-							<instance_reference name="upgrade_name" value="upgrade\soviet\items\mobilize_reserves_conscript" />
-						</template_reference>
-						<template_reference name="required" value="requirements\required_any_in_list">
-							<enum name="reason" value="usage" />
-							<locstring name="ui_name" value="0" />
-							<list name="requirements">
-								<template_reference name="requirement" value="requirements\required_in_cover">
-									<enum name="reason" value="usage" />
-									<locstring name="ui_name" value="0" />
-									<group name="cover_type_table">
-										<enum name="cover_type_01" value="tp_heavy" />
-										<enum name="cover_type_02" value="tp_light" />
-										<enum name="cover_type_03" value="tp_trench" />
-										<enum name="cover_type_04" value="tp_garrison_halftrack" />
-										<enum name="cover_type_05" value="" />
-										<enum name="cover_type_06" value="" />
-									</group>
-								</template_reference>
-								<template_reference name="requirement" value="requirements\required_in_state">
-									<enum name="reason" value="usage" />
-									<locstring name="ui_name" value="0" />
-									<bool name="garrisoned" value="True" />
-									<bool name="healed" value="False" />
-									<float name="in_combat_since" value="-1" />
-									<bool name="injured" value="False" />
-									<bool name="leader" value="False" />
-									<bool name="not_moving" value="False" />
-									<bool name="not_retreating" value="False" />
-									<bool name="pinned" value="False" />
-									<bool name="suppressed" value="False" />
-									<bool name="camouflaged" value="False" />
-								</template_reference>
-							</list>
-						</template_reference>
-					</list>
-					<list name="action_table">
-						<template_reference name="action" value="action\apply_modifiers_action">
-							<float name="duration" value="0" />
-							<bool name="permanent" value="False" />
-							<list name="modifiers">
-								<template_reference name="modifier" value="modifiers\cooldown_weapon_modifier">
-									<enum name="application_type" value="apply_to_weapon" />
-									<bool name="exclusive" value="False" />
-									<string name="modifier_id" value="" />
-									<string name="target_type_name" value="hardpoint_01" />
-									<enum name="usage_type" value="multiplication" />
-									<float name="value" value="0.7" />
-									<instance_reference name="tooltip" value="modifier_tooltip\cooldown_weapon_modifier" />
-								</template_reference>
-							</list>
-							<uniqueid name="id" value="1073742596" />
-						</template_reference>
-					</list>
-					<uniqueid name="id" value="1073742597" />
-					<bool name="fire_and_forget_non_global" value="False" />
-					<template_reference name="ui_help_text" value="tables\help_text_phrase">
-						<int name="phrase_order" value="0" />
-						<locstring name="phrase" value="0" />
-					</template_reference>
-				</template_reference>
 			</list>
 		</template_reference>
 		<template_reference name="squadexts" value="sbpextensions\squad_attention_ext">

@@ -23,7 +23,7 @@ namespace BattlegroundsApp {
         private static void OnPlayerEvent(ManagedLobbyPlayerEventType type, string from, string message) {
             var mainWindow = MainWindow.Instance;
             Trace.WriteLine($"[ManagedLobbyPlayerEventType.{type}] {from}: \"{message}\"");
-            mainWindow.Dispatcher.Invoke(() => {
+            mainWindow.UpdateGUI(() => {
                 switch (type) {
                     case ManagedLobbyPlayerEventType.Join:
                         mainWindow.chatBox.Text += $"[Lobby] {from} has joined.\n";
@@ -120,18 +120,20 @@ namespace BattlegroundsApp {
         private static void OnLocalEvent(ManagedLobbyLocalEventType type, string message) {
             var mainWindow = MainWindow.Instance;
             Trace.WriteLine($"[ManagedLobbyLocalEventType.{type}] \"{message}\"");
-            switch (type) {
-                case ManagedLobbyLocalEventType.Host:
-                    MainWindow.Instance.chatBox.Text += "[Lobby] You have been assigned as host.\n";
-                    break;
-                case ManagedLobbyLocalEventType.Kicked:
-                    mainWindow.ClearLobby();
-                    // TODO: Messagebox for this
-                    break;
-                default:
-                    Trace.WriteLine($"Unhandled event type \"ManagedLobbyLocalEventType.{type}\"");
-                    break;
-            }
+            mainWindow.UpdateGUI(() => {
+                switch (type) {
+                    case ManagedLobbyLocalEventType.Host:
+                        mainWindow.chatBox.Text += "[Lobby] You have been assigned as host.\n";
+                        break;
+                    case ManagedLobbyLocalEventType.Kicked:
+                        mainWindow.ClearLobby();
+                        // TODO: Messagebox for this
+                        break;
+                    default:
+                        Trace.WriteLine($"Unhandled event type \"ManagedLobbyLocalEventType.{type}\"");
+                        break;
+                }
+            });
         }
 
         public static void OnServerResponse(ManagedLobbyStatus status, ManagedLobby result) {
@@ -146,7 +148,7 @@ namespace BattlegroundsApp {
                 __LobbyInstance.OnStartMatchReceived += StartMatchCommandReceived;
                 __LobbyInstance.OnFileReceived += OnFileReceived;
 
-                MainWindow.Instance.Dispatcher.Invoke(() => MainWindow.Instance.OnLobbyEnter(__LobbyInstance));
+                MainWindow.Instance.UpdateGUI(() => MainWindow.Instance.OnLobbyEnter(__LobbyInstance));
 
                 Trace.WriteLine("Server responded with OK");
 

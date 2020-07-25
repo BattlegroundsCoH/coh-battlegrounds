@@ -1,0 +1,56 @@
+<instance description="ptrs package for the conscripts commander ability" template="slot_item">
+	<group name="slot_item_bag">
+		<bool name="always_pick_up" value="False" />
+		<bool name="can_stack" value="False" />
+		<float name="can_stack_max" value="1" />
+		<instance_reference name="drop_item_entity" value="" />
+		<float name="drop_rate" value="0" />
+		<float name="hardpoint" value="1" />
+		<bool name="has_speech_code" value="True" />
+		<bool name="is_entity_user" value="False" />
+		<float name="item_uses" value="0" />
+		<enum name="owner_type" value="squad" />
+		<icon name="package_icon" value="" />
+		<float name="recharge_time" value="0" />
+		<float name="slot_size" value="1" />
+		<group name="speech_code_2">
+			<string name="code_1" value="" />
+			<string name="code_2" value="" />
+			<string name="code_3" value="" />
+		</group>
+		<group name="speech_code_3">
+			<string name="code_1" value="atr" />
+			<string name="code_2" value="" />
+			<string name="code_3" value="" />
+		</group>
+		<group name="ui_info">
+			<locstring name="extra_text" value="0" />
+			<locstring name="help_text" value="0" />
+			<string name="hotkey_name" value="" />
+			<icon name="icon_name" value="Icons_weapons_weapon_ptrs" />
+			<string name="overlay_name" value="" />
+			<bool name="reveal_for_decryption" value="True" />
+			<locstring name="screen_name" value="0" />
+		</group>
+		<group name="weapon">
+			<group name="heading">
+				<float name="x" value="0" />
+				<float name="y" value="0" />
+				<float name="z" value="1" />
+			</group>
+			<float name="length" value="0" />
+			<group name="origin">
+				<float name="x" value="0" />
+				<float name="y" value="1.5" />
+				<float name="z" value="0" />
+			</group>
+			<enum name="type" value="squad" />
+			<instance_reference name="weapon" value="" />
+		</group>
+		<list name="on_add_actions">
+		</list>
+		<list name="on_drop_actions">
+		</list>
+	</group>
+	<uniqueid name="pbgid" value="1073741827" />
+</instance>
