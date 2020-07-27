@@ -191,7 +191,7 @@ namespace Battlegrounds.Online.Services {
                 }
             }
 
-            int lookForIdentifier = this.m_lobbySync.SendFile(ManagedLobby.SEND_ALL, file);
+            int lookForIdentifier = this.m_lobbySync.SendFile(ManagedLobby.SEND_ALL, file, true);
             this.m_lobbySync.WorkerConnection.SetIdentifierReceiver(lookForIdentifier, response);
 
             while (!this.m_isDone) {
@@ -212,7 +212,7 @@ namespace Battlegrounds.Online.Services {
                         lock (this.m_syncStates) {
                             for (int i = 0; i < this.m_syncStates.Count; i++) {
                                 if (!this.m_syncStates[i].userDone) { // Resend to all those who havent received the message.
-                                    this.m_lobbySync.SendFile(this.m_syncStates[i].userID, file, lookForIdentifier);
+                                    this.m_lobbySync.SendFile(this.m_syncStates[i].userID, file, lookForIdentifier, true);
                                 }
                             }
                         }

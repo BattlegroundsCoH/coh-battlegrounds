@@ -457,7 +457,7 @@ namespace coh2_battlegrounds_console {
                 result.OnDataRequest += (a, b, c, d) => {
                     if (c.CompareTo("CompanyData") == 0) {
                         Console.WriteLine("Received request for company data using identifier " + d);
-                        result.SendFile(b, "test_company.json", d);
+                        result.SendFile(b, "test_company.json", d, true);
                     } 
                 };
 

@@ -73,7 +73,7 @@ namespace BattlegroundsApp {
 
         public static void OnDataRequest(bool isFileRequest, string asker, string requestedData, int id) {
             if (requestedData.CompareTo("CompanyData") == 0) {
-                if (__LobbyInstance.SendFile(asker, "test_company.json", id) == -1) {
+                if (__LobbyInstance.SendFile(asker, "test_company.json", id, true) == -1) {
                     Trace.WriteLine("Failed to send test company");
                 }
             }
@@ -166,7 +166,6 @@ namespace BattlegroundsApp {
         public static void LeaveLobby() {
             if (__LobbyInstance != null) {
                 __LobbyInstance.Leave(); // Async... will need a callback for this when done.
-                //__LobbyInstance = null;
             }
         }
 

@@ -195,8 +195,8 @@ namespace Battlegrounds.Online.Services {
         /// <param name="receiver">The username of the recipient.</param>
         /// <param name="filepath">The filepath of the file to send.</param>
         /// <returns>The identifier used to send the file. -1 if unable to send file.</returns>
-        public int SendFile(string receiver, string filepath)
-            => this.SendFile(receiver, filepath, -1);
+        public int SendFile(string receiver, string filepath, bool asUTF8)
+            => this.SendFile(receiver, filepath, -1, asUTF8);
 
         /// <summary>
         /// Send a file to another user in the lobby with a specific identifier.
@@ -205,9 +205,9 @@ namespace Battlegrounds.Online.Services {
         /// <param name="filepath">The filepath of the file to send.</param>
         /// <param name="identifier">The custom identifier to use when sending message.</param>
         /// <returns>The identifier used to send the file. -1 if unable to send file.</returns>
-        public int SendFile(string receiver, string filepath, int identifier) {
+        public int SendFile(string receiver, string filepath, int identifier, bool asUTF8) {
             if (m_underlyingConnection != null && m_underlyingConnection.IsConnected) {
-                return m_underlyingConnection.SendFile(receiver, filepath, identifier);
+                return m_underlyingConnection.SendFile(receiver, filepath, asUTF8, identifier);
             } else {
                 return -1;
             }
