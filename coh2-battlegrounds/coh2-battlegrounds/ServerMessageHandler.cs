@@ -84,6 +84,8 @@ namespace BattlegroundsApp {
             // Statrt the game
             if (!CoH2Launcher.Launch()) {
                 Trace.WriteLine("Failed to launch Company of Heroes 2...");
+            } else {
+                Trace.WriteLine("Launched Company of Heroes 2");
             }
 
         }
@@ -93,24 +95,29 @@ namespace BattlegroundsApp {
             // Did we receive the battlegrounds .sga
             if (received && filename.CompareTo("coh2_battlegrounds_wincondition.sga") == 0) {
 
-                // Path to the sga file we'll write to
-                string sgapath = $"{Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)}\\my games\\Company of Heroes 2\\mods\\gamemode\\coh2_battlegrounds_wincondition.sga";
+                MainWindow.Instance.UpdateGUI(() => {
 
-                // Delete file if it already exists
-                if (File.Exists(sgapath)) {
-                    File.Delete(sgapath);
-                }
+                    // Path to the sga file we'll write to
+                    string sgapath = $"{Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)}\\my games\\Company of Heroes 2\\mods\\gamemode\\coh2_battlegrounds_wincondition.sga";
 
-                // Write all byte content
-                File.WriteAllBytes(sgapath, content);
+                        // Delete file if it already exists
+                        if (File.Exists(sgapath)) {
+                            File.Delete(sgapath);
+                        }
 
-                // Let the user know we've received the win condition
-                MainWindow.Instance.chatBox.Text += "[Lobby] Received wincondition file from host.\n";
+                        // Write all byte content
+                        File.WriteAllBytes(sgapath, content);
 
-                // Write a log message
-                Trace.WriteLine("Received and saved .sga");
+                        // Let the user know we've received the win condition
+                        MainWindow.Instance.chatBox.Text += "[Lobby] Received wincondition file from host.\n";
+
+                        // Write a log message
+                        Trace.WriteLine($"Received and saved .sga to \"{sgapath}\"");
+
+                });
 
             } else {
+                Trace.WriteLine(sender + ":" + filename + ":" + received);
                 // TODO: Handle other cases
             }
 
