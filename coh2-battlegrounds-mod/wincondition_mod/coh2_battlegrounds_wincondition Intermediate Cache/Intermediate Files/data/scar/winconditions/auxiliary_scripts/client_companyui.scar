@@ -5,7 +5,7 @@ local _bg_local_show_to = -1;
 local _bg_local_show_max = 13;
 
 _BG_UI_CompanyViewX = 0;
-_BG_UI_CompanyViewY = -612;
+_BG_UI_CompanyViewY = -616;
 
 _BG_UI_UpdateInterval = 0.25;
 
@@ -15,7 +15,7 @@ _BG_UI_UNIT_CARD_CANCEL_CLICKED = 43;
 function BG_CreateCallInUI(player)
 
     -- The position
-    local callinPos = UI_BottomRight(355, 326);
+    local callinPos = UI_BottomRight(355, 334);
 
     -- Create the root panel
     bg_call_ui = RootPanel();
@@ -36,9 +36,7 @@ function BG_CreateShowCompanyButon()
 
     local show_deployment_bkg = Panel();
     show_deployment_bkg:setBounds(0, 0, 360, 72);
-
-    local show_deployment_bkg_ico = Icon("ModIcons_6a0a13b89555402ca75b85dc30f5cb04_button_background", 360, 72, 0, 0);
-    show_deployment_bkg:add(show_deployment_bkg_ico);
+    show_deployment_bkg:add(Icon("ModIcons_6a0a13b89555402ca75b85dc30f5cb04_button_background", 360, 72, 0, 0));
 
     -- Button for show/hide deployment menu
     bg_show_company = Button(Util_CreateLocString(_bg_playerData[BG_GetPlayerID(Game_GetLocalPlayer())].company.name), "ModIcons_6a0a13b89555402ca75b85dc30f5cb04_button_simple");
@@ -67,8 +65,7 @@ function BG_CreateCompanyView()
     bg_companyView:setPos(_BG_UI_CompanyViewX, _BG_UI_CompanyViewY);
 
     -- The background
-    local longpanel_bkg_ico = Icon("ModIcons_6a0a13b89555402ca75b85dc30f5cb04_company_overview_clean", 360, 576, 0, 56);
-    bg_companyView:add(longpanel_bkg_ico);
+    bg_companyView:add(Icon("ModIcons_6a0a13b89555402ca75b85dc30f5cb04_company_overview_clean", 360, 576, 0, 53));
 
     -- Create the company categories
     BG_CreateCompanyCategories();
@@ -78,19 +75,18 @@ function BG_CreateCompanyView()
     bg_company_container:setPos(24, 80); -- y = 56 + 24
     bg_companyView:add(bg_company_container);
 
-    -- And we'll hide it
-    --BG_HideCompanyView(); -- When not being debugged...
-
     -- Add panel
     bg_call_ui:add(bg_companyView);
+
+    -- And we'll hide it
+    --BG_HideCompanyView(); -- When not being debugged...
 
 end
 
 function BG_CreateCompanyCategories()
 
     -- The categories background
-    local longpanel_cat_bkg_ico = Icon("ModIcons_6a0a13b89555402ca75b85dc30f5cb04_button_background", 360, 72, 0, 0);
-    bg_companyView:add(longpanel_cat_bkg_ico);
+    bg_companyView:add(Icon("ModIcons_6a0a13b89555402ca75b85dc30f5cb04_button_background", 360, 72, 0, 0));
 
     -- Infantry category
     bg_company_infantry_category = Button(Util_CreateLocString(""), "ModIcons_6a0a13b89555402ca75b85dc30f5cb04_button_inf");
@@ -160,6 +156,9 @@ function BG_ShowCompanyCategory(category)
             end
         end
 
+        -- Show company abilities (if any)
+        BG_CreateCompanyAbilityView(_bg_playerData[bgPlayerID].company);
+
         -- Update the category
         _bg_local_category = category;
 
@@ -169,6 +168,21 @@ end
 
 function BG_HideCompanyView()
     bg_companyView:setPos(-9999, -9999);
+end
+
+function BG_CreateCompanyAbilityView(playerData) -- For special abilities requiring modal phases
+
+    -- The X-offset
+    local xOffset = 12;
+
+
+    playerData.specials.reinforcementsButton = Button(nil, "ModIcons_6a0a13b89555402ca75b85dc30f5cb04_icon_artillery");
+    playerData.specials.reinforcementsButton:setBounds(xOffset, 46, 48, 48);
+    playerData.specials.reinforcementsButton:setTag("artillery_support");
+    playerData.specials.reinforcementsButton:setCallback(BG_SpecialAbilitiesClicked);
+    bg_call_ui:add(playerData.specials.reinforcementsButton);
+    xOffset = xOffset + 52;
+
 end
 
 function BG_CreateUnitcard(unit, yoffset)
@@ -423,4 +437,15 @@ end
 
 function BG_UpdateCompanyButtonView(player, name)
     bg_show_company:setText(Util_CreateLocString(name .. " (" .. tostring(Player_GetSquadCount(player)) .. "/" .. tostring(_bg_custom.max_squad_count) ..")"));
+end
+
+function BG_SpecialAbilitiesClicked(type)
+    if type == "air_reinforcements" then
+
+    elseif type == "air_support" then
+
+    elseif type == "artillery_support" then
+
+    end
+    -- else other types?
 end

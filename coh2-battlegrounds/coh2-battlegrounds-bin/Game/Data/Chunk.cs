@@ -5,7 +5,7 @@ using System.Linq;
 
 using Battlegrounds.Util;
 
-namespace Battlegrounds {
+namespace Battlegrounds.Game.Data {
     
     /// <summary>
     /// Represents a chunk of data in a <see cref="ChunkyFile"/>.

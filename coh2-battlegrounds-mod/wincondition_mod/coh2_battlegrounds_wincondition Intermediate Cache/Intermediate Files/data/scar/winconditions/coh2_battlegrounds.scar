@@ -1,4 +1,6 @@
-
+------------------------------------------------------------------------------------
+-- Imports
+------------------------------------------------------------------------------------
 import("ScarUtil.scar")
 import("Fatalities/Fatalities.scar")
 import("Prototype/WorldEntityCollector.scar")
@@ -8,6 +10,9 @@ import("PrintOnScreen.scar")
 -- Battlegrounds file(s)
 import("WinConditions/auxiliary_scripts/shared_handler.scar") -- This will handle most if not all of "external" data processing and import useful utility functions.
 
+------------------------------------------------------------------------------------
+-- "Attrition" Check
+------------------------------------------------------------------------------------
 function Battlegrounds_CheckPlayerValidity(player)
 
     local tableCheck = nil;
@@ -117,3 +122,15 @@ function Battlegrounds_OnGamemodeInit()
 end
 
 Scar_AddInit(Battlegrounds_OnGamemodeInit);
+
+------------------------------------------------------------------------------------
+-- Breakthrough Code
+------------------------------------------------------------------------------------
+
+------------------------------------------------------------------------------------
+-- Encirclement (Break out) Code
+------------------------------------------------------------------------------------
+
+------------------------------------------------------------------------------------
+-- Air Assault Code
+------------------------------------------------------------------------------------

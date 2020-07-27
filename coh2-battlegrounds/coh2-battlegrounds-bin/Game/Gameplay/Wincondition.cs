@@ -32,11 +32,27 @@ namespace Battlegrounds.Game.Gameplay {
         /// <summary>
         /// 
         /// </summary>
+        public uint DisplayName { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public uint DisplayShortDescription { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public uint[] DisplayGoals { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <param name="name"></param>
         /// <param name="guid"></param>
         public Wincondition(string name, Guid guid) {
             this.Name = name;
             this.Guid = guid;
+            this.DefaultOptionIndex = 0;
         }
 
         public override string ToString() => this.Name;

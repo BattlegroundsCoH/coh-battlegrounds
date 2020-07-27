@@ -11,6 +11,31 @@ namespace Battlegrounds.Game.Database {
     /// </summary>
     public static class WinconditionList {
 
+        /// <summary>
+        /// Const string identifier for the Victory Points gamemode.
+        /// </summary>
+        public const string VictoryPoints = "Victory Points";
+
+        /// <summary>
+        /// Const string identifier for the Breakthrough gamemode.
+        /// </summary>
+        public const string Breakthrough = "Breakthrough";
+
+        /// <summary>
+        /// Const string identifier for the Breakout gamemode.
+        /// </summary>
+        public const string Breakout = "Breakout";
+
+        /// <summary>
+        /// Const string identifier for the AirAssault gamemode.
+        /// </summary>
+        public const string AirAssault = "Air Assault";
+
+        /// <summary>
+        /// Const string identifier for the Attrition gamemode.
+        /// </summary>
+        public const string Attrition = "Attrition";
+
         static Dictionary<string, Wincondition> __winconditions;
 
         /// <summary>
@@ -18,17 +43,40 @@ namespace Battlegrounds.Game.Database {
         /// </summary>
         public static void CreateAndLoadDatabase() {
 
-            Guid vp_guid = Guid.NewGuid();
+            Guid bg_wincondition = Guid.Parse("6a0a13b89555402ca75b85dc30f5cb04");
 
             // Create the wincondition dictionary
             __winconditions = new Dictionary<string, Wincondition> {
-                [vp_guid.ToString()] = new Wincondition("Victory Points", vp_guid) {
+                [VictoryPoints] = new Wincondition(VictoryPoints, bg_wincondition) {
                     Options = new WinconditionOption[] {
                         new WinconditionOption("250 Victory Points", 250),
                         new WinconditionOption("500 Victory Points", 500),
                         new WinconditionOption("1000 Victory Points", 1000)
                     },
                     DefaultOptionIndex = 1
+                },
+                [Breakthrough] = new Wincondition(Breakthrough, bg_wincondition) {
+                    Options = new WinconditionOption[] {
+                        new WinconditionOption("250 Victory Points", 250),
+                        new WinconditionOption("500 Victory Points", 500),
+                        new WinconditionOption("1000 Victory Points", 1000)
+                    },
+                },
+                [Breakout] = new Wincondition(Breakout, bg_wincondition) {
+                    Options = new WinconditionOption[] {
+                        new WinconditionOption("250 Victory Points", 250),
+                        new WinconditionOption("500 Victory Points", 500),
+                        new WinconditionOption("1000 Victory Points", 1000)
+                    },
+                },
+                [AirAssault] = new Wincondition(AirAssault, bg_wincondition) {
+                    Options = new WinconditionOption[] {
+                        new WinconditionOption("75 Victory Points", 75),
+                        new WinconditionOption("250 Victory Points", 250),
+                        new WinconditionOption("500 Victory Points", 500)
+                    },
+                },
+                [Attrition] = new Wincondition(Attrition, bg_wincondition) {
                 },
             };
 
@@ -43,23 +91,9 @@ namespace Battlegrounds.Game.Database {
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="name"></param>
-        /// <returns></returns>
-        public static Wincondition GetWinconditionByName(string name) => __winconditions.FirstOrDefault(x => x.Value.Name.CompareTo(name) == 0).Value;
-
-        /// <summary>
-        /// 
-        /// </summary>
         /// <param name="guid"></param>
         /// <returns></returns>
-        public static Wincondition GetWinconditionBuGUID(string guid) => __winconditions[guid];
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="guid"></param>
-        /// <returns></returns>
-        public static Wincondition GetWinconditionBuGUID(Guid guid) => __winconditions[guid.ToString()];
+        public static Wincondition GetWinconditionByName(string name) => __winconditions[name];
 
     }
 

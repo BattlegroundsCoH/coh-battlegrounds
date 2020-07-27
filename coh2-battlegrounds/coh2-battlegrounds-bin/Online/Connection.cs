@@ -86,18 +86,22 @@ namespace Battlegrounds.Online {
 
         private void MessageReceived(Socket source, Message message) {
             this.m_isListening = false;
-            if (this.m_identifierCallback?.ContainsKey(message.Identifier) ?? false) {
-                this.m_identifierCallback[message.Identifier].Invoke(message);
+            if (message.Descriptor == Message_Type.SERVER_PING) {
+                this.SendMessage(message.CreateResponse(Message_Type.USER_PING));
             } else {
-                if (message.Descriptor == Message_Type.LOBBY_SENDFILE) {
-                    this.OnFile?.Invoke(message);
+                if (this.m_identifierCallback?.ContainsKey(message.Identifier) ?? false) {
+                    this.m_identifierCallback[message.Identifier].Invoke(message);
                 } else {
-                    this.OnMessage?.Invoke(message);
+                    if (message.Descriptor == Message_Type.LOBBY_SENDFILE) {
+                        this.OnFile?.Invoke(message);
+                    } else {
+                        this.OnMessage?.Invoke(message);
+                    }
                 }
             }
             if (this.m_isOpen) {
                 if (source != this.m_socket) {
-                    Console.WriteLine("Socket-Mismatch!");
+                    Trace.WriteLine("Socket-Mismatch!");
                 }
                 this.Listen();
             }

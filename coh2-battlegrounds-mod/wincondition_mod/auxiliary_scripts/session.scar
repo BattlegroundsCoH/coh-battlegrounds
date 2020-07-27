@@ -26,6 +26,20 @@ bg_companies = {
 		name = "26th Rifle Division",
 		style = "Unspecified",
 		army = "soviet",
+		specials = {
+			artillery = {
+
+			},
+			air = {
+
+			},
+		},
+		upgrades = {
+
+		},
+		modifiers = {
+
+		},
 		units = {
 			{
 				bp_name = "142b113740474c82a60b0a428bd553d5:conscript_squad_bg",

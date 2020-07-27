@@ -3,12 +3,11 @@ using System.IO;
 using System.Text;
 using System.Collections.Generic;
 
-using Battlegrounds.Game;
 using Battlegrounds.Game.Gameplay;
 using Battlegrounds.Util;
 using System.Linq;
 
-namespace Battlegrounds {
+namespace Battlegrounds.Game.Data {
 
     /// <summary>
     /// Represents a CoH2 replay file

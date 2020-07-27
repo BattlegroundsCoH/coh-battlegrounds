@@ -10,6 +10,7 @@ _bg_custom.teams = {};
 _bg_custom.phase_current = 1;
 _bg_custom.phase_time_left = 420; -- 7 minutes
 _bg_custom.phase_time = 420;
+_bg_custom.phase_paued = false;
 _bg_custom.team_voting = {};
 
 _bg_playerData = {};
@@ -38,6 +39,9 @@ import("WinConditions/auxiliary_scripts/api_ui.scar");
 import("WinConditions/auxiliary_scripts/client_companyui.scar");
 import("WinConditions/auxiliary_scripts/client_overrideui.scar");
 
+------------------------------------------------------------------------------------
+-- Script Code
+------------------------------------------------------------------------------------
 function BG_Init()
 
     -- Load important session data
@@ -487,13 +491,17 @@ function BG_PhaseUpdate()
 
     if _bg_custom.phase_current < 3 then
 
-        _bg_custom.phase_time_left = _bg_custom.phase_time_left - 1;
+        if not _bg_custom.phase_paued then
 
-        if _bg_custom.phase_time_left == 0 then
-            _bg_custom.phase_current = _bg_custom.phase_current + 1;
-            _bg_custom.phase_time = _bg_custom.phase_time * 1.4;
-            _bg_custom.phase_time_left = _bg_custom.phase_time;
-            BG_OnEnterNewPhase();
+            _bg_custom.phase_time_left = _bg_custom.phase_time_left - 1;
+
+            if _bg_custom.phase_time_left == 0 then
+                _bg_custom.phase_current = _bg_custom.phase_current + 1;
+                _bg_custom.phase_time = _bg_custom.phase_time * 1.4;
+                _bg_custom.phase_time_left = _bg_custom.phase_time;
+                BG_OnEnterNewPhase();
+            end
+
         end
 
     else

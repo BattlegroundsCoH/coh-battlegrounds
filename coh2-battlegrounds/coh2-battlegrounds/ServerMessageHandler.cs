@@ -3,7 +3,6 @@ using Battlegrounds.Game;
 using Battlegrounds.Game.Battlegrounds;
 using Battlegrounds.Game.Database;
 using Battlegrounds.Online.Services;
-using coh2_battlegrounds;
 using System;
 using System.IO;
 using System.Collections.Generic;
@@ -57,7 +56,7 @@ namespace BattlegroundsApp {
                 return Company.ReadCompanyFromFile("test_company.json");
             } else if (type.CompareTo("MatchInfo") == 0) {
                 return new SessionInfo() { // should probably be redirected to Mainwindow and let it set up this (when considering players and settings)
-                    SelectedGamemode = WinconditionList.GetWinconditionByName("Victory Point"),
+                    SelectedGamemode = WinconditionList.GetWinconditionByName("Victory Points"),
                     SelectedGamemodeOption = 1,
                     SelectedScenario = ScenarioList.FromFilename("2p_angoville_farms"),
                     SelectedTuningMod = new BattlegroundsTuning(),

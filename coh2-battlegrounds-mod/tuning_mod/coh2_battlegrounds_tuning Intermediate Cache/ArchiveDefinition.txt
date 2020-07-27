@@ -68,6 +68,9 @@ TOCStart name="attrib" alias="attrib" path="" relativeroot="attrib"
 	E:\coh2_battlegrounds\coh2-battlegrounds-mod\tuning_mod\coh2_battlegrounds_tuning Intermediate Cache\Intermediate Files\attrib\attrib\ebps\races\german\vehicles\stug_iii_sdkfz_141_1\stug_iii_g_sdkfz_141_1_bg.rgd
 	E:\coh2_battlegrounds\coh2-battlegrounds-mod\tuning_mod\coh2_battlegrounds_tuning Intermediate Cache\Intermediate Files\attrib\attrib\ebps\races\german\vehicles\tiger_sdkfz_181\tiger_sdkfz_181_bg.rgd
 	E:\coh2_battlegrounds\coh2-battlegrounds-mod\tuning_mod\coh2_battlegrounds_tuning Intermediate Cache\Intermediate Files\attrib\attrib\ebps\races\german\vehicles\tiger_sdkfz_181\tiger_sdkfz_181_command_bg.rgd
+	E:\coh2_battlegrounds\coh2-battlegrounds-mod\tuning_mod\coh2_battlegrounds_tuning Intermediate Cache\Intermediate Files\attrib\attrib\ebps\races\soviet\abilities\soviet_air_support.rgd
+	E:\coh2_battlegrounds\coh2-battlegrounds-mod\tuning_mod\coh2_battlegrounds_tuning Intermediate Cache\Intermediate Files\attrib\attrib\ebps\races\soviet\abilities\soviet_artillery.rgd
+	E:\coh2_battlegrounds\coh2-battlegrounds-mod\tuning_mod\coh2_battlegrounds_tuning Intermediate Cache\Intermediate Files\attrib\attrib\ebps\races\soviet\abilities\soviet_paradrop.rgd
 	E:\coh2_battlegrounds\coh2-battlegrounds-mod\tuning_mod\coh2_battlegrounds_tuning Intermediate Cache\Intermediate Files\attrib\attrib\ebps\races\soviet\soldiers\combat_engineer\combat_engineer_bg.rgd
 	E:\coh2_battlegrounds\coh2-battlegrounds-mod\tuning_mod\coh2_battlegrounds_tuning Intermediate Cache\Intermediate Files\attrib\attrib\ebps\races\soviet\soldiers\combat_engineer\sapper_soldier_bg.rgd
 	E:\coh2_battlegrounds\coh2-battlegrounds-mod\tuning_mod\coh2_battlegrounds_tuning Intermediate Cache\Intermediate Files\attrib\attrib\ebps\races\soviet\soldiers\commander_troops\guard_troops_bg.rgd

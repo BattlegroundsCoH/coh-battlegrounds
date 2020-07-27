@@ -24,6 +24,8 @@ namespace Battlegrounds.Online {
 
         CONFIRMATION_MESSAGE, // Confirms
 
+        ORDINARY_RESPONSE, // Ordinary response to a simple query (Identifier must exist for response message to work)
+
         GET_LOBBIES, // Get the list of lobbies
 
         GET_LOBBIES_RETURN, // This is a returned lobby
@@ -64,9 +66,23 @@ namespace Battlegrounds.Online {
 
         LOBBY_PLAYERNAMES,
 
+        LOBBY_GETPLAYERID,
+
         LOBBY_SETHOST, // Message sent to client that they're now the host.
 
+        LOBBY_GETMATCHSETTINGS,
+
+        LOBBY_SENDMATCHSETTINGS,
+
+        LOBBY_STARTING, // Host has pressed the start button
+
+        LOBBY_CANCEL, // Tell the lobby to cancel match start
+
         USER_SETUSERDATA, // Set the user data
+
+        USER_PING, // User ping-back (SERVER_PING -> reponse = USER_PING)
+
+        SERVER_PING, // Ping from server (Server -> Client)
 
         SERVER_CLOSE, // Close the server
 

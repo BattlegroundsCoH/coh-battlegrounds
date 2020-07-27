@@ -417,8 +417,21 @@ namespace Battlegrounds.Online.Services {
         }
 
         void ManagedLobbyInternal_GameSessionStatusChanged(SessionStatus status, Session s) {
-            // TODO: Implement
-            Console.WriteLine("Session update: " + status.ToString());
+            Trace.WriteLine($"Session update: {status}");
+            switch (status) {
+                case SessionStatus.S_FailedCompile:
+                    break;
+                case SessionStatus.S_FailedPlay:
+                    break;
+                case SessionStatus.S_GameNotLaunched:
+                    break;
+                case SessionStatus.S_NoPlayback:
+                    break;
+                case SessionStatus.S_ScarError:
+                    break;
+                case SessionStatus.S_BugSplat:
+                    break;
+            }
         }
 
         void ManagedLobbyInternal_GameMatchAnalyzed(GameMatch results) {

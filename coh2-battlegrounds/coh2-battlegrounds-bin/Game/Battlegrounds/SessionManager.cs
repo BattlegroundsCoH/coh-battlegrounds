@@ -11,52 +11,52 @@ namespace Battlegrounds.Game.Battlegrounds {
     public enum SessionStatus {
 
         /// <summary>
-        /// Invalid session (Session was null)
+        /// Invalid session (Session was null).
         /// </summary>
         S_Invalid = -1,
 
         /// <summary>
-        /// Session was completed without errors
+        /// Session was completed without errors.
         /// </summary>
         S_Success,
 
         /// <summary>
-        /// The session is currently compiling
+        /// The session is currently compiling.
         /// </summary>
         S_Compiling,
 
         /// <summary>
-        /// The session failed to compile
+        /// The session failed to compile.
         /// </summary>
         S_FailedCompile,
 
         /// <summary>
-        /// The session failed to play
+        /// The session failed to play.
         /// </summary>
         S_FailedPlay,
 
         /// <summary>
-        /// The game was not launched
+        /// The game was not launched.
         /// </summary>
         S_GameNotLaunched,
 
         /// <summary>
-        /// The game was played without causing a crash
+        /// The game was played without causing a crash.
         /// </summary>
         S_GamePlayedWithoutCrash,
 
         /// <summary>
-        /// The played match is currently being analyzed
+        /// The played match is currently being analyzed.
         /// </summary>
         S_Analyzing,
 
         /// <summary>
-        /// The analysis of the match failed
+        /// The analysis of the match failed.
         /// </summary>
         S_AnalysisFailed,
 
         /// <summary>
-        /// The playback file was found
+        /// The playback file was found.
         /// </summary>
         S_NoPlayback,
 
@@ -66,9 +66,14 @@ namespace Battlegrounds.Game.Battlegrounds {
         S_Playing,
 
         /// <summary>
-        /// The session encountered a scar error
+        /// The session encountered a scar error.
         /// </summary>
         S_ScarError,
+
+        /// <summary>
+        /// The session detected a bug splat error.
+        /// </summary>
+        S_BugSplat,
 
     }
 

@@ -50,6 +50,12 @@
 		public static var gameover_vehiclestat:Class;
 		[Embed(source='E:/coh2_battlegrounds/coh2-battlegrounds-mod/wincondition_mod/art/gameover_vet_change.png')]
 		public static var gameover_vet_change:Class;
+		[Embed(source='E:/coh2_battlegrounds/coh2-battlegrounds-mod/wincondition_mod/art/icon_air_support.png')]
+		public static var icon_air_support:Class;
+		[Embed(source='E:/coh2_battlegrounds/coh2-battlegrounds-mod/wincondition_mod/art/icon_artillery.png')]
+		public static var icon_artillery:Class;
+		[Embed(source='E:/coh2_battlegrounds/coh2-battlegrounds-mod/wincondition_mod/art/icon_paratrooper.png')]
+		public static var icon_paratrooper:Class;
 		[Embed(source='E:/coh2_battlegrounds/coh2-battlegrounds-mod/wincondition_mod/art/manpower_24x24.png')]
 		public static var manpower_24x24:Class;
 		[Embed(source='E:/coh2_battlegrounds/coh2-battlegrounds-mod/wincondition_mod/art/mp_actions_override_button.png')]

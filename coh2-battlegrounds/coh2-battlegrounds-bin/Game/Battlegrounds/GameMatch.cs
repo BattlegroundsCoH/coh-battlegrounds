@@ -5,6 +5,7 @@ using System.Text.RegularExpressions;
 
 using Battlegrounds.Game.Gameplay;
 using Battlegrounds.Game.Database;
+using Battlegrounds.Game.Data;
 
 namespace Battlegrounds.Game.Battlegrounds {
 
