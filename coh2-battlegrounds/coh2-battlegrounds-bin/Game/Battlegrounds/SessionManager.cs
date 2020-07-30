@@ -105,7 +105,7 @@ namespace Battlegrounds.Game.Battlegrounds {
             Session session, 
             Action<SessionStatus, Session> statusChangedCallback, 
             Action<GameMatch> matchAnalyzedCallback,
-            Func<Task<bool>> matchCompileAndWait
+            Func<bool> matchCompileAndWait
             )
             where TSessionCompilerType : SessionCompiler<TCompanyCompilerType>
             where TCompanyCompilerType : CompanyCompiler {
@@ -140,11 +140,15 @@ namespace Battlegrounds.Game.Battlegrounds {
                 // If there's a "blocking" method - execute it and wait for it to finish.
                 if (matchCompileAndWait != null) {
 
-                    // Wait for compile done
-                    if (!(await matchCompileAndWait.Invoke())) {
-                        UpdateStatus(SessionStatus.S_GameNotLaunched, statusChangedCallback);
-                        return;
-                    }
+                    await Task.Run(() => {
+
+                        // Wait for compile done
+                        if (!matchCompileAndWait.Invoke()) {
+                            UpdateStatus(SessionStatus.S_GameNotLaunched, statusChangedCallback);
+                            return;
+                        }
+
+                    });
 
                 }
 
@@ -210,6 +214,9 @@ namespace Battlegrounds.Game.Battlegrounds {
             // Create compiler
             TSessionCompilerType compiler = Activator.CreateInstance<TSessionCompilerType>();
 
+            // Get the scar file
+            string sessionScarFile = BattlegroundsInstance.GetRelativePath(BattlegroundsPaths.SESSION_FOLDER, "session.scar");
+
             // Try the following
             try {
 
@@ -217,7 +224,7 @@ namespace Battlegrounds.Game.Battlegrounds {
                 string luaSessionOutput = compiler.CompileSession(ActiveSession);
 
                 // Write contents to session.scar
-                File.WriteAllText("session.scar", luaSessionOutput);
+                File.WriteAllText(sessionScarFile, luaSessionOutput);
 
             } catch {
 
@@ -227,7 +234,7 @@ namespace Battlegrounds.Game.Battlegrounds {
             }
 
             // Return the result of the win condition compilation
-            return WinconditionCompiler.CompileToSga("temp_build", "session.scar");
+            return WinconditionCompiler.CompileToSga(BattlegroundsInstance.GetRelativePath(BattlegroundsPaths.BUILD_FOLDER, string.Empty), sessionScarFile);
 
         }
 
@@ -236,7 +243,7 @@ namespace Battlegrounds.Game.Battlegrounds {
             string logPath = $"{Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)}\\my games\\company of heroes 2\\warnings.log";
 
             if (File.Exists(logPath)) {
-                if (File.ReadAllText(logPath).Contains("GameObj::OnFatalScarError: [FATAL Scar Error! - Execution has been paused.")) {
+                if (File.ReadAllText(logPath).Contains("GameObj::OnFatalScarError:")) {
                     return true;
                 }
             }

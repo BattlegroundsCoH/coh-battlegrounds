@@ -217,13 +217,16 @@ namespace Battlegrounds.Json {
             Match v = Regex.Match(kv, @"\s*(?<key>\s*\""\S*\"")\s*:\s*(?<val>(\""(\s|\S)*\"")|(\d*))\s*");
 
             // Find the key and the value
-            string key = v.Groups["key"].Value.Trim('\"');
-            string value = v.Groups["val"].Value.Trim('\"');
+            string key = SanitizeString(v.Groups["key"].Value.Trim('\"'));
+            string value = SanitizeString(v.Groups["val"].Value.Trim('\"'));
 
             // Return key value pair
             return new KeyValuePair<string, object>(key, value);
 
         }
+
+        private static string SanitizeString(string input)
+            => input.Replace("\\\\", "\\"); // TODO: More
 
     }
 

@@ -22,7 +22,7 @@ namespace Battlegrounds.Online {
             int sent = 0;
             while (sent < content.Length) {
                 sent += socket.Send(content[sent..^0]);
-                Trace.WriteLine($"sent {sent}/{content.Length} bytes");
+                Trace.WriteLine($"Sent {sent}/{content.Length} bytes", "Online-Service");
             }
         }
 

@@ -121,7 +121,7 @@ namespace Battlegrounds.Compiler {
             }
 
             // Add the info preview file
-            AddLocalFile(archiveDef, "coh2_battlegrounds_wincondition_preview.dds", "info\\", workdir);
+            AddLocalFile(archiveDef, BattlegroundsInstance.GetRelativePath(BattlegroundsPaths.MOD_ART_FOLDER, "coh2_battlegrounds_wincondition_preview.dds"), "info\\", workdir);
 
             // Locale TOC section
             archiveDef.AppendLine("TOCEnd");
@@ -315,17 +315,20 @@ namespace Battlegrounds.Compiler {
 
         private static void AddGraphics(TxtBuilder builder, string workdir) {
 
-            // Get the absolute paths
-            string gfxabspath = Path.GetFullPath(workdir + "data\\ui\\Bin\\6a0a13b89555402ca75b85dc30f5cb04.gfx");
-            string ddsabspath = Path.GetFullPath(workdir + "data\\ui\\Assets\\Textures\\6a0a13b89555402ca75b85dc30f5cb04_I1.dds");
-
-            // Add the gfx and dds files
-            builder.AppendLine($"\t{gfxabspath}");
-            builder.AppendLine($"\t{ddsabspath}");
-
-            // Copy the files
+            // Add the gfx file
+            string gfxabspath = Path.GetFullPath($"{workdir}data\\ui\\Bin\\6a0a13b89555402ca75b85dc30f5cb04.gfx");
             File.Copy(Path.GetFullPath("6a0a13b89555402ca75b85dc30f5cb04.gfx"), gfxabspath);
-            File.Copy(Path.GetFullPath("6a0a13b89555402ca75b85dc30f5cb04_I1.dds"), ddsabspath);
+            builder.AppendLine($"\t{gfxabspath}");
+
+            // Get DDS files
+            string[] ddsFiles = Directory.GetFiles(BattlegroundsInstance.GetRelativePath(BattlegroundsPaths.MOD_ART_FOLDER, string.Empty), "*.dds");
+
+            // Add DDS files
+            for (int i = 0; i < ddsFiles.Length; i++) {
+                string ddspath = Path.GetFullPath($"{workdir}data\\ui\\Assets\\Textures\\{Path.GetFileName(ddsFiles[i])}");
+                File.Copy(Path.GetFullPath(ddsFiles[i]), ddspath);
+                builder.AppendLine($"\t{ddspath}");
+            }
 
         }
 

@@ -1,12 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.IO;
 using System.Net.Sockets;
 using System.Threading;
 using System.Threading.Tasks;
-
-using Battlegrounds.Util;
 
 namespace Battlegrounds.Online {
     
@@ -37,11 +34,6 @@ namespace Battlegrounds.Online {
         /// The event to trigger when a <see cref="Message"/> has been received.
         /// </summary>
         public event Action<Message> OnMessage;
-
-        /// <summary>
-        /// The event to trigger when a <see cref="Message"/> with descriptor <see cref="Message_Type.LOBBY_SENDFILE"/> has been received.
-        /// </summary>
-        public event Action<Message> OnFile;
 
         /// <summary>
         /// Create a new <see cref="Connection"/> instance for a <see cref="Socket"/>.
@@ -92,11 +84,7 @@ namespace Battlegrounds.Online {
                 if (this.m_identifierCallback?.ContainsKey(message.Identifier) ?? false) {
                     this.m_identifierCallback[message.Identifier].Invoke(message);
                 } else {
-                    if (message.Descriptor == Message_Type.LOBBY_SENDFILE) {
-                        this.OnFile?.Invoke(message);
-                    } else {
-                        this.OnMessage?.Invoke(message);
-                    }
+                    this.OnMessage?.Invoke(message);
                 }
             }
             if (this.m_isOpen) {
@@ -210,59 +198,6 @@ namespace Battlegrounds.Online {
             if (m_identifierCallback.ContainsKey(identifier)) {
                 m_identifierCallback.Remove(identifier);
             }
-        }
-
-        /// <summary>
-        /// Send the contents of a file to another user. The file is sent as a <see cref="Message"/> with the FileData byte array being the file contents.
-        /// </summary>
-        /// <remarks>It is not possible to send files larger than 64 MB.</remarks>
-        /// <param name="arg2">The second string argument in the <see cref="Message"/>.</param>
-        /// <param name="filepath">The path of the file to send.</param>
-        /// <param name="identifier">The optional identifier to attach to the <see cref="Message"/>.</param>
-        /// <exception cref="ArgumentException"/>
-        /// <exception cref="ArgumentNullException"/>
-        /// <exception cref="ArgumentOutOfRangeException"/>
-        /// <exception cref="PathTooLongException"/>
-        /// <exception cref="DirectoryNotFoundException"/>
-        /// <exception cref="IOException"/>
-        /// <exception cref="UnauthorizedAccessException"/>
-        /// <exception cref="FileNotFoundException"/>
-        /// <exception cref="NotSupportedException"/>
-        /// <exception cref="System.Security.SecurityException"/>
-        /// <returns>The identifier used to send the file.</returns>
-        public int SendFile(string arg2, string filepath, bool asUTF8, int identifier = -1) {
-
-            byte[] data;
-
-            if (File.Exists(filepath)) {
-
-                long len = new FileInfo(filepath).Length;
-                if (len >= 64000000) {
-                    throw new ArgumentOutOfRangeException($"Attempt to send file of size {len / 1000.0 / 1000.0} MB, this is not allowed!. Only files smaller than 64MB can be sent.");
-                }
-
-                if (asUTF8) {
-                    data = FileUtil.ReadUTF8Binary(filepath);
-                } else {
-                    data = File.ReadAllBytes(filepath);
-                }
-
-            } else {
-                data = new byte[0];
-                Trace.WriteLine($"The file @ \"{filepath}\" does not exist");
-            }
-
-            Message message = new Message(Message_Type.LOBBY_SENDFILE, Path.GetFileName(filepath), arg2) {
-                Identifier = identifier,
-                FileData = data
-            };
-            Message.SetIdentifier(this.m_socket, message);
-
-            this.m_messageQueue.Enqueue(message);
-
-            // Return the identifier
-            return message.Identifier;
-
         }
 
     }

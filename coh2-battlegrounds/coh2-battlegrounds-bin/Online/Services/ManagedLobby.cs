@@ -2,14 +2,14 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Net.Sockets;
 using System.Threading.Tasks;
 
 using Battlegrounds.Compiler;
 using Battlegrounds.Functional;
 using Battlegrounds.Game.Battlegrounds;
-using Battlegrounds.Game.Gameplay;
-using Battlegrounds.Modding;
+using Battlegrounds.Steam;
 
 namespace Battlegrounds.Online.Services {
     
@@ -23,13 +23,12 @@ namespace Battlegrounds.Online.Services {
         /// </summary>
         public const string SEND_ALL = "ALL";
 
+        SteamUser m_self;
         Connection m_underlyingConnection;
+        string m_lobbyID;
         bool m_isHost;
 
-        /// <summary>
-        /// The worker <see cref="Connection"/> used to connect to files. This is only available to the DLL.
-        /// </summary>
-        internal Connection WorkerConnection => this.m_underlyingConnection;
+        private string LobbyFileID => this.m_lobbyID.Replace("-", "");
 
         /// <summary>
         /// Event triggered when a player-specific event was received.
@@ -45,11 +44,6 @@ namespace Battlegrounds.Online.Services {
         /// Event triggered when the client receives a data request.
         /// </summary>
         public event ManagedLobbyQuery OnDataRequest;
-
-        /// <summary>
-        /// Even triggered when a file has been received.
-        /// </summary>
-        public event ManagedLobbyFileReceived OnFileReceived;
 
         /// <summary>
         /// Event triggered when the host has sent the <see cref="Message_Type.LOBBY_STARTMATCH"/> message.
@@ -76,7 +70,6 @@ namespace Battlegrounds.Online.Services {
             // Assign the underlying connection and start listening for messages
             this.m_underlyingConnection = connection;
             this.m_underlyingConnection.OnMessage += this.ManagedLobbyInternal_MessageReceived;
-            this.m_underlyingConnection.OnFile += this.ManagedLobbyInternal_FileReceived;
             this.m_underlyingConnection.Start();
 
             // Assign hostship
@@ -190,60 +183,11 @@ namespace Battlegrounds.Online.Services {
         }
 
         /// <summary>
-        /// Send a file to another user in the lobby.
-        /// </summary>
-        /// <param name="receiver">The username of the recipient.</param>
-        /// <param name="filepath">The filepath of the file to send.</param>
-        /// <returns>The identifier used to send the file. -1 if unable to send file.</returns>
-        public int SendFile(string receiver, string filepath, bool asUTF8)
-            => this.SendFile(receiver, filepath, -1, asUTF8);
-
-        /// <summary>
-        /// Send a file to another user in the lobby with a specific identifier.
-        /// </summary>
-        /// <param name="receiver">The username of the recipient.</param>
-        /// <param name="filepath">The filepath of the file to send.</param>
-        /// <param name="identifier">The custom identifier to use when sending message.</param>
-        /// <returns>The identifier used to send the file. -1 if unable to send file.</returns>
-        public int SendFile(string receiver, string filepath, int identifier, bool asUTF8) {
-            if (m_underlyingConnection != null && m_underlyingConnection.IsConnected) {
-                return m_underlyingConnection.SendFile(receiver, filepath, asUTF8, identifier);
-            } else {
-                return -1;
-            }
-        }
-
-        /// <summary>
         /// Get a random identifier to identify messages.
         /// </summary>
         /// <returns>A random identifier.</returns>
         public int GetRandomIdentifier()
             => Message.GetIdentifier(this.m_underlyingConnection.ConnectionSocket);
-
-        /// <summary>
-        /// Request the <see cref="Company"/> file from a specific user in the lobby.
-        /// </summary>
-        /// <param name="from">The user to request <see cref="Company"/> file from.</param>
-        /// <param name="response">The <see cref="ManagedLobbyFileReceived"/> response callback to use when a response from the user is received.</param>
-        public void GetCompanyFileFrom(string from, ManagedLobbyFileReceived response) {
-            if (m_underlyingConnection != null && m_underlyingConnection.IsConnected) {
-                Message message = new Message(Message_Type.LOBBY_REQUEST_COMPANY, from);
-                Message.SetIdentifier(m_underlyingConnection.ConnectionSocket, message);
-                void OnMessage(Message msg) {
-                    if (msg.Descriptor == Message_Type.LOBBY_SENDFILE) {
-                        response?.Invoke(msg.Argument2, msg.Argument1, true, msg.FileData, msg.Identifier);
-                        if (from.CompareTo(SEND_ALL) != 0) {
-                            m_underlyingConnection.ClearIdentifierReceiver(msg.Identifier);
-                        }
-                    } else {
-                        response?.Invoke(from, null, false, null, msg.Identifier);
-                    }
-                }
-                m_underlyingConnection.SetIdentifierReceiver(message.Identifier, OnMessage);
-                m_underlyingConnection.SendMessage(message);
-                Trace.WriteLine("Sent request for getting company files.");
-            }
-        }
 
         /// <summary>
         /// Gracefully disconnect from the <see cref="ManagedLobby"/>.
@@ -287,6 +231,69 @@ namespace Battlegrounds.Online.Services {
 
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public async Task<ulong[]> GetPlayerIDsAsync() {
+
+            ulong[] playerids = null;
+            bool alldone = false;
+
+            void OnMessage(Message response) {
+                Trace.WriteLine(response);
+                if (response.Descriptor == Message_Type.LOBBY_PLAYERIDS) {
+                    playerids = response.Argument1.Split(';', StringSplitOptions.RemoveEmptyEntries).ForEach(x => x.Replace("\"", "")).Select(x => ulong.Parse(x)).ToArray();
+                }
+                alldone = true;
+            }
+
+            Message playerIDQueryMessage = new Message(Message_Type.LOBBY_PLAYERIDS);
+            Message.SetIdentifier(m_underlyingConnection.ConnectionSocket, playerIDQueryMessage);
+            m_underlyingConnection.SetIdentifierReceiver(playerIDQueryMessage.Identifier, OnMessage);
+            m_underlyingConnection.SendMessage(playerIDQueryMessage);
+            m_underlyingConnection.Listen();
+
+            while (!alldone) {
+                await Task.Delay(1);
+            }
+
+            return playerids;
+
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="player"></param>
+        /// <returns></returns>
+        public async Task<ulong> GetLobbyPlayerIDAsync(string player) {
+
+            ulong id = 0; // in the case of Steam ID's, 0 should never happen
+            bool alldone = false;
+
+            void OnMessage(Message message) {
+                Trace.WriteLine(message);
+                if (message.Descriptor == Message_Type.LOBBY_GETPLAYERID) {
+                    ulong.TryParse(message.Argument1, out id);
+                }
+                alldone = true;
+            }
+
+            Message idQueryMessage = new Message(Message_Type.LOBBY_GETPLAYERID, player);
+            Message.SetIdentifier(m_underlyingConnection.ConnectionSocket, idQueryMessage);
+            m_underlyingConnection.SetIdentifierReceiver(idQueryMessage.Identifier, OnMessage);
+            m_underlyingConnection.SendMessage(idQueryMessage);
+            m_underlyingConnection.Listen();
+
+            while (!alldone) {
+                await Task.Delay(1);
+            }
+
+            return id;
+
+        }
+
         private Company GetLocalCompany() {
             object val = this.OnLocalDataRequested?.Invoke("CompanyData");
             if (val is Company c) {
@@ -297,30 +304,73 @@ namespace Battlegrounds.Online.Services {
             return null;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="companyFile"></param>
+        public void UploadCompany(string companyFile) {
+
+            // Get file
+            string targetFile = BattlegroundsInstance.GetRelativePath(BattlegroundsPaths.COMPANY_FOLDER, "current_company.json");
+
+            // Copy file
+            File.Copy(companyFile, targetFile, true);
+
+            // Upload file
+            FileHub.UploadFile(targetFile, $"{this.m_self.ID}_company.json", this.LobbyFileID);
+
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="player"></param>
+        /// <param name="destination"></param>
+        /// <returns></returns>
+        public async Task<bool> GetLobbyCompany(string player, string destination) 
+            => this.GetLobbyCompany(await this.GetLobbyPlayerIDAsync(player), destination);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="userID"></param>
+        /// <param name="destination"></param>
+        /// <returns></returns>
+        public bool GetLobbyCompany(ulong userID, string destination) 
+            =>FileHub.DownloadFile(destination, $"{userID}_company.json", this.LobbyFileID);
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         private async Task<(List<Company>, bool)> GetLobbyCompanies() {
 
-            FileSync sync = new FileSync(this, new Message(Message_Type.LOBBY_REQUEST_COMPANY, SEND_ALL));
+            ulong[] lobbyPlayers = await this.GetPlayerIDsAsync();
+            List<Company> companies = new List<Company>();
+            bool success = false; ;
+            
+            await Task.Run(() => {
 
-            await sync.Sync();
+                int count = 0;
 
-            if (sync.IsSynced) {
+                for (int i = 0; i < lobbyPlayers.Length; i++) {
 
-                List<Company> companies = new List<Company>();
+                    string destination = BattlegroundsInstance.GetRelativePath(BattlegroundsPaths.SESSION_FOLDER, $"{lobbyPlayers[i]}_company.json");
 
-                foreach (FileSync.SyncFile file in sync.SyncedFiles) {
-                    Trace.WriteLine(file.From + ":" + file.Name + ":" + file.Data.Length);
-                    if (file.Data.Length > 0) {
-                        Company readcompany = Company.ReadCompanyFromBytes(file.Data);
-                        readcompany.Owner = file.From;
-                        companies.Add(readcompany);
+                    if (!this.GetLobbyCompany(lobbyPlayers[i], destination)) {
+                        // TODO: Try and redownload
+                    } else {
+                        companies.Add(Company.ReadCompanyFromFile(destination));
+                        count++;
                     }
+
                 }
 
-                return (companies, true);
+                success = count == lobbyPlayers.Length;
 
-            } else {
-                return (null, false);
-            }
+            });
+
+            return (companies, success);
 
         }
 
@@ -336,6 +386,7 @@ namespace Battlegrounds.Online.Services {
                 return;
             }
 
+            // Get the local company
             Company ownCompany = GetLocalCompany();
             if (ownCompany == null) {
                 operationCancelled?.Invoke("Failed to load own company!");
@@ -344,12 +395,22 @@ namespace Battlegrounds.Online.Services {
                 ownCompany.Owner = BattlegroundsInstance.LocalSteamuser.Name;
             }
 
+            // Send a "Starting match" message to lobby members
+            m_underlyingConnection.SendMessage(new Message(Message_Type.LOBBY_STARTING));
+
+            // Wait a bit
+            await Task.Delay(240);
+
+            // Get company lobbies
             (List<Company> lobbyCompanies, bool success) = await GetLobbyCompanies();
 
+            // If we managed to retrieve companies
             if (success) {
 
+                // Add our own
                 lobbyCompanies.Add(ownCompany);
 
+                // The session to be built
                 Session session = null;
 
                 try {
@@ -371,6 +432,7 @@ namespace Battlegrounds.Online.Services {
                     operationCancelled?.Invoke(e.Message);
                 }
 
+                // Did we fail to create session?
                 if (session is null) {
                     operationCancelled?.Invoke("Failed to create session");
                 }
@@ -380,7 +442,7 @@ namespace Battlegrounds.Online.Services {
                     session,
                     this.ManagedLobbyInternal_GameSessionStatusChanged,
                     this.ManagedLobbyInternal_GameMatchAnalyzed,
-                    async () => await this.ManagedLobbyInternal_GameOnGamemodeCompiled(operationCancelled));
+                    () => this.ManagedLobbyInternal_GameOnGamemodeCompiled(operationCancelled));
 
             } else {
                 operationCancelled?.Invoke("Failed to get lobby companies");
@@ -388,25 +450,29 @@ namespace Battlegrounds.Online.Services {
 
         }
 
-        async Task<bool> ManagedLobbyInternal_GameOnGamemodeCompiled(Action<string> operationCancelled) {
+        bool ManagedLobbyInternal_GameOnGamemodeCompiled(Action<string> operationCancelled) {
 
             string sgapath = $"{Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)}\\my games\\Company of Heroes 2\\mods\\gamemode\\coh2_battlegrounds_wincondition.sga";
 
             if (File.Exists(sgapath)) {
 
-                FileSync sgaSync = new FileSync(this, sgapath);
+                // Upload
+                if (FileHub.UploadFile(sgapath, "gamemode.sga", this.LobbyFileID)) {
 
-                await sgaSync.Sync();
+                    // Notify lobby players the gamemode is available
+                    this.m_underlyingConnection.SendMessage(new Message(Message_Type.LOBBY_NOTIFY_GAMEMODE));
 
-                if (sgaSync.SyncFailed) {
-                    operationCancelled?.Invoke("Failed send .sga to all participants.");
-                    return false;
+                    // Send the start match...
+                    this.m_underlyingConnection.SendMessage(new Message(Message_Type.LOBBY_STARTMATCH));
+
+                    // Return true
+                    return true;
+
+                } else {
+
+                    operationCancelled?.Invoke("Failed to upload gamemode!");
+
                 }
-
-                // Send the start match...
-                this.m_underlyingConnection.SendMessage(new Message(Message_Type.LOBBY_STARTMATCH));
-
-                return true;
 
             } else {
                 operationCancelled?.Invoke("Failed to compile!");
@@ -474,27 +540,10 @@ namespace Battlegrounds.Online.Services {
                 case Message_Type.LOBBY_STARTMATCH:
                     this.OnStartMatchReceived?.Invoke();
                     break;
-                case Message_Type.LOBBY_SENDFILE:
-                    break;
                 case Message_Type.CONFIRMATION_MESSAGE:
                     break;
                 default: Trace.WriteLine($"Unhandled type {incomingMessage.Descriptor}"); break;
             }
-        }
-
-        private void ManagedLobbyInternal_FileReceived(Message incomingFileMessage) {
-            if (incomingFileMessage.Argument1.CompareTo("coh2_battlegrounds_wincondition.sga") == 0) {
-                Trace.WriteLine($"Received .sga -- returning OK message to {incomingFileMessage.Argument2}");
-                this.m_underlyingConnection.SendMessage(
-                    incomingFileMessage.CreateResponse(Message_Type.CONFIRMATION_MESSAGE, incomingFileMessage.Argument2, "Received .sga"));
-            }
-            this.OnFileReceived?.Invoke(
-                incomingFileMessage.Argument2, 
-                incomingFileMessage.Argument1, 
-                !(incomingFileMessage.FileData is null), 
-                incomingFileMessage.FileData, 
-                incomingFileMessage.Identifier
-                );
         }
 
         /// <summary>
@@ -522,7 +571,10 @@ namespace Battlegrounds.Online.Services {
                 if (connected) {
                     void OnLobbyCreated(Socket _, Message response) {
                         if (response.Descriptor == Message_Type.CONFIRMATION_MESSAGE) {
-                            managedCallback?.Invoke(new ManagedLobbyStatus(true), new ManagedLobby(connection, true));
+                            managedCallback?.Invoke(new ManagedLobbyStatus(true), new ManagedLobby(connection, true) { 
+                                m_lobbyID = response.Argument2, 
+                                m_self = hub.User 
+                            });
                         } else {
                             managedCallback?.Invoke(new ManagedLobbyStatus(false, response.Argument1), null);
                         }
@@ -576,7 +628,10 @@ namespace Battlegrounds.Online.Services {
                 if (connected) {
                     void OnLobbyJoinResponse(Socket _, Message response) {
                         if (response.Descriptor == Message_Type.CONFIRMATION_MESSAGE) {
-                            managedCallback?.Invoke(new ManagedLobbyStatus(true), new ManagedLobby(connection, false));
+                            managedCallback?.Invoke(new ManagedLobbyStatus(true), new ManagedLobby(connection, false) { 
+                                m_lobbyID = response.Argument2,
+                                m_self = hub.User,
+                            });
                         } else {
                             managedCallback?.Invoke(new ManagedLobbyStatus(false, response.Argument1), null);
                         }

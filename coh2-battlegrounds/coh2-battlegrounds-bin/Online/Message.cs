@@ -6,15 +6,7 @@ using System.Net;
 using System.Net.Sockets;
 using System.Text;
 
-/*
- * This file was copied directly from the serverside.
- * Do not modify this code.
- * - CoDiEx
- */
-
 namespace Battlegrounds.Online {
-
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
 
     public enum Message_Type : byte {
 
@@ -50,8 +42,6 @@ namespace Battlegrounds.Online {
 
         LOBBY_METAMESSAGE, // Send metamessage
 
-        LOBBY_SENDFILE, // Send file
-
         LOBBY_REQUEST_COMPANY,
 
         LOBBY_REQUEST_RESULTS,
@@ -66,17 +56,17 @@ namespace Battlegrounds.Online {
 
         LOBBY_PLAYERNAMES,
 
+        LOBBY_PLAYERIDS,
+
         LOBBY_GETPLAYERID,
 
         LOBBY_SETHOST, // Message sent to client that they're now the host.
 
-        LOBBY_GETMATCHSETTINGS,
-
-        LOBBY_SENDMATCHSETTINGS,
-
         LOBBY_STARTING, // Host has pressed the start button
 
         LOBBY_CANCEL, // Tell the lobby to cancel match start
+
+        LOBBY_NOTIFY_GAMEMODE, // Notify lobby members the gamemode is available
 
         USER_SETUSERDATA, // Set the user data
 
@@ -98,14 +88,14 @@ namespace Battlegrounds.Online {
 
         public string Argument1;
         public string Argument2;
-
-        public byte[] FileData;
+        public string Argument3;
 
         public Message() {
             this.Descriptor = Message_Type.ERROR_MESSAGE;
             this.Identifier = -1;
             this.Argument1 = string.Empty;
             this.Argument2 = string.Empty;
+            this.Argument3 = string.Empty;
         }
 
         public Message(Message_Type type) {
@@ -113,65 +103,55 @@ namespace Battlegrounds.Online {
             this.Identifier = -1;
             this.Argument1 = string.Empty;
             this.Argument2 = string.Empty;
+            this.Argument3 = string.Empty;
         }
 
-        public Message(Message_Type type, string arg1) {
-            this.Descriptor = type;
-            this.Identifier = -1;
-            this.Argument1 = arg1;
-            this.Argument2 = string.Empty;
-        }
-
-        public Message(Message_Type type, string arg1, string arg2) {
+        public Message(Message_Type type, string arg1 = "", string arg2 = "", string arg3 = "") {
             this.Descriptor = type;
             this.Identifier = -1;
             this.Argument1 = arg1;
             this.Argument2 = arg2;
+            this.Argument3 = arg3;
         }
 
-        public Message CreateResponse(Message_Type type, string arg1 = "", string arg2 = "") {
-            Message message = new Message(type, arg1, arg2) {
+        public Message CreateResponse(Message_Type type, string arg1 = "", string arg2 = "", string arg3 = "") {
+            Message message = new Message(type, arg1, arg2, arg3) {
                 Identifier = this.Identifier
             };
             return message;
         }
-
-        public void EncodeStringAsFile(string content)
-            => this.FileData = Encoding.ASCII.GetBytes(content);
 
         public byte[] ToBytes() {
 
             MemoryStream ms = new MemoryStream();
             using (BinaryWriter binaryWriter = new BinaryWriter(ms)) {
 
-                byte[] arg1 = Encoding.ASCII.GetBytes(this.Argument1);
-                byte[] arg2 = Encoding.ASCII.GetBytes(this.Argument2);
+                byte[] arg1 = Encoding.UTF8.GetBytes(this.Argument1);
+                byte[] arg2 = Encoding.UTF8.GetBytes(this.Argument2);
+                byte[] arg3 = Encoding.UTF8.GetBytes(this.Argument3);
 
-                int len1 = arg1.Length;
-                int len2 = arg2.Length;
-                int len3 = (FileData == null) ? 0 : FileData.Length + sizeof(UInt16);
+                ushort len1 = (ushort)arg1.Length;
+                ushort len2 = (ushort)arg2.Length;
+                ushort len3 = (ushort)arg3.Length;
 
-                ushort totalSize = (ushort)(len1 + len2 + len3 + (sizeof(Int32) + (sizeof(byte) * 5) + sizeof(bool)));
+                int ushortSize = (len1 == 0) ? 0 : sizeof(ushort) + ((len2 == 0) ? 0 : sizeof(ushort) + ((len3 == 0) ? 0 : sizeof(ushort)));
+                ushort totalSize = (ushort)(len1 + len2 + len3 + ushortSize + (sizeof(ushort) + sizeof(int) + (sizeof(byte) * 3)));
 
-                binaryWriter.Write((UInt16)totalSize);
+                binaryWriter.Write((ushort)totalSize);
                 binaryWriter.Write((byte)this.Descriptor);
-                binaryWriter.Write((Int32)this.Identifier);
+                binaryWriter.Write((int)this.Identifier);
 
-                binaryWriter.Write((byte)len1);
-                binaryWriter.Write(arg1);
-
-                binaryWriter.Write((byte)len2);
-                binaryWriter.Write(arg2);
-
-                if (FileData != null && FileData.Length == 0) {
-                    FileData = null;
-                }
-
-                binaryWriter.Write(FileData != null);
-
-                if (FileData != null) {
-                    binaryWriter.Write((UInt16)FileData.Length);
-                    binaryWriter.Write(FileData);
+                if (len1 > 0) {
+                    binaryWriter.Write((ushort)len1);
+                    binaryWriter.Write(arg1);
+                    if (len2 > 0) {
+                        binaryWriter.Write((ushort)len2);
+                        binaryWriter.Write(arg2);
+                        if (len3 > 0) {
+                            binaryWriter.Write((ushort)len3);
+                            binaryWriter.Write(arg3);
+                        }
+                    }
                 }
 
                 // Write end bytes
@@ -205,13 +185,26 @@ namespace Battlegrounds.Online {
                         m.Descriptor = (Message_Type)subReader.ReadByte();
                         m.Identifier = subReader.ReadInt32();
 
-                        byte l1 = subReader.ReadByte();
-                        m.Argument1 = Encoding.ASCII.GetString(subReader.ReadBytes(l1));
+                        int p = subReader.PeekChar();
+                        if (p != -1 && subReader.BaseStream.Position + 2 < size) {
 
-                        byte l2 = subReader.ReadByte();
-                        m.Argument2 = Encoding.ASCII.GetString(subReader.ReadBytes(l2));
-                        if (subReader.ReadBoolean()) {
-                            m.FileData = subReader.ReadBytes(subReader.ReadUInt16());
+                            ushort l1 = subReader.ReadUInt16();
+                            m.Argument1 = Encoding.ASCII.GetString(subReader.ReadBytes(l1));
+
+                            p = subReader.PeekChar();
+                            if (p != -1 && subReader.BaseStream.Position + 2 < size) {
+
+                                ushort l2 = subReader.ReadUInt16();
+                                m.Argument2 = Encoding.ASCII.GetString(subReader.ReadBytes(l2));
+
+                                p = subReader.PeekChar();
+                                if (p != -1 && subReader.BaseStream.Position + 2 < size) {
+
+                                    ushort l3 = subReader.ReadUInt16();
+                                    m.Argument3 = Encoding.ASCII.GetString(subReader.ReadBytes(l3));
+
+                                }
+                            }
                         }
 
                     } catch (Exception e) {
@@ -223,8 +216,8 @@ namespace Battlegrounds.Online {
 
                 }
 
-            } catch {
-
+            } catch (Exception e) {
+                Console.WriteLine($"[Server.IO] {e.Message}");
             }
 
             return messages;
@@ -244,11 +237,11 @@ namespace Battlegrounds.Online {
 
         internal static int GetIdentifier(Socket socket)
             => Encoding.ASCII.GetBytes(
-                (socket.RemoteEndPoint as IPEndPoint).Address.ToString() + 
-                (DateTime.UtcNow.TimeOfDay + DateTime.Now.TimeOfDay).ToString() + 
+                (socket.RemoteEndPoint as IPEndPoint).Address.ToString() +
+                DateTime.UtcNow.TimeOfDay.ToString() +
                 Guid.NewGuid().ToString()).Aggregate(0, (a, b) => a += b);
 
-        public override string ToString() => $"{this.Descriptor}: \"{this.Argument1}\" : \"{this.Argument2}\"";
+        public override string ToString() => $"{this.Descriptor}: \"{this.Argument1}\" : \"{this.Argument2}\" : \"{this.Argument3}\"";
 
     }
 
@@ -257,5 +250,3 @@ namespace Battlegrounds.Online {
     }
 
 }
-
-#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member

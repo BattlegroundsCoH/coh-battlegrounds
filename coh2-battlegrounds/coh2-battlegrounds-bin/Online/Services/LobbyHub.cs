@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Net;
 using System.Net.Sockets;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
@@ -29,7 +28,7 @@ namespace Battlegrounds.Online.Services {
             try {
 
                 Ping ping = new Ping();
-                PingReply reply = ping.Send(BattlegroundsInstance.BattlegroundHubAddress);
+                PingReply reply = ping.Send(AddressBook.LobbyServerAddress);
 
                 if (reply.Status == IPStatus.Success) {
                     return true;
@@ -86,7 +85,7 @@ namespace Battlegrounds.Online.Services {
 
             }
 
-            MessageSender.SendMessage(new IPEndPoint(IPAddress.Parse(BattlegroundsInstance.BattlegroundHubAddress), 11000), message, OnLobby);
+            MessageSender.SendMessage(AddressBook.GetLobbyServer(), message, OnLobby);
             int m = connectableLobbies.Count;
 
             while (!gotAll && timeout > 0) {
@@ -124,7 +123,7 @@ namespace Battlegrounds.Online.Services {
 
             }
 
-            MessageSender.SendMessage(new IPEndPoint(IPAddress.Parse(BattlegroundsInstance.BattlegroundHubAddress), 11000), message, OnLobby);
+            MessageSender.SendMessage(AddressBook.GetLobbyServer(), message, OnLobby);
 
         }
 
@@ -147,7 +146,7 @@ namespace Battlegrounds.Online.Services {
             }
 
             // Send the message
-            MessageSender.SendMessage(new IPEndPoint(IPAddress.Parse(BattlegroundsInstance.BattlegroundHubAddress), 11000), addUserMessage, OnResponse);
+            MessageSender.SendMessage(AddressBook.GetLobbyServer(), addUserMessage, OnResponse);
 
         }
         

@@ -58,7 +58,7 @@ namespace coh2_battlegrounds_console {
             testCompany.SaveToFile("test_company.json");
 
             
-            /*LobbyHub hub = new LobbyHub();
+            LobbyHub hub = new LobbyHub();
             if (!hub.CanConnect()) {
                 Console.WriteLine("Unable to reach server hub");
             } else {
@@ -75,7 +75,7 @@ namespace coh2_battlegrounds_console {
             }
             
             BattlegroundsInstance.SaveInstance();
-            */
+            
             Console.ReadLine();
 
         }
@@ -421,13 +421,6 @@ namespace coh2_battlegrounds_console {
 
         private static void OnMessageLoop(ManagedLobbyStatus status, ManagedLobby result) {
 
-            static void OnCompanyFileReceived(string from, string name, bool received, byte[] content) {
-                Console.WriteLine("Received company data");
-                if (received) {
-                    File.WriteAllBytes("hello.json", content);
-                }
-            }
-
             if (status.Success) {
 
                 Console.WriteLine("Connection was established!");
@@ -437,7 +430,6 @@ namespace coh2_battlegrounds_console {
                         Console.WriteLine($"{b}: {c}");
                         Console.WriteLine("Testing launch feature");
                         result.CompileAndStartMatch(x => Console.WriteLine(x));
-                        //result.GetCompanyFileFrom(b, OnCompanyFileReceived);
                     } else {
                         string word = (a == ManagedLobbyPlayerEventType.Leave) ? "Left" : (a == ManagedLobbyPlayerEventType.Kicked ? "Was kicked" : "Joined");
                         Console.WriteLine($"{b} {word}");
@@ -457,7 +449,7 @@ namespace coh2_battlegrounds_console {
                 result.OnDataRequest += (a, b, c, d) => {
                     if (c.CompareTo("CompanyData") == 0) {
                         Console.WriteLine("Received request for company data using identifier " + d);
-                        result.SendFile(b, "test_company.json", d, true);
+                        //result.SendFile(b, "test_company.json", d, true);
                     } 
                 };
 
@@ -465,10 +457,11 @@ namespace coh2_battlegrounds_console {
                     result.SendChatMessage("Hello World");
                 }
 
+                result.UploadCompany("test_company.json");
+
             } else {
                 Console.WriteLine(status.Message);
             }
-
 
         }
 

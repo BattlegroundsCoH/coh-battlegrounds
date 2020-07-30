@@ -5,6 +5,7 @@ using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using Battlegrounds.Util;
+using Battlegrounds.Functional;
 
 namespace Battlegrounds.Json {
     
@@ -150,6 +151,31 @@ namespace Battlegrounds.Json {
                     } else {
                         jsonbuilder.AppendLine($"\"{name}\": {jso.Serialize(jsonbuilder.GetIndent()).Trim('\t', '\n')}{((appendComma) ? "," : "")}");
                     }
+                } else if (type.GenericTypeArguments.Length == 2 && type == typeof(Dictionary<,>).MakeGenericType(type.GenericTypeArguments)) {
+                    jsonbuilder.AppendLine($"\"{name}\": {{");
+                    jsonbuilder.IncreaseIndent();
+                    dynamic dic = val; // BAD
+                    int i = 0;
+                    int j = dic.Count - 1;
+                    foreach (dynamic kvp in dic) {
+                        Type t = kvp.Value.GetType();
+                        string entryName = kvp.Key.ToString();
+                        if (t.IsPrimitive || kvp.Value is string) {
+                            jsonbuilder.Append($"\"{entryName}\" : \"{(kvp.Value as string).Replace("\\", "\\\\")}\"{((i < j) ? ",\n" : "")}");
+                        } else if (kvp.Value is IJsonObject jso2) {
+                            if (attributeSet.UseRef) {
+                                jsonbuilder.Append($"\"{entryName}\" : \"{jso2.ToJsonReference()}\"{((i < j) ? ",\n" : "")}");
+                            } else {
+                                jsonbuilder.Append($"\"{entryName}\" : {jso2.Serialize(jsonbuilder.GetIndent()).TrimEnd('\n')}{((i < j) ? ",\n" : "")}", false);
+                            }
+                        }
+                        i++;
+                    }
+                    if (j >= 0) {
+                        jsonbuilder.Append("\n", false);
+                    }
+                    jsonbuilder.DecreaseIndent();
+                    jsonbuilder.AppendLine($"}}{((appendComma) ? "," : "")}");
                 } else if (type.GenericTypeArguments.Length > 0 && type.GetInterfaces().Contains(typeof(IEnumerable<>).MakeGenericType(type.GenericTypeArguments))) {
                     jsonbuilder.AppendLine($"\"{name}\": [");
                     jsonbuilder.IncreaseIndent();
@@ -173,7 +199,7 @@ namespace Battlegrounds.Json {
                         jsonbuilder.Append("\n", false);
                     }
                     jsonbuilder.DecreaseIndent();
-                    jsonbuilder.AppendLine($"]{((appendComma)?",":"")}");
+                    jsonbuilder.AppendLine($"]{((appendComma) ? "," : "")}");
                 } else {
                     jsonbuilder.AppendLine($"\"{name}\": \"{val}\"{((appendComma) ? "," : "")}");
                 }
@@ -188,12 +214,14 @@ namespace Battlegrounds.Json {
         /// <returns>A deserialized instance of the json input string</returns>
         internal static object Deserialize(Dictionary<string, object> parsedJson) {
 
+            // Solve type
             if (!parsedJson.TryGetValue("jsdbtype", out object type)) {
-                throw new ArgumentException();
+                type = typeof(JsonKeyValueSet).AssemblyQualifiedName;
             } else {
                 parsedJson.Remove("jsdbtype");
             }
 
+            // Make sure type is valid
             if (type is null) {
                 throw new ArgumentNullException("The given 'jsdbtype' was null!");
             }
@@ -204,60 +232,78 @@ namespace Battlegrounds.Json {
             // Create object
             object source = Activator.CreateInstance(il_type);
 
-            // Get all the fields
-            FieldInfo[] fields = il_type.GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.FlattenHierarchy);
+            if (source is JsonKeyValueSet keyValues) {
 
-            // Get all the properties
-            PropertyInfo[] properties = il_type.GetProperties(BindingFlags.FlattenHierarchy | BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+                // Easily handle the dictionary style in a different method
+                HandleKeyValueSet(keyValues, parsedJson);
 
-            // Set the value (fields expected!)
-            foreach (var pair in parsedJson) {
+            } else {
 
-                // Define the reference attribute (it may be used)
-                JsonReferenceAttribute refAttrib;
-                JsonEnumAttribute enumAttrib;
+                // Get methods
+                MethodInfo[] methods = il_type.GetMethods(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.FlattenHierarchy);
 
-                if (fields.FirstOrDefault(x => x.Name == pair.Key) is FieldInfo finfo) { // Is Field?
+                //methods.ForEach(x => (x.GetCustomAttribute<>)) // TODO: Preinitialize
 
-                    // Get the reference attribute
-                    refAttrib = finfo.GetCustomAttribute<JsonReferenceAttribute>();
-                    enumAttrib = finfo.GetCustomAttribute<JsonEnumAttribute>();
+                // Get all the fields
+                FieldInfo[] fields = il_type.GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.FlattenHierarchy);
 
-                    // Use the reference method
-                    bool useRef = !(refAttrib is null);
+                // Get all the properties
+                PropertyInfo[] properties = il_type.GetProperties(BindingFlags.FlattenHierarchy | BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
 
-                    // Set the field value.
-                    SetValue(source, pair.Value, finfo.FieldType, useRef, finfo.SetValue, refAttrib?.GetReferenceFunction(), enumAttrib);
+                // Set the value (fields expected!)
+                foreach (var pair in parsedJson) {
 
-                } else if (properties.FirstOrDefault(x => x.Name == pair.Key) is PropertyInfo pinfo) { // Is Property?
+                    // Define the reference attribute (it may be used)
+                    JsonReferenceAttribute refAttrib;
+                    JsonEnumAttribute enumAttrib;
 
-                    // Get the reference attribute
-                    refAttrib = pinfo.GetCustomAttribute<JsonReferenceAttribute>();
-                    enumAttrib = pinfo.GetCustomAttribute<JsonEnumAttribute>();
+                    if (fields.FirstOrDefault(x => x.Name == pair.Key) is FieldInfo finfo) { // Is Field?
 
-                    // Use the reference method
-                    bool useRef = !(refAttrib is null);
+                        // Get the reference attribute
+                        refAttrib = finfo.GetCustomAttribute<JsonReferenceAttribute>();
+                        enumAttrib = finfo.GetCustomAttribute<JsonEnumAttribute>();
 
-                    // Do we have a set method?
-                    if (pinfo.SetMethod != null) {
+                        // Use the reference method
+                        bool useRef = !(refAttrib is null);
 
-                        // Set value using the 'SetMethod'
-                        SetValue(source, pair.Value, pinfo.PropertyType, useRef, pinfo.SetValue, refAttrib?.GetReferenceFunction(), enumAttrib);
+                        // Set the field value.
+                        SetValue(source, pair.Value, finfo.FieldType, useRef, finfo.SetValue, refAttrib?.GetReferenceFunction(), enumAttrib);
 
-                    } else {
+                    } else if (properties.FirstOrDefault(x => x.Name == pair.Key) is PropertyInfo pinfo) { // Is Property?
 
-                        // Get the backing field
-                        FieldInfo backingField = il_type.GetField($"<{pinfo.Name}>k__BackingField", BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.FlattenHierarchy);
+                        // Get the reference attribute
+                        refAttrib = pinfo.GetCustomAttribute<JsonReferenceAttribute>();
+                        enumAttrib = pinfo.GetCustomAttribute<JsonEnumAttribute>();
 
-                        // Set the value of the backing field.
-                        SetValue(source, pair.Value, backingField.FieldType, useRef, backingField.SetValue, refAttrib?.GetReferenceFunction(), enumAttrib);
+                        // Use the reference method
+                        bool useRef = !(refAttrib is null);
+
+                        // Do we have a set method?
+                        if (pinfo.SetMethod != null) {
+
+                            // Set value using the 'SetMethod'
+                            SetValue(source, pair.Value, pinfo.PropertyType, useRef, pinfo.SetValue, refAttrib?.GetReferenceFunction(), enumAttrib);
+
+                        } else {
+
+                            // Get the backing field
+                            FieldInfo backingField = il_type.GetField($"<{pinfo.Name}>k__BackingField", BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.FlattenHierarchy);
+
+                            // Set the value of the backing field.
+                            SetValue(source, pair.Value, backingField.FieldType, useRef, backingField.SetValue, refAttrib?.GetReferenceFunction(), enumAttrib);
+
+                        }
 
                     }
 
                 }
 
+                // Invoke all the OnDeserialized methods
+                methods.ForEach(x => x.IfTrue(y => y.GetCustomAttribute<JsonOnDeserializedAttribute>() is JsonOnDeserializedAttribute).Then(y => y.Invoke(source, null)));
+
             }
 
+            // Return the object we've deserialized
             return source;
 
         }
@@ -274,6 +320,15 @@ namespace Battlegrounds.Json {
 
                 // Set the value using the enumerable
                 setValueMethod.Invoke(instance, enumerableType);
+
+            } else if (value is JsonKeyValueSet jkvs) {
+
+                // Create and populate key-value set
+                object valueset = Activator.CreateInstance(valueType);
+                jkvs.Populate(valueset, valueType.GenericTypeArguments[0], valueType.GenericTypeArguments[1], derefMethood);
+
+                // Set the value
+                setValueMethod.Invoke(instance, valueset);
 
             } else {
 
@@ -318,6 +373,27 @@ namespace Battlegrounds.Json {
 
 
         }
+
+        private static void HandleKeyValueSet(JsonKeyValueSet pairs, Dictionary<string, object> keyValues) {
+
+            // Loop through
+            foreach (var pair in keyValues) {
+
+                // Get simplisticly
+                IJsonElement keyStr = new JsonValue(pair.Key);
+                IJsonElement valueObj = pair.Value as IJsonElement;
+
+                if (valueObj is null && pair.Value is string s) {
+                    valueObj = new JsonValue(s);
+                }
+
+                // Add
+                pairs.Add(keyStr, valueObj);
+
+            }
+
+        }
+
 
     }
 
