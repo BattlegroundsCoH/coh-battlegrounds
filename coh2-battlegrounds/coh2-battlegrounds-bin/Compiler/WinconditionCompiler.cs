@@ -38,15 +38,15 @@ namespace Battlegrounds.Compiler {
 
         // URLs to the most up-to-date win files (Will need a separate branch for this later)
         private static string[] WinFiles = new string[] {
-            "https://raw.githubusercontent.com/JustCodiex/coh2-battlegrounds/master/coh2-battlegrounds-mod/wincondition_mod/coh2_battlegrounds.win",
+            "https://raw.githubusercontent.com/JustCodiex/coh2-battlegrounds/scar-release-branch/coh2-battlegrounds-mod/wincondition_mod/coh2_battlegrounds.win",
         };
 
         // URLs to the most up-to-date info file (Will need a separate branch for this later)
-        private static string InfoFile = "https://raw.githubusercontent.com/JustCodiex/coh2-battlegrounds/master/coh2-battlegrounds-mod/wincondition_mod/coh2_battlegrounds_wincondition%20Intermediate%20Cache/Intermediate%20Files/info/6a0a13b89555402ca75b85dc30f5cb04.info";
+        private static string InfoFile = "https://raw.githubusercontent.com/JustCodiex/coh2-battlegrounds/scar-release-branch/coh2-battlegrounds-mod/wincondition_mod/coh2_battlegrounds_wincondition%20Intermediate%20Cache/Intermediate%20Files/info/6a0a13b89555402ca75b85dc30f5cb04.info";
 
         // URLs to the most up-to-date locale files (Will need a separate branch for this later)
         private static string[] LocaleFiles = new string[] {
-            "https://raw.githubusercontent.com/JustCodiex/coh2-battlegrounds/master/coh2-battlegrounds-mod/wincondition_mod/locale/english/english.ucs",
+            "https://raw.githubusercontent.com/JustCodiex/coh2-battlegrounds/scar-release-branch/coh2-battlegrounds-mod/wincondition_mod/locale/english/english.ucs",
         };
 
         /// <summary>
