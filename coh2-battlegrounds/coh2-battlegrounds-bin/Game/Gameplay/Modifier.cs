@@ -1,9 +1,11 @@
-﻿namespace Battlegrounds.Game.Gameplay {
+﻿using Battlegrounds.Game.Scar;
+
+namespace Battlegrounds.Game.Gameplay {
     
     /// <summary>
-    /// Represents a <see cref="Modifier"/> to apply to a <see cref="Squad"/>.
+    /// Represents a <see cref="Modifier"/> to apply to a <see cref="Squad"/>. Implements <see cref="IScarValue"/>.
     /// </summary>
-    public readonly struct Modifier {
+    public readonly struct Modifier : IScarValue {
 
         /// <summary>
         /// The modifier value.
@@ -26,6 +28,8 @@
         }
 
         public override string ToString() => $"{this.Name} x{this.Value:0.00}";
+
+        public string ToScar() => $"{{ name = \"{this.Name}\", value = {this.Value:0.00} }}";
 
     }
 

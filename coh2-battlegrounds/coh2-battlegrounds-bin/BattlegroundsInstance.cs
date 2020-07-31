@@ -26,6 +26,9 @@ namespace Battlegrounds {
             /// </summary>
             [JsonReference(typeof(SteamUser))] public SteamUser User { get; set; }
 
+            /// <summary>
+            /// 
+            /// </summary>
             public Dictionary<string, string> Paths { get; set; }
 
             /// <summary>
@@ -143,6 +146,12 @@ namespace Battlegrounds {
         /// </summary>
         public static bool IsFirstRun { get; internal set; }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="pathID"></param>
+        /// <param name="appendPath"></param>
+        /// <returns></returns>
         public static string GetRelativePath(string pathID, string appendPath)
             => Path.Combine(__instance.GetPath(pathID), appendPath);
 

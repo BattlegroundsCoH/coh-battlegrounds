@@ -5,7 +5,6 @@ using System.IO;
 using System.Linq;
 using System.Text;
 
-using Battlegrounds.Functional;
 using Battlegrounds.Game.Database;
 using Battlegrounds.Game.Gameplay;
 using Battlegrounds.Json;
@@ -28,6 +27,9 @@ namespace Battlegrounds.Game.Battlegrounds {
         private ushort m_nextSquadId;
         [JsonIgnoreIfEmpty] private List<Squad> m_squads;
         [JsonIgnoreIfEmpty] private List<Blueprint> m_inventory;
+        [JsonIgnoreIfEmpty] private List<Modifier> m_modifiers;
+        [JsonIgnoreIfEmpty] private List<UpgradeBlueprint> m_upgrades;
+        [JsonIgnoreIfEmpty] private List<SpecialAbility> m_abilities;
 
         [JsonEnum(typeof(CompanyType))] private CompanyType m_companyType;
         [JsonReference(typeof(Faction))] private Faction m_companyArmy;
@@ -41,7 +43,7 @@ namespace Battlegrounds.Game.Battlegrounds {
         /// The <see cref="CompanyType"/> that can be used to describe the <see cref="Company"/> characteristics.
         /// </summary>
         [JsonIgnore]
-        public CompanyType Type => m_companyType;
+        public CompanyType Type => this.m_companyType;
 
         /// <summary>
         /// The GUID of the tuning mod used to create this company.
@@ -52,7 +54,7 @@ namespace Battlegrounds.Game.Battlegrounds {
         /// The <see cref="Faction"/> this company is associated with.
         /// </summary>
         [JsonIgnore]
-        public Faction Army => m_companyArmy;
+        public Faction Army => this.m_companyArmy;
 
         /// <summary>
         /// The display name of who owns the <see cref="Company"/>. This property is used by the compilers. This will be overriden.
@@ -64,19 +66,37 @@ namespace Battlegrounds.Game.Battlegrounds {
         /// <see cref="ImmutableArray{T}"/> representation of the units in the <see cref="Company"/>.
         /// </summary>
         [JsonIgnore]
-        public ImmutableArray<Squad> Units => m_squads.ToImmutableArray();
+        public ImmutableArray<Squad> Units => this.m_squads.ToImmutableArray();
 
         /// <summary>
         /// <see cref="ImmutableArray{T}"/> representation of a <see cref="Company"/> inventory of stored <see cref="Blueprint"/> objects.
         /// </summary>
         [JsonIgnore]
-        public ImmutableArray<Blueprint> Inventory => m_inventory.ToImmutableArray();
+        public ImmutableArray<Blueprint> Inventory => this.m_inventory.ToImmutableArray();
 
         /// <summary>
-        /// 
+        /// <see cref="ImmutableArray{T}"/> representation of a <see cref="Company"/>'s upgrade list.
         /// </summary>
         [JsonIgnore]
-        public string Checksum => m_checksum;
+        public ImmutableArray<UpgradeBlueprint> Upgrades => this.m_upgrades.ToImmutableArray();
+
+        /// <summary>
+        /// <see cref="ImmutableArray{T}"/> representation of a <see cref="Company"/>'s modifier list.
+        /// </summary>
+        [JsonIgnore]
+        public ImmutableArray<Modifier> Modifiers => this.m_modifiers.ToImmutableArray();
+
+        /// <summary>
+        /// <see cref="ImmutableArray{T}"/> representation of a <see cref="Company"/>'s special ability list.
+        /// </summary>
+        [JsonIgnore]
+        public ImmutableArray<SpecialAbility> Abilities => this.m_abilities.ToImmutableArray();
+
+        /// <summary>
+        /// The calculated company checksum.
+        /// </summary>
+        [JsonIgnore]
+        public string Checksum => this.m_checksum;
 
         /// <summary>
         /// New empty <see cref="Company"/> instance.
@@ -85,6 +105,9 @@ namespace Battlegrounds.Game.Battlegrounds {
         public Company() {
             this.m_squads = new List<Squad>();
             this.m_inventory = new List<Blueprint>();
+            this.m_modifiers = new List<Modifier>();
+            this.m_upgrades = new List<UpgradeBlueprint>();
+            this.m_abilities = new List<SpecialAbility>();
             this.m_companyType = CompanyType.Unspecified;
         }
 
@@ -141,14 +164,14 @@ namespace Battlegrounds.Game.Battlegrounds {
         /// <param name="squadID">The index of the squad to get</param>
         /// <returns>The squad with squad id matching requested squad ID or null.</returns>
         public Squad GetSquadByIndex(ushort squadID)
-            => m_squads.FirstOrDefault(x => x.SquadID == squadID);
+            => this.m_squads.FirstOrDefault(x => x.SquadID == squadID);
 
         /// <summary>
         /// 
         /// </summary>
         /// <param name="squadId"></param>
         public bool RemoveSquad(ushort squadId)
-            => m_squads.RemoveAll(x => x.SquadID == squadId) == 1;
+            => this.m_squads.RemoveAll(x => x.SquadID == squadId) == 1;
 
         /// <summary>
         /// Reset the squads of the company.

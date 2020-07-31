@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
+
 using Battlegrounds.Game.Battlegrounds;
 using Battlegrounds.Game.Database;
 using Battlegrounds.Game.Gameplay;
@@ -9,34 +11,54 @@ using Battlegrounds.Util;
 namespace Battlegrounds.Compiler {
     
     /// <summary>
-    /// 
+    /// Standard implementation for compiling a company into Lua format.
     /// </summary>
     public class CompanyCompiler {
     
         /// <summary>
-        /// 
+        /// New <see cref="CompanyCompiler"/> instance.
         /// </summary>
         public CompanyCompiler() {}
 
         /// <summary>
-        /// 
+        /// Compile a <see cref="Company"/> into a formatted string representing a lua table. Only in-game values are compiled. (Virtual Method).
         /// </summary>
-        /// <param name="company"></param>
-        /// <param name="indent"></param>
+        /// <param name="company">The company file to compile into lua string.</param>
+        /// <param name="indexOnTeam">The index of the player on their team. (Should only be used for AI).</param>
+        /// <param name="namedIndex">Use the name of the <see cref="Company"/> owner instead of their team index.</param>
+        /// <param name="indent">The indentation level to use when compiling lua.</param>
+        /// <returns>A formatted (and correct) lua table string containing all <see cref="Company"/> data for in-game use.</returns>
         public virtual string CompileToLua(Company company, bool namedIndex, byte indexOnTeam, int indent = 1) {
 
             TxtBuilder lua = new TxtBuilder();
 
-            lua.AppendLine($"[\"{company.Owner}{(namedIndex ? ("#" + indexOnTeam.ToString()) : "")}\"] = {{");
             lua.SetIndent(indent);
+            lua.AppendLine($"[\"{company.Owner}{(namedIndex ? ("#" + indexOnTeam.ToString()) : "")}\"] = {{");
             lua.IncreaseIndent();
 
             { // Company data
 
+                // Write the name and style
                 lua.AppendLine($"name = \"{company.Name}\",");
                 lua.AppendLine($"style = \"{company.Type}\",");
                 lua.AppendLine($"army = \"{company.Army.Name}\",");
 
+                // Write special call-in abilities
+                lua.AppendLine($"units = {{");
+                lua.IncreaseIndent();
+
+                // Compile the list
+                this.CompileList(lua, "artillery", company.Abilities.Where(x => x.Category == SpecialAbilityCategory.Artillery).ToImmutableArray(), x => x.ToScar());
+                this.CompileList(lua, "air", company.Abilities.Where(x => x.Category == SpecialAbilityCategory.AirSupport).ToImmutableArray(), x => x.ToScar());
+
+                lua.DecreaseIndent();
+                lua.AppendLine("}");
+
+                // Compile upgrades
+                this.CompileList(lua, "upgrades", company.Upgrades, x => x.ToScar());
+                this.CompileList(lua, "modifiers", company.Modifiers, x => x.ToScar());
+
+                // Write units table
                 lua.AppendLine($"units = {{");
                 lua.IncreaseIndent();
 
@@ -60,12 +82,13 @@ namespace Battlegrounds.Compiler {
         }
 
         /// <summary>
-        /// 
+        /// Company a specific company unit into a formatted lua table string.
         /// </summary>
-        /// <param name="builder"></param>
-        /// <param name="squad"></param>
+        /// <param name="builder">The text builder to write contents to.</param>
+        /// <param name="squad">The <see cref="Squad"/> to compile.</param>
         public virtual void CompileUnit(TxtBuilder builder, Squad squad) {
 
+            // Open table entry
             builder.AppendLine("{");
             builder.IncreaseIndent();
 
@@ -140,7 +163,7 @@ namespace Battlegrounds.Compiler {
 
             CompileList(builder, "upgrades", squad.Upgrades, x => { UpgradeBlueprint y = x as UpgradeBlueprint; return $"{{ bp={y.ToScar()}, symbol=\"{y.Symbol}\" }}"; });
             CompileList(builder, "slot_items", squad.SlotItems, x => { SlotItemBlueprint y = x as SlotItemBlueprint; return $"{y.ToScar()}"; });
-            CompileList(builder, "modifiers", (new string[0]).ToImmutableHashSet(), x => x);
+            CompileList(builder, "modifiers", squad.Modifiers, x => x.ToScar());
 
             builder.AppendLine($"spawned = false,");
 
@@ -149,7 +172,7 @@ namespace Battlegrounds.Compiler {
 
         }
 
-        private void CompileList<T>(TxtBuilder builder, string table, ImmutableHashSet<T> source, Func<T, string> func) {
+        private void CompileList<T>(TxtBuilder builder, string table, IReadOnlyCollection<T> source, Func<T, string> func) {
             builder.AppendLine($"{table} = {{");
             builder.IncreaseIndent();
             if (source.Count > 0) {

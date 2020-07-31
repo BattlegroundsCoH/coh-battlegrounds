@@ -6,8 +6,15 @@ using System.Diagnostics;
 
 namespace Battlegrounds.Online.Services {
     
+    /// <summary>
+    /// 
+    /// </summary>
     public static class FileHub {
     
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         private static TcpClient Connect() {
 
             try {
@@ -28,6 +35,13 @@ namespace Battlegrounds.Online.Services {
 
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="localapth"></param>
+        /// <param name="downloadname"></param>
+        /// <param name="lobbyID"></param>
+        /// <returns></returns>
         public static bool DownloadFile(string localapth, string downloadname, string lobbyID) {
 
             if (Connect() is TcpClient client) {
@@ -83,6 +97,13 @@ namespace Battlegrounds.Online.Services {
 
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="filepath"></param>
+        /// <param name="uploadname"></param>
+        /// <param name="lobbyID"></param>
+        /// <returns></returns>
         public static bool UploadFile(string filepath, string uploadname, string lobbyID) {
 
             if (!File.Exists(filepath)) {
