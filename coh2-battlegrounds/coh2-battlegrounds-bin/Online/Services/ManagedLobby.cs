@@ -310,14 +310,12 @@ namespace Battlegrounds.Online.Services {
         /// <param name="companyFile"></param>
         public void UploadCompany(string companyFile) {
 
-            // Get file
-            string targetFile = BattlegroundsInstance.GetRelativePath(BattlegroundsPaths.COMPANY_FOLDER, "current_company.json");
-
-            // Copy file
-            File.Copy(companyFile, targetFile, true);
+            // Read the company
+            Company company = Company.ReadCompanyFromFile(companyFile);
+            company.Owner = this.m_self.ID.ToString();
 
             // Upload file
-            FileHub.UploadFile(targetFile, $"{this.m_self.ID}_company.json", this.LobbyFileID);
+            FileHub.UploadFile(company.ToBytes(), $"{this.m_self.ID}_company.json", this.LobbyFileID);
 
         }
 
@@ -360,7 +358,9 @@ namespace Battlegrounds.Online.Services {
                     if (!this.GetLobbyCompany(lobbyPlayers[i], destination)) {
                         // TODO: Try and redownload
                     } else {
-                        companies.Add(Company.ReadCompanyFromFile(destination));
+                        Company company = Company.ReadCompanyFromFile(destination);
+                        company.Owner = lobbyPlayers[i].ToString();
+                        companies.Add(company);
                         count++;
                     }
 
@@ -392,7 +392,7 @@ namespace Battlegrounds.Online.Services {
                 operationCancelled?.Invoke("Failed to load own company!");
                 return;
             } else {
-                ownCompany.Owner = BattlegroundsInstance.LocalSteamuser.Name;
+                ownCompany.Owner = BattlegroundsInstance.LocalSteamuser.ID.ToString();
             }
 
             // Send a "Starting match" message to lobby members

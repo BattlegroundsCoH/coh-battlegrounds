@@ -60,7 +60,7 @@ namespace Battlegrounds.Game.Battlegrounds {
         /// The display name of who owns the <see cref="Company"/>. This property is used by the compilers. This will be overriden.
         /// </summary>
         [JsonIgnore]
-        public string Owner { get; set; }
+        public string Owner { get; set; } = string.Empty;
 
         /// <summary>
         /// <see cref="ImmutableArray{T}"/> representation of the units in the <see cref="Company"/>.
@@ -245,6 +245,18 @@ namespace Battlegrounds.Game.Battlegrounds {
         /// </summary>
         /// <returns>A string that represents the current object.</returns>
         public override string ToString() => this.Name;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public byte[] ToBytes() {
+
+            this.m_checksum = string.Empty;
+            this.m_checksum = this.GetChecksum();
+            return Encoding.UTF8.GetBytes((this as IJsonObject).Serialize());
+
+        }
 
         /// <summary>
         /// 

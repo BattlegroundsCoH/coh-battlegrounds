@@ -455,9 +455,11 @@ namespace coh2_battlegrounds_console {
 
                 if (!result.IsHost) {
                     result.SendChatMessage("Hello World");
+                    result.UploadCompany("deutsches_kompanie.json");
+                } else {
+                    result.UploadCompany("test_company.json");
                 }
 
-                result.UploadCompany("test_company.json");
 
             } else {
                 Console.WriteLine(status.Message);
