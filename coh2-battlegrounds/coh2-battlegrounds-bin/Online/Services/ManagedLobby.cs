@@ -28,7 +28,10 @@ namespace Battlegrounds.Online.Services {
         string m_lobbyID;
         bool m_isHost;
 
-        private string LobbyFileID => this.m_lobbyID.Replace("-", "");
+        /// <summary>
+        /// 
+        /// </summary>
+        public string LobbyFileID => this.m_lobbyID.Replace("-", "");
 
         /// <summary>
         /// Event triggered when a player-specific event was received.
@@ -541,6 +544,14 @@ namespace Battlegrounds.Online.Services {
                     this.OnStartMatchReceived?.Invoke();
                     break;
                 case Message_Type.CONFIRMATION_MESSAGE:
+                    break;
+                case Message_Type.LOBBY_NOTIFY_GAMEMODE:
+                    string path = $"{Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)}\\my games\\Company of Heroes 2\\mods\\gamemode\\coh2_battlegrounds_wincondition.sga";
+                    if (!FileHub.DownloadFile(path, "gamemode.sga", this.LobbyFileID)) {
+                        Trace.WriteLine("Failed to download 'gamemode.sga'");
+                    } else {
+                        Trace.WriteLine("Successfully downloaded 'gamemode.sga'");
+                    }                    
                     break;
                 default: Trace.WriteLine($"Unhandled type {incomingMessage.Descriptor}"); break;
             }

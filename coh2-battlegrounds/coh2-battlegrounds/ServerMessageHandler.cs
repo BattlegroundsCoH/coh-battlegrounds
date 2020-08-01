@@ -159,6 +159,8 @@ namespace BattlegroundsApp {
 
                 Trace.WriteLine("Server responded with OK");
 
+                result.UploadCompany("test_company.json");
+
             } else {
                 Trace.WriteLine(status.Message);
             }
