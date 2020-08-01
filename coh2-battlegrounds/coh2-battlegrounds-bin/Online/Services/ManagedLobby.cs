@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net.Sockets;
+using System.Threading;
 using System.Threading.Tasks;
 
 using Battlegrounds.Compiler;
@@ -462,11 +463,20 @@ namespace Battlegrounds.Online.Services {
                 // Upload
                 if (FileHub.UploadFile(sgapath, "gamemode.sga", this.LobbyFileID)) {
 
+                    // Sleep for 1s (TODO: Fix Upload to wait for confirmation...)
+                    Thread.Sleep(1000);
+
                     // Notify lobby players the gamemode is available
                     this.m_underlyingConnection.SendMessage(new Message(Message_Type.LOBBY_NOTIFY_GAMEMODE));
 
+                    // Sleep for 1s
+                    Thread.Sleep(1000);
+
                     // Send the start match...
                     this.m_underlyingConnection.SendMessage(new Message(Message_Type.LOBBY_STARTMATCH));
+
+                    // Sleep for 1s
+                    Thread.Sleep(1000);
 
                     // Return true
                     return true;

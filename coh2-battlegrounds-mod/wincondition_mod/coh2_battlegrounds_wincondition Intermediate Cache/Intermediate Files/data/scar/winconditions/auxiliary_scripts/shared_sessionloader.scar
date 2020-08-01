@@ -6,6 +6,8 @@ function BG_LoadSessionData()
     -- Create player data (for relevant players)
     for i = 1, World_GetPlayerCount() do
         local player = World_GetPlayerAt(i);
+        local race = Player_GetRaceName(player);
+        BG_SpawnAbilityEntities(player, race);
         Player_SetPopCapOverride(player, 260);
         if not AI_IsAIPlayer(player) then -- Make sure it's a player
             _bg_playerData[j] = {};
@@ -13,7 +15,7 @@ function BG_LoadSessionData()
             _bg_playerData[j].selfID = j;
             _bg_playerData[j].name = Player_GetDisplayName(player)[1];
             _bg_playerData[j].playerID = Player_GetID(player);
-            _bg_playerData[j].race = Player_GetRaceName(player);
+            _bg_playerData[j].race = race;
             _bg_playerData[j].total_deployed = 0;
             _bg_playerData[j].squads = {};
             _bg_playerData[j].deployed = {};
@@ -30,7 +32,7 @@ function BG_LoadSessionData()
             _bg_aiData[k].player = player;
             _bg_aiData[k].name = Player_GetDisplayName(player)[1];
             _bg_aiData[k].playerID = Player_GetID(player);
-            _bg_aiData[k].race = Player_GetRaceName(player);
+            _bg_aiData[k].race = race;
             _bg_aiData[k].teamStr = BG_GetTeamString(_bg_aiData[k].race);
             _bg_aiData[k].deployed = {};
             _bg_aiData[k].encountered = {};
@@ -170,4 +172,21 @@ end
 
 function BG_FindCapturedIcon(item)
     return nil;
+end
+
+_bg_saentity = {
+    "_air_support",
+    "_artillery",
+    "_paradrop",
+};
+
+function BG_GetFactionAbilityEntityBlueprint(race, type)
+    return BP_GetEntityBlueprint(bg_settings.tuning_mod.mod_guid ..":" .. race .. _bg_saentity[type]);
+end
+
+function BG_SpawnAbilityEntities(player, race)
+    local air = BG_GetFactionAbilityEntityBlueprint(race, 1);
+    local art = BG_GetFactionAbilityEntityBlueprint(race, 2);
+    local par = BG_GetFactionAbilityEntityBlueprint(race, 3);
+    
 end
