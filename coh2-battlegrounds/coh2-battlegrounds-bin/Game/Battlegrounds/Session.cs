@@ -189,6 +189,7 @@ namespace Battlegrounds.Game.Battlegrounds {
 
                     int j = sessionInfo.Allies.IndexOf(x => x.GetID().ToString().CompareTo(allCompanies[i].Owner) == 0 && x.Difficulty == AIDifficulty.Human);
                     if (j >= 0) {
+                        allCompanies[i].Owner = sessionInfo.Allies[j].UserDisplayname;
                         sessionInfo.Allies[j] = new SessionParticipant(sessionInfo.Allies[j].UserDisplayname, sessionInfo.Allies[j].UserID, allCompanies[i], TEAM_ALLIES, 0);
                     } else {
                         Trace.WriteLine($"Failed to pair allied company '{allCompanies[i].Name}' with a player...");
@@ -198,6 +199,7 @@ namespace Battlegrounds.Game.Battlegrounds {
 
                     int j = sessionInfo.Axis.IndexOf(x => x.GetID().ToString().CompareTo(allCompanies[i].Owner) == 0 && x.Difficulty == AIDifficulty.Human);
                     if (j >= 0) {
+                        allCompanies[i].Owner = sessionInfo.Axis[j].UserDisplayname;
                         sessionInfo.Axis[j] = new SessionParticipant(sessionInfo.Axis[j].UserDisplayname, sessionInfo.Axis[j].UserID, allCompanies[i], TEAM_AXIS, 0);
                     } else {
                         Trace.WriteLine($"Failed to pair axis company '{allCompanies[i].Name}' with a player...");
