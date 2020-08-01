@@ -33,6 +33,11 @@ namespace Battlegrounds.Game.Battlegrounds {
         [JsonIgnoreIfValue("")] public string UserDisplayname { get; }
 
         /// <summary>
+        /// The <see cref="SteamUser"/> profile ID.
+        /// </summary>
+        [JsonIgnoreIfValue(0)] public ulong UserID { get; }
+
+        /// <summary>
         /// Is the <see cref="SessionParticipant"/> instance a human player.
         /// </summary>
         public bool IsHumanParticipant { get; }
@@ -73,11 +78,13 @@ namespace Battlegrounds.Game.Battlegrounds {
         public SessionParticipant(SteamUser user, Company company, SessionParticipantTeam tIndex, byte pIndex) {
 
             this.UserDisplayname = user.Name;
+            this.UserID = user.ID;
             this.IsHumanParticipant = true;
             this.ParticipantCompany = company;
             this.Difficulty = AIDifficulty.Human;
             this.TeamIndex = tIndex;
             this.PlayerIndexOnTeam = pIndex;
+
         }
 
         /// <summary>
@@ -87,14 +94,19 @@ namespace Battlegrounds.Game.Battlegrounds {
         /// <param name="company"></param>
         /// <param name="tIndex"></param>
         /// <param name="pIndex"></param>
-        public SessionParticipant(string user, Company company, SessionParticipantTeam tIndex, byte pIndex) {
+        public SessionParticipant(string user, ulong id, Company company, SessionParticipantTeam tIndex, byte pIndex) {
 
             this.UserDisplayname = user;
+            this.UserID = id;
             this.IsHumanParticipant = true;
             this.ParticipantCompany = company;
             this.Difficulty = AIDifficulty.Human;
             this.TeamIndex = tIndex;
             this.PlayerIndexOnTeam = pIndex;
+            
+            if (this.ParticipantCompany != null) {
+                this.TeamIndex = (this.ParticipantCompany.Army.IsAllied) ? SessionParticipantTeam.TEAM_ALLIES : SessionParticipantTeam.TEAM_AXIS;
+            }
 
         }
 
@@ -113,17 +125,22 @@ namespace Battlegrounds.Game.Battlegrounds {
                 throw new ArgumentException("Attempted to create AI participant with human settings!");
 
             this.UserDisplayname = string.Empty;
+            this.UserID = 0;
             this.IsHumanParticipant = false;
             this.ParticipantCompany = company;
             this.Difficulty = difficulty;
             this.TeamIndex = tIndex;
             this.PlayerIndexOnTeam = pIndex;
+
         }
 
         public string ToJsonReference() => throw new NotSupportedException();
 
         public string GetName()
             => (this.IsHumanParticipant) ? this.UserDisplayname : this.Difficulty.GetIngameDisplayName();
+
+        public ulong GetID()
+            => this.IsHumanParticipant ? this.UserID : 0;
 
         public override string ToString() 
             => $"{this.GetName()} [{this.ParticipantCompany.Name}]";

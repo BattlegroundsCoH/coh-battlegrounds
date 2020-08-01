@@ -32,8 +32,8 @@ namespace Battlegrounds.Compiler {
 
             TxtBuilder lua = new TxtBuilder();
 
-            lua.SetIndent(indent);
             lua.AppendLine($"[\"{company.Owner}{(namedIndex ? ("#" + indexOnTeam.ToString()) : "")}\"] = {{");
+            lua.SetIndent(indent);
             lua.IncreaseIndent();
 
             { // Company data

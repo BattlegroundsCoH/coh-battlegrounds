@@ -10,6 +10,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Windows;
+using Battlegrounds.Steam;
 
 namespace BattlegroundsApp {
 
@@ -60,8 +61,8 @@ namespace BattlegroundsApp {
                     SelectedGamemodeOption = 1,
                     SelectedScenario = ScenarioList.FromFilename("2p_angoville_farms"),
                     SelectedTuningMod = new BattlegroundsTuning(),
-                    Allies = new SessionParticipant[] { new SessionParticipant("CoDiEx", null, 0, 0) }, // We'll have to solve this later
-                    Axis = new SessionParticipant[] { new SessionParticipant("Ragnar", null, 0, 0) },
+                    Allies = new SessionParticipant[] { new SessionParticipant(SteamUser.FromID(76561198003529969UL), null, 0, 0) }, // We'll have to solve participant setup later
+                    Axis = new SessionParticipant[] { new SessionParticipant(SteamUser.FromID(76561198157626935UL), null, 0, 0) },
                     FillAI = false,
                     DefaultDifficulty = AIDifficulty.AI_Hard,
                 };

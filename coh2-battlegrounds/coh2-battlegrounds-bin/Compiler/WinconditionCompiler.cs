@@ -255,7 +255,7 @@ namespace Battlegrounds.Compiler {
 
         }
 
-        private static string path_cut = "https://raw.githubusercontent.com/JustCodiex/coh2-battlegrounds/master/coh2-battlegrounds-mod/wincondition_mod/";
+        private static string path_cut = "https://raw.githubusercontent.com/JustCodiex/coh2-battlegrounds/scar-release-branch/coh2-battlegrounds-mod/wincondition_mod/";
 
         private static bool AddURLFile(TxtBuilder builder, string rpath, string workdir, string file, bool useBytes = false) {
 
@@ -289,7 +289,7 @@ namespace Battlegrounds.Compiler {
                 return false;
             }
 
-            string relpath = file.Substring("https://raw.githubusercontent.com/JustCodiex/coh2-battlegrounds/master/coh2-battlegrounds-mod/wincondition_mod/coh2_battlegrounds_wincondition%20Intermediate%20Cache/Intermediate%20Files".Length);
+            string relpath = file.Substring("https://raw.githubusercontent.com/JustCodiex/coh2-battlegrounds/scar-release-branch/coh2-battlegrounds-mod/wincondition_mod/coh2_battlegrounds_wincondition%20Intermediate%20Cache/Intermediate%20Files".Length);
             string abspath = Path.GetFullPath(workdir + relpath.Replace("/", "\\"));
 
             builder.AppendLine($"\t{abspath}");
@@ -317,7 +317,7 @@ namespace Battlegrounds.Compiler {
 
             // Add the gfx file
             string gfxabspath = Path.GetFullPath($"{workdir}data\\ui\\Bin\\6a0a13b89555402ca75b85dc30f5cb04.gfx");
-            File.Copy(Path.GetFullPath("6a0a13b89555402ca75b85dc30f5cb04.gfx"), gfxabspath);
+            File.Copy(Path.GetFullPath(BattlegroundsInstance.GetRelativePath(BattlegroundsPaths.MOD_ART_FOLDER, "6a0a13b89555402ca75b85dc30f5cb04.gfx")), gfxabspath);
             builder.AppendLine($"\t{gfxabspath}");
 
             // Get DDS files
