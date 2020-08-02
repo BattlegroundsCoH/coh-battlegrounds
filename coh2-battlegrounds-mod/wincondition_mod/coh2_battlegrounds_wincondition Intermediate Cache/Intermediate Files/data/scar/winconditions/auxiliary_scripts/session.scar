@@ -34,6 +34,12 @@ bg_companies = {
 
 			},
 		},
+		upgrades = {
+
+		},
+		modifiers = {
+
+		},
 		units = {
 			{
 				bp_name = "142b113740474c82a60b0a428bd553d5:conscript_squad_bg",

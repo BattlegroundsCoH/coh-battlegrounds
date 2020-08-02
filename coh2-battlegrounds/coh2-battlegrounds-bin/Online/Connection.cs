@@ -103,7 +103,7 @@ namespace Battlegrounds.Online {
 
                     lock (this.m_socket) {
                         this.m_socket.SendAll(topMessage.ToBytes());
-                        Trace.WriteLine($"Sent: [{topMessage}]");
+                        Trace.WriteLine($"Sent: [{topMessage}]", "Online-Service");
                     }
 
                     Thread.Sleep(10);

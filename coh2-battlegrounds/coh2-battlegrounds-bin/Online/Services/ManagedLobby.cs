@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net.Sockets;
+using System.Threading;
 using System.Threading.Tasks;
 
 using Battlegrounds.Compiler;
@@ -28,7 +29,10 @@ namespace Battlegrounds.Online.Services {
         string m_lobbyID;
         bool m_isHost;
 
-        private string LobbyFileID => this.m_lobbyID.Replace("-", "");
+        /// <summary>
+        /// 
+        /// </summary>
+        public string LobbyFileID => this.m_lobbyID.Replace("-", "");
 
         /// <summary>
         /// Event triggered when a player-specific event was received.
@@ -310,14 +314,12 @@ namespace Battlegrounds.Online.Services {
         /// <param name="companyFile"></param>
         public void UploadCompany(string companyFile) {
 
-            // Get file
-            string targetFile = BattlegroundsInstance.GetRelativePath(BattlegroundsPaths.COMPANY_FOLDER, "current_company.json");
-
-            // Copy file
-            File.Copy(companyFile, targetFile, true);
+            // Read the company
+            Company company = Company.ReadCompanyFromFile(companyFile);
+            company.Owner = this.m_self.ID.ToString();
 
             // Upload file
-            FileHub.UploadFile(targetFile, $"{this.m_self.ID}_company.json", this.LobbyFileID);
+            FileHub.UploadFile(company.ToBytes(), $"{this.m_self.ID}_company.json", this.LobbyFileID);
 
         }
 
@@ -360,7 +362,9 @@ namespace Battlegrounds.Online.Services {
                     if (!this.GetLobbyCompany(lobbyPlayers[i], destination)) {
                         // TODO: Try and redownload
                     } else {
-                        companies.Add(Company.ReadCompanyFromFile(destination));
+                        Company company = Company.ReadCompanyFromFile(destination);
+                        company.Owner = lobbyPlayers[i].ToString();
+                        companies.Add(company);
                         count++;
                     }
 
@@ -392,7 +396,7 @@ namespace Battlegrounds.Online.Services {
                 operationCancelled?.Invoke("Failed to load own company!");
                 return;
             } else {
-                ownCompany.Owner = BattlegroundsInstance.LocalSteamuser.Name;
+                ownCompany.Owner = BattlegroundsInstance.LocalSteamuser.ID.ToString();
             }
 
             // Send a "Starting match" message to lobby members
@@ -459,11 +463,20 @@ namespace Battlegrounds.Online.Services {
                 // Upload
                 if (FileHub.UploadFile(sgapath, "gamemode.sga", this.LobbyFileID)) {
 
+                    // Sleep for 1s (TODO: Fix Upload to wait for confirmation...)
+                    Thread.Sleep(1000);
+
                     // Notify lobby players the gamemode is available
                     this.m_underlyingConnection.SendMessage(new Message(Message_Type.LOBBY_NOTIFY_GAMEMODE));
 
+                    // Sleep for 1s
+                    Thread.Sleep(1000);
+
                     // Send the start match...
                     this.m_underlyingConnection.SendMessage(new Message(Message_Type.LOBBY_STARTMATCH));
+
+                    // Sleep for 1s
+                    Thread.Sleep(1000);
 
                     // Return true
                     return true;
@@ -541,6 +554,14 @@ namespace Battlegrounds.Online.Services {
                     this.OnStartMatchReceived?.Invoke();
                     break;
                 case Message_Type.CONFIRMATION_MESSAGE:
+                    break;
+                case Message_Type.LOBBY_NOTIFY_GAMEMODE:
+                    string path = $"{Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)}\\my games\\Company of Heroes 2\\mods\\gamemode\\coh2_battlegrounds_wincondition.sga";
+                    if (!FileHub.DownloadFile(path, "gamemode.sga", this.LobbyFileID)) {
+                        Trace.WriteLine("Failed to download 'gamemode.sga'");
+                    } else {
+                        Trace.WriteLine("Successfully downloaded 'gamemode.sga'");
+                    }                    
                     break;
                 default: Trace.WriteLine($"Unhandled type {incomingMessage.Descriptor}"); break;
             }
