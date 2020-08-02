@@ -176,13 +176,24 @@ namespace Battlegrounds.Online.Services {
                         sw.BaseStream.Write(byteContent, 0, byteContent.Length);
                         sw.Flush();
 
-                        // Log that we managed to uplaod the file
-                        Trace.WriteLine($"Uploaded file \"{uploadname}\" to {lobbyID} ({byteContent.Length} bytes)", "Online-Service");
+                        // Get a response from the server
+                        response = sr.ReadLine();
 
-                        // Note: We do not verify with server that the file was verified
+                        // Check for server response
+                        if (response.CompareTo($"OK {byteContent.Length}") == 0) {
 
-                        // Return true
-                        return true;
+                            // Log that we managed to uplaod the file
+                            Trace.WriteLine($"Uploaded file \"{uploadname}\" to {lobbyID} ({byteContent.Length} bytes)", "Online-Service");
+
+                            // Return true
+                            return true;
+
+                        } else {
+
+                            // Log error
+                            Trace.WriteLine($"Failed to upload ({response})", "Online-Service");
+
+                        }
 
                     } else {
 
