@@ -262,7 +262,7 @@ namespace Battlegrounds.Compiler {
             string fileContent;
 
             if (useBytes) {
-                fileContent = Encoding.UTF8.GetString(SourceDownloader.DownloadSourceFile(file));
+                fileContent = Encoding.Unicode.GetString(SourceDownloader.DownloadSourceFile(file));
             } else {
                 fileContent = SourceDownloader.DownloadSourceCode(file);
             }
