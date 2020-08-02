@@ -31,14 +31,14 @@ namespace Battlegrounds.Online {
         /// Download the file in binary format found at the url path.
         /// </summary>
         /// <param name="urlpath">The full URL of the source file to download.</param>
-        /// <param name="encodeAsUTF8">Encode the binary content as UTF-8</param>
+        /// <param name="encoding">The encoding to use when downloading</param>
         /// <returns>A byte array containing the found content or a byte array of length 0 if no data was downloaded.</returns>
-        public static byte[] DownloadSourceFile(string urlpath, bool encodeAsUTF8 = true) {
+        public static byte[] DownloadSourceFile(string urlpath, Encoding encoding = null) {
 
             try {
                 using (var client = new WebClient()) {
-                    if (encodeAsUTF8) {
-                        return Encoding.UTF8.GetBytes(client.DownloadString(urlpath));
+                    if (encoding != null) {
+                        return encoding.GetBytes(client.DownloadString(urlpath));
                     } else {
                         return client.DownloadData(urlpath);
                     }

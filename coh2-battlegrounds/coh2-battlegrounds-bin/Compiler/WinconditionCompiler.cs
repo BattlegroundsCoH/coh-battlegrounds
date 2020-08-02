@@ -134,7 +134,7 @@ namespace Battlegrounds.Compiler {
 
             // Add and compile info files
             foreach (string file in localefiles) {
-                if (!AddURLFile(archiveDef, "", workdir, file, true)) {
+                if (!AddURLFile(archiveDef, "", workdir, file, true, Encoding.Unicode, new byte[] { 0xff, 0xfe })) {
                     return false;
                 }
             }
@@ -257,17 +257,21 @@ namespace Battlegrounds.Compiler {
 
         private static string path_cut = "https://raw.githubusercontent.com/JustCodiex/coh2-battlegrounds/scar-release-branch/coh2-battlegrounds-mod/wincondition_mod/";
 
-        private static bool AddURLFile(TxtBuilder builder, string rpath, string workdir, string file, bool useBytes = false) {
+        private static bool AddURLFile(TxtBuilder builder, string rpath, string workdir, string file, bool useBytes = false, Encoding encoding = null, byte[] prepend = null) {
 
-            string fileContent;
+            byte[] binaryContent;
 
-            if (useBytes) {
-                fileContent = Encoding.Unicode.GetString(SourceDownloader.DownloadSourceFile(file));
-            } else {
-                fileContent = SourceDownloader.DownloadSourceCode(file);
+            if (encoding == null) {
+                encoding = Encoding.UTF8;
             }
 
-            if (fileContent == string.Empty) {
+            if (useBytes) {
+                binaryContent = SourceDownloader.DownloadSourceFile(file, encoding);
+            } else {
+                binaryContent = encoding.GetBytes(SourceDownloader.DownloadSourceCode(file));
+            }
+
+            if (binaryContent == null || binaryContent.Length == 0) {
                 return false;
             }
 
@@ -276,7 +280,16 @@ namespace Battlegrounds.Compiler {
 
             builder.AppendLine($"\t{abspath}");
 
-            File.WriteAllText(abspath, fileContent);
+            if (File.Exists(abspath)) {
+                File.Delete(abspath);
+            }
+
+            using (BinaryWriter writer = new BinaryWriter(File.OpenWrite(abspath), encoding)) {
+                if (prepend != null) {
+                    writer.Write(prepend);
+                }
+                writer.Write(binaryContent);
+            }
 
             return true;
 
