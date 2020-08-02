@@ -121,7 +121,7 @@ namespace Battlegrounds.Compiler {
             }
 
             // Add the info preview file
-            AddLocalFile(archiveDef, BattlegroundsInstance.GetRelativePath(BattlegroundsPaths.MOD_ART_FOLDER, "coh2_battlegrounds_wincondition_preview.dds"), "info\\", workdir);
+            AddLocalFile(archiveDef, BattlegroundsInstance.GetRelativePath(BattlegroundsPaths.MOD_ART_FOLDER, "..\\coh2_battlegrounds_wincondition_preview.dds"), "info\\", workdir);
 
             // Locale TOC section
             archiveDef.AppendLine("TOCEnd");

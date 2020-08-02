@@ -156,15 +156,15 @@ end
 function BGUI_HideAll()
 
 	if bg_call_ui ~= nil then
-		bg_call_ui:setPos(9999, 9999);
+		bg_call_ui:setPos(-9999, -9999);
 	end
 
 	if bg_overrideui ~= nil then
-		bg_overrideui:setPos(9999, 9999);
+		bg_overrideui:setPos(-9999, -9999);
 	end
 
 	if bg_gameoverscreen ~= nil then
-		bg_gameoverscreen:setPos(9999, 9999);
+		bg_gameoverscreen:setPos(-9999, -9999);
 	end
 
 end

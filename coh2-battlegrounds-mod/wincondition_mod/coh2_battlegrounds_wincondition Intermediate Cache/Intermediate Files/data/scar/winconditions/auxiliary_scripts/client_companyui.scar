@@ -172,16 +172,34 @@ end
 
 function BG_CreateCompanyAbilityView(playerData) -- For special abilities requiring modal phases
 
-    -- The X-offset
-    local xOffset = 12;
+    local specialPanel = Panel();
+    specialPanel:setPos(-40, 0);
+    specialPanel:add(Icon("ModIcons_6a0a13b89555402ca75b85dc30f5cb04_", 40, 108, 0, 0));
 
+    local yOffset = 16;
 
-    playerData.specials.reinforcementsButton = Button(nil, "ModIcons_6a0a13b89555402ca75b85dc30f5cb04_icon_artillery");
-    playerData.specials.reinforcementsButton:setBounds(xOffset, 46, 48, 48);
-    playerData.specials.reinforcementsButton:setTag("artillery_support");
+    playerData.specials.artilleryButton = Button(nil, "ModIcons_6a0a13b89555402ca75b85dc30f5cb04_icon_artillery");
+    playerData.specials.artilleryButton:setBounds(12, yOffset, 48, 48);
+    playerData.specials.artilleryButton:setTag("artillery_support");
+    playerData.specials.artilleryButton:setCallback(BG_SpecialAbilitiesClicked);
+    specialPanel:add(playerData.specials.artilleryButton);
+    yOffset = yOffset + 52;
+
+    playerData.specials.airButton = Button(nil, "ModIcons_6a0a13b89555402ca75b85dc30f5cb04_icon_air_support");
+    playerData.specials.airButton:setBounds(12, yOffset, 48, 48);
+    playerData.specials.airButton:setTag("air_support");
+    playerData.specials.airButton:setCallback(BG_SpecialAbilitiesClicked);
+    specialPanel:add(playerData.specials.airButton);
+    yOffset = yOffset + 52;
+
+    playerData.specials.reinforcementsButton = Button(nil, "ModIcons_6a0a13b89555402ca75b85dc30f5cb04_icon_paratrooper");
+    playerData.specials.reinforcementsButton:setBounds(12, yOffset, 48, 48);
+    playerData.specials.reinforcementsButton:setTag("air_reinforcements");
     playerData.specials.reinforcementsButton:setCallback(BG_SpecialAbilitiesClicked);
-    bg_call_ui:add(playerData.specials.reinforcementsButton);
-    xOffset = xOffset + 52;
+    specialPanel:add(playerData.specials.reinforcementsButton);
+    yOffset = yOffset + 52;
+
+    bg_call_ui:add(specialPanel);
 
 end
 
