@@ -44,7 +44,7 @@ namespace Battlegrounds.Compiler {
                 lua.AppendLine($"army = \"{company.Army.Name}\",");
 
                 // Write special call-in abilities
-                lua.AppendLine($"units = {{");
+                lua.AppendLine($"specials = {{");
                 lua.IncreaseIndent();
 
                 // Compile the list
@@ -52,7 +52,7 @@ namespace Battlegrounds.Compiler {
                 this.CompileList(lua, "air", company.Abilities.Where(x => x.Category == SpecialAbilityCategory.AirSupport).ToImmutableArray(), x => x.ToScar());
 
                 lua.DecreaseIndent();
-                lua.AppendLine("}");
+                lua.AppendLine("},");
 
                 // Compile upgrades
                 this.CompileList(lua, "upgrades", company.Upgrades, x => x.ToScar());
