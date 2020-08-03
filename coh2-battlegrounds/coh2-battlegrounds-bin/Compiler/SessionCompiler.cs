@@ -1,14 +1,17 @@
 ﻿using System;
-using System.IO;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 
 using Battlegrounds.Game.Battlegrounds;
+using Battlegrounds.Game.Database;
+using Battlegrounds.Game.Gameplay;
+using Battlegrounds.Functional;
 using Battlegrounds.Modding;
 using Battlegrounds.Util;
 
 namespace Battlegrounds.Compiler {
-    
+
     /// <summary>
     /// Basic <see cref="Session"/> to Lua code compiler. Can be inherited to add custom features.
     /// </summary>
@@ -65,6 +68,9 @@ namespace Battlegrounds.Compiler {
 
             lua.DecreaseIndent();
             lua.AppendLine("};\n");
+
+            // Write the precompiled database
+            WritePrecompiledDatabase(lua, session.Participants.Select(x => x.ParticipantCompany));
 
             lua.AppendLine($"bg_companies = {{");
             lua.IncreaseIndent();
@@ -141,6 +147,64 @@ namespace Battlegrounds.Compiler {
 
             lua.DecreaseIndent();
             lua.AppendLine("},");
+
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="lua"></param>
+        /// <param name="companies"></param>
+        protected virtual void WritePrecompiledDatabase(TxtBuilder lua, IEnumerable<Company> companies) {
+
+            // Write database table
+            lua.AppendLine("bg_db = {");
+            lua.IncreaseIndent();
+
+            // Write slot items table
+            lua.AppendLine("slot_items = {");
+            lua.IncreaseIndent();
+
+            // List for keeping track of dummy slot items (Slot items granted by an upgrade)
+            Dictionary<string, HashSet<string>> upgradeItems = new Dictionary<string, HashSet<string>>();
+
+            // Get all potential slot items used in this session
+            List<SlotItemBlueprint> slotitems = companies.Aggregate(new List<Squad>(), (a, b) => { a.AddRange(b.Units); return a; })
+                .Aggregate(new List<SlotItemBlueprint>(), (a,b) => { 
+                    a.AddRange(b.SlotItems.Cast<SlotItemBlueprint>());
+                    a.AddRange(b.Upgrades.Cast<UpgradeBlueprint>().Aggregate(new List<SlotItemBlueprint>(), (d, e) => {
+                        var items = e.SlotItems.Select(x => BlueprintManager.FromBlueprintName(x, BlueprintType.IBP) as SlotItemBlueprint);
+                        d.AddRange(items);
+                        items.ForEach(x => upgradeItems.IfTrue(y => y.ContainsKey(x.Name))
+                            .Then(y => y[x.Name].Add(e.Name))
+                            .Else(y => y.Add(x.Name, new HashSet<string>() { e.Name }))
+                        );
+                        return d;
+                    }));
+                    return a; 
+                })
+                .Distinct()
+                .ToList();
+
+            // Loop through all the items
+            foreach (SlotItemBlueprint ibp in slotitems) {
+
+                string subIfTable;
+                if (upgradeItems.TryGetValue(ibp.Name, out HashSet<string> upgs)) {
+                    subIfTable = $"{{ {string.Join(", ", upgs.Select(x => $"\"{x}\""))} }}";
+                } else {
+                    subIfTable = "{}";
+                }
+
+                lua.AppendLine($"{{ ibp = \"{ibp.Name}\", ignore_if = {subIfTable}, icon = \"{ibp.Icon}\", }},");
+
+            }
+
+            lua.DecreaseIndent();
+            lua.AppendLine("},");
+
+            lua.DecreaseIndent();
+            lua.AppendLine("};\n");
 
         }
 

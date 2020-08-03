@@ -234,10 +234,6 @@ namespace Battlegrounds.Game.Battlegrounds {
 
         internal void SetArmy(Faction faction) => this.m_companyArmy = faction;
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
         public string ToJsonReference() => this.Name;
 
         /// <summary>
@@ -247,9 +243,9 @@ namespace Battlegrounds.Game.Battlegrounds {
         public override string ToString() => this.Name;
 
         /// <summary>
-        /// 
+        /// Convert the <see cref="Company"/> into a byte array.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>The binary representation of the <see cref="Company"/>.</returns>
         public byte[] ToBytes() {
 
             this.m_checksum = string.Empty;

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.IO;
 using System.Threading.Tasks;
 using Battlegrounds.Compiler;
@@ -140,6 +141,7 @@ namespace Battlegrounds.Game.Battlegrounds {
                 // If there's a "blocking" method - execute it and wait for it to finish.
                 if (matchCompileAndWait != null) {
 
+                    // Wait for compile and wait to finish
                     await Task.Run(() => {
 
                         // Wait for compile done
@@ -183,6 +185,13 @@ namespace Battlegrounds.Game.Battlegrounds {
             // Update status
             UpdateStatus(SessionStatus.S_Analyzing, statusChangedCallback);
 
+            // If any bug splat error was found - we discard the match results
+            if (await GotBugsplat()) {
+                UpdateStatus(SessionStatus.S_BugSplat, statusChangedCallback);
+                return;
+            }
+
+            // If any fatal scar error was found - we discard the match results
             if (GotFatalScarError()) {
                 UpdateStatus(SessionStatus.S_ScarError, statusChangedCallback);
                 return;
@@ -246,6 +255,23 @@ namespace Battlegrounds.Game.Battlegrounds {
                 if (File.ReadAllText(logPath).Contains("GameObj::OnFatalScarError:")) {
                     return true;
                 }
+            }
+
+            return false;
+
+        }
+
+        private static async Task<bool> GotBugsplat() {
+
+            int count = 0;
+
+            while (count < 15) {
+                Process[] processes = Process.GetProcessesByName("BsSndRpt");
+                if (processes.Length >= 1) {
+                    return true;
+                }
+                await Task.Delay(100);
+                count++;
             }
 
             return false;

@@ -82,11 +82,8 @@ namespace Battlegrounds.Compiler {
             archiveDef.AppendLine("\t\tOverride wildcard=\".*\\.(bsc)$\" minsize=\"-1\" maxsize=\"-1\" vt=\"none\" ct=\"buffer_compress\"");
             archiveDef.AppendLine("\tFileSettingsEnd");
 
-            // Get the scar files
-            string[] winfiles = WinFiles;
-
-            // Add and compile scar files
-            foreach (string file in winfiles) {
+            // Add and compile win file(s)
+            foreach (string file in WinFiles) {
                 if (!AddURLFile(archiveDef, "data\\game\\winconditions\\", workdir, file)) {
                     return false;
                 }
@@ -95,11 +92,8 @@ namespace Battlegrounds.Compiler {
             // Add the company file
             AddLocalFile(archiveDef, sessionFile, "data\\scar\\winconditions\\auxiliary_scripts\\", workdir);
 
-            // Get the scar files
-            string[] scarfiles = ScarFiles;
-
-            // Add and compile scar files
-            foreach (string file in scarfiles) {
+            // Add and *compile* scar files
+            foreach (string file in ScarFiles) {
                 if (!AddURLFile(archiveDef, "data\\scar\\winconditions\\", workdir, file)) {
                     return false;
                 }
@@ -129,11 +123,8 @@ namespace Battlegrounds.Compiler {
             archiveDef.AppendLine("\tFileSettingsStart defverification=\"crc_blocks\" defcompression=\"stream_compress\"");
             archiveDef.AppendLine("\tFileSettingsEnd");
 
-            // Get all locale files
-            string[] localefiles = LocaleFiles;
-
-            // Add and compile info files
-            foreach (string file in localefiles) {
+            // Add and compile locale files
+            foreach (string file in LocaleFiles) {
                 if (!AddURLFile(archiveDef, "", workdir, file, true, Encoding.Unicode, new byte[] { 0xff, 0xfe })) {
                     return false;
                 }
@@ -175,10 +166,11 @@ namespace Battlegrounds.Compiler {
         public static bool InvokeArchiver(string archdef, string relativepath, string output) {
 
             string cmdarg = $" -c \"{archdef}\" -a \"{output}\" -v -r \"{relativepath}\\\"";
+            string exepath = Pathfinder.GetOrFindCoHPath() + "Archive.exe";
 
             Process archiveProcess = new Process {
                 StartInfo = new ProcessStartInfo() {
-                    FileName = Pathfinder.GetOrFindCoHPath() + "Archive.exe",
+                    FileName = exepath,
                     Arguments = cmdarg,
                     RedirectStandardOutput = true,
                     RedirectStandardInput = false,
@@ -188,6 +180,8 @@ namespace Battlegrounds.Compiler {
                 },
                 EnableRaisingEvents = true,
             };
+
+            Trace.WriteLine($"Starting archiver @{exepath}\n\tArgs: {cmdarg}", "Archiver.exe");
 
             archiveProcess.OutputDataReceived += ArchiveProcess_OutputDataReceived;
 
@@ -200,15 +194,13 @@ namespace Battlegrounds.Compiler {
                     archiveProcess.BeginOutputReadLine();
                 }
 
-                Thread.Sleep(1000);
-
                 do {
-                    Thread.Sleep(100);
+                    Thread.Sleep(150);
                 } while (!archiveProcess.HasExited);
 
                 if (archiveProcess.ExitCode != 0) {
                     int eCode = archiveProcess.ExitCode;
-                    Trace.WriteLine($"Archiver has finished with error code = {eCode}");
+                    Trace.WriteLine($"Archiver has finished with error code = {eCode}", "Archiver.exe");
                     archiveProcess.Dispose();
                     return false;
                 }
@@ -220,13 +212,15 @@ namespace Battlegrounds.Compiler {
 
             archiveProcess.Dispose();
 
+            Trace.WriteLine($"Successfully compiled {archdef}", "Archiver.exe");
+
             return true;
 
         }
 
         private static void ArchiveProcess_OutputDataReceived(object sender, DataReceivedEventArgs e) {
             if (e.Data != null && e.Data != string.Empty && e.Data != " ")
-                Console.WriteLine($"{e.Data}");
+                Trace.WriteLine($"{e.Data}", "Archiver.exe");
         }
 
         private static void CreateWorkspace(string workdir) {
@@ -255,7 +249,7 @@ namespace Battlegrounds.Compiler {
 
         }
 
-        private static string path_cut = "https://raw.githubusercontent.com/JustCodiex/coh2-battlegrounds/scar-release-branch/coh2-battlegrounds-mod/wincondition_mod/";
+        private static string path_cut = FixDebugString("https://raw.githubusercontent.com/JustCodiex/coh2-battlegrounds/scar-release-branch/coh2-battlegrounds-mod/wincondition_mod/");
 
         private static bool AddURLFile(TxtBuilder builder, string rpath, string workdir, string file, bool useBytes = false, Encoding encoding = null, byte[] prepend = null) {
 
@@ -264,6 +258,8 @@ namespace Battlegrounds.Compiler {
             if (encoding == null) {
                 encoding = Encoding.UTF8;
             }
+
+            file = FixDebugString(file);
 
             if (useBytes) {
                 binaryContent = SourceDownloader.DownloadSourceFile(file, encoding);
@@ -302,7 +298,8 @@ namespace Battlegrounds.Compiler {
                 return false;
             }
 
-            string relpath = file.Substring("https://raw.githubusercontent.com/JustCodiex/coh2-battlegrounds/scar-release-branch/coh2-battlegrounds-mod/wincondition_mod/coh2_battlegrounds_wincondition%20Intermediate%20Cache/Intermediate%20Files".Length);
+            string substr = FixDebugString("https://raw.githubusercontent.com/JustCodiex/coh2-battlegrounds/scar-release-branch/coh2-battlegrounds-mod/wincondition_mod/coh2_battlegrounds_wincondition%20Intermediate%20Cache/Intermediate%20Files");
+            string relpath = FixDebugString(file).Substring(substr.Length);
             string abspath = Path.GetFullPath(workdir + relpath.Replace("/", "\\"));
 
             builder.AppendLine($"\t{abspath}");
@@ -343,6 +340,15 @@ namespace Battlegrounds.Compiler {
                 builder.AppendLine($"\t{ddspath}");
             }
 
+        }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0022:Use expression body for methods", Justification = "Compile-mode dependant")]
+        private static string FixDebugString(string input) {
+#if DEBUG
+            return input.Replace("scar-release-branch", "scar-dev-branch");
+#else
+            return input;
+#endif
         }
 
     }
