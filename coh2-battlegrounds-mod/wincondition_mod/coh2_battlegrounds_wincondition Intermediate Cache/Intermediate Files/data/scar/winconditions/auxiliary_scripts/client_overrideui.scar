@@ -48,7 +48,7 @@ function BG_CreateAndDisplayGameOverScreenOverride(locplayer, callback, victory)
     bg_gameoverscreen:add(company_close_bkg);
 
     -- Create gameove close button
-    bg_gameover_close_button = Button(Util_CreateLocString("Return to Lobby"), "ModIcons_6a0a13b89555402ca75b85dc30f5cb04_gameover_close_button");
+    bg_gameover_close_button = Button(BG_LocString(21), "ModIcons_6a0a13b89555402ca75b85dc30f5cb04_gameover_close_button");
     bg_gameover_close_button:setBounds(UI_CentreAlignWidth(308, bkwidth) + UI_CentreAlignWidth(268, 308), bkheight - 20, 268, 28);
     bg_gameover_close_button:setCallback(callback);
     bg_gameoverscreen:add(bg_gameover_close_button);
@@ -58,13 +58,13 @@ function BG_CreateAndDisplayGameOverScreenOverride(locplayer, callback, victory)
 
     -- If victory
     if victory then
-        stateText = "Victory";
+        stateText = BG_LocString(19);
     else -- else defeat
-        stateText = "Defeat";
+        stateText = BG_LocString(20)
     end
 
     -- Create victory label
-    local game_state_label = Label(Util_CreateLocString(stateText));
+    local game_state_label = Label(stateText);
     game_state_label:setBounds(UI_CentreAlignWidth(204, bkwidth), 24, 204, 58);
     game_state_label:setFontSize(48.0);
     game_state_label:setColor(Color.White);
@@ -161,6 +161,7 @@ function BG_CreatePagedStats(title, xOffset, viewTable)
                 viewTable.nextButton:setEnabled(false);
             end
             viewTable.previousButton:setEnabled(true);
+            viewTable.pageLabel:setText(Util_CreateLocString(viewTable.current_page.."/"..viewTable.max_page));
         end
     end
 
@@ -173,6 +174,7 @@ function BG_CreatePagedStats(title, xOffset, viewTable)
                 viewTable.previousButton:setEnabled(false);
             end
             viewTable.nextButton:setEnabled(true);
+            viewTable.pageLabel:setText(Util_CreateLocString(viewTable.current_page.."/"..viewTable.max_page));
         end
     end
 
@@ -244,7 +246,7 @@ function BG_CreateLossStats(refPlayer, root)
     end
 
     -- Create and get the loss page
-    local lossPage = BG_CreatePagedStats(Util_CreateLocString("Losses"), 64, _bg_gameoverLossContent);
+    local lossPage = BG_CreatePagedStats(BG_LocString(22), 64, _bg_gameoverLossContent);
 
     _bg_gameoverLossContent.container = Panel();
     _bg_gameoverLossContent.container:setBounds(8, 42, 350, 266);
@@ -378,7 +380,7 @@ function BG_CreateGainsStats(refPlayer, root)
     end
 
     -- The gains page
-    local gainsPage = BG_CreatePagedStats(Util_CreateLocString("Gains"), 456, _bg_gameoverGainsContent);
+    local gainsPage = BG_CreatePagedStats(BG_LocString(23), 456, _bg_gameoverGainsContent);
     _bg_gameoverGainsContent.container = Panel();
     _bg_gameoverGainsContent.container:setBounds(8, 42, 350, 266);
     gainsPage:add(_bg_gameoverGainsContent.container);

@@ -3,7 +3,7 @@
 		<template_reference name="exts" value="ebpextensions\entity_blueprint_ext">
 			<string name="alternate_sua" value="armies\common\base\commonhuman\commonhuman" />
 			<bool name="always_revealed_in_fow" value="False" />
-			<file name="animator" value="armies\soviet\soldiers\elite_rifleman\vehicle_crew" />
+			<file name="animator" value="armies\soviet\soldiers\tank_crew_1\tank_crew_1" />
 			<bool name="is_visible_in_game" value="True" />
 			<float name="precise_size" value="-1" />
 		</template_reference>
@@ -32,7 +32,7 @@
 					<string name="state_machine_name" value="RoleVariation" />
 					<string name="undo_action_state_name" value="" />
 					<bool name="retrigger" value="False" />
-					<uniqueid name="id" value="1073741992" />
+					<uniqueid name="id" value="1073744478" />
 				</template_reference>
 			</list>
 		</template_reference>
@@ -504,7 +504,7 @@
 						<bool name="fire_and_forget" value="True" />
 						<bool name="is_terrain_only" value="False" />
 						<bool name="allies_only" value="False" />
-						<uniqueid name="id" value="1073741993" />
+						<uniqueid name="id" value="1073744479" />
 					</template_reference>
 				</list>
 			</group>
@@ -522,7 +522,7 @@
 						<bool name="fire_and_forget" value="True" />
 						<bool name="is_terrain_only" value="False" />
 						<bool name="allies_only" value="False" />
-						<uniqueid name="id" value="1073741994" />
+						<uniqueid name="id" value="1073744480" />
 					</template_reference>
 				</list>
 			</group>
@@ -540,7 +540,7 @@
 						<bool name="fire_and_forget" value="True" />
 						<bool name="is_terrain_only" value="False" />
 						<bool name="allies_only" value="False" />
-						<uniqueid name="id" value="1073741995" />
+						<uniqueid name="id" value="1073744481" />
 					</template_reference>
 				</list>
 			</group>
@@ -558,7 +558,7 @@
 						<bool name="fire_and_forget" value="True" />
 						<bool name="is_terrain_only" value="False" />
 						<bool name="allies_only" value="False" />
-						<uniqueid name="id" value="1073741996" />
+						<uniqueid name="id" value="1073744482" />
 					</template_reference>
 				</list>
 			</group>
@@ -576,7 +576,7 @@
 						<bool name="fire_and_forget" value="True" />
 						<bool name="is_terrain_only" value="False" />
 						<bool name="allies_only" value="False" />
-						<uniqueid name="id" value="1073741997" />
+						<uniqueid name="id" value="1073744483" />
 					</template_reference>
 				</list>
 			</group>
@@ -604,7 +604,7 @@
 						<bool name="fire_and_forget" value="True" />
 						<bool name="is_terrain_only" value="False" />
 						<bool name="allies_only" value="False" />
-						<uniqueid name="id" value="1073741998" />
+						<uniqueid name="id" value="1073744484" />
 					</template_reference>
 				</list>
 			</group>
@@ -636,7 +636,7 @@
 						<bool name="fire_and_forget" value="True" />
 						<bool name="is_terrain_only" value="False" />
 						<bool name="allies_only" value="False" />
-						<uniqueid name="id" value="1073741999" />
+						<uniqueid name="id" value="1073744485" />
 					</template_reference>
 				</list>
 				<group name="posture">
@@ -654,7 +654,7 @@
 						<bool name="fire_and_forget" value="True" />
 						<bool name="is_terrain_only" value="False" />
 						<bool name="allies_only" value="False" />
-						<uniqueid name="id" value="1073742000" />
+						<uniqueid name="id" value="1073744486" />
 					</template_reference>
 				</list>
 				<group name="posture">
@@ -731,7 +731,7 @@
 							<float name="deceleration_multiplier" value="0.3" />
 							<float name="pathfinding_size_x" value="0" />
 							<float name="pathfinding_size_y" value="0" />
-							<uniqueid name="id" value="1073742001" />
+							<uniqueid name="id" value="1073744487" />
 						</template_reference>
 						<template_reference name="action" value="action\apply_modifiers_action">
 							<float name="duration" value="1" />
@@ -747,10 +747,10 @@
 									<instance_reference name="tooltip" value="modifier_tooltip\speed_maximum_modifier" />
 								</template_reference>
 							</list>
-							<uniqueid name="id" value="1073742002" />
+							<uniqueid name="id" value="1073744488" />
 						</template_reference>
 					</list>
-					<uniqueid name="id" value="1073742003" />
+					<uniqueid name="id" value="1073744489" />
 				</template_reference>
 			</list>
 		</template_reference>
@@ -782,5 +782,5 @@
 			</list>
 		</template_reference>
 	</list>
-	<uniqueid name="pbgid" value="1073741829" />
+	<uniqueid name="pbgid" value="1073741923" />
 </instance>

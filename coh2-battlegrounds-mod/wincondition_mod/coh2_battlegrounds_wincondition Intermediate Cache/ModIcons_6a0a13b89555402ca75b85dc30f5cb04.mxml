@@ -18,6 +18,8 @@
 		public static var captured_equipment:Class;
 		[Embed(source='E:/coh2_battlegrounds/coh2-battlegrounds-mod/wincondition_mod/art/company_overview_clean.png')]
 		public static var company_overview_clean:Class;
+		[Embed(source='E:/coh2_battlegrounds/coh2-battlegrounds-mod/wincondition_mod/art/company_page_bkg.png')]
+		public static var company_page_bkg:Class;
 		[Embed(source='E:/coh2_battlegrounds/coh2-battlegrounds-mod/wincondition_mod/art/fuel_24x24.png')]
 		public static var fuel_24x24:Class;
 		[Embed(source='E:/coh2_battlegrounds/coh2-battlegrounds-mod/wincondition_mod/art/gameover_background.png')]

@@ -7,8 +7,6 @@ function BG_LoadSessionData()
     for i = 1, World_GetPlayerCount() do
         local player = World_GetPlayerAt(i);
         local race = Player_GetRaceName(player);
-        BG_SpawnAbilityEntities(player, race);
-        Player_SetPopCapOverride(player, 260);
         if not AI_IsAIPlayer(player) then -- Make sure it's a player
             _bg_playerData[j] = {};
             _bg_playerData[j].player = player;
@@ -46,10 +44,9 @@ function BG_LoadSessionData()
             BGAI_RegisterAIPlayer(k, player);
             k = k + 1;
         end
+        BG_SpawnAbilityEntities(player, race);
+        Player_SetPopCapOverride(player, 260);
     end
-
-    -- Create the item icon database.
-    BG_CreateItemIconDatabase();
 
     return true;
 
@@ -161,16 +158,16 @@ function BG_LoadAIData()
 
 end
 
-
-function BG_CreateItemIconDatabase()
-
-end
-
 function BG_FindItemIcon(item)
+    for k,v in pairs(bg_db.slot_items) do
+        if k == item then
+            return v.icon;
+        end
+    end
     return nil;
 end
 
-function BG_FindCapturedIcon(item)
+function BG_FindCapturedIcon(item) -- For vehicles, team weapons etc...
     return nil;
 end
 
@@ -185,8 +182,15 @@ function BG_GetFactionAbilityEntityBlueprint(race, type)
 end
 
 function BG_SpawnAbilityEntities(player, race)
-    local air = BG_GetFactionAbilityEntityBlueprint(race, 1);
-    local art = BG_GetFactionAbilityEntityBlueprint(race, 2);
-    local par = BG_GetFactionAbilityEntityBlueprint(race, 3);
-    
+    local air_e = Entity_CreateAndSpawn(player, BG_GetFactionAbilityEntityBlueprint(race, 1));
+    local art_e = Entity_CreateAndSpawn(player, BG_GetFactionAbilityEntityBlueprint(race, 2));
+    local par_e = Entity_CreateAndSpawn(player, BG_GetFactionAbilityEntityBlueprint(race, 3));
+    if Player_IsHuman(player) then
+        local pid = BG_GetPlayerID(player);
+        _bg_playerData[pid].special_ability_entities = {
+            ["air_support"] = air_e,
+            ["artillery_support"] = art_e,
+            ["air_reinforcements"] = par_e,
+        };
+    end
 end

@@ -196,8 +196,8 @@ namespace Battlegrounds.Compiler {
                     subIfTable = "{}";
                 }
 
-                lua.AppendLine($"{{ ibp = \"{ibp.Name}\", ignore_if = {subIfTable}, icon = \"{ibp.Icon}\", }},");
-
+                lua.AppendLine($"[\"{ibp.Name}\"] = {{ ignore_if = {subIfTable}, icon = \"{ibp.Icon}\", }},");
+                // TODO: Write better format (Just write the IScarSerializable...)
             }
 
             lua.DecreaseIndent();

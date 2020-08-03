@@ -1,8 +1,7 @@
 local _bg_local_category = "infantry";
 local _bg_local_companyIsVisible = false;
-local _bg_local_show_from = 1;
-local _bg_local_show_to = -1;
-local _bg_local_show_max = 13;
+local _bg_local_category_page = 1;
+local _bg_local_category_page_max = 1;
 
 _BG_UI_CompanyViewX = 0;
 _BG_UI_CompanyViewY = -616;
@@ -13,6 +12,9 @@ _BG_UI_UNIT_CARD_CLICKED = 42;
 _BG_UI_UNIT_CARD_CANCEL_CLICKED = 43;
 
 function BG_CreateCallInUI(player)
+
+    -- Player ID
+    bgPlayerID = BG_GetPlayerID(player);
 
     -- The position
     local callinPos = UI_BottomRight(355, 334);
@@ -26,6 +28,9 @@ function BG_CreateCallInUI(player)
 
     -- Create the company view
     BG_CreateCompanyView();
+
+    -- Create Special Company abilities selector
+    BG_CreateCompanyAbilityView(_bg_playerData[bgPlayerID].company);
 
     -- Add a function update deployment
     Rule_AddInterval(BG_UpdateCompanyUIValues, _BG_UI_UpdateInterval);
@@ -72,8 +77,56 @@ function BG_CreateCompanyView()
 
     -- Create the company container
     bg_company_container = Panel();
-    bg_company_container:setPos(24, 80); -- y = 56 + 24
+    bg_company_container:setPos(24, 76); -- y = 56 + 20
     bg_companyView:add(bg_company_container);
+
+    -- Create page controller panel
+    bg_company_pageController = Panel();
+    bg_company_pageController:setBounds(360 - 152, 576 + 53 - 44, 130, 36);
+    bg_company_pageController:add(Icon("ModIcons_6a0a13b89555402ca75b85dc30f5cb04_company_page_bkg", 130, 36, 0, 0));
+
+    -- The next page
+    bg_company_pageController.next_page = function(tag)
+        if _bg_local_category_page + 1 <= _bg_local_category_page_max then
+            _bg_local_category_page = _bg_local_category_page + 1;
+            BG_ShowCompanyPage(_bg_playerData[BG_GetPlayerID(Game_GetLocalPlayer())].company.units, _bg_local_category);
+            if _bg_local_category_page == _bg_local_category_page_max then
+                bg_company_pageControllerRight:setEnabled(false);
+            end
+            bg_company_pageControllerLeft:setEnabled(true);
+        end
+    end
+
+    -- The previous page
+    bg_company_pageController.previous_page = function(tag)
+        if _bg_local_category_page - 1 >= 1 then
+            _bg_local_category_page = _bg_local_category_page - 1;
+            BG_ShowCompanyPage(_bg_playerData[BG_GetPlayerID(Game_GetLocalPlayer())].company.units, _bg_local_category);
+            if _bg_local_category_page == 1 then
+                bg_company_pageControllerLeft:setEnabled(false);
+            end
+            bg_company_pageControllerRight:setEnabled(true);
+        end
+    end
+
+    bg_company_pageControllerLeft = Button(Util_CreateLocString(""), "ModIcons_6a0a13b89555402ca75b85dc30f5cb04_gameover_left_button");
+    bg_company_pageControllerLeft:setBounds(10, 6, 24, 22);
+    bg_company_pageControllerLeft:setCallback(bg_company_pageController.previous_page);
+    bg_company_pageController:add(bg_company_pageControllerLeft);
+
+    bg_company_pageControllerRight = Button(Util_CreateLocString(""), "ModIcons_6a0a13b89555402ca75b85dc30f5cb04_gameover_right_button");
+    bg_company_pageControllerRight:setBounds(130 - 34, 6, 24, 22);
+    bg_company_pageControllerRight:setCallback(bg_company_pageController.next_page);
+    bg_company_pageController:add(bg_company_pageControllerRight);
+
+    bg_company_pageControllerLabel = Label(Util_CreateLocString("1/1"));
+    bg_company_pageControllerLabel:setBounds(UI_CentreAlignWidth(68, 130), 6, 68, 28);
+    bg_company_pageControllerLabel:setFontSize(11.0);
+    bg_company_pageControllerLabel:setColor(Color.White);
+    bg_company_pageControllerLabel:setHorizontalAlignment(LAH_Center);
+    bg_company_pageController:add(bg_company_pageControllerLabel);
+
+    bg_companyView:add(bg_company_pageController);
 
     -- Add panel
     bg_call_ui:add(bg_companyView);
@@ -119,45 +172,14 @@ function BG_ShowCompanyCategory(category)
         -- Show the view
         bg_companyView:setPos(_BG_UI_CompanyViewX, _BG_UI_CompanyViewY);
 
-        -- Clear the container
-        bg_company_container:clear();
-
         -- Get player ID
         local bgPlayerID = BG_GetPlayerID(player);
 
-        -- Set max to show (TODO: Implement proper logic for handling this)
-        _bg_local_show_from = 1;
-        _bg_local_show_to = #_bg_playerData[bgPlayerID].company.units;
-        if (_bg_local_show_to > _bg_local_show_max) then
-            _bg_local_show_to = _bg_local_show_max;
-        end
+        -- Set max to show
+        _bg_local_category_page = 1;
 
-        -- Keep track of the y-offset
-        local yOffset = 0.0
-        local j = 0;
-
-        -- For each unit in company unit
-        for i=1, #_bg_playerData[bgPlayerID].company.units do
-            -- TODO: Do this properly...
-            if _bg_playerData[bgPlayerID].company.units[i].category == category and _bg_playerData[bgPlayerID].company.units[i].phase <= _bg_custom.phase_current then
-                if (not _bg_playerData[bgPlayerID].company.units[i].spawned) then
-
-                    local unitcard = BG_CreateUnitcard(_bg_playerData[bgPlayerID].company.units[i], yOffset);
-                    bg_company_container:add(unitcard);
-
-                    yOffset = yOffset + 40;
-
-                    j = j + 1;
-
-                end
-            end
-            if j >= _bg_local_show_max then
-                break;
-            end
-        end
-
-        -- Show company abilities (if any)
-        BG_CreateCompanyAbilityView(_bg_playerData[bgPlayerID].company);
+        -- Show the company page for the category
+        BG_ShowCompanyPage(_bg_playerData[bgPlayerID].company.units, category);
 
         -- Update the category
         _bg_local_category = category;
@@ -173,33 +195,92 @@ end
 function BG_CreateCompanyAbilityView(playerData) -- For special abilities requiring modal phases
 
     local specialPanel = Panel();
-    specialPanel:setPos(-40, 0);
-    specialPanel:add(Icon("ModIcons_6a0a13b89555402ca75b85dc30f5cb04_", 40, 108, 0, 0));
-
-    local yOffset = 16;
+    specialPanel:setPos(-34, 0);
+    specialPanel:add(Icon("ModIcons_6a0a13b89555402ca75b85dc30f5cb04_special_bkg", 38, 103, 0, 0));
+    -- TODO: Implement sized-icons etc. such that the player can't select a building with no available abilities.
+    local xOffset = 8;
+    local yOffset = 12;
+    local icoSize = 28;
 
     playerData.specials.artilleryButton = Button(nil, "ModIcons_6a0a13b89555402ca75b85dc30f5cb04_icon_artillery");
-    playerData.specials.artilleryButton:setBounds(12, yOffset, 48, 48);
+    playerData.specials.artilleryButton:setBounds(xOffset, yOffset, icoSize, icoSize);
     playerData.specials.artilleryButton:setTag("artillery_support");
     playerData.specials.artilleryButton:setCallback(BG_SpecialAbilitiesClicked);
     specialPanel:add(playerData.specials.artilleryButton);
-    yOffset = yOffset + 52;
+    yOffset = yOffset + icoSize - 2;
 
     playerData.specials.airButton = Button(nil, "ModIcons_6a0a13b89555402ca75b85dc30f5cb04_icon_air_support");
-    playerData.specials.airButton:setBounds(12, yOffset, 48, 48);
+    playerData.specials.airButton:setBounds(xOffset, yOffset, icoSize, icoSize);
     playerData.specials.airButton:setTag("air_support");
     playerData.specials.airButton:setCallback(BG_SpecialAbilitiesClicked);
     specialPanel:add(playerData.specials.airButton);
-    yOffset = yOffset + 52;
+    yOffset = yOffset + icoSize - 2;
 
     playerData.specials.reinforcementsButton = Button(nil, "ModIcons_6a0a13b89555402ca75b85dc30f5cb04_icon_paratrooper");
-    playerData.specials.reinforcementsButton:setBounds(12, yOffset, 48, 48);
+    playerData.specials.reinforcementsButton:setBounds(xOffset, yOffset, icoSize, icoSize);
     playerData.specials.reinforcementsButton:setTag("air_reinforcements");
     playerData.specials.reinforcementsButton:setCallback(BG_SpecialAbilitiesClicked);
     specialPanel:add(playerData.specials.reinforcementsButton);
-    yOffset = yOffset + 52;
+    yOffset = yOffset + icoSize - 2;
 
     bg_call_ui:add(specialPanel);
+
+end
+
+function BG_ShowCompanyPage(units, category)
+
+    -- Clear the container
+    bg_company_container:clear();
+
+    -- Keep track of the y-offset
+    local yOffset = 0.0
+
+    -- Update page indices
+    BG_UpdatePageIndex(units, category);
+
+    -- For each unit in company unit
+    for i=1, #units do
+        if units[i].page_index == _bg_local_category_page then
+            local unitcard = BG_CreateUnitcard(units[i], yOffset); -- SUGGESTION: Precache most of this
+            bg_company_container:add(unitcard);
+            yOffset = yOffset + 36;
+        end
+    end
+
+    -- Update page buttons
+    if _bg_local_category_page_max == 1 then
+        bg_company_pageControllerLeft:setEnabled(false);
+        bg_company_pageControllerRight:setEnabled(false);
+    else
+        bg_company_pageControllerLeft:setEnabled(_bg_local_category_page > 1);
+        bg_company_pageControllerRight:setEnabled(_bg_local_category_page < _bg_local_category_page_max);
+    end
+
+    -- Update page label
+    bg_company_pageControllerLabel:setText(Util_CreateLocString(_bg_local_category_page.."/".._bg_local_category_page_max));
+
+end
+
+function BG_UpdatePageIndex(units, category)
+
+    local counter = 1;
+    local page = 1;
+
+    for i = 1, #units do
+        if units[i].category == category and units[i].phase <= _bg_custom.phase_current and not units[i].spawned then
+            units[i].page_index = page;
+            counter = counter + 1;
+            if counter >= 15 then
+                counter = 1;
+                page = page + 1;
+            end
+        else
+            units[i].page_index = -1;
+        end
+    end
+
+    -- Update the page count
+    _bg_local_category_page_max = page;
 
 end
 
@@ -328,6 +409,10 @@ function BG_UnitCardClicked(tag)
     if not UI_ButtonCheck(_BG_UI_UNIT_CARD_CLICKED) then
         return;
     end
+    if not BG_AllowDeployment() then
+        BG_ShowTooManyFieldedUnitsWarning();
+        return;
+    end
     local refPlayerID = BG_GetPlayerID(Game_GetLocalPlayer());
     for i=1, #_bg_playerData[refPlayerID].company.units do
         if _bg_playerData[refPlayerID].company.units[i].company_id == tonumber(tag) then
@@ -430,18 +515,37 @@ function BG_RefreshCompanyView()
     end
 end
 
-function BG_VerifyPurchase(cost)
-    local man = cost.manpower or 0;
-    local mun = cost.munitions or 0;
-    local ful = cost.fuel or 0;
-    return Player_CanBuy(Game_GetLocalPlayer(), man, mun, ful);
+function BG_VerifyPurchase(cost, player)
+    if player == nil then
+        player = Game_GetLocalPlayer();
+    end
+    return Player_CanBuy(player, cost.manpower or 0, cost.munitions or 0, cost.fuel or 0);
+end
+
+function BG_AllowDeployment(player)
+    if player == nil then
+        player = Game_GetLocalPlayer();
+    end
+    return Player_GetSquadCount(player) < _bg_custom.max_squad_count;
 end
 
 function BG_ShowInsufficientFundsWarning()
-    BG_ClearWarnings();
-    g_uiWarningIndex = UIWarning_Show(BG_LocString(3));
-    if not Rule_Exists(BG_ClearWarnings) then
-        Rule_AddOneShot(BG_ClearWarnings, 5);
+    if g_uiWarningIndex == nil then
+        BG_ClearWarnings();
+        g_uiWarningIndex = UIWarning_Show(BG_LocString(3));
+        if not Rule_Exists(BG_ClearWarnings) then
+            Rule_AddOneShot(BG_ClearWarnings, 5);
+        end
+    end
+end
+
+function BG_ShowTooManyFieldedUnitsWarning()
+    if g_uiWarningIndex == nil then
+        BG_ClearWarnings();
+        g_uiWarningIndex = UIWarning_Show(BG_LocString(18));
+        if not Rule_Exists(BG_ClearWarnings) then
+            Rule_AddOneShot(BG_ClearWarnings, 5);
+        end
     end
 end
 
@@ -458,12 +562,11 @@ function BG_UpdateCompanyButtonView(player, name)
 end
 
 function BG_SpecialAbilitiesClicked(type)
-    if type == "air_reinforcements" then
-
-    elseif type == "air_support" then
-
-    elseif type == "artillery_support" then
-
+    local pid = BG_GetPlayerID(Game_GetLocalPlayer());
+    if pid ~= -1 then
+        local e = _bg_playerData[pid].special_ability_entities[type];
+        if e ~= nil then
+            Misc_SelectEntity(e);
+        end
     end
-    -- else other types?
 end

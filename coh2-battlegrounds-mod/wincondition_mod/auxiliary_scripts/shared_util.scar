@@ -88,7 +88,7 @@ function Vec3(_x, _y, _z)
             return World_Pos(self.x, self.y, self.z);
         end,
     };
-    return vec;
+    return vec; -- TODO: Fix potential memory "leak"
 end
 
 function Vec3Scar(pos)
@@ -176,6 +176,33 @@ function Squad_IsInfantrySquad(squad)
 end
 
 function Squad_Surrender(squad)
+    -- TODO: Implement
+end
+
+------------------------------------------------------------
+-- Entity functions
+------------------------------------------------------------
+
+function Entity_CreateAndSpawn(player, blueprint, position, towards)
+
+    -- If position is nil - use player's starting position
+    if position == nil then
+        position = Player_GetStartingPosition(player);
+    end
+
+    -- If towards is nil - use position + some
+    if towards == nil then
+        towards = Vec3Scar(position):add(Vec3(1,0,0)):toscar();
+    end
+
+    -- Create entity
+    local e = Entity_Create(blueprint, player, position, towards );
+
+    -- Spawn the entity
+    Entity_Spawn(e);
+
+    -- Return entity
+    return e;
 
 end
 

@@ -280,7 +280,9 @@ function BG_ApplyCompanyData(player, squad, tempGroup, data)
 
     -- Add slot_items
     for i=1, #data.slot_items do
-        Squad_GiveSlotItem(squad, BP_GetSlotItemBlueprint(data.slot_items[i].bp) );
+        if data.slot_items[i].bp ~= nil then
+            Squad_GiveSlotItem(squad, BP_GetSlotItemBlueprint(data.slot_items[i].bp) );
+        end
     end
 
     -- Add modifiers
