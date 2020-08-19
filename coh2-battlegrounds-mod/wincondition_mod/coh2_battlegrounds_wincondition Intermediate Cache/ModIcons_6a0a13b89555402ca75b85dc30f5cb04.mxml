@@ -72,6 +72,8 @@
 		public static var special_bkg:Class;
 		[Embed(source='E:/coh2_battlegrounds/coh2-battlegrounds-mod/wincondition_mod/art/unitbackground.png')]
 		public static var unitbackground:Class;
+		[Embed(source='E:/coh2_battlegrounds/coh2-battlegrounds-mod/wincondition_mod/art/unknown_item.png')]
+		public static var unknown_item:Class;
 		[Embed(source='E:/coh2_battlegrounds/coh2-battlegrounds-mod/wincondition_mod/art/upgrade_pickup.png')]
 		public static var upgrade_pickup:Class;
 		[Embed(source='E:/coh2_battlegrounds/coh2-battlegrounds-mod/wincondition_mod/art/vstar.png')]

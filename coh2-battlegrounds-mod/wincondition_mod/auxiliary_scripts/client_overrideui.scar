@@ -2,15 +2,21 @@ function BG_CreateAndDisplayGameOverScreenOverride(locplayer, callback, victory)
 
     -- Disable other UI
     Taskbar_SetVisibility(false);
+    UI_ToggleDecorators()
+    UI_HideTacticalMap();
     BGUI_HideAll();
 
     -- Disable camera input
     Camera_SetInputEnabled(false);
+    Camera_AutoRotate(Camera_GetTargetPos(), 35, 43, 1);
 
     -- Reveral FOW
     FOW_Enable(false);
 
-    -- Goto enemy base?
+    -- Fade out speech / sfx as win screen comes up (From ScarUtil.scar)
+	Sound_SetVolume("master\\speech_master", 0.0, 2)
+	Sound_SetVolume("master\\sfx_master", 0.0, 2)
+
     -- Make defeated player units retreat?
 
     -- Get ref player ID

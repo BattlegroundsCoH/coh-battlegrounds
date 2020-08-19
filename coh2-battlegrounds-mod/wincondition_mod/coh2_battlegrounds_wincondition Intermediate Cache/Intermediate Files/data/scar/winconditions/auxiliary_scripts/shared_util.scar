@@ -53,6 +53,13 @@ bg_set = {
         end
         return false;
     end,
+    select = function(self, set, selector)
+        local selected = {};
+        for i=1, #set do
+            selected[i] = selector(set[i]);
+        end
+        return selected;
+    end,
     size = function(self, set)
         return #set;
     end,
@@ -94,6 +101,27 @@ end
 function Vec3Scar(pos)
     return Vec3(pos.x, pos.y, pos.z);
 end
+------------------------------------------------------------
+-- Lua Helper functions
+------------------------------------------------------------
+
+function Table_ContainsAny(table, predicate)
+    for k,v in pairs(table) do
+        if predicate(v) then
+            return true;
+        end
+    end
+    return false;
+end
+
+table.pack = function(...)
+    local pack = {};
+    for i, v in ipairs(arg) do
+        pack[i] = v;
+    end
+    return pack;
+end
+
 ------------------------------------------------------------
 -- SGroup functions
 ------------------------------------------------------------

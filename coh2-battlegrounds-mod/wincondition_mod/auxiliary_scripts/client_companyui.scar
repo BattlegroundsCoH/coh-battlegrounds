@@ -270,7 +270,7 @@ function BG_UpdatePageIndex(units, category)
         if units[i].category == category and units[i].phase <= _bg_custom.phase_current and not units[i].spawned then
             units[i].page_index = page;
             counter = counter + 1;
-            if counter >= 15 then
+            if counter > 14 then
                 counter = 1;
                 page = page + 1;
             end

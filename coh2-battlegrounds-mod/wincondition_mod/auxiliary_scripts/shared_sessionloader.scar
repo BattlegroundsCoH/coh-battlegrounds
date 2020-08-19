@@ -164,11 +164,11 @@ function BG_FindItemIcon(item)
             return v.icon;
         end
     end
-    return nil;
+    return "ModIcons_6a0a13b89555402ca75b85dc30f5cb04_unknown_item";
 end
 
 function BG_FindCapturedIcon(item) -- For vehicles, team weapons etc...
-    return nil;
+    return "ModIcons_6a0a13b89555402ca75b85dc30f5cb04_unknown_item";
 end
 
 _bg_saentity = {

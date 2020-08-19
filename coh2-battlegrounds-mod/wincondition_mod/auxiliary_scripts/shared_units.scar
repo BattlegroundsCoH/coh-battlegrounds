@@ -282,6 +282,9 @@ function BG_ApplyCompanyData(player, squad, tempGroup, data)
     for i=1, #data.slot_items do
         if data.slot_items[i].bp ~= nil then
             Squad_GiveSlotItem(squad, BP_GetSlotItemBlueprint(data.slot_items[i].bp) );
+            if data.slot_items[i].base == nil then
+                data.slot_items[i].base = true;
+            end
         end
     end
 
@@ -398,19 +401,44 @@ end
 function BG_CollectSquadSlotItems(squad)
     local set = {};
     for i=1, Squad_GetSlotItemCount(squad) do
-        table.insert(set, BP_GetName(Squad_GetSlotItemAt(squad, i)));
+        local bp = BP_GetName(Squad_GetSlotItemAt(squad, i));
+        if bg_db.slot_items[bp] ~= nil then -- make sure we know about this slot item
+            local ignore = false;
+            for _, v in pairs(bg_db.slot_items[bp].ignore_if) do
+                if Squad_HasUpgrade(squad, BP_GetUpgradeBlueprint(v)) then
+                    ignore = true;
+                    break;
+                end
+            end
+            if not ignore then
+                table.insert(set, bp);
+            end
+        end
     end
     return set;
 end
 
 function BG_SaveSlotItems(unit_data, squad)
     local items = BG_CollectSquadSlotItems(squad);
-    local new_items = bg_set:diff(unit_data.slot_items, items);
-    local last_pickup = nil;
+    local new_items = bg_set:diff(items, bg_set:select(unit_data.slot_items, function(e) return e.bp; end));
     for i = 1, #new_items do
         Game_SendMessage(_bg_message_type_no_actions_required, "I["..unit_data.company_id..","..new_items[i].."]");
-        last_pickup = new_items[i];
     end
-    unit_data.slot_items = items;
+    local last_pickup = nil;
+    local slot_items = {};
+    for i=1, #items do
+        local isBaseItem = Table_ContainsAny(unit_data.slot_items, function(v)
+            if v.bp == items[i] and v.base == true then -- This will not trigger properly if two of the same items are picked up (But won't really matter in the end)
+                return true;
+            else
+                return false;
+            end
+        end);
+        table.insert(slot_items, { bp=items[i], symbol=BG_FindItemIcon(items[i]), base=isBaseItem });
+        if not isBaseItem then
+            last_pickup = items[i];
+        end
+    end
+    unit_data.slot_items = slot_items;
     return last_pickup;
 end
