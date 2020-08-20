@@ -9,7 +9,7 @@ bg_settings = {
 	},
 	gamemode = "Victory Points",
 	gameoptions = {
-		gamemode_setting = 250,
+		gamemode_setting = 50,
 	},
 	team_setup = {
 		["allies"] = {

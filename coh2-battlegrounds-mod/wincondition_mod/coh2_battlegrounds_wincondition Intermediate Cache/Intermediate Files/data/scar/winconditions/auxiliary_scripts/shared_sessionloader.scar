@@ -18,6 +18,7 @@ function BG_LoadSessionData()
             _bg_playerData[j].squads = {};
             _bg_playerData[j].deployed = {};
             _bg_playerData[j].captured = {};
+            _bg_playerData[j].tempcrews = {};
             _bg_playerData[j].gainsData = {};
             _bg_playerData[j].lossData = {};
             _bg_playerData[j].teamStr = BG_GetTeamString(_bg_playerData[j].race);

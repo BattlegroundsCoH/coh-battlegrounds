@@ -27,6 +27,9 @@ _bg_message_type_team_vote_no_withdraw = 68.0; -- A player voted no to witdraw
 _bg_message_type_team_vote_yes_withdraw = 69.0; -- A player votes yes to withdraw
 _bg_message_type_team_do_withdraw = 70.0; -- A team has decided to withdraw
 
+_bg_unitID_RecrewRecapture = -1; -- Constant ID to make a squad ID as recrewed/recaptured
+_bg_unitID_NoIdea = -2; -- Constant ID to mark a squad ID as being a case of "How the f*ck did this happen".
+
 ------------------------------------------------------------------------------------
 -- Imports
 ------------------------------------------------------------------------------------
@@ -414,24 +417,35 @@ function BG_CollectEndofMatchData()
                     table.insert(_bg_playerData[i].gainsData, gData);
                 end
 
-            elseif company_id == -1 and Squad_IsValid(squadID) then -- Captured equipment
+            elseif company_id == _bg_unitID_RecrewRecapture and Squad_IsValid(squadID) then -- Captured equipment
 
                 -- Get the actual squad
                 local squad = Squad_FromWorldID(squadID);
                 local squadBP = BP_GetName(Squad_GetBlueprint(squad));
+                local formalBP = _bg_playerData[i].captured[squadID].bp; -- The formal blueprint - which we may need to change in case it's a team weapon
 
-                -- The capture message
-                local capture_message = "T[" .. squadBP .."]";
+                -- The capture message data
+                local capture_type = 0;
 
-                -- Broadcast the message
-                Game_SendMessage(_bg_message_type_no_actions_required, capture_message);
+                -- Get the capture type (weapon or vehicle)
+                if Squad_IsVehicleSquad(squad) then -- Is vehicle?
+                    capture_type = 1;
+                else -- Then it's a team weapon
+                    capture_type = 2;
+                    formalBP = BP_GetName(Squad_GetSyncWeaponBlueprint(squadID));
+                end
 
-                -- Add to the captured
+                -- Save the data
+                BG_SaveCapturedItem(_bg_playerData[i].player, formalBP, capture_type, _bg_playerData[i].captured[squadID].tp);
+
+                -- Create gains data
                 local cData = {
-                    type = 1,
+                    type = 1, -- Captured equipment
                     symbol = BG_FindCapturedIcon(squadBP),
                 };
-                table.insert(_bg_playerData[i].gainsData, gData);
+
+                -- Add to the gains data
+                table.insert(_bg_playerData[i].gainsData, cData);
 
             end
 

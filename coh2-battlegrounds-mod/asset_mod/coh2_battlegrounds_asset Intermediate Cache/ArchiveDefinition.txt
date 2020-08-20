@@ -1,4 +1,10 @@
 Archive name="f0c3cb74008447268cad2804e3b9d565" blocksize="262144"
+TOCStart name="attrib" alias="attrib" path="" relativeroot="attrib"
+	FileSettingsStart defverification="sha1_blocks" defcompression="stream_compress"
+		Override wildcard=".*\.(rgd)$" minsize="-1" maxsize="-1" vt="sha1_blocks" ct="buffer_compress"
+	FileSettingsEnd
+	E:\coh2_battlegrounds\coh2-battlegrounds-mod\asset_mod\coh2_battlegrounds_asset Intermediate Cache\Intermediate Files\attrib\attrib\ebps\races\german\vehicles\panzer_iv_sdkfz_161\panzer_iv_sdkfz_161_decrewed.rgd
+TOCEnd
 TOCStart name="locale" alias="locale" path="" relativeroot="locale"
 	FileSettingsStart defverification="crc_blocks" defcompression="stream_compress"
 	FileSettingsEnd

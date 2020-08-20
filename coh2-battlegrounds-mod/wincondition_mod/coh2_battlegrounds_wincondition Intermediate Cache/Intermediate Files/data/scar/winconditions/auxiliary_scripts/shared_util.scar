@@ -191,6 +191,15 @@ function Squad_GetSyncWeapon(squad)
     return nil;
 end
 
+function Squad_GetSyncWeaponBlueprint(squad)
+    local e = Squad_GetSyncWeapon(squad);
+    if e ~= nil then
+        return Entity_GetBlueprint(e);
+    else
+        fatal("Expected team weapon but found other squad type.");
+    end
+end
+
 function Squad_IsVehicleSquad(squad)
     return Entity_IsVehicle(Squad_EntityAt(squad, 0));
 end
