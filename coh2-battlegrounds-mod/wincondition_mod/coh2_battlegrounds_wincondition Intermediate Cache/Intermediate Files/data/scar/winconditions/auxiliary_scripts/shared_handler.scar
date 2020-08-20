@@ -421,31 +421,9 @@ function BG_CollectEndofMatchData()
 
                 -- Get the actual squad
                 local squad = Squad_FromWorldID(squadID);
-                local squadBP = BP_GetName(Squad_GetBlueprint(squad));
-                local formalBP = _bg_playerData[i].captured[squadID].bp; -- The formal blueprint - which we may need to change in case it's a team weapon
 
-                -- The capture message data
-                local capture_type = 0;
-
-                -- Get the capture type (weapon or vehicle)
-                if Squad_IsVehicleSquad(squad) then -- Is vehicle?
-                    capture_type = 1;
-                else -- Then it's a team weapon
-                    capture_type = 2;
-                    formalBP = BP_GetName(Squad_GetSyncWeaponBlueprint(squadID));
-                end
-
-                -- Save the data
-                BG_SaveCapturedItem(_bg_playerData[i].player, formalBP, capture_type, _bg_playerData[i].captured[squadID].tp);
-
-                -- Create gains data
-                local cData = {
-                    type = 1, -- Captured equipment
-                    symbol = BG_FindCapturedIcon(squadBP),
-                };
-
-                -- Add to the gains data
-                table.insert(_bg_playerData[i].gainsData, cData);
+                -- Handle the captured equipment (shared_units.scar)
+                BG_HandleCapturedEquipment(_bg_playerData[i], squadID, squad, BP_GetName(Squad_GetBlueprint(squad)));
 
             end
 
