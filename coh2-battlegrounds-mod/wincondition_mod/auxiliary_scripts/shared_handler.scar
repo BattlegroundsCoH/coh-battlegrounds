@@ -29,6 +29,7 @@ _bg_message_type_team_do_withdraw = 70.0; -- A team has decided to withdraw
 
 _bg_unitID_RecrewRecapture = -1; -- Constant ID to make a squad ID as recrewed/recaptured
 _bg_unitID_NoIdea = -2; -- Constant ID to mark a squad ID as being a case of "How the f*ck did this happen".
+_bg_unitID_TransportIgnore = -3; -- Constant ID to mark a squad ID as a transport unit that's set to dissappear.
 
 ------------------------------------------------------------------------------------
 -- Imports

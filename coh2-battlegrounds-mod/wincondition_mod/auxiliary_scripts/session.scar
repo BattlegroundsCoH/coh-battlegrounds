@@ -21,6 +21,8 @@ bg_settings = {
 	},
 };
 
+bg_db.towing_upgrade = "142b113740474c82a60b0a428bd553d5:is_towing";
+bg_db.towed_upgrade = "142b113740474c82a60b0a428bd553d5:is_towed";
 bg_db.slot_items["ppsh41_assault_package_dummy_item_bg"] = { ignore_if = { "ppsh-41_sub_machine_gun_upgrade_bg" }, icon = "Icons_weapons_weapon_pps", };
 bg_db.slot_items["dp-28_light_machine_gun_package_bg"] = { ignore_if = { "dp-28_lmg_upgrade_bg" }, icon = "Icons_weapons_weapon_dp_28_lmg", };
 

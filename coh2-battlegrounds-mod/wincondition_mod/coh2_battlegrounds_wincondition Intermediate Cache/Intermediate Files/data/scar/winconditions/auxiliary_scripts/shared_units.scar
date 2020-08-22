@@ -149,11 +149,16 @@ function BG_DeploySquad(player, unit_id)
         local spawnfrom = Player_GetNearestMapEntry(player, gotopos);
 
         -- Call in the unit
-        local squad, crewSquad = BG_CallInUnit(unit_data, player, gotopos, spawnfrom);
+        local squad, crewSquad, transportSquad = BG_CallInUnit(unit_data, player, gotopos, spawnfrom);
 
         -- Register the unit
         _bg_playerData[playerRefID].deployed[Squad_GetGameID(squad)] = unit_data.company_id;
         _bg_playerData[playerRefID].total_deployed = _bg_playerData[playerRefID].total_deployed + 1;
+
+        -- Register the transport squad (if any)
+        if transportSquad ~= nil then
+            _bg_playerData[playerRefID].deployed[Squad_GetGameID(transportSquad)] = _bg_unitID_TransportIgnore;
+        end
 
         -- Register the crew (if any)
         if crewSquad ~= nil then
@@ -186,6 +191,9 @@ function BG_CallInUnit(unit_data, player, gotopos, spawnfrom)
     local squad = Squad_CreateAndSpawnToward(BP_GetSquadBlueprint(unit_data.bp_name), player, 0, spawnfrom, gotopos );
     local sg_temp = SGroup_FromSquad(squad);
 
+    -- The transport squad
+    local transportSquad = nil;
+
     -- Was a transport method specified?
     if unit_data.transport ~= nil then
 
@@ -193,7 +201,7 @@ function BG_CallInUnit(unit_data, player, gotopos, spawnfrom)
         if (unit_data.transport.mode == 1 or unit_data.transport.mode == 2)  then
 
             -- Create transport squad
-            local transportSquad = Squad_CreateAndSpawnToward(BP_GetSquadBlueprint(unit_data.transport.sbp), player, 0, spawnfrom, gotopos );
+            transportSquad = Squad_CreateAndSpawnToward(BP_GetSquadBlueprint(unit_data.transport.sbp), player, 0, spawnfrom, gotopos );
             local sg_transport_temp = SGroup_FromSquad(transportSquad, "sg_transport_temp" .. unit_data.company_id);
             SGroup_Add(sg_transport_temp, transportSquad);
 
@@ -273,7 +281,7 @@ function BG_CallInUnit(unit_data, player, gotopos, spawnfrom)
     unit_data.spawned = true;
 
     -- Return the squad
-    return squad, crewSquad;
+    return squad, crewSquad, transportSquad;
 
 end
 
@@ -407,6 +415,8 @@ function BG_RecallSquad(playerID, squadID)
                     else
                         return; -- Nothing we can do -- no company unit to save
                     end
+                elseif companyID == _bg_unitID_TransportIgnore then
+                    return
                 end
                 local unit_data = BG_FindSquadInCompany(playerID, companyID);
                 if unit_data ~= nil then
@@ -511,7 +521,7 @@ function BG_DeployAndExit(group, deployPos)
         end, nil, group, true, 0.5)
     else
         Event_Proximity(function()
-            Battlegrounds_TowDetach(SGroup_GetSpawnedSquadAt(group, 1)); -- Detach and get rid of the squad.
+            Battlegrounds_TowDetach(SGroup_GetSpawnedSquadAt(group, 1)); -- Detatch and get rid of the squad.
             local pos = Player_GetNearestMapEntry(Util_GetPlayerOwner(group), Util_GetPosition(group));
             SGroup_MoveAndDespawn(group, pos);
         end, nil, group, deployPos, 2.5, nil, 4 );

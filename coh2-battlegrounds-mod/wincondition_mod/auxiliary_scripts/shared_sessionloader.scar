@@ -49,6 +49,16 @@ function BG_LoadSessionData()
         Player_SetPopCapOverride(player, 260);
     end
 
+    -- Fix towing upgrade
+    if bg_db.towing_upgrade ~= nil and scartype(bg_db.towing_upgrade) == ST_STRING then
+        bg_db.towing_upgrade = BP_GetUpgradeBlueprint(bg_db.towing_upgrade);
+    end
+
+    -- Fix towing upgrade
+    if bg_db.towed_upgrade ~= nil and scartype(bg_db.towed_upgrade) == ST_STRING then
+        bg_db.towed_upgrade = BP_GetUpgradeBlueprint(bg_db.towed_upgrade);
+    end
+
     return true;
 
 end
