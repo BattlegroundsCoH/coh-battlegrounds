@@ -129,8 +129,6 @@ namespace Battlegrounds.Game.Battlegrounds {
 
                 if (messageMatchResult.Success) {
 
-                    Console.WriteLine(msg);
-
                     char msgtype = char.ToUpper(messageMatchResult.Groups["cmdtype"].Value[0]); // Always bump it to upper (incase it's forgotten in Scar script)
                     string[] values = messageMatchResult.Groups["content"].Captures.ToList().Where(x => x.Value != "," && x.Value != " ").Select(x => x.Value).ToArray();
 
@@ -172,7 +170,7 @@ namespace Battlegrounds.Game.Battlegrounds {
 
                             Squad squad = FindFirstSquad(player, allsquads, squadID);
                             if (squad != null) {
-                                Console.WriteLine(squadID + " was withdrawn by " + player.Player.Name);
+                                Console.WriteLine(squadID + " was withdrawn (or survived to end of match) by " + player.Player.Name);
                                 if (vetChange > 0) {
                                     squad.SetVeterancy((byte)(squad.VeterancyRank + vetChange), vetExp);
                                     Console.WriteLine(squadID + " increased veterancy rank by " + vetChange);
@@ -200,7 +198,21 @@ namespace Battlegrounds.Game.Battlegrounds {
                         Console.WriteLine();
 
 
-                    } else if (msgtype == 'I') {
+                    } else if (msgtype == 'T') { // Captured Equipment
+
+                        // Parse the blueprint type
+                        BlueprintType bp = Enum.Parse<BlueprintType>(values[2]);
+
+                        // Get the captured item
+                        Blueprint item = BlueprintManager.FromBlueprintName(values[0], bp);
+
+                        // Add captured item
+                        player.CapturedItems.Add(item);
+
+                        // Log the capture
+                        Console.WriteLine($"{player.Player.Name} captured \"{item.Name}\"");
+
+                    } else if (msgtype == 'I') { // Slot Item
 
                         ushort squadID = ushort.Parse(values[0]);
                         string slot_item_bp = values[1];
@@ -217,7 +229,7 @@ namespace Battlegrounds.Game.Battlegrounds {
                         }
 
                     } else if (msgtype == 'G') {
-                        
+
                         // Verify GUID
                         this.PlayedWithSession = values[0].CompareTo(this.m_gameSession.SessionID.ToString()) == 0;
 
@@ -227,11 +239,15 @@ namespace Battlegrounds.Game.Battlegrounds {
                             Console.WriteLine($"\"{values[0]}\" != \"{this.m_gameSession.SessionID}\"");
                         }
 
-                    } // Other commands here
+                    } else {
+
+                        Console.WriteLine($"Failed to parse regex-matched message: \"{msg}\"");
+
+                    }
 
                 } else {
 
-                    //Console.WriteLine($"Failed to parse: \"{msg}\"");
+                    Console.WriteLine($"Failed to parse: \"{msg}\"");
 
                 }
 

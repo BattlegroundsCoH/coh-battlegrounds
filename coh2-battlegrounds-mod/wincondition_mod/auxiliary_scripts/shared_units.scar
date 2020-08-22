@@ -494,7 +494,7 @@ function BG_SaveCapturedItem(player, blueprint, type, bptype)
     if player == Game_GetLocalPlayer() then
 
         -- Generate message
-        local capture_message = "T["..blueprint..";"..type..";"..bptype.."]";
+        local capture_message = "T["..blueprint..","..type..","..bptype.."]";
 
         -- Broadcast the message
         Game_SendMessage(_bg_message_type_no_actions_required, capture_message);

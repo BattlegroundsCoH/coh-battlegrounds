@@ -14,6 +14,16 @@ namespace Battlegrounds.Modding {
         /// </summary>
         public string VerificationUpgrade { get; }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        public string TowUpgrade { get; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public string TowingUpgrade { get; }
+
     }
 
 }

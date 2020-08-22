@@ -69,6 +69,12 @@ namespace Battlegrounds.Compiler {
             lua.DecreaseIndent();
             lua.AppendLine("};\n");
 
+            // If there are tow upgrades - save them
+            if (!string.IsNullOrEmpty(session.TuningMod.TowUpgrade) && !string.IsNullOrEmpty(session.TuningMod.TowingUpgrade)) {
+                lua.AppendLine($"bg_db.towing_upgrade = \"{session.TuningMod.Guid.ToString().Replace("-", "")}:{session.TuningMod.TowingUpgrade}\"");
+                lua.AppendLine($"bg_db.towed_upgrade = \"{session.TuningMod.Guid.ToString().Replace("-", "")}:{session.TuningMod.TowUpgrade}\"");
+            }
+
             // Write the precompiled database
             WritePrecompiledDatabase(lua, session.Participants.Select(x => x.ParticipantCompany));
 
@@ -157,14 +163,6 @@ namespace Battlegrounds.Compiler {
         /// <param name="companies"></param>
         protected virtual void WritePrecompiledDatabase(TxtBuilder lua, IEnumerable<Company> companies) {
 
-            // Write database table
-            lua.AppendLine("bg_db = {");
-            lua.IncreaseIndent();
-
-            // Write slot items table
-            lua.AppendLine("slot_items = {");
-            lua.IncreaseIndent();
-
             // List for keeping track of dummy slot items (Slot items granted by an upgrade)
             Dictionary<string, HashSet<string>> upgradeItems = new Dictionary<string, HashSet<string>>();
 
@@ -196,15 +194,9 @@ namespace Battlegrounds.Compiler {
                     subIfTable = "{}";
                 }
 
-                lua.AppendLine($"[\"{ibp.Name}\"] = {{ ignore_if = {subIfTable}, icon = \"{ibp.Icon}\", }},");
+                lua.AppendLine($"bg_db.slot_items[\"{ibp.Name}\"] = {{ ignore_if = {subIfTable}, icon = \"{ibp.Icon}\", }};");
                 // TODO: Write better format (Just write the IScarSerializable...)
             }
-
-            lua.DecreaseIndent();
-            lua.AppendLine("},");
-
-            lua.DecreaseIndent();
-            lua.AppendLine("};\n");
 
         }
 

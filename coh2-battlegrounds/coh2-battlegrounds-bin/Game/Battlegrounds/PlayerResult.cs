@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Collections.Immutable;
+using Battlegrounds.Game.Database;
 using Battlegrounds.Game.Gameplay;
 
 namespace Battlegrounds.Game.Battlegrounds {
@@ -39,11 +40,17 @@ namespace Battlegrounds.Game.Battlegrounds {
         public ImmutableHashSet<Squad> Alive => m_activeSquads.ToImmutableHashSet();
 
         /// <summary>
+        /// Keeps track of items captured by the player during the match.
+        /// </summary>
+        public List<Blueprint> CapturedItems { get; set; }
+
+        /// <summary>
         /// Creates a new result container for the player.
         /// </summary>
         /// <param name="player">The player to keep all results about.</param>
         public PlayerResult(Player player) {
             this.Player = player;
+            this.CapturedItems = new List<Blueprint>();
             this.m_activeEntities = new HashSet<Entity>();
             this.m_activeSquads = new HashSet<Squad>();
             this.m_lostSquads = new HashSet<Squad>();

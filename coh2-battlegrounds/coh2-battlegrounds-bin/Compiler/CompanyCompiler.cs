@@ -197,7 +197,7 @@ namespace Battlegrounds.Compiler {
                     return lhs.VeterancyRank - rhs.VeterancyRank;
                 } else {
                     if (lhs.SBP.IsCommandUnit) {
-                        return 999;
+                        return int.MaxValue;
                     } else {
                         return order;
                     }
