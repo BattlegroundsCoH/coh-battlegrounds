@@ -125,7 +125,7 @@ namespace Battlegrounds.Game.Battlegrounds {
 
             if (msg.Length > 0) {
 
-                Match messageMatchResult = Regex.Match(msg, @"(?<cmdtype>\w)\[(?<content>(?<msg>(\w|_|-|\.|\d)+)|,|\s)*\]");
+                Match messageMatchResult = Regex.Match(msg, @"(?<cmdtype>\w)\[(?<content>(?<msg>(\w|_|-|:|\.|\d)+)|,|\s)*\]");
 
                 if (messageMatchResult.Success) {
 
@@ -206,11 +206,19 @@ namespace Battlegrounds.Game.Battlegrounds {
                         // Get the captured item
                         Blueprint item = BlueprintManager.FromBlueprintName(values[0], bp);
 
-                        // Add captured item
-                        player.CapturedItems.Add(item);
+                        if (item != null) {
 
-                        // Log the capture
-                        Console.WriteLine($"{player.Player.Name} captured \"{item.Name}\"");
+                            // Add captured item
+                            player.CapturedItems.Add(item);
+
+                            // Log the capture
+                            Console.WriteLine($"{player.Player.Name} captured \"{item.Name}\"");
+
+                        } else {
+
+                            Console.WriteLine($"{player.Player.Name} captured unknwon item \"{values[0]}\" (Not logged!)");
+
+                        }
 
                     } else if (msgtype == 'I') { // Slot Item
 
@@ -223,8 +231,11 @@ namespace Battlegrounds.Game.Battlegrounds {
                             if (bp != null) {
                                 squad.AddSlotItem(bp);
                                 Console.WriteLine(squadID + " picked up " + slot_item_bp);
+                            } else {
+                                Console.WriteLine(squadID + " picked up unknown item " + slot_item_bp);
                             }
                         } else {
+                            Console.WriteLine($"Invalid squad {squadID} picked up {slot_item_bp}");
                             // error?
                         }
 
@@ -237,6 +248,8 @@ namespace Battlegrounds.Game.Battlegrounds {
                         if (!this.PlayedWithSession) {
                             Console.WriteLine("Fatal error during match validation!");
                             Console.WriteLine($"\"{values[0]}\" != \"{this.m_gameSession.SessionID}\"");
+                        } else {
+                            Console.WriteLine("Match GUID's were verified.");
                         }
 
                     } else {
@@ -246,9 +259,9 @@ namespace Battlegrounds.Game.Battlegrounds {
                     }
 
                 } else {
-
-                    Console.WriteLine($"Failed to parse: \"{msg}\"");
-
+                    if (msg.Contains("[") && msg.Contains("]")) { // Was it a potential message we should've parsed?
+                        Console.WriteLine($"Failed to parse: \"{msg}\"");
+                    }
                 }
 
             } else {

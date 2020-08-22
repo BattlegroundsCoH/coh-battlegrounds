@@ -210,14 +210,18 @@ namespace Battlegrounds.Game.Database {
         /// <exception cref="ArgumentNullException"/>
         /// <returns>The correct <see cref="Blueprint"/>, null if not found or a <see cref="ArgumentException"/> if <see cref="BlueprintType"/> was somehow invalid.</returns>
         public static Blueprint FromBlueprintName(string id, BlueprintType bType) {
+            if (id.Contains(":")) {
+                id = id.Substring(id.IndexOf(':') + 1);
+                Console.WriteLine(id);
+            }
             return bType switch
             {
-                BlueprintType.ABP => __abilities.FirstOrDefault(x => (x.Value.Name ?? "") == id).Value,
-                BlueprintType.CBP => __criticals.FirstOrDefault(x => (x.Value.Name ?? "") == id).Value,
-                BlueprintType.EBP => __entities.FirstOrDefault(x => (x.Value.Name ?? "") == id).Value,
-                BlueprintType.SBP => __squads.FirstOrDefault(x => (x.Value.Name ?? "") == id).Value,
-                BlueprintType.UBP => __upgrades.FirstOrDefault(x => (x.Value.Name ?? "") == id).Value,
-                BlueprintType.IBP => __slotitems.FirstOrDefault(x => (x.Value.Name ?? "") == id).Value,
+                BlueprintType.ABP => __abilities.FirstOrDefault(x => (x.Value.Name ?? "").CompareTo(id) == 0).Value,
+                BlueprintType.CBP => __criticals.FirstOrDefault(x => (x.Value.Name ?? "").CompareTo(id) == 0).Value,
+                BlueprintType.EBP => __entities.FirstOrDefault(x => (x.Value.Name ?? "").CompareTo(id) == 0).Value,
+                BlueprintType.SBP => __squads.FirstOrDefault(x => (x.Value.Name ?? "").CompareTo(id) == 0).Value,
+                BlueprintType.UBP => __upgrades.FirstOrDefault(x => (x.Value.Name ?? "").CompareTo(id) == 0).Value,
+                BlueprintType.IBP => __slotitems.FirstOrDefault(x => (x.Value.Name ?? "").CompareTo(id) == 0).Value,
                 _ => throw new ArgumentException(),
             };
         }
