@@ -51,7 +51,7 @@ namespace Battlegrounds.Game.Battlegrounds {
             int max_specialized_infantry = 4 + (type == CompanyType.Infantry || type == CompanyType.Airborne ? 4 : 0);
             int max_heavy_tank = 2 + (type == CompanyType.Armoured ? 1 : 0);
             int max_support = 6 + (type == CompanyType.Engineer ? 2 : 0);
-            int max_artillery = 4 + (type == CompanyType.Artillery ? 2 : 0);
+            int max_artillery = 0 /*4 + (type == CompanyType.Artillery ? 2 : 0)*/;
             int max_transport_use = 4 + ((type == CompanyType.Motorized || type == CompanyType.Mechanized) ? 5 : 0);
 
             // The builder
@@ -110,7 +110,7 @@ namespace Battlegrounds.Game.Battlegrounds {
 
                 } else if (unit_type >= 29 && unit_type <= 34 && max_support > 0) { // support
 
-                    SquadBlueprint support = blueprintPool.Where(x => x.IsTeamWeapon).Random(__random);
+                    SquadBlueprint support = blueprintPool.Where(x => x.IsTeamWeapon && !x.IsHeavyArtillery).Random(__random);
                     SquadBlueprint transport_blueprint = null;
                     DeploymentMethod deployMethod = DeploymentMethod.None;
 

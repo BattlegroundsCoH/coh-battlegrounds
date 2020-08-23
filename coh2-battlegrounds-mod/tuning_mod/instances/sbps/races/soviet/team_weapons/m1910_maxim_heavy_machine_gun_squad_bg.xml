@@ -1225,7 +1225,6 @@
 				<enum name="squad_type" value="hmg" />
 				<enum name="squad_type" value="soviet_team_weapons" />
 				<enum name="squad_type" value="" />
-				<enum name="squad_type" value="rapid_conscription" />
 				<enum name="squad_type" value="team_weapon" />
 				<enum name="squad_type" value="infantry" />
 			</list>

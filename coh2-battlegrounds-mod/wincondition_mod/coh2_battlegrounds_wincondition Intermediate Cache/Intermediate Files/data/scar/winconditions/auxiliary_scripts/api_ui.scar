@@ -83,13 +83,16 @@ function UI_Centre(_x, _y)
 	return { x = (UI_GetScreenWidth() / 2.0) + _x, y = (UI_GetScreenHeight() / 2.0) + _y };
 end
 
-function UI_TeamEventCue(player, title, description, iconPath)
+function UI_TeamEventCue(player, title, description, iconPath, soundPath)
 	if (iconPath == nil) then
 		iconPath = ""
 	end
+	if soundPath == nil then
+		soundPath = "General_alert";
+	end
 	Player_CallLocal(Game_GetLocalPlayer(), function(locPlayer)
 		if (Player_GetTeam(player) == Player_GetTeam(locPlayer)) then
-			UI_CreateEventCue(iconPath, "", title, description, nil, true );
+			UI_CreateEventCue(iconPath, soundPath, title, description, nil, true );
 		end
 	end);
 end
@@ -149,7 +152,7 @@ function BG_GetUnitItemIcon(unitData)
     elseif (#unitData.upgrades == 1 and #unitData.slot_items == 0) then
         return unitData.upgrades[1].symbol;
     elseif (#unitData.upgrades == 0 and #unitData.slot_items == 1) then
-        -- TODO: Implement
+        return unitData.slot_items[1].symbol;
     end
 end
 

@@ -23,6 +23,16 @@ namespace Battlegrounds.Game.Battlegrounds {
         /// </summary>
         public string VerificationUpgrade => "bg_verify";
 
+        /// <summary>
+        /// 
+        /// </summary>
+        public string TowUpgrade => "is_towed";
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public string TowingUpgrade => "is_towing";
+
     }
 
 }

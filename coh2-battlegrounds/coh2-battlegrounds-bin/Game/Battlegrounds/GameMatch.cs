@@ -125,11 +125,9 @@ namespace Battlegrounds.Game.Battlegrounds {
 
             if (msg.Length > 0) {
 
-                Match messageMatchResult = Regex.Match(msg, @"(?<cmdtype>\w)\[(?<content>(?<msg>(\w|_|-|\.|\d)+)|,|\s)*\]");
+                Match messageMatchResult = Regex.Match(msg, @"(?<cmdtype>\w)\[(?<content>(?<msg>(\w|_|-|:|\.|\d)+)|,|\s)*\]");
 
                 if (messageMatchResult.Success) {
-
-                    Console.WriteLine(msg);
 
                     char msgtype = char.ToUpper(messageMatchResult.Groups["cmdtype"].Value[0]); // Always bump it to upper (incase it's forgotten in Scar script)
                     string[] values = messageMatchResult.Groups["content"].Captures.ToList().Where(x => x.Value != "," && x.Value != " ").Select(x => x.Value).ToArray();
@@ -172,7 +170,7 @@ namespace Battlegrounds.Game.Battlegrounds {
 
                             Squad squad = FindFirstSquad(player, allsquads, squadID);
                             if (squad != null) {
-                                Console.WriteLine(squadID + " was withdrawn by " + player.Player.Name);
+                                Console.WriteLine(squadID + " was withdrawn (or survived to end of match) by " + player.Player.Name);
                                 if (vetChange > 0) {
                                     squad.SetVeterancy((byte)(squad.VeterancyRank + vetChange), vetExp);
                                     Console.WriteLine(squadID + " increased veterancy rank by " + vetChange);
@@ -185,7 +183,7 @@ namespace Battlegrounds.Game.Battlegrounds {
                             Console.WriteLine("Failed to properly detect withdrawal of unit " + squadID + " by " + player.Player.Name);
                         }
 
-                    } else if (msgtype == 'U') {
+                    } else if (msgtype == 'U') { // Upgrade?
 
                         Console.WriteLine();
 
@@ -200,7 +198,29 @@ namespace Battlegrounds.Game.Battlegrounds {
                         Console.WriteLine();
 
 
-                    } else if (msgtype == 'I') {
+                    } else if (msgtype == 'T') { // Captured Equipment
+
+                        // Parse the blueprint type
+                        BlueprintType bp = Enum.Parse<BlueprintType>(values[2]);
+
+                        // Get the captured item
+                        Blueprint item = BlueprintManager.FromBlueprintName(values[0], bp);
+
+                        if (item != null) {
+
+                            // Add captured item
+                            player.CapturedItems.Add(item);
+
+                            // Log the capture
+                            Console.WriteLine($"{player.Player.Name} captured \"{item.Name}\"");
+
+                        } else {
+
+                            Console.WriteLine($"{player.Player.Name} captured unknwon item \"{values[0]}\" (Not logged!)");
+
+                        }
+
+                    } else if (msgtype == 'I') { // Slot Item
 
                         ushort squadID = ushort.Parse(values[0]);
                         string slot_item_bp = values[1];
@@ -211,13 +231,16 @@ namespace Battlegrounds.Game.Battlegrounds {
                             if (bp != null) {
                                 squad.AddSlotItem(bp);
                                 Console.WriteLine(squadID + " picked up " + slot_item_bp);
+                            } else {
+                                Console.WriteLine(squadID + " picked up unknown item " + slot_item_bp);
                             }
                         } else {
+                            Console.WriteLine($"Invalid squad {squadID} picked up {slot_item_bp}");
                             // error?
                         }
 
                     } else if (msgtype == 'G') {
-                        
+
                         // Verify GUID
                         this.PlayedWithSession = values[0].CompareTo(this.m_gameSession.SessionID.ToString()) == 0;
 
@@ -225,14 +248,20 @@ namespace Battlegrounds.Game.Battlegrounds {
                         if (!this.PlayedWithSession) {
                             Console.WriteLine("Fatal error during match validation!");
                             Console.WriteLine($"\"{values[0]}\" != \"{this.m_gameSession.SessionID}\"");
+                        } else {
+                            Console.WriteLine("Match GUID's were verified.");
                         }
 
-                    } // Other commands here
+                    } else {
+
+                        Console.WriteLine($"Failed to parse regex-matched message: \"{msg}\"");
+
+                    }
 
                 } else {
-
-                    //Console.WriteLine($"Failed to parse: \"{msg}\"");
-
+                    if (msg.Contains("[") && msg.Contains("]")) { // Was it a potential message we should've parsed?
+                        Console.WriteLine($"Failed to parse: \"{msg}\"");
+                    }
                 }
 
             } else {
@@ -255,27 +284,36 @@ namespace Battlegrounds.Game.Battlegrounds {
 
                 if (company == null) {
                     Console.WriteLine($"Unable to find company for player '{this.m_matchPlayerResults[i].Player.Name}'");
-                    // some error?
                     continue;
                 }
 
-                // We now remove all the squads lost
+                // Remove all the squads lost
                 foreach (Squad squad in this.m_matchPlayerResults[i].Losses) {
                     if (!company.RemoveSquad(squad.SquadID)) {
                         Console.WriteLine("Lost a squad that was not deployed by player!");
                     }
                 }
 
-                // And we now update squads
+                // Update squads
                 foreach (Squad squad in this.m_matchPlayerResults[i].Alive) {
 
                     Squad companySquad = company.GetSquadByIndex(squad.SquadID);
-
-                    // TODO: Increase rank, add upgrades, slot items etc.
+                    if (companySquad != null) {
+                        companySquad.ApplyBattlefieldSquad(squad);
+                    } else {
+                        Console.WriteLine("Failed to update non-existant squad.");
+                    }
 
                 }
 
+                // Add captured items
+                foreach (Blueprint bp in this.m_matchPlayerResults[i].CapturedItems) {
+                    company.AddInventoryItem(bp);
+                }
+
             }
+
+            Console.WriteLine("Applied all company changes.");
 
         }
 

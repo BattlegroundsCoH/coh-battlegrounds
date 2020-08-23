@@ -862,6 +862,7 @@
 		<template_reference name="squadexts" value="sbpextensions\squad_type_ext">
 			<list name="squad_type_list">
 				<enum name="squad_type" value="team_weapon" />
+				<enum name="squad_type" value="b4_howtizer" />
 			</list>
 		</template_reference>
 		<template_reference name="squadexts" value="sbpextensions\squad_ability_ext">

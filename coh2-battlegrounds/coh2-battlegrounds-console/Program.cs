@@ -33,7 +33,7 @@ namespace coh2_battlegrounds_console {
 
             SessionInfo sessionInfo = new SessionInfo() {
                 SelectedGamemode = WinconditionList.GetWinconditionByName("Victory Points"),
-                SelectedGamemodeOption = 1,
+                SelectedGamemodeOption = 0,
                 SelectedScenario = ScenarioList.FromFilename("2p_angoville_farms"),
                 SelectedTuningMod = new BattlegroundsTuning(),
                 Allies = new SessionParticipant[] { new SessionParticipant(BattlegroundsInstance.LocalSteamuser, testCompany, 0, 0) },

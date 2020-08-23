@@ -27,11 +27,16 @@ _bg_message_type_team_vote_no_withdraw = 68.0; -- A player voted no to witdraw
 _bg_message_type_team_vote_yes_withdraw = 69.0; -- A player votes yes to withdraw
 _bg_message_type_team_do_withdraw = 70.0; -- A team has decided to withdraw
 
+_bg_unitID_RecrewRecapture = -1; -- Constant ID to make a squad ID as recrewed/recaptured
+_bg_unitID_NoIdea = -2; -- Constant ID to mark a squad ID as being a case of "How the f*ck did this happen".
+_bg_unitID_TransportIgnore = -3; -- Constant ID to mark a squad ID as a transport unit that's set to dissappear.
+
 ------------------------------------------------------------------------------------
 -- Imports
 ------------------------------------------------------------------------------------
+import("WinConditions/auxiliary_scripts/shared_util.scar"); -- Must always be imported first
+import("WinConditions/auxiliary_scripts/shared_lookups.scar");
 import("WinConditions/auxiliary_scripts/session.scar");
-import("WinConditions/auxiliary_scripts/shared_util.scar");
 import("WinConditions/auxiliary_scripts/shared_sessionloader.scar");
 import("WinConditions/auxiliary_scripts/shared_units.scar");
 import("WinConditions/auxiliary_scripts/shared_ai.scar");
@@ -206,7 +211,7 @@ function BG_VerifyMatch()
 
     -- Get the scenario name
     local name = Stats_GetScenarioName();
-    if (name ~= bg_settings.map) then
+    if (name ~= bg_settings.map and name ~= "bg_testmap") then -- "bg_testmap" can always be played.
         return BG_LocString(1);
     end
 
@@ -256,8 +261,11 @@ function BG_OverrideGameEndingFunctionCalls()
         -- Broadcast victory for each player
         Team_ForEachPlayer(team, BG_BroadcastVictory);
 
+        -- Get the local player
+        local locPlayer = Game_GetLocalPlayer();
+
         -- Create and display gameover message
-        BG_CreateAndDisplayGameOverScreenOverride(Game_GetLocalPlayer(), BG_SaveAndExit);
+        BG_CreateAndDisplayGameOverScreenOverride(locPlayer, BG_SaveAndExit, Player_GetTeam(locPlayer) == team);
 
     end
 
@@ -273,6 +281,9 @@ function BG_StopAll()
 end
 
 function BG_SaveAndExit()
+
+    -- Try this (Don't know what it actually does)
+    World_SetGameOver();
 
     -- Make sure it's not a replay. (Would otherwise also close the game)
     if not World_IsReplay() then
@@ -358,13 +369,6 @@ function BG_TeamWithdraw(player)
 
 end
 
-function BG_SetCallinPoint(executer, target)
-    if scartype(executer) == ST_PLAYER then
-        local pid = BG_GetPlayerID(executer);
-        _bg_playerData[pid].last_callin_point = target;
-    end
-end
-
 function BG_CollectEndofMatchData()
 
     -- Loop through all the players
@@ -414,24 +418,13 @@ function BG_CollectEndofMatchData()
                     table.insert(_bg_playerData[i].gainsData, gData);
                 end
 
-            elseif company_id == -1 and Squad_IsValid(squadID) then -- Captured equipment
+            elseif company_id == _bg_unitID_RecrewRecapture and Squad_IsValid(squadID) then -- Captured equipment
 
                 -- Get the actual squad
                 local squad = Squad_FromWorldID(squadID);
-                local squadBP = BP_GetName(Squad_GetBlueprint(squad));
 
-                -- The capture message
-                local capture_message = "T[" .. squadBP .."]";
-
-                -- Broadcast the message
-                Game_SendMessage(_bg_message_type_no_actions_required, capture_message);
-
-                -- Add to the captured
-                local cData = {
-                    type = 1,
-                    symbol = BG_FindCapturedIcon(squadBP),
-                };
-                table.insert(_bg_playerData[i].gainsData, gData);
+                -- Handle the captured equipment (shared_units.scar)
+                BG_HandleCapturedEquipment(_bg_playerData[i], squadID, squad, BP_GetName(Squad_GetBlueprint(squad)));
 
             end
 
@@ -524,5 +517,20 @@ function BG_UpdatePlayerStats(refID)
     _bg_playerData[refID].total_vloss = Stats_VehiclesLost(_bg_playerData[refID].player);
     if _bg_playerData[refID].total_deployed == nil then
         _bg_playerData[refID].total_deployed = 0;
+    end
+end
+
+function BG_SetCallinPoint(executer, target)
+    if scartype(executer) == ST_PLAYER then
+        local pid = BG_GetPlayerID(executer);
+        _bg_playerData[pid].last_callin_point = target;
+    end
+end
+
+function BG_ParadopNext(executer, target)
+    local player = Util_GetPlayerOwner(executer);
+    if scartype(target) == ST_SCARPOS then
+        local pid = BG_GetPlayerID(player);
+        -- TODO: Implement
     end
 end

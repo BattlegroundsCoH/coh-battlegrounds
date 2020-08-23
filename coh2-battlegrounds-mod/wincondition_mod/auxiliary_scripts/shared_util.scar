@@ -53,6 +53,13 @@ bg_set = {
         end
         return false;
     end,
+    select = function(self, set, selector)
+        local selected = {};
+        for i=1, #set do
+            selected[i] = selector(set[i]);
+        end
+        return selected;
+    end,
     size = function(self, set)
         return #set;
     end,
@@ -60,40 +67,87 @@ bg_set = {
 ------------------------------------------------------------
 -- Vector (Position) Functionality
 ------------------------------------------------------------
+vec3funcs = { -- Add additional mutable functions --> Less copy and assignment operations (Could be critial regarding the towing system)
+    add = function(self, other)
+        return Vec3(self.x + other.x, self.y + other.y, self.z + other.z);
+    end,
+    sub = function(self, other)
+        return Vec3(other.x - self.x, other.y - self.y, other.z - self.z);
+    end,
+    mul = function(self, v)
+        return Vec3(self.x * v, self.y * v, self.z * v);
+    end,
+    negate = function(self)
+        return Vec3(-self.x, -self.y, -self.z);
+    end,
+    length = function(self)
+        return math.sqrt(self.x^2 + self.y^2 + self.z^2);
+    end,
+    unit = function(self)
+        local len = self:length();
+        return Vec3(self.x / len, self.y / len, self.z / len);
+    end,
+    towards = function(self, other, t)
+        local lx = math.lerp(self.x, other.x, t);
+        local ly = math.lerp(self.y, other.y, t);
+        local lz = math.lerp(self.z, other.z, t);
+        return Vec3(lx, ly, lz);
+    end,
+    lookat = function(self, target)
+        return self:sub(target);
+    end,
+    eq = function(self, other)
+        return self.x == other.x and self.y == other.y and self.z == other.z;
+    end,
+    toscar = function(self)
+        return World_Pos(self.x, self.y, self.z);
+    end,
+}
 function Vec3(_x, _y, _z)
-    local vec = {
-        x = _x,
-        y = _y,
-        z = _z,
-        add = function(self, other)
-            return Vec3(self.x + other.x, self.y + other.y, self.z + other.z);
-        end,
-        sub = function(self, other)
-            return Vec3(other.x - self.x, other.y - self.y, other.z - self.z);
-        end,
-        mul = function(self, v)
-        	return Vec3(self.x * v, self.y * v, self.z * v);
-        end,
-        negate = function(self)
-            return Vec3(-self.x, -self.y, -self.z);
-        end,
-    	length = function(self)
-    		return math.sqrt(self.x^2 + self.y^2 + self.z^2);
-    	end,
-    	unit = function(self)
-    		local len = self:length();
-    		return Vec3(self.x / len, self.y / len, self.z / len);
-        end,
-        toscar = function(self)
-            return World_Pos(self.x, self.y, self.z);
-        end,
-    };
+    local vec = Table_Copy(vec3funcs);
+    vec.x = _x;
+    vec.y = _y;
+    vec.z = _z;
     return vec;
 end
 
 function Vec3Scar(pos)
     return Vec3(pos.x, pos.y, pos.z);
 end
+------------------------------------------------------------
+-- Lua Helper functions
+------------------------------------------------------------
+
+function Table_ContainsAny(table, predicate)
+    for k,v in pairs(table) do
+        if predicate(v) then
+            return true;
+        end
+    end
+    return false;
+end
+
+table.pack = function(...)
+    local pack = {};
+    for i, v in ipairs(arg) do
+        pack[i] = v;
+    end
+    return pack;
+end
+
+math.lerp = function(a, b, t)
+    return (b - a) * t + a;
+end
+
+math.lerpf = function(a,b,t)
+    if t > 1.0 then t = 1.0 elseif t < 0.0 then t = 0.0 end
+    return math.lerp(a,b,t);
+end
+
+math.range = function(min, max, v)
+    return math.max(min, math.min(max, v));
+end
+
 ------------------------------------------------------------
 -- SGroup functions
 ------------------------------------------------------------
@@ -163,6 +217,15 @@ function Squad_GetSyncWeapon(squad)
     return nil;
 end
 
+function Squad_GetSyncWeaponBlueprint(squad)
+    local e = Squad_GetSyncWeapon(squad);
+    if e ~= nil then
+        return Entity_GetBlueprint(e);
+    else
+        fatal("Expected team weapon but found other squad type.");
+    end
+end
+
 function Squad_IsVehicleSquad(squad)
     return Entity_IsVehicle(Squad_EntityAt(squad, 0));
 end
@@ -176,6 +239,33 @@ function Squad_IsInfantrySquad(squad)
 end
 
 function Squad_Surrender(squad)
+    -- TODO: Implement
+end
+
+------------------------------------------------------------
+-- Entity functions
+------------------------------------------------------------
+
+function Entity_CreateAndSpawn(player, blueprint, position, towards)
+
+    -- If position is nil - use player's starting position
+    if position == nil then
+        position = Player_GetStartingPosition(player);
+    end
+
+    -- If towards is nil - use position + some
+    if towards == nil then
+        towards = Vec3Scar(position):add(Vec3(1,0,0)):toscar();
+    end
+
+    -- Create entity
+    local e = Entity_Create(blueprint, player, position, towards );
+
+    -- Spawn the entity
+    Entity_Spawn(e);
+
+    -- Return entity
+    return e;
 
 end
 
@@ -400,11 +490,10 @@ function Battlegrounds_TowFromOffmap(transportSquad, towTarget)
 
     local sg_tow_transport = SGroup_FromSquad(transportSquad, "sg_tow_transport_offmap" .. __BGTOWIndexer);
     local sg_tow_target = SGroup_FromSquad(towTarget, "sg_tow_target_offmap" .. __BGTOWIndexer);
+    __BGTOWIndexer = __BGTOWIndexer + 1;
 
-    Modify_UnitSpeed( sg_tow_transport, 0.325);
-
-    Cmd_InstantUpgrade( sg_tow_transport, BP_GetUpgradeBlueprint("142b113740474c82a60b0a428bd553d5:is_towing") ); -- TODO: Read these upgrades from session.scar
-    Cmd_InstantUpgrade( sg_tow_target, BP_GetUpgradeBlueprint("142b113740474c82a60b0a428bd553d5:is_towed") );
+    Cmd_InstantUpgrade( sg_tow_transport, bg_db.towing_upgrade );
+    Cmd_InstantUpgrade( sg_tow_target, bg_db.towed_upgrade );
 
     Battlegrounds_TowAttach(transportSquad, towTarget);
 
@@ -418,27 +507,65 @@ function Battlegrounds_AETowAttach(executer, target)
     end
 end
 
+function Battlegrounds_FindOffset(target)
+    local blueprint = BP_GetName(Entity_GetBlueprint(target));
+    if string.match(blueprint, "m1931_203mm") ~= nil or Entity_IsOfType(target, "b4_howtizer") then -- B-4 Howitzer
+        return -8.75;
+    elseif string.match(blueprint, "m1937_152mm") ~= nil or Entity_IsOfType(target, "ml_20_howitzer") then -- ML-20 Howitzer
+        return -8.75; -- TODO: Adjust
+    elseif string.match(blueprint, "m1937_53-k%-45") ~= nil or Entity_IsOfType(target, "53k_45mm_atgun") then -- M42 AT gun (soviet)
+        return -8.75; -- TODO: Adjust
+    elseif string.match(blueprint, "zis%-3") ~= nil or Entity_IsOfType(target, "zis-3_at_gun") then -- Zis-3
+        return -7.45;
+    elseif string.match(blueprint, "howitzer_105mm") ~= nil or Entity_IsOfType(target, "fh18_howitzer") then -- 105 Howitzer
+        return -8.75; -- TODO: Adjust
+    elseif string.match(blueprint, "pak40") ~= nil or string.match(blueprint, "m1%-57mm") ~= nil or Entity_IsOfType(target, "pak40_at_gun") then -- Pak 40 (Will also cover the 6-pounder)
+        return -8.75; -- TODO: Adjust
+    elseif string.match(blueprint, "pak43") ~= nil or Entity_IsOfType(target, "pak43_at_gun") then -- Pak 43
+        return -8.75; -- TODO: Adjust
+    end
+    -- Add more cases for UKF and AEF (OKW is covered by Wehrmacht units)
+    return -5.0;
+end
+
 function Battlegrounds_TowAttach(executer, target)
+    local syncwpn = Squad_GetSyncWeapon(target);
     local tow_data = {
         tow_transport = executer,
         tow_transport_id = Squad_GetGameID(executer),
-        tow_target = Squad_GetSyncWeapon(target),
+        tow_target = syncwpn,
         tow_target_id = Squad_GetGameID(target),
-        tow_offset = -8.75,
+        tow_offset = Battlegrounds_FindOffset(syncwpn),
     };
-    local pos, dir = Battlegrounds_GetTowCoordinates(tow_data.tow_transport, tow_data.tow_offset);
+    Battlegrounds_HideCrew(target, true);
+    local pos, dir = Battlegrounds_GetTowCoordinates(tow_data.tow_transport, nil, tow_data.tow_offset);
     Entity_SetPosition(tow_data.tow_target, pos);
     Entity_SetHeading(tow_data.tow_target, dir, false);
-    __BGTOWIndexer = __BGTOWIndexer + 1;
+    tow_data.delta = {
+        tpos = Vec3Scar(pos),
+        tdir = Vec3Scar(dir);
+    }
     table.insert(__BGTOWObjects, tow_data);
     if not Rule_Exists(__BgUpdateTOW) then
         Rule_Add(__BgUpdateTOW);
     end
 end
 
+function Battlegrounds_HideCrew(towed, hide)
+    for i=0, Squad_Count(towed) - 1 do
+        local e = Squad_EntityAt(towed, i);
+        if not Entity_IsSyncWeapon(e) then
+            Entity_VisHide( e, hide ); -- Hide the crew members
+        end
+    end
+end
+
 function Battlegrounds_TowDetach(executer)
     for i=1, #__BGTOWObjects do
         if __BGTOWObjects[i].tow_transport == executer then
+            Battlegrounds_HideCrew(Entity_GetSquad(__BGTOWObjects[i].tow_target), false); -- Show crew
+            Squad_WarpToPos(Entity_GetSquad(__BGTOWObjects[i].tow_target), __BGTOWObjects[i].delta.lpos:toscar()); -- Warp entire crew to position
+            --Squad_FacePosition(squad, pos) if this totally messes up
             table.remove(__BGTOWObjects, i);
             break;
         end
@@ -449,28 +576,42 @@ function __BgUpdateTOW()
     if #__BGTOWObjects == 0 then
         Rule_RemoveMe();
     else
-        for i=1, #__BGTOWObjects do
-            if not Squad_IsValid(__BGTOWObjects[i].tow_transport_id) then
+        for i, data in ipairs(__BGTOWObjects) do
+            if not Squad_IsValid(data.tow_transport_id) then
+                if Squad_IsValid(data.tow_target_id) then
+                    Squad_RemoveUpgrade(Squad_FromWorldID(data.tow_target_id), bg_db.towed_upgrade);
+                end
                 table.remove(__BGTOWObjects, i);
                 return;
             end
-            if not Squad_IsValid(__BGTOWObjects[i].tow_target_id) then
+            if not Squad_IsValid(data.tow_target_id) then
+                Squad_RemoveUpgrade(Squad_FromWorldID(data.tow_transport_id), bg_db.towing_upgrade);
                 table.remove(__BGTOWObjects, i);
                 return;
             end
-            local pos, dir = Battlegrounds_GetTowCoordinates(__BGTOWObjects[i].tow_transport, __BGTOWObjects[i].tow_offset);
-            local try_ = function()
-                Entity_SetPosition(__BGTOWObjects[i].tow_target, pos);
-                Entity_SetHeading(__BGTOWObjects[i].tow_target, dir, true);
-            end
-            pcall(try);
+            local pos, dir = Battlegrounds_GetTowCoordinates(data.tow_transport, data.tow_target, data.tow_offset, data.delta);
+            Entity_SetPosition(data.tow_target, pos);
+            Entity_SetHeading(data.tow_target, dir, true);
         end
     end
 end
 
-function Battlegrounds_GetTowCoordinates(transport, off)
+function Battlegrounds_GetTowCoordinates(transport, target, off, delta) -- This function can and should be optimized later
     local tow_transport_pos = Vec3Scar(Squad_GetPosition(transport));
     local tow_transport_dir = Vec3Scar(Squad_GetHeading(transport)):unit();
     local tow_target_pos = tow_transport_dir:mul(off):add(tow_transport_pos);
-    return tow_target_pos:toscar(), tow_transport_dir:negate():toscar();
+    if delta ~= nil and (not delta.tpos:eq(tow_transport_pos) or not delta.tdir:eq(tow_transport_dir)) then -- delta data is not nil and the position of the transport has changed
+        local axis = tow_transport_dir:mul(off * 0.75):add(tow_transport_pos);
+        local tow_target_end = Vec3Scar(Entity_GetHeading(target)):unit():mul(-off * 2.0):add(axis);
+        local tow_transport_end = tow_transport_dir:mul(off * 2.0):add(axis);
+        delta.ldir = axis:lookat(tow_target_end:towards(tow_transport_end, 0.125)):unit();
+        delta.lpos = delta.ldir:mul(-off * 0.25):add(axis);
+        delta.tpos = tow_transport_pos;
+        delta.tdir = tow_transport_dir;
+        return delta.lpos:toscar(), delta.ldir:toscar();
+    elseif delta ~= nil then
+        return delta.lpos:toscar(), delta.ldir:toscar(); -- Return last calculated position
+    else
+        return tow_target_pos:toscar(), tow_transport_dir:negate():toscar();
+    end
 end
