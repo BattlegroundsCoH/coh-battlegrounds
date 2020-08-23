@@ -313,6 +313,8 @@ namespace Battlegrounds.Game.Battlegrounds {
 
             }
 
+            Console.WriteLine("Applied all company changes.");
+
         }
 
     }

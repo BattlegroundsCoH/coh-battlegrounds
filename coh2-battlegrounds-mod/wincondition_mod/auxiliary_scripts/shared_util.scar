@@ -516,7 +516,7 @@ function Battlegrounds_FindOffset(target)
     elseif string.match(blueprint, "m1937_53-k%-45") ~= nil or Entity_IsOfType(target, "53k_45mm_atgun") then -- M42 AT gun (soviet)
         return -8.75; -- TODO: Adjust
     elseif string.match(blueprint, "zis%-3") ~= nil or Entity_IsOfType(target, "zis-3_at_gun") then -- Zis-3
-        return -7.85;
+        return -7.45;
     elseif string.match(blueprint, "howitzer_105mm") ~= nil or Entity_IsOfType(target, "fh18_howitzer") then -- 105 Howitzer
         return -8.75; -- TODO: Adjust
     elseif string.match(blueprint, "pak40") ~= nil or string.match(blueprint, "m1%-57mm") ~= nil or Entity_IsOfType(target, "pak40_at_gun") then -- Pak 40 (Will also cover the 6-pounder)

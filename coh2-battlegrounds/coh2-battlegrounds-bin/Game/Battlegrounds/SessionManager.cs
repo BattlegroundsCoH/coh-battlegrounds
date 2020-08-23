@@ -96,6 +96,9 @@ namespace Battlegrounds.Game.Battlegrounds {
         /// <summary>
         /// Plays a <see cref="Session"/> in a controlled flow of execution wherein callbacks are used to report on the status of the <see cref="Session"/>. Once done, a <see cref="GameMatch"/> instance can be retrieved to see match results.
         /// </summary>
+        /// <remarks>
+        /// Runs asynchronously. (Is Awaitable).
+        /// </remarks>
         /// <typeparam name="TSessionCompilerType">The session compiler type</typeparam>
         /// <typeparam name="TCompanyCompilerType">The company compiler type</typeparam>
         /// <param name="session">The <see cref="Session"/> instance to play and analyze.</param>
