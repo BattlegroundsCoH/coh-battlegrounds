@@ -47,12 +47,12 @@ namespace coh2_battlegrounds_console {
             SessionCompiler<CompanyCompiler> sessionCompiler = new SessionCompiler<CompanyCompiler>();
             File.WriteAllText("test_session.lua", sessionCompiler.CompileSession(session));
 
-            GameMatch m = new GameMatch(session);
+            /*GameMatch m = new GameMatch(session);
             m.LoadMatch($"{Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)}\\my games\\company of heroes 2\\playback\\temp.rec");
             m.EvaluateResult();
+            */
             
-            
-            //SessionManager.PlaySession<SessionCompiler<CompanyCompiler>, CompanyCompiler>(session, (a,b) => { Console.WriteLine(a); }, null, null);
+            SessionManager.PlaySession<SessionCompiler<CompanyCompiler>, CompanyCompiler>(session, (a,b) => { Console.WriteLine(a); }, null, null);
 
             // Save json
             testCompany.SaveToFile("test_company.json");

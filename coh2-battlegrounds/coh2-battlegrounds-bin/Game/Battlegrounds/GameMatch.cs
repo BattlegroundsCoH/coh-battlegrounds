@@ -183,7 +183,7 @@ namespace Battlegrounds.Game.Battlegrounds {
                             Console.WriteLine("Failed to properly detect withdrawal of unit " + squadID + " by " + player.Player.Name);
                         }
 
-                    } else if (msgtype == 'U') {
+                    } else if (msgtype == 'U') { // Upgrade?
 
                         Console.WriteLine();
 
@@ -284,24 +284,31 @@ namespace Battlegrounds.Game.Battlegrounds {
 
                 if (company == null) {
                     Console.WriteLine($"Unable to find company for player '{this.m_matchPlayerResults[i].Player.Name}'");
-                    // some error?
                     continue;
                 }
 
-                // We now remove all the squads lost
+                // Remove all the squads lost
                 foreach (Squad squad in this.m_matchPlayerResults[i].Losses) {
                     if (!company.RemoveSquad(squad.SquadID)) {
                         Console.WriteLine("Lost a squad that was not deployed by player!");
                     }
                 }
 
-                // And we now update squads
+                // Update squads
                 foreach (Squad squad in this.m_matchPlayerResults[i].Alive) {
 
                     Squad companySquad = company.GetSquadByIndex(squad.SquadID);
+                    if (companySquad != null) {
+                        companySquad.ApplyBattlefieldSquad(squad);
+                    } else {
+                        Console.WriteLine("Failed to update non-existant squad.");
+                    }
 
-                    // TODO: Increase rank, add upgrades, slot items etc.
+                }
 
+                // Add captured items
+                foreach (Blueprint bp in this.m_matchPlayerResults[i].CapturedItems) {
+                    company.AddInventoryItem(bp);
                 }
 
             }

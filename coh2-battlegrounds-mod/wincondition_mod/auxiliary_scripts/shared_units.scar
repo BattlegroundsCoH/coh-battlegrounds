@@ -462,6 +462,7 @@ function BG_HandleCapturedEquipment(playerData, gameID, squadID, bpName)
     -- Get the save data
     local bpSave = playerData.captured[gameID].bp;
     local captureType = 1;
+    local bpType = playerData.captured[gameID].tp;
 
     -- Fix blueprint name
     if bpName == nil then
@@ -471,6 +472,7 @@ function BG_HandleCapturedEquipment(playerData, gameID, squadID, bpName)
     -- Is it not a vehicle (then handle slightly differently)
     if not Squad_IsVehicleSquad(squadID) then
         captureType = 2;
+        bpType = "EBP";
         bpSave = BP_GetName(Squad_GetSyncWeaponBlueprint(squadID));
     end
 
@@ -484,7 +486,7 @@ function BG_HandleCapturedEquipment(playerData, gameID, squadID, bpName)
     table.insert(playerData.gainsData, cData);
 
     -- Save the captured item
-    BG_SaveCapturedItem(playerData.player, bpSave, captureType, playerData.captured[gameID].tp);
+    BG_SaveCapturedItem(playerData.player, bpSave, captureType, bpType);
 
 end
 

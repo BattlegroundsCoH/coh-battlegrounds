@@ -163,8 +163,11 @@ namespace Battlegrounds.Game.Battlegrounds {
         /// </summary>
         /// <param name="squadID">The index of the squad to get</param>
         /// <returns>The squad with squad id matching requested squad ID or null.</returns>
-        public Squad GetSquadByIndex(ushort squadID)
-            => this.m_squads.FirstOrDefault(x => x.SquadID == squadID);
+        public Squad GetSquadByIndex(ushort squadID) {
+            Squad s = this.m_squads.FirstOrDefault(x => x.SquadID == squadID);
+            if (s == null) { s = this.m_squads.FirstOrDefault(x => x.Crew.SquadID == squadID)?.Crew; }
+            return s;
+        }
 
         /// <summary>
         /// 
@@ -181,11 +184,23 @@ namespace Battlegrounds.Game.Battlegrounds {
             this.m_nextSquadId = 0;
         }
 
+        public void AddInventoryItem(Blueprint blueprint) => this.m_inventory.Add(blueprint);
+
+        /// <summary>
+        /// Reset most of the company data, including the company inventory.
+        /// </summary>
+        public void ResetCompany() => this.ResetCompany(true);
+
         /// <summary>
         /// Reset most of the company data.
         /// </summary>
-        public void ResetCompany() {
+        /// <param name="resetInventory"></param>
+        public void ResetCompany(bool resetInventory) {
             this.ResetSquads();
+            this.m_abilities.Clear();
+            if (resetInventory) {
+                this.m_inventory.Clear();
+            }
             this.Name = string.Empty;
         }
 

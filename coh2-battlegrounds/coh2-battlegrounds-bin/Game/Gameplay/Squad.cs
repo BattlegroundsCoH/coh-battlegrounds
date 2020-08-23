@@ -315,6 +315,22 @@ namespace Battlegrounds.Game.Gameplay {
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="squad"></param>
+        public void ApplyBattlefieldSquad(Squad squad) {
+
+            // Set the squad veterancy
+            this.SetVeterancy(squad.VeterancyRank, squad.VeterancyProgress);
+
+            // Update squad data
+            this.m_upgrades = squad.m_upgrades;
+            this.m_slotItems = squad.m_slotItems;
+            this.m_modifiers = squad.m_modifiers;
+
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <returns></returns>
         public string ToJsonReference() => this.SquadID.ToString();
 
