@@ -16,8 +16,35 @@ namespace BattlegroundsApp.Views {
     /// Interaction logic for GameBrowserView.xaml
     /// </summary>
     public partial class GameBrowserView : UserControl {
+
         public GameBrowserView() {
+
             InitializeComponent();
+
+            GetLobbyList();
+
+        }
+
+        private void GetLobbyList() {
+
+            // Clear lobby list
+            gameLobbyList.Items.Clear();
+
+            // Get lobby list async
+            //hub.GetConnectableLobbies(x => this.UpdateGUI(() => {
+            //    this.LobbyList.Items.Add(new Lobby { _lobbyName = x.lobby_name, _lobbyPasswordProtected = x.lobby_passwordProtected, _lobbyGuid = x.lobby_guid });
+            //}));
+
+        }
+
+        private void RefreshLobbyList_Click(object sender, RoutedEventArgs e) => this.GetLobbyList();
+
+        private void HostGame_Click(object sender, RoutedEventArgs e) {
+
+        }
+
+        private void JoinGame_Click(object sender, RoutedEventArgs e) {
+
         }
     }
 }
