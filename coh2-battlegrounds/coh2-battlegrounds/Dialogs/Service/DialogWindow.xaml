@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:BattlegroundsApp.Dialogs.Service"
         mc:Ignorable="d"
+        SizeToContent="WidthAndHeight"
         WindowStartupLocation="CenterScreen"
         Title="{Binding Title}" Height="250" Width="250">
     <ContentControl x:Name="ContentPresenter" Content="{Binding}"/>

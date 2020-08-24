@@ -39,10 +39,6 @@ namespace BattlegroundsApp.Views {
 
         private void RefreshLobbyList_Click(object sender, RoutedEventArgs e) => this.GetLobbyList();
 
-        private void HostGame_Click(object sender, RoutedEventArgs e) {
-
-        }
-
         private void JoinGame_Click(object sender, RoutedEventArgs e) {
 
         }
