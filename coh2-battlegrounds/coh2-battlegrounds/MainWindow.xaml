@@ -4,29 +4,10 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:BattlegroundsApp"
-        xmlns:viewmodels="clr-namespace:BattlegroundsApp.ViewModels"
         xmlns:views="clr-namespace:BattlegroundsApp.Views"
         mc:Ignorable="d"
-        Title="Battlegrounds" Height="450" Width="850" WindowStartupLocation="CenterScreen">
-    
-    <Window.Resources>
-        <DataTemplate x:Name="dashboardViewTemplate" DataType="{x:Type viewmodels:DashboardViewModel}">
-            <views:DashboardView DataContext="{Binding}"/>
-        </DataTemplate>
-        <DataTemplate x:Name="newsViewTemplate" DataType="{x:Type viewmodels:NewsViewModel}">
-            <views:NewsView DataContext="{Binding}"/>
-        </DataTemplate>
-        <DataTemplate x:Name="divisionBuilderViewTemplate" DataType="{x:Type viewmodels:DivisionBuilderViewModel}">
-            <views:DivisionBuilderView DataContext="{Binding}"/>
-        </DataTemplate>
-        <DataTemplate x:Name="campaignViewTemplate" DataType="{x:Type viewmodels:CampaignViewModel}">
-            <views:CampaignView DataContext="{Binding}"/>
-        </DataTemplate>
-        <DataTemplate x:Name="gameBrowserViewTemplate" DataType="{x:Type viewmodels:GameBrowserViewModel}">
-            <views:GameBrowserView DataContext="{Binding}"/>
-        </DataTemplate>
-    </Window.Resources>
-    
+        Title="Battlegrounds" Height="650" Width="1150" WindowStartupLocation="CenterScreen">
+
     <Grid>
 
         <Grid.RowDefinitions>

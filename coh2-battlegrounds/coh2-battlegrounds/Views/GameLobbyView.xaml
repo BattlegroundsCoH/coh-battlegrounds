@@ -1,4 +1,4 @@
-﻿<UserControl x:Class="BattlegroundsApp.Views.GameBrowserView"
+﻿<UserControl x:Class="BattlegroundsApp.Views.GameLobbyView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -9,6 +9,9 @@
     <Grid>
 
         <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
             <RowDefinition Height="auto"/>
             <RowDefinition Height="auto"/>
             <RowDefinition Height="auto"/>
@@ -27,35 +30,36 @@
             <ColumnDefinition Width="auto"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
-
+        
         <!-- Row 0 -->
-        <ListView x:Name="GameLobbyList" Grid.Row="0" Grid.Column="0" Grid.RowSpan="5" Grid.ColumnSpan="5" Height="400" Width="800">
-            <ListView.View>
-                <GridView>
-                    <GridViewColumn Header="Name" Width="625" DisplayMemberBinding="{Binding _lobbyName}"/>
-                    <GridViewColumn Header="Players" Width="100" DisplayMemberBinding="{Binding _lobbyPlayers}"/>
-                    <GridViewColumn Header="Password" Width="75" DisplayMemberBinding="{Binding _lobbyPasswordProtected}"/>
-                </GridView>
-            </ListView.View>
-        </ListView>
+        <TextBlock Grid.Row="0" Grid.Column="0" Text="Lobby" FontSize="22"/>
 
         <!-- Row 1 -->
 
         <!-- Row 2 -->
 
         <!-- Row 3 -->
-
+        
         <!-- Row 4 -->
+        <TextBox x:Name="lobbyChat" Grid.Row="4" Grid.Column="3" Height="100" Width="375" VerticalAlignment="Bottom" 
+                 IsReadOnly="True" VerticalScrollBarVisibility="Visible"/>
 
         <!-- Row 5 -->
-        <Button x:Name="refreshLobbyListButton" Grid.Row="5" Grid.Column="2" Content="Refresh" Margin="0,5,0,0"
-                Click="RefreshLobbyList_Click"/>
-        
-        <Button x:Name="hostGameButton" Grid.Row="5" Grid.Column="3" Content="Host Game" Margin="5,5,0,0"
-                Command="{Binding HostGameCommand}"/>
+        <Button Grid.Row="5" Grid.Column="0" Content="Change Team" Margin="0,5,0,0" Click="ChangeTeam_Click"/>
 
-        <Button x:Name="joinGameButton" Grid.Row="5" Grid.Column="4" Content="Join Game" Margin="5,5,0,0"
-                Click="JoinLobby_Click"/>
+        <TextBlock Grid.Row="5" Grid.Column="3" Text="Message:" Width="50" HorizontalAlignment="Left" Margin="0,5,0,0"/>
+
+        <TextBox x:Name="messageText" Grid.Row="5" Grid.Column="3" Width="230" HorizontalAlignment="Left" Margin="50,5,0,0"/>
+
+        <Button Grid.Row="5" Grid.Column="3" Content="Send" Width="95" HorizontalAlignment="Right" Margin="0,5,0,0"
+                IsEnabled="{Binding ElementName=messageText, Path=Text.Length, Mode=OneWay}" Click="SendMessage_Click"/>
+
+        <!-- Row 6 -->
+        <Button Grid.Row="6" Grid.Column="0" Content="Start Game" Margin=" 0,5,0,0" Click="StartGame_Click"/>
+        
+        <!-- Row 7 -->
+        <Button Grid.Row="7" Grid.Column="0" Content="Leave Lobby" Margin="0,5,0,0" Click="LeaveLobby_Click"/>
+
 
     </Grid>
 </UserControl>

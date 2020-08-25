@@ -1,9 +1,10 @@
-﻿<Application x:Class="coh2_battlegrounds.App"
+﻿<Application x:Class="BattlegroundsApp.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:local="clr-namespace:coh2_battlegrounds"
+             xmlns:local="clr-namespace:BattlegroundsApp"
              xmlns:hostgame="clr-namespace:BattlegroundsApp.Dialogs.HostGame"
-             StartupUri="MainWindow.xaml">
+             Startup="App_Startup"
+             ShutdownMode="OnMainWindowClose">
     <Application.Resources>
         <DataTemplate DataType="{x:Type hostgame:HostGameDialogViewModel}">
             <hostgame:HostGameDialogView/>

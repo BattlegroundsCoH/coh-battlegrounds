@@ -18,7 +18,8 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Diagnostics;
-using BattlegroundsApp.ViewModels;
+using BattlegroundsApp.Views;
+using System.Windows.Threading;
 
 namespace BattlegroundsApp {
 
@@ -28,40 +29,52 @@ namespace BattlegroundsApp {
     public partial class MainWindow : Window {
         
         public MainWindow() {
+
+            // Initialize components etc...
             InitializeComponent();
 
             // Starts with Dashboard page opened
-            DataContext = new DashboardViewModel();
+            DataContext = new DashboardView();
         }
 
         // Open Dashboard page
         private void Dashboard_Click(object sender, RoutedEventArgs e) {
-            DataContext = new DashboardViewModel();
+            DataContext = new DashboardView();
         }
 
         // Open News page
         private void News_Click(object sender, RoutedEventArgs e) {
-            DataContext = new NewsViewModel();
+            DataContext = new NewsView();
         }
     
         // Open Division Builder page
         private void DivisionBuilder_Click(object sender, RoutedEventArgs e) {
-            DataContext = new DivisionBuilderViewModel();
+            DataContext = new DivisionBuilderView();
         }
 
         // Open Campaign page
         private void Campaign_Click(object sender, RoutedEventArgs e) {
-            DataContext = new CampaignViewModel();
+            DataContext = new CampaignView();
         }
 
         // Open Game Browser page
         private void GameBrowser_Click(object sender, RoutedEventArgs e) {
-            DataContext = new GameBrowserViewModel();
+            DataContext = new GameBrowserView(this);
         }
 
         // Exit application
         private void Exit_Click(object sender, RoutedEventArgs e) {
             this.Close();
         }
+
+        // Helper method to update the view
+        public Dispatcher SetView(object view) {
+            this.Dispatcher.Invoke(() => {
+                this.DataContext = view;
+                this.InvalidateVisual();
+            });
+            return this.Dispatcher;
+        }
+
     }   
 }

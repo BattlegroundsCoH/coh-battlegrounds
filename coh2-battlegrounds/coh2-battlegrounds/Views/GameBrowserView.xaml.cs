@@ -11,36 +11,112 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
+using Battlegrounds;
+using Battlegrounds.Steam;
+using Battlegrounds.Online.Services;
+using BattlegroundsApp.Dialogs.HostGame;
+using BattlegroundsApp.Dialogs.Service;
+using BattlegroundsApp.Utilities;
+
 namespace BattlegroundsApp.Views {
     /// <summary>
     /// Interaction logic for GameBrowserView.xaml
     /// </summary>
     public partial class GameBrowserView : UserControl {
 
-        public GameBrowserView() {
+        private IDialogService _dialogService;
+
+        public ICommand HostGameCommand { get; private set; }
+
+        private LobbyHub m_hub;
+
+        private MainWindow m_hostWindow;
+
+        public GameBrowserView(MainWindow hostWindow) {
+
+            this.m_hostWindow = hostWindow;
 
             InitializeComponent();
+
+            this.m_hub = new LobbyHub();
+            if (!this.m_hub.CanConnect()) {
+                // TODO: Error report
+            } else {
+                this.m_hub.User = BattlegroundsInstance.LocalSteamuser;
+            }
+
+            // TODO: Make this with injection?
+            _dialogService = new DialogService();
+
+            HostGameCommand = new RelayCommand(HostLobby);
 
             GetLobbyList();
 
         }
 
+        public void UpdateGUI(Action a) => this.Dispatcher.BeginInvoke(a);
+
         private void GetLobbyList() {
 
-            // Clear lobby list
-            gameLobbyList.Items.Clear();
+            GameLobbyList.Items.Clear();
 
-            // Get lobby list async
-            //hub.GetConnectableLobbies(x => this.UpdateGUI(() => {
-            //    this.LobbyList.Items.Add(new Lobby { _lobbyName = x.lobby_name, _lobbyPasswordProtected = x.lobby_passwordProtected, _lobbyGuid = x.lobby_guid });
-            //}));
+            this.m_hub.GetConnectableLobbies(x => this.UpdateGUI(() => {
+                this.GameLobbyList.Items.Add(new Lobby { 
+                    _lobbyName = x.lobby_name, 
+                    _lobbyPlayers = (x.lobby_players?.Count ?? null)?.ToString() ?? "0", 
+                    _lobbyPasswordProtected = x.lobby_passwordProtected, 
+                    _lobbyGuid = x.lobby_guid 
+                });
+            }));
 
         }
 
         private void RefreshLobbyList_Click(object sender, RoutedEventArgs e) => this.GetLobbyList();
 
-        private void JoinGame_Click(object sender, RoutedEventArgs e) {
+        private void JoinLobby_Click(object sender, RoutedEventArgs e) {
+
+            if (GameLobbyList.SelectedItem is Lobby lobby) {
+
+                // TODO: Psswd check
+
+                GameLobbyView vw = new GameLobbyView();
+                vw.OnServerAcceptanceResponse += this.OnServerConnectResponse;
+                ServerMessageHandler smh = new ServerMessageHandler(vw);
+                vw.SetSMH(smh);
+
+                string lobbyToJoin = lobby._lobbyGuid;
+
+                ManagedLobby.Join(this.m_hub, lobbyToJoin, String.Empty, smh.OnServerResponse);
+
+            }
 
         }
+
+        private void HostLobby() {
+
+            var dialog = new HostGameDialogViewModel("Host Game");
+            var result = _dialogService.OpenDialog(dialog);
+            
+            if (result == Dialogs.DialogResults.Host) {
+
+                GameLobbyView vw = new GameLobbyView();
+                vw.OnServerAcceptanceResponse += this.OnServerConnectResponse;
+                ServerMessageHandler smh = new ServerMessageHandler(vw);
+                vw.SetSMH(smh);
+
+                ManagedLobby.Host(this.m_hub, "Battlegrounds Test", string.Empty, smh.OnServerResponse);
+
+            }
+
+        }
+
+        private void OnServerConnectResponse(bool connected, GameLobbyView view) {
+            if (connected) {
+                this.m_hostWindow.SetView(view); // Returns a dispatcher; TODO: Disable navbar (Maybe could be done in .xaml => IsEnabled="{Binding}")
+            } else {
+                // TODO: Report error
+            }
+        }
+
     }
 }
