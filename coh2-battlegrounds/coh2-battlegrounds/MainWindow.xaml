@@ -50,8 +50,8 @@
                 Click="News_Click"/>
 
         <!-- Row 4 -->
-        <Button x:Name="DivisionBuilderButton" Grid.Row="4" Grid.Column="1" Content="Division Builder" Margin="0,5,0,0"
-                Click="DivisionBuilder_Click"/>
+        <Button x:Name="CompanyBuilderButton" Grid.Row="4" Grid.Column="1" Content="Company Builder" Margin="0,5,0,0"
+                Click="CompanyBuilder_Click"/>
 
         <!-- Row 5 -->
         <Button x:Name="CampaignButton" Grid.Row="5" Grid.Column="1" Content="Campaign" Margin="0,5,0,0" IsEnabled="False"
