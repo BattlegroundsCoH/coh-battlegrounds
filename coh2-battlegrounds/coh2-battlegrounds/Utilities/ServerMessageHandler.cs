@@ -138,7 +138,6 @@ namespace BattlegroundsApp {
                         m_lobbyWindow.lobbyChat.Text += "[Lobby] You have been assigned as host.\n";
                         break;
                     case ManagedLobbyLocalEventType.Kicked:
-                        m_lobbyWindow.ClearLobby();
                         // TODO: Messagebox for this
                         break;
                     default:

@@ -79,7 +79,7 @@ namespace BattlegroundsApp.Views {
 
                 // TODO: Psswd check
 
-                GameLobbyView vw = new GameLobbyView();
+                GameLobbyView vw = new GameLobbyView(m_hostWindow);
                 vw.OnServerAcceptanceResponse += this.OnServerConnectResponse;
                 ServerMessageHandler smh = new ServerMessageHandler(vw);
                 vw.SetSMH(smh);
@@ -99,7 +99,7 @@ namespace BattlegroundsApp.Views {
             
             if (result == Dialogs.DialogResults.Host) {
 
-                GameLobbyView vw = new GameLobbyView();
+                GameLobbyView vw = new GameLobbyView(m_hostWindow);
                 vw.OnServerAcceptanceResponse += this.OnServerConnectResponse;
                 ServerMessageHandler smh = new ServerMessageHandler(vw);
                 vw.SetSMH(smh);

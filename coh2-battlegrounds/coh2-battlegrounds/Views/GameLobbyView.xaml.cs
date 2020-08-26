@@ -22,13 +22,15 @@ namespace BattlegroundsApp.Views {
 
         ServerMessageHandler m_smh;
 
+        private MainWindow m_hostWindow;
+
         public event Action<bool, GameLobbyView> OnServerAcceptanceResponse;
 
-        public GameLobbyView() {
+        public GameLobbyView(MainWindow hostWindow) {
+
+            this.m_hostWindow = hostWindow;
 
             InitializeComponent();
-
-
 
         }
 
@@ -67,9 +69,9 @@ namespace BattlegroundsApp.Views {
 
         private void LeaveLobby_Click(object sender, RoutedEventArgs e) {
 
-            ClearLobby();
             if (this.m_smh.Lobby != null) {
                 this.m_smh.LeaveLobby();
+                this.m_hostWindow.SetView(new GameBrowserView(m_hostWindow));
             }
 
         }
@@ -80,11 +82,6 @@ namespace BattlegroundsApp.Views {
 
         internal void RemovePlayer(string _user) {
 
-        }
-
-        public void ClearLobby() {
-            lobbyChat.Clear();
-            messageText.Clear();
         }
 
         public void UpdateGUI(Action a) => this.Dispatcher.Invoke(a);

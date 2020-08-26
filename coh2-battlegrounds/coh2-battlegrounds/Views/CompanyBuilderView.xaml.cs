@@ -15,8 +15,8 @@ namespace BattlegroundsApp.Views {
     /// <summary>
     /// Interaction logic for DivisionBuilderView.xaml
     /// </summary>
-    public partial class DivisionBuilderView : UserControl {
-        public DivisionBuilderView() {
+    public partial class CompanyBuilderView : UserControl {
+        public CompanyBuilderView() {
             InitializeComponent();
         }
     }

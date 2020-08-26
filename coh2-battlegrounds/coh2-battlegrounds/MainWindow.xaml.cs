@@ -20,6 +20,7 @@ using System.Windows.Shapes;
 using System.Diagnostics;
 using BattlegroundsApp.Views;
 using System.Windows.Threading;
+using Battlegrounds.Game.Battlegrounds;
 
 namespace BattlegroundsApp {
 
@@ -48,8 +49,8 @@ namespace BattlegroundsApp {
         }
     
         // Open Division Builder page
-        private void DivisionBuilder_Click(object sender, RoutedEventArgs e) {
-            DataContext = new DivisionBuilderView();
+        private void CompanyBuilder_Click(object sender, RoutedEventArgs e) {
+            DataContext = new CompanyBuilderView();
         }
 
         // Open Campaign page
