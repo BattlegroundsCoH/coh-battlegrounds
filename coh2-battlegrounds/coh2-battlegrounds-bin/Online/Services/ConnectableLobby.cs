@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Text.RegularExpressions;
 
 namespace Battlegrounds.Online.Services {
@@ -72,6 +73,11 @@ namespace Battlegrounds.Online.Services {
         public bool lobby_passwordProtected;
 
         /// <summary>
+        /// 
+        /// </summary>
+        public string lobby_map;
+
+        /// <summary>
         /// The lobby players currently in the lobby (Player name, team index, ...).
         /// </summary>
         public List<ConnectableLobbyPlayer> lobby_players;
@@ -85,6 +91,7 @@ namespace Battlegrounds.Online.Services {
         public ConnectableLobby(string gid, string name, bool isPsswProtected) {
             this.lobby_guid = gid;
             this.lobby_name = name;
+            this.lobby_map = "<none>";
             this.lobby_passwordProtected = isPsswProtected;
             this.lobby_players = new List<ConnectableLobbyPlayer>();
         }
@@ -94,9 +101,25 @@ namespace Battlegrounds.Online.Services {
                 this.lobby_players.Clear();
                 Message message = new Message(Message_Type.LOBBY_INFO, this.lobby_guid);
                 MessageSender.SendMessage(AddressBook.GetLobbyServer(), message, (a, msg) => {
-                    var matches = Regex.Match(msg.Argument1, @"");
-                    if (matches.Success) {
-
+                    string work = msg.Argument1.Replace("\x07", "x07");
+                    var mapRegMatch = Regex.Match(work, @"m:""(?<map>(\w|_|-|<|>|x07)*)""");
+                    if (mapRegMatch.Success) {
+                        this.lobby_map = mapRegMatch.Groups["map"].Value.Replace("x07", "\x07");
+                    }
+                    var matches = Regex.Matches(work, @"\(s:(?<s>\d+);n:""(?<n>(\s|\S)+)"";i:(?<i>\d+);t:(?<t>-?\d+);f:(?<f>\w*);c:""(?<c>(\s|\S)*)""\)");
+                    if (matches.Count > 0) {
+                        for (int i = 0; i < matches.Count; i++) {
+                            if (!ulong.TryParse(matches[i].Groups["s"].Value, out ulong sID)) {
+                                break;
+                            }
+                            if (!int.TryParse(matches[i].Groups["i"].Value, out int pID)) {
+                                break;
+                            }
+                            if (!int.TryParse(matches[i].Groups["t"].Value, out int tID)) {
+                                break;
+                            } // TODO: Save company name
+                            this.lobby_players.Add(new ConnectableLobbyPlayer(pID, sID, matches[i].Groups["n"].Value, matches[i].Groups["f"].Value, tID));
+                        }
                     }
                 });
             } catch { /* do something here? */ }

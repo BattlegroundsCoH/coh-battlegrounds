@@ -52,12 +52,12 @@ namespace coh2_battlegrounds_console {
             m.EvaluateResult();
             */
             
-            SessionManager.PlaySession<SessionCompiler<CompanyCompiler>, CompanyCompiler>(session, (a,b) => { Console.WriteLine(a); }, null, null);
+            //SessionManager.PlaySession<SessionCompiler<CompanyCompiler>, CompanyCompiler>(session, (a,b) => { Console.WriteLine(a); }, null, null);
 
             // Save json
             testCompany.SaveToFile("test_company.json");
 
-            /*LobbyHub hub = new LobbyHub();
+            LobbyHub hub = new LobbyHub();
             if (!hub.CanConnect()) {
                 Console.WriteLine("Unable to reach server hub");
             } else {
@@ -71,7 +71,7 @@ namespace coh2_battlegrounds_console {
                     ClientTest(hub, lobbies.First());
                 }
 
-            }*/
+            }
             
             BattlegroundsInstance.SaveInstance();
             
