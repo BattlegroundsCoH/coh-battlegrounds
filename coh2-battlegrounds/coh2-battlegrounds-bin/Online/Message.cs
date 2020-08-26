@@ -68,6 +68,8 @@ namespace Battlegrounds.Online {
 
         LOBBY_NOTIFY_GAMEMODE, // Notify lobby members the gamemode is available
 
+        LOBBY_SETUSERDATA,
+
         USER_SETUSERDATA, // Set the user data
 
         USER_PING, // User ping-back (SERVER_PING -> reponse = USER_PING)

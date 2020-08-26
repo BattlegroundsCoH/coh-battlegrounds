@@ -1,16 +1,17 @@
 ﻿using System.Collections.Generic;
+using System.Text.RegularExpressions;
 
 namespace Battlegrounds.Online.Services {
     
     /// <summary>
     /// Represents a lobby that can be connected to.
     /// </summary>
-    public struct ConnectableLobby {
+    public class ConnectableLobby {
 
         /// <summary>
-        /// Represents a player that's connected to a <see>ConnectableLobby</see>
+        /// Represents a player that's connected to a <see cref="ConnectableLobby"/>.
         /// </summary>
-        public struct ConnectableLobbyPlayer {
+        public class ConnectableLobbyPlayer {
             
             /// <summary>
             /// The UTF-8 string representation of the connected player's name.
@@ -26,6 +27,11 @@ namespace Battlegrounds.Online.Services {
             /// The player's index in the lobby.
             /// </summary>
             public int player_index;
+
+            /// <summary>
+            /// The player's unique steam index.
+            /// </summary>
+            public ulong player_steam_index;
             
             /// <summary>
             /// The player's team index.
@@ -36,13 +42,15 @@ namespace Battlegrounds.Online.Services {
             /// 
             /// </summary>
             /// <param name="pIndex"></param>
+            /// <param name="sIndex"></param>
             /// <param name="pName"></param>
             /// <param name="pFaction"></param>
             /// <param name="pTIndex"></param>
-            public ConnectableLobbyPlayer(int pIndex, string pName, string pFaction, int pTIndex) {
+            public ConnectableLobbyPlayer(int pIndex, ulong sIndex, string pName, string pFaction, int pTIndex) {
                 this.player_name = pName;
                 this.player_faction = pFaction;
                 this.player_index = pIndex;
+                this.player_steam_index = sIndex;
                 this.player_team_index = pTIndex;
             }
 
@@ -64,21 +72,34 @@ namespace Battlegrounds.Online.Services {
         public bool lobby_passwordProtected;
 
         /// <summary>
-        /// The lobby players currently in the lobby (Player name, team index).
+        /// The lobby players currently in the lobby (Player name, team index, ...).
         /// </summary>
         public List<ConnectableLobbyPlayer> lobby_players;
 
         /// <summary>
-        /// 
+        /// New standard <see cref="ConnectableLobby"/> instance without player data.
         /// </summary>
-        /// <param name="gid"></param>
-        /// <param name="name"></param>
-        /// <param name="isPsswProtected"></param>
+        /// <param name="gid">The lobby GUID that's used by the server to identify the lobby.</param>
+        /// <param name="name">The assigned name of the lobby.</param>
+        /// <param name="isPsswProtected">Boolean flag makring whether the lobby is password protected or not.</param>
         public ConnectableLobby(string gid, string name, bool isPsswProtected) {
             this.lobby_guid = gid;
             this.lobby_name = name;
             this.lobby_passwordProtected = isPsswProtected;
             this.lobby_players = new List<ConnectableLobbyPlayer>();
+        }
+
+        public void Update() {
+            try {
+                this.lobby_players.Clear();
+                Message message = new Message(Message_Type.LOBBY_INFO, this.lobby_guid);
+                MessageSender.SendMessage(AddressBook.GetLobbyServer(), message, (a, msg) => {
+                    var matches = Regex.Match(msg.Argument1, @"");
+                    if (matches.Success) {
+
+                    }
+                });
+            } catch { /* do something here? */ }
         }
 
     }
