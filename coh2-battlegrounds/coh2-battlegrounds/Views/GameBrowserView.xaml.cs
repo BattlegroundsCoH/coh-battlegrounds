@@ -61,12 +61,7 @@ namespace BattlegroundsApp.Views {
             GameLobbyList.Items.Clear();
 
             this.m_hub.GetConnectableLobbies(x => this.UpdateGUI(() => {
-                this.GameLobbyList.Items.Add(new Lobby { 
-                    _lobbyName = x.lobby_name, 
-                    _lobbyPlayers = (x.lobby_players?.Count ?? null)?.ToString() ?? "0", 
-                    _lobbyPasswordProtected = x.lobby_passwordProtected, 
-                    _lobbyGuid = x.lobby_guid 
-                });
+                this.GameLobbyList.Items.Add(new Lobby(x));
             }));
 
         }

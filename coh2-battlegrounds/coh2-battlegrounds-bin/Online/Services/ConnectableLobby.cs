@@ -23,7 +23,12 @@ namespace Battlegrounds.Online.Services {
             /// The the current faction ID selected by the player.
             /// </summary>
             public string player_faction;
-            
+
+            /// <summary>
+            /// The player's selected company name
+            /// </summary>
+            public string player_company;
+
             /// <summary>
             /// The player's index in the lobby.
             /// </summary>
@@ -47,12 +52,13 @@ namespace Battlegrounds.Online.Services {
             /// <param name="pName"></param>
             /// <param name="pFaction"></param>
             /// <param name="pTIndex"></param>
-            public ConnectableLobbyPlayer(int pIndex, ulong sIndex, string pName, string pFaction, int pTIndex) {
+            public ConnectableLobbyPlayer(int pIndex, ulong sIndex, string pName, string pFaction, string cName, int pTIndex) {
                 this.player_name = pName;
                 this.player_faction = pFaction;
                 this.player_index = pIndex;
                 this.player_steam_index = sIndex;
                 this.player_team_index = pTIndex;
+                this.player_company = cName;
             }
 
         }
@@ -73,7 +79,7 @@ namespace Battlegrounds.Online.Services {
         public bool lobby_passwordProtected;
 
         /// <summary>
-        /// 
+        /// The currently selected map (Not formatted)
         /// </summary>
         public string lobby_map;
 
@@ -118,7 +124,7 @@ namespace Battlegrounds.Online.Services {
                             if (!int.TryParse(matches[i].Groups["t"].Value, out int tID)) {
                                 break;
                             } // TODO: Save company name
-                            this.lobby_players.Add(new ConnectableLobbyPlayer(pID, sID, matches[i].Groups["n"].Value, matches[i].Groups["f"].Value, tID));
+                            this.lobby_players.Add(new ConnectableLobbyPlayer(pID, sID, matches[i].Groups["n"].Value, matches[i].Groups["f"].Value, matches[i].Groups["c"].Value, tID));
                         }
                     }
                 });
