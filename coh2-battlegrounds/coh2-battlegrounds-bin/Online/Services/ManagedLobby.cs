@@ -67,7 +67,12 @@ namespace Battlegrounds.Online.Services {
         /// <summary>
         /// Is the instance of <see cref="ManagedLobby"/> considered to be the host of the lobby.
         /// </summary>
-        public bool IsHost => m_isHost;
+        public bool IsHost => this.m_isHost;
+
+        /// <summary>
+        /// The <see cref="SteamUser"/> that's connected to the server. (The local user).
+        /// </summary>
+        public SteamUser Self => this.m_self;
 
         private ManagedLobby(Connection connection, bool isHost) {
 
@@ -171,6 +176,21 @@ namespace Battlegrounds.Online.Services {
                 m_underlyingConnection.SetIdentifierReceiver(queryMessage.Identifier, OnResponse);
                 m_underlyingConnection.SendMessage(queryMessage);
             }
+        }
+
+        /// <summary>
+        /// Get a specific detail from the lobby.
+        /// </summary>
+        /// <param name="lobbyInformation">The information that is sought from the server.</param>
+        /// <returns>The first argument of the received server response.</returns>
+        /// <remarks>Async method.</remarks>
+        public async Task<string> GetLobbyInformation(string lobbyInformation) {
+            string response = null;
+            this.GetLobbyInformation(lobbyInformation, (a, b) => response = a);
+            while (response is null) {
+                await Task.Delay(1);
+            }
+            return response;
         }
 
         /// <summary>

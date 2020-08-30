@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics;
-
+using System.Threading.Tasks;
 using Battlegrounds.Game.Database;
 using Battlegrounds.Online.Services;
 using BattlegroundsApp.Utilities;
@@ -120,7 +120,10 @@ namespace BattlegroundsApp {
         /// <param name="playerID"></param>
         /// <param name="type"></param>
         public void MoveTeam(ServerMessageHandler smh, ulong playerID, LobbyTeam.TeamType type) {
+            if (playerID == smh.Lobby.Self.ID) {
 
+                // TODO: Send meta message informthing other clients to update
+            }
         }
 
         /// <summary>
@@ -132,10 +135,22 @@ namespace BattlegroundsApp {
             this.UpdateLobbyInfo(smh); // will only fire if host
         }
 
-        private void FetchLobbyInfo(ServerMessageHandler smh) {
+        /*
+         ** Just making the note now : There's a high chance we're going to have some sync problems.
+         */
+
+        private async void FetchLobbyInfo(ServerMessageHandler smh) {
             if (!smh.Lobby.IsHost) {
                 Trace.WriteLine("Updating lobby information....");
                 smh.Lobby.GetSelectedMap(false, x => this.m_lobbySelectedMapFilename = x);
+                int player_count = await smh.Lobby.GetPlayersInLobbyAsync();
+                ulong[] steamIndicies = await smh.Lobby.GetPlayerIDsAsync();
+                string[] steamNames = await smh.Lobby.GetPlayerNamesAsync();
+                this.ClearTeams();
+                for (int i = 0; i < player_count; i++) {
+                    (int teamIndex, string faction, string company) = await smh.Lobby.GetPlayerdata(i);
+                    this.m_lobbyTeams[(LobbyTeam.TeamType)teamIndex].Players.Add(new LobbyPlayer(i, steamIndicies[i], steamNames[i], faction, company));
+                }
             }
         }
 
@@ -143,6 +158,13 @@ namespace BattlegroundsApp {
             if (smh.Lobby.IsHost) {
                 Trace.WriteLine("Updating lobby information...");
             }
+        }
+
+        private void ClearTeams() {
+            this.m_lobbyTeams[LobbyTeam.TeamType.Allies].Players.Clear();
+            this.m_lobbyTeams[LobbyTeam.TeamType.Axis].Players.Clear();
+            this.m_lobbyTeams[LobbyTeam.TeamType.Spectator].Players.Clear();
+            this.m_lobbyTeams[LobbyTeam.TeamType.Undefined].Players.Clear();
         }
 
     }
