@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-
+using System.Linq;
 using Battlegrounds.Functional;
 using Battlegrounds.Game.Database;
 using Battlegrounds.Online.Services;
@@ -36,9 +36,21 @@ namespace BattlegroundsApp {
 
             public string Name { get; }
 
-            public string Faction { get; }
+            /// <summary>
+            /// The <see cref="LobbyPlayer"/>'s faction.
+            /// </summary>
+            /// <remarks>
+            /// Do not modify. Call <see cref="SetFaction(ServerMessageHandler, ulong, string)"/>.
+            /// </remarks>
+            public string Faction { get; set; }
 
-            public string CompanyName { get; }
+            /// <summary>
+            /// The <see cref="LobbyPlayer"/>'s selected company's name.
+            /// </summary>
+            /// <remarks>
+            /// Do not modify. Call <see cref="SetCompanyName(ServerMessageHandler, ulong, string)"/>.
+            /// </remarks>
+            public string CompanyName { get; set; }
 
             public int LobbyIndex { get; }
 
@@ -138,11 +150,46 @@ namespace BattlegroundsApp {
                     if (this.m_lobbyTeams[currentTeam].Players.Find(x => x.SteamID == playerID) is LobbyPlayer player) {
                         this.m_lobbyTeams[currentTeam].Players.Remove(player);
                         this.m_lobbyTeams[type].Players.Add(player);
+                        smh.Lobby.UpdateUserInformation("tid", (int)type);
                         smh.Lobby.SendMetaMessage("TeamPositionChanged");
                     } else {
                         throw new ArgumentOutOfRangeException($"Unknown player #{playerID}");
                     }
                 }
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="smh"></param>
+        /// <param name="playerID"></param>
+        /// <param name="faction"></param>
+        public void SetFaction(ServerMessageHandler smh, ulong playerID, string faction) {
+            if (this.SetStringServerValue(smh, playerID, "fac", faction)) {
+                this.m_lobbyTeams.Aggregate(new List<LobbyPlayer>(), (a, b) => { a.AddRange(b.Value.Players); return a; }).Find(x => x.SteamID == playerID).Faction = faction;
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="smh"></param>
+        /// <param name="playerID"></param>
+        /// <param name="name"></param>
+        public void SetCompanyName(ServerMessageHandler smh, ulong playerID, string name) {
+            if (this.SetStringServerValue(smh, playerID, "com", name)) {
+                this.m_lobbyTeams.Aggregate(new List<LobbyPlayer>(), (a, b) => { a.AddRange(b.Value.Players); return a; }).Find(x => x.SteamID == playerID).CompanyName = name;
+            }
+        }
+
+        private bool SetStringServerValue(ServerMessageHandler smh, ulong steamID, string key, string val) {
+            if (smh.Lobby.Self.ID == steamID) {
+                smh.Lobby.UpdateUserInformation(key, val);
+                smh.Lobby.SendMetaMessage("StringValueChanged");
+                return true;
+            } else {
+                return false;
             }
         }
 

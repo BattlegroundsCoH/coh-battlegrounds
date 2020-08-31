@@ -237,11 +237,13 @@ namespace Battlegrounds.Online {
             }
         }
 
+        private static int _offset = 1000;
+
         internal static int GetIdentifier(Socket socket)
             => Encoding.ASCII.GetBytes(
                 (socket.RemoteEndPoint as IPEndPoint).Address.ToString() +
                 DateTime.UtcNow.TimeOfDay.ToString() +
-                Guid.NewGuid().ToString()).Aggregate(0, (a, b) => a += b);
+                Guid.NewGuid().ToString() + ((++_offset).ToString())).Aggregate(int.MinValue, (a, b) => a += a + b);
 
         public override string ToString() => $"{this.Descriptor}: \"{this.Argument1}\" : \"{this.Argument2}\" : \"{this.Argument3}\"";
 

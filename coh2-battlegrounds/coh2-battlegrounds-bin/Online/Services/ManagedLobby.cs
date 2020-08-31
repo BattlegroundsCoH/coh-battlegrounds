@@ -161,6 +161,13 @@ namespace Battlegrounds.Online.Services {
         }
 
         /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="info"></param>
+        /// <param name="value"></param>
+        public void UpdateUserInformation(string info, object value) => this.m_underlyingConnection.SendMessage(new Message(Message_Type.LOBBY_SETUSERDATA, info, value.ToString()));
+
+        /// <summary>
         /// Get a specific detail from the lobby.
         /// </summary>
         /// <param name="lobbyInformation">The information that is sought.</param>
