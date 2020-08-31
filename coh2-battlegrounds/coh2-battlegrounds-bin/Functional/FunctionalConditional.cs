@@ -3,7 +3,7 @@
 namespace Battlegrounds.Functional {
     
     /// <summary>
-    /// 
+    /// Functional-styled implmentation of a conditional statement.
     /// </summary>
     public static class FunctionalConditional {
     
@@ -26,6 +26,18 @@ namespace Battlegrounds.Functional {
             public IsTrue<T> Then(Action<T> then) {
                 if (_yes) {
                     then.Invoke(this.__subj);
+                }
+                return this;
+            }
+
+            /// <summary>
+            /// 
+            /// </summary>
+            /// <param name="then"></param>
+            /// <returns></returns>
+            public IsTrue<T> Then(Action then) {
+                if (_yes) {
+                    then.Invoke();
                 }
                 return this;
             }
@@ -72,6 +84,21 @@ namespace Battlegrounds.Functional {
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="b"></param>
+        /// <returns></returns>
+        public static IsTrue<bool> IfTrue(this bool b) => new IsTrue<bool>(b, b);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="b"></param>
+        /// <param name="act"></param>
+        /// <returns></returns>
+        public static IsTrue<bool> Then(this bool b, Action act) => new IsTrue<bool>(b, b).Then(act);
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="o"></param>
         /// <param name="condition"></param>
@@ -83,6 +110,13 @@ namespace Battlegrounds.Functional {
                 return new IsTrue<T>(true, o);
             }
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="b"></param>
+        /// <returns></returns>
+        public static IsTrue<bool> IfFalse(this bool b) => new IsTrue<bool>(!b, !b);
 
     }
 

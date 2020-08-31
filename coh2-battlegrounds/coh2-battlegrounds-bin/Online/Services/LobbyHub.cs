@@ -15,8 +15,11 @@ namespace Battlegrounds.Online.Services {
     public class LobbyHub {
 
         /// <summary>
-        /// The <see cref="SteamUser"/> who will be connecting to the <see cref="LobbyHub"/>.<br/>At no point are users verified on the server - Security risk!!!
+        /// The <see cref="SteamUser"/> who will be connecting to the <see cref="LobbyHub"/>.
         /// </summary>
+        /// <remarks>
+        /// At no point are users verified on the server - Personal Security risk!!!
+        /// </remarks>
         public SteamUser User { get; set; }
 
         /// <summary>

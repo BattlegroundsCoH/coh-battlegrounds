@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Threading.Tasks;
+using Battlegrounds.Functional;
 using Battlegrounds.Game.Database;
 using Battlegrounds.Online.Services;
 using BattlegroundsApp.Utilities;
@@ -76,6 +78,10 @@ namespace BattlegroundsApp {
 
         public string _lobbyMapFile { get => this.m_lobbySelectedMapFilename; set => this.m_lobbySelectedMapFilename = value; }
 
+        public string _lobbyGamemode { get; set; }
+
+        public int _lobbyGamemodeOption { get; set; }
+
         /// <summary>
         /// New basic <see cref="Lobby"/> instance with a basic setup.
         /// </summary>
@@ -121,8 +127,9 @@ namespace BattlegroundsApp {
         /// <param name="type"></param>
         public void MoveTeam(ServerMessageHandler smh, ulong playerID, LobbyTeam.TeamType type) {
             if (playerID == smh.Lobby.Self.ID) {
+                //LobbyPlayer player = m_lobbyTeams.Aggregate(new List<LobbyPlayer>(), (a, b) => { a.AddRange(b.Value.Players); return a; }).Find(x => x.SteamID == playerID);
 
-                // TODO: Send meta message informthing other clients to update
+                smh.Lobby.SendMetaMessage("TeamPositionChanged");
             }
         }
 
@@ -143,6 +150,8 @@ namespace BattlegroundsApp {
             if (!smh.Lobby.IsHost) {
                 Trace.WriteLine("Updating lobby information....");
                 smh.Lobby.GetSelectedMap(false, x => this.m_lobbySelectedMapFilename = x);
+                smh.Lobby.GetSelectedGamemode(x => this._lobbyGamemode = x);
+                smh.Lobby.GetSelectedGamemodeOption(x => int.TryParse(x, out int o).Then(() => this._lobbyGamemodeOption = o));
                 int player_count = await smh.Lobby.GetPlayersInLobbyAsync();
                 ulong[] steamIndicies = await smh.Lobby.GetPlayerIDsAsync();
                 string[] steamNames = await smh.Lobby.GetPlayerNamesAsync();
@@ -157,6 +166,17 @@ namespace BattlegroundsApp {
         private void UpdateLobbyInfo(ServerMessageHandler smh) {
             if (smh.Lobby.IsHost) {
                 Trace.WriteLine("Updating lobby information...");
+                smh.Lobby.SetLobbyInformation("selected_map", this.m_lobbySelectedMapFilename);
+                smh.Lobby.SetLobbyInformation("selected_wc", this._lobbyGamemode);
+                smh.Lobby.SetLobbyInformation("selected_wcs", this._lobbyGamemodeOption);
+                for (int i = (int)LobbyTeam.TeamType.Undefined; i < (int)LobbyTeam.TeamType.Axis; i++) {
+                    LobbyTeam.TeamType t = (LobbyTeam.TeamType)i;
+                    for (int j = 0; j < this.m_lobbyTeams[t].Players.Count; j++) {
+                        smh.Lobby.SetLobbyInformation($"tid{this.m_lobbyTeams[t].Players[j].LobbyIndex}", (int)t);
+                        smh.Lobby.SetLobbyInformation($"fac{this.m_lobbyTeams[t].Players[j].LobbyIndex}", this.m_lobbyTeams[t].Players[j].Faction);
+                        smh.Lobby.SetLobbyInformation($"com{this.m_lobbyTeams[t].Players[j].LobbyIndex}", this.m_lobbyTeams[t].Players[j].CompanyName);
+                    }
+                }
             }
         }
 
