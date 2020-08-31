@@ -1,7 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Threading.Tasks;
+
 using Battlegrounds.Functional;
 using Battlegrounds.Game.Database;
 using Battlegrounds.Online.Services;
@@ -113,23 +113,36 @@ namespace BattlegroundsApp {
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="smh"></param>
-        /// <param name="name"></param>
-        public void PlayerConnected(ServerMessageHandler smh, string name) {
-
+        /// <param name="playerSteamID"></param>
+        /// <returns></returns>
+        public LobbyTeam.TeamType GetPlayerTeam(ulong playerSteamID) {
+            foreach (var pair in m_lobbyTeams) {
+                if (pair.Value.Players.FindIndex(x => x.SteamID == playerSteamID) >= 0) {
+                    return pair.Key;
+                }
+            }
+            return LobbyTeam.TeamType.Undefined;
         }
 
         /// <summary>
-        /// 
+        /// Move the local player to a new team.
         /// </summary>
-        /// <param name="smh"></param>
-        /// <param name="playerID"></param>
-        /// <param name="type"></param>
+        /// <param name="smh">The <see cref="ServerMessageHandler"/> connected to the lobby.</param>
+        /// <param name="playerID">The ID of the player to move. Can only move self. This is for validation purposes.</param>
+        /// <param name="type">The new <see cref="LobbyTeam.TeamType"/> to assign the player.</param>
+        /// <exception cref="ArgumentOutOfRangeException"/>
         public void MoveTeam(ServerMessageHandler smh, ulong playerID, LobbyTeam.TeamType type) {
             if (playerID == smh.Lobby.Self.ID) {
-                //LobbyPlayer player = m_lobbyTeams.Aggregate(new List<LobbyPlayer>(), (a, b) => { a.AddRange(b.Value.Players); return a; }).Find(x => x.SteamID == playerID);
-
-                smh.Lobby.SendMetaMessage("TeamPositionChanged");
+                var currentTeam = this.GetPlayerTeam(playerID);
+                if (currentTeam != type) {
+                    if (this.m_lobbyTeams[currentTeam].Players.Find(x => x.SteamID == playerID) is LobbyPlayer player) {
+                        this.m_lobbyTeams[currentTeam].Players.Remove(player);
+                        this.m_lobbyTeams[type].Players.Add(player);
+                        smh.Lobby.SendMetaMessage("TeamPositionChanged");
+                    } else {
+                        throw new ArgumentOutOfRangeException($"Unknown player #{playerID}");
+                    }
+                }
             }
         }
 
@@ -138,7 +151,7 @@ namespace BattlegroundsApp {
         /// </summary>
         /// <param name="smh">The <see cref="ServerMessageHandler"/> that handles messages to and from the server.</param>
         public void UpdateLobby(ServerMessageHandler smh) {
-            this.FetchLobbyInfo(smh); // will inly fire if not host
+            this.FetchLobbyInfo(smh); // will only fire if not host
             this.UpdateLobbyInfo(smh); // will only fire if host
         }
 
