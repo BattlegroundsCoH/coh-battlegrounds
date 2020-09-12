@@ -610,7 +610,7 @@ namespace Battlegrounds.Online.Services {
             }
 
             // Just to be safe
-            if (lobbyPassword == null) {
+            if (lobbyPassword is null) {
                 lobbyPassword = string.Empty;
             }
 
