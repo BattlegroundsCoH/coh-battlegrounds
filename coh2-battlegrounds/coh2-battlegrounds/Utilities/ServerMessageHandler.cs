@@ -157,19 +157,14 @@ namespace BattlegroundsApp {
                 this.m_LobbyInstance.OnLocalDataRequested += OnLocalDataRequest;
                 this.m_LobbyInstance.OnDataRequest += OnDataRequest;
                 this.m_LobbyInstance.OnStartMatchReceived += StartMatchCommandReceived;
-                //this.m_LobbyInstance.OnFileReceived += OnFileReceived;
 
-                //m_lobbyWindow.UpdateGUI(() => m_lobbyWindow.OnLobbyEnter(this.m_LobbyInstance));
-
-                m_lobbyWindow.ServerConnectResponse(true);
+                this.m_lobbyWindow.ServerConnectResponse(true);
 
                 Trace.WriteLine("Server responded with OK");
 
-                result.UploadCompany("test_company.json");
-
             } else {
                 Trace.WriteLine(status.Message);
-                m_lobbyWindow.ServerConnectResponse(false);
+                this.m_lobbyWindow.ServerConnectResponse(false);
             }
         }
 

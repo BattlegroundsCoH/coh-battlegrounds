@@ -70,6 +70,8 @@ namespace Battlegrounds.Game.Database {
         /// <exception cref="KeyNotFoundException"/>
         public static Scenario FromFilename(string filename) => __scenarios[filename];
 
+        public static List<Scenario> GetList() => __scenarios.Values.ToList();
+
     }
 
 }

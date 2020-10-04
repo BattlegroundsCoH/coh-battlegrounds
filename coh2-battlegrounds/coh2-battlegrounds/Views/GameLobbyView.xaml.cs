@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -12,6 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Battlegrounds;
+using Battlegrounds.Game.Database;
 using Battlegrounds.Steam;
 
 namespace BattlegroundsApp.Views {
@@ -34,9 +36,7 @@ namespace BattlegroundsApp.Views {
 
         }
 
-        public void SetSMH(ServerMessageHandler smh) {
-            this.m_smh = smh;
-        }
+        public void SetSMH(ServerMessageHandler smh) => this.m_smh = smh;
 
         private void SendMessage_Click(object sender, RoutedEventArgs e) {
 
@@ -86,7 +86,37 @@ namespace BattlegroundsApp.Views {
 
         public void UpdateGUI(Action a) => this.Dispatcher.Invoke(a);
 
-        public void ServerConnectResponse(bool connected) => this.OnServerAcceptanceResponse?.Invoke(connected, this);
+        public void ServerConnectResponse(bool connected) {
+            this.OnServerAcceptanceResponse?.Invoke(connected, this);
+            if (!connected) {
+                this.m_hostWindow.SetView(new GameBrowserView(this.m_hostWindow));
+                MessageBox.Show("An unexpected server error occured and it was not possible to join the lobby.", "Server Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            } else {
+                this.UpdateGUI(this.CreateLobbyData);
+            }
+        }
+
+        private void CreateLobbyData() {
+            if (this.m_smh.Lobby.IsHost) {
+
+                var scenarioSource = ScenarioList.GetList().OrderBy(x => x.ToString()).ToList();
+                Map.ItemsSource = scenarioSource;
+
+                int selectedScenario = scenarioSource.FindIndex(x => x.RelativeFilename.CompareTo(BattlegroundsInstance.LastPlayedMap) == 0);
+                Map.SelectedIndex = selectedScenario != -1 ? selectedScenario : 0;
+
+
+
+
+            } else {
+
+                // lock everything
+
+                throw new NotImplementedException(); // TODO: Fetch lobby data
+
+            }
+        }
 
     }
 

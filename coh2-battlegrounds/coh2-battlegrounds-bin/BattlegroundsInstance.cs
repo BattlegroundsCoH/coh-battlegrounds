@@ -31,6 +31,10 @@ namespace Battlegrounds {
             /// </summary>
             public Dictionary<string, string> Paths { get; set; }
 
+            public string LastPlayedScenario { get; set; }
+
+            public string LastPlayedGamemode { get; set; }
+
             /// <summary>
             /// 
             /// </summary>
@@ -139,6 +143,22 @@ namespace Battlegrounds {
         public static SteamUser LocalSteamuser {
             get => __instance.User;
             set => __instance.User = value;
+        }
+
+        /// <summary>
+        /// The last played map.
+        /// </summary>
+        public static string LastPlayedMap {
+            get => __instance.LastPlayedScenario;
+            set => __instance.LastPlayedScenario = value;
+        }
+
+        /// <summary>
+        /// The last played gamemode.
+        /// </summary>
+        public static string LastPlayedGamemode {
+            get => __instance.LastPlayedGamemode;
+            set => __instance.LastPlayedGamemode = value;
         }
 
         /// <summary>
