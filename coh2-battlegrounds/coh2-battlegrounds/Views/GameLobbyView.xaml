@@ -18,6 +18,9 @@
             <RowDefinition Height="auto"/>
             <RowDefinition Height="auto"/>
             <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
@@ -30,16 +33,33 @@
             <ColumnDefinition Width="auto"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
-        
+
         <!-- Row 0 -->
-        <TextBlock Grid.Row="0" Grid.Column="0" Text="Lobby" FontSize="22"/>
 
         <!-- Row 1 -->
+        <TextBlock Grid.Row="1" Grid.Column="0" Text="Map:"/>
+
+        <ComboBox x:Name="Map" Grid.Row="1" Grid.Column="1">
+            
+        </ComboBox>
 
         <!-- Row 2 -->
+        <TextBlock Grid.Row="2" Grid.Column="0" Text="Game Size:"/>
 
-        <!-- Row 3 -->
+        <ComboBox x:Name="GameSize" Grid.Row="2" Grid.Column="1" Width="50">
+            <ComboBoxItem Content="1v1" Tag="2" IsSelected="True"/>
+            <ComboBoxItem Content="2v2" Tag="4"/>
+            <ComboBoxItem Content="3v3" Tag="6"/>
+            <ComboBoxItem Content="4v4" Tag="8"/>
+        </ComboBox>
         
+        <!-- Row 3 -->
+        <TextBlock Grid.Row="3" Grid.Column="0" Text="Gamemode:"/>
+
+        <ComboBox x:Name="Gamemode" Grid.Row="3" Grid.Column="1"> 
+            
+        </ComboBox>
+
         <!-- Row 4 -->
         <TextBox x:Name="lobbyChat" Grid.Row="4" Grid.Column="3" Height="100" Width="375" VerticalAlignment="Bottom" 
                  IsReadOnly="True" VerticalScrollBarVisibility="Visible"/>
@@ -56,7 +76,7 @@
 
         <!-- Row 6 -->
         <Button Grid.Row="6" Grid.Column="0" Content="Start Game" Margin=" 0,5,0,0" Click="StartGame_Click"/>
-        
+
         <!-- Row 7 -->
         <Button Grid.Row="7" Grid.Column="0" Content="Leave Lobby" Margin="0,5,0,0" Click="LeaveLobby_Click"/>
 
