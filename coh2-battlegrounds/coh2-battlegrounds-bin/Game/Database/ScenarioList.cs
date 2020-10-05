@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
-
+using System.Text;
 using Battlegrounds.Json;
 
 namespace Battlegrounds.Game.Database {
@@ -40,9 +41,44 @@ namespace Battlegrounds.Game.Database {
 
                 }
 
+                try {
+                    LoadWorkshopScenarios();
+                } catch (Exception e) {
+                    Trace.WriteLine(e);
+                }
+
             } catch (Exception e) {
-                Console.WriteLine(e.Message);
+                Trace.WriteLine(e);
             }
+
+        }
+
+        private static void LoadWorkshopScenarios() {
+
+            string workshopScenarioFolder = $"{Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)}\\my games\\Company of Heroes 2\\Mods\\Scenarios\\subscriptions";
+            string[] files = Directory.GetFiles(workshopScenarioFolder, "*.sga");
+
+            for (int i = 0; i < files.Length; i++) {
+                using (BinaryReader sgareader = new BinaryReader(File.OpenRead(files[i]))) {
+
+                    if (sgareader.ReadBytes(8).SequenceEqual(Encoding.ASCII.GetBytes("_ARCHIVE"))) {
+
+                        long jmp = 16 * 16;
+
+                        sgareader.BaseStream.Seek(jmp, SeekOrigin.Begin);
+
+                        byte[] nameBytes = sgareader.ReadBytes(128);
+
+                        string name = Encoding.ASCII.GetString(nameBytes);
+
+                        Scenario scen = new Scenario(); // TODO: Finish this...
+
+                    }
+
+                }
+            }
+
+            return;
 
         }
 
