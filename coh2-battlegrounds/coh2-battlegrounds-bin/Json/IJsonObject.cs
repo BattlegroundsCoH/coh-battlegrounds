@@ -71,9 +71,13 @@ namespace Battlegrounds.Json {
         /// Serialize self into a json object
         /// </summary>
         /// <returns>The json string representation of the <see cref="IJsonObject"/>.</returns>
-        public virtual string Serialize(int indent) {
+        public virtual string Serialize(int indent)
+            => SerializeObject(indent, this);
 
-            Type il_type = this.GetType();
+        public static string SerializeObject(int indent, object obj) {
+
+
+            Type il_type = obj.GetType();
             TxtBuilder jsonbuilder = new TxtBuilder();
             jsonbuilder.SetIndent(indent);
 
@@ -96,7 +100,7 @@ namespace Battlegrounds.Json {
                     pinfo.PropertyType,
                     new JsonAttributeSet(pinfo),
                     pinfo.Name,
-                    pinfo.GetValue(this),
+                    pinfo.GetValue(obj),
                     pinfo != properties.Last() || fields.Count() > 0
                     );
             }
@@ -107,7 +111,7 @@ namespace Battlegrounds.Json {
                     finfo.FieldType,
                     new JsonAttributeSet(finfo),
                     finfo.Name,
-                    finfo.GetValue(this),
+                    finfo.GetValue(obj),
                     finfo != fields.Last()
                     );
             }
@@ -122,6 +126,7 @@ namespace Battlegrounds.Json {
             jsonbuilder.AppendLine("}");
 
             return jsonbuilder.GetContent();
+
 
         }
 
