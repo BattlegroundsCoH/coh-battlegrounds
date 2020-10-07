@@ -145,11 +145,12 @@ namespace BattlegroundsApp.Views {
         }
 
         private void Map_SelectionChanged(object sender, SelectionChangedEventArgs e) {
-            if (Gamemode.SelectedItem is Scenario scenario) {
-                if (scenario.MaxPlayers < int.Parse(this.m_smh.AppLobby._lobbyPlayers)) {
+            if (Map.SelectedItem is Scenario scenario) {
+                if (scenario.MaxPlayers < this.m_smh.AppLobby._lobbyPlayers) {
                     // TODO: Do something
                 }
                 this.UpdateAvailableGamemodes();
+                this.m_teamManagement.SetMaxPlayers(scenario.MaxPlayers);
             }
         }
 

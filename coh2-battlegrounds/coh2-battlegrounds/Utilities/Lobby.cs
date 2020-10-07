@@ -83,7 +83,7 @@ namespace BattlegroundsApp {
 
         public string _lobbyName { get; set; }
         
-        public string _lobbyPlayers { get; set; }
+        public int _lobbyPlayers { get; set; }
         
         public bool _lobbyPasswordProtected { get; set; }
         
@@ -105,7 +105,7 @@ namespace BattlegroundsApp {
             this._lobbyName = baseLobby.lobby_name;
             this._lobbyGuid = baseLobby.lobby_guid;
             this._lobbyPasswordProtected = baseLobby.lobby_passwordProtected;
-            this._lobbyPlayers = baseLobby.lobby_players.Count.ToString();
+            this._lobbyPlayers = baseLobby.lobby_players.Count;
             this.m_lobbySelectedMapFilename = baseLobby.lobby_map;
             this.m_lobbyTeams = new Dictionary<LobbyTeam.TeamType, LobbyTeam>() {
                 [LobbyTeam.TeamType.Undefined] = new LobbyTeam(),
