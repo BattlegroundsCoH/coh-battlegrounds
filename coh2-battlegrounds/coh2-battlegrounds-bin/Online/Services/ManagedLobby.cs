@@ -207,7 +207,10 @@ namespace Battlegrounds.Online.Services {
         /// <param name="lobbyInformationValue">The new value to set.</param>
         public void SetLobbyInformation(string lobbyInformation, object lobbyInformationValue) {
             if (m_isHost) {
-                if (m_underlyingConnection != null && m_underlyingConnection.IsConnected) {
+                if (lobbyInformationValue is null) {
+                    lobbyInformationValue = string.Empty;
+                }
+                if (m_underlyingConnection is not null && m_underlyingConnection.IsConnected) {
                     m_underlyingConnection.SendMessage(new Message(Message_Type.LOBBY_UPDATE, lobbyInformation, lobbyInformationValue.ToString()));
                 }
             }

@@ -28,7 +28,7 @@ namespace Battlegrounds.Online {
         /// <summary>
         /// Flag for connection state.
         /// </summary>
-        public bool IsConnected => m_socket.Connected;
+        public bool IsConnected => m_socket?.Connected ?? false;
 
         /// <summary>
         /// The event to trigger when a <see cref="Message"/> has been received.

@@ -49,6 +49,8 @@ namespace Battlegrounds.Game.Gameplay {
 
         #region Static Region
 
+        public static implicit operator string(Faction fac) => fac.Name;
+
         private static Faction base_soviet;
         private static Faction base_wehrmacht;
 

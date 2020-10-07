@@ -17,15 +17,20 @@ namespace BattlegroundsApp {
 
     public class ServerMessageHandler {
 
-        private ManagedLobby m_LobbyInstance; // Oughta rename this to m_lobbyInstance.... my bad :D
+        private Lobby m_appLobbyInstance;
+        private ManagedLobby m_lobbyInstance; // Oughta rename this to m_lobbyInstance.... my bad :D
         private GameLobbyView m_lobbyWindow; // I have no idea where the lobby logic is; The actual lobby
 
-        public ManagedLobby Lobby => this.m_LobbyInstance;
+        public ManagedLobby Lobby => this.m_lobbyInstance;
+
+        public Lobby AppLobby => this.m_appLobbyInstance;
 
         // only thing that semiworks in the lobby now is the chat; And that will also have to be moved to the VM right now it is in the View
         public ServerMessageHandler(GameLobbyView lobbyObject) {
             this.m_lobbyWindow = lobbyObject;
         }
+
+        public void SetLobby(Lobby lobby) => this.m_appLobbyInstance = lobby;
 
         private void OnPlayerEvent(ManagedLobbyPlayerEventType type, string from, string message) {
             Trace.WriteLine($"[ManagedLobbyPlayerEventType.{type}] {from}: \"{message}\"");
@@ -33,15 +38,12 @@ namespace BattlegroundsApp {
                 switch (type) {
                     case ManagedLobbyPlayerEventType.Join:
                         m_lobbyWindow.lobbyChat.Text += $"[Lobby] {from} has joined.\n";
-                        m_lobbyWindow.AddPlayer(from);
                         break;
                     case ManagedLobbyPlayerEventType.Leave:
                         m_lobbyWindow.lobbyChat.Text += $"[Lobby] {from} has left.\n";
-                        m_lobbyWindow.RemovePlayer(from);
                         break;
                     case ManagedLobbyPlayerEventType.Kicked:
                         m_lobbyWindow.lobbyChat.Text += $"[Lobby] {from} has been kicked.\n";
-                        m_lobbyWindow.RemovePlayer(from);
                         break;
                     case ManagedLobbyPlayerEventType.Message:
                         m_lobbyWindow.lobbyChat.Text += $"{from}: {message}\n";
@@ -62,16 +64,7 @@ namespace BattlegroundsApp {
             if (type.CompareTo("CompanyData") == 0) {
                 return Company.ReadCompanyFromFile("test_company.json");
             } else if (type.CompareTo("MatchInfo") == 0) {
-                return new SessionInfo() { // should probably be redirected to Mainwindow and let it set up this (when considering players and settings)
-                    SelectedGamemode = WinconditionList.GetWinconditionByName("Victory Points"),
-                    SelectedGamemodeOption = 1,
-                    SelectedScenario = ScenarioList.FromFilename("2p_angoville_farms"),
-                    SelectedTuningMod = new BattlegroundsTuning(),
-                    Allies = new SessionParticipant[] { new SessionParticipant(SteamUser.FromID(76561198003529969UL), null, 0, 0) }, // We'll have to solve participant setup later
-                    Axis = new SessionParticipant[] { new SessionParticipant(SteamUser.FromID(76561198157626935UL), null, 0, 0) },
-                    FillAI = false,
-                    DefaultDifficulty = AIDifficulty.AI_Hard,
-                };
+                return this.m_lobbyWindow.CreateSessionInfo();
             } else {
                 return null;
             }
@@ -150,13 +143,17 @@ namespace BattlegroundsApp {
         public void OnServerResponse(ManagedLobbyStatus status, ManagedLobby result) {
             if (status.Success) {
 
-                this.m_LobbyInstance = result;
+                this.m_lobbyInstance = result;
 
-                this.m_LobbyInstance.OnPlayerEvent += OnPlayerEvent;
-                this.m_LobbyInstance.OnLocalEvent += OnLocalEvent;
-                this.m_LobbyInstance.OnLocalDataRequested += OnLocalDataRequest;
-                this.m_LobbyInstance.OnDataRequest += OnDataRequest;
-                this.m_LobbyInstance.OnStartMatchReceived += StartMatchCommandReceived;
+                this.m_lobbyInstance.OnPlayerEvent += OnPlayerEvent;
+                this.m_lobbyInstance.OnLocalEvent += OnLocalEvent;
+                this.m_lobbyInstance.OnLocalDataRequested += OnLocalDataRequest;
+                this.m_lobbyInstance.OnDataRequest += OnDataRequest;
+                this.m_lobbyInstance.OnStartMatchReceived += StartMatchCommandReceived;
+
+                if (result.IsHost) {
+                    this.m_appLobbyInstance = new Lobby(result.LobbyFileID);
+                }
 
                 this.m_lobbyWindow.ServerConnectResponse(true);
 
@@ -169,8 +166,8 @@ namespace BattlegroundsApp {
         }
 
         public void LeaveLobby() {
-            if (this.m_LobbyInstance != null) {
-                this.m_LobbyInstance.Leave(); // Async... will need a callback for this when done.
+            if (this.m_lobbyInstance != null) {
+                this.m_lobbyInstance.Leave(); // Async... will need a callback for this when done.
             }
         }
 

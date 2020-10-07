@@ -77,11 +77,12 @@ namespace BattlegroundsApp.Views {
                 GameLobbyView vw = new GameLobbyView(m_hostWindow);
                 vw.OnServerAcceptanceResponse += this.OnServerConnectResponse;
                 ServerMessageHandler smh = new ServerMessageHandler(vw);
+                smh.SetLobby(lobby);
                 vw.SetSMH(smh);
 
                 string lobbyToJoin = lobby._lobbyGuid;
 
-                ManagedLobby.Join(this.m_hub, lobbyToJoin, String.Empty, smh.OnServerResponse);
+                ManagedLobby.Join(this.m_hub, lobbyToJoin, string.Empty, smh.OnServerResponse);
 
             }
 

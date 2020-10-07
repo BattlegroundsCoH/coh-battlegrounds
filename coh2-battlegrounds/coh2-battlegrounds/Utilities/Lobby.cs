@@ -4,7 +4,9 @@ using System.Diagnostics;
 using System.Linq;
 using Battlegrounds.Functional;
 using Battlegrounds.Game.Database;
+using Battlegrounds.Game.Gameplay;
 using Battlegrounds.Online.Services;
+using Battlegrounds.Steam;
 using BattlegroundsApp.Utilities;
 
 namespace BattlegroundsApp {
@@ -72,6 +74,7 @@ namespace BattlegroundsApp {
             public static bool operator !=(LobbyPlayer a, LobbyPlayer b) => !(a == b);
 
         }
+
 #pragma warning restore CS0660 // Type defines operator == or operator != but does not override Object.Equals(object o)
 #pragma warning restore CS0661 // Type defines operator == or operator != but does not override Object.GetHashCode()
 
@@ -122,6 +125,17 @@ namespace BattlegroundsApp {
             }
         }
 
+        public Lobby(string guid) {
+            this._lobbyName = string.Empty;
+            this._lobbyGuid = guid;
+            this.m_lobbyTeams = new Dictionary<LobbyTeam.TeamType, LobbyTeam>() {
+                [LobbyTeam.TeamType.Undefined] = new LobbyTeam(),
+                [LobbyTeam.TeamType.Spectator] = new LobbyTeam(),
+                [LobbyTeam.TeamType.Allies] = new LobbyTeam(),
+                [LobbyTeam.TeamType.Axis] = new LobbyTeam(),
+            };
+        }
+
         /// <summary>
         /// 
         /// </summary>
@@ -135,6 +149,13 @@ namespace BattlegroundsApp {
             }
             return LobbyTeam.TeamType.Undefined;
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        public LobbyTeam GetTeam(LobbyTeam.TeamType type) => this.m_lobbyTeams[type];
 
         /// <summary>
         /// Move the local player to a new team.
@@ -193,20 +214,23 @@ namespace BattlegroundsApp {
             }
         }
 
+        public void CreateHost(SteamUser localSteamuser)
+            => this.m_lobbyTeams[LobbyTeam.TeamType.Allies].Players.Add(new LobbyPlayer(0, localSteamuser.ID, localSteamuser.Name, Faction.Soviet, string.Empty));
+
         /// <summary>
         /// Update lobby such that the local data is updated to reflect the server lobby data or the local data is "uploaded" to the server lobby data.
         /// </summary>
         /// <param name="smh">The <see cref="ServerMessageHandler"/> that handles messages to and from the server.</param>
-        public void UpdateLobby(ServerMessageHandler smh) {
-            this.FetchLobbyInfo(smh); // will only fire if not host
-            this.UpdateLobbyInfo(smh); // will only fire if host
+        public void UpdateLobby(ServerMessageHandler smh, Action<Lobby> onDone) {
+            this.FetchLobbyInfo(smh, onDone); // will only fire if not host
+            this.UpdateLobbyInfo(smh, onDone); // will only fire if host
         }
 
         /*
          ** Just making the note now : There's a high chance we're going to have some sync problems.
          */
 
-        private async void FetchLobbyInfo(ServerMessageHandler smh) {
+        private async void FetchLobbyInfo(ServerMessageHandler smh, Action<Lobby> onDone) {
             if (!smh.Lobby.IsHost) {
                 Trace.WriteLine("Updating lobby information....");
                 smh.Lobby.GetSelectedMap(false, x => this.m_lobbySelectedMapFilename = x);
@@ -220,10 +244,11 @@ namespace BattlegroundsApp {
                     (int teamIndex, string faction, string company) = await smh.Lobby.GetPlayerdata(i);
                     this.m_lobbyTeams[(LobbyTeam.TeamType)teamIndex].Players.Add(new LobbyPlayer(i, steamIndicies[i], steamNames[i], faction, company));
                 }
+                onDone.Invoke(this);
             }
         }
 
-        private void UpdateLobbyInfo(ServerMessageHandler smh) {
+        private void UpdateLobbyInfo(ServerMessageHandler smh, Action<Lobby> onDone) {
             if (smh.Lobby.IsHost) {
                 Trace.WriteLine("Updating lobby information...");
                 smh.Lobby.SetLobbyInformation("selected_map", this.m_lobbySelectedMapFilename);
@@ -237,6 +262,7 @@ namespace BattlegroundsApp {
                         smh.Lobby.SetLobbyInformation($"com{this.m_lobbyTeams[t].Players[j].LobbyIndex}", this.m_lobbyTeams[t].Players[j].CompanyName);
                     }
                 }
+                onDone.Invoke(this);
             }
         }
 
