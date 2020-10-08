@@ -17,6 +17,7 @@ using Battlegrounds;
 using Battlegrounds.Game;
 using Battlegrounds.Game.Battlegrounds;
 using Battlegrounds.Game.Database;
+using Battlegrounds.Game.Gameplay;
 using Battlegrounds.Steam;
 using BattlegroundsApp.Models;
 
@@ -136,8 +137,9 @@ namespace BattlegroundsApp.Views {
                     Gamemode.ItemsSource = scenario.Gamemodes;
                     Gamemode.SelectedIndex = 0;
                 } else {
-                    Gamemode.ItemsSource = WinconditionList.GetDefaultList().OrderBy(x => x.ToString()).ToList();
-                    Gamemode.SelectedIndex = 0;
+                    var def = WinconditionList.GetDefaultList().OrderBy(x => x.ToString()).ToList();
+                    Gamemode.ItemsSource = def;
+                    Gamemode.SelectedIndex = def.FindIndex(x => x.Name.CompareTo("Victory Points") == 0);
                 }
 
             }
@@ -151,18 +153,32 @@ namespace BattlegroundsApp.Views {
                 }
                 this.UpdateAvailableGamemodes();
                 this.m_teamManagement.SetMaxPlayers(scenario.MaxPlayers);
+                this.m_smh.AppLobby.SetMap(this.m_smh, scenario);
             }
         }
 
         public SessionInfo CreateSessionInfo() {
 
+            Wincondition selectedWincondition = WinconditionList.GetWinconditionByName(Gamemode.SelectedItem as string);
+            if (selectedWincondition is null) {
+                // TODO: Handle
+            }
+
+            Scenario selectedScenario = Map.SelectedItem as Scenario;
+            if (selectedScenario is null) {
+                // TODO: Handle
+            }
+
+            List<SessionParticipant> alliedTeam = this.m_teamManagement.GetParticipants(Lobby.LobbyTeam.TeamType.Allies);
+            List<SessionParticipant> axisTeam = this.m_teamManagement.GetParticipants(Lobby.LobbyTeam.TeamType.Axis);
+
             SessionInfo sinfo = new SessionInfo() {
-                SelectedGamemode = WinconditionList.GetWinconditionByName("Victory Points"),
+                SelectedGamemode = selectedWincondition,
                 SelectedGamemodeOption = 1,
-                SelectedScenario = ScenarioList.FromFilename("2p_angoville_farms"),
+                SelectedScenario = selectedScenario,
                 SelectedTuningMod = new BattlegroundsTuning(),
-                Allies = new SessionParticipant[] { new SessionParticipant(SteamUser.FromID(76561198003529969UL), null, 0, 0) }, // We'll have to solve participant setup later
-                Axis = new SessionParticipant[] { new SessionParticipant(SteamUser.FromID(76561198157626935UL), null, 0, 0) },
+                Allies = alliedTeam.ToArray(),
+                Axis = axisTeam.ToArray(),
                 FillAI = false,
                 DefaultDifficulty = AIDifficulty.AI_Hard,
             };
@@ -174,13 +190,13 @@ namespace BattlegroundsApp.Views {
         private async void UpdateLobby() {
             while (true && this is not null) {
                 this.m_smh.AppLobby.UpdateLobby(this.m_smh, this.UpdateLobbyVisuals);
-                await Task.Delay(750);
+                await Task.Delay(1500);
             }
         }
 
         private void UpdateLobbyVisuals(Lobby lobby) {
             this.UpdateGUI(() => {
-                this.m_teamManagement.UpdateTeamview(lobby);
+                this.m_teamManagement.UpdateTeamview(lobby, this.m_smh.Lobby.IsHost);
             });
         }
 

@@ -97,7 +97,8 @@ namespace Battlegrounds.Game.Database {
 
         public static List<Wincondition> GetDefaultList() {
             return new List<Wincondition> {
-                GetWinconditionByName(Attrition)
+                GetWinconditionByName(Attrition),
+                GetWinconditionByName(VictoryPoints),
             };
         }
 

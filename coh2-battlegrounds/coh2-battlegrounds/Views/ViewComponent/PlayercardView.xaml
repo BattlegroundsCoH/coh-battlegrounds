@@ -6,18 +6,23 @@
              xmlns:local="clr-namespace:BattlegroundsApp.Views.ViewComponent"
              mc:Ignorable="d" 
              d:DesignHeight="64" d:DesignWidth="200">
-    <StackPanel>
-        <StackPanel Orientation="Horizontal">
-            <Image Name="PlayerArmyIcon" Margin="2.25, 2.25, 2.25, 2.25" Width="24" MouseLeftButtonDown="PlayerArmyIcon_MouseLeftButtonDown"/>
-            <Label Name="PlayerName" Margin="5.75,1,1,1">CoDiEx</Label>
-        </StackPanel>
-        <StackPanel>
-            <DockPanel Name="IsSelfPanel" LastChildFill="False">
-                <ComboBox Name="SelfCompanySelector" Width="180" DockPanel.Dock="Right"/>
-            </DockPanel>
-            <StackPanel Name="IsNotSelfPanel" Orientation="Horizontal">
-                <!-- Calculated data here -->
+    <DockPanel LastChildFill="False">
+        <DockPanel Name="OpenDockState" Visibility="Collapsed" Width="200">
+            <Button Margin="5" Height="28" Width="90" Name="NewAIPlayerButton" Click="NewAIPlayerButton_Click">Add AI Player</Button>
+        </DockPanel>
+        <StackPanel Name="OccupiedStackState" Width="200">
+            <StackPanel Orientation="Horizontal">
+                <Image Name="PlayerArmyIcon" Margin="2.25, 2.25, 2.25, 2.25" Width="24" MouseLeftButtonDown="PlayerArmyIcon_MouseLeftButtonDown"/>
+                <Label Name="PlayerName" Margin="5.75,1,1,1">Player Connecting...</Label>
+            </StackPanel>
+            <StackPanel>
+                <DockPanel Name="IsSelfPanel" LastChildFill="False">
+                    <ComboBox Name="SelfCompanySelector" Width="166" DockPanel.Dock="Right"/>
+                </DockPanel>
+                <StackPanel Name="IsNotSelfPanel" Orientation="Horizontal">
+                    <!-- Calculated data here -->
+                </StackPanel>
             </StackPanel>
         </StackPanel>
-    </StackPanel>
+    </DockPanel>    
 </UserControl>

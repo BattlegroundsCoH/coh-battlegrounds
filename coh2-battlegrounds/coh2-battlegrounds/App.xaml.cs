@@ -1,15 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Data;
-using System.Diagnostics;
-using System.Linq;
-using System.Threading.Tasks;
 using System.Windows;
 
 using Battlegrounds;
 using Battlegrounds.Game.Database;
 using Battlegrounds.Steam;
+using BattlegroundsApp.LocalData;
 
 namespace BattlegroundsApp {
     
@@ -25,14 +20,34 @@ namespace BattlegroundsApp {
             BattlegroundsInstance.LocalSteamuser = SteamUser.FromLocalInstall(); // TODO: Properly read the steam user (with permission and all that)
 
             // Load databases (async)
-            DatabaseManager.LoadAllDatabases(null); // Important this is done (TODO: Add a callback handler)
+            DatabaseManager.LoadAllDatabases(OnDatabasesLoaded); // Important this is done (TODO: Add a callback handler)
 
             MainWindow = new MainWindow();
             MainWindow.Show();
+            MainWindow.Closed += this.MainWindow_Closed;
 
         }
 
-        // TODO: OnAppClose event (To save the instance)
+        private void MainWindow_Closed(object sender, EventArgs e) {
+
+            // Save all changes
+            BattlegroundsInstance.SaveInstance();
+
+            // Exit
+            Environment.Exit(0);
+
+        }
+
+        private void OnDatabasesLoaded(int loaded, int failed) {
+
+            if (failed > 0) {
+                // TODO: handle
+            }
+
+            // Load all companies used by the player
+            PlayerCompanies.LoadAll();
+
+        }
 
     }
 

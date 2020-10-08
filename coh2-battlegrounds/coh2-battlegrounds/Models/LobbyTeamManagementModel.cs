@@ -5,7 +5,11 @@ using System.Diagnostics.Contracts;
 using System.Text;
 using System.Windows.Controls;
 using Battlegrounds;
+using Battlegrounds.Game;
 using BattlegroundsApp.Views.ViewComponent;
+using Battlegrounds.Game.Battlegrounds;
+using BattlegroundsApp.LocalData;
+using Battlegrounds.Game.Gameplay;
 
 namespace BattlegroundsApp.Models {
     
@@ -47,7 +51,7 @@ namespace BattlegroundsApp.Models {
             }
         }
 
-        public void UpdateTeamview(Lobby lobby) {
+        public void UpdateTeamview(Lobby lobby, bool isHost) {
 
             foreach (var pair in this.m_teamSetup) {
 
@@ -56,7 +60,7 @@ namespace BattlegroundsApp.Models {
                 for (int i = 0; i < 4; i++) {
                     if (i < team.Players.Count) {
                         var player = team.Players[i];
-                        pair.Value[i].SetPlayerdata(player.Name, player.Faction, player.SteamID == BattlegroundsInstance.LocalSteamuser.ID);
+                        pair.Value[i].SetPlayerdata(player.SteamID, player.Name, player.Faction, player.SteamID == BattlegroundsInstance.LocalSteamuser.ID, player.SteamID == 0, isHost);
                     } else {
                         pair.Value[i].SetCardState(i < this.m_maxPlayerCount / 2 ? PlayercardViewstate.Open : PlayercardViewstate.Locked);
                     }
@@ -65,6 +69,35 @@ namespace BattlegroundsApp.Models {
             }
 
             return;
+
+        }
+
+        public List<SessionParticipant> GetParticipants(Lobby.LobbyTeam.TeamType team) {
+
+            List<SessionParticipant> participants = new List<SessionParticipant>();
+
+            byte i = 0;
+            foreach (var player in this.m_teamSetup[team]) {
+                if (player.IsOccupied) {
+                    if (player.IsAI) {
+                        participants.Add(new SessionParticipant(
+                            AIDifficulty.AI_Hard, 
+                            null, 
+                            (team == Lobby.LobbyTeam.TeamType.Allies) ? SessionParticipantTeam.TEAM_ALLIES : SessionParticipantTeam.TEAM_AXIS, 
+                            i));
+                    } else {
+                        participants.Add(new SessionParticipant(
+                            player.Playername,
+                            player.Playerid,
+                            (player.Playerid == BattlegroundsInstance.LocalSteamuser.ID) ? PlayerCompanies.FromNameAndFaction(player.Playercompany, Faction.FromName(player.Playerarmy)) : null,
+                            (team == Lobby.LobbyTeam.TeamType.Allies) ? SessionParticipantTeam.TEAM_ALLIES : SessionParticipantTeam.TEAM_AXIS,
+                            i));
+                    }
+                    i++;
+                }
+            }
+
+            return participants;
 
         }
 

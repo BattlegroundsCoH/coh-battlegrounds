@@ -136,6 +136,13 @@ namespace BattlegroundsApp {
             };
         }
 
+        public void SetMap(ServerMessageHandler smh, Scenario scenario) { 
+            if (smh.Lobby.IsHost) {
+                this.m_lobbySelectedMapFilename = scenario.RelativeFilename;
+                smh.Lobby.SetLobbyInformation("selected_map", this.m_lobbySelectedMapFilename);
+            }
+        }
+
         /// <summary>
         /// 
         /// </summary>
@@ -248,7 +255,7 @@ namespace BattlegroundsApp {
             }
         }
 
-        private void UpdateLobbyInfo(ServerMessageHandler smh, Action<Lobby> onDone) {
+        private void UpdateLobbyInfo(ServerMessageHandler smh, Action<Lobby> onDone) { // TODO: Update only if there's been a change...
             if (smh.Lobby.IsHost) {
                 Trace.WriteLine("Updating lobby information...");
                 smh.Lobby.SetLobbyInformation("selected_map", this.m_lobbySelectedMapFilename);
