@@ -20,6 +20,7 @@ using Battlegrounds.Game.Database;
 using Battlegrounds.Game.Gameplay;
 using Battlegrounds.Steam;
 using BattlegroundsApp.Models;
+using BattlegroundsApp.Views.ViewComponent;
 
 namespace BattlegroundsApp.Views {
     /// <summary>
@@ -43,6 +44,7 @@ namespace BattlegroundsApp.Views {
             InitializeComponent();
 
             this.m_teamManagement = new LobbyTeamManagementModel(this.TeamGridview);
+            this.m_teamManagement.OnTeamEvent += this.OnTeamManagementCallbackHandler;
 
         }
 
@@ -198,6 +200,24 @@ namespace BattlegroundsApp.Views {
             this.UpdateGUI(() => {
                 this.m_teamManagement.UpdateTeamview(lobby, this.m_smh.Lobby.IsHost);
             });
+        }
+
+        private void OnTeamManagementCallbackHandler(Lobby.LobbyTeam.TeamType team, PlayercardView card, int teamPos, string reason) {
+
+            switch (reason) {
+                case "AddAI":
+                    this.m_smh.AppLobby.AddAI(team, card.Difficulty, teamPos, card.Playerarmy);
+                    break;
+                case "ChangeArmy":
+
+                    break;
+                case "ChangedCompany":
+
+                    break;
+                default:
+                    break;
+            }
+
         }
 
     }

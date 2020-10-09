@@ -1,23 +1,26 @@
 ﻿using System;
-using System.Windows;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
-using System.Text;
+using System.Windows;
 using System.Windows.Controls;
 using Battlegrounds;
 using Battlegrounds.Game;
-using BattlegroundsApp.Views.ViewComponent;
 using Battlegrounds.Game.Battlegrounds;
-using BattlegroundsApp.LocalData;
 using Battlegrounds.Game.Gameplay;
+using BattlegroundsApp.LocalData;
+using BattlegroundsApp.Views.ViewComponent;
 
 namespace BattlegroundsApp.Models {
-    
+
     public class LobbyTeamManagementModel {
+
+        public const int MAX_TEAM = 4;
 
         private Grid m_teamGrid;
         private int m_maxPlayerCount;
         private Dictionary<Lobby.LobbyTeam.TeamType, List<PlayercardView>> m_teamSetup;
+
+        public event Action<Lobby.LobbyTeam.TeamType, PlayercardView, int, string> OnTeamEvent;
 
         public LobbyTeamManagementModel(Grid teamGrid) {
             this.m_teamGrid = teamGrid;
@@ -25,19 +28,23 @@ namespace BattlegroundsApp.Models {
                 [Lobby.LobbyTeam.TeamType.Allies] = new List<PlayercardView>(),
                 [Lobby.LobbyTeam.TeamType.Axis] = new List<PlayercardView>(),
             };
-            for (int i = 0; i < 4; i++) {
-                PlayercardView alliesView = new PlayercardView();
-                alliesView.SetValue(Grid.ColumnProperty, 0);
-                alliesView.SetValue(Grid.RowProperty, i);
-                PlayercardView axisView = new PlayercardView();
-                axisView.SetValue(Grid.ColumnProperty, 1);
-                axisView.SetValue(Grid.RowProperty, i);
-                this.m_teamSetup[Lobby.LobbyTeam.TeamType.Allies].Add(alliesView);
-                this.m_teamSetup[Lobby.LobbyTeam.TeamType.Axis].Add(axisView);
-                this.m_teamGrid.Children.Add(alliesView);
-                this.m_teamGrid.Children.Add(axisView);
+            for (int i = 0; i < MAX_TEAM; i++) {
+                this.CreatePlayercard(i, Lobby.LobbyTeam.TeamType.Allies);
+                this.CreatePlayercard(i, Lobby.LobbyTeam.TeamType.Axis);
             }
             this.SetMaxPlayers(2);
+        }
+
+        private void CreatePlayercard(int row, Lobby.LobbyTeam.TeamType type) {
+            Contract.Requires(row > 0);
+            Contract.Requires(row <= MAX_TEAM);
+            Contract.Requires(type == Lobby.LobbyTeam.TeamType.Allies || type == Lobby.LobbyTeam.TeamType.Axis);
+            PlayercardView view = new PlayercardView();
+            view.SetValue(Grid.ColumnProperty, type == Lobby.LobbyTeam.TeamType.Allies ? 0 : 1);
+            view.SetValue(Grid.RowProperty, row);
+            view.OnPlayercardEvent += this.OnCardActionHandler;
+            this.m_teamSetup[type].Add(view);
+            this.m_teamGrid.Children.Add(view);
         }
 
         public void SetMaxPlayers(int count) {
@@ -45,7 +52,7 @@ namespace BattlegroundsApp.Models {
             Contract.Requires(count <= 8);
             Contract.Requires(count % 2 == 0);
             this.m_maxPlayerCount = count;
-            for (int i = 0; i < 4; i++) {
+            for (int i = 0; i < MAX_TEAM; i++) {
                 this.m_teamSetup[Lobby.LobbyTeam.TeamType.Allies][i].Visibility = i < (count / 2) ? Visibility.Visible : Visibility.Collapsed;
                 this.m_teamSetup[Lobby.LobbyTeam.TeamType.Axis][i].Visibility = i < (count / 2) ? Visibility.Visible : Visibility.Collapsed;
             }
@@ -57,7 +64,7 @@ namespace BattlegroundsApp.Models {
 
                 var team = lobby.GetTeam(pair.Key);
 
-                for (int i = 0; i < 4; i++) {
+                for (int i = 0; i < MAX_TEAM; i++) {
                     if (i < team.Players.Count) {
                         var player = team.Players[i];
                         pair.Value[i].SetPlayerdata(player.SteamID, player.Name, player.Faction, player.SteamID == BattlegroundsInstance.LocalSteamuser.ID, player.SteamID == 0, isHost);
@@ -98,6 +105,30 @@ namespace BattlegroundsApp.Models {
             }
 
             return participants;
+
+        }
+
+        private void OnCardActionHandler(PlayercardView sender, string reason) { 
+        
+            switch (reason) {
+                case "AddAI":
+                    if (this.m_teamSetup[Lobby.LobbyTeam.TeamType.Allies].Contains(sender)) {
+                        sender.SetAIData(AIDifficulty.AI_Hard, "soviet");
+                        OnTeamEvent?.Invoke(Lobby.LobbyTeam.TeamType.Allies, sender, this.m_teamSetup[Lobby.LobbyTeam.TeamType.Allies].IndexOf(sender), reason);
+                    } else {
+                        sender.SetAIData(AIDifficulty.AI_Hard, "german");
+                        OnTeamEvent?.Invoke(Lobby.LobbyTeam.TeamType.Allies, sender, this.m_teamSetup[Lobby.LobbyTeam.TeamType.Allies].IndexOf(sender), reason);
+                    }
+                    break;
+                case "ChangeArmy":
+
+                    break;
+                case "ChangedCompany":
+
+                    break;
+                default:
+                    break;
+            }
 
         }
 

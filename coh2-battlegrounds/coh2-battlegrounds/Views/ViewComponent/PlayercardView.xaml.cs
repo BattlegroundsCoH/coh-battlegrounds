@@ -11,7 +11,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using Battlegrounds.Game.Battlegrounds;
+using Battlegrounds.Game;
 using BattlegroundsApp.LocalData;
 
 namespace BattlegroundsApp.Views.ViewComponent {
@@ -36,6 +36,7 @@ namespace BattlegroundsApp.Views.ViewComponent {
         };
 
         private PlayercardViewstate m_state;
+        private AIDifficulty m_diff;
         private ulong m_steamID;
         private string m_army;
         private bool m_isAIPlayer;
@@ -52,6 +53,10 @@ namespace BattlegroundsApp.Views.ViewComponent {
 
         public ulong Playerid => this.m_steamID;
 
+        public AIDifficulty Difficulty => this.m_diff;
+
+        public event Action<PlayercardView, string> OnPlayercardEvent;
+
         public PlayercardView() {
             InitializeComponent();
             this.m_state = PlayercardViewstate.Locked;
@@ -62,6 +67,7 @@ namespace BattlegroundsApp.Views.ViewComponent {
             this.m_steamID = id;
             this.m_army = army;
             this.m_isAIPlayer = isAIPlayer;
+            this.m_diff = AIDifficulty.Human;
             if (!string.IsNullOrEmpty(name)) {
                 this.PlayerName.Content = name;
                 if (armyIconPaths.ContainsKey(army)) {
@@ -77,6 +83,11 @@ namespace BattlegroundsApp.Views.ViewComponent {
                 }
                 this.SetCardState(PlayercardViewstate.Occupied);
             }
+        }
+
+        public void SetAIData(AIDifficulty difficulty, string army) {
+            this.SetPlayerdata(0, m_diff.GetIngameDisplayName(), army, false, true, false);
+            this.m_diff = difficulty;
         }
 
         public void SetCardState(PlayercardViewstate viewstate) {
@@ -97,13 +108,9 @@ namespace BattlegroundsApp.Views.ViewComponent {
             }
         }
 
-        private void PlayerArmyIcon_MouseLeftButtonDown(object sender, MouseButtonEventArgs e) {
+        private void PlayerArmyIcon_MouseLeftButtonDown(object sender, MouseButtonEventArgs e) => this.OnPlayercardEvent?.Invoke(this, "ChangeArmy");
 
-        }
-
-        private void NewAIPlayerButton_Click(object sender, RoutedEventArgs e) {
-
-        }
+        private void NewAIPlayerButton_Click(object sender, RoutedEventArgs e) => this.OnPlayercardEvent?.Invoke(this, "AddAI");
 
         private void LoadSelfPlayerCompanies(string army, bool allowAutogen) {
 
@@ -117,6 +124,8 @@ namespace BattlegroundsApp.Views.ViewComponent {
 
         }
 
+        private void SelfCompanySelector_SelectionChanged(object sender, SelectionChangedEventArgs e) => this.OnPlayercardEvent?.Invoke(this, "ChangedCompany");
+    
     }
 
 }

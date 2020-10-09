@@ -17,7 +17,7 @@
             </StackPanel>
             <StackPanel>
                 <DockPanel Name="IsSelfPanel" LastChildFill="False">
-                    <ComboBox Name="SelfCompanySelector" Width="166" DockPanel.Dock="Right"/>
+                    <ComboBox Name="SelfCompanySelector" Width="166" DockPanel.Dock="Right" SelectionChanged="SelfCompanySelector_SelectionChanged"/>
                 </DockPanel>
                 <StackPanel Name="IsNotSelfPanel" Orientation="Horizontal">
                     <!-- Calculated data here -->

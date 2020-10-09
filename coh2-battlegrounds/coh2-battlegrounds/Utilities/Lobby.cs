@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using Battlegrounds.Functional;
+using Battlegrounds.Game;
 using Battlegrounds.Game.Database;
 using Battlegrounds.Game.Gameplay;
 using Battlegrounds.Online.Services;
@@ -56,17 +57,20 @@ namespace BattlegroundsApp {
 
             public int LobbyIndex { get; }
 
+            public AIDifficulty Difficulty { get; set; }
+
             public LobbyPlayer(int lobID, ulong id, string name, string faction, string company) {
                 this.LobbyIndex = lobID;
                 this.SteamID = id;
                 this.Name = name;
                 this.CompanyName = company;
                 this.Faction = faction;
+                this.Difficulty = AIDifficulty.Human;
             }
 
             public static bool operator==(LobbyPlayer a, LobbyPlayer b) {
                 if (a is LobbyPlayer c && b is LobbyPlayer d) {
-                    return c.SteamID == d.SteamID;
+                    return c.SteamID == d.SteamID && c.Difficulty == AIDifficulty.Human && d.Difficulty == c.Difficulty;
                 } else {
                     return false;
                 }
@@ -187,6 +191,13 @@ namespace BattlegroundsApp {
             }
         }
 
+        public void AddAI(LobbyTeam.TeamType team, AIDifficulty difficulty, int lobbyID, string army) {
+            LobbyPlayer player = new LobbyPlayer(lobbyID, 0, difficulty.GetIngameDisplayName(), army, string.Empty) {
+                Difficulty = difficulty
+            };
+            this.m_lobbyTeams[team].Players.Add(player);
+        }
+
         /// <summary>
         /// 
         /// </summary>
@@ -264,9 +275,13 @@ namespace BattlegroundsApp {
                 for (int i = (int)LobbyTeam.TeamType.Undefined; i < (int)LobbyTeam.TeamType.Axis; i++) {
                     LobbyTeam.TeamType t = (LobbyTeam.TeamType)i;
                     for (int j = 0; j < this.m_lobbyTeams[t].Players.Count; j++) {
+                        if (this.m_lobbyTeams[t].Players[j].Difficulty != AIDifficulty.Human) {
+                            smh.Lobby.SetLobbyInformation($"ai{this.m_lobbyTeams[t].Players[j].LobbyIndex}", (int)this.m_lobbyTeams[t].Players[j].Difficulty);
+                        }
                         smh.Lobby.SetLobbyInformation($"tid{this.m_lobbyTeams[t].Players[j].LobbyIndex}", (int)t);
                         smh.Lobby.SetLobbyInformation($"fac{this.m_lobbyTeams[t].Players[j].LobbyIndex}", this.m_lobbyTeams[t].Players[j].Faction);
                         smh.Lobby.SetLobbyInformation($"com{this.m_lobbyTeams[t].Players[j].LobbyIndex}", this.m_lobbyTeams[t].Players[j].CompanyName);
+                        
                     }
                 }
                 onDone.Invoke(this);
