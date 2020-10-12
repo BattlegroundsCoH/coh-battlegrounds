@@ -64,7 +64,7 @@ namespace Battlegrounds.Online.Services {
         public List<ConnectableLobby> GetConnectableLobbies(bool fetchLobbyData = true) {
 
             List<ConnectableLobby> connectableLobbies = new List<ConnectableLobby>();
-            Message message = new Message(Message_Type.GET_LOBBIES);
+            Message message = new Message(MessageType.GET_LOBBIES);
             bool gotAll = false;
             int timeout = 20;
 
@@ -110,7 +110,7 @@ namespace Battlegrounds.Online.Services {
         /// <param name="callback">The callback to invoke wheneer a new <see cref="ConnectableLobby"/> instance was discovered.</param>
         public void GetConnectableLobbies(Action<ConnectableLobby> callback, bool fetchLobbyData = true) {
 
-            Message message = new Message(Message_Type.GET_LOBBIES);
+            Message message = new Message(MessageType.GET_LOBBIES);
 
             void OnLobby(Socket x, Message y) {
 
@@ -144,10 +144,10 @@ namespace Battlegrounds.Online.Services {
             }
 
             // The connect message
-            Message addUserMessage = new Message(Message_Type.USER_SETUSERDATA, this.User.Name, this.User.ID.ToString());
+            Message addUserMessage = new Message(MessageType.USER_SETUSERDATA, this.User.Name, this.User.ID.ToString());
 
             void OnResponse(Socket socket, Message response) {
-                if (response.Descriptor == Message_Type.CONFIRMATION_MESSAGE) {
+                if (response.Descriptor == MessageType.CONFIRMATION_MESSAGE) {
                     Connection connection = new Connection(socket, false);
                     connectionResponse?.Invoke(true, connection);
                 } else {

@@ -109,7 +109,7 @@ namespace BattlegroundsApp {
                     File.WriteAllBytes(sgapath, content);
 
                     // Let the user know we've received the win condition
-                    m_lobbyWindow.lobbyChat.Text += "[Lobby] Received wincondition file from host.\n";
+                    this.m_lobbyWindow.lobbyChat.Text += "[Lobby] Received wincondition file from host.\n";
 
                     // Write a log message
                     Trace.WriteLine($"Received and saved .sga to \"{sgapath}\"");
@@ -125,7 +125,7 @@ namespace BattlegroundsApp {
 
         private void OnLocalEvent(ManagedLobbyLocalEventType type, string message) {
             Trace.WriteLine($"[ManagedLobbyLocalEventType.{type}] \"{message}\"");
-            m_lobbyWindow.UpdateGUI(() => {
+            this.m_lobbyWindow.UpdateGUI(() => {
                 switch (type) {
                     case ManagedLobbyLocalEventType.Host:
                         m_lobbyWindow.lobbyChat.Text += "[Lobby] You have been assigned as host.\n";

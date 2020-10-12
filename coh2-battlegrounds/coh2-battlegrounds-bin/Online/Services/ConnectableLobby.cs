@@ -105,7 +105,7 @@ namespace Battlegrounds.Online.Services {
         public void Update() {
             try {
                 this.lobby_players.Clear();
-                Message message = new Message(Message_Type.LOBBY_INFO, this.lobby_guid);
+                Message message = new Message(MessageType.LOBBY_INFO, this.lobby_guid);
                 MessageSender.SendMessage(AddressBook.GetLobbyServer(), message, (a, msg) => {
                     string work = msg.Argument1.Replace("\x07", "x07");
                     var mapRegMatch = Regex.Match(work, @"m:""(?<map>(\w|_|-|<|>|x07)*)""");

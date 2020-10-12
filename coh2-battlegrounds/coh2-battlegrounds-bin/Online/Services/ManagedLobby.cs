@@ -50,7 +50,7 @@ namespace Battlegrounds.Online.Services {
         public event ManagedLobbyQuery OnDataRequest;
 
         /// <summary>
-        /// Event triggered when the host has sent the <see cref="Message_Type.LOBBY_STARTMATCH"/> message.
+        /// Event triggered when the host has sent the <see cref="MessageType.LOBBY_STARTMATCH"/> message.
         /// </summary>
         public event ManagedLobbyMatchStart OnStartMatchReceived;
 
@@ -92,7 +92,7 @@ namespace Battlegrounds.Online.Services {
         /// <param name="chatMessage">The contents of the chat message.</param>
         public void SendChatMessage(string chatMessage) {
             if (m_underlyingConnection != null && m_underlyingConnection.IsConnected) {
-                m_underlyingConnection.SendMessage(new Message(Message_Type.LOBBY_CHATMESSAGE, chatMessage));
+                m_underlyingConnection.SendMessage(new Message(MessageType.LOBBY_CHATMESSAGE, chatMessage));
             }
         }
 
@@ -102,7 +102,7 @@ namespace Battlegrounds.Online.Services {
         /// <param name="metaMessage">The contents of the meta-message.</param>
         public void SendMetaMessage(string metaMessage) {
             if (m_underlyingConnection != null && m_underlyingConnection.IsConnected) {
-                m_underlyingConnection.SendMessage(new Message(Message_Type.LOBBY_METAMESSAGE, metaMessage));
+                m_underlyingConnection.SendMessage(new Message(MessageType.LOBBY_METAMESSAGE, metaMessage));
             }
         }
 
@@ -165,7 +165,7 @@ namespace Battlegrounds.Online.Services {
         /// </summary>
         /// <param name="info"></param>
         /// <param name="value"></param>
-        public void UpdateUserInformation(string info, object value) => this.m_underlyingConnection.SendMessage(new Message(Message_Type.LOBBY_SETUSERDATA, info, value.ToString()));
+        public void UpdateUserInformation(string info, object value) => this.m_underlyingConnection.SendMessage(new Message(MessageType.LOBBY_SETUSERDATA, info, value.ToString()));
 
         /// <summary>
         /// Get a specific detail from the lobby.
@@ -174,7 +174,7 @@ namespace Battlegrounds.Online.Services {
         /// <param name="reponse">The query response callback to handle the server response.</param>
         public void GetLobbyInformation(string lobbyInformation, ManagedLobbyQueryResponse reponse) {
             if (m_underlyingConnection != null && m_underlyingConnection.IsConnected) {
-                Message queryMessage = new Message(Message_Type.LOBBY_INFO, lobbyInformation);
+                Message queryMessage = new Message(MessageType.LOBBY_INFO, lobbyInformation);
                 Message.SetIdentifier(m_underlyingConnection.ConnectionSocket, queryMessage);
                 void OnResponse(Message message) {
                     m_underlyingConnection.ClearIdentifierReceiver(message.Identifier);
@@ -211,7 +211,7 @@ namespace Battlegrounds.Online.Services {
                     lobbyInformationValue = string.Empty;
                 }
                 if (m_underlyingConnection is not null && m_underlyingConnection.IsConnected) {
-                    m_underlyingConnection.SendMessage(new Message(Message_Type.LOBBY_UPDATE, lobbyInformation, lobbyInformationValue.ToString()));
+                    m_underlyingConnection.SendMessage(new Message(MessageType.LOBBY_UPDATE, lobbyInformation, lobbyInformationValue.ToString()));
                 }
             }
         }
@@ -229,7 +229,7 @@ namespace Battlegrounds.Online.Services {
         /// <remarks>The connection to the server will be broken and <see cref="Join(LobbyHub, string, string, ManagedLobbyConnectCallback)"/> must be used to reestablish connection.</remarks>
         public void Leave() {
             if (m_underlyingConnection != null) {
-                m_underlyingConnection.SendMessage(new Message(Message_Type.LOBBY_LEAVE));
+                m_underlyingConnection.SendMessage(new Message(MessageType.LOBBY_LEAVE));
                 m_underlyingConnection.Stop();
             }
         }
@@ -245,13 +245,13 @@ namespace Battlegrounds.Online.Services {
 
             void OnMessage(Message response) {
                 Trace.WriteLine(response);
-                if (response.Descriptor == Message_Type.LOBBY_PLAYERNAMES) {
+                if (response.Descriptor == MessageType.LOBBY_PLAYERNAMES) {
                     playernames = response.Argument1.Split(';', StringSplitOptions.RemoveEmptyEntries).ForEach(x => x.Replace("\"", ""));
                 }
                 alldone = true; // do this even if false...
             }
 
-            Message playersQueryMessage = new Message(Message_Type.LOBBY_PLAYERNAMES);
+            Message playersQueryMessage = new Message(MessageType.LOBBY_PLAYERNAMES);
             Message.SetIdentifier(m_underlyingConnection.ConnectionSocket, playersQueryMessage);
             m_underlyingConnection.SetIdentifierReceiver(playersQueryMessage.Identifier, OnMessage);
             m_underlyingConnection.SendMessage(playersQueryMessage);
@@ -276,13 +276,13 @@ namespace Battlegrounds.Online.Services {
 
             void OnMessage(Message response) {
                 Trace.WriteLine(response);
-                if (response.Descriptor == Message_Type.LOBBY_PLAYERIDS) {
+                if (response.Descriptor == MessageType.LOBBY_PLAYERIDS) {
                     playerids = response.Argument1.Split(';', StringSplitOptions.RemoveEmptyEntries).ForEach(x => x.Replace("\"", "")).Select(x => ulong.Parse(x)).ToArray();
                 }
                 alldone = true;
             }
 
-            Message playerIDQueryMessage = new Message(Message_Type.LOBBY_PLAYERIDS);
+            Message playerIDQueryMessage = new Message(MessageType.LOBBY_PLAYERIDS);
             Message.SetIdentifier(m_underlyingConnection.ConnectionSocket, playerIDQueryMessage);
             m_underlyingConnection.SetIdentifierReceiver(playerIDQueryMessage.Identifier, OnMessage);
             m_underlyingConnection.SendMessage(playerIDQueryMessage);
@@ -308,13 +308,13 @@ namespace Battlegrounds.Online.Services {
 
             void OnMessage(Message message) {
                 Trace.WriteLine(message);
-                if (message.Descriptor == Message_Type.LOBBY_GETPLAYERID) {
+                if (message.Descriptor == MessageType.LOBBY_GETPLAYERID) {
                     ulong.TryParse(message.Argument1, out id);
                 }
                 alldone = true;
             }
 
-            Message idQueryMessage = new Message(Message_Type.LOBBY_GETPLAYERID, player);
+            Message idQueryMessage = new Message(MessageType.LOBBY_GETPLAYERID, player);
             Message.SetIdentifier(m_underlyingConnection.ConnectionSocket, idQueryMessage);
             m_underlyingConnection.SetIdentifierReceiver(idQueryMessage.Identifier, OnMessage);
             m_underlyingConnection.SendMessage(idQueryMessage);
@@ -430,7 +430,7 @@ namespace Battlegrounds.Online.Services {
             }
 
             // Send a "Starting match" message to lobby members
-            m_underlyingConnection.SendMessage(new Message(Message_Type.LOBBY_STARTING));
+            m_underlyingConnection.SendMessage(new Message(MessageType.LOBBY_STARTING));
 
             // Wait a bit
             await Task.Delay(240);
@@ -497,13 +497,13 @@ namespace Battlegrounds.Online.Services {
                     Thread.Sleep(1000);
 
                     // Notify lobby players the gamemode is available
-                    this.m_underlyingConnection.SendMessage(new Message(Message_Type.LOBBY_NOTIFY_GAMEMODE));
+                    this.m_underlyingConnection.SendMessage(new Message(MessageType.LOBBY_NOTIFY_GAMEMODE));
 
                     // Sleep for 1s
                     Thread.Sleep(1000);
 
                     // Send the start match...
-                    this.m_underlyingConnection.SendMessage(new Message(Message_Type.LOBBY_STARTMATCH));
+                    this.m_underlyingConnection.SendMessage(new Message(MessageType.LOBBY_STARTMATCH));
 
                     // Sleep for 1s
                     Thread.Sleep(1000);
@@ -550,42 +550,42 @@ namespace Battlegrounds.Online.Services {
         private void ManagedLobbyInternal_MessageReceived(Message incomingMessage) {
             Trace.WriteLine($"Received: [{incomingMessage}]");
             switch (incomingMessage.Descriptor) {
-                case Message_Type.LOBBY_CHATMESSAGE:
+                case MessageType.LOBBY_CHATMESSAGE:
                     this.OnPlayerEvent?.Invoke(ManagedLobbyPlayerEventType.Message, incomingMessage.Argument2, incomingMessage.Argument1);
                     break;
-                case Message_Type.LOBBY_METAMESSAGE:
+                case MessageType.LOBBY_METAMESSAGE:
                     this.OnPlayerEvent?.Invoke(ManagedLobbyPlayerEventType.Meta, incomingMessage.Argument2, incomingMessage.Argument1);
                     break;
-                case Message_Type.LOBBY_JOIN:
+                case MessageType.LOBBY_JOIN:
                     this.OnPlayerEvent?.Invoke(ManagedLobbyPlayerEventType.Join, incomingMessage.Argument1, string.Empty);
                     break;
-                case Message_Type.LOBBY_LEAVE:
+                case MessageType.LOBBY_LEAVE:
                     this.OnPlayerEvent?.Invoke(ManagedLobbyPlayerEventType.Leave, incomingMessage.Argument1, string.Empty);
                     break;
-                case Message_Type.LOBBY_KICK:
+                case MessageType.LOBBY_KICK:
                     this.OnPlayerEvent?.Invoke(ManagedLobbyPlayerEventType.Kicked, incomingMessage.Argument1, incomingMessage.Argument2);
                     break;
-                case Message_Type.LOBBY_KICKED:
+                case MessageType.LOBBY_KICKED:
                     this.OnLocalEvent?.Invoke(ManagedLobbyLocalEventType.Kicked, incomingMessage.Argument1);
                     break;
-                case Message_Type.LOBBY_SETHOST:
+                case MessageType.LOBBY_SETHOST:
                     this.OnLocalEvent?.Invoke(ManagedLobbyLocalEventType.Host, string.Empty);
                     break;
-                case Message_Type.LOBBY_INFO:
+                case MessageType.LOBBY_INFO:
                     this.OnLobbyInfoChanged?.Invoke(incomingMessage.Argument1, incomingMessage.Argument2);
                     break;
-                case Message_Type.LOBBY_REQUEST_COMPANY:
+                case MessageType.LOBBY_REQUEST_COMPANY:
                     this.OnDataRequest?.Invoke(true, incomingMessage.Argument1, "CompanyData", incomingMessage.Identifier);
                     break;
-                case Message_Type.LOBBY_REQUEST_RESULTS:
+                case MessageType.LOBBY_REQUEST_RESULTS:
                     this.OnDataRequest?.Invoke(true, incomingMessage.Argument1, "MatchData", incomingMessage.Identifier);
                     break;
-                case Message_Type.LOBBY_STARTMATCH:
+                case MessageType.LOBBY_STARTMATCH:
                     this.OnStartMatchReceived?.Invoke();
                     break;
-                case Message_Type.CONFIRMATION_MESSAGE:
+                case MessageType.CONFIRMATION_MESSAGE:
                     break;
-                case Message_Type.LOBBY_NOTIFY_GAMEMODE:
+                case MessageType.LOBBY_NOTIFY_GAMEMODE:
                     string path = $"{Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)}\\my games\\Company of Heroes 2\\mods\\gamemode\\coh2_battlegrounds_wincondition.sga";
                     if (!FileHub.DownloadFile(path, "gamemode.sga", this.LobbyFileID)) {
                         Trace.WriteLine("Failed to download 'gamemode.sga'");
@@ -621,7 +621,7 @@ namespace Battlegrounds.Online.Services {
             void OnConnectionEstablished(bool connected, Connection connection) {
                 if (connected) {
                     void OnLobbyCreated(Socket _, Message response) {
-                        if (response.Descriptor == Message_Type.CONFIRMATION_MESSAGE) {
+                        if (response.Descriptor == MessageType.CONFIRMATION_MESSAGE) {
                             managedCallback?.Invoke(new ManagedLobbyStatus(true), new ManagedLobby(connection, true) { 
                                 m_lobbyID = response.Argument2, 
                                 m_self = hub.User 
@@ -630,7 +630,7 @@ namespace Battlegrounds.Online.Services {
                             managedCallback?.Invoke(new ManagedLobbyStatus(false, response.Argument1), null);
                         }
                     }
-                    MessageSender.SendMessage(connection.ConnectionSocket, new Message(Message_Type.LOBBY_CREATE, lobbyName, lobbyPassword), OnLobbyCreated);
+                    MessageSender.SendMessage(connection.ConnectionSocket, new Message(MessageType.LOBBY_CREATE, lobbyName, lobbyPassword), OnLobbyCreated);
                 } else {
                     managedCallback?.Invoke(new ManagedLobbyStatus(false, "Unable to establish connection with server."), null);
                 }
@@ -678,7 +678,7 @@ namespace Battlegrounds.Online.Services {
             void OnConnectionEstablished(bool connected, Connection connection) {
                 if (connected) {
                     void OnLobbyJoinResponse(Socket _, Message response) {
-                        if (response.Descriptor == Message_Type.CONFIRMATION_MESSAGE) {
+                        if (response.Descriptor == MessageType.CONFIRMATION_MESSAGE) {
                             managedCallback?.Invoke(new ManagedLobbyStatus(true), new ManagedLobby(connection, false) { 
                                 m_lobbyID = response.Argument2,
                                 m_self = hub.User,
@@ -687,7 +687,7 @@ namespace Battlegrounds.Online.Services {
                             managedCallback?.Invoke(new ManagedLobbyStatus(false, response.Argument1), null);
                         }
                     }
-                    MessageSender.SendMessage(connection.ConnectionSocket, new Message(Message_Type.LOBBY_JOIN, lobbyGUID, password), OnLobbyJoinResponse);
+                    MessageSender.SendMessage(connection.ConnectionSocket, new Message(MessageType.LOBBY_JOIN, lobbyGUID, password), OnLobbyJoinResponse);
                 } else {
                     managedCallback?.Invoke(new ManagedLobbyStatus(false, "Unable to establish connection with server."), null);
                 }

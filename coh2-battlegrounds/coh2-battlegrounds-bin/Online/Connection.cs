@@ -78,8 +78,8 @@ namespace Battlegrounds.Online {
 
         private void MessageReceived(Socket source, Message message) {
             this.m_isListening = false;
-            if (message.Descriptor == Message_Type.SERVER_PING) {
-                this.SendMessage(message.CreateResponse(Message_Type.USER_PING));
+            if (message.Descriptor == MessageType.SERVER_PING) {
+                this.SendMessage(message.CreateResponse(MessageType.USER_PING));
             } else {
                 if (this.m_identifierCallback?.ContainsKey(message.Identifier) ?? false) {
                     this.m_identifierCallback[message.Identifier].Invoke(message);
