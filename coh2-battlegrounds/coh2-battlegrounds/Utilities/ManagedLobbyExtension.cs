@@ -18,13 +18,17 @@ namespace BattlegroundsApp.Utilities {
         public static void GetSelectedGamemodeOption(this ManagedLobby lobby, LobbyStringCallback callback)
             => lobby.GetLobbyInformation("selected_wcs", (a, _) => callback(a));
 
-        public static async Task<(int, string, string)> GetPlayerdata(this ManagedLobby lobby, int playerIndex) {
-            if (int.TryParse(await lobby.GetLobbyInformation($"tid{playerIndex}"), out int teamIndex)) {
-                string faction = await lobby.GetLobbyInformation($"fac{playerIndex}");
-                string companyName = await lobby.GetLobbyInformation($"com{playerIndex}");
-                return (teamIndex, faction, companyName);
+        public static async Task<(int, string, string, int)> GetPlayerdata(this ManagedLobby lobby, int playerIndex) {
+            if (int.TryParse(await lobby.GetUserInformation(playerIndex, "tid"), out int teamIndex)) {
+                string faction = await lobby.GetUserInformation(playerIndex, "fac");
+                string companyName = await lobby.GetUserInformation(playerIndex, "com");
+                if (int.TryParse(await lobby.GetUserInformation(playerIndex, "dif"), out int aiDiff)) {
+                    return (teamIndex, faction, companyName, aiDiff);
+                } else {
+                    return (teamIndex, faction, companyName, -1);
+                }
             } else {
-                return (-1, "<None>", "<None>");
+                return (-1, "<None>", "<None>", -1);
             }
         }
 

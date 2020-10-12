@@ -82,6 +82,8 @@
 
         APP_VCHECK, // Check for current app version
 
+        FatalMessageError = 255
+
     }
 
 }

@@ -259,8 +259,12 @@ namespace BattlegroundsApp {
                 string[] steamNames = await smh.Lobby.GetPlayerNamesAsync();
                 this.ClearTeams();
                 for (int i = 0; i < player_count; i++) {
-                    (int teamIndex, string faction, string company) = await smh.Lobby.GetPlayerdata(i);
-                    this.m_lobbyTeams[(LobbyTeam.TeamType)teamIndex].Players.Add(new LobbyPlayer(i, steamIndicies[i], steamNames[i], faction, company));
+                    (int teamIndex, string faction, string company, int diff) = await smh.Lobby.GetPlayerdata(i);
+                    if (diff != -1) {
+                        this.m_lobbyTeams[(LobbyTeam.TeamType)teamIndex].Players.Add(new LobbyPlayer(i, steamIndicies[i], steamNames[i], faction, company) { Difficulty = (AIDifficulty)diff });
+                    } else {
+                        this.m_lobbyTeams[(LobbyTeam.TeamType)teamIndex].Players.Add(new LobbyPlayer(i, steamIndicies[i], steamNames[i], faction, company) { Difficulty = AIDifficulty.Human });
+                    }
                 }
                 onDone.Invoke(this);
             }
@@ -276,12 +280,11 @@ namespace BattlegroundsApp {
                     LobbyTeam.TeamType t = (LobbyTeam.TeamType)i;
                     for (int j = 0; j < this.m_lobbyTeams[t].Players.Count; j++) {
                         if (this.m_lobbyTeams[t].Players[j].Difficulty != AIDifficulty.Human) {
-                            smh.Lobby.SetLobbyInformation($"ai{this.m_lobbyTeams[t].Players[j].LobbyIndex}", (int)this.m_lobbyTeams[t].Players[j].Difficulty);
+                            smh.Lobby.SetUserInformation(this.m_lobbyTeams[t].Players[j].LobbyIndex, "ai", (int)this.m_lobbyTeams[t].Players[j].Difficulty);
                         }
-                        smh.Lobby.SetLobbyInformation($"tid{this.m_lobbyTeams[t].Players[j].LobbyIndex}", (int)t);
-                        smh.Lobby.SetLobbyInformation($"fac{this.m_lobbyTeams[t].Players[j].LobbyIndex}", this.m_lobbyTeams[t].Players[j].Faction);
-                        smh.Lobby.SetLobbyInformation($"com{this.m_lobbyTeams[t].Players[j].LobbyIndex}", this.m_lobbyTeams[t].Players[j].CompanyName);
-                        
+                        smh.Lobby.SetUserInformation(this.m_lobbyTeams[t].Players[j].LobbyIndex, "tid", (int)t);
+                        smh.Lobby.SetUserInformation(this.m_lobbyTeams[t].Players[j].LobbyIndex, "fac", this.m_lobbyTeams[t].Players[j].Faction);
+                        smh.Lobby.SetUserInformation(this.m_lobbyTeams[t].Players[j].LobbyIndex, "com", this.m_lobbyTeams[t].Players[j].CompanyName);
                     }
                 }
                 onDone.Invoke(this);

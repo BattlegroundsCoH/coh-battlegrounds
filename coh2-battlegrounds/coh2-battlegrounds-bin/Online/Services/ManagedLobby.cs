@@ -172,13 +172,13 @@ namespace Battlegrounds.Online.Services {
         /// </summary>
         /// <param name="lobbyInformation">The information that is sought.</param>
         /// <param name="reponse">The query response callback to handle the server response.</param>
-        public void GetLobbyInformation(string lobbyInformation, ManagedLobbyQueryResponse reponse) {
+        public void GetLobbyInformation(string lobbyInformation, ManagedLobbyQueryResponse response) {
             if (m_underlyingConnection != null && m_underlyingConnection.IsConnected) {
                 Message queryMessage = new Message(MessageType.LOBBY_INFO, lobbyInformation);
                 Message.SetIdentifier(m_underlyingConnection.ConnectionSocket, queryMessage);
                 void OnResponse(Message message) {
                     m_underlyingConnection.ClearIdentifierReceiver(message.Identifier);
-                    reponse?.Invoke(message.Argument1, message.Argument2);
+                    response?.Invoke(message.Argument1, message.Argument2);
                 }
                 m_underlyingConnection.SetIdentifierReceiver(queryMessage.Identifier, OnResponse);
                 m_underlyingConnection.SendMessage(queryMessage);
@@ -201,6 +201,59 @@ namespace Battlegrounds.Online.Services {
         }
 
         /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="userInformation"></param>
+        /// <param name="response"></param>
+        public void GetUserInformation(string userInformation, ManagedLobbyQueryResponse response, int userIndex = -1) {
+            if (this.m_underlyingConnection != null && this.m_underlyingConnection.IsConnected) {
+                Message queryMessage = null;
+                if (userIndex == -1) {
+                    queryMessage = new Message(MessageType.LOBBY_GETUSERDATA, userInformation);
+                } else {
+                    queryMessage = new Message(MessageType.LOBBY_GETUSERDATA, userIndex.ToString(), userInformation);
+                }
+                Message.SetIdentifier(this.m_underlyingConnection.ConnectionSocket, queryMessage);
+                void OnResponse(Message message) {
+                    this.m_underlyingConnection.ClearIdentifierReceiver(message.Identifier);
+                    response?.Invoke(message.Argument1, message.Argument2);
+                }
+                this.m_underlyingConnection.SetIdentifierReceiver(queryMessage.Identifier, OnResponse);
+                this.m_underlyingConnection.SendMessage(queryMessage);
+            }
+        }
+
+        /// <summary>
+        /// Get a specific detail from the lobby.
+        /// </summary>
+        /// <param name="userInfo">The information that is sought from the server.</param>
+        /// <returns>The first argument of the received server response.</returns>
+        /// <remarks>Async method.</remarks>
+        public async Task<string> GetUserInformation(string userInfo) {
+            string response = null;
+            this.GetUserInformation(userInfo, (a, _) => response = a);
+            while (response is null) {
+                await Task.Delay(1);
+            }
+            return response;
+        }
+
+        /// <summary>
+        /// Get a specific detail from the lobby.
+        /// </summary>
+        /// <param name="lobbyInformation">The information that is sought from the server.</param>
+        /// <returns>The first argument of the received server response.</returns>
+        /// <remarks>Async method.</remarks>
+        public async Task<string> GetUserInformation(int lobbyUser, string userInfo) {
+            string response = null;
+            this.GetUserInformation(userInfo, (a, _) => response = a, lobbyUser);
+            while (response is null) {
+                await Task.Delay(1);
+            }
+            return response;
+        }
+
+        /// <summary>
         /// Set a specific lobby detail. This will only be fully invoked if host.
         /// </summary>
         /// <param name="lobbyInformation">The information to change.</param>
@@ -213,6 +266,37 @@ namespace Battlegrounds.Online.Services {
                 if (m_underlyingConnection is not null && m_underlyingConnection.IsConnected) {
                     m_underlyingConnection.SendMessage(new Message(MessageType.LOBBY_UPDATE, lobbyInformation, lobbyInformationValue.ToString()));
                 }
+            }
+        }
+
+        /// <summary>
+        /// Update user-specific information for specified lobby member. Will require hostship to apply.
+        /// </summary>
+        /// <param name="lobbyIndex">The index of the user in lobby to update value of.</param>
+        /// <param name="userinfo">The user info to change (Like, fac, tid, or com)</param>
+        /// <param name="uservalue">The value to update information to.</param>
+        public void SetUserInformation(int lobbyIndex, string userinfo, object uservalue) {
+            if (this.m_isHost) {
+                if (uservalue is null) {
+                    uservalue = string.Empty;
+                }
+                if (this.m_underlyingConnection is not null && this.m_underlyingConnection.IsConnected) {
+                    this.m_underlyingConnection.SendMessage(new Message(MessageType.LOBBY_SETUSERDATA, lobbyIndex.ToString(), userinfo, uservalue.ToString()));
+                }
+            }
+        }
+
+        /// <summary>
+        /// Update user-specific information for local user (doesn't require hostship)
+        /// </summary>
+        /// <param name="userinfo">The user info to change (Like, fac, tid, or com)</param>
+        /// <param name="uservalue">The value to update information to.</param>
+        public void SetUserInformation(string userinfo, object uservalue) {
+            if (uservalue is null) {
+                uservalue = string.Empty;
+            }
+            if (this.m_underlyingConnection is not null && this.m_underlyingConnection.IsConnected) {
+                this.m_underlyingConnection.SendMessage(new Message(MessageType.LOBBY_SETUSERDATA, userinfo, uservalue.ToString()));
             }
         }
 
@@ -252,10 +336,10 @@ namespace Battlegrounds.Online.Services {
             }
 
             Message playersQueryMessage = new Message(MessageType.LOBBY_PLAYERNAMES);
-            Message.SetIdentifier(m_underlyingConnection.ConnectionSocket, playersQueryMessage);
-            m_underlyingConnection.SetIdentifierReceiver(playersQueryMessage.Identifier, OnMessage);
-            m_underlyingConnection.SendMessage(playersQueryMessage);
-            m_underlyingConnection.Listen(); // For some reason it just stops listening here...
+            Message.SetIdentifier(this.m_underlyingConnection.ConnectionSocket, playersQueryMessage);
+            this.m_underlyingConnection.SetIdentifierReceiver(playersQueryMessage.Identifier, OnMessage);
+            this.m_underlyingConnection.SendMessage(playersQueryMessage);
+            this.m_underlyingConnection.Listen(); // For some reason it just stops listening here...
 
             while (!alldone) {
                 await Task.Delay(1);
