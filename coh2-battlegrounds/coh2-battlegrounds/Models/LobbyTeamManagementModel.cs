@@ -1,13 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+
 using Battlegrounds;
 using Battlegrounds.Game;
 using Battlegrounds.Game.Battlegrounds;
 using Battlegrounds.Game.Gameplay;
+
 using BattlegroundsApp.LocalData;
 using BattlegroundsApp.Views.ViewComponent;
 
@@ -129,7 +132,13 @@ namespace BattlegroundsApp.Models {
                 case "ChangedCompany":
 
                     break;
+                case "RemovePlayer":
+                    Lobby.LobbyTeam.TeamType teamRemove = this.m_teamSetup[Lobby.LobbyTeam.TeamType.Allies].Contains(sender) ? Lobby.LobbyTeam.TeamType.Allies : Lobby.LobbyTeam.TeamType.Axis;
+                    sender.SetCardState(PlayercardViewstate.Open);
+                    OnTeamEvent?.Invoke(teamRemove, sender, this.m_teamSetup[teamRemove].IndexOf(sender), reason);
+                    break;
                 default:
+                    Trace.WriteLine($"Unhandled playercard event '{reason}'", "LobbyTeamManagementModel.cs");
                     break;
             }
 

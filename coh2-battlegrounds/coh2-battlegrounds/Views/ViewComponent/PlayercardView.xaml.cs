@@ -11,6 +11,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Battlegrounds;
 using Battlegrounds.Game;
 using BattlegroundsApp.LocalData;
 
@@ -82,6 +83,7 @@ namespace BattlegroundsApp.Views.ViewComponent {
                     IsSelfPanel.Visibility = Visibility.Collapsed;
                 }
                 this.SetCardState(PlayercardViewstate.Occupied);
+                this.PlayerKickButton.Visibility = (isHost && id != BattlegroundsInstance.LocalSteamuser.ID) ? Visibility.Visible : Visibility.Collapsed;
             }
         }
 
@@ -125,7 +127,8 @@ namespace BattlegroundsApp.Views.ViewComponent {
         }
 
         private void SelfCompanySelector_SelectionChanged(object sender, SelectionChangedEventArgs e) => this.OnPlayercardEvent?.Invoke(this, "ChangedCompany");
-    
+
+        private void PlayerKickButton_Click(object sender, RoutedEventArgs e) => this.OnPlayercardEvent?.Invoke(this, "RemovePlayer");
     }
 
 }

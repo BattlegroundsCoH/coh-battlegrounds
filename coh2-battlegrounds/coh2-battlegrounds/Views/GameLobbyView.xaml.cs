@@ -219,6 +219,10 @@ namespace BattlegroundsApp.Views {
                 case "ChangedCompany":
 
                     break;
+                case "RemovePlayer":
+                    this.m_smh.AppLobby.RemovePlayer(this.m_smh, team, teamPos);
+                    Trace.WriteLine($"Removing player [{team}][{teamPos}][{card.Difficulty}][{card.Playerarmy}]", "GameLobbyView");
+                    break;
                 default:
                     break;
             }

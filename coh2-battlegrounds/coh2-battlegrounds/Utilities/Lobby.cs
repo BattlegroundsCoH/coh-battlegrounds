@@ -199,6 +199,16 @@ namespace BattlegroundsApp {
             this.m_lobbyTeams[team].Players.Add(player);
         }
 
+        public void RemovePlayer(ServerMessageHandler smh, LobbyTeam.TeamType team, int teamIndex) {
+            var player = this.m_lobbyTeams[team].Players[teamIndex];
+            if (player.Difficulty != AIDifficulty.Human) {
+                smh.Lobby.RemoveAI(player.SteamID);
+            } else {
+                smh.Lobby.KickPlayer(player.SteamID);
+            }
+            this.m_lobbyTeams[team].Players.Remove(player);
+        }
+
         /// <summary>
         /// 
         /// </summary>

@@ -11,10 +11,11 @@
             <Button Margin="5" Height="28" Width="90" Name="NewAIPlayerButton" Click="NewAIPlayerButton_Click">Add AI Player</Button>
         </DockPanel>
         <StackPanel Name="OccupiedStackState" Width="200">
-            <StackPanel Orientation="Horizontal">
-                <Image Name="PlayerArmyIcon" Margin="2.25, 2.25, 2.25, 2.25" Width="24" MouseLeftButtonDown="PlayerArmyIcon_MouseLeftButtonDown"/>
+            <DockPanel LastChildFill="True">
+                <Image Name="PlayerArmyIcon" Margin="2.25" Width="24" MouseLeftButtonDown="PlayerArmyIcon_MouseLeftButtonDown" DockPanel.Dock="Left" />
+                <Button Name="PlayerKickButton" Margin="2.25" Width="24" Click="PlayerKickButton_Click" DockPanel.Dock="Right">X</Button>
                 <Label Name="PlayerName" Margin="5.75,1,1,1">Player Connecting...</Label>
-            </StackPanel>
+            </DockPanel>
             <StackPanel>
                 <DockPanel Name="IsSelfPanel" LastChildFill="False">
                     <ComboBox Name="SelfCompanySelector" Width="166" DockPanel.Dock="Right" SelectionChanged="SelfCompanySelector_SelectionChanged"/>

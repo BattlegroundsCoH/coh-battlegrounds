@@ -522,6 +522,21 @@ namespace Battlegrounds.Online.Services {
         }
 
         /// <summary>
+        /// Kick a player from the lobby. (If host).
+        /// </summary>
+        /// <param name="playerID">The unique steam ID of the player to kick.</param>
+        /// <param name="message">A message to send to the user stating why they were kicked.</param>
+        public void KickPlayer(ulong playerID, string message = "Kicked by Host") 
+            => this.m_isHost.Then(() => this.m_underlyingConnection.SendMessage(new Message(MessageType.LOBBY_KICK, playerID.ToString(), message)));
+
+        /// <summary>
+        /// Remove the AI player with specified ID. (If host).
+        /// </summary>
+        /// <param name="aiID">The ID used to identify the AI to remove.</param>
+        public void RemoveAI(ulong aiID)
+            => this.m_isHost.Then(() => this.m_underlyingConnection.SendMessage(new Message(MessageType.LOBBY_REMOVEAI, aiID.ToString())));
+
+        /// <summary>
         /// Compile the win condition using data from the lobby members and begin the match with all lobby members.<br/>This will start Company of Heroes 2 if completed.
         /// </summary>
         /// <remarks>The method is synchronous and make take several minutes to complete. (Use in a <see cref="Task.Run(Action)"/> context to maintain responsiveness).</remarks>
