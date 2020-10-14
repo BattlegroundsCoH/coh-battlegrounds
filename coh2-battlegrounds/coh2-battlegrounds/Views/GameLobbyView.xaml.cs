@@ -150,7 +150,7 @@ namespace BattlegroundsApp.Views {
 
         private void Map_SelectionChanged(object sender, SelectionChangedEventArgs e) {
             if (Map.SelectedItem is Scenario scenario) {
-                if (scenario.MaxPlayers < this.m_smh.AppLobby._lobbyPlayers) {
+                if (scenario.MaxPlayers < this.m_smh.AppLobby.LobbyPlayers) {
                     // TODO: Do something
                 }
                 this.UpdateAvailableGamemodes();
@@ -191,8 +191,12 @@ namespace BattlegroundsApp.Views {
 
         private async void UpdateLobby() {
             while (true && this is not null) {
-                this.m_smh.AppLobby.UpdateLobby(this.m_smh, this.UpdateLobbyVisuals);
-                await Task.Delay(1500);
+                if (this.m_smh.Lobby.IsConnectedToServer) {
+                    this.m_smh.AppLobby.UpdateLobby(this.m_smh, this.UpdateLobbyVisuals);
+                    await Task.Delay(1500);
+                } else {
+                    break;
+                }
             }
         }
 
@@ -206,7 +210,8 @@ namespace BattlegroundsApp.Views {
 
             switch (reason) {
                 case "AddAI":
-                    this.m_smh.AppLobby.AddAI(team, card.Difficulty, teamPos, card.Playerarmy);
+                    this.m_smh.AppLobby.AddAI(this.m_smh, team, card.Difficulty, teamPos, card.Playerarmy);
+                    Trace.WriteLine($"Adding AI [{team}][{card.Difficulty}][{card.Playerarmy}]", "GameLobbyView");
                     break;
                 case "ChangeArmy":
 

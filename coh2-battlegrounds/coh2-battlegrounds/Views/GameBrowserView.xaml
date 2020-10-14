@@ -32,9 +32,9 @@
         <ListView x:Name="GameLobbyList" Grid.Row="0" Grid.Column="0" Grid.RowSpan="5" Grid.ColumnSpan="5" Height="400" Width="800">
             <ListView.View>
                 <GridView>
-                    <GridViewColumn Header="Name" Width="625" DisplayMemberBinding="{Binding _lobbyName}"/>
-                    <GridViewColumn Header="Players" Width="100" DisplayMemberBinding="{Binding _lobbyPlayers}"/>
-                    <GridViewColumn Header="Password" Width="75" DisplayMemberBinding="{Binding _lobbyPasswordProtected}"/>
+                    <GridViewColumn Header="Name" Width="625" DisplayMemberBinding="{Binding LobbyName}"/>
+                    <GridViewColumn Header="Players" Width="100" DisplayMemberBinding="{Binding LobbyPlayers}"/>
+                    <GridViewColumn Header="Password" Width="75" DisplayMemberBinding="{Binding LobbyPasswordProtected}"/>
                 </GridView>
             </ListView.View>
         </ListView>

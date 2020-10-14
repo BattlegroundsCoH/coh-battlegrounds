@@ -80,7 +80,7 @@ namespace BattlegroundsApp.Views {
                 smh.SetLobby(lobby);
                 vw.SetSMH(smh);
 
-                string lobbyToJoin = lobby._lobbyGuid;
+                string lobbyToJoin = lobby.LobbyGuid;
 
                 ManagedLobby.Join(this.m_hub, lobbyToJoin, string.Empty, smh.OnServerResponse);
 
@@ -100,7 +100,7 @@ namespace BattlegroundsApp.Views {
                 ServerMessageHandler smh = new ServerMessageHandler(vw);
                 vw.SetSMH(smh);
 
-                ManagedLobby.Host(this.m_hub, "Battlegrounds Test", string.Empty, smh.OnServerResponse);
+                ManagedLobby.Host(this.m_hub, "Meh", string.Empty, smh.OnServerResponse);
 
             }
 

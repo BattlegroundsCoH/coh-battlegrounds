@@ -147,7 +147,7 @@ namespace Battlegrounds.Online {
                 }
 
             } catch (Exception e) {
-                Console.WriteLine($"[Server.IO] {e.Message}");
+                Console.WriteLine($"[Client.IO] {e.Message}");
             }
 
             return messages;

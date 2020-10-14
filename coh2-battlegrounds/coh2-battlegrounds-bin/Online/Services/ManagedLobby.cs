@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 
 using Battlegrounds.Compiler;
 using Battlegrounds.Functional;
+using Battlegrounds.Game;
 using Battlegrounds.Game.Battlegrounds;
 using Battlegrounds.Steam;
 
@@ -73,6 +74,11 @@ namespace Battlegrounds.Online.Services {
         /// The <see cref="SteamUser"/> that's connected to the server. (The local user).
         /// </summary>
         public SteamUser Self => this.m_self;
+
+        /// <summary>
+        /// Is the underlying connection connected to the server.
+        /// </summary>
+        public bool IsConnectedToServer => this.m_underlyingConnection.IsConnected;
 
         private ManagedLobby(Connection connection, bool isHost) {
 
@@ -493,6 +499,29 @@ namespace Battlegrounds.Online.Services {
         }
 
         /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="difficulty"></param>
+        /// <param name="faction"></param>
+        /// <param name="teamIndex"></param>
+        /// <returns></returns>
+        public async Task<int> TryCreateAIPlayer(AIDifficulty difficulty, string faction, int teamIndex) {
+            string responseQuery = null;
+            Message addAIMessage = new Message(MessageType.LOBBY_ADDAI, ((int)difficulty).ToString(), faction, teamIndex.ToString());
+            Message.SetIdentifier(this.m_underlyingConnection.ConnectionSocket, addAIMessage);
+            this.m_underlyingConnection.SetIdentifierReceiver(addAIMessage.Identifier, msg => responseQuery = msg.Argument1);
+            this.m_underlyingConnection.SendMessage(addAIMessage);
+            while (responseQuery is null) {
+                await Task.Delay(1);
+            }
+            if (int.TryParse(responseQuery, out int id)) {
+                return id;
+            } else {
+                return -1;
+            }
+        }
+
+        /// <summary>
         /// Compile the win condition using data from the lobby members and begin the match with all lobby members.<br/>This will start Company of Heroes 2 if completed.
         /// </summary>
         /// <remarks>The method is synchronous and make take several minutes to complete. (Use in a <see cref="Task.Run(Action)"/> context to maintain responsiveness).</remarks>
@@ -632,7 +661,7 @@ namespace Battlegrounds.Online.Services {
         }
 
         private void ManagedLobbyInternal_MessageReceived(Message incomingMessage) {
-            Trace.WriteLine($"Received: [{incomingMessage}]");
+            Trace.WriteLine($"Received message <<{incomingMessage}>> from server.", "ManagedLobby.cs");
             switch (incomingMessage.Descriptor) {
                 case MessageType.LOBBY_CHATMESSAGE:
                     this.OnPlayerEvent?.Invoke(ManagedLobbyPlayerEventType.Message, incomingMessage.Argument2, incomingMessage.Argument1);
@@ -677,7 +706,9 @@ namespace Battlegrounds.Online.Services {
                         Trace.WriteLine("Successfully downloaded 'gamemode.sga'");
                     }                    
                     break;
-                default: Trace.WriteLine($"Unhandled type {incomingMessage.Descriptor}"); break;
+                case MessageType.FatalMessageError:
+                    break;
+                default: Trace.WriteLine($"Unhandled type <<{incomingMessage.Descriptor}>>", "ManagedLobby.cs"); break;
             }
         }
 

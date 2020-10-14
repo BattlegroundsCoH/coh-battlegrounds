@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using Battlegrounds;
@@ -21,6 +22,8 @@ namespace BattlegroundsApp.Models {
         private Dictionary<Lobby.LobbyTeam.TeamType, List<PlayercardView>> m_teamSetup;
 
         public event Action<Lobby.LobbyTeam.TeamType, PlayercardView, int, string> OnTeamEvent;
+
+        public int TotalPlayerCount => this.m_teamSetup[Lobby.LobbyTeam.TeamType.Allies].Count(x => x.IsOccupied) + this.m_teamSetup[Lobby.LobbyTeam.TeamType.Axis].Count(x => x.IsOccupied);
 
         public LobbyTeamManagementModel(Grid teamGrid) {
             this.m_teamGrid = teamGrid;
@@ -114,10 +117,10 @@ namespace BattlegroundsApp.Models {
                 case "AddAI":
                     if (this.m_teamSetup[Lobby.LobbyTeam.TeamType.Allies].Contains(sender)) {
                         sender.SetAIData(AIDifficulty.AI_Hard, "soviet");
-                        OnTeamEvent?.Invoke(Lobby.LobbyTeam.TeamType.Allies, sender, this.m_teamSetup[Lobby.LobbyTeam.TeamType.Allies].IndexOf(sender), reason);
+                        OnTeamEvent?.Invoke(Lobby.LobbyTeam.TeamType.Allies, sender, this.TotalPlayerCount, reason);
                     } else {
                         sender.SetAIData(AIDifficulty.AI_Hard, "german");
-                        OnTeamEvent?.Invoke(Lobby.LobbyTeam.TeamType.Allies, sender, this.m_teamSetup[Lobby.LobbyTeam.TeamType.Allies].IndexOf(sender), reason);
+                        OnTeamEvent?.Invoke(Lobby.LobbyTeam.TeamType.Axis, sender, this.TotalPlayerCount, reason);
                     }
                     break;
                 case "ChangeArmy":

@@ -85,31 +85,31 @@ namespace BattlegroundsApp {
         private string m_lobbySelectedMapFilename;
         private Dictionary<LobbyTeam.TeamType, LobbyTeam> m_lobbyTeams;
 
-        public string _lobbyName { get; set; }
+        public string LobbyName { get; set; }
         
-        public int _lobbyPlayers { get; set; }
+        public int LobbyPlayers { get; set; }
         
-        public bool _lobbyPasswordProtected { get; set; }
+        public bool LobbyPasswordProtected { get; set; }
         
-        public string _lobbyGuid { get; set; }
+        public string LobbyGuid { get; set; }
 
-        public string _lobbyMap => ScenarioList.FromFilename(this.m_lobbySelectedMapFilename).Name;
+        public string LobbyMap => ScenarioList.FromFilename(this.m_lobbySelectedMapFilename).Name;
 
-        public string _lobbyMapFile { get => this.m_lobbySelectedMapFilename; set => this.m_lobbySelectedMapFilename = value; }
+        public string LobbyMapFile { get => this.m_lobbySelectedMapFilename; set => this.m_lobbySelectedMapFilename = value; }
 
-        public string _lobbyGamemode { get; set; }
+        public string LobbyGamemode { get; set; }
 
-        public int _lobbyGamemodeOption { get; set; }
+        public int LobbyGamemodeOption { get; set; }
 
         /// <summary>
         /// New basic <see cref="Lobby"/> instance with a basic setup.
         /// </summary>
         /// <param name="baseLobby">The <see cref="ConnectableLobby"/> that was connected with.</param>
         public Lobby(ConnectableLobby baseLobby) {
-            this._lobbyName = baseLobby.lobby_name;
-            this._lobbyGuid = baseLobby.lobby_guid;
-            this._lobbyPasswordProtected = baseLobby.lobby_passwordProtected;
-            this._lobbyPlayers = baseLobby.lobby_players.Count;
+            this.LobbyName = baseLobby.lobby_name;
+            this.LobbyGuid = baseLobby.lobby_guid;
+            this.LobbyPasswordProtected = baseLobby.lobby_passwordProtected;
+            this.LobbyPlayers = baseLobby.lobby_players.Count;
             this.m_lobbySelectedMapFilename = baseLobby.lobby_map;
             this.m_lobbyTeams = new Dictionary<LobbyTeam.TeamType, LobbyTeam>() {
                 [LobbyTeam.TeamType.Undefined] = new LobbyTeam(),
@@ -130,8 +130,8 @@ namespace BattlegroundsApp {
         }
 
         public Lobby(string guid) {
-            this._lobbyName = string.Empty;
-            this._lobbyGuid = guid;
+            this.LobbyName = string.Empty;
+            this.LobbyGuid = guid;
             this.m_lobbyTeams = new Dictionary<LobbyTeam.TeamType, LobbyTeam>() {
                 [LobbyTeam.TeamType.Undefined] = new LobbyTeam(),
                 [LobbyTeam.TeamType.Spectator] = new LobbyTeam(),
@@ -191,8 +191,9 @@ namespace BattlegroundsApp {
             }
         }
 
-        public void AddAI(LobbyTeam.TeamType team, AIDifficulty difficulty, int lobbyID, string army) {
-            LobbyPlayer player = new LobbyPlayer(lobbyID, 0, difficulty.GetIngameDisplayName(), army, string.Empty) {
+        public async void AddAI(ServerMessageHandler smh, LobbyTeam.TeamType team, AIDifficulty difficulty, int lobbyID, string army) {
+            int lobbyIndex = await smh.Lobby.TryCreateAIPlayer(difficulty, army, (int)team);
+            LobbyPlayer player = new LobbyPlayer(lobbyID, (ulong)lobbyIndex, difficulty.GetIngameDisplayName(), army, string.Empty) {
                 Difficulty = difficulty
             };
             this.m_lobbyTeams[team].Players.Add(player);
@@ -252,8 +253,8 @@ namespace BattlegroundsApp {
             if (!smh.Lobby.IsHost) {
                 Trace.WriteLine("Updating lobby information....");
                 smh.Lobby.GetSelectedMap(false, x => this.m_lobbySelectedMapFilename = x);
-                smh.Lobby.GetSelectedGamemode(x => this._lobbyGamemode = x);
-                smh.Lobby.GetSelectedGamemodeOption(x => int.TryParse(x, out int o).Then(() => this._lobbyGamemodeOption = o));
+                smh.Lobby.GetSelectedGamemode(x => this.LobbyGamemode = x);
+                smh.Lobby.GetSelectedGamemodeOption(x => int.TryParse(x, out int o).Then(() => this.LobbyGamemodeOption = o));
                 int player_count = await smh.Lobby.GetPlayersInLobbyAsync();
                 ulong[] steamIndicies = await smh.Lobby.GetPlayerIDsAsync();
                 string[] steamNames = await smh.Lobby.GetPlayerNamesAsync();
@@ -274,8 +275,8 @@ namespace BattlegroundsApp {
             if (smh.Lobby.IsHost) {
                 Trace.WriteLine("Updating lobby information...");
                 smh.Lobby.SetLobbyInformation("selected_map", this.m_lobbySelectedMapFilename);
-                smh.Lobby.SetLobbyInformation("selected_wc", this._lobbyGamemode);
-                smh.Lobby.SetLobbyInformation("selected_wcs", this._lobbyGamemodeOption);
+                smh.Lobby.SetLobbyInformation("selected_wc", this.LobbyGamemode);
+                smh.Lobby.SetLobbyInformation("selected_wcs", this.LobbyGamemodeOption);
                 for (int i = (int)LobbyTeam.TeamType.Undefined; i < (int)LobbyTeam.TeamType.Axis; i++) {
                     LobbyTeam.TeamType t = (LobbyTeam.TeamType)i;
                     for (int j = 0; j < this.m_lobbyTeams[t].Players.Count; j++) {

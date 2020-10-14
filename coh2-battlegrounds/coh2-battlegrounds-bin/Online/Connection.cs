@@ -103,7 +103,7 @@ namespace Battlegrounds.Online {
 
                     lock (this.m_socket) {
                         this.m_socket.SendAll(topMessage.ToBytes());
-                        Trace.WriteLine($"Sent: [{topMessage}]", "Online-Service");
+                        Trace.WriteLine($"Sent message <<{topMessage}>>", "Online-Service");
                     }
 
                     Thread.Sleep(10);
@@ -119,9 +119,9 @@ namespace Battlegrounds.Online {
         /// Start listening for <see cref="Message"/> data.
         /// </summary>
         public void Listen() {
-            if (!m_isListening) {
+            if (!this.m_isListening) {
                 MessageSender.WaitForMessage(this.m_socket, this.MessageReceived);
-                m_isListening = true;
+                this.m_isListening = true;
             }
         }
 
@@ -183,10 +183,10 @@ namespace Battlegrounds.Online {
         /// <exception cref="ArgumentException"/>
         /// <remarks>Remember to use <see cref="ClearIdentifierReceiver(int)"/> when done.</remarks>
         public void SetIdentifierReceiver(int identifier, Action<Message> onMessage) { 
-            if (m_identifierCallback.ContainsKey(identifier)) {
-                throw new ArgumentException($"The {identifier} already has a callback.");
+            if (this.m_identifierCallback.ContainsKey(identifier)) {
+                throw new ArgumentException($"The identifier '{identifier}' already has a callback.");
             } else {
-                m_identifierCallback.Add(identifier, onMessage);
+                this.m_identifierCallback.Add(identifier, onMessage);
             }
         }
 
@@ -195,8 +195,8 @@ namespace Battlegrounds.Online {
         /// </summary>
         /// <param name="identifier">The identifier callback to remove.</param>
         public void ClearIdentifierReceiver(int identifier) {
-            if (m_identifierCallback.ContainsKey(identifier)) {
-                m_identifierCallback.Remove(identifier);
+            if (this.m_identifierCallback.ContainsKey(identifier)) {
+                this.m_identifierCallback.Remove(identifier);
             }
         }
 

@@ -72,6 +72,8 @@
 
         LOBBY_GETUSERDATA, // Get data from lobby member
 
+        LOBBY_CHANGEDUSERDATA, // Server to client(s) telling them some user data has been changed
+
         USER_SETUSERDATA, // Set the user data
 
         USER_PING, // User ping-back (SERVER_PING -> reponse = USER_PING)
@@ -81,6 +83,8 @@
         SERVER_CLOSE, // Close the server
 
         APP_VCHECK, // Check for current app version
+
+        // Add more here
 
         FatalMessageError = 255
 
