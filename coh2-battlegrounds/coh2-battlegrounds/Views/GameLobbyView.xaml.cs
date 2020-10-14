@@ -91,6 +91,8 @@ namespace BattlegroundsApp.Views {
         public void UpdateGUI(Action a) {
             try {
                 this.Dispatcher.Invoke(a);
+            } catch (ObjectDisposedException) {
+
             } catch {
 
             }
@@ -119,6 +121,7 @@ namespace BattlegroundsApp.Views {
                 this.UpdateAvailableGamemodes();
 
                 this.m_smh.AppLobby.CreateHost(BattlegroundsInstance.LocalSteamuser);
+                this.m_smh.AppLobby.SetMap(this.m_smh, Map.SelectedItem as Scenario);
 
             } else {
 

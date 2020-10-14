@@ -144,6 +144,7 @@ namespace BattlegroundsApp {
             if (smh.Lobby.IsHost) {
                 this.m_lobbySelectedMapFilename = scenario.RelativeFilename;
                 smh.Lobby.SetLobbyInformation("selected_map", this.m_lobbySelectedMapFilename);
+                smh.Lobby.SetLobbyInformation("capacity", scenario.MaxPlayers);
             }
         }
 
