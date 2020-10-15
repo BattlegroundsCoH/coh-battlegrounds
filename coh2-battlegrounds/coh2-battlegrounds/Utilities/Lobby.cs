@@ -6,6 +6,7 @@ using Battlegrounds.Functional;
 using Battlegrounds.Game;
 using Battlegrounds.Game.Database;
 using Battlegrounds.Game.Gameplay;
+using Battlegrounds.Modding;
 using Battlegrounds.Online.Services;
 using Battlegrounds.Steam;
 using BattlegroundsApp.Utilities;
@@ -210,6 +211,17 @@ namespace BattlegroundsApp {
             this.m_lobbyTeams[team].Players.Remove(player);
         }
 
+        public void SetGamemode(ServerMessageHandler smh, Wincondition wincon) {
+            this.LobbyGamemode = wincon.DisplayName.ToString();
+            smh.Lobby.SetLobbyInformation("selected_wc", wincon.Name);
+        }
+
+
+        public void SetGamemodeOption(ServerMessageHandler smh, int index) {
+            this.LobbyGamemodeOption = index;
+            smh.Lobby.SetLobbyInformation("selected_wcs", index);
+        }
+
         /// <summary>
         /// 
         /// </summary>
@@ -252,8 +264,11 @@ namespace BattlegroundsApp {
         /// </summary>
         /// <param name="smh">The <see cref="ServerMessageHandler"/> that handles messages to and from the server.</param>
         public void UpdateLobby(ServerMessageHandler smh, Action<Lobby> onDone) {
-            this.FetchLobbyInfo(smh, onDone); // will only fire if not host
-            this.UpdateLobbyInfo(smh, onDone); // will only fire if host
+            if (!smh.Lobby.IsHost) {
+                this.FetchLobbyInfo(smh, onDone); // will only fire if not host
+            } else {
+                // TODO: Make special update routine to verify players are matching up with local data.
+            }
         }
 
         /*
@@ -261,30 +276,28 @@ namespace BattlegroundsApp {
          */
 
         private async void FetchLobbyInfo(ServerMessageHandler smh, Action<Lobby> onDone) {
-            if (!smh.Lobby.IsHost) {
-                Trace.WriteLine("Updating lobby information....");
-                smh.Lobby.GetSelectedMap(false, x => this.m_lobbySelectedMapFilename = x);
-                smh.Lobby.GetSelectedGamemode(x => this.LobbyGamemode = x);
-                smh.Lobby.GetSelectedGamemodeOption(x => int.TryParse(x, out int o).Then(() => this.LobbyGamemodeOption = o));
-                int player_count = await smh.Lobby.GetPlayersInLobbyAsync();
-                ulong[] steamIndicies = await smh.Lobby.GetPlayerIDsAsync();
-                string[] steamNames = await smh.Lobby.GetPlayerNamesAsync();
-                this.ClearTeams();
-                for (int i = 0; i < player_count; i++) {
-                    (int teamIndex, string faction, string company, int diff) = await smh.Lobby.GetPlayerdata(i);
-                    if (diff != -1) {
-                        this.m_lobbyTeams[(LobbyTeam.TeamType)teamIndex].Players.Add(new LobbyPlayer(i, steamIndicies[i], steamNames[i], faction, company) { Difficulty = (AIDifficulty)diff });
-                    } else {
-                        this.m_lobbyTeams[(LobbyTeam.TeamType)teamIndex].Players.Add(new LobbyPlayer(i, steamIndicies[i], steamNames[i], faction, company) { Difficulty = AIDifficulty.Human });
-                    }
+            Trace.WriteLine("Updating lobby information from server....");
+            smh.Lobby.GetSelectedMap(false, x => this.m_lobbySelectedMapFilename = x);
+            smh.Lobby.GetSelectedGamemode(x => this.LobbyGamemode = x);
+            smh.Lobby.GetSelectedGamemodeOption(x => int.TryParse(x, out int o).Then(() => this.LobbyGamemodeOption = o));
+            int player_count = await smh.Lobby.GetPlayersInLobbyAsync();
+            ulong[] steamIndicies = await smh.Lobby.GetPlayerIDsAsync();
+            string[] steamNames = await smh.Lobby.GetPlayerNamesAsync();
+            this.ClearTeams();
+            for (int i = 0; i < player_count; i++) {
+                (int teamIndex, string faction, string company, int diff) = await smh.Lobby.GetPlayerdata(i);
+                if (diff != -1) {
+                    this.m_lobbyTeams[(LobbyTeam.TeamType)teamIndex].Players.Add(new LobbyPlayer(i, steamIndicies[i], steamNames[i], faction, company) { Difficulty = (AIDifficulty)diff });
+                } else {
+                    this.m_lobbyTeams[(LobbyTeam.TeamType)teamIndex].Players.Add(new LobbyPlayer(i, steamIndicies[i], steamNames[i], faction, company) { Difficulty = AIDifficulty.Human });
                 }
-                onDone.Invoke(this);
             }
+            onDone.Invoke(this);
         }
 
         private void UpdateLobbyInfo(ServerMessageHandler smh, Action<Lobby> onDone) { // TODO: Update only if there's been a change...
             if (smh.Lobby.IsHost) {
-                Trace.WriteLine("Updating lobby information...");
+                Trace.WriteLine("Updating lobby information on server...");
                 smh.Lobby.SetLobbyInformation("selected_map", this.m_lobbySelectedMapFilename);
                 smh.Lobby.SetLobbyInformation("selected_wc", this.LobbyGamemode);
                 smh.Lobby.SetLobbyInformation("selected_wcs", this.LobbyGamemodeOption);

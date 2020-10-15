@@ -18,6 +18,7 @@ using Battlegrounds.Game;
 using Battlegrounds.Game.Battlegrounds;
 using Battlegrounds.Game.Database;
 using Battlegrounds.Game.Gameplay;
+using Battlegrounds.Modding;
 using Battlegrounds.Steam;
 using BattlegroundsApp.Models;
 using BattlegroundsApp.Views.ViewComponent;
@@ -139,13 +140,15 @@ namespace BattlegroundsApp.Views {
             if (Map.SelectedItem is Scenario scenario) {
 
                 if (scenario.Gamemodes.Count > 0) {
-                    Gamemode.ItemsSource = scenario.Gamemodes;
+                    Gamemode.ItemsSource = scenario.Gamemodes.OrderBy(x => x.ToString()).ToList();
                     Gamemode.SelectedIndex = 0;
                 } else {
                     var def = WinconditionList.GetDefaultList().OrderBy(x => x.ToString()).ToList();
                     Gamemode.ItemsSource = def;
                     Gamemode.SelectedIndex = def.FindIndex(x => x.Name.CompareTo("Victory Points") == 0);
                 }
+
+                this.UpdateGamemodeOptions(Gamemode.SelectedItem as Wincondition);
 
             }
 
@@ -209,11 +212,11 @@ namespace BattlegroundsApp.Views {
             });
         }
 
-        private void OnTeamManagementCallbackHandler(Lobby.LobbyTeam.TeamType team, PlayercardView card, int teamPos, string reason) {
+        private void OnTeamManagementCallbackHandler(Lobby.LobbyTeam.TeamType team, PlayercardView card, object arg, string reason) {
 
             switch (reason) {
                 case "AddAI":
-                    this.m_smh.AppLobby.AddAI(this.m_smh, team, card.Difficulty, teamPos, card.Playerarmy);
+                    this.m_smh.AppLobby.AddAI(this.m_smh, team, card.Difficulty, (int)arg, card.Playerarmy);
                     Trace.WriteLine($"Adding AI [{team}][{card.Difficulty}][{card.Playerarmy}]", "GameLobbyView");
                     break;
                 case "ChangeArmy":
@@ -223,13 +226,36 @@ namespace BattlegroundsApp.Views {
 
                     break;
                 case "RemovePlayer":
-                    this.m_smh.AppLobby.RemovePlayer(this.m_smh, team, teamPos);
-                    Trace.WriteLine($"Removing player [{team}][{teamPos}][{card.Difficulty}][{card.Playerarmy}]", "GameLobbyView");
+                    this.m_smh.AppLobby.RemovePlayer(this.m_smh, team, (int)arg);
+                    Trace.WriteLine($"Removing player [{team}][{arg}][{card.Difficulty}][{card.Playerarmy}]", "GameLobbyView");
                     break;
                 default:
                     break;
             }
 
+        }
+
+        private void UpdateGamemodeOptions(Wincondition wc) {
+            if (wc.Options is not null) {
+                GamemodeOption.Visibility = Visibility.Visible;
+                GamemodeOption.ItemsSource = wc.Options.OrderBy(x => x.Value).ToList();
+                GamemodeOption.SelectedIndex = wc.DefaultOptionIndex;
+            } else {
+                GamemodeOption.Visibility = Visibility.Collapsed;
+            }
+        }
+
+        private void Gamemode_SelectionChanged(object sender, SelectionChangedEventArgs e) {
+            if (Gamemode.SelectedItem is Wincondition wincon) {
+                this.m_smh.AppLobby.SetGamemode(this.m_smh, wincon);
+                this.UpdateGamemodeOptions(wincon);
+            }
+        }
+
+        private void GamemodeOption_SelectionChanged(object sender, SelectionChangedEventArgs e) {
+            if (GamemodeOption.SelectedItem is WinconditionOption) {
+                this.m_smh.AppLobby.SetGamemodeOption(this.m_smh, GamemodeOption.SelectedIndex);
+            }
         }
 
     }

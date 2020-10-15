@@ -35,14 +35,16 @@
         </Grid.ColumnDefinitions>
 
         <!-- Row 0 -->
-
+        <TextBlock Grid.Row="0" Grid.Column="0" Text="Map:"/>
+        <ComboBox x:Name="Map" Grid.Row="0" Grid.Column="1" MinWidth="120" SelectionChanged="Map_SelectionChanged"/>
+        
         <!-- Row 1 -->
-        <TextBlock Grid.Row="1" Grid.Column="0" Text="Map:"/>
-        <ComboBox x:Name="Map" Grid.Row="1" Grid.Column="1" MinWidth="120" SelectionChanged="Map_SelectionChanged"/>
+        <TextBlock Grid.Row="1" Grid.Column="0" Text="Gamemode:"/>
+        <ComboBox x:Name="Gamemode" Grid.Row="1" Grid.Column="1" MinWidth="120" SelectionChanged="Gamemode_SelectionChanged"/>
 
         <!-- Row 2 -->
-        <TextBlock Grid.Row="2" Grid.Column="0" Text="Gamemode:"/>
-        <ComboBox x:Name="Gamemode" Grid.Row="2" Grid.Column="1"/>
+        <TextBlock Grid.Row="2" Grid.Column="0" Text="Option:"/>
+        <ComboBox x:Name="GamemodeOption" Grid.Row="2" Grid.Column="1" SelectionChanged="GamemodeOption_SelectionChanged"/>
         
         <!-- Row 3 -->
         <Grid Grid.Row="3" Grid.Column="3" MinHeight="260" Name="TeamGridview">

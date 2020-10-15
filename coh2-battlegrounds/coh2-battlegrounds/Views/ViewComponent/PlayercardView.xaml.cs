@@ -88,7 +88,7 @@ namespace BattlegroundsApp.Views.ViewComponent {
         }
 
         public void SetAIData(AIDifficulty difficulty, string army) {
-            this.SetPlayerdata(0, m_diff.GetIngameDisplayName(), army, false, true, false);
+            this.SetPlayerdata(0, difficulty.GetIngameDisplayName(), army, false, true, true);
             this.m_diff = difficulty;
         }
 

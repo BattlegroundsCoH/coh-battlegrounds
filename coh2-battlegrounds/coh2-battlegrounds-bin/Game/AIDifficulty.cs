@@ -50,15 +50,14 @@
         /// </summary>
         /// <param name="difficulty">The difficulty to get display name of.</param>
         /// <returns>The <see cref="string"/> representation of an <see cref="AIDifficulty"/> value. Empty if <see cref="AIDifficulty.Human"/>.</returns>
-        public static string GetIngameDisplayName(this AIDifficulty difficulty)
-            => difficulty switch
-            {
-                AIDifficulty.AI_Easy => "AI - Easy",
-                AIDifficulty.AI_Expert => "AI - Expert",
-                AIDifficulty.AI_Hard => "AI - Hard",
-                AIDifficulty.AI_Standard => "AI - Standard",
-                _ => string.Empty
-            };
+        public static string GetIngameDisplayName(this AIDifficulty difficulty) => difficulty switch
+        {
+            AIDifficulty.AI_Easy => "AI - Easy",
+            AIDifficulty.AI_Expert => "AI - Expert",
+            AIDifficulty.AI_Hard => "AI - Hard",
+            AIDifficulty.AI_Standard => "AI - Standard",
+            _ => string.Empty
+        };
 
     }
 

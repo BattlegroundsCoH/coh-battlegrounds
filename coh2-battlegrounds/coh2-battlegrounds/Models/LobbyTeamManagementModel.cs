@@ -24,7 +24,7 @@ namespace BattlegroundsApp.Models {
         private int m_maxPlayerCount;
         private Dictionary<Lobby.LobbyTeam.TeamType, List<PlayercardView>> m_teamSetup;
 
-        public event Action<Lobby.LobbyTeam.TeamType, PlayercardView, int, string> OnTeamEvent;
+        public event Action<Lobby.LobbyTeam.TeamType, PlayercardView, object, string> OnTeamEvent;
 
         public int TotalPlayerCount => this.m_teamSetup[Lobby.LobbyTeam.TeamType.Allies].Count(x => x.IsOccupied) + this.m_teamSetup[Lobby.LobbyTeam.TeamType.Axis].Count(x => x.IsOccupied);
 
@@ -114,8 +114,7 @@ namespace BattlegroundsApp.Models {
 
         }
 
-        private void OnCardActionHandler(PlayercardView sender, string reason) { 
-        
+        private void OnCardActionHandler(PlayercardView sender, string reason) {        
             switch (reason) {
                 case "AddAI":
                     if (this.m_teamSetup[Lobby.LobbyTeam.TeamType.Allies].Contains(sender)) {
@@ -141,7 +140,6 @@ namespace BattlegroundsApp.Models {
                     Trace.WriteLine($"Unhandled playercard event '{reason}'", "LobbyTeamManagementModel.cs");
                     break;
             }
-
         }
 
     }
