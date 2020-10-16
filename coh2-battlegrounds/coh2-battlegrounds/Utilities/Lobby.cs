@@ -230,7 +230,9 @@ namespace BattlegroundsApp {
         /// <param name="faction"></param>
         public void SetFaction(ServerMessageHandler smh, ulong playerID, string faction) {
             if (this.SetStringServerValue(smh, "fac", faction)) {
-                this.m_lobbyTeams.Aggregate(new List<LobbyPlayer>(), (a, b) => { a.AddRange(b.Value.Players); return a; }).Find(x => x.SteamID == playerID).Faction = faction;
+                if (this.m_lobbyTeams.Aggregate(new List<LobbyPlayer>(), (a, b) => { a.AddRange(b.Value.Players); return a; }).Find(x => x.SteamID == playerID) is LobbyPlayer player) {
+                    player.Faction = faction;
+                }
             }
         }
 
@@ -242,7 +244,9 @@ namespace BattlegroundsApp {
         /// <param name="name"></param>
         public void SetCompanyName(ServerMessageHandler smh, ulong playerID, string name) {
             if (this.SetStringServerValue(smh, "com", name)) {
-                this.m_lobbyTeams.Aggregate(new List<LobbyPlayer>(), (a, b) => { a.AddRange(b.Value.Players); return a; }).Find(x => x.SteamID == playerID).CompanyName = name;
+                if (this.m_lobbyTeams.Aggregate(new List<LobbyPlayer>(), (a, b) => { a.AddRange(b.Value.Players); return a; }).Find(x => x.SteamID == playerID) is LobbyPlayer player) {
+                    player.CompanyName = name;
+                }
             }
         }
 
