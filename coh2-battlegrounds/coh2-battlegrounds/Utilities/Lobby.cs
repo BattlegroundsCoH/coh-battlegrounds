@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+
 using Battlegrounds.Functional;
 using Battlegrounds.Game;
 using Battlegrounds.Game.Database;
 using Battlegrounds.Game.Gameplay;
-using Battlegrounds.Modding;
 using Battlegrounds.Online.Services;
 using Battlegrounds.Steam;
 using BattlegroundsApp.Utilities;
@@ -229,7 +229,7 @@ namespace BattlegroundsApp {
         /// <param name="playerID"></param>
         /// <param name="faction"></param>
         public void SetFaction(ServerMessageHandler smh, ulong playerID, string faction) {
-            if (this.SetStringServerValue(smh, playerID, "fac", faction)) {
+            if (this.SetStringServerValue(smh, "fac", faction)) {
                 this.m_lobbyTeams.Aggregate(new List<LobbyPlayer>(), (a, b) => { a.AddRange(b.Value.Players); return a; }).Find(x => x.SteamID == playerID).Faction = faction;
             }
         }
@@ -241,19 +241,15 @@ namespace BattlegroundsApp {
         /// <param name="playerID"></param>
         /// <param name="name"></param>
         public void SetCompanyName(ServerMessageHandler smh, ulong playerID, string name) {
-            if (this.SetStringServerValue(smh, playerID, "com", name)) {
+            if (this.SetStringServerValue(smh, "com", name)) {
                 this.m_lobbyTeams.Aggregate(new List<LobbyPlayer>(), (a, b) => { a.AddRange(b.Value.Players); return a; }).Find(x => x.SteamID == playerID).CompanyName = name;
             }
         }
 
-        private bool SetStringServerValue(ServerMessageHandler smh, ulong steamID, string key, string val) {
-            if (smh.Lobby.Self.ID == steamID) {
-                smh.Lobby.UpdateUserInformation(key, val);
-                smh.Lobby.SendMetaMessage("StringValueChanged");
-                return true;
-            } else {
-                return false;
-            }
+        private bool SetStringServerValue(ServerMessageHandler smh, string key, string val) {
+            smh.Lobby.UpdateUserInformation(key, val);
+            smh.Lobby.SendMetaMessage("StringValueChanged");
+            return true;
         }
 
         public void CreateHost(SteamUser localSteamuser)

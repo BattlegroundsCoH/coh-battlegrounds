@@ -213,14 +213,14 @@ namespace BattlegroundsApp.Views {
         }
 
         private void OnTeamManagementCallbackHandler(Lobby.LobbyTeam.TeamType team, PlayercardView card, object arg, string reason) {
-
             switch (reason) {
                 case "AddAI":
                     this.m_smh.AppLobby.AddAI(this.m_smh, team, card.Difficulty, (int)arg, card.Playerarmy);
                     Trace.WriteLine($"Adding AI [{team}][{card.Difficulty}][{card.Playerarmy}]", "GameLobbyView");
                     break;
-                case "ChangeArmy":
-
+                case "ChangedArmy":
+                    this.m_smh.AppLobby.SetFaction(this.m_smh, card.Playerid, card.Playerarmy);
+                    Trace.WriteLine($"Changing faction [{card.Playerid}][{card.Difficulty}][{card.Playerarmy}]", "GameLobbyView");
                     break;
                 case "ChangedCompany":
 
@@ -232,7 +232,6 @@ namespace BattlegroundsApp.Views {
                 default:
                     break;
             }
-
         }
 
         private void UpdateGamemodeOptions(Wincondition wc) {

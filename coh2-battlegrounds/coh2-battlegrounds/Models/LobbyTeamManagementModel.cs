@@ -49,6 +49,7 @@ namespace BattlegroundsApp.Models {
             view.SetValue(Grid.ColumnProperty, type == Lobby.LobbyTeam.TeamType.Allies ? 0 : 1);
             view.SetValue(Grid.RowProperty, row);
             view.OnPlayercardEvent += this.OnCardActionHandler;
+            view.SetAvailableArmies(type == Lobby.LobbyTeam.TeamType.Allies);
             this.m_teamSetup[type].Add(view);
             this.m_teamGrid.Children.Add(view);
         }
@@ -114,10 +115,11 @@ namespace BattlegroundsApp.Models {
 
         }
 
-        private void OnCardActionHandler(PlayercardView sender, string reason) {        
+        private void OnCardActionHandler(PlayercardView sender, string reason) {
+            Lobby.LobbyTeam.TeamType teamOf = this.m_teamSetup[Lobby.LobbyTeam.TeamType.Allies].Contains(sender) ? Lobby.LobbyTeam.TeamType.Allies : Lobby.LobbyTeam.TeamType.Axis;
             switch (reason) {
                 case "AddAI":
-                    if (this.m_teamSetup[Lobby.LobbyTeam.TeamType.Allies].Contains(sender)) {
+                    if (teamOf == Lobby.LobbyTeam.TeamType.Allies) {
                         sender.SetAIData(AIDifficulty.AI_Hard, "soviet");
                         OnTeamEvent?.Invoke(Lobby.LobbyTeam.TeamType.Allies, sender, this.TotalPlayerCount, reason);
                     } else {
@@ -125,16 +127,15 @@ namespace BattlegroundsApp.Models {
                         OnTeamEvent?.Invoke(Lobby.LobbyTeam.TeamType.Axis, sender, this.TotalPlayerCount, reason);
                     }
                     break;
-                case "ChangeArmy":
-
+                case "ChangedArmy":
+                    OnTeamEvent?.Invoke(teamOf, sender, sender.Playerarmy, reason);
                     break;
                 case "ChangedCompany":
 
                     break;
                 case "RemovePlayer":
-                    Lobby.LobbyTeam.TeamType teamRemove = this.m_teamSetup[Lobby.LobbyTeam.TeamType.Allies].Contains(sender) ? Lobby.LobbyTeam.TeamType.Allies : Lobby.LobbyTeam.TeamType.Axis;
                     sender.SetCardState(PlayercardViewstate.Open);
-                    OnTeamEvent?.Invoke(teamRemove, sender, this.m_teamSetup[teamRemove].IndexOf(sender), reason);
+                    OnTeamEvent?.Invoke(teamOf, sender, this.m_teamSetup[teamOf].IndexOf(sender), reason);
                     break;
                 default:
                     Trace.WriteLine($"Unhandled playercard event '{reason}'", "LobbyTeamManagementModel.cs");

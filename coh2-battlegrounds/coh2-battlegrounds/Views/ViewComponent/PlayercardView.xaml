@@ -3,7 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:BattlegroundsApp.Views.ViewComponent"
+             xmlns:local="clr-namespace:BattlegroundsApp.Views.ViewComponent" xmlns:controls="clr-namespace:BattlegroundsApp.Controls"
              mc:Ignorable="d" 
              d:DesignHeight="64" d:DesignWidth="200">
     <DockPanel LastChildFill="False">
@@ -12,13 +12,13 @@
         </DockPanel>
         <StackPanel Name="OccupiedStackState" Width="200">
             <DockPanel LastChildFill="True">
-                <Image Name="PlayerArmyIcon" Margin="2.25" Width="24" MouseLeftButtonDown="PlayerArmyIcon_MouseLeftButtonDown" DockPanel.Dock="Left" />
+                <controls:IconComboBox x:Name="PlayerArmySelection" Margin="2.25" Width="24" SelectionChanged="PlayerArmySelection_SelectionChanged" DockPanel.Dock="Left"/>
                 <Button Name="PlayerKickButton" Margin="2.25" Width="24" Click="PlayerKickButton_Click" DockPanel.Dock="Right">X</Button>
                 <Label Name="PlayerName" Margin="5.75,1,1,1">Player Connecting...</Label>
             </DockPanel>
             <StackPanel>
                 <DockPanel Name="IsSelfPanel" LastChildFill="False">
-                    <ComboBox Name="SelfCompanySelector" Width="166" DockPanel.Dock="Right" SelectionChanged="SelfCompanySelector_SelectionChanged"/>
+                    <ComboBox Name="SelfCompanySelector" Margin="0,0,2.5,0" Width="166" DockPanel.Dock="Right" SelectionChanged="SelfCompanySelector_SelectionChanged"/>
                 </DockPanel>
                 <StackPanel Name="IsNotSelfPanel" Orientation="Horizontal">
                     <!-- Calculated data here -->

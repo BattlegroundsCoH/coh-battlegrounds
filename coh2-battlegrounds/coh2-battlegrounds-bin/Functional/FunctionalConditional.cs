@@ -64,6 +64,17 @@ namespace Battlegrounds.Functional {
                     then.Invoke(this.__subj);
                 }
             }
+
+            /// <summary>
+            /// 
+            /// </summary>
+            /// <param name="then"></param>
+            public void Else(Action then) {
+                if (!_yes) {
+                    then.Invoke();
+                }
+            }
+
         }
 
         /// <summary>
