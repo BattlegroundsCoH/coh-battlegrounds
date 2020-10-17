@@ -8,97 +8,27 @@ using System.Text;
 
 namespace Battlegrounds.Online {
 
-    public enum Message_Type : byte {
-
-        ERROR_MESSAGE, // Error message
-
-        INFORMATION_MESSAGE, // Information message
-
-        CONFIRMATION_MESSAGE, // Confirms
-
-        ORDINARY_RESPONSE, // Ordinary response to a simple query (Identifier must exist for response message to work)
-
-        GET_LOBBIES, // Get the list of lobbies
-
-        GET_LOBBIES_RETURN, // This is a returned lobby
-
-        LOBBY_CREATE, // Create lobby
-
-        LOBBY_REMOVE, // Remove lobby
-
-        LOBBY_JOIN, // Join lobby
-
-        LOBBY_LEAVE, // Leave lobby
-
-        LOBBY_KICK, // User was kicked (To players in lobby: *player* was kicked)
-
-        LOBBY_KICKED, // The user was kicked (Sent to the player who was kicked - to let them know they were kicked)
-
-        LOBBY_INFO, // Get lobby info
-
-        LOBBY_UPDATE, // Update lobby info
-
-        LOBBY_CHATMESSAGE, // Send chatmessage
-
-        LOBBY_METAMESSAGE, // Send metamessage
-
-        LOBBY_REQUEST_COMPANY,
-
-        LOBBY_REQUEST_RESULTS,
-
-        LOBBY_STARTMATCH, // Tell clients to start match
-
-        LOBBY_SYNCMATCH, // Tell clients to sync match
-
-        LOBBY_STATE,
-
-        LOBBY_GETSTATE,
-
-        LOBBY_PLAYERNAMES,
-
-        LOBBY_PLAYERIDS,
-
-        LOBBY_GETPLAYERID,
-
-        LOBBY_SETHOST, // Message sent to client that they're now the host.
-
-        LOBBY_STARTING, // Host has pressed the start button
-
-        LOBBY_CANCEL, // Tell the lobby to cancel match start
-
-        LOBBY_NOTIFY_GAMEMODE, // Notify lobby members the gamemode is available
-
-        USER_SETUSERDATA, // Set the user data
-
-        USER_PING, // User ping-back (SERVER_PING -> reponse = USER_PING)
-
-        SERVER_PING, // Ping from server (Server -> Client)
-
-        SERVER_CLOSE, // Close the server
-
-    }
-
     public sealed class Message {
 
         public const string MESSAGE_INVALID_REQUEST = "Invalid Request";
 
         public int Identifier;
 
-        public Message_Type Descriptor;
+        public MessageType Descriptor;
 
         public string Argument1;
         public string Argument2;
         public string Argument3;
 
         public Message() {
-            this.Descriptor = Message_Type.ERROR_MESSAGE;
+            this.Descriptor = MessageType.ERROR_MESSAGE;
             this.Identifier = -1;
             this.Argument1 = string.Empty;
             this.Argument2 = string.Empty;
             this.Argument3 = string.Empty;
         }
 
-        public Message(Message_Type type) {
+        public Message(MessageType type) {
             this.Descriptor = type;
             this.Identifier = -1;
             this.Argument1 = string.Empty;
@@ -106,7 +36,7 @@ namespace Battlegrounds.Online {
             this.Argument3 = string.Empty;
         }
 
-        public Message(Message_Type type, string arg1 = "", string arg2 = "", string arg3 = "") {
+        public Message(MessageType type, string arg1 = "", string arg2 = "", string arg3 = "") {
             this.Descriptor = type;
             this.Identifier = -1;
             this.Argument1 = arg1;
@@ -114,7 +44,7 @@ namespace Battlegrounds.Online {
             this.Argument3 = arg3;
         }
 
-        public Message CreateResponse(Message_Type type, string arg1 = "", string arg2 = "", string arg3 = "") {
+        public Message CreateResponse(MessageType type, string arg1 = "", string arg2 = "", string arg3 = "") {
             Message message = new Message(type, arg1, arg2, arg3) {
                 Identifier = this.Identifier
             };
@@ -182,7 +112,7 @@ namespace Battlegrounds.Online {
 
                         using BinaryReader subReader = new BinaryReader(new MemoryStream(reader.ReadBytes(size)));
 
-                        m.Descriptor = (Message_Type)subReader.ReadByte();
+                        m.Descriptor = (MessageType)subReader.ReadByte();
                         m.Identifier = subReader.ReadInt32();
 
                         int p = subReader.PeekChar();
@@ -208,7 +138,7 @@ namespace Battlegrounds.Online {
                         }
 
                     } catch (Exception e) {
-                        m.Descriptor = Message_Type.ERROR_MESSAGE;
+                        m.Descriptor = MessageType.ERROR_MESSAGE;
                         m.Argument1 = $"Failed to read message of length {size} - {e.Message}";
                     }
 
@@ -217,7 +147,7 @@ namespace Battlegrounds.Online {
                 }
 
             } catch (Exception e) {
-                Console.WriteLine($"[Server.IO] {e.Message}");
+                Console.WriteLine($"[Client.IO] {e.Message}");
             }
 
             return messages;
@@ -235,11 +165,13 @@ namespace Battlegrounds.Online {
             }
         }
 
+        private static int _offset = 1000;
+
         internal static int GetIdentifier(Socket socket)
             => Encoding.ASCII.GetBytes(
                 (socket.RemoteEndPoint as IPEndPoint).Address.ToString() +
                 DateTime.UtcNow.TimeOfDay.ToString() +
-                Guid.NewGuid().ToString()).Aggregate(0, (a, b) => a += b);
+                Guid.NewGuid().ToString() + ((++_offset).ToString())).Aggregate(int.MinValue, (a, b) => a += a + b);
 
         public override string ToString() => $"{this.Descriptor}: \"{this.Argument1}\" : \"{this.Argument2}\" : \"{this.Argument3}\"";
 

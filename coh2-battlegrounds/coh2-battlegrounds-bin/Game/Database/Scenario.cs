@@ -1,4 +1,7 @@
 ﻿using System.Collections.Generic;
+using System.Text.RegularExpressions;
+using System.Linq;
+using System.IO;
 
 using Battlegrounds.Game.Gameplay;
 using Battlegrounds.Json;
@@ -48,6 +51,11 @@ namespace Battlegrounds.Game.Database {
         public string RelativeFilename { get; set; }
 
         /// <summary>
+        /// Name of the sga file containing this <see cref="Scenario"/>.
+        /// </summary>
+        public string SgaName { get; set; }
+
+        /// <summary>
         /// The max amount of players who can play on this map.
         /// </summary>
         public byte MaxPlayers { get; set; }
@@ -70,6 +78,40 @@ namespace Battlegrounds.Game.Database {
         public List<Wincondition> Gamemodes { get; set; }
 
         public string ToJsonReference() => this.RelativeFilename;
+
+        public Scenario() {
+            this.SgaName = string.Empty;
+            this.Gamemodes = new List<Wincondition>();
+        }
+
+        public Scenario(string infofile, string optionsfile) {
+
+            this.RelativeFilename = Path.GetFileNameWithoutExtension(infofile);
+            this.Gamemodes = new List<Wincondition>();
+            this.SgaName = string.Empty;
+
+            string infolua = File.ReadAllText(infofile);
+            string optionslua = File.ReadAllText(optionsfile);
+
+            string matchpattern = @"(?<key>\w+)\s+=\s+(?<value>(\w+|\d+|(\"".*\"")))";
+            var infomatches = Regex.Matches(infolua, matchpattern);
+            var optionsmatches = Regex.Matches(infolua, matchpattern);
+
+            this.Name = infomatches.FirstOrDefault(x => x.Groups["key"].Value.CompareTo("scenarioname") == 0)?.Groups["value"].Value.Trim(' ', '\"') ?? "???";
+            this.Description = infomatches.FirstOrDefault(x => x.Groups["key"].Value.CompareTo("scenariodescription") == 0)?.Groups["value"].Value.Trim(' ', '\"') ?? "???";
+            this.Description = this.Description.Replace(@"\""", "'");
+
+            if (byte.TryParse(infomatches.FirstOrDefault(x => x.Groups["key"].Value.CompareTo("maxplayers") == 0)?.Groups["value"].Value ?? "2", out byte maxplayers)) {
+                this.MaxPlayers = maxplayers;
+            }
+
+            if (int.TryParse(infomatches.FirstOrDefault(x => x.Groups["key"].Value.CompareTo("scenario_battlefront") == 0)?.Groups["value"].Value ?? "2", out int battlefront)) {
+                this.Theatre = battlefront == 2 ? ScenarioTheatre.EasternFront : battlefront == 5 ? ScenarioTheatre.WesternFront : ScenarioTheatre.SharedFront;
+            }
+
+            this.IsWintermap = infolua.Contains("\"winter\"");
+
+        }
 
         public override string ToString() => this.Name;
 

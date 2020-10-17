@@ -28,7 +28,7 @@ namespace Battlegrounds.Online {
         /// <summary>
         /// Flag for connection state.
         /// </summary>
-        public bool IsConnected => m_socket.Connected;
+        public bool IsConnected => m_socket?.Connected ?? false;
 
         /// <summary>
         /// The event to trigger when a <see cref="Message"/> has been received.
@@ -78,8 +78,8 @@ namespace Battlegrounds.Online {
 
         private void MessageReceived(Socket source, Message message) {
             this.m_isListening = false;
-            if (message.Descriptor == Message_Type.SERVER_PING) {
-                this.SendMessage(message.CreateResponse(Message_Type.USER_PING));
+            if (message.Descriptor == MessageType.SERVER_PING) {
+                this.SendMessage(message.CreateResponse(MessageType.USER_PING));
             } else {
                 if (this.m_identifierCallback?.ContainsKey(message.Identifier) ?? false) {
                     this.m_identifierCallback[message.Identifier].Invoke(message);
@@ -103,7 +103,7 @@ namespace Battlegrounds.Online {
 
                     lock (this.m_socket) {
                         this.m_socket.SendAll(topMessage.ToBytes());
-                        Trace.WriteLine($"Sent: [{topMessage}]", "Online-Service");
+                        Trace.WriteLine($"Sent message <<{topMessage}>>", "Online-Service");
                     }
 
                     Thread.Sleep(10);
@@ -119,9 +119,9 @@ namespace Battlegrounds.Online {
         /// Start listening for <see cref="Message"/> data.
         /// </summary>
         public void Listen() {
-            if (!m_isListening) {
+            if (!this.m_isListening) {
                 MessageSender.WaitForMessage(this.m_socket, this.MessageReceived);
-                m_isListening = true;
+                this.m_isListening = true;
             }
         }
 
@@ -183,10 +183,10 @@ namespace Battlegrounds.Online {
         /// <exception cref="ArgumentException"/>
         /// <remarks>Remember to use <see cref="ClearIdentifierReceiver(int)"/> when done.</remarks>
         public void SetIdentifierReceiver(int identifier, Action<Message> onMessage) { 
-            if (m_identifierCallback.ContainsKey(identifier)) {
-                throw new ArgumentException($"The {identifier} already has a callback.");
+            if (this.m_identifierCallback.ContainsKey(identifier)) {
+                throw new ArgumentException($"The identifier '{identifier}' already has a callback.");
             } else {
-                m_identifierCallback.Add(identifier, onMessage);
+                this.m_identifierCallback.Add(identifier, onMessage);
             }
         }
 
@@ -195,8 +195,8 @@ namespace Battlegrounds.Online {
         /// </summary>
         /// <param name="identifier">The identifier callback to remove.</param>
         public void ClearIdentifierReceiver(int identifier) {
-            if (m_identifierCallback.ContainsKey(identifier)) {
-                m_identifierCallback.Remove(identifier);
+            if (this.m_identifierCallback.ContainsKey(identifier)) {
+                this.m_identifierCallback.Remove(identifier);
             }
         }
 

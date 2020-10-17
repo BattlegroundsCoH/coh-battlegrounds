@@ -18,230 +18,64 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Diagnostics;
+using BattlegroundsApp.Views;
+using System.Windows.Threading;
+using Battlegrounds.Game.Battlegrounds;
 
 namespace BattlegroundsApp {
 
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window
-    {
+    public partial class MainWindow : Window {
+        
+        public MainWindow() {
 
-        public static MainWindow Instance { get; private set; }
-
-        private List<string> m_allPlayers;
-
-        public SteamUser user; // TODO: Replace all references to this with BattlegroundsInstance.LocalSteamuser
-        private LobbyHub hub;
-
-        public MainWindow()
-        {
-
-            Instance = this;
-
-            // Create local BG instance and find user
-            BattlegroundsInstance.LoadInstance();
-            this.user = BattlegroundsInstance.LocalSteamuser = SteamUser.FromLocalInstall();
-
-            // Load the database(s)
-            DatabaseManager.LoadAllDatabases(null);
-
+            // Initialize components etc...
             InitializeComponent();
 
-            this.user = SteamUser.FromLocalInstall();
-
-            // Then create lobby and assign user
-            this.hub = new LobbyHub {
-                User = this.user
-            };
-
-            // Create list of all players
-            this.m_allPlayers = new List<string>();
-
-            GetLobbyList();
-
+            // Starts with Dashboard page opened
+            DataContext = new DashboardView();
         }
 
-        public void UpdateGUI(Action a) => this.Dispatcher.BeginInvoke(a);
-
-        public void GetLobbyList() {
-
-            // Clear list
-            LobbyList.Items.Clear();
-
-            // Get lobby list async
-            hub.GetConnectableLobbies(x => this.UpdateGUI(() => { 
-                this.LobbyList.Items.Add(new Lobby { _lobbyName = x.lobby_name, _lobbyPasswordProtected = x.lobby_passwordProtected, _lobbyGuid = x.lobby_guid 
-                }); 
-            }));
-
+        // Open Dashboard page
+        private void Dashboard_Click(object sender, RoutedEventArgs e) {
+            DataContext = new DashboardView();
         }
 
-        private void hostGame_Click(object sender, RoutedEventArgs e) {
-
-            HostGameDialogWindow dialog = new HostGameDialogWindow();
-
-            if (dialog.ShowDialog() is true) {
-                string _lobbyName = dialog.lobbyName.Text;
-                string _lobbyPassword = dialog.lobbyPassword.Text;
-
-                ManagedLobby.Host(hub, _lobbyName, _lobbyPassword, ServerMessageHandler.OnServerResponse);
-
-            }
-
+        // Open News page
+        private void News_Click(object sender, RoutedEventArgs e) {
+            DataContext = new NewsView();
+        }
+    
+        // Open Division Builder page
+        private void CompanyBuilder_Click(object sender, RoutedEventArgs e) {
+            DataContext = new CompanyBuilderView();
         }
 
-        private void joinLobby_Click(object sender, RoutedEventArgs e)
-        {
-
-            if (LobbyList.SelectedItem is Lobby lobby)
-            {
-                //TODO: Password check 
-
-                string lobbyToJoin = lobby._lobbyGuid;
-                ManagedLobby.Join(hub, lobbyToJoin, String.Empty, ServerMessageHandler.OnServerResponse);
-
-            }
-
+        // Open Campaign page
+        private void Campaign_Click(object sender, RoutedEventArgs e) {
+            DataContext = new CampaignView();
         }
 
-        public void OnLobbyEnter(ManagedLobby lobby) { // This is called when the server says OK, lobby created or lobby joined
-
-            // Hide browser, show lobby
-            GameBrowser.Visibility = Visibility.Collapsed;
-            LobbyView.Visibility = Visibility.Visible;
-
-            // We do have to handle some stuff seperately
-            if (lobby.IsHost) {
-
-                // Add ourselves
-                this.AddPlayer(user.Name);
-
-            } else {
-
-                // Setup lobby data
-                SetupLobbyData();
-
-            }
-
+        // Open Game Browser page
+        private void GameBrowser_Click(object sender, RoutedEventArgs e) {
+            DataContext = new GameBrowserView(this);
         }
 
-        private async void SetupLobbyData() {
-
-            // Get player names
-            m_allPlayers.AddRange(await ServerMessageHandler.CurrentLobby.GetPlayerNamesAsync());
-
-            // Get max capacity
-            /*int maxCapacity = await ServerMessageHandler.CurrentLobby.GetLobbyCapacityAsync();
-
-            for (int i = 0; i < maxCapacity; i++)
-            {
-
-                // Team slot we're getting info from
-                string teamSlot = $"Slot_{i}_state";
-
-                // Get that information
-                ServerMessageHandler.CurrentLobby.GetLobbyInformation(teamSlot, (x, y) =>
-                {
-                    this.Dispatcher.Invoke(() => { this.AddPlayer(x, i); } );
-                });
-
-            }*/
-                
+        // Exit application
+        private void Exit_Click(object sender, RoutedEventArgs e) {
+            this.Close();
         }
 
-        private void refreshLobbyList_Click(object sender, RoutedEventArgs e)
-            => this.GetLobbyList();
-
-        private void LobbyList_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-
+        // Helper method to update the view
+        public Dispatcher SetView(object view) {
+            this.Dispatcher.Invoke(() => {
+                this.DataContext = view;
+                this.InvalidateVisual();
+            });
+            return this.Dispatcher;
         }
 
-        private void leaveLobby_Click(object sender, RoutedEventArgs e)
-        {
-            LobbyView.Visibility = Visibility.Collapsed;
-            GameBrowser.Visibility = Visibility.Visible;
-            ClearLobby();
-            if (ServerMessageHandler.CurrentLobby != null) {
-                ServerMessageHandler.LeaveLobby();
-            }
-        }
-
-        private void sendMessage_Click(object sender, RoutedEventArgs e)
-        {
-            string messageContent = messageText.Text;
-            string messageSender = user.Name;
-
-            string message = $"{messageSender}: {messageContent}";
-
-            chatBox.Text += $"{message}\n";
-            chatBox.ScrollToEnd();
-
-            messageText.Clear();
-
-            // Send message to server (so other players can see)
-            ServerMessageHandler.CurrentLobby.SendChatMessage(messageContent);
-
-        }
-
-        public void ClearLobby()
-        {
-            chatBox.Clear();
-            messageText.Clear();
-            LobbyTeam1.Items.Clear();
-            LobbyTeam2.Items.Clear();
-
-        }
-
-        internal void AddPlayer(string _user, int pos = -1)
-        {
-            if (pos != -1) {
-
-            }
-            if (!m_allPlayers.Contains(_user)) {
-                m_allPlayers.Add(_user);
-            }
-            if (LobbyTeam1.Items.Count <= LobbyTeam2.Items.Count)
-            {
-                LobbyTeam1.Items.Add(_user);
-            } else {
-                LobbyTeam2.Items.Add(_user);
-            }
-
-        }
-
-        internal void RemovePlayer(string _user)
-        {
-            if (LobbyTeam1.Items.Contains(_user))
-            {
-                LobbyTeam1.Items.Remove(_user);
-            } else
-            {
-                LobbyTeam2.Items.Remove(_user);
-            }
-        }
-
-        private void changeTeam_Click(object sender, RoutedEventArgs e)
-        {
-            if (LobbyTeam1.Items.Contains(user.Name))
-            {
-                LobbyTeam1.Items.Remove(user.Name);
-                LobbyTeam2.Items.Add(user.Name);
-            }
-            else
-            {
-                LobbyTeam2.Items.Remove(user.Name);
-                LobbyTeam1.Items.Add(user.Name);
-            }
-        }
-
-        private void OnStartMatchCancelled(string reason) {
-            Trace.WriteLine(reason);
-        }
-
-        private void startMatch_Click(object sender, RoutedEventArgs e) 
-            => ServerMessageHandler.CurrentLobby.CompileAndStartMatch(this.OnStartMatchCancelled);
-
-    }
+    }   
 }

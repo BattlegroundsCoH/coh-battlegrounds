@@ -1,0 +1,50 @@
+﻿<UserControl x:Class="BattlegroundsApp.Dialogs.HostGame.HostGameDialogView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:BattlegroundsApp.Dialogs.HostGame"
+             mc:Ignorable="d" 
+             Height="150" Width="250">
+    <Grid>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="20"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="20"/>
+        </Grid.RowDefinitions>
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="20"/>
+            <ColumnDefinition Width="auto"/>
+            <ColumnDefinition Width="auto"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="20"/>
+        </Grid.ColumnDefinitions>
+        
+        <!-- Row 1 -->
+        <TextBlock Grid.Row="1" Grid.Column="1" Margin="2.5" Text="Game Name:"/>
+
+        <TextBox x:Name="LobbyName" Grid.Row="1" Grid.Column="2" Margin="2.5" Width="100"/>
+
+        <!-- Row 2 -->
+        <CheckBox x:Name="passworsProtectedCheck" Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2" Margin="2.5" Content="Password protected"/>
+
+        <!-- Row 3 -->
+        <TextBlock Grid.Row="3" Grid.Column="1" Margin="2.5" Text="Password:"/>
+
+        <TextBox x:Name="LobbyPassword" Grid.Row="3" Grid.Column="2" Margin="2.5" Width="100" IsEnabled="{Binding ElementName=passworsProtectedCheck, Path=IsChecked}"/>
+        
+        <!-- Row 4 -->
+        <Button Grid.Row="4" Grid.Column="1" Margin="2.5" Content="Host Game" Width="75" IsEnabled="{Binding ElementName=LobbyName, Path=Text.Length, Mode=OneWay}"
+                Command="{Binding HostCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}"/>
+
+        <Button Grid.Row="4" Grid.Column="2" Margin="2.5" Content="Cancel" Width="75"
+                Command="{Binding CancelCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}"/>
+
+    </Grid>
+</UserControl>

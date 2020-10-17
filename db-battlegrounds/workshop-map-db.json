@@ -1,0 +1,1109 @@
+{
+	"jsdbtype": "Battlegrounds.Game.Database.ScenarioList+WorkshopRecord",
+	"scenarios": [
+		{
+			"jsdbtype": "Battlegrounds.Game.Database.Scenario",
+			"Name": "(4) Ponary Forest",
+			"Description": "",
+			"RelativeFilename": "ponaryforest",
+			"SgaName": "1091348376",
+			"MaxPlayers": "4",
+			"Theatre": "SharedFront",
+			"IsWintermap": "False",
+			"Gamemodes": [
+			]
+		},
+		{
+			"jsdbtype": "Battlegrounds.Game.Database.Scenario",
+			"Name": "(4 - 6) Overloon",
+			"Description": "After the failure of Operation Market Garden, the Allies were left with a salient running across the South-East Netherlands; to defend it from Axis counter-attacks and advance over the Meuse, they launched Operation Aintree. The U.S. 7th Armored Division was brought to the van and attacked Overloon, where it took huge casualties from a defending force including the 107th Panzer Brigade, and stalled. The 7th was then replaced by the British 3rd Infantry and 11th Armoured Divisions; after a tremendous artillery barrage on the town, the British attacked in what would be known as the 'second Battle for Caen'.",
+			"RelativeFilename": "6p_overloon2",
+			"SgaName": "1114162062",
+			"MaxPlayers": "6",
+			"Theatre": "SharedFront",
+			"IsWintermap": "False",
+			"Gamemodes": [
+			]
+		},
+		{
+			"jsdbtype": "Battlegrounds.Game.Database.Scenario",
+			"Name": "(2) Port Nazaire",
+			"Description": "",
+			"RelativeFilename": "industrialvon_mp",
+			"SgaName": "1265188076",
+			"MaxPlayers": "2",
+			"Theatre": "SharedFront",
+			"IsWintermap": "True",
+			"Gamemodes": [
+			]
+		},
+		{
+			"jsdbtype": "Battlegrounds.Game.Database.Scenario",
+			"Name": "(4-6) Russian swamp",
+			"Description": "",
+			"RelativeFilename": "pueblo",
+			"SgaName": "1273871167",
+			"MaxPlayers": "6",
+			"Theatre": "SharedFront",
+			"IsWintermap": "False",
+			"Gamemodes": [
+			]
+		},
+		{
+			"jsdbtype": "Battlegrounds.Game.Database.Scenario",
+			"Name": "(2) Southern Alblasserwaard",
+			"Description": "",
+			"RelativeFilename": "floodedplains",
+			"SgaName": "1279052972",
+			"MaxPlayers": "2",
+			"Theatre": "SharedFront",
+			"IsWintermap": "False",
+			"Gamemodes": [
+			]
+		},
+		{
+			"jsdbtype": "Battlegrounds.Game.Database.Scenario",
+			"Name": "(2) Ladoga Karelia",
+			"Description": "",
+			"RelativeFilename": "talisman",
+			"SgaName": "1285925287",
+			"MaxPlayers": "2",
+			"Theatre": "SharedFront",
+			"IsWintermap": "True",
+			"Gamemodes": [
+			]
+		},
+		{
+			"jsdbtype": "Battlegrounds.Game.Database.Scenario",
+			"Name": "(2 - 4) The Battle Of Reichswald",
+			"Description": "Operation Veritable (also known as the Battle of the Reichswald) was the northern part of an Allied pincer movement that took place between 8 February and 11 March 1945 during the final stages of the Second World War. The heavily forested terrain, squeezed between the Rhine and Maas rivers, reduced Anglo-Canadian advantages in manpower and armour; the situation was exacerbated by soft ground which had thawed after the winter and also by the deliberate flooding of the adjacent Rhine flood plain.",
+			"RelativeFilename": "the battle of reichswald",
+			"SgaName": "1291481725",
+			"MaxPlayers": "4",
+			"Theatre": "EasternFront",
+			"IsWintermap": "False",
+			"Gamemodes": [
+			]
+		},
+		{
+			"jsdbtype": "Battlegrounds.Game.Database.Scenario",
+			"Name": "(2) Vilshanka",
+			"Description": "",
+			"RelativeFilename": "theo",
+			"SgaName": "1293601721",
+			"MaxPlayers": "2",
+			"Theatre": "SharedFront",
+			"IsWintermap": "False",
+			"Gamemodes": [
+			]
+		},
+		{
+			"jsdbtype": "Battlegrounds.Game.Database.Scenario",
+			"Name": "(2) Rattay Ruins",
+			"Description": "",
+			"RelativeFilename": "rattay_v2",
+			"SgaName": "1330188176",
+			"MaxPlayers": "2",
+			"Theatre": "SharedFront",
+			"IsWintermap": "False",
+			"Gamemodes": [
+			]
+		},
+		{
+			"jsdbtype": "Battlegrounds.Game.Database.Scenario",
+			"Name": "(2) Rechnaya Pereprava",
+			"Description": "",
+			"RelativeFilename": "sid",
+			"SgaName": "1358364990",
+			"MaxPlayers": "2",
+			"Theatre": "SharedFront",
+			"IsWintermap": "False",
+			"Gamemodes": [
+			]
+		},
+		{
+			"jsdbtype": "Battlegrounds.Game.Database.Scenario",
+			"Name": "(2) Verman River",
+			"Description": "",
+			"RelativeFilename": "talis",
+			"SgaName": "1359399878",
+			"MaxPlayers": "2",
+			"Theatre": "SharedFront",
+			"IsWintermap": "True",
+			"Gamemodes": [
+			]
+		},
+		{
+			"jsdbtype": "Battlegrounds.Game.Database.Scenario",
+			"Name": "(2) Deutz",
+			"Description": "",
+			"RelativeFilename": "dave",
+			"SgaName": "1392512289",
+			"MaxPlayers": "2",
+			"Theatre": "SharedFront",
+			"IsWintermap": "False",
+			"Gamemodes": [
+			]
+		},
+		{
+			"jsdbtype": "Battlegrounds.Game.Database.Scenario",
+			"Name": "(6 - 8) Operation Plunder Autumn Rain",
+			"Description": "Map made by O´Field scenario settings changed to weather and terrain effects from Pinsk Marshes. All credits to O´Field. Beginning on the night of March 23, 1945 the 21st Army Group under Field Marshal Bernard Montgomery launched Operation Plunder, as a part of a coordinated set of Rhine crossings. The crossing of the River Rhine was at Rees, Wesel, and south of the Lippe River by the British Second Army, under Lieutenant General Sir Miles C. Dempsey (Operations Turnscrew, Widgeon, and Torchlight), and the United States Ninth Army (Operation Flashpoint), under Lieutenant General William H. Simpson. The First Allied Airborne Army conducted Operation Varsity airborne landings on the east bank of the Rhine in support of Operation Plunder, consisting of U.S. XVIII Airborne Corps, the British 6th and the U.S. 17th Airborne Divisions.",
+			"RelativeFilename": "8p_avenue12",
+			"SgaName": "1395070616",
+			"MaxPlayers": "8",
+			"Theatre": "EasternFront",
+			"IsWintermap": "False",
+			"Gamemodes": [
+			]
+		},
+		{
+			"jsdbtype": "Battlegrounds.Game.Database.Scenario",
+			"Name": "(2 - 4) Kharkov Suburbs",
+			"Description": "The first Battle of Kharkov took place during the last phase of Operation Barbarossa and lasted only for four days. Beeing one of the largest industrial centers and one of the most important bases for railroad and airline connections of the Soviet Union the city of Kharkov was of big strategic Value for both sides. With large parts of the Red Army in the process of strategic retreat, only the 216th Rifle Division was left to hold back the Wehrmacht long enough until most of the industrial equipment could be evacuated or destroyed. Coming from the west, the German Army managed to conquer the last Soviet defence Line and reach the eastern edge of the city. When the 57th Infantry Division ended to Siege of Kharkov by 24 October 1941 they found most of the factories dismantled and relocated to the east.",
+			"RelativeFilename": "4p_kiev2",
+			"SgaName": "1491053595",
+			"MaxPlayers": "4",
+			"Theatre": "SharedFront",
+			"IsWintermap": "False",
+			"Gamemodes": [
+			]
+		},
+		{
+			"jsdbtype": "Battlegrounds.Game.Database.Scenario",
+			"Name": "(4 - 6) Vienna",
+			"Description": "After 4 years of war the Soviet 3rd Ukrainian Front set foot on the Austrian Capital on the 6th April 1945. Approaching from South, North-East and West the Red Army aimed to encircle the Center cutting off the defending forces from further supplies. Supported by the 6th Panzer Army and the fanatic 'Führer Grenadier Brigade' the Wehrmacht tried to hold back the attackers long enough to set up a new line of defence in the West. After days of fierce urban combat Soviet troops finally reached the famous 'Ringstraße' - the hearth of the city.                                                   The large alleys of the Viennese inner city allow for quick armored advances while Buildings and courtyards provide cover for infantry and can be used for ambushes.",
+			"RelativeFilename": "vienna3",
+			"SgaName": "1492218909",
+			"MaxPlayers": "6",
+			"Theatre": "SharedFront",
+			"IsWintermap": "False",
+			"Gamemodes": [
+			]
+		},
+		{
+			"jsdbtype": "Battlegrounds.Game.Database.Scenario",
+			"Name": "(2-6) Bastogne",
+			"Description": "Ihre überregionale Bekanntheit geht auf die Ardennenoffensive der deutschen Wehrmacht ab dem 16. Dezember 1944 – also in der Endphase des Zweiten Weltkrieges – zurück. Unter Feldmarschall von Rundstedt startete die Wehrmacht im Norden Luxemburgs, im angrenzenden östlichen Belgien einen letzten Großangriff, in dessen Verlauf die amerikanischen Truppen zurückgeworfen wurden und sich nur in der umzingelten Stadt Bastogne halten konnten.                                                                                                        erstellt von SpaidaMa",
+			"RelativeFilename": "bastogne",
+			"SgaName": "1510095580",
+			"MaxPlayers": "6",
+			"Theatre": "SharedFront",
+			"IsWintermap": "False",
+			"Gamemodes": [
+			]
+		},
+		{
+			"jsdbtype": "Battlegrounds.Game.Database.Scenario",
+			"Name": "(2 - 4) Stadtkrieg",
+			"Description": "",
+			"RelativeFilename": "citywar",
+			"SgaName": "1530903992",
+			"MaxPlayers": "4",
+			"Theatre": "SharedFront",
+			"IsWintermap": "False",
+			"Gamemodes": [
+			]
+		},
+		{
+			"jsdbtype": "Battlegrounds.Game.Database.Scenario",
+			"Name": "(2) Operation Infatuate",
+			"Description": "",
+			"RelativeFilename": "2p_operation_infatuate",
+			"SgaName": "1559192520",
+			"MaxPlayers": "2",
+			"Theatre": "SharedFront",
+			"IsWintermap": "False",
+			"Gamemodes": [
+			]
+		},
+		{
+			"jsdbtype": "Battlegrounds.Game.Database.Scenario",
+			"Name": "(2) Uuras Kirkkoniemi",
+			"Description": "",
+			"RelativeFilename": "talismanlovessnow",
+			"SgaName": "1613691408",
+			"MaxPlayers": "2",
+			"Theatre": "SharedFront",
+			"IsWintermap": "True",
+			"Gamemodes": [
+			]
+		},
+		{
+			"jsdbtype": "Battlegrounds.Game.Database.Scenario",
+			"Name": "(2) Neckarsulm",
+			"Description": "",
+			"RelativeFilename": "orangepest",
+			"SgaName": "1676316413",
+			"MaxPlayers": "2",
+			"Theatre": "SharedFront",
+			"IsWintermap": "False",
+			"Gamemodes": [
+			]
+		},
+		{
+			"jsdbtype": "Battlegrounds.Game.Database.Scenario",
+			"Name": "(2) Bombarded Refinery",
+			"Description": "Heavy air attacks on the Soviet Union factories have left the nation crippled and weakened. This factory is one of many that can be retaken to begin the resupply and push back of the axis forces, however this one in particular, features a main supply route directly out of the factory, giving it extra priotization by both sides to retake and control to continue the war effort.",
+			"RelativeFilename": "refinery_rework",
+			"SgaName": "1689679212",
+			"MaxPlayers": "2",
+			"Theatre": "SharedFront",
+			"IsWintermap": "True",
+			"Gamemodes": [
+			]
+		},
+		{
+			"jsdbtype": "Battlegrounds.Game.Database.Scenario",
+			"Name": "(4) Striking Eastern Scheldt",
+			"Description": "By September 1944 only a single obstacle stood between the allies and port of Antwerp: The Scheldt estuary. Clearing this area located between northern Belgium and southwestern Netherlands was proven to be challenging, as the well-established Wehrmacht fortified this territory in numerous ways.",
+			"RelativeFilename": "strikingeasternscheldt",
+			"SgaName": "1700474707",
+			"MaxPlayers": "4",
+			"Theatre": "SharedFront",
+			"IsWintermap": "False",
+			"Gamemodes": [
+			]
+		},
+		{
+			"jsdbtype": "Battlegrounds.Game.Database.Scenario",
+			"Name": "Whiteball Express",
+			"Description": "Community map created by Rosbone, Sander93, and Sturmpanther",
+			"RelativeFilename": "8p_whiteball_express",
+			"SgaName": "1764555914",
+			"MaxPlayers": "8",
+			"Theatre": "EasternFront",
+			"IsWintermap": "False",
+			"Gamemodes": [
+			]
+		},
+		{
+			"jsdbtype": "Battlegrounds.Game.Database.Scenario",
+			"Name": "(4 - 6) Budapest",
+			"Description": "Heavily depending on the Hungarian oilfields as last income source for fuel, the Wehrmacht declared Budapest a 'Festung', meaning it had to be held at any cost. The Red Army started its offensive against the city on 29 October 1944. More than 1,000,000 men, split into two operating maneuver groups, advanced, encircling German and Hungarian Forces. Around February 1945 the fighting was shifting towards the districts west of the Danube River and around Buda castle whose medieval tunnel system underneath the fortress had been serving as command center for the Wehrmacht. The Siege went on for over 4 months and ended with a desperate outbreak through Soviet lines on 13 February, which led to the biggest defeat in Hungarian military history.",
+			"RelativeFilename": "budapest2",
+			"SgaName": "1785043703",
+			"MaxPlayers": "6",
+			"Theatre": "SharedFront",
+			"IsWintermap": "True",
+			"Gamemodes": [
+			]
+		},
+		{
+			"jsdbtype": "Battlegrounds.Game.Database.Scenario",
+			"Name": "(4) Dreux Scout r19",
+			"Description": "Community map created by Rosbone. Balance adjustments by TR Clan, Sturmpanther, and Blvckdream",
+			"RelativeFilename": "4p_dreux_scout",
+			"SgaName": "1811887397",
+			"MaxPlayers": "4",
+			"Theatre": "SharedFront",
+			"IsWintermap": "True",
+			"Gamemodes": [
+			]
+		},
+		{
+			"jsdbtype": "Battlegrounds.Game.Database.Scenario",
+			"Name": "(2) Amilly Fields",
+			"Description": "As summer gives way to autumn a small allied force moves into the outskirts of the small French town of Amilly, it is tasked with repairing a section of rail track destroyed by retreating German forces. This rail line will be key to keeping supplies moving to the front.",
+			"RelativeFilename": "amilly_fields",
+			"SgaName": "1857890839",
+			"MaxPlayers": "2",
+			"Theatre": "EasternFront",
+			"IsWintermap": "False",
+			"Gamemodes": [
+			]
+		},
+		{
+			"jsdbtype": "Battlegrounds.Game.Database.Scenario",
+			"Name": "(2) Bocage Version 3.6",
+			"Description": "Normandy was the scene of furious fighting several weeks after June 6, 1944. After the landings of D-Day, what historians today commonly call the “hedge war” begins. After two months of deadly and fierce fighting that put men to the test the Allies finally broke out of the Bocage Liberating France.",
+			"RelativeFilename": "kpen 1vs1",
+			"SgaName": "1891664720",
+			"MaxPlayers": "2",
+			"Theatre": "EasternFront",
+			"IsWintermap": "False",
+			"Gamemodes": [
+			]
+		},
+		{
+			"jsdbtype": "Battlegrounds.Game.Database.Scenario",
+			"Name": "4-6 Devastation",
+			"Description": "During the battle of Rotterdam on the 14th of May, 1940, the German command made gave the Dutch forces an ultimatum. If the Dutch surrendered, the Germans would call off a bombing raid on the city. However, due to a misscommunication or deciet, the bombing proceeded anyway. The Devastating air raid destroyed much of the city, save for the St. Lawrence Church, and left tens of thousands homeless and killed nearly nine hundred civilians. The Dutch government capitulated to the Germans to prevent further destruction to other cities.",
+			"RelativeFilename": "4-6 devastation",
+			"SgaName": "1916269282",
+			"MaxPlayers": "6",
+			"Theatre": "SharedFront",
+			"IsWintermap": "False",
+			"Gamemodes": [
+			]
+		},
+		{
+			"jsdbtype": "Battlegrounds.Game.Database.Scenario",
+			"Name": "(4) Duclair Competitive Rework",
+			"Description": "(4) Duclair. Originally created by OnkelSam, COH2 remake by Mirage357, Competitive rework by WhiteFlashReborn V2.1",
+			"RelativeFilename": "4 duclair",
+			"SgaName": "1940143764",
+			"MaxPlayers": "4",
+			"Theatre": "SharedFront",
+			"IsWintermap": "False",
+			"Gamemodes": [
+			]
+		},
+		{
+			"jsdbtype": "Battlegrounds.Game.Database.Scenario",
+			"Name": "(4 - 6) Achelous River Winter",
+			"Description": "Achelous River, a place long forgotten. Many battles have been fought here and many soldiers have fallen trying to take Archelous river. Tempetures have changed, the once clear fields have now been covered by a thick layer of snow and surviving has never been so hard.",
+			"RelativeFilename": "achelous river winter",
+			"SgaName": "202820699",
+			"MaxPlayers": "6",
+			"Theatre": "SharedFront",
+			"IsWintermap": "True",
+			"Gamemodes": [
+			]
+		},
+		{
+			"jsdbtype": "Battlegrounds.Game.Database.Scenario",
+			"Name": "(4 - 6) Seine River Docks",
+			"Description": "Near the mouth of the Seine River lies Port-Jerome, a small developing port with a large quantity of industrial resources. Bot Allies and Axis officers have identified Port-Jerome as a significant strategic location for controlling the flow of traffic along the Seine River, as well as controlling movement along the mainland. The importance of the docks and bridges destined to convert this once bustling dockside community into nothing but debris.",
+			"RelativeFilename": "seine_river_docks_winter",
+			"SgaName": "202820737",
+			"MaxPlayers": "6",
+			"Theatre": "SharedFront",
+			"IsWintermap": "True",
+			"Gamemodes": [
+			]
+		},
+		{
+			"jsdbtype": "Battlegrounds.Game.Database.Scenario",
+			"Name": "(4 - 6) Lionskaya",
+			"Description": "The way this small town resembles the French Lyon is uncanny. \n \n 'Why did the verdammte Führer not deploy us to the Atlantikwall?' one German officer grunted before being shot by an Allied sniper. \n \n Contact has been made! Push across the river to decide this engagement early, or fortify yourself in a desperate attempt to hold the line. \n \n Scouts report on large amounts of fuel stored across the river, which might give your forces a decisive edge over your enemy! \n \n Either way: enjoy this fierce battle, as it might be your last one!",
+			"RelativeFilename": "4-6p_lionskaya",
+			"SgaName": "202868305",
+			"MaxPlayers": "6",
+			"Theatre": "SharedFront",
+			"IsWintermap": "True",
+			"Gamemodes": [
+			]
+		},
+		{
+			"jsdbtype": "Battlegrounds.Game.Database.Scenario",
+			"Name": "(2-8) Achelous River WFA",
+			"Description": "CoH Original Map, ported to CoH 2 by Ecarus & Cpl.Cookie. Updated for WFA and tweaked.",
+			"RelativeFilename": "achelous_river_wfa",
+			"SgaName": "204665522",
+			"MaxPlayers": "8",
+			"Theatre": "SharedFront",
+			"IsWintermap": "False",
+			"Gamemodes": [
+			]
+		},
+		{
+			"jsdbtype": "Battlegrounds.Game.Database.Scenario",
+			"Name": "(8) Eastern Assault v12",
+			"Description": "Community map by Rosbone",
+			"RelativeFilename": "8p_eastern_assault",
+			"SgaName": "2071262744",
+			"MaxPlayers": "8",
+			"Theatre": "EasternFront",
+			"IsWintermap": "False",
+			"Gamemodes": [
+			]
+		},
+		{
+			"jsdbtype": "Battlegrounds.Game.Database.Scenario",
+			"Name": "(2 - 4) Saratov Bridge",
+			"Description": "These two bridges offering passage across the mighty Volga on the edge of Saratov have been engulfed in a vicious battle as both sides try to secure this vital and last connecting point for many kilometers in both directions...",
+			"RelativeFilename": "saratov bridge",
+			"SgaName": "207274972",
+			"MaxPlayers": "4",
+			"Theatre": "EasternFront",
+			"IsWintermap": "False",
+			"Gamemodes": [
+			]
+		},
+		{
+			"jsdbtype": "Battlegrounds.Game.Database.Scenario",
+			"Name": "(2-4)Two-Towns",
+			"Description": "",
+			"RelativeFilename": "4p_two_towns",
+			"SgaName": "226214391",
+			"MaxPlayers": "4",
+			"Theatre": "SharedFront",
+			"IsWintermap": "False",
+			"Gamemodes": [
+			]
+		},
+		{
+			"jsdbtype": "Battlegrounds.Game.Database.Scenario",
+			"Name": "(2-4)Hold The Sector",
+			"Description": "",
+			"RelativeFilename": "hold the sector",
+			"SgaName": "245715701",
+			"MaxPlayers": "4",
+			"Theatre": "SharedFront",
+			"IsWintermap": "False",
+			"Gamemodes": [
+			]
+		},
+		{
+			"jsdbtype": "Battlegrounds.Game.Database.Scenario",
+			"Name": "(2 - 4) Baraque de Fraiture",
+			"Description": "In the blistering cold of the morning I heard some men talking about the boys at St.Vith, being trapped in what they called 'goose egg'. That morning, I thought of the men dying eye to eye with the Krauts, deperately fighting, trying to escape the inevitable. That morning, I did not know I'd also be within death's reach only a few hours after. One job. Hold the corridor to St. Vith. Two roads. Meeting in a small settlement called Baraque de Fraiture. Three days. 20th - 23rd of December. Hitler had indeed opened Hell's gates for Christmas.",
+			"RelativeFilename": "4p_baraque_de_fraiture",
+			"SgaName": "275568654",
+			"MaxPlayers": "4",
+			"Theatre": "SharedFront",
+			"IsWintermap": "False",
+			"Gamemodes": [
+			]
+		},
+		{
+			"jsdbtype": "Battlegrounds.Game.Database.Scenario",
+			"Name": "Testmap",
+			"Description": "",
+			"RelativeFilename": "testmap",
+			"SgaName": "286954680",
+			"MaxPlayers": "2",
+			"Theatre": "SharedFront",
+			"IsWintermap": "False",
+			"Gamemodes": [
+			]
+		},
+		{
+			"jsdbtype": "Battlegrounds.Game.Database.Scenario",
+			"Name": "(2 - 4) Operation Chariot",
+			"Description": "March 28, 1942, Saint Nazaire. British forces launched Operation Chariot. Objective: destruction of facilities and equipment dock, especially the dry dock of the port of St. Nazaire and thus prevented the battleship Tirpitz, sister of Bismarck, can not be repaired after a potential race war in the Atlantic. This exceptional raid done at the cost of terrible losses, proved at that time the irreplaceable special forces in case of conflict.",
+			"RelativeFilename": "operation_cerberus4",
+			"SgaName": "288908351",
+			"MaxPlayers": "4",
+			"Theatre": "EasternFront",
+			"IsWintermap": "False",
+			"Gamemodes": [
+			]
+		},
+		{
+			"jsdbtype": "Battlegrounds.Game.Database.Scenario",
+			"Name": "(6 - 8) Jülich",
+			"Description": "By the time American forces arrived at the borders of Jülich, it was an ashen white ruin. Razed to its last few buildings, Jülich, on the integral Rhineland, was one of many settlements utterly destroyed as the Battle of the Bulge came to a climax. It's ruins played host to Wehrmacht forces for several months as Allied armies bombarded the town, hoping to distract from their efforts to cross the Roer unimpeded. Vast ruins offer unique urban combat, where vehicles can only dominate in open areas, and infantry can infiltrate unnoticed.",
+			"RelativeFilename": "8p_julich",
+			"SgaName": "306448293",
+			"MaxPlayers": "8",
+			"Theatre": "EasternFront",
+			"IsWintermap": "False",
+			"Gamemodes": [
+			]
+		},
+		{
+			"jsdbtype": "Battlegrounds.Game.Database.Scenario",
+			"Name": "(6 - 8) Carentan",
+			"Description": "D-Day Plus 3: On June, 9th 1944 advancing airborne forces of the U.S. Army tried to establish a continous defense line securing the U.S. beachheads at 'Omaha' and 'Utha'. Aerial reconnaissance of Carentan indicated that the town might be lightly defended. The leading attack of parts of 101st Airborne Division lasted in a battle of four days fighting elements of the German 2nd Fallschirmjäger-Division and 91st Air-Landing-Division, which were supported by a massive counterattack of the 17th SS-Panzergrenadier-Division on 13 June. Initially successful, its attack was thrown back by Combat Command A of the U.S. 2nd Armored Division. (v.2.0.2) Copyright 28.08.2014 SteamID: CasTroy (76561198010749720)",
+			"RelativeFilename": "carentan",
+			"SgaName": "307083605",
+			"MaxPlayers": "8",
+			"Theatre": "EasternFront",
+			"IsWintermap": "False",
+			"Gamemodes": [
+			]
+		},
+		{
+			"jsdbtype": "Battlegrounds.Game.Database.Scenario",
+			"Name": "(2 - 4) Volga Pass",
+			"Description": "Crossing the bridge over rocky rivers of shallow and warm water, the dusk strokes gently our gloomy and tired faces. And so we encounter the unknown but well expected enemy, as we prepare to leave this dreamworld, this prison of endless war, and return to the underworld for oblivion...",
+			"RelativeFilename": "volga pass",
+			"SgaName": "314753878",
+			"MaxPlayers": "4",
+			"Theatre": "EasternFront",
+			"IsWintermap": "False",
+			"Gamemodes": [
+			]
+		},
+		{
+			"jsdbtype": "Battlegrounds.Game.Database.Scenario",
+			"Name": "(6 - 8) Downtown",
+			"Description": "Sie stehen vor einer großen Herausforderung. Das Oberkommando verlangt die sofortige Rückeroberung der Stadt. Da die Alliierten mit ihrem Luftschlag erfolglos waren, werden sie sich ebenfalls im Hinterland neu formiert haben. Der Stadtkampf birgt die schwierigste Art der Kriegsführung insich. Rüsten sie ihre Einheiten möglichst bald mit Flammenwerfer aus und sparen sie nicht mit Granaten. Der Einsatz von Mörser und Scharfschützen erleichtert den Kampf gegen feindliche Infanterie in Gebäuden. Nützen sie wenn möglich Panzer. Jedoch ist Vorsicht geboten, denn in den engen Strassen können ihre Panzerverbände ohne Schutz ein rasches Ende finden.               Map created by TheSphinx Steam-ID 0:1:108228154 Copyright 01.08.2014",
+			"RelativeFilename": "8p_downtown_bysphinx",
+			"SgaName": "321025726",
+			"MaxPlayers": "8",
+			"Theatre": "SharedFront",
+			"IsWintermap": "False",
+			"Gamemodes": [
+			]
+		},
+		{
+			"jsdbtype": "Battlegrounds.Game.Database.Scenario",
+			"Name": "(4 - 6) Eisenfaust",
+			"Description": "The Fatherland had lost its protective boundaries. During the occupation of Europe, with Germany nestled in the safety of its neighbouring countries, production and industry had flourished, safe from the bombardments of the Soviets to the East, and the Commonwealth to the West. However, as Operation Market Garden pushed the Allies further into Europe, factories, facilities and power plants alike fell victim; a new emphasis on defence was required, not just to save the Fatherland from destruction, but to keep its industry alive long enough to be of use. Make use of forward positions in this map of attrition, wherein certain territory points will allow you to spawn closer to the action - beware however, as neglecting these points will allow your opponent to use it against you.",
+			"RelativeFilename": "6p_eisenfaust",
+			"SgaName": "326383830",
+			"MaxPlayers": "6",
+			"Theatre": "SharedFront",
+			"IsWintermap": "False",
+			"Gamemodes": [
+			]
+		},
+		{
+			"jsdbtype": "Battlegrounds.Game.Database.Scenario",
+			"Name": "(4) Smolensk Outskirts",
+			"Description": "Not too much is known about a soldier named Maxim Orlow who died in the Smolensk Pocket in late July,1941. He shared the fate of nearly 500,000 men of the Red Army who let their lives as the Wehrmacht ruthlessly advanced through Eastern Europe. More than three years later, when the Soviets had beaten the Wehrmacht out of Smolensk again, a letter was found in the ruins of a barn in the outskirts of the city. Standing in a muddy puddle next to the road, Major Ivan Danko started to read: >They came to every village/ Picked up us near and far/ To stop the madman Hitler/ The chosen ones we are/ We do not stand a chance/ Oh death is in the air/ Out here we die like flies/ But Stalin doesn't care.< Danko hesitated for a second, then he dropped the dirty sheet of paper and it blew away with the wind.",
+			"RelativeFilename": "4p_smolensk_outskirts",
+			"SgaName": "332427968",
+			"MaxPlayers": "4",
+			"Theatre": "SharedFront",
+			"IsWintermap": "False",
+			"Gamemodes": [
+			]
+		},
+		{
+			"jsdbtype": "Battlegrounds.Game.Database.Scenario",
+			"Name": "Monte Cassino",
+			"Description": "Map Version : Monte Cassino 1.1 , Popcap : 200 , Night - Morning - Day",
+			"RelativeFilename": "monte cassino",
+			"SgaName": "419650399",
+			"MaxPlayers": "6",
+			"Theatre": "SharedFront",
+			"IsWintermap": "False",
+			"Gamemodes": [
+			]
+		},
+		{
+			"jsdbtype": "Battlegrounds.Game.Database.Scenario",
+			"Name": "(4) Oosterbeek",
+			"Description": "“You know as well as I do there are a lot of bloody Germans coming at us… We've fought the Germans before - in North Africa, Sicily, Italy. They weren't good enough for us then, and they're bloody well not good enough for us now. They're up against the finest soldiers in the world” quoted Richard Lonsdale to the defenders of Oosterbeek. So desperate was the retreat from Arnhem, and so desperate for liberation were its local citizens, that even Dutch families contributed to its defence, going so far as to smuggle the dying and wounded off its streets, before it was too late.",
+			"RelativeFilename": "4p_stationsweg",
+			"SgaName": "493476190",
+			"MaxPlayers": "4",
+			"Theatre": "EasternFront",
+			"IsWintermap": "False",
+			"Gamemodes": [
+			]
+		},
+		{
+			"jsdbtype": "Battlegrounds.Game.Database.Scenario",
+			"Name": "(2 - 6) Atlantic Wall",
+			"Description": "In an attempt to repulse an Allied attack on Nazi-occupied Europe, Hitler designed the Atlantic Wall.  A massive chain of minefields, concrete walls, concrete bunkers, barbed wire fences, and fortified artillery emplacements, this line of defensive structures stretched all the way from Norway, along the Belgium and French coastline to the Spanish border.  The barrier of the Atlantic Wall was the last great impediment the Germans could muster to keep the Allies out of Europe.",
+			"RelativeFilename": "atlantic_wall_pub",
+			"SgaName": "508073026",
+			"MaxPlayers": "6",
+			"Theatre": "SharedFront",
+			"IsWintermap": "False",
+			"Gamemodes": [
+			]
+		},
+		{
+			"jsdbtype": "Battlegrounds.Game.Database.Scenario",
+			"Name": "4_p achelous river by xxCOCxx",
+			"Description": "Transformed by xxCOMPANY OF COWARDSxx",
+			"RelativeFilename": "4_p achelous river by xxcocxx",
+			"SgaName": "511835961",
+			"MaxPlayers": "4",
+			"Theatre": "SharedFront",
+			"IsWintermap": "False",
+			"Gamemodes": [
+			]
+		},
+		{
+			"jsdbtype": "Battlegrounds.Game.Database.Scenario",
+			"Name": "(4 - 6) Vire River Valley",
+			"Description": "Nestled in the large valley, a small rural community has been torn by war. The river that runs through this community was once a place where children and adults alike would fish or wet their feet on a hot summer day, but now it is nothing more than a natural barrier that has led to stalemate after stalemate between the Allied and Axis forces stationed in the area. It has been told that the commander who takes this valley once and for all is to receive commendations of the highest order.",
+			"RelativeFilename": "4p_vire_river_valley",
+			"SgaName": "526578937",
+			"MaxPlayers": "6",
+			"Theatre": "WesternFront",
+			"IsWintermap": "False",
+			"Gamemodes": [
+			]
+		},
+		{
+			"jsdbtype": "Battlegrounds.Game.Database.Scenario",
+			"Name": "(4) Yartsevo - Vop river",
+			"Description": "",
+			"RelativeFilename": "4_yartsevo_vop_river",
+			"SgaName": "542240913",
+			"MaxPlayers": "4",
+			"Theatre": "EasternFront",
+			"IsWintermap": "False",
+			"Gamemodes": [
+			]
+		},
+		{
+			"jsdbtype": "Battlegrounds.Game.Database.Scenario",
+			"Name": "(2 - 4) Hamminkeln",
+			"Description": "As part of the Operation Plunder the British Field Marshall Montgomery planed an airborne landing on the right side of the river Rhine to support the allied crossing of Germany's last defensive line. On 24th March 1945 the British 6th Airborne and the US 17th Airborne Division were dropped near the town of Hamminkeln during Operation Varsity. The region was defend by local German Flak soldiers, Volkssturm units and small parts of the 116. PzDiv. All in all they could withstand the allied offensive and within hours the Allies conquered all objectives.",
+			"RelativeFilename": "hamminkeln",
+			"SgaName": "551682347",
+			"MaxPlayers": "4",
+			"Theatre": "EasternFront",
+			"IsWintermap": "False",
+			"Gamemodes": [
+			]
+		},
+		{
+			"jsdbtype": "Battlegrounds.Game.Database.Scenario",
+			"Name": "(6 - 8) Sword Beach",
+			"Description": "Supported by British and French Commandos on their eastern flank and by Canadian landings on their western side, over 25,000 men of the British Army assaulted Sword Beach during the Normandy Landings of June 6th. Sword Beach offered a considerably different conflict to that of Omaha and Utah Beaches however, as only small portions of the coastal defences were placed upon cliffsides, meaning that infantry and vehicles alike could rush across the flat beaches – albeit well-defended – without risk from natural barriers. This battlefield of wide sands, dense housing blocks and open fields was the gateway to some of the most famous battles in history, from Pegasus Bridge, to Villers-Bocage and the Liberation of Caen.",
+			"RelativeFilename": "6p_sword",
+			"SgaName": "562507378",
+			"MaxPlayers": "8",
+			"Theatre": "EasternFront",
+			"IsWintermap": "False",
+			"Gamemodes": [
+			]
+		},
+		{
+			"jsdbtype": "Battlegrounds.Game.Database.Scenario",
+			"Name": "(2 - 4) Gilroy's Harbour winter",
+			"Description": "The residents of Oye swore they would rename their small harbor town in honor of the first Allied soldier to liberate them. Lucky for them, Private Gilroy was one step ahead of Corporal Butts. These harbors dot the coasts and river estuaries of France, Belgium and the Netherlands and each, no matter the size, could be used to transship material vital to the Allied war effort.",
+			"RelativeFilename": "4p_coastal_harbour",
+			"SgaName": "577534400",
+			"MaxPlayers": "4",
+			"Theatre": "EasternFront",
+			"IsWintermap": "True",
+			"Gamemodes": [
+			]
+		},
+		{
+			"jsdbtype": "Battlegrounds.Game.Database.Scenario",
+			"Name": "(2 - 4) Kreuzung Dorf",
+			"Description": "In the final months of the war, Allied forces push deep into the heart of Germany, fighting from one village to the next before they can reach Berlin.",
+			"RelativeFilename": "4p_crossroads",
+			"SgaName": "581482034",
+			"MaxPlayers": "4",
+			"Theatre": "SharedFront",
+			"IsWintermap": "False",
+			"Gamemodes": [
+			]
+		},
+		{
+			"jsdbtype": "Battlegrounds.Game.Database.Scenario",
+			"Name": "(2 - 4) Angoville",
+			"Description": "(Extended 4-player version of the official '(2) Angoville')\n\nThe small farming community of Angoville has the potential to be the staging ground of a short but bloody battle. Open fields in the west would allow the swift movement of large squadrons unhindered by the terrain. Medics pray that the shelter found on the eastern end would be enough to hold off an Axis offensive that would surely prove fatal for the wounded too weak for transportation.\n\nThe farmhouses to the east have been long abandoned, farmers fearing the impending conflict.",
+			"RelativeFilename": "4p_angoville_farms",
+			"SgaName": "623570565",
+			"MaxPlayers": "4",
+			"Theatre": "SharedFront",
+			"IsWintermap": "False",
+			"Gamemodes": [
+			]
+		},
+		{
+			"jsdbtype": "Battlegrounds.Game.Database.Scenario",
+			"Name": "(4) Goch Infiltration",
+			"Description": "The town of Goch, for many men in the 51st Highland Division, was the end of the war. Situated on the River Niers, this crumbling town was the final objective for the division, and the final resting place for those who died there. Under the cover of darkness, the town was assaulted from several angles, including the Northern road into the town itself, and the Western road into the flooded outskirts and forests. The men who fought here knew the cost of such a battle: push too far on either front, and risk being outflanked by the other. Strict command, strategy and grit was needed to advance both lines without breaking. In all, Allied forces advanced only a few hundred metres in 2 days.",
+			"RelativeFilename": "6p_goch_assault",
+			"SgaName": "634119029",
+			"MaxPlayers": "4",
+			"Theatre": "WesternFront",
+			"IsWintermap": "False",
+			"Gamemodes": [
+			]
+		},
+		{
+			"jsdbtype": "Battlegrounds.Game.Database.Scenario",
+			"Name": "(2 - 4) Samrée",
+			"Description": "During the Battle of the Bulge Samrée - a small village close to the important town of La Roche-en-Ardenne - saw furious battles. When the german 116. Panzer-Division conquered the town they captured the supplies of an retreating US armored division. Only a couple of days later the germans had to retreat. 50 Panzergrenadiers supported by a small number of Panthers and armored vehicles - the rest of the proud and elite 116. PzDiv - try to defend this supplies against the US counter attack. Map by Gerrit 'Lord Rommel' G..",
+			"RelativeFilename": "samree",
+			"SgaName": "655354499",
+			"MaxPlayers": "4",
+			"Theatre": "EasternFront",
+			"IsWintermap": "True",
+			"Gamemodes": [
+			]
+		},
+		{
+			"jsdbtype": "Battlegrounds.Game.Database.Scenario",
+			"Name": "(4) Operation Ladbroke",
+			"Description": "For all intents and purposes, Operation Ladbroke, part of the Allied Invasion of Sicily, was a full-scale assault. How it panned out in reality, however, was considerably less effective than the later invasions of France, the Netherlands, and Germany. Inexperienced pilots, faulty gliders and poor weather conditions caused the airborne from American and British regiments to be scattered all over the coast of Sicily, despite only departing from the recently conquered Tunisia. What they lacked in accuracy, however, these units made up for in chaos, which was wrought all over Axis positions by scattered soldiers, intent on collapsing their foe’s infrastructure from within.",
+			"RelativeFilename": "4p_river_road",
+			"SgaName": "675976863",
+			"MaxPlayers": "4",
+			"Theatre": "EasternFront",
+			"IsWintermap": "False",
+			"Gamemodes": [
+			]
+		},
+		{
+			"jsdbtype": "Battlegrounds.Game.Database.Scenario",
+			"Name": "(2 - 4) Lyon",
+			"Description": "'...and our jump was off, that's for sure. Sergeant Richards says we're outside the town of Lyon - an urban stronghold for the Germans in the region. We managed to creep up close enough to get a look at the city though, seems that may have changed. About one-third of the town is rubble and no sign of the enemy. We setup our HQ in...' Partially destroyed city blocks make urban tactics a must in Lyon.",
+			"RelativeFilename": "4p_lyon",
+			"SgaName": "685673431",
+			"MaxPlayers": "4",
+			"Theatre": "WesternFront",
+			"IsWintermap": "False",
+			"Gamemodes": [
+			]
+		},
+		{
+			"jsdbtype": "Battlegrounds.Game.Database.Scenario",
+			"Name": "(2) Normandy",
+			"Description": "“The dice are on the carpet;” the phrase broadcast over BBC radio and heard throughout France was the first of several call signs, awakening the Resistance in the Normandy area. Citizens who had remained patient under occupation knew at last that the Allied invasion was coming – within hours, roads were blocked, railways mined and key military figures were assassinated. As Allied forces moved inland, carnage awaited them.",
+			"RelativeFilename": "2p_carpet_dice",
+			"SgaName": "718351464",
+			"MaxPlayers": "2",
+			"Theatre": "EasternFront",
+			"IsWintermap": "False",
+			"Gamemodes": [
+			]
+		},
+		{
+			"jsdbtype": "Battlegrounds.Game.Database.Scenario",
+			"Name": "(2) Caen",
+			"Description": "“Jerry held onto Caen, tooth and nail. Every time we pushed, they clung on tighter. Every basement, ruin and bunker down every damn street was a deathtrap, and what should have been a fleeting skirmish took us the better part of a month. Wilkes summed it up best: ‘they fight like we did at Dunkirk’, he’d said. We shouldn’t have expected less.”  Dense urban ruins change the pace of combat, where ambush and indirect fire are key to maintaining control. Knowing where to defend and where to assault can turn the ruins against your enemy.",
+			"RelativeFilename": "2p_caen",
+			"SgaName": "723237092",
+			"MaxPlayers": "2",
+			"Theatre": "EasternFront",
+			"IsWintermap": "False",
+			"Gamemodes": [
+			]
+		},
+		{
+			"jsdbtype": "Battlegrounds.Game.Database.Scenario",
+			"Name": "(6 - 8) Seine River Docks",
+			"Description": "Near the mouth of the Seine River lies Port-Jerome, a small developing port with a large quantity of industrial resources. Bot Allies and Axis officers have identified Port-Jerome as a significant strategic location for controlling the flow of traffic along the Seine River, as well as controlling movement along the mainland. The importance of the docks and bridges destined to convert this once bustling dockside community into nothing but debris.",
+			"RelativeFilename": "seine_river_docks_winter4v4",
+			"SgaName": "729498858",
+			"MaxPlayers": "8",
+			"Theatre": "SharedFront",
+			"IsWintermap": "True",
+			"Gamemodes": [
+			]
+		},
+		{
+			"jsdbtype": "Battlegrounds.Game.Database.Scenario",
+			"Name": "(2) Forest Skirmish",
+			"Description": "Inspired map 'Hill Skirmish' from Heroes & Generals. Map by Zbir.",
+			"RelativeFilename": "2p_forestskirmish",
+			"SgaName": "730247933",
+			"MaxPlayers": "2",
+			"Theatre": "EasternFront",
+			"IsWintermap": "False",
+			"Gamemodes": [
+			]
+		},
+		{
+			"jsdbtype": "Battlegrounds.Game.Database.Scenario",
+			"Name": "(2 - 4) Schlisselburg",
+			"Description": "The area between Schlisselburg and the bend of the Neva to the south represented the land link between the Soviet-controlled territory and the city defence perimeter. The Red Army objective was to retain this narrow stretch of the shore and prevent German forces from completing the blockade, thus allowing transports to reach the population in besieged Leningrad with food, medications and other supplies.",
+			"RelativeFilename": "shlisselburg",
+			"SgaName": "740677859",
+			"MaxPlayers": "4",
+			"Theatre": "SharedFront",
+			"IsWintermap": "True",
+			"Gamemodes": [
+			]
+		},
+		{
+			"jsdbtype": "Battlegrounds.Game.Database.Scenario",
+			"Name": "(2) Bryansk Forest",
+			"Description": "After the start of the German retreat after the Battle of Stalingrad, the Germans went straight into the stronghold of the partisans. Attacked by the Red Army in the rear and partisans in front of them, the German Army had a fearful time during its retreat. The Germans attempted to take on the partisans especially in the Bryansk Forest. Up to 60,000 German soldiers were sent into the forest to seek and destroy partisan strongholds.",
+			"RelativeFilename": "2p_bryansk_forest",
+			"SgaName": "746181951",
+			"MaxPlayers": "2",
+			"Theatre": "EasternFront",
+			"IsWintermap": "False",
+			"Gamemodes": [
+			]
+		},
+		{
+			"jsdbtype": "Battlegrounds.Game.Database.Scenario",
+			"Name": "(2) Winter valley",
+			"Description": "",
+			"RelativeFilename": "winter_valley",
+			"SgaName": "746962101",
+			"MaxPlayers": "2",
+			"Theatre": "SharedFront",
+			"IsWintermap": "True",
+			"Gamemodes": [
+			]
+		},
+		{
+			"jsdbtype": "Battlegrounds.Game.Database.Scenario",
+			"Name": "(6) Heiligenbeil",
+			"Description": "'I never understood war. I never knew what it was all about. Why men who could be brothers should let their lives to satisfy someone else's need for power. I never understood it, until that one day came. That day, in February 1945 when my unit was sent to Heiligenbeil. That day, when a Soviet plane attacked that refugee column of elders and children. That day changed it all. Now I understood. Now I knew, that all the killing had to stop. But first, we had to stop them from killing those unable to defend themselves. And maybe one day, everyone will understand - and men will, in fact - treat each other like brothers.' Unknown German Volkssturm Soldier, 1945",
+			"RelativeFilename": "6p_heiligenbeil",
+			"SgaName": "755080062",
+			"MaxPlayers": "6",
+			"Theatre": "SharedFront",
+			"IsWintermap": "True",
+			"Gamemodes": [
+			]
+		},
+		{
+			"jsdbtype": "Battlegrounds.Game.Database.Scenario",
+			"Name": "(2) Oosterbeek",
+			"Description": "Fighting in Oosterbeek grew bitter after eight days of protracted trench warfare and continuous bombardments. British forces and Dutch civilians were on a razor’s edge, with more wounded and dead than there were fighting men left alive, against Wehrmacht forces that seemed to have no limit. Axis armour and infantry entered Oosterbeek every hour, leaving the defenders no choice but to hatch a final, daring escape across the Lower Rhine under the cover of night. At the turn of midnight, British forces evacuated, leaving only volunteers behind to continue the illusion of defence. Even after a failed liberation, a promise was made to try once more: “we brought death and destruction for which you have never blamed us…”",
+			"RelativeFilename": "2p_stationsweg",
+			"SgaName": "764025815",
+			"MaxPlayers": "2",
+			"Theatre": "EasternFront",
+			"IsWintermap": "False",
+			"Gamemodes": [
+			]
+		},
+		{
+			"jsdbtype": "Battlegrounds.Game.Database.Scenario",
+			"Name": "(2 - 4) Halbe",
+			"Description": "Late April, 1945. The 9th Army is trapped in a large pocket in the Spree Forest region south-east of Berlin and attempts to break out westwards through the village of Halbe and the pine forests south of Berlin to link up with the 12th Army with the intention of heading west and surrendering to the Western Allies. Under constant bombardment by the overwhelming Soviet Air Force and Artillery, the Ninth Army has to fight their way through three lines of Soviet troops of the 1st Ukrainian Front, while at the same time units of the 1st Belorussian Front are moving in from the north east.",
+			"RelativeFilename": "halbe",
+			"SgaName": "778052359",
+			"MaxPlayers": "4",
+			"Theatre": "SharedFront",
+			"IsWintermap": "False",
+			"Gamemodes": [
+			]
+		},
+		{
+			"jsdbtype": "Battlegrounds.Game.Database.Scenario",
+			"Name": "(6 - 8) Western Oder Pocket",
+			"Description": "Early in the Upper-Silesian Offensive, the 10th Guards Tank Korps managed to close a pocket on the western front of the Oder river by meeting the 7th Guards Mechanized Korps at Raselwitz. The remnants of five German Divisions were trapped between the Oder and the Neisse. While reseve forces of the Wehrmacht try to break through to the encircled Divisions scattered around towns at the riverfront, those men will have to make a stand and bind as many Red Army units as possible.",
+			"RelativeFilename": "elbe_castle",
+			"SgaName": "778052768",
+			"MaxPlayers": "8",
+			"Theatre": "EasternFront",
+			"IsWintermap": "False",
+			"Gamemodes": [
+			]
+		},
+		{
+			"jsdbtype": "Battlegrounds.Game.Database.Scenario",
+			"Name": "(4 - 6) Orsha",
+			"Description": "After their defeat in the Battle of Smolensk in the Summer of 1943, the Wehrmacht retreated on a broad front to the Panther-Stellung line. The German 4th Army part of Army Group Centre took defensive positions near Orsha. The Orsha offensives were a series of battles, fought between the Red Army and the Wehrmacht during the late Fall of 1943. Orsha was a main traffic junction with the north-south road from Leningrad to Kiev and the east-west road from Minsk to Moscow.",
+			"RelativeFilename": "orsha",
+			"SgaName": "778053130",
+			"MaxPlayers": "6",
+			"Theatre": "SharedFront",
+			"IsWintermap": "False",
+			"Gamemodes": [
+			]
+		},
+		{
+			"jsdbtype": "Battlegrounds.Game.Database.Scenario",
+			"Name": "(4 - 6) Belarusian Lowlands",
+			"Description": "Operation Barbarossa marked the occupation of Belarus by Axis forces, and while there was some initial opposition, resistance quickly broke down, leading to total occupation within three months. Displaced from their homes, citizens and soldiers took resistance into their own hands, occupying the lowlands and forests of Belarus as a staging ground for continuous skirmishes of attrition. With support from the Soviet Union, and the organisation of several Partisan forces, the Belarusian resistance fought back. After considerable losses of communications equipment, fuel, munitions and vehicles, Axis forces retreated until Operation Bagration commenced, attempting the overwhelm the forests en masse.",
+			"RelativeFilename": "6p_best_forest_summer",
+			"SgaName": "778536766",
+			"MaxPlayers": "6",
+			"Theatre": "EasternFront",
+			"IsWintermap": "False",
+			"Gamemodes": [
+			]
+		},
+		{
+			"jsdbtype": "Battlegrounds.Game.Database.Scenario",
+			"Name": "(6 - 8) Elst Outskirts",
+			"Description": "Operation Market Garden was rapidly declining. Communication failure was among the countless flaws of the Allied plan to liberate The Netherlands, but on the road to Elst, it cost the Allies dearly. While John Frosts’ airborne elite were dying in the Battle for Arnhem, British and American regiments raced to link up with them, oblivious to their comrades’ predicament, or the well-prepared forces that awaited them. The road to Elst, like many of the roads between Arnhem and Nijmegen were saturated with Axis forces, and combat here was brutal, staggered and slow.",
+			"RelativeFilename": "8p_elst",
+			"SgaName": "847811063",
+			"MaxPlayers": "8",
+			"Theatre": "SharedFront",
+			"IsWintermap": "False",
+			"Gamemodes": [
+			]
+		},
+		{
+			"jsdbtype": "Battlegrounds.Game.Database.Scenario",
+			"Name": "(4-6) Under Siege",
+			"Description": "Well Ballanced, Highly Detailed Map, 3vs3 size 448x512. This map has a little Town in the Middle, 'Made By Lt.Clifforth' Enjoy",
+			"RelativeFilename": "3p_upperside",
+			"SgaName": "860944220",
+			"MaxPlayers": "6",
+			"Theatre": "EasternFront",
+			"IsWintermap": "False",
+			"Gamemodes": [
+			]
+		},
+		{
+			"jsdbtype": "Battlegrounds.Game.Database.Scenario",
+			"Name": "(2) Riverside",
+			"Description": "Created by Simen",
+			"RelativeFilename": "riverside",
+			"SgaName": "861244569",
+			"MaxPlayers": "2",
+			"Theatre": "EasternFront",
+			"IsWintermap": "False",
+			"Gamemodes": [
+			]
+		},
+		{
+			"jsdbtype": "Battlegrounds.Game.Database.Scenario",
+			"Name": "(2-4)Second_Assault",
+			"Description": "We fought Hard almost a Month, Brutal House to House clearing and with little sleep. Because of the Constant Bombardment on the city. It's strange to think about the people who once lived here, they had a happy life and nice homes 'all that is no more...' Many Brave men already lay dead in these streets and I fear I will soon join them, this is my last thoughts before we Launch the Second Assault. I Pray my superiors will guide us Threw this hell hole. Map made By Lt.Clifforth",
+			"RelativeFilename": "battlefield",
+			"SgaName": "900041168",
+			"MaxPlayers": "4",
+			"Theatre": "SharedFront",
+			"IsWintermap": "False",
+			"Gamemodes": [
+			]
+		},
+		{
+			"jsdbtype": "Battlegrounds.Game.Database.Scenario",
+			"Name": "(2-4) Countryside",
+			"Description": "Countrysides all around the world would be touched by the great Conflict, some more than others. Your Task today, is to gain control over this countryside, so a supply route could be established along the main road that crosses the town. This is imperative for the soldiers on the front in order to receive much needed supplies and keep fighting. YOU are in command and you must get the job done.                                                                                       Map Made By Lt.Clifforth",
+			"RelativeFilename": "long_map2vs2",
+			"SgaName": "905102525",
+			"MaxPlayers": "4",
+			"Theatre": "SharedFront",
+			"IsWintermap": "False",
+			"Gamemodes": [
+			]
+		},
+		{
+			"jsdbtype": "Battlegrounds.Game.Database.Scenario",
+			"Name": "(2) St. Omer Airfield",
+			"Description": "",
+			"RelativeFilename": "2p_rafv2",
+			"SgaName": "907087512",
+			"MaxPlayers": "2",
+			"Theatre": "SharedFront",
+			"IsWintermap": "True",
+			"Gamemodes": [
+			]
+		},
+		{
+			"jsdbtype": "Battlegrounds.Game.Database.Scenario",
+			"Name": "(2) Road to Tula",
+			"Description": "The region of Tula represented a thorn in the paw of Operation Typhoon - the German offensive targeting Moscow’s weaker outlying settlements, to enable them to surround and overwhelm the capital. Kalinin and Kaluga, cities on Moscow’s southern flank had already fallen, but as the winter of 1941 rolled in, the road to Tula only became stronger. Defences around Tula were erected in frozen dirt, turning villages and farms into minefields and killzones. The outskirts of Tula changed hands continuously from October into January, claiming hundreds of vehicles and thousands of lives.",
+			"RelativeFilename": "2p_tula_winter",
+			"SgaName": "907533390",
+			"MaxPlayers": "2",
+			"Theatre": "SharedFront",
+			"IsWintermap": "True",
+			"Gamemodes": [
+			]
+		},
+		{
+			"jsdbtype": "Battlegrounds.Game.Database.Scenario",
+			"Name": "(4) Operation Sonnenwende",
+			"Description": "Map by Lord Rommel",
+			"RelativeFilename": "operation_sonnenwende",
+			"SgaName": "924400969",
+			"MaxPlayers": "4",
+			"Theatre": "SharedFront",
+			"IsWintermap": "True",
+			"Gamemodes": [
+			]
+		},
+		{
+			"jsdbtype": "Battlegrounds.Game.Database.Scenario",
+			"Name": "(4 - 6) Vyazma Summer",
+			"Description": "Vyazma was one of many urban targets that had to be taken before Moscow would fall. Isolated by the 3rd and 4th Panzer Armies, and cut-off entirely from Bryansk, which was suffering its own siege, the defenders of Vyazma had no choice but to slow their opponents, in the hope that they would be reinforced. Like many other settlements on the Western front of the Blitzkrieg, there was little time to prepare; civilians were often denied evacuation, defences were hastily thrown together, and Soviet military leaders were few.",
+			"RelativeFilename": "6p_vyazma",
+			"SgaName": "954477943",
+			"MaxPlayers": "6",
+			"Theatre": "EasternFront",
+			"IsWintermap": "False",
+			"Gamemodes": [
+			]
+		},
+		{
+			"jsdbtype": "Battlegrounds.Game.Database.Scenario",
+			"Name": "(4 - 6) Golden Fields",
+			"Description": "Map by TheSphinx",
+			"RelativeFilename": "mapbysphinx",
+			"SgaName": "214552824",
+			"MaxPlayers": "6",
+			"Theatre": "SharedFront",
+			"IsWintermap": "False",
+			"Gamemodes": [
+			]
+		},
+		{
+			"jsdbtype": "Battlegrounds.Game.Database.Scenario",
+			"Name": "(4 - 6) Road to Seelow",
+			"Description": "'We dismounted the train five kilometres from Seelow - the bridge up ahead ceased to exist - and marched the last stretch through the woodlands without any resistance. Once we finally reached a clearing, what awaited us was far beyond our expectations: the road to Seelow was locked down, tight, fortified on the very rail bridge we were supposed to cross. The German War Machine was far from unprepared, unlike our rudimentary, desperate defences of Vyazma and Kharkov; these were the defences of Berlin, and we would bleed before we took them.'",
+			"RelativeFilename": "4p_road_to_seelow",
+			"SgaName": "246500770",
+			"MaxPlayers": "6",
+			"Theatre": "SharedFront",
+			"IsWintermap": "False",
+			"Gamemodes": [
+			]
+		},
+		{
+			"jsdbtype": "Battlegrounds.Game.Database.Scenario",
+			"Name": "(2 - 4) Derailing the DR-K320",
+			"Description": "During Operation Wieniec, in the winter of 1942, Polish Partisans sought to utterly disrupt the supply links that the advancing Ostheer had established, through the conquered territory of Warsaw. Among the sabotage was the desire to derail the Wehrmacht Freight Train, Deutsche Reichsbahn - Klassifikation 320. On board were half a battalion of reserve infantry, correspondence from the West, and high orders from the German Command: the key to the Partisan's further survival in seclusion, and their offering to the Soviet War Machine. However, with Soviet forces in reserve, and Ostheer patrols on the advance, the DR - K320 would not be taken so easily.",
+			"RelativeFilename": "2p_derailing",
+			"SgaName": "318597196",
+			"MaxPlayers": "4",
+			"Theatre": "SharedFront",
+			"IsWintermap": "True",
+			"Gamemodes": [
+			]
+		},
+		{
+			"jsdbtype": "Battlegrounds.Game.Database.Scenario",
+			"Name": "(4 - 6) Passchendaele",
+			"Description": "The township of Passchendaele was reduced to little more than rubble and mud during the Third Battle of Ypres. This battlefront, battered by some of the heaviest shelling and the poorest weather in the entire war, soon became an infeasible location to hold. Trenches, fortifications and defensive lines were swallowed and lost within the quagmire of Passchendaele's outskirts, leaving advancing infantry at risk of far more than the enemy's attack. This battlefield alone claimed more men 'missing' than any other in the course of the entire war.",
+			"RelativeFilename": "4p_ passchendaele",
+			"SgaName": "393764621",
+			"MaxPlayers": "6",
+			"Theatre": "EasternFront",
+			"IsWintermap": "False",
+			"Gamemodes": [
+			]
+		},
+		{
+			"jsdbtype": "Battlegrounds.Game.Database.Scenario",
+			"Name": "(2) Eszterháza",
+			"Description": "Created by OField, Special Thanks to all Contributors.",
+			"RelativeFilename": "schloss",
+			"SgaName": "400945417",
+			"MaxPlayers": "2",
+			"Theatre": "SharedFront",
+			"IsWintermap": "False",
+			"Gamemodes": [
+			]
+		},
+		{
+			"jsdbtype": "Battlegrounds.Game.Database.Scenario",
+			"Name": "(2 - 6) The Kessel",
+			"Description": "'The street is no longer measured by meters but by corpses... Stalingrad is no longer a town.  Animals flee this hell; the hardest stones can not bear it for long; only men endure.' -Lieutenant Weiner, 24th Panzer Division",
+			"RelativeFilename": "the_kessel_pub",
+			"SgaName": "406468751",
+			"MaxPlayers": "6",
+			"Theatre": "SharedFront",
+			"IsWintermap": "False",
+			"Gamemodes": [
+			]
+		},
+		{
+			"jsdbtype": "Battlegrounds.Game.Database.Scenario",
+			"Name": "(2vs2) Hedges and Trenches by SL",
+			"Description": "A french landscape with many fields edged by hedges. After the conquest of france the german army builded many defenses at the nothern coast. A lot of trenches cut through the hedges and give them a lot of cover. Also some houses and farms can be found near the battlefield.Does anyone read this? I don't think so. I can write what ever I want and nobody cares. Why you never starve in the desert? Because all the sand-wich-is there. Ha ha. I'm so funny. Okay so back to topic: Send your troops inside the trenches and give them perfect cover. MG's are also a good idear. Have fun!",
+			"RelativeFilename": "trenches by sl",
+			"SgaName": "410414180",
+			"MaxPlayers": "4",
+			"Theatre": "EasternFront",
+			"IsWintermap": "False",
+			"Gamemodes": [
+			]
+		},
+		{
+			"jsdbtype": "Battlegrounds.Game.Database.Scenario",
+			"Name": "(4 - 6) Montherme",
+			"Description": "Few crossings over the Meuse River are as important as Montherme. This urban center provides numerous access roads leading inland through the thick forests that surround the rugged valley the city is constructed on. While the city dominates most of the area, savvy commanders would be wise to make use of the few trails towards the forests on the top of the ridge; perfect for avoiding the clustered streets of the town.",
+			"RelativeFilename": "6p_montherme",
+			"SgaName": "410535247",
+			"MaxPlayers": "6",
+			"Theatre": "SharedFront",
+			"IsWintermap": "False",
+			"Gamemodes": [
+			]
+		},
+		{
+			"jsdbtype": "Battlegrounds.Game.Database.Scenario",
+			"Name": "(4) Lindensky",
+			"Description": "Lindensky was a small but industrious town in western Russia. As Germans approached, most of the young and healthy population was recruited to the newly built factories near Volga. The town now overrun, many remaining population took to the forest and waged guerilla warfare. As a large Soviet force is gathering to take this strategically important town back, Lidensky is bracing for a baptism by fire.                                                                   ----------                                            Special thanks to Janne252, Monolithicbacon, Srinidhalaya, Mirage357 and the cohbros/ for helping me create this map!",
+			"RelativeFilename": "4p_lindensky",
+			"SgaName": "434983286",
+			"MaxPlayers": "4",
+			"Theatre": "SharedFront",
+			"IsWintermap": "False",
+			"Gamemodes": [
+			]
+		}
+	]
+}

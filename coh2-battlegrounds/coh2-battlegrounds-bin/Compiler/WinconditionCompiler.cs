@@ -140,10 +140,11 @@ namespace Battlegrounds.Compiler {
             // Save the archive definition
             archiveDef.Save(archiveDefTxtPath);
 
+            // The output archive
             string outputArchive = $"{Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)}\\my games\\Company of Heroes 2\\mods\\gamemode\\coh2_battlegrounds_wincondition.sga";
 
             // Call the archive
-            if (!InvokeArchiver(archiveDefTxtPath, workdir, outputArchive)) {
+            if (!Archiver.Archive(archiveDefTxtPath, workdir, outputArchive)) {
                 return false;
             }
 
@@ -155,73 +156,6 @@ namespace Battlegrounds.Compiler {
             // Return true
             return true;
 
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="archdef"></param>
-        /// <param name="relativepath"></param>
-        /// <param name="output"></param>
-        /// <returns></returns>
-        public static bool InvokeArchiver(string archdef, string relativepath, string output) {
-
-            string cmdarg = $" -c \"{archdef}\" -a \"{output}\" -v -r \"{relativepath}\\\"";
-            string exepath = Pathfinder.GetOrFindCoHPath() + "Archive.exe";
-
-            Process archiveProcess = new Process {
-                StartInfo = new ProcessStartInfo() {
-                    FileName = exepath,
-                    Arguments = cmdarg,
-                    RedirectStandardOutput = true,
-                    RedirectStandardInput = false,
-                    RedirectStandardError = true,
-                    CreateNoWindow = true,
-                    UseShellExecute = false,
-                },
-                EnableRaisingEvents = true,
-            };
-
-            Trace.WriteLine($"Starting archiver @{exepath}\n\tArgs: {cmdarg}", "Archiver.exe");
-
-            archiveProcess.OutputDataReceived += ArchiveProcess_OutputDataReceived;
-
-            try {
-
-                if (!archiveProcess.Start()) {
-                    archiveProcess.Dispose();
-                    return false;
-                } else {
-                    archiveProcess.BeginOutputReadLine();
-                }
-
-                do {
-                    Thread.Sleep(150);
-                } while (!archiveProcess.HasExited);
-
-                if (archiveProcess.ExitCode != 0) {
-                    int eCode = archiveProcess.ExitCode;
-                    Trace.WriteLine($"Archiver has finished with error code = {eCode}", "Archiver.exe");
-                    archiveProcess.Dispose();
-                    return false;
-                }
-
-            } catch {
-                archiveProcess.Dispose();
-                return false;
-            }
-
-            archiveProcess.Dispose();
-
-            Trace.WriteLine($"Successfully compiled {archdef}", "Archiver.exe");
-
-            return true;
-
-        }
-
-        private static void ArchiveProcess_OutputDataReceived(object sender, DataReceivedEventArgs e) {
-            if (e.Data != null && e.Data != string.Empty && e.Data != " ")
-                Trace.WriteLine($"{e.Data}", "Archiver.exe");
         }
 
         private static void CreateWorkspace(string workdir) {
