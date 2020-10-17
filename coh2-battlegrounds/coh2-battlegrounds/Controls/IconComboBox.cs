@@ -62,13 +62,16 @@ namespace BattlegroundsApp.Controls {
                 StaysOpen = true
             };
             this.m_popup.LostFocus += this.OnPopupLostFocus;
+            this.LostMouseCapture += this.OnLostMouseCapture;
             this.m_items = new List<IconComboBoxItem>();
             this.Content = this.m_imageControl;
         }
 
+        private void OnLostMouseCapture(object sender, MouseEventArgs e) => this.m_popup.IsOpen = false;
+
         private void OnPopupLostFocus(object sender, RoutedEventArgs e) => this.m_popup.IsOpen = false;
 
-        private void OnLeftMouseButtonImage(object sender, MouseButtonEventArgs e) => this.m_popup.IsOpen = true;
+        private void OnLeftMouseButtonImage(object sender, MouseButtonEventArgs e) => this.m_popup.IsOpen = !this.m_popup.IsOpen;
 
         public void SetItemSource<T>(IEnumerable<T> obj, Func<T, IconComboBoxItem> converter) {
             this.m_items = obj.Select(x => converter(x)).ToList();

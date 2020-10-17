@@ -85,6 +85,9 @@ namespace BattlegroundsApp.Views.ViewComponent {
 
         public string Playercompany => this.SelfCompanySelector.Text;
 
+        public PlayercardCompanyItem PlayerSelectedCompanyItem 
+            => this.SelfCompanySelector.SelectedItem is not null ? (PlayercardCompanyItem)this.SelfCompanySelector.SelectedItem : default;
+
         public ulong Playerid => this.m_steamID;
 
         public AIDifficulty Difficulty => this.m_diff;

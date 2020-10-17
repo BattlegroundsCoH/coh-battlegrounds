@@ -20,6 +20,7 @@ using Battlegrounds.Game.Database;
 using Battlegrounds.Game.Gameplay;
 using Battlegrounds.Modding;
 using Battlegrounds.Steam;
+using BattlegroundsApp.LocalData;
 using BattlegroundsApp.Models;
 using BattlegroundsApp.Views.ViewComponent;
 
@@ -223,7 +224,24 @@ namespace BattlegroundsApp.Views {
                     Trace.WriteLine($"Changing faction [{card.Playerid}][{card.Difficulty}][{card.Playerarmy}]", "GameLobbyView");
                     break;
                 case "ChangedCompany":
+                    if (card.IsAI || card.Playerid == this.m_smh.Lobby.Self.ID) {
+                        PlayercardCompanyItem companyItem = (PlayercardCompanyItem)arg;
+                        if (companyItem.State == PlayercardCompanyItem.CompanyItemState.Company) {
+                            Company company = PlayerCompanies.FromNameAndFaction(companyItem.Name, Faction.FromName(card.Playerarmy));
+                            if (company is not null) {
+                                this.m_smh.AppLobby.SetCompany(this.m_smh, card.Playerid, company);
+                                Trace.WriteLine($"Changing company [{card.Playerid}][{card.Difficulty}][{card.Playerarmy}][{card.Playercompany}]", "GameLobbyView");
+                            } else {
 
+                            }
+                        } else if (companyItem.State == PlayercardCompanyItem.CompanyItemState.Generate && card.IsAI) {
+                            this.m_smh.AppLobby.SetCompany(this.m_smh, card.Playerid, null);
+                            Trace.WriteLine($"Changing company [{card.Playerid}][{card.Difficulty}][{card.Playerarmy}][Auto-generated]", "GameLobbyView");
+                        } else {
+                            this.m_smh.AppLobby.SetCompany(this.m_smh, card.Playerid, null);
+                            Trace.WriteLine($"Changing company [{card.Playerid}][{card.Difficulty}][{card.Playerarmy}][{card.Playercompany}]", "GameLobbyView");
+                        }
+                    }
                     break;
                 case "RemovePlayer":
                     this.m_smh.AppLobby.RemovePlayer(this.m_smh, team, (int)arg);
@@ -232,6 +250,7 @@ namespace BattlegroundsApp.Views {
                 default:
                     break;
             }
+            this.UpdateStartMatchButton();
         }
 
         private void UpdateGamemodeOptions(Wincondition wc) {
@@ -256,6 +275,11 @@ namespace BattlegroundsApp.Views {
                 this.m_smh.AppLobby.SetGamemodeOption(this.m_smh, GamemodeOption.SelectedIndex);
             }
         }
+
+        private void UpdateStartMatchButton() => StartGameBttn.IsEnabled = this.IsLegalMatch();
+
+        private bool IsLegalMatch() 
+            => this.m_teamManagement.GetTeamSize(Lobby.LobbyTeam.TeamType.Allies) > 0 && this.m_teamManagement.GetTeamSize(Lobby.LobbyTeam.TeamType.Axis) > 0;
 
     }
 

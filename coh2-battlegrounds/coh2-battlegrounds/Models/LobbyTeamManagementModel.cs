@@ -75,6 +75,7 @@ namespace BattlegroundsApp.Models {
                     if (i < team.Players.Count) {
                         var player = team.Players[i];
                         pair.Value[i].SetPlayerdata(player.SteamID, player.Name, player.Faction, player.SteamID == BattlegroundsInstance.LocalSteamuser.ID, player.SteamID == 0, isHost);
+
                     } else {
                         pair.Value[i].SetCardState(i < this.m_maxPlayerCount / 2 ? PlayercardViewstate.Open : PlayercardViewstate.Locked);
                     }
@@ -131,7 +132,7 @@ namespace BattlegroundsApp.Models {
                     OnTeamEvent?.Invoke(teamOf, sender, sender.Playerarmy, reason);
                     break;
                 case "ChangedCompany":
-
+                    OnTeamEvent?.Invoke(teamOf, sender, sender.PlayerSelectedCompanyItem, reason);
                     break;
                 case "RemovePlayer":
                     sender.SetCardState(PlayercardViewstate.Open);
@@ -142,6 +143,8 @@ namespace BattlegroundsApp.Models {
                     break;
             }
         }
+
+        public int GetTeamSize(Lobby.LobbyTeam.TeamType size) => this.m_teamSetup[size].Count(x => x.IsOccupied);
 
     }
 

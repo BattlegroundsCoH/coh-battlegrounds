@@ -5,6 +5,7 @@ using System.Linq;
 
 using Battlegrounds.Functional;
 using Battlegrounds.Game;
+using Battlegrounds.Game.Battlegrounds;
 using Battlegrounds.Game.Database;
 using Battlegrounds.Game.Gameplay;
 using Battlegrounds.Online.Services;
@@ -36,7 +37,7 @@ namespace BattlegroundsApp {
 #pragma warning disable CS0661 // Type defines operator == or operator != but does not override Object.GetHashCode()
         public class LobbyPlayer {
 
-            public ulong SteamID { get; }
+            public ulong SteamID { get; private set; }
 
             public string Name { get; }
 
@@ -52,9 +53,17 @@ namespace BattlegroundsApp {
             /// The <see cref="LobbyPlayer"/>'s selected company's name.
             /// </summary>
             /// <remarks>
-            /// Do not modify. Call <see cref="SetCompanyName(ServerMessageHandler, ulong, string)"/>.
+            /// Do not modify directly. Call <see cref="SetCompany(ServerMessageHandler, ulong, Company)"/>.
             /// </remarks>
             public string CompanyName { get; set; }
+
+            /// <summary>
+            /// The <see cref="LobbyPlayer"/>'s selected company's strength
+            /// </summary>
+            /// <remarks>
+            /// Do not modify directly. Call <see cref="SetCompany(ServerMessageHandler, ulong, Company)"/>.
+            /// </remarks>
+            public double CompanyStrength { get; set; }
 
             public int LobbyIndex { get; }
 
@@ -77,6 +86,8 @@ namespace BattlegroundsApp {
                 }
             }
             public static bool operator !=(LobbyPlayer a, LobbyPlayer b) => !(a == b);
+
+            public void ChangeID(ulong id) => Difficulty.IfTrue(x => x != AIDifficulty.Human).Then(() => this.SteamID = id);
 
         }
 
@@ -194,11 +205,11 @@ namespace BattlegroundsApp {
         }
 
         public async void AddAI(ServerMessageHandler smh, LobbyTeam.TeamType team, AIDifficulty difficulty, int lobbyID, string army) {
-            int lobbyIndex = await smh.Lobby.TryCreateAIPlayer(difficulty, army, (int)team);
-            LobbyPlayer player = new LobbyPlayer(lobbyID, (ulong)lobbyIndex, difficulty.GetIngameDisplayName(), army, string.Empty) {
+            LobbyPlayer player = new LobbyPlayer(lobbyID, 0, difficulty.GetIngameDisplayName(), army, string.Empty) {
                 Difficulty = difficulty
             };
             this.m_lobbyTeams[team].Players.Add(player);
+            player.ChangeID((ulong)await smh.Lobby.TryCreateAIPlayer(difficulty, army, (int)team));
         }
 
         public void RemovePlayer(ServerMessageHandler smh, LobbyTeam.TeamType team, int teamIndex) {
@@ -242,10 +253,13 @@ namespace BattlegroundsApp {
         /// <param name="smh"></param>
         /// <param name="playerID"></param>
         /// <param name="name"></param>
-        public void SetCompanyName(ServerMessageHandler smh, ulong playerID, string name) {
-            if (this.SetStringServerValue(smh, "com", name)) {
+        public void SetCompany(ServerMessageHandler smh, ulong playerID, Company company) {
+            double strength = company?.GetStrength() ?? 0.0;
+            string name = company?.Name ?? "None";
+            if (this.SetStringServerValue(smh, "com", name) && this.SetStringServerValue(smh, "str", strength.ToString())) {
                 if (this.m_lobbyTeams.Aggregate(new List<LobbyPlayer>(), (a, b) => { a.AddRange(b.Value.Players); return a; }).Find(x => x.SteamID == playerID) is LobbyPlayer player) {
                     player.CompanyName = name;
+                    player.CompanyStrength = strength;
                 }
             }
         }

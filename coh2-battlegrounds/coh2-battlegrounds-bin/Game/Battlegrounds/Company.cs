@@ -230,9 +230,15 @@ namespace Battlegrounds.Game.Battlegrounds {
             File.WriteAllText(jsonfile, (this as IJsonObject).Serialize());
         }
 
-        internal void SetType(CompanyType type) => this.m_companyType = type;
+        public void SetType(CompanyType type) => this.m_companyType = type;
 
-        internal void SetArmy(Faction faction) => this.m_companyArmy = faction;
+        public void SetArmy(Faction faction) => this.m_companyArmy = faction;
+
+        /// <summary>
+        /// Calculate the strength of the company
+        /// </summary>
+        /// <returns></returns>
+        public double GetStrength() => 0;
 
         /// <summary>
         /// 
