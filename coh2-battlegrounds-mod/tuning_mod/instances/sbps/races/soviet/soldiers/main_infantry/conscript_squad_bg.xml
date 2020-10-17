@@ -435,7 +435,10 @@
 			<float name="reaction_combat_delay_seconds" value="30" />
 			<string name="squad_ai_sniped_file" value="sniped-reaction-plan-mp" />
 			<template_reference name="can_recrew_abandoned_option" value="options\sbpextensions\squad_combat_behaviour_ext\can_recrew_abandoned">
-				<template_reference name="is_mobile_driver_option" value="options\none">
+				<template_reference name="is_mobile_driver_option" value="options\sbpextensions\squad_combat_behaviour_ext\is_mobile_driver">
+					<list name="abilities_to_bring">
+						<instance_reference name="ability" value="abilities\battlegrounds_generic\timed_ability\vehicle_decrew_vehicle_crew_bg" mod="142b113740474c82a60b0a428bd553d5" />
+					</list>
 				</template_reference>
 			</template_reference>
 			<float name="reveal_defender_time" value="0" />

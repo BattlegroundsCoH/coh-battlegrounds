@@ -12,29 +12,6 @@
 					<instance_reference name="upgrade" value="upgrade\is_towing" mod="142b113740474c82a60b0a428bd553d5" />
 					<uniqueid name="id" value="1073742317" />
 				</template_reference>
-				<template_reference name="action" value="action\change_move_data_action">
-					<float name="acceleration_multiplier" value="0.5" />
-					<float name="deceleration_multiplier" value="0.5" />
-					<float name="pathfinding_size_x" value="0" />
-					<float name="pathfinding_size_y" value="0" />
-					<uniqueid name="id" value="1073742353" />
-				</template_reference>
-				<template_reference name="action" value="action\apply_modifiers_action">
-					<float name="duration" value="0" />
-					<bool name="permanent" value="False" />
-					<list name="modifiers">
-						<template_reference name="modifier" value="modifiers\speed_maximum_modifier">
-							<enum name="application_type" value="apply_to_entity" />
-							<bool name="exclusive" value="False" />
-							<string name="modifier_id" value="" />
-							<string name="target_type_name" value="" />
-							<enum name="usage_type" value="multiplication" />
-							<float name="value" value="0.325" />
-							<instance_reference name="tooltip" value="modifier_tooltip\speed_maximum_modifier" />
-						</template_reference>
-					</list>
-					<uniqueid name="id" value="1073742354" />
-				</template_reference>
 			</list>
 			<list name="start_target_actions">
 				<template_reference name="action" value="action\upgrade_add">
@@ -115,6 +92,27 @@
 							<template_reference name="target_info" value="type_ability_target_type\enemy">
 							</template_reference>
 						</group>
+					</template_reference>
+					<template_reference name="info" value="type_ability_target_type\has_unit_type">
+						<enum name="unit_type" value="team_weapon" />
+					</template_reference>
+					<template_reference name="info" value="type_ability_target_type\has_any_in_list">
+						<list name="target_infos">
+							<template_reference name="info" value="type_ability_target_type\at_least_one_entity_has">
+								<group name="target_info">
+									<template_reference name="target_info" value="type_ability_target_type\has_unit_type">
+										<enum name="unit_type" value="atgun" />
+									</template_reference>
+								</group>
+							</template_reference>
+							<template_reference name="info" value="type_ability_target_type\at_least_one_entity_has">
+								<group name="target_info">
+									<template_reference name="target_info" value="type_ability_target_type\has_unit_type">
+										<enum name="unit_type" value="artillery" />
+									</template_reference>
+								</group>
+							</template_reference>
+						</list>
 					</template_reference>
 				</list>
 			</template_reference>

@@ -629,7 +629,7 @@ namespace CoH2XML2JSON {
                                 upgrade.Cost.Manpower = costManpower;
                                 upgrade.Cost.Munition = costMunition;
                                 upgrade.Cost.Fuel = costFuel;
-                                upgrade.SlotItem = new JArray(uniqueSlotItems);
+                                upgrade.SlotItems = new JArray(uniqueSlotItems);
 
                                 if (slotItems.FirstOrDefault() is string item) {
                                     if (slotItemSymbols.TryGetValue(item, out string itemSymbol)) {

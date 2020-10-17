@@ -28,7 +28,7 @@
 		</group>
 		<bool name="ui_event_cue" value="False" />
 		<enum name="ui_group" value="command_panel" />
-		<int name="ui_position" value="0" />
+		<int name="ui_position" value="-1" />
 		<group name="ui_info">
 			<locstring name="extra_text" value="0" />
 			<locstring name="help_text" value="0" />

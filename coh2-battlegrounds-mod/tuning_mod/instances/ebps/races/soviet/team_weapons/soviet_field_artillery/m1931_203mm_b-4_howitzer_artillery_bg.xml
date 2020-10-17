@@ -156,7 +156,7 @@
 				<enum name="unit_type04" value="" />
 				<enum name="unit_type05" value="artillery" />
 				<enum name="unit_type06" value="soviet_artillery" />
-				<enum name="unit_type07" value="ml20_artillery" />
+				<enum name="unit_type07" value="b4_howitzer" />
 				<enum name="unit_type08" value="mp_unit" />
 				<enum name="unit_type09" value="" />
 				<enum name="unit_type10" value="" />

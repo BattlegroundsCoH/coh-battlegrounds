@@ -1,6 +1,15 @@
 [
   {
     "jsdbtype": "Battlegrounds.Game.Database.SlotItemBlueprint",
+    "PBGID": "1073741827",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "Name": "ptrs_41_anti_tank_rifle_dummy_bg",
+    "LocaleName": "0",
+    "LocaleDescription": "0",
+    "Icon": "Icons_weapons_weapon_ptrs"
+  },
+  {
+    "jsdbtype": "Battlegrounds.Game.Database.SlotItemBlueprint",
     "PBGID": "1073741824",
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
     "Name": "dp-28_light_machine_gun_package_bg",

@@ -1,6 +1,60 @@
 [
   {
     "jsdbtype": "Battlegrounds.Game.Database.EntityBlueprint",
+    "PBGID": "1073741920",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "Name": "german_air_support",
+    "LocaleName": "0",
+    "LocaleDescription": "0",
+    "Army": "german",
+    "Icon": "",
+    "Symbol": "",
+    "Cost": {
+      "jsdbtype": "Battlegrounds.Game.Gameplay.Cost",
+      "Manpower": "0",
+      "Munition": "0",
+      "Fuel": "0",
+      "BuildTime": "0"
+    }
+  },
+  {
+    "jsdbtype": "Battlegrounds.Game.Database.EntityBlueprint",
+    "PBGID": "1073741921",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "Name": "german_artillery",
+    "LocaleName": "0",
+    "LocaleDescription": "0",
+    "Army": "german",
+    "Icon": "",
+    "Symbol": "",
+    "Cost": {
+      "jsdbtype": "Battlegrounds.Game.Gameplay.Cost",
+      "Manpower": "0",
+      "Munition": "0",
+      "Fuel": "0",
+      "BuildTime": "0"
+    }
+  },
+  {
+    "jsdbtype": "Battlegrounds.Game.Database.EntityBlueprint",
+    "PBGID": "1073741922",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "Name": "german_paradrop",
+    "LocaleName": "0",
+    "LocaleDescription": "0",
+    "Army": "german",
+    "Icon": "",
+    "Symbol": "",
+    "Cost": {
+      "jsdbtype": "Battlegrounds.Game.Gameplay.Cost",
+      "Manpower": "0",
+      "Munition": "0",
+      "Fuel": "0",
+      "BuildTime": "0"
+    }
+  },
+  {
+    "jsdbtype": "Battlegrounds.Game.Database.EntityBlueprint",
     "PBGID": "1073741886",
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
     "Name": "granatewerfer_34_81mm_mortar_bg",
@@ -87,6 +141,60 @@
       "Munition": "0",
       "Fuel": "45",
       "BuildTime": "192"
+    }
+  },
+  {
+    "jsdbtype": "Battlegrounds.Game.Database.EntityBlueprint",
+    "PBGID": "1073741917",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "Name": "soviet_air_support",
+    "LocaleName": "0",
+    "LocaleDescription": "0",
+    "Army": "soviet",
+    "Icon": "",
+    "Symbol": "",
+    "Cost": {
+      "jsdbtype": "Battlegrounds.Game.Gameplay.Cost",
+      "Manpower": "0",
+      "Munition": "0",
+      "Fuel": "0",
+      "BuildTime": "0"
+    }
+  },
+  {
+    "jsdbtype": "Battlegrounds.Game.Database.EntityBlueprint",
+    "PBGID": "1073741918",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "Name": "soviet_artillery",
+    "LocaleName": "0",
+    "LocaleDescription": "0",
+    "Army": "soviet",
+    "Icon": "",
+    "Symbol": "",
+    "Cost": {
+      "jsdbtype": "Battlegrounds.Game.Gameplay.Cost",
+      "Manpower": "0",
+      "Munition": "0",
+      "Fuel": "0",
+      "BuildTime": "0"
+    }
+  },
+  {
+    "jsdbtype": "Battlegrounds.Game.Database.EntityBlueprint",
+    "PBGID": "1073741919",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "Name": "soviet_paradrop",
+    "LocaleName": "0",
+    "LocaleDescription": "0",
+    "Army": "soviet",
+    "Icon": "",
+    "Symbol": "",
+    "Cost": {
+      "jsdbtype": "Battlegrounds.Game.Gameplay.Cost",
+      "Manpower": "0",
+      "Munition": "0",
+      "Fuel": "0",
+      "BuildTime": "0"
     }
   },
   {
@@ -289,9 +397,63 @@
   },
   {
     "jsdbtype": "Battlegrounds.Game.Database.EntityBlueprint",
+    "PBGID": "1073741915",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "Name": "luftwaffe_ground_forces_bg",
+    "LocaleName": "0",
+    "LocaleDescription": "0",
+    "Army": "german",
+    "Icon": "",
+    "Symbol": "",
+    "Cost": {
+      "jsdbtype": "Battlegrounds.Game.Gameplay.Cost",
+      "Manpower": "67.5",
+      "Munition": "0",
+      "Fuel": "0",
+      "BuildTime": "6.75"
+    }
+  },
+  {
+    "jsdbtype": "Battlegrounds.Game.Database.EntityBlueprint",
     "PBGID": "1073741882",
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
     "Name": "stormtroopers_bg",
+    "LocaleName": "0",
+    "LocaleDescription": "0",
+    "Army": "german",
+    "Icon": "",
+    "Symbol": "",
+    "Cost": {
+      "jsdbtype": "Battlegrounds.Game.Gameplay.Cost",
+      "Manpower": "67.5",
+      "Munition": "0",
+      "Fuel": "0",
+      "BuildTime": "6.75"
+    }
+  },
+  {
+    "jsdbtype": "Battlegrounds.Game.Database.EntityBlueprint",
+    "PBGID": "1073741912",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "Name": "tankhunter_bg",
+    "LocaleName": "0",
+    "LocaleDescription": "0",
+    "Army": "german",
+    "Icon": "",
+    "Symbol": "",
+    "Cost": {
+      "jsdbtype": "Battlegrounds.Game.Gameplay.Cost",
+      "Manpower": "67.5",
+      "Munition": "0",
+      "Fuel": "0",
+      "BuildTime": "6.75"
+    }
+  },
+  {
+    "jsdbtype": "Battlegrounds.Game.Database.EntityBlueprint",
+    "PBGID": "1073741913",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "Name": "tankhunter_rifle_bg",
     "LocaleName": "0",
     "LocaleDescription": "0",
     "Army": "german",
@@ -929,7 +1091,7 @@
     "Symbol": "",
     "Cost": {
       "jsdbtype": "Battlegrounds.Game.Gameplay.Cost",
-      "Manpower": "40",
+      "Manpower": "60",
       "Munition": "0",
       "Fuel": "0",
       "BuildTime": "0"
@@ -947,7 +1109,7 @@
     "Symbol": "",
     "Cost": {
       "jsdbtype": "Battlegrounds.Game.Gameplay.Cost",
-      "Manpower": "40",
+      "Manpower": "120",
       "Munition": "0",
       "Fuel": "0",
       "BuildTime": "0"
@@ -983,7 +1145,7 @@
     "Symbol": "Icons_symbols_unit_soviet_conscript_02_symbol",
     "Cost": {
       "jsdbtype": "Battlegrounds.Game.Gameplay.Cost",
-      "Manpower": "40",
+      "Manpower": "50",
       "Munition": "0",
       "Fuel": "0",
       "BuildTime": "4"
@@ -1002,6 +1164,24 @@
     "Cost": {
       "jsdbtype": "Battlegrounds.Game.Gameplay.Cost",
       "Manpower": "40",
+      "Munition": "0",
+      "Fuel": "0",
+      "BuildTime": "4"
+    }
+  },
+  {
+    "jsdbtype": "Battlegrounds.Game.Database.EntityBlueprint",
+    "PBGID": "1073741916",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "Name": "tank_buster_soldier_ptrs_bg",
+    "LocaleName": "0",
+    "LocaleDescription": "11007040",
+    "Army": "soviet",
+    "Icon": "Icons_units_unit_soviet_conscript_02",
+    "Symbol": "Icons_symbols_unit_soviet_conscript_02_symbol",
+    "Cost": {
+      "jsdbtype": "Battlegrounds.Game.Gameplay.Cost",
+      "Manpower": "60",
       "Munition": "0",
       "Fuel": "0",
       "BuildTime": "4"

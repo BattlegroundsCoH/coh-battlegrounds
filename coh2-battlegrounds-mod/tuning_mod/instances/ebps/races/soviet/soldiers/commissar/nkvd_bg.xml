@@ -3,7 +3,7 @@
 		<template_reference name="exts" value="ebpextensions\entity_blueprint_ext">
 			<string name="alternate_sua" value="armies\common\base\commonhuman\commonhuman" />
 			<bool name="always_revealed_in_fow" value="False" />
-			<file name="animator" value="armies\soviet\soldiers\elite_rifleman\elite_nocape" />
+			<file name="animator" value="armies\soviet\soldiers\penal_battalion\penal_battalion" />
 			<bool name="is_visible_in_game" value="False" />
 			<float name="precise_size" value="-1" />
 		</template_reference>
@@ -21,14 +21,6 @@
 		</template_reference>
 		<template_reference name="exts" value="ebpextensions\action_apply_ext">
 			<list name="actions">
-				<template_reference name="action" value="action\animator_set_state">
-					<bool name="apply_to_leader_only" value="False" />
-					<string name="do_action_state_name" value="Rifleman01" />
-					<string name="state_machine_name" value="RoleVariation" />
-					<string name="undo_action_state_name" value="" />
-					<bool name="retrigger" value="False" />
-					<uniqueid name="id" value="1073742676" />
-				</template_reference>
 			</list>
 		</template_reference>
 		<template_reference name="exts" value="ebpextensions\cost_ext">

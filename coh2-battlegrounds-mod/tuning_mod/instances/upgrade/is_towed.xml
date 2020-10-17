@@ -42,30 +42,6 @@
 		</group>
 		<bool name="validate_actions" value="False" />
 		<list name="actions">
-			<template_reference name="action" value="action\cancel_forced_attack">
-				<uniqueid name="id" value="1073742306" />
-				<enum name="stop_command" value="attack_stop" />
-			</template_reference>
-			<template_reference name="action" value="action\animator_set_state">
-				<bool name="apply_to_leader_only" value="False" />
-				<string name="do_action_state_name" value="mobile" />
-				<bool name="retrigger" value="False" />
-				<string name="state_machine_name" value="artillery_state" />
-				<string name="undo_action_state_name" value="" />
-				<uniqueid name="id" value="1073742332" />
-			</template_reference>
-			<template_reference name="action" value="action\apply_crew_action">
-				<bool name="apply_removal" value="False" />
-				<string name="crew_name" value="crew1" />
-				<bool name="kill" value="False" />
-				<uniqueid name="id" value="1073742344" />
-			</template_reference>
-			<template_reference name="action" value="action\apply_crew_action">
-				<bool name="apply_removal" value="False" />
-				<string name="crew_name" value="gunner2" />
-				<bool name="kill" value="False" />
-				<uniqueid name="id" value="1073742345" />
-			</template_reference>
 		</list>
 		<list name="requirements">
 		</list>

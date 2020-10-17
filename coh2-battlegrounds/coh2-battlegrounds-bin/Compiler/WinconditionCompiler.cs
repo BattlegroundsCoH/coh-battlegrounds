@@ -21,6 +21,7 @@ namespace Battlegrounds.Compiler {
             "https://raw.githubusercontent.com/JustCodiex/coh2-battlegrounds/scar-release-branch/coh2-battlegrounds-mod/wincondition_mod/auxiliary_scripts/shared_handler.scar",
             "https://raw.githubusercontent.com/JustCodiex/coh2-battlegrounds/scar-release-branch/coh2-battlegrounds-mod/wincondition_mod/auxiliary_scripts/shared_sessionloader.scar",
             "https://raw.githubusercontent.com/JustCodiex/coh2-battlegrounds/scar-release-branch/coh2-battlegrounds-mod/wincondition_mod/auxiliary_scripts/shared_ai.scar",
+            "https://raw.githubusercontent.com/JustCodiex/coh2-battlegrounds/scar-release-branch/coh2-battlegrounds-mod/wincondition_mod/auxiliary_scripts/shared_lookups.scar",
             "https://raw.githubusercontent.com/JustCodiex/coh2-battlegrounds/scar-release-branch/coh2-battlegrounds-mod/wincondition_mod/auxiliary_scripts/client_companyui.scar",
             "https://raw.githubusercontent.com/JustCodiex/coh2-battlegrounds/scar-release-branch/coh2-battlegrounds-mod/wincondition_mod/auxiliary_scripts/client_overrideui.scar",
             "https://raw.githubusercontent.com/JustCodiex/coh2-battlegrounds/scar-release-branch/coh2-battlegrounds-mod/wincondition_mod/auxiliary_scripts/api_ui.scar",
@@ -82,11 +83,8 @@ namespace Battlegrounds.Compiler {
             archiveDef.AppendLine("\t\tOverride wildcard=\".*\\.(bsc)$\" minsize=\"-1\" maxsize=\"-1\" vt=\"none\" ct=\"buffer_compress\"");
             archiveDef.AppendLine("\tFileSettingsEnd");
 
-            // Get the scar files
-            string[] winfiles = WinFiles;
-
-            // Add and compile scar files
-            foreach (string file in winfiles) {
+            // Add and compile win file(s)
+            foreach (string file in WinFiles) {
                 if (!AddURLFile(archiveDef, "data\\game\\winconditions\\", workdir, file)) {
                     return false;
                 }
@@ -95,11 +93,8 @@ namespace Battlegrounds.Compiler {
             // Add the company file
             AddLocalFile(archiveDef, sessionFile, "data\\scar\\winconditions\\auxiliary_scripts\\", workdir);
 
-            // Get the scar files
-            string[] scarfiles = ScarFiles;
-
-            // Add and compile scar files
-            foreach (string file in scarfiles) {
+            // Add and *compile* scar files
+            foreach (string file in ScarFiles) {
                 if (!AddURLFile(archiveDef, "data\\scar\\winconditions\\", workdir, file)) {
                     return false;
                 }
@@ -129,11 +124,8 @@ namespace Battlegrounds.Compiler {
             archiveDef.AppendLine("\tFileSettingsStart defverification=\"crc_blocks\" defcompression=\"stream_compress\"");
             archiveDef.AppendLine("\tFileSettingsEnd");
 
-            // Get all locale files
-            string[] localefiles = LocaleFiles;
-
-            // Add and compile info files
-            foreach (string file in localefiles) {
+            // Add and compile locale files
+            foreach (string file in LocaleFiles) {
                 if (!AddURLFile(archiveDef, "", workdir, file, true, Encoding.Unicode, new byte[] { 0xff, 0xfe })) {
                     return false;
                 }
@@ -192,7 +184,7 @@ namespace Battlegrounds.Compiler {
 
         }
 
-        private static string path_cut = "https://raw.githubusercontent.com/JustCodiex/coh2-battlegrounds/scar-release-branch/coh2-battlegrounds-mod/wincondition_mod/";
+        private static string path_cut = FixDebugString("https://raw.githubusercontent.com/JustCodiex/coh2-battlegrounds/scar-release-branch/coh2-battlegrounds-mod/wincondition_mod/");
 
         private static bool AddURLFile(TxtBuilder builder, string rpath, string workdir, string file, bool useBytes = false, Encoding encoding = null, byte[] prepend = null) {
 
@@ -201,6 +193,8 @@ namespace Battlegrounds.Compiler {
             if (encoding == null) {
                 encoding = Encoding.UTF8;
             }
+
+            file = FixDebugString(file);
 
             if (useBytes) {
                 binaryContent = SourceDownloader.DownloadSourceFile(file, encoding);
@@ -239,7 +233,8 @@ namespace Battlegrounds.Compiler {
                 return false;
             }
 
-            string relpath = file.Substring("https://raw.githubusercontent.com/JustCodiex/coh2-battlegrounds/scar-release-branch/coh2-battlegrounds-mod/wincondition_mod/coh2_battlegrounds_wincondition%20Intermediate%20Cache/Intermediate%20Files".Length);
+            string substr = FixDebugString("https://raw.githubusercontent.com/JustCodiex/coh2-battlegrounds/scar-release-branch/coh2-battlegrounds-mod/wincondition_mod/coh2_battlegrounds_wincondition%20Intermediate%20Cache/Intermediate%20Files");
+            string relpath = FixDebugString(file).Substring(substr.Length);
             string abspath = Path.GetFullPath(workdir + relpath.Replace("/", "\\"));
 
             builder.AppendLine($"\t{abspath}");
@@ -280,6 +275,15 @@ namespace Battlegrounds.Compiler {
                 builder.AppendLine($"\t{ddspath}");
             }
 
+        }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0022:Use expression body for methods", Justification = "Compile-mode dependant")]
+        private static string FixDebugString(string input) {
+#if DEBUG
+            return input.Replace("scar-release-branch", "scar-dev-branch");
+#else
+            return input;
+#endif
         }
 
     }

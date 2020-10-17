@@ -18,6 +18,14 @@ namespace Battlegrounds.Functional {
             return (i >= 0) ? enumerable.ElementAt(i) : default;
         }
 
+        public static IEnumerable<T> ForEach<T>(this IEnumerable<T> enumerable, Action<T> action) {
+            var enumerator = enumerable.GetEnumerator();
+            while (enumerator.MoveNext()) {
+                action(enumerator.Current);
+            }
+            return enumerable;
+        }
+
     }
 
 }
