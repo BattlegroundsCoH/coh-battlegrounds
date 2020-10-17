@@ -230,6 +230,25 @@ namespace Battlegrounds.Online.Services {
         }
 
         /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="userInformation"></param>
+        /// <param name="response"></param>
+        public void GetUserInformation(string userInformation, ManagedLobbyQueryResponse response, ulong userId) {
+            if (this.m_underlyingConnection != null && this.m_underlyingConnection.IsConnected) {
+                Message queryMessage = null;
+                queryMessage = new Message(MessageType.LOBBY_GETUSERDATA, userId.ToString(), userInformation);
+                Message.SetIdentifier(this.m_underlyingConnection.ConnectionSocket, queryMessage);
+                void OnResponse(Message message) {
+                    this.m_underlyingConnection.ClearIdentifierReceiver(message.Identifier);
+                    response?.Invoke(message.Argument1, message.Argument2);
+                }
+                this.m_underlyingConnection.SetIdentifierReceiver(queryMessage.Identifier, OnResponse);
+                this.m_underlyingConnection.SendMessage(queryMessage);
+            }
+        }
+
+        /// <summary>
         /// Get a specific detail from the lobby.
         /// </summary>
         /// <param name="userInfo">The information that is sought from the server.</param>
@@ -251,6 +270,21 @@ namespace Battlegrounds.Online.Services {
         /// <returns>The first argument of the received server response.</returns>
         /// <remarks>Async method.</remarks>
         public async Task<string> GetUserInformation(int lobbyUser, string userInfo) {
+            string response = null;
+            this.GetUserInformation(userInfo, (a, _) => response = a, lobbyUser);
+            while (response is null) {
+                await Task.Delay(1);
+            }
+            return response;
+        }
+
+        /// <summary>
+        /// Get a specific detail from the lobby.
+        /// </summary>
+        /// <param name="lobbyInformation">The information that is sought from the server.</param>
+        /// <returns>The first argument of the received server response.</returns>
+        /// <remarks>Async method.</remarks>
+        public async Task<string> GetUserInformation(ulong lobbyUser, string userInfo) {
             string response = null;
             this.GetUserInformation(userInfo, (a, _) => response = a, lobbyUser);
             while (response is null) {
@@ -418,6 +452,20 @@ namespace Battlegrounds.Online.Services {
 
         }
 
+        public async Task<int[]> GetLobbyPlayerDifficultiesAsync(ulong[] players) {
+
+            int[] diffs = new int[players.Length];
+            for (int i = 0; i < players.Length; i++) {
+                string diff = await this.GetUserInformation(players[i], "dif");
+                if (int.TryParse(diff, out int d)) {
+                    diffs[i] = d;
+                }
+            }
+
+            return diffs;
+
+        }
+
         private Company GetLocalCompany() {
             object val = this.OnLocalDataRequested?.Invoke("CompanyData");
             if (val is Company c) {
@@ -459,7 +507,7 @@ namespace Battlegrounds.Online.Services {
         /// <param name="destination"></param>
         /// <returns></returns>
         public bool GetLobbyCompany(ulong userID, string destination) 
-            =>FileHub.DownloadFile(destination, $"{userID}_company.json", this.LobbyFileID);
+            => FileHub.DownloadFile(destination, $"{userID}_company.json", this.LobbyFileID);
         
         /// <summary>
         /// 
@@ -468,14 +516,22 @@ namespace Battlegrounds.Online.Services {
         private async Task<(List<Company>, bool)> GetLobbyCompanies() {
 
             ulong[] lobbyPlayers = await this.GetPlayerIDsAsync();
+            int[] lobbyDifficulties = await this.GetLobbyPlayerDifficultiesAsync(lobbyPlayers);
             List<Company> companies = new List<Company>();
-            bool success = false; ;
+            bool success = false;
+
+            int humanCount = lobbyDifficulties.Count(x => x == (int)AIDifficulty.Human);
             
             await Task.Run(() => {
 
                 int count = 0;
 
                 for (int i = 0; i < lobbyPlayers.Length; i++) {
+
+                    if (lobbyDifficulties[i] != (int)AIDifficulty.Human) { // doesn't make sense (and not possible) to download company data of AI
+                        Trace.WriteLine($"Skipping player {lobbyPlayers[i]} as they're not of human \"difficulty\" ({lobbyDifficulties[i]})");
+                        continue;
+                    }
 
                     string destination = BattlegroundsInstance.GetRelativePath(BattlegroundsPaths.SESSION_FOLDER, $"{lobbyPlayers[i]}_company.json");
 
@@ -490,7 +546,7 @@ namespace Battlegrounds.Online.Services {
 
                 }
 
-                success = count == lobbyPlayers.Length;
+                success = count == humanCount;
 
             });
 
@@ -544,7 +600,7 @@ namespace Battlegrounds.Online.Services {
         public async void CompileAndStartMatch(Action<string> operationCancelled) {
 
             // Make sure we're the host
-            if (!m_isHost) {
+            if (!this.m_isHost) {
                 return;
             }
 
@@ -558,7 +614,7 @@ namespace Battlegrounds.Online.Services {
             }
 
             // Send a "Starting match" message to lobby members
-            m_underlyingConnection.SendMessage(new Message(MessageType.LOBBY_STARTING));
+            this.m_underlyingConnection.SendMessage(new Message(MessageType.LOBBY_STARTING));
 
             // Wait a bit
             await Task.Delay(240);

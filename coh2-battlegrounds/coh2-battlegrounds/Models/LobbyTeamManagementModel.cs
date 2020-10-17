@@ -104,7 +104,7 @@ namespace BattlegroundsApp.Models {
                         participants.Add(new SessionParticipant(
                             player.Playername,
                             player.Playerid,
-                            (player.Playerid == BattlegroundsInstance.LocalSteamuser.ID) ? PlayerCompanies.FromNameAndFaction(player.Playercompany, Faction.FromName(player.Playerarmy)) : null,
+                            this.GetAICompany(player),
                             (team == Lobby.LobbyTeam.TeamType.Allies) ? SessionParticipantTeam.TEAM_ALLIES : SessionParticipantTeam.TEAM_AXIS,
                             i));
                     }
@@ -114,6 +114,17 @@ namespace BattlegroundsApp.Models {
 
             return participants;
 
+        }
+
+        private Company GetAICompany(PlayercardView view) {
+            Faction faction = Faction.FromName(view.Playerarmy);
+            if (view.PlayerSelectedCompanyItem.State == PlayercardCompanyItem.CompanyItemState.Company) {
+                return PlayerCompanies.FromNameAndFaction(view.Playercompany, faction);
+            } else if (view.PlayerSelectedCompanyItem.State == PlayercardCompanyItem.CompanyItemState.Generate) {
+                return CompanyGenerator.Generate(faction, BattlegroundsInstance.BattleGroundsTuningMod.Guid.ToString().Replace("-", ""), false, true, true);
+            } else {
+                throw new Exception();
+            }
         }
 
         private void OnCardActionHandler(PlayercardView sender, string reason) {
