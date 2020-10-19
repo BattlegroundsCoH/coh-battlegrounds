@@ -11,9 +11,10 @@ using Battlegrounds.Compiler;
 using Battlegrounds.Functional;
 using Battlegrounds.Game;
 using Battlegrounds.Game.Battlegrounds;
+using Battlegrounds.Online.Services;
 using Battlegrounds.Steam;
 
-namespace Battlegrounds.Online.Services {
+namespace Battlegrounds.Online.Lobby {
     
     /// <summary>
     /// An abstracted representation of a lobby. This class cannot be inherited. This class has no public constructor.

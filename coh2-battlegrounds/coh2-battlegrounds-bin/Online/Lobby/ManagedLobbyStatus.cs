@@ -1,4 +1,4 @@
-﻿namespace Battlegrounds.Online.Services {
+﻿namespace Battlegrounds.Online.Lobby {
     
     /// <summary>
     /// Represents a status report on a <see cref="ManagedLobby"/> query.

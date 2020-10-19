@@ -1,4 +1,4 @@
-﻿namespace Battlegrounds.Online.Services {
+﻿namespace Battlegrounds.Online.Lobby {
 
     /// <summary>
     /// Callback event for handling a connection request to a <see cref="ManagedLobby"/>.
