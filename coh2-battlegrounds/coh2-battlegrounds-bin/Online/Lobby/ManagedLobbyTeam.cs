@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Battlegrounds.Online.Lobby {
     
@@ -12,21 +10,47 @@ namespace Battlegrounds.Online.Lobby {
 
     public sealed class ManagedLobbyTeam {
 
-        private List<ManagedLobbyMember> m_members;
-        public List<ManagedLobbyMember> Members => this.m_members;
+        private ManagedLobby m_lobby;
+        private ManagedLobbyMember[] m_members;
+        private int m_nextIndex;
 
-        public int Size => this.Members.Count;
+        public ManagedLobbyMember[] Members => this.m_members;
+
+        public int Capacity => this.Members.Length;
+
+        public int Size => this.m_nextIndex;
 
         public ManagedLobbyTeamType Team { get; }
 
-        public ManagedLobbyTeam(ManagedLobbyTeamType teamtype) {
+        public ManagedLobbyTeam(ManagedLobby lobby, byte teamsize, ManagedLobbyTeamType teamtype) {
             this.Team = teamtype;
-            this.m_members = new List<ManagedLobbyMember>();
+            this.m_nextIndex = 0;
+            this.m_members = new ManagedLobbyMember[teamsize];
+            this.m_lobby = lobby;
         }
 
-        public void ForEachMember(Action<ManagedLobbyMember> action) => this.m_members.ForEach(action);
+        public void ForEachMember(Action<ManagedLobbyMember> action) { 
+            for (int i = 0; i < this.Capacity; i++) {
+                if (this.m_members[i] is ManagedLobbyMember member) {
+                    action(member);
+                } else {
+                    break;
+                }
+            }
+        }
 
-        public bool AllMembers(Predicate<ManagedLobbyMember> predicate) => this.m_members.TrueForAll(predicate);
+        public bool AllMembers(Predicate<ManagedLobbyMember> predicate) {
+            for (int i = 0; i < this.Capacity; i++) {
+                if (this.m_members[i] is ManagedLobbyMember member) {
+                    if (!predicate(member)) {
+                        return false;
+                    }
+                } else {
+                    break;
+                }
+            }
+            return true;
+        }
 
     }
 

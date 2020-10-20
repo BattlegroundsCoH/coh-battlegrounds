@@ -8,6 +8,7 @@ using Battlegrounds.Game.Battlegrounds;
 using Battlegrounds.Game.Database;
 using Battlegrounds.Game.Gameplay;
 using Battlegrounds.Online;
+using Battlegrounds.Online.Lobby;
 using Battlegrounds.Online.Services;
 using Battlegrounds.Steam;
 

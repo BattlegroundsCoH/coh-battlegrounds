@@ -17,6 +17,7 @@ using Battlegrounds.Online.Services;
 using BattlegroundsApp.Dialogs.HostGame;
 using BattlegroundsApp.Dialogs.Service;
 using BattlegroundsApp.Utilities;
+using Battlegrounds.Online.Lobby;
 
 namespace BattlegroundsApp.Views {
     /// <summary>

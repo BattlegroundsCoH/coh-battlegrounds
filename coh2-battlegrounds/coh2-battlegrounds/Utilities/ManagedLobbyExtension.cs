@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
 
 using Battlegrounds.Game.Database;
-using Battlegrounds.Online.Services;
+using Battlegrounds.Online.Lobby;
 
 namespace BattlegroundsApp.Utilities {
 

@@ -2,7 +2,7 @@
 using Battlegrounds.Game;
 using Battlegrounds.Game.Battlegrounds;
 using Battlegrounds.Game.Database;
-using Battlegrounds.Online.Services;
+using Battlegrounds.Online.Lobby;
 using System;
 using System.IO;
 using System.Collections.Generic;
