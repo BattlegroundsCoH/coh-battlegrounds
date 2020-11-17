@@ -14,8 +14,9 @@ using BattlegroundsApp.Utilities;
 
 namespace BattlegroundsApp {
     
+    [Obsolete]
     public class Lobby {
-
+        [Obsolete]
         public class LobbyTeam {
 
             public enum TeamType {
@@ -35,6 +36,7 @@ namespace BattlegroundsApp {
 
 #pragma warning disable CS0660 // Type defines operator == or operator != but does not override Object.Equals(object o)
 #pragma warning disable CS0661 // Type defines operator == or operator != but does not override Object.GetHashCode()
+        [Obsolete]
         public class LobbyPlayer {
 
             public ulong SteamID { get; private set; }
@@ -319,11 +321,11 @@ namespace BattlegroundsApp {
                     LobbyTeam.TeamType t = (LobbyTeam.TeamType)i;
                     for (int j = 0; j < this.m_lobbyTeams[t].Players.Count; j++) {
                         if (this.m_lobbyTeams[t].Players[j].Difficulty != AIDifficulty.Human) {
-                            smh.Lobby.SetUserInformation(this.m_lobbyTeams[t].Players[j].LobbyIndex, "ai", (int)this.m_lobbyTeams[t].Players[j].Difficulty);
+                            //smh.Lobby.SetUserInformation(this.m_lobbyTeams[t].Players[j].LobbyIndex, "ai", (int)this.m_lobbyTeams[t].Players[j].Difficulty);
                         }
-                        smh.Lobby.SetUserInformation(this.m_lobbyTeams[t].Players[j].LobbyIndex, "tid", (int)t);
-                        smh.Lobby.SetUserInformation(this.m_lobbyTeams[t].Players[j].LobbyIndex, "fac", this.m_lobbyTeams[t].Players[j].Faction);
-                        smh.Lobby.SetUserInformation(this.m_lobbyTeams[t].Players[j].LobbyIndex, "com", this.m_lobbyTeams[t].Players[j].CompanyName);
+                       // smh.Lobby.SetUserInformation(this.m_lobbyTeams[t].Players[j].LobbyIndex, "tid", (int)t);
+                       // smh.Lobby.SetUserInformation(this.m_lobbyTeams[t].Players[j].LobbyIndex, "fac", this.m_lobbyTeams[t].Players[j].Faction);
+                      //  smh.Lobby.SetUserInformation(this.m_lobbyTeams[t].Players[j].LobbyIndex, "com", this.m_lobbyTeams[t].Players[j].CompanyName);
                     }
                 }
                 onDone.Invoke(this);

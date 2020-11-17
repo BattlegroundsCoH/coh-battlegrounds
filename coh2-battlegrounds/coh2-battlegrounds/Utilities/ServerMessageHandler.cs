@@ -1,52 +1,41 @@
-﻿using Battlegrounds;
-using Battlegrounds.Game;
+﻿using Battlegrounds.Game;
 using Battlegrounds.Game.Battlegrounds;
-using Battlegrounds.Game.Database;
 using Battlegrounds.Online.Lobby;
 using System;
 using System.IO;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Windows;
-using Battlegrounds.Steam;
+
 using BattlegroundsApp.Views;
 
 namespace BattlegroundsApp {
 
     public class ServerMessageHandler {
 
-        private Lobby m_appLobbyInstance;
-        private ManagedLobby m_lobbyInstance; // Oughta rename this to m_lobbyInstance.... my bad :D
-        private GameLobbyView m_lobbyWindow; // I have no idea where the lobby logic is; The actual lobby
+        private ManagedLobby m_lobbyInstance;
+        private GameLobbyView m_lobbyWindow;
 
         public ManagedLobby Lobby => this.m_lobbyInstance;
-
-        public Lobby AppLobby => this.m_appLobbyInstance;
 
         // only thing that semiworks in the lobby now is the chat; And that will also have to be moved to the VM right now it is in the View
         public ServerMessageHandler(GameLobbyView lobbyObject) {
             this.m_lobbyWindow = lobbyObject;
         }
 
-        public void SetLobby(Lobby lobby) => this.m_appLobbyInstance = lobby;
-
         private void OnPlayerEvent(ManagedLobbyPlayerEventType type, string from, string message) {
             Trace.WriteLine($"[ManagedLobbyPlayerEventType.{type}] {from}: \"{message}\"");
-            m_lobbyWindow.UpdateGUI(() => {
+            this.m_lobbyWindow.UpdateGUI(() => {
                 switch (type) {
                     case ManagedLobbyPlayerEventType.Join:
-                        m_lobbyWindow.lobbyChat.Text += $"[Lobby] {from} has joined.\n";
+                        this.m_lobbyWindow.lobbyChat.Text += $"[Lobby] {from} has joined.\n";
                         break;
                     case ManagedLobbyPlayerEventType.Leave:
-                        m_lobbyWindow.lobbyChat.Text += $"[Lobby] {from} has left.\n";
+                        this.m_lobbyWindow.lobbyChat.Text += $"[Lobby] {from} has left.\n";
                         break;
                     case ManagedLobbyPlayerEventType.Kicked:
-                        m_lobbyWindow.lobbyChat.Text += $"[Lobby] {from} has been kicked.\n";
+                        this.m_lobbyWindow.lobbyChat.Text += $"[Lobby] {from} has been kicked.\n";
                         break;
                     case ManagedLobbyPlayerEventType.Message:
-                        m_lobbyWindow.lobbyChat.Text += $"{from}: {message}\n";
+                        this.m_lobbyWindow.lobbyChat.Text += $"{from}: {message}\n";
                         break;
                     case ManagedLobbyPlayerEventType.Meta:
                         string metaMessage = $"{from}: {message}";
@@ -143,21 +132,18 @@ namespace BattlegroundsApp {
         public void OnServerResponse(ManagedLobbyStatus status, ManagedLobby result) {
             if (status.Success) {
 
+                // Assign instance
                 this.m_lobbyInstance = result;
 
+                // Hook callback methods
                 this.m_lobbyInstance.OnPlayerEvent += OnPlayerEvent;
                 this.m_lobbyInstance.OnLocalEvent += OnLocalEvent;
                 this.m_lobbyInstance.OnLocalDataRequested += OnLocalDataRequest;
                 this.m_lobbyInstance.OnDataRequest += OnDataRequest;
                 this.m_lobbyInstance.OnStartMatchReceived += StartMatchCommandReceived;
 
-                if (result.IsHost) {
-                    this.m_appLobbyInstance = new Lobby(result.LobbyFileID);
-                }
-
+                // Connect method
                 this.m_lobbyWindow.ServerConnectResponse(true);
-
-                Trace.WriteLine("Server responded with OK");
 
             } else {
                 Trace.WriteLine(status.Message);

@@ -19,12 +19,14 @@ using Battlegrounds.Game.Battlegrounds;
 using Battlegrounds.Game.Database;
 using Battlegrounds.Game.Gameplay;
 using Battlegrounds.Modding;
-using Battlegrounds.Steam;
+using Battlegrounds.Online.Lobby;
+
 using BattlegroundsApp.LocalData;
 using BattlegroundsApp.Models;
 using BattlegroundsApp.Views.ViewComponent;
 
 namespace BattlegroundsApp.Views {
+
     /// <summary>
     /// Interaction logic for GameLobbyView.xaml
     /// </summary>
@@ -77,9 +79,7 @@ namespace BattlegroundsApp.Views {
 
         private void StartGame_Click(object sender, RoutedEventArgs e) => this.m_smh.Lobby.CompileAndStartMatch(this.OnStartMatchCancelled);
 
-        private void OnStartMatchCancelled(string reason) {
-            Trace.WriteLine(reason);
-        }
+        private void OnStartMatchCancelled(string reason) => Trace.WriteLine(reason);
 
         private void LeaveLobby_Click(object sender, RoutedEventArgs e) {
 
@@ -120,10 +120,11 @@ namespace BattlegroundsApp.Views {
                 int selectedScenario = scenarioSource.FindIndex(x => x.RelativeFilename.CompareTo(BattlegroundsInstance.LastPlayedMap) == 0);
                 Map.SelectedIndex = selectedScenario != -1 ? selectedScenario : 0;
 
-                this.UpdateAvailableGamemodes();
+                var scen = Map.SelectedItem as Scenario;
+                this.m_smh.Lobby.SetMap(scen);
+                this.m_smh.Lobby.SetLobbyCapacity(scen.MaxPlayers);
 
-                this.m_smh.AppLobby.CreateHost(BattlegroundsInstance.LocalSteamuser);
-                this.m_smh.AppLobby.SetMap(this.m_smh, Map.SelectedItem as Scenario);
+                this.UpdateAvailableGamemodes();
 
             } else {
 
@@ -132,7 +133,7 @@ namespace BattlegroundsApp.Views {
                 throw new NotImplementedException(); // TODO: Fetch lobby data
 
             }
-            this.UpdateLobbyVisuals(this.m_smh.AppLobby);
+            this.UpdateLobbyVisuals();
             this.m_lobbyUpdate.Start();
         }
 
@@ -157,12 +158,13 @@ namespace BattlegroundsApp.Views {
 
         private void Map_SelectionChanged(object sender, SelectionChangedEventArgs e) {
             if (Map.SelectedItem is Scenario scenario) {
-                if (scenario.MaxPlayers < this.m_smh.AppLobby.LobbyPlayers) {
-                    // TODO: Do something
+                if (scenario.MaxPlayers < this.m_smh.Lobby.PlayerCount) {
+                    // Do something
                 }
                 this.UpdateAvailableGamemodes();
                 this.m_teamManagement.SetMaxPlayers(scenario.MaxPlayers);
-                this.m_smh.AppLobby.SetMap(this.m_smh, scenario);
+                this.m_smh.Lobby.SetMap(scenario);
+                this.m_smh.Lobby.SetLobbyCapacity(scenario.MaxPlayers);
             }
         }
 
@@ -178,8 +180,8 @@ namespace BattlegroundsApp.Views {
                 // TODO: Handle
             }
 
-            List<SessionParticipant> alliedTeam = this.m_teamManagement.GetParticipants(Lobby.LobbyTeam.TeamType.Allies);
-            List<SessionParticipant> axisTeam = this.m_teamManagement.GetParticipants(Lobby.LobbyTeam.TeamType.Axis);
+            List<SessionParticipant> alliedTeam = this.m_teamManagement.GetParticipants(ManagedLobbyTeamType.Allies);
+            List<SessionParticipant> axisTeam = this.m_teamManagement.GetParticipants(ManagedLobbyTeamType.Axis);
 
             SessionInfo sinfo = new SessionInfo() {
                 SelectedGamemode = selectedWincondition,
@@ -199,7 +201,7 @@ namespace BattlegroundsApp.Views {
         private async void UpdateLobby() {
             while (true && this is not null) {
                 if (this.m_smh.Lobby.IsConnectedToServer) {
-                    this.m_smh.AppLobby.UpdateLobby(this.m_smh, this.UpdateLobbyVisuals);
+                    this.UpdateLobbyVisuals();
                     await Task.Delay(1500);
                 } else {
                     break;
@@ -207,44 +209,48 @@ namespace BattlegroundsApp.Views {
             }
         }
 
-        private void UpdateLobbyVisuals(Lobby lobby) {
+        private void UpdateLobbyVisuals() {
             this.UpdateGUI(() => {
-                this.m_teamManagement.UpdateTeamview(lobby, this.m_smh.Lobby.IsHost);
+                this.m_teamManagement.UpdateTeamview(this.m_smh.Lobby, this.m_smh.Lobby.IsHost);
             });
         }
 
-        private void OnTeamManagementCallbackHandler(Lobby.LobbyTeam.TeamType team, PlayercardView card, object arg, string reason) {
+        private void OnTeamManagementCallbackHandler(ManagedLobbyTeamType team, PlayercardView card, object arg, string reason) {
             switch (reason) {
                 case "AddAI":
-                    this.m_smh.AppLobby.AddAI(this.m_smh, team, card.Difficulty, (int)arg, card.Playerarmy);
+                    this.m_smh.Lobby.CreateAIPlayer(card.Difficulty, card.Playerarmy, team);
                     Trace.WriteLine($"Adding AI [{team}][{card.Difficulty}][{card.Playerarmy}]", "GameLobbyView");
                     break;
                 case "ChangedArmy":
-                    this.m_smh.AppLobby.SetFaction(this.m_smh, card.Playerid, card.Playerarmy);
+                    if (this.m_smh.Lobby.IsHost && (card.Playerid == this.m_smh.Lobby.Self.ID || card.IsAI)) {
+                        this.m_smh.Lobby.SetFaction(card.Playerid, card.Playerarmy);
+                    } else if (this.m_smh.Lobby.Self.ID == card.Playerid) {
+                        this.m_smh.Lobby.SetFaction(card.Playerarmy);
+                    }
                     Trace.WriteLine($"Changing faction [{card.Playerid}][{card.Difficulty}][{card.Playerarmy}]", "GameLobbyView");
                     break;
                 case "ChangedCompany":
                     if (card.IsAI || card.Playerid == this.m_smh.Lobby.Self.ID) {
                         PlayercardCompanyItem companyItem = (PlayercardCompanyItem)arg;
-                        if (companyItem.State == PlayercardCompanyItem.CompanyItemState.Company) {
+                        if (companyItem.State == PlayercardCompanyItem.CompanyItemState.Company && card.Playerid == this.m_smh.Lobby.Self.ID) {
                             Company company = PlayerCompanies.FromNameAndFaction(companyItem.Name, Faction.FromName(card.Playerarmy));
                             if (company is not null) {
-                                this.m_smh.AppLobby.SetCompany(this.m_smh, card.Playerid, company);
+                                this.m_smh.Lobby.SetCompany(company);
                                 Trace.WriteLine($"Changing company [{card.Playerid}][{card.Difficulty}][{card.Playerarmy}][{card.Playercompany}]", "GameLobbyView");
                             } else {
-
+                                throw new NotImplementedException();
                             }
                         } else if (companyItem.State == PlayercardCompanyItem.CompanyItemState.Generate && card.IsAI) {
-                            this.m_smh.AppLobby.SetCompany(this.m_smh, card.Playerid, null);
+                            this.m_smh.Lobby.SetCompany(card.Playerid, "AUGEN");
                             Trace.WriteLine($"Changing company [{card.Playerid}][{card.Difficulty}][{card.Playerarmy}][Auto-generated]", "GameLobbyView");
                         } else {
-                            this.m_smh.AppLobby.SetCompany(this.m_smh, card.Playerid, null);
+                            this.m_smh.Lobby.SetCompany(card.Playerid, "NULL");
                             Trace.WriteLine($"Changing company [{card.Playerid}][{card.Difficulty}][{card.Playerarmy}][{card.Playercompany}]", "GameLobbyView");
                         }
                     }
                     break;
                 case "RemovePlayer":
-                    this.m_smh.AppLobby.RemovePlayer(this.m_smh, team, (int)arg);
+                    this.m_smh.Lobby.RemovePlayer(card.Playerid, true);
                     Trace.WriteLine($"Removing player [{team}][{arg}][{card.Difficulty}][{card.Playerarmy}]", "GameLobbyView");
                     break;
                 default:
@@ -265,21 +271,21 @@ namespace BattlegroundsApp.Views {
 
         private void Gamemode_SelectionChanged(object sender, SelectionChangedEventArgs e) {
             if (Gamemode.SelectedItem is Wincondition wincon) {
-                this.m_smh.AppLobby.SetGamemode(this.m_smh, wincon);
+                this.m_smh.Lobby.SetGamemode(wincon.Name);
                 this.UpdateGamemodeOptions(wincon);
             }
         }
 
         private void GamemodeOption_SelectionChanged(object sender, SelectionChangedEventArgs e) {
             if (GamemodeOption.SelectedItem is WinconditionOption) {
-                this.m_smh.AppLobby.SetGamemodeOption(this.m_smh, GamemodeOption.SelectedIndex);
+                this.m_smh.Lobby.SetGamemodeOption(GamemodeOption.SelectedIndex);
             }
         }
 
         private void UpdateStartMatchButton() => StartGameBttn.IsEnabled = this.IsLegalMatch();
 
         private bool IsLegalMatch() 
-            => this.m_teamManagement.GetTeamSize(Lobby.LobbyTeam.TeamType.Allies) > 0 && this.m_teamManagement.GetTeamSize(Lobby.LobbyTeam.TeamType.Axis) > 0;
+            => this.m_teamManagement.GetTeamSize(ManagedLobbyTeamType.Allies) > 0 && this.m_teamManagement.GetTeamSize(ManagedLobbyTeamType.Axis) > 0;
 
     }
 

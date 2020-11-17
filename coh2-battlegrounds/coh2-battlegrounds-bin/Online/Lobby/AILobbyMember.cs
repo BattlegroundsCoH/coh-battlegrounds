@@ -55,6 +55,10 @@ namespace Battlegrounds.Online.Lobby {
             }
         }
 
+        public override void UpdateFaction(string faction) => this.m_faction = faction;
+
+        public override void UpdateCompany(string name, double strength) {}
+
         public override bool IsSamePlayer(ManagedLobbyMember other) {
             if (other is AILobbyMember ai) {
                 return ai.ID == other.ID;
@@ -63,6 +67,7 @@ namespace Battlegrounds.Online.Lobby {
             }
         }
 
+        public override void UpdateTeamPosition(int position) => throw new NotImplementedException();
     }
 
 }

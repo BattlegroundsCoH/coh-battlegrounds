@@ -24,13 +24,21 @@ namespace Battlegrounds.Online.Lobby {
 
         public override int LobbyIndex => this.m_index;
 
-        private HumanLobbyMember(ManagedLobby lobby, int index, ulong id, string name, string company, double strnegth) {
+        public HumanLobbyMember(ManagedLobby lobby, int index, ulong id, string name, string company, double strnegth) {
             this.m_lobby = lobby;
             this.m_index = index;
             this.m_uniqueID = id;
             this.m_name = name;
             this.m_company = company;
             this.m_strength = strnegth;
+            this.m_faction = "soviet";
+        }
+
+        public override void UpdateFaction(string faction) => this.m_faction = faction;
+
+        public override void UpdateCompany(string name, double strength) {
+            this.m_company = name;
+            this.m_strength = strength;
         }
 
         public override bool IsSamePlayer(ManagedLobbyMember other) {
@@ -40,6 +48,8 @@ namespace Battlegrounds.Online.Lobby {
                 return false;
             }
         }
+
+        public override void UpdateTeamPosition(int position) => throw new NotImplementedException();
 
     }
 
