@@ -93,15 +93,15 @@ namespace BattlegroundsApp.Models {
                 if (player.IsOccupied) {
                     if (player.IsAI) {
                         participants.Add(new SessionParticipant(
-                            AIDifficulty.AI_Hard, 
-                            null, 
+                            AIDifficulty.AI_Hard,
+                            this.GetAICompany(player), 
                             (team == ManagedLobbyTeamType.Allies) ? SessionParticipantTeam.TEAM_ALLIES : SessionParticipantTeam.TEAM_AXIS, 
                             i));
                     } else {
                         participants.Add(new SessionParticipant(
                             player.Playername,
                             player.Playerid,
-                            this.GetAICompany(player),
+                            null,
                             (team == ManagedLobbyTeamType.Allies) ? SessionParticipantTeam.TEAM_ALLIES : SessionParticipantTeam.TEAM_AXIS,
                             i));
                     }
