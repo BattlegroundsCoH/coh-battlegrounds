@@ -85,6 +85,8 @@ namespace BattlegroundsApp.Views.ViewComponent {
 
         public string Playercompany => this.SelfCompanySelector.Text;
 
+        public bool IsRegistered { get; set; }
+
         public PlayercardCompanyItem PlayerSelectedCompanyItem 
             => this.SelfCompanySelector.SelectedItem is not null ? (PlayercardCompanyItem)this.SelfCompanySelector.SelectedItem : default;
 
@@ -101,6 +103,7 @@ namespace BattlegroundsApp.Views.ViewComponent {
             this.m_state = PlayercardViewstate.Locked;
             this.m_isAIPlayer = true;
             this.PlayerArmySelection.SetItemSource(alliedArmyItems, x => new IconComboBoxItem(x.Icon, x.DisplayName));
+            this.IsRegistered = false;
         }
 
         private IconComboBoxItem CreateArmyItem(PlayercardArmyItem item) => new IconComboBoxItem(item.Icon, item.DisplayName) { Source = item };
@@ -115,6 +118,7 @@ namespace BattlegroundsApp.Views.ViewComponent {
             this.m_isAIPlayer = isAIPlayer;
             this.m_diff = AIDifficulty.Human;
             this.m_isHost = isHost;
+            this.IsRegistered = !this.m_isAIPlayer;
             if (!string.IsNullOrEmpty(name)) {
                 this.PlayerName.Content = name;
                 if (isClient || (isAIPlayer && isHost)) {

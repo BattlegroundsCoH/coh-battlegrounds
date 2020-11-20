@@ -197,7 +197,7 @@ namespace BattlegroundsApp {
                     if (this.m_lobbyTeams[currentTeam].Players.Find(x => x.SteamID == playerID) is LobbyPlayer player) {
                         this.m_lobbyTeams[currentTeam].Players.Remove(player);
                         this.m_lobbyTeams[type].Players.Add(player);
-                        smh.Lobby.UpdateUserInformation("tid", (int)type);
+                        //smh.Lobby.UpdateUserInformation("tid", (int)type);
                         smh.Lobby.SendMetaMessage("TeamPositionChanged");
                     } else {
                         throw new ArgumentOutOfRangeException($"Unknown player #{playerID}");
@@ -267,7 +267,7 @@ namespace BattlegroundsApp {
         }
 
         private bool SetStringServerValue(ServerMessageHandler smh, string key, string val) {
-            smh.Lobby.UpdateUserInformation(key, val);
+           // smh.Lobby.UpdateUserInformation(key, val);
             smh.Lobby.SendMetaMessage("StringValueChanged");
             return true;
         }

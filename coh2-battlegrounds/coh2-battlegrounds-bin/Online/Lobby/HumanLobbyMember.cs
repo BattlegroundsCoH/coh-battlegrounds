@@ -10,7 +10,6 @@ namespace Battlegrounds.Online.Lobby {
         private string m_name;
         private string m_company;
         private double m_strength;
-        private int m_index;
 
         public override ulong ID => this.m_uniqueID;
 
@@ -22,11 +21,8 @@ namespace Battlegrounds.Online.Lobby {
 
         public override double CompanyStrength => this.m_strength;
 
-        public override int LobbyIndex => this.m_index;
-
-        public HumanLobbyMember(ManagedLobby lobby, int index, ulong id, string name, string company, double strnegth) {
+        public HumanLobbyMember(ManagedLobby lobby, ulong id, string name, string company, double strnegth) {
             this.m_lobby = lobby;
-            this.m_index = index;
             this.m_uniqueID = id;
             this.m_name = name;
             this.m_company = company;
@@ -48,8 +44,6 @@ namespace Battlegrounds.Online.Lobby {
                 return false;
             }
         }
-
-        public override void UpdateTeamPosition(int position) => throw new NotImplementedException();
 
     }
 

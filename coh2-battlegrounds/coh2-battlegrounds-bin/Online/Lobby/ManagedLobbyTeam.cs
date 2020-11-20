@@ -64,8 +64,11 @@ namespace Battlegrounds.Online.Lobby {
 
         public ManagedLobbyTeam(ManagedLobby lobby, byte teamsize, ManagedLobbyTeamType teamtype) {
             this.Team = teamtype;
-            this.m_slots = new ManagedLobbyTeamSlot[teamsize];
             this.m_lobby = lobby;
+            this.m_slots = new ManagedLobbyTeamSlot[teamsize];
+            for (int i = 0; i < teamsize; i++) {
+                this.m_slots[i] = new ManagedLobbyTeamSlot(i);
+            }
         }
 
         public void ForEachMember(Action<ManagedLobbyMember> action) {
@@ -88,8 +91,9 @@ namespace Battlegrounds.Online.Lobby {
             List<ManagedLobbyMember> removed = new List<ManagedLobbyMember>();
             for (int i = 0; i < slots.Length; i++) {
                 slots[i] = new ManagedLobbyTeamSlot(i);
-                if (i < this.m_slots.Length && this.m_slots[i].State == ManagedLobbyTeamSlotState.Occupied) {
+                if (i < this.m_slots.Length && this.m_slots[i] is not null && this.m_slots[i].State == ManagedLobbyTeamSlotState.Occupied) {
                     slots[i].SetOccupant(this.m_slots[i].Occupant);
+
                 }
             }
             for (int i = slots.Length; i < this.m_slots.Length; i++) {
@@ -105,6 +109,7 @@ namespace Battlegrounds.Online.Lobby {
             for (int i = 0; i < this.m_slots.Length; i++) {
                 if (this.m_slots[i].State == ManagedLobbyTeamSlotState.Open) {
                     this.m_slots[i].SetOccupant(member);
+                    this.m_lobby.SetUserInformation(member.ID, "pos", i);
                     return true;
                 }
             }
@@ -120,6 +125,9 @@ namespace Battlegrounds.Online.Lobby {
         }
 
         public ManagedLobbyMember GetLobbyMember(ulong playerID) => this.m_slots.FirstOrDefault(x => x.Occupant is not null && x.Occupant.ID == playerID)?.Occupant;
+
+        public static ManagedLobbyTeamType GetTeamTypeFromFaction(string faction) 
+            => faction.CompareTo("german") == 0 || faction.CompareTo("west_german") == 0 ? ManagedLobbyTeamType.Axis : ManagedLobbyTeamType.Allies;
 
     }
 

@@ -10,7 +10,6 @@ namespace Battlegrounds.Online.Lobby {
         private AIDifficulty m_diff;
         private ulong m_uniqueID;
         private string m_faction;
-        private int m_index;
 
         /// <summary>
         /// 
@@ -27,32 +26,11 @@ namespace Battlegrounds.Online.Lobby {
 
         public override double CompanyStrength => 0;
 
-        public override int LobbyIndex => this.m_index;
-
-        public AILobbyMember(ManagedLobby lobby, AIDifficulty difficulty, string faction, int index) {
-            if (lobby.IsHost) {
-                this.m_lobby = lobby;
-                this.m_diff = difficulty;
-                this.m_faction = faction;
-                this.m_index = index;
-                Task.Run(async () => {
-                    this.m_uniqueID = (ulong)await this.m_lobby.TryCreateAIPlayer(difficulty, faction, index);
-                });
-            } else {
-                throw new InvalidOperationException("Unable to add new AI lobby member when caller is not host!");
-            }
-        }
-
-        public AILobbyMember(ManagedLobby lobby, AIDifficulty difficulty, string faction, int index, ulong id) {
-            if (lobby.IsHost) {
-                throw new InvalidOperationException("Unable to add new AI lobby member when caller is host!");
-            } else {
-                this.m_lobby = lobby;
-                this.m_diff = difficulty;
-                this.m_faction = faction;
-                this.m_index = index;
-                this.m_uniqueID = id;
-            }
+        public AILobbyMember(ManagedLobby lobby, AIDifficulty difficulty, string faction, ulong id) {
+            this.m_lobby = lobby;
+            this.m_diff = difficulty;
+            this.m_faction = faction;
+            this.m_uniqueID = id;
         }
 
         public override void UpdateFaction(string faction) => this.m_faction = faction;
@@ -67,7 +45,6 @@ namespace Battlegrounds.Online.Lobby {
             }
         }
 
-        public override void UpdateTeamPosition(int position) => throw new NotImplementedException();
     }
 
 }

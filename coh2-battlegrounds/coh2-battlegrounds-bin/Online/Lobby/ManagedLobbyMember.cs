@@ -1,19 +1,17 @@
-﻿using System;
-
-namespace Battlegrounds.Online.Lobby {
+﻿namespace Battlegrounds.Online.Lobby {
     
     /// <summary>
-    /// 
+    /// Abstract representation of a member of a <see cref="ManagedLobby"/>.
     /// </summary>
     public abstract class ManagedLobbyMember {
 
         /// <summary>
-        /// 
+        /// The unique identifier of the <see cref="ManagedLobbyMember"/>. Indicies below 32 are assumed to be of type <see cref="AILobbyMember"/> while above is of type <see cref="HumanLobbyMember"/>.
         /// </summary>
         public abstract ulong ID { get; }
 
         /// <summary>
-        /// 
+        /// The display name of the <see cref="ManagedLobbyMember"/>.
         /// </summary>
         public abstract string Name { get; }
 
@@ -33,11 +31,6 @@ namespace Battlegrounds.Online.Lobby {
         public abstract double CompanyStrength { get; }
 
         /// <summary>
-        /// 
-        /// </summary>
-        public abstract int LobbyIndex { get; }
-
-        /// <summary>
         /// Check if this instance of <see cref="ManagedLobbyMember"/> can be considered the same player as the <see cref="ManagedLobbyMember"/> instance being compared to.
         /// </summary>
         /// <param name="other">The other <see cref="ManagedLobbyMember"/> instance to check.</param>
@@ -45,24 +38,24 @@ namespace Battlegrounds.Online.Lobby {
         public abstract bool IsSamePlayer(ManagedLobbyMember other);
 
         /// <summary>
-        /// 
+        /// Update the faction of the <see cref="ManagedLobbyMember"/>.
         /// </summary>
-        /// <param name="faction"></param>
+        /// <param name="faction">The new faction to set.</param>
+        /// <remarks>
+        /// No validation is applied!
+        /// </remarks>
         public abstract void UpdateFaction(string faction);
 
         /// <summary>
-        /// 
+        /// Update the company used by the <see cref="ManagedLobbyMember"/>.
         /// </summary>
-        /// <param name="name"></param>
-        /// <param name="strength"></param>
+        /// <param name="name">The display name of the company</param>
+        /// <param name="strength">The strength of the company.</param>
+        /// <remarks>
+        /// No validation is applied!
+        /// </remarks>
         public abstract void UpdateCompany(string name, double strength);
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="position"></param>
-        public abstract void UpdateTeamPosition(int position);
-    
     }
 
 }

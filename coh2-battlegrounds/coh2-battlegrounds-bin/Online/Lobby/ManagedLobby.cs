@@ -40,8 +40,6 @@ namespace Battlegrounds.Online.Lobby {
         private bool m_isHost;
         private Dictionary<ManagedLobbyTeamType, ManagedLobbyTeam> m_teams;
 
-        ManagedLobbyTeamType m_selfTeam;
-
         /// <summary>
         /// 
         /// </summary>
@@ -186,33 +184,26 @@ namespace Battlegrounds.Online.Lobby {
             }
         }
 
-        public void SetFaction(string faction) {
-            this.m_teams[this.m_selfTeam].GetLobbyMember(this.Self.ID).UpdateFaction(faction);
-            this.SetUserInformation("fac", faction);
-        }
-
         public void SetFaction(ulong ID, string faction) {
-            if (this.m_isHost) {
+            this.SetUserInformation(ID, "fac", faction);
+            if (this.m_isHost || ID == this.m_self.ID) {
                 if (this.TryFindPlayerFromID(ID) is ManagedLobbyMember member) {
                     member.UpdateFaction(faction);
                 }
-                this.SetUserInformation(ID, "fac", faction);
             } else {
                 throw new PermissionDeniedException(PermissionDeniedException.HOST_ONLY);
             }
         }
 
-        public void SetCompany(Company company) {
-            this.m_teams[this.m_selfTeam].GetLobbyMember(this.Self.ID).UpdateCompany(company.Name, company.GetStrength());
-            this.SetUserInformation("com", company.Name);
-        }
+        public void SetCompany(Company company) => this.SetCompany(this.Self.ID, company.Name, company.GetStrength());
 
-        public void SetCompany(ulong ID, string company) {
-            if (this.m_isHost) {
+        public void SetCompany(ulong ID, string company, double strength) {
+            this.SetUserInformation(ID, "com", company);
+            this.SetUserInformation(ID, "str", strength);
+            if (this.m_isHost || ID == this.m_self.ID) {
                 if (this.TryFindPlayerFromID(ID) is ManagedLobbyMember member) {
-                    member.UpdateCompany(company, -1.0);
+                    member.UpdateCompany(company, strength);
                 }
-                this.SetUserInformation(ID, "com", company);
             } else {
                 throw new PermissionDeniedException(PermissionDeniedException.HOST_ONLY);
             }
@@ -247,13 +238,6 @@ namespace Battlegrounds.Online.Lobby {
             }
             return result;
         }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="info"></param>
-        /// <param name="value"></param>
-        public void UpdateUserInformation(string info, object value) => this.m_underlyingConnection.SendMessage(new Message(MessageType.LOBBY_SETUSERDATA, info, value.ToString()));
 
         /// <summary>
         /// Get a specific detail from the lobby.
@@ -397,6 +381,7 @@ namespace Battlegrounds.Online.Lobby {
         /// <param name="lobbyIndex">The index of the user in lobby to update value of.</param>
         /// <param name="userinfo">The user info to change (Like, fac, tid, or com)</param>
         /// <param name="uservalue">The value to update information to.</param>
+        /// <exception cref="PermissionDeniedException"/>
         public void SetUserInformation(ulong lobbyIndex, string userinfo, object uservalue) {
             if (this.m_isHost) {
                 if (uservalue is null) {
@@ -405,6 +390,10 @@ namespace Battlegrounds.Online.Lobby {
                 if (this.m_underlyingConnection is not null && this.m_underlyingConnection.IsConnected) {
                     this.m_underlyingConnection.SendMessage(new Message(MessageType.LOBBY_SETUSERDATA, lobbyIndex.ToString(), userinfo, uservalue.ToString()));
                 }
+            } else if (lobbyIndex == this.m_self.ID) {
+                this.SetUserInformation(userinfo, uservalue);
+            } else {
+                throw new PermissionDeniedException(PermissionDeniedException.HOST_ONLY);
             }
         }
 
@@ -426,7 +415,8 @@ namespace Battlegrounds.Online.Lobby {
         /// Set the max number of players that can join the lobby. Each playable team gains half of the specified amount. May only be invoked by host.
         /// </summary>
         /// <param name="capacity">The maximum amount of players that are allowed to join.</param>
-        public void SetLobbyCapacity(int capacity) {
+        /// <param name="broadcast">Should broadcast the change in capacity</param>
+        public void SetLobbyCapacity(int capacity, bool broadcast = true) {
             if (this.m_isHost) {
                 int teamSize = capacity / 2;
                 var alliesRemoved = this.m_teams[ManagedLobbyTeamType.Allies].SetCapacity(teamSize);
@@ -440,7 +430,7 @@ namespace Battlegrounds.Online.Lobby {
                         }
                     }
                 }
-                this.SetLobbyInformation("capacity", capacity);
+                broadcast.Then(() => this.SetLobbyInformation("capacity", capacity));
             }
         }
 
@@ -666,14 +656,17 @@ namespace Battlegrounds.Online.Lobby {
         /// <param name="faction"></param>
         /// <param name="teamIndex"></param>
         /// <returns></returns>
-        public async Task<int> TryCreateAIPlayer(AIDifficulty difficulty, string faction, int teamIndex) {
+        public async Task<int> TryCreateAIPlayer(AIDifficulty difficulty, string faction, int teamIndex, int timeout = -1) {
             string responseQuery = null;
             Message addAIMessage = new Message(MessageType.LOBBY_ADDAI, ((int)difficulty).ToString(), faction, teamIndex.ToString());
             Message.SetIdentifier(this.m_underlyingConnection.ConnectionSocket, addAIMessage);
             this.m_underlyingConnection.SetIdentifierReceiver(addAIMessage.Identifier, msg => responseQuery = msg.Argument1);
             this.m_underlyingConnection.SendMessage(addAIMessage);
-            while (responseQuery is null) {
+            while (responseQuery is null && (timeout >= 0 || timeout == -1)) {
                 await Task.Delay(1);
+                if (timeout != -1) {
+                    timeout--;
+                }
             }
             if (int.TryParse(responseQuery, out int id)) {
                 return id;
@@ -682,8 +675,8 @@ namespace Battlegrounds.Online.Lobby {
             }
         }
 
-        public bool CreateAIPlayer(AIDifficulty difficulty, string faction, ManagedLobbyTeamType teamIndex)
-            => this.TryCreateAIPlayer(difficulty, faction, (int)teamIndex).Result != -1;
+        public bool CreateAIPlayer(AIDifficulty difficulty, string faction, ManagedLobbyTeamType teamIndex) 
+            => Task.Run(() => this.TryCreateAIPlayer(difficulty, faction, (int)teamIndex, 1250)).Result != -1;
 
         /// <summary>
         /// Kick a player from the lobby. (If host).
@@ -865,7 +858,7 @@ namespace Battlegrounds.Online.Lobby {
                     break;
                 case MessageType.LOBBY_JOIN:
                     if (ulong.TryParse(incomingMessage.Argument2, out ulong newSteamID)) {
-                        HumanLobbyMember newPlayer = new HumanLobbyMember(this, -1, newSteamID, incomingMessage.Argument1, string.Empty, 0.0);
+                        HumanLobbyMember newPlayer = new HumanLobbyMember(this, newSteamID, incomingMessage.Argument1, string.Empty, 0.0);
                         if (this.m_teams[ManagedLobbyTeamType.Allies].Count <= this.m_teams[ManagedLobbyTeamType.Axis].Count) {
                             this.m_teams[ManagedLobbyTeamType.Allies].Join(newPlayer);
                         } else {
@@ -916,6 +909,10 @@ namespace Battlegrounds.Online.Lobby {
                         Trace.WriteLine("Successfully downloaded 'gamemode.sga'");
                     }                    
                     break;
+                case MessageType.LOBBY_AIJOIN:
+                    ManagedLobbyTeamType aiteam = ManagedLobbyTeam.GetTeamTypeFromFaction(incomingMessage.Argument2);
+                    this.m_teams[aiteam].Join(new AILobbyMember(this, Enum.Parse<AIDifficulty>(incomingMessage.Argument1), incomingMessage.Argument2, ulong.Parse(incomingMessage.Argument3)));
+                    break;
                 case MessageType.FatalMessageError:
                     break;
                 default: Trace.WriteLine($"Unhandled type <<{incomingMessage.Descriptor}>>", "ManagedLobby.cs"); break;
@@ -933,6 +930,8 @@ namespace Battlegrounds.Online.Lobby {
                 case "selected_wcs":
                     this.m_lobbyGamemodeOption = value;
                     break;
+                case "capacity":
+                    throw new NotImplementedException();
                 default:
                     Trace.WriteLine($"Unknown lobby information change: {info} (with value '{value}')");
                     break;
@@ -953,7 +952,7 @@ namespace Battlegrounds.Online.Lobby {
             }
         }
 
-        private ManagedLobbyMember TryFindPlayerFromID(ulong id) => this.TryFindPlayerFromID(id, out _);
+        public ManagedLobbyMember TryFindPlayerFromID(ulong id) => this.TryFindPlayerFromID(id, out _);
 
         /// <summary>
         /// Host a new <see cref="ManagedLobby"/> on the central server.
@@ -983,9 +982,9 @@ namespace Battlegrounds.Online.Lobby {
                             var mLobby = new ManagedLobby(connection, true) {
                                 m_lobbyID = response.Argument2,
                                 m_self = hub.User,
-                                m_selfTeam = ManagedLobbyTeamType.Allies
                             };
-                            mLobby.m_teams[ManagedLobbyTeamType.Allies].Join(new HumanLobbyMember(mLobby, 0, hub.User.ID, hub.User.Name, string.Empty, 0.0));
+                            mLobby.SetLobbyCapacity(2, false);
+                            mLobby.m_teams[ManagedLobbyTeamType.Allies].Join(new HumanLobbyMember(mLobby, hub.User.ID, hub.User.Name, string.Empty, 0.0));
                             managedCallback?.Invoke(new ManagedLobbyStatus(true), mLobby);
                         } else {
                             managedCallback?.Invoke(new ManagedLobbyStatus(false, response.Argument1), null);

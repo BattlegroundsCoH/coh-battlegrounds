@@ -158,13 +158,15 @@ namespace BattlegroundsApp.Views {
 
         private void Map_SelectionChanged(object sender, SelectionChangedEventArgs e) {
             if (Map.SelectedItem is Scenario scenario) {
-                if (scenario.MaxPlayers < this.m_smh.Lobby.PlayerCount) {
-                    // Do something
+                if (scenario.RelativeFilename.CompareTo(this.m_smh.Lobby.SelectedMap) != 0) {
+                    if (scenario.MaxPlayers < this.m_smh.Lobby.PlayerCount) {
+                        // Do something
+                    }
+                    this.UpdateAvailableGamemodes();
+                    this.m_teamManagement.SetMaxPlayers(scenario.MaxPlayers);
+                    this.m_smh.Lobby.SetMap(scenario);
+                    this.m_smh.Lobby.SetLobbyCapacity(scenario.MaxPlayers);
                 }
-                this.UpdateAvailableGamemodes();
-                this.m_teamManagement.SetMaxPlayers(scenario.MaxPlayers);
-                this.m_smh.Lobby.SetMap(scenario);
-                this.m_smh.Lobby.SetLobbyCapacity(scenario.MaxPlayers);
             }
         }
 
@@ -218,38 +220,51 @@ namespace BattlegroundsApp.Views {
         private void OnTeamManagementCallbackHandler(ManagedLobbyTeamType team, PlayercardView card, object arg, string reason) {
             switch (reason) {
                 case "AddAI":
-                    this.m_smh.Lobby.CreateAIPlayer(card.Difficulty, card.Playerarmy, team);
-                    Trace.WriteLine($"Adding AI [{team}][{card.Difficulty}][{card.Playerarmy}]", "GameLobbyView");
+                    card.IsRegistered = false;
+                    if (this.m_smh.Lobby.CreateAIPlayer(card.Difficulty, card.Playerarmy, team)) {
+                        card.IsRegistered = true;
+                        Trace.WriteLine($"Adding AI [{team}][{card.Difficulty}][{card.Playerarmy}]", "GameLobbyView");
+                    } else {
+                        Trace.WriteLine("Failed to add AI...");
+                        card.SetCardState(PlayercardViewstate.Open);
+                    }
                     break;
                 case "ChangedArmy":
-                    if (this.m_smh.Lobby.IsHost && (card.Playerid == this.m_smh.Lobby.Self.ID || card.IsAI)) {
-                        this.m_smh.Lobby.SetFaction(card.Playerid, card.Playerarmy);
-                    } else if (this.m_smh.Lobby.Self.ID == card.Playerid) {
-                        this.m_smh.Lobby.SetFaction(card.Playerarmy);
+                    if (!card.IsRegistered) {
+                        break;
                     }
-                    Trace.WriteLine($"Changing faction [{card.Playerid}][{card.Difficulty}][{card.Playerarmy}]", "GameLobbyView");
+                    if (card.Playerarmy.CompareTo(this.m_smh.Lobby.TryFindPlayerFromID(card.Playerid)?.Faction) != 0) {
+                        this.m_smh.Lobby.SetFaction(card.Playerid, card.Playerarmy);
+                        Trace.WriteLine($"Changing faction [{card.Playerid}][{card.Difficulty}][{card.Playerarmy}]", "GameLobbyView");
+                    }
                     break;
                 case "ChangedCompany":
-                    if (card.IsAI || card.Playerid == this.m_smh.Lobby.Self.ID) {
-                        PlayercardCompanyItem companyItem = (PlayercardCompanyItem)arg;
-                        if (companyItem.State == PlayercardCompanyItem.CompanyItemState.Company && card.Playerid == this.m_smh.Lobby.Self.ID) {
-                            Company company = PlayerCompanies.FromNameAndFaction(companyItem.Name, Faction.FromName(card.Playerarmy));
-                            if (company is not null) {
-                                this.m_smh.Lobby.SetCompany(company);
-                                Trace.WriteLine($"Changing company [{card.Playerid}][{card.Difficulty}][{card.Playerarmy}][{card.Playercompany}]", "GameLobbyView");
+                    if (!card.IsRegistered) {
+                        break;
+                    }
+                    if (card.Playercompany.CompareTo(this.m_smh.Lobby.TryFindPlayerFromID(card.Playerid)?.CompanyName) != 0) {
+                        if (card.IsAI || card.Playerid == this.m_smh.Lobby.Self.ID) {
+                            PlayercardCompanyItem companyItem = (PlayercardCompanyItem)arg;
+                            if (companyItem.State == PlayercardCompanyItem.CompanyItemState.Company && card.Playerid == this.m_smh.Lobby.Self.ID) {
+                                Company company = PlayerCompanies.FromNameAndFaction(companyItem.Name, Faction.FromName(card.Playerarmy));
+                                if (company is not null) {
+                                    this.m_smh.Lobby.SetCompany(company);
+                                    Trace.WriteLine($"Changing company [{card.Playerid}][{card.Difficulty}][{card.Playerarmy}][{card.Playercompany}]", "GameLobbyView");
+                                } else {
+                                    throw new NotImplementedException();
+                                }
+                            } else if (companyItem.State == PlayercardCompanyItem.CompanyItemState.Generate && card.IsAI) {
+                                this.m_smh.Lobby.SetCompany(card.Playerid, "AUGEN", -1.0);
+                                Trace.WriteLine($"Changing company [{card.Playerid}][{card.Difficulty}][{card.Playerarmy}][Auto-generated]", "GameLobbyView");
                             } else {
-                                throw new NotImplementedException();
+                                this.m_smh.Lobby.SetCompany(card.Playerid, "NULL", -1.0);
+                                Trace.WriteLine($"Changing company [{card.Playerid}][{card.Difficulty}][{card.Playerarmy}][{card.Playercompany}]", "GameLobbyView");
                             }
-                        } else if (companyItem.State == PlayercardCompanyItem.CompanyItemState.Generate && card.IsAI) {
-                            this.m_smh.Lobby.SetCompany(card.Playerid, "AUGEN");
-                            Trace.WriteLine($"Changing company [{card.Playerid}][{card.Difficulty}][{card.Playerarmy}][Auto-generated]", "GameLobbyView");
-                        } else {
-                            this.m_smh.Lobby.SetCompany(card.Playerid, "NULL");
-                            Trace.WriteLine($"Changing company [{card.Playerid}][{card.Difficulty}][{card.Playerarmy}][{card.Playercompany}]", "GameLobbyView");
                         }
                     }
                     break;
                 case "RemovePlayer":
+                    card.IsRegistered = false;
                     this.m_smh.Lobby.RemovePlayer(card.Playerid, true);
                     Trace.WriteLine($"Removing player [{team}][{arg}][{card.Difficulty}][{card.Playerarmy}]", "GameLobbyView");
                     break;
