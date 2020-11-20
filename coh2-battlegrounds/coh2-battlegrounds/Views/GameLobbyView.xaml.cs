@@ -172,7 +172,7 @@ namespace BattlegroundsApp.Views {
 
         public SessionInfo CreateSessionInfo() {
 
-            Wincondition selectedWincondition = WinconditionList.GetWinconditionByName(Gamemode.SelectedItem as string);
+            Wincondition selectedWincondition = Gamemode.SelectedItem as Wincondition;
             if (selectedWincondition is null) {
                 // TODO: Handle
             }

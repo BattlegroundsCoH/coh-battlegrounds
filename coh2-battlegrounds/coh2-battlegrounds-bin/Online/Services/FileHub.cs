@@ -147,7 +147,7 @@ namespace Battlegrounds.Online.Services {
         /// <param name="byteContent">The byte content representing a file to upload.</param>
         /// <param name="uploadname">The name of the file to upload to the server.</param>
         /// <param name="lobbyID">The lobby ID to use when identifying the lobby to upload data to.</param>
-        /// <returns>If upload was ssuccesful, true is returned; otherwise false.</returns>
+        /// <returns>If upload was ssuccesful, <see langword="true"/> is returned; otherwise <see langword="false"/>.</returns>
         public static bool UploadFile(byte[] byteContent, string uploadname, string lobbyID) {
 
             // Establish connection

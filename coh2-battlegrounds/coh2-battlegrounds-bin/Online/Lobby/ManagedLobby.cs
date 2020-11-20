@@ -94,6 +94,8 @@ namespace Battlegrounds.Online.Lobby {
 
         public string SelectedMap => this.m_lobbyMap;
 
+        private List<ManagedLobbyTeam> Teams => this.m_teams.Values.ToList();
+
         private ManagedLobby(Connection connection, bool isHost) {
 
             // Assign the underlying connection and start listening for messages
@@ -195,7 +197,10 @@ namespace Battlegrounds.Online.Lobby {
             }
         }
 
-        public void SetCompany(Company company) => this.SetCompany(this.Self.ID, company.Name, company.GetStrength());
+        public void SetCompany(Company company) {
+            this.SetCompany(this.Self.ID, company.Name, company.GetStrength());
+            this.UploadCompany(company);
+        }
 
         public void SetCompany(ulong ID, string company, double strength) {
             this.SetUserInformation(ID, "com", company);
@@ -587,6 +592,17 @@ namespace Battlegrounds.Online.Lobby {
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="company"></param>
+        public void UploadCompany(Company company) {
+            if (!FileHub.UploadFile(company.ToBytes(), $"{this.m_self.ID}_company.json", this.LobbyFileID)) {
+                Trace.WriteLine("Failed to upload company...");
+                // ... do something?
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <param name="player"></param>
         /// <param name="destination"></param>
         /// <returns></returns>
@@ -608,36 +624,31 @@ namespace Battlegrounds.Online.Lobby {
         /// <returns></returns>
         private async Task<(List<Company>, bool)> GetLobbyCompanies() {
 
-            ulong[] lobbyPlayers = await this.GetPlayerIDsAsync();
-            int[] lobbyDifficulties = await this.GetLobbyPlayerDifficultiesAsync(lobbyPlayers);
             List<Company> companies = new List<Company>();
             bool success = false;
 
-            int humanCount = lobbyDifficulties.Count(x => x == (int)AIDifficulty.Human);
-            
+            int humanCount = -1;
+            this.Teams.ForEach(x => x.ForEachMember(y => humanCount += y is HumanLobbyMember ? 1 : 0));
+
             await Task.Run(() => {
 
                 int count = 0;
 
-                for (int i = 0; i < lobbyPlayers.Length; i++) {
-
-                    if (lobbyDifficulties[i] != (int)AIDifficulty.Human) { // doesn't make sense (and not possible) to download company data of AI
-                        Trace.WriteLine($"Skipping player {lobbyPlayers[i]} as they're not of human \"difficulty\" ({lobbyDifficulties[i]})");
-                        continue;
-                    }
-
-                    string destination = BattlegroundsInstance.GetRelativePath(BattlegroundsPaths.SESSION_FOLDER, $"{lobbyPlayers[i]}_company.json");
-
-                    if (!this.GetLobbyCompany(lobbyPlayers[i], destination)) {
-                        // TODO: Try and redownload
-                    } else {
-                        Company company = Company.ReadCompanyFromFile(destination);
-                        company.Owner = lobbyPlayers[i].ToString();
-                        companies.Add(company);
-                        count++;
-                    }
-
-                }
+                this.Teams.ForEach(x => {
+                    x.ForEachMember(y => {
+                        if (y is HumanLobbyMember && y.ID != this.Self.ID) {
+                            string destination = BattlegroundsInstance.GetRelativePath(BattlegroundsPaths.SESSION_FOLDER, $"{y.ID}_company.json");
+                            if (!this.GetLobbyCompany(y.ID, destination)) {
+                                // TODO: Try and redownload
+                            } else {
+                                Company company = Company.ReadCompanyFromFile(destination);
+                                company.Owner = y.Name;
+                                companies.Add(company);
+                                count++;
+                            }
+                        }
+                    });
+                });
 
                 success = count == humanCount;
 
@@ -660,7 +671,7 @@ namespace Battlegrounds.Online.Lobby {
             string responseQuery = null;
             Message addAIMessage = new Message(MessageType.LOBBY_ADDAI, ((int)difficulty).ToString(), faction, teamIndex.ToString());
             Message.SetIdentifier(this.m_underlyingConnection.ConnectionSocket, addAIMessage);
-            this.m_underlyingConnection.SetIdentifierReceiver(addAIMessage.Identifier, msg => responseQuery = msg.Argument1);
+            this.m_underlyingConnection.SetIdentifierReceiver(addAIMessage.Identifier, msg => responseQuery = msg.Argument3);
             this.m_underlyingConnection.SendMessage(addAIMessage);
             while (responseQuery is null && (timeout >= 0 || timeout == -1)) {
                 await Task.Delay(1);
@@ -848,7 +859,6 @@ namespace Battlegrounds.Online.Lobby {
         }
 
         private void ManagedLobbyInternal_MessageReceived(Message incomingMessage) {
-            Trace.WriteLine($"Received message <<{incomingMessage}>> from server.", "ManagedLobby.cs");
             switch (incomingMessage.Descriptor) {
                 case MessageType.LOBBY_CHATMESSAGE:
                     this.OnPlayerEvent?.Invoke(ManagedLobbyPlayerEventType.Message, incomingMessage.Argument2, incomingMessage.Argument1);

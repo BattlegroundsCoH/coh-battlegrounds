@@ -108,8 +108,8 @@ namespace BattlegroundsApp.Views.ViewComponent {
 
         private IconComboBoxItem CreateArmyItem(PlayercardArmyItem item) => new IconComboBoxItem(item.Icon, item.DisplayName) { Source = item };
 
-        public void SetAvailableArmies(bool isAllies)
-            => isAllies.Then(() => { this.PlayerArmySelection.SetItemSource(alliedArmyItems, this.CreateArmyItem); this.m_isAllied = true; })
+        public void SetAvailableArmies(bool isAllies) => isAllies
+            .Then(() => { this.PlayerArmySelection.SetItemSource(alliedArmyItems, this.CreateArmyItem); this.m_isAllied = true; })
             .Else(() => { this.PlayerArmySelection.SetItemSource(axisArmyItems, this.CreateArmyItem); this.m_isAllied = false; });
 
         public void SetPlayerdata(ulong id, string name, string army, bool isClient, bool isAIPlayer = false, bool isHost = false) {

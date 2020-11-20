@@ -26,7 +26,9 @@ namespace Battlegrounds.Game.Battlegrounds {
     /// Represents a human or AI participant in a <see cref="Session"/>. Implements <see cref="IJsonObject"/>.
     /// </summary>
     public readonly struct SessionParticipant : IJsonObject {
-    
+
+        private readonly Company m_company;
+
         /// <summary>
         /// The <see cref="SteamUser"/> profile of the human user.
         /// </summary>
@@ -45,7 +47,7 @@ namespace Battlegrounds.Game.Battlegrounds {
         /// <summary>
         /// The <see cref="Company"/> used by the <see cref="SessionParticipant"/>.
         /// </summary>
-        public Company ParticipantCompany { get; }
+        public Company ParticipantCompany => this.m_company;
 
         /// <summary>
         /// The faction to be used by the <see cref="SessionParticipant"/>.
@@ -80,7 +82,7 @@ namespace Battlegrounds.Game.Battlegrounds {
             this.UserDisplayname = user.Name;
             this.UserID = user.ID;
             this.IsHumanParticipant = true;
-            this.ParticipantCompany = company;
+            this.m_company = company;
             this.Difficulty = AIDifficulty.Human;
             this.TeamIndex = tIndex;
             this.PlayerIndexOnTeam = pIndex;
@@ -99,7 +101,7 @@ namespace Battlegrounds.Game.Battlegrounds {
             this.UserDisplayname = user;
             this.UserID = id;
             this.IsHumanParticipant = true;
-            this.ParticipantCompany = company;
+            this.m_company = company;
             this.Difficulty = AIDifficulty.Human;
             this.TeamIndex = tIndex;
             this.PlayerIndexOnTeam = pIndex;
@@ -127,7 +129,7 @@ namespace Battlegrounds.Game.Battlegrounds {
             this.UserDisplayname = string.Empty;
             this.UserID = 0;
             this.IsHumanParticipant = false;
-            this.ParticipantCompany = company;
+            this.m_company = company;
             this.Difficulty = difficulty;
             this.TeamIndex = tIndex;
             this.PlayerIndexOnTeam = pIndex;
