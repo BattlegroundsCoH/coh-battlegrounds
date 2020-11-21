@@ -1104,6 +1104,66 @@
 			"IsWintermap": "False",
 			"Gamemodes": [
 			]
+		},
+		{
+			"jsdbtype": "Battlegrounds.Game.Database.Scenario",
+			"Name": "(2 - 4) Bridgehead",
+			"Description": "Operation Market Garden opened with Allied success all round. In the first landing, almost all troops arrived on top of their drop zones without incident.The 101st met little resistance and captured four of five bridges assigned to them, however the bridge at Son was blown up by the Germans on approach. Faced with the loss of the bridge at Son, the 101st  unsuccessfully attempted to capture a similar bridge a few kilometres away at Best. While fending off the attack of the American paratroopers, the Germans suffered a lot of casualties, therefore they choose to hold their ground by pulling back further into Best. The Scottish 15th Division took over from the Americans. They tried to liberate the village of Best for over a month, until the town was liberated on October 24.",
+			"RelativeFilename": "best",
+			"SgaName": "1286314799",
+			"MaxPlayers": "4",
+			"Theatre": "SharedFront",
+			"IsWintermap": "False",
+			"Gamemodes": [
+			]
+		},
+		{
+			"jsdbtype": "Battlegrounds.Game.Database.Scenario",
+			"Name": "8p_linden",
+			"Description": "",
+			"RelativeFilename": "8p_linden",
+			"SgaName": "1507561160",
+			"MaxPlayers": "8",
+			"Theatre": "SharedFront",
+			"IsWintermap": "False",
+			"Gamemodes": [
+			]
+		},
+		{
+			"jsdbtype": "Battlegrounds.Game.Database.Scenario",
+			"Name": "(6 - 8) Pinsk Marshes",
+			"Description": "The wide and open marshes of the prypjat river allow armies to attack their enemy from all directions, but expierenced commanders are aware, that the swamps can turn fast into wet graves for the attacking troops, so the key to victory lies in controlling the roads in order to move units fast across the water and thus be albe to control the battlefield.                  By O'Field",
+			"RelativeFilename": "6p_swamps",
+			"SgaName": "202943684",
+			"MaxPlayers": "8",
+			"Theatre": "SharedFront",
+			"IsWintermap": "False",
+			"Gamemodes": [
+			]
+		},
+		{
+			"jsdbtype": "Battlegrounds.Game.Database.Scenario",
+			"Name": "(8) Not Another Generic Achelous River",
+			"Description": "Not Another Generic Achelous River (100 Pop Cap)",
+			"RelativeFilename": "8p_not_another_generic_achelous_river",
+			"SgaName": "314818255",
+			"MaxPlayers": "8",
+			"Theatre": "SharedFront",
+			"IsWintermap": "False",
+			"Gamemodes": [
+			]
+		},
+		{
+			"jsdbtype": "Battlegrounds.Game.Database.Scenario",
+			"Name": "(2 - 4) Medieval Warzone",
+			"Description": "As the forces of Nazi Germany and the Allies made camp in preparation for battle the next day, a freak plasma induction lightning storm transported them back to the middle ages. Faced with the prospect of never seeing their families again, they did the only thing they could do- fight to the death over a small castle on a river. \n\nCreated by Janne252",
+			"RelativeFilename": "4p_some_warzone_03",
+			"SgaName": "589056001",
+			"MaxPlayers": "4",
+			"Theatre": "SharedFront",
+			"IsWintermap": "False",
+			"Gamemodes": [
+			]
 		}
 	]
 }

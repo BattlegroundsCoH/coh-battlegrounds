@@ -196,6 +196,8 @@ namespace BattlegroundsApp.Views.ViewComponent {
             }
         }
 
+        public void UpdatePlayerID(ulong aiid) => this.m_steamID = aiid;
+
     }
 
 }

@@ -231,7 +231,9 @@ namespace BattlegroundsApp.Views {
             switch (reason) {
                 case "AddAI":
                     card.IsRegistered = false;
-                    if (this.m_smh.Lobby.CreateAIPlayer(card.Difficulty, card.Playerarmy, team)) {
+                    int aiid = this.m_smh.Lobby.CreateAIPlayer(card.Difficulty, card.Playerarmy, team);
+                    if (aiid != -1) {
+                        card.UpdatePlayerID((ulong)aiid);
                         card.IsRegistered = true;
                         Trace.WriteLine($"Adding AI [{team}][{card.Difficulty}][{card.Playerarmy}]", "GameLobbyView");
                     } else {

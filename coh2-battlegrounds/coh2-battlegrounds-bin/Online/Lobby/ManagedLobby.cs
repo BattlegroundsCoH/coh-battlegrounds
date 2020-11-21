@@ -466,7 +466,7 @@ namespace Battlegrounds.Online.Lobby {
             bool alldone = false;
 
             void OnMessage(Message response) {
-                Trace.WriteLine(response);
+                Trace.WriteLine(response, "ManagedLobby");
                 if (response.Descriptor == MessageType.LOBBY_PLAYERNAMES) {
                     playernames = response.Argument1.Split(';', StringSplitOptions.RemoveEmptyEntries).ForEach(x => x.Replace("\"", ""));
                 }
@@ -497,7 +497,7 @@ namespace Battlegrounds.Online.Lobby {
             bool alldone = false;
 
             void OnMessage(Message response) {
-                Trace.WriteLine(response);
+                Trace.WriteLine(response, "ManagedLobby");
                 if (response.Descriptor == MessageType.LOBBY_PLAYERIDS) {
                     playerids = response.Argument1.Split(';', StringSplitOptions.RemoveEmptyEntries).ForEach(x => x.Replace("\"", "")).Select(x => ulong.Parse(x)).ToArray();
                 }
@@ -529,7 +529,7 @@ namespace Battlegrounds.Online.Lobby {
             bool alldone = false;
 
             void OnMessage(Message message) {
-                Trace.WriteLine(message);
+                Trace.WriteLine(message, "ManagedLobby");
                 if (message.Descriptor == MessageType.LOBBY_GETPLAYERID) {
                     ulong.TryParse(message.Argument1, out id);
                 }
@@ -595,7 +595,7 @@ namespace Battlegrounds.Online.Lobby {
         /// <param name="company"></param>
         public void UploadCompany(Company company) {
             if (!FileHub.UploadFile(company.ToBytes(), $"{this.m_self.ID}_company.json", this.LobbyFileID)) {
-                Trace.WriteLine("Failed to upload company...");
+                Trace.WriteLine("Failed to upload company...", "ManagedLobby");
                 // ... do something?
             }
         }
@@ -671,7 +671,7 @@ namespace Battlegrounds.Online.Lobby {
             string responseQuery = null;
             Message addAIMessage = new Message(MessageType.LOBBY_ADDAI, ((int)difficulty).ToString(), faction, teamIndex.ToString());
             Message.SetIdentifier(this.m_underlyingConnection.ConnectionSocket, addAIMessage);
-            this.m_underlyingConnection.SetIdentifierReceiver(addAIMessage.Identifier, msg => responseQuery = msg.Argument3);
+            this.m_underlyingConnection.SetIdentifierReceiver(addAIMessage.Identifier, msg => { /*Trace.WriteLine(msg);*/ responseQuery = msg.Argument1; });
             this.m_underlyingConnection.SendMessage(addAIMessage);
             while (responseQuery is null && (timeout >= 0 || timeout == -1)) {
                 await Task.Delay(1);
@@ -686,8 +686,8 @@ namespace Battlegrounds.Online.Lobby {
             }
         }
 
-        public bool CreateAIPlayer(AIDifficulty difficulty, string faction, ManagedLobbyTeamType teamIndex) 
-            => Task.Run(() => this.TryCreateAIPlayer(difficulty, faction, (int)teamIndex, 1250)).Result != -1;
+        public int CreateAIPlayer(AIDifficulty difficulty, string faction, ManagedLobbyTeamType teamIndex) 
+            => Task.Run(() => this.TryCreateAIPlayer(difficulty, faction, (int)teamIndex, 1250)).Result;
 
         /// <summary>
         /// Kick a player from the lobby. (If host).
@@ -713,6 +713,8 @@ namespace Battlegrounds.Online.Lobby {
                 } else if (player is AILobbyMember ai) {
                     broadcast.Then(() => this.RemoveAI(ai.ID));
                     this.m_teams[team].Leave(ai);
+                } else {
+                    Trace.WriteLine($"Unable to find player with ID = {id}", "ManagedLobby");
                 }
             } else {
                 throw new PermissionDeniedException(PermissionDeniedException.HOST_ONLY);
@@ -837,7 +839,7 @@ namespace Battlegrounds.Online.Lobby {
         }
 
         void ManagedLobbyInternal_GameSessionStatusChanged(SessionStatus status, Session s) {
-            Trace.WriteLine($"Session update: {status}");
+            Trace.WriteLine($"Session update: {status}", "ManagedLobby");
             switch (status) {
                 case SessionStatus.S_FailedCompile:
                     break;
@@ -914,18 +916,31 @@ namespace Battlegrounds.Online.Lobby {
                 case MessageType.LOBBY_NOTIFY_GAMEMODE:
                     string path = $"{Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)}\\my games\\Company of Heroes 2\\mods\\gamemode\\coh2_battlegrounds_wincondition.sga";
                     if (!FileHub.DownloadFile(path, "gamemode.sga", this.LobbyFileID)) {
-                        Trace.WriteLine("Failed to download 'gamemode.sga'");
+                        Trace.WriteLine("Failed to download 'gamemode.sga'", "ManagedLobby");
                     } else {
-                        Trace.WriteLine("Successfully downloaded 'gamemode.sga'");
+                        Trace.WriteLine("Successfully downloaded 'gamemode.sga'", "ManagedLobby");
                     }                    
                     break;
                 case MessageType.LOBBY_AIJOIN:
                     ManagedLobbyTeamType aiteam = ManagedLobbyTeam.GetTeamTypeFromFaction(incomingMessage.Argument2);
                     this.m_teams[aiteam].Join(new AILobbyMember(this, Enum.Parse<AIDifficulty>(incomingMessage.Argument1), incomingMessage.Argument2, ulong.Parse(incomingMessage.Argument3)));
                     break;
+                case MessageType.LOBBY_AILEAVE:
+                    if (ulong.TryParse(incomingMessage.Argument2, out ulong aiid)) {
+                        var aiplayer = this.TryFindPlayerFromID(aiid);
+                        if (aiplayer is AILobbyMember) {
+                            var team = ManagedLobbyTeam.GetTeamTypeFromFaction(aiplayer.Faction);
+                            this.m_teams[team].Leave(aiplayer);
+                        } else {
+                            Trace.WriteLine($"Failed to remove AI with ID {aiid} (May already have been removed on the clientside).", "ManagedLobby");
+                        }
+                    } else {
+                        Trace.WriteLine("Failed to remove AI (Invalid ID)", "ManagedLobby");
+                    }
+                    break;
                 case MessageType.FatalMessageError:
                     break;
-                default: Trace.WriteLine($"Unhandled type <<{incomingMessage.Descriptor}>>", "ManagedLobby.cs"); break;
+                default: Trace.WriteLine($"Unhandled type <<{incomingMessage.Descriptor}>>", "ManagedLobby"); break;
             }
         }
 
@@ -943,7 +958,7 @@ namespace Battlegrounds.Online.Lobby {
                 case "capacity":
                     throw new NotImplementedException();
                 default:
-                    Trace.WriteLine($"Unknown lobby information change: {info} (with value '{value}')");
+                    Trace.WriteLine($"Unknown lobby information change: {info} (with value '{value}')", "ManagedLobby");
                     break;
             }
             this.OnLobbyInfoChanged?.Invoke(info, value);
