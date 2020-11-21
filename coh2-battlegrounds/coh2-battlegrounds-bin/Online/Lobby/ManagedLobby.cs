@@ -724,7 +724,7 @@ namespace Battlegrounds.Online.Lobby {
         /// </summary>
         /// <remarks>The method is synchronous and make take several minutes to complete. (Use in a <see cref="Task.Run(Action)"/> context to maintain responsiveness).</remarks>
         /// <param name="operationCancelled">The <see cref="Action{T}"/> invoked if the execution of the method is cancelled. The <see cref="string"/> argument describes what caused the cancellation.</param>
-        public async void CompileAndStartMatch(Action<string> operationCancelled) {
+        public async void CompileAndStartMatch(Action<string> operationFeedback) {
 
             // Make sure we're the host
             if (!this.m_isHost) {
@@ -734,7 +734,7 @@ namespace Battlegrounds.Online.Lobby {
             // Get the local company
             Company ownCompany = GetLocalCompany();
             if (ownCompany == null) {
-                operationCancelled?.Invoke("Failed to load own company!");
+                operationFeedback?.Invoke("Failed to load own company!");
                 return;
             } else {
                 ownCompany.Owner = BattlegroundsInstance.LocalSteamuser.ID.ToString();
@@ -774,23 +774,23 @@ namespace Battlegrounds.Online.Lobby {
                     }
 
                 } catch (Exception e) {
-                    operationCancelled?.Invoke(e.Message);
+                    operationFeedback?.Invoke(e.Message);
                 }
 
                 // Did we fail to create session?
                 if (session is null) {
-                    operationCancelled?.Invoke("Failed to create session");
+                    operationFeedback?.Invoke("Failed to create session");
                 }
 
                 // Play the session
                 SessionManager.PlaySession<SessionCompiler<CompanyCompiler>, CompanyCompiler>(
                     session,
-                    this.ManagedLobbyInternal_GameSessionStatusChanged,
+                    (a, b) => { operationFeedback?.Invoke(a.ToString()); this.ManagedLobbyInternal_GameSessionStatusChanged(a, b); },
                     this.ManagedLobbyInternal_GameMatchAnalyzed,
-                    () => this.ManagedLobbyInternal_GameOnGamemodeCompiled(operationCancelled));
+                    () => this.ManagedLobbyInternal_GameOnGamemodeCompiled(operationFeedback));
 
             } else {
-                operationCancelled?.Invoke("Failed to get lobby companies");
+                operationFeedback?.Invoke("Failed to get lobby companies");
             }
 
         }

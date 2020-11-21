@@ -77,9 +77,19 @@ namespace BattlegroundsApp.Views {
 
         }
 
-        private void StartGame_Click(object sender, RoutedEventArgs e) => this.m_smh.Lobby.CompileAndStartMatch(this.OnStartMatchCancelled);
+        private void StartGame_Click(object sender, RoutedEventArgs e) {
+            this.m_smh.Lobby.CompileAndStartMatch(this.OnStartMatchCancelled);
+            this.UpdateGUI(() => this.messageText.AppendText("[Info] Starting match\n"));
+        }
 
-        private void OnStartMatchCancelled(string reason) => Trace.WriteLine(reason);
+        private void OnStartMatchCancelled(string reason) {
+            Trace.WriteLine(reason);
+            if (reason.CompareTo(SessionStatus.S_Compiling.ToString()) == 0) {
+                this.UpdateGUI(() => this.messageText.AppendText("[Info] Generating ingame match details...\n"));
+            } else if (reason.CompareTo(SessionStatus.S_Playing.ToString()) == 0) {
+                this.UpdateGUI(() => this.messageText.AppendText("[Info] Starting game...\n"));
+            }
+        }
 
         private void LeaveLobby_Click(object sender, RoutedEventArgs e) {
 
