@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Threading.Tasks;
 using Battlegrounds.Compiler;
+using Battlegrounds.Modding;
 
 namespace Battlegrounds.Game.Battlegrounds {
     
@@ -136,7 +137,7 @@ namespace Battlegrounds.Game.Battlegrounds {
             await Task.Run(async () => {
 
                 // Compile
-                if (!CompileSession<TSessionCompilerType, TCompanyCompilerType>()) {
+                if (!CompileSession<TSessionCompilerType, TCompanyCompilerType>(session.Gamemode)) {
                     UpdateStatus(SessionStatus.S_FailedCompile, statusChangedCallback);
                     return;
                 }
@@ -219,7 +220,7 @@ namespace Battlegrounds.Game.Battlegrounds {
 
         }
 
-        private static bool CompileSession<TSessionCompilerType, TCompanyCompilerType>()
+        private static bool CompileSession<TSessionCompilerType, TCompanyCompilerType>(IWinconditionMod wincondition)
             where TSessionCompilerType : SessionCompiler<TCompanyCompilerType>
             where TCompanyCompilerType : CompanyCompiler {
 
@@ -246,7 +247,7 @@ namespace Battlegrounds.Game.Battlegrounds {
             }
 
             // Return the result of the win condition compilation
-            return WinconditionCompiler.CompileToSga(BattlegroundsInstance.GetRelativePath(BattlegroundsPaths.BUILD_FOLDER, string.Empty), sessionScarFile);
+            return WinconditionCompiler.CompileToSga(BattlegroundsInstance.GetRelativePath(BattlegroundsPaths.BUILD_FOLDER, string.Empty), sessionScarFile, wincondition);
 
         }
 
