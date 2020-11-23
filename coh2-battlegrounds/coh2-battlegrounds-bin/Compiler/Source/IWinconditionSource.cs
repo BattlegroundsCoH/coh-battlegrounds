@@ -1,4 +1,6 @@
-﻿namespace Battlegrounds.Compiler.Source {
+﻿using Battlegrounds.Modding;
+
+namespace Battlegrounds.Compiler.Source {
     
     public interface IWinconditionSource {
 
@@ -8,7 +10,7 @@
 
         WinconoditionSourceFile[] GetLocaleFiles();
 
-        WinconoditionSourceFile GetInfoFile();
+        WinconoditionSourceFile GetInfoFile(IWinconditionMod mod);
 
     }
 

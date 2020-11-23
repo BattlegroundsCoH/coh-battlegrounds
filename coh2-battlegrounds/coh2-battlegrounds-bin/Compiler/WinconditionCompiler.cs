@@ -36,7 +36,7 @@ namespace Battlegrounds.Compiler {
             WinconoditionSourceFile[] scarFiles = winconSrc.GetScarFiles();
             WinconoditionSourceFile[] winFiles = winconSrc.GetWinFiles();
             WinconoditionSourceFile[] localeFiles = winconSrc.GetLocaleFiles();
-            WinconoditionSourceFile infoFile = winconSrc.GetInfoFile();
+            WinconoditionSourceFile infoFile = winconSrc.GetInfoFile(wincondition);
 
             // Fix potential missing '\'
             if (!workdir.EndsWith("\\")) {
@@ -91,7 +91,7 @@ namespace Battlegrounds.Compiler {
             archiveDef.AppendLine("\tFileSettingsEnd");
 
             // Add and compile info file
-            if (!AddInfoFile(archiveDef, workdir, infoFile)) {
+            if (!AddFile(archiveDef, "info\\", workdir, infoFile)) {
                 return false;
             }
 

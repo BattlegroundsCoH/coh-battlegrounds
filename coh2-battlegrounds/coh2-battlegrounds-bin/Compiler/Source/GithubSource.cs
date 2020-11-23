@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using System.Text;
+using Battlegrounds.Modding;
 using Battlegrounds.Online;
 
 namespace Battlegrounds.Compiler.Source {
@@ -48,7 +49,7 @@ namespace Battlegrounds.Compiler.Source {
             this.m_branch = branchname;
         }
 
-        public WinconoditionSourceFile GetInfoFile() 
+        public WinconoditionSourceFile GetInfoFile(IWinconditionMod mod) 
             => new WinconoditionSourceFile(InfoFile[this.GetCut()..], Encoding.UTF8.GetBytes(SourceDownloader.DownloadSourceCode(CorrectBranch(InfoFile))));
 
         public WinconoditionSourceFile[] GetLocaleFiles() 
