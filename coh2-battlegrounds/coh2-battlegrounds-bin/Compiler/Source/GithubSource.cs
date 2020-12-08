@@ -74,10 +74,14 @@ namespace Battlegrounds.Compiler.Source {
             return files.ToArray();
         }
 
-        public WinconoditionSourceFile[] GetWinFiles()
-            => WinFiles.Select(
-                x => new WinconoditionSourceFile(x[this.GetCut()..], Encoding.UTF8.GetBytes(SourceDownloader.DownloadSourceCode(CorrectBranch(x))))).ToArray();
-
+        public WinconoditionSourceFile[] GetWinFiles() {
+            var files = new List<WinconoditionSourceFile>();
+            WinFiles.ForEach(x => {
+                string correct = this.CorrectBranch(x);
+                files.Add(new WinconoditionSourceFile(correct[this.GetCut()..].Replace("/", "\\"), Encoding.UTF8.GetBytes(SourceDownloader.DownloadSourceCode(correct))));
+            });
+            return files.ToArray();
+        }
 
         public WinconoditionSourceFile[] GetUIFiles(IWinconditionMod mod) => throw new NotImplementedException();
 

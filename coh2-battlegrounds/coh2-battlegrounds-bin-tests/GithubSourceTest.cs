@@ -92,6 +92,15 @@ namespace coh2_battlegrounds_bin_tests {
             Assert.IsTrue(files.Any(x => x.path.CompareTo("locale\\english\\english.ucs") == 0 && x.contents.Length > 2 && x.contents[0] == 0xff && x.contents[1] == 0xfe));
         }
 
+        [DataTestMethod]
+        [DataRow(DEV_BRANCH)]
+        [DataRow(RELEASE_BRANCH)]
+        public void CanGetWinFiles(string branch) {
+            var files = this.GetBranchSource(branch).GetWinFiles();
+            Assert.IsTrue(files.Length > 0);
+            Assert.IsTrue(files.Any(x => x.path.Contains("coh2_battlegrounds.win") && x.contents.Length > 0));
+        }
+
     }
 
 }
