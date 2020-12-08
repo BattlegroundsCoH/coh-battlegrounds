@@ -4,12 +4,14 @@ on:
     branches: [ bin-dev-branch ]
 jobs:
   run-specific-tests:
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
     steps:
-    - name: Checkout
-      uses: actions/checkout@v2
+    - uses: actions/checkout@v
+    - name: Setup .NET Core
+      uses: actions/setup-dotnet@v1
       with:
-        fetch-depth: 0
-    - name: Execute unit tests
-      run: dotnet test
-
+        dotnet-version: 3.1.301
+    - name: Install dependencies
+      run: dotnet restore
+    - name: Test
+      run: dotnet test --no-restore --verbosity normal
