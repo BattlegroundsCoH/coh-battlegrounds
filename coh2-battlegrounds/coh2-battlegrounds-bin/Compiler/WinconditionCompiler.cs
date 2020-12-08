@@ -52,7 +52,7 @@ namespace Battlegrounds.Compiler {
             TxtBuilder archiveDef = new TxtBuilder();
             
             // Scar/Data TOC section
-            archiveDef.AppendLine("Archive name=\"6a0a13b89555402ca75b85dc30f5cb04\" blocksize=\"262144\"");
+            archiveDef.AppendLine($"Archive name=\"{ModGuid.FromGuid(wincondition.Guid)}\" blocksize=\"262144\"");
             archiveDef.AppendLine("TOCStart name=\"data\" alias=\"data\" path=\"\" relativeroot=\"data\"");
             archiveDef.AppendLine("\tFileSettingsStart defverification=\"sha1_blocks\" defcompression=\"stream_compress\"");
             archiveDef.AppendLine("\t\tOverride wildcard=\".*\\.(rgt|ttf)$\" minsize=\"-1\" maxsize=\"-1\" vt=\"none\" ct=\"store\"");
@@ -72,7 +72,7 @@ namespace Battlegrounds.Compiler {
                 }
             }
 
-            // Add the company file
+            // Add the session file
             AddLocalFile(archiveDef, sessionFile, "data\\scar\\winconditions\\auxiliary_scripts\\", workdir);
 
             // Add and *compile* scar files

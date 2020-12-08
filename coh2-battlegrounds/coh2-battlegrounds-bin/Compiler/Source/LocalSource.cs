@@ -12,7 +12,7 @@ namespace Battlegrounds.Compiler.Source {
 
         private string m_relpath;
 
-        private string m_intermediate => $"{this.m_relpath}coh2_battlegrounds_wincondition Intermediate Cache\\Intermediate Files\\";
+        private string Intermediate => $"{this.m_relpath}coh2_battlegrounds_wincondition Intermediate Cache\\Intermediate Files\\";
 
         public LocalSource(string path) {
             this.m_relpath = path;
@@ -65,15 +65,15 @@ namespace Battlegrounds.Compiler.Source {
 
         public WinconoditionSourceFile[] GetUIFiles(IWinconditionMod mod) {
             List<WinconoditionSourceFile> files = new List<WinconoditionSourceFile> {
-                new WinconoditionSourceFile($"data\\ui\\Bin\\{ModGuid.FromGuid(mod.Guid)}.gfx", File.ReadAllBytes($"{this.m_intermediate}info\\coh2_battlegrounds_wincondition_preview.dds"))
+                new WinconoditionSourceFile($"data\\ui\\Bin\\{ModGuid.FromGuid(mod.Guid)}.gfx", File.ReadAllBytes($"{this.Intermediate}info\\coh2_battlegrounds_wincondition_preview.dds"))
             };
-            Directory.GetFiles($"{this.m_intermediate}\\data\\ui\\Assets\\Textures\\", "*.dds")
-                .ForEach(x => files.Add(new WinconoditionSourceFile(x[this.m_intermediate.Length..], File.ReadAllBytes(x))));
+            Directory.GetFiles($"{this.Intermediate}\\data\\ui\\Assets\\Textures\\", "*.dds")
+                .ForEach(x => files.Add(new WinconoditionSourceFile(x[this.Intermediate.Length..], File.ReadAllBytes(x))));
             return files.ToArray();
         }
 
         public WinconoditionSourceFile GetModGraphic() 
-            => new WinconoditionSourceFile($"info\\coh2_battlegrounds_wincondition_preview.dds", File.ReadAllBytes($"{this.m_intermediate}info\\coh2_battlegrounds_wincondition_preview.dds"));
+            => new WinconoditionSourceFile($"info\\coh2_battlegrounds_wincondition_preview.dds", File.ReadAllBytes($"{this.Intermediate}info\\coh2_battlegrounds_wincondition_preview.dds"));
 
     }
 
