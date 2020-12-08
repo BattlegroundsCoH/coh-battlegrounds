@@ -55,15 +55,18 @@ namespace Battlegrounds.Compiler.Source {
         public WinconoditionSourceFile GetInfoFile(IWinconditionMod mod) 
             => new WinconoditionSourceFile($"info\\{ModGuid.FromGuid(mod.Guid)}.info", Encoding.UTF8.GetBytes(SourceDownloader.DownloadSourceCode(CorrectBranch(InfoFile))));
 
-        public WinconoditionSourceFile[] GetLocaleFiles() 
-            => LocaleFiles.Select(
-                x => new WinconoditionSourceFile(x[this.GetCut()..], // get path
-                    (byte[])new byte[] { 0xff, 0xfe } // create byte array with required start bytes
-                    .Union(Encoding.Unicode.GetBytes(SourceDownloader.DownloadSourceCode(CorrectBranch(x)))))) // and union with the unicode representation of the external source file
-            .ToArray(); // convert all the selected files to an array
+        public WinconoditionSourceFile[] GetLocaleFiles() {
+            var files = new List<WinconoditionSourceFile>();
+            LocaleFiles.ForEach(x => {
+                string correct = this.CorrectBranch(x);
+                byte[] byteContent = (new byte[] { 0xff, 0xfe }).Union(Encoding.Unicode.GetBytes(SourceDownloader.DownloadSourceCode(correct))).ToArray();
+                files.Add(new WinconoditionSourceFile(correct[this.GetCut()..].Replace("/", "\\"), byteContent));
+            });
+            return files.ToArray();
+        }
 
         public WinconoditionSourceFile[] GetScarFiles() {
-            List<WinconoditionSourceFile> files = new List<WinconoditionSourceFile>();
+            var files = new List<WinconoditionSourceFile>();
             ScarFiles.ForEach(x => {
                 string correct = this.CorrectBranch(x);
                 files.Add(new WinconoditionSourceFile(correct[this.GetCut()..].Replace("/", "\\"), Encoding.UTF8.GetBytes(SourceDownloader.DownloadSourceCode(correct))));

@@ -83,6 +83,15 @@ namespace coh2_battlegrounds_bin_tests {
             Assert.IsTrue(files.Any(x => x.path.EndsWith("ui_api\\button.scar") && x.contents.Length > 0));
         }
 
+        [DataTestMethod]
+        [DataRow(DEV_BRANCH)]
+        [DataRow(RELEASE_BRANCH)]
+        public void CanGetEnglishLocaleFile(string branch) {
+            var files = this.GetBranchSource(branch).GetLocaleFiles();
+            Assert.IsTrue(files.Length > 0);
+            Assert.IsTrue(files.Any(x => x.path.CompareTo("locale\\english\\english.ucs") == 0 && x.contents.Length > 2 && x.contents[0] == 0xff && x.contents[1] == 0xfe));
+        }
+
     }
 
 }
