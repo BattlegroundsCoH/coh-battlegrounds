@@ -6,6 +6,8 @@ jobs:
   run-specific-tests:
     runs-on: ubuntu-latest
     steps:
+    - name: Pre-everything
+      run: echo Starting test
     - uses: actions/checkout@v2
     - name: Setup .NET Core
       uses: actions/setup-dotnet@v1
@@ -13,6 +15,8 @@ jobs:
         dotnet-version: 3.1.301
     - name: Install dependencies
       run: dotnet restore
+    - name: Build
+      run: dotnet build --configuration Release --no-restore
     - name: Pre-run
       run: echo Running tests
     - name: Test
