@@ -42,8 +42,9 @@ namespace coh2_battlegrounds_bin_tests {
         }
 
         [TestMethod]
-        public void CanGetLocaleFiles() {
-
+        public void CanGetEnglishLocaleFile() {
+            var files = this.ls.GetLocaleFiles();
+            Assert.IsTrue(files.Any(x => x.path.Contains("english.ucs"))); // only really interested in the english file to verify it works (Add more tests for other locale files)
         }
 
         [TestMethod]
