@@ -1,0 +1,21 @@
+name: bin-dev-test
+on:
+  push:
+    branches: [ bin-dev-branch ]
+jobs:
+  run-specific-tests:
+    runs-on: windows-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
+    - name: Install .NET Core
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 5.0.0
+    - name: Setup MSBuild.exe
+      uses: microsoft/setup-msbuild@2008f912f56e61277eefaac6d1888b750582aa16
+    - name: Execute unit tests
+      run: dotnet test
+
