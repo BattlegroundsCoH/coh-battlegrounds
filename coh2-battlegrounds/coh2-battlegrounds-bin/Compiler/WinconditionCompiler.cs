@@ -36,7 +36,9 @@ namespace Battlegrounds.Compiler {
             WinconoditionSourceFile[] scarFiles = winconSrc.GetScarFiles();
             WinconoditionSourceFile[] winFiles = winconSrc.GetWinFiles();
             WinconoditionSourceFile[] localeFiles = winconSrc.GetLocaleFiles();
+            WinconoditionSourceFile[] uiFiles = winconSrc.GetUIFiles(wincondition);
             WinconoditionSourceFile infoFile = winconSrc.GetInfoFile(wincondition);
+            WinconoditionSourceFile modiconFile = winconSrc.GetModGraphic();
 
             // Fix potential missing '\'
             if (!workdir.EndsWith("\\")) {
@@ -81,7 +83,7 @@ namespace Battlegrounds.Compiler {
             }
 
             // Add the graphic files
-            AddGraphics(archiveDef, workdir);
+            AddGraphics(archiveDef, workdir, uiFiles);
 
             // Info TOC section
             archiveDef.AppendLine("TOCEnd");
@@ -91,12 +93,12 @@ namespace Battlegrounds.Compiler {
             archiveDef.AppendLine("\tFileSettingsEnd");
 
             // Add and compile info file
-            if (!AddFile(archiveDef, "info\\", workdir, infoFile)) {
+            if (!AddInfoFiles(archiveDef, workdir, infoFile, modiconFile)) {
                 return false;
             }
 
             // Add the info preview file
-            AddLocalFile(archiveDef, BattlegroundsInstance.GetRelativePath(BattlegroundsPaths.MOD_ART_FOLDER, "..\\coh2_battlegrounds_wincondition_preview.dds"), "info\\", workdir);
+            //AddLocalFile(archiveDef, BattlegroundsInstance.GetRelativePath(BattlegroundsPaths.MOD_ART_FOLDER, "..\\coh2_battlegrounds_wincondition_preview.dds"), "info\\", workdir);
 
             // Locale TOC section
             archiveDef.AppendLine("TOCEnd");
@@ -174,9 +176,9 @@ namespace Battlegrounds.Compiler {
             string abspath = Path.GetFullPath(workdir + relpath.Replace("/", "\\"));
 
             Trace.WriteLine($"Adding file [ABS] <{abspath}>", "Wincondition-Compiler");
-            Trace.WriteLine($"\t[REL] <{relpath}>", "Wincondition-Compiler");
-            Trace.WriteLine($"\t[RPA] <{rpath}>", "Wincondition-Compiler");
-            Trace.WriteLine($"\t[SFP] <{sourceFile.path}>", "Wincondition-Compiler");
+            //Trace.WriteLine($"\t[REL] <{relpath}>", "Wincondition-Compiler");
+            //Trace.WriteLine($"\t[RPA] <{rpath}>", "Wincondition-Compiler");
+            //Trace.WriteLine($"\t[SFP] <{sourceFile.path}>", "Wincondition-Compiler");
 
             builder.AppendLine($"\t{abspath}");
 
@@ -187,6 +189,9 @@ namespace Battlegrounds.Compiler {
             if (useBytes) {
                 File.WriteAllBytes(abspath, sourceFile.contents);
             } else {
+                if (encoding is null) {
+                    encoding = Encoding.UTF8;
+                }
                 File.WriteAllText(abspath, encoding.GetString(sourceFile.contents));
             }
 
@@ -237,19 +242,6 @@ namespace Battlegrounds.Compiler {
 
         }
 
-        private static bool AddInfoFile(TxtBuilder builder, string workdir, WinconoditionSourceFile file) {
-
-            string relpath = file.path;
-            string abspath = Path.GetFullPath(workdir + relpath.Replace("/", "\\"));
-
-            builder.AppendLine($"\t{abspath}");
-
-            File.WriteAllBytes(abspath, file.contents);
-
-            return true;
-
-        }
-
         private static void AddLocalFile(TxtBuilder builder, string localfile, string relpath, string workdir) {
 
             // Get path to copy file to
@@ -263,7 +255,28 @@ namespace Battlegrounds.Compiler {
 
         }
 
-        private static void AddGraphics(TxtBuilder builder, string workdir) {
+        private static void AddGraphics(TxtBuilder builder, string workdir, WinconoditionSourceFile[] uiFiles) {
+
+            // Create paths
+            string ddsPath = Path.GetFullPath($"{workdir}data\\ui\\Assets\\Textures\\");
+            string gfxPath = Path.GetFullPath($"{workdir}data\\ui\\Bin\\");
+
+            // Loop through gfx files and add them
+            for (int i = 0; i < uiFiles.Length; i++) {
+                if (uiFiles[i].path.EndsWith(".dds")) {
+                    string ddspath = $"{ddsPath}{Path.GetFileName(uiFiles[i].path)}";
+                    File.WriteAllBytes(ddspath, uiFiles[i].contents);
+                    builder.AppendLine($"\t{ddspath}");
+                } else if (uiFiles[i].path.EndsWith(".gfx")) {
+                    string gfxpath = $"{gfxPath}{Path.GetFileName(uiFiles[i].path)}";
+                    File.WriteAllBytes(gfxpath, uiFiles[i].contents);
+                    builder.AppendLine($"\t{gfxpath}");
+                } else {
+                    Trace.Write($"Skipping graphics file \"{uiFiles[i].path}\"");
+                }
+            }
+
+            /*
 
             // Add the gfx file
             string gfxabspath = Path.GetFullPath($"{workdir}data\\ui\\Bin\\6a0a13b89555402ca75b85dc30f5cb04.gfx");
@@ -279,6 +292,22 @@ namespace Battlegrounds.Compiler {
                 File.Copy(Path.GetFullPath(ddsFiles[i]), ddspath);
                 builder.AppendLine($"\t{ddspath}");
             }
+
+            */
+
+        }
+
+        private static bool AddInfoFiles(TxtBuilder builder, string workdir, WinconoditionSourceFile infoFile, WinconoditionSourceFile iconFile) {
+
+            if (!AddFile(builder, string.Empty, workdir, infoFile)) {
+                return false;
+            }
+
+            if (!AddFile(builder, string.Empty, workdir, iconFile)) {
+                return false;
+            }
+
+            return true;
 
         }
 

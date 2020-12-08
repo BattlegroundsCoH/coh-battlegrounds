@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Text;
 using Battlegrounds.Modding;
 using Battlegrounds.Online;
@@ -66,6 +67,12 @@ namespace Battlegrounds.Compiler.Source {
         public WinconoditionSourceFile[] GetWinFiles()
             => WinFiles.Select(
                 x => new WinconoditionSourceFile(x[this.GetCut()..], Encoding.UTF8.GetBytes(SourceDownloader.DownloadSourceCode(CorrectBranch(x))))).ToArray();
+
+
+        public WinconoditionSourceFile[] GetUIFiles(IWinconditionMod mod) => throw new NotImplementedException();
+
+        public WinconoditionSourceFile GetModGraphic() => throw new NotImplementedException();
+
 
         private string CorrectBranch(string input) => input.Replace("scar-release-branch", this.m_branch);
 

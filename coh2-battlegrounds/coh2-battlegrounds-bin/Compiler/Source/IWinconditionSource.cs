@@ -10,6 +10,10 @@ namespace Battlegrounds.Compiler.Source {
 
         WinconoditionSourceFile[] GetLocaleFiles();
 
+        WinconoditionSourceFile[] GetUIFiles(IWinconditionMod mod);
+
+        WinconoditionSourceFile GetModGraphic();
+
         WinconoditionSourceFile GetInfoFile(IWinconditionMod mod);
 
     }
