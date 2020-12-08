@@ -1,9 +1,11 @@
 name: bin-dev-test
 on:
   push:
-    branches: [ bin-dev-branch ]
+    branches:
+      - bin-dev-branch
 jobs:
   run-specific-tests:
+    name: Specific Tests
     runs-on: ubuntu-latest
     steps:
     - name: Pre-everything
