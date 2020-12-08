@@ -13,5 +13,7 @@ jobs:
         dotnet-version: 3.1.301
     - name: Install dependencies
       run: dotnet restore
+    - name: Pre-run
+      run: echo Running tests
     - name: Test
       run: dotnet test --no-restore --verbosity normal

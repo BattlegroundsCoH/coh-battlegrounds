@@ -49,7 +49,7 @@ namespace coh2_battlegrounds_bin_tests {
 
         [TestMethod]
         public void CanGetWinFiles() {
-
+            var files = this.ls.GetWinFiles();
         }
 
         [TestMethod]
