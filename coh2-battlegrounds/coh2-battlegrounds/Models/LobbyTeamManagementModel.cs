@@ -153,6 +153,20 @@ namespace BattlegroundsApp.Models {
         }
 
         public int GetTeamSize(ManagedLobbyTeamType size) => this.m_teamSetup[size].Count(x => x.IsOccupied);
+        
+        public PlayercardView GetLocalPlayercard() { 
+        
+            foreach (var team in this.m_teamSetup) {
+                foreach (var player in team.Value) {
+                    if (player.IsClient) {
+                        return player;
+                    }
+                }
+            }
+
+            return null;
+
+        }
 
     }
 

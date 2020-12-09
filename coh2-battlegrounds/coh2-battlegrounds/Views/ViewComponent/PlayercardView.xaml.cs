@@ -96,7 +96,10 @@ namespace BattlegroundsApp.Views.ViewComponent {
 
         public event Action<PlayercardView, string> OnPlayercardEvent;
 
-        private bool IsClient => this.m_steamID == BattlegroundsInstance.LocalSteamuser.ID;
+        /// <summary>
+        /// Is this instance of the <see cref="PlayercardView"/> considered to be the local client.
+        /// </summary>
+        public bool IsClient => this.m_steamID == BattlegroundsInstance.LocalSteamuser.ID;
 
         public PlayercardView() {
             InitializeComponent();

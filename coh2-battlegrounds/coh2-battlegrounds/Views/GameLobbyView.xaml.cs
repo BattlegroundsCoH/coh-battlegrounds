@@ -79,15 +79,15 @@ namespace BattlegroundsApp.Views {
 
         private void StartGame_Click(object sender, RoutedEventArgs e) {
             this.m_smh.Lobby.CompileAndStartMatch(this.OnStartMatchCancelled);
-            this.UpdateGUI(() => this.messageText.AppendText("[Info] Starting match\n"));
+            this.UpdateGUI(() => this.lobbyChat.AppendText("[Info] Starting match\n"));
         }
 
         private void OnStartMatchCancelled(string reason) {
-            Trace.WriteLine(reason);
+            Trace.WriteLine(reason, "GameLobbyView-OnMatchCancelled.cs");
             if (reason.CompareTo(SessionStatus.S_Compiling.ToString()) == 0) {
-                this.UpdateGUI(() => this.messageText.AppendText("[Info] Generating ingame match details...\n"));
+                this.UpdateGUI(() => this.lobbyChat.AppendText("[Info] Generating ingame match details...\n"));
             } else if (reason.CompareTo(SessionStatus.S_Playing.ToString()) == 0) {
-                this.UpdateGUI(() => this.messageText.AppendText("[Info] Starting game...\n"));
+                this.UpdateGUI(() => this.lobbyChat.AppendText("[Info] Starting game...\n"));
             }
         }
 
@@ -313,6 +313,15 @@ namespace BattlegroundsApp.Views {
 
         private bool IsLegalMatch() 
             => this.m_teamManagement.GetTeamSize(ManagedLobbyTeamType.Allies) > 0 && this.m_teamManagement.GetTeamSize(ManagedLobbyTeamType.Axis) > 0;
+
+        public Company GetLocalCompany() {
+            var card = this.m_teamManagement.GetLocalPlayercard();
+            if (card is not null) {
+                return PlayerCompanies.FromNameAndFaction(card.Playercompany, Faction.FromName(card.Playerarmy));
+            } else {
+                return null;
+            }
+        }
 
     }
 

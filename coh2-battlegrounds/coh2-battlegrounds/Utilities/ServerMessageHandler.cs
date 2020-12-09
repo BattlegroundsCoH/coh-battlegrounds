@@ -51,7 +51,7 @@ namespace BattlegroundsApp {
         public object OnLocalDataRequest(string type) {
 
             if (type.CompareTo("CompanyData") == 0) {
-                return Company.ReadCompanyFromFile("test_company.json");
+                return this.m_lobbyWindow.GetLocalCompany();// Company.ReadCompanyFromFile("test_company.json");
             } else if (type.CompareTo("MatchInfo") == 0) {
                 return this.m_lobbyWindow.CreateSessionInfo();
             } else {
