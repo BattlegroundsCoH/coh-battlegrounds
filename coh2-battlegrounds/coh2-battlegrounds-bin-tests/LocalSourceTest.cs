@@ -86,7 +86,7 @@ namespace coh2_battlegrounds_bin_tests {
 
         [TestMethod]
         public void CanCompileFromLocalSource() {
-            Assert.IsTrue(WinconditionCompiler.CompileToSga("~tmp\\bld\\", sessionFile, this.gamemode));
+            Assert.IsTrue(WinconditionCompiler.CompileToSga("~tmp\\bld\\", sessionFile, this.gamemode, this.ls));
             string path = "~tmp\\bld\\ArchiveDefinition.txt";
             Assert.IsTrue(File.Exists(path));
             Assert.IsTrue(File.ReadAllText(path).Length > 0);

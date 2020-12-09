@@ -3,7 +3,6 @@ using System.IO;
 using System.Text;
 using System.Diagnostics;
 
-using Battlegrounds.Online;
 using Battlegrounds.Util;
 using Battlegrounds.Compiler.Source;
 using Battlegrounds.Modding;
@@ -21,24 +20,21 @@ namespace Battlegrounds.Compiler {
         /// <param name="workdir">The temporary work directory.</param>
         /// <param name="sessionFile">The session file to include</param>
         /// <returns>True of the archive file was created sucessfully. False if any error occured.</returns>
-        public static bool CompileToSga(string workdir, string sessionFile, IWinconditionMod wincondition) {
-
-            // Get the source
-            IWinconditionSource winconSrc = WinconditionSourceFinder.GetSource(wincondition);
+        public static bool CompileToSga(string workdir, string sessionFile, IWinconditionMod wincondition, IWinconditionSource source) {
 
             // Verify is win condition source is valid
-            if (winconSrc is null) {
+            if (source is null) {
                 Trace.WriteLine("Failed to find a valid source", "Wincondition-Compiler");
                 return false;
             }
 
             // Get the files
-            WinconoditionSourceFile[] scarFiles = winconSrc.GetScarFiles();
-            WinconoditionSourceFile[] winFiles = winconSrc.GetWinFiles();
-            WinconoditionSourceFile[] localeFiles = winconSrc.GetLocaleFiles();
-            WinconoditionSourceFile[] uiFiles = winconSrc.GetUIFiles(wincondition);
-            WinconoditionSourceFile infoFile = winconSrc.GetInfoFile(wincondition);
-            WinconoditionSourceFile modiconFile = winconSrc.GetModGraphic();
+            WinconoditionSourceFile[] scarFiles = source.GetScarFiles();
+            WinconoditionSourceFile[] winFiles = source.GetWinFiles();
+            WinconoditionSourceFile[] localeFiles = source.GetLocaleFiles();
+            WinconoditionSourceFile[] uiFiles = source.GetUIFiles(wincondition);
+            WinconoditionSourceFile infoFile = source.GetInfoFile(wincondition);
+            WinconoditionSourceFile modiconFile = source.GetModGraphic();
 
             // Fix potential missing '\'
             if (!workdir.EndsWith("\\")) {
@@ -176,9 +172,6 @@ namespace Battlegrounds.Compiler {
             string abspath = Path.GetFullPath(workdir + relpath.Replace("/", "\\"));
 
             Trace.WriteLine($"Adding file [ABS] <{abspath}>", "Wincondition-Compiler");
-            //Trace.WriteLine($"\t[REL] <{relpath}>", "Wincondition-Compiler");
-            //Trace.WriteLine($"\t[RPA] <{rpath}>", "Wincondition-Compiler");
-            //Trace.WriteLine($"\t[SFP] <{sourceFile.path}>", "Wincondition-Compiler");
 
             builder.AppendLine($"\t{abspath}");
 
@@ -193,49 +186,6 @@ namespace Battlegrounds.Compiler {
                     encoding = Encoding.UTF8;
                 }
                 File.WriteAllText(abspath, encoding.GetString(sourceFile.contents));
-            }
-
-            return true;
-
-        }
-
-        private static string path_cut = FixDebugString("https://raw.githubusercontent.com/JustCodiex/coh2-battlegrounds/scar-release-branch/coh2-battlegrounds-mod/wincondition_mod/");
-
-        [Obsolete]
-        private static bool AddURLFile(TxtBuilder builder, string rpath, string workdir, string file, bool useBytes = false, Encoding encoding = null, byte[] prepend = null) {
-
-            byte[] binaryContent;
-
-            if (encoding == null) {
-                encoding = Encoding.UTF8;
-            }
-
-            file = FixDebugString(file);
-
-            if (useBytes) {
-                binaryContent = SourceDownloader.DownloadSourceFile(file, encoding);
-            } else {
-                binaryContent = encoding.GetBytes(SourceDownloader.DownloadSourceCode(file));
-            }
-
-            if (binaryContent == null || binaryContent.Length == 0) {
-                return false;
-            }
-
-            string relpath = rpath + file.Substring(path_cut.Length);
-            string abspath = Path.GetFullPath(workdir + relpath.Replace("/", "\\"));
-
-            builder.AppendLine($"\t{abspath}");
-
-            if (File.Exists(abspath)) {
-                File.Delete(abspath);
-            }
-
-            using (BinaryWriter writer = new BinaryWriter(File.OpenWrite(abspath), encoding)) {
-                if (prepend != null) {
-                    writer.Write(prepend);
-                }
-                writer.Write(binaryContent);
             }
 
             return true;
@@ -276,25 +226,6 @@ namespace Battlegrounds.Compiler {
                 }
             }
 
-            /*
-
-            // Add the gfx file
-            string gfxabspath = Path.GetFullPath($"{workdir}data\\ui\\Bin\\6a0a13b89555402ca75b85dc30f5cb04.gfx");
-            File.Copy(Path.GetFullPath(BattlegroundsInstance.GetRelativePath(BattlegroundsPaths.MOD_ART_FOLDER, "6a0a13b89555402ca75b85dc30f5cb04.gfx")), gfxabspath);
-            builder.AppendLine($"\t{gfxabspath}");
-
-            // Get DDS files
-            string[] ddsFiles = Directory.GetFiles(BattlegroundsInstance.GetRelativePath(BattlegroundsPaths.MOD_ART_FOLDER, string.Empty), "*.dds");
-
-            // Add DDS files
-            for (int i = 0; i < ddsFiles.Length; i++) {
-                string ddspath = Path.GetFullPath($"{workdir}data\\ui\\Assets\\Textures\\{Path.GetFileName(ddsFiles[i])}");
-                File.Copy(Path.GetFullPath(ddsFiles[i]), ddspath);
-                builder.AppendLine($"\t{ddspath}");
-            }
-
-            */
-
         }
 
         private static bool AddInfoFiles(TxtBuilder builder, string workdir, WinconoditionSourceFile infoFile, WinconoditionSourceFile iconFile) {
@@ -309,15 +240,6 @@ namespace Battlegrounds.Compiler {
 
             return true;
 
-        }
-
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0022:Use expression body for methods", Justification = "Compile-mode dependant")]
-        private static string FixDebugString(string input) {
-#if DEBUG
-            return input.Replace("scar-release-branch", "scar-dev-branch");
-#else
-            return input;
-#endif
         }
 
     }

@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Threading.Tasks;
 using Battlegrounds.Compiler;
+using Battlegrounds.Compiler.Source;
 using Battlegrounds.Modding;
 
 namespace Battlegrounds.Game.Battlegrounds {
@@ -246,8 +247,11 @@ namespace Battlegrounds.Game.Battlegrounds {
 
             }
 
+            // Get the gamemode source code finder
+            var sourceFinder = WinconditionSourceFinder.GetSource(wincondition);
+
             // Return the result of the win condition compilation
-            return WinconditionCompiler.CompileToSga(BattlegroundsInstance.GetRelativePath(BattlegroundsPaths.BUILD_FOLDER, string.Empty), sessionScarFile, wincondition);
+            return WinconditionCompiler.CompileToSga(BattlegroundsInstance.GetRelativePath(BattlegroundsPaths.BUILD_FOLDER, string.Empty), sessionScarFile, wincondition, sourceFinder);
 
         }
 

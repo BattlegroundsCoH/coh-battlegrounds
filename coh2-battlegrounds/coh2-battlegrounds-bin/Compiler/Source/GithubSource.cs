@@ -1,10 +1,12 @@
 ﻿using System;
+using System.IO;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Battlegrounds.Functional;
 using Battlegrounds.Modding;
 using Battlegrounds.Online;
+using Battlegrounds.ErrorHandling;
 
 namespace Battlegrounds.Compiler.Source {
 
@@ -39,11 +41,11 @@ namespace Battlegrounds.Compiler.Source {
         };
 
         // URLs to the most up-to-date info file
-        private static string InfoFile = "https://raw.githubusercontent.com/JustCodiex/coh2-battlegrounds/scar-release-branch/coh2-battlegrounds-mod/wincondition_mod/coh2_battlegrounds_wincondition%20Intermediate%20Cache/Intermediate%20Files/info/6a0a13b89555402ca75b85dc30f5cb04.info";
+        private static string InfoFile = @"https://raw.githubusercontent.com/JustCodiex/coh2-battlegrounds/scar-release-branch/coh2-battlegrounds-mod/wincondition_mod/coh2_battlegrounds_wincondition%20Intermediate%20Cache/Intermediate%20Files/info/6a0a13b89555402ca75b85dc30f5cb04.info";
 
         // URLs to the most up-to-date locale files
         private static string[] LocaleFiles = new string[] {
-            "https://raw.githubusercontent.com/JustCodiex/coh2-battlegrounds/scar-release-branch/coh2-battlegrounds-mod/wincondition_mod/locale/english/english.ucs",
+            @"https://raw.githubusercontent.com/JustCodiex/coh2-battlegrounds/scar-release-branch/coh2-battlegrounds-mod/wincondition_mod/locale/english/english.ucs",
         };
 
         private string m_branch;
@@ -83,10 +85,37 @@ namespace Battlegrounds.Compiler.Source {
             return files.ToArray();
         }
 
-        public WinconoditionSourceFile[] GetUIFiles(IWinconditionMod mod) => throw new NotImplementedException();
+        public WinconoditionSourceFile[] GetUIFiles(IWinconditionMod mod) {
+            try {
+                string[] local = Directory.GetFiles("bin\\gfx\\");
+                if (local.Length > 0) {
+                    var files = new List<WinconoditionSourceFile>();
+                    for (int i = 0; i < local.Length; i++) {
+                        byte[] contents = File.ReadAllBytes(local[i]);
+                        if (local[i].EndsWith(".gfx")) {
+                            files.Add(new WinconoditionSourceFile($"data\\ui\\Bin\\{ModGuid.FromGuid(mod.Guid)}.gfx", contents));
+                        } else if (local[i].EndsWith(".dds")) {
+                            files.Add(new WinconoditionSourceFile($"data\\ui\\Assets\\Textures\\{Path.GetFileName(local[i])}", contents));
+                        } // else ... ignore
+                    }
+                    return files.ToArray();
+                } else {
+                    throw new EnvironmentException($"Failed to find .gfx and .dds files that are part of the shipped build!");
+                }
+            } catch(DirectoryNotFoundException e) {
+                throw new EnvironmentException(e.Message);
+            }
+        }
 
-        public WinconoditionSourceFile GetModGraphic() => throw new NotImplementedException();
-
+        public WinconoditionSourceFile GetModGraphic() {
+            const string path = "bin\\coh2_battlegrounds_wincondition_preview.dds";
+            if (File.Exists(path)) {
+                byte[] ddsBytes = File.ReadAllBytes(path);
+                return new WinconoditionSourceFile($"info\\coh2_battlegrounds_wincondition_preview.dds", ddsBytes);
+            } else {
+                throw new EnvironmentException($"Failed to find shipped file \"{path}\"");
+            }
+        }
 
         public string CorrectBranch(string input) 
             => input.Replace("scar-release-branch", this.m_branch);

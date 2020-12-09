@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Linq;
+using Battlegrounds.Compiler;
 using Battlegrounds.Compiler.Source;
 using Battlegrounds.Game.Gameplay;
 using Battlegrounds.Modding;
@@ -99,6 +100,36 @@ namespace coh2_battlegrounds_bin_tests {
             var files = this.GetBranchSource(branch).GetWinFiles();
             Assert.IsTrue(files.Length > 0);
             Assert.IsTrue(files.Any(x => x.path.Contains("coh2_battlegrounds.win") && x.contents.Length > 0));
+        }
+
+
+        [DataTestMethod]
+        [DataRow(DEV_BRANCH)]
+        [DataRow(RELEASE_BRANCH)]
+        public void CanGetModGraphic(string branch) {
+            var graphic = this.GetBranchSource(branch).GetModGraphic();
+            Assert.IsTrue(graphic.path.EndsWith("info\\coh2_battlegrounds_wincondition_preview.dds"));
+            Assert.IsTrue(graphic.contents.Length > 0);
+        }
+
+        [DataTestMethod]
+        [DataRow(DEV_BRANCH)]
+        [DataRow(RELEASE_BRANCH)]
+        public void CanGetModUI(string branch) {
+            var files = this.GetBranchSource(branch).GetUIFiles(this.gamemode);
+            Assert.IsTrue(files.Length > 0);
+            Assert.IsTrue(files.Any(x => x.path.EndsWith(".gfx") && x.contents.Length > 0));
+            Assert.IsTrue(files.Any(x => x.path.EndsWith(".dds") && x.contents.Length > 0));
+        }
+
+        [DataTestMethod]
+        [DataRow(DEV_BRANCH)]
+        [DataRow(RELEASE_BRANCH)]
+        public void CanCompileFromLocalSource(string branch) {
+            Assert.IsTrue(WinconditionCompiler.CompileToSga("~tmp\\bld\\", sessionFile, this.gamemode, this.GetBranchSource(branch)));
+            string path = "~tmp\\bld\\ArchiveDefinition.txt";
+            Assert.IsTrue(File.Exists(path));
+            Assert.IsTrue(File.ReadAllText(path).Length > 0);
         }
 
     }
