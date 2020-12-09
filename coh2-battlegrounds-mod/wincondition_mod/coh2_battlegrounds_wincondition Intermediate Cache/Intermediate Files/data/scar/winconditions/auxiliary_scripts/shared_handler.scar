@@ -34,7 +34,7 @@ _bg_unitID_TransportIgnore = -3; -- Constant ID to mark a squad ID as a transpor
 ------------------------------------------------------------------------------------
 -- Imports
 ------------------------------------------------------------------------------------
-import("WinConditions/auxiliary_scripts/shared_util.scar"); -- Must always be importated first
+import("WinConditions/auxiliary_scripts/shared_util.scar"); -- Must always be imported first
 import("WinConditions/auxiliary_scripts/shared_lookups.scar");
 import("WinConditions/auxiliary_scripts/session.scar");
 import("WinConditions/auxiliary_scripts/shared_sessionloader.scar");

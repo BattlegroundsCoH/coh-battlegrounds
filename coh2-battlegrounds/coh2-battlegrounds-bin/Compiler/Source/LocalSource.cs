@@ -65,15 +65,17 @@ namespace Battlegrounds.Compiler.Source {
 
         public WinconoditionSourceFile[] GetUIFiles(IWinconditionMod mod) {
             List<WinconoditionSourceFile> files = new List<WinconoditionSourceFile> {
-                new WinconoditionSourceFile($"data\\ui\\Bin\\{ModGuid.FromGuid(mod.Guid)}.gfx", File.ReadAllBytes($"{this.Intermediate}info\\coh2_battlegrounds_wincondition_preview.dds"))
+                new WinconoditionSourceFile($"data\\ui\\Bin\\{ModGuid.FromGuid(mod.Guid)}.gfx", File.ReadAllBytes($"{this.Intermediate}data\\ui\\Bin\\{ModGuid.FromGuid(mod.Guid)}.gfx"))
             };
-            Directory.GetFiles($"{this.Intermediate}\\data\\ui\\Assets\\Textures\\", "*.dds")
+            Directory.GetFiles($"{this.Intermediate}data\\ui\\Assets\\Textures\\", "*.dds")
                 .ForEach(x => files.Add(new WinconoditionSourceFile(x[this.Intermediate.Length..], File.ReadAllBytes(x))));
             return files.ToArray();
         }
 
         public WinconoditionSourceFile GetModGraphic() 
             => new WinconoditionSourceFile($"info\\coh2_battlegrounds_wincondition_preview.dds", File.ReadAllBytes($"{this.Intermediate}info\\coh2_battlegrounds_wincondition_preview.dds"));
+
+        public override string ToString() => $"Local build from \"{this.m_relpath}\"";
 
     }
 

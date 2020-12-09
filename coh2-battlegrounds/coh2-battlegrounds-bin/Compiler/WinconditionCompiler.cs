@@ -6,6 +6,8 @@ using System.Diagnostics;
 using Battlegrounds.Util;
 using Battlegrounds.Compiler.Source;
 using Battlegrounds.Modding;
+using System.Linq;
+using Battlegrounds.Functional;
 
 namespace Battlegrounds.Compiler {
     
@@ -92,9 +94,6 @@ namespace Battlegrounds.Compiler {
             if (!AddInfoFiles(archiveDef, workdir, infoFile, modiconFile)) {
                 return false;
             }
-
-            // Add the info preview file
-            //AddLocalFile(archiveDef, BattlegroundsInstance.GetRelativePath(BattlegroundsPaths.MOD_ART_FOLDER, "..\\coh2_battlegrounds_wincondition_preview.dds"), "info\\", workdir);
 
             // Locale TOC section
             archiveDef.AppendLine("TOCEnd");
