@@ -123,6 +123,8 @@ namespace Battlegrounds.Compiler.Source {
         public int GetCut() 
             => this.CorrectBranch(@"https://raw.githubusercontent.com/JustCodiex/coh2-battlegrounds/scar-release-branch/coh2-battlegrounds-mod/wincondition_mod/").Length;
 
+        public override string ToString() => "Github";
+
     }
 
 }

@@ -250,6 +250,8 @@ namespace Battlegrounds.Game.Battlegrounds {
             // Get the gamemode source code finder
             var sourceFinder = WinconditionSourceFinder.GetSource(wincondition);
 
+            Trace.WriteLine($"Using {sourceFinder} as wincondition code source");
+             
             // Return the result of the win condition compilation
             return WinconditionCompiler.CompileToSga(BattlegroundsInstance.GetRelativePath(BattlegroundsPaths.BUILD_FOLDER, string.Empty), sessionScarFile, wincondition, sourceFinder);
 

@@ -195,7 +195,7 @@ function BGAI_EvalProduction(index)
         if not BGAI_BuySomething(index, "infantry") then -- always try to buy infantry
             if not BGAI_BuySomething(index, "vehicle") then -- Then vehicles
                 if not BGAI_BuySomething(index, "vehicle", true) then  -- Then heavy vehicles
-                    BGAI_BuySomething(index, "team_weapon"); -- Then team weapons
+                    --BGAI_BuySomething(index, "team_weapon"); -- Then team weapons
                 end
             end
         end
