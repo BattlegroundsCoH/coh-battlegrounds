@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using System.Net.NetworkInformation;
 using System.Threading;
+
 using Battlegrounds.Steam;
 
 namespace Battlegrounds.Online.Services {
@@ -14,8 +15,11 @@ namespace Battlegrounds.Online.Services {
     public class LobbyHub {
 
         /// <summary>
-        /// The <see cref="SteamUser"/> who will be connecting to the <see cref="LobbyHub"/>.<br/>At no point are users verified on the server - Security risk!!!
+        /// The <see cref="SteamUser"/> who will be connecting to the <see cref="LobbyHub"/>.
         /// </summary>
+        /// <remarks>
+        /// At no point are users verified on the server - Personal Security risk!!!
+        /// </remarks>
         public SteamUser User { get; set; }
 
         /// <summary>
@@ -40,16 +44,12 @@ namespace Battlegrounds.Online.Services {
 
         }
 
-        private ConnectableLobby? GetLobby(string serverStringResponse) {
+        private ConnectableLobby GetLobby(string serverStringResponse) {
 
             var match = Regex.Match(serverStringResponse, @"\[(?<guid>\S{36});\""(?<name>(\S|\s)*)\"";(?<password>True|False)\]");
 
             if (match.Success) {
-                return new ConnectableLobby {
-                    lobby_guid = match.Groups["guid"].Value,
-                    lobby_name = match.Groups["name"].Value,
-                    lobby_passwordProtected = match.Groups["password"].Value.CompareTo("True") == 0,
-                };
+                return new ConnectableLobby(match.Groups["guid"].Value, match.Groups["name"].Value, match.Groups["password"].Value.CompareTo("True") == 0);
             } else {
                 return null;
             }
@@ -61,10 +61,10 @@ namespace Battlegrounds.Online.Services {
         /// </summary>
         /// <remarks>Blocks execution until all <see cref="ConnectableLobby"/> instances have been received.</remarks>
         /// <returns>A list of <see cref="ConnectableLobby"/> instances representing the lobbies on the server.</returns>
-        public List<ConnectableLobby> GetConnectableLobbies() {
+        public List<ConnectableLobby> GetConnectableLobbies(bool fetchLobbyData = true) {
 
             List<ConnectableLobby> connectableLobbies = new List<ConnectableLobby>();
-            Message message = new Message(Message_Type.GET_LOBBIES);
+            Message message = new Message(MessageType.GET_LOBBIES);
             bool gotAll = false;
             int timeout = 20;
 
@@ -74,9 +74,11 @@ namespace Battlegrounds.Online.Services {
                     MessageSender.WaitForMessage(x, OnLobby);
                 }
 
-                ConnectableLobby? lobby = this.GetLobby(y.Argument1);
-                if (lobby != null) {
-                    connectableLobbies.Add(lobby.Value);
+                if (this.GetLobby(y.Argument1) is ConnectableLobby lobby) {
+                    connectableLobbies.Add(lobby);
+                    if (fetchLobbyData) {
+                        lobby.Update();
+                    }
                 }
 
                 if (y.Argument2 == "False") {
@@ -106,9 +108,9 @@ namespace Battlegrounds.Online.Services {
         /// Get a list of all <see cref="ConnectableLobby"/> instances available on the server in an asynchronous manner.
         /// </summary>
         /// <param name="callback">The callback to invoke wheneer a new <see cref="ConnectableLobby"/> instance was discovered.</param>
-        public void GetConnectableLobbies(Action<ConnectableLobby> callback) {
+        public void GetConnectableLobbies(Action<ConnectableLobby> callback, bool fetchLobbyData = true) {
 
-            Message message = new Message(Message_Type.GET_LOBBIES);
+            Message message = new Message(MessageType.GET_LOBBIES);
 
             void OnLobby(Socket x, Message y) {
 
@@ -116,9 +118,11 @@ namespace Battlegrounds.Online.Services {
                     MessageSender.WaitForMessage(x, OnLobby);
                 }
 
-                ConnectableLobby? lobby = this.GetLobby(y.Argument1);
-                if (lobby != null) {
-                    callback?.Invoke(lobby.Value);
+                if (this.GetLobby(y.Argument1) is ConnectableLobby lobby) {
+                    callback?.Invoke(lobby);
+                    if (fetchLobbyData) {
+                        lobby.Update();
+                    }
                 }
 
             }
@@ -131,13 +135,19 @@ namespace Battlegrounds.Online.Services {
         /// Establish a continuous connection to the server.
         /// </summary>
         /// <param name="connectionResponse">The server response to connection attempt.</param>
+        /// <exception cref="ArgumentNullException"/>
         public void Connect(Action<bool, Connection> connectionResponse) {
 
+            // Make sure there's a user to work with
+            if (this.User is null) {
+                throw new ArgumentNullException("Steam User object not assigned!");
+            }
+
             // The connect message
-            Message addUserMessage = new Message(Message_Type.USER_SETUSERDATA, this.User.Name, this.User.ID.ToString());
+            Message addUserMessage = new Message(MessageType.USER_SETUSERDATA, this.User.Name, this.User.ID.ToString());
 
             void OnResponse(Socket socket, Message response) {
-                if (response.Descriptor == Message_Type.CONFIRMATION_MESSAGE) {
+                if (response.Descriptor == MessageType.CONFIRMATION_MESSAGE) {
                     Connection connection = new Connection(socket, false);
                     connectionResponse?.Invoke(true, connection);
                 } else {

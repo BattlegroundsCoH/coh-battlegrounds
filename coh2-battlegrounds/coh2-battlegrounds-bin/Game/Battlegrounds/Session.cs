@@ -181,7 +181,7 @@ namespace Battlegrounds.Game.Battlegrounds {
 
         }
 
-        internal static void ZipCompanies(Company[] allCompanies, ref SessionInfo sessionInfo) {
+        public static void ZipCompanies(Company[] allCompanies, ref SessionInfo sessionInfo) {
 
             for (int i = 0; i < allCompanies.Length; i++) {
 

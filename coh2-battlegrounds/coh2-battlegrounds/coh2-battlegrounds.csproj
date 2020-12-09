@@ -2,9 +2,10 @@
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <TargetFramework>net5.0-windows</TargetFramework>
     <RootNamespace>BattlegroundsApp</RootNamespace>
     <UseWPF>true</UseWPF>
+    <LangVersion>preview</LangVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -13,7 +14,23 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Resources\ingame\aef.png" />
+    <None Remove="Resources\ingame\british.png" />
+    <None Remove="Resources\ingame\german.png" />
+    <None Remove="Resources\ingame\soviet.png" />
+    <None Remove="Resources\ingame\west_german.png" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\coh2-battlegrounds-bin\coh2-battlegrounds-bin.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Resources\ingame\aef.png" />
+    <Resource Include="Resources\ingame\british.png" />
+    <Resource Include="Resources\ingame\german.png" />
+    <Resource Include="Resources\ingame\soviet.png" />
+    <Resource Include="Resources\ingame\west_german.png" />
   </ItemGroup>
 
 </Project>

@@ -95,6 +95,13 @@ namespace Battlegrounds.Game.Database {
         /// <returns></returns>
         public static Wincondition GetWinconditionByName(string name) => __winconditions[name];
 
+        public static List<Wincondition> GetDefaultList() {
+            return new List<Wincondition> {
+                GetWinconditionByName(Attrition),
+                GetWinconditionByName(VictoryPoints),
+            };
+        }
+
     }
 
 }
