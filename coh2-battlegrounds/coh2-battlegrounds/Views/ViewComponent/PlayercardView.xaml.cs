@@ -85,6 +85,8 @@ namespace BattlegroundsApp.Views.ViewComponent {
 
         public string Playercompany => this.SelfCompanySelector.Text;
 
+        public bool IsRegistered { get; set; }
+
         public PlayercardCompanyItem PlayerSelectedCompanyItem 
             => this.SelfCompanySelector.SelectedItem is not null ? (PlayercardCompanyItem)this.SelfCompanySelector.SelectedItem : default;
 
@@ -94,19 +96,23 @@ namespace BattlegroundsApp.Views.ViewComponent {
 
         public event Action<PlayercardView, string> OnPlayercardEvent;
 
-        private bool IsClient => this.m_steamID == BattlegroundsInstance.LocalSteamuser.ID;
+        /// <summary>
+        /// Is this instance of the <see cref="PlayercardView"/> considered to be the local client.
+        /// </summary>
+        public bool IsClient => this.m_steamID == BattlegroundsInstance.LocalSteamuser.ID;
 
         public PlayercardView() {
             InitializeComponent();
             this.m_state = PlayercardViewstate.Locked;
             this.m_isAIPlayer = true;
             this.PlayerArmySelection.SetItemSource(alliedArmyItems, x => new IconComboBoxItem(x.Icon, x.DisplayName));
+            this.IsRegistered = false;
         }
 
         private IconComboBoxItem CreateArmyItem(PlayercardArmyItem item) => new IconComboBoxItem(item.Icon, item.DisplayName) { Source = item };
 
-        public void SetAvailableArmies(bool isAllies)
-            => isAllies.Then(() => { this.PlayerArmySelection.SetItemSource(alliedArmyItems, this.CreateArmyItem); this.m_isAllied = true; })
+        public void SetAvailableArmies(bool isAllies) => isAllies
+            .Then(() => { this.PlayerArmySelection.SetItemSource(alliedArmyItems, this.CreateArmyItem); this.m_isAllied = true; })
             .Else(() => { this.PlayerArmySelection.SetItemSource(axisArmyItems, this.CreateArmyItem); this.m_isAllied = false; });
 
         public void SetPlayerdata(ulong id, string name, string army, bool isClient, bool isAIPlayer = false, bool isHost = false) {
@@ -115,6 +121,7 @@ namespace BattlegroundsApp.Views.ViewComponent {
             this.m_isAIPlayer = isAIPlayer;
             this.m_diff = AIDifficulty.Human;
             this.m_isHost = isHost;
+            this.IsRegistered = !this.m_isAIPlayer;
             if (!string.IsNullOrEmpty(name)) {
                 this.PlayerName.Content = name;
                 if (isClient || (isAIPlayer && isHost)) {
@@ -191,6 +198,8 @@ namespace BattlegroundsApp.Views.ViewComponent {
                 this.OnPlayercardEvent?.Invoke(this, "ChangedArmy");
             }
         }
+
+        public void UpdatePlayerID(ulong aiid) => this.m_steamID = aiid;
 
     }
 

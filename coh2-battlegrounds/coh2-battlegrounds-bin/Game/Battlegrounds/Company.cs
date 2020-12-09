@@ -264,7 +264,7 @@ namespace Battlegrounds.Game.Battlegrounds {
         public override string ToString() => this.Name;
 
         /// <summary>
-        /// Convert the <see cref="Company"/> into a byte array.
+        /// Convert the <see cref="Company"/> into a <see cref="byte"/> array.
         /// </summary>
         /// <returns>The binary representation of the <see cref="Company"/>.</returns>
         public byte[] ToBytes() {

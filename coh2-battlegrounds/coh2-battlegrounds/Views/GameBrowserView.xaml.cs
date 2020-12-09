@@ -17,6 +17,7 @@ using Battlegrounds.Online.Services;
 using BattlegroundsApp.Dialogs.HostGame;
 using BattlegroundsApp.Dialogs.Service;
 using BattlegroundsApp.Utilities;
+using Battlegrounds.Online.Lobby;
 
 namespace BattlegroundsApp.Views {
     /// <summary>
@@ -77,7 +78,6 @@ namespace BattlegroundsApp.Views {
                 GameLobbyView vw = new GameLobbyView(m_hostWindow);
                 vw.OnServerAcceptanceResponse += this.OnServerConnectResponse;
                 ServerMessageHandler smh = new ServerMessageHandler(vw);
-                smh.SetLobby(lobby);
                 vw.SetSMH(smh);
 
                 string lobbyToJoin = lobby.LobbyGuid;

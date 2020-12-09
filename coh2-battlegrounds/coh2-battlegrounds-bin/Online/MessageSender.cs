@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Net;
 using System.Net.Sockets;
 
@@ -20,7 +21,7 @@ namespace Battlegrounds.Online {
                 sender.BeginSend(bytes, 0, bytes.Length, SocketFlags.None, x => { sender.EndSend(x); if (response != null) { WaitForMessage(sender, response); } }, null);
 
             } catch (Exception e) {
-                Console.WriteLine(e.Message);
+                Trace.WriteLine(e.Message);
             }
 
         }
@@ -33,7 +34,7 @@ namespace Battlegrounds.Online {
                 socket.BeginSend(bytes, 0, bytes.Length, SocketFlags.None, x => { socket.EndSend(x); if (response != null) { WaitForMessage(socket, response); } }, null);
 
             } catch (Exception e) {
-                Console.WriteLine(e.Message);
+                Trace.WriteLine(e.Message);
             }
 
         }
@@ -54,7 +55,7 @@ namespace Battlegrounds.Online {
                             }
                         } else {
                             if (backBuffer.Count > 0) {
-                                Console.WriteLine("Backbuffer contains content...");
+                                Trace.WriteLine("Backbuffer contains content...");
                             }
                         }
                     } catch { }

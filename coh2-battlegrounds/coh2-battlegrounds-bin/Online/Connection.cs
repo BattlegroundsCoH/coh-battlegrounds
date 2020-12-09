@@ -70,7 +70,7 @@ namespace Battlegrounds.Online {
             this.m_messageQueue = new Queue<Message>();
             this.m_isListening = false;
 
-            if (m_isOpen) {
+            if (this.m_isOpen) {
                 this.Start();
             }
 
@@ -81,6 +81,7 @@ namespace Battlegrounds.Online {
             if (message.Descriptor == MessageType.SERVER_PING) {
                 this.SendMessage(message.CreateResponse(MessageType.USER_PING));
             } else {
+                Trace.WriteLine($"Received message <<{message}>> ({message.ToBytes().Length} bytes){Environment.NewLine}", "Online-Service");
                 if (this.m_identifierCallback?.ContainsKey(message.Identifier) ?? false) {
                     this.m_identifierCallback[message.Identifier].Invoke(message);
                 } else {
@@ -97,21 +98,25 @@ namespace Battlegrounds.Online {
 
         private void InternalProccessor() {
             while (this.m_isOpen || this.m_messageQueue.Count > 0) {
-                if (this.m_messageQueue.Count > 0) {
+                try {
+                    if (this.m_messageQueue.Count > 0) {
 
-                    Message topMessage = this.m_messageQueue.Dequeue();
+                        Message topMessage = this.m_messageQueue.Dequeue();
 
-                    lock (this.m_socket) {
-                        this.m_socket.SendAll(topMessage.ToBytes());
-                        Trace.WriteLine($"Sent message <<{topMessage}>>", "Online-Service");
+                        lock (this.m_socket) {
+                            byte[] msg = topMessage.ToBytes();
+                            this.m_socket.SendAll(msg);
+                            Trace.WriteLine($"Sent message <<{topMessage}>> ({msg.Length} bytes){Environment.NewLine}", "Online-Service");
+                        }
+
+                        Thread.Sleep(30);
+
+                    } else {
+                        Thread.Sleep(60);
                     }
-
-                    Thread.Sleep(10);
-
-                } else {
-                    Thread.Sleep(15);
+                } catch (ObjectDisposedException) {
+                    break;
                 }
-
             }
         }
 
