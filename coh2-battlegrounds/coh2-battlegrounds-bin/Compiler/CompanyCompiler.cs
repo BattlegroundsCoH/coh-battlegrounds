@@ -25,14 +25,14 @@ namespace Battlegrounds.Compiler {
         /// </summary>
         /// <param name="company">The company file to compile into lua string.</param>
         /// <param name="indexOnTeam">The index of the player on their team. (Should only be used for AI).</param>
-        /// <param name="namedIndex">Use the name of the <see cref="Company"/> owner instead of their team index.</param>
+        /// <param name="isAIPlayer">Is this an AI player company</param>
         /// <param name="indent">The indentation level to use when compiling lua.</param>
         /// <returns>A formatted (and correct) lua table string containing all <see cref="Company"/> data for in-game use.</returns>
-        public virtual string CompileToLua(Company company, bool namedIndex, byte indexOnTeam, int indent = 1) {
+        public virtual string CompileToLua(Company company, bool isAIPlayer, byte indexOnTeam, int indent = 1) {
 
             TxtBuilder lua = new TxtBuilder();
 
-            lua.AppendLine($"[\"{company.Owner}{(namedIndex ? ("#" + indexOnTeam.ToString()) : "")}\"] = {{");
+            lua.AppendLine($"[\"{company.Owner}{(isAIPlayer ? ("AIPlayer#" + indexOnTeam.ToString()) : "")}\"] = {{");
             lua.SetIndent(indent);
             lua.IncreaseIndent();
 
