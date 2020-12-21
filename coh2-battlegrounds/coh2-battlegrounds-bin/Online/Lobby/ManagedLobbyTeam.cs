@@ -108,11 +108,13 @@ namespace Battlegrounds.Online.Lobby {
             return removed.ToArray();
         }
 
-        public bool Join(ManagedLobbyMember member) {
+        public bool Join(ManagedLobbyMember member, bool silent = false) {
             for (int i = 0; i < this.m_slots.Length; i++) {
                 if (this.m_slots[i].State == ManagedLobbyTeamSlotState.Open) {
                     this.m_slots[i].SetOccupant(member);
-                    this.m_lobby.SetUserInformation(member.ID, "pos", i);
+                    if (silent) {
+                        this.m_lobby.SetUserInformation(member.ID, "pos", i);
+                    }
                     return true;
                 }
             }
@@ -135,12 +137,15 @@ namespace Battlegrounds.Online.Lobby {
 
         public ManagedLobbyMember GetLobbyMember(ulong playerID) => this.m_slots.FirstOrDefault(x => x.Occupant is not null && x.Occupant.ID == playerID)?.Occupant;
 
-        public void TrySetMemberPosition(ManagedLobbyMember member, int position) {
+        public void TrySetMemberPosition(ManagedLobbyMember member, int position, bool silent = true) {
             if (this.m_slots[position].Occupant is null) {
                 int prev = this.m_slots.IndexOf(x => x.Occupant == member);
                 if (prev != -1) {
                     this.m_slots[position].SetOccupant(member);
                     this.m_slots[prev].SetOccupant(null);
+                    if (silent) {
+                        this.m_lobby.SetUserInformation(member.ID, "pos", position);
+                    }
                 }
             }
         }
