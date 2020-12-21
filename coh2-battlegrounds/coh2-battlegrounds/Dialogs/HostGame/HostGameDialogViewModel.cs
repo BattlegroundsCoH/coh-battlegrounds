@@ -4,6 +4,7 @@ using System.Text;
 using System.Windows.Input;
 using BattlegroundsApp.Dialogs.Service;
 using BattlegroundsApp.Utilities;
+using BattlegroundsApp.ViewModels;
 
 namespace BattlegroundsApp.Dialogs.HostGame {
     public class HostGameDialogViewModel : DialogViewModelBase<DialogResults> {
@@ -11,33 +12,32 @@ namespace BattlegroundsApp.Dialogs.HostGame {
         public ICommand HostCommand { get; private set; }
         public ICommand CancelCommand { get; private set; }
 
-        private string lobbyName;
+        private string _lobbyName;
         public string LobbyName {
-            get { return this.lobbyName; }
+            get { return this._lobbyName; }
 
             set {
 
-                if (!string.Equals(this.lobbyName, value)) {
+                if (!string.Equals(this._lobbyName, value)) {
 
-                    this.lobbyName = value;
+                    this._lobbyName = value;
 
                 }
 
             }
         }
 
-        private string lobbyPassword;
+        private string _lobbyPassword;
         public string LobbyPassword {
-            get { return this.lobbyPassword; }
+            get { return this._lobbyPassword; }
 
             set {
 
-                if (!string.Equals(this.lobbyPassword, value)) {
+                if (!string.Equals(this._lobbyPassword, value)) {
 
-                    this.lobbyPassword = value;
+                    this._lobbyPassword = value;
 
                 }
-
             }
 
         }
