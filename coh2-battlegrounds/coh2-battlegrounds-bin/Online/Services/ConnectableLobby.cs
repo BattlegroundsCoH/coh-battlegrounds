@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics;
 using System.Text.RegularExpressions;
 
 namespace Battlegrounds.Online.Services {
@@ -63,8 +64,9 @@ namespace Battlegrounds.Online.Services {
                 this.lobby_players.Clear();
                 Message message = new Message(MessageType.LOBBY_INFO, this.lobby_guid);
                 MessageSender.SendMessage(AddressBook.GetLobbyServer(), message, (a, msg) => {
+                    Trace.WriteLine(msg, "ConnectableLobby");
                     string work = msg.Argument1.Replace("\x07", "x07");
-                    var mapRegMatch = Regex.Match(work, @"m:""(?<map>(\w|_|-|<|>|x07)*)""");
+                    var mapRegMatch = Regex.Match(work, @"m:(?<map>(\w|_|-|<|>|x07)*)");
                     if (mapRegMatch.Success) {
                         this.m_lobbyMap = mapRegMatch.Groups["map"].Value.Replace("x07", "\x07");
                     }
