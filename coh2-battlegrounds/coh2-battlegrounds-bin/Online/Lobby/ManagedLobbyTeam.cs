@@ -138,6 +138,9 @@ namespace Battlegrounds.Online.Lobby {
         public ManagedLobbyMember GetLobbyMember(ulong playerID) => this.m_slots.FirstOrDefault(x => x.Occupant is not null && x.Occupant.ID == playerID)?.Occupant;
 
         public void TrySetMemberPosition(ManagedLobbyMember member, int position, bool silent = true) {
+            if (this.m_slots.Length >= position) {
+                return;
+            }
             if (this.m_slots[position].Occupant is null) {
                 int prev = this.m_slots.IndexOf(x => x.Occupant == member);
                 if (prev != -1) {
