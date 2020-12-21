@@ -1164,6 +1164,150 @@
 			"IsWintermap": "False",
 			"Gamemodes": [
 			]
+		},
+		{
+			"jsdbtype": "Battlegrounds.Game.Database.Scenario",
+			"Name": "Tundra",
+			"Description": "Wir sind heute hier zusammen gekommen um einige Eingeweide und Körperteile in dieser landlichen Gegend zu verteilen. Oberstleutnant P. Immel sagte einmal: 'Haltet die Mitte, sonst ist alles verloren, diese Gegend ist zu schön zum sterben. Map by Blounchump --- Grüße an Warlord --- Pop Cap 350",
+			"RelativeFilename": "tundra2",
+			"SgaName": "1133750018",
+			"MaxPlayers": "8",
+			"Theatre": "EasternFront",
+			"IsWintermap": "False",
+			"Gamemodes": [
+			]
+		},
+		{
+			"jsdbtype": "Battlegrounds.Game.Database.Scenario",
+			"Name": "(2 - 4) Armor Remnants",
+			"Description": "The fall and subsequent liberation of the important crossroad town St. Lo allowed the Allied Expeditionary Force to continue their push for the liberation of France. With a majority of German forces focused on the vital commune of Caen, US forces took great advantage of the distraction caused by the Commonwealth forces, by resuming their attack at a 5,500 m X 2,000 m area west of St. Lo. The Panzer Lehr took the brunt of the attack.",
+			"RelativeFilename": "4_p armor remnants",
+			"SgaName": "1412045794",
+			"MaxPlayers": "4",
+			"Theatre": "EasternFront",
+			"IsWintermap": "False",
+			"Gamemodes": [
+			]
+		},
+		{
+			"jsdbtype": "Battlegrounds.Game.Database.Scenario",
+			"Name": "(6 - 8) Sittard (200 Population)",
+			"Description": "During Operation Blackcock, the township of Sittard changed hands progressively, playing host to both the Wehrmacht and Allied defensive lines. Sitting comfortably upon the Geleenbeek River, the bridges of Sittard became fortresses to be held and disputed for a number of months, until the Roer Triangle began to shrink. Narrow streets, tall buildings and deadly chokepoints make Sittard a complexity, conquered only by patient and ruthless commanders; what to sacrifice and when could make the difference between three bridgeheads, or none.",
+			"RelativeFilename": "8p_sittard_3",
+			"SgaName": "1528285333",
+			"MaxPlayers": "8",
+			"Theatre": "EasternFront",
+			"IsWintermap": "False",
+			"Gamemodes": [
+			]
+		},
+		{
+			"jsdbtype": "Battlegrounds.Game.Database.Scenario",
+			"Name": "World Front World war II",
+			"Description": "Have you ever been thinking fighting 4 fronts at ones? now you can do it! join for World Front and fight for axis or allies! / discord link for map, for feedback https://discord.gg/9zYS2nh",
+			"RelativeFilename": "world front world war ii",
+			"SgaName": "1627110129",
+			"MaxPlayers": "8",
+			"Theatre": "SharedFront",
+			"IsWintermap": "False",
+			"Gamemodes": [
+			]
+		},
+		{
+			"jsdbtype": "Battlegrounds.Game.Database.Scenario",
+			"Name": "(6 - 8) Kingscliff Beach",
+			"Description": "A hydroelectric power station has been breached via sea. Fight head to head over the beach whilst capturing the coastal town that provides fuel to ensure you have tank superiority.",
+			"RelativeFilename": "kingscliffbeach",
+			"SgaName": "1823870530",
+			"MaxPlayers": "8",
+			"Theatre": "EasternFront",
+			"IsWintermap": "False",
+			"Gamemodes": [
+			]
+		},
+		{
+			"jsdbtype": "Battlegrounds.Game.Database.Scenario",
+			"Name": "(6) Blazing Lowland",
+			"Description": "Transformed by xxCOMPANY OF COWARDSxx Created and polished by AGameAnx",
+			"RelativeFilename": "6_p blazing lowland",
+			"SgaName": "284055558",
+			"MaxPlayers": "6",
+			"Theatre": "SharedFront",
+			"IsWintermap": "False",
+			"Gamemodes": [
+			]
+		},
+		{
+			"jsdbtype": "Battlegrounds.Game.Database.Scenario",
+			"Name": "(2-6) Achelous River",
+			"Description": "CoH1-Original Map Remixed",
+			"RelativeFilename": "achellous_river",
+			"SgaName": "621386653",
+			"MaxPlayers": "6",
+			"Theatre": "EasternFront",
+			"IsWintermap": "False",
+			"Gamemodes": [
+			]
+		},
+		{
+			"jsdbtype": "Battlegrounds.Game.Database.Scenario",
+			"Name": "(6 - 8) Lyon Defense",
+			"Description": "",
+			"RelativeFilename": "lyon_var_3",
+			"SgaName": "675843436",
+			"MaxPlayers": "8",
+			"Theatre": "EasternFront",
+			"IsWintermap": "False",
+			"Gamemodes": [
+			]
+		},
+		{
+			"jsdbtype": "Battlegrounds.Game.Database.Scenario",
+			"Name": "TestRangeMap",
+			"Description": "",
+			"RelativeFilename": "testrangemap",
+			"SgaName": "703184792",
+			"MaxPlayers": "2",
+			"Theatre": "SharedFront",
+			"IsWintermap": "False",
+			"Gamemodes": [
+			]
+		},
+		{
+			"jsdbtype": "Battlegrounds.Game.Database.Scenario",
+			"Name": "Forgotten Battle (6) V5.3",
+			"Description": "One of the fiercest battles in the Netherlands during World War II takes place near Overloon. American and British armoured divisions are locked in battle with German tanks and troops. On October 12, 1944, Overloon is almost completely destroyed by Allied artillery fire and air attacks. But the Germans do not surrender. It takes days before the battle is over.",
+			"RelativeFilename": "4p_fbv2",
+			"SgaName": "883012291",
+			"MaxPlayers": "6",
+			"Theatre": "SharedFront",
+			"IsWintermap": "False",
+			"Gamemodes": [
+			]
+		},
+		{
+			"jsdbtype": "Battlegrounds.Game.Database.Scenario",
+			"Name": "Merkelbeek",
+			"Description": "Merkelbeek (2-8 player map)",
+			"RelativeFilename": "merkelbeek",
+			"SgaName": "921101109",
+			"MaxPlayers": "8",
+			"Theatre": "SharedFront",
+			"IsWintermap": "False",
+			"Gamemodes": [
+			]
+		},
+		{
+			"jsdbtype": "Battlegrounds.Game.Database.Scenario",
+			"Name": "(4-8) Trench Bridge",
+			"Description": "An L-shaped death bridge with trenches, bottlenecks, massive fortifications and plenty resources. Let the carnage begin!",
+			"RelativeFilename": "8-trenchbridge",
+			"SgaName": "939244409",
+			"MaxPlayers": "8",
+			"Theatre": "SharedFront",
+			"IsWintermap": "False",
+			"Gamemodes": [
+			]
 		}
 	]
 }

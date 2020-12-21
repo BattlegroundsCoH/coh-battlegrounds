@@ -144,6 +144,8 @@ namespace BattlegroundsApp.Views {
 
                 // Fetch selected map
                 this.m_smh.Lobby.GetLobbyInformation("selected_map", this.UpdateSelectedMap);
+                this.m_smh.Lobby.GetLobbyInformation("selected_wc", this.UpdateSelectedGamemode);
+                this.m_smh.Lobby.GetLobbyInformation("selected_wcs", this.UpdateSelectedOption);
 
                 //throw new NotImplementedException();
 
@@ -155,9 +157,27 @@ namespace BattlegroundsApp.Views {
         private void UpdateSelectedMap(string arg1, string arg2) {
             this.Dispatcher.Invoke(() => {
                 var temp = ScenarioList.FromFilename(arg1);
-                //this.Map.SelectedItem = temp;
                 this.Map.ItemsSource = new List<Scenario>() { temp };
                 this.Map.SelectedIndex = 0;
+            });
+        }
+
+        private void UpdateSelectedGamemode(string arg1, string arg2) {
+            this.Dispatcher.Invoke(() => {
+                var temp = WinconditionList.GetWinconditionByName(arg1);
+                this.Gamemode.ItemsSource = new List<Wincondition>() { temp };
+                this.Gamemode.SelectedIndex = 0;
+            });
+        }
+
+        private void UpdateSelectedOption(string arg1, string arg2) {
+            this.Dispatcher.Invoke(() => {
+                if (int.TryParse(arg1, out int option)) {
+                    var gamemode = Gamemode.SelectedItem as Wincondition;
+                    var opt = gamemode.Options[option];
+                    this.GamemodeOption.ItemsSource = new List<string> { opt.Title };
+                    this.GamemodeOption.SelectedIndex = 0;
+                }
             });
         }
 
