@@ -109,7 +109,7 @@ namespace Battlegrounds.Online {
                             Trace.WriteLine($"Sent message <<{topMessage}>> ({msg.Length} bytes){Environment.NewLine}", "Online-Service");
                         }
 
-                        Thread.Sleep(30);
+                        Thread.Sleep(120);
 
                     } else {
                         Thread.Sleep(60);
