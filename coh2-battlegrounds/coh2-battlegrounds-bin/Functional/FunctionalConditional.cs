@@ -30,6 +30,14 @@ namespace Battlegrounds.Functional {
                 return this;
             }
 
+            public T Then(Func<T, T> then) {
+                if (_yes) {
+                    return then.Invoke(this.__subj);
+                } else {
+                    return this.__subj;
+                }
+            }
+
             /// <summary>
             /// 
             /// </summary>
