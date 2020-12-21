@@ -149,6 +149,10 @@ namespace BattlegroundsApp.Views {
                 this.m_smh.Lobby.GetLobbyInformation("selected_wc", this.UpdateSelectedGamemode);
                 this.m_smh.Lobby.GetLobbyInformation("selected_wcs", this.UpdateSelectedOption);
 
+                // TODO: Hook into info messages so we can update properly
+
+                this.m_smh.Lobby.RefreshTeamAsync(this.LobbyTeamRefreshDone);
+
                 //throw new NotImplementedException();
 
             }
@@ -367,6 +371,15 @@ namespace BattlegroundsApp.Views {
             } else {
                 return null;
             }
+        }
+
+        private void LobbyTeamRefreshDone(ManagedLobby lobby) {
+
+            // Update lobby visuals
+            this.UpdateLobbyVisuals();
+
+            // Do more stuff?
+
         }
 
     }

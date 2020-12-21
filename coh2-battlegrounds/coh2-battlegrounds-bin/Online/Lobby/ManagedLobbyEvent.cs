@@ -114,6 +114,12 @@
     /// </summary>
     /// <param name="arg">The string name identifier for the type of data that was requested.</param>
     /// <returns>Any <see cref="System.Object"/> that is a pointer-or-direct value of the requested data.</returns>
-    public delegate object ManagedLobbyLocalDataRequest(string arg); 
+    public delegate object ManagedLobbyLocalDataRequest(string arg);
+
+    /// <summary>
+    /// Event delegate triggered when the lobby task is done.
+    /// </summary>
+    /// <param name="self">A reference to the <see cref="ManagedLobby"/> instance that finished executing.</param>
+    public delegate void ManagedLobbyTaskDone(ManagedLobby self);
 
 }

@@ -660,6 +660,67 @@ namespace Battlegrounds.Online.Lobby {
 
         public ManagedLobbyTeam GetTeam(ManagedLobbyTeamType type) => this.m_teams[type];
 
+        public async void RefreshTeamAsync(ManagedLobbyTaskDone taskDone) {
+
+            // Get all player IDs
+            ulong[] playerIDs = await this.GetPlayerIDsAsync();
+
+            // Clear teams
+            for (int i = 0; i < ManagedLobbyTeam.TeamTypes.Length; i++) {
+                this.m_teams[ManagedLobbyTeam.TeamTypes[i]].Clear();
+            }
+
+            //Loop through all players
+            for (int i = 0; i < playerIDs.Length; i++) {
+
+                // Find out if it's a human or AI
+                AIDifficulty diff = AIDifficulty.Human;
+                if (int.TryParse(await this.GetUserInformation(playerIDs[i], "dif"), out int d)) {
+                    diff = (AIDifficulty)d;
+                }
+
+                // Is human?
+                if (diff == AIDifficulty.Human) {
+
+                    // Get member name and create them as human
+                    string name = await this.GetUserInformation(playerIDs[i], "name");
+                    string faction = await this.GetUserInformation(playerIDs[i], "fac");
+                    HumanLobbyMember human = new HumanLobbyMember(this, playerIDs[i], name, string.Empty, 0.0);
+
+                    // Find team from faction
+                    ManagedLobbyTeamType team = ManagedLobbyTeam.GetTeamTypeFromFaction(faction);
+
+                    // Find index on team
+                    int tid = int.Parse(await this.GetUserInformation(playerIDs[i], "tid"));
+
+                    // Add human
+                    this.GetTeam(team).Join(human);
+                    this.GetTeam(team).TrySetMemberPosition(human, tid);
+
+                } else {
+
+                    // Create AI
+                    AILobbyMember ai = new AILobbyMember(this, diff, await this.GetUserInformation(playerIDs[i], "fac"), playerIDs[i]);
+
+                    // Find team from faction
+                    var team = ManagedLobbyTeam.GetTeamTypeFromFaction(ai.Faction);
+
+                    // Find index on team
+                    int tid = int.Parse(await this.GetUserInformation(playerIDs[i], "tid"));
+
+                    // Add AI
+                    this.GetTeam(team).Join(ai);
+                    this.GetTeam(team).TrySetMemberPosition(ai, tid);
+
+                }
+
+            }
+
+            // Call the task done
+            taskDone?.Invoke(this);
+
+        }
+
         /// <summary>
         /// 
         /// </summary>

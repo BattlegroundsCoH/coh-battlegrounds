@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Battlegrounds.Functional;
 
 namespace Battlegrounds.Online.Lobby {
     
@@ -33,6 +34,8 @@ namespace Battlegrounds.Online.Lobby {
     /// Sealed class representing a Team in the <see cref="ManagedLobby"/> object.
     /// </summary>
     public sealed class ManagedLobbyTeam {
+
+        public static readonly ManagedLobbyTeamType[] TeamTypes = { ManagedLobbyTeamType.Allies, ManagedLobbyTeamType.Axis, ManagedLobbyTeamType.Spectator };
 
         private ManagedLobby m_lobby;
         private ManagedLobbyTeamSlot[] m_slots;
@@ -124,7 +127,23 @@ namespace Battlegrounds.Online.Lobby {
             }
         }
 
+        public void Clear() {
+            for (int i = 0; i < this.m_slots.Length; i++) {
+                this.m_slots[i].SetOccupant(null);
+            }
+        }
+
         public ManagedLobbyMember GetLobbyMember(ulong playerID) => this.m_slots.FirstOrDefault(x => x.Occupant is not null && x.Occupant.ID == playerID)?.Occupant;
+
+        public void TrySetMemberPosition(ManagedLobbyMember member, int position) {
+            if (this.m_slots[position].Occupant is null) {
+                int prev = this.m_slots.IndexOf(x => x.Occupant == member);
+                if (prev != -1) {
+                    this.m_slots[position].SetOccupant(member);
+                    this.m_slots[prev].SetOccupant(null);
+                }
+            }
+        }
 
         public static ManagedLobbyTeamType GetTeamTypeFromFaction(string faction) 
             => faction.CompareTo("german") == 0 || faction.CompareTo("west_german") == 0 ? ManagedLobbyTeamType.Axis : ManagedLobbyTeamType.Allies;
