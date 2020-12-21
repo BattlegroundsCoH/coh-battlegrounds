@@ -6,8 +6,6 @@ using System.Diagnostics;
 using Battlegrounds.Util;
 using Battlegrounds.Compiler.Source;
 using Battlegrounds.Modding;
-using System.Linq;
-using Battlegrounds.Functional;
 
 namespace Battlegrounds.Compiler {
     

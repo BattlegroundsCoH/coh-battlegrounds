@@ -99,7 +99,7 @@ namespace Battlegrounds.Game.Database {
 
             this.Name = infomatches.FirstOrDefault(x => x.Groups["key"].Value.CompareTo("scenarioname") == 0)?.Groups["value"].Value.Trim(' ', '\"') ?? "???";
             this.Description = infomatches.FirstOrDefault(x => x.Groups["key"].Value.CompareTo("scenariodescription") == 0)?.Groups["value"].Value.Trim(' ', '\"') ?? "???";
-            this.Description = this.Description.Replace(@"\""", "'");
+            this.Description = this.Description.Replace(@"\""", "'").Replace('[', '(').Replace(']', ')');
 
             if (byte.TryParse(infomatches.FirstOrDefault(x => x.Groups["key"].Value.CompareTo("maxplayers") == 0)?.Groups["value"].Value ?? "2", out byte maxplayers)) {
                 this.MaxPlayers = maxplayers;
