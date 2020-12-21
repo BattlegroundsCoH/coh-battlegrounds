@@ -23,6 +23,7 @@ using Battlegrounds.Online.Lobby;
 
 using BattlegroundsApp.LocalData;
 using BattlegroundsApp.Models;
+using BattlegroundsApp.Utilities;
 using BattlegroundsApp.Views.ViewComponent;
 
 namespace BattlegroundsApp.Views {
@@ -140,11 +141,18 @@ namespace BattlegroundsApp.Views {
 
                 // lock everything
 
-                throw new NotImplementedException(); // TODO: Fetch lobby data
+                // Fetch selected map
+                this.m_smh.Lobby.GetLobbyInformation("selected_map", this.UpdateSelectedMap);
+
+                throw new NotImplementedException();
 
             }
             this.UpdateLobbyVisuals();
             this.m_lobbyUpdate.Start();
+        }
+
+        private void UpdateSelectedMap(string arg1, string arg2) {
+            Trace.WriteLine(arg1 + ":" + arg2);
         }
 
         private void UpdateAvailableGamemodes() {
