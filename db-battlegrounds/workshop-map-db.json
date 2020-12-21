@@ -1308,6 +1308,30 @@
 			"IsWintermap": "False",
 			"Gamemodes": [
 			]
+		},
+		{
+			"jsdbtype": "Battlegrounds.Game.Database.Scenario",
+			"Name": "Desert Airfield at El Alamein",
+			"Description": "A smal Trainstation, somewhere in the Desert of North Africa. El Alamein is one of the most Famouse Battlefields of the second Worldwar and became the Destiny of the German African Korps! .......: You got Order,to defend an Airfield on the left Side of the Frontline. The Mission is very importand, because its the only Airfield in the Area around El Alamein.Get ready, the Enemy Movements will start in the early Morning.---------Ps.:This Map, was the most difficult Projekt, I ever made ! I was useing 160 Houers of work and all My skill to realise it. -----Map made by  ORKLORD",
+			"RelativeFilename": "desert airfield at el alamein",
+			"SgaName": "263927461",
+			"MaxPlayers": "8",
+			"Theatre": "SharedFront",
+			"IsWintermap": "False",
+			"Gamemodes": [
+			]
+		},
+		{
+			"jsdbtype": "Battlegrounds.Game.Database.Scenario",
+			"Name": "(6 - 8) Lyon var. 3.1",
+			"Description": "Normal map without restrictions. Population cap is 250 (Original Map from Bogatyriwe // Edited by Großdeutschland)",
+			"RelativeFilename": "8p_lyon_var_31",
+			"SgaName": "392863643",
+			"MaxPlayers": "8",
+			"Theatre": "SharedFront",
+			"IsWintermap": "False",
+			"Gamemodes": [
+			]
 		}
 	]
 }
