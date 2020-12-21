@@ -141,6 +141,8 @@ namespace BattlegroundsApp.Views {
 
                 // lock everything
                 this.Map.IsEnabled = false;
+                this.Gamemode.IsEnabled = false;
+                this.GamemodeOption.IsEnabled = false;
 
                 // Fetch selected map
                 this.m_smh.Lobby.GetLobbyInformation("selected_map", this.UpdateSelectedMap);
@@ -156,9 +158,10 @@ namespace BattlegroundsApp.Views {
 
         private void UpdateSelectedMap(string arg1, string arg2) {
             this.Dispatcher.Invoke(() => {
-                var temp = ScenarioList.FromFilename(arg1);
-                this.Map.ItemsSource = new List<Scenario>() { temp };
-                this.Map.SelectedIndex = 0;
+                if (ScenarioList.TryFindScenario(arg1, out Scenario scenario)) {
+                    this.Map.ItemsSource = new List<Scenario>() { scenario };
+                    this.Map.SelectedIndex = 0;
+                }
             });
         }
 
@@ -334,6 +337,9 @@ namespace BattlegroundsApp.Views {
         }
 
         private void Gamemode_SelectionChanged(object sender, SelectionChangedEventArgs e) {
+            if (!Gamemode.IsEnabled) {
+                return;
+            }
             if (Gamemode.SelectedItem is Wincondition wincon) {
                 this.m_smh.Lobby.SetGamemode(wincon.Name);
                 this.UpdateGamemodeOptions(wincon);
@@ -341,6 +347,9 @@ namespace BattlegroundsApp.Views {
         }
 
         private void GamemodeOption_SelectionChanged(object sender, SelectionChangedEventArgs e) {
+            if (!GamemodeOption.IsEnabled) {
+                return;
+            }
             if (GamemodeOption.SelectedItem is WinconditionOption) {
                 this.m_smh.Lobby.SetGamemodeOption(GamemodeOption.SelectedIndex);
             }
