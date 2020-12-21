@@ -125,6 +125,8 @@ namespace BattlegroundsApp.Views {
         private void CreateLobbyData() {
             if (this.m_smh.Lobby.IsHost) {
 
+                this.m_teamManagement.SetIsHost(true);
+
                 var scenarioSource = ScenarioList.GetList().OrderBy(x => x.ToString()).ToList();
                 Map.ItemsSource = scenarioSource;
 
@@ -140,6 +142,7 @@ namespace BattlegroundsApp.Views {
             } else {
 
                 // lock everything
+                this.m_teamManagement.SetIsHost(false);
                 this.Map.IsEnabled = false;
                 this.Gamemode.IsEnabled = false;
                 this.GamemodeOption.IsEnabled = false;

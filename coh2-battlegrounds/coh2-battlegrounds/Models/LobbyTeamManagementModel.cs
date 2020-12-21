@@ -22,6 +22,7 @@ namespace BattlegroundsApp.Models {
 
         private Grid m_teamGrid;
         private int m_maxPlayerCount;
+        private bool m_isHost;
         private Dictionary<ManagedLobbyTeamType, List<PlayercardView>> m_teamSetup;
 
         public event Action<ManagedLobbyTeamType, PlayercardView, object, string> OnTeamEvent;
@@ -39,6 +40,7 @@ namespace BattlegroundsApp.Models {
                 this.CreatePlayercard(i, ManagedLobbyTeamType.Axis);
             }
             this.SetMaxPlayers(2);
+            this.m_isHost = false;
         }
 
         private void CreatePlayercard(int row, ManagedLobbyTeamType type) {
@@ -125,6 +127,9 @@ namespace BattlegroundsApp.Models {
         }
 
         private void OnCardActionHandler(PlayercardView sender, string reason) {
+            if (!(this.m_isHost || sender.Playerid == BattlegroundsInstance.LocalSteamuser.ID)) {
+                return;
+            }
             ManagedLobbyTeamType teamOf = this.m_teamSetup[ManagedLobbyTeamType.Allies].Contains(sender) ? ManagedLobbyTeamType.Allies : ManagedLobbyTeamType.Axis;
             switch (reason) {
                 case "AddAI":
@@ -167,6 +172,8 @@ namespace BattlegroundsApp.Models {
             return null;
 
         }
+
+        public void SetIsHost(bool isHost) => this.m_isHost = isHost;
 
     }
 
