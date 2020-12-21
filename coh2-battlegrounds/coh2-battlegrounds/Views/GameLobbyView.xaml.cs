@@ -168,6 +168,7 @@ namespace BattlegroundsApp.Views {
                 if (ScenarioList.TryFindScenario(arg1, out Scenario scenario)) {
                     this.Map.ItemsSource = new List<Scenario>() { scenario };
                     this.Map.SelectedIndex = 0;
+                    UpdateMapPreview(scenario);
                 }
             });
         }
@@ -223,8 +224,13 @@ namespace BattlegroundsApp.Views {
                     this.m_teamManagement.SetMaxPlayers(scenario.MaxPlayers);
                     this.m_smh.Lobby.SetMap(scenario);
                     this.m_smh.Lobby.SetLobbyCapacity(scenario.MaxPlayers);
+                    UpdateMapPreview(scenario);
                 }
             }
+        }
+
+        private void UpdateMapPreview(Scenario scenario) {
+            mapImage.Source = new BitmapImage(new Uri(System.IO.Path.GetFullPath($"usr\\mods\\map_icons\\{scenario.Name}_map.tga")));
         }
 
         public SessionInfo CreateSessionInfo() {
