@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 
 namespace BattlegroundsApp.Dialogs.Service {
+    //TODO : Turn into interface
     public abstract class DialogViewModelBase<T> {
 
         public string Title { get; set; }

@@ -3,7 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:BattlegroundsApp.Dialogs.HostGame"
+             xmlns:local="clr-namespace:BattlegroundsApp.Dialogs.HostGame" xmlns:bindablepasswordbox="clr-namespace:BattlegroundsApp.Views.ViewComponent.BindablePasswordBox"
              mc:Ignorable="d" 
              Height="150" Width="250">
     <Grid>
@@ -29,7 +29,7 @@
         <!-- Row 1 -->
         <TextBlock Grid.Row="1" Grid.Column="1" Margin="2.5" Text="Game Name:"/>
 
-        <TextBox x:Name="LobbyName" Text="{Binding LobbyName}" Grid.Row="1" Grid.Column="2" Margin="2.5" Width="100"/>
+        <TextBox x:Name="LobbyName" Text="{Binding LobbyName, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Grid.Row="1" Grid.Column="2" Margin="2.5" Width="100"/>
 
         <!-- Row 2 -->
         <CheckBox x:Name="passworsProtectedCheck" Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2" Margin="2.5" Content="Password protected"/>
@@ -37,7 +37,7 @@
         <!-- Row 3 -->
         <TextBlock Grid.Row="3" Grid.Column="1" Margin="2.5" Text="Password:"/>
 
-        <TextBox x:Name="LobbyPassword" Text="{Binding LobbyPassword}" Grid.Row="3" Grid.Column="2" Margin="2.5" Width="100" IsEnabled="{Binding ElementName=passworsProtectedCheck, Path=IsChecked}"/>
+        <bindablepasswordbox:BindablePasswordBox Password="{Binding LobbyPassword, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Grid.Row="3" Grid.Column="2" Margin="2.5" Width="100" IsEnabled="{Binding ElementName=passworsProtectedCheck, Path=IsChecked}"/>
         
         <!-- Row 4 -->
         <Button Grid.Row="4" Grid.Column="1" Margin="2.5" Content="Host Game" Width="75" IsEnabled="{Binding ElementName=LobbyName, Path=Text.Length, Mode=OneWay}"
