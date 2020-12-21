@@ -100,7 +100,7 @@ namespace BattlegroundsApp.Views {
                 ServerMessageHandler smh = new ServerMessageHandler(vw);
                 vw.SetSMH(smh);
 
-                ManagedLobby.Host(this.m_hub, "Meh", string.Empty, smh.OnServerResponse);
+                ManagedLobby.Host(this.m_hub, dialog.LobbyName, dialog.LobbyPassword, smh.OnServerResponse);
 
             }
 
