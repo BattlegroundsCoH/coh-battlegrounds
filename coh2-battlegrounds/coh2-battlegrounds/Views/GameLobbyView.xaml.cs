@@ -145,7 +145,7 @@ namespace BattlegroundsApp.Views {
                 // Fetch selected map
                 this.m_smh.Lobby.GetLobbyInformation("selected_map", this.UpdateSelectedMap);
 
-                throw new NotImplementedException();
+                //throw new NotImplementedException();
 
             }
             this.UpdateLobbyVisuals();
@@ -154,7 +154,10 @@ namespace BattlegroundsApp.Views {
 
         private void UpdateSelectedMap(string arg1, string arg2) {
             this.Dispatcher.Invoke(() => {
-                this.Map.SelectedItem = ScenarioList.FromFilename(arg1);
+                var temp = ScenarioList.FromFilename(arg1);
+                //this.Map.SelectedItem = temp;
+                this.Map.ItemsSource = new List<Scenario>() { temp };
+                this.Map.SelectedIndex = 0;
             });
         }
 
