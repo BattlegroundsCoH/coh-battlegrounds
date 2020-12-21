@@ -140,6 +140,7 @@ namespace BattlegroundsApp.Views {
             } else {
 
                 // lock everything
+                this.Map.IsEnabled = false;
 
                 // Fetch selected map
                 this.m_smh.Lobby.GetLobbyInformation("selected_map", this.UpdateSelectedMap);
@@ -152,7 +153,9 @@ namespace BattlegroundsApp.Views {
         }
 
         private void UpdateSelectedMap(string arg1, string arg2) {
-            Trace.WriteLine(arg1 + ":" + arg2);
+            this.Dispatcher.Invoke(() => {
+                this.Map.SelectedItem = ScenarioList.FromFilename(arg1);
+            });
         }
 
         private void UpdateAvailableGamemodes() {
@@ -175,6 +178,9 @@ namespace BattlegroundsApp.Views {
         }
 
         private void Map_SelectionChanged(object sender, SelectionChangedEventArgs e) {
+            if (!Map.IsEnabled) {
+                return;
+            }
             if (Map.SelectedItem is Scenario scenario) {
                 if (scenario.RelativeFilename.CompareTo(this.m_smh.Lobby.SelectedMap) != 0) {
                     if (scenario.MaxPlayers < this.m_smh.Lobby.PlayerCount) {
