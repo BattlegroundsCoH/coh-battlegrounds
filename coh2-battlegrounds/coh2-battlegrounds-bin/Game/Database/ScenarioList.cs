@@ -170,6 +170,29 @@ namespace Battlegrounds.Game.Database {
         /// <exception cref="KeyNotFoundException"/>
         public static Scenario FromFilename(string filename) => __scenarios[filename];
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="filename"></param>
+        /// <returns></returns>
+        public static Scenario FromRelativeFilename(string filename) => __scenarios.FirstOrDefault(x => x.Value.RelativeFilename.CompareTo(filename) == 0).Value;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="identifier"></param>
+        /// <param name="scenario"></param>
+        /// <returns></returns>
+        public static bool TryFindScenario(string identifier, out Scenario scenario) {
+            if (__scenarios.ContainsKey(identifier)) {
+                scenario = __scenarios[identifier];
+                return true;
+            } else {
+                scenario = FromRelativeFilename(identifier);
+                return scenario is not null;
+            }
+        }
+
         public static List<Scenario> GetList() => __scenarios.Values.ToList();
 
     }
