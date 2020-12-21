@@ -131,16 +131,16 @@ namespace BattlegroundsApp {
                 [LobbyTeam.TeamType.Allies] = new LobbyTeam(),
                 [LobbyTeam.TeamType.Axis] = new LobbyTeam(),
             };
-            for (int i = 0; i < baseLobby.lobby_players.Count; i++) {
-                LobbyPlayer player = new LobbyPlayer(
-                    baseLobby.lobby_players[i].player_index,
-                    baseLobby.lobby_players[i].player_steam_index,
-                    baseLobby.lobby_players[i].player_name,
-                    baseLobby.lobby_players[i].player_faction,
-                    baseLobby.lobby_players[i].player_company
-                    );
-                this.m_lobbyTeams[(LobbyTeam.TeamType)baseLobby.lobby_players[i].player_index].Players.Add(player);
-            }
+            //for (int i = 0; i < baseLobby.lobby_players.Count; i++) {
+            //    LobbyPlayer player = new LobbyPlayer(
+            //        baseLobby.lobby_players[i].player_index,
+            //        baseLobby.lobby_players[i].player_steam_index,
+            //        baseLobby.lobby_players[i].player_name,
+            //        baseLobby.lobby_players[i].player_faction,
+            //        baseLobby.lobby_players[i].player_company
+            //        );
+            //    this.m_lobbyTeams[(LobbyTeam.TeamType)baseLobby.lobby_players[i].player_index].Players.Add(player);
+            //}
         }
 
         public Lobby(string guid) {

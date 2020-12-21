@@ -11,81 +11,38 @@ namespace Battlegrounds.Online.Services {
         /// <summary>
         /// Represents a player that's connected to a <see cref="ConnectableLobby"/>.
         /// </summary>
-        public class ConnectableLobbyPlayer {
-            
-            /// <summary>
-            /// The UTF-8 string representation of the connected player's name.
-            /// </summary>
-            public string player_name;
-            
-            /// <summary>
-            /// The the current faction ID selected by the player.
-            /// </summary>
-            public string player_faction;
+        public record ConnectableLobbyPlayer(int pIndex, ulong sIndex, string pName, string pFaction, string cName, int pTIndex);
 
-            /// <summary>
-            /// The player's selected company name
-            /// </summary>
-            public string player_company;
-
-            /// <summary>
-            /// The player's index in the lobby.
-            /// </summary>
-            public int player_index;
-
-            /// <summary>
-            /// The player's unique steam index.
-            /// </summary>
-            public ulong player_steam_index;
-            
-            /// <summary>
-            /// The player's team index.
-            /// </summary>
-            public int player_team_index;
-
-            /// <summary>
-            /// 
-            /// </summary>
-            /// <param name="pIndex"></param>
-            /// <param name="sIndex"></param>
-            /// <param name="pName"></param>
-            /// <param name="pFaction"></param>
-            /// <param name="pTIndex"></param>
-            public ConnectableLobbyPlayer(int pIndex, ulong sIndex, string pName, string pFaction, string cName, int pTIndex) {
-                this.player_name = pName;
-                this.player_faction = pFaction;
-                this.player_index = pIndex;
-                this.player_steam_index = sIndex;
-                this.player_team_index = pTIndex;
-                this.player_company = cName;
-            }
-
-        }
+        private string m_lobbyMap;
 
         /// <summary>
         /// The server-assigned GUID given to the lobby.
         /// </summary>
-        public string lobby_guid;
+        public string lobby_guid { get; }
 
         /// <summary>
         /// The name of the lobby.
         /// </summary>
-        public string lobby_name;
-
+        public string lobby_name { get; }
         /// <summary>
         /// Is the lobby password protected.
         /// </summary>
-        public bool lobby_passwordProtected;
+        public bool lobby_passwordProtected { get; }
 
         /// <summary>
         /// The currently selected map (Not formatted)
         /// </summary>
-        public string lobby_map;
+        public string lobby_map => this.m_lobbyMap;
 
         /// <summary>
         /// The lobby players currently in the lobby (Player name, team index, ...).
         /// </summary>
         public List<ConnectableLobbyPlayer> lobby_players;
+
+        /// <summary>
+        /// Gets number of players in player list
+        /// </summary>
+        public int lobby_player_count => this.lobby_players.Count;
 
         /// <summary>
         /// New standard <see cref="ConnectableLobby"/> instance without player data.
@@ -96,9 +53,9 @@ namespace Battlegrounds.Online.Services {
         public ConnectableLobby(string gid, string name, bool isPsswProtected) {
             this.lobby_guid = gid;
             this.lobby_name = name;
-            this.lobby_map = "<none>";
             this.lobby_passwordProtected = isPsswProtected;
             this.lobby_players = new List<ConnectableLobbyPlayer>();
+            this.m_lobbyMap = "<none>";
         }
 
         public void Update() {
@@ -109,7 +66,7 @@ namespace Battlegrounds.Online.Services {
                     string work = msg.Argument1.Replace("\x07", "x07");
                     var mapRegMatch = Regex.Match(work, @"m:""(?<map>(\w|_|-|<|>|x07)*)""");
                     if (mapRegMatch.Success) {
-                        this.lobby_map = mapRegMatch.Groups["map"].Value.Replace("x07", "\x07");
+                        this.m_lobbyMap = mapRegMatch.Groups["map"].Value.Replace("x07", "\x07");
                     }
                     var matches = Regex.Matches(work, @"\(s:(?<s>\d+);n:""(?<n>(\s|\S)+)"";i:(?<i>\d+);t:(?<t>-?\d+);f:(?<f>\w*);c:""(?<c>(\s|\S)*)""\)");
                     if (matches.Count > 0) {

@@ -62,7 +62,8 @@ namespace BattlegroundsApp.Views {
             GameLobbyList.Items.Clear();
 
             this.m_hub.GetConnectableLobbies(x => this.UpdateGUI(() => {
-                this.GameLobbyList.Items.Add(new Lobby(x));
+                x.Update();
+                this.GameLobbyList.Items.Add(x);
             }));
 
         }
@@ -71,7 +72,7 @@ namespace BattlegroundsApp.Views {
 
         private void JoinLobby_Click(object sender, RoutedEventArgs e) {
 
-            if (GameLobbyList.SelectedItem is Lobby lobby) {
+            if (GameLobbyList.SelectedItem is ConnectableLobby lobby) {
 
                 // TODO: Psswd check
 
@@ -80,7 +81,7 @@ namespace BattlegroundsApp.Views {
                 ServerMessageHandler smh = new ServerMessageHandler(vw);
                 vw.SetSMH(smh);
 
-                string lobbyToJoin = lobby.LobbyGuid;
+                string lobbyToJoin = lobby.lobby_guid;
 
                 ManagedLobby.Join(this.m_hub, lobbyToJoin, string.Empty, smh.OnServerResponse);
 
