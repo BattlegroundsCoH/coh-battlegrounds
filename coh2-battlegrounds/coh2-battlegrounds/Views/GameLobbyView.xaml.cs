@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -23,6 +24,7 @@ using Battlegrounds.Online.Lobby;
 
 using BattlegroundsApp.LocalData;
 using BattlegroundsApp.Models;
+using BattlegroundsApp.Resources;
 using BattlegroundsApp.Utilities;
 using BattlegroundsApp.Views.ViewComponent;
 
@@ -236,7 +238,12 @@ namespace BattlegroundsApp.Views {
         }
 
         private void UpdateMapPreview(Scenario scenario) {
-            //mapImage.Source = new BitmapImage(new Uri(System.IO.Path.GetFullPath($"usr\\mods\\map_icons\\{scenario.Name}_map.tga")));
+            string fullpath = System.IO.Path.GetFullPath($"usr\\mods\\map_icons\\{scenario.Name}_map.tga");
+            if (File.Exists(fullpath)) {
+                mapImage.Source = TgaImageSource.TargaBitmapSourceFromFile(fullpath);
+            } else {
+                Trace.WriteLine($"Failed to locate file: {fullpath}");
+            }
         }
 
         public SessionInfo CreateSessionInfo() {

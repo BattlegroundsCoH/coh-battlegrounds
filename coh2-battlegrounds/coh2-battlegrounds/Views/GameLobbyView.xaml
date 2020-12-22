@@ -36,7 +36,7 @@
         </Grid.ColumnDefinitions>
         
         <!-- Row 0-->
-        <Image x:Name="mapImage" Height="200" Width="200" Source="{Binding MapImage}"/>
+        <Image x:Name="mapImage" Height="200" Width="200"/>
 
         <!-- Row 1 -->
         <TextBlock Grid.Row="1" Grid.Column="0" Text="Map:"/>
