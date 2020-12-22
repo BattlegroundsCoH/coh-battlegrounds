@@ -230,7 +230,7 @@ namespace BattlegroundsApp.Views {
         }
 
         private void UpdateMapPreview(Scenario scenario) {
-            mapImage.Source = new BitmapImage(new Uri(System.IO.Path.GetFullPath($"usr\\mods\\map_icons\\{scenario.Name}_map.tga")));
+            //mapImage.Source = new BitmapImage(new Uri(System.IO.Path.GetFullPath($"usr\\mods\\map_icons\\{scenario.Name}_map.tga")));
         }
 
         public SessionInfo CreateSessionInfo() {
