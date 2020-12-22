@@ -114,6 +114,19 @@ namespace Battlegrounds.Game.Database {
 
                             workshopScenarios.Add(scen);
 
+                            int minimapFile = scenarioFiles.IndexOf(x => x.EndsWith("_preview.tga")).IfTrue(x => x == -1).Then(x => scenarioFiles.IndexOf(x => x.EndsWith("_mm.tga")));
+
+                            if (Directory.Exists($"usr\\mods\\map_icons")) {
+
+                                File.Copy(scenarioFiles[minimapFile], $"usr\\mods\\map_icons\\{scen.Name}_map.tga");
+
+                            } else {
+
+                                Directory.CreateDirectory($"usr\\mods\\map_icons");
+                                File.Copy(scenarioFiles[minimapFile], $"usr\\mods\\map_icons\\{scen.Name}_map.tga");
+
+                            }
+
                             Directory.Delete(readfrom, true);
 
                             newWorkshopEntries++;
