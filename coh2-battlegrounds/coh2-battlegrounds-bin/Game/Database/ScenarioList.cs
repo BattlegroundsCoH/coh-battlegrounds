@@ -117,9 +117,11 @@ namespace Battlegrounds.Game.Database {
                             int minimapFile = scenarioFiles.IndexOf(x => x.EndsWith("_preview.tga")).IfTrue(x => x == -1).Then(x => scenarioFiles.IndexOf(x => x.EndsWith("_mm.tga")));
 
                             if (Directory.Exists($"usr\\mods\\map_icons")) {
-
-                                File.Copy(scenarioFiles[minimapFile], $"usr\\mods\\map_icons\\{scen.Name}_map.tga");
-
+                                string destination = $"usr\\mods\\map_icons\\{scen.Name}_map.tga";
+                                if (File.Exists(destination)) {
+                                    File.Delete(destination);
+                                }
+                                File.Copy(scenarioFiles[minimapFile], destination);
                             } else {
 
                                 Directory.CreateDirectory($"usr\\mods\\map_icons");
