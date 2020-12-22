@@ -154,7 +154,7 @@ namespace BattlegroundsApp.Views {
 
                 // TODO: Hook into info messages so we can update properly
 
-                this.m_smh.Lobby.RefreshTeamAsync(this.LobbyTeamRefreshDone);
+                this.m_smh.Lobby.InvokeDelayed(500, x => x.RefreshTeamAsync(this.LobbyTeamRefreshDone));
 
                 //throw new NotImplementedException();
 

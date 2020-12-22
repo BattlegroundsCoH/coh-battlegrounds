@@ -108,11 +108,12 @@ namespace Battlegrounds.Online.Lobby {
             return removed.ToArray();
         }
 
-        public bool Join(ManagedLobbyMember member, bool silent = false) {
+        public bool Join(ManagedLobbyMember member, bool silent = true) {
             for (int i = 0; i < this.m_slots.Length; i++) {
                 if (this.m_slots[i].State == ManagedLobbyTeamSlotState.Open) {
                     this.m_slots[i].SetOccupant(member);
-                    if (silent) {
+                    if (!silent) {
+                        this.m_lobby.SetUserInformation(member.ID, "tid", (int)this.Team);
                         this.m_lobby.SetUserInformation(member.ID, "pos", i);
                     }
                     return true;
@@ -146,7 +147,7 @@ namespace Battlegrounds.Online.Lobby {
                 if (prev != -1) {
                     this.m_slots[position].SetOccupant(member);
                     this.m_slots[prev].SetOccupant(null);
-                    if (silent) {
+                    if (!silent) {
                         this.m_lobby.SetUserInformation(member.ID, "pos", position);
                     }
                 }
