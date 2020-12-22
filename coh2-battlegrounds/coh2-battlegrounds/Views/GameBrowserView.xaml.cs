@@ -10,6 +10,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Diagnostics;
 
 using Battlegrounds;
 using Battlegrounds.Online.Services;
@@ -17,7 +18,6 @@ using BattlegroundsApp.Dialogs.HostGame;
 using BattlegroundsApp.Dialogs.Service;
 using BattlegroundsApp.Utilities;
 using Battlegrounds.Online.Lobby;
-using System.Diagnostics;
 
 namespace BattlegroundsApp.Views {
 

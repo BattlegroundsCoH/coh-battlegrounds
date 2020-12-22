@@ -804,6 +804,9 @@ namespace Battlegrounds.Online.Lobby {
                 if (teamToJoin == ManagedLobbyTeamType.Axis) { // if axis team was joined, update faction
                     this.SetFaction(steamID, Faction.Wehrmacht.Name);
                 }
+                if (this.m_isHost) {
+                    this.SendMetaMessage($"{steamID}-join-success");
+                }
             } else {
                 this.m_teams[ManagedLobbyTeamType.Spectator].Join(newPlayer, !this.m_isHost);
             }

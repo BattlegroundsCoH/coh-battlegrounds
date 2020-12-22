@@ -5,6 +5,7 @@ using System.IO;
 
 using Battlegrounds.Game.Gameplay;
 using Battlegrounds.Json;
+using System;
 
 namespace Battlegrounds.Game.Database {
 
@@ -84,7 +85,23 @@ namespace Battlegrounds.Game.Database {
             this.Gamemodes = new List<Wincondition>();
         }
 
+        /// <summary>
+        /// New <see cref="Scenario"/> instance with data from either an infor or options file.
+        /// </summary>
+        /// <param name="infofile">The path to the info file.</param>
+        /// <param name="optionsfile">The path to the options file</param>
+        /// <exception cref="ArgumentNullException"/>
         public Scenario(string infofile, string optionsfile) {
+
+            // Make sure infofile is not null
+            if (infofile is null) {
+                throw new ArgumentNullException(nameof(infofile), "Info filepath cannot be null");
+            }
+
+            // Make sure optionsfile is not null
+            if (optionsfile is null) {
+                throw new ArgumentNullException(nameof(optionsfile), "Options filepath cannot be null");
+            }
 
             this.RelativeFilename = Path.GetFileNameWithoutExtension(infofile);
             this.Gamemodes = new List<Wincondition>();

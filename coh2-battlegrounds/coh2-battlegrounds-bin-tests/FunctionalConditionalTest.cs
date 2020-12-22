@@ -35,6 +35,26 @@ namespace coh2_battlegrounds_bin_tests {
             Assert.IsTrue(b);
         }
 
+        [TestMethod]
+        public void ChainTest1() {
+            string s = "Soviet"
+                .IfTrue(x => x.CompareTo("German") == 0)
+                .ElseIf("American", x => x.CompareTo("German") == 0)
+                .ElseIf("German", x => x.CompareTo("German") == 0) // Expected as returning subject
+                .Else(x => x);
+            Assert.AreEqual("German", s);
+        }
+
+        [TestMethod]
+        public void ChainTest2() {
+            string s = "Soviet"
+                .IfTrue(x => x.CompareTo("German") == 0)
+                .ElseIf("American", x => x.CompareTo("American") == 0) // Expected as returning subject
+                .ElseIf("German", x => x.CompareTo("German") == 0)
+                .Else(x => x);
+            Assert.AreEqual("American", s);
+        }
+
     }
 
 }

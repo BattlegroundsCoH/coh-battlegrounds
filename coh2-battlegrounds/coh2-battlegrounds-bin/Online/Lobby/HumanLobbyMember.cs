@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Battlegrounds.Online.Lobby {
+﻿namespace Battlegrounds.Online.Lobby {
 
     public sealed class HumanLobbyMember : ManagedLobbyMember {
 
@@ -30,9 +28,7 @@ namespace Battlegrounds.Online.Lobby {
             this.m_faction = "soviet";
         }
 
-        public override void UpdateFaction(string faction) {
-            this.m_faction = faction;
-        }
+        public override void UpdateFaction(string faction) => this.m_faction = faction;
 
         public override void UpdateCompany(string name, double strength) {
             this.m_company = name;
@@ -46,6 +42,8 @@ namespace Battlegrounds.Online.Lobby {
                 return false;
             }
         }
+
+        public override string ToString() => $"{this.Name}#{this.ID} [{this.Faction}][{this.CompanyName}${this.CompanyStrength:0000.00}]";
 
     }
 
