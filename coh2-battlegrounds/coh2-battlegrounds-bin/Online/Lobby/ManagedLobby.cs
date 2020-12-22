@@ -531,7 +531,7 @@ namespace Battlegrounds.Online.Lobby {
             void OnMessage(Message message) {
                 Trace.WriteLine(message, "ManagedLobby");
                 if (message.Descriptor == MessageType.LOBBY_GETPLAYERID) {
-                    ulong.TryParse(message.Argument1, out id);
+                    _ = ulong.TryParse(message.Argument1, out id);
                 }
                 alldone = true;
             }
@@ -713,6 +713,9 @@ namespace Battlegrounds.Online.Lobby {
                     this.GetTeam(team).TrySetMemberPosition(ai, tid);
 
                 }
+
+                // Add in some artificial delay (Should then make it easier for server/client communication).
+                await Task.Delay(150);
 
             }
 
@@ -1112,12 +1115,12 @@ namespace Battlegrounds.Online.Lobby {
 
             // Make sure we have a valid hub instance.
             if (hub == null) {
-                throw new ArgumentNullException("The lobby hub instance was null!");
+                throw new ArgumentNullException(nameof(hub), "The lobby hub instance was null!");
             }
 
             // Make sure the GUID is valid.
             if (lobbyGUID.Length != 36) {
-                throw new ArgumentOutOfRangeException("The GUID was not of length 36 and is therefore not a valid GUID.");
+                throw new ArgumentOutOfRangeException(nameof(lobbyGUID), "The GUID was not of length 36 and is therefore not a valid GUID.");
             }
 
             // Callback for establishing connection

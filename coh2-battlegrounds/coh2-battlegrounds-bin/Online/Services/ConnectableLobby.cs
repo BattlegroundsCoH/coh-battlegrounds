@@ -65,25 +65,32 @@ namespace Battlegrounds.Online.Services {
                 Message message = new Message(MessageType.LOBBY_INFO, this.lobby_guid);
                 MessageSender.SendMessage(AddressBook.GetLobbyServer(), message, (a, msg) => {
                     Trace.WriteLine(msg, "ConnectableLobby");
-                    string work = msg.Argument1.Replace("\x07", "x07");
-                    var mapRegMatch = Regex.Match(work, @"m:(?<map>(\w|_|-|<|>|x07)*)");
+                    var mapRegMatch = Regex.Match(msg.Argument1, @"\(m:(?<map>(\w|_|-|<|>|x07)*)\)");
                     if (mapRegMatch.Success) {
-                        this.m_lobbyMap = mapRegMatch.Groups["map"].Value.Replace("x07", "\x07");
+                        this.m_lobbyMap = mapRegMatch.Groups["map"].Value;
+                        Trace.WriteLine($"{this.lobby_guid}-map: {this.m_lobbyMap}", "ConnectableLobby");
+                    } else {
+                        Trace.WriteLine($"{this.lobby_guid}-map: Failed to read map", "ConnectableLobby");
                     }
-                    var matches = Regex.Matches(work, @"\(s:(?<s>\d+);n:""(?<n>(\s|\S)+)"";i:(?<i>\d+);t:(?<t>-?\d+);f:(?<f>\w*);c:""(?<c>(\s|\S)*)""\)");
+                    var matches = Regex.Matches(msg.Argument1, @"\(s:(?<s>\d+);n:""(?<n>(\s|\S)+)"";i:(?<i>\d+);t:(?<t>-?\d+);f:(?<f>\w*);c:""(?<c>(\s|\S)*)""\)");
                     if (matches.Count > 0) {
                         for (int i = 0; i < matches.Count; i++) {
                             if (!ulong.TryParse(matches[i].Groups["s"].Value, out ulong sID)) {
+                                Trace.WriteLine($"{this.lobby_guid}: Failed to read steam ID ({matches[i].Groups["s"].Value})", "ConnectableLobby");
                                 break;
                             }
                             if (!int.TryParse(matches[i].Groups["i"].Value, out int pID)) {
+                                Trace.WriteLine($"{this.lobby_guid}: Failed to read lobby ID ({matches[i].Groups["i"].Value})", "ConnectableLobby");
                                 break;
                             }
                             if (!int.TryParse(matches[i].Groups["t"].Value, out int tID)) {
+                                Trace.WriteLine($"{this.lobby_guid}: Failed to read team ID ({matches[i].Groups["t"].Value})", "ConnectableLobby");
                                 break;
-                            } // TODO: Save company name
+                            }
                             this.lobby_players.Add(new ConnectableLobbyPlayer(pID, sID, matches[i].Groups["n"].Value, matches[i].Groups["f"].Value, matches[i].Groups["c"].Value, tID));
                         }
+                    } else {
+                        Trace.WriteLine($"{this.lobby_guid}: Failed to read players", "ConnectableLobby");
                     }
                 });
             } catch { /* do something here? */ }

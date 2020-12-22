@@ -6,23 +6,31 @@ namespace Battlegrounds.Functional {
     /// Functional-styled implmentation of a conditional statement.
     /// </summary>
     public static class FunctionalConditional {
-    
+
         /// <summary>
-        /// 
+        /// Functional helper class telling whether som initial condition is <see langword="true"/> for a subject of type <typeparamref name="T"/>.
         /// </summary>
         /// <typeparam name="T"></typeparam>
         public class IsTrue<T> {
+            
             private T __subj;
             private readonly bool _yes; // non-mutable and based on initial condition value
+
+            /// <summary>
+            /// Create a new instance of the <see cref="IsTrue{T}"/> helper class.
+            /// </summary>
+            /// <param name="y">The given initial (base) condition.</param>
+            /// <param name="subj">The subject element of the condition.</param>
             public IsTrue(bool y, T subj) {
                 this.__subj = subj;
                 this._yes = y;
             }
+
             /// <summary>
-            /// 
+            /// Invoke an instance of <see cref="Action{T}"/> taking the subject as argument if the base condition is <see langword="true"/>.
             /// </summary>
-            /// <param name="then"></param>
-            /// <returns></returns>
+            /// <param name="then">The action object to invoke.</param>
+            /// <returns>The calling <see cref="IsTrue{T}"/> instance.</returns>
             public IsTrue<T> Then(Action<T> then) {
                 if (_yes) {
                     then.Invoke(this.__subj);
@@ -30,6 +38,11 @@ namespace Battlegrounds.Functional {
                 return this;
             }
 
+            /// <summary>
+            /// Invoke an instance of <see cref="Func{T, TResult}"/> if the base condition is <see langword="true"/>.
+            /// </summary>
+            /// <param name="then">The function object to invoke.</param>
+            /// <returns>The result of the <paramref name="then"/> parameter if base condition is <see langword="true"/>. Otherwise the subject of the calling instance is returned.</returns>
             public T Then(Func<T, T> then) {
                 if (_yes) {
                     return then.Invoke(this.__subj);
@@ -39,22 +52,25 @@ namespace Battlegrounds.Functional {
             }
 
             /// <summary>
-            /// 
+            /// Invoke an instance of <see cref="Action{T}"/> if the base condition is <see langword="true"/>.
             /// </summary>
-            /// <param name="then"></param>
-            /// <returns></returns>
+            /// <param name="then">The action object to invoke.</param>
+            /// <returns>The calling <see cref="IsTrue{T}"/> instance.</returns>
             public IsTrue<T> Then(Action then) {
                 if (_yes) {
                     then.Invoke();
                 }
                 return this;
             }
-            
+
             /// <summary>
-            /// 
+            /// Invoke the <see cref="Predicate{T}"/> function if the base condition is <see langword="false"/>.
             /// </summary>
-            /// <param name="condition"></param>
-            /// <returns></returns>
+            /// <param name="condition">The <see cref="Predicate{T}"/> condition to check.</param>
+            /// <returns>
+            /// If base condition is <see langword="true"/>, a negated instance of the calling instance is returned. 
+            /// Otherwise a new <see cref="IsTrue{T}"/> instance is returned based of the <see cref="Predicate{T}"/> result.
+            /// </returns>
             public IsTrue<T> ElseIf(Predicate<T> condition) {
                 if (!_yes) {
                     return this.__subj.IfTrue(condition);
@@ -64,9 +80,9 @@ namespace Battlegrounds.Functional {
             }
 
             /// <summary>
-            /// 
+            /// Invoke a <see cref="Action{T}"/> instance, taking the subject as argument, if the base condition is <see langword="false"/>.
             /// </summary>
-            /// <param name="then"></param>
+            /// <param name="then">The <see cref="Action{T}"/> to invoke.</param>
             public void Else(Action<T> then) {
                 if (!_yes) {
                     then.Invoke(this.__subj);
@@ -74,67 +90,97 @@ namespace Battlegrounds.Functional {
             }
 
             /// <summary>
-            /// 
+            /// Invoke a <see cref="Action{T}"/> instance, if the base condition is <see langword="false"/>.
             /// </summary>
-            /// <param name="then"></param>
+            /// <param name="then">The <see cref="Action{T}"/> to invoke.</param>
             public void Else(Action then) {
                 if (!_yes) {
                     then.Invoke();
                 }
             }
 
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="o"></param>
-        /// <param name="condition"></param>
-        /// <returns></returns>
-        public static IsTrue<T> IfTrue<T>(this T o, Predicate<T> condition) {
-            if (condition(o)) {
-                return new IsTrue<T>(true, o);
-            } else {
-                return new IsTrue<T>(false, o);
+            /// <summary>
+            /// Invoke a <see cref="Func{T, TResult}"/> instance, if the base condition is <see langword="false"/>.
+            /// </summary>
+            /// <param name="then">The <see cref="Func{T, TResult}"/> to invoke.</param>
+            /// <returns>The result of the <paramref name="then"/> parameter if base condition is <see langword="false"/>. Otherwise the subject of the calling instance is returned.</returns>
+            public T Else(Func<T, T> then) {
+                if (!_yes) {
+                    return then.Invoke(this.__subj);
+                } else {
+                    return this.__subj;
+                }
             }
+
+            /// <summary>
+            /// Negate the base condition of the instance.
+            /// </summary>
+            /// <returns>A negated instance of the <see cref="IsTrue{T}"/> instance.</returns>
+            public IsTrue<T> Negate() => new IsTrue<T>(!this._yes, this.__subj);
+
+            /// <summary>
+            /// Retrieve the underlying base condition value.
+            /// </summary>
+            /// <returns>The base condition of the <see cref="IsTrue{T}"/> instance.</returns>
+            public bool ToBool() => this._yes;
+
+            /// <summary>
+            /// Retrieve the subject associated with the <see cref="IsTrue{T}"/> instance.
+            /// </summary>
+            /// <returns>The subject of the <see cref="IsTrue{T}"/> instance.</returns>
+            public T ToSubject() => this.__subj;
+
+            /// <summary>
+            /// Negate the base condition value of the given <see cref="IsTrue{T}"/> instance.
+            /// </summary>
+            /// <param name="isTrue">The <see cref="IsTrue{T}"/> instance to negate base condition value of.</param>
+            /// <returns>The instance of the negated <see cref="IsTrue{T}"/>.</returns>
+            public static IsTrue<T> operator !(IsTrue<T> isTrue) => isTrue.Negate();
+
+            public static explicit operator bool(IsTrue<T> isTrue) => isTrue._yes;
+
+            public static explicit operator T(IsTrue<T> isTrue) => isTrue.__subj; // This will conflict if T is bool
+
         }
 
         /// <summary>
-        /// 
+        /// Check if a given condition on <typeparamref name="T"/> is <see langword="true"/>.
         /// </summary>
-        /// <param name="b"></param>
-        /// <returns></returns>
+        /// <typeparam name="T">The subject of the resulting <see cref="IsTrue{T}"/> instance.</typeparam>
+        /// <param name="o">The given object that is the subject of the initial condition.</param>
+        /// <param name="condition">The <see cref="Predicate{T}"/> to match.</param>
+        /// <returns>A new <see cref="IsTrue{T}"/> instance with base condition set as result of the <see cref="Predicate{T}"/>.</returns>
+        public static IsTrue<T> IfTrue<T>(this T o, Predicate<T> condition) => new IsTrue<T>(condition(o), o);
+
+        /// <summary>
+        /// Create a <see cref="IsTrue{T}"/> instance based on the <see cref="bool"/> value as initial condition.
+        /// </summary>
+        /// <param name="b">The initial value.</param>
+        /// <returns>A new <see cref="IsTrue{T}"/> instance based on <see cref="bool"/> value.</returns>
         public static IsTrue<bool> IfTrue(this bool b) => new IsTrue<bool>(b, b);
 
         /// <summary>
-        /// 
+        /// Invoke an action on a <see cref="bool"/> value, given it's <see langword="true"/>.
         /// </summary>
-        /// <param name="b"></param>
-        /// <param name="act"></param>
-        /// <returns></returns>
+        /// <param name="b">The <see cref="bool"/> value.</param>
+        /// <param name="act"><see cref="Action"/> to invoke, if <see cref="bool"/> value is <see langword="true"/>.</param>
+        /// <returns>A new <see cref="IsTrue{T}"/> instance based on <see cref="bool"/> value.</returns>
         public static IsTrue<bool> Then(this bool b, Action act) => new IsTrue<bool>(b, b).Then(act);
 
         /// <summary>
-        /// 
+        /// Check if a given condition on <typeparamref name="T"/> is <see langword="false"/>.
         /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="o"></param>
-        /// <param name="condition"></param>
-        /// <returns></returns>
-        public static IsTrue<T> IfFalse<T>(this T o, Predicate<T> condition) {
-            if (condition(o)) {
-                return new IsTrue<T>(false, o);
-            } else {
-                return new IsTrue<T>(true, o);
-            }
-        }
+        /// <typeparam name="T">The subject of the resulting <see cref="IsTrue{T}"/> instance.</typeparam>
+        /// <param name="o">The given object that is the subject of the initial condition.</param>
+        /// <param name="condition">The <see cref="Predicate{T}"/> to match.</param>
+        /// <returns>A new <see cref="IsTrue{T}"/> instance with base condition set as result of the <see cref="Predicate{T}"/>.</returns>
+        public static IsTrue<T> IfFalse<T>(this T o, Predicate<T> condition) => new IsTrue<T>(!condition(o), o);
 
         /// <summary>
-        /// 
+        /// Create a <see cref="IsTrue{T}"/> instance based on the <see cref="bool"/> value as initial condition.
         /// </summary>
-        /// <param name="b"></param>
-        /// <returns></returns>
+        /// <param name="b">The initial value.</param>
+        /// <returns>A new <see cref="IsTrue{T}"/> instance based on <see cref="bool"/> value.</returns>
         public static IsTrue<bool> IfFalse(this bool b) => new IsTrue<bool>(!b, !b);
 
     }
