@@ -72,6 +72,12 @@ namespace BattlegroundsApp.Views {
 
         }
 
+        private void OnKeyHandler(object sender, KeyEventArgs e) {
+            if (e.Key == Key.Enter) {
+                SendMessage_Click(null, null);
+            }
+        }
+
         private void ChangeTeam_Click(object sender, RoutedEventArgs e) {
 
            // TODO: 
