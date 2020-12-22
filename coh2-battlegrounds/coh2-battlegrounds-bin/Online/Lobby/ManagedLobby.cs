@@ -12,6 +12,7 @@ using Battlegrounds.Functional;
 using Battlegrounds.Game;
 using Battlegrounds.Game.Battlegrounds;
 using Battlegrounds.Game.Database;
+using Battlegrounds.Game.Gameplay;
 using Battlegrounds.Online.Debug;
 using Battlegrounds.Online.Services;
 using Battlegrounds.Steam;
@@ -90,8 +91,14 @@ namespace Battlegrounds.Online.Lobby {
         /// </summary>
         public bool IsConnectedToServer => this.m_underlyingConnection.IsConnected;
 
+        /// <summary>
+        /// 
+        /// </summary>
         public int PlayerCount => this.m_teams[ManagedLobbyTeamType.Allies].Count + this.m_teams[ManagedLobbyTeamType.Axis].Count;
 
+        /// <summary>
+        /// 
+        /// </summary>
         public string SelectedMap => this.m_lobbyMap;
 
         private List<ManagedLobbyTeam> Teams => this.m_teams.Values.ToList();
@@ -187,13 +194,13 @@ namespace Battlegrounds.Online.Lobby {
         }
 
         public void SetFaction(ulong ID, string faction) {
-            this.SetUserInformation(ID, "fac", faction);
             if (this.m_isHost || ID == this.m_self.ID) {
-                if (this.TryFindPlayerFromID(ID) is ManagedLobbyMember member) {
-                    member.UpdateFaction(faction);
-                }
+                this.SetUserInformation(ID, "fac", faction);
             } else {
                 throw new PermissionDeniedException(PermissionDeniedException.HOST_ONLY);
+            }
+            if (this.TryFindPlayerFromID(ID) is ManagedLobbyMember member) {
+                member.UpdateFaction(faction);
             }
         }
 
@@ -691,11 +698,11 @@ namespace Battlegrounds.Online.Lobby {
                     ManagedLobbyTeamType team = ManagedLobbyTeam.GetTeamTypeFromFaction(faction);
 
                     // Find index on team
-                    int tid = int.Parse(await this.GetUserInformation(playerIDs[i], "tid"));
+                    int pos = int.Parse(await this.GetUserInformation(playerIDs[i], "pos"));
 
                     // Add human
                     this.GetTeam(team).Join(human);
-                    this.GetTeam(team).TrySetMemberPosition(human, tid);
+                    this.GetTeam(team).TrySetMemberPosition(human, pos);
 
                 } else {
 
@@ -706,11 +713,11 @@ namespace Battlegrounds.Online.Lobby {
                     var team = ManagedLobbyTeam.GetTeamTypeFromFaction(ai.Faction);
 
                     // Find index on team
-                    int tid = int.Parse(await this.GetUserInformation(playerIDs[i], "tid"));
+                    int pos = int.Parse(await this.GetUserInformation(playerIDs[i], "pos"));
 
                     // Add AI
                     this.GetTeam(team).Join(ai);
-                    this.GetTeam(team).TrySetMemberPosition(ai, tid);
+                    this.GetTeam(team).TrySetMemberPosition(ai, pos);
 
                 }
 
@@ -782,6 +789,22 @@ namespace Battlegrounds.Online.Lobby {
                 }
             } else {
                 throw new PermissionDeniedException(PermissionDeniedException.HOST_ONLY);
+            }
+        }
+
+        private void OnPlayerJoined(ulong steamID, string name) {
+
+            HumanLobbyMember newPlayer = new HumanLobbyMember(this, steamID, name, string.Empty, 0.0);
+
+            bool alliesHasLessThanAxis = this.m_teams[ManagedLobbyTeamType.Allies].Count <= this.m_teams[ManagedLobbyTeamType.Axis].Count;
+            ManagedLobbyTeamType teamToJoin = alliesHasLessThanAxis ? ManagedLobbyTeamType.Allies : ManagedLobbyTeamType.Allies;
+
+            if (this.m_teams[teamToJoin].Join(newPlayer)) {
+                if (teamToJoin == ManagedLobbyTeamType.Axis) { // if axis team was joined, update faction
+                    this.SetFaction(steamID, Faction.Wehrmacht.Name);
+                }
+            } else {
+                this.m_teams[ManagedLobbyTeamType.Spectator].Join(newPlayer, !this.m_isHost);
             }
         }
 
@@ -934,15 +957,10 @@ namespace Battlegrounds.Online.Lobby {
                     break;
                 case MessageType.LOBBY_JOIN:
                     if (ulong.TryParse(incomingMessage.Argument2, out ulong newSteamID)) {
-                        HumanLobbyMember newPlayer = new HumanLobbyMember(this, newSteamID, incomingMessage.Argument1, string.Empty, 0.0);
-                        if (this.m_teams[ManagedLobbyTeamType.Allies].Count <= this.m_teams[ManagedLobbyTeamType.Axis].Count) {
-                            this.m_teams[ManagedLobbyTeamType.Allies].Join(newPlayer);
-                        } else {
-                            this.m_teams[ManagedLobbyTeamType.Axis].Join(newPlayer);
-                        }
+                        this.OnPlayerJoined(newSteamID, incomingMessage.Argument1);
                         this.OnPlayerEvent?.Invoke(ManagedLobbyPlayerEventType.Join, incomingMessage.Argument1, string.Empty);
                     } else {
-
+                        Trace.WriteLine($"Failed to connect player with invalid steam ID {incomingMessage.Argument2}", "ManagedLobby.cs");
                     }
                     break;
                 case MessageType.LOBBY_LEAVE:
@@ -1042,6 +1060,16 @@ namespace Battlegrounds.Online.Lobby {
         }
 
         public ManagedLobbyMember TryFindPlayerFromID(ulong id) => this.TryFindPlayerFromID(id, out _);
+
+        /// <summary>
+        /// Invoke a method on this instance after a specified delay.
+        /// </summary>
+        /// <param name="delay">The delay in milliseconds</param>
+        /// <param name="action">The action to call</param>
+        public async void InvokeDelayed(int delay, Action<ManagedLobby> action) {
+            await Task.Delay(delay);
+            action.Invoke(this);
+        }
 
         /// <summary>
         /// Host a new <see cref="ManagedLobby"/> on the central server.

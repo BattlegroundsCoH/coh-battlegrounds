@@ -30,7 +30,9 @@ namespace Battlegrounds.Online.Lobby {
             this.m_faction = "soviet";
         }
 
-        public override void UpdateFaction(string faction) => this.m_faction = faction;
+        public override void UpdateFaction(string faction) {
+            this.m_faction = faction;
+        }
 
         public override void UpdateCompany(string name, double strength) {
             this.m_company = name;
