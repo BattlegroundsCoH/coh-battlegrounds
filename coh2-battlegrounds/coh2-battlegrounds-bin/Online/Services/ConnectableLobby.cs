@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text.RegularExpressions;
 
@@ -59,16 +60,14 @@ namespace Battlegrounds.Online.Services {
             this.m_lobbyMap = "<none>";
         }
 
-        public void Update() {
+        public void Update(Action<ConnectableLobby> updateFinished) {
             try {
                 this.lobby_players.Clear();
                 Message message = new Message(MessageType.LOBBY_INFO, this.lobby_guid);
                 MessageSender.SendMessage(AddressBook.GetLobbyServer(), message, (a, msg) => {
-                    Trace.WriteLine(msg, "ConnectableLobby");
                     var mapRegMatch = Regex.Match(msg.Argument1, @"\(m:(?<map>(\w|_|-|<|>|x07)*)\)");
                     if (mapRegMatch.Success) {
                         this.m_lobbyMap = mapRegMatch.Groups["map"].Value;
-                        Trace.WriteLine($"{this.lobby_guid}-map: {this.m_lobbyMap}", "ConnectableLobby");
                     } else {
                         Trace.WriteLine($"{this.lobby_guid}-map: Failed to read map", "ConnectableLobby");
                     }
@@ -92,6 +91,7 @@ namespace Battlegrounds.Online.Services {
                     } else {
                         Trace.WriteLine($"{this.lobby_guid}: Failed to read players", "ConnectableLobby");
                     }
+                    updateFinished?.Invoke(this);
                 });
             } catch { /* do something here? */ }
         }

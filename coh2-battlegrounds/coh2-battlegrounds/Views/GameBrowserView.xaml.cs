@@ -12,14 +12,15 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 
 using Battlegrounds;
-using Battlegrounds.Steam;
 using Battlegrounds.Online.Services;
 using BattlegroundsApp.Dialogs.HostGame;
 using BattlegroundsApp.Dialogs.Service;
 using BattlegroundsApp.Utilities;
 using Battlegrounds.Online.Lobby;
+using System.Diagnostics;
 
 namespace BattlegroundsApp.Views {
+
     /// <summary>
     /// Interaction logic for GameBrowserView.xaml
     /// </summary>
@@ -40,7 +41,7 @@ namespace BattlegroundsApp.Views {
             InitializeComponent();
 
             this.m_hub = new LobbyHub();
-            if (!this.m_hub.CanConnect()) {
+            if (!LobbyHub.CanConnect()) {
                 // TODO: Error report
             } else {
                 this.m_hub.User = BattlegroundsInstance.LocalSteamuser;
@@ -51,7 +52,8 @@ namespace BattlegroundsApp.Views {
 
             HostGameCommand = new RelayCommand(HostLobby);
 
-            GetLobbyList();
+            // Get lobby list
+            this.GetLobbyList();
 
         }
 
@@ -59,12 +61,14 @@ namespace BattlegroundsApp.Views {
 
         private void GetLobbyList() {
 
+            // Clear the current lobby list
             GameLobbyList.Items.Clear();
 
-            this.m_hub.GetConnectableLobbies(x => this.UpdateGUI(() => {
-                x.Update();
-                this.GameLobbyList.Items.Add(x);
-            }));
+            // Get connectable lobbies and add them
+            this.m_hub.GetConnectableLobbies(x => this.UpdateGUI(() => this.GameLobbyList.Items.Add(x)), true);
+
+            // Log refresh
+            Trace.WriteLine("Refreshing lobby list", "GameBrowserView");
 
         }
 
