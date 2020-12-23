@@ -78,9 +78,10 @@ namespace BattlegroundsApp.Views {
             }
         }
 
-        private void ChangeTeam_Click(object sender, RoutedEventArgs e) {
+        // DEV: Remove later
+        private void RefreshLobby_Click(object sender, RoutedEventArgs e) {
 
-           // TODO: 
+            this.m_smh.Lobby.InvokeDelayed(500, x => x.RefreshTeamAsync(this.LobbyTeamRefreshDone));
 
         }
 
