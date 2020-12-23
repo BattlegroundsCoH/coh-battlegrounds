@@ -58,10 +58,11 @@ namespace Battlegrounds.Online {
                                 Trace.WriteLine("Backbuffer contains content...");
                             }
                         }
-                    } catch { }
+                    } catch (ObjectDisposedException) { }
+                    catch (SocketException) { }
                 }
                 socket.BeginReceive(buffer, 0, 2048, 0, Received, null);
-            } catch { }
+            } catch (ObjectDisposedException) { } catch (SocketException) { }
         }
 
     }

@@ -18,64 +18,86 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Diagnostics;
+
 using BattlegroundsApp.Views;
-using System.Windows.Threading;
-using Battlegrounds.Game.Battlegrounds;
 
 namespace BattlegroundsApp {
 
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window {
-        
+    public partial class MainWindow : CoreAppWindow {
+
+        public const string GAMEBROWSERSTATE = "GAMEBROWSERVIEW";
+        public const string CAMPAIGNSTATE = "CAMPAIGNVIEW";
+        public const string COMPANYBUILDERSTATE = "COMPANYBUILDERVIEW";
+        public const string DASHBOARDSTATE = "DASHBOARDVIEW";
+        public const string NEWSSTATE = "NEWSVIEW";
+
+        private Dictionary<string, ViewState> m_constStates; // lookup table for all states that don't need initialization.
+
         public MainWindow() {
 
             // Initialize components etc...
             InitializeComponent();
 
+            // Create all the views that can be created at startup
+            this.m_constStates = new Dictionary<string, ViewState> {
+                [GAMEBROWSERSTATE] = new GameBrowserView(),
+                [CAMPAIGNSTATE] = new CampaignView(),
+                [COMPANYBUILDERSTATE] = new CompanyBuilderView(),
+                [DASHBOARDSTATE] = new DashboardView(),
+                [NEWSSTATE] = new NewsView(),
+            };
+
             // Starts with Dashboard page opened
-            DataContext = new DashboardView();
+            this.DataContext = this.m_constStates[DASHBOARDSTATE];
+
         }
 
         // Open Dashboard page
-        private void Dashboard_Click(object sender, RoutedEventArgs e) {
-            DataContext = new DashboardView();
-        }
+        private void Dashboard_Click(object sender, RoutedEventArgs e) => this.State = this.m_constStates[DASHBOARDSTATE];
 
         // Open News page
-        private void News_Click(object sender, RoutedEventArgs e) {
-            DataContext = new NewsView();
-        }
-    
+        private void News_Click(object sender, RoutedEventArgs e) => this.State = this.m_constStates[NEWSSTATE];
+
         // Open Division Builder page
-        private void CompanyBuilder_Click(object sender, RoutedEventArgs e) {
-            DataContext = new CompanyBuilderView();
-        }
+        private void CompanyBuilder_Click(object sender, RoutedEventArgs e) => this.State = this.m_constStates[COMPANYBUILDERSTATE];
 
         // Open Campaign page
-        private void Campaign_Click(object sender, RoutedEventArgs e) {
-            DataContext = new CampaignView();
-        }
+        private void Campaign_Click(object sender, RoutedEventArgs e) => this.State = this.m_constStates[CAMPAIGNSTATE];
 
         // Open Game Browser page
-        private void GameBrowser_Click(object sender, RoutedEventArgs e) {
-            DataContext = new GameBrowserView(this);
-        }
+        private void GameBrowser_Click(object sender, RoutedEventArgs e) => this.State = this.m_constStates[GAMEBROWSERSTATE];
 
         // Exit application
-        private void Exit_Click(object sender, RoutedEventArgs e) {
-            this.Close();
+        private void Exit_Click(object sender, RoutedEventArgs e) => this.Close();
+
+        // Hanlde view state change requests
+        public override bool StateChangeRequest(object request) {
+            if (request is ViewState state) {
+                this.State = state;
+            } else if (request is string view && this.m_constStates.ContainsKey(view)) {
+                this.State = this.m_constStates[view];
+            } else {
+                Trace.WriteLine($"Failed to change state to {request}", "MainWindow");
+                return false;
+            }
+            return true;
         }
 
-        // Helper method to update the view
-        public Dispatcher SetView(object view) {
-            this.Dispatcher.Invoke(() => {
-                this.DataContext = view;
-                this.InvalidateVisual();
-            });
-            return this.Dispatcher;
+        // Get the current state from identifier
+        public ViewState GetState(string stateIdentifier) {
+            if (this.m_constStates.TryGetValue(stateIdentifier, out ViewState state)) {
+                return state;
+            } else {
+                return null;
+            }
         }
+
+        // Get the request handler
+        public override StateChangeRequestHandler GetRequestHandler() => this.StateChangeRequest;
 
     }   
+
 }

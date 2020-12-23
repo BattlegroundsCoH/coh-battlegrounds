@@ -59,6 +59,7 @@ namespace Battlegrounds.Game.Database {
 
         private record WorkshopRecord(List<Scenario> Scenarios) : IJsonObject {
             public string ToJsonReference() => throw new NotImplementedException();
+            public WorkshopRecord() : this(new List<Scenario>()) { }
         }
 
         private static void HandleWorkshopFiles() {

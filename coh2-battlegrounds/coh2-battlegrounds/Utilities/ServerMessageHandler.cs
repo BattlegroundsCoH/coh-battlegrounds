@@ -16,9 +16,25 @@ namespace BattlegroundsApp {
 
         public ManagedLobby Lobby => this.m_lobbyInstance;
 
-        // only thing that semiworks in the lobby now is the chat; And that will also have to be moved to the VM right now it is in the View
-        public ServerMessageHandler(GameLobbyView lobbyObject) {
-            this.m_lobbyWindow = lobbyObject;
+        public event Action<string, string> MetaMessageReceived;
+
+        public event Action<string, ulong> OnPlayerJoined;
+
+        public ServerMessageHandler(GameLobbyView view, ManagedLobby lobby) {
+            
+            // Set lobby view
+            this.m_lobbyWindow = view;
+
+            // Set lobby instance
+            this.m_lobbyInstance = lobby;
+
+            // Hook callback methods
+            this.m_lobbyInstance.OnPlayerEvent += this.OnPlayerEvent;
+            this.m_lobbyInstance.OnLocalEvent += this.OnLocalEvent;
+            this.m_lobbyInstance.OnLocalDataRequested += this.OnLocalDataRequest;
+            this.m_lobbyInstance.OnDataRequest += this.OnDataRequest;
+            this.m_lobbyInstance.OnStartMatchReceived += this.StartMatchCommandReceived;
+
         }
 
         private void OnPlayerEvent(ManagedLobbyPlayerEventType type, string from, string message) {
@@ -26,6 +42,7 @@ namespace BattlegroundsApp {
             this.m_lobbyWindow.UpdateGUI(() => {
                 switch (type) {
                     case ManagedLobbyPlayerEventType.Join:
+                        this.OnPlayerJoined?.Invoke(from, ulong.Parse(message));
                         this.m_lobbyWindow.lobbyChat.Text += $"[Lobby] {from} has joined.\n";
                         break;
                     case ManagedLobbyPlayerEventType.Leave:
@@ -39,6 +56,7 @@ namespace BattlegroundsApp {
                         break;
                     case ManagedLobbyPlayerEventType.Meta:
                         string metaMessage = $"{from}: {message}";
+                        this.MetaMessageReceived?.Invoke(from, message);
                         Trace.WriteLine(metaMessage);
                         break;
                     default:
@@ -127,28 +145,6 @@ namespace BattlegroundsApp {
                         break;
                 }
             });
-        }
-
-        public void OnServerResponse(ManagedLobbyStatus status, ManagedLobby result) {
-            if (status.Success) {
-
-                // Assign instance
-                this.m_lobbyInstance = result;
-
-                // Hook callback methods
-                this.m_lobbyInstance.OnPlayerEvent += OnPlayerEvent;
-                this.m_lobbyInstance.OnLocalEvent += OnLocalEvent;
-                this.m_lobbyInstance.OnLocalDataRequested += OnLocalDataRequest;
-                this.m_lobbyInstance.OnDataRequest += OnDataRequest;
-                this.m_lobbyInstance.OnStartMatchReceived += StartMatchCommandReceived;
-
-                // Connect method
-                this.m_lobbyWindow.ServerConnectResponse(true);
-
-            } else {
-                Trace.WriteLine(status.Message);
-                this.m_lobbyWindow.ServerConnectResponse(false);
-            }
         }
 
         public void LeaveLobby() {

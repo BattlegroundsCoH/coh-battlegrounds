@@ -15,9 +15,12 @@ namespace BattlegroundsApp.Views {
     /// <summary>
     /// Interaction logic for DivisionBuilderView.xaml
     /// </summary>
-    public partial class CompanyBuilderView : UserControl {
+    public partial class CompanyBuilderView : ViewState {
         public CompanyBuilderView() {
             InitializeComponent();
         }
+
+        public override void StateOnFocus() => throw new NotImplementedException();
+        public override void StateOnLostFocus() => throw new NotImplementedException();
     }
 }

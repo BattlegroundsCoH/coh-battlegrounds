@@ -15,9 +15,12 @@ namespace BattlegroundsApp.Views {
     /// <summary>
     /// Interaction logic for CampaignView.xaml
     /// </summary>
-    public partial class CampaignView : UserControl {
+    public partial class CampaignView : ViewState {
         public CampaignView() {
             InitializeComponent();
         }
+
+        public override void StateOnFocus() => throw new NotImplementedException();
+        public override void StateOnLostFocus() => throw new NotImplementedException();
     }
 }

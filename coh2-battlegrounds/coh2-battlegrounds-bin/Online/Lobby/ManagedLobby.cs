@@ -963,7 +963,7 @@ namespace Battlegrounds.Online.Lobby {
                 case MessageType.LOBBY_JOIN:
                     if (ulong.TryParse(incomingMessage.Argument2, out ulong newSteamID)) {
                         this.OnPlayerJoined(newSteamID, incomingMessage.Argument1);
-                        this.OnPlayerEvent?.Invoke(ManagedLobbyPlayerEventType.Join, incomingMessage.Argument1, string.Empty);
+                        this.OnPlayerEvent?.Invoke(ManagedLobbyPlayerEventType.Join, incomingMessage.Argument1, incomingMessage.Argument2);
                     } else {
                         Trace.WriteLine($"Failed to connect player with invalid steam ID {incomingMessage.Argument2}", "ManagedLobby.cs");
                     }

@@ -25,7 +25,6 @@ using Battlegrounds.Online.Lobby;
 using BattlegroundsApp.LocalData;
 using BattlegroundsApp.Models;
 using BattlegroundsApp.Resources;
-using BattlegroundsApp.Utilities;
 using BattlegroundsApp.Views.ViewComponent;
 
 namespace BattlegroundsApp.Views {
@@ -33,29 +32,22 @@ namespace BattlegroundsApp.Views {
     /// <summary>
     /// Interaction logic for GameLobbyView.xaml
     /// </summary>
-    public partial class GameLobbyView : UserControl {
+    public partial class GameLobbyView : ViewState {
 
-        ServerMessageHandler m_smh;
-
-        private MainWindow m_hostWindow;
-        private Task m_lobbyUpdate;
+        private ServerMessageHandler m_smh;
         private LobbyTeamManagementModel m_teamManagement;
+        private Task m_lobbyUpdate;
 
-        public event Action<bool, GameLobbyView> OnServerAcceptanceResponse;
+        public GameLobbyView() {
 
-        public GameLobbyView(MainWindow hostWindow) {
-
-            this.m_hostWindow = hostWindow;
-            this.m_lobbyUpdate = new Task(this.UpdateLobby);
-
+            // Initialize component
             InitializeComponent();
 
+            // Setup team management
             this.m_teamManagement = new LobbyTeamManagementModel(this.TeamGridview);
             this.m_teamManagement.OnTeamEvent += this.OnTeamManagementCallbackHandler;
 
         }
-
-        public void SetSMH(ServerMessageHandler smh) => this.m_smh = smh;
 
         private void SendMessage_Click(object sender, RoutedEventArgs e) {
 
@@ -104,72 +96,20 @@ namespace BattlegroundsApp.Views {
 
             if (this.m_smh.Lobby != null) {
                 this.m_smh.LeaveLobby();
-                this.m_hostWindow.SetView(new GameBrowserView(m_hostWindow));
+                this.StateChangeRequest?.Invoke(MainWindow.GAMEBROWSERSTATE);
             }
 
         }
 
-        public void UpdateGUI(Action a) {
-            try {
-                this.Dispatcher.Invoke(a);
-            } catch (ObjectDisposedException) {
+        public void CreateMessageHandler(ManagedLobby result) => this.m_smh = new ServerMessageHandler(this, result);
 
-            } catch {
+        public void AddMetaMessageListener(Action<string, string> listener) => this.m_smh.MetaMessageReceived += listener;
 
-            }
-        }
+        public void RemoveMetaMessageListener(Action<string, string> listener) => this.m_smh.MetaMessageReceived -= listener;
 
-        public void ServerConnectResponse(bool connected) {
-            this.OnServerAcceptanceResponse?.Invoke(connected, this);
-            if (!connected) {
-                this.m_hostWindow.SetView(new GameBrowserView(this.m_hostWindow));
-                MessageBox.Show("An unexpected server error occured and it was not possible to join the lobby.", "Server Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                return;
-            } else {
-                this.UpdateGUI(this.CreateLobbyData);
-            }
-        }
+        public void AddJoinMessageListener(Action<string, ulong> listener) => this.m_smh.OnPlayerJoined += listener;
 
-        private void CreateLobbyData() {
-            if (this.m_smh.Lobby.IsHost) {
-
-                this.m_teamManagement.SetIsHost(true);
-
-                var scenarioSource = ScenarioList.GetList().OrderBy(x => x.ToString()).ToList();
-                Map.ItemsSource = scenarioSource;
-
-                int selectedScenario = scenarioSource.FindIndex(x => x.RelativeFilename.CompareTo(BattlegroundsInstance.LastPlayedMap) == 0);
-                Map.SelectedIndex = selectedScenario != -1 ? selectedScenario : 0;
-
-                var scen = Map.SelectedItem as Scenario;
-                this.m_smh.Lobby.SetMap(scen);
-                this.m_smh.Lobby.SetLobbyCapacity(scen.MaxPlayers);
-
-                this.UpdateAvailableGamemodes();
-
-            } else {
-
-                // lock everything
-                this.m_teamManagement.SetIsHost(false);
-                this.Map.IsEnabled = false;
-                this.Gamemode.IsEnabled = false;
-                this.GamemodeOption.IsEnabled = false;
-
-                // Fetch selected map
-                this.m_smh.Lobby.GetLobbyInformation("selected_map", this.UpdateSelectedMap);
-                this.m_smh.Lobby.GetLobbyInformation("selected_wc", this.UpdateSelectedGamemode);
-                this.m_smh.Lobby.GetLobbyInformation("selected_wcs", this.UpdateSelectedOption);
-
-                // TODO: Hook into info messages so we can update properly
-
-                this.m_smh.Lobby.InvokeDelayed(500, x => x.RefreshTeamAsync(this.LobbyTeamRefreshDone));
-
-                //throw new NotImplementedException();
-
-            }
-            this.UpdateLobbyVisuals();
-            this.m_lobbyUpdate.Start();
-        }
+        public void RemoveJoinMessageListener(Action<string, ulong> listener) => this.m_smh.OnPlayerJoined -= listener;
 
         private void UpdateSelectedMap(string arg1, string arg2) {
             this.Dispatcher.Invoke(() => {
@@ -401,6 +341,64 @@ namespace BattlegroundsApp.Views {
             this.UpdateLobbyVisuals();
 
             // Do more stuff?
+
+        }
+
+        public override void StateOnFocus() {
+
+            // Update lobby
+            this.m_lobbyUpdate = new Task(this.UpdateLobby);
+
+            // Create lobby data
+            this.SetupLobby();
+
+        }
+
+        private void SetupLobby() {
+            if (this.m_smh.Lobby.IsHost) {
+
+                this.m_teamManagement.SetIsHost(true);
+
+                var scenarioSource = ScenarioList.GetList().OrderBy(x => x.ToString()).ToList();
+                Map.ItemsSource = scenarioSource;
+
+                int selectedScenario = scenarioSource.FindIndex(x => x.RelativeFilename.CompareTo(BattlegroundsInstance.LastPlayedMap) == 0);
+                Map.SelectedIndex = selectedScenario != -1 ? selectedScenario : 0;
+
+                var scen = Map.SelectedItem as Scenario;
+                this.m_smh.Lobby.SetMap(scen);
+                this.m_smh.Lobby.SetLobbyCapacity(scen.MaxPlayers);
+
+                this.UpdateAvailableGamemodes();
+
+            } else {
+
+                // lock everything
+                this.m_teamManagement.SetIsHost(false);
+                this.Map.IsEnabled = false;
+                this.Gamemode.IsEnabled = false;
+                this.GamemodeOption.IsEnabled = false;
+
+                // Fetch selected map
+                this.m_smh.Lobby.GetLobbyInformation("selected_map", this.UpdateSelectedMap);
+                this.m_smh.Lobby.GetLobbyInformation("selected_wc", this.UpdateSelectedGamemode);
+                this.m_smh.Lobby.GetLobbyInformation("selected_wcs", this.UpdateSelectedOption);
+
+                // TODO: Hook into info messages so we can update properly
+
+                this.m_smh.Lobby.InvokeDelayed(500, x => x.RefreshTeamAsync(this.LobbyTeamRefreshDone));
+
+                //throw new NotImplementedException();
+
+            }
+            this.UpdateLobbyVisuals();
+            this.m_lobbyUpdate.Start();
+        }
+
+        public override void StateOnLostFocus() {
+
+            // Stop lobby update
+            this.m_lobbyUpdate.Dispose();
 
         }
 
