@@ -66,6 +66,7 @@ namespace BattlegroundsApp.Views {
                     this.m_lobby.CreateMessageHandler(result);
                     this.m_lobby.AddMetaMessageListener(this.OnMetaMessage);
                     this.m_lobby.AddJoinMessageListener(this.OnPlayerJoin);
+                    this.m_lobby.EnableHostMode(false);
                     this.m_lobby.RefreshGameSettings();
 
                 });
