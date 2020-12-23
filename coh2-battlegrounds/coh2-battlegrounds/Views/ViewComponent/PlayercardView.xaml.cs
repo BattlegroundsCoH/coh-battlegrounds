@@ -25,29 +25,15 @@ namespace BattlegroundsApp.Views.ViewComponent {
         Locked,
     }
 
-    public struct PlayercardArmyItem {
-        public BitmapSource Icon { get; }
-        public string DisplayName { get; }
-        public string Name { get; }
-        public PlayercardArmyItem(BitmapSource ico, string dsp, string name) {
-            this.Icon = ico;
-            this.DisplayName = dsp;
-            this.Name = name;
-        }
+    public enum CompanyItemState {
+        None,
+        Company,
+        Generate,
     }
 
-    public struct PlayercardCompanyItem {
-        public enum CompanyItemState {
-            None,
-            Company,
-            Generate,
-        }
-        public CompanyItemState State { get; }
-        public string Name { get; }
-        public PlayercardCompanyItem(CompanyItemState state, string text) {
-            this.State = state;
-            this.Name = text;
-        }
+    public record PlayercardArmyItem(BitmapSource Icon, string DisplayName, string Name);
+
+    public record PlayercardCompanyItem(CompanyItemState State, string Name) {
         public override string ToString() => this.Name;
     }
 
@@ -117,27 +103,35 @@ namespace BattlegroundsApp.Views.ViewComponent {
 
         public void SetPlayerdata(ulong id, string name, string army, bool isClient, bool isAIPlayer = false, bool isHost = false) {
             this.m_steamID = id;
-            this.m_army = army;
             this.m_isAIPlayer = isAIPlayer;
             this.m_diff = AIDifficulty.Human;
             this.m_isHost = isHost;
             this.IsRegistered = !this.m_isAIPlayer;
+            this.SetPlayerFaction(army);
             if (!string.IsNullOrEmpty(name)) {
                 this.PlayerName.Content = name;
                 if (isClient || (isAIPlayer && isHost)) {
-                    IsSelfPanel.Visibility = Visibility.Visible;
-                    IsNotSelfPanel.Visibility = Visibility.Collapsed;
-                    this.PlayerArmySelection.SelectedIndex = this.m_isAllied ? 
-                        alliedArmyItems.IndexOf(x => x.Name.CompareTo(army) == 0) : 
-                        axisArmyItems.IndexOf(x => x.Name.CompareTo(army) == 0);
+                    this.IsSelfPanel.Visibility = Visibility.Visible;
+                    this.IsNotSelfPanel.Visibility = Visibility.Collapsed;
+                    this.PlayerArmySelection.IsEnabled = true;
                     this.LoadSelfPlayerCompanies(army, isAIPlayer);
                 } else {
-                    IsNotSelfPanel.Visibility = Visibility.Visible;
-                    IsSelfPanel.Visibility = Visibility.Collapsed;
+                    this.IsNotSelfPanel.Visibility = Visibility.Visible;
+                    this.IsSelfPanel.Visibility = Visibility.Collapsed;
+                    this.PlayerArmySelection.IsEnabled = false;
                 }
                 this.SetCardState(PlayercardViewstate.Occupied);
                 this.PlayerKickButton.Visibility = (isHost && id != BattlegroundsInstance.LocalSteamuser.ID) ? Visibility.Visible : Visibility.Collapsed;
             }
+        }
+
+        public void SetPlayerFaction(string army) {
+            this.m_army = army;
+            this.PlayerArmySelection.EnableEvents = false;
+            this.PlayerArmySelection.SelectedIndex = this.m_isAllied ?
+                alliedArmyItems.IndexOf(x => x.Name.CompareTo(army) == 0) :
+                axisArmyItems.IndexOf(x => x.Name.CompareTo(army) == 0);
+            this.PlayerArmySelection.EnableEvents = true;
         }
 
         public void SetAIData(AIDifficulty difficulty, string army, bool isHost = true) {
@@ -168,15 +162,15 @@ namespace BattlegroundsApp.Views.ViewComponent {
         private void LoadSelfPlayerCompanies(string army, bool allowAutogen) {
 
             var availableCompanies = PlayerCompanies.FindAll(x => x.Army.Name.CompareTo(army) == 0)
-                .Select(x => new PlayercardCompanyItem(PlayercardCompanyItem.CompanyItemState.Company, x.Name))
+                .Select(x => new PlayercardCompanyItem(CompanyItemState.Company, x.Name))
                 .ToList();
 
             if (allowAutogen) {
-                availableCompanies.Add(new PlayercardCompanyItem(PlayercardCompanyItem.CompanyItemState.Generate, "Generate Randomly"));
+                availableCompanies.Add(new PlayercardCompanyItem(CompanyItemState.Generate, "Generate Randomly"));
             }
 
             if (availableCompanies.Count == 0) {
-                this.SelfCompanySelector.ItemsSource = new List<PlayercardCompanyItem>() { new PlayercardCompanyItem(PlayercardCompanyItem.CompanyItemState.None, "No Company Available") };
+                this.SelfCompanySelector.ItemsSource = new List<PlayercardCompanyItem>() { new PlayercardCompanyItem(CompanyItemState.None, "No Company Available") };
             } else {
                 this.SelfCompanySelector.ItemsSource = availableCompanies;
             }

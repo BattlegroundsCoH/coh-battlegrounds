@@ -11,6 +11,7 @@ using Battlegrounds.Game;
 using Battlegrounds.Game.Battlegrounds;
 using Battlegrounds.Game.Gameplay;
 using Battlegrounds.Online.Lobby;
+
 using BattlegroundsApp.LocalData;
 using BattlegroundsApp.Views.ViewComponent;
 
@@ -30,41 +31,52 @@ namespace BattlegroundsApp.Models {
         public int TotalPlayerCount => this.m_teamSetup[ManagedLobbyTeamType.Axis].Count(x => x.IsOccupied) + this.m_teamSetup[ManagedLobbyTeamType.Allies].Count(x => x.IsOccupied);
 
         public LobbyTeamManagementModel(Grid teamGrid) {
+            
             this.m_teamGrid = teamGrid;
             this.m_teamSetup = new Dictionary<ManagedLobbyTeamType, List<PlayercardView>>() {
                 [ManagedLobbyTeamType.Allies] = new List<PlayercardView>(),
                 [ManagedLobbyTeamType.Axis] = new List<PlayercardView>(),
             };
+            
             for (int i = 0; i < MAX_TEAM; i++) {
                 this.CreatePlayercard(i, ManagedLobbyTeamType.Allies);
                 this.CreatePlayercard(i, ManagedLobbyTeamType.Axis);
             }
+            
             this.SetMaxPlayers(2);
             this.m_isHost = false;
+
         }
 
         private void CreatePlayercard(int row, ManagedLobbyTeamType type) {
+            
             Contract.Requires(row > 0);
             Contract.Requires(row <= MAX_TEAM);
             Contract.Requires(type == ManagedLobbyTeamType.Allies || type == ManagedLobbyTeamType.Axis);
+
             PlayercardView view = new PlayercardView();
             view.SetValue(Grid.ColumnProperty, type == ManagedLobbyTeamType.Allies ? 0 : 1);
             view.SetValue(Grid.RowProperty, row);
             view.OnPlayercardEvent += this.OnCardActionHandler;
             view.SetAvailableArmies(type == ManagedLobbyTeamType.Allies);
+            
             this.m_teamSetup[type].Add(view);
             this.m_teamGrid.Children.Add(view);
+        
         }
 
         public void SetMaxPlayers(int count) {
+            
             Contract.Requires(count > 0);
             Contract.Requires(count <= 8);
             Contract.Requires(count % 2 == 0);
+
             this.m_maxPlayerCount = count;
             for (int i = 0; i < MAX_TEAM; i++) {
                 this.m_teamSetup[ManagedLobbyTeamType.Allies][i].Visibility = i < (count / 2) ? Visibility.Visible : Visibility.Collapsed;
                 this.m_teamSetup[ManagedLobbyTeamType.Axis][i].Visibility = i < (count / 2) ? Visibility.Visible : Visibility.Collapsed;
             }
+
         }
 
         public void UpdateTeamview(ManagedLobby lobby, bool isHost) {
@@ -117,9 +129,9 @@ namespace BattlegroundsApp.Models {
 
         private Company GetAICompany(PlayercardView view) {
             Faction faction = Faction.FromName(view.Playerarmy);
-            if (view.PlayerSelectedCompanyItem.State == PlayercardCompanyItem.CompanyItemState.Company) {
+            if (view.PlayerSelectedCompanyItem.State == CompanyItemState.Company) {
                 return PlayerCompanies.FromNameAndFaction(view.Playercompany, faction);
-            } else if (view.PlayerSelectedCompanyItem.State == PlayercardCompanyItem.CompanyItemState.Generate) {
+            } else if (view.PlayerSelectedCompanyItem.State == CompanyItemState.Generate) {
                 return CompanyGenerator.Generate(faction, BattlegroundsInstance.BattleGroundsTuningMod.Guid.ToString().Replace("-", ""), false, true, true);
             } else {
                 throw new Exception();

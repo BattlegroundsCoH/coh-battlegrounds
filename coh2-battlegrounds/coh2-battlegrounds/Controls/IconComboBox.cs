@@ -48,6 +48,8 @@ namespace BattlegroundsApp.Controls {
 
         public int SelectedIndex { get => this.m_selectedIndex; set => this.SetSelectedIndex(value); }
 
+        public bool EnableEvents { get; set; }
+
         public IconComboBoxItem SelectedItem => this.m_items[this.m_selectedIndex];
 
         public event Action SelectionChanged;
@@ -65,6 +67,7 @@ namespace BattlegroundsApp.Controls {
             this.LostMouseCapture += this.OnLostMouseCapture;
             this.m_items = new List<IconComboBoxItem>();
             this.Content = this.m_imageControl;
+            this.EnableEvents = true;
         }
 
         private void OnLostMouseCapture(object sender, MouseEventArgs e) => this.m_popup.IsOpen = false;
@@ -98,7 +101,9 @@ namespace BattlegroundsApp.Controls {
                 this.SetSelectedIndex(index);
             }
             this.m_popup.IsOpen = false;
-            this.SelectionChanged?.Invoke();
+            if (this.EnableEvents) {
+                this.SelectionChanged?.Invoke();
+            }
         }
 
     }

@@ -284,7 +284,7 @@ namespace BattlegroundsApp.Views {
                     if (card.Playercompany.CompareTo(this.m_smh.Lobby.TryFindPlayerFromID(card.Playerid)?.CompanyName) != 0) {
                         if (card.IsAI || card.Playerid == this.m_smh.Lobby.Self.ID) {
                             PlayercardCompanyItem companyItem = (PlayercardCompanyItem)arg;
-                            if (companyItem.State == PlayercardCompanyItem.CompanyItemState.Company && card.Playerid == this.m_smh.Lobby.Self.ID) {
+                            if (companyItem.State == CompanyItemState.Company && card.Playerid == this.m_smh.Lobby.Self.ID) {
                                 Company company = PlayerCompanies.FromNameAndFaction(companyItem.Name, Faction.FromName(card.Playerarmy));
                                 if (company is not null) {
                                     this.m_smh.Lobby.SetCompany(company);
@@ -292,7 +292,7 @@ namespace BattlegroundsApp.Views {
                                 } else {
                                     throw new NotImplementedException();
                                 }
-                            } else if (companyItem.State == PlayercardCompanyItem.CompanyItemState.Generate && card.IsAI) {
+                            } else if (companyItem.State == CompanyItemState.Generate && card.IsAI) {
                                 this.m_smh.Lobby.SetCompany(card.Playerid, "AUGEN", -1.0);
                                 Trace.WriteLine($"Changing company [{card.Playerid}][{card.Difficulty}][{card.Playerarmy}][Auto-generated]", "GameLobbyView");
                             } else {
@@ -345,7 +345,7 @@ namespace BattlegroundsApp.Views {
         private void UpdateStartMatchButton() => StartGameBttn.IsEnabled = this.IsLegalMatch();
 
         private bool IsLegalMatch() 
-            => this.m_teamManagement.GetTeamSize(ManagedLobbyTeamType.Allies) > 0 && this.m_teamManagement.GetTeamSize(ManagedLobbyTeamType.Axis) > 0;
+            => this.m_smh.Lobby.IsHost && this.m_teamManagement.GetTeamSize(ManagedLobbyTeamType.Allies) > 0 && this.m_teamManagement.GetTeamSize(ManagedLobbyTeamType.Axis) > 0;
 
         public Company GetLocalCompany() {
             var card = this.m_teamManagement.GetLocalPlayercard();
