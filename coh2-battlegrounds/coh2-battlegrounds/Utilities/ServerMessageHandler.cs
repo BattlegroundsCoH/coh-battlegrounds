@@ -6,8 +6,20 @@ using System.IO;
 using System.Diagnostics;
 
 using BattlegroundsApp.Views;
+using Battlegrounds.Game.Database;
+using Battlegrounds.Game.Gameplay;
 
 namespace BattlegroundsApp {
+
+    public delegate void MetaMessageListener(string from, string meta);
+
+    public delegate void PlayerJoinedListener(string name, ulong id);
+
+    public delegate void MapChangedListener(string scenario);
+
+    public delegate void GamemodechangedListener(string gamemode, string setting);
+
+    public delegate void KickedListener(string message);
 
     public class ServerMessageHandler {
 
@@ -16,9 +28,15 @@ namespace BattlegroundsApp {
 
         public ManagedLobby Lobby => this.m_lobbyInstance;
 
-        public event Action<string, string> MetaMessageReceived;
+        public event MetaMessageListener MetaMessageReceived;
 
-        public event Action<string, ulong> OnPlayerJoined;
+        public event PlayerJoinedListener OnPlayerJoined;
+
+        public event KickedListener OnPlayerKicked;
+
+        public event MapChangedListener OnMapChanged;
+
+        public event GamemodechangedListener OnGamemodeChanged;
 
         public ServerMessageHandler(GameLobbyView view, ManagedLobby lobby) {
             
@@ -34,11 +52,31 @@ namespace BattlegroundsApp {
             this.m_lobbyInstance.OnLocalDataRequested += this.OnLocalDataRequest;
             this.m_lobbyInstance.OnDataRequest += this.OnDataRequest;
             this.m_lobbyInstance.OnStartMatchReceived += this.StartMatchCommandReceived;
+            this.m_lobbyInstance.OnLobbyInfoChanged += this.OnLobbyInfoChanged;
 
         }
 
+        private void OnLobbyInfoChanged(string info, string value) {
+            this.m_lobbyWindow.UpdateGUI(() => {
+                switch (info) {
+                    case "selected_map":
+                        this.OnMapChanged?.Invoke(value);
+                        break;
+                    case "selected_wc":
+                        this.OnGamemodeChanged?.Invoke(value, this.m_lobbyInstance.SelectedGamemodeOption);
+                        break;
+                    case "selected_wcs":
+                        this.OnGamemodeChanged?.Invoke(this.m_lobbyInstance.SelectedGamemode, value);
+                        break;
+                    default:
+                        Trace.WriteLine($"Unknown lobby info change [{info}:{value}]", "ServerMessageHandler");
+                        break;
+                }
+            });
+        }
+
         private void OnPlayerEvent(ManagedLobbyPlayerEventType type, string from, string message) {
-            Trace.WriteLine($"[ManagedLobbyPlayerEventType.{type}] {from}: \"{message}\"");
+            Trace.WriteLine($"[ManagedLobbyPlayerEventType.{type}] {from}: \"{message}\"", "ServerMessageHandler");
             this.m_lobbyWindow.UpdateGUI(() => {
                 switch (type) {
                     case ManagedLobbyPlayerEventType.Join:
@@ -57,10 +95,10 @@ namespace BattlegroundsApp {
                     case ManagedLobbyPlayerEventType.Meta:
                         string metaMessage = $"{from}: {message}";
                         this.MetaMessageReceived?.Invoke(from, message);
-                        Trace.WriteLine(metaMessage);
+                        Trace.WriteLine(metaMessage, "ServerMessageHandler");
                         break;
                     default:
-                        Trace.WriteLine($"Unhandled event type \"ManagedLobbyPlayerEventType.{type}\"");
+                        Trace.WriteLine($"Unhandled event type \"ManagedLobbyPlayerEventType.{type}\"", "ServerMessageHandler");
                         break;
                 }
             });
@@ -90,9 +128,9 @@ namespace BattlegroundsApp {
 
             // Statrt the game
             if (!CoH2Launcher.Launch()) {
-                Trace.WriteLine("Failed to launch Company of Heroes 2...");
+                Trace.WriteLine("Failed to launch Company of Heroes 2...", "ServerMessageHandler");
             } else {
-                Trace.WriteLine("Launched Company of Heroes 2");
+                Trace.WriteLine("Launched Company of Heroes 2", "ServerMessageHandler");
             }
 
         }
@@ -119,12 +157,12 @@ namespace BattlegroundsApp {
                     this.m_lobbyWindow.lobbyChat.Text += "[Lobby] Received wincondition file from host.\n";
 
                     // Write a log message
-                    Trace.WriteLine($"Received and saved .sga to \"{sgapath}\"");
+                    Trace.WriteLine($"Received and saved .sga to \"{sgapath}\"", "ServerMessageHandler");
 
                 });
 
             } else {
-                Trace.WriteLine(sender + ":" + filename + ":" + received);
+                Trace.WriteLine(sender + ":" + filename + ":" + received, "ServerMessageHandler");
                 // TODO: Handle other cases
             }
 
@@ -135,13 +173,14 @@ namespace BattlegroundsApp {
             this.m_lobbyWindow.UpdateGUI(() => {
                 switch (type) {
                     case ManagedLobbyLocalEventType.Host:
-                        m_lobbyWindow.lobbyChat.Text += "[Lobby] You have been assigned as host.\n";
+                        this.m_lobbyWindow.lobbyChat.Text += "[Lobby] You have been assigned as host.\n";
+                        this.m_lobbyWindow.EnableHostMode(true);
                         break;
                     case ManagedLobbyLocalEventType.Kicked:
-                        // TODO: Messagebox for this
+                        this.OnPlayerKicked?.Invoke(message);
                         break;
                     default:
-                        Trace.WriteLine($"Unhandled event type \"ManagedLobbyLocalEventType.{type}\"");
+                        Trace.WriteLine($"Unhandled event type \"ManagedLobbyLocalEventType.{type}\"", "ServerMessageHandler");
                         break;
                 }
             });

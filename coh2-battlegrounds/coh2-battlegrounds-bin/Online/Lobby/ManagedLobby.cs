@@ -101,6 +101,10 @@ namespace Battlegrounds.Online.Lobby {
         /// </summary>
         public string SelectedMap => this.m_lobbyMap;
 
+        public string SelectedGamemode => this.m_lobbyGamemode;
+
+        public string SelectedGamemodeOption => this.m_lobbyGamemodeOption;
+
         private List<ManagedLobbyTeam> Teams => this.m_teams.Values.ToList();
 
         private ManagedLobby(Connection connection, bool isHost) {

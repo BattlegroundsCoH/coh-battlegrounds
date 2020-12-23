@@ -71,6 +71,7 @@ namespace BattlegroundsApp.Views {
 
         private void JoinLobby_Click(object sender, RoutedEventArgs e) {
 
+            // Found a lobby that we can connect to?
             if (GameLobbyList.SelectedItem is ConnectableLobby lobby) {
 
                 // Get password (if any)
@@ -129,8 +130,13 @@ namespace BattlegroundsApp.Views {
 
         public override void StateOnFocus() {
 
-            // Get lobby list
-            this.GetLobbyList();
+            // Should only do this if there are no servers already listed
+            if (this.GameLobbyList.Items.Count == 0) {
+
+                // Get lobby list
+                this.GetLobbyList();
+
+            }
 
             // Log state change
             Trace.WriteLine("GameBrowser was set as active state.", "ViewStateMachine");

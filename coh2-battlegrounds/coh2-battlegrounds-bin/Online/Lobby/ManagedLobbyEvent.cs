@@ -53,7 +53,7 @@
     public enum ManagedLobbyLocalEventType {
 
         /// <summary>
-        /// The local client was upgrades to host.
+        /// The local client was upgraded to host.
         /// </summary>
         Host,
 

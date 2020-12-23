@@ -37,6 +37,7 @@ namespace BattlegroundsApp.Views {
         private ServerMessageHandler m_smh;
         private LobbyTeamManagementModel m_teamManagement;
         private Task m_lobbyUpdate;
+
         private volatile bool m_updateLobby;
 
         public GameLobbyView() {
@@ -69,14 +70,14 @@ namespace BattlegroundsApp.Views {
 
         private void OnKeyHandler(object sender, KeyEventArgs e) {
             if (e.Key == Key.Enter) {
-                SendMessage_Click(null, null);
+                this.SendMessage_Click(null, null);
             }
         }
 
         // DEV: Remove later
         private void RefreshLobby_Click(object sender, RoutedEventArgs e) {
 
-            this.m_smh.Lobby.InvokeDelayed(500, x => x.RefreshTeamAsync(this.LobbyTeamRefreshDone));
+            //this.m_smh.Lobby.InvokeDelayed(500, x => x.RefreshTeamAsync(this.LobbyTeamRefreshDone));
 
         }
 
@@ -105,13 +106,25 @@ namespace BattlegroundsApp.Views {
 
         public void CreateMessageHandler(ManagedLobby result) => this.m_smh = new ServerMessageHandler(this, result);
 
-        public void AddMetaMessageListener(Action<string, string> listener) => this.m_smh.MetaMessageReceived += listener;
+        #region Server Message Listeners
 
-        public void RemoveMetaMessageListener(Action<string, string> listener) => this.m_smh.MetaMessageReceived -= listener;
+        public void AddMetaMessageListener(MetaMessageListener listener) => this.m_smh.MetaMessageReceived += listener;
 
-        public void AddJoinMessageListener(Action<string, ulong> listener) => this.m_smh.OnPlayerJoined += listener;
+        public void RemoveMetaMessageListener(MetaMessageListener listener) => this.m_smh.MetaMessageReceived -= listener;
 
-        public void RemoveJoinMessageListener(Action<string, ulong> listener) => this.m_smh.OnPlayerJoined -= listener;
+        public void AddJoinMessageListener(PlayerJoinedListener listener) => this.m_smh.OnPlayerJoined += listener;
+
+        public void RemoveJoinMessageListener(PlayerJoinedListener listener) => this.m_smh.OnPlayerJoined -= listener;
+
+        public void AddMapChangedListener(MapChangedListener listener) => this.m_smh.OnMapChanged += listener;
+
+        public void RemoveMapChangedListener(MapChangedListener listener) => this.m_smh.OnMapChanged -= listener;
+
+        public void AddGamemodeChangedListener(GamemodechangedListener listener) => this.m_smh.OnGamemodeChanged += listener;
+
+        public void RemoveGamemodeChangedListener(GamemodechangedListener listener) => this.m_smh.OnGamemodeChanged -= listener;
+
+        #endregion
 
         private void UpdateSelectedMap(string arg1, string arg2) {
             this.Dispatcher.Invoke(() => {
@@ -380,7 +393,8 @@ namespace BattlegroundsApp.Views {
             // If host, setup everything
             if (this.m_smh.Lobby.IsHost) {
 
-                this.m_teamManagement.SetIsHost(true);
+                // Enable host mode
+                this.EnableHostMode(true);
 
                 var scenarioSource = ScenarioList.GetList().OrderBy(x => x.ToString()).ToList();
                 Map.ItemsSource = scenarioSource;
@@ -400,6 +414,8 @@ namespace BattlegroundsApp.Views {
                 this.EnableHostMode(false);
 
                 // TODO: Hook into info messages so we can update properly
+                this.AddMapChangedListener(this.MapChangedCallback);
+                this.AddGamemodeChangedListener(this.GamemodeChangedCallback);
 
             }
             
@@ -412,6 +428,13 @@ namespace BattlegroundsApp.Views {
 
         }
 
+        private void GamemodeChangedCallback(string game, string setting) {
+            this.UpdateSelectedGamemode(game, string.Empty);
+            this.UpdateSelectedOption(setting, string.Empty);
+        }
+
+        private void MapChangedCallback(string scenario) => this.UpdateSelectedMap(scenario, string.Empty);
+
         public override void StateOnLostFocus() {
 
             // Stop lobby update
@@ -421,8 +444,10 @@ namespace BattlegroundsApp.Views {
 
         public void EnableHostMode(bool hostMode) {
 
+            // Set team management
             this.m_teamManagement.SetIsHost(hostMode);
             
+            // Enable or disable game settings
             this.Map.IsEnabled = hostMode;
             this.Gamemode.IsEnabled = hostMode;
             this.GamemodeOption.IsEnabled = hostMode;

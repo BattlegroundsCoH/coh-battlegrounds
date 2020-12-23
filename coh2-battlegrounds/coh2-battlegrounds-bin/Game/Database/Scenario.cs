@@ -36,6 +36,8 @@ namespace Battlegrounds.Game.Database {
     /// </summary>
     public sealed class Scenario : IJsonObject {
 
+        public const string INVALID_SGA = "INVALID SGA";
+
         /// <summary>
         /// The text-name for the <see cref="Scenario"/>.
         /// </summary>
@@ -81,7 +83,7 @@ namespace Battlegrounds.Game.Database {
         public string ToJsonReference() => this.RelativeFilename;
 
         public Scenario() {
-            this.SgaName = string.Empty;
+            this.SgaName = INVALID_SGA;
             this.Gamemodes = new List<Wincondition>();
         }
 
