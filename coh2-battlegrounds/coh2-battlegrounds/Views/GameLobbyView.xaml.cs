@@ -97,10 +97,16 @@ namespace BattlegroundsApp.Views {
 
         private void LeaveLobby_Click(object sender, RoutedEventArgs e) {
 
+            // Stop updating lobby
+            this.m_updateLobby = false;
+
+            // Try to leave lobby
             if (this.m_smh.Lobby != null) {
-                this.m_smh.LeaveLobby();
-                this.StateChangeRequest?.Invoke(MainWindow.GAMEBROWSERSTATE);
+                this.m_smh.LeaveLobby(); // Send leave message
             }
+
+            // Change state
+            this.StateChangeRequest?.Invoke(MainWindow.GAMEBROWSERSTATE);
 
         }
 
