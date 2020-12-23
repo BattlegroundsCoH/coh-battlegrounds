@@ -153,6 +153,9 @@ namespace BattlegroundsApp.Views.ViewComponent {
                 case PlayercardViewstate.Open:
                     this.OpenDockState.Visibility = Visibility.Visible;
                     this.OccupiedStackState.Visibility = Visibility.Collapsed;
+                    if (this.m_isHost) {
+
+                    }
                     break;
             }
         }

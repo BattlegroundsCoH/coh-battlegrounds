@@ -14,7 +14,7 @@ namespace BattlegroundsApp {
     /// <summary>
     /// 
     /// </summary>
-    public abstract class ViewState : UserControl {
+    public abstract class ViewState : UserControl, IState {
 
         /// <summary>
         /// 

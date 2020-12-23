@@ -2,7 +2,7 @@
 
 namespace BattlegroundsApp {
     
-    public abstract class ViewStateMachine : Window {
+    public abstract class ViewStateMachine : Window, IStateMachine<ViewState> {
 
         private ViewState m_currentState;
 
