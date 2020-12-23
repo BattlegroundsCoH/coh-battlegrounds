@@ -15,12 +15,22 @@ namespace BattlegroundsApp.Views {
     /// <summary>
     /// Interaction logic for DivisionBuilderView.xaml
     /// </summary>
-    public partial class CompanyBuilderView : ViewState {
+    public partial class CompanyBuilderView : ViewState, IStateMachine<ViewState> {
+
         public CompanyBuilderView() {
             InitializeComponent();
         }
 
+        public ViewState State { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+
+        public StateChangeRequestHandler GetRequestHandler() => throw new NotImplementedException();
+
+        public void SetState(ViewState state) => throw new NotImplementedException();
+
         public override void StateOnFocus() => throw new NotImplementedException();
+
         public override void StateOnLostFocus() => throw new NotImplementedException();
+
+        bool IStateMachine<ViewState>.StateChangeRequest(object request) => throw new NotImplementedException();
     }
 }
