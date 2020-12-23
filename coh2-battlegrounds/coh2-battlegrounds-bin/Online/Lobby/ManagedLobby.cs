@@ -42,7 +42,7 @@ namespace Battlegrounds.Online.Lobby {
         private Dictionary<ManagedLobbyTeamType, ManagedLobbyTeam> m_teams;
 
         /// <summary>
-        /// 
+        /// The file ID on the file server
         /// </summary>
         public string LobbyFileID => this.m_lobbyID.Replace("-", "");
 
@@ -92,12 +92,12 @@ namespace Battlegrounds.Online.Lobby {
         public bool IsConnectedToServer => this.m_underlyingConnection.IsConnected;
 
         /// <summary>
-        /// 
+        /// The current player count
         /// </summary>
         public int PlayerCount => this.m_teams[ManagedLobbyTeamType.Allies].Count + this.m_teams[ManagedLobbyTeamType.Axis].Count;
 
         /// <summary>
-        /// 
+        /// The currently selected map
         /// </summary>
         public string SelectedMap => this.m_lobbyMap;
 
