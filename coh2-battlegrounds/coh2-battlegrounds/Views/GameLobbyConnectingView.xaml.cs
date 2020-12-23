@@ -66,6 +66,7 @@ namespace BattlegroundsApp.Views {
                     this.m_lobby.CreateMessageHandler(result);
                     this.m_lobby.AddMetaMessageListener(this.OnMetaMessage);
                     this.m_lobby.AddJoinMessageListener(this.OnPlayerJoin);
+                    this.m_lobby.RefreshGameSettings();
 
                 });
 
@@ -95,19 +96,32 @@ namespace BattlegroundsApp.Views {
                 // The acceptable user to listen for?
                 if (ul == this.m_listenfor) {
 
+                    // Log success
+                    Trace.WriteLine("Received join OK", "ConnectingState");
+
                     // TODO: Do more here
 
                     // Remove self as listener
                     this.m_lobby.RemoveMetaMessageListener(this.OnMetaMessage);
                     this.m_lobby.RemoveJoinMessageListener(this.OnPlayerJoin);
 
-                    // Request state change
-                    if (this.StateChangeRequest?.Invoke(this.m_lobby) is false) {
-                        Trace.WriteLine("Somehow failed to change state"); // TODO: Better error handling
-                    }
+                    // Begin refresh
+                    this.m_lobby.RefreshTeams(this.OnTeamsRefreshed);
 
                 }
 
+            }
+
+        }
+
+        private void OnTeamsRefreshed(ManagedLobby lobby) {
+
+            // Teams data has been updated
+            Trace.WriteLine("Received join OK", "ConnectingState");
+
+            // Request state change
+            if (this.StateChangeRequest?.Invoke(this.m_lobby) is false) {
+                Trace.WriteLine("Somehow failed to change state", "ConnectingState"); // TODO: Better error handling
             }
 
         }

@@ -37,6 +37,7 @@ namespace BattlegroundsApp.Views {
         private ServerMessageHandler m_smh;
         private LobbyTeamManagementModel m_teamManagement;
         private Task m_lobbyUpdate;
+        private volatile bool m_updateLobby;
 
         public GameLobbyView() {
 
@@ -117,6 +118,8 @@ namespace BattlegroundsApp.Views {
                 if (ScenarioList.TryFindScenario(arg1, out Scenario scenario)) {
                     this.Map.ItemsSource = new List<Scenario>() { scenario };
                     this.Map.SelectedIndex = 0;
+                    this.m_teamManagement.SetMaxPlayers(scenario.MaxPlayers);
+                    this.m_smh.Lobby.SetLobbyCapacity(scenario.MaxPlayers, false);
                     UpdateMapPreview(scenario);
                 }
             });
@@ -181,7 +184,11 @@ namespace BattlegroundsApp.Views {
         private void UpdateMapPreview(Scenario scenario) {
             string fullpath = System.IO.Path.GetFullPath($"usr\\mods\\map_icons\\{scenario.Name}_map.tga");
             if (File.Exists(fullpath)) {
-                mapImage.Source = TgaImageSource.TargaBitmapSourceFromFile(fullpath);
+                try {
+                    mapImage.Source = TgaImageSource.TargaBitmapSourceFromFile(fullpath);
+                } catch (BadImageFormatException bife) {
+                    Trace.WriteLine(bife);
+                }
             } else {
                 Trace.WriteLine($"Failed to locate file: {fullpath}");
             }
@@ -218,7 +225,7 @@ namespace BattlegroundsApp.Views {
         }
 
         private async void UpdateLobby() {
-            while (true && this is not null) {
+            while (this is not null && this.m_updateLobby) {
                 if (this.m_smh.Lobby.IsConnectedToServer) {
                     this.UpdateLobbyVisuals();
                     await Task.Delay(1500);
@@ -356,6 +363,8 @@ namespace BattlegroundsApp.Views {
         }
 
         private void SetupLobby() {
+
+            // If host, setup everything
             if (this.m_smh.Lobby.IsHost) {
 
                 this.m_teamManagement.SetIsHost(true);
@@ -375,33 +384,48 @@ namespace BattlegroundsApp.Views {
             } else {
 
                 // lock everything
-                this.m_teamManagement.SetIsHost(false);
-                this.Map.IsEnabled = false;
-                this.Gamemode.IsEnabled = false;
-                this.GamemodeOption.IsEnabled = false;
-
-                // Fetch selected map
-                this.m_smh.Lobby.GetLobbyInformation("selected_map", this.UpdateSelectedMap);
-                this.m_smh.Lobby.GetLobbyInformation("selected_wc", this.UpdateSelectedGamemode);
-                this.m_smh.Lobby.GetLobbyInformation("selected_wcs", this.UpdateSelectedOption);
+                this.EnableHostMode(false);
 
                 // TODO: Hook into info messages so we can update properly
 
-                this.m_smh.Lobby.InvokeDelayed(500, x => x.RefreshTeamAsync(this.LobbyTeamRefreshDone));
-
-                //throw new NotImplementedException();
-
             }
+            
+            // Update visuals
             this.UpdateLobbyVisuals();
+
+            // Start lobby
+            this.m_updateLobby = true;
             this.m_lobbyUpdate.Start();
+
         }
 
         public override void StateOnLostFocus() {
 
             // Stop lobby update
-            this.m_lobbyUpdate.Dispose();
+            this.m_updateLobby = false;
 
         }
+
+        public void EnableHostMode(bool hostMode) {
+
+            this.m_teamManagement.SetIsHost(hostMode);
+            
+            this.Map.IsEnabled = hostMode;
+            this.Gamemode.IsEnabled = hostMode;
+            this.GamemodeOption.IsEnabled = hostMode;
+
+        }
+
+        public void RefreshGameSettings() {
+
+            // Fetch selected map and gamemode
+            this.m_smh.Lobby.GetLobbyInformation("selected_map", this.UpdateSelectedMap);
+            this.m_smh.Lobby.GetLobbyInformation("selected_wc", this.UpdateSelectedGamemode);
+            this.m_smh.Lobby.GetLobbyInformation("selected_wcs", this.UpdateSelectedOption);
+
+        }
+
+        public void RefreshTeams(ManagedLobbyTaskDone overrideDone) => this.m_smh.Lobby.RefreshTeamAsync(overrideDone ?? this.LobbyTeamRefreshDone);
 
     }
 
