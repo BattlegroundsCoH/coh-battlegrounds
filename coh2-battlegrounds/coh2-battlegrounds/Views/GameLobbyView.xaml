@@ -71,7 +71,7 @@
                  IsReadOnly="True" VerticalScrollBarVisibility="Visible"/>
 
         <!-- Row 6 -->
-        <Button Grid.Row="6" Grid.Column="0" Content="Change Team" Margin="0,5,0,0" Click="ChangeTeam_Click"/>
+        <Button Grid.Row="6" Grid.Column="0" Content="Refresh Lobby" Margin="0,5,0,0" Click="RefreshLobby_Click"/>
 
         <TextBlock Grid.Row="6" Grid.Column="3" Text="Message:" Width="50" HorizontalAlignment="Left" Margin="0,5,0,0"/>
 
