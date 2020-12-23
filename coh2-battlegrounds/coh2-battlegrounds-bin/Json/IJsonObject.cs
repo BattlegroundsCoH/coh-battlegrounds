@@ -88,7 +88,7 @@ namespace Battlegrounds.Json {
                 .Where(x => x.GetCustomAttribute<JsonIgnoreAttribute>() is null);
 
             // Derecord the object
-            properties = JsonRecord.Derecord(il_type, properties);
+            properties = JsonRecord.Derecord(obj, properties);
 
             // Begin building
             jsonbuilder.AppendLine("{");

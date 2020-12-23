@@ -7,12 +7,12 @@ namespace Battlegrounds.Json {
     
     public static class JsonRecord {
     
-        public static bool IsRecordType(Type type, out PropertyInfo equalityContractProperty) {
-            equalityContractProperty = type.GetProperty("EqualityContract", BindingFlags.Instance | BindingFlags.Public);
+        public static bool IsRecordType(object type, out PropertyInfo equalityContractProperty) {
+            equalityContractProperty = type.GetType().GetProperty("EqualityContract", BindingFlags.Instance | BindingFlags.NonPublic);
             if (equalityContractProperty is null) {
                 return false;
             }
-            if (equalityContractProperty.PropertyType == type) {
+            if (equalityContractProperty.GetValue(type) as Type == type.GetType()) {
                 return true;
             } else {
                 return false;
@@ -21,10 +21,10 @@ namespace Battlegrounds.Json {
 
         public static bool IsRecordType(Type type) => IsRecordType(type, out _);
 
-        public static bool IsValidRecordType(Type type, out bool isConsideredRecord, out PropertyInfo equalityContractProperty) {
+        public static bool IsValidRecordType(object type, out bool isConsideredRecord, out PropertyInfo equalityContractProperty) {
             isConsideredRecord = IsRecordType(type, out equalityContractProperty);
             if (isConsideredRecord) {
-                if (type.GetConstructors().Any(x => x.GetParameters().Length == 0)) {
+                if (type.GetType().GetConstructors().Any(x => x.GetParameters().Length == 0)) {
                     return true;
                 } else {
                     return false;
@@ -34,12 +34,12 @@ namespace Battlegrounds.Json {
             }
         }
 
-        public static IEnumerable<PropertyInfo> Derecord(Type recordType, IEnumerable<PropertyInfo> properties) {
-            if (IsValidRecordType(recordType, out bool isRecord, out PropertyInfo property)) {
+        public static IEnumerable<PropertyInfo> Derecord(object record, IEnumerable<PropertyInfo> properties) {
+            if (IsValidRecordType(record, out bool isRecord, out PropertyInfo property)) {
                 return properties.Except(new List<PropertyInfo>() { property });
             } else {
                 if (isRecord) {
-                    throw new JsonTypeException(recordType, $"Invalid record type. No parameterless constructor found.");
+                    throw new JsonTypeException(record.GetType(), $"Invalid record type. No parameterless constructor found.");
                 }
                 return properties;
             }
