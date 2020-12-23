@@ -672,9 +672,20 @@ namespace Battlegrounds.Online.Lobby {
             // Get all player IDs
             ulong[] playerIDs = await this.GetPlayerIDsAsync();
 
+            // Log
+            Trace.WriteLine($"PlayerIDs: {string.Join(',', playerIDs)}", "ManagedLobby.Refresh");
+
+            // Get the capacity
+            int capacity = await this.GetLobbyCapacityAsync();
+            int tSize = capacity / 2;
+
+            // Log
+            Trace.WriteLine($"Capacity: {capacity}, team capacities: {tSize}", "ManagedLobby.Refresh");
+
             // Clear teams
             for (int i = 0; i < ManagedLobbyTeam.TeamTypes.Length; i++) {
                 this.m_teams[ManagedLobbyTeam.TeamTypes[i]].Clear();
+                this.m_teams[ManagedLobbyTeam.TeamTypes[i]].SetCapacity(tSize);
             }
 
             //Loop through all players
@@ -704,6 +715,9 @@ namespace Battlegrounds.Online.Lobby {
                     this.GetTeam(team).Join(human);
                     this.GetTeam(team).TrySetMemberPosition(human, pos);
 
+                    // Log
+                    Trace.WriteLine($"Found human player: {name}, playing as {faction} for team {team} with pos {pos}", "ManagedLobby.Refresh");
+
                 } else {
 
                     // Create AI
@@ -718,6 +732,9 @@ namespace Battlegrounds.Online.Lobby {
                     // Add AI
                     this.GetTeam(team).Join(ai);
                     this.GetTeam(team).TrySetMemberPosition(ai, pos);
+
+                    // Log
+                    Trace.WriteLine($"Found AI player playing as {ai.Faction} for {team} at {pos}.", "ManagedLobby.Refresh");
 
                 }
 
