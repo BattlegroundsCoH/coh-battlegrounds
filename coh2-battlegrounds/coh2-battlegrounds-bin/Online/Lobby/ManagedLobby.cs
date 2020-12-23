@@ -797,15 +797,20 @@ namespace Battlegrounds.Online.Lobby {
             HumanLobbyMember newPlayer = new HumanLobbyMember(this, steamID, name, string.Empty, 0.0);
 
             bool alliesHasLessThanAxis = this.m_teams[ManagedLobbyTeamType.Allies].Count <= this.m_teams[ManagedLobbyTeamType.Axis].Count;
-            ManagedLobbyTeamType teamToJoin = alliesHasLessThanAxis ? ManagedLobbyTeamType.Allies : ManagedLobbyTeamType.Allies;
+            ManagedLobbyTeamType teamToJoin = alliesHasLessThanAxis ? ManagedLobbyTeamType.Allies : ManagedLobbyTeamType.Axis;
 
             if (this.m_teams[teamToJoin].Join(newPlayer)) {
+                Trace.WriteLine($"{name} has joined team {teamToJoin}");
                 if (teamToJoin == ManagedLobbyTeamType.Axis) { // if axis team was joined, update faction
                     this.SetFaction(steamID, Faction.Wehrmacht.Name);
+                }
+                if (this.m_isHost) {
+                    this.SendMetaMessage($"{steamID}-join-success");
                 }
             } else {
                 this.m_teams[ManagedLobbyTeamType.Spectator].Join(newPlayer, !this.m_isHost);
             }
+
         }
 
         /// <summary>
@@ -958,7 +963,7 @@ namespace Battlegrounds.Online.Lobby {
                 case MessageType.LOBBY_JOIN:
                     if (ulong.TryParse(incomingMessage.Argument2, out ulong newSteamID)) {
                         this.OnPlayerJoined(newSteamID, incomingMessage.Argument1);
-                        this.OnPlayerEvent?.Invoke(ManagedLobbyPlayerEventType.Join, incomingMessage.Argument1, string.Empty);
+                        this.OnPlayerEvent?.Invoke(ManagedLobbyPlayerEventType.Join, incomingMessage.Argument1, incomingMessage.Argument2);
                     } else {
                         Trace.WriteLine($"Failed to connect player with invalid steam ID {incomingMessage.Argument2}", "ManagedLobby.cs");
                     }

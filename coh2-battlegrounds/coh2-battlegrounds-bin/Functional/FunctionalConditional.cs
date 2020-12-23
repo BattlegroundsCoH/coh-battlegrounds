@@ -68,14 +68,31 @@ namespace Battlegrounds.Functional {
             /// </summary>
             /// <param name="condition">The <see cref="Predicate{T}"/> condition to check.</param>
             /// <returns>
-            /// If base condition is <see langword="true"/>, a negated instance of the calling instance is returned. 
+            /// If base condition is <see langword="true"/>, the calling instance is returned. 
             /// Otherwise a new <see cref="IsTrue{T}"/> instance is returned based of the <see cref="Predicate{T}"/> result.
             /// </returns>
             public IsTrue<T> ElseIf(Predicate<T> condition) {
                 if (!_yes) {
                     return this.__subj.IfTrue(condition);
                 } else {
-                    return new IsTrue<T>(false, this.__subj);
+                    return this;
+                }
+            }
+
+            /// <summary>
+            /// Invoke the <see cref="Predicate{T}"/> function on the <paramref name="newSubject"/> parameter if the base condition is <see langword="false"/>.
+            /// </summary>
+            /// <param name="newSubject">The new subject of the whole <see cref="IsTrue{T}"/> chain.</param>
+            /// <param name="condition">The <see cref="Predicate{T}"/> condition to check.</param>
+            /// <returns>
+            /// If base condition is <see langword="true"/> the calling instance is returned. 
+            /// Otherwise a new <see cref="IsTrue{T}"/> instance is returned based of the <see cref="Predicate{T}"/> result with <paramref name="newSubject"/> as subject.
+            /// </returns>
+            public IsTrue<T> ElseIf(T newSubject, Predicate<T> condition) {
+                if (!_yes && condition(newSubject)) {
+                    return new IsTrue<T>(true, newSubject);
+                } else {
+                    return this;
                 }
             }
 
@@ -107,6 +124,23 @@ namespace Battlegrounds.Functional {
             public T Else(Func<T, T> then) {
                 if (!_yes) {
                     return then.Invoke(this.__subj);
+                } else {
+                    return this.__subj;
+                }
+            }
+
+            /// <summary>
+            /// Check if some other condition (<paramref name="then"/>) is true and return the given subject (<paramref name="other"/>). Otherwise return the subject of the initial instance.
+            /// </summary>
+            /// <param name="other">The new subject to return if <paramref name="then"/> is <see langword="true"/> and base condition is <see langword="false"/>.</param>
+            /// <param name="then">The <see cref="Predicate{T}"/> to check.</param>
+            /// <returns>
+            /// The <paramref name="other"/> parameter if base condition is <see langword="false"/> and the <paramref name="then"/> predicate is <see langword="true"/>. 
+            /// Otherwise the subject of the calling instance is returned.
+            /// </returns>
+            public T Else(T other, Predicate<T> then) {
+                if (!_yes && then(other)) {
+                    return other;
                 } else {
                     return this.__subj;
                 }

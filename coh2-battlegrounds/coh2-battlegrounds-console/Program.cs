@@ -59,7 +59,7 @@ namespace coh2_battlegrounds_console {
             testCompany.SaveToFile("test_company.json");
 
             LobbyHub hub = new LobbyHub();
-            if (!hub.CanConnect()) {
+            if (!LobbyHub.CanConnect()) {
                 Console.WriteLine("Unable to reach server hub");
             } else {
 

@@ -46,7 +46,7 @@ namespace Battlegrounds.Game.Database {
                 }
 
                 try {
-                    Task.Run(LoadWorkshopScenarios);
+                    Task.Run(HandleWorkshopFiles);
                 } catch (Exception e) {
                     Trace.WriteLine(e);
                 }
@@ -57,18 +57,48 @@ namespace Battlegrounds.Game.Database {
 
         }
 
-        private class WorkshopRecord : IJsonObject {
-            public List<Scenario> scenarios = new List<Scenario>();
+        private record WorkshopRecord(List<Scenario> Scenarios) : IJsonObject {
             public string ToJsonReference() => throw new NotImplementedException();
+            public WorkshopRecord() : this(new List<Scenario>()) { }
         }
 
-        private static void LoadWorkshopScenarios() {
+        private static void HandleWorkshopFiles() {
+
+            // Find path to workshop database
+            string workshop_dbpath = $"{DatabaseManager.SolveDatabasepath()}workshop-map-db.json";
+
+            // Load existing workshop items
+            var workshopScenarios = LoadWorkshopScenarioDatabase(workshop_dbpath);
+
+            // Load new scenarios
+            LoadNewWorkshopScenarios(workshopScenarios, out int newWorkshopEntries);
+
+            // If more than 0, update the database
+            if (newWorkshopEntries > 0) {
+
+                // Get the record
+                IJsonObject rec = new WorkshopRecord(workshopScenarios);
+
+                // Save database
+                File.WriteAllText(workshop_dbpath, rec.Serialize());
+
+                // Log how many new workship maps were added
+                Trace.WriteLine($"Added {newWorkshopEntries} workshop maps.");
+
+            }
+
+            // Add all
+            workshopScenarios.ForEach(x => __scenarios.IfTrue(y => !y.ContainsKey(Path.GetFileNameWithoutExtension(x.RelativeFilename)))
+                .Then(y => y.Add(Path.GetFileNameWithoutExtension(x.RelativeFilename), x)));
+
+        }
+
+        private static List<Scenario> LoadWorkshopScenarioDatabase(string workshop_dbpath) {
 
             List<Scenario> workshopScenarios = new List<Scenario>();
-            string workshop_dbpath = $"{DatabaseManager.SolveDatabasepath()}workshop-map-db.json";
             if (File.Exists(workshop_dbpath)) {
                 if (JsonParser.Parse(workshop_dbpath).FirstOrDefault() is WorkshopRecord array) {
-                    foreach (IJsonElement jsonElement in array.scenarios) {
+                    foreach (IJsonElement jsonElement in array.Scenarios) {
 
                         if (jsonElement is Scenario scenario) {
                             workshopScenarios.Add(scenario);
@@ -82,10 +112,33 @@ namespace Battlegrounds.Game.Database {
                 }
             }
 
+            return workshopScenarios;
+
+        }
+
+        private static bool IsValidExtractedWorkshopMapDirectory(string x) {
+            if (Directory.Exists(x)) {
+                string[] d = Directory.GetDirectories(x);
+                return d.Length == 1 && Directory.GetFiles(d[0]).Length > 0;
+            } else {
+                return false;
+            }
+        }
+
+        private static void LoadNewWorkshopScenarios(List<Scenario> workshopScenarios, out int newWorkshopEntries) {
+
             string workshopScenarioFolder = $"{Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)}\\my games\\Company of Heroes 2\\Mods\\Scenarios\\subscriptions";
             string[] files = Directory.GetFiles(workshopScenarioFolder, "*.sga");
-            int newWorkshopEntries = 0;
+            newWorkshopEntries = 0;
 
+            const string baseExtract = "~tmp\\~workshop-extract\\scenarios\\";
+
+            // If the directory for map icons doesn't exist, create it
+            if (!Directory.Exists($"usr\\mods\\map_icons")) {
+                Directory.CreateDirectory($"usr\\mods\\map_icons");
+            }
+
+            // Loop through all the .sga files in the subscriptions folder
             for (int i = 0; i < files.Length; i++) {
 
                 string sga = Path.GetFileNameWithoutExtension(files[i]);
@@ -96,13 +149,15 @@ namespace Battlegrounds.Game.Database {
                     }
 
                     try {
-                        string readfrom = $"~tmp\\~workshop-extract\\scenarios\\mp\\community\\";
-                        if (!Directory.Exists(readfrom)) {
-                            readfrom = $"~tmp\\~workshop-extract\\scenarios\\pm\\community\\";
-                            if (!Directory.Exists(readfrom)) {
-                                continue;
-                            }
-                        }
+
+                        // Get the directory to read from
+                        string readfrom = $"{baseExtract}\\mp\\community\\"
+                            .IfTrue(IsValidExtractedWorkshopMapDirectory)
+                            .ElseIf($"{baseExtract}\\mp\\", IsValidExtractedWorkshopMapDirectory)
+                            .ElseIf($"{baseExtract}\\pm\\community\\", IsValidExtractedWorkshopMapDirectory)
+                            .ElseIf($"{baseExtract}\\pm\\", IsValidExtractedWorkshopMapDirectory)
+                            .Else(baseExtract, IsValidExtractedWorkshopMapDirectory);
+
                         string[] dirs = Directory.GetDirectories(readfrom);
                         if (dirs.Length > 0) {
                             readfrom = dirs[0];
@@ -114,23 +169,27 @@ namespace Battlegrounds.Game.Database {
 
                             workshopScenarios.Add(scen);
 
+                            // Find the index of the minimap
                             int minimapFile = scenarioFiles.IndexOf(x => x.EndsWith("_preview.tga")).IfTrue(x => x == -1).Then(x => scenarioFiles.IndexOf(x => x.EndsWith("_mm.tga")));
 
-                            if (Directory.Exists($"usr\\mods\\map_icons")) {
+                            // Make sure it's a valid index
+                            if (minimapFile != -1) {
+
+                                // Save destination
                                 string destination = $"usr\\mods\\map_icons\\{scen.Name}_map.tga";
                                 if (File.Exists(destination)) {
                                     File.Delete(destination);
                                 }
-                                File.Copy(scenarioFiles[minimapFile], destination);
-                            } else {
 
-                                Directory.CreateDirectory($"usr\\mods\\map_icons");
-                                File.Copy(scenarioFiles[minimapFile], $"usr\\mods\\map_icons\\{scen.Name}_map.tga");
+                                // Copy the found index file
+                                File.Copy(scenarioFiles[minimapFile], destination);
 
                             }
 
-                            Directory.Delete(readfrom, true);
+                            // Delete the extracted files
+                            Directory.Delete(baseExtract, true);
 
+                            // Increment new entries
                             newWorkshopEntries++;
 
                         } else {
@@ -141,23 +200,6 @@ namespace Battlegrounds.Game.Database {
                 }
 
             }
-
-            if (newWorkshopEntries > 0) {
-
-                IJsonObject rec = new WorkshopRecord {
-                    scenarios = workshopScenarios
-                };
-
-                // Save database
-                File.WriteAllText(workshop_dbpath, rec.Serialize());
-
-                Trace.WriteLine($"Added {newWorkshopEntries} workshop maps.");
-
-            }
-
-            // Add all
-            workshopScenarios.ForEach(x =>__scenarios.IfTrue(y => !y.ContainsKey(Path.GetFileNameWithoutExtension(x.RelativeFilename)))
-                .Then(y => y.Add(Path.GetFileNameWithoutExtension(x.RelativeFilename), x)));
 
         }
 

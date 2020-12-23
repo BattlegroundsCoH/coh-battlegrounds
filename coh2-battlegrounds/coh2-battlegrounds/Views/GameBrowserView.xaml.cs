@@ -10,9 +10,9 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Diagnostics;
 
 using Battlegrounds;
-using Battlegrounds.Steam;
 using Battlegrounds.Online.Services;
 using BattlegroundsApp.Dialogs.HostGame;
 using BattlegroundsApp.Dialogs.Service;
@@ -20,10 +20,11 @@ using BattlegroundsApp.Utilities;
 using Battlegrounds.Online.Lobby;
 
 namespace BattlegroundsApp.Views {
+
     /// <summary>
     /// Interaction logic for GameBrowserView.xaml
     /// </summary>
-    public partial class GameBrowserView : UserControl {
+    public partial class GameBrowserView : ViewState {
 
         private IDialogService _dialogService;
 
@@ -31,40 +32,38 @@ namespace BattlegroundsApp.Views {
 
         private LobbyHub m_hub;
 
-        private MainWindow m_hostWindow;
+        /// <summary>
+        /// Flag: Can connect to the external <see cref="LobbyHub"/>.
+        /// </summary>
+        public static bool HasLobbyHubConnection => LobbyHub.CanConnect();
 
-        public GameBrowserView(MainWindow hostWindow) {
+        public GameBrowserView() {
 
-            this.m_hostWindow = hostWindow;
-
+            // Initialize component
             InitializeComponent();
 
-            this.m_hub = new LobbyHub();
-            if (!this.m_hub.CanConnect()) {
-                // TODO: Error report
-            } else {
-                this.m_hub.User = BattlegroundsInstance.LocalSteamuser;
-            }
+            // Create lobby hub with local steam user
+            this.m_hub = new LobbyHub {
+                User = BattlegroundsInstance.LocalSteamuser
+            };
 
             // TODO: Make this with injection?
             _dialogService = new DialogService();
 
             HostGameCommand = new RelayCommand(HostLobby);
 
-            GetLobbyList();
-
         }
-
-        public void UpdateGUI(Action a) => this.Dispatcher.BeginInvoke(a);
 
         private void GetLobbyList() {
 
+            // Clear the current lobby list
             GameLobbyList.Items.Clear();
 
-            this.m_hub.GetConnectableLobbies(x => this.UpdateGUI(() => {
-                x.Update();
-                this.GameLobbyList.Items.Add(x);
-            }));
+            // Get connectable lobbies and add them
+            this.m_hub.GetConnectableLobbies(x => this.UpdateGUI(() => this.GameLobbyList.Items.Add(x)), true);
+
+            // Log refresh
+            Trace.WriteLine("Refreshing lobby list", "GameBrowserView");
 
         }
 
@@ -74,16 +73,17 @@ namespace BattlegroundsApp.Views {
 
             if (GameLobbyList.SelectedItem is ConnectableLobby lobby) {
 
-                // TODO: Psswd check
+                // Get password (if any)
+                string password = string.Empty;
+                if (lobby.lobby_passwordProtected) {
+                    // TODO: Get password here if required
+                }
 
-                GameLobbyView vw = new GameLobbyView(m_hostWindow);
-                vw.OnServerAcceptanceResponse += this.OnServerConnectResponse;
-                ServerMessageHandler smh = new ServerMessageHandler(vw);
-                vw.SetSMH(smh);
+                // Create new connecting view
+                var connectingView = new GameLobbyConnectingView(this.m_hub, lobby.lobby_guid, lobby.lobby_name, password);
 
-                string lobbyToJoin = lobby.lobby_guid;
-
-                ManagedLobby.Join(this.m_hub, lobbyToJoin, string.Empty, smh.OnServerResponse);
+                // Change state to connecting view
+                this.StateChangeRequest?.Invoke(connectingView);
 
             }
 
@@ -96,23 +96,49 @@ namespace BattlegroundsApp.Views {
             
             if (result == Dialogs.DialogResults.Host) {
 
-                GameLobbyView vw = new GameLobbyView(m_hostWindow);
-                vw.OnServerAcceptanceResponse += this.OnServerConnectResponse;
-                ServerMessageHandler smh = new ServerMessageHandler(vw);
-                vw.SetSMH(smh);
-
-                ManagedLobby.Host(this.m_hub, dialog.LobbyName, dialog.LobbyPassword, smh.OnServerResponse);
+                // Call the host function
+                ManagedLobby.Host(this.m_hub, dialog.LobbyName, dialog.LobbyPassword, this.HostLobbyServerResponse);
 
             }
 
         }
 
-        private void OnServerConnectResponse(bool connected, GameLobbyView view) {
-            if (connected) {
-                this.m_hostWindow.SetView(view); // Returns a dispatcher; TODO: Disable navbar (Maybe could be done in .xaml => IsEnabled="{Binding}")
+        private void HostLobbyServerResponse(ManagedLobbyStatus status, ManagedLobby result) {
+
+            // Make sure it was a success
+            if (status.Success) {
+
+                this.UpdateGUI(() => {
+
+                    // Create lobby view
+                    GameLobbyView lobbyView = new GameLobbyView();
+                    lobbyView.CreateMessageHandler(result);
+
+                    // Request state change
+                    if (this.StateChangeRequest?.Invoke(lobbyView) is false) {
+                        Trace.WriteLine("Somehow failed to change state"); // TODO: Better error handling
+                    }
+
+                });
+
             } else {
-                // TODO: Report error
+                MessageBox.Show($"Failed to create lobby.\nServer Message: {status.Message}", "Server Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
+
+        }
+
+        public override void StateOnFocus() {
+
+            // Get lobby list
+            this.GetLobbyList();
+
+            // Log state change
+            Trace.WriteLine("GameBrowser was set as active state.", "ViewStateMachine");
+
+        }
+
+        public override void StateOnLostFocus() {
+
         }
 
     }

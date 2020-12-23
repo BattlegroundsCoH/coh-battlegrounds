@@ -27,7 +27,7 @@ namespace Battlegrounds.Online.Services {
         /// </summary>
         /// <remarks>This method does not guarantee server connection. Only that the server machine is active.</remarks>
         /// <returns>True if the server machine was pinged with success. False if no ping-back was received.</returns>
-        public bool CanConnect() {
+        public static bool CanConnect() {
 
             try {
 
@@ -44,7 +44,7 @@ namespace Battlegrounds.Online.Services {
 
         }
 
-        private ConnectableLobby GetLobby(string serverStringResponse) {
+        private static ConnectableLobby GetLobby(string serverStringResponse) {
 
             var match = Regex.Match(serverStringResponse, @"\[(?<guid>\S{36});\""(?<name>(\S|\s)*)\"";(?<password>True|False)\]");
 
@@ -74,10 +74,11 @@ namespace Battlegrounds.Online.Services {
                     MessageSender.WaitForMessage(x, OnLobby);
                 }
 
-                if (this.GetLobby(y.Argument1) is ConnectableLobby lobby) {
-                    connectableLobbies.Add(lobby);
+                if (GetLobby(y.Argument1) is ConnectableLobby lobby) {
                     if (fetchLobbyData) {
-                        lobby.Update();
+                        lobby.Update(x => connectableLobbies?.Add(x));
+                    } else {
+                        connectableLobbies.Add(lobby);
                     }
                 }
 
@@ -118,10 +119,11 @@ namespace Battlegrounds.Online.Services {
                     MessageSender.WaitForMessage(x, OnLobby);
                 }
 
-                if (this.GetLobby(y.Argument1) is ConnectableLobby lobby) {
-                    callback?.Invoke(lobby);
+                if (GetLobby(y.Argument1) is ConnectableLobby lobby) {
                     if (fetchLobbyData) {
-                        lobby.Update();
+                        lobby.Update(callback);
+                    } else {
+                        callback?.Invoke(lobby);
                     }
                 }
 
@@ -140,7 +142,7 @@ namespace Battlegrounds.Online.Services {
 
             // Make sure there's a user to work with
             if (this.User is null) {
-                throw new ArgumentNullException("Steam User object not assigned!");
+                throw new ArgumentNullException(nameof(this.User), "Steam User object not assigned!");
             }
 
             // The connect message

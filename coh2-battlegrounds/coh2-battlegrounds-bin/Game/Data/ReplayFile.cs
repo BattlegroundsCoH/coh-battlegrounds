@@ -161,14 +161,14 @@ namespace Battlegrounds.Game.Data {
 
         private bool ParseHeader() {
 
-            uint version = BitConverter.ToUInt32(this.m_header[0 .. 4]); // read version (unsigned 32-bit integer ==> 4 bytes)
+            uint version = BitConverter.ToUInt32(this.m_header.AsSpan()[0 .. 4]); // read version (unsigned 32-bit integer ==> 4 bytes)
             string name = Encoding.ASCII.GetString(this.m_header[4..12]); // read game version (ASCII, 1 char = 1 byte, length is fixed and equal to 8)
             
             StringBuilder dateBuilder = new StringBuilder();
 
             int i = 12; // start position
             while (i < this.m_header.Length) { // UTF-8 encoding (1 char = 2 byte)
-                ushort u = BitConverter.ToUInt16(this.m_header[i..(i + 2)]);
+                ushort u = BitConverter.ToUInt16(this.m_header.AsSpan()[i..(i + 2)]);
                 if (u == 0) {
                     break;
                 } else {

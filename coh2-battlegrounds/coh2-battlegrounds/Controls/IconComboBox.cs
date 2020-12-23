@@ -85,6 +85,9 @@ namespace BattlegroundsApp.Controls {
         }
 
         private void SetSelectedIndex(int index) {
+            if (index < 0) {
+                throw new ArgumentOutOfRangeException(nameof(index), $"The index given is out of range (is: {index})");
+            }
             this.m_imageControl.Source = this.m_items[index].Icon;
             this.m_selectedIndex = index;
             this.SelectionChangedMethod(index, false);

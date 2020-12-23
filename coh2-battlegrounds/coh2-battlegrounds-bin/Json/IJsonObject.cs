@@ -14,14 +14,15 @@ namespace Battlegrounds.Json {
     /// </summary>
     public interface IJsonObject : IJsonElement {
 
-        public static IFormatProvider JsonStandardFormatter = new CultureInfo("en-GB");
+        private static readonly IFormatProvider JSStandardFormat = new CultureInfo("en-GB");
+
+        public static IFormatProvider JsonStandardFormatter => JSStandardFormat;
 
         private struct JsonAttributeSet {
             private JsonIgnoreIfValueAttribute IgnoreIfValueAttribute;
             private JsonIgnoreIfEmptyAttribute IgnoreIfEmptyAttribute;
             private JsonIgnoreIfNullAttribute IgnoreIfNullAttribute;
             private JsonIgnoreAttribute IgnoreAttribute;
-            private JsonEnumAttribute EnumAttribute;
             private JsonReferenceAttribute ReferenceAttribute;
 
             public bool IgnoreIfNull => this.IgnoreIfNullAttribute is JsonIgnoreIfNullAttribute;
@@ -41,7 +42,6 @@ namespace Battlegrounds.Json {
                 this.IgnoreIfValueAttribute = pinfo.GetCustomAttribute<JsonIgnoreIfValueAttribute>();
                 this.IgnoreIfNullAttribute = pinfo.GetCustomAttribute<JsonIgnoreIfNullAttribute>();
                 this.IgnoreAttribute = pinfo.GetCustomAttribute<JsonIgnoreAttribute>();
-                this.EnumAttribute = pinfo.GetCustomAttribute<JsonEnumAttribute>();
                 this.ReferenceAttribute = pinfo.GetCustomAttribute<JsonReferenceAttribute>();
             }
             public JsonAttributeSet(FieldInfo finfo) {
@@ -49,7 +49,6 @@ namespace Battlegrounds.Json {
                 this.IgnoreIfValueAttribute = finfo.GetCustomAttribute<JsonIgnoreIfValueAttribute>();
                 this.IgnoreIfNullAttribute = finfo.GetCustomAttribute<JsonIgnoreIfNullAttribute>();
                 this.IgnoreAttribute = finfo.GetCustomAttribute<JsonIgnoreAttribute>();
-                this.EnumAttribute = finfo.GetCustomAttribute<JsonEnumAttribute>();
                 this.ReferenceAttribute = finfo.GetCustomAttribute<JsonReferenceAttribute>();
             }
         }
@@ -76,7 +75,6 @@ namespace Battlegrounds.Json {
 
         public static string SerializeObject(int indent, object obj) {
 
-
             Type il_type = obj.GetType();
             TxtBuilder jsonbuilder = new TxtBuilder();
             jsonbuilder.SetIndent(indent);
@@ -89,6 +87,10 @@ namespace Battlegrounds.Json {
             IEnumerable<PropertyInfo> properties = il_type.GetProperties(BindingFlags.FlattenHierarchy | BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)
                 .Where(x => x.GetCustomAttribute<JsonIgnoreAttribute>() is null);
 
+            // Derecord the object
+            properties = JsonRecord.Derecord(il_type, properties);
+
+            // Begin building
             jsonbuilder.AppendLine("{");
             jsonbuilder.IncreaseIndent();
 
@@ -101,7 +103,7 @@ namespace Battlegrounds.Json {
                     new JsonAttributeSet(pinfo),
                     pinfo.Name,
                     pinfo.GetValue(obj),
-                    pinfo != properties.Last() || fields.Count() > 0
+                    pinfo != properties.Last() || fields.Any()
                     );
             }
 
@@ -228,7 +230,7 @@ namespace Battlegrounds.Json {
 
             // Make sure type is valid
             if (type is null) {
-                throw new ArgumentNullException("The given 'jsdbtype' was null!");
+                throw new NullReferenceException("The given 'jsdbtype' was null!");
             }
 
             // Get the type
