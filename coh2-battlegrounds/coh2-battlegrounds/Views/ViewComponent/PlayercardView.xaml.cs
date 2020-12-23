@@ -153,10 +153,17 @@ namespace BattlegroundsApp.Views.ViewComponent {
                 case PlayercardViewstate.Open:
                     this.OpenDockState.Visibility = Visibility.Visible;
                     this.OccupiedStackState.Visibility = Visibility.Collapsed;
-                    if (this.m_isHost) {
-
-                    }
+                    this.SetAIPlayerButtonState();
                     break;
+            }
+        }
+
+        public void SetAIPlayerButtonState() {
+            this.NewAIPlayerButton.IsEnabled = this.m_isHost;
+            if (this.NewAIPlayerButton.IsEnabled) {
+                this.NewAIPlayerButton.Content = "Add AI player";
+            } else {
+                this.NewAIPlayerButton.Content = "Unoccupied Slot";
             }
         }
 
