@@ -121,6 +121,12 @@ namespace BattlegroundsApp.Views {
                     this.m_teamManagement.SetMaxPlayers(scenario.MaxPlayers);
                     this.m_smh.Lobby.SetLobbyCapacity(scenario.MaxPlayers, false);
                     UpdateMapPreview(scenario);
+                } else {
+                    Trace.WriteLine("Unknown scenario from server (Probably workshop map).", "GameLobbyView");
+                    this.Map.ItemsSource = new List<string>() { arg1 };
+                    this.Map.SelectedIndex = 0;
+                    this.m_smh.Lobby.GetLobbyCapacity(x => this.UpdateGUI(() => this.m_teamManagement.SetMaxPlayers(x)));
+                    UpdateMapPreview(null);
                 }
             });
         }
@@ -182,16 +188,23 @@ namespace BattlegroundsApp.Views {
         }
 
         private void UpdateMapPreview(Scenario scenario) {
-            string fullpath = System.IO.Path.GetFullPath($"usr\\mods\\map_icons\\{scenario.Name}_map.tga");
-            if (File.Exists(fullpath)) {
-                try {
-                    mapImage.Source = TgaImageSource.TargaBitmapSourceFromFile(fullpath);
-                } catch (BadImageFormatException bife) {
-                    Trace.WriteLine(bife);
-                }
+            if (scenario is not null) {
+                string fullpath = System.IO.Path.GetFullPath($"usr\\mods\\map_icons\\{scenario.Name}_map.tga");
+                    if (File.Exists(fullpath)) {
+                        try {
+                            mapImage.Source = TgaImageSource.TargaBitmapSourceFromFile(fullpath);
+                            return;
+                        } catch (BadImageFormatException bife) {
+                            Trace.WriteLine(bife);
+                        }
+                    } else {
+                        Trace.WriteLine($"Failed to locate file: {fullpath}");
+                    }
             } else {
-                Trace.WriteLine($"Failed to locate file: {fullpath}");
+                Trace.WriteLine("Failed to find minimap for null scenario.");
             }
+            mapImage.Source = new BitmapImage(new Uri("pack://application:,,,/Resources/ingame/unknown_map.png"));
+
         }
 
         public SessionInfo CreateSessionInfo() {

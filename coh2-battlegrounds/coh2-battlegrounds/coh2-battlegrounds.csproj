@@ -18,6 +18,7 @@
     <None Remove="Resources\ingame\british.png" />
     <None Remove="Resources\ingame\german.png" />
     <None Remove="Resources\ingame\soviet.png" />
+    <None Remove="Resources\ingame\unknown_map.png" />
     <None Remove="Resources\ingame\west_german.png" />
   </ItemGroup>
 
@@ -30,6 +31,7 @@
     <Resource Include="Resources\ingame\british.png" />
     <Resource Include="Resources\ingame\german.png" />
     <Resource Include="Resources\ingame\soviet.png" />
+    <Resource Include="Resources\ingame\unknown_map.png" />
     <Resource Include="Resources\ingame\west_german.png" />
   </ItemGroup>
 
