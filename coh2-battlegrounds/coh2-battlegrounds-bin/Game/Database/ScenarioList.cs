@@ -127,10 +127,20 @@ namespace Battlegrounds.Game.Database {
 
         private static void LoadNewWorkshopScenarios(List<Scenario> workshopScenarios, out int newWorkshopEntries) {
 
-            string workshopScenarioFolder = $"{Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)}\\my games\\Company of Heroes 2\\Mods\\Scenarios\\subscriptions";
-            string[] files = Directory.GetFiles(workshopScenarioFolder, "*.sga");
+            // Set new entry counter
             newWorkshopEntries = 0;
 
+            // Get workshop filepath
+            string workshopScenarioFolder = $"{Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)}\\my games\\Company of Heroes 2\\Mods\\Scenarios\\subscriptions";
+
+            // Verify it exists
+            if (!Directory.Exists(workshopScenarioFolder)) {
+                Trace.WriteLine("Failed to locate workshop folder. (CoH2 may never have been launched on this device).", "WorkshopScenarios");
+                return;
+            }
+
+            // Get sga files
+            string[] files = Directory.GetFiles(workshopScenarioFolder, "*.sga");
             const string baseExtract = "~tmp\\~workshop-extract\\scenarios\\";
 
             // If the directory for map icons doesn't exist, create it
