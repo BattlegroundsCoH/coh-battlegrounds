@@ -800,19 +800,15 @@ namespace Battlegrounds.Online.Lobby {
             => this.m_isHost.Then(() => this.m_underlyingConnection.SendMessage(new Message(MessageType.LOBBY_REMOVEAI, aiID.ToString())));
 
         public void RemovePlayer(ulong id, bool broadcast) {
-            if (this.m_isHost) {
-                var player = this.TryFindPlayerFromID(id, out ManagedLobbyTeamType team);
-                if (player is HumanLobbyMember human) {
-                    broadcast.Then(() => this.KickPlayer(id));
-                    this.m_teams[team].Leave(human);
-                } else if (player is AILobbyMember ai) {
-                    broadcast.Then(() => this.RemoveAI(ai.ID));
-                    this.m_teams[team].Leave(ai);
-                } else {
-                    Trace.WriteLine($"Unable to find player with ID = {id}", "ManagedLobby");
-                }
+            var player = this.TryFindPlayerFromID(id, out ManagedLobbyTeamType team);
+            if (player is HumanLobbyMember human) {
+                broadcast.Then(() => this.m_isHost.Then(() => this.KickPlayer(id)).Else(() => throw new PermissionDeniedException(PermissionDeniedException.HOST_ONLY)));
+                this.m_teams[team].Leave(human);
+            } else if (player is AILobbyMember ai) {
+                broadcast.Then(() => this.m_isHost.Then(() => this.RemoveAI(ai.ID)).Else(() => throw new PermissionDeniedException(PermissionDeniedException.HOST_ONLY)));
+                this.m_teams[team].Leave(ai);
             } else {
-                throw new PermissionDeniedException(PermissionDeniedException.HOST_ONLY);
+                Trace.WriteLine($"Unable to find player with ID = {id}", "ManagedLobby");
             }
         }
 

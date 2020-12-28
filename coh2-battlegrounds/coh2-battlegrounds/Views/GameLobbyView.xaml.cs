@@ -77,7 +77,7 @@ namespace BattlegroundsApp.Views {
         // DEV: Remove later
         private void RefreshLobby_Click(object sender, RoutedEventArgs e) {
 
-            //this.m_smh.Lobby.InvokeDelayed(500, x => x.RefreshTeamAsync(this.LobbyTeamRefreshDone));
+            this.m_smh.Lobby.InvokeDelayed(500, x => x.RefreshTeamAsync(this.LobbyTeamRefreshDone));
 
         }
 
@@ -260,6 +260,7 @@ namespace BattlegroundsApp.Views {
             while (this is not null && this.m_updateLobby) {
                 if (this.m_smh.Lobby.IsConnectedToServer) {
                     this.UpdateLobbyVisuals();
+                    this.UpdateStartMatchButton();
                     await Task.Delay(1500);
                 } else {
                     break;
