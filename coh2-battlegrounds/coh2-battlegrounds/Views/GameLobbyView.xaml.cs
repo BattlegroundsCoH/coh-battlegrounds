@@ -260,7 +260,6 @@ namespace BattlegroundsApp.Views {
             while (this is not null && this.m_updateLobby) {
                 if (this.m_smh.Lobby.IsConnectedToServer) {
                     this.UpdateLobbyVisuals();
-                    this.UpdateStartMatchButton();
                     await Task.Delay(1500);
                 } else {
                     break;
@@ -271,6 +270,7 @@ namespace BattlegroundsApp.Views {
         private void UpdateLobbyVisuals() {
             this.UpdateGUI(() => {
                 this.m_teamManagement.UpdateTeamview(this.m_smh.Lobby, this.m_smh.Lobby.IsHost);
+                this.UpdateStartMatchButton();
             });
         }
 

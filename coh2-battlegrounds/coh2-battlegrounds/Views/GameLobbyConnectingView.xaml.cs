@@ -22,7 +22,7 @@ namespace BattlegroundsApp.Views {
     /// <summary>
     /// Interaction logic for GameLobbyConnectingView.xaml
     /// </summary>
-    public partial class GameLobbyConnectingView : ViewState {
+    public partial class GameLobbyConnectingView : ViewState { // TODO: Add a time-out functionality in case the host disconnected or some other error occured (like a change in host).
 
         private LobbyHub m_hub;
         private string m_guid;
