@@ -59,6 +59,8 @@ namespace BattlegroundsApp.Views.ViewComponent {
 
         public bool IsOccupied => this.m_state == PlayercardViewstate.Occupied;
 
+        public bool IsOpen => this.m_state == PlayercardViewstate.Open;
+
         public string Playername => PlayerName.Content as string;
 
         public string Playerarmy => this.m_army;
@@ -147,13 +149,13 @@ namespace BattlegroundsApp.Views.ViewComponent {
                 case PlayercardViewstate.Open:
                     this.OpenDockState.Visibility = Visibility.Visible;
                     this.OccupiedStackState.Visibility = Visibility.Collapsed;
-                    this.SetAIPlayerButtonState();
+                    this.SetAIPlayerButtonState(this.m_isHost);
                     break;
             }
         }
 
-        public void SetAIPlayerButtonState() {
-            this.NewAIPlayerButton.IsEnabled = this.m_isHost;
+        public void SetAIPlayerButtonState(bool isHost) {
+            this.NewAIPlayerButton.IsEnabled = isHost;
             if (this.NewAIPlayerButton.IsEnabled) {
                 this.NewAIPlayerButton.Content = "Add AI player";
             } else {

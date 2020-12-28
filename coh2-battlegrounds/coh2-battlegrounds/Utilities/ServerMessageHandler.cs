@@ -68,6 +68,9 @@ namespace BattlegroundsApp {
                     case "selected_wcs":
                         this.OnGamemodeChanged?.Invoke(this.m_lobbyInstance.SelectedGamemode, value);
                         break;
+                    case "capity":
+                        this.m_lobbyWindow.RefreshTeams(null);
+                        break;
                     default:
                         Trace.WriteLine($"Unknown lobby info change [{info}:{value}]", "ServerMessageHandler");
                         break;

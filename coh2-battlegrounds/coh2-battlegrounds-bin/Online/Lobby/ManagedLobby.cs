@@ -1067,7 +1067,7 @@ namespace Battlegrounds.Online.Lobby {
                     this.m_lobbyGamemodeOption = value;
                     break;
                 case "capacity":
-                    throw new NotImplementedException();
+                    break;
                 default:
                     Trace.WriteLine($"Unknown lobby information change: {info} (with value '{value}')", "ManagedLobby");
                     break;

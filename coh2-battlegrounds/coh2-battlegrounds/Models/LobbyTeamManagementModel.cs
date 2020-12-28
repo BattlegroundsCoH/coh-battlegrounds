@@ -91,6 +91,9 @@ namespace BattlegroundsApp.Models {
                         pair.Value[i].SetPlayerdata(occ.ID, occ.Name, occ.Faction, occ.ID == BattlegroundsInstance.LocalSteamuser.ID, occ is AILobbyMember, isHost);
                     } else {
                         pair.Value[i].SetCardState(i < this.m_maxPlayerCount / 2 ? PlayercardViewstate.Open : PlayercardViewstate.Locked);
+                        if (pair.Value[i].IsOpen) {
+                            pair.Value[i].SetAIPlayerButtonState(isHost);
+                        }
                     }
                 }
 

@@ -380,6 +380,9 @@ namespace BattlegroundsApp.Views {
             // Update lobby visuals
             this.UpdateLobbyVisuals();
 
+            // Update start match button
+            this.UpdateStartMatchButton();
+
             // Do more stuff?
 
         }
