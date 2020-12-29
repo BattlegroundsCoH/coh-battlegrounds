@@ -2,12 +2,16 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:local="clr-namespace:BattlegroundsApp"
-             xmlns:hostgame="clr-namespace:BattlegroundsApp.Dialogs.HostGame"
+             xmlns:hostGame="clr-namespace:BattlegroundsApp.Dialogs.HostGame"
+             xmlns:exitApp="clr-namespace:BattlegroundsApp.Dialogs.ExitApplication"
              Startup="App_Startup"
              ShutdownMode="OnMainWindowClose">
     <Application.Resources>
-        <DataTemplate DataType="{x:Type hostgame:HostGameDialogViewModel}">
-            <hostgame:HostGameDialogView/>
+        <DataTemplate DataType="{x:Type hostGame:HostGameDialogViewModel}">
+            <hostGame:HostGameDialogView/>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type exitApp:ExitApplicationDialogViewModel}">
+            <exitApp:ExitApplicationDialogView/>
         </DataTemplate>
     </Application.Resources>
 </Application>
