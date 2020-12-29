@@ -1,0 +1,16 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace BattlegroundsApp.Dialogs.Service {
+    public interface IDialogViewModelBase<T> {
+
+        public string Title { get; set; }
+        public T DialogResult { get; set; }
+        public T DialogCloseDefault { get;  }
+        public void CloseDialogWithResult(IDialogWindow dialog, T result);
+
+    }
+}

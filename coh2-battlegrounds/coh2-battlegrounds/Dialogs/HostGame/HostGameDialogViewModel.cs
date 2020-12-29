@@ -7,43 +7,54 @@ using BattlegroundsApp.Utilities;
 using BattlegroundsApp.ViewModels;
 
 namespace BattlegroundsApp.Dialogs.HostGame {
-    public class HostGameDialogViewModel : DialogViewModelBase<DialogResults> {
+    public enum HostGameDialogResult {
+        Host,
+        Cancel
+    }
+    public class HostGameDialogViewModel : ViewModelBase, IDialogViewModelBase<HostGameDialogResult> {
 
         public ICommand HostCommand { get; private set; }
         public ICommand CancelCommand { get; private set; }
+        public string Title { get; set; }
+        public HostGameDialogResult DialogResult { get; set; }
+        public HostGameDialogResult DialogCloseDefault => HostGameDialogResult.Cancel;
 
         private string _lobbyName;
         public string LobbyName {
-            get { return this._lobbyName; }
+            get { 
+
+                return this._lobbyName; 
+
+            }
 
             set {
 
-                if (!string.Equals(this._lobbyName, value)) {
-
-                    this._lobbyName = value;
-
-                }
+                this._lobbyName = value;
+                OnPropertyChanged(nameof(LobbyName));
 
             }
         }
 
         private string _lobbyPassword;
         public string LobbyPassword {
-            get { return this._lobbyPassword; }
+            get { 
+                
+                return this._lobbyPassword; 
+            
+            }
 
             set {
 
-                if (!string.Equals(this._lobbyPassword, value)) {
+                this._lobbyPassword = value;
+                OnPropertyChanged(nameof(LobbyPassword));
 
-                    this._lobbyPassword = value;
-
-                }
             }
 
         }
 
-        public HostGameDialogViewModel(string title) : base(title) {
+        public HostGameDialogViewModel(string title) {
 
+            Title = title;
             HostCommand = new RelayCommand<IDialogWindow>(Host);
             CancelCommand = new RelayCommand<IDialogWindow>(Cancel);
 
@@ -51,15 +62,22 @@ namespace BattlegroundsApp.Dialogs.HostGame {
 
         private void Host(IDialogWindow window) {
 
-            CloseDialogWithResult(window, DialogResults.Host);
+            CloseDialogWithResult(window, HostGameDialogResult.Host);
 
         }
 
         private void Cancel(IDialogWindow window) {
 
-            CloseDialogWithResult(window, DialogResults.Cancel);
+            CloseDialogWithResult(window, HostGameDialogResult.Cancel);
 
         }
 
+        public void CloseDialogWithResult(IDialogWindow dialog, HostGameDialogResult result) {
+
+            DialogResult = result;
+
+            if (dialog != null) dialog.DialogResult = true;
+
+        }
     }
 }

@@ -95,7 +95,7 @@ namespace BattlegroundsApp.Views {
             var dialog = new HostGameDialogViewModel("Host Game");
             var result = _dialogService.OpenDialog(dialog);
             
-            if (result == Dialogs.DialogResults.Host) {
+            if (result == HostGameDialogResult.Host) {
 
                 // Call the host function
                 ManagedLobby.Host(this.m_hub, dialog.LobbyName, dialog.LobbyPassword, this.HostLobbyServerResponse);

@@ -32,5 +32,13 @@ namespace BattlegroundsApp.Views {
         public override void StateOnLostFocus() => throw new NotImplementedException();
 
         bool IStateMachine<ViewState>.StateChangeRequest(object request) => throw new NotImplementedException();
+
+        private void createCompany_Click(object sender, RoutedEventArgs e) {
+
+        }
+
+        private void editCompany_Click(object sender, RoutedEventArgs e) {
+
+        }
     }
 }
