@@ -652,14 +652,15 @@ namespace Battlegrounds.Online.Lobby {
 
                     this.Teams.ForEach(x => {
                         x.ForEachMember(y => {
-                            if (members.Contains(y)) {
+                            if (!members.Contains(y)) {
                                 if (y is HumanLobbyMember && y.ID != this.Self.ID) {
                                     string destination = BattlegroundsInstance.GetRelativePath(BattlegroundsPaths.SESSION_FOLDER, $"{y.ID}_company.json");
                                     if (this.GetLobbyCompany(y.ID, destination)) {
                                         Company company = Company.ReadCompanyFromFile(destination);
-                                        company.Owner = y.Name;
+                                        company.Owner = y.ID.ToString();
                                         companies.Add(company);
                                         members.Add(y as HumanLobbyMember);
+                                        Trace.WriteLine($"Downloaded company for user {y.ID} ({y.Name}) titled '{company.Name}'");
                                     } else {
                                         Trace.WriteLine($"Failed to download company for use {y.ID}. Will attempt again in 100ms");
                                     }
@@ -675,6 +676,8 @@ namespace Battlegrounds.Online.Lobby {
                 }
 
                 success = members.Count == humanCount;
+
+                Trace.WriteLine($"Found {members.Count} and expected {humanCount}, following {attempts} attempts, thus retrieving companies will return {success}");
 
             });
 
