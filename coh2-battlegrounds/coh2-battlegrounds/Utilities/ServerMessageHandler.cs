@@ -53,7 +53,22 @@ namespace BattlegroundsApp {
             this.m_lobbyInstance.OnDataRequest += this.OnDataRequest;
             this.m_lobbyInstance.OnStartMatchReceived += this.StartMatchCommandReceived;
             this.m_lobbyInstance.OnLobbyInfoChanged += this.OnLobbyInfoChanged;
+            this.m_lobbyInstance.OnMatchInfoReceived += this.OnLobbyMatchInfo;
 
+        }
+
+        private void OnLobbyMatchInfo(string type, string arg1, string arg2) {
+            this.m_lobbyWindow.UpdateGUI(() => {
+                switch (type) {
+                    case "STARTING":
+                        if (!this.m_lobbyInstance.IsHost) {
+                            this.m_lobbyWindow.lobbyChat.Text += $"[Lobby] The host has presset the start game button.\n";
+                        }
+                        break;
+                    default:
+                        break;
+                }
+            });
         }
 
         private void OnLobbyInfoChanged(string info, string value) {

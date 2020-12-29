@@ -122,4 +122,6 @@
     /// <param name="self">A reference to the <see cref="ManagedLobby"/> instance that finished executing.</param>
     public delegate void ManagedLobbyTaskDone(ManagedLobby self);
 
+    public delegate void ManagedLobbyMatchInfo(string type, string arg1, string arg2);
+
 }

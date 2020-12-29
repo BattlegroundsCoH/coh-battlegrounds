@@ -76,6 +76,8 @@ namespace Battlegrounds.Online.Lobby {
         /// </summary>
         public event ManagedLobbyLocalDataRequest OnLocalDataRequested;
 
+        public event ManagedLobbyMatchInfo OnMatchInfoReceived;
+
         /// <summary>
         /// Is the instance of <see cref="ManagedLobby"/> considered to be the host of the lobby.
         /// </summary>
@@ -842,7 +844,7 @@ namespace Battlegrounds.Online.Lobby {
 
             // Make sure we're the host
             if (!this.m_isHost) {
-                return;
+                throw new PermissionDeniedException(PermissionDeniedException.HOST_ONLY);
             }
 
             // Get the local company
@@ -859,6 +861,9 @@ namespace Battlegrounds.Online.Lobby {
 
             // Wait a bit
             await Task.Delay(240);
+
+            // Log
+            operationFeedback?.Invoke("Downloading lobby companies");
 
             // Get company lobbies
             (List<Company> lobbyCompanies, bool success) = await GetLobbyCompanies();
@@ -1044,6 +1049,9 @@ namespace Battlegrounds.Online.Lobby {
                     } else {
                         Trace.WriteLine("Failed to remove AI (Invalid ID)", "ManagedLobby");
                     }
+                    break;
+                case MessageType.LOBBY_STARTING:
+                    this.OnMatchInfoReceived?.Invoke(incomingMessage.Descriptor.ToString(), incomingMessage.Argument1, incomingMessage.Argument2);
                     break;
                 case MessageType.FatalMessageError:
                     break;
