@@ -110,7 +110,10 @@ namespace BattlegroundsApp.Views {
 
         }
 
-        public void CreateMessageHandler(ManagedLobby result) => this.m_smh = new ServerMessageHandler(this, result);
+        public void CreateMessageHandler(ManagedLobby result) {
+            this.m_smh = new ServerMessageHandler(this, result);
+            this.m_smh.OnCompanyRequested += this.OnCompanyRequested;
+        }
 
         #region Server Message Listeners
 
@@ -474,6 +477,20 @@ namespace BattlegroundsApp.Views {
         }
 
         public void RefreshTeams(ManagedLobbyTaskDone overrideDone) => this.m_smh.Lobby.RefreshTeamAsync(overrideDone ?? this.LobbyTeamRefreshDone);
+
+        private void OnCompanyRequested(string reason) {
+            if (reason.CompareTo("HOST") == 0) {
+                var company = this.GetLocalCompany();
+                if (company is not null) {
+                    this.m_smh.Lobby.UploadCompany(company);
+                    Trace.WriteLine("Uploading company");
+                } else {
+                    this.UpdateGUI(() => {
+                        this.lobbyChat.Text += "[User Error] You've not selected a company.";
+                    });
+                }
+            }
+        }
 
     }
 

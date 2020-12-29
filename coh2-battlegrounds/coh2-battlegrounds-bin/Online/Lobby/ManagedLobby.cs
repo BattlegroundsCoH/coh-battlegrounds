@@ -643,27 +643,38 @@ namespace Battlegrounds.Online.Lobby {
             int humanCount = -1;
             this.Teams.ForEach(x => x.ForEachMember(y => humanCount += y is HumanLobbyMember ? 1 : 0));
 
-            await Task.Run(() => {
+            await Task.Run(async () => {
 
-                int count = 0;
+                int attempts = 0;
+                List<HumanLobbyMember> members = new List<HumanLobbyMember>();
 
-                this.Teams.ForEach(x => {
-                    x.ForEachMember(y => {
-                        if (y is HumanLobbyMember && y.ID != this.Self.ID) {
-                            string destination = BattlegroundsInstance.GetRelativePath(BattlegroundsPaths.SESSION_FOLDER, $"{y.ID}_company.json");
-                            if (!this.GetLobbyCompany(y.ID, destination)) {
-                                // TODO: Try and redownload
-                            } else {
-                                Company company = Company.ReadCompanyFromFile(destination);
-                                company.Owner = y.Name;
-                                companies.Add(company);
-                                count++;
+                while (members.Count != humanCount && attempts < 100) {
+
+                    this.Teams.ForEach(x => {
+                        x.ForEachMember(y => {
+                            if (members.Contains(y)) {
+                                if (y is HumanLobbyMember && y.ID != this.Self.ID) {
+                                    string destination = BattlegroundsInstance.GetRelativePath(BattlegroundsPaths.SESSION_FOLDER, $"{y.ID}_company.json");
+                                    if (this.GetLobbyCompany(y.ID, destination)) {
+                                        Company company = Company.ReadCompanyFromFile(destination);
+                                        company.Owner = y.Name;
+                                        companies.Add(company);
+                                        members.Add(y as HumanLobbyMember);
+                                    } else {
+                                        Trace.WriteLine($"Failed to download company for use {y.ID}. Will attempt again in 100ms");
+                                    }
+                                }
                             }
-                        }
+                        });
                     });
-                });
 
-                success = count == humanCount;
+                    await Task.Delay(100);
+
+                    attempts++;
+
+                }
+
+                success = members.Count == humanCount;
 
             });
 

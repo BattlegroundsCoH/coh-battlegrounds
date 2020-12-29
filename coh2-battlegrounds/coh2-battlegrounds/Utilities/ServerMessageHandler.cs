@@ -21,6 +21,8 @@ namespace BattlegroundsApp {
 
     public delegate void KickedListener(string message);
 
+    public delegate void CompanyRequestListener(string reason);
+
     public class ServerMessageHandler {
 
         private ManagedLobby m_lobbyInstance;
@@ -37,6 +39,8 @@ namespace BattlegroundsApp {
         public event MapChangedListener OnMapChanged;
 
         public event GamemodechangedListener OnGamemodeChanged;
+
+        public event CompanyRequestListener OnCompanyRequested;
 
         public ServerMessageHandler(GameLobbyView view, ManagedLobby lobby) {
             
@@ -60,9 +64,10 @@ namespace BattlegroundsApp {
         private void OnLobbyMatchInfo(string type, string arg1, string arg2) {
             this.m_lobbyWindow.UpdateGUI(() => {
                 switch (type) {
-                    case "STARTING":
+                    case "LOBBY_STARTING":
                         if (!this.m_lobbyInstance.IsHost) {
                             this.m_lobbyWindow.lobbyChat.Text += $"[Lobby] The host has presset the start game button.\n";
+                            this.OnCompanyRequested?.Invoke("HOST");
                         }
                         break;
                     default:
