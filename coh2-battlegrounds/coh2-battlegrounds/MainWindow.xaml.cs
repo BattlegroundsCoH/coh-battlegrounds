@@ -20,6 +20,8 @@ using System.Windows.Shapes;
 using System.Diagnostics;
 
 using BattlegroundsApp.Views;
+using BattlegroundsApp.Dialogs.Service;
+using BattlegroundsApp.Dialogs.ExitApplication;
 
 namespace BattlegroundsApp {
 
@@ -36,6 +38,8 @@ namespace BattlegroundsApp {
 
         private Dictionary<string, ViewState> m_constStates; // lookup table for all states that don't need initialization.
 
+        private IDialogService _dialogService;
+
         public MainWindow() {
 
             // Initialize components etc...
@@ -49,6 +53,8 @@ namespace BattlegroundsApp {
                 [DASHBOARDSTATE] = new DashboardView(),
                 [NEWSSTATE] = new NewsView(),
             };
+
+            _dialogService = new DialogService();
 
             // Starts with Dashboard page opened
             this.DataContext = this.m_constStates[DASHBOARDSTATE];
@@ -71,7 +77,18 @@ namespace BattlegroundsApp {
         private void GameBrowser_Click(object sender, RoutedEventArgs e) => this.State = this.m_constStates[GAMEBROWSERSTATE];
 
         // Exit application
-        private void Exit_Click(object sender, RoutedEventArgs e) => this.Close();
+        private void Exit_Click(object sender, RoutedEventArgs e) {
+
+            var dialog = new ExitApplicationDialogViewModel("Exit", "Are you sure?");
+            var result = _dialogService.OpenDialog(dialog);
+
+            if (result == ExitApplicationDialogResult.Exit) {
+
+                this.Close();
+
+            }
+
+        }
 
         // Hanlde view state change requests
         public override bool StateChangeRequest(object request) {
