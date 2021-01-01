@@ -3,17 +3,12 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+
 using Battlegrounds;
 using Battlegrounds.Game;
 using Battlegrounds.Game.Battlegrounds;
@@ -21,7 +16,7 @@ using Battlegrounds.Game.Database;
 using Battlegrounds.Game.Gameplay;
 using Battlegrounds.Modding;
 using Battlegrounds.Online.Lobby;
-
+using BattlegroundsApp.Controls.Lobby;
 using BattlegroundsApp.LocalData;
 using BattlegroundsApp.Models;
 using BattlegroundsApp.Resources;
@@ -191,8 +186,8 @@ namespace BattlegroundsApp.Views {
 
         }
 
-        private void Map_SelectionChanged(object sender, SelectionChangedEventArgs e) {
-            if (!Map.IsEnabled) {
+        private void Map_SelectedItemChanged(object sender, SelectionChangedEventArgs e) {
+            if (Map.State is OtherState) {
                 return;
             }
             if (Map.SelectedItem is Scenario scenario) {
@@ -277,15 +272,15 @@ namespace BattlegroundsApp.Views {
             });
         }
 
-        private void OnTeamManagementCallbackHandler(ManagedLobbyTeamType team, PlayercardView card, object arg, string reason) {
+        private void OnTeamManagementCallbackHandler(ManagedLobbyTeamType team, PlayerCardView card, object arg, string reason) {
             switch (reason) {
                 case "AddAI":
                     card.IsRegistered = false;
-                    int aiid = this.m_smh.Lobby.CreateAIPlayer(card.Difficulty, card.Playerarmy, team);
+                    int aiid = this.m_smh.Lobby.CreateAIPlayer(card.Difficulty, card.PlayerArmy, team);
                     if (aiid != -1) {
                         card.UpdatePlayerID((ulong)aiid);
                         card.IsRegistered = true;
-                        Trace.WriteLine($"Adding AI [{team}][{card.Difficulty}][{card.Playerarmy}]", "GameLobbyView");
+                        Trace.WriteLine($"Adding AI [{team}][{card.Difficulty}][{card.PlayerArmy}]", "GameLobbyView");
                     } else {
                         Trace.WriteLine("Failed to add AI...");
                         card.SetCardState(PlayercardViewstate.Open);
@@ -295,41 +290,38 @@ namespace BattlegroundsApp.Views {
                     if (!card.IsRegistered) {
                         break;
                     }
-                    if (card.Playerarmy.CompareTo(this.m_smh.Lobby.TryFindPlayerFromID(card.Playerid)?.Faction) != 0) {
-                        this.m_smh.Lobby.SetFaction(card.Playerid, card.Playerarmy);
-                        Trace.WriteLine($"Changing faction [{card.Playerid}][{card.Difficulty}][{card.Playerarmy}]", "GameLobbyView");
+                    if (card.PlayerArmy.CompareTo(this.m_smh.Lobby.TryFindPlayerFromID(card.PlayerSteamID)?.Faction) != 0) {
+                        this.m_smh.Lobby.SetFaction(card.PlayerSteamID, card.PlayerArmy);
+                        Trace.WriteLine($"Changing faction [{card.PlayerSteamID}][{card.Difficulty}][{card.PlayerArmy}]", "GameLobbyView");
                     }
                     break;
                 case "ChangedCompany":
-                    if (!card.IsRegistered) {
-                        break;
-                    }
-                    if (card.Playercompany.CompareTo(this.m_smh.Lobby.TryFindPlayerFromID(card.Playerid)?.CompanyName) != 0) {
-                        if (card.IsAI || card.Playerid == this.m_smh.Lobby.Self.ID) {
-                            PlayercardCompanyItem companyItem = (PlayercardCompanyItem)arg;
-                            if (companyItem.State == CompanyItemState.Company && card.Playerid == this.m_smh.Lobby.Self.ID) {
-                                Company company = PlayerCompanies.FromNameAndFaction(companyItem.Name, Faction.FromName(card.Playerarmy));
-                                if (company is not null) {
-                                    this.m_smh.Lobby.SetCompany(company);
-                                    Trace.WriteLine($"Changing company [{card.Playerid}][{card.Difficulty}][{card.Playerarmy}][{card.Playercompany}]", "GameLobbyView");
-                                } else {
-                                    throw new NotImplementedException();
-                                }
-                            } else if (companyItem.State == CompanyItemState.Generate && card.IsAI) {
-                                this.m_smh.Lobby.SetCompany(card.Playerid, "AUGEN", -1.0);
-                                Trace.WriteLine($"Changing company [{card.Playerid}][{card.Difficulty}][{card.Playerarmy}][Auto-generated]", "GameLobbyView");
-                            } else {
-                                this.m_smh.Lobby.SetCompany(card.Playerid, "NULL", -1.0);
-                                Trace.WriteLine($"Changing company [{card.Playerid}][{card.Difficulty}][{card.Playerarmy}][{card.Playercompany}]", "GameLobbyView");
-                            }
+                    PlayercardCompanyItem companyItem = card.PlayerSelectedCompanyItem;
+                    if (companyItem.Name.CompareTo(this.m_smh.Lobby.TryFindPlayerFromID(card.PlayerSteamID)?.CompanyName) != 0) {
+                        bool allowSet = card.PlayerSteamID == this.m_smh.Lobby.Self.ID || (card.IsHost && card.IsAI);
+                        if (companyItem.State == CompanyItemState.Company && allowSet) {
+                            this.m_smh.Lobby.SetCompany(card.PlayerSteamID, companyItem.Name, companyItem.Strength);
+                            Trace.WriteLine($"Changing company [{card.PlayerSteamID}][{card.Difficulty}][{card.PlayerArmy}][{companyItem.Name}]", "GameLobbyView");
+                        } else if (companyItem.State == CompanyItemState.Generate && allowSet) {
+                            this.m_smh.Lobby.SetCompany(card.PlayerSteamID, "AUGEN", -1.0);
+                            Trace.WriteLine($"Changing company [{card.PlayerSteamID}][{card.Difficulty}][{card.PlayerArmy}][Auto-generated]", "GameLobbyView");
+                        } else {
+                            this.m_smh.Lobby.SetCompany(card.PlayerSteamID, "NULL", -1.0);
+                            Trace.WriteLine($"Changing company [{card.PlayerSteamID}][{card.Difficulty}][{card.PlayerArmy}][NULL]", "GameLobbyView");
                         }
                     }
                     break;
                 case "RemovePlayer":
                     card.IsRegistered = false;
-                    this.m_smh.Lobby.RemovePlayer(card.Playerid, true);
-                    Trace.WriteLine($"Removing player [{team}][{arg}][{card.Difficulty}][{card.Playerarmy}]", "GameLobbyView");
+                    this.m_smh.Lobby.RemovePlayer(card.PlayerSteamID, true);
+                    Trace.WriteLine($"Removing player [{team}][{arg}][{card.Difficulty}][{card.PlayerArmy}]", "GameLobbyView");
                     break;
+                case "LockSlot":
+                    throw new NotImplementedException();
+                case "UnlockSlot":
+                    throw new NotImplementedException();
+                case "MoveTo":
+                    throw new NotImplementedException();
                 default:
                     break;
             }
@@ -346,8 +338,8 @@ namespace BattlegroundsApp.Views {
             }
         }
 
-        private void Gamemode_SelectionChanged(object sender, SelectionChangedEventArgs e) {
-            if (!Gamemode.IsEnabled) {
+        private void Gamemode_SelectedItemChanged(object sender, SelectionChangedEventArgs e) {
+            if (Gamemode.State is OtherState) {
                 return;
             }
             if (Gamemode.SelectedItem is Wincondition wincon) {
@@ -356,8 +348,8 @@ namespace BattlegroundsApp.Views {
             }
         }
 
-        private void GamemodeOption_SelectionChanged(object sender, SelectionChangedEventArgs e) {
-            if (!GamemodeOption.IsEnabled) {
+        private void GamemodeOption_SelectedItemChanged(object sender, SelectionChangedEventArgs e) {
+            if (GamemodeOption.State is OtherState) {
                 return;
             }
             if (GamemodeOption.SelectedItem is WinconditionOption) {
@@ -373,7 +365,7 @@ namespace BattlegroundsApp.Views {
         public Company GetLocalCompany() {
             var card = this.m_teamManagement.GetLocalPlayercard();
             if (card is not null) {
-                return PlayerCompanies.FromNameAndFaction(card.Playercompany, Faction.FromName(card.Playerarmy));
+                return PlayerCompanies.FromNameAndFaction(card.PlayerSelectedCompanyItem.Name, Faction.FromName(card.PlayerArmy));
             } else {
                 return null;
             }
@@ -386,8 +378,6 @@ namespace BattlegroundsApp.Views {
 
             // Update start match button
             this.UpdateStartMatchButton();
-
-            // Do more stuff?
 
         }
 
@@ -459,11 +449,11 @@ namespace BattlegroundsApp.Views {
 
             // Set team management
             this.m_teamManagement.SetIsHost(hostMode);
-            
-            // Enable or disable game settings
-            this.Map.IsEnabled = hostMode;
-            this.Gamemode.IsEnabled = hostMode;
-            this.GamemodeOption.IsEnabled = hostMode;
+
+            // Enable or disable game settings (AI and ID properties not relevant to these elements)
+            this.Map.SetStateBasedOnContext(hostMode, hostMode, 0);
+            this.Gamemode.SetStateBasedOnContext(hostMode, hostMode, 0);
+            this.GamemodeOption.SetStateBasedOnContext(hostMode, hostMode, 0);
 
         }
 

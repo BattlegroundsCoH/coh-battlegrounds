@@ -24,18 +24,18 @@ namespace BattlegroundsApp.Models {
         private Grid m_teamGrid;
         private int m_maxPlayerCount;
         private bool m_isHost;
-        private Dictionary<ManagedLobbyTeamType, List<PlayercardView>> m_teamSetup;
+        private Dictionary<ManagedLobbyTeamType, List<PlayerCardView>> m_teamSetup;
 
-        public event Action<ManagedLobbyTeamType, PlayercardView, object, string> OnTeamEvent;
+        public event Action<ManagedLobbyTeamType, PlayerCardView, object, string> OnTeamEvent;
 
         public int TotalPlayerCount => this.m_teamSetup[ManagedLobbyTeamType.Axis].Count(x => x.IsOccupied) + this.m_teamSetup[ManagedLobbyTeamType.Allies].Count(x => x.IsOccupied);
 
         public LobbyTeamManagementModel(Grid teamGrid) {
             
             this.m_teamGrid = teamGrid;
-            this.m_teamSetup = new Dictionary<ManagedLobbyTeamType, List<PlayercardView>>() {
-                [ManagedLobbyTeamType.Allies] = new List<PlayercardView>(),
-                [ManagedLobbyTeamType.Axis] = new List<PlayercardView>(),
+            this.m_teamSetup = new Dictionary<ManagedLobbyTeamType, List<PlayerCardView>>() {
+                [ManagedLobbyTeamType.Allies] = new List<PlayerCardView>(),
+                [ManagedLobbyTeamType.Axis] = new List<PlayerCardView>(),
             };
             
             for (int i = 0; i < MAX_TEAM; i++) {
@@ -54,7 +54,7 @@ namespace BattlegroundsApp.Models {
             Contract.Requires(row <= MAX_TEAM);
             Contract.Requires(type == ManagedLobbyTeamType.Allies || type == ManagedLobbyTeamType.Axis);
 
-            PlayercardView view = new PlayercardView();
+            PlayerCardView view = new PlayerCardView();
             view.SetValue(Grid.ColumnProperty, type == ManagedLobbyTeamType.Allies ? 0 : 1);
             view.SetValue(Grid.RowProperty, row);
             view.OnPlayercardEvent += this.OnCardActionHandler;
@@ -88,17 +88,40 @@ namespace BattlegroundsApp.Models {
                 for (int i = 0; i < team.Slots.Length; i++) {
                     if (team.Slots[i].State == ManagedLobbyTeamSlotState.Occupied) {
                         var occ = team.Slots[i].Occupant;
-                        pair.Value[i].SetPlayerdata(occ.ID, occ.Name, occ.Faction, occ.ID == BattlegroundsInstance.LocalSteamuser.ID, occ is AILobbyMember, isHost);
+                        pair.Value[i].SetStateBasedOnContext(isHost, occ is AILobbyMember, occ.ID);
+                        if (occ is AILobbyMember aiMember) {
+                            pair.Value[i].SetAIData(aiMember.Difficulty, aiMember.Faction);
+                        } else {
+                            pair.Value[i].SetPlayerData(occ.Name, occ.Faction, this.CreateCompanyFromOccupant(occ));
+                        }
+                        pair.Value[i].SetCardState(PlayercardViewstate.Occupied);
                     } else {
                         pair.Value[i].SetCardState(i < this.m_maxPlayerCount / 2 ? PlayercardViewstate.Open : PlayercardViewstate.Locked);
-                        if (pair.Value[i].IsOpen) {
-                            pair.Value[i].SetAIPlayerButtonState(isHost);
-                        }
                     }
                 }
 
             }
 
+        }
+
+        private PlayercardCompanyItem CreateCompanyFromOccupant(ManagedLobbyMember member) {
+            if (member is HumanLobbyMember human) {
+                if (!string.IsNullOrEmpty(human.CompanyName) && human.CompanyName.CompareTo("NULL") != 0) {
+                    return new PlayercardCompanyItem(CompanyItemState.Company, human.CompanyName, human.CompanyStrength);
+                } else {
+                    return new PlayercardCompanyItem(CompanyItemState.None, "NULL");
+                }
+            } else if (member is AILobbyMember ai) {
+                if (!string.IsNullOrEmpty(ai.CompanyName) && ai.CompanyName.CompareTo("NULL") != 0) {
+                    return new PlayercardCompanyItem(CompanyItemState.Company, ai.CompanyName, ai.CompanyStrength);
+                } else if (ai.CompanyName.CompareTo("AUGEN") == 0) {
+                    return new PlayercardCompanyItem(CompanyItemState.Generate, "AUGEN");
+                } else {
+                    return new PlayercardCompanyItem(CompanyItemState.None, "NULL");
+                }
+            } else {
+                throw new NotImplementedException();
+            }
         }
 
         public List<SessionParticipant> GetParticipants(ManagedLobbyTeamType team) {
@@ -116,8 +139,8 @@ namespace BattlegroundsApp.Models {
                             i));
                     } else {
                         participants.Add(new SessionParticipant(
-                            player.Playername,
-                            player.Playerid,
+                            player.PlayerName,
+                            player.PlayerSteamID,
                             null,
                             (team == ManagedLobbyTeamType.Allies) ? SessionParticipantTeam.TEAM_ALLIES : SessionParticipantTeam.TEAM_AXIS,
                             i));
@@ -130,10 +153,10 @@ namespace BattlegroundsApp.Models {
 
         }
 
-        private Company GetAICompany(PlayercardView view) {
-            Faction faction = Faction.FromName(view.Playerarmy);
+        private Company GetAICompany(PlayerCardView view) {
+            Faction faction = Faction.FromName(view.PlayerArmy);
             if (view.PlayerSelectedCompanyItem.State == CompanyItemState.Company) {
-                return PlayerCompanies.FromNameAndFaction(view.Playercompany, faction);
+                return PlayerCompanies.FromNameAndFaction(view.PlayerSelectedCompanyItem.Name, faction);
             } else if (view.PlayerSelectedCompanyItem.State == CompanyItemState.Generate) {
                 return CompanyGenerator.Generate(faction, BattlegroundsInstance.BattleGroundsTuningMod.Guid.ToString().Replace("-", ""), false, true, true);
             } else {
@@ -141,8 +164,8 @@ namespace BattlegroundsApp.Models {
             }
         }
 
-        private void OnCardActionHandler(PlayercardView sender, string reason) {
-            if (!(this.m_isHost || sender.Playerid == BattlegroundsInstance.LocalSteamuser.ID)) {
+        private void OnCardActionHandler(PlayerCardView sender, string reason) {
+            if (!(this.m_isHost || sender.PlayerSteamID == BattlegroundsInstance.LocalSteamuser.ID)) {
                 return;
             }
             ManagedLobbyTeamType teamOf = this.m_teamSetup[ManagedLobbyTeamType.Allies].Contains(sender) ? ManagedLobbyTeamType.Allies : ManagedLobbyTeamType.Axis;
@@ -157,7 +180,7 @@ namespace BattlegroundsApp.Models {
                     }
                     break;
                 case "ChangedArmy":
-                    OnTeamEvent?.Invoke(teamOf, sender, sender.Playerarmy, reason);
+                    OnTeamEvent?.Invoke(teamOf, sender, sender.PlayerArmy, reason);
                     break;
                 case "ChangedCompany":
                     OnTeamEvent?.Invoke(teamOf, sender, sender.PlayerSelectedCompanyItem, reason);
@@ -166,6 +189,12 @@ namespace BattlegroundsApp.Models {
                     sender.SetCardState(PlayercardViewstate.Open);
                     OnTeamEvent?.Invoke(teamOf, sender, this.m_teamSetup[teamOf].IndexOf(sender), reason);
                     break;
+                case "LockSlot":
+                    throw new NotImplementedException();
+                case "UnlockSlot":
+                    throw new NotImplementedException();
+                case "MoveTo":
+                    throw new NotImplementedException();
                 default:
                     Trace.WriteLine($"Unhandled playercard event '{reason}'", "LobbyTeamManagementModel.cs");
                     break;
@@ -174,18 +203,16 @@ namespace BattlegroundsApp.Models {
 
         public int GetTeamSize(ManagedLobbyTeamType size) => this.m_teamSetup[size].Count(x => x.IsOccupied);
         
-        public PlayercardView GetLocalPlayercard() { 
-        
+        public PlayerCardView GetLocalPlayercard() {
+            ulong localID = BattlegroundsInstance.LocalSteamuser.ID;
             foreach (var team in this.m_teamSetup) {
                 foreach (var player in team.Value) {
-                    if (player.IsClient) {
+                    if (player.PlayerSteamID == localID) {
                         return player;
                     }
                 }
             }
-
             return null;
-
         }
 
         public void SetIsHost(bool isHost) => this.m_isHost = isHost;

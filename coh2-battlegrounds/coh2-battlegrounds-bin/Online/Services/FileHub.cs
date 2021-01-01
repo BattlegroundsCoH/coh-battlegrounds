@@ -41,7 +41,7 @@ namespace Battlegrounds.Online.Services {
         /// <param name="localapth">The local path that the downloaded file contents will be written to.</param>
         /// <param name="downloadname">The name of the file to download from the server.</param>
         /// <param name="lobbyID">The lobby ID to use when identifying the lobby to download data from.</param>
-        /// <returns>If download was ssuccesful, true is returned; otherwise false.</returns>
+        /// <returns>If download was successful <see langword="true"/> is returned. Otherwise <see langword="false"/> is returned.</returns>
         public static bool DownloadFile(string localapth, string downloadname, string lobbyID) {
 
             // Establish connection
@@ -125,7 +125,7 @@ namespace Battlegrounds.Online.Services {
         /// <param name="filepath">The local path of the file to upload.</param>
         /// <param name="uploadname">The name of the file to upload to the server.</param>
         /// <param name="lobbyID">The lobby ID to use when identifying the lobby to upload data to.</param>
-        /// <returns>If upload was ssuccesful, true is returned; otherwise false.</returns>
+        /// <returns>If upload was successful <see langword="true"/> is returned. Otherwise <see langword="false"/> is returned.</returns>
         public static bool UploadFile(string filepath, string uploadname, string lobbyID) {
 
             // If the file doesn't exit on our end - we naturally can't download it

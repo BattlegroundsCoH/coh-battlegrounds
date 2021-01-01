@@ -16,11 +16,24 @@ using Battlegrounds.Game.Gameplay;
 using Battlegrounds.Online.Debug;
 using Battlegrounds.Online.Services;
 using Battlegrounds.Steam;
+using Battlegrounds.Verification;
 
 namespace Battlegrounds.Online.Lobby {
-    
+
     /// <summary>
-    /// A representation of a clientside lobby. This class cannot be inherited. This class has no public constructor.
+    /// Callback for handlings events of a single <see cref="int"/> argument.
+    /// </summary>
+    /// <param name="argument">The <see cref="int"/> argument given to the callback.</param>
+    public delegate void IntegerCallback(int argument);
+
+    /// <summary>
+    /// Callback for handlings events of a single <see cref="ulong"/> argument.
+    /// </summary>
+    /// <param name="argument">The <see cref="ulong"/> argument given to the callback.</param>
+    public delegate void UlongCallback(ulong argument);
+
+    /// <summary>
+    /// A representation of a clientside lobby that handles communication to and from the Battlegrounds server. This class cannot be inherited. This class has no public constructor.
     /// </summary>
     /// <remarks>
     /// See <see cref="Join(LobbyHub, string, string, ManagedLobbyConnectCallback)"/> or <see cref="Host(LobbyHub, string, string, ManagedLobbyConnectCallback)"/> to create a new instance.
@@ -76,6 +89,9 @@ namespace Battlegrounds.Online.Lobby {
         /// </summary>
         public event ManagedLobbyLocalDataRequest OnLocalDataRequested;
 
+        /// <summary>
+        /// Event triggered when new informaion regarding the starting match has been received.
+        /// </summary>
         public event ManagedLobbyMatchInfo OnMatchInfoReceived;
 
         /// <summary>
@@ -103,8 +119,14 @@ namespace Battlegrounds.Online.Lobby {
         /// </summary>
         public string SelectedMap => this.m_lobbyMap;
 
+        /// <summary>
+        /// Gets the currently registered to be selected gamemode.
+        /// </summary>
         public string SelectedGamemode => this.m_lobbyGamemode;
 
+        /// <summary>
+        /// Gets the currently registered to be selected gamemode.
+        /// </summary>
         public string SelectedGamemodeOption => this.m_lobbyGamemodeOption;
 
         private List<ManagedLobbyTeam> Teams => this.m_teams.Values.ToList();
@@ -149,30 +171,48 @@ namespace Battlegrounds.Online.Lobby {
         }
 
         /// <summary>
-        /// 
+        /// Get the amount of active players in the lobby.
         /// </summary>
-        /// <param name="response"></param>
-        public void GetPlayersInLobby(Action<int> response) {
+        /// <param name="response">The callback function that will received the server response. If connection fails, -1 is returned.</param>
+        /// <returns>Will return <see langword="true"/> if the callback was valid. Otherwise <see langword="false"/>.</returns>
+        public bool GetPlayersInLobby(IntegerCallback response) {
+            if (response is null) {
+                return false; // Bail-fast --> no need to request data from the server if we're not going to use it.
+            }
             if (this.m_underlyingConnection != null && this.m_underlyingConnection.IsConnected) {
                 this.GetLobbyInformation("players", (a, b) => response.Invoke(int.Parse(a)));
+                return true;
+            } else {
+                response.Invoke(-1);
+                return false;
             }
         }
 
         /// <summary>
-        /// 
+        /// Get the amount of active players in the lobby through an asynchronous operation
         /// </summary>
-        /// <returns></returns>
+        /// <remarks>Async method.</remarks>
+        /// <returns>The integer response from the server. If connection fails, -1 is returned.</returns>
         public async Task<int> GetPlayersInLobbyAsync() {
-            int result = 0;
+            int result = -1;
             bool done = false;
-            this.GetPlayersInLobby(x => { result = x; done = true; });
-            while (!done) {
-                await Task.Delay(1);
+            if (this.GetPlayersInLobby(x => { result = x; done = true; })) {
+                while (!done) {
+                    await Task.Delay(1);
+                }
             }
             return result;
         }
 
+        /// <summary>
+        /// Set the currently selected <see cref="Scenario"/> in the <see cref="ManagedLobby"/>.
+        /// </summary>
+        /// <param name="scenario">The <see cref="Scenario"/> to set as selected map.</param>
+        /// <exception cref="PermissionDeniedException"/>
         public void SetMap(Scenario scenario) {
+            if (scenario is null) {
+                return;
+            }
             if (!this.m_isHost) {
                 throw new PermissionDeniedException(PermissionDeniedException.HOST_ONLY);
             } else {
@@ -181,7 +221,15 @@ namespace Battlegrounds.Online.Lobby {
             }
         }
 
+        /// <summary>
+        /// Set the currently selected gamemode.
+        /// </summary>
+        /// <param name="gamemode">The name of the gamemode to set.</param>
+        /// <exception cref="PermissionDeniedException"/>
         public void SetGamemode(string gamemode) {
+            if (gamemode is null) {
+                return;
+            }
             if (!this.m_isHost) {
                 throw new PermissionDeniedException(PermissionDeniedException.HOST_ONLY);
             } else {
@@ -190,6 +238,11 @@ namespace Battlegrounds.Online.Lobby {
             }
         }
 
+        /// <summary>
+        /// Set the currently selected option for the selected gamemode.
+        /// </summary>
+        /// <param name="option">The numeric ID of the option to set.</param>
+        /// <exception cref="PermissionDeniedException"/>
         public void SetGamemodeOption(int option) {
             if (!this.m_isHost) {
                 throw new PermissionDeniedException(PermissionDeniedException.HOST_ONLY);
@@ -199,6 +252,12 @@ namespace Battlegrounds.Online.Lobby {
             }
         }
 
+        /// <summary>
+        /// Set the faction of the specified user.
+        /// </summary>
+        /// <param name="ID">The unique ID of the user to set faction for.</param>
+        /// <param name="faction">The AE name of the faction to set.</param>
+        /// <exception cref="PermissionDeniedException"/>
         public void SetFaction(ulong ID, string faction) {
             if (this.m_isHost || ID == this.m_self.ID) {
                 this.SetUserInformation(ID, "fac", faction);
@@ -210,28 +269,45 @@ namespace Battlegrounds.Online.Lobby {
             }
         }
 
-        public void SetCompany(Company company) {
+        /// <summary>
+        /// Set the <see cref="Company"/> of the local user.
+        /// </summary>
+        /// <param name="company">The actual <see cref="Company"/> to set as selected company.</param>
+        /// <param name="upload">Upload the selected company file to the server. (Set to <see langword="true"/> only when absolutely needed).</param>
+        /// <exception cref="PermissionDeniedException"/>
+        public void SetCompany(Company company, bool upload = false) {
             this.SetCompany(this.Self.ID, company.Name, company.GetStrength());
-            this.UploadCompany(company);
+            upload.Then(() => this.UploadCompany(company));
         }
 
+        /// <summary>
+        /// Set the name and strength of the selected company for a specific user.
+        /// </summary>
+        /// <param name="ID">The unique ID of the user to set company data for.</param>
+        /// <param name="company">The display name of the company.</param>
+        /// <param name="strength">The strength associated with the company.</param>
+        /// <exception cref="PermissionDeniedException"/>
         public void SetCompany(ulong ID, string company, double strength) {
-            this.SetUserInformation(ID, "com", company);
-            this.SetUserInformation(ID, "str", strength);
             if (this.m_isHost || ID == this.m_self.ID) {
-                if (this.TryFindPlayerFromID(ID) is ManagedLobbyMember member) {
-                    member.UpdateCompany(company, strength);
-                }
+                this.SetUserInformation(ID, "com", company);
+                this.SetUserInformation(ID, "str", strength);
             } else {
                 throw new PermissionDeniedException(PermissionDeniedException.HOST_ONLY);
+            }
+            if (this.TryFindPlayerFromID(ID) is ManagedLobbyMember member) {
+                member.UpdateCompany(company, strength);
             }
         }
 
         /// <summary>
-        /// 
+        /// Get the current capacity of the lobby. -1 is returned if no valid value could be fetched from the server.
         /// </summary>
-        /// <param name="response"></param>
-        public void GetLobbyCapacity(Action<int> response) {
+        /// <param name="response">The integer callback to handle the server response.</param>
+        /// <returns>Will return <see langword="true"/> if the callback was valid. Otherwise <see langword="false"/>.</returns>
+        public bool GetLobbyCapacity(IntegerCallback response) {
+            if (response is null) {
+                return false; // Bail-fast --> no need to request data from the server if we're not going to use it.
+            }
             if (this.m_underlyingConnection != null && this.m_underlyingConnection.IsConnected) {
                 this.GetLobbyInformation("capacity", (a, b) => {
                     if (int.TryParse(a, out int c)) {
@@ -240,19 +316,25 @@ namespace Battlegrounds.Online.Lobby {
                         response.Invoke(-1);
                     }
                 });
+                return true;
+            } else {
+                response.Invoke(-1);
+                return false;
             }
         }
 
         /// <summary>
-        /// 
+        /// Get the current capacity of the lobby.
         /// </summary>
-        /// <returns></returns>
+        /// <remarks>Async method.</remarks>
+        /// <returns>The response from the server. -1 is returned if no valid value could be fetched from the server.</returns>
         public async Task<int> GetLobbyCapacityAsync() {
-            int result = 0;
+            int result = -1;
             bool done = false;
-            this.GetLobbyCapacity(x => { result = x; done = true; });
-            while (!done) {
-                await Task.Delay(1);
+            if (this.GetLobbyCapacity(x => { result = x; done = true; })) {
+                while (!done) {
+                    await Task.Delay(1);
+                }
             }
             return result;
         }
@@ -261,8 +343,12 @@ namespace Battlegrounds.Online.Lobby {
         /// Get a specific detail from the lobby.
         /// </summary>
         /// <param name="lobbyInformation">The information that is sought.</param>
-        /// <param name="reponse">The query response callback to handle the server response.</param>
-        public void GetLobbyInformation(string lobbyInformation, ManagedLobbyQueryResponse response) {
+        /// <param name="response">The query response callback to handle the server response. If connection fails, both arguments will be <see cref="string.Empty"/>.</param>
+        /// <returns>Will return <see langword="true"/> if the callback was valid. Otherwise <see langword="false"/>.</returns>
+        public bool GetLobbyInformation(string lobbyInformation, ManagedLobbyQueryResponse response) {
+            if (response is null) {
+                return false; // Bail-fast --> no need to request data from the server if we're not going to use it.
+            }
             if (this.m_underlyingConnection != null && this.m_underlyingConnection.IsConnected) {
                 Message queryMessage = new Message(MessageType.LOBBY_INFO, lobbyInformation);
                 Message.SetIdentifier(this.m_underlyingConnection.ConnectionSocket, queryMessage);
@@ -272,6 +358,10 @@ namespace Battlegrounds.Online.Lobby {
                 }
                 this.m_underlyingConnection.SetIdentifierReceiver(queryMessage.Identifier, OnResponse);
                 this.m_underlyingConnection.SendMessage(queryMessage);
+                return true;
+            } else {
+                response?.Invoke(string.Empty, string.Empty);
+                return false;
             }
         }
 
@@ -283,22 +373,28 @@ namespace Battlegrounds.Online.Lobby {
         /// <remarks>Async method.</remarks>
         public async Task<string> GetLobbyInformation(string lobbyInformation) {
             string response = null;
-            this.GetLobbyInformation(lobbyInformation, (a, b) => response = a);
-            while (response is null) {
-                await Task.Delay(1);
+            if (this.GetLobbyInformation(lobbyInformation, (a, b) => response = a)) {
+                while (response is null) {
+                    await Task.Delay(1);
+                }
             }
             return response;
         }
 
         /// <summary>
-        /// 
+        /// Get a specific user-related information detail from the server.
         /// </summary>
-        /// <param name="userInformation"></param>
-        /// <param name="response"></param>
-        public void GetUserInformation(string userInformation, ManagedLobbyQueryResponse response, int userIndex = -1) {
+        /// <param name="userInformation">The specific information that is sought from the server.</param>
+        /// <param name="response">The <see cref="ManagedLobbyQueryResponse"/> to handle the server response. Both arguments may be <see cref="string.Empty"/> if no response from server could be received.</param>
+        /// <param name="userIndex">The unique ID of the user the information is sought for. By default set as the local user.</param>
+        /// <returns>Will return <see langword="true"/> if the callback was valid. Otherwise <see langword="false"/>.</returns>
+        public bool GetUserInformation(string userInformation, ManagedLobbyQueryResponse response, ulong userIndex = ulong.MaxValue) {
+            if (response is null) {
+                return false; // Bail-fast --> no need to request data from the server if we're not going to use it.
+            }
             if (this.m_underlyingConnection != null && this.m_underlyingConnection.IsConnected) {
                 Message queryMessage = null;
-                if (userIndex == -1) {
+                if (userIndex == ulong.MaxValue) { // If default value, we're just looking for information of the local user (which the server can identify).
                     queryMessage = new Message(MessageType.LOBBY_GETUSERDATA, userInformation);
                 } else {
                     queryMessage = new Message(MessageType.LOBBY_GETUSERDATA, userIndex.ToString(), userInformation);
@@ -310,25 +406,10 @@ namespace Battlegrounds.Online.Lobby {
                 }
                 this.m_underlyingConnection.SetIdentifierReceiver(queryMessage.Identifier, OnResponse);
                 this.m_underlyingConnection.SendMessage(queryMessage);
-            }
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="userInformation"></param>
-        /// <param name="response"></param>
-        public void GetUserInformation(string userInformation, ManagedLobbyQueryResponse response, ulong userId) {
-            if (this.m_underlyingConnection != null && this.m_underlyingConnection.IsConnected) {
-                Message queryMessage = null;
-                queryMessage = new Message(MessageType.LOBBY_GETUSERDATA, userId.ToString(), userInformation);
-                Message.SetIdentifier(this.m_underlyingConnection.ConnectionSocket, queryMessage);
-                void OnResponse(Message message) {
-                    this.m_underlyingConnection.ClearIdentifierReceiver(message.Identifier);
-                    response?.Invoke(message.Argument1, message.Argument2);
-                }
-                this.m_underlyingConnection.SetIdentifierReceiver(queryMessage.Identifier, OnResponse);
-                this.m_underlyingConnection.SendMessage(queryMessage);
+                return true;
+            } else {
+                response.Invoke(string.Empty, string.Empty);
+                return false;
             }
         }
 
@@ -340,24 +421,10 @@ namespace Battlegrounds.Online.Lobby {
         /// <remarks>Async method.</remarks>
         public async Task<string> GetUserInformation(string userInfo) {
             string response = null;
-            this.GetUserInformation(userInfo, (a, _) => response = a);
-            while (response is null) {
-                await Task.Delay(1);
-            }
-            return response;
-        }
-
-        /// <summary>
-        /// Get a specific detail from the lobby.
-        /// </summary>
-        /// <param name="lobbyInformation">The information that is sought from the server.</param>
-        /// <returns>The first argument of the received server response.</returns>
-        /// <remarks>Async method.</remarks>
-        public async Task<string> GetUserInformation(int lobbyUser, string userInfo) {
-            string response = null;
-            this.GetUserInformation(userInfo, (a, _) => response = a, lobbyUser);
-            while (response is null) {
-                await Task.Delay(1);
+            if (this.GetUserInformation(userInfo, (a, _) => response = a)) {
+                while (response is null) {
+                    await Task.Delay(1);
+                }
             }
             return response;
         }
@@ -370,9 +437,10 @@ namespace Battlegrounds.Online.Lobby {
         /// <remarks>Async method.</remarks>
         public async Task<string> GetUserInformation(ulong lobbyUser, string userInfo) {
             string response = null;
-            this.GetUserInformation(userInfo, (a, _) => response = a, lobbyUser);
-            while (response is null) {
-                await Task.Delay(1);
+            if (this.GetUserInformation(userInfo, (a, _) => response = a, lobbyUser)) {
+                while (response is null) {
+                    await Task.Delay(1);
+                }
             }
             return response;
         }
@@ -382,6 +450,7 @@ namespace Battlegrounds.Online.Lobby {
         /// </summary>
         /// <param name="lobbyInformation">The information to change.</param>
         /// <param name="lobbyInformationValue">The new value to set.</param>
+        /// <exception cref="PermissionDeniedException"/>
         public void SetLobbyInformation(string lobbyInformation, object lobbyInformationValue) {
             if (this.m_isHost) {
                 if (lobbyInformationValue is null) {
@@ -390,6 +459,8 @@ namespace Battlegrounds.Online.Lobby {
                 if (this.m_underlyingConnection is not null && this.m_underlyingConnection.IsConnected) {
                     this.m_underlyingConnection.SendMessage(new Message(MessageType.LOBBY_UPDATE, lobbyInformation, lobbyInformationValue.ToString()));
                 }
+            } else {
+                throw new PermissionDeniedException(PermissionDeniedException.HOST_ONLY);
             }
         }
 
@@ -434,6 +505,7 @@ namespace Battlegrounds.Online.Lobby {
         /// </summary>
         /// <param name="capacity">The maximum amount of players that are allowed to join.</param>
         /// <param name="broadcast">Should broadcast the change in capacity</param>
+        /// <exception cref="PermissionDeniedException"/>
         public void SetLobbyCapacity(int capacity, bool broadcast = true) {
             if (this.m_isHost) {
                 int teamSize = capacity / 2;
@@ -449,6 +521,8 @@ namespace Battlegrounds.Online.Lobby {
                     }
                 }
                 broadcast.Then(() => this.SetLobbyInformation("capacity", capacity));
+            } else {
+                throw new PermissionDeniedException(PermissionDeniedException.HOST_ONLY);
             }
         }
 
@@ -470,9 +544,10 @@ namespace Battlegrounds.Online.Lobby {
         }
 
         /// <summary>
-        /// 
+        /// Get an array of the names of all active players in the lobby.
         /// </summary>
-        /// <returns></returns>
+        /// <remarks>Async method.</remarks>
+        /// <returns>Array of name for all members in the lobby. If any error, <see langword="null"/> is returned.</returns>
         public async Task<string[]> GetPlayerNamesAsync() {
 
             string[] playernames = null;
@@ -501,9 +576,10 @@ namespace Battlegrounds.Online.Lobby {
         }
 
         /// <summary>
-        /// 
+        /// Get an array of the IDs of all active players in the lobby.
         /// </summary>
-        /// <returns></returns>
+        /// <remarks>Async method.</remarks>
+        /// <returns>Array of IDs for all members in the lobby. If any error, <see langword="null"/> is returned.</returns>
         public async Task<ulong[]> GetPlayerIDsAsync() {
 
             ulong[] playerids = null;
@@ -532,13 +608,14 @@ namespace Battlegrounds.Online.Lobby {
         }
 
         /// <summary>
-        /// 
+        /// Retrieve the ID of the first lobby member with matching name.
         /// </summary>
-        /// <param name="player"></param>
-        /// <returns></returns>
+        /// <param name="player">The string name of the user to find ID of.</param>
+        /// <remarks>Async method.Note: This method may return incorrect ID if two users share the same name.</remarks>
+        /// <returns>The found unique ID. if any error occurs, <see cref="ulong.MaxValue"/> is returned.</returns>
         public async Task<ulong> GetLobbyPlayerIDAsync(string player) {
 
-            ulong id = 0; // in the case of Steam ID's, 0 should never happen
+            ulong id = ulong.MaxValue;
             bool alldone = false;
 
             void OnMessage(Message message) {
@@ -563,6 +640,12 @@ namespace Battlegrounds.Online.Lobby {
 
         }
 
+        /// <summary>
+        /// Get an array of the difficulty numberic values of all designated players in the lobby.
+        /// </summary>
+        /// <param name="players">The unique ID of the players the difficulty is sought after.</param>
+        /// <remarks>Async method.</remarks>
+        /// <returns>Array of numeric values of difficulty levels for all requested members.</returns>
         public async Task<int[]> GetLobbyPlayerDifficultiesAsync(ulong[] players) {
 
             int[] diffs = new int[players.Length];
@@ -578,115 +661,148 @@ namespace Battlegrounds.Online.Lobby {
         }
 
         private Company GetLocalCompany() {
-            object val = this.OnLocalDataRequested?.Invoke("CompanyData");
-            if (val is Company c) {
+            object val = this.OnLocalDataRequested?.Invoke("CompanyData"); // Invoke the local data requester.
+            if (val is Company c) { // If company is valid then return it
                 return c;
-            } else if (val is string s) {
-                return Company.ReadCompanyFromFile(s);
+            } else if (val is string s) { // if a string, try and read from that
+                if (File.Exists(s)) {
+                    try {
+                        return Company.ReadCompanyFromFile(s);
+                    } catch (ChecksumViolationException sumViolation) {
+                        Trace.WriteLine($"Failed to retrieve local company [Checksum-Violation]; {sumViolation}", "ManagedLobby");
+                    }
+                }
             }
-            return null;
+            return null; // return null otherwise.
         }
 
         /// <summary>
-        /// 
+        /// Upload the company file that is found at the specified file path.
         /// </summary>
-        /// <param name="companyFile"></param>
-        public void UploadCompany(string companyFile) {
+        /// <param name="companyFile">The path to the company file to upload.</param>
+        /// <returns>If file was successfully uploaded, <see langword="true"/> is returned. Otherwise <see langword="false"/> is returned, if file didn't exist or upload failed.</returns>
+        public bool UploadCompany(string companyFile) {
 
-            // Read the company
-            Company company = Company.ReadCompanyFromFile(companyFile);
-            company.Owner = this.m_self.ID.ToString();
+            // Make sure the file exists
+            if (File.Exists(companyFile)) {
 
-            // Upload file
-            FileHub.UploadFile(company.ToBytes(), $"{this.m_self.ID}_company.json", this.LobbyFileID);
+                // Read the company
+                Company company = Company.ReadCompanyFromFile(companyFile);
+                company.Owner = this.m_self.ID.ToString();
+
+                // Upload the company and handle potential errors.
+                return this.UploadCompany(company);
+
+            } else {
+                
+                // Return false ==> File didn't exist
+                return false;
+
+            }
 
         }
 
         /// <summary>
-        /// 
+        /// Upload the company instance to the file server.
         /// </summary>
-        /// <param name="company"></param>
-        public void UploadCompany(Company company) {
+        /// <param name="company">The company instance to upload.</param>
+        /// <returns>If file was successfully uploaded, <see langword="true"/> is returned. Otherwise <see langword="false"/> is returned.</returns>
+        public bool UploadCompany(Company company) {
             if (!FileHub.UploadFile(company.ToBytes(), $"{this.m_self.ID}_company.json", this.LobbyFileID)) {
                 Trace.WriteLine("Failed to upload company...", "ManagedLobby");
                 // ... do something?
+                return false;
             }
+            return true;
         }
 
         /// <summary>
-        /// 
+        /// Download the uploaded <see cref="Company"/> instance from the specified user.
         /// </summary>
-        /// <param name="player"></param>
-        /// <param name="destination"></param>
-        /// <returns></returns>
-        public async Task<bool> GetLobbyCompany(string player, string destination) 
-            => this.GetLobbyCompany(await this.GetLobbyPlayerIDAsync(player), destination);
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="userID"></param>
-        /// <param name="destination"></param>
-        /// <returns></returns>
+        /// <param name="userID">The unique ID of the user to download company from.</param>
+        /// <param name="destination">The output destination to save the downloaded <see cref="Company"/> file from.</param>
+        /// <returns>If download was successful <see langword="true"/> is returned. Otherwise <see langword="false"/> is returned.</returns>
         public bool GetLobbyCompany(ulong userID, string destination) 
             => FileHub.DownloadFile(destination, $"{userID}_company.json", this.LobbyFileID);
         
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
         private async Task<(List<Company>, bool)> GetLobbyCompanies() {
 
+            // Initialize variables
             List<Company> companies = new List<Company>();
             bool success = false;
 
+            // Calculate amount of human players (exluding the host).
             int humanCount = -1;
             this.Teams.ForEach(x => x.ForEachMember(y => humanCount += y is HumanLobbyMember ? 1 : 0));
 
+            // Download all asynchronously.
             await Task.Run(async () => {
 
+                // Keep an attempts counter
                 int attempts = 0;
-                List<HumanLobbyMember> members = new List<HumanLobbyMember>();
 
+                // Keep track of members from which it was possible to find company files.
+                HashSet<HumanLobbyMember> members = new HashSet<HumanLobbyMember>();
+
+                // While not all human companies have been downloaded and attempts are still below 100
                 while (members.Count != humanCount && attempts < 100) {
 
+                    // Go through each team and its members
                     this.Teams.ForEach(x => {
                         x.ForEachMember(y => {
-                            if (!members.Contains(y)) {
-                                if (y is HumanLobbyMember && y.ID != this.Self.ID) {
+                            if (!members.Contains(y)) { // If we've not yet downloaded this members company
+                                if (y is HumanLobbyMember && y.ID != this.Self.ID) { // and this member is a human and not self.
+                                    // Define destination
                                     string destination = BattlegroundsInstance.GetRelativePath(BattlegroundsPaths.SESSION_FOLDER, $"{y.ID}_company.json");
+                                    // Try and download the company
                                     if (this.GetLobbyCompany(y.ID, destination)) {
-                                        Company company = Company.ReadCompanyFromFile(destination);
+                                        Company company = Company.ReadCompanyFromFile(destination); // Read in the company file and add to list.
                                         company.Owner = y.ID.ToString();
                                         companies.Add(company);
-                                        members.Add(y as HumanLobbyMember);
+                                        members.Add(y as HumanLobbyMember); // Register member in downloaded set.
                                         Trace.WriteLine($"Downloaded company for user {y.ID} ({y.Name}) titled '{company.Name}'");
-                                    } else {
+                                    } else { // If fail, log and try again in 100ms
                                         Trace.WriteLine($"Failed to download company for use {y.ID}. Will attempt again in 100ms");
+                                        // TODO: Send message to use it wasn't possible to download their file.
                                     }
                                 }
                             }
                         });
                     });
 
+                    // Wait 100ms to give users a chance to uploaded
                     await Task.Delay(100);
 
+                    // Increase attempts counter
                     attempts++;
 
                 }
 
+                // Did we get all members?
                 success = members.Count == humanCount;
 
+                // Log
                 Trace.WriteLine($"Found {members.Count} and expected {humanCount}, following {attempts} attempts, thus retrieving companies will return {success}");
 
             });
 
+            // Return downloaded companies and if we got all
             return (companies, success);
 
         }
 
+        /// <summary>
+        /// Retrieve the <see cref="ManagedLobbyTeam"/> that belongs to the specified <see cref="ManagedLobbyTeamType"/>.
+        /// </summary>
+        /// <param name="type">The type of team to find.</param>
+        /// <returns>The <see cref="ManagedLobbyTeam"/> with specified type.</returns>
         public ManagedLobbyTeam GetTeam(ManagedLobbyTeamType type) => this.m_teams[type];
 
+        /// <summary>
+        /// Refresh the teams in an asynchronous manner.
+        /// </summary>
+        /// <remarks>Async method.</remarks>
+        /// <param name="taskDone">Callback function called when the refresh is done.</param>
         public async void RefreshTeamAsync(ManagedLobbyTaskDone taskDone) {
 
             // Get all player IDs
@@ -772,13 +888,19 @@ namespace Battlegrounds.Online.Lobby {
         }
 
         /// <summary>
-        /// 
+        /// Try and create a new <see cref="AILobbyMember"/> in the <see cref="ManagedLobby"/>. This will not create the <see cref="AILobbyMember"/> until the <see cref="MessageType.LOBBY_AIJOIN"/> message is received.
         /// </summary>
-        /// <param name="difficulty"></param>
-        /// <param name="faction"></param>
-        /// <param name="teamIndex"></param>
-        /// <returns></returns>
+        /// <param name="difficulty">The difficulty of the AI.</param>
+        /// <param name="faction">The faction of the AI.</param>
+        /// <param name="teamIndex">The index (position) of the AI on the given team.</param>
+        /// <param name="timeout">The amount of time to wait before timing out the attempt to create AI player. Default is -1.</param>
+        /// <returns>The ID given to the <see cref="AILobbyMember"/> by the server.</returns>
+        /// <remarks>Async method.</remarks>
+        /// <exception cref="PermissionDeniedException"/>
         public async Task<int> TryCreateAIPlayer(AIDifficulty difficulty, string faction, int teamIndex, int timeout = -1) {
+            if (!this.m_isHost) {
+                throw new PermissionDeniedException(PermissionDeniedException.HOST_ONLY);
+            }
             string responseQuery = null;
             Message addAIMessage = new Message(MessageType.LOBBY_ADDAI, ((int)difficulty).ToString(), faction, teamIndex.ToString());
             Message.SetIdentifier(this.m_underlyingConnection.ConnectionSocket, addAIMessage);
@@ -797,6 +919,14 @@ namespace Battlegrounds.Online.Lobby {
             }
         }
 
+        /// <summary>
+        /// Try and create a new <see cref="AILobbyMember"/> in the <see cref="ManagedLobby"/>. This will not create the <see cref="AILobbyMember"/> until the <see cref="MessageType.LOBBY_AIJOIN"/> message is received.
+        /// </summary>
+        /// <param name="difficulty">The difficulty of the AI.</param>
+        /// <param name="faction">The faction of the AI.</param>
+        /// <param name="teamIndex">The index (position) of the AI on the given team.</param>
+        /// <returns>The ID given to the <see cref="AILobbyMember"/> by the server.</returns>
+        /// <exception cref="PermissionDeniedException"/>
         public int CreateAIPlayer(AIDifficulty difficulty, string faction, ManagedLobbyTeamType teamIndex) 
             => Task.Run(() => this.TryCreateAIPlayer(difficulty, faction, (int)teamIndex, 1250)).Result;
 
@@ -805,16 +935,26 @@ namespace Battlegrounds.Online.Lobby {
         /// </summary>
         /// <param name="playerID">The unique steam ID of the player to kick.</param>
         /// <param name="message">A message to send to the user stating why they were kicked.</param>
-        public void KickPlayer(ulong playerID, string message = "Kicked by Host") 
-            => this.m_isHost.Then(() => this.m_underlyingConnection.SendMessage(new Message(MessageType.LOBBY_KICK, playerID.ToString(), message)));
+        /// <exception cref="PermissionDeniedException"/>
+        public void KickPlayer(ulong playerID, string message = "Kicked by Host")
+            => this.m_isHost.Then(() => this.m_underlyingConnection.SendMessage(new Message(MessageType.LOBBY_KICK, playerID.ToString(), message)))
+            .Else(() => throw new PermissionDeniedException(PermissionDeniedException.HOST_ONLY));
 
         /// <summary>
         /// Remove the AI player with specified ID. (If host).
         /// </summary>
         /// <param name="aiID">The ID used to identify the AI to remove.</param>
+        /// <exception cref="PermissionDeniedException"/>
         public void RemoveAI(ulong aiID)
-            => this.m_isHost.Then(() => this.m_underlyingConnection.SendMessage(new Message(MessageType.LOBBY_REMOVEAI, aiID.ToString())));
+            => this.m_isHost.Then(() => this.m_underlyingConnection.SendMessage(new Message(MessageType.LOBBY_REMOVEAI, aiID.ToString())))
+            .Else(() => throw new PermissionDeniedException(PermissionDeniedException.HOST_ONLY));
 
+        /// <summary>
+        /// Remove a player from the <see cref="ManagedLobby"/>.
+        /// </summary>
+        /// <param name="id">The unique ID of the player to remove.</param>
+        /// <param name="broadcast">Should try to broadcast this event. (Host only action).</param>
+        /// <exception cref="PermissionDeniedException"/>
         public void RemovePlayer(ulong id, bool broadcast) {
             var player = this.TryFindPlayerFromID(id, out ManagedLobbyTeamType team);
             if (player is HumanLobbyMember human) {
@@ -928,7 +1068,7 @@ namespace Battlegrounds.Online.Lobby {
 
         }
 
-        bool ManagedLobbyInternal_GameOnGamemodeCompiled(Action<string> operationCancelled) {
+        private bool ManagedLobbyInternal_GameOnGamemodeCompiled(Action<string> operationCancelled) {
 
             string sgapath = $"{Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)}\\my games\\Company of Heroes 2\\mods\\gamemode\\coh2_battlegrounds_wincondition.sga";
 
@@ -969,7 +1109,7 @@ namespace Battlegrounds.Online.Lobby {
 
         }
 
-        void ManagedLobbyInternal_GameSessionStatusChanged(SessionStatus status, Session s) {
+        private void ManagedLobbyInternal_GameSessionStatusChanged(SessionStatus status, Session s) {
             Trace.WriteLine($"Session update: {status}", "ManagedLobby");
             switch (status) {
                 case SessionStatus.S_FailedCompile:
@@ -987,7 +1127,7 @@ namespace Battlegrounds.Online.Lobby {
             }
         }
 
-        void ManagedLobbyInternal_GameMatchAnalyzed(GameMatch results) {
+        private void ManagedLobbyInternal_GameMatchAnalyzed(GameMatch results) {
             // TODO: Sync
         }
 
@@ -1106,6 +1246,11 @@ namespace Battlegrounds.Online.Lobby {
             }
         }
 
+        /// <summary>
+        /// Try and find the <see cref="ManagedLobbyMember"/> tied to the unique ID.
+        /// </summary>
+        /// <param name="id">The unique ID to find member from.</param>
+        /// <returns>The <see cref="ManagedLobbyMember"/> with given unique ID. Otherwise <see langword="null"/>.</returns>
         public ManagedLobbyMember TryFindPlayerFromID(ulong id) => this.TryFindPlayerFromID(id, out _);
 
         /// <summary>

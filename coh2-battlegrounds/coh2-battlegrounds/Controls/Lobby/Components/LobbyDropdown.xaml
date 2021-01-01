@@ -1,0 +1,39 @@
+﻿<lobby:LobbyControl  
+    xmlns:lobby="clr-namespace:BattlegroundsApp.Controls.Lobby"
+    x:Class="BattlegroundsApp.Controls.Lobby.Components.LobbyDropdown"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:BattlegroundsApp.Controls.Lobby.Components"
+             mc:Ignorable="d" 
+             d:DesignHeight="48" d:DesignWidth="320">
+    <lobby:SelfState>
+        <DockPanel Margin="0.75">
+            <Label 
+                x:Name="SelfTitle" 
+                Content="{Binding Path=Description, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:LobbyDropdown}}}" 
+                Width="{Binding Path=DescriptionWidth, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:LobbyDropdown}}}"
+                MinWidth="{Binding Path=DescriptionMinWidth, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:LobbyDropdown}}}"
+                MaxWidth="{Binding Path=DescriptionMaxWidth, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:LobbyDropdown}}}"
+                DockPanel.Dock="Left" 
+                Padding="1.75,0,5,0" 
+                VerticalAlignment="Center"/>
+            <ComboBox x:Name="SelfOptions"/>
+        </DockPanel>
+    </lobby:SelfState>
+    <lobby:OtherState>
+        <DockPanel Margin="0.75">
+            <Label 
+                x:Name="OtherTitle" 
+                Content="{Binding Path=Description, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:LobbyDropdown}}}" 
+                Width="{Binding Path=DescriptionWidth, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:LobbyDropdown}}}"
+                MinWidth="{Binding Path=DescriptionMinWidth, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:LobbyDropdown}}}"
+                MaxWidth="{Binding Path=DescriptionMaxWidth, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:LobbyDropdown}}}"
+                DockPanel.Dock="Left" 
+                Padding="1.75,0,5,0" 
+                VerticalAlignment="Center"/>
+            <Label x:Name="OtherSelected" Content="Unknown" VerticalAlignment="Center" HorizontalAlignment="Right" Padding="0,0,5,0"/>
+        </DockPanel>
+    </lobby:OtherState>
+</lobby:LobbyControl>

@@ -59,7 +59,7 @@ namespace Battlegrounds.Online {
                             }
                         }
                     } catch (ObjectDisposedException) { }
-                    catch (SocketException) { }
+                    catch (SocketException s) { Trace.WriteLine(s, "MessageSender"); }
                 }
                 socket.BeginReceive(buffer, 0, 2048, 0, Received, null);
             } catch (ObjectDisposedException) { } catch (SocketException) { }

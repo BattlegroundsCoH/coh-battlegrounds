@@ -4,8 +4,8 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:BattlegroundsApp.Views"
-             xmlns:bg="clr-namespace:BattlegroundsApp"
-             mc:Ignorable="d" Background="White"
+             xmlns:bg="clr-namespace:BattlegroundsApp" xmlns:components="clr-namespace:BattlegroundsApp.Controls.Lobby.Components"
+              mc:Ignorable="d" Background="White"
              d:DesignHeight="700" d:DesignWidth="800">
     <Grid>
 
@@ -40,17 +40,32 @@
         <Image x:Name="mapImage" Height="200" Width="200"/>
 
         <!-- Row 1 -->
-        <TextBlock Grid.Row="1" Grid.Column="0" Text="Map:"/>
-        <ComboBox x:Name="Map" Grid.Row="1" Grid.Column="1" MinWidth="120" SelectionChanged="Map_SelectionChanged"/>
+        <components:LobbyDropdown 
+            x:Name="Map" 
+            Grid.Row="1" Grid.Column="0" 
+            Description="Map:" 
+            DescriptionMinWidth="90"
+            MinWidth="120" 
+            SelectedItemChanged="Map_SelectedItemChanged"/>
         
         <!-- Row 2 -->
-        <TextBlock Grid.Row="2" Grid.Column="0" Text="Gamemode:"/>
-        <ComboBox x:Name="Gamemode" Grid.Row="2" Grid.Column="1" MinWidth="120" SelectionChanged="Gamemode_SelectionChanged"/>
+        <components:LobbyDropdown 
+            x:Name="Gamemode" 
+            Grid.Row="2" Grid.Column="0" 
+            Description="Gamemode:" 
+            DescriptionMinWidth="90"
+            MinWidth="120" 
+            SelectedItemChanged="Gamemode_SelectedItemChanged"/>
 
         <!-- Row 3 -->
-        <TextBlock Grid.Row="3" Grid.Column="0" Text="Option:"/>
-        <ComboBox x:Name="GamemodeOption" Grid.Row="3" Grid.Column="1" SelectionChanged="GamemodeOption_SelectionChanged"/>
-        
+        <components:LobbyDropdown 
+            x:Name="GamemodeOption" 
+            Grid.Row="3" Grid.Column="0" 
+            Description="Setting:" 
+            DescriptionMinWidth="90"
+            MinWidth="120" 
+            SelectedItemChanged="GamemodeOption_SelectedItemChanged"/>
+
         <!-- Row 4 -->
         <Grid Grid.Row="4" Grid.Column="3" MinHeight="260" Name="TeamGridview">
             <Grid.RowDefinitions>
@@ -64,7 +79,6 @@
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
         </Grid>
-
 
         <!-- Row 5 -->
         <TextBox x:Name="lobbyChat" Grid.Row="5" Grid.Column="3" Height="80" Width="400" VerticalAlignment="Bottom" 

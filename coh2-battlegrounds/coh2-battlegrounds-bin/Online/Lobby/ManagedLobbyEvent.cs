@@ -122,6 +122,12 @@
     /// <param name="self">A reference to the <see cref="ManagedLobby"/> instance that finished executing.</param>
     public delegate void ManagedLobbyTaskDone(ManagedLobby self);
 
+    /// <summary>
+    /// Event delegate to be triggered when information about an ongoing match is received. One or both arguments may be empty.
+    /// </summary>
+    /// <param name="type">The type of the received information.</param>
+    /// <param name="arg1">The first <see cref="string"/> argument. (May be empty).</param>
+    /// <param name="arg2">The second <see cref="string"/> argument. (May be empty).</param>
     public delegate void ManagedLobbyMatchInfo(string type, string arg1, string arg2);
 
 }
