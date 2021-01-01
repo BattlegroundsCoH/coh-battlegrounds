@@ -50,14 +50,41 @@
         <!-- Row 4 -->
 
         <!-- Row 5 -->
-        <Button x:Name="refreshLobbyListButton" Grid.Row="5" Grid.Column="2" Content="Refresh" Margin="0,5,0,0"
-                Click="RefreshLobbyList_Click"/>
-        
+        <Button x:Name="refreshLobbyListButton" Grid.Row="5" Grid.Column="2" Content="Refresh" Margin="0,5,0,0" Click="RefreshLobbyList_Click">
+            <Button.Style>
+                <Style TargetType="{x:Type Button}">
+                    <Style.Triggers>
+                        <EventTrigger RoutedEvent="Button.Click">
+                            <EventTrigger.Actions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <BooleanAnimationUsingKeyFrames Storyboard.TargetProperty="IsEnabled">
+                                            <DiscreteBooleanKeyFrame KeyTime="00:00:00" Value="False"/>
+                                            <DiscreteBooleanKeyFrame KeyTime="00:00:10" Value="True"/>
+                                        </BooleanAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </EventTrigger.Actions>
+                        </EventTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Button.Style>
+        </Button>
+
         <Button x:Name="hostGameButton" Grid.Row="5" Grid.Column="3" Content="Host Game" Margin="5,5,0,0"
                 Command="{Binding HostGameCommand}"/>
 
-        <Button x:Name="joinGameButton" Grid.Row="5" Grid.Column="4" Content="Join Game" Margin="5,5,0,0"
-                Click="JoinLobby_Click" IsEnabled="True"/>
+        <Button x:Name="joinGameButton" Grid.Row="5" Grid.Column="4" Content="Join Game" Margin="5,5,0,0" Click="JoinLobby_Click">
+            <Button.Style>
+                <Style TargetType="{x:Type Button}">
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding SelectedItem, ElementName=GameLobbyList}" Value="{x:Null}">
+                            <Setter Property="IsEnabled" Value="False"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Button.Style>
+        </Button>
 
     </Grid>
 </bg:ViewState>
