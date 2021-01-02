@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.IO;
 using System.Threading.Tasks;
 
@@ -97,6 +98,7 @@ namespace Battlegrounds.Game.Database {
                 return m_databaseFoundPath;
             } else {
                 string[] testPaths = new string[] {
+                    "..\\..\\..\\..\\..\\..\\db-battlegrounds\\",
                     "..\\..\\..\\..\\..\\db-battlegrounds\\",
                     "..\\..\\..\\..\\db-battlegrounds\\",
                     "..\\..\\..\\db-battlegrounds\\",
@@ -110,6 +112,7 @@ namespace Battlegrounds.Game.Database {
                     }
                 }
                 m_databaseFoundPath = string.Empty;
+                Trace.WriteLine("Failed to find any valid path to the database folder. Please verify install path.", "DatabaseManager");
                 return m_databaseFoundPath;
             }
         }

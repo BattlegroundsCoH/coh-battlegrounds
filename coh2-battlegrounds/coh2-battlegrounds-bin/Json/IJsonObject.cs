@@ -24,6 +24,7 @@ namespace Battlegrounds.Json {
             private JsonIgnoreIfNullAttribute IgnoreIfNullAttribute;
             private JsonIgnoreAttribute IgnoreAttribute;
             private JsonReferenceAttribute ReferenceAttribute;
+            private JsonBackingFieldAttribute BackingAttribute;
 
             public bool IgnoreIfNull => this.IgnoreIfNullAttribute is JsonIgnoreIfNullAttribute;
 
@@ -37,12 +38,17 @@ namespace Battlegrounds.Json {
 
             public bool IgnoreIfEmpty => this.IgnoreIfEmptyAttribute is JsonIgnoreIfEmptyAttribute;
 
+            public bool HasBackingField => this.BackingAttribute is JsonBackingFieldAttribute;
+
+            public string BackingFieldName => this.BackingAttribute.Field;
+
             public JsonAttributeSet(PropertyInfo pinfo) {
                 this.IgnoreIfEmptyAttribute = pinfo.GetCustomAttribute<JsonIgnoreIfEmptyAttribute>();
                 this.IgnoreIfValueAttribute = pinfo.GetCustomAttribute<JsonIgnoreIfValueAttribute>();
                 this.IgnoreIfNullAttribute = pinfo.GetCustomAttribute<JsonIgnoreIfNullAttribute>();
                 this.IgnoreAttribute = pinfo.GetCustomAttribute<JsonIgnoreAttribute>();
                 this.ReferenceAttribute = pinfo.GetCustomAttribute<JsonReferenceAttribute>();
+                this.BackingAttribute = pinfo.GetCustomAttribute<JsonBackingFieldAttribute>();
             }
             public JsonAttributeSet(FieldInfo finfo) {
                 this.IgnoreIfEmptyAttribute = finfo.GetCustomAttribute<JsonIgnoreIfEmptyAttribute>();
@@ -50,6 +56,8 @@ namespace Battlegrounds.Json {
                 this.IgnoreIfNullAttribute = finfo.GetCustomAttribute<JsonIgnoreIfNullAttribute>();
                 this.IgnoreAttribute = finfo.GetCustomAttribute<JsonIgnoreAttribute>();
                 this.ReferenceAttribute = finfo.GetCustomAttribute<JsonReferenceAttribute>();
+                this.BackingAttribute = finfo.GetCustomAttribute<JsonBackingFieldAttribute>();
+
             }
         }
 
@@ -97,14 +105,20 @@ namespace Battlegrounds.Json {
             jsonbuilder.AppendLine($"\"jsdbtype\": \"{il_type.FullName}\"{((fields.Count() + properties.Count() > 0) ? "," : "")}");
 
             foreach (PropertyInfo pinfo in properties) {
-                WriteKeyValuePair(
-                    jsonbuilder,
-                    pinfo.PropertyType,
-                    new JsonAttributeSet(pinfo),
-                    pinfo.Name,
-                    pinfo.GetValue(obj),
-                    pinfo != properties.Last() || fields.Any()
-                    );
+                var attribSet = new JsonAttributeSet(pinfo);
+                if (attribSet.HasBackingField) {
+                    FieldInfo finfo = il_type.GetField(attribSet.BackingFieldName, BindingFlags.FlattenHierarchy | BindingFlags.Instance | BindingFlags.NonPublic);
+                    WriteKeyValuePair(jsonbuilder, finfo.FieldType, attribSet, pinfo.Name, finfo.GetValue(obj), pinfo != properties.Last() || fields.Any());
+                } else {
+                    WriteKeyValuePair(
+                        jsonbuilder,
+                        pinfo.PropertyType,
+                        attribSet,
+                        pinfo.Name,
+                        pinfo.GetValue(obj),
+                        pinfo != properties.Last() || fields.Any()
+                        );
+                }
             }
 
             foreach (FieldInfo finfo in fields) {
@@ -190,6 +204,9 @@ namespace Battlegrounds.Json {
                     int i = 0;
                     int j = dynVal.Count - 1;
                     foreach (dynamic c in dynVal) {
+                        if (c is null) {
+                            continue;
+                        }
                         Type t = c.GetType();
                         if (t.IsPrimitive || c is string) {
                             jsonbuilder.Append($"\"{name}\"{((i < j) ? "," : "")}");
@@ -285,19 +302,37 @@ namespace Battlegrounds.Json {
                         // Use the reference method
                         bool useRef = !(refAttrib is null);
 
-                        // Do we have a set method?
-                        if (pinfo.SetMethod != null) {
-
-                            // Set value using the 'SetMethod'
-                            SetValue(source, pair.Value, pinfo.PropertyType, useRef, pinfo.SetValue, refAttrib?.GetReferenceFunction(), enumAttrib);
-
-                        } else {
+                        // If it has a backing field with specific name
+                        if (pinfo.GetCustomAttribute<JsonBackingFieldAttribute>() is JsonBackingFieldAttribute backAttrib) {
 
                             // Get the backing field
-                            FieldInfo backingField = il_type.GetField($"<{pinfo.Name}>k__BackingField", BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.FlattenHierarchy);
+                            FieldInfo backingField = il_type.GetField(backAttrib.Field, BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.FlattenHierarchy);
 
                             // Set the value of the backing field.
                             SetValue(source, pair.Value, backingField.FieldType, useRef, backingField.SetValue, refAttrib?.GetReferenceFunction(), enumAttrib);
+
+                        } else {
+
+                            // Do we have a set method?
+                            if (pinfo.SetMethod != null) {
+
+                                // Set value using the 'SetMethod'
+                                SetValue(source, pair.Value, pinfo.PropertyType, useRef, pinfo.SetValue, refAttrib?.GetReferenceFunction(), enumAttrib);
+
+                            } else {
+
+                                // Get the backing field
+                                FieldInfo backingField = il_type.GetField($"<{pinfo.Name}>k__BackingField", BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.FlattenHierarchy);
+
+                                // Do if any backing field (otherwise it might just be a get-only, precalculated variable.
+                                if (backingField is not null) {
+
+                                    // Set the value of the backing field.
+                                    SetValue(source, pair.Value, backingField.FieldType, useRef, backingField.SetValue, refAttrib?.GetReferenceFunction(), enumAttrib);
+
+                                }
+
+                            }
 
                         }
 

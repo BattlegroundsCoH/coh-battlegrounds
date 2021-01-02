@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
-using Battlegrounds.Game.Gameplay;
+
 using Battlegrounds.Json;
 
 namespace Battlegrounds.Game.Database {

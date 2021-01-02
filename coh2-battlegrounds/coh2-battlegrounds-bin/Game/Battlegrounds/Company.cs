@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 
 using Battlegrounds.Game.Database;
@@ -23,16 +24,19 @@ namespace Battlegrounds.Game.Battlegrounds {
         /// </summary>
         public const int MAX_SIZE = 40;
 
-        private string m_checksum;
+        #region Private Fields
+        [JsonIgnore] private string m_checksum;
+        [JsonIgnore] private string m_lastEditVersion;
         private ushort m_nextSquadId;
-        [JsonIgnoreIfEmpty] private List<Squad> m_squads;
-        [JsonIgnoreIfEmpty] private List<Blueprint> m_inventory;
-        [JsonIgnoreIfEmpty] private List<Modifier> m_modifiers;
-        [JsonIgnoreIfEmpty] private List<UpgradeBlueprint> m_upgrades;
-        [JsonIgnoreIfEmpty] private List<SpecialAbility> m_abilities;
-
-        [JsonEnum(typeof(CompanyType))] private CompanyType m_companyType;
-        [JsonReference(typeof(Faction))] private Faction m_companyArmy;
+        [JsonIgnore] private List<Squad> m_squads;
+        [JsonIgnore] private List<Blueprint> m_inventory;
+        [JsonIgnore] private List<Modifier> m_modifiers;
+        [JsonIgnore] private List<UpgradeBlueprint> m_upgrades;
+        [JsonIgnore] private List<SpecialAbility> m_abilities;
+        [JsonIgnore] private CompanyType m_companyType;
+        [JsonIgnore] private Faction m_companyArmy;
+        [JsonIgnore] private CompanyStatistics m_companyStatistics;
+        #endregion
 
         /// <summary>
         /// The name of the company.
@@ -42,8 +46,15 @@ namespace Battlegrounds.Game.Battlegrounds {
         /// <summary>
         /// The <see cref="CompanyType"/> that can be used to describe the <see cref="Company"/> characteristics.
         /// </summary>
-        [JsonIgnore]
+        [JsonBackingField(nameof(m_companyType))]
+        [JsonEnum(typeof(CompanyType))]
         public CompanyType Type => this.m_companyType;
+
+        /// <summary>
+        /// The version that was used to generate this company.
+        /// </summary>
+        [JsonBackingField(nameof(m_lastEditVersion))]
+        public string AppVersion => this.m_lastEditVersion;
 
         /// <summary>
         /// The GUID of the tuning mod used to create this company.
@@ -53,7 +64,8 @@ namespace Battlegrounds.Game.Battlegrounds {
         /// <summary>
         /// The <see cref="Faction"/> this company is associated with.
         /// </summary>
-        [JsonIgnore]
+        [JsonBackingField(nameof(m_companyArmy))]
+        [JsonReference(typeof(Faction))]
         public Faction Army => this.m_companyArmy;
 
         /// <summary>
@@ -65,37 +77,48 @@ namespace Battlegrounds.Game.Battlegrounds {
         /// <summary>
         /// <see cref="ImmutableArray{T}"/> representation of the units in the <see cref="Company"/>.
         /// </summary>
-        [JsonIgnore]
+        [JsonBackingField(nameof(m_squads))]
+        [JsonIgnoreIfEmpty]
         public ImmutableArray<Squad> Units => this.m_squads.ToImmutableArray();
 
         /// <summary>
         /// <see cref="ImmutableArray{T}"/> representation of a <see cref="Company"/> inventory of stored <see cref="Blueprint"/> objects.
         /// </summary>
-        [JsonIgnore]
+        [JsonBackingField(nameof(m_inventory))]
+        [JsonIgnoreIfEmpty]
         public ImmutableArray<Blueprint> Inventory => this.m_inventory.ToImmutableArray();
 
         /// <summary>
         /// <see cref="ImmutableArray{T}"/> representation of a <see cref="Company"/>'s upgrade list.
         /// </summary>
-        [JsonIgnore]
+        [JsonBackingField(nameof(m_upgrades))]
+        [JsonIgnoreIfEmpty]
         public ImmutableArray<UpgradeBlueprint> Upgrades => this.m_upgrades.ToImmutableArray();
 
         /// <summary>
         /// <see cref="ImmutableArray{T}"/> representation of a <see cref="Company"/>'s modifier list.
         /// </summary>
-        [JsonIgnore]
+        [JsonBackingField(nameof(m_modifiers))]
+        [JsonIgnoreIfEmpty]
         public ImmutableArray<Modifier> Modifiers => this.m_modifiers.ToImmutableArray();
 
         /// <summary>
         /// <see cref="ImmutableArray{T}"/> representation of a <see cref="Company"/>'s special ability list.
         /// </summary>
-        [JsonIgnore]
+        [JsonBackingField(nameof(m_abilities))]
+        [JsonIgnoreIfEmpty]
         public ImmutableArray<SpecialAbility> Abilities => this.m_abilities.ToImmutableArray();
+
+        /// <summary>
+        /// Statistics tied to the <see cref="Company"/>.
+        /// </summary>
+        [JsonBackingField(nameof(m_companyStatistics))]
+        public CompanyStatistics Statistics => this.m_companyStatistics;
 
         /// <summary>
         /// The calculated company checksum.
         /// </summary>
-        [JsonIgnore]
+        [JsonBackingField(nameof(m_checksum))]
         public string Checksum => this.m_checksum;
 
         /// <summary>
@@ -109,6 +132,8 @@ namespace Battlegrounds.Game.Battlegrounds {
             this.m_upgrades = new List<UpgradeBlueprint>();
             this.m_abilities = new List<SpecialAbility>();
             this.m_companyType = CompanyType.Unspecified;
+            this.m_companyStatistics = new CompanyStatistics();
+            this.m_lastEditVersion = Assembly.GetExecutingAssembly().GetName().Version.ToString();
         }
 
         /// <summary>
@@ -123,8 +148,8 @@ namespace Battlegrounds.Game.Battlegrounds {
         public Company(SteamUser user, string name, Faction army, string tuningGUID) {
 
             // Make sure it's a valid army
-            if (army == null) {
-                throw new ArgumentNullException("Army was null");
+            if (army is null) {
+                throw new ArgumentNullException(nameof(army), "Army was null");
             }
 
             // Assign base values
@@ -133,6 +158,7 @@ namespace Battlegrounds.Game.Battlegrounds {
             this.m_companyArmy = army;
             this.TuningGUID = tuningGUID.Replace("-", "");
             this.m_companyType = CompanyType.Unspecified;
+            this.m_companyStatistics = new CompanyStatistics();
 
             // Prepare squad list
             this.m_squads = new List<Squad>();
@@ -140,6 +166,9 @@ namespace Battlegrounds.Game.Battlegrounds {
 
             // Misc stuff
             this.m_inventory = new List<Blueprint>();
+
+            // Set last edit version
+            this.m_lastEditVersion = Assembly.GetExecutingAssembly().GetName().Version.ToString();
 
         }
 
@@ -202,6 +231,7 @@ namespace Battlegrounds.Game.Battlegrounds {
                 this.m_inventory.Clear();
             }
             this.Name = string.Empty;
+            this.m_checksum = string.Empty;
         }
 
         /// <summary>
@@ -215,17 +245,24 @@ namespace Battlegrounds.Game.Battlegrounds {
         }
 
         /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public bool VerifyAppVersion() => this.m_lastEditVersion.CompareTo(this.m_lastEditVersion = Assembly.GetExecutingAssembly().GetName().Version.ToString()) == 0;
+
+        /// <summary>
         /// Verify the checksum of the object.
         /// </summary>
         /// <returns>true if the checksum is valid. False if the checksum does not match.</returns>
         public bool VerifyChecksum() {
-            
+           
             // Backup and reset checksum
             string checksum = this.m_checksum;
             this.m_checksum = string.Empty;
 
             // Calculate checksum
-            bool result = (this.GetChecksum().CompareTo(checksum) == 0);
+            string newChecksum = this.GetChecksum();
+            bool result = newChecksum.CompareTo(checksum) == 0;
 
             // Restore checksum
             this.m_checksum = checksum;
@@ -268,12 +305,16 @@ namespace Battlegrounds.Game.Battlegrounds {
         /// </summary>
         /// <returns>The binary representation of the <see cref="Company"/>.</returns>
         public byte[] ToBytes() {
-
             this.m_checksum = string.Empty;
             this.m_checksum = this.GetChecksum();
             return Encoding.UTF8.GetBytes((this as IJsonObject).Serialize());
-
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="updateFunction"></param>
+        public void UpdateStatistics(Func<CompanyStatistics, CompanyStatistics> updateFunction) => this.m_companyStatistics = updateFunction(this.m_companyStatistics);
 
         /// <summary>
         /// 
@@ -281,14 +322,22 @@ namespace Battlegrounds.Game.Battlegrounds {
         /// <param name="jsonfilepath"></param>
         /// <returns></returns>
         public static Company ReadCompanyFromFile(string jsonfilepath) {
-
+            // Load from json
             List<IJsonElement> elements = JsonParser.Parse(jsonfilepath);
             if (elements.FirstOrDefault() is Company c) {
-                if (c.VerifyChecksum()) {
-                    return c;
+                if (c.VerifyAppVersion()) {
+                    if (c.VerifyChecksum()) {
+                        return c;
+                    } else {
+#if RELEASE
+                        throw new ChecksumViolationException();
+#else
+                        return null;
+#endif
+                    }
                 } else {
 #if RELEASE
-                    throw new ChecksumViolationException();
+                        throw new Exception("Version stuff");
 #else
                     return null;
 #endif
@@ -316,6 +365,17 @@ namespace Battlegrounds.Game.Battlegrounds {
                 return null;
 #endif
             }
+        }
+
+        public static Company UpgradeCompanyToCurrentAppVersion(string jsonfilepath) {
+            List<IJsonElement> elements = JsonParser.Parse(jsonfilepath); 
+            if (elements.FirstOrDefault() is Company c) {
+                c.m_lastEditVersion = Assembly.GetExecutingAssembly().GetName().Version.ToString();
+                return c;
+            } else {
+                return null;
+            }
+
         }
 
     }
