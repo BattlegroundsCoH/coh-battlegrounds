@@ -21,6 +21,7 @@
             <RowDefinition Height="auto"/>
             <RowDefinition Height="auto"/>
             <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="20"/>
         </Grid.RowDefinitions>
@@ -39,32 +40,33 @@
         </Grid.ColumnDefinitions>
         
         <!-- Row 1 -->
-        <Image Source="pack://application:,,,/Resources/ingame/application/app_selected.png"/>
+        <Image Grid.Row="1" Grid.Column="1" Source="pack://application:,,,/Resources/ingame/application/app_logo1.png" Width="250"/>
+        <Image Grid.Row="2" Grid.Column="1" Source="pack://application:,,,/Resources/ingame/application/app_logo2.png" Width="250"/>
 
         <!-- Row 2 -->
-        <ContentControl Grid.Row="2" Grid.Column="2" Grid.RowSpan="7" Grid.ColumnSpan="7" Margin="5,0,0,0" Content="{Binding}"/>
+        <ContentControl Grid.Row="3" Grid.Column="2" Grid.RowSpan="7" Grid.ColumnSpan="7" Margin="5,0,0,0" Content="{Binding}"/>
 
-        <Button x:Name="DashboardButton" Grid.Row="2" Grid.Column="1" Content="Dashboard" Margin="0,0,0,0"
+        <Button x:Name="DashboardButton" Grid.Row="3" Grid.Column="1" Content="Dashboard" Margin="0,0,0,0"
                 Click="Dashboard_Click"/>
 
         <!-- Row 3 -->
-        <Button x:Name="NewsButton" Grid.Row="3" Grid.Column="1" Content="News" Margin="0,10,0,0" IsEnabled="False"
+        <Button x:Name="NewsButton" Grid.Row="4" Grid.Column="1" Content="News" Margin="0,10,0,0" IsEnabled="False"
                 Click="News_Click"/>
 
         <!-- Row 4 -->
-        <Button x:Name="CompanyBuilderButton" Grid.Row="4" Grid.Column="1" Content="Company Builder" Margin="0,10,0,0"
+        <Button x:Name="CompanyBuilderButton" Grid.Row="5" Grid.Column="1" Content="Company Builder" Margin="0,10,0,0"
                 Click="CompanyBuilder_Click"/>
 
         <!-- Row 5 -->
-        <Button x:Name="CampaignButton" Grid.Row="5" Grid.Column="1" Content="Campaign" Margin="0,10,0,0" IsEnabled="False"
+        <Button x:Name="CampaignButton" Grid.Row="6" Grid.Column="1" Content="Campaign" Margin="0,10,0,0" IsEnabled="False"
                 Click="Campaign_Click"/>
 
         <!-- Row 6 -->
-        <Button x:Name="GameBrowserButton" Grid.Row="6" Grid.Column="1" Content="Game Browser" Margin="0,10,0,0"
+        <Button x:Name="GameBrowserButton" Grid.Row="7" Grid.Column="1" Content="Game Browser" Margin="0,10,0,0"
                 Click="GameBrowser_Click"/>
 
         <!-- Row 7 -->
-        <Button x:Name="ExitButton" Grid.Row="7" Grid.Column="1" Content="Exit" Margin="0,25,0,0"
+        <Button x:Name="ExitButton" Grid.Row="8" Grid.Column="1" Content="Exit" Margin="0,25,0,0"
                 Click="Exit_Click"/>
 
     </Grid>
