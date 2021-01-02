@@ -15,6 +15,12 @@
 
   <ItemGroup>
     <None Remove="Resources\ingame\aef.png" />
+    <None Remove="Resources\ingame\application\app_background.png" />
+    <None Remove="Resources\ingame\application\app_button.png" />
+    <None Remove="Resources\ingame\application\app_highlight.png" />
+    <None Remove="Resources\ingame\application\app_logo1.png" />
+    <None Remove="Resources\ingame\application\app_logo2.png" />
+    <None Remove="Resources\ingame\application\app_selected.png" />
     <None Remove="Resources\ingame\british.png" />
     <None Remove="Resources\ingame\german.png" />
     <None Remove="Resources\ingame\soviet.png" />
@@ -28,6 +34,12 @@
 
   <ItemGroup>
     <Resource Include="Resources\ingame\aef.png" />
+    <Resource Include="Resources\ingame\application\app_background.png" />
+    <Resource Include="Resources\ingame\application\app_button.png" />
+    <Resource Include="Resources\ingame\application\app_highlight.png" />
+    <Resource Include="Resources\ingame\application\app_logo1.png" />
+    <Resource Include="Resources\ingame\application\app_logo2.png" />
+    <Resource Include="Resources\ingame\application\app_selected.png" />
     <Resource Include="Resources\ingame\british.png" />
     <Resource Include="Resources\ingame\german.png" />
     <Resource Include="Resources\ingame\soviet.png" />
