@@ -6,10 +6,48 @@
         xmlns:local="clr-namespace:BattlegroundsApp"
         xmlns:views="clr-namespace:BattlegroundsApp.Views"
         mc:Ignorable="d"
-        Title="Battlegrounds" Height="850" Width="1400" WindowStartupLocation="CenterScreen">
+        Title="Battlegrounds" Height="850" Width="1400" WindowStartupLocation="CenterScreen" WindowStyle="SingleBorderWindow">
     <local:CoreAppWindow.Background>
         <ImageBrush ImageSource="pack://application:,,,/Resources/ingame/application/app_background.png"/>
     </local:CoreAppWindow.Background>
+    <local:CoreAppWindow.Resources>
+        <Style x:Key="MainWindiwButton" TargetType="{x:Type Button}">
+            <Setter Property="Background">
+                <Setter.Value>
+                    <ImageBrush ImageSource="pack://application:,,,/Resources/ingame/application/app_button.png"/>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="FontSize" Value="18"/>
+            <Setter Property="Foreground" Value="#eee"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Button}">
+                        <Border Background="{TemplateBinding Background}">
+                            <Grid Width="275" Height="48">
+                                <ContentPresenter x:Name="MyContentPresenter" Content="{TemplateBinding Content}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </Grid>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background">
+                                    <Setter.Value>
+                                        <ImageBrush ImageSource="pack://application:,,,/Resources/ingame/application/app_highlight.png"/>
+                                    </Setter.Value>
+                                </Setter>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter Property="Background">
+                                    <Setter.Value>
+                                        <ImageBrush ImageSource="pack://application:,,,/Resources/ingame/application/app_selected.png"/>
+                                    </Setter.Value>
+                                </Setter>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </local:CoreAppWindow.Resources>
     <Grid>
 
         <Grid.RowDefinitions>
@@ -47,27 +85,27 @@
         <ContentControl Grid.Row="3" Grid.Column="2" Grid.RowSpan="7" Grid.ColumnSpan="7" Margin="5,0,0,0" Content="{Binding}"/>
 
         <Button x:Name="DashboardButton" Grid.Row="3" Grid.Column="1" Content="Dashboard" Margin="0,0,0,0"
-                Click="Dashboard_Click"/>
+                Click="Dashboard_Click" Style="{StaticResource MainWindiwButton}"/>
 
         <!-- Row 3 -->
         <Button x:Name="NewsButton" Grid.Row="4" Grid.Column="1" Content="News" Margin="0,10,0,0" IsEnabled="False"
-                Click="News_Click"/>
+                Click="News_Click" Style="{StaticResource MainWindiwButton}"/>
 
         <!-- Row 4 -->
         <Button x:Name="CompanyBuilderButton" Grid.Row="5" Grid.Column="1" Content="Company Builder" Margin="0,10,0,0"
-                Click="CompanyBuilder_Click"/>
+                Click="CompanyBuilder_Click" Style="{StaticResource MainWindiwButton}"/>
 
         <!-- Row 5 -->
         <Button x:Name="CampaignButton" Grid.Row="6" Grid.Column="1" Content="Campaign" Margin="0,10,0,0" IsEnabled="False"
-                Click="Campaign_Click"/>
+                Click="Campaign_Click" Style="{StaticResource MainWindiwButton}"/>
 
         <!-- Row 6 -->
         <Button x:Name="GameBrowserButton" Grid.Row="7" Grid.Column="1" Content="Game Browser" Margin="0,10,0,0"
-                Click="GameBrowser_Click"/>
+                Click="GameBrowser_Click" Style="{StaticResource MainWindiwButton}"/>
 
         <!-- Row 7 -->
         <Button x:Name="ExitButton" Grid.Row="8" Grid.Column="1" Content="Exit" Margin="0,25,0,0"
-                Click="Exit_Click"/>
+                Click="Exit_Click" Style="{StaticResource MainWindiwButton}"/>
 
     </Grid>
 </local:CoreAppWindow>

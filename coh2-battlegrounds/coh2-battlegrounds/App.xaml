@@ -13,43 +13,5 @@
         <DataTemplate DataType="{x:Type exitApp:ExitApplicationDialogViewModel}">
             <exitApp:ExitApplicationDialogView/>
         </DataTemplate>
-        
-        <!-- STYLES -->
-        <Style TargetType="{x:Type Button}">
-            <Setter Property="Background">
-                <Setter.Value>
-                    <ImageBrush ImageSource="pack://application:,,,/Resources/ingame/application/app_button.png"/>
-                </Setter.Value>
-            </Setter>
-            <Setter Property="FontSize" Value="15"/>
-            <Setter Property="Foreground" Value="#eee"/>
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="{x:Type Button}">
-                        <Border Background="{TemplateBinding Background}">
-                            <Grid Width="250" Height="45">
-                                <ContentPresenter x:Name="MyContentPresenter" Content="{TemplateBinding Content}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                            </Grid>
-                        </Border>
-                        <ControlTemplate.Triggers>
-                            <Trigger Property="IsMouseOver" Value="True">
-                                <Setter Property="Background">
-                                    <Setter.Value>
-                                        <ImageBrush ImageSource="pack://application:,,,/Resources/ingame/application/app_highlight.png"/>
-                                    </Setter.Value>
-                                </Setter>
-                            </Trigger>
-                            <Trigger Property="IsPressed" Value="True">
-                                <Setter Property="Background">
-                                    <Setter.Value>
-                                        <ImageBrush ImageSource="pack://application:,,,/Resources/ingame/application/app_selected.png"/>
-                                    </Setter.Value>
-                                </Setter>
-                            </Trigger>
-                        </ControlTemplate.Triggers>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
     </Application.Resources>
 </Application>
