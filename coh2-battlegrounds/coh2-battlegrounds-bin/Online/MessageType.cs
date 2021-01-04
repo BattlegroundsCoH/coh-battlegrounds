@@ -68,11 +68,15 @@
 
         LOBBY_NOTIFY_GAMEMODE, // Notify lobby members the gamemode is available
 
+        LOBBY_NOTIFY_MATCH, // Notify lobby members that match result data is available
+
         LOBBY_SETUSERDATA, // Set data for lobby member
 
         LOBBY_GETUSERDATA, // Get data from lobby member
 
         LOBBY_CHANGEDUSERDATA, // Server to client(s) telling them some user data has been changed
+
+        LOBBY_TRYRECONNECT, // Try to reconnect to the lobby.
 
         USER_SETUSERDATA, // Set the user data
 
@@ -83,6 +87,14 @@
         SERVER_CLOSE, // Close the server
 
         APP_VCHECK, // Check for current app version
+
+        COH2_VCHECK, // Check version of CoH2 that's supported
+
+        STAT_GETLOBBYCOUNT, // Get the current amount of lobbies
+
+        STAT_GETUSERCOUNT, // Get the current amount of users
+
+        SERVER_INTERNAL_PROCESS, // Call a process internally (or receive response)
 
         // Add more here
 
