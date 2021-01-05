@@ -69,13 +69,6 @@ namespace BattlegroundsApp.Views {
             }
         }
 
-        // DEV: Remove later
-        private void RefreshLobby_Click(object sender, RoutedEventArgs e) {
-
-            this.m_smh.Lobby.InvokeDelayed(500, x => x.RefreshTeamAsync(this.LobbyTeamRefreshDone));
-
-        }
-
         private void StartGame_Click(object sender, RoutedEventArgs e) {
             this.m_smh.Lobby.CompileAndStartMatch(this.OnStartMatchCancelled);
             this.UpdateGUI(() => this.lobbyChat.AppendText("[Info] Starting match\n"));
