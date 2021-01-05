@@ -72,19 +72,18 @@ namespace BattlegroundsApp.Views {
 
         private void JoinLobby_Click(object sender, RoutedEventArgs e) {
 
-            // Found a lobby that we can connect to?
             if (GameLobbyList.SelectedItem is ConnectableLobby lobby) {
 
                 // Get password (if any)
                 string password = string.Empty;
                 if (lobby.lobby_passwordProtected) {
                     // TODO: Get password here if required
-                    var dialog = new LobbyPasswordDialogViewModel("Connect to lobby");
-                    var result = _dialogService.OpenDialog(dialog);
+                    var pwdDialog = new LobbyPasswordDialogViewModel("Connect to lobby");
+                    var pwdResult = _dialogService.OpenDialog(pwdDialog);
 
-                    if (result == LobbyPasswordDialogResult.Join) {
+                    if (pwdResult == LobbyPasswordDialogResult.Join) {
 
-
+                        password = pwdDialog.Password;
 
                     }
 
