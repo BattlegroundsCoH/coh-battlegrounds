@@ -4,6 +4,7 @@
              xmlns:local="clr-namespace:BattlegroundsApp"
              xmlns:hostGame="clr-namespace:BattlegroundsApp.Dialogs.HostGame"
              xmlns:exitApp="clr-namespace:BattlegroundsApp.Dialogs.ExitApplication"
+             xmlns:lobbypwd="clr-namespace:BattlegroundsApp.Dialogs.LobbyPassword"
              Startup="App_Startup"
              ShutdownMode="OnMainWindowClose">
     <Application.Resources>
@@ -12,6 +13,9 @@
         </DataTemplate>
         <DataTemplate DataType="{x:Type exitApp:ExitApplicationDialogViewModel}">
             <exitApp:ExitApplicationDialogView/>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type lobbypwd:LobbyPasswordDialogViewModel}">
+            <lobbypwd:LobbyPasswordDialogView/>
         </DataTemplate>
     </Application.Resources>
 </Application>

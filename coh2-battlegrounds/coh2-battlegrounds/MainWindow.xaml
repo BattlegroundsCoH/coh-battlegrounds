@@ -18,6 +18,8 @@
                     <ImageBrush ImageSource="pack://application:,,,/Resources/ingame/application/app_button.png"/>
                 </Setter.Value>
             </Setter>
+            <Setter Property="SnapsToDevicePixels" Value="True"/>
+            <Setter Property="UseLayoutRounding" Value="True"/>
             <Setter Property="FontSize" Value="18"/>
             <Setter Property="Foreground" Value="#eee"/>
             <Setter Property="Template">
@@ -86,7 +88,7 @@
         <Image Grid.Row="2" Grid.Column="1" Source="pack://application:,,,/Resources/ingame/application/app_logo2.png" Width="250"/>
 
         <!-- Row 3 -->
-        <ContentControl Grid.Row="3" Grid.Column="2" Grid.RowSpan="8" Grid.ColumnSpan="7" Margin="10,0,0,0" Content="{Binding}"/>
+        <ContentControl Grid.Row="3" Grid.Column="2" Grid.RowSpan="8" Grid.ColumnSpan="7" Margin="20,0,0,0" Content="{Binding}"/>
 
         <Button x:Name="DashboardButton" Grid.Row="3" Grid.Column="1" Content="Dashboard" Margin="0,0,0,0"
                 Click="Dashboard_Click" Style="{StaticResource MainWindiwButtonStyle}" ToolTip="Personal overall statistics"/>

@@ -18,6 +18,7 @@ using BattlegroundsApp.Dialogs.HostGame;
 using BattlegroundsApp.Dialogs.Service;
 using BattlegroundsApp.Utilities;
 using Battlegrounds.Online.Lobby;
+using BattlegroundsApp.Dialogs.LobbyPassword;
 
 namespace BattlegroundsApp.Views {
 
@@ -78,6 +79,15 @@ namespace BattlegroundsApp.Views {
                 string password = string.Empty;
                 if (lobby.lobby_passwordProtected) {
                     // TODO: Get password here if required
+                    var dialog = new LobbyPasswordDialogViewModel("Connect to lobby");
+                    var result = _dialogService.OpenDialog(dialog);
+
+                    if (result == LobbyPasswordDialogResult.Join) {
+
+
+
+                    }
+
                 }
 
                 // Create new connecting view
