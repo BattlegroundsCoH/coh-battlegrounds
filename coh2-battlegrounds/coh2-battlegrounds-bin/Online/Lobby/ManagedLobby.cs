@@ -1343,6 +1343,11 @@ namespace Battlegrounds.Online.Lobby {
                 throw new ArgumentOutOfRangeException(nameof(lobbyGUID), "The GUID was not of length 36 and is therefore not a valid GUID.");
             }
 
+            // Make sure the password is null
+            if (password is null) {
+                throw new ArgumentNullException(nameof(password), "Password cannot be null. Use String.Empty if no password is used");
+            }
+
             // Callback for establishing connection
             void OnConnectionEstablished(bool connected, Connection connection) {
                 if (connected) {
