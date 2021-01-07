@@ -17,6 +17,7 @@ namespace Battlegrounds.Game.Battlegrounds {
 
         byte m_vetrank;
         float m_vetexperience;
+        string m_modGuid;
         SquadBlueprint m_blueprint;
         SquadBlueprint m_transportBlueprint;
         DeploymentMethod m_deploymentMethod;
@@ -30,6 +31,7 @@ namespace Battlegrounds.Game.Battlegrounds {
         /// New basic <see cref="UnitBuilder"/> instance of for building a <see cref="Squad"/>.
         /// </summary>
         public UnitBuilder() {
+            this.m_modGuid = string.Empty;
             this.m_blueprint = null;
             this.m_transportBlueprint = null;
             this.m_crewBuilder = null;
@@ -57,9 +59,20 @@ namespace Battlegrounds.Game.Battlegrounds {
             this.m_transportBlueprint = squad.SupportBlueprint as SquadBlueprint;
             this.m_deploymentPhase = squad.DeploymentPhase;
             this.m_deploymentMethod = squad.DeploymentMethod;
+            this.m_modGuid = string.Empty;
             if (squad.Crew != null) {
                 this.m_crewBuilder = new UnitBuilder(squad.Crew, overrideIndex);
             }
+        }
+
+        /// <summary>
+        /// Set the tuning pack GUID this unit should be based on.
+        /// </summary>
+        /// <param name="guid">The GUID (in coh2 string format).</param>
+        /// <returns>The modified instance the method is invoked with.</returns>
+        public UnitBuilder SetModGUID(string guid) {
+            this.m_modGuid = guid;
+            return this;
         }
 
         /// <summary>
@@ -103,6 +116,19 @@ namespace Battlegrounds.Game.Battlegrounds {
         /// <summary>
         /// Set the <see cref="SquadBlueprint"/> the <see cref="Squad"/> instance being built will use.
         /// </summary>
+        /// /// <remarks>
+        /// This must be called before certain other methods.
+        /// </remarks>
+        /// <param name="localBPID">The local property bag ID given to the blueprint.</param>
+        /// <returns>The modified instance the method is invoked with.</returns>
+        public virtual UnitBuilder SetBlueprint(ushort localBPID) {
+            this.m_blueprint = BlueprintManager.GetCollection<SquadBlueprint>().FilterByMod(this.m_modGuid).Single(x => x.ModPBGID == localBPID);
+            return this;
+        }
+
+        /// <summary>
+        /// Set the <see cref="SquadBlueprint"/> the <see cref="Squad"/> instance being built will use.
+        /// </summary>
         /// <remarks>
         /// This must be called before certain other methods.
         /// </remarks>
@@ -123,6 +149,19 @@ namespace Battlegrounds.Game.Battlegrounds {
         /// <returns>The modified instance the method is invoked with.</returns>
         public virtual UnitBuilder SetTransportBlueprint(SquadBlueprint sbp) {
             this.m_transportBlueprint = sbp;
+            return this;
+        }
+
+        /// <summary>
+        /// Set the transport <see cref="SquadBlueprint"/> of the <see cref="Squad"/> instance being built will use when entering the battlefield.
+        /// </summary>
+        /// <remarks>
+        /// This must be called before certain other methods.
+        /// </remarks>
+        /// <param name="localBPID">The local property bag ID given to the blueprint.</param>
+        /// <returns>The modified instance the method is invoked with.</returns>
+        public virtual UnitBuilder SetTransportBlueprint(ushort localBPID) {
+            this.m_transportBlueprint = BlueprintManager.GetCollection<SquadBlueprint>().FilterByMod(this.m_modGuid).Single(x => x.ModPBGID == localBPID);
             return this;
         }
 

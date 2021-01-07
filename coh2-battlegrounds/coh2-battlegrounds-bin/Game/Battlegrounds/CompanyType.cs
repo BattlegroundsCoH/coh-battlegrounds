@@ -65,6 +65,28 @@ namespace Battlegrounds.Game.Battlegrounds {
     /// <summary>
     /// 
     /// </summary>
+    public enum CompanyAvailabilityType {
+
+        /// <summary>
+        /// 
+        /// </summary>
+        MultiplayerOnly,
+
+        /// <summary>
+        /// 
+        /// </summary>
+        CampaignOnly,
+
+        /// <summary>
+        /// 
+        /// </summary>
+        AnyMode,
+
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
     public static class CompanyTypeExtension {
 
 

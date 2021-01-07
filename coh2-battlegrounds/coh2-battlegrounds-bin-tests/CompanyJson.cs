@@ -15,7 +15,6 @@ namespace coh2_battlegrounds_bin_tests {
         public void Setup() {
             BlueprintManager.CreateDatabase();
             BlueprintManager.LoadDatabaseWithMod("battlegrounds", "142b113740474c82a60b0a428bd553d5");
-            Thread.Sleep(1000);
             company = CompanyTestBuilder.CreateSovietCompany();
         }
 

@@ -14,6 +14,11 @@ namespace Battlegrounds.Game.Database {
         public ulong PBGID { get; set; }
 
         /// <summary>
+        /// The unique PropertyBagGroupID assigned to this blueprint at load-time.
+        /// </summary>
+        public ushort ModPBGID { get; set; }
+
+        /// <summary>
         /// The name of the <see cref="Blueprint"/> file in the game files (See the instances folder in the mod tools).
         /// </summary>
         public string Name { get; set; }
@@ -55,6 +60,8 @@ namespace Battlegrounds.Game.Database {
                 return false;
             }
         }
+
+        public override int GetHashCode() => this.ModGUID.GetHashCode() + this.ModPBGID;
 
     }
 

@@ -10,6 +10,11 @@ namespace Battlegrounds.Modding {
         private readonly string m_guid;
 
         /// <summary>
+        /// The fixed length of the company GUI
+        /// </summary>
+        public const byte FIXED_LENGTH = 32;
+
+        /// <summary>
         /// Get the Company of Heroes <see cref="string"/> representation of the <see cref="Guid"/>.
         /// </summary>
         public string GUID => this.m_guid;

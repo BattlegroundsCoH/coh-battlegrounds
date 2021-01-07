@@ -202,6 +202,15 @@ namespace Battlegrounds.Functional {
         public static IsTrue<bool> Then(this bool b, Action act) => new IsTrue<bool>(b, b).Then(act);
 
         /// <summary>
+        /// Invoke a <see cref="Func{TResult}"/> if initial boolean value is <see langword="true"/>.
+        /// </summary>
+        /// <typeparam name="T">The type of which the subject will be.</typeparam>
+        /// <param name="b">The initial <see cref="bool"/> value.</param>
+        /// <param name="act">The <see cref="Func{TResult}"/> (action) to invoke if the initial value is <see langword="true"/>.</param>
+        /// <returns>A new <see cref="IsTrue{T}"/> instance with base condition from initial <see cref="bool"/> value and result of action (or default if initial condition is <see langword="false"/>).</returns>
+        public static IsTrue<T> Then<T>(this bool b, Func<T> act) => new IsTrue<T>(b, b ? act() : default);
+
+        /// <summary>
         /// Check if a given condition on <typeparamref name="T"/> is <see langword="false"/>.
         /// </summary>
         /// <typeparam name="T">The subject of the resulting <see cref="IsTrue{T}"/> instance.</typeparam>

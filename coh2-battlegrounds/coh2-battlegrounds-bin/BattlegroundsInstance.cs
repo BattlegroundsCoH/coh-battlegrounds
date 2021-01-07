@@ -162,7 +162,7 @@ namespace Battlegrounds {
         }
 
         /// <summary>
-        /// This this the first time the application has been launched
+        /// Get if this is the first time the application has been launched
         /// </summary>
         public static bool IsFirstRun { get; internal set; }
 

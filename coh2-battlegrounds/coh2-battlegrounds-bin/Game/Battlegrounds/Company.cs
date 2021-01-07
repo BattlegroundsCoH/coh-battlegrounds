@@ -34,6 +34,7 @@ namespace Battlegrounds.Game.Battlegrounds {
         [JsonIgnore] private List<UpgradeBlueprint> m_upgrades;
         [JsonIgnore] private List<SpecialAbility> m_abilities;
         [JsonIgnore] private CompanyType m_companyType;
+        [JsonIgnore] private CompanyAvailabilityType m_availabilityType;
         [JsonIgnore] private Faction m_companyArmy;
         [JsonIgnore] private CompanyStatistics m_companyStatistics;
         #endregion
@@ -49,6 +50,13 @@ namespace Battlegrounds.Game.Battlegrounds {
         [JsonBackingField(nameof(m_companyType))]
         [JsonEnum(typeof(CompanyType))]
         public CompanyType Type => this.m_companyType;
+
+        /// <summary>
+        /// The <see cref="CompanyAvailabilityType"/> that will determine when the company is available.
+        /// </summary>
+        [JsonBackingField(nameof(m_availabilityType))]
+        [JsonEnum(typeof(CompanyAvailabilityType))]
+        public CompanyAvailabilityType AvailabilityType => this.m_availabilityType;
 
         /// <summary>
         /// The version that was used to generate this company.
@@ -290,7 +298,12 @@ namespace Battlegrounds.Game.Battlegrounds {
         /// Calculate the strength of the company
         /// </summary>
         /// <returns></returns>
-        public double GetStrength() => 0;
+        public double GetStrength() {
+            double total = 1;
+            // TODO: Add other factors here
+            total *= 1.0 + this.m_companyStatistics.WinRate;
+            return total;
+        }
 
         public string ToJsonReference() => this.Name;
 

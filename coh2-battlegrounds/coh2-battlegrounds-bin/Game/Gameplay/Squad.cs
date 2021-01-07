@@ -11,7 +11,7 @@ namespace Battlegrounds.Game.Gameplay {
     /// <summary>
     /// The method in which to deploy a <see cref="Squad"/>.
     /// </summary>
-    public enum DeploymentMethod {
+    public enum DeploymentMethod : byte {
 
         /// <summary>
         /// No special method is defined (units walks unto the battlefield)
@@ -43,7 +43,7 @@ namespace Battlegrounds.Game.Gameplay {
     /// <summary>
     /// The phase in which a <see cref="Squad"/> can be deployed.
     /// </summary>
-    public enum DeploymentPhase {
+    public enum DeploymentPhase : byte {
 
         /// <summary>
         /// No phase - <see cref="Squad"/> may not be deployed in any standard way.

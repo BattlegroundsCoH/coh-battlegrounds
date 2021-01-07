@@ -2,6 +2,9 @@
 
 namespace Battlegrounds.Game.Battlegrounds {
 
+    /// <summary>
+    /// 
+    /// </summary>
     public class CompanyStatistics : IJsonObject {
 
         #region Win/Lose counts

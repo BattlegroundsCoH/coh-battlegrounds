@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
-
+using Battlegrounds.Functional;
 using Battlegrounds.Json;
 
 namespace Battlegrounds.Game.Database {
@@ -49,6 +49,11 @@ namespace Battlegrounds.Game.Database {
     /// Database over all relevant blueprints in use
     /// </summary>
     public static class BlueprintManager {
+
+        /// <summary>
+        /// Const value for the invalid local blueprint ID.
+        /// </summary>
+        public const ushort InvalidLocalBlueprint = 0;
 
         private static Dictionary<ulong, Blueprint> __entities;
         private static Dictionary<ulong, Blueprint> __squads;
@@ -102,13 +107,16 @@ namespace Battlegrounds.Game.Database {
             int failCounter = 0;
             int loadCounter = 0;
 
+            // The mod-local pbgid
+            ushort modPbgidCntr = 1;
+
             // loop through all the json paths
             for (int i = 0; i < db_paths.Length; i++) {
                 Match match = Regex.Match(db_paths[i], $@"{mod}-(?<type>\w{{3}})-db"); // Do regex match
                 if (match.Success) { // If match found
                     string toUpper = match.Groups["type"].Value.ToUpper(); // get the type in upper form
                     if (Enum.TryParse(toUpper, out BlueprintType t)) { // try and parse to blueprint type
-                        if (!LoadJsonDatabase(db_paths[i], t, guid)) { // load the db
+                        if (!LoadJsonDatabase(db_paths[i], t, guid, ref modPbgidCntr)) { // load the db
                             failCounter++; // we failed, so increment fail counter.
                         } else {
                             loadCounter++;
@@ -123,7 +131,7 @@ namespace Battlegrounds.Game.Database {
 
         }
 
-        internal static bool LoadJsonDatabase(string jsonfile, BlueprintType bType, string guid) {
+        internal static bool LoadJsonDatabase(string jsonfile, BlueprintType bType, string guid, ref ushort bpCntr) {
 
             // Parse the file
             var ls = JsonParser.Parse(jsonfile);
@@ -145,7 +153,7 @@ namespace Battlegrounds.Game.Database {
                     BlueprintType.SBP => __squads,
                     BlueprintType.UBP => __upgrades,
                     BlueprintType.IBP => __slotitems,
-                    _ => throw new ArgumentException(),
+                    _ => throw new ArgumentException("Unkown blueprint type", nameof(bType)),
                 };
 
                 // Add all the found elements
@@ -153,6 +161,7 @@ namespace Battlegrounds.Game.Database {
                     if (element is Blueprint bp) {
                         bp.BlueprintType = bType;
                         bp.ModGUID = guid;
+                        bp.ModPBGID = bpCntr++;
                         targetDictionary.Add(bp.PBGID, bp);
                     } else {
                         return false;
@@ -167,6 +176,11 @@ namespace Battlegrounds.Game.Database {
 
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="predicate"></param>
+        /// <returns></returns>
         public static List<Blueprint> Select(Predicate<Blueprint> predicate) {
             // TODO: Make a more optimized and specific version of this...
             List<Blueprint> blueprints = new List<Blueprint>();
@@ -180,6 +194,20 @@ namespace Battlegrounds.Game.Database {
         }
 
         /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        public static BlueprintCollection<Blueprint> GetCollection(BlueprintType type) => new BlueprintCollection<Blueprint>(GetAllBlueprintsOfType(type));
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        public static BlueprintCollection<T> GetCollection<T>() where T : Blueprint => new BlueprintCollection<T>(GetAllBlueprintsOfType(BlueprintTypeFromType<T>()));
+
+        /// <summary>
         /// Get a <see cref="Blueprint"/> instance by its unique ID and <see cref="BlueprintType"/>.
         /// </summary>
         /// <param name="id">The unique ID of the blueprint to find.</param>
@@ -188,18 +216,7 @@ namespace Battlegrounds.Game.Database {
         /// <exception cref="ArgumentNullException"/>
         /// <exception cref="KeyNotFoundException"/>
         /// <returns>The correct <see cref="Blueprint"/>, null if not found or a <see cref="ArgumentException"/> if <see cref="BlueprintType"/> was somehow invalid.</returns>
-        public static Blueprint FromPbgId(ushort id, BlueprintType bType) {
-            return bType switch
-            {
-                BlueprintType.ABP => __abilities[id],
-                BlueprintType.CBP => __criticals[id],
-                BlueprintType.EBP => __entities[id],
-                BlueprintType.SBP => __squads[id],
-                BlueprintType.UBP => __upgrades[id],
-                BlueprintType.IBP => __slotitems[id],
-                _ => throw new ArgumentException(),
-            };
-        }
+        public static Blueprint FromPbgId(ushort id, BlueprintType bType) => GetAllBlueprintsOfType(bType)[id];
 
         /// <summary>
         /// Get a <see cref="Blueprint"/> instance from its string name (file name).
@@ -209,22 +226,7 @@ namespace Battlegrounds.Game.Database {
         /// <exception cref="ArgumentException"/>
         /// <exception cref="ArgumentNullException"/>
         /// <returns>The correct <see cref="Blueprint"/>, null if not found or a <see cref="ArgumentException"/> if <see cref="BlueprintType"/> was somehow invalid.</returns>
-        public static Blueprint FromBlueprintName(string id, BlueprintType bType) {
-            if (id.Contains(":")) {
-                id = id.Substring(id.IndexOf(':') + 1);
-                Console.WriteLine(id);
-            }
-            return bType switch
-            {
-                BlueprintType.ABP => __abilities.FirstOrDefault(x => (x.Value.Name ?? "").CompareTo(id) == 0).Value,
-                BlueprintType.CBP => __criticals.FirstOrDefault(x => (x.Value.Name ?? "").CompareTo(id) == 0).Value,
-                BlueprintType.EBP => __entities.FirstOrDefault(x => (x.Value.Name ?? "").CompareTo(id) == 0).Value,
-                BlueprintType.SBP => __squads.FirstOrDefault(x => (x.Value.Name ?? "").CompareTo(id) == 0).Value,
-                BlueprintType.UBP => __upgrades.FirstOrDefault(x => (x.Value.Name ?? "").CompareTo(id) == 0).Value,
-                BlueprintType.IBP => __slotitems.FirstOrDefault(x => (x.Value.Name ?? "").CompareTo(id) == 0).Value,
-                _ => throw new ArgumentException(),
-            };
-        }
+        public static Blueprint FromBlueprintName(string id, BlueprintType bType) => GetAllBlueprintsOfType(bType).FirstOrDefault(x => (x.Value.Name ?? "").CompareTo(id) == 0).Value;
 
         /// <summary>
         /// Dereference a <see cref="Blueprint"/> reference from a json reference string of the form "BPT:BPName".
@@ -238,12 +240,89 @@ namespace Battlegrounds.Game.Database {
         /// <exception cref="FormatException"/>
         public static IJsonObject JsonDereference(string jsonReference) {
             BlueprintType type = (BlueprintType)Enum.Parse(typeof(BlueprintType), jsonReference.Substring(0, 3));
-            if (ushort.TryParse(jsonReference.Substring(4), out ushort result)) {
+            if (ushort.TryParse(jsonReference[4..], out ushort result)) {
                 return FromPbgId(result, type);
             } else {
-                return FromBlueprintName(jsonReference.Substring(4), type);
+                return FromBlueprintName(jsonReference[4..], type);
             }
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        public static Dictionary<ulong, Blueprint> GetAllBlueprintsOfType(BlueprintType type) => type switch {
+            BlueprintType.ABP => __abilities,
+            BlueprintType.CBP => __criticals,
+            BlueprintType.EBP => __entities,
+            BlueprintType.SBP => __squads,
+            BlueprintType.UBP => __upgrades,
+            BlueprintType.IBP => __slotitems,
+            _ => throw new ArgumentException(null, nameof(type)),
+        };
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="isMax"></param>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        public static ulong GetUIDValueExtrema(bool isMax, BlueprintType type)
+                => isMax.Then(() => GetAllBlueprintsOfType(type).Max(x => x.Key))
+                .Else(_ => GetAllBlueprintsOfType(type).Min(x => x.Key));
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TResult"></typeparam>
+        /// <param name="isMax"></param>
+        /// <param name="type"></param>
+        /// <param name="selector"></param>
+        /// <returns></returns>
+        public static TResult GetValueExtrema<TResult>(bool isMax, BlueprintType type, Func<Blueprint, TResult> selector, Predicate<KeyValuePair<ulong, Blueprint>> predicate = null)
+            => isMax.Then(() => GetAllBlueprintsOfType(type).Where(x => predicate?.Invoke(x) ?? true).Max(x => selector(x.Value)))
+                .Else(_ => GetAllBlueprintsOfType(type).Where(x => predicate?.Invoke(x) ?? true).Min(x => selector(x.Value)));
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TBlueprint"></typeparam>
+        /// <typeparam name="TResult"></typeparam>
+        /// <param name="isMax"></param>
+        /// <param name="selector"></param>
+        /// <returns></returns>
+        public static TResult GetValueExtrema<TBlueprint, TResult>(bool isMax, Func<TBlueprint, TResult> selector, Predicate<KeyValuePair<ulong, TBlueprint>> predicate = null) 
+            where TBlueprint : Blueprint
+            => isMax.Then(() => GetAllBlueprintsOfType(BlueprintTypeFromType<TBlueprint>())
+            .Where(x => predicate?.Invoke(new KeyValuePair<ulong, TBlueprint>(x.Key, x.Value as TBlueprint)) ?? true)
+            .Max(x => selector(x.Value as TBlueprint)))
+                .Else(_ => GetAllBlueprintsOfType(BlueprintTypeFromType<TBlueprint>())
+                .Where(x => predicate?.Invoke(new KeyValuePair<ulong, TBlueprint>(x.Key, x.Value as TBlueprint)) ?? true).Min(x => selector(x.Value as TBlueprint)));
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        public static BlueprintType BlueprintTypeFromType<T>() where T : Blueprint {
+            if (typeof(T) == typeof(SquadBlueprint)) {
+                return BlueprintType.SBP;
+            } else if (typeof(T) == typeof(EntityBlueprint)) {
+                return BlueprintType.EBP;
+            } else if (typeof(T) == typeof(AbilityBlueprint)) {
+                return BlueprintType.ABP;
+            } else if (typeof(T) == typeof(SlotItemBlueprint)) {
+                return BlueprintType.IBP;
+            } else if (typeof(T) == typeof(CriticalBlueprint)) {
+                return BlueprintType.CBP;
+            } else if (typeof(T) == typeof(UpgradeBlueprint)) {
+                return BlueprintType.UBP;
+            } else {
+                throw new ArgumentException("Invalid type argument");
+            }
+        }
+
     }
 
 }
