@@ -27,7 +27,9 @@ namespace BattlegroundsApp.Views {
 
         public void SetState(ViewState state) => throw new NotImplementedException();
 
-        public override void StateOnFocus() => throw new NotImplementedException();
+        public override void StateOnFocus() {
+
+        }
 
         public override void StateOnLostFocus() => throw new NotImplementedException();
 
@@ -38,6 +40,26 @@ namespace BattlegroundsApp.Views {
         }
 
         private void editCompany_Click(object sender, RoutedEventArgs e) {
+
+        }
+
+        private void renameCompany_Click(object sender, RoutedEventArgs e) {
+
+        }
+
+        private void deleteCompany_Click(object sender, RoutedEventArgs e) {
+
+        }
+
+        private void copyCompany_Click(object sender, RoutedEventArgs e) {
+
+        }
+
+        private void exportCompany_Click(object sender, RoutedEventArgs e) {
+
+        }
+
+        private void importCompany_Click(object sender, RoutedEventArgs e) {
 
         }
     }
