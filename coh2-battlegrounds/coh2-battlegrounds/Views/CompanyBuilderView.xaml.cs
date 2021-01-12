@@ -12,6 +12,8 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using BattlegroundsApp.Dialogs.CreateCompany;
 using BattlegroundsApp.Dialogs.Service;
+using BattlegroundsApp.Dialogs.YesNo;
+using BattlegroundsApp.Dialogs.RenameCompany;
 
 namespace BattlegroundsApp.Views {
     /// <summary>
@@ -58,9 +60,23 @@ namespace BattlegroundsApp.Views {
 
         private void renameCompany_Click(object sender, RoutedEventArgs e) {
 
+            var dialog = new RenameCompanyDialogViewModel("Rename Company");
+            var result = _dialogService.OpenDialog(dialog);
+
+            if (result == RenameCompanyDialogResult.Rename) {
+                //Rename selected company here
+            }
+
         }
 
         private void deleteCompany_Click(object sender, RoutedEventArgs e) {
+
+            var dialog = new YesNoDialogViewModel("Delete Company", "Are you sure?");
+            var result = _dialogService.OpenDialog(dialog);
+
+            if (result == YesNoDialogResult.Confirm) {
+                //Detele selected company here
+            }
 
         }
 

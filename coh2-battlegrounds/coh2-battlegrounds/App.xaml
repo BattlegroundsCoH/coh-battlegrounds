@@ -7,6 +7,7 @@
              xmlns:lobbypwd="clr-namespace:BattlegroundsApp.Dialogs.LobbyPassword"
              xmlns:ok="clr-namespace:BattlegroundsApp.Dialogs.OK"
              xmlns:createCompany="clr-namespace:BattlegroundsApp.Dialogs.CreateCompany"
+             xmlns:renameCompany="clr-namespace:BattlegroundsApp.Dialogs.RenameCompany"
              Startup="App_Startup"
              ShutdownMode="OnMainWindowClose">
     <Application.Resources>
@@ -24,6 +25,9 @@
         </DataTemplate>
         <DataTemplate DataType="{x:Type createCompany:CreateCompanyDialogViewModel}">
             <createCompany:CreateCompanyDialogView/>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type renameCompany:RenameCompanyDialogViewModel}">
+            <renameCompany:RenameCompanyDialogView/>
         </DataTemplate>
     </Application.Resources>
 </Application>
