@@ -13,12 +13,12 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace BattlegroundsApp.Dialogs.ExitApplication {
+namespace BattlegroundsApp.Dialogs.YesNo {
     /// <summary>
-    /// Interaction logic for ExitApplicationDialogView.xaml
+    /// Interaction logic for YesNoDialogView.xaml
     /// </summary>
-    public partial class ExitApplicationDialogView : UserControl {
-        public ExitApplicationDialogView() {
+    public partial class YesNoDialogView : UserControl {
+        public YesNoDialogView() {
             InitializeComponent();
         }
     }

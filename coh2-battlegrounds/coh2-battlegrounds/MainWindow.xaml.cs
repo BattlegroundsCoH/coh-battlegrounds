@@ -21,7 +21,7 @@ using System.Diagnostics;
 
 using BattlegroundsApp.Views;
 using BattlegroundsApp.Dialogs.Service;
-using BattlegroundsApp.Dialogs.ExitApplication;
+using BattlegroundsApp.Dialogs.YesNo;
 
 namespace BattlegroundsApp {
 
@@ -79,10 +79,10 @@ namespace BattlegroundsApp {
         // Exit application
         private void Exit_Click(object sender, RoutedEventArgs e) {
 
-            var dialog = new ExitApplicationDialogViewModel("Exit", "Are you sure?");
+            var dialog = new YesNoDialogViewModel("Exit", "Are you sure?");
             var result = _dialogService.OpenDialog(dialog);
 
-            if (result == ExitApplicationDialogResult.Exit) {
+            if (result == YesNoDialogResult.Confirm) {
 
                 this.Close();
 

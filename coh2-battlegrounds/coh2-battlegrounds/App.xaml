@@ -3,7 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:local="clr-namespace:BattlegroundsApp"
              xmlns:hostGame="clr-namespace:BattlegroundsApp.Dialogs.HostGame"
-             xmlns:exitApp="clr-namespace:BattlegroundsApp.Dialogs.ExitApplication"
+             xmlns:yesNo="clr-namespace:BattlegroundsApp.Dialogs.YesNo"
              xmlns:lobbypwd="clr-namespace:BattlegroundsApp.Dialogs.LobbyPassword"
              xmlns:ok="clr-namespace:BattlegroundsApp.Dialogs.OK"
              xmlns:createCompany="clr-namespace:BattlegroundsApp.Dialogs.CreateCompany"
@@ -13,8 +13,8 @@
         <DataTemplate DataType="{x:Type hostGame:HostGameDialogViewModel}">
             <hostGame:HostGameDialogView/>
         </DataTemplate>
-        <DataTemplate DataType="{x:Type exitApp:ExitApplicationDialogViewModel}">
-            <exitApp:ExitApplicationDialogView/>
+        <DataTemplate DataType="{x:Type yesNo:YesNoDialogViewModel}">
+            <yesNo:YesNoDialogView/>
         </DataTemplate>
         <DataTemplate DataType="{x:Type lobbypwd:LobbyPasswordDialogViewModel}">
             <lobbypwd:LobbyPasswordDialogView/>
