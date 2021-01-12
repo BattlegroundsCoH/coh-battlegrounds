@@ -33,6 +33,11 @@
         <ListView x:Name="companyList" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="9" Height="400" Width="800">
             <ListView.View>
                 <GridView>
+                    <GridView.ColumnHeaderContainerStyle>
+                        <Style BasedOn="{StaticResource {x:Type GridViewColumnHeader}}" TargetType="{x:Type GridViewColumnHeader}">
+                            <Setter Property="IsHitTestVisible" Value="False"/>
+                        </Style>
+                    </GridView.ColumnHeaderContainerStyle>
                     <GridViewColumn Header="Name" Width="500" DisplayMemberBinding="{Binding company_name}"/>
                     <GridViewColumn Header="Rating" Width="75" DisplayMemberBinding="{Binding company_rating}"/>
                     <GridViewColumn Header="Type" Width="75" DisplayMemberBinding="{Binding company_type}"/>

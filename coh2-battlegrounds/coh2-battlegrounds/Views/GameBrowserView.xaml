@@ -33,6 +33,11 @@
         <ListView x:Name="GameLobbyList" Grid.Row="0" Grid.Column="0" Grid.RowSpan="5" Grid.ColumnSpan="5" Height="400" Width="800">
             <ListView.View>
                 <GridView>
+                    <GridView.ColumnHeaderContainerStyle>
+                        <Style BasedOn="{StaticResource {x:Type GridViewColumnHeader}}" TargetType="{x:Type GridViewColumnHeader}">
+                            <Setter Property="IsHitTestVisible" Value="False"/>
+                        </Style>
+                    </GridView.ColumnHeaderContainerStyle>
                     <GridViewColumn Header="Name" Width="525" DisplayMemberBinding="{Binding lobby_name}"/>
                     <GridViewColumn Header="Players" Width="100" DisplayMemberBinding="{Binding lobby_player_count}"/>
                     <GridViewColumn Header="Map" Width="100" DisplayMemberBinding="{Binding lobby_map}"/>
