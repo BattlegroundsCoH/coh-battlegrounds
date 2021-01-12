@@ -10,6 +10,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using BattlegroundsApp.Dialogs.CreateCompany;
+using BattlegroundsApp.Dialogs.Service;
 
 namespace BattlegroundsApp.Views {
     /// <summary>
@@ -17,8 +19,11 @@ namespace BattlegroundsApp.Views {
     /// </summary>
     public partial class CompanyBuilderView : ViewState, IStateMachine<ViewState> {
 
+        private IDialogService _dialogService;
+
         public CompanyBuilderView() {
             InitializeComponent();
+            _dialogService = new DialogService();
         }
 
         public ViewState State { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
@@ -27,6 +32,7 @@ namespace BattlegroundsApp.Views {
 
         public void SetState(ViewState state) => throw new NotImplementedException();
 
+        // TODO
         public override void StateOnFocus() {
 
         }
@@ -36,6 +42,13 @@ namespace BattlegroundsApp.Views {
         bool IStateMachine<ViewState>.StateChangeRequest(object request) => throw new NotImplementedException();
 
         private void createCompany_Click(object sender, RoutedEventArgs e) {
+
+            var dialog = new CreateCompanyDialogViewModel("Create Company");
+            var result = _dialogService.OpenDialog(dialog);
+
+            if (result == CreateCompanyDialogResult.Create) {
+                //Switch state here
+            }
 
         }
 
