@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Markup;
@@ -11,7 +12,7 @@ namespace BattlegroundsApp.Controls.Lobby.Components {
     /// Interaction logic for LobbyDropdown.xaml
     /// </summary>
     [ContentProperty("Items")]
-    public partial class LobbyDropdown : LobbyControl {
+    public partial class LobbyDropdown : LobbyControl, INotifyPropertyChanged {
 
         private IEnumerable m_itemSource;
         private object m_setSelectedValue;
@@ -94,9 +95,12 @@ namespace BattlegroundsApp.Controls.Lobby.Components {
         /// </summary>
         public event SelectionChangedEventHandler SelectedItemChanged;
 
+        public event PropertyChangedEventHandler PropertyChanged;
+
         public LobbyDropdown() {
             InitializeComponent();
             this.EnableEvents = true;
+            this.m_setSelectedValue = "Unknown";
             this.SelfOptions.SelectionChanged += this.SelfOptions_SelectionChanged;
         }
 
@@ -114,7 +118,7 @@ namespace BattlegroundsApp.Controls.Lobby.Components {
             } else if (this.State is OtherState) {
                 return this.m_setSelectedValue;
             } else {
-                return null;
+                return "Unknown";
             }
         }
 
@@ -124,6 +128,7 @@ namespace BattlegroundsApp.Controls.Lobby.Components {
             } else if (this.State is OtherState) {
                 this.m_setSelectedValue = value;
             }
+            this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(this.SelectedItem)));
         }
 
         private int CountOfElements() {
