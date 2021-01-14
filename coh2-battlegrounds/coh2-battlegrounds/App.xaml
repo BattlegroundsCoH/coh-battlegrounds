@@ -3,23 +3,31 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:local="clr-namespace:BattlegroundsApp"
              xmlns:hostGame="clr-namespace:BattlegroundsApp.Dialogs.HostGame"
-             xmlns:exitApp="clr-namespace:BattlegroundsApp.Dialogs.ExitApplication"
+             xmlns:yesNo="clr-namespace:BattlegroundsApp.Dialogs.YesNo"
              xmlns:lobbypwd="clr-namespace:BattlegroundsApp.Dialogs.LobbyPassword"
              xmlns:ok="clr-namespace:BattlegroundsApp.Dialogs.OK"
+             xmlns:createCompany="clr-namespace:BattlegroundsApp.Dialogs.CreateCompany"
+             xmlns:renameCompany="clr-namespace:BattlegroundsApp.Dialogs.RenameCompany"
              Startup="App_Startup"
              ShutdownMode="OnMainWindowClose">
     <Application.Resources>
         <DataTemplate DataType="{x:Type hostGame:HostGameDialogViewModel}">
             <hostGame:HostGameDialogView/>
         </DataTemplate>
-        <DataTemplate DataType="{x:Type exitApp:ExitApplicationDialogViewModel}">
-            <exitApp:ExitApplicationDialogView/>
+        <DataTemplate DataType="{x:Type yesNo:YesNoDialogViewModel}">
+            <yesNo:YesNoDialogView/>
         </DataTemplate>
         <DataTemplate DataType="{x:Type lobbypwd:LobbyPasswordDialogViewModel}">
             <lobbypwd:LobbyPasswordDialogView/>
         </DataTemplate>
         <DataTemplate DataType="{x:Type ok:OKDialogViewModel}">
             <ok:OKDialogView/>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type createCompany:CreateCompanyDialogViewModel}">
+            <createCompany:CreateCompanyDialogView/>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type renameCompany:RenameCompanyDialogViewModel}">
+            <renameCompany:RenameCompanyDialogView/>
         </DataTemplate>
     </Application.Resources>
 </Application>
