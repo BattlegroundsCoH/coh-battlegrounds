@@ -99,7 +99,7 @@
         </Button>
         
         <Button x:Name="exportCompany" Grid.Row="1" Grid.Column="4" Content="Export" Click="exportCompany_Click" Margin="0, 0, 0, 0" Width="100">
-             <!--<Button.Style>
+            <Button.Style>
                 <Style TargetType="{x:Type Button}">
                     <Style.Triggers>
                         <DataTrigger Binding="{Binding SelectedItem, ElementName=companyList}" Value="{x:Null}">
@@ -107,7 +107,7 @@
                         </DataTrigger>
                     </Style.Triggers>
                 </Style>
-            </Button.Style>-->
+            </Button.Style>
         </Button>
 
         <Button x:Name="importCompany" Grid.Row="1" Grid.Column="5" Content="Import" Click="importCompany_Click" Margin="0, 0, 0, 0" Width="100"/>
