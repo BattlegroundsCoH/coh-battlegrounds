@@ -153,10 +153,13 @@ namespace BattlegroundsApp.Views {
         private void UpdateSelectedOption(string arg1, string arg2) {
             this.Dispatcher.Invoke(() => {
                 if (int.TryParse(arg1, out int option)) {
-                    var gamemode = Gamemode.SelectedItem as Wincondition;
-                    var opt = gamemode.Options[option];
-                    this.GamemodeOption.ItemsSource = new List<string> { opt.Title };
-                    this.GamemodeOption.SelectedIndex = 0;
+                    if (Gamemode.SelectedItem is Wincondition gamemode) {
+                        var opt = gamemode.Options[option];
+                        this.GamemodeOption.ItemsSource = new List<string> { opt.Title };
+                        this.GamemodeOption.SelectedIndex = 0;
+                    } else {
+                        // FIX
+                    }
                 }
             });
         }
