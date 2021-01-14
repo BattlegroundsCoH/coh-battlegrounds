@@ -4,7 +4,6 @@ using System.Diagnostics;
 using System.IO;
 
 using Battlegrounds.Functional;
-using Battlegrounds.Game.Battlegrounds;
 using Battlegrounds.Json;
 using Battlegrounds.Modding;
 using Battlegrounds.Steam;

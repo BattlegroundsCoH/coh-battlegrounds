@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Battlegrounds.Game.Battlegrounds {
+﻿namespace Battlegrounds.Game.DataCompany {
     
     /// <summary>
     /// Enumerated representation of recognized types that can be used to describe a <see cref="Company"/>.

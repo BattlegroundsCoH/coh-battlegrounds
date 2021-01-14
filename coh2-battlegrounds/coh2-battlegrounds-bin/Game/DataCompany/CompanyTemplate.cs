@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Linq;
 using System.Text;
-using Battlegrounds.Game.Database;
+using Battlegrounds.Game.Database.Management;
 using Battlegrounds.Game.Gameplay;
 using Battlegrounds.Modding;
 using Battlegrounds.Util;
 
-namespace Battlegrounds.Game.Battlegrounds {
+namespace Battlegrounds.Game.DataCompany {
     
     /// <summary>
     /// Readonly class representing a template for generating a <see cref="Company"/> instance.

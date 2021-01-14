@@ -1,6 +1,6 @@
 ﻿using Battlegrounds.Json;
 
-namespace Battlegrounds.Game.Battlegrounds {
+namespace Battlegrounds.Game.DataCompany {
 
     /// <summary>
     /// 

@@ -2,7 +2,7 @@
 using System.Windows;
 
 using Battlegrounds;
-using Battlegrounds.Game.Database;
+using Battlegrounds.Game.Database.Management;
 using Battlegrounds.Steam;
 using BattlegroundsApp.LocalData;
 

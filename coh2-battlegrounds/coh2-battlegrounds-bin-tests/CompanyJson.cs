@@ -1,7 +1,6 @@
 ﻿using System.IO;
-using System.Threading;
-using Battlegrounds.Game.Battlegrounds;
-using Battlegrounds.Game.Database;
+using Battlegrounds.Game.Database.Management;
+using Battlegrounds.Game.DataCompany;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace coh2_battlegrounds_bin_tests {

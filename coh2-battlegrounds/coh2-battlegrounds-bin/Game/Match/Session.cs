@@ -1,17 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-
-using Battlegrounds.Json;
-using Battlegrounds.Game.Gameplay;
-using Battlegrounds.Modding;
-using Battlegrounds.Game.Database;
-
-using static Battlegrounds.Game.Battlegrounds.SessionParticipantTeam;
-using Battlegrounds.Functional;
 using System.Diagnostics;
 
-namespace Battlegrounds.Game.Battlegrounds {
+using Battlegrounds.Json;
+using Battlegrounds.Modding;
+using Battlegrounds.Functional;
+using Battlegrounds.Game.Gameplay;
+using Battlegrounds.Game.Database;
+using Battlegrounds.Game.DataCompany;
+
+using static Battlegrounds.Game.Match.SessionParticipantTeam;
+
+namespace Battlegrounds.Game.Match {
     
     /// <summary>
     /// Represents a game session where a match will take place between players with a pre-selected <see cref="Company"/> and using a set of preset settings. Implements <see cref="IJsonObject"/>.
@@ -78,7 +79,7 @@ namespace Battlegrounds.Game.Battlegrounds {
         }
 
         public Company FindCompany(string playername, Faction faction)
-            => m_participants.FirstOrDefault(x => x.IsHumanParticipant && x.UserDisplayname.CompareTo(playername) == 0 && x.ParticipantFaction == faction).ParticipantCompany;
+            => this.m_participants.FirstOrDefault(x => x.IsHumanParticipant && x.UserDisplayname.CompareTo(playername) == 0 && x.ParticipantFaction == faction).ParticipantCompany;
 
         /// <summary>
         /// Create a new <see cref="Session"/> instance with a unique <see cref="Guid"/>.

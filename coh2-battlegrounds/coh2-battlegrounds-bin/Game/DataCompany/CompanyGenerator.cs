@@ -4,9 +4,10 @@ using System.Linq;
 using System.Text;
 using Battlegrounds.Functional;
 using Battlegrounds.Game.Database;
+using Battlegrounds.Game.Database.Management;
 using Battlegrounds.Game.Gameplay;
 
-namespace Battlegrounds.Game.Battlegrounds {
+namespace Battlegrounds.Game.DataCompany {
     
     /// <summary>
     /// Utility class for generating random <see cref="Company"/> data ready for ingame-use.

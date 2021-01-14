@@ -3,7 +3,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Threading.Tasks;
 
-namespace Battlegrounds.Game.Database {
+namespace Battlegrounds.Game.Database.Management {
 
     /// <summary>
     /// Callback handler for the <see cref="DatabaseManager"/> being done loading databases.

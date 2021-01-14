@@ -1,7 +1,7 @@
 ﻿using System;
 using Battlegrounds.Modding;
 
-namespace Battlegrounds.Game.Battlegrounds {
+namespace Battlegrounds.Modding {
 
     /// <summary>
     /// The battlegrounds tuning mod. Implements <see cref="ITuningMod"/>. This class cannot be inherited.

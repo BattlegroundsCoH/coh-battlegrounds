@@ -3,7 +3,7 @@ using Battlegrounds.Game.Database;
 using Battlegrounds.Game.Scar;
 using Battlegrounds.Json;
 
-namespace Battlegrounds.Game.Battlegrounds {
+namespace Battlegrounds.Game.DataCompany {
 
     /// <summary>
     /// Special ability category an ability may belong to.

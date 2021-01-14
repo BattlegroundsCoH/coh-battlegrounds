@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+
 using Battlegrounds.Functional;
 using Battlegrounds.Game.Database;
+using Battlegrounds.Game.Database.Management;
 using Battlegrounds.Game.Gameplay;
 
-namespace Battlegrounds.Game.Battlegrounds {
+namespace Battlegrounds.Game.DataCompany {
     
     /// <summary>
     /// Builder class for building a <see cref="Squad"/> instance with serial-style methods. Can be cleared for re-use.

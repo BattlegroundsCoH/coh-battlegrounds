@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using Battlegrounds.Game.Gameplay;
 
-namespace Battlegrounds.Game.Battlegrounds {
+namespace Battlegrounds.Game.DataCompany {
     
     /// <summary>
     /// Builder class for building a <see cref="Company"/>. Inherit if you wish to extend functionality. This class is intended to be used for method chaining (But is not required for use).

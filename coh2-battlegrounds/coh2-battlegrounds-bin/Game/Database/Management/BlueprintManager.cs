@@ -6,7 +6,9 @@ using System.Text.RegularExpressions;
 using Battlegrounds.Functional;
 using Battlegrounds.Json;
 
-namespace Battlegrounds.Game.Database {
+using RegexMatch = System.Text.RegularExpressions.Match;
+
+namespace Battlegrounds.Game.Database.Management {
 
     /// <summary>
     /// The type a <see cref="Blueprint"/> may represent in the <see cref="BlueprintManager"/>.
@@ -112,7 +114,7 @@ namespace Battlegrounds.Game.Database {
 
             // loop through all the json paths
             for (int i = 0; i < db_paths.Length; i++) {
-                Match match = Regex.Match(db_paths[i], $@"{mod}-(?<type>\w{{3}})-db"); // Do regex match
+                RegexMatch match = Regex.Match(db_paths[i], $@"{mod}-(?<type>\w{{3}})-db"); // Do regex match
                 if (match.Success) { // If match found
                     string toUpper = match.Groups["type"].Value.ToUpper(); // get the type in upper form
                     if (Enum.TryParse(toUpper, out BlueprintType t)) { // try and parse to blueprint type

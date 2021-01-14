@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Battlegrounds.Game.Gameplay;
-
-namespace Battlegrounds.Game {
+﻿namespace Battlegrounds.Game.Database {
     
     /// <summary>
     /// 

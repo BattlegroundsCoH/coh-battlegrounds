@@ -3,7 +3,7 @@ using System.Collections.Immutable;
 using Battlegrounds.Game.Database;
 using Battlegrounds.Game.Gameplay;
 
-namespace Battlegrounds.Game.Battlegrounds {
+namespace Battlegrounds.Game.Match {
     
     /// <summary>
     /// Class the keeps track of <see cref="Gameplay.Player"/> data throughout a <see cref="GameMatch"/>.

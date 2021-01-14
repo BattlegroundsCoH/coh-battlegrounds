@@ -47,6 +47,11 @@ namespace Battlegrounds.Online.Services {
         public int lobby_player_count => this.lobby_players.Count;
 
         /// <summary>
+        /// Gets the cap on players
+        /// </summary>
+        public int lobby_player_cap { get; private set; }
+
+        /// <summary>
         /// New standard <see cref="ConnectableLobby"/> instance without player data.
         /// </summary>
         /// <param name="gid">The lobby GUID that's used by the server to identify the lobby.</param>
@@ -55,6 +60,7 @@ namespace Battlegrounds.Online.Services {
         public ConnectableLobby(string gid, string name, bool isPsswProtected) {
             this.lobby_guid = gid;
             this.lobby_name = name;
+            this.lobby_player_cap = 0;
             this.lobby_passwordProtected = isPsswProtected;
             this.lobby_players = new List<ConnectableLobbyPlayer>();
             this.m_lobbyMap = "<none>";
@@ -65,11 +71,19 @@ namespace Battlegrounds.Online.Services {
                 this.lobby_players.Clear();
                 Message message = new Message(MessageType.LOBBY_INFO, this.lobby_guid);
                 MessageSender.SendMessage(AddressBook.GetLobbyServer(), message, (a, msg) => {
-                    var mapRegMatch = Regex.Match(msg.Argument1, @"\(m:(?<map>(\w|_|-|<|>|x07)*)\)");
+                    var mapRegMatch = Regex.Match(msg.Argument1, @"\(m:(?<map>(\w|\d|_|-|<|>)*)\)");
                     if (mapRegMatch.Success) {
                         this.m_lobbyMap = mapRegMatch.Groups["map"].Value;
                     } else {
                         Trace.WriteLine($"{this.lobby_guid}-map: Failed to read map", "ConnectableLobby");
+                    }
+                    var capRegMatch = Regex.Match(msg.Argument1, @"\(cap:(?<cap>(\d*))\)");
+                    if (mapRegMatch.Success) {
+                        if (int.TryParse(mapRegMatch.Groups["cap"].Value, out int capValue)) {
+                            this.lobby_player_cap = capValue;
+                        }
+                    } else {
+                        Trace.WriteLine($"{this.lobby_guid}-map: Failed to read capacity", "ConnectableLobby");
                     }
                     var matches = Regex.Matches(msg.Argument1, @"\(s:(?<s>\d+);n:""(?<n>(\s|\S)+)"";i:(?<i>\d+);t:(?<t>-?\d+);f:(?<f>\w*);c:""(?<c>(\s|\S)*)""\)");
                     if (matches.Count > 0) {

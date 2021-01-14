@@ -6,8 +6,9 @@ using System.Collections.Generic;
 using Battlegrounds.Game.Gameplay;
 using Battlegrounds.Util;
 using System.Linq;
+using Battlegrounds.Game.Database;
 
-namespace Battlegrounds.Game.Data {
+namespace Battlegrounds.Game.DataSource.Replay {
 
     /// <summary>
     /// Represents a CoH2 replay file
