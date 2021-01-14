@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Markup;
@@ -128,7 +129,8 @@ namespace BattlegroundsApp.Controls.Lobby.Components {
             if (this.State is SelfState) {
                 this.SelfOptions.SelectedIndex = this.SelfOptions.Items.IndexOf(value);
             } else if (this.State is OtherState) {
-                this.m_setSelectedValue = value;
+                /*this.OtherSelected.Content = */this.m_setSelectedValue = value.ToString();
+                Trace.WriteLine($"Setting selected value to \"{value}\"", "WPF-Sucks");
             }
             this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(this.SelectedItem)));
         }
