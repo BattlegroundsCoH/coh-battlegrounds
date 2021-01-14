@@ -50,9 +50,11 @@ namespace BattlegroundsApp.Dialogs.ImportExport {
 
         private ImportExportDialogViewModel(ImportExportDialogType type, string title, string companyString) : this(type, title) { this.CompanyString = companyString; }
 
-        public static ImportExportDialogResult ShowImportDialog(string title) {
+        public static ImportExportDialogResult ShowImportDialog(string title, out string companyString) {
             var dialog = new ImportExportDialogViewModel(ImportExportDialogType.Import, title);
-            return dialog.ShowDialog();
+            var result = dialog.ShowDialog();
+            companyString = dialog.CompanyString;
+            return result;
         }
         public static ImportExportDialogResult ShowExportDialog(string title, string companyString) {
             var dialog = new ImportExportDialogViewModel(ImportExportDialogType.Export, title, companyString);

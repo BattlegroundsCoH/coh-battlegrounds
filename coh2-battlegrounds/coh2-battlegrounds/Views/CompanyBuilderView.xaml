@@ -38,7 +38,7 @@
                             <Setter Property="IsHitTestVisible" Value="False"/>
                         </Style>
                     </GridView.ColumnHeaderContainerStyle>
-                    <GridViewColumn Header="Name" Width="500" DisplayMemberBinding="{Binding company_name}"/>
+                    <GridViewColumn Header="Name" Width="500" DisplayMemberBinding="{Binding Name}"/>
                     <GridViewColumn Header="Rating" Width="75" DisplayMemberBinding="{Binding company_rating}"/>
                     <GridViewColumn Header="Type" Width="75" DisplayMemberBinding="{Binding company_type}"/>
                     <GridViewColumn Header="Alliance" Width="75" DisplayMemberBinding="{Binding company_alliance}"/>
@@ -86,7 +86,7 @@
             </Button.Style>
         </Button>
         
-        <Button x:Name="copyCompany" Grid.Row="1" Grid.Column="3" Content="Copy" Click="copyCompany_Click" Margin="0, 0, 0, 0">
+        <Button x:Name="copyCompany" Grid.Row="1" Grid.Column="4" Content="Copy" Click="copyCompany_Click" Margin="0, 0, 0, 0">
             <Button.Style>
                 <Style TargetType="{x:Type Button}">
                     <Style.Triggers>
@@ -98,7 +98,7 @@
             </Button.Style>
         </Button>
         
-        <Button x:Name="exportCompany" Grid.Row="1" Grid.Column="4" Content="Export" Click="exportCompany_Click" Margin="0, 0, 0, 0" Width="100">
+        <Button x:Name="exportCompany" Grid.Row="1" Grid.Column="5" Content="Export" Click="exportCompany_Click" Margin="0, 0, 0, 0" Width="100">
             <Button.Style>
                 <Style TargetType="{x:Type Button}">
                     <Style.Triggers>
@@ -110,7 +110,7 @@
             </Button.Style>
         </Button>
 
-        <Button x:Name="importCompany" Grid.Row="1" Grid.Column="5" Content="Import" Click="importCompany_Click" Margin="0, 0, 0, 0" Width="100"/>
+        <Button x:Name="importCompany" Grid.Row="1" Grid.Column="6" Content="Import" Click="importCompany_Click" Margin="0, 0, 0, 0" Width="100"/>
 
     </Grid>
 </bg:ViewState>
