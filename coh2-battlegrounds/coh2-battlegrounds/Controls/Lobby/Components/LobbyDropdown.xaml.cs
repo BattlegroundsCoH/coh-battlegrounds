@@ -25,6 +25,8 @@ namespace BattlegroundsApp.Controls.Lobby.Components {
 
         public static readonly DependencyProperty DescriptionMaxWidthProperty = DependencyProperty.Register("DescriptionMaxWidth", typeof(double), typeof(LobbyDropdown));
 
+        public static readonly DependencyProperty SelectedItemProperty = DependencyProperty.Register("SelectedItem", typeof(object), typeof(LobbyDropdown));
+
         /// <summary>
         /// Get the <see cref="ItemCollection"/> used to generate the conents of the <see cref="LobbyDropdown"/>. Default is an empty collection.
         /// </summary>
