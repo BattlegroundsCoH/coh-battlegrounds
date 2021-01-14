@@ -8,7 +8,9 @@ using System.Windows;
 using System.Windows.Controls;
 
 namespace BattlegroundsApp.Dialogs.Service {
+
     public abstract class DialogWindowBase<T> : UserControl, INotifyPropertyChanged, IDialogViewModelBase<T> where T : Enum {
+
         public T Result { get; }
 
         public string Title { get; set; }
@@ -29,8 +31,10 @@ namespace BattlegroundsApp.Dialogs.Service {
 
         public virtual T ShowDialog() {
 
-            DialogWindow window = new DialogWindow();
-            window.ContentPresenter = this;
+            DialogWindow window = new DialogWindow {
+                Content = this.Content
+            };
+
             if (window.ShowDialog() == true) {
                 return this.DialogResult;
             } else {
@@ -38,10 +42,9 @@ namespace BattlegroundsApp.Dialogs.Service {
             }
 
         }
-        public virtual void OnPropertyChanged(string propertyName) {
 
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        public virtual void OnPropertyChanged(string propertyName) 
+            => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 
-        }
     }
 }

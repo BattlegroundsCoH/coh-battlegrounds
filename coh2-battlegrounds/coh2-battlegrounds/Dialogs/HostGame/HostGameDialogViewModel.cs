@@ -56,6 +56,8 @@ namespace BattlegroundsApp.Dialogs.HostGame {
             CancelCommand = new RelayCommand<DialogWindow>(Cancel);
             DialogCloseDefault = HostGameDialogResult.Cancel;
 
+            this.Content = new HostGameDialogView();
+
         }
 
         public static HostGameDialogResult ShowHostGameDialog(string title, out string lobbyName, out string lobbyPwd) {
