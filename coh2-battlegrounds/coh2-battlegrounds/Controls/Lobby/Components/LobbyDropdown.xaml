@@ -35,7 +35,6 @@
                 VerticalAlignment="Center"/>
             <Label 
                 x:Name="OtherSelected" 
-                Content="{Binding Path=SelectedItem, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:LobbyDropdown}}}" 
                 VerticalAlignment="Center" 
                 HorizontalAlignment="Right" 
                 Padding="0,0,5,0"/>
