@@ -132,7 +132,7 @@ namespace BattlegroundsApp.Controls.Lobby.Components {
             if (this.State is SelfState) {
                 this.SelfOptions.SelectedIndex = this.SelfOptions.Items.IndexOf(value);
             } else if (this.State is OtherState) {
-                this.m_setSelectedValue = value.ToString();
+                this.OtherSelected.Content = this.m_setSelectedValue = value.ToString();
             }
             this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(this.SelectedItem)));
         }
