@@ -1,10 +1,11 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using System.Collections.Generic;
 using System.Text;
 using System.Text.RegularExpressions;
 
-namespace Battlegrounds.Game.Data {
+using RegexMatch = System.Text.RegularExpressions.Match;
+
+namespace Battlegrounds.Game.DataSource {
     
     /// <summary>
     /// 
@@ -41,7 +42,7 @@ namespace Battlegrounds.Game.Data {
 
                 while(!string.IsNullOrEmpty(line = sr.ReadLine())) {
 
-                    Match match = reg.Match(line);
+                    RegexMatch match = reg.Match(line);
 
                     if (match.Success) {
 

@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Battlegrounds;
-using Battlegrounds.Game.Battlegrounds;
-using Battlegrounds.Game.Database;
+﻿using Battlegrounds.Game.DataCompany;
 using Battlegrounds.Game.Gameplay;
 
 namespace coh2_battlegrounds_bin_tests {

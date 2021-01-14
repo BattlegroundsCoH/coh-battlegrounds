@@ -4,7 +4,7 @@ using System.IO;
 
 using Battlegrounds.Util;
 
-namespace Battlegrounds.Game {
+namespace Battlegrounds.Game.DataSource.Replay {
     
     /// <summary>
     /// Class representation of a tick (update) in the game

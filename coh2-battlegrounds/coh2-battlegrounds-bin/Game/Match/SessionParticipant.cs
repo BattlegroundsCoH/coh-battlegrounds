@@ -2,8 +2,9 @@
 using Battlegrounds.Game.Gameplay;
 using Battlegrounds.Json;
 using Battlegrounds.Steam;
+using Battlegrounds.Game.DataCompany;
 
-namespace Battlegrounds.Game.Battlegrounds {
+namespace Battlegrounds.Game.Match {
     
     /// <summary>
     /// Enum representing a team a <see cref="SessionParticipant"/> can be on.

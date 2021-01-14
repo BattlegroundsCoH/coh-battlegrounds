@@ -1,6 +1,4 @@
-﻿namespace Battlegrounds.Game {
-
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+﻿namespace Battlegrounds.Game.DataSource.Replay {
 
     /// <summary>
     /// Represents a game event
@@ -133,5 +131,4 @@
 
     }
 
-#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 }

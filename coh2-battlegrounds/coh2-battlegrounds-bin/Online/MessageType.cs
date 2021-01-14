@@ -40,6 +40,8 @@
 
         LOBBY_CHATMESSAGE, // Send chatmessage
 
+        LOBBY_TEAMCHATMESSAGE, // Send message to team members only
+
         LOBBY_METAMESSAGE, // Send metamessage
 
         LOBBY_REQUEST_COMPANY, // Request company data from player(s)
@@ -62,6 +64,8 @@
 
         LOBBY_SETHOST, // Message sent to client that they're now the host.
 
+        LOBBY_UNSETHOST, // Message sent to client that they're no longer the host.
+
         LOBBY_STARTING, // Host has pressed the start button
 
         LOBBY_CANCEL, // Tell the lobby to cancel match start
@@ -78,6 +82,14 @@
 
         LOBBY_TRYRECONNECT, // Try to reconnect to the lobby.
 
+        LOBBY_GETHOSTID, // Get ID of host
+
+        LOBBY_CLIENTERROR, // Inform of client error (fatal)
+
+        LOBBY_CLIENTPROBLEM, // Inform of client problem (non-fatal, lacking information).
+
+        LOBBY_DIRECTMESSAGE, // Send direct message to ID
+
         USER_SETUSERDATA, // Set the user data
 
         USER_PING, // User ping-back (SERVER_PING -> reponse = USER_PING)
@@ -86,15 +98,17 @@
 
         SERVER_CLOSE, // Close the server
 
-        APP_VCHECK, // Check for current app version
+        SERVER_INTERNAL_PROCESS, // Call a process internally (or receive response)
 
-        COH2_VCHECK, // Check version of CoH2 that's supported
+        SERVER_APP_VCHECK, // Check for current app version
+
+        SERVER_COH2_VCHECK, // Check version of CoH2 that's supported
 
         STAT_GETLOBBYCOUNT, // Get the current amount of lobbies
 
         STAT_GETUSERCOUNT, // Get the current amount of users
 
-        SERVER_INTERNAL_PROCESS, // Call a process internally (or receive response)
+        STAT_GETPLAYING, // Get the current amount of active matches
 
         // Add more here
 

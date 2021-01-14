@@ -1,7 +1,7 @@
 ﻿using Battlegrounds.Game.Database;
 using Battlegrounds.Modding;
 
-namespace Battlegrounds.Game.Battlegrounds {
+namespace Battlegrounds.Game.Match {
     
     /// <summary>
     /// Info struct used by a <see cref="Session"/> instance to infer information.

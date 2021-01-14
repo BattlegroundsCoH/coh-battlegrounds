@@ -12,7 +12,7 @@ using Battlegrounds.Json;
 using Battlegrounds.Steam;
 using Battlegrounds.Verification;
 
-namespace Battlegrounds.Game.Battlegrounds {
+namespace Battlegrounds.Game.DataCompany {
 
     /// <summary>
     /// Represents a Company. Implements <see cref="IJsonObject"/> and <see cref="IChecksumItem"/>.

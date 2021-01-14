@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Battlegrounds.Game.Database {
+namespace Battlegrounds.Game.Database.Management {
     
     /// <summary>
     /// A collection of <see cref="Blueprint"/> instances. Can contain inheriting types of <see cref="Blueprint"/>.

@@ -5,9 +5,13 @@ using System.Text.RegularExpressions;
 
 using Battlegrounds.Game.Gameplay;
 using Battlegrounds.Game.Database;
-using Battlegrounds.Game.Data;
+using Battlegrounds.Game.DataSource.Replay;
+using Battlegrounds.Game.Database.Management;
+using Battlegrounds.Game.DataCompany;
 
-namespace Battlegrounds.Game.Battlegrounds {
+using RegexMatch = System.Text.RegularExpressions.Match;
+
+namespace Battlegrounds.Game.Match {
 
     /// <summary>
     /// Representation of a match wherein the results of the match can be evaluated and verified within the <see cref="Session"/> the match was played.
@@ -125,7 +129,7 @@ namespace Battlegrounds.Game.Battlegrounds {
 
             if (msg.Length > 0) {
 
-                Match messageMatchResult = Regex.Match(msg, @"(?<cmdtype>\w)\[(?<content>(?<msg>(\w|_|-|:|\.|\d)+)|,|\s)*\]");
+                RegexMatch messageMatchResult = Regex.Match(msg, @"(?<cmdtype>\w)\[(?<content>(?<msg>(\w|_|-|:|\.|\d)+)|,|\s)*\]");
 
                 if (messageMatchResult.Success) {
 

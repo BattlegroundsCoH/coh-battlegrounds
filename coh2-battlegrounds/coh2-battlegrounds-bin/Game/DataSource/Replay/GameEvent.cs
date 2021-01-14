@@ -1,18 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Text;
 
-namespace Battlegrounds.Game {
+namespace Battlegrounds.Game.DataSource.Replay {
     
     /// <summary>
     /// Represents an event that occured in a <see cref="GameTick"/>.
     /// </summary>
     public class GameEvent {
-
-        // Static dictionary used to test ID
-        // public static Dictionary<uint, Dictionary<GameEventType, uint>> test = new Dictionary<uint, Dictionary<GameEventType, uint>>();
-
-        //public static HashSet<byte> unknowns = new HashSet<byte>();
 
         /// <summary>
         /// The first <see cref="GamePosition"/> argument given to the <see cref="GameEvent"/>.
@@ -122,27 +116,9 @@ namespace Battlegrounds.Game {
                         break;
                     default: break;
                 }
-            } /*else {
-                if (this.Type != 104 && this.Type != 105) {
-                    Console.WriteLine(this.Type);
-                }
-            }*/
+            }
 
         }
-
-        /*private static void testInc(uint u, GameEventType t) {
-            if (test.ContainsKey(u)) {
-                if (test[u].ContainsKey(t)) {
-                    test[u][t]++;
-                } else {
-                    test[u].Add(t, 1);
-                }
-            } else {
-                Dictionary<GameEventType, uint> counter = new Dictionary<GameEventType, uint>();
-                counter.Add(t, 1);
-                test.Add(u, counter);
-            }
-        }*/
 
     }
 

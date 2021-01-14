@@ -6,7 +6,7 @@ using Battlegrounds.Compiler;
 using Battlegrounds.Compiler.Source;
 using Battlegrounds.Modding;
 
-namespace Battlegrounds.Game.Battlegrounds {
+namespace Battlegrounds.Game.Match {
     
     /// <summary>
     /// Status code for a <see cref="Session"/> being run in the <see cref="SessionManager"/>.
