@@ -25,7 +25,7 @@ namespace BattlegroundsApp.Controls.Lobby.Components {
 
         public static readonly DependencyProperty DescriptionMaxWidthProperty = DependencyProperty.Register("DescriptionMaxWidth", typeof(double), typeof(LobbyDropdown));
 
-        public static readonly DependencyProperty SelectedItemProperty = DependencyProperty.Register("SelectedItem", typeof(object), typeof(LobbyDropdown));
+        public new static readonly DependencyProperty SelectedItemProperty = DependencyProperty.Register("SelectedItem", typeof(object), typeof(LobbyDropdown));
 
         /// <summary>
         /// Get the <see cref="ItemCollection"/> used to generate the conents of the <see cref="LobbyDropdown"/>. Default is an empty collection.
@@ -130,7 +130,7 @@ namespace BattlegroundsApp.Controls.Lobby.Components {
             } else if (this.State is OtherState) {
                 this.m_setSelectedValue = value;
             }
-            //this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(this.SelectedItem)));
+            this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(this.SelectedItem)));
         }
 
         private int CountOfElements() {
