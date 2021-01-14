@@ -138,6 +138,7 @@ namespace BattlegroundsApp.Views {
                     this.Map.SelectedIndex = 0;
                     this.m_smh.Lobby.GetLobbyCapacity(x => this.UpdateGUI(() => this.m_teamManagement.SetMaxPlayers(x)));
                     UpdateMapPreview(null);
+                    // TODO: Report error to host
                 }
             });
         }
@@ -203,7 +204,7 @@ namespace BattlegroundsApp.Views {
 
         private void UpdateMapPreview(Scenario scenario) {
             if (scenario is not null) {
-                string fullpath = System.IO.Path.GetFullPath($"usr\\mods\\map_icons\\{scenario.Name}_map.tga");
+                string fullpath = Path.GetFullPath($"usr\\mods\\map_icons\\{scenario.Name}_map.tga");
                     if (File.Exists(fullpath)) {
                         try {
                             mapImage.Source = TgaImageSource.TargaBitmapSourceFromFile(fullpath);

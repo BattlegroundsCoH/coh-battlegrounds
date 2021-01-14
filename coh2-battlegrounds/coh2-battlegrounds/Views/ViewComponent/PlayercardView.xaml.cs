@@ -210,6 +210,7 @@ namespace BattlegroundsApp.Views.ViewComponent {
             this.LockSlotButton.SetStateBasedOnContext(isHost, isAI, selfID);
             this.UnlockSlotButton.SetStateBasedOnContext(isHost, isAI, selfID);
             this.AddAIButton.SetStateBasedOnContext(isHost, isAI, selfID);
+            this.RemovePlayerButton.SetStateBasedOnContext(isHost, isAI, selfID);
         }
 
         private void LockSlotButton_Click(object sender, RoutedEventArgs e) => this.OnPlayercardEvent?.Invoke(this, "LockSlot");

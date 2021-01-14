@@ -521,9 +521,10 @@ namespace Battlegrounds.Online.Lobby {
                         }
                     }
                 }
-                broadcast.Then(() => this.SetLobbyInformation("capacity", capacity));
-            } else {
-                throw new PermissionDeniedException(PermissionDeniedException.HOST_ONLY);
+                broadcast.Then(() => this.m_isHost.Then(
+                        () => this.SetLobbyInformation("capacity", capacity)).Else(
+                        () => throw new PermissionDeniedException(PermissionDeniedException.HOST_ONLY))
+                    );
             }
         }
 
