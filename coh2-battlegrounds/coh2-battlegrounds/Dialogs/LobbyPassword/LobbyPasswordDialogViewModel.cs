@@ -13,13 +13,10 @@ namespace BattlegroundsApp.Dialogs.LobbyPassword {
         Join,
         Cancel
     }
-    class LobbyPasswordDialogViewModel :ViewModelBase, IDialogViewModelBase<LobbyPasswordDialogResult> {
+    class LobbyPasswordDialogViewModel : DialogWindowBase<LobbyPasswordDialogResult> {
 
         public ICommand JoinCommand { get; private set; }
         public ICommand CandelCommand { get; private set; }
-        public string Title { get; set; }
-        public LobbyPasswordDialogResult DialogResult { get; set; }
-        public LobbyPasswordDialogResult DialogCloseDefault => LobbyPasswordDialogResult.Cancel;
 
         private string _password;
         public string Password {
@@ -33,31 +30,31 @@ namespace BattlegroundsApp.Dialogs.LobbyPassword {
             }
         }
 
-        public LobbyPasswordDialogViewModel(string title) {
+        private LobbyPasswordDialogViewModel(string title) {
 
             Title = title;
-            JoinCommand = new RelayCommand<IDialogWindow>(Join);
-            CandelCommand = new RelayCommand<IDialogWindow>(Cancel);
+            JoinCommand = new RelayCommand<DialogWindow>(Join);
+            CandelCommand = new RelayCommand<DialogWindow>(Cancel);
+            DialogCloseDefault = LobbyPasswordDialogResult.Cancel;
 
         }
 
-        private void Join(IDialogWindow window) {
+        public static LobbyPasswordDialogResult ShowLobbyPasswordDialog(string title, out string password) {
+            var dialog = new LobbyPasswordDialogViewModel(title);
+            var result = dialog.ShowDialog();
+            password = dialog.Password;
+            return result;
+        }
+
+        private void Join(DialogWindow window) {
 
             CloseDialogWithResult(window, LobbyPasswordDialogResult.Join);
 
         }
 
-        private void Cancel(IDialogWindow window) {
+        private void Cancel(DialogWindow window) {
 
             CloseDialogWithResult(window, LobbyPasswordDialogResult.Cancel);
-
-        }
-
-        public void CloseDialogWithResult(IDialogWindow dialog, LobbyPasswordDialogResult result) {
-
-            DialogResult = result;
-
-            if (dialog != null) dialog.DialogResult = true;
 
         }
     }

@@ -13,14 +13,10 @@ namespace BattlegroundsApp.Dialogs.RenameCompany {
         Rename,
         Cancel
     }
-    class RenameCompanyDialogViewModel : ViewModelBase, IDialogViewModelBase<RenameCompanyDialogResult> {
+    class RenameCompanyDialogViewModel : DialogWindowBase<RenameCompanyDialogResult> {
         
         public ICommand RenameCommand { get; set; }
         public ICommand CancelCommand { get; set; }
-        public string Title { get; set; }
-        public RenameCompanyDialogResult DialogResult { get; set; }
-
-        public RenameCompanyDialogResult DialogCloseDefault => RenameCompanyDialogResult.Cancel;
 
         private string _newCompanyName;
         public string NewCompanyName {
@@ -34,26 +30,29 @@ namespace BattlegroundsApp.Dialogs.RenameCompany {
             }
         }
 
-        public RenameCompanyDialogViewModel(string title) {
+        private RenameCompanyDialogViewModel(string title) {
 
             Title = title;
-            RenameCommand = new RelayCommand<IDialogWindow>(Rename);
-            CancelCommand = new RelayCommand<IDialogWindow>(Cancel);
-
+            RenameCommand = new RelayCommand<DialogWindow>(Rename);
+            CancelCommand = new RelayCommand<DialogWindow>(Cancel);
+            DialogCloseDefault = RenameCompanyDialogResult.Cancel;
         }
 
-        private void Rename(IDialogWindow window) {
+        public static RenameCompanyDialogResult ShowRenameCompanyDialog(string title) {
+            var dialog = new RenameCompanyDialogViewModel(title);
+            return dialog.ShowDialog();
+        }
+
+        private void Rename(DialogWindow window) {
 
             CloseDialogWithResult(window, RenameCompanyDialogResult.Rename);
 
         }
 
-        private void Cancel(IDialogWindow window) {
+        private void Cancel(DialogWindow window) {
 
             CloseDialogWithResult(window, RenameCompanyDialogResult.Cancel);
 
         }
-
-        public void CloseDialogWithResult(IDialogWindow dialog, RenameCompanyDialogResult result) => throw new NotImplementedException();
     }
 }

@@ -38,8 +38,6 @@ namespace BattlegroundsApp {
 
         private Dictionary<string, ViewState> m_constStates; // lookup table for all states that don't need initialization.
 
-        private IDialogService _dialogService;
-
         public MainWindow() {
 
             // Initialize components etc...
@@ -53,8 +51,6 @@ namespace BattlegroundsApp {
                 [DASHBOARDSTATE] = new DashboardView(),
                 [NEWSSTATE] = new NewsView(),
             };
-
-            _dialogService = new DialogService();
 
             // Starts with Dashboard page opened
             this.DataContext = this.m_constStates[DASHBOARDSTATE];
@@ -79,8 +75,7 @@ namespace BattlegroundsApp {
         // Exit application
         private void Exit_Click(object sender, RoutedEventArgs e) {
 
-            var dialog = new YesNoDialogViewModel("Exit", "Are you sure?");
-            var result = _dialogService.OpenDialog(dialog);
+            var result = YesNoDialogViewModel.ShowYesNoDialog("Exit", "Are you sure?");
 
             if (result == YesNoDialogResult.Confirm) {
 

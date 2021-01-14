@@ -8,6 +8,7 @@
              xmlns:ok="clr-namespace:BattlegroundsApp.Dialogs.OK"
              xmlns:createCompany="clr-namespace:BattlegroundsApp.Dialogs.CreateCompany"
              xmlns:renameCompany="clr-namespace:BattlegroundsApp.Dialogs.RenameCompany"
+             xmlns:importExport="clr-namespace:BattlegroundsApp.Dialogs.ImportExport"
              Startup="App_Startup"
              ShutdownMode="OnMainWindowClose">
     <Application.Resources>
@@ -28,6 +29,9 @@
         </DataTemplate>
         <DataTemplate DataType="{x:Type renameCompany:RenameCompanyDialogViewModel}">
             <renameCompany:RenameCompanyDialogView/>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type importExport:ImportExportDialogViewModel}">
+            <importExport:ImportExportDialogView/>
         </DataTemplate>
     </Application.Resources>
 </Application>

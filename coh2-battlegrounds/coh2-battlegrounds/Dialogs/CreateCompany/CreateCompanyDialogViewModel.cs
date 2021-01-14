@@ -13,13 +13,10 @@ namespace BattlegroundsApp.Dialogs.CreateCompany {
         Create,
         Cancel
     }
-    class CreateCompanyDialogViewModel : ViewModelBase, IDialogViewModelBase<CreateCompanyDialogResult> {
+    class CreateCompanyDialogViewModel : DialogWindowBase<CreateCompanyDialogResult> {
     
         public ICommand CreateCommand { get; set; }
         public ICommand CancelCommand { get; set; }
-        public string Title { get; set; }
-        public CreateCompanyDialogResult DialogResult { get; set; }
-        public CreateCompanyDialogResult DialogCloseDefault => CreateCompanyDialogResult.Cancel;
 
         private string _companyName;
         public string CompanyName {
@@ -46,33 +43,38 @@ namespace BattlegroundsApp.Dialogs.CreateCompany {
             }
         }
 
-        public CreateCompanyDialogViewModel(string title) {
+        private CreateCompanyDialogViewModel(string title) {
 
             Title = title;
-            CreateCommand = new RelayCommand<IDialogWindow>(Create);
-            CancelCommand = new RelayCommand<IDialogWindow>(Cancel);
+            CreateCommand = new RelayCommand<DialogWindow>(Create);
+            CancelCommand = new RelayCommand<DialogWindow>(Cancel);
+            DialogCloseDefault = CreateCompanyDialogResult.Cancel;
 
         }
 
-        private void Create(IDialogWindow window) {
+        public static CreateCompanyDialogResult ShowCreateCompanyDialog(string title) {
+            var dialog = new CreateCompanyDialogViewModel(title);
+            return dialog.ShowDialog();
+        }
+
+        private void Create(DialogWindow window) {
 
             CloseDialogWithResult(window, CreateCompanyDialogResult.Create);
 
         }
 
-        private void Cancel(IDialogWindow window) {
+        private void Cancel(DialogWindow window) {
 
             CloseDialogWithResult(window, CreateCompanyDialogResult.Cancel);
 
         }
 
-        public void CloseDialogWithResult(IDialogWindow dialog, CreateCompanyDialogResult result) {
+        public override void CloseDialogWithResult(DialogWindow dialog, CreateCompanyDialogResult result) {
 
             DialogResult = result;
 
             if (dialog != null) dialog.DialogResult = true;
 
         }
-    
     }
 }

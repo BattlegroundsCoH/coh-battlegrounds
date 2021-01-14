@@ -14,6 +14,7 @@ using BattlegroundsApp.Dialogs.CreateCompany;
 using BattlegroundsApp.Dialogs.Service;
 using BattlegroundsApp.Dialogs.YesNo;
 using BattlegroundsApp.Dialogs.RenameCompany;
+using BattlegroundsApp.Dialogs.ImportExport;
 
 namespace BattlegroundsApp.Views {
     /// <summary>
@@ -21,11 +22,8 @@ namespace BattlegroundsApp.Views {
     /// </summary>
     public partial class CompanyBuilderView : ViewState, IStateMachine<ViewState> {
 
-        private IDialogService _dialogService;
-
         public CompanyBuilderView() {
             InitializeComponent();
-            _dialogService = new DialogService();
         }
 
         public ViewState State { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
@@ -45,8 +43,7 @@ namespace BattlegroundsApp.Views {
 
         private void createCompany_Click(object sender, RoutedEventArgs e) {
 
-            var dialog = new CreateCompanyDialogViewModel("Create Company");
-            var result = _dialogService.OpenDialog(dialog);
+            var result = CreateCompanyDialogViewModel.ShowCreateCompanyDialog("Create");
 
             if (result == CreateCompanyDialogResult.Create) {
                 //Switch state here
@@ -60,19 +57,11 @@ namespace BattlegroundsApp.Views {
 
         private void renameCompany_Click(object sender, RoutedEventArgs e) {
 
-            var dialog = new RenameCompanyDialogViewModel("Rename Company");
-            var result = _dialogService.OpenDialog(dialog);
-
-            if (result == RenameCompanyDialogResult.Rename) {
-                //Rename selected company here
-            }
-
         }
 
         private void deleteCompany_Click(object sender, RoutedEventArgs e) {
 
-            var dialog = new YesNoDialogViewModel("Delete Company", "Are you sure?");
-            var result = _dialogService.OpenDialog(dialog);
+            var result = YesNoDialogViewModel.ShowYesNoDialog("Delete Company", "Are you sure?");
 
             if (result == YesNoDialogResult.Confirm) {
                 //Detele selected company here
@@ -85,11 +74,14 @@ namespace BattlegroundsApp.Views {
         }
 
         private void exportCompany_Click(object sender, RoutedEventArgs e) {
-
+            ImportExportDialogViewModel.ShowExportDialog("Export", "4444");
         }
 
         private void importCompany_Click(object sender, RoutedEventArgs e) {
-
+            var result = ImportExportDialogViewModel.ShowImportDialog("Export");
+            if (result == ImportExportDialogResult.Import) {
+                //Import company here
+            }
         }
     }
 }

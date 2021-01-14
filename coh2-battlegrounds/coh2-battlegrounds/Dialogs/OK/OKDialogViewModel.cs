@@ -12,33 +12,28 @@ namespace BattlegroundsApp.Dialogs.OK {
     public enum OKDialogResult {
         OK,
     }
-    class OKDialogViewModel : ViewModelBase, IDialogViewModelBase<OKDialogResult> {
+    class OKDialogViewModel : DialogWindowBase<OKDialogResult> {
 
         public ICommand OKCommand { get; private set; }
-        public string Title { get; set; }
         public string Message { get; set; }
-        public OKDialogResult DialogResult { get; set; }
-        public OKDialogResult DialogCloseDefault => OKDialogResult.OK;
 
-        public OKDialogViewModel(string title, string message) {
+        private OKDialogViewModel(string title, string message) {
 
             Title = title;
             Message = message;
-            OKCommand = new RelayCommand<IDialogWindow>(OK);
+            OKCommand = new RelayCommand<DialogWindow>(OK);
+            DialogCloseDefault = OKDialogResult.OK;
 
         }
 
-        private void OK(IDialogWindow window) {
+        public static OKDialogResult ShowOKDialog(string title, string message) {
+            var dialog = new OKDialogViewModel(title, message);
+            return dialog.ShowDialog();
+        }
+
+        private void OK(DialogWindow window) {
 
             CloseDialogWithResult(window, OKDialogResult.OK);
-
-        }
-
-        public void CloseDialogWithResult(IDialogWindow dialog, OKDialogResult result) {
-
-            DialogResult = result;
-
-            if (dialog != null) dialog.DialogResult = true;
 
         }
 

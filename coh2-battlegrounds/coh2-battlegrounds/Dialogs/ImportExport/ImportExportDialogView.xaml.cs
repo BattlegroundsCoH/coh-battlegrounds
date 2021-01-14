@@ -13,12 +13,12 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace BattlegroundsApp.Dialogs.RenameCompany {
+namespace BattlegroundsApp.Dialogs.ImportExport {
     /// <summary>
-    /// Interaction logic for RenameCompanyDialogView.xaml
+    /// Interaction logic for ImportExportDialogView.xaml
     /// </summary>
-    public partial class RenameCompanyDialogView : UserControl {
-        public RenameCompanyDialogView() {
+    public partial class ImportExportDialogView : UserControl {
+        public ImportExportDialogView() {
             InitializeComponent();
         }
     }

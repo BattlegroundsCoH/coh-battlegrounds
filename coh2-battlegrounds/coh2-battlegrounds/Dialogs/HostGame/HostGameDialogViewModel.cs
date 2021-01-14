@@ -11,13 +11,10 @@ namespace BattlegroundsApp.Dialogs.HostGame {
         Host,
         Cancel
     }
-    public class HostGameDialogViewModel : ViewModelBase, IDialogViewModelBase<HostGameDialogResult> {
+    public class HostGameDialogViewModel : DialogWindowBase<HostGameDialogResult> {
 
         public ICommand HostCommand { get; private set; }
         public ICommand CancelCommand { get; private set; }
-        public string Title { get; set; }
-        public HostGameDialogResult DialogResult { get; set; }
-        public HostGameDialogResult DialogCloseDefault => HostGameDialogResult.Cancel;
 
         private string _lobbyName;
         public string LobbyName {
@@ -52,31 +49,32 @@ namespace BattlegroundsApp.Dialogs.HostGame {
 
         }
 
-        public HostGameDialogViewModel(string title) {
+        private HostGameDialogViewModel(string title) {
 
             Title = title;
-            HostCommand = new RelayCommand<IDialogWindow>(Host);
-            CancelCommand = new RelayCommand<IDialogWindow>(Cancel);
+            HostCommand = new RelayCommand<DialogWindow>(Host);
+            CancelCommand = new RelayCommand<DialogWindow>(Cancel);
+            DialogCloseDefault = HostGameDialogResult.Cancel;
 
         }
 
-        private void Host(IDialogWindow window) {
+        public static HostGameDialogResult ShowHostGameDialog(string title, out string lobbyName, out string lobbyPwd) {
+            var dialog = new HostGameDialogViewModel(title);
+            var result = dialog.ShowDialog();
+            lobbyName = dialog.LobbyName;
+            lobbyPwd = dialog.LobbyPassword;
+            return result;
+        }
+
+        private void Host(DialogWindow window) {
 
             CloseDialogWithResult(window, HostGameDialogResult.Host);
 
         }
 
-        private void Cancel(IDialogWindow window) {
+        private void Cancel(DialogWindow window) {
 
             CloseDialogWithResult(window, HostGameDialogResult.Cancel);
-
-        }
-
-        public void CloseDialogWithResult(IDialogWindow dialog, HostGameDialogResult result) {
-
-            DialogResult = result;
-
-            if (dialog != null) dialog.DialogResult = true;
 
         }
     }

@@ -27,8 +27,6 @@ namespace BattlegroundsApp.Views {
     /// </summary>
     public partial class GameBrowserView : ViewState {
 
-        private IDialogService _dialogService;
-
         public ICommand HostGameCommand { get; private set; }
 
         private LobbyHub m_hub;
@@ -47,9 +45,6 @@ namespace BattlegroundsApp.Views {
             this.m_hub = new LobbyHub {
                 User = BattlegroundsInstance.LocalSteamuser
             };
-
-            // TODO: Make this with injection?
-            _dialogService = new DialogService();
 
             HostGameCommand = new RelayCommand(HostLobby);
 
@@ -75,22 +70,16 @@ namespace BattlegroundsApp.Views {
             if (GameLobbyList.SelectedItem is ConnectableLobby lobby) {
 
                 // Get password (if any)
-                string password = string.Empty;
+                string lobbyPassword = string.Empty;
                 if (lobby.lobby_passwordProtected) {
-                    // TODO: Get password here if required
-                    var pwdDialog = new LobbyPasswordDialogViewModel("Connect to lobby");
-                    var pwdResult = _dialogService.OpenDialog(pwdDialog);
-
-                    if (pwdResult == LobbyPasswordDialogResult.Join) {
-
-                        password = pwdDialog.Password;
-
+                    var result = LobbyPasswordDialogViewModel.ShowLobbyPasswordDialog("Connect to lobby", out lobbyPassword);
+                    if (result == LobbyPasswordDialogResult.Cancel) {
+                        return;
                     }
-
                 }
 
                 // Create new connecting view
-                var connectingView = new GameLobbyConnectingView(this.m_hub, lobby.lobby_guid, lobby.lobby_name, password);
+                var connectingView = new GameLobbyConnectingView(this.m_hub, lobby.lobby_guid, lobby.lobby_name, lobbyPassword);
 
                 // Change state to connecting view
                 this.StateChangeRequest?.Invoke(connectingView);
@@ -101,13 +90,12 @@ namespace BattlegroundsApp.Views {
 
         private void HostLobby() {
 
-            var dialog = new HostGameDialogViewModel("Host Game");
-            var result = _dialogService.OpenDialog(dialog);
+            var result = HostGameDialogViewModel.ShowHostGameDialog("Host Game", out string lobbyName, out string lobbyPwd);
             
             if (result == HostGameDialogResult.Host) {
 
                 // Call the host function
-                ManagedLobby.Host(this.m_hub, dialog.LobbyName, dialog.LobbyPassword, this.HostLobbyServerResponse);
+                ManagedLobby.Host(this.m_hub, lobbyName, lobbyPwd, this.HostLobbyServerResponse);
 
             }
 

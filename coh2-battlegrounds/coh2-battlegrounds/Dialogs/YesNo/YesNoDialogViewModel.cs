@@ -13,43 +13,37 @@ namespace BattlegroundsApp.Dialogs.YesNo {
         Confirm,
         Cancel
     }
-    class YesNoDialogViewModel : ViewModelBase, IDialogViewModelBase<YesNoDialogResult> {
+    class YesNoDialogViewModel : DialogWindowBase<YesNoDialogResult> {
 
         public ICommand ConfirmCommand { get; set; }
         public ICommand CancelCommand { get; set; }
-        public string Title { get; set; }
         public string Message { get; set; }
-        public YesNoDialogResult DialogResult { get; set; }
-        public YesNoDialogResult DialogCloseDefault => YesNoDialogResult.Cancel;
 
-        public YesNoDialogViewModel(string title, string message) {
+        private YesNoDialogViewModel(string title, string message) {
 
             Title = title;
             Message = message;
-            ConfirmCommand = new RelayCommand<IDialogWindow>(Confirm);
-            CancelCommand = new RelayCommand<IDialogWindow>(Cancel);
+            ConfirmCommand = new RelayCommand<DialogWindow>(Confirm);
+            CancelCommand = new RelayCommand<DialogWindow>(Cancel);
+            DialogCloseDefault = YesNoDialogResult.Cancel;
 
         }
 
-        private void Confirm(IDialogWindow window) {
+        public static YesNoDialogResult ShowYesNoDialog(string title, string message) {
+            var dialog = new YesNoDialogViewModel(title, message);
+            return dialog.ShowDialog();
+        }
+
+        private void Confirm(DialogWindow window) {
 
             CloseDialogWithResult(window, YesNoDialogResult.Confirm);
 
         }
 
-        private void Cancel(IDialogWindow window) {
+        private void Cancel(DialogWindow window) {
 
             CloseDialogWithResult(window, YesNoDialogResult.Cancel);
 
         }
-
-        public void CloseDialogWithResult(IDialogWindow dialog, YesNoDialogResult result) {
-
-            DialogResult = result;
-
-            if (dialog != null) dialog.DialogResult = true;
-
-        }
-
     }
 }
