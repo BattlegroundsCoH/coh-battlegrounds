@@ -28,6 +28,8 @@ namespace BattlegroundsApp.Controls.Lobby.Components {
 
         public new static readonly DependencyProperty SelectedItemProperty = DependencyProperty.Register("SelectedItem", typeof(object), typeof(LobbyDropdown));
 
+        public new static readonly DependencyProperty SelectedIndexProperty = DependencyProperty.Register("SelectedIndex", typeof(int), typeof(LobbyDropdown));
+
         /// <summary>
         /// Get the <see cref="ItemCollection"/> used to generate the conents of the <see cref="LobbyDropdown"/>. Default is an empty collection.
         /// </summary>
@@ -68,8 +70,8 @@ namespace BattlegroundsApp.Controls.Lobby.Components {
         /// Gets or sets the index of the selected item in the <see cref="LobbyDropdown"/>. Default value is -1.
         /// </summary>
         public new int SelectedIndex { 
-            get => this.SelfOptions.SelectedIndex; 
-            set => this.SelfOptions.SelectedIndex = value; 
+            get => this.GetSelectedIndex(); 
+            set => this.SetSelectedIndex(value); 
         }
 
         /// <summary>
@@ -126,13 +128,34 @@ namespace BattlegroundsApp.Controls.Lobby.Components {
         }
 
         private void SetSelectedValue(object value) {
+
             if (this.State is SelfState) {
                 this.SelfOptions.SelectedIndex = this.SelfOptions.Items.IndexOf(value);
             } else if (this.State is OtherState) {
-                /*this.OtherSelected.Content = */this.m_setSelectedValue = value.ToString();
-                Trace.WriteLine($"Setting selected value to \"{value}\"", "WPF-Sucks");
+                this.m_setSelectedValue = value.ToString();
             }
             this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(this.SelectedItem)));
+        }
+
+        private int GetSelectedIndex() {
+            if (this.State is SelfState) {
+                return this.SelfOptions.SelectedIndex;
+            } else {
+                return 0;
+            }
+        }
+
+        private void SetSelectedIndex(int value) {
+            if (this.State is SelfState) {
+                this.SelfOptions.SelectedIndex = value;
+            } else if (this.State is OtherState) {
+                if (this.m_itemSource is not null && CountOfElements() > 0) {
+                    this.SetSelectedValue(this.SelfOptions.Items[0]);
+                } else {
+                    Trace.WriteLine("Unable to update selected index for client (Item list empty)", "LobbyDropdown");
+                }
+            }
+            this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(this.SelectedIndex)));
         }
 
         private int CountOfElements() {

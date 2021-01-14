@@ -34,7 +34,7 @@ namespace coh2_battlegrounds_console {
 
             Company testCompany = CreateSovietCompany();
             Company germanCompany = CreateGermanCompany();
-            germanCompany.SaveToFile("deutsches_kompanie.json");
+            germanCompany.SaveToFile("69th_panzer.json");
 
             SessionInfo sessionInfo = new SessionInfo() {
                 SelectedGamemode = WinconditionList.GetWinconditionByName("Victory Points"),
@@ -60,8 +60,8 @@ namespace coh2_battlegrounds_console {
             //SessionManager.PlaySession<SessionCompiler<CompanyCompiler>, CompanyCompiler>(session, (a,b) => { Console.WriteLine(a); }, null, null);
 
             // Save json
-            testCompany.SaveToFile("test_company.json");
-
+            testCompany.SaveToFile("guards_rifle.json");
+            /*
             LobbyHub hub = new LobbyHub();
             if (!LobbyHub.CanConnect()) {
                 Console.WriteLine("Unable to reach server hub");
@@ -77,7 +77,7 @@ namespace coh2_battlegrounds_console {
                 }
 
             }
-            
+            */
             BattlegroundsInstance.SaveInstance();
             
             Console.ReadLine();
