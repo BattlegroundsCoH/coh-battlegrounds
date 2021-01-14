@@ -13,8 +13,8 @@ using System.Windows.Shapes;
 using BattlegroundsApp.Dialogs.CreateCompany;
 using BattlegroundsApp.Dialogs.Service;
 using BattlegroundsApp.Dialogs.YesNo;
-using BattlegroundsApp.Dialogs.RenameCompany;
 using BattlegroundsApp.Dialogs.ImportExport;
+using BattlegroundsApp.Dialogs.RenameCopyDialog;
 
 namespace BattlegroundsApp.Views {
     /// <summary>
@@ -56,6 +56,11 @@ namespace BattlegroundsApp.Views {
         }
 
         private void renameCompany_Click(object sender, RoutedEventArgs e) {
+            var result = RenameCopyDialogViewModel.ShowRenameDialog("Rename");
+
+            if (result == RenameCopyDialogResult.Rename) {
+                //Rename selected company here
+            }
 
         }
 
@@ -70,7 +75,11 @@ namespace BattlegroundsApp.Views {
         }
 
         private void copyCompany_Click(object sender, RoutedEventArgs e) {
+            var result = RenameCopyDialogViewModel.ShowCopyDialog("Copy");
 
+            if (result == RenameCopyDialogResult.Copy) {
+                //Copy selected company here
+            }
         }
 
         private void exportCompany_Click(object sender, RoutedEventArgs e) {

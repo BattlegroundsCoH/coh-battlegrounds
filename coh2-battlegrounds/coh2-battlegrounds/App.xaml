@@ -7,8 +7,8 @@
              xmlns:lobbypwd="clr-namespace:BattlegroundsApp.Dialogs.LobbyPassword"
              xmlns:ok="clr-namespace:BattlegroundsApp.Dialogs.OK"
              xmlns:createCompany="clr-namespace:BattlegroundsApp.Dialogs.CreateCompany"
-             xmlns:renameCompany="clr-namespace:BattlegroundsApp.Dialogs.RenameCompany"
              xmlns:importExport="clr-namespace:BattlegroundsApp.Dialogs.ImportExport"
+             xmlns:renameCopy="clr-namespace:BattlegroundsApp.Dialogs.RenameCopyDialog"
              Startup="App_Startup"
              ShutdownMode="OnMainWindowClose">
     <Application.Resources>
@@ -27,11 +27,11 @@
         <DataTemplate DataType="{x:Type createCompany:CreateCompanyDialogViewModel}">
             <createCompany:CreateCompanyDialogView/>
         </DataTemplate>
-        <DataTemplate DataType="{x:Type renameCompany:RenameCompanyDialogViewModel}">
-            <renameCompany:RenameCompanyDialogView/>
-        </DataTemplate>
         <DataTemplate DataType="{x:Type importExport:ImportExportDialogViewModel}">
             <importExport:ImportExportDialogView/>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type renameCopy:RenameCopyDialogViewModel}">
+            <renameCopy:RenameCopyDialogView/>
         </DataTemplate>
     </Application.Resources>
 </Application>
