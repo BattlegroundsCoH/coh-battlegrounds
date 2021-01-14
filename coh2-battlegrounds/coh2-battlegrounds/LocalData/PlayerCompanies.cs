@@ -16,7 +16,11 @@ namespace BattlegroundsApp.LocalData {
 
         public static void LoadAll() {
 
-            __companies = new List<Company>();
+            if (__companies == null) {
+                __companies = new List<Company>();
+            } else {
+                __companies.Clear();
+            }
 
             try {
 
@@ -64,11 +68,20 @@ namespace BattlegroundsApp.LocalData {
         /// </remarks>
         /// <param name="company">The <see cref="Company"/> instance to save.</param>
         public static void SaveCompany(Company company) {
-            string filename = BattlegroundsInstance.GetRelativePath(BattlegroundsPaths.COMPANY_FOLDER, $"{company.Name}.json");
+            string filename = BattlegroundsInstance.GetRelativePath(BattlegroundsPaths.COMPANY_FOLDER, $"{company.Name.Replace(" ", "_")}.json");
             if (File.Exists(filename)) {
                 File.Delete(filename);
             }
             company.SaveToFile(filename);
         }
+
+        public static void DeleteCompany(Company company) {
+            string filename = BattlegroundsInstance.GetRelativePath(BattlegroundsPaths.COMPANY_FOLDER, $"{company.Name.Replace(" ", "_")}.json");
+            if (File.Exists(filename)) {
+                File.Delete(filename);
+            }
+        }
+
+        public static List<Company> GetAllCompanyes() => __companies;
     }
 }

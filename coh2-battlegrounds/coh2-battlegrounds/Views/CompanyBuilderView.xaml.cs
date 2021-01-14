@@ -15,6 +15,10 @@ using BattlegroundsApp.Dialogs.Service;
 using BattlegroundsApp.Dialogs.YesNo;
 using BattlegroundsApp.Dialogs.ImportExport;
 using BattlegroundsApp.Dialogs.RenameCopyDialog;
+using BattlegroundsApp.LocalData;
+using Battlegrounds.Game.DataCompany;
+using Battlegrounds.Verification;
+using System.Collections.ObjectModel;
 
 namespace BattlegroundsApp.Views {
     /// <summary>
@@ -22,8 +26,13 @@ namespace BattlegroundsApp.Views {
     /// </summary>
     public partial class CompanyBuilderView : ViewState, IStateMachine<ViewState> {
 
+        private ObservableCollection<Company>  m_player_companies;
+
         public CompanyBuilderView() {
             InitializeComponent();
+            m_player_companies = new ObservableCollection<Company>();
+            companyList.ItemsSource = m_player_companies;
+
         }
 
         public ViewState State { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
@@ -32,8 +41,9 @@ namespace BattlegroundsApp.Views {
 
         public void SetState(ViewState state) => throw new NotImplementedException();
 
-        // TODO
         public override void StateOnFocus() {
+
+            UpdateCompanyList();
 
         }
 
@@ -52,7 +62,7 @@ namespace BattlegroundsApp.Views {
         }
 
         private void editCompany_Click(object sender, RoutedEventArgs e) {
-
+            //Switch state here
         }
 
         private void renameCompany_Click(object sender, RoutedEventArgs e) {
@@ -69,7 +79,8 @@ namespace BattlegroundsApp.Views {
             var result = YesNoDialogViewModel.ShowYesNoDialog("Delete Company", "Are you sure?");
 
             if (result == YesNoDialogResult.Confirm) {
-                //Detele selected company here
+                PlayerCompanies.DeleteCompany(companyList.SelectedItem as Company);
+                UpdateCompanyList();
             }
 
         }
@@ -83,13 +94,27 @@ namespace BattlegroundsApp.Views {
         }
 
         private void exportCompany_Click(object sender, RoutedEventArgs e) {
-            ImportExportDialogViewModel.ShowExportDialog("Export", "4444");
+            ImportExportDialogViewModel.ShowExportDialog("Export", (CompanyTemplate.FromCompany(companyList.SelectedItem as Company)).ToString());
         }
 
         private void importCompany_Click(object sender, RoutedEventArgs e) {
-            var result = ImportExportDialogViewModel.ShowImportDialog("Export");
+            var result = ImportExportDialogViewModel.ShowImportDialog("Export", out string companyString);
             if (result == ImportExportDialogResult.Import) {
-                //Import company here
+                try {
+                    var company = CompanyTemplate.FromString(companyString);
+                    PlayerCompanies.SaveCompany(CompanyTemplate.FromTemplate(company));
+                    UpdateCompanyList();
+                } catch(ChecksumViolationException err) {
+
+                }
+            }
+        }
+
+        private void UpdateCompanyList() {
+            PlayerCompanies.LoadAll();
+            m_player_companies.Clear();
+            foreach (var company in PlayerCompanies.GetAllCompanyes()) {
+                m_player_companies.Add(company);
             }
         }
     }
