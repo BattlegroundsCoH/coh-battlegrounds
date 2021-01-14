@@ -18,19 +18,19 @@ namespace BattlegroundsApp.Controls.Lobby.Components {
         private IEnumerable m_itemSource;
         private object m_setSelectedValue;
 
-        public static readonly DependencyProperty DescriptionProperty = DependencyProperty.Register("Description", typeof(string), typeof(LobbyDropdown));
+        public static readonly DependencyProperty DescriptionProperty = DependencyProperty.Register(nameof(Description), typeof(string), typeof(LobbyDropdown));
 
-        public static readonly DependencyProperty DescriptionWidthProperty = DependencyProperty.Register("DescriptionWidth", typeof(double), typeof(LobbyDropdown));
+        public static readonly DependencyProperty DescriptionWidthProperty = DependencyProperty.Register(nameof(DescriptionWidth), typeof(double), typeof(LobbyDropdown));
 
-        public static readonly DependencyProperty DescriptionMinWidthProperty = DependencyProperty.Register("DescriptionMinWidth", typeof(double), typeof(LobbyDropdown));
+        public static readonly DependencyProperty DescriptionMinWidthProperty = DependencyProperty.Register(nameof(DescriptionMinWidth), typeof(double), typeof(LobbyDropdown));
 
-        public static readonly DependencyProperty DescriptionMaxWidthProperty = DependencyProperty.Register("DescriptionMaxWidth", typeof(double), typeof(LobbyDropdown));
+        public static readonly DependencyProperty DescriptionMaxWidthProperty = DependencyProperty.Register(nameof(DescriptionMaxWidth), typeof(double), typeof(LobbyDropdown));
 
-        public static readonly DependencyProperty OtherSelectedItemProperty = DependencyProperty.Register("OtherSelectedItem", typeof(object), typeof(LobbyDropdown));
+        public static readonly DependencyProperty OtherSelectedItemProperty = DependencyProperty.Register(nameof(OtherSelectedItem), typeof(object), typeof(LobbyDropdown));
 
-        public new static readonly DependencyProperty SelectedItemProperty = DependencyProperty.Register("SelectedItem", typeof(object), typeof(LobbyDropdown));
+        public new static readonly DependencyProperty SelectedItemProperty = DependencyProperty.Register(nameof(SelectedItem), typeof(object), typeof(LobbyDropdown));
 
-        public new static readonly DependencyProperty SelectedIndexProperty = DependencyProperty.Register("SelectedIndex", typeof(int), typeof(LobbyDropdown));
+        public new static readonly DependencyProperty SelectedIndexProperty = DependencyProperty.Register(nameof(SelectedIndex), typeof(int), typeof(LobbyDropdown));
 
         /// <summary>
         /// Get the <see cref="ItemCollection"/> used to generate the conents of the <see cref="LobbyDropdown"/>. Default is an empty collection.
@@ -139,7 +139,8 @@ namespace BattlegroundsApp.Controls.Lobby.Components {
             if (this.State is SelfState) {
                 this.SelfOptions.SelectedIndex = this.SelfOptions.Items.IndexOf(value);
             } else if (this.State is OtherState) {
-                this.OtherSelected.Content = this.m_setSelectedValue = value.ToString();
+                /*this.OtherSelected.Content =*/ this.m_setSelectedValue = value.ToString();
+                this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(this.OtherSelectedItem)));
             }
             this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(this.SelectedItem)));
         }

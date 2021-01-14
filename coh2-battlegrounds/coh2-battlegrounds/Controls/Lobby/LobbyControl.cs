@@ -41,14 +41,14 @@ namespace BattlegroundsApp.Controls.Lobby {
             foreach (object state in this.Items) {
                 if (state is LobbyControlState controlState) {
                     if (controlState.IsCorrectState(this.m_context)) {
-                        this.State = this.OnStateChange(controlState);
+                        this.State = this.OnStateChange(controlState, this.m_context);
                         return;
                     }
                 }
             }
         }
 
-        protected virtual LobbyControlState OnStateChange(LobbyControlState newState) => newState;
+        protected virtual LobbyControlState OnStateChange(LobbyControlState newState, LobbyControlContext controlContext) => newState;
 
     }
 

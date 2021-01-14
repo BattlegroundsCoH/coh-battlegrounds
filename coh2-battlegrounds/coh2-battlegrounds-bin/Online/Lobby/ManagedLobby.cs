@@ -842,11 +842,12 @@ namespace Battlegrounds.Online.Lobby {
                     string name = await this.GetUserInformation(playerIDs[i], "name");
                     string faction = await this.GetUserInformation(playerIDs[i], "fac");
                     string company = await this.GetUserInformation(playerIDs[i], "com");
-                    double strength = -1.0;
-                    if (!double.TryParse(await this.GetUserInformation(playerIDs[i], "str"), out strength)) {
+                    if (!double.TryParse(await this.GetUserInformation(playerIDs[i], "str"), out double strength)) {
                         Trace.WriteLine("Failed to convert strength", "ManagedLobby.Refresh");
+                    } else {
+                        strength = -1.0;
                     }
-                    
+
                     // Create human lobby member and update their faction
                     HumanLobbyMember human = new HumanLobbyMember(this, playerIDs[i], name, company, strength);
                     human.UpdateFaction(faction);

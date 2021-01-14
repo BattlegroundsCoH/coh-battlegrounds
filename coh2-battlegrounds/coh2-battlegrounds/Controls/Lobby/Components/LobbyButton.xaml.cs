@@ -52,8 +52,8 @@ namespace BattlegroundsApp.Controls.Lobby.Components {
 
         private void HandleButton_Click(object sender, RoutedEventArgs e) => this.Click?.Invoke(sender, e);
 
-        protected override LobbyControlState OnStateChange(LobbyControlState newState) {
-            if (newState is SelfState && IsHostOnly) {
+        protected override LobbyControlState OnStateChange(LobbyControlState newState, LobbyControlContext controlContext) {
+            if (newState is SelfState && IsHostOnly && !controlContext.IsHost) {
                 return this.ButtonOtherState;
             }
             return newState;

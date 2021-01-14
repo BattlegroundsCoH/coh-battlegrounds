@@ -154,12 +154,13 @@ namespace BattlegroundsApp.Views {
         private void UpdateSelectedOption(string arg1, string arg2) {
             this.Dispatcher.Invoke(() => {
                 if (int.TryParse(arg1, out int option)) {
-                    if (Gamemode.SelectedItem is Wincondition gamemode) {
+                    if (this.Gamemode.SelectedItem is Wincondition gamemode) {
                         var opt = gamemode.Options[option];
                         this.GamemodeOption.ItemsSource = new List<string> { opt.Title };
                         this.GamemodeOption.SelectedIndex = 0;
+                        this.GamemodeOption.Visibility = Visibility.Visible;
                     } else {
-                        // FIX
+                        this.GamemodeOption.Visibility = Visibility.Hidden;
                     }
                 }
             });
@@ -273,7 +274,6 @@ namespace BattlegroundsApp.Views {
         private void OnTeamManagementCallbackHandler(ManagedLobbyTeamType team, PlayerCardView card, object arg, string reason) {
             switch (reason) {
                 case "AddAI":
-                    card.IsRegistered = false;
                     int aiid = this.m_smh.Lobby.CreateAIPlayer(card.Difficulty, card.PlayerArmy, team);
                     if (aiid != -1) {
                         card.UpdatePlayerID((ulong)aiid);
@@ -285,9 +285,6 @@ namespace BattlegroundsApp.Views {
                     }
                     break;
                 case "ChangedArmy":
-                    if (!card.IsRegistered) {
-                        break;
-                    }
                     if (card.PlayerArmy.CompareTo(this.m_smh.Lobby.TryFindPlayerFromID(card.PlayerSteamID)?.Faction) != 0) {
                         this.m_smh.Lobby.SetFaction(card.PlayerSteamID, card.PlayerArmy);
                         Trace.WriteLine($"Changing faction [{card.PlayerSteamID}][{card.Difficulty}][{card.PlayerArmy}]", "GameLobbyView");
