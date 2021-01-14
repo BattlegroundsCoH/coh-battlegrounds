@@ -18,13 +18,14 @@ namespace Battlegrounds.Json {
         /// <typeparam name="T">The object type to retrieve from the file. Implements <see cref="IJsonObject"/>.</typeparam>
         /// <param name="jsonfile">The path of the Json file to open and parse.</param>
         /// <returns>The default value if parsing failed. Otherwise the object that was expected.</returns>
-        public static T Parse<T>(string jsonfile) where T : IJsonObject {
+        /// <exception cref="JsonTypeException"/>
+        public static T ParseFile<T>(string jsonfile) where T : IJsonObject {
             if (File.Exists(jsonfile)) {
-                List<IJsonElement> topElements = Parse(jsonfile);
-                if (topElements.Count == 1) {
-                    return (T)(topElements[0] as IJsonObject);
+                var topElements = Parse(jsonfile);
+                if (topElements[0] is T top) {
+                    return top;
                 } else {
-                    return default;
+                    throw new JsonTypeException(topElements[0].GetType(), $"Cannot convert to type \"{typeof(T).Name}\"");
                 }
             } else {
                 return default;
@@ -204,7 +205,7 @@ namespace Battlegrounds.Json {
 
             } else {
 
-                result = result as string + contents[i];
+                result = (result as string) + contents[i];
                 i++;
 
             }

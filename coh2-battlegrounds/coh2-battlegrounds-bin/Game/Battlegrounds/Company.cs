@@ -334,10 +334,11 @@ namespace Battlegrounds.Game.Battlegrounds {
         /// </summary>
         /// <param name="jsonfilepath"></param>
         /// <returns></returns>
+        /// <exception cref="JsonTypeException"/>
         public static Company ReadCompanyFromFile(string jsonfilepath) {
-            // Load from json
-            List<IJsonElement> elements = JsonParser.Parse(jsonfilepath);
-            if (elements.FirstOrDefault() is Company c) {
+            try {
+                // Load from json
+                Company c = JsonParser.ParseFile<Company>(jsonfilepath);
                 if (c.VerifyAppVersion()) {
                     if (c.VerifyChecksum()) {
                         return c;
@@ -355,10 +356,9 @@ namespace Battlegrounds.Game.Battlegrounds {
                     return null;
 #endif
                 }
-            } else {
-                return null;
+            } catch (JsonTypeException) {
+                throw;
             }
-
         }
 
         /// <summary>
@@ -380,15 +380,23 @@ namespace Battlegrounds.Game.Battlegrounds {
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="jsonfilepath"></param>
+        /// <returns></returns>
+        /// <exception cref="JsonTypeException"/>
         public static Company UpgradeCompanyToCurrentAppVersion(string jsonfilepath) {
-            List<IJsonElement> elements = JsonParser.Parse(jsonfilepath); 
-            if (elements.FirstOrDefault() is Company c) {
-                c.m_lastEditVersion = Assembly.GetExecutingAssembly().GetName().Version.ToString();
-                return c;
-            } else {
-                return null;
+            try {
+                if (JsonParser.ParseFile<Company>(jsonfilepath) is Company c) {
+                    c.m_lastEditVersion = Assembly.GetExecutingAssembly().GetName().Version.ToString();
+                    return c;
+                } else {
+                    return null;
+                }
+            } catch (JsonTypeException) {
+                throw;
             }
-
         }
 
     }
