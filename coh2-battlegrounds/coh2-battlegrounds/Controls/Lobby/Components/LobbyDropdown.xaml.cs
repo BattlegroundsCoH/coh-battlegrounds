@@ -128,7 +128,7 @@ namespace BattlegroundsApp.Controls.Lobby.Components {
             } else if (this.State is OtherState) {
                 this.m_setSelectedValue = value;
             }
-            this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(this.SelectedItem)));
+            //this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(this.SelectedItem)));
         }
 
         private int CountOfElements() {
