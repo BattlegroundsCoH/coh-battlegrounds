@@ -13,7 +13,7 @@ namespace BattlegroundsApp.Dialogs.CreateCompany {
         Create,
         Cancel
     }
-    class CreateCompanyDialogViewModel : DialogWindowBase<CreateCompanyDialogResult> {
+    class CreateCompanyDialogViewModel : DialogControlBase<CreateCompanyDialogResult> {
     
         public ICommand CreateCommand { get; set; }
         public ICommand CancelCommand { get; set; }

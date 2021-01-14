@@ -12,7 +12,7 @@ namespace BattlegroundsApp.Dialogs.OK {
     public enum OKDialogResult {
         OK,
     }
-    class OKDialogViewModel : DialogWindowBase<OKDialogResult> {
+    class OKDialogViewModel : DialogControlBase<OKDialogResult> {
 
         public ICommand OKCommand { get; private set; }
         public string Message { get; set; }

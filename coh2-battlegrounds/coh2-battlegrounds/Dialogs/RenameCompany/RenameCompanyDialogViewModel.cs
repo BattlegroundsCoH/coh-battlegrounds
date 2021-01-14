@@ -13,7 +13,7 @@ namespace BattlegroundsApp.Dialogs.RenameCompany {
         Rename,
         Cancel
     }
-    class RenameCompanyDialogViewModel : DialogWindowBase<RenameCompanyDialogResult> {
+    class RenameCompanyDialogViewModel : DialogControlBase<RenameCompanyDialogResult> {
         
         public ICommand RenameCommand { get; set; }
         public ICommand CancelCommand { get; set; }

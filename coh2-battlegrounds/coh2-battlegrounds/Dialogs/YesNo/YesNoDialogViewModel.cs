@@ -13,7 +13,7 @@ namespace BattlegroundsApp.Dialogs.YesNo {
         Confirm,
         Cancel
     }
-    class YesNoDialogViewModel : DialogWindowBase<YesNoDialogResult> {
+    class YesNoDialogViewModel : DialogControlBase<YesNoDialogResult> {
 
         public ICommand ConfirmCommand { get; set; }
         public ICommand CancelCommand { get; set; }

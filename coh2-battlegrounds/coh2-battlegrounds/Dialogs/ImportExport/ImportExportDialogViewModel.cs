@@ -18,7 +18,7 @@ namespace BattlegroundsApp.Dialogs.ImportExport {
         Import,
         Cancel
     }
-    public class ImportExportDialogViewModel : DialogWindowBase<ImportExportDialogResult> {
+    public class ImportExportDialogViewModel : DialogControlBase<ImportExportDialogResult> {
 
         public ICommand ImportExportCommand { get; set; }
         public ICommand CancelCommand { get; set; }

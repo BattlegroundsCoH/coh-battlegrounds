@@ -13,7 +13,7 @@ namespace BattlegroundsApp.Dialogs.LobbyPassword {
         Join,
         Cancel
     }
-    class LobbyPasswordDialogViewModel : DialogWindowBase<LobbyPasswordDialogResult> {
+    class LobbyPasswordDialogViewModel : DialogControlBase<LobbyPasswordDialogResult> {
 
         public ICommand JoinCommand { get; private set; }
         public ICommand CandelCommand { get; private set; }
