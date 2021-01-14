@@ -26,6 +26,8 @@ namespace BattlegroundsApp.Controls.Lobby.Components {
 
         public static readonly DependencyProperty DescriptionMaxWidthProperty = DependencyProperty.Register("DescriptionMaxWidth", typeof(double), typeof(LobbyDropdown));
 
+        public static readonly DependencyProperty OtherSelectedItemProperty = DependencyProperty.Register("OtherSelectedItem", typeof(object), typeof(LobbyDropdown));
+
         public new static readonly DependencyProperty SelectedItemProperty = DependencyProperty.Register("SelectedItem", typeof(object), typeof(LobbyDropdown));
 
         public new static readonly DependencyProperty SelectedIndexProperty = DependencyProperty.Register("SelectedIndex", typeof(int), typeof(LobbyDropdown));
@@ -81,6 +83,11 @@ namespace BattlegroundsApp.Controls.Lobby.Components {
             get => this.GetSelectedValue();
             set => this.SetSelectedValue(value);
         }
+
+        /// <summary>
+        /// Get the selected value to be displayed in the "other" category
+        /// </summary>
+        public object OtherSelectedItem => this.GetSelectedValue();
 
         /// <summary>
         /// Get or set whether events should be triggered.
