@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-
+using System.Runtime.CompilerServices;
 using Battlegrounds;
 using Battlegrounds.Game.DataCompany;
 using Battlegrounds.Game.Gameplay;
 
 namespace BattlegroundsApp.LocalData {
-    
+
     public static class PlayerCompanies {
 
         private static List<Company> __companies;
@@ -55,6 +55,20 @@ namespace BattlegroundsApp.LocalData {
         }
 
         public static Company FromNameAndFaction(string name, Faction faction) => FindAll(x => x.Name.CompareTo(name) == 0 && x.Army == faction).FirstOrDefault();
-    }
 
+        /// <summary>
+        /// Save the <see cref="Company"/> instance safely in the users local company storage folder.
+        /// </summary>
+        /// <remarks>
+        /// This will override companies with the same name!
+        /// </remarks>
+        /// <param name="company">The <see cref="Company"/> instance to save.</param>
+        public static void SaveCompany(Company company) {
+            string filename = BattlegroundsInstance.GetRelativePath(BattlegroundsPaths.COMPANY_FOLDER, $"{company.Name}.json");
+            if (File.Exists(filename)) {
+                File.Delete(filename);
+            }
+            company.SaveToFile(filename);
+        }
+    }
 }
