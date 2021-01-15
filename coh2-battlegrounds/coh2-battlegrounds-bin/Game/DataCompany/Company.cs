@@ -251,7 +251,7 @@ namespace Battlegrounds.Game.DataCompany {
         /// </summary>
         /// <returns>The string representation of the checksum.</returns>
         public string GetChecksum() {
-            long aggr = Encoding.UTF8.GetBytes((this as IJsonObject).Serialize()).Aggregate<byte, long>(0, (a, b) => a += b + (a % b));
+            long aggr = Encoding.UTF8.GetBytes((this as IJsonObject).Serialize()).Aggregate<byte, long>(0, (a, b) => a + b + (a % b));
             aggr &= 0xffff;
             return aggr.ToString("X8");
         }

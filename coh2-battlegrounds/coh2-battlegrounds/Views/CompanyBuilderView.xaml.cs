@@ -48,9 +48,9 @@ namespace BattlegroundsApp.Views {
 
         }
 
-        public override void StateOnLostFocus() => throw new NotImplementedException();
+        public override void StateOnLostFocus() {}
 
-        bool IStateMachine<ViewState>.StateChangeRequest(object request) => throw new NotImplementedException();
+        bool IStateMachine<ViewState>.StateChangeRequest(object request) => true;
 
         private void createCompany_Click(object sender, RoutedEventArgs e) {
 
@@ -101,9 +101,8 @@ namespace BattlegroundsApp.Views {
             }
         }
 
-        private void exportCompany_Click(object sender, RoutedEventArgs e) {
-            ImportExportDialogViewModel.ShowExportDialog("Export", (CompanyTemplate.FromCompany(companyList.SelectedItem as Company)).ToString());
-        }
+        private void exportCompany_Click(object sender, RoutedEventArgs e) 
+            => ImportExportDialogViewModel.ShowExportDialog("Export", (CompanyTemplate.FromCompany(companyList.SelectedItem as Company)).ToTemplateString());
 
         private void importCompany_Click(object sender, RoutedEventArgs e) {
             var result = ImportExportDialogViewModel.ShowImportDialog("Export", out string companyString);
@@ -112,8 +111,9 @@ namespace BattlegroundsApp.Views {
                     var company = CompanyTemplate.FromString(companyString);
                     PlayerCompanies.SaveCompany(CompanyTemplate.FromTemplate(company));
                     UpdateCompanyList();
-                } catch(ChecksumViolationException err) {
-                    Trace.WriteLine(err);
+                } catch(FormatException err) {
+                    Trace.WriteLine(err); // TODO: Show message box featuring a detailed description of the problem 
+                    // The causing error will be visible in err (You may need it when deciding on what to do from there).
                 }
             }
         }
@@ -125,5 +125,7 @@ namespace BattlegroundsApp.Views {
                 m_player_companies.Add(company);
             }
         }
+
     }
+
 }

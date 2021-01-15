@@ -19,7 +19,7 @@ namespace coh2_battlegrounds_bin_tests {
         [TestMethod]
         public void ToTemplateSoviet() {
             var t = CompanyTemplate.FromCompany(sovietCompany);
-            var back = CompanyTemplate.FromString(t.ToString());
+            var back = CompanyTemplate.FromString(t.ToTemplateString());
             Assert.AreEqual(t.TemplateName, back.TemplateName);
             Assert.AreEqual(t.TemplateArmy, back.TemplateArmy);
             Assert.AreEqual(t.TemplateUnitCount, back.TemplateUnitCount);

@@ -6,13 +6,14 @@ using Battlegrounds.Game.Database.Management;
 using Battlegrounds.Game.Gameplay;
 using Battlegrounds.Modding;
 using Battlegrounds.Util;
+using Battlegrounds.Verification;
 
 namespace Battlegrounds.Game.DataCompany {
     
     /// <summary>
     /// Readonly class representing a template for generating a <see cref="Company"/> instance.
     /// </summary>
-    public sealed class CompanyTemplate {
+    public sealed class CompanyTemplate : IChecksumItem {
 
         private struct CompanyUnit {
             public ushort PBGID { get; init; }
@@ -28,6 +29,7 @@ namespace Battlegrounds.Game.DataCompany {
         private string m_guid;
         private string m_name;
         private string m_army;
+        private string m_checksum;
 
         /// <summary>
         /// Get the company name set by this template.
@@ -46,6 +48,27 @@ namespace Battlegrounds.Game.DataCompany {
 
         private CompanyTemplate() {
             this.m_units = new CompanyUnit[Company.MAX_SIZE];
+            this.m_checksum = string.Empty;
+        }
+
+        public string GetChecksum() => this.ToString().Aggregate((uint)0, (a, b) => a + b + (b % (a + 1))).ToString("X8");
+
+        public bool VerifyChecksum() {
+            
+            // Backup and reset checksum
+            string checksum = this.m_checksum;
+            this.m_checksum = string.Empty;
+
+            // Calculate checksum
+            string newChecksum = this.GetChecksum();
+            bool result = newChecksum.CompareTo(checksum) == 0;
+
+            // Restore checksum
+            this.m_checksum = checksum;
+
+            // Return result
+            return result;
+
         }
 
         /// <summary>
@@ -53,16 +76,27 @@ namespace Battlegrounds.Game.DataCompany {
         /// </summary>
         /// <returns>A <see cref="string"/> representation of the <see cref="CompanyTemplate"/>.</returns>
         public override string ToString() {
-            
+
             // Create string builder and encode basic information
             StringBuilder sb = new StringBuilder();
             sb.Append($"{this.m_guid}{EncodeArmy(this.m_army)}{this.m_name.Length:X}-{this.m_name.Replace(' ', '@')}-");
 
             // Get valid non-zero chunks
-            sb.Append(StringCompression.CompressString(string.Join('-', this.m_units.Where(x => x.FILLED).Select(x => x.Collapse()))));
+            sb.Append(StringCompression.CompressString($"{string.Join('-', this.m_units.Where(x => x.FILLED).Select(x => x.Collapse()))}<{this.m_checksum}>"));
             
             // Return in string
             return sb.ToString();
+
+        }
+
+        public string ToTemplateString() {
+
+            // Get the checksum
+            this.m_checksum = string.Empty;
+            this.m_checksum = GetChecksum();
+
+            // Return template with checksum
+            return this.ToString();
 
         }
 
@@ -114,43 +148,60 @@ namespace Battlegrounds.Game.DataCompany {
         /// <exception cref="ArgumentOutOfRangeException"/>
         public static CompanyTemplate FromString(string tmpString) {
 
-            // Create template from first parameters of tmpString
-            CompanyTemplate template = new CompanyTemplate {
-                m_guid = tmpString[0..ModGuid.FIXED_LENGTH],
-                m_army = DecodeArmy(tmpString[ModGuid.FIXED_LENGTH]),
-            };
+            try {
 
-            // Get cut position and length for name
-            int cut = tmpString.IndexOf('-');
-            int nameLength = int.Parse(tmpString[(ModGuid.FIXED_LENGTH + 1)..cut], System.Globalization.NumberStyles.HexNumber);
+                // Create template from first parameters of tmpString
+                CompanyTemplate template = new CompanyTemplate {
+                    m_guid = tmpString[0..ModGuid.FIXED_LENGTH],
+                    m_army = DecodeArmy(tmpString[ModGuid.FIXED_LENGTH]),
+                };
 
-            // Get company name
-            int nameEnd = cut + 1 + nameLength;
-            template.m_name = tmpString[(cut + 1)..nameEnd].Replace('@', ' ');
+                // Get cut position and length for name
+                int cut = tmpString.IndexOf('-');
+                int nameLength = int.Parse(tmpString[(ModGuid.FIXED_LENGTH + 1)..cut], System.Globalization.NumberStyles.HexNumber);
 
-            // Decompress string
-            tmpString = tmpString[(nameEnd + 1)..];
-            tmpString = StringCompression.DecompressString(tmpString);
+                // Get company name
+                int nameEnd = cut + 1 + nameLength;
+                template.m_name = tmpString[(cut + 1)..nameEnd].Replace('@', ' ');
 
-            // Get each individual unit
-            string[] units = tmpString.Split('-');
-            for (int i = 0; i < Company.MAX_SIZE; i++) {
-                if (i < units.Length) {
-                    string[] components = units[i].Split('?');
-                    template.m_units[i] = new CompanyUnit() {
-                        FILLED = true,
-                        PBGID = ushort.Parse(components[0]),
-                        TPBGID = ushort.Parse(components[1]),
-                        DMODE = byte.Parse(components[2]),
-                        PHASE = byte.Parse(components[3]),
-                    };
-                } else {
-                    template.m_units[i] = new CompanyUnit() { FILLED = false };
+                // Decompress string
+                tmpString = tmpString[(nameEnd + 1)..];
+                tmpString = StringCompression.DecompressString(tmpString);
+
+                // Get checksum
+                int checksumBegin = tmpString.LastIndexOf('<') + 1;
+                int checksumEnd = tmpString.LastIndexOf('>');
+                template.m_checksum = tmpString[checksumBegin..checksumEnd];
+                tmpString = tmpString[0..(checksumBegin - 1)];
+
+                // Get each individual unit
+                string[] units = tmpString.Split('-');
+                for (int i = 0; i < Company.MAX_SIZE; i++) {
+                    if (i < units.Length) {
+                        string[] components = units[i].Split('?');
+                        template.m_units[i] = new CompanyUnit() {
+                            FILLED = true,
+                            PBGID = ushort.Parse(components[0]),
+                            TPBGID = ushort.Parse(components[1]),
+                            DMODE = byte.Parse(components[2]),
+                            PHASE = byte.Parse(components[3]),
+                        };
+                    } else {
+                        template.m_units[i] = new CompanyUnit() { FILLED = false };
+                    }
                 }
-            }
 
-            // Return template
-            return template;
+                // Verify checksum
+                if (!template.VerifyChecksum()) {
+                    throw new ChecksumViolationException();
+                }
+
+                // Return template
+                return template;
+
+            } catch (Exception e) {
+                throw new FormatException("Template string was of incorrect format", e);
+            }
 
         }
 
