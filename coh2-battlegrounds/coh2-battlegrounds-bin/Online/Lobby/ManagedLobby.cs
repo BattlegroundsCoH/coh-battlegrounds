@@ -366,6 +366,44 @@ namespace Battlegrounds.Online.Lobby {
         }
 
         /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="position"></param>
+        public void SetTeamPosition(ulong id, int position) {
+            if (this.m_isHost || id == this.m_self.ID) {
+                if (this.TryFindPlayerFromID(id, out ManagedLobbyTeamType team) is ManagedLobbyMember member) {
+                    this.m_teams[team].TrySetMemberPosition(member, position, false);
+                }
+            } else {
+                throw new PermissionDeniedException(PermissionDeniedException.HOST_ONLY);
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="target"></param>
+        /// <param name="position"></param>
+        public void SwapTeam(ulong id, ManagedLobbyTeamType target, int position = -1) {
+            if (this.m_isHost || id == this.m_self.ID) {
+                if (this.TryFindPlayerFromID(id, out ManagedLobbyTeamType team) is ManagedLobbyMember member) {
+                    if (this.m_teams[target].Join(member, false)) {
+                        member.UpdateCompany(string.Empty, 0.0);
+                        member.UpdateFaction(target == ManagedLobbyTeamType.Allies ? Faction.Soviet : Faction.Wehrmacht);
+                        this.m_teams[team].Leave(member);
+                        if (position >= 0) {
+                            this.m_teams[target].TrySetMemberPosition(member, position, false);
+                        }
+                    }
+                }
+            } else {
+                throw new PermissionDeniedException(PermissionDeniedException.HOST_ONLY);
+            }
+        }
+
+        /// <summary>
         /// Get the current capacity of the lobby. -1 is returned if no valid value could be fetched from the server.
         /// </summary>
         /// <param name="response">The integer callback to handle the server response.</param>

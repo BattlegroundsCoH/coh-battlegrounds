@@ -123,6 +123,14 @@ namespace Battlegrounds.Game.Gameplay {
         }
 
         /// <summary>
+        /// Check if two factions are on the same team (Both are allied or both are axis)
+        /// </summary>
+        /// <param name="left">The first faction.</param>
+        /// <param name="right">The second faction.</param>
+        /// <returns><see langword="true"/> if both are on the same team. Otherwise <see langword="false"/>.</returns>
+        public static bool AreSameTeam(Faction left, Faction right) => left.IsAllied == right.IsAllied || left.IsAxis == right.IsAxis;
+
+        /// <summary>
         /// 
         /// </summary>
         /// <param name="jsonReference"></param>

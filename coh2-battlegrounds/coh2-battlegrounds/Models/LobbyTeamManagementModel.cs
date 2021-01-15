@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
@@ -20,7 +19,7 @@ namespace BattlegroundsApp.Models {
 
     public class LobbyTeamManagementModel {
 
-        public const int MAX_TEAM = 4;
+        public const int MAX_TEAM_PLAYERCOUNT = 4;
 
         private Grid m_teamGrid;
         private int m_maxPlayerCount;
@@ -39,7 +38,7 @@ namespace BattlegroundsApp.Models {
                 [ManagedLobbyTeamType.Axis] = new List<PlayerCardView>(),
             };
             
-            for (int i = 0; i < MAX_TEAM; i++) {
+            for (int i = 0; i < MAX_TEAM_PLAYERCOUNT; i++) {
                 this.CreatePlayercard(i, ManagedLobbyTeamType.Allies);
                 this.CreatePlayercard(i, ManagedLobbyTeamType.Axis);
             }
@@ -51,11 +50,7 @@ namespace BattlegroundsApp.Models {
 
         private void CreatePlayercard(int row, ManagedLobbyTeamType type) {
             
-            Contract.Requires(row > 0);
-            Contract.Requires(row <= MAX_TEAM);
-            Contract.Requires(type == ManagedLobbyTeamType.Allies || type == ManagedLobbyTeamType.Axis);
-
-            PlayerCardView view = new PlayerCardView();
+            PlayerCardView view = new PlayerCardView(row);
             view.SetValue(Grid.ColumnProperty, type == ManagedLobbyTeamType.Allies ? 0 : 1);
             view.SetValue(Grid.RowProperty, row);
             view.OnPlayercardEvent += this.OnCardActionHandler;
@@ -68,12 +63,8 @@ namespace BattlegroundsApp.Models {
 
         public void SetMaxPlayers(int count) {
             
-            Contract.Requires(count > 0);
-            Contract.Requires(count <= 8);
-            Contract.Requires(count % 2 == 0);
-
             this.m_maxPlayerCount = count;
-            for (int i = 0; i < MAX_TEAM; i++) {
+            for (int i = 0; i < MAX_TEAM_PLAYERCOUNT; i++) {
                 this.m_teamSetup[ManagedLobbyTeamType.Allies][i].Visibility = i < (count / 2) ? Visibility.Visible : Visibility.Collapsed;
                 this.m_teamSetup[ManagedLobbyTeamType.Axis][i].Visibility = i < (count / 2) ? Visibility.Visible : Visibility.Collapsed;
             }
@@ -166,11 +157,14 @@ namespace BattlegroundsApp.Models {
             }
         }
 
+        private ManagedLobbyTeamType GetTeamOfCard(PlayerCardView playerCard) 
+            => this.m_teamSetup[ManagedLobbyTeamType.Allies].Contains(playerCard) ? ManagedLobbyTeamType.Allies : ManagedLobbyTeamType.Axis;
+
         private void OnCardActionHandler(PlayerCardView sender, string reason) {
             if (!(this.m_isHost || sender.PlayerSteamID == BattlegroundsInstance.LocalSteamuser.ID)) {
                 return;
             }
-            ManagedLobbyTeamType teamOf = this.m_teamSetup[ManagedLobbyTeamType.Allies].Contains(sender) ? ManagedLobbyTeamType.Allies : ManagedLobbyTeamType.Axis;
+            ManagedLobbyTeamType teamOf = this.GetTeamOfCard(sender);
             switch (reason) {
                 case "AddAI":
                     if (teamOf == ManagedLobbyTeamType.Allies) {
@@ -193,16 +187,31 @@ namespace BattlegroundsApp.Models {
                     break;
                 case "LockSlot":
                     sender.SetCardState(PlayercardViewstate.Locked);
-                    throw new NotImplementedException();
+                    this.OnTeamEvent?.Invoke(teamOf, sender, null, reason);
+                    break;
                 case "UnlockSlot":
                     sender.SetCardState(PlayercardViewstate.Open);
-                    throw new NotImplementedException();
+                    this.OnTeamEvent?.Invoke(teamOf, sender, null, reason);
+                    break;
                 case "MoveTo":
-                    throw new NotImplementedException();
+                    this.MoveTeam(GetLocalPlayercard(), sender);
+                    break;
                 default:
                     Trace.WriteLine($"Unhandled playercard event '{reason}'", "LobbyTeamManagementModel.cs");
                     break;
             }
+        }
+
+        private void MoveTeam(PlayerCardView from, PlayerCardView to) {
+            var fromTeam = this.GetTeamOfCard(from);
+            var toTeam = this.GetTeamOfCard(to);
+            string updatedReason = "MoveToAxis";
+            if (fromTeam == toTeam) {
+                updatedReason = "MoveTo";
+            } else if (toTeam == ManagedLobbyTeamType.Allies) {
+                updatedReason = "MoveToAllies";
+            }
+            this.OnTeamEvent?.Invoke(fromTeam, from, to, updatedReason);
         }
 
         public int GetTeamSize(ManagedLobbyTeamType size) => this.m_teamSetup[size].Count(x => x.IsOccupied);
@@ -219,7 +228,14 @@ namespace BattlegroundsApp.Models {
             return null;
         }
 
-        public void SetIsHost(bool isHost) => this.m_isHost = isHost;
+        public void SetIsHost(bool isHost) {
+            this.m_isHost = isHost;
+            foreach (var pair in this.m_teamSetup) {
+                foreach (var card in pair.Value) {
+                    card.SetStateBasedOnContext(isHost, card.IsAI, card.PlayerSteamID);
+                }
+            }
+        }
 
     }
 

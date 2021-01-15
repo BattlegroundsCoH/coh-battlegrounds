@@ -311,20 +311,40 @@ namespace BattlegroundsApp.Views {
                     }
                     break;
                 case "RemovePlayer":
-                    card.IsRegistered = false;
                     this.m_smh.Lobby.RemovePlayer(card.PlayerSteamID, true);
                     Trace.WriteLine($"Removing player [{team}][{arg}][{card.Difficulty}][{card.PlayerArmy}]", "GameLobbyView");
                     break;
                 case "LockSlot":
-                    throw new NotImplementedException();
+                    break;
                 case "UnlockSlot":
-                    throw new NotImplementedException();
+                    break;
                 case "MoveTo":
-                    throw new NotImplementedException();
+                    this.MovePlayer(card, team, arg as PlayerCardView, team);
+                    break;
+                case "MoveToAllies":
+                    this.MovePlayer(card, team, arg as PlayerCardView, ManagedLobbyTeamType.Allies);
+                    break;
+                case "MoveToAxis":
+                    this.MovePlayer(card, team, arg as PlayerCardView, ManagedLobbyTeamType.Axis);
+                    break;
                 default:
                     break;
             }
             this.UpdateStartMatchButton();
+        }
+
+        private void MovePlayer(PlayerCardView from, ManagedLobbyTeamType fromTeam, PlayerCardView to, ManagedLobbyTeamType toTeam) {
+
+            // Determine method to move player (and then move them).
+            if (fromTeam == toTeam) {
+                this.m_smh.Lobby.SetTeamPosition(from.PlayerSteamID, to.TeamIndex);
+            } else {
+                this.m_smh.Lobby.SwapTeam(from.PlayerSteamID, toTeam, to.TeamIndex);
+            }
+
+            // Update visuals
+            this.UpdateLobbyVisuals();
+
         }
 
         private void UpdateGamemodeOptions(Wincondition wc) {

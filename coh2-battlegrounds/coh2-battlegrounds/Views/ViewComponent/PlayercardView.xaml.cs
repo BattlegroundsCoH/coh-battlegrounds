@@ -65,6 +65,8 @@ namespace BattlegroundsApp.Views.ViewComponent {
         public Visibility ShowRemove 
             => (this.m_isHost && this.m_steamID == BattlegroundsInstance.LocalSteamuser.ID) ? Visibility.Collapsed : Visibility.Visible;
 
+        public int TeamIndex { get; }
+
         public bool IsHost => this.m_isHost;
 
         public bool IsAI => this.m_isAIPlayer;
@@ -74,8 +76,6 @@ namespace BattlegroundsApp.Views.ViewComponent {
         public string PlayerName => this.m_name;
         
         public string PlayerArmy => this.m_army;
-
-        public bool IsRegistered { get; set; }
 
         public PlayercardCompanyItem PlayerSelectedCompanyItem 
             => this.PlayerCompanySelection.SelectedItem is not null ? (PlayercardCompanyItem)this.PlayerCompanySelection.SelectedItem : default;
@@ -93,7 +93,10 @@ namespace BattlegroundsApp.Views.ViewComponent {
             this.SetCardState(PlayercardViewstate.Locked);
             this.m_isAIPlayer = true;
             this.PlayerArmySelection.SetItemSource(alliedArmyItems, x => new IconComboBoxItem(x.Icon, x.DisplayName));
-            this.IsRegistered = false;
+        }
+
+        public PlayerCardView(int teamIndex) : this() {
+            this.TeamIndex = teamIndex;
         }
 
         private IconComboBoxItem CreateArmyItem(PlayercardArmyItem item) => new IconComboBoxItem(item.Icon, item.DisplayName) { Source = item };
@@ -104,7 +107,6 @@ namespace BattlegroundsApp.Views.ViewComponent {
     
         public void SetPlayerData(string name, string army, PlayercardCompanyItem company) {
             this.m_diff = AIDifficulty.Human;
-            this.IsRegistered = !this.m_isAIPlayer;
             this.SetPlayerName(name);
             this.SetPlayerFaction(army);
             this.SetPlayerCompany(this.m_steamID == BattlegroundsInstance.LocalSteamuser.ID, this.IsAI, army, company);
