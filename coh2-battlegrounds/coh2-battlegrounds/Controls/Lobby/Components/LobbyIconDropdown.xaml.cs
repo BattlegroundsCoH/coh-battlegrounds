@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Windows.Controls;
 using Battlegrounds.Functional;
@@ -44,12 +43,13 @@ namespace BattlegroundsApp.Controls.Lobby.Components {
             if (this.State is SelfState) {
                 this.m_selectedIndex = this.SelfCombobox.SelectedIndex = index;
             } else if (this.State is OtherState) {
-                this.m_selectedIndex = index;
-                this.OtherIcon.Source = this.m_items[index].Icon;
-                if (this.m_items[index].HasText) {
-                    this.OtherIcon.ToolTip = new ToolTip() { Content = this.m_items[index].Text };
+                if (this.m_selectedIndex != index) {
+                    this.m_selectedIndex = index;
+                    this.OtherIcon.Source = this.m_items[index].Icon;
+                    if (this.m_items[index].HasText) {
+                        this.OtherIcon.ToolTip = new ToolTip() { Content = this.m_items[index].Text };
+                    }
                 }
-                Trace.WriteLine($"Setting index to {index}", "LobbyIconDropdown");
             }
         }
 

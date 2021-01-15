@@ -274,10 +274,9 @@ namespace BattlegroundsApp.Views {
         private void OnTeamManagementCallbackHandler(ManagedLobbyTeamType team, PlayerCardView card, object arg, string reason) {
             switch (reason) {
                 case "AddAI":
-                    int aiid = this.m_smh.Lobby.CreateAIPlayer(card.Difficulty, card.PlayerArmy, team);
+                    int aiid = this.m_smh.Lobby.CreateAIPlayer(card.Difficulty, card.PlayerArmy, team, (int)card.GetValue(Grid.RowProperty));
                     if (aiid != -1) {
                         card.UpdatePlayerID((ulong)aiid);
-                        card.IsRegistered = true;
                         Trace.WriteLine($"Adding AI [{team}][{card.Difficulty}][{card.PlayerArmy}]", "GameLobbyView");
                     } else {
                         Trace.WriteLine("Failed to add AI...");
@@ -293,7 +292,7 @@ namespace BattlegroundsApp.Views {
                 case "ChangedCompany":
                     PlayercardCompanyItem companyItem = card.PlayerSelectedCompanyItem;
                     if (companyItem.Name.CompareTo(this.m_smh.Lobby.TryFindPlayerFromID(card.PlayerSteamID)?.CompanyName) != 0) {
-                        bool allowSet = card.PlayerSteamID == this.m_smh.Lobby.Self.ID || (card.IsHost && card.IsAI);
+                        bool allowSet = card.PlayerSteamID == this.m_smh.Lobby.Self.ID || (this.m_smh.Lobby.IsHost && card.IsAI);
                         if (companyItem.State == CompanyItemState.Company && allowSet) {
                             this.m_smh.Lobby.SetCompany(card.PlayerSteamID, companyItem.Name, companyItem.Strength);
                             Trace.WriteLine($"Changing company [{card.PlayerSteamID}][{card.Difficulty}][{card.PlayerArmy}][{companyItem.Name}]", "GameLobbyView");

@@ -41,6 +41,71 @@ namespace Battlegrounds.Online.Lobby {
     /// </remarks>
     public sealed class ManagedLobby {
 
+        // Constants for user-info related values
+        #region User Info Constants
+
+        /// <summary>
+        /// Get or set name of user's selected company.
+        /// </summary>
+        public const string USERINFO_COMPANY = "com";
+
+        /// <summary>
+        /// Get or set the strength of user's selected company.
+        /// </summary>
+        public const string USERINFO_COMPANYSTRENGTH = "str";
+
+        /// <summary>
+        /// Get or set the position of the user (on team).
+        /// </summary>
+        public const string USERINFO_POSITION = "pos";
+
+        /// <summary>
+        /// Get or set the team index of the user.
+        /// </summary>
+        public const string USERINFO_TEAMINDEX = "tid";
+
+        /// <summary>
+        /// Get or set the faction of the user.
+        /// </summary>
+        public const string USERINFO_FACTION = "fac";
+
+        /// <summary>
+        /// Get or set the difficulty of the user (Directly transalte to <see cref="AIDifficulty"/>).
+        /// </summary>
+        public const string USERINFO_DIFFICULTY = "dif";
+
+        /// <summary>
+        /// Get the name of the user (based on ID).
+        /// </summary>
+        public const string USERINFO_NAME = "name";
+
+        #endregion
+
+        // Constants for lobby-info related values
+        #region Lobby Info Constants
+
+        /// <summary>
+        /// Get or set the selected map in the lobby.
+        /// </summary>
+        public const string LOBBYINFO_SELECTEDMAP = "selected_map";
+
+        /// <summary>
+        /// Get or set the selected wincondition in the lobby.
+        /// </summary>
+        public const string LOBBYINFO_SELECTEDGAMEMODE = "selected_wc";
+
+        /// <summary>
+        /// Get or set the selected gamemode option in the lobby.
+        /// </summary>
+        public const string LOBBYINFO_SELECTEDGAMEMODEOPTION = "selected_wcs";
+
+        /// <summary>
+        /// Get or set the maximum amount of people allowed in the lobby.
+        /// </summary>
+        public const string LOBBYINFO_CAPACITY = "capacity";
+
+        #endregion
+
         /// <summary>
         /// Send a file to all lobby members.
         /// </summary>
@@ -218,7 +283,7 @@ namespace Battlegrounds.Online.Lobby {
                 throw new PermissionDeniedException(PermissionDeniedException.HOST_ONLY);
             } else {
                 this.m_lobbyMap = scenario.RelativeFilename;
-                this.SetLobbyInformation("selected_map", this.m_lobbyMap);
+                this.SetLobbyInformation(LOBBYINFO_SELECTEDMAP, this.m_lobbyMap);
             }
         }
 
@@ -235,7 +300,7 @@ namespace Battlegrounds.Online.Lobby {
                 throw new PermissionDeniedException(PermissionDeniedException.HOST_ONLY);
             } else {
                 this.m_lobbyGamemode = gamemode;
-                this.SetLobbyInformation("selected_wc", this.m_lobbyGamemode);
+                this.SetLobbyInformation(LOBBYINFO_SELECTEDGAMEMODE, this.m_lobbyGamemode);
             }
         }
 
@@ -249,7 +314,7 @@ namespace Battlegrounds.Online.Lobby {
                 throw new PermissionDeniedException(PermissionDeniedException.HOST_ONLY);
             } else {
                 this.m_lobbyGamemodeOption = option.ToString();
-                this.SetLobbyInformation("selected_wcs", this.m_lobbyGamemodeOption);
+                this.SetLobbyInformation(LOBBYINFO_SELECTEDGAMEMODEOPTION, this.m_lobbyGamemodeOption);
             }
         }
 
@@ -261,7 +326,7 @@ namespace Battlegrounds.Online.Lobby {
         /// <exception cref="PermissionDeniedException"/>
         public void SetFaction(ulong ID, string faction) {
             if (this.m_isHost || ID == this.m_self.ID) {
-                this.SetUserInformation(ID, "fac", faction);
+                this.SetUserInformation(ID, USERINFO_FACTION, faction);
             } else {
                 throw new PermissionDeniedException(PermissionDeniedException.HOST_ONLY);
             }
@@ -290,8 +355,8 @@ namespace Battlegrounds.Online.Lobby {
         /// <exception cref="PermissionDeniedException"/>
         public void SetCompany(ulong ID, string company, double strength) {
             if (this.m_isHost || ID == this.m_self.ID) {
-                this.SetUserInformation(ID, "com", company);
-                this.SetUserInformation(ID, "str", strength);
+                this.SetUserInformation(ID, USERINFO_COMPANY, company);
+                this.SetUserInformation(ID, USERINFO_COMPANYSTRENGTH, strength);
             } else {
                 throw new PermissionDeniedException(PermissionDeniedException.HOST_ONLY);
             }
@@ -310,7 +375,7 @@ namespace Battlegrounds.Online.Lobby {
                 return false; // Bail-fast --> no need to request data from the server if we're not going to use it.
             }
             if (this.m_underlyingConnection != null && this.m_underlyingConnection.IsConnected) {
-                this.GetLobbyInformation("capacity", (a, b) => {
+                this.GetLobbyInformation(LOBBYINFO_CAPACITY, (a, b) => {
                     if (int.TryParse(a, out int c)) {
                         response.Invoke(c);
                     } else {
@@ -522,7 +587,7 @@ namespace Battlegrounds.Online.Lobby {
                     }
                 }
                 broadcast.Then(() => this.m_isHost.Then(
-                        () => this.SetLobbyInformation("capacity", capacity)).Else(
+                        () => this.SetLobbyInformation(LOBBYINFO_CAPACITY, capacity)).Else(
                         () => throw new PermissionDeniedException(PermissionDeniedException.HOST_ONLY))
                     );
             }
@@ -652,7 +717,7 @@ namespace Battlegrounds.Online.Lobby {
 
             int[] diffs = new int[players.Length];
             for (int i = 0; i < players.Length; i++) {
-                string diff = await this.GetUserInformation(players[i], "dif");
+                string diff = await this.GetUserInformation(players[i], USERINFO_DIFFICULTY);
                 if (int.TryParse(diff, out int d)) {
                     diffs[i] = d;
                 }
@@ -831,7 +896,7 @@ namespace Battlegrounds.Online.Lobby {
 
                 // Find out if it's a human or AI
                 AIDifficulty diff = AIDifficulty.Human;
-                if (int.TryParse(await this.GetUserInformation(playerIDs[i], "dif"), out int d)) {
+                if (int.TryParse(await this.GetUserInformation(playerIDs[i], USERINFO_DIFFICULTY), out int d)) {
                     diff = (AIDifficulty)d;
                 }
 
@@ -839,10 +904,10 @@ namespace Battlegrounds.Online.Lobby {
                 if (diff == AIDifficulty.Human) {
 
                     // Get member name and create them as human
-                    string name = await this.GetUserInformation(playerIDs[i], "name");
-                    string faction = await this.GetUserInformation(playerIDs[i], "fac");
-                    string company = await this.GetUserInformation(playerIDs[i], "com");
-                    if (!double.TryParse(await this.GetUserInformation(playerIDs[i], "str"), out double strength)) {
+                    string name = await this.GetUserInformation(playerIDs[i], USERINFO_NAME);
+                    string faction = await this.GetUserInformation(playerIDs[i], USERINFO_FACTION);
+                    string company = await this.GetUserInformation(playerIDs[i], USERINFO_COMPANY);
+                    if (!double.TryParse(await this.GetUserInformation(playerIDs[i], USERINFO_COMPANYSTRENGTH), out double strength)) {
                         Trace.WriteLine("Failed to convert strength", "ManagedLobby.Refresh");
                     } else {
                         strength = -1.0;
@@ -856,7 +921,7 @@ namespace Battlegrounds.Online.Lobby {
                     ManagedLobbyTeamType team = ManagedLobbyTeam.GetTeamTypeFromFaction(faction);
 
                     // Find index on team
-                    int pos = int.Parse(await this.GetUserInformation(playerIDs[i], "pos"));
+                    int pos = int.Parse(await this.GetUserInformation(playerIDs[i], USERINFO_POSITION));
 
                     // Add human
                     this.GetTeam(team).Join(human);
@@ -868,17 +933,28 @@ namespace Battlegrounds.Online.Lobby {
                 } else {
 
                     // Create AI
-                    AILobbyMember ai = new AILobbyMember(this, diff, await this.GetUserInformation(playerIDs[i], "fac"), playerIDs[i]);
+                    AILobbyMember ai = new AILobbyMember(this, diff, await this.GetUserInformation(playerIDs[i], USERINFO_FACTION), playerIDs[i]);
 
                     // Find team from faction
                     var team = ManagedLobbyTeam.GetTeamTypeFromFaction(ai.Faction);
 
                     // Find index on team
-                    int pos = int.Parse(await this.GetUserInformation(playerIDs[i], "pos"));
+                    int pos = int.Parse(await this.GetUserInformation(playerIDs[i], USERINFO_POSITION));
 
                     // Add AI
                     this.GetTeam(team).Join(ai);
                     this.GetTeam(team).TrySetMemberPosition(ai, pos);
+
+                    // Fetch company data of AI
+                    string company = await this.GetUserInformation(playerIDs[i], USERINFO_COMPANY);
+                    if (!double.TryParse(await this.GetUserInformation(playerIDs[i], USERINFO_COMPANYSTRENGTH), out double strength)) {
+                        Trace.WriteLine("Failed to convert strength", "ManagedLobby.Refresh");
+                    } else {
+                        strength = -1.0;
+                    }
+
+                    // Update AI company data
+                    ai.UpdateCompany(company, strength);
 
                     // Log
                     Trace.WriteLine($"Found AI player playing as {ai.Faction} for {team} at {pos}.", "ManagedLobby.Refresh");
@@ -900,30 +976,40 @@ namespace Battlegrounds.Online.Lobby {
         /// </summary>
         /// <param name="difficulty">The difficulty of the AI.</param>
         /// <param name="faction">The faction of the AI.</param>
-        /// <param name="teamIndex">The index (position) of the AI on the given team.</param>
+        /// <param name="team">The <see cref="ManagedLobbyTeamType"/> the AI will be a member of.</param>
+        /// <param name="position">The index (position) of the AI on the given team.</param>
         /// <param name="timeout">The amount of time to wait before timing out the attempt to create AI player. Default is -1.</param>
         /// <returns>The ID given to the <see cref="AILobbyMember"/> by the server.</returns>
         /// <remarks>Async method.</remarks>
         /// <exception cref="PermissionDeniedException"/>
-        public async Task<int> TryCreateAIPlayer(AIDifficulty difficulty, string faction, int teamIndex, int timeout = -1) {
+        public async Task<int> TryCreateAIPlayer(AIDifficulty difficulty, string faction, ManagedLobbyTeamType team, int position, int timeout = -1) {
             if (!this.m_isHost) {
                 throw new PermissionDeniedException(PermissionDeniedException.HOST_ONLY);
             }
-            string responseQuery = null;
-            Message addAIMessage = new Message(MessageType.LOBBY_ADDAI, ((int)difficulty).ToString(), faction, teamIndex.ToString());
+            int response = int.MinValue;
+            Message addAIMessage = new Message(MessageType.LOBBY_ADDAI, ((int)difficulty).ToString(), faction, ((int)team).ToString());
             Message.SetIdentifier(this.m_underlyingConnection.ConnectionSocket, addAIMessage);
-            this.m_underlyingConnection.SetIdentifierReceiver(addAIMessage.Identifier, msg => { /*Trace.WriteLine(msg);*/ responseQuery = msg.Argument1; });
+            this.m_underlyingConnection.SetIdentifierReceiver(addAIMessage.Identifier, msg => { 
+                if (int.TryParse(msg.Argument1, out response)) {
+                    var aiPlayer = this.m_teams[team].GetLobbyMember((ulong)response);
+                    if (aiPlayer is not null) {
+                        this.m_teams[team].TrySetMemberPosition(aiPlayer, position, false);
+                    }
+                } else {
+                    response = -1;  
+                }
+            });
             this.m_underlyingConnection.SendMessage(addAIMessage);
-            while (responseQuery is null && (timeout >= 0 || timeout == -1)) {
+            while (response == int.MinValue && (timeout >= 0 || timeout == -1)) {
                 await Task.Delay(1);
                 if (timeout != -1) {
                     timeout--;
                 }
             }
-            if (int.TryParse(responseQuery, out int id)) {
-                return id;
-            } else {
+            if (timeout < 0 && response == int.MinValue) {
                 return -1;
+            } else {
+                return response;
             }
         }
 
@@ -932,11 +1018,12 @@ namespace Battlegrounds.Online.Lobby {
         /// </summary>
         /// <param name="difficulty">The difficulty of the AI.</param>
         /// <param name="faction">The faction of the AI.</param>
-        /// <param name="teamIndex">The index (position) of the AI on the given team.</param>
+        /// <param name="team">The <see cref="ManagedLobbyTeamType"/> the AI will be a member of.</param>
+        /// <param name="position">The index (position) of the AI on the given team.</param>
         /// <returns>The ID given to the <see cref="AILobbyMember"/> by the server.</returns>
         /// <exception cref="PermissionDeniedException"/>
-        public int CreateAIPlayer(AIDifficulty difficulty, string faction, ManagedLobbyTeamType teamIndex) 
-            => Task.Run(() => this.TryCreateAIPlayer(difficulty, faction, (int)teamIndex, 1250)).Result;
+        public int CreateAIPlayer(AIDifficulty difficulty, string faction, ManagedLobbyTeamType team, int position) 
+            => Task.Run(() => this.TryCreateAIPlayer(difficulty, faction, team, position, 1250)).Result;
 
         /// <summary>
         /// Kick a player from the lobby. (If host).
@@ -1233,16 +1320,16 @@ namespace Battlegrounds.Online.Lobby {
 
         private void LobbyInfoChange(string info, string value) {
             switch (info) {
-                case "selected_map":
+                case LOBBYINFO_SELECTEDMAP:
                     this.m_lobbyMap = value;
                     break;
-                case "selected_wc":
+                case LOBBYINFO_SELECTEDGAMEMODE:
                     this.m_lobbyGamemode = value;
                     break;
-                case "selected_wcs":
+                case LOBBYINFO_SELECTEDGAMEMODEOPTION:
                     this.m_lobbyGamemodeOption = value;
                     break;
-                case "capacity":
+                case LOBBYINFO_CAPACITY:
                     break;
                 default:
                     Trace.WriteLine($"Unknown lobby information change: {info} (with value '{value}')", "ManagedLobby");
@@ -1253,18 +1340,21 @@ namespace Battlegrounds.Online.Lobby {
 
         private void LobbyUserInfoChanged(string user, string info, string value) {
             if (ulong.TryParse(user, out ulong id)) {
-                if (this.TryFindPlayerFromID(id) is ManagedLobbyMember member) {
+                if (this.TryFindPlayerFromID(id, out ManagedLobbyTeamType team) is ManagedLobbyMember member) {
                     switch (info) {
-                        case "fac":
+                        case USERINFO_FACTION:
                             member.UpdateFaction(value);
                             break;
-                        case "str":
+                        case USERINFO_COMPANYSTRENGTH:
                             member.UpdateCompany(member.CompanyName, double.Parse(value));
                             break;
-                        case "com":
+                        case USERINFO_COMPANY:
                             member.UpdateCompany(value, member.CompanyStrength);
                             break;
-                        case "pos":
+                        case USERINFO_POSITION:
+                            this.m_teams[team].TrySetMemberPosition(member, int.Parse(value));
+                            break;
+                        case USERINFO_DIFFICULTY:
                             break;
                         default:
                             Trace.WriteLine(info + ":" + value);

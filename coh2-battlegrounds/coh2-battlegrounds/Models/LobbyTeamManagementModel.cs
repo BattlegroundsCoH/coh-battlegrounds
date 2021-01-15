@@ -192,8 +192,10 @@ namespace BattlegroundsApp.Models {
                     OnTeamEvent?.Invoke(teamOf, sender, this.m_teamSetup[teamOf].IndexOf(sender), reason);
                     break;
                 case "LockSlot":
+                    sender.SetCardState(PlayercardViewstate.Locked);
                     throw new NotImplementedException();
                 case "UnlockSlot":
+                    sender.SetCardState(PlayercardViewstate.Open);
                     throw new NotImplementedException();
                 case "MoveTo":
                     throw new NotImplementedException();

@@ -113,8 +113,8 @@ namespace Battlegrounds.Online.Lobby {
                 if (this.m_slots[i].State == ManagedLobbyTeamSlotState.Open) {
                     this.m_slots[i].SetOccupant(member);
                     if (!silent) {
-                        this.m_lobby.SetUserInformation(member.ID, "tid", (int)this.Team);
-                        this.m_lobby.SetUserInformation(member.ID, "pos", i);
+                        this.m_lobby.SetUserInformation(member.ID, ManagedLobby.USERINFO_TEAMINDEX, (int)this.Team);
+                        this.m_lobby.SetUserInformation(member.ID, ManagedLobby.USERINFO_POSITION, i);
                     }
                     return true;
                 }
@@ -139,7 +139,7 @@ namespace Battlegrounds.Online.Lobby {
         public ManagedLobbyMember GetLobbyMember(ulong playerID) => this.m_slots.FirstOrDefault(x => x.Occupant is not null && x.Occupant.ID == playerID)?.Occupant;
 
         public void TrySetMemberPosition(ManagedLobbyMember member, int position, bool silent = true) {
-            if (this.m_slots.Length >= position) {
+            if (position >= this.m_slots.Length) {
                 return;
             }
             if (this.m_slots[position].Occupant is null) {
@@ -148,7 +148,7 @@ namespace Battlegrounds.Online.Lobby {
                     this.m_slots[position].SetOccupant(member);
                     this.m_slots[prev].SetOccupant(null);
                     if (!silent) {
-                        this.m_lobby.SetUserInformation(member.ID, "pos", position);
+                        this.m_lobby.SetUserInformation(member.ID, ManagedLobby.USERINFO_POSITION, position);
                     }
                 }
             }
