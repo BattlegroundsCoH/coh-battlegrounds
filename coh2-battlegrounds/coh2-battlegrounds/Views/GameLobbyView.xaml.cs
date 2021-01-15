@@ -148,7 +148,7 @@ namespace BattlegroundsApp.Views {
                 var temp = WinconditionList.GetWinconditionByName(arg1);
                 this.Gamemode.ItemsSource = new List<Wincondition>() { temp };
                 this.Gamemode.SelectedIndex = 0;
-                if (temp.Options.Length == 0) {
+                if (temp.Options is null || temp.Options.Length == 0) {
                     this.GamemodeOption.Visibility = Visibility.Hidden;
                 } else {
                     this.GamemodeOption.Visibility = Visibility.Visible;
