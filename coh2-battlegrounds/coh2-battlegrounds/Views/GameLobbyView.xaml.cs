@@ -159,7 +159,7 @@ namespace BattlegroundsApp.Views {
         private void UpdateSelectedOption(string arg1, string arg2) {
             this.Dispatcher.Invoke(() => {
                 if (int.TryParse(arg1, out int option)) {
-                    if (this.Gamemode.SelectedItem is Wincondition gamemode) {
+                    if (this.Gamemode.SelectedItem is Wincondition gamemode && gamemode.Options is not null) {
                         var opt = gamemode.Options[option];
                         this.GamemodeOption.ItemsSource = new List<string> { opt.Title };
                         this.GamemodeOption.SelectedIndex = 0;
