@@ -157,7 +157,7 @@ namespace Battlegrounds.Game.DataCompany {
 
             // Make sure it's a valid army
             if (army is null) {
-                throw new ArgumentNullException(nameof(army), "Army was null");
+                throw new ArgumentNullException(nameof(army), "Army cannot be null");
             }
 
             // Assign base values
@@ -221,6 +221,10 @@ namespace Battlegrounds.Game.DataCompany {
             this.m_nextSquadId = 0;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="blueprint"></param>
         public void AddInventoryItem(Blueprint blueprint) => this.m_inventory.Add(blueprint);
 
         /// <summary>
@@ -293,6 +297,8 @@ namespace Battlegrounds.Game.DataCompany {
         public void SetType(CompanyType type) => this.m_companyType = type;
 
         public void SetArmy(Faction faction) => this.m_companyArmy = faction;
+
+        public void SetAvailability(CompanyAvailabilityType companyAvailability) => this.m_availabilityType = companyAvailability;
 
         /// <summary>
         /// Calculate the strength of the company

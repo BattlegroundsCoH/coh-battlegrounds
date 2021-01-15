@@ -11,6 +11,7 @@ namespace Battlegrounds.Game.DataCompany {
 
         private Company m_companyTarget;
         private CompanyType m_companyType;
+        private CompanyAvailabilityType m_availabilityType;
         private string m_companyName;
         private string m_companyGUID;
         private string m_companyUsername;
@@ -64,6 +65,25 @@ namespace Battlegrounds.Game.DataCompany {
             this.m_companyTarget = companyTarget;
             this.m_companyType = companyTarget.Type;
             this.m_companyName = companyTarget.Name;
+            return this;
+        }
+
+        /// <summary>
+        /// Clones an existing <see cref="Company"/> instance using a <see cref="CompanyTemplate"/> to clone.
+        /// </summary>
+        /// <remarks>
+        /// Company progression is lost when using this method.
+        /// </remarks>
+        /// <param name="company">The company to clone.</param>
+        /// <param name="newName">The new name of the company.</param>
+        /// <param name="companyAvailability">The <see cref="CompanyAvailabilityType"/> new availability type</param>
+        /// <returns>The calling <see cref="CompanyBuilder"/> instance.</returns>
+        public CompanyBuilder CloneCompany(Company company, string newName, CompanyAvailabilityType companyAvailability) {
+            var template = CompanyTemplate.FromCompany(company);
+            this.m_companyTarget = CompanyTemplate.FromTemplate(template);
+            this.m_companyName = newName;
+            this.m_companyType = this.m_companyTarget.Type;
+            this.m_availabilityType = companyAvailability;
             return this;
         }
 
@@ -149,17 +169,24 @@ namespace Battlegrounds.Game.DataCompany {
         }
 
         /// <summary>
-        /// Commit all unsaved changes to the <see cref="Company"/> target instance (Result can be extracted from the <see cref="Result"/> property).
+        /// Commit all unsaved changes to the <see cref="Company"/> target instance.
         /// </summary>
-        public virtual void Commit() {
+        /// <remarks>
+        /// Result can be extracted from the <see cref="Result"/> property.
+        /// </remarks>
+        /// <returns>
+        /// The calling <see cref="CompanyBuilder"/> instance.
+        /// </returns>
+        public virtual CompanyBuilder Commit() {
 
             // If null, throw error
             if (this.m_companyTarget == null) {
-                throw new ArgumentNullException();
+                throw new ArgumentNullException("Internal Company Target", "Unable to commit changes to undefined company");
             }
 
             // Update company fluff
             this.m_companyTarget.SetType(this.m_companyType);
+            this.m_companyTarget.SetAvailability(this.m_availabilityType);
             this.m_companyTarget.Name = this.m_companyName;
             this.m_companyTarget.TuningGUID = this.m_companyGUID;
             this.m_companyTarget.Owner = this.m_companyUsername;
@@ -177,6 +204,9 @@ namespace Battlegrounds.Game.DataCompany {
 
             // Clear the redo
             this.m_redo.Clear();
+
+            // Return self.
+            return this;
 
         }
 

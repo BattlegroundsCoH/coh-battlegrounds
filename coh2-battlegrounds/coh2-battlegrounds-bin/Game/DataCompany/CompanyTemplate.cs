@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Text;
+using Battlegrounds.Functional;
 using Battlegrounds.Game.Database.Management;
 using Battlegrounds.Game.Gameplay;
 using Battlegrounds.Modding;
@@ -167,27 +168,27 @@ namespace Battlegrounds.Game.DataCompany {
         /// <returns>A <see cref="Company"/> instance based on the <see cref="CompanyTemplate"/>.</returns>
         public static Company FromTemplate(CompanyTemplate template) {
 
+            // Create Company Builder
             CompanyBuilder builder = new CompanyBuilder()
                 .NewCompany(Faction.FromName(template.m_army))
                 .ChangeTuningMod(template.m_guid)
                 .ChangeName(template.m_name);
 
+            // Create Units
             for (int i = 0; i < template.m_units.Length; i++) {
                 if (template.m_units[i].FILLED) {
                     UnitBuilder unit = new UnitBuilder()
                         .SetModGUID(template.m_guid)
                         .SetBlueprint(template.m_units[i].PBGID)
-                        .SetDeploymentMethod((DeploymentMethod)template.m_units[i].DMODE)
-                        .SetDeploymentPhase((DeploymentPhase)template.m_units[i].PHASE);
-                    if (template.m_units[i].TPBGID != BlueprintManager.InvalidLocalBlueprint) {
-                        unit.SetTransportBlueprint(template.m_units[i].TPBGID);
-                    }
+                        .SetDeploymentPhase((DeploymentPhase)template.m_units[i].PHASE)
+                        .IfTrue(x => template.m_units[i].TPBGID != BlueprintManager.InvalidLocalBlueprint).Then(x => x.SetTransportBlueprint(template.m_units[i].TPBGID))
+                        .SetDeploymentMethod((DeploymentMethod)template.m_units[i].DMODE);
                     builder.AddUnit(unit);
                 }
             }
 
-            builder.Commit();
-            return builder.Result;
+            // Commit changes and get result
+            return builder.Commit().Result;
 
         }
 
