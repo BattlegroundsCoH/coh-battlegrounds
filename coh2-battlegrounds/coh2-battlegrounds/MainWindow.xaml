@@ -7,7 +7,7 @@
         xmlns:views="clr-namespace:BattlegroundsApp.Views"
         xmlns:caseConverter="clr-namespace:BattlegroundsApp.Utilities.XAML"
         mc:Ignorable="d"
-        Title="Battlegrounds" Height="850" Width="1400" WindowStartupLocation="CenterScreen" WindowStyle="SingleBorderWindow">
+        Title="Battlegrounds" Height="850" Width="1400" WindowStartupLocation="CenterScreen" WindowStyle="SingleBorderWindow" MinHeight="850" MinWidth="1400">
     <local:CoreAppWindow.Background>
         <ImageBrush ImageSource="pack://application:,,,/Resources/ingame/application/app_background.png"/>
     </local:CoreAppWindow.Background>
@@ -51,6 +51,7 @@
                 </Setter.Value>
             </Setter>
         </Style>
+        <!-- CaseConverter -->
         <caseConverter:CaseConverter Case="Upper" x:Key="CaseConverterUpper"/>
     </local:CoreAppWindow.Resources>
     <Grid>
@@ -117,7 +118,7 @@
 
         <!-- Row 9 -->
         <Button x:Name="ExitButton" Grid.Row="9" Grid.Column="1" Content="{Binding ExitButtonContent, Converter={StaticResource CaseConverterUpper}, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}" 
-                Margin="0,25,0,0" Click="Exit_Click" Style="{StaticResource MainWindiwButtonStyle}" ToolTip="Exit the application"/>
+                Margin="0,35,0,0" Click="Exit_Click" Style="{StaticResource MainWindiwButtonStyle}" ToolTip="Exit the application"/>
 
     </Grid>
 </local:CoreAppWindow>

@@ -70,7 +70,11 @@ namespace BattlegroundsApp.Views {
             var result = RenameCopyDialogViewModel.ShowRenameDialog("Rename", out string companyName);
 
             if (result == RenameCopyDialogResult.Rename) {
-                //Rename selected company here
+                var builder = new CompanyBuilder();
+                var company = builder.CloneCompany(companyList.SelectedItem as Company, companyName, CompanyAvailabilityType.MultiplayerOnly).Commit().Result;
+                PlayerCompanies.DeleteCompany(companyList.SelectedItem as Company);
+                PlayerCompanies.SaveCompany(company);
+                UpdateCompanyList();
             }
 
         }
@@ -90,8 +94,9 @@ namespace BattlegroundsApp.Views {
             var result = RenameCopyDialogViewModel.ShowCopyDialog("Copy", out string companyName);
 
             if (result == RenameCopyDialogResult.Copy) {
-                //TODO: Change company name from original one
-                PlayerCompanies.SaveCompany(companyList.SelectedItem as Company);
+                var builder = new CompanyBuilder();
+                builder.CloneCompany(companyList.SelectedItem as Company, companyName, CompanyAvailabilityType.MultiplayerOnly).Commit();
+                PlayerCompanies.SaveCompany(builder.Result);
                 UpdateCompanyList();
             }
         }

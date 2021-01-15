@@ -36,13 +36,13 @@ namespace BattlegroundsApp {
         public const string DASHBOARDSTATE = "DASHBOARDVIEW";
         public const string NEWSSTATE = "NEWSVIEW";
 
-        public string DashboardButtonContent { get; set; }
-        public string NewsButtonContent { get; set; }
-        public string CompanyBuilderButtonContent { get; set; }
-        public string CampaignButtonContent { get; set; }
-        public string GameBrowserButtonContent { get; set; }
-        public string SettingsButtonContent { get; set; }
-        public string ExitButtonContent { get; set; }
+        public string DashboardButtonContent { get; }
+        public string NewsButtonContent { get; }
+        public string CompanyBuilderButtonContent { get; }
+        public string CampaignButtonContent { get; }
+        public string GameBrowserButtonContent { get; }
+        public string SettingsButtonContent { get; }
+        public string ExitButtonContent { get; }
 
         private Dictionary<string, ViewState> m_constStates; // lookup table for all states that don't need initialization.
 
@@ -96,7 +96,6 @@ namespace BattlegroundsApp {
             if (result == YesNoDialogResult.Confirm) {
 
                 this.Close();
-
             }
 
         }
