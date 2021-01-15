@@ -97,6 +97,7 @@ namespace BattlegroundsApp.Models {
                         }
                         pair.Value[i].SetCardState(PlayercardViewstate.Occupied);
                     } else {
+                        pair.Value[i].SetStateBasedOnContext(isHost, false, ulong.MaxValue);
                         pair.Value[i].SetCardState(i < this.m_maxPlayerCount / 2 ? PlayercardViewstate.Open : PlayercardViewstate.Locked);
                     }
                 }
