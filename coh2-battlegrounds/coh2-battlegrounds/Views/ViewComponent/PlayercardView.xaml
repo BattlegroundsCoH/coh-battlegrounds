@@ -17,8 +17,8 @@
             <Label HorizontalAlignment="Center">Open Slot</Label>
             <StackPanel Orientation="Horizontal">
                 <Button x:Name="MoveHereButton" Click="MoveHereButton_Click">Move Here</Button>
-                <local:LobbyButton x:Name="AddAIButton" Click="AddAIButton_Click">Add AI</local:LobbyButton>
-                <local:LobbyButton x:Name="LockSlotButton" Click="LockSlotButton_Click">Lock Slot</local:LobbyButton>
+                <local:LobbyButton x:Name="AddAIButton" Click="AddAIButton_Click" IsHostOnly="True">Add AI</local:LobbyButton>
+                <local:LobbyButton x:Name="LockSlotButton" Click="LockSlotButton_Click" IsHostOnly="True">Lock Slot</local:LobbyButton>
             </StackPanel>            
         </StackPanel>
     </viewcomponent:PlayerCardState>

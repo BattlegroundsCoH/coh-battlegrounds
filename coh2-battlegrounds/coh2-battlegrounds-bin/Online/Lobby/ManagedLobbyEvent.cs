@@ -58,6 +58,11 @@
         Host,
 
         /// <summary>
+        /// The loca client was downgraded from being a host.
+        /// </summary>
+        HostRemove,
+
+        /// <summary>
         /// The local client was kicked from the lobby.
         /// </summary>
         Kicked,

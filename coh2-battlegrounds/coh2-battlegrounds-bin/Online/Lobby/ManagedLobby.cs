@@ -1171,7 +1171,12 @@ namespace Battlegrounds.Online.Lobby {
                     this.OnLocalEvent?.Invoke(ManagedLobbyLocalEventType.Kicked, incomingMessage.Argument1);
                     break;
                 case MessageType.LOBBY_SETHOST:
+                    this.m_isHost = true;
                     this.OnLocalEvent?.Invoke(ManagedLobbyLocalEventType.Host, string.Empty);
+                    break;
+                case MessageType.LOBBY_UNSETHOST:
+                    this.m_isHost = false;
+                    this.OnLocalEvent?.Invoke(ManagedLobbyLocalEventType.HostRemove, string.Empty);
                     break;
                 case MessageType.LOBBY_INFO:
                     this.LobbyInfoChange(incomingMessage.Argument1, incomingMessage.Argument2);
@@ -1215,6 +1220,9 @@ namespace Battlegrounds.Online.Lobby {
                 case MessageType.LOBBY_STARTING:
                     this.OnMatchInfoReceived?.Invoke(incomingMessage.Descriptor.ToString(), incomingMessage.Argument1, incomingMessage.Argument2);
                     break;
+                case MessageType.LOBBY_CHANGEDUSERDATA:
+                    this.LobbyUserInfoChanged(incomingMessage.Argument3, incomingMessage.Argument1, incomingMessage.Argument2);
+                    break;
                 case MessageType.FatalMessageError:
                     break;
                 default: Trace.WriteLine($"Unhandled type <<{incomingMessage.Descriptor}>>", "ManagedLobby"); break;
@@ -1239,6 +1247,33 @@ namespace Battlegrounds.Online.Lobby {
                     break;
             }
             this.OnLobbyInfoChanged?.Invoke(info, value);
+        }
+
+        private void LobbyUserInfoChanged(string user, string info, string value) {
+            if (ulong.TryParse(user, out ulong id)) {
+                if (this.TryFindPlayerFromID(id) is ManagedLobbyMember member) {
+                    switch (info) {
+                        case "fac":
+                            member.UpdateFaction(value);
+                            break;
+                        case "str":
+                            member.UpdateCompany(member.CompanyName, double.Parse(value));
+                            break;
+                        case "com":
+                            member.UpdateCompany(value, member.CompanyStrength);
+                            break;
+                        case "pos":
+                            break;
+                        default:
+                            Trace.WriteLine(info + ":" + value);
+                            break;
+                    }
+                } else {
+                    Trace.WriteLine($"Failed to parse user ID \"{user}#{id}\"", "ManagedLobby");
+                }
+            } else {
+                Trace.WriteLine($"Failed to parse user ID \"{user}\"", "ManagedLobby");
+            }
         }
 
         private ManagedLobbyMember TryFindPlayerFromID(ulong id, out ManagedLobbyTeamType team) {
