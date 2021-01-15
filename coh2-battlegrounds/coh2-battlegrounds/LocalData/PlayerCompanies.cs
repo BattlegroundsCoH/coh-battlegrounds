@@ -7,6 +7,7 @@ using System.Runtime.CompilerServices;
 using Battlegrounds;
 using Battlegrounds.Game.DataCompany;
 using Battlegrounds.Game.Gameplay;
+using Battlegrounds.Verification;
 
 namespace BattlegroundsApp.LocalData {
 
@@ -28,16 +29,16 @@ namespace BattlegroundsApp.LocalData {
                 string[] companies = Directory.GetFiles(companyFolder, "*.json");
 
                 foreach (string companypath in companies) {
-
-                    Company company = Company.ReadCompanyFromFile(companypath);
-                    if (!company.VerifyChecksum()) {
-                        Trace.WriteLine($"Failed to verify company \"{company.Name}\"");
-                    } else {
-
-                        __companies.Add(company);
-
+                    try {
+                        Company company = Company.ReadCompanyFromFile(companypath);
+                        if (company.Name.Replace(" ", "_").CompareTo(Path.GetFileNameWithoutExtension(companypath)) == 0) {
+                            __companies.Add(company);
+                        } else {
+                            Trace.WriteLine($"Failed to verify company \"{companypath}\" (Name Mismatch)", "PlayerCompanies");
+                        }
+                    } catch (ChecksumViolationException checksumViolation) {
+                        Trace.WriteLine($"Failed to verify company \"{companypath}\" ({checksumViolation.Message})", "PlayerCompanies");
                     }
-
                 }
 
                 Trace.WriteLine($"Loaded {__companies.Count} user companies");

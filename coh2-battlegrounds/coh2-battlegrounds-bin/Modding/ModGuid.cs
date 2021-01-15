@@ -19,9 +19,9 @@ namespace Battlegrounds.Modding {
         /// </summary>
         public string GUID => this.m_guid;
 
-        private ModGuid(Guid guid) {
-            this.m_guid = guid.ToString().Replace("-", "");
-        }
+        private ModGuid(Guid guid) => this.m_guid = guid.ToString().Replace("-", "");
+
+        private ModGuid(string guid) => this.m_guid = guid.Replace("-", "");
 
         public override string ToString() => this.m_guid;
 
@@ -35,6 +35,13 @@ namespace Battlegrounds.Modding {
         /// <param name="guid">The <see cref="Guid"/> instance to convert.</param>
         /// <returns>A formatted <see cref="ModGuid"/> instance.</returns>
         public static ModGuid FromGuid(Guid guid) => new ModGuid(guid);
+
+        /// <summary>
+        /// Convert a string into a Company of Heroes 2 mod GUID format compliant representation.
+        /// </summary>
+        /// <param name="guid">The string instance to convert</param>
+        /// <returns>A formatted <see cref="ModGuid"/> instance.</returns>
+        public static ModGuid FromGuid(string guid) => new ModGuid(guid.Replace("-", ""));
 
     }
 

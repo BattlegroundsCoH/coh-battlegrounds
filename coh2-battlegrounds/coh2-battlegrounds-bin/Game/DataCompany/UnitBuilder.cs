@@ -124,7 +124,13 @@ namespace Battlegrounds.Game.DataCompany {
         /// <param name="localBPID">The local property bag ID given to the blueprint.</param>
         /// <returns>The modified instance the method is invoked with.</returns>
         public virtual UnitBuilder SetBlueprint(ushort localBPID) {
+            if (localBPID == BlueprintManager.InvalidLocalBlueprint) {
+                throw new ArgumentNullException(nameof(localBPID), "Cannot set unit blueprint to null!");
+            }
             this.m_blueprint = BlueprintManager.GetCollection<SquadBlueprint>().FilterByMod(this.m_modGuid).Single(x => x.ModPBGID == localBPID);
+            if (this.m_blueprint is null) {
+                throw new ArgumentException($"Failed to find blueprint with mod PBGID {localBPID}", nameof(localBPID));
+            }
             return this;
         }
 
@@ -163,7 +169,16 @@ namespace Battlegrounds.Game.DataCompany {
         /// <param name="localBPID">The local property bag ID given to the blueprint.</param>
         /// <returns>The modified instance the method is invoked with.</returns>
         public virtual UnitBuilder SetTransportBlueprint(ushort localBPID) {
-            this.m_transportBlueprint = BlueprintManager.GetCollection<SquadBlueprint>().FilterByMod(this.m_modGuid).Single(x => x.ModPBGID == localBPID);
+            if (localBPID == BlueprintManager.InvalidLocalBlueprint) {
+                this.m_transportBlueprint = null;
+                return this;
+            }
+            this.m_transportBlueprint = BlueprintManager.GetCollection<SquadBlueprint>()
+                .FilterByMod(this.m_modGuid)
+                .Single(x => x.ModPBGID == localBPID);
+            if (this.m_transportBlueprint is null) {
+                throw new ArgumentException($"Failed to find blueprint with mod PBGID {localBPID}", nameof(localBPID));
+            }
             return this;
         }
 

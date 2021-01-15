@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using Battlegrounds.Functional;
 using Battlegrounds.Json;
-
+using Battlegrounds.Modding;
 using RegexMatch = System.Text.RegularExpressions.Match;
 
 namespace Battlegrounds.Game.Database.Management {
@@ -162,7 +162,7 @@ namespace Battlegrounds.Game.Database.Management {
                 foreach (IJsonElement element in content) {
                     if (element is Blueprint bp) {
                         bp.BlueprintType = bType;
-                        bp.ModGUID = guid;
+                        bp.ModGUID = ModGuid.FromGuid(guid);
                         bp.ModPBGID = bpCntr++;
                         targetDictionary.Add(bp.PBGID, bp);
                     } else {
