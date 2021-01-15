@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Battlegrounds.Game.Gameplay {
     
@@ -51,27 +49,15 @@ namespace Battlegrounds.Game.Gameplay {
 
         public static implicit operator string(Faction fac) => fac.Name;
 
-        private static Faction base_soviet;
-        private static Faction base_wehrmacht;
+        public static explicit operator Faction(string name) => FromName(name);
 
-        private static Faction wfa_aef;
-        private static Faction wfa_okw;
+        private static readonly Faction base_soviet = new Faction(0, "soviet", true, DLCPack.Base);
+        private static readonly Faction base_wehrmacht = new Faction(1, "german", false, DLCPack.Base);
 
-        private static Faction dlc_ukf;
+        private static readonly Faction wfa_aef = new Faction(2, "aef", true, DLCPack.WesternFrontArmiesUSA);
+        private static readonly Faction wfa_okw = new Faction(3, "west_german", false, DLCPack.WesternFrontArmiesOKW);
 
-        static Faction() {
-            
-            base_soviet = new Faction(0, "soviet", true, DLCPack.Base);
-
-            base_wehrmacht = new Faction(1, "german", false, DLCPack.Base);
-
-            wfa_aef = new Faction(2, "aef", true, DLCPack.WesternFrontArmiesUSA);
-
-            wfa_okw = new Faction(3, "west_german", false, DLCPack.WesternFrontArmiesOKW);
-
-            dlc_ukf = new Faction(4, "british", true, DLCPack.UKF);
-
-        }
+        private static readonly Faction dlc_ukf = new Faction(4, "british", true, DLCPack.UKF);
 
         /// <summary>
         /// The Soviet faction.
@@ -104,16 +90,13 @@ namespace Battlegrounds.Game.Gameplay {
         /// <param name="name">The <see cref="string"/> faction name to find.</param>
         /// <returns>One of the five factions or null.</returns>
         public static Faction FromName(string name) {
-            switch (name.ToLower()) {
-                case "soviet": return base_soviet;
-                case "german": return base_wehrmacht;
-                case "usa": 
-                case "aef": return wfa_aef;
-                case "okw":
-                case "west_german": return wfa_okw;
-                case "ukf":
-                case "british": return dlc_ukf;
-                default: return null;
+            return (name.ToLower()) switch {
+                "soviet" => base_soviet,
+                "german" => base_wehrmacht,
+                "usa" or "aef" => wfa_aef,
+                "okw" or "west_german" => wfa_okw,
+                "ukf" or "british" => dlc_ukf,
+                _ => null,
             };
         }
 

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Runtime.CompilerServices;
+
 using Battlegrounds;
 using Battlegrounds.Game.DataCompany;
 using Battlegrounds.Game.Gameplay;
@@ -84,5 +84,7 @@ namespace BattlegroundsApp.LocalData {
         }
 
         public static List<Company> GetAllCompanyes() => __companies;
+    
     }
+
 }
