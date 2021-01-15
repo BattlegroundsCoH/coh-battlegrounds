@@ -19,6 +19,7 @@ using BattlegroundsApp.LocalData;
 using Battlegrounds.Game.DataCompany;
 using Battlegrounds.Verification;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 
 namespace BattlegroundsApp.Views {
     /// <summary>
@@ -66,7 +67,7 @@ namespace BattlegroundsApp.Views {
         }
 
         private void renameCompany_Click(object sender, RoutedEventArgs e) {
-            var result = RenameCopyDialogViewModel.ShowRenameDialog("Rename");
+            var result = RenameCopyDialogViewModel.ShowRenameDialog("Rename", out string companyName);
 
             if (result == RenameCopyDialogResult.Rename) {
                 //Rename selected company here
@@ -86,10 +87,12 @@ namespace BattlegroundsApp.Views {
         }
 
         private void copyCompany_Click(object sender, RoutedEventArgs e) {
-            var result = RenameCopyDialogViewModel.ShowCopyDialog("Copy");
+            var result = RenameCopyDialogViewModel.ShowCopyDialog("Copy", out string companyName);
 
             if (result == RenameCopyDialogResult.Copy) {
-                //Copy selected company here
+                //TODO: Change company name from original one
+                PlayerCompanies.SaveCompany(companyList.SelectedItem as Company);
+                UpdateCompanyList();
             }
         }
 
@@ -105,7 +108,7 @@ namespace BattlegroundsApp.Views {
                     PlayerCompanies.SaveCompany(CompanyTemplate.FromTemplate(company));
                     UpdateCompanyList();
                 } catch(ChecksumViolationException err) {
-
+                    Trace.WriteLine(err);
                 }
             }
         }

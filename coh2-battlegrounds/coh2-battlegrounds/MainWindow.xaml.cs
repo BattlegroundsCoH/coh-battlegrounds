@@ -36,12 +36,28 @@ namespace BattlegroundsApp {
         public const string DASHBOARDSTATE = "DASHBOARDVIEW";
         public const string NEWSSTATE = "NEWSVIEW";
 
+        public string DashboardButtonContent { get; set; }
+        public string NewsButtonContent { get; set; }
+        public string CompanyBuilderButtonContent { get; set; }
+        public string CampaignButtonContent { get; set; }
+        public string GameBrowserButtonContent { get; set; }
+        public string SettingsButtonContent { get; set; }
+        public string ExitButtonContent { get; set; }
+
         private Dictionary<string, ViewState> m_constStates; // lookup table for all states that don't need initialization.
 
         public MainWindow() {
 
             // Initialize components etc...
             InitializeComponent();
+
+            DashboardButtonContent = "Dashboard";
+            NewsButtonContent = "News";
+            CompanyBuilderButtonContent = "Company Builder";
+            CampaignButtonContent = "Campaign";
+            GameBrowserButtonContent = "Game Browser";
+            SettingsButtonContent = "Settings";
+            ExitButtonContent = "Exit";
 
             // Create all the views that can be created at startup
             this.m_constStates = new Dictionary<string, ViewState> {

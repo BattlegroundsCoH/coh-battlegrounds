@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:BattlegroundsApp"
         xmlns:views="clr-namespace:BattlegroundsApp.Views"
+        xmlns:caseConverter="clr-namespace:BattlegroundsApp.Utilities.XAML"
         mc:Ignorable="d"
         Title="Battlegrounds" Height="850" Width="1400" WindowStartupLocation="CenterScreen" WindowStyle="SingleBorderWindow">
     <local:CoreAppWindow.Background>
@@ -50,6 +51,7 @@
                 </Setter.Value>
             </Setter>
         </Style>
+        <caseConverter:CaseConverter Case="Upper" x:Key="CaseConverterUpper"/>
     </local:CoreAppWindow.Resources>
     <Grid>
 
@@ -90,32 +92,32 @@
         <!-- Row 3 -->
         <ContentControl Grid.Row="3" Grid.Column="2" Grid.RowSpan="8" Grid.ColumnSpan="7" Margin="20,0,0,0" Content="{Binding}"/>
 
-        <Button x:Name="DashboardButton" Grid.Row="3" Grid.Column="1" Content="Dashboard" Margin="0,0,0,0"
-                Click="Dashboard_Click" Style="{StaticResource MainWindiwButtonStyle}" ToolTip="Personal overall statistics"/>
+        <Button x:Name="DashboardButton" Grid.Row="3" Grid.Column="1" Content="{Binding DashboardButtonContent, Converter={StaticResource CaseConverterUpper}, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}"
+                Margin="0,0,0,0" Click="Dashboard_Click" Style="{StaticResource MainWindiwButtonStyle}" ToolTip="Personal overall statistics"/>
 
         <!-- Row 4 -->
-        <Button x:Name="NewsButton" Grid.Row="4" Grid.Column="1" Content="News" Margin="0,10,0,0" IsEnabled="False"
-                Click="News_Click" Style="{StaticResource MainWindiwButtonStyle}" ToolTip="Shows the latest news"/>
+        <Button x:Name="NewsButton" Grid.Row="4" Grid.Column="1" Content="{Binding NewsButtonContent, Converter={StaticResource CaseConverterUpper}, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}" 
+                Margin="0,10,0,0" IsEnabled="False" Click="News_Click" Style="{StaticResource MainWindiwButtonStyle}" ToolTip="Shows the latest news"/>
 
         <!-- Row 5 -->
-        <Button x:Name="CompanyBuilderButton" Grid.Row="5" Grid.Column="1" Content="Company Builder" Margin="0,10,0,0"
-                Click="CompanyBuilder_Click" Style="{StaticResource MainWindiwButtonStyle}" ToolTip="Create or edit your compenies"/>
+        <Button x:Name="CompanyBuilderButton" Grid.Row="5" Grid.Column="1" Content="{Binding CompanyBuilderButtonContent, Converter={StaticResource CaseConverterUpper}, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}" 
+                Margin="0,10,0,0" Click="CompanyBuilder_Click" Style="{StaticResource MainWindiwButtonStyle}" ToolTip="Create or edit your compenies"/>
 
         <!-- Row 6 -->
-        <Button x:Name="CampaignButton" Grid.Row="6" Grid.Column="1" Content="Campaign" Margin="0,10,0,0" IsEnabled="False"
-                Click="Campaign_Click" Style="{StaticResource MainWindiwButtonStyle}" ToolTip="Play singleplayer or coop campaign"/>
+        <Button x:Name="CampaignButton" Grid.Row="6" Grid.Column="1" Content="{Binding CampaignButtonContent, Converter={StaticResource CaseConverterUpper}, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}" 
+                Margin="0,10,0,0" IsEnabled="False" Click="Campaign_Click" Style="{StaticResource MainWindiwButtonStyle}" ToolTip="Play singleplayer or coop campaign"/>
 
         <!-- Row 7 -->
-        <Button x:Name="GameBrowserButton" Grid.Row="7" Grid.Column="1" Content="Game Browser" Margin="0,10,0,0"
-                Click="GameBrowser_Click" Style="{StaticResource MainWindiwButtonStyle}" ToolTip="Browse through a list of available lobbies"/>
+        <Button x:Name="GameBrowserButton" Grid.Row="7" Grid.Column="1" Content="{Binding GameBrowserButtonContent, Converter={StaticResource CaseConverterUpper}, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}" 
+                Margin="0,10,0,0" Click="GameBrowser_Click" Style="{StaticResource MainWindiwButtonStyle}" ToolTip="Browse through a list of available lobbies"/>
 
         <!-- Row 8 -->
-        <Button x:Name="SettingsButton" Grid.Row="8" Grid.Column="1" Content="Settings" Margin="0,10,0,0"
-                Style="{StaticResource MainWindiwButtonStyle}" ToolTip="Adjust application settings"/>
+        <Button x:Name="SettingsButton" Grid.Row="8" Grid.Column="1" Content="{Binding SettingsButtonContent, Converter={StaticResource CaseConverterUpper}, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}" 
+                Margin="0,10,0,0" Style="{StaticResource MainWindiwButtonStyle}" ToolTip="Adjust application settings"/>
 
         <!-- Row 9 -->
-        <Button x:Name="ExitButton" Grid.Row="9" Grid.Column="1" Content="Exit" Margin="0,25,0,0"
-                Click="Exit_Click" Style="{StaticResource MainWindiwButtonStyle}" ToolTip="Exit the application"/>
+        <Button x:Name="ExitButton" Grid.Row="9" Grid.Column="1" Content="{Binding ExitButtonContent, Converter={StaticResource CaseConverterUpper}, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}" 
+                Margin="0,25,0,0" Click="Exit_Click" Style="{StaticResource MainWindiwButtonStyle}" ToolTip="Exit the application"/>
 
     </Grid>
 </local:CoreAppWindow>
