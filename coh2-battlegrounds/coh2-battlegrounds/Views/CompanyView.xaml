@@ -1,0 +1,122 @@
+﻿<bg:ViewState x:Class="BattlegroundsApp.Views.CompanyView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:BattlegroundsApp.Views"
+             xmlns:bg="clr-namespace:BattlegroundsApp"
+             xmlns:f2aConverter="clr-namespace:BattlegroundsApp.Utilities.Converters"
+             mc:Ignorable="d" Background="White"
+             d:DesignHeight="450" d:DesignWidth="800">
+
+    <Grid>
+
+        <Grid.Resources>
+            <f2aConverter:FactionToAllianceConverter x:Key="FactionToAllianceConverter"/>
+        </Grid.Resources>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="auto"/>
+            <ColumnDefinition Width="auto"/>
+            <ColumnDefinition Width="auto"/>
+            <ColumnDefinition Width="auto"/>
+            <ColumnDefinition Width="auto"/>
+            <ColumnDefinition Width="auto"/>
+            <ColumnDefinition Width="auto"/>
+            <ColumnDefinition Width="auto"/>
+            <ColumnDefinition Width="auto"/>
+            <ColumnDefinition Width="auto"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        
+        <!-- Row 0 -->
+        <!-- TODO: Change to own ListView -->
+        <ListView x:Name="companyList" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="9" Height="400" Width="800">
+            <ListView.View>
+                <GridView>
+                    <GridView.ColumnHeaderContainerStyle>
+                        <Style BasedOn="{StaticResource {x:Type GridViewColumnHeader}}" TargetType="{x:Type GridViewColumnHeader}">
+                            <Setter Property="IsHitTestVisible" Value="False"/>
+                        </Style>
+                    </GridView.ColumnHeaderContainerStyle>
+                    <GridViewColumn Header="Name" Width="500" DisplayMemberBinding="{Binding Name}"/>
+                    <GridViewColumn Header="Rating" Width="75" DisplayMemberBinding="{Binding Strength}"/>
+                    <GridViewColumn Header="Type" Width="75" DisplayMemberBinding="{Binding Type}"/>
+                    <GridViewColumn Header="Alliance" Width="75" DisplayMemberBinding="{Binding Army, Converter={StaticResource FactionToAllianceConverter}}"/>
+                    <GridViewColumn Header="Country" Width="75" DisplayMemberBinding="{Binding Army}"/>
+                </GridView>
+            </ListView.View>
+        </ListView>
+        
+        <!-- Row 1 -->
+        <Button x:Name="createCompany" Grid.Row="1" Grid.Column="0" Content="Create" Click="createCompany_Click" Margin="0, 0, 0, 0" Width="100"/>
+        
+        <Button x:Name="editCompany" Grid.Row="1" Grid.Column="1" Content="Edit" Click="editCompany_Click" Margin="0, 0, 0, 0" Width="100">
+            <Button.Style>
+                <Style TargetType="{x:Type Button}">
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding SelectedItem, ElementName=companyList}" Value="{x:Null}">
+                            <Setter Property="IsEnabled" Value="False"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Button.Style>
+        </Button>
+        
+        <Button x:Name="renameCompany" Grid.Row="1" Grid.Column="2" Content="Rename" Click="renameCompany_Click" Margin="0, 0, 0, 0" Width="100">
+            <Button.Style>
+                <Style TargetType="{x:Type Button}">
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding SelectedItem, ElementName=companyList}" Value="{x:Null}">
+                            <Setter Property="IsEnabled" Value="False"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Button.Style>
+        </Button>
+        
+        <Button x:Name="deleteCompany" Grid.Row="1" Grid.Column="3" Content="Delete" Click="deleteCompany_Click" Margin="0, 0, 0, 0" Width="100">
+            <Button.Style>
+                <Style TargetType="{x:Type Button}">
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding SelectedItem, ElementName=companyList}" Value="{x:Null}">
+                            <Setter Property="IsEnabled" Value="False"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Button.Style>
+        </Button>
+        
+        <Button x:Name="copyCompany" Grid.Row="1" Grid.Column="4" Content="Copy" Click="copyCompany_Click" Margin="0, 0, 0, 0">
+            <Button.Style>
+                <Style TargetType="{x:Type Button}">
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding SelectedItem, ElementName=companyList}" Value="{x:Null}">
+                            <Setter Property="IsEnabled" Value="False"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Button.Style>
+        </Button>
+        
+        <Button x:Name="exportCompany" Grid.Row="1" Grid.Column="5" Content="Export" Click="exportCompany_Click" Margin="0, 0, 0, 0" Width="100">
+            <Button.Style>
+                <Style TargetType="{x:Type Button}">
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding SelectedItem, ElementName=companyList}" Value="{x:Null}">
+                            <Setter Property="IsEnabled" Value="False"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Button.Style>
+        </Button>
+
+        <Button x:Name="importCompany" Grid.Row="1" Grid.Column="6" Content="Import" Click="importCompany_Click" Margin="0, 0, 0, 0" Width="100"/>
+
+    </Grid>
+</bg:ViewState>

@@ -1,4 +1,8 @@
-﻿namespace Battlegrounds.Game.DataCompany {
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+
+namespace Battlegrounds.Game.DataCompany {
     
     /// <summary>
     /// Enumerated representation of recognized types that can be used to describe a <see cref="Company"/>.
@@ -25,16 +29,10 @@
         /// </summary>
         Mechanized,
 
-        Cavalry = Mechanized,
-
         /// <summary>
         /// Favours the use of heavy and medium tanks.
         /// </summary>
         Armoured,
-
-        Panzer = Armoured,
-
-        Tank = Armoured,
 
         /// <summary>
         /// Favours anti-tank units
@@ -85,7 +83,7 @@
     /// </summary>
     public static class CompanyTypeExtension {
 
-
+        public static List<CompanyType> CompanyTypes => Enum.GetValues<CompanyType>().ToList();
 
     }
 

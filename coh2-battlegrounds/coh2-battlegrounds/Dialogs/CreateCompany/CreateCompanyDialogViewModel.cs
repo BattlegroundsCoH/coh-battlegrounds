@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using Battlegrounds.Game.DataCompany;
+using Battlegrounds.Game.Gameplay;
 using BattlegroundsApp.Dialogs.Service;
 using BattlegroundsApp.Utilities;
 using BattlegroundsApp.ViewModels;
@@ -30,9 +32,20 @@ namespace BattlegroundsApp.Dialogs.CreateCompany {
             }
         }
 
-        // TODO: From combobox selection conver to string or whatever will be needed
-        private string _companyType;
-        public string CompanyType {
+        private Faction _companyFaction;
+        public Faction CompanyFaction {
+            get {
+                return this._companyFaction;
+            }
+
+            set {
+                this._companyFaction = value;
+                OnPropertyChanged(nameof(CompanyFaction));
+            }
+        }
+
+        private CompanyType _companyType;
+        public CompanyType CompanyType {
             get {
                 return this._companyType;
             }
@@ -52,9 +65,13 @@ namespace BattlegroundsApp.Dialogs.CreateCompany {
 
         }
 
-        public static CreateCompanyDialogResult ShowCreateCompanyDialog(string title) {
+        public static CreateCompanyDialogResult ShowCreateCompanyDialog(string title, out string companyName, out Faction faction, out CompanyType type) {
             var dialog = new CreateCompanyDialogViewModel(title);
-            return dialog.ShowDialog();
+            var result = dialog.ShowDialog();
+            companyName = dialog.CompanyName;
+            faction = dialog.CompanyFaction;
+            type = dialog.CompanyType;
+            return result;
         }
 
         private void Create(DialogWindow window) {

@@ -1,7 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace Battlegrounds.Game.Gameplay {
-    
+
     /// <summary>
     /// Represents a faction in Company of Heroes 2. This class cannot be inherited. This class cannot be instantiated.
     /// </summary>
@@ -135,7 +136,9 @@ namespace Battlegrounds.Game.Gameplay {
         /// </summary>
         /// <param name="jsonReference"></param>
         /// <returns></returns>
-        public static object JsonDereference(string jsonReference)  => FromName(jsonReference);
+        public static object JsonDereference(string jsonReference) => FromName(jsonReference);
+
+        public static List<Faction> Factions => new List<Faction> { Soviet, British, America, Wehrmacht, OberkommandoWest };
 
         #endregion
 
