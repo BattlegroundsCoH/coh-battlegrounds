@@ -116,7 +116,7 @@ namespace BattlegroundsApp.Views.ViewComponent {
         }
 
         public void SetPlayerFaction(string army) {
-            if (this.m_army?.CompareTo(army) == 0) {
+            if (this.PlayerArmySelection.State is SelfState && this.m_army?.CompareTo(army) == 0) {
                 return;
             }
             this.m_army = army;
@@ -225,7 +225,7 @@ namespace BattlegroundsApp.Views.ViewComponent {
 
         private void PlayerCompanySelection_SelectionChanged(object sender, SelectionChangedEventArgs e) => this.OnPlayercardEvent?.Invoke(this, "ChangedCompany");
 
-        private void PlayerArmySelection_SelectionChanged(object sender, IconComboBoxItem newItem) {
+        public void PlayerArmySelection_SelectionChanged(object sender, IconComboBoxItem newItem) {
             if (newItem is not null && newItem.GetSource(out PlayercardArmyItem item)) {
                 this.SetPlayerFaction(item.Name);
                 this.SetPlayerCompany(this.m_steamID == BattlegroundsInstance.LocalSteamuser.ID, this.m_isAIPlayer, item.Name, null);

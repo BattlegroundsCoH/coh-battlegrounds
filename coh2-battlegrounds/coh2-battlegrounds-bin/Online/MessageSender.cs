@@ -58,8 +58,12 @@ namespace Battlegrounds.Online {
                                 Trace.WriteLine("Backbuffer contains content...");
                             }
                         }
-                    } catch (ObjectDisposedException) { }
-                    catch (SocketException s) { Trace.WriteLine(s, "MessageSender"); }
+                    } catch (ObjectDisposedException) { 
+                    } catch (SocketException conn) when (conn.SocketErrorCode == SocketError.ConnectionReset) {
+                        Trace.WriteLine("Connection was reset by server (Possibly fatal).", "MessageSender");
+                    } catch (SocketException s) { 
+                        Trace.WriteLine(s, "MessageSender"); 
+                    }
                 }
                 socket.BeginReceive(buffer, 0, 2048, 0, Received, null);
             } catch (ObjectDisposedException) { } catch (SocketException) { }

@@ -987,6 +987,8 @@ namespace Battlegrounds.Online.Lobby {
                 Trace.WriteLine($"{name} has joined team {teamToJoin}");
                 if (teamToJoin == ManagedLobbyTeamType.Axis) { // if axis team was joined, update faction
                     this.SetFaction(steamID, Faction.Wehrmacht.Name);
+                } else {
+                    this.SetFaction(steamID, Faction.Soviet.Name);
                 }
                 if (this.m_isHost) {
                     this.SendMetaMessage($"{steamID}-join-success");

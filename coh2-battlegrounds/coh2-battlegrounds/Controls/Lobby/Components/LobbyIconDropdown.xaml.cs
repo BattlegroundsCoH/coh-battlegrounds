@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Windows.Controls;
 using Battlegrounds.Functional;
@@ -28,6 +29,7 @@ namespace BattlegroundsApp.Controls.Lobby.Components {
 
         public LobbyIconDropdown() {
             InitializeComponent();
+            this.m_selectedIndex = -1;
             this.SelfCombobox.SelectionChanged += this.SelfCombobox_SelectionChanged;
         }
 
@@ -47,6 +49,7 @@ namespace BattlegroundsApp.Controls.Lobby.Components {
                 if (this.m_items[index].HasText) {
                     this.OtherIcon.ToolTip = new ToolTip() { Content = this.m_items[index].Text };
                 }
+                Trace.WriteLine($"Setting index to {index}", "LobbyIconDropdown");
             }
         }
 
