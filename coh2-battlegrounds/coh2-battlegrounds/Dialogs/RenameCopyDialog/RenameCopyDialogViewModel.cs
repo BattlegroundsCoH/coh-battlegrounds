@@ -46,14 +46,19 @@ namespace BattlegroundsApp.Dialogs.RenameCopyDialog {
 
         }
 
-        public static RenameCopyDialogResult ShowRenameDialog(string title) {
+        public static RenameCopyDialogResult ShowRenameDialog(string title, out string companyName) {
             var dialog = new RenameCopyDialogViewModel(RenameCopyDialogType.Rename, title);
-            return dialog.ShowDialog();
+            var result = dialog.ShowDialog();
+            companyName = dialog.CompanyName;
+            return result;
         }
 
-        public static RenameCopyDialogResult ShowCopyDialog(string title) {
+        public static RenameCopyDialogResult ShowCopyDialog(string title, out string companyName) {
             var dialog = new RenameCopyDialogViewModel(RenameCopyDialogType.Copy, title);
-            return dialog.ShowDialog();
+            var result = dialog.ShowDialog();
+            companyName = dialog.CompanyName;
+            return result;
+
         }
 
         private void Rename(DialogWindow window) {
