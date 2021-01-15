@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Battlegrounds.Game.Gameplay;
+using Battlegrounds.Modding;
 
 namespace Battlegrounds.Game.DataCompany {
     
@@ -13,8 +14,8 @@ namespace Battlegrounds.Game.DataCompany {
         private CompanyType m_companyType;
         private CompanyAvailabilityType m_availabilityType;
         private string m_companyName;
-        private string m_companyGUID;
         private string m_companyUsername;
+        private ModGuid m_companyGUID;
         private Stack<UnitBuilder> m_uncommittedSquads;
         private Stack<UnitBuilder> m_redo;
 
@@ -65,6 +66,7 @@ namespace Battlegrounds.Game.DataCompany {
             this.m_companyTarget = companyTarget;
             this.m_companyType = companyTarget.Type;
             this.m_companyName = companyTarget.Name;
+            this.m_companyGUID = ModGuid.FromGuid(companyTarget.TuningGUID);
             return this;
         }
 
@@ -83,6 +85,7 @@ namespace Battlegrounds.Game.DataCompany {
             this.m_companyTarget = CompanyTemplate.FromTemplate(template);
             this.m_companyName = newName;
             this.m_companyType = this.m_companyTarget.Type;
+            this.m_companyGUID = ModGuid.FromGuid(company.TuningGUID);
             this.m_availabilityType = companyAvailability;
             return this;
         }
@@ -164,7 +167,7 @@ namespace Battlegrounds.Game.DataCompany {
         /// <param name="tuningGUID">The string version of the mod GUID. (May contain '-' characters).</param>
         /// <returns>The calling <see cref="CompanyBuilder"/> instance.</returns>
         public virtual CompanyBuilder ChangeTuningMod(string tuningGUID) {
-            this.m_companyGUID = tuningGUID.Replace("-", "");
+            this.m_companyGUID = ModGuid.FromGuid(tuningGUID);
             return this;
         }
 

@@ -31,7 +31,7 @@ namespace BattlegroundsApp.LocalData {
                 foreach (string companypath in companies) {
                     try {
                         Company company = Company.ReadCompanyFromFile(companypath);
-                        if (company.Name.Replace(" ", "_").CompareTo(Path.GetFileNameWithoutExtension(companypath)) == 0) {
+                        if (company?.Name?.Replace(" ", "_")?.CompareTo(Path.GetFileNameWithoutExtension(companypath)) == 0) {
                             __companies.Add(company);
                         } else {
                             Trace.WriteLine($"Failed to verify company \"{companypath}\" (Name Mismatch)", "PlayerCompanies");
