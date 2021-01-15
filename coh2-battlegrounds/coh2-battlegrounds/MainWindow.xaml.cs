@@ -32,7 +32,7 @@ namespace BattlegroundsApp {
 
         public const string GAMEBROWSERSTATE = "GAMEBROWSERVIEW";
         public const string CAMPAIGNSTATE = "CAMPAIGNVIEW";
-        public const string COMPANYBUILDERSTATE = "COMPANYBUILDERVIEW";
+        public const string COMPANYSTATE = "COMPANYBUILDERVIEW";
         public const string DASHBOARDSTATE = "DASHBOARDVIEW";
         public const string NEWSSTATE = "NEWSVIEW";
 
@@ -63,7 +63,7 @@ namespace BattlegroundsApp {
             this.m_constStates = new Dictionary<string, ViewState> {
                 [GAMEBROWSERSTATE] = new GameBrowserView(),
                 [CAMPAIGNSTATE] = new CampaignView(),
-                [COMPANYBUILDERSTATE] = new CompanyBuilderView(),
+                [COMPANYSTATE] = new CompanyView(),
                 [DASHBOARDSTATE] = new DashboardView(),
                 [NEWSSTATE] = new NewsView(),
             };
@@ -80,7 +80,7 @@ namespace BattlegroundsApp {
         private void News_Click(object sender, RoutedEventArgs e) => this.State = this.m_constStates[NEWSSTATE];
 
         // Open Division Builder page
-        private void CompanyBuilder_Click(object sender, RoutedEventArgs e) => this.State = this.m_constStates[COMPANYBUILDERSTATE];
+        private void CompanyBuilder_Click(object sender, RoutedEventArgs e) => this.State = this.m_constStates[COMPANYSTATE];
 
         // Open Campaign page
         private void Campaign_Click(object sender, RoutedEventArgs e) => this.State = this.m_constStates[CAMPAIGNSTATE];

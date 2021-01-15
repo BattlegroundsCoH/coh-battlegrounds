@@ -4,12 +4,15 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:BattlegroundsApp.Dialogs.CreateCompany"
+             xmlns:factions="clr-namespace:Battlegrounds.Game.Gameplay;assembly=coh2-battlegrounds-bin"
+             xmlns:type="clr-namespace:Battlegrounds.Game.DataCompany;assembly=coh2-battlegrounds-bin"
              mc:Ignorable="d" 
              d:DesignHeight="150" d:DesignWidth="250">
     <Grid>
-
+        
         <Grid.RowDefinitions>
             <RowDefinition Height="20"/>
+            <RowDefinition Height="auto"/>
             <RowDefinition Height="auto"/>
             <RowDefinition Height="auto"/>
             <RowDefinition Height="auto"/>
@@ -27,14 +30,19 @@
         </Grid.ColumnDefinitions>
 
         <!-- Row 1 -->
-        <TextBlock Grid.Row="1" Grid.Column="1" Margin="2.5" Text="Company Name:"/>
+        <TextBlock Grid.Row="1" Grid.Column="1" Margin="2.5" Text="Name:"/>
 
         <TextBox x:Name="companyName" Text="{Binding CompanyName, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Grid.Row="1" Grid.Column="2" Margin="2.5" Width="100"/>
 
-        <!-- Row 3 -->
-        <TextBlock Grid.Row="3" Grid.Column="1" Margin="2.5" Text="Company Type:"/>
+        <!-- Row 2 -->
+        <TextBlock Grid.Row="2" Grid.Column="1" Margin="2.5" Text="Faction:"/>
 
-        <ComboBox x:Name="companyType" Grid.Row="3" Grid.Column="2" Margin="2.5"/>
+        <ComboBox x:Name="companyFaction" Grid.Row="2" Grid.Column="2" Margin="2.5" ItemsSource="{Binding Source={x:Static factions:Faction.Factions}}" SelectedIndex="0"/>
+
+        <!-- Row 3 -->
+        <TextBlock Grid.Row="3" Grid.Column="1" Margin="2.5" Text="Type:"/>
+
+        <ComboBox x:Name="companyType" Grid.Row="3" Grid.Column="2" Margin="2.5" ItemsSource="{Binding Source={x:Static type:CompanyTypeExtension.CompanyTypes}}" SelectedIndex="0"/>
 
         <!-- Row 4 -->
         <!-- TODO: MultiBinding? User will also have to pick type? Or just make one type default and leave this as single binding -->

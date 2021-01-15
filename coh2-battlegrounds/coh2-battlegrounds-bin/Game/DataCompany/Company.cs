@@ -44,6 +44,9 @@ namespace Battlegrounds.Game.DataCompany {
         /// </summary>
         public string Name { get; set; }
 
+        [JsonIgnore]
+        public double Strength => this.GetStrength();
+
         /// <summary>
         /// The <see cref="CompanyType"/> that can be used to describe the <see cref="Company"/> characteristics.
         /// </summary>
