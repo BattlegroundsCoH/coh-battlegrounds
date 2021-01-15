@@ -22,7 +22,7 @@ namespace BattlegroundsApp {
             this.m_currentState.StateOnFocus();
         }
 
-        public abstract bool StateChangeRequest(object request);
+        public new abstract bool StateChangeRequest(object request);
 
         public abstract StateChangeRequestHandler GetRequestHandler();
     }
