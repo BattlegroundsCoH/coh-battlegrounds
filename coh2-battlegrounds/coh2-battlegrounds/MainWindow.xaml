@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:BattlegroundsApp"
         xmlns:views="clr-namespace:BattlegroundsApp.Views"
-        xmlns:caseConverter="clr-namespace:BattlegroundsApp.Utilities.XAML"
+        xmlns:caseConverter="clr-namespace:BattlegroundsApp.Utilities.Converters"
         mc:Ignorable="d"
         Title="Battlegrounds" Height="850" Width="1400" WindowStartupLocation="CenterScreen" WindowStyle="SingleBorderWindow" MinHeight="850" MinWidth="1400">
     <local:CoreAppWindow.Background>

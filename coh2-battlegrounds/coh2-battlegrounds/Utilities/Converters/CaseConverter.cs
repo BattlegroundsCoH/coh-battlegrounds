@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using System.Windows.Controls;
 using System.Windows.Data;
 
-namespace BattlegroundsApp.Utilities.XAML {
+namespace BattlegroundsApp.Utilities.Converters {
     public class CaseConverter : IValueConverter {
 
         public CharacterCasing Case { get; set; }
