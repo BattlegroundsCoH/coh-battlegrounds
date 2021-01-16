@@ -70,7 +70,7 @@ namespace Battlegrounds.Online.Lobby {
         public const string USERINFO_FACTION = "fac";
 
         /// <summary>
-        /// Get or set the difficulty of the user (Directly transalte to <see cref="AIDifficulty"/>).
+        /// Get or set the difficulty of the user (Directly translate to <see cref="AIDifficulty"/>).
         /// </summary>
         public const string USERINFO_DIFFICULTY = "dif";
 
@@ -227,12 +227,45 @@ namespace Battlegrounds.Online.Lobby {
         }
 
         /// <summary>
+        /// Send a chat message intended for team members to the server.
+        /// </summary>
+        /// <param name="chatMessage">The contents of the chat message.</param>
+        public void SendTeamChatMessage(string chatMessage) {
+            if (this.m_underlyingConnection != null && this.m_underlyingConnection.IsConnected) {
+                this.m_underlyingConnection.SendMessage(new Message(MessageType.LOBBY_TEAMCHATMESSAGE, chatMessage));
+            }
+        }
+
+        /// <summary>
+        /// Send a chat direct message to specified user.
+        /// </summary>
+        /// <param name="targetUser">The unique ID identifying the targetted user to send message to.</param>
+        /// <param name="chatMessage">The contents of the chat message.</param>
+        public void SendDirectChatMessage(ulong targetUser, string chatMessage) {
+            if (this.m_underlyingConnection != null && this.m_underlyingConnection.IsConnected) {
+                this.m_underlyingConnection.SendMessage(new Message(MessageType.LOBBY_DIRECTMESSAGE, targetUser.ToString(), chatMessage));
+            }
+        }
+
+        /// <summary>
         /// Send a meta-message to all users in the server.
         /// </summary>
         /// <param name="metaMessage">The contents of the meta-message.</param>
         public void SendMetaMessage(string metaMessage) {
             if (this.m_underlyingConnection != null && this.m_underlyingConnection.IsConnected) {
                 this.m_underlyingConnection.SendMessage(new Message(MessageType.LOBBY_METAMESSAGE, metaMessage));
+            }
+        }
+
+        /// <summary>
+        /// Send a message to the host that a (critical) problem occured.
+        /// </summary>
+        /// <param name="isFatal">Is this a fatal problem (ie. about to crash).</param>
+        /// <param name="primaryMessage">The primary message containing information of problems.</param>
+        /// <param name="secondaryMessage">The auxiliary message containing information (if required).</param>
+        public void SendClientProblem(bool isFatal, string primaryMessage, string secondaryMessage = "") {
+            if (this.m_underlyingConnection != null && this.m_underlyingConnection.IsConnected) {
+                this.m_underlyingConnection.SendMessage(new Message(isFatal ? MessageType.LOBBY_CLIENTERROR : MessageType.LOBBY_CLIENTPROBLEM, primaryMessage, secondaryMessage));
             }
         }
 
@@ -252,6 +285,51 @@ namespace Battlegrounds.Online.Lobby {
                 response.Invoke(-1);
                 return false;
             }
+        }
+
+        /// <summary>
+        /// Get the ID of the current host of the lobby. <see cref="ulong.MaxValue"/> is returned if no valid value could be fetched from the server.
+        /// </summary>
+        /// <param name="response">The integer callback to handle the server response.</param>
+        /// <returns>Will return <see langword="true"/> if the callback was valid. Otherwise <see langword="false"/>.</returns>
+        public bool GetHostID(UlongCallback response) {
+            if (response is null) {
+                return false; // Bail-fast --> no need to request data from the server if we're not going to use it.
+            }
+            if (this.m_underlyingConnection != null && this.m_underlyingConnection.IsConnected) {
+                Message queryMessage = new Message(MessageType.LOBBY_GETHOSTID);
+                Message.SetIdentifier(this.m_underlyingConnection.ConnectionSocket, queryMessage);
+                void OnResponse(Message message) {
+                    this.m_underlyingConnection.ClearIdentifierReceiver(message.Identifier);
+                    if (ulong.TryParse(message.Argument1, out ulong hostID)) {
+                        response?.Invoke(hostID);
+                    } else {
+                        response?.Invoke(ulong.MaxValue);
+                    }
+                }
+                this.m_underlyingConnection.SetIdentifierReceiver(queryMessage.Identifier, OnResponse);
+                this.m_underlyingConnection.SendMessage(queryMessage);
+                return true;
+            } else {
+                response.Invoke(ulong.MaxValue);
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Get the ID of the current host.
+        /// </summary>
+        /// <remarks>Async method.</remarks>
+        /// <returns>The ID of the host. If anything fails, <see cref="ulong.MaxValue"/> is returned.</returns>
+        public async Task<ulong> GetHostID() {
+            ulong result = ulong.MaxValue;
+            bool done = false;
+            if (this.GetHostID(x => { result = x; done = true; })) {
+                while (!done) {
+                    await Task.Delay(1);
+                }
+            }
+            return result;
         }
 
         /// <summary>

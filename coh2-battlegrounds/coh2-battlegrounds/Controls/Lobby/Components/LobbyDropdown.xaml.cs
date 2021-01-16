@@ -71,9 +71,9 @@ namespace BattlegroundsApp.Controls.Lobby.Components {
         /// <summary>
         /// Gets or sets the index of the selected item in the <see cref="LobbyDropdown"/>. Default value is -1.
         /// </summary>
-        public new int SelectedIndex { 
-            get => this.GetSelectedIndex(); 
-            set => this.SetSelectedIndex(value); 
+        public new int SelectedIndex {
+            get => this.GetSelectedIndex();
+            set => this.SetSelectedIndex(value);
         }
 
         /// <summary>

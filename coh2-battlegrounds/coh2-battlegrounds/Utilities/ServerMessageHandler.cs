@@ -76,18 +76,17 @@ namespace BattlegroundsApp {
         private void OnLobbyInfoChanged(string info, string value) {
             this.m_lobbyWindow.UpdateGUI(() => {
                 switch (info) {
-                    case "selected_map":
+                    case ManagedLobby.LOBBYINFO_SELECTEDMAP:
                         this.OnMapChanged?.Invoke(value);
                         break;
-                    case "selected_wc":
+                    case ManagedLobby.LOBBYINFO_SELECTEDGAMEMODE:
                         this.OnGamemodeChanged?.Invoke(value, this.m_lobbyInstance.SelectedGamemodeOption);
                         break;
-                    case "selected_wcs":
+                    case ManagedLobby.LOBBYINFO_SELECTEDGAMEMODEOPTION:
                         this.OnGamemodeChanged?.Invoke(this.m_lobbyInstance.SelectedGamemode, value);
                         break;
-                    case "capacity":
+                    case ManagedLobby.LOBBYINFO_CAPACITY:
                         this.m_lobbyWindow.RefreshTeams(null);
-                        Trace.WriteLine("Capacity has changed - updating team layout", "ServerMessageHandler");
                         break;
                     default:
                         Trace.WriteLine($"Unknown lobby info change [{info}:{value}]", "ServerMessageHandler");
@@ -196,6 +195,10 @@ namespace BattlegroundsApp {
                     case ManagedLobbyLocalEventType.Host:
                         this.m_lobbyWindow.lobbyChat.Text += "[Lobby] You have been assigned as host.\n";
                         this.m_lobbyWindow.EnableHostMode(true);
+                        break;
+                    case ManagedLobbyLocalEventType.HostRemove:
+                        this.m_lobbyWindow.lobbyChat.Text += "[Lobby] You have been un-assigned as host.\n";
+                        this.m_lobbyWindow.EnableHostMode(false);
                         break;
                     case ManagedLobbyLocalEventType.Kicked:
                         this.OnPlayerKicked?.Invoke(message);

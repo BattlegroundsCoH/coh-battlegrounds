@@ -131,9 +131,9 @@ namespace Battlegrounds.Online {
         }
 
         /// <summary>
-        /// Enqueue a <see cref="Message"/> to be send as soon as possible.
+        /// Enqueue a <see cref="Message"/> to be sent as soon as possible.
         /// </summary>
-        /// <param name="message"></param>
+        /// <param name="message">The <see cref="Message"/> instance to enqueue and send.</param>
         public void SendMessage(Message message)
             => this.m_messageQueue.Enqueue(message);
 

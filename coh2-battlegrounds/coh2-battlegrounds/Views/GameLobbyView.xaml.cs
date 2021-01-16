@@ -30,6 +30,7 @@ namespace BattlegroundsApp.Views {
     /// </summary>
     public partial class GameLobbyView : ViewState {
 
+        private bool m_hasCreatedLobbyOnce;
         private ServerMessageHandler m_smh;
         private LobbyTeamManagementModel m_teamManagement;
         private Task m_lobbyUpdate;
@@ -45,13 +46,15 @@ namespace BattlegroundsApp.Views {
             this.m_teamManagement = new LobbyTeamManagementModel(this.TeamGridview);
             this.m_teamManagement.OnTeamEvent += this.OnTeamManagementCallbackHandler;
 
+            // Set other variables
+            this.m_hasCreatedLobbyOnce = false;
+
         }
 
         private void SendMessage_Click(object sender, RoutedEventArgs e) {
 
             string messageContent = messageText.Text;
             string messageSender = BattlegroundsInstance.LocalSteamuser.Name;
-
             string message = $"{messageSender}: {messageContent}";
 
             lobbyChat.Text += $"{message}\n";
@@ -173,15 +176,15 @@ namespace BattlegroundsApp.Views {
 
         private void UpdateAvailableGamemodes() {
 
-            if (Map.SelectedItem is Scenario scenario) {
+            if (this.Map.SelectedItem is Scenario scenario) {
 
                 if (scenario.Gamemodes.Count > 0) {
-                    Gamemode.ItemsSource = scenario.Gamemodes.OrderBy(x => x.ToString()).ToList();
-                    Gamemode.SelectedIndex = 0;
+                    this.Gamemode.ItemsSource = scenario.Gamemodes.OrderBy(x => x.ToString()).ToList();
+                    this.Gamemode.SelectedIndex = 0;
                 } else {
                     var def = WinconditionList.GetDefaultList().OrderBy(x => x.ToString()).ToList();
-                    Gamemode.ItemsSource = def;
-                    Gamemode.SelectedIndex = def.FindIndex(x => x.Name.CompareTo("Victory Points") == 0);
+                    this.Gamemode.ItemsSource = def;
+                    this.Gamemode.SelectedIndex = def.FindIndex(x => x.Name.CompareTo("Victory Points") == 0);
                 }
 
                 this.UpdateGamemodeOptions(Gamemode.SelectedItem as Wincondition);
@@ -191,10 +194,10 @@ namespace BattlegroundsApp.Views {
         }
 
         private void Map_SelectedItemChanged(object sender, SelectionChangedEventArgs e) {
-            if (Map.State is OtherState) {
+            if (this.Map.State is OtherState) {
                 return;
             }
-            if (Map.SelectedItem is Scenario scenario) {
+            if (this.Map.SelectedItem is Scenario scenario) {
                 if (scenario.RelativeFilename.CompareTo(this.m_smh.Lobby.SelectedMap) != 0) {
                     if (scenario.MaxPlayers < this.m_smh.Lobby.PlayerCount) {
                         // Do something
@@ -203,7 +206,7 @@ namespace BattlegroundsApp.Views {
                     this.m_teamManagement.SetMaxPlayers(scenario.MaxPlayers);
                     this.m_smh.Lobby.SetMap(scenario);
                     this.m_smh.Lobby.SetLobbyCapacity(scenario.MaxPlayers);
-                    UpdateMapPreview(scenario);
+                    this.UpdateMapPreview(scenario);
                 }
             }
         }
@@ -213,7 +216,7 @@ namespace BattlegroundsApp.Views {
                 string fullpath = Path.GetFullPath($"usr\\mods\\map_icons\\{scenario.Name}_map.tga");
                     if (File.Exists(fullpath)) {
                         try {
-                            mapImage.Source = TgaImageSource.TargaBitmapSourceFromFile(fullpath);
+                            this.mapImage.Source = TgaImageSource.TargaBitmapSourceFromFile(fullpath);
                             return;
                         } catch (BadImageFormatException bife) {
                             Trace.WriteLine(bife);
@@ -224,8 +227,7 @@ namespace BattlegroundsApp.Views {
             } else {
                 Trace.WriteLine("Failed to find minimap for null scenario.");
             }
-            mapImage.Source = new BitmapImage(new Uri("pack://application:,,,/Resources/ingame/unknown_map.png"));
-
+            this.mapImage.Source = new BitmapImage(new Uri("pack://application:,,,/Resources/ingame/unknown_map.png"));
         }
 
         public SessionInfo CreateSessionInfo() {
@@ -403,10 +405,22 @@ namespace BattlegroundsApp.Views {
         public override void StateOnFocus() {
 
             // Update lobby
-            this.m_lobbyUpdate = new Task(this.UpdateLobby);
+            if (this.m_lobbyUpdate is null) {
+                this.m_lobbyUpdate = new Task(this.UpdateLobby);
+            }
 
             // Create lobby data
-            this.SetupLobby();
+            if (!this.m_hasCreatedLobbyOnce) {
+                
+                // Setup the lobby
+                this.SetupLobby();
+
+            } else {
+
+                // Re-enable lobby updates
+                this.m_updateLobby = true;
+
+            }
 
         }
 
@@ -415,20 +429,8 @@ namespace BattlegroundsApp.Views {
             // If host, setup everything
             if (this.m_smh.Lobby.IsHost) {
 
-                // Enable host mode
+                // Enable host mode (and because true, will update populate the dropdowns).
                 this.EnableHostMode(true);
-
-                var scenarioSource = ScenarioList.GetList().OrderBy(x => x.ToString()).ToList();
-                Map.ItemsSource = scenarioSource;
-
-                int selectedScenario = scenarioSource.FindIndex(x => x.RelativeFilename.CompareTo(BattlegroundsInstance.LastPlayedMap) == 0);
-                Map.SelectedIndex = selectedScenario != -1 ? selectedScenario : 0;
-
-                var scen = Map.SelectedItem as Scenario;
-                this.m_smh.Lobby.SetMap(scen);
-                this.m_smh.Lobby.SetLobbyCapacity(scen.MaxPlayers);
-
-                this.UpdateAvailableGamemodes();
 
             } else {
 
@@ -447,6 +449,9 @@ namespace BattlegroundsApp.Views {
             // Start lobby
             this.m_updateLobby = true;
             this.m_lobbyUpdate.Start();
+
+            // Set to true
+            this.m_hasCreatedLobbyOnce = true;
 
         }
 
@@ -474,14 +479,44 @@ namespace BattlegroundsApp.Views {
             this.Gamemode.SetStateBasedOnContext(hostMode, hostMode, 0);
             this.GamemodeOption.SetStateBasedOnContext(hostMode, hostMode, 0);
 
+            // If host-mode is enabled, populate the dropdowns
+            if (hostMode) {
+                this.PopulateDropdowns();
+            }
+
         }
 
         public void RefreshGameSettings() {
 
             // Fetch selected map and gamemode
-            this.m_smh.Lobby.GetLobbyInformation("selected_map", this.UpdateSelectedMap);
-            this.m_smh.Lobby.GetLobbyInformation("selected_wc", this.UpdateSelectedGamemode);
-            this.m_smh.Lobby.GetLobbyInformation("selected_wcs", this.UpdateSelectedOption);
+            this.m_smh.Lobby.GetLobbyInformation(ManagedLobby.LOBBYINFO_SELECTEDMAP, this.UpdateSelectedMap);
+            this.m_smh.Lobby.GetLobbyInformation(ManagedLobby.LOBBYINFO_SELECTEDGAMEMODE, this.UpdateSelectedGamemode);
+            this.m_smh.Lobby.GetLobbyInformation(ManagedLobby.LOBBYINFO_SELECTEDGAMEMODEOPTION, this.UpdateSelectedOption);
+
+        }
+
+        private void PopulateDropdowns() {
+
+            // Get the scenarios and set source
+            var scenarioSource = ScenarioList.GetList().OrderBy(x => x.ToString()).ToList();
+            this.Map.ItemsSource = scenarioSource;
+
+            // If no mapp has been selected
+            if (this.Map.SelectedIndex == -1) {
+
+                // Find map to select
+                int selectedScenario = scenarioSource.FindIndex(x => x.RelativeFilename.CompareTo(BattlegroundsInstance.LastPlayedMap) == 0);
+                this.Map.SelectedIndex = selectedScenario != -1 ? selectedScenario : 0;
+
+                // Get selected scenario and update lobby accordingly
+                var scen = this.Map.SelectedItem as Scenario;
+                this.m_smh.Lobby.SetMap(scen);
+                this.m_smh.Lobby.SetLobbyCapacity(scen.MaxPlayers);
+
+                // Update available gamemodes
+                this.UpdateAvailableGamemodes();
+
+            }
 
         }
 
