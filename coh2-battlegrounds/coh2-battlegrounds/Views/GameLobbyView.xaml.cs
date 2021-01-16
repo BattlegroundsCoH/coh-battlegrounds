@@ -134,13 +134,13 @@ namespace BattlegroundsApp.Views {
                     this.Map.SelectedIndex = 0;
                     this.m_teamManagement.SetMaxPlayers(scenario.MaxPlayers);
                     this.m_smh.Lobby.SetLobbyCapacity(scenario.MaxPlayers, false);
-                    UpdateMapPreview(scenario);
+                    this.UpdateMapPreview(scenario);
                 } else {
-                    Trace.WriteLine("Unknown scenario from server (Probably workshop map).", "GameLobbyView");
+                    Trace.WriteLine($"Unknown scenario from server \"{arg1}\" (Probably workshop map).", "GameLobbyView");
                     this.Map.ItemsSource = new List<string>() { arg1 };
                     this.Map.SelectedIndex = 0;
                     this.m_smh.Lobby.GetLobbyCapacity(x => this.UpdateGUI(() => this.m_teamManagement.SetMaxPlayers(x)));
-                    UpdateMapPreview(null);
+                    this.UpdateMapPreview(null);
                     // TODO: Report error to host
                 }
             });
@@ -219,7 +219,7 @@ namespace BattlegroundsApp.Views {
                             this.mapImage.Source = TgaImageSource.TargaBitmapSourceFromFile(fullpath);
                             return;
                         } catch (BadImageFormatException bife) {
-                            Trace.WriteLine(bife);
+                            Trace.WriteLine(bife, "GameLobbyView@UpdateMapPreview");
                         }
                     } else {
                         Trace.WriteLine($"Failed to locate file: {fullpath}");
@@ -283,8 +283,16 @@ namespace BattlegroundsApp.Views {
                 case "AddAI":
                     int aiid = this.m_smh.Lobby.CreateAIPlayer(card.Difficulty, card.PlayerArmy, team, (int)card.GetValue(Grid.RowProperty));
                     if (aiid != -1) {
-                        card.UpdatePlayerID((ulong)aiid);
+
+                        // Log that AI is being added
                         Trace.WriteLine($"Adding AI [{team}][{card.Difficulty}][{card.PlayerArmy}]", "GameLobbyView");
+
+                        // Update ID
+                        card.UpdatePlayerID((ulong)aiid);
+                        
+                        // Update visuals
+                        this.UpdateLobbyVisuals();
+
                     } else {
                         Trace.WriteLine("Failed to add AI...");
                         card.SetCardState(PlayercardViewstate.Open);
