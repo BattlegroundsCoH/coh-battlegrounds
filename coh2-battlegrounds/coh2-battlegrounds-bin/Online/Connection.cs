@@ -81,7 +81,7 @@ namespace Battlegrounds.Online {
             if (message.Descriptor == MessageType.SERVER_PING) {
                 this.SendMessage(message.CreateResponse(MessageType.USER_PING));
             } else {
-                Trace.WriteLine($"Received message <<{message}>> ({message.ToBytes().Length} bytes){Environment.NewLine}", "Online-Service");
+                Trace.WriteLine($"Received message <<{message}>> ({message.ToBytes().Length} bytes)", "Online-Service");
                 if (this.m_identifierCallback?.ContainsKey(message.Identifier) ?? false) {
                     this.m_identifierCallback[message.Identifier].Invoke(message);
                 } else {
@@ -106,7 +106,7 @@ namespace Battlegrounds.Online {
                         lock (this.m_socket) {
                             byte[] msg = topMessage.ToBytes();
                             this.m_socket.SendAll(msg);
-                            Trace.WriteLine($"Sent message <<{topMessage}>> ({msg.Length} bytes){Environment.NewLine}", "Online-Service");
+                            Trace.WriteLine($"Sent message <<{topMessage}>> ({msg.Length} bytes)", "Online-Service");
                         }
 
                         Thread.Sleep(120);

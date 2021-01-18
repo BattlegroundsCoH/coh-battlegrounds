@@ -71,7 +71,7 @@ namespace BattlegroundsApp.Views {
 
                 // Get password (if any)
                 string lobbyPassword = string.Empty;
-                if (lobby.lobby_passwordProtected) {
+                if (lobby.IsPasswordProtected) {
                     var result = LobbyPasswordDialogViewModel.ShowLobbyPasswordDialog("Connect to lobby", out lobbyPassword);
                     if (result == LobbyPasswordDialogResult.Cancel) {
                         return;
@@ -79,7 +79,7 @@ namespace BattlegroundsApp.Views {
                 }
 
                 // Create new connecting view
-                var connectingView = new GameLobbyConnectingView(this.m_hub, lobby.lobby_guid, lobby.lobby_name, lobbyPassword);
+                var connectingView = new GameLobbyConnectingView(this.m_hub, lobby.LobbyGUID, lobby.LobbyName, lobbyPassword);
 
                 // Change state to connecting view
                 this.StateChangeRequest?.Invoke(connectingView);

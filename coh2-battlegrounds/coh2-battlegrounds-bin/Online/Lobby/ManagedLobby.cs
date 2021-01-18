@@ -1571,7 +1571,7 @@ namespace Battlegrounds.Online.Lobby {
         /// <exception cref="ArgumentNullException"/>
         /// <exception cref="ArgumentOutOfRangeException"/>
         public static void Join(LobbyHub hub, ConnectableLobby lobby, string password, ManagedLobbyConnectCallback managedCallback)
-            => Join(hub, lobby.lobby_guid, password, managedCallback);
+            => Join(hub, lobby.LobbyGUID, password, managedCallback);
 
         /// <summary>
         /// Join an existing lobby in the <see cref="LobbyHub"/>.

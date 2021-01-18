@@ -15,31 +15,41 @@ namespace BattlegroundsApp.Utilities {
 
         private StreamWriter m_writer;
 
-        private static FileStream Open() => File.Open(OUT_PATH, FileMode.Append, FileAccess.Write, FileShare.Read);
+        private static FileStream Open() {
+            try {
+                return File.Open(OUT_PATH, FileMode.Append, FileAccess.Write, FileShare.Read);
+            } catch (IOException) {
+                return null;
+            }
+        }
 
         public Logger() {
             FileStream file = Open();
-            if (file.Length > 1024 * 128) { // Delete if file exceeds 128 MB
-                file.Close();
-                File.Delete(OUT_PATH);
-                file = Open();
+            if (file is not null) {
+                if (file.Length > 1024 * 128) { // Delete if file exceeds 128 MB
+                    file.Close();
+                    File.Delete(OUT_PATH);
+                    file = Open();
+                }
+                this.m_writer = new StreamWriter(file, Encoding.Unicode) {
+                    AutoFlush = true,
+                };
+                this.m_writer.WriteLine($"{Environment.NewLine}\tStarting new log on {DateTime.Now.ToLongDateString()} @ {DateTime.Now.ToLongTimeString()}{Environment.NewLine}");
+                Trace.Listeners.Add(this);
             }
-            this.m_writer = new StreamWriter(file, Encoding.Unicode) {
-                AutoFlush = true,
-            };
-            this.m_writer.WriteLine($"{Environment.NewLine}\tStarting new log on {DateTime.Now.ToLongDateString()} @ {DateTime.Now.ToLongTimeString()}{Environment.NewLine}");
-            Trace.Listeners.Add(this);
         }
 
-        public override void Write(string message) => this.m_writer.Write(message);
+        public override void Write(string message) => this.m_writer?.Write(message);
 
         public override void WriteLine(string message) => this.Write($"[{DateTime.Now.ToLongTimeString()}] {message}{Environment.NewLine}");
 
         public void SaveAndClose(int code) {
-            this.m_writer.WriteLine($"{Environment.NewLine}\tClosing Application with error code 0x{code:X8} @ {DateTime.Now.ToLongTimeString()}{Environment.NewLine}");
-            this.m_writer.WriteLine($"\t---------------------------------------------------------");
-            this.m_writer.Flush();
-            this.m_writer.Close();
+            if (this.m_writer is not null) {
+                this.m_writer.WriteLine($"{Environment.NewLine}\tClosing Application with error code 0x{code:X8} @ {DateTime.Now.ToLongTimeString()}{Environment.NewLine}");
+                this.m_writer.WriteLine($"\t---------------------------------------------------------");
+                this.m_writer.Flush();
+                this.m_writer.Close();
+            }
         }
 
     }

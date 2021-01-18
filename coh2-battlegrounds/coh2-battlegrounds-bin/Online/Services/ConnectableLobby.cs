@@ -16,40 +16,32 @@ namespace Battlegrounds.Online.Services {
         public record ConnectableLobbyPlayer(int pIndex, ulong sIndex, string pName, string pFaction, string cName, int pTIndex);
 
         private string m_lobbyMap;
+        private List<ConnectableLobbyPlayer> m_lobby_players;
+        private int m_lobbyPlayerCap;
 
         /// <summary>
         /// The server-assigned GUID given to the lobby.
         /// </summary>
-        public string lobby_guid { get; }
+        public string LobbyGUID { get; }
 
         /// <summary>
         /// The name of the lobby.
         /// </summary>
-        public string lobby_name { get; }
+        public string LobbyName { get; }
         /// <summary>
         /// Is the lobby password protected.
         /// </summary>
-        public bool lobby_passwordProtected { get; }
+        public bool IsPasswordProtected { get; }
 
         /// <summary>
         /// The currently selected map (Not formatted)
         /// </summary>
-        public string lobby_map => this.m_lobbyMap;
+        public string LobbyMap => this.m_lobbyMap;
 
         /// <summary>
-        /// The lobby players currently in the lobby (Player name, team index, ...).
+        /// 
         /// </summary>
-        public List<ConnectableLobbyPlayer> lobby_players;
-
-        /// <summary>
-        /// Gets number of players in player list
-        /// </summary>
-        public int lobby_player_count => this.lobby_players.Count;
-
-        /// <summary>
-        /// Gets the cap on players
-        /// </summary>
-        public int lobby_player_cap { get; private set; }
+        public string LobbyPlayers => $"{this.m_lobby_players.Count}/{this.m_lobbyPlayerCap}";
 
         /// <summary>
         /// New standard <see cref="ConnectableLobby"/> instance without player data.
@@ -58,52 +50,52 @@ namespace Battlegrounds.Online.Services {
         /// <param name="name">The assigned name of the lobby.</param>
         /// <param name="isPsswProtected">Boolean flag makring whether the lobby is password protected or not.</param>
         public ConnectableLobby(string gid, string name, bool isPsswProtected) {
-            this.lobby_guid = gid;
-            this.lobby_name = name;
-            this.lobby_player_cap = 0;
-            this.lobby_passwordProtected = isPsswProtected;
-            this.lobby_players = new List<ConnectableLobbyPlayer>();
+            this.LobbyGUID = gid;
+            this.LobbyName = name;
+            this.m_lobbyPlayerCap = 0;
+            this.IsPasswordProtected = isPsswProtected;
+            this.m_lobby_players = new List<ConnectableLobbyPlayer>();
             this.m_lobbyMap = "<none>";
         }
 
         public void Update(Action<ConnectableLobby> updateFinished) {
             try {
-                this.lobby_players.Clear();
-                Message message = new Message(MessageType.LOBBY_INFO, this.lobby_guid);
+                this.m_lobby_players.Clear();
+                Message message = new Message(MessageType.LOBBY_INFO, this.LobbyGUID);
                 MessageSender.SendMessage(AddressBook.GetLobbyServer(), message, (a, msg) => {
                     var mapRegMatch = Regex.Match(msg.Argument1, @"\(m:(?<map>(\w|\d|_|-|<|>)*)\)");
                     if (mapRegMatch.Success) {
                         this.m_lobbyMap = mapRegMatch.Groups["map"].Value;
                     } else {
-                        Trace.WriteLine($"{this.lobby_guid}-map: Failed to read map", "ConnectableLobby");
+                        Trace.WriteLine($"{this.LobbyGUID}-map: Failed to read map", "ConnectableLobby");
                     }
                     var capRegMatch = Regex.Match(msg.Argument1, @"\(cap:(?<cap>(\d*))\)");
-                    if (mapRegMatch.Success) {
-                        if (int.TryParse(mapRegMatch.Groups["cap"].Value, out int capValue)) {
-                            this.lobby_player_cap = capValue;
+                    if (capRegMatch.Success) {
+                        if (int.TryParse(capRegMatch.Groups["cap"].Value, out int capValue)) {
+                            this.m_lobbyPlayerCap = capValue;
                         }
                     } else {
-                        Trace.WriteLine($"{this.lobby_guid}-map: Failed to read capacity", "ConnectableLobby");
+                        Trace.WriteLine($"{this.LobbyGUID}-map: Failed to read capacity", "ConnectableLobby");
                     }
                     var matches = Regex.Matches(msg.Argument1, @"\(s:(?<s>\d+);n:""(?<n>(\s|\S)+)"";i:(?<i>\d+);t:(?<t>-?\d+);f:(?<f>\w*);c:""(?<c>(\s|\S)*)""\)");
                     if (matches.Count > 0) {
                         for (int i = 0; i < matches.Count; i++) {
                             if (!ulong.TryParse(matches[i].Groups["s"].Value, out ulong sID)) {
-                                Trace.WriteLine($"{this.lobby_guid}: Failed to read steam ID ({matches[i].Groups["s"].Value})", "ConnectableLobby");
+                                Trace.WriteLine($"{this.LobbyGUID}: Failed to read steam ID ({matches[i].Groups["s"].Value})", "ConnectableLobby");
                                 break;
                             }
                             if (!int.TryParse(matches[i].Groups["i"].Value, out int pID)) {
-                                Trace.WriteLine($"{this.lobby_guid}: Failed to read lobby ID ({matches[i].Groups["i"].Value})", "ConnectableLobby");
+                                Trace.WriteLine($"{this.LobbyGUID}: Failed to read lobby ID ({matches[i].Groups["i"].Value})", "ConnectableLobby");
                                 break;
                             }
                             if (!int.TryParse(matches[i].Groups["t"].Value, out int tID)) {
-                                Trace.WriteLine($"{this.lobby_guid}: Failed to read team ID ({matches[i].Groups["t"].Value})", "ConnectableLobby");
+                                Trace.WriteLine($"{this.LobbyGUID}: Failed to read team ID ({matches[i].Groups["t"].Value})", "ConnectableLobby");
                                 break;
                             }
-                            this.lobby_players.Add(new ConnectableLobbyPlayer(pID, sID, matches[i].Groups["n"].Value, matches[i].Groups["f"].Value, matches[i].Groups["c"].Value, tID));
+                            this.m_lobby_players.Add(new ConnectableLobbyPlayer(pID, sID, matches[i].Groups["n"].Value, matches[i].Groups["f"].Value, matches[i].Groups["c"].Value, tID));
                         }
                     } else {
-                        Trace.WriteLine($"{this.lobby_guid}: Failed to read players", "ConnectableLobby");
+                        Trace.WriteLine($"{this.LobbyGUID}: Failed to read players", "ConnectableLobby");
                     }
                     updateFinished?.Invoke(this);
                 });
