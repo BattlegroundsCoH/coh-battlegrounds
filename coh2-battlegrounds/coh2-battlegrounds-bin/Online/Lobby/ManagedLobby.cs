@@ -1220,7 +1220,7 @@ namespace Battlegrounds.Online.Lobby {
                 operationFeedback?.Invoke("Failed to load own company!");
                 return;
             } else {
-                ownCompany.Owner = BattlegroundsInstance.LocalSteamuser.ID.ToString();
+                ownCompany.Owner = this.m_self.Name;
             }
 
             // Send a "Starting match" message to lobby members

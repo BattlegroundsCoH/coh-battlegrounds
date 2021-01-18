@@ -41,7 +41,7 @@ namespace BattlegroundsApp.LocalData {
                     }
                 }
 
-                Trace.WriteLine($"Loaded {__companies.Count} user companies");
+                Trace.WriteLine($"Loaded {__companies.Count} user companies", "PlayerCompanies");
 
             } catch {
 

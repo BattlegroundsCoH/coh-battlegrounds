@@ -20,10 +20,11 @@ using System.Windows.Shapes;
 using System.Diagnostics;
 
 using BattlegroundsApp.Views;
-using BattlegroundsApp.Dialogs.Service;
 using BattlegroundsApp.Dialogs.YesNo;
 
 namespace BattlegroundsApp {
+
+    public delegate void OnWindowReady(MainWindow window);
 
     /// <summary>
     /// Interaction logic for MainWindow.xaml
@@ -36,6 +37,8 @@ namespace BattlegroundsApp {
         public const string DASHBOARDSTATE = "DASHBOARDVIEW";
         public const string NEWSSTATE = "NEWSVIEW";
 
+        private bool m_isReady;
+
         public string DashboardButtonContent { get; }
         public string NewsButtonContent { get; }
         public string CompanyBuilderButtonContent { get; }
@@ -46,7 +49,12 @@ namespace BattlegroundsApp {
 
         private Dictionary<string, ViewState> m_constStates; // lookup table for all states that don't need initialization.
 
+        public event OnWindowReady Ready;
+
         public MainWindow() {
+
+            // Clear is ready
+            this.m_isReady = false;
 
             // Initialize components etc...
             InitializeComponent();
@@ -124,6 +132,17 @@ namespace BattlegroundsApp {
 
         // Get the request handler
         public override StateChangeRequestHandler GetRequestHandler() => this.StateChangeRequest;
+
+        public bool AllowGetSteamUser()
+            => YesNoDialogViewModel.ShowYesNoDialog("No Steam User Found", "No Steam user was found on startup. Would you like to have the application find the local Steam user?") == YesNoDialogResult.Confirm;
+
+        protected override void OnContentRendered(EventArgs e) {
+            base.OnContentRendered(e);
+            if (!this.m_isReady) {
+                this.Ready?.Invoke(this);
+                this.m_isReady = true;
+            }
+        }
 
     }   
 

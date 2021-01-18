@@ -14,7 +14,6 @@ using Battlegrounds.Modding;
 using Battlegrounds.Online;
 using Battlegrounds.Online.Lobby;
 using Battlegrounds.Online.Services;
-using Battlegrounds.Steam;
 
 namespace coh2_battlegrounds_console {
     
@@ -23,7 +22,11 @@ namespace coh2_battlegrounds_console {
         static void Main(string[] args) {
 
             BattlegroundsInstance.LoadInstance();
-            BattlegroundsInstance.LocalSteamuser = SteamUser.FromLocalInstall();
+            if (!BattlegroundsInstance.Steam.GetSteamUser()) {
+                Console.WriteLine("Unable to find local steam user!");
+                Console.Read();
+                return;
+            }
 
             // Important this is done
             DatabaseManager.LoadAllDatabases(null);
@@ -41,7 +44,7 @@ namespace coh2_battlegrounds_console {
                 SelectedGamemodeOption = 0,
                 SelectedScenario = ScenarioList.FromFilename("2p_angoville_farms"),
                 SelectedTuningMod = new BattlegroundsTuning(),
-                Allies = new SessionParticipant[] { new SessionParticipant(BattlegroundsInstance.LocalSteamuser, testCompany, 0, 0) },
+                Allies = new SessionParticipant[] { new SessionParticipant(BattlegroundsInstance.Steam.User, testCompany, 0, 0) },
                 Axis = null,
                 FillAI = true,
                 DefaultDifficulty = Battlegrounds.Game.AIDifficulty.AI_Hard,
@@ -89,7 +92,6 @@ namespace coh2_battlegrounds_console {
             // Create a dummy company
             CompanyBuilder companyBuilder = new CompanyBuilder().NewCompany(Faction.Soviet)
                 .ChangeName("26th Rifle Division")
-                .ChangeUser(BattlegroundsInstance.LocalSteamuser.Name)
                 .ChangeTuningMod(BattlegroundsInstance.BattleGroundsTuningMod.Guid.ToString());
             UnitBuilder unitBuilder = new UnitBuilder();
 

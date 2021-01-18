@@ -62,13 +62,15 @@ namespace BattlegroundsApp.Models {
         }
 
         public void SetMaxPlayers(int count) {
-            
-            this.m_maxPlayerCount = count;
-            for (int i = 0; i < MAX_TEAM_PLAYERCOUNT; i++) {
-                this.m_teamSetup[ManagedLobbyTeamType.Allies][i].Visibility = i < (count / 2) ? Visibility.Visible : Visibility.Collapsed;
-                this.m_teamSetup[ManagedLobbyTeamType.Axis][i].Visibility = i < (count / 2) ? Visibility.Visible : Visibility.Collapsed;
+            if (count > 0) {
+                this.m_maxPlayerCount = count;
+                for (int i = 0; i < MAX_TEAM_PLAYERCOUNT; i++) {
+                    this.m_teamSetup[ManagedLobbyTeamType.Allies][i].Visibility = i < (count / 2) ? Visibility.Visible : Visibility.Collapsed;
+                    this.m_teamSetup[ManagedLobbyTeamType.Axis][i].Visibility = i < (count / 2) ? Visibility.Visible : Visibility.Collapsed;
+                }
+            } else {
+                Trace.WriteLine("Unable to set max player count to a negative value.", "LobbyTeamManagementModel");
             }
-
         }
 
         public void UpdateTeamview(ManagedLobby lobby, bool isHost) {
@@ -161,7 +163,7 @@ namespace BattlegroundsApp.Models {
             => this.m_teamSetup[ManagedLobbyTeamType.Allies].Contains(playerCard) ? ManagedLobbyTeamType.Allies : ManagedLobbyTeamType.Axis;
 
         private void OnCardActionHandler(PlayerCardView sender, string reason) {
-            if (!(this.m_isHost || sender.PlayerSteamID == BattlegroundsInstance.LocalSteamuser.ID)) {
+            if (!(this.m_isHost || BattlegroundsInstance.IsLocalUser(sender.PlayerSteamID))) {
                 return;
             }
             ManagedLobbyTeamType teamOf = this.GetTeamOfCard(sender);
@@ -197,7 +199,7 @@ namespace BattlegroundsApp.Models {
                     this.MoveTeam(GetLocalPlayercard(), sender);
                     break;
                 default:
-                    Trace.WriteLine($"Unhandled playercard event '{reason}'", "LobbyTeamManagementModel.cs");
+                    Trace.WriteLine($"Unhandled playercard event '{reason}'", "LobbyTeamManagementModel");
                     break;
             }
         }
@@ -217,10 +219,9 @@ namespace BattlegroundsApp.Models {
         public int GetTeamSize(ManagedLobbyTeamType size) => this.m_teamSetup[size].Count(x => x.IsOccupied);
         
         public PlayerCardView GetLocalPlayercard() {
-            ulong localID = BattlegroundsInstance.LocalSteamuser.ID;
             foreach (var team in this.m_teamSetup) {
                 foreach (var player in team.Value) {
-                    if (player.PlayerSteamID == localID) {
+                    if (BattlegroundsInstance.IsLocalUser(player.PlayerSteamID)) {
                         return player;
                     }
                 }

@@ -25,7 +25,7 @@ namespace BattlegroundsApp.Views.ViewComponent {
 
         public override void SetStateIdentifier(ulong ownerID, bool isAI) {
             this.SteamID = ownerID;
-            this.IsLocalUser = SteamID == BattlegroundsInstance.LocalSteamuser.ID;
+            this.IsLocalUser = BattlegroundsInstance.IsLocalUser(this.SteamID);
             this.IsAI = isAI;
         }
 

@@ -43,7 +43,7 @@ namespace BattlegroundsApp.Views {
 
             // Create lobby hub with local steam user
             this.m_hub = new LobbyHub {
-                User = BattlegroundsInstance.LocalSteamuser
+                User = BattlegroundsInstance.Steam.User
             };
 
             HostGameCommand = new RelayCommand(HostLobby);

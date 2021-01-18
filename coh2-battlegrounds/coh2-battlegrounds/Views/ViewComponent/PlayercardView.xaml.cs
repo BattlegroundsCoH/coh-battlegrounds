@@ -63,7 +63,7 @@ namespace BattlegroundsApp.Views.ViewComponent {
         private bool m_isHost;
 
         public Visibility ShowRemove 
-            => (this.m_isHost && this.m_steamID == BattlegroundsInstance.LocalSteamuser.ID) ? Visibility.Collapsed : Visibility.Visible;
+            => (this.m_isHost && BattlegroundsInstance.IsLocalUser(this.m_steamID)) ? Visibility.Collapsed : Visibility.Visible;
 
         public int TeamIndex { get; }
 
@@ -109,7 +109,7 @@ namespace BattlegroundsApp.Views.ViewComponent {
             this.m_diff = AIDifficulty.Human;
             this.SetPlayerName(name);
             this.SetPlayerFaction(army);
-            this.SetPlayerCompany(this.m_steamID == BattlegroundsInstance.LocalSteamuser.ID, this.IsAI, army, company);
+            this.SetPlayerCompany(BattlegroundsInstance.IsLocalUser(this.m_steamID), this.IsAI, army, company);
         }
 
         public void SetPlayerName(string name) {
@@ -230,7 +230,7 @@ namespace BattlegroundsApp.Views.ViewComponent {
         public void PlayerArmySelection_SelectionChanged(object sender, IconComboBoxItem newItem) {
             if (newItem is not null && newItem.GetSource(out PlayercardArmyItem item)) {
                 this.SetPlayerFaction(item.Name);
-                this.SetPlayerCompany(this.m_steamID == BattlegroundsInstance.LocalSteamuser.ID, this.m_isAIPlayer, item.Name, null);
+                this.SetPlayerCompany(BattlegroundsInstance.IsLocalUser(this.m_steamID), this.m_isAIPlayer, item.Name, null);
                 this.OnPlayercardEvent?.Invoke(this, "ChangedArmy");
             }
         }

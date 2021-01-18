@@ -21,7 +21,7 @@ namespace Battlegrounds.Steam {
         /// </summary>
         public ulong ID { get; }
 
-        private SteamUser(ulong steamUID) {
+        internal SteamUser(ulong steamUID) {
             this.ID = steamUID;
             this.Name = "";
         }
@@ -36,7 +36,6 @@ namespace Battlegrounds.Steam {
             // https://steamidfinder.com/lookup/76561198003529969/ ==> Will give a website containing the information
 
             string str = SourceDownloader.DownloadSourceCode($"https://steamidfinder.com/lookup/{this.ID}/");
-            //File.WriteAllText("ts.html", str);
 
             const string lookfor = "name <code>";
             int pos = str.IndexOf(lookfor);
@@ -76,34 +75,6 @@ namespace Battlegrounds.Steam {
 
             // Return user
             return user;
-
-        }
-
-        /// <summary>
-        /// Fetch the <see cref="SteamUser"/> from the local instance of the Steam client.
-        /// </summary>
-        /// <returns>The <see cref="SteamUser"/> using the machine or null if it was not possible.</returns>
-        public static SteamUser FromLocalInstall() {
-
-            string steaminstall = Pathfinder.GetOrFindSteamPath().Replace("Steam.exe", "config\\loginusers.vdf");
-            string contents = File.ReadAllText(steaminstall);
-
-            var idCollection = Regex.Matches(contents, @"\""(?<id>\d+)\""\s*\{(?<body>(\s|\w|\d|\"")*)\}");
-
-            foreach (Match idMatch in idCollection) {
-
-                ulong id = ulong.Parse(idMatch.Groups["id"].Value);
-
-                Match name = Regex.Match(idMatch.Groups["body"].Value, @"\""PersonaName\""\s*\""(?<name>(\s|\w|\d)*)\""");
-                Match recent = Regex.Match(idMatch.Groups["body"].Value, @"\""mostrecent\""\s*\""(?<recent>1|0)\""");
-
-                if (recent.Groups["recent"].Value.CompareTo("1") == 0) {
-                    return new SteamUser(id) { Name = name.Groups["name"].Value };
-                }
-
-            }
-
-            return null;
 
         }
 

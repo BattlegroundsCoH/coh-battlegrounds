@@ -23,33 +23,32 @@ namespace Battlegrounds {
             /// <summary>
             /// 
             /// </summary>
-            [JsonReference(typeof(SteamUser))] public SteamUser User { get; set; }
-
-            /// <summary>
-            /// 
-            /// </summary>
             public Dictionary<string, string> Paths { get; set; }
 
             public string LastPlayedScenario { get; set; }
 
             public string LastPlayedGamemode { get; set; }
 
+            public SteamInstance SteamData { get; set; }
+
             /// <summary>
             /// 
             /// </summary>
             public InternalInstance() {
-                this.User = null;
+                this.SteamData = new SteamInstance();
                 this.Paths = new Dictionary<string, string>();
             }
 
             /// <summary>
-            /// 
+            /// Resolve paths. Automatically called when the json variant is deserialized.
             /// </summary>
             [JsonOnDeserialized]
             public void ResolvePaths() {
 
-                Trace.WriteLine($"Resolving paths (Local to: {Environment.CurrentDirectory})");
+                // Log
+                Trace.WriteLine($"Resolving paths (Local to: {Environment.CurrentDirectory})", "BattlegroundsInstance");
 
+                // Paths
                 string installpath = $"{Environment.CurrentDirectory}\\";
                 string binpath = $"{installpath}bin\\";
                 string userpath = $"{installpath}usr\\";
@@ -58,13 +57,13 @@ namespace Battlegrounds {
                 // Create data directory if it does not exist
                 if (!Directory.Exists(binpath)) {
                     Directory.CreateDirectory(binpath);
-                    Trace.WriteLine("Bin path missing - this may cause errors");
+                    Trace.WriteLine("Bin path missing - this may cause errors", "BattlegroundsInstance");
                 }
 
                 // Create user directory if it does not exist
                 if (!Directory.Exists(userpath)) {
                     Directory.CreateDirectory(userpath);
-                    Trace.WriteLine("User path missing - this may cause errors");
+                    Trace.WriteLine("User path missing - this may cause errors", "BattlegroundsInstance");
                 }
 
                 // User folder
@@ -86,7 +85,7 @@ namespace Battlegrounds {
                         Directory.GetFiles(tmppath).ForEach(File.Delete);
                         Directory.GetDirectories(tmppath).ForEach(x => Directory.Delete(x, true));
                     } catch {
-                        Trace.WriteLine("Unexpected IO error occured while attempting to clean tmp folder!");
+                        Trace.WriteLine("Unexpected IO error occured while attempting to clean tmp folder!", "BattlegroundsInstance");
                     }
                 }
 
@@ -108,8 +107,8 @@ namespace Battlegrounds {
                         Directory.CreateDirectory(cFolder);
                     }
                 } catch (Exception e) {
-                    Trace.WriteLine($"Failed to resolve directory \"{pathID}\"");
-                    Trace.WriteLine(e);
+                    Trace.WriteLine($"Failed to resolve directory \"{pathID}\"", "BattlegroundsInstance");
+                    Trace.WriteLine(e, "BattlegroundsInstance");
                 }
             }
 
@@ -137,14 +136,6 @@ namespace Battlegrounds {
         private static InternalInstance __instance;
 
         /// <summary>
-        /// The current local steam user instance.
-        /// </summary>
-        public static SteamUser LocalSteamuser {
-            get => __instance.User;
-            set => __instance.User = value;
-        }
-
-        /// <summary>
         /// The last played map.
         /// </summary>
         public static string LastPlayedMap {
@@ -166,20 +157,29 @@ namespace Battlegrounds {
         public static bool IsFirstRun { get; internal set; }
 
         /// <summary>
-        /// 
+        /// The active <see cref="SteamInstance"/>
         /// </summary>
-        /// <param name="pathID"></param>
-        /// <param name="appendPath"></param>
-        /// <returns></returns>
+        public static SteamInstance Steam => __instance.SteamData;
+
+        /// <summary>
+        /// Get the relative path to a predefined app path. Can be appened with remaining direct path to obtain the full path.
+        /// </summary>
+        /// <param name="pathID">The <see cref="string"/> path ID.</param>
+        /// <param name="appendPath">The optional path to append to the relative path.</param>
+        /// <returns>The relative path + potential append path.</returns>
+        /// <exception cref="ArgumentException"/>
         public static string GetRelativePath(string pathID, string appendPath)
             => Path.Combine(__instance.GetPath(pathID), appendPath);
 
         private static ITuningMod __bgTuningInstance;
 
+        /// <summary>
+        /// Get the Battlegrounds tuning mod instance.
+        /// </summary>
         public static ITuningMod BattleGroundsTuningMod => __bgTuningInstance;
 
         /// <summary>
-        /// 
+        /// Load the current instance data.
         /// </summary>
         public static void LoadInstance() {
 
@@ -197,7 +197,21 @@ namespace Battlegrounds {
         }
 
         /// <summary>
-        /// 
+        /// Verify if the given <see cref="SteamUser"/> is the local user.
+        /// </summary>
+        /// <param name="user">The <see cref="SteamUser"/> to verify.</param>
+        /// <returns>Will return <see langword="true"/> if local user. Otherwise <see langword="false"/>.</returns>
+        public static bool IsLocalUser(SteamUser user) => __instance.SteamData.User.ID == user.ID;
+
+        /// <summary>
+        /// Verify if the given user ID is the local user ID.
+        /// </summary>
+        /// <param name="userID">The user ID to verify.</param>
+        /// <returns>Will return <see langword="true"/> if local user. Otherwise <see langword="false"/>.</returns>
+        public static bool IsLocalUser(ulong userID) => __instance.SteamData.User.ID == userID;
+
+        /// <summary>
+        /// Save the currently stored data of this instance.
         /// </summary>
         public static void SaveInstance() 
             => File.WriteAllText("local.json", (__instance as IJsonObject).Serialize());

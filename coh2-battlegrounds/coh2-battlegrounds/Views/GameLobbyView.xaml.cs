@@ -54,7 +54,7 @@ namespace BattlegroundsApp.Views {
         private void SendMessage_Click(object sender, RoutedEventArgs e) {
 
             string messageContent = messageText.Text;
-            string messageSender = BattlegroundsInstance.LocalSteamuser.Name;
+            string messageSender = BattlegroundsInstance.Steam.User.Name;
             string message = $"{messageSender}: {messageContent}";
 
             lobbyChat.Text += $"{message}\n";
@@ -141,7 +141,7 @@ namespace BattlegroundsApp.Views {
                     this.Map.SelectedIndex = 0;
                     this.m_smh.Lobby.GetLobbyCapacity(x => this.UpdateGUI(() => this.m_teamManagement.SetMaxPlayers(x)));
                     this.UpdateMapPreview(null);
-                    // TODO: Report error to host
+                    this.m_smh.Lobby.SendClientProblem(false, "UNKNOWN_MAP", arg1);
                 }
             });
         }
