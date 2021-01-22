@@ -23,8 +23,8 @@ namespace Battlegrounds.Game.Match.Startup {
             set => this.m_localCompany = value;
         }
 
-        public virtual event CancelHandler StartupCancelled;
-        public virtual event InformationHandler StartupFeedback;
+        public event CancelHandler StartupCancelled;
+        public event InformationHandler StartupFeedback;
 
         public abstract bool OnBegin(object caller);
 

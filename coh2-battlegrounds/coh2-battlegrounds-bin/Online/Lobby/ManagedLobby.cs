@@ -258,7 +258,7 @@ namespace Battlegrounds.Online.Lobby {
         public void TriggerSystemMessage(string message) {
             if (this.m_isHost) {
                 if (this.m_underlyingConnection is not null && this.m_underlyingConnection.IsConnected) {
-                    this.m_underlyingConnection.SendMessage(new Message(MessageType.LOBBY_INFO, message)); // TODO: Change message type to something more appropriate
+                    this.m_underlyingConnection.SendMessage(new Message(MessageType.LOBBY_SYSINFO, message));
                 }
             } else {
                 throw new PermissionDeniedException(PermissionDeniedException.HOST_ONLY);
