@@ -4,7 +4,6 @@ using System.Linq;
 using Battlegrounds.Compiler;
 using Battlegrounds.Compiler.Source;
 using Battlegrounds.Game.Gameplay;
-using Battlegrounds.Modding;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace coh2_battlegrounds_bin_tests {
@@ -63,7 +62,7 @@ namespace coh2_battlegrounds_bin_tests {
         [DataRow(RELEASE_BRANCH)]
         public void CanGetInfo(string branch) {
             var info = this.GetBranchSource(branch).GetInfoFile(this.gamemode);
-            Assert.AreEqual(info.path, $"info\\{ModGuid.FromGuid(this.gamemode.Guid)}.info");
+            Assert.AreEqual(info.path, $"info\\{this.gamemode.Guid}.info");
             Assert.AreNotEqual(0, info.contents.Length);
         }
 

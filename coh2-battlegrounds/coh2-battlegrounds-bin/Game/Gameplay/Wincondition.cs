@@ -17,7 +17,7 @@ namespace Battlegrounds.Game.Gameplay {
         /// <summary>
         /// 
         /// </summary>
-        public Guid Guid { get; }
+        public ModGuid Guid { get; }
 
         /// <summary>
         /// 
@@ -49,7 +49,14 @@ namespace Battlegrounds.Game.Gameplay {
         /// </summary>
         /// <param name="name"></param>
         /// <param name="guid"></param>
-        public Wincondition(string name, Guid guid) {
+        public Wincondition(string name, Guid guid) : this(name, ModGuid.FromGuid(guid)) {}
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="guid"></param>
+        public Wincondition(string name, ModGuid guid) {
             this.Name = name;
             this.Guid = guid;
             this.DefaultOptionIndex = 0;

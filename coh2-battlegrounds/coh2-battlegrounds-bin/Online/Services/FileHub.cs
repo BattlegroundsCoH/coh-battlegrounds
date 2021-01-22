@@ -38,11 +38,11 @@ namespace Battlegrounds.Online.Services {
         /// <summary>
         /// Download a file from the server.
         /// </summary>
-        /// <param name="localapth">The local path that the downloaded file contents will be written to.</param>
+        /// <param name="localpath">The local path that the downloaded file contents will be written to.</param>
         /// <param name="downloadname">The name of the file to download from the server.</param>
         /// <param name="lobbyID">The lobby ID to use when identifying the lobby to download data from.</param>
         /// <returns>If download was successful <see langword="true"/> is returned. Otherwise <see langword="false"/> is returned.</returns>
-        public static bool DownloadFile(string localapth, string downloadname, string lobbyID) {
+        public static bool DownloadFile(string localpath, string downloadname, string lobbyID) {
 
             // Establish connection
             if (Connect() is TcpClient client) {
@@ -82,15 +82,15 @@ namespace Battlegrounds.Online.Services {
                         }
 
                         // If the file already exists, we delete it (Just to be safe)
-                        if (File.Exists(localapth)) {
-                            File.Delete(localapth);
+                        if (File.Exists(localpath)) {
+                            File.Delete(localpath);
                         }
 
                         // Write all downloaded binary contents.
-                        File.WriteAllBytes(localapth, bytes.ToArray());
+                        File.WriteAllBytes(localpath, bytes.ToArray());
 
                         // Log what, how, and where the file was downloaded.
-                        Trace.WriteLine($"Downloaded file \"{downloadname}\" (\"{localapth}\") from {lobbyID} #{bytes.Count}", "Online-Service");
+                        Trace.WriteLine($"Downloaded file \"{downloadname}\" (\"{localpath}\") from {lobbyID} #{bytes.Count}", "Online-Service");
 
                         // Return true ==> we've downloaded the file
                         return true;

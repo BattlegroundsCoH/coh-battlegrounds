@@ -33,11 +33,11 @@ namespace Battlegrounds.Json {
         }
 
         /// <summary>
-        /// Parse a json string (Will only parse it - may parse syntactically incorrect json!) and extract the top-level item.
+        /// Parse a json string (Will only parse it - may parse syntactically incorrect json!) and extract the top-level item and attempt to interpret as a <typeparamref name="T"/> object.
         /// </summary>
         /// <typeparam name="T">The object type to retrieve from the file. Implements <see cref="IJsonObject"/>.</typeparam>
-        /// <param name="jsoncontent">The json string parse and interpret.</param>
-        /// <returns>The default value if parsing failed. Otherwise the object that was expected.</returns>
+        /// <param name="jsoncontent">The json string to parse and interpret.</param>
+        /// <returns>The <see langword="default"/> value if parsing failed. Otherwise the expected deserialized <typeparamref name="T"/> object.</returns>
         public static T ParseString<T>(string jsoncontent) where T : IJsonObject {
             List<IJsonElement> topElements = ParseString(jsoncontent);
             if (topElements.Count == 1) {

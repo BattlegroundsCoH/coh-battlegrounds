@@ -20,6 +20,8 @@ namespace BattlegroundsApp {
 
     public delegate void CompanyRequestListener(string reason);
 
+    public delegate void StartingMatchListener(int time, string guid);
+
     public class ServerMessageHandler {
 
         private ManagedLobby m_lobbyInstance;
@@ -39,6 +41,8 @@ namespace BattlegroundsApp {
 
         public event CompanyRequestListener OnCompanyRequested;
 
+        public event StartingMatchListener OnMatchStarting;
+
         public ServerMessageHandler(GameLobbyView view, ManagedLobby lobby) {
             
             // Set lobby view
@@ -50,7 +54,6 @@ namespace BattlegroundsApp {
             // Hook callback methods
             this.m_lobbyInstance.OnPlayerEvent += this.OnPlayerEvent;
             this.m_lobbyInstance.OnLocalEvent += this.OnLocalEvent;
-            this.m_lobbyInstance.OnLocalDataRequested += this.OnLocalDataRequest;
             this.m_lobbyInstance.OnDataRequest += this.OnDataRequest;
             this.m_lobbyInstance.OnStartMatchReceived += this.StartMatchCommandReceived;
             this.m_lobbyInstance.OnLobbyInfoChanged += this.OnLobbyInfoChanged;
@@ -63,8 +66,11 @@ namespace BattlegroundsApp {
                 switch (type) {
                     case "LOBBY_STARTING":
                         if (!this.m_lobbyInstance.IsHost) {
-                            this.m_lobbyWindow.lobbyChat.Text += $"[Lobby] The host has presset the start game button.\n";
-                            this.OnCompanyRequested?.Invoke("HOST");
+                            if (int.TryParse(arg1, out int time)) {
+                                this.OnMatchStarting?.Invoke(time, arg2);
+                                this.m_lobbyWindow.lobbyChat.Text += $"[Lobby] The host has pressed the start game button.\n";
+                                this.OnCompanyRequested?.Invoke("HOST"); // Tell member to upload company
+                            }
                         }
                         break;
                     default:
@@ -122,18 +128,6 @@ namespace BattlegroundsApp {
                         break;
                 }
             });
-        }
-
-        public object OnLocalDataRequest(string type) {
-
-            if (type.CompareTo("CompanyData") == 0) {
-                return this.m_lobbyWindow.GetLocalCompany();// Company.ReadCompanyFromFile("test_company.json");
-            } else if (type.CompareTo("MatchInfo") == 0) {
-                return this.m_lobbyWindow.CreateSessionInfo();
-            } else {
-                return null;
-            }
-
         }
 
         public void OnDataRequest(bool isFileRequest, string asker, string requestedData, int id) {

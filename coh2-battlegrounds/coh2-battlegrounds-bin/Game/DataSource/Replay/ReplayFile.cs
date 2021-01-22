@@ -141,7 +141,7 @@ namespace Battlegrounds.Game.DataSource.Replay {
                         return false;
                     }
 
-                    m_replaycontent = bin.ReadToEnd();
+                    this.m_replaycontent = bin.ReadToEnd();
 
                     if (!this.ParseScenarioDescription()) {
                         return false;
@@ -267,7 +267,7 @@ namespace Battlegrounds.Game.DataSource.Replay {
 
                     // Read player data
                     do {
-                        this.m_playerlist.Add(this.ParsePlayerInfo(reader));
+                        this.m_playerlist.Add(ParsePlayerInfo(reader));
                         int peak = reader.PeekChar();
                         if (peak == 65533) {
                             break;
@@ -281,7 +281,7 @@ namespace Battlegrounds.Game.DataSource.Replay {
 
         }
 
-        private Player ParsePlayerInfo(BinaryReader reader) {
+        private static Player ParsePlayerInfo(BinaryReader reader) {
 
             // Read player name
             string name = reader.ReadUTF8String(reader.ReadUInt32());
@@ -300,7 +300,7 @@ namespace Battlegrounds.Game.DataSource.Replay {
 
             /*reader.Skip(103);
              // The Steam ID is somewhere in this range - but there's some data here that's currently not readable
-             // It follwos a pattern of 00 00 00 00 (4 bytes) and then 8 bytes, matching the steam ID
+             // It follows a pattern of 00 00 00 00 (4 bytes) and then 8 bytes, matching the steam ID
             ulong steamID = reader.ReadUInt64();
             */
 

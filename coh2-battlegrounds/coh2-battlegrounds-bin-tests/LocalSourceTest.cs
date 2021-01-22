@@ -36,7 +36,7 @@ namespace coh2_battlegrounds_bin_tests {
         [TestMethod]
         public void CanGetInfo() {
             var info = this.ls.GetInfoFile(this.gamemode);
-            Assert.AreEqual(info.path, $"info\\{ModGuid.FromGuid(this.gamemode.Guid)}.info");
+            Assert.AreEqual(info.path, $"info\\{this.gamemode.Guid}.info");
         }
 
         [TestMethod]

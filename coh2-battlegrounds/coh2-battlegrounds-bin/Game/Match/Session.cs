@@ -15,54 +15,50 @@ using static Battlegrounds.Game.Match.SessionParticipantTeam;
 namespace Battlegrounds.Game.Match {
     
     /// <summary>
-    /// Represents a game session where a match will take place between players with a pre-selected <see cref="Company"/> and using a set of preset settings. Implements <see cref="IJsonObject"/>.
+    /// Represents a game session where a match will take place between players with a pre-selected <see cref="Company"/> and using a set of preset settings.
+    /// Implements <see cref="ISession"/> and <see cref="IJsonObject"/>.
     /// </summary>
-    public class Session : IJsonObject {
+    public class Session : ISession, IJsonObject {
 
         SessionParticipant[] m_participants;
 
         /// <summary>
-        /// Array of participating players in the <see cref="Session"/>. This should only contain <see cref="SessionParticipant"/> instances for players and AI (not observers).
+        /// Get an array of participating players in the <see cref="Session"/>. This should only contain <see cref="SessionParticipant"/> instances for players and AI (not observers).
         /// </summary>
         [JsonIgnore]
         public SessionParticipant[] Participants => m_participants;
 
         /// <summary>
-        /// The name of the scenario file to play.
+        /// Get the name of the scenario file to play.
         /// </summary>
         public Scenario Scenario { get; }
 
         /// <summary>
-        /// The <see cref="Wincondition"/> to use when playing.
+        /// Get the <see cref="Wincondition"/> to use when playing.
         /// </summary>
         public IWinconditionMod Gamemode { get; }
 
         /// <summary>
-        /// A list of all settings to apply for the <see cref="Session"/>.
+        /// Get the associated <see cref="ITuningMod"/> with the <see cref="Session"/>.
+        /// </summary>
+        [JsonIgnore] public ITuningMod TuningMod { get; }
+
+        /// <summary>
+        /// Get a list of all settings to apply for the <see cref="Session"/>.
         /// </summary>
         public Dictionary<string, object> Settings { get; }
 
-        /// <summary>
-        /// The unique GUID to use to verify match data.
-        /// </summary>
         public Guid SessionID { get; }
 
-        /// <summary>
-        /// Does the <see cref="Session"/> allow for persistency (events ingame will be saved in the company).
-        /// </summary>
         [JsonIgnore] public bool AllowPersistency => this.m_participants.All(x => x.Difficulty.AllowsPersistency());
 
-        /// <summary>
-        /// The associated <see cref="ITuningMod"/> with the <see cref="Session"/>.
-        /// </summary>
-        [JsonIgnore] public ITuningMod TuningMod { get; private set; }
-
-        private Session(Scenario scenario, IWinconditionMod gamemode) {
+        private Session(Scenario scenario, IWinconditionMod gamemode, ITuningMod tuning) {
             this.Settings = new Dictionary<string, object>();
             this.SessionID = Guid.NewGuid();
             this.Scenario = scenario;
             this.Gamemode = gamemode;
-            this.m_participants = new SessionParticipant[0];
+            this.TuningMod = tuning;
+            this.m_participants = Array.Empty<SessionParticipant>();
         }
 
         /// <summary>
@@ -82,16 +78,28 @@ namespace Battlegrounds.Game.Match {
             => this.m_participants.FirstOrDefault(x => x.IsHumanParticipant && x.UserDisplayname.CompareTo(playername) == 0 && x.ParticipantFaction == faction).ParticipantCompany;
 
         /// <summary>
+        /// Get the player company associated with the given steam index.
+        /// </summary>
+        /// <param name="steamIndex">The index of the steam user.</param>
+        /// <returns>The <see cref="Company"/> associated with the given steam user.</returns>
+        public Company GetPlayerCompany(ulong steamIndex) 
+            => this.m_participants.FirstOrDefault(x => x.UserID == steamIndex).ParticipantCompany;
+
+        /// <summary>
         /// Create a new <see cref="Session"/> instance with a unique <see cref="Guid"/>.
         /// </summary>
+        /// <remarks>
+        /// Player companies must have been assigned beforehand.
+        /// </remarks>
         /// <param name="sessionInfo">The map name of the scenario to play on.</param>
         /// <returns>New <see cref="Session"/> with the given data.</returns>
         public static Session CreateSession(SessionInfo sessionInfo) {
 
             // Create the session
-            Session session = new Session(sessionInfo.SelectedScenario, sessionInfo.SelectedGamemode) {
-                TuningMod = sessionInfo.SelectedTuningMod
-            };
+            Session session = new Session(sessionInfo.SelectedScenario, sessionInfo.SelectedGamemode, sessionInfo.SelectedTuningMod);
+
+            // defaults
+            var defDif = sessionInfo.DefaultDifficulty;
 
             // Get player count
             int playerCount = GetPlayerCount(sessionInfo.FillAI, sessionInfo.Allies?.Length ?? 0, sessionInfo.Axis?.Length ?? 0, out int alliedFillAI, out int axisFillAI);
@@ -101,39 +109,19 @@ namespace Battlegrounds.Game.Match {
             byte currentIndex = 0;
             byte playerTeamIndex = 0;
 
-            if (sessionInfo.Allies != null) {
-                foreach (SessionParticipant participant in sessionInfo.Allies) {
-                    if (participant.TeamIndex != TEAM_ALLIES) {
-                        throw new ArgumentException("A participant playing as 'Axis' was added to the 'Allies' team!");
-                    }
-                    session.m_participants[currentIndex++] = participant;
-                }
-                playerTeamIndex = (byte)sessionInfo.Allies.Length;
-            }
+            // Assign allied players
+            session.AssignPlayers(TEAM_ALLIES, sessionInfo.Allies, ref currentIndex, ref playerTeamIndex);
+            session.AddAIPlayers(TEAM_ALLIES, defDif, alliedFillAI, ref currentIndex, ref playerTeamIndex, x => sessionInfo.Axis[sessionInfo.Allies?.Length ?? 1 - 1 + x].ParticipantFaction);
 
-            // Add the missing allied AI players
-            AddAIPlayers(sessionInfo, session, TEAM_ALLIES, alliedFillAI, ref currentIndex, ref playerTeamIndex, x => sessionInfo.Axis[sessionInfo.Allies?.Length ?? 1 - 1 + x].ParticipantFaction);
-
-            if (sessionInfo.Axis != null) {
-                foreach (SessionParticipant participant in sessionInfo.Axis) {
-                    if (participant.TeamIndex != TEAM_AXIS) {
-                        throw new ArgumentException("A participant playing as 'Axis' was added to the 'Allies' team!");
-                    }
-                    session.m_participants[currentIndex++] = participant;
-                }
-                playerTeamIndex = (byte)sessionInfo.Axis.Length;
-            } else {
-                playerTeamIndex = 0;
-            }
-
-            // Add the missing axis AI players
-            AddAIPlayers(sessionInfo, session, TEAM_AXIS, axisFillAI, ref currentIndex, ref playerTeamIndex, x => sessionInfo.Allies[sessionInfo.Axis?.Length ?? 1 - 1 + x].ParticipantFaction);
+            // Assign axis players
+            session.AssignPlayers(TEAM_AXIS, sessionInfo.Axis, ref currentIndex, ref playerTeamIndex);
+            session.AddAIPlayers(TEAM_AXIS, defDif, axisFillAI, ref currentIndex, ref playerTeamIndex, x => sessionInfo.Allies[sessionInfo.Axis?.Length ?? 1 - 1 + x].ParticipantFaction);
 
             // Set the game mode
             if (sessionInfo.SelectedGamemode != null) {
                 session.AddSetting("gamemode_setting", sessionInfo.SelectedGamemode.Options[sessionInfo.SelectedGamemodeOption].Value);
             } else {
-                Trace.WriteLine("Failed to read selected gamemode - using 500 as default");
+                Trace.WriteLine("Failed to read selected gamemode - using 500 as default option", "Session.Create");
                 session.AddSetting("gamemode_setting", 500);
             }
 
@@ -142,14 +130,26 @@ namespace Battlegrounds.Game.Match {
 
         }
 
-        private static void AddAIPlayers(SessionInfo sinfo, Session session, SessionParticipantTeam team, 
-            int fillAICount, ref byte currentIndex, ref byte playerTeamIndex, Func<int, Faction> complementaryFunc) {
+        private void AssignPlayers(SessionParticipantTeam team, SessionParticipant[] participants, ref byte currentIndex, ref byte playerTeamIndex) {
+
+            if (participants != null) {
+                foreach (SessionParticipant participant in participants) {
+                    if (participant.TeamIndex == team) {
+                        this.m_participants[currentIndex++] = participant;
+                    }
+                }
+                playerTeamIndex = (byte)participants.Length;
+            }
+
+        }
+
+        private void AddAIPlayers(SessionParticipantTeam team, AIDifficulty aIDifficulty, int fillAICount, ref byte currentIndex, ref byte playerTeamIndex, Func<int, Faction> complementaryFunc) {
             for (int i = 0; i < fillAICount; i++) {
                 byte pIndex = currentIndex++;
                 Faction complementary = Faction.GetComplementaryFaction(complementaryFunc(i));
-                Company aiCompany = CompanyGenerator.Generate(complementary, sinfo.SelectedTuningMod.Guid.ToString().Replace("-", ""), false, true, false);
+                Company aiCompany = CompanyGenerator.Generate(complementary, this.TuningMod.Guid.ToString(), false, true, false);
                 aiCompany.Owner = "AIPlayer";
-                session.m_participants[pIndex] = new SessionParticipant(sinfo.DefaultDifficulty, aiCompany, team, playerTeamIndex++);
+                this.m_participants[pIndex] = new SessionParticipant(aIDifficulty, aiCompany, team, playerTeamIndex++);
             }
         }
 
@@ -182,6 +182,14 @@ namespace Battlegrounds.Game.Match {
 
         }
 
+        /// <summary>
+        /// Connect all companies to their respective owners using the <see cref="SessionInfo"/> to connect players with their companies.
+        /// </summary>
+        /// <remarks>
+        /// The companies are connected through the user IDs and names are then assigned afterwards.
+        /// </remarks>
+        /// <param name="allCompanies">Array of all the <see cref="Company"/> instances to connect with their respective player.</param>
+        /// <param name="sessionInfo">Session info containing all the relevant information of the users.</param>
         public static void ZipCompanies(Company[] allCompanies, ref SessionInfo sessionInfo) {
 
             for (int i = 0; i < allCompanies.Length; i++) {
@@ -193,7 +201,7 @@ namespace Battlegrounds.Game.Match {
                         allCompanies[i].Owner = sessionInfo.Allies[j].UserDisplayname;
                         sessionInfo.Allies[j] = new SessionParticipant(sessionInfo.Allies[j].UserDisplayname, sessionInfo.Allies[j].UserID, allCompanies[i], TEAM_ALLIES, 0);
                     } else {
-                        Trace.WriteLine($"Failed to pair allied company '{allCompanies[i].Name}' with a player...");
+                        Trace.WriteLine($"Failed to pair allied company '{allCompanies[i].Name}' with a player...", "Session.Zip");
                     }
 
                 } else {
@@ -203,7 +211,7 @@ namespace Battlegrounds.Game.Match {
                         allCompanies[i].Owner = sessionInfo.Axis[j].UserDisplayname;
                         sessionInfo.Axis[j] = new SessionParticipant(sessionInfo.Axis[j].UserDisplayname, sessionInfo.Axis[j].UserID, allCompanies[i], TEAM_AXIS, 0);
                     } else {
-                        Trace.WriteLine($"Failed to pair axis company '{allCompanies[i].Name}' with a player...");
+                        Trace.WriteLine($"Failed to pair axis company '{allCompanies[i].Name}' with a player...", "Session.Zip");
                     }
 
                 }
@@ -212,10 +220,6 @@ namespace Battlegrounds.Game.Match {
 
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
         public string ToJsonReference() => this.SessionID.ToString();
 
     }

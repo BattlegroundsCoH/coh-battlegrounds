@@ -13,7 +13,7 @@ namespace Battlegrounds.Compiler {
     /// <summary>
     /// Standard implementation for compiling a company into Lua format.
     /// </summary>
-    public class CompanyCompiler {
+    public class CompanyCompiler : ICompanyCompiler {
     
         /// <summary>
         /// New <see cref="CompanyCompiler"/> instance.
@@ -140,7 +140,7 @@ namespace Battlegrounds.Compiler {
 
                 CompileList(builder, "upgrades", crew.Upgrades, x => { UpgradeBlueprint y = x as UpgradeBlueprint; return y.ToScar(); });
                 CompileList(builder, "slot_items", crew.SlotItems, x => { SlotItemBlueprint y = x as SlotItemBlueprint; return y.ToScar(); });
-                CompileList(builder, "modifiers", (new string[0]).ToImmutableHashSet(), x => x);
+                CompileList(builder, "modifiers", (Array.Empty<string>()).ToImmutableHashSet(), x => x);
 
                 builder.DecreaseIndent();
                 builder.AppendLine("},");
@@ -172,7 +172,7 @@ namespace Battlegrounds.Compiler {
 
         }
 
-        private void CompileList<T>(TxtBuilder builder, string table, IReadOnlyCollection<T> source, Func<T, string> func) {
+        protected virtual void CompileList<T>(TxtBuilder builder, string table, IReadOnlyCollection<T> source, Func<T, string> func) {
             builder.AppendLine($"{table} = {{");
             builder.IncreaseIndent();
             if (source.Count > 0) {
@@ -186,7 +186,7 @@ namespace Battlegrounds.Compiler {
             builder.AppendLine("},");
         }
 
-        private int CompareUnit(Squad lhs, Squad rhs) {
+        protected virtual int CompareUnit(Squad lhs, Squad rhs) {
             string catlhs = lhs.GetCategory(true);
             string catrhs = rhs.GetCategory(true);
             int cilhs = (catlhs.CompareTo("infantry") == 0 ? 0 : (catlhs.CompareTo("team_weapon") == 0 ? 1 : 2));

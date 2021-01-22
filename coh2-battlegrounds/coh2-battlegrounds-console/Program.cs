@@ -1,10 +1,7 @@
 ﻿using System;
-using System.IO;
-using System.Linq;
 using System.Threading;
 
 using Battlegrounds;
-using Battlegrounds.Compiler;
 using Battlegrounds.Game.Database;
 using Battlegrounds.Game.Database.Management;
 using Battlegrounds.Game.DataCompany;
@@ -52,8 +49,8 @@ namespace coh2_battlegrounds_console {
 
             Session session = Session.CreateSession(sessionInfo);
 
-            SessionCompiler<CompanyCompiler> sessionCompiler = new SessionCompiler<CompanyCompiler>();
-            File.WriteAllText("test_session.lua", sessionCompiler.CompileSession(session));
+            //SessionCompiler<CompanyCompiler> sessionCompiler = new SessionCompiler<CompanyCompiler>();
+            //File.WriteAllText("test_session.lua", sessionCompiler.CompileSession(session));
 
             /*GameMatch m = new GameMatch(session);
             m.LoadMatch($"{Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)}\\my games\\company of heroes 2\\playback\\temp.rec");
@@ -63,7 +60,7 @@ namespace coh2_battlegrounds_console {
             //SessionManager.PlaySession<SessionCompiler<CompanyCompiler>, CompanyCompiler>(session, (a,b) => { Console.WriteLine(a); }, null, null);
 
             // Save json
-            testCompany.SaveToFile("guards_rifle.json");
+            testCompany.SaveToFile("26th_Rifle_Division.json");
             /*
             LobbyHub hub = new LobbyHub();
             if (!LobbyHub.CanConnect()) {
@@ -435,20 +432,10 @@ namespace coh2_battlegrounds_console {
                     if (a == ManagedLobbyPlayerEventType.Message) {
                         Console.WriteLine($"{b}: {c}");
                         Console.WriteLine("Testing launch feature");
-                        result.CompileAndStartMatch(x => Console.WriteLine(x));
+                        //result.CompileAndStartMatch(x => Console.WriteLine(x));
                     } else {
                         string word = (a == ManagedLobbyPlayerEventType.Leave) ? "Left" : (a == ManagedLobbyPlayerEventType.Kicked ? "Was kicked" : "Joined");
                         Console.WriteLine($"{b} {word}");
-                    }
-                };
-
-                result.OnLocalDataRequested += (a) => {
-                    if (a.CompareTo("CompanyData") == 0) {
-                        return Company.ReadCompanyFromFile("test_company.json");
-                    } else if (a.CompareTo("Gamemode") == 0) {
-                        return WinconditionList.GetWinconditionByName("Victory Points");
-                    } else {
-                        return null;
                     }
                 };
 

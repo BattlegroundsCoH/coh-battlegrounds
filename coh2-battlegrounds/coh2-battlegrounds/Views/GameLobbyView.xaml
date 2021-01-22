@@ -93,10 +93,10 @@
                 IsEnabled="{Binding ElementName=messageText, Path=Text.Length, Mode=OneWay}" Click="SendMessage_Click"/>
 
         <!-- Row 7 -->
-        <Button Grid.Row="7" Grid.Column="0" Name="StartGameBttn" Content="Start Game" Margin=" 0,2.5,0,0" Click="StartGame_Click" IsEnabled="False"/>
+        <Button Grid.Row="7" Grid.Column="0" Name="StartGameBttn" Content="Start Game" Margin=" 0,2.5,0,0" Click="StartGame_Click" IsEnabled="{Binding CanStartMatch}"/>
 
         <!-- Row 8 -->
-        <Button Grid.Row="8" Grid.Column="0" Content="Leave Lobby" Margin="0,2.5,0,0" Click="LeaveLobby_Click"/>
+        <Button Grid.Row="8" Grid.Column="0" Content="Leave Lobby" Margin="0,2.5,0,0" Click="LeaveLobby_Click" IsEnabled="{Binding CanLeave}"/>
 
 
     </Grid>

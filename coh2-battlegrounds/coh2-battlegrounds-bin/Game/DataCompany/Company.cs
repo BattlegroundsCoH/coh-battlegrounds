@@ -25,18 +25,18 @@ namespace Battlegrounds.Game.DataCompany {
         public const int MAX_SIZE = 40;
 
         #region Private Fields
-        [JsonIgnore] private string m_checksum;
-        [JsonIgnore] private string m_lastEditVersion;
+        private string m_checksum;
+        private string m_lastEditVersion;
         private ushort m_nextSquadId;
-        [JsonIgnore] private List<Squad> m_squads;
-        [JsonIgnore] private List<Blueprint> m_inventory;
-        [JsonIgnore] private List<Modifier> m_modifiers;
-        [JsonIgnore] private List<UpgradeBlueprint> m_upgrades;
-        [JsonIgnore] private List<SpecialAbility> m_abilities;
-        [JsonIgnore] private CompanyType m_companyType;
-        [JsonIgnore] private CompanyAvailabilityType m_availabilityType;
-        [JsonIgnore] private Faction m_companyArmy;
-        [JsonIgnore] private CompanyStatistics m_companyStatistics;
+        private List<Squad> m_squads;
+        private List<Blueprint> m_inventory;
+        private List<Modifier> m_modifiers;
+        private List<UpgradeBlueprint> m_upgrades;
+        private List<SpecialAbility> m_abilities;
+        private CompanyType m_companyType;
+        private CompanyAvailabilityType m_availabilityType;
+        private Faction m_companyArmy;
+        private CompanyStatistics m_companyStatistics;
         #endregion
 
         /// <summary>
@@ -131,6 +131,10 @@ namespace Battlegrounds.Game.DataCompany {
         /// </summary>
         [JsonBackingField(nameof(m_checksum))]
         public string Checksum => this.m_checksum;
+
+
+        [JsonBackingField(nameof(m_nextSquadId))]
+        protected ushort NextSquadID => this.m_nextSquadId;
 
         /// <summary>
         /// New empty <see cref="Company"/> instance.
@@ -254,7 +258,7 @@ namespace Battlegrounds.Game.DataCompany {
         /// </summary>
         /// <returns>The string representation of the checksum.</returns>
         public string GetChecksum() {
-            long aggr = Encoding.UTF8.GetBytes((this as IJsonObject).Serialize()).Aggregate<byte, long>(0, (a, b) => a + b + (a % b));
+            long aggr = Encoding.UTF8.GetBytes(this.SerializeAsJson()).Aggregate<byte, long>(0, (a, b) => a + b + (a % b));
             aggr &= 0xffff;
             return aggr.ToString("X8");
         }
@@ -294,7 +298,7 @@ namespace Battlegrounds.Game.DataCompany {
         public void SaveToFile(string jsonfile) {
             this.m_checksum = string.Empty;
             this.m_checksum = this.GetChecksum();
-            File.WriteAllText(jsonfile, (this as IJsonObject).Serialize());
+            File.WriteAllText(jsonfile, this.SerializeAsJson());
         }
 
         public void SetType(CompanyType type) => this.m_companyType = type;
@@ -329,7 +333,7 @@ namespace Battlegrounds.Game.DataCompany {
         public byte[] ToBytes() {
             this.m_checksum = string.Empty;
             this.m_checksum = this.GetChecksum();
-            return Encoding.UTF8.GetBytes((this as IJsonObject).Serialize());
+            return Encoding.UTF8.GetBytes(this.SerializeAsJson());
         }
 
         /// <summary>

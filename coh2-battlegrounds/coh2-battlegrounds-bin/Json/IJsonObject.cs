@@ -10,12 +10,15 @@ using Battlegrounds.Functional;
 namespace Battlegrounds.Json {
     
     /// <summary>
-    /// Json interface for converting object to and from a Json object. Implements <see cref="IJsonElement"/>.
+    /// Interface for converting objects to and from a Json object. Implements <see cref="IJsonElement"/>.
     /// </summary>
     public interface IJsonObject : IJsonElement {
 
         private static readonly IFormatProvider JSStandardFormat = new CultureInfo("en-GB");
 
+        /// <summary>
+        /// Get the <see cref="IFormatProvider"/> used when formatting a JSon object.
+        /// </summary>
         public static IFormatProvider JsonStandardFormatter => JSStandardFormat;
 
         private struct JsonAttributeSet {
@@ -71,16 +74,22 @@ namespace Battlegrounds.Json {
         /// Serialize self into a json object
         /// </summary>
         /// <returns>The json string representation of the <see cref="IJsonObject"/>.</returns>
-        public virtual string Serialize()
+        public string Serialize()
             => this.Serialize(0);
 
         /// <summary>
         /// Serialize self into a json object
         /// </summary>
         /// <returns>The json string representation of the <see cref="IJsonObject"/>.</returns>
-        public virtual string Serialize(int indent)
+        public string Serialize(int indent)
             => SerializeObject(indent, this);
 
+        /// <summary>
+        /// Serialize some object (Note, the object can ignore the <see cref="IJsonObject"/> constraint and may expose fields that should not be exposed).
+        /// </summary>
+        /// <param name="indent">The level of indent to use while serializing.</param>
+        /// <param name="obj">The <see cref="object"/> to serialize.</param>
+        /// <returns>Will return a <see cref="string"/> representation of the <paramref name="obj"/> in Json format.</returns>
         public static string SerializeObject(int indent, object obj) {
 
             Type il_type = obj.GetType();
@@ -95,6 +104,13 @@ namespace Battlegrounds.Json {
             IEnumerable<PropertyInfo> properties = il_type.GetProperties(BindingFlags.FlattenHierarchy | BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)
                 .Where(x => x.GetCustomAttribute<JsonIgnoreAttribute>() is null);
 
+            // Remove fields acting as backing fields of JsonBackingFieldAttributed properties
+            properties.ForEach(x => {
+                if (x.GetCustomAttribute<JsonBackingFieldAttribute>() is JsonBackingFieldAttribute backer) {
+                    fields = fields.Without(x => x.Name.CompareTo(backer.Field) == 0);
+                }
+            });
+
             // Derecord the object
             properties = JsonRecord.Derecord(obj, properties);
 
@@ -102,8 +118,10 @@ namespace Battlegrounds.Json {
             jsonbuilder.AppendLine("{");
             jsonbuilder.IncreaseIndent();
 
+            // Write C# type
             jsonbuilder.AppendLine($"\"jsdbtype\": \"{il_type.FullName}\"{((fields.Count() + properties.Count() > 0) ? "," : "")}");
 
+            // Write out all properties
             foreach (PropertyInfo pinfo in properties) {
                 var attribSet = new JsonAttributeSet(pinfo);
                 if (attribSet.HasBackingField) {
@@ -121,6 +139,7 @@ namespace Battlegrounds.Json {
                 }
             }
 
+            // Then write out all properties
             foreach (FieldInfo finfo in fields) {
                 WriteKeyValuePair(
                     jsonbuilder,
@@ -132,6 +151,7 @@ namespace Battlegrounds.Json {
                     );
             }
 
+            // Fix syntax
             if (jsonbuilder.EndsWith(",", true)) {
                 int lComma = jsonbuilder.LastIndexOf(',');
                 jsonbuilder.Popback(jsonbuilder.Length - lComma);
@@ -141,8 +161,8 @@ namespace Battlegrounds.Json {
             jsonbuilder.DecreaseIndent();
             jsonbuilder.AppendLine("}");
 
+            // Return the built string.
             return jsonbuilder.GetContent();
-
 
         }
 
@@ -236,6 +256,8 @@ namespace Battlegrounds.Json {
         /// </summary>
         /// <param name="parsedJson">The parsed input of a json object</param>
         /// <returns>A deserialized instance of the json input string</returns>
+        /// <exception cref="NullReferenceException"/>
+        /// <exception cref="InvalidCastException"/>
         internal static object Deserialize(Dictionary<string, object> parsedJson) {
 
             // Solve type
@@ -388,8 +410,18 @@ namespace Battlegrounds.Json {
                     // If the attribute is not valid
                     if (eAttrib is null) {
 
+                        // Value to set
+                        object valueToSet;
+
+                        // If there exists a converter
+                        if (JsonConverters.HasConverter(valueType)) {
+                            valueToSet = JsonConverters.GetConverter(valueType).ConvertFromString(value as string);
+                        } else {
+                            valueToSet = Convert.ChangeType(value, valueType, JsonStandardFormatter);
+                        }
+
                         // Set value
-                        setValueMethod.Invoke(instance, Convert.ChangeType(value, valueType, JsonStandardFormatter));
+                        setValueMethod.Invoke(instance, valueToSet);
 
                     } else {
 
@@ -437,6 +469,20 @@ namespace Battlegrounds.Json {
         }
 
 
+    }
+
+    /// <summary>
+    /// Static helper extension class for <see cref="IJsonObject"/> functionality.
+    /// </summary>
+    public static class JsonSerializer {
+
+        /// <summary>
+        /// Serialize the <typeparamref name="T"/> object into its Json <see cref="string"/> representation.
+        /// </summary>
+        /// <typeparam name="T">The <see cref="IJsonObject"/> object type.</typeparam>
+        /// <param name="obj">The <typeparamref name="T"/> to serialize.</param>
+        /// <returns>A <see cref="string"/> representation of the given <typeparamref name="T"/> object.</returns>
+        public static string SerializeAsJson<T>(this T obj) where T : IJsonObject => obj.Serialize();
     }
 
 }

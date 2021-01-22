@@ -14,6 +14,11 @@ namespace Battlegrounds.Game.Match {
         public IWinconditionMod SelectedGamemode { get; set; }
 
         /// <summary>
+        /// The selected tuning mod to play with.
+        /// </summary>
+        public ITuningMod SelectedTuningMod { get; set; }
+
+        /// <summary>
         /// The selected game mode option.
         /// </summary>
         public int SelectedGamemodeOption { get; set; }
@@ -22,11 +27,6 @@ namespace Battlegrounds.Game.Match {
         /// The selected scenario.
         /// </summary>
         public Scenario SelectedScenario { get; set; }
-
-        /// <summary>
-        /// The selected tuning mod to play with.
-        /// </summary>
-        public ITuningMod SelectedTuningMod { get; set; }
 
         /// <summary>
         /// The Allied players participating in the <see cref="Session"/>.

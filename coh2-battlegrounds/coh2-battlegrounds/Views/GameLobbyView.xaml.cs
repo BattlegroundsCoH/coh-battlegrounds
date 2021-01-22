@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -17,7 +18,9 @@ using Battlegrounds.Game.Gameplay;
 using Battlegrounds.Game.Match;
 using Battlegrounds.Modding;
 using Battlegrounds.Online.Lobby;
+
 using BattlegroundsApp.Controls.Lobby;
+using BattlegroundsApp.Dialogs.YesNo;
 using BattlegroundsApp.LocalData;
 using BattlegroundsApp.Models;
 using BattlegroundsApp.Resources;
@@ -28,14 +31,23 @@ namespace BattlegroundsApp.Views {
     /// <summary>
     /// Interaction logic for GameLobbyView.xaml
     /// </summary>
-    public partial class GameLobbyView : ViewState {
+    public partial class GameLobbyView : ViewState, INotifyPropertyChanged {
 
         private bool m_hasCreatedLobbyOnce;
+        private ILobbyPlayModel m_playModel;
         private ServerMessageHandler m_smh;
         private LobbyTeamManagementModel m_teamManagement;
         private Task m_lobbyUpdate;
 
         private volatile bool m_updateLobby;
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        public bool CanLeave => this.m_playModel is null;
+
+        public bool CanStartMatch => (this.m_smh.Lobby.IsHost && this.IsLegalMatch()) || (this.m_playModel is not null && this.m_playModel.CanCancel);
+
+        public LobbyTeamManagementModel TeamManager => this.m_teamManagement;
 
         public GameLobbyView() {
 
@@ -74,17 +86,35 @@ namespace BattlegroundsApp.Views {
         }
 
         private void StartGame_Click(object sender, RoutedEventArgs e) {
-            this.m_smh.Lobby.CompileAndStartMatch(this.OnStartMatchCancelled);
-            this.UpdateGUI(() => this.lobbyChat.AppendText("[Info] Starting match\n"));
+
+            if (this.m_playModel is null) {
+
+                // Prompt the user for confirmation.
+                if (YesNoDialogViewModel.ShowYesNoDialog("Start Match", "Are you sure you'd like to start?") == YesNoDialogResult.Confirm) {
+
+                    // Create play model and begin playing
+                    this.m_playModel = new LobbyHostPlayModel(this, this.m_smh.Lobby);
+                    this.m_playModel.PlayGame(this.MatchCancelled);
+
+                }
+
+            } else {
+
+                // Cancel the game (Will invoke MatchCancelled when cancelled).
+                this.m_playModel.CancelGame();
+
+            }
+
         }
 
-        private void OnStartMatchCancelled(string reason) {
-            Trace.WriteLine(reason, "GameLobbyView-OnMatchCancelled.cs");
-            if (reason.CompareTo(SessionStatus.S_Compiling.ToString()) == 0) {
-                this.UpdateGUI(() => this.lobbyChat.AppendText("[Info] Generating ingame match details...\n"));
-            } else if (reason.CompareTo(SessionStatus.S_Playing.ToString()) == 0) {
-                this.UpdateGUI(() => this.lobbyChat.AppendText("[Info] Starting game...\n"));
-            }
+        private void MatchCancelled() {
+            
+            // Reset text
+            this.StartGameBttn.Content = "Start Match";
+            
+            // Remove reference to play model
+            this.m_playModel = null;
+
         }
 
         private void LeaveLobby_Click(object sender, RoutedEventArgs e) {
@@ -124,6 +154,8 @@ namespace BattlegroundsApp.Views {
         public void AddGamemodeChangedListener(GamemodechangedListener listener) => this.m_smh.OnGamemodeChanged += listener;
 
         public void RemoveGamemodeChangedListener(GamemodechangedListener listener) => this.m_smh.OnGamemodeChanged -= listener;
+
+        public void AddMatchStartingListener(StartingMatchListener listener) => this.m_smh.OnMatchStarting += listener;
 
         #endregion
 
@@ -249,7 +281,7 @@ namespace BattlegroundsApp.Views {
                 SelectedGamemode = selectedWincondition,
                 SelectedGamemodeOption = 1,
                 SelectedScenario = selectedScenario,
-                SelectedTuningMod = new BattlegroundsTuning(),
+                SelectedTuningMod = new BattlegroundsTuning(), // TODO: Allow users to change this somewhere
                 Allies = alliedTeam.ToArray(),
                 Axis = axisTeam.ToArray(),
                 FillAI = false,
@@ -386,7 +418,7 @@ namespace BattlegroundsApp.Views {
             }
         }
 
-        private void UpdateStartMatchButton() => StartGameBttn.IsEnabled = this.IsLegalMatch();
+        private void UpdateStartMatchButton() => this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(CanStartMatch)));
 
         private bool IsLegalMatch() 
             => this.m_smh.Lobby.IsHost && this.m_teamManagement.GetTeamSize(ManagedLobbyTeamType.Allies) > 0 && this.m_teamManagement.GetTeamSize(ManagedLobbyTeamType.Axis) > 0;
@@ -448,6 +480,7 @@ namespace BattlegroundsApp.Views {
                 // TODO: Hook into info messages so we can update properly
                 this.AddMapChangedListener(this.MapChangedCallback);
                 this.AddGamemodeChangedListener(this.GamemodeChangedCallback);
+                this.AddMatchStartingListener(this.MatchStarting);
 
             }
             
@@ -470,10 +503,31 @@ namespace BattlegroundsApp.Views {
 
         private void MapChangedCallback(string scenario) => this.UpdateSelectedMap(scenario, string.Empty);
 
+        private void MatchStarting(int time, string guid) {
+
+            // Create new lobby member play model
+            var model = new LobbyMemberPlayModel(this, this.m_smh.Lobby);
+            model.PlayGame(MatchCancelled);
+            model.CreateSession(guid);
+            model.StartCountdown(time);
+
+            // Set model
+            this.m_playModel = model;
+
+        }
+
         public override void StateOnLostFocus() {
 
             // Stop lobby update
             this.m_updateLobby = false;
+
+            // If we're in the middle of launching a game
+            if (this.m_playModel is not null) {
+
+                // Forcefully change us back
+                this.StateChangeRequest?.Invoke(this);
+
+            }
 
         }
 

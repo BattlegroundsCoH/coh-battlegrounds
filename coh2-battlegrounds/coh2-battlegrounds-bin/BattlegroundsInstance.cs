@@ -214,7 +214,7 @@ namespace Battlegrounds {
         /// Save the currently stored data of this instance.
         /// </summary>
         public static void SaveInstance() 
-            => File.WriteAllText("local.json", (__instance as IJsonObject).Serialize());
+            => File.WriteAllText("local.json", __instance.SerializeAsJson());
 
     }
 

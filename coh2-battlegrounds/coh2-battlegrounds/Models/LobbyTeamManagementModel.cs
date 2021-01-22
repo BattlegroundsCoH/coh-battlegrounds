@@ -28,7 +28,16 @@ namespace BattlegroundsApp.Models {
 
         public event Action<ManagedLobbyTeamType, PlayerCardView, object, string> OnTeamEvent;
 
+        /// <summary>
+        /// Get the total amount of players (Including AI).
+        /// </summary>
         public int TotalPlayerCount => this.m_teamSetup[ManagedLobbyTeamType.Axis].Count(x => x.IsOccupied) + this.m_teamSetup[ManagedLobbyTeamType.Allies].Count(x => x.IsOccupied);
+
+        /// <summary>
+        /// Get the total amount of human players.
+        /// </summary>
+        public int TotalHumanCount =>
+            this.m_teamSetup[ManagedLobbyTeamType.Axis].Count(x => !x.IsAI && x.IsOccupied) + this.m_teamSetup[ManagedLobbyTeamType.Allies].Count(x => !x.IsAI && x.IsOccupied);
 
         public LobbyTeamManagementModel(Grid teamGrid) {
             

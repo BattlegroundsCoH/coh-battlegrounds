@@ -15,6 +15,7 @@ import("WinConditions/ui_api/label.scar");
 ---------------------------------------------------------------------------
 -- UI API - Helper functions
 -- Developed by CoDiEx & Ragnar
+-- Credits for implentention of 'UI_AddSetupFunction': Janne252
 ---------------------------------------------------------------------------
 gui_inits = {};
 gui_issetup = false;

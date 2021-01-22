@@ -33,6 +33,16 @@
         Message,
 
         /// <summary>
+        /// A message was sent directly from a player.
+        /// </summary>
+        DirectMessage,
+
+        /// <summary>
+        /// A team message was sent from a team member.
+        /// </summary>
+        TeamMessage,
+
+        /// <summary>
         /// A meta-message (small data) was sent from a player.
         /// </summary>
         Meta,

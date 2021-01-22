@@ -48,7 +48,7 @@ namespace Battlegrounds.Compiler {
             TxtBuilder archiveDef = new TxtBuilder();
             
             // Scar/Data TOC section
-            archiveDef.AppendLine($"Archive name=\"{ModGuid.FromGuid(wincondition.Guid)}\" blocksize=\"262144\"");
+            archiveDef.AppendLine($"Archive name=\"{wincondition.Guid}\" blocksize=\"262144\"");
             archiveDef.AppendLine("TOCStart name=\"data\" alias=\"data\" path=\"\" relativeroot=\"data\"");
             archiveDef.AppendLine("\tFileSettingsStart defverification=\"sha1_blocks\" defcompression=\"stream_compress\"");
             archiveDef.AppendLine("\t\tOverride wildcard=\".*\\.(rgt|ttf)$\" minsize=\"-1\" maxsize=\"-1\" vt=\"none\" ct=\"store\"");

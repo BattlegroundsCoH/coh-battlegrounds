@@ -1,11 +1,12 @@
-﻿using Battlegrounds.Json;
+﻿using System;
+using Battlegrounds.Json;
 
 namespace Battlegrounds.Game.DataCompany {
 
     /// <summary>
     /// 
     /// </summary>
-    public class CompanyStatistics : IJsonObject {
+    public class CompanyStatistics : IJsonObject, ICloneable {
 
         #region Win/Lose counts
 
@@ -31,6 +32,8 @@ namespace Battlegrounds.Game.DataCompany {
 
         [JsonIgnore]
         public ulong TotalLosses => this.TotalInfantryLosses + this.TotalVehicleLosses;
+
+        public object Clone() => JsonParser.ParseString<CompanyStatistics>(this.SerializeAsJson());
 
         #endregion
 

@@ -28,7 +28,7 @@ namespace Battlegrounds.Compiler.Source {
                 "description=\"\"",
                 "dependencies = {}"
             };
-            return new WinconoditionSourceFile($"info\\{ModGuid.FromGuid(mod.Guid)}.info", Encoding.UTF8.GetBytes(string.Join('\n', info)));
+            return new WinconoditionSourceFile($"info\\{mod.Guid}.info", Encoding.UTF8.GetBytes(string.Join('\n', info)));
         }
 
         public WinconoditionSourceFile[] GetLocaleFiles() {
@@ -65,7 +65,7 @@ namespace Battlegrounds.Compiler.Source {
 
         public WinconoditionSourceFile[] GetUIFiles(IWinconditionMod mod) {
             List<WinconoditionSourceFile> files = new List<WinconoditionSourceFile> {
-                new WinconoditionSourceFile($"data\\ui\\Bin\\{ModGuid.FromGuid(mod.Guid)}.gfx", File.ReadAllBytes($"{this.Intermediate}data\\ui\\Bin\\{ModGuid.FromGuid(mod.Guid)}.gfx"))
+                new WinconoditionSourceFile($"data\\ui\\Bin\\{mod.Guid}.gfx", File.ReadAllBytes($"{this.Intermediate}data\\ui\\Bin\\{mod.Guid}.gfx"))
             };
             Directory.GetFiles($"{this.Intermediate}data\\ui\\Assets\\Textures\\", "*.dds")
                 .ForEach(x => files.Add(new WinconoditionSourceFile(x[this.Intermediate.Length..], File.ReadAllBytes(x))));

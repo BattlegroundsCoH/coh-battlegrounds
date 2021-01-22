@@ -10,6 +10,16 @@ namespace Battlegrounds.Game {
     public static class CoH2Launcher {
 
         /// <summary>
+        /// Const ID for marking process as having run to completion
+        /// </summary>
+        public const int PROCESS_OK = 0;
+
+        /// <summary>
+        /// Const ID for marking process not found
+        /// </summary>
+        public const int PROCESS_NOT_FOUND = 1;
+
+        /// <summary>
         /// The steam app ID for Company of Heroes 2.
         /// </summary>
         public const string GameAppID = "231430";
@@ -47,7 +57,7 @@ namespace Battlegrounds.Game {
             int attemps = 0;
 
             // The processes
-            Process[] processes = new Process[0];
+            Process[] processes = System.Array.Empty<Process>();
 
             // While we havent found it and there are still attempts to make
             while (attemps < 1000) {
@@ -70,7 +80,7 @@ namespace Battlegrounds.Game {
 
             // None found?
             if (processes.Length == 0) {
-                return 1;
+                return PROCESS_NOT_FOUND;
             }
 
             // Get the process
@@ -82,7 +92,7 @@ namespace Battlegrounds.Game {
             // Wait 0.5s
             Thread.Sleep(500);
 
-            return 0;
+            return PROCESS_OK;
 
         }
 
