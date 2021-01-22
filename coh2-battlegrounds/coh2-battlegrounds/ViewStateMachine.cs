@@ -26,7 +26,7 @@ namespace BattlegroundsApp {
             this.m_currentState?.StateOnLostFocus();
             this.m_currentState = state;
             this.m_currentState.StateChangeRequest = this.GetRequestHandler();
-            this.m_currentState.StateOnFocus();
+            this.m_currentState.UpdateGUI(() => { this.m_currentState.StateOnFocus(); });
         }
 
         /// <summary>

@@ -92,6 +92,8 @@
 
         LOBBY_FWD2HOST, // Forward message to host (Must contain descriptor in first argument).
 
+        LOBBY_SYSINFO, // System information to send
+
         USER_SETUSERDATA, // Set the user data
 
         USER_PING, // User ping-back (SERVER_PING -> reponse = USER_PING)

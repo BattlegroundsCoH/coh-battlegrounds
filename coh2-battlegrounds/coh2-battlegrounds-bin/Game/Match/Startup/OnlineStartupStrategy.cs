@@ -52,9 +52,12 @@ namespace Battlegrounds.Game.Match.Startup {
                 string sender = string.Empty;
 
                 // Send starting message with timeout and wait for stop listener
-                connection.SendMessageWithResponseListener(new Message(MessageType.LOBBY_STARTING, this.StartMatchWait.ToString()), MessageType.LOBBY_CANCEL, x => { 
-                    shouldStop = true; sender = x.Argument1; 
-                });
+                connection.SendMessageWithResponseListener(new Message(MessageType.LOBBY_STARTING, this.StartMatchWait.ToString(), this.m_session.SessionID.ToString()), 
+                    MessageType.LOBBY_CANCEL,
+                    x => {
+                        shouldStop = true; sender = x.Argument1;
+                    }
+                );
 
                 // If we get stop message, false is returned, otherwise, if we timeout, return true (received no stop message).
                 // 1000 ms * StopMatchSeconds attempts = StopMatchSeconds seconds to stop match from starting.

@@ -124,11 +124,13 @@ namespace BattlegroundsApp.Views {
 
             // Try to leave lobby
             if (this.m_smh.Lobby != null) {
-                this.m_smh.LeaveLobby(); // Send leave message
-            }
+                this.m_smh.LeaveLobby(() => {
 
-            // Change state
-            this.StateChangeRequest?.Invoke(MainWindow.GAMEBROWSERSTATE);
+                    // Change state when we've officially left
+                    this.StateChangeRequest?.Invoke(MainWindow.GAMEBROWSERSTATE);
+
+                });
+            }
 
         }
 

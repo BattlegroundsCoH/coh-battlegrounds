@@ -204,9 +204,9 @@ namespace BattlegroundsApp {
             });
         }
 
-        public void LeaveLobby() {
+        public void LeaveLobby(Action onLeft) {
             if (this.m_lobbyInstance != null) {
-                this.m_lobbyInstance.Leave(); // Async... will need a callback for this when done.
+                this.m_lobbyInstance.Leave(x => onLeft?.Invoke()); // Async... will need a callback for this when done.
             }
         }
 

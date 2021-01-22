@@ -773,10 +773,13 @@ namespace Battlegrounds.Online.Lobby {
         /// Gracefully disconnect from the <see cref="ManagedLobby"/>.
         /// </summary>
         /// <remarks>The connection to the server will be broken and <see cref="Join(LobbyHub, string, string, ManagedLobbyConnectCallback)"/> must be used to reestablish connection.</remarks>
-        public void Leave() {
-            if (this.m_underlyingConnection != null) {
-                this.m_underlyingConnection.SendMessage(new Message(MessageType.LOBBY_LEAVE));
-                this.m_underlyingConnection.Stop();
+        public void Leave(ManagedLobbyTaskDone taskDone) {
+            if (this.m_underlyingConnection is not null) {
+                void StopAll(Message msg) {
+                    this.m_underlyingConnection.Stop();
+                    taskDone?.Invoke(this);
+                }
+                this.m_underlyingConnection.SendMessageWithResponse(new Message(MessageType.LOBBY_LEAVE), StopAll);
             }
         }
 
