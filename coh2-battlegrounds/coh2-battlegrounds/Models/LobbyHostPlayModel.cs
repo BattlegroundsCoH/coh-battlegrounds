@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Diagnostics;
-
+using System.Threading.Tasks;
+using Battlegrounds.Game.DataCompany;
 using Battlegrounds.Game.Match;
 using Battlegrounds.Game.Match.Analyze;
 using Battlegrounds.Game.Match.Composite;
 using Battlegrounds.Game.Match.Finalizer;
+using Battlegrounds.Game.Match.Play;
 using Battlegrounds.Game.Match.Startup;
 using Battlegrounds.Online;
 using Battlegrounds.Online.Lobby;
@@ -56,8 +58,8 @@ namespace BattlegroundsApp.Models {
 
                 // Startup strategy
                 startupStrategy = new SingleplayerStartupStrategy {
-                    LocalCompanyCollector = this.m_view.GetLocalCompany,
-                    SessionInfoCollector = this.m_view.CreateSessionInfo,
+                    LocalCompanyCollector = this.GetLocalCompany,
+                    SessionInfoCollector = this.GetSessionInfo,
                 };
 
                 // Analysis strategy
@@ -80,8 +82,8 @@ namespace BattlegroundsApp.Models {
 
                 // Create standard online setup strategy.
                 startupStrategy = new OnlineStartupStrategy {
-                    LocalCompanyCollector = this.m_view.GetLocalCompany,
-                    SessionInfoCollector = this.m_view.CreateSessionInfo,
+                    LocalCompanyCollector = this.GetLocalCompany,
+                    SessionInfoCollector = this.GetSessionInfo,
                     StartMatchWait = this.StopMatchPulse,
                     StopMatchSeconds = WAIT_TIME,
                 };
@@ -128,12 +130,42 @@ namespace BattlegroundsApp.Models {
 
         }
 
-        private void OnError() { 
-            
+        private Company GetLocalCompany() => this.m_view.Dispatcher.Invoke(() => this.m_view.GetLocalCompany());
+
+        private SessionInfo GetSessionInfo() => this.m_view.Dispatcher.Invoke(() => this.m_view.CreateSessionInfo());
+
+        private void OnError(object reason, string message) {
+
+            // Write to console
+            Trace.WriteLine($"[{reason}] -- {message} (OnError)", "GameLobbyView");
+
+            this.m_view.UpdateGUI(() => {
+
+                // If the reason is from the play strategy
+                if (reason is IPlayStrategy playStrategy) {
+
+                    // Append to lobby chat
+                    this.m_view.lobbyChat.AppendText($"[System] A fatal error was detected while playing.\n");
+
+                }
+
+                // Invoke the handler for "cancelling"
+                this.m_cancelHandler.Invoke();
+
+            });
+
         }
 
-        private void OnComplete() { 
-            
+        private void OnComplete() {
+            this.m_view.UpdateGUI(() => {
+
+                // Append to lobby chat
+                this.m_view.lobbyChat.AppendText($"[System] Match has completed and been logged.\n");
+
+                // Invoke the handler for "cancelling"
+                this.m_cancelHandler.Invoke();
+
+            });
         }
 
         public void CancelGame() {

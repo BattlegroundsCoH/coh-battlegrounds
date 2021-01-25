@@ -7,14 +7,14 @@ using Battlegrounds.Game.Match.Startup;
 namespace Battlegrounds.Game.Match {
 
     /// <summary>
-    /// 
+    /// Handler for when a match has fully completed.
     /// </summary>
     public delegate void MatchCompletedHandler();
 
     /// <summary>
-    /// 
+    /// Handler for handling errors that have occured during the match.
     /// </summary>
-    public delegate void MatchErrorHandler();
+    public delegate void MatchErrorHandler(object cause, string reason);
 
     /// <summary>
     /// Basic controller for controlloing the flow of a match from startup to finalization.
@@ -114,7 +114,7 @@ namespace Battlegrounds.Game.Match {
                 throw new ArgumentNullException(nameof(this.m_analyzer), "Analysis object cannot be null.");
             } else {
                 this.m_analyzer.AnalysisCancelled += (cause, reason) => {
-                    this.Error?.Invoke(); // TODO: Proper error handling
+                    this.Error?.Invoke(cause, reason);
                 };
             }
             
@@ -169,24 +169,22 @@ namespace Battlegrounds.Game.Match {
                             // And then commit
                             this.m_finalizer.Finalize(this.m_finalizeStrategy, analysis);
 
-                        } else {
-
-                            // TODO: Handle
-
                         }
+
+                        // Invoke the complete event
+                        this.Complete?.Invoke();
 
                     } else {
 
-                        // TODO: Handle
+                        // "Throw" Error
+                        this.Error?.Invoke(results, "Match ID did not match");
 
                     }
 
-                    // Invoke the complete event
-                    this.Complete?.Invoke();
-
                 } else {
 
-                    // TODO: Handle
+                    // Let caller know that the player was faulty
+                    this.Error?.Invoke(player, "The player detected one or more problems");
 
                 }
 
