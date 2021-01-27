@@ -43,14 +43,20 @@ namespace BattlegroundsApp.Models {
         }
 
         private async void DoCountdownAndUpdate() {
+            this.m_remainingTime = this.m_maxTime;
             while (this.m_remainingTime > 0) {
                 _ = this.m_view.UpdateGUI(() => {
                     this.m_view.StartGameBttn.Content = $"Stop Match ({this.m_maxTime - this.m_remainingTime}s)";
+                    this.m_view.StartGameBttn.ToolTip = "Stop the match from starting";
                 });
                 await Task.Delay(1000);
                 this.m_remainingTime--;
             }
             this.m_canStop = false;
+            _ = this.m_view.UpdateGUI(() => {
+                this.m_view.StartGameBttn.Content = $"Start Match";
+                this.m_view.StartGameBttn.ToolTip = "Only the host can start the match";
+            });
         }
 
         public void CreateSession(string guid) => this.m_session = new RemoteSession(guid);
@@ -65,7 +71,14 @@ namespace BattlegroundsApp.Models {
             this.m_lobby.AddListener(MessageType.LOBBY_SYNCMATCH, this.OnSyncMatch);
             this.m_lobby.AddListener(MessageType.LOBBY_NOTIFY_GAMEMODE, this.OnGamemodeAvailable);
             this.m_lobby.AddListener(MessageType.LOBBY_NOTIFY_MATCH, this.OnResultsAvailable);
+            this.m_lobby.AddListener(MessageType.LOBBY_SYSINFO, this.OnSysInfo, true);
 
+        }
+
+        private void OnSysInfo(Message message) {
+            this.m_view.UpdateGUI(() => {
+                this.m_view.lobbyChat.AppendText($"{message.Argument1}\n");
+            });
         }
 
         private void OnResultsAvailable(Message message) {
