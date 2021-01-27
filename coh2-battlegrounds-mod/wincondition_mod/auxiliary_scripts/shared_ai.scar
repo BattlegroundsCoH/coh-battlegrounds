@@ -75,7 +75,7 @@ function BGAI_RegisterAIPlayer(index, player)
     };
 
     -- Get the update time
-    local updateTime = 60 - (difficulty * 15);
+    local updateTime = 60 - (_bg_aiData[index].difficulty * 14.5);
 
     -- Set update interval
     _bg_aiData[index].update_interval = updateTime;

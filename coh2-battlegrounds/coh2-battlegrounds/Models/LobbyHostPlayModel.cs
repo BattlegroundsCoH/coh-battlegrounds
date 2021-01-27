@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Diagnostics;
-using System.Threading.Tasks;
 using Battlegrounds.Game.DataCompany;
 using Battlegrounds.Game.Match;
 using Battlegrounds.Game.Match.Analyze;
@@ -139,6 +138,7 @@ namespace BattlegroundsApp.Models {
             // Write to console
             Trace.WriteLine($"[{reason}] -- {message} (OnError)", "GameLobbyView");
 
+            // Report the rest on the UI thread
             this.m_view.UpdateGUI(() => {
 
                 // If the reason is from the play strategy
