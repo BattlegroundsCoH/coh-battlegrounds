@@ -355,6 +355,9 @@ function BG_OnSquadDeath(squad)
 
     end
 
+    -- Remove from deployed list
+    _bg_playerData[playerRefID].deployed[id] = nil;
+
 end
 
 function BG_RegisterSquadDeath(playerData, companyID)
@@ -377,10 +380,9 @@ function BG_RegisterSquadDeath(playerData, companyID)
         symbol = companySquad.symbol,
         item_symbol = BG_GetUnitItemIcon(companySquad),
     };
-    table.insert(playerData.lossData, lData);
 
-    -- Remove from deployed list
-    playerData.deployed[id] = nil;
+    -- Register loss
+    table.insert(playerData.lossData, lData);
 
 end
 

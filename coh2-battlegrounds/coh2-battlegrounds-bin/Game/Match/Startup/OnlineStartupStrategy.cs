@@ -61,7 +61,10 @@ namespace Battlegrounds.Game.Match.Startup {
 
                 // If we get stop message, false is returned, otherwise, if we timeout, return true (received no stop message).
                 // 1000 ms * StopMatchSeconds attempts = StopMatchSeconds seconds to stop match from starting.
-                bool result = SyncService.WaitAndPulseUntil(() => shouldStop == true, this.StartMatchWait, this.StopMatchSeconds, 1000); 
+                bool result = SyncService.WaitAndPulseUntil(() => shouldStop == true, this.StartMatchWait, this.StopMatchSeconds, 1000);
+
+                // Remove cancel listener
+                connection.ClearTypeListener(MessageType.LOBBY_CANCEL);
 
                 // Did we timeout?
                 if (result) {

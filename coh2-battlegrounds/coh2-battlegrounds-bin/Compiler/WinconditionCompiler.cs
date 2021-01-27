@@ -116,7 +116,7 @@ namespace Battlegrounds.Compiler {
             archiveDef.Save(archiveDefTxtPath);
 
             // The output archive
-            string outputArchive = $"{Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)}\\my games\\Company of Heroes 2\\mods\\gamemode\\coh2_battlegrounds_wincondition.sga";
+            string outputArchive = $"{Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)}\\my games\\Company of Heroes 2\\mods\\gamemode\\subscriptions\\coh2_battlegrounds_wincondition.sga";
 
             // Call the archive
             if (!Archiver.Archive(archiveDefTxtPath, workdir, outputArchive)) {
