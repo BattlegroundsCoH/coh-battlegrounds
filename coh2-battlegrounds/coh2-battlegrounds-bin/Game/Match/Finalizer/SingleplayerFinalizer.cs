@@ -68,7 +68,9 @@ namespace Battlegrounds.Game.Match.Finalizer {
                 } else {
 
                     // Update veterancy
-                    squad.IncreaseVeterancy(status.VetChange, status.VetExperience);
+                    if (status.VetChange >= 0) {
+                        squad.IncreaseVeterancy(status.VetChange, status.VetExperience);
+                    }
 
                     // Update combat time
                     squad.IncreaseCombatTime(status.CombatTime);

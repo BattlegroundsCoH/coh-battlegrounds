@@ -111,52 +111,90 @@ namespace Battlegrounds.Game.DataSource.Replay {
         }
 
         /// <summary>
+        /// New instance of a <see cref="ReplayFile"/> without a specified replay filepath.
+        /// </summary>
+        public ReplayFile() {
+            this.m_isParsed = false;
+            this.m_playerlist = new List<Player>();
+            this.m_tickList = new List<GameTick>();
+            this.m_replayfile = null;
+        }
+
+        /// <summary>
+        /// Load the replay file from the given file path at instantiation.
+        /// </summary>
+        /// <param name="reader">The <see cref="BinaryReader"/> to use when reading the binary replay data</param>
+        /// <returns>True if no errors occured</returns>
+        /// <exception cref="IOException"/>
+        public bool LoadReplay(BinaryReader reader) {
+            bool res = this.ParseReplayBinary(reader);
+            reader.Close();
+            return res;
+        }
+
+        /// <summary>
         /// Load the replay file from the given file path at instantiation.
         /// </summary>
         /// <returns>True if no errors occured</returns>
         /// <exception cref="ArgumentException"/>
+        /// <exception cref="ArgumentNullException"/>
+        /// <exception cref="FileNotFoundException"/>
         /// <exception cref="IOException"/>
         public bool LoadReplay() {
 
-            using (FileStream fs = File.OpenRead(this.m_replayfile)) {
-                using (BinaryReader bin = new BinaryReader(fs)) {
+            // Verify we can do this
+            if (string.IsNullOrEmpty(this.m_replayfile)) {
+                throw new ArgumentNullException(nameof(m_replayfile), "Cannot load replay without being given ");
+            } else if (!File.Exists(this.m_replayfile)) {
+                throw new FileNotFoundException(null, this.m_replayfile);
+            }
 
-                    // Constant data beforehand
-                    this.m_header = bin.ReadBytes(76);
+            // Create streams
+            using FileStream fs = File.OpenRead(this.m_replayfile);
+            using BinaryReader br = new BinaryReader(fs);
 
-                    // Parse header
-                    if (!this.ParseHeader()) {
-                        return false;
-                    }
-
-                    this.m_scenarioChunkyFile = new ChunkyFile();
-                    if (!this.m_scenarioChunkyFile.LoadFile(bin)) {
-                        Console.WriteLine("Failed to read intro");
-                        return false;
-                    }
-
-                    this.m_replayEventsChunkyFile = new ChunkyFile();
-                    if (!this.m_replayEventsChunkyFile.LoadFile(bin)) {
-                        Console.WriteLine("Failed to read outro");
-                        return false;
-                    }
-
-                    this.m_replaycontent = bin.ReadToEnd();
-
-                    if (!this.ParseScenarioDescription()) {
-                        return false;
-                    }
-
-                    if (!this.ParseReplayContent()) {
-                        return false;
-                    }
-
-                    this.m_isParsed = true;
-
-                }
+            // Parse the binary data
+            if (!this.ParseReplayBinary(br)) {
+                return false;
             }
 
             return true;
+
+        }
+
+        private bool ParseReplayBinary(BinaryReader binaryReader) {
+
+            // Constant data beforehand
+            this.m_header = binaryReader.ReadBytes(76);
+
+            // Parse header
+            if (!this.ParseHeader()) {
+                return false;
+            }
+
+            this.m_scenarioChunkyFile = new ChunkyFile();
+            if (!this.m_scenarioChunkyFile.LoadFile(binaryReader)) {
+                Console.WriteLine("Failed to read intro");
+                return false;
+            }
+
+            this.m_replayEventsChunkyFile = new ChunkyFile();
+            if (!this.m_replayEventsChunkyFile.LoadFile(binaryReader)) {
+                Console.WriteLine("Failed to read outro");
+                return false;
+            }
+
+            this.m_replaycontent = binaryReader.ReadToEnd();
+
+            if (!this.ParseScenarioDescription()) {
+                return false;
+            }
+
+            if (!this.ParseReplayContent()) {
+                return false;
+            }
+
+            return this.m_isParsed = true;
 
         }
 

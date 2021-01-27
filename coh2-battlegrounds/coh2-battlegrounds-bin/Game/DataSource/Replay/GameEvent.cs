@@ -84,7 +84,7 @@ namespace Battlegrounds.Game.DataSource.Replay {
             this.PlayerID = eventData[3];
 
             // The target type
-            this.TargetType = BitConverter.ToUInt16(eventData[6..8]); // Most likely an enum
+            this.TargetType = BitConverter.ToUInt16(eventData.AsSpan()[6..8]); // Most likely an enum
                                                                       // 16 = Entity
                                                                       // 32 = Squad
                                                                       // 64 = ???
@@ -97,11 +97,11 @@ namespace Battlegrounds.Game.DataSource.Replay {
                     case GameEventType.CMD_BuildSquad:
                     case GameEventType.CMD_Upgrade:
                     case GameEventType.SCMD_Upgrade:
-                        this.UnitID = BitConverter.ToUInt16(eventData[8..10]);
-                        this.BlueprintID = BitConverter.ToUInt32(eventData[13..17]);
+                        this.UnitID = BitConverter.ToUInt16(eventData.AsSpan()[8..10]);
+                        this.BlueprintID = BitConverter.ToUInt32(eventData.AsSpan()[13..17]);
                         break;
                     case GameEventType.SCMD_Move:
-                        this.UnitID = BitConverter.ToUInt16(eventData[8..10]);
+                        this.UnitID = BitConverter.ToUInt16(eventData.AsSpan()[8..10]);
                         break;
                     // TODO: Other important cases here
                     // These load unit ID differently:
@@ -111,7 +111,7 @@ namespace Battlegrounds.Game.DataSource.Replay {
                     // SCMD_REINFORCEUNIT
                     // ...
                     case GameEventType.PCMD_BroadcastMessage:
-                        int messageLength = (int)BitConverter.ToUInt32(eventData[20..24]);
+                        int messageLength = (int)BitConverter.ToUInt32(eventData.AsSpan()[20..24]);
                         this.AttachedMessage = Encoding.ASCII.GetString(eventData[24..(24 + messageLength)]);
                         break;
                     default: break;

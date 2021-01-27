@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -10,7 +11,6 @@ using Battlegrounds.Game.Gameplay;
 using Battlegrounds.Game.Match.Data.Events;
 
 using RegexMatch = System.Text.RegularExpressions.Match;
-using System.Diagnostics;
 
 namespace Battlegrounds.Game.Match.Data {
 
@@ -31,6 +31,7 @@ namespace Battlegrounds.Game.Match.Data {
         private bool m_isSessionValid;
 
         private readonly Regex broadcastRegex = new Regex(@"(?<cmdtype>\w)\[(?<content>(?<msg>(\w|_|-|:|\.|\d)+)|,|\s)*\]");
+        private readonly Regex broadcastUIDigitRegex = new Regex(@"\d+(,\d+)*");
 
         public ISession Session { get; }
 
@@ -74,6 +75,15 @@ namespace Battlegrounds.Game.Match.Data {
             return true;
 
         }
+
+        /// <summary>
+        /// Set the replay file instead manually creating it.
+        /// </summary>
+        /// <remarks>
+        /// Debug/Test method. Please do not use in production.
+        /// </remarks>
+        /// <param name="replayFile">The loaded replay file to use.</param>
+        public void SetReplayFile(ReplayFile replayFile) => this.m_replay = replayFile;
 
         public bool ParseMatchData() {
 
@@ -161,13 +171,30 @@ namespace Battlegrounds.Game.Match.Data {
 
                 } else {
 
-                    // No match -> Invalid broadcast message
-                    return null;
+                    // Did it match on the UI digit stuff?
+                    if (broadcastUIDigitRegex.IsMatch(gameEvent.AttachedMessage)) {
+                        return new UIDigitEvent();
+                    } else {
+
+                        // Log this scenario
+                        Trace.WriteLine("Found a broadcast message for which the regex failed to match.", "ReplayMatchData");
+                        Trace.WriteLine($"Regex failure on : [{gameEvent.AttachedMessage}]", "ReplayMatchData");
+
+                        // No match -> Invalid broadcast message
+                        return null;
+
+                    }
 
                 }
 
             } else {
+
+                // Log this case
+                Trace.WriteLine("Found broadcast message with message of length 0.", "ReplayMatchData");
+
+                // Return null (nothing to parse)
                 return null;
+
             }
 
         }

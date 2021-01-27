@@ -1,4 +1,5 @@
 ﻿using System;
+using Battlegrounds.Functional;
 using Battlegrounds.Game.Gameplay;
 
 namespace Battlegrounds.Game.Match.Data.Events {
@@ -53,8 +54,8 @@ namespace Battlegrounds.Game.Match.Data.Events {
             }
             
             // Get the veterancy change
-            if (byte.TryParse(values[1], out byte change)) {
-                this.WithdrawingUnitVeterancyChange = change;
+            if (sbyte.TryParse(values[1], out sbyte change)) {
+                this.WithdrawingUnitVeterancyChange = change >= 0 ? (byte)change : 0;
             } else {
                 throw new FormatException();
             }
