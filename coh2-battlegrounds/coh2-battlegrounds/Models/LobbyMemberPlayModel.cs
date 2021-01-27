@@ -46,7 +46,7 @@ namespace BattlegroundsApp.Models {
             this.m_remainingTime = this.m_maxTime;
             while (this.m_remainingTime > 0) {
                 _ = this.m_view.UpdateGUI(() => {
-                    this.m_view.StartGameBttn.Content = $"Stop Match ({this.m_maxTime - this.m_remainingTime}s)";
+                    this.m_view.StartGameBttn.Content = $"Stop Match ({this.m_remainingTime}s)";
                     this.m_view.StartGameBttn.ToolTip = "Stop the match from starting";
                 });
                 await Task.Delay(1000);
