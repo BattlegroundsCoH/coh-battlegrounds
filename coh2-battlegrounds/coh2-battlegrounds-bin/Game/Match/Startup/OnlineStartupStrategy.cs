@@ -52,7 +52,7 @@ namespace Battlegrounds.Game.Match.Startup {
                 string sender = string.Empty;
 
                 // Send starting message with timeout and wait for stop listener
-                connection.SendMessageWithResponseListener(new Message(MessageType.LOBBY_STARTING, this.StopMatchSeconds.ToString(), string.Empty), 
+                connection.SendMessageWithResponseListener(new Message(MessageType.LOBBY_STARTING, this.StopMatchSeconds.ToString()), 
                     MessageType.LOBBY_CANCEL,
                     x => {
                         shouldStop = true; sender = x.Argument1;

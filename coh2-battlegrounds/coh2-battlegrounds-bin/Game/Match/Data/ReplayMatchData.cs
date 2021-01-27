@@ -10,6 +10,7 @@ using Battlegrounds.Game.Gameplay;
 using Battlegrounds.Game.Match.Data.Events;
 
 using RegexMatch = System.Text.RegularExpressions.Match;
+using System.Diagnostics;
 
 namespace Battlegrounds.Game.Match.Data {
 
@@ -65,6 +66,7 @@ namespace Battlegrounds.Game.Match.Data {
 
             // Load the replay
             if (!this.m_replay.LoadReplay()) {
+                Trace.WriteLine($"Failed to read replay file {matchFile}", "ReplayMatchData");
                 return false;
             }
 

@@ -62,7 +62,7 @@ namespace Battlegrounds.Game.Match.Analyze {
                 }
 
                 // Send the message
-                connection.SendMessageWithResponse(new Message(MessageType.LOBBY_SYNCMATCH), Collect);
+                connection.SendMessageWithResponse(new Message(MessageType.LOBBY_SYNCMATCH, toAnalyze.Session.SessionID.ToString()), Collect);
 
                 // Wait until we've collected all
                 bool timedOut = SyncService.WaitUntil(() => collectedCount >= this.m_humanCount, 100, 50).Then(() => { 

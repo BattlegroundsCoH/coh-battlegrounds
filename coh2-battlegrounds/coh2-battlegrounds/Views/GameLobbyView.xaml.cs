@@ -510,7 +510,6 @@ namespace BattlegroundsApp.Views {
             // Create new lobby member play model
             var model = new LobbyMemberPlayModel(this, this.m_smh.Lobby);
             model.PlayGame(MatchCancelled);
-            //model.CreateSession(guid);
             model.StartCountdown(time);
 
             // Set model

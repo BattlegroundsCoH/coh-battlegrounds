@@ -156,6 +156,10 @@ namespace BattlegroundsApp.Models {
         
         private void OnSyncMatch(Message message) {
 
+            // Create session
+            this.CreateSession(message.Argument1);
+
+            // Get json playback
             if (this.m_playResults is JsonPlayback playback) {
 
                 // Serialize and convert to bytes

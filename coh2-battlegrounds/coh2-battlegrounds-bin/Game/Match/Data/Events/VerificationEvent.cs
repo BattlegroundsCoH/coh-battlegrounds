@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 
 namespace Battlegrounds.Game.Match.Data.Events {
 
@@ -52,9 +53,10 @@ namespace Battlegrounds.Game.Match.Data.Events {
         /// Verify that the event is as expected.
         /// </summary>
         /// <param name="argument">The argument to use when verifying.</param>
-        /// <returns>Returns <see langword="tr"/> if verification succeeds. Otherwise <see langword="false"/></returns>
+        /// <returns>Returns <see langword="true"/> if verification succeeds. Otherwise <see langword="false"/></returns>
         public bool Verify(object argument) {
             if (this.VerificationType == VerificationType.SessionVerification && argument is Session session) {
+                Trace.WriteLine($"{this.VerificationArgument} ?= {session.SessionID}", "VerificationEvent");
                 return this.VerificationArgument.CompareTo(session.SessionID.ToString()) == 0;
             }
             return false;
