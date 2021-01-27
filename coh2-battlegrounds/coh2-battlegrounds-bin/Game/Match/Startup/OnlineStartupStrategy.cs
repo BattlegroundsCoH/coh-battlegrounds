@@ -52,7 +52,7 @@ namespace Battlegrounds.Game.Match.Startup {
                 string sender = string.Empty;
 
                 // Send starting message with timeout and wait for stop listener
-                connection.SendMessageWithResponseListener(new Message(MessageType.LOBBY_STARTING, this.StartMatchWait.ToString(), this.m_session.SessionID.ToString()), 
+                connection.SendMessageWithResponseListener(new Message(MessageType.LOBBY_STARTING, this.StopMatchSeconds.ToString(), string.Empty), 
                     MessageType.LOBBY_CANCEL,
                     x => {
                         shouldStop = true; sender = x.Argument1;
@@ -164,7 +164,10 @@ namespace Battlegrounds.Game.Match.Startup {
 
             // Log depending on outcome
             if (success) {
+
+                // Log
                 this.OnFeedback(null, $"Received all company files.");
+
             } else {
                 this.OnFeedback(null, $"Failed to receive one or more company files.");
             }
