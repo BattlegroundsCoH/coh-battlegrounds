@@ -59,13 +59,14 @@ function BG_SolveNewUnit(playerData, sid)
                         playerData.captured[sid] = { bp = vehicleBlueprint, tp = "SBP" }; -- Add to captured equipment
                         playerData.tempcrews[sid] = driverID; -- Mark driver squad ID as temporary crew (and point to the captured squad)
                         playerData.deployed[sid] = _bg_unitID_RecrewRecapture; -- Mark vehicle as being a recrew or recapture case
+                        Rule_AddSquadEvent(BG_OnSquadDeath, squad, GE_SquadKilled); -- Add on death event for squad
                     end -- else the crew (most likely) recrewed its old vehicle.
                 else
-                    playerData.deployed[sid] = _bg_unitID_NoIdea; -- Mark is as no idea (just so we don't go over this case every time this function is called)
+                    playerData.deployed[sid] = _bg_unitID_NoIdea; -- Mark it as no idea (just so we don't go over this case every time this function is called)
                 end
 
             else  -- otherwise there's no mobile driver squad ==> unit lost - nothing reasonable we can really do...
-                playerData.deployed[sid] = _bg_unitID_NoIdea; -- Mark is as no idea (just so we don't go over this case every time this function is called)
+                playerData.deployed[sid] = _bg_unitID_NoIdea; -- Mark it as no idea (just so we don't go over this case every time this function is called)
             end
 
         elseif Squad_HasTeamWeapon(squad) then -- if team weapon
@@ -81,10 +82,10 @@ function BG_SolveNewUnit(playerData, sid)
             playerData.deployed[sid] = _bg_unitID_RecrewRecapture;
             playerData.captured[sid] = { bp = BP_GetName(Squad_GetBlueprint(squad)), tp = "SBP" }
 
-        end
+            -- Add on death event for squad
+            Rule_AddSquadEvent(BG_OnSquadDeath, squad, GE_SquadKilled);
 
-        -- Add on death event for squad
-        Rule_AddSquadEvent(BG_OnSquadDeath, squad, GE_SquadKilled);
+        end
 
     end
 
@@ -276,6 +277,9 @@ function BG_CallInUnit(unit_data, player, gotopos, spawnfrom)
 
             -- Apply company data
             BG_ApplyCompanyData(player, crewSquad, temp_crew, unit_data.crew);
+
+            -- Add death registry
+            Rule_AddSquadEvent(BG_OnSquadDeath, crewSquad, GE_SquadKilled);
 
         end
 

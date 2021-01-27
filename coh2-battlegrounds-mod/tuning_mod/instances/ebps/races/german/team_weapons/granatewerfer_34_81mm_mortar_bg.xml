@@ -212,6 +212,7 @@
 				<instance_reference name="ability" value="abilities\german\modal_ability\artillery\mortar_barrage_ability\mortar_team_incendiary_barrage_mp" />
 				<instance_reference name="ability" value="abilities\german\timed_ability\team_weapon_suppression_stun_mp" />
 				<instance_reference name="ability" value="abilities\german\timed_ability\mortar_veterancy_3_mp" />
+				<instance_reference name="ability" value="abilities\german\modal_ability\german_mortar_fire_flares_ability_bg" mod="142b113740474c82a60b0a428bd553d5" />
 			</list>
 		</template_reference>
 		<template_reference name="exts" value="ebpextensions\combat_ext">
