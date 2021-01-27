@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using Battlegrounds.Game.Match.Data;
 using Battlegrounds.Game.Match.Data.Events;
 
@@ -22,19 +21,14 @@ namespace Battlegrounds.Game.Match.Analyze {
 
         public virtual void OnAnalyze(object caller) {
 
-            if (this.m_subject is ReplayMatchData replayMatchData) {
-                if (!this.AnalyzeReplayData(replayMatchData)) {
-                    this.m_analysisResult = null; // Invalid (Should give a null-analysis when finalizing).
-                }
-            } else {
-
-                throw new NotImplementedException(); // Some other type of analysis?
-
+            // Analyze given playback data
+            if (!this.AnalyzePlaybackData(this.m_subject)) {
+                this.m_analysisResult = null; // Invalid (Should give a null-analysis when finalizing).
             }
 
         }
 
-        protected virtual bool AnalyzeReplayData(ReplayMatchData replayMatchData) {
+        protected virtual bool AnalyzePlaybackData(IMatchData replayMatchData) {
 
             // Set length of match
             this.m_analysisResult.SetLength(replayMatchData.Length);

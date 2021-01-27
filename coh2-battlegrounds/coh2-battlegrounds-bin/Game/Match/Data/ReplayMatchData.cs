@@ -17,7 +17,7 @@ namespace Battlegrounds.Game.Match.Data {
     /// <summary>
     /// Object representing data read from a <see cref="ReplayFile"/>.
     /// </summary>
-    public sealed class ReplayMatchData : IMatchData, IEnumerable<TimeEvent> {
+    public sealed class ReplayMatchData : IMatchData {
 
         /// <summary>
         /// The path to the latest replay file.
@@ -44,9 +44,6 @@ namespace Battlegrounds.Game.Match.Data {
         /// </summary>
         public ReplayFile Replay => this.m_replay;
 
-        /// <summary>
-        /// Get all the players in this match.
-        /// </summary>
         public ReadOnlyCollection<Player> Players => new ReadOnlyCollection<Player>(this.m_players);
 
         /// <summary>
@@ -207,7 +204,7 @@ namespace Battlegrounds.Game.Match.Data {
             return verification;
         }
 
-        public IEnumerator<TimeEvent> GetEnumerator() => ((IEnumerable<TimeEvent>)this.m_events).GetEnumerator();
+        public IEnumerator<IMatchEvent> GetEnumerator() => this.m_events.GetEnumerator();
         
         IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable)this.m_events).GetEnumerator();
 

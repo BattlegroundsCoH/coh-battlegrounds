@@ -1,11 +1,14 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using Battlegrounds.Game.Gameplay;
 
 namespace Battlegrounds.Game.Match.Data {
     
     /// <summary>
     /// Interface for objects containing match data.
     /// </summary>
-    public interface IMatchData {
+    public interface IMatchData : IEnumerable<IMatchEvent> {
 
         /// <summary>
         /// Get the <see cref="ISession"/> associated with the match data.
@@ -21,6 +24,11 @@ namespace Battlegrounds.Game.Match.Data {
         /// Get if the match contains data for the given session.
         /// </summary>
         bool IsSessionMatch { get; }
+
+        /// <summary>
+        /// Get all the players in this match.
+        /// </summary>
+        ReadOnlyCollection<Player> Players { get; }
 
         /// <summary>
         /// Load the match data into memory.

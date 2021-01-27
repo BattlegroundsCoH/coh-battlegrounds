@@ -1,5 +1,10 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
+
+using Battlegrounds.Game.Gameplay;
 using Battlegrounds.Game.Match.Analyze;
 using Battlegrounds.Game.Match.Data.Events;
 using Battlegrounds.Json;
@@ -11,22 +16,39 @@ namespace Battlegrounds.Game.Match.Data {
     /// </summary>
     public class JsonPlayback : IMatchData, IJsonObject {
 
-        public struct Event : IJsonObject {
+        public struct Event : IMatchEvent, IJsonObject {
+
+            [JsonIgnore] public char Identifier => 'J';
+            [JsonIgnore] public uint Uid => 0;
+
             public ulong UID;
             [JsonIgnoreIfValue("")] public string Type;
             [JsonIgnoreIfValue(ulong.MaxValue)] public ulong Player;
             [JsonIgnoreIfValue(ushort.MaxValue)] public ushort Id;
             [JsonIgnoreIfValue("")] public string Arg1;
             [JsonIgnoreIfValue("")] public string Arg2;
-            public string ToJsonReference() => throw new NotImplementedException();
+
+            public string ToJsonReference() => throw new InvalidOperationException();
+
         }
 
         public struct EventTick : IJsonObject {
             public List<Event> Events { get; set; }
-            public string ToJsonReference() => throw new NotImplementedException();
+            public string ToJsonReference() => throw new InvalidOperationException();
+        }
+
+        public struct PlayerData : IJsonObject {
+            public string Name;
+            public string Army;
+            public string Profile;
+            public ulong Id;
+            public uint team;
+            public string ToJsonReference() => throw new InvalidOperationException();
+            public Player FromData() => new Player((uint)this.Id, this.team, this.Name, Faction.FromName(this.Army), Profile);
         }
 
         [JsonIgnore] private ReplayMatchData m_dataSource;
+        private PlayerData[] players;
 
         public ISession Session { get; private set; }
 
@@ -35,6 +57,9 @@ namespace Battlegrounds.Game.Match.Data {
         public bool IsSessionMatch { get; private set; }
 
         public Dictionary<TimeSpan, EventTick> Events { get; private set; }
+
+        [JsonIgnore]
+        public ReadOnlyCollection<Player> Players => new ReadOnlyCollection<Player>(this.players.Select(x => x.FromData()).ToList());
 
         public JsonPlayback() {
             this.Session = new NullSession();
@@ -55,19 +80,31 @@ namespace Battlegrounds.Game.Match.Data {
         public bool ParseMatchData() {
 
             // Run through all elements
-            foreach (var element in this.m_dataSource) {
-
-                if (this.Events.ContainsKey(element.Timestamp)) {
-                    this.Events[element.Timestamp].Events.Add(FromData(element.UnderlyingEvent));
-                } else {
-                    EventTick tick = new EventTick() { 
-                        Events = new List<Event>() {
-                            FromData(element.UnderlyingEvent)
-                        }
-                    };
-                    this.Events.Add(element.Timestamp, tick);
+            foreach (var entry in this.m_dataSource) {
+                if (entry is TimeEvent element) {
+                    if (this.Events.ContainsKey(element.Timestamp)) {
+                        this.Events[element.Timestamp].Events.Add(FromData(element.UnderlyingEvent));
+                    } else {
+                        EventTick tick = new EventTick() {
+                            Events = new List<Event>() {
+                                FromData(element.UnderlyingEvent)
+                            }
+                        };
+                        this.Events.Add(element.Timestamp, tick);
+                    }
                 }
+            }
 
+            // Alloc player data
+            this.players = new PlayerData[this.m_dataSource.Players.Count];
+            for (int i = 0; i < this.players.Length; i++) {
+                this.players[i] = new PlayerData() {
+                    Army = this.m_dataSource.Players[i].Army,
+                    Id = this.m_dataSource.Players[i].ID,
+                    Name = this.m_dataSource.Players[i].Name,
+                    Profile = this.m_dataSource.Players[i].Profile,
+                    team = this.m_dataSource.Players[i].TeamID
+                };
             }
 
             return true;
@@ -99,8 +136,20 @@ namespace Battlegrounds.Game.Match.Data {
             return true;
         }
 
-        public string ToJsonReference() => throw new NotImplementedException();
+        public string ToJsonReference() => throw new InvalidOperationException();
 
+        public IEnumerator<IMatchEvent> GetEnumerator() {
+            List<IMatchEvent> events = new List<IMatchEvent>();
+            foreach (var spair in this.Events) {
+                foreach (var tpair in spair.Value.Events) {
+                    events.Add(new TimeEvent(spair.Key, tpair));
+                }
+            }
+            return events.GetEnumerator();
+        }
+
+        IEnumerator IEnumerable.GetEnumerator() => this.GetEnumerator();
+    
     }
 
 }

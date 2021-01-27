@@ -80,7 +80,7 @@ namespace Battlegrounds.Game.Match.Analyze {
         }
 
         public override void OnAnalyze(object caller) {
-            if (this.AnalyzeReplayData(this.m_selfData)) {
+            if (this.AnalyzePlaybackData(this.m_selfData)) {
                 foreach (IMatchData matchData in this.m_matchData) {
                     if (matchData is JsonPlayback playback) {
                         if (!playback.CompareAgainst(this.m_analysisResult)) {
