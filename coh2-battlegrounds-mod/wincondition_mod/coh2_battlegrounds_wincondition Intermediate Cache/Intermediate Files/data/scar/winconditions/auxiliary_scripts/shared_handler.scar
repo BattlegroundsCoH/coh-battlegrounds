@@ -8,8 +8,8 @@ _bg_custom.max_squad_count = 24;
 _bg_custom.dead_players = {};
 _bg_custom.teams = {};
 _bg_custom.phase_current = 1;
-_bg_custom.phase_time_left = 420; -- 7 minutes
-_bg_custom.phase_time = 420;
+_bg_custom.phase_time_left = 330; -- 5 minutes 30 seconds
+_bg_custom.phase_time = 330;
 _bg_custom.phase_paued = false;
 _bg_custom.team_voting = {};
 
@@ -235,6 +235,15 @@ function BG_GetPlayerID(player)
         end
     end
     return -1;
+end
+
+function BG_GetPlayerData(player)
+    local id = BG_GetPlayerID(player);
+    if id >= 0 then
+        return _bg_playerData[id];
+    else
+        return nil;
+    end
 end
 
 function BG_BroadcastVictory(player)

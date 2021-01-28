@@ -486,7 +486,7 @@
 								<enum name="application_type" value="apply_to_ability" />
 								<bool name="exclusive" value="False" />
 								<string name="modifier_id" value="" />
-								<instance_reference name="target_type_name" value="abilities\german\modal_ability\accessory_weapons\grenadier_rifle_grenade_ability_bg" mod="142b113740474c82a60b0a428bd553d5" />
+								<instance_reference name="target_type_name" value="" />
 								<enum name="usage_type" value="multiplication" />
 								<float name="value" value="0.67" />
 								<instance_reference name="tooltip" value="modifier_tooltip\ability_max_range_modifier" />
@@ -775,7 +775,7 @@
 				<instance_reference name="ability" value="abilities\german\modal_ability\infantry_medkits_mp" />
 				<instance_reference name="ability" value="abilities\german\timed_ability\retreat_to_forward_hq" />
 				<instance_reference name="ability" value="abilities\german\timed_ability\stormtrooper_sprint_mp" />
-				<instance_reference name="ability" value="abilities\german\modal_ability\accessory_weapons\grenadier_rifle_grenade_ability_bg" mod="142b113740474c82a60b0a428bd553d5" />
+				<instance_reference name="ability" value="abilities\german\modal_ability\accessory_weapons\grenadier_panzerfaust_bg" mod="142b113740474c82a60b0a428bd553d5" />
 			</list>
 			<bool name="allow_targeted_abilities_whilst_moving" value="False" />
 		</template_reference>

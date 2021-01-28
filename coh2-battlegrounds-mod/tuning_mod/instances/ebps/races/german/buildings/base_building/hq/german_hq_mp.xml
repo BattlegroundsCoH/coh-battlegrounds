@@ -1,0 +1,714 @@
+<instance description="" template="ebps">
+	<list name="extensions">
+		<template_reference name="exts" value="ebpextensions\entity_blueprint_ext">
+			<string name="alternate_sua" value="" />
+			<bool name="always_revealed_in_fow" value="False" />
+			<file name="animator" value="armies\german\structures\command_post\command_post" />
+			<bool name="is_visible_in_game" value="True" />
+			<float name="precise_size" value="-1" />
+		</template_reference>
+		<template_reference name="exts" value="ebpextensions\sim_entity_ext">
+			<bool name="is_in_spatial_bucket" value="True" />
+			<float name="rotate_snap" value="360" />
+			<float name="transferable" value="0" />
+			<bool name="kill_paradrop" value="False" />
+		</template_reference>
+		<template_reference name="exts" value="ebpextensions\health_ext">
+			<bool name="can_repair" value="True" />
+			<bool name="cuttable" value="False" />
+			<string name="death_event_name" value="death" />
+			<float name="death_seconds" value="2" />
+			<bool name="delete_when_dead" value="True" />
+			<bool name="force_attacker_memory" value="False" />
+			<float name="hitpoints" value="3000" />
+			<bool name="is_invincible" value="False" />
+			<bool name="is_salvagable_wreck" value="False" />
+			<bool name="keep_wreck_ownership" value="True" />
+			<bool name="rear_damage_enabled" value="False" />
+			<instance_reference name="rebuilt_entity" value="" />
+			<instance_reference name="rebuilt_squad" value="" />
+			<bool name="rebuilt_use_wreck_owner" value="True" />
+			<bool name="receive_weapon_cover_modifiers" value="True" />
+			<float name="regeneration" value="0" />
+			<bool name="regeneration_disabled" value="True" />
+			<bool name="remove_from_pathfinding_on_death" value="False" />
+			<bool name="reveal_to_all_on_death" value="True" />
+			<bool name="ui_can_scuttle" value="False" />
+			<instance_reference name="wreck_entity" value="ebps\races\german\buildings\base_building\hq\german_hq_wreck_mp" />
+			<list name="death_actions">
+			</list>
+			<float name="armor" value="35" />
+			<float name="rear_armor" value="0" />
+			<float name="target_size" value="5" />
+			<bool name="dies_from_broken_ice" value="True" />
+			<list name="criticals">
+				<group name="critical_group">
+					<float name="max_health_percentage" value="0" />
+					<list name="critical_info">
+						<group name="info">
+							<float name="weight" value="100" />
+							<enum_table name="applicable_weapons">
+								<bool name="small_arms" value="True" />
+								<bool name="flame" value="True" />
+								<bool name="ballistic" value="True" />
+								<bool name="big_explosive" value="True" />
+								<bool name="small_explosive" value="True" />
+							</enum_table>
+							<instance_reference name="critical" value="critical\building_destroy" />
+							<enum_table name="applicable_hit_direction">
+								<bool name="front" value="True" />
+								<bool name="rear" value="True" />
+							</enum_table>
+							<enum name="apply_on" value="penetrate" />
+						</group>
+					</list>
+				</group>
+			</list>
+			<float name="weapon_priority" value="-80" />
+			<template_reference name="wreck_entity_option" value="options\none">
+			</template_reference>
+			<list name="self_destruct_actions">
+			</list>
+			<list name="rebuilt_entity_actions">
+			</list>
+		</template_reference>
+		<template_reference name="exts" value="ebpextensions\hit_object_ext">
+			<instance_reference name="hit_material" value="hit_material\sandbag" />
+			<bool name="hit_non_neutral" value="True" />
+			<float name="hit_percentage" value="1" />
+			<bool name="pass_through" value="False" />
+			<group name="projectile_pass_through">
+				<bool name="tp_artillery" value="False" />
+				<bool name="tp_artillery_inf" value="False" />
+				<bool name="tp_artillery_overwatch" value="False" />
+				<bool name="tp_homing" value="False" />
+				<bool name="tp_homing_inf" value="False" />
+				<bool name="tp_sticky" value="False" />
+				<bool name="tp_throw" value="False" />
+			</group>
+		</template_reference>
+		<template_reference name="exts" value="ebpextensions\line_of_sight_ext">
+			<group name="blocking_box">
+				<float name="x" value="0.01" />
+				<float name="y" value="0.01" />
+				<float name="z" value="0.01" />
+			</group>
+			<bool name="is_shot_blocking" value="True" />
+			<bool name="use_blocking_box" value="False" />
+			<enum name="does_block_line_of_sight" value="Never" />
+		</template_reference>
+		<template_reference name="exts" value="ebpextensions\marker_ext">
+		</template_reference>
+		<template_reference name="exts" value="ebpextensions\modifier_ext">
+		</template_reference>
+		<template_reference name="exts" value="ebpextensions\site_ext">
+			<float name="extra_build_test_footprint" value="2" />
+			<bool name="require_all_cells_clear" value="True" />
+			<bool name="snap_to_terrain" value="False" />
+			<bool name="ignore_impass" value="False" />
+			<bool name="lock_to_impass" value="True" />
+		</template_reference>
+		<template_reference name="exts" value="ebpextensions\type_ext">
+			<group name="unit_type_list">
+				<enum name="unit_type00" value="hq" />
+				<enum name="unit_type01" value="building" />
+				<enum name="unit_type02" value="grant_abilities" />
+				<enum name="unit_type03" value="annihilation_condition" />
+				<enum name="unit_type04" value="non_supply_target" />
+				<enum name="unit_type05" value="production_building" />
+				<enum name="unit_type06" value="" />
+				<enum name="unit_type07" value="" />
+				<enum name="unit_type08" value="" />
+				<enum name="unit_type09" value="" />
+				<enum name="unit_type10" value="" />
+				<enum name="unit_type11" value="" />
+				<enum name="unit_type12" value="" />
+				<enum name="unit_type13" value="" />
+				<enum name="unit_type14" value="" />
+				<enum name="unit_type15" value="" />
+			</group>
+			<enum name="weapon_targeting" value="automatic" />
+		</template_reference>
+		<template_reference name="exts" value="ebpextensions\ability_ext">
+			<list name="abilities">
+			</list>
+		</template_reference>
+		<template_reference name="exts" value="ebpextensions\construction_ext">
+			<bool name="automatic_fit_on_placement" value="True" />
+			<bool name="can_set_facing" value="False" />
+			<float name="cancel_refund_percentage" value="100" />
+			<bool name="check_terrain" value="False" />
+			<string name="construction_state_name" value="build_shovel_sandbag_state" />
+			<float name="construction_transition_time" value="1.36667" />
+			<bool name="force_construction" value="False" />
+			<float name="max_engineers" value="8" />
+			<bool name="must_be_in_command_territory" value="False" />
+			<bool name="must_be_in_line_of_sight" value="False" />
+			<bool name="must_be_in_supply_territory" value="False" />
+			<bool name="must_be_in_territory" value="True" />
+			<bool name="must_be_on" value="False" />
+			<bool name="must_not_be_in_walkable_surfaces" value="False" />
+			<instance_reference name="on_construction_squad" value="" />
+			<float name="orientation" value="0" />
+			<enum name="placement_type" value="tp_structure" />
+			<bool name="prefer_spots_on_side_with_leader" value="False" />
+			<bool name="query_abilities_for_range_ui" value="True" />
+			<bool name="query_construction_actions_for_range_ui" value="True" />
+			<bool name="query_upgrade_actions_for_range_ui" value="True" />
+			<bool name="random_rotation" value="False" />
+			<float name="replace_ghost_distance" value="5" />
+			<float name="spacing_distance" value="0" />
+			<bool name="self_construct" value="False" />
+			<list name="on_construction_actions">
+			</list>
+			<list name="materials">
+			</list>
+			<group name="field_placement_info">
+				<instance_reference name="border_entity" value="" />
+				<instance_reference name="replace_entity" value="" />
+				<int name="replace_count" value="0" />
+				<float name="replace_retry_distance" value="0" />
+			</group>
+			<instance_reference name="placement_valid" value="ui_rectangle\construction_placement_valid" />
+			<instance_reference name="placement_invalid" value="ui_rectangle\construction_placement_invalid" />
+			<instance_reference name="ui_range" value="ui_reticule\construction_range_hq" />
+			<float name="ui_range_radius" value="30" />
+			<instance_reference name="ui_setfacing" value="" />
+			<bool name="query_weapon_for_range_ui" value="True" />
+			<bool name="squad_ignore_pathfinding" value="False" />
+			<bool name="must_not_be_in_command_territory" value="False" />
+		</template_reference>
+		<template_reference name="exts" value="ebpextensions\cost_ext">
+			<group name="time_cost">
+				<group name="cost">
+					<float name="action" value="0" />
+					<float name="command" value="0" />
+					<float name="fuel" value="0" />
+					<float name="manpower" value="500" />
+					<float name="munition" value="0" />
+					<float name="popcap" value="0" />
+				</group>
+				<float name="time_seconds" value="90" />
+			</group>
+		</template_reference>
+		<template_reference name="exts" value="ebpextensions\impass_ext">
+			<bool name="cant_build" value="True" />
+			<bool name="heavy_crush" value="True" />
+			<bool name="land" value="True" />
+			<bool name="light_crush" value="True" />
+			<bool name="medium_crush" value="True" />
+		</template_reference>
+		<template_reference name="exts" value="ebpextensions\sight_ext">
+			<group name="detect_camouflage">
+				<float name="tp_global" value="3" />
+				<float name="tp_mine" value="0" />
+			</group>
+			<bool name="extended_sight" value="True" />
+			<float name="extended_sight_radius" value="1000" />
+			<float name="reveal_area_on_death_time" value="1.5" />
+			<group name="sight_package">
+				<float name="inner_height" value="5" />
+				<float name="inner_radius" value="10" />
+				<float name="outer_height" value="-10" />
+				<float name="outer_radius" value="35" />
+				<float name="cone_angle" value="360" />
+				<float name="cone_start_radius" value="0" />
+			</group>
+			<group name="extended_sight_target_info">
+				<template_reference name="extended_sight_target_info" value="type_ability_target_type\all">
+				</template_reference>
+			</group>
+		</template_reference>
+		<template_reference name="exts" value="ebpextensions\ui_ext">
+			<bool name="ap_killed_kicker" value="True" />
+			<bool name="ap_loss_kicker" value="True" />
+			<bool name="cullsphere_selectable" value="False" />
+			<float name="decorator_offset" value="0" />
+			<string name="extra_text_deprecated" value="Grants Manpower and can upgrade to escalate Battle Phases." />
+			<bool name="ghost_enable" value="True" />
+			<bool name="has_speech_code" value="True" />
+			<locstring name="help_text" value="2099300" />
+			<string name="hotkey_name" value="axis_foundation_hq" />
+			<icon name="icon_name" value="Icons_buildings_building_german_hq" />
+			<enum name="kill_type" value="building" />
+			<float name="minimap_color_a" value="255" />
+			<float name="minimap_color_b" value="255" />
+			<float name="minimap_color_g" value="255" />
+			<float name="minimap_color_r" value="255" />
+			<bool name="minimap_enable" value="True" />
+			<bool name="minimap_team_only" value="False" />
+			<bool name="minimap_teamcolor" value="True" />
+			<bool name="obb_selectable" value="True" />
+			<string name="overlay_name" value="" />
+			<bool name="reveal_for_decryption" value="True" />
+			<locstring name="screen_name" value="2099301" />
+			<enum name="selection_name" value="building" />
+			<float name="selection_scale" value="1" />
+			<enum name="selection_type" value="single_entity_select" />
+			<bool name="sloppy_selectable" value="False" />
+			<group name="speaker">
+				<string name="code_1" value="gbl" />
+				<string name="code_2" value="" />
+				<string name="code_3" value="" />
+			</group>
+			<group name="speech_code_2">
+				<string name="code_1" value="gq" />
+				<string name="code_2" value="bl" />
+				<string name="code_3" value="" />
+			</group>
+			<group name="speech_code_3">
+				<string name="code_1" value="ghq" />
+				<string name="code_2" value="bld" />
+				<string name="code_3" value="" />
+			</group>
+			<group name="speech_code_cover">
+				<string name="code_1" value="" />
+				<string name="code_2" value="" />
+				<string name="code_3" value="" />
+			</group>
+			<bool name="tacmap_team_only" value="False" />
+			<locstring name="tooltip_txt" value="0" />
+			<int name="ui_priority" value="0" />
+			<icon name="minimap_icon" value="Icons_taskbar_coh_taskbar_01_sc_icon_01" />
+			<icon name="portrait_icon_winter" value="Icons_portraits_building_german_headquarters_w_portrait" />
+			<group name="speaker_alt">
+				<string name="code_1" value="" />
+				<string name="code_2" value="" />
+				<string name="code_3" value="" />
+			</group>
+			<float name="minimap_icon_scale" value="1" />
+			<icon name="portrait_icon_summer" value="Icons_portraits_building_german_headquarters_s_portrait" />
+			<locstring name="brief_text" value="11038998" />
+			<locstring name="extra_text" value="11041840" />
+			<bool name="show_in_build_log" value="True" />
+			<locstring name="screen_name_short" value="0" />
+			<bool name="show_entity_appearance" value="True" />
+			<locstring name="screen_name_world" value="0" />
+			<locstring name="help_text_world" value="0" />
+			<locstring name="extra_text_world" value="0" />
+			<enum name="map_rotation_type_override" value="no_override" />
+			<icon name="symbol_icon_name" value="Icons_symbols_building_german_hq_symbol" />
+			<enum name="occlusion_state" value="can_be_occluded" />
+			<enum name="decorator_visibility" value="default" />
+			<string name="decorator_marker_name" value="Marker_FX_UI" />
+			<bool name="skin_pack_override" value="False" />
+			<string name="skin_summer" value="" />
+			<string name="skin_winter" value="" />
+		</template_reference>
+		<template_reference name="exts" value="ebpextensions\combat_ext">
+			<bool name="reject_attack_command" value="True" />
+			<list name="hardpoints">
+				<group name="hardpoint">
+					<float name="parent_hardpoint" value="-1" />
+					<list name="weapon_table">
+						<group name="weapon">
+							<group name="heading">
+								<float name="x" value="0" />
+								<float name="y" value="0" />
+								<float name="z" value="1" />
+							</group>
+							<float name="length" value="0" />
+							<group name="origin">
+								<float name="x" value="0" />
+								<float name="y" value="35" />
+								<float name="z" value="0" />
+							</group>
+							<enum name="type" value="default" />
+							<instance_reference name="weapon" value="" />
+						</group>
+					</list>
+					<bool name="receives_attack_commands" value="False" />
+				</group>
+			</list>
+			<int name="sight_hardpoint" value="-1" />
+			<list name="kill_actions">
+			</list>
+		</template_reference>
+		<template_reference name="exts" value="ebpextensions\action_apply_ext">
+			<list name="actions">
+				<template_reference name="action" value="action\add_aura">
+					<instance_reference name="aura" value="aura\heat_aura_mp" />
+					<group name="area_info">
+						<float name="angle_left" value="0" />
+						<float name="angle_right" value="0" />
+						<enum name="area_type" value="circle" />
+						<float name="radius" value="30" />
+					</group>
+					<template_reference name="target_info" value="type_ability_target_type\all">
+					</template_reference>
+					<bool name="permanent" value="True" />
+					<uniqueid name="id" value="1073744529" />
+				</template_reference>
+				<template_reference name="action" value="action\apply_deformation_action">
+					<group name="deform_decal">
+						<string name="deform_decal_file" value="axis_command_post" />
+						<bool name="limited" value="False" />
+						<bool name="random_rotation" value="False" />
+						<float name="rotation" value="0" />
+						<group name="splat_list">
+							<group name="entry_01">
+								<string name="splat_texture" value="" />
+								<instance_reference name="terrain_material" value="" />
+							</group>
+							<group name="entry_02">
+								<string name="splat_texture" value="" />
+								<instance_reference name="terrain_material" value="" />
+							</group>
+							<group name="entry_03">
+								<string name="splat_texture" value="" />
+								<instance_reference name="terrain_material" value="" />
+							</group>
+							<group name="entry_04">
+								<string name="splat_texture" value="" />
+								<instance_reference name="terrain_material" value="" />
+							</group>
+							<group name="entry_05">
+								<string name="splat_texture" value="" />
+								<instance_reference name="terrain_material" value="" />
+							</group>
+							<group name="entry_06">
+								<string name="splat_texture" value="" />
+								<instance_reference name="terrain_material" value="" />
+							</group>
+							<group name="entry_07">
+								<string name="splat_texture" value="" />
+								<instance_reference name="terrain_material" value="" />
+							</group>
+							<group name="entry_08">
+								<string name="splat_texture" value="" />
+								<instance_reference name="terrain_material" value="" />
+							</group>
+							<group name="entry_09">
+								<string name="splat_texture" value="" />
+								<instance_reference name="terrain_material" value="" />
+							</group>
+							<group name="entry_10">
+								<string name="splat_texture" value="" />
+								<instance_reference name="terrain_material" value="" />
+							</group>
+							<group name="entry_11">
+								<string name="splat_texture" value="" />
+								<instance_reference name="terrain_material" value="" />
+							</group>
+							<group name="entry_12">
+								<string name="splat_texture" value="" />
+								<instance_reference name="terrain_material" value="" />
+							</group>
+							<group name="entry_13">
+								<string name="splat_texture" value="" />
+								<instance_reference name="terrain_material" value="" />
+							</group>
+							<group name="entry_14">
+								<string name="splat_texture" value="" />
+								<instance_reference name="terrain_material" value="" />
+							</group>
+							<group name="entry_15">
+								<string name="splat_texture" value="" />
+								<instance_reference name="terrain_material" value="" />
+							</group>
+							<group name="entry_default">
+								<string name="splat_texture" value="" />
+								<instance_reference name="terrain_material" value="" />
+							</group>
+						</group>
+						<float name="vertical_scale" value="0.05" />
+						<enum name="deform_type" value="tp_additive" />
+					</group>
+					<float name="scale_x" value="8" />
+					<float name="scale_y" value="8" />
+					<bool name="undoable" value="False" />
+					<uniqueid name="id" value="1073744530" />
+				</template_reference>
+				<template_reference name="action" value="action\spawn_entity">
+					<float name="duration" value="99999" />
+					<instance_reference name="entity_blueprint" value="ebps\races\aef\buildings\defensive_structures\retreat_point_actual_mp" />
+					<bool name="permanent" value="False" />
+					<bool name="player_owned" value="True" />
+					<group name="target_info">
+						<template_reference name="target_info" value="type_ability_target_type\all">
+						</template_reference>
+					</group>
+					<uniqueid name="id" value="1073744531" />
+					<template_reference name="spawn_attached_option" value="options\none">
+					</template_reference>
+					<list name="spawned_entity_actions">
+					</list>
+					<group name="offset">
+						<float name="x" value="7" />
+						<float name="y" value="0" />
+						<float name="z" value="0" />
+					</group>
+				</template_reference>
+				<template_reference name="action" value="action\spawn_entity">
+					<float name="duration" value="99999" />
+					<instance_reference name="entity_blueprint" value="ebps\races\aef\buildings\defensive_structures\retreat_point_actual_mp" />
+					<bool name="permanent" value="False" />
+					<bool name="player_owned" value="True" />
+					<group name="target_info">
+						<template_reference name="target_info" value="type_ability_target_type\all">
+						</template_reference>
+					</group>
+					<uniqueid name="id" value="1073744532" />
+					<template_reference name="spawn_attached_option" value="options\none">
+					</template_reference>
+					<list name="spawned_entity_actions">
+					</list>
+					<group name="offset">
+						<float name="x" value="3.5" />
+						<float name="y" value="0" />
+						<float name="z" value="6.02" />
+					</group>
+				</template_reference>
+				<template_reference name="action" value="action\spawn_entity">
+					<float name="duration" value="99999" />
+					<instance_reference name="entity_blueprint" value="ebps\races\aef\buildings\defensive_structures\retreat_point_actual_mp" />
+					<bool name="permanent" value="False" />
+					<bool name="player_owned" value="True" />
+					<group name="target_info">
+						<template_reference name="target_info" value="type_ability_target_type\all">
+						</template_reference>
+					</group>
+					<uniqueid name="id" value="1073744533" />
+					<template_reference name="spawn_attached_option" value="options\none">
+					</template_reference>
+					<list name="spawned_entity_actions">
+					</list>
+					<group name="offset">
+						<float name="x" value="-3.5" />
+						<float name="y" value="0" />
+						<float name="z" value="6.02" />
+					</group>
+				</template_reference>
+				<template_reference name="action" value="action\spawn_entity">
+					<float name="duration" value="99999" />
+					<instance_reference name="entity_blueprint" value="ebps\races\aef\buildings\defensive_structures\retreat_point_actual_mp" />
+					<bool name="permanent" value="False" />
+					<bool name="player_owned" value="True" />
+					<group name="target_info">
+						<template_reference name="target_info" value="type_ability_target_type\all">
+						</template_reference>
+					</group>
+					<uniqueid name="id" value="1073744534" />
+					<template_reference name="spawn_attached_option" value="options\none">
+					</template_reference>
+					<list name="spawned_entity_actions">
+					</list>
+					<group name="offset">
+						<float name="x" value="-7" />
+						<float name="y" value="0" />
+						<float name="z" value="0" />
+					</group>
+				</template_reference>
+				<template_reference name="action" value="action\spawn_entity">
+					<float name="duration" value="99999" />
+					<instance_reference name="entity_blueprint" value="ebps\races\aef\buildings\defensive_structures\retreat_point_actual_mp" />
+					<bool name="permanent" value="False" />
+					<bool name="player_owned" value="True" />
+					<group name="target_info">
+						<template_reference name="target_info" value="type_ability_target_type\all">
+						</template_reference>
+					</group>
+					<uniqueid name="id" value="1073744535" />
+					<template_reference name="spawn_attached_option" value="options\none">
+					</template_reference>
+					<list name="spawned_entity_actions">
+					</list>
+					<group name="offset">
+						<float name="x" value="3.5" />
+						<float name="y" value="0" />
+						<float name="z" value="-8.6" />
+					</group>
+				</template_reference>
+				<template_reference name="action" value="action\spawn_entity">
+					<float name="duration" value="99999" />
+					<instance_reference name="entity_blueprint" value="ebps\races\aef\buildings\defensive_structures\retreat_point_actual_mp" />
+					<bool name="permanent" value="False" />
+					<bool name="player_owned" value="True" />
+					<group name="target_info">
+						<template_reference name="target_info" value="type_ability_target_type\all">
+						</template_reference>
+					</group>
+					<uniqueid name="id" value="1073744536" />
+					<template_reference name="spawn_attached_option" value="options\none">
+					</template_reference>
+					<list name="spawned_entity_actions">
+					</list>
+					<group name="offset">
+						<float name="x" value="-3.5" />
+						<float name="y" value="0" />
+						<float name="z" value="-8.6" />
+					</group>
+				</template_reference>
+				<template_reference name="action" value="action\spawn_entity">
+					<float name="duration" value="99999" />
+					<instance_reference name="entity_blueprint" value="ebps\races\aef\buildings\defensive_structures\retreat_point_actual_mp" />
+					<bool name="permanent" value="False" />
+					<bool name="player_owned" value="True" />
+					<group name="target_info">
+						<template_reference name="target_info" value="type_ability_target_type\all">
+						</template_reference>
+					</group>
+					<uniqueid name="id" value="1073744537" />
+					<template_reference name="spawn_attached_option" value="options\none">
+					</template_reference>
+					<list name="spawned_entity_actions">
+					</list>
+					<group name="offset">
+						<float name="x" value="-1.75" />
+						<float name="y" value="0" />
+						<float name="z" value="-8.6" />
+					</group>
+				</template_reference>
+				<template_reference name="action" value="action\spawn_entity">
+					<float name="duration" value="99999" />
+					<instance_reference name="entity_blueprint" value="ebps\races\aef\buildings\defensive_structures\retreat_point_actual_mp" />
+					<bool name="permanent" value="False" />
+					<bool name="player_owned" value="True" />
+					<group name="target_info">
+						<template_reference name="target_info" value="type_ability_target_type\all">
+						</template_reference>
+					</group>
+					<uniqueid name="id" value="1073744538" />
+					<template_reference name="spawn_attached_option" value="options\none">
+					</template_reference>
+					<list name="spawned_entity_actions">
+					</list>
+					<group name="offset">
+						<float name="x" value="0" />
+						<float name="y" value="0" />
+						<float name="z" value="-8.6" />
+					</group>
+				</template_reference>
+				<template_reference name="action" value="action\spawn_entity">
+					<float name="duration" value="99999" />
+					<instance_reference name="entity_blueprint" value="ebps\races\aef\buildings\defensive_structures\retreat_point_actual_mp" />
+					<bool name="permanent" value="False" />
+					<bool name="player_owned" value="True" />
+					<group name="target_info">
+						<template_reference name="target_info" value="type_ability_target_type\all">
+						</template_reference>
+					</group>
+					<uniqueid name="id" value="1073744539" />
+					<template_reference name="spawn_attached_option" value="options\none">
+					</template_reference>
+					<list name="spawned_entity_actions">
+					</list>
+					<group name="offset">
+						<float name="x" value="1.75" />
+						<float name="y" value="0" />
+						<float name="z" value="-8.6" />
+					</group>
+				</template_reference>
+			</list>
+		</template_reference>
+		<template_reference name="exts" value="ebpextensions\modifier_apply_ext">
+			<list name="modifiers">
+			</list>
+		</template_reference>
+		<template_reference name="exts" value="ebpextensions\obj_cover_ext">
+			<enum name="cover_type" value="tp_garrison_cover" />
+			<bool name="is_cover_directional" value="False" />
+			<bool name="is_shoot_through" value="False" />
+			<bool name="lengthwise_spots" value="False" />
+			<float name="offset_x" value="0" />
+			<float name="offset_y" value="0" />
+			<float name="offset_z" value="0" />
+			<bool name="prevent_prone" value="False" />
+			<float name="range_x" value="2" />
+			<float name="range_y" value="1.5" />
+			<float name="range_z" value="2" />
+			<bool name="require_standing" value="False" />
+			<bool name="use_simbox_range" value="True" />
+			<bool name="use_simbox_range_plus_spots" value="False" />
+		</template_reference>
+		<template_reference name="exts" value="ebpextensions\requirement_ext">
+			<list name="requirement_table">
+				<template_reference name="required" value="requirements\required_not">
+					<enum name="reason" value="usage_and_display" />
+					<locstring name="ui_name" value="0" />
+					<list name="requirement_table">
+						<template_reference name="required" value="requirements\required_entity">
+							<enum name="reason" value="usage" />
+							<locstring name="ui_name" value="0" />
+							<instance_reference name="entity_blueprint_name" value="" />
+							<enum name="entity_type" value="hq" />
+						</template_reference>
+					</list>
+				</template_reference>
+			</list>
+		</template_reference>
+		<template_reference name="exts" value="ebpextensions\spawner_ext">
+			<bool name="animated_spawning" value="False" />
+			<float name="animated_spawning_seconds" value="0" />
+			<bool name="must_be_in_supply" value="False" />
+			<float name="reinforce_radius" value="25" />
+			<list name="spawn_items">
+				<group name="spawn_item">
+					<int name="ui_position" value="11" />
+					<instance_reference name="entity" value="" />
+					<instance_reference name="squad" value="sbps\races\german\soldiers\pioneer_squad\pioneer_squad_mp" />
+					<bool name="spawn_at_map_entry_point" value="False" />
+				</group>
+				<group name="spawn_item">
+					<int name="ui_position" value="12" />
+					<instance_reference name="entity" value="" />
+					<instance_reference name="squad" value="sbps\races\german\soldiers\mg42_heavy_machine_gun_squad\mg42_heavy_machine_gun_squad_mp" />
+					<bool name="spawn_at_map_entry_point" value="False" />
+				</group>
+				<group name="spawn_item">
+					<int name="ui_position" value="14" />
+					<instance_reference name="entity" value="" />
+					<instance_reference name="squad" value="sbps\races\german\vehicles\halftrack_squad\infantry_250_halftrack_mp" />
+					<bool name="spawn_at_map_entry_point" value="True" />
+				</group>
+				<group name="spawn_item">
+					<int name="ui_position" value="13" />
+					<instance_reference name="entity" value="" />
+					<instance_reference name="squad" value="sbps\races\german\soldiers\panzer_grenadier_squad\panzer_grenadier_squad_mp" />
+					<bool name="spawn_at_map_entry_point" value="False" />
+				</group>
+				<group name="spawn_item">
+					<int name="ui_position" value="0" />
+					<instance_reference name="entity" value="" />
+					<instance_reference name="squad" value="sbps\races\german\vehicles\panzer_iv_squad\panzer_iv_ausf_j_ostheer_mp" />
+					<bool name="spawn_at_map_entry_point" value="True" />
+				</group>
+				<group name="spawn_item">
+					<int name="ui_position" value="14" />
+					<instance_reference name="entity" value="" />
+					<instance_reference name="squad" value="sbps\races\german\vehicles\puma\puma_east_german_mp" />
+					<bool name="spawn_at_map_entry_point" value="True" />
+				</group>
+				<group name="spawn_item">
+					<int name="ui_position" value="31" />
+					<instance_reference name="entity" value="" />
+					<instance_reference name="squad" value="sbps\races\german\soldiers\panzer_grenadier_squad\panzer_grenadier_squad_bg" mod="142b113740474c82a60b0a428bd553d5" />
+					<bool name="spawn_at_map_entry_point" value="True" />
+				</group>
+			</list>
+			<list name="bonus_xp_from_hold_list">
+			</list>
+			<list name="reinforce_requirements">
+			</list>
+			<bool name="spawn_to_hold_try_first" value="False" />
+		</template_reference>
+		<template_reference name="exts" value="ebpextensions\supply_ext">
+			<bool name="default_on" value="True" />
+		</template_reference>
+		<template_reference name="exts" value="ebpextensions\upgrade_ext">
+			<bool name="must_be_in_supply" value="False" />
+			<float name="number_of_standard_slots" value="-1" />
+			<list name="standard_upgrades">
+				<instance_reference name="upgrade" value="upgrade\german\research\battle_phase_2_mp" />
+				<instance_reference name="upgrade" value="upgrade\german\research\battle_phase_3_mp" />
+				<instance_reference name="upgrade" value="upgrade\german\research\battle_phase_4_mp" />
+			</list>
+		</template_reference>
+		<template_reference name="exts" value="ebpextensions\demolishable_ext">
+			<bool name="detonate_requires_fully_wired" value="False" />
+			<bool name="prevent_detonation_effects" value="False" />
+			<bool name="wire_all_points" value="False" />
+		</template_reference>
+	</list>
+	<uniqueid name="pbgid" value="1479" />
+</instance>

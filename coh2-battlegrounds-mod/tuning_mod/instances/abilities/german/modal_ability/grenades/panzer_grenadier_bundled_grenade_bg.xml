@@ -8,7 +8,7 @@
 					<bool name="retrigger" value="True" />
 					<string name="state_machine_name" value="submachinegun_state" />
 					<string name="undo_action_state_name" value="on" />
-					<uniqueid name="id" value="1073744503" />
+					<uniqueid name="id" value="1073744516" />
 				</template_reference>
 				<template_reference name="action" value="action\animator_set_state">
 					<bool name="apply_to_leader_only" value="False" />
@@ -16,7 +16,7 @@
 					<bool name="retrigger" value="True" />
 					<string name="state_machine_name" value="rifle_state" />
 					<string name="undo_action_state_name" value="on" />
-					<uniqueid name="id" value="1073744504" />
+					<uniqueid name="id" value="1073744517" />
 				</template_reference>
 			</list>
 			<list name="end_target_actions">
@@ -28,7 +28,7 @@
 					<bool name="retrigger" value="True" />
 					<string name="state_machine_name" value="submachinegun_state" />
 					<string name="undo_action_state_name" value="on" />
-					<uniqueid name="id" value="1073744505" />
+					<uniqueid name="id" value="1073744518" />
 				</template_reference>
 				<template_reference name="action" value="action\animator_set_state">
 					<bool name="apply_to_leader_only" value="False" />
@@ -36,7 +36,7 @@
 					<bool name="retrigger" value="True" />
 					<string name="state_machine_name" value="rifle_state" />
 					<string name="undo_action_state_name" value="on" />
-					<uniqueid name="id" value="1073744506" />
+					<uniqueid name="id" value="1073744519" />
 				</template_reference>
 			</list>
 			<list name="start_target_actions">
@@ -51,7 +51,7 @@
 						<template_reference name="target_info" value="type_ability_target_type\all">
 						</template_reference>
 					</group>
-					<uniqueid name="id" value="1073744507" />
+					<uniqueid name="id" value="1073744520" />
 					<bool name="target_override_direction_times_max_range" value="False" />
 				</template_reference>
 				<template_reference name="action" value="action\delay">
@@ -66,10 +66,10 @@
 							<float name="event_param_end" value="-1" />
 							<enum name="event_type" value="grenade" />
 							<bool name="event_send_to_target_player" value="False" />
-							<uniqueid name="id" value="1073744508" />
+							<uniqueid name="id" value="1073744521" />
 						</template_reference>
 					</list>
-					<uniqueid name="id" value="1073744509" />
+					<uniqueid name="id" value="1073744522" />
 					<bool name="can_prevent_refund" value="False" />
 				</template_reference>
 			</list>
@@ -241,5 +241,5 @@
 		<bool name="can_cast_outside_active_battle_field" value="False" />
 		<bool name="ability_super_event_cue" value="False" />
 	</group>
-	<uniqueid name="pbgid" value="89" />
+	<uniqueid name="pbgid" value="1073741844" />
 </instance>

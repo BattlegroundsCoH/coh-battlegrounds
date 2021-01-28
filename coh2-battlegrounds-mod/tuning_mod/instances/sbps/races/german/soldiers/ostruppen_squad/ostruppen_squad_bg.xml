@@ -449,10 +449,10 @@
 		<template_reference name="squadexts" value="sbpextensions\squad_ability_ext">
 			<list name="abilities">
 				<instance_reference name="ability" value="abilities\global\cold\blizzard_effect" />
-				<instance_reference name="ability" value="abilities\german\modal_ability\accessory_weapons\grenadier_panzerfaust_bg" mod="142b113740474c82a60b0a428bd553d5" />
 				<instance_reference name="ability" value="abilities\german\modal_ability\infantry_medkits_mp" />
 				<instance_reference name="ability" value="abilities\german\timed_ability\stormtrooper_sprint_mp" />
 				<instance_reference name="ability" value="abilities\german\always_on_ability\ostruppen_cover_bonus" />
+				<instance_reference name="ability" value="abilities\german\modal_ability\accessory_weapons\grenadier_panzerfaust_bg" mod="142b113740474c82a60b0a428bd553d5" />
 			</list>
 			<bool name="allow_targeted_abilities_whilst_moving" value="False" />
 		</template_reference>

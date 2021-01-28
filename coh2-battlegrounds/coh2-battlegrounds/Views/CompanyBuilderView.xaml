@@ -6,7 +6,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:BattlegroundsApp.Views"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800" Background="white">
+             d:DesignHeight="450" d:DesignWidth="1000" Background="white">
     <Grid>
 
         <Grid.RowDefinitions>
@@ -29,24 +29,30 @@
             <ColumnDefinition Width="auto"/>
             <ColumnDefinition Width="auto"/>
             <ColumnDefinition Width="auto"/>
+            <ColumnDefinition Width="auto"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
         <!-- Row 0 -->
         <TextBlock Grid.Row="0" Grid.Column="0" Text="Company Name Here" Margin="2.5"/>
 
+        <!-- For company size use the size variable from Company.cs file -->
         <TextBlock Grid.Row="0" Grid.Column="1" Text="Company size 0/40" Margin="2.5" Grid.ColumnSpan="8"/>
         
         <!-- Row 1 -->
-        <Button x:Name="infantryButton" Grid.Row="1" Grid.Column="0" Content="Infantry" Margin="2.5" Width="150" Click="InfantryButton_Click"/>
+        <Button x:Name="infantryButton" Grid.Row="1" Grid.Column="0" Content="Infantry" Margin="2.5" Width="125" Click="InfantryButton_Click"/>
 
-        <Button x:Name="supportButton" Grid.Row="1" Grid.Column="1" Content="Support" Margin="2.5" Width="150" Click="SupportButton_Click"/>
+        <Button x:Name="supportButton" Grid.Row="1" Grid.Column="1" Content="Support" Margin="2.5" Width="125" Click="SupportButton_Click"/>
 
-        <Button x:Name="vehicleButton" Grid.Row="1" Grid.Column="2" Content="Vehicles" Margin="2.5" Width="150" Click="VehicleButton_Click"/>
+        <Button x:Name="vehicleButton" Grid.Row="1" Grid.Column="2" Content="Vehicles" Margin="2.5" Width="125" Click="VehicleButton_Click"/>
 
-        <Button x:Name="saveButton" Grid.Row="1" Grid.Column="3" Content="Save" Margin="2.5" Width="150" Click="SaveButton_Click"/>
+        <Button x:Name="capcuredButton" Grid.Row="1" Grid.Column="3" Content="Capcured" Margin="2.5" Width="125" Click="CapcuredButton_Click"/>
 
-        <Button x:Name="backButton" Grid.Row="1" Grid.Column="4" Content="Back" Margin="2.5" Width="150" Click="BackButton_Click"/>
+        <Button x:Name="abilitiesButton" Grid.Row="1" Grid.Column="4" Content="Abilities" Margin="2.5" Width="125" Click="AbilitiesButton_Click"/>
+
+        <Button x:Name="saveButton" Grid.Row="1" Grid.Column="5" Content="Save" Margin="2.5" Width="125" Click="SaveButton_Click"/>
+
+        <Button x:Name="backButton" Grid.Row="1" Grid.Column="6" Content="Back" Margin="2.5" Width="125" Click="BackButton_Click"/>
 
     </Grid>
 </bg:ViewState>
