@@ -266,9 +266,14 @@ namespace BattlegroundsApp.Views {
 
         public SessionInfo CreateSessionInfo() {
 
+            int option = 1;
             Wincondition selectedWincondition = Gamemode.SelectedItem as Wincondition;
             if (selectedWincondition is null) {
                 // TODO: Handle
+            } else {
+                if (selectedWincondition.Options != null && GamemodeOption.SelectedItem is WinconditionOption opt) {
+                    option = opt.Value;
+                }
             }
 
             Scenario selectedScenario = Map.SelectedItem as Scenario;
@@ -281,8 +286,9 @@ namespace BattlegroundsApp.Views {
 
             SessionInfo sinfo = new SessionInfo() {
                 SelectedGamemode = selectedWincondition,
-                SelectedGamemodeOption = 1,
+                SelectedGamemodeOption = option,
                 SelectedScenario = selectedScenario,
+                IsOptionValue = true,
                 SelectedTuningMod = new BattlegroundsTuning(), // TODO: Allow users to change this somewhere
                 Allies = alliedTeam.ToArray(),
                 Axis = axisTeam.ToArray(),

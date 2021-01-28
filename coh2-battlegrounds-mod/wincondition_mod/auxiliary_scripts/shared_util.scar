@@ -492,7 +492,8 @@ function Battlegrounds_LogEvent(msgtype, type, value, player)
         player = Game_GetLocalPlayer();
     end
     local pdata = BG_GetPlayerData(player);
-    local str = type .. "[" .. value .. "]@" .. pdata.steamID;
+    local str = type .. "[" .. value .. "]#".._bg_logid.."@" .. pdata.steamID;
+    _bg_logid = _bg_logid + 1;
     Game_SendMessage(msgtype, str);
 end
 
@@ -557,6 +558,7 @@ function Battlegrounds_TowAttach(executer, target)
     local pos, dir = Battlegrounds_GetTowCoordinates(tow_data.tow_transport, nil, tow_data.tow_offset);
     Entity_SetPosition(tow_data.tow_target, pos);
     Entity_SetHeading(tow_data.tow_target, dir, false);
+    Entity_SetAnimatorState(tow_data.tow_target, "antitankgun_state", "towing");
     tow_data.delta = {
         tpos = Vec3Scar(pos),
         tdir = Vec3Scar(dir);

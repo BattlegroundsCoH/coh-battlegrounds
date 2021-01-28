@@ -11,6 +11,7 @@ namespace Battlegrounds.Online {
         internal static void SendMessage(IPEndPoint endpoint, Message message, Action<Socket, Message> response) {
 
             Socket sender = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+            sender.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.KeepAlive, true);
 
             try {
 

@@ -468,13 +468,13 @@ function BG_PhaseUpdate()
 
     if _bg_custom.phase_current < 3 then
 
-        if not _bg_custom.phase_paued then
+        if not _bg_custom.phase_pasued then
 
             _bg_custom.phase_time_left = _bg_custom.phase_time_left - 1;
 
-            if _bg_custom.phase_time_left == 0 then
+            if _bg_custom.phase_time_left <= 0 then
                 _bg_custom.phase_current = _bg_custom.phase_current + 1;
-                _bg_custom.phase_time = _bg_custom.phase_time * 1.4;
+                _bg_custom.phase_time = _bg_custom.phase_time * 1.2;
                 _bg_custom.phase_time_left = _bg_custom.phase_time;
                 BG_OnEnterNewPhase();
             end

@@ -31,6 +31,8 @@ namespace Battlegrounds.Game.Match.Data {
         private bool m_isSessionValid;
 
         private readonly Regex broadcastRegex = new Regex(@"(?<cmdtype>\w)\[(?<content>(?<msg>(\w|_|-|:|\.|\d)+)|,|\s)*\]");
+        private readonly Regex broadcastIdRegex = new Regex(@"#(?<id>\d+)");
+        //private readonly Regex broadcastCallerRegex = new Regex(@"@(?<id>\d+)");
         private readonly Regex broadcastUIDigitRegex = new Regex(@"\d+(,\d+)*");
 
         public ISession Session { get; }
@@ -93,9 +95,6 @@ namespace Battlegrounds.Game.Match.Data {
             // Length of the match
             this.m_length = TimeSpan.Zero;
 
-            // unique ID
-            uint id = 0;
-
             // Loop through all the ticks
             for (int i = 0; i < matchTicks.Length; i++) {
 
@@ -109,7 +108,7 @@ namespace Battlegrounds.Game.Match.Data {
                     if (tickEvent.Type < (byte)GameEventType.EVENT_MAX && tickEvent.EventType == GameEventType.PCMD_BroadcastMessage) {
 
                         // Get the data
-                        if (this.ParseBroadcastMessage(tickEvent, id++) is IMatchEvent broadcastMessage) {
+                        if (this.ParseBroadcastMessage(tickEvent) is IMatchEvent broadcastMessage) {
                             this.m_events.Add(new TimeEvent(tickEvent.TimeStamp, broadcastMessage));
                         } else {
                             return false;
@@ -134,7 +133,7 @@ namespace Battlegrounds.Game.Match.Data {
 
         }
 
-        private IMatchEvent ParseBroadcastMessage(GameEvent gameEvent, uint id) { 
+        private IMatchEvent ParseBroadcastMessage(GameEvent gameEvent) { 
             
             // Make sure it's valid
             if (gameEvent.AttachedMessage.Length > 0) {
@@ -152,17 +151,26 @@ namespace Battlegrounds.Game.Match.Data {
                     // Get the invoking player
                     var player = this.m_players.First(x => x.ID == gameEvent.PlayerID);
 
-                    // TODO: Read id from message
+                    // Define event UID
+                    uint eventUID = 0;
+
+                    // Get the ID
+                    match = broadcastIdRegex.Match(gameEvent.AttachedMessage);
+                    if (match.Success) {
+                        eventUID = uint.Parse(match.Groups["id"].Value);
+                    } else {
+                        Trace.WriteLine($"{{Warning}} Event message has no UID \"{gameEvent.AttachedMessage}\" (Using UID = 0), this may cause problems.", "ReplayMatchData");
+                    }
 
                     // Return the proper type
                     return msgtype switch {
-                        'D' => new DeployEvent(id, values, player),
-                        'K' => new KillEvent(id, values, player),
-                        'T' => new CaptureEvent(id, values, player),
-                        'R' => new RetreatEvent(id, values, player),
-                        'I' => new PickupEvent(id, values, player),
-                        'V' => new VictoryEvent(id, values),
-                        'G' => this.CreateVerificationEvent(id, values),
+                        'D' => new DeployEvent(eventUID, values, player),
+                        'K' => new KillEvent(eventUID, values, player),
+                        'T' => new CaptureEvent(eventUID, values, player),
+                        'R' => new RetreatEvent(eventUID, values, player),
+                        'I' => new PickupEvent(eventUID, values, player),
+                        'V' => new VictoryEvent(eventUID, values),
+                        'G' => this.CreateVerificationEvent(eventUID, values),
                         _ => null,
                     };
 

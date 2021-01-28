@@ -13,7 +13,7 @@ _bg_custom.teams = {};
 _bg_custom.phase_current = 1;
 _bg_custom.phase_time_left = 330; -- 5 minutes 30 seconds
 _bg_custom.phase_time = 330;
-_bg_custom.phase_paued = false;
+_bg_custom.phase_pasued = false;
 _bg_custom.team_voting = {};
 
 ------------------------------------------------------------------------------------

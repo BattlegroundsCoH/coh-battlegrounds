@@ -24,6 +24,11 @@ namespace Battlegrounds.Game.Match {
         public int SelectedGamemodeOption { get; set; }
 
         /// <summary>
+        /// Get or set whether the given gamemode option is the direct value and not an index.
+        /// </summary>
+        public bool IsOptionValue { get; set; }
+
+        /// <summary>
         /// The selected scenario.
         /// </summary>
         public Scenario SelectedScenario { get; set; }
