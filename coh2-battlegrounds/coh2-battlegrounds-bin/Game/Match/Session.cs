@@ -119,7 +119,11 @@ namespace Battlegrounds.Game.Match {
 
             // Set the game mode
             if (sessionInfo.SelectedGamemode != null) {
-                session.AddSetting("gamemode_setting", sessionInfo.SelectedGamemode.Options[sessionInfo.SelectedGamemodeOption].Value);
+                if (sessionInfo.IsOptionValue) {
+                    session.AddSetting("gamemode_setting", sessionInfo.SelectedGamemodeOption);
+                } else {
+                    session.AddSetting("gamemode_setting", sessionInfo.SelectedGamemode.Options[sessionInfo.SelectedGamemodeOption].Value);
+                }
             } else {
                 Trace.WriteLine("Failed to read selected gamemode - using 500 as default option", "Session.Create");
                 session.AddSetting("gamemode_setting", 500);
