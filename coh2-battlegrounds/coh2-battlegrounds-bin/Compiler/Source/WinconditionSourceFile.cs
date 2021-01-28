@@ -5,6 +5,6 @@
     /// </summary>
     /// <param name="path">The path for use in the wincondition (Not where the source is from).</param>
     /// <param name="contents">The byte contents loaded from the source.</param>
-    public record WinconoditionSourceFile(string path, byte[] contents);
+    public record WinconditionSourceFile(string path, byte[] contents);
 
 }

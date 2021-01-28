@@ -19,6 +19,9 @@ namespace Battlegrounds.Online {
         /// <exception cref="SocketException"/>
         /// <exception cref="ObjectDisposedException"/>
         public static void SendAll(this Socket socket, byte[] content) {
+            if (!socket.Connected) {
+                return;
+            }
             int sent = 0;
             while (sent < content.Length) {
                 sent += socket.Send(content[sent..^0]);

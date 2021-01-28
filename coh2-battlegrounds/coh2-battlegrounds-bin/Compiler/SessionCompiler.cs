@@ -163,6 +163,7 @@ namespace Battlegrounds.Compiler {
                 blder.Append($"ai_value = {(byte)player.Difficulty}, ");
                 blder.Append($"id = {player.PlayerIndexOnTeam},{Environment.NewLine}");
                 blder.Append($"}},{Environment.NewLine}");
+                lua.Append(blder.ToString());
             }
 
             // End table

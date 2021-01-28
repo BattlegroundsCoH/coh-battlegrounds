@@ -20,9 +20,6 @@ namespace Battlegrounds {
         /// </summary>
         public class InternalInstance : IJsonObject {
 
-            /// <summary>
-            /// 
-            /// </summary>
             public Dictionary<string, string> Paths { get; set; }
 
             public string LastPlayedScenario { get; set; }
@@ -58,6 +55,9 @@ namespace Battlegrounds {
                 if (!Directory.Exists(binpath)) {
                     Directory.CreateDirectory(binpath);
                     Trace.WriteLine("Bin path missing - this may cause errors", "BattlegroundsInstance");
+                    this.Paths.Add(BattlegroundsPaths.BINARY_FOLDER, binpath);
+                } else {
+                    this.Paths.Add(BattlegroundsPaths.BINARY_FOLDER, binpath);
                 }
 
                 // Create user directory if it does not exist

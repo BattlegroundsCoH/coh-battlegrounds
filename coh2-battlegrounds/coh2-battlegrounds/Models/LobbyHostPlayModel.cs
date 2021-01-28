@@ -4,6 +4,7 @@ using Battlegrounds.Game.DataCompany;
 using Battlegrounds.Game.Match;
 using Battlegrounds.Game.Match.Analyze;
 using Battlegrounds.Game.Match.Composite;
+using Battlegrounds.Game.Match.Data;
 using Battlegrounds.Game.Match.Finalizer;
 using Battlegrounds.Game.Match.Play;
 using Battlegrounds.Game.Match.Startup;
@@ -146,6 +147,11 @@ namespace BattlegroundsApp.Models {
 
                     // Append to lobby chat
                     this.m_view.lobbyChat.AppendText($"[System] A fatal error was detected while playing.\n");
+
+                } else if (reason is IMatchData matchEvents) {
+
+                    // Append to lobby chat
+                    this.m_view.lobbyChat.AppendText($"[System] {message} \n");
 
                 }
 

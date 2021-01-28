@@ -485,6 +485,9 @@ function Battlegrounds_LogEvent(msgtype, type, value, player)
     if msgtype == nil then
         msgtype = _bg_message_type_no_actions_required;
     end
+    if _bg_logs[type] ~= nil then
+        type = _bg_logs[type]; -- Put the proper message
+    end
     if player == nil then
         player = Game_GetLocalPlayer();
     end

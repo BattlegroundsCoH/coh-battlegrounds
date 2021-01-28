@@ -21,28 +21,28 @@ namespace Battlegrounds.Compiler.Source {
             }
         }
 
-        public WinconoditionSourceFile GetInfoFile(IWinconditionMod mod) {
+        public WinconditionSourceFile GetInfoFile(IWinconditionMod mod) {
             string[] info = {
                 "hidden=false",
                 $"name=\"{mod.Name}\"",
                 "description=\"\"",
                 "dependencies = {}"
             };
-            return new WinconoditionSourceFile($"info\\{mod.Guid}.info", Encoding.UTF8.GetBytes(string.Join('\n', info)));
+            return new WinconditionSourceFile($"info\\{mod.Guid}.info", Encoding.UTF8.GetBytes(string.Join('\n', info)));
         }
 
-        public WinconoditionSourceFile[] GetLocaleFiles() {
-            List<WinconoditionSourceFile> files = new List<WinconoditionSourceFile>();
+        public WinconditionSourceFile[] GetLocaleFiles() {
+            List<WinconditionSourceFile> files = new List<WinconditionSourceFile>();
             string[] locFolders = Directory.GetDirectories($"{this.m_relpath}locale");
             string[] loc = locFolders.ConvertAndMerge(x => Directory.GetFiles(x, "*.ucs"));
             foreach (string file in loc) {
-                files.Add(new WinconoditionSourceFile(file[this.m_relpath.Length..], File.ReadAllBytes(file)));
+                files.Add(new WinconditionSourceFile(file[this.m_relpath.Length..], File.ReadAllBytes(file)));
             }
             return files.ToArray();
         }
 
-        public WinconoditionSourceFile[] GetScarFiles() {
-            List<WinconoditionSourceFile> files = new List<WinconoditionSourceFile>();
+        public WinconditionSourceFile[] GetScarFiles() {
+            List<WinconditionSourceFile> files = new List<WinconditionSourceFile>();
             string[] scar = Directory
                 .GetFiles($"{this.m_relpath}auxiliary_scripts\\", "*.scar")
                 .Union(Directory.GetFiles($"{this.m_relpath}ui_api\\", "*.scar"))
@@ -50,30 +50,30 @@ namespace Battlegrounds.Compiler.Source {
                 .ToArray();
             foreach (string file in scar) {
                 if (!file.EndsWith("session.scar")) {
-                    files.Add(new WinconoditionSourceFile(file[this.m_relpath.Length..], File.ReadAllBytes(file)));
+                    files.Add(new WinconditionSourceFile(file[this.m_relpath.Length..], File.ReadAllBytes(file)));
                 }
             }
             return files.ToArray();
         }
 
-        public WinconoditionSourceFile[] GetWinFiles() {
-            List<WinconoditionSourceFile> files = new List<WinconoditionSourceFile>();
+        public WinconditionSourceFile[] GetWinFiles() {
+            List<WinconditionSourceFile> files = new List<WinconditionSourceFile>();
             Directory.GetFiles($"{this.m_relpath}", "*.win")
-                .ForEach(x => files.Add(new WinconoditionSourceFile(x[this.m_relpath.Length..], File.ReadAllBytes(x))));
+                .ForEach(x => files.Add(new WinconditionSourceFile(x[this.m_relpath.Length..], File.ReadAllBytes(x))));
             return files.ToArray();
         }
 
-        public WinconoditionSourceFile[] GetUIFiles(IWinconditionMod mod) {
-            List<WinconoditionSourceFile> files = new List<WinconoditionSourceFile> {
-                new WinconoditionSourceFile($"data\\ui\\Bin\\{mod.Guid}.gfx", File.ReadAllBytes($"{this.Intermediate}data\\ui\\Bin\\{mod.Guid}.gfx"))
+        public WinconditionSourceFile[] GetUIFiles(IWinconditionMod mod) {
+            List<WinconditionSourceFile> files = new List<WinconditionSourceFile> {
+                new WinconditionSourceFile($"data\\ui\\Bin\\{mod.Guid}.gfx", File.ReadAllBytes($"{this.Intermediate}data\\ui\\Bin\\{mod.Guid}.gfx"))
             };
             Directory.GetFiles($"{this.Intermediate}data\\ui\\Assets\\Textures\\", "*.dds")
-                .ForEach(x => files.Add(new WinconoditionSourceFile(x[this.Intermediate.Length..], File.ReadAllBytes(x))));
+                .ForEach(x => files.Add(new WinconditionSourceFile(x[this.Intermediate.Length..], File.ReadAllBytes(x))));
             return files.ToArray();
         }
 
-        public WinconoditionSourceFile GetModGraphic() 
-            => new WinconoditionSourceFile($"info\\coh2_battlegrounds_wincondition_preview.dds", File.ReadAllBytes($"{this.Intermediate}info\\coh2_battlegrounds_wincondition_preview.dds"));
+        public WinconditionSourceFile GetModGraphic() 
+            => new WinconditionSourceFile($"info\\coh2_battlegrounds_wincondition_preview.dds", File.ReadAllBytes($"{this.Intermediate}info\\coh2_battlegrounds_wincondition_preview.dds"));
 
         public override string ToString() => $"Local build from \"{this.m_relpath}\"";
 

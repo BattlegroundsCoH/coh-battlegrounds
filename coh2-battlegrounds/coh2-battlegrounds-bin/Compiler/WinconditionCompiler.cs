@@ -29,12 +29,12 @@ namespace Battlegrounds.Compiler {
             }
 
             // Get the files
-            WinconoditionSourceFile[] scarFiles = source.GetScarFiles();
-            WinconoditionSourceFile[] winFiles = source.GetWinFiles();
-            WinconoditionSourceFile[] localeFiles = source.GetLocaleFiles();
-            WinconoditionSourceFile[] uiFiles = source.GetUIFiles(wincondition);
-            WinconoditionSourceFile infoFile = source.GetInfoFile(wincondition);
-            WinconoditionSourceFile modiconFile = source.GetModGraphic();
+            WinconditionSourceFile[] scarFiles = source.GetScarFiles();
+            WinconditionSourceFile[] winFiles = source.GetWinFiles();
+            WinconditionSourceFile[] localeFiles = source.GetLocaleFiles();
+            WinconditionSourceFile[] uiFiles = source.GetUIFiles(wincondition);
+            WinconditionSourceFile infoFile = source.GetInfoFile(wincondition);
+            WinconditionSourceFile modiconFile = source.GetModGraphic();
 
             // Fix potential missing '\'
             if (!workdir.EndsWith("\\")) {
@@ -62,7 +62,7 @@ namespace Battlegrounds.Compiler {
             archiveDef.AppendLine("\tFileSettingsEnd");
 
             // Add and compile win file(s)
-            foreach (WinconoditionSourceFile file in winFiles) {
+            foreach (WinconditionSourceFile file in winFiles) {
                 if (!AddFile(archiveDef, "data\\game\\winconditions\\", workdir, file)) {
                     return false;
                 }
@@ -72,7 +72,7 @@ namespace Battlegrounds.Compiler {
             AddLocalFile(archiveDef, sessionFile, "data\\scar\\winconditions\\auxiliary_scripts\\", workdir);
 
             // Add and *compile* scar files
-            foreach (WinconoditionSourceFile file in scarFiles) {
+            foreach (WinconditionSourceFile file in scarFiles) {
                 if (!AddFile(archiveDef, "data\\scar\\winconditions\\", workdir, file)) {
                     return false;
                 }
@@ -100,7 +100,7 @@ namespace Battlegrounds.Compiler {
             archiveDef.AppendLine("\tFileSettingsEnd");
 
             // Add and compile locale files
-            foreach (WinconoditionSourceFile file in localeFiles) {
+            foreach (WinconditionSourceFile file in localeFiles) {
                 if (!AddFile(archiveDef, string.Empty, workdir, file, true, Encoding.Unicode)) {
                     return false;
                 }
@@ -159,7 +159,7 @@ namespace Battlegrounds.Compiler {
 
         }
 
-        private static bool AddFile(TxtBuilder builder, string rpath, string workdir, WinconoditionSourceFile sourceFile, bool useBytes = false, Encoding encoding = null) {
+        private static bool AddFile(TxtBuilder builder, string rpath, string workdir, WinconditionSourceFile sourceFile, bool useBytes = false, Encoding encoding = null) {
 
             if (sourceFile.contents == null || sourceFile.contents.Length == 0) {
                 return false;
@@ -202,7 +202,7 @@ namespace Battlegrounds.Compiler {
 
         }
 
-        private static void AddGraphics(TxtBuilder builder, string workdir, WinconoditionSourceFile[] uiFiles) {
+        private static void AddGraphics(TxtBuilder builder, string workdir, WinconditionSourceFile[] uiFiles) {
 
             // Create paths
             string ddsPath = Path.GetFullPath($"{workdir}data\\ui\\Assets\\Textures\\");
@@ -225,7 +225,7 @@ namespace Battlegrounds.Compiler {
 
         }
 
-        private static bool AddInfoFiles(TxtBuilder builder, string workdir, WinconoditionSourceFile infoFile, WinconoditionSourceFile iconFile) {
+        private static bool AddInfoFiles(TxtBuilder builder, string workdir, WinconditionSourceFile infoFile, WinconditionSourceFile iconFile) {
 
             if (!AddFile(builder, string.Empty, workdir, infoFile)) {
                 return false;

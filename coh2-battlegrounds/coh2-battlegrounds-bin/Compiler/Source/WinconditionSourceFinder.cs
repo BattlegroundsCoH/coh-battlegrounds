@@ -21,6 +21,8 @@ namespace Battlegrounds.Compiler.Source {
             return false;
         }
 
+        private static bool HasManifest() => File.Exists(BattlegroundsInstance.GetRelativePath(BattlegroundsPaths.BINARY_FOLDER, "scripts.manifest"));
+
         public static IWinconditionSource GetSource(IWinconditionMod wincondition) {
 
             // TODO: Checkup on the wincondition
@@ -28,7 +30,11 @@ namespace Battlegrounds.Compiler.Source {
             if (HasLocalCopy(out string path)) {
                 return new LocalSource(path);
             } else {
-                return new GithubSource(GetBranch());
+                if (HasManifest()) {
+                    return new ManifestSource();
+                } else {
+                    return new GithubSource(GetBranch());
+                }
             }
 
         }
