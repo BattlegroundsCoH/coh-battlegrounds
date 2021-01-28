@@ -299,6 +299,8 @@
 							<enum name="type" value="default" />
 							<instance_reference name="weapon" value="weapon\axis\explosive_weapons\mortar\grw34_81mm_mortar_counter_barrage_mp" />
 						</group>
+						<group name="weapon">
+						</group>
 					</list>
 					<bool name="receives_attack_commands" value="False" />
 				</group>
@@ -340,6 +342,27 @@
 							</group>
 							<enum name="type" value="default" />
 							<instance_reference name="weapon" value="weapon\axis\flame_throwers\mortar\grw34_81mm_incendiary_mortar_barrage_mp" />
+						</group>
+					</list>
+					<bool name="receives_attack_commands" value="False" />
+				</group>
+				<group name="hardpoint">
+					<float name="parent_hardpoint" value="1" />
+					<list name="weapon_table">
+						<group name="weapon">
+							<group name="heading">
+								<float name="x" value="0" />
+								<float name="y" value="0" />
+								<float name="z" value="1" />
+							</group>
+							<float name="length" value="0" />
+							<group name="origin">
+								<float name="x" value="0" />
+								<float name="y" value="5" />
+								<float name="z" value="0" />
+							</group>
+							<enum name="type" value="default" />
+							<instance_reference name="weapon" value="weapon\soviet\explosive_weapons\mortar\pm41_82mm_mortar_flare_mp" />
 						</group>
 					</list>
 					<bool name="receives_attack_commands" value="False" />

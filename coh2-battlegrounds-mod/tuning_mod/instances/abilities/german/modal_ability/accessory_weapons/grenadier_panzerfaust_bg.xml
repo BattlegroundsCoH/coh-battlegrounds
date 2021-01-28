@@ -30,7 +30,7 @@
 									</group>
 								</template_reference>
 							</group>
-							<uniqueid name="id" value="1073744497" />
+							<uniqueid name="id" value="1073744526" />
 							<bool name="target_override_direction_times_max_range" value="False" />
 						</template_reference>
 						<template_reference name="action" value="action\apply_modifiers_action">
@@ -47,10 +47,10 @@
 									<instance_reference name="tooltip" value="modifier_tooltip\enable_visible_in_fow" />
 								</template_reference>
 							</list>
-							<uniqueid name="id" value="1073744498" />
+							<uniqueid name="id" value="1073744527" />
 						</template_reference>
 					</list>
-					<uniqueid name="id" value="1073744499" />
+					<uniqueid name="id" value="1073744528" />
 					<bool name="can_prevent_refund" value="True" />
 				</template_reference>
 			</list>
@@ -219,5 +219,5 @@
 		<bool name="can_cast_outside_active_battle_field" value="False" />
 		<bool name="ability_super_event_cue" value="False" />
 	</group>
-	<uniqueid name="pbgid" value="10" />
+	<uniqueid name="pbgid" value="1073741846" />
 </instance>

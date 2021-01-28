@@ -20,7 +20,7 @@
 									<instance_reference name="weapon_03" value="" />
 								</group>
 								<float name="num_salvo" value="1" />
-								<float name="use_hardpoint" value="4" />
+								<float name="use_hardpoint" value="7" />
 								<bool name="face_to_target" value="True" />
 								<uniqueid name="id" value="1073744511" />
 								<bool name="target_override_direction_times_max_range" value="False" />

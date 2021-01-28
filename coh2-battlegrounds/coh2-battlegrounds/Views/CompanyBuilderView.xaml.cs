@@ -50,13 +50,21 @@ namespace BattlegroundsApp.Views {
 
         }
 
+        private void CapcuredButton_Click(object sender, RoutedEventArgs e) {
+
+        }
+
+        private void AbilitiesButton_Click(object sender, RoutedEventArgs e) {
+
+        }
+
         private void SaveButton_Click(object sender, RoutedEventArgs e) {
             var comapny = builder.Commit().Result;
             PlayerCompanies.SaveCompany(comapny);
         }
 
         private void BackButton_Click(object sender, RoutedEventArgs e) {
-
+            this.StateChangeRequest(new CompanyView());
         }
     }
 }

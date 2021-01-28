@@ -1,12 +1,23 @@
-1	The played map does not match the map selected in the Battlegrounds Launcher!਍㈀ऀ吀栀攀 瀀氀愀礀攀搀 洀愀琀挀栀 椀猀 渀漀琀 甀猀椀渀最 琀栀攀 琀甀渀椀渀最 洀漀搀 猀攀氀攀挀琀攀搀 椀渀 琀栀攀 䈀愀琀琀氀攀最爀漀甀渀搀猀 䰀愀甀渀挀栀攀爀℀ഀ
-3	Insufficient Funds!਍㐀ऀ吀栀攀 愀洀漀甀渀琀 漀昀 瀀氀愀礀攀爀猀 搀漀攀猀 渀漀琀 洀愀琀挀栀 琀栀攀 瀀氀愀礀攀爀 挀漀甀渀琀 猀瀀攀挀椀昀椀攀搀 戀礀 琀栀攀 䈀愀琀琀氀攀最爀漀甀渀搀猀 䰀愀甀渀挀栀攀爀℀ഀ
-5	Unexpected Player '%1PLAYERNAME%'.਍㘀   倀氀愀礀攀爀 ✀─㄀倀䰀䄀夀䔀刀一䄀䴀䔀─✀ 栀愀猀 瀀椀挀欀攀搀 琀栀攀 椀渀挀漀爀爀攀挀琀 昀愀挀琀椀漀渀⸀ 䘀漀甀渀搀 ✀─㈀刀䄀䌀䔀一䄀䴀䔀─✀ 戀甀琀 攀砀瀀攀挀琀攀搀 ✀─㌀刀䄀䌀䔀一䄀䴀䔀─✀⸀ഀ
-7   %1COMPANYNAME% (%2COUNT%/%3MAX%)਍㠀   䌀愀渀 漀渀氀礀 昀椀攀氀搀 ─㄀䴀䄀堀─ 甀渀椀琀猀 漀渀 琀栀攀 戀愀琀琀氀攀昀椀攀氀搀⸀ഀ
-9   %1PLAYERNAME% is using an incorrect setup.਍㄀　  伀渀攀 漀爀 洀漀爀攀 䄀䤀 瀀愀爀琀椀挀椀瀀愀渀琀猀 昀愀椀氀攀搀 琀漀 瘀攀爀椀昀礀⸀ഀ
-11  Failed to load company for one or more AI participants.਍㄀㈀  䴀愀琀挀栀 嘀愀氀椀搀愀琀椀漀渀 䔀爀爀漀爀ഀ
-13  Match Setup Error਍㄀㐀  䔀砀椀琀ഀ
-15  Exit to main menu.਍㄀㘀  倀栀愀猀攀 䈀 漀昀 琀栀攀 愀琀琀愀挀欀 栀愀猀 戀攀最甀渀⸀尀渀䄀搀搀椀琀椀漀渀愀氀 甀渀椀琀猀 愀爀攀 愀瘀愀椀氀愀戀氀攀⸀ഀ
-17  Phase C of the attack has begun.\nAdditional units are available - This is the final phase.਍㄀㠀  䘀椀攀氀搀攀搀 唀渀椀琀 䌀愀瀀 刀攀愀挀栀攀搀℀ഀ
-19  Victory!਍㈀　  䐀攀昀攀愀琀ഀ
-21  Return to lobby਍㈀㈀  䰀漀猀猀攀猀ഀ
+1	The played map does not match the map selected in the Battlegrounds Launcher!
+2	The played match is not using the tuning mod selected in the Battlegrounds Launcher!
+3	Insufficient Funds!
+4	The amount of players does not match the player count specified by the Battlegrounds Launcher!
+5	Unexpected Player '%1PLAYERNAME%'.
+6   Player '%1PLAYERNAME%' has picked the incorrect faction. Found '%2RACENAME%' but expected '%3RACENAME%'.
+7   %1COMPANYNAME% (%2COUNT%/%3MAX%)
+8   Can only field %1MAX% units on the battlefield.
+9   %1PLAYERNAME% is using an incorrect setup.
+10  One or more AI participants failed to verify.
+11  Failed to load company for one or more AI participants.
+12  Match Validation Error
+13  Match Setup Error
+14  Exit
+15  Exit to main menu.
+16  Phase B of the attack has begun.\nAdditional units are available.
+17  Phase C of the attack has begun.\nAdditional units are available - This is the final phase.
+18  Fielded Unit Cap Reached!
+19  Victory!
+20  Defeat
+21  Return to lobby
+22  Losses
 23  Gains

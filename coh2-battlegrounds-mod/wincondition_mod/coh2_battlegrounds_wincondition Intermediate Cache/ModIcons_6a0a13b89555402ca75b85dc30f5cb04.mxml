@@ -2,93 +2,93 @@
 <display:MovieClip xmlns:fx='http://ns.adobe.com/mxml/2009' xmlns:display='flash.display.*'>
 	<fx:Script>
 		<![CDATA[
-		[Embed(source='E:/coh2_battlegrounds/coh2-battlegrounds-mod/wincondition_mod/art/button_background.png')]
+		[Embed(source='D:/coh2_projects/coh2-battlegrounds/coh2-battlegrounds-mod/wincondition_mod/art/button_background.png')]
 		public static var button_background:Class;
-		[Embed(source='E:/coh2_battlegrounds/coh2-battlegrounds-mod/wincondition_mod/art/button_inf.png')]
+		[Embed(source='D:/coh2_projects/coh2-battlegrounds/coh2-battlegrounds-mod/wincondition_mod/art/button_inf.png')]
 		public static var button_inf:Class;
-		[Embed(source='E:/coh2_battlegrounds/coh2-battlegrounds-mod/wincondition_mod/art/button_simple.png')]
+		[Embed(source='D:/coh2_projects/coh2-battlegrounds/coh2-battlegrounds-mod/wincondition_mod/art/button_simple.png')]
 		public static var button_simple:Class;
-		[Embed(source='E:/coh2_battlegrounds/coh2-battlegrounds-mod/wincondition_mod/art/button_tank.png')]
+		[Embed(source='D:/coh2_projects/coh2-battlegrounds/coh2-battlegrounds-mod/wincondition_mod/art/button_tank.png')]
 		public static var button_tank:Class;
-		[Embed(source='E:/coh2_battlegrounds/coh2-battlegrounds-mod/wincondition_mod/art/button_tw.png')]
+		[Embed(source='D:/coh2_projects/coh2-battlegrounds/coh2-battlegrounds-mod/wincondition_mod/art/button_tw.png')]
 		public static var button_tw:Class;
-		[Embed(source='E:/coh2_battlegrounds/coh2-battlegrounds-mod/wincondition_mod/art/cancel_button.png')]
+		[Embed(source='D:/coh2_projects/coh2-battlegrounds/coh2-battlegrounds-mod/wincondition_mod/art/cancel_button.png')]
 		public static var cancel_button:Class;
-		[Embed(source='E:/coh2_battlegrounds/coh2-battlegrounds-mod/wincondition_mod/art/captured_equipment.png')]
+		[Embed(source='D:/coh2_projects/coh2-battlegrounds/coh2-battlegrounds-mod/wincondition_mod/art/captured_equipment.png')]
 		public static var captured_equipment:Class;
-		[Embed(source='E:/coh2_battlegrounds/coh2-battlegrounds-mod/wincondition_mod/art/company_overview_clean.png')]
+		[Embed(source='D:/coh2_projects/coh2-battlegrounds/coh2-battlegrounds-mod/wincondition_mod/art/company_overview_clean.png')]
 		public static var company_overview_clean:Class;
-		[Embed(source='E:/coh2_battlegrounds/coh2-battlegrounds-mod/wincondition_mod/art/company_page_bkg.png')]
+		[Embed(source='D:/coh2_projects/coh2-battlegrounds/coh2-battlegrounds-mod/wincondition_mod/art/company_page_bkg.png')]
 		public static var company_page_bkg:Class;
-		[Embed(source='E:/coh2_battlegrounds/coh2-battlegrounds-mod/wincondition_mod/art/fuel_24x24.png')]
+		[Embed(source='D:/coh2_projects/coh2-battlegrounds/coh2-battlegrounds-mod/wincondition_mod/art/fuel_24x24.png')]
 		public static var fuel_24x24:Class;
-		[Embed(source='E:/coh2_battlegrounds/coh2-battlegrounds-mod/wincondition_mod/art/gameover_background.png')]
+		[Embed(source='D:/coh2_projects/coh2-battlegrounds/coh2-battlegrounds-mod/wincondition_mod/art/gameover_background.png')]
 		public static var gameover_background:Class;
-		[Embed(source='E:/coh2_battlegrounds/coh2-battlegrounds-mod/wincondition_mod/art/gameover_close_button.png')]
+		[Embed(source='D:/coh2_projects/coh2-battlegrounds/coh2-battlegrounds-mod/wincondition_mod/art/gameover_close_button.png')]
 		public static var gameover_close_button:Class;
-		[Embed(source='E:/coh2_battlegrounds/coh2-battlegrounds-mod/wincondition_mod/art/gameover_damagestat.png')]
+		[Embed(source='D:/coh2_projects/coh2-battlegrounds/coh2-battlegrounds-mod/wincondition_mod/art/gameover_damagestat.png')]
 		public static var gameover_damagestat:Class;
-		[Embed(source='E:/coh2_battlegrounds/coh2-battlegrounds-mod/wincondition_mod/art/gameover_data_frame.png')]
+		[Embed(source='D:/coh2_projects/coh2-battlegrounds/coh2-battlegrounds-mod/wincondition_mod/art/gameover_data_frame.png')]
 		public static var gameover_data_frame:Class;
-		[Embed(source='E:/coh2_battlegrounds/coh2-battlegrounds-mod/wincondition_mod/art/gameover_data_frame2.png')]
+		[Embed(source='D:/coh2_projects/coh2-battlegrounds/coh2-battlegrounds-mod/wincondition_mod/art/gameover_data_frame2.png')]
 		public static var gameover_data_frame2:Class;
-		[Embed(source='E:/coh2_battlegrounds/coh2-battlegrounds-mod/wincondition_mod/art/gameover_deathstat.png')]
+		[Embed(source='D:/coh2_projects/coh2-battlegrounds/coh2-battlegrounds-mod/wincondition_mod/art/gameover_deathstat.png')]
 		public static var gameover_deathstat:Class;
-		[Embed(source='E:/coh2_battlegrounds/coh2-battlegrounds-mod/wincondition_mod/art/gameover_deploystat.png')]
+		[Embed(source='D:/coh2_projects/coh2-battlegrounds/coh2-battlegrounds-mod/wincondition_mod/art/gameover_deploystat.png')]
 		public static var gameover_deploystat:Class;
-		[Embed(source='E:/coh2_battlegrounds/coh2-battlegrounds-mod/wincondition_mod/art/gameover_inventory_item.png')]
+		[Embed(source='D:/coh2_projects/coh2-battlegrounds/coh2-battlegrounds-mod/wincondition_mod/art/gameover_inventory_item.png')]
 		public static var gameover_inventory_item:Class;
-		[Embed(source='E:/coh2_battlegrounds/coh2-battlegrounds-mod/wincondition_mod/art/gameover_killstat.png')]
+		[Embed(source='D:/coh2_projects/coh2-battlegrounds/coh2-battlegrounds-mod/wincondition_mod/art/gameover_killstat.png')]
 		public static var gameover_killstat:Class;
-		[Embed(source='E:/coh2_battlegrounds/coh2-battlegrounds-mod/wincondition_mod/art/gameover_left_button.png')]
+		[Embed(source='D:/coh2_projects/coh2-battlegrounds/coh2-battlegrounds-mod/wincondition_mod/art/gameover_left_button.png')]
 		public static var gameover_left_button:Class;
-		[Embed(source='E:/coh2_battlegrounds/coh2-battlegrounds-mod/wincondition_mod/art/gameover_lr_bkg.png')]
+		[Embed(source='D:/coh2_projects/coh2-battlegrounds/coh2-battlegrounds-mod/wincondition_mod/art/gameover_lr_bkg.png')]
 		public static var gameover_lr_bkg:Class;
-		[Embed(source='E:/coh2_battlegrounds/coh2-battlegrounds-mod/wincondition_mod/art/gameover_right_button.png')]
+		[Embed(source='D:/coh2_projects/coh2-battlegrounds/coh2-battlegrounds-mod/wincondition_mod/art/gameover_right_button.png')]
 		public static var gameover_right_button:Class;
-		[Embed(source='E:/coh2_battlegrounds/coh2-battlegrounds-mod/wincondition_mod/art/gameover_unit_bkg.png')]
+		[Embed(source='D:/coh2_projects/coh2-battlegrounds/coh2-battlegrounds-mod/wincondition_mod/art/gameover_unit_bkg.png')]
 		public static var gameover_unit_bkg:Class;
-		[Embed(source='E:/coh2_battlegrounds/coh2-battlegrounds-mod/wincondition_mod/art/gameover_vehiclestat.png')]
+		[Embed(source='D:/coh2_projects/coh2-battlegrounds/coh2-battlegrounds-mod/wincondition_mod/art/gameover_vehiclestat.png')]
 		public static var gameover_vehiclestat:Class;
-		[Embed(source='E:/coh2_battlegrounds/coh2-battlegrounds-mod/wincondition_mod/art/gameover_vet_change.png')]
+		[Embed(source='D:/coh2_projects/coh2-battlegrounds/coh2-battlegrounds-mod/wincondition_mod/art/gameover_vet_change.png')]
 		public static var gameover_vet_change:Class;
-		[Embed(source='E:/coh2_battlegrounds/coh2-battlegrounds-mod/wincondition_mod/art/icon_air_support.png')]
+		[Embed(source='D:/coh2_projects/coh2-battlegrounds/coh2-battlegrounds-mod/wincondition_mod/art/icon_air_support.png')]
 		public static var icon_air_support:Class;
-		[Embed(source='E:/coh2_battlegrounds/coh2-battlegrounds-mod/wincondition_mod/art/icon_artillery.png')]
+		[Embed(source='D:/coh2_projects/coh2-battlegrounds/coh2-battlegrounds-mod/wincondition_mod/art/icon_artillery.png')]
 		public static var icon_artillery:Class;
-		[Embed(source='E:/coh2_battlegrounds/coh2-battlegrounds-mod/wincondition_mod/art/icon_paratrooper.png')]
+		[Embed(source='D:/coh2_projects/coh2-battlegrounds/coh2-battlegrounds-mod/wincondition_mod/art/icon_paratrooper.png')]
 		public static var icon_paratrooper:Class;
-		[Embed(source='E:/coh2_battlegrounds/coh2-battlegrounds-mod/wincondition_mod/art/manpower_24x24.png')]
+		[Embed(source='D:/coh2_projects/coh2-battlegrounds/coh2-battlegrounds-mod/wincondition_mod/art/manpower_24x24.png')]
 		public static var manpower_24x24:Class;
-		[Embed(source='E:/coh2_battlegrounds/coh2-battlegrounds-mod/wincondition_mod/art/mp_actions_override_button.png')]
+		[Embed(source='D:/coh2_projects/coh2-battlegrounds/coh2-battlegrounds-mod/wincondition_mod/art/mp_actions_override_button.png')]
 		public static var mp_actions_override_button:Class;
-		[Embed(source='E:/coh2_battlegrounds/coh2-battlegrounds-mod/wincondition_mod/art/munitions_24x24.png')]
+		[Embed(source='D:/coh2_projects/coh2-battlegrounds/coh2-battlegrounds-mod/wincondition_mod/art/munitions_24x24.png')]
 		public static var munitions_24x24:Class;
-		[Embed(source='E:/coh2_battlegrounds/coh2-battlegrounds-mod/wincondition_mod/art/progress_bar_small.png')]
+		[Embed(source='D:/coh2_projects/coh2-battlegrounds/coh2-battlegrounds-mod/wincondition_mod/art/progress_bar_small.png')]
 		public static var progress_bar_small:Class;
-		[Embed(source='E:/coh2_battlegrounds/coh2-battlegrounds-mod/wincondition_mod/art/progress_bar_small_frame.png')]
+		[Embed(source='D:/coh2_projects/coh2-battlegrounds/coh2-battlegrounds-mod/wincondition_mod/art/progress_bar_small_frame.png')]
 		public static var progress_bar_small_frame:Class;
-		[Embed(source='E:/coh2_battlegrounds/coh2-battlegrounds-mod/wincondition_mod/art/special_bkg.png')]
+		[Embed(source='D:/coh2_projects/coh2-battlegrounds/coh2-battlegrounds-mod/wincondition_mod/art/special_bkg.png')]
 		public static var special_bkg:Class;
-		[Embed(source='E:/coh2_battlegrounds/coh2-battlegrounds-mod/wincondition_mod/art/unitbackground.png')]
+		[Embed(source='D:/coh2_projects/coh2-battlegrounds/coh2-battlegrounds-mod/wincondition_mod/art/unitbackground.png')]
 		public static var unitbackground:Class;
-		[Embed(source='E:/coh2_battlegrounds/coh2-battlegrounds-mod/wincondition_mod/art/unknown_item.png')]
+		[Embed(source='D:/coh2_projects/coh2-battlegrounds/coh2-battlegrounds-mod/wincondition_mod/art/unknown_item.png')]
 		public static var unknown_item:Class;
-		[Embed(source='E:/coh2_battlegrounds/coh2-battlegrounds-mod/wincondition_mod/art/upgrade_pickup.png')]
+		[Embed(source='D:/coh2_projects/coh2-battlegrounds/coh2-battlegrounds-mod/wincondition_mod/art/upgrade_pickup.png')]
 		public static var upgrade_pickup:Class;
-		[Embed(source='E:/coh2_battlegrounds/coh2-battlegrounds-mod/wincondition_mod/art/vstar.png')]
+		[Embed(source='D:/coh2_projects/coh2-battlegrounds/coh2-battlegrounds-mod/wincondition_mod/art/vstar.png')]
 		public static var vstar:Class;
-		[Embed(source='E:/coh2_battlegrounds/coh2-battlegrounds-mod/wincondition_mod/art/vstar1.png')]
+		[Embed(source='D:/coh2_projects/coh2-battlegrounds/coh2-battlegrounds-mod/wincondition_mod/art/vstar1.png')]
 		public static var vstar1:Class;
-		[Embed(source='E:/coh2_battlegrounds/coh2-battlegrounds-mod/wincondition_mod/art/vstar2.png')]
+		[Embed(source='D:/coh2_projects/coh2-battlegrounds/coh2-battlegrounds-mod/wincondition_mod/art/vstar2.png')]
 		public static var vstar2:Class;
-		[Embed(source='E:/coh2_battlegrounds/coh2-battlegrounds-mod/wincondition_mod/art/vstar3.png')]
+		[Embed(source='D:/coh2_projects/coh2-battlegrounds/coh2-battlegrounds-mod/wincondition_mod/art/vstar3.png')]
 		public static var vstar3:Class;
-		[Embed(source='E:/coh2_battlegrounds/coh2-battlegrounds-mod/wincondition_mod/art/vstar4.png')]
+		[Embed(source='D:/coh2_projects/coh2-battlegrounds/coh2-battlegrounds-mod/wincondition_mod/art/vstar4.png')]
 		public static var vstar4:Class;
-		[Embed(source='E:/coh2_battlegrounds/coh2-battlegrounds-mod/wincondition_mod/art/vstar5.png')]
+		[Embed(source='D:/coh2_projects/coh2-battlegrounds/coh2-battlegrounds-mod/wincondition_mod/art/vstar5.png')]
 		public static var vstar5:Class;
-		[Embed(source='E:/coh2_battlegrounds/coh2-battlegrounds-mod/wincondition_mod/art/vstar_increase.png')]
+		[Embed(source='D:/coh2_projects/coh2-battlegrounds/coh2-battlegrounds-mod/wincondition_mod/art/vstar_increase.png')]
 		public static var vstar_increase:Class;
 		]]>
 	</fx:Script>

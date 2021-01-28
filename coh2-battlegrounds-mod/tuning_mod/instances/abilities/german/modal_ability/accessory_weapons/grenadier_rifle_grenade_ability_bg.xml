@@ -19,7 +19,7 @@
 						<template_reference name="target_info" value="type_ability_target_type\all">
 						</template_reference>
 					</group>
-					<uniqueid name="id" value="1073744500" />
+					<uniqueid name="id" value="1073744523" />
 					<bool name="target_override_direction_times_max_range" value="False" />
 				</template_reference>
 				<template_reference name="action" value="action\delay">
@@ -34,10 +34,10 @@
 							<float name="event_param_end" value="-1" />
 							<enum name="event_type" value="grenade" />
 							<bool name="event_send_to_target_player" value="False" />
-							<uniqueid name="id" value="1073744501" />
+							<uniqueid name="id" value="1073744524" />
 						</template_reference>
 					</list>
-					<uniqueid name="id" value="1073744502" />
+					<uniqueid name="id" value="1073744525" />
 					<bool name="can_prevent_refund" value="False" />
 				</template_reference>
 			</list>
@@ -196,5 +196,5 @@
 		<bool name="can_cast_outside_active_battle_field" value="False" />
 		<bool name="ability_super_event_cue" value="False" />
 	</group>
-	<uniqueid name="pbgid" value="12" />
+	<uniqueid name="pbgid" value="1073741845" />
 </instance>
