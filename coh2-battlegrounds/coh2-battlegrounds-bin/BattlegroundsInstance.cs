@@ -57,7 +57,9 @@ namespace Battlegrounds {
                     Trace.WriteLine("Bin path missing - this may cause errors", "BattlegroundsInstance");
                     this.Paths.Add(BattlegroundsPaths.BINARY_FOLDER, binpath);
                 } else {
-                    this.Paths.Add(BattlegroundsPaths.BINARY_FOLDER, binpath);
+                    if (!this.Paths.ContainsKey(BattlegroundsPaths.BINARY_FOLDER)) {
+                        this.Paths.Add(BattlegroundsPaths.BINARY_FOLDER, binpath);
+                    }
                 }
 
                 // Create user directory if it does not exist

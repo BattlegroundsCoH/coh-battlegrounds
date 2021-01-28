@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Diagnostics;
+using System.Linq;
 using Battlegrounds.Game.Match.Data;
 using Battlegrounds.Game.Match.Data.Events;
 
@@ -42,11 +43,14 @@ namespace Battlegrounds.Game.Match.Analyze {
                 if (!reg) {
                     if (reg.WasOutsideTime) {
                         // TODO: Handle
+                        Trace.WriteLine("Time event was outside registered AFTER the length of the match", "SingleplayerMatchAnalyzer");
                         return false; // For sure some problem
                     } else if (reg.ConflictingTimes) {
                         // TODO: Handle
+                        Trace.WriteLine("Time event was conflicting in time", "SingleplayerMatchAnalyzer");
                         return false; // Event time not adding up
                     } else {
+                        Trace.WriteLine("Time event found duplicate event", "SingleplayerMatchAnalyzer");
                         // TODO: Handle
                         return false; // Duplicate event for something that doesn't allow duplicates
                     }
@@ -61,7 +65,7 @@ namespace Battlegrounds.Game.Match.Analyze {
         public virtual IAnalyzedMatch OnCleanup(object caller) {
 
             // Compile the final result
-            if (!this.m_analysisResult.CompileResults()) {
+            if (!this.m_analysisResult?.CompileResults() ?? true) {
                 return new NullAnalysis();
             }
 

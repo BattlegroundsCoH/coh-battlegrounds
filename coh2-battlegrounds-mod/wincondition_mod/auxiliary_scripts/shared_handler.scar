@@ -222,9 +222,9 @@ function BG_GetPlayerData(player)
 end
 
 function BG_BroadcastVictory(player)
-    local refp = BG_GetPlayerID(player);
-    if (refp ~= -1) then
-        Game_SendMessage(_bg_message_type_no_actions_required, "V["..BG_GetPlayerID(player).."]");
+    local pd = BG_GetPlayerData(player);
+    if pd ~= -nil then
+        Battlegrounds_LogEvent(nil, BG_EVENT_ONVICTORY, pd.steam_index);
     end
 end
 
