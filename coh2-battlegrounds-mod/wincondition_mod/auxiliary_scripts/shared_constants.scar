@@ -26,6 +26,7 @@ BG_EVENT_ONSURRENDER = 3; -- On surrender
 BG_EVENT_ONCAPTURE = 4; -- On capture
 BG_EVENT_ONITEM = 5; -- On item picked up
 BG_EVENT_ONVICTORY = 6; -- On victory
+BG_EVENT_ONVERIFY = 7; -- On verify
 
 _bg_logs = {
     [BG_EVENT_ONDEATH] = "K",
@@ -35,6 +36,7 @@ _bg_logs = {
     [BG_EVENT_ONCAPTURE] = "T",
     [BG_EVENT_ONITEM] = "I",
     [BG_EVENT_ONVICTORY] = "V",
+    [BG_EVENT_ONVERIFY] = "G",
 }
 
 ------------------------------------------------------------------------------------

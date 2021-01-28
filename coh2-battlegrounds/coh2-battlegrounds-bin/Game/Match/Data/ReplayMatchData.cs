@@ -37,7 +37,7 @@ namespace Battlegrounds.Game.Match.Data {
 
         public ISession Session { get; }
 
-        public TimeSpan Length { get; }
+        public TimeSpan Length => this.m_length;
 
         public bool IsSessionMatch => this.m_isSessionValid;
 
@@ -57,6 +57,7 @@ namespace Battlegrounds.Game.Match.Data {
             this.m_replay = null;
             this.m_events = new List<TimeEvent>();
             this.m_isSessionValid = false;
+            this.m_players = Array.Empty<Player>();
         }
 
         public bool LoadMatchData(string matchFile) {

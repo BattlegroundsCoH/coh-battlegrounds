@@ -196,7 +196,7 @@ function BG_VerifyMatch()
     end
 
     -- Broadcast the GUID
-    Game_SendMessage(_bg_message_type_no_actions_required, "G[" .. bg_settings.session_guid .. "]")
+    Battlegrounds_LogEvent(nil, BG_EVENT_ONVERIFY, bg_settings.session_guid);
 
     -- Return true, match verified
     return true;
@@ -223,8 +223,8 @@ end
 
 function BG_BroadcastVictory(player)
     local pd = BG_GetPlayerData(player);
-    if pd ~= -nil then
-        Battlegrounds_LogEvent(nil, BG_EVENT_ONVICTORY, pd.steam_index);
+    if pd ~= nil then
+        Battlegrounds_LogEvent(nil, BG_EVENT_ONVICTORY, pd.steamID);
     end
 end
 
