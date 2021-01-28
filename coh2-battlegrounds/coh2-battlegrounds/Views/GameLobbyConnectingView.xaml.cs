@@ -33,6 +33,7 @@ namespace BattlegroundsApp.Views {
         private ulong m_listenfor;
 
         private GameLobbyView m_lobby;
+        private ManagedLobby m_vlobby;
 
         private Regex m_joinFullyRegex = new Regex(@"(?<id>\d+)-join-(?<state>\w+)");
 
@@ -57,6 +58,9 @@ namespace BattlegroundsApp.Views {
 
             // Success?
             if (status.Success) {
+
+                // Set (virtual) lobby
+                this.m_vlobby = result;
 
                 // Call on GUI thread
                 this.UpdateGUI(() => {
@@ -120,6 +124,9 @@ namespace BattlegroundsApp.Views {
             // Teams data has been updated
             Trace.WriteLine("Received join OK", "ConnectingState");
 
+            // Set is connecting flag to false (So we can goto the correct view without leaving immediately)
+            this.m_isConnecting = false;
+
             // Request state change
             if (this.StateChangeRequest?.Invoke(this.m_lobby) is false) {
                 Trace.WriteLine("Somehow failed to change state", "ConnectingState"); // TODO: Better error handling
@@ -154,6 +161,12 @@ namespace BattlegroundsApp.Views {
 
         public override void StateOnLostFocus() { 
             
+            if (this.m_isConnecting) {
+                // Send leave message
+                this.m_vlobby.Leave(null); // don't wait for OK
+                this.m_isConnecting = false;
+            }
+
         }
 
     }

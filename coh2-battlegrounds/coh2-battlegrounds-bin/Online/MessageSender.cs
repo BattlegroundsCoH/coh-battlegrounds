@@ -60,7 +60,9 @@ namespace Battlegrounds.Online {
                         }
                     } catch (ObjectDisposedException) { 
                     } catch (SocketException conn) when (conn.SocketErrorCode == SocketError.ConnectionReset) {
-                        Trace.WriteLine("Connection was reset by server (Possibly fatal).", "MessageSender");
+                        if (!socket.Connected) {
+                            Trace.WriteLine("Connection was reset by server (Possibly fatal).", "MessageSender");
+                        }
                     } catch (SocketException s) { 
                         Trace.WriteLine(s, "MessageSender"); 
                     }

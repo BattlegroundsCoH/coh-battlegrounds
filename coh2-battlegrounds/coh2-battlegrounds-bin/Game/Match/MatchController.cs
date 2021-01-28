@@ -51,10 +51,10 @@ namespace Battlegrounds.Game.Match {
         }
 
         /// <summary>
-        /// 
+        /// Set composite objects responsible for handling the startup process.
         /// </summary>
-        /// <param name="matchStarter"></param>
-        /// <param name="startupStrategy"></param>
+        /// <param name="matchStarter">The object responsible for starting a match-</param>
+        /// <param name="startupStrategy">The object representing the strategy to use when starting.</param>
         /// <exception cref="ArgumentNullException"/>
         public void SetStartupObjects(IMatchStarter matchStarter, IStartupStrategy startupStrategy) {
             this.m_starter = matchStarter;
@@ -66,10 +66,10 @@ namespace Battlegrounds.Game.Match {
         }
 
         /// <summary>
-        /// 
+        /// Set composite objects responsible for handling the analysis process.
         /// </summary>
-        /// <param name="matchAnalyzer"></param>
-        /// <param name="analyzeStrategy"></param>
+        /// <param name="matchAnalyzer">The object responsible for analyzing a match.</param>
+        /// <param name="analyzeStrategy">The object representing the analysis strategy.</param>
         /// <exception cref="ArgumentNullException"/>
         public void SetAnalysisObjects(IMatchAnalyzer matchAnalyzer, IAnalyzeStrategy analyzeStrategy) {
             this.m_analyzer = matchAnalyzer;
@@ -81,10 +81,10 @@ namespace Battlegrounds.Game.Match {
         }
 
         /// <summary>
-        /// 
+        /// Set composite objects responsible for handling the finalizing process.
         /// </summary>
-        /// <param name="matchFinalizer"></param>
-        /// <param name="finalizeStrategy"></param>
+        /// <param name="matchFinalizer">The object responsible for finalizing a match.</param>
+        /// <param name="finalizeStrategy">The object representing the finalizer strategy.</param>
         /// <exception cref="ArgumentNullException"/>
         public void SetFinalizerObjects(IMatchFinalizer matchFinalizer, IFinalizeStrategy finalizeStrategy) {
             this.m_finalizer = matchFinalizer;

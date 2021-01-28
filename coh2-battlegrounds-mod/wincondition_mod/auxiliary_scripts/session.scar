@@ -13,7 +13,10 @@ bg_settings = {
 	},
 	team_setup = {
 		["allies"] = {
-			{ display_name = "CoDiEx", ai_value = 0, id = 0, },
+			{
+				display_name = "CoDiEx", steam_index = 76561198003529969,
+				ai_value = 0, id = 0,
+			},
 		},
 		["axis"] = {
 			{ display_name = "AI - Hard", ai_value = 3, id = 0, },

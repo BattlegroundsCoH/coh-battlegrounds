@@ -480,6 +480,19 @@ function Battlegrounds_FormatResources(cost, negate)
     return tostring(mp)..","..tostring(mu)..","..tostring(fu);
 end
 
+_bg_logid = 0;
+function Battlegrounds_LogEvent(msgtype, type, value, player)
+    if msgtype == nil then
+        msgtype = _bg_message_type_no_actions_required;
+    end
+    if player == nil then
+        player = Game_GetLocalPlayer();
+    end
+    local pdata = BG_GetPlayerData(player);
+    local str = type .. "[" .. value .. "]@" .. pdata.steamID;
+    Game_SendMessage(msgtype, str);
+end
+
 ------------------------------------------------------------
 -- Battlegrounds Tow System
 ------------------------------------------------------------

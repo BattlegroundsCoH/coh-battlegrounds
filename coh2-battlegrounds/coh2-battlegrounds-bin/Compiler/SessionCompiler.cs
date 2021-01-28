@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 
 using Battlegrounds.Game.Database.Management;
 using Battlegrounds.Game.DataCompany;
@@ -147,13 +148,24 @@ namespace Battlegrounds.Compiler {
         /// <param name="players">The players on the team.</param>
         protected virtual void WriteTeam(TxtBuilder lua, string team, IEnumerable<SessionParticipant> players) {
 
+            // Create team table
             lua.AppendLine($"[\"{team}\"] = {{");
             lua.IncreaseIndent();
 
+            // Foreach participant
             foreach (SessionParticipant player in players) {
-                lua.AppendLine($"{{ display_name = \"{player.GetName()}\", ai_value = {(byte)player.Difficulty}, id = {player.PlayerIndexOnTeam}, }},");
+                StringBuilder blder = new StringBuilder();
+                blder.Append("{ ");
+                blder.Append($"display_name = \"{player.GetName()}\", ");
+                if (player.Difficulty == Game.AIDifficulty.Human) {
+                    blder.Append($"steam_index = {player.GetID()},{Environment.NewLine}");
+                }
+                blder.Append($"ai_value = {(byte)player.Difficulty}, ");
+                blder.Append($"id = {player.PlayerIndexOnTeam},{Environment.NewLine}");
+                blder.Append($"}},{Environment.NewLine}");
             }
 
+            // End table
             lua.DecreaseIndent();
             lua.AppendLine("},");
 

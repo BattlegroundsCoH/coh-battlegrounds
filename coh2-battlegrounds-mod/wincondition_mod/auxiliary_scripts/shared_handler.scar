@@ -237,6 +237,15 @@ function BG_GetPlayerID(player)
     return -1;
 end
 
+function BG_GetPlayerData(player)
+    local id = BG_GetPlayerID(player);
+    if id >= 0 then
+        return _bg_playerData[id];
+    else
+        return nil;
+    end
+end
+
 function BG_BroadcastVictory(player)
     local refp = BG_GetPlayerID(player);
     if (refp ~= -1) then
