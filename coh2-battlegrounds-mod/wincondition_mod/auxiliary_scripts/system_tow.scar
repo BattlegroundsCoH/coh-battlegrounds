@@ -99,7 +99,7 @@ function Battlegrounds_AETowAttach(executer, target)
         success = Battlegrounds_TowAttach(executer, target, offset);
     end
     if not success then
-        UI_CreateColouredSquadKickerMessage(Util_GetPlayerOwner(executer), executer, "$142b113740474c82a60b0a428bd553d5:24", 186, 48, 1, 0 );
+        UI_CreateColouredSquadKickerMessage(Util_GetPlayerOwner(executer), executer, BG_LocString(24), 186, 48, 1, 0 );
     end
 end
 
