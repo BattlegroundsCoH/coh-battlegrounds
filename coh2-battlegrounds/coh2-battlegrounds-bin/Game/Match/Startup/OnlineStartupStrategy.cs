@@ -373,7 +373,7 @@ namespace Battlegrounds.Game.Match.Startup {
         public override bool OnStart(object caller, out IPlayStrategy playStrategy) { // Launch CoH2 with Overwatch strategy
 
             // Use the overwatch strategy (and launch).
-            playStrategy = new OverwatchStrategy(this.m_session);
+            playStrategy = this.PlayStrategyFactory.CreateStrategy(this.m_session);
             playStrategy.Launch();
 
             // Inform host they'll now be launching

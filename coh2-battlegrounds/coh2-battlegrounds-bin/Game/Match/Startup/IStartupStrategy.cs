@@ -47,6 +47,11 @@ namespace Battlegrounds.Game.Match.Startup {
         SessionInfoHandle SessionInfoCollector { get; set; }
 
         /// <summary>
+        /// Get or set the <see cref="IPlayStrategyFactory"/> to use when constructing the <see cref="IPlayStrategy"/>.
+        /// </summary>
+        IPlayStrategyFactory PlayStrategyFactory { get; set; }
+
+        /// <summary>
         /// Occurs when the strategy has cancelled the startup.
         /// </summary>
         event CancelHandler StartupCancelled;

@@ -58,7 +58,7 @@ namespace Battlegrounds.Game.Match.Startup {
         public override bool OnStart(object caller, out IPlayStrategy playStrategy) {
 
             // Use the overwatch strategy (and launch).
-            playStrategy = new OverwatchStrategy(this.m_collectedSession);
+            playStrategy = this.PlayStrategyFactory.CreateStrategy(this.m_collectedSession);
             playStrategy.Launch();
 
             // Inform player they'll now be launching

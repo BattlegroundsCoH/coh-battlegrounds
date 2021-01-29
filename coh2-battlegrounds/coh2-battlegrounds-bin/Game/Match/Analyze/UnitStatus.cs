@@ -5,7 +5,7 @@ using Battlegrounds.Game.Gameplay;
 
 namespace Battlegrounds.Game.Match.Analyze {
     
-    public struct UnitStatus { // Maybe convert into an interface in the future
+    public class UnitStatus { // Maybe convert into an interface in the future
 
         public Player PlayerOwner { get; }
         public ushort UnitID { get; }
@@ -38,6 +38,7 @@ namespace Battlegrounds.Game.Match.Analyze {
             if (this.IsDeployed) {
                 this.LastSeen = stamp;
                 this.IsDead = true;
+                this.IsDeployed = false;
                 return true;
             } else {
                 return false;

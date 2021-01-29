@@ -28,6 +28,12 @@ namespace Battlegrounds.Game.Match.Analyze {
         /// </summary>
         ISession Session { get; }
 
+        /// <summary>
+        /// Compile the results into a finalizable form.
+        /// </summary>
+        /// <returns>Will return <see langword="true"/> if it was possible to compile the result. Otherwise <see langword="false"/>.</returns>
+        bool CompileResults();
+
     }
 
 }

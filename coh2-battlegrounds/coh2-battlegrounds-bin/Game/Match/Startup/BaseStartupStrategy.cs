@@ -15,6 +15,8 @@ namespace Battlegrounds.Game.Match.Startup {
         
         public SessionInfoHandle SessionInfoCollector { get; set; }
 
+        public IPlayStrategyFactory PlayStrategyFactory { get; set; }
+
         /// <summary>
         /// Get or set the local company used by the <see cref="IStartupStrategy"/>.
         /// </summary>

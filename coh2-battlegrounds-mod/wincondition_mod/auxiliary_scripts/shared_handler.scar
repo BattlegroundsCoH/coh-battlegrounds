@@ -8,8 +8,8 @@ _bg_aiData = {};
 ------------------------------------------------------------------------------------
 -- Imports
 ------------------------------------------------------------------------------------
-import("WinConditions/auxiliary_scripts/shared_constants.scar")
-import("WinConditions/auxiliary_scripts/shared_util.scar"); -- Must always be imported first
+import("WinConditions/auxiliary_scripts/shared_constants.scar") -- Must always be imported first
+import("WinConditions/auxiliary_scripts/shared_util.scar"); -- Then this (Contains several useful utility functions)
 import("WinConditions/auxiliary_scripts/shared_lookups.scar");
 import("WinConditions/auxiliary_scripts/session.scar");
 import("WinConditions/auxiliary_scripts/shared_sessionloader.scar");
@@ -18,6 +18,7 @@ import("WinConditions/auxiliary_scripts/shared_ai.scar");
 import("WinConditions/auxiliary_scripts/api_ui.scar");
 import("WinConditions/auxiliary_scripts/client_companyui.scar");
 import("WinConditions/auxiliary_scripts/client_overrideui.scar");
+import("WinConditions/auxiliary_scripts/system_tow.scar");
 
 ------------------------------------------------------------------------------------
 -- Script Code
@@ -31,7 +32,9 @@ function BG_Init()
         return;
     end
 
-    --Rule_AddOneShot(_tow_test, 1);
+    if g_towdebug then
+        Rule_AddOneShot(_tow_test, 1);
+    end
 
     -- Load the player companies
     local companyError = BG_LoadCompanies();
@@ -154,22 +157,6 @@ function _endgame_test()
     }
 
     BG_CreateAndDisplayGameOverScreenOverride(Game_GetLocalPlayer(), BG_SaveAndExit);
-
-end
-
-function _tow_test()
-
-    local gotopos = Player_GetStartingPosition(Game_GetLocalPlayer());
-    local startpos = Player_GetNearestMapEntry(Game_GetLocalPlayer(), gotopos);
-
-    local tow_transport = Squad_CreateAndSpawnToward(BP_GetSquadBlueprint("142b113740474c82a60b0a428bd553d5:zis_6_transport_truck_bg"), Game_GetLocalPlayer(), 0, startpos, gotopos ) ;
-    local tow_target = Squad_CreateAndSpawnToward(BP_GetSquadBlueprint("142b113740474c82a60b0a428bd553d5:m1931_203mm_b-4_howitzer_artillery_bg"), Game_GetLocalPlayer(), 0, startpos, gotopos ) ;
-
-    local test_a = SGroup_FromSquad(tow_transport, "sg_tow_transport_test");
-
-    Cmd_Move(test_a, gotopos, true);
-
-    Battlegrounds_TowFromOffmap(tow_transport, tow_target);
 
 end
 

@@ -7,6 +7,7 @@ using Battlegrounds.Game.Match.Composite;
 using Battlegrounds.Game.Match.Data;
 using Battlegrounds.Game.Match.Finalizer;
 using Battlegrounds.Game.Match.Play;
+using Battlegrounds.Game.Match.Play.Factory;
 using Battlegrounds.Game.Match.Startup;
 using Battlegrounds.Online;
 using Battlegrounds.Online.Lobby;
@@ -60,6 +61,7 @@ namespace BattlegroundsApp.Models {
                 startupStrategy = new SingleplayerStartupStrategy {
                     LocalCompanyCollector = this.GetLocalCompany,
                     SessionInfoCollector = this.GetSessionInfo,
+                    PlayStrategyFactory = new OverwatchStrategyFactory(),
                 };
 
                 // Analysis strategy
@@ -84,6 +86,7 @@ namespace BattlegroundsApp.Models {
                 startupStrategy = new OnlineStartupStrategy {
                     LocalCompanyCollector = this.GetLocalCompany,
                     SessionInfoCollector = this.GetSessionInfo,
+                    PlayStrategyFactory = new OverwatchStrategyFactory(),
                     StartMatchWait = this.StopMatchPulse,
                     StopMatchSeconds = WAIT_TIME,
                 };

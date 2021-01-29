@@ -171,7 +171,7 @@ function BG_DeploySquad(player, unit_id)
         end
 
         -- Broadcast that a unit was spawned
-        Command_PlayerBroadcastMessage(Game_GetLocalPlayer(), Game_GetLocalPlayer(), _bg_message_type_no_actions_required, "D["..unit_data.company_id.."]");
+        Battlegrounds_LogEvent(nil, BG_EVENT_ONDEPLOY, unit_data.company_id);
 
         -- Add events
         Rule_AddSquadEvent(BG_OnSquadDeath, squad, GE_SquadKilled);
@@ -339,6 +339,11 @@ function BG_OnSquadDeath(squad)
     local playerRefID = BG_GetPlayerID(playerOwner);
     local id = Squad_GetGameID(squad);
 
+    -- If not found - dont do anything. (This might be an AI unit) TODO: Also allow for keeping track of AI units, in case of campaigns etc.
+    if _bg_playerData[playerRefID] == nil then
+        return;
+    end
+
     -- Make sure it's a valid unit
     if _bg_playerData[playerRefID].deployed[id] ~= nil then
 
@@ -375,7 +380,7 @@ function BG_RegisterSquadDeath(playerData, companyID)
     local companySquad = BG_FindSquadInCompanyData(playerData.company.units, companyID);
 
     -- Broadcast that the unit was killed
-    Game_SendMessage( _bg_message_type_no_actions_required, "K[" .. companyID .. "]")
+    Battlegrounds_LogEvent(nil, BG_EVENT_ONDEATH, companyID);
 
     -- Add to player's loss list
     local lData = {
@@ -451,7 +456,7 @@ function BG_RecallCompanySquad(unit_data, squadID, companyID, playerData, reset)
         unit_data.veterancy_rank = unit_data.veterancy_rank + vet_rank_diff;
         unit_data.veterancy_progress = vet_rank_progress;
     end
-    Game_SendMessage(_bg_message_type_no_actions_required, "R[" .. companyID .. "," .. vet_rank_diff .. "," .. vet_rank_progress .."]");
+    Battlegrounds_LogEvent(nil, BG_EVENT_ONRETREAT, companyID .. "," .. vet_rank_diff .. "," .. vet_rank_progress);
     unit_data.spawned = false;
     unit_data.transport = nil; -- We no longer allow this unit to be brought in with transport (Infinite transports would be possible here).
     unit_data.isRecallDelayed = true;
@@ -508,8 +513,8 @@ function BG_SaveCapturedItem(player, blueprint, type, bptype)
         -- Generate message
         local capture_message = "T["..blueprint..","..type..","..bptype.."]";
 
-        -- Broadcast the message
-        Game_SendMessage(_bg_message_type_no_actions_required, capture_message);
+        -- Broadcast event
+        Battlegrounds_LogEvent(nil, BG_EVENT_ONCAPTURE, capture_message);
 
     end
 
@@ -568,7 +573,7 @@ function BG_SaveSlotItems(unit_data, squad)
     local items = BG_CollectSquadSlotItems(squad);
     local new_items = bg_set:diff(items, bg_set:select(unit_data.slot_items, function(e) return e.bp; end));
     for i = 1, #new_items do
-        Game_SendMessage(_bg_message_type_no_actions_required, "I["..unit_data.company_id..","..new_items[i].."]");
+        Battlegrounds_LogEvent(nil, BG_EVENT_ONITEM, unit_data.company_id..","..new_items[i]);
     end
     local last_pickup = nil;
     local slot_items = {};

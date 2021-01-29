@@ -15,7 +15,7 @@ import("WinConditions/ui_api/label.scar");
 ---------------------------------------------------------------------------
 -- UI API - Helper functions
 -- Developed by CoDiEx & Ragnar
--- Credits for implentention of 'UI_AddSetupFunction': Janne252
+-- Credits for implementation of 'UI_AddSetupFunction': Janne252
 ---------------------------------------------------------------------------
 gui_inits = {};
 gui_issetup = false;
@@ -36,6 +36,7 @@ function UI_AddSetupFunction(func)
 					gui_inits[i]();
 				end
 				Rule_Remove(_G[gui_oninitfuncname]);
+				--Rule_Add(__UI_CalcMouseScreenPosition);
 			end
 		end
 		Rule_Add(_G[gui_oninitfuncname]);

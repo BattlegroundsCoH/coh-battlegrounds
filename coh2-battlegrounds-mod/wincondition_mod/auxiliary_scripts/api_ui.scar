@@ -36,6 +36,7 @@ function UI_AddSetupFunction(func)
 					gui_inits[i]();
 				end
 				Rule_Remove(_G[gui_oninitfuncname]);
+				--Rule_Add(__UI_CalcMouseScreenPosition);
 			end
 		end
 		Rule_Add(_G[gui_oninitfuncname]);

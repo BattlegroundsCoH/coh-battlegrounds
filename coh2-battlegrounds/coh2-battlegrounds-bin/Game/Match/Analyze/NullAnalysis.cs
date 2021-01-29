@@ -6,6 +6,7 @@ using Battlegrounds.Game.Gameplay;
 namespace Battlegrounds.Game.Match.Analyze {
 
     public class NullAnalysis : IAnalyzedMatch {
+        
         public bool IsFinalizableMatch => false;
 
         public IReadOnlyList<UnitStatus> Units => new ReadOnlyCollection<UnitStatus>(Array.Empty<UnitStatus>());
@@ -13,6 +14,9 @@ namespace Battlegrounds.Game.Match.Analyze {
         public IReadOnlyCollection<Player> Players => new ReadOnlyCollection<Player>(Array.Empty<Player>());
 
         public ISession Session => null;
+
+        public bool CompileResults() => true;
+
     }
 
 }
