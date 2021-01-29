@@ -539,14 +539,18 @@ function BG_DeployAndExit(group, deployPos)
     -- Depending on method we use different events (When emptied or reached destination)
     if deployPos == nil then
         Event_IsHoldingAny(function()
-            local pos = Player_GetNearestMapEntry(Util_GetPlayerOwner(group), Util_GetPosition(group));
-            SGroup_MoveAndDespawn(group, pos);
+            if SGroup_Count(group) > 0 then
+                local pos = Player_GetNearestMapEntry(Util_GetPlayerOwner(group), Util_GetPosition(group));
+                SGroup_MoveAndDespawn(group, pos);
+            end
         end, nil, group, true, 0.5)
     else
         Event_Proximity(function()
-            Battlegrounds_TowDetach(SGroup_GetSpawnedSquadAt(group, 1)); -- Detatch and get rid of the squad.
-            local pos = Player_GetNearestMapEntry(Util_GetPlayerOwner(group), Util_GetPosition(group));
-            SGroup_MoveAndDespawn(group, pos);
+            if SGroup_Count(group) > 0 then
+                Battlegrounds_TowDetach(SGroup_GetSpawnedSquadAt(group, 1)); -- Detatch and get rid of the squad.
+                local pos = Player_GetNearestMapEntry(Util_GetPlayerOwner(group), Util_GetPosition(group));
+                SGroup_MoveAndDespawn(group, pos);
+            end
         end, nil, group, deployPos, 2.5, nil, 4 );
     end
 
