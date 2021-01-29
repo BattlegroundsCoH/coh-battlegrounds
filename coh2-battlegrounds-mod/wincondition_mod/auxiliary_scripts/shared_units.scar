@@ -379,6 +379,12 @@ function BG_RegisterSquadDeath(playerData, companyID)
     -- Get the company squad
     local companySquad = BG_FindSquadInCompanyData(playerData.company.units, companyID);
 
+    -- If we fail to get the company squad data - it might be because of some debug issue
+    if companySquad == nil then
+        -- TODO: if not in debug broadcast an error event
+        return;
+    end
+
     -- Broadcast that the unit was killed
     Battlegrounds_LogEvent(nil, BG_EVENT_ONDEATH, companyID);
 
