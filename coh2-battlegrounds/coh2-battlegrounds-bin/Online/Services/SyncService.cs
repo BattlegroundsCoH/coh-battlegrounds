@@ -103,6 +103,7 @@ namespace Battlegrounds.Online.Services {
             while (!predicate() && !pulse(counter++) && counter < max) {
                 Thread.Sleep(step);
             }
+            pulse(counter);
             return new TimedOut(counter >= max);
         }
 

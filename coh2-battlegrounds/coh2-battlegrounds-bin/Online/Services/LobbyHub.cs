@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Net.Sockets;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
@@ -192,15 +193,14 @@ namespace Battlegrounds.Online.Services {
                 throw new ArgumentNullException(nameof(user), "Steam User object not assigned!");
             }
 
-            // The connect message
-            Message addUserMessage = new Message(MessageType.USER_SETUSERDATA, user.Name, user.ID.ToString());
-
             // On Reconnected handler
             void OnReconnect(Message message) {
                 if (message.Descriptor == MessageType.CONFIRMATION_MESSAGE) {
                     connectionResponse?.Invoke(true, existingConnection);
+                    Trace.WriteLine("Reconnected with lobby.", "LobbyHub");
                 } else {
                     connectionResponse?.Invoke(false, existingConnection);
+                    Trace.WriteLine("Failed to reconnect with server.", "LobbyHub");
                 }
             }
 
@@ -209,10 +209,15 @@ namespace Battlegrounds.Online.Services {
                 if (response.Descriptor == MessageType.CONFIRMATION_MESSAGE) {
                     existingConnection.UpdateSocket(socket);
                     existingConnection.SendMessageWithResponse(new Message(MessageType.LOBBY_TRYRECONNECT, lobbyID, lobbypswd, isHost.ToString()), OnReconnect);
+                    Trace.WriteLine("Reconnected with server.", "LobbyHub");
                 } else {
                     connectionResponse?.Invoke(false, null);
+                    Trace.WriteLine("Failed to reconnect with server.", "LobbyHub");
                 }
             }
+
+            // The connect message
+            Message addUserMessage = new Message(MessageType.USER_SETUSERDATA, user.Name, user.ID.ToString());
 
             // Send the message
             MessageSender.SendMessage(AddressBook.GetLobbyServer(), addUserMessage, OnResponse);
