@@ -776,6 +776,7 @@
 				<instance_reference name="ability" value="abilities\german\timed_ability\retreat_to_forward_hq" />
 				<instance_reference name="ability" value="abilities\german\timed_ability\stormtrooper_sprint_mp" />
 				<instance_reference name="ability" value="abilities\german\modal_ability\accessory_weapons\grenadier_panzerfaust_bg" mod="142b113740474c82a60b0a428bd553d5" />
+				<instance_reference name="ability" value="abilities\german\modal_ability\accessory_weapons\grenadier_rifle_grenade_ability_bg" mod="142b113740474c82a60b0a428bd553d5" />
 			</list>
 			<bool name="allow_targeted_abilities_whilst_moving" value="False" />
 		</template_reference>
