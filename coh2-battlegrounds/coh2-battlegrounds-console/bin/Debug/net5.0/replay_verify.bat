@@ -1,0 +1,1 @@
+coh2-battlegrounds-console.exe -recent_analysis -json
