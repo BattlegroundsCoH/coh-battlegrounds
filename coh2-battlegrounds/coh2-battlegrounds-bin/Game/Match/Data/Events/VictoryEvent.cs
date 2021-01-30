@@ -13,7 +13,7 @@ namespace Battlegrounds.Game.Match.Data.Events {
         /// <summary>
         /// Get the ID of the victor
         /// </summary>
-        public byte VictorID { get; }
+        public ulong VictorID { get; }
 
         /// <summary>
         /// Create a new <see cref="VictoryEvent"/>.
@@ -21,7 +21,7 @@ namespace Battlegrounds.Game.Match.Data.Events {
         /// <param name="values">String arguments containing victor ID</param>
         public VictoryEvent(uint id, string[] values) {
             this.Uid = id;
-            if (byte.TryParse(values[0], out byte victor)) {
+            if (ulong.TryParse(values[0], out ulong victor)) {
                 this.VictorID = victor;
             } else {
                 throw new FormatException();

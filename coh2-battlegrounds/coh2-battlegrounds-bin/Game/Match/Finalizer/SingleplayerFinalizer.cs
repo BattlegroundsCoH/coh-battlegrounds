@@ -34,7 +34,7 @@ namespace Battlegrounds.Game.Match.Finalizer {
 
             // Assign player companies
             foreach (Player player in players) {
-                var company = session.GetPlayerCompany(player.ID);
+                var company = session.GetPlayerCompany(player.SteamID);
                 if (company is not null) {
                     this.m_companies.Add(player, company);
                 } else {

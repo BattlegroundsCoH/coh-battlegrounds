@@ -118,20 +118,20 @@ namespace Battlegrounds.Game.Match.Data {
 
         private static Event FromData(IMatchEvent e) {
             return e switch {
-                KillEvent k => new Event() { UID = e.Uid, Type = nameof(KillEvent), Player = k.UnitOwner.ID, Id = k.UnitID },
-                DeployEvent d => new Event() { UID = e.Uid, Type = nameof(DeployEvent), Player = d.DeployingPlayer.ID, Id = d.SquadID },
-                RetreatEvent r => new Event() { UID = e.Uid, Type = nameof(RetreatEvent), Player = r.WithdrawPlayer.ID, 
+                KillEvent k => new Event() { UID = e.Uid, Type = nameof(KillEvent), Player = k.UnitOwner.SteamID, Id = k.UnitID },
+                DeployEvent d => new Event() { UID = e.Uid, Type = nameof(DeployEvent), Player = d.DeployingPlayer.SteamID, Id = d.SquadID },
+                RetreatEvent r => new Event() { UID = e.Uid, Type = nameof(RetreatEvent), Player = r.WithdrawPlayer.SteamID, 
                     Id = r.WithdrawingUnitID, 
                     Arg1 = r.WithdrawingUnitVeterancyChange.ToString(), 
                     Arg2 = r.WithdrawingUnitVeterancyExperience.ToString() 
                 },
                 VictoryEvent v => new Event() { UID = e.Uid, Type = nameof(VictoryEvent), Player = v.VictorID },
-                PickupEvent i => new Event() { UID = e.Uid, Type = nameof(PickupEvent), Player = i.PickupPlayer.ID, Id = i.PickupSquadID, Arg1 = i.PickupItem.ToJsonReference() },
+                PickupEvent i => new Event() { UID = e.Uid, Type = nameof(PickupEvent), Player = i.PickupPlayer.SteamID, Id = i.PickupSquadID, Arg1 = i.PickupItem.ToJsonReference() },
                 VerificationEvent g => new Event() { UID = e.Uid, Type = nameof(VerificationEvent), Player = ulong.MaxValue, Id = ushort.MaxValue, 
                     Arg1 = g.VerificationType.ToString(), 
                     Arg2 = g.VerificationArgument 
                 },
-                CaptureEvent c => new Event() { UID = e.Uid, Type = nameof(CaptureEvent), Player = c.CapturingPlayer.ID, Id = ushort.MaxValue, Arg1 = c.CapturedBlueprint.ToJsonReference() },
+                CaptureEvent c => new Event() { UID = e.Uid, Type = nameof(CaptureEvent), Player = c.CapturingPlayer.SteamID, Id = ushort.MaxValue, Arg1 = c.CapturedBlueprint.ToJsonReference() },
                 _ => new Event() { UID = e.Uid },
             };
         }

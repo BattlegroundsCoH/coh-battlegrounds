@@ -171,14 +171,19 @@ namespace Battlegrounds.Game.Match.Data {
                     // Get the invoking player
                     match = broadcastCallerRegex.Match(gameEvent.AttachedMessage);
                     if (match.Success) {
-                        if (double.TryParse(match.Groups["id"].Value, out double val)) {
-                            ulong integer = (uint)val;
+                        string str = match.Groups["id"].Value;
+                        if (ulong.TryParse(str, out ulong integer)) {
+                            player = this.m_players.FirstOrDefault(x => x.SteamID == integer);
+                        } else if (double.TryParse(str, out double val)) { // not accurate for large numbers!
+                            integer = (ulong)val;
                             player = this.m_players.FirstOrDefault(x => x.SteamID == integer);
                             if (player is null) {
-                                player = this.m_players.First(x => x.ID == gameEvent.PlayerID);
+                                
                             }
                         }
-                    } else {
+                    }
+
+                    if (player is null) {
                         player = this.m_players.First(x => x.ID == gameEvent.PlayerID);
                         Trace.WriteLine($"{{Warning}} Event message has no player ID \"{gameEvent.AttachedMessage}\" (Using event ID), this may cause problems.", "ReplayMatchData");
                     }
