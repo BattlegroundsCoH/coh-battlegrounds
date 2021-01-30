@@ -9,11 +9,13 @@
 
   <ItemGroup>
     <None Remove="MatchSim\Data\3rdm.rec" />
+    <None Remove="MatchSim\Data\4th.rec" />
     <None Remove="MatchSim\Data\idchk.rec" />
   </ItemGroup>
 
   <ItemGroup>
     <EmbeddedResource Include="MatchSim\Data\3rdm.rec" />
+    <EmbeddedResource Include="MatchSim\Data\4th.rec" />
     <EmbeddedResource Include="MatchSim\Data\idchk.rec" />
   </ItemGroup>
 

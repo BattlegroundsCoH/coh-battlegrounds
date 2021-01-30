@@ -113,6 +113,7 @@ namespace Battlegrounds.Online.Lobby {
         private string m_lobbyMap;
         private string m_lobbyGamemode;
         private string m_lobbyGamemodeOption;
+        private string m_lobbyPassword;
         private bool m_isHost;
         private Dictionary<ManagedLobbyTeamType, ManagedLobbyTeam> m_teams;
 
@@ -196,6 +197,7 @@ namespace Battlegrounds.Online.Lobby {
             // Assign the underlying connection and start listening for messages
             this.m_underlyingConnection = connection;
             this.m_underlyingConnection.OnMessage += this.ManagedLobbyInternal_MessageReceived;
+            this.m_underlyingConnection.OnConnectionLost += this.ManagedLobbyInternal_ConnectionLost;
             this.m_underlyingConnection.Start();
 
             // Assign hostship
@@ -207,6 +209,31 @@ namespace Battlegrounds.Online.Lobby {
                 [ManagedLobbyTeamType.Axis] = new ManagedLobbyTeam(this, 1, ManagedLobbyTeamType.Axis),
                 [ManagedLobbyTeamType.Spectator] = new ManagedLobbyTeam(this, 4, ManagedLobbyTeamType.Spectator),
             };
+
+        }
+
+        // Handler for when a connection is lost
+        private void ManagedLobbyInternal_ConnectionLost(ConnectionLostEventArgs args) {
+
+            // Log disconnect
+            Trace.WriteLine("Connection to server was lost", "ManagedLobby");
+
+            // Handler
+            void ReconnectHandler(bool result, Connection connection) {
+                if (result) {
+                    Trace.WriteLine("Reconnected to lobby.", "ManagedLobby");
+                    this.m_underlyingConnection.Listen(); // Tell the connection to begin listening for server messages
+                } else {
+                    Trace.WriteLine("Failed to reconnect to lobby.", "ManagedLobby");
+                    this.m_underlyingConnection.Stop();
+                }
+            }
+
+            // Try and reconnect
+            LobbyHub.Reconnect(this.m_underlyingConnection, this.m_self, this.m_lobbyID, this.m_lobbyPassword, this.m_isHost, ReconnectHandler);
+
+            // Stop from closing
+            args.IsClosing = false;
 
         }
 
@@ -780,6 +807,8 @@ namespace Battlegrounds.Online.Lobby {
                     taskDone?.Invoke(this);
                 }
                 this.m_underlyingConnection.SendMessageWithResponse(new Message(MessageType.LOBBY_LEAVE), StopAll);
+            } else {
+                taskDone?.Invoke(this);
             }
         }
 

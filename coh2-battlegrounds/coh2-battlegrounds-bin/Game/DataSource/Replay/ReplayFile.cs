@@ -1,11 +1,12 @@
 ﻿using System;
 using System.IO;
 using System.Text;
+using System.Linq;
+using System.Diagnostics;
 using System.Collections.Generic;
 
 using Battlegrounds.Game.Gameplay;
 using Battlegrounds.Util;
-using System.Linq;
 using Battlegrounds.Game.Database;
 
 namespace Battlegrounds.Game.DataSource.Replay {
@@ -59,14 +60,20 @@ namespace Battlegrounds.Game.DataSource.Replay {
         private string m_replayfile;
 
         private bool m_isParsed;
+        private bool m_isPartial;
 
         private ChunkyFile m_scenarioChunkyFile;
         private ChunkyFile m_replayEventsChunkyFile;
 
         /// <summary>
-        /// Check if the <see cref="ReplayFile"/> has been loaded and parsed.
+        /// Get if the <see cref="ReplayFile"/> has been loaded and parsed.
         /// </summary>
         public bool IsParsed => this.m_isParsed;
+
+        /// <summary>
+        /// Get if the <see cref="ReplayFile"/> was partially read
+        /// </summary>
+        public bool IsPartial => this.m_isPartial;
 
         /// <summary>
         /// The header read when the file was parsed
@@ -169,28 +176,31 @@ namespace Battlegrounds.Game.DataSource.Replay {
 
             // Parse header
             if (!this.ParseHeader()) {
+                Trace.WriteLine("Failed to parse replay header data", "ReplayFile");
                 return false;
             }
 
             this.m_scenarioChunkyFile = new ChunkyFile();
             if (!this.m_scenarioChunkyFile.LoadFile(binaryReader)) {
-                Console.WriteLine("Failed to read intro");
+                Trace.WriteLine("Failed to read replay intro data", "ReplayFile");
                 return false;
             }
 
             this.m_replayEventsChunkyFile = new ChunkyFile();
             if (!this.m_replayEventsChunkyFile.LoadFile(binaryReader)) {
-                Console.WriteLine("Failed to read outro");
+                Trace.WriteLine("Failed to read replay outro data", "ReplayFile");
                 return false;
             }
 
             this.m_replaycontent = binaryReader.ReadToEnd();
 
             if (!this.ParseScenarioDescription()) {
+                Trace.WriteLine("Failed to read scenario data", "ReplayFile");
                 return false;
             }
 
             if (!this.ParseReplayContent()) {
+                Trace.WriteLine("Failed to read raw replay data", "ReplayFile");
                 return false;
             }
 
@@ -385,6 +395,7 @@ namespace Battlegrounds.Game.DataSource.Replay {
                             tick.Parse(reader);
 
                             this.m_tickList.Add(tick);
+                            this.m_isPartial = true;
 
                         } else {
 

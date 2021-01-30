@@ -49,6 +49,32 @@ namespace coh2_battlegrounds_bin_tests.MatchSim {
 
         }
 
+        private static ReplayFile Load4th() {
+            var assstream = Assembly.GetExecutingAssembly().GetManifestResourceStream("coh2_battlegrounds_bin_tests.MatchSim.Data.4th.rec");
+            Assert.IsNotNull(assstream);
+            var resstream = new BinaryReader(assstream);
+            ReplayFile replayFile = new ReplayFile();
+            Assert.AreEqual(true, replayFile.LoadReplay(resstream));
+            return replayFile;
+        }
+        /*
+        [TestMethod]
+        public void CanLoad4th() => Assert.IsNotNull(Load4th());
+
+        [TestMethod]
+        public void CanParse4th() {
+
+            // Create replay
+            ReplayMatchData rmd = new ReplayMatchData(session);
+            rmd.SetReplayFile(Load3rdm());
+
+            // Try parse
+            bool isParsing = rmd.ParseMatchData();
+
+            // Assert we can parse the match data
+            Assert.AreEqual(true, isParsing);
+
+        }*/
     }
 
 }

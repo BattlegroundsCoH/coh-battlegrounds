@@ -14,9 +14,22 @@ namespace Battlegrounds.Online {
     public delegate void MessageHandler(Message message);
 
     /// <summary>
+    /// 
+    /// </summary>
+    public class ConnectionLostEventArgs { public bool IsClosing { get; set; } = true; }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="args"></param>
+    public delegate void ConnectionLostHandler(ConnectionLostEventArgs args);
+
+    /// <summary>
     /// Represents a server-client connection. Provides abstraction for <see cref="Socket"/> send and receive methods. This class cannot be inherited.
     /// </summary>
     public sealed class Connection {
+
+        public const int RESPONSE_BUFFR_SIZE = 1024;
 
         Thread m_processThread;
 
@@ -41,6 +54,11 @@ namespace Battlegrounds.Online {
         /// The event to trigger when a <see cref="Message"/> has been received.
         /// </summary>
         public event MessageHandler OnMessage;
+
+        /// <summary>
+        /// The event to trigger when the connection was unexpectedly lost.
+        /// </summary>
+        public event ConnectionLostHandler OnConnectionLost;
 
         /// <summary>
         /// Create a new <see cref="Connection"/> instance for a <see cref="Socket"/>.
@@ -136,12 +154,61 @@ namespace Battlegrounds.Online {
             }
         }
 
+        private void WaitForMessage() {
+            try {
+                byte[] buffer = new byte[2048];
+                List<byte> backBuffer = new List<byte>();
+                void Received(IAsyncResult result) {
+                    try {
+                        int received = this.m_socket.EndReceive(result);
+                        if (received > 0) {
+                            backBuffer.AddRange(buffer[0..received]);
+                            if (backBuffer.Count > 2 && backBuffer[^1] == 0x06 && backBuffer[^2] == 0x04) {
+                                Message.GetMessages(backBuffer.ToArray()).Invoke(x => this.MessageReceived(this.m_socket, x));
+                            } else {
+                                this.m_socket.BeginReceive(buffer, 0, RESPONSE_BUFFR_SIZE, 0, Received, null);
+                            }
+                        } else {
+                            if (backBuffer.Count > 0) {
+                                Trace.WriteLine("Backbuffer contains content...", "Connection");
+                            }
+                        }
+                    } catch (ObjectDisposedException) {
+                    } catch (SocketException conn) when (conn.SocketErrorCode == SocketError.ConnectionReset) {
+                        if (!this.m_socket.Connected) {
+                            Trace.WriteLine("Connection was reset by server (Possibly fatal).", "Connection");
+                            var args = new ConnectionLostEventArgs() { IsClosing = true };
+                            this.OnConnectionLost?.Invoke(args);
+                            if (args.IsClosing is true) {
+                                this.Stop();
+                            }
+                        }
+                    } catch (SocketException s) {
+                        Trace.WriteLine(s, "Connection");
+                    }
+                }
+                this.m_socket.BeginReceive(buffer, 0, RESPONSE_BUFFR_SIZE, 0, Received, null);
+            } catch (ObjectDisposedException) { } catch (SocketException) { }
+        }
+
+        /// <summary>
+        /// Update the underlying <see cref="Socket"/> object.
+        /// </summary>
+        /// <param name="socket"></param>
+        public void UpdateSocket(Socket socket) {
+            if (this.m_socket is null || !this.m_socket.Connected) {
+                this.m_socket = socket;
+            } else {
+                throw new InvalidOperationException("Cannot update socket when the existing socket exists.");
+            }
+        }
+
         /// <summary>
         /// Start listening for <see cref="Message"/> data.
         /// </summary>
         public void Listen() {
             if (!this.m_isListening) {
-                MessageSender.WaitForMessage(this.m_socket, this.MessageReceived);
+                this.WaitForMessage();
                 this.m_isListening = true;
             }
         }

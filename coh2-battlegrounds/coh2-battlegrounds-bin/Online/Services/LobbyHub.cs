@@ -10,6 +10,13 @@ using Battlegrounds.Steam;
 namespace Battlegrounds.Online.Services {
 
     /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="isConnected"></param>
+    /// <param name="connection"></param>
+    public delegate void LobbyHubConnectionHandler(bool isConnected, Connection connection);
+
+    /// <summary>
     /// Instance of a lobby hub (Free service).
     /// </summary>
     public class LobbyHub {
@@ -138,7 +145,7 @@ namespace Battlegrounds.Online.Services {
         /// </summary>
         /// <param name="connectionResponse">The server response to connection attempt.</param>
         /// <exception cref="ArgumentNullException"/>
-        public void Connect(Action<bool, Connection> connectionResponse) {
+        public void Connect(LobbyHubConnectionHandler connectionResponse) {
 
             // Make sure there's a user to work with
             if (this.User is null) {
@@ -161,7 +168,57 @@ namespace Battlegrounds.Online.Services {
             MessageSender.SendMessage(AddressBook.GetLobbyServer(), addUserMessage, OnResponse);
 
         }
-        
+
+        /// <summary>
+        /// Reconnect to a lobby if connection to server was lost.
+        /// </summary>
+        /// <param name="existingConnection">The existing <see cref="Connection"/> object.</param>
+        /// <param name="user">The <see cref="SteamUser"/> to reconnect to the lobby.</param>
+        /// <param name="lobbyID">The GUID of the lobby to try and reconnect with.</param>
+        /// <param name="lobbypswd">The password to use when connecting to the lobby.</param>
+        /// <param name="isHost">Inform the lobby we wish to reconnect as host.</param>
+        /// <param name="connectionResponse">The <see cref="LobbyHubConnectionHandler"/> to handle the final server response.</param>
+        /// <exception cref="ArgumentNullException"/>
+        /// <exception cref="InvalidOperationException"/>
+        public static void Reconnect(Connection existingConnection, SteamUser user, string lobbyID, string lobbypswd, bool isHost, LobbyHubConnectionHandler connectionResponse) {
+
+            // Make sure we're not connected
+            if (existingConnection.IsConnected) {
+                throw new InvalidOperationException("Cannot reconnect to server lobby if already connected!");
+            }
+
+            // Make sure there's a user to work with
+            if (user is null) {
+                throw new ArgumentNullException(nameof(user), "Steam User object not assigned!");
+            }
+
+            // The connect message
+            Message addUserMessage = new Message(MessageType.USER_SETUSERDATA, user.Name, user.ID.ToString());
+
+            // On Reconnected handler
+            void OnReconnect(Message message) {
+                if (message.Descriptor == MessageType.CONFIRMATION_MESSAGE) {
+                    connectionResponse?.Invoke(true, existingConnection);
+                } else {
+                    connectionResponse?.Invoke(false, existingConnection);
+                }
+            }
+
+            // On server response handler
+            void OnResponse(Socket socket, Message response) {
+                if (response.Descriptor == MessageType.CONFIRMATION_MESSAGE) {
+                    existingConnection.UpdateSocket(socket);
+                    existingConnection.SendMessageWithResponse(new Message(MessageType.LOBBY_TRYRECONNECT, lobbyID, lobbypswd, isHost.ToString()), OnReconnect);
+                } else {
+                    connectionResponse?.Invoke(false, null);
+                }
+            }
+
+            // Send the message
+            MessageSender.SendMessage(AddressBook.GetLobbyServer(), addUserMessage, OnResponse);
+
+        }
+
     }
 
 }

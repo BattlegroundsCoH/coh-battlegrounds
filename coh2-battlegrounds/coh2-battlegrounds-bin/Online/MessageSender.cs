@@ -56,7 +56,7 @@ namespace Battlegrounds.Online {
                             }
                         } else {
                             if (backBuffer.Count > 0) {
-                                Trace.WriteLine("Backbuffer contains content...");
+                                Trace.WriteLine("Backbuffer contains content...", "MessageSender");
                             }
                         }
                     } catch (ObjectDisposedException) { 
