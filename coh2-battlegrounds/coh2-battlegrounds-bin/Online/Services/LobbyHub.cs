@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Net.Sockets;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
@@ -6,7 +7,6 @@ using System.Net.NetworkInformation;
 using System.Threading;
 
 using Battlegrounds.Steam;
-using System.Diagnostics;
 
 namespace Battlegrounds.Online.Services {
 

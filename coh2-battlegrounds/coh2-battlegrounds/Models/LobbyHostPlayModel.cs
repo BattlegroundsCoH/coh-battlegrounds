@@ -151,10 +151,16 @@ namespace BattlegroundsApp.Models {
                     // Append to lobby chat
                     this.m_view.lobbyChat.AppendText($"[System] A fatal error was detected while playing.\n");
 
+                    // Trigger system message
+                    this.m_lobby.TriggerSystemMessage("A fatal error was detected while playing.");
+
                 } else if (reason is IMatchData matchEvents) {
 
                     // Append to lobby chat
                     this.m_view.lobbyChat.AppendText($"[System] {message} \n");
+
+                    // Trigger system message
+                    this.m_lobby.TriggerSystemMessage(message);
 
                 }
 
