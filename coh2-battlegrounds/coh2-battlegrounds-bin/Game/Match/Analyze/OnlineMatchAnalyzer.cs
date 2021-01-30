@@ -24,6 +24,9 @@ namespace Battlegrounds.Game.Match.Analyze {
 
         public override void OnPrepare(object caller, IMatchData toAnalyze) {
 
+            // Create analysis result
+            this.m_analysisResult = new EventAnalysis(toAnalyze.Session);
+
             // Set self data
             if (toAnalyze is ReplayMatchData replay) {
                 this.m_selfData = replay;
