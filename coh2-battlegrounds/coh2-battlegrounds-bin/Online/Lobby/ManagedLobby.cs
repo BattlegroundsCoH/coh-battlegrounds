@@ -1435,6 +1435,7 @@ namespace Battlegrounds.Online.Lobby {
                         if (response.Descriptor == MessageType.CONFIRMATION_MESSAGE) {
                             var mLobby = new ManagedLobby(connection, true) {
                                 m_lobbyID = response.Argument2,
+                                m_lobbyPassword = lobbyPassword,
                                 m_self = hub.User,
                             };
                             mLobby.SetLobbyCapacity(2, false);
@@ -1500,6 +1501,7 @@ namespace Battlegrounds.Online.Lobby {
                         if (response.Descriptor == MessageType.CONFIRMATION_MESSAGE) {
                             managedCallback?.Invoke(new ManagedLobbyStatus(true), new ManagedLobby(connection, false) { 
                                 m_lobbyID = response.Argument2,
+                                m_lobbyPassword = password,
                                 m_self = hub.User,
                             });
                         } else {
