@@ -32,7 +32,7 @@ namespace Battlegrounds.Game.Match.Data {
 
         private readonly Regex broadcastRegex = new Regex(@"(?<cmdtype>\w)\[(?<content>(?<msg>(\w|_|-|:|\.|\d)+)|,|\s)*\]");
         private readonly Regex broadcastIdRegex = new Regex(@"#(?<id>\d+)");
-        //private readonly Regex broadcastCallerRegex = new Regex(@"@(?<id>\d+)");
+        private readonly Regex broadcastCallerRegex = new Regex(@"@(?<id>\d+(\.\d+e\+\d+)?)");
         private readonly Regex broadcastUIDigitRegex = new Regex(@"\d+(,\d+)*");
 
         public ISession Session { get; }
@@ -96,6 +96,9 @@ namespace Battlegrounds.Game.Match.Data {
             // Length of the match
             this.m_length = TimeSpan.Zero;
 
+            // Keep track of registered IDs
+            HashSet<uint> ids = new HashSet<uint>();
+
             // Loop through all the ticks
             for (int i = 0; i < matchTicks.Length; i++) {
 
@@ -110,7 +113,9 @@ namespace Battlegrounds.Game.Match.Data {
 
                         // Get the data
                         if (this.ParseBroadcastMessage(tickEvent) is IMatchEvent broadcastMessage) {
-                            this.m_events.Add(new TimeEvent(tickEvent.TimeStamp, broadcastMessage));
+                            if (ids.Add(broadcastMessage.Uid)) {
+                                this.m_events.Add(new TimeEvent(tickEvent.TimeStamp, broadcastMessage));
+                            }
                         } else {
                             return false;
                         }
@@ -149,9 +154,6 @@ namespace Battlegrounds.Game.Match.Data {
                     char msgtype = char.ToUpper(match.Groups["cmdtype"].Value[0]); // Always bump it to upper (incase it's forgotten in Scar script)
                     string[] values = match.Groups["content"].Captures.ToList().Where(x => x.Value != "," && x.Value != " ").Select(x => x.Value).ToArray();
 
-                    // Get the invoking player
-                    var player = this.m_players.First(x => x.ID == gameEvent.PlayerID);
-
                     // Define event UID
                     uint eventUID = 0;
 
@@ -161,6 +163,24 @@ namespace Battlegrounds.Game.Match.Data {
                         eventUID = uint.Parse(match.Groups["id"].Value);
                     } else {
                         Trace.WriteLine($"{{Warning}} Event message has no UID \"{gameEvent.AttachedMessage}\" (Using UID = 0), this may cause problems.", "ReplayMatchData");
+                    }
+
+                    // Define invoking player
+                    Player player = null;
+
+                    // Get the invoking player
+                    match = broadcastCallerRegex.Match(gameEvent.AttachedMessage);
+                    if (match.Success) {
+                        if (double.TryParse(match.Groups["id"].Value, out double val)) {
+                            ulong integer = (uint)val;
+                            player = this.m_players.FirstOrDefault(x => x.SteamID == integer);
+                            if (player is null) {
+                                player = this.m_players.First(x => x.ID == gameEvent.PlayerID);
+                            }
+                        }
+                    } else {
+                        player = this.m_players.First(x => x.ID == gameEvent.PlayerID);
+                        Trace.WriteLine($"{{Warning}} Event message has no player ID \"{gameEvent.AttachedMessage}\" (Using event ID), this may cause problems.", "ReplayMatchData");
                     }
 
                     // Return the proper type

@@ -1,12 +1,16 @@
 ﻿using System;
+using System.IO;
 using System.Threading;
 
 using Battlegrounds;
 using Battlegrounds.Game.Database;
 using Battlegrounds.Game.Database.Management;
 using Battlegrounds.Game.DataCompany;
+using Battlegrounds.Game.DataSource.Replay;
 using Battlegrounds.Game.Gameplay;
 using Battlegrounds.Game.Match;
+using Battlegrounds.Game.Match.Data;
+using Battlegrounds.Json;
 using Battlegrounds.Modding;
 using Battlegrounds.Online;
 using Battlegrounds.Online.Lobby;
@@ -15,8 +19,42 @@ using Battlegrounds.Online.Services;
 namespace coh2_battlegrounds_console {
     
     class Program {
-        
+
+        static bool recent_analysis;
+        static string recent_file = null;
+        static bool compile_json;
+
         static void Main(string[] args) {
+
+            Console.WriteLine(string.Join(' ', args));
+            ParseArguments(args);
+
+            if (recent_analysis) {
+                Console.WriteLine("Parsing latest replay file");
+                string target = ReplayMatchData.LATEST_REPLAY_FILE;
+                if (!string.IsNullOrEmpty(recent_file)) {
+                    if (File.Exists(recent_file)) {
+                        target = recent_file;
+                    } 
+                }
+                ReplayFile replayFile = new ReplayFile(target);
+                Console.WriteLine($"Load Replay: {replayFile.LoadReplay()}");
+                Console.WriteLine($"Partial: {replayFile.IsPartial}");
+                if (compile_json) {
+                    Console.WriteLine("Compiling to json playback");
+                    ReplayMatchData playback = new ReplayMatchData(new NullSession());
+                    playback.SetReplayFile(replayFile);
+                    if (playback.ParseMatchData()) {
+                        JsonPlayback events = new JsonPlayback(playback);
+                        File.WriteAllText("playback.json", events.SerializeAsJson());
+                        Console.WriteLine("Saved to .json");
+                    } else {
+                        Console.WriteLine("Failed to compile to json...");
+                    }
+                }
+                Console.ReadLine();
+                return;
+            }
 
             BattlegroundsInstance.LoadInstance();
             if (!BattlegroundsInstance.Steam.GetSteamUser()) {
@@ -456,6 +494,25 @@ namespace coh2_battlegrounds_console {
 
             } else {
                 Console.WriteLine(status.Message);
+            }
+
+        }
+
+        private static void ParseArguments(string[] args) {
+
+            for (int i = 0; i < args.Length; i++) {
+
+                if (args[i].CompareTo("-recent_analysis") == 0) {
+                    recent_analysis = true;
+                    if (i + 1 < args.Length) {
+                        if (args[i+1][0] != '-') {
+                            recent_file = args[i + 1];
+                        }
+                    }
+                } else if (args[i].CompareTo("-json") == 0) {
+                    compile_json = true;
+                }
+
             }
 
         }

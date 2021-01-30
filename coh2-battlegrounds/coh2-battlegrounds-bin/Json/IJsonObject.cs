@@ -202,19 +202,19 @@ namespace Battlegrounds.Json {
                         Type t = kvp.Value.GetType();
                         string entryName = kvp.Key.ToString();
                         if (t.IsPrimitive || kvp.Value is string) {
-                            jsonbuilder.Append($"\"{entryName}\" : \"{(kvp.Value as string).Replace("\\", "\\\\")}\"{((i < j) ? ",\n" : "")}");
+                            jsonbuilder.AppendLine($"\"{entryName}\": \"{(kvp.Value as string).Replace("\\", "\\\\")}\"{((i < j) ? "," : "")}");
                         } else if (kvp.Value is IJsonObject jso2) {
                             if (attributeSet.UseRef) {
-                                jsonbuilder.Append($"\"{entryName}\" : \"{jso2.ToJsonReference()}\"{((i < j) ? ",\n" : "")}");
+                                jsonbuilder.AppendLine($"\"{entryName}\": \"{jso2.ToJsonReference()}\"{((i < j) ? "," : "")}");
                             } else {
-                                jsonbuilder.Append($"\"{entryName}\" : {jso2.Serialize(jsonbuilder.GetIndent()).TrimEnd('\n')}{((i < j) ? ",\n" : "")}", false);
+                                jsonbuilder.AppendLine($"\"{entryName}\": {jso2.Serialize(jsonbuilder.GetIndent()).TrimEnd('\n').TrimStart('\t')}{((i < j) ? "," : "")}");
                             }
                         }
                         i++;
                     }
-                    if (j >= 0) {
+                    /*if (j >= 0 &) {
                         jsonbuilder.Append("\n", false);
-                    }
+                    }*/
                     jsonbuilder.DecreaseIndent();
                     jsonbuilder.AppendLine($"}}{((appendComma) ? "," : "")}");
                 } else if (type.GenericTypeArguments.Length > 0 && type.GetInterfaces().Contains(typeof(IEnumerable<>).MakeGenericType(type.GenericTypeArguments))) {
@@ -242,6 +242,25 @@ namespace Battlegrounds.Json {
                     if (j >= 0) {
                         jsonbuilder.Append("\n", false);
                     }
+                    jsonbuilder.DecreaseIndent();
+                    jsonbuilder.AppendLine($"]{((appendComma) ? "," : "")}");
+                } else if (type.IsArray) {
+                    jsonbuilder.AppendLine($"\"{name}\": [");
+                    jsonbuilder.IncreaseIndent();
+                    dynamic arr = val; // BAD
+                    for (int i = 0; i < arr.Length; i++) {
+                        dynamic element = arr[i];
+                        Type t = element.GetType();
+                        if (t.IsPrimitive || element is string) {
+                            jsonbuilder.AppendLine($"\"{i}\"{((i + 1 != arr.Length) ? "," : "")}");
+                        } else if (element is IJsonObject jso2) {
+                            if (attributeSet.UseRef) {
+                                jsonbuilder.AppendLine($"\"{jso2.ToJsonReference()}\"{((i + 1 != arr.Length) ? "," : "")}");
+                            } else {
+                                jsonbuilder.Append($"{jso2.Serialize(jsonbuilder.GetIndent()).TrimEnd('\n')}{((i + 1 != arr.Length) ? ",\n" : "\n")}", false);
+                            }
+                        }
+                    }                        
                     jsonbuilder.DecreaseIndent();
                     jsonbuilder.AppendLine($"]{((appendComma) ? "," : "")}");
                 } else {

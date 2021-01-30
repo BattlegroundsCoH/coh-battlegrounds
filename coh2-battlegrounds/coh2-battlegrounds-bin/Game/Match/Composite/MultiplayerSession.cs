@@ -16,6 +16,7 @@ namespace Battlegrounds.Game.Match.Composite {
 
         private bool m_isStarted;
         private bool m_isCancelled;
+        private bool m_hasSuccessAnalysis;
         private ManagedLobby m_lobby;
         private IPlayStrategy m_playStrategyResult;
         private IAnalyzedMatch m_analyzedMatch;
@@ -32,6 +33,8 @@ namespace Battlegrounds.Game.Match.Composite {
         public IPlayStrategy PlayObject => this.m_playStrategyResult;
 
         public IAnalyzedMatch MatchAnalysis => this.m_analyzedMatch;
+
+        public bool AnalysisSuccess => this.m_hasSuccessAnalysis;
 
         public event AnalysisCancelledHandler AnalysisCancelled;
 
@@ -121,6 +124,9 @@ namespace Battlegrounds.Game.Match.Composite {
         
         public void Analyze(IAnalyzeStrategy strategy, IMatchData matchResults) {
 
+            // Set to false
+            this.m_hasSuccessAnalysis = false;
+
             // Bind to ReplayMatchData -> Get the latest replay match data here
             if (matchResults.LoadMatchData(ReplayMatchData.LATEST_REPLAY_FILE)) {
 
@@ -135,6 +141,9 @@ namespace Battlegrounds.Game.Match.Composite {
 
                     // Cleanup
                     this.m_analyzedMatch = strategy.OnCleanup(this.m_lobby);
+
+                    // Set as true
+                    this.m_hasSuccessAnalysis = true;
 
                 } else {
 

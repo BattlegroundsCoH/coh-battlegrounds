@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Battlegrounds.Util;
@@ -20,7 +19,7 @@ namespace Battlegrounds.Game.DataSource {
         /// 
         /// </summary>
         public ChunkyFile() {
-            m_chunks = new List<Chunk>();
+            this.m_chunks = new List<Chunk>();
         }
 
         /// <summary>
@@ -44,21 +43,20 @@ namespace Battlegrounds.Game.DataSource {
         public bool LoadFile(BinaryReader stream) {
 
             // Make sure the header is valid
-            if (!VerifyHeader(stream)) {
+            if (!this.VerifyHeader(stream)) {
                 return false;
             }
 
             // Read the version
-            m_version = stream.ReadInt32();
+            this.m_version = stream.ReadInt32();
 
             // Verify version
-            if (m_version != 3) {
-                // TODO: Set error saying incorrect version
+            if (this.m_version != 3) {
                 return false;
             }
 
-            // Read dummy bytes (could use a 'skip' method)
-            stream.ReadBytes(4);
+            // Skip 4 bytes
+            stream.Skip(4);
 
             // Read dummy bytes
             stream.ReadBytes(stream.ReadInt32() - 28);
@@ -69,7 +67,7 @@ namespace Battlegrounds.Game.DataSource {
                 // Read chunk
                 Chunk chunk = new Chunk(this.m_version);
                 if (chunk.ReadChunk(stream)) {
-                    m_chunks.Add(chunk);
+                    this.m_chunks.Add(chunk);
                 } else {
                     break; // done reading or reading into some other file content (should check the status of the chunk)
                 }
@@ -82,23 +80,8 @@ namespace Battlegrounds.Game.DataSource {
         }
 
         private bool VerifyHeader(BinaryReader stream) {
-            m_header = stream.ReadBytes(16);
-            return ByteUtil.Match(m_header, "Relic Chunky\x0D\x0A\x1A\x00");
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public void Dump() => this.Dump(Console.OpenStandardOutput());
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="stream"></param>
-        public void Dump(Stream stream) {
-
-
-
+            this.m_header = stream.ReadBytes(16);
+            return ByteUtil.Match(this.m_header, "Relic Chunky\x0D\x0A\x1A\x00");
         }
 
         /// <summary>

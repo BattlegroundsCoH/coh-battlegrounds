@@ -1,7 +1,8 @@
 {
   "profiles": {
     "coh2-battlegrounds-console": {
-      "commandName": "Project"
+      "commandName": "Project",
+      "commandLineArgs": "-recent_analysis temp.rec -json"
     }
   }
 }

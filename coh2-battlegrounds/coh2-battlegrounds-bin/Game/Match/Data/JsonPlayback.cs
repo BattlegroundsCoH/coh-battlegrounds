@@ -22,11 +22,11 @@ namespace Battlegrounds.Game.Match.Data {
             [JsonIgnore] public uint Uid => 0;
 
             public ulong UID;
-            [JsonIgnoreIfValue("")] public string Type;
+            [JsonIgnoreIfValue("")][JsonIgnoreIfNull] public string Type;
             [JsonIgnoreIfValue(ulong.MaxValue)] public ulong Player;
             [JsonIgnoreIfValue(ushort.MaxValue)] public ushort Id;
-            [JsonIgnoreIfValue("")] public string Arg1;
-            [JsonIgnoreIfValue("")] public string Arg2;
+            [JsonIgnoreIfValue("")][JsonIgnoreIfNull] public string Arg1;
+            [JsonIgnoreIfValue("")] [JsonIgnoreIfNull] public string Arg2;
 
             public string ToJsonReference() => throw new InvalidOperationException();
 
@@ -41,10 +41,11 @@ namespace Battlegrounds.Game.Match.Data {
             public string Name;
             public string Army;
             public string Profile;
-            public ulong Id;
+            public ulong SteamID;
+            public uint Id;
             public uint team;
             public string ToJsonReference() => throw new InvalidOperationException();
-            public Player FromData() => new Player((uint)this.Id, this.team, this.Name, Faction.FromName(this.Army), Profile);
+            public Player FromData() => new Player(this.Id, this.SteamID, this.team, this.Name, Faction.FromName(this.Army), Profile);
         }
 
         [JsonIgnore] private ReplayMatchData m_dataSource;
@@ -68,6 +69,7 @@ namespace Battlegrounds.Game.Match.Data {
         public JsonPlayback(ReplayMatchData events) {
             this.Session = events.Session;
             this.Length = events.Length;
+            this.Events = new Dictionary<TimeSpan, EventTick>();
             this.IsSessionMatch = events.IsSessionMatch;
             this.m_dataSource = events;
             this.ParseMatchData();
@@ -82,15 +84,17 @@ namespace Battlegrounds.Game.Match.Data {
             // Run through all elements
             foreach (var entry in this.m_dataSource) {
                 if (entry is TimeEvent element) {
-                    if (this.Events.ContainsKey(element.Timestamp)) {
-                        this.Events[element.Timestamp].Events.Add(FromData(element.UnderlyingEvent));
-                    } else {
-                        EventTick tick = new EventTick() {
-                            Events = new List<Event>() {
-                                FromData(element.UnderlyingEvent)
-                            }
-                        };
-                        this.Events.Add(element.Timestamp, tick);
+                    if (element.UnderlyingEvent is not UIDigitEvent) {
+                        if (this.Events.ContainsKey(element.Timestamp)) {
+                            this.Events[element.Timestamp].Events.Add(FromData(element.UnderlyingEvent));
+                        } else {
+                            EventTick tick = new EventTick() {
+                                Events = new List<Event>() {
+                                    FromData(element.UnderlyingEvent)
+                                }
+                            };
+                            this.Events.Add(element.Timestamp, tick);
+                        }
                     }
                 }
             }
@@ -103,7 +107,8 @@ namespace Battlegrounds.Game.Match.Data {
                     Id = this.m_dataSource.Players[i].ID,
                     Name = this.m_dataSource.Players[i].Name,
                     Profile = this.m_dataSource.Players[i].Profile,
-                    team = this.m_dataSource.Players[i].TeamID
+                    team = this.m_dataSource.Players[i].TeamID,
+                    SteamID = this.m_dataSource.Players[i].SteamID
                 };
             }
 
@@ -113,20 +118,20 @@ namespace Battlegrounds.Game.Match.Data {
 
         private static Event FromData(IMatchEvent e) {
             return e switch {
-                KillEvent k => new Event() { UID = e.Uid, Type = k.GetType().Name, Player = k.UnitOwner.ID, Id = k.UnitID },
-                DeployEvent d => new Event() { UID = e.Uid, Type = d.GetType().Name, Player = d.DeployingPlayer.ID, Id = d.SquadID },
-                RetreatEvent r => new Event() { UID = e.Uid, Type = r.GetType().Name, Player = r.WithdrawPlayer.ID, 
+                KillEvent k => new Event() { UID = e.Uid, Type = nameof(KillEvent), Player = k.UnitOwner.ID, Id = k.UnitID },
+                DeployEvent d => new Event() { UID = e.Uid, Type = nameof(DeployEvent), Player = d.DeployingPlayer.ID, Id = d.SquadID },
+                RetreatEvent r => new Event() { UID = e.Uid, Type = nameof(RetreatEvent), Player = r.WithdrawPlayer.ID, 
                     Id = r.WithdrawingUnitID, 
                     Arg1 = r.WithdrawingUnitVeterancyChange.ToString(), 
                     Arg2 = r.WithdrawingUnitVeterancyExperience.ToString() 
                 },
-                VictoryEvent v => new Event() { UID = e.Uid, Type = v.GetType().Name, Player = v.VictorID },
-                PickupEvent i => new Event() { UID = e.Uid, Type = i.GetType().Name, Player = i.PickupPlayer.ID, Id = i.PickupSquadID, Arg1 = i.PickupItem.ToJsonReference() },
-                VerificationEvent g => new Event() { UID = e.Uid, Type = g.GetType().Name, Player = ulong.MaxValue, Id = ushort.MaxValue, 
+                VictoryEvent v => new Event() { UID = e.Uid, Type = nameof(VictoryEvent), Player = v.VictorID },
+                PickupEvent i => new Event() { UID = e.Uid, Type = nameof(PickupEvent), Player = i.PickupPlayer.ID, Id = i.PickupSquadID, Arg1 = i.PickupItem.ToJsonReference() },
+                VerificationEvent g => new Event() { UID = e.Uid, Type = nameof(VerificationEvent), Player = ulong.MaxValue, Id = ushort.MaxValue, 
                     Arg1 = g.VerificationType.ToString(), 
                     Arg2 = g.VerificationArgument 
                 },
-                CaptureEvent c => new Event() { UID = e.Uid, Type = c.GetType().Name, Player = c.CapturingPlayer.ID, Id = ushort.MaxValue, Arg1 = c.CapturedBlueprint.ToJsonReference() },
+                CaptureEvent c => new Event() { UID = e.Uid, Type = nameof(CaptureEvent), Player = c.CapturingPlayer.ID, Id = ushort.MaxValue, Arg1 = c.CapturedBlueprint.ToJsonReference() },
                 _ => new Event() { UID = e.Uid },
             };
         }

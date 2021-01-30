@@ -158,7 +158,7 @@ namespace Battlegrounds.Compiler {
                 blder.Append("{ ");
                 blder.Append($"display_name = \"{player.GetName()}\", ");
                 if (player.Difficulty == Game.AIDifficulty.Human) {
-                    blder.Append($"steam_index = {player.GetID()},{Environment.NewLine}");
+                    blder.Append($"steam_index = \"{player.GetID()}\",{Environment.NewLine}");
                 }
                 blder.Append($"ai_value = {(byte)player.Difficulty}, ");
                 blder.Append($"id = {player.PlayerIndexOnTeam},{Environment.NewLine}");

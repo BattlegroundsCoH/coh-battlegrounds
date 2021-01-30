@@ -21,6 +21,11 @@ namespace Battlegrounds.Game.Match {
         IAnalyzedMatch MatchAnalysis { get; }
 
         /// <summary>
+        /// Get if the analysis was a success
+        /// </summary>
+        public bool AnalysisSuccess { get; }
+
+        /// <summary>
         /// Occurs when the analysis is cancelled
         /// </summary>
         event AnalysisCancelledHandler AnalysisCancelled;

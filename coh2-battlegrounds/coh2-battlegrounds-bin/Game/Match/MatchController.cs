@@ -154,8 +154,11 @@ namespace Battlegrounds.Game.Match {
                     // Get the results
                     var results = player.GetResults();
 
-                    // Then analyze
+                    // Then analyze (and stop if no sucess)
                     this.m_analyzer.Analyze(this.m_analyzeStrategy, results);
+                    if (!this.m_analyzer.AnalysisSuccess) {
+                        return;
+                    }
 
                     // If the played match was matching, we can finalize
                     if (results.IsSessionMatch) {

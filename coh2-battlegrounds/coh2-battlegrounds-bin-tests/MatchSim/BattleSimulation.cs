@@ -30,8 +30,8 @@ namespace coh2_battlegrounds_bin_tests.MatchSim {
             playStrategy = new BattleSimulatorStrategy(session);
             analyzeStrategy = new SingleplayerMatchAnalyzer();
             players = new Player[] {
-                new Player (0, 0, "Player 1", Faction.Soviet, string.Empty),
-                new Player (1, 1, "Player 2", Faction.Wehrmacht, string.Empty),
+                new Player (0, 0, 0, "Player 1", Faction.Soviet, string.Empty),
+                new Player (1, 0, 1, "Player 2", Faction.Wehrmacht, string.Empty),
             };
         }
 

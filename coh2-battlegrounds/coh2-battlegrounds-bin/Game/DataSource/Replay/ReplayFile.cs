@@ -8,8 +8,14 @@ using System.Collections.Generic;
 using Battlegrounds.Game.Gameplay;
 using Battlegrounds.Util;
 using Battlegrounds.Game.Database;
+using Battlegrounds.Functional;
 
 namespace Battlegrounds.Game.DataSource.Replay {
+
+    public enum MatchType {
+        Multiplayer = 1,
+        Skirmish = 2,
+    }
 
     /// <summary>
     /// Represents a CoH2 replay file
@@ -49,15 +55,26 @@ namespace Battlegrounds.Game.DataSource.Replay {
             }
         }
 
+        public readonly struct ChatMessage {
+            public readonly TimeSpan TimeStamp { get; init; }
+            public readonly string Sender { get; init; }
+            public readonly string Content { get; init; }
+        }
+
         private ReplayHeader m_replayHeader;
         private ScenarioDescription m_sdsc;
 
-        private List<Player> m_playerlist;
+        private Player[] m_playerlist;
         private List<GameTick> m_tickList;
 
         private byte[] m_header;
         private byte[] m_replaycontent;
         private string m_replayfile;
+
+        private List<ChatMessage> m_chatHistory;
+        private TimeSpan m_replayParsedLength;
+        private MatchType m_replayMatchType;
+        private uint m_seed;
 
         private bool m_isParsed;
         private bool m_isPartial;
@@ -108,8 +125,8 @@ namespace Battlegrounds.Game.DataSource.Replay {
         /// <exception cref="FileNotFoundException"/>
         public ReplayFile(string file) {
             this.m_isParsed = false;
-            this.m_playerlist = new List<Player>();
             this.m_tickList = new List<GameTick>();
+            this.m_chatHistory = new List<ChatMessage>();
             if (File.Exists(file)) {
                 this.m_replayfile = file;
             } else {
@@ -122,8 +139,8 @@ namespace Battlegrounds.Game.DataSource.Replay {
         /// </summary>
         public ReplayFile() {
             this.m_isParsed = false;
-            this.m_playerlist = new List<Player>();
             this.m_tickList = new List<GameTick>();
+            this.m_chatHistory = new List<ChatMessage>();
             this.m_replayfile = null;
         }
 
@@ -307,20 +324,30 @@ namespace Battlegrounds.Game.DataSource.Replay {
             using (MemoryStream stream = new MemoryStream(infoChunk.Data)) {
                 using (BinaryReader reader = new BinaryReader(stream)) {
 
-                    // potentially the player count
-                    int potentialPlayerCount = reader.ReadInt32();
+                    if (infoChunk.Version.InRange(27, 28)) {
 
-                    // Skip 19 bytes
-                    reader.Skip(19);
-
-                    // Read player data
-                    do {
-                        this.m_playerlist.Add(ParsePlayerInfo(reader));
-                        int peak = reader.PeekChar();
-                        if (peak == 65533) {
-                            break;
+                        // Read match type
+                        uint type = reader.ReadUInt32();
+                        if (type.InRange(1, 2)) {
+                            this.m_replayMatchType = type == 1 ? MatchType.Multiplayer : MatchType.Skirmish;
                         }
-                    } while (!reader.HasReachedEOS());
+
+                        // Skip 10 bytes
+                        reader.Skip(10);
+
+                        // Read in the seed
+                        this.m_seed = reader.ReadUInt32();
+
+                        // Read player count
+                        uint pcount = reader.ReadUInt32();
+                        this.m_playerlist = new Player[pcount];
+
+                        // Read player data
+                        for (int i = 0; i < this.m_playerlist.Length; i++) {
+                            this.m_playerlist[i] = ParsePlayerInfo(reader);
+                        }
+
+                    }
 
                 }
             }
@@ -331,38 +358,101 @@ namespace Battlegrounds.Game.DataSource.Replay {
 
         private static Player ParsePlayerInfo(BinaryReader reader) {
 
-            // Read player name
+            // Read playertype
+            byte playertype = reader.ReadByte();
+
+            // Read player name, team, and faction
             string name = reader.ReadUTF8String(reader.ReadUInt32());
-
             uint teamID = reader.ReadUInt32();
-
             string faction = reader.ReadASCIIString();
 
+            // Skip the next eight bytes (unknown)
             reader.Skip(8);
 
+            // Profile and player ID
             string aiprofile = reader.ReadASCIIString();
-
             uint playerID = reader.ReadUInt32();
 
-            bool isAI = reader.ReadInt32() == 1;
+            // Skip next 14 bytes
+            reader.Skip(14);
 
-            /*reader.Skip(103);
-             // The Steam ID is somewhere in this range - but there's some data here that's currently not readable
-             // It follows a pattern of 00 00 00 00 (4 bytes) and then 8 bytes, matching the steam ID
-            ulong steamID = reader.ReadUInt64();
-            */
-
-            // Skip inventory stuff
-            reader.SkipUntil(new byte[] { 255, 255, 255, 255 });
-
-            uint p = (uint)reader.PeekChar();
-            if (p != 65533) { // not FF FF FF FF
-                reader.Skip(5); // So we have to skip 5 bytes
+            // Read skins
+            const ServerItemType skin = ServerItemType.Skin;
+            if (!ReadItem(reader, skin, out ServerItem skin1) || !ReadItem(reader, skin, out ServerItem skin2) || !ReadItem(reader, skin, out ServerItem skin3)) {
+                return null;
             }
 
-            // Return the player we read
-            return new Player(playerID, teamID, name, Faction.FromName(faction), (isAI) ? aiprofile : null);
+            // Skip an additional two bytes
+            reader.Skip(10);
 
+            // Read Steam ID
+            ulong steamID = reader.ReadUInt64();
+
+            // Read faceplate (Why is this even saved in the replay?)
+            if (!ReadItem(reader, ServerItemType.Faceplate, out _)) {
+                return null;
+            }
+
+            // Read victory strike
+            if (!ReadItem(reader, ServerItemType.Faceplate, out _)) {
+                return null;
+            }
+
+            // Read decal
+            if (!ReadItem(reader, ServerItemType.Faceplate, out _)) {
+                return null;
+            }
+
+            // Skip the rest of the inventory stuff
+            reader.SkipUntil(new byte[] { 255, 255, 255, 255 });
+            reader.Skip(4);
+
+            // Create player object
+            Player player = new Player(playerID, steamID, teamID, name, Faction.FromName(faction), aiprofile) {
+                IsAIPlayer = playertype != 1
+            };
+            player.Skins[0] = skin1;
+            player.Skins[1] = skin2;
+            player.Skins[2] = skin3;
+
+            // Return the player data
+            return player;
+
+        }
+
+        private static bool ReadItem(BinaryReader reader, ServerItemType itemType, out ServerItem item) {
+            ServerItem? tmp = reader.ReadUInt16() switch {
+                1 => ServerItem.None,
+                265 => Read265(itemType, reader),
+                518 => Read518(itemType, reader),
+                534 => Read534(itemType, reader),
+                _ => null,
+            };
+            if (tmp is null) {
+                item = ServerItem.None;
+                return false;
+            } else {
+                item = tmp.Value;
+                return true;
+            }
+        }
+
+        private static ServerItem? Read265(ServerItemType itemType, BinaryReader reader) {
+            reader.Skip(8);
+            var item = new ServerItem(itemType, reader.ReadUInt32());
+            reader.Skip(4);
+            reader.Skip(reader.ReadUInt16());
+            return item;
+        }
+
+        private static ServerItem? Read518(ServerItemType itemType, BinaryReader reader) {
+            reader.Skip(5); // TODO: Read PBGID
+            return new ServerItem(itemType, uint.MaxValue);
+        }
+
+        private static ServerItem? Read534(ServerItemType itemType, BinaryReader reader) {
+            reader.Skip(21);
+            return new ServerItem(itemType, uint.MaxValue);
         }
 
         private bool ParseRecordedData() {
@@ -373,23 +463,12 @@ namespace Battlegrounds.Game.DataSource.Replay {
                     while (!reader.HasReachedEOS()) {
 
                         uint dataType = reader.ReadUInt32();
+                        uint dataSize = reader.ReadUInt32();
 
-                        if (reader.ReadUInt32() == 0)
-                            return false;
+                        if (dataSize == 0)
+                            continue;
 
-                        if (dataType == 1) {
-
-                            // Skip the message (we don't care about that)
-                            reader.Skip(8);
-
-                            string a = reader.ReadUTF8String();
-                            string b = reader.ReadUTF8String();
-
-                            Console.WriteLine($"{a}: {b}");
-
-                            reader.Skip(10);
-
-                        } else if (dataType == 0) {
+                        if (dataType == 0) {
 
                             GameTick tick = new GameTick();
                             tick.Parse(reader);
@@ -397,9 +476,30 @@ namespace Battlegrounds.Game.DataSource.Replay {
                             this.m_tickList.Add(tick);
                             this.m_isPartial = true;
 
+                            if (tick.TimeStamp > this.m_replayParsedLength) {
+                                this.m_replayParsedLength = tick.TimeStamp;
+                            }
+
+                        } else if (dataType == 1) {
+
+                            uint mode = reader.ReadUInt32();
+                            if (mode == 1) {
+                                reader.Skip(8);
+                                string sender = reader.ReadASCIIString();
+                                string content = reader.ReadASCIIString();
+                                Trace.WriteLine("{sender}: {content}", "ReplayFile");
+                                this.m_chatHistory.Add(new ChatMessage() {
+                                    Sender = sender,
+                                    Content = content,
+                                    TimeStamp = this.m_replayParsedLength
+                                });
+                                reader.Skip(2 * reader.ReadUInt32());
+                            } else {
+                                reader.Skip(12);
+                            }
+
                         } else {
 
-                            reader.Skip(12);
                             return false;
 
                         }

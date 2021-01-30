@@ -82,7 +82,7 @@ namespace Battlegrounds.Game.DataSource.Replay {
 
                         // Parse gamevent and add to our list of events
                         GameEvent ge = new GameEvent(this.m_tickTime, reader.ReadBytes(length - 2));
-                        m_events.Add(ge);
+                        this.m_events.Add(ge);
 
                         // Increment offset
                         j += length;
