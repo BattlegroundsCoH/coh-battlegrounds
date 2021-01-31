@@ -1,4 +1,5 @@
-﻿using Battlegrounds.Online;
+﻿using System.Diagnostics;
+using Battlegrounds.Online;
 using Battlegrounds.Online.Lobby;
 using Battlegrounds.Online.Services;
 
@@ -11,13 +12,18 @@ namespace Battlegrounds.Game.Match.Finalizer {
 
         public override void Synchronize(object synchronizeObject) {
 
+            // Make sure we log this unfortunate event
+            if (this.CompanyHandler is null) {
+                Trace.WriteLine("{Warning} -- The company handler is NULL and changes will therefore not be saved!", "MultiplayerFinalizer");
+            }
+
             // Get the lobby object
             var lobby = synchronizeObject as ManagedLobby;
 
             // Get the connection
             if (lobby.GetConnection() is Connection connection) {
 
-                // Upload all external user companies
+                // Upload all external user companies and save own company on local machine
                 foreach (var pair in this.m_companies) {
                     if (pair.Key.IsAIPlayer) {
                         continue;

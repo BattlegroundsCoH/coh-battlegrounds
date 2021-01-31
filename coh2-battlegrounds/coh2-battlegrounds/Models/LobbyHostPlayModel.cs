@@ -11,7 +11,7 @@ using Battlegrounds.Game.Match.Play.Factory;
 using Battlegrounds.Game.Match.Startup;
 using Battlegrounds.Online;
 using Battlegrounds.Online.Lobby;
-
+using BattlegroundsApp.LocalData;
 using BattlegroundsApp.Views;
 
 namespace BattlegroundsApp.Models {
@@ -71,7 +71,7 @@ namespace BattlegroundsApp.Models {
 
                 // Finalizer strategy
                 finalizeStrategy = new SingleplayerFinalizer {
-
+                    CompanyHandler = PlayerCompanies.SaveCompany,
                 };
 
                 // Log strategy choice
@@ -98,7 +98,7 @@ namespace BattlegroundsApp.Models {
 
                 // Create standard online finalizer
                 finalizeStrategy = new MultiplayerFinalizer {
-
+                    CompanyHandler = PlayerCompanies.SaveCompany,
                 };
 
                 // Log strategy choice

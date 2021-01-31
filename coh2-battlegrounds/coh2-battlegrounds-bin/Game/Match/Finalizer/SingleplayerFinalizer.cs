@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics;
 using Battlegrounds.Game.DataCompany;
 using Battlegrounds.Game.Gameplay;
 using Battlegrounds.Game.Match.Analyze;
@@ -36,8 +37,14 @@ namespace Battlegrounds.Game.Match.Finalizer {
             foreach (Player player in players) {
                 var company = session.GetPlayerCompany(player.SteamID);
                 if (company is not null) {
+                    if (analyzedMatch.IsWinner(player)) {
+                        company.UpdateStatistics(x => { x.TotalMatchWinCount++; return x; });
+                    } else {
+                        company.UpdateStatistics(x => { x.TotalMatchLossCount++; return x; });
+                    }
                     this.m_companies.Add(player, company);
                 } else {
+                    Trace.WriteLine($"Failed to find a company for {player.SteamID} ({player.Name})", "SingleplayerFinalizer");
                     // TODO: Handle
                 }
             }
@@ -96,6 +103,12 @@ namespace Battlegrounds.Game.Match.Finalizer {
 
         public virtual void Synchronize(object syncronizerObject) {
 
+            // Make sure we log this unfortunate event
+            if (this.CompanyHandler is null) {
+                Trace.WriteLine("{Warning} -- The company handler is NULL and changes will therefore not be saved!", "SingleplayerFinalizer");
+            }
+
+            // Loop through all companies and save
             foreach (var pair in this.m_companies) {
                 if (!pair.Key.IsAIPlayer) {
                     this.CompanyHandler?.Invoke(pair.Value);

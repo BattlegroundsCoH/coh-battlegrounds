@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 
 using Battlegrounds.Functional;
@@ -26,12 +27,16 @@ namespace Battlegrounds.Game.Match.Analyze {
             public static implicit operator bool(RegisterEventResult result) => result.WasAdded;
         }
 
+        private int m_eventCount;
         private bool m_isFinalizable;
+        private HashSet<ulong> m_winners;
         private TimeSpan m_timespan;
         private List<(TimeSpan time, IMatchEvent @event)> m_events;
         private Player[] m_players;
 
         private List<UnitStatus> m_units;
+
+        public int EventCount => this.m_eventCount;
 
         public bool IsFinalizableMatch => this.m_isFinalizable && this.Session.AllowPersistency;
 
@@ -45,6 +50,7 @@ namespace Battlegrounds.Game.Match.Analyze {
             this.m_isFinalizable = false;
             this.m_timespan = TimeSpan.Zero;
             this.m_events = new List<(TimeSpan, IMatchEvent)>();
+            this.m_winners = new HashSet<ulong>();
             this.Session = session;
         }
 
@@ -84,6 +90,7 @@ namespace Battlegrounds.Game.Match.Analyze {
 
             // Add to event list
             this.m_events.Add((timeEvent.Timestamp, timeEvent.UnderlyingEvent));
+            this.m_eventCount++;
 
             // Return result
             return new RegisterEventResult(true);
@@ -98,6 +105,9 @@ namespace Battlegrounds.Game.Match.Analyze {
 
         public bool CompileResults() {
 
+            // Success marker
+            bool success = true;
+
             // Sort by time
             this.m_events = this.m_events.OrderBy(x => x.time).ToList();
 
@@ -107,15 +117,19 @@ namespace Battlegrounds.Game.Match.Analyze {
             // Now loop through all events.
             for (int i = 0; i < this.m_events.Count; i++) {
                 var stamp = this.m_events[i].time;
+                uint uid = this.m_events[i].@event.Uid;
+                string dbstring = $"EventAnalysis@{stamp}#{uid}";
                 switch (this.m_events[i].@event) {
                     case KillEvent killEvent:
                         int killID = this.m_units.FindIndex(x => x.UnitID == killEvent.UnitID && x.PlayerOwner.ID == killEvent.UnitOwner.ID);
                         if (killID >= 0) {
                             if (!this.m_units[killID].MakeDead(stamp)) {
-                                return false; // Killed a unit that was either not deployed or was withdrawn
+                                Trace.WriteLine($"Killed unit {killID} (Owner: {killEvent.UnitOwner.Name}) but it was either not deployed or was withdrawn.", dbstring);
+                                success = false;
                             }
                         } else {
-                            return false;
+                            Trace.WriteLine($"Invalid unitID was killed ({killID})", dbstring);
+                            success = false;
                         }
                         break;
                     case DeployEvent deployEvent:
@@ -125,11 +139,13 @@ namespace Battlegrounds.Game.Match.Analyze {
                             if (status.Deploy(stamp)) {
                                 this.m_units.Add(status);
                             } else {
-                                return false;
+                                Trace.WriteLine($"Deployed unit {deployID} (Owner: {deployEvent.DeployingPlayer.Name}) but was either already deployed or killed.", dbstring);
+                                success = false;
                             }
                         } else {
                             if (!this.m_units[deployID].Deploy(stamp)) {
-                                return false; // deployed a dead or already deployed unit
+                                Trace.WriteLine($"Invalid unitID was deployed ({deployID})", dbstring);
+                                success = false; // deployed a dead or already deployed unit
                             }
                         }
                         break;
@@ -143,10 +159,18 @@ namespace Battlegrounds.Game.Match.Analyze {
                         int retreatID = this.m_units.FindIndex(x => x.UnitID == retreatEvent.WithdrawingUnitID && x.PlayerOwner.ID == retreatEvent.WithdrawPlayer.ID);
                         if (retreatID >= 0) {
                             if (!this.m_units[retreatID].Callback(stamp, retreatEvent.WithdrawingUnitVeterancyChange, retreatEvent.WithdrawingUnitVeterancyExperience)) {
-                                return false; // Withdrew a unit that was either dead or not deployed
+                                Trace.WriteLine($"Withdrew unit {retreatID} (Owner: {retreatEvent.WithdrawPlayer.Name}) that was either dead or not deployed", dbstring);
+                                success = false;
                             }
                         } else {
-                            return false;
+                            Trace.WriteLine($"Invalid unitID was withdrawn ({retreatID})", dbstring);
+                            success = false;
+                        }
+                        break;
+                    case VictoryEvent victoryEvent:
+                        if (!this.m_winners.Add(victoryEvent.VictorID)) {
+                            Trace.WriteLine($"Attempted to mark player {victoryEvent.VictorID} as winner, but has already been marked as winner.", dbstring);
+                            success = false;
                         }
                         break;
                     default: break;
@@ -154,12 +178,14 @@ namespace Battlegrounds.Game.Match.Analyze {
             }
 
             // Finally mark it finalizable
-            this.m_isFinalizable = true;
+            this.m_isFinalizable = success;
 
             // Return true
-            return true;
+            return success;
 
         }
+
+        public bool IsWinner(Player player) => this.m_winners.Contains(player.SteamID);
 
     }
 

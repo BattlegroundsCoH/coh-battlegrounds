@@ -17,6 +17,8 @@ namespace Battlegrounds.Game.Match.Analyze {
 
         public bool CompileResults() => true;
 
+        public bool IsWinner(Player player) => false;
+
     }
 
 }

@@ -34,6 +34,13 @@ namespace Battlegrounds.Game.Match.Analyze {
         /// <returns>Will return <see langword="true"/> if it was possible to compile the result. Otherwise <see langword="false"/>.</returns>
         bool CompileResults();
 
+        /// <summary>
+        /// Get if a <see cref="Player"/> is considered a winner of the <see cref="IAnalyzedMatch"/>.
+        /// </summary>
+        /// <param name="player">The <see cref="Player"/> instance to get winner state of.</param>
+        /// <returns>Will return <see langword="true"/> if player has won. Otherwise <see langword="false"/>.</returns>
+        bool IsWinner(Player player);
+
     }
 
 }
