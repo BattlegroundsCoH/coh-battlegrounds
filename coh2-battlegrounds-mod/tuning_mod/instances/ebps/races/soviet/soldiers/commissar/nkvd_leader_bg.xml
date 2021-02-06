@@ -775,10 +775,6 @@
 				<float name="speed_multiplier" value="1" />
 			</group>
 		</template_reference>
-		<template_reference name="exts" value="ebpextensions\modifier_apply_ext">
-			<list name="modifiers">
-			</list>
-		</template_reference>
 		<template_reference name="exts" value="ebpextensions\moving_ext">
 			<float name="acceleration" value="-1" />
 			<float name="deceleration" value="-1" />
@@ -812,6 +808,55 @@
 			<enum name="holdable" value="hold_infantry" />
 		</template_reference>
 		<template_reference name="exts" value="ebpextensions\cold_system_ext">
+		</template_reference>
+		<template_reference name="exts" value="ebpextensions\team_weapon_user_ext">
+		</template_reference>
+		<template_reference name="exts" value="ebpextensions\camouflage_ext">
+			<float name="attack_priority" value="5" />
+			<enum name="camouflage_type" value="tp_global" />
+			<bool name="chain_revealer" value="True" />
+			<float name="detection_radius" value="10" />
+			<bool name="must_be_fully_constructed" value="False" />
+			<bool name="permanently_activated" value="False" />
+			<float name="combat_reset_time" value="16" />
+			<float name="first_strike_shots" value="1" />
+			<float name="revert_max" value="30" />
+			<float name="revert_multiplier" value="2" />
+			<float name="revert_time" value="3" />
+			<float name="revert_time_on_detection" value="1" />
+			<list name="camouflage_actions">
+			</list>
+			<list name="first_strike_actions">
+				<template_reference name="action" value="action\timed_action">
+					<float name="duration" value="5" />
+					<bool name="fire_and_forget" value="True" />
+					<list name="subactions">
+						<template_reference name="action" value="action\change_target_action">
+							<list name="actions">
+								<template_reference name="action" value="action\apply_modifiers_action">
+									<float name="duration" value="5" />
+									<bool name="permanent" value="False" />
+									<list name="modifiers">
+										<template_reference name="modifier" value="modifiers\weapon_penetration_modifier">
+											<enum name="application_type" value="apply_to_weapon" />
+											<bool name="exclusive" value="False" />
+											<string name="modifier_id" value="ptrs_ambush" />
+											<string name="target_type_name" value="hardpoint_01" />
+											<enum name="usage_type" value="multiplication" />
+											<float name="value" value="1.25" />
+											<instance_reference name="tooltip" value="modifier_tooltip\weapon_penetration_modifier" />
+										</template_reference>
+									</list>
+									<uniqueid name="id" value="1073744550" />
+								</template_reference>
+							</list>
+							<enum name="change_target_type" value="entities" />
+							<uniqueid name="id" value="1073744551" />
+						</template_reference>
+					</list>
+					<uniqueid name="id" value="1073744552" />
+				</template_reference>
+			</list>
 		</template_reference>
 	</list>
 	<uniqueid name="pbgid" value="1073741867" />

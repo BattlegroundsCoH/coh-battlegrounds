@@ -547,11 +547,11 @@ function BG_DeployAndExit(group, deployPos)
     else
         Event_Proximity(function()
             if SGroup_Count(group) > 0 then
-                Battlegrounds_TowDetach(SGroup_GetSpawnedSquadAt(group, 1)); -- Detatch and get rid of the squad.
+                Battlegrounds_TowDetachFromWeaponAE(SGroup_GetSpawnedSquadAt(group, 1)); -- Detatch and get rid of the squad.
                 local pos = Player_GetNearestMapEntry(Util_GetPlayerOwner(group), Util_GetPosition(group));
                 SGroup_MoveAndDespawn(group, pos);
             end
-        end, nil, group, deployPos, 2.5, nil, 4 );
+        end, nil, group, deployPos, 7.5, nil, 1 );
     end
 
 end

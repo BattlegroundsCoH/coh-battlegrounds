@@ -12,7 +12,7 @@
 					<uniqueid name="id" value="1073742325" />
 				</template_reference>
 				<template_reference name="action" value="action\scar_function_call">
-					<string name="function_name" value="Battlegrounds_TowDetach" />
+					<string name="function_name" value="Battlegrounds_TowDetachFromWeaponAE" />
 					<uniqueid name="id" value="1073742326" />
 				</template_reference>
 				<template_reference name="action" value="action\change_move_data_action">

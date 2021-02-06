@@ -503,6 +503,5 @@ function Battlegrounds_LogEvent(msgtype, type, value, player)
     local pdata = BG_GetPlayerData(player);
     local str = type .. "[" .. value .. "]#".._bg_logid.."@" .. pdata.steamID;
     _bg_logid = _bg_logid + 1;
-    PrintOnScreen(str);
     Game_SendMessage(msgtype, str);
 end

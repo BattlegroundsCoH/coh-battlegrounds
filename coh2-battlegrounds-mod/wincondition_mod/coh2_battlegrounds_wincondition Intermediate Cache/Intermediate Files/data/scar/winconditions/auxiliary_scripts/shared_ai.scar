@@ -292,17 +292,21 @@ function BGAI_FindAffordableUnits(index, type, heavy)
 
     for _, unit in pairs(_bg_aiData[index].company.units) do
 
-        local heavyProperty = unit.heavy or false;
-        local heavyCondition = (heavy and heavyProperty) or (heavy == false and not heavyProperty);
+        if unit.phase <= _bg_custom.phase_current then
 
-        if (not unit.spawned) and (type == nil or unit.category == type) and heavyCondition then
+            local heavyProperty = unit.heavy or false;
+            local heavyCondition = (heavy and heavyProperty) or (heavy == false and not heavyProperty);
 
-            local costManpower = unit.cost.manpower or 0;
-            local costMunitions = unit.cost.munitions or 0;
-            local costFuel = unit.cost.fuel or 0;
+            if (not unit.spawned) and (type == nil or unit.category == type) and heavyCondition then
 
-            if manpower >= costManpower and munitions >= costMunitions and fuel >= costFuel then
-                bg_set:add(affordable_set, unit);
+                local costManpower = unit.cost.manpower or 0;
+                local costMunitions = unit.cost.munitions or 0;
+                local costFuel = unit.cost.fuel or 0;
+
+                if manpower >= costManpower and munitions >= costMunitions and fuel >= costFuel then
+                    bg_set:add(affordable_set, unit);
+                end
+
             end
 
         end
