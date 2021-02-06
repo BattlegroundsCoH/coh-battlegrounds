@@ -78,7 +78,7 @@ bgtow_data = {
 __BGTOWObjects = {};
 __BGTOWIndexer = 0;
 
-function Battlegrounds_TowFromOffmap(transportSquad, towTarget)
+function Battlegrounds_TowFromOffmap(transportSquad, towTarget, detatchCallback)
 
     local sg_tow_transport = SGroup_FromSquad(transportSquad, "sg_tow_transport_offmap" .. __BGTOWIndexer);
     local sg_tow_target = SGroup_FromSquad(towTarget, "sg_tow_target_offmap" .. __BGTOWIndexer);
@@ -87,7 +87,7 @@ function Battlegrounds_TowFromOffmap(transportSquad, towTarget)
     Cmd_InstantUpgrade( sg_tow_transport, bg_db.towing_upgrade );
     Cmd_InstantUpgrade( sg_tow_target, bg_db.towed_upgrade );
 
-    Battlegrounds_TowAttach(transportSquad, towTarget);
+    Battlegrounds_TowAttach(transportSquad, towTarget, nil, detatchCallback);
 
 end
 
@@ -119,7 +119,7 @@ function Battlegrounds_GetTOWProfile(towEntityID, transportSquadID)
     return nil;
 end
 
-function Battlegrounds_TowAttach(executer, target, offset)
+function Battlegrounds_TowAttach(executer, target, offset, detatchCallback)
     local syncwpn = Squad_GetSyncWeapon(target);
     local profile = {};
     if offset == nil then
@@ -138,6 +138,7 @@ function Battlegrounds_TowAttach(executer, target, offset)
         tow_target_id = Squad_GetGameID(target),
         tow_offset = profile.offset,
         tow_state = profile.state,
+        tow_callback = detatchCallback,
     };
     Battlegrounds_HideCrew(target, true);
     local pos, dir = Battlegrounds_GetTowCoordinates(tow_data.tow_transport, nil, tow_data.tow_offset);
@@ -185,7 +186,6 @@ function Battlegrounds_HideCrew(towed, hide)
 end
 
 function Battlegrounds_TowDetachFromTransportAE(executer)
-    PrintOnScreen(Util_DumpObjectType(executer));
     local id, data = Battlegrounds_FindTowPairFromWeapon(executer);
     if data ~= nil then
         Battlegrounds_TowDetachData(id, data);
@@ -207,12 +207,17 @@ function Battlegrounds_TowDetachData(id, data)
     -- Warp entire squad to position
     Squad_WarpToPos(Entity_GetSquad(data.tow_target), data.delta.lpos:toscar()); -- Warp entire crew to position
 
+    -- Should the callback be triggered (if any)
+    local shouldTriggerCallbackIfAny = true;
+
     -- Clear "Toing weapon" upgrade
     if Squad_IsValid(data.tow_transport_id) then
         local transportSquad = Squad_FromWorldID(data.tow_transport_id);
         if Squad_HasUpgrade(transportSquad, bg_db.towing_upgrade) then
             Squad_RemoveUpgrade(transportSquad, bg_db.towing_upgrade);
         end
+    else
+        shouldTriggerCallbackIfAny = false;
     end
 
     -- Clear "being towed" upgrade
@@ -221,6 +226,11 @@ function Battlegrounds_TowDetachData(id, data)
         if Squad_HasUpgrade(weaponSquad, bg_db.towed_upgrade) then
             Squad_RemoveUpgrade(weaponSquad, bg_db.towed_upgrade);
         end
+    end
+
+    -- Should we trigger callback
+    if shouldTriggerCallbackIfAny and data.tow_callback ~= nil then
+        data.tow_callback(Squad_FromWorldID(data.tow_transport_id), Squad_IsValid(data.tow_target_id));
     end
 
     -- Remove from table
