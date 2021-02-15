@@ -282,18 +282,52 @@
 		</template_reference>
 		<template_reference name="exts" value="ebpextensions\action_apply_ext">
 			<list name="actions">
-				<template_reference name="action" value="action\add_aura">
-					<instance_reference name="aura" value="aura\soviet_forward_hq_defensive_boost" />
+				<template_reference name="action" value="action\target">
 					<group name="area_info">
 						<float name="angle_left" value="0" />
 						<float name="angle_right" value="0" />
 						<enum name="area_type" value="sector" />
 						<float name="radius" value="0" />
 					</group>
-					<template_reference name="target_info" value="type_ability_target_type\enemy">
-					</template_reference>
-					<bool name="permanent" value="True" />
-					<uniqueid name="id" value="1073744560" />
+					<bool name="die_with_creator" value="True" />
+					<bool name="do_recalc_targets" value="False" />
+					<float name="duration" value="0" />
+					<bool name="entity_targets" value="False" />
+					<instance_reference name="entity_types_to_choose" value="" />
+					<bool name="stationary" value="True" />
+					<group name="target_info">
+						<template_reference name="target_info" value="type_ability_target_type\enemy">
+						</template_reference>
+					</group>
+					<enum name="unit_type" value="" />
+					<list name="subactions">
+						<template_reference name="action" value="action\blip_action">
+							<enum name="blip_type" value="reveal" />
+							<float name="duration" value="0" />
+							<uniqueid name="id" value="1073744568" />
+						</template_reference>
+						<template_reference name="action" value="action\retreat_action">
+							<instance_reference name="entity_type_to_retreat_to" value="" />
+							<enum name="retreat_type" value="forced_retreat" />
+							<uniqueid name="id" value="1073744569" />
+							<float name="refund_percent_after_retreat" value="0" />
+						</template_reference>
+						<template_reference name="action" value="action\delay">
+							<float name="delay" value="5" />
+							<float name="delay_min" value="3" />
+							<bool name="progress_bar" value="True" />
+							<bool name="randomize" value="True" />
+							<list name="delayed_actions">
+								<template_reference name="action" value="action\squad_cancel_retreat_action">
+									<uniqueid name="id" value="1073744570" />
+								</template_reference>
+							</list>
+							<uniqueid name="id" value="1073744571" />
+							<bool name="can_prevent_refund" value="True" />
+						</template_reference>
+					</list>
+					<uniqueid name="id" value="1073744567" />
+					<bool name="any_subaction" value="False" />
 				</template_reference>
 			</list>
 		</template_reference>

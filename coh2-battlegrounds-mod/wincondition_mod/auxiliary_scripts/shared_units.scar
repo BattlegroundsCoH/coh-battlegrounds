@@ -551,7 +551,7 @@ function BG_DeployAndExit(group, deployPos)
                 local pos = Player_GetNearestMapEntry(Util_GetPlayerOwner(group), Util_GetPosition(group));
                 SGroup_MoveAndDespawn(group, pos);
             end
-        end, nil, group, deployPos, 7.5, nil, 1 );
+        end, nil, group, deployPos, 7.5, nil, 1 ); -- TODO: Add cleanup for this (So we don't slow down the game)
     end
 
 end

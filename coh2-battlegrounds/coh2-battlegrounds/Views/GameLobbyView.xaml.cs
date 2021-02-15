@@ -37,6 +37,7 @@ namespace BattlegroundsApp.Views {
         private ILobbyPlayModel m_playModel;
         private ServerMessageHandler m_smh;
         private LobbyTeamManagementModel m_teamManagement;
+        private LobbyGamemodeModel m_gamemode;
         private Task m_lobbyUpdate;
 
         private volatile bool m_updateLobby;
@@ -57,6 +58,10 @@ namespace BattlegroundsApp.Views {
             // Setup team management
             this.m_teamManagement = new LobbyTeamManagementModel(this.TeamGridview);
             this.m_teamManagement.OnTeamEvent += this.OnTeamManagementCallbackHandler;
+
+            // Create buffer gamemode
+            this.m_gamemode = new LobbyGamemodeModel();
+            this.m_gamemode.SetDefaults();
 
             // Set other variables
             this.m_hasCreatedLobbyOnce = false;
@@ -182,30 +187,43 @@ namespace BattlegroundsApp.Views {
 
         private void UpdateSelectedGamemode(string arg1, string arg2) {
             this.Dispatcher.Invoke(() => {
-                var temp = WinconditionList.GetWinconditionByName(arg1);
-                this.Gamemode.ItemsSource = new List<Wincondition>() { temp };
-                this.Gamemode.SelectedIndex = 0;
-                if (temp.Options is null || temp.Options.Length == 0) {
-                    this.GamemodeOption.Visibility = Visibility.Hidden;
-                } else {
-                    this.GamemodeOption.Visibility = Visibility.Visible;
-                }
+                this.m_gamemode.SetWincondition(arg1);
+                this.UpdateGamemodeDisplay();
             });
         }
 
         private void UpdateSelectedOption(string arg1, string arg2) {
             this.Dispatcher.Invoke(() => {
                 if (int.TryParse(arg1, out int option)) {
-                    if (this.Gamemode.SelectedItem is Wincondition gamemode && gamemode.Options is not null) {
-                        var opt = gamemode.Options[option];
-                        this.GamemodeOption.ItemsSource = new List<string> { opt.Title };
-                        this.GamemodeOption.SelectedIndex = 0;
-                        this.GamemodeOption.Visibility = Visibility.Visible;
-                    } else {
-                        this.GamemodeOption.Visibility = Visibility.Hidden;
-                    }
+                    this.m_gamemode.SetSetting(option);
+                    this.UpdateGamemodeDisplay();
                 }
             });
+        }
+
+        private void UpdateGamemodeDisplay() {
+            
+            // If we can get the gamemode
+            if (this.m_gamemode.GetGamemode()) {
+                
+                // Get wincondition
+                var win = this.m_gamemode.Wincondition;
+                
+                // Set gamemode
+                this.Gamemode.ItemsSource = new List<Wincondition>() { win };
+                this.Gamemode.SelectedIndex = 0;
+
+                // Set option (or hide if not viable)
+                if (win.Options is not null && this.m_gamemode.GamemodeOptionIndex < win.Options.Length) {
+                    this.GamemodeOption.ItemsSource = new List<string> { win.Options[this.m_gamemode.GamemodeOptionIndex].Title };
+                    this.GamemodeOption.SelectedIndex = this.m_gamemode.GamemodeOptionIndex;
+                    this.GamemodeOption.Visibility = Visibility.Visible;
+                } else {
+                    this.GamemodeOption.Visibility = Visibility.Hidden;
+                }
+            
+            }
+
         }
 
         private void UpdateAvailableGamemodes() {
@@ -220,6 +238,8 @@ namespace BattlegroundsApp.Views {
                     this.Gamemode.ItemsSource = def;
                     this.Gamemode.SelectedIndex = def.FindIndex(x => x.Name.CompareTo("Victory Points") == 0);
                 }
+
+                this.m_gamemode.SetWincondition(this.Gamemode.SelectedItem as Wincondition);
 
                 this.UpdateGamemodeOptions(Gamemode.SelectedItem as Wincondition);
 
@@ -266,15 +286,18 @@ namespace BattlegroundsApp.Views {
 
         public SessionInfo CreateSessionInfo() {
 
-            int option = 1;
-            Wincondition selectedWincondition = Gamemode.SelectedItem as Wincondition;
-            if (selectedWincondition is null) {
-                // TODO: Handle
+            int option;
+            Wincondition selectedWincondition;
+            if (this.m_gamemode.GetGamemode()) {
+                selectedWincondition = this.m_gamemode.Wincondition;
+                option = this.m_gamemode.GamemodeOptionIndex;
             } else {
-                if (selectedWincondition.Options != null && GamemodeOption.SelectedItem is WinconditionOption opt) {
-                    option = opt.Value;
-                }
+                selectedWincondition = WinconditionList.GetWinconditionByName(WinconditionList.VictoryPoints);
+                option = selectedWincondition.DefaultOptionIndex;
+                Trace.WriteLine("Failed to set gamemode", "GameLobbyView");
             }
+
+            this.m_gamemode.SaveDefaults();
 
             Scenario selectedScenario = Map.SelectedItem as Scenario;
             if (selectedScenario is null) {
@@ -402,6 +425,7 @@ namespace BattlegroundsApp.Views {
                 GamemodeOption.Visibility = Visibility.Visible;
                 GamemodeOption.ItemsSource = wc.Options.OrderBy(x => x.Value).ToList();
                 GamemodeOption.SelectedIndex = wc.DefaultOptionIndex;
+
             } else {
                 GamemodeOption.Visibility = Visibility.Collapsed;
             }
@@ -413,6 +437,7 @@ namespace BattlegroundsApp.Views {
             }
             if (Gamemode.SelectedItem is Wincondition wincon) {
                 this.m_smh.Lobby.SetGamemode(wincon.Name);
+                this.m_gamemode.SetWincondition(wincon);
                 this.UpdateGamemodeOptions(wincon);
             }
         }
@@ -423,6 +448,10 @@ namespace BattlegroundsApp.Views {
             }
             if (GamemodeOption.SelectedItem is WinconditionOption) {
                 this.m_smh.Lobby.SetGamemodeOption(GamemodeOption.SelectedIndex);
+                if (this.m_gamemode.GetGamemode()) {
+                    var wc = this.m_gamemode.Wincondition;
+                    this.m_gamemode.SetSetting(wc.Options[GamemodeOption.SelectedIndex].Value);
+                }
             }
         }
 

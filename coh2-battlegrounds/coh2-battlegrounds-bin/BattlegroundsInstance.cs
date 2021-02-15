@@ -26,6 +26,8 @@ namespace Battlegrounds {
 
             public string LastPlayedGamemode { get; set; }
 
+            public int LastPlayedGamemodeSetting { get; set; }
+
             public SteamInstance SteamData { get; set; }
 
             /// <summary>
@@ -34,6 +36,8 @@ namespace Battlegrounds {
             public InternalInstance() {
                 this.SteamData = new SteamInstance();
                 this.Paths = new Dictionary<string, string>();
+                this.LastPlayedGamemode = "Victory Points";
+                this.LastPlayedGamemodeSetting = 1;
             }
 
             /// <summary>
@@ -138,7 +142,7 @@ namespace Battlegrounds {
         private static InternalInstance __instance;
 
         /// <summary>
-        /// The last played map.
+        /// Get or set the last played map.
         /// </summary>
         public static string LastPlayedMap {
             get => __instance.LastPlayedScenario;
@@ -146,11 +150,19 @@ namespace Battlegrounds {
         }
 
         /// <summary>
-        /// The last played gamemode.
+        /// Get or set the last played gamemode.
         /// </summary>
         public static string LastPlayedGamemode {
             get => __instance.LastPlayedGamemode;
             set => __instance.LastPlayedGamemode = value;
+        }
+
+        /// <summary>
+        /// Get or set the last played gamemode setting
+        /// </summary>
+        public static int LastPlayedGamemodeSetting {
+            get => __instance.LastPlayedGamemodeSetting;
+            set => __instance.LastPlayedGamemodeSetting = value;
         }
 
         /// <summary>
