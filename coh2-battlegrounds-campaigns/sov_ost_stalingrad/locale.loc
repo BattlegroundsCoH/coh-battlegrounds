@@ -1,0 +1,12 @@
+english:
+ campaign_name: "Battle of Stalingrad"
+ campaign_desc: ""
+ campaign_location: "Stalingrad, USSR"
+ soviet_army: "Stalingrad Front"
+ german_army: "Army Group B"
+german:
+ campaign_name: "Schlacht von Stalingrad"
+ campaign_desc: ""
+ campaign_location: "Stalingrad, UdSSR"
+ soviet_army: "Stalingrader Front"
+ german_army: "Heeresgruppe B"

@@ -47,4 +47,8 @@
     <Resource Include="Resources\ingame\west_german.png" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Views\CampaignViews\" />
+  </ItemGroup>
+
 </Project>

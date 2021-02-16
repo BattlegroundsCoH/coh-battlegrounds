@@ -32,12 +32,13 @@ namespace BattlegroundsApp {
     public partial class MainWindow : CoreAppWindow {
 
         public const string GAMEBROWSERSTATE = "GAMEBROWSERVIEW";
-        public const string CAMPAIGNSTATE = "CAMPAIGNVIEW";
+        public const string CAMPAIGNBORWSESTATE = "CAMPAIGNVIEW";
         public const string COMPANYSTATE = "COMPANYBUILDERVIEW";
         public const string DASHBOARDSTATE = "DASHBOARDVIEW";
         public const string NEWSSTATE = "NEWSVIEW";
 
         private bool m_isReady;
+        private Button[] m_leftPanelButtons;
 
         public string DashboardButtonContent { get; }
         public string NewsButtonContent { get; }
@@ -59,6 +60,18 @@ namespace BattlegroundsApp {
             // Initialize components etc...
             InitializeComponent();
 
+            // Define left panels buttons
+            this.m_leftPanelButtons = new Button[] {
+                DashboardButton,
+                NewsButton,
+                CompanyBuilderButton,
+                CampaignButton,
+                GameBrowserButton,
+                SettingsButton,
+                ExitButton
+            };
+
+            // Define locales
             DashboardButtonContent = "Dashboard";
             NewsButtonContent = "News";
             CompanyBuilderButtonContent = "Company Builder";
@@ -70,7 +83,7 @@ namespace BattlegroundsApp {
             // Create all the views that can be created at startup
             this.m_constStates = new Dictionary<string, ViewState> {
                 [GAMEBROWSERSTATE] = new GameBrowserView(),
-                [CAMPAIGNSTATE] = new CampaignView(),
+                [CAMPAIGNBORWSESTATE] = new CampaignBrowserView() { MainWindow = this },
                 [COMPANYSTATE] = new CompanyView(),
                 [DASHBOARDSTATE] = new DashboardView(),
                 [NEWSSTATE] = new NewsView(),
@@ -91,7 +104,7 @@ namespace BattlegroundsApp {
         private void CompanyBuilder_Click(object sender, RoutedEventArgs e) => this.State = this.m_constStates[COMPANYSTATE];
 
         // Open Campaign page
-        private void Campaign_Click(object sender, RoutedEventArgs e) => this.State = this.m_constStates[CAMPAIGNSTATE];
+        private void Campaign_Click(object sender, RoutedEventArgs e) => this.State = this.m_constStates[CAMPAIGNBORWSESTATE];
 
         // Open Game Browser page
         private void GameBrowser_Click(object sender, RoutedEventArgs e) => this.State = this.m_constStates[GAMEBROWSERSTATE];
@@ -141,6 +154,24 @@ namespace BattlegroundsApp {
             if (!this.m_isReady) {
                 this.Ready?.Invoke(this);
                 this.m_isReady = true;
+            }
+        }
+
+        /// <summary>
+        /// Show or hide left-side panel. Use when additional space is required and it does not make sense to expose other data.
+        /// </summary>
+        /// <param name="show">Show the left-side panel</param>
+        public void ShowLeftPanel(bool show) {
+            var vs = show ? Visibility.Visible : Visibility.Collapsed;
+            foreach (var bttn in this.m_leftPanelButtons) {
+                bttn.Visibility = vs;
+            }
+            if (show) {
+                this.AppContent.SetValue(Grid.ColumnProperty, 2);
+                this.AppContent.SetValue(Grid.ColumnSpanProperty, 7);
+            } else {
+                this.AppContent.SetValue(Grid.ColumnProperty, 1);
+                this.AppContent.SetValue(Grid.ColumnSpanProperty, 8);
             }
         }
 

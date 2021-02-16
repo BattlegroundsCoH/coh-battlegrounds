@@ -23,6 +23,7 @@ namespace coh2_battlegrounds_console {
         static bool recent_analysis;
         static string recent_file = null;
         static bool compile_json;
+        static bool do_campaign_edit;
 
         static void Main(string[] args) {
 
@@ -511,6 +512,8 @@ namespace coh2_battlegrounds_console {
                     }
                 } else if (args[i].CompareTo("-json") == 0) {
                     compile_json = true;
+                } else if (args[i].CompareTo("-campaign") == 0) {
+
                 }
 
             }
