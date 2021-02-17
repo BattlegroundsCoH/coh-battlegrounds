@@ -23,7 +23,9 @@ namespace coh2_battlegrounds_console {
         static bool recent_analysis;
         static string recent_file = null;
         static bool compile_json;
-        static bool do_campaign_edit;
+
+        static bool campaign_compile;
+        static string campaign_compile_file = null;
 
         static void Main(string[] args) {
 
@@ -54,6 +56,9 @@ namespace coh2_battlegrounds_console {
                     }
                 }
                 Console.ReadLine();
+                return;
+            } else if (campaign_compile) {
+                CampaignCompiler.Compile(campaign_compile_file);
                 return;
             }
 
@@ -513,7 +518,13 @@ namespace coh2_battlegrounds_console {
                 } else if (args[i].CompareTo("-json") == 0) {
                     compile_json = true;
                 } else if (args[i].CompareTo("-campaign") == 0) {
-
+                    campaign_compile = true;
+                    if (i + 1 < args.Length) {
+                        campaign_compile_file = args[i + 1];
+                    } else {
+                        Console.WriteLine("Cannot compile campaign - none specified!");
+                        campaign_compile = false;
+                    }
                 }
 
             }

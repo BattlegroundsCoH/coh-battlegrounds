@@ -104,6 +104,70 @@ test = {
 
         }
 
+        [TestMethod]
+        public void LuaDataParseRunTest05() {
+
+            string sourcefile = @"
+test = {
+    a = {
+        a = 0,
+        b = 4.5
+    },
+    b = {
+        [""Enterprise""] = {
+            a = false
+        },
+        [""Shenzhou""] = {
+            a = true
+        }
+    }
+}
+";
+
+            // Assert parsing and execution runs fine
+            Assert.AreEqual(new LuaNil(), lState.DoString(sourcefile));
+
+            // Assert table values
+            Assert.IsNotNull(lState._G["test"]);
+            Assert.AreEqual(new LuaNumber(4.5), lState.DoString("test.a[\"b\"]"));
+            Assert.AreEqual(new LuaBool(false), lState.DoString("test.b[\"Enterprise\"].a"));
+            Assert.AreEqual(new LuaBool(true), lState.DoString("test.b[\"Shenzhou\"].a"));
+            Assert.AreEqual(lState.InitialGlobalSize + 1, lState._G.Size);
+
+        }
+
+        [TestMethod]
+        public void LuaDataParseRunTest06() {
+
+            string sourcefile = @"
+test = {
+    a = {
+        a = 0,
+        b = 4.5
+    },
+    b = {
+        {
+            a = ""Enterprise""
+        },
+        {
+            a = ""Shenzhou""
+        }
+    }
+}
+";
+
+            // Assert parsing and execution runs fine
+            Assert.AreEqual(new LuaNil(), lState.DoString(sourcefile));
+
+            // Assert table values
+            Assert.IsNotNull(lState._G["test"]);
+            Assert.AreEqual(new LuaNumber(4.5), lState.DoString("test.a[\"b\"]"));
+            Assert.AreEqual(new LuaString("Enterprise"), lState.DoString("test.b[1].a"));
+            Assert.AreEqual(new LuaString("Shenzhou"), lState.DoString("test.b[2].a"));
+            Assert.AreEqual(lState.InitialGlobalSize + 1, lState._G.Size);
+
+        }
+
     }
 
 }

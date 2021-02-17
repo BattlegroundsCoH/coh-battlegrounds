@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using Battlegrounds.Lua.Debugging;
 
 namespace Battlegrounds.Lua {
     
@@ -8,6 +9,8 @@ namespace Battlegrounds.Lua {
     /// Basic C# implementation of the C-type lua_State for Lua. This is an emulated version of Lua and may run otherwise incorrect/invalid Lua code.
     /// </summary>
     public class LuaState {
+
+        private int m_initialGSize;
 
 #pragma warning disable IDE1006 // Naming Styles (This is intentional in Lua
 
@@ -19,11 +22,23 @@ namespace Battlegrounds.Lua {
 #pragma warning restore IDE1006 // Naming Styles
 
         /// <summary>
+        /// Get the initial size of the <see cref="_G"/> table.
+        /// </summary>
+        public int InitialGlobalSize => this.m_initialGSize;
+
+        /// <summary>
         /// Create new <see cref="LuaState"/> with <see cref="_G"/> initialized.
         /// </summary>
         public LuaState() {
-            _G = new LuaTable();
-            _G["__version"] = new LuaString("Battlegrounds.Lua V1.0 (Emulates Lua 5.1)");
+            
+            // Create _G table
+            this._G = new LuaTable();
+            this._G["_G"] = this._G; // Assign _G to self
+            this._G["__version"] = new LuaString("Battlegrounds.Lua V1.0 (Emulates Lua 5.1)");
+            
+            // Store the size of the initial _G table
+            this.m_initialGSize = _G.Size;
+
         }
 
         /// <summary>
@@ -35,15 +50,23 @@ namespace Battlegrounds.Lua {
             
             // Lua stack
             Stack<LuaValue> stack = new Stack<LuaValue>();
-            stack.Push(_G);
+
+            // Get top value (if none, return _G)
+            LuaValue GetTop() {
+                if (stack.Count > 0) {
+                    return stack.Pop();
+                } else {
+                    return _G;
+                }
+            }
 
             // Lookup function for handling variable lookup
             LuaValue Lookup(LuaValue identifier) {
-                var s = stack.Pop();
+                var s = GetTop();
                 if (s is LuaTable topTable) {
                     return topTable[identifier];
                 } else {
-                    throw new Exception();
+                    throw new LuaRuntimeError("Attempt to index '?', a nil value.", stack, this);
                 }
             }
 
@@ -59,12 +82,16 @@ namespace Battlegrounds.Lua {
                                 stack.Push(new LuaString(declID.Identifier));
                             } else if (bin.Left is LuaIndexExpr indexOp) {
                                 DoExpr(indexOp);
+                            } else {
+                                return;
                             }
                             LuaValue tableIdentifier = stack.Pop();
                             LuaValue tableValue = stack.Pop();
-                            LuaValue scope = stack.Pop();
+                            LuaValue scope = GetTop();
                             if (scope is LuaTable scopeTable) {
                                 scopeTable[tableIdentifier] = tableValue;
+                            } else if (scope is LuaNil) {
+                                throw new LuaRuntimeError("Attempt to index '?' a nil value.", stack, this);
                             } else {
                                 throw new Exception();
                             }
@@ -98,7 +125,8 @@ namespace Battlegrounds.Lua {
                     case LuaValueExpr value:
                         stack.Push(value.Value);
                         break;
-                    case LuaIdentifierExpr id:
+                    case LuaIdentifierExpr id: // If at some point we add more lua behaviour, we need to check local registry here before pushing _G)
+                        stack.Push(_G);
                         stack.Push(Lookup(new LuaString(id.Identifier)));
                         break;
                     case LuaIndexExpr iex:
@@ -113,12 +141,17 @@ namespace Battlegrounds.Lua {
             DoExpr(expr);
 
             // Return whatever's on top (or nil if nothing on top)
-            if (stack.Count == 1)
+            if (stack.Count >= 1)
                 return stack.Pop();
             else
                 return new LuaNil();
 
         }
+
+        //
+        // TODO:
+        // Wrap the following two methods in proper try-catch statements so we can run "Lua" safely.
+        //
 
         /// <summary>
         /// Do a Lua string expression in the current <see cref="LuaState"/> environment.
