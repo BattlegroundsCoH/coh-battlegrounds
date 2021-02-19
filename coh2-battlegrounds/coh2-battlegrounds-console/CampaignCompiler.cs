@@ -34,7 +34,7 @@ namespace coh2_battlegrounds_console {
             public LocaleKey desc;
             public LocaleKey loc;
             public CampaignTheatre theatre;
-            public HashSet<CampaignType> types;
+            public HashSet<CampaignMode> types;
             public CampaignDate startdate;
             public CampaignDate enddate;
             public string start;
@@ -170,19 +170,20 @@ namespace coh2_battlegrounds_console {
             bw.Write(fe_loc);
 
             bw.Write((byte)display.theatre);
-            bw.Write(display.turntime);
             bw.Write(display.playercount);
 
             bw.Write((byte)display.types.Count);
             display.types.ForEach(x => bw.Write((byte)x));
 
-            bw.Write(display.startdate.Year);
-            bw.Write(display.startdate.Month);
-            bw.Write(display.startdate.Day);
+            bw.Write(display.turntime);
 
             bw.Write(display.startdate.Year);
             bw.Write(display.startdate.Month);
             bw.Write(display.startdate.Day);
+
+            bw.Write(display.enddate.Year);
+            bw.Write(display.enddate.Month);
+            bw.Write(display.enddate.Day);
 
             byte[] startSide = display.start.Encode(Encoding.Unicode);
             bw.Write(startSide.Length);
@@ -218,6 +219,7 @@ namespace coh2_battlegrounds_console {
                     bw.Write(armyFille.Length);
                     bw.Write(armyFille);
                 } else {
+                    Console.WriteLine("Warning: Army entry '{0}' Has no army file defined!", x.army);
                     bw.Write(0);
                 }
 
@@ -337,14 +339,14 @@ namespace coh2_battlegrounds_console {
             _ => CampaignTheatre.Undefined
         };
 
-        private static HashSet<CampaignType> GetTypes(LuaTable table) {
-            HashSet<CampaignType> ts = new HashSet<CampaignType>();
+        private static HashSet<CampaignMode> GetTypes(LuaTable table) {
+            HashSet<CampaignMode> ts = new HashSet<CampaignMode>();
             table.Pairs((k, v) => {
                 ts.Add(v.Str().ToLower() switch {
-                    "competitive" => CampaignType.CompetitiveOnly,
-                    "cooperative" => CampaignType.CooperativeOnly,
-                    "singleplayer" => CampaignType.SingleplayerOnly,
-                    _ => CampaignType.Undefined,
+                    "competitive" => CampaignMode.Competitive,
+                    "cooperative" => CampaignMode.Cooperative,
+                    "singleplayer" => CampaignMode.Singleplayer,
+                    _ => CampaignMode.Undefined,
                 });
             });
             return ts;

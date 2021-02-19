@@ -100,6 +100,10 @@ namespace BattlegroundsApp {
             // Load all companies used by the player
             PlayerCompanies.LoadAll();
 
+            // Load all installed and active campaigns
+            PlayerCampaigns.GetInstalledCampaigns();
+            PlayerCampaigns.LoadActiveCampaigns();
+
         }
 
     }
