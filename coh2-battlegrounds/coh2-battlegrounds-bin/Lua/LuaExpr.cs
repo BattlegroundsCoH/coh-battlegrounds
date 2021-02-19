@@ -13,6 +13,11 @@ namespace Battlegrounds.Lua {
     public abstract record LuaLookupIdExpr() : LuaExpr;
 
     /// <summary>
+    /// Represents a comment in Lua code
+    /// </summary>
+    public record LuaComment(string Comment) : LuaExpr;
+
+    /// <summary>
     /// Representation of an Operator expression (Should never be executed)
     /// </summary>
     /// <param name="Type">The operator type of the operator expression.</param>

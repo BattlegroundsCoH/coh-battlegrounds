@@ -25,13 +25,14 @@ namespace Battlegrounds.Lua {
             Comma,
             Equals,
             Semicolon,
-            Dot
+            Dot,
+            Comment,
         }
 
         private record LuaToken(LuaTokenType Type, string Val);
 
         private static readonly Regex LuaRegex 
-            = new Regex(@"(?<n>\d*\.\d+)|(?<i>\d+)|(?<b>true|false)|(?<nil>nil)|(?<op>=|,|\+|-|;|\.)|(?<t>\{|\}|\[|\])|(?<id>\w(\d|\w)*)|(?<str>\"".*\""{1}?)");
+            = new Regex(@"(?<c>--.*\n)|(?<n>\d*\.\d+)|(?<i>\d+)|(?<b>true|false)|(?<nil>nil)|(?<op>=|,|\+|-|;|\.)|(?<t>\{|\}|\[|\])|(?<id>\w(\d|\w)*)|(?<str>\"".*\""{1}?)");
 
         public static List<LuaExpr> ParseLuaSource(string sourceText) {
             
@@ -51,8 +52,12 @@ namespace Battlegrounds.Lua {
                     LuaTokenType.Comma or LuaTokenType.Equals or LuaTokenType.IndexClose or 
                     LuaTokenType.IndexOpen or LuaTokenType.Semicolon or LuaTokenType.TableClose or
                     LuaTokenType.TableOpen or LuaTokenType.Dot => new LuaOpExpr(tokens[i].Type),
+                    LuaTokenType.Comment => new LuaComment(tokens[i].Val),
                     _ => throw new Exception(),
                 });
+                if (expressions[^1] is LuaComment) {
+                    expressions.RemoveAt(expressions.Count - 1);
+                }
             }
             
             // Apply groups
@@ -228,6 +233,7 @@ namespace Battlegrounds.Lua {
                     "n" => new LuaToken(LuaTokenType.Number, match.Value),
                     "i" => new LuaToken(LuaTokenType.Integer, match.Value),
                     "b" => new LuaToken(LuaTokenType.Bool, match.Value),
+                    "c" => new LuaToken(LuaTokenType.Comment, match.Value),
                     "t" => new LuaToken(match.Value switch {
                         "[" => LuaTokenType.IndexOpen,
                         "]" => LuaTokenType.IndexClose,

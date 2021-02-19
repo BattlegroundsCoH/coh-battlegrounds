@@ -10,12 +10,13 @@ namespace Battlegrounds.Lua {
 
         private bool m_bool;
 
+        public bool IsTrue => this.m_bool;
+
         public LuaBool(bool value) => this.m_bool = value;
 
         public override bool Equals(LuaValue value) => value is LuaBool b && b.m_bool == this.m_bool;
 
         public override bool Equals(object obj) => obj is LuaValue v ? this.Equals(v) : base.Equals(obj);
-
 
         public override string Str() => this.m_bool ? "true" : "false";
 

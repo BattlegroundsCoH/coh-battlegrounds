@@ -5,6 +5,7 @@ using System.IO;
 
 using Battlegrounds.Functional;
 using Battlegrounds.Json;
+using Battlegrounds.Locale;
 using Battlegrounds.Modding;
 using Battlegrounds.Steam;
 
@@ -30,8 +31,11 @@ namespace Battlegrounds {
 
             public SteamInstance SteamData { get; set; }
 
+            [JsonEnum(typeof(LocaleLanguage))]
+            public LocaleLanguage Language { get; set; }
+
             /// <summary>
-            /// 
+            /// Initialize a new <see cref="InternalInstance"/> class with default data.
             /// </summary>
             public InternalInstance() {
                 this.SteamData = new SteamInstance();
@@ -131,15 +135,12 @@ namespace Battlegrounds {
                 }
             }
 
-            /// <summary>
-            /// 
-            /// </summary>
-            /// <returns></returns>
             public string ToJsonReference() => throw new NotSupportedException();
 
         }
 
         private static InternalInstance __instance;
+        private static Localize __localeManagement;
 
         /// <summary>
         /// Get or set the last played map.
@@ -171,9 +172,14 @@ namespace Battlegrounds {
         public static bool IsFirstRun { get; internal set; }
 
         /// <summary>
-        /// The active <see cref="SteamInstance"/>
+        /// Get the active <see cref="SteamInstance"/>
         /// </summary>
         public static SteamInstance Steam => __instance.SteamData;
+
+        /// <summary>
+        /// Get the localize manager for the instance
+        /// </summary>
+        public static Localize Localize => __localeManagement;
 
         /// <summary>
         /// Get the relative path to a predefined app path. Can be appened with remaining direct path to obtain the full path.
@@ -197,6 +203,7 @@ namespace Battlegrounds {
         /// </summary>
         public static void LoadInstance() {
 
+            // Load instance data
             __instance = JsonParser.ParseFile<InternalInstance>("local.json");
             if (__instance == null) {
                 __instance = new InternalInstance();
@@ -206,6 +213,10 @@ namespace Battlegrounds {
                 IsFirstRun = false;
             }
 
+            // Create locale manager
+            __localeManagement = new Localize(__instance.Language);
+
+            // Create tuning
             __bgTuningInstance = new BattlegroundsTuning();
 
         }

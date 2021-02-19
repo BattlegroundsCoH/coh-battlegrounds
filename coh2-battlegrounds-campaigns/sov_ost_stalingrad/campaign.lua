@@ -19,14 +19,14 @@
         ["soviet"] = {
             fe_army_name = "soviet_army",
             fe_army_desc = "",
-            army_file = "",
+            army_file = "soviets.lua",
             min_players = 1,
             max_players = 4,
         },
         ["german"] = {
             fe_army_name = "german_army",
             fe_army_desc = "",
-            army_file = "",
+            army_file = "germans.lua",
             min_players = 1,
             max_players = 4,
         }
@@ -40,6 +40,14 @@
             type = LOCALE,
             lang = "ALL",
             file = "locale.loc",
+        },
+        {
+            type = SCRIPT,
+            file = "victory.lua",
+        },
+        {
+            type = SCRIPT,
+            file = "events.lua",
         },
     }
 }

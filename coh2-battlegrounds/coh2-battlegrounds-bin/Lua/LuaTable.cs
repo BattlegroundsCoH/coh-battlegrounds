@@ -81,6 +81,12 @@ namespace Battlegrounds.Lua {
         /// Do a pairs run on  the table.
         /// </summary>
         /// <param name="pairs">The delegate to run on each pair iteration.</param>
+        public void Pairs(Action<LuaValue, LuaValue> pairsAction) => this.Pairs((k, v) => { pairsAction(k, v); return new LuaNil(); });
+
+        /// <summary>
+        /// Do a pairs run on  the table.
+        /// </summary>
+        /// <param name="pairs">The delegate to run on each pair iteration.</param>
         /// <returns><see cref="LuaNil"/> if pairs iterator reached the end of the table. Otherwise returned <see cref="LuaValue"/>.</returns>
         public LuaValue Pairs(Pairs pairs) {
             var e = this.GetEnumerator();

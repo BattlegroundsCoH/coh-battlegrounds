@@ -4,6 +4,8 @@
 
         private string m_internalStringValue;
 
+        public int Length => this.m_internalStringValue.Length;
+
         public LuaString(string value) => this.m_internalStringValue = value;
 
         public override bool Equals(LuaValue value) {

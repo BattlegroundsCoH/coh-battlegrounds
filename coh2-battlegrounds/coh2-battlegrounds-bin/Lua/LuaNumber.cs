@@ -38,6 +38,10 @@ namespace Battlegrounds.Lua {
 
         public override string ToString() => this.m_treatAsInteger ? ((int)this.m_number).ToString() : this.m_number.ToString(NumberCulture);
 
+        public static explicit operator int(LuaNumber n) => n.IsInteger() ? (int)n.m_number : throw new InvalidCastException("Cannot cast non-integer LuaNumber to an integer");
+
+        public static implicit operator double(LuaNumber n) => n.m_number;
+
     }
 
 }
