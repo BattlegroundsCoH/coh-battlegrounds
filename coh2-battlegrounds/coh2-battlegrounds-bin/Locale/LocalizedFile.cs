@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using Battlegrounds.Functional;
+using Battlegrounds.Util;
 
 namespace Battlegrounds.Locale {
     
@@ -133,13 +134,18 @@ namespace Battlegrounds.Locale {
                 j++;
             });
 
-            this.m_loadedStrings.Values.ForEach(lang => {
-                lang.ForEach(v => {
-                    int k = Array.IndexOf(this.DistinctKeys, v.value);
+            // Sort by keys
+            this.m_loadedStrings.ForEach(lang => {
+                bw.Write((byte)lang.Key);
+                lang.Value.ForEach(v => {                    
+                    int k = Array.IndexOf(this.DistinctKeys, v.key.LocaleID);
                     if (k >= 0) {
                         bw.Write(k);
                     } else {
-                        bw.Write((sbyte)-1);
+                        bw.Write(-1);
+                        byte[] kb = Encoding.Unicode.GetBytes(v.key.LocaleID);
+                        bw.Write((ushort)kb.Length);
+                        bw.Write(kb);
                     }
                     byte[] sb = Encoding.Unicode.GetBytes(v.value);
                     bw.Write((ushort)sb.Length);
@@ -149,6 +155,63 @@ namespace Battlegrounds.Locale {
 
             ms.Position = 0;
             return ms.ToArray();
+
+        }
+
+        public bool LoadFromBinary(MemoryStream stream) {
+
+            // Create binary reader
+            using BinaryReader reader = new BinaryReader(stream, Encoding.Unicode, true);
+
+            // Read identifier
+            string identifier = reader.ReadUnicodeString();
+            if (identifier != this.m_sourceID) { 
+                if (this.m_sourceID == Localize.UndefinedSource) {
+                    this.m_sourceID = identifier;
+                } else {
+                    return false;
+                }
+            }
+
+            // Create loaded strings
+            var tmp = new Dictionary<LocaleLanguage, int>();
+
+            // Read the amount of languages
+            int langCount = reader.ReadInt32();
+            for (int i = 0; i < langCount; i++) {
+                reader.Skip(1); // skip a single byte
+                LocaleLanguage lang = (LocaleLanguage)reader.ReadByte();
+                tmp.Add(lang, reader.ReadInt32());
+                this.m_loadedStrings.Add(lang, new List<(LocaleKey key, string value)>());
+            }
+
+            // Read lookup keys
+            int lookupCount = reader.ReadInt32();
+            string[] lookup = new string[lookupCount];
+            for (int i = 0; i < lookupCount; i++) {
+                string str = reader.ReadUnicodeString(reader.ReadUInt16());
+                int j = reader.ReadInt32();
+                lookup[j] = str;
+            }
+
+            // Read to end
+            while (!reader.HasReachedEOS()) {
+                LocaleLanguage lan = (LocaleLanguage)reader.ReadByte();
+                int count = tmp[lan];
+                for (int i = 0; i < count; i++) {
+                    int lookupID = reader.ReadInt32();
+                    string locID = null;
+                    if (lookupID == -1) {
+                        locID = reader.ReadUnicodeString(reader.ReadUInt16());
+                    } else {
+                        locID = lookup[lookupID];
+                    }
+                    this.m_loadedStrings[lan].Add((new LocaleKey(locID, identifier), reader.ReadUnicodeString(reader.ReadUInt16())));
+                }
+            }
+
+            // Return true
+            return true;
 
         }
 
