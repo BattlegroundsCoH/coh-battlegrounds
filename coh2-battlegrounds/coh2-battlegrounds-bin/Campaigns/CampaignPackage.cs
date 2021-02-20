@@ -53,6 +53,10 @@ namespace Battlegrounds.Campaigns {
 
         public ArmyData[] CampaignArmies { get; private set; }
 
+        public CampaignMapData MapData { get; private set; }
+
+        public Localize LocaleManager { get; private set; }
+
         #region Binary Data
 
         private static uint[] SupportedVersions = { 10 };
@@ -101,6 +105,48 @@ namespace Battlegrounds.Campaigns {
                     Trace.WriteLine($"Campaign '{Path.GetFileName(binaryFilepath)}' has invalid army data and cannot be loaded.", nameof(CampaignPackage));
                     return false;
                 }
+            }
+
+            // Create localizer (Based on locale language
+            this.LocaleManager = new Localize(BattlegroundsInstance.Localize.Language);
+
+            // Read resources
+            for (int i = 0; i < resourceCount; i++) {
+
+                // Read identifier
+                string identifier = reader.ReadUnicodeString();
+
+                // Read resource type
+                byte resourceType = reader.ReadByte();
+
+                // Read length
+                int resourceByteLength = reader.ReadInt32();
+
+                // Read all bytes
+                byte[] resourceBytes = reader.ReadBytes(resourceByteLength);
+
+                // From here, determine resource type
+                switch (resourceType) {
+                    case 0x1:
+                        if (this.MapData is null) {
+                            this.MapData = new CampaignMapData(resourceBytes);
+                        } else {
+                            Trace.WriteLine($"Campaign '{Path.GetFileName(binaryFilepath)}' has conflicting campaign maps.", nameof(CampaignPackage));
+                            return false;
+                        }
+                        break;
+                    case 0x2:
+                        if (!this.LocaleManager.LoadBinaryLocaleFile(new MemoryStream(resourceBytes) { Position = 0 }, identifier)) {
+                            Trace.WriteLine($"Campaign '{Path.GetFileName(binaryFilepath)}' contains faulty locale file.", nameof(CampaignPackage));
+                        }
+                        break;
+                    case 0x3:
+
+                        break;
+                    default:
+                        break;
+                }
+
             }
 
             // Return true => everything was loaded

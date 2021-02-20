@@ -133,17 +133,56 @@ namespace Battlegrounds.Locale {
             // Get all keys for THIS language
             var kvps = fl.GetLanguage(this.Language);
 
+            // Add keys
+            if (!AddKeys(kvps)) {
+                return false;
+            }
+
+            // Return true
+            return true;
+
+        }
+
+        private bool AddKeys((LocaleKey, string)[] entries) {
+
+            bool dups = false;
+
             // Loop through them all
-            foreach(var (k, v) in kvps) {
+            foreach (var (k, v) in entries) {
                 if (!this.m_allText.ContainsKey(k)) {
                     this.m_allText[k] = v;
                 } else {
                     Trace.WriteLine($"Duplicate locale entry '' (e = \"{this.m_allText[k]}\", n = \"{v}\") (language is '{this.Language}')", "Localize");
-                    return false;
+                    dups = true;
                 }
             }
 
-            // Return true
+            // return whatever dups is not
+            return !dups;
+
+        }
+
+        /// <summary>
+        /// Load a binary locale file
+        /// </summary>
+        /// <param name="stream"></param>
+        /// <param name="sourceID"></param>
+        /// <returns></returns>
+        public bool LoadBinaryLocaleFile(MemoryStream stream, string sourceID = UndefinedSource) {
+
+            // Define file
+            LocalizedFile lf = new LocalizedFile(sourceID);
+            if (!lf.LoadFromBinary(stream)) {
+                return false;
+            }
+
+            // Get relevant keys
+            var kvps = lf.GetLanguage(this.Language);
+            if (!this.AddKeys(kvps)) {
+                return false;
+            }
+
+            // Return true;
             return true;
 
         }
@@ -162,7 +201,7 @@ namespace Battlegrounds.Locale {
                         return kvp.Value;
                     }
                 }
-                Trace.WriteLine($"Undefined locale key '{key.LocaleID}'@{key.LocaleSource}. (Lang : {this.Language})", "Localize");
+                Trace.WriteLine($"Undefined locale key '{key.LocaleID}'@{key.LocaleSource}. (Lang : {this.Language})", nameof(Localize));
                 return key.LocaleID;
             }
         }

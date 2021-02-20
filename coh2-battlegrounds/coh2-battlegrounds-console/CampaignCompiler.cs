@@ -18,9 +18,9 @@ namespace coh2_battlegrounds_console {
         public const uint COMPILER_VERSION = 10;
 
         enum ResourceType : byte {
-            MapImage,
-            Locale,
-            Script,
+            MapImage = 0x1,
+            Locale = 0x2,
+            Script = 0x3,
         }
 
         private struct CampaignResource {
@@ -228,8 +228,11 @@ namespace coh2_battlegrounds_console {
 
             // Write all resources
             foreach (var res in resources) {
-                bw.Write(res.Identifier);
+                bw.Write(res.Identifier.Encode(Encoding.Unicode).Then(x => {
+                    bw.Write(x.Length); return x;
+                }));
                 bw.Write((byte)res.Rt);
+                bw.Write(res.Content.Length);
                 bw.Write(res.Content);
             }
 
