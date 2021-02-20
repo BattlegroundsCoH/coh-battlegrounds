@@ -9,10 +9,13 @@ using BattlegroundsApp.Resources;
 namespace BattlegroundsApp.Controls.CompanyBuilderControls {
     public class OccupiedState : UnitSlotState {
         public string UnitName { get; set; }
+        public string UnitPortrait { get; set; }
+
         public override bool isOccupied => true;
 
         public void SetUnit(Squad squad) {
             UnitName = GameLocale.GetString(uint.Parse(squad.SBP.LocaleName));
+            UnitPortrait = squad.SBP.Icon;
         }
     }
 }

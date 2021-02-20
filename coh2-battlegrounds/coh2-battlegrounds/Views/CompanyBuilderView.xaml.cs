@@ -50,6 +50,7 @@ namespace BattlegroundsApp.Views {
             builder = new CompanyBuilder().NewCompany(faction).ChangeName(companyName).ChangeType(type);
             CompanyName = companyName;
             CompanySize = "0";
+            ShowCompany();
         }
 
         private void SaveButton_Click(object sender, RoutedEventArgs e) {
@@ -72,9 +73,14 @@ namespace BattlegroundsApp.Views {
 
         private void ShowCompany() {
 
+            this.InfantryList.Children.Clear();
+            this.SupportList.Children.Clear();
+            this.VehicleList.Children.Clear();
+            this.AbilityList.Children.Clear();
+
             builder.EachUnit(x => {
 
-                UnitSlot unitSlot = new UnitSlot();
+                UnitSlot unitSlot = new UnitSlot(this);
                 unitSlot.SetUnit(x);
 
                 if (x.GetCategory(true) == "infantry") {
@@ -85,9 +91,35 @@ namespace BattlegroundsApp.Views {
 
                 } else if (x.GetCategory(true) == "vehicle") {
                     this.VehicleList.Children.Add(unitSlot);
-                }
-            }); 
+                } 
 
+                // TODO: Add abilities to list
+
+            });
+
+            UnitSlot AddSlotInfantry = new UnitSlot(this);
+            AddSlotInfantry.SetUnit(null);
+
+            UnitSlot AddSlotSupport = new UnitSlot(this);
+            AddSlotSupport.SetUnit(null);
+
+            UnitSlot AddSlotVehicle = new UnitSlot(this);
+            AddSlotVehicle.SetUnit(null);
+
+            UnitSlot AddSlotAbility = new UnitSlot(this);
+            AddSlotAbility.SetUnit(null);
+
+            this.InfantryList.Children.Add(AddSlotInfantry);
+            this.SupportList.Children.Add(AddSlotSupport);
+            this.VehicleList.Children.Add(AddSlotVehicle);
+            this.AbilityList.Children.Add(AddSlotAbility);
+        }
+
+        public void AddUnitToCompany(Squad squad) {
+            UnitBuilder unitBuilder = new UnitBuilder(squad);
+            builder.AddUnit(unitBuilder);
+            builder.Commit();
+            ShowCompany();
         }
     }
 }

@@ -13,6 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Battlegrounds.Game.Gameplay;
+using BattlegroundsApp.Views;
 
 namespace BattlegroundsApp.Controls.CompanyBuilderControls {
 
@@ -35,8 +36,11 @@ namespace BattlegroundsApp.Controls.CompanyBuilderControls {
 
         public UnitSlotType UnitType { get; set; }
 
-        public UnitSlot() {
+        private CompanyBuilderView CompanyBuilder { get; set; }
+
+        public UnitSlot(CompanyBuilderView view) {
             InitializeComponent();
+            CompanyBuilder = view;
         }
 
         public void SetUnit(Squad squad) {
@@ -51,6 +55,10 @@ namespace BattlegroundsApp.Controls.CompanyBuilderControls {
         }
 
         private void AddUnit_Click(object sender, RoutedEventArgs e) {
+            //CompanyBuilder.AddUnitToCompany();
+        }
+
+        private void ReplaceUnit_Click(object sender, RoutedEventArgs e) {
 
         }
     }
