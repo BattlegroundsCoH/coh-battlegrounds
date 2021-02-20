@@ -4,12 +4,11 @@ using System.Text;
 using System.Text.RegularExpressions;
 
 using RegexMatch = System.Text.RegularExpressions.Match;
-using Battlegrounds.Functional;
 
 namespace Battlegrounds.Game.DataSource {
     
     /// <summary>
-    /// 
+    /// Represents a localized file used by Company of Heroes to store text data.
     /// </summary>
     public class UcsFile {
 
@@ -20,17 +19,17 @@ namespace Battlegrounds.Game.DataSource {
         }
 
         /// <summary>
-        /// 
+        /// Get the UCS localized string identified by the <paramref name="locID"/> key.
         /// </summary>
-        /// <param name="locID"></param>
-        /// <returns></returns>
-        public string this[uint locID] => this.m_content.ContainsKey(locID) ? this.m_content[locID] : "Not Found";
+        /// <param name="locID">The numeric locale key to use when index.</param>
+        /// <returns>The localized string identified by <paramref name="locID"/> or an error message if no string is found.</returns>
+        public string this[uint locID] => this.m_content.ContainsKey(locID) ? this.m_content[locID] : $"${locID} No key!";
 
         /// <summary>
-        /// 
+        /// Load a UCS file with UTF-8 encoding.
         /// </summary>
-        /// <param name="ucsFilePath"></param>
-        /// <returns></returns>
+        /// <param name="ucsFilePath">The path to the UCS file.</param>
+        /// <returns>A <see cref="UcsFile"/> instance containing the keys and values of the file.</returns>
         public static UcsFile LoadFromFile(string ucsFilePath) {
 
             UcsFile file = new UcsFile();

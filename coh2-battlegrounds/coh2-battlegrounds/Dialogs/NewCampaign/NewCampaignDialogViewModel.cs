@@ -1,7 +1,13 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Windows.Input;
+using System.Windows.Media;
+
+using Battlegrounds.Campaigns;
+
 using BattlegroundsApp.Dialogs.Service;
 using BattlegroundsApp.Models.Campaigns;
+using BattlegroundsApp.Resources;
 using BattlegroundsApp.Utilities;
 
 namespace BattlegroundsApp.Dialogs.NewCampaign {
@@ -12,7 +18,29 @@ namespace BattlegroundsApp.Dialogs.NewCampaign {
         HostCampaign,
     }
 
+    #region Option Classes
+    
+    public abstract class NewCampaignDialogViewSelectionOption { public abstract CampaignPackage GetPackage(); }
+    
+    public class NewCampaignDialogViewSelectedNone : NewCampaignDialogViewSelectionOption {
+        public override CampaignPackage GetPackage() => null;
+        public override string ToString() => "None Available";
+    }
+
+    public class NewCampaignDialogViewSelectedPackage : NewCampaignDialogViewSelectionOption {
+        public CampaignPackage Package { get; }
+        public NewCampaignDialogViewSelectedPackage(CampaignPackage package) {
+            this.Package = package;
+        }
+        public override string ToString() => this.Package.LocaleManager.GetString(this.Package.Name);
+        public override CampaignPackage GetPackage() => this.Package;
+    }
+
+    #endregion
+
     public class NewCampaignDialogViewModel : DialogControlBase<NewCampaignDialogResult> {
+
+        int m_selectedCampaignIndex;
 
         public ICommand CancelCommand { get; }
 
@@ -20,7 +48,13 @@ namespace BattlegroundsApp.Dialogs.NewCampaign {
 
         public NewCampaignData CampaignData { get; private set; }
 
-        public int SelectedCampaignIndex { get; set; }
+        public int SelectedCampaignIndex {
+            get => this.m_selectedCampaignIndex;
+            set { 
+                this.m_selectedCampaignIndex = value;
+                this.SelectedCampaignChanged(value);
+            }
+        }
 
         public int SelectedCampaignDifficulty { get; set; }
 
@@ -28,16 +62,27 @@ namespace BattlegroundsApp.Dialogs.NewCampaign {
 
         public int SelectedCampaignSide { get; set; }
 
-        public List<string> Campaigns { get; }
+        public ImageSource SelectedCampaignImageSource { get; set; }
 
-        private NewCampaignDialogViewModel(string title, string[] campaigns) {
+        public List<NewCampaignDialogViewSelectionOption> Campaigns { get; }
+
+        public List<string> AvailableModes { get; }
+
+        private NewCampaignDialogViewModel(string title, CampaignPackage[] campaigns) {
 
             // Set title
             this.Title = title;
 
+            // Init available modes
+            this.AvailableModes = new List<string>();
+
             // Set campaigns
-            this.Campaigns = new List<string>() { "None Selected" };
-            this.Campaigns.AddRange(campaigns);
+            this.Campaigns = new List<NewCampaignDialogViewSelectionOption>();
+            if (campaigns.Length == 0) {
+                this.Campaigns.Add(new NewCampaignDialogViewSelectedNone());
+            } else {
+                this.Campaigns.AddRange(campaigns.Select(x => new NewCampaignDialogViewSelectedPackage(x)));
+            }
 
             // Set defaults
             this.SelectedCampaignIndex = 0;
@@ -58,14 +103,22 @@ namespace BattlegroundsApp.Dialogs.NewCampaign {
 
         public void Begin(DialogWindow caller) {            
             this.CampaignData = new NewCampaignData(
-                this.Campaigns[this.SelectedCampaignIndex],
+                this.Campaigns[this.SelectedCampaignIndex].GetPackage(),
                 this.SelectedCampaignDifficulty,
                 this.SelectedCampaignMode,
                 this.SelectedCampaignSide);
             this.CloseDialogWithResult(caller, NewCampaignDialogResult.Cancel);
         }
 
-        public static NewCampaignDialogResult ShowHostGameDialog(string title, out NewCampaignData campaignData, params string[] campaigns) {
+        private void SelectedCampaignChanged(int newValue) {
+            if (this.Campaigns[newValue].GetPackage() is CampaignPackage package) {
+                this.SelectedCampaignImageSource = PngImageSource.FromMemory(package.MapData.RawImageData);
+                this.AvailableModes.Clear();
+                this.AvailableModes.AddRange(package.CampaignModes.Select(x => x.ToString()));
+            }
+        }
+
+        public static NewCampaignDialogResult ShowHostGameDialog(string title, out NewCampaignData campaignData, params CampaignPackage[] campaigns) {
             var dialog = new NewCampaignDialogViewModel(title, campaigns);
             var result = dialog.ShowDialog();
             campaignData = dialog.CampaignData;

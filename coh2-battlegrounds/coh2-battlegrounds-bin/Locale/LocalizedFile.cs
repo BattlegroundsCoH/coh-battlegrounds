@@ -39,6 +39,11 @@ namespace Battlegrounds.Locale {
 
                     if (lns[i].Length > 0) {
 
+                        if (lns[i].All(char.IsWhiteSpace)) {
+                            i++;
+                            continue;
+                        }
+
                         if (lns[i][0] == ' ') {
                             if (hasLanguage) {
 

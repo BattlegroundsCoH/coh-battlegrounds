@@ -1,10 +1,12 @@
 ﻿using System;
+using System.IO;
 using System.Diagnostics;
 using System.Windows;
 
 using Battlegrounds;
 using Battlegrounds.Game.Database.Management;
 using Battlegrounds.Steam;
+
 using BattlegroundsApp.LocalData;
 using BattlegroundsApp.Utilities;
 
@@ -24,6 +26,9 @@ namespace BattlegroundsApp {
 
             // Load BG .dll instance*
             BattlegroundsInstance.LoadInstance();
+
+            // Load locale
+            LoadLocale();
 
             // Load databases (async)
             DatabaseManager.LoadAllDatabases(OnDatabasesLoaded); // Important this is done (TODO: Add a callback handler)
@@ -88,6 +93,22 @@ namespace BattlegroundsApp {
 
             // Exit
             Environment.Exit(0);
+
+        }
+
+        private static void LoadLocale() {
+
+            string lang = BattlegroundsInstance.Localize.Language.ToString().ToLower();
+            if (lang == "default") {
+                lang = "english";
+            }
+
+            string filepath = BattlegroundsInstance.GetRelativePath(BattlegroundsPaths.BINARY_FOLDER, $"locale\\{lang}.loc");
+            if (File.Exists(filepath)) {
+                BattlegroundsInstance.Localize.LoadLocaleFile(filepath);
+            } else {
+                Trace.WriteLine($"Failed to locate locale file: {filepath}", "AppStartup");
+            }
 
         }
 
