@@ -14,6 +14,8 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Battlegrounds.Game.DataCompany;
 using Battlegrounds.Game.Gameplay;
+using BattlegroundsApp.Controls.CompanyBuilderControls;
+using BattlegroundsApp.Dialogs.YesNo;
 using BattlegroundsApp.LocalData;
 
 namespace BattlegroundsApp.Views {
@@ -22,7 +24,14 @@ namespace BattlegroundsApp.Views {
     /// </summary>
     public partial class CompanyBuilderView : ViewState {
 
+        public string CompanyName { get; }
+        public string CompanySize { get; }
+        public string CompanyMaxSize { get { return Company.MAX_SIZE.ToString(); } }
+        public string CompanySizeText => $"Company Size: {this.CompanySize}/{this.CompanyMaxSize}";
+
         private CompanyBuilder builder;
+        public CompanyBuilder Builder { get { return this.builder; } }
+
         public override void StateOnFocus() { }
         public override void StateOnLostFocus() { }
 
@@ -32,30 +41,15 @@ namespace BattlegroundsApp.Views {
 
         public CompanyBuilderView(Company company) : this() {
             builder = new CompanyBuilder().DesignCompany(company);
+            CompanyName = company.Name;
+            CompanySize = company.Units.Length.ToString();
+            ShowCompany();
         }
 
         public CompanyBuilderView(string companyName, Faction faction, CompanyType type) : this() {
             builder = new CompanyBuilder().NewCompany(faction).ChangeName(companyName).ChangeType(type);
-        }
-
-        private void InfantryButton_Click(object sender, RoutedEventArgs e) {
-
-        }
-
-        private void SupportButton_Click(object sender, RoutedEventArgs e) {
-
-        }
-
-        private void VehicleButton_Click(object sender, RoutedEventArgs e) {
-
-        }
-
-        private void CapcuredButton_Click(object sender, RoutedEventArgs e) {
-
-        }
-
-        private void AbilitiesButton_Click(object sender, RoutedEventArgs e) {
-
+            CompanyName = companyName;
+            CompanySize = "0";
         }
 
         private void SaveButton_Click(object sender, RoutedEventArgs e) {
@@ -64,7 +58,36 @@ namespace BattlegroundsApp.Views {
         }
 
         private void BackButton_Click(object sender, RoutedEventArgs e) {
-            this.StateChangeRequest(new CompanyView());
+
+            var result = YesNoDialogViewModel.ShowYesNoDialog("Back", "Are you sure? All unsaved changes will be lost.");
+
+            if (result == YesNoDialogResult.Confirm) {
+                this.StateChangeRequest(new CompanyView());
+            }
+        }
+
+        private void UnitSlot_SelectionChanged(object sender, SelectionChangedEventArgs e) {
+
+        }
+
+        private void ShowCompany() {
+
+            builder.EachUnit(x => {
+
+                UnitSlot unitSlot = new UnitSlot();
+                unitSlot.SetUnit(x);
+
+                if (x.GetCategory(true) == "infantry") {
+                    this.InfantryList.Children.Add(unitSlot);
+
+                } else if (x.GetCategory(true) == "team_weapon") {
+                    this.SupportList.Children.Add(unitSlot);
+
+                } else if (x.GetCategory(true) == "vehicle") {
+                    this.VehicleList.Children.Add(unitSlot);
+                }
+            }); 
+
         }
     }
 }

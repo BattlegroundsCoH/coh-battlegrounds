@@ -5,7 +5,8 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:BattlegroundsApp.Views"
-             mc:Ignorable="d" 
+             xmlns:card="clr-namespace:BattlegroundsApp.Controls.CompanyBuilderControls"
+             mc:Ignorable="d"
              d:DesignHeight="450" d:DesignWidth="1000" Background="white">
     <Grid>
 
@@ -34,29 +35,53 @@
         </Grid.ColumnDefinitions>
 
         <!-- Row 0 -->
-        <TextBlock Grid.Row="0" Grid.Column="0" Text="Company Name Here" Margin="2.5"/>
+        <TextBlock Grid.Row="0" Grid.Column="0" Text="{Binding CompanyName}" Margin="2.5"/>
 
         <!-- For company size use the size variable from Company.cs file -->
-        <TextBlock Grid.Row="0" Grid.Column="1" Text="Company size 0/40" Margin="2.5" Grid.ColumnSpan="8"/>
-        
+        <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding CompanySizeText}" Margin="2.5"/>
+
         <!-- Row 1 -->
-        <!-- <Button x:Name="infantryButton" Grid.Row="1" Grid.Column="0" Content="Infantry" Margin="2.5" Width="125" Click="InfantryButton_Click"/>
-
-        <Button x:Name="supportButton" Grid.Row="1" Grid.Column="1" Content="Support" Margin="2.5" Width="125" Click="SupportButton_Click"/>
-
-        <Button x:Name="vehicleButton" Grid.Row="1" Grid.Column="2" Content="Vehicles" Margin="2.5" Width="125" Click="VehicleButton_Click"/>
-
-        <Button x:Name="abilitiesButton" Grid.Row="1" Grid.Column="3" Content="Abilities" Margin="2.5" Width="125" Click="AbilitiesButton_Click"/>
-
-        <Button x:Name="saveButton" Grid.Row="1" Grid.Column="4" Content="Save" Margin="2.5" Width="125" Click="SaveButton_Click"/>
-
-        <Button x:Name="backButton" Grid.Row="1" Grid.Column="5" Content="Back" Margin="2.5" Width="125" Click="BackButton_Click"/> -->
-        
         <TextBlock Grid.Row="1" Grid.Column="0" Text="Infantry"/>
         
-        <TextBlock Grid.Row="2" Grid.Column="0" Text="Support"/>
+        <TextBlock Grid.Row="1" Grid.Column="1" Text="Support"/>
         
-        <TextBlock Grid.Row="3" Grid.Column="0" Text="Vehicles"/>
+        <TextBlock Grid.Row="1" Grid.Column="2" Text="Vehicles"/>
+
+        <TextBlock Grid.Row="1" Grid.Column="3" Text="Abilities"/>
+        
+        <!-- Row 2 -->
+        <!-- Infantry -->
+        <ScrollViewer Grid.Row="2" Grid.Column="0" CanContentScroll="False" VerticalScrollBarVisibility="Visible" MaxHeight="575">
+            <StackPanel x:Name="InfantryList">
+                
+            </StackPanel>
+        </ScrollViewer>
+
+        <!-- Support -->
+        <ScrollViewer Grid.Row="2" Grid.Column="1" CanContentScroll="False" VerticalScrollBarVisibility="Visible" MaxHeight="575">
+            <StackPanel x:Name="SupportList">
+
+            </StackPanel>
+        </ScrollViewer>
+
+        <!-- Vehicles -->
+        <ScrollViewer Grid.Row="2" Grid.Column="2" CanContentScroll="False" VerticalScrollBarVisibility="Visible" MaxHeight="575">
+            <StackPanel x:Name="VehicleList">
+
+            </StackPanel>
+        </ScrollViewer>
+
+        <!-- Abilities -->
+        <ScrollViewer Grid.Row="2" Grid.Column="3" CanContentScroll="False" VerticalScrollBarVisibility="Visible" MaxHeight="575">
+            <StackPanel x:Name="AbilityList">
+
+            </StackPanel>
+        </ScrollViewer>
+
+        <!-- Row 3 -->
+        <Button x:Name="saveButton" Grid.Row="3" Grid.Column="0" Content="Save" Margin="2.5" Width="125" Click="SaveButton_Click"/>
+
+        <Button x:Name="backButton" Grid.Row="3" Grid.Column="1" Content="Back" Margin="2.5" Width="125" Click="BackButton_Click"/>
 
     </Grid>
 </bg:ViewState>
