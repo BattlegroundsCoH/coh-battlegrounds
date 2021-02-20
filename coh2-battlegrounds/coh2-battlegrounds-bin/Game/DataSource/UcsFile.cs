@@ -4,6 +4,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 
 using RegexMatch = System.Text.RegularExpressions.Match;
+using Battlegrounds.Functional;
 
 namespace Battlegrounds.Game.DataSource {
     
@@ -23,7 +24,7 @@ namespace Battlegrounds.Game.DataSource {
         /// </summary>
         /// <param name="locID"></param>
         /// <returns></returns>
-        public string this[uint locID] => m_content[locID];
+        public string this[uint locID] => this.m_content.ContainsKey(locID) ? this.m_content[locID] : "Not Found";
 
         /// <summary>
         /// 
@@ -38,7 +39,7 @@ namespace Battlegrounds.Game.DataSource {
 
                 string line;
 
-                Regex reg = new Regex(@"(?<key>\d+)\s*(?<value>\S*)");
+                Regex reg = new Regex(@"(?<key>\d+)\s*(?<value>.*)");
 
                 while(!string.IsNullOrEmpty(line = sr.ReadLine())) {
 

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Battlegrounds.Game.Gameplay;
+using BattlegroundsApp.Resources;
 
 namespace BattlegroundsApp.Controls.CompanyBuilderControls {
     public class OccupiedState : UnitSlotState {
@@ -11,7 +12,7 @@ namespace BattlegroundsApp.Controls.CompanyBuilderControls {
         public override bool isOccupied => true;
 
         public void SetUnit(Squad squad) {
-            UnitName = squad.SBP.Name;
+            UnitName = GameLocale.GetString(uint.Parse(squad.SBP.LocaleName));
         }
     }
 }
