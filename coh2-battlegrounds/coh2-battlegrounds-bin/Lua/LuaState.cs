@@ -101,6 +101,18 @@ namespace Battlegrounds.Lua {
                             LuaValue lhs = stack.Pop();
                             LuaValue rhs = stack.Pop();
                             stack.Push(bin.Operator switch {
+                                "+" => lhs switch {
+                                    LuaNumber ln when rhs is LuaNumber rn => new LuaNumber(ln + rn),
+                                    _ => throw new Exception(),
+                                },
+                                "-" => lhs switch {
+                                    LuaNumber ln when rhs is LuaNumber rn => new LuaNumber(ln - rn),
+                                    _ => throw new Exception(),
+                                },
+                                "*" => lhs switch {
+                                    LuaNumber ln when rhs is LuaNumber rn => new LuaNumber(ln * rn),
+                                    _ => throw new Exception(),
+                                },
                                 "/" => lhs switch {
                                     LuaNumber ln when rhs is LuaNumber rn => new LuaNumber(ln / rn),
                                     _ => throw new Exception(),

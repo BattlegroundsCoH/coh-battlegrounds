@@ -168,6 +168,40 @@ test = {
 
         }
 
+        [TestMethod]
+        public void LuaDataParseRunTest07() {
+
+            string sourcefile = @"5 + 5";
+
+            // Assert parsing and execution runs fine
+            Assert.AreEqual(new LuaNumber(10), lState.DoString(sourcefile));
+
+        }
+
+        [TestMethod]
+        public void LuaDataParseRunTest08() {
+
+            string sourcefile = @"5 / 5";
+
+            // Assert parsing and execution runs fine
+            Assert.AreEqual(new LuaNumber(1), lState.DoString(sourcefile));
+
+        }
+
+        [TestMethod]
+        public void LuaDataParseRunTest09() {
+
+            string sourcefile = @"{ e = 5 / 5, b = 5 + 5 }";
+
+            // Assert parsing and execution runs fine
+            var val = lState.DoString(sourcefile);
+            Assert.IsInstanceOfType(val, typeof(LuaTable));
+            Assert.AreEqual(new LuaNumber(1), (val as LuaTable)["e"]);
+            Assert.AreEqual(new LuaNumber(10), (val as LuaTable)["b"]);
+
+
+        }
+
     }
 
 }
