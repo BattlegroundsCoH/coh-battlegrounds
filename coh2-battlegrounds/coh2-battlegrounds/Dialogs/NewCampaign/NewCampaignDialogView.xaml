@@ -3,13 +3,15 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:BattlegroundsApp.Dialogs.NewCampaign"
+             xmlns:local="clr-namespace:BattlegroundsApp.Dialogs.NewCampaign" 
+             xmlns:utilities="clr-namespace:BattlegroundsApp.Utilities"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="360">
+             d:DesignHeight="450" d:DesignWidth="820">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition MinWidth="160" MaxWidth="160"/>
             <ColumnDefinition MinWidth="200" MaxWidth="200"/>
+            <ColumnDefinition MinWidth="460" MaxWidth="460"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition/>
@@ -25,7 +27,9 @@
         <Label Grid.Row="1" Grid.Column="0">Campaign: </Label>
         <ComboBox Grid.Row="1" Grid.Column="1" 
                   ItemsSource="{Binding Campaigns}"
-                  SelectedIndex="{Binding SelectedCampaignIndex}"/>
+                  SelectedIndex="{Binding SelectedCampaignIndex}"
+                  >
+        </ComboBox>
         
         <!-- 2nd Setting -->
         <Label Grid.Row="2" Grid.Column="0">Side:</Label>
@@ -47,15 +51,14 @@
         <!-- 4th Setting -->
         <Label Grid.Row="4" Grid.Column="0">Mode:</Label>
         <ComboBox Grid.Row="4" Grid.Column="1" 
+                  ItemsSource="{Binding AvailableModes}"
                   SelectedIndex="{Binding SelectedCampaignMode}">
-            <!-- 1 Player -->
-            <ComboBoxItem>Singleplayer</ComboBoxItem>
-            <!-- 1-8 Players on one team (4 players max in a match) -->
-            <ComboBoxItem>Cooperative</ComboBoxItem>
-            <!-- 2-8 Players (min 1 per team, max 4 per team) -->
-            <ComboBoxItem>Competitive</ComboBoxItem>
         </ComboBox>
 
+        <Border Grid.Row="1" Grid.RowSpan="5" Grid.Column="2" BorderThickness="2">
+            <Image Source="{Binding SelectedCampaignImageSource}"/>
+        </Border>
+        
         <!-- Cancel Button -->
         <Button Grid.Column="0" Grid.Row="6" Margin="7.5" Name="CancelButton" 
                 Command="{Binding CancelCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}">

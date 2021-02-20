@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -11,6 +12,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using BattlegroundsApp.Dialogs.NewCampaign;
+using BattlegroundsApp.LocalData;
 using BattlegroundsApp.Models.Campaigns;
 
 namespace BattlegroundsApp.Views {
@@ -48,8 +50,8 @@ namespace BattlegroundsApp.Views {
         private void NewCampaignButton_Click(object sender, RoutedEventArgs e) {
 
             //Show dialog and retrieve data
-            var state = NewCampaignDialogViewModel.ShowHostGameDialog("Begin New Campaign", out NewCampaignData campaignData);
-            if (state != NewCampaignDialogResult.Cancel && campaignData.CampaignToLoad != "None Selected") {
+            var state = NewCampaignDialogViewModel.ShowHostGameDialog("Begin New Campaign", out NewCampaignData campaignData, PlayerCampaigns.CampaignPackages.ToArray());
+            if (state != NewCampaignDialogResult.Cancel && campaignData.CampaignToLoad is not null) {
 
                 // Hide the left panel
                 this.MainWindow.ShowLeftPanel(false);

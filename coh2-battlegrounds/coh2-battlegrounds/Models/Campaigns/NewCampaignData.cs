@@ -1,14 +1,16 @@
-﻿namespace BattlegroundsApp.Models.Campaigns {
+﻿using Battlegrounds.Campaigns;
+
+namespace BattlegroundsApp.Models.Campaigns {
     
     /// <summary>
     /// Readonly struct containing data collected by a <see cref="Dialogs.NewCampaign.NewCampaignDialogViewModel"/>.
     /// </summary>
     public readonly struct NewCampaignData {
-        
+
         /// <summary>
-        /// Get the campaign file to load.
+        /// Get the campaign <see cref="CampaignPackage"/> to load.
         /// </summary>
-        public readonly string CampaignToLoad { get; }
+        public readonly CampaignPackage CampaignToLoad { get; }
         
         /// <summary>
         /// Get the difficulty of the campaign.
@@ -25,7 +27,7 @@
         /// </summary>
         public readonly int CampaignHostSide { get; }
 
-        public NewCampaignData(string cmp, int diff, int mode, int side) {
+        public NewCampaignData(CampaignPackage cmp, int diff, int mode, int side) {
             this.CampaignDifficulty = diff;
             this.CampaignHostSide = side;
             this.CampaignMode = mode;
