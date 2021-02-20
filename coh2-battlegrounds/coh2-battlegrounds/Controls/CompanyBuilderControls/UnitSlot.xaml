@@ -1,0 +1,18 @@
+﻿<local:UnitSlotControl x:Class="BattlegroundsApp.Controls.CompanyBuilderControls.UnitSlot"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:BattlegroundsApp.Controls.CompanyBuilderControls"
+             mc:Ignorable="d" 
+             d:DesignHeight="64" d:DesignWidth="175">
+    
+    <local:AddState x:Name="AddState">
+        <Button Width="225" Height="64" Content="Add" Click="AddUnit_Click"/>
+    </local:AddState>
+
+    <local:OccupiedState x:Name="OccupiedState">
+        <Button Width="225" Height="64" Content="{Binding UnitName, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:OccupiedState}}}"/>
+    </local:OccupiedState>
+
+</local:UnitSlotControl>

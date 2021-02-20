@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Battlegrounds.Functional;
 using Battlegrounds.Game.Gameplay;
 using Battlegrounds.Modding;
 
@@ -228,6 +229,8 @@ namespace Battlegrounds.Game.DataCompany {
             if (this.m_redo.Count > 0)
                 this.m_uncommittedSquads.Push(this.m_redo.Pop());
         }
+
+        public void EachUnit(Action<Squad> squad) => this.m_companyTarget.Units.ForEach(squad);
 
     }
 
