@@ -12,7 +12,8 @@
     </local:AddState>
 
     <local:OccupiedState x:Name="OccupiedState">
-        <Button Width="225" Height="64" Content="{Binding UnitName, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:OccupiedState}}}"/>
+        <Button Width="225" Height="64" Content="{Binding UnitName, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:OccupiedState}}}" 
+                Click="ReplaceUnit_Click"/>
     </local:OccupiedState>
 
 </local:UnitSlotControl>
