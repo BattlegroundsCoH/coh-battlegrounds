@@ -58,6 +58,10 @@ namespace coh2_battlegrounds_console {
             settingsState._G["MAP"] = LuaValue.ToLuaValue(ResourceType.MapImage);
             settingsState._G["LOCALE"] = LuaValue.ToLuaValue(ResourceType.Locale);
             settingsState._G["SCRIPT"] = LuaValue.ToLuaValue(ResourceType.Script);
+            settingsState._G["BINARY"] = LuaValue.ToLuaValue("binary");
+            settingsState._G["UNARY"] = LuaValue.ToLuaValue("unary");
+            settingsState._G["TEAM_AXIS"] = LuaValue.ToLuaValue("axis");
+            settingsState._G["TEAM_ALLIES"] = LuaValue.ToLuaValue("allies");
 
             // Verify file exists
             string settingsFile = Path.Combine(dir, "campaign.lua");
@@ -111,6 +115,19 @@ namespace coh2_battlegrounds_console {
                 return;
             }
 
+            // Locate mapdef path
+            string mapdefPath = Path.Combine(dir, "mapdef.lua");
+            if (!File.Exists(mapdefPath)) {
+                Console.WriteLine("Failed find mapdef.lua");
+                return;
+            }
+
+            // Load mapdef
+            if (settingsState.DoFile(mapdefPath) is not LuaTable mapdef) {
+                Console.WriteLine("Failed read mapdef.lua");
+                return;
+            }
+
             // Default localeID
             string id = Localize.UndefinedSource;
 
@@ -132,11 +149,11 @@ namespace coh2_battlegrounds_console {
 
             }            
 
-            Compile(dir, id, campaignDisplay, campaignArmies, campaignResources);
+            Compile(dir, id, campaignDisplay, campaignArmies, campaignResources, mapdef);
 
         }
 
-        private static void Compile(string relative, string iddef, CampaignDisplay display, List<CampaignArmy> armies, List<CampaignResource> resources) {
+        private static void Compile(string relative, string iddef, CampaignDisplay display, List<CampaignArmy> armies, List<CampaignResource> resources, LuaTable mapdef) {
 
             // Output path
             string output = Path.Combine(relative, Path.GetFileNameWithoutExtension(relative) + ".dat");
@@ -223,8 +240,12 @@ namespace coh2_battlegrounds_console {
                     bw.Write(0);
                 }
 
-
             });
+
+            // Write map definition table
+            byte[] binaryData = LuaBinary.SaveAsBinary(mapdef, Encoding.Unicode);
+            bw.Write(binaryData.Length);
+            bw.Write(binaryData);
 
             // Write all resources
             foreach (var res in resources) {

@@ -107,6 +107,11 @@ namespace Battlegrounds.Campaigns {
                 }
             }
 
+            if (LuaBinary.FromBinary(new MemoryStream(reader.ReadBytes(reader.ReadInt32())), Encoding.Unicode) is not LuaTable mapdef) {
+                Trace.WriteLine($"Campaign '{Path.GetFileName(binaryFilepath)}' contains no map definition.", nameof(CampaignPackage));
+                return false;
+            }
+
             // Create localizer (Based on locale language
             this.LocaleManager = new Localize(BattlegroundsInstance.Localize.Language);
 
@@ -129,7 +134,10 @@ namespace Battlegrounds.Campaigns {
                 switch (resourceType) {
                     case 0x1:
                         if (this.MapData is null) {
-                            this.MapData = new CampaignMapData(resourceBytes);
+                            // Create map data
+                            this.MapData = new CampaignMapData(resourceBytes) {
+                                Data = mapdef
+                            };
                         } else {
                             Trace.WriteLine($"Campaign '{Path.GetFileName(binaryFilepath)}' has conflicting campaign maps.", nameof(CampaignPackage));
                             return false;

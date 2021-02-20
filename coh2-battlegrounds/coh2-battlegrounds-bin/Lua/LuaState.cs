@@ -98,6 +98,15 @@ namespace Battlegrounds.Lua {
                         } else {
                             DoExpr(bin.Right);
                             DoExpr(bin.Left);
+                            LuaValue lhs = stack.Pop();
+                            LuaValue rhs = stack.Pop();
+                            stack.Push(bin.Operator switch {
+                                "/" => lhs switch {
+                                    LuaNumber ln when rhs is LuaNumber rn => new LuaNumber(ln / rn),
+                                    _ => throw new Exception(),
+                                },
+                                _ => throw new Exception(),
+                            });
                         }
                         break;
                     case LuaLookupExpr lookup:

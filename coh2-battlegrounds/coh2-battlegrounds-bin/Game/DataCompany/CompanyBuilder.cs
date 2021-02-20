@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Battlegrounds.Functional;
 using Battlegrounds.Game.Gameplay;
 using Battlegrounds.Modding;
@@ -131,6 +132,14 @@ namespace Battlegrounds.Game.DataCompany {
             // Return self for method chaining
             return this;
 
+        }
+
+        public virtual UnitBuilder GetUnit(uint squadId) {
+            if (this.m_companyTarget.Units.FirstOrDefault(x => x.SquadID == squadId) is Squad s) {
+                return new UnitBuilder(s);
+            } else {
+                throw new IndexOutOfRangeException();
+            }
         }
 
         /// <summary>
