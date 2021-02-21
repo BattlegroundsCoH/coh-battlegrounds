@@ -202,6 +202,36 @@ test = {
 
         }
 
+        [TestMethod]
+        public void LuaDataParseRunTest10() {
+
+            // Test string
+            string sourcefile = @"{ ""a"", ""b"", ""c"" }";
+
+            // Assert parsing and execution runs fine
+            var val = lState.DoString(sourcefile);
+            Assert.IsInstanceOfType(val, typeof(LuaTable));
+            Assert.AreEqual(new LuaString("a"), (val as LuaTable).RawIndex<LuaString>(0));
+            Assert.AreEqual(new LuaString("b"), (val as LuaTable).RawIndex<LuaString>(1));
+            Assert.AreEqual(new LuaString("c"), (val as LuaTable).RawIndex<LuaString>(2));
+
+        }
+
+        [TestMethod]
+        public void LuaDataParseRunTest11() {
+
+            // Test string
+            string sourcefile = @"{ "" a "", ""  b"", ""c  "" }";
+
+            // Assert parsing and execution runs fine
+            var val = lState.DoString(sourcefile);
+            Assert.IsInstanceOfType(val, typeof(LuaTable));
+            Assert.AreEqual(new LuaString(" a "), (val as LuaTable).RawIndex<LuaString>(0));
+            Assert.AreEqual(new LuaString("  b"), (val as LuaTable).RawIndex<LuaString>(1));
+            Assert.AreEqual(new LuaString("c  "), (val as LuaTable).RawIndex<LuaString>(2));
+
+        }
+
     }
 
 }

@@ -19,6 +19,7 @@ namespace Battlegrounds.Lua {
     public sealed class LuaTable : LuaValue, IEnumerable<KeyValuePair<LuaValue, LuaValue>> {
 
         private Dictionary<LuaValue, LuaValue> m_table;
+        private Dictionary<int, LuaValue> m_rawIndices;
 
         /// <summary>
         /// Get the size of the table.
@@ -30,6 +31,7 @@ namespace Battlegrounds.Lua {
         /// </summary>
         public LuaTable() {
             this.m_table = new Dictionary<LuaValue, LuaValue>();
+            this.m_rawIndices = new Dictionary<int, LuaValue>();
         }
 
         public override bool Equals(LuaValue value) {
@@ -43,12 +45,21 @@ namespace Battlegrounds.Lua {
 
         public LuaValue this[LuaValue key] {
             get => this.m_table.ContainsKey(key) ? this.m_table[key] : new LuaNil();
-            set => this.m_table[key] = value;
+            set => this.SetIndexValue(key, value);
         }
 
         public LuaValue this[string key] {
             get => this[new LuaString(key)];
             set => this[new LuaString(key)] = value;
+        }
+
+        private void SetIndexValue(LuaValue index, LuaValue value) {
+            if (this.m_table.ContainsKey(index)) {
+                this.m_table[index] = value;
+            } else {
+                this.m_table[index] = value;
+                this.m_rawIndices[this.m_rawIndices.Count] = index;
+            }
         }
 
         /// <summary>
@@ -65,6 +76,21 @@ namespace Battlegrounds.Lua {
         }
 
         /// <summary>
+        /// Retrieve a <see cref="LuaValue"/> by absolute index.
+        /// </summary>
+        /// <typeparam name="T">The expected <see cref="LuaValue"/> type.</typeparam>
+        /// <param name="index">The absolute index to lookup table value by.</param>
+        /// <returns>The value found at specified raw index.</returns>
+        /// <exception cref="KeyNotFoundException"/>
+        public T RawIndex<T>(int index) where T : LuaValue {
+            if (this.m_rawIndices.ContainsKey(index)) {
+                return this.m_table[this.m_rawIndices[index]] as T;
+            } else {
+                throw new KeyNotFoundException();
+            }
+        }
+        
+        /// <summary>
         /// Retrieve an element by <see cref="string"/> key (Implict <see cref="LuaString"/>).
         /// </summary>
         /// <typeparam name="T">Expected <see cref="LuaValue"/> type.</typeparam>
@@ -78,13 +104,13 @@ namespace Battlegrounds.Lua {
         }
 
         /// <summary>
-        /// Do a pairs run on  the table.
+        /// Do a pairs run on the table.
         /// </summary>
         /// <param name="pairs">The delegate to run on each pair iteration.</param>
         public void Pairs(Action<LuaValue, LuaValue> pairsAction) => this.Pairs((k, v) => { pairsAction(k, v); return new LuaNil(); });
 
         /// <summary>
-        /// Do a pairs run on  the table.
+        /// Do a pairs run on the table.
         /// </summary>
         /// <param name="pairs">The delegate to run on each pair iteration.</param>
         /// <returns><see cref="LuaNil"/> if pairs iterator reached the end of the table. Otherwise returned <see cref="LuaValue"/>.</returns>

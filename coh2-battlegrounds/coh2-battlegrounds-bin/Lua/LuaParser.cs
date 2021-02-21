@@ -19,6 +19,8 @@ namespace Battlegrounds.Lua {
             Bool,
             Nil,
             String,
+            Quote,
+            Whitespace,
             Identifier,
             TableOpen,
             TableClose,
@@ -36,7 +38,7 @@ namespace Battlegrounds.Lua {
         private record LuaToken(LuaTokenType Type, string Val);
 
         private static readonly Regex LuaRegex 
-            = new Regex(@"(?<c>--.*\n)|(?<n>\d*\.\d+)|(?<i>\d+)|(?<b>true|false)|(?<nil>nil)|(?<op>=|,|\+|-|\*|/|;|\.)|(?<t>\{|\}|\[|\])|(?<id>\w(\d|\w)*)|(?<str>\"".*\""{1}?)");
+            = new Regex(@"(?<c>--.*\n)|(?<n>\d*\.\d+)|(?<i>\d+)|(?<b>true|false)|(?<nil>nil)|(?<op>=|,|\+|-|\*|/|;|\.)|(?<t>\{|\}|\[|\])|(?<id>(_|\w)(_|\d|\w)*)|(?<s>\"".*?\"")");
 
         public static List<LuaExpr> ParseLuaSource(string sourceText) {
             
@@ -299,6 +301,7 @@ namespace Battlegrounds.Lua {
                         "}" => LuaTokenType.TableClose,
                         _ => throw new Exception()
                     }, match.Value),
+                    "s" => new LuaToken(LuaTokenType.String, match.Value.Trim('\"')),
                     "op" => new LuaToken(match.Value switch {
                         "," => LuaTokenType.Comma,
                         "=" => LuaTokenType.Equals,
@@ -308,6 +311,7 @@ namespace Battlegrounds.Lua {
                         "-" => LuaTokenType.StdOperator,
                         "*" => LuaTokenType.StdOperator,
                         "/" => LuaTokenType.StdOperator,
+                        "\"" => LuaTokenType.Quote,
                         _ => throw new Exception()
                     }, match.Value),
                     "id" => match.Value switch {
@@ -317,15 +321,16 @@ namespace Battlegrounds.Lua {
                         "for" => new LuaToken(LuaTokenType.Keyword, match.Value),
                         "while" => new LuaToken(LuaTokenType.Keyword, match.Value),
                         "do" => new LuaToken(LuaTokenType.Keyword, match.Value),
+                        "function" => new LuaToken(LuaTokenType.Keyword, match.Value),
                         _ => new LuaToken(LuaTokenType.Identifier, match.Value)
                     },
                     "nil" => new LuaToken(LuaTokenType.Nil, match.Value),
-                    "str" => new LuaToken(LuaTokenType.String, match.Value.Trim('\"')),
-                    _ => throw new Exception()
+                    _ => throw new Exception(),
                 });
 
             }
 
+            // Return tokens
             return tokens;
 
         }

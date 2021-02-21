@@ -121,15 +121,15 @@ namespace coh2_battlegrounds_bin_tests {
             Assert.IsTrue(files.Any(x => x.path.EndsWith(".dds") && x.contents.Length > 0));
         }
 
-        [DataTestMethod]
-        [DataRow(DEV_BRANCH)]
-        [DataRow(RELEASE_BRANCH)]
-        public void CanCompileFromLocalSource(string branch) {
-            Assert.IsTrue(WinconditionCompiler.CompileToSga("~tmp\\bld\\", sessionFile, this.gamemode, this.GetBranchSource(branch)));
-            string path = "~tmp\\bld\\ArchiveDefinition.txt";
-            Assert.IsTrue(File.Exists(path));
-            Assert.IsTrue(File.ReadAllText(path).Length > 0);
-        }
+        //[DataTestMethod]
+        //[DataRow(DEV_BRANCH)]
+        //[DataRow(RELEASE_BRANCH)]
+        //public void CanCompileFromLocalSource(string branch) {
+        //    Assert.IsTrue(WinconditionCompiler.CompileToSga("~tmp\\bld\\", sessionFile, this.gamemode, this.GetBranchSource(branch)));
+        //    string path = "~tmp\\bld\\ArchiveDefinition.txt";
+        //    Assert.IsTrue(File.Exists(path));
+        //    Assert.IsTrue(File.ReadAllText(path).Length > 0);
+        //}
 
     }
 
