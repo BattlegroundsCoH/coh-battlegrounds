@@ -33,7 +33,7 @@ namespace Battlegrounds.Campaigns {
 
         public record TurnData(int TurnLength, (int Year, int Month, int Day) Start, (int Year, int Month, int Day) End);
 
-        public record ArmyData(LocaleKey Name, LocaleKey Desc, Faction Army, int MinPlayers, int MaxPlayers, LuaTable FullArrmyData);
+        public record ArmyData(LocaleKey Name, LocaleKey Desc, Faction Army, int MinPlayers, int MaxPlayers, LuaTable FullArmyData);
 
         public LocaleKey Name { get; private set; }
 

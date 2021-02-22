@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -152,7 +153,7 @@ namespace Battlegrounds.Locale {
                 if (!this.m_allText.ContainsKey(k)) {
                     this.m_allText[k] = v;
                 } else {
-                    Trace.WriteLine($"Duplicate locale entry '' (e = \"{this.m_allText[k]}\", n = \"{v}\") (language is '{this.Language}')", "Localize");
+                    Trace.WriteLine($"Duplicate locale entry '{k}' (e = \"{this.m_allText[k]}\", n = \"{v}\") (language is '{this.Language}')", "Localize");
                     dups = true;
                 }
             }
@@ -193,6 +194,9 @@ namespace Battlegrounds.Locale {
         /// <param name="key">The <see cref="LocaleKey"/> to use when locating the string.</param>
         /// <returns>The UTF-16 encoded string sought after if present in system. Otherwise <paramref name="key"/>.LocaleID is returned.</returns>
         public string GetString(LocaleKey key) { 
+            if (string.IsNullOrEmpty(key.LocaleID)) {
+                return string.Empty;
+            }
             if (this.m_allText.ContainsKey(key)) {
                 return this.m_allText[key];
             } else {
@@ -212,6 +216,18 @@ namespace Battlegrounds.Locale {
         /// <param name="key">The raw locale key to use when locating the string.</param>
         /// <returns>The UTF-16 encoded string sought after if present in system. Otherwsie <paramref name="key"/> is returned.</returns>
         public string GetString(string key) => this.GetString(new LocaleKey(key));
+
+        /// <summary>
+        /// Get the UTF-16 encoded string represented by the enum value.
+        /// </summary>
+        /// <typeparam name="T">The enum type to get display value of</typeparam>
+        /// <param name="enumValue">The enum value to find name of.</param>
+        /// <param name="sourceID">The specific locale source to locate.</param>
+        /// <returns>If enum value is defined, the display value is returned. Otherwise the used key is returned.</returns>
+        public string GetEnum<T>(T enumValue, string sourceID = UndefinedSource) where T : Enum {
+            string lookup = $"{typeof(T).Name}_{enumValue}";
+            return this.GetString(new LocaleKey(lookup, sourceID));
+        }
 
     }
 

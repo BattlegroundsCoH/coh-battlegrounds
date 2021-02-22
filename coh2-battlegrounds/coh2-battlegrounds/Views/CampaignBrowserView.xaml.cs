@@ -11,9 +11,14 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using BattlegroundsApp.Dialogs.NewCampaign;
+
+using Battlegrounds.Campaigns;
+using Battlegrounds.Campaigns.Controller;
+
 using BattlegroundsApp.LocalData;
+using BattlegroundsApp.Dialogs.NewCampaign;
 using BattlegroundsApp.Models.Campaigns;
+using BattlegroundsApp.Views.CampaignViews;
 
 namespace BattlegroundsApp.Views {
     
@@ -21,15 +26,35 @@ namespace BattlegroundsApp.Views {
     /// Interaction logic for CampaignView.xaml
     /// </summary>
     public partial class CampaignBrowserView : ViewState {
-        
+
+        private ViewState m_actualState;
+
+        public bool CanContinueCampaign { get; set; }
+
         public MainWindow MainWindow { get; set; }
 
         public CampaignBrowserView() {
+            
             InitializeComponent();
+            
+            this.CanContinueCampaign = false;
+            
+            this.m_actualState = null;
+
         }
 
-        public override void StateOnFocus() { 
-        
+        public override void StateOnFocus() {
+
+            if (this.m_actualState is null) {
+
+                // TODO: Read from BG instance if there's a "latest played" campaign.
+
+            } else {
+
+                this.StateChangeRequest?.Invoke(this.m_actualState);
+
+            }
+
         }
 
         public override void StateOnLostFocus() { 
@@ -56,15 +81,29 @@ namespace BattlegroundsApp.Views {
                 // Hide the left panel
                 this.MainWindow.ShowLeftPanel(false);
 
+                // View for displaying map data
+                CampaignMapView mapView = null;
+
                 if (state == NewCampaignDialogResult.HostCampaign) {
 
 
 
                 } else if (state == NewCampaignDialogResult.NewSingleplayer) {
 
+                    // Create campaign data and controller
+                    var activeCampaign = ActiveCampaign.FromPackage(campaignData.CampaignToLoad, CampaignMode.Singleplayer, campaignData.CampaignDifficulty, campaignData.CampaignHostSide);
+                    var singleController = new SingleplayerCampaign(activeCampaign);
 
+                    // Create view with controller
+                    mapView = new CampaignMapView(singleController);
 
+                } else {
+                    throw new NotImplementedException();
                 }
+
+                // Set actual state and switch to that
+                this.m_actualState = mapView;
+                this.StateChangeRequest?.Invoke(this.m_actualState);
 
             }
 

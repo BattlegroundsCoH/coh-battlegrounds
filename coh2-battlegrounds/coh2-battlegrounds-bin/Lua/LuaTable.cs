@@ -53,6 +53,11 @@ namespace Battlegrounds.Lua {
             set => this[new LuaString(key)] = value;
         }
 
+        public LuaValue this[int key] {
+            get => this[new LuaNumber(key)];
+            set => this[new LuaNumber(key)] = value;
+        }
+
         private void SetIndexValue(LuaValue index, LuaValue value) {
             if (this.m_table.ContainsKey(index)) {
                 this.m_table[index] = value;

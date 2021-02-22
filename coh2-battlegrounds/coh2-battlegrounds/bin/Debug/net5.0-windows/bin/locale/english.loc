@@ -1,2 +1,4 @@
 english:
- 
+ CampaignMode_Singleplayer: "Singleplayer"
+ CampaignMode_Cooperative: "Cooperative"
+ CampaignMode_Competitive: "Competitive"

@@ -1,10 +1,12 @@
-﻿using Battlegrounds.Game;
-using Battlegrounds.Online.Lobby;
-using System;
+﻿using System;
 using System.IO;
 using System.Diagnostics;
 
+using Battlegrounds.Game;
+using Battlegrounds.Online.Lobby;
+
 using BattlegroundsApp.Views;
+using BattlegroundsApp.Controls.Lobby.Chatting;
 
 namespace BattlegroundsApp {
 
@@ -22,12 +24,14 @@ namespace BattlegroundsApp {
 
     public delegate void StartingMatchListener(int time, string guid);
 
-    public class ServerMessageHandler {
+    public class ServerMessageHandler : IChatController {
 
         private ManagedLobby m_lobbyInstance;
         private GameLobbyView m_lobbyWindow;
 
         public ManagedLobby Lobby => this.m_lobbyInstance;
+
+        public string Self => this.Lobby.Self.Name;
 
         public event MetaMessageListener MetaMessageReceived;
 
@@ -42,6 +46,8 @@ namespace BattlegroundsApp {
         public event CompanyRequestListener OnCompanyRequested;
 
         public event StartingMatchListener OnMatchStarting;
+
+        public event ChatMessageReceived OnReceived;
 
         public ServerMessageHandler(GameLobbyView view, ManagedLobby lobby) {
             
@@ -68,7 +74,7 @@ namespace BattlegroundsApp {
                         if (!this.m_lobbyInstance.IsHost) {
                             if (int.TryParse(arg1, out int time)) {
                                 this.OnMatchStarting?.Invoke(time, arg2);
-                                this.m_lobbyWindow.lobbyChat.Text += $"[Lobby] The host has pressed the start game button.\n";
+                                this.OnReceived?.Invoke("[Lobby]", "The host has pressed the start game button.");
                                 this.OnCompanyRequested?.Invoke("HOST"); // Tell member to upload company
                             }
                         }
@@ -107,16 +113,16 @@ namespace BattlegroundsApp {
                 switch (type) {
                     case ManagedLobbyPlayerEventType.Join:
                         this.OnPlayerJoined?.Invoke(from, ulong.Parse(message));
-                        this.m_lobbyWindow.lobbyChat.Text += $"[Lobby] {from} has joined.\n";
+                        this.OnReceived?.Invoke("[Lobby]", $"{from} has joined.");
                         break;
                     case ManagedLobbyPlayerEventType.Leave:
-                        this.m_lobbyWindow.lobbyChat.Text += $"[Lobby] {from} has left.\n";
+                        this.OnReceived?.Invoke("[Lobby]", $"{from} has left.");
                         break;
                     case ManagedLobbyPlayerEventType.Kicked:
-                        this.m_lobbyWindow.lobbyChat.Text += $"[Lobby] {from} has been kicked.\n";
+                        this.OnReceived?.Invoke("[Lobby]", $"{from} has been kicked.");
                         break;
                     case ManagedLobbyPlayerEventType.Message:
-                        this.m_lobbyWindow.lobbyChat.Text += $"{from}: {message}\n";
+                        this.OnReceived?.Invoke($"{from}:", message);
                         break;
                     case ManagedLobbyPlayerEventType.Meta:
                         string metaMessage = $"{from}: {message}";
@@ -168,7 +174,7 @@ namespace BattlegroundsApp {
                     File.WriteAllBytes(sgapath, content);
 
                     // Let the user know we've received the win condition
-                    this.m_lobbyWindow.lobbyChat.Text += "[Lobby] Received wincondition file from host.\n";
+                    this.OnReceived?.Invoke("[Lobby]", "Received wincondition file from host.");
 
                     // Write a log message
                     Trace.WriteLine($"Received and saved .sga to \"{sgapath}\"", "ServerMessageHandler");
@@ -187,11 +193,11 @@ namespace BattlegroundsApp {
             this.m_lobbyWindow.UpdateGUI(() => {
                 switch (type) {
                     case ManagedLobbyLocalEventType.Host:
-                        this.m_lobbyWindow.lobbyChat.Text += "[Lobby] You have been assigned as host.\n";
+                        this.OnReceived?.Invoke("[Lobby]", "You have been assigned as host.");
                         this.m_lobbyWindow.EnableHostMode(true);
                         break;
                     case ManagedLobbyLocalEventType.HostRemove:
-                        this.m_lobbyWindow.lobbyChat.Text += "[Lobby] You have been un-assigned as host.\n";
+                        this.OnReceived?.Invoke("[Lobby]", "You have been un-assigned as host.");
                         this.m_lobbyWindow.EnableHostMode(false);
                         break;
                     case ManagedLobbyLocalEventType.Kicked:
@@ -209,6 +215,8 @@ namespace BattlegroundsApp {
                 this.m_lobbyInstance.Leave(x => onLeft?.Invoke()); // Async... will need a callback for this when done.
             }
         }
+
+        public void SendChatMessage(string message) => this.m_lobbyInstance.SendChatMessage(message);
 
     }
 

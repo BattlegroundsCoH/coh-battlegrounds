@@ -20,14 +20,14 @@ namespace BattlegroundsApp.Models.Campaigns {
         /// <summary>
         /// Get the campaign mode.
         /// </summary>
-        public readonly int CampaignMode { get; }
+        public readonly CampaignMode CampaignMode { get; }
         
         /// <summary>
         /// Get the side of the host to play on.
         /// </summary>
-        public readonly int CampaignHostSide { get; }
+        public readonly string CampaignHostSide { get; }
 
-        public NewCampaignData(CampaignPackage cmp, int diff, int mode, int side) {
+        public NewCampaignData(CampaignPackage cmp, int diff, CampaignMode mode, string side) {
             this.CampaignDifficulty = diff;
             this.CampaignHostSide = side;
             this.CampaignMode = mode;

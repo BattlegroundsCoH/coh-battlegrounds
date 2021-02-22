@@ -77,7 +77,7 @@ namespace BattlegroundsApp.Models {
 
         private void OnSysInfo(Message message) {
             this.m_view.UpdateGUI(() => {
-                this.m_view.lobbyChat.AppendText($"{message.Argument1}\n");
+                this.m_view.LobbyChat.DisplayMessage($"{message.Argument1}\n");
             });
         }
 
@@ -107,7 +107,7 @@ namespace BattlegroundsApp.Models {
 
                     // Inform user the gamemode was NOT validated
                     this.m_view.UpdateGUI(() => {
-                        this.m_view.lobbyChat.AppendText($"[System] Updated company failed validation.\n");
+                        this.m_view.LobbyChat.DisplayMessage($"[System] Updated company failed validation.\n");
                     });
 
                     // Stop here
@@ -120,7 +120,7 @@ namespace BattlegroundsApp.Models {
 
                 // Inform user the gamemode was NOT downloaded
                 this.m_view.UpdateGUI(() => {
-                    this.m_view.lobbyChat.AppendText($"[System] Updated company \"{company.Name}\" with match information.\n");
+                    this.m_view.LobbyChat.DisplayMessage($"[System] Updated company \"{company.Name}\" with match information.\n");
                 });
 
             } else {
@@ -130,7 +130,7 @@ namespace BattlegroundsApp.Models {
 
                 // Inform user the gamemode was NOT downloaded
                 this.m_view.UpdateGUI(() => {
-                    this.m_view.lobbyChat.AppendText($"[System] Updated company failed to download.\n");
+                    this.m_view.LobbyChat.DisplayMessage($"[System] Updated company failed to download.\n");
                 });
 
             }
@@ -150,7 +150,7 @@ namespace BattlegroundsApp.Models {
 
                 // Inform user the gamemode was downloaded
                 this.m_view.UpdateGUI(() => {
-                    this.m_view.lobbyChat.AppendText($"[System] Gamemode was downloaded and installed.\n");
+                    this.m_view.LobbyChat.DisplayMessage($"[System] Gamemode was downloaded and installed.\n");
                 });
 
             } else {
@@ -160,7 +160,7 @@ namespace BattlegroundsApp.Models {
 
                 // Inform user the gamemode was NOT downloaded
                 this.m_view.UpdateGUI(() => {
-                    this.m_view.lobbyChat.AppendText($"[System] Gamemode failed to download - Stopping match.\n");
+                    this.m_view.LobbyChat.DisplayMessage($"[System] Gamemode failed to download - Stopping match.\n");
                 });
 
             }

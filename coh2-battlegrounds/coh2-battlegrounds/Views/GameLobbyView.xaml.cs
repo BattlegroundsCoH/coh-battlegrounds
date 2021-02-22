@@ -7,7 +7,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Input;
 using System.Windows.Media.Imaging;
 
 using Battlegrounds;
@@ -68,28 +67,6 @@ namespace BattlegroundsApp.Views {
 
         }
 
-        private void SendMessage_Click(object sender, RoutedEventArgs e) {
-
-            string messageContent = messageText.Text;
-            string messageSender = BattlegroundsInstance.Steam.User.Name;
-            string message = $"{messageSender}: {messageContent}";
-
-            lobbyChat.Text += $"{message}\n";
-            lobbyChat.ScrollToEnd();
-
-            messageText.Clear();
-
-            // Send message to server (so other players can see)
-            this.m_smh.Lobby.SendChatMessage(messageContent);
-
-        }
-
-        private void OnKeyHandler(object sender, KeyEventArgs e) {
-            if (e.Key == Key.Enter) {
-                this.SendMessage_Click(null, null);
-            }
-        }
-
         private void StartGame_Click(object sender, RoutedEventArgs e) {
 
             if (this.m_playModel is null) {
@@ -140,8 +117,14 @@ namespace BattlegroundsApp.Views {
         }
 
         public void CreateMessageHandler(ManagedLobby result) {
+            
+            // Create server message handler
             this.m_smh = new ServerMessageHandler(this, result);
             this.m_smh.OnCompanyRequested += this.OnCompanyRequested;
+
+            // Hookup chat message handler
+            this.LobbyChat.Chat = this.m_smh;
+
         }
 
         #region Server Message Listeners
@@ -627,9 +610,7 @@ namespace BattlegroundsApp.Views {
                     this.m_smh.Lobby.UploadCompany(company);
                     Trace.WriteLine("Uploading company");
                 } else {
-                    this.UpdateGUI(() => {
-                        this.lobbyChat.Text += "[User Error] You've not selected a company.";
-                    });
+                    this.LobbyChat.DisplayMessage("[User Error] You've not selected a company.\n");
                 }
             }
         }

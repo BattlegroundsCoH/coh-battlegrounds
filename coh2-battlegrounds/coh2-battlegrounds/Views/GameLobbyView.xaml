@@ -4,7 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:BattlegroundsApp.Views"
-             xmlns:bg="clr-namespace:BattlegroundsApp" xmlns:components="clr-namespace:BattlegroundsApp.Controls.Lobby.Components"
+             xmlns:bg="clr-namespace:BattlegroundsApp" xmlns:components="clr-namespace:BattlegroundsApp.Controls.Lobby.Components" xmlns:chatting="clr-namespace:BattlegroundsApp.Controls.Lobby.Chatting"
               mc:Ignorable="d" Background="White"
              d:DesignHeight="700" d:DesignWidth="800">
     <Grid>
@@ -81,22 +81,13 @@
         </Grid>
 
         <!-- Row 5 -->
-        <TextBox x:Name="lobbyChat" Grid.Row="5" Grid.Column="3" Height="80" Width="400" VerticalAlignment="Bottom" 
-                 IsReadOnly="True" VerticalScrollBarVisibility="Visible"/>
+        <chatting:ChatView x:Name="LobbyChat" Grid.Column="1" Grid.Row="5"/>
 
         <!-- Row 6 -->
-        <TextBlock Grid.Row="6" Grid.Column="3" Text="Message:" Width="50" HorizontalAlignment="Left" Margin="0,5,0,0"/>
-
-        <TextBox x:Name="messageText" Grid.Row="6" Grid.Column="3" Width="230" HorizontalAlignment="Left" Margin="50,5,0,0" KeyDown="OnKeyHandler"/>
-
-        <Button Grid.Row="6" Grid.Column="3" Content="Send" Width="95" HorizontalAlignment="Right" Margin="0,2.5,0,0"
-                IsEnabled="{Binding ElementName=messageText, Path=Text.Length, Mode=OneWay}" Click="SendMessage_Click"/>
+        <Button Grid.Row="6" Grid.Column="0" Name="StartGameBttn" Content="Start Game" Margin=" 0,2.5,0,0" Click="StartGame_Click" IsEnabled="{Binding CanStartMatch}"/>
 
         <!-- Row 7 -->
-        <Button Grid.Row="7" Grid.Column="0" Name="StartGameBttn" Content="Start Game" Margin=" 0,2.5,0,0" Click="StartGame_Click" IsEnabled="{Binding CanStartMatch}"/>
-
-        <!-- Row 8 -->
-        <Button Grid.Row="8" Grid.Column="0" Content="Leave Lobby" Margin="0,2.5,0,0" Click="LeaveLobby_Click" IsEnabled="{Binding CanLeave}"/>
+        <Button Grid.Row="7" Grid.Column="0" Content="Leave Lobby" Margin="0,2.5,0,0" Click="LeaveLobby_Click" IsEnabled="{Binding CanLeave}"/>
 
 
     </Grid>

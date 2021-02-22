@@ -21,7 +21,7 @@
             <Label FontSize="18" FontWeight="Bold" Grid.Row="0">Your Campaigns:</Label>
             <ListView Name="SelfCampaignView" MouseDoubleClick="SelfCampaignView_MouseDoubleClick" Grid.Row="1" Margin="0.75"></ListView>
             <StackPanel Margin="0.75" Orientation="Horizontal" Grid.Row="2">
-                <Button Name="ContinueCampaignButton" Margin="2" MinWidth="152" MaxWidth="152" Click="ContinueCampaignButton_Click">Continue Campaign</Button>
+                <Button Name="ContinueCampaignButton" Margin="2" MinWidth="152" MaxWidth="152" Click="ContinueCampaignButton_Click" IsEnabled="{Binding CanContinueCampaign}">Continue Campaign</Button>
                 <Button Name="LoadCampaignButton" Margin="2" MinWidth="152" MaxWidth="152" Click="LoadCampaignButton_Click">Load Campaign</Button>
                 <Button Name="NewCampaignButton" Margin="2" MinWidth="152" MaxWidth="152" Click="NewCampaignButton_Click">New Campaign</Button>
             </StackPanel>

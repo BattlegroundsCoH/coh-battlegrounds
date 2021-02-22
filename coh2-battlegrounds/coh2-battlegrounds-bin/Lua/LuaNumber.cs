@@ -16,7 +16,7 @@ namespace Battlegrounds.Lua {
 
         public LuaNumber(double value) {
             this.m_number = value;
-            this.m_treatAsInteger = false;
+            this.m_treatAsInteger = IsInteger();
         }
 
         public LuaNumber(int value) {

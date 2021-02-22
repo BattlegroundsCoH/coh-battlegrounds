@@ -149,7 +149,7 @@ namespace BattlegroundsApp.Models {
                 if (reason is IPlayStrategy playStrategy) {
 
                     // Append to lobby chat
-                    this.m_view.lobbyChat.AppendText($"[System] A fatal error was detected while playing.\n");
+                    this.m_view.LobbyChat.DisplayMessage($"[System] A fatal error was detected while playing.\n");
 
                     // Trigger system message
                     this.m_lobby.TriggerSystemMessage("A fatal error was detected while playing.");
@@ -157,7 +157,7 @@ namespace BattlegroundsApp.Models {
                 } else if (reason is IMatchData matchEvents) {
 
                     // Append to lobby chat
-                    this.m_view.lobbyChat.AppendText($"[System] {message} \n");
+                    this.m_view.LobbyChat.DisplayMessage($"[System] {message} \n");
 
                     // Trigger system message
                     this.m_lobby.TriggerSystemMessage(message);
@@ -175,7 +175,7 @@ namespace BattlegroundsApp.Models {
             this.m_view.UpdateGUI(() => {
 
                 // Append to lobby chat
-                this.m_view.lobbyChat.AppendText($"[System] Match has completed and been logged.\n");
+                this.m_view.LobbyChat.DisplayMessage($"[System] Match has completed and been logged.\n");
 
                 // Invoke the handler for "cancelling"
                 this.m_cancelHandler.Invoke();
@@ -218,7 +218,7 @@ namespace BattlegroundsApp.Models {
                 this.m_lobby.TriggerSystemMessage(message);
             } else {
                 this.m_view.UpdateGUI(() => {
-                    this.m_view.lobbyChat.AppendText($"[System] {message}{Environment.NewLine}");
+                    this.m_view.LobbyChat.DisplayMessage($"[System] {message}{Environment.NewLine}");
                 });
             }
         }
