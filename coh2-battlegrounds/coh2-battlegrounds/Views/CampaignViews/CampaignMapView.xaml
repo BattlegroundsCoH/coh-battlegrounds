@@ -6,14 +6,14 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:BattlegroundsApp.Views.CampaignViews" xmlns:chatting="clr-namespace:BattlegroundsApp.Controls.Lobby.Chatting"
                              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
+             d:DesignHeight="600" d:DesignWidth="1000">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition MaxWidth="290" MinWidth="290"/>
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition MaxHeight="70" MinHeight="70"/>
+            <RowDefinition MaxHeight="76" MinHeight="76"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
 
@@ -25,23 +25,42 @@
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
 
-            <Button Grid.Column="0">
+            <Button Grid.Column="0" Name="LeaveAndSaveButton" Click="LeaveAndSaveButton_Click">
                 Leave Campaign
             </Button>
 
             <Grid Grid.Column="1">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition/>
-                    <ColumnDefinition/>
+                    <ColumnDefinition Width="0.7*"/>
+                    <ColumnDefinition Width="0.3*"/>
                 </Grid.ColumnDefinitions>
 
-                <StackPanel>
-                    
+                <DockPanel>
+                    <Label DockPanel.Dock="Top">Available Armies</Label>
+                    <StackPanel Orientation="Horizontal">
+                        <Image Name="DeployableDivisionIcon1" Width="48" Height="48"></Image>
+                        <Image Name="DeployableDivisionIcon2" Width="48" Height="48"></Image>
+                        <Image Name="DeployableDivisionIcon3" Width="48" Height="48"></Image>
+                        <Image Name="DeployableDivisionIcon4" Width="48" Height="48"></Image>
+                        <Image Name="DeployableDivisionIcon5" Width="48" Height="48"></Image>
+                        <Image Name="DeployableDivisionIcon6" Width="48" Height="48"></Image>
+                        <Image Name="DeployableDivisionIcon7" Width="48" Height="48"></Image>
+                        <Image Name="DeployableDivisionIcon8" Width="48" Height="48"></Image>
+                        <Image Name="DeployableDivisionIcon9" Width="48" Height="48"></Image>
+                        <Image Name="DeployableDivisionIcon10" Width="48" Height="48"></Image>
+                    </StackPanel>
+                </DockPanel>
+
+                <StackPanel Grid.Column="1"
+                        Margin="5">
+                    <Label HorizontalContentAlignment="Center"
+                           Content="{Binding CampaignDate}"
+                           />
+                    <Button  MaxHeight="30" MaxWidth="90"
+                        Name="EndTurnBttn" Click="EndTurnBttn_Click">
+                        End Turn
+                    </Button>
                 </StackPanel>
-                
-                <Button Grid.Column="1">
-                    End Turn
-                </Button>
                 
             </Grid>
 
@@ -56,8 +75,31 @@
             </Grid.RowDefinitions>
             
             <!-- Campaign View -->
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                
+                <!-- Row 1-->
+                
+                <Image Grid.Column="0" Width="32" Height="32"/>
+                <Label Grid.Column="1">0 Points</Label>
+                <Label Grid.Column="2">vs</Label>
+                <Label Grid.Column="3">0 Points</Label>
+                <Image Grid.Column="4" Width="32" Height="32"/>
+
+            </Grid>
             
-            <!-- Company View -->
+            <!-- Selection View -->
+            
             
             <!-- Chat View -->
             <chatting:ChatView x:Name="CampaignChat" Grid.Row="2"/>

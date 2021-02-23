@@ -90,8 +90,13 @@ namespace BattlegroundsApp.Views {
 
                 } else if (state == NewCampaignDialogResult.NewSingleplayer) {
 
+                    // Create start args
+                    ActiveCampaignStartData startData = new ActiveCampaignStartData() {
+                        PlayAs = campaignData.CampaignHostSide
+                    };
+
                     // Create campaign data and controller
-                    var activeCampaign = ActiveCampaign.FromPackage(campaignData.CampaignToLoad, CampaignMode.Singleplayer, campaignData.CampaignDifficulty, campaignData.CampaignHostSide);
+                    var activeCampaign = ActiveCampaign.FromPackage(campaignData.CampaignToLoad, CampaignMode.Singleplayer, campaignData.CampaignDifficulty, startData);
                     var singleController = new SingleplayerCampaign(activeCampaign);
 
                     // Create view with controller

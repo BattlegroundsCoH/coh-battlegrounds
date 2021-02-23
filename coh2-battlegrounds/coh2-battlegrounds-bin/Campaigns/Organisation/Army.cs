@@ -8,11 +8,6 @@ using Battlegrounds.Json;
 
 namespace Battlegrounds.Campaigns.Organisation {
     
-    public enum CampaignArmyTeam {
-        TEAM_ALLIES,
-        TEAM_AXIS,
-    }
-
     public class Army : IJsonObject {
 
         public string Name { get; init; }

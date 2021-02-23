@@ -1,17 +1,18 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
+
 using Battlegrounds.Campaigns.Organisation;
-using Battlegrounds.Functional;
 using Battlegrounds.Game.Gameplay;
 using Battlegrounds.Json;
 using Battlegrounds.Locale;
 
 namespace Battlegrounds.Campaigns {
-    
+
+    public enum CampaignArmyTeam {
+        TEAM_NEUTRAL,
+        TEAM_ALLIES,
+        TEAM_AXIS,
+    }
+
     public class ActiveCampaign : IJsonObject {
 
         public class Player { }
@@ -21,6 +22,10 @@ namespace Battlegrounds.Campaigns {
         public Army[] Armies { get; init; }
 
         public Localize Locale { get; init; }
+
+        public ActiveCampaignTurnData Turn { get; private set; }
+
+        public int DifficultyLevel { get; init; }
 
         private ActiveCampaign() { 
         }
@@ -42,13 +47,14 @@ namespace Battlegrounds.Campaigns {
 
         public string ToJsonReference() => throw new NotSupportedException();
 
-        public static ActiveCampaign FromPackage(CampaignPackage package, CampaignMode mode, int difficulty, string playas, object createArgs = null) {
+        public static ActiveCampaign FromPackage(CampaignPackage package, CampaignMode mode, int difficulty, ActiveCampaignStartData createArgs) {
 
             // Create initial campaign data
             ActiveCampaign campaign = new ActiveCampaign {
                 PlayMap = new CampaignMap(package.MapData),
                 Armies = new Army[package.CampaignArmies.Length],
-                Locale = package.LocaleManager
+                Locale = package.LocaleManager,
+                DifficultyLevel = difficulty,
             };
 
             // Create campaign nodes
@@ -59,14 +65,30 @@ namespace Battlegrounds.Campaigns {
                 campaign.CreateArmy(i, package.CampaignArmies[i]);
             }
 
+            // Define start team
+            CampaignArmyTeam startTeam = Faction.IsAlliedFaction(package.NormalStartingSide) ? CampaignArmyTeam.TEAM_ALLIES : CampaignArmyTeam.TEAM_AXIS;
+
             // Create mode-specific data
             if (mode == CampaignMode.Singleplayer) {
 
-
+                // Determine starting team
+                if (createArgs.PlayAs != package.NormalStartingSide) {
+                    if (startTeam == CampaignArmyTeam.TEAM_AXIS) {
+                        startTeam = CampaignArmyTeam.TEAM_ALLIES;
+                    } else {
+                        startTeam = CampaignArmyTeam.TEAM_AXIS;
+                    }
+                }
 
             } else {
                 // TODO: Stuff
             }
+
+            // Create turn data
+            campaign.Turn = new ActiveCampaignTurnData(startTeam, new[] {
+                package.CampaignTurnData.Start,
+                package.CampaignTurnData.End
+            }, package.CampaignTurnData.TurnLength);
 
             return campaign;
 

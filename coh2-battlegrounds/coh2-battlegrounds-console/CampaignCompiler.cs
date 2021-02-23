@@ -7,6 +7,7 @@ using System.Text;
 using Battlegrounds.Campaigns;
 using Battlegrounds.Functional;
 using Battlegrounds.Game.Gameplay;
+using Battlegrounds.Gfx;
 using Battlegrounds.Locale;
 using Battlegrounds.Lua;
 using Battlegrounds.Util;
@@ -20,7 +21,9 @@ namespace coh2_battlegrounds_console {
         enum ResourceType : byte {
             MapImage = 0x1,
             Locale = 0x2,
-            Script = 0x3,
+            CampaignScript = 0x3, // lstate is stored
+            MissionScript = 0x4, // Raw script file
+            GfxAtlas = 0x5,
         }
 
         private struct CampaignResource {
@@ -57,7 +60,7 @@ namespace coh2_battlegrounds_console {
             LuaState settingsState = new LuaState();
             settingsState._G["MAP"] = LuaValue.ToLuaValue(ResourceType.MapImage);
             settingsState._G["LOCALE"] = LuaValue.ToLuaValue(ResourceType.Locale);
-            settingsState._G["SCRIPT"] = LuaValue.ToLuaValue(ResourceType.Script);
+            settingsState._G["SCRIPT"] = LuaValue.ToLuaValue(ResourceType.CampaignScript);
             settingsState._G["BINARY"] = LuaValue.ToLuaValue("binary");
             settingsState._G["UNARY"] = LuaValue.ToLuaValue("unary");
             settingsState._G["TEAM_AXIS"] = LuaValue.ToLuaValue("axis");
@@ -287,6 +290,34 @@ namespace coh2_battlegrounds_console {
                     };
 
                     return true;
+
+                } else if (rt == ResourceType.CampaignScript) {
+
+
+
+                } else if (rt == ResourceType.MissionScript) {
+
+
+
+                } else if (rt == ResourceType.GfxAtlas) {
+
+                    LuaState gfxState = new LuaState();
+                    if (gfxState.DoFile(Path.Combine(relativePath, file)) is LuaTable gfxTable) {
+                        
+                        // Load atlas
+                        GfxAtlas atlas = GfxAtlas.FromLua(gfxTable, Path.Combine(relativePath, file, name));
+
+                        // Create resource
+                        resource = new CampaignResource() {
+                            Rt = ResourceType.GfxAtlas,
+                            Identifier = name,
+                            Content = atlas.AsBinary()
+                        };
+
+                        // Return true
+                        return true;
+
+                    }
 
                 }
             }

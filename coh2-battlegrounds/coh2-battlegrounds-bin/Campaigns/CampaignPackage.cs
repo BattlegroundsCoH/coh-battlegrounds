@@ -151,6 +151,11 @@ namespace Battlegrounds.Campaigns {
                     case 0x3:
 
                         break;
+                    case 0x4:
+                        break;
+                    case 0x5:
+
+                        break;
                     default:
                         break;
                 }

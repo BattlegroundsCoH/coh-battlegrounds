@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -23,7 +24,7 @@ namespace BattlegroundsApp.Views.CampaignViews {
     /// <summary>
     /// Interaction logic for CampaignMapView.xaml
     /// </summary>
-    public partial class CampaignMapView : ViewState {
+    public partial class CampaignMapView : ViewState, INotifyPropertyChanged {
         
         public ICampaignController Controller { get; }
 
@@ -32,6 +33,10 @@ namespace BattlegroundsApp.Views.CampaignViews {
         public double CampaignMapWidth => this.CampaignMapImage.Width;
 
         public double CampaignMapHeight => this.CampaignMapImage.Height;
+
+        public string CampaignDate => this.Controller.Campaign.Turn.Date;
+
+        public event PropertyChangedEventHandler PropertyChanged;
 
         public CampaignMapView(ICampaignController controller) {
 
@@ -45,9 +50,12 @@ namespace BattlegroundsApp.Views.CampaignViews {
             this.CampaignMapImage = PngImageSource.FromMemory(controller.Campaign.PlayMap.RawImageData);
             this.CreateNodeNetwork();
 
+            // Hide chat control if singleplayer
             if (controller.IsSingleplayer) {
                 this.CampaignChat.Visibility = Visibility.Collapsed;
                 // TODO: Expand selection view
+            } else {
+
             }
 
         }
@@ -65,7 +73,7 @@ namespace BattlegroundsApp.Views.CampaignViews {
                 Ellipse node = new Ellipse {
                     Width = 32,
                     Height = 32,
-                    Fill = Brushes.Orange,
+                    Fill = n.Owner == CampaignArmyTeam.TEAM_ALLIES ? Brushes.Red : (n.Owner == CampaignArmyTeam.TEAM_AXIS ? Brushes.Green : Brushes.Gray),
                     Tag = n,
                 };
 
@@ -117,6 +125,17 @@ namespace BattlegroundsApp.Views.CampaignViews {
             element.SetValue(Canvas.LeftProperty, x);
             element.SetValue(Canvas.TopProperty, y);
             element.SetValue(Panel.ZIndexProperty, 100);
+        }
+
+        private void EndTurnBttn_Click(object sender, RoutedEventArgs e) {
+            if (!this.Controller.EndTurn()) {
+                this.Controller.EndCampaign();
+            }
+            this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(this.CampaignDate)));
+        }
+
+        private void LeaveAndSaveButton_Click(object sender, RoutedEventArgs e) {
+
         }
 
     }

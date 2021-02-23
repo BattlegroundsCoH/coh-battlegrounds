@@ -86,6 +86,14 @@ namespace Battlegrounds.Game.Gameplay {
         public static Faction British => dlc_ukf;
 
         /// <summary>
+        /// Get if some faction is an allied faction.
+        /// </summary>
+        /// <param name="factionName">The name of the faction to check.</param>
+        /// <returns>Will return <see langword="true"/> if <paramref name="factionName"/> is not "german" and not "west_german". Otherwise <see langword="false"/.></returns>
+        public static bool IsAlliedFaction(string factionName)
+            => factionName != "german" && factionName != "west_german";
+
+        /// <summary>
         /// Get a <see cref="Faction"/> by its <see cref="string"/> name identifier.
         /// </summary>
         /// <param name="name">The <see cref="string"/> faction name to find.</param>

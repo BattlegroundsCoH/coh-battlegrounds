@@ -13,7 +13,7 @@
         max_players = 8,
         start_date = { year = 1942, month = 8, day = 23 },
         end_date = { year = 1943, month = 2, day = 2 },
-        turn_time = { months = 0.5 },
+        turn_time = { months = 0.25 },
     },
     armies = {
         ["soviet"] = {

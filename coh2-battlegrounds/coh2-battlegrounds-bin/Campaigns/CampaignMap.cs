@@ -35,8 +35,18 @@ namespace Battlegrounds.Campaigns {
             var nodes = this.MapDef["nodes"] as LuaTable;
             nodes.Pairs((k, v) => {
                 LuaTable vt = v as LuaTable;
-                var node = new CampaignMapNode(k.Str(), vt["u"] as LuaNumber, vt["v"] as LuaNumber);
-
+                var node = new CampaignMapNode(k.Str(), vt["u"] as LuaNumber, vt["v"] as LuaNumber) {
+                    Attrition = vt["attrition"] as LuaNumber,
+                    IsLeaf = (vt["leaf"] as LuaBool)?.IsTrue ?? false,
+                    OccupantCapacity = (int)(vt["capacity"] as LuaNumber),
+                    Value = vt["attrition"] as LuaNumber,
+                };
+                if (vt["owner"] is LuaString ls) {
+                    node.Owner = ls.Str().ToUpper() == "ALLIES" ? CampaignArmyTeam.TEAM_ALLIES : CampaignArmyTeam.TEAM_AXIS;
+                } else {
+                    node.Owner = CampaignArmyTeam.TEAM_NEUTRAL;
+                }
+                node.SetMapData(vt["map"]);
                 this.m_nodes.Add(node);
             });
 

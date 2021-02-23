@@ -16,8 +16,14 @@ namespace Battlegrounds.Campaigns.Controller {
             this.Campaign = campaign;
         }
 
-        public void Save() { 
-        
+        public void Save() {
+
+        }
+
+        public bool EndTurn() => this.Campaign.Turn.EndTurn();
+
+        public void EndCampaign() {
+
         }
 
     }

@@ -112,13 +112,33 @@
         },
         ["soviet_entrance"] = {
             u = 510.0 / 1110.0,
-            v = 0.0 / 792.0,
+            v = 0.0,
+            leaf = true, -- Is endpoint
+            owner = TEAM_ALLIES, -- Node owner
+            value = 1, -- Victory Point value
+            capacity = 8, -- Max companies per side
+            attrition = 0.1, -- The amount of attrition a company suffers
+            map = "" -- The map to play when fighting a battle
+        },
+        ["timberyard"] = {
+            u = 1004.0 / 1110.0,
+            v = 724.0 / 792.0,
+            leaf = false, -- Is endpoint
+            owner = TEAM_ALLIES, -- Node owner
+            value = 1, -- Victory Point value
+            capacity = 1, -- Max companies per side
+            attrition = 0.1, -- The amount of attrition a company suffers
+            map = "timberyard" -- The map to play when fighting a battle
+        },
+        ["south_soviet_entrance"] = {
+            u = 1.0,
+            v = 750.0 / 792.0,
             leaf = true, -- Is endpoint
             owner = TEAM_ALLIES, -- Node owner
             value = 1, -- Victory Point value
             capacity = 1, -- Max companies per side
             attrition = 0.1, -- The amount of attrition a company suffers
-            map = "" -- The map to play when fighting a battle
+            map = "divide map" -- The map to play when fighting a battle
         }
     },
     transitions = {
@@ -128,11 +148,15 @@
         { "pavlovs_house", "fallen_soldiers", "binary" },
         { "southern_advances", "southern_suburbs", "binary" },
         { "southern_suburbs", "central_train_station", "binary" },
-        { "soviet_entrance", "volga_crossing", "unary" },
+        { "soviet_entrance", "volga_crossing", "unary" }, -- soviet_entrance has no map - soviets will always be able to move in from this node
         { "volga_crossing", "landing_soviet", "binary" },
         { "central_approach", "central_train_station", "binary" },
         { "landing_soviet", "red_october_plant", "binary" },
         { "red_october_plant", "barricades_plant", "binary" },
         { "barricades_plant", "tractor_plant", "binary" },
+        { "south_soviet_entrance", "timberyard", "binary" },
+        { "timberyard", "southern_suburbs", "binary" },
+        { "timberyard", "fallen_soldiers", "binary" },
+        { "timberyard", "central_train_station", "binary" },
     }
 }

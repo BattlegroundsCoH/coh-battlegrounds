@@ -229,6 +229,24 @@ namespace Battlegrounds.Locale {
             return this.GetString(new LocaleKey(lookup, sourceID));
         }
 
+        /// <summary>
+        /// Get the numeric suffix to a number (st, nd, rd, th).
+        /// </summary>
+        /// <param name="n">The number to get the suffix for.</param>
+        /// <returns>A string with the number and its proper suffix.</returns>
+        public string GetNumberSuffix(int n) {
+            string s = n.ToString();
+            if (s[^1] == '1') {
+                return $"{n}{this.GetString("ST")}";
+            } else if (s[^1] == '2') {
+                return $"{n}{this.GetString("ND")}";
+            } else if (s[^1] == '3') {
+                return $"{n}{this.GetString("RD")}";
+            } else {
+                return $"{n}{this.GetString("TH")}";
+            }
+        }
+
     }
 
 }
