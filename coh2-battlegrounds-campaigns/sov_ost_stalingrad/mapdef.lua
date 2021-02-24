@@ -4,7 +4,7 @@
             u = 428.0 / 1110.0,
             v = 290.0 / 792.0,
             leaf = false, -- Is endpoint
-            owner = TEAM_AXIS, -- Node owner
+            owner = TEAM_ALLIES, -- Node owner
             value = 1, -- Victory Point value
             capacity = 1, -- Max companies per side
             attrition = 0.1, -- The amount of attrition a company suffers
@@ -14,7 +14,7 @@
             u = 600.0 / 1110.0,
             v = 450.0 / 792.0,
             leaf = false, -- Is endpoint
-            owner = TEAM_AXIS, -- Node owner
+            owner = TEAM_ALLIES, -- Node owner
             value = 1, -- Victory Point value
             capacity = 1, -- Max companies per side
             attrition = 0.1, -- The amount of attrition a company suffers
@@ -24,7 +24,7 @@
             u = 640.0 / 1110.0,
             v = 450.0 / 792.0,
             leaf = false, -- Is endpoint
-            owner = TEAM_AXIS, -- Node owner
+            owner = TEAM_ALLIES, -- Node owner
             value = 1, -- Victory Point value
             capacity = 1, -- Max companies per side
             attrition = 0.1, -- The amount of attrition a company suffers
@@ -34,7 +34,7 @@
             u = 700.0 / 1110.0,
             v = 733.0 / 792.0,
             leaf = false, -- Is endpoint
-            owner = TEAM_AXIS, -- Node owner
+            owner = TEAM_ALLIES, -- Node owner
             value = 1, -- Victory Point value
             capacity = 1, -- Max companies per side
             attrition = 0.1, -- The amount of attrition a company suffers
@@ -44,7 +44,7 @@
             u = 694.0 / 1110.0,
             v = 610.0 / 792.0,
             leaf = false, -- Is endpoint
-            owner = TEAM_AXIS, -- Node owner
+            owner = TEAM_ALLIES, -- Node owner
             value = 1, -- Victory Point value
             capacity = 1, -- Max companies per side
             attrition = 0.1, -- The amount of attrition a company suffers
@@ -54,7 +54,7 @@
             u = 520.0 / 1110.0,
             v = 520.0 / 792.0,
             leaf = false, -- Is endpoint
-            owner = TEAM_AXIS, -- Node owner
+            owner = TEAM_ALLIES, -- Node owner
             value = 1, -- Victory Point value
             capacity = 1, -- Max companies per side
             attrition = 0.1, -- The amount of attrition a company suffers
@@ -64,7 +64,7 @@
             u = 374.0 / 1110.0,
             v = 292.0 / 792.0,
             leaf = false, -- Is endpoint
-            owner = TEAM_AXIS, -- Node owner
+            owner = TEAM_ALLIES, -- Node owner
             value = 1, -- Victory Point value
             capacity = 1, -- Max companies per side
             attrition = 0.1, -- The amount of attrition a company suffers
@@ -74,7 +74,7 @@
             u = 150.0 / 1110.0,
             v = 95.0 / 792.0,
             leaf = false, -- Is endpoint
-            owner = TEAM_AXIS, -- Node owner
+            owner = TEAM_ALLIES, -- Node owner
             value = 1, -- Victory Point value
             capacity = 1, -- Max companies per side
             attrition = 0.1, -- The amount of attrition a company suffers
@@ -84,7 +84,7 @@
             u = 300.0 / 1110.0,
             v = 210.0 / 792.0,
             leaf = false, -- Is endpoint
-            owner = TEAM_AXIS, -- Node owner
+            owner = TEAM_ALLIES, -- Node owner
             value = 1, -- Victory Point value
             capacity = 1, -- Max companies per side
             attrition = 0.1, -- The amount of attrition a company suffers
@@ -94,7 +94,7 @@
             u = 594.0 / 1110.0,
             v = 400.0 / 792.0,
             leaf = false, -- Is endpoint
-            owner = TEAM_AXIS, -- Node owner
+            owner = TEAM_ALLIES, -- Node owner
             value = 1, -- Victory Point value
             capacity = 1, -- Max companies per side
             attrition = 0.1, -- The amount of attrition a company suffers
@@ -104,7 +104,7 @@
             u = 485.0 / 1110.0,
             v = 210.0 / 792.0,
             leaf = false, -- Is endpoint
-            owner = TEAM_AXIS, -- Node owner
+            owner = TEAM_ALLIES, -- Node owner
             value = 1, -- Victory Point value
             capacity = 1, -- Max companies per side
             attrition = 0.1, -- The amount of attrition a company suffers
@@ -130,9 +130,59 @@
             attrition = 0.1, -- The amount of attrition a company suffers
             map = "timberyard" -- The map to play when fighting a battle
         },
-        ["south_soviet_entrance"] = {
+        ["south_german_entrance"] = {
             u = 1.0,
             v = 750.0 / 792.0,
+            leaf = true, -- Is endpoint
+            owner = TEAM_AXIS, -- Node owner
+            value = 1, -- Victory Point value
+            capacity = 1, -- Max companies per side
+            attrition = 0.1, -- The amount of attrition a company suffers
+            map = "divide map" -- The map to play when fighting a battle
+        },
+        ["south_west_german_entrance"] = {
+            u = 688.0 / 1110.0,
+            v = 1.0,
+            leaf = true, -- Is endpoint
+            owner = TEAM_AXIS, -- Node owner
+            value = 1, -- Victory Point value
+            capacity = 1, -- Max companies per side
+            attrition = 0.1, -- The amount of attrition a company suffers
+            map = "divide map" -- The map to play when fighting a battle
+        },
+        ["central_west_german_entrance"] = {
+            u = 410.0 / 1110.0,
+            v = 1.0,
+            leaf = true, -- Is endpoint
+            owner = TEAM_AXIS, -- Node owner
+            value = 1, -- Victory Point value
+            capacity = 1, -- Max companies per side
+            attrition = 0.1, -- The amount of attrition a company suffers
+            map = "divide map" -- The map to play when fighting a battle
+        },
+        ["northern_german_entrance"] = {
+            u = 0.0,
+            v = 433.0 / 792.0,
+            leaf = true, -- Is endpoint
+            owner = TEAM_AXIS, -- Node owner
+            value = 1, -- Victory Point value
+            capacity = 1, -- Max companies per side
+            attrition = 0.1, -- The amount of attrition a company suffers
+            map = "divide map" -- The map to play when fighting a battle
+        },
+        ["workers_settlement"] = {
+            u = 121.0 / 1110.0,
+            v = 172.0 / 792.0,
+            leaf = true, -- Is endpoint
+            owner = TEAM_ALLIES, -- Node owner
+            value = 1, -- Victory Point value
+            capacity = 1, -- Max companies per side
+            attrition = 0.1, -- The amount of attrition a company suffers
+            map = "divide map" -- The map to play when fighting a battle
+        },
+        ["rail_exit"] = {
+            u = 215.0 / 1110.0,
+            v = 524.0 / 792.0,
             leaf = true, -- Is endpoint
             owner = TEAM_ALLIES, -- Node owner
             value = 1, -- Victory Point value
@@ -140,6 +190,7 @@
             attrition = 0.1, -- The amount of attrition a company suffers
             map = "divide map" -- The map to play when fighting a battle
         }
+        -- TODO: Mamaev Kurgan (The mountain in the middle - sorta splitting the city in two)
     },
     transitions = {
         { "central_train_station", "fallen_soldiers", "binary" }, -- Binary = a <-> b | Unary = a -> b
@@ -154,9 +205,17 @@
         { "landing_soviet", "red_october_plant", "binary" },
         { "red_october_plant", "barricades_plant", "binary" },
         { "barricades_plant", "tractor_plant", "binary" },
-        { "south_soviet_entrance", "timberyard", "binary" },
+        { "south_german_entrance", "timberyard", "binary" },
         { "timberyard", "southern_suburbs", "binary" },
         { "timberyard", "fallen_soldiers", "binary" },
         { "timberyard", "central_train_station", "binary" },
+        { "south_west_german_entrance", "southern_advances", "unary" },
+        { "central_west_german_entrance", "central_approach", "unary" },
+        { "central_west_german_entrance", "rail_exit", "unary" },
+        { "northern_german_entrance", "workers_settlement", "unary" },
+        { "northern_german_entrance", "rail_exit", "unary" },
+        { "workers_settlement", "tractor_plant", "binary" },
+        { "rail_exit", "red_october_plant", "binary" },
+        { "rail_exit", "central_approach", "binary" },
     }
 }

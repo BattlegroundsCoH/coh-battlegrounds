@@ -11,7 +11,7 @@
         },
         start = "german",
         max_players = 8,
-        start_date = { year = 1942, month = 8, day = 23 },
+        start_date = { year = 1942, month = 9, day = 13 },
         end_date = { year = 1943, month = 2, day = 2 },
         turn_time = { months = 0.25 },
     },

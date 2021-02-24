@@ -104,7 +104,8 @@
                     ["sapper"] = {
                         "sov_35thgrds_s3",
                     },
-                }
+                },
+                deploy = "timberyard"
             },
             ["sov_87th"] = {
                 tmpl = "rifle",
@@ -118,6 +119,46 @@
                         "sov_87th_s1",
                     },
                 }
+            },
+            ["sov_133rd"] = {
+                tmpl = "rifle",
+                regiments = {
+                    ["rifle"] = {
+                        "sov_sov_133rd_r1",
+                        "sov_sov_133rd_r2",
+                        "sov_sov_133rd_r3",
+                    },
+                    ["artillery"] = {
+                        "sov_sov_133rd_s1",
+                    },
+                },
+                deploy = "southern_advances"
+            },
+            ["sov_244th"] = {
+                tmpl = "rifle",
+                regiments = {
+                    ["rifle"] = {
+                        "sov_sov_133rd_r1",
+                        "sov_sov_133rd_r2",
+                        "sov_sov_133rd_r3",
+                    },
+                    ["artillery"] = {
+                        "sov_sov_133rd_s1",
+                    },
+                },
+                deploy = { -- If table, the regiments are split 1/n'th to fit the deployments
+                    "central_approach",
+                    "central_train_station"
+                },
+            },
+            ["sov_271st_nkvd"] = {
+                tmpl = "nkvd",
+                regiments = {
+                    ["rifle"] = {
+                        "sov_sov_133rd_r1"
+                    },
+                },
+                deploy = "southern_advances"
             },
             ["sov_23rd_tcorps"] = {
                 tmpl = "tank",
