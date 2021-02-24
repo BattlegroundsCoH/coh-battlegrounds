@@ -412,6 +412,20 @@ namespace Battlegrounds.Game.DataCompany {
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="squadIndex"></param>
+        /// <param name="squad"></param>
+        public void ReplaceSquad(ushort squadIndex, Squad squad) {
+            int arrIndex = this.m_squads.FindIndex(x => x.SquadID == squadIndex);
+            if (arrIndex != -1) {
+                this.m_squads[arrIndex] = squad;
+            } else {
+                throw new InvalidOperationException();
+            }
+        }
+
     }
 
 }

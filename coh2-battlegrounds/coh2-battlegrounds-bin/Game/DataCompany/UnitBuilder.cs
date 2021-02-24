@@ -14,7 +14,7 @@ namespace Battlegrounds.Game.DataCompany {
     /// </summary>
     public class UnitBuilder {
 
-        ushort m_overrideIndex = 0;
+        ushort m_overrideIndex = ushort.MaxValue;
         bool m_hasOverrideIndex = false;
 
         byte m_vetrank;
@@ -28,6 +28,7 @@ namespace Battlegrounds.Game.DataCompany {
         HashSet<SlotItemBlueprint> m_slotitems;
         HashSet<Modifier> m_modifiers;
         UnitBuilder m_crewBuilder;
+        CompanyBuilder m_builder;
 
         /// <summary>
         /// New basic <see cref="UnitBuilder"/> instance of for building a <see cref="Squad"/>.
@@ -48,8 +49,10 @@ namespace Battlegrounds.Game.DataCompany {
         /// New <see cref="UnitBuilder"/> instance based on the settings of an already built <see cref="Squad"/> instance.
         /// </summary>
         /// <param name="squad">The <see cref="Squad"/> instance to copy the unit data from.</param>
+        /// <param name="overrideIndex">Should the built squad </param>
         /// <remarks>This will not modify the <see cref="Squad"/> instance.</remarks>
         public UnitBuilder(Squad squad, bool overrideIndex = true) {
+            
             this.m_hasOverrideIndex = overrideIndex;
             this.m_overrideIndex = squad.SquadID;
             this.m_modifiers = squad.Modifiers.ToHashSet();
@@ -62,8 +65,35 @@ namespace Battlegrounds.Game.DataCompany {
             this.m_deploymentPhase = squad.DeploymentPhase;
             this.m_deploymentMethod = squad.DeploymentMethod;
             this.m_modGuid = string.Empty;
+            
             if (squad.Crew != null) {
                 this.m_crewBuilder = new UnitBuilder(squad.Crew, overrideIndex);
+            }
+
+        }
+        
+        /// <summary>
+        /// New <see cref="UnitBuilder"/> instance based on the settings of an already built <see cref="Squad"/> instance.
+        /// </summary>
+        /// <param name="squad">The <see cref="Squad"/> instance to copy the unit data from.</param>
+        /// <param name="builder"></param>
+        /// <remarks>This will not modify the <see cref="Squad"/> instance.</remarks>
+        public UnitBuilder(Squad squad, CompanyBuilder builder) {
+            this.m_hasOverrideIndex = true;
+            this.m_builder = builder;
+            this.m_overrideIndex = squad.SquadID;
+            this.m_modifiers = squad.Modifiers.ToHashSet();
+            this.m_upgrades = squad.Upgrades.Select(x => x as UpgradeBlueprint).ToHashSet();
+            this.m_slotitems = squad.SlotItems.Select(x => x as SlotItemBlueprint).ToHashSet();
+            this.m_vetexperience = squad.VeterancyProgress;
+            this.m_vetrank = squad.VeterancyRank;
+            this.m_blueprint = squad.SBP;
+            this.m_transportBlueprint = squad.SupportBlueprint as SquadBlueprint;
+            this.m_deploymentPhase = squad.DeploymentPhase;
+            this.m_deploymentMethod = squad.DeploymentMethod;
+            this.m_modGuid = string.Empty;
+            if (squad.Crew != null) {
+                this.m_crewBuilder = new UnitBuilder(squad.Crew, true);
             }
         }
 
@@ -366,6 +396,17 @@ namespace Battlegrounds.Game.DataCompany {
 
             return squad;
 
+        }
+
+        /// <summary>
+        /// Apply changes directly to the company.
+        /// </summary>
+        public virtual void Apply() {
+            if (this.m_builder is not null && this.m_overrideIndex != ushort.MaxValue) {
+                this.m_builder.Result.ReplaceSquad(this.m_overrideIndex, this.Build(0));
+            } else {
+                throw new InvalidOperationException("Cannot apply changes as this is a new unit.");
+            }
         }
 
         /// <summary>

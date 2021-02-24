@@ -141,9 +141,14 @@ namespace Battlegrounds.Game.DataCompany {
 
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="squadId"></param>
+        /// <returns></returns>
         public virtual UnitBuilder GetUnit(uint squadId) {
             if (this.m_companyTarget.Units.FirstOrDefault(x => x.SquadID == squadId) is Squad s) {
-                return new UnitBuilder(s);
+                return new UnitBuilder(s, this);
             } else {
                 throw new IndexOutOfRangeException();
             }
@@ -246,6 +251,10 @@ namespace Battlegrounds.Game.DataCompany {
                 this.m_uncommittedSquads.Push(this.m_redo.Pop());
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="squad"></param>
         public void EachUnit(Action<Squad> squad) => this.m_companyTarget.Units.ForEach(squad);
 
     }
