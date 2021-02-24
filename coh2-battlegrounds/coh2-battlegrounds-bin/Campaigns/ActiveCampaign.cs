@@ -1,9 +1,10 @@
 ﻿using System;
-
+using System.Diagnostics;
 using Battlegrounds.Campaigns.Organisation;
 using Battlegrounds.Game.Gameplay;
 using Battlegrounds.Json;
 using Battlegrounds.Locale;
+using Battlegrounds.Lua;
 
 namespace Battlegrounds.Campaigns {
 
@@ -27,8 +28,7 @@ namespace Battlegrounds.Campaigns {
 
         public int DifficultyLevel { get; init; }
 
-        private ActiveCampaign() { 
-        }
+        private ActiveCampaign() {}
 
         public void CreateArmy(int index, CampaignPackage.ArmyData army) {
             this.Armies[index] = new Army(army.Army.IsAllied ? CampaignArmyTeam.TEAM_ALLIES : CampaignArmyTeam.TEAM_AXIS) {
@@ -37,7 +37,29 @@ namespace Battlegrounds.Campaigns {
                 Faction = army.Army,
             };
             army.FullArmyData?.Pairs((k, v) => {
-
+                switch (k.Str()) {
+                    case "templates":
+                        (v as LuaTable).Pairs((k, v) => {
+                            this.Armies[index].NewRegimentTemplate(k.Str(), v as LuaTable);
+                        });
+                        break;
+                    case "army":
+                        var vt = v as LuaTable;
+                        this.Armies[index].ArmyName = this.Locale.GetString(vt["name"].Str());
+                        (vt["divisions"] as LuaTable).Pairs((k, v) => {
+                            var vt = v as LuaTable;
+                            this.Armies[index].NewDivision(
+                                this.Locale.GetString(k.Str()),
+                                vt["tmpl"].Str(),
+                                (vt["deploy"] as LuaString)?.Str() ?? string.Empty,
+                                vt["regiments"] as LuaTable
+                                );
+                        });
+                        break;
+                    default:
+                        Trace.WriteLine($"Unrecognized army entry '{k.Str()}'", nameof(ActiveCampaign));
+                        break;
+                }
             });
         }
 

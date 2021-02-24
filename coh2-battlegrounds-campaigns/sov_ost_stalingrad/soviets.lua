@@ -66,8 +66,9 @@
             }
         },
     },
-    armies = {
-        ["sov_army1"] = {
+    army = {
+        name = "sov_62nd",
+        divisions = {
             ["sov_33rdgrds"] = {
                 tmpl = "guards_rifle",
                 regiments = {
