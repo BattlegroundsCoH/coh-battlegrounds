@@ -46,6 +46,14 @@
                                     </Setter.Value>
                                 </Setter>
                             </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter Property="Background">
+                                    <Setter.Value>
+                                        <ImageBrush ImageSource="pack://application:,,,/Resources/ingame/application/app_button_disabled.png"/>
+                                    </Setter.Value>
+                                </Setter>
+                                <Setter Property="Opacity" Value="0.65"/>
+                            </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
                 </Setter.Value>
@@ -94,7 +102,7 @@
         <ContentControl Name="AppContent" Grid.Row="3" Grid.Column="2" Grid.RowSpan="8" Grid.ColumnSpan="7" Margin="20,0,0,0" Content="{Binding}"/>
 
         <Button x:Name="DashboardButton" Grid.Row="3" Grid.Column="1" Content="{Binding DashboardButtonContent, Converter={StaticResource CaseConverterUpper}, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}"
-                Margin="0,0,0,0" Click="Dashboard_Click" Style="{StaticResource MainWindiwButtonStyle}" ToolTip="Personal overall statistics"/>
+                Margin="0,0,0,0" IsEnabled="False" Click="Dashboard_Click" Style="{StaticResource MainWindiwButtonStyle}" ToolTip="Personal overall statistics"/>
 
         <!-- Row 4 -->
         <Button x:Name="NewsButton" Grid.Row="4" Grid.Column="1" Content="{Binding NewsButtonContent, Converter={StaticResource CaseConverterUpper}, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}" 
@@ -114,7 +122,7 @@
 
         <!-- Row 8 -->
         <Button x:Name="SettingsButton" Grid.Row="8" Grid.Column="1" Content="{Binding SettingsButtonContent, Converter={StaticResource CaseConverterUpper}, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}" 
-                Margin="0,10,0,0" Style="{StaticResource MainWindiwButtonStyle}" ToolTip="Adjust application settings"/>
+                Margin="0,10,0,0" IsEnabled="False" Style="{StaticResource MainWindiwButtonStyle}" ToolTip="Adjust application settings"/>
 
         <!-- Row 9 -->
         <Button x:Name="ExitButton" Grid.Row="9" Grid.Column="1" Content="{Binding ExitButtonContent, Converter={StaticResource CaseConverterUpper}, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}" 
