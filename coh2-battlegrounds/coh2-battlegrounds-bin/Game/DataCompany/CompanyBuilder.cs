@@ -124,9 +124,11 @@ namespace Battlegrounds.Game.DataCompany {
             builder.SetModGUID(this.m_companyGUID);
 
             // Add if we can
-            if (this.m_uncommittedSquads.Count + 1 + this.m_companyTarget.Units.Length < Company.MAX_SIZE) {
+            if (this.m_uncommittedSquads.Count + 1 + this.m_companyTarget.Units.Length <= Company.MAX_SIZE) {
                 this.m_uncommittedSquads.Push(builder);
                 this.m_redo.Clear();
+            } else {
+                throw new InvalidOperationException("Cannot add more units to company - Please verify before adding!");
             }
             
             // Return self for method chaining
