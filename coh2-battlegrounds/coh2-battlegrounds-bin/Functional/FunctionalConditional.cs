@@ -8,6 +8,54 @@ namespace Battlegrounds.Functional {
     public static class FunctionalConditional {
 
         /// <summary>
+        /// Functional helper object that handles a "var v = if x then y otherwise default" case.
+        /// </summary>
+        /// <typeparam name="U"></typeparam>
+        /// <typeparam name="V"></typeparam>
+        public class Otherwise<U, V> {
+
+            private V __subj;
+            private U __exist;
+            private readonly bool _hasValue;
+
+            /// <summary>
+            /// Initialize a new <see cref="Otherwise{U, V}"/> class without a value.
+            /// </summary>
+            /// <param name="subject">The subject used to create this case.</param>
+            public Otherwise(V subject) {
+                this.__subj = subject;
+                this._hasValue = false;
+            }
+
+            /// <summary>
+            /// Initialize a new <see cref="Otherwise{U, V}"/> class with some value and a flag determining if previous condition was <see langword="true"/>.
+            /// </summary>
+            /// <param name="hasVal">Should previous case be considered true?</param>
+            /// <param name="subj">The subject used to create this case.</param>
+            /// <param name="v">The existing value of the case.</param>
+            public Otherwise(bool hasVal, V subj, U v) {
+                this._hasValue = hasVal;
+                this.__subj = subj;
+                this.__exist = v;
+            }
+
+            // TODO: Add a "ThenIf" that can do additional stuff given som condition)
+
+            /// <summary>
+            /// Default to some case defined by <paramref name="def"/>.
+            /// </summary>
+            /// <param name="def">The function to invoke if case should be defaulted.</param>
+            /// <returns>
+            /// Will return <see langword="this"/> if value is present in case. 
+            /// Otherwise a new <see cref="Otherwise{U, V}"/> object with value defined as return value of <paramref name="def"/>
+            /// </returns>
+            public Otherwise<U,V> OrDefaultTo(Func<U> def) => _hasValue ? this : new Otherwise<U, V>(true, this.__subj, def());
+
+            public static implicit operator U(Otherwise<U,V> otherwise) => otherwise.__exist;
+
+        }
+
+        /// <summary>
         /// Functional helper class telling whether som initial condition is <see langword="true"/> for a subject of type <typeparamref name="T"/>.
         /// </summary>
         /// <typeparam name="T"></typeparam>
@@ -49,6 +97,19 @@ namespace Battlegrounds.Functional {
                 } else {
                     return this.__subj;
                 }
+            }
+
+            /// <summary>
+            /// If true then do some function and create a <see cref="Otherwise{U, V}"/> case object.
+            /// </summary>
+            /// <typeparam name="U">The new value type to work with.</typeparam>
+            /// <param name="func">Function to invoke if base condition is <see langword="true"/>.</param>
+            /// <returns>A new <see cref="Otherwise{U, V}"/> instance with subject and, if base condition is <see langword="true"/>, the result of <paramref name="func"/>.</returns>
+            public Otherwise<U, T> ThenDo<U>(Func<T, U> func) {
+                if (_yes)
+                    return new Otherwise<U, T>(true, this.__subj, func(this.__subj));
+                else
+                    return new Otherwise<U, T>(this.__subj);
             }
 
             /// <summary>
