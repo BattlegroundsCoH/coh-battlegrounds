@@ -28,6 +28,7 @@ namespace BattlegroundsApp.Views {
         public string CompanySize { get; }
         public string CompanyMaxSize { get { return Company.MAX_SIZE.ToString(); } }
         public string CompanySizeText => $"Company Size: {this.CompanySize}/{this.CompanyMaxSize}";
+        public Faction CompanyFaction { get; }
 
         private CompanyBuilder builder;
         public CompanyBuilder Builder { get { return this.builder; } }
@@ -43,6 +44,7 @@ namespace BattlegroundsApp.Views {
             builder = new CompanyBuilder().DesignCompany(company);
             CompanyName = company.Name;
             CompanySize = company.Units.Length.ToString();
+            CompanyFaction = company.Army;
             ShowCompany();
         }
 
@@ -50,6 +52,7 @@ namespace BattlegroundsApp.Views {
             builder = new CompanyBuilder().NewCompany(faction).ChangeName(companyName).ChangeType(type);
             CompanyName = companyName;
             CompanySize = "0";
+            CompanyFaction = faction;
             ShowCompany();
         }
 
@@ -78,18 +81,22 @@ namespace BattlegroundsApp.Views {
             this.VehicleList.Children.Clear();
             this.AbilityList.Children.Clear();
 
+            // TODO: Make UnitSlot addition more generic
             builder.EachUnit(x => {
 
-                UnitSlot unitSlot = new UnitSlot(this);
-                unitSlot.SetUnit(x);
-
                 if (x.GetCategory(true) == "infantry") {
+                    UnitSlot unitSlot = new UnitSlot(this, UnitSlotType.Infantry);
+                    unitSlot.SetUnit(x);
                     this.InfantryList.Children.Add(unitSlot);
 
                 } else if (x.GetCategory(true) == "team_weapon") {
+                    UnitSlot unitSlot = new UnitSlot(this, UnitSlotType.Support);
+                    unitSlot.SetUnit(x);
                     this.SupportList.Children.Add(unitSlot);
 
                 } else if (x.GetCategory(true) == "vehicle") {
+                    UnitSlot unitSlot = new UnitSlot(this, UnitSlotType.Vehicle);
+                    unitSlot.SetUnit(x);
                     this.VehicleList.Children.Add(unitSlot);
                 } 
 
@@ -97,16 +104,16 @@ namespace BattlegroundsApp.Views {
 
             });
 
-            UnitSlot AddSlotInfantry = new UnitSlot(this);
+            UnitSlot AddSlotInfantry = new UnitSlot(this, UnitSlotType.Infantry);
             AddSlotInfantry.SetUnit(null);
 
-            UnitSlot AddSlotSupport = new UnitSlot(this);
+            UnitSlot AddSlotSupport = new UnitSlot(this, UnitSlotType.Support);
             AddSlotSupport.SetUnit(null);
 
-            UnitSlot AddSlotVehicle = new UnitSlot(this);
+            UnitSlot AddSlotVehicle = new UnitSlot(this, UnitSlotType.Vehicle);
             AddSlotVehicle.SetUnit(null);
 
-            UnitSlot AddSlotAbility = new UnitSlot(this);
+            UnitSlot AddSlotAbility = new UnitSlot(this, UnitSlotType.Ability);
             AddSlotAbility.SetUnit(null);
 
             this.InfantryList.Children.Add(AddSlotInfantry);
@@ -115,10 +122,14 @@ namespace BattlegroundsApp.Views {
             this.AbilityList.Children.Add(AddSlotAbility);
         }
 
-        public void AddUnitToCompany(Squad squad) {
-            UnitBuilder unitBuilder = new UnitBuilder(squad);
+        public void AddUnitToCompany(UnitBuilder unitBuilder) {
             builder.AddUnit(unitBuilder);
             builder.Commit();
+            ShowCompany();
+        }
+
+        public void ReplaceUnitInCompany(UnitBuilder unitBuilder) {
+            unitBuilder.Apply();
             ShowCompany();
         }
     }
