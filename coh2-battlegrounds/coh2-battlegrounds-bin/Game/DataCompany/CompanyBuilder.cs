@@ -37,6 +37,11 @@ namespace Battlegrounds.Game.DataCompany {
         public bool CanRedoSquad => this.m_redo.Count > 0;
 
         /// <summary>
+        /// Get if it's possible to add another unit.
+        /// </summary>
+        public bool CanAddUnit => this.m_uncommittedSquads.Count + 1 + this.m_companyTarget.Units.Length <= Company.MAX_SIZE;
+
+        /// <summary>
         /// New instance of the <see cref="CompanyBuilder"/>.
         /// </summary>
         public CompanyBuilder() {
@@ -124,7 +129,7 @@ namespace Battlegrounds.Game.DataCompany {
             builder.SetModGUID(this.m_companyGUID);
 
             // Add if we can
-            if (this.m_uncommittedSquads.Count + 1 + this.m_companyTarget.Units.Length <= Company.MAX_SIZE) {
+            if (this.CanAddUnit) {
                 this.m_uncommittedSquads.Push(builder);
                 this.m_redo.Clear();
             } else {
