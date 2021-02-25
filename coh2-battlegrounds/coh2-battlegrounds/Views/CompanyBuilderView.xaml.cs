@@ -53,7 +53,7 @@ namespace BattlegroundsApp.Views {
 
         // TODO: CHANGE HOW YOU GET THE GUID!
         public CompanyBuilderView(string companyName, Faction faction, CompanyType type) : this() {
-            builder = new CompanyBuilder().NewCompany(faction).ChangeName(companyName).ChangeType(type);
+            builder = new CompanyBuilder().NewCompany(faction).ChangeName(companyName).ChangeType(type).ChangeTuningMod(BattlegroundsInstance.BattleGroundsTuningMod.Guid);
             CompanyName = companyName;
             CompanySize = "0";
             CompanyFaction = faction;
