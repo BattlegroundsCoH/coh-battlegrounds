@@ -18,8 +18,8 @@ namespace BattlegroundsApp.Dialogs.AddUnit {
         public ICommand AddCommand { get; set; }
         public ICommand CancelCommand { get; set; }
 
-        private Blueprint _selectedUnit;
-        public Blueprint SelectedUnit { 
+        private SquadBlueprint _selectedUnit;
+        public SquadBlueprint SelectedUnit { 
             get {
                 return this._selectedUnit;
             }
@@ -30,9 +30,9 @@ namespace BattlegroundsApp.Dialogs.AddUnit {
             }
         }
 
-        public List<Blueprint> UnitList { get; set; }
+        public List<SquadBlueprint> UnitList { get; set; }
 
-        private AddUnitDialogViewModel(string title, List<Blueprint> unitList) {
+        private AddUnitDialogViewModel(string title, List<SquadBlueprint> unitList) {
 
             Title = title;
             AddCommand = new RelayCommand<DialogWindow>(Add);
@@ -42,7 +42,7 @@ namespace BattlegroundsApp.Dialogs.AddUnit {
 
         }
 
-        public static AddUnitDialogResult ShowAddUnitDialog(string title, List<Blueprint> unitList, out Blueprint unit) {
+        public static AddUnitDialogResult ShowAddUnitDialog(string title, List<SquadBlueprint> unitList, out SquadBlueprint unit) {
             var dialog = new AddUnitDialogViewModel(title, unitList);
             var result = dialog.ShowDialog();
             unit = dialog.SelectedUnit;

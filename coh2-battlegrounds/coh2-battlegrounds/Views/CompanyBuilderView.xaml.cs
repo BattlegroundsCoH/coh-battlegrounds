@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Battlegrounds;
 using Battlegrounds.Game.DataCompany;
 using Battlegrounds.Game.Gameplay;
 using BattlegroundsApp.Controls.CompanyBuilderControls;
@@ -29,6 +30,7 @@ namespace BattlegroundsApp.Views {
         public string CompanyMaxSize { get { return Company.MAX_SIZE.ToString(); } }
         public string CompanySizeText => $"Company Size: {this.CompanySize}/{this.CompanyMaxSize}";
         public Faction CompanyFaction { get; }
+        public string CompanyGUID { get; }
 
         private CompanyBuilder builder;
         public CompanyBuilder Builder { get { return this.builder; } }
@@ -45,14 +47,17 @@ namespace BattlegroundsApp.Views {
             CompanyName = company.Name;
             CompanySize = company.Units.Length.ToString();
             CompanyFaction = company.Army;
+            CompanyGUID = company.TuningGUID;
             ShowCompany();
         }
 
+        // TODO: CHANGE HOW YOU GET THE GUID!
         public CompanyBuilderView(string companyName, Faction faction, CompanyType type) : this() {
             builder = new CompanyBuilder().NewCompany(faction).ChangeName(companyName).ChangeType(type);
             CompanyName = companyName;
             CompanySize = "0";
             CompanyFaction = faction;
+            CompanyGUID = BattlegroundsInstance.BattleGroundsTuningMod.Guid;
             ShowCompany();
         }
 
@@ -131,6 +136,12 @@ namespace BattlegroundsApp.Views {
         public void ReplaceUnitInCompany(UnitBuilder unitBuilder) {
             unitBuilder.Apply();
             ShowCompany();
+        }
+
+        public void RemoveUnitFromCompany(uint unitID) {
+            //builder.RemoveUnit(unitID);
+            ShowCompany();
+
         }
     }
 }

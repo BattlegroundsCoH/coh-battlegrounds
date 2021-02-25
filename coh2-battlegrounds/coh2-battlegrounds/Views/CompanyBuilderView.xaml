@@ -38,7 +38,7 @@
         <TextBlock Grid.Row="0" Grid.Column="0" Text="{Binding CompanyName}" Margin="2.5"/>
 
         <!-- For company size use the size variable from Company.cs file -->
-        <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding CompanySizeText}" Margin="2.5"/>
+        <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding CompanySizeText, Mode=OneWay}" Margin="2.5"/>
 
         <!-- Row 1 -->
         <TextBlock Grid.Row="1" Grid.Column="0" Text="Infantry"/>
@@ -51,28 +51,28 @@
         
         <!-- Row 2 -->
         <!-- Infantry -->
-        <ScrollViewer Grid.Row="2" Grid.Column="0" CanContentScroll="False" VerticalScrollBarVisibility="Visible" MaxHeight="575">
+        <ScrollViewer Grid.Row="2" Grid.Column="0" CanContentScroll="False" VerticalScrollBarVisibility="Visible" Height="575" MaxHeight="575">
             <StackPanel x:Name="InfantryList">
                 
             </StackPanel>
         </ScrollViewer>
 
         <!-- Support -->
-        <ScrollViewer Grid.Row="2" Grid.Column="1" CanContentScroll="False" VerticalScrollBarVisibility="Visible" MaxHeight="575">
+        <ScrollViewer Grid.Row="2" Grid.Column="1" CanContentScroll="False" VerticalScrollBarVisibility="Visible" Height="575" MaxHeight="575">
             <StackPanel x:Name="SupportList">
 
             </StackPanel>
         </ScrollViewer>
 
         <!-- Vehicles -->
-        <ScrollViewer Grid.Row="2" Grid.Column="2" CanContentScroll="False" VerticalScrollBarVisibility="Visible" MaxHeight="575">
+        <ScrollViewer Grid.Row="2" Grid.Column="2" CanContentScroll="False" VerticalScrollBarVisibility="Visible" Height="575" MaxHeight="575">
             <StackPanel x:Name="VehicleList">
 
             </StackPanel>
         </ScrollViewer>
 
         <!-- Abilities -->
-        <ScrollViewer Grid.Row="2" Grid.Column="3" CanContentScroll="False" VerticalScrollBarVisibility="Visible" MaxHeight="575">
+        <ScrollViewer Grid.Row="2" Grid.Column="3" CanContentScroll="False" VerticalScrollBarVisibility="Visible" Height="575" MaxHeight="575">
             <StackPanel x:Name="AbilityList">
 
             </StackPanel>
