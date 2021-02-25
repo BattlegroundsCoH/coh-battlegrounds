@@ -15,7 +15,7 @@
         <Canvas Width="225" Height="64">
             <Button Width="225" Height="64" Content="{Binding UnitName, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:OccupiedState}}}" 
                 Click="ReplaceUnit_Click"/>
-            <Button Width="25" Height="25" Content="X" Canvas.Left="200"/>
+            <Button Width="25" Height="25" Content="X" Canvas.Left="200" Click="RemoveUnit_Click"/>
         </Canvas>
     </local:OccupiedState>
 

@@ -139,7 +139,7 @@ namespace BattlegroundsApp.Views {
         }
 
         public void RemoveUnitFromCompany(uint unitID) {
-            //builder.RemoveUnit(unitID);
+            builder.RemoveUnit(unitID);
             ShowCompany();
 
         }
