@@ -53,6 +53,13 @@ namespace Battlegrounds.Game.Database.Management {
         /// <returns>A new <see cref="BlueprintCollection{T}"/> containing only <typeparamref name="T"/> instances of specifiied mod GUID.</returns>
         public BlueprintCollection<T> FilterByMod(string modguid) => new BlueprintCollection<T>(this.m_internalDictionary.Where(x => x.Value.ModGUID.CompareTo(modguid) == 0));
 
+        /// <summary>
+        /// Get a new <see cref="BlueprintCollection{T}"/> where all <typeparamref name="T"/> instances matching the predicate.
+        /// </summary>
+        /// <param name="predicate">The test function.</param>
+        /// <returns>A new <see cref="BlueprintCollection{T}"/> containing only <typeparamref name="T"/> instances matching the predicate.</returns>
+        public BlueprintCollection<T> Filter(Predicate<T> predicate) => new BlueprintCollection<T>(this.m_internalDictionary.Where(x => predicate(x.Value)));
+
         public IEnumerator<T> GetEnumerator() => this.m_internalDictionary.Select(x => x.Value).GetEnumerator();
         
         IEnumerator IEnumerable.GetEnumerator() => this.m_internalDictionary.Select(x => x.Value).GetEnumerator();

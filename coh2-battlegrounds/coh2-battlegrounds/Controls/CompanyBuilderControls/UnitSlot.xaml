@@ -5,15 +5,18 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:BattlegroundsApp.Controls.CompanyBuilderControls"
              mc:Ignorable="d" 
-             d:DesignHeight="64" d:DesignWidth="175">
+             d:DesignHeight="64" d:DesignWidth="225">
     
     <local:AddState x:Name="AddState">
         <Button Width="225" Height="64" Content="Add" Click="AddUnit_Click"/>
     </local:AddState>
 
     <local:OccupiedState x:Name="OccupiedState">
-        <Button Width="225" Height="64" Content="{Binding UnitName, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:OccupiedState}}}" 
+        <Canvas Width="225" Height="64">
+            <Button Width="225" Height="64" Content="{Binding UnitName, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:OccupiedState}}}" 
                 Click="ReplaceUnit_Click"/>
+            <Button Width="25" Height="25" Content="X" Canvas.Left="200" Click="RemoveUnit_Click"/>
+        </Canvas>
     </local:OccupiedState>
 
 </local:UnitSlotControl>

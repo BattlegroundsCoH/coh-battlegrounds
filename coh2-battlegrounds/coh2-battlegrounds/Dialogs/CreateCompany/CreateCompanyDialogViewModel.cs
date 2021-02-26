@@ -32,7 +32,7 @@ namespace BattlegroundsApp.Dialogs.CreateCompany {
             }
         }
 
-        private Faction _companyFaction;
+        private Faction _companyFaction = Faction.Soviet;
         public Faction CompanyFaction {
             get {
                 return this._companyFaction;

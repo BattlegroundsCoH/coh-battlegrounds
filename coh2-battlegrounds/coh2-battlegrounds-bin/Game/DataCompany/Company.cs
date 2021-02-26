@@ -203,6 +203,12 @@ namespace Battlegrounds.Game.DataCompany {
         }
 
         /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="squadID"></param>
+        public void RemoveSquad(uint squadID) => this.m_squads.RemoveAll(x => x.SquadID == squadID);
+
+        /// <summary>
         /// Get the company <see cref="Squad"/> by its company index.
         /// </summary>
         /// <param name="squadID">The index of the squad to get</param>

@@ -141,6 +141,14 @@ namespace Battlegrounds.Game.DataCompany {
 
         }
 
+        public virtual CompanyBuilder RemoveUnit(uint unitID) {
+
+            this.m_companyTarget.RemoveSquad(unitID);
+
+            // Return self for method chaining
+            return this;
+        }
+
         /// <summary>
         /// 
         /// </summary>
