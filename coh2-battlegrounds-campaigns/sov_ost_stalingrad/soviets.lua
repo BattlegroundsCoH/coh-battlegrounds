@@ -4,7 +4,9 @@
             size = 100, -- In total amount of units
             companies = 4, -- (size / companies = actual company, remaining goes into a "reserve")
             units = {
-                { sbp = "frontoviki_squad_bg", rank_range = { 2, 5 }, weight = 0.6 },
+                { sbp = "commissar_squad_bg", rank_range = { 0, 2 }, count = 2 },
+                { sbp = "frontoviki_squad_bg", rank_range = { 2, 5 }, weight = 0.4 },
+                { sbp = "guards_troops_bg", rank_range = { 1, 4 }, weight = 0.6 },
                 { sbp = "conscript_squad_bg", rank_range = { 0, 1 }, weight = 0.2 },
             }
         },
@@ -37,6 +39,7 @@
             size = 100, -- In total amount of units
             companies = 4, -- (size / companies = actual company, remaining goes into a "reserve")
             units = {
+                { sbp = "commissar_squad_bg", rank_range = { 0, 2 }, count = 1 },
                 { sbp = "frontoviki_squad_bg", rank_range = { 2, 5 }, weight = 0.6 },
                 { sbp = "conscript_squad_bg", rank_range = { 0, 1 }, weight = 0.2 },
             }

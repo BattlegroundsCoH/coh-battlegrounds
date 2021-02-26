@@ -141,6 +141,7 @@ namespace Battlegrounds {
 
         private static InternalInstance __instance;
         private static Localize __localeManagement;
+        private static Random __rng;
 
         /// <summary>
         /// Get or set the last played map.
@@ -165,6 +166,11 @@ namespace Battlegrounds {
             get => __instance.LastPlayedGamemodeSetting;
             set => __instance.LastPlayedGamemodeSetting = value;
         }
+
+        /// <summary>
+        /// Get the random number generator instance.
+        /// </summary>
+        public static Random RNG => __rng;
 
         /// <summary>
         /// Get if this is the first time the application has been launched
@@ -218,6 +224,9 @@ namespace Battlegrounds {
 
             // Create tuning
             __bgTuningInstance = new BattlegroundsTuning();
+
+            // Create RNG
+            __rng = new Random();
 
         }
 

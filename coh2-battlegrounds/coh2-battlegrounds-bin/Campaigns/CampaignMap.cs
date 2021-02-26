@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-
+using Battlegrounds.Campaigns.Organisations;
 using Battlegrounds.Lua;
 
 namespace Battlegrounds.Campaigns {
@@ -14,6 +14,7 @@ namespace Battlegrounds.Campaigns {
 
         private List<CampaignMapNode> m_nodes;
         private List<CampaignMapTransition> m_edges;
+        private List<Formation> m_organisations;
 
         public CampaignMap(CampaignMapData mapData) {
 
@@ -26,6 +27,9 @@ namespace Battlegrounds.Campaigns {
             // Create lists for network data
             this.m_nodes = new List<CampaignMapNode>();
             this.m_edges = new List<CampaignMapTransition>();
+
+            // Create organisation overview
+            this.m_organisations = new List<Formation>();
 
         }
 
@@ -71,6 +75,25 @@ namespace Battlegrounds.Campaigns {
         public void EachNode(Action<CampaignMapNode> action) => this.m_nodes.ForEach(action);
 
         public void EachTransition(Action<CampaignMapTransition> action) => this.m_edges.ForEach(action);
+
+        public void EachFormation(Action<Formation> action) => this.m_organisations.ForEach(action);
+
+        public CampaignMapNode FromName(string name) => this.m_nodes.FirstOrDefault(x => x.NodeName == name);
+
+        public bool SpawnFormationAt(string nodeIdentifier, Formation organisation) {
+            if (this.FromName(nodeIdentifier) is CampaignMapNode node) {
+                // TODO: Check if node can handle it
+                organisation.SetNodeLocation(node);
+                this.m_organisations.Add(organisation);
+                return true;
+            } else {
+                return false;
+            }
+        }
+
+        public bool MoveTo(Formation organisation, CampaignMapNode target) {
+            return true;
+        }
 
     }
 

@@ -25,7 +25,9 @@ namespace BattlegroundsApp.Views.CampaignViews {
     /// Interaction logic for CampaignMapView.xaml
     /// </summary>
     public partial class CampaignMapView : ViewState, INotifyPropertyChanged {
-        
+
+        private List<CampaignUnitFormationView> m_formationViews;
+
         public ICampaignController Controller { get; }
 
         public ImageSource CampaignMapImage { get; }
@@ -43,12 +45,16 @@ namespace BattlegroundsApp.Views.CampaignViews {
             // Assign controller
             this.Controller = controller;
 
+            // Init list
+            this.m_formationViews = new List<CampaignUnitFormationView>();
+
             // Init components
             InitializeComponent();
 
             // Init data
             this.CampaignMapImage = PngImageSource.FromMemory(controller.Campaign.PlayMap.RawImageData);
             this.CreateNodeNetwork();
+            this.RefreshDisplayedFormations();
 
             // Hide chat control if singleplayer
             if (controller.IsSingleplayer) {
@@ -113,6 +119,27 @@ namespace BattlegroundsApp.Views.CampaignViews {
 
             });
 
+        }
+
+        private void RefreshDisplayedFormations() {
+
+            // Clear all formations
+            this.ClearFormations();
+
+            // Loop through all formations and display them
+            this.Controller.Campaign.PlayMap.EachFormation(f => { 
+            
+
+            
+            });
+
+        }
+
+        private void ClearFormations() {
+            foreach (var form in this.m_formationViews) {
+                this.CampaignMapCanvas.Children.Remove(form.Element);
+            }
+            this.m_formationViews.Clear();
         }
 
         private void NodeClicked(object sender, MouseButtonEventArgs e) {

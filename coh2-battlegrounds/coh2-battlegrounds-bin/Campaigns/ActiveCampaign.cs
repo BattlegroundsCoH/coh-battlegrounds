@@ -1,6 +1,9 @@
 ﻿using System;
+using System.Linq;
 using System.Diagnostics;
-using Battlegrounds.Campaigns.Organisation;
+using System.Collections.Generic;
+
+using Battlegrounds.Campaigns.Organisations;
 using Battlegrounds.Game.Gameplay;
 using Battlegrounds.Json;
 using Battlegrounds.Locale;
@@ -16,6 +19,8 @@ namespace Battlegrounds.Campaigns {
 
     public class ActiveCampaign : IJsonObject {
 
+        private string m_locSourceID;
+
         public class Player { }
 
         public CampaignMap PlayMap { get; init; }
@@ -30,12 +35,13 @@ namespace Battlegrounds.Campaigns {
 
         private ActiveCampaign() {}
 
-        public void CreateArmy(int index, CampaignPackage.ArmyData army) {
+        public void CreateArmy(int index, ref uint divCount, CampaignPackage.ArmyData army) {
             this.Armies[index] = new Army(army.Army.IsAllied ? CampaignArmyTeam.TEAM_ALLIES : CampaignArmyTeam.TEAM_AXIS) {
                 Name = this.Locale.GetString(army.Name),
                 Description = this.Locale.GetString(army.Desc),
                 Faction = army.Army,
             };
+            uint tmp = divCount;
             army.FullArmyData?.Pairs((k, v) => {
                 switch (k.Str()) {
                     case "templates":
@@ -45,15 +51,21 @@ namespace Battlegrounds.Campaigns {
                         break;
                     case "army":
                         var vt = v as LuaTable;
-                        this.Armies[index].ArmyName = this.Locale.GetString(vt["name"].Str());
+                        this.Armies[index].ArmyName = new LocaleKey(vt["name"].Str(), this.m_locSourceID);
                         (vt["divisions"] as LuaTable).Pairs((k, v) => {
                             var vt = v as LuaTable;
-                            this.Armies[index].NewDivision(
-                                this.Locale.GetString(k.Str()),
-                                vt["tmpl"].Str(),
-                                (vt["deploy"] as LuaString)?.Str() ?? string.Empty,
-                                vt["regiments"] as LuaTable
-                                );
+                            uint divID = tmp;
+                            this.Armies[index].NewDivision(divID, new LocaleKey(k.Str(), this.m_locSourceID), vt["tmpl"].Str(), vt["regiments"] as LuaTable);
+                            tmp++;
+                            if (vt["deploy"] is not LuaNil) {
+                                if (vt["deploy"] is LuaTable tableAt) {
+                                    this.Armies[index].DeployDivision(divID, new List<string>(tableAt.ToArray().Select(x => x.Str())), this.PlayMap);
+                                } else if (vt["deploy"] is LuaString strAt) {
+                                    this.Armies[index].DeployDivision(divID, new List<string>() { strAt.Str() }, this.PlayMap);
+                                } else {
+                                    Trace.WriteLine($"Attempted to spawn '{k.Str()}' using unsupported datatype!", nameof(ActiveCampaign));
+                                }
+                            }
                         });
                         break;
                     default:
@@ -61,10 +73,7 @@ namespace Battlegrounds.Campaigns {
                         break;
                 }
             });
-        }
-
-        public void NewPlayer() {
-
+            divCount = tmp;
         }
 
         public string ToJsonReference() => throw new NotSupportedException();
@@ -77,14 +86,18 @@ namespace Battlegrounds.Campaigns {
                 Armies = new Army[package.CampaignArmies.Length],
                 Locale = package.LocaleManager,
                 DifficultyLevel = difficulty,
+                m_locSourceID = package.LocaleSourceID,
             };
 
             // Create campaign nodes
             campaign.PlayMap.BuildNetwork();
 
+            // Counter to keep track of diviions
+            uint divisionCount = 0;
+
             // Create the armies
             for (int i = 0; i < package.CampaignArmies.Length; i++) {
-                campaign.CreateArmy(i, package.CampaignArmies[i]);
+                campaign.CreateArmy(i, ref divisionCount, package.CampaignArmies[i]);
             }
 
             // Define start team

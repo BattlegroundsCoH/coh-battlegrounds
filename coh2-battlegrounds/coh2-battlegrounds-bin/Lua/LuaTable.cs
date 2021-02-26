@@ -131,6 +131,18 @@ namespace Battlegrounds.Lua {
             return nil;
         }
 
+        /// <summary>
+        /// Get the table in a managed array format. Index from 0 to retrieve elements.
+        /// </summary>
+        /// <returns>An array of <see cref="LuaValue"/> objects.</returns>
+        public LuaValue[] ToArray() => this.m_table.Values.ToArray();
+
+        /// <summary>
+        /// Get the table in a managed array format. Index from 0 to retrieve elements.
+        /// </summary>
+        /// <returns>An array of <typeparamref name="T"/> objects.</returns>
+        public T[] ToArray<T>() where T : LuaValue => this.m_table.Values.Select(x => x as T).ToArray();
+
         public override string Str() => this.GetHashCode().ToString();
 
         public IEnumerator<KeyValuePair<LuaValue, LuaValue>> GetEnumerator() => ((IEnumerable<KeyValuePair<LuaValue, LuaValue>>)this.m_table).GetEnumerator();

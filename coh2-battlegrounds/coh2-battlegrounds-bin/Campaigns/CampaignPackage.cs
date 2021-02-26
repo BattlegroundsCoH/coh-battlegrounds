@@ -57,6 +57,8 @@ namespace Battlegrounds.Campaigns {
 
         public Localize LocaleManager { get; private set; }
 
+        public string LocaleSourceID { get; private set; }
+
         #region Binary Data
 
         private static uint[] SupportedVersions = { 10 };
@@ -88,10 +90,10 @@ namespace Battlegrounds.Campaigns {
             int armyCount = reader.ReadInt32();
 
             // Get default locale ID
-            string locale = reader.ReadUnicodeString();
+            this.LocaleSourceID = reader.ReadUnicodeString();
 
             // Load display data
-            if (!LoadBinaryDisplay(reader, locale, binaryFilepath)) {
+            if (!LoadBinaryDisplay(reader, this.LocaleSourceID, binaryFilepath)) {
                 Trace.WriteLine($"Campaign '{Path.GetFileName(binaryFilepath)}' has no invalid display data and cannot be loaded.", nameof(CampaignPackage));
                 return false;
             }
@@ -101,7 +103,7 @@ namespace Battlegrounds.Campaigns {
 
             // Load army data
             for (int i = 0; i < armyCount; i++) {
-                if (!LoadArmyData(reader, i, locale, binaryFilepath)) {
+                if (!LoadArmyData(reader, i, this.LocaleSourceID, binaryFilepath)) {
                     Trace.WriteLine($"Campaign '{Path.GetFileName(binaryFilepath)}' has invalid army data and cannot be loaded.", nameof(CampaignPackage));
                     return false;
                 }
