@@ -2,17 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using Battlegrounds.Game.Database;
 using Battlegrounds.Game.Database.Management;
 using Battlegrounds.Game.DataCompany;
@@ -26,13 +16,13 @@ namespace BattlegroundsApp.Controls.CompanyBuilderControls {
 
     public enum UnitSlotType {
         [Description("infantry")]
-        Infantry,
+        Infantry = 0,
         [Description("team_weapon")]
-        Support,
+        Support = 1,
         [Description("vehicle")]
-        Vehicle,
+        Vehicle = 2,
         [Description("ability")]
-        Ability
+        Ability = 3
     }
 
     public enum UnitSlotStateType {
@@ -48,7 +38,7 @@ namespace BattlegroundsApp.Controls.CompanyBuilderControls {
         public UnitSlotType UnitType { get; }
         private uint SlotOccupantID { get; set; }
 
-        private List<SquadBlueprint> SquadList => BlueprintManager.GetCollection<SquadBlueprint>().FilterByMod(_companyBuilderView.CompanyGUID).Filter(x => x.Army == _companyBuilderView.CompanyFaction.ToString() && x.Types.Contains($"{UnitType.GetDescription()}")).ToList();
+        private List<SquadBlueprint> SquadList => BlueprintManager.GetCollection<SquadBlueprint>().FilterByMod(_companyBuilderView.CompanyGUID).Filter(x => x.Army == _companyBuilderView.CompanyFaction.ToString() && _companyBuilderView.Category[(int)this.UnitType].IsValid(x)).ToList();
 
         private CompanyBuilderView _companyBuilderView { get; set; }
 

@@ -13,6 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Battlegrounds;
+using Battlegrounds.Game.Database;
 using Battlegrounds.Game.DataCompany;
 using Battlegrounds.Game.Gameplay;
 using BattlegroundsApp.Controls.CompanyBuilderControls;
@@ -23,7 +24,17 @@ namespace BattlegroundsApp.Views {
     /// <summary>
     /// Interaction logic for CompanyBuilderView.xaml
     /// </summary>
+
     public partial class CompanyBuilderView : ViewState {
+
+        public struct SquadCategory {
+
+            public string Type { get; init; }
+            public string[] ExcludeTypes { get; init; }
+
+            public bool IsValid(SquadBlueprint squadBlueprint) => squadBlueprint.Types.Contains(this.Type) && ExcludeTypes.All(x => !squadBlueprint.Types.Contains(x));
+
+        }
 
         public string CompanyName { get; }
         public string CompanySize { get; }
@@ -31,6 +42,21 @@ namespace BattlegroundsApp.Views {
         public string CompanySizeText => $"Company Size: {this.CompanySize}/{this.CompanyMaxSize}";
         public Faction CompanyFaction { get; }
         public string CompanyGUID { get; }
+
+        public SquadCategory[] Category => new[] { 
+            new SquadCategory {
+                Type = "infantry",
+                ExcludeTypes = new [] { "team_weapon" }
+            }, 
+            new SquadCategory { 
+                Type = "team_weapon",
+                ExcludeTypes = new string[0]
+            }, 
+            new SquadCategory { 
+                Type = "vehicle",
+                ExcludeTypes = new string[0]
+            } 
+        };
 
         private CompanyBuilder builder;
         public CompanyBuilder Builder { get { return this.builder; } }
