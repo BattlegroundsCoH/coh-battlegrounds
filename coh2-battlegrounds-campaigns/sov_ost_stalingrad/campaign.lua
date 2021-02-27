@@ -49,5 +49,9 @@
             type = SCRIPT,
             file = "events.lua",
         },
+        {
+            type = GFX,
+            file = "gfx.lua",
+        },
     }
 }

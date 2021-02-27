@@ -25,6 +25,11 @@ namespace Battlegrounds.Campaigns.Organisations {
         public CampaignMapNode Node => this.m_location;
 
         /// <summary>
+        /// Get the name of the dominant army in charge of this formation.
+        /// </summary>
+        public string Army => this.Divisions.FirstOrDefault().EleemntOf.Faction.Name;
+
+        /// <summary>
         /// Get if the unit formation can be split.
         /// </summary>
         public bool CanSplit => this.m_regiments.Count > 1;

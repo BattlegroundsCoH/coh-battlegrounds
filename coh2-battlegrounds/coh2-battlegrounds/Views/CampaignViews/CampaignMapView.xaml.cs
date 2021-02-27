@@ -16,8 +16,12 @@ using System.Windows.Shapes;
 
 using Battlegrounds.Campaigns;
 using Battlegrounds.Campaigns.Controller;
+using Battlegrounds.Campaigns.Organisations;
+using Battlegrounds.Functional;
+using Battlegrounds.Gfx;
 
 using BattlegroundsApp.Resources;
+using BattlegroundsApp.Views.CampaignViews.Models;
 
 namespace BattlegroundsApp.Views.CampaignViews {
     
@@ -26,7 +30,10 @@ namespace BattlegroundsApp.Views.CampaignViews {
     /// </summary>
     public partial class CampaignMapView : ViewState, INotifyPropertyChanged {
 
-        private List<CampaignUnitFormationView> m_formationViews;
+        private List<CampaignUnitFormationModel> m_formationViews;
+        private Dictionary<string, ImageSource> m_graphics;
+
+        public CampaignUnitSelectionModel Selection { get; }
 
         public ICampaignController Controller { get; }
 
@@ -46,12 +53,16 @@ namespace BattlegroundsApp.Views.CampaignViews {
             this.Controller = controller;
 
             // Init list
-            this.m_formationViews = new List<CampaignUnitFormationView>();
+            this.m_formationViews = new List<CampaignUnitFormationModel>();
+
+            // Load graphics
+            this.InitializeGrapihcs();
 
             // Init components
-            InitializeComponent();
+            this.InitializeComponent();
 
             // Init data
+            this.Selection = new CampaignUnitSelectionModel();
             this.CampaignMapImage = PngImageSource.FromMemory(controller.Campaign.PlayMap.RawImageData);
             this.CreateNodeNetwork();
             this.RefreshDisplayedFormations();
@@ -63,6 +74,30 @@ namespace BattlegroundsApp.Views.CampaignViews {
             } else {
 
             }
+
+        }
+
+        private void InitializeGrapihcs() {
+
+            // Create graphics dictionary
+            this.m_graphics = new Dictionary<string, ImageSource>();
+
+            // For each GFX map
+            this.Controller.Campaign.GfxMaps.ForEach(x => {
+
+                // Loop over all resources
+                x.Resources.ForEach(id => {
+
+                    // Get the resource
+                    GfxResource resource = x.GetResource(id);
+                    var stream = resource.Open();
+
+                    // Decode and store the image
+                    this.m_graphics[id] = new PngBitmapDecoder(stream, BitmapCreateOptions.None, BitmapCacheOption.Default).Frames[0];
+
+                });
+
+            });
 
         }
 
@@ -127,26 +162,77 @@ namespace BattlegroundsApp.Views.CampaignViews {
             this.ClearFormations();
 
             // Loop through all formations and display them
-            this.Controller.Campaign.PlayMap.EachFormation(f => { 
-            
+            this.Controller.Campaign.PlayMap.EachFormation(f => {
 
-            
+                // Banner file
+                string banner_element = $"{f.Army}_banner";
+
+                // Create space for UI element (default to null)
+                UIElement displayElement = null;
+
+                // If it exists, use an image, otherwise some other default pinkish shape
+                if (this.m_graphics.TryGetValue(banner_element, out ImageSource img)) {
+
+                    // Create image
+                    displayElement = new Image() {
+                        Source = img,
+                        Width = 24,
+                        Height = 32,
+                        Tag = f,
+                    };
+
+                    // Add handler(s)
+                    displayElement.MouseDown += this.BannerClicked;
+
+                    // Add to canvas
+                    this.CampaignMapCanvas.Children.Add(displayElement);
+
+                    // Set the display position
+                    SetPosition(displayElement, f.Node.U * this.CampaignMapWidth, f.Node.V * this.CampaignMapHeight);
+
+                }
+
+                // Create container type
+                CampaignUnitFormationModel cufv = new CampaignUnitFormationModel(displayElement, f);
+
+                this.m_formationViews.Add(cufv);
+
             });
 
         }
 
         private void ClearFormations() {
             foreach (var form in this.m_formationViews) {
-                this.CampaignMapCanvas.Children.Remove(form.Element);
+                if (form.Element is not null) {
+                    this.CampaignMapCanvas.Children.Remove(form.Element);
+                }
             }
             this.m_formationViews.Clear();
         }
 
         private void NodeClicked(object sender, MouseButtonEventArgs e) {
             if (sender is Ellipse ellipse && ellipse.Tag is CampaignMapNode node) {
+                if (e.LeftButton == MouseButtonState.Pressed) {
 
+                } else if (e.RightButton == MouseButtonState.Pressed) {
+                    if (this.Selection.Size > 0) {
+
+                    }
+                }
             }
         }
+
+        private void BannerClicked(object sender, MouseButtonEventArgs e) {
+            if (sender is Image img && img.Tag is Formation formation) {
+                if (this.FromFormation(formation) is CampaignUnitFormationModel model) {
+                    if (e.LeftButton == MouseButtonState.Pressed) {
+                        Keyboard.IsKeyDown(Key.LeftShift).IfTrue().Then(() => this.Selection.AddToSelection(model)).Else(() => this.Selection.Select(model));
+                    }
+                }
+            }
+        }
+
+        private CampaignUnitFormationModel FromFormation(Formation formation) => this.m_formationViews.FirstOrDefault(x => x.Formation == formation);
 
         private static void SetPosition(UIElement element, double x, double y) {
             element.SetValue(Canvas.LeftProperty, x);

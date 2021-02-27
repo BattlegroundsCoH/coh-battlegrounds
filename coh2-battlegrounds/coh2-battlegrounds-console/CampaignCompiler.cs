@@ -23,7 +23,7 @@ namespace coh2_battlegrounds_console {
             Locale = 0x2,
             CampaignScript = 0x3, // lstate is stored
             MissionScript = 0x4, // Raw script file
-            GfxAtlas = 0x5,
+            GfxMap = 0x5,
         }
 
         private struct CampaignResource {
@@ -61,6 +61,7 @@ namespace coh2_battlegrounds_console {
             settingsState._G["MAP"] = LuaValue.ToLuaValue(ResourceType.MapImage);
             settingsState._G["LOCALE"] = LuaValue.ToLuaValue(ResourceType.Locale);
             settingsState._G["SCRIPT"] = LuaValue.ToLuaValue(ResourceType.CampaignScript);
+            settingsState._G["GFX"] = LuaValue.ToLuaValue(ResourceType.GfxMap);
             settingsState._G["BINARY"] = LuaValue.ToLuaValue("binary");
             settingsState._G["UNARY"] = LuaValue.ToLuaValue("unary");
             settingsState._G["TEAM_AXIS"] = LuaValue.ToLuaValue("axis");
@@ -299,17 +300,17 @@ namespace coh2_battlegrounds_console {
 
 
 
-                } else if (rt == ResourceType.GfxAtlas) {
+                } else if (rt == ResourceType.GfxMap) {
 
                     LuaState gfxState = new LuaState();
                     if (gfxState.DoFile(Path.Combine(relativePath, file)) is LuaTable gfxTable) {
                         
                         // Load atlas
-                        GfxAtlas atlas = GfxAtlas.FromLua(gfxTable, Path.Combine(relativePath, file, name));
+                        GfxMap atlas = GfxMap.FromLua(gfxTable, Path.Combine(relativePath, name));
 
                         // Create resource
                         resource = new CampaignResource() {
-                            Rt = ResourceType.GfxAtlas,
+                            Rt = ResourceType.GfxMap,
                             Identifier = name,
                             Content = atlas.AsBinary()
                         };

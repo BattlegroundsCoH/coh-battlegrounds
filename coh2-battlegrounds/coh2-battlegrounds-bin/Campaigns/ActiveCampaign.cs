@@ -8,6 +8,7 @@ using Battlegrounds.Game.Gameplay;
 using Battlegrounds.Json;
 using Battlegrounds.Locale;
 using Battlegrounds.Lua;
+using Battlegrounds.Gfx;
 
 namespace Battlegrounds.Campaigns {
 
@@ -26,6 +27,8 @@ namespace Battlegrounds.Campaigns {
         public CampaignMap PlayMap { get; init; }
 
         public Army[] Armies { get; init; }
+
+        public List<GfxMap> GfxMaps { get; init; }
 
         public Localize Locale { get; init; }
 
@@ -86,6 +89,7 @@ namespace Battlegrounds.Campaigns {
                 Armies = new Army[package.CampaignArmies.Length],
                 Locale = package.LocaleManager,
                 DifficultyLevel = difficulty,
+                GfxMaps = package.GfxResources,
                 m_locSourceID = package.LocaleSourceID,
             };
 

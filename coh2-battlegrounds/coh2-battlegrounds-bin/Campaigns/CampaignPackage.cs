@@ -1,13 +1,15 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Diagnostics;
+using System.Collections.Generic;
 
 using Battlegrounds.Game.Gameplay;
 using Battlegrounds.Locale;
 using Battlegrounds.Util;
 using Battlegrounds.Lua;
-using System.Text;
+using Battlegrounds.Gfx;
 
 namespace Battlegrounds.Campaigns {
     
@@ -53,11 +55,17 @@ namespace Battlegrounds.Campaigns {
 
         public ArmyData[] CampaignArmies { get; private set; }
 
+        public List<GfxMap> GfxResources { get; }
+
         public CampaignMapData MapData { get; private set; }
 
         public Localize LocaleManager { get; private set; }
 
         public string LocaleSourceID { get; private set; }
+
+        public CampaignPackage() {
+            this.GfxResources = new List<GfxMap>();
+        }
 
         #region Binary Data
 
@@ -109,6 +117,7 @@ namespace Battlegrounds.Campaigns {
                 }
             }
 
+            // Read map definition from binary
             if (LuaBinary.FromBinary(new MemoryStream(reader.ReadBytes(reader.ReadInt32())), Encoding.Unicode) is not LuaTable mapdef) {
                 Trace.WriteLine($"Campaign '{Path.GetFileName(binaryFilepath)}' contains no map definition.", nameof(CampaignPackage));
                 return false;
@@ -156,7 +165,9 @@ namespace Battlegrounds.Campaigns {
                     case 0x4:
                         break;
                     case 0x5:
-
+                        if (GfxMap.FromBinary(new MemoryStream(resourceBytes)) is GfxMap gfx) {
+                            this.GfxResources.Add(gfx);
+                        }
                         break;
                     default:
                         break;
