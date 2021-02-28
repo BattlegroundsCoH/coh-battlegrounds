@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Battlegrounds.Campaigns.Organisations;
 using Battlegrounds.Lua;
 
 namespace Battlegrounds.Campaigns {
@@ -46,8 +47,6 @@ namespace Battlegrounds.Campaigns {
 
         public CampaignArmyTeam Owner { get; set; }
 
-        public List<int> Occupants { get; }
-
         public int OccupantCapacity { get; init; }
 
         public double Value { get; set; }
@@ -58,14 +57,16 @@ namespace Battlegrounds.Campaigns {
 
         public List<NodeMap> Maps { get; }
 
+        public List<Formation> Occupants { get; }
+
         public CampaignMapNode(string name, double u, double v) {
             this.NodeName = name;
             this.U = u;
             this.V = v;
             this.VisualNode = null;
             this.Owner = CampaignArmyTeam.TEAM_NEUTRAL;
-            this.Occupants = new List<int>();
             this.Maps = new List<NodeMap>();
+            this.Occupants = new List<Formation>();
         }
 
         public void SetMapData(LuaValue luaValue) {
@@ -82,6 +83,15 @@ namespace Battlegrounds.Campaigns {
                         this.Maps.Add(new NodeMap(s.Str(), string.Empty, false));
                     }
                 });
+            }
+        }
+
+        public bool CanMoveTo(Formation formation) {
+            if (this.Occupants.Count + 1 <= this.OccupantCapacity) {
+                // TODO: Check if script allows for it
+                return true;
+            } else {
+                return false;
             }
         }
 

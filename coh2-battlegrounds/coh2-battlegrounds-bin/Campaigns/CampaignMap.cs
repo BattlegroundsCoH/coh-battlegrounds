@@ -14,7 +14,6 @@ namespace Battlegrounds.Campaigns {
 
         private List<CampaignMapNode> m_nodes;
         private List<CampaignMapTransition> m_edges;
-        private List<Formation> m_organisations;
 
         public CampaignMap(CampaignMapData mapData) {
 
@@ -27,9 +26,6 @@ namespace Battlegrounds.Campaigns {
             // Create lists for network data
             this.m_nodes = new List<CampaignMapNode>();
             this.m_edges = new List<CampaignMapTransition>();
-
-            // Create organisation overview
-            this.m_organisations = new List<Formation>();
 
         }
 
@@ -76,23 +72,109 @@ namespace Battlegrounds.Campaigns {
 
         public void EachTransition(Action<CampaignMapTransition> action) => this.m_edges.ForEach(action);
 
-        public void EachFormation(Action<Formation> action) => this.m_organisations.ForEach(action);
+        public void EachFormation(Action<Formation> action) => this.m_nodes.ForEach(x => x.Occupants.ForEach(action));
 
         public CampaignMapNode FromName(string name) => this.m_nodes.FirstOrDefault(x => x.NodeName == name);
 
-        public bool SpawnFormationAt(string nodeIdentifier, Formation organisation) {
+        public bool SpawnFormationAt(string nodeIdentifier, Formation formation) {
             if (this.FromName(nodeIdentifier) is CampaignMapNode node) {
-                // TODO: Check if node can handle it
-                organisation.SetNodeLocation(node);
-                this.m_organisations.Add(organisation);
-                return true;
-            } else {
-                return false;
+                
+                if (node.CanMoveTo(formation)) {
+                    formation.SetNodeLocation(node);
+                    node.Occupants.Add(formation);
+                    return true;
+                }
+
             }
+            return false;
         }
 
         public bool MoveTo(Formation organisation, CampaignMapNode target) {
             return true;
+        }
+
+        public List<CampaignMapNode> FindPath(CampaignMapNode from, CampaignMapNode end)
+            => Dijkstra(from, end);
+
+        private List<CampaignMapNode> Dijkstra(CampaignMapNode from, CampaignMapNode end) {
+            
+            HashSet<CampaignMapNode> nodes = new HashSet<CampaignMapNode>();
+            Dictionary<CampaignMapNode, float> distance = new Dictionary<CampaignMapNode, float>();
+            Dictionary<CampaignMapNode, CampaignMapNode> prev = new Dictionary<CampaignMapNode, CampaignMapNode>();
+            
+            foreach (CampaignMapNode node in this.m_nodes) {
+                distance[node] = float.PositiveInfinity;
+                prev[node] = null;
+                nodes.Add(node);
+            }
+
+            distance[from] = 0.0f;
+
+            CampaignMapNode MinDis() {
+                float f = float.PositiveInfinity;
+                CampaignMapNode q = null;
+                foreach (CampaignMapNode n in nodes) {
+                    if (distance[n] < f) {
+                        q = n;
+                    }
+                }
+                return q;
+            }
+
+            while (nodes.Count > 0) {
+
+                CampaignMapNode u = MinDis();
+                nodes.Remove(u);
+
+                if (u == end)
+                    break;
+
+                var neighbours = this.GetNeighbours(u, nodes);
+
+                foreach (var neighbour in neighbours) {
+                    float d = distance[u] + 1.0f;
+                    if (d < distance[neighbour]) {
+                        distance[neighbour] = d;
+                        prev[neighbour] = u;
+                    }
+                }
+
+            }
+
+            List<CampaignMapNode> path = new List<CampaignMapNode>();
+            CampaignMapNode t = end;
+            if (prev[t] is not null || t == from) {
+                while (t is not null) {
+                    path.Insert(0, t);
+                    t = prev[t];
+                }
+            }
+
+            return path;
+
+        }
+
+        private List<CampaignMapNode> GetNeighbours(CampaignMapNode source, IEnumerable<CampaignMapNode> filter) {
+            List<CampaignMapNode> neighbours = new List<CampaignMapNode>();
+            foreach (var t in this.m_edges) {
+                if (t.TransitionType == CampaignMapTransitionType.Unary) {
+                    if (t.From == source) {
+                        neighbours.Add(t.To);
+                    }
+                } else {
+                    if (t.From == source) {
+                        neighbours.Add(t.To);
+                    } else if (t.To == source) {
+                        neighbours.Add(t.From);
+                    }
+                }
+            }
+            int fcount = filter.Count();
+            if (fcount == 0) {
+                return neighbours;
+            } else {
+                return neighbours.Where(x => filter.Contains(x)).ToList();
+            }
         }
 
     }

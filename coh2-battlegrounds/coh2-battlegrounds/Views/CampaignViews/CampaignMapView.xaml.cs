@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -213,10 +214,18 @@ namespace BattlegroundsApp.Views.CampaignViews {
         private void NodeClicked(object sender, MouseButtonEventArgs e) {
             if (sender is Ellipse ellipse && ellipse.Tag is CampaignMapNode node) {
                 if (e.LeftButton == MouseButtonState.Pressed) {
-
+                    this.Selection.Select(node.Occupants.Select(x => this.FromFormation(x)));
                 } else if (e.RightButton == MouseButtonState.Pressed) {
                     if (this.Selection.Size > 0) {
+                        if (this.Selection.Shares(x => x.Formation.Node)) {
+                            this.Selection.InvokeEach(x => {
 
+                                var path = this.Controller.Campaign.PlayMap.FindPath(x.Formation.Node, node);
+
+                                Trace.WriteLine(string.Join(" -> ", path.Select(x => x.NodeName)));
+
+                            });
+                        }
                     }
                 }
             }

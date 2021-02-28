@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Battlegrounds.Functional;
 
 namespace BattlegroundsApp.Views.CampaignViews.Models {
@@ -32,6 +30,19 @@ namespace BattlegroundsApp.Views.CampaignViews.Models {
         public void DeSelect(CampaignUnitFormationModel model) => this.m_selection.Remove(model);
 
         public void Clear() => this.m_selection.Clear();
+
+        public void InvokeEach(Action<CampaignUnitFormationModel> action) => this.m_selection.ForEach(action);
+
+        public bool All(Predicate<CampaignUnitFormationModel> predicate) => this.m_selection.All(x => predicate(x));
+
+        public bool Shares<T>(Func<CampaignUnitFormationModel, T> selector) {
+            if (this.Size > 0) {
+                var def = selector(this.m_selection.FirstOrDefault());
+                return this.All(x => def.Equals(selector(x)));
+            } else {
+                return false;
+            }
+        }
 
     }
 

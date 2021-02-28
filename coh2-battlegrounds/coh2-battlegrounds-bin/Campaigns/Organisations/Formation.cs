@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 
 namespace Battlegrounds.Campaigns.Organisations {
@@ -25,6 +24,11 @@ namespace Battlegrounds.Campaigns.Organisations {
         public CampaignMapNode Node => this.m_location;
 
         /// <summary>
+        /// 
+        /// </summary>
+        public CampaignMapNode Destination { get; set; }
+
+        /// <summary>
         /// Get the name of the dominant army in charge of this formation.
         /// </summary>
         public string Army => this.Divisions.FirstOrDefault().EleemntOf.Faction.Name;
@@ -33,6 +37,11 @@ namespace Battlegrounds.Campaigns.Organisations {
         /// Get if the unit formation can be split.
         /// </summary>
         public bool CanSplit => this.m_regiments.Count > 1;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public CampaignArmyTeam Team { get; private set; }
 
         /// <summary>
         /// 
@@ -51,6 +60,7 @@ namespace Battlegrounds.Campaigns.Organisations {
                     this.m_regiments.Add(x);
                 }
             });
+            this.Team = div.EleemntOf.Team;
         }
 
         public void SetNodeLocation(CampaignMapNode node) => this.m_location = node;
