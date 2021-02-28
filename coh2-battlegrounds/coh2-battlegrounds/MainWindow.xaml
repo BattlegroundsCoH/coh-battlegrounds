@@ -7,58 +7,11 @@
         xmlns:views="clr-namespace:BattlegroundsApp.Views"
         xmlns:caseConverter="clr-namespace:BattlegroundsApp.Utilities.Converters"
         mc:Ignorable="d"
-        Title="Battlegrounds" Height="850" Width="1400" WindowStartupLocation="CenterScreen" WindowStyle="SingleBorderWindow" MinHeight="850" MinWidth="1400">
+        Title="Battlegrounds" Height="1080" Width="1920" WindowStartupLocation="CenterScreen" WindowStyle="SingleBorderWindow" MinHeight="850" MinWidth="1400">
     <local:CoreAppWindow.Background>
         <ImageBrush ImageSource="pack://application:,,,/Resources/ingame/application/app_background.png"/>
     </local:CoreAppWindow.Background>
     <local:CoreAppWindow.Resources>
-        <!-- Button Styles -->
-        <Style x:Key="MainWindiwButtonStyle" TargetType="{x:Type Button}">
-            <Setter Property="Background">
-                <Setter.Value>
-                    <ImageBrush ImageSource="pack://application:,,,/Resources/ingame/application/app_button.png"/>
-                </Setter.Value>
-            </Setter>
-            <Setter Property="SnapsToDevicePixels" Value="True"/>
-            <Setter Property="UseLayoutRounding" Value="True"/>
-            <Setter Property="FontSize" Value="18"/>
-            <Setter Property="Foreground" Value="#eee"/>
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="{x:Type Button}">
-                        <Border Background="{TemplateBinding Background}">
-                            <Grid Width="275" Height="48">
-                                <ContentPresenter x:Name="MyContentPresenter" Content="{TemplateBinding Content}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                            </Grid>
-                        </Border>
-                        <ControlTemplate.Triggers>
-                            <Trigger Property="IsMouseOver" Value="True">
-                                <Setter Property="Background">
-                                    <Setter.Value>
-                                        <ImageBrush ImageSource="pack://application:,,,/Resources/ingame/application/app_button_highlighted.png"/>
-                                    </Setter.Value>
-                                </Setter>
-                            </Trigger>
-                            <Trigger Property="IsPressed" Value="True">
-                                <Setter Property="Background">
-                                    <Setter.Value>
-                                        <ImageBrush ImageSource="pack://application:,,,/Resources/ingame/application/app_button_selected.png"/>
-                                    </Setter.Value>
-                                </Setter>
-                            </Trigger>
-                            <Trigger Property="IsEnabled" Value="False">
-                                <Setter Property="Background">
-                                    <Setter.Value>
-                                        <ImageBrush ImageSource="pack://application:,,,/Resources/ingame/application/app_button_disabled.png"/>
-                                    </Setter.Value>
-                                </Setter>
-                                <Setter Property="Opacity" Value="0.65"/>
-                            </Trigger>
-                        </ControlTemplate.Triggers>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
         <!-- CaseConverter -->
         <caseConverter:CaseConverter Case="Upper" x:Key="CaseConverterUpper"/>
     </local:CoreAppWindow.Resources>
@@ -102,31 +55,31 @@
         <ContentControl Name="AppContent" Grid.Row="3" Grid.Column="2" Grid.RowSpan="8" Grid.ColumnSpan="7" Margin="20,0,0,0" Content="{Binding}"/>
 
         <Button x:Name="DashboardButton" Grid.Row="3" Grid.Column="1" Content="{Binding DashboardButtonContent, Converter={StaticResource CaseConverterUpper}, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}"
-                Margin="0,0,0,0" IsEnabled="False" Click="Dashboard_Click" Style="{StaticResource MainWindiwButtonStyle}" ToolTip="Personal overall statistics"/>
+                Margin="0,0,0,0" IsEnabled="False" Click="Dashboard_Click" Style="{StaticResource MainButtonStyle}" ToolTip="Personal overall statistics"/>
 
         <!-- Row 4 -->
         <Button x:Name="NewsButton" Grid.Row="4" Grid.Column="1" Content="{Binding NewsButtonContent, Converter={StaticResource CaseConverterUpper}, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}" 
-                Margin="0,10,0,0" IsEnabled="False" Click="News_Click" Style="{StaticResource MainWindiwButtonStyle}" ToolTip="Shows the latest news"/>
+                Margin="0,10,0,0" IsEnabled="False" Click="News_Click" Style="{StaticResource MainButtonStyle}" ToolTip="Shows the latest news"/>
 
         <!-- Row 5 -->
         <Button x:Name="CompanyBuilderButton" Grid.Row="5" Grid.Column="1" Content="{Binding CompanyBuilderButtonContent, Converter={StaticResource CaseConverterUpper}, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}" 
-                Margin="0,10,0,0" Click="CompanyBuilder_Click" Style="{StaticResource MainWindiwButtonStyle}" ToolTip="Create or edit your compenies"/>
+                Margin="0,10,0,0" Click="CompanyBuilder_Click" Style="{StaticResource MainButtonStyle}" ToolTip="Create or edit your compenies"/>
 
         <!-- Row 6 -->
         <Button x:Name="CampaignButton" Grid.Row="6" Grid.Column="1" Content="{Binding CampaignButtonContent, Converter={StaticResource CaseConverterUpper}, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}" 
-                Margin="0,10,0,0" IsEnabled="True" Click="Campaign_Click" Style="{StaticResource MainWindiwButtonStyle}" ToolTip="Play singleplayer or coop campaign"/>
+                Margin="0,10,0,0" IsEnabled="True" Click="Campaign_Click" Style="{StaticResource MainButtonStyle}" ToolTip="Play singleplayer or coop campaign"/>
 
         <!-- Row 7 -->
         <Button x:Name="GameBrowserButton" Grid.Row="7" Grid.Column="1" Content="{Binding GameBrowserButtonContent, Converter={StaticResource CaseConverterUpper}, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}" 
-                Margin="0,10,0,0" Click="GameBrowser_Click" Style="{StaticResource MainWindiwButtonStyle}" ToolTip="Browse through a list of available lobbies"/>
+                Margin="0,10,0,0" Click="GameBrowser_Click" Style="{StaticResource MainButtonStyle}" ToolTip="Browse through a list of available lobbies"/>
 
         <!-- Row 8 -->
         <Button x:Name="SettingsButton" Grid.Row="8" Grid.Column="1" Content="{Binding SettingsButtonContent, Converter={StaticResource CaseConverterUpper}, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}" 
-                Margin="0,10,0,0" IsEnabled="False" Style="{StaticResource MainWindiwButtonStyle}" ToolTip="Adjust application settings"/>
+                Margin="0,10,0,0" IsEnabled="False" Style="{StaticResource MainButtonStyle}" ToolTip="Adjust application settings"/>
 
         <!-- Row 9 -->
         <Button x:Name="ExitButton" Grid.Row="9" Grid.Column="1" Content="{Binding ExitButtonContent, Converter={StaticResource CaseConverterUpper}, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}" 
-                Margin="0,35,0,0" Click="Exit_Click" Style="{StaticResource MainWindiwButtonStyle}" ToolTip="Exit the application"/>
+                Margin="0,35,0,0" Click="Exit_Click" Style="{StaticResource MainButtonStyle}" ToolTip="Exit the application"/>
 
     </Grid>
 </local:CoreAppWindow>
