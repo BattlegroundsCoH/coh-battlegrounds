@@ -36,7 +36,7 @@
             leaf = false, -- Is endpoint
             owner = TEAM_ALLIES, -- Node owner
             value = 1, -- Victory Point value
-            capacity = 1, -- Max companies per side
+            capacity = 2, -- Max companies per side
             attrition = 0.1, -- The amount of attrition a company suffers
             map = "4p_rails_and_metal" -- The map to play when fighting a battle
         },
@@ -56,7 +56,7 @@
             leaf = false, -- Is endpoint
             owner = TEAM_ALLIES, -- Node owner
             value = 1, -- Victory Point value
-            capacity = 1, -- Max companies per side
+            capacity = 4, -- Max companies per side
             attrition = 0.1, -- The amount of attrition a company suffers
             map = "8p_city17" -- The map to play when fighting a battle
         },
@@ -126,7 +126,7 @@
             leaf = false, -- Is endpoint
             owner = TEAM_ALLIES, -- Node owner
             value = 1, -- Victory Point value
-            capacity = 1, -- Max companies per side
+            capacity = 2, -- Max companies per side
             attrition = 0.1, -- The amount of attrition a company suffers
             map = "timberyard" -- The map to play when fighting a battle
         },
@@ -136,7 +136,7 @@
             leaf = true, -- Is endpoint
             owner = TEAM_AXIS, -- Node owner
             value = 1, -- Victory Point value
-            capacity = 1, -- Max companies per side
+            capacity = 8, -- Max companies per side
             attrition = 0.1, -- The amount of attrition a company suffers
             map = "divide map" -- The map to play when fighting a battle
         },
@@ -146,7 +146,7 @@
             leaf = true, -- Is endpoint
             owner = TEAM_AXIS, -- Node owner
             value = 1, -- Victory Point value
-            capacity = 1, -- Max companies per side
+            capacity = 8, -- Max companies per side
             attrition = 0.1, -- The amount of attrition a company suffers
             map = "divide map" -- The map to play when fighting a battle
         },
@@ -156,7 +156,7 @@
             leaf = true, -- Is endpoint
             owner = TEAM_AXIS, -- Node owner
             value = 1, -- Victory Point value
-            capacity = 1, -- Max companies per side
+            capacity = 8, -- Max companies per side
             attrition = 0.1, -- The amount of attrition a company suffers
             map = "divide map" -- The map to play when fighting a battle
         },
@@ -166,14 +166,14 @@
             leaf = true, -- Is endpoint
             owner = TEAM_AXIS, -- Node owner
             value = 1, -- Victory Point value
-            capacity = 1, -- Max companies per side
+            capacity = 8, -- Max companies per side
             attrition = 0.1, -- The amount of attrition a company suffers
             map = "divide map" -- The map to play when fighting a battle
         },
         ["workers_settlement"] = {
             u = 121.0 / 1110.0,
             v = 172.0 / 792.0,
-            leaf = true, -- Is endpoint
+            leaf = false, -- Is endpoint
             owner = TEAM_ALLIES, -- Node owner
             value = 1, -- Victory Point value
             capacity = 1, -- Max companies per side
@@ -183,7 +183,7 @@
         ["rail_exit"] = {
             u = 215.0 / 1110.0,
             v = 524.0 / 792.0,
-            leaf = true, -- Is endpoint
+            leaf = false, -- Is endpoint
             owner = TEAM_ALLIES, -- Node owner
             value = 1, -- Victory Point value
             capacity = 1, -- Max companies per side
