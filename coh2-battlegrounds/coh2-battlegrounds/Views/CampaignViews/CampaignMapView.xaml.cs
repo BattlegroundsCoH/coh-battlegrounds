@@ -11,6 +11,7 @@ using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
@@ -219,12 +220,13 @@ namespace BattlegroundsApp.Views.CampaignViews {
                     if (this.Selection.Size > 0) {
                         if (this.Selection.Shares(x => x.Formation.Node)) {
                             this.Selection.InvokeEach(x => {
-
-                                var path = this.Controller.Campaign.PlayMap.FindPath(x.Formation.Node, node);
-
-                                Trace.WriteLine(string.Join(" -> ", path.Select(x => x.NodeName)));
-
+                                if (x.Formation.CanMove) {
+                                    if (this.Controller.Campaign.PlayMap.SetPath(x.Formation.Node, node, x.Formation)) {
+                                        this.MoveFormation(x);
+                                    }
+                                }
                             });
+                            this.FindAndBeginCombat();
                         }
                     }
                 }
@@ -249,11 +251,56 @@ namespace BattlegroundsApp.Views.CampaignViews {
             element.SetValue(Panel.ZIndexProperty, 100);
         }
 
+        private static void GotoPosition(UIElement element, double x, double y) {
+
+            DoubleAnimation xAnim = new DoubleAnimation((double)element.GetValue(Canvas.LeftProperty), x, new Duration(TimeSpan.FromSeconds(2))) {
+                 RepeatBehavior = new RepeatBehavior(1),
+            };
+            xAnim.Freeze();
+
+            DoubleAnimation yAnim = new DoubleAnimation((double)element.GetValue(Canvas.TopProperty), y, new Duration(TimeSpan.FromSeconds(2))) {
+                RepeatBehavior = new RepeatBehavior(1),
+            };
+            yAnim.Freeze();
+
+            element.BeginAnimation(Canvas.LeftProperty, xAnim, HandoffBehavior.Compose);
+            element.BeginAnimation(Canvas.TopProperty, yAnim, HandoffBehavior.Compose);
+
+        }
+
         private void EndTurnBttn_Click(object sender, RoutedEventArgs e) {
             if (!this.Controller.EndTurn()) {
                 this.Controller.EndCampaign();
             }
             this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(this.CampaignDate)));
+        }
+
+        /// <summary>
+        /// This will move a formation to its next destination
+        /// </summary>
+        private void MoveFormation(CampaignUnitFormationModel formationModel) {
+            
+            // Make sure there's a destination
+            if (formationModel.Formation.Destination is CampaignMapNode node) {
+                
+                // Move in map
+                this.Controller.Campaign.PlayMap.MoveTo(formationModel.Formation, node);
+
+                // Show visually
+                GotoPosition(formationModel.Element, node.U * this.CampaignMapWidth, node.V * this.CampaignMapHeight);
+
+                // Check if we can move
+                formationModel.Formation.CanMove = false;
+            
+            }
+
+        }
+
+        /// <summary>
+        /// This will look at all nodes, and engage in combat
+        /// </summary>
+        private void FindAndBeginCombat() {
+
         }
 
         private void LeaveAndSaveButton_Click(object sender, RoutedEventArgs e) {

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using Battlegrounds.Campaigns.Organisations;
 using Battlegrounds.Lua;
@@ -89,14 +90,42 @@ namespace Battlegrounds.Campaigns {
             return false;
         }
 
-        public bool MoveTo(Formation organisation, CampaignMapNode target) {
-            return true;
+        public void MoveTo(Formation formation, CampaignMapNode target) {
+            
+            // Update occupants
+            formation.Node.Occupants.Remove(formation);
+            target.Occupants.Add(formation);
+            
+            // Set location and update destination
+            formation.SetNodeLocation(target);
+            formation.UpdatePath();
+            
         }
 
-        public List<CampaignMapNode> FindPath(CampaignMapNode from, CampaignMapNode end)
-            => Dijkstra(from, end);
+        public bool SetPath(CampaignMapNode from, CampaignMapNode end, Formation formation) {
+            var path = Dijkstra(from, end, formation);
+            Trace.WriteLine(string.Join(" -> ", path.Select(x => x.NodeName)), $"{nameof(CampaignMap)}:PathResult");
+            if (path[0] == from && path[^1] == end) {
+                formation.SetNodeDestinations(path);
+                return true;
+            } else {
+                return false;
+            }
+        }
 
-        private List<CampaignMapNode> Dijkstra(CampaignMapNode from, CampaignMapNode end) {
+        private float Weight(CampaignMapNode prev, CampaignMapNode to, Formation formation) {
+            if (to.CanMoveTo(formation)) {
+                float w = 1.0f;
+                if (to.Owner != formation.Team) {
+                    w += 2.5f;
+                }
+                // TODO: Check with lua scripts if it's possible to move.
+                return w;
+            }
+            return float.PositiveInfinity;
+        }
+
+        private List<CampaignMapNode> Dijkstra(CampaignMapNode from, CampaignMapNode end, Formation formation) {
             
             HashSet<CampaignMapNode> nodes = new HashSet<CampaignMapNode>();
             Dictionary<CampaignMapNode, float> distance = new Dictionary<CampaignMapNode, float>();
@@ -132,7 +161,7 @@ namespace Battlegrounds.Campaigns {
                 var neighbours = this.GetNeighbours(u, nodes);
 
                 foreach (var neighbour in neighbours) {
-                    float d = distance[u] + 1.0f;
+                    float d = distance[u] + this.Weight(u, neighbour, formation);
                     if (d < distance[neighbour]) {
                         distance[neighbour] = d;
                         prev[neighbour] = u;

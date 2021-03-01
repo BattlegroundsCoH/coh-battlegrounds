@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Battlegrounds.Campaigns.Organisations {
@@ -6,6 +7,7 @@ namespace Battlegrounds.Campaigns.Organisations {
     public class Formation {
 
         private List<Regiment> m_regiments;
+        private List<CampaignMapNode> m_path;
         private CampaignMapNode m_location;
 
         /// <summary>
@@ -24,9 +26,9 @@ namespace Battlegrounds.Campaigns.Organisations {
         public CampaignMapNode Node => this.m_location;
 
         /// <summary>
-        /// 
+        /// Get the destination of this formation
         /// </summary>
-        public CampaignMapNode Destination { get; set; }
+        public CampaignMapNode Destination => this.m_path.Count > 0 ? this.m_path[0] : null;
 
         /// <summary>
         /// Get the name of the dominant army in charge of this formation.
@@ -39,6 +41,11 @@ namespace Battlegrounds.Campaigns.Organisations {
         public bool CanSplit => this.m_regiments.Count > 1;
 
         /// <summary>
+        /// Get if the formation can currently move
+        /// </summary>
+        public bool CanMove { get; set; }
+
+        /// <summary>
         /// 
         /// </summary>
         public CampaignArmyTeam Team { get; private set; }
@@ -48,6 +55,7 @@ namespace Battlegrounds.Campaigns.Organisations {
         /// </summary>
         public Formation() {
             this.m_regiments = new List<Regiment>();
+            this.CanMove = true;
         }
 
         /// <summary>
@@ -64,6 +72,11 @@ namespace Battlegrounds.Campaigns.Organisations {
         }
 
         public void SetNodeLocation(CampaignMapNode node) => this.m_location = node;
+
+        public void SetNodeDestinations(List<CampaignMapNode> nodes) {
+            this.m_path = nodes;
+            this.UpdatePath();
+        }
 
         public void ApplyAttrition(double attrition) {
 
@@ -123,6 +136,12 @@ namespace Battlegrounds.Campaigns.Organisations {
             // Return orgs
             return organisations;
 
+        }
+
+        public void UpdatePath() {
+            if (this.m_path.Count > 0 && this.m_path[0] == this.m_location) {
+                this.m_path.RemoveAt(0);
+            }
         }
 
     }
