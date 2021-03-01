@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
+using Battlegrounds.Functional;
 using Battlegrounds.Game.Gameplay;
 using Battlegrounds.Json;
 using Battlegrounds.Locale;
@@ -14,6 +15,7 @@ namespace Battlegrounds.Campaigns.Organisations {
             public string Designation { get; } // Able, Baker.. etc
             public List<Squad> Units { get; }
             public int BaseStrength { get; private set; }
+            public float Strength => this.Units.Count / (float)this.BaseStrength;
             public Company(string designation) {
                 this.Designation = designation;
                 this.Units = new List<Squad>();
@@ -36,7 +38,7 @@ namespace Battlegrounds.Campaigns.Organisations {
         // TODO: Implement some kind of json late-binding
         public Division ElementOf { get; }
 
-        public float Strength => this.m_companies.Select(x => x.Units.Count / (float)x.BaseStrength).Sum() / this.m_initialCompanyCount;
+        public float Strength => this.m_companies.Select(x => x.Strength).Sum() / this.m_initialCompanyCount;
 
         public bool IsArtillery { get; }
 
@@ -58,6 +60,10 @@ namespace Battlegrounds.Campaigns.Organisations {
         }
 
         public string ToJsonReference() => throw new NotSupportedException();
+
+        public void EachCompany(Action<Regiment.Company> action) => this.m_companies.ForEach(action);
+
+        public Regiment.Company FirstCompany() => this.m_companies.FirstOrDefault(x => x.Strength > 0);
 
     }
 

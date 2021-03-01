@@ -121,6 +121,13 @@
                        Height="{Binding CampaignMapHeight}"
                        Panel.ZIndex="0"
                        />
+                <Rectangle
+                       Width="{Binding CampaignMapWidth}"
+                       Height="{Binding CampaignMapHeight}"
+                    Fill="#4242420f"
+                    Panel.ZIndex="1000"
+                    Visibility="{Binding CampaignDialogVisible}"
+                    />
             </Canvas>            
         </ScrollViewer>
         

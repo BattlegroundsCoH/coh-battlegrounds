@@ -15,7 +15,7 @@ using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-
+using Battlegrounds;
 using Battlegrounds.Campaigns;
 using Battlegrounds.Campaigns.Controller;
 using Battlegrounds.Campaigns.Organisations;
@@ -24,6 +24,8 @@ using Battlegrounds.Gfx;
 
 using BattlegroundsApp.Resources;
 using BattlegroundsApp.Views.CampaignViews.Models;
+
+using static Battlegrounds.BattlegroundsInstance;
 
 namespace BattlegroundsApp.Views.CampaignViews {
     
@@ -46,6 +48,8 @@ namespace BattlegroundsApp.Views.CampaignViews {
         public double CampaignMapHeight => this.CampaignMapImage.Height;
 
         public string CampaignDate => this.Controller.Campaign.Turn.Date;
+
+        public Visibility CampaignDialogVisible { get; set; } = Visibility.Collapsed;
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -128,6 +132,7 @@ namespace BattlegroundsApp.Views.CampaignViews {
 
                 // Set visual
                 n.VisualNode = node;
+                n.NodeChange += this.NodePropertyChanged;
 
                 // Set position of node
                 SetPosition(node, n.U * this.CampaignMapWidth - (32.0 / 2.0), n.V * this.CampaignMapHeight - (32.0 / 2.0));
@@ -156,6 +161,17 @@ namespace BattlegroundsApp.Views.CampaignViews {
 
             });
 
+        }
+
+        private void NodePropertyChanged(CampaignMapNode self, CampaignMapNodeProperty property, object value) {
+            switch (property) {
+                case CampaignMapNodeProperty.Owner:
+                    CampaignArmyTeam team = (CampaignArmyTeam)value;
+                    (self.VisualNode as Ellipse).Fill = team == CampaignArmyTeam.TEAM_ALLIES ? Brushes.Red : (team == CampaignArmyTeam.TEAM_AXIS ? Brushes.Green : Brushes.Gray);
+                    break;
+                default:
+                    break;
+            }
         }
 
         private void RefreshDisplayedFormations() {
@@ -217,20 +233,27 @@ namespace BattlegroundsApp.Views.CampaignViews {
                 if (e.LeftButton == MouseButtonState.Pressed) {
                     this.Selection.Select(node.Occupants.Select(x => this.FromFormation(x)));
                 } else if (e.RightButton == MouseButtonState.Pressed) {
-                    if (this.Selection.Size > 0) {
-                        if (this.Selection.Shares(x => x.Formation.Node)) {
-                            this.Selection.InvokeEach(x => {
-                                if (x.Formation.CanMove) {
-                                    if (this.Controller.Campaign.PlayMap.SetPath(x.Formation.Node, node, x.Formation)) {
-                                        this.MoveFormation(x);
-                                    }
-                                }
-                            });
-                            this.FindAndBeginCombat();
+                    this.NodeRightClicked(node);
+                }
+            }
+        }
+
+        private void NodeRightClicked(CampaignMapNode node) {
+
+            if (this.Selection.Size > 0) {
+                if (this.Selection.Shares(x => x.Formation.Node)) {
+                    if (this.Selection.All(x => x.Formation.Team == node.Owner)) {
+                        this.MoveSelection(node);
+                    } else {
+                        if (node.Occupants.Count == 0) {
+                            this.MoveSelection(node);
+                        } else {
+                            this.SelectionAttackNode(node);
                         }
                     }
                 }
             }
+
         }
 
         private void BannerClicked(object sender, MouseButtonEventArgs e) {
@@ -276,6 +299,19 @@ namespace BattlegroundsApp.Views.CampaignViews {
         }
 
         /// <summary>
+        /// Move the entire selection to node
+        /// </summary>
+        private void MoveSelection(CampaignMapNode node) {
+            this.Selection.InvokeEach(x => {
+                if (x.Formation.CanMove) {
+                    if (this.Controller.Campaign.PlayMap.SetPath(x.Formation.Node, node, x.Formation)) {
+                        this.MoveFormation(x);
+                    }
+                }
+            });
+        }
+
+        /// <summary>
         /// This will move a formation to its next destination
         /// </summary>
         private void MoveFormation(CampaignUnitFormationModel formationModel) {
@@ -297,13 +333,44 @@ namespace BattlegroundsApp.Views.CampaignViews {
         }
 
         /// <summary>
-        /// This will look at all nodes, and engage in combat
+        /// This will display the attacking dialog
         /// </summary>
-        private void FindAndBeginCombat() {
+        private void SelectionAttackNode(CampaignMapNode node) {
+
+            // Get attackers
+            List<Formation> attackers = this.Selection.Get();
+
+            // Create engagement view
+            CampaignEngagementDialogView engagementDialogView = new CampaignEngagementDialogView() {
+                Header = Localize.GetString("CampaignView_AttackString", node.NodeName),
+                Attackers = Localize.GetEnum(attackers.First().Team),
+                Defenders = Localize.GetEnum(node.Owner),
+            };
+
+            // Set formations etc.
+            engagementDialogView.SetAttackingFormations(attackers);
+
+            // Show dialog
+            this.ShowCampaignDialog(engagementDialogView);
 
         }
 
         private void LeaveAndSaveButton_Click(object sender, RoutedEventArgs e) {
+
+        }
+
+        private void ShowCampaignDialog(CampaignDialogView dialogView) {
+            
+            // Set background visibility
+            CampaignDialogVisible = Visibility.Visible;
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(CampaignDialogVisible)));
+            
+            // Show Dialog
+            dialogView.ShowDialogView(this.CampaignMapCanvas);
+
+        }
+
+        private void HideCampaignDialog() {
 
         }
 

@@ -37,15 +37,15 @@ namespace Battlegrounds.Campaigns {
             nodes.Pairs((k, v) => {
                 LuaTable vt = v as LuaTable;
                 var node = new CampaignMapNode(k.Str(), vt["u"] as LuaNumber, vt["v"] as LuaNumber) {
-                    Attrition = vt["attrition"] as LuaNumber,
                     IsLeaf = (vt["leaf"] as LuaBool)?.IsTrue ?? false,
                     OccupantCapacity = (int)(vt["capacity"] as LuaNumber),
-                    Value = vt["attrition"] as LuaNumber,
                 };
+                node.SetAttrition(vt["attrition"] as LuaNumber);
+                node.SetValue(vt["attrition"] as LuaNumber);
                 if (vt["owner"] is LuaString ls) {
-                    node.Owner = ls.Str().ToUpper() == "ALLIES" ? CampaignArmyTeam.TEAM_ALLIES : CampaignArmyTeam.TEAM_AXIS;
+                    node.SetOwner(ls.Str().ToUpper() == "ALLIES" ? CampaignArmyTeam.TEAM_ALLIES : CampaignArmyTeam.TEAM_AXIS);
                 } else {
-                    node.Owner = CampaignArmyTeam.TEAM_NEUTRAL;
+                    node.SetOwner(CampaignArmyTeam.TEAM_NEUTRAL);
                 }
                 node.SetMapData(vt["map"]);
                 this.m_nodes.Add(node);
@@ -99,6 +99,13 @@ namespace Battlegrounds.Campaigns {
             // Set location and update destination
             formation.SetNodeLocation(target);
             formation.UpdatePath();
+
+            // Update owner
+            if (target.Owner != formation.Team) {
+                target.SetOwner(formation.Team);
+            }
+
+            // Invoke lua script
             
         }
 
@@ -155,7 +162,7 @@ namespace Battlegrounds.Campaigns {
                 CampaignMapNode u = MinDis();
                 nodes.Remove(u);
 
-                if (u == end)
+                if (u == end || u is null)
                     break;
 
                 var neighbours = this.GetNeighbours(u, nodes);

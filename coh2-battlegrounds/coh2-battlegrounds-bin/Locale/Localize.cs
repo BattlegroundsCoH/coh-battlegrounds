@@ -211,11 +211,37 @@ namespace Battlegrounds.Locale {
         }
 
         /// <summary>
+        /// Get the first UTF-16 encoded string represented by the <paramref name="key"/> and fill in string parameters.
+        /// </summary>
+        /// <param name="key">The raw locale key to use when locating the string.</param>
+        /// <param name="args">The argument values to give to the string parameters.</param>
+        /// <returns>The UTF-16 encoded <see cref="string"/> with filled parameters sought after if present in system. Otherwsie <paramref name="key"/> is returned.</returns>
+        public string GetString(LocaleKey key, params object[] args) {
+            string str = this.GetString(key);
+            for (int i = 0; i < args.Length; i++) {
+                string value = args[i] switch {
+                    LocaleKey lc => this.GetString(lc),
+                    _ => args[i].ToString()
+                };
+                str = str.Replace($"{{{i}}}", value);
+            }
+            return str;
+        }
+
+        /// <summary>
         /// Get the first UTF-16 encoded string represented by the <paramref name="key"/>.
         /// </summary>
         /// <param name="key">The raw locale key to use when locating the string.</param>
-        /// <returns>The UTF-16 encoded string sought after if present in system. Otherwsie <paramref name="key"/> is returned.</returns>
+        /// <returns>The UTF-16 encoded <see cref="string"/> sought after if present in system. Otherwsie <paramref name="key"/> is returned.</returns>
         public string GetString(string key) => this.GetString(new LocaleKey(key));
+
+        /// <summary>
+        /// Get the first UTF-16 encoded string represented by the <paramref name="key"/> and fill in string parameters.
+        /// </summary>
+        /// <param name="key">The raw locale key to use when locating the string.</param>
+        /// <param name="args">The argument values to give to the string parameters.</param>
+        /// <returns>The UTF-16 encoded <see cref="string"/> with filled parameters sought after if present in system. Otherwsie <paramref name="key"/> is returned.</returns>
+        public string GetString(string key, params object[] args) => this.GetString(new LocaleKey(key), args);
 
         /// <summary>
         /// Get the UTF-16 encoded string represented by the enum value.

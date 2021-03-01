@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Battlegrounds.Campaigns.Organisations;
 using Battlegrounds.Functional;
 
 namespace BattlegroundsApp.Views.CampaignViews.Models {
@@ -43,6 +44,8 @@ namespace BattlegroundsApp.Views.CampaignViews.Models {
                 return false;
             }
         }
+
+        public List<Formation> Get() => this.m_selection.Select(x => x.Formation).ToList();
 
     }
 
