@@ -345,13 +345,32 @@ namespace BattlegroundsApp.Views.CampaignViews {
                 Header = Localize.GetString("CampaignView_AttackString", node.NodeName),
                 Attackers = Localize.GetEnum(attackers.First().Team),
                 Defenders = Localize.GetEnum(node.Owner),
+                MapNode = node,
             };
+
+            // Subscribe to events
+            engagementDialogView.SubscribeToDialogEvent(CampaignEngagementDialogView.WITHDRAW, this.WithdrawAttack);
+            engagementDialogView.SubscribeToDialogEvent(CampaignEngagementDialogView.AUTO, this.AutoAttack);
+            engagementDialogView.SubscribeToDialogEvent(CampaignEngagementDialogView.ENGAGE, this.EngageAttack);
 
             // Set formations etc.
             engagementDialogView.SetAttackingFormations(attackers);
 
             // Show dialog
             this.ShowCampaignDialog(engagementDialogView);
+
+        }
+
+        private void WithdrawAttack(CampaignDialogView dialogView) {
+            this.HideCampaignDialog();
+        }
+
+        private void AutoAttack(CampaignDialogView dialogView) {
+            this.HideCampaignDialog();
+        }
+
+        private void EngageAttack(CampaignDialogView dialogView) {
+            this.HideCampaignDialog();
 
         }
 
@@ -371,6 +390,10 @@ namespace BattlegroundsApp.Views.CampaignViews {
         }
 
         private void HideCampaignDialog() {
+
+            // Set background visibility
+            CampaignDialogVisible = Visibility.Collapsed;
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(CampaignDialogVisible)));
 
         }
 

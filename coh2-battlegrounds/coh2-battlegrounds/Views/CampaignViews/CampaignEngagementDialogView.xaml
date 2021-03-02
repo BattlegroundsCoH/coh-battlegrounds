@@ -103,7 +103,7 @@
                 <ColumnDefinition MinWidth="220" MaxWidth="220"/>
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
-                <RowDefinition Height="28"/>
+                <RowDefinition Height="28" MaxHeight="28"/>
                 <RowDefinition/>
             </Grid.RowDefinitions>
             
@@ -119,28 +119,60 @@
             
             <!-- Control Buttons -->
             <StackPanel Grid.Row="1" Grid.Column="1" VerticalAlignment="Center">
-                <Button Margin="1,1,1,0" Click="MoveAll_Click">&gt;&gt;</Button>
-                <Button Margin="1,1,1,5" Click="MoveThis_Click">&gt;</Button>
-                <Button Margin="1,5,1,0" Click="ReturnAll_Click">&lt;&lt;</Button>
-                <Button Margin="1,1,1,0" Click="ReturnThis_Click">&lt;</Button>
+                <Button Margin="1,1,1,0" Click="MoveAll_Click"
+                        IsEnabled="{Binding CanMoveAll}">
+                    &gt;&gt;
+                </Button>
+                <Button Margin="1,1,1,5" Click="MoveThis_Click" 
+                        IsEnabled="{Binding CanAddToCompany}">
+                    &gt;
+                </Button>
+                <Button Margin="1,5,1,0" Click="ReturnAll_Click"
+                        IsEnabled="{Binding CanRemoveAll}">
+                    &lt;&lt;
+                </Button>
+                <Button Margin="1,1,1,0" Click="ReturnThis_Click"
+                        IsEnabled="{Binding CanRemoveFromCompany}">
+                    &lt;
+                </Button>
             </StackPanel>
 
             <!-- Available Units -->
-            <ListView Grid.Row="1" Grid.Column="0" ItemsSource="{Binding RegimentalUnits}"/>
+            <ListView Grid.Row="1" Grid.Column="0" 
+                      ItemsSource="{Binding RegimentalUnits}"
+                      SelectedIndex="{Binding SelectedRegimentUnit}"
+                      SelectionChanged="RegimentUnitList_SelectionChanged"
+                      MouseDoubleClick="RegimentUnitList_MouseDoubleClick"/>
             
             <!-- Selected Units -->
-            <TabControl Grid.Row="0" Grid.Column="2" Grid.RowSpan="2">
+            <TabControl Grid.Row="0" Grid.Column="2" Grid.RowSpan="2"
+                        SelectedIndex="{Binding SelectedPlayer}">
                 <TabItem Header="Player 1">
-                    <ListView />
+                    <ListView ItemsSource="{Binding Player1Units}"
+                              SelectedItem="{Binding CurrentCompanyUnitPlayer1}"
+                              SelectionChanged="Company_SelectionChanged"
+                              MouseDoubleClick="CompanyList_MouseDoubleClick"/>
                 </TabItem>
-                <TabItem Header="Player 2">
-                    <ListView />
+                <TabItem Header="Player 2" Visibility="{Binding Player2Tab}">
+                    <ListView ItemsSource="{Binding Player2Units}"
+                              Visibility="{Binding Player2Tab}"
+                              SelectedItem="{Binding CurrentCompanyUnitPlayer2}"
+                              SelectionChanged="Company_SelectionChanged"
+                              MouseDoubleClick="CompanyList_MouseDoubleClick"/>
                 </TabItem>
-                <TabItem Header="Player 3">
-                    <ListView />
+                <TabItem Header="Player 3" Visibility="{Binding Player3Tab}">
+                    <ListView ItemsSource="{Binding Player3Units}"
+                              Visibility="{Binding Player3Tab}"
+                              SelectedItem="{Binding CurrentCompanyUnitPlayer3}"
+                              SelectionChanged="Company_SelectionChanged"
+                              MouseDoubleClick="CompanyList_MouseDoubleClick"/>
                 </TabItem>
-                <TabItem Header="Player 4">
-                    <ListView />
+                <TabItem Header="Player 4" Visibility="{Binding Player4Tab}">
+                    <ListView ItemsSource="{Binding Player4Units}"
+                              Visibility="{Binding Player4Tab}"
+                              SelectedItem="{Binding CurrentCompanyUnitPlayer4}"
+                              SelectionChanged="Company_SelectionChanged"
+                              MouseDoubleClick="CompanyList_MouseDoubleClick"/>
                 </TabItem>
             </TabControl>
 
@@ -152,7 +184,7 @@
             <!-- Style="{StaticResource MainButtonStyle}" -->
             <Button Width="90" Margin="2" Click="Withdraw_Click">Withdraw</Button>
             <Button Width="90" Margin="2" Click="AutoResolve_Click">Auto-Resolve</Button>
-            <Button Width="90" Margin="2" Click="Engage_Click">Engage</Button>
+            <Button Width="90" Margin="2" Click="Engage_Click" IsEnabled="{Binding CanEngage}" >Engage</Button>
             
         </StackPanel>
         
