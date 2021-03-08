@@ -29,12 +29,14 @@ namespace Battlegrounds.Game.Database {
 
             try {
 
-                if (JsonParser.Parse($"{DatabaseManager.SolveDatabasepath()}vcoh-map-db.json").FirstOrDefault() is JsonArray array) {
+                if (JsonParser.Parse($"{DatabaseManager.SolveDatabasepath()}vcoh-map-db.json").FirstOrDefault() is ScenarioRecord record) {
 
-                    foreach (IJsonElement jsonElement in array) {
+                    foreach (IJsonElement jsonElement in record.Scenarios) {
 
                         if (jsonElement is Scenario scenario) {
-                            __scenarios.Add(Path.GetFileNameWithoutExtension(scenario.RelativeFilename), scenario);
+                            if (!__scenarios.TryAdd(Path.GetFileNameWithoutExtension(scenario.RelativeFilename), scenario)) {
+                                Trace.Write($"Failed to add duplicate vcoh scenario '{scenario.RelativeFilename}'", "ScenarioList::LoadList");
+                            }
                         }
 
                     }
@@ -57,9 +59,9 @@ namespace Battlegrounds.Game.Database {
 
         }
 
-        private record WorkshopRecord(List<Scenario> Scenarios) : IJsonObject {
+        public record ScenarioRecord(List<Scenario> Scenarios) : IJsonObject {
             public string ToJsonReference() => throw new NotImplementedException();
-            public WorkshopRecord() : this(new List<Scenario>()) { }
+            public ScenarioRecord() : this(new List<Scenario>()) { }
         }
 
         private static void HandleWorkshopFiles() {
@@ -77,7 +79,7 @@ namespace Battlegrounds.Game.Database {
             if (newWorkshopEntries > 0) {
 
                 // Get the record
-                IJsonObject rec = new WorkshopRecord(workshopScenarios);
+                IJsonObject rec = new ScenarioRecord(workshopScenarios);
 
                 // Save database
                 File.WriteAllText(workshop_dbpath, rec.Serialize());
@@ -97,7 +99,7 @@ namespace Battlegrounds.Game.Database {
 
             List<Scenario> workshopScenarios = new List<Scenario>();
             if (File.Exists(workshop_dbpath)) {
-                if (JsonParser.Parse(workshop_dbpath).FirstOrDefault() is WorkshopRecord array) {
+                if (JsonParser.Parse(workshop_dbpath).FirstOrDefault() is ScenarioRecord array) {
                     foreach (IJsonElement jsonElement in array.Scenarios) {
 
                         if (jsonElement is Scenario scenario) {
@@ -116,7 +118,7 @@ namespace Battlegrounds.Game.Database {
 
         }
 
-        private static bool IsValidExtractedWorkshopMapDirectory(string x) {
+        public static bool IsValidMapDirectory(string x) {
             if (Directory.Exists(x)) {
                 string[] d = Directory.GetDirectories(x);
                 return d.Length == 1 && Directory.GetFiles(d[0]).Length > 0;
@@ -162,53 +164,86 @@ namespace Battlegrounds.Game.Database {
 
                         // Get the directory to read from
                         string readfrom = $"{baseExtract}\\mp\\community\\"
-                            .IfTrue(IsValidExtractedWorkshopMapDirectory)
-                            .ElseIf($"{baseExtract}\\mp\\", IsValidExtractedWorkshopMapDirectory)
-                            .ElseIf($"{baseExtract}\\pm\\community\\", IsValidExtractedWorkshopMapDirectory)
-                            .ElseIf($"{baseExtract}\\pm\\", IsValidExtractedWorkshopMapDirectory)
-                            .Else(baseExtract, IsValidExtractedWorkshopMapDirectory);
+                            .IfTrue(IsValidMapDirectory)
+                            .ElseIf($"{baseExtract}\\mp\\", IsValidMapDirectory)
+                            .ElseIf($"{baseExtract}\\pm\\community\\", IsValidMapDirectory)
+                            .ElseIf($"{baseExtract}\\pm\\", IsValidMapDirectory)
+                            .Else(baseExtract, IsValidMapDirectory);
 
                         string[] dirs = Directory.GetDirectories(readfrom);
                         if (dirs.Length > 0) {
                             readfrom = dirs[0];
 
-                            string[] scenarioFiles = Directory.GetFiles(readfrom);
-                            Scenario scen = new Scenario(scenarioFiles.FirstOrDefault(x => x.EndsWith(".info")), scenarioFiles.FirstOrDefault(x => x.EndsWith(".options"))) {
-                                SgaName = sga
-                            };
-
-                            workshopScenarios.Add(scen);
-
-                            // Find the index of the minimap
-                            int minimapFile = scenarioFiles.IndexOf(x => x.EndsWith("_preview.tga")).IfTrue(x => x == -1).Then(x => scenarioFiles.IndexOf(x => x.EndsWith("_mm.tga")));
-
-                            // Make sure it's a valid index
-                            if (minimapFile != -1) {
-
-                                // Save destination
-                                string destination = $"usr\\mods\\map_icons\\{scen.Name}_map.tga";
-                                if (File.Exists(destination)) {
-                                    File.Delete(destination);
-                                }
-
-                                // Copy the found index file
-                                File.Copy(scenarioFiles[minimapFile], destination);
-
-                            }
-
-                            // Delete the extracted files
-                            Directory.Delete(baseExtract, true);
+                            // Read and add scenario
+                            workshopScenarios.Add(GetScenarioFromDirectory(readfrom, sga, "usr\\mods\\map_icons\\"));
 
                             // Increment new entries
                             newWorkshopEntries++;
 
                         } else {
-                            Trace.WriteLine($"Failed to read sga \"{sga}\" (Skipping)");
+                            Trace.WriteLine($"Failed to read sga \"{sga}\" (Skipping, unknown file structure)", "ScenarioList::WorkshopExtract");
                         }
-                    } catch { }
+                    } catch (Exception e) {
+                        Trace.WriteLine($"Failed to read sga \"{sga}\" (Skipping, message = '{e.Message}')", "ScenarioList::WorkshopExtract");
+                    }
 
                 }
 
+            }
+
+        }
+
+        public static Scenario GetScenarioFromDirectory(string scenarioDirectoryPath, string sga = "MPScenarios.sga", string mmSavePath = "bin\\gfx\\map_icons\\") {
+
+            // If valid scenario path
+            if (Directory.Exists(scenarioDirectoryPath)) {
+
+                // Create minimap save path if not found
+                if (!Directory.Exists(mmSavePath)) {
+                    Directory.CreateDirectory(mmSavePath);
+                }
+
+                // Get scenario files
+                string[] scenarioFiles = Directory.GetFiles(scenarioDirectoryPath);
+                string info = scenarioFiles.FirstOrDefault(x => x.EndsWith(".info"));
+                string opt = scenarioFiles.FirstOrDefault(x => x.EndsWith(".options"));
+
+                // Make sure there's actually a info file
+                if (string.IsNullOrEmpty(info)) {
+                    return null;
+                }
+
+                // Make sure there's actually an options file
+                if (string.IsNullOrEmpty(opt)) {
+                    return null;
+                }
+
+                Scenario scen = new Scenario(info, opt) {
+                    SgaName = sga
+                };
+
+                // Find the index of the minimap
+                int minimapFile = scenarioFiles.IndexOf(x => x.EndsWith("_preview.tga")).IfTrue(x => x == -1).Then(x => scenarioFiles.IndexOf(x => x.EndsWith("_mm.tga")));
+
+                // Make sure it's a valid index
+                if (minimapFile != -1) {
+
+                    // Save destination
+                    string destination = $"{mmSavePath}{scen.RelativeFilename}_map.tga";
+
+                    // Copy the found index file
+                    File.Copy(scenarioFiles[minimapFile], destination, true);
+
+                }
+
+                // Delete the extracted files
+                Directory.Delete(scenarioDirectoryPath, true);
+
+                // Return the scenario
+                return scen;
+
+            } else {
+                return null;
             }
 
         }

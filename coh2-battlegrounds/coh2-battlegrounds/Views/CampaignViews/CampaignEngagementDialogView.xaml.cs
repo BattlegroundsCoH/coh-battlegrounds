@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -13,14 +15,13 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
-using System.Windows.Shapes;
 using Battlegrounds.Campaigns;
 using Battlegrounds.Campaigns.Organisations;
 using Battlegrounds.Functional;
 using Battlegrounds.Game.Database;
 using Battlegrounds.Game.DataCompany;
 using Battlegrounds.Game.Gameplay;
-
+using BattlegroundsApp.Resources;
 using static Battlegrounds.BattlegroundsInstance;
 
 namespace BattlegroundsApp.Views.CampaignViews {
@@ -77,6 +78,12 @@ namespace BattlegroundsApp.Views.CampaignViews {
         */
 
         public CampaignMapNode MapNode { get; init; }
+
+        public Scenario EngagementScenario { get; private set; }
+
+        public ImageSource EngagementScenarioMinimap { get; private set; }
+
+        public string EngagementScenarioTitle => this.EngagementScenario?.Name ?? "No valid node map!";
 
         public int SelectedPlayer { get; set; } = 0;
 
@@ -257,6 +264,20 @@ namespace BattlegroundsApp.Views.CampaignViews {
 
         private void Company_SelectionChanged(object sender, SelectionChangedEventArgs e)
             => this.RefreshProperties();
+
+        public void SetupMatchData(ActiveCampaign campaign) {
+            this.EngagementScenario = campaign.PickScenario(this.MapNode.Maps);
+            if (this.EngagementScenario is not null) {
+                string userPath = Path.GetFullPath($"usr\\mods\\map_icons\\{this.EngagementScenario.Name}_map.tga");
+                if (File.Exists(userPath)) {
+                    this.EngagementScenarioMinimap = TgaImageSource.TargaBitmapSourceFromFile(userPath);
+                } /* else if */ else {
+                    this.EngagementScenarioMinimap = new BitmapImage(new Uri("pack://application:,,,/Resources/ingame/unknown_map.png"));
+                }
+            } else {
+                Trace.WriteLine($"Node '{this.MapNode.NodeName}' has no valid engagement map!", nameof(CampaignEngagementDialogView));
+            }
+        }
 
     }
 

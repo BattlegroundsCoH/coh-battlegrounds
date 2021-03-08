@@ -31,8 +31,9 @@
             </Grid.ColumnDefinitions>
 
             <StackPanel Grid.Column="0">
-                <Image MaxWidth="164" Height="164" MaxHeight="164"/>
-                <Label Content="MAP NAME"/>
+                <Image MaxWidth="164" Height="164" MaxHeight="164"
+                       Source="{Binding EngagementScenarioMinimap}"/>
+                <Label Content="{Binding EngagementScenarioTitle}"/>
             </StackPanel>
 
             <Grid Grid.Column="1">

@@ -32,6 +32,22 @@ namespace BattlegroundsApp.Views {
     /// </summary>
     public partial class GameLobbyView : ViewState, INotifyPropertyChanged {
 
+        private class GameLobbyViewScenarioItem {
+            private Scenario m_scenario;
+            public Scenario Scenario => this.m_scenario;
+            private string m_display;
+            public GameLobbyViewScenarioItem(Scenario scenario) {
+                this.m_scenario = scenario;
+                this.m_display = this.m_scenario.Name;
+                if (this.m_scenario.Name.StartsWith("$")) {
+                    if (uint.TryParse(this.m_scenario.Name[1..], out uint key)) {
+                        this.m_display = GameLocale.GetString(key);
+                    }
+                }
+            }
+            public override string ToString() => this.m_display;
+        }
+
         private bool m_hasCreatedLobbyOnce;
         private ILobbyPlayModel m_playModel;
         private ServerMessageHandler m_smh;
@@ -152,7 +168,7 @@ namespace BattlegroundsApp.Views {
         private void UpdateSelectedMap(string arg1, string arg2) {
             this.Dispatcher.Invoke(() => {
                 if (ScenarioList.TryFindScenario(arg1, out Scenario scenario)) {
-                    this.Map.ItemsSource = new List<Scenario>() { scenario };
+                    this.Map.ItemsSource = new List<GameLobbyViewScenarioItem>() { new GameLobbyViewScenarioItem(scenario) };
                     this.Map.SelectedIndex = 0;
                     this.m_teamManagement.SetMaxPlayers(scenario.MaxPlayers);
                     this.m_smh.Lobby.SetLobbyCapacity(scenario.MaxPlayers, false);
@@ -211,7 +227,9 @@ namespace BattlegroundsApp.Views {
 
         private void UpdateAvailableGamemodes() {
 
-            if (this.Map.SelectedItem is Scenario scenario) {
+            if (this.Map.SelectedItem is GameLobbyViewScenarioItem scenarioItem) {
+
+                var scenario = scenarioItem.Scenario;
 
                 if (scenario.Gamemodes.Count > 0) {
                     this.Gamemode.ItemsSource = scenario.Gamemodes.OrderBy(x => x.ToString()).ToList();
@@ -234,7 +252,8 @@ namespace BattlegroundsApp.Views {
             if (this.Map.State is OtherState) {
                 return;
             }
-            if (this.Map.SelectedItem is Scenario scenario) {
+            if (this.Map.SelectedItem is GameLobbyViewScenarioItem scenarioItem) {
+                var scenario = scenarioItem.Scenario;
                 if (scenario.RelativeFilename.CompareTo(this.m_smh.Lobby.SelectedMap) != 0) {
                     if (scenario.MaxPlayers < this.m_smh.Lobby.PlayerCount) {
                         // Do something
@@ -250,7 +269,16 @@ namespace BattlegroundsApp.Views {
 
         private void UpdateMapPreview(Scenario scenario) {
             if (scenario is not null) {
-                string fullpath = Path.GetFullPath($"usr\\mods\\map_icons\\{scenario.Name}_map.tga");
+                string fullpath = Path.GetFullPath($"bin\\gfx\\map_icons\\{scenario.RelativeFilename}_map.tga");
+                if (File.Exists(fullpath)) {
+                    try {
+                        this.mapImage.Source = TgaImageSource.TargaBitmapSourceFromFile(fullpath);
+                        return;
+                    } catch (BadImageFormatException bife) {
+                        Trace.WriteLine(bife, "GameLobbyView@UpdateMapPreview");
+                    }
+                } else {
+                    fullpath = Path.GetFullPath($"usr\\mods\\map_icons\\{scenario.RelativeFilename}_map.tga");
                     if (File.Exists(fullpath)) {
                         try {
                             this.mapImage.Source = TgaImageSource.TargaBitmapSourceFromFile(fullpath);
@@ -261,6 +289,7 @@ namespace BattlegroundsApp.Views {
                     } else {
                         Trace.WriteLine($"Failed to locate file: {fullpath}");
                     }
+                }
             } else {
                 Trace.WriteLine("Failed to find minimap for null scenario.");
             }
@@ -282,7 +311,7 @@ namespace BattlegroundsApp.Views {
 
             this.m_gamemode.SaveDefaults();
 
-            Scenario selectedScenario = Map.SelectedItem as Scenario;
+            Scenario selectedScenario = (Map.SelectedItem as GameLobbyViewScenarioItem).Scenario;
             if (selectedScenario is null) {
                 // TODO: Handle
             }
@@ -579,18 +608,18 @@ namespace BattlegroundsApp.Views {
         private void PopulateDropdowns() {
 
             // Get the scenarios and set source
-            var scenarioSource = ScenarioList.GetList().OrderBy(x => x.ToString()).ToList();
+            var scenarioSource = ScenarioList.GetList().Select(x => new GameLobbyViewScenarioItem(x)).ToList();
             this.Map.ItemsSource = scenarioSource;
 
             // If no mapp has been selected
             if (this.Map.SelectedIndex == -1) {
 
                 // Find map to select
-                int selectedScenario = scenarioSource.FindIndex(x => x.RelativeFilename.CompareTo(BattlegroundsInstance.LastPlayedMap) == 0);
+                int selectedScenario = scenarioSource.FindIndex(x => x.Scenario.RelativeFilename.CompareTo(BattlegroundsInstance.LastPlayedMap) == 0);
                 this.Map.SelectedIndex = selectedScenario != -1 ? selectedScenario : 0;
 
                 // Get selected scenario and update lobby accordingly
-                var scen = this.Map.SelectedItem as Scenario;
+                var scen = (this.Map.SelectedItem as GameLobbyViewScenarioItem).Scenario;
                 this.m_smh.Lobby.SetMap(scen);
                 this.m_smh.Lobby.SetLobbyCapacity(scen.MaxPlayers);
 

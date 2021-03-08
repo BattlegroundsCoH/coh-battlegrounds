@@ -1,8 +1,5 @@
-﻿using System;
-using System.IO;
-using System.Collections.Generic;
+﻿using System.IO;
 using System.Diagnostics;
-using System.Text;
 using System.Threading;
 
 namespace Battlegrounds.Compiler {
@@ -10,10 +7,13 @@ namespace Battlegrounds.Compiler {
     public static class Archiver {
 
         public static bool Archive(string archdef, string relativepath, string output) 
-            => RunArchiver($" -c \"{archdef}\" -a \"{output}\" -v -r \"{relativepath}\\\"");
+            => RunArchiver($" -c \"{archdef}\" -a \"{output}\" -v -r \"{relativepath}\\\"", null);
 
         public static bool Extract(string arcfile, string outpath)
-            => RunArchiver($" -a \"{arcfile}\" -e \"{outpath}\" -v ");
+            => RunArchiver($" -a \"{arcfile}\" -e \"{outpath}\" -v ", null);
+
+        public static bool Extract(string arcfile, string outpath, TextWriter output)
+            => RunArchiver($" -a \"{arcfile}\" -e \"{outpath}\" -v ", output);
 
         private static string GetArchiverFilepath() {
             string path = Pathfinder.GetOrFindCoHPath() + "Archive.exe";
@@ -24,7 +24,7 @@ namespace Battlegrounds.Compiler {
             }
         }
 
-        private static bool RunArchiver(string args) {
+        private static bool RunArchiver(string args, TextWriter outputStream) {
 
             Process archiveProcess = new Process {
                 StartInfo = new ProcessStartInfo() {
@@ -39,7 +39,15 @@ namespace Battlegrounds.Compiler {
                 EnableRaisingEvents = true,
             };
 
-            archiveProcess.OutputDataReceived += ArchiveProcess_OutputDataReceived;
+            if (outputStream is null) {
+                archiveProcess.OutputDataReceived += ArchiveProcess_OutputDataReceived;
+            } else {
+                archiveProcess.OutputDataReceived += (sender, e) => {
+                    if (e.Data != null && e.Data != string.Empty && e.Data != " ") {
+                        outputStream.WriteLine(e.Data);
+                    }
+                };
+            }
 
             try {
 
@@ -76,7 +84,7 @@ namespace Battlegrounds.Compiler {
 
         private static void ArchiveProcess_OutputDataReceived(object sender, DataReceivedEventArgs e) {
             if (e.Data != null && e.Data != string.Empty && e.Data != " ")
-                Trace.WriteLine($"{e.Data}");
+                Trace.WriteLine(e.Data);
         }
 
     }

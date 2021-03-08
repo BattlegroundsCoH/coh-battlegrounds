@@ -3,7 +3,6 @@ using System.IO;
 using System.Threading;
 
 using Battlegrounds;
-using Battlegrounds.Game.Database;
 using Battlegrounds.Game.Database.Management;
 using Battlegrounds.Game.DataCompany;
 using Battlegrounds.Game.DataSource.Replay;
@@ -11,10 +10,6 @@ using Battlegrounds.Game.Gameplay;
 using Battlegrounds.Game.Match;
 using Battlegrounds.Game.Match.Data;
 using Battlegrounds.Json;
-using Battlegrounds.Modding;
-using Battlegrounds.Online;
-using Battlegrounds.Online.Lobby;
-using Battlegrounds.Online.Services;
 
 namespace coh2_battlegrounds_console {
     
@@ -27,18 +22,26 @@ namespace coh2_battlegrounds_console {
         static bool campaign_compile;
         static string campaign_compile_file = null;
 
+        static bool extract_coh2_maps;
+
+        static bool do_test_companies;
+
+        static string output_path = null;
+
         static void Main(string[] args) {
 
+            // Write args
             Console.WriteLine(string.Join(' ', args));
             ParseArguments(args);
 
             if (recent_analysis) {
+                LoadBGAndProceed();
                 Console.WriteLine("Parsing latest replay file");
                 string target = ReplayMatchData.LATEST_REPLAY_FILE;
                 if (!string.IsNullOrEmpty(recent_file)) {
                     if (File.Exists(recent_file)) {
                         target = recent_file;
-                    } 
+                    }
                 }
                 ReplayFile replayFile = new ReplayFile(target);
                 Console.WriteLine($"Load Replay: {replayFile.LoadReplay()}");
@@ -56,75 +59,39 @@ namespace coh2_battlegrounds_console {
                     }
                 }
                 Console.ReadLine();
-                return;
             } else if (campaign_compile) {
+                LoadBGAndProceed();
+                CampaignCompiler.Output = output_path;
                 CampaignCompiler.Compile(campaign_compile_file);
-                return;
+            } else if (extract_coh2_maps) {
+                MapExtractor.Output = output_path;
+                MapExtractor.Extract();
+            } else if (do_test_companies) {
+
+                LoadBGAndProceed();
+
+                Company testCompany = CreateSovietCompany();
+                Company germanCompany = CreateGermanCompany();
+
+                germanCompany.SaveToFile("69th_panzer.json");
+                testCompany.SaveToFile("26th_Rifle_Division.json");
+
             }
 
+        }
+
+        private static void LoadBGAndProceed() {
+
+            // Load BG
             BattlegroundsInstance.LoadInstance();
-            if (!BattlegroundsInstance.Steam.GetSteamUser()) {
-                Console.WriteLine("Unable to find local steam user!");
-                Console.Read();
-                return;
-            }
 
             // Important this is done
             DatabaseManager.LoadAllDatabases(null);
 
+            // Wait for database to load
             while (!DatabaseManager.DatabaseLoaded) {
-                Thread.Sleep(1);
+                Thread.Sleep(100);
             }
-
-            Company testCompany = CreateSovietCompany();
-            Company germanCompany = CreateGermanCompany();
-            germanCompany.SaveToFile("69th_panzer.json");
-
-            SessionInfo sessionInfo = new SessionInfo() {
-                SelectedGamemode = WinconditionList.GetWinconditionByName("Victory Points"),
-                SelectedGamemodeOption = 0,
-                SelectedScenario = ScenarioList.FromFilename("2p_angoville_farms"),
-                SelectedTuningMod = new BattlegroundsTuning(),
-                Allies = new SessionParticipant[] { new SessionParticipant(BattlegroundsInstance.Steam.User, testCompany, 0, 0) },
-                Axis = null,
-                FillAI = true,
-                DefaultDifficulty = Battlegrounds.Game.AIDifficulty.AI_Hard,
-            };
-
-            Session session = Session.CreateSession(sessionInfo);
-
-            //SessionCompiler<CompanyCompiler> sessionCompiler = new SessionCompiler<CompanyCompiler>();
-            //File.WriteAllText("test_session.lua", sessionCompiler.CompileSession(session));
-
-            /*GameMatch m = new GameMatch(session);
-            m.LoadMatch($"{Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)}\\my games\\company of heroes 2\\playback\\temp.rec");
-            m.EvaluateResult();
-            */
-            
-            //SessionManager.PlaySession<SessionCompiler<CompanyCompiler>, CompanyCompiler>(session, (a,b) => { Console.WriteLine(a); }, null, null);
-
-            // Save json
-            testCompany.SaveToFile("26th_Rifle_Division.json");
-            /*
-            LobbyHub hub = new LobbyHub();
-            if (!LobbyHub.CanConnect()) {
-                Console.WriteLine("Unable to reach server hub");
-            } else {
-
-                var lobbies = hub.GetConnectableLobbies();
-                if (lobbies.Count == 0) {
-                    hub.User = BattlegroundsInstance.LocalSteamuser;
-                    HostTest(hub);
-                } else {
-                    hub.User = SteamUser.FromID(76561198157626935UL);
-                    ClientTest(hub, lobbies.First());
-                }
-
-            }
-            */
-            BattlegroundsInstance.SaveInstance();
-            
-            Console.ReadLine();
 
         }
 
@@ -450,60 +417,6 @@ namespace coh2_battlegrounds_console {
             return companyBuilder.Result;
         }
 
-        private static void HostTest(LobbyHub hub) {
-
-            Console.WriteLine("Running hosting test");
-
-            ManagedLobby.Host(hub, "Battlegrounds Test", string.Empty, OnMessageLoop);
-
-        }
-
-        private static void ClientTest(LobbyHub hub, ConnectableLobby lob) {
-
-            Console.WriteLine("Running client test");
-
-            ManagedLobby.Join(hub, lob, string.Empty, OnMessageLoop);
-
-        }
-
-        private static void OnMessageLoop(ManagedLobbyStatus status, ManagedLobby result) {
-
-            if (status.Success) {
-
-                Console.WriteLine("Connection was established!");
-
-                result.OnPlayerEvent += (a, b, c) => {
-                    if (a == ManagedLobbyPlayerEventType.Message) {
-                        Console.WriteLine($"{b}: {c}");
-                        Console.WriteLine("Testing launch feature");
-                        //result.CompileAndStartMatch(x => Console.WriteLine(x));
-                    } else {
-                        string word = (a == ManagedLobbyPlayerEventType.Leave) ? "Left" : (a == ManagedLobbyPlayerEventType.Kicked ? "Was kicked" : "Joined");
-                        Console.WriteLine($"{b} {word}");
-                    }
-                };
-
-                result.OnDataRequest += (a, b, c, d) => {
-                    if (c.CompareTo("CompanyData") == 0) {
-                        Console.WriteLine("Received request for company data using identifier " + d);
-                        //result.SendFile(b, "test_company.json", d, true);
-                    } 
-                };
-
-                if (!result.IsHost) {
-                    result.SendChatMessage("Hello World");
-                    result.UploadCompany("deutsches_kompanie.json");
-                } else {
-                    result.UploadCompany("test_company.json");
-                }
-
-
-            } else {
-                Console.WriteLine(status.Message);
-            }
-
-        }
-
         private static void ParseArguments(string[] args) {
 
             for (int i = 0; i < args.Length; i++) {
@@ -524,6 +437,16 @@ namespace coh2_battlegrounds_console {
                     } else {
                         Console.WriteLine("Cannot compile campaign - none specified!");
                         campaign_compile = false;
+                    }
+                } else if (args[i].CompareTo("-coh2-extract-maps") == 0) {
+                    extract_coh2_maps = true;
+                } else if (args[i].CompareTo("-test_companies") == 0) {
+                    do_test_companies = true;
+                } else if (args[i].CompareTo("-o") == 0) {
+                    if (i + 1 < args.Length) {
+                        output_path = args[i + 1];
+                    } else {
+                        Environment.Exit(-1);
                     }
                 }
 

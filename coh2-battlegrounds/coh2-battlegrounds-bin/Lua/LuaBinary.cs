@@ -202,7 +202,7 @@ namespace Battlegrounds.Lua {
 
         private static byte[] BinaryValue(LuaValue value, Encoding encoding) => value switch {
             LuaString s => value.Str().Encode(encoding).Then(b => BitConverter.GetBytes(b.Length).Concat(b).ToArray()),
-            LuaBool b => new byte[] { b.IsTrue ? 0x1 : 0x0 },
+            LuaBool b => new byte[] { (byte)(b.IsTrue ? 0x1 : 0x0) },
             LuaNumber n => BitConverter.GetBytes(n),
             LuaNil => Array.Empty<byte>(),
             _ => throw new Exception()

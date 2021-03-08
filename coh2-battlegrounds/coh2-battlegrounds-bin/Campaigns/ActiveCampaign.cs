@@ -9,6 +9,7 @@ using Battlegrounds.Json;
 using Battlegrounds.Locale;
 using Battlegrounds.Lua;
 using Battlegrounds.Gfx;
+using Battlegrounds.Game.Database;
 
 namespace Battlegrounds.Campaigns {
 
@@ -37,6 +38,10 @@ namespace Battlegrounds.Campaigns {
         public int DifficultyLevel { get; init; }
 
         private ActiveCampaign() {}
+
+        public Scenario PickScenario(List<CampaignMapNode.NodeMap> maps) {
+            return null;
+        }
 
         public void CreateArmy(int index, ref uint divCount, CampaignPackage.ArmyData army) {
             this.Armies[index] = new Army(army.Army.IsAllied ? CampaignArmyTeam.TEAM_ALLIES : CampaignArmyTeam.TEAM_AXIS) {

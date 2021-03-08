@@ -18,6 +18,8 @@ namespace coh2_battlegrounds_console {
 
         public const uint COMPILER_VERSION = 10;
 
+        public static string Output { get; set; }
+
         enum ResourceType : byte {
             MapImage = 0x1,
             Locale = 0x2,
@@ -160,7 +162,10 @@ namespace coh2_battlegrounds_console {
         private static void Compile(string relative, string iddef, CampaignDisplay display, List<CampaignArmy> armies, List<CampaignResource> resources, LuaTable mapdef) {
 
             // Output path
-            string output = Path.Combine(relative, Path.GetFileNameWithoutExtension(relative) + ".dat");
+            string output = Output ?? Path.Combine(relative, Path.GetFileNameWithoutExtension(relative) + ".dat");
+
+            // Log where it's saved to
+            Console.WriteLine($"Saving binary to: {output}");
 
             // Open overall binary writer
             using BinaryWriter bw = new BinaryWriter(File.Open(output, FileMode.Create), Encoding.Unicode);

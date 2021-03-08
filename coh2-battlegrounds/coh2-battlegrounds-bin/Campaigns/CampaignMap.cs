@@ -111,13 +111,14 @@ namespace Battlegrounds.Campaigns {
 
         public bool SetPath(CampaignMapNode from, CampaignMapNode end, Formation formation) {
             var path = Dijkstra(from, end, formation);
-            Trace.WriteLine(string.Join(" -> ", path.Select(x => x.NodeName)), $"{nameof(CampaignMap)}:PathResult");
-            if (path[0] == from && path[^1] == end) {
-                formation.SetNodeDestinations(path);
-                return true;
-            } else {
-                return false;
+            if (path.Count > 0) {
+                Trace.WriteLine(string.Join(" -> ", path.Select(x => x.NodeName)), $"{nameof(CampaignMap)}:PathResult");
+                if (path[0] == from && path[^1] == end) {
+                    formation.SetNodeDestinations(path);
+                    return true;
+                }
             }
+            return false;
         }
 
         private float Weight(CampaignMapNode prev, CampaignMapNode to, Formation formation) {

@@ -75,6 +75,12 @@ namespace Battlegrounds.Game.Database {
         public bool IsWintermap { get; set; }
 
         /// <summary>
+        /// Get if the <see cref="Scenario"/> is a workshop map.
+        /// </summary>
+        [JsonIgnore]
+        public bool IsWorkshopMap => this.SgaName != "MPScenarios" && this.SgaName != "MPXP1Scenarios";
+
+        /// <summary>
         /// The <see cref="Wincondition"/> instances designed for this <see cref="Scenario"/>. Empty list means all <see cref="Wincondition"/> instances can be used.
         /// </summary>
         [JsonReference] 

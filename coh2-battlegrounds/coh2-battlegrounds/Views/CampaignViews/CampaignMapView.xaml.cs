@@ -355,6 +355,7 @@ namespace BattlegroundsApp.Views.CampaignViews {
 
             // Set formations etc.
             engagementDialogView.SetAttackingFormations(attackers);
+            engagementDialogView.SetupMatchData(this.Controller.Campaign);
 
             // Show dialog
             this.ShowCampaignDialog(engagementDialogView);

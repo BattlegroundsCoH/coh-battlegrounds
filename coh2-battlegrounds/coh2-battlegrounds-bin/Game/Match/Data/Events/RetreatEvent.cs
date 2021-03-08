@@ -55,7 +55,7 @@ namespace Battlegrounds.Game.Match.Data.Events {
             
             // Get the veterancy change
             if (sbyte.TryParse(values[1], out sbyte change)) {
-                this.WithdrawingUnitVeterancyChange = change >= 0 ? (byte)change : 0;
+                this.WithdrawingUnitVeterancyChange = (byte)(change >= 0 ? (byte)change : 0);
             } else {
                 throw new FormatException();
             }
