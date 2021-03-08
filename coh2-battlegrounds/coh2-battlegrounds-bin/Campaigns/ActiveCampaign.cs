@@ -40,6 +40,11 @@ namespace Battlegrounds.Campaigns {
         private ActiveCampaign() {}
 
         public Scenario PickScenario(List<CampaignMapNode.NodeMap> maps) {
+            if (maps.Count == 1) {
+                if (ScenarioList.TryFindScenario(maps[0].MapName, out Scenario singleScenario)) {
+                    return singleScenario;
+                }
+            }
             return null;
         }
 

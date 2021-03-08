@@ -48,7 +48,7 @@
             value = 1, -- Victory Point value
             capacity = 1, -- Max companies per side
             attrition = 0.1, -- The amount of attrition a company suffers
-            map = "2p_stalingrad" -- The map to play when fighting a battle
+            map = "2p_coh2_resistance" -- The map to play when fighting a battle
         },
         ["central_approach"] = {
             u = 520.0 / 1110.0,
@@ -98,7 +98,7 @@
             value = 1, -- Victory Point value
             capacity = 1, -- Max companies per side
             attrition = 0.1, -- The amount of attrition a company suffers
-            map = "" -- The map to play when fighting a battle
+            map = "6p_coh2_pavlov_s_house" -- The map to play when fighting a battle
         },
         ["volga_crossing"] = {
             u = 485.0 / 1110.0,
@@ -188,7 +188,7 @@
             value = 1, -- Victory Point value
             capacity = 1, -- Max companies per side
             attrition = 0.1, -- The amount of attrition a company suffers
-            map = "divide map" -- The map to play when fighting a battle
+            map = "6_8_brody" -- The map to play when fighting a battle
         }
         -- TODO: Mamaev Kurgan (The mountain in the middle - sorta splitting the city in two)
     },

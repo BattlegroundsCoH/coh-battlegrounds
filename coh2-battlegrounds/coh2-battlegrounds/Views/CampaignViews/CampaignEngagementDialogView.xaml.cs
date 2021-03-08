@@ -83,7 +83,7 @@ namespace BattlegroundsApp.Views.CampaignViews {
 
         public ImageSource EngagementScenarioMinimap { get; private set; }
 
-        public string EngagementScenarioTitle => this.EngagementScenario?.Name ?? "No valid node map!";
+        public string EngagementScenarioTitle => GameLocale.GetString(this.EngagementScenario?.Name ?? "No valid node map!");
 
         public int SelectedPlayer { get; set; } = 0;
 
@@ -268,10 +268,13 @@ namespace BattlegroundsApp.Views.CampaignViews {
         public void SetupMatchData(ActiveCampaign campaign) {
             this.EngagementScenario = campaign.PickScenario(this.MapNode.Maps);
             if (this.EngagementScenario is not null) {
-                string userPath = Path.GetFullPath($"usr\\mods\\map_icons\\{this.EngagementScenario.Name}_map.tga");
-                if (File.Exists(userPath)) {
+                string gamePath = Path.GetFullPath($"bin\\gfx\\map_icons\\{this.EngagementScenario.RelativeFilename}_map.tga");
+                string userPath = Path.GetFullPath($"usr\\mods\\map_icons\\{this.EngagementScenario.RelativeFilename}_map.tga");
+                if (File.Exists(gamePath)) {
+                    this.EngagementScenarioMinimap = TgaImageSource.TargaBitmapSourceFromFile(gamePath);
+                } else if (File.Exists(userPath)) {
                     this.EngagementScenarioMinimap = TgaImageSource.TargaBitmapSourceFromFile(userPath);
-                } /* else if */ else {
+                } else {
                     this.EngagementScenarioMinimap = new BitmapImage(new Uri("pack://application:,,,/Resources/ingame/unknown_map.png"));
                 }
             } else {

@@ -19,6 +19,11 @@ namespace Battlegrounds.Modding {
         /// </summary>
         public string GUID => this.m_guid;
 
+        /// <summary>
+        /// Get if the given Mod GUID is valid (Has fixed length)
+        /// </summary>
+        public bool IsValid => this.GUID.Length == FIXED_LENGTH;
+
         private ModGuid(Guid guid) => this.m_guid = guid.ToString().Replace("-", "");
 
         private ModGuid(string guid) => this.m_guid = guid.Replace("-", "");
