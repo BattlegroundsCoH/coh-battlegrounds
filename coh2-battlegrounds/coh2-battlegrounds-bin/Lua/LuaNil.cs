@@ -13,6 +13,8 @@ namespace Battlegrounds.Lua {
         public override bool Equals(object obj) => obj is LuaValue v ? this.Equals(v) : base.Equals(obj);
 
         public override int GetHashCode() => 0;
+        
+        public override LuaType GetLuaType() => LuaType.LUA_NIL;
 
         public override string Str() => "nil";
         

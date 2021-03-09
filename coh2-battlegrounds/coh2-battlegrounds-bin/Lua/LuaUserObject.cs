@@ -16,6 +16,8 @@
         
         public override string Str() => $"0x{this.m_obj.GetHashCode():X8}";
 
+        public override LuaType GetLuaType() => LuaType.LUA_USEROBJECT;
+
         public override string ToString() => this.m_obj.ToString();
 
     }

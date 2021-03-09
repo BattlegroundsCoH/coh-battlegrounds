@@ -1,4 +1,5 @@
 ﻿using Battlegrounds.Lua;
+using Battlegrounds.Lua.Debugging;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace coh2_battlegrounds_bin_tests.LuaLib {
@@ -232,6 +233,80 @@ test = {
 
         }
 
+        [TestMethod]
+        public void LuaDataParseRuntest12() {
+
+            // Test string
+            string sourceText = @"-5";
+
+            // Assertions
+            var val = lState.DoString(sourceText);
+            Assert.IsInstanceOfType(val, typeof(LuaNumber));
+            Assert.AreEqual(new LuaNumber(-5), val);
+
+        }
+
+        [TestMethod]
+        public void LuaDataParseRuntest13() {
+
+            // Test string
+            string sourceText = @"-5 * 6";
+
+            // Assertions
+            var val = lState.DoString(sourceText);
+            Assert.IsInstanceOfType(val, typeof(LuaNumber));
+            Assert.AreEqual(new LuaNumber(-30), val);
+
+        }
+
+        [TestMethod]
+        public void LuaDataParseRuntest14() {
+
+            // Test string
+            string sourceText = @"-5 * 0.5";
+
+            // Assertions
+            var val = lState.DoString(sourceText);
+            Assert.IsInstanceOfType(val, typeof(LuaNumber));
+            Assert.AreEqual(new LuaNumber(-2.5), val);
+
+        }
+
+        [TestMethod]
+        public void LuaDataParseRuntest15() {
+
+            // Test string
+            string sourceText = @"{ 0, 1, -5, -7 * 0.5, 5 }";
+
+            // Assertions
+            var val = lState.DoString(sourceText);
+            Assert.IsInstanceOfType(val, typeof(LuaTable));
+
+            // Get table
+            var tab = val as LuaTable;
+            Assert.AreEqual(new LuaNumber(0), tab[1]);
+            Assert.AreEqual(new LuaNumber(1), tab[2]);
+            Assert.AreEqual(new LuaNumber(-5), tab[3]);
+            Assert.AreEqual(new LuaNumber(-3.5), tab[4]);
+            Assert.AreEqual(new LuaNumber(5), tab[5]);
+
+        }
+
+        [TestMethod]
+        public void LuaDataParseRuntest16() {
+
+            // Test string
+            string sourceText = @"-""hello""";
+
+            // Assertions
+            var val = lState.DoString(sourceText);
+            Assert.IsInstanceOfType(val, typeof(LuaNil));
+
+            var ex = lState.GetError();
+            Assert.IsNotNull(ex);
+            Assert.AreEqual("Attempt to perform arithmetic on a string value.", ex.Message);
+
+        }
     }
 
 }

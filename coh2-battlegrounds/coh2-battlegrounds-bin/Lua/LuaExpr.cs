@@ -34,6 +34,11 @@ namespace Battlegrounds.Lua {
     public record LuaValueExpr(LuaValue Value) : LuaExpr;
 
     /// <summary>
+    /// Negate expression
+    /// </summary>
+    public record LuaNegateExpr(LuaExpr Expr) : LuaExpr;
+
+    /// <summary>
     /// Identifier expression.
     /// </summary>
     public record LuaIdentifierExpr(string Identifier) : LuaLookupIdExpr;

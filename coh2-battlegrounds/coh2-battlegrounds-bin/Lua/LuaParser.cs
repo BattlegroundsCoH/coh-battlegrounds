@@ -91,6 +91,7 @@ namespace Battlegrounds.Lua {
         static void ApplyOrderOfOperations(List<LuaExpr> luaExprs) {
 
             ILuaOperatorSyntax[][] order = new ILuaOperatorSyntax[][] {
+                new ILuaOperatorSyntax[] { new LuaUnaryOperatorSyntax("-", LuaUnaryPosition.Prefix) },
                 new ILuaOperatorSyntax[] { new LuaBinaryOperatorSyntax("*"), new LuaBinaryOperatorSyntax("/") },
                 new ILuaOperatorSyntax[] { new LuaBinaryOperatorSyntax("+"), new LuaBinaryOperatorSyntax("-") },
                 new ILuaOperatorSyntax[] {
@@ -204,9 +205,14 @@ namespace Battlegrounds.Lua {
                 int j = 0; // using j so we dont confuse with i from outer scope
                 int k = 1; // Lua indexing starts from 1
                 while (j < luaTable.SubExpressions.Count){
-                    if (luaTable.SubExpressions[j] is LuaValueExpr or LuaTableExpr) {
+                    if (luaTable.SubExpressions[j] is LuaValueExpr or LuaTableExpr or LuaNegateExpr) {
                         luaTable.SubExpressions[j] = new LuaBinaryExpr(new LuaIndexExpr(new LuaValueExpr(new LuaNumber(k))), luaTable.SubExpressions[j], "=");
                         k++;
+                    } else if (luaTable.SubExpressions[j] is LuaBinaryExpr binaryExpr) {
+                        if (binaryExpr.Operator != "=") {
+                            luaTable.SubExpressions[j] = new LuaBinaryExpr(new LuaIndexExpr(new LuaValueExpr(new LuaNumber(k))), luaTable.SubExpressions[j], "=");
+                            k++;
+                        }
                     }
                     j++;
                 }

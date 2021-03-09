@@ -156,6 +156,8 @@ namespace Battlegrounds.Lua {
 
         public override string Str() => this.GetHashCode().ToString();
 
+        public override LuaType GetLuaType() => LuaType.LUA_TABLE;
+
         public IEnumerator<KeyValuePair<LuaValue, LuaValue>> GetEnumerator() => ((IEnumerable<KeyValuePair<LuaValue, LuaValue>>)this.m_table).GetEnumerator();
         
         IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable)this.m_table).GetEnumerator();

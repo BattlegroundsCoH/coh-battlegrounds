@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using Battlegrounds.Lua.Debugging;
 
@@ -11,6 +12,7 @@ namespace Battlegrounds.Lua {
     public class LuaState {
 
         private int m_initialGSize;
+        private LuaRuntimeError m_lastError;
 
 #pragma warning disable IDE1006 // Naming Styles (This is intentional in Lua
 
@@ -143,6 +145,16 @@ namespace Battlegrounds.Lua {
                             stack.Push(t);
                         }
                         break;
+                    case LuaNegateExpr negateExpr:
+                        DoExpr(negateExpr.Expr);
+                        LuaValue top = stack.Pop();
+                        if (top is LuaNumber n) {
+                            stack.Push(new LuaNumber(-n));
+                        } else {
+                            stack.Push(top);
+                            throw new LuaRuntimeError($"Attempt to perform arithmetic on a {top.GetLuaType()} value.", stack, this);
+                        }
+                        break;
                     case LuaValueExpr value:
                         stack.Push(value.Value);
                         break;
@@ -199,8 +211,12 @@ namespace Battlegrounds.Lua {
                         // TODO: Stuff
                     }
                 }
+            } catch (LuaRuntimeError runtime) {
+                this.m_lastError = runtime;
+                Trace.WriteLine(runtime.Message, "LuaRuntimeError");
+                return new LuaNil();
             } catch {
-                return null;
+                throw;
             }
 
             // Return the lua value
@@ -221,6 +237,12 @@ namespace Battlegrounds.Lua {
                 throw new FileNotFoundException(luaSourceFilePath);
             }
         }
+
+        /// <summary>
+        /// Get last runtime error (<see langword="null"/> if no runtime error).
+        /// </summary>
+        /// <returns>Returns the last thrown <see cref="LuaRuntimeError"/>.</returns>
+        public LuaRuntimeError GetError() => this.m_lastError;
 
     }
 

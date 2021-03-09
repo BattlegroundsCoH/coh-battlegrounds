@@ -21,6 +21,12 @@
         public abstract override int GetHashCode();
 
         /// <summary>
+        /// Get the <see cref="LuaType"/> of the value.
+        /// </summary>
+        /// <returns>A <see cref="LuaType"/> instance representing the Lua type.</returns>
+        public abstract LuaType GetLuaType();
+
+        /// <summary>
         /// Convert a managed object into a proper <see cref="LuaValue"/> representation.
         /// </summary>
         /// <param name="value">The <see cref="object"/> to get <see cref="LuaValue"/> representation of.</param>
