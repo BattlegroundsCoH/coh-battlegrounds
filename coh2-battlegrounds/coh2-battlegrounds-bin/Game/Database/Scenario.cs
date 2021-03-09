@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-
+using Battlegrounds.Functional;
 using Battlegrounds.Game.Gameplay;
 using Battlegrounds.Json;
 using Battlegrounds.Lua;
@@ -104,7 +104,6 @@ namespace Battlegrounds.Game.Database {
         /// <param name="optionsfile">The path to the options file</param>
         /// <exception cref="ArgumentNullException"/>
         public Scenario(string infofile, string optionsfile) {
-
             // Make sure infofile is not null
             if (infofile is null) {
                 throw new ArgumentNullException(nameof(infofile), "Info filepath cannot be null");
@@ -128,10 +127,19 @@ namespace Battlegrounds.Game.Database {
             this.Description = headerInfo["scenariodescription"].Str();
             this.MaxPlayers = (byte)(headerInfo["maxplayers"] as LuaNumber);
 
-            int battlefront = (int)(headerInfo["scenario_battlefront"] as LuaNumber);
+            int battlefront = (int)(LuaNumber)headerInfo["scenario_battlefront"].IfTrue(x => x is LuaNumber).ThenDo(x => x as LuaNumber).OrDefaultTo(() => new LuaNumber(2));
             this.Theatre = battlefront == 2 ? ScenarioTheatre.EasternFront : battlefront == 5 ? ScenarioTheatre.WesternFront : ScenarioTheatre.SharedFront;
 
-            this.IsWintermap = (headerInfo["default_skins"] as LuaTable).Contains("winter");
+#pragma warning disable IDE0019 // Use pattern matching
+            LuaTable skins = headerInfo["default_skins"] as LuaTable;
+#pragma warning restore IDE0019 // Use pattern matching
+
+            // Get the skins table (apperantly both are accepted...)
+            if (skins == null) {
+                skins = headerInfo["default_skin"] as LuaTable;
+            }
+
+            this.IsWintermap = skins?.Contains("winter") ?? false;
             this.IsVisibleInLobby = (scenarioState._G["visible_in_lobby"] as LuaBool)?.IsTrue ?? true;
 
         }
