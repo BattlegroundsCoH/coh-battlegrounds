@@ -62,7 +62,11 @@ namespace coh2_battlegrounds_console {
 
                         // Read and add scenario
                         if (ScenarioList.GetScenarioFromDirectory(dir, Path.GetFileName(archive)) is Scenario scen) {
-                            scenarios.Add(scen);
+                            if (scen.IsVisibleInLobby) {
+                                scenarios.Add(scen);
+                            } else {
+                                Console.WriteLine($"Skipping {scen.RelativeFilename} - NOT visible in lobby!");
+                            }
                         }
 
                     }

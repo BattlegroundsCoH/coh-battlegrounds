@@ -20,6 +20,8 @@ using Battlegrounds.Campaigns;
 using Battlegrounds.Campaigns.Controller;
 using Battlegrounds.Campaigns.Organisations;
 using Battlegrounds.Functional;
+using Battlegrounds.Game;
+using Battlegrounds.Game.Gameplay;
 using Battlegrounds.Gfx;
 
 using BattlegroundsApp.Resources;
@@ -372,7 +374,81 @@ namespace BattlegroundsApp.Views.CampaignViews {
 
         private void EngageAttack(CampaignDialogView dialogView) {
             this.HideCampaignDialog();
+            CampaignEngagementDialogView cedv = dialogView as CampaignEngagementDialogView;
 
+            CampaignEngagementData data = new CampaignEngagementData();
+            ApplyEngagementData(true, ref data, cedv);
+
+            if (this.Controller is SingleplayerCampaign) {
+                this.Controller.GenerateAIEngagementSetup(ref data, true, cedv.MapNode.Occupants.Count, cedv.MapNode.Occupants.ToArray());
+                var matchController = this.Controller.Engage(data);
+                // TODO: Init match controller
+                matchController.Control();
+            } else {
+                // TODO: Show defence view
+            }
+
+        }
+
+        private void ApplyEngagementData(bool isAttackerData, ref CampaignEngagementData engagementData, CampaignEngagementDialogView view) {
+            if (isAttackerData) {
+                
+                // Set base parameters
+                engagementData.scenario = view.EngagementScenario;
+                engagementData.attackers = view.Attackers.ToLower() == "allies" ? CampaignArmyTeam.TEAM_ALLIES : CampaignArmyTeam.TEAM_AXIS;
+                engagementData.defenders = engagementData.attackers == CampaignArmyTeam.TEAM_AXIS ? CampaignArmyTeam.TEAM_ALLIES : CampaignArmyTeam.TEAM_AXIS;
+                engagementData.attackingFaction = view.AttackingRegimentalPool.First().Regiment.ElementOf.EleemntOf.Faction;
+                engagementData.defendingFaction = view.MapNode.Occupants.First().Regiments.First().ElementOf.EleemntOf.Faction;
+
+                // Set company data
+                engagementData.attackingCompanyUnits = new List<Squad>[view.Players];
+                engagementData.attackingDifficulties = new AIDifficulty[view.Players];
+                for (int i = 0; i < view.Players; i++) {
+                    engagementData.attackingDifficulties[i] = AIDifficulty.Human;
+                    switch (i) {
+                        case 0:
+                            engagementData.attackingCompanyUnits[i] = view.Player1Units.Select(x => x.Squad).ToList();
+                            break;
+                        case 1:
+                            engagementData.attackingCompanyUnits[i] = view.Player2Units.Select(x => x.Squad).ToList();
+                            break;
+                        case 2:
+                            engagementData.attackingCompanyUnits[i] = view.Player3Units.Select(x => x.Squad).ToList();
+                            break;
+                        case 3:
+                            engagementData.attackingCompanyUnits[i] = view.Player4Units.Select(x => x.Squad).ToList();
+                            break;
+                        default:
+                            break;
+                    }
+                }
+
+            } else {
+
+                // Set company data
+                engagementData.defendingCompanyUnits = new List<Squad>[view.Players];
+                engagementData.defendingDifficulties = new AIDifficulty[view.Players];
+                for (int i = 0; i < view.Players; i++) {
+                    engagementData.defendingDifficulties[i] = AIDifficulty.Human;
+                    switch (i) {
+                        case 0:
+                            engagementData.defendingCompanyUnits[i] = view.Player1Units.Select(x => x.Squad).ToList();
+                            break;
+                        case 1:
+                            engagementData.defendingCompanyUnits[i] = view.Player2Units.Select(x => x.Squad).ToList();
+                            break;
+                        case 2:
+                            engagementData.defendingCompanyUnits[i] = view.Player3Units.Select(x => x.Squad).ToList();
+                            break;
+                        case 3:
+                            engagementData.defendingCompanyUnits[i] = view.Player4Units.Select(x => x.Squad).ToList();
+                            break;
+                        default:
+                            break;
+                    }
+                }
+
+            }
         }
 
         private void LeaveAndSaveButton_Click(object sender, RoutedEventArgs e) {

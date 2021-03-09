@@ -1,4 +1,5 @@
 ﻿using Battlegrounds.Compiler;
+using Battlegrounds.Game.Match.Composite;
 using Battlegrounds.Game.Match.Play;
 
 namespace Battlegrounds.Game.Match.Startup {
@@ -19,8 +20,10 @@ namespace Battlegrounds.Game.Match.Startup {
             // Collect session info and create session from it.
             var info = this.SessionInfoCollector();
 
-            // Zip the single company.
-            Session.ZipCompanies(new[] { this.LocalCompany }, ref info);
+            // Zip the single company, if we're a semi-singleplayer call
+            if (caller is not SingleplayerSession) {
+                Session.ZipCompanies(new[] { this.LocalCompany }, ref info);
+            }
 
             // Create the session
             this.m_collectedSession = Session.CreateSession(info);

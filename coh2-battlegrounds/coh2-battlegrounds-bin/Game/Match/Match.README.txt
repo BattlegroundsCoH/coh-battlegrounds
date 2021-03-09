@@ -15,3 +15,5 @@ A battlegrounds match consists of four elements:
 	- Here the analysis modification suggestions are finalized (if applicable) and changes to participating companies are finalized.
 
 To start a match, it's much easier to let the MatchController handle the actual protocol. However, you can set custom strategies defining how the 4 elements mentioned above are to be executed.
+The matchcontroller will also need impementations of IMatchX interfaces that handle the small sub-elements. Pick one in the Composite namespace (SingleplayerSession or MultiplayerSession).
+They will have all the functionality required already implemented. You can also implement your own, or split them over several objects.

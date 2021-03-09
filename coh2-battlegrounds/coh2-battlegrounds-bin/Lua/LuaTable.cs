@@ -143,6 +143,17 @@ namespace Battlegrounds.Lua {
         /// <returns>An array of <typeparamref name="T"/> objects.</returns>
         public T[] ToArray<T>() where T : LuaValue => this.m_table.Values.Select(x => x as T).ToArray();
 
+        public bool Contains(LuaValue value) {
+            foreach (var kv in this) {
+                if (kv.Value == value) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        public bool Contains(object managedObj) => this.Contains(ToLuaValue(managedObj));
+
         public override string Str() => this.GetHashCode().ToString();
 
         public IEnumerator<KeyValuePair<LuaValue, LuaValue>> GetEnumerator() => ((IEnumerable<KeyValuePair<LuaValue, LuaValue>>)this.m_table).GetEnumerator();

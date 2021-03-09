@@ -141,7 +141,7 @@ namespace Battlegrounds.Campaigns {
             } else if (luaValue is LuaTable mapOptions) {
                 mapOptions.Pairs((k, v) => {
                     if (v is LuaTable vt) {
-                        string name = (vt["name"] as LuaString).Str();
+                        string name = (vt["scenario"] as LuaString).Str();
                         string func = (vt["script"] as LuaString)?.Str() ?? string.Empty;
                         bool isWinter = (vt["winter"] as LuaBool)?.IsTrue ?? false;
                         this.Maps.Add(new NodeMap(name, func, isWinter));

@@ -1,11 +1,10 @@
-﻿using System.Collections.Generic;
-using System.Text.RegularExpressions;
-using System.Linq;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 
 using Battlegrounds.Game.Gameplay;
 using Battlegrounds.Json;
-using System;
+using Battlegrounds.Lua;
 
 namespace Battlegrounds.Game.Database {
 
@@ -75,6 +74,11 @@ namespace Battlegrounds.Game.Database {
         public bool IsWintermap { get; set; }
 
         /// <summary>
+        /// Get if the given scenario is visible in the lobby.
+        /// </summary>
+        public bool IsVisibleInLobby { get; set; }
+
+        /// <summary>
         /// Get if the <see cref="Scenario"/> is a workshop map.
         /// </summary>
         [JsonIgnore]
@@ -115,26 +119,20 @@ namespace Battlegrounds.Game.Database {
             this.Gamemodes = new List<Wincondition>();
             this.SgaName = string.Empty;
 
-            string infolua = File.ReadAllText(infofile);
-            string optionslua = File.ReadAllText(optionsfile);
+            LuaState scenarioState = new LuaState();
+            scenarioState.DoFile(infofile);
+            scenarioState.DoFile(optionsfile);
 
-            string matchpattern = @"(?<key>\w+)\s+=\s+(?<value>(\w+|\d+|(\"".*\"")))";
-            var infomatches = Regex.Matches(infolua, matchpattern);
-            var optionsmatches = Regex.Matches(infolua, matchpattern);
+            LuaTable headerInfo = scenarioState._G["HeaderInfo"] as LuaTable;
+            this.Name = headerInfo["scenarioname"].Str();
+            this.Description = headerInfo["scenariodescription"].Str();
+            this.MaxPlayers = (byte)(headerInfo["maxplayers"] as LuaNumber);
 
-            this.Name = infomatches.FirstOrDefault(x => x.Groups["key"].Value.CompareTo("scenarioname") == 0)?.Groups["value"].Value.Trim(' ', '\"') ?? "???";
-            this.Description = infomatches.FirstOrDefault(x => x.Groups["key"].Value.CompareTo("scenariodescription") == 0)?.Groups["value"].Value.Trim(' ', '\"') ?? "???";
-            this.Description = this.Description.Replace(@"\""", "'").Replace('[', '(').Replace(']', ')');
+            int battlefront = (int)(headerInfo["scenario_battlefront"] as LuaNumber);
+            this.Theatre = battlefront == 2 ? ScenarioTheatre.EasternFront : battlefront == 5 ? ScenarioTheatre.WesternFront : ScenarioTheatre.SharedFront;
 
-            if (byte.TryParse(infomatches.FirstOrDefault(x => x.Groups["key"].Value.CompareTo("maxplayers") == 0)?.Groups["value"].Value ?? "2", out byte maxplayers)) {
-                this.MaxPlayers = maxplayers;
-            }
-
-            if (int.TryParse(infomatches.FirstOrDefault(x => x.Groups["key"].Value.CompareTo("scenario_battlefront") == 0)?.Groups["value"].Value ?? "2", out int battlefront)) {
-                this.Theatre = battlefront == 2 ? ScenarioTheatre.EasternFront : battlefront == 5 ? ScenarioTheatre.WesternFront : ScenarioTheatre.SharedFront;
-            }
-
-            this.IsWintermap = infolua.Contains("\"winter\"");
+            this.IsWintermap = (headerInfo["default_skins"] as LuaTable).Contains("winter");
+            this.IsVisibleInLobby = (scenarioState._G["visible_in_lobby"] as LuaBool)?.IsTrue ?? true;
 
         }
 

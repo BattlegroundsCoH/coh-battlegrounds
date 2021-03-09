@@ -58,7 +58,10 @@
             value = 1, -- Victory Point value
             capacity = 4, -- Max companies per side
             attrition = 0.1, -- The amount of attrition a company suffers
-            map = "8p_city17" -- The map to play when fighting a battle
+            map = {
+                { scenario = "8p_coh2_city_17_spring_frontline", winter = false },
+                { scenario = "8p_coh2_city_17_winter_battlefield", winter = true },
+            }
         },
         ["red_october_plant"] = {
             u = 374.0 / 1110.0,
@@ -78,7 +81,7 @@
             value = 1, -- Victory Point value
             capacity = 1, -- Max companies per side
             attrition = 0.1, -- The amount of attrition a company suffers
-            map = "" -- The map to play when fighting a battle
+            map = "8p_tank_factory" -- The map to play when fighting a battle
         },
         ["barricades_plant"] = {
             u = 300.0 / 1110.0,
@@ -178,7 +181,7 @@
             value = 1, -- Victory Point value
             capacity = 1, -- Max companies per side
             attrition = 0.1, -- The amount of attrition a company suffers
-            map = "divide map" -- The map to play when fighting a battle
+            map = "anotherstalingrad" -- The map to play when fighting a battle
         },
         ["rail_exit"] = {
             u = 215.0 / 1110.0,
@@ -186,7 +189,7 @@
             leaf = false, -- Is endpoint
             owner = TEAM_ALLIES, -- Node owner
             value = 1, -- Victory Point value
-            capacity = 1, -- Max companies per side
+            capacity = 4, -- Max companies per side
             attrition = 0.1, -- The amount of attrition a company suffers
             map = "6_8_brody" -- The map to play when fighting a battle
         }

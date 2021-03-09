@@ -1,5 +1,4 @@
-﻿using Battlegrounds.Game.DataCompany;
-using Battlegrounds.Game.Match.Analyze;
+﻿using Battlegrounds.Game.Match.Analyze;
 using Battlegrounds.Game.Match.Finalizer;
 
 namespace Battlegrounds.Game.Match {

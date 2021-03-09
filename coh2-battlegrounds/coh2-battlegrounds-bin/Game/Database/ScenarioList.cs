@@ -218,6 +218,7 @@ namespace Battlegrounds.Game.Database {
                     return null;
                 }
 
+                // Create scenario
                 Scenario scen = new Scenario(info, opt) {
                     SgaName = sga
                 };
