@@ -10,18 +10,7 @@
 			"MaxPlayers": "2",
 			"Theatre": "SharedFront",
 			"IsWintermap": "False",
-			"Gamemodes": [
-			]
-		},
-		{
-			"jsdbtype": "Battlegrounds.Game.Database.Scenario",
-			"Name": "(4 - 6) Poltava Station",
-			"Description": "",
-			"RelativeFilename": "(2-4)_compound",
-			"SgaName": "MPScenarios.sga",
-			"MaxPlayers": "6",
-			"Theatre": "SharedFront",
-			"IsWintermap": "False",
+			"IsVisibleInLobby": "True",
 			"Gamemodes": [
 			]
 		},
@@ -34,6 +23,7 @@
 			"MaxPlayers": "2",
 			"Theatre": "EasternFront",
 			"IsWintermap": "False",
+			"IsVisibleInLobby": "True",
 			"Gamemodes": [
 			]
 		},
@@ -45,7 +35,8 @@
 			"SgaName": "MPScenarios.sga",
 			"MaxPlayers": "2",
 			"Theatre": "EasternFront",
-			"IsWintermap": "True",
+			"IsWintermap": "False",
+			"IsVisibleInLobby": "True",
 			"Gamemodes": [
 			]
 		},
@@ -58,6 +49,7 @@
 			"MaxPlayers": "2",
 			"Theatre": "EasternFront",
 			"IsWintermap": "False",
+			"IsVisibleInLobby": "True",
 			"Gamemodes": [
 			]
 		},
@@ -70,6 +62,7 @@
 			"MaxPlayers": "2",
 			"Theatre": "SharedFront",
 			"IsWintermap": "False",
+			"IsVisibleInLobby": "True",
 			"Gamemodes": [
 			]
 		},
@@ -82,6 +75,7 @@
 			"MaxPlayers": "2",
 			"Theatre": "WesternFront",
 			"IsWintermap": "False",
+			"IsVisibleInLobby": "True",
 			"Gamemodes": [
 			]
 		},
@@ -94,6 +88,7 @@
 			"MaxPlayers": "2",
 			"Theatre": "EasternFront",
 			"IsWintermap": "False",
+			"IsVisibleInLobby": "True",
 			"Gamemodes": [
 			]
 		},
@@ -106,6 +101,7 @@
 			"MaxPlayers": "2",
 			"Theatre": "EasternFront",
 			"IsWintermap": "False",
+			"IsVisibleInLobby": "True",
 			"Gamemodes": [
 			]
 		},
@@ -118,6 +114,7 @@
 			"MaxPlayers": "2",
 			"Theatre": "SharedFront",
 			"IsWintermap": "False",
+			"IsVisibleInLobby": "True",
 			"Gamemodes": [
 			]
 		},
@@ -130,6 +127,7 @@
 			"MaxPlayers": "2",
 			"Theatre": "SharedFront",
 			"IsWintermap": "False",
+			"IsVisibleInLobby": "True",
 			"Gamemodes": [
 			]
 		},
@@ -142,6 +140,7 @@
 			"MaxPlayers": "2",
 			"Theatre": "EasternFront",
 			"IsWintermap": "False",
+			"IsVisibleInLobby": "True",
 			"Gamemodes": [
 			]
 		},
@@ -153,7 +152,8 @@
 			"SgaName": "MPScenarios.sga",
 			"MaxPlayers": "4",
 			"Theatre": "SharedFront",
-			"IsWintermap": "True",
+			"IsWintermap": "False",
+			"IsVisibleInLobby": "True",
 			"Gamemodes": [
 			]
 		},
@@ -166,30 +166,20 @@
 			"MaxPlayers": "2",
 			"Theatre": "EasternFront",
 			"IsWintermap": "False",
+			"IsVisibleInLobby": "True",
 			"Gamemodes": [
 			]
 		},
 		{
 			"jsdbtype": "Battlegrounds.Game.Database.Scenario",
-			"Name": "???",
+			"Name": "11164226",
 			"Description": "$11164227",
 			"RelativeFilename": "deutz",
 			"SgaName": "MPScenarios.sga",
 			"MaxPlayers": "2",
 			"Theatre": "SharedFront",
 			"IsWintermap": "False",
-			"Gamemodes": [
-			]
-		},
-		{
-			"jsdbtype": "Battlegrounds.Game.Database.Scenario",
-			"Name": "(2 - 4) Divide",
-			"Description": "",
-			"RelativeFilename": "2p_divide",
-			"SgaName": "MPScenarios.sga",
-			"MaxPlayers": "4",
-			"Theatre": "EasternFront",
-			"IsWintermap": "False",
+			"IsVisibleInLobby": "True",
 			"Gamemodes": [
 			]
 		},
@@ -201,7 +191,8 @@
 			"SgaName": "MPScenarios.sga",
 			"MaxPlayers": "4",
 			"Theatre": "SharedFront",
-			"IsWintermap": "True",
+			"IsWintermap": "False",
+			"IsVisibleInLobby": "True",
 			"Gamemodes": [
 			]
 		},
@@ -214,18 +205,7 @@
 			"MaxPlayers": "2",
 			"Theatre": "SharedFront",
 			"IsWintermap": "False",
-			"Gamemodes": [
-			]
-		},
-		{
-			"jsdbtype": "Battlegrounds.Game.Database.Scenario",
-			"Name": "$11077601",
-			"Description": "The Karelian Isthmus, a vital stretch of land spanning 100km wide between both the Gulf of Finland and Lake Ladoga became a bottleneck for both Soviet and German-Finnish forces. After its original capitulation at the hands of the Soviets during the Winter War of 1940, it was once again sought after in the summer of the following year. What has previously been a whiteout of gullies and frozen marshes was now a vast, wild entanglement of woodland. The forests of Karelia consumed miles of cliffs and crevices, hiding their treacherous nature within the undergrowth. Progress towards Tali-Ihantala was slow, dangerous, and at every infrequent road or track, ambushes were usually in waiting.",
-			"RelativeFilename": "2p_karelia",
-			"SgaName": "MPScenarios.sga",
-			"MaxPlayers": "4",
-			"Theatre": "SharedFront",
-			"IsWintermap": "False",
+			"IsVisibleInLobby": "True",
 			"Gamemodes": [
 			]
 		},
@@ -237,7 +217,8 @@
 			"SgaName": "MPScenarios.sga",
 			"MaxPlayers": "2",
 			"Theatre": "SharedFront",
-			"IsWintermap": "True",
+			"IsWintermap": "False",
+			"IsVisibleInLobby": "True",
 			"Gamemodes": [
 			]
 		},
@@ -250,6 +231,7 @@
 			"MaxPlayers": "2",
 			"Theatre": "SharedFront",
 			"IsWintermap": "False",
+			"IsVisibleInLobby": "True",
 			"Gamemodes": [
 			]
 		},
@@ -261,7 +243,8 @@
 			"SgaName": "MPScenarios.sga",
 			"MaxPlayers": "2",
 			"Theatre": "SharedFront",
-			"IsWintermap": "True",
+			"IsWintermap": "False",
+			"IsVisibleInLobby": "True",
 			"Gamemodes": [
 			]
 		},
@@ -273,7 +256,8 @@
 			"SgaName": "MPScenarios.sga",
 			"MaxPlayers": "2",
 			"Theatre": "SharedFront",
-			"IsWintermap": "True",
+			"IsWintermap": "False",
+			"IsVisibleInLobby": "True",
 			"Gamemodes": [
 			]
 		},
@@ -286,6 +270,7 @@
 			"MaxPlayers": "2",
 			"Theatre": "SharedFront",
 			"IsWintermap": "False",
+			"IsVisibleInLobby": "True",
 			"Gamemodes": [
 			]
 		},
@@ -298,6 +283,7 @@
 			"MaxPlayers": "2",
 			"Theatre": "SharedFront",
 			"IsWintermap": "False",
+			"IsVisibleInLobby": "True",
 			"Gamemodes": [
 			]
 		},
@@ -310,6 +296,7 @@
 			"MaxPlayers": "2",
 			"Theatre": "SharedFront",
 			"IsWintermap": "False",
+			"IsVisibleInLobby": "True",
 			"Gamemodes": [
 			]
 		},
@@ -322,6 +309,7 @@
 			"MaxPlayers": "2",
 			"Theatre": "SharedFront",
 			"IsWintermap": "False",
+			"IsVisibleInLobby": "True",
 			"Gamemodes": [
 			]
 		},
@@ -333,7 +321,8 @@
 			"SgaName": "MPScenarios.sga",
 			"MaxPlayers": "2",
 			"Theatre": "EasternFront",
-			"IsWintermap": "True",
+			"IsWintermap": "False",
+			"IsVisibleInLobby": "True",
 			"Gamemodes": [
 			]
 		},
@@ -346,6 +335,7 @@
 			"MaxPlayers": "2",
 			"Theatre": "SharedFront",
 			"IsWintermap": "False",
+			"IsVisibleInLobby": "True",
 			"Gamemodes": [
 			]
 		},
@@ -358,6 +348,7 @@
 			"MaxPlayers": "2",
 			"Theatre": "SharedFront",
 			"IsWintermap": "False",
+			"IsVisibleInLobby": "True",
 			"Gamemodes": [
 			]
 		},
@@ -370,6 +361,7 @@
 			"MaxPlayers": "2",
 			"Theatre": "SharedFront",
 			"IsWintermap": "False",
+			"IsVisibleInLobby": "True",
 			"Gamemodes": [
 			]
 		},
@@ -382,6 +374,7 @@
 			"MaxPlayers": "2",
 			"Theatre": "SharedFront",
 			"IsWintermap": "False",
+			"IsVisibleInLobby": "True",
 			"Gamemodes": [
 			]
 		},
@@ -393,7 +386,8 @@
 			"SgaName": "MPScenarios.sga",
 			"MaxPlayers": "2",
 			"Theatre": "SharedFront",
-			"IsWintermap": "True",
+			"IsWintermap": "False",
+			"IsVisibleInLobby": "True",
 			"Gamemodes": [
 			]
 		},
@@ -406,18 +400,7 @@
 			"MaxPlayers": "2",
 			"Theatre": "EasternFront",
 			"IsWintermap": "False",
-			"Gamemodes": [
-			]
-		},
-		{
-			"jsdbtype": "Battlegrounds.Game.Database.Scenario",
-			"Name": "$11098172",
-			"Description": "$11098173",
-			"RelativeFilename": "2p_sturzdorf",
-			"SgaName": "MPScenarios.sga",
-			"MaxPlayers": "2",
-			"Theatre": "SharedFront",
-			"IsWintermap": "False",
+			"IsVisibleInLobby": "True",
 			"Gamemodes": [
 			]
 		},
@@ -429,19 +412,8 @@
 			"SgaName": "MPScenarios.sga",
 			"MaxPlayers": "2",
 			"Theatre": "EasternFront",
-			"IsWintermap": "True",
-			"Gamemodes": [
-			]
-		},
-		{
-			"jsdbtype": "Battlegrounds.Game.Database.Scenario",
-			"Name": "$11065424",
-			"Description": "$11065425",
-			"RelativeFilename": "2_4_tereklines",
-			"SgaName": "MPScenarios.sga",
-			"MaxPlayers": "4",
-			"Theatre": "SharedFront",
-			"IsWintermap": "True",
+			"IsWintermap": "False",
+			"IsVisibleInLobby": "True",
 			"Gamemodes": [
 			]
 		},
@@ -454,6 +426,7 @@
 			"MaxPlayers": "4",
 			"Theatre": "WesternFront",
 			"IsWintermap": "False",
+			"IsVisibleInLobby": "True",
 			"Gamemodes": [
 			]
 		},
@@ -466,6 +439,7 @@
 			"MaxPlayers": "4",
 			"Theatre": "EasternFront",
 			"IsWintermap": "False",
+			"IsVisibleInLobby": "True",
 			"Gamemodes": [
 			]
 		},
@@ -478,6 +452,7 @@
 			"MaxPlayers": "4",
 			"Theatre": "SharedFront",
 			"IsWintermap": "False",
+			"IsVisibleInLobby": "True",
 			"Gamemodes": [
 			]
 		},
@@ -490,6 +465,7 @@
 			"MaxPlayers": "4",
 			"Theatre": "EasternFront",
 			"IsWintermap": "False",
+			"IsVisibleInLobby": "True",
 			"Gamemodes": [
 			]
 		},
@@ -501,19 +477,8 @@
 			"SgaName": "MPScenarios.sga",
 			"MaxPlayers": "4",
 			"Theatre": "SharedFront",
-			"IsWintermap": "True",
-			"Gamemodes": [
-			]
-		},
-		{
-			"jsdbtype": "Battlegrounds.Game.Database.Scenario",
-			"Name": "$11085930",
-			"Description": "$11089991",
-			"RelativeFilename": "4p_bystraya_voda",
-			"SgaName": "MPScenarios.sga",
-			"MaxPlayers": "4",
-			"Theatre": "SharedFront",
-			"IsWintermap": "True",
+			"IsWintermap": "False",
+			"IsVisibleInLobby": "True",
 			"Gamemodes": [
 			]
 		},
@@ -525,7 +490,8 @@
 			"SgaName": "MPScenarios.sga",
 			"MaxPlayers": "6",
 			"Theatre": "SharedFront",
-			"IsWintermap": "True",
+			"IsWintermap": "False",
+			"IsVisibleInLobby": "True",
 			"Gamemodes": [
 			]
 		},
@@ -538,6 +504,7 @@
 			"MaxPlayers": "4",
 			"Theatre": "EasternFront",
 			"IsWintermap": "False",
+			"IsVisibleInLobby": "True",
 			"Gamemodes": [
 			]
 		},
@@ -549,7 +516,8 @@
 			"SgaName": "MPScenarios.sga",
 			"MaxPlayers": "4",
 			"Theatre": "SharedFront",
-			"IsWintermap": "True",
+			"IsWintermap": "False",
+			"IsVisibleInLobby": "True",
 			"Gamemodes": [
 			]
 		},
@@ -562,18 +530,7 @@
 			"MaxPlayers": "4",
 			"Theatre": "WesternFront",
 			"IsWintermap": "False",
-			"Gamemodes": [
-			]
-		},
-		{
-			"jsdbtype": "Battlegrounds.Game.Database.Scenario",
-			"Name": "$11098174",
-			"Description": "$11098175",
-			"RelativeFilename": "4p_ecliptic_fields",
-			"SgaName": "MPScenarios.sga",
-			"MaxPlayers": "4",
-			"Theatre": "SharedFront",
-			"IsWintermap": "False",
+			"IsVisibleInLobby": "True",
 			"Gamemodes": [
 			]
 		},
@@ -586,6 +543,7 @@
 			"MaxPlayers": "4",
 			"Theatre": "SharedFront",
 			"IsWintermap": "False",
+			"IsVisibleInLobby": "True",
 			"Gamemodes": [
 			]
 		},
@@ -598,6 +556,7 @@
 			"MaxPlayers": "4",
 			"Theatre": "SharedFront",
 			"IsWintermap": "False",
+			"IsVisibleInLobby": "True",
 			"Gamemodes": [
 			]
 		},
@@ -610,6 +569,7 @@
 			"MaxPlayers": "4",
 			"Theatre": "SharedFront",
 			"IsWintermap": "False",
+			"IsVisibleInLobby": "True",
 			"Gamemodes": [
 			]
 		},
@@ -622,6 +582,7 @@
 			"MaxPlayers": "4",
 			"Theatre": "SharedFront",
 			"IsWintermap": "False",
+			"IsVisibleInLobby": "True",
 			"Gamemodes": [
 			]
 		},
@@ -634,6 +595,7 @@
 			"MaxPlayers": "4",
 			"Theatre": "WesternFront",
 			"IsWintermap": "False",
+			"IsVisibleInLobby": "True",
 			"Gamemodes": [
 			]
 		},
@@ -646,6 +608,7 @@
 			"MaxPlayers": "4",
 			"Theatre": "WesternFront",
 			"IsWintermap": "False",
+			"IsVisibleInLobby": "True",
 			"Gamemodes": [
 			]
 		},
@@ -658,18 +621,7 @@
 			"MaxPlayers": "4",
 			"Theatre": "EasternFront",
 			"IsWintermap": "False",
-			"Gamemodes": [
-			]
-		},
-		{
-			"jsdbtype": "Battlegrounds.Game.Database.Scenario",
-			"Name": "$11045520",
-			"Description": "$11045521",
-			"RelativeFilename": "4p_kholodnaya_ferma_battlefield",
-			"SgaName": "MPScenarios.sga",
-			"MaxPlayers": "4",
-			"Theatre": "SharedFront",
-			"IsWintermap": "True",
+			"IsVisibleInLobby": "True",
 			"Gamemodes": [
 			]
 		},
@@ -682,6 +634,7 @@
 			"MaxPlayers": "4",
 			"Theatre": "EasternFront",
 			"IsWintermap": "False",
+			"IsVisibleInLobby": "True",
 			"Gamemodes": [
 			]
 		},
@@ -694,6 +647,7 @@
 			"MaxPlayers": "4",
 			"Theatre": "SharedFront",
 			"IsWintermap": "False",
+			"IsVisibleInLobby": "True",
 			"Gamemodes": [
 			]
 		},
@@ -706,6 +660,7 @@
 			"MaxPlayers": "4",
 			"Theatre": "SharedFront",
 			"IsWintermap": "False",
+			"IsVisibleInLobby": "True",
 			"Gamemodes": [
 			]
 		},
@@ -717,7 +672,8 @@
 			"SgaName": "MPScenarios.sga",
 			"MaxPlayers": "4",
 			"Theatre": "SharedFront",
-			"IsWintermap": "True",
+			"IsWintermap": "False",
+			"IsVisibleInLobby": "True",
 			"Gamemodes": [
 			]
 		},
@@ -729,7 +685,8 @@
 			"SgaName": "MPScenarios.sga",
 			"MaxPlayers": "4",
 			"Theatre": "SharedFront",
-			"IsWintermap": "True",
+			"IsWintermap": "False",
+			"IsVisibleInLobby": "True",
 			"Gamemodes": [
 			]
 		},
@@ -742,6 +699,7 @@
 			"MaxPlayers": "4",
 			"Theatre": "SharedFront",
 			"IsWintermap": "False",
+			"IsVisibleInLobby": "True",
 			"Gamemodes": [
 			]
 		},
@@ -754,6 +712,7 @@
 			"MaxPlayers": "4",
 			"Theatre": "SharedFront",
 			"IsWintermap": "False",
+			"IsVisibleInLobby": "True",
 			"Gamemodes": [
 			]
 		},
@@ -766,6 +725,7 @@
 			"MaxPlayers": "4",
 			"Theatre": "SharedFront",
 			"IsWintermap": "False",
+			"IsVisibleInLobby": "True",
 			"Gamemodes": [
 			]
 		},
@@ -778,6 +738,7 @@
 			"MaxPlayers": "4",
 			"Theatre": "SharedFront",
 			"IsWintermap": "False",
+			"IsVisibleInLobby": "True",
 			"Gamemodes": [
 			]
 		},
@@ -789,7 +750,8 @@
 			"SgaName": "MPScenarios.sga",
 			"MaxPlayers": "4",
 			"Theatre": "SharedFront",
-			"IsWintermap": "True",
+			"IsWintermap": "False",
+			"IsVisibleInLobby": "True",
 			"Gamemodes": [
 			]
 		},
@@ -802,6 +764,7 @@
 			"MaxPlayers": "4",
 			"Theatre": "SharedFront",
 			"IsWintermap": "False",
+			"IsVisibleInLobby": "True",
 			"Gamemodes": [
 			]
 		},
@@ -814,6 +777,7 @@
 			"MaxPlayers": "4",
 			"Theatre": "SharedFront",
 			"IsWintermap": "False",
+			"IsVisibleInLobby": "True",
 			"Gamemodes": [
 			]
 		},
@@ -826,6 +790,7 @@
 			"MaxPlayers": "4",
 			"Theatre": "SharedFront",
 			"IsWintermap": "False",
+			"IsVisibleInLobby": "True",
 			"Gamemodes": [
 			]
 		},
@@ -838,6 +803,7 @@
 			"MaxPlayers": "4",
 			"Theatre": "SharedFront",
 			"IsWintermap": "False",
+			"IsVisibleInLobby": "True",
 			"Gamemodes": [
 			]
 		},
@@ -849,19 +815,8 @@
 			"SgaName": "MPScenarios.sga",
 			"MaxPlayers": "4",
 			"Theatre": "SharedFront",
-			"IsWintermap": "True",
-			"Gamemodes": [
-			]
-		},
-		{
-			"jsdbtype": "Battlegrounds.Game.Database.Scenario",
-			"Name": "$11050391",
-			"Description": "$11050491",
-			"RelativeFilename": "4p_rzhev_summer_frontline",
-			"SgaName": "MPScenarios.sga",
-			"MaxPlayers": "6",
-			"Theatre": "SharedFront",
 			"IsWintermap": "False",
+			"IsVisibleInLobby": "True",
 			"Gamemodes": [
 			]
 		},
@@ -873,7 +828,8 @@
 			"SgaName": "MPScenarios.sga",
 			"MaxPlayers": "4",
 			"Theatre": "SharedFront",
-			"IsWintermap": "True",
+			"IsWintermap": "False",
+			"IsVisibleInLobby": "True",
 			"Gamemodes": [
 			]
 		},
@@ -886,18 +842,7 @@
 			"MaxPlayers": "4",
 			"Theatre": "SharedFront",
 			"IsWintermap": "False",
-			"Gamemodes": [
-			]
-		},
-		{
-			"jsdbtype": "Battlegrounds.Game.Database.Scenario",
-			"Name": "(2 - 4) Semois - Attrition",
-			"Description": "Requisition troops using the limited resources command has made available to you. Your mission is to take and hold the village of Semois by controlling the three victory points. However, you may also achieve victory by completely annihilating all opposition forces.",
-			"RelativeFilename": "4p_semois_attrition",
-			"SgaName": "MPScenarios.sga",
-			"MaxPlayers": "4",
-			"Theatre": "SharedFront",
-			"IsWintermap": "False",
+			"IsVisibleInLobby": "True",
 			"Gamemodes": [
 			]
 		},
@@ -909,7 +854,8 @@
 			"SgaName": "MPScenarios.sga",
 			"MaxPlayers": "4",
 			"Theatre": "SharedFront",
-			"IsWintermap": "True",
+			"IsWintermap": "False",
+			"IsVisibleInLobby": "True",
 			"Gamemodes": [
 			]
 		},
@@ -922,18 +868,7 @@
 			"MaxPlayers": "4",
 			"Theatre": "SharedFront",
 			"IsWintermap": "False",
-			"Gamemodes": [
-			]
-		},
-		{
-			"jsdbtype": "Battlegrounds.Game.Database.Scenario",
-			"Name": "Vaux Farmlands - Attrition",
-			"Description": "$11072210",
-			"RelativeFilename": "4p_vaux_farmlands_attrition",
-			"SgaName": "MPScenarios.sga",
-			"MaxPlayers": "4",
-			"Theatre": "SharedFront",
-			"IsWintermap": "False",
+			"IsVisibleInLobby": "True",
 			"Gamemodes": [
 			]
 		},
@@ -946,18 +881,7 @@
 			"MaxPlayers": "4",
 			"Theatre": "SharedFront",
 			"IsWintermap": "False",
-			"Gamemodes": [
-			]
-		},
-		{
-			"jsdbtype": "Battlegrounds.Game.Database.Scenario",
-			"Name": "$11077600",
-			"Description": "Retreat! Ivan is coming!' It's Fall 1944, the mighty German Ostfront has fallen. While the first snow begins to fall over what once was East Poland, you can hear the clattering of Soviet tank treads, the fizzling sound of artillery projectiles and the screaming roar of IL-2 engines in the cold air of November. Everything else seems silent, the Wehrmacht is on retreat. However, appearances are deceiving. Close to the once idyllic town of Lemberg, devastated by Operation Barbarossa, some German divisions regroup to block the Soviets' way to victory. For the Fatherland! The area is suited perfectly for flanking or ambushing the enemy, the dark woods provide good cover, while the vast fields may appear as deadly traps unless equipped with some well placed sand bags. Good luck, Kameraden!",
-			"RelativeFilename": "4_6_lemberg_fall",
-			"SgaName": "MPScenarios.sga",
-			"MaxPlayers": "6",
-			"Theatre": "SharedFront",
-			"IsWintermap": "False",
+			"IsVisibleInLobby": "True",
 			"Gamemodes": [
 			]
 		},
@@ -969,7 +893,8 @@
 			"SgaName": "MPScenarios.sga",
 			"MaxPlayers": "8",
 			"Theatre": "SharedFront",
-			"IsWintermap": "True",
+			"IsWintermap": "False",
+			"IsVisibleInLobby": "True",
 			"Gamemodes": [
 			]
 		},
@@ -982,6 +907,7 @@
 			"MaxPlayers": "6",
 			"Theatre": "WesternFront",
 			"IsWintermap": "False",
+			"IsVisibleInLobby": "True",
 			"Gamemodes": [
 			]
 		},
@@ -994,6 +920,7 @@
 			"MaxPlayers": "6",
 			"Theatre": "EasternFront",
 			"IsWintermap": "False",
+			"IsVisibleInLobby": "True",
 			"Gamemodes": [
 			]
 		},
@@ -1005,7 +932,8 @@
 			"SgaName": "MPScenarios.sga",
 			"MaxPlayers": "6",
 			"Theatre": "EasternFront",
-			"IsWintermap": "True",
+			"IsWintermap": "False",
+			"IsVisibleInLobby": "True",
 			"Gamemodes": [
 			]
 		},
@@ -1018,6 +946,7 @@
 			"MaxPlayers": "6",
 			"Theatre": "SharedFront",
 			"IsWintermap": "False",
+			"IsVisibleInLobby": "True",
 			"Gamemodes": [
 			]
 		},
@@ -1030,6 +959,7 @@
 			"MaxPlayers": "6",
 			"Theatre": "SharedFront",
 			"IsWintermap": "False",
+			"IsVisibleInLobby": "True",
 			"Gamemodes": [
 			]
 		},
@@ -1042,6 +972,7 @@
 			"MaxPlayers": "8",
 			"Theatre": "SharedFront",
 			"IsWintermap": "False",
+			"IsVisibleInLobby": "True",
 			"Gamemodes": [
 			]
 		},
@@ -1054,42 +985,7 @@
 			"MaxPlayers": "6",
 			"Theatre": "SharedFront",
 			"IsWintermap": "False",
-			"Gamemodes": [
-			]
-		},
-		{
-			"jsdbtype": "Battlegrounds.Game.Database.Scenario",
-			"Name": "$11098176",
-			"Description": "$11098177",
-			"RelativeFilename": "6p_montherme",
-			"SgaName": "MPScenarios.sga",
-			"MaxPlayers": "6",
-			"Theatre": "SharedFront",
-			"IsWintermap": "False",
-			"Gamemodes": [
-			]
-		},
-		{
-			"jsdbtype": "Battlegrounds.Game.Database.Scenario",
-			"Name": "$11055188",
-			"Description": "",
-			"RelativeFilename": "6p_mud_valley",
-			"SgaName": "MPScenarios.sga",
-			"MaxPlayers": "8",
-			"Theatre": "SharedFront",
-			"IsWintermap": "False",
-			"Gamemodes": [
-			]
-		},
-		{
-			"jsdbtype": "Battlegrounds.Game.Database.Scenario",
-			"Name": "$11089985",
-			"Description": "$11089990",
-			"RelativeFilename": "6p_coh2_pavlov_s_house",
-			"SgaName": "MPScenarios.sga",
-			"MaxPlayers": "6",
-			"Theatre": "SharedFront",
-			"IsWintermap": "False",
+			"IsVisibleInLobby": "True",
 			"Gamemodes": [
 			]
 		},
@@ -1102,6 +998,7 @@
 			"MaxPlayers": "6",
 			"Theatre": "WesternFront",
 			"IsWintermap": "False",
+			"IsVisibleInLobby": "True",
 			"Gamemodes": [
 			]
 		},
@@ -1113,55 +1010,8 @@
 			"SgaName": "MPScenarios.sga",
 			"MaxPlayers": "6",
 			"Theatre": "SharedFront",
-			"IsWintermap": "True",
-			"Gamemodes": [
-			]
-		},
-		{
-			"jsdbtype": "Battlegrounds.Game.Database.Scenario",
-			"Name": "$11077597",
-			"Description": "The wide and open marshes of the prypjat river allow armies to attack their enemy from all directions, but expierenced commanders are aware, that the swamps can turn fast into wet graves for the attacking troops, so the key to victory lies in controlling the roads in order to move units fast across the water and thus be albe to control the battlefield.                  By O'Field",
-			"RelativeFilename": "6p_swamps",
-			"SgaName": "MPScenarios.sga",
-			"MaxPlayers": "8",
-			"Theatre": "SharedFront",
 			"IsWintermap": "False",
-			"Gamemodes": [
-			]
-		},
-		{
-			"jsdbtype": "Battlegrounds.Game.Database.Scenario",
-			"Name": "$11085931",
-			"Description": "$11089989",
-			"RelativeFilename": "wolfs_lair",
-			"SgaName": "MPScenarios.sga",
-			"MaxPlayers": "6",
-			"Theatre": "SharedFront",
-			"IsWintermap": "False",
-			"Gamemodes": [
-			]
-		},
-		{
-			"jsdbtype": "Battlegrounds.Game.Database.Scenario",
-			"Name": "$11054521",
-			"Description": "$11054522",
-			"RelativeFilename": "6_8_brody",
-			"SgaName": "MPScenarios.sga",
-			"MaxPlayers": "8",
-			"Theatre": "SharedFront",
-			"IsWintermap": "False",
-			"Gamemodes": [
-			]
-		},
-		{
-			"jsdbtype": "Battlegrounds.Game.Database.Scenario",
-			"Name": "(6 - 8) General Mud",
-			"Description": "",
-			"RelativeFilename": "6p_mudroad311",
-			"SgaName": "MPScenarios.sga",
-			"MaxPlayers": "8",
-			"Theatre": "SharedFront",
-			"IsWintermap": "False",
+			"IsVisibleInLobby": "True",
 			"Gamemodes": [
 			]
 		},
@@ -1174,6 +1024,7 @@
 			"MaxPlayers": "6",
 			"Theatre": "EasternFront",
 			"IsWintermap": "False",
+			"IsVisibleInLobby": "True",
 			"Gamemodes": [
 			]
 		},
@@ -1186,6 +1037,7 @@
 			"MaxPlayers": "8",
 			"Theatre": "EasternFront",
 			"IsWintermap": "False",
+			"IsVisibleInLobby": "True",
 			"Gamemodes": [
 			]
 		},
@@ -1197,7 +1049,8 @@
 			"SgaName": "MPScenarios.sga",
 			"MaxPlayers": "8",
 			"Theatre": "EasternFront",
-			"IsWintermap": "True",
+			"IsWintermap": "False",
+			"IsVisibleInLobby": "True",
 			"Gamemodes": [
 			]
 		},
@@ -1210,6 +1063,7 @@
 			"MaxPlayers": "8",
 			"Theatre": "SharedFront",
 			"IsWintermap": "False",
+			"IsVisibleInLobby": "True",
 			"Gamemodes": [
 			]
 		},
@@ -1221,7 +1075,8 @@
 			"SgaName": "MPScenarios.sga",
 			"MaxPlayers": "8",
 			"Theatre": "SharedFront",
-			"IsWintermap": "True",
+			"IsWintermap": "False",
+			"IsVisibleInLobby": "True",
 			"Gamemodes": [
 			]
 		},
@@ -1234,6 +1089,7 @@
 			"MaxPlayers": "8",
 			"Theatre": "WesternFront",
 			"IsWintermap": "False",
+			"IsVisibleInLobby": "True",
 			"Gamemodes": [
 			]
 		},
@@ -1246,6 +1102,7 @@
 			"MaxPlayers": "8",
 			"Theatre": "SharedFront",
 			"IsWintermap": "False",
+			"IsVisibleInLobby": "True",
 			"Gamemodes": [
 			]
 		},
@@ -1258,6 +1115,7 @@
 			"MaxPlayers": "8",
 			"Theatre": "SharedFront",
 			"IsWintermap": "False",
+			"IsVisibleInLobby": "True",
 			"Gamemodes": [
 			]
 		},
@@ -1269,7 +1127,8 @@
 			"SgaName": "MPScenarios.sga",
 			"MaxPlayers": "8",
 			"Theatre": "EasternFront",
-			"IsWintermap": "True",
+			"IsWintermap": "False",
+			"IsVisibleInLobby": "True",
 			"Gamemodes": [
 			]
 		},
@@ -1282,6 +1141,7 @@
 			"MaxPlayers": "8",
 			"Theatre": "WesternFront",
 			"IsWintermap": "False",
+			"IsVisibleInLobby": "True",
 			"Gamemodes": [
 			]
 		},
@@ -1294,18 +1154,7 @@
 			"MaxPlayers": "8",
 			"Theatre": "SharedFront",
 			"IsWintermap": "False",
-			"Gamemodes": [
-			]
-		},
-		{
-			"jsdbtype": "Battlegrounds.Game.Database.Scenario",
-			"Name": "$11077598",
-			"Description": "25th of July, 1944. The 2nd Shock Army meets heavy resistance in their struggle to take back Narva, at the Russian-Estonian border.",
-			"RelativeFilename": "8p_narva_v2",
-			"SgaName": "MPScenarios.sga",
-			"MaxPlayers": "8",
-			"Theatre": "SharedFront",
-			"IsWintermap": "False",
+			"IsVisibleInLobby": "True",
 			"Gamemodes": [
 			]
 		},
@@ -1317,7 +1166,8 @@
 			"SgaName": "MPScenarios.sga",
 			"MaxPlayers": "8",
 			"Theatre": "SharedFront",
-			"IsWintermap": "True",
+			"IsWintermap": "False",
+			"IsVisibleInLobby": "True",
 			"Gamemodes": [
 			]
 		},
@@ -1330,6 +1180,7 @@
 			"MaxPlayers": "8",
 			"Theatre": "WesternFront",
 			"IsWintermap": "False",
+			"IsVisibleInLobby": "True",
 			"Gamemodes": [
 			]
 		},
@@ -1342,6 +1193,7 @@
 			"MaxPlayers": "8",
 			"Theatre": "EasternFront",
 			"IsWintermap": "False",
+			"IsVisibleInLobby": "True",
 			"Gamemodes": [
 			]
 		},
@@ -1354,6 +1206,7 @@
 			"MaxPlayers": "8",
 			"Theatre": "EasternFront",
 			"IsWintermap": "False",
+			"IsVisibleInLobby": "True",
 			"Gamemodes": [
 			]
 		},
@@ -1366,6 +1219,7 @@
 			"MaxPlayers": "8",
 			"Theatre": "EasternFront",
 			"IsWintermap": "False",
+			"IsVisibleInLobby": "True",
 			"Gamemodes": [
 			]
 		},
@@ -1377,7 +1231,8 @@
 			"SgaName": "MPScenarios.sga",
 			"MaxPlayers": "8",
 			"Theatre": "SharedFront",
-			"IsWintermap": "True",
+			"IsWintermap": "False",
+			"IsVisibleInLobby": "True",
 			"Gamemodes": [
 			]
 		},
@@ -1390,6 +1245,7 @@
 			"MaxPlayers": "6",
 			"Theatre": "WesternFront",
 			"IsWintermap": "False",
+			"IsVisibleInLobby": "True",
 			"Gamemodes": [
 			]
 		},
@@ -1402,6 +1258,7 @@
 			"MaxPlayers": "8",
 			"Theatre": "SharedFront",
 			"IsWintermap": "False",
+			"IsVisibleInLobby": "True",
 			"Gamemodes": [
 			]
 		},
@@ -1414,6 +1271,7 @@
 			"MaxPlayers": "2",
 			"Theatre": "SharedFront",
 			"IsWintermap": "False",
+			"IsVisibleInLobby": "True",
 			"Gamemodes": [
 			]
 		},
@@ -1425,7 +1283,8 @@
 			"SgaName": "MPScenarios.sga",
 			"MaxPlayers": "8",
 			"Theatre": "SharedFront",
-			"IsWintermap": "True",
+			"IsWintermap": "False",
+			"IsVisibleInLobby": "True",
 			"Gamemodes": [
 			]
 		},
@@ -1438,6 +1297,7 @@
 			"MaxPlayers": "8",
 			"Theatre": "EasternFront",
 			"IsWintermap": "False",
+			"IsVisibleInLobby": "True",
 			"Gamemodes": [
 			]
 		},
@@ -1450,6 +1310,7 @@
 			"MaxPlayers": "2",
 			"Theatre": "SharedFront",
 			"IsWintermap": "False",
+			"IsVisibleInLobby": "True",
 			"Gamemodes": [
 			]
 		},
@@ -1462,6 +1323,7 @@
 			"MaxPlayers": "2",
 			"Theatre": "SharedFront",
 			"IsWintermap": "False",
+			"IsVisibleInLobby": "True",
 			"Gamemodes": [
 			]
 		},
@@ -1473,7 +1335,8 @@
 			"SgaName": "MPScenarios.sga",
 			"MaxPlayers": "2",
 			"Theatre": "SharedFront",
-			"IsWintermap": "True",
+			"IsWintermap": "False",
+			"IsVisibleInLobby": "True",
 			"Gamemodes": [
 			]
 		},
@@ -1486,6 +1349,7 @@
 			"MaxPlayers": "2",
 			"Theatre": "SharedFront",
 			"IsWintermap": "False",
+			"IsVisibleInLobby": "True",
 			"Gamemodes": [
 			]
 		},
@@ -1498,6 +1362,7 @@
 			"MaxPlayers": "4",
 			"Theatre": "SharedFront",
 			"IsWintermap": "False",
+			"IsVisibleInLobby": "True",
 			"Gamemodes": [
 			]
 		},
@@ -1510,30 +1375,7 @@
 			"MaxPlayers": "2",
 			"Theatre": "SharedFront",
 			"IsWintermap": "False",
-			"Gamemodes": [
-			]
-		},
-		{
-			"jsdbtype": "Battlegrounds.Game.Database.Scenario",
-			"Name": "specialtest",
-			"Description": "",
-			"RelativeFilename": "specialtest",
-			"SgaName": "MPScenarios.sga",
-			"MaxPlayers": "2",
-			"Theatre": "EasternFront",
-			"IsWintermap": "False",
-			"Gamemodes": [
-			]
-		},
-		{
-			"jsdbtype": "Battlegrounds.Game.Database.Scenario",
-			"Name": "$11077599",
-			"Description": "This hamlet, buried in sporadic clusters of forest deep within rural Eastern Poland, has seen war before. These lands had boldly resisted the Soviet invasion of late 1939, but to no avail. Now time has passed; it is the summer of 1941 -and Operation Barbarossa means war is knocking at their door once again....                                                                                                          A combination of bare open fields and key positions will see victory goes to the side who best utilize the old town buildings, newly-built trenches and abandoned objects scattered around the map.",
-			"RelativeFilename": "overgrowth",
-			"SgaName": "MPScenarios.sga",
-			"MaxPlayers": "4",
-			"Theatre": "SharedFront",
-			"IsWintermap": "False",
+			"IsVisibleInLobby": "True",
 			"Gamemodes": [
 			]
 		},
@@ -1546,18 +1388,7 @@
 			"MaxPlayers": "2",
 			"Theatre": "EasternFront",
 			"IsWintermap": "False",
-			"Gamemodes": [
-			]
-		},
-		{
-			"jsdbtype": "Battlegrounds.Game.Database.Scenario",
-			"Name": "(4) Volga Timber Yard",
-			"Description": "",
-			"RelativeFilename": "volga_timber_yard",
-			"SgaName": "MPScenarios.sga",
-			"MaxPlayers": "4",
-			"Theatre": "EasternFront",
-			"IsWintermap": "False",
+			"IsVisibleInLobby": "True",
 			"Gamemodes": [
 			]
 		},
@@ -1569,7 +1400,8 @@
 			"SgaName": "MPXP1Scenarios.sga",
 			"MaxPlayers": "4",
 			"Theatre": "SharedFront",
-			"IsWintermap": "True",
+			"IsWintermap": "False",
+			"IsVisibleInLobby": "True",
 			"Gamemodes": [
 			]
 		},
@@ -1582,6 +1414,7 @@
 			"MaxPlayers": "2",
 			"Theatre": "SharedFront",
 			"IsWintermap": "False",
+			"IsVisibleInLobby": "True",
 			"Gamemodes": [
 			]
 		},
@@ -1593,7 +1426,8 @@
 			"SgaName": "MPXP1Scenarios.sga",
 			"MaxPlayers": "4",
 			"Theatre": "SharedFront",
-			"IsWintermap": "True",
+			"IsWintermap": "False",
+			"IsVisibleInLobby": "True",
 			"Gamemodes": [
 			]
 		},
@@ -1605,7 +1439,8 @@
 			"SgaName": "MPXP1Scenarios.sga",
 			"MaxPlayers": "4",
 			"Theatre": "SharedFront",
-			"IsWintermap": "True",
+			"IsWintermap": "False",
+			"IsVisibleInLobby": "True",
 			"Gamemodes": [
 			]
 		},
@@ -1617,7 +1452,8 @@
 			"SgaName": "MPXP1Scenarios.sga",
 			"MaxPlayers": "4",
 			"Theatre": "SharedFront",
-			"IsWintermap": "True",
+			"IsWintermap": "False",
+			"IsVisibleInLobby": "True",
 			"Gamemodes": [
 			]
 		},
@@ -1630,6 +1466,7 @@
 			"MaxPlayers": "4",
 			"Theatre": "SharedFront",
 			"IsWintermap": "False",
+			"IsVisibleInLobby": "True",
 			"Gamemodes": [
 			]
 		},
@@ -1642,6 +1479,7 @@
 			"MaxPlayers": "4",
 			"Theatre": "EasternFront",
 			"IsWintermap": "False",
+			"IsVisibleInLobby": "True",
 			"Gamemodes": [
 			]
 		},
@@ -1654,6 +1492,7 @@
 			"MaxPlayers": "4",
 			"Theatre": "SharedFront",
 			"IsWintermap": "False",
+			"IsVisibleInLobby": "True",
 			"Gamemodes": [
 			]
 		},
@@ -1665,7 +1504,8 @@
 			"SgaName": "MPXP1Scenarios.sga",
 			"MaxPlayers": "6",
 			"Theatre": "SharedFront",
-			"IsWintermap": "True",
+			"IsWintermap": "False",
+			"IsVisibleInLobby": "True",
 			"Gamemodes": [
 			]
 		},
@@ -1677,7 +1517,8 @@
 			"SgaName": "MPXP1Scenarios.sga",
 			"MaxPlayers": "6",
 			"Theatre": "SharedFront",
-			"IsWintermap": "True",
+			"IsWintermap": "False",
+			"IsVisibleInLobby": "True",
 			"Gamemodes": [
 			]
 		},
@@ -1690,6 +1531,7 @@
 			"MaxPlayers": "6",
 			"Theatre": "SharedFront",
 			"IsWintermap": "False",
+			"IsVisibleInLobby": "True",
 			"Gamemodes": [
 			]
 		},
@@ -1701,7 +1543,8 @@
 			"SgaName": "MPXP1Scenarios.sga",
 			"MaxPlayers": "6",
 			"Theatre": "EasternFront",
-			"IsWintermap": "True",
+			"IsWintermap": "False",
+			"IsVisibleInLobby": "True",
 			"Gamemodes": [
 			]
 		},
@@ -1713,7 +1556,8 @@
 			"SgaName": "MPXP1Scenarios.sga",
 			"MaxPlayers": "8",
 			"Theatre": "SharedFront",
-			"IsWintermap": "True",
+			"IsWintermap": "False",
+			"IsVisibleInLobby": "True",
 			"Gamemodes": [
 			]
 		},
@@ -1726,6 +1570,7 @@
 			"MaxPlayers": "8",
 			"Theatre": "SharedFront",
 			"IsWintermap": "False",
+			"IsVisibleInLobby": "True",
 			"Gamemodes": [
 			]
 		},
@@ -1738,6 +1583,7 @@
 			"MaxPlayers": "8",
 			"Theatre": "SharedFront",
 			"IsWintermap": "False",
+			"IsVisibleInLobby": "True",
 			"Gamemodes": [
 			]
 		},
@@ -1749,7 +1595,8 @@
 			"SgaName": "MPXP1Scenarios.sga",
 			"MaxPlayers": "8",
 			"Theatre": "SharedFront",
-			"IsWintermap": "True",
+			"IsWintermap": "False",
+			"IsVisibleInLobby": "True",
 			"Gamemodes": [
 			]
 		}

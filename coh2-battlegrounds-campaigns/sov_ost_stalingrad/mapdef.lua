@@ -191,7 +191,7 @@
             value = 1, -- Victory Point value
             capacity = 4, -- Max companies per side
             attrition = 0.1, -- The amount of attrition a company suffers
-            map = "6_8_brody" -- The map to play when fighting a battle
+            map = "8p_coh2_thesteppes_frontline" -- The map to play when fighting a battle
         }
         -- TODO: Mamaev Kurgan (The mountain in the middle - sorta splitting the city in two)
     },

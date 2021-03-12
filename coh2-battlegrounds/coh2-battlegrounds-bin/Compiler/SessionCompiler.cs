@@ -86,7 +86,7 @@ namespace Battlegrounds.Compiler {
             lua.IncreaseIndent();
 
             foreach (SessionParticipant participant in session.Participants) {
-                lua.AppendLine(m_companyCompiler.CompileToLua(participant.ParticipantCompany, !participant.IsHumanParticipant, participant.PlayerIndexOnTeam, 1));
+                lua.AppendLine(this.m_companyCompiler.CompileToLua(participant.ParticipantCompany, !participant.IsHumanParticipant, participant.PlayerIndexOnTeam, 1));
             }
 
             lua.DecreaseIndent();
@@ -162,7 +162,7 @@ namespace Battlegrounds.Compiler {
                 }
                 blder.Append($"ai_value = {(byte)player.Difficulty}, ");
                 blder.Append($"id = {player.PlayerIndexOnTeam},{Environment.NewLine}");
-                blder.Append($"}},{Environment.NewLine}");
+                blder.Append($"\t\t}},{Environment.NewLine}");
                 lua.Append(blder.ToString());
             }
 

@@ -32,7 +32,11 @@ namespace Battlegrounds.Compiler {
 
             TxtBuilder lua = new TxtBuilder();
 
-            lua.AppendLine($"[\"{company.Owner}{(isAIPlayer ? ("AIPlayer#" + indexOnTeam.ToString()) : "")}\"] = {{");
+            if (isAIPlayer) {
+                lua.AppendLine($"[\"AIPlayer#{indexOnTeam}\"] = {{");
+            } else {
+                lua.AppendLine($"[\"{company.Owner}\"] = {{");
+            }
             lua.SetIndent(indent);
             lua.IncreaseIndent();
 

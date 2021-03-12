@@ -270,12 +270,18 @@ namespace BattlegroundsApp.Views.CampaignViews {
             if (this.EngagementScenario is not null) {
                 string gamePath = Path.GetFullPath($"bin\\gfx\\map_icons\\{this.EngagementScenario.RelativeFilename}_map.tga");
                 string userPath = Path.GetFullPath($"usr\\mods\\map_icons\\{this.EngagementScenario.RelativeFilename}_map.tga");
-                if (File.Exists(gamePath)) {
-                    this.EngagementScenarioMinimap = TgaImageSource.TargaBitmapSourceFromFile(gamePath);
-                } else if (File.Exists(userPath)) {
-                    this.EngagementScenarioMinimap = TgaImageSource.TargaBitmapSourceFromFile(userPath);
-                } else {
-                    this.EngagementScenarioMinimap = new BitmapImage(new Uri("pack://application:,,,/Resources/ingame/unknown_map.png"));
+                this.EngagementScenarioMinimap = null;
+                try {
+                    if (File.Exists(gamePath)) {
+                        this.EngagementScenarioMinimap = TgaImageSource.TargaBitmapSourceFromFile(gamePath);
+                    } else if (File.Exists(userPath)) {
+                        this.EngagementScenarioMinimap = TgaImageSource.TargaBitmapSourceFromFile(userPath);
+                    }
+                } catch {
+                } finally {
+                    if (this.EngagementScenarioMinimap is null) {
+                        this.EngagementScenarioMinimap = new BitmapImage(new Uri("pack://application:,,,/Resources/ingame/unknown_map.png"));
+                    }
                 }
             } else {
                 Trace.WriteLine($"Node '{this.MapNode.NodeName}' has no valid engagement map!", nameof(CampaignEngagementDialogView));
