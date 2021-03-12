@@ -151,8 +151,22 @@ namespace Battlegrounds.Campaigns.Controller {
                 .ChangeTuningMod(BattlegroundsInstance.BattleGroundsTuningMod.Guid)
                 .ChangeName("UNTITLED COMPANY")
                 .ChangeUser(BattlegroundsInstance.Steam.User.Name);
+            DeploymentPhase phase = DeploymentPhase.PhaseInitial; // TEMP FIX: Should be set while creating the regiment
+            int count = 0;
             for (int i = 0; i < units.Count; i++) {
-                builder.AddUnit(new UnitBuilder(units[i], false));
+                var uBld = new UnitBuilder(units[i], false);
+                uBld.SetDeploymentPhase(phase);
+                count++;
+                if (count > 4 && phase == DeploymentPhase.PhaseInitial) {
+                    phase = DeploymentPhase.PhaseA;
+                    count = 0;
+                } else if (count > 6 && phase == DeploymentPhase.PhaseA) {
+                    phase = DeploymentPhase.PhaseB;
+                    count = 0;
+                } else if (count > 8 && phase == DeploymentPhase.PhaseB) {
+                    phase = DeploymentPhase.PhaseC;
+                }
+                builder.AddUnit(uBld);
             }
             return builder.Commit().Result;
         }
