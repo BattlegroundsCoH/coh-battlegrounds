@@ -3,11 +3,16 @@ using System.Linq;
 
 namespace Battlegrounds.Campaigns.Organisations {
     
+    /// <summary>
+    /// 
+    /// </summary>
     public class Formation {
 
         private List<Regiment> m_regiments;
         private List<CampaignMapNode> m_path;
         private CampaignMapNode m_location;
+        private int m_moveDistance;
+        private int m_maxMoveDistance;
 
         /// <summary>
         /// 
@@ -42,7 +47,7 @@ namespace Battlegrounds.Campaigns.Organisations {
         /// <summary>
         /// Get if the formation can currently move
         /// </summary>
-        public bool CanMove { get; set; }
+        public bool CanMove => this.m_moveDistance > 0;
 
         /// <summary>
         /// 
@@ -54,7 +59,8 @@ namespace Battlegrounds.Campaigns.Organisations {
         /// </summary>
         public Formation() {
             this.m_regiments = new List<Regiment>();
-            this.CanMove = true;
+            this.m_moveDistance = 1;
+            this.m_maxMoveDistance = 1;
         }
 
         /// <summary>
@@ -74,7 +80,7 @@ namespace Battlegrounds.Campaigns.Organisations {
 
         public void SetNodeDestinations(List<CampaignMapNode> nodes) {
             this.m_path = nodes;
-            this.UpdatePath();
+            this.OnMoved(false);
         }
 
         public void ApplyAttrition(double attrition) {
@@ -120,6 +126,7 @@ namespace Battlegrounds.Campaigns.Organisations {
                 // Create formation if not found
                 if (organisations[j] is null) {
                     organisations[j] = new Formation();
+                    organisations[j].Team = this.Team;
                 }
 
                 // Move regiment
@@ -141,9 +148,15 @@ namespace Battlegrounds.Campaigns.Organisations {
 
         }
 
-        public void UpdatePath() {
+        /// <summary>
+        /// Updates destination and decrements available move distance by 1.
+        /// </summary>
+        public void OnMoved(bool actualMove = true) {
             if (this.m_path.Count > 0 && this.m_path[0] == this.m_location) {
                 this.m_path.RemoveAt(0);
+            }
+            if (actualMove) {
+                this.m_moveDistance--;
             }
         }
 
@@ -159,6 +172,12 @@ namespace Battlegrounds.Campaigns.Organisations {
                 }
             }
             return avgStrength / count;
+        }
+
+        public void EndOfRound() {
+            // Reset max move distance
+            this.m_moveDistance = this.m_maxMoveDistance;
+
         }
 
         public List<CampaignMapNode> GetPath() => this.m_path;

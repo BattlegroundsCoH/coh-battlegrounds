@@ -16,7 +16,6 @@
         turn_time = { months = 0.25 }, -- 1/4 = 1 week...
     },
     weather = {
-        default = "summer", -- This will be a binary "summer/winter" system
         winter = {
             start_date = { year = 1942, month = 11, day = 1 },
             end_date = { year = 1943, month = 1, day = 1},
@@ -34,15 +33,21 @@
     armies = {
         ["soviet"] = {
             fe_army_name = "soviet_army",
-            fe_army_desc = "",
+            fe_army_desc = "soviet_army_desc",
             army_file = "soviets.lua",
+            army_colour = {
+                255, 0, 0
+            },
             min_players = 1,
             max_players = 4,
         },
         ["german"] = {
             fe_army_name = "german_army",
-            fe_army_desc = "",
+            fe_army_desc = "german_army_desc",
             army_file = "germans.lua",
+            army_colour = {
+                0, 255, 0
+            },
             min_players = 1,
             max_players = 4,
         }

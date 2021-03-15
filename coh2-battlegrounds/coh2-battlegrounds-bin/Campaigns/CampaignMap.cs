@@ -98,7 +98,7 @@ namespace Battlegrounds.Campaigns {
             
             // Set location and update destination
             formation.SetNodeLocation(target);
-            formation.UpdatePath();
+            formation.OnMoved();
 
             // Update owner
             if (target.Owner != formation.Team) {

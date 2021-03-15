@@ -324,9 +324,9 @@ namespace BattlegroundsApp.Views.CampaignViews {
             if (this.Controller.Campaign.PlayMap.SetPath(first.Formation.Node, node, first.Formation)) {
                 this.Selection.InvokeEach(x => x.IfTrue(y => y.Formation != first.Formation).Then(z => z.Formation.SetNodeDestinations(first.Formation.GetPath())));
                 if (first.Formation.Destination == node) {
-                    SelectionAttackNode(node);
+                    this.SelectionAttackNode(node);
                 } else {
-                    this.Selection.InvokeEach(MoveFormation);
+                    this.Selection.InvokeEach(this.MoveFormation);
                 }
             }
         }
@@ -345,9 +345,6 @@ namespace BattlegroundsApp.Views.CampaignViews {
                 // Show visually
                 GotoPosition(formationModel.Element, node.U * this.CampaignMapWidth, node.V * this.CampaignMapHeight);
 
-                // Check if we can move
-                formationModel.Formation.CanMove = false;
-            
             }
 
         }
@@ -509,9 +506,9 @@ namespace BattlegroundsApp.Views.CampaignViews {
             var attackers = this.Selection.Get();
 
             // Destroy low length formations
-            static bool DestroyLowStrengthFormations(Formation formation) {
+            bool DestroyLowStrengthFormations(Formation formation) {
                 if (formation.CalculateStrength() <= 0.025f) {
-                    // TODO: Kill attacker visually (This may need to be in the outer method for coroutine functionality)
+                    this.DestroyFormation(this.FromFormation(formation));
                     return true;
                 } else {
                     return false;
@@ -533,9 +530,9 @@ namespace BattlegroundsApp.Views.CampaignViews {
                 int nodeIndex = 0;
 
                 if (nodes.Count == 0) {
-
-                    // TODO: Destroy all occupants (nowhere to run to)
-
+                    mapNode.Occupants.ForEach(x => { // Destroy all formations, nowhere to go to.
+                        this.DestroyFormation(this.FromFormation(x));
+                    });
                 } else {
 
                     // Tell all current occupants to leave
@@ -547,7 +544,7 @@ namespace BattlegroundsApp.Views.CampaignViews {
                         if (nodeIndex > nodes.Count) {
                             nodeIndex = 0;
                         }
-                        yield return new WaitTimespan(TimeSpan.FromSeconds(2));
+                        yield return new WaitTimespan(TimeSpan.FromSeconds(1.5));
                     }
 
                 }
@@ -555,7 +552,7 @@ namespace BattlegroundsApp.Views.CampaignViews {
                 // Move in attackers
                 foreach (var attacker in attackers) {
                     this.MoveFormation(this.FromFormation(attacker));
-                    yield return new WaitTimespan(TimeSpan.FromSeconds(2));
+                    yield return new WaitTimespan(TimeSpan.FromSeconds(1.5));
                 }
 
             }
@@ -585,6 +582,10 @@ namespace BattlegroundsApp.Views.CampaignViews {
             // Set background visibility
             CampaignDialogVisible = Visibility.Collapsed;
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(CampaignDialogVisible)));
+
+        }
+
+        private void DestroyFormation(CampaignUnitFormationModel formationModel) {
 
         }
 

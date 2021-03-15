@@ -40,7 +40,11 @@ namespace Battlegrounds.Campaigns.Controller {
 
         }
 
-        public bool EndTurn() => this.Campaign.Turn.EndTurn();
+        public bool EndTurn() {
+            bool lastTurn = ICampaignController.GlobalEndTurn(this);
+            // More stuff here?
+            return lastTurn;
+        }
 
         public void EndCampaign() {
 

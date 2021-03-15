@@ -2,7 +2,7 @@
   "profiles": {
     "coh2-battlegrounds-console": {
       "commandName": "Project",
-      "commandLineArgs": "-coh2-extract-maps"
+      "commandLineArgs": "-campaign \"E:\\coh2_battlegrounds\\coh2-battlegrounds-campaigns\\sov_ost_stalingrad\""
     }
   }
 }

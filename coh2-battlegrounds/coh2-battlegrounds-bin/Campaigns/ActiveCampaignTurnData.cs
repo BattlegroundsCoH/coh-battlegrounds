@@ -35,7 +35,7 @@ namespace Battlegrounds.Campaigns {
             
         }
 
-        public bool EndTurn() { 
+        public bool EndTurn(out bool wasRound) { 
             if (this.m_currentTurn == CampaignArmyTeam.TEAM_ALLIES) {
                 this.m_currentTurn = CampaignArmyTeam.TEAM_AXIS;
             } else {
@@ -43,6 +43,9 @@ namespace Battlegrounds.Campaigns {
             }
             if (this.m_currentTurn == this.m_initialTurn) {
                 this.m_date += this.m_turnStep;
+                wasRound = true;
+            } else {
+                wasRound = false;
             }
             return this.m_date <= this.m_endDate;
         }

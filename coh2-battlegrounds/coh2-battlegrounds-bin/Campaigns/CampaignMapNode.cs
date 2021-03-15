@@ -193,6 +193,20 @@ namespace Battlegrounds.Campaigns {
             this.NodeChange?.Invoke(this, CampaignMapNodeProperty.Attrition, value);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        public void EndOfRound() {
+            
+            // Apply attrition
+            this.Occupants.ForEach(x => {
+                if (x.CanMove) {
+                    x.ApplyAttrition(this.Attrition);
+                }
+            });
+
+        }
+
     }
 
 }

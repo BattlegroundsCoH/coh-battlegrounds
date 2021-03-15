@@ -198,6 +198,17 @@ namespace Battlegrounds.Campaigns.Controller {
 
         }
 
+        protected static bool GlobalEndTurn(ICampaignController controller) {
+            if (controller.Campaign.Turn.EndTurn(out bool wasEndOfRound)) {
+                if (wasEndOfRound) {
+                    controller.Campaign.PlayMap.EachNode(n => n.EndOfRound());
+                    controller.Campaign.PlayMap.EachFormation(x => x.EndOfRound());
+                }
+                return true;
+            }
+            return false;
+        }
+
     }
 
 }
