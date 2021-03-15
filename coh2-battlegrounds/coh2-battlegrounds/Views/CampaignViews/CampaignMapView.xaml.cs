@@ -16,7 +16,7 @@ using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using Battlegrounds;
+
 using Battlegrounds.Campaigns;
 using Battlegrounds.Campaigns.Controller;
 using Battlegrounds.Campaigns.Organisations;
@@ -426,8 +426,7 @@ namespace BattlegroundsApp.Views.CampaignViews {
             // Setup base data
             engagementData.node = view.MapNode;
             engagementData.scenario = view.EngagementScenario;
-            engagementData.allSquads = new List<Squad>();
-            engagementData.initialSquads = new List<Squad>();
+            engagementData.allParticipatingSquads = new List<Squad>();
             engagementData.attackers = view.Attackers.ToLower() == "allies" ? CampaignArmyTeam.TEAM_ALLIES : CampaignArmyTeam.TEAM_AXIS;
             engagementData.defenders = engagementData.attackers == CampaignArmyTeam.TEAM_AXIS ? CampaignArmyTeam.TEAM_ALLIES : CampaignArmyTeam.TEAM_AXIS;
             engagementData.attackingFaction = view.AttackingRegimentalPool.First().Regiment.ElementOf.EleemntOf.Faction;

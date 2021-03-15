@@ -129,6 +129,8 @@ namespace Battlegrounds.Campaigns.Controller {
             if (!isAttacker && !data.defendingPlayerNames.Contains(company.Owner)) {
                 Trace.WriteLine($"Failed to map company owned by '{company.Owner}' to an attacking or defending player/formation", nameof(ICampaignController));
                 return;
+            } else {
+                Trace.WriteLine($"Handling company '{company.Name}' owned by '{company.Owner}' on {(isAttacker ? "attacking" : "defending")} side.", nameof(ICampaignController));
             }
             
             // Loop through all units and update accordingly
@@ -139,9 +141,6 @@ namespace Battlegrounds.Campaigns.Controller {
 
                 }
             });*/
-
-            // Register alive squads
-            data.allSquads.AddRange(company.Units);
 
         }
 
@@ -156,9 +155,18 @@ namespace Battlegrounds.Campaigns.Controller {
             // Subscribe to completion event
             controller.Complete += res => {
 
-                // Determine loses
-                int inialCount = data.attackingCompanyUnits.Aggregate(0, (a, b) => a + b.Count) + data.defendingCompanyUnits.Aggregate(0, (a, b) => a + b.Count);
-                var deadUnits = data.initialSquads.Where(x => !data.allSquads.Any(y => y.SquadID == x.SquadID)).ToList();
+                // Loop through unit statuses and register dead units
+                var deadUnits = new List<Squad>();
+                res.Units.ForEach(u => {
+                    if (u.IsDead) {
+                        if (data.allParticipatingSquads.FirstOrDefault(s => s.SquadID == u.UnitID) is Squad unit) {
+                            deadUnits.Add(unit);
+                            Trace.WriteLine($"Found unit with ID {u.UnitID} in engaged unit list that has been marked as dead.", nameof(ICampaignController));
+                        } else {
+                            Trace.WriteLine($"Failed to find unit with ID {u.UnitID} in engaged unit list. This may lead to incorrect death counts!", nameof(ICampaignController));
+                        }
+                    }
+                });
 
                 // Formation updater
                 void UpdateFormations(Formation f) {
@@ -172,7 +180,7 @@ namespace Battlegrounds.Campaigns.Controller {
                 data.defendingFormations.ForEach(UpdateFormations);
 
                 // Log
-                Trace.WriteLine($"Removed {deadUnits.Count} (delta = {inialCount - deadUnits.Count}) squads from engaged formations.", nameof(ICampaignController));
+                Trace.WriteLine($"Removed {deadUnits.Count} squads from engaged formations (of {res.Units.Count} detected units).", nameof(ICampaignController));
 
                 var lookatPlayer = res.Players.First();
                 bool wasAttackerSuccessful = res.IsWinner(lookatPlayer);

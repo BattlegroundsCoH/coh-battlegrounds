@@ -27,8 +27,7 @@ namespace Battlegrounds.Campaigns.Controller {
         public List<Squad>[] attackingCompanyUnits;
         public List<Squad>[] defendingCompanyUnits;
 
-        public List<Squad> allSquads;
-        public List<Squad> initialSquads;
+        public List<Squad> allParticipatingSquads;
 
         public List<Formation> attackingFormations;
         public List<Formation> defendingFormations;

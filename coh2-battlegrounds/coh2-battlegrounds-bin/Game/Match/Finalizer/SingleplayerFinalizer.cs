@@ -58,7 +58,7 @@ namespace Battlegrounds.Game.Match.Finalizer {
             foreach (UnitStatus status in units) {
 
                 // Ignore AI player data
-                if (status.PlayerOwner.IsAIPlayer) {
+                if (status.PlayerOwner.IsAIPlayer || this.NotifyAI) {
                     continue;
                 }
 
@@ -72,7 +72,9 @@ namespace Battlegrounds.Game.Match.Finalizer {
                 if (status.IsDead) {
 
                     // Remove the squad
-                    company.RemoveSquad(status.UnitID);
+                    if (!company.RemoveSquad(status.UnitID)) {
+                        Trace.WriteLine($"Failed to remove company unit '{status.UnitID}' from company '{company.Name}'.", nameof(SingleplayerFinalizer));
+                    }
 
                     // Update losses
                     company.UpdateStatistics(x => UpdateLosses(x, !squad.SBP.IsVehicle, 0)); // TODO: Get proper loss sizes
@@ -110,7 +112,7 @@ namespace Battlegrounds.Game.Match.Finalizer {
 
             // Make sure we log this unfortunate event
             if (this.CompanyHandler is null) {
-                Trace.WriteLine("{Warning} -- The company handler is NULL and changes will therefore not be saved!", "SingleplayerFinalizer");
+                Trace.WriteLine("{Warning} -- The company handler is NULL and changes will therefore not be handled further!", "SingleplayerFinalizer");
             }
 
             // Loop through all companies and save

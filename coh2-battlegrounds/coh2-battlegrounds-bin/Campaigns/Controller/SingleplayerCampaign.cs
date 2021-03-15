@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using Battlegrounds.Campaigns.Organisations;
 using Battlegrounds.Functional;
@@ -55,9 +56,14 @@ namespace Battlegrounds.Campaigns.Controller {
 
         public MatchController Engage(CampaignEngagementData data) {
 
-            // Add all units to a single list
-            data.attackingCompanyUnits.ForEach(x => data.initialSquads.AddRange(x));
-            data.defendingCompanyUnits.ForEach(x => data.initialSquads.AddRange(x));
+            // Make sure we have a list
+            if (data.allParticipatingSquads is null && data.allParticipatingSquads.Count == 0) {
+                throw new InvalidDataException();
+            }
+
+            // Aggregate
+            data.attackingCompanyUnits.ForEach(x => data.allParticipatingSquads.AddRange(x));
+            data.defendingCompanyUnits.ForEach(x => data.allParticipatingSquads.AddRange(x));
 
             // Create strategies
             SingleplayerStartupStrategy singleplayerStartupStrategy = new() {

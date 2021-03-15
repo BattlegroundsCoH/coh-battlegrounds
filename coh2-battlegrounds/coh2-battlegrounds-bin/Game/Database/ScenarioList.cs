@@ -35,7 +35,7 @@ namespace Battlegrounds.Game.Database {
 
                         if (jsonElement is Scenario scenario) {
                             if (!__scenarios.TryAdd(Path.GetFileNameWithoutExtension(scenario.RelativeFilename), scenario)) {
-                                Trace.Write($"Failed to add duplicate vcoh scenario '{scenario.RelativeFilename}'", "ScenarioList::LoadList");
+                                Trace.WriteLine($"Failed to add duplicate vcoh scenario '{scenario.RelativeFilename}'", "ScenarioList::LoadList");
                             }
                         }
 
