@@ -74,6 +74,20 @@ namespace Battlegrounds.Functional {
             return container;
         }
 
+        /// <summary>
+        /// Get a remove-safe iterator that iterates over <paramref name="enumerable"/>.
+        /// </summary>
+        /// <param name="enumerable">The enumerable to get enumerator of.</param>
+        /// <returns>An eumerator that can iterate over the collection where remove functionality does not break.</returns>
+        public static IEnumerator<T> GetSafeEnumerator<T>(this IEnumerable<T> enumerable) where T : class {
+            List<T> dummy = new List<T>();
+            var itt = enumerable.GetEnumerator();
+            while (itt.MoveNext()) {
+                dummy.Add(itt.Current);
+            }
+            return dummy.GetEnumerator();
+        }
+
     }
 
 }

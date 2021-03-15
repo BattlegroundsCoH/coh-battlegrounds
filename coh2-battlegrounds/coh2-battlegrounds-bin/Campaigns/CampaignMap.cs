@@ -192,26 +192,33 @@ namespace Battlegrounds.Campaigns {
         }
 
         private List<CampaignMapNode> GetNeighbours(CampaignMapNode source, IEnumerable<CampaignMapNode> filter) {
-            List<CampaignMapNode> neighbours = new List<CampaignMapNode>();
-            foreach (var t in this.m_edges) {
-                if (t.TransitionType == CampaignMapTransitionType.Unary) {
-                    if (t.From == source) {
-                        neighbours.Add(t.To);
-                    }
-                } else {
-                    if (t.From == source) {
-                        neighbours.Add(t.To);
-                    } else if (t.To == source) {
-                        neighbours.Add(t.From);
-                    }
-                }
-            }
+            List<CampaignMapNode> neighbours = this.GetNodeNeighbours(source);
             int fcount = filter.Count();
             if (fcount == 0) {
                 return neighbours;
             } else {
                 return neighbours.Where(x => filter.Contains(x)).ToList();
             }
+        }
+
+        public List<CampaignMapNode> GetNodeNeighbours(CampaignMapNode mapNode)
+            => this.GetNodeNeighbours(mapNode, x => true);
+
+        public List<CampaignMapNode> GetNodeNeighbours(CampaignMapNode mapNode, Predicate<CampaignMapNode> predicate) {
+            List<CampaignMapNode> neighbours = new List<CampaignMapNode>();
+            foreach (var transition in this.m_edges) {
+                bool a = transition.From == mapNode;
+                bool b = transition.To == mapNode;
+                bool binary = transition.TransitionType == CampaignMapTransitionType.Binary && (a || b);
+                bool unary = transition.TransitionType == CampaignMapTransitionType.Unary && a;
+                if (binary || unary) {
+                    var node = a ? transition.To : transition.From;
+                    if (predicate(node)) {
+                        neighbours.Add(node);
+                    }
+                }
+            }
+            return neighbours;
         }
 
     }

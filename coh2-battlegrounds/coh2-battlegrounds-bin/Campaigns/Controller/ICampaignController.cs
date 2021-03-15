@@ -1,4 +1,12 @@
-﻿using Battlegrounds.Campaigns.Organisations;
+﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
+
+using Battlegrounds.Campaigns.Organisations;
+using Battlegrounds.Functional;
+using Battlegrounds.Game.DataCompany;
+using Battlegrounds.Game.Gameplay;
 using Battlegrounds.Game.Match;
 
 namespace Battlegrounds.Campaigns.Controller {
@@ -35,6 +43,14 @@ namespace Battlegrounds.Campaigns.Controller {
         void EndCampaign();
 
         /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="player"></param>
+        /// <param name="playername"></param>
+        /// <param name="playerTeam"></param>
+        void CreatePlayer(ulong player, string playername, CampaignArmyTeam playerTeam);
+
+        /// <summary>
         /// Initialize a <see cref="MatchController"/> object that is ready to be controlled.
         /// </summary>
         /// <param name="data">The engagement data to use while generating scenario data</param>
@@ -45,10 +61,134 @@ namespace Battlegrounds.Campaigns.Controller {
         /// 
         /// </summary>
         /// <param name="data"></param>
+        void ZipPlayerData(ref CampaignEngagementData data);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="data"></param>
         /// <param name="isDefence"></param>
         /// <param name="armyCount"></param>
         /// <param name="availableFormations"></param>
         void GenerateAIEngagementSetup(ref CampaignEngagementData data, bool isDefence, int armyCount, Formation[] availableFormations);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="data"></param>
+        /// <param name="isAttacker"></param>
+        /// <param name="index"></param>
+        /// <returns></returns>
+        public static Company GetCompanyFromEngagementData(CampaignEngagementData data, bool isAttacker, int index) {
+
+            // Get squad pool
+            List<Squad> units = isAttacker ? data.attackingCompanyUnits[index] : data.defendingCompanyUnits[index];
+
+            // Create company
+            CompanyBuilder builder = new CompanyBuilder()
+                .NewCompany(isAttacker ? data.attackingFaction : data.defendingFaction)
+                .ChangeTuningMod(BattlegroundsInstance.BattleGroundsTuningMod.Guid)
+                .ChangeName(isAttacker ? data.attackingCompanyNames[index] : data.defendingCompanyNames[index])
+                .ChangeUser(isAttacker ? data.attackingPlayerNames[index] : data.defendingPlayerNames[index]);
+
+            // If no deployment phase is set, auto-generate it
+            if (units.TrueForAll(x => x.DeploymentPhase == DeploymentPhase.PhaseNone)) {
+                DeploymentPhase phase = DeploymentPhase.PhaseInitial;
+                int count = 0;
+                for (int i = 0; i < units.Count; i++) {
+                    var uBld = new UnitBuilder(units[i], false);
+                    uBld.SetDeploymentPhase(phase);
+                    count++;
+                    if (count > 4 && phase == DeploymentPhase.PhaseInitial) {
+                        phase = DeploymentPhase.PhaseA;
+                        count = 0;
+                    } else if (count > 12 && phase == DeploymentPhase.PhaseA) {
+                        phase = DeploymentPhase.PhaseB;
+                        count = 0;
+                    } else if (count > 12 && phase == DeploymentPhase.PhaseB) {
+                        phase = DeploymentPhase.PhaseC;
+                    }
+                    builder.AddUnit(uBld);
+                }
+            }
+
+            // Commit and return company
+            return builder.Commit().Result;
+
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="data"></param>
+        /// <param name="company"></param>
+        public static void HandleCompanyChanges(CampaignEngagementData data, Company company) { // Note: data is value type, but the fields affected are ref types
+            
+            // Determine if company was attacking or defending
+            bool isAttacker = data.attackingPlayerNames.Contains(company.Owner);
+            if (!isAttacker && !data.defendingPlayerNames.Contains(company.Owner)) {
+                Trace.WriteLine($"Failed to map company owned by '{company.Owner}' to an attacking or defending player/formation", nameof(ICampaignController));
+                return;
+            }
+            
+            // Loop through all units and update accordingly
+            /*company.Units.ForEach(x => {
+                if (isAttacker) {
+
+                } else {
+
+                }
+            });*/
+
+            // Register alive squads
+            data.allSquads.AddRange(company.Units);
+
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="controller"></param>
+        /// <param name="data"></param>
+        /// <param name="node"></param>
+        public static void HandleEngagement(MatchController controller, CampaignEngagementData data, Action<CampaignMapNode, bool> node) {
+
+            // Subscribe to completion event
+            controller.Complete += res => {
+
+                // Determine loses
+                int inialCount = data.attackingCompanyUnits.Aggregate(0, (a, b) => a + b.Count) + data.defendingCompanyUnits.Aggregate(0, (a, b) => a + b.Count);
+                var deadUnits = data.initialSquads.Where(x => !data.allSquads.Any(y => y.SquadID == x.SquadID)).ToList();
+
+                // Formation updater
+                void UpdateFormations(Formation f) {
+                    f.Regiments.ForEach(x => {
+                        x.KillSquads(deadUnits);
+                    });
+                }
+
+                // Update formations
+                data.attackingFormations.ForEach(UpdateFormations);
+                data.defendingFormations.ForEach(UpdateFormations);
+
+                // Log
+                Trace.WriteLine($"Removed {deadUnits.Count} (delta = {inialCount - deadUnits.Count}) squads from engaged formations.", nameof(ICampaignController));
+
+                var lookatPlayer = res.Players.First();
+                bool wasAttackerSuccessful = res.IsWinner(lookatPlayer);
+                if (wasAttackerSuccessful && !data.attackingPlayerNames.Contains(lookatPlayer.Name)) {
+                    wasAttackerSuccessful = false;
+                }
+
+                // Log outcome
+                Trace.WriteLine($"The engagement resulted in a {(wasAttackerSuccessful ? "WIN" : "LOSS")} for the attacking side.", nameof(ICampaignController));
+
+                // Tell UI it can now update
+                node?.Invoke(data.node, wasAttackerSuccessful);
+
+            };
+
+        }
 
     }
 

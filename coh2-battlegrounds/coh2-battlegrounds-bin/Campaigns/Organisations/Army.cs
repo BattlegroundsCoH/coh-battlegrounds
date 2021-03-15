@@ -100,7 +100,7 @@ namespace Battlegrounds.Campaigns.Organisations {
 
         }
 
-        public void NewDivision(uint divisionID, LocaleKey divisionName, string template, LuaTable regiments) {
+        public void NewDivision(uint divisionID, LocaleKey divisionName, string template, LuaTable regiments, ref ushort campaignUnitID) {
 
             // Make sure it's a valid division
             if (!this.m_regimentTemplates.ContainsKey(template)) {
@@ -115,6 +115,9 @@ namespace Battlegrounds.Campaigns.Organisations {
                 TemplateName = template
             };
 
+            // ID buffer
+            ushort squadIDCounter = campaignUnitID;
+
             // Loop table for regiments
             regiments.Pairs((k, v) => {
 
@@ -127,7 +130,7 @@ namespace Battlegrounds.Campaigns.Organisations {
                     string[] regimentNames = (v as LuaTable).ToArray<LuaString>().Select(x => x.Str()).ToArray();
 
                     // Add all regiments (if it was possible to generate regiment)
-                    regimentNames.ForEach(x => GenerateRegiment(x, div, regimentalTemplate).IfTrue(x => x is not null).Then(x => div.Regiments.Add(x)));
+                    regimentNames.ForEach(x => GenerateRegiment(x, div, regimentalTemplate, ref squadIDCounter).IfTrue(x => x is not null).Then(x => div.Regiments.Add(x)));
 
                 } else {
                     Trace.WriteLine(
@@ -138,12 +141,15 @@ namespace Battlegrounds.Campaigns.Organisations {
 
             });
 
+            // Update counter
+            campaignUnitID = squadIDCounter;
+
             // Add division
             this.Divisions.Add(div);
 
         }
 
-        private static Regiment GenerateRegiment(string regimentName, Division division, ArmyRegimentalTemplate regimentalTemplate) {
+        private static Regiment GenerateRegiment(string regimentName, Division division, ArmyRegimentalTemplate regimentalTemplate, ref ushort campaignUnitID) {
 
             // Create regiment
             var nameKey = new LocaleKey(regimentName, division.Name.LocaleSource);
@@ -159,7 +165,7 @@ namespace Battlegrounds.Campaigns.Organisations {
                 if (regimentalTemplate.CountedRegimentalUnitTemplates is not null) {
                     foreach (var counted in regimentalTemplate.CountedRegimentalUnitTemplates) {
                         for (int j = 0; j < counted.Count; j++) {
-                            squadss.Add(CreateSquad(counted));
+                            squadss.Add(CreateSquad(counted, ref campaignUnitID));
                         }
                     }
                 }
@@ -172,7 +178,7 @@ namespace Battlegrounds.Campaigns.Organisations {
 
                 // Loop through and pick
                 for (int j = 0; j < remaining; j++) {
-                    squadss.Add(CreateSquad(weighted.Pick(BattlegroundsInstance.RNG)));
+                    squadss.Add(CreateSquad(weighted.Pick(BattlegroundsInstance.RNG), ref campaignUnitID));
                 }
                 /*
                 
@@ -194,11 +200,22 @@ namespace Battlegrounds.Campaigns.Organisations {
 
         }
 
-        private static Squad CreateSquad(ArmyRegimentalUnitTemplate unitTemplate) {
+        private static Squad CreateSquad(ArmyRegimentalUnitTemplate unitTemplate, ref ushort campaignUnitID) {
+            
+            // Create unit builder
             UnitBuilder ub = new UnitBuilder();
             ub.SetModGUID(BattlegroundsInstance.BattleGroundsTuningMod.Guid);
             ub.SetBlueprint(unitTemplate.BlueprintName);
-            return ub.Build(0);
+
+            // Build squad
+            Squad squadResult = ub.Build(campaignUnitID++);
+            if (squadResult.Crew is not null) {
+                campaignUnitID++;
+            }
+
+            // Return squad
+            return squadResult;
+        
         }
 
         public void DeployDivision(uint divisionID, List<string> deployLocations, CampaignMap map) {

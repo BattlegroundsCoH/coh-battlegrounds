@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-
+using System.Linq;
 using Battlegrounds.Campaigns.Organisations;
 using Battlegrounds.Functional;
 using Battlegrounds.Game;
@@ -18,6 +18,14 @@ using Battlegrounds.Util.Lists;
 namespace Battlegrounds.Campaigns.Controller {
 
     public class SingleplayerCampaign : ICampaignController {
+
+        private class Player {
+            public ulong id;
+            public string name;
+            public CampaignArmyTeam team;
+        }
+
+        private Player m_player;
 
         public ActiveCampaign Campaign { get; }
 
@@ -37,16 +45,32 @@ namespace Battlegrounds.Campaigns.Controller {
 
         }
 
+        public void CreatePlayer(ulong player, string playername, CampaignArmyTeam playerTeam) {
+            this.m_player = new Player() {
+                id = player,
+                name = playername,
+                team = playerTeam
+            };
+        }
+
         public MatchController Engage(CampaignEngagementData data) {
+
+            // Add all units to a single list
+            data.attackingCompanyUnits.ForEach(x => data.initialSquads.AddRange(x));
+            data.defendingCompanyUnits.ForEach(x => data.initialSquads.AddRange(x));
 
             // Create strategies
             SingleplayerStartupStrategy singleplayerStartupStrategy = new() {
-                LocalCompanyCollector = () => GetCompanyFromEngagementData(data, true, 0),
+                LocalCompanyCollector = () => ICampaignController.GetCompanyFromEngagementData(data, true, 0),
                 SessionInfoCollector = () => GetSessionFromEngagementData(data),
                 PlayStrategyFactory = new OverwatchStrategyFactory(),
             };
             SingleplayerMatchAnalyzer singleplayerMatchAnalyzer = new();
             SingleplayerFinalizer singleplayerFinalizer = new() { 
+                NotifyAI = true,
+                CompanyHandler = x => {
+                    ICampaignController.HandleCompanyChanges(data, x);
+                }
             };
 
             // Create session handler
@@ -60,6 +84,50 @@ namespace Battlegrounds.Campaigns.Controller {
 
             // Return the controller
             return controller;
+
+        }
+
+        public void ZipPlayerData(ref CampaignEngagementData data) {
+
+            // Method for determining company name
+            string DetermineCompanyName(List<Squad> squads, List<Formation> formations) {
+                Dictionary<Formation, int> counts = new Dictionary<Formation, int>();
+                formations.ForEach(x => {
+                    counts.Add(x, squads.Count(x => formations.Any(y => y.Regiments.Any(z => z.HasSquad(x)))));
+                });
+                int maxVal = counts.Max(x => x.Value);
+                Formation largestInfluence = counts.FirstOrDefault(x => x.Value == maxVal).Key;
+                return this.Campaign.Locale.GetString(largestInfluence.Regiments.FirstOrDefault().Name);
+            }
+
+            // Method for zipping player
+            string ZipPlayer(CampaignArmyTeam team, int index) {
+                if (index == 0 && team == this.m_player.team) {
+                    return this.m_player.name;
+                } else {
+                    return AIDifficulty.AI_Hard.GetIngameDisplayName();
+                }
+            }
+
+            // Alloc company name arrays
+            data.attackingCompanyNames = new string[data.attackingCompanyUnits.Length];
+            data.defendingCompanyNames = new string[data.defendingCompanyUnits.Length];
+
+            // Allow company player name arrays
+            data.attackingPlayerNames = new string[data.attackingCompanyUnits.Length];
+            data.defendingPlayerNames = new string[data.defendingCompanyUnits.Length];
+
+            // Setup attackers
+            for (int i = 0; i < data.attackingPlayerNames.Length; i++) {
+                data.attackingCompanyNames[i] = DetermineCompanyName(data.attackingCompanyUnits[i], data.attackingFormations);
+                data.attackingPlayerNames[i] = ZipPlayer(data.attackers, i);
+            }
+
+            // Setup defenders
+            for (int i = 0; i < data.defendingPlayerNames.Length; i++) {
+                data.defendingCompanyNames[i] = DetermineCompanyName(data.defendingCompanyUnits[i], data.defendingFormations);
+                data.defendingPlayerNames[i] = ZipPlayer(data.defenders, i);
+            }
 
         }
 
@@ -81,7 +149,6 @@ namespace Battlegrounds.Campaigns.Controller {
 
                 targetList = data.defendingCompanyUnits;
                 
-
             } else {
 
                 // Set to amount of armies
@@ -129,12 +196,13 @@ namespace Battlegrounds.Campaigns.Controller {
                         double priority = 0.05;
                         if (x.SBP.IsAntiTank) {
                             priority += isDefence ? 0.7 : 0.2;
-                        } else if (x.SBP.IsCommandUnit) {
-                            priority += isDefence ? 0.6 : 0.4;
                         } else if (x.SBP.IsInfantry) {
                             priority += isDefence ? 0.8 : 0.6;
                         } else if (x.SBP.IsVehicle) {
                             priority += isDefence ? 0.3 : 0.5;
+                        }
+                        if (x.SBP.IsCommandUnit) {
+                            priority = 1.0;
                         }
                         squads.Add(x, priority);
                     });
@@ -144,39 +212,12 @@ namespace Battlegrounds.Campaigns.Controller {
 
         }
 
-        private static Company GetCompanyFromEngagementData(CampaignEngagementData data, bool isAttacker, int index) {
-            List<Squad> units = isAttacker ? data.attackingCompanyUnits[index] : data.defendingCompanyUnits[index];
-            CompanyBuilder builder = new CompanyBuilder()
-                .NewCompany(isAttacker ? data.attackingFaction : data.defendingFaction)
-                .ChangeTuningMod(BattlegroundsInstance.BattleGroundsTuningMod.Guid)
-                .ChangeName("UNTITLED COMPANY")
-                .ChangeUser(BattlegroundsInstance.Steam.User.Name);
-            DeploymentPhase phase = DeploymentPhase.PhaseInitial; // TEMP FIX: Should be set while creating the regiment
-            int count = 0;
-            for (int i = 0; i < units.Count; i++) {
-                var uBld = new UnitBuilder(units[i], false);
-                uBld.SetDeploymentPhase(phase);
-                count++;
-                if (count > 4 && phase == DeploymentPhase.PhaseInitial) {
-                    phase = DeploymentPhase.PhaseA;
-                    count = 0;
-                } else if (count > 6 && phase == DeploymentPhase.PhaseA) {
-                    phase = DeploymentPhase.PhaseB;
-                    count = 0;
-                } else if (count > 8 && phase == DeploymentPhase.PhaseB) {
-                    phase = DeploymentPhase.PhaseC;
-                }
-                builder.AddUnit(uBld);
-            }
-            return builder.Commit().Result;
-        }
-
         private static SessionInfo GetSessionFromEngagementData(CampaignEngagementData data) {
             SessionParticipant[] CreateTeam(bool isAttacker, List<Squad>[] companies, SessionParticipantTeam team) {
                 SessionParticipant[] participants = new SessionParticipant[companies.Length];
                 var diffs = isAttacker ? data.attackingDifficulties : data.defendingDifficulties;
                 for (int i = 0; i < companies.Length; i++) {
-                    var company = GetCompanyFromEngagementData(data, isAttacker, i);
+                    var company = ICampaignController.GetCompanyFromEngagementData(data, isAttacker, i);
                     if (diffs[i] == AIDifficulty.Human) {
                         var usr = BattlegroundsInstance.Steam.User;
                         participants[i] = new SessionParticipant(usr.Name, usr.ID, company, team, (byte)i);
@@ -189,12 +230,12 @@ namespace Battlegrounds.Campaigns.Controller {
             bool areAlliesAttacking = data.attackers == CampaignArmyTeam.TEAM_ALLIES;
             SessionInfo info = new SessionInfo() {
                 SelectedScenario = data.scenario,
-                SelectedGamemode = WinconditionList.GetWinconditionByName(WinconditionList.VictoryPoints),
-                SelectedGamemodeOption = 0,
+                SelectedGamemode = WinconditionList.GetWinconditionByName(WinconditionList.VictoryPoints), // TODO: Set according to CampaignEngagementData
+                SelectedGamemodeOption = 50, // TODO: Set according to CampaignEngagementData
                 SelectedTuningMod = BattlegroundsInstance.BattleGroundsTuningMod,
                 DefaultDifficulty = AIDifficulty.AI_Hard,
                 FillAI = false,
-                IsOptionValue = false,
+                IsOptionValue = true, // TODO: Set according to CampaignEngagementData
                 Allies = CreateTeam(areAlliesAttacking, areAlliesAttacking ? data.attackingCompanyUnits : data.defendingCompanyUnits, SessionParticipantTeam.TEAM_ALLIES),
                 Axis = CreateTeam(!areAlliesAttacking, !areAlliesAttacking ? data.attackingCompanyUnits : data.defendingCompanyUnits, SessionParticipantTeam.TEAM_AXIS)
             };

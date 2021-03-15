@@ -9,6 +9,9 @@ namespace BattlegroundsApp.Views.CampaignViews.Models {
     public class CampaignUnitSelectionModel {
 
         private HashSet<CampaignUnitFormationModel> m_selection;
+        private bool m_isLocked;
+
+        public CampaignUnitFormationModel First => this.m_selection.FirstOrDefault();
 
         public int Size => this.m_selection.Count;
 
@@ -18,19 +21,21 @@ namespace BattlegroundsApp.Views.CampaignViews.Models {
 
         public void Select(CampaignUnitFormationModel model) {
             this.Clear();
-            this.m_selection.Add(model);
+            this.AddToSelection(model);
         }
 
-        public void AddToSelection(CampaignUnitFormationModel model) => this.m_selection.Add(model);
+        public void AddToSelection(CampaignUnitFormationModel model) =>  (!this.m_isLocked).Then(() => this.m_selection.Add(model));
 
         public void Select(IEnumerable<CampaignUnitFormationModel> model) {
-            this.Clear();
-            model.ForEach(x => this.m_selection.Add(x));
+            if (!this.m_isLocked) {
+                this.Clear();
+                model.ForEach(x => this.m_selection.Add(x));
+            }
         }
 
-        public void DeSelect(CampaignUnitFormationModel model) => this.m_selection.Remove(model);
+        public void DeSelect(CampaignUnitFormationModel model) => (!this.m_isLocked).Then(() => this.m_selection.Remove(model));
 
-        public void Clear() => this.m_selection.Clear();
+        public void Clear() => (!this.m_isLocked).Then(() => this.m_selection.Clear());
 
         public void InvokeEach(Action<CampaignUnitFormationModel> action) => this.m_selection.ForEach(action);
 
@@ -45,7 +50,24 @@ namespace BattlegroundsApp.Views.CampaignViews.Models {
             }
         }
 
+        public void Lock() => this.m_isLocked = true;
+
+        public void Unlock() => this.m_isLocked = false;
+
         public List<Formation> Get() => this.m_selection.Select(x => x.Formation).ToList();
+
+        public int Filter(Predicate<CampaignUnitFormationModel> p) {
+            int count = 0;
+            var itt = this.m_selection.GetEnumerator();
+            while (itt.MoveNext()) {
+                if (!p(itt.Current)) {
+                    this.m_selection.Remove(itt.Current);
+                } else {
+                    count++;
+                }
+            }
+            return count;
+        }
 
     }
 

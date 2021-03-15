@@ -208,13 +208,6 @@ function BG_GetPlayerData(player)
     end
 end
 
-function BG_BroadcastVictory(player)
-    local pd = BG_GetPlayerData(player);
-    if pd ~= nil then
-        Battlegrounds_LogEvent(nil, BG_EVENT_ONVICTORY, pd.steamID);
-    end
-end
-
 function BG_OverrideGameEndingFunctionCalls()
 
     -- Create a backup "pointer" just in case
@@ -230,7 +223,9 @@ function BG_OverrideGameEndingFunctionCalls()
         BG_CollectEndofMatchData();
 
         -- Broadcast victory for each player
-        Team_ForEachPlayer(team, BG_BroadcastVictory);
+        if Player_GetTeam(Game_GetLocalPlayer()) == team then
+            Battlegrounds_LogEvent(nil, BG_EVENT_ONVICTORY, BG_GetPlayerData(Game_GetLocalPlayer()).steamID);
+        end
 
         -- Get the local player
         local locPlayer = Game_GetLocalPlayer();

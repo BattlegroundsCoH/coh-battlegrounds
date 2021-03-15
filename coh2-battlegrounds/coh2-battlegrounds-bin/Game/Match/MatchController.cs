@@ -9,7 +9,8 @@ namespace Battlegrounds.Game.Match {
     /// <summary>
     /// Handler for when a match has fully completed.
     /// </summary>
-    public delegate void MatchCompletedHandler();
+    /// <param name="match">The match analysis result.</param>
+    public delegate void MatchCompletedHandler(IAnalyzedMatch match);
 
     /// <summary>
     /// Handler for handling errors that have occured during the match.
@@ -175,7 +176,7 @@ namespace Battlegrounds.Game.Match {
                         }
 
                         // Invoke the complete event
-                        this.Complete?.Invoke();
+                        this.Complete?.Invoke(analysis);
 
                     } else {
 

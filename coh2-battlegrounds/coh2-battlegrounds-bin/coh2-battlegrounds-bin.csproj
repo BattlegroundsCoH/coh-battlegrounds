@@ -10,4 +10,8 @@
     <DocumentationFile></DocumentationFile>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Folder Include="Lua\Correctness\" />
+  </ItemGroup>
+
 </Project>

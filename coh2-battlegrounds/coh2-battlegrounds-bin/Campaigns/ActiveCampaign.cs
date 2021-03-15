@@ -22,6 +22,7 @@ namespace Battlegrounds.Campaigns {
     public class ActiveCampaign : IJsonObject {
 
         private string m_locSourceID;
+        private ushort m_unitCampaignID;
 
         public class Player { }
 
@@ -68,7 +69,7 @@ namespace Battlegrounds.Campaigns {
                         (vt["divisions"] as LuaTable).Pairs((k, v) => {
                             var vt = v as LuaTable;
                             uint divID = tmp;
-                            this.Armies[index].NewDivision(divID, new LocaleKey(k.Str(), this.m_locSourceID), vt["tmpl"].Str(), vt["regiments"] as LuaTable);
+                            this.Armies[index].NewDivision(divID, new LocaleKey(k.Str(), this.m_locSourceID), vt["tmpl"].Str(), vt["regiments"] as LuaTable, ref this.m_unitCampaignID);
                             tmp++;
                             if (vt["deploy"] is not LuaNil) {
                                 if (vt["deploy"] is LuaTable tableAt) {
@@ -101,6 +102,7 @@ namespace Battlegrounds.Campaigns {
                 DifficultyLevel = difficulty,
                 GfxMaps = package.GfxResources,
                 m_locSourceID = package.LocaleSourceID,
+                m_unitCampaignID = 0,
             };
 
             // Create campaign nodes
@@ -115,7 +117,7 @@ namespace Battlegrounds.Campaigns {
             }
 
             // Define start team
-            CampaignArmyTeam startTeam = Faction.IsAlliedFaction(package.NormalStartingSide) ? CampaignArmyTeam.TEAM_ALLIES : CampaignArmyTeam.TEAM_AXIS;
+            CampaignArmyTeam startTeam = GetArmyTeamFromFaction(package.NormalStartingSide);
 
             // Create mode-specific data
             if (mode == CampaignMode.Singleplayer) {
@@ -129,8 +131,6 @@ namespace Battlegrounds.Campaigns {
                     }
                 }
 
-            } else {
-                // TODO: Stuff
             }
 
             // Create turn data
@@ -142,6 +142,9 @@ namespace Battlegrounds.Campaigns {
             return campaign;
 
         }
+
+        public static CampaignArmyTeam GetArmyTeamFromFaction(string faction)
+            => Faction.IsAlliedFaction(faction) ? CampaignArmyTeam.TEAM_ALLIES : CampaignArmyTeam.TEAM_AXIS;
 
     }
 

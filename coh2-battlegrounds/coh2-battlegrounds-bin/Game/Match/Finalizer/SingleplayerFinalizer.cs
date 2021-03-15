@@ -13,6 +13,11 @@ namespace Battlegrounds.Game.Match.Finalizer {
 
         protected Dictionary<Player, Company> m_companies;
 
+        /// <summary>
+        /// Get or set if finalizer should also notify AI company changes. Default value is <see langword="false"/>.
+        /// </summary>
+        public bool NotifyAI { get; set; } = false;
+
         public FinalizedCompanyHandler CompanyHandler { get; set; }
 
         public SingleplayerFinalizer() {
@@ -110,7 +115,7 @@ namespace Battlegrounds.Game.Match.Finalizer {
 
             // Loop through all companies and save
             foreach (var pair in this.m_companies) {
-                if (!pair.Key.IsAIPlayer) {
+                if (!pair.Key.IsAIPlayer || this.NotifyAI) {
                     this.CompanyHandler?.Invoke(pair.Value);
                 }
             }

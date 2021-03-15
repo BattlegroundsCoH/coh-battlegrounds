@@ -171,7 +171,7 @@ namespace BattlegroundsApp.Models {
 
         }
 
-        private void OnComplete() {
+        private void OnComplete(IAnalyzedMatch match) {
             this.m_view.UpdateGUI(() => {
 
                 // Append to lobby chat

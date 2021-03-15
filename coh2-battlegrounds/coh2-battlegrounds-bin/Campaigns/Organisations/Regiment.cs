@@ -55,7 +55,7 @@ namespace Battlegrounds.Campaigns.Organisations {
 
         public void CreateCompany(int companyIndex, List<Squad> squads) {
             this.m_companies[companyIndex] = new Company(BattlegroundsInstance.Localize.GetNumberSuffix(companyIndex));
-            this.m_companies[companyIndex].Units.AddRange(squads);
+            this.m_companies[companyIndex].SetSquads(squads);
             this.m_initialCompanyCount++;
         }
 
@@ -64,6 +64,23 @@ namespace Battlegrounds.Campaigns.Organisations {
         public void EachCompany(Action<Regiment.Company> action) => this.m_companies.ForEach(action);
 
         public Regiment.Company FirstCompany() => this.m_companies.FirstOrDefault(x => x.Strength > 0);
+
+        public void KillSquads(List<Squad> lostSquads) {
+            this.EachCompany(x => {
+                x.Units.RemoveAll(x => lostSquads.Contains(x));
+            });
+            // TODO: Bring up reinforcements
+        }
+
+        public bool HasSquad(Squad squad) {
+            bool any = false;
+            this.EachCompany(x => {
+                if (x.Units.Contains(squad)) {
+                    any = true;
+                }
+            });
+            return any;
+        }
 
     }
 

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -23,8 +24,10 @@ using Battlegrounds.Functional;
 using Battlegrounds.Game;
 using Battlegrounds.Game.Gameplay;
 using Battlegrounds.Gfx;
+using Battlegrounds.Util.Coroutines;
 
 using BattlegroundsApp.Resources;
+using BattlegroundsApp.Utilities;
 using BattlegroundsApp.Views.CampaignViews.Models;
 
 using static Battlegrounds.BattlegroundsInstance;
@@ -244,13 +247,15 @@ namespace BattlegroundsApp.Views.CampaignViews {
 
             if (this.Selection.Size > 0) {
                 if (this.Selection.Shares(x => x.Formation.Node)) {
-                    if (this.Selection.All(x => x.Formation.Team == node.Owner)) {
-                        this.MoveSelection(node);
-                    } else {
-                        if (node.Occupants.Count == 0) {
+                    if (this.Selection.Filter(x => x.Formation.CanMove) > 0) {
+                        if (this.Selection.All(x => x.Formation.Team == node.Owner)) {
                             this.MoveSelection(node);
                         } else {
-                            this.SelectionAttackNode(node);
+                            if (node.Occupants.Count == 0) {
+                                this.MoveSelection(node);
+                            } else {
+                                this.MoveSelectionIntoHostileTerritory(node);
+                            }
                         }
                     }
                 }
@@ -305,12 +310,25 @@ namespace BattlegroundsApp.Views.CampaignViews {
         /// </summary>
         private void MoveSelection(CampaignMapNode node) {
             this.Selection.InvokeEach(x => {
-                if (x.Formation.CanMove) {
-                    if (this.Controller.Campaign.PlayMap.SetPath(x.Formation.Node, node, x.Formation)) {
-                        this.MoveFormation(x);
-                    }
+                if (this.Controller.Campaign.PlayMap.SetPath(x.Formation.Node, node, x.Formation)) {
+                    this.MoveFormation(x);
                 }
             });
+        }
+
+        /// <summary>
+        /// Move the entire selection (with same origin) into a hostile node
+        /// </summary>
+        private void MoveSelectionIntoHostileTerritory(CampaignMapNode node) {
+            var first = this.Selection.First;
+            if (this.Controller.Campaign.PlayMap.SetPath(first.Formation.Node, node, first.Formation)) {
+                this.Selection.InvokeEach(x => x.IfTrue(y => y.Formation != first.Formation).Then(z => z.Formation.SetNodeDestinations(first.Formation.GetPath())));
+                if (first.Formation.Destination == node) {
+                    SelectionAttackNode(node);
+                } else {
+                    this.Selection.InvokeEach(MoveFormation);
+                }
+            }
         }
 
         /// <summary>
@@ -339,8 +357,9 @@ namespace BattlegroundsApp.Views.CampaignViews {
         /// </summary>
         private void SelectionAttackNode(CampaignMapNode node) {
 
-            // Get attackers
+            // Get attackers, lock selection
             List<Formation> attackers = this.Selection.Get();
+            this.Selection.Lock();
 
             // Create engagement view
             CampaignEngagementDialogView engagementDialogView = new CampaignEngagementDialogView() {
@@ -377,29 +396,52 @@ namespace BattlegroundsApp.Views.CampaignViews {
             CampaignEngagementDialogView cedv = dialogView as CampaignEngagementDialogView;
 
             CampaignEngagementData data = new CampaignEngagementData();
-            ApplyEngagementData(true, ref data, cedv);
+            this.SetupEngagementData(ref data, cedv);
+            this.ApplyEngagementData(true, ref data, cedv);
 
             if (this.Controller is SingleplayerCampaign) {
+                
                 this.Controller.GenerateAIEngagementSetup(ref data, true, cedv.MapNode.Occupants.Count, cedv.MapNode.Occupants.ToArray());
+                this.Controller.ZipPlayerData(ref data);
+
                 var matchController = this.Controller.Engage(data);
-                // TODO: Init match controller
                 matchController.Control();
+
+                ICampaignController.HandleEngagement(matchController, data, this.OnEngagementOver);
+
+                this.ShowBattleStatusDialog();
+
             } else {
                 // TODO: Show defence view
             }
 
         }
 
+        private void ShowBattleStatusDialog() {
+            // TODO: Show battle status
+        }
+
+        private void SetupEngagementData(ref CampaignEngagementData engagementData, CampaignEngagementDialogView view) {
+
+            // Setup base data
+            engagementData.node = view.MapNode;
+            engagementData.scenario = view.EngagementScenario;
+            engagementData.allSquads = new List<Squad>();
+            engagementData.initialSquads = new List<Squad>();
+            engagementData.attackers = view.Attackers.ToLower() == "allies" ? CampaignArmyTeam.TEAM_ALLIES : CampaignArmyTeam.TEAM_AXIS;
+            engagementData.defenders = engagementData.attackers == CampaignArmyTeam.TEAM_AXIS ? CampaignArmyTeam.TEAM_ALLIES : CampaignArmyTeam.TEAM_AXIS;
+            engagementData.attackingFaction = view.AttackingRegimentalPool.First().Regiment.ElementOf.EleemntOf.Faction;
+            engagementData.defendingFaction = view.MapNode.Occupants.First().Regiments.First().ElementOf.EleemntOf.Faction;
+            engagementData.attackingFormations = this.Selection.Get();
+            engagementData.defendingFormations = view.MapNode.Occupants;
+
+            // TODO: Map players etc.
+
+        }
+
         private void ApplyEngagementData(bool isAttackerData, ref CampaignEngagementData engagementData, CampaignEngagementDialogView view) {
             if (isAttackerData) {
                 
-                // Set base parameters
-                engagementData.scenario = view.EngagementScenario;
-                engagementData.attackers = view.Attackers.ToLower() == "allies" ? CampaignArmyTeam.TEAM_ALLIES : CampaignArmyTeam.TEAM_AXIS;
-                engagementData.defenders = engagementData.attackers == CampaignArmyTeam.TEAM_AXIS ? CampaignArmyTeam.TEAM_ALLIES : CampaignArmyTeam.TEAM_AXIS;
-                engagementData.attackingFaction = view.AttackingRegimentalPool.First().Regiment.ElementOf.EleemntOf.Faction;
-                engagementData.defendingFaction = view.MapNode.Occupants.First().Regiments.First().ElementOf.EleemntOf.Faction;
-
                 // Set company data
                 engagementData.attackingCompanyUnits = new List<Squad>[view.Players];
                 engagementData.attackingDifficulties = new AIDifficulty[view.Players];
@@ -449,6 +491,79 @@ namespace BattlegroundsApp.Views.CampaignViews {
                 }
 
             }
+        }
+
+        private void OnEngagementOver(CampaignMapNode mapNode, bool attackSuccessful) {
+
+            // TODO: Hide "Playing battle"
+
+            // Start coroutine
+            Coroutine.StartCoroutine(this.NodeLostVisuals(mapNode, attackSuccessful), (GUIThreadDispatcher)this.Dispatcher);
+
+            // Update logs etc.
+
+        }
+
+        private IEnumerator NodeLostVisuals(CampaignMapNode mapNode, bool attackSuccessful) {
+
+            // Get attackers from locked selection
+            var attackers = this.Selection.Get();
+
+            // Destroy low length formations
+            static bool DestroyLowStrengthFormations(Formation formation) {
+                if (formation.CalculateStrength() <= 0.025f) {
+                    // TODO: Kill attacker visually (This may need to be in the outer method for coroutine functionality)
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+
+            // Remove all dead attackers and defenders
+            int lostAttackers = attackers.RemoveAll(DestroyLowStrengthFormations);
+            int lostDefenders = mapNode.Occupants.RemoveAll(DestroyLowStrengthFormations);
+
+            // Log event
+            Trace.WriteLine($"Attackers lost {lostAttackers} formations and defenders lost {lostDefenders}.", nameof(CampaignMapView));
+
+            // It the attack was successful
+            if (attackSuccessful) {
+
+                // Get neighbouring nodes of current ally
+                var nodes = this.Controller.Campaign.PlayMap.GetNodeNeighbours(mapNode, x => x.Occupants.Count < x.OccupantCapacity && x.Owner == mapNode.Owner);
+                int nodeIndex = 0;
+
+                if (nodes.Count == 0) {
+
+                    // TODO: Destroy all occupants (nowhere to run to)
+
+                } else {
+
+                    // Tell all current occupants to leave
+                    var itter = mapNode.Occupants.GetSafeEnumerator();
+                    while (itter.MoveNext()) {
+                        itter.Current.SetNodeDestinations(new List<CampaignMapNode>() { nodes[nodeIndex] });
+                        this.MoveFormation(this.FromFormation(itter.Current));
+                        nodeIndex++;
+                        if (nodeIndex > nodes.Count) {
+                            nodeIndex = 0;
+                        }
+                        yield return new WaitTimespan(TimeSpan.FromSeconds(2));
+                    }
+
+                }
+
+                // Move in attackers
+                foreach (var attacker in attackers) {
+                    this.MoveFormation(this.FromFormation(attacker));
+                    yield return new WaitTimespan(TimeSpan.FromSeconds(2));
+                }
+
+            }
+
+            // Unlock selection
+            this.Selection.Unlock();
+
         }
 
         private void LeaveAndSaveButton_Click(object sender, RoutedEventArgs e) {

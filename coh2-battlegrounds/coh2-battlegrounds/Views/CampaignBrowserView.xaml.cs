@@ -12,6 +12,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
+using Battlegrounds;
 using Battlegrounds.Campaigns;
 using Battlegrounds.Campaigns.Controller;
 
@@ -91,13 +92,15 @@ namespace BattlegroundsApp.Views {
                 } else if (state == NewCampaignDialogResult.NewSingleplayer) {
 
                     // Create start args
-                    ActiveCampaignStartData startData = new ActiveCampaignStartData() {
-                        PlayAs = campaignData.CampaignHostSide
-                    };
+                    ActiveCampaignStartData startData = new ActiveCampaignStartData() { PlayAs = campaignData.CampaignHostSide };
+
+                    // Get steam profile
+                    var steamProfile = BattlegroundsInstance.Steam.User;
 
                     // Create campaign data and controller
                     var activeCampaign = ActiveCampaign.FromPackage(campaignData.CampaignToLoad, CampaignMode.Singleplayer, campaignData.CampaignDifficulty, startData);
                     var singleController = new SingleplayerCampaign(activeCampaign);
+                    singleController.CreatePlayer(steamProfile.ID, steamProfile.Name, startData.PlayAs == "axis" ? CampaignArmyTeam.TEAM_AXIS : CampaignArmyTeam.TEAM_ALLIES);
 
                     // Create view with controller
                     mapView = new CampaignMapView(singleController);

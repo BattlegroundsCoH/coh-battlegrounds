@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 
 namespace Battlegrounds.Campaigns.Organisations {
@@ -94,10 +93,14 @@ namespace Battlegrounds.Campaigns.Organisations {
             mergeInto.m_location = null; // Unset location
         }
 
-        public void RemoveOrganisation(List<Regiment> regiments) {
+        public void RemoveRegiment(List<Regiment> regiments) {
 
         }
 
+        /// <summary>
+        /// Split the <see cref="Formation"/> into two smaller formations.
+        /// </summary>
+        /// <returns>The new formation that was split from current formation.</returns>
         public Formation Split() => this.Split(2)[1];
 
         public Formation[] Split(int subElements) {
@@ -143,6 +146,22 @@ namespace Battlegrounds.Campaigns.Organisations {
                 this.m_path.RemoveAt(0);
             }
         }
+
+        public float CalculateStrength() {
+            float avgStrength = 0.0f;
+            int count = this.m_regiments.Count;
+            var itt = this.m_regiments.GetEnumerator();
+            while (itt.MoveNext()) {
+                avgStrength += itt.Current.Strength;
+                if (itt.Current.Strength <= 0.025) {
+                    itt.Current.IsDeployed = false;
+                    this.m_regiments.Remove(itt.Current);
+                }
+            }
+            return avgStrength / count;
+        }
+
+        public List<CampaignMapNode> GetPath() => this.m_path;
 
     }
 
