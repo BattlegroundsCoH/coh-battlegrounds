@@ -37,6 +37,13 @@ namespace Battlegrounds.Lua {
         public override int GetHashCode() => this.m_number.GetHashCode() ^ this.m_treatAsInteger.GetHashCode();
 
         public override string ToString() => this.m_treatAsInteger ? ((int)this.m_number).ToString() : this.m_number.ToString(NumberCulture);
+
+        /// <summary>
+        /// Returns the integer that best represents the numeric value.
+        /// </summary>
+        /// <returns>An integer that best represents the numeric value.</returns>
+        public int ToInt() => (int)this.m_number;
+
         public override LuaType GetLuaType() => LuaType.LUA_NUMBER;
 
         public static explicit operator int(LuaNumber n) => n.IsInteger() ? (int)n.m_number : throw new InvalidCastException("Cannot cast non-integer LuaNumber to an integer");

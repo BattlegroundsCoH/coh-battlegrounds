@@ -122,7 +122,7 @@ namespace Battlegrounds.Campaigns.Organisations {
 
         }
 
-        public void NewDivision(uint divisionID, LocaleKey divisionName, string template, LuaTable regiments, ref ushort campaignUnitID) {
+        public void NewDivision(uint divisionID, LocaleKey divisionName, string template, LuaValue speed, LuaTable regiments, ref ushort campaignUnitID) {
 
             // Make sure it's a valid division
             if (!this.m_regimentTemplates.ContainsKey(template)) {
@@ -134,7 +134,8 @@ namespace Battlegrounds.Campaigns.Organisations {
 
             // Create division
             Division div = new Division(divisionID, this, divisionName) {
-                TemplateName = template
+                TemplateName = template,
+                MaxMove = (speed as LuaNumber)?.ToInt() ?? 1
             };
 
             // ID buffer

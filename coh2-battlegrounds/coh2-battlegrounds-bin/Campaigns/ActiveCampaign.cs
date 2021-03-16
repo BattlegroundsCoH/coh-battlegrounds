@@ -74,7 +74,14 @@ namespace Battlegrounds.Campaigns {
                         (vt["divisions"] as LuaTable).Pairs((k, v) => {
                             var vt = v as LuaTable;
                             uint divID = tmp;
-                            this.Armies[index].NewDivision(divID, new LocaleKey(k.Str(), this.m_locSourceID), vt["tmpl"].Str(), vt["regiments"] as LuaTable, ref this.m_unitCampaignID);
+                            
+                            this.Armies[index].NewDivision(divID, 
+                                new LocaleKey(k.Str(), this.m_locSourceID), 
+                                vt["tmpl"].Str(), 
+                                vt["max_move"], 
+                                vt["regiments"] as LuaTable, 
+                                ref this.m_unitCampaignID);
+
                             tmp++;
                             if (vt["deploy"] is not LuaNil) {
                                 if (vt["deploy"] is LuaTable tableAt) {

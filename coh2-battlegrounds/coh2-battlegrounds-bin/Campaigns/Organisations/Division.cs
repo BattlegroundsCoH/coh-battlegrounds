@@ -16,6 +16,8 @@ namespace Battlegrounds.Campaigns.Organisations {
 
         public uint DivisionUid { get; }
 
+        public int MaxMove { get; init; }
+
         public string TemplateName { get; init; }
 
         // See Regiment.cs
