@@ -76,7 +76,15 @@ namespace Battlegrounds.Campaigns.Organisations {
             this.Team = div.EleemntOf.Team;
         }
 
-        public void SetNodeLocation(CampaignMapNode node) => this.m_location = node;
+        public void SetNodeLocation(CampaignMapNode node) {
+            
+            // Set this location
+            this.m_location = node;
+            
+            // Inform node we've added ourselves as occupant
+            node.AddOccupant(this);
+
+        }
 
         public void SetNodeDestinations(List<CampaignMapNode> nodes) {
             this.m_path = nodes;

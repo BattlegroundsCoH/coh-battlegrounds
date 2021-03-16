@@ -160,13 +160,13 @@ namespace Battlegrounds.Campaigns.Organisations {
                             if (GenerateRegiment(lstr.Str(), div, regimentalTemplate, ref squadIDCounter) is Regiment simpleRegiment) {
                                 div.Regiments.Add(simpleRegiment);
                             } else {
-                                return new LuaBool(false);
+                                return new LuaBool(false); // Stop loop
                             }
                         } else {
                             Trace.WriteLine(
                                 $"Army '{this.ArmyName.LocaleID}' contains no template sub-type '{templType}' in {template} and will therefore skip creating '{divisionName.LocaleID}'",
                                 $"{nameof(Army)}::{nameof(NewDivision)}");
-                            return new LuaBool(false);
+                            return new LuaBool(false); // Stop loop
                         }
                     } else if (entry is LuaTable entryTable) {
                         string instName = entryTable["name"].Str();
@@ -203,7 +203,7 @@ namespace Battlegrounds.Campaigns.Organisations {
                                 $"{nameof(Army)}::{nameof(NewDivision)}");
                         }
                     }
-                    return new LuaNil();
+                    return new LuaNil(); // "Continue"
                 });
 
             });

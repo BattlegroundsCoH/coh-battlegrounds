@@ -72,8 +72,10 @@ namespace Battlegrounds.Util.Coroutines {
             if (__runningCoroutines is null) {
                 __runningCoroutines = new List<CoroutineMetaData>();
             }
-            __runningCoroutines.Add(new CoroutineMetaData(enumerator, dispatcher));
-            if (__coroutineTask is null) {
+            lock (__runningCoroutines) {
+                __runningCoroutines.Add(new CoroutineMetaData(enumerator, dispatcher));
+            }
+            if (__coroutineTask is null || __coroutineTask.Status == TaskStatus.RanToCompletion) {
                 __cancelTokenSource = new CancellationTokenSource();
                 __doCoroutines = true;
                 __coroutineTask = new Task(UpdateCoroutines, __cancelTokenSource.Token, TaskCreationOptions.LongRunning);

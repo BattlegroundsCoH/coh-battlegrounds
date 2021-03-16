@@ -82,7 +82,6 @@ namespace Battlegrounds.Campaigns {
                 
                 if (node.CanMoveTo(formation)) {
                     formation.SetNodeLocation(node);
-                    node.Occupants.Add(formation);
                     return true;
                 }
 
@@ -91,10 +90,9 @@ namespace Battlegrounds.Campaigns {
         }
 
         public void MoveTo(Formation formation, CampaignMapNode target) {
-            
+
             // Update occupants
-            formation.Node.Occupants.Remove(formation);
-            target.Occupants.Add(formation);
+            formation.Node.RemoveOccupant(formation);
             
             // Set location and update destination
             formation.SetNodeLocation(target);

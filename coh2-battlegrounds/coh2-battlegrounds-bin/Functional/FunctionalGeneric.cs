@@ -81,9 +81,11 @@ namespace Battlegrounds.Functional {
         /// <returns>An eumerator that can iterate over the collection where remove functionality does not break.</returns>
         public static IEnumerator<T> GetSafeEnumerator<T>(this IEnumerable<T> enumerable) where T : class {
             List<T> dummy = new List<T>();
-            var itt = enumerable.GetEnumerator();
-            while (itt.MoveNext()) {
-                dummy.Add(itt.Current);
+            lock (enumerable) {
+                var itt = enumerable.GetEnumerator();
+                while (itt.MoveNext()) {
+                    dummy.Add(itt.Current);
+                }
             }
             return dummy.GetEnumerator();
         }

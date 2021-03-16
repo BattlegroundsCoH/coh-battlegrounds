@@ -18,6 +18,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 
 using Battlegrounds.Campaigns;
+using Battlegrounds.Campaigns.API;
 using Battlegrounds.Campaigns.Controller;
 using Battlegrounds.Campaigns.Organisations;
 using Battlegrounds.Functional;
@@ -40,6 +41,7 @@ namespace BattlegroundsApp.Views.CampaignViews {
     public partial class CampaignMapView : ViewState, INotifyPropertyChanged {
 
         private List<CampaignUnitFormationModel> m_formationViews;
+        private List<ICampaignMapNode> m_nodes;
         private Dictionary<string, ImageSource> m_graphics;
 
         public CampaignUnitSelectionModel Selection { get; }
@@ -63,8 +65,9 @@ namespace BattlegroundsApp.Views.CampaignViews {
             // Assign controller
             this.Controller = controller;
 
-            // Init list
+            // Init lists
             this.m_formationViews = new List<CampaignUnitFormationModel>();
+            this.m_nodes = new List<ICampaignMapNode>();
 
             // Load graphics
             this.InitializeGrapihcs();
@@ -121,26 +124,22 @@ namespace BattlegroundsApp.Views.CampaignViews {
             // Loop through all nodes
             this.Controller.Campaign.PlayMap.EachNode(n => {
 
-                // Create figure and add to canvas
-                Ellipse node = new Ellipse {
-                    Width = 32,
-                    Height = 32,
-                    Fill = n.Owner == CampaignArmyTeam.TEAM_ALLIES ? Brushes.Red : (n.Owner == CampaignArmyTeam.TEAM_AXIS ? Brushes.Green : Brushes.Gray),
-                    Tag = n,
+                // TODO: Check if leaf then create different model
+                ICampaignMapNode visualNode = new CampaignVisualNodeModel(n, this.CampaignMapWidth, this.CampaignMapHeight) {
+                    ModelFromFormation = this.FromFormation
                 };
 
-                // Add events
-                node.MouseDown += this.NodeClicked;
+                // Add click check
+                visualNode.NodeClicked += this.NodeClicked;
 
                 // Add node
-                this.CampaignMapCanvas.Children.Add(node);
+                this.CampaignMapCanvas.Children.Add(visualNode.VisualElement);
 
                 // Set visual
-                n.VisualNode = node;
-                n.NodeChange += this.NodePropertyChanged;
+                n.VisualNode = visualNode as IVisualCampaignNode;
 
-                // Set position of node
-                SetPosition(node, n.U * this.CampaignMapWidth - (32.0 / 2.0), n.V * this.CampaignMapHeight - (32.0 / 2.0));
+                // Add node to list
+                this.m_nodes.Add(visualNode);
 
             });
 
@@ -166,17 +165,6 @@ namespace BattlegroundsApp.Views.CampaignViews {
 
             });
 
-        }
-
-        private void NodePropertyChanged(CampaignMapNode self, CampaignMapNodeProperty property, object value) {
-            switch (property) {
-                case CampaignMapNodeProperty.Owner:
-                    CampaignArmyTeam team = (CampaignArmyTeam)value;
-                    (self.VisualNode as Ellipse).Fill = team == CampaignArmyTeam.TEAM_ALLIES ? Brushes.Red : (team == CampaignArmyTeam.TEAM_AXIS ? Brushes.Green : Brushes.Gray);
-                    break;
-                default:
-                    break;
-            }
         }
 
         private void RefreshDisplayedFormations() {
@@ -210,41 +198,39 @@ namespace BattlegroundsApp.Views.CampaignViews {
                     // Add to canvas
                     this.CampaignMapCanvas.Children.Add(displayElement);
 
-                    // Set the display position
-                    SetPosition(displayElement, f.Node.U * this.CampaignMapWidth, f.Node.V * this.CampaignMapHeight);
-
                 }
 
                 // Create container type
                 CampaignUnitFormationModel cufv = new CampaignUnitFormationModel(displayElement, f);
 
+                // Add to formation view
                 this.m_formationViews.Add(cufv);
 
             });
+
+            // Refresh formations
+            this.m_nodes.ForEach(x => (x as CampaignVisualNodeModel)?.RefreshFormations(this.m_formationViews));
 
         }
 
         private void ClearFormations() {
             foreach (var form in this.m_formationViews) {
-                if (form.Element is not null) {
-                    this.CampaignMapCanvas.Children.Remove(form.Element);
+                if (form.VisualElement is not null) {
+                    this.CampaignMapCanvas.Children.Remove(form.VisualElement);
                 }
             }
             this.m_formationViews.Clear();
         }
 
-        private void NodeClicked(object sender, MouseButtonEventArgs e) {
-            if (sender is Ellipse ellipse && ellipse.Tag is CampaignMapNode node) {
-                if (e.LeftButton == MouseButtonState.Pressed) {
-                    this.Selection.Select(node.Occupants.Select(x => this.FromFormation(x)));
-                } else if (e.RightButton == MouseButtonState.Pressed) {
-                    this.NodeRightClicked(node);
-                }
+        private void NodeClicked(CampaignMapNode node, bool isRightclick) {
+            if (isRightclick) {
+                this.NodeRightClicked(node);
+            } else {
+                this.Selection.Select(node.Occupants.Select(x => this.FromFormation(x)));
             }
         }
 
         private void NodeRightClicked(CampaignMapNode node) {
-
             if (this.Selection.Size > 0) {
                 if (this.Selection.Shares(x => x.Formation.Node)) {
                     if (this.Selection.Filter(x => x.Formation.CanMove) > 0) {
@@ -260,7 +246,6 @@ namespace BattlegroundsApp.Views.CampaignViews {
                     }
                 }
             }
-
         }
 
         private void BannerClicked(object sender, MouseButtonEventArgs e) {
@@ -273,34 +258,15 @@ namespace BattlegroundsApp.Views.CampaignViews {
             }
         }
 
+        private ICampaignMapNode FromNode(CampaignMapNode node) => this.m_nodes.FirstOrDefault(x => x.Node == node);
+
         private CampaignUnitFormationModel FromFormation(Formation formation) => this.m_formationViews.FirstOrDefault(x => x.Formation == formation);
-
-        private static void SetPosition(UIElement element, double x, double y) {
-            element.SetValue(Canvas.LeftProperty, x);
-            element.SetValue(Canvas.TopProperty, y);
-            element.SetValue(Panel.ZIndexProperty, 100);
-        }
-
-        private static void GotoPosition(UIElement element, double x, double y) {
-
-            DoubleAnimation xAnim = new DoubleAnimation((double)element.GetValue(Canvas.LeftProperty), x, new Duration(TimeSpan.FromSeconds(2))) {
-                 RepeatBehavior = new RepeatBehavior(1),
-            };
-            xAnim.Freeze();
-
-            DoubleAnimation yAnim = new DoubleAnimation((double)element.GetValue(Canvas.TopProperty), y, new Duration(TimeSpan.FromSeconds(2))) {
-                RepeatBehavior = new RepeatBehavior(1),
-            };
-            yAnim.Freeze();
-
-            element.BeginAnimation(Canvas.LeftProperty, xAnim, HandoffBehavior.Compose);
-            element.BeginAnimation(Canvas.TopProperty, yAnim, HandoffBehavior.Compose);
-
-        }
 
         private void EndTurnBttn_Click(object sender, RoutedEventArgs e) {
             if (!this.Controller.EndTurn()) {
                 this.Controller.EndCampaign();
+            } else {
+                // Loop though and update movement
             }
             this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(this.CampaignDate)));
         }
@@ -308,13 +274,8 @@ namespace BattlegroundsApp.Views.CampaignViews {
         /// <summary>
         /// Move the entire selection to node
         /// </summary>
-        private void MoveSelection(CampaignMapNode node) {
-            this.Selection.InvokeEach(x => {
-                if (this.Controller.Campaign.PlayMap.SetPath(x.Formation.Node, node, x.Formation)) {
-                    this.MoveFormation(x);
-                }
-            });
-        }
+        private void MoveSelection(CampaignMapNode node)
+            => this.MoveFormations(this.Selection.Get().Select(x => this.FromFormation(x)), node);
 
         /// <summary>
         /// Move the entire selection (with same origin) into a hostile node
@@ -332,18 +293,56 @@ namespace BattlegroundsApp.Views.CampaignViews {
         }
 
         /// <summary>
+        /// Move the enumerable collection of formations
+        /// </summary>
+        private void MoveFormations(IEnumerable<CampaignUnitFormationModel> models, CampaignMapNode node) {
+            models.ForEach(x => {
+                if (this.Controller.Campaign.PlayMap.SetPath(x.Formation.Node, node, x.Formation)) {
+                    this.MoveFormation(x);
+                };
+            });
+        }
+
+        /// <summary>
         /// This will move a formation to its next destination
         /// </summary>
         private void MoveFormation(CampaignUnitFormationModel formationModel) {
             
             // Make sure there's a destination
             if (formationModel.Formation.Destination is CampaignMapNode node) {
-                
+
+                // Get old node
+                var backNode = formationModel.Formation.Node;
+
                 // Move in map
                 this.Controller.Campaign.PlayMap.MoveTo(formationModel.Formation, node);
 
+                // Get target
+                var targetModel = this.FromNode(node);
+
+                // Get next offset
+                (double x, double y) = targetModel.GetNextOffset(true);
+                (x, y) = targetModel.GetRelative(x, y);
+
                 // Show visually
-                GotoPosition(formationModel.Element, node.U * this.CampaignMapWidth, node.V * this.CampaignMapHeight);
+                (formationModel as ICampaignMapVisual).GotoPosition(x, y);
+
+                // Slow iterator
+                IEnumerator UpdateOldNode (){
+                    yield return new WaitTimespan(TimeSpan.FromSeconds(0.5));
+                    if (backNode.Occupants.Count > 0) {
+                        var ogNode = this.FromNode(backNode);
+                        ogNode.ResetOffset();
+                        var remainingOccupants = backNode.Occupants.Select(a => this.FromFormation(a)).ForEach(b => {
+                            (double x, double y) = ogNode.GetNextOffset(true);
+                            (x, y) = ogNode.GetRelative(x, y);
+                            (b as ICampaignMapVisual).GotoPosition(x, y, TimeSpan.FromMilliseconds(50));
+                        });
+                    }
+                }
+
+                // Tell coroutine to activate
+                Coroutine.StartCoroutine(UpdateOldNode(), (GUIThreadDispatcher)this.Dispatcher);
 
             }
 

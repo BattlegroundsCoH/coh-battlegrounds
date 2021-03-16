@@ -1,22 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Media;
+﻿using System.Windows;
 using Battlegrounds.Campaigns.Organisations;
 
 namespace BattlegroundsApp.Views.CampaignViews.Models {
     
-    public class CampaignUnitFormationModel {
+    public class CampaignUnitFormationModel : ICampaignMapVisual {
     
         public Formation Formation { get; }
 
-        public UIElement Element { get; }
+        public UIElement VisualElement { get; }
 
         public CampaignUnitFormationModel(UIElement element, Formation formation) {
-            this.Element = element;
+            this.VisualElement = element;
             this.Formation = formation;
         }
 

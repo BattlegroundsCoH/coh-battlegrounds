@@ -1,27 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics;
+
+using Battlegrounds.Campaigns.API;
 using Battlegrounds.Campaigns.Organisations;
 using Battlegrounds.Lua;
+using Battlegrounds.Util.Lists;
 
 namespace Battlegrounds.Campaigns {
-
-    /// <summary>
-    /// 
-    /// </summary>
-    public enum CampaignMapNodeProperty {
-        Owner,
-        Value,
-        Attrition,
-        Occupants,
-    }
-
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="self"></param>
-    /// <param name="property"></param>
-    /// <param name="value"></param>
-    public delegate void CampaignNodePropertyChangeHandler(CampaignMapNode self, CampaignMapNodeProperty property, object value);
 
     /// <summary>
     /// Represents a node on the campaign map where companies/regiments can be located and where armies can fight.
@@ -74,7 +59,7 @@ namespace Battlegrounds.Campaigns {
         /// <summary>
         /// 
         /// </summary>
-        public object VisualNode { get; set; }
+        public IVisualCampaignNode VisualNode { get; set; }
 
         /// <summary>
         /// 
@@ -109,12 +94,7 @@ namespace Battlegrounds.Campaigns {
         /// <summary>
         /// 
         /// </summary>
-        public List<Formation> Occupants { get; }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public event CampaignNodePropertyChangeHandler NodeChange;
+        public DistinctList<Formation> Occupants { get; }
 
         /// <summary>
         /// 
@@ -129,7 +109,7 @@ namespace Battlegrounds.Campaigns {
             this.VisualNode = null;
             this.Owner = CampaignArmyTeam.TEAM_NEUTRAL;
             this.Maps = new List<NodeMap>();
-            this.Occupants = new List<Formation>();
+            this.Occupants = new DistinctList<Formation>();
         }
 
         /// <summary>
@@ -179,7 +159,7 @@ namespace Battlegrounds.Campaigns {
         /// <param name="team"></param>
         public void SetOwner(CampaignArmyTeam team) {
             this.Owner = team;
-            this.NodeChange?.Invoke(this, CampaignMapNodeProperty.Owner, team);
+            this.VisualNode?.OwnershipChanged(team);
         }
 
         /// <summary>
@@ -188,7 +168,7 @@ namespace Battlegrounds.Campaigns {
         /// <param name="value"></param>
         public void SetValue(double value) {
             this.Value = value;
-            this.NodeChange?.Invoke(this, CampaignMapNodeProperty.Value, value);
+            this.VisualNode?.VictoryValueChanged(value);
         }
 
         /// <summary>
@@ -197,7 +177,7 @@ namespace Battlegrounds.Campaigns {
         /// <param name="value"></param>
         public void SetAttrition(double value) {
             this.Attrition = value;
-            this.NodeChange?.Invoke(this, CampaignMapNodeProperty.Attrition, value);
+            this.VisualNode?.AttritionValueChanged(value);
         }
 
         /// <summary>
@@ -212,6 +192,24 @@ namespace Battlegrounds.Campaigns {
                 }
             });
 
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="formation"></param>
+        public void AddOccupant(Formation formation) {
+            this.Occupants.Add(formation);
+            this.VisualNode?.OccupantAdded(formation);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="formation"></param>
+        public void RemoveOccupant(Formation formation) {
+            this.Occupants.Remove(formation);
+            this.VisualNode?.OccupantRemoved(formation);
         }
 
     }
