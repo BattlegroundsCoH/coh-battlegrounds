@@ -21,7 +21,6 @@
             end_date = { year = 1943, month = 1, day = 1},
         },
         allowed_atmospheres = {
-            allow_random = true,
             s = {
 
             },

@@ -35,6 +35,8 @@ namespace Battlegrounds.Campaigns {
 
         public record TurnData(int TurnLength, (int Year, int Month, int Day) Start, (int Year, int Month, int Day) End);
 
+        public record WeatherData((int Year, int Month, int Day) WinterStart, (int Year, int Month, int Day) WinterEnd, HashSet<string> WinterAtmospheres, HashSet<string> SummerAtmospheres);
+
         public record ArmyData(LocaleKey Name, LocaleKey Desc, Faction Army, int MinPlayers, int MaxPlayers, LuaTable FullArmyData);
 
         public LocaleKey Name { get; private set; }
@@ -52,6 +54,8 @@ namespace Battlegrounds.Campaigns {
         public string NormalStartingSide { get; private set; }
 
         public TurnData CampaignTurnData { get; private set; }
+
+        public WeatherData CampaignWeatherData { get; private set; }
 
         public ArmyData[] CampaignArmies { get; private set; }
 
@@ -102,7 +106,13 @@ namespace Battlegrounds.Campaigns {
 
             // Load display data
             if (!LoadBinaryDisplay(reader, this.LocaleSourceID, binaryFilepath)) {
-                Trace.WriteLine($"Campaign '{Path.GetFileName(binaryFilepath)}' has no invalid display data and cannot be loaded.", nameof(CampaignPackage));
+                Trace.WriteLine($"Campaign '{Path.GetFileName(binaryFilepath)}' has invalid display data and cannot be loaded.", nameof(CampaignPackage));
+                return false;
+            }
+
+            // Load weather data
+            if (!LoadBinaryWeather(reader)) {
+                Trace.WriteLine($"Campaign '{Path.GetFileName(binaryFilepath)}' has invalid weather data and cannot be loaded.", nameof(CampaignPackage));
                 return false;
             }
 
@@ -176,6 +186,51 @@ namespace Battlegrounds.Campaigns {
             }
 
             // Return true => everything was loaded
+            return true;
+
+        }
+
+        private bool LoadBinaryWeather(BinaryReader reader) {
+
+            HashSet<string> winter = new HashSet<string>();
+            HashSet<string> summer = new HashSet<string>();
+
+            // Create basic one
+            this.CampaignWeatherData = new WeatherData((0, 0, 0), (0, 0, 0), winter, summer);
+
+            // Read winter dates (if any)
+            int winterStartYear = reader.ReadInt32();
+            if (winterStartYear != -1) {
+
+                // Read values
+                int winterStartMonth = reader.ReadInt32();
+                int winterStartDay = reader.ReadInt32();
+                int winterEndYear = reader.ReadInt32();
+                int winterEndMonth = reader.ReadInt32();
+                int winterEndDay = reader.ReadInt32();
+
+                // Mutate
+                this.CampaignWeatherData = this.CampaignWeatherData with
+                {
+                    WinterStart = (winterStartYear, winterStartMonth, winterStartDay),
+                    WinterEnd = (winterEndYear, winterEndMonth, winterEndDay)
+                };
+
+            }
+
+            int summerCount = reader.ReadInt32();
+            int winterCount = reader.ReadInt32();
+
+            for (int i = 0; i < summerCount; i++) {
+                int count = reader.ReadInt32();
+                summer.Add(Encoding.Unicode.GetString(reader.ReadBytes(count)));
+            }
+
+            for (int i = 0; i < winterCount; i++) {
+                int count = reader.ReadInt32();
+                winter.Add(Encoding.Unicode.GetString(reader.ReadBytes(count)));
+            }
+
             return true;
 
         }

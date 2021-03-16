@@ -24,6 +24,9 @@ namespace Battlegrounds.Campaigns {
         private string m_locSourceID;
         private ushort m_unitCampaignID;
 
+        private HashSet<string> m_allowedSummerAtmospheres;
+        private HashSet<string> m_allowedWinterAtmospheres;
+
         public class Player { }
 
         public CampaignMap PlayMap { get; init; }
@@ -45,6 +48,8 @@ namespace Battlegrounds.Campaigns {
                 if (ScenarioList.TryFindScenario(maps[0].MapName, out Scenario singleScenario)) {
                     return singleScenario;
                 }
+            } else {
+
             }
             return null;
         }
@@ -138,6 +143,11 @@ namespace Battlegrounds.Campaigns {
                 package.CampaignTurnData.Start,
                 package.CampaignTurnData.End
             }, package.CampaignTurnData.TurnLength);
+            campaign.Turn.SetWinterDates(new[] { package.CampaignWeatherData.WinterStart, package.CampaignWeatherData.WinterEnd });
+
+            // Set atmospheres
+            campaign.m_allowedSummerAtmospheres = package.CampaignWeatherData.SummerAtmospheres;
+            campaign.m_allowedWinterAtmospheres = package.CampaignWeatherData.WinterAtmospheres;
 
             return campaign;
 

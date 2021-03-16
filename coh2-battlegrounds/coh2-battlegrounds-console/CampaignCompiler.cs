@@ -12,6 +12,9 @@ using Battlegrounds.Locale;
 using Battlegrounds.Lua;
 using Battlegrounds.Util;
 
+using CampaignArmies = System.Collections.Generic.List<coh2_battlegrounds_console.CampaignCompiler.CampaignArmy>;
+using CampaignResources = System.Collections.Generic.List<coh2_battlegrounds_console.CampaignCompiler.CampaignResource>;
+
 namespace coh2_battlegrounds_console {
     
     public static class CampaignCompiler {
@@ -20,7 +23,7 @@ namespace coh2_battlegrounds_console {
 
         public static string Output { get; set; }
 
-        enum ResourceType : byte {
+        internal enum ResourceType : byte {
             MapImage = 0x1,
             Locale = 0x2,
             CampaignScript = 0x3, // lstate is stored
@@ -28,13 +31,13 @@ namespace coh2_battlegrounds_console {
             GfxMap = 0x5,
         }
 
-        private struct CampaignResource {
+        internal struct CampaignResource {
             public string Identifier;
             public ResourceType Rt;
             public byte[] Content;
         }
 
-        private struct CampaignDisplay {
+        internal struct CampaignDisplay {
             public LocaleKey name;
             public LocaleKey desc;
             public LocaleKey loc;
@@ -47,7 +50,14 @@ namespace coh2_battlegrounds_console {
             public int turntime;
         }
 
-        private class CampaignArmy {
+        internal struct CampaignWeather {
+            public CampaignDate winterStart;
+            public CampaignDate winterEnd;
+            public HashSet<string> winterAtmospheres;
+            public HashSet<string> summerAtmospheres;
+        }
+
+        internal class CampaignArmy {
             public string army;
             public int min;
             public int max;
@@ -55,7 +65,7 @@ namespace coh2_battlegrounds_console {
             public LocaleKey desc;
             public LuaTable armyComposition;
         }
-
+        
         public static void Compile(string dir) {
 
             // Create lua state
@@ -77,9 +87,10 @@ namespace coh2_battlegrounds_console {
             }
 
             // List of resources loaded
-            List<CampaignResource> campaignResources = new List<CampaignResource>();
-            List<CampaignArmy> campaignArmies = new List<CampaignArmy>();
+            CampaignResources campaignResources = new ();
+            CampaignArmies campaignArmies = new ();
             CampaignDisplay campaignDisplay = default;
+            CampaignWeather campaignWeather = default;
 
             // Load lua file
             if (settingsState.DoFile(settingsFile) is LuaTable manifest) {
@@ -109,6 +120,13 @@ namespace coh2_battlegrounds_console {
                                         }
                                     }
                                 });
+                            }
+                            break;
+                        case "weather":
+                            if (v is LuaTable w) {
+                                if (!ParseWeather(w, out campaignWeather)) {
+                                    Console.WriteLine("Failed to read weather data!");
+                                }
                             }
                             break;
                         default:
@@ -155,11 +173,11 @@ namespace coh2_battlegrounds_console {
 
             }            
 
-            Compile(dir, id, campaignDisplay, campaignArmies, campaignResources, mapdef);
+            Compile(dir, id, campaignDisplay, campaignWeather, campaignArmies, campaignResources, mapdef);
 
         }
 
-        private static void Compile(string relative, string iddef, CampaignDisplay display, List<CampaignArmy> armies, List<CampaignResource> resources, LuaTable mapdef) {
+        private static void Compile(string relative, string iddef, CampaignDisplay display, CampaignWeather weather, CampaignArmies armies, CampaignResources resources, LuaTable mapdef) {
 
             // Output path
             string output = Output ?? Path.Combine(relative, Path.GetFileNameWithoutExtension(relative) + ".dat");
@@ -214,6 +232,34 @@ namespace coh2_battlegrounds_console {
             byte[] startSide = display.start.Encode(Encoding.Unicode);
             bw.Write(startSide.Length);
             bw.Write(startSide);
+
+            // Write weather data
+            if (weather.winterStart != weather.winterEnd) {
+                bw.Write(weather.winterStart.Year);
+                bw.Write(weather.winterStart.Month);
+                bw.Write(weather.winterStart.Day);
+                bw.Write(weather.winterEnd.Year);
+                bw.Write(weather.winterEnd.Month);
+                bw.Write(weather.winterEnd.Day);
+            } else {
+                bw.Write(-1);
+            }
+
+            // Writer atmosphere counts
+            bw.Write(weather.summerAtmospheres.Count);
+            bw.Write(weather.winterAtmospheres.Count);
+
+            void WriteAtmosphere(HashSet<string> atmos) {
+                foreach (string summerAtmosphere in atmos) {
+                    byte[] bytes = summerAtmosphere.Encode(Encoding.Unicode);
+                    bw.Write(bytes.Length);
+                    bw.Write(bytes);
+                }
+            }
+
+            // Write atmospheres
+            WriteAtmosphere(weather.summerAtmospheres);
+            WriteAtmosphere(weather.winterAtmospheres);
 
             // Write each army
             armies.ForEach(x => {
@@ -371,6 +417,31 @@ namespace coh2_battlegrounds_console {
                 theatre = GetTheatre(lTable["theatre"] as LuaString),
                 types = GetTypes(lTable["modes"] as LuaTable)
             };
+            return true;
+        }
+
+        private static bool ParseWeather(LuaTable table, out CampaignWeather weather) {
+            weather = new CampaignWeather();
+            if (table["winter"] is LuaTable winterTable) {
+                weather.winterStart = GetDate(winterTable["start_date"] as LuaTable);
+                weather.winterEnd = GetDate(winterTable["end_date"] as LuaTable);
+            } else {                
+                weather.winterStart = weather.winterEnd = new CampaignDate(2021, 1, 1);
+            }
+            if (table["allowed_atmospheres"] is LuaTable atmosTable) {
+                var w = new HashSet<string>();
+                var s = new HashSet<string>();
+                if (atmosTable["s"] is LuaTable summer) {
+                    summer.ToArray().ForEach(x => s.Add(x.Str()));
+                }
+                if (atmosTable["w"] is LuaTable winter) {
+                    winter.ToArray().ForEach(x => w.Add(x.Str()));
+                }
+                weather.summerAtmospheres = s;
+                weather.winterAtmospheres = w;
+            } else {
+                weather.summerAtmospheres = weather.winterAtmospheres = new HashSet<string>();
+            }
             return true;
         }
 
