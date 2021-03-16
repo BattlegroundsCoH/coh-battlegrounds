@@ -372,7 +372,7 @@ namespace BattlegroundsApp.Views.CampaignViews {
             engagementDialogView.SubscribeToDialogEvent(CampaignEngagementDialogView.ENGAGE, this.EngageAttack);
 
             // Set formations etc.
-            engagementDialogView.SetAttackingFormations(attackers);
+            engagementDialogView.SetAttackingFormations(attackers, this.Controller.Campaign.Locale);
             engagementDialogView.SetupMatchData(this.Controller.Campaign);
 
             // Show dialog
@@ -382,6 +382,10 @@ namespace BattlegroundsApp.Views.CampaignViews {
 
         private void WithdrawAttack(CampaignDialogView dialogView) {
             this.HideCampaignDialog();
+
+            // Unlock selection
+            this.Selection.Unlock();
+
         }
 
         private void AutoAttack(CampaignDialogView dialogView) {

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics;
 using Battlegrounds.Campaigns.Organisations;
 using Battlegrounds.Lua;
 
@@ -137,7 +138,11 @@ namespace Battlegrounds.Campaigns {
         /// <param name="luaValue"></param>
         public void SetMapData(LuaValue luaValue) {
             if (luaValue is LuaString ls) {
-                this.Maps.Add(new NodeMap(ls.Str(), string.Empty, false));
+                string lss = ls.Str();
+                if (!string.IsNullOrEmpty(lss)) {
+                    this.Maps.Add(new NodeMap(lss, string.Empty, false));
+                    return;
+                }
             } else if (luaValue is LuaTable mapOptions) {
                 mapOptions.Pairs((k, v) => {
                     if (v is LuaTable vt) {
@@ -149,7 +154,9 @@ namespace Battlegrounds.Campaigns {
                         this.Maps.Add(new NodeMap(s.Str(), string.Empty, false));
                     }
                 });
+                return;
             }
+            Trace.WriteLine($"Node '{this.NodeName}' has no valid map defined.", nameof(CampaignMapNode));
         }
 
         /// <summary>

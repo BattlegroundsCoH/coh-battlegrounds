@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+
 using Battlegrounds.Functional;
 using Battlegrounds.Game.DataCompany;
 using Battlegrounds.Game.Gameplay;
@@ -17,7 +18,7 @@ namespace Battlegrounds.Campaigns.Organisations {
     /// </summary>
     public class Army : IJsonObject {
 
-        private record ArmyRegimentalUnitTemplate(string BlueprintName, Range VetRange, double Weight, int Count);
+        private record ArmyRegimentalUnitTemplate(string BlueprintName, string TransportBlueprint, Range VetRange, double Weight, int Count);
         private record ArmyRegimentalTemplate(string RegimentType, int RegimentUnitSize, int RegimentCompanyCount, 
             ArmyRegimentalUnitTemplate[] WeightedRegimentalUnitTemplates, ArmyRegimentalUnitTemplate[] CountedRegimentalUnitTemplates = null, bool IsArtillery = false);
 
@@ -76,27 +77,48 @@ namespace Battlegrounds.Campaigns.Organisations {
             // Create units
             units.Pairs((k, v) => {
 
-                int i = (int)((k as LuaNumber) - 1);
-                var vt = v as LuaTable;
+                // Make sure it's a table
+                if (v is LuaTable vt) {
 
-                string sbp = vt["sbp"].Str();
+                    // Create the unit template
+                    if (CreateUnitTemplate(vt, out bool weighted) is ArmyRegimentalUnitTemplate unitTmpl) {
+                        if (weighted) {
+                            weightedTemplates.Add(unitTmpl);
+                        } else {
+                            countFixedTemplates.Add(unitTmpl);
+                        }
+                    } else {
+                        Trace.WriteLine($"Unable to add unit '{k.Str()}' to regiment template {templName}:{templType}", $"{nameof(Army)}::{nameof(NewRegimentTemplate)}");
+                    }
 
-                var range = (vt["rank_range"] as LuaTable).IfTrue(x => x is not null)
-                .ThenDo(x => new Range((int)(x[1] as LuaNumber), (int)(x[2] as LuaNumber)))
-                .OrDefaultTo(() => new Range(0, 0));
-
-                if (vt["weight"] is LuaNumber w) {
-                    weightedTemplates.Add(new ArmyRegimentalUnitTemplate(sbp, range, w, -1));
-                } else if (vt["count"] is LuaNumber c) {
-                    weightedTemplates.Add(new ArmyRegimentalUnitTemplate(sbp, range, -1.0, (int)c.AsInteger()));
-                } else {
-                    Trace.WriteLine($"Unable to add unit {sbp} to regiment template {templName}:{templType}", $"{nameof(Army)}::{nameof(NewRegimentTemplate)}");
                 }
 
             });
 
             // Add template
             this.m_regimentTemplates[templName].Add(new ArmyRegimentalTemplate(templType, regSize, comCount, weightedTemplates.ToArray(), countFixedTemplates.ToArray(), isArty));
+
+        }
+
+        private static ArmyRegimentalUnitTemplate CreateUnitTemplate(LuaTable unitTable, out bool isWeighted) {
+
+            string sbp = unitTable["sbp"].Str();
+            string tsbp = (unitTable["transport_sbp"] as LuaString)?.Str() ?? null;
+
+            var range = (unitTable["rank_range"] as LuaTable).IfTrue(x => x is not null)
+            .ThenDo(x => new Range((int)(x[1] as LuaNumber), (int)(x[2] as LuaNumber)))
+            .OrDefaultTo(() => new Range(0, 0));
+
+            if (unitTable["weight"] is LuaNumber w) {
+                isWeighted = true;
+                return new ArmyRegimentalUnitTemplate(sbp, tsbp, range, w, -1);
+            } else if (unitTable["count"] is LuaNumber c) {
+                isWeighted = false;
+                return new ArmyRegimentalUnitTemplate(sbp, tsbp, range, -1.0, (int)c.AsInteger());
+            } else {
+                isWeighted = false;
+                return null;
+            }
 
         }
 
@@ -124,20 +146,64 @@ namespace Battlegrounds.Campaigns.Organisations {
                 // Get template type
                 string templType = k.Str();
 
-                if (this.m_regimentTemplates[template].FirstOrDefault(x => x.RegimentType == templType) is ArmyRegimentalTemplate regimentalTemplate) {
+                // Get template
+                var regimentalTemplate = this.m_regimentTemplates[template].FirstOrDefault(x => x.RegimentType == templType);
 
-                    // Get regimental names
-                    string[] regimentNames = (v as LuaTable).ToArray<LuaString>().Select(x => x.Str()).ToArray();
+                // Get regimental names
+                List<string> regimentNames = new();
 
-                    // Add all regiments (if it was possible to generate regiment)
-                    regimentNames.ForEach(x => GenerateRegiment(x, div, regimentalTemplate, ref squadIDCounter).IfTrue(x => x is not null).Then(x => div.Regiments.Add(x)));
-
-                } else {
-                    Trace.WriteLine(
-                        $"Army '{this.ArmyName.LocaleID}' contains no template sub-type '{templType}' in {template} and will therefore skip creating '{divisionName.LocaleID}'",
-                        $"{nameof(Army)}::{nameof(NewDivision)}");
-                    return;
-                }
+                // Loop over all entries
+                (v as LuaTable).Pairs((_, entry) => {
+                    if (entry is LuaString lstr) {
+                        if (regimentalTemplate is not null) {
+                            if (GenerateRegiment(lstr.Str(), div, regimentalTemplate, ref squadIDCounter) is Regiment simpleRegiment) {
+                                div.Regiments.Add(simpleRegiment);
+                            } else {
+                                return new LuaBool(false);
+                            }
+                        } else {
+                            Trace.WriteLine(
+                                $"Army '{this.ArmyName.LocaleID}' contains no template sub-type '{templType}' in {template} and will therefore skip creating '{divisionName.LocaleID}'",
+                                $"{nameof(Army)}::{nameof(NewDivision)}");
+                            return new LuaBool(false);
+                        }
+                    } else if (entry is LuaTable entryTable) {
+                        string instName = entryTable["name"].Str();
+                        string tmplName = (entryTable["tmpl"] as LuaString)?.Str() ?? $"{template}@{templType}";
+                        string[] tmplLookup = tmplName.Split('@');
+                        if (this.m_regimentTemplates[tmplLookup[0]].FirstOrDefault(x => x.RegimentType == tmplLookup[1]) is ArmyRegimentalTemplate otherRegimentalTemplate) {
+                            if (entryTable["custom_units"] is LuaTable customUnits) {
+                                customUnits.Pairs((uk, unit) => {
+                                    if (unit is LuaTable unitTable) {
+                                        if (CreateUnitTemplate(unitTable, out bool weighted) is ArmyRegimentalUnitTemplate unitTmpl) {
+                                            if (weighted) {
+                                                otherRegimentalTemplate = otherRegimentalTemplate with
+                                                { // Why this ugly style...
+                                                    WeightedRegimentalUnitTemplates = otherRegimentalTemplate.WeightedRegimentalUnitTemplates.Append(unitTmpl)
+                                                };
+                                            } else {
+                                                otherRegimentalTemplate = otherRegimentalTemplate with
+                                                {
+                                                    CountedRegimentalUnitTemplates = otherRegimentalTemplate.CountedRegimentalUnitTemplates.Append(unitTmpl)
+                                                };
+                                            }
+                                        } else {
+                                            Trace.WriteLine($"Unable to add unit '{uk.Str()}' to regiment template {tmplLookup[0]}:{tmplLookup[1]}", $"{nameof(Army)}::{nameof(NewRegimentTemplate)}");
+                                        }
+                                    }
+                                });
+                            }
+                            if (GenerateRegiment(instName, div, otherRegimentalTemplate, ref squadIDCounter) is Regiment mutatedRegiment) {
+                                div.Regiments.Add(mutatedRegiment);
+                            }
+                        } else {
+                            Trace.WriteLine(
+                                $"Army '{this.ArmyName.LocaleID}' contains no template sub-type '{tmplLookup[0]}' in {tmplLookup[1]} and will therefore skip creating '{instName}'",
+                                $"{nameof(Army)}::{nameof(NewDivision)}");
+                        }
+                    }
+                    return new LuaNil();
+                });
 
             });
 

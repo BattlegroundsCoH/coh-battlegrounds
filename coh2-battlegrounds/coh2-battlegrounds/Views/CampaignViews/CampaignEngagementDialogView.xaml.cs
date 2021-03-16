@@ -21,6 +21,7 @@ using Battlegrounds.Functional;
 using Battlegrounds.Game.Database;
 using Battlegrounds.Game.DataCompany;
 using Battlegrounds.Game.Gameplay;
+using Battlegrounds.Locale;
 using BattlegroundsApp.Resources;
 using static Battlegrounds.BattlegroundsInstance;
 
@@ -38,9 +39,9 @@ namespace BattlegroundsApp.Views.CampaignViews {
         public class CampaignEngagementRegiment {
             public Regiment Regiment { get; }
             public string Display { get; }
-            public CampaignEngagementRegiment(Regiment r) {
+            public CampaignEngagementRegiment(Regiment r, Localize localizeSource) {
                 this.Regiment = r;
-                this.Display = Localize.GetString(r.Name);
+                this.Display = localizeSource.GetString(r.Name);
             }
             public override bool Equals(object obj) {
                 if (obj is CampaignEngagementRegiment reg) {
@@ -165,12 +166,12 @@ namespace BattlegroundsApp.Views.CampaignViews {
 
         }
 
-        public void SetAttackingFormations(List<Formation> formations) {
+        public void SetAttackingFormations(List<Formation> formations, Localize localize) {
             this.m_formations.AddRange(formations);
             formations.ForEach(x => {
                 x.Regiments.ForEach(r => {
                     if (r.Strength > 0) {
-                        this.AttackingRegimentalPool.Add(new CampaignEngagementRegiment(r));
+                        this.AttackingRegimentalPool.Add(new CampaignEngagementRegiment(r, localize));
                     }
                 });
             });
@@ -204,12 +205,10 @@ namespace BattlegroundsApp.Views.CampaignViews {
         }
 
         private void MoveAll_Click(object sender, RoutedEventArgs e) {
-            int count = 0;
-            while (count < this.RegimentalUnits.Count && this.IndexableUnits[this.SelectedPlayer].Count < Company.MAX_SIZE) {
-                var u = this.RegimentalUnits[count];
-                this.IndexableUnits[this.SelectedPlayer].Add(u);
-                this.RegimentalUnits.RemoveAt(count);
-                count++;
+            var itt = this.RegimentalUnits.GetSafeEnumerator();
+            while (itt.MoveNext() && this.IndexableUnits[this.SelectedPlayer].Count < Company.MAX_SIZE) {
+                this.IndexableUnits[this.SelectedPlayer].Add(itt.Current);
+                this.RegimentalUnits.Remove(itt.Current);
             }
             this.RefreshProperties();
         }
