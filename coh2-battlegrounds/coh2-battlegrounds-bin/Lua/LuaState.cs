@@ -1,13 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
+﻿using System.IO;
 using Battlegrounds.Lua.Debugging;
 
 namespace Battlegrounds.Lua {
     
     /// <summary>
-    /// Basic C# implementation of the C-type lua_State for Lua. This is an emulated version of Lua and may run otherwise incorrect/invalid Lua code.
+    /// Basic C# implementation of the C-type lua_State for Lua.
     /// </summary>
     public class LuaState {
 
@@ -44,185 +41,17 @@ namespace Battlegrounds.Lua {
         }
 
         /// <summary>
-        /// Do a <see cref="LuaExpr"/> in the current <see cref="LuaState"/> environment.
+        /// Get last runtime error (<see langword="null"/> if no runtime error).
         /// </summary>
-        /// <param name="expr">The <see cref="LuaExpr"/> to run in enviornment.</param>
-        /// <returns>The <see cref="LuaValue"/> that was on top of the stack after execution finished.</returns>
-        public LuaValue DoExpression(LuaExpr expr) {
-            
-            // Lua stack
-            Stack<LuaValue> stack = new Stack<LuaValue>();
-
-            // Get top value (if none, return _G)
-            LuaValue GetTop() {
-                if (stack.Count > 0) {
-                    return stack.Pop();
-                } else {
-                    return _G;
-                }
-            }
-
-            // Lookup function for handling variable lookup
-            LuaValue Lookup(LuaValue identifier) {
-                var s = GetTop();
-                if (s is LuaTable topTable) {
-                    return topTable[identifier];
-                } else {
-                    throw new LuaRuntimeError("Attempt to index '?', a nil value.", stack, this);
-                }
-            }
-
-            // Do lua expressions
-            void DoExpr(LuaExpr exp) {
-                
-                // Handle expression
-                switch (exp) {
-                    case LuaBinaryExpr bin:
-                        if (bin.Operator.CompareTo("=") == 0) {
-                            DoExpr(bin.Right);
-                            if (bin.Left is LuaIdentifierExpr declID) {
-                                stack.Push(new LuaString(declID.Identifier));
-                            } else if (bin.Left is LuaIndexExpr indexOp) {
-                                DoExpr(indexOp);
-                            } else {
-                                return;
-                            }
-                            LuaValue tableIdentifier = stack.Pop();
-                            LuaValue tableValue = stack.Pop();
-                            LuaValue scope = GetTop();
-                            if (scope is LuaTable scopeTable) {
-                                scopeTable[tableIdentifier] = tableValue;
-                            } else if (scope is LuaNil) {
-                                throw new LuaRuntimeError("Attempt to index '?' a nil value.", stack, this);
-                            } else {
-                                throw new Exception();
-                            }
-                        } else {
-                            DoExpr(bin.Right);
-                            DoExpr(bin.Left);
-                            LuaValue lhs = stack.Pop();
-                            LuaValue rhs = stack.Pop();
-                            stack.Push(bin.Operator switch {
-                                "+" => lhs switch {
-                                    LuaNumber ln when rhs is LuaNumber rn => new LuaNumber(ln + rn),
-                                    _ => throw new Exception(),
-                                },
-                                "-" => lhs switch {
-                                    LuaNumber ln when rhs is LuaNumber rn => new LuaNumber(ln - rn),
-                                    _ => throw new Exception(),
-                                },
-                                "*" => lhs switch {
-                                    LuaNumber ln when rhs is LuaNumber rn => new LuaNumber(ln * rn),
-                                    _ => throw new Exception(),
-                                },
-                                "/" => lhs switch {
-                                    LuaNumber ln when rhs is LuaNumber rn => new LuaNumber(ln / rn),
-                                    _ => throw new Exception(),
-                                },
-                                _ => throw new Exception(),
-                            });
-                        }
-                        break;
-                    case LuaLookupExpr lookup:
-                        DoExpr(lookup.Left);
-                        switch (lookup.Right) {
-                            case LuaIdentifierExpr lid:
-                                stack.Push(Lookup(new LuaString(lid.Identifier)));
-                                break;
-                            case LuaIndexExpr ixe:
-                                DoExpr(ixe.Key);
-                                stack.Push(Lookup(stack.Pop()));
-                                break;
-                            default:
-                                throw new Exception();
-                        }
-                        break;
-                    case LuaTableExpr table:
-                        LuaTable t = new LuaTable();
-                        stack.Push(t);
-                        for (int i = 0; i < table.SubExpressions.Count; i++) {
-                            DoExpr(table.SubExpressions[i]);
-                            stack.Push(t);
-                        }
-                        break;
-                    case LuaNegateExpr negateExpr:
-                        DoExpr(negateExpr.Expr);
-                        LuaValue top = stack.Pop();
-                        if (top is LuaNumber n) {
-                            stack.Push(new LuaNumber(-n));
-                        } else {
-                            stack.Push(top);
-                            throw new LuaRuntimeError($"Attempt to perform arithmetic on a {top.GetLuaType()} value.", stack, this);
-                        }
-                        break;
-                    case LuaValueExpr value:
-                        stack.Push(value.Value);
-                        break;
-                    case LuaIdentifierExpr id: // If at some point we add more lua behaviour, we need to check local registry here before pushing _G)
-                        stack.Push(_G);
-                        stack.Push(Lookup(new LuaString(id.Identifier)));
-                        break;
-                    case LuaIndexExpr iex:
-                        DoExpr(iex.Key);
-                        break;
-                    default:
-                        throw new Exception();
-                }
-            }
-
-            // Invoke top expression
-            DoExpr(expr);
-
-            // Return whatever's on top (or nil if nothing on top)
-            if (stack.Count >= 1)
-                return stack.Pop();
-            else
-                return new LuaNil();
-
-        }
-
-        //
-        // TODO:
-        // Wrap the following two methods in proper try-catch statements so we can run "Lua" safely.
-        //
+        /// <returns>Returns the last thrown <see cref="LuaRuntimeError"/>.</returns>
+        public LuaRuntimeError GetError() => this.m_lastError;
 
         /// <summary>
         /// Do a Lua string expression in the current <see cref="LuaState"/> environment.
         /// </summary>
         /// <param name="luaExpression">The lua-code string containing the expression(s) to do.</param>
         /// <returns>The <see cref="LuaValue"/> that was on top of the stack after execution finished.</returns>
-        public LuaValue DoString(string luaExpression) {
-
-            // Get expressions
-            var expressions = LuaParser.ParseLuaSource(luaExpression);
-            if (expressions.Count == 0) {
-                // TODO: Error
-            }
-
-            // Define lua value to return
-            LuaValue value = new LuaNil();
-
-            // Invoke
-            try {
-                for (int i = 0; i < expressions.Count; i++) {
-                    if (expressions[i] is not LuaOpExpr) {
-                        value = this.DoExpression(expressions[i]);
-                    } else {
-                        // TODO: Stuff
-                    }
-                }
-            } catch (LuaRuntimeError runtime) {
-                this.m_lastError = runtime;
-                Trace.WriteLine(runtime.Message, "LuaRuntimeError");
-                return new LuaNil();
-            } catch {
-                throw;
-            }
-
-            // Return the lua value
-            return value;
-
-        }
+        public LuaValue DoString(string luaExpression) => LuaVM.DoString(this, luaExpression);
 
         /// <summary>
         /// Do a Lua file containing Lua source code in the current <see cref="LuaState"/> envionment.
@@ -230,19 +59,13 @@ namespace Battlegrounds.Lua {
         /// <param name="luaSourceFilePath"></param>
         /// <returns>The <see cref="LuaValue"/> that was on top of the stack after execution finished.</returns>
         /// <exception cref="FileNotFoundException"/>
-        public LuaValue DoFile(string luaSourceFilePath) {
-            if (File.Exists(luaSourceFilePath)) {
-                return this.DoString(File.ReadAllText(luaSourceFilePath));
-            } else {
-                throw new FileNotFoundException(luaSourceFilePath);
-            }
-        }
+        public LuaValue DoFile(string luaSourceFilePath) => LuaVM.DoFile(this, luaSourceFilePath);
 
         /// <summary>
-        /// Get last runtime error (<see langword="null"/> if no runtime error).
+        /// 
         /// </summary>
-        /// <returns>Returns the last thrown <see cref="LuaRuntimeError"/>.</returns>
-        public LuaRuntimeError GetError() => this.m_lastError;
+        /// <param name="luaRuntimeErr"></param>
+        public void SetLastError(LuaRuntimeError luaRuntimeErr) => this.m_lastError = luaRuntimeErr;
 
     }
 

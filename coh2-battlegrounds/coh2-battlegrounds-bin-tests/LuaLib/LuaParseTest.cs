@@ -26,7 +26,7 @@ settings = {
 ";
 
             // Assert parsing and execution runs fine
-            Assert.AreEqual(new LuaNil(), lState.DoString(sourcefile));
+            Assert.AreEqual(new LuaNil(), LuaVM.DoString(lState, sourcefile));
 
             // Assert table values
             Assert.IsNotNull(lState._G["settings"]);
@@ -48,7 +48,7 @@ test = {
 ";
 
             // Assert parsing and execution runs fine
-            Assert.AreEqual(new LuaNil(), lState.DoString(sourcefile));
+            Assert.AreEqual(new LuaNil(), LuaVM.DoString(lState, sourcefile));
 
             // Assert table values
             Assert.IsNotNull(lState._G["test"]);
@@ -70,11 +70,11 @@ test = {
 ";
 
             // Assert parsing and execution runs fine
-            Assert.AreEqual(new LuaNil(), lState.DoString(sourcefile));
+            Assert.AreEqual(new LuaNil(), LuaVM.DoString(lState, sourcefile));
 
             // Assert table values
             Assert.IsNotNull(lState._G["test"]);
-            Assert.AreEqual(new LuaNumber(0), lState.DoString("test.a.a"));
+            Assert.AreEqual(new LuaNumber(0), LuaVM.DoString(lState, "test.a.a"));
 
         }
 
@@ -96,12 +96,12 @@ test = {
 ";
 
             // Assert parsing and execution runs fine
-            Assert.AreEqual(new LuaNil(), lState.DoString(sourcefile));
+            Assert.AreEqual(new LuaNil(), LuaVM.DoString(lState, sourcefile));
 
             // Assert table values
             Assert.IsNotNull(lState._G["test"]);
-            Assert.AreEqual(new LuaBool(false), lState.DoString("test.b[\"Enterprise\"].a"));
-            Assert.AreEqual(new LuaNumber(4.5), lState.DoString("test.a[\"b\"]"));
+            Assert.AreEqual(new LuaBool(false), LuaVM.DoString(lState, "test.b[\"Enterprise\"].a"));
+            Assert.AreEqual(new LuaNumber(4.5), LuaVM.DoString(lState, "test.a[\"b\"]"));
 
         }
 
@@ -126,13 +126,13 @@ test = {
 ";
 
             // Assert parsing and execution runs fine
-            Assert.AreEqual(new LuaNil(), lState.DoString(sourcefile));
+            Assert.AreEqual(new LuaNil(), LuaVM.DoString(lState, sourcefile));
 
             // Assert table values
             Assert.IsNotNull(lState._G["test"]);
-            Assert.AreEqual(new LuaNumber(4.5), lState.DoString("test.a[\"b\"]"));
-            Assert.AreEqual(new LuaBool(false), lState.DoString("test.b[\"Enterprise\"].a"));
-            Assert.AreEqual(new LuaBool(true), lState.DoString("test.b[\"Shenzhou\"].a"));
+            Assert.AreEqual(new LuaNumber(4.5), LuaVM.DoString(lState, "test.a[\"b\"]"));
+            Assert.AreEqual(new LuaBool(false), LuaVM.DoString(lState, "test.b[\"Enterprise\"].a"));
+            Assert.AreEqual(new LuaBool(true), LuaVM.DoString(lState, "test.b[\"Shenzhou\"].a"));
             Assert.AreEqual(lState.InitialGlobalSize + 1, lState._G.Size);
 
         }
@@ -158,13 +158,13 @@ test = {
 ";
 
             // Assert parsing and execution runs fine
-            Assert.AreEqual(new LuaNil(), lState.DoString(sourcefile));
+            Assert.AreEqual(new LuaNil(), LuaVM.DoString(lState, sourcefile));
 
             // Assert table values
             Assert.IsNotNull(lState._G["test"]);
-            Assert.AreEqual(new LuaNumber(4.5), lState.DoString("test.a[\"b\"]"));
-            Assert.AreEqual(new LuaString("Enterprise"), lState.DoString("test.b[1].a"));
-            Assert.AreEqual(new LuaString("Shenzhou"), lState.DoString("test.b[2].a"));
+            Assert.AreEqual(new LuaNumber(4.5), LuaVM.DoString(lState, "test.a[\"b\"]"));
+            Assert.AreEqual(new LuaString("Enterprise"), LuaVM.DoString(lState, "test.b[1].a"));
+            Assert.AreEqual(new LuaString("Shenzhou"), LuaVM.DoString(lState, "test.b[2].a"));
             Assert.AreEqual(lState.InitialGlobalSize + 1, lState._G.Size);
 
         }
@@ -175,7 +175,7 @@ test = {
             string sourcefile = @"5 + 5";
 
             // Assert parsing and execution runs fine
-            Assert.AreEqual(new LuaNumber(10), lState.DoString(sourcefile));
+            Assert.AreEqual(new LuaNumber(10), LuaVM.DoString(lState, sourcefile));
 
         }
 
@@ -185,7 +185,7 @@ test = {
             string sourcefile = @"5 / 5";
 
             // Assert parsing and execution runs fine
-            Assert.AreEqual(new LuaNumber(1), lState.DoString(sourcefile));
+            Assert.AreEqual(new LuaNumber(1), LuaVM.DoString(lState, sourcefile));
 
         }
 
@@ -195,7 +195,7 @@ test = {
             string sourcefile = @"{ e = 5 / 5, b = 5 + 5 }";
 
             // Assert parsing and execution runs fine
-            var val = lState.DoString(sourcefile);
+            var val = LuaVM.DoString(lState, sourcefile);
             Assert.IsInstanceOfType(val, typeof(LuaTable));
             Assert.AreEqual(new LuaNumber(1), (val as LuaTable)["e"]);
             Assert.AreEqual(new LuaNumber(10), (val as LuaTable)["b"]);
@@ -210,7 +210,7 @@ test = {
             string sourcefile = @"{ ""a"", ""b"", ""c"" }";
 
             // Assert parsing and execution runs fine
-            var val = lState.DoString(sourcefile);
+            var val = LuaVM.DoString(lState, sourcefile);
             Assert.IsInstanceOfType(val, typeof(LuaTable));
             Assert.AreEqual(new LuaString("a"), (val as LuaTable).RawIndex<LuaString>(0));
             Assert.AreEqual(new LuaString("b"), (val as LuaTable).RawIndex<LuaString>(1));
@@ -225,7 +225,7 @@ test = {
             string sourcefile = @"{ "" a "", ""  b"", ""c  "" }";
 
             // Assert parsing and execution runs fine
-            var val = lState.DoString(sourcefile);
+            var val = LuaVM.DoString(lState, sourcefile);
             Assert.IsInstanceOfType(val, typeof(LuaTable));
             Assert.AreEqual(new LuaString(" a "), (val as LuaTable).RawIndex<LuaString>(0));
             Assert.AreEqual(new LuaString("  b"), (val as LuaTable).RawIndex<LuaString>(1));
@@ -240,7 +240,7 @@ test = {
             string sourceText = @"-5";
 
             // Assertions
-            var val = lState.DoString(sourceText);
+            var val = LuaVM.DoString(lState, sourceText);
             Assert.IsInstanceOfType(val, typeof(LuaNumber));
             Assert.AreEqual(new LuaNumber(-5), val);
 
@@ -253,7 +253,7 @@ test = {
             string sourceText = @"-5 * 6";
 
             // Assertions
-            var val = lState.DoString(sourceText);
+            var val = LuaVM.DoString(lState, sourceText);
             Assert.IsInstanceOfType(val, typeof(LuaNumber));
             Assert.AreEqual(new LuaNumber(-30), val);
 
@@ -266,7 +266,7 @@ test = {
             string sourceText = @"-5 * 0.5";
 
             // Assertions
-            var val = lState.DoString(sourceText);
+            var val = LuaVM.DoString(lState, sourceText);
             Assert.IsInstanceOfType(val, typeof(LuaNumber));
             Assert.AreEqual(new LuaNumber(-2.5), val);
 
@@ -279,7 +279,7 @@ test = {
             string sourceText = @"{ 0, 1, -5, -7 * 0.5, 5 }";
 
             // Assertions
-            var val = lState.DoString(sourceText);
+            var val = LuaVM.DoString(lState, sourceText);
             Assert.IsInstanceOfType(val, typeof(LuaTable));
 
             // Get table
@@ -299,7 +299,7 @@ test = {
             string sourceText = @"-""hello""";
 
             // Assertions
-            var val = lState.DoString(sourceText);
+            var val = LuaVM.DoString(lState, sourceText);
             Assert.IsInstanceOfType(val, typeof(LuaNil));
 
             var ex = lState.GetError();

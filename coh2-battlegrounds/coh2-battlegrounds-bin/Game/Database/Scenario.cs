@@ -119,8 +119,8 @@ namespace Battlegrounds.Game.Database {
             this.SgaName = string.Empty;
 
             LuaState scenarioState = new LuaState();
-            scenarioState.DoFile(infofile);
-            scenarioState.DoFile(optionsfile);
+            LuaVM.DoFile(scenarioState, infofile);
+            LuaVM.DoFile(scenarioState, optionsfile);
 
             LuaTable headerInfo = scenarioState._G["HeaderInfo"] as LuaTable;
             this.Name = headerInfo["scenarioname"].Str();

@@ -93,7 +93,7 @@ namespace coh2_battlegrounds_console {
             CampaignWeather campaignWeather = default;
 
             // Load lua file
-            if (settingsState.DoFile(settingsFile) is LuaTable manifest) {
+            if (LuaVM.DoFile(settingsState, settingsFile) is LuaTable manifest) {
                 manifest.Pairs((k,v) => {
                     switch (k.Str()) {
                         case "display":
@@ -147,7 +147,7 @@ namespace coh2_battlegrounds_console {
             }
 
             // Load mapdef
-            if (settingsState.DoFile(mapdefPath) is not LuaTable mapdef) {
+            if (LuaVM.DoFile(settingsState, mapdefPath) is not LuaTable mapdef) {
                 Console.WriteLine("Failed read mapdef.lua");
                 return;
             }
@@ -354,7 +354,7 @@ namespace coh2_battlegrounds_console {
                 } else if (rt == ResourceType.GfxMap) {
 
                     LuaState gfxState = new LuaState();
-                    if (gfxState.DoFile(Path.Combine(relativePath, file)) is LuaTable gfxTable) {
+                    if (LuaVM.DoFile(gfxState, Path.Combine(relativePath, file)) is LuaTable gfxTable) {
                         
                         // Load atlas
                         GfxMap atlas = GfxMap.FromLua(gfxTable, Path.Combine(relativePath, name));
@@ -390,7 +390,7 @@ namespace coh2_battlegrounds_console {
                         };
                         if (table["army_file"] is LuaString armyfile) {
                             string readfrom = Path.Combine(dir, armyfile.Str());
-                            if (armyReadState.DoFile(readfrom) is LuaTable armyTable) {
+                            if (LuaVM.DoFile(armyReadState, readfrom) is LuaTable armyTable) {
                                 army.armyComposition = armyTable;
                             }
                             armies.Add(army);
