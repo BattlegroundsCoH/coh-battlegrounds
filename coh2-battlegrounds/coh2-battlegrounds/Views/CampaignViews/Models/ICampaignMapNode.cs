@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using Battlegrounds.Campaigns;
 
 namespace BattlegroundsApp.Views.CampaignViews.Models {
