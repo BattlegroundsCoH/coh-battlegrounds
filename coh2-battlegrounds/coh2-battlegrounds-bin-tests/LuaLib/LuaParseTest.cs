@@ -1,5 +1,6 @@
 ﻿using Battlegrounds.Lua;
 using Battlegrounds.Lua.Debugging;
+using Battlegrounds.Lua.Parsing;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace coh2_battlegrounds_bin_tests.LuaLib {
@@ -307,6 +308,44 @@ test = {
             Assert.AreEqual("Attempt to perform arithmetic on a string value.", ex.Message);
 
         }
+
+        [TestMethod]
+        public void LuaFunctionalTest01() {
+
+            // src, the below is equivalent to [[ ds9 = function() print("Hello Space") end ]]
+            string sourceText = @"
+            function ds9()
+                print(""Hello Space"")
+            end
+            ";
+
+            var luaAST = LuaParser.ParseLuaSource(sourceText);
+            Assert.IsInstanceOfType(luaAST[0], typeof(LuaBinaryExpr));
+
+            var top = luaAST[0] as LuaBinaryExpr;
+            Assert.AreEqual(new LuaIdentifierExpr("ds9"), top.Left);
+            Assert.IsInstanceOfType(top.Right, typeof(LuaFuncExpr));
+
+        }
+
+        [TestMethod]
+        public void LuaFunctionalTest02() {
+
+            string sourceText = @"
+            ds9 = function()
+                print(""Hello Space"")
+            end
+            ";
+
+            var luaAST = LuaParser.ParseLuaSource(sourceText);
+            Assert.IsInstanceOfType(luaAST[0], typeof(LuaBinaryExpr));
+
+            var top = luaAST[0] as LuaBinaryExpr;
+            Assert.AreEqual(new LuaIdentifierExpr("ds9"), top.Left);
+            Assert.IsInstanceOfType(top.Right, typeof(LuaFuncExpr));
+
+        }
+
     }
 
 }

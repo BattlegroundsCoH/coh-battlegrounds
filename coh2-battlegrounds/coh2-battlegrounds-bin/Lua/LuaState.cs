@@ -1,5 +1,9 @@
-﻿using System.IO;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using Battlegrounds.Functional;
 using Battlegrounds.Lua.Debugging;
+using Battlegrounds.Lua.Runtime;
 
 namespace Battlegrounds.Lua {
     
@@ -18,6 +22,21 @@ namespace Battlegrounds.Lua {
         /// </summary>
         public LuaTable _G { get; }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        public TextWriter Out { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public TextReader In { get; set; }
+
+        /// <summary>
+        /// Get or set whether <see cref="System.Diagnostics.Trace"/> should be used.
+        /// </summary>
+        public bool EnableTrace { get; set; } = true;
+
 #pragma warning restore IDE1006 // Naming Styles
 
         /// <summary>
@@ -28,13 +47,28 @@ namespace Battlegrounds.Lua {
         /// <summary>
         /// Create new <see cref="LuaState"/> with <see cref="_G"/> initialized.
         /// </summary>
-        public LuaState() {
+        public LuaState(params string[] libraries) {
             
             // Create _G table
             this._G = new LuaTable();
             this._G["_G"] = this._G; // Assign _G to self
             this._G["__version"] = new LuaString("Battlegrounds.Lua V1.0 (Emulates Lua 5.1)");
-            
+
+            // Set console in and out
+            this.Out = Console.Out;
+            this.In = Console.In;
+
+            // Register libraries
+            libraries.ForEach(x => {
+                switch (x) {
+                    case "base":
+                        LuaBaseLib.ImportLuaBase(this);
+                        break;
+                    default:
+                        break;
+                }
+            });
+
             // Store the size of the initial _G table
             this.m_initialGSize = _G.Size;
 
@@ -66,6 +100,25 @@ namespace Battlegrounds.Lua {
         /// </summary>
         /// <param name="luaRuntimeErr"></param>
         public void SetLastError(LuaRuntimeError luaRuntimeErr) => this.m_lastError = luaRuntimeErr;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="sharpFuncDelegate"></param>
+        public void RegisterFunction(string name, LuaCSharpFuncDelegate sharpFuncDelegate) 
+            => this._G[name] = new LuaClosure(new LuaFunction(sharpFuncDelegate));
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="action"></param>
+        public void RegisterFunction(string name, Action<LuaState, Stack<LuaValue>> action)
+            => this._G[name] = new LuaClosure(new LuaFunction((a,b) => {
+                action(a, b);
+                return 0;
+            }));
 
     }
 
