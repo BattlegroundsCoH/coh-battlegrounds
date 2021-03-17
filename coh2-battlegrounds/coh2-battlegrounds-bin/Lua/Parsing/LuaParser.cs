@@ -199,7 +199,11 @@ namespace Battlegrounds.Lua.Parsing {
         static void ApplyLateSyntaxCheck(List<LuaExpr> luaExprs, int i) {
             static void ApplyBinop(LuaBinaryExpr binop) {
                 if (binop.Left is LuaTableExpr lt) { ApplyTable(lt); }
-                if (binop.Right is LuaTableExpr lr) { ApplyTable(lr); }
+                if (binop.Right is LuaTableExpr lrt) { ApplyTable(lrt); }
+                if (binop.Right is LuaFuncExpr lrf) {
+                    ApplyArgs(lrf.Arguments);
+                    ApplyLateSyntaxCheck(lrf.Body.ScopeBody, 0);
+                }
             }
             static void ApplyTable(LuaTableExpr table) {
                 int j = 0;
@@ -219,11 +223,29 @@ namespace Battlegrounds.Lua.Parsing {
                     j++;
                 }
             }
+            static void ApplyArgs(LuaArguments args) {
+                int j = 0;
+                while (j < args.Arguments.Count) {
+                    if (j + 1 < args.Arguments.Count && args.Arguments[j + 1] is not LuaOpExpr { Type: LuaTokenType.Comma }) {
+                        throw new LuaSyntaxError("',' expected.", $"Insert ',' following '{args.Arguments[j]}'");
+                    } else {
+                        if (j + 1 < args.Arguments.Count) {
+                            args.Arguments.RemoveAt(j + 1);
+                        }
+                    }
+                    j++;
+                }
+            }
             while (i < luaExprs.Count) {
                 if (luaExprs[i] is LuaTableExpr table) {
                     ApplyTable(table);
                 } else if (luaExprs[i] is LuaBinaryExpr binop) {
                     ApplyBinop(binop);
+                } else if (luaExprs[i] is LuaCallExpr call) {
+                    ApplyArgs(call.Arguments);
+                } else if (luaExprs[i] is LuaFuncExpr func) {
+                    ApplyArgs(func.Arguments);
+                    ApplyLateSyntaxCheck(func.Body.ScopeBody, 0);
                 }
                 i++;
             }

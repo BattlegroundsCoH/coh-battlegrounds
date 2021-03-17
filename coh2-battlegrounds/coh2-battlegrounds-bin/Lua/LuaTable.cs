@@ -16,7 +16,7 @@ namespace Battlegrounds.Lua {
     /// <summary>
     /// Representation of a Lua table. Extends <see cref="LuaValue"/> and can be enumerated over.
     /// </summary>
-    public sealed class LuaTable : LuaValue, IEnumerable<KeyValuePair<LuaValue, LuaValue>> {
+    public sealed class LuaTable : LuaValue, IEnumerable<KeyValuePair<LuaValue, LuaValue>>, ICloneable {
 
         private Dictionary<LuaValue, LuaValue> m_table;
         private Dictionary<int, LuaValue> m_rawIndices;
@@ -143,6 +143,11 @@ namespace Battlegrounds.Lua {
         /// <returns>An array of <typeparamref name="T"/> objects.</returns>
         public T[] ToArray<T>() where T : LuaValue => this.m_table.Values.Select(x => x as T).ToArray();
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
         public bool Contains(LuaValue value) {
             foreach (var kv in this) {
                 if (kv.Value == value) {
@@ -152,7 +157,48 @@ namespace Battlegrounds.Lua {
             return false;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="managedObj"></param>
+        /// <returns></returns>
         public bool Contains(object managedObj) => this.Contains(ToLuaValue(managedObj));
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="key"></param>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public bool GetIfExists(string key, out LuaValue value)
+            => this.GetIfExists(new LuaString(key), out value);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="key"></param>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public bool GetIfExists(LuaString key, out LuaValue value) {
+            foreach (var kv in this.m_table) {
+                if (kv.Key.Equals(key)) {
+                    value = kv.Value;
+                    return true;
+                }
+            }
+            value = new LuaNil();
+            return false;
+        }
+
+        public LuaTable Clone() {
+            LuaTable clone = new LuaTable();
+            foreach (var kv in this.m_table) {
+                clone.SetIndexValue(kv.Key, kv.Value);
+            }
+            return clone;
+        }
+
+        object ICloneable.Clone() => this.Clone();
 
         public override string Str() => this.GetHashCode().ToString();
 
@@ -163,7 +209,6 @@ namespace Battlegrounds.Lua {
         IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable)this.m_table).GetEnumerator();
 
         public override int GetHashCode() => this.m_table.GetHashCode();
-    
     }
 
 }

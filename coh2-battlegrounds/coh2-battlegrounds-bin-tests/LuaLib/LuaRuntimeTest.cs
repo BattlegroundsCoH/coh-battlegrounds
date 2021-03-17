@@ -15,7 +15,6 @@ namespace coh2_battlegrounds_bin_tests.LuaLib {
 
         LuaState lState;
         TextWriter writer;
-        TextReader reader;
         StringBuilder writerOutput;
 
         [TestInitialize]
@@ -23,7 +22,6 @@ namespace coh2_battlegrounds_bin_tests.LuaLib {
             writerOutput = new StringBuilder();
             lState = new LuaState("base") {
                 Out = writer = new StringWriter(writerOutput),
-                In = reader = new StreamReader(new MemoryStream())
             };
         }
 
@@ -48,6 +46,24 @@ namespace coh2_battlegrounds_bin_tests.LuaLib {
             var result = LuaVM.DoString(this.lState, sourceText);
             Assert.AreEqual(new LuaNil(), result);
             Assert.AreEqual($"Hello Space{writer.NewLine}", writerOutput.ToString());
+
+        }
+
+        [TestMethod]
+        public void SimpleFunctionTest02() {
+
+            string sourceText = @"
+            function dumdum(a, b)
+                print(a)
+                print(b)
+            end
+            dumdum(42, 69)
+            print(a)
+            ";
+
+            var result = LuaVM.DoString(this.lState, sourceText);
+            Assert.AreEqual(new LuaNil(), result);
+            Assert.AreEqual($"42{writer.NewLine}69{writer.NewLine}nil{writer.NewLine}", writerOutput.ToString());
 
         }
 

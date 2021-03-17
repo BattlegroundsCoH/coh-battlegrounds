@@ -31,8 +31,30 @@ namespace Battlegrounds.Lua {
         /// <param name="stack"></param>
         /// <returns></returns>
         public int Invoke(LuaState callState, Stack<LuaValue> stack) {
-            // TODO: Set captured variables
-            return this.Function.Invoke(callState, stack);
+            if (this.Function.IsCFunction) {
+                return this.Function.Delegate.Invoke(callState, stack);
+            } else {
+
+                // Clone current environment
+                var env = callState.Envionment.Clone();
+
+                // TODO: Set captured variables (always first)
+
+                // Set parameter values                
+                int i = this.Function.Parameters.Length - 1;
+                while (i >= 0) {
+                    callState.Envionment[this.Function.Parameters[i]] = stack.Count > 0 ? stack.Pop() : new LuaNil();
+                    i--;
+                }
+
+                // Invoke expression
+                LuaVM.DoExpression(callState, this.Function.First, new Stack<LuaValue>());
+
+                // Reset environment
+                callState.Envionment = env;
+
+                return 0; // TODO: FIX
+            }
         }
 
         public override bool Equals(LuaValue value) {

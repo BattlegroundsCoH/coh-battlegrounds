@@ -131,9 +131,13 @@ namespace Battlegrounds.Lua {
                     case LuaConstValueExpr value:
                         stack.Push(value.Value);
                         break;
-                    case LuaIdentifierExpr id: // If at some point we add more lua behaviour, we need to check local registry here before pushing _G)
-                        stack.Push(luaState._G);
-                        stack.Push(Lookup(new LuaString(id.Identifier)));
+                    case LuaIdentifierExpr id:
+                        if (luaState.Envionment.GetIfExists(id.Identifier, out LuaValue envValue)) {
+                            stack.Push(envValue);
+                        } else {
+                            stack.Push(luaState._G);
+                            stack.Push(Lookup(new LuaString(id.Identifier)));
+                        }
                         break;
                     case LuaIndexExpr iex:
                         DoExpr(iex.Key);

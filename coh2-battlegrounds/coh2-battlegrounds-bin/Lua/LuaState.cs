@@ -23,12 +23,17 @@ namespace Battlegrounds.Lua {
         public LuaTable _G { get; }
 
         /// <summary>
-        /// 
+        /// Get or set the current environment values (Arguments and local variables).
+        /// </summary>
+        public LuaTable Envionment { get; set; }
+
+        /// <summary>
+        /// Get the output writer of the state.
         /// </summary>
         public TextWriter Out { get; set; }
 
         /// <summary>
-        /// 
+        /// Get the input reader of the state
         /// </summary>
         public TextReader In { get; set; }
 
@@ -53,6 +58,9 @@ namespace Battlegrounds.Lua {
             this._G = new LuaTable();
             this._G["_G"] = this._G; // Assign _G to self
             this._G["__version"] = new LuaString("Battlegrounds.Lua V1.0 (Emulates Lua 5.1)");
+
+            // Initialize envionment
+            this.Envionment = new LuaTable();
 
             // Set console in and out
             this.Out = Console.Out;

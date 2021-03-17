@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿namespace Battlegrounds.Lua {
 
-namespace Battlegrounds.Lua {
-
+    /// <summary>
+    /// 
+    /// </summary>
     public sealed class LuaNil : LuaValue {
 
         public override bool Equals(LuaValue value) => value is LuaNil;
@@ -17,7 +14,9 @@ namespace Battlegrounds.Lua {
         public override LuaType GetLuaType() => LuaType.LUA_NIL;
 
         public override string Str() => "nil";
-        
+
+        public override string ToString() => this.Str();
+
     }
 
 }

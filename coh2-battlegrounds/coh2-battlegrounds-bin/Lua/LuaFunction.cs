@@ -25,7 +25,22 @@ namespace Battlegrounds.Lua {
         private LuaExpr m_luaTop;
 
         /// <summary>
-        /// 
+        /// Get the C# delegate to invoke.
+        /// </summary>
+        public LuaCSharpFuncDelegate Delegate => this.m_csharpDelegate;
+
+        /// <summary>
+        /// Get the top expression to invoke in the function.
+        /// </summary>
+        public LuaExpr First => this.m_luaTop;
+
+        /// <summary>
+        /// Get the parameters.
+        /// </summary>
+        public string[] Parameters => this.m_params;
+
+        /// <summary>
+        /// Get if the <see cref="LuaFunction"/> is a C(#) function.
         /// </summary>
         public bool IsCFunction => this.m_csharpDelegate is not null;
 
@@ -47,21 +62,6 @@ namespace Battlegrounds.Lua {
             this.m_csharpDelegate = null;
             this.m_luaTop = raw;
             this.m_params = parameters;
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="callState"></param>
-        /// <param name="stack"></param>
-        /// <returns></returns>
-        public int Invoke(LuaState callState, Stack<LuaValue> stack) {
-            if (this.IsCFunction) {
-                return this.m_csharpDelegate.Invoke(callState, stack);
-            } else {
-                stack.Push(LuaVM.DoExpression(callState, this.m_luaTop, stack));
-                return stack.Count; // TODO: We may have to make DoExpression return count as well and also return stack
-            }
         }
 
     }

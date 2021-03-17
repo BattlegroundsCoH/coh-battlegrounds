@@ -346,6 +346,31 @@ test = {
 
         }
 
+        [TestMethod]
+        public void LuaFunctionalTest03() {
+
+            string sourceText = @"
+            function dumdum(a, b)
+                print(a)
+                print(b)
+            end
+            dumdum(42, 69)
+            ";
+
+            var luaAST = LuaParser.ParseLuaSource(sourceText);
+            Assert.IsInstanceOfType(luaAST[0], typeof(LuaBinaryExpr));
+            Assert.IsInstanceOfType(luaAST[1], typeof(LuaCallExpr));
+
+            var top = luaAST[0] as LuaBinaryExpr;
+            Assert.AreEqual(new LuaIdentifierExpr("dumdum"), top.Left);
+            Assert.IsInstanceOfType(top.Right, typeof(LuaFuncExpr));
+            Assert.AreEqual(2, (top.Right as LuaFuncExpr).Arguments.Arguments.Count);
+
+            var bottom = luaAST[1] as LuaCallExpr;
+            Assert.AreEqual(2, bottom.Arguments.Arguments.Count);
+
+        }
+
     }
 
 }

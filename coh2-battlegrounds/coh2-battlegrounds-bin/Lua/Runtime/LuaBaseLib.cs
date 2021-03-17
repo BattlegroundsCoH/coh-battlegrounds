@@ -11,7 +11,7 @@ namespace Battlegrounds.Lua.Runtime {
 
         public static void Print(LuaState state, Stack<LuaValue> stack) {
             LuaValue top = stack.Pop();
-            state.Out.WriteLine(top.ToString());
+            state.Out?.WriteLine(top.ToString());
             if (state.EnableTrace) {
                 Trace.WriteLine(top.Str(), "Lua");
             }
