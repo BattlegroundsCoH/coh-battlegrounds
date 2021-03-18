@@ -12,7 +12,11 @@ namespace Battlegrounds.Lua.Parsing {
 
     // https://www.lua.org/manual/5.1/manual.html
 
+    /// <summary>
+    /// Parser class for parsing Lua source code.
+    /// </summary>
     public static class LuaParser {
+        // This file explodes really quickly
 
         private enum LuaTokenType {
             Undefined = 0,
@@ -70,7 +74,7 @@ namespace Battlegrounds.Lua.Parsing {
                     LuaTokenType.TableOpen or LuaTokenType.Dot or LuaTokenType.ExprOpen or
                     LuaTokenType.ExprClose => new LuaOpExpr(tokens[i].Type),
                     LuaTokenType.Comment => new LuaComment(tokens[i].Val),
-                    LuaTokenType.StdOperator or LuaTokenType.RelOperator => new LuaOpExpr(tokens[i].Val),
+                    LuaTokenType.StdOperator or LuaTokenType.RelOperator or LuaTokenType.Concat => new LuaOpExpr(tokens[i].Val),
                     LuaTokenType.Keyword => new LuaKeyword(tokens[i].Val),
                     _ => throw new Exception(),
                 });
@@ -105,6 +109,22 @@ namespace Battlegrounds.Lua.Parsing {
         }
 
         static List<LuaExpr> ApplyScopeGroups(List<LuaExpr> luaExprs, int i, bool endSemicolon) {
+
+            static List<LuaExpr> PickUntil(List<LuaExpr> exprs, int from, Predicate<LuaExpr> predicate, Predicate<LuaExpr> errorPredicate) {
+                List<LuaExpr> elements = new List<LuaExpr>();
+                while (from < exprs.Count) {
+                    if (predicate(exprs[from])) {
+                        break;
+                    } else if (errorPredicate(exprs[from])) {
+                        throw new LuaSyntaxError();
+                    } else {
+                        elements.Add(exprs[from]);
+                        from++;
+                    }
+                }
+                return elements;
+            }
+
             List<LuaExpr> result = new List<LuaExpr>();
             while (i < luaExprs.Count) {
                 if (luaExprs[i] is LuaKeyword { Keyword: "end" } || (endSemicolon && luaExprs[i] is LuaOpExpr { Type: LuaTokenType.Semicolon })) {
@@ -118,7 +138,7 @@ namespace Battlegrounds.Lua.Parsing {
                             var body = ApplyScopeGroups(luaExprs, i + 2, false);
 
                             // Form func
-                            luaExprs[i] = new LuaFuncExpr(lfargs, new LuaScope(body));
+                            luaExprs[i] = new LuaFuncExpr(lfargs, new LuaChunk(body));
 
                             // Remove body + args
                             luaExprs.RemoveRange(i + 1, body.Count + 2);
@@ -148,6 +168,34 @@ namespace Battlegrounds.Lua.Parsing {
                     luaExprs[i] = new LuaReturnStatement(new LuaTupleExpr(sub));
                     luaExprs.RemoveRange(i + 1, sub.Count);
                     result.Add(luaExprs[i]); // Add new statement to "outer" collection
+
+                } else if (luaExprs[i] is LuaKeyword { Keyword: "break" }) {
+                
+                } else if (luaExprs[i] is LuaKeyword { Keyword: "do" }) {
+
+                } else if (luaExprs[i] is LuaKeyword { Keyword: "while" }) {
+
+                    // Get condition
+                    var condition = PickUntil(luaExprs, i+1, u => u is LuaKeyword { Keyword: "do" }, v => v is LuaKeyword);
+                    luaExprs.RemoveRange(i + 1, condition.Count + 1);
+
+                    // Get body
+                    var body = ApplyScopeGroups(luaExprs, i + 1, true);
+                    luaExprs.RemoveRange(i + 1, body.Count + 1);
+
+                    // Create while statement and add to outer collection
+                    luaExprs[i] = new LuaWhileStatement(new LuaChunk(condition), new LuaChunk(body));
+                    result.Add(luaExprs[i]);
+
+                } else if (luaExprs[i] is LuaKeyword { Keyword: "for" }) {
+
+                } else if (luaExprs[i] is LuaKeyword { Keyword: "repeat" }) {
+
+                } else if (luaExprs[i] is LuaKeyword { Keyword: "if" }) {
+
+                } else if (luaExprs[i] is LuaKeyword { Keyword: "elseif" }) {
+
+                } else if (luaExprs[i] is LuaKeyword { Keyword: "else" }) {
 
                 } else {
                     result.Add(luaExprs[i]);
@@ -204,7 +252,7 @@ namespace Battlegrounds.Lua.Parsing {
             for (int i = 0; i < luaExprs.Count; i++) {
                 if (luaExprs[i] is LuaTableExpr tableNode) {
                     ApplyOrderOfOperations(tableNode.SubExpressions);
-                } else if (luaExprs[i] is LuaScope scopeNode) {
+                } else if (luaExprs[i] is LuaChunk scopeNode) {
                     ApplyOrderOfOperations(scopeNode.ScopeBody);
                 } else if (luaExprs[i] is LuaFuncExpr funcExpr) {
                     ApplyOrderOfOperations(funcExpr.Arguments.Arguments);
@@ -216,6 +264,14 @@ namespace Battlegrounds.Lua.Parsing {
                     } else {
                         throw new NotImplementedException();
                     }
+                } else if (luaExprs[i] is LuaWhileStatement whileStatement) {
+                    var cond = whileStatement.Condition as LuaChunk;
+                    ApplyOrderOfOperations(cond.ScopeBody);
+                    if (cond.ScopeBody.Count == 1) {
+                        whileStatement = whileStatement with { Condition = cond.ScopeBody[0] };
+                    }
+                    ApplyOrderOfOperations((whileStatement.Body).ScopeBody);
+                    luaExprs[i] = whileStatement;
                 }
             }
 
@@ -303,6 +359,16 @@ namespace Battlegrounds.Lua.Parsing {
                 }
             }
 
+            void ApplyLocal() {
+                if (luaExprs[i + 1] is LuaAssignExpr laexp) {
+                    luaExprs[i + 1] = laexp with { Local = true };
+                    luaExprs.RemoveAt(i);
+                } else {
+                    // throw error
+                }
+                i--;
+            }
+
             // Run through all expressions and apply appropriate late-syntax
             while (i < luaExprs.Count) {
                 if (luaExprs[i] is LuaTableExpr table) {
@@ -316,6 +382,8 @@ namespace Battlegrounds.Lua.Parsing {
                     ApplyLateSyntaxCheck(func.Body.ScopeBody, 0);
                 } else if (luaExprs[i] is LuaIdentifierExpr or LuaLookupExpr or LuaTupleExpr) {
                     ApplyMultivalueAssignment(luaExprs, ref i);
+                } else if (luaExprs[i] is LuaKeyword { Keyword: "local" }) {
+                    ApplyLocal();
                 }
                 i++;
             }
@@ -353,8 +421,10 @@ namespace Battlegrounds.Lua.Parsing {
                 } else {
                     if (luaExprs[i] is LuaTableExpr singleTable) {
                         ApplyGrammar(singleTable.SubExpressions, 0);
-                    } else if (luaExprs[i] is LuaScope scope) {
+                    } else if (luaExprs[i] is LuaChunk scope) {
                         ApplyGrammar(scope.ScopeBody, 0);
+                    } else if (luaExprs[i] is LuaWhileStatement whileStatement) {
+                        ApplyGrammar(whileStatement.Body.ScopeBody, 0);
                     }
                     i++;
                 }
@@ -367,7 +437,7 @@ namespace Battlegrounds.Lua.Parsing {
                 int j = 0; // using j so we dont confuse with i from outer scope
                 int k = 1; // Lua indexing starts from 1
                 while (j < luaTable.SubExpressions.Count){
-                    if (luaTable.SubExpressions[j] is LuaConstValueExpr or LuaTableExpr or LuaNegateExpr) {
+                    if (luaTable.SubExpressions[j] is LuaConstValueExpr or LuaTableExpr or LuaUnaryExpr) {
                         luaTable.SubExpressions[j] = new LuaAssignExpr(new LuaIndexExpr(new LuaConstValueExpr(new LuaNumber(k))), luaTable.SubExpressions[j], false);
                         k++;
                     } else if (luaTable.SubExpressions[j] is LuaBinaryExpr binaryExpr) {

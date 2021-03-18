@@ -8,6 +8,14 @@
 
         public LuaString(string value) => this.m_internalStringValue = value;
 
+        public LuaValue Num() {
+            if (double.TryParse(this.m_internalStringValue, out double n)) {
+                return new LuaNumber(n);
+            } else {
+                return new LuaNil();
+            }
+        }
+
         public override bool Equals(LuaValue value) {
             if (value is LuaString s) {
                 return s.m_internalStringValue.CompareTo(this.m_internalStringValue) == 0;

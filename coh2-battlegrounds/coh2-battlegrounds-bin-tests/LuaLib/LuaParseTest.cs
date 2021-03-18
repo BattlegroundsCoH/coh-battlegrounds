@@ -400,6 +400,54 @@ test = {
 
         }
 
+        [TestMethod]
+        public void LuaFunctionalTest05() {
+
+            string sourceText = @"
+            local k = 2
+            local function dumdum(a, b)
+                local k = k + 1 -- Should not modify k in outer scope
+                return a + b + k, a * b - k
+            end
+            a, b = dumdum(42, 69)
+            c, d = dumdum(a + k, b / k)
+            print(a .. "":"" .. b)
+            print(c .. "":"" .. d)
+            print(k)";
+
+            var luaAST = LuaParser.ParseLuaSource(sourceText);
+            Assert.IsInstanceOfType(luaAST[0], typeof(LuaAssignExpr));
+            Assert.IsTrue(luaAST[0] is LuaAssignExpr { Local: true });
+
+            Assert.IsInstanceOfType(luaAST[1], typeof(LuaAssignExpr));
+            Assert.IsTrue(luaAST[1] is LuaAssignExpr { Local: true });
+
+        }
+
+        [TestMethod]
+        public void LuaFunctionalTest06() {
+
+            string sourceText = @"
+            local k = 0
+            while k < 50 do
+                print(k)
+            end
+            ";
+
+            // Parse and verify top-level
+            var luaAST = LuaParser.ParseLuaSource(sourceText);
+            Assert.IsInstanceOfType(luaAST[0], typeof(LuaAssignExpr));
+            Assert.IsTrue(luaAST[0] is LuaAssignExpr { Local: true });
+            Assert.IsInstanceOfType(luaAST[1], typeof(LuaWhileStatement));
+
+            // Verify AST
+            var whileStatement = luaAST[1] as LuaWhileStatement;
+            Assert.IsInstanceOfType(whileStatement.Condition, typeof(LuaBinaryExpr));
+            Assert.IsInstanceOfType(whileStatement.Body.ScopeBody[0], typeof(LuaCallExpr));
+
+        }
+
+
     }
 
 }

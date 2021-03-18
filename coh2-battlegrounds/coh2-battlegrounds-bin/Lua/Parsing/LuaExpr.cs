@@ -13,14 +13,19 @@ namespace Battlegrounds.Lua.Parsing {
     public abstract record LuaLookupIdExpr : LuaExpr;
 
     /// <summary>
-    /// 
+    /// Abtract representation of a statement.
     /// </summary>
     public abstract record LuaStatement : LuaExpr;
 
     /// <summary>
-    /// 
+    /// Abstract representation of a value.
     /// </summary>
     public abstract record LuaValueExpr : LuaExpr;
+
+    /// <summary>
+    /// Nop expression (For optional executables)
+    /// </summary>
+    public record LuaNopExpr : LuaExpr;
 
     /// <summary>
     /// Represents a comment in Lua code
@@ -28,9 +33,9 @@ namespace Battlegrounds.Lua.Parsing {
     public record LuaComment(string Comment) : LuaExpr;
 
     /// <summary>
-    /// Represents a lua scope
+    /// Represents a chunk of Lua expressions and statements.
     /// </summary>
-    public record LuaScope(List<LuaExpr> ScopeBody) : LuaExpr;
+    public record LuaChunk(List<LuaExpr> ScopeBody) : LuaExpr;
 
     /// <summary>
     /// Representation of an Operator expression (Should never be executed)
@@ -49,12 +54,17 @@ namespace Battlegrounds.Lua.Parsing {
     public record LuaBinaryExpr(LuaExpr Left, LuaExpr Right, string Operator) : LuaExpr;
 
     /// <summary>
-    /// 
+    /// Assignment expression (Extension of <see cref="LuaBinaryExpr"/>).
     /// </summary>
     public record LuaAssignExpr(LuaExpr Left, LuaExpr Right, bool Local) : LuaBinaryExpr(Left, Right, "=");
 
     /// <summary>
-    /// 
+    /// Unary expression
+    /// </summary>
+    public record LuaUnaryExpr(LuaExpr Expr, string Operator) : LuaExpr;
+
+    /// <summary>
+    /// Tuple expression (List of expressions) - Not an actual tuple.
     /// </summary>
     public record LuaTupleExpr(List<LuaExpr> Values) : LuaExpr;
 
@@ -62,11 +72,6 @@ namespace Battlegrounds.Lua.Parsing {
     /// Value expression.
     /// </summary>
     public record LuaConstValueExpr(LuaValue Value) : LuaValueExpr;
-
-    /// <summary>
-    /// Negate expression
-    /// </summary>
-    public record LuaNegateExpr(LuaExpr Expr) : LuaExpr;
 
     /// <summary>
     /// Identifier expression.
@@ -89,33 +94,79 @@ namespace Battlegrounds.Lua.Parsing {
     public record LuaLookupExpr(LuaExpr Left, LuaLookupIdExpr Right) : LuaExpr;
 
     /// <summary>
-    /// 
+    /// Argument list.
     /// </summary>
     public record LuaArguments(List<LuaExpr> Arguments) : LuaExpr;
 
     /// <summary>
-    /// 
+    /// () group with no contents.
     /// </summary>
     public record LuaEmptyParenthesisGroup() : LuaArguments(new List<LuaExpr>());
 
     /// <summary>
-    /// 
+    /// () group with a single element
     /// </summary>
     public record LuaSingleElementParenthesisGroup(List<LuaExpr> Exprs) : LuaArguments(Exprs);
 
     /// <summary>
-    /// 
+    /// Call epxression
     /// </summary>
     public record LuaCallExpr(LuaExpr ToCall, LuaArguments Arguments) : LuaExpr;
 
     /// <summary>
-    /// 
+    /// Functional value expression (function(...) ... end)
     /// </summary>
-    public record LuaFuncExpr(LuaArguments Arguments, LuaScope Body) : LuaValueExpr;
+    public record LuaFuncExpr(LuaArguments Arguments, LuaChunk Body) : LuaValueExpr;
 
     /// <summary>
-    /// 
+    /// Return statement
     /// </summary>
     public record LuaReturnStatement(LuaExpr Value) : LuaStatement;
+
+    /// <summary>
+    /// Break statement
+    /// </summary>
+    public record LuaBreakStatement : LuaStatement;
+
+    /// <summary>
+    /// {while &lt;Condition&gt; do &lt;Body&gt; end} statement
+    /// </summary>
+    public record LuaWhileStatement(LuaExpr Condition, LuaChunk Body) : LuaStatement;
+
+    /// <summary>
+    /// {do &lt;Body&gt; end} statement
+    /// </summary>
+    public record LuaDoStatement(LuaChunk Body) : LuaStatement;
+
+    /// <summary>
+    /// {for v=e1, e2[, e3] do &lt;Body&gt; end} statement (where e2 = max, e3 = step and is optional)
+    /// </summary>
+    public record LuaNumericForStatement(LuaAssignExpr Var, LuaExpr Limit, LuaExpr Step, LuaChunk Body) : LuaStatement;
+
+    /// <summary>
+    /// {for v_1, ..., v_n in e do &lt;Body&gt; end} statement (where e = iterator function)
+    /// </summary>
+    public record LuaGenericForStatement(List<LuaIdentifierExpr> Vars, LuaExpr Iterator, LuaChunk Body) : LuaStatement;
+    // explist is evaluated only once. Its results are an iterator function, a state, and an initial value for the first iterator variable. - Lua 5.1 manual
+
+    /// <summary>
+    /// {repeat &lt;Body&gt; until &lt;Condition&gt;}  statement
+    /// </summary>
+    public record LuaRepeatStatement(LuaChunk Body, LuaExpr Condition) : LuaStatement;
+
+    /// <summary>
+    /// If ... then ... end statement
+    /// </summary>
+    public record LuaIfStatement : LuaStatement;
+
+    /// <summary>
+    /// Elseif ... then ... end statement
+    /// </summary>
+    public record LuaIfElseStatement : LuaStatement;
+
+    /// <summary>
+    /// Else ... end statement
+    /// </summary>
+    public record LuaElseStatement : LuaStatement;
 
 }

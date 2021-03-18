@@ -49,9 +49,13 @@ namespace Battlegrounds.Lua {
 
             int pop = 0;
             bool halt = false;
+            bool haltLoop = false;
 
             // Do lua expressions
             void DoExpr(LuaExpr exp) {
+                if (halt) {
+                    return;
+                }
 
                 // TODO: Make the whole assignment stuff work a bit better, too much code-duplication, stack popping/pushing
 
@@ -79,7 +83,7 @@ namespace Battlegrounds.Lua {
                 }
 
                 void MultiAssign(bool isLocal, LuaTupleExpr mval) {
-                    int stackSize = mval.Values.Count;
+                    int stackSize = stack.Count;
                     int j = 0;
                     while (j < mval.Values.Count) {
                         if (j < stackSize) {
@@ -98,6 +102,8 @@ namespace Battlegrounds.Lua {
 
                 // Handle expression
                 switch (exp) {
+                    case LuaNopExpr:
+                        break;
                     case LuaAssignExpr assign:
                         DoExpr(assign.Right);
                         if (assign.Left is LuaTupleExpr multival) {
@@ -129,6 +135,39 @@ namespace Battlegrounds.Lua {
                                 LuaNumber ln when rhs is LuaNumber rn => new LuaNumber(ln / rn),
                                 _ => throw new LuaRuntimeError($"Attempt to perform arithmetic on a {LuaType.NoArithmetic(lhs, rhs).GetLuaType()} value.", Repush(stack, lhs, rhs), luaState),
                             },
+                            "%" => lhs switch {
+                                LuaNumber ln when rhs is LuaNumber rn => new LuaNumber(ln % rn),
+                                _ => throw new LuaRuntimeError($"Attempt to perform arithmetic on a {LuaType.NoArithmetic(lhs, rhs).GetLuaType()} value.", Repush(stack, lhs, rhs), luaState),
+                            },
+                            "^" => lhs switch {
+                                LuaNumber ln when rhs is LuaNumber rn => new LuaNumber(Math.Pow(ln, rn)),
+                                _ => throw new LuaRuntimeError($"Attempt to perform arithmetic on a {LuaType.NoArithmetic(lhs, rhs).GetLuaType()} value.", Repush(stack, lhs, rhs), luaState),
+                            },
+                            "~=" => new LuaBool(!lhs.Equals(rhs)),
+                            "==" => new LuaBool(lhs.Equals(rhs)),
+                            ">" => lhs switch {
+                                LuaNumber ln when rhs is LuaNumber rn => new LuaBool(ln > rn),
+                                _ => throw new LuaRuntimeError($"Attempt to compare {lhs.GetLuaType()} with {rhs.GetLuaType()}.", Repush(stack, lhs, rhs), luaState)
+                            },
+                            "<" => lhs switch {
+                                LuaNumber ln when rhs is LuaNumber rn => new LuaBool(ln < rn),
+                                _ => throw new LuaRuntimeError($"Attempt to compare {lhs.GetLuaType()} with {rhs.GetLuaType()}.", Repush(stack, lhs, rhs), luaState)
+                            },
+                            ">=" => lhs switch {
+                                LuaNumber ln when rhs is LuaNumber rn => new LuaBool(ln >= rn),
+                                _ => throw new LuaRuntimeError($"Attempt to compare {lhs.GetLuaType()} with {rhs.GetLuaType()}.", Repush(stack, lhs, rhs), luaState)
+                            },
+                            "<=" => lhs switch {
+                                LuaNumber ln when rhs is LuaNumber rn => new LuaBool(ln <= rn),
+                                _ => throw new LuaRuntimeError($"Attempt to compare {lhs.GetLuaType()} with {rhs.GetLuaType()}.", Repush(stack, lhs, rhs), luaState)
+                            },
+                            ".." => lhs switch {
+                                LuaNumber ln when rhs is LuaNumber rn => new LuaString(ln.Str() + rn.Str()),
+                                LuaNumber ln when rhs is LuaString rs => new LuaString(ln.Str() + rs.Str()),
+                                LuaString ls when rhs is LuaNumber rn => new LuaString(ls.Str() + rn.Str()),
+                                LuaString ls when rhs is LuaString rs => new LuaString(ls.Str() + rs.Str()),
+                                _ => throw new LuaRuntimeError($"Attempt to concatenate a {LuaType.NoConcatenation(lhs, rhs).GetLuaType()} value.", Repush(stack, lhs, rhs), luaState),
+                            },
                             _ => throw new Exception(),
                         });                        
                         break;
@@ -154,14 +193,23 @@ namespace Battlegrounds.Lua {
                             stack.Push(t);
                         }
                         break;
-                    case LuaNegateExpr negateExpr:
-                        DoExpr(negateExpr.Expr);
+                    case LuaUnaryExpr unary:
+                        DoExpr(unary.Expr);
                         LuaValue top = stack.Pop();
-                        if (top is LuaNumber n) {
-                            stack.Push(new LuaNumber(-n));
-                        } else {
-                            throw new LuaRuntimeError($"Attempt to perform arithmetic on a {top.GetLuaType()} value.", Repush(stack, top), luaState);
-                        }
+                        stack.Push(unary.Operator switch {
+                            "-" => top switch {
+                                LuaNumber n => new LuaNumber(-n),
+                                LuaString s => s.Num().IfTrue(sn => sn is LuaNumber).ThenDo(x => new LuaNumber(-(x as LuaNumber)))
+                                .OrDefaultTo(() => throw new LuaRuntimeError($"Attempt to perform arithmetic on a {top.GetLuaType()} value.", Repush(stack, top), luaState)),
+                                _ => throw new LuaRuntimeError($"Attempt to perform arithmetic on a {top.GetLuaType()} value.", Repush(stack, top), luaState),
+                            },
+                            "#" => top switch {
+                                LuaString s => new LuaNumber(s.Length),
+                                LuaTable ut => new LuaNumber(ut.Len()),
+                                _ => throw new Exception()
+                            },
+                            _ => throw new Exception()
+                        });
                         break;
                     case LuaConstValueExpr value:
                         stack.Push(value.Value);
@@ -185,6 +233,9 @@ namespace Battlegrounds.Lua {
                         }
                         halt = true;
                         return;
+                    case LuaBreakStatement:
+                        haltLoop = true;
+                        break;
                     case LuaCallExpr call: {
                             
                             // Push arguments
@@ -210,16 +261,38 @@ namespace Battlegrounds.Lua {
                             stack.Push(closure);
                             break;
                         }
-                    case LuaScope scope:
-                        scope.ScopeBody.ForEach(x => {
-                            if (!halt) {
-                                DoExpr(x);
-                                if (x is LuaCallExpr) { // Is single call expression not used within any context - pop all stack values
-                                    pop.Do(i => stack.Count.IfTrue(_ => stack.Count > 0).Then(() => stack.Pop()));
+                    case LuaChunk chunk: 
+                        {
+                            var env = luaState.Envionment.Clone();
+                            chunk.ScopeBody.ForEach(x => {
+                                if (!halt) {
+                                    DoExpr(x);
+                                    if (x is LuaCallExpr) { // Is single call expression not used within any context - pop all stack values
+                                        pop.Do(i => stack.Count.IfTrue(_ => stack.Count > 0).Then(() => stack.Pop()));
+                                    }
                                 }
+                            });
+                            luaState.Envionment = env;
+                            break;
+                        }
+                    case LuaWhileStatement luaWhile: 
+                        {
+                            var env = luaState.Envionment.Clone();
+                            while (!haltLoop) {
+                                DoExpr(luaWhile.Condition);
+                                if (IsFalse(stack.Pop())) {
+                                    break;
+                                }
+                                luaWhile.Body.ScopeBody.ForEach(x => {
+                                    if (!haltLoop) {
+                                        DoExpr(x);
+                                    }
+                                });
                             }
-                        });
-                        break;
+                            luaState.Envionment = env;
+                            haltLoop = false;
+                            break;
+                        }
                     default:
                         throw new Exception();
                 }
@@ -233,17 +306,20 @@ namespace Battlegrounds.Lua {
 
         }
 
-        //
-        // TODO:
-        // Wrap the following two methods in proper try-catch statements so we can run "Lua" safely.
-        //
-
         private static Stack<LuaValue> Repush(Stack<LuaValue> stack, params LuaValue[] top) {
             for (int i = 0; i < top.Length; i++) {
                 stack.Push(top[i]);
             }
             return stack;
         }
+
+        private static bool IsFalse(LuaValue value)
+            => value is LuaNil or LuaBool { IsTrue: false };
+
+        //
+        // TODO:
+        // Wrap the following two methods in proper try-catch statements so we can run "Lua" safely.
+        //
 
         /// <summary>
         /// Do a Lua string expression in the current <see cref="LuaState"/> environment.

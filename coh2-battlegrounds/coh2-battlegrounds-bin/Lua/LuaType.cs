@@ -59,6 +59,16 @@
         public static LuaValue NoArithmetic(LuaValue left, LuaValue right) => (left.GetLuaType() == LUA_NUMBER) ? right : left;
 
         /// <summary>
+        /// Determine which of two lua values that do not allow concatenation.
+        /// </summary>
+        /// <param name="left">The left-hand side value.</param>
+        /// <param name="right">The right-hand side value.</param>
+        /// <returns>
+        /// If <paramref name="left"/> type is <see cref="LUA_NUMBER"/> or <see cref="LUA_STRING"/> then <paramref name="right"/> is returned; Otherwise <paramref name="left"/> is returned.
+        /// </returns>
+        public static LuaValue NoConcatenation(LuaValue left, LuaValue right) => (left.GetLuaType() == LUA_STRING || left.GetLuaType() == LUA_NUMBER) ? right : left;
+
+        /// <summary>
         /// Determines whether to types values are representing the same type
         /// </summary>
         /// <param name="left">Left type</param>

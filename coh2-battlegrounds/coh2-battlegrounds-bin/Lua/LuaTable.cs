@@ -209,6 +209,22 @@ namespace Battlegrounds.Lua {
         IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable)this.m_table).GetEnumerator();
 
         public override int GetHashCode() => this.m_table.GetHashCode();
+        
+        /// <summary>
+        /// Get the length (as defined by the lua 5.1 manual, NOT accurate).
+        /// </summary>
+        /// <returns>The amount of items indexable from 1 to n.</returns>
+        public int Len() {
+            int len = 0;
+            while (true) {
+                if (this.m_table.ContainsKey(new LuaNumber(len + 1))) {
+                    len++;
+                } else {
+                    return len;
+                }
+            }
+        }
+
     }
 
 }
