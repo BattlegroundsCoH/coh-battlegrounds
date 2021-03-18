@@ -1,5 +1,4 @@
 ﻿using Battlegrounds.Lua;
-using Battlegrounds.Lua.Debugging;
 using Battlegrounds.Lua.Parsing;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -368,6 +367,36 @@ test = {
 
             var bottom = luaAST[1] as LuaCallExpr;
             Assert.AreEqual(2, bottom.Arguments.Arguments.Count);
+
+        }
+
+        [TestMethod]
+        public void LuaFunctionalTest04() {
+
+            string sourceText = @"
+            function dumdum(a, b)
+                return a +  b, a * b
+            end
+            a, b = dumdum(42, 69)
+            print(a)
+            print(b)
+            ";
+
+            var luaAST = LuaParser.ParseLuaSource(sourceText);
+            Assert.IsInstanceOfType(luaAST[0], typeof(LuaBinaryExpr));
+            Assert.IsInstanceOfType(luaAST[1], typeof(LuaBinaryExpr));
+
+            var top = luaAST[0] as LuaBinaryExpr;
+            Assert.AreEqual(new LuaIdentifierExpr("dumdum"), top.Left);
+            Assert.IsInstanceOfType(top.Right, typeof(LuaFuncExpr));
+            Assert.AreEqual(2, (top.Right as LuaFuncExpr).Arguments.Arguments.Count);
+
+            var body = (top.Right as LuaFuncExpr).Body;
+            Assert.IsInstanceOfType(body.ScopeBody[0], typeof(LuaReturnStatement));
+
+            var bottom = luaAST[1] as LuaBinaryExpr;
+            Assert.IsInstanceOfType(bottom.Left, typeof(LuaTupleExpr));
+            Assert.IsInstanceOfType(bottom.Right, typeof(LuaCallExpr));
 
         }
 

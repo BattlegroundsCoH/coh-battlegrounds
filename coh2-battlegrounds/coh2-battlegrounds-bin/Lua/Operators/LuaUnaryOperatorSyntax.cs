@@ -32,6 +32,8 @@ namespace Battlegrounds.Lua.Operators {
         public bool PrePostCondtion(bool pre, bool post) 
             => (this.Position == LuaUnaryPosition.Prefix && post) || (this.Position == LuaUnaryPosition.Postfix && pre);
 
+        public bool IsOperator(LuaExpr source) => source is LuaOpExpr op && op.Type is string s && s == this.OperatorSymbol;
+
     }
 
 }

@@ -67,6 +67,23 @@ namespace coh2_battlegrounds_bin_tests.LuaLib {
 
         }
 
+        [TestMethod]
+        public void SimpleFunctionTest03() {
+
+            string sourceText = @"
+            function dumdum(a, b)
+                return a +  b, a * b
+            end
+            a, b = dumdum(42, 69)
+            print(a)
+            print(b)";
+
+            var result = LuaVM.DoString(this.lState, sourceText);
+            Assert.AreEqual(new LuaNil(), result);
+            Assert.AreEqual($"111{writer.NewLine}2898{writer.NewLine}", writerOutput.ToString());
+
+        }
+
     }
 
 }

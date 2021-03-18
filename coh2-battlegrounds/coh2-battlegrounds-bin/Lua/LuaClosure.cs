@@ -25,12 +25,13 @@ namespace Battlegrounds.Lua {
         }
 
         /// <summary>
-        /// 
+        /// Invoke the referenced <see cref="LuaFunction"/> within the <see cref="LuaState"/> environment.
         /// </summary>
-        /// <param name="callState"></param>
-        /// <param name="stack"></param>
-        /// <returns></returns>
+        /// <param name="callState">The <see cref="LuaState"/> responsible for invoking the closure.</param>
+        /// <param name="stack">The current stack containing <see cref="LuaFunction"/> values.</param>
+        /// <returns>The amount of values returned by the stack.</returns>
         public int Invoke(LuaState callState, Stack<LuaValue> stack) {
+
             if (this.Function.IsCFunction) {
                 return this.Function.Delegate.Invoke(callState, stack);
             } else {
@@ -48,13 +49,21 @@ namespace Battlegrounds.Lua {
                 }
 
                 // Invoke expression
-                LuaVM.DoExpression(callState, this.Function.First, new Stack<LuaValue>());
+                var _stack = LuaVM.DoExpression(callState, this.Function.First);
+                int _stackSz = _stack.Count;
+
+                // Push returned values onto calling stack
+                while (_stack.Count > 0) {
+                    stack.Push(_stack.Pop());
+                }
 
                 // Reset environment
                 callState.Envionment = env;
 
-                return 0; // TODO: FIX
+                // Return stack size
+                return _stackSz;
             }
+
         }
 
         public override bool Equals(LuaValue value) {

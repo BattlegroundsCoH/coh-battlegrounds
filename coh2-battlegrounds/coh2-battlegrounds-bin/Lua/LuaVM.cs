@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using Battlegrounds.Functional;
 using Battlegrounds.Lua.Debugging;
 using Battlegrounds.Lua.Parsing;
 
@@ -20,7 +21,7 @@ namespace Battlegrounds.Lua {
         /// <param name="expr">The <see cref="LuaExpr"/> to run in enviornment.</param>
         /// <param name="stack"></param>
         /// <returns>The <see cref="LuaValue"/> that was on top of the stack after execution finished.</returns>
-        public static LuaValue DoExpression(LuaState luaState, LuaExpr expr, Stack<LuaValue> stack = null) {
+        public static Stack<LuaValue> DoExpression(LuaState luaState, LuaExpr expr, Stack<LuaValue> stack = null) {
 
             // Init Lua stack if none
             if (stack is null) {
@@ -28,17 +29,17 @@ namespace Battlegrounds.Lua {
             }
 
             // Get top value (if none, return _G)
-            LuaValue GetTop() {
+            LuaValue GetTop(bool local) {
                 if (stack.Count > 0) {
                     return stack.Pop();
                 } else {
-                    return luaState._G;
+                    return local ? luaState.Envionment : luaState._G;
                 }
             }
 
             // Lookup function for handling variable lookup
             LuaValue Lookup(LuaValue identifier) {
-                var s = GetTop();
+                var s = GetTop(false);
                 if (s is LuaTable topTable) {
                     return topTable[identifier];
                 } else {
@@ -46,56 +47,90 @@ namespace Battlegrounds.Lua {
                 }
             }
 
+            int pop = 0;
+            bool halt = false;
+
             // Do lua expressions
             void DoExpr(LuaExpr exp) {
 
+                // TODO: Make the whole assignment stuff work a bit better, too much code-duplication, stack popping/pushing
+
+                void PushAssignable(LuaExpr lxp) {
+                    if (lxp is LuaIdentifierExpr declID) {
+                        stack.Push(new LuaString(declID.Identifier));
+                    } else if (lxp is LuaIndexExpr indexOp) {
+                        DoExpr(indexOp);
+                    } else {
+                        return;
+                    }
+                }
+
+                void SingleAssign(bool isLocal, LuaValue identifier = null, LuaValue value = null) {
+                    LuaValue tableIdentifier = identifier is null ? stack.Pop() : identifier;
+                    LuaValue tableValue = value is null ? stack.Pop() : value;
+                    LuaValue assignScope = GetTop(isLocal);
+                    if (assignScope is LuaTable scopeTable) {
+                        scopeTable[tableIdentifier] = tableValue;
+                    } else if (assignScope is LuaNil) {
+                        throw new LuaRuntimeError("Attempt to index '?' a nil value.", stack, luaState);
+                    } else {
+                        throw new Exception();
+                    }
+                }
+
+                void MultiAssign(bool isLocal, LuaTupleExpr mval) {
+                    int stackSize = mval.Values.Count;
+                    int j = 0;
+                    while (j < mval.Values.Count) {
+                        if (j < stackSize) {
+                            var v = stack.Pop();
+                            stack.Push(luaState._G);
+                            stack.Push(v);
+                            PushAssignable(mval.Values[j]);
+                        } else {
+                            stack.Push(new LuaNil());
+                            PushAssignable(mval.Values[j]);
+                        }
+                        SingleAssign(isLocal);
+                        j++;
+                    }
+                }
+
                 // Handle expression
                 switch (exp) {
-                    case LuaBinaryExpr bin:
-                        if (bin.Operator.CompareTo("=") == 0) {
-                            DoExpr(bin.Right);
-                            if (bin.Left is LuaIdentifierExpr declID) {
-                                stack.Push(new LuaString(declID.Identifier));
-                            } else if (bin.Left is LuaIndexExpr indexOp) {
-                                DoExpr(indexOp);
-                            } else {
-                                return;
-                            }
-                            LuaValue tableIdentifier = stack.Pop();
-                            LuaValue tableValue = stack.Pop();
-                            LuaValue scope = GetTop();
-                            if (scope is LuaTable scopeTable) {
-                                scopeTable[tableIdentifier] = tableValue;
-                            } else if (scope is LuaNil) {
-                                throw new LuaRuntimeError("Attempt to index '?' a nil value.", stack, luaState);
-                            } else {
-                                throw new Exception();
-                            }
+                    case LuaAssignExpr assign:
+                        DoExpr(assign.Right);
+                        if (assign.Left is LuaTupleExpr multival) {
+                            MultiAssign(assign.Local, multival);
                         } else {
-                            DoExpr(bin.Right);
-                            DoExpr(bin.Left);
-                            LuaValue lhs = stack.Pop();
-                            LuaValue rhs = stack.Pop();
-                            stack.Push(bin.Operator switch {
-                                "+" => lhs switch {
-                                    LuaNumber ln when rhs is LuaNumber rn => new LuaNumber(ln + rn),
-                                    _ => throw new LuaRuntimeError($"Attempt to perform arithmetic on a {LuaType.NoArithmetic(lhs, rhs).GetLuaType()} value.", Repush(stack, lhs, rhs), luaState),
-                                },
-                                "-" => lhs switch {
-                                    LuaNumber ln when rhs is LuaNumber rn => new LuaNumber(ln - rn),
-                                    _ => throw new LuaRuntimeError($"Attempt to perform arithmetic on a {LuaType.NoArithmetic(lhs, rhs).GetLuaType()} value.", Repush(stack, lhs, rhs), luaState),
-                                },
-                                "*" => lhs switch {
-                                    LuaNumber ln when rhs is LuaNumber rn => new LuaNumber(ln * rn),
-                                    _ => throw new LuaRuntimeError($"Attempt to perform arithmetic on a {LuaType.NoArithmetic(lhs, rhs).GetLuaType()} value.", Repush(stack, lhs, rhs), luaState),
-                                },
-                                "/" => lhs switch {
-                                    LuaNumber ln when rhs is LuaNumber rn => new LuaNumber(ln / rn),
-                                    _ => throw new LuaRuntimeError($"Attempt to perform arithmetic on a {LuaType.NoArithmetic(lhs, rhs).GetLuaType()} value.", Repush(stack, lhs, rhs), luaState),
-                                },
-                                _ => throw new Exception(),
-                            });
+                            PushAssignable(assign.Left);
+                            SingleAssign(assign.Local);
                         }
+                        break;
+                    case LuaBinaryExpr bin:
+                        DoExpr(bin.Right);
+                        DoExpr(bin.Left);
+                        LuaValue lhs = stack.Pop();
+                        LuaValue rhs = stack.Pop();
+                        stack.Push(bin.Operator switch {
+                            "+" => lhs switch {
+                                LuaNumber ln when rhs is LuaNumber rn => new LuaNumber(ln + rn),
+                                _ => throw new LuaRuntimeError($"Attempt to perform arithmetic on a {LuaType.NoArithmetic(lhs, rhs).GetLuaType()} value.", Repush(stack, lhs, rhs), luaState),
+                            },
+                            "-" => lhs switch {
+                                LuaNumber ln when rhs is LuaNumber rn => new LuaNumber(ln - rn),
+                                _ => throw new LuaRuntimeError($"Attempt to perform arithmetic on a {LuaType.NoArithmetic(lhs, rhs).GetLuaType()} value.", Repush(stack, lhs, rhs), luaState),
+                            },
+                            "*" => lhs switch {
+                                LuaNumber ln when rhs is LuaNumber rn => new LuaNumber(ln * rn),
+                                _ => throw new LuaRuntimeError($"Attempt to perform arithmetic on a {LuaType.NoArithmetic(lhs, rhs).GetLuaType()} value.", Repush(stack, lhs, rhs), luaState),
+                            },
+                            "/" => lhs switch {
+                                LuaNumber ln when rhs is LuaNumber rn => new LuaNumber(ln / rn),
+                                _ => throw new LuaRuntimeError($"Attempt to perform arithmetic on a {LuaType.NoArithmetic(lhs, rhs).GetLuaType()} value.", Repush(stack, lhs, rhs), luaState),
+                            },
+                            _ => throw new Exception(),
+                        });                        
                         break;
                     case LuaLookupExpr lookup:
                         DoExpr(lookup.Left);
@@ -142,6 +177,14 @@ namespace Battlegrounds.Lua {
                     case LuaIndexExpr iex:
                         DoExpr(iex.Key);
                         break;
+                    case LuaReturnStatement returnStatement:
+                        if (returnStatement.Value is LuaTupleExpr returnTuple) {
+                            returnTuple.Values.ForEach(DoExpr);
+                        } else {
+                            DoExpr(returnStatement.Value);
+                        }
+                        halt = true;
+                        return;
                     case LuaCallExpr call: {
                             
                             // Push arguments
@@ -153,7 +196,7 @@ namespace Battlegrounds.Lua {
                             // Pop closure and invoke
                             var topValue = stack.Pop();
                             if (topValue is LuaClosure closure) {
-                                closure.Invoke(luaState, stack);
+                                pop = closure.Invoke(luaState, stack);
                             } else {
                                 throw new LuaRuntimeError($"Attempt to run a {topValue.GetLuaType()} value.");
                             }
@@ -168,7 +211,14 @@ namespace Battlegrounds.Lua {
                             break;
                         }
                     case LuaScope scope:
-                        scope.ScopeBody.ForEach(x => DoExpr(x));
+                        scope.ScopeBody.ForEach(x => {
+                            if (!halt) {
+                                DoExpr(x);
+                                if (x is LuaCallExpr) { // Is single call expression not used within any context - pop all stack values
+                                    pop.Do(i => stack.Count.IfTrue(_ => stack.Count > 0).Then(() => stack.Pop()));
+                                }
+                            }
+                        });
                         break;
                     default:
                         throw new Exception();
@@ -178,11 +228,8 @@ namespace Battlegrounds.Lua {
             // Invoke top expression
             DoExpr(expr);
 
-            // Return whatever's on top (or nil if nothing on top)
-            if (stack.Count >= 1)
-                return stack.Pop();
-            else
-                return new LuaNil();
+            // Return the whole stack
+            return stack;
 
         }
 
@@ -218,7 +265,12 @@ namespace Battlegrounds.Lua {
             try {
                 for (int i = 0; i < expressions.Count; i++) {
                     if (expressions[i] is not LuaOpExpr) {
-                        value = DoExpression(luaState, expressions[i]);
+                        var stack = DoExpression(luaState, expressions[i]);
+                        if (stack.Count > 0) {
+                            value = stack.Pop();
+                        } else {
+                            value = new LuaNil();
+                        }
                     } else {
                         // TODO: Stuff
                     }

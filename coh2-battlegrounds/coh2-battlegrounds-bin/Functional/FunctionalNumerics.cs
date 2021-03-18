@@ -12,6 +12,12 @@ namespace Battlegrounds.Functional {
 
         public static bool InRange(this uint n, uint min, uint max) => min <= n && n <= max;
 
+        public static void Do(this int n, Action<int> action) {
+            for (int i = 0; i < n; i++) {
+                action(n);
+            }
+        }
+
     }
 
 }

@@ -49,6 +49,16 @@ namespace Battlegrounds.Lua.Parsing {
     public record LuaBinaryExpr(LuaExpr Left, LuaExpr Right, string Operator) : LuaExpr;
 
     /// <summary>
+    /// 
+    /// </summary>
+    public record LuaAssignExpr(LuaExpr Left, LuaExpr Right, bool Local) : LuaBinaryExpr(Left, Right, "=");
+
+    /// <summary>
+    /// 
+    /// </summary>
+    public record LuaTupleExpr(List<LuaExpr> Values) : LuaExpr;
+
+    /// <summary>
     /// Value expression.
     /// </summary>
     public record LuaConstValueExpr(LuaValue Value) : LuaValueExpr;
@@ -102,5 +112,10 @@ namespace Battlegrounds.Lua.Parsing {
     /// 
     /// </summary>
     public record LuaFuncExpr(LuaArguments Arguments, LuaScope Body) : LuaValueExpr;
+
+    /// <summary>
+    /// 
+    /// </summary>
+    public record LuaReturnStatement(LuaExpr Value) : LuaStatement;
 
 }

@@ -1,22 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using Battlegrounds.Lua.Parsing;
 
 namespace Battlegrounds.Lua {
 
     /// <summary>
-    /// 
+    /// Delegate for an instance of the <see cref="LuaFunction"/> class to use when invoked.
     /// </summary>
-    /// <param name="state"></param>
-    /// <param name="stack"></param>
-    /// <returns></returns>
+    /// <param name="state">The currently executing lua state.</param>
+    /// <param name="stack">The current stack.</param>
+    /// <returns>The amount of values returned by the value.</returns>
     public delegate int LuaCSharpFuncDelegate(LuaState state, Stack<LuaValue> stack); // TODO: Change to LuaClosure
 
     /// <summary>
-    /// 
+    /// Simple container object for keeping track of lua function data.
     /// </summary>
     public class LuaFunction {
 
@@ -45,9 +41,9 @@ namespace Battlegrounds.Lua {
         public bool IsCFunction => this.m_csharpDelegate is not null;
 
         /// <summary>
-        /// 
+        /// Initialize a new <see cref="LuaFunction"/> class as a native C(#) function.
         /// </summary>
-        /// <param name="funcDelegate"></param>
+        /// <param name="funcDelegate">The delegate to execute when a <see cref="LuaClosure"/> is being invoked.</param>
         public LuaFunction(LuaCSharpFuncDelegate funcDelegate) {
             this.m_csharpDelegate = funcDelegate;
             this.m_params = null;
@@ -55,9 +51,10 @@ namespace Battlegrounds.Lua {
         }
 
         /// <summary>
-        /// 
+        /// Initialize a new <see cref="LuaFunction"/> class with lua AST data and parameter data.
         /// </summary>
-        /// <param name="raw"></param>
+        /// <param name="raw">The raw AST code data to execute when a <see cref="LuaClosure"/> is being invoked.</param>
+        /// <param name="parameters">The name of the parameters to map stack values to.</param>
         public LuaFunction(LuaExpr raw, params string[] parameters) {
             this.m_csharpDelegate = null;
             this.m_luaTop = raw;

@@ -20,6 +20,8 @@ namespace Battlegrounds.Lua.Operators {
             return true;
         }
 
+        public bool IsOperator(LuaExpr source) => source is LuaOpExpr op && op.Type is string s && s == this.OperatorSymbol;
+
     }
 
 }
