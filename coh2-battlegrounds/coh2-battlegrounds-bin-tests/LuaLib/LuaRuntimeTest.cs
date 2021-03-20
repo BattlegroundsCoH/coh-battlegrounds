@@ -220,6 +220,28 @@ namespace coh2_battlegrounds_bin_tests.LuaLib {
 
         }
 
+        [TestMethod]
+        public void SimpleFunctionTest10() {
+
+            string sourceText = @"
+            if false then
+                print(""Hello World"")
+            elseif (25 + 25 > 75) then
+                print(""Crazy World"")
+            else
+                print(""This is branched Lua"")
+            end";
+
+            // Run and check output
+            var result = LuaVM.DoString(this.lState, sourceText);
+            Assert.AreEqual(new LuaNil(), result);
+
+            string[] lns = writerOutput.ToString().Split(writer.NewLine);
+            Assert.AreEqual(2, lns.Length);
+            Assert.AreEqual($"This is branched Lua", lns[0]);
+
+        }
+
     }
 
 }

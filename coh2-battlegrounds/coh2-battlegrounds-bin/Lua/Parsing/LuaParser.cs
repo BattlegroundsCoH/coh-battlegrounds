@@ -136,7 +136,7 @@ namespace Battlegrounds.Lua.Parsing {
 
         }
 
-        static List<LuaExpr> ApplyScopeGroups(List<LuaExpr> luaExprs, int i, bool endSemicolon) {
+        static List<LuaExpr> ApplyScopeGroups(List<LuaExpr> luaExprs, int i, bool endSemicolon, bool allowElseif = false) {
 
             static List<LuaExpr> PickUntil(List<LuaExpr> exprs, int from, Predicate<LuaExpr> predicate, Predicate<LuaExpr> errorPredicate) {
                 List<LuaExpr> elements = new List<LuaExpr>();
@@ -281,11 +281,43 @@ namespace Battlegrounds.Lua.Parsing {
 
                 } else if (luaExprs[i] is LuaKeyword { Keyword: "repeat" }) {
 
-                } else if (luaExprs[i] is LuaKeyword { Keyword: "if" }) {
+                } else if (luaExprs[i] is LuaKeyword { Keyword: "if" } or LuaKeyword { Keyword: "elseif" }) {
 
-                } else if (luaExprs[i] is LuaKeyword { Keyword: "elseif" }) {
+                    // Determine if it's a "if" or "elseif"
+                    bool isIfCondition = luaExprs[i] is LuaKeyword { Keyword: "if" };
+                    if (!isIfCondition && !allowElseif) {
+                        throw new LuaSyntaxError("Unexpected elseif");
+                    }
+
+                    // Get condition
+                    var condition = PickUntil(luaExprs, i + 1, u => u is LuaKeyword { Keyword: "then" }, v => v is LuaKeyword);
+                    luaExprs.RemoveRange(i + 1, condition.Count + 1);
+
+                    // Collect body
+                    var body = ApplyScopeGroups(luaExprs, i + 1, false, true);
+                    bool hasFollow = body[^1] is LuaBranchFollow;
+                    luaExprs.RemoveRange(i + 1, body.Count + (hasFollow ? 0 : 1));
+
+                    // Determine if there's a follow-up branch
+                    LuaBranchFollow follow = new LuaEndBranch();
+                    if (hasFollow) {
+                        follow = body[^1] as LuaBranchFollow;
+                        body.RemoveAt(body.Count - 1);
+                    }
+
+                    // Create statement
+                    var conditionChunk = new LuaChunk(condition);
+                    var bodyChunk = new LuaChunk(body);
+                    luaExprs[i] = isIfCondition ? new LuaIfStatement(conditionChunk, bodyChunk, follow) : new LuaIfElseStatement(conditionChunk, bodyChunk, follow);
+                    result.Add(luaExprs[i]);
 
                 } else if (luaExprs[i] is LuaKeyword { Keyword: "else" }) {
+
+                    var body = ApplyScopeGroups(luaExprs, i + 1, false, false);
+                    luaExprs[i] = new LuaElseStatement(new LuaChunk(body));
+                    luaExprs.RemoveRange(i + 1, body.Count + 1);
+
+                    result.Add(luaExprs[i]);
 
                 } else {
                     result.Add(luaExprs[i]);
@@ -329,6 +361,9 @@ namespace Battlegrounds.Lua.Parsing {
                     ApplyOrderOfOperations(tableNode.SubExpressions);
                 } else if (luaExprs[i] is LuaChunk scopeNode) {
                     ApplyOrderOfOperations(scopeNode.ScopeBody);
+                    if (scopeNode.ScopeBody.Count == 1) {
+                        luaExprs[i] = scopeNode.ScopeBody[0];
+                    }
                 } else if (luaExprs[i] is LuaFuncExpr funcExpr) {
                     ApplyOrderOfOperations(funcExpr.Arguments.Arguments);
                     ApplyOrderOfOperations(funcExpr.Body.ScopeBody);
@@ -350,9 +385,30 @@ namespace Battlegrounds.Lua.Parsing {
                     luaExprs[i] = numForStatement;
                 } else if (luaExprs[i] is LuaGenericForStatement genForStatement) {
                     ApplyOrderOfOperations((genForStatement.Body).ScopeBody);
+                } else if (luaExprs[i] is LuaBranch branch) {
+                    luaExprs[i] = RecrusiveOOPBranching(branch);
+                } else if (luaExprs[i] is LuaSingleElementParenthesisGroup single) {
+                    ApplyOrderOfOperations(single.Arguments);
+                    if (single.Arguments.Count == 1) {
+                        luaExprs[i] = single.Arguments[0];
+                    }
                 }
             }
 
+        }
+
+        static LuaBranch RecrusiveOOPBranching(LuaBranch branch) {
+            ApplyOrderOfOperations(branch.Body.ScopeBody);
+            if (branch is LuaIfStatement _if) {
+                _if = RecursiveOOP(_if, _if.Condition, (self, res) => self with { Condition = res });
+                RecrusiveOOPBranching(_if.BranchFollow);
+                return _if;
+            } else if (branch is LuaIfElseStatement _eif) {
+                _eif = RecursiveOOP(_eif, _eif.Condition, (self, res) => self with { Condition = res });
+                RecrusiveOOPBranching(_eif.BranchFollow);
+                return _eif;
+            }
+            return branch;
         }
 
         static T RecursiveOOP<T>(T self, LuaExpr expr, Func<T, LuaExpr, T> mutator) where T : LuaExpr {
@@ -655,6 +711,7 @@ namespace Battlegrounds.Lua.Parsing {
                         "if" => new LuaToken(LuaTokenType.Keyword, match.Value),
                         "else" => new LuaToken(LuaTokenType.Keyword, match.Value),
                         "elseif" => new LuaToken(LuaTokenType.Keyword, match.Value),
+                        "then" => new LuaToken(LuaTokenType.Keyword, match.Value),
                         "in" => new LuaToken(LuaTokenType.Keyword, match.Value),
                         "for" => new LuaToken(LuaTokenType.Keyword, match.Value),
                         "while" => new LuaToken(LuaTokenType.Keyword, match.Value),

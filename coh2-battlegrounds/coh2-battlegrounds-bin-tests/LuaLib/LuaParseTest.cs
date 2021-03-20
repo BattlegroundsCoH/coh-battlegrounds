@@ -519,6 +519,30 @@ test = {
 
         }
 
+        [TestMethod]
+        public void LuaFunctionalTest10() {
+
+            string sourceText = @"
+            if false then
+                print(""Hello World"")
+            elseif (25 + 25 > 75) then
+                print(""Crazy World"")
+            else
+                print(""This is branched Lua"")
+            end";
+
+            // Parse and verify top-level
+            var luaAST = LuaParser.ParseLuaSource(sourceText);
+            Assert.IsInstanceOfType(luaAST[0], typeof(LuaIfStatement));
+
+            // Verify AST
+            var ifStatement = luaAST[0] as LuaIfStatement;
+            Assert.IsInstanceOfType(ifStatement.BranchFollow, typeof(LuaIfElseStatement));
+            var ifElseStatement = ifStatement.BranchFollow as LuaIfElseStatement;
+            Assert.IsInstanceOfType(ifElseStatement.BranchFollow, typeof(LuaElseStatement));
+
+        }
+
     }
 
 }

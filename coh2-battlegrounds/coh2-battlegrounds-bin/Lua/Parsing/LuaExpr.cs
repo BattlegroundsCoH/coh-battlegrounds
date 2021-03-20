@@ -160,18 +160,33 @@ namespace Battlegrounds.Lua.Parsing {
     public record LuaRepeatStatement(LuaChunk Body, LuaExpr Condition) : LuaStatement;
 
     /// <summary>
+    /// Abstract bracnh statement
+    /// </summary>
+    public abstract record LuaBranch(LuaChunk Body) : LuaStatement;
+
+    /// <summary>
+    /// Abstract follow-up branch to a <see cref="LuaBranch"/>.
+    /// </summary>
+    public abstract record LuaBranchFollow(LuaChunk Body) : LuaBranch(Body);
+
+    /// <summary>
     /// If ... then ... end statement
     /// </summary>
-    public record LuaIfStatement : LuaStatement;
+    public record LuaIfStatement(LuaExpr Condition, LuaChunk Body, LuaBranchFollow BranchFollow) : LuaBranch(Body);
 
     /// <summary>
     /// Elseif ... then ... end statement
     /// </summary>
-    public record LuaIfElseStatement : LuaStatement;
+    public record LuaIfElseStatement(LuaExpr Condition, LuaChunk Body, LuaBranchFollow BranchFollow) : LuaBranchFollow(Body);
 
     /// <summary>
     /// Else ... end statement
     /// </summary>
-    public record LuaElseStatement : LuaStatement;
+    public record LuaElseStatement(LuaChunk Body) : LuaBranchFollow(Body);
+
+    /// <summary>
+    /// End of branch
+    /// </summary>
+    public record LuaEndBranch() : LuaBranchFollow(new LuaChunk(new List<LuaExpr>()));
 
 }

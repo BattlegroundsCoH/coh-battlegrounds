@@ -144,9 +144,9 @@ namespace Battlegrounds.Lua.Runtime {
         }
 
         /// <summary>
-        /// 
+        /// Registers basic functionality in the <see cref="LuaState"/>.
         /// </summary>
-        /// <param name="lState"></param>
+        /// <param name="lState">The <see cref="LuaState"/> to import functionality into</param>
         public static void ImportLuaBase(LuaState lState) {
             
             // Register basic functions
@@ -161,6 +161,8 @@ namespace Battlegrounds.Lua.Runtime {
             lState.RegisterFunction("next", Next);
             lState.RegisterFunction("ipairs", IPairs);
             lState.RegisterFunction("pairs", Pairs);
+
+            // Register do/load functions
 
         }
 

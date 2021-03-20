@@ -103,6 +103,17 @@ namespace Battlegrounds.Lua {
                     }
                 }
 
+                void Branch(LuaExpr condition, LuaExpr body, LuaBranchFollow follow) {
+                    DoExpr(condition);
+                    if (IsFalse(stack.Pop())) {
+                        if (follow is not LuaEndBranch) {
+                            DoExpr(follow);
+                        }
+                    } else {
+                        DoExpr(body);
+                    }
+                }
+
                 // Handle expression
                 switch (exp) {
                     case LuaNopExpr:
@@ -369,6 +380,15 @@ namespace Battlegrounds.Lua {
                             luaState.Envionment = env;
                         }
                         haltLoop = false;
+                        break;
+                    case LuaIfStatement lif:
+                        Branch(lif.Condition, lif.Body, lif.BranchFollow);
+                        break;
+                    case LuaIfElseStatement leif:
+                        Branch(leif.Condition, leif.Body, leif.BranchFollow);
+                        break;
+                    case LuaElseStatement le:
+                        DoExpr(le.Body);
                         break;
                     default:
                         throw new Exception();
