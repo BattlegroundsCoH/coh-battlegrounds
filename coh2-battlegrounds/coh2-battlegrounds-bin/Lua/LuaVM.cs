@@ -37,7 +37,7 @@ namespace Battlegrounds.Lua {
                 if (stack.Count > 0 && stack.Peek() is LuaTable) {
                     return stack.Pop();
                 } else {
-                    return local ? /*luaState.Envionment*/ luaState.Envionment.Table : luaState._G;
+                    return local ? luaState.Envionment.Table : luaState._G;
                 }
             }
 
@@ -346,22 +346,28 @@ namespace Battlegrounds.Lua {
                             luaState.Envionment.NewFrame();
                             DoExpr(luaNumFor.Var.Right);
                             string varId = (luaNumFor.Var.Left as LuaIdentifierExpr).Identifier;
-                            LuaNumber controlVar = stack.Pop() as LuaNumber;
-                            DoExpr(luaNumFor.Limit);
-                            LuaNumber limit = stack.Pop() as LuaNumber;
-                            DoExpr(luaNumFor.Step);
-                            LuaNumber step = luaNumFor.Step is not LuaNopExpr ? (stack.Pop() as LuaNumber) : new LuaNumber(1);
-                            if (controlVar is null || limit is null || step is null) {
-                                throw new LuaRuntimeError();
-                            }
-                            while (!haltLoop && !halt) {
-                                if ((step > 0.0 && controlVar <= limit) || (step <= 0 && controlVar >= limit)) {
-                                    luaState.Envionment.Define(varId, controlVar);
-                                    DoExpr(luaNumFor.Body);
-                                    controlVar = new LuaNumber(controlVar + step);
+                            if (stack.Pop() is LuaNumber controlVar) {
+                                DoExpr(luaNumFor.Limit);
+                                if (stack.Pop() is LuaNumber limit) {
+                                    DoExpr(luaNumFor.Step);
+                                    if ((luaNumFor.Step is not LuaNopExpr ? (stack.Pop() as LuaNumber) : new LuaNumber(1)) is LuaNumber step) {
+                                        while (!haltLoop && !halt) {
+                                            if ((step > 0.0 && controlVar <= limit) || (step <= 0 && controlVar >= limit)) {
+                                                luaState.Envionment.Define(varId, controlVar);
+                                                DoExpr(luaNumFor.Body);
+                                                controlVar = new LuaNumber(controlVar + step);
+                                            } else {
+                                                break;
+                                            }
+                                        }
+                                    } else {
+                                        throw new LuaRuntimeError();
+                                    }
                                 } else {
-                                    break;
+                                    throw new LuaRuntimeError();
                                 }
+                            } else {
+                                throw new LuaRuntimeError();
                             }
                             luaState.Envionment.PopFrame();
                         }
