@@ -242,6 +242,107 @@ namespace coh2_battlegrounds_bin_tests.LuaLib {
 
         }
 
+        [TestMethod]
+        public void SimpleFunctionTest11() {
+
+            string sourceText = @"
+            if false then
+                print(""Hello World"")
+            elseif (25 + 25 > 75) then
+                print(""Crazy World"")
+            else
+                if true then
+                    print(""This is branched Lua"")
+                end
+            end";
+
+            // Run and check output
+            var result = LuaVM.DoString(this.lState, sourceText);
+            Assert.AreEqual(new LuaNil(), result);
+
+            string[] lns = writerOutput.ToString().Split(writer.NewLine);
+            Assert.AreEqual(2, lns.Length);
+            Assert.AreEqual($"This is branched Lua", lns[0]);
+
+        }
+
+        [TestMethod]
+        public void SimpleFunctionTest12() {
+
+            string sourceText = @"
+            if false then
+                print(""Hello World"")
+            elseif (25 + 25 > 75) then
+                print(""Crazy World"")
+            else
+                if false then
+                    print(""This is branched Lua"")
+                end
+            end";
+
+            // Run and check output
+            var result = LuaVM.DoString(this.lState, sourceText);
+            Assert.AreEqual(new LuaNil(), result);
+
+            string[] lns = writerOutput.ToString().Split(writer.NewLine);
+            Assert.AreEqual(1, lns.Length);
+
+        }
+
+        [TestMethod]
+        public void SimpleFunctionTest13() {
+
+            string sourceText = @"
+            for i=1, 10 do
+                if i <= 5 then
+                    print(""Hello"")
+                else
+                    break
+                end
+            end
+            print(""done"")";
+
+            // Run and check output
+            var result = LuaVM.DoString(this.lState, sourceText);
+            Assert.AreEqual(new LuaNil(), result);
+
+            string[] lns = writerOutput.ToString().Split(writer.NewLine);
+            Assert.AreEqual(7, lns.Length);
+            Assert.AreEqual("Hello", lns[0]);
+            Assert.AreEqual("Hello", lns[1]);
+            Assert.AreEqual("Hello", lns[2]);
+            Assert.AreEqual("Hello", lns[3]);
+            Assert.AreEqual("Hello", lns[4]);
+            Assert.AreEqual("done", lns[5]);
+
+        }
+
+        [TestMethod]
+        public void SimpleFunctionTest14() {
+
+            string sourceText = @"
+            for i=1, 10 do
+                if i <= 5 then
+                    print(""Hello"")
+                else
+                    return 11
+                end
+            end
+            print(""done"")";
+
+            // Run and check output
+            var result = LuaVM.DoString(this.lState, sourceText);
+            Assert.AreEqual(new LuaNumber(11), result);
+
+            string[] lns = writerOutput.ToString().Split(writer.NewLine);
+            Assert.AreEqual(6, lns.Length);
+            Assert.AreEqual("Hello", lns[0]);
+            Assert.AreEqual("Hello", lns[1]);
+            Assert.AreEqual("Hello", lns[2]);
+            Assert.AreEqual("Hello", lns[3]);
+            Assert.AreEqual("Hello", lns[4]);
+
+        }
     }
 
 }

@@ -59,6 +59,11 @@ namespace Battlegrounds.Lua.Parsing {
     public record LuaAssignExpr(LuaExpr Left, LuaExpr Right, bool Local) : LuaBinaryExpr(Left, Right, "=");
 
     /// <summary>
+    /// Binary logic Lua expression with either "and" or "or" as operator.
+    /// </summary>
+    public record LuaLogicExpr(LuaExpr Left, LuaExpr Right, string Operator) : LuaBinaryExpr(Left, Right, Operator);
+
+    /// <summary>
     /// Unary expression
     /// </summary>
     public record LuaUnaryExpr(LuaExpr Expr, string Operator) : LuaExpr;

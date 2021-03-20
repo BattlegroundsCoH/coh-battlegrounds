@@ -317,6 +317,32 @@ test = {
         }
 
         [TestMethod]
+        public void LuaDataParseRuntest17() {
+
+            // Various NOT parse-run tests
+            Assert.AreEqual(new LuaBool(true), LuaVM.DoString(lState, "not nil"));
+            Assert.AreEqual(new LuaBool(true), LuaVM.DoString(lState, "not false"));
+            Assert.AreEqual(new LuaBool(false), LuaVM.DoString(lState, "not true"));
+            Assert.AreEqual(new LuaBool(false), LuaVM.DoString(lState, "not \"Hello\""));
+
+        }
+
+        [TestMethod]
+        public void LuaDataParseRuntest18() {
+
+            // Various OR and AND parse-run tests (From the lua reference)
+            Assert.AreEqual(new LuaNumber(10), LuaVM.DoString(lState, "10 or 20"));
+            Assert.AreEqual(new LuaNumber(10), LuaVM.DoString(lState, "10 or error()"));
+            Assert.AreEqual(new LuaString("a"), LuaVM.DoString(lState, "nil or \"a\""));
+            Assert.AreEqual(new LuaNil(), LuaVM.DoString(lState, "nil and 10"));
+            Assert.AreEqual(new LuaBool(false), LuaVM.DoString(lState, "false and nil"));
+            Assert.AreEqual(new LuaBool(false), LuaVM.DoString(lState, "false and error()"));
+            Assert.AreEqual(new LuaNil(), LuaVM.DoString(lState, "false or nil"));
+            Assert.AreEqual(new LuaNumber(20), LuaVM.DoString(lState, "10 and 20"));
+
+        }
+
+        [TestMethod]
         public void LuaFunctionalTest01() {
 
             // src, the below is equivalent to [[ ds9 = function() print("Hello Space") end ]]

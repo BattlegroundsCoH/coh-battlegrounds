@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+﻿using Battlegrounds.Lua.Runtime;
 
 namespace Battlegrounds.Lua {
     
@@ -26,7 +26,7 @@ namespace Battlegrounds.Lua {
         /// <param name="callState">The <see cref="LuaState"/> responsible for invoking the closure.</param>
         /// <param name="stack">The current stack containing <see cref="LuaFunction"/> values.</param>
         /// <returns>The amount of values returned by the stack.</returns>
-        public int Invoke(LuaState callState, Stack<LuaValue> stack) {
+        public int Invoke(LuaState callState, LuaStack stack) {
 
             if (this.Function.IsCFunction) {
                 return this.Function.Delegate.Invoke(callState, stack);
@@ -40,7 +40,7 @@ namespace Battlegrounds.Lua {
                 // Set parameter values                
                 int i = this.Function.Parameters.Length - 1;
                 while (i >= 0) {
-                    callState.Envionment[this.Function.Parameters[i]] = stack.Count > 0 ? stack.Pop() : new LuaNil();
+                    callState.Envionment[this.Function.Parameters[i]] = stack.PopOrNil();
                     i--;
                 }
 

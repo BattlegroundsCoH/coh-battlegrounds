@@ -74,4 +74,21 @@ namespace Battlegrounds.Lua.Operators {
 
     }
 
+    /// <summary>
+    /// Lua operator syntax handler for logic operations.
+    /// </summary>
+    public class LuaLogicOperatorSyntax : LuaBinaryOperatorSyntax {
+
+        public LuaLogicOperatorSyntax(string symbol) : base(symbol) { }
+
+        public override bool Apply(List<LuaExpr> luaExprs, int i, Action<List<LuaExpr>> recursiveFunction) {
+            if (base.Apply(luaExprs, i, recursiveFunction)) {
+                var binop = luaExprs[i - 1] as LuaBinaryExpr;
+                luaExprs[i - 1] = new LuaLogicExpr(binop.Left, binop.Right, this.OperatorSymbol);
+                return true;
+            }
+            return false;
+        }
+
+    }
 }

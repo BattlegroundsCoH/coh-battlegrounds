@@ -131,7 +131,7 @@ namespace Battlegrounds.Lua {
         /// </remarks>
         /// <param name="name">The name of the function to register.</param>
         /// <param name="action">The void <see cref="Action{T1, T2}"/> to invoke when the function is called by Lua.</param>
-        public void RegisterFunction(string name, Action<LuaState, Stack<LuaValue>> action)
+        public void RegisterFunction(string name, Action<LuaState, LuaStack> action)
             => this._G[name] = new LuaClosure(new LuaFunction((a,b) => {
                 action(a, b);
                 b.Push(new LuaNil());

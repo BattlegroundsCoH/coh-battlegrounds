@@ -41,9 +41,6 @@ namespace Battlegrounds.Lua.Parsing {
             Comment,
             StdOperator,
             RelOperator,
-            Or,
-            And,
-            Not,
             Concat,
             VarArgs,
             Keyword,
@@ -79,8 +76,8 @@ namespace Battlegrounds.Lua.Parsing {
                     new LuaBinaryOperatorSyntax("<"), new LuaBinaryOperatorSyntax("<="), new LuaBinaryOperatorSyntax(">"), new LuaBinaryOperatorSyntax(">="),
                     new LuaBinaryOperatorSyntax("=="), new LuaBinaryOperatorSyntax("!=")
                 },
-                new ILuaOperatorSyntax[] { new LuaBinaryOperatorSyntax("and") },
-                new ILuaOperatorSyntax[] { new LuaBinaryOperatorSyntax("or") },
+                new ILuaOperatorSyntax[] { new LuaLogicOperatorSyntax("and") },
+                new ILuaOperatorSyntax[] { new LuaLogicOperatorSyntax("or") },
                 new ILuaOperatorSyntax[] { new LuaAssignOperatorSyntax() },
             };
 
@@ -198,7 +195,8 @@ namespace Battlegrounds.Lua.Parsing {
                     result.Add(luaExprs[i]); // Add new statement to "outer" collection
 
                 } else if (luaExprs[i] is LuaKeyword { Keyword: "break" }) {
-                
+                    luaExprs[i] = new LuaBreakStatement();
+                    result.Add(luaExprs[i]);
                 } else if (luaExprs[i] is LuaKeyword { Keyword: "do" }) {
 
                 } else if (luaExprs[i] is LuaKeyword { Keyword: "while" }) {
@@ -705,9 +703,9 @@ namespace Battlegrounds.Lua.Parsing {
                         _ => throw new Exception()
                     }, match.Value),
                     "id" => match.Value switch {
-                        "and" => new LuaToken(LuaTokenType.And, match.Value),
-                        "not" => new LuaToken(LuaTokenType.Not, match.Value),
-                        "or" => new LuaToken(LuaTokenType.Or, match.Value),
+                        "and" => new LuaToken(LuaTokenType.StdOperator, match.Value),
+                        "not" => new LuaToken(LuaTokenType.StdOperator, match.Value),
+                        "or" => new LuaToken(LuaTokenType.StdOperator, match.Value),
                         "if" => new LuaToken(LuaTokenType.Keyword, match.Value),
                         "else" => new LuaToken(LuaTokenType.Keyword, match.Value),
                         "elseif" => new LuaToken(LuaTokenType.Keyword, match.Value),

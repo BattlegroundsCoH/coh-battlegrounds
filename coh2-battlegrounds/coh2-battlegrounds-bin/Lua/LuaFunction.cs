@@ -1,5 +1,5 @@
-﻿using System.Collections.Generic;
-using Battlegrounds.Lua.Parsing;
+﻿using Battlegrounds.Lua.Parsing;
+using Battlegrounds.Lua.Runtime;
 
 namespace Battlegrounds.Lua {
 
@@ -9,7 +9,7 @@ namespace Battlegrounds.Lua {
     /// <param name="state">The currently executing lua state.</param>
     /// <param name="stack">The current stack.</param>
     /// <returns>The amount of values returned by the value.</returns>
-    public delegate int LuaCSharpFuncDelegate(LuaState state, Stack<LuaValue> stack); // TODO: Change to LuaClosure
+    public delegate int LuaCSharpFuncDelegate(LuaState state, LuaStack stack); // TODO: Change to LuaClosure
 
     /// <summary>
     /// Simple container object for keeping track of lua function data.
