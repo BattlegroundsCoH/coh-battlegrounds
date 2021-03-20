@@ -15,22 +15,27 @@ namespace coh2_battlegrounds_bin_tests.LuaLib {
         [TestMethod]
         public void LuaDataParseRunTest01() {
             string sourcefile = @"
-settings = {
-    a = true,
-    b = ""Hello World"",
-    c = 1,
-    d = 2.3,
-    e = false,
-    f = nil,
-}
-";
+            settings = {
+                a = true,
+                b = ""Hello World"",
+                c = 1,
+                d = 2.3,
+                e = false,
+                f = nil,
+            }
+            ";
 
             // Assert parsing and execution runs fine
             Assert.AreEqual(new LuaNil(), LuaVM.DoString(lState, sourcefile));
 
             // Assert table values
             Assert.IsNotNull(lState._G["settings"]);
+            Assert.AreEqual(new LuaBool(true), (lState._G["settings"] as LuaTable)["a"]);
             Assert.AreEqual(new LuaString("Hello World"), (lState._G["settings"] as LuaTable)["b"]);
+            Assert.AreEqual(new LuaNumber(1), (lState._G["settings"] as LuaTable)["c"]);
+            Assert.AreEqual(new LuaNumber(2.3), (lState._G["settings"] as LuaTable)["d"]);
+            Assert.AreEqual(new LuaBool(false), (lState._G["settings"] as LuaTable)["e"]);
+            Assert.AreEqual(new LuaNil(), (lState._G["settings"] as LuaTable)["f"]);
 
         }
 
@@ -38,21 +43,24 @@ settings = {
         public void LuaDataParseRunTest02() {
 
             string sourcefile = @"
-test = {
-    a = {
-        a = 0,
-        b = 4.5
-    },
-    b = ""nil"",
-}
-";
+            test = {
+                a = {
+                    a = 0,
+                    b = 4.5
+                },
+                b = ""nil"",
+            }";
 
             // Assert parsing and execution runs fine
             Assert.AreEqual(new LuaNil(), LuaVM.DoString(lState, sourcefile));
 
             // Assert table values
             Assert.IsNotNull(lState._G["test"]);
-            Assert.AreEqual(new LuaNumber(0), lState._G.ByKey<LuaTable>("test").ByKey<LuaTable>("a").ByKey<LuaNumber>("a"));
+
+            var table = lState._G["test"] as LuaTable;
+            Assert.AreEqual(new LuaNumber(0), table.ByKey<LuaTable>("a").ByKey<LuaNumber>("a"));
+            Assert.AreEqual(new LuaNumber(4.5), table.ByKey<LuaTable>("a").ByKey<LuaNumber>("b"));
+            Assert.AreEqual(new LuaString("nil"), table.ByKey<LuaString>("b"));
 
         }
 
@@ -60,14 +68,14 @@ test = {
         public void LuaDataParseRunTest03() {
 
             string sourcefile = @"
-test = {
-    a = {
-        a = 0,
-        b = 4.5
-    },
-    b = ""nil"",
-}
-";
+            test = {
+                a = {
+                    a = 0,
+                    b = 4.5
+                },
+                b = ""nil"",
+            }
+            ";
 
             // Assert parsing and execution runs fine
             Assert.AreEqual(new LuaNil(), LuaVM.DoString(lState, sourcefile));
@@ -82,18 +90,18 @@ test = {
         public void LuaDataParseRunTest04() {
 
             string sourcefile = @"
-test = {
-    a = {
-        a = 0,
-        b = 4.5
-    },
-    b = {
-        [""Enterprise""] = {
-            a = false
-        }
-    }
-}
-";
+            test = {
+                a = {
+                    a = 0,
+                    b = 4.5
+                },
+                b = {
+                    [""Enterprise""] = {
+                        a = false
+                    }
+                }
+            }
+            ";
 
             // Assert parsing and execution runs fine
             Assert.AreEqual(new LuaNil(), LuaVM.DoString(lState, sourcefile));
@@ -431,8 +439,8 @@ test = {
             local k = 0
             while k < 50 do
                 print(k)
-            end
-            ";
+                k = k + 1
+            end";
 
             // Parse and verify top-level
             var luaAST = LuaParser.ParseLuaSource(sourceText);
@@ -447,6 +455,69 @@ test = {
 
         }
 
+        [TestMethod]
+        public void LuaFunctionalTest07() {
+
+            string sourceText = @"
+            for k = 1, 8, 2 do -- Numeric for statement
+                print(k)
+            end";
+
+            // Parse and verify top-level
+            var luaAST = LuaParser.ParseLuaSource(sourceText);
+            Assert.IsInstanceOfType(luaAST[0], typeof(LuaNumericForStatement));
+
+            // Verify AST
+            var forStatement = luaAST[0] as LuaNumericForStatement;
+            Assert.IsInstanceOfType(forStatement.Var, typeof(LuaAssignExpr));
+            Assert.IsInstanceOfType(forStatement.Step, typeof(LuaExpr));
+            Assert.IsInstanceOfType(forStatement.Limit, typeof(LuaExpr));
+            Assert.IsInstanceOfType(forStatement.Body.ScopeBody[0], typeof(LuaExpr));
+
+        }
+
+        [TestMethod]
+        public void LuaFunctionalTest08() {
+
+            string sourceText = @"
+            for k = 1, 8 do -- Numeric for statement
+                print(k)
+            end";
+
+            // Parse and verify top-level
+            var luaAST = LuaParser.ParseLuaSource(sourceText);
+            Assert.IsInstanceOfType(luaAST[0], typeof(LuaNumericForStatement));
+
+            // Verify AST
+            var forStatement = luaAST[0] as LuaNumericForStatement;
+            Assert.IsInstanceOfType(forStatement.Var, typeof(LuaAssignExpr));
+            Assert.IsInstanceOfType(forStatement.Step, typeof(LuaNopExpr));
+            Assert.IsInstanceOfType(forStatement.Limit, typeof(LuaExpr));
+            Assert.IsInstanceOfType(forStatement.Body.ScopeBody[0], typeof(LuaExpr));
+
+        }
+
+        [TestMethod]
+        public void LuaFunctionalTest09() {
+
+            string sourceText = @"
+            local t = { 1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 2048, 4096 }
+            for k, v in pairs(t) do -- Generic for statement
+                print(""2^"" .. k  .. "" = "" .. v)
+            end";
+
+            // Parse and verify top-level
+            var luaAST = LuaParser.ParseLuaSource(sourceText);
+            Assert.IsInstanceOfType(luaAST[0], typeof(LuaAssignExpr));
+            Assert.IsInstanceOfType(luaAST[1], typeof(LuaGenericForStatement));
+
+            // Verify AST
+            var forStatement = luaAST[1] as LuaGenericForStatement;
+            Assert.AreEqual(forStatement.VarList.Variables.Count, 2);
+            Assert.IsInstanceOfType(forStatement.Iterator, typeof(LuaCallExpr));
+            Assert.AreEqual(1, forStatement.Body.ScopeBody.Count);
+
+        }
 
     }
 

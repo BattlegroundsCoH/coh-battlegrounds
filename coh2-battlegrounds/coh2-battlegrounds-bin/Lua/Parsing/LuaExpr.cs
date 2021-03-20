@@ -91,7 +91,7 @@ namespace Battlegrounds.Lua.Parsing {
     /// <summary>
     /// Value lookup expression
     /// </summary>
-    public record LuaLookupExpr(LuaExpr Left, LuaLookupIdExpr Right) : LuaExpr;
+    public record LuaLookupExpr(LuaExpr Left, LuaLookupIdExpr Right) : LuaLookupIdExpr;
 
     /// <summary>
     /// Argument list.
@@ -119,6 +119,11 @@ namespace Battlegrounds.Lua.Parsing {
     public record LuaFuncExpr(LuaArguments Arguments, LuaChunk Body) : LuaValueExpr;
 
     /// <summary>
+    /// List of variables
+    /// </summary>
+    public record LuaVariableList(List<LuaIdentifierExpr> Variables) : LuaExpr;
+
+    /// <summary>
     /// Return statement
     /// </summary>
     public record LuaReturnStatement(LuaExpr Value) : LuaStatement;
@@ -141,12 +146,12 @@ namespace Battlegrounds.Lua.Parsing {
     /// <summary>
     /// {for v=e1, e2[, e3] do &lt;Body&gt; end} statement (where e2 = max, e3 = step and is optional)
     /// </summary>
-    public record LuaNumericForStatement(LuaAssignExpr Var, LuaExpr Limit, LuaExpr Step, LuaChunk Body) : LuaStatement;
+    public record LuaNumericForStatement(LuaBinaryExpr Var, LuaExpr Limit, LuaExpr Step, LuaChunk Body) : LuaStatement;
 
     /// <summary>
     /// {for v_1, ..., v_n in e do &lt;Body&gt; end} statement (where e = iterator function)
     /// </summary>
-    public record LuaGenericForStatement(List<LuaIdentifierExpr> Vars, LuaExpr Iterator, LuaChunk Body) : LuaStatement;
+    public record LuaGenericForStatement(LuaVariableList VarList, LuaExpr Iterator, LuaChunk Body) : LuaStatement;
     // explist is evaluated only once. Its results are an iterator function, a state, and an initial value for the first iterator variable. - Lua 5.1 manual
 
     /// <summary>

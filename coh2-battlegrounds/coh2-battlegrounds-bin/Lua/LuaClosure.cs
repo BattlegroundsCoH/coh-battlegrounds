@@ -1,25 +1,21 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace Battlegrounds.Lua {
     
     /// <summary>
-    /// 
+    /// Closure value type for Lua. Extends <see cref="LuaValue"/>.
     /// </summary>
     public class LuaClosure : LuaValue {
 
         /// <summary>
-        /// 
+        /// Get the <see cref="LuaFunction"/> to execute when closure is invoked.
         /// </summary>
         public LuaFunction Function { get; }
 
         /// <summary>
-        /// 
+        /// Initialize a new <see cref="LuaClosure"/> class with specified <see cref="LuaFunction"/>.
         /// </summary>
-        /// <param name="function"></param>
+        /// <param name="function">The function to execute when closure is invoked.</param>
         public LuaClosure(LuaFunction function) {
             this.Function = function;
         }
@@ -74,11 +70,13 @@ namespace Battlegrounds.Lua {
             }
         }
 
-        public override int GetHashCode() => 0;
+        public override int GetHashCode() => this.Function.GetHashCode();
 
         public override LuaType GetLuaType() => LuaType.LUA_FUNCTION;
 
         public override string Str() => $"0x:{this.GetHashCode():X8}";
+
+        public override string ToString() => this.Str();
 
     }
 

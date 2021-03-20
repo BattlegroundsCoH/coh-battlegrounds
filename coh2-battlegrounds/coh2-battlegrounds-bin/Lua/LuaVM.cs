@@ -23,6 +23,9 @@ namespace Battlegrounds.Lua {
         /// <returns>The <see cref="LuaValue"/> that was on top of the stack after execution finished.</returns>
         public static Stack<LuaValue> DoExpression(LuaState luaState, LuaExpr expr, Stack<LuaValue> stack = null) {
 
+            // Init debug OP id
+            int opID = 0;
+
             // Init Lua stack if none
             if (stack is null) {
                 stack = new Stack<LuaValue>();
@@ -38,8 +41,8 @@ namespace Battlegrounds.Lua {
             }
 
             // Lookup function for handling variable lookup
-            LuaValue Lookup(LuaValue identifier) {
-                var s = GetTop(false);
+            LuaValue Lookup(LuaValue identifier, LuaValue top = null) {
+                var s = top is null ? GetTop(false) : top;
                 if (s is LuaTable topTable) {
                     return topTable[identifier];
                 } else {
@@ -171,20 +174,32 @@ namespace Battlegrounds.Lua {
                             _ => throw new Exception(),
                         });                        
                         break;
-                    case LuaLookupExpr lookup:
-                        DoExpr(lookup.Left);
-                        switch (lookup.Right) {
-                            case LuaIdentifierExpr lid:
-                                stack.Push(Lookup(new LuaString(lid.Identifier)));
-                                break;
-                            case LuaIndexExpr ixe:
-                                DoExpr(ixe.Key);
-                                stack.Push(Lookup(stack.Pop()));
-                                break;
-                            default:
-                                throw new Exception();
+                    case LuaLookupExpr lookup: 
+                        {
+                            DoExpr(lookup.Left);
+                            switch (lookup.Right) {
+                                case LuaIdentifierExpr id:
+                                    stack.Push(Lookup(new LuaString(id.Identifier)));
+                                    break;
+                                case LuaIndexExpr ixe:
+                                    DoExpr(ixe.Key);
+                                    var keyValue = stack.Pop();
+                                    stack.Push(Lookup(keyValue));
+                                    break;
+                                case LuaLookupExpr lex:
+                                    if (lex.Left is LuaIdentifierExpr lexid) {
+                                        stack.Push(Lookup(new LuaString(lexid.Identifier)));
+                                    } else {
+                                        DoExpr(lex.Left);
+                                    }
+                                    DoExpr(lex.Right);
+                                    stack.Push(Lookup(stack.Pop()));
+                                    break;
+                                default:
+                                    throw new Exception();
+                            }
+                            break;
                         }
-                        break;
                     case LuaTableExpr table:
                         LuaTable t = new LuaTable();
                         stack.Push(t);
@@ -243,7 +258,17 @@ namespace Battlegrounds.Lua {
 
                             // Push closure
                             DoExpr(call.ToCall);
-                            
+
+                            // Log trace etc. (For debugging)
+                            if (luaState.StackTrace) {
+                                string prntName = "???";
+                                if (call.ToCall is LuaIdentifierExpr callee) {
+                                    prntName = callee.Identifier;
+                                }
+                                Trace.WriteLine($"[{opID}] LuaCallExpr [{prntName}] ;; Stack := {string.Join(", ", stack.ToList())}", "LuaStackTrace");
+                                opID++;
+                            }
+
                             // Pop closure and invoke
                             var topValue = stack.Pop();
                             if (topValue is LuaClosure closure) {
@@ -265,7 +290,7 @@ namespace Battlegrounds.Lua {
                         {
                             var env = luaState.Envionment.Clone();
                             chunk.ScopeBody.ForEach(x => {
-                                if (!halt) {
+                                if (!halt && !haltLoop) {
                                     DoExpr(x);
                                     if (x is LuaCallExpr) { // Is single call expression not used within any context - pop all stack values
                                         pop.Do(i => stack.Count.IfTrue(_ => stack.Count > 0).Then(() => stack.Pop()));
@@ -278,24 +303,83 @@ namespace Battlegrounds.Lua {
                     case LuaWhileStatement luaWhile: 
                         {
                             var env = luaState.Envionment.Clone();
-                            while (!haltLoop) {
+                            while (!haltLoop && !halt) {
                                 DoExpr(luaWhile.Condition);
                                 if (IsFalse(stack.Pop())) {
                                     break;
                                 }
-                                luaWhile.Body.ScopeBody.ForEach(x => {
-                                    if (!haltLoop) {
-                                        DoExpr(x);
-                                    }
-                                });
+                                DoExpr(luaWhile.Body);
                             }
                             luaState.Envionment = env;
-                            haltLoop = false;
-                            break;
                         }
+                        haltLoop = false;
+                        break;
+                    case LuaNumericForStatement luaNumFor: 
+                        {
+                            var env = luaState.Envionment.Clone();
+                            DoExpr(luaNumFor.Var.Right);
+                            string varId = (luaNumFor.Var.Left as LuaIdentifierExpr).Identifier;
+                            LuaNumber controlVar = stack.Pop() as LuaNumber;
+                            DoExpr(luaNumFor.Limit);
+                            LuaNumber limit = stack.Pop() as LuaNumber;
+                            DoExpr(luaNumFor.Step);
+                            LuaNumber step = luaNumFor.Step is not LuaNopExpr ? (stack.Pop() as LuaNumber) : new LuaNumber(1);
+                            if (controlVar is null || limit is null || step is null) {
+                                throw new LuaRuntimeError();
+                            }
+                            while (!haltLoop && !halt) {
+                                if ((step > 0.0 && controlVar <= limit) || (step <= 0 && controlVar >= limit)) {
+                                    luaState.Envionment[varId] = controlVar;
+                                    DoExpr(luaNumFor.Body);
+                                    controlVar = new LuaNumber(controlVar + step);
+                                } else {
+                                    break;
+                                }
+                            }
+                            luaState.Envionment = env;
+                        }
+                        haltLoop = false;
+                        break;
+                    case LuaGenericForStatement luaGenFor: 
+                        {
+                            var env = luaState.Envionment.Clone();
+                            DoExpr(luaGenFor.Iterator);
+                            var f = stack.Pop() as LuaClosure;
+                            var s = stack.Pop();
+                            var v = stack.Pop();
+                            while (!haltLoop && !halt) {
+                                stack.Push(s);
+                                stack.Push(v);
+                                int q = f.Invoke(luaState, stack);
+                                for (int k = 0; k < luaGenFor.VarList.Variables.Count; k++) {
+                                    string varID = luaGenFor.VarList.Variables[k].Identifier;
+                                    if (k < q) {
+                                        luaState.Envionment[varID] = stack.Pop();
+                                        if (k == 0) { v = luaState.Envionment[varID]; }
+                                    } else {
+                                        luaState.Envionment[varID] = new LuaNil();
+                                    }
+                                }
+                                if (v is LuaNil) {
+                                    break;
+                                } else {
+                                    DoExpr(luaGenFor.Body);
+                                }
+                            }
+                            luaState.Envionment = env;
+                        }
+                        haltLoop = false;
+                        break;
                     default:
                         throw new Exception();
                 }
+
+                // Log trace etc. (For debugging)
+                if (luaState.StackTrace && exp is not LuaCallExpr) {
+                    Trace.WriteLine($"[{opID}] {exp.GetType().Name} ;; Stack := {string.Join(", ", stack.ToList())}", "LuaStackTrace");
+                    opID++;
+                }
+
             }
 
             // Invoke top expression
@@ -335,21 +419,19 @@ namespace Battlegrounds.Lua {
             }
 
             // Define lua value to return
-            LuaValue value = new LuaNil();
+            LuaValue value;
+
+            // Create chunk
+            Stack<LuaValue> stack = new Stack<LuaValue>();
+            LuaChunk chunk = new LuaChunk(expressions);
 
             // Invoke
             try {
-                for (int i = 0; i < expressions.Count; i++) {
-                    if (expressions[i] is not LuaOpExpr) {
-                        var stack = DoExpression(luaState, expressions[i]);
-                        if (stack.Count > 0) {
-                            value = stack.Pop();
-                        } else {
-                            value = new LuaNil();
-                        }
-                    } else {
-                        // TODO: Stuff
-                    }
+                DoExpression(luaState, chunk, stack);
+                if (stack.Count > 0) {
+                    value = stack.Pop();
+                } else {
+                    value = new LuaNil();
                 }
             } catch (LuaRuntimeError runtime) {
                 luaState.SetLastError(runtime);

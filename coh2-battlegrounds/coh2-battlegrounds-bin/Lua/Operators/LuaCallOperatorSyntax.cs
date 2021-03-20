@@ -4,12 +4,15 @@ using Battlegrounds.Lua.Parsing;
 
 namespace Battlegrounds.Lua.Operators {
 
+    /// <summary>
+    /// Lua operator syntax handler for call operations.
+    /// </summary>
     public class LuaCallOperatorSyntax : ILuaOperatorSyntax {
 
         public string OperatorSymbol => "()";
 
         public bool Apply(List<LuaExpr> luaExprs, int i, Action<List<LuaExpr>> recursiveFunction) {
-            if (i - 1 >= 0 && luaExprs[i-1] is LuaIdentifierExpr or LuaLookupExpr) {
+            if (i - 1 >= 0 && luaExprs[i-1] is LuaLookupIdExpr) {
                 
                 // Set args
                 var largs = luaExprs[i] as LuaArguments;

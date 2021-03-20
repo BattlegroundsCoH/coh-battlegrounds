@@ -24,6 +24,8 @@ namespace Battlegrounds.Lua {
         
         public override LuaType GetLuaType() => LuaType.LUA_BOOL;
 
+        public override string ToString() => this.Str();
+
     }
 
 }

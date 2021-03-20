@@ -22,6 +22,7 @@ namespace coh2_battlegrounds_bin_tests.LuaLib {
             writerOutput = new StringBuilder();
             lState = new LuaState("base") {
                 Out = writer = new StringWriter(writerOutput),
+                StackTrace = true,
             };
         }
 
@@ -40,8 +41,7 @@ namespace coh2_battlegrounds_bin_tests.LuaLib {
             function ds9()
                 print(""Hello Space"")
             end
-            ds9()
-            ";
+            ds9()";
 
             var result = LuaVM.DoString(this.lState, sourceText);
             Assert.AreEqual(new LuaNil(), result);
@@ -58,8 +58,7 @@ namespace coh2_battlegrounds_bin_tests.LuaLib {
                 print(b)
             end
             dumdum(42, 69)
-            print(a)
-            ";
+            print(a)";
 
             var result = LuaVM.DoString(this.lState, sourceText);
             Assert.AreEqual(new LuaNil(), result);
@@ -129,11 +128,9 @@ namespace coh2_battlegrounds_bin_tests.LuaLib {
             // Verify locals are done correctly
             Assert.AreEqual(new LuaNil(), this.lState._G["k"]);
             Assert.AreEqual(new LuaNil(), this.lState._G["dumdum"]);
-            Assert.AreEqual(new LuaNumber(2), this.lState.Envionment["k"]);
-            Assert.AreNotEqual(new LuaNil(), this.lState.Envionment["dumdum"]);
+            Assert.AreEqual(0, this.lState.Envionment.Size); // Environment should now be closed --> We sould not be able to access k or dumdum
 
         }
-
 
         [TestMethod]
         public void SimpleFunctionTest06() {
@@ -143,8 +140,7 @@ namespace coh2_battlegrounds_bin_tests.LuaLib {
             while k < 50 do
                 print(k)
                 k = k + 1
-            end
-            ";
+            end";
 
             // Run and check output
             var result = LuaVM.DoString(this.lState, sourceText);
@@ -158,6 +154,72 @@ namespace coh2_battlegrounds_bin_tests.LuaLib {
             }
 
         }
+
+        [TestMethod]
+        public void SimpleFunctionTest07() {
+
+            string sourceText = @"
+            for k = 1, 8, 2 do -- Numeric for statement
+                print(k)
+            end";
+
+            // Run and check output
+            var result = LuaVM.DoString(this.lState, sourceText);
+            Assert.AreEqual(new LuaNil(), result);
+
+            string[] lns = writerOutput.ToString().Split(writer.NewLine);
+            Assert.AreEqual(5, lns.Length);
+
+            for (int i = 0; i < 8; i += 2) {
+                Assert.AreEqual((i+1).ToString(), lns[i / 2]);
+            }
+
+        }
+
+        [TestMethod]
+        public void SimpleFunctionTest08() {
+
+            string sourceText = @"
+            for k = 1, 8 do -- Numeric for statement
+                print(k)
+            end";
+
+            // Run and check output
+            var result = LuaVM.DoString(this.lState, sourceText);
+            Assert.AreEqual(new LuaNil(), result);
+
+            string[] lns = writerOutput.ToString().Split(writer.NewLine);
+            Assert.AreEqual(9, lns.Length);
+
+            for (int i = 0; i < 8; i++) {
+                Assert.AreEqual((i + 1).ToString(), lns[i]);
+            }
+
+        }
+
+        [TestMethod]
+        public void SimpleFunctionTest09() {
+
+            string sourceText = @"
+            local t = { 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 2048, 4096 }
+            for k, v in pairs(t) do -- Generic for statement
+                print(""2^"" .. k  .. "" = "" .. v)
+            end";
+
+            // Run and check output
+            var result = LuaVM.DoString(this.lState, sourceText);
+            Assert.AreEqual(new LuaNil(), result);
+
+            string[] lns = writerOutput.ToString().Split(writer.NewLine);
+            Assert.AreEqual(13, lns.Length);
+
+            for (int i = 0; i < 8; i++) {
+                int v = (int)Math.Pow(2, i + 1);
+                Assert.AreEqual($"2^{i+1} = {v}", lns[i]);
+            }
+
+        }
+
     }
 
 }

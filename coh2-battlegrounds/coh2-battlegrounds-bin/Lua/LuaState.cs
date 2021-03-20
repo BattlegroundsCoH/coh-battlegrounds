@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.IO;
 using Battlegrounds.Functional;
@@ -42,6 +43,11 @@ namespace Battlegrounds.Lua {
         /// </summary>
         public bool EnableTrace { get; set; } = true;
 
+        /// <summary>
+        /// Get or set whether the <see cref="LuaVM"/> should trace stack data.
+        /// </summary>
+        public bool StackTrace { get; set; } = false;
+
 #pragma warning restore IDE1006 // Naming Styles
 
         /// <summary>
@@ -67,7 +73,7 @@ namespace Battlegrounds.Lua {
             this.In = Console.In;
 
             // Register libraries
-            libraries.ForEach(x => {
+            libraries.Distinct().ForEach(x => {
                 switch (x) {
                     case "base":
                         LuaBaseLib.ImportLuaBase(this);
@@ -104,28 +110,32 @@ namespace Battlegrounds.Lua {
         public LuaValue DoFile(string luaSourceFilePath) => LuaVM.DoFile(this, luaSourceFilePath);
 
         /// <summary>
-        /// 
+        /// Set the last <see cref="LuaRuntimeError"/> that occured.
         /// </summary>
-        /// <param name="luaRuntimeErr"></param>
+        /// <param name="luaRuntimeErr">The last <see cref="LuaRuntimeError"/> instance.</param>
         public void SetLastError(LuaRuntimeError luaRuntimeErr) => this.m_lastError = luaRuntimeErr;
 
         /// <summary>
-        /// 
+        /// Register a function within the global environment.
         /// </summary>
-        /// <param name="name"></param>
-        /// <param name="sharpFuncDelegate"></param>
+        /// <param name="name">The name of the function to register.</param>
+        /// <param name="sharpFuncDelegate">The <see cref="LuaCSharpFuncDelegate"/> delegate to use as function.</param>
         public void RegisterFunction(string name, LuaCSharpFuncDelegate sharpFuncDelegate) 
             => this._G[name] = new LuaClosure(new LuaFunction(sharpFuncDelegate));
 
         /// <summary>
-        /// 
+        /// Register a void function within the global environment.
         /// </summary>
-        /// <param name="name"></param>
-        /// <param name="action"></param>
+        /// <remarks>
+        /// This will convert the given <see cref="Action{T1, T2}"/> into a <see cref="LuaCSharpFuncDelegate"/> that pushes a <see cref="LuaNil"/> value on the stack.
+        /// </remarks>
+        /// <param name="name">The name of the function to register.</param>
+        /// <param name="action">The void <see cref="Action{T1, T2}"/> to invoke when the function is called by Lua.</param>
         public void RegisterFunction(string name, Action<LuaState, Stack<LuaValue>> action)
             => this._G[name] = new LuaClosure(new LuaFunction((a,b) => {
                 action(a, b);
-                return 0;
+                b.Push(new LuaNil());
+                return 1;
             }));
 
     }

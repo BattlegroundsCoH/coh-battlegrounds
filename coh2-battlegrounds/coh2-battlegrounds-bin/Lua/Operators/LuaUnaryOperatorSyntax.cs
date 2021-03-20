@@ -4,15 +4,24 @@ using Battlegrounds.Lua.Parsing;
 
 namespace Battlegrounds.Lua.Operators {
     
+    /// <summary>
+    /// The expected position of the operator symbol a Lua unary operation.
+    /// </summary>
     public enum LuaUnaryPosition {
         Prefix,
         Postfix,
     }
 
+    /// <summary>
+    /// Lua operator syntax handler for unary operations.
+    /// </summary>
     public class LuaUnaryOperatorSyntax : ILuaOperatorSyntax {
 
         public string OperatorSymbol { get; }
 
+        /// <summary>
+        /// Get the expected position of the operator symbol.
+        /// </summary>
         public LuaUnaryPosition Position { get; }
 
         public LuaUnaryOperatorSyntax(string symbol, LuaUnaryPosition position) {

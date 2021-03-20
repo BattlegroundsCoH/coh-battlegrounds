@@ -18,7 +18,7 @@ namespace Battlegrounds.Lua.Parsing {
     public static class LuaParser {
         // This file explodes really quickly
 
-        private enum LuaTokenType {
+        public enum LuaTokenType {
             Undefined = 0,
             Number,
             Integer,
@@ -37,7 +37,7 @@ namespace Battlegrounds.Lua.Parsing {
             Comma,
             Equals,
             Semicolon,
-            Dot,
+            Look,
             Comment,
             StdOperator,
             RelOperator,
@@ -49,10 +49,41 @@ namespace Battlegrounds.Lua.Parsing {
             Keyword,
         }
 
+        /// <summary>
+        /// Parsing token for Lua src.
+        /// </summary>
         private record LuaToken(LuaTokenType Type, string Val);
 
+        /// <summary>
+        /// Regex for Lua tokens.
+        /// </summary>
         private static readonly Regex LuaRegex 
             = new Regex(@"(?<c>--.*\n)|(?<n>\d*\.\d+)|(?<i>\d+)|(?<b>true|false)|(?<nil>nil)|(?<op>(=|,|\+|-|\*|/|;|\.|#|<|>|~|\^|:|%)+)|(?<e>\(|\))|(?<t>\{|\}|\[|\])|(?<id>(_|\w)(_|\d|\w)*)|(?<s>\"".*?\"")");
+
+        /// <summary>
+        /// Operator presedence table.
+        /// </summary>
+        private static ILuaOperatorSyntax[][] luaOperatorPresedence = new ILuaOperatorSyntax[][] {
+                new ILuaOperatorSyntax[] { new LuaCallOperatorSyntax() },
+                new ILuaOperatorSyntax[] { new LuaIndexOperatorSyntax() },
+                new ILuaOperatorSyntax[] { new LuaLookupOperatorSyntax(":"), new LuaLookupOperatorSyntax(".") },
+                new ILuaOperatorSyntax[] { new LuaBinaryOperatorSyntax("^") },
+                new ILuaOperatorSyntax[] {
+                    new LuaUnaryOperatorSyntax("not", LuaUnaryPosition.Prefix), new LuaUnaryOperatorSyntax("#", LuaUnaryPosition.Prefix),
+                    new LuaUnaryOperatorSyntax("-", LuaUnaryPosition.Prefix)
+                },
+                new ILuaOperatorSyntax[] { new LuaBinaryOperatorSyntax("*"), new LuaBinaryOperatorSyntax("/"), new LuaBinaryOperatorSyntax("%") },
+                new ILuaOperatorSyntax[] { new LuaBinaryOperatorSyntax("+"), new LuaBinaryOperatorSyntax("-") },
+                new ILuaOperatorSyntax[] { new LuaBinaryOperatorSyntax("..") },
+                new ILuaOperatorSyntax[] {
+                    new LuaBinaryOperatorSyntax("<"), new LuaBinaryOperatorSyntax("<="), new LuaBinaryOperatorSyntax(">"), new LuaBinaryOperatorSyntax(">="),
+                    new LuaBinaryOperatorSyntax("=="), new LuaBinaryOperatorSyntax("!=")
+                },
+                new ILuaOperatorSyntax[] { new LuaBinaryOperatorSyntax("and") },
+                new ILuaOperatorSyntax[] { new LuaBinaryOperatorSyntax("or") },
+                new ILuaOperatorSyntax[] { new LuaAssignOperatorSyntax() },
+            };
+
 
         public static List<LuaExpr> ParseLuaSource(string sourceText) {
             
@@ -71,7 +102,7 @@ namespace Battlegrounds.Lua.Parsing {
                     LuaTokenType.Number => new LuaConstValueExpr(new LuaNumber(double.Parse(tokens[i].Val))),
                     LuaTokenType.Comma or LuaTokenType.Equals or LuaTokenType.IndexClose or 
                     LuaTokenType.IndexOpen or LuaTokenType.Semicolon or LuaTokenType.TableClose or
-                    LuaTokenType.TableOpen or LuaTokenType.Dot or LuaTokenType.ExprOpen or
+                    LuaTokenType.TableOpen or LuaTokenType.Look or LuaTokenType.ExprOpen or
                     LuaTokenType.ExprClose => new LuaOpExpr(tokens[i].Type),
                     LuaTokenType.Comment => new LuaComment(tokens[i].Val),
                     LuaTokenType.StdOperator or LuaTokenType.RelOperator or LuaTokenType.Concat => new LuaOpExpr(tokens[i].Val),
@@ -94,14 +125,11 @@ namespace Battlegrounds.Lua.Parsing {
             // Apply OOP
             ApplyOrderOfOperations(expressions);
 
-            // Apply grammar
-            ApplyGrammar(expressions, 0);
-
             // Apply implicit behaviour (like implict indexing)
             ApplyImplicitBehaviour(expressions, 0);
 
-            // Apply late-syntax check
-            ApplyLateSyntaxCheck(expressions, 0);
+            // Apply grammar
+            ApplyGrammar(expressions, 0);
 
             // Return expressions
             return expressions;
@@ -189,6 +217,68 @@ namespace Battlegrounds.Lua.Parsing {
 
                 } else if (luaExprs[i] is LuaKeyword { Keyword: "for" }) {
 
+                    // Get statement
+                    var condition = PickUntil(luaExprs, i + 1, u => u is LuaKeyword { Keyword: "do" }, v => v is LuaKeyword and not LuaKeyword { Keyword: "in" });
+                    luaExprs.RemoveRange(i + 1, condition.Count + 1);
+
+                    // Get body
+                    var body = ApplyScopeGroups(luaExprs, i + 1, true);
+                    luaExprs.RemoveRange(i + 1, body.Count + 1);
+
+                    // Create while statement and add to outer collection
+                    int stop = condition.FindIndex(x => x is LuaKeyword { Keyword: "in" });
+                    if (stop != -1) { // Is "generic"
+
+                        // Pick variable list
+                        var _varargs = condition.Take(stop).ToList();
+                        CheckCommas(_varargs, 0);
+                        LuaVariableList varls = null;
+                        if (!_varargs.All(x => x is LuaIdentifierExpr)) {
+                            throw new LuaSyntaxError();
+                        } else {
+                            varls = new LuaVariableList(_varargs.Select(x => x as LuaIdentifierExpr).ToList());
+                        }
+
+                        // Properly fetch iterators
+                        condition = condition.Skip(stop + 1).ToList();
+                        ApplyOrderOfOperations(condition);
+
+                        // Set for statement
+                        luaExprs[i] = new LuaGenericForStatement(varls, condition.Count == 1 ? condition[0] : throw new LuaSyntaxError(), new LuaChunk(body));
+
+                    } else { // is "numeric"
+
+                        // Select var
+                        stop = condition.FindIndex(x => x is LuaOpExpr { Type: LuaTokenType.Comma });
+                        var _var = condition.Take(stop).ToList();
+
+                        ApplyOrderOfOperations(_var);
+                        if (_var.Count != 1 && _var[0] is not LuaBinaryExpr) {
+                            throw new LuaSyntaxError();
+                        }
+
+                        condition = condition.Skip(stop + 1).ToList();
+
+                        // Select limit
+                        stop = condition.FindIndex(x => x is LuaOpExpr { Type: LuaTokenType.Comma });
+                        bool hasStep = stop != -1;
+                        if (!hasStep) {
+                            stop = condition.Count;
+                        }
+
+                        var _limit = new LuaChunk(condition.Take(stop).ToList());
+                        condition = condition.Skip(stop + 1).ToList();
+
+                        // Select step
+                        LuaExpr _step = hasStep ? new LuaChunk(condition) : new LuaNopExpr();
+
+                        // Set for statement
+                        luaExprs[i] = new LuaNumericForStatement((_var[0] as LuaAssignExpr) with { Local = true }, _limit, _step, new LuaChunk(body));
+
+                    }
+
+                    result.Add(luaExprs[i]);
+
                 } else if (luaExprs[i] is LuaKeyword { Keyword: "repeat" }) {
 
                 } else if (luaExprs[i] is LuaKeyword { Keyword: "if" }) {
@@ -207,30 +297,11 @@ namespace Battlegrounds.Lua.Parsing {
 
         static void ApplyOrderOfOperations(List<LuaExpr> luaExprs) {
 
-            ILuaOperatorSyntax[][] order = new ILuaOperatorSyntax[][] {
-                //new ILuaOperatorSyntax[] { new LuaIndexOperatorSyntax() },
-                //new ILuaOperatorSyntax[] { new LuaLookupOperatorSyntax(":"), new LuaLookupOperatorSyntax(".") },
-                new ILuaOperatorSyntax[] { new LuaCallOperatorSyntax() },
-                new ILuaOperatorSyntax[] { new LuaBinaryOperatorSyntax("^") },
-                new ILuaOperatorSyntax[] { 
-                    new LuaUnaryOperatorSyntax("not", LuaUnaryPosition.Prefix), new LuaUnaryOperatorSyntax("#", LuaUnaryPosition.Prefix),
-                    new LuaUnaryOperatorSyntax("-", LuaUnaryPosition.Prefix) 
-                },
-                new ILuaOperatorSyntax[] { new LuaBinaryOperatorSyntax("*"), new LuaBinaryOperatorSyntax("/"), new LuaBinaryOperatorSyntax("%") },
-                new ILuaOperatorSyntax[] { new LuaBinaryOperatorSyntax("+"), new LuaBinaryOperatorSyntax("-") },
-                new ILuaOperatorSyntax[] { new LuaBinaryOperatorSyntax("..") },
-                new ILuaOperatorSyntax[] {
-                    new LuaBinaryOperatorSyntax("<"), new LuaBinaryOperatorSyntax("<="), new LuaBinaryOperatorSyntax(">"), new LuaBinaryOperatorSyntax(">="),
-                    new LuaBinaryOperatorSyntax("=="), new LuaBinaryOperatorSyntax("!=")
-                },
-                new ILuaOperatorSyntax[] { new LuaBinaryOperatorSyntax("and") },
-                new ILuaOperatorSyntax[] { new LuaBinaryOperatorSyntax("or") },
-                new ILuaOperatorSyntax[] { new LuaBinaryOperatorSyntax("=") },
-            };
+            // Run through all operators
+            for (int i = 0; i < luaOperatorPresedence.Length; i++) {
 
-            for (int i = 0; i < order.Length; i++) {
-
-                var ops = order[i];
+                // Get current available operators to consider
+                var ops = luaOperatorPresedence[i];
 
                 int j = 0;
                 while (j < luaExprs.Count) {
@@ -250,7 +321,11 @@ namespace Battlegrounds.Lua.Parsing {
 
             // Run recursively
             for (int i = 0; i < luaExprs.Count; i++) {
-                if (luaExprs[i] is LuaTableExpr tableNode) {
+                if (luaExprs[i] is LuaBinaryExpr binop) {
+                    if (binop.Right is LuaTableExpr table) {
+                        ApplyOrderOfOperations(table.SubExpressions);
+                    }
+                } else if (luaExprs[i] is LuaTableExpr tableNode) {
                     ApplyOrderOfOperations(tableNode.SubExpressions);
                 } else if (luaExprs[i] is LuaChunk scopeNode) {
                     ApplyOrderOfOperations(scopeNode.ScopeBody);
@@ -265,16 +340,29 @@ namespace Battlegrounds.Lua.Parsing {
                         throw new NotImplementedException();
                     }
                 } else if (luaExprs[i] is LuaWhileStatement whileStatement) {
-                    var cond = whileStatement.Condition as LuaChunk;
-                    ApplyOrderOfOperations(cond.ScopeBody);
-                    if (cond.ScopeBody.Count == 1) {
-                        whileStatement = whileStatement with { Condition = cond.ScopeBody[0] };
-                    }
+                    whileStatement = RecursiveOOP(whileStatement, whileStatement.Condition, (self, res) => self with { Condition = res });
                     ApplyOrderOfOperations((whileStatement.Body).ScopeBody);
                     luaExprs[i] = whileStatement;
+                } else if (luaExprs[i] is LuaNumericForStatement numForStatement) {
+                    numForStatement = RecursiveOOP(numForStatement, numForStatement.Limit, (self, res) => self with { Limit = res });
+                    numForStatement = RecursiveOOP(numForStatement, numForStatement.Step, (self, res) => self with { Step = res });
+                    ApplyOrderOfOperations((numForStatement.Body).ScopeBody);
+                    luaExprs[i] = numForStatement;
+                } else if (luaExprs[i] is LuaGenericForStatement genForStatement) {
+                    ApplyOrderOfOperations((genForStatement.Body).ScopeBody);
                 }
             }
 
+        }
+
+        static T RecursiveOOP<T>(T self, LuaExpr expr, Func<T, LuaExpr, T> mutator) where T : LuaExpr {
+            if (expr is LuaChunk chunk) {
+                ApplyOrderOfOperations(chunk.ScopeBody);
+                if (chunk.ScopeBody.Count == 1) {
+                    return mutator(self, chunk.ScopeBody[0]);
+                }
+            }
+            return self;
         }
 
         static void CheckCommas(List<LuaExpr> exprs, int i) {
@@ -298,7 +386,7 @@ namespace Battlegrounds.Lua.Parsing {
 
         }
 
-        static void ApplyLateSyntaxCheck(List<LuaExpr> luaExprs, int i) {
+        static void ApplyGrammar(List<LuaExpr> luaExprs, int i) {
             
             // Apply binary operation
             static void ApplyBinop(LuaBinaryExpr binop) {
@@ -315,7 +403,7 @@ namespace Battlegrounds.Lua.Parsing {
                     ApplyTable(lrt); 
                 } else if (binop.Right is LuaFuncExpr lrf) {
                     ApplyArgs(lrf.Arguments);
-                    ApplyLateSyntaxCheck(lrf.Body.ScopeBody, 0);
+                    ApplyGrammar(lrf.Body.ScopeBody, 0);
                 } else if(binop.Right is LuaCallExpr rc) {
                     ApplyArgs(rc.Arguments);
                 }
@@ -327,7 +415,7 @@ namespace Battlegrounds.Lua.Parsing {
                 int j = 0;
                 while (j < table.SubExpressions.Count) {
                     if (table.SubExpressions[j] is LuaTableExpr sub) {
-                        ApplyLateSyntaxCheck(sub.SubExpressions, 0);
+                        ApplyGrammar(sub.SubExpressions, 0);
                     } else if (table.SubExpressions[j] is LuaBinaryExpr tablebin) {
                         ApplyBinop(tablebin);
                     }
@@ -359,6 +447,7 @@ namespace Battlegrounds.Lua.Parsing {
                 }
             }
 
+            // Apply local modifier
             void ApplyLocal() {
                 if (luaExprs[i + 1] is LuaAssignExpr laexp) {
                     luaExprs[i + 1] = laexp with { Local = true };
@@ -367,6 +456,21 @@ namespace Battlegrounds.Lua.Parsing {
                     // throw error
                 }
                 i--;
+            }
+
+            // Apply for-statement corrections
+            void ApplyForStatement(LuaExpr expr) {
+                if (expr is LuaGenericForStatement generic) {
+                    ApplyGrammar(generic.Body.ScopeBody, 0);
+                } else if (expr is LuaNumericForStatement numeric) {
+                    ApplyGrammar(numeric.Body.ScopeBody, 0);
+                    if (numeric.Limit is LuaBinaryExpr lim) {
+                        ApplyBinop(lim);
+                    }
+                    if (numeric.Step is LuaBinaryExpr step) {
+                        ApplyBinop(step);
+                    }
+                }
             }
 
             // Run through all expressions and apply appropriate late-syntax
@@ -379,56 +483,17 @@ namespace Battlegrounds.Lua.Parsing {
                     ApplyArgs(call.Arguments);
                 } else if (luaExprs[i] is LuaFuncExpr func) {
                     ApplyArgs(func.Arguments);
-                    ApplyLateSyntaxCheck(func.Body.ScopeBody, 0);
+                    ApplyGrammar(func.Body.ScopeBody, 0);
                 } else if (luaExprs[i] is LuaIdentifierExpr or LuaLookupExpr or LuaTupleExpr) {
                     ApplyMultivalueAssignment(luaExprs, ref i);
                 } else if (luaExprs[i] is LuaKeyword { Keyword: "local" }) {
                     ApplyLocal();
+                } else if (luaExprs[i] is LuaGenericForStatement or LuaNumericForStatement) {
+                    ApplyForStatement(luaExprs[i]);
                 }
                 i++;
             }
 
-        }
-
-        static void ApplyGrammar(List<LuaExpr> luaExprs, int i) {
-            while (i < luaExprs.Count) {
-                bool hasNext = i + 1 < luaExprs.Count;
-                bool hasPrev = i - 1 >= 0;
-                if (hasNext && hasPrev && luaExprs[i] is LuaOpExpr { Type: LuaTokenType.Equals }) {
-                    if (luaExprs[i + 1] is LuaTableExpr tableExpr) {
-                        ApplyGrammar(tableExpr.SubExpressions, 0);
-                    } else if (luaExprs[i + 1] is LuaFuncExpr lfunc) {
-                        ApplyGrammar(lfunc.Arguments.Arguments, 0);
-                        ApplyGrammar(lfunc.Body.ScopeBody, 0);
-                    }
-                    luaExprs[i - 1] = new LuaAssignExpr(luaExprs[i - 1], luaExprs[i + 1], false);
-                    luaExprs.RemoveRange(i, 2);
-                } else if (hasNext && hasPrev && luaExprs[i] is LuaOpExpr op && op.Type is string opStr) {
-                    if (luaExprs[i + 1] is LuaTableExpr tableExpr) {
-                        ApplyGrammar(tableExpr.SubExpressions, 0);
-                    }
-                    luaExprs[i - 1] = new LuaBinaryExpr(luaExprs[i - 1], luaExprs[i + 1], opStr);
-                    luaExprs.RemoveRange(i, 2);
-                } else if (hasNext && hasPrev && luaExprs[i] is LuaOpExpr dotOp && (LuaTokenType)dotOp.Type == LuaTokenType.Dot) {
-                    if (luaExprs[i + 1] is LuaTableExpr tableExpr) {
-                        ApplyGrammar(tableExpr.SubExpressions, 0);
-                    }
-                    luaExprs[i - 1] = new LuaLookupExpr(luaExprs[i - 1], luaExprs[i + 1] as LuaLookupIdExpr);
-                    luaExprs.RemoveRange(i, 2);
-                } else if (hasPrev && luaExprs[i] is LuaIndexExpr && luaExprs[i - 1] is not LuaOpExpr { Type: LuaTokenType.Comma }) {
-                    luaExprs[i - 1] = new LuaLookupExpr(luaExprs[i - 1], luaExprs[i] as LuaLookupIdExpr);
-                    luaExprs.RemoveAt(i);
-                } else {
-                    if (luaExprs[i] is LuaTableExpr singleTable) {
-                        ApplyGrammar(singleTable.SubExpressions, 0);
-                    } else if (luaExprs[i] is LuaChunk scope) {
-                        ApplyGrammar(scope.ScopeBody, 0);
-                    } else if (luaExprs[i] is LuaWhileStatement whileStatement) {
-                        ApplyGrammar(whileStatement.Body.ScopeBody, 0);
-                    }
-                    i++;
-                }
-            }
         }
 
         static void ApplyImplicitBehaviour(List<LuaExpr> luaExprs, int i) {
@@ -563,7 +628,8 @@ namespace Battlegrounds.Lua.Parsing {
                         "," => LuaTokenType.Comma,
                         "=" => LuaTokenType.Equals,
                         ";" => LuaTokenType.Semicolon,
-                        "." => LuaTokenType.Dot,
+                        "." => LuaTokenType.Look,
+                        ":" => LuaTokenType.Look,
                         ".." => LuaTokenType.Concat,
                         "..." => LuaTokenType.VarArgs,
                         "+" => LuaTokenType.StdOperator,

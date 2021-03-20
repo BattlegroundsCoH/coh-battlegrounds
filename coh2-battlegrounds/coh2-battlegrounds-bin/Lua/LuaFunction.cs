@@ -61,6 +61,8 @@ namespace Battlegrounds.Lua {
             this.m_params = parameters;
         }
 
+        public override int GetHashCode() => this.IsCFunction ? this.m_csharpDelegate.GetHashCode() : this.m_luaTop.GetHashCode();
+
     }
 
 }
