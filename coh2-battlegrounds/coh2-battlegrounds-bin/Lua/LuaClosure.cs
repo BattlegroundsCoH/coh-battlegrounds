@@ -33,14 +33,14 @@ namespace Battlegrounds.Lua {
             } else {
 
                 // Clone current environment
-                var env = callState.Envionment.Clone();
+                callState.Envionment.NewFrame();
 
                 // TODO: Set captured variables (always first)
 
                 // Set parameter values                
                 int i = this.Function.Parameters.Length - 1;
                 while (i >= 0) {
-                    callState.Envionment[this.Function.Parameters[i]] = stack.PopOrNil();
+                    callState.Envionment.Define(this.Function.Parameters[i], stack.PopOrNil());
                     i--;
                 }
 
@@ -54,7 +54,7 @@ namespace Battlegrounds.Lua {
                 }
 
                 // Reset environment
-                callState.Envionment = env;
+                callState.Envionment.PopFrame();
 
                 // Return stack size
                 return _stackSz;

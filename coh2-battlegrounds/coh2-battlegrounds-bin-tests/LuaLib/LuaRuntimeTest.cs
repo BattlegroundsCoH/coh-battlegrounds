@@ -128,7 +128,7 @@ namespace coh2_battlegrounds_bin_tests.LuaLib {
             // Verify locals are done correctly
             Assert.AreEqual(new LuaNil(), this.lState._G["k"]);
             Assert.AreEqual(new LuaNil(), this.lState._G["dumdum"]);
-            Assert.AreEqual(0, this.lState.Envionment.Size); // Environment should now be closed --> We sould not be able to access k or dumdum
+            //Assert.AreEqual(0, this.lState.Envionment.Size); // Environment should now be closed --> We sould not be able to access k or dumdum
 
         }
 
@@ -343,6 +343,31 @@ namespace coh2_battlegrounds_bin_tests.LuaLib {
             Assert.AreEqual("Hello", lns[4]);
 
         }
+
+        [TestMethod]
+        [Timeout(500)]
+        public void SimpleFunctionTest15() {
+
+            string sourceText = @"
+            local k = 0
+            while k < 50 do
+                print(k)
+                k = k + 1
+            end";
+
+            // Run and check output
+            var result = LuaVM.DoString(this.lState, sourceText);
+            Assert.AreEqual(new LuaNil(), result);
+
+            string[] lns = writerOutput.ToString().Split(writer.NewLine);
+            Assert.AreEqual(51, lns.Length);
+
+            for (int i = 0; i < 50; i++) {
+                Assert.AreEqual(i.ToString(), lns[i]);
+            }
+
+        }
+
     }
 
 }

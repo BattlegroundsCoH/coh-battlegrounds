@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -33,10 +34,10 @@ namespace Battlegrounds.Lua {
 
             // Get top value (if none, return _G)
             LuaValue GetTop(bool local) {
-                if (stack.Count > 0) {
+                if (stack.Count > 0 && stack.Peek() is LuaTable) {
                     return stack.Pop();
                 } else {
-                    return local ? luaState.Envionment : luaState._G;
+                    return local ? /*luaState.Envionment*/ luaState.Envionment.Table : luaState._G;
                 }
             }
 
@@ -66,46 +67,15 @@ namespace Battlegrounds.Lua {
                     return;
                 }
 
-                // TODO: Make the whole assignment stuff work a bit better, too much code-duplication, stack popping/pushing
-
-                void PushAssignable(LuaExpr lxp) {
-                    if (lxp is LuaIdentifierExpr declID) {
-                        stack.Push(new LuaString(declID.Identifier));
-                    } else if (lxp is LuaIndexExpr indexOp) {
-                        DoExpr(indexOp);
-                    } else {
-                        return;
+                (LuaTable scope, LuaValue key) GetAssignable(LuaIdentifierExpr idExpr, bool declareLocal) {
+                    LuaString lstrKey = new LuaString(idExpr.Identifier);
+                    if (declareLocal) {
+                        return (luaState.Envionment.Table, new LuaString(idExpr.Identifier));
                     }
-                }
-
-                void SingleAssign(bool isLocal, LuaValue identifier = null, LuaValue value = null) {
-                    LuaValue tableIdentifier = identifier is null ? stack.Pop() : identifier;
-                    LuaValue tableValue = value is null ? stack.Pop() : value;
-                    LuaValue assignScope = GetTop(isLocal);
-                    if (assignScope is LuaTable scopeTable) {
-                        scopeTable[tableIdentifier] = tableValue;
-                    } else if (assignScope is LuaNil) {
-                        throw new LuaRuntimeError("Attempt to index '?' a nil value.", stack, luaState);
+                    if (luaState.Envionment.Lookup(GetTop(false) as LuaTable, idExpr.Identifier, out LuaTable envt) is LuaValue v) {
+                        return (envt, new LuaString(idExpr.Identifier));
                     } else {
                         throw new Exception();
-                    }
-                }
-
-                void MultiAssign(bool isLocal, LuaTupleExpr mval) {
-                    int stackSize = stack.Count;
-                    int j = 0;
-                    while (j < mval.Values.Count) {
-                        if (j < stackSize) {
-                            var v = stack.Pop();
-                            stack.Push(luaState._G);
-                            stack.Push(v);
-                            PushAssignable(mval.Values[j]);
-                        } else {
-                            stack.Push(new LuaNil());
-                            PushAssignable(mval.Values[j]);
-                        }
-                        SingleAssign(isLocal);
-                        j++;
                     }
                 }
 
@@ -124,13 +94,28 @@ namespace Battlegrounds.Lua {
                 switch (exp) {
                     case LuaNopExpr:
                         break;
-                    case LuaAssignExpr assign:
-                        DoExpr(assign.Right);
-                        if (assign.Left is LuaTupleExpr multival) {
-                            MultiAssign(assign.Local, multival);
-                        } else {
-                            PushAssignable(assign.Left);
-                            SingleAssign(assign.Local);
+                    case LuaAssignExpr assign: {
+                            if (assign.Left is not LuaTupleExpr varExprLst) {
+                                varExprLst = new LuaTupleExpr(new List<LuaExpr>() { assign.Left });
+                            }
+                            int stackTop = stack.Count;
+                            DoExpr(assign.Right);
+                            int stackNewTop = stack.Count;
+                            int vars = varExprLst.Values.Count;
+                            int stackDelta = stackNewTop - stackTop;
+                            for (int k = 0; k < vars; k++) {
+                                LuaValue value = new LuaNil();
+                                if (stackDelta > 0) {
+                                    value = stack.Pop();
+                                    stackDelta--;
+                                }
+                                (LuaTable scope, LuaValue key) = varExprLst.Values[k] switch {
+                                    LuaIdentifierExpr idExpr => GetAssignable(idExpr, assign.Local),
+                                    LuaIndexExpr indExpr => (stack.Pop() as LuaTable, DoExprAndPop(indExpr.Key)),
+                                    _ => throw new Exception()
+                                };
+                                scope[key] = value;
+                            }
                         }
                         break;
                     case LuaLogicExpr logic: {
@@ -277,12 +262,7 @@ namespace Battlegrounds.Lua {
                         stack.Push(value.Value);
                         break;
                     case LuaIdentifierExpr id:
-                        if (luaState.Envionment.GetIfExists(id.Identifier, out LuaValue envValue)) {
-                            stack.Push(envValue);
-                        } else {
-                            stack.Push(luaState._G);
-                            stack.Push(Lookup(new LuaString(id.Identifier)));
-                        }
+                        stack.Push(luaState.Envionment.Lookup(luaState._G, id.Identifier, out _));
                         break;
                     case LuaIndexExpr iex:
                         DoExpr(iex.Key);
@@ -335,7 +315,7 @@ namespace Battlegrounds.Lua {
                         }
                     case LuaChunk chunk: 
                         {
-                            var env = luaState.Envionment.Clone();
+                            luaState.Envionment.NewFrame();
                             chunk.ScopeBody.ForEach(x => {
                                 if (!halt && !haltLoop) {
                                     DoExpr(x);
@@ -344,12 +324,12 @@ namespace Battlegrounds.Lua {
                                     }
                                 }
                             });
-                            luaState.Envionment = env;
+                            luaState.Envionment.PopFrame();
                             break;
                         }
                     case LuaWhileStatement luaWhile: 
                         {
-                            var env = luaState.Envionment.Clone();
+                            luaState.Envionment.NewFrame();
                             while (!haltLoop && !halt) {
                                 DoExpr(luaWhile.Condition);
                                 if (IsFalse(stack.Pop())) {
@@ -357,13 +337,13 @@ namespace Battlegrounds.Lua {
                                 }
                                 DoExpr(luaWhile.Body);
                             }
-                            luaState.Envionment = env;
+                            luaState.Envionment.PopFrame();
                         }
                         haltLoop = false;
                         break;
                     case LuaNumericForStatement luaNumFor: 
                         {
-                            var env = luaState.Envionment.Clone();
+                            luaState.Envionment.NewFrame();
                             DoExpr(luaNumFor.Var.Right);
                             string varId = (luaNumFor.Var.Left as LuaIdentifierExpr).Identifier;
                             LuaNumber controlVar = stack.Pop() as LuaNumber;
@@ -376,20 +356,20 @@ namespace Battlegrounds.Lua {
                             }
                             while (!haltLoop && !halt) {
                                 if ((step > 0.0 && controlVar <= limit) || (step <= 0 && controlVar >= limit)) {
-                                    luaState.Envionment[varId] = controlVar;
+                                    luaState.Envionment.Define(varId, controlVar);
                                     DoExpr(luaNumFor.Body);
                                     controlVar = new LuaNumber(controlVar + step);
                                 } else {
                                     break;
                                 }
                             }
-                            luaState.Envionment = env;
+                            luaState.Envionment.PopFrame();
                         }
                         haltLoop = false;
                         break;
                     case LuaGenericForStatement luaGenFor: 
                         {
-                            var env = luaState.Envionment.Clone();
+                            luaState.Envionment.NewFrame();
                             DoExpr(luaGenFor.Iterator);
                             var f = stack.Pop() as LuaClosure;
                             var s = stack.Pop();
@@ -401,10 +381,10 @@ namespace Battlegrounds.Lua {
                                 for (int k = 0; k < luaGenFor.VarList.Variables.Count; k++) {
                                     string varID = luaGenFor.VarList.Variables[k].Identifier;
                                     if (k < q) {
-                                        luaState.Envionment[varID] = stack.Pop();
-                                        if (k == 0) { v = luaState.Envionment[varID]; }
+                                        var cv = luaState.Envionment.Define(varID, stack.Pop());
+                                        if (k == 0) { v = cv; }
                                     } else {
-                                        luaState.Envionment[varID] = new LuaNil();
+                                        luaState.Envionment.Define(varID, new LuaNil());
                                     }
                                 }
                                 if (v is LuaNil) {
@@ -413,7 +393,7 @@ namespace Battlegrounds.Lua {
                                     DoExpr(luaGenFor.Body);
                                 }
                             }
-                            luaState.Envionment = env;
+                            luaState.Envionment.PopFrame();
                         }
                         haltLoop = false;
                         break;

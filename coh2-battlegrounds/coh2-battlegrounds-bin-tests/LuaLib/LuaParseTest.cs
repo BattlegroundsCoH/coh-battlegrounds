@@ -208,7 +208,6 @@ test = {
             Assert.AreEqual(new LuaNumber(1), (val as LuaTable)["e"]);
             Assert.AreEqual(new LuaNumber(10), (val as LuaTable)["b"]);
 
-
         }
 
         [TestMethod]

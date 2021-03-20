@@ -26,7 +26,7 @@ namespace Battlegrounds.Lua {
         /// <summary>
         /// Get or set the current environment values (Arguments and local variables).
         /// </summary>
-        public LuaTable Envionment { get; set; }
+        public LuaEnvironment Envionment { get; set; }
 
         /// <summary>
         /// Get the output writer of the state.
@@ -66,7 +66,7 @@ namespace Battlegrounds.Lua {
             this._G["__version"] = new LuaString("Battlegrounds.Lua V1.0 (Emulates Lua 5.1)");
 
             // Initialize envionment
-            this.Envionment = new LuaTable();
+            this.Envionment = new LuaEnvironment();
 
             // Set console in and out
             this.Out = Console.Out;
