@@ -199,6 +199,16 @@ namespace Battlegrounds.Lua.Parsing {
                     result.Add(luaExprs[i]);
                 } else if (luaExprs[i] is LuaKeyword { Keyword: "do" }) {
 
+                    // Collect body
+                    var body = ApplyScopeGroups(luaExprs, i + 1, false);
+
+                    // Update expression list
+                    luaExprs[i] = new LuaDoStatement(new LuaChunk(body));
+                    luaExprs.RemoveRange(i + 1, body.Count + 1);
+
+                    // Add self to results
+                    result.Add(luaExprs[i]);
+
                 } else if (luaExprs[i] is LuaKeyword { Keyword: "while" }) {
 
                     // Get condition
@@ -382,7 +392,9 @@ namespace Battlegrounds.Lua.Parsing {
                     ApplyOrderOfOperations((numForStatement.Body).ScopeBody);
                     luaExprs[i] = numForStatement;
                 } else if (luaExprs[i] is LuaGenericForStatement genForStatement) {
-                    ApplyOrderOfOperations((genForStatement.Body).ScopeBody);
+                    ApplyOrderOfOperations(genForStatement.Body.ScopeBody);
+                } else if (luaExprs[i] is LuaDoStatement doStatement) {
+                    ApplyOrderOfOperations(doStatement.Body.ScopeBody);
                 } else if (luaExprs[i] is LuaBranch branch) {
                     luaExprs[i] = RecrusiveOOPBranching(branch);
                 } else if (luaExprs[i] is LuaSingleElementParenthesisGroup single) {
@@ -527,6 +539,18 @@ namespace Battlegrounds.Lua.Parsing {
                 }
             }
 
+            // Apply grammar on branching
+            void ApplyBranch(LuaBranch branch) {
+                ApplyGrammar(branch.Body.ScopeBody, 0);
+                if (branch is LuaIfStatement ifbranch) {
+                    ApplySingleGrammar(ifbranch.Condition);
+                    ApplyBranch(ifbranch.BranchFollow);
+                } else if (branch is LuaIfElseStatement ifElseBranch) {
+                    ApplySingleGrammar(ifElseBranch.Condition);
+                    ApplyBranch(ifElseBranch.BranchFollow);
+                }
+            }
+
             // Run through all expressions and apply appropriate late-syntax
             while (i < luaExprs.Count) {
                 if (luaExprs[i] is LuaTableExpr table) {
@@ -544,10 +568,22 @@ namespace Battlegrounds.Lua.Parsing {
                     ApplyLocal();
                 } else if (luaExprs[i] is LuaGenericForStatement or LuaNumericForStatement) {
                     ApplyForStatement(luaExprs[i]);
+                } else if (luaExprs[i] is LuaDoStatement doStatement) {
+                    ApplyGrammar(doStatement.Body.ScopeBody, 0);
+                } else if (luaExprs[i] is LuaBranch branch) {
+                    ApplyBranch(branch);
                 }
                 i++;
             }
 
+        }
+
+        static void ApplySingleGrammar(LuaExpr exprSrc) {
+            if (exprSrc is LuaChunk chunk) {
+                ApplyGrammar(chunk.ScopeBody, 0);
+            } else {
+                ApplyGrammar(new List<LuaExpr> { exprSrc }, 0);
+            }
         }
 
         static void ApplyImplicitBehaviour(List<LuaExpr> luaExprs, int i) {

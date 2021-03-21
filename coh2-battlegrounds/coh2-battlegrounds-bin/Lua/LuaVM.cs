@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+
 using Battlegrounds.Functional;
 using Battlegrounds.Lua.Debugging;
 using Battlegrounds.Lua.Parsing;
@@ -411,6 +412,9 @@ namespace Battlegrounds.Lua {
                         break;
                     case LuaElseStatement le:
                         DoExpr(le.Body);
+                        break;
+                    case LuaDoStatement ldo:
+                        DoExpr(ldo.Body); // Is chunk, will also handle frame pushing/popping
                         break;
                     default:
                         throw new Exception();

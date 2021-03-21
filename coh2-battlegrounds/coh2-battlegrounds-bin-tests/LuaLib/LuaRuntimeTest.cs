@@ -368,6 +368,38 @@ namespace coh2_battlegrounds_bin_tests.LuaLib {
 
         }
 
+        [TestMethod]
+        public void SimpleFunctionTest16() {
+
+            // Define source (From lua manual on visibility/scope rules)
+            string sourceText = @"
+            x = 10
+            do
+                local x = x
+                print(x)
+                x = x+1
+                do
+                    local x = x+1
+                    print(x)
+                end
+                print(x)
+            end
+            print(x)";
+
+            // Run and check output
+            var result = LuaVM.DoString(this.lState, sourceText);
+            Assert.AreEqual(new LuaNil(), result);
+
+            // Make assertions on output
+            string[] lns = writerOutput.ToString().Split(writer.NewLine);
+            Assert.AreEqual(5, lns.Length);
+            Assert.AreEqual("10", lns[0]);
+            Assert.AreEqual("12", lns[1]);
+            Assert.AreEqual("11", lns[2]);
+            Assert.AreEqual("10", lns[3]);
+
+        }
+
     }
 
 }
