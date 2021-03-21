@@ -249,7 +249,9 @@ namespace Battlegrounds.Lua {
 
         object ICloneable.Clone() => this.Clone();
 
-        public override string Str() => this.GetHashCode().ToString();
+        public override string Str() => $"0x{this.GetHashCode():X8}";
+
+        public override string ToString() => this.Str();
 
         public override LuaType GetLuaType() => LuaType.LUA_TABLE;
 

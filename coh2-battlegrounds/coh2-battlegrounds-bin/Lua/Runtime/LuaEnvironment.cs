@@ -3,7 +3,7 @@
 namespace Battlegrounds.Lua.Runtime {
     
     /// <summary>
-    /// 
+    /// Represents the currently executing Lua variable environment.
     /// </summary>
     public class LuaEnvironment {
 
@@ -54,8 +54,7 @@ namespace Battlegrounds.Lua.Runtime {
         /// <summary>
         /// 
         /// </summary>
-        public void PopFrame() 
-            => this.m_currentFrame = this.m_frames.Pop();
+        public void PopFrame() => this.m_currentFrame = this.m_frames.Pop();
 
         /// <summary>
         /// 
@@ -75,25 +74,11 @@ namespace Battlegrounds.Lua.Runtime {
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="_G"></param>
-        /// <param name="id"></param>
-        /// <returns></returns>
-        public LuaValue Lookup(LuaTable _G, string id) {
-            if (this.m_currentFrame.TryGet(new LuaString(id), out LuaValue value, out _)) {
-                return value;
-            } else {
-                return _G[id];
-            }
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
         /// <param name="id"></param>
         /// <param name="value"></param>
         /// <returns></returns>
         public LuaValue Define(string id, LuaValue value) { 
-            this.m_currentFrame.TableEnv[id] = value; 
+            this.m_currentFrame.TableEnv[id] = value;
             return value; 
         }
 

@@ -133,7 +133,7 @@ namespace Battlegrounds.Lua.Parsing {
 
         }
 
-        static List<LuaExpr> ApplyScopeGroups(List<LuaExpr> luaExprs, int i, bool endSemicolon, bool allowElseif = false) {
+        static List<LuaExpr> ApplyScopeGroups(List<LuaExpr> luaExprs, int i, bool endSemicolon, bool allowElseif = false, string endIsEnd = "end") {
 
             static List<LuaExpr> PickUntil(List<LuaExpr> exprs, int from, Predicate<LuaExpr> predicate, Predicate<LuaExpr> errorPredicate) {
                 List<LuaExpr> elements = new List<LuaExpr>();
@@ -152,7 +152,8 @@ namespace Battlegrounds.Lua.Parsing {
 
             List<LuaExpr> result = new List<LuaExpr>();
             while (i < luaExprs.Count) {
-                if (luaExprs[i] is LuaKeyword { Keyword: "end" } || (endSemicolon && luaExprs[i] is LuaOpExpr { Type: LuaTokenType.Semicolon })) {
+                if ((luaExprs[i] is LuaKeyword { Keyword: "end" } && endIsEnd == "end" )|| (endSemicolon && luaExprs[i] is LuaOpExpr { Type: LuaTokenType.Semicolon }) 
+                    || (luaExprs[i] is LuaKeyword kw && kw.Keyword == endIsEnd)) {
                     return result;
                 } else if (luaExprs[i] is LuaKeyword { Keyword: "function" }) {
                     // Handle functions
@@ -289,6 +290,16 @@ namespace Battlegrounds.Lua.Parsing {
 
                 } else if (luaExprs[i] is LuaKeyword { Keyword: "repeat" }) {
 
+                    // Collect body
+                    var body = ApplyScopeGroups(luaExprs, i + 1, false, false, "until");
+
+                    // Create statement (without condition)
+                    luaExprs[i] = new LuaRepeatStatement(new LuaChunk(body), null);
+                    luaExprs.RemoveRange(i + 1, body.Count + 1);
+
+                    // Add self
+                    result.Add(luaExprs[i]);
+
                 } else if (luaExprs[i] is LuaKeyword { Keyword: "if" } or LuaKeyword { Keyword: "elseif" }) {
 
                     // Determine if it's a "if" or "elseif"
@@ -395,6 +406,8 @@ namespace Battlegrounds.Lua.Parsing {
                     ApplyOrderOfOperations(genForStatement.Body.ScopeBody);
                 } else if (luaExprs[i] is LuaDoStatement doStatement) {
                     ApplyOrderOfOperations(doStatement.Body.ScopeBody);
+                } else if (luaExprs[i] is LuaRepeatStatement repeatStatement) {
+                    ApplyOrderOfOperations(repeatStatement.Body.ScopeBody);
                 } else if (luaExprs[i] is LuaBranch branch) {
                     luaExprs[i] = RecrusiveOOPBranching(branch);
                 } else if (luaExprs[i] is LuaSingleElementParenthesisGroup single) {
@@ -551,28 +564,46 @@ namespace Battlegrounds.Lua.Parsing {
                 }
             }
 
-            // Run through all expressions and apply appropriate late-syntax
-            while (i < luaExprs.Count) {
-                if (luaExprs[i] is LuaTableExpr table) {
+            // Apply repeat statement
+            void ApplyRepeat(List<LuaExpr> expr, int i, LuaRepeatStatement repeatStatement) {
+                ApplyGrammar(repeatStatement.Body.ScopeBody, 0);
+                if (i + 1 < expr.Count && expr[i + 1] is not LuaStatement) {
+                    Single(expr[i + 1]);
+                    expr[i] = repeatStatement with { Condition = expr[i + 1] };
+                    expr.RemoveAt(i + 1);
+                } else {
+                    throw new LuaSyntaxError("");
+                }
+            }
+
+            void Single(LuaExpr expr) {
+                if (expr is LuaTableExpr table) {
                     ApplyTable(table);
-                } else if (luaExprs[i] is LuaBinaryExpr binop) {
+                } else if (expr is LuaBinaryExpr binop) {
                     ApplyBinop(binop);
-                } else if (luaExprs[i] is LuaCallExpr call) {
+                } else if (expr is LuaCallExpr call) {
                     ApplyArgs(call.Arguments);
-                } else if (luaExprs[i] is LuaFuncExpr func) {
+                } else if (expr is LuaFuncExpr func) {
                     ApplyArgs(func.Arguments);
                     ApplyGrammar(func.Body.ScopeBody, 0);
-                } else if (luaExprs[i] is LuaIdentifierExpr or LuaLookupExpr or LuaTupleExpr) {
+                } else if (expr is LuaIdentifierExpr or LuaLookupExpr or LuaTupleExpr) {
                     ApplyMultivalueAssignment(luaExprs, ref i);
-                } else if (luaExprs[i] is LuaKeyword { Keyword: "local" }) {
+                } else if (expr is LuaKeyword { Keyword: "local" }) {
                     ApplyLocal();
-                } else if (luaExprs[i] is LuaGenericForStatement or LuaNumericForStatement) {
+                } else if (expr is LuaGenericForStatement or LuaNumericForStatement) {
                     ApplyForStatement(luaExprs[i]);
-                } else if (luaExprs[i] is LuaDoStatement doStatement) {
+                } else if (expr is LuaDoStatement doStatement) {
                     ApplyGrammar(doStatement.Body.ScopeBody, 0);
-                } else if (luaExprs[i] is LuaBranch branch) {
+                } else if (expr is LuaRepeatStatement repeat) {
+                    ApplyRepeat(luaExprs, i, repeat);
+                } else if (expr is LuaBranch branch) {
                     ApplyBranch(branch);
                 }
+            }
+
+            // Run through all expressions and apply appropriate late-syntax
+            while (i < luaExprs.Count) {
+                Single(luaExprs[i]);
                 i++;
             }
 

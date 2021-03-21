@@ -584,6 +584,26 @@ test = {
 
         }
 
+        [TestMethod]
+        public void LuaFunctionalTest12() {
+
+            string sourceText = @"
+            local i = 0
+            repeat
+                local k = i * 2
+                print(k)
+                i = i + 1
+            until i + k >= 50
+            print(i)";
+
+            // Parse and verify top-level
+            var luaAST = LuaParser.ParseLuaSource(sourceText);
+            Assert.IsInstanceOfType(luaAST[0], typeof(LuaAssignExpr));
+            Assert.IsInstanceOfType(luaAST[1], typeof(LuaRepeatStatement));
+            Assert.IsInstanceOfType(luaAST[2], typeof(LuaCallExpr));
+
+        }
+
     }
 
 }

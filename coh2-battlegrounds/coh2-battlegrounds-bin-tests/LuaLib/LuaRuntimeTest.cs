@@ -400,6 +400,32 @@ namespace coh2_battlegrounds_bin_tests.LuaLib {
 
         }
 
+        [TestMethod]
+        public void SimpleFunctionTest17() {
+
+            string sourceText = @"
+            local i = 0
+            repeat
+                local k = i * 2
+                print(k)
+                i = i + 1
+            until i + k >= 50
+            print(i)";
+
+            // Run and check output
+            var result = LuaVM.DoString(this.lState, sourceText);
+            Assert.AreEqual(new LuaNil(), result);
+
+            // Make assertions on output
+            string[] lns = writerOutput.ToString().Split(writer.NewLine);
+            Assert.AreEqual(20, lns.Length);
+            for (int i = 0; i < 18; i++) {
+                Assert.AreEqual((i * 2).ToString(), lns[i]);
+            }
+            Assert.AreEqual("18", lns[18]);
+
+        }
+
     }
 
 }

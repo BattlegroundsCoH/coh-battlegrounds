@@ -48,6 +48,11 @@ namespace Battlegrounds.Lua {
         /// </summary>
         public bool StackTrace { get; set; } = false;
 
+        /// <summary>
+        /// Get or set whether the <see cref="LuaVM"/> should execute instructions with debugging capabilities.
+        /// </summary>
+        public bool DebugMode { get; set; } = false;
+
 #pragma warning restore IDE1006 // Naming Styles
 
         /// <summary>

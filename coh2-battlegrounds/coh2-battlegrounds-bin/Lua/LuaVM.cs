@@ -33,6 +33,20 @@ namespace Battlegrounds.Lua {
                 stack = new();
             }
 
+            // Init run-values
+            int pop = 0;
+            bool halt = false;
+            bool haltLoop = false;
+
+            // Debug tracer
+            void TraceDb(string ins, params string[] args) {
+                if (luaState.EnableTrace) {
+                    string name = args.Length == 0 ? ins : $"{ins} [{string.Join(", ", args)}]";
+                    Trace.WriteLine($"[{opID}] {name} ;; Stack := {string.Join(", ", stack.ToList())}", "LuaStackTrace");
+                    opID++;
+                }
+            }
+
             // Get top value (if none, return _G)
             LuaValue GetTop(bool local) {
                 if (stack.Count > 0 && stack.Peek() is LuaTable) {
@@ -58,9 +72,51 @@ namespace Battlegrounds.Lua {
                 return stack.Pop();
             }
 
-            int pop = 0;
-            bool halt = false;
-            bool haltLoop = false;
+            // Get assignable value
+            (LuaTable scope, LuaValue key) GetAssignable(LuaIdentifierExpr idExpr, bool declareLocal) {
+                LuaString lstrKey = new LuaString(idExpr.Identifier);
+                if (declareLocal) {
+                    luaState.Envionment.Define(idExpr.Identifier, new LuaNil());
+                    return (luaState.Envionment.Table, new LuaString(idExpr.Identifier));
+                }
+                if (luaState.Envionment.Lookup(GetTop(false) as LuaTable, idExpr.Identifier, out LuaTable envt) is LuaValue v) {
+                    return (envt, new LuaString(idExpr.Identifier));
+                } else {
+                    throw new Exception();
+                }
+            }
+
+            // Execute branch
+            void Branch(LuaExpr condition, LuaChunk body, LuaBranchFollow follow) {
+                DoExpr(condition);
+                if (IsFalse(stack.Pop())) {
+                    TraceDb("LuaBranch::False");
+                    if (follow is not LuaEndBranch) {
+                        DoExpr(follow);
+                    }
+                } else {
+                    TraceDb("LuaBranch::True");
+                    DoChunk(body, true);
+                }
+            }
+
+            // Execute chunk
+            void DoChunk(LuaChunk chunk, bool stackframe) {
+                if (stackframe) {
+                    luaState.Envionment.NewFrame();
+                }
+                chunk.ScopeBody.ForEach(x => {
+                    if (!halt && !haltLoop) {
+                        DoExpr(x);
+                        if (x is LuaCallExpr) { // Is single call expression not used within any context - pop all stack values
+                            pop.Do(i => stack.Count.IfTrue(_ => stack.Count > 0).Then(() => stack.Pop()));
+                        }
+                    }
+                });
+                if (stackframe) {
+                    luaState.Envionment.PopFrame();
+                }
+            }
 
             // Do lua expressions
             void DoExpr(LuaExpr exp) {
@@ -68,34 +124,13 @@ namespace Battlegrounds.Lua {
                     return;
                 }
 
-                (LuaTable scope, LuaValue key) GetAssignable(LuaIdentifierExpr idExpr, bool declareLocal) {
-                    LuaString lstrKey = new LuaString(idExpr.Identifier);
-                    if (declareLocal) {
-                        return (luaState.Envionment.Table, new LuaString(idExpr.Identifier));
-                    }
-                    if (luaState.Envionment.Lookup(GetTop(false) as LuaTable, idExpr.Identifier, out LuaTable envt) is LuaValue v) {
-                        return (envt, new LuaString(idExpr.Identifier));
-                    } else {
-                        throw new Exception();
-                    }
-                }
-
-                void Branch(LuaExpr condition, LuaExpr body, LuaBranchFollow follow) {
-                    DoExpr(condition);
-                    if (IsFalse(stack.Pop())) {
-                        if (follow is not LuaEndBranch) {
-                            DoExpr(follow);
-                        }
-                    } else {
-                        DoExpr(body);
-                    }
-                }
-
                 // Handle expression
                 switch (exp) {
                     case LuaNopExpr:
+                        TraceDb(nameof(LuaNopExpr));
                         break;
-                    case LuaAssignExpr assign: {
+                    case LuaAssignExpr assign:
+                        List<string> assignedValues = new List<string>(); {
                             if (assign.Left is not LuaTupleExpr varExprLst) {
                                 varExprLst = new LuaTupleExpr(new List<LuaExpr>() { assign.Left });
                             }
@@ -115,9 +150,11 @@ namespace Battlegrounds.Lua {
                                     LuaIndexExpr indExpr => (stack.Pop() as LuaTable, DoExprAndPop(indExpr.Key)),
                                     _ => throw new Exception()
                                 };
+                                assignedValues.Add(key.Str());
                                 scope[key] = value;
                             }
                         }
+                        TraceDb(nameof(LuaAssignExpr), assignedValues.ToArray());
                         break;
                     case LuaLogicExpr logic: {
                             DoExpr(logic.Left);
@@ -136,6 +173,7 @@ namespace Battlegrounds.Lua {
                                 _ => throw new Exception()
                             });
                         }
+                        TraceDb(nameof(LuaLogicExpr), logic.Operator);
                         break;
                     case LuaBinaryExpr bin: {
                             DoExpr(bin.Right);
@@ -201,9 +239,9 @@ namespace Battlegrounds.Lua {
                                 _ => throw new Exception(),
                             });
                         }
+                        TraceDb(nameof(LuaBinaryExpr), bin.Operator);
                         break;
-                    case LuaLookupExpr lookup: 
-                        {
+                    case LuaLookupExpr lookup: {
                             DoExpr(lookup.Left);
                             switch (lookup.Right) {
                                 case LuaIdentifierExpr id:
@@ -226,6 +264,7 @@ namespace Battlegrounds.Lua {
                                 default:
                                     throw new Exception();
                             }
+                            TraceDb(lookup.GetType().Name);
                             break;
                         }
                     case LuaTableExpr table:
@@ -235,6 +274,7 @@ namespace Battlegrounds.Lua {
                             DoExpr(table.SubExpressions[i]);
                             stack.Push(t);
                         }
+                        TraceDb(nameof(LuaTableExpr), t.GetHashCode().ToString());
                         break;
                     case LuaUnaryExpr unary:
                         DoExpr(unary.Expr);
@@ -258,29 +298,36 @@ namespace Battlegrounds.Lua {
                             },
                             _ => throw new Exception()
                         });
+                        TraceDb(nameof(LuaUnaryExpr), unary.Operator);
                         break;
                     case LuaConstValueExpr value:
+                        TraceDb(nameof(LuaConstValueExpr), value.Value.Str());
                         stack.Push(value.Value);
                         break;
                     case LuaIdentifierExpr id:
+                        TraceDb(nameof(LuaIndexExpr), id.Identifier, "global");
                         stack.Push(luaState.Envionment.Lookup(luaState._G, id.Identifier, out _));
                         break;
                     case LuaIndexExpr iex:
                         DoExpr(iex.Key);
+                        TraceDb(nameof(LuaIndexExpr));
                         break;
                     case LuaReturnStatement returnStatement:
                         if (returnStatement.Value is LuaTupleExpr returnTuple) {
                             returnTuple.Values.ForEach(DoExpr);
+                            TraceDb(nameof(LuaReturnStatement), returnTuple.Values.Count.ToString());
                         } else {
                             DoExpr(returnStatement.Value);
+                            TraceDb(nameof(LuaReturnStatement), "1");
                         }
                         halt = true;
                         return;
                     case LuaBreakStatement:
+                        TraceDb(nameof(LuaBreakStatement));
                         haltLoop = true;
                         break;
                     case LuaCallExpr call: {
-                            
+
                             // Push arguments
                             call.Arguments.Arguments.ForEach(x => DoExpr(x));
 
@@ -293,7 +340,7 @@ namespace Battlegrounds.Lua {
                                 if (call.ToCall is LuaIdentifierExpr callee) {
                                     prntName = callee.Identifier;
                                 }
-                                Trace.WriteLine($"[{opID}] LuaCallExpr [{prntName}] ;; Stack := {string.Join(", ", stack.ToList())}", "LuaStackTrace");
+                                TraceDb(nameof(LuaCallExpr), prntName);
                                 opID++;
                             }
 
@@ -312,38 +359,28 @@ namespace Battlegrounds.Lua {
                             string[] parameters = func.Arguments.Arguments.Select(x => (x as LuaIdentifierExpr).Identifier).ToArray();
                             LuaClosure closure = new LuaClosure(new LuaFunction(func.Body, parameters));
                             stack.Push(closure);
+                            TraceDb(nameof(LuaFuncExpr), closure.Str());
                             break;
                         }
-                    case LuaChunk chunk: 
-                        {
-                            luaState.Envionment.NewFrame();
-                            chunk.ScopeBody.ForEach(x => {
-                                if (!halt && !haltLoop) {
-                                    DoExpr(x);
-                                    if (x is LuaCallExpr) { // Is single call expression not used within any context - pop all stack values
-                                        pop.Do(i => stack.Count.IfTrue(_ => stack.Count > 0).Then(() => stack.Pop()));
-                                    }
-                                }
-                            });
-                            luaState.Envionment.PopFrame();
-                            break;
-                        }
-                    case LuaWhileStatement luaWhile: 
-                        {
-                            luaState.Envionment.NewFrame();
+                    case LuaChunk chunk:
+                        TraceDb(nameof(LuaChunk));
+                        DoChunk(chunk, true);
+                        break;
+                    case LuaWhileStatement luaWhile:
+                        TraceDb(nameof(LuaWhileStatement)); {
                             while (!haltLoop && !halt) {
                                 DoExpr(luaWhile.Condition);
                                 if (IsFalse(stack.Pop())) {
                                     break;
+                                } else {
+                                    DoChunk(luaWhile.Body, true);
                                 }
-                                DoExpr(luaWhile.Body);
                             }
-                            luaState.Envionment.PopFrame();
                         }
                         haltLoop = false;
                         break;
-                    case LuaNumericForStatement luaNumFor: 
-                        {
+                    case LuaNumericForStatement luaNumFor:
+                        TraceDb(nameof(LuaNumericForStatement)); {
                             luaState.Envionment.NewFrame();
                             DoExpr(luaNumFor.Var.Right);
                             string varId = (luaNumFor.Var.Left as LuaIdentifierExpr).Identifier;
@@ -355,7 +392,7 @@ namespace Battlegrounds.Lua {
                                         while (!haltLoop && !halt) {
                                             if ((step > 0.0 && controlVar <= limit) || (step <= 0 && controlVar >= limit)) {
                                                 luaState.Envionment.Define(varId, controlVar);
-                                                DoExpr(luaNumFor.Body);
+                                                DoChunk(luaNumFor.Body, true);
                                                 controlVar = new LuaNumber(controlVar + step);
                                             } else {
                                                 break;
@@ -374,8 +411,8 @@ namespace Battlegrounds.Lua {
                         }
                         haltLoop = false;
                         break;
-                    case LuaGenericForStatement luaGenFor: 
-                        {
+                    case LuaGenericForStatement luaGenFor:
+                        TraceDb(nameof(LuaGenericForStatement)); {
                             luaState.Envionment.NewFrame();
                             DoExpr(luaGenFor.Iterator);
                             var f = stack.Pop() as LuaClosure;
@@ -397,33 +434,45 @@ namespace Battlegrounds.Lua {
                                 if (v is LuaNil) {
                                     break;
                                 } else {
-                                    DoExpr(luaGenFor.Body);
+                                    DoChunk(luaGenFor.Body, true);
                                 }
                             }
                             luaState.Envionment.PopFrame();
                         }
                         haltLoop = false;
                         break;
+                    case LuaRepeatStatement lrs:
+                        TraceDb(nameof(LuaRepeatStatement)); {
+                            while (!halt && !haltLoop) {
+                                luaState.Envionment.NewFrame();
+                                DoChunk(lrs.Body, false);
+                                DoExpr(lrs.Condition);
+                                if (!IsFalse(stack.Pop())) {
+                                    break;
+                                }
+                                luaState.Envionment.PopFrame();
+                            }
+                        }
+                        haltLoop = false;
+                        break;
                     case LuaIfStatement lif:
+                        TraceDb(nameof(LuaIfStatement));
                         Branch(lif.Condition, lif.Body, lif.BranchFollow);
                         break;
                     case LuaIfElseStatement leif:
+                        TraceDb(nameof(LuaIfElseStatement));
                         Branch(leif.Condition, leif.Body, leif.BranchFollow);
                         break;
                     case LuaElseStatement le:
-                        DoExpr(le.Body);
+                        TraceDb(nameof(LuaElseStatement));
+                        DoChunk(le.Body, true);
                         break;
                     case LuaDoStatement ldo:
-                        DoExpr(ldo.Body); // Is chunk, will also handle frame pushing/popping
+                        TraceDb(nameof(LuaDoStatement));
+                        DoChunk(ldo.Body, true);
                         break;
                     default:
                         throw new Exception();
-                }
-
-                // Log trace etc. (For debugging)
-                if (luaState.StackTrace && exp is not LuaCallExpr) {
-                    Trace.WriteLine($"[{opID}] {exp.GetType().Name} ;; Stack := {string.Join(", ", stack.ToList())}", "LuaStackTrace");
-                    opID++;
                 }
 
             }
