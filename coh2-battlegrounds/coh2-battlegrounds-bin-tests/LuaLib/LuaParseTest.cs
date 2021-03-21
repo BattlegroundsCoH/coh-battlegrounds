@@ -355,7 +355,7 @@ test = {
             Assert.IsInstanceOfType(luaAST[0], typeof(LuaBinaryExpr));
 
             var top = luaAST[0] as LuaBinaryExpr;
-            Assert.AreEqual(new LuaIdentifierExpr("ds9"), top.Left);
+            Assert.AreEqual("ds9", (top.Left as LuaIdentifierExpr).Identifier);
             Assert.IsInstanceOfType(top.Right, typeof(LuaFuncExpr));
 
         }
@@ -373,7 +373,7 @@ test = {
             Assert.IsInstanceOfType(luaAST[0], typeof(LuaBinaryExpr));
 
             var top = luaAST[0] as LuaBinaryExpr;
-            Assert.AreEqual(new LuaIdentifierExpr("ds9"), top.Left);
+            Assert.AreEqual("ds9", (top.Left as LuaIdentifierExpr).Identifier);
             Assert.IsInstanceOfType(top.Right, typeof(LuaFuncExpr));
 
         }
@@ -394,7 +394,7 @@ test = {
             Assert.IsInstanceOfType(luaAST[1], typeof(LuaCallExpr));
 
             var top = luaAST[0] as LuaBinaryExpr;
-            Assert.AreEqual(new LuaIdentifierExpr("dumdum"), top.Left);
+            Assert.AreEqual("dumdum", (top.Left as LuaIdentifierExpr).Identifier);
             Assert.IsInstanceOfType(top.Right, typeof(LuaFuncExpr));
             Assert.AreEqual(2, (top.Right as LuaFuncExpr).Arguments.Arguments.Count);
 
@@ -420,7 +420,7 @@ test = {
             Assert.IsInstanceOfType(luaAST[1], typeof(LuaBinaryExpr));
 
             var top = luaAST[0] as LuaBinaryExpr;
-            Assert.AreEqual(new LuaIdentifierExpr("dumdum"), top.Left);
+            Assert.AreEqual("dumdum", (top.Left as LuaIdentifierExpr).Identifier);
             Assert.IsInstanceOfType(top.Right, typeof(LuaFuncExpr));
             Assert.AreEqual(2, (top.Right as LuaFuncExpr).Arguments.Arguments.Count);
 

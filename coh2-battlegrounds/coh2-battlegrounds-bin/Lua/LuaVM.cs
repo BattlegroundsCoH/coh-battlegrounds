@@ -132,7 +132,7 @@ namespace Battlegrounds.Lua {
                     case LuaAssignExpr assign:
                         List<string> assignedValues = new List<string>(); {
                             if (assign.Left is not LuaTupleExpr varExprLst) {
-                                varExprLst = new LuaTupleExpr(new List<LuaExpr>() { assign.Left });
+                                varExprLst = new LuaTupleExpr(new List<LuaExpr>() { assign.Left }, LuaSourcePos.Undefined);
                             }
                             int stackTop = stack.Count;
                             DoExpr(assign.Right);
@@ -518,7 +518,7 @@ namespace Battlegrounds.Lua {
 
             // Create chunk
             LuaStack stack = new();
-            LuaChunk chunk = new LuaChunk(expressions);
+            LuaChunk chunk = new LuaChunk(expressions, LuaSourcePos.Undefined);
 
             // Invoke
             try {

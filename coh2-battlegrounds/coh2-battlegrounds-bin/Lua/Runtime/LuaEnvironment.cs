@@ -35,7 +35,7 @@ namespace Battlegrounds.Lua.Runtime {
         public LuaTable Table => this.m_currentFrame.TableEnv;
 
         /// <summary>
-        /// 
+        /// Initialize a new and empty <see cref="LuaEnvironment"/> class.
         /// </summary>
         public LuaEnvironment() {
             this.m_currentFrame = new EnvFrame();
@@ -43,7 +43,7 @@ namespace Battlegrounds.Lua.Runtime {
         }
 
         /// <summary>
-        /// 
+        /// Push a new environment frame.
         /// </summary>
         public void NewFrame() {
             EnvFrame frame = new EnvFrame() { ParentFrame = this.m_currentFrame };
@@ -52,16 +52,17 @@ namespace Battlegrounds.Lua.Runtime {
         }
 
         /// <summary>
-        /// 
+        /// Pop the current environment frame.
         /// </summary>
         public void PopFrame() => this.m_currentFrame = this.m_frames.Pop();
 
         /// <summary>
-        /// 
+        /// Lookup a variable in the environment.
         /// </summary>
-        /// <param name="_G"></param>
-        /// <param name="id"></param>
-        /// <returns></returns>
+        /// <param name="_G">The global table.</param>
+        /// <param name="id">The string ID of the variable to lookup.</param>
+        /// <param name="table">The environment table containing the variable.</param>
+        /// <returns>The value of the variable.</returns>
         public LuaValue Lookup(LuaTable _G, string id, out LuaTable table) {
             if (this.m_currentFrame.TryGet(new LuaString(id), out LuaValue value, out table)) {
                 return value;
@@ -72,11 +73,11 @@ namespace Battlegrounds.Lua.Runtime {
         }
 
         /// <summary>
-        /// 
+        /// Define a variable in the current environment frame.
         /// </summary>
-        /// <param name="id"></param>
-        /// <param name="value"></param>
-        /// <returns></returns>
+        /// <param name="id">The string ID</param>
+        /// <param name="value">The value of the variable</param>
+        /// <returns><paramref name="value"/>.</returns>
         public LuaValue Define(string id, LuaValue value) { 
             this.m_currentFrame.TableEnv[id] = value;
             return value; 
