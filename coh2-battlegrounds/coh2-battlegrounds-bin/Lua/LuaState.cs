@@ -5,6 +5,7 @@ using System.IO;
 using Battlegrounds.Functional;
 using Battlegrounds.Lua.Debugging;
 using Battlegrounds.Lua.Runtime;
+using Battlegrounds.Lua.Parsing;
 
 namespace Battlegrounds.Lua {
     
@@ -13,8 +14,14 @@ namespace Battlegrounds.Lua {
     /// </summary>
     public class LuaState {
 
+        public struct CallStackFrame {
+            public string FrameTitle;
+            public LuaSourcePos FrameSource;
+        }
+
         private int m_initialGSize;
         private LuaRuntimeError m_lastError;
+        private Stack<CallStackFrame> m_callStack;
 
 #pragma warning disable IDE1006 // Naming Styles (This is intentional in Lua
 
@@ -91,6 +98,9 @@ namespace Battlegrounds.Lua {
             // Store the size of the initial _G table
             this.m_initialGSize = _G.Size;
 
+            // Init callstack
+            this.m_callStack = new Stack<CallStackFrame>();
+
         }
 
         /// <summary>
@@ -142,6 +152,22 @@ namespace Battlegrounds.Lua {
                 b.Push(new LuaNil());
                 return 1;
             }));
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sourcePos"></param>
+        /// <param name="comment"></param>
+        public void PushStackTrace(LuaSourcePos sourcePos, string comment) {
+            CallStackFrame stackFrame = new CallStackFrame() { FrameSource = sourcePos, FrameTitle = comment };
+            this.m_callStack.Push(stackFrame);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public CallStackFrame PopStackTrace() => this.m_callStack.Pop();
 
     }
 

@@ -18,9 +18,8 @@ namespace Battlegrounds.Lua.Operators {
         public bool PrePostCondtion(bool pre, bool post) => pre && post;
 
         public virtual bool Apply(List<LuaExpr> luaExprs, int i, Action<List<LuaExpr>> recursiveFunction) {
-            if (luaExprs[i+1] is LuaFuncExpr func) {
-                recursiveFunction(func.Arguments.Arguments);
-                recursiveFunction(func.Body.ScopeBody);
+            if (luaExprs[i+1] is LuaKeyword { Keyword: "function" }) {
+                return false;
             }
             luaExprs[i - 1] = new LuaBinaryExpr(luaExprs[i - 1], luaExprs[i + 1], this.OperatorSymbol);
             luaExprs.RemoveRange(i, 2);

@@ -604,6 +604,32 @@ test = {
 
         }
 
+        [TestMethod]
+        public void LuaFunctionalTest13() {
+
+            string sourceText =
+              @"    for i=1, 10 do
+                        if i <= 5 then
+                            print(""Hello"")
+                        else
+                            break
+                        end
+                    end
+                    print(""done"")";
+
+            // Parse and verify top-level
+            var luaAST = LuaParser.ParseLuaSource(sourceText);
+            Assert.IsInstanceOfType(luaAST[0], typeof(LuaNumericForStatement));
+
+            // Verify AST
+            var forStatement = luaAST[0] as LuaNumericForStatement;
+            Assert.IsInstanceOfType(forStatement.Var, typeof(LuaAssignExpr));
+            Assert.IsInstanceOfType(forStatement.Step, typeof(LuaNopExpr));
+            Assert.IsInstanceOfType(forStatement.Limit, typeof(LuaExpr));
+            Assert.IsInstanceOfType(forStatement.Body.ScopeBody[0], typeof(LuaIfStatement));
+
+        }
+
     }
 
 }

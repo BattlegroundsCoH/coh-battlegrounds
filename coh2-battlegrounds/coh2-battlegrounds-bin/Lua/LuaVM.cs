@@ -38,11 +38,12 @@ namespace Battlegrounds.Lua {
             bool halt = false;
             bool haltLoop = false;
 
-            // Debug tracer
+            // Debug trace
             void TraceDb(string ins, params string[] args) {
-                if (luaState.EnableTrace) {
+                if (luaState.DebugMode) {
                     string name = args.Length == 0 ? ins : $"{ins} [{string.Join(", ", args)}]";
-                    Trace.WriteLine($"[{opID}] {name} ;; Stack := {string.Join(", ", stack.ToList())}", "LuaStackTrace");
+                    string stackContent = luaState.StackTrace ? $" Stack := {string.Join(", ", stack.ToList())}" : string.Empty;
+                    Trace.WriteLine($"[{opID}] {name} ;;{stackContent}", "LuaStackTrace");
                     opID++;
                 }
             }
@@ -334,14 +335,17 @@ namespace Battlegrounds.Lua {
                             // Push closure
                             DoExpr(call.ToCall);
 
-                            // Log trace etc. (For debugging)
-                            if (luaState.StackTrace) {
+                            // Log instruction (For debugging)
+                            if (luaState.DebugMode) {
                                 string prntName = "???";
                                 if (call.ToCall is LuaIdentifierExpr callee) {
                                     prntName = callee.Identifier;
                                 }
                                 TraceDb(nameof(LuaCallExpr), prntName);
                                 opID++;
+                                luaState.PushStackTrace(call.SourcePos, prntName);
+                            } else {
+                                luaState.PushStackTrace(call.SourcePos, "?");
                             }
 
                             // Pop closure and invoke
@@ -503,12 +507,30 @@ namespace Battlegrounds.Lua {
         /// <summary>
         /// Do a Lua string expression in the current <see cref="LuaState"/> environment.
         /// </summary>
+        /// <param name="luaState">The <see cref="LuaState"/> to use when running the code.</param>
         /// <param name="luaExpression">The lua-code string containing the expression(s) to do.</param>
+        /// <param name="luaSource">The source name. By default "?.lua".</param>
         /// <returns>The <see cref="LuaValue"/> that was on top of the stack after execution finished.</returns>
-        public static LuaValue DoString(LuaState luaState, string luaExpression) {
+        public static LuaValue DoString(LuaState luaState, string luaExpression, string luaSource = "?.lua") {
 
             // Get expressions
-            var expressions = LuaParser.ParseLuaSource(luaExpression);
+            if (LuaParser.ParseLuaSourceSafe(out List<LuaExpr> expressions, luaExpression, luaSource) is LuaSyntaxError lse) {
+
+                // The error message
+                string syntaxErrMessage = $"{lse.SourcePos}: {lse.Message}";
+
+                // Dump syntax error
+                Trace.WriteLine(syntaxErrMessage, "Lua Syntax Error");
+                if (!string.IsNullOrEmpty(lse.Suggestion)) {
+                    Trace.WriteLine(lse.Suggestion, "Lua Syntax Error - Suggestion");
+                }
+
+                // Return error message as string
+                return new LuaString(syntaxErrMessage);
+
+            }
+
+            // Verify we acutally got something to run.
             if (expressions.Count == 0) {
                 return new LuaNil();
             }
@@ -522,6 +544,7 @@ namespace Battlegrounds.Lua {
 
             // Invoke
             try {
+                luaState.PushStackTrace(LuaSourcePos.Undefined, "main chunk");
                 DoExpression(luaState, chunk, stack);
                 if (stack.Count > 0) {
                     value = stack.Pop();
@@ -549,7 +572,7 @@ namespace Battlegrounds.Lua {
         /// <exception cref="FileNotFoundException"/>
         public static LuaValue DoFile(LuaState luaState, string luaSourceFilePath) {
             if (File.Exists(luaSourceFilePath)) {
-                return DoString(luaState, File.ReadAllText(luaSourceFilePath));
+                return DoString(luaState, File.ReadAllText(luaSourceFilePath), Path.GetFileName(luaSourceFilePath));
             } else {
                 throw new FileNotFoundException(luaSourceFilePath);
             }

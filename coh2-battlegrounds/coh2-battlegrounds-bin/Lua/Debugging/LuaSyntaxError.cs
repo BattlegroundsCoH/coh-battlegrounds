@@ -1,4 +1,6 @@
-﻿namespace Battlegrounds.Lua.Debugging {
+﻿using Battlegrounds.Lua.Parsing;
+
+namespace Battlegrounds.Lua.Debugging {
     
     /// <summary>
     /// Represents errors that occured while verifying Lua code syntax.
@@ -6,14 +8,9 @@
     public class LuaSyntaxError : LuaException {
     
         /// <summary>
-        /// Get the line where the syntax error was detected.
+        /// Get the position of the syntax error
         /// </summary>
-        public int Line { get; }
-
-        /// <summary>
-        /// Get the starting column where the syntax error was detected.
-        /// </summary>
-        public int Column { get; }
+        public LuaSourcePos SourcePos { get; }
 
         /// <summary>
         /// Get the suggested fix for this syntax error.
@@ -23,25 +20,23 @@
         /// <summary>
         /// Initialize a new <see cref="LuaSyntaxError"/> class with a default error message.
         /// </summary>
-        public LuaSyntaxError() : base("Lua syntax error") { this.Line = int.MaxValue; this.Column = int.MaxValue; this.Suggestion = string.Empty; }
+        public LuaSyntaxError() : base("Lua syntax error") { this.SourcePos = LuaSourcePos.Undefined; this.Suggestion = string.Empty; }
 
         /// <summary>
         /// Initialize a new <see cref="LuaSyntaxError"/> class with a specialised error message.
         /// </summary>
         /// <param name="luaSyntaxErrMessage">The specialised error message to display</param>
         public LuaSyntaxError(string luaSyntaxErrMessage) : base(luaSyntaxErrMessage) {
-            this.Line = int.MaxValue; this.Column = int.MaxValue; this.Suggestion = string.Empty;
+            this.SourcePos = LuaSourcePos.Undefined; this.Suggestion = string.Empty;
         }
 
         /// <summary>
         /// Initialize a new <see cref="LuaSyntaxError"/> class with a specialised error message and origin of the syntax error.
         /// </summary>
-        /// <param name="luaSyntaxErrMessage">The specialised error message to display</param>
-        /// <param name="line">The line that caused the error</param>
-        /// <param name="column">The column that contains the starting character of the error</param>
-        public LuaSyntaxError(string luaSyntaxErrMessage, int line, int column) : base(luaSyntaxErrMessage) {
-            this.Line = line;
-            this.Column = column;
+        /// <param name="luaSyntaxErrMessage">The specialised error message to display.</param>
+        /// <param name="source">The source position of the syntax error.</param>
+        public LuaSyntaxError(string luaSyntaxErrMessage, LuaSourcePos source) : base(luaSyntaxErrMessage) {
+            this.SourcePos = source;
         }
 
         /// <summary>
@@ -50,8 +45,7 @@
         /// <param name="luaSyntaxErrMessage">The specialised error message to display</param>
         /// <param name="suggestion">The suggested correction to display</param>
         public LuaSyntaxError(string luaSyntaxErrMessage, string suggestion) : base(luaSyntaxErrMessage) {
-            this.Line = int.MaxValue;
-            this.Column = int.MaxValue;
+            this.SourcePos = LuaSourcePos.Undefined;
             this.Suggestion = suggestion;
         }
 
@@ -60,11 +54,9 @@
         /// </summary>
         /// <param name="luaSyntaxErrMessage">The specialised error message to display</param>
         /// <param name="suggestion">The suggested correction to display</param>
-        /// <param name="line">The line that caused the error</param>
-        /// <param name="column">The column that contains the starting character of the error</param>
-        public LuaSyntaxError(string luaSyntaxErrMessage, string suggestion, int line, int column) : base(luaSyntaxErrMessage) {
-            this.Line = line;
-            this.Column = column;
+        /// <param name="source">The source position of the syntax error.</param>
+        public LuaSyntaxError(string luaSyntaxErrMessage, string suggestion, LuaSourcePos source) : base(luaSyntaxErrMessage) {
+            this.SourcePos = source;
             this.Suggestion = suggestion;
         }
 
