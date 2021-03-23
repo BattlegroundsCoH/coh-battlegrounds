@@ -679,6 +679,31 @@ test = {
 
         }
 
+        [TestMethod]
+        public void LuaFunctionalTest18() {
+
+            string sourceText = @"
+            test = { beta = 5 };
+            function test:alpha(arg)
+                print(arg / (self.beta * 2));
+            end
+            test:alpha(420);
+            ";
+
+            // Parse and verify top-level
+            var luaAST = LuaParser.ParseLuaSource(sourceText);
+            Assert.AreEqual(3, luaAST.Count);
+            Assert.IsInstanceOfType(luaAST[0], typeof(LuaAssignExpr));
+            Assert.IsInstanceOfType(luaAST[1], typeof(LuaAssignExpr));
+            Assert.IsInstanceOfType(luaAST[2], typeof(LuaSelfCallExpr));
+
+            // Verify test.alpha definition
+            var decl = luaAST[1] as LuaAssignExpr;
+            Assert.IsInstanceOfType(decl.Left, typeof(LuaLookupExpr));
+            Assert.IsInstanceOfType(decl.Right, typeof(LuaFuncExpr));
+
+        }
+
     }
 
 }

@@ -84,12 +84,14 @@ namespace Battlegrounds.Lua {
             if (method.MethodAttribute.CreateMetatable) {
                 var oldDelegate = funcDelegate;
                 funcDelegate = (state, stack) => {
-                    _ = oldDelegate(state, stack);
+                    if (oldDelegate(state, stack) != 1) {
+                        throw new LuaRuntimeError($"Attempt to set metatable of userobject constructor '{method.Name}' that returned multiple values. This is not allowed.");
+                    }
                     if (stack.PopOrNil() is LuaUserObject obj) {
                         obj.SetMetatable(CreateMetatable(objectType, state, true));
                         stack.Push(obj); // Push back on stack
                     } else {
-                        throw new LuaRuntimeError($"Attempt to set metatable of non-metatable valid value.");
+                        throw new LuaRuntimeError("Attempt to set metatable of non-metatable valid value.");
                     }
                     return 1;
                 };

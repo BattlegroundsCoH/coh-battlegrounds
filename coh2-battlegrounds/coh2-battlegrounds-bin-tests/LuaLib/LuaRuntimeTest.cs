@@ -426,6 +426,27 @@ namespace coh2_battlegrounds_bin_tests.LuaLib {
 
         }
 
+        [TestMethod]
+        public void SimpleFunctionTest18() {
+
+            string sourceText = @"
+            test = { beta = 5 };
+            function test:alpha(arg)
+                print(arg / (self.beta * 2));
+            end
+            test:alpha(420);
+            ";
+
+            // Run and check output
+            var result = LuaVM.DoString(this.lState, sourceText);
+            Assert.AreEqual(new LuaNil(), result);
+
+            // Make assertions on output
+            string[] lns = writerOutput.ToString().Split(writer.NewLine);
+            Assert.AreEqual(2, lns.Length);
+            Assert.AreEqual("42", lns[0]);
+
+        }
     }
 
 }

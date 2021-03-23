@@ -181,6 +181,7 @@ namespace Battlegrounds.Lua {
                                 (LuaTable scope, LuaValue key) = varExprLst.Values[k] switch {
                                     LuaIdentifierExpr idExpr => GetAssignable(idExpr, assign.Local),
                                     LuaIndexExpr indExpr => (stack.Pop() as LuaTable, DoExprAndPop(indExpr.Key)),
+                                    LuaLookupExpr look => (DoExprAndPop(look.Left) as LuaTable, new LuaString((look.Right as LuaIdentifierExpr).Identifier)),
                                     _ => throw new Exception()
                                 };
                                 assignedValues.Add(key.Str());
@@ -360,13 +361,12 @@ namespace Battlegrounds.Lua {
                         haltLoop = true;
                         break;
                     case LuaSelfCallExpr selfCall: {
-
+                            // Handle 'self' argument
                             if (selfCall.ToCall is LuaLookupExpr lookup) {
                                 DoExpr(lookup.Left); // Do LHS (--> SELF)
                             } else {
                                 throw new LuaRuntimeError();
                             }
-
                             DoCall(selfCall);
                         }
                         break;

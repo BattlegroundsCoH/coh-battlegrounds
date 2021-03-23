@@ -258,6 +258,13 @@ namespace Battlegrounds.Lua.Parsing {
                             var id = call.ToCall;
                             var args = call.Arguments;
 
+                            if (call is LuaSelfCallExpr) {
+                                args.Arguments.Insert(0, new LuaIdentifierExpr("self", LuaSourcePos.Undefined));
+                                if (args.Arguments.Count > 1) {
+                                    args.Arguments.Insert(1, new LuaOpExpr(LuaTokenType.Comma, LuaSourcePos.Undefined));
+                                }
+                            }
+
                             // Fit
                             var tmp = luaExprs[i];
                             luaExprs[i] = id;
@@ -488,8 +495,19 @@ namespace Battlegrounds.Lua.Parsing {
             // Run recursively
             for (int i = 0; i < luaExprs.Count; i++) {
                 if (luaExprs[i] is LuaBinaryExpr binop) {
+                    if (binop.Left is LuaSingleElementParenthesisGroup lpg) {
+                        ApplyOrderOfOperations(lpg.Arguments); 
+                        if (lpg.Arguments.Count == 1) {
+                            luaExprs[i] = binop with { Left = lpg.Arguments[0] };
+                        }
+                    }
                     if (binop.Right is LuaTableExpr table) {
                         ApplyOrderOfOperations(table.SubExpressions);
+                    } else if (binop.Right is LuaSingleElementParenthesisGroup rpg) {
+                        ApplyOrderOfOperations(rpg.Arguments);
+                        if (rpg.Arguments.Count == 1) {
+                            luaExprs[i] = binop with { Right = rpg.Arguments[0] };
+                        }
                     }
                 } else if (luaExprs[i] is LuaTableExpr tableNode) {
                     ApplyOrderOfOperations(tableNode.SubExpressions);
