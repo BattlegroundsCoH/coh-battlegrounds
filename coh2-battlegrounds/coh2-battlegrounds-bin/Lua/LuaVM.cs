@@ -50,7 +50,7 @@ namespace Battlegrounds.Lua {
 
             // Get top value (if none, return _G)
             LuaValue GetTop(bool local) {
-                if (stack.Count > 0 && stack.Peek() is LuaTable) {
+                if (stack.Count > 0 && stack.Peek() is LuaTable or LuaUserObject) {
                     return stack.Pop();
                 } else {
                     return local ? luaState.Envionment.Table : luaState._G;
@@ -60,8 +60,8 @@ namespace Battlegrounds.Lua {
             // Lookup function for handling variable lookup
             LuaValue Lookup(LuaValue identifier, LuaValue top = null) {
                 var s = top is null ? GetTop(false) : top;
-                if (s is LuaTable topTable) {
-                    return topTable[identifier];
+                if (s is IMetatableParent topTable) {
+                    return LuaMetatableUtil.__Index(topTable, identifier, luaState);
                 } else {
                     throw new LuaRuntimeError("Attempt to index '?', a nil value.", stack, luaState);
                 }
@@ -99,6 +99,38 @@ namespace Battlegrounds.Lua {
                     TraceDb("LuaBranch::True");
                     DoChunk(body, true);
                 }
+            }
+
+            // Do a call
+            void DoCall(LuaCallExpr call) {
+
+                // Push arguments
+                call.Arguments.Arguments.ForEach(x => DoExpr(x));
+
+                // Push closure
+                DoExpr(call.ToCall);
+
+                // Log instruction (For debugging)
+                if (luaState.DebugMode) {
+                    string prntName = "???";
+                    if (call.ToCall is LuaIdentifierExpr callee) {
+                        prntName = callee.Identifier;
+                    }
+                    TraceDb(nameof(LuaCallExpr), prntName);
+                    opID++;
+                    luaState.PushStackTrace(call.SourcePos, prntName);
+                } else {
+                    luaState.PushStackTrace(call.SourcePos, "?");
+                }
+
+                // Pop closure and invoke
+                var topValue = stack.Pop();
+                if (topValue is LuaClosure closure) {
+                    pop = closure.Invoke(luaState, stack);
+                } else {
+                    throw new LuaRuntimeError($"Attempt to run a {topValue.GetLuaType()} value.");
+                }
+
             }
 
             // Execute chunk
@@ -327,37 +359,20 @@ namespace Battlegrounds.Lua {
                         TraceDb(nameof(LuaBreakStatement));
                         haltLoop = true;
                         break;
-                    case LuaCallExpr call: {
+                    case LuaSelfCallExpr selfCall: {
 
-                            // Push arguments
-                            call.Arguments.Arguments.ForEach(x => DoExpr(x));
-
-                            // Push closure
-                            DoExpr(call.ToCall);
-
-                            // Log instruction (For debugging)
-                            if (luaState.DebugMode) {
-                                string prntName = "???";
-                                if (call.ToCall is LuaIdentifierExpr callee) {
-                                    prntName = callee.Identifier;
-                                }
-                                TraceDb(nameof(LuaCallExpr), prntName);
-                                opID++;
-                                luaState.PushStackTrace(call.SourcePos, prntName);
+                            if (selfCall.ToCall is LuaLookupExpr lookup) {
+                                DoExpr(lookup.Left); // Do LHS (--> SELF)
                             } else {
-                                luaState.PushStackTrace(call.SourcePos, "?");
+                                throw new LuaRuntimeError();
                             }
 
-                            // Pop closure and invoke
-                            var topValue = stack.Pop();
-                            if (topValue is LuaClosure closure) {
-                                pop = closure.Invoke(luaState, stack);
-                            } else {
-                                throw new LuaRuntimeError($"Attempt to run a {topValue.GetLuaType()} value.");
-                            }
-
-                            break;
+                            DoCall(selfCall);
                         }
+                        break;
+                    case LuaCallExpr call:
+                        DoCall(call);
+                        break;
                     case LuaFuncExpr func: {
                             // TODO: Capture locals
                             string[] parameters = func.Arguments.Arguments.Select(x => (x as LuaIdentifierExpr).Identifier).ToArray();

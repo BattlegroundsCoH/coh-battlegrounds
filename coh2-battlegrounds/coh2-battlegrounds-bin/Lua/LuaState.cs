@@ -184,7 +184,7 @@ namespace Battlegrounds.Lua {
                 .Where(x => x.GetCustomAttribute<LuaUserobjectMethodAttribute>() is not null)
                 .Select(x => new LuaUserObjectType.Method(x.Name, x.GetCustomAttribute<LuaUserobjectMethodAttribute>(), x));
             var managedProperties = type.GetProperties(BindingFlags.Public | BindingFlags.Instance)
-                .Where(x => x.GetCustomAttribute<LuaUserobjectPropertyAttribute>() is not null)
+                .Where(x => x.GetCustomAttribute<LuaUserobjectPropertyAttribute>() is not null && x.GetMethod is not null)
                 .Select(x => new LuaUserObjectType.Property(x.Name, x.GetCustomAttribute<LuaUserobjectPropertyAttribute>(), x));
             
             // Create type
@@ -197,11 +197,11 @@ namespace Battlegrounds.Lua {
 
             // Init methods
             foreach (var method in managedMethods) {
-                userDataTable[method.Name] = LuaUserObjectType.CreateFunction(method);
+                userDataTable[method.Name] = LuaUserObjectType.CreateFunction(objType, method, userDataTable);
             }
 
             // Create metatable
-            userDataTable["__metatable"] = LuaUserObjectType.CreateMetatable(objType, this);
+            userDataTable["__metatable"] = LuaUserObjectType.CreateMetatable(objType, this, false);
 
             // Register usertype
             this._G[type.Name] = userDataTable;

@@ -66,14 +66,20 @@ namespace Battlegrounds.Lua.Operators {
                     return true;
                 }
             } else if (luaExprs[i + 1] is LuaCallExpr call) {
-                luaExprs[i - 1] = call with { ToCall = new LuaLookupExpr(luaExprs[i-1], call.ToCall as LuaLookupIdExpr) };
+                if (luaExprs[i] is LuaOpExpr { Type: LuaParser.LuaTokenType.LookSelf }) { // Then it's a call with implicit "self" in it
+                    luaExprs[i - 1] = new LuaSelfCallExpr(new LuaLookupExpr(luaExprs[i - 1], call.ToCall as LuaLookupIdExpr), call.Arguments);
+                } else if (luaExprs[i] is LuaOpExpr { Type: LuaParser.LuaTokenType.Look }) {
+                    luaExprs[i - 1] = call with { ToCall = new LuaLookupExpr(luaExprs[i - 1], call.ToCall as LuaLookupIdExpr) };
+                } else {
+                    return false;
+                }
                 luaExprs.RemoveRange(i, 2);
                 return true;
             }
             return false;
         }
 
-        public override bool IsOperator(LuaExpr source) => source is LuaOpExpr { Type: LuaParser.LuaTokenType.Look };
+        public override bool IsOperator(LuaExpr source) => source is LuaOpExpr { Type: LuaParser.LuaTokenType.Look } or LuaOpExpr { Type: LuaParser.LuaTokenType.LookSelf };
 
     }
 

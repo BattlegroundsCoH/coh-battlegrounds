@@ -41,6 +41,7 @@ namespace Battlegrounds.Lua.Parsing {
             Equals,
             Semicolon,
             Look,
+            LookSelf,
             Comment,
             StdOperator,
             RelOperator,
@@ -66,7 +67,7 @@ namespace Battlegrounds.Lua.Parsing {
         private static ILuaOperatorSyntax[][] luaOperatorPresedence = new ILuaOperatorSyntax[][] {
             new ILuaOperatorSyntax[] { new LuaCallOperatorSyntax() },
             new ILuaOperatorSyntax[] { new LuaIndexOperatorSyntax() },
-            new ILuaOperatorSyntax[] { new LuaLookupOperatorSyntax(":"), new LuaLookupOperatorSyntax(".") },
+            new ILuaOperatorSyntax[] { new LuaLookupOperatorSyntax("."), new LuaLookupOperatorSyntax(":") },
             new ILuaOperatorSyntax[] { new LuaBinaryOperatorSyntax("^") },
             new ILuaOperatorSyntax[] {
                 new LuaUnaryOperatorSyntax("not", LuaUnaryPosition.Prefix), new LuaUnaryOperatorSyntax("#", LuaUnaryPosition.Prefix),
@@ -126,8 +127,8 @@ namespace Battlegrounds.Lua.Parsing {
                     LuaTokenType.Number => new LuaConstValueExpr(new LuaNumber(double.Parse(tokens[i].Val)), tokens[i].Pos),
                     LuaTokenType.Comma or LuaTokenType.Equals or LuaTokenType.IndexClose or
                     LuaTokenType.IndexOpen or LuaTokenType.Semicolon or LuaTokenType.TableClose or
-                    LuaTokenType.TableOpen or LuaTokenType.Look or LuaTokenType.ExprOpen or
-                    LuaTokenType.ExprClose => new LuaOpExpr(tokens[i].Type, tokens[i].Pos),
+                    LuaTokenType.TableOpen or LuaTokenType.Look or LuaTokenType.LookSelf or 
+                    LuaTokenType.ExprOpen or LuaTokenType.ExprClose => new LuaOpExpr(tokens[i].Type, tokens[i].Pos),
                     LuaTokenType.Comment => new LuaComment(tokens[i].Val, tokens[i].Pos),
                     LuaTokenType.StdOperator or LuaTokenType.RelOperator or LuaTokenType.Concat => new LuaOpExpr(tokens[i].Val, tokens[i].Pos),
                     LuaTokenType.Keyword => new LuaKeyword(tokens[i].Val, tokens[i].Pos),
@@ -715,6 +716,9 @@ namespace Battlegrounds.Lua.Parsing {
                     ApplyRepeat(luaExprs, i, repeat);
                 } else if (expr is LuaBranch branch) {
                     ApplyBranch(branch);
+                } else if (expr is LuaOpExpr {  Type: LuaTokenType.Semicolon }) {
+                    luaExprs.RemoveAt(i); // Can just remove
+                    i--;
                 }
             }
 
@@ -900,7 +904,8 @@ namespace Battlegrounds.Lua.Parsing {
                             ";" => LuaTokenType.Semicolon,
                             ".." => LuaTokenType.Concat,
                             "..." => LuaTokenType.VarArgs,
-                            "." or ":" => LuaTokenType.Look,
+                            "." => LuaTokenType.Look,
+                            ":" => LuaTokenType.LookSelf,
                             "+" or "-" or "*" or "/" or "#" or "%" or "^" => LuaTokenType.StdOperator,
                             "==" or "~=" or "<=" or ">=" or "<" or ">" => LuaTokenType.RelOperator,
                             "\"" => LuaTokenType.Quote,

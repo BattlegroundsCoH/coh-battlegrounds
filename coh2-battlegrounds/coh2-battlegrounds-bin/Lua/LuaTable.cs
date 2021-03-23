@@ -17,7 +17,7 @@ namespace Battlegrounds.Lua {
     /// <summary>
     /// Representation of a Lua table. Extends <see cref="LuaValue"/> and can be enumerated over.
     /// </summary>
-    public sealed class LuaTable : LuaValue, IEnumerable<KeyValuePair<LuaValue, LuaValue>>, ICloneable {
+    public sealed class LuaTable : LuaValue, IEnumerable<KeyValuePair<LuaValue, LuaValue>>, ICloneable, IMetatableParent {
 
         /*private readonly struct TableKey {
             public readonly LuaValue key;

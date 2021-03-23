@@ -78,6 +78,13 @@ namespace Battlegrounds.Lua {
 
         public override string ToString() => this.Str();
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="funcDelegate"></param>
+        /// <returns></returns>
+        public static LuaClosure Anonymous(LuaCSharpFuncDelegate funcDelegate) => new LuaClosure(new LuaFunction(funcDelegate));
+
     }
 
 }

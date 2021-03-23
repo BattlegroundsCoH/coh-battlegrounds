@@ -119,6 +119,11 @@ namespace Battlegrounds.Lua.Parsing {
     public record LuaCallExpr(LuaExpr ToCall, LuaArguments Arguments) : LuaExpr(ToCall.SourcePos);
 
     /// <summary>
+    /// Call on self expression
+    /// </summary>
+    public record LuaSelfCallExpr(LuaExpr ToCall, LuaArguments Arguments) : LuaCallExpr(ToCall, Arguments);
+
+    /// <summary>
     /// Functional value expression (function(...) ... end)
     /// </summary>
     public record LuaFuncExpr(LuaArguments Arguments, LuaChunk Body, LuaSourcePos SourcePos) : LuaValueExpr(SourcePos);

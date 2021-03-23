@@ -21,6 +21,7 @@ namespace Battlegrounds.Lua {
             LuaBool b => b.IsTrue,
             LuaTable t => t,
             LuaUserObject u => u.Object,
+            LuaClosure c => c.Function,
             _ => null
         };
 

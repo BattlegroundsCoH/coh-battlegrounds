@@ -82,6 +82,51 @@ namespace coh2_battlegrounds_bin_tests.LuaLib {
 
         }
 
+        [TestMethod]
+        public void CanUseUserObjectDirectly() {
+
+            // Register type
+            lState.RegisterUserdata(typeof(PlayerTestClass));
+
+            // Lua code to run
+            string code = @"
+            player = PlayerTestClass.New()
+            player:SetFaction(""Soviet"")
+            print(player:GetFaction())
+            ";
+
+            // Run string
+            Assert.AreEqual(new LuaNil(), lState.DoString(code));
+
+            // Make assertions on output
+            string[] lns = writerOutput.ToString().Split(writer.NewLine);
+            Assert.AreEqual(2, lns.Length);
+            Assert.AreEqual("Soviet", lns[0]);
+
+        }
+
+        [TestMethod]
+        public void CanAccessUserObjectProperty() {
+
+            // Register type
+            lState.RegisterUserdata(typeof(PlayerTestClass));
+
+            // Lua code to run
+            string code = @"
+            player = PlayerTestClass.New()
+            print(player.Name)
+            ";
+
+            // Run string
+            Assert.AreEqual(new LuaNil(), lState.DoString(code));
+
+            // Make assertions on output
+            string[] lns = writerOutput.ToString().Split(writer.NewLine);
+            Assert.AreEqual(2, lns.Length);
+            Assert.AreEqual("CoDiEx", lns[0]);
+
+        }
+
     }
 
 }

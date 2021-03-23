@@ -18,6 +18,11 @@ namespace Battlegrounds.Lua {
         /// </summary>
         public bool CreateMetatable { get; init; } = false;
 
+        /// <summary>
+        /// The metatable indexing name ("__add" will handle addition, "__sub" will handle subtraction, etc.)
+        /// </summary>
+        public string MetaTableIndex { get; init; } = string.Empty;
+
     }
 
     /// <summary>
@@ -25,7 +30,6 @@ namespace Battlegrounds.Lua {
     /// </summary>
     [AttributeUsage(AttributeTargets.Property)]
     public class LuaUserobjectPropertyAttribute : Attribute {
-        public bool IsGetOnly { get; init; } = true;
     }
 
 }
