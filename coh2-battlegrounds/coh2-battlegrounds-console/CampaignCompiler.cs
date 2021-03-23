@@ -70,14 +70,14 @@ namespace coh2_battlegrounds_console {
 
             // Create lua state
             LuaState settingsState = new LuaState();
-            settingsState._G["MAP"] = LuaValue.ToLuaValue(ResourceType.MapImage);
-            settingsState._G["LOCALE"] = LuaValue.ToLuaValue(ResourceType.Locale);
-            settingsState._G["SCRIPT"] = LuaValue.ToLuaValue(ResourceType.CampaignScript);
-            settingsState._G["GFX"] = LuaValue.ToLuaValue(ResourceType.GfxMap);
-            settingsState._G["BINARY"] = LuaValue.ToLuaValue("binary");
-            settingsState._G["UNARY"] = LuaValue.ToLuaValue("unary");
-            settingsState._G["TEAM_AXIS"] = LuaValue.ToLuaValue("axis");
-            settingsState._G["TEAM_ALLIES"] = LuaValue.ToLuaValue("allies");
+            settingsState._G["MAP"] = LuaMarshal.ToLuaValue(ResourceType.MapImage);
+            settingsState._G["LOCALE"] = LuaMarshal.ToLuaValue(ResourceType.Locale);
+            settingsState._G["SCRIPT"] = LuaMarshal.ToLuaValue(ResourceType.CampaignScript);
+            settingsState._G["GFX"] = LuaMarshal.ToLuaValue(ResourceType.GfxMap);
+            settingsState._G["BINARY"] = LuaMarshal.ToLuaValue("binary");
+            settingsState._G["UNARY"] = LuaMarshal.ToLuaValue("unary");
+            settingsState._G["TEAM_AXIS"] = LuaMarshal.ToLuaValue("axis");
+            settingsState._G["TEAM_ALLIES"] = LuaMarshal.ToLuaValue("allies");
 
             // Verify file exists
             string settingsFile = Path.Combine(dir, "campaign.lua");

@@ -269,7 +269,7 @@ namespace Battlegrounds.Lua {
                             break;
                         }
                     case LuaTableExpr table:
-                        LuaTable t = new LuaTable();
+                        LuaTable t = new LuaTable(luaState);
                         stack.Push(t);
                         for (int i = 0; i < table.SubExpressions.Count; i++) {
                             DoExpr(table.SubExpressions[i]);

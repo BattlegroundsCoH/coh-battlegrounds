@@ -630,6 +630,30 @@ test = {
 
         }
 
+        [TestMethod]
+        public void LuaFunctionalTest14() {
+
+            string sourceText = "a.b()";
+
+            // Parse and verify top-level
+            var luaAST = LuaParser.ParseLuaSource(sourceText);
+            Assert.IsInstanceOfType(luaAST[0], typeof(LuaCallExpr));
+            Assert.IsInstanceOfType((luaAST[0] as LuaCallExpr).ToCall, typeof(LuaLookupExpr));
+
+        }
+
+        [TestMethod]
+        public void LuaFunctionalTest15() {
+
+            string sourceText = "a.b.c()";
+
+            // Parse and verify top-level
+            var luaAST = LuaParser.ParseLuaSource(sourceText);
+            Assert.IsInstanceOfType(luaAST[0], typeof(LuaCallExpr));
+            Assert.IsInstanceOfType((luaAST[0] as LuaCallExpr).ToCall, typeof(LuaLookupExpr));
+
+        }
+
     }
 
 }

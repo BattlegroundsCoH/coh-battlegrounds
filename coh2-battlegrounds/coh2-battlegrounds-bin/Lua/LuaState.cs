@@ -2,6 +2,8 @@
 using System.Linq;
 using System.Collections.Generic;
 using System.IO;
+using System.Reflection;
+
 using Battlegrounds.Functional;
 using Battlegrounds.Lua.Debugging;
 using Battlegrounds.Lua.Runtime;
@@ -22,6 +24,7 @@ namespace Battlegrounds.Lua {
         private int m_initialGSize;
         private LuaRuntimeError m_lastError;
         private Stack<CallStackFrame> m_callStack;
+        private Dictionary<Type, LuaUserObjectType> m_userTypes;
 
 #pragma warning disable IDE1006 // Naming Styles (This is intentional in Lua
 
@@ -73,7 +76,7 @@ namespace Battlegrounds.Lua {
         public LuaState(params string[] libraries) {
             
             // Create _G table
-            this._G = new LuaTable();
+            this._G = new LuaTable(this);
             this._G["_G"] = this._G; // Assign _G to self
             this._G["__version"] = new LuaString("Battlegrounds.Lua V1.0 (Emulates Lua 5.1)");
 
@@ -100,6 +103,9 @@ namespace Battlegrounds.Lua {
 
             // Init callstack
             this.m_callStack = new Stack<CallStackFrame>();
+
+            // Init type lists
+            this.m_userTypes = new Dictionary<Type, LuaUserObjectType>();
 
         }
 
@@ -152,6 +158,63 @@ namespace Battlegrounds.Lua {
                 b.Push(new LuaNil());
                 return 1;
             }));
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="tablepath"></param>
+        /// <param name="name"></param>
+        /// <param name="sharpFuncDelegate"></param>
+        public void RegisterFunction(string tablepath, string name, LuaCSharpFuncDelegate sharpFuncDelegate) {
+            if (this.DoString(tablepath) is LuaTable table) {
+                table[name] = new LuaClosure(new LuaFunction(sharpFuncDelegate));
+            } else {
+                throw new LuaRuntimeError();
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="type"></param>
+        public void RegisterUserdata(Type type) {
+            
+            // Collect methods and properties
+            var managedMethods = type.GetMethods(BindingFlags.Public | BindingFlags.Static | BindingFlags.Instance)
+                .Where(x => x.GetCustomAttribute<LuaUserobjectMethodAttribute>() is not null)
+                .Select(x => new LuaUserObjectType.Method(x.Name, x.GetCustomAttribute<LuaUserobjectMethodAttribute>(), x));
+            var managedProperties = type.GetProperties(BindingFlags.Public | BindingFlags.Instance)
+                .Where(x => x.GetCustomAttribute<LuaUserobjectPropertyAttribute>() is not null)
+                .Select(x => new LuaUserObjectType.Property(x.Name, x.GetCustomAttribute<LuaUserobjectPropertyAttribute>(), x));
+            
+            // Create type
+            LuaUserObjectType objType = new LuaUserObjectType(type);
+            objType.Methods.AddRange(managedMethods);
+            objType.Properties.AddRange(managedProperties);
+
+            // Init table container
+            LuaTable userDataTable = new LuaTable(this);
+
+            // Init methods
+            foreach (var method in managedMethods) {
+                userDataTable[method.Name] = LuaUserObjectType.CreateFunction(method);
+            }
+
+            // Create metatable
+            userDataTable["__metatable"] = LuaUserObjectType.CreateMetatable(objType, this);
+
+            // Register usertype
+            this._G[type.Name] = userDataTable;
+            this.m_userTypes[type] = objType;
+
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        public bool IsUserObject(Type type) => this.m_userTypes.ContainsKey(type);
 
         /// <summary>
         /// 

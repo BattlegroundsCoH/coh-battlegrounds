@@ -59,12 +59,16 @@ namespace Battlegrounds.Lua.Operators {
         public LuaLookupOperatorSyntax(string symbol) : base(symbol) { }
 
         public override bool Apply(List<LuaExpr> luaExprs, int i, Action<List<LuaExpr>> recursiveFunction) {
-            if (i + 1 < luaExprs.Count && luaExprs[i + 1] is LuaLookupIdExpr or LuaLookupExpr) {
+            if (luaExprs[i + 1] is LuaLookupIdExpr or LuaLookupExpr) {
                 if (base.Apply(luaExprs, i, recursiveFunction)) {
                     var binop = luaExprs[i - 1] as LuaBinaryExpr;
                     luaExprs[i - 1] = new LuaLookupExpr(binop.Left, binop.Right as LuaLookupIdExpr);
                     return true;
                 }
+            } else if (luaExprs[i + 1] is LuaCallExpr call) {
+                luaExprs[i - 1] = call with { ToCall = new LuaLookupExpr(luaExprs[i-1], call.ToCall as LuaLookupIdExpr) };
+                luaExprs.RemoveRange(i, 2);
+                return true;
             }
             return false;
         }

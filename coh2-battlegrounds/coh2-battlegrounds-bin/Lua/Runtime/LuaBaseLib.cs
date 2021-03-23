@@ -178,6 +178,38 @@ namespace Battlegrounds.Lua.Runtime {
             => throw new NotImplementedException();
 
         /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="state">The currently executing <see cref="LuaState"/>.</param>
+        /// <param name="stack">The current stack values</param>
+        /// <returns>The amount of new values pushed to the stack.</returns>
+        public static int SetMetaTable(LuaState state, LuaStack stack) {
+            if (stack.PopOrNil() is LuaValue meta) {
+                if (stack.PopOrNil() is LuaTable table) {
+                    table["__metatable"] = meta;
+                    stack.Push(table);
+                    return 1;
+                }
+            }
+            throw new LuaRuntimeError();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="state">The currently executing <see cref="LuaState"/>.</param>
+        /// <param name="stack">The current stack values</param>
+        /// <returns>The amount of new values pushed to the stack.</returns>
+        public static int GetMetaTable(LuaState state, LuaStack stack) {
+            if (stack.PopOrNil() is LuaTable table) {
+                stack.Push(table.MetaTable);
+                return 1;
+            } else {
+                throw new LuaRuntimeError();
+            }
+        }
+
+        /// <summary>
         /// Registers basic functionality in the <see cref="LuaState"/>.
         /// </summary>
         /// <param name="lState">The <see cref="LuaState"/> to import functionality into</param>
@@ -191,6 +223,10 @@ namespace Battlegrounds.Lua.Runtime {
             lState.RegisterFunction("tostring", ToString);
             lState.RegisterFunction("tonumber", ToNumber);
             lState.RegisterFunction("type", TypeOf);
+
+            // Register metadata functions
+            lState.RegisterFunction("setmetatable", SetMetaTable);
+            lState.RegisterFunction("getmetatable", GetMetaTable);
 
             // Register iteration functions
             lState.RegisterFunction("next", Next);

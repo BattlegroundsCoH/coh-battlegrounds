@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Battlegrounds.Lua.Runtime;
 
 namespace Battlegrounds.Lua {
 
@@ -52,11 +53,29 @@ namespace Battlegrounds.Lua {
         public int Length => this.Len();
 
         /// <summary>
-        /// Initialize a new <see cref="LuaTable"/> class without entries.
+        /// Get or set the metatable of the table.
+        /// </summary>
+        public LuaTable MetaTable => this["__metatable"] as LuaTable;
+
+        /// <summary>
+        /// Get the Lua state the table was created in.
+        /// </summary>
+        public LuaState LuaState { get; }
+
+        /// <summary>
+        /// Initialize a new state less <see cref="LuaTable"/> class without entries.
         /// </summary>
         public LuaTable() {
             this.m_table = new Dictionary<LuaValue, LuaValue>();
             this.m_rawIndices = new Dictionary<int, LuaValue>();
+        }
+
+        /// <summary>
+        /// Initialize a new <see cref="LuaTable"/> class without entries.
+        /// </summary>
+        /// <param name="state"></param>
+        public LuaTable(LuaState state) : this() {
+            this.LuaState = state;
         }
 
         public override bool Equals(LuaValue value) {
@@ -207,7 +226,7 @@ namespace Battlegrounds.Lua {
         /// </summary>
         /// <param name="managedObj"></param>
         /// <returns></returns>
-        public bool Contains(object managedObj) => this.Contains(ToLuaValue(managedObj));
+        public bool Contains(object managedObj) => this.Contains(LuaMarshal.ToLuaValue(managedObj));
 
         /// <summary>
         /// 
@@ -249,7 +268,7 @@ namespace Battlegrounds.Lua {
 
         object ICloneable.Clone() => this.Clone();
 
-        public override string Str() => $"0x{this.GetHashCode():X8}";
+        public override string Str() => this.LuaState is not null ? LuaMetatableUtil.__ToString(this) : $"0x{this.GetHashCode():X8}";
 
         public override string ToString() => this.Str();
 
