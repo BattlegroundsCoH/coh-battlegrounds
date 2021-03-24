@@ -93,6 +93,28 @@ namespace coh2_battlegrounds_bin_tests.LuaLib {
 
         }
 
+        [TestMethod]
+        [TestCategory("Syntax Error - for (generic)")]
+        public void LuaSyntaxError04() {
+
+        }
+
+        [TestMethod]
+        [TestCategory("Syntax Error - Basic syntax")]
+        public void LuaSyntaxError05() {
+
+            // Verify invalid
+            LuaSyntaxError lse = LuaParser.ParseLuaSourceToChunk(out _, "5+5");
+            Assert.IsNotNull(lse);
+            Assert.AreEqual("unexpected number '5' near '+'", lse.Message);
+
+            // Verify invalid
+            lse = LuaParser.ParseLuaSourceToChunk(out _, "if true then 5*5 end");
+            Assert.IsNotNull(lse);
+            Assert.AreEqual("unexpected number '5' near '*'", lse.Message);
+
+        }
+
     }
 
 }

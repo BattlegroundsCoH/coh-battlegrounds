@@ -21,6 +21,9 @@ namespace Battlegrounds.Lua.Operators {
             if (luaExprs[i+1] is LuaKeyword { Keyword: "function" }) {
                 return false;
             }
+            if (luaExprs[i-1] is LuaKeyword and not LuaKeyword { Keyword: "self" }) {
+                return false;
+            }
             luaExprs[i - 1] = new LuaBinaryExpr(luaExprs[i - 1], luaExprs[i + 1], this.OperatorSymbol);
             luaExprs.RemoveRange(i, 2);
             return true;

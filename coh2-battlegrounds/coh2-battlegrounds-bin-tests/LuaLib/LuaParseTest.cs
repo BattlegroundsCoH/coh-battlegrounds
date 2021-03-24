@@ -82,7 +82,7 @@ namespace coh2_battlegrounds_bin_tests.LuaLib {
 
             // Assert table values
             Assert.IsNotNull(lState._G["test"]);
-            Assert.AreEqual(new LuaNumber(0), LuaVM.DoString(lState, "test.a.a"));
+            Assert.AreEqual(new LuaNumber(0), LuaVM.DoRawString(lState, "test.a.a"));
 
         }
 
@@ -108,8 +108,8 @@ namespace coh2_battlegrounds_bin_tests.LuaLib {
 
             // Assert table values
             Assert.IsNotNull(lState._G["test"]);
-            Assert.AreEqual(new LuaBool(false), LuaVM.DoString(lState, "test.b[\"Enterprise\"].a"));
-            Assert.AreEqual(new LuaNumber(4.5), LuaVM.DoString(lState, "test.a[\"b\"]"));
+            Assert.AreEqual(new LuaBool(false), LuaVM.DoRawString(lState, "test.b[\"Enterprise\"].a"));
+            Assert.AreEqual(new LuaNumber(4.5), LuaVM.DoRawString(lState, "test.a[\"b\"]"));
 
         }
 
@@ -117,30 +117,30 @@ namespace coh2_battlegrounds_bin_tests.LuaLib {
         public void LuaDataParseRunTest05() {
 
             string sourcefile = @"
-test = {
-    a = {
-        a = 0,
-        b = 4.5
-    },
-    b = {
-        [""Enterprise""] = {
-            a = false
-        },
-        [""Shenzhou""] = {
-            a = true
-        }
-    }
-}
-";
+            test = {
+                a = {
+                    a = 0,
+                    b = 4.5
+                },
+                b = {
+                    [""Enterprise""] = {
+                        a = false
+                    },
+                    [""Shenzhou""] = {
+                        a = true
+                    }
+                }
+            }
+            ";
 
             // Assert parsing and execution runs fine
             Assert.AreEqual(new LuaNil(), LuaVM.DoString(lState, sourcefile));
 
             // Assert table values
             Assert.IsNotNull(lState._G["test"]);
-            Assert.AreEqual(new LuaNumber(4.5), LuaVM.DoString(lState, "test.a[\"b\"]"));
-            Assert.AreEqual(new LuaBool(false), LuaVM.DoString(lState, "test.b[\"Enterprise\"].a"));
-            Assert.AreEqual(new LuaBool(true), LuaVM.DoString(lState, "test.b[\"Shenzhou\"].a"));
+            Assert.AreEqual(new LuaNumber(4.5), LuaVM.DoRawString(lState, "return test.a[\"b\"]"));
+            Assert.AreEqual(new LuaBool(false), LuaVM.DoRawString(lState, "test.b[\"Enterprise\"].a"));
+            Assert.AreEqual(new LuaBool(true), LuaVM.DoRawString(lState, "test.b[\"Shenzhou\"].a"));
             Assert.AreEqual(lState.InitialGlobalSize + 1, lState._G.Size);
 
         }
@@ -149,30 +149,30 @@ test = {
         public void LuaDataParseRunTest06() {
 
             string sourcefile = @"
-test = {
-    a = {
-        a = 0,
-        b = 4.5
-    },
-    b = {
-        {
-            a = ""Enterprise""
-        },
-        {
-            a = ""Shenzhou""
-        }
-    }
-}
-";
+            test = {
+                a = {
+                    a = 0,
+                    b = 4.5
+                },
+                b = {
+                    {
+                        a = ""Enterprise""
+                    },
+                    {
+                        a = ""Shenzhou""
+                    }
+                }
+            }
+            ";
 
             // Assert parsing and execution runs fine
             Assert.AreEqual(new LuaNil(), LuaVM.DoString(lState, sourcefile));
 
             // Assert table values
             Assert.IsNotNull(lState._G["test"]);
-            Assert.AreEqual(new LuaNumber(4.5), LuaVM.DoString(lState, "test.a[\"b\"]"));
-            Assert.AreEqual(new LuaString("Enterprise"), LuaVM.DoString(lState, "test.b[1].a"));
-            Assert.AreEqual(new LuaString("Shenzhou"), LuaVM.DoString(lState, "test.b[2].a"));
+            Assert.AreEqual(new LuaNumber(4.5), LuaVM.DoRawString(lState, "test.a[\"b\"]"));
+            Assert.AreEqual(new LuaString("Enterprise"), LuaVM.DoRawString(lState, "test.b[1].a"));
+            Assert.AreEqual(new LuaString("Shenzhou"), LuaVM.DoRawString(lState, "test.b[2].a"));
             Assert.AreEqual(lState.InitialGlobalSize + 1, lState._G.Size);
 
         }
@@ -180,7 +180,7 @@ test = {
         [TestMethod]
         public void LuaDataParseRunTest07() {
 
-            string sourcefile = @"5 + 5";
+            string sourcefile = @"return 5 + 5";
 
             // Assert parsing and execution runs fine
             Assert.AreEqual(new LuaNumber(10), LuaVM.DoString(lState, sourcefile));
@@ -190,7 +190,7 @@ test = {
         [TestMethod]
         public void LuaDataParseRunTest08() {
 
-            string sourcefile = @"5 / 5";
+            string sourcefile = @"return 5 / 5";
 
             // Assert parsing and execution runs fine
             Assert.AreEqual(new LuaNumber(1), LuaVM.DoString(lState, sourcefile));
@@ -200,7 +200,7 @@ test = {
         [TestMethod]
         public void LuaDataParseRunTest09() {
 
-            string sourcefile = @"{ e = 5 / 5, b = 5 + 5 }";
+            string sourcefile = @"return { e = 5 / 5, b = 5 + 5 }";
 
             // Assert parsing and execution runs fine
             var val = LuaVM.DoString(lState, sourcefile);
@@ -214,7 +214,7 @@ test = {
         public void LuaDataParseRunTest10() {
 
             // Test string
-            string sourcefile = @"{ ""a"", ""b"", ""c"" }";
+            string sourcefile = @"return { ""a"", ""b"", ""c"" }";
 
             // Assert parsing and execution runs fine
             var val = LuaVM.DoString(lState, sourcefile);
@@ -229,7 +229,7 @@ test = {
         public void LuaDataParseRunTest11() {
 
             // Test string
-            string sourcefile = @"{ "" a "", ""  b"", ""c  "" }";
+            string sourcefile = @"return { "" a "", ""  b"", ""c  "" }";
 
             // Assert parsing and execution runs fine
             var val = LuaVM.DoString(lState, sourcefile);
@@ -244,7 +244,7 @@ test = {
         public void LuaDataParseRuntest12() {
 
             // Test string
-            string sourceText = @"-5";
+            string sourceText = @"return -5";
 
             // Assertions
             var val = LuaVM.DoString(lState, sourceText);
@@ -257,7 +257,7 @@ test = {
         public void LuaDataParseRuntest13() {
 
             // Test string
-            string sourceText = @"-5 * 6";
+            string sourceText = @"return -5 * 6";
 
             // Assertions
             var val = LuaVM.DoString(lState, sourceText);
@@ -270,7 +270,7 @@ test = {
         public void LuaDataParseRuntest14() {
 
             // Test string
-            string sourceText = @"-5 * 0.5";
+            string sourceText = @"return -5 * 0.5";
 
             // Assertions
             var val = LuaVM.DoString(lState, sourceText);
@@ -283,7 +283,7 @@ test = {
         public void LuaDataParseRuntest15() {
 
             // Test string
-            string sourceText = @"{ 0, 1, -5, -7 * 0.5, 5 }";
+            string sourceText = @"return { 0, 1, -5, -7 * 0.5, 5 }";
 
             // Assertions
             var val = LuaVM.DoString(lState, sourceText);
@@ -303,7 +303,7 @@ test = {
         public void LuaDataParseRuntest16() {
 
             // Test string
-            string sourceText = @"-""hello""";
+            string sourceText = @"return -""hello""";
 
             // Assertions
             var val = LuaVM.DoString(lState, sourceText);
@@ -319,10 +319,10 @@ test = {
         public void LuaDataParseRuntest17() {
 
             // Various NOT parse-run tests
-            Assert.AreEqual(new LuaBool(true), LuaVM.DoString(lState, "not nil"));
-            Assert.AreEqual(new LuaBool(true), LuaVM.DoString(lState, "not false"));
-            Assert.AreEqual(new LuaBool(false), LuaVM.DoString(lState, "not true"));
-            Assert.AreEqual(new LuaBool(false), LuaVM.DoString(lState, "not \"Hello\""));
+            Assert.AreEqual(new LuaBool(true), LuaVM.DoString(lState, "return not nil"));
+            Assert.AreEqual(new LuaBool(true), LuaVM.DoString(lState, "return not false"));
+            Assert.AreEqual(new LuaBool(false), LuaVM.DoString(lState, "return not true"));
+            Assert.AreEqual(new LuaBool(false), LuaVM.DoString(lState, "return not \"Hello\""));
 
         }
 
@@ -330,14 +330,14 @@ test = {
         public void LuaDataParseRuntest18() {
 
             // Various OR and AND parse-run tests (From the lua reference)
-            Assert.AreEqual(new LuaNumber(10), LuaVM.DoString(lState, "10 or 20"));
-            Assert.AreEqual(new LuaNumber(10), LuaVM.DoString(lState, "10 or error()"));
-            Assert.AreEqual(new LuaString("a"), LuaVM.DoString(lState, "nil or \"a\""));
-            Assert.AreEqual(new LuaNil(), LuaVM.DoString(lState, "nil and 10"));
-            Assert.AreEqual(new LuaBool(false), LuaVM.DoString(lState, "false and nil"));
-            Assert.AreEqual(new LuaBool(false), LuaVM.DoString(lState, "false and error()"));
-            Assert.AreEqual(new LuaNil(), LuaVM.DoString(lState, "false or nil"));
-            Assert.AreEqual(new LuaNumber(20), LuaVM.DoString(lState, "10 and 20"));
+            Assert.AreEqual(new LuaNumber(10), LuaVM.DoString(lState, "return 10 or 20"));
+            Assert.AreEqual(new LuaNumber(10), LuaVM.DoString(lState, "return 10 or error()"));
+            Assert.AreEqual(new LuaString("a"), LuaVM.DoString(lState, "return nil or \"a\""));
+            Assert.AreEqual(new LuaNil(), LuaVM.DoString(lState, "return nil and 10"));
+            Assert.AreEqual(new LuaBool(false), LuaVM.DoString(lState, "return false and nil"));
+            Assert.AreEqual(new LuaBool(false), LuaVM.DoString(lState, "return false and error()"));
+            Assert.AreEqual(new LuaNil(), LuaVM.DoString(lState, "return false or nil"));
+            Assert.AreEqual(new LuaNumber(20), LuaVM.DoString(lState, "return 10 and 20"));
 
         }
 

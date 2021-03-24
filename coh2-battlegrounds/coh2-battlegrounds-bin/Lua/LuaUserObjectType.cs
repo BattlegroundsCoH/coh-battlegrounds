@@ -13,6 +13,9 @@ namespace Battlegrounds.Lua {
     /// </summary>
     public class LuaUserObjectType {
 
+        // The instance table
+        LuaTable m_instanceTable;
+
         /// <summary>
         /// Invokable method.
         /// </summary>
@@ -39,6 +42,11 @@ namespace Battlegrounds.Lua {
         public List<Property> Properties { get; }
 
         /// <summary>
+        /// Get the instance metatable
+        /// </summary>
+        public LuaTable InstanceMetatable => this.m_instanceTable;
+
+        /// <summary>
         /// Initialize a new <see cref="LuaUserObjectType"/> bound to specified <paramref name="type"/>.
         /// </summary>
         /// <param name="type">The <see cref="Type"/> the <see cref="LuaUserObjectType"/> is representing.</param>
@@ -49,12 +57,39 @@ namespace Battlegrounds.Lua {
         }
 
         /// <summary>
-        /// 
+        /// Create the per-instance metatable for the <see cref="LuaUserObject"/>.
         /// </summary>
-        /// <param name="method"></param>
-        /// <param name="typeTable"></param>
+        /// <param name="state">The current <see cref="LuaState"/> being used to register <see cref="LuaUserObject"/>.</param>
+        public void CreateInstanceMetaTable(LuaState state) {
+
+            // Setup meta-table
+            this.m_instanceTable = new LuaTable(state);
+
+            // Setup per-instance values
+            this.m_instanceTable["__index"] = LuaClosure.Anonymous((state, stack) => {
+                var key = stack.Pop();
+                if (stack.PopOrNil() is LuaUserObject obj && obj.Object.GetType() == this.ObjectType) {
+                    if (this.Properties.FirstOrDefault(x => x.Name == key.Str() && x.Info.GetMethod.IsStatic is false) is Property prop) {
+                        stack.Push(LuaMarshal.ToLuaValue(prop.Info.GetMethod.Invoke(obj.Object, Array.Empty<object>())));
+                    } else {
+                        stack.Push(state._G.ByKey<LuaTable>(this.ObjectType.Name)[key]);
+                    }
+                } else {
+                    stack.Push(new LuaNil()); // Might have to throw error here
+                }
+                return 1;
+            });
+
+        }
+
+        /// <summary>
+        /// Create a function bound to a specific <see cref="LuaUserObjectType"/>.
+        /// </summary>
+        /// <param name="objectType">The user object type to create function for.</param>
+        /// <param name="method">The actual method to be bound.</param>
+        /// <param name="typeTable">The user object table to be defined.</param>
         /// <exception cref="LuaRuntimeError"/>
-        /// <returns></returns>
+        /// <returns>The <see cref="LuaClosure"/> that best represents the specified settings in the <paramref name="method"/> object.</returns>
         public static LuaClosure CreateFunction(LuaUserObjectType objectType, Method method, LuaTable typeTable) {
             
             // The delegate to invoke
@@ -88,7 +123,7 @@ namespace Battlegrounds.Lua {
                         throw new LuaRuntimeError($"Attempt to set metatable of userobject constructor '{method.Name}' that returned multiple values. This is not allowed.");
                     }
                     if (stack.PopOrNil() is LuaUserObject obj) {
-                        obj.SetMetatable(CreateMetatable(objectType, state, true));
+                        obj.SetMetatable(objectType.m_instanceTable);
                         stack.Push(obj); // Push back on stack
                     } else {
                         throw new LuaRuntimeError("Attempt to set metatable of non-metatable valid value.");
@@ -103,44 +138,33 @@ namespace Battlegrounds.Lua {
         }
 
         /// <summary>
-        /// 
+        /// Create metatable for for a <see cref="LuaUserObjectType"/>
         /// </summary>
-        /// <param name="objectType"></param>
-        /// <param name="state"></param>
-        /// <returns></returns>
-        public static LuaTable CreateMetatable(LuaUserObjectType objectType, LuaState state, bool instanceTable) {
-            LuaTable meta = new LuaTable();
-            // Define index
-            if (instanceTable) {
-                meta["__index"] = LuaClosure.Anonymous((state, stack) => {
-                    var key = stack.Pop();
-                    if (stack.PopOrNil() is LuaUserObject obj && obj.Object.GetType() == objectType.ObjectType) {
-                        if (objectType.Properties.FirstOrDefault(x => x.Name == key.Str() && x.Info.GetMethod.IsStatic is false) is Property prop) {
-                            stack.Push(LuaMarshal.ToLuaValue(prop.Info.GetMethod.Invoke(obj.Object, Array.Empty<object>())));
-                        } else {
-                            stack.Push(state._G.ByKey<LuaTable>(objectType.ObjectType.Name)[key]);
-                        }
+        /// <param name="objectType">The user object type to create meta data for.</param>
+        /// <param name="state">The state used to create metatable.</param>
+        /// <returns>The meta-table for the user object table.</returns>
+        public static LuaTable CreateMetatable(LuaUserObjectType objectType, LuaState state) {
+
+            // Setup meta-table
+            LuaTable meta = new LuaTable(state);
+
+            // Define static data
+            meta["__index"] = LuaClosure.Anonymous((state, stack) => {
+                var key = stack.Pop();
+                if (stack.PopOrNil() is LuaTable) {
+                    if (objectType.Properties.FirstOrDefault(x => x.Name == key.Str() && x.Info.GetMethod.IsStatic is true) is Property prop) {
+                        stack.Push(LuaMarshal.ToLuaValue(prop.Info.GetMethod.Invoke(null, Array.Empty<object>())));
                     } else {
-                        stack.Push(new LuaNil()); // Might have to throw error here
+                        stack.Push(state._G.ByKey<LuaTable>(objectType.ObjectType.Name)[key]);
                     }
-                    return 1;
-                });
-            } else {
-                meta["__index"] = LuaClosure.Anonymous((state, stack) => {
-                    var key = stack.Pop();
-                    if (stack.PopOrNil() is LuaTable) {
-                        if (objectType.Properties.FirstOrDefault(x => x.Name == key.Str() && x.Info.GetMethod.IsStatic is true) is Property prop) {
-                            stack.Push(LuaMarshal.ToLuaValue(prop.Info.GetMethod.Invoke(null, Array.Empty<object>())));
-                        } else {
-                            stack.Push(state._G.ByKey<LuaTable>(objectType.ObjectType.Name)[key]);
-                        }
-                    } else {
-                        stack.Push(new LuaNil()); // Might have to throw error here
-                    }
-                    return 1;
-                });
-            }
+                } else {
+                    stack.Push(new LuaNil()); // Might have to throw error here
+                }
+                return 1;
+            });
+
             return meta;
+
         }
 
     }

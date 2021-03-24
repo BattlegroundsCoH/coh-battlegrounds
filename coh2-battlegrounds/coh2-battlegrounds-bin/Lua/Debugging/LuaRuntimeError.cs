@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Battlegrounds.Lua.Runtime;
 
 namespace Battlegrounds.Lua.Debugging {
 
@@ -10,7 +11,7 @@ namespace Battlegrounds.Lua.Debugging {
         /// <summary>
         /// Get the stack when exception was thrown.
         /// </summary>
-        public Stack<LuaValue> Stack { get; }
+        public LuaStack Stack { get; }
 
         /// <summary>
         /// Get the state that caused the exception.
@@ -22,7 +23,7 @@ namespace Battlegrounds.Lua.Debugging {
         /// </summary>
         public LuaRuntimeError() : base("Fatal and unexpected error occured while executing Lua code.") {
             this.State = null;
-            this.Stack = new Stack<LuaValue>();
+            this.Stack = new ();
         }
 
         /// <summary>
@@ -31,7 +32,7 @@ namespace Battlegrounds.Lua.Debugging {
         /// <param name="luaRuntimeErrMessage">The specialized error message to display when error is thrown.</param>
         public LuaRuntimeError(string luaRuntimeErrMessage) : base(luaRuntimeErrMessage) {
             this.State = null;
-            this.Stack = new Stack<LuaValue>();
+            this.Stack = new ();
         }
 
         /// <summary>
@@ -40,7 +41,7 @@ namespace Battlegrounds.Lua.Debugging {
         /// <param name="luaRuntimeErrMessage">The specialized error message to display when error is thrown.</param>
         /// <param name="stack">The Lua stack at the time when exception was thrown.</param>
         /// <param name="state">The <see cref="LuaState"/> object that triggered the <see cref="LuaRuntimeError"/>.</param>
-        public LuaRuntimeError(string luaRuntimeErrMessage, Stack<LuaValue> stack, LuaState state) : base(luaRuntimeErrMessage) {
+        public LuaRuntimeError(string luaRuntimeErrMessage, LuaStack stack, LuaState state) : base(luaRuntimeErrMessage) {
             this.Stack = stack;
             this.State = state;
         }

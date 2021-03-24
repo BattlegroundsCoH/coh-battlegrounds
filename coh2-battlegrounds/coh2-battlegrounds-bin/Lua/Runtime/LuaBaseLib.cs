@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Text;
 using Battlegrounds.Lua.Debugging;
 
 namespace Battlegrounds.Lua.Runtime {
@@ -16,9 +17,18 @@ namespace Battlegrounds.Lua.Runtime {
         /// <param name="stack">The current stack values</param>
         public static void Print(LuaState state, LuaStack stack) {
             LuaValue top = stack.PopOrNil();
-            state.Out?.WriteLine(top.ToString());
+            string message = top.Str(); // TODO: Call __tostring
+            if (stack.Any) {
+                StringBuilder builder = new StringBuilder(message);
+                while (stack.Any) {
+                    builder.Append(' ');
+                    builder.Append(stack.Pop().Str()); // TODO: Call __tostring
+                }
+                message = builder.ToString();
+            }
+            state.Out?.WriteLine(message);
             if (state.EnableTrace) {
-                Trace.WriteLine(top.Str(), "Lua");
+                Trace.WriteLine(message, "Lua");
             }
         }
 

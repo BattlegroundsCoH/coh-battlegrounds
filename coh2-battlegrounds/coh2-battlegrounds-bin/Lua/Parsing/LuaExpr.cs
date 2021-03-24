@@ -3,6 +3,11 @@
 namespace Battlegrounds.Lua.Parsing {
     
     /// <summary>
+    /// Interface for detecting lua statements.
+    /// </summary>
+    public interface ILuaStatementExpr { }
+
+    /// <summary>
     /// Abstract representation of a Lua Expression
     /// </summary>
     public abstract record LuaExpr(LuaSourcePos SourcePos);
@@ -15,7 +20,7 @@ namespace Battlegrounds.Lua.Parsing {
     /// <summary>
     /// Abtract representation of a statement.
     /// </summary>
-    public abstract record LuaStatement(LuaSourcePos SourcePos) : LuaExpr(SourcePos);
+    public abstract record LuaStatement(LuaSourcePos SourcePos) : LuaExpr(SourcePos), ILuaStatementExpr;
 
     /// <summary>
     /// Abstract representation of a value.
@@ -56,7 +61,7 @@ namespace Battlegrounds.Lua.Parsing {
     /// <summary>
     /// Assignment expression (Extension of <see cref="LuaBinaryExpr"/>).
     /// </summary>
-    public record LuaAssignExpr(LuaExpr Left, LuaExpr Right, bool Local) : LuaBinaryExpr(Left, Right, "=");
+    public record LuaAssignExpr(LuaExpr Left, LuaExpr Right, bool Local) : LuaBinaryExpr(Left, Right, "="), ILuaStatementExpr;
 
     /// <summary>
     /// Binary logic Lua expression with either "and" or "or" as operator.
@@ -116,12 +121,12 @@ namespace Battlegrounds.Lua.Parsing {
     /// <summary>
     /// Call epxression
     /// </summary>
-    public record LuaCallExpr(LuaExpr ToCall, LuaArguments Arguments) : LuaExpr(ToCall.SourcePos);
+    public record LuaCallExpr(LuaExpr ToCall, LuaArguments Arguments, int ReturnCount = -1) : LuaExpr(ToCall.SourcePos), ILuaStatementExpr;
 
     /// <summary>
     /// Call on self expression
     /// </summary>
-    public record LuaSelfCallExpr(LuaExpr ToCall, LuaArguments Arguments) : LuaCallExpr(ToCall, Arguments);
+    public record LuaSelfCallExpr(LuaExpr ToCall, LuaArguments Arguments, int ReturnCount = -1) : LuaCallExpr(ToCall, Arguments, ReturnCount);
 
     /// <summary>
     /// Functional value expression (function(...) ... end)

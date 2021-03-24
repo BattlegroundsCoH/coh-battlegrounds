@@ -42,7 +42,7 @@ namespace Battlegrounds.Lua {
             void TraceDb(string ins, params string[] args) {
                 if (luaState.DebugMode) {
                     string name = args.Length == 0 ? ins : $"{ins} [{string.Join(", ", args)}]";
-                    string stackContent = luaState.StackTrace ? $" Stack := {string.Join(", ", stack.ToList())}" : string.Empty;
+                    string stackContent = luaState.StackTrace ? $" Stack := {string.Join(", ", stack.ToString(true))}" : string.Empty;
                     Trace.WriteLine($"[{opID}] {name} ;;{stackContent}", "LuaStackTrace");
                     opID++;
                 }
@@ -50,7 +50,7 @@ namespace Battlegrounds.Lua {
 
             // Get top value (if none, return _G)
             LuaValue GetTop(bool local) {
-                if (stack.Count > 0 && stack.Peek() is LuaTable or LuaUserObject) {
+                if (stack.Any && stack.Peek() is LuaTable or LuaUserObject) {
                     return stack.Pop();
                 } else {
                     return local ? luaState.Envionment.Table : luaState._G;
@@ -127,6 +127,9 @@ namespace Battlegrounds.Lua {
                 var topValue = stack.Pop();
                 if (topValue is LuaClosure closure) {
                     pop = closure.Invoke(luaState, stack);
+                    if (call.ReturnCount != -1) {
+                        pop = stack.ShiftLeft(pop - call.ReturnCount);
+                    }
                 } else {
                     throw new LuaRuntimeError($"Attempt to run a {topValue.GetLuaType()} value.");
                 }
@@ -142,7 +145,8 @@ namespace Battlegrounds.Lua {
                     if (!halt && !haltLoop) {
                         DoExpr(x);
                         if (x is LuaCallExpr) { // Is single call expression not used within any context - pop all stack values
-                            pop.Do(i => stack.Count.IfTrue(_ => stack.Count > 0).Then(() => stack.Pop()));
+                            stack.Pop(pop);
+                            //pop.Do(i => stack.Count.IfTrue(_ => stack.Count > 0).Then(() => stack.Pop()));
                         }
                     }
                 });
@@ -167,9 +171,9 @@ namespace Battlegrounds.Lua {
                             if (assign.Left is not LuaTupleExpr varExprLst) {
                                 varExprLst = new LuaTupleExpr(new List<LuaExpr>() { assign.Left }, LuaSourcePos.Undefined);
                             }
-                            int stackTop = stack.Count;
+                            int stackTop = stack.Top;
                             DoExpr(assign.Right);
-                            int stackNewTop = stack.Count;
+                            int stackNewTop = stack.Top;
                             int vars = varExprLst.Values.Count;
                             int stackDelta = stackNewTop - stackTop;
                             for (int k = 0; k < vars; k++) {
@@ -520,48 +524,24 @@ namespace Battlegrounds.Lua {
         //
 
         /// <summary>
-        /// Do a Lua string expression in the current <see cref="LuaState"/> environment.
+        /// 
         /// </summary>
-        /// <param name="luaState">The <see cref="LuaState"/> to use when running the code.</param>
-        /// <param name="luaExpression">The lua-code string containing the expression(s) to do.</param>
-        /// <param name="luaSource">The source name. By default "?.lua".</param>
-        /// <returns>The <see cref="LuaValue"/> that was on top of the stack after execution finished.</returns>
-        public static LuaValue DoString(LuaState luaState, string luaExpression, string luaSource = "?.lua") {
-
-            // Get expressions
-            if (LuaParser.ParseLuaSourceSafe(out List<LuaExpr> expressions, luaExpression, luaSource) is LuaSyntaxError lse) {
-
-                // The error message
-                string syntaxErrMessage = $"{lse.SourcePos}: {lse.Message}";
-
-                // Dump syntax error
-                Trace.WriteLine(syntaxErrMessage, "Lua Syntax Error");
-                if (!string.IsNullOrEmpty(lse.Suggestion)) {
-                    Trace.WriteLine(lse.Suggestion, "Lua Syntax Error - Suggestion");
-                }
-
-                // Return error message as string
-                return new LuaString(syntaxErrMessage);
-
-            }
-
-            // Verify we acutally got something to run.
-            if (expressions.Count == 0) {
-                return new LuaNil();
-            }
+        /// <param name="luaState"></param>
+        /// <param name="chunk"></param>
+        /// <returns></returns>
+        public static LuaValue RunChunk(LuaState luaState, LuaChunk chunk) {
 
             // Define lua value to return
             LuaValue value;
 
-            // Create chunk
+            // Init stack
             LuaStack stack = new();
-            LuaChunk chunk = new LuaChunk(expressions, LuaSourcePos.Undefined);
 
             // Invoke
             try {
                 luaState.PushStackTrace(LuaSourcePos.Undefined, "main chunk");
                 DoExpression(luaState, chunk, stack);
-                if (stack.Count > 0) {
+                if (stack.Any) {
                     value = stack.Pop();
                 } else {
                     value = new LuaNil();
@@ -580,6 +560,37 @@ namespace Battlegrounds.Lua {
         }
 
         /// <summary>
+        /// Do a Lua string expression in the current <see cref="LuaState"/> environment.
+        /// </summary>
+        /// <param name="luaState">The <see cref="LuaState"/> to use when running the code.</param>
+        /// <param name="luaExpression">The lua-code string containing the expression(s) to do.</param>
+        /// <param name="luaSource">The source name. By default "?.lua".</param>
+        /// <returns>The <see cref="LuaValue"/> that was on top of the stack after execution finished.</returns>
+        public static LuaValue DoString(LuaState luaState, string luaExpression, string luaSource = "?.lua") {
+
+            // Get expressions
+            if (LuaParser.ParseLuaSourceToChunk(out LuaChunk chunk, luaExpression, luaSource) is LuaSyntaxError lse) {
+
+                // The error message
+                string syntaxErrMessage = $"{lse.SourcePos}: {lse.Message}";
+
+                // Dump syntax error
+                Trace.WriteLine(syntaxErrMessage, "Lua Syntax Error");
+                if (!string.IsNullOrEmpty(lse.Suggestion)) {
+                    Trace.WriteLine(lse.Suggestion, "Lua Syntax Error - Suggestion");
+                }
+
+                // Return error message as string
+                return new LuaString(syntaxErrMessage);
+
+            }
+
+            // Reun the chunk
+            return RunChunk(luaState, chunk);
+
+        }
+
+        /// <summary>
         /// Do a Lua file containing Lua source code in the current <see cref="LuaState"/> envionment.
         /// </summary>
         /// <param name="luaSourceFilePath"></param>
@@ -591,6 +602,36 @@ namespace Battlegrounds.Lua {
             } else {
                 throw new FileNotFoundException(luaSourceFilePath);
             }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="luaState"></param>
+        /// <param name="luaExpression"></param>
+        /// <returns></returns>
+        public static LuaValue DoRawString(LuaState luaState, string luaExpression) {
+
+            // Get expressions
+            if (LuaParser.ParseLuaSourceSafe(out List<LuaExpr> ast, luaExpression) is LuaSyntaxError lse) {
+
+                // The error message
+                string syntaxErrMessage = $"{lse.SourcePos}: {lse.Message}";
+
+                // Dump syntax error
+                Trace.WriteLine(syntaxErrMessage, "Lua Syntax Error");
+                if (!string.IsNullOrEmpty(lse.Suggestion)) {
+                    Trace.WriteLine(lse.Suggestion, "Lua Syntax Error - Suggestion");
+                }
+
+                // Return error message as string
+                return new LuaString(syntaxErrMessage);
+
+            }
+
+            // Reun the chunk
+            return RunChunk(luaState, new LuaChunk(ast, LuaSourcePos.Undefined));
+
         }
 
     }

@@ -1,4 +1,6 @@
-﻿namespace Battlegrounds.Lua {
+﻿using Battlegrounds.Functional;
+
+namespace Battlegrounds.Lua {
 
     /// <summary>
     /// Represents a C (C#) object exposed to Lua. (In this case it's a managed C# object, this also means it'll offer some extra functionality).
@@ -24,16 +26,16 @@
         public LuaUserObject(object o) => this.m_obj = o;
 
         /// <summary>
-        /// 
+        /// Get the wrapped object represented by the User Object.
         /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <returns></returns>
-        public T GetObject<T>() => (T)this.m_obj;
+        /// <typeparam name="T">The type to cast the wrapped object into.</typeparam>
+        /// <returns>Either the wrapped object or the default value if type parameter is invalid.</returns>
+        public T GetObject<T>() => this.m_obj.IfTrue(x => x is T).ThenDo(x => (T)x).OrDefaultTo(() => default);
 
         /// <summary>
-        /// 
+        /// Set the metatable of the userobject.
         /// </summary>
-        /// <param name="meta"></param>
+        /// <param name="meta">The metatable. If not a <see cref="LuaTable"/>, the metatable is set to <see langword="null"/>.</param>
         public void SetMetatable(LuaValue meta) {
             if (meta is LuaTable t) {
                 this.MetaTable = t;

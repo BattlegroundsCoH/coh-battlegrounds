@@ -191,6 +191,7 @@ namespace Battlegrounds.Lua {
             LuaUserObjectType objType = new LuaUserObjectType(type);
             objType.Methods.AddRange(managedMethods);
             objType.Properties.AddRange(managedProperties);
+            objType.CreateInstanceMetaTable(this);
 
             // Init table container
             LuaTable userDataTable = new LuaTable(this);
@@ -201,7 +202,7 @@ namespace Battlegrounds.Lua {
             }
 
             // Create metatable
-            userDataTable["__metatable"] = LuaUserObjectType.CreateMetatable(objType, this, false);
+            userDataTable["__metatable"] = LuaUserObjectType.CreateMetatable(objType, this);
 
             // Register usertype
             this._G[type.Name] = userDataTable;

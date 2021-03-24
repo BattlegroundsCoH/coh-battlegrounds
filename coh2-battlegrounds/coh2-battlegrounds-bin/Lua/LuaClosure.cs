@@ -46,10 +46,10 @@ namespace Battlegrounds.Lua {
 
                 // Invoke expression
                 var _stack = LuaVM.DoExpression(callState, this.Function.First);
-                int _stackSz = _stack.Count;
+                int _stackSz = _stack.Top;
 
                 // Push returned values onto calling stack
-                while (_stack.Count > 0) {
+                while (_stack.Any) {
                     stack.Push(_stack.Pop());
                 }
 
