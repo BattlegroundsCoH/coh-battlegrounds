@@ -117,7 +117,6 @@ namespace Battlegrounds.Lua {
                         prntName = callee.Identifier;
                     }
                     TraceDb(nameof(LuaCallExpr), prntName);
-                    opID++;
                     luaState.PushStackTrace(call.SourcePos, prntName);
                 } else {
                     luaState.PushStackTrace(call.SourcePos, "?");
@@ -146,7 +145,6 @@ namespace Battlegrounds.Lua {
                         DoExpr(x);
                         if (x is LuaCallExpr) { // Is single call expression not used within any context - pop all stack values
                             stack.Pop(pop);
-                            //pop.Do(i => stack.Count.IfTrue(_ => stack.Count > 0).Then(() => stack.Pop()));
                         }
                     }
                 });
@@ -168,8 +166,8 @@ namespace Battlegrounds.Lua {
                         break;
                     case LuaAssignExpr assign:
                         List<string> assignedValues = new List<string>(); {
-                            if (assign.Left is not LuaTupleExpr varExprLst) {
-                                varExprLst = new LuaTupleExpr(new List<LuaExpr>() { assign.Left }, LuaSourcePos.Undefined);
+                            if (assign.Left is not LuaExpressionList varExprLst) {
+                                varExprLst = new LuaExpressionList(new List<LuaExpr>() { assign.Left }, LuaSourcePos.Undefined);
                             }
                             int stackTop = stack.Top;
                             DoExpr(assign.Right);
@@ -351,7 +349,7 @@ namespace Battlegrounds.Lua {
                         TraceDb(nameof(LuaIndexExpr));
                         break;
                     case LuaReturnStatement returnStatement:
-                        if (returnStatement.Value is LuaTupleExpr returnTuple) {
+                        if (returnStatement.Value is LuaExpressionList returnTuple) {
                             returnTuple.Values.ForEach(DoExpr);
                             TraceDb(nameof(LuaReturnStatement), returnTuple.Values.Count.ToString());
                         } else {
@@ -493,6 +491,11 @@ namespace Battlegrounds.Lua {
                     case LuaDoStatement ldo:
                         TraceDb(nameof(LuaDoStatement));
                         DoChunk(ldo.Body, true);
+                        break;
+                    case LuaExpressionList ltuple:
+                        for (int j = 0; j < ltuple.Values.Count; j++) {
+                            DoExpr(ltuple.Values[ltuple.Values.Count - 1 - j]);
+                        }
                         break;
                     default:
                         throw new Exception();

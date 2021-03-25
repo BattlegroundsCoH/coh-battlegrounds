@@ -325,9 +325,9 @@ namespace Battlegrounds.Lua.Parsing {
 
                     // Verify return value
                     CheckCommas(sub, 0);
-                    LuaExpr tuple = new LuaTupleExpr(sub, luaExprs[i].SourcePos);
-                    if ((tuple as LuaTupleExpr).Values.Count == 1) {
-                        tuple = (tuple as LuaTupleExpr).Values[0];
+                    LuaExpr tuple = new LuaExpressionList(sub, luaExprs[i].SourcePos);
+                    if ((tuple as LuaExpressionList).Values.Count == 1) {
+                        tuple = (tuple as LuaExpressionList).Values[0];
                     }
 
                     // Set return value
@@ -356,7 +356,7 @@ namespace Battlegrounds.Lua.Parsing {
 
                     // Get condition
                     var condition = luaExprs[i + 1];
-                    if (condition is LuaTupleExpr or LuaChunk) {
+                    if (condition is LuaExpressionList or LuaChunk) {
                         throw new LuaSyntaxError($"'do' expected near '{GetNodeAsString(luaExprs, i + 1)}'");
                     }
                     luaExprs.RemoveRange(i + 1, 2);
@@ -556,7 +556,7 @@ namespace Battlegrounds.Lua.Parsing {
                     ApplyOrderOfOperations(funcExpr.Arguments.Arguments);
                     ApplyOrderOfOperations(funcExpr.Body.ScopeBody);
                 } else if (luaExprs[i] is LuaReturnStatement returnStatement) {
-                    if (returnStatement.Value is LuaTupleExpr tupleExpr) {
+                    if (returnStatement.Value is LuaExpressionList tupleExpr) {
                         ApplyOrderOfOperations(tupleExpr.Values);
                         CheckCommas(tupleExpr.Values, 0);
                     } else {
@@ -634,8 +634,23 @@ namespace Battlegrounds.Lua.Parsing {
             }
         }
 
-        static void FlattenTuple(LuaTupleExpr tupleExpr) {
-
+        static void FlattenTuple(LuaExpressionList tupleExpr) {
+            if (tupleExpr.Values.Count == 0) {
+                return;
+            }
+            if (tupleExpr.Values[0] is LuaExpressionList expr) {
+                FlattenTuple(expr);
+                var merged = expr.Values;
+                merged.AddRange(tupleExpr.Values.Skip(1));
+                tupleExpr.Values.Clear();
+                tupleExpr.Values.AddRange(merged);
+            } else if (tupleExpr.Values[^1] is LuaExpressionList exprRight) {
+                FlattenTuple(exprRight);
+                var merged = tupleExpr.Values.Take(tupleExpr.Values.Count - 1).ToList();
+                merged.AddRange(exprRight.Values);
+                tupleExpr.Values.Clear();
+                tupleExpr.Values.AddRange(merged);
+            }
         }
 
         /// <summary>
@@ -688,17 +703,24 @@ namespace Battlegrounds.Lua.Parsing {
             static void ApplyMultivalueAssignment(List<LuaExpr> luaExprs, ref int i) {
                 if (i + 1 < luaExprs.Count && luaExprs[i + 1] is LuaOpExpr { Type: LuaTokenType.Comma }) {
                     if (i + 2 < luaExprs.Count && luaExprs[i + 2] is LuaAssignExpr assign) {
-                        var lhs = new LuaTupleExpr(new List<LuaExpr>() { luaExprs[i], assign.Left }, luaExprs[i].SourcePos);
+                        var lhs = new LuaExpressionList(new List<LuaExpr>() { luaExprs[i], assign.Left }, luaExprs[i].SourcePos);
                         FlattenTuple(lhs);
                         luaExprs[i] = assign with { Left = lhs };
                         luaExprs.RemoveRange(i + 1, 2);
                         ApplyBinop(luaExprs[i] as LuaAssignExpr);
                     } else if (i + 2 < luaExprs.Count && luaExprs[i + 2] is LuaIdentifierExpr or LuaLookupExpr) {
-                        luaExprs[i] = new LuaTupleExpr(new List<LuaExpr>() { luaExprs[i], luaExprs[i + 2] }, luaExprs[i].SourcePos);
+                        luaExprs[i] = new LuaExpressionList(new List<LuaExpr>() { luaExprs[i], luaExprs[i + 2] }, luaExprs[i].SourcePos);
+                        luaExprs.RemoveRange(i + 1, 2);
                         i--;
                     } else {
                         // ERR
                     }
+                } else if (i - 2 >= 0 && luaExprs[i-1] is LuaOpExpr { Type: LuaTokenType.Comma } && luaExprs[i-2] is LuaAssignExpr assign) {
+                    var rhs = new LuaExpressionList(new List<LuaExpr>() { assign.Right, luaExprs[i] }, luaExprs[i - 2].SourcePos);
+                    FlattenTuple(rhs);
+                    luaExprs[i - 2] = assign with { Right = rhs };
+                    luaExprs.RemoveRange(i - 1, 2);
+                    i -= 2;
                 }
             }
 
@@ -762,7 +784,7 @@ namespace Battlegrounds.Lua.Parsing {
                 } else if (expr is LuaFuncExpr func) {
                     ApplyArgs(func.Arguments);
                     Single(func.Body);
-                } else if (expr is LuaIdentifierExpr or LuaLookupExpr or LuaTupleExpr) {
+                } else if (expr is LuaIdentifierExpr or LuaLookupExpr or LuaExpressionList) {
                     ApplyMultivalueAssignment(luaExprs, ref i);
                 } else if (expr is LuaKeyword { Keyword: "local" }) {
                     ApplyLocal();
@@ -831,7 +853,7 @@ namespace Battlegrounds.Lua.Parsing {
                 ApplyImplicitBehaviour(table.SubExpressions, 0);
             }
 
-            void Single(LuaExpr expr) {
+            static void Single(LuaExpr expr) {
                 if (expr is LuaTableExpr t) {
                     TableImplicits(t);
                 } else if (expr is LuaBinaryExpr binop) {
@@ -844,7 +866,7 @@ namespace Battlegrounds.Lua.Parsing {
                     // TODO: Loop through other elements
                 } else if (expr is LuaReturnStatement returnStatement) {
                     Single(returnStatement.Value);
-                } else if (expr is LuaTupleExpr tupleExpr) {
+                } else if (expr is LuaExpressionList tupleExpr) {
                     ApplyImplicitBehaviour(tupleExpr.Values, 0);
                 }
             }

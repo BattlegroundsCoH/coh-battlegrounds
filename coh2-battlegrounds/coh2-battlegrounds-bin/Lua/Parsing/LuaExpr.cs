@@ -74,9 +74,9 @@ namespace Battlegrounds.Lua.Parsing {
     public record LuaUnaryExpr(LuaExpr Expr, string Operator) : LuaExpr(Expr.SourcePos);
 
     /// <summary>
-    /// Tuple expression (List of expressions) - Not an actual tuple.
+    /// Expression list
     /// </summary>
-    public record LuaTupleExpr(List<LuaExpr> Values, LuaSourcePos SourcePos) : LuaExpr(SourcePos);
+    public record LuaExpressionList(List<LuaExpr> Values, LuaSourcePos SourcePos) : LuaExpr(SourcePos);
 
     /// <summary>
     /// Value expression.

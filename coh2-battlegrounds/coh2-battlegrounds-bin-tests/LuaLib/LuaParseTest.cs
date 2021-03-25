@@ -428,7 +428,7 @@ namespace coh2_battlegrounds_bin_tests.LuaLib {
             Assert.IsInstanceOfType(body.ScopeBody[0], typeof(LuaReturnStatement));
 
             var bottom = luaAST[1] as LuaBinaryExpr;
-            Assert.IsInstanceOfType(bottom.Left, typeof(LuaTupleExpr));
+            Assert.IsInstanceOfType(bottom.Left, typeof(LuaExpressionList));
             Assert.IsInstanceOfType(bottom.Right, typeof(LuaCallExpr));
 
         }
@@ -701,6 +701,44 @@ namespace coh2_battlegrounds_bin_tests.LuaLib {
             var decl = luaAST[1] as LuaAssignExpr;
             Assert.IsInstanceOfType(decl.Left, typeof(LuaLookupExpr));
             Assert.IsInstanceOfType(decl.Right, typeof(LuaFuncExpr));
+
+        }
+
+        [TestMethod]
+        public void LuaFunctionalTest19() {
+
+            // Parse and verify top-level
+            var luaAST = LuaParser.ParseLuaSource("x, y, z = y, z, x;");
+            Assert.AreEqual(1, luaAST.Count);
+            Assert.IsInstanceOfType(luaAST[0], typeof(LuaAssignExpr));
+
+            // Verify test.alpha definition
+            var decl = luaAST[0] as LuaAssignExpr;
+            Assert.IsInstanceOfType(decl.Left, typeof(LuaExpressionList));
+            Assert.IsInstanceOfType(decl.Right, typeof(LuaExpressionList));
+
+            // Assert orders
+            LuaTestUtility.VerifyTupleOrder(decl.Left as LuaExpressionList, "x", "y", "z");
+            LuaTestUtility.VerifyTupleOrder(decl.Right as LuaExpressionList, "y", "z", "x");
+
+        }
+
+        [TestMethod]
+        public void LuaFunctionalTest20() {
+
+            // Parse and verify top-level
+            var luaAST = LuaParser.ParseLuaSource("x, y, z, w = y, z, w, x;");
+            Assert.AreEqual(1, luaAST.Count);
+            Assert.IsInstanceOfType(luaAST[0], typeof(LuaAssignExpr));
+
+            // Verify test.alpha definition
+            var decl = luaAST[0] as LuaAssignExpr;
+            Assert.IsInstanceOfType(decl.Left, typeof(LuaExpressionList));
+            Assert.IsInstanceOfType(decl.Right, typeof(LuaExpressionList));
+
+            // Assert orders
+            LuaTestUtility.VerifyTupleOrder(decl.Left as LuaExpressionList, "x", "y", "z", "w");
+            LuaTestUtility.VerifyTupleOrder(decl.Right as LuaExpressionList, "y", "z", "w", "x");
 
         }
 

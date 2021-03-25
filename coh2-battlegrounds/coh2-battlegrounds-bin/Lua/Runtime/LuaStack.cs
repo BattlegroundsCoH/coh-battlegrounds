@@ -87,7 +87,7 @@ namespace Battlegrounds.Lua.Runtime {
             if (this.m_topPtr - 1 >= 0) {
                 return this.m_stack[--this.m_topPtr]; // We dont set to null, we just change our stack ptr
             } else {
-                throw new InvalidOperationException();
+                throw new InvalidOperationException("Cannot pop an empty stack.");
             }
         }
 
@@ -100,7 +100,7 @@ namespace Battlegrounds.Lua.Runtime {
             if (this.m_topPtr - 1 >= 0) {
                 return this.m_stack[this.m_topPtr - 1];
             } else {
-                throw new InvalidOperationException();
+                throw new InvalidOperationException("Cannot peek an empty stack.");
             }
         }
 
@@ -117,22 +117,29 @@ namespace Battlegrounds.Lua.Runtime {
         }
 
         /// <summary>
+        /// Creates a new array of <see cref="LuaValue"/> references currently contained on the stack.
+        /// </summary>
+        /// <param name="topFirst">Should the top-element of the stack be the first element.</param>
+        /// <returns>An array representing the stack.</returns>
+        public LuaValue[] ToArray(bool topFirst) => topFirst ? this.m_stack.Reverse().ToArray() : this.m_stack.Clone() as LuaValue[];
+
+        /// <summary>
         /// Convert the stack into a string with a list of contained <see cref="LuaValue"/> elements.
         /// </summary>
         /// <param name="topFirst">Top-element should be the first element in returned string.</param>
         /// <returns>The converted string of <see cref="LuaValue"/> string representations.</returns>
         public string ToString(bool topFirst) 
-            => !topFirst ? string.Join(", ", this.Pop(this.Top).Select(x => x.Str())) : string.Join(", ", this.Pop(this.Top).Reverse().Select(x => x.Str()));
+            => string.Join(", ", this.ToArray(topFirst).Select(x => x.Str()));
 
         /// <summary>
         /// Shift the whole stack to the left by <paramref name="count"/> elements.
         /// </summary>
         /// <param name="count">The amount of elements to shift.</param>
         /// <returns>The new top pointer of the stack.</returns>
-        /// <exception cref="IndexOutOfRangeException"/>
+        /// <exception cref="InvalidOperationException"/>
         public int ShiftLeft(int count) {
             if (count > this.Capacity) {
-                throw new IndexOutOfRangeException();
+                throw new InvalidOperationException("Cannot shift more elements than available.");
             }
             var buffer = new LuaValue[this.Capacity];
             Array.Copy(this.m_stack, count, buffer, 0, this.Capacity - count);
