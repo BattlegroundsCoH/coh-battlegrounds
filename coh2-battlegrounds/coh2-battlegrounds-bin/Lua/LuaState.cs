@@ -22,7 +22,7 @@ namespace Battlegrounds.Lua {
         }
 
         private int m_initialGSize;
-        private LuaRuntimeError m_lastError;
+        private LuaException m_lastError;
         private Stack<CallStackFrame> m_callStack;
         private Dictionary<Type, LuaUserObjectType> m_userTypes;
 
@@ -112,8 +112,8 @@ namespace Battlegrounds.Lua {
         /// <summary>
         /// Get last runtime error (<see langword="null"/> if no runtime error).
         /// </summary>
-        /// <returns>Returns the last thrown <see cref="LuaRuntimeError"/>.</returns>
-        public LuaRuntimeError GetError() => this.m_lastError;
+        /// <returns>Returns the last thrown <see cref="LuaException"/> within the context of this state.</returns>
+        public LuaException GetError() => this.m_lastError;
 
         /// <summary>
         /// Do a Lua string expression in the current <see cref="LuaState"/> environment.
@@ -131,10 +131,10 @@ namespace Battlegrounds.Lua {
         public LuaValue DoFile(string luaSourceFilePath) => LuaVM.DoFile(this, luaSourceFilePath);
 
         /// <summary>
-        /// Set the last <see cref="LuaRuntimeError"/> that occured.
+        /// Set the last <see cref="LuaException"/> that occured.
         /// </summary>
-        /// <param name="luaRuntimeErr">The last <see cref="LuaRuntimeError"/> instance.</param>
-        public void SetLastError(LuaRuntimeError luaRuntimeErr) => this.m_lastError = luaRuntimeErr;
+        /// <param name="luaRuntimeErr">The last <see cref="LuaException"/> instance.</param>
+        public void SetLastError(LuaException luaRuntimeErr) => this.m_lastError = luaRuntimeErr;
 
         /// <summary>
         /// Register a function within the global environment.
@@ -158,20 +158,6 @@ namespace Battlegrounds.Lua {
                 b.Push(new LuaNil());
                 return 1;
             }));
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="tablepath"></param>
-        /// <param name="name"></param>
-        /// <param name="sharpFuncDelegate"></param>
-        public void RegisterFunction(string tablepath, string name, LuaCSharpFuncDelegate sharpFuncDelegate) {
-            if (this.DoString(tablepath) is LuaTable table) {
-                table[name] = new LuaClosure(new LuaFunction(sharpFuncDelegate));
-            } else {
-                throw new LuaRuntimeError();
-            }
-        }
 
         /// <summary>
         /// 

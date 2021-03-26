@@ -1,4 +1,4 @@
-{
+gfx = {
     ["soviet_banner"] = {
         gfx = "soviet_banner.png", -- Note, will load from folder named after file
         width = 48,

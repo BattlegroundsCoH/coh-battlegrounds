@@ -563,13 +563,13 @@ namespace Battlegrounds.Lua {
         }
 
         /// <summary>
-        /// Do a Lua string expression in the current <see cref="LuaState"/> environment.
+        /// 
         /// </summary>
-        /// <param name="luaState">The <see cref="LuaState"/> to use when running the code.</param>
-        /// <param name="luaExpression">The lua-code string containing the expression(s) to do.</param>
-        /// <param name="luaSource">The source name. By default "?.lua".</param>
-        /// <returns>The <see cref="LuaValue"/> that was on top of the stack after execution finished.</returns>
-        public static LuaValue DoString(LuaState luaState, string luaExpression, string luaSource = "?.lua") {
+        /// <param name="luaState"></param>
+        /// <param name="luaExpression"></param>
+        /// <param name="luaSource"></param>
+        /// <returns></returns>
+        public static LuaChunk LoadChunk(LuaState luaState, string luaExpression, string luaSource = "?.lua") {
 
             // Get expressions
             if (LuaParser.ParseLuaSourceToChunk(out LuaChunk chunk, luaExpression, luaSource) is LuaSyntaxError lse) {
@@ -583,20 +583,50 @@ namespace Battlegrounds.Lua {
                     Trace.WriteLine(lse.Suggestion, "Lua Syntax Error - Suggestion");
                 }
 
+                // Set syntax error
+                luaState.SetLastError(lse);
+
                 // Return error message as string
-                return new LuaString(syntaxErrMessage);
+                return null;
+
+            } else {
+                
+                // Return result
+                return chunk;
 
             }
 
-            // Reun the chunk
-            return RunChunk(luaState, chunk);
+        }
+
+        /// <summary>
+        /// Do a Lua string expression in the current <see cref="LuaState"/> environment.
+        /// </summary>
+        /// <param name="luaState">The <see cref="LuaState"/> to use when running the code.</param>
+        /// <param name="luaExpression">The lua-code string containing the expression(s) to do.</param>
+        /// <param name="luaSource">The source name. By default "?.lua".</param>
+        /// <returns>The <see cref="LuaValue"/> that was on top of the stack after execution finished.</returns>
+        public static LuaValue DoString(LuaState luaState, string luaExpression, string luaSource = "?.lua") {
+
+            // Load chunk
+            if (LoadChunk(luaState, luaExpression, luaSource) is LuaChunk chunk) {
+
+                // Reun the chunk
+                return RunChunk(luaState, chunk);
+
+            } else {
+
+                // Return nil
+                return new LuaNil();
+
+            }
 
         }
 
         /// <summary>
         /// Do a Lua file containing Lua source code in the current <see cref="LuaState"/> envionment.
         /// </summary>
-        /// <param name="luaSourceFilePath"></param>
+        /// <param name="luaState">The state to execute the file in.</param>
+        /// <param name="luaSourceFilePath">The location of the Lua source code.</param>
         /// <returns>The <see cref="LuaValue"/> that was on top of the stack after execution finished.</returns>
         /// <exception cref="FileNotFoundException"/>
         public static LuaValue DoFile(LuaState luaState, string luaSourceFilePath) {
@@ -608,11 +638,11 @@ namespace Battlegrounds.Lua {
         }
 
         /// <summary>
-        /// 
+        /// Evaluate a single and raw lua expression and get result of expression.
         /// </summary>
-        /// <param name="luaState"></param>
-        /// <param name="luaExpression"></param>
-        /// <returns></returns>
+        /// <param name="luaState">The state to execute the raw expression in.</param>
+        /// <param name="luaExpression">The actual string containing a single lua expression to evaluate.</param>
+        /// <returns>If no syntax-error occured, the result of the evaluation; Otherwise a <see cref="LuaString"/> describing the syntax error.</returns>
         public static LuaValue DoRawString(LuaState luaState, string luaExpression) {
 
             // Get expressions
@@ -627,6 +657,8 @@ namespace Battlegrounds.Lua {
                     Trace.WriteLine(lse.Suggestion, "Lua Syntax Error - Suggestion");
                 }
 
+                // Set syntax error
+                luaState.SetLastError(lse);
                 // Return error message as string
                 return new LuaString(syntaxErrMessage);
 
@@ -635,6 +667,37 @@ namespace Battlegrounds.Lua {
             // Reun the chunk
             return RunChunk(luaState, new LuaChunk(ast, LuaSourcePos.Undefined));
 
+        }
+
+        /// <summary>
+        /// Load but do not run a Lua string.
+        /// </summary>
+        /// <param name="luaState">The state to execute the raw expression in.</param>
+        /// <param name="luaExpression">The actual string containing lua expression(s) to load.</param>
+        /// <param name="luaSource">The name of the source file containing the expression.</param>
+        /// <returns>If no syntax error occured, a <see cref="LuaClosure"/> is returned, containing the parsed lua chunk to be executed; Otherwise <see cref="LuaNil"/>.</returns>
+        public static LuaValue LoadString(LuaState luaState, string luaExpression, string luaSource = "?.lua") {
+
+            if (LoadChunk(luaState, luaExpression, luaSource) is LuaChunk chunk) {
+                return new LuaClosure(new LuaFunction(chunk));
+            } else {
+                return new LuaNil();
+            }
+
+        }
+
+        /// <summary>
+        /// Loads the contents of a lua source file without running the loaded code.
+        /// </summary>
+        /// <param name="luaState">The state to execute the raw expression in.</param>
+        /// <param name="luaSource">The name of the source file containing the expression.</param>
+        /// <returns>If no syntax error occured, a <see cref="LuaClosure"/> is returned, containing the parsed lua chunk to be executed; Otherwise <see cref="LuaNil"/>.</returns>
+        public static LuaValue LoadFile(LuaState luaState, string luaSource) {
+            if (File.Exists(luaSource)) {
+                return LoadString(luaState, File.ReadAllText(luaSource), Path.GetFileName(luaSource));
+            } else {
+                throw new FileNotFoundException();
+            }
         }
 
     }

@@ -1,4 +1,4 @@
-{
+army = {
     templates = {
         ["inf_div@rifle"] = {
             size = 100, -- In total amount of units

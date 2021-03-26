@@ -1,4 +1,4 @@
-{
+campaign = {
     display = {
         fe_name = "campaign_name",
         fe_desc = "campaign_desc",

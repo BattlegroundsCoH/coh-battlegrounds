@@ -93,7 +93,11 @@ namespace coh2_battlegrounds_console {
             CampaignWeather campaignWeather = default;
 
             // Load lua file
-            if (LuaVM.DoFile(settingsState, settingsFile) is LuaTable manifest) {
+            if (LuaVM.DoFile(settingsState, settingsFile) is LuaNil) {
+                if (settingsState._G["campaign"] is not LuaTable manifest) {
+                    Console.WriteLine("Invalid campaign file. Global table 'campaign' is missing");
+                    return;
+                }
                 manifest.Pairs((k,v) => {
                     switch (k.Str()) {
                         case "display":
@@ -136,6 +140,7 @@ namespace coh2_battlegrounds_console {
                 });
             } else {
                 Console.WriteLine("Failed read campaign.lua");
+                Console.WriteLine(settingsState.GetError());
                 return;
             }
 
@@ -147,9 +152,12 @@ namespace coh2_battlegrounds_console {
             }
 
             // Load mapdef
-            if (LuaVM.DoFile(settingsState, mapdefPath) is not LuaTable mapdef) {
+            LuaTable mapdef = null;
+            if (LuaVM.DoFile(settingsState, mapdefPath) is not LuaNil) {
                 Console.WriteLine("Failed read mapdef.lua");
                 return;
+            } else {
+                mapdef = settingsState._G["map"] as LuaTable;
             }
 
             // Default localeID
@@ -345,7 +353,26 @@ namespace coh2_battlegrounds_console {
 
                 } else if (rt == ResourceType.CampaignScript) {
 
+                    // Load
+                    LuaState campaignState = new LuaState();
+                    string src = Path.Combine(relativePath, file);
 
+                    // Run syntax check
+                    if (LuaVM.LoadFile(campaignState, src) is not LuaNil) {
+                       
+                        // Save raw
+                        resource = new CampaignResource() {
+                            Rt = rt,
+                            Identifier = name,
+                            Content = File.ReadAllBytes(src)
+                        };
+
+                        // Return true
+                        return true;
+
+                    } else {
+                        Console.WriteLine(campaignState.GetError());
+                    }
 
                 } else if (rt == ResourceType.MissionScript) {
 
@@ -354,8 +381,11 @@ namespace coh2_battlegrounds_console {
                 } else if (rt == ResourceType.GfxMap) {
 
                     LuaState gfxState = new LuaState();
-                    if (LuaVM.DoFile(gfxState, Path.Combine(relativePath, file)) is LuaTable gfxTable) {
-                        
+                    if (LuaVM.DoFile(gfxState, Path.Combine(relativePath, file)) is LuaNil) {
+
+                        // Get GFX table
+                        LuaTable gfxTable = gfxState._G["gfx"] as LuaTable;
+
                         // Load atlas
                         GfxMap atlas = GfxMap.FromLua(gfxTable, Path.Combine(relativePath, name));
 
@@ -369,6 +399,8 @@ namespace coh2_battlegrounds_console {
                         // Return true
                         return true;
 
+                    } else {
+                        Console.WriteLine(gfxState.GetError());
                     }
 
                 }
@@ -390,8 +422,15 @@ namespace coh2_battlegrounds_console {
                         };
                         if (table["army_file"] is LuaString armyfile) {
                             string readfrom = Path.Combine(dir, armyfile.Str());
-                            if (LuaVM.DoFile(armyReadState, readfrom) is LuaTable armyTable) {
-                                army.armyComposition = armyTable;
+                            if (LuaVM.DoFile(armyReadState, readfrom) is LuaNil) {
+                                if (armyReadState._G["army"] is LuaTable armyTable) {
+                                    army.armyComposition = armyTable;
+                                } else {
+                                    Console.WriteLine($"Invalid army'{k.Str()}' (Missing global lua table 'army').");
+                                    return;
+                                }
+                            } else {
+                                Console.WriteLine(armyReadState.GetError());
                             }
                             armies.Add(army);
                         } else {

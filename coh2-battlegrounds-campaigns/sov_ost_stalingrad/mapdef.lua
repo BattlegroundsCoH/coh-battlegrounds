@@ -1,4 +1,4 @@
-{
+map = {
     nodes = {
         ["landing_soviet"] = {
             u = 428.0 / 1110.0,

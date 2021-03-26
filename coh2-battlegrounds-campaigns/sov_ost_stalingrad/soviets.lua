@@ -1,4 +1,4 @@
-{
+army = {
     templates = {
         ["guards_rifle@rifle"] = {
             size = 100, -- In total amount of units
