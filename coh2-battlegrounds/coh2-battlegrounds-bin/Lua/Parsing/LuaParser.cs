@@ -85,7 +85,6 @@ namespace Battlegrounds.Lua.Parsing {
             new ILuaOperatorSyntax[] { new LuaAssignOperatorSyntax() },
         };
 
-
         /// <summary>
         /// Parse Lua code without syntax error propogation and returns a complete chunk.
         /// </summary>
@@ -844,7 +843,7 @@ namespace Battlegrounds.Lua.Parsing {
                 int j = 0; // using j so we dont confuse with i from outer scope
                 int k = 1; // Lua indexing starts from 1
                 while (j < luaTable.SubExpressions.Count) {
-                    if (luaTable.SubExpressions[j] is LuaConstValueExpr or LuaTableExpr or LuaUnaryExpr) {
+                    if (luaTable.SubExpressions[j] is LuaConstValueExpr or LuaTableExpr or LuaUnaryExpr or LuaCallExpr) {
                         luaTable.SubExpressions[j] = new LuaAssignExpr(new LuaIndexExpr(new LuaConstValueExpr(new LuaNumber(k), LuaSourcePos.Undefined)), luaTable.SubExpressions[j], false);
                         k++;
                     } else if (luaTable.SubExpressions[j] is LuaBinaryExpr binaryExpr) {
@@ -936,6 +935,8 @@ namespace Battlegrounds.Lua.Parsing {
                     expressions.RemoveRange(i + 1, rem + 1);
                     expressions[i] = creator(sub);
 
+                } else if (expressions[i] is LuaArguments args) {
+                    ApplyGroup(args.Arguments, 0, open, close, creator);
                 } else if (expressions[i] is LuaTableExpr table) {
                     int j = 0;
                     ApplyGroup(table.SubExpressions, j, open, close, creator);

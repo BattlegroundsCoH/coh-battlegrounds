@@ -203,7 +203,7 @@ namespace Battlegrounds.Campaigns {
             campaign.m_allowedWinterAtmospheres = package.CampaignWeatherData.WinterAtmospheres;
 
             // Set lua stuff
-            campaign.LuaState._G["Map"] = new LuaUserObject(campaign.PlayMap);
+            campaign.LuaState.PushUserObject("Map", campaign.PlayMap);
 
             // Loop over campaign scripts and init them
             package.CampaignScripts.ForEach(x => {

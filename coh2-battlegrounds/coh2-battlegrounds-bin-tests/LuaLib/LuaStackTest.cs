@@ -100,6 +100,21 @@ namespace coh2_battlegrounds_bin_tests.LuaLib {
             Assert.AreEqual(new LuaNumber(1), stack.Pop());
         }
 
+        [TestMethod]
+        public void CanSetEnd() {
+            stack.Push(new LuaNumber(3));
+            stack.Push(new LuaNumber(2));
+            stack.Push(new LuaNumber(1));
+            stack.Lock(stack.Top);
+            Assert.AreEqual(false, stack.Any);
+            stack.Push(new LuaNumber(0));
+            Assert.AreEqual(true, stack.Any);
+            Assert.AreEqual(new LuaNumber(0), stack.Pop());
+            Assert.AreEqual(new LuaNil(), stack.PopOrNil());
+            stack.Unlock();
+            Assert.AreEqual(new LuaNumber(1), stack.Pop());
+        }
+
     }
 
 }

@@ -365,11 +365,13 @@ namespace Battlegrounds.Lua {
                     case LuaSelfCallExpr selfCall: {
                             // Handle 'self' argument
                             if (selfCall.ToCall is LuaLookupExpr lookup) {
+                                stack.Lock(stack.Top);
                                 DoExpr(lookup.Left); // Do LHS (--> SELF)
                             } else {
                                 throw new LuaRuntimeError();
                             }
                             DoCall(selfCall);
+                            stack.Unlock();
                         }
                         break;
                     case LuaCallExpr call:

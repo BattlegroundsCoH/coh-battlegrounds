@@ -112,10 +112,11 @@ namespace Battlegrounds.Lua {
         }
 
         /// <summary>
-        /// 
+        /// Finds the <see cref="LuaUserObjectType"/> representing the given managed <paramref name="type"/>.
         /// </summary>
-        /// <param name="type"></param>
-        /// <returns></returns>
+        /// <param name="type">The managed type to get Lua userobject type for.</param>
+        /// <returns>The registered <see cref="LuaUserObjectType"/> representing <paramref name="type"/>.</returns>
+        /// <exception cref="LuaException"/>
         public LuaUserObjectType GetUsertype(Type type) { 
             if (this.m_userTypes.TryGetValue(type, out LuaUserObjectType objType)) {
                 return objType;
@@ -175,11 +176,20 @@ namespace Battlegrounds.Lua {
             }));
 
         /// <summary>
-        /// 
+        /// Register a new managed user object type such that the <see cref="LuaState"/> can perform object-specific operations and call the proper managed functions. <br/>
+        /// This will forcefully create a global table by the <paramref name="type"/> name, overriding any existing table.
         /// </summary>
-        /// <param name="type"></param>
+        /// <remarks>
+        /// This uses reflection to perform runtime bindings.
+        /// </remarks>
+        /// <param name="type">The managed type to register.</param>
         public void RegisterUserdata(Type type) {
             
+            // Ignore if already registered
+            if (this.IsUserObject(type)) {
+                return;
+            }
+
             // Collect methods and properties
             var managedMethods = type.GetMethods(BindingFlags.Public | BindingFlags.Static | BindingFlags.Instance)
                 .Where(x => x.GetCustomAttribute<LuaUserobjectMethodAttribute>() is not null)
@@ -209,6 +219,22 @@ namespace Battlegrounds.Lua {
             this._G[type.Name] = userDataTable;
             this.m_userTypes[type] = objType;
 
+        }
+
+        /// <summary>
+        /// Push <paramref name="obj"/> into the Lua state and set the per-instance meta-table.
+        /// </summary>
+        /// <param name="globalName">The global name of the object.</param>
+        /// <param name="obj">The actual object to define in Lua.</param>
+        /// <exception cref="LuaException"/>
+        public void PushUserObject(string globalName, object obj) {
+            if (this.m_userTypes.TryGetValue(obj.GetType(), out LuaUserObjectType objType)) {
+                var lobj = new LuaUserObject(obj);
+                lobj.SetMetatable(objType.InstanceMetatable);
+                this._G[globalName] = lobj;
+            } else {
+                throw new LuaException($"Invalid type '{obj.GetType().FullName}'; Not registered in state.");
+            }
         }
 
         /// <summary>

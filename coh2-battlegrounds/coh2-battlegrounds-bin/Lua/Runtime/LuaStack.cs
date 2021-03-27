@@ -10,6 +10,7 @@ namespace Battlegrounds.Lua.Runtime {
 
         private LuaValue[] m_stack;
         private int m_topPtr;
+        private int m_bottomPtr;
 
         /// <summary>
         /// Get the pointer to the top stack value.
@@ -24,7 +25,7 @@ namespace Battlegrounds.Lua.Runtime {
         /// <summary>
         /// Get if any value is currently on the stack.
         /// </summary>
-        public bool Any => this.m_topPtr != 0;
+        public bool Any => this.m_topPtr > this.m_bottomPtr;
 
         /// <summary>
         /// Initialize a new and empty <see cref="LuaStack"/> class with default capacity of 8 elements.
@@ -32,6 +33,7 @@ namespace Battlegrounds.Lua.Runtime {
         public LuaStack() {
             this.m_stack = new LuaValue[8];
             this.m_topPtr = 0;
+            this.m_bottomPtr = 0;
         }
 
         /// <summary>
@@ -84,7 +86,7 @@ namespace Battlegrounds.Lua.Runtime {
         /// <returns>The top-most element.</returns>
         /// <exception cref="InvalidOperationException"/>
         public LuaValue Pop() {
-            if (this.m_topPtr - 1 >= 0) {
+            if (this.m_topPtr - 1 >= this.m_bottomPtr) {
                 return this.m_stack[--this.m_topPtr]; // We dont set to null, we just change our stack ptr
             } else {
                 throw new InvalidOperationException("Cannot pop an empty stack.");
@@ -97,7 +99,7 @@ namespace Battlegrounds.Lua.Runtime {
         /// <returns>The top-most element of the stack.</returns>
         /// <exception cref="InvalidOperationException"/>
         public LuaValue Peek() {
-            if (this.m_topPtr - 1 >= 0) {
+            if (this.m_topPtr - 1 >= this.m_bottomPtr) {
                 return this.m_stack[this.m_topPtr - 1];
             } else {
                 throw new InvalidOperationException("Cannot peek an empty stack.");
@@ -147,6 +149,23 @@ namespace Battlegrounds.Lua.Runtime {
             this.m_stack = buffer;
             return this.m_topPtr;
         }
+
+        /// <summary>
+        /// Lock stack operations op until the given stack index.
+        /// </summary>
+        /// <param name="at">The index to place lock at.</param>
+        /// <exception cref="IndexOutOfRangeException"/>
+        public void Lock(int at) {
+            if (at > this.Top) {
+                throw new IndexOutOfRangeException("Attempt to lock an index greater than top value.");
+            }
+            this.m_bottomPtr = at;
+        }
+
+        /// <summary>
+        /// Unlocks the stack-lock placed by a <see cref="Lock(int)"/> command.
+        /// </summary>
+        public void Unlock() => this.m_bottomPtr = 0;
 
     }
 
