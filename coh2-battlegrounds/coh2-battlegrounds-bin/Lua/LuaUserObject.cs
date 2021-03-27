@@ -1,4 +1,5 @@
-﻿using Battlegrounds.Functional;
+﻿using System;
+using Battlegrounds.Functional;
 
 namespace Battlegrounds.Lua {
 
@@ -18,6 +19,11 @@ namespace Battlegrounds.Lua {
         /// Get or privately set the metatable of the userobject.
         /// </summary>
         public LuaTable MetaTable { get; private set; }
+
+        /// <summary>
+        /// Get the type of the encapsulated <see cref="LuaUserObject"/>.
+        /// </summary>
+        public Type Type => this.m_obj.GetType();
 
         /// <summary>
         /// Initialize a new <see cref="LuaUserObject"/> class with wrapped C# object.

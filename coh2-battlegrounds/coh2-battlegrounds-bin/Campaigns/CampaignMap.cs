@@ -16,6 +16,8 @@ namespace Battlegrounds.Campaigns {
         private List<CampaignMapNode> m_nodes;
         private List<CampaignMapTransition> m_edges;
 
+        private LuaState m_luaState;
+
         public CampaignMap(CampaignMapData mapData) {
 
             // Store raw image data
@@ -30,13 +32,15 @@ namespace Battlegrounds.Campaigns {
 
         }
 
+        public void SetLuaState(LuaState state) => this.m_luaState = state;
+
         public void BuildNetwork() {
 
             // Create nodes
             var nodes = this.MapDef["nodes"] as LuaTable;
             nodes.Pairs((k, v) => {
                 LuaTable vt = v as LuaTable;
-                var node = new CampaignMapNode(k.Str(), vt["u"] as LuaNumber, vt["v"] as LuaNumber) {
+                var node = new CampaignMapNode(k.Str(), vt["u"] as LuaNumber, vt["v"] as LuaNumber, vt.ByKey<LuaString>("filter")?.Str()) {
                     IsLeaf = (vt["leaf"] as LuaBool)?.IsTrue ?? false,
                     OccupantCapacity = (int)(vt["capacity"] as LuaNumber),
                 };
@@ -126,7 +130,19 @@ namespace Battlegrounds.Campaigns {
                 if (to.Owner != formation.Team) {
                     w += 2.5f;
                 }
-                // TODO: Check with lua scripts if it's possible to move.
+                if (!string.IsNullOrEmpty(to.NodeFilter)!) {
+                    if (this.m_luaState._G[to.NodeFilter] is LuaClosure closure) {
+                        if (LuaMarshal.InvokeClosureManaged(closure, this.m_luaState, formation)[0] is double d) {
+                            w += (float)d;
+                        } else {
+                            Trace.WriteLine($"Lua function '{to.NodeFilter}' returned non-number value and will be ignored.", nameof(CampaignMapNode));
+                        }
+                    } else if (this.m_luaState._G[to.NodeFilter] is LuaNumber num) {
+                        w += (float)num;
+                    } else {
+                        Trace.WriteLine($"Lua function '{to.NodeFilter}' is a {this.m_luaState._G[to.NodeFilter].GetLuaType()} type (Only accepts number or function).", nameof(CampaignMapNode));
+                    }
+                }
                 return w;
             }
             return float.PositiveInfinity;

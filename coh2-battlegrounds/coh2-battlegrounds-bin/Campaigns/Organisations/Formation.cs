@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Battlegrounds.Lua;
 
 namespace Battlegrounds.Campaigns.Organisations {
     
@@ -27,6 +28,7 @@ namespace Battlegrounds.Campaigns.Organisations {
         /// <summary>
         /// 
         /// </summary>
+        [LuaUserobjectProperty]
         public CampaignMapNode Node => this.m_location;
 
         /// <summary>
@@ -37,6 +39,7 @@ namespace Battlegrounds.Campaigns.Organisations {
         /// <summary>
         /// Get the name of the dominant army in charge of this formation.
         /// </summary>
+        [LuaUserobjectProperty]
         public string Army => this.Divisions.FirstOrDefault().EleemntOf.Faction.Name;
 
         /// <summary>
@@ -52,6 +55,7 @@ namespace Battlegrounds.Campaigns.Organisations {
         /// <summary>
         /// 
         /// </summary>
+        [LuaUserobjectProperty]
         public CampaignArmyTeam Team { get; private set; }
 
         /// <summary>
@@ -95,6 +99,7 @@ namespace Battlegrounds.Campaigns.Organisations {
 
         }
 
+        [LuaUserobjectMethod(UseMarshalling = true)]
         public void Disband(bool killAll) {
 
         }
@@ -115,6 +120,7 @@ namespace Battlegrounds.Campaigns.Organisations {
         /// Split the <see cref="Formation"/> into two smaller formations.
         /// </summary>
         /// <returns>The new formation that was split from current formation.</returns>
+        [LuaUserobjectMethod(UseMarshalling = true)]
         public Formation Split() => this.Split(2)[1];
 
         public Formation[] Split(int subElements) {
@@ -168,6 +174,11 @@ namespace Battlegrounds.Campaigns.Organisations {
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        [LuaUserobjectMethod(UseMarshalling = true)]
         public float CalculateStrength() {
             float avgStrength = 0.0f;
             int count = this.m_regiments.Count;

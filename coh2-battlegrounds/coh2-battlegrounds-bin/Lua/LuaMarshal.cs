@@ -66,6 +66,28 @@ namespace Battlegrounds.Lua {
             return 1;
         }
 
+        /// <summary>
+        /// Invoke a <see cref="LuaClosure"/> directly from managed code and get result(s) as managed objects.
+        /// </summary>
+        /// <param name="closure">The <see cref="LuaClosure"/> to invoke (without proper environment).</param>
+        /// <param name="state">The <see cref="LuaState"/> to use to invoke the closure.</param>
+        /// <param name="args">The managed objects to marshal into their respective Lua representations.</param>
+        /// <returns>An array of managed objects demarshalled from their respective Lua representations.</returns>
+        /// <exception cref="LuaException"/>
+        /// <exception cref="LuaRuntimeError"/>
+        public static object[] InvokeClosureManaged(LuaClosure closure, LuaState state, params object[] args) {
+            LuaStack stack = new LuaStack();
+            for (int i = 0; i < args.Length; i++) {
+                var luaValue = ToLuaValue(args[i]);
+                if (luaValue is LuaUserObject obj) {
+                    obj.SetMetatable(state.GetUsertype(obj.Type).InstanceMetatable);
+                }
+                stack.Push(luaValue);
+            }
+            int pop = closure.Invoke(state, stack);
+            return stack.Pop(pop).Select(x => FromLuaValue(x)).ToArray();
+        }
+
     }
 
 }

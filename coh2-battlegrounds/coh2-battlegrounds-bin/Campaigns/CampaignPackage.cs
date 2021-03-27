@@ -61,6 +61,8 @@ namespace Battlegrounds.Campaigns {
 
         public List<GfxMap> GfxResources { get; }
 
+        public List<string> CampaignScripts { get; }
+
         public CampaignMapData MapData { get; private set; }
 
         public Localize LocaleManager { get; private set; }
@@ -69,6 +71,7 @@ namespace Battlegrounds.Campaigns {
 
         public CampaignPackage() {
             this.GfxResources = new List<GfxMap>();
+            this.CampaignScripts = new List<string>();
         }
 
         #region Binary Data
@@ -170,7 +173,7 @@ namespace Battlegrounds.Campaigns {
                         }
                         break;
                     case 0x3:
-
+                        this.CampaignScripts.Add(Encoding.UTF8.GetString(resourceBytes));
                         break;
                     case 0x4:
                         break;

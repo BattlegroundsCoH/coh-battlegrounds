@@ -205,6 +205,16 @@ namespace Battlegrounds.Campaigns {
             // Set lua stuff
             campaign.LuaState._G["Map"] = new LuaUserObject(campaign.PlayMap);
 
+            // Loop over campaign scripts and init them
+            package.CampaignScripts.ForEach(x => {
+                if (campaign.LuaState.DoString(x) is not LuaNil) {
+                    Trace.WriteLine($"Fatal lua error :: {campaign.LuaState.GetError()}", nameof(ActiveCampaign));
+                }
+            });
+
+            // Assign state ptrs
+            campaign.PlayMap.SetLuaState(campaign.LuaState);
+
             // Return campaign
             return campaign;
 

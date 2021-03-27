@@ -112,6 +112,19 @@ namespace Battlegrounds.Lua {
         }
 
         /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        public LuaUserObjectType GetUsertype(Type type) { 
+            if (this.m_userTypes.TryGetValue(type, out LuaUserObjectType objType)) {
+                return objType;
+            } else {
+                throw new LuaException($"Invalid type '{type.FullName}'; Not registered in state.");
+            }
+        }
+
+        /// <summary>
         /// Get last runtime error (<see langword="null"/> if no runtime error).
         /// </summary>
         /// <returns>Returns the last thrown <see cref="LuaException"/> within the context of this state.</returns>

@@ -57,6 +57,11 @@ namespace Battlegrounds.Campaigns {
         public string NodeName { get; }
 
         /// <summary>
+        /// Get the name of the function to invoke when weighting nodes in the Dijkstra algorithm.
+        /// </summary>
+        public string NodeFilter { get; }
+
+        /// <summary>
         /// 
         /// </summary>
         public IVisualCampaignNode VisualNode { get; set; }
@@ -102,8 +107,9 @@ namespace Battlegrounds.Campaigns {
         /// <param name="name"></param>
         /// <param name="u"></param>
         /// <param name="v"></param>
-        public CampaignMapNode(string name, double u, double v) {
+        public CampaignMapNode(string name, double u, double v, string filter) {
             this.NodeName = name;
+            this.NodeFilter = filter ?? string.Empty;
             this.U = u;
             this.V = v;
             this.VisualNode = null;
