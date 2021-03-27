@@ -75,6 +75,7 @@ namespace Battlegrounds.Campaigns {
 
         public void EachFormation(Action<Formation> action) => this.m_nodes.ForEach(x => x.Occupants.ForEach(action));
 
+        [LuaUserobjectMethod(UseMarshalling = true)]
         public CampaignMapNode FromName(string name) => this.m_nodes.FirstOrDefault(x => x.NodeName == name);
 
         public bool SpawnFormationAt(string nodeIdentifier, Formation formation) {

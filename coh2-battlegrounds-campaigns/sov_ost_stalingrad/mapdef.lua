@@ -111,7 +111,8 @@ map = {
             value = 1, -- Victory Point value
             capacity = 1, -- Max companies per side
             attrition = 0.1, -- The amount of attrition a company suffers
-            map = "" -- The map to play when fighting a battle
+            filter = "CanCrossVolga", -- Pathfinding filter function
+            map = "6p_coh2_pavlov_s_house" -- The map to play when fighting a battle
         },
         ["soviet_entrance"] = {
             u = 510.0 / 1110.0,

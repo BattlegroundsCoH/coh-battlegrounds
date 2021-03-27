@@ -13,12 +13,18 @@ using Battlegrounds.Game.Database;
 
 namespace Battlegrounds.Campaigns {
 
+    /// <summary>
+    /// 
+    /// </summary>
     public enum CampaignArmyTeam {
         TEAM_NEUTRAL,
         TEAM_ALLIES,
         TEAM_AXIS,
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
     public class ActiveCampaign : IJsonObject {
 
         private string m_locSourceID;
@@ -29,19 +35,59 @@ namespace Battlegrounds.Campaigns {
 
         public class Player { }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public CampaignMap PlayMap { get; init; }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public Army[] Armies { get; init; }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public List<GfxMap> GfxMaps { get; init; }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public Localize Locale { get; init; }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public ActiveCampaignTurnData Turn { get; private set; }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public int DifficultyLevel { get; init; }
 
-        private ActiveCampaign() {}
+        /// <summary>
+        /// 
+        /// </summary>
+        public LuaState LuaState { get; }
+
+        private ActiveCampaign() {
+            
+            // Create state
+            this.LuaState = new LuaState("base", "math", "table", "string");
+            
+            // Register userdata
+            this.LuaState.RegisterUserdata(typeof(CampaignMap));
+            this.LuaState.RegisterUserdata(typeof(CampaignMapNode));
+            this.LuaState.RegisterUserdata(typeof(Formation));
+
+            // Register constants
+            this.LuaState._G["TEAM_AXIS"] = LuaMarshal.ToLuaValue(CampaignArmyTeam.TEAM_AXIS);
+            this.LuaState._G["TEAM_ALLIES"] = LuaMarshal.ToLuaValue(CampaignArmyTeam.TEAM_ALLIES);
+            this.LuaState._G["TEAM_NEUTRAL"] = LuaMarshal.ToLuaValue(CampaignArmyTeam.TEAM_NEUTRAL);
+            this.LuaState._G["FILTER_NEVER"] = new LuaNumber(double.MaxValue);
+            this.LuaState._G["FILTER_OK"] = new LuaNumber(1.0);
+
+        }
 
         public Scenario PickScenario(List<CampaignMapNode.NodeMap> maps) {
             if (maps.Count == 1) {
@@ -156,6 +202,10 @@ namespace Battlegrounds.Campaigns {
             campaign.m_allowedSummerAtmospheres = package.CampaignWeatherData.SummerAtmospheres;
             campaign.m_allowedWinterAtmospheres = package.CampaignWeatherData.WinterAtmospheres;
 
+            // Set lua stuff
+            campaign.LuaState._G["Map"] = new LuaUserObject(campaign.PlayMap);
+
+            // Return campaign
             return campaign;
 
         }

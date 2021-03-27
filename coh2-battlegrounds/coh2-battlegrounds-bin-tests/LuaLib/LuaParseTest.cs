@@ -742,6 +742,103 @@ namespace coh2_battlegrounds_bin_tests.LuaLib {
 
         }
 
+        [TestMethod]
+        public void LuaFunctionalTest21() {
+
+            // Src
+            string src = @"
+            function a()
+                return true;
+            end
+
+            function b()
+                return false;
+            end
+
+            function c()
+                if a() then
+                    if b() then 
+                        return false;
+                    else
+                        return true;
+                    end
+                else
+                    return false;
+                end
+            end
+
+            ";
+
+            // Parse and verify top-level
+            var luaAST = LuaParser.ParseLuaSource(src);
+            Assert.AreEqual(3, luaAST.Count);
+            Assert.IsInstanceOfType(luaAST[0], typeof(LuaAssignExpr));
+            Assert.IsInstanceOfType(luaAST[1], typeof(LuaAssignExpr));
+            Assert.IsInstanceOfType(luaAST[2], typeof(LuaAssignExpr));
+
+        }
+
+        [TestMethod]
+        public void LuaFunctionalTest22() {
+
+            // Src
+            string src = @"
+            if true then
+                if false then 
+                    return false;
+                else
+                    return true;
+                end
+            else
+                return false;
+            end
+            ";
+
+            // Parse and verify top-level
+            var luaAST = LuaParser.ParseLuaSource(src);
+            Assert.AreEqual(1, luaAST.Count);
+            Assert.IsInstanceOfType(luaAST[0], typeof(LuaIfStatement));
+            Assert.IsInstanceOfType((luaAST[0] as LuaIfStatement).BranchFollow, typeof(LuaElseStatement));
+
+            // Assert body is same pattern
+            Assert.AreEqual(1, (luaAST[0] as LuaIfStatement).Body.ScopeBody.Count);
+            var body = (luaAST[0] as LuaIfStatement).Body.ScopeBody[0];
+            Assert.IsInstanceOfType(body, typeof(LuaIfStatement));
+            Assert.IsInstanceOfType((body as LuaIfStatement).BranchFollow, typeof(LuaElseStatement));
+
+        }
+
+        [TestMethod]
+        public void LuaFunctionalTest23() {
+
+            // Src
+            string src = @"
+            if true then
+                if false then 
+                    return false;
+                else
+                    return true;
+                end
+                print(5);
+            else
+                return false;
+            end
+            ";
+
+            // Parse and verify top-level
+            var luaAST = LuaParser.ParseLuaSource(src);
+            Assert.AreEqual(1, luaAST.Count);
+            Assert.IsInstanceOfType(luaAST[0], typeof(LuaIfStatement));
+            Assert.IsInstanceOfType((luaAST[0] as LuaIfStatement).BranchFollow, typeof(LuaElseStatement));
+
+            // Assert body is same pattern
+            Assert.AreEqual(2, (luaAST[0] as LuaIfStatement).Body.ScopeBody.Count);
+            var body = (luaAST[0] as LuaIfStatement).Body.ScopeBody[0];
+            Assert.IsInstanceOfType(body, typeof(LuaIfStatement));
+            Assert.IsInstanceOfType((body as LuaIfStatement).BranchFollow, typeof(LuaElseStatement));
+
+        }
+
     }
 
 }

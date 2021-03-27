@@ -224,7 +224,7 @@ namespace Battlegrounds.Lua.Parsing {
         /// <summary>
         /// Applies scope rules (eg. function ... end --> LuaFuncExpr; if ... then ... end --> LuaIfStatement).
         /// </summary>
-        static List<LuaExpr> ApplyScopeGroups(List<LuaExpr> luaExprs, int i, bool endSemicolon, bool allowElseif = false, string endIsEnd = "end") {
+        static List<LuaExpr> ApplyScopeGroups(List<LuaExpr> luaExprs, int i, bool endSemicolon, bool allowElse = false, string endIsEnd = "end") {
 
             static List<LuaExpr> PickUntil(List<LuaExpr> exprs, int from, Predicate<LuaExpr> predicate, Predicate<LuaExpr> errorPredicate, Action<int> errHandler = null) {
                 List<LuaExpr> elements = new List<LuaExpr>();
@@ -307,6 +307,7 @@ namespace Battlegrounds.Lua.Parsing {
                             luaExprs[i + 1] = new LuaOpExpr(LuaTokenType.Equals, luaExprs[i].SourcePos);
                             luaExprs.Insert(i + 2, tmp);
                             luaExprs.Insert(i + 3, args);
+                            i--;
 
                         } else {
                             throw new LuaSyntaxError(); // TODO: Error message
@@ -447,7 +448,7 @@ namespace Battlegrounds.Lua.Parsing {
 
                     // Determine if it's a "if" or "elseif"
                     bool isIfCondition = luaExprs[i] is LuaKeyword { Keyword: "if" };
-                    if (!isIfCondition && !allowElseif) {
+                    if (!isIfCondition && !allowElse) {
                         throw new LuaSyntaxError("Unexpected elseif");
                     }
 
@@ -486,12 +487,20 @@ namespace Battlegrounds.Lua.Parsing {
 
                 } else if (luaExprs[i] is LuaKeyword { Keyword: "else" }) {
 
+                    // Make sure we allow "else"
+                    if (!allowElse) {
+                        throw new LuaSyntaxError("Unexpected else");
+                    }
+
                     // Get body
                     var body = CollectBody(luaExprs, i, false, "else");
 
                     // Set statement and add slef
                     luaExprs[i] = new LuaElseStatement(new LuaChunk(body, luaExprs[i].SourcePos), luaExprs[i].SourcePos);
                     result.Add(luaExprs[i]);
+
+                    // Result result
+                    return result;
 
                 } else {
                     result.Add(luaExprs[i]);

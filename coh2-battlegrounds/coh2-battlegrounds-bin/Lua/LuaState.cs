@@ -8,6 +8,7 @@ using Battlegrounds.Functional;
 using Battlegrounds.Lua.Debugging;
 using Battlegrounds.Lua.Runtime;
 using Battlegrounds.Lua.Parsing;
+using System.Diagnostics;
 
 namespace Battlegrounds.Lua {
     
@@ -94,6 +95,7 @@ namespace Battlegrounds.Lua {
                         LuaBaseLib.ImportLuaBase(this);
                         break;
                     default:
+                        Trace.WriteLine($"Invalid built-in Lua library '{x}'", "Lua");
                         break;
                 }
             });
