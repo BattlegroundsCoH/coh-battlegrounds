@@ -30,18 +30,18 @@ end
 
 -- Has axis won
 function HasAxisWon()
-    return false;
+    return g_axisOwnsCity and Team_GetPoints(TEAM_AXIS) >= 1 or Map:FromName("volga_crossing").owner == TEAM_AXIS;
 end
 
 -- Has allies won
 function HasAlliesWon()
-    return false;
+    return Date:IsEndDate() or (Team_GetReservesCount(TEAM_AXIS) == 0 and Team_GetFormationCount(TEAM_AXIS) == 0);
 end
 
 -- Check if unit can cross the volga
 function CanCrossVolga(unit)
     if unit.Team == TEAM_AXIS then
-        if Team_OwnsAll(unit.Team, __stalingradNodes) then
+        if DoesAxisOwnCity() then
             return FILTER_NEVER;
         else
             return FILTER_OK;
@@ -49,4 +49,9 @@ function CanCrossVolga(unit)
     else
         return FILTER_OK;
     end
+end
+
+-- Returns true if axis team owns all city nodes
+function DoesAxisOwnCity()
+    return Team_OwnsAll(TEAM_AXIS, __stalingradNodes);
 end
