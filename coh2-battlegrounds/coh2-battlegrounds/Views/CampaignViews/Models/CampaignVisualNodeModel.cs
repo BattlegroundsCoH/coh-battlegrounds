@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Shapes;
 
@@ -20,41 +20,49 @@ namespace BattlegroundsApp.Views.CampaignViews.Models {
 
         public CampaignMapNode Node { get; }
 
+        public CampaignResourceContext ResourceContext { get; }
+
         public Func<Formation, CampaignUnitFormationModel> ModelFromFormation { get; init; }
 
         private double m_formationXOffset;
         private double m_formationYOffset;
 
-        private double m_mapWidth;
-        private double m_mapHeight;
-
-        public CampaignVisualNodeModel(CampaignMapNode node, double mapWidth, double mapHeight) {
+        public CampaignVisualNodeModel(CampaignMapNode node, CampaignResourceContext resourceContext) {
             
             // Set fields and properties
             this.Node = node;
+            this.ResourceContext = resourceContext;
             this.m_formationXOffset = 0.0;
             this.m_formationYOffset = 0.0;
-            this.m_mapWidth = mapWidth;
-            this.m_mapHeight = mapHeight;
 
             // Init UI
-            this.VisualElement = new Ellipse {
+            var visual = this.ResourceContext.GetResource($"{(node.Owner == CampaignArmyTeam.TEAM_ALLIES ? "allies" : "axis")}_node");
+            this.VisualElement = visual is null ? new Ellipse {
                 Width = 32,
                 Height = 32,
+            } : new Image() { 
+                Source = visual,
+                Width = 32,
+                Height = 32
             };
+
+            // Subscribe to events
             this.OwnershipChanged(node.Owner);
             this.VisualElement.MouseLeftButtonDown += (a, b) => this.LeftClick();
             this.VisualElement.MouseRightButtonDown += (a, b) => this.RightClick();
 
             // Set position of node
-            (this as ICampaignMapNode).SetPosition(node.U * mapWidth - (32.0 / 2.0), node.V * mapHeight - (32.0 / 2.0));
+            (this as ICampaignMapNode).SetPosition(node.U * resourceContext.MapWidth - (32.0 / 2.0), node.V * resourceContext.MapHeight - (32.0 / 2.0));
 
         }
 
         public void OwnershipChanged(CampaignArmyTeam armyTeam) { 
             if (this.VisualElement is Ellipse ellipse) {
                 ellipse.Fill = armyTeam == CampaignArmyTeam.TEAM_ALLIES ? Brushes.Red : (armyTeam == CampaignArmyTeam.TEAM_AXIS ? Brushes.Green : Brushes.Gray);
+            } else if (this.VisualElement is Image img) {
+                img.Source = this.ResourceContext.GetResource($"{(this.Node.Owner == CampaignArmyTeam.TEAM_ALLIES ? "allies" : "axis")}_node");
             }
+            this.ResourceContext.Controller.FireEvent(ActiveCampaignEventManager.ET_Ownership, this.Node);
         }
 
         public void VictoryValueChanged(double newValue) {
@@ -107,14 +115,14 @@ namespace BattlegroundsApp.Views.CampaignViews.Models {
 
         public (double x, double y) GetRelative(double x, double y) {
             (double x, double y) tuple = (x, y);
-            double nx = this.Node.U * this.m_mapWidth;
-            double ny = this.Node.V * this.m_mapHeight;
-            if (tuple.x + nx + 24.0 >= this.m_mapWidth) {
+            double nx = this.Node.U * this.ResourceContext.MapWidth;
+            double ny = this.Node.V * this.ResourceContext.MapHeight;
+            if (tuple.x + nx + 24.0 >= this.ResourceContext.MapWidth) {
                 tuple.x = nx - (tuple.x + 24.0);
             } else {
                 tuple.x += nx;
             }
-            if (tuple.y + ny + 34.0 >= this.m_mapHeight) {
+            if (tuple.y + ny + 34.0 >= this.ResourceContext.MapHeight) {
                 tuple.y = ny - (tuple.y + 34.0);
             } else {
                 tuple.y += ny;

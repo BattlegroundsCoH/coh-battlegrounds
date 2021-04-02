@@ -10,6 +10,7 @@ using Battlegrounds.Locale;
 using Battlegrounds.Lua;
 using Battlegrounds.Gfx;
 using Battlegrounds.Game.Database;
+using Battlegrounds.Campaigns.Scripting;
 
 namespace Battlegrounds.Campaigns {
 
@@ -63,6 +64,11 @@ namespace Battlegrounds.Campaigns {
         /// <summary>
         /// 
         /// </summary>
+        public ActiveCampaignEventManager Events { get; }
+
+        /// <summary>
+        /// 
+        /// </summary>
         public int DifficultyLevel { get; init; }
 
         /// <summary>
@@ -70,8 +76,11 @@ namespace Battlegrounds.Campaigns {
         /// </summary>
         public LuaState LuaState { get; }
 
+        /// <summary>
+        /// 
+        /// </summary>
         private ActiveCampaign() {
-            
+
             // Create state
             this.LuaState = new LuaState("base", "math", "table", "string");
             
@@ -79,13 +88,20 @@ namespace Battlegrounds.Campaigns {
             this.LuaState.RegisterUserdata(typeof(CampaignMap));
             this.LuaState.RegisterUserdata(typeof(CampaignMapNode));
             this.LuaState.RegisterUserdata(typeof(Formation));
+            this.LuaState.RegisterUserdata(typeof(ActiveCampaignTurnData));
 
             // Register constants
             this.LuaState._G["TEAM_AXIS"] = LuaMarshal.ToLuaValue(CampaignArmyTeam.TEAM_AXIS);
             this.LuaState._G["TEAM_ALLIES"] = LuaMarshal.ToLuaValue(CampaignArmyTeam.TEAM_ALLIES);
             this.LuaState._G["TEAM_NEUTRAL"] = LuaMarshal.ToLuaValue(CampaignArmyTeam.TEAM_NEUTRAL);
-            this.LuaState._G["FILTER_NEVER"] = new LuaNumber(double.MaxValue);
-            this.LuaState._G["FILTER_OK"] = new LuaNumber(1.0);
+            this.LuaState._G["FILTER_NEVER"] = double.MaxValue;
+            this.LuaState._G["FILTER_OK"] = 1.0;
+            this.LuaState._G["ET_Ownership"] = ActiveCampaignEventManager.ET_Ownership;
+
+            // Create other data
+            this.Events = new() {
+                RuntimeState = this.LuaState
+            };
 
         }
 
@@ -204,6 +220,11 @@ namespace Battlegrounds.Campaigns {
 
             // Set lua stuff
             campaign.LuaState.PushUserObject("Map", campaign.PlayMap);
+            campaign.LuaState.PushUserObject("Turn", campaign.Turn);
+            campaign.LuaState.PushUserObject(BattlegroundsCampaignLibrary.CampaignInstanceField, campaign, true);
+
+            // Register library
+            BattlegroundsCampaignLibrary.LoadLibrary(campaign.LuaState);
 
             // Loop over campaign scripts and init them
             package.CampaignScripts.ForEach(x => {

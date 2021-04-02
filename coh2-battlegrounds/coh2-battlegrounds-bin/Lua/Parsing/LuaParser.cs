@@ -78,7 +78,7 @@ namespace Battlegrounds.Lua.Parsing {
             new ILuaOperatorSyntax[] { new LuaBinaryOperatorSyntax("..") },
             new ILuaOperatorSyntax[] {
                 new LuaBinaryOperatorSyntax("<"), new LuaBinaryOperatorSyntax("<="), new LuaBinaryOperatorSyntax(">"), new LuaBinaryOperatorSyntax(">="),
-                new LuaBinaryOperatorSyntax("=="), new LuaBinaryOperatorSyntax("!=")
+                new LuaBinaryOperatorSyntax("=="), new LuaBinaryOperatorSyntax("~=")
             },
             new ILuaOperatorSyntax[] { new LuaLogicOperatorSyntax("and") },
             new ILuaOperatorSyntax[] { new LuaLogicOperatorSyntax("or") },

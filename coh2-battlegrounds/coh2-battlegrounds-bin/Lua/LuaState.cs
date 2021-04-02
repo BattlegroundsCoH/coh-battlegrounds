@@ -226,14 +226,19 @@ namespace Battlegrounds.Lua {
         /// </summary>
         /// <param name="globalName">The global name of the object.</param>
         /// <param name="obj">The actual object to define in Lua.</param>
+        /// <param name="asPointer">Push the object as a raw managed object.</param>
         /// <exception cref="LuaException"/>
-        public void PushUserObject(string globalName, object obj) {
-            if (this.m_userTypes.TryGetValue(obj.GetType(), out LuaUserObjectType objType)) {
-                var lobj = new LuaUserObject(obj);
-                lobj.SetMetatable(objType.InstanceMetatable);
-                this._G[globalName] = lobj;
+        public void PushUserObject(string globalName, object obj, bool asPointer = false) {
+            if (!asPointer) {
+                if (this.m_userTypes.TryGetValue(obj.GetType(), out LuaUserObjectType objType)) {
+                    var lobj = new LuaUserObject(obj);
+                    lobj.SetMetatable(objType.InstanceMetatable);
+                    this._G[globalName] = lobj;
+                } else {
+                    throw new LuaException($"Invalid type '{obj.GetType().FullName}'; Not registered in state.");
+                }
             } else {
-                throw new LuaException($"Invalid type '{obj.GetType().FullName}'; Not registered in state.");
+                this._G[globalName] = new LuaUserObject(obj);
             }
         }
 

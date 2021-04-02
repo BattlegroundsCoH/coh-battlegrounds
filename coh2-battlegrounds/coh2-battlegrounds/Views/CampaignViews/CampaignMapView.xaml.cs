@@ -42,13 +42,16 @@ namespace BattlegroundsApp.Views.CampaignViews {
 
         private List<CampaignUnitFormationModel> m_formationViews;
         private List<ICampaignMapNode> m_nodes;
-        private Dictionary<string, ImageSource> m_graphics;
+        private CampaignResourceContext m_resourceContext;
+        private bool m_hasStarted = false;
 
         public CampaignUnitSelectionModel Selection { get; }
 
         public ICampaignController Controller { get; }
 
         public ImageSource CampaignMapImage { get; }
+
+        public CampaignResourceContext ResourceContext => this.m_resourceContext;
 
         public double CampaignMapWidth => this.CampaignMapImage.Width;
 
@@ -70,14 +73,15 @@ namespace BattlegroundsApp.Views.CampaignViews {
             this.m_nodes = new List<ICampaignMapNode>();
 
             // Load graphics
-            this.InitializeGrapihcs();
+            this.CampaignMapImage = PngImageSource.FromMemory(controller.Campaign.PlayMap.RawImageData);
+            this.m_resourceContext = new CampaignResourceContext(this.CampaignMapWidth, this.CampaignMapHeight, controller);
+            this.m_resourceContext.InitializeGraphics(controller);
 
             // Init components
             this.InitializeComponent();
 
             // Init data
             this.Selection = new CampaignUnitSelectionModel();
-            this.CampaignMapImage = PngImageSource.FromMemory(controller.Campaign.PlayMap.RawImageData);
             this.CreateNodeNetwork();
             this.RefreshDisplayedFormations();
 
@@ -91,31 +95,20 @@ namespace BattlegroundsApp.Views.CampaignViews {
 
         }
 
-        private void InitializeGrapihcs() {
+        public override void StateOnFocus() {
+            
+            // Start functionality
+            if (!this.m_hasStarted) {
 
-            // Create graphics dictionary
-            this.m_graphics = new Dictionary<string, ImageSource>();
+                // Invoke setup functionality and begin playing.
+                this.Controller.StartCampaign();
 
-            // For each GFX map
-            this.Controller.Campaign.GfxMaps.ForEach(x => {
+                // Update flag
+                this.m_hasStarted = true;
 
-                // Loop over all resources
-                x.Resources.ForEach(id => {
-
-                    // Get the resource
-                    GfxResource resource = x.GetResource(id);
-                    var stream = resource.Open();
-
-                    // Decode and store the image
-                    this.m_graphics[id] = new PngBitmapDecoder(stream, BitmapCreateOptions.None, BitmapCacheOption.Default).Frames[0];
-
-                });
-
-            });
+            }
 
         }
-
-        public override void StateOnFocus() {}
 
         public override void StateOnLostFocus() {}
 
@@ -125,7 +118,7 @@ namespace BattlegroundsApp.Views.CampaignViews {
             this.Controller.Campaign.PlayMap.EachNode(n => {
 
                 // TODO: Check if leaf then create different model
-                ICampaignMapNode visualNode = new CampaignVisualNodeModel(n, this.CampaignMapWidth, this.CampaignMapHeight) {
+                ICampaignMapNode visualNode = new CampaignVisualNodeModel(n, this.ResourceContext) {
                     ModelFromFormation = this.FromFormation
                 };
 
@@ -182,7 +175,7 @@ namespace BattlegroundsApp.Views.CampaignViews {
                 UIElement displayElement = null;
 
                 // If it exists, use an image, otherwise some other default pinkish shape
-                if (this.m_graphics.TryGetValue(banner_element, out ImageSource img)) {
+                if (this.m_resourceContext.GetResource(banner_element) is ImageSource img) {
 
                     // Create image
                     displayElement = new Image() {
@@ -283,7 +276,7 @@ namespace BattlegroundsApp.Views.CampaignViews {
         private void MoveSelectionIntoHostileTerritory(CampaignMapNode node) {
             var first = this.Selection.First;
             if (this.Controller.Campaign.PlayMap.SetPath(first.Formation.Node, node, first.Formation)) {
-                this.Selection.InvokeEach(x => x.IfTrue(y => y.Formation != first.Formation).Then(z => z.Formation.SetNodeDestinations(first.Formation.GetPath())));
+                this.Selection.InvokeEach(x => x.IfTrue(y => y.Formation != first.Formation).Then(z => z.Formation.SetNodeDestinationsAndMove(first.Formation.GetPath())));
                 if (first.Formation.Destination == node) {
                     this.SelectionAttackNode(node);
                 } else {
@@ -541,7 +534,7 @@ namespace BattlegroundsApp.Views.CampaignViews {
                     // Tell all current occupants to leave
                     var itter = mapNode.Occupants.GetSafeEnumerator();
                     while (itter.MoveNext()) {
-                        itter.Current.SetNodeDestinations(new List<CampaignMapNode>() { nodes[nodeIndex] });
+                        itter.Current.SetNodeDestinationsAndMove(new List<CampaignMapNode>() { nodes[nodeIndex] });
                         this.MoveFormation(this.FromFormation(itter.Current));
                         nodeIndex++;
                         if (nodeIndex > nodes.Count) {

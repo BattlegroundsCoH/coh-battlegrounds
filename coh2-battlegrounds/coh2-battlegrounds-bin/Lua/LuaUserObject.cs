@@ -50,7 +50,7 @@ namespace Battlegrounds.Lua {
             }
         }
 
-        public override bool Equals(LuaValue value) => value is LuaUserObject o && o.m_obj == this.m_obj;
+        public override bool Equals(LuaValue value) => value is LuaUserObject o && o.Type == this.Type && o.m_obj.Equals(this.m_obj);
 
         public override bool Equals(object obj) => obj is LuaValue v ? this.Equals(v) : base.Equals(obj);
 

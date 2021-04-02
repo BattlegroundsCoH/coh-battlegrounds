@@ -1,5 +1,5 @@
 -- Handler for node ownership change events
-function CampaignEvent_NodeOwnershipChanged(node, owner)
+function CampaignEvent_NodeOwnershipChanged(node)
 
     -- Check who owns the whole city
     local ownsCity = DoesAxisOwnCity();
@@ -25,4 +25,4 @@ function CampaignEvent_NodeOwnershipChanged(node, owner)
 end
 
 -- Register campaign handler
-Battlegrounds_RegisterCampaignEventHandler(CampaignEvent_NodeOwnershipChanged, EC_Ownership);
+Battlegrounds_RegisterCampaignEventHandler(CampaignEvent_NodeOwnershipChanged, ET_Ownership);

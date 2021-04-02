@@ -117,7 +117,7 @@ namespace Battlegrounds.Campaigns {
             if (path.Count > 0) {
                 Trace.WriteLine(string.Join(" -> ", path.Select(x => x.NodeName)), $"{nameof(CampaignMap)}:PathResult");
                 if (path[0] == from && path[^1] == end) {
-                    formation.SetNodeDestinations(path);
+                    formation.SetNodeDestinationsAndMove(path);
                     return true;
                 }
             }

@@ -45,6 +45,11 @@ namespace Battlegrounds.Campaigns.Controller {
         /// <summary>
         /// 
         /// </summary>
+        void StartCampaign();
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <param name="player"></param>
         /// <param name="playername"></param>
         /// <param name="playerTeam"></param>
@@ -116,6 +121,8 @@ namespace Battlegrounds.Campaigns.Controller {
             return builder.Commit().Result;
 
         }
+
+        void FireEvent(int eventType, params object[] args);
 
         /// <summary>
         /// 

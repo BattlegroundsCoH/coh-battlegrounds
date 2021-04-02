@@ -42,17 +42,17 @@ namespace Battlegrounds.Campaigns {
         }
 
         /// <summary>
-        /// 
+        /// Get the U-index for the node.
         /// </summary>
         public double U { get; }
 
         /// <summary>
-        /// 
+        /// Get the V-index for the node.
         /// </summary>
         public double V { get; }
 
         /// <summary>
-        /// 
+        /// Get the name of the node.
         /// </summary>
         public string NodeName { get; }
 
@@ -62,42 +62,42 @@ namespace Battlegrounds.Campaigns {
         public string NodeFilter { get; }
 
         /// <summary>
-        /// 
+        /// Get the visual representation of the node.
         /// </summary>
         public IVisualCampaignNode VisualNode { get; set; }
 
         /// <summary>
-        /// 
+        /// Get the current owner of the node.
         /// </summary>
         public CampaignArmyTeam Owner { get; private set; }
 
         /// <summary>
-        /// 
+        /// Get the max capacity of the node.
         /// </summary>
         public int OccupantCapacity { get; init; }
 
         /// <summary>
-        /// 
+        /// Get the victory value of the node.
         /// </summary>
         public double Value { get; private set; }
 
         /// <summary>
-        /// 
+        /// Get the attrition value of the node.
         /// </summary>
         public double Attrition { get; private set; }
 
         /// <summary>
-        /// 
+        /// Get if the node is a leaf node.
         /// </summary>
         public bool IsLeaf { get; init; }
 
         /// <summary>
-        /// 
+        /// Get the maps that can be played on this node.
         /// </summary>
         public List<NodeMap> Maps { get; }
 
         /// <summary>
-        /// 
+        /// Get the occupants of the node.
         /// </summary>
         public DistinctList<Formation> Occupants { get; }
 

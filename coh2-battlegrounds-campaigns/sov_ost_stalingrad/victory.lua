@@ -19,7 +19,7 @@ __stalingradNodes = {
     Map:FromName("rail_exit")
 };
 
--- Setup campaign
+-- Setup campaign (Called when app is ready)
 function CampaignSetup()
 
     -- Register Wincondition functions
@@ -35,7 +35,7 @@ end
 
 -- Has allies won
 function HasAlliesWon()
-    return Date:IsEndDate() or (Team_GetReservesCount(TEAM_AXIS) == 0 and Team_GetFormationCount(TEAM_AXIS) == 0);
+    return Turn:IsEndDate() or (Team_GetReservesCount(TEAM_AXIS) == 0 and Team_GetFormationCount(TEAM_AXIS) == 0);
 end
 
 -- Check if unit can cross the volga

@@ -26,6 +26,18 @@
         /// <returns>A <see cref="LuaType"/> instance representing the Lua type.</returns>
         public abstract LuaType GetLuaType();
 
+        /// <summary>
+        /// Convert <paramref name="v"/> into the proper <see cref="LuaValue"/> representation.
+        /// </summary>
+        /// <param name="v">The value to convert.</param>
+        public static implicit operator LuaValue(double v) => new LuaNumber(v);
+
+        /// <summary>
+        /// Convert <paramref name="v"/> into the proper <see cref="LuaValue"/> representation.
+        /// </summary>
+        /// <param name="v">The value to convert.</param>
+        public static implicit operator LuaValue(int v) => new LuaNumber(v);
+
     }
 
 }

@@ -14,6 +14,7 @@ using Battlegrounds.Game.Match.Composite;
 using Battlegrounds.Game.Match.Finalizer;
 using Battlegrounds.Game.Match.Play.Factory;
 using Battlegrounds.Game.Match.Startup;
+using Battlegrounds.Lua;
 using Battlegrounds.Util.Lists;
 
 namespace Battlegrounds.Campaigns.Controller {
@@ -46,9 +47,21 @@ namespace Battlegrounds.Campaigns.Controller {
             return lastTurn;
         }
 
+        public void StartCampaign() {
+
+            // Invoke setup function if any
+            if (this.Campaign.LuaState._G["CampaignSetup"] is LuaClosure setupFunction) {
+                LuaMarshal.InvokeClosureManaged(setupFunction, this.Campaign.LuaState);
+            }
+
+        }
+
         public void EndCampaign() {
 
         }
+
+        public void FireEvent(int eventType, params object[] args)
+            => this.Campaign.Events.FireEvent(eventType, args);
 
         public void CreatePlayer(ulong player, string playername, CampaignArmyTeam playerTeam) {
             this.m_player = new Player() {
