@@ -121,7 +121,12 @@ namespace Battlegrounds.Lua {
             if (this.m_userTypes.TryGetValue(type, out LuaUserObjectType objType)) {
                 return objType;
             } else {
-                throw new LuaException($"Invalid type '{type.FullName}'; Not registered in state.");
+                var interfaces = this.m_userTypes.Where(x => x.Key.IsInterface);
+                if (interfaces.FirstOrDefault(x => type.IsAssignableTo(x.Key)) is var interfaceMatch) {
+                    return interfaceMatch.Value;
+                } else {
+                    throw new LuaException($"Invalid type '{type.FullName}'; Not registered in state.");
+                }
             }
         }
 

@@ -16,6 +16,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using Battlegrounds.Campaigns;
+using Battlegrounds.Campaigns.API;
+using Battlegrounds.Campaigns.Controller;
 using Battlegrounds.Campaigns.Organisations;
 using Battlegrounds.Functional;
 using Battlegrounds.Game.Database;
@@ -70,7 +72,7 @@ namespace BattlegroundsApp.Views.CampaignViews {
             public override string ToString() => this.Squad.SBP.Name;
         }
 
-        private List<Formation> m_formations;
+        private List<ICampaignFormation> m_formations;
 
         /*
         ***
@@ -78,7 +80,7 @@ namespace BattlegroundsApp.Views.CampaignViews {
         ***
         */
 
-        public CampaignMapNode MapNode { get; init; }
+        public ICampaignMapNode MapNode { get; init; }
 
         public Scenario EngagementScenario { get; private set; }
 
@@ -154,7 +156,7 @@ namespace BattlegroundsApp.Views.CampaignViews {
             this.Player2Units = new ObservableCollection<CampaignEngagementRegimentalUnit>();
             this.Player3Units = new ObservableCollection<CampaignEngagementRegimentalUnit>();
             this.Player4Units = new ObservableCollection<CampaignEngagementRegimentalUnit>();
-            this.m_formations = new List<Formation>();
+            this.m_formations = new List<ICampaignFormation>();
 
             // Create indexable arrays
             this.IndexableUnits = new[] {
@@ -166,7 +168,7 @@ namespace BattlegroundsApp.Views.CampaignViews {
 
         }
 
-        public void SetAttackingFormations(List<Formation> formations, Localize localize) {
+        public void SetAttackingFormations(List<ICampaignFormation> formations, Localize localize) {
             this.m_formations.AddRange(formations);
             formations.ForEach(x => {
                 x.Regiments.ForEach(r => {
@@ -264,8 +266,8 @@ namespace BattlegroundsApp.Views.CampaignViews {
         private void Company_SelectionChanged(object sender, SelectionChangedEventArgs e)
             => this.RefreshProperties();
 
-        public void SetupMatchData(ActiveCampaign campaign) {
-            this.EngagementScenario = campaign.PickScenario(this.MapNode.Maps);
+        public void SetupMatchData(ICampaignController campaign) {
+            this.EngagementScenario = campaign.Map.PickScenario(this.MapNode, campaign.Turn);
             if (this.EngagementScenario is not null) {
                 string gamePath = Path.GetFullPath($"bin\\gfx\\map_icons\\{this.EngagementScenario.RelativeFilename}_map.tga");
                 string userPath = Path.GetFullPath($"usr\\mods\\map_icons\\{this.EngagementScenario.RelativeFilename}_map.tga");

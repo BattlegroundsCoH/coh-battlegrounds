@@ -1,8 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using Battlegrounds.Campaigns.API;
+using Battlegrounds.Campaigns.Map;
+using Battlegrounds.Campaigns.Models;
 using Battlegrounds.Campaigns.Organisations;
+using Battlegrounds.Campaigns.Scripting;
 using Battlegrounds.Functional;
 using Battlegrounds.Game;
 using Battlegrounds.Game.Database;
@@ -14,27 +19,81 @@ using Battlegrounds.Game.Match.Composite;
 using Battlegrounds.Game.Match.Finalizer;
 using Battlegrounds.Game.Match.Play.Factory;
 using Battlegrounds.Game.Match.Startup;
+using Battlegrounds.Gfx;
+using Battlegrounds.Locale;
 using Battlegrounds.Lua;
 using Battlegrounds.Util.Lists;
 
 namespace Battlegrounds.Campaigns.Controller {
 
+    /// <summary>
+    /// 
+    /// </summary>
     public class SingleplayerCampaign : ICampaignController {
 
-        private class Player {
-            public ulong id;
-            public string name;
-            public CampaignArmyTeam team;
-        }
+        private string m_locSourceID;
+        private ushort m_unitCampaignID;
 
-        private Player m_player;
+        private HashSet<string> m_allowedSummerAtmospheres;
+        private HashSet<string> m_allowedWinterAtmospheres;
 
-        public ActiveCampaign Campaign { get; }
+        private ICampaignEventManager m_eventManager;
+        private ICampaignMap m_map;
+        private ICampaignScriptHandler m_scriptHandler;
+        private ICampaignTurn m_turn;
 
+        private ICampaignTeam[] m_teams;
+        private ICampaignPlayer m_player; // The single-player
+
+        private Localize m_locale;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public ICampaignEventManager Events => this.m_eventManager;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public ICampaignScriptHandler Script => this.m_scriptHandler;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public ICampaignMap Map => this.m_map;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public ICampaignTurn Turn => this.m_turn;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public Localize Locale => this.m_locale;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public Army[] Armies { get; init; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public List<GfxMap> GfxMaps { get; init; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public int DifficultyLevel { get; init; }
+
+        /// <summary>
+        /// 
+        /// </summary>
         public bool IsSingleplayer => true;
 
-        public SingleplayerCampaign(ActiveCampaign campaign) {
-            this.Campaign = campaign;
+        private SingleplayerCampaign() {
+            this.m_unitCampaignID = 0;
         }
 
         public void Save() {
@@ -50,25 +109,12 @@ namespace Battlegrounds.Campaigns.Controller {
         public void StartCampaign() {
 
             // Invoke setup function if any
-            if (this.Campaign.LuaState._G["CampaignSetup"] is LuaClosure setupFunction) {
-                LuaMarshal.InvokeClosureManaged(setupFunction, this.Campaign.LuaState);
-            }
+            this.Script.CallGlobal("CampaignSetup");
 
         }
 
         public void EndCampaign() {
 
-        }
-
-        public void FireEvent(int eventType, params object[] args)
-            => this.Campaign.Events.FireEvent(eventType, args);
-
-        public void CreatePlayer(ulong player, string playername, CampaignArmyTeam playerTeam) {
-            this.m_player = new Player() {
-                id = player,
-                name = playername,
-                team = playerTeam
-            };
         }
 
         public MatchController Engage(CampaignEngagementData data) {
@@ -113,20 +159,20 @@ namespace Battlegrounds.Campaigns.Controller {
         public void ZipPlayerData(ref CampaignEngagementData data) {
 
             // Method for determining company name
-            string DetermineCompanyName(List<Squad> squads, List<Formation> formations) {
-                Dictionary<Formation, int> counts = new Dictionary<Formation, int>();
+            string DetermineCompanyName(List<Squad> squads, List<ICampaignFormation> formations) {
+                Dictionary<ICampaignFormation, int> counts = new Dictionary<ICampaignFormation, int>();
                 formations.ForEach(x => {
                     counts.Add(x, squads.Count(x => formations.Any(y => y.Regiments.Any(z => z.HasSquad(x)))));
                 });
                 int maxVal = counts.Max(x => x.Value);
-                Formation largestInfluence = counts.FirstOrDefault(x => x.Value == maxVal).Key;
-                return this.Campaign.Locale.GetString(largestInfluence.Regiments.FirstOrDefault().Name);
+                ICampaignFormation largestInfluence = counts.FirstOrDefault(x => x.Value == maxVal).Key;
+                return this.Locale.GetString(largestInfluence.Regiments.FirstOrDefault().Name);
             }
 
             // Method for zipping player
             string ZipPlayer(CampaignArmyTeam team, int index) {
-                if (index == 0 && team == this.m_player.team) {
-                    return this.m_player.name;
+                if (index == 0 && team == this.m_player.Team.Team) {
+                    return this.m_player.DisplayName;
                 } else {
                     return AIDifficulty.AI_Hard.GetIngameDisplayName();
                 }
@@ -154,7 +200,7 @@ namespace Battlegrounds.Campaigns.Controller {
 
         }
 
-        public void GenerateAIEngagementSetup(ref CampaignEngagementData data, bool isDefence, int armyCount, Formation[] availableFormations) {
+        public void GenerateAIEngagementSetup(ref CampaignEngagementData data, bool isDefence, int armyCount, ICampaignFormation[] availableFormations) {
 
             // RefPtr to lists that will be affected
             List<Squad>[] targetList;
@@ -208,7 +254,136 @@ namespace Battlegrounds.Campaigns.Controller {
 
         }
 
-        private static void PopulateListWithFormations(WeightedList<Squad> squads, bool isDefence, Formation[] formations) {
+
+        public void CreateArmy(int index, ref uint divCount, CampaignPackage.ArmyData army) {
+            this.Armies[index] = new Army(army.Army.IsAllied ? CampaignArmyTeam.TEAM_ALLIES : CampaignArmyTeam.TEAM_AXIS) {
+                Name = this.Locale.GetString(army.Name),
+                Description = this.Locale.GetString(army.Desc),
+                Faction = army.Army,
+            };
+            uint tmp = divCount;
+            army.FullArmyData?.Pairs((k, v) => {
+                switch (k.Str()) {
+                    case "templates":
+                        (v as LuaTable).Pairs((k, v) => {
+                            this.Armies[index].NewRegimentTemplate(k.Str(), v as LuaTable);
+                        });
+                        break;
+                    case "army":
+                        var vt = v as LuaTable;
+                        this.Armies[index].ArmyName = new LocaleKey(vt["name"].Str(), this.m_locSourceID);
+                        (vt["divisions"] as LuaTable).Pairs((k, v) => {
+                            var vt = v as LuaTable;
+                            uint divID = tmp;
+
+                            this.Armies[index].NewDivision(divID,
+                                new LocaleKey(k.Str(), this.m_locSourceID),
+                                vt["tmpl"].Str(),
+                                vt["max_move"],
+                                vt["regiments"] as LuaTable,
+                                ref this.m_unitCampaignID);
+
+                            tmp++;
+                            if (vt["deploy"] is not LuaNil) {
+                                if (vt["deploy"] is LuaTable tableAt) {
+                                    this.Map.DeployDivision(divID, this.Armies[index], new List<string>(tableAt.ToArray().Select(x => x.Str())));
+                                } else if (vt["deploy"] is LuaString strAt) {
+                                    this.Map.DeployDivision(divID, this.Armies[index], new List<string>() { strAt.Str() });
+                                } else {
+                                    Trace.WriteLine($"Attempted to spawn '{k.Str()}' using unsupported datatype!", nameof(SingleplayerCampaign));
+                                }
+                            }
+                        });
+                        break;
+                    default:
+                        Trace.WriteLine($"Unrecognized army entry '{k.Str()}'", nameof(SingleplayerCampaign));
+                        break;
+                }
+            });
+            divCount = tmp;
+        }
+
+        public static SingleplayerCampaign FromPackage(CampaignPackage package, int difficulty, CampaignStartData createArgs) {
+
+            // Create initial campaign data
+            SingleplayerCampaign campaign = new SingleplayerCampaign {
+                m_map = new CampaignMap(package.MapData),
+                m_locale = package.LocaleManager,
+                m_locSourceID = package.LocaleSourceID,
+                m_scriptHandler = new CampaignScriptHandler(),
+                m_eventManager = new SingleplayerCampaignEventManager(),
+                Armies = new Army[package.CampaignArmies.Length],
+                DifficultyLevel = difficulty,
+                GfxMaps = package.GfxResources,
+            };
+
+            // Create campaign nodes
+            campaign.Map.BuildNetwork();
+
+            // Counter to keep track of diviions
+            uint divisionCount = 0;
+
+            // Create the armies
+            for (int i = 0; i < package.CampaignArmies.Length; i++) {
+                campaign.CreateArmy(i, ref divisionCount, package.CampaignArmies[i]);
+            }
+
+            // Define start team
+            CampaignArmyTeam startTeam = ICampaignTeam.GetArmyTeamFromFaction(package.NormalStartingSide);
+            var human = createArgs.HumanDataList[0];
+
+            // Determine starting team
+            if (human.Team.ToString() != package.NormalStartingSide) {
+                if (startTeam == CampaignArmyTeam.TEAM_AXIS) {
+                    startTeam = CampaignArmyTeam.TEAM_ALLIES;
+                } else {
+                    startTeam = CampaignArmyTeam.TEAM_AXIS;
+                }
+            }
+
+            // Create team and players
+            campaign.m_teams = new ICampaignTeam[] {
+                new SingleCampaignTeam(CampaignArmyTeam.TEAM_ALLIES, 1),
+                new SingleCampaignTeam(CampaignArmyTeam.TEAM_AXIS, 1)
+            };
+            campaign.m_teams[0].CreatePlayer(0, human.Team == CampaignArmyTeam.TEAM_ALLIES ? human.Name : string.Empty, human.Team == CampaignArmyTeam.TEAM_ALLIES ? human.SteamID : 0);
+            campaign.m_teams[1].CreatePlayer(0, human.Team == CampaignArmyTeam.TEAM_AXIS ? human.Name : string.Empty, human.Team == CampaignArmyTeam.TEAM_AXIS ? human.SteamID : 0);
+
+            // Set default player
+            campaign.m_player = campaign.m_teams[human.Team == CampaignArmyTeam.TEAM_ALLIES ? 0 : 1].Players[0];
+
+            // Create turn data
+            campaign.m_turn = new SingleplayerCampaignTurn(startTeam, new[] {
+                package.CampaignTurnData.Start,
+                package.CampaignTurnData.End
+            }, package.CampaignTurnData.TurnLength);
+            campaign.Turn.SetWinterDates(new[] { package.CampaignWeatherData.WinterStart, package.CampaignWeatherData.WinterEnd });
+
+            // Set atmospheres
+            campaign.m_allowedSummerAtmospheres = package.CampaignWeatherData.SummerAtmospheres;
+            campaign.m_allowedWinterAtmospheres = package.CampaignWeatherData.WinterAtmospheres;
+
+            // Set lua stuff
+            campaign.Script.SetGlobal("Map", campaign.Map, true);
+            campaign.Script.SetGlobal("Turn", campaign.Turn, true);
+            campaign.Script.SetGlobal(BattlegroundsCampaignLibrary.CampaignInstanceField, campaign, false);
+
+            // Register library
+            BattlegroundsCampaignLibrary.LoadLibrary(campaign.Script.ScriptState);
+
+            // Loop over campaign scripts and init them
+            package.CampaignScripts.ForEach(x => campaign.Script.LoadScript(x));
+
+            // Assign state ptrs
+            campaign.Map.ScriptHandler = campaign.Script;
+            campaign.Events.ScriptHandler = campaign.Script;
+
+            // Return campaign
+            return campaign;
+
+        }
+
+        private static void PopulateListWithFormations(WeightedList<Squad> squads, bool isDefence, ICampaignFormation[] formations) {
 
             // Run through all formations
             for (int i = 0; i < formations.Length; i++) {

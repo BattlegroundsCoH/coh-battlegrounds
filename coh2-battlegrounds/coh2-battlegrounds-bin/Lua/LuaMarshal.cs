@@ -57,7 +57,8 @@ namespace Battlegrounds.Lua {
             if (method.Info.IsStatic) {
                 stack.Push(ToLuaValue(method.Info.Invoke(null, parameters.ToArray())));
             } else {
-                if (parameters[0].GetType() == method.Info.DeclaringType) {
+                bool validSelf = parameters[0].GetType() == method.Info.DeclaringType || parameters[0].GetType().IsAssignableTo(method.Info.DeclaringType);
+                if (validSelf) {
                     stack.Push(ToLuaValue(method.Info.Invoke(parameters[0], parameters.Skip(1).ToArray())));
                 } else {
                     throw new LuaRuntimeError($"Attempt to invoke native method {method.Name} without valid instance.");

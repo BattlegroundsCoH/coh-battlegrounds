@@ -10,9 +10,9 @@ namespace Battlegrounds.Campaigns.API {
 
         void AttritionValueChanged(double newValue);
 
-        void OccupantAdded(Formation formation);
+        void OccupantAdded(ICampaignFormation formation);
 
-        void OccupantRemoved(Formation formation);
+        void OccupantRemoved(ICampaignFormation formation);
 
     }
 

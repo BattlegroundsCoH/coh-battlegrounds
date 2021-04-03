@@ -5,29 +5,27 @@ using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Shapes;
 
-using Battlegrounds.Campaigns;
 using Battlegrounds.Campaigns.API;
-using Battlegrounds.Campaigns.Organisations;
 using Battlegrounds.Functional;
 
 namespace BattlegroundsApp.Views.CampaignViews.Models {
 
-    public class CampaignVisualNodeModel : IVisualCampaignNode, ICampaignMapNode {
+    public class CampaignVisualNodeModel : IVisualCampaignNode, ICampaignPointsNode {
         
         public UIElement VisualElement { get; }
 
-        public event Action<CampaignMapNode, bool> NodeClicked;
+        public event Action<ICampaignMapNode, bool> NodeClicked;
 
-        public CampaignMapNode Node { get; }
+        public ICampaignMapNode Node { get; }
 
         public CampaignResourceContext ResourceContext { get; }
 
-        public Func<Formation, CampaignUnitFormationModel> ModelFromFormation { get; init; }
+        public Func<ICampaignFormation, CampaignUnitFormationModel> ModelFromFormation { get; init; }
 
         private double m_formationXOffset;
         private double m_formationYOffset;
 
-        public CampaignVisualNodeModel(CampaignMapNode node, CampaignResourceContext resourceContext) {
+        public CampaignVisualNodeModel(ICampaignMapNode node, CampaignResourceContext resourceContext) {
             
             // Set fields and properties
             this.Node = node;
@@ -52,7 +50,7 @@ namespace BattlegroundsApp.Views.CampaignViews.Models {
             this.VisualElement.MouseRightButtonDown += (a, b) => this.RightClick();
 
             // Set position of node
-            (this as ICampaignMapNode).SetPosition(node.U * resourceContext.MapWidth - (32.0 / 2.0), node.V * resourceContext.MapHeight - (32.0 / 2.0));
+            (this as ICampaignPointsNode).SetPosition(node.U * resourceContext.MapWidth - (32.0 / 2.0), node.V * resourceContext.MapHeight - (32.0 / 2.0));
 
         }
 
@@ -62,7 +60,7 @@ namespace BattlegroundsApp.Views.CampaignViews.Models {
             } else if (this.VisualElement is Image img) {
                 img.Source = this.ResourceContext.GetResource($"{(this.Node.Owner == CampaignArmyTeam.TEAM_ALLIES ? "allies" : "axis")}_node");
             }
-            this.ResourceContext.Controller.FireEvent(ActiveCampaignEventManager.ET_Ownership, this.Node);
+            this.ResourceContext.Controller.Events.FireEvent(ICampaignEventManager.ET_Ownership, this.Node);
         }
 
         public void VictoryValueChanged(double newValue) {
@@ -73,10 +71,10 @@ namespace BattlegroundsApp.Views.CampaignViews.Models {
 
         }
 
-        public void OccupantAdded(Formation formation) {
+        public void OccupantAdded(ICampaignFormation formation) {
         }
 
-        public void OccupantRemoved(Formation formation) {
+        public void OccupantRemoved(ICampaignFormation formation) {
             if (this.Node.Occupants.Count == 0) {
                 this.ResetOffset();
             }

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Battlegrounds.Campaigns.Organisations;
+using Battlegrounds.Campaigns.API;
 using Battlegrounds.Functional;
 
 namespace BattlegroundsApp.Views.CampaignViews.Models {
@@ -54,7 +54,7 @@ namespace BattlegroundsApp.Views.CampaignViews.Models {
 
         public void Unlock() => this.m_isLocked = false;
 
-        public List<Formation> Get() => this.m_selection.Select(x => x.Formation).ToList();
+        public List<ICampaignFormation> Get() => this.m_selection.Select(x => x.Formation).ToList();
 
         public int Filter(Predicate<CampaignUnitFormationModel> p) {
             int count = 0;

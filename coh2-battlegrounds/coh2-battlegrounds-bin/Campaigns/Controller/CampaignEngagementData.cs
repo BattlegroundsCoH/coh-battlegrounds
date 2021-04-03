@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
-
-using Battlegrounds.Campaigns.Organisations;
+using Battlegrounds.Campaigns.API;
 using Battlegrounds.Game;
 using Battlegrounds.Game.Database;
 using Battlegrounds.Game.Gameplay;
@@ -29,13 +28,13 @@ namespace Battlegrounds.Campaigns.Controller {
 
         public List<Squad> allParticipatingSquads;
 
-        public List<Formation> attackingFormations;
-        public List<Formation> defendingFormations;
+        public List<ICampaignFormation> attackingFormations;
+        public List<ICampaignFormation> defendingFormations;
 
         public Scenario scenario;
         public Wincondition gamemode;
         public int gamemodeValue;
-        public CampaignMapNode node;
+        public ICampaignMapNode node;
 
     }
 

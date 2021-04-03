@@ -68,7 +68,7 @@ namespace Battlegrounds.Lua {
             // Setup per-instance values
             this.m_instanceTable["__index"] = LuaClosure.Anonymous((state, stack) => {
                 var key = stack.Pop();
-                if (stack.PopOrNil() is LuaUserObject obj && obj.Object.GetType() == this.ObjectType) {
+                if (stack.PopOrNil() is LuaUserObject obj && (obj.Object.GetType() == this.ObjectType || obj.Object.GetType().IsAssignableTo(this.ObjectType))) {
                     if (this.Properties.FirstOrDefault(x => x.Name == key.Str() && x.Info.GetMethod.IsStatic is false) is Property prop) {
                         stack.Push(LuaMarshal.ToLuaValue(prop.Info.GetMethod.Invoke(obj.Object, Array.Empty<object>())));
                     } else {

@@ -2,44 +2,15 @@
 using System.Diagnostics;
 
 using Battlegrounds.Campaigns.API;
-using Battlegrounds.Campaigns.Organisations;
 using Battlegrounds.Lua;
 using Battlegrounds.Util.Lists;
 
-namespace Battlegrounds.Campaigns {
+namespace Battlegrounds.Campaigns.Map {
 
     /// <summary>
     /// Represents a node on the campaign map where companies/regiments can be located and where armies can fight.
     /// </summary>
-    public class CampaignMapNode {
-
-        /// <summary>
-        /// Readonly struct representing a map that can be played in node.
-        /// </summary>
-        public readonly struct NodeMap {
-            
-            /// <summary>
-            /// Get the name of the map file to play.
-            /// </summary>
-            public readonly string MapName { get; }
-            
-            /// <summary>
-            /// Get if this is the winter variant of the map.
-            /// </summary>
-            public readonly bool IsWinterVariant { get; }
-            
-            /// <summary>
-            /// Get the name of the function to invoke when checking if map should be used. (Leave empty if not intended for use
-            /// </summary>
-            public readonly string ScriptDeterminant { get; }
-
-            public NodeMap(string name, string func, bool winter) {
-                this.MapName = name;
-                this.ScriptDeterminant = func;
-                this.IsWinterVariant = winter;
-            }
-
-        }
+    public class CampaignMapNode : ICampaignMapNode {
 
         /// <summary>
         /// Get the U-index for the node.
@@ -99,7 +70,7 @@ namespace Battlegrounds.Campaigns {
         /// <summary>
         /// Get the occupants of the node.
         /// </summary>
-        public DistinctList<Formation> Occupants { get; }
+        public DistinctList<ICampaignFormation> Occupants { get; }
 
         /// <summary>
         /// 
@@ -115,7 +86,7 @@ namespace Battlegrounds.Campaigns {
             this.VisualNode = null;
             this.Owner = CampaignArmyTeam.TEAM_NEUTRAL;
             this.Maps = new List<NodeMap>();
-            this.Occupants = new DistinctList<Formation>();
+            this.Occupants = new DistinctList<ICampaignFormation>();
         }
 
         /// <summary>
@@ -150,7 +121,7 @@ namespace Battlegrounds.Campaigns {
         /// </summary>
         /// <param name="formation"></param>
         /// <returns></returns>
-        public bool CanMoveTo(Formation formation) {
+        public bool CanMoveTo(ICampaignFormation formation) {
             if (this.Occupants.Count + 1 <= this.OccupantCapacity) {
                 // TODO: Check if script allows for it
                 return true;
@@ -204,7 +175,7 @@ namespace Battlegrounds.Campaigns {
         /// 
         /// </summary>
         /// <param name="formation"></param>
-        public void AddOccupant(Formation formation) {
+        public void AddOccupant(ICampaignFormation formation) {
             this.Occupants.Add(formation);
             this.VisualNode?.OccupantAdded(formation);
         }
@@ -213,7 +184,7 @@ namespace Battlegrounds.Campaigns {
         /// 
         /// </summary>
         /// <param name="formation"></param>
-        public void RemoveOccupant(Formation formation) {
+        public void RemoveOccupant(ICampaignFormation formation) {
             this.Occupants.Remove(formation);
             this.VisualNode?.OccupantRemoved(formation);
         }

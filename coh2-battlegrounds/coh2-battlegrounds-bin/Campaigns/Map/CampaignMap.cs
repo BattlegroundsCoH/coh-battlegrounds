@@ -2,21 +2,32 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using Battlegrounds.Campaigns.API;
 using Battlegrounds.Campaigns.Organisations;
+using Battlegrounds.Game.Database;
 using Battlegrounds.Lua;
 
-namespace Battlegrounds.Campaigns {
+namespace Battlegrounds.Campaigns.Map {
     
-    public class CampaignMap {
+    /// <summary>
+    /// 
+    /// </summary>
+    public class CampaignMap : ICampaignMap {
 
+        /// <summary>
+        /// 
+        /// </summary>
         public byte[] RawImageData { get; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public ICampaignScriptHandler ScriptHandler { get; set; }
 
         private LuaTable MapDef { get; }
 
         private List<CampaignMapNode> m_nodes;
         private List<CampaignMapTransition> m_edges;
-
-        private LuaState m_luaState;
 
         public CampaignMap(CampaignMapData mapData) {
 
@@ -31,8 +42,6 @@ namespace Battlegrounds.Campaigns {
             this.m_edges = new List<CampaignMapTransition>();
 
         }
-
-        public void SetLuaState(LuaState state) => this.m_luaState = state;
 
         public void BuildNetwork() {
 
@@ -73,17 +82,17 @@ namespace Battlegrounds.Campaigns {
 
         }
 
-        public void EachNode(Action<CampaignMapNode> action) => this.m_nodes.ForEach(action);
+        public void EachNode(Action<ICampaignMapNode> action) => this.m_nodes.ForEach(action);
 
-        public void EachTransition(Action<CampaignMapTransition> action) => this.m_edges.ForEach(action);
+        public void EachTransition(Action<ICampaignMapNodeTransition> action) => this.m_edges.ForEach(action);
 
-        public void EachFormation(Action<Formation> action) => this.m_nodes.ForEach(x => x.Occupants.ForEach(action));
+        public void EachFormation(Action<ICampaignFormation> action) => this.m_nodes.ForEach(x => x.Occupants.ForEach(action));
 
         [LuaUserobjectMethod(UseMarshalling = true)]
-        public CampaignMapNode FromName(string name) => this.m_nodes.FirstOrDefault(x => x.NodeName == name);
+        public ICampaignMapNode FromName(string name) => this.m_nodes.FirstOrDefault(x => x.NodeName == name);
 
-        public bool SpawnFormationAt(string nodeIdentifier, Formation formation) {
-            if (this.FromName(nodeIdentifier) is CampaignMapNode node) {
+        public bool SpawnFormationAt(string nodeIdentifier, ICampaignFormation formation) {
+            if (this.FromName(nodeIdentifier) is ICampaignMapNode node) {
                 
                 if (node.CanMoveTo(formation)) {
                     formation.SetNodeLocation(node);
@@ -94,7 +103,7 @@ namespace Battlegrounds.Campaigns {
             return false;
         }
 
-        public void MoveTo(Formation formation, CampaignMapNode target) {
+        public void MoveTo(ICampaignFormation formation, ICampaignMapNode target) {
 
             // Update occupants
             formation.Node.RemoveOccupant(formation);
@@ -108,11 +117,9 @@ namespace Battlegrounds.Campaigns {
                 target.SetOwner(formation.Team);
             }
 
-            // Invoke lua script
-            
         }
 
-        public bool SetPath(CampaignMapNode from, CampaignMapNode end, Formation formation) {
+        public bool SetPath(ICampaignMapNode from, ICampaignMapNode end, ICampaignFormation formation) {
             var path = Dijkstra(from, end, formation);
             if (path.Count > 0) {
                 Trace.WriteLine(string.Join(" -> ", path.Select(x => x.NodeName)), $"{nameof(CampaignMap)}:PathResult");
@@ -124,23 +131,18 @@ namespace Battlegrounds.Campaigns {
             return false;
         }
 
-        private float Weight(CampaignMapNode prev, CampaignMapNode to, Formation formation) {
+        private float Weight(ICampaignMapNode prev, ICampaignMapNode to, ICampaignFormation formation) {
             if (to.CanMoveTo(formation)) {
                 float w = 1.0f;
                 if (to.Owner != formation.Team) {
                     w += 2.5f;
                 }
                 if (!string.IsNullOrEmpty(to.NodeFilter)!) {
-                    if (this.m_luaState._G[to.NodeFilter] is LuaClosure closure) {
-                        if (LuaMarshal.InvokeClosureManaged(closure, this.m_luaState, formation)[0] is double d) {
-                            w += (float)d;
-                        } else {
-                            Trace.WriteLine($"Lua function '{to.NodeFilter}' returned non-number value and will be ignored.", nameof(CampaignMapNode));
-                        }
-                    } else if (this.m_luaState._G[to.NodeFilter] is LuaNumber num) {
-                        w += (float)num;
+                    object[] results = this.ScriptHandler.CallGlobal(to.NodeFilter, formation);
+                    if (results.Length == 1 && results[0] is double d) {
+                        w += (float)d;
                     } else {
-                        Trace.WriteLine($"Lua function '{to.NodeFilter}' is a {this.m_luaState._G[to.NodeFilter].GetLuaType()} type (Only accepts number or function).", nameof(CampaignMapNode));
+                        Trace.WriteLine($"Lua function '{to.NodeFilter}' returned non-number value and will be ignored.", nameof(ICampaignMapNode));
                     }
                 }
                 return w;
@@ -148,13 +150,13 @@ namespace Battlegrounds.Campaigns {
             return float.PositiveInfinity;
         }
 
-        private List<CampaignMapNode> Dijkstra(CampaignMapNode from, CampaignMapNode end, Formation formation) {
+        private List<ICampaignMapNode> Dijkstra(ICampaignMapNode from, ICampaignMapNode end, ICampaignFormation formation) {
             
-            HashSet<CampaignMapNode> nodes = new HashSet<CampaignMapNode>();
-            Dictionary<CampaignMapNode, float> distance = new Dictionary<CampaignMapNode, float>();
-            Dictionary<CampaignMapNode, CampaignMapNode> prev = new Dictionary<CampaignMapNode, CampaignMapNode>();
+            HashSet<ICampaignMapNode> nodes = new HashSet<ICampaignMapNode>();
+            Dictionary<ICampaignMapNode, float> distance = new Dictionary<ICampaignMapNode, float>();
+            Dictionary<ICampaignMapNode, ICampaignMapNode> prev = new Dictionary<ICampaignMapNode, ICampaignMapNode>();
             
-            foreach (CampaignMapNode node in this.m_nodes) {
+            foreach (ICampaignMapNode node in this.m_nodes) {
                 distance[node] = float.PositiveInfinity;
                 prev[node] = null;
                 nodes.Add(node);
@@ -162,10 +164,10 @@ namespace Battlegrounds.Campaigns {
 
             distance[from] = 0.0f;
 
-            CampaignMapNode MinDis() {
+            ICampaignMapNode MinDis() {
                 float f = float.PositiveInfinity;
-                CampaignMapNode q = null;
-                foreach (CampaignMapNode n in nodes) {
+                ICampaignMapNode q = null;
+                foreach (ICampaignMapNode n in nodes) {
                     if (distance[n] < f) {
                         q = n;
                     }
@@ -175,7 +177,7 @@ namespace Battlegrounds.Campaigns {
 
             while (nodes.Count > 0) {
 
-                CampaignMapNode u = MinDis();
+                ICampaignMapNode u = MinDis();
                 nodes.Remove(u);
 
                 if (u == end || u is null)
@@ -193,8 +195,8 @@ namespace Battlegrounds.Campaigns {
 
             }
 
-            List<CampaignMapNode> path = new List<CampaignMapNode>();
-            CampaignMapNode t = end;
+            List<ICampaignMapNode> path = new List<ICampaignMapNode>();
+            ICampaignMapNode t = end;
             if (prev[t] is not null || t == from) {
                 while (t is not null) {
                     path.Insert(0, t);
@@ -206,8 +208,8 @@ namespace Battlegrounds.Campaigns {
 
         }
 
-        private List<CampaignMapNode> GetNeighbours(CampaignMapNode source, IEnumerable<CampaignMapNode> filter) {
-            List<CampaignMapNode> neighbours = this.GetNodeNeighbours(source);
+        private List<ICampaignMapNode> GetNeighbours(ICampaignMapNode source, IEnumerable<ICampaignMapNode> filter) {
+            List<ICampaignMapNode> neighbours = this.GetNodeNeighbours(source);
             int fcount = filter.Count();
             if (fcount == 0) {
                 return neighbours;
@@ -216,11 +218,11 @@ namespace Battlegrounds.Campaigns {
             }
         }
 
-        public List<CampaignMapNode> GetNodeNeighbours(CampaignMapNode mapNode)
+        public List<ICampaignMapNode> GetNodeNeighbours(ICampaignMapNode mapNode)
             => this.GetNodeNeighbours(mapNode, x => true);
 
-        public List<CampaignMapNode> GetNodeNeighbours(CampaignMapNode mapNode, Predicate<CampaignMapNode> predicate) {
-            List<CampaignMapNode> neighbours = new List<CampaignMapNode>();
+        public List<ICampaignMapNode> GetNodeNeighbours(ICampaignMapNode mapNode, Predicate<ICampaignMapNode> predicate) {
+            List<ICampaignMapNode> neighbours = new List<ICampaignMapNode>();
             foreach (var transition in this.m_edges) {
                 bool a = transition.From == mapNode;
                 bool b = transition.To == mapNode;
@@ -234,6 +236,62 @@ namespace Battlegrounds.Campaigns {
                 }
             }
             return neighbours;
+        }
+
+        public Scenario PickScenario(ICampaignMapNode node, ICampaignTurn campaignTurn) {
+            Scenario result = null;
+            if (node.Maps.Count == 1) {
+                if (ScenarioList.TryFindScenario(node.Maps[0].MapName, out result)) {
+                    return result;
+                }
+            } else {
+                for (int i = 0; i < node.Maps.Count; i++) {
+                    if (node.Maps[i].IsWinterVariant == campaignTurn.IsWinter) {
+                        if (string.IsNullOrEmpty(node.Maps[i].ScriptDeterminant)) {
+                            if (ScenarioList.TryFindScenario(node.Maps[i].MapName, out result)) {
+                                return result;
+                            }
+                        } else {
+                            object[] scriptDetermination = this.ScriptHandler.CallGlobal(node.Maps[i].ScriptDeterminant);
+                            if (scriptDetermination.Length == 1 && scriptDetermination[0] is true) {
+                                if (ScenarioList.TryFindScenario(node.Maps[i].MapName, out result)) {
+                                    return result;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            return result;
+        }
+
+        public void DeployDivision(uint divisionID, Army army, List<string> deployLocations) {
+            if (army.Divisions.FirstOrDefault(x => x.DivisionUid == divisionID) is Division div) {
+
+                // Create formation from division
+                Formation form = new Formation();
+                form.FromDivision(div);
+
+                // Determine method to spawn (just spawn or split to fit)
+                if (deployLocations.Count == 1) {
+                    this.SpawnFormationAt(deployLocations[0], form);
+                } else {
+                    if (form.CanSplit) { // Make sure we can split
+                        Formation[] split = form.Split(deployLocations.Count);
+                        for (int i = 0; i < deployLocations.Count; i++) {
+                            this.SpawnFormationAt(deployLocations[i], split[i]);
+                        }
+                    } else {
+                        Trace.WriteLine($"Army '{army.ArmyName.LocaleID}' contains deploy division with ID {div.Name.LocaleID}, as there are too few regiments to distribute.", $"{nameof(CampaignMap)}::{nameof(DeployDivision)}");
+                    }
+                }
+
+                // Log that we're deploying some unit
+                Trace.WriteLine($"Army '{army.ArmyName.LocaleID}' deploying {div.Name.LocaleID} at {string.Join(", ", deployLocations)}", $"{nameof(CampaignMap)}::{nameof(DeployDivision)}");
+
+            } else {
+                Trace.WriteLine($"Army '{army.ArmyName.LocaleID}' contains no division with ID {divisionID}", $"{nameof(CampaignMap)}::{nameof(DeployDivision)}");
+            }
         }
 
     }

@@ -2,12 +2,14 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-
+using Battlegrounds.Campaigns.API;
 using Battlegrounds.Campaigns.Organisations;
 using Battlegrounds.Functional;
 using Battlegrounds.Game.DataCompany;
 using Battlegrounds.Game.Gameplay;
 using Battlegrounds.Game.Match;
+using Battlegrounds.Gfx;
+using Battlegrounds.Locale;
 
 namespace Battlegrounds.Campaigns.Controller {
     
@@ -19,7 +21,42 @@ namespace Battlegrounds.Campaigns.Controller {
         /// <summary>
         /// 
         /// </summary>
-        ActiveCampaign Campaign { get; }
+        ICampaignEventManager Events { get; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        ICampaignScriptHandler Script { get; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        ICampaignMap Map { get; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        ICampaignTurn Turn { get; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        int DifficultyLevel { get; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        Army[] Armies { get; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        List<GfxMap> GfxMaps { get; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public Localize Locale { get; }
 
         /// <summary>
         /// 
@@ -48,14 +85,6 @@ namespace Battlegrounds.Campaigns.Controller {
         void StartCampaign();
 
         /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="player"></param>
-        /// <param name="playername"></param>
-        /// <param name="playerTeam"></param>
-        void CreatePlayer(ulong player, string playername, CampaignArmyTeam playerTeam);
-
-        /// <summary>
         /// Initialize a <see cref="MatchController"/> object that is ready to be controlled.
         /// </summary>
         /// <param name="data">The engagement data to use while generating scenario data</param>
@@ -75,7 +104,7 @@ namespace Battlegrounds.Campaigns.Controller {
         /// <param name="isDefence"></param>
         /// <param name="armyCount"></param>
         /// <param name="availableFormations"></param>
-        void GenerateAIEngagementSetup(ref CampaignEngagementData data, bool isDefence, int armyCount, Formation[] availableFormations);
+        void GenerateAIEngagementSetup(ref CampaignEngagementData data, bool isDefence, int armyCount, ICampaignFormation[] availableFormations);
 
         /// <summary>
         /// 
@@ -122,8 +151,6 @@ namespace Battlegrounds.Campaigns.Controller {
 
         }
 
-        void FireEvent(int eventType, params object[] args);
-
         /// <summary>
         /// 
         /// </summary>
@@ -140,15 +167,6 @@ namespace Battlegrounds.Campaigns.Controller {
                 Trace.WriteLine($"Handling company '{company.Name}' owned by '{company.Owner}' on {(isAttacker ? "attacking" : "defending")} side.", nameof(ICampaignController));
             }
             
-            // Loop through all units and update accordingly
-            /*company.Units.ForEach(x => {
-                if (isAttacker) {
-
-                } else {
-
-                }
-            });*/
-
         }
 
         /// <summary>
@@ -157,7 +175,7 @@ namespace Battlegrounds.Campaigns.Controller {
         /// <param name="controller"></param>
         /// <param name="data"></param>
         /// <param name="node"></param>
-        public static void HandleEngagement(MatchController controller, CampaignEngagementData data, Action<CampaignMapNode, bool> node) {
+        public static void HandleEngagement(MatchController controller, CampaignEngagementData data, Action<ICampaignMapNode, bool> node) {
 
             // Subscribe to completion event
             controller.Complete += res => {
@@ -176,7 +194,7 @@ namespace Battlegrounds.Campaigns.Controller {
                 });
 
                 // Formation updater
-                void UpdateFormations(Formation f) {
+                void UpdateFormations(ICampaignFormation f) {
                     f.Regiments.ForEach(x => {
                         x.KillSquads(deadUnits);
                     });
@@ -206,10 +224,11 @@ namespace Battlegrounds.Campaigns.Controller {
         }
 
         protected static bool GlobalEndTurn(ICampaignController controller) {
-            if (controller.Campaign.Turn.EndTurn(out bool wasEndOfRound)) {
+            if (controller.Turn.EndTurn(out bool wasEndOfRound)) {
                 if (wasEndOfRound) {
-                    controller.Campaign.PlayMap.EachNode(n => n.EndOfRound());
-                    controller.Campaign.PlayMap.EachFormation(x => x.EndOfRound());
+                    controller.Map.EachNode(n => n.EndOfRound());
+                    controller.Map.EachFormation(x => x.EndOfRound());
+                    return controller.Events.UpdateVictory();
                 }
                 return true;
             }

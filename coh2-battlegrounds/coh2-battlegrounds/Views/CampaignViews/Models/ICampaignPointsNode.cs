@@ -1,13 +1,13 @@
 ﻿using System;
-using Battlegrounds.Campaigns;
+using Battlegrounds.Campaigns.API;
 
 namespace BattlegroundsApp.Views.CampaignViews.Models {
     
-    public interface ICampaignMapNode : ICampaignMapVisual {
+    public interface ICampaignPointsNode : ICampaignMapVisual {
 
-        CampaignMapNode Node { get; }
+        ICampaignMapNode Node { get; }
 
-        event Action<CampaignMapNode, bool> NodeClicked;
+        event Action<ICampaignMapNode, bool> NodeClicked;
 
         void ResetOffset();
 

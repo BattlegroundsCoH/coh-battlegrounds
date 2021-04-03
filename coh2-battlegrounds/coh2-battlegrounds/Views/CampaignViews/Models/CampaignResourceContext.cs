@@ -28,6 +28,9 @@ namespace BattlegroundsApp.Views.CampaignViews.Models {
         /// </summary>
         public double MapHeight { get; }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public ICampaignController Controller { get; }
 
         /// <summary>
@@ -51,7 +54,7 @@ namespace BattlegroundsApp.Views.CampaignViews.Models {
             this.m_graphics = new Dictionary<string, ImageSource>();
 
             // For each GFX map
-            controller.Campaign.GfxMaps.ForEach(x => {
+            controller.GfxMaps.ForEach(x => {
 
                 // Loop over all resources
                 x.Resources.ForEach(id => {

@@ -1,10 +1,11 @@
 ﻿using System;
+using Battlegrounds.Campaigns.API;
 
 using static Battlegrounds.BattlegroundsInstance;
 
-namespace Battlegrounds.Campaigns {
+namespace Battlegrounds.Campaigns.Models {
     
-    public class ActiveCampaignTurnData {
+    public class SingleplayerCampaignTurn : ICampaignTurn {
 
         private DateTime m_date;
         private DateTime m_endDate;
@@ -22,7 +23,7 @@ namespace Battlegrounds.Campaigns {
 
         public bool IsWinter => this.m_date > this.m_winterStart && this.m_date < this.m_winterEnd;
 
-        public ActiveCampaignTurnData(CampaignArmyTeam inTurn, (int year, int month, int day)[] dates, double advance) {
+        public SingleplayerCampaignTurn(CampaignArmyTeam inTurn, (int year, int month, int day)[] dates, double advance) {
 
             // Set team turn
             this.m_initialTurn = this.m_currentTurn = inTurn;

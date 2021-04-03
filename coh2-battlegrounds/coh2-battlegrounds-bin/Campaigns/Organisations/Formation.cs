@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
+using Battlegrounds.Campaigns.API;
 using Battlegrounds.Lua;
 
 namespace Battlegrounds.Campaigns.Organisations {
@@ -7,11 +9,11 @@ namespace Battlegrounds.Campaigns.Organisations {
     /// <summary>
     /// Represents a movable organisation of regiments on the campaign map.
     /// </summary>
-    public class Formation {
+    public class Formation : ICampaignFormation {
 
         private List<Regiment> m_regiments;
-        private List<CampaignMapNode> m_path;
-        private CampaignMapNode m_location;
+        private List<ICampaignMapNode> m_path;
+        private ICampaignMapNode m_location;
         private int m_moveDistance;
         private int m_maxMoveDistance;
 
@@ -32,12 +34,12 @@ namespace Battlegrounds.Campaigns.Organisations {
         /// Lua-Visible
         /// </remarks>
         [LuaUserobjectProperty]
-        public CampaignMapNode Node => this.m_location;
+        public ICampaignMapNode Node => this.m_location;
 
         /// <summary>
         /// Get the destination of this formation
         /// </summary>
-        public CampaignMapNode Destination => this.m_path.Count > 0 ? this.m_path[0] : null;
+        public ICampaignMapNode Destination => this.m_path.Count > 0 ? this.m_path[0] : null;
 
         /// <summary>
         /// Get the name of the dominant army in charge of this formation.
@@ -96,7 +98,7 @@ namespace Battlegrounds.Campaigns.Organisations {
         /// This will not check if node can contain unit.
         /// </remarks>
         /// <param name="node">The new location of the formation.</param>
-        public void SetNodeLocation(CampaignMapNode node) {
+        public void SetNodeLocation(ICampaignMapNode node) {
             
             // Set this location
             this.m_location = node;
@@ -110,7 +112,7 @@ namespace Battlegrounds.Campaigns.Organisations {
         /// Set the list of destinations for the formation and move max capacity.
         /// </summary>
         /// <param name="nodes">The node destinations.</param>
-        public void SetNodeDestinationsAndMove(List<CampaignMapNode> nodes) {
+        public void SetNodeDestinationsAndMove(List<ICampaignMapNode> nodes) {
             this.m_path = nodes;
             this.OnMoved(false);
         }
@@ -130,7 +132,6 @@ namespace Battlegrounds.Campaigns.Organisations {
         /// Lua-invokable
         /// </remarks>
         /// <param name="killAll">Trigger kill-event on all regiments, removing them entirely from the game.</param>
-        [LuaUserobjectMethod(UseMarshalling = true)]
         public void Disband(bool killAll) {
 
         }
@@ -232,7 +233,6 @@ namespace Battlegrounds.Campaigns.Organisations {
         /// Lua-invokable
         /// </remarks>
         /// <returns>The strength of the formation.</returns>
-        [LuaUserobjectMethod(UseMarshalling = true)]
         public float CalculateStrength() {
             float avgStrength = 0.0f;
             int count = this.m_regiments.Count;
@@ -251,8 +251,12 @@ namespace Battlegrounds.Campaigns.Organisations {
         /// Update end of round values.
         /// </summary>
         public void EndOfRound() {
+
             // Reset max move distance
             this.m_moveDistance = this.m_maxMoveDistance;
+
+            // Apply attrition
+            this.ApplyAttrition(this.Node.Attrition);
 
         }
 
@@ -260,7 +264,7 @@ namespace Battlegrounds.Campaigns.Organisations {
         /// Get the current path of the formation.
         /// </summary>
         /// <returns>List of <see cref="CampaignMapNode"/> elements.</returns>
-        public List<CampaignMapNode> GetPath() => this.m_path;
+        public List<ICampaignMapNode> GetPath() => this.m_path;
 
     }
 

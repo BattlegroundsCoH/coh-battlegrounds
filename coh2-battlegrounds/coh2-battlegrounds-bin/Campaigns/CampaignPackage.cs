@@ -13,6 +13,9 @@ using Battlegrounds.Gfx;
 
 namespace Battlegrounds.Campaigns {
     
+    /// <summary>
+    /// 
+    /// </summary>
     public enum CampaignMode {
         Undefined = 0x0,
         Singleplayer = 0x1,
@@ -20,6 +23,9 @@ namespace Battlegrounds.Campaigns {
         Competitive = 0x3,
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
     public enum CampaignTheatre {
         Undefined = 0x0,
         East = 0x1,
@@ -27,48 +33,114 @@ namespace Battlegrounds.Campaigns {
         EastWest = 0x3
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
     public record CampaignArmy(LocaleKey Name, LocaleKey Desc, Faction Army, int Min, int Max);
 
+    /// <summary>
+    /// 
+    /// </summary>
     public record CampaignDate(int Year, int Month, int Day);
 
+    /// <summary>
+    /// 
+    /// </summary>
     public class CampaignPackage {
 
+        /// <summary>
+        /// 
+        /// </summary>
         public record TurnData(int TurnLength, (int Year, int Month, int Day) Start, (int Year, int Month, int Day) End);
 
+        /// <summary>
+        /// 
+        /// </summary>
         public record WeatherData((int Year, int Month, int Day) WinterStart, (int Year, int Month, int Day) WinterEnd, HashSet<string> WinterAtmospheres, HashSet<string> SummerAtmospheres);
 
+        /// <summary>
+        /// 
+        /// </summary>
         public record ArmyData(LocaleKey Name, LocaleKey Desc, Faction Army, int MinPlayers, int MaxPlayers, LuaTable FullArmyData);
 
+        /// <summary>
+        /// 
+        /// </summary>
         public LocaleKey Name { get; private set; }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public LocaleKey Description { get; private set; }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public LocaleKey Location { get; private set; }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public CampaignMode[] CampaignModes { get; private set; }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public CampaignTheatre Theatre { get; private set; }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public int MaxPlayers { get; private set; }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public string NormalStartingSide { get; private set; }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public TurnData CampaignTurnData { get; private set; }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public WeatherData CampaignWeatherData { get; private set; }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public ArmyData[] CampaignArmies { get; private set; }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public List<GfxMap> GfxResources { get; }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public List<string> CampaignScripts { get; }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public CampaignMapData MapData { get; private set; }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public Localize LocaleManager { get; private set; }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public string LocaleSourceID { get; private set; }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public CampaignPackage() {
             this.GfxResources = new List<GfxMap>();
             this.CampaignScripts = new List<string>();
@@ -78,6 +150,11 @@ namespace Battlegrounds.Campaigns {
 
         private static uint[] SupportedVersions = { 10 };
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="binaryFilepath"></param>
+        /// <returns></returns>
         public bool LoadFromBinary(string binaryFilepath) {
 
             // Open reader

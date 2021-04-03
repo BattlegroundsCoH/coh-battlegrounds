@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Diagnostics.Contracts;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Battlegrounds.Campaigns.API;
+using Battlegrounds.Campaigns.Controller;
 using Battlegrounds.Lua;
 using Battlegrounds.Lua.Runtime;
 
@@ -32,7 +29,7 @@ namespace Battlegrounds.Campaigns.Scripting {
                 return;
             }
             var team = stack.Pop() as LuaUserObject;
-            var inst = (luaState._G[CampaignInstanceField] as LuaUserObject).GetObject<ActiveCampaign>();
+            var inst = (luaState._G[CampaignInstanceField] as LuaUserObject).GetObject<ICampaignController>();
             if (!inst.Events.NewLuaVictoryHandler(team.GetObject<CampaignArmyTeam>(), func)) {
                 Trace.WriteLine($"Failed to register function as victory handler: 'handler already exists for {team.GetObject<CampaignArmyTeam>()}'.", "Battlegrounds:Lua");
             }
@@ -50,7 +47,7 @@ namespace Battlegrounds.Campaigns.Scripting {
                 Trace.WriteLine("Failed to register function in event handler 'not a function'.", "Battlegrounds:Lua");
                 return;
             }
-            var inst = (luaState._G[CampaignInstanceField] as LuaUserObject).GetObject<ActiveCampaign>();
+            var inst = (luaState._G[CampaignInstanceField] as LuaUserObject).GetObject<ICampaignController>();
             inst.Events.NewLuaEventHandler(type.ToInt(), func);
         }
 
@@ -64,7 +61,7 @@ namespace Battlegrounds.Campaigns.Scripting {
             LuaTable nodes = stack.Pop() as LuaTable;
             var team = (stack.Pop() as LuaUserObject).GetObject<CampaignArmyTeam>();
             var result = nodes.Pairs((k, v) => {
-                if ((v as LuaUserObject).GetObject<CampaignMapNode>().Owner != team) {
+                if ((v as LuaUserObject).GetObject<ICampaignMapNode>().Owner != team) {
                     return new LuaBool(false);
                 } else {
                     return new LuaNil();

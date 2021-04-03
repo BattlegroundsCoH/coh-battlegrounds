@@ -20,6 +20,7 @@ using BattlegroundsApp.LocalData;
 using BattlegroundsApp.Dialogs.NewCampaign;
 using BattlegroundsApp.Models.Campaigns;
 using BattlegroundsApp.Views.CampaignViews;
+using Battlegrounds.Campaigns.API;
 
 namespace BattlegroundsApp.Views {
     
@@ -92,18 +93,23 @@ namespace BattlegroundsApp.Views {
                 } else if (state == NewCampaignDialogResult.NewSingleplayer) {
 
                     // Create start args
-                    ActiveCampaignStartData startData = new ActiveCampaignStartData() { PlayAs = campaignData.CampaignHostSide };
+                    CampaignStartData startData = new CampaignStartData() { 
+                        HumanAlliesPlayers = campaignData.CampaignHostSide == "allies" ? 1 : 0,
+                        HumanAxisPlayers = campaignData.CampaignHostSide == "axis" ? 1 : 0
+                    };
 
                     // Get steam profile
                     var steamProfile = BattlegroundsInstance.Steam.User;
 
-                    // Create campaign data and controller
-                    var activeCampaign = ActiveCampaign.FromPackage(campaignData.CampaignToLoad, CampaignMode.Singleplayer, campaignData.CampaignDifficulty, startData);
-                    var singleController = new SingleplayerCampaign(activeCampaign);
-                    singleController.CreatePlayer(steamProfile.ID, steamProfile.Name, startData.PlayAs == "axis" ? CampaignArmyTeam.TEAM_AXIS : CampaignArmyTeam.TEAM_ALLIES);
+                    // Create single player
+                    CampaignArmyTeam team = campaignData.CampaignHostSide == "axis" ? CampaignArmyTeam.TEAM_AXIS : CampaignArmyTeam.TEAM_ALLIES;
+                    startData.AddHuman(steamProfile.Name, steamProfile.ID, string.Empty, team);
+
+                    // Create campaign control
+                    var spCampaign = SingleplayerCampaign.FromPackage(campaignData.CampaignToLoad, campaignData.CampaignDifficulty, startData);
 
                     // Create view with controller
-                    mapView = new CampaignMapView(singleController);
+                    mapView = new CampaignMapView(spCampaign);
 
                 } else {
                     throw new NotImplementedException();

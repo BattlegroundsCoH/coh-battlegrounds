@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-
+using Battlegrounds.Campaigns.API;
 using Battlegrounds.Functional;
 using Battlegrounds.Game.DataCompany;
 using Battlegrounds.Game.Gameplay;
@@ -283,35 +283,6 @@ namespace Battlegrounds.Campaigns.Organisations {
             // Return squad
             return squadResult;
         
-        }
-
-        public void DeployDivision(uint divisionID, List<string> deployLocations, CampaignMap map) {
-            if (this.Divisions.FirstOrDefault(x => x.DivisionUid == divisionID) is Division div) {
-                
-                // Create formation from division
-                Formation form = new Formation();
-                form.FromDivision(div);
-                
-                // Determine method to spawn (just spawn or split to fit)
-                if (deployLocations.Count == 1) {
-                    map.SpawnFormationAt(deployLocations[0], form);
-                } else {
-                    if (form.CanSplit) { // Make sure we can split
-                        Formation[] split = form.Split(deployLocations.Count);
-                        for (int i = 0; i < deployLocations.Count; i++) {
-                            map.SpawnFormationAt(deployLocations[i], split[i]);
-                        }
-                    } else {
-                        Trace.WriteLine($"Army '{this.ArmyName.LocaleID}' contains deploy division with ID {div.Name.LocaleID}, as there are too few regiments to distribute.", $"{nameof(Army)}::{nameof(DeployDivision)}");
-                    }
-                }
-
-                // Log that we're deploying some unit
-                Trace.WriteLine($"Army '{this.ArmyName.LocaleID}' deploying {div.Name.LocaleID} at {string.Join(", ", deployLocations)}", $"{nameof(Army)}::{nameof(DeployDivision)}");
-
-            } else {
-                Trace.WriteLine($"Army '{this.ArmyName.LocaleID}' contains no division with ID {divisionID}", $"{nameof(Army)}::{nameof(DeployDivision)}");
-            }            
         }
 
         public string ToJsonReference() => this.ArmyName.LocaleID;
