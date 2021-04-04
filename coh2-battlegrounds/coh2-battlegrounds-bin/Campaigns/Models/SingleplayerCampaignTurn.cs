@@ -5,6 +5,9 @@ using static Battlegrounds.BattlegroundsInstance;
 
 namespace Battlegrounds.Campaigns.Models {
     
+    /// <summary>
+    /// Class for handling singleplayer campaign turns.
+    /// </summary>
     public class SingleplayerCampaignTurn : ICampaignTurn {
 
         private DateTime m_date;
@@ -23,6 +26,12 @@ namespace Battlegrounds.Campaigns.Models {
 
         public bool IsWinter => this.m_date > this.m_winterStart && this.m_date < this.m_winterEnd;
 
+        /// <summary>
+        /// Initialize a new <see cref="SingleplayerCampaignTurn"/> class with date and turn data.
+        /// </summary>
+        /// <param name="inTurn">The team starting in the first turn.</param>
+        /// <param name="dates">The start and end dates. (Respectively).</param>
+        /// <param name="advance">The amount of time to advance when a rond is ended.</param>
         public SingleplayerCampaignTurn(CampaignArmyTeam inTurn, (int year, int month, int day)[] dates, double advance) {
 
             // Set team turn

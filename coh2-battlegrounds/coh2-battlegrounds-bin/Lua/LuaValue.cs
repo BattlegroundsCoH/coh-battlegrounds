@@ -18,6 +18,13 @@
         /// <returns><see langword="true"/> if the <paramref name="value"/> is equal to the current object; otherwise, <see langword="false"/>.</returns>
         public abstract bool Equals(LuaValue value);
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        public T As<T>() where T : LuaValue => (T)this;
+
         public abstract override int GetHashCode();
 
         /// <summary>

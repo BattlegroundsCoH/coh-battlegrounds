@@ -117,6 +117,8 @@ namespace Battlegrounds.Campaigns.Controller {
 
         }
 
+        public bool IsSelfTurn() => this.m_player.Team.Team == this.m_turn.CurrentTurn;
+
         public MatchController Engage(CampaignEngagementData data) {
 
             // Make sure we have a list
@@ -254,9 +256,17 @@ namespace Battlegrounds.Campaigns.Controller {
 
         }
 
+        public ICampaignTeam GetTeam(CampaignArmyTeam teamType) => teamType switch {
+            CampaignArmyTeam.TEAM_ALLIES => this.m_teams[0],
+            CampaignArmyTeam.TEAM_AXIS => this.m_teams[1],
+            _ => null
+        };
+
+        public ICampaignPlayer GetSelf() => this.m_player;
 
         public void CreateArmy(int index, ref uint divCount, CampaignPackage.ArmyData army) {
-            this.Armies[index] = new Army(army.Army.IsAllied ? CampaignArmyTeam.TEAM_ALLIES : CampaignArmyTeam.TEAM_AXIS) {
+            var team = army.Army.IsAllied ? CampaignArmyTeam.TEAM_ALLIES : CampaignArmyTeam.TEAM_AXIS;
+            this.Armies[index] = new Army(team) {
                 Name = this.Locale.GetString(army.Name),
                 Description = this.Locale.GetString(army.Desc),
                 Faction = army.Army,
@@ -287,12 +297,18 @@ namespace Battlegrounds.Campaigns.Controller {
                             if (vt["deploy"] is not LuaNil) {
                                 if (vt["deploy"] is LuaTable tableAt) {
                                     this.Map.DeployDivision(divID, this.Armies[index], new List<string>(tableAt.ToArray().Select(x => x.Str())));
+                                    return;
                                 } else if (vt["deploy"] is LuaString strAt) {
                                     this.Map.DeployDivision(divID, this.Armies[index], new List<string>() { strAt.Str() });
+                                    return;
                                 } else {
                                     Trace.WriteLine($"Attempted to spawn '{k.Str()}' using unsupported datatype!", nameof(SingleplayerCampaign));
                                 }
                             }
+
+                            // If not deployed, add to campaign reserves.
+                            this.m_teams[team == CampaignArmyTeam.TEAM_ALLIES ? 0 : 1].AddReserveDivision(this.Armies[index].GetDivision(divID));
+
                         });
                         break;
                     default:
@@ -320,20 +336,12 @@ namespace Battlegrounds.Campaigns.Controller {
             // Create campaign nodes
             campaign.Map.BuildNetwork();
 
-            // Counter to keep track of diviions
-            uint divisionCount = 0;
-
-            // Create the armies
-            for (int i = 0; i < package.CampaignArmies.Length; i++) {
-                campaign.CreateArmy(i, ref divisionCount, package.CampaignArmies[i]);
-            }
-
             // Define start team
             CampaignArmyTeam startTeam = ICampaignTeam.GetArmyTeamFromFaction(package.NormalStartingSide);
             var human = createArgs.HumanDataList[0];
 
             // Determine starting team
-            if (human.Team.ToString() != package.NormalStartingSide) {
+            if (human.Team != startTeam) {
                 if (startTeam == CampaignArmyTeam.TEAM_AXIS) {
                     startTeam = CampaignArmyTeam.TEAM_ALLIES;
                 } else {
@@ -351,6 +359,14 @@ namespace Battlegrounds.Campaigns.Controller {
 
             // Set default player
             campaign.m_player = campaign.m_teams[human.Team == CampaignArmyTeam.TEAM_ALLIES ? 0 : 1].Players[0];
+
+            // Counter to keep track of diviions
+            uint divisionCount = 0;
+
+            // Create the armies
+            for (int i = 0; i < package.CampaignArmies.Length; i++) {
+                campaign.CreateArmy(i, ref divisionCount, package.CampaignArmies[i]);
+            }
 
             // Create turn data
             campaign.m_turn = new SingleplayerCampaignTurn(startTeam, new[] {

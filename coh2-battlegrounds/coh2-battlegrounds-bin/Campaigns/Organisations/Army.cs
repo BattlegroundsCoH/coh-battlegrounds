@@ -45,6 +45,8 @@ namespace Battlegrounds.Campaigns.Organisations {
             this.m_regimentTemplates = new Dictionary<string, List<ArmyRegimentalTemplate>>();
         }
 
+        public Division GetDivision(uint id) => this.Divisions.FirstOrDefault(x => x.DivisionUid == id);
+
         public void NewRegimentTemplate(string templateName, LuaTable templateValue) {
 
             // Make sure we have a valid name
@@ -97,28 +99,6 @@ namespace Battlegrounds.Campaigns.Organisations {
 
             // Add template
             this.m_regimentTemplates[templName].Add(new ArmyRegimentalTemplate(templType, regSize, comCount, weightedTemplates.ToArray(), countFixedTemplates.ToArray(), isArty));
-
-        }
-
-        private static ArmyRegimentalUnitTemplate CreateUnitTemplate(LuaTable unitTable, out bool isWeighted) {
-
-            string sbp = unitTable["sbp"].Str();
-            string tsbp = (unitTable["transport_sbp"] as LuaString)?.Str() ?? null;
-
-            var range = (unitTable["rank_range"] as LuaTable).IfTrue(x => x is not null)
-            .ThenDo(x => new Range((int)(x[1] as LuaNumber), (int)(x[2] as LuaNumber)))
-            .OrDefaultTo(() => new Range(0, 0));
-
-            if (unitTable["weight"] is LuaNumber w) {
-                isWeighted = true;
-                return new ArmyRegimentalUnitTemplate(sbp, tsbp, range, w, -1);
-            } else if (unitTable["count"] is LuaNumber c) {
-                isWeighted = false;
-                return new ArmyRegimentalUnitTemplate(sbp, tsbp, range, -1.0, (int)c.AsInteger());
-            } else {
-                isWeighted = false;
-                return null;
-            }
 
         }
 
@@ -213,6 +193,28 @@ namespace Battlegrounds.Campaigns.Organisations {
 
             // Add division
             this.Divisions.Add(div);
+
+        }
+
+        private static ArmyRegimentalUnitTemplate CreateUnitTemplate(LuaTable unitTable, out bool isWeighted) {
+
+            string sbp = unitTable["sbp"].Str();
+            string tsbp = (unitTable["transport_sbp"] as LuaString)?.Str() ?? null;
+
+            var range = (unitTable["rank_range"] as LuaTable).IfTrue(x => x is not null)
+            .ThenDo(x => new Range((int)(x[1] as LuaNumber), (int)(x[2] as LuaNumber)))
+            .OrDefaultTo(() => new Range(0, 0));
+
+            if (unitTable["weight"] is LuaNumber w) {
+                isWeighted = true;
+                return new ArmyRegimentalUnitTemplate(sbp, tsbp, range, w, -1);
+            } else if (unitTable["count"] is LuaNumber c) {
+                isWeighted = false;
+                return new ArmyRegimentalUnitTemplate(sbp, tsbp, range, -1.0, (int)c.AsInteger());
+            } else {
+                isWeighted = false;
+                return null;
+            }
 
         }
 

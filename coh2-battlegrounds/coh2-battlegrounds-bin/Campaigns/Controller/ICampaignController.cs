@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using Battlegrounds.Campaigns.API;
-using Battlegrounds.Campaigns.Organisations;
 using Battlegrounds.Functional;
 using Battlegrounds.Game.DataCompany;
 using Battlegrounds.Game.Gameplay;
@@ -46,11 +45,6 @@ namespace Battlegrounds.Campaigns.Controller {
         /// <summary>
         /// 
         /// </summary>
-        Army[] Armies { get; }
-
-        /// <summary>
-        /// 
-        /// </summary>
         List<GfxMap> GfxMaps { get; }
 
         /// <summary>
@@ -85,6 +79,12 @@ namespace Battlegrounds.Campaigns.Controller {
         void StartCampaign();
 
         /// <summary>
+        /// Determine if local user is allowed to perform actions on the map.
+        /// </summary>
+        /// <returns>When local user is in turn, <see langword="true"/> is returned; Otherwise <see langword="false"/>.</returns>
+        bool IsSelfTurn();
+
+        /// <summary>
         /// Initialize a <see cref="MatchController"/> object that is ready to be controlled.
         /// </summary>
         /// <param name="data">The engagement data to use while generating scenario data</param>
@@ -105,6 +105,19 @@ namespace Battlegrounds.Campaigns.Controller {
         /// <param name="armyCount"></param>
         /// <param name="availableFormations"></param>
         void GenerateAIEngagementSetup(ref CampaignEngagementData data, bool isDefence, int armyCount, ICampaignFormation[] availableFormations);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="teamType"></param>
+        /// <returns></returns>
+        ICampaignTeam GetTeam(CampaignArmyTeam teamType);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        ICampaignPlayer GetSelf();
 
         /// <summary>
         /// 

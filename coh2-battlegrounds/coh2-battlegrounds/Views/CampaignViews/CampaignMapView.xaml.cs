@@ -59,6 +59,10 @@ namespace BattlegroundsApp.Views.CampaignViews {
 
         public string CampaignDate => this.Controller.Turn.Date;
 
+        public string CampaignAlliesPoints => $"{this.Controller.GetTeam(CampaignArmyTeam.TEAM_ALLIES).VictoryPoints} Points";
+
+        public string CampaignAxisPoints => $"{this.Controller.GetTeam(CampaignArmyTeam.TEAM_AXIS).VictoryPoints} Points";
+
         public Visibility CampaignDialogVisible { get; set; } = Visibility.Collapsed;
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -264,23 +268,29 @@ namespace BattlegroundsApp.Views.CampaignViews {
             this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(this.CampaignDate)));
         }
 
+        private int FilterSelectionToSelf() => this.Selection.Filter(x => x.Formation.Team == this.Controller.GetSelf().Team.Team);
+
         /// <summary>
         /// Move the entire selection to node
         /// </summary>
         private void MoveSelection(ICampaignMapNode node)
-            => this.MoveFormations(this.Selection.Get().Select(x => this.FromFormation(x)), node);
+            => this.Controller.IsSelfTurn().Then(() => this.FilterSelectionToSelf() > 0).Then(() => this.MoveFormations(this.Selection.Get().Select(x => this.FromFormation(x)), node));
 
         /// <summary>
         /// Move the entire selection (with same origin) into a hostile node
         /// </summary>
         private void MoveSelectionIntoHostileTerritory(ICampaignMapNode node) {
-            var first = this.Selection.First;
-            if (this.Controller.Map.SetPath(first.Formation.Node, node, first.Formation)) {
-                this.Selection.InvokeEach(x => x.IfTrue(y => y.Formation != first.Formation).Then(z => z.Formation.SetNodeDestinationsAndMove(first.Formation.GetPath())));
-                if (first.Formation.Destination == node) {
-                    this.SelectionAttackNode(node);
-                } else {
-                    this.Selection.InvokeEach(this.MoveFormation);
+            if (this.Controller.IsSelfTurn()) {
+                if (this.FilterSelectionToSelf() > 0) { // Make sure we only move our own units
+                    var first = this.Selection.First;
+                    if (this.Controller.Map.SetPath(first.Formation.Node, node, first.Formation)) {
+                        this.Selection.InvokeEach(x => x.IfTrue(y => y.Formation != first.Formation).Then(z => z.Formation.SetNodeDestinationsAndMove(first.Formation.GetPath())));
+                        if (first.Formation.Destination == node) {
+                            this.SelectionAttackNode(node);
+                        } else {
+                            this.Selection.InvokeEach(this.MoveFormation);
+                        }
+                    }
                 }
             }
         }

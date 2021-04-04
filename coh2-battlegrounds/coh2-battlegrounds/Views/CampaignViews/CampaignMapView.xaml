@@ -91,9 +91,9 @@
                 <!-- Row 1-->
                 
                 <Image Grid.Column="0" Width="32" Height="32"/>
-                <Label Grid.Column="1">0 Points</Label>
+                <Label Grid.Column="1" Content="{Binding CampaignAlliesPoints}"/>
                 <Label Grid.Column="2">vs</Label>
-                <Label Grid.Column="3">0 Points</Label>
+                <Label Grid.Column="3" Content="{Binding CampaignAxisPoints}"/>
                 <Image Grid.Column="4" Width="32" Height="32"/>
 
             </Grid>

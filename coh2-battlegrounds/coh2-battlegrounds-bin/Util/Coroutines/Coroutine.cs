@@ -80,10 +80,10 @@ namespace Battlegrounds.Util.Coroutines {
                 __doCoroutines = true;
                 __coroutineTask = new Task(UpdateCoroutines, __cancelTokenSource.Token, TaskCreationOptions.LongRunning);
                 __coroutineTask.Start();
-                Trace.WriteLine($"Starting coroutine engine with refresh rate ~{__RefreshRate}ms", nameof(Coroutine));
+                //Trace.WriteLine($"Starting coroutine engine with refresh rate ~{__RefreshRate}ms", nameof(Coroutine));
             }
             int corID = enumerator.GetHashCode();
-            Trace.WriteLine($"Starting new coroutine 0x{corID:X8}", nameof(Coroutine));
+            //Trace.WriteLine($"Starting new coroutine 0x{corID:X8}", nameof(Coroutine));
             return corID;
         }
 
@@ -97,7 +97,7 @@ namespace Battlegrounds.Util.Coroutines {
                     bool rem = false;
                     itt.Current.Dispatcher.Invoke(() => {
                         if (!itt.Current.Update()) {
-                            Trace.WriteLine($"Finished coroutine 0x{itt.Current.CoroutineID:X8} (ran for {(DateTime.Now - itt.Current.StartTime).TotalSeconds}s)", nameof(Coroutine));
+                            ///Trace.WriteLine($"Finished coroutine 0x{itt.Current.CoroutineID:X8} (ran for {(DateTime.Now - itt.Current.StartTime).TotalSeconds}s)", nameof(Coroutine));
                             rem = true;
                         }
                     });
