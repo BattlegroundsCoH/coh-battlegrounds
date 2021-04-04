@@ -455,7 +455,7 @@ namespace Battlegrounds.Lua.Parsing {
                     var condition = PickUntil(luaExprs, i + 1,
                         u => u is LuaKeyword { Keyword: "then" },
                         v => v is LuaKeyword,
-                        _ => throw new LuaSyntaxError($"'then' expected before '{GetNodeAsString(luaExprs, i + 2)}'", luaExprs[i + 1].SourcePos));
+                        _ => throw new LuaSyntaxError($"'then' expected before '{GetNodeAsString(luaExprs, i + 2)}'", luaExprs[i + 1].SourcePos)); // TODO: Simplify this, only one expr is needed
                     luaExprs.RemoveRange(i + 1, condition.Count + 1);
 
                     // Collect body
@@ -479,9 +479,8 @@ namespace Battlegrounds.Lua.Parsing {
                     }
 
                     // Create statement
-                    var conditionChunk = new LuaChunk(condition, luaExprs[i].SourcePos);
                     var bodyChunk = new LuaChunk(body, luaExprs[i].SourcePos);
-                    luaExprs[i] = isIfCondition ? new LuaIfStatement(conditionChunk, bodyChunk, follow, luaExprs[i].SourcePos) : new LuaIfElseStatement(conditionChunk, bodyChunk, follow, luaExprs[i].SourcePos);
+                    luaExprs[i] = isIfCondition ? new LuaIfStatement(condition[0], bodyChunk, follow, luaExprs[i].SourcePos) : new LuaIfElseStatement(condition[0], bodyChunk, follow, luaExprs[i].SourcePos);
                     result.Add(luaExprs[i]);
 
                 } else if (luaExprs[i] is LuaKeyword { Keyword: "else" }) {

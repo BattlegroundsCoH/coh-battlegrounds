@@ -61,6 +61,8 @@ namespace Battlegrounds.Campaigns.Models {
             return this.m_date <= this.m_endDate;
         }
 
+        public bool IsEndDate() => this.m_date == this.m_endDate;
+
     }
 
 }

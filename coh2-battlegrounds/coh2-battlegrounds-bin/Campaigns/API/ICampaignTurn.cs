@@ -43,6 +43,13 @@ namespace Battlegrounds.Campaigns.API {
         /// <returns></returns>
         bool EndTurn(out bool wasRound);
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        [LuaUserobjectMethod(UseMarshalling = true)]
+        bool IsEndDate();
+
     }
 
 }
