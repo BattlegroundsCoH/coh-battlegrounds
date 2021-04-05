@@ -3,26 +3,34 @@ using Battlegrounds.Campaigns.Organisations;
 using Battlegrounds.Lua;
 
 namespace Battlegrounds.Campaigns.API {
-    
+
+    public delegate void FormationPositionEventHandler(ICampaignFormation formation, ICampaignMapNode origin, ICampaignMapNode destination);
+
     /// <summary>
-    /// 
+    /// Interface for representing a unit formation in a campaign.
     /// </summary>
     public interface ICampaignFormation {
-        
+
         /// <summary>
-        /// 
+        /// Get the current node occupied by the formation.
         /// </summary>
+        /// <remarks>
+        /// Lua-Visible
+        /// </remarks>
         [LuaUserobjectProperty]
         ICampaignMapNode Node { get; }
 
         /// <summary>
-        /// 
+        /// Get the destination of this formation
         /// </summary>
         ICampaignMapNode Destination { get; }
 
         /// <summary>
-        /// 
+        /// Get the <see cref="CampaignArmyTeam"/> owning the formation.
         /// </summary>
+        /// <remarks>
+        /// Lua-Visible
+        /// </remarks>
         [LuaUserobjectProperty]
         CampaignArmyTeam Team { get; }
         
@@ -32,20 +40,28 @@ namespace Battlegrounds.Campaigns.API {
         Regiment[] Regiments { get; }
 
         /// <summary>
-        /// 
+        /// Get the name of the dominant army in charge of this formation.
         /// </summary>
+        /// <remarks>
+        /// Lua-Visible
+        /// </remarks>
         [LuaUserobjectProperty]
         string Army { get; }
 
         /// <summary>
-        /// 
+        /// Get if the unit formation can be split.
         /// </summary>
         bool CanSplit { get; }
 
         /// <summary>
-        /// 
+        /// Get if the formation can currently move
         /// </summary>
         bool CanMove { get; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        event FormationPositionEventHandler FormationMoved;
 
         /// <summary>
         /// 
@@ -68,7 +84,7 @@ namespace Battlegrounds.Campaigns.API {
         /// 
         /// </summary>
         /// <param name="nodes"></param>
-        void SetNodeDestinationsAndMove(List<ICampaignMapNode> nodes);
+        void SetNodeDestinations(List<ICampaignMapNode> nodes);
 
         /// <summary>
         /// 
@@ -85,9 +101,9 @@ namespace Battlegrounds.Campaigns.API {
         float CalculateStrength();
 
         /// <summary>
-        /// 
+        /// Updates destination and decrements available move distance by 1.
         /// </summary>
-        void OnMoved(bool actualMove = true);
+        void MoveToDestination();
         
         /// <summary>
         /// 

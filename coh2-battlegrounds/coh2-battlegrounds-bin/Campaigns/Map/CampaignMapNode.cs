@@ -12,65 +12,31 @@ namespace Battlegrounds.Campaigns.Map {
     /// </summary>
     public class CampaignMapNode : ICampaignMapNode {
 
-        /// <summary>
-        /// Get the U-index for the node.
-        /// </summary>
         public double U { get; }
 
-        /// <summary>
-        /// Get the V-index for the node.
-        /// </summary>
         public double V { get; }
 
-        /// <summary>
-        /// Get the name of the node.
-        /// </summary>
         public string NodeName { get; }
 
-        /// <summary>
-        /// Get the name of the function to invoke when weighting nodes in the Dijkstra algorithm.
-        /// </summary>
         public string NodeFilter { get; }
 
-        /// <summary>
-        /// Get the visual representation of the node.
-        /// </summary>
-        public IVisualCampaignNode VisualNode { get; set; }
-
-        /// <summary>
-        /// Get the current owner of the node.
-        /// </summary>
         public CampaignArmyTeam Owner { get; private set; }
 
-        /// <summary>
-        /// Get the max capacity of the node.
-        /// </summary>
         public int OccupantCapacity { get; init; }
 
-        /// <summary>
-        /// Get the victory value of the node.
-        /// </summary>
         public double Value { get; private set; }
 
-        /// <summary>
-        /// Get the attrition value of the node.
-        /// </summary>
         public double Attrition { get; private set; }
 
-        /// <summary>
-        /// Get if the node is a leaf node.
-        /// </summary>
         public bool IsLeaf { get; init; }
 
-        /// <summary>
-        /// Get the maps that can be played on this node.
-        /// </summary>
         public List<NodeMap> Maps { get; }
 
-        /// <summary>
-        /// Get the occupants of the node.
-        /// </summary>
         public DistinctList<ICampaignFormation> Occupants { get; }
+
+        public event NodeEventHandler<CampaignArmyTeam> OnOwnershipChange;
+        public event NodeEventHandler<ICampaignFormation> OnOccupantEnter;
+        public event NodeEventHandler<ICampaignFormation> OnOccupantLeave;
 
         /// <summary>
         /// 
@@ -83,7 +49,6 @@ namespace Battlegrounds.Campaigns.Map {
             this.NodeFilter = filter ?? string.Empty;
             this.U = u;
             this.V = v;
-            this.VisualNode = null;
             this.Owner = CampaignArmyTeam.TEAM_NEUTRAL;
             this.Maps = new List<NodeMap>();
             this.Occupants = new DistinctList<ICampaignFormation>();
@@ -136,26 +101,20 @@ namespace Battlegrounds.Campaigns.Map {
         /// <param name="team"></param>
         public void SetOwner(CampaignArmyTeam team) {
             this.Owner = team;
-            this.VisualNode?.OwnershipChanged(team);
+            this.OnOwnershipChange?.Invoke(this, team);
         }
 
         /// <summary>
         /// 
         /// </summary>
         /// <param name="value"></param>
-        public void SetValue(double value) {
-            this.Value = value;
-            this.VisualNode?.VictoryValueChanged(value);
-        }
+        public void SetValue(double value) => this.Value = value;
 
         /// <summary>
         /// 
         /// </summary>
         /// <param name="value"></param>
-        public void SetAttrition(double value) {
-            this.Attrition = value;
-            this.VisualNode?.AttritionValueChanged(value);
-        }
+        public void SetAttrition(double value) => this.Attrition = value;
 
         /// <summary>
         /// 
@@ -177,7 +136,7 @@ namespace Battlegrounds.Campaigns.Map {
         /// <param name="formation"></param>
         public void AddOccupant(ICampaignFormation formation) {
             this.Occupants.Add(formation);
-            this.VisualNode?.OccupantAdded(formation);
+            this.OnOccupantEnter?.Invoke(this, formation);
         }
 
         /// <summary>
@@ -186,7 +145,7 @@ namespace Battlegrounds.Campaigns.Map {
         /// <param name="formation"></param>
         public void RemoveOccupant(ICampaignFormation formation) {
             this.Occupants.Remove(formation);
-            this.VisualNode?.OccupantRemoved(formation);
+            this.OnOccupantLeave?.Invoke(this, formation);
         }
 
     }

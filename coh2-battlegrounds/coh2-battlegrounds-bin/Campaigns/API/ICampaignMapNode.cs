@@ -4,6 +4,14 @@ using Battlegrounds.Util.Lists;
 namespace Battlegrounds.Campaigns.API {
 
     /// <summary>
+    /// 
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <param name="node"></param>
+    /// <param name="argument"></param>
+    public delegate void NodeEventHandler<T>(ICampaignMapNode node, T argument);
+
+    /// <summary>
     /// Readonly struct representing a map that can be played in node.
     /// </summary>
     public readonly struct NodeMap {
@@ -32,70 +40,80 @@ namespace Battlegrounds.Campaigns.API {
     }
 
     /// <summary>
-    /// 
+    /// Interface for representing a node in a <see cref="ICampaignMap"/>.
     /// </summary>
     public interface ICampaignMapNode {
 
         /// <summary>
         /// Get the U-index for the node.
         /// </summary>
-        public double U { get; }
+        double U { get; }
 
         /// <summary>
         /// Get the V-index for the node.
         /// </summary>
-        public double V { get; }
+        double V { get; }
 
         /// <summary>
         /// Get the name of the node.
         /// </summary>
-        public string NodeName { get; }
+        string NodeName { get; }
 
         /// <summary>
         /// Get the name of the function to invoke when weighting nodes in the Dijkstra algorithm.
         /// </summary>
-        public string NodeFilter { get; }
-
-        /// <summary>
-        /// Get the visual representation of the node.
-        /// </summary>
-        public IVisualCampaignNode VisualNode { get; set; }
+        string NodeFilter { get; }
 
         /// <summary>
         /// Get the current owner of the node.
         /// </summary>
-        public CampaignArmyTeam Owner { get; }
+        CampaignArmyTeam Owner { get; }
 
         /// <summary>
         /// Get the max capacity of the node.
         /// </summary>
-        public int OccupantCapacity { get; }
+        int OccupantCapacity { get; }
 
         /// <summary>
         /// Get the victory value of the node.
         /// </summary>
-        public double Value { get; }
+        double Value { get; }
 
         /// <summary>
         /// Get the attrition value of the node.
         /// </summary>
-        public double Attrition { get; }
+        double Attrition { get; }
 
         /// <summary>
         /// Get if the node is a leaf node.
         /// </summary>
-        public bool IsLeaf { get; }
+        bool IsLeaf { get; }
 
         /// <summary>
         /// Get the maps that can be played on this node.
         /// </summary>
-        public List<NodeMap> Maps { get; }
+        List<NodeMap> Maps { get; }
 
         /// <summary>
         /// Get the occupants of the node.
         /// </summary>
-        public DistinctList<ICampaignFormation> Occupants { get; }
-        
+        DistinctList<ICampaignFormation> Occupants { get; }
+
+        /// <summary>
+        /// Event fired when the owner of a node changes.
+        /// </summary>
+        event NodeEventHandler<CampaignArmyTeam> OnOwnershipChange;
+
+        /// <summary>
+        /// Event fired when an occupant enters a node.
+        /// </summary>
+        event NodeEventHandler<ICampaignFormation> OnOccupantEnter;
+
+        /// <summary>
+        /// Event fired when an occupant leaves a node.
+        /// </summary>
+        event NodeEventHandler<ICampaignFormation> OnOccupantLeave;
+
         /// <summary>
         /// 
         /// </summary>

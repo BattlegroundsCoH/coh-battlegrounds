@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using Battlegrounds.Campaigns.API;
+using Battlegrounds.Campaigns.Scripting;
 using Battlegrounds.Functional;
 using Battlegrounds.Game.DataCompany;
 using Battlegrounds.Game.Gameplay;
@@ -15,45 +16,69 @@ namespace Battlegrounds.Campaigns.Controller {
     /// <summary>
     /// 
     /// </summary>
+    public enum MoveFormationResult {
+        MoveSuccess,
+        MoveAttack,
+        MoveCap
+    }
+
+    /// <summary>
+    /// Interface for controlling campaign behaviour.
+    /// </summary>
     public interface ICampaignController {
 
         /// <summary>
-        /// 
+        /// Get the event manager of the campaign.
         /// </summary>
         ICampaignEventManager Events { get; }
 
         /// <summary>
-        /// 
+        /// Get the script handler for the campaign.
         /// </summary>
         ICampaignScriptHandler Script { get; }
 
         /// <summary>
-        /// 
+        /// Get the map object.
         /// </summary>
         ICampaignMap Map { get; }
 
         /// <summary>
-        /// 
+        /// Get the turn data.
         /// </summary>
         ICampaignTurn Turn { get; }
 
         /// <summary>
-        /// 
+        /// Event fired when one team attacks the other team.
+        /// </summary>
+        event CampaignEngagementAttackHandler OnAttack;
+
+        /// <summary>
+        /// Event fired when one team defends itself from the other team.
+        /// </summary>
+        event CampaignEngagmeentDefendHandler OnDefend;
+
+        /// <summary>
+        /// Event fired when <see cref="EndTurn"/> has been called and finished.
+        /// </summary>
+        event CampaignTurnOverHandler OnTurn;
+
+        /// <summary>
+        /// Get the difficulty level
         /// </summary>
         int DifficultyLevel { get; }
 
         /// <summary>
-        /// 
+        /// Get the GFX mappings of the campaign.
         /// </summary>
         List<GfxMap> GfxMaps { get; }
 
         /// <summary>
-        /// 
+        /// Get the specific locale data associated with the campaign.
         /// </summary>
         public Localize Locale { get; }
 
         /// <summary>
-        /// 
+        /// Get if this is a purely singleplayer campaign instance.
         /// </summary>
         bool IsSingleplayer { get; }
 
@@ -109,15 +134,52 @@ namespace Battlegrounds.Campaigns.Controller {
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="attackingFormations"></param>
+        /// <param name="node"></param>
+        /// <returns></returns>
+        CampaignEngagementData? HandleAttacker(ICampaignFormation[] attackingFormations, ICampaignMapNode node);
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <param name="teamType"></param>
         /// <returns></returns>
         ICampaignTeam GetTeam(CampaignArmyTeam teamType);
 
         /// <summary>
+        /// Get the local player instance.
+        /// </summary>
+        /// <returns>The local player.</returns>
+        ICampaignPlayer GetSelf();
+
+        /// <summary>
+        /// Moves <paramref name="formation"/> to destination node <paramref name="to"/>. This performs A -> B moves with no intermediate steps.
+        /// </summary>
+        /// <param name="formation">The formation to move.</param>
+        /// <param name="to">The destination of the formation.</param>
+        /// <returns>If move can be performed instantly, <see langword="true"/>; Otherwise <see langword="false"/>.</returns>
+        MoveFormationResult MoveFormation(ICampaignFormation formation, ICampaignMapNode to);
+
+        /// <summary>
+        /// Calculate a path for <paramref name="formation"/> to destination node <paramref name="to"/>. This will use a pathfiding algorithm and may be used on non-neighbouring nodes.
+        /// </summary>
+        /// <param name="formation">The formation to move.</param>
+        /// <param name="to">The destination node to find path of.</param>
+        /// <returns>If a path was found <see langword="true"/>; Otherwise <see langword="false"/>.</returns>
+        bool FindPath(ICampaignFormation formation, ICampaignMapNode to);
+
+        /// <summary>
         /// 
         /// </summary>
-        /// <returns></returns>
-        ICampaignPlayer GetSelf();
+        /// <param name="attackedNode"></param>
+        /// <param name="formations"></param>
+        void HandleAttack(ICampaignMapNode attackedNode, ICampaignFormation[] formations);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="engagementData"></param>
+        void HandleDefender(ref CampaignEngagementData engagementData);
 
         /// <summary>
         /// 
@@ -236,6 +298,25 @@ namespace Battlegrounds.Campaigns.Controller {
 
         }
 
+        protected static void SetupScriptEnvironment(ICampaignController controller, CampaignPackage package) {
+
+            // Set lua stuff
+            controller.Script.SetGlobal("Map", controller.Map, true);
+            controller.Script.SetGlobal("Turn", controller.Turn, true);
+            controller.Script.SetGlobal(BattlegroundsCampaignLibrary.CampaignInstanceField, controller, false);
+
+            // Register library
+            BattlegroundsCampaignLibrary.LoadLibrary(controller.Script.ScriptState);
+
+            // Loop over campaign scripts and init them
+            package.CampaignScripts.ForEach(x => controller.Script.LoadScript(x));
+
+            // Assign state ptrs
+            controller.Map.ScriptHandler = controller.Script;
+            controller.Events.ScriptHandler = controller.Script;
+
+        }
+
         protected static bool GlobalEndTurn(ICampaignController controller) {
             if (controller.Turn.EndTurn(out bool wasEndOfRound)) {
                 if (wasEndOfRound) {
@@ -246,6 +327,33 @@ namespace Battlegrounds.Campaigns.Controller {
                 return true;
             }
             return false;
+        }
+
+        protected static void ScatterLostEngagementDefenders(ICampaignController controller, ICampaignMapNode lostNode) {
+
+            // Get neighbouring nodes of current ally
+            var nodes = controller.Map.GetNodeNeighbours(lostNode, x => x.Occupants.Count < x.OccupantCapacity && x.Owner == lostNode.Owner);
+            int nodeIndex = 0;
+
+            if (nodes.Count == 0) {
+                lostNode.Occupants.ForEach(x => { // Destroy all formations, nowhere to go to.
+                    x.Disband(true);
+                });
+            } else {
+
+                // Move all occupants (where highest-strength units get to retreat first)
+                lostNode.Occupants.OrderByDescending(x => x.CalculateStrength()).ForEach(x => {
+                    controller.MoveFormation(x, nodes[nodeIndex]);
+                    nodeIndex++;
+                    if (nodeIndex > nodes.Count) {
+                        nodeIndex = 0;
+                    }
+                    // TODO: Make sure we can actually move to node, if no nodes are available, kill remaining.
+                });
+
+            }
+
+
         }
 
     }

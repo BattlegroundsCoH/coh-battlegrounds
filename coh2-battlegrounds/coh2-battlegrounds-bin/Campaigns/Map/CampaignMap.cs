@@ -103,28 +103,12 @@ namespace Battlegrounds.Campaigns.Map {
             return false;
         }
 
-        public void MoveTo(ICampaignFormation formation, ICampaignMapNode target) {
-
-            // Update occupants
-            formation.Node.RemoveOccupant(formation);
-            
-            // Set location and update destination
-            formation.SetNodeLocation(target);
-            formation.OnMoved();
-
-            // Update owner
-            if (target.Owner != formation.Team) {
-                target.SetOwner(formation.Team);
-            }
-
-        }
-
-        public bool SetPath(ICampaignMapNode from, ICampaignMapNode end, ICampaignFormation formation) {
-            var path = Dijkstra(from, end, formation);
+        public bool FindPath(ICampaignFormation formation, ICampaignMapNode end, out List<ICampaignMapNode> path) {
+            var from = formation.Node;
+            path = Dijkstra(from, end, formation);
             if (path.Count > 0) {
                 Trace.WriteLine(string.Join(" -> ", path.Select(x => x.NodeName)), $"{nameof(CampaignMap)}:PathResult");
                 if (path[0] == from && path[^1] == end) {
-                    formation.SetNodeDestinationsAndMove(path);
                     return true;
                 }
             }

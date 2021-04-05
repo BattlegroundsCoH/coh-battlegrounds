@@ -10,7 +10,7 @@ using Battlegrounds.Functional;
 
 namespace BattlegroundsApp.Views.CampaignViews.Models {
 
-    public class CampaignVisualNodeModel : IVisualCampaignNode, ICampaignPointsNode {
+    public class CampaignVisualNodeModel : ICampaignPointsNode {
         
         public UIElement VisualElement { get; }
 
@@ -29,6 +29,9 @@ namespace BattlegroundsApp.Views.CampaignViews.Models {
             
             // Set fields and properties
             this.Node = node;
+            this.Node.OnOwnershipChange += this.OwnershipChanged;
+            this.Node.OnOccupantEnter += this.OccupantAdded;
+            this.Node.OnOccupantLeave += this.OccupantRemoved;
             this.ResourceContext = resourceContext;
             this.m_formationXOffset = 0.0;
             this.m_formationYOffset = 0.0;
@@ -45,7 +48,7 @@ namespace BattlegroundsApp.Views.CampaignViews.Models {
             };
 
             // Subscribe to events
-            this.OwnershipChanged(node.Owner);
+            this.OwnershipChanged(node, node.Owner);
             this.VisualElement.MouseLeftButtonDown += (a, b) => this.LeftClick();
             this.VisualElement.MouseRightButtonDown += (a, b) => this.RightClick();
 
@@ -54,7 +57,7 @@ namespace BattlegroundsApp.Views.CampaignViews.Models {
 
         }
 
-        public void OwnershipChanged(CampaignArmyTeam armyTeam) { 
+        public void OwnershipChanged(ICampaignMapNode node, CampaignArmyTeam armyTeam) { 
             if (this.VisualElement is Ellipse ellipse) {
                 ellipse.Fill = armyTeam == CampaignArmyTeam.TEAM_ALLIES ? Brushes.Red : (armyTeam == CampaignArmyTeam.TEAM_AXIS ? Brushes.Green : Brushes.Gray);
             } else if (this.VisualElement is Image img) {
@@ -63,18 +66,10 @@ namespace BattlegroundsApp.Views.CampaignViews.Models {
             this.ResourceContext.Controller.Events.FireEvent(ICampaignEventManager.ET_Ownership, this.Node);
         }
 
-        public void VictoryValueChanged(double newValue) {
-
+        public void OccupantAdded(ICampaignMapNode node, ICampaignFormation formation) {
         }
 
-        public void AttritionValueChanged(double newValue) {
-
-        }
-
-        public void OccupantAdded(ICampaignFormation formation) {
-        }
-
-        public void OccupantRemoved(ICampaignFormation formation) {
+        public void OccupantRemoved(ICampaignMapNode node, ICampaignFormation formation) {
             if (this.Node.Occupants.Count == 0) {
                 this.ResetOffset();
             }

@@ -69,6 +69,8 @@ namespace BattlegroundsApp.Views.CampaignViews.Models {
             return count;
         }
 
+        public ICampaignFormation[] ToArray() => this.m_selection.Select(x => x.Formation).ToArray();
+
     }
 
 }

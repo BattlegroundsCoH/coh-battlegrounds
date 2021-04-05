@@ -1,5 +1,11 @@
-﻿using System.Windows;
+﻿using System;
+using System.Collections;
+using System.Linq;
+using System.Windows;
 using Battlegrounds.Campaigns.API;
+using Battlegrounds.Functional;
+using Battlegrounds.Util.Coroutines;
+using BattlegroundsApp.Utilities;
 
 namespace BattlegroundsApp.Views.CampaignViews.Models {
     
@@ -9,12 +15,48 @@ namespace BattlegroundsApp.Views.CampaignViews.Models {
 
         public UIElement VisualElement { get; }
 
+        public Func<ICampaignMapNode, ICampaignPointsNode> NodeModelFetcher { get; init; }
+
+        public Func<ICampaignFormation, ICampaignMapVisual> UnitModelFetcher { get; init; }
+
+        public GUIThreadDispatcher ThreadDispatcher { get; init; }
+
         public CampaignUnitFormationModel(UIElement element, ICampaignFormation formation) {
             this.VisualElement = element;
             this.Formation = formation;
+            this.Formation.FormationMoved += this.Formation_FormationMoved;
         }
 
-        public static UIElement CreateElement() => null;
+        private void Formation_FormationMoved(ICampaignFormation formation, ICampaignMapNode origin, ICampaignMapNode destination) {
+
+            // Get target
+            var targetModel = this.NodeModelFetcher(destination);
+
+            // Get next offset
+            (double x, double y) = targetModel.GetNextOffset(true);
+            (x, y) = targetModel.GetRelative(x, y);
+
+            // Show visually
+            (this as ICampaignMapVisual).GotoPosition(x, y);
+
+            // Slow iterator
+            IEnumerator UpdateOldNode() {
+                yield return new WaitTimespan(TimeSpan.FromSeconds(0.5));
+                if (origin.Occupants.Count > 0) {
+                    var ogNode = this.NodeModelFetcher(origin);
+                    ogNode.ResetOffset();
+                    var remainingOccupants = origin.Occupants.Select(a => this.UnitModelFetcher(a)).ForEach(b => {
+                        (double x, double y) = ogNode.GetNextOffset(true);
+                        (x, y) = ogNode.GetRelative(x, y);
+                        b.GotoPosition(x, y, TimeSpan.FromMilliseconds(50));
+                    });
+                }
+            }
+
+            // Tell coroutine to activate
+            Coroutine.StartCoroutine(UpdateOldNode(), this.ThreadDispatcher);
+
+        }
 
     }
 

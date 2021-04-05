@@ -5,6 +5,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -17,15 +18,11 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-using Battlegrounds.Campaigns;
 using Battlegrounds.Campaigns.API;
 using Battlegrounds.Campaigns.Controller;
-using Battlegrounds.Campaigns.Organisations;
 using Battlegrounds.Functional;
 using Battlegrounds.Game;
 using Battlegrounds.Game.Gameplay;
-using Battlegrounds.Gfx;
-using Battlegrounds.Util.Coroutines;
 
 using BattlegroundsApp.Resources;
 using BattlegroundsApp.Utilities;
@@ -65,12 +62,17 @@ namespace BattlegroundsApp.Views.CampaignViews {
 
         public Visibility CampaignDialogVisible { get; set; } = Visibility.Collapsed;
 
+        public GUIThreadDispatcher ThreadDispatcher => (GUIThreadDispatcher)this.Dispatcher;
+
         public event PropertyChangedEventHandler PropertyChanged;
 
         public CampaignMapView(ICampaignController controller) {
 
             // Assign controller
             this.Controller = controller;
+            this.Controller.OnAttack += this.OnAttackEvent;
+            this.Controller.OnDefend += this.OnDefendEvent;
+            this.Controller.OnTurn += this.OnTurnOverEvent;
 
             // Init lists
             this.m_formationViews = new List<CampaignUnitFormationModel>();
@@ -99,6 +101,140 @@ namespace BattlegroundsApp.Views.CampaignViews {
 
         }
 
+        private void OnTurnOverEvent() {
+            // TODO: Update so end turn is enabled/disabled depending on whose turn it is.
+            this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(this.CampaignDate)));
+        }
+
+        private CampaignEngagementData? OnAttackEvent(ICampaignFormation[] attackingFormations, ICampaignMapNode node) {
+
+            if (attackingFormations[0].Team != this.Controller.GetSelf().Team.Team) {
+                // TODO: Visually show we're being attacked
+                // Then maybe a delay here for visuals
+                return this.Controller.HandleAttacker(attackingFormations, node);
+            } else {
+
+                bool hasResult = false;
+                CampaignEngagementData? engagementData = null;
+
+                // Show dialog
+                this.Dispatcher.Invoke(() => {
+
+                    // Create engagement view
+                    CampaignEngagementDialogView engagementDialogView = new CampaignEngagementDialogView() {
+                        Header = Localize.GetString("CampaignView_AttackString", node.NodeName),
+                        Attackers = Localize.GetEnum(attackingFormations.First().Team),
+                        Defenders = Localize.GetEnum(node.Owner),
+                        MapNode = node,
+                    };
+
+                    void Attack(CampaignDialogView view) {
+
+                        CampaignEngagementData data = new CampaignEngagementData();
+                        this.SetupEngagementData(ref data, view as CampaignEngagementDialogView);
+                        this.ApplyEngagementData(true, ref data, view as CampaignEngagementDialogView);
+
+                        engagementData = data;
+                        hasResult = true;
+
+                        HideCampaignDialog();
+
+                    }
+
+                    void Withdraw(CampaignDialogView view) {
+                        HideCampaignDialog();
+
+                    }
+
+                    // Subscribe to events
+                    engagementDialogView.SubscribeToDialogEvent(CampaignEngagementDialogView.WITHDRAW, Withdraw);
+                    engagementDialogView.SubscribeToDialogEvent(CampaignEngagementDialogView.ENGAGE, Attack);
+
+                    // Set formations etc.
+                    engagementDialogView.SetAttackingFormations(attackingFormations.ToList(), this.Controller.Locale);
+                    engagementDialogView.SetupMatchData(this.Controller);
+
+                    this.ShowCampaignDialog(engagementDialogView); 
+
+                });
+
+                // Wait until we've gotten a result
+                while (this.CampaignDialogVisible == Visibility.Visible && !hasResult) {
+                    Thread.Sleep(1);
+                }
+
+                // Return nothing
+                return engagementData;
+
+            }
+
+        }
+
+        private CampaignEngagementData OnDefendEvent(CampaignEngagementData engagementData) {
+
+            if (engagementData.defenders != this.Controller.GetSelf().Team.Team) {
+
+                // Handle defence
+                this.Controller.HandleDefender(ref engagementData);
+
+            } else {
+
+                bool hasResult = false;
+
+                // Show dialog
+                this.Dispatcher.Invoke(() => {
+
+                    // Create engagement view
+                    CampaignEngagementDialogView engagementDialogView = new CampaignEngagementDialogView() {
+                        Header = Localize.GetString("CampaignView_DefendString", engagementData.node.NodeName),
+                        Attackers = Localize.GetEnum(engagementData.defenders), // Reversing roles here
+                        Defenders = Localize.GetEnum(engagementData.attackers),
+                    };
+
+                    void Attack(CampaignDialogView view) {
+
+                        CampaignEngagementData data = new CampaignEngagementData();
+                        this.ApplyEngagementData(false, ref data, view as CampaignEngagementDialogView);
+
+                        engagementData = data;
+                        hasResult = true;
+
+                        HideCampaignDialog();
+
+                    }
+
+                    void Withdraw(CampaignDialogView view) {
+                        HideCampaignDialog();
+
+                    }
+
+                    // Subscribe to events
+                    engagementDialogView.SubscribeToDialogEvent(CampaignEngagementDialogView.WITHDRAW, Withdraw);
+                    engagementDialogView.SubscribeToDialogEvent(CampaignEngagementDialogView.ENGAGE, Attack);
+
+                    // Set formations etc.
+                    engagementDialogView.SetAttackingFormations(engagementData.defendingFormations, this.Controller.Locale); // This is actually the defenders
+                    engagementDialogView.SetupMatchData(this.Controller);
+
+                    this.ShowCampaignDialog(engagementDialogView); 
+                
+                });
+
+                // Wait until we've gotten a result
+                while (this.CampaignDialogVisible == Visibility.Visible && !hasResult) {
+                    Thread.Sleep(1);
+                }
+
+            }
+
+            // Show battle status
+            this.ShowBattleStatusDialog();
+
+            // Return engagement data
+            return engagementData;
+
+        }
+        
         public override void StateOnFocus() {
             
             // Start functionality
@@ -131,9 +267,6 @@ namespace BattlegroundsApp.Views.CampaignViews {
 
                 // Add node
                 this.CampaignMapCanvas.Children.Add(visualNode.VisualElement);
-
-                // Set visual
-                n.VisualNode = visualNode as IVisualCampaignNode;
 
                 // Add node to list
                 this.m_nodes.Add(visualNode);
@@ -198,7 +331,11 @@ namespace BattlegroundsApp.Views.CampaignViews {
                 }
 
                 // Create container type
-                CampaignUnitFormationModel cufv = new CampaignUnitFormationModel(displayElement, f);
+                CampaignUnitFormationModel cufv = new CampaignUnitFormationModel(displayElement, f) {
+                    NodeModelFetcher = this.FromNode,
+                    UnitModelFetcher = this.FromFormation,
+                    ThreadDispatcher = this.ThreadDispatcher
+                };
 
                 // Add to formation view
                 this.m_formationViews.Add(cufv);
@@ -228,25 +365,24 @@ namespace BattlegroundsApp.Views.CampaignViews {
         }
 
         private void NodeRightClicked(ICampaignMapNode node) {
-            if (this.Selection.Size > 0) {
+            if (this.FilterSelectionToSelf() > 0) {
                 if (this.Selection.Shares(x => x.Formation.Node)) {
                     if (this.Selection.Filter(x => x.Formation.CanMove) > 0) {
-                        if (this.Selection.All(x => x.Formation.Team == node.Owner)) {
-                            this.MoveSelection(node);
-                        } else {
-                            if (node.Occupants.Count == 0) {
-                                this.MoveSelection(node);
-                            } else {
-                                this.MoveSelectionIntoHostileTerritory(node);
+                        // Get first unit and get path. If node is occupied by enemy, handle attack.
+                        var first = this.Selection.First;
+                        if (this.Controller.FindPath(first.Formation, node)) {
+                            if (this.Selection.All(x => this.Controller.MoveFormation(x.Formation, node) == MoveFormationResult.MoveAttack)) {
+                                this.Controller.HandleAttack(node, this.Selection.ToArray());
                             }
                         }
+
                     }
                 }
             }
         }
 
         private void BannerClicked(object sender, MouseButtonEventArgs e) {
-            if (sender is Image img && img.Tag is Formation formation) {
+            if (sender is Image img && img.Tag is ICampaignFormation formation) {
                 if (this.FromFormation(formation) is CampaignUnitFormationModel model) {
                     if (e.LeftButton == MouseButtonState.Pressed) {
                         Keyboard.IsKeyDown(Key.LeftShift).IfTrue().Then(() => this.Selection.AddToSelection(model)).Else(() => this.Selection.Select(model));
@@ -262,163 +398,10 @@ namespace BattlegroundsApp.Views.CampaignViews {
         private void EndTurnBttn_Click(object sender, RoutedEventArgs e) {
             if (!this.Controller.EndTurn()) {
                 this.Controller.EndCampaign();
-            } else {
-                // Loop though and update movement
             }
-            this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(this.CampaignDate)));
         }
 
         private int FilterSelectionToSelf() => this.Selection.Filter(x => x.Formation.Team == this.Controller.GetSelf().Team.Team);
-
-        /// <summary>
-        /// Move the entire selection to node
-        /// </summary>
-        private void MoveSelection(ICampaignMapNode node)
-            => this.Controller.IsSelfTurn().Then(() => this.FilterSelectionToSelf() > 0).Then(() => this.MoveFormations(this.Selection.Get().Select(x => this.FromFormation(x)), node));
-
-        /// <summary>
-        /// Move the entire selection (with same origin) into a hostile node
-        /// </summary>
-        private void MoveSelectionIntoHostileTerritory(ICampaignMapNode node) {
-            if (this.Controller.IsSelfTurn()) {
-                if (this.FilterSelectionToSelf() > 0) { // Make sure we only move our own units
-                    var first = this.Selection.First;
-                    if (this.Controller.Map.SetPath(first.Formation.Node, node, first.Formation)) {
-                        this.Selection.InvokeEach(x => x.IfTrue(y => y.Formation != first.Formation).Then(z => z.Formation.SetNodeDestinationsAndMove(first.Formation.GetPath())));
-                        if (first.Formation.Destination == node) {
-                            this.SelectionAttackNode(node);
-                        } else {
-                            this.Selection.InvokeEach(this.MoveFormation);
-                        }
-                    }
-                }
-            }
-        }
-
-        /// <summary>
-        /// Move the enumerable collection of formations
-        /// </summary>
-        private void MoveFormations(IEnumerable<CampaignUnitFormationModel> models, ICampaignMapNode node) {
-            models.ForEach(x => {
-                if (this.Controller.Map.SetPath(x.Formation.Node, node, x.Formation)) {
-                    this.MoveFormation(x);
-                };
-            });
-        }
-
-        /// <summary>
-        /// This will move a formation to its next destination
-        /// </summary>
-        private void MoveFormation(CampaignUnitFormationModel formationModel) {
-            
-            // Make sure there's a destination
-            if (formationModel.Formation.Destination is ICampaignMapNode node) {
-
-                // Get old node
-                var backNode = formationModel.Formation.Node;
-
-                // Move in map
-                this.Controller.Map.MoveTo(formationModel.Formation, node);
-
-                // Get target
-                var targetModel = this.FromNode(node);
-
-                // Get next offset
-                (double x, double y) = targetModel.GetNextOffset(true);
-                (x, y) = targetModel.GetRelative(x, y);
-
-                // Show visually
-                (formationModel as ICampaignMapVisual).GotoPosition(x, y);
-
-                // Slow iterator
-                IEnumerator UpdateOldNode (){
-                    yield return new WaitTimespan(TimeSpan.FromSeconds(0.5));
-                    if (backNode.Occupants.Count > 0) {
-                        var ogNode = this.FromNode(backNode);
-                        ogNode.ResetOffset();
-                        var remainingOccupants = backNode.Occupants.Select(a => this.FromFormation(a)).ForEach(b => {
-                            (double x, double y) = ogNode.GetNextOffset(true);
-                            (x, y) = ogNode.GetRelative(x, y);
-                            (b as ICampaignMapVisual).GotoPosition(x, y, TimeSpan.FromMilliseconds(50));
-                        });
-                    }
-                }
-
-                // Tell coroutine to activate
-                Coroutine.StartCoroutine(UpdateOldNode(), (GUIThreadDispatcher)this.Dispatcher);
-
-            }
-
-        }
-
-        /// <summary>
-        /// This will display the attacking dialog
-        /// </summary>
-        private void SelectionAttackNode(ICampaignMapNode node) {
-
-            // Get attackers, lock selection
-            List<ICampaignFormation> attackers = this.Selection.Get();
-            this.Selection.Lock();
-
-            // Create engagement view
-            CampaignEngagementDialogView engagementDialogView = new CampaignEngagementDialogView() {
-                Header = Localize.GetString("CampaignView_AttackString", node.NodeName),
-                Attackers = Localize.GetEnum(attackers.First().Team),
-                Defenders = Localize.GetEnum(node.Owner),
-                MapNode = node,
-            };
-
-            // Subscribe to events
-            engagementDialogView.SubscribeToDialogEvent(CampaignEngagementDialogView.WITHDRAW, this.WithdrawAttack);
-            engagementDialogView.SubscribeToDialogEvent(CampaignEngagementDialogView.AUTO, this.AutoAttack);
-            engagementDialogView.SubscribeToDialogEvent(CampaignEngagementDialogView.ENGAGE, this.EngageAttack);
-
-            // Set formations etc.
-            engagementDialogView.SetAttackingFormations(attackers, this.Controller.Locale);
-            engagementDialogView.SetupMatchData(this.Controller);
-
-            // Show dialog
-            this.ShowCampaignDialog(engagementDialogView);
-
-        }
-
-        private void WithdrawAttack(CampaignDialogView dialogView) {
-            this.HideCampaignDialog();
-
-            // Unlock selection
-            this.Selection.Unlock();
-
-        }
-
-        private void AutoAttack(CampaignDialogView dialogView) {
-            this.HideCampaignDialog();
-        }
-
-        private void EngageAttack(CampaignDialogView dialogView) {
-            this.HideCampaignDialog();
-            CampaignEngagementDialogView cedv = dialogView as CampaignEngagementDialogView;
-
-            CampaignEngagementData data = new CampaignEngagementData();
-            this.SetupEngagementData(ref data, cedv);
-            this.ApplyEngagementData(true, ref data, cedv);
-
-            if (this.Controller is SingleplayerCampaign) {
-                
-                this.Controller.GenerateAIEngagementSetup(ref data, true, cedv.MapNode.Occupants.Count, cedv.MapNode.Occupants.ToArray());
-                this.Controller.ZipPlayerData(ref data);
-
-                var matchController = this.Controller.Engage(data);
-                matchController.Control();
-
-                ICampaignController.HandleEngagement(matchController, data, this.OnEngagementOver);
-
-                this.ShowBattleStatusDialog();
-
-            } else {
-                // TODO: Show defence view
-            }
-
-        }
 
         private void ShowBattleStatusDialog() {
             // TODO: Show battle status
@@ -436,8 +419,6 @@ namespace BattlegroundsApp.Views.CampaignViews {
             engagementData.defendingFaction = view.MapNode.Occupants.First().Regiments.First().ElementOf.EleemntOf.Faction;
             engagementData.attackingFormations = this.Selection.Get();
             engagementData.defendingFormations = view.MapNode.Occupants;
-
-            // TODO: Map players etc.
 
         }
 
@@ -495,79 +476,6 @@ namespace BattlegroundsApp.Views.CampaignViews {
             }
         }
 
-        private void OnEngagementOver(ICampaignMapNode mapNode, bool attackSuccessful) {
-
-            // TODO: Hide "Playing battle"
-
-            // Start coroutine
-            Coroutine.StartCoroutine(this.NodeLostVisuals(mapNode, attackSuccessful), (GUIThreadDispatcher)this.Dispatcher);
-
-            // Update logs etc.
-
-        }
-
-        private IEnumerator NodeLostVisuals(ICampaignMapNode mapNode, bool attackSuccessful) {
-
-            // Get attackers from locked selection
-            var attackers = this.Selection.Get();
-
-            // Destroy low length formations
-            bool DestroyLowStrengthFormations(ICampaignFormation formation) {
-                if (formation.CalculateStrength() <= 0.025f) {
-                    this.DestroyFormation(this.FromFormation(formation));
-                    return true;
-                } else {
-                    return false;
-                }
-            }
-
-            // Remove all dead attackers and defenders
-            int lostAttackers = attackers.RemoveAll(DestroyLowStrengthFormations);
-            int lostDefenders = mapNode.Occupants.RemoveAll(DestroyLowStrengthFormations);
-
-            // Log event
-            Trace.WriteLine($"Attackers lost {lostAttackers} formations and defenders lost {lostDefenders}.", nameof(CampaignMapView));
-
-            // It the attack was successful
-            if (attackSuccessful) {
-
-                // Get neighbouring nodes of current ally
-                var nodes = this.Controller.Map.GetNodeNeighbours(mapNode, x => x.Occupants.Count < x.OccupantCapacity && x.Owner == mapNode.Owner);
-                int nodeIndex = 0;
-
-                if (nodes.Count == 0) {
-                    mapNode.Occupants.ForEach(x => { // Destroy all formations, nowhere to go to.
-                        this.DestroyFormation(this.FromFormation(x));
-                    });
-                } else {
-
-                    // Tell all current occupants to leave
-                    var itter = mapNode.Occupants.GetSafeEnumerator();
-                    while (itter.MoveNext()) {
-                        itter.Current.SetNodeDestinationsAndMove(new List<ICampaignMapNode>() { nodes[nodeIndex] });
-                        this.MoveFormation(this.FromFormation(itter.Current));
-                        nodeIndex++;
-                        if (nodeIndex > nodes.Count) {
-                            nodeIndex = 0;
-                        }
-                        yield return new WaitTimespan(TimeSpan.FromSeconds(1.5));
-                    }
-
-                }
-
-                // Move in attackers
-                foreach (var attacker in attackers) {
-                    this.MoveFormation(this.FromFormation(attacker));
-                    yield return new WaitTimespan(TimeSpan.FromSeconds(1.5));
-                }
-
-            }
-
-            // Unlock selection
-            this.Selection.Unlock();
-
-        }
-
         private void LeaveAndSaveButton_Click(object sender, RoutedEventArgs e) {
 
         }
@@ -588,10 +496,6 @@ namespace BattlegroundsApp.Views.CampaignViews {
             // Set background visibility
             CampaignDialogVisible = Visibility.Collapsed;
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(CampaignDialogVisible)));
-
-        }
-
-        private void DestroyFormation(CampaignUnitFormationModel formationModel) {
 
         }
 

@@ -7,7 +7,7 @@ using Battlegrounds.Lua;
 namespace Battlegrounds.Campaigns.API {
     
     /// <summary>
-    /// 
+    /// Interface for handling map-related behaviour for campaigns.
     /// </summary>
     public interface ICampaignMap {
 
@@ -55,13 +55,6 @@ namespace Battlegrounds.Campaigns.API {
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="formation"></param>
-        /// <param name="target"></param>
-        void MoveTo(ICampaignFormation formation, ICampaignMapNode target);
-
-        /// <summary>
-        /// 
-        /// </summary>
         /// <param name="node"></param>
         /// <param name="campaignTurn"></param>
         /// <returns></returns>
@@ -86,11 +79,10 @@ namespace Battlegrounds.Campaigns.API {
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="from"></param>
-        /// <param name="end"></param>
         /// <param name="formation"></param>
+        /// <param name="end"></param>
         /// <returns></returns>
-        bool SetPath(ICampaignMapNode from, ICampaignMapNode end, ICampaignFormation formation);
+        bool FindPath(ICampaignFormation formation, ICampaignMapNode end, out List<ICampaignMapNode> path);
 
     }
 

@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
+using Battlegrounds.Campaigns.AI;
 using Battlegrounds.Campaigns.API;
 using Battlegrounds.Campaigns.Map;
 using Battlegrounds.Campaigns.Models;
@@ -22,12 +24,13 @@ using Battlegrounds.Game.Match.Startup;
 using Battlegrounds.Gfx;
 using Battlegrounds.Locale;
 using Battlegrounds.Lua;
+using Battlegrounds.Util.Coroutines;
 using Battlegrounds.Util.Lists;
 
 namespace Battlegrounds.Campaigns.Controller {
 
     /// <summary>
-    /// 
+    /// Class for representing and controlling the behaviour of a single-player campaign.
     /// </summary>
     public class SingleplayerCampaign : ICampaignController {
 
@@ -45,31 +48,22 @@ namespace Battlegrounds.Campaigns.Controller {
         private ICampaignTeam[] m_teams;
         private ICampaignPlayer m_player; // The single-player
 
+        private CampaignMapAI m_opponentAI;
+
         private Localize m_locale;
 
-        /// <summary>
-        /// 
-        /// </summary>
         public ICampaignEventManager Events => this.m_eventManager;
 
-        /// <summary>
-        /// 
-        /// </summary>
         public ICampaignScriptHandler Script => this.m_scriptHandler;
 
-        /// <summary>
-        /// 
-        /// </summary>
         public ICampaignMap Map => this.m_map;
 
-        /// <summary>
-        /// 
-        /// </summary>
         public ICampaignTurn Turn => this.m_turn;
 
-        /// <summary>
-        /// 
-        /// </summary>
+        public event CampaignEngagementAttackHandler OnAttack;
+        public event CampaignEngagmeentDefendHandler OnDefend;
+        public event CampaignTurnOverHandler OnTurn;
+
         public Localize Locale => this.m_locale;
 
         /// <summary>
@@ -77,19 +71,10 @@ namespace Battlegrounds.Campaigns.Controller {
         /// </summary>
         public Army[] Armies { get; init; }
 
-        /// <summary>
-        /// 
-        /// </summary>
         public List<GfxMap> GfxMaps { get; init; }
 
-        /// <summary>
-        /// 
-        /// </summary>
         public int DifficultyLevel { get; init; }
 
-        /// <summary>
-        /// 
-        /// </summary>
         public bool IsSingleplayer => true;
 
         private SingleplayerCampaign() {
@@ -102,11 +87,19 @@ namespace Battlegrounds.Campaigns.Controller {
 
         public bool EndTurn() {
             bool lastTurn = ICampaignController.GlobalEndTurn(this);
-            // More stuff here?
+            if (!lastTurn) {
+                if (this.Turn.CurrentTurn != this.m_player.Team.Team) {
+                    Coroutine.StartCoroutine(this.m_opponentAI.ProcessTurn());
+                }
+            }
+            this.OnTurn?.Invoke();
             return lastTurn;
         }
 
         public void StartCampaign() {
+
+            // Initialise AI
+            this.m_opponentAI.Initialise();
 
             // Invoke setup function if any
             this.Script.CallGlobal("CampaignSetup");
@@ -137,7 +130,7 @@ namespace Battlegrounds.Campaigns.Controller {
                 PlayStrategyFactory = new OverwatchStrategyFactory(),
             };
             SingleplayerMatchAnalyzer singleplayerMatchAnalyzer = new();
-            SingleplayerFinalizer singleplayerFinalizer = new() { 
+            SingleplayerFinalizer singleplayerFinalizer = new() {
                 NotifyAI = true,
                 CompanyHandler = x => {
                     ICampaignController.HandleCompanyChanges(data, x);
@@ -219,7 +212,7 @@ namespace Battlegrounds.Campaigns.Controller {
                 Array.Fill(data.defendingDifficulties, AIDifficulty.AI_Hard);
 
                 targetList = data.defendingCompanyUnits;
-                
+
             } else {
 
                 // Set to amount of armies
@@ -256,6 +249,39 @@ namespace Battlegrounds.Campaigns.Controller {
 
         }
 
+        public CampaignEngagementData? HandleAttacker(ICampaignFormation[] attackingFormations, ICampaignMapNode node) {
+
+            // Note: Because it's singleplayer we can treat this as the AI.
+
+            // Get teams
+            var attackers = attackingFormations[0].Team;
+            var defenders = node.Owner;
+
+            // Create data
+            CampaignEngagementData data = new CampaignEngagementData {
+                node = node,
+                scenario = this.Map.PickScenario(node, this.m_turn),
+                allParticipatingSquads = new List<Squad>(),
+                attackers = attackers,
+                defenders = defenders,
+                attackingFaction = attackingFormations[0].Regiments[0].ElementOf.EleemntOf.Faction,
+                defendingFaction = node.Occupants[0].Regiments[0].ElementOf.EleemntOf.Faction,
+                attackingFormations = attackingFormations.ToList(),
+                defendingFormations = node.Occupants
+            };
+
+            // Generate AI attack data (TODO: Bring in AI logic)
+            this.GenerateAIEngagementSetup(ref data, false, 1, attackingFormations);
+
+            // Return generated data
+            return data;
+
+        }
+
+        public void HandleDefender(ref CampaignEngagementData engagementData) =>
+            // Note: Because it's singleplayer we can treat this as the AI.
+            this.GenerateAIEngagementSetup(ref engagementData, true, engagementData.defendingFormations.Count, engagementData.defendingFormations.ToArray());
+
         public ICampaignTeam GetTeam(CampaignArmyTeam teamType) => teamType switch {
             CampaignArmyTeam.TEAM_ALLIES => this.m_teams[0],
             CampaignArmyTeam.TEAM_AXIS => this.m_teams[1],
@@ -263,6 +289,96 @@ namespace Battlegrounds.Campaigns.Controller {
         };
 
         public ICampaignPlayer GetSelf() => this.m_player;
+
+        public async void HandleAttack(ICampaignMapNode attackedNode, ICampaignFormation[] formations) {
+
+            // Get attackers
+            var attackerData = await Task.Run(() => this.OnAttack?.Invoke(formations, attackedNode) ?? null);
+
+            // If no engagement data, return
+            if (attackerData is CampaignEngagementData engagementData) {
+
+                // Get defender data
+                var engagement = (await Task.Run(() => this.OnDefend?.Invoke(engagementData) ?? null)).Value;
+                this.ZipPlayerData(ref engagement);
+
+                // Create engagement data
+                var match = this.Engage(engagement);
+                match.Control();
+
+                // Hand-off control
+                ICampaignController.HandleEngagement(match, engagement, (node, success) => {
+
+                    // Destroy low length formations
+                    static bool DestroyLowStrengthFormations(ICampaignFormation formation) {
+                        if (formation.CalculateStrength() <= 0.025f) {
+                            formation.Disband(true);
+                            return true;
+                        } else {
+                            return false;
+                        }
+                    }
+
+                    // Remove all dead attackers and defenders
+                    int lostAttackers = engagement.attackingFormations.RemoveAll(DestroyLowStrengthFormations);
+                    int lostDefenders = node.Occupants.RemoveAll(DestroyLowStrengthFormations);
+
+                    if (success) {
+
+                        // Move out defenders
+                        ICampaignController.ScatterLostEngagementDefenders(this, node);
+
+                        // Move in formations
+                        formations.ForEach(x => this.MoveFormation(x, attackedNode));
+
+                    }
+
+                });
+
+            }
+
+        }
+
+        public MoveFormationResult MoveFormation(ICampaignFormation formation, ICampaignMapNode to) {
+
+            // If we're attacking
+            if (to.Occupants.Count > 0 && to.Owner != formation.Team) {
+
+                // Cannot move, should initiate attack.
+                return MoveFormationResult.MoveAttack;
+
+            } else {
+
+                // Make sure we can actually move
+                if (!to.CanMoveTo(formation)) {
+                    return MoveFormationResult.MoveCap;
+                }
+
+                // Update occupants
+                formation.Node.RemoveOccupant(formation);
+
+                // Set location and update destination
+                formation.SetNodeLocation(to);
+
+                // Update owner
+                if (to.Owner != formation.Team) {
+                    to.SetOwner(formation.Team);
+                }
+
+                // Return true
+                return MoveFormationResult.MoveSuccess;
+
+            }
+
+        }
+
+        public bool FindPath(ICampaignFormation formation, ICampaignMapNode to) {
+            if (this.Map.FindPath(formation, to, out List<ICampaignMapNode> path)) {
+                formation.SetNodeDestinations(path);
+                return true;
+            }
+            return false;
+        }
 
         public void CreateArmy(int index, ref uint divCount, CampaignPackage.ArmyData army) {
             var team = army.Army.IsAllied ? CampaignArmyTeam.TEAM_ALLIES : CampaignArmyTeam.TEAM_AXIS;
@@ -357,9 +473,6 @@ namespace Battlegrounds.Campaigns.Controller {
             campaign.m_teams[0].CreatePlayer(0, human.Team == CampaignArmyTeam.TEAM_ALLIES ? human.Name : string.Empty, human.Team == CampaignArmyTeam.TEAM_ALLIES ? human.SteamID : 0);
             campaign.m_teams[1].CreatePlayer(0, human.Team == CampaignArmyTeam.TEAM_AXIS ? human.Name : string.Empty, human.Team == CampaignArmyTeam.TEAM_AXIS ? human.SteamID : 0);
 
-            // Set default player
-            campaign.m_player = campaign.m_teams[human.Team == CampaignArmyTeam.TEAM_ALLIES ? 0 : 1].Players[0];
-
             // Counter to keep track of diviions
             uint divisionCount = 0;
 
@@ -367,6 +480,10 @@ namespace Battlegrounds.Campaigns.Controller {
             for (int i = 0; i < package.CampaignArmies.Length; i++) {
                 campaign.CreateArmy(i, ref divisionCount, package.CampaignArmies[i]);
             }
+
+            // Set default player and create AI
+            campaign.m_player = campaign.m_teams[human.Team == CampaignArmyTeam.TEAM_ALLIES ? 0 : 1].Players[0];
+            campaign.m_opponentAI = new CampaignMapAI(campaign.m_teams[human.Team == CampaignArmyTeam.TEAM_ALLIES ? 1 : 0], campaign);
 
             // Create turn data
             campaign.m_turn = new SingleplayerCampaignTurn(startTeam, new[] {
@@ -379,20 +496,8 @@ namespace Battlegrounds.Campaigns.Controller {
             campaign.m_allowedSummerAtmospheres = package.CampaignWeatherData.SummerAtmospheres;
             campaign.m_allowedWinterAtmospheres = package.CampaignWeatherData.WinterAtmospheres;
 
-            // Set lua stuff
-            campaign.Script.SetGlobal("Map", campaign.Map, true);
-            campaign.Script.SetGlobal("Turn", campaign.Turn, true);
-            campaign.Script.SetGlobal(BattlegroundsCampaignLibrary.CampaignInstanceField, campaign, false);
-
-            // Register library
-            BattlegroundsCampaignLibrary.LoadLibrary(campaign.Script.ScriptState);
-
-            // Loop over campaign scripts and init them
-            package.CampaignScripts.ForEach(x => campaign.Script.LoadScript(x));
-
-            // Assign state ptrs
-            campaign.Map.ScriptHandler = campaign.Script;
-            campaign.Events.ScriptHandler = campaign.Script;
+            // Setup lua environment
+            ICampaignController.SetupScriptEnvironment(campaign, package);
 
             // Return campaign
             return campaign;

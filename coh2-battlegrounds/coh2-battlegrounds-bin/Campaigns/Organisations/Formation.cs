@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using Battlegrounds.Campaigns.API;
 using Battlegrounds.Lua;
@@ -27,46 +26,18 @@ namespace Battlegrounds.Campaigns.Organisations {
         /// </summary>
         public Regiment[] Regiments => this.m_regiments.ToArray();
 
-        /// <summary>
-        /// Get the current node occupied by the formation.
-        /// </summary>
-        /// <remarks>
-        /// Lua-Visible
-        /// </remarks>
-        [LuaUserobjectProperty]
         public ICampaignMapNode Node => this.m_location;
 
-        /// <summary>
-        /// Get the destination of this formation
-        /// </summary>
         public ICampaignMapNode Destination => this.m_path.Count > 0 ? this.m_path[0] : null;
 
-        /// <summary>
-        /// Get the name of the dominant army in charge of this formation.
-        /// </summary>
-        /// <remarks>
-        /// Lua-Visible
-        /// </remarks>
-        [LuaUserobjectProperty]
         public string Army => this.Divisions.FirstOrDefault().EleemntOf.Faction.Name;
 
-        /// <summary>
-        /// Get if the unit formation can be split.
-        /// </summary>
         public bool CanSplit => this.m_regiments.Count > 1;
 
-        /// <summary>
-        /// Get if the formation can currently move
-        /// </summary>
         public bool CanMove => this.m_moveDistance > 0;
 
-        /// <summary>
-        /// Get the <see cref="CampaignArmyTeam"/> owning the formation.
-        /// </summary>
-        /// <remarks>
-        /// Lua-Visible
-        /// </remarks>
-        [LuaUserobjectProperty]
+        public event FormationPositionEventHandler FormationMoved;
+
         public CampaignArmyTeam Team { get; private set; }
 
         /// <summary>
@@ -99,10 +70,15 @@ namespace Battlegrounds.Campaigns.Organisations {
         /// </remarks>
         /// <param name="node">The new location of the formation.</param>
         public void SetNodeLocation(ICampaignMapNode node) {
-            
+
+            // Trigger event (if location
+            if (this.m_location is not null) {
+                this.FormationMoved?.Invoke(this, this.m_location, node);
+            }
+
             // Set this location
             this.m_location = node;
-            
+
             // Inform node we've added ourselves as occupant
             node.AddOccupant(this);
 
@@ -112,10 +88,7 @@ namespace Battlegrounds.Campaigns.Organisations {
         /// Set the list of destinations for the formation and move max capacity.
         /// </summary>
         /// <param name="nodes">The node destinations.</param>
-        public void SetNodeDestinationsAndMove(List<ICampaignMapNode> nodes) {
-            this.m_path = nodes;
-            this.OnMoved(false);
-        }
+        public void SetNodeDestinations(List<ICampaignMapNode> nodes) => this.m_path = nodes;
 
         /// <summary>
         /// Applies attrition to the formation.
@@ -214,14 +187,11 @@ namespace Battlegrounds.Campaigns.Organisations {
 
         }
 
-        /// <summary>
-        /// Updates destination and decrements available move distance by 1.
-        /// </summary>
-        public void OnMoved(bool actualMove = true) {
+        public void MoveToDestination() {
             if (this.m_path.Count > 0 && this.m_path[0] == this.m_location) {
+                this.FormationMoved?.Invoke(this, this.m_location, this.m_path[0]);
+                this.m_location = this.m_path[0];
                 this.m_path.RemoveAt(0);
-            }
-            if (actualMove) {
                 this.m_moveDistance--;
             }
         }
