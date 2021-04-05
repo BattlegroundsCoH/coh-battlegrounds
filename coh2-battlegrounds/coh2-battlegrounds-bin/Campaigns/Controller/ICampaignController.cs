@@ -343,7 +343,9 @@ namespace Battlegrounds.Campaigns.Controller {
 
                 // Move all occupants (where highest-strength units get to retreat first)
                 lostNode.Occupants.OrderByDescending(x => x.CalculateStrength()).ForEach(x => {
-                    controller.MoveFormation(x, nodes[nodeIndex]);
+                    if (controller.MoveFormation(x, nodes[nodeIndex]) == MoveFormationResult.MoveCap) {
+                        x.Disband(true);
+                    }
                     nodeIndex++;
                     if (nodeIndex > nodes.Count) {
                         nodeIndex = 0;

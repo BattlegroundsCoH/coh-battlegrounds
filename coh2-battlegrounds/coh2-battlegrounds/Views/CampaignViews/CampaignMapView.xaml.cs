@@ -336,7 +336,8 @@ namespace BattlegroundsApp.Views.CampaignViews {
                 CampaignUnitFormationModel cufv = new CampaignUnitFormationModel(displayElement, f) {
                     NodeModelFetcher = this.FromNode,
                     UnitModelFetcher = this.FromFormation,
-                    ThreadDispatcher = this.ThreadDispatcher
+                    ThreadDispatcher = this.ThreadDispatcher,
+                    RemoveHandle = this.RemoveFormation
                 };
 
                 // Add to formation view
@@ -499,6 +500,12 @@ namespace BattlegroundsApp.Views.CampaignViews {
             CampaignDialogVisible = Visibility.Collapsed;
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(CampaignDialogVisible)));
 
+        }
+
+        private void RemoveFormation(CampaignUnitFormationModel model) {
+            if (this.m_formationViews.Remove(model)) {
+                this.CampaignMapCanvas.Children.Remove(model.VisualElement);
+            }
         }
 
     }

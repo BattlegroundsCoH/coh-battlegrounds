@@ -38,6 +38,8 @@ namespace Battlegrounds.Campaigns.Organisations {
 
         public event FormationPositionEventHandler FormationMoved;
 
+        public event FormationDisbandedEventHandler FormationDisbanded;
+
         public CampaignArmyTeam Team { get; private set; }
 
         /// <summary>
@@ -107,6 +109,12 @@ namespace Battlegrounds.Campaigns.Organisations {
         /// <param name="killAll">Trigger kill-event on all regiments, removing them entirely from the game.</param>
         public void Disband(bool killAll) {
 
+            // Invoke event
+            this.FormationDisbanded?.Invoke(this, killAll);
+
+            // Release from occupied noide
+            this.Node.RemoveOccupant(this);
+
         }
 
         /// <summary>
@@ -164,8 +172,9 @@ namespace Battlegrounds.Campaigns.Organisations {
                 
                 // Create formation if not found
                 if (organisations[j] is null) {
-                    organisations[j] = new Formation();
-                    organisations[j].Team = this.Team;
+                    organisations[j] = new Formation {
+                        Team = this.Team
+                    };
                 }
 
                 // Move regiment

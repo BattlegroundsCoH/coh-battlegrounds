@@ -57,12 +57,14 @@ namespace BattlegroundsApp.Views.CampaignViews.Models {
 
         }
 
-        public void OwnershipChanged(ICampaignMapNode node, CampaignArmyTeam armyTeam) { 
-            if (this.VisualElement is Ellipse ellipse) {
-                ellipse.Fill = armyTeam == CampaignArmyTeam.TEAM_ALLIES ? Brushes.Red : (armyTeam == CampaignArmyTeam.TEAM_AXIS ? Brushes.Green : Brushes.Gray);
-            } else if (this.VisualElement is Image img) {
-                img.Source = this.ResourceContext.GetResource($"{(this.Node.Owner == CampaignArmyTeam.TEAM_ALLIES ? "allies" : "axis")}_node");
-            }
+        public void OwnershipChanged(ICampaignMapNode node, CampaignArmyTeam armyTeam) {
+            this.VisualElement.Dispatcher.Invoke(() => {
+                if (this.VisualElement is Ellipse ellipse) {
+                    ellipse.Fill = armyTeam == CampaignArmyTeam.TEAM_ALLIES ? Brushes.Red : (armyTeam == CampaignArmyTeam.TEAM_AXIS ? Brushes.Green : Brushes.Gray);
+                } else if (this.VisualElement is Image img) {
+                    img.Source = this.ResourceContext.GetResource($"{(this.Node.Owner == CampaignArmyTeam.TEAM_ALLIES ? "allies" : "axis")}_node");
+                }
+            });
             this.ResourceContext.Controller.Events.FireEvent(ICampaignEventManager.ET_Ownership, this.Node);
         }
 
@@ -70,9 +72,11 @@ namespace BattlegroundsApp.Views.CampaignViews.Models {
         }
 
         public void OccupantRemoved(ICampaignMapNode node, ICampaignFormation formation) {
-            if (this.Node.Occupants.Count == 0) {
-                this.ResetOffset();
-            }
+            this.VisualElement.Dispatcher.Invoke(() => {
+                if (this.Node.Occupants.Count == 0) {
+                    this.ResetOffset();
+                }
+            });
         }
 
         public void LeftClick() => this.NodeClicked?.Invoke(this.Node, false);

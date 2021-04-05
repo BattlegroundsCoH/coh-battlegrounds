@@ -4,7 +4,20 @@ using Battlegrounds.Lua;
 
 namespace Battlegrounds.Campaigns.API {
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="formation"></param>
+    /// <param name="origin"></param>
+    /// <param name="destination"></param>
     public delegate void FormationPositionEventHandler(ICampaignFormation formation, ICampaignMapNode origin, ICampaignMapNode destination);
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="formation"></param>
+    /// <param name="killed"></param>
+    public delegate void FormationDisbandedEventHandler(ICampaignFormation formation, bool killed);
 
     /// <summary>
     /// Interface for representing a unit formation in a campaign.
@@ -62,6 +75,11 @@ namespace Battlegrounds.Campaigns.API {
         /// 
         /// </summary>
         event FormationPositionEventHandler FormationMoved;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        event FormationDisbandedEventHandler FormationDisbanded;
 
         /// <summary>
         /// 

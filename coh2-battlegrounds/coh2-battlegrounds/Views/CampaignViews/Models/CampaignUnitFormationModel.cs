@@ -19,27 +19,51 @@ namespace BattlegroundsApp.Views.CampaignViews.Models {
 
         public Func<ICampaignFormation, ICampaignMapVisual> UnitModelFetcher { get; init; }
 
+        public Action<CampaignUnitFormationModel> RemoveHandle { get; init; }
+
         public GUIThreadDispatcher ThreadDispatcher { get; init; }
 
         public CampaignUnitFormationModel(UIElement element, ICampaignFormation formation) {
             this.VisualElement = element;
             this.Formation = formation;
-            this.Formation.FormationMoved += this.Formation_FormationMoved;
+            this.Formation.FormationMoved += this.FormationMoved;
+            this.Formation.FormationDisbanded += this.FormationDisbanded;
         }
 
-        private void Formation_FormationMoved(ICampaignFormation formation, ICampaignMapNode origin, ICampaignMapNode destination) {
+        private void FormationDisbanded(ICampaignFormation formation, bool killed) {
 
-            // Get target
-            var targetModel = this.NodeModelFetcher(destination);
+            if (killed) {
+                IEnumerator KillFormation() {
+                    // TODO: Show visually
+                    yield return 0;
+                    this.RemoveHandle?.Invoke(this);
+                }
+                Coroutine.StartCoroutine(KillFormation(), this.ThreadDispatcher);
+            } else {
+                this.ThreadDispatcher.Invoke(() => {
+                    this.RemoveHandle?.Invoke(this);
+                });
+            }
+        }
 
-            // Get next offset
-            (double x, double y) = targetModel.GetNextOffset(true);
-            (x, y) = targetModel.GetRelative(x, y);
+        private void FormationMoved(ICampaignFormation formation, ICampaignMapNode origin, ICampaignMapNode destination) {
+            
+            // Update formation, visually
+            this.ThreadDispatcher.Invoke(() => {
 
-            // Show visually
-            (this as ICampaignMapVisual).GotoPosition(x, y);
+                // Get target
+                var targetModel = this.NodeModelFetcher(destination);
 
-            // Slow iterator
+                // Get next offset
+                (double x, double y) = targetModel.GetNextOffset(true);
+                (x, y) = targetModel.GetRelative(x, y);
+
+                // Show visually
+                (this as ICampaignMapVisual).GotoPosition(x, y);
+
+            });
+
+            // Delayed update of origin
             IEnumerator UpdateOldNode() {
                 yield return new WaitTimespan(TimeSpan.FromSeconds(0.5));
                 if (origin.Occupants.Count > 0) {
