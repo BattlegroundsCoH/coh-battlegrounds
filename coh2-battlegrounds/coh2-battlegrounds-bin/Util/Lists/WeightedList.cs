@@ -47,7 +47,7 @@ namespace Battlegrounds.Util.Lists {
                 throw new InvalidOperationException("Cannot pick a random element from an empty list.");
 
             // Select self
-            var pairs = this.Select(x => x).OrderBy(x => x.Value).ToList();
+            var pairs = this.OrderBy(x => x.Value).ToList();
 
             // While there's more than 1
             while (pairs.Count > 1) {
@@ -63,7 +63,26 @@ namespace Battlegrounds.Util.Lists {
             return pairs[0].Key;
 
         }
-    
+
+        /// <summary>
+        /// Pick a random element from and then remove it.
+        /// </summary>
+        /// <returns>A randomly picked <typeparamref name="T"/> object.</returns>
+        /// <exception cref="InvalidOperationException"/>
+        public T PickOut() => this.PickOut(new Random());
+
+        /// <summary>
+        /// Pick a random element from and then remove it.
+        /// </summary>
+        /// <param name="random">The random generator to use when picking random values.</param>
+        /// <returns>A randomly picked <typeparamref name="T"/> object.</returns>
+        /// <exception cref="InvalidOperationException"/>
+        public T PickOut(Random random) {
+            var pick = this.Pick(random);
+            this.Remove(pick);
+            return pick;
+        }
+
     }
 
 }

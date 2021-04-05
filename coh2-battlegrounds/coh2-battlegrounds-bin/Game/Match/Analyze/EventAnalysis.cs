@@ -118,7 +118,7 @@ namespace Battlegrounds.Game.Match.Analyze {
             for (int i = 0; i < this.m_events.Count; i++) {
                 var stamp = this.m_events[i].time;
                 uint uid = this.m_events[i].@event.Uid;
-                string dbstring = $"EventAnalysis@{stamp}#{uid}";
+                string dbstring = $"{nameof(EventAnalysis)}@{stamp}#{uid}";
                 switch (this.m_events[i].@event) {
                     case KillEvent killEvent:
                         int killID = this.m_units.FindIndex(x => x.UnitID == killEvent.UnitID && x.PlayerOwner.ID == killEvent.UnitOwner.ID);
@@ -128,7 +128,7 @@ namespace Battlegrounds.Game.Match.Analyze {
                                 success = false;
                             }
                         } else {
-                            Trace.WriteLine($"Invalid unitID was killed ({killID})", dbstring);
+                            Trace.WriteLine($"Invalid unitID was killed ({killEvent.UnitID})", dbstring);
                             success = false;
                         }
                         break;

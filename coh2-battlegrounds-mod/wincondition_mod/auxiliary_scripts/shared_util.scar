@@ -500,8 +500,16 @@ function Battlegrounds_LogEvent(msgtype, type, value, player)
     if player == nil then
         player = Game_GetLocalPlayer();
     end
-    local pdata = BG_GetPlayerData(player);
-    local str = type .. "[" .. value .. "]#".._bg_logid.."@" .. pdata.steamID;
+    local pstr = BG_GetPlayerData(player);
+    if pstr ~= nil then
+        pstr = pstr.steamID;
+    elseif pstr == nil and AI_IsAIPlayer(player) then
+        local index = BGAI_GetAIPlayerID(player);
+        pstr = "ai".._bg_aiData[index].steamID .. "_" .._bg_aiData[index].ttype;
+    else
+        return; -- Should probably be a fatal error instead.
+    end
+    local str = type .. "[" .. value .. "]#".._bg_logid.."@" .. pstr;
     _bg_logid = _bg_logid + 1;
     Game_SendMessage(msgtype, str);
 end

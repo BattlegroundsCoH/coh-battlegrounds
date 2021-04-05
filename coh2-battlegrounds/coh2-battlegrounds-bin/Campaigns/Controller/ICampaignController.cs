@@ -338,22 +338,23 @@ namespace Battlegrounds.Campaigns.Controller {
             var nodes = controller.Map.GetNodeNeighbours(lostNode, x => x.Occupants.Count < x.OccupantCapacity && x.Owner == lostNode.Owner);
             int nodeIndex = 0;
 
-            if (nodes.Count == 0) {
-                lostNode.Occupants.ForEach(x => { // Destroy all formations, nowhere to go to.
-                    x.Disband(true);
-                });
+            if (nodes.Count == 0) { // Destroy all formations, nowhere to go to.
+                var itter = lostNode.Occupants.GetSafeEnumerator();
+                while (itter.MoveNext()) {
+                    itter.Current.Disband(true);
+                }
             } else {
 
-                // Move all occupants (where highest-strength units get to retreat first)
-                lostNode.Occupants.OrderByDescending(x => x.CalculateStrength()).ForEach(x => {
-                    if (controller.MoveFormation(x, nodes[nodeIndex]) == MoveFormationResult.MoveCap) {
-                        x.Disband(true);
+                var itter = lostNode.Occupants.OrderByDescending(x => x.CalculateStrength()).GetSafeEnumerator();
+                while (itter.MoveNext()) {
+                    if (controller.MoveFormation(itter.Current, nodes[nodeIndex]) == MoveFormationResult.MoveCap) {
+                        itter.Current.Disband(true);
                     }
                     nodeIndex++;
                     if (nodeIndex > nodes.Count) {
                         nodeIndex = 0;
                     }
-                });
+                }
 
             }
 

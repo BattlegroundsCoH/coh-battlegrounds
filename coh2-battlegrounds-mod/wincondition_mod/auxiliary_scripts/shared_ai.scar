@@ -106,8 +106,8 @@ function BGAI_GetDifficultyFromValue(d)
 end
 
 function BGAI_GetAIPlayerID(player)
-    for i=1, #_bg_aiData do
-        if _bg_aiData[i].player == player then
+    for i,v in ipairs(_bg_aiData) do
+        if v.player == player then
             return i;
         end
     end
@@ -319,6 +319,11 @@ end
 
 function BGAI_BuyRandom(index, set)
 
+    -- Don't call in unit if the match has stopped
+    if _bg_matchStopped == true then
+        return;
+    end
+
     -- Get the index of random unit
     local i = World_GetRand(1, bg_set:size(set));
 
@@ -328,7 +333,42 @@ function BGAI_BuyRandom(index, set)
     local spawnfrom = Player_GetNearestMapEntry(player, gotopos);
 
     -- Call in the unit
-    BG_CallInUnit(set[i], player, gotopos, spawnfrom);
+    local squad, crew, transport = BG_CallInUnit(set[i], player, gotopos, spawnfrom);
+
+    -- If log AI is enabled, then log the AI
+    if _bg_custom.log_ai then
+
+        -- Register squad
+        _bg_aiData[index].deployed[Squad_GetGameID(squad)] = set[i];
+
+        -- Broadcast that a unit was spawned
+        Battlegrounds_LogEvent(nil, BG_EVENT_ONDEPLOY, set[i].company_id, player);
+
+        -- Add events
+        Rule_AddSquadEvent(BGAI_OnSquadDeath, squad, GE_SquadKilled);
+        if crew ~= nil then
+            _bg_aiData[index].deployed[Squad_GetGameID(crew)] = set[i].crew;
+            Rule_AddSquadEvent(BGAI_OnSquadDeath, crew, GE_SquadKilled);
+        end
+
+    end
+
+end
+
+function BGAI_OnSquadDeath(squad)
+
+    -- Get player data
+    local player = Squad_GetPlayerOwner(squad);
+    local index = BGAI_GetAIPlayerID(player);
+    if index == -1 then
+        return;
+    end
+
+    -- Get squad data
+    local squadData = _bg_aiData[index].deployed[Squad_GetGameID(squad)];
+
+    -- Broadcast that the unit was killed
+    Battlegrounds_LogEvent(nil, BG_EVENT_ONDEATH, squadData.company_id, player);
 
 end
 

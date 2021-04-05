@@ -32,7 +32,6 @@ function BG_LoadSessionData()
         else
             _bg_aiData[k] = {};
             _bg_aiData[k].player = player;
-            _bg_aiData[k].steamID = "0";
             _bg_aiData[k].name = Player_GetDisplayName(player)[1];
             _bg_aiData[k].playerID = Player_GetID(player);
             _bg_aiData[k].race = race;
@@ -159,6 +158,8 @@ function BG_LoadAIData()
         for k,v in pairs(bg_companies) do
             if k == "AIPlayer#" ..tostring(counters[side]) then
                 ai.company = v;
+                ai.steamID = counters[side];
+                ai.ttype = side;
                 counters[side] = counters[side] + 1;
                 break;
             end

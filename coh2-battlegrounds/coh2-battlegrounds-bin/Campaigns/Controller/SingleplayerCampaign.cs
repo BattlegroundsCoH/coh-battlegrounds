@@ -238,10 +238,10 @@ namespace Battlegrounds.Campaigns.Controller {
                 targetList[i] = new List<Squad>();
 
                 // Pick at random
-                while (targetList[i].Count < Company.MAX_SIZE && targetList[i].Count < distribution) {
+                while (targetList[i].Count < Company.MAX_SIZE && targetList[i].Count < distribution && options.Count > 0) {
 
                     // Add random
-                    targetList[i].Add(options.Pick(BattlegroundsInstance.RNG));
+                    targetList[i].Add(options.PickOut(BattlegroundsInstance.RNG));
 
                 }
 
@@ -511,19 +511,19 @@ namespace Battlegrounds.Campaigns.Controller {
 
                 // Loop through all regiments
                 formations[i].Regiments.ForEach(x => {
-                    x.FirstCompany().Units.ForEach(x => {
+                    x.FirstCompany().Units.ForEach(u => {
                         double priority = 0.05;
-                        if (x.SBP.IsAntiTank) {
+                        if (u.SBP.IsAntiTank) {
                             priority += isDefence ? 0.7 : 0.2;
-                        } else if (x.SBP.IsInfantry) {
+                        } else if (u.SBP.IsInfantry) {
                             priority += isDefence ? 0.8 : 0.6;
-                        } else if (x.SBP.IsVehicle) {
+                        } else if (u.SBP.IsVehicle) {
                             priority += isDefence ? 0.3 : 0.5;
                         }
-                        if (x.SBP.IsCommandUnit) {
+                        if (u.SBP.IsCommandUnit) {
                             priority = 1.0;
                         }
-                        squads.Add(x, priority);
+                        squads.Add(u, priority);
                     });
                 });
 

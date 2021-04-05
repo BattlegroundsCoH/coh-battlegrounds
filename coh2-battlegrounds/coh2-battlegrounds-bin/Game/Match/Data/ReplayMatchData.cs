@@ -32,7 +32,7 @@ namespace Battlegrounds.Game.Match.Data {
 
         private readonly Regex broadcastRegex = new Regex(@"(?<cmdtype>\w)\[(?<content>(?<msg>(\w|_|-|:|\.|\d)+)|,|\s)*\]");
         private readonly Regex broadcastIdRegex = new Regex(@"#(?<id>\d+)");
-        private readonly Regex broadcastCallerRegex = new Regex(@"@(?<id>\d+(\.\d+e\+\d+)?)");
+        private readonly Regex broadcastCallerRegex = new Regex(@"@(?<id>(ai)?\d+(\.\d+e\+\d+)?(_(axis|allies))?)");
         private readonly Regex broadcastUIDigitRegex = new Regex(@"\d+(,\d+)*");
 
         public ISession Session { get; }
@@ -172,17 +172,35 @@ namespace Battlegrounds.Game.Match.Data {
                     match = broadcastCallerRegex.Match(gameEvent.AttachedMessage);
                     if (match.Success) {
                         string str = match.Groups["id"].Value;
-                        if (ulong.TryParse(str, out ulong integer)) {
-                            player = this.m_players.FirstOrDefault(x => x.SteamID == integer);
-                        } else if (double.TryParse(str, out double val)) { // not accurate for large numbers!
-                            integer = (ulong)val;
-                            player = this.m_players.FirstOrDefault(x => x.SteamID == integer);
-                            if (player is null) {
-                                
+                        if (str.StartsWith("ai")) {
+                            int cut = str.LastIndexOf('_');
+                            string side = str[(cut+ 1)..];
+                            int aiID = int.Parse(str[2..cut]);
+                            int cnt = 0;
+                            for (int i = 0; i < this.m_players.Length; i++) {
+                                if ((this.m_players[i].Army.IsAllied && side == "allies") || (this.m_players[i].Army.IsAxis && side == "axis")) {
+                                    if (cnt == aiID) {
+                                        player = this.m_players[i];
+                                        break;
+                                    } else {
+                                        cnt++;
+                                    }
+                                }
+                            }
+                        } else {
+                            if (ulong.TryParse(str, out ulong integer)) {
+                                player = this.m_players.FirstOrDefault(x => x.SteamID == integer);
+                            } else if (double.TryParse(str, out double val)) { // not accurate for large numbers!
+                                integer = (ulong)val;
+                                player = this.m_players.FirstOrDefault(x => x.SteamID == integer);
+                                if (player is null) {
+                                    // Log or ... ?
+                                }
                             }
                         }
                     }
 
+                    // Handle case were player is not found
                     if (player is null) {
                         player = this.m_players.First(x => x.ID == gameEvent.PlayerID);
                         Trace.WriteLine($"{{Warning}} Event message has no player ID \"{gameEvent.AttachedMessage}\" (Using event ID), this may cause problems.", "ReplayMatchData");

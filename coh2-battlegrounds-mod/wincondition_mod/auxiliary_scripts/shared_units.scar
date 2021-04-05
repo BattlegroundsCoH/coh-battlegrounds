@@ -175,6 +175,9 @@ function BG_DeploySquad(player, unit_id)
 
         -- Add events
         Rule_AddSquadEvent(BG_OnSquadDeath, squad, GE_SquadKilled);
+        if crewSquad ~= nil then
+            Rule_AddSquadEvent(BG_OnSquadDeath, crewSquad, GE_SquadKilled);
+        end
 
         -- Was it the local player who spawned this unit?
         if player == Game_GetLocalPlayer() then
@@ -278,9 +281,6 @@ function BG_CallInUnit(unit_data, player, gotopos, spawnfrom)
             -- Apply company data
             BG_ApplyCompanyData(player, crewSquad, temp_crew, unit_data.crew);
 
-            -- Add death registry
-            Rule_AddSquadEvent(BG_OnSquadDeath, crewSquad, GE_SquadKilled);
-
         end
 
     end
@@ -339,7 +339,7 @@ function BG_OnSquadDeath(squad)
     local playerRefID = BG_GetPlayerID(playerOwner);
     local id = Squad_GetGameID(squad);
 
-    -- If not found - dont do anything. (This might be an AI unit) TODO: Also allow for keeping track of AI units, in case of campaigns etc.
+    -- If not found - dont do anything. (This might be an AI unit)
     if _bg_playerData[playerRefID] == nil then
         return;
     end

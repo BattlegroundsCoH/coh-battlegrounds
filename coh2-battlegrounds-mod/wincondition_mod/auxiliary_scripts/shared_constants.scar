@@ -15,6 +15,7 @@ _bg_custom.phase_time_left = 330; -- 5 minutes 30 seconds
 _bg_custom.phase_time = 330;
 _bg_custom.phase_pasued = false;
 _bg_custom.team_voting = {};
+_bg_custom.log_ai = true; -- Will log certain AI events.
 
 ------------------------------------------------------------------------------------
 -- Logging Constants
