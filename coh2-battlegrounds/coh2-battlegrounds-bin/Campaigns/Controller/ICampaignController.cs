@@ -205,7 +205,7 @@ namespace Battlegrounds.Campaigns.Controller {
                 DeploymentPhase phase = DeploymentPhase.PhaseInitial;
                 int count = 0;
                 for (int i = 0; i < units.Count; i++) {
-                    var uBld = new UnitBuilder(units[i], false);
+                    var uBld = new UnitBuilder(units[i], true);
                     uBld.SetDeploymentPhase(phase);
                     count++;
                     if (count > 4 && phase == DeploymentPhase.PhaseInitial) {
@@ -320,7 +320,10 @@ namespace Battlegrounds.Campaigns.Controller {
         protected static bool GlobalEndTurn(ICampaignController controller) {
             if (controller.Turn.EndTurn(out bool wasEndOfRound)) {
                 if (wasEndOfRound) {
-                    controller.Map.EachNode(n => n.EndOfRound());
+                    controller.Map.EachNode(n => {
+                        n.EndOfRound();
+                        controller.GetTeam(n.Owner).AwardPoints(n.Value);
+                    });
                     controller.Map.EachFormation(x => x.EndOfRound());
                     return controller.Events.UpdateVictory();
                 }
@@ -350,11 +353,9 @@ namespace Battlegrounds.Campaigns.Controller {
                     if (nodeIndex > nodes.Count) {
                         nodeIndex = 0;
                     }
-                    // TODO: Make sure we can actually move to node, if no nodes are available, kill remaining.
                 });
 
             }
-
 
         }
 

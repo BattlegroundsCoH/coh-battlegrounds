@@ -10,14 +10,14 @@ namespace Battlegrounds.Campaigns.Models {
     /// </summary>
     public class SingleCampaignTeam : ICampaignTeam {
 
-        private int m_victoryValue;
+        private double m_victoryValue;
         private DistinctList<Regiment> m_reserves;
 
         public CampaignArmyTeam Team { get; }
 
         public ICampaignPlayer[] Players { get; }
 
-        public int VictoryPoints => this.m_victoryValue;
+        public double VictoryPoints => this.m_victoryValue;
 
         /// <summary>
         /// Initialise a new <see cref="SingleCampaignTeam"/> class with a <see cref="CampaignArmyTeam"/> and space for specified amount of players.
@@ -45,6 +45,8 @@ namespace Battlegrounds.Campaigns.Models {
 
         public List<Regiment> GetReserves()
             => this.m_reserves;
+
+        public void AwardPoints(double value) => this.m_victoryValue += value;
 
     }
 

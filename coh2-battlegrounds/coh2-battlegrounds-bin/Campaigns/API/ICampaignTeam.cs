@@ -44,7 +44,7 @@ namespace Battlegrounds.Campaigns.API {
         /// <summary>
         /// Get the amount of victory points the team has.
         /// </summary>
-        int VictoryPoints { get; }
+        double VictoryPoints { get; }
         
         /// <summary>
         /// Create a new <see cref="ICampaignPlayer"/> with specified index, name and index.
@@ -76,7 +76,13 @@ namespace Battlegrounds.Campaigns.API {
         /// Get the undeployed regiments that can be called in.
         /// </summary>
         /// <returns>List of undeployed regiments.</returns>
-        public List<Regiment> GetReserves();
+        List<Regiment> GetReserves();
+        
+        /// <summary>
+        /// Award specified amount of points to the team.
+        /// </summary>
+        /// <param name="value">The amount of points to award.</param>
+        void AwardPoints(double value);
 
         /// <summary>
         /// Get the <see cref="CampaignArmyTeam"/> corresponding to the string name of a faction.
@@ -88,7 +94,7 @@ namespace Battlegrounds.Campaigns.API {
         /// </returns>
         public static CampaignArmyTeam GetArmyTeamFromFaction(string faction)
             => Faction.IsAlliedFaction(faction) ? CampaignArmyTeam.TEAM_ALLIES : CampaignArmyTeam.TEAM_AXIS;
-
+        
     }
 
 }

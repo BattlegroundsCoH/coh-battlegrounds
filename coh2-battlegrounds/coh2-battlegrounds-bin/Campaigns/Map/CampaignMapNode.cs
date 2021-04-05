@@ -81,44 +81,23 @@ namespace Battlegrounds.Campaigns.Map {
             Trace.WriteLine($"Node '{this.NodeName}' has no valid map defined.", nameof(CampaignMapNode));
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="formation"></param>
-        /// <returns></returns>
         public bool CanMoveTo(ICampaignFormation formation) {
             if (this.Occupants.Count + 1 <= this.OccupantCapacity) {
-                // TODO: Check if script allows for it
                 return true;
             } else {
                 return this.Owner != formation.Team;
             }
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="team"></param>
         public void SetOwner(CampaignArmyTeam team) {
             this.Owner = team;
             this.OnOwnershipChange?.Invoke(this, team);
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="value"></param>
         public void SetValue(double value) => this.Value = value;
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="value"></param>
         public void SetAttrition(double value) => this.Attrition = value;
 
-        /// <summary>
-        /// 
-        /// </summary>
         public void EndOfRound() {
             
             // Apply attrition
@@ -130,19 +109,11 @@ namespace Battlegrounds.Campaigns.Map {
 
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="formation"></param>
         public void AddOccupant(ICampaignFormation formation) {
             this.Occupants.Add(formation);
             this.OnOccupantEnter?.Invoke(this, formation);
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="formation"></param>
         public void RemoveOccupant(ICampaignFormation formation) {
             this.Occupants.Remove(formation);
             this.OnOccupantLeave?.Invoke(this, formation);
