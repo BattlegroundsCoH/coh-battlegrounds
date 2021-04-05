@@ -86,14 +86,14 @@ namespace Battlegrounds.Campaigns.Controller {
         }
 
         public bool EndTurn() {
-            bool lastTurn = ICampaignController.GlobalEndTurn(this);
-            if (!lastTurn) {
+            bool canCampaignContinue = ICampaignController.GlobalEndTurn(this);
+            this.OnTurn?.Invoke();
+            if (canCampaignContinue) {
                 if (this.Turn.CurrentTurn != this.m_player.Team.Team) {
                     Coroutine.StartCoroutine(this.m_opponentAI.ProcessTurn());
                 }
             }
-            this.OnTurn?.Invoke();
-            return lastTurn;
+            return canCampaignContinue;
         }
 
         public void StartCampaign() {

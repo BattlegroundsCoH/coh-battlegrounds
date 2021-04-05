@@ -62,6 +62,8 @@ namespace BattlegroundsApp.Views.CampaignViews {
 
         public Visibility CampaignDialogVisible { get; set; } = Visibility.Collapsed;
 
+        public bool CanEndTurn => this.Controller.IsSelfTurn();
+
         public GUIThreadDispatcher ThreadDispatcher => (GUIThreadDispatcher)this.Dispatcher;
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -102,7 +104,7 @@ namespace BattlegroundsApp.Views.CampaignViews {
         }
 
         private void OnTurnOverEvent() {
-            // TODO: Update so end turn is enabled/disabled depending on whose turn it is.
+            this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(this.CanEndTurn)));
             this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(this.CampaignDate)));
         }
 

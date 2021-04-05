@@ -57,6 +57,7 @@
                            Content="{Binding CampaignDate}"
                            />
                     <Button  MaxHeight="30" MaxWidth="90"
+                             IsEnabled="{Binding CanEndTurn}"
                         Name="EndTurnBttn" Click="EndTurnBttn_Click">
                         End Turn
                     </Button>
