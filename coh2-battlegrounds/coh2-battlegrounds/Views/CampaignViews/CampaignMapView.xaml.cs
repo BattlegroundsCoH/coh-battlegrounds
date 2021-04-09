@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
@@ -333,7 +334,7 @@ namespace BattlegroundsApp.Views.CampaignViews {
                 }
 
                 // Create container type
-                CampaignUnitFormationModel cufv = new CampaignUnitFormationModel(displayElement, f) {
+                CampaignUnitFormationModel cufv = new CampaignUnitFormationModel(displayElement, f, this.ResourceContext) {
                     NodeModelFetcher = this.FromNode,
                     UnitModelFetcher = this.FromFormation,
                     ThreadDispatcher = this.ThreadDispatcher,
@@ -363,7 +364,8 @@ namespace BattlegroundsApp.Views.CampaignViews {
             if (isRightclick) {
                 this.NodeRightClicked(node);
             } else {
-                this.Selection.Select(node.Occupants.Select(x => this.FromFormation(x)));
+                this.Selection.Select(this.FromNode(node), true);
+                node.Occupants.ForEach(x => this.Selection.AddToSelection(this.FromFormation(x)));
             }
         }
 

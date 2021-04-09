@@ -247,7 +247,9 @@ namespace Battlegrounds.Campaigns.Organisations {
 
                 // Loop through and pick
                 for (int j = 0; j < remaining; j++) {
-                    squadss.Add(CreateSquad(weighted.Pick(BattlegroundsInstance.RNG), ref campaignUnitID));
+                    if (CreateSquad(weighted.Pick(BattlegroundsInstance.RNG), ref campaignUnitID) is Squad squadResult) {
+                        squadss.Add(squadResult);
+                    }
                 }
                 /*
                 
@@ -275,6 +277,12 @@ namespace Battlegrounds.Campaigns.Organisations {
             UnitBuilder ub = new UnitBuilder();
             ub.SetModGUID(BattlegroundsInstance.BattleGroundsTuningMod.Guid);
             ub.SetBlueprint(unitTemplate.BlueprintName);
+
+            // Make sure the blueprint is valid
+            if (ub.Blueprint is null) {
+                Trace.WriteLine($"Attempt to create unit with invalid sbp '{unitTemplate.BlueprintName}'.", $"{nameof(Army)}::{nameof(CreateSquad)}");
+                return null;
+            }
 
             // Build squad
             Squad squadResult = ub.Build(campaignUnitID++);

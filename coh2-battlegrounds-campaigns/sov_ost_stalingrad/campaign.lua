@@ -39,6 +39,19 @@ campaign = {
             },
             min_players = 1,
             max_players = 4,
+            goals = {
+                ["obj_stalingrad_soviet"] = {
+                    fe_priority = 1,
+                    script_isdone = "obj_stalingrad_soviet_isdone",
+                    script_isfail = "obj_stalingrad_soviet_isfailed",
+                    script_ui = "obj_stalingrad_soviet_updateui",
+                    subgoals = {
+                        ["obj_hold_volga"] = {
+                            script_isfail = "obj_stalingrad_soviet_volga_isfailed"
+                        }
+                    }
+                },
+            }
         },
         ["german"] = {
             fe_army_name = "german_army",
@@ -49,6 +62,17 @@ campaign = {
             },
             min_players = 1,
             max_players = 4,
+            goals = {
+                ["obj_stalingrad_german"] = {
+                    fe_priority = 1,
+                    script_isdone = "obj_stalingrad_german_isdone",
+                    subgoals = {
+                        ["obj_take_volga"] = {
+                            script_isdone = "obj_stalingrad_german_volga_isdone"
+                        }
+                    }
+                },
+            }
         }
     },
     resources = {

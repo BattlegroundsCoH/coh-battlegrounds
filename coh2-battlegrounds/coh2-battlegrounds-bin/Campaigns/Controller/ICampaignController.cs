@@ -33,6 +33,11 @@ namespace Battlegrounds.Campaigns.Controller {
         ICampaignEventManager Events { get; }
 
         /// <summary>
+        /// Get the campaign goal manager.
+        /// </summary>
+        ICampaignGoalManager Goals { get; }
+
+        /// <summary>
         /// Get the script handler for the campaign.
         /// </summary>
         ICampaignScriptHandler Script { get; }

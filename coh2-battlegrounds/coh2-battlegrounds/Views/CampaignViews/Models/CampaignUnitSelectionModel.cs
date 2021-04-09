@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using Battlegrounds.Campaigns.API;
 using Battlegrounds.Functional;
@@ -8,15 +9,29 @@ namespace BattlegroundsApp.Views.CampaignViews.Models {
     
     public class CampaignUnitSelectionModel {
 
+        private ICampaignSelectable m_selectedNode;
         private HashSet<CampaignUnitFormationModel> m_selection;
-        private bool m_isLocked;
+
+        public ObservableCollection<CampaignModelSelectionViewModel> SelectionView { get; set; }
 
         public CampaignUnitFormationModel First => this.m_selection.FirstOrDefault();
 
         public int Size => this.m_selection.Count;
 
         public CampaignUnitSelectionModel() {
+            this.SelectionView = new ObservableCollection<CampaignModelSelectionViewModel>();
             this.m_selection = new HashSet<CampaignUnitFormationModel>();
+        }
+
+        public void Select(ICampaignSelectable model, bool clearSelection) {
+            if (clearSelection) {
+                this.Clear();
+            }
+            if (this.m_selectedNode is not null) {
+                this.SelectionView.Remove(this.SelectionView.FirstOrDefault(x => x.SelectedObject == this.m_selectedNode));
+            }
+            this.m_selectedNode = model;
+            this.SelectionView.Insert(0, new CampaignModelSelectionViewModel(this.m_selectedNode));
         }
 
         public void Select(CampaignUnitFormationModel model) {
@@ -24,18 +39,20 @@ namespace BattlegroundsApp.Views.CampaignViews.Models {
             this.AddToSelection(model);
         }
 
-        public void AddToSelection(CampaignUnitFormationModel model) =>  (!this.m_isLocked).Then(() => this.m_selection.Add(model));
-
-        public void Select(IEnumerable<CampaignUnitFormationModel> model) {
-            if (!this.m_isLocked) {
-                this.Clear();
-                model.ForEach(x => this.m_selection.Add(x));
-            }
+        public void AddToSelection(CampaignUnitFormationModel model) {
+            this.m_selection.Add(model);
+            this.SelectionView.Add(new CampaignModelSelectionViewModel(model));
         }
 
-        public void DeSelect(CampaignUnitFormationModel model) => (!this.m_isLocked).Then(() => this.m_selection.Remove(model));
+        public void DeSelect(CampaignUnitFormationModel model) {
+            this.m_selection.Remove(model);
+            this.SelectionView.Remove(this.SelectionView.FirstOrDefault(x => x.SelectedObject == model));
+        }
 
-        public void Clear() => (!this.m_isLocked).Then(() => this.m_selection.Clear());
+        public void Clear() {
+            this.m_selection.Clear();
+            this.SelectionView.Clear();
+        }
 
         public void InvokeEach(Action<CampaignUnitFormationModel> action) => this.m_selection.ForEach(action);
 
@@ -49,10 +66,6 @@ namespace BattlegroundsApp.Views.CampaignViews.Models {
                 return false;
             }
         }
-
-        public void Lock() => this.m_isLocked = true;
-
-        public void Unlock() => this.m_isLocked = false;
 
         public List<ICampaignFormation> Get() => this.m_selection.Select(x => x.Formation).ToList();
 

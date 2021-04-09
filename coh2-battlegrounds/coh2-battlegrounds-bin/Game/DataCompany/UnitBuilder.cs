@@ -31,6 +31,11 @@ namespace Battlegrounds.Game.DataCompany {
         CompanyBuilder m_builder;
 
         /// <summary>
+        /// Get the current blueprint of the unit.
+        /// </summary>
+        public SquadBlueprint Blueprint => this.m_blueprint;
+
+        /// <summary>
         /// New basic <see cref="UnitBuilder"/> instance of for building a <see cref="Squad"/>.
         /// </summary>
         public UnitBuilder() {

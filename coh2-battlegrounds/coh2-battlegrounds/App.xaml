@@ -11,6 +11,8 @@
              xmlns:renameCopy="clr-namespace:BattlegroundsApp.Dialogs.RenameCopyDialog"
              xmlns:newCampaign="clr-namespace:BattlegroundsApp.Dialogs.NewCampaign"
              xmlns:addUnit="clr-namespace:BattlegroundsApp.Dialogs.AddUnit"
+             xmlns:campaignModels="clr-namespace:BattlegroundsApp.Views.CampaignViews.Models"
+             xmlns:campaignViews="clr-namespace:BattlegroundsApp.Views.CampaignViews"
              Startup="App_Startup"
              ShutdownMode="OnMainWindowClose">
     <Application.Resources>
@@ -40,6 +42,9 @@
         </DataTemplate>
         <DataTemplate DataType="{x:Type addUnit:AddUnitDialogViewModel}">
             <addUnit:AddUnitDilaogView/>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type campaignModels:CampaignModelSelectionViewModel}">
+            <campaignViews:CampaignModelSelectionView/>
         </DataTemplate>
 
         <Style x:Key="MainButtonStyle" TargetType="{x:Type Button}">

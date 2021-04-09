@@ -14,6 +14,17 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Resources\campaign\icon_attrition.png" />
+    <None Remove="Resources\campaign\icon_unittype_air.png" />
+    <None Remove="Resources\campaign\icon_unittype_arty.png" />
+    <None Remove="Resources\campaign\icon_unittype_infantry.png" />
+    <None Remove="Resources\campaign\icon_unittype_support.png" />
+    <None Remove="Resources\campaign\icon_unittype_tank.png" />
+    <None Remove="Resources\campaign\icon_unittype_vehicle.png" />
+    <None Remove="Resources\campaign\icon_vp.png" />
+    <None Remove="Resources\campaign\obj_main.png" />
+    <None Remove="Resources\campaign\obj_secondary.png" />
+    <None Remove="Resources\campaign\obj_star.png" />
     <None Remove="Resources\ingame\aef.png" />
     <None Remove="Resources\ingame\application\app_background.png" />
     <None Remove="Resources\ingame\application\app_button.png" />
@@ -34,6 +45,17 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="Resources\campaign\icon_attrition.png" />
+    <Resource Include="Resources\campaign\icon_unittype_air.png" />
+    <Resource Include="Resources\campaign\icon_unittype_arty.png" />
+    <Resource Include="Resources\campaign\icon_unittype_infantry.png" />
+    <Resource Include="Resources\campaign\icon_unittype_support.png" />
+    <Resource Include="Resources\campaign\icon_unittype_tank.png" />
+    <Resource Include="Resources\campaign\icon_unittype_vehicle.png" />
+    <Resource Include="Resources\campaign\icon_vp.png" />
+    <Resource Include="Resources\campaign\obj_main.png" />
+    <Resource Include="Resources\campaign\obj_secondary.png" />
+    <Resource Include="Resources\campaign\obj_star.png" />
     <Resource Include="Resources\ingame\aef.png" />
     <Resource Include="Resources\ingame\application\app_background.png" />
     <Resource Include="Resources\ingame\application\app_button.png" />
@@ -47,10 +69,6 @@
     <Resource Include="Resources\ingame\soviet.png" />
     <Resource Include="Resources\ingame\unknown_map.png" />
     <Resource Include="Resources\ingame\west_german.png" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Resources\campaign\" />
   </ItemGroup>
 
 </Project>

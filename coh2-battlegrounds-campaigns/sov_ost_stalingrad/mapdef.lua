@@ -8,7 +8,8 @@ map = {
             value = 1, -- Victory Point value
             capacity = 1, -- Max companies per side
             attrition = 0.1, -- The amount of attrition a company suffers
-            map = "" -- The map to play when fighting a battle
+            map = "", -- The map to play when fighting a battle
+            preview = "" -- Display preview
         },
         ["central_train_station"] = {
             u = 600.0 / 1110.0,
@@ -18,7 +19,8 @@ map = {
             value = 1, -- Victory Point value
             capacity = 1, -- Max companies per side
             attrition = 0.1, -- The amount of attrition a company suffers
-            map = "" -- The map to play when fighting a battle
+            map = "", -- The map to play when fighting a battle
+            preview = "" -- Display preview
         },
         ["fallen_soldiers"] = {
             u = 640.0 / 1110.0,
@@ -28,7 +30,8 @@ map = {
             value = 1, -- Victory Point value
             capacity = 1, -- Max companies per side
             attrition = 0.1, -- The amount of attrition a company suffers
-            map = "" -- The map to play when fighting a battle
+            map = "", -- The map to play when fighting a battle
+            preview = "" -- Display preview
         },
         ["southern_advances"] = {
             u = 700.0 / 1110.0,
@@ -38,7 +41,8 @@ map = {
             value = 1, -- Victory Point value
             capacity = 2, -- Max companies per side
             attrition = 0.1, -- The amount of attrition a company suffers
-            map = "4p_rails_and_metal" -- The map to play when fighting a battle
+            map = "4p_rails_and_metal", -- The map to play when fighting a battle
+            preview = "" -- Display preview
         },
         ["southern_suburbs"] = {
             u = 694.0 / 1110.0,
@@ -48,7 +52,8 @@ map = {
             value = 1, -- Victory Point value
             capacity = 1, -- Max companies per side
             attrition = 0.1, -- The amount of attrition a company suffers
-            map = "2p_coh2_resistance" -- The map to play when fighting a battle
+            map = "2p_coh2_resistance", -- The map to play when fighting a battle
+            preview = "" -- Display preview
         },
         ["central_approach"] = {
             u = 520.0 / 1110.0,
@@ -61,7 +66,8 @@ map = {
             map = {
                 { scenario = "8p_coh2_city_17_spring_frontline", winter = false },
                 { scenario = "8p_coh2_city_17_winter_battlefield", winter = true },
-            }
+            },
+            preview = "",
         },
         ["red_october_plant"] = {
             u = 374.0 / 1110.0,
@@ -71,7 +77,8 @@ map = {
             value = 1, -- Victory Point value
             capacity = 1, -- Max companies per side
             attrition = 0.1, -- The amount of attrition a company suffers
-            map = "" -- The map to play when fighting a battle
+            map = "", -- The map to play when fighting a battle
+            preview = "" -- Display preview
         },
         ["tractor_plant"] = {
             u = 150.0 / 1110.0,
@@ -81,7 +88,8 @@ map = {
             value = 1, -- Victory Point value
             capacity = 1, -- Max companies per side
             attrition = 0.1, -- The amount of attrition a company suffers
-            map = "8p_tank_factory" -- The map to play when fighting a battle
+            map = "8p_tank_factory", -- The map to play when fighting a battle
+            preview = "" -- Display preview
         },
         ["barricades_plant"] = {
             u = 300.0 / 1110.0,
@@ -91,7 +99,8 @@ map = {
             value = 1, -- Victory Point value
             capacity = 1, -- Max companies per side
             attrition = 0.1, -- The amount of attrition a company suffers
-            map = "" -- The map to play when fighting a battle
+            map = "", -- The map to play when fighting a battle
+            preview = "" -- Display preview
         },
         ["pavlovs_house"] = {
             u = 594.0 / 1110.0,
@@ -101,7 +110,8 @@ map = {
             value = 1, -- Victory Point value
             capacity = 1, -- Max companies per side
             attrition = 0.1, -- The amount of attrition a company suffers
-            map = "6p_coh2_pavlov_s_house" -- The map to play when fighting a battle
+            map = "6p_coh2_pavlov_s_house", -- The map to play when fighting a battle
+            preview = "" -- Display preview
         },
         ["volga_crossing"] = {
             u = 485.0 / 1110.0,
@@ -112,7 +122,8 @@ map = {
             capacity = 1, -- Max companies per side
             attrition = 0.1, -- The amount of attrition a company suffers
             filter = "CanCrossVolga", -- Pathfinding filter function
-            map = "6p_coh2_pavlov_s_house" -- The map to play when fighting a battle
+            map = "6p_coh2_pavlov_s_house", -- The map to play when fighting a battle
+            preview = "" -- Display preview
         },
         ["soviet_entrance"] = {
             u = 510.0 / 1110.0,
@@ -122,7 +133,8 @@ map = {
             value = 1, -- Victory Point value
             capacity = 8, -- Max companies per side
             attrition = 0.1, -- The amount of attrition a company suffers
-            map = "" -- The map to play when fighting a battle
+            map = "", -- The map to play when fighting a battle
+            preview = "" -- Display preview
         },
         ["timberyard"] = {
             u = 1004.0 / 1110.0,
@@ -132,7 +144,8 @@ map = {
             value = 1, -- Victory Point value
             capacity = 2, -- Max companies per side
             attrition = 0.1, -- The amount of attrition a company suffers
-            map = "timberyard" -- The map to play when fighting a battle
+            map = "timberyard", -- The map to play when fighting a battle
+            preview = "" -- Display preview
         },
         ["south_german_entrance"] = {
             u = 1.0,
@@ -142,7 +155,8 @@ map = {
             value = 1, -- Victory Point value
             capacity = 8, -- Max companies per side
             attrition = 0.1, -- The amount of attrition a company suffers
-            map = "divide map" -- The map to play when fighting a battle
+            map = "divide map", -- The map to play when fighting a battle
+            preview = "" -- Display preview
         },
         ["south_west_german_entrance"] = {
             u = 688.0 / 1110.0,
@@ -152,7 +166,8 @@ map = {
             value = 1, -- Victory Point value
             capacity = 8, -- Max companies per side
             attrition = 0.1, -- The amount of attrition a company suffers
-            map = "divide map" -- The map to play when fighting a battle
+            map = "divide map", -- The map to play when fighting a battle
+            preview = "" -- Display preview
         },
         ["central_west_german_entrance"] = {
             u = 410.0 / 1110.0,
@@ -162,7 +177,8 @@ map = {
             value = 1, -- Victory Point value
             capacity = 8, -- Max companies per side
             attrition = 0.1, -- The amount of attrition a company suffers
-            map = "divide map" -- The map to play when fighting a battle
+            map = "divide map", -- The map to play when fighting a battle
+            preview = "" -- Display preview
         },
         ["northern_german_entrance"] = {
             u = 0.0,
@@ -172,7 +188,8 @@ map = {
             value = 1, -- Victory Point value
             capacity = 8, -- Max companies per side
             attrition = 0.1, -- The amount of attrition a company suffers
-            map = "divide map" -- The map to play when fighting a battle
+            map = "divide map", -- The map to play when fighting a battle
+            preview = "" -- Display preview
         },
         ["workers_settlement"] = {
             u = 121.0 / 1110.0,
@@ -182,7 +199,8 @@ map = {
             value = 1, -- Victory Point value
             capacity = 1, -- Max companies per side
             attrition = 0.1, -- The amount of attrition a company suffers
-            map = "anotherstalingrad" -- The map to play when fighting a battle
+            map = "anotherstalingrad", -- The map to play when fighting a battle
+            preview = "" -- Display preview
         },
         ["rail_exit"] = {
             u = 215.0 / 1110.0,
@@ -192,9 +210,11 @@ map = {
             value = 1, -- Victory Point value
             capacity = 4, -- Max companies per side
             attrition = 0.1, -- The amount of attrition a company suffers
-            map = "8p_coh2_thesteppes_frontline" -- The map to play when fighting a battle
+            map = "8p_coh2_thesteppes_frontline", -- The map to play when fighting a battle
+            preview = "" -- Display preview
         }
         -- TODO: Mamaev Kurgan (The mountain in the middle - sorta splitting the city in two)
+        -- TODO: Second crossing across the volga (and perhaps another node near the HQ'ish on the other side of the volga)
     },
     transitions = {
         { "central_train_station", "fallen_soldiers", "binary" }, -- Binary = a <-> b | Unary = a -> b

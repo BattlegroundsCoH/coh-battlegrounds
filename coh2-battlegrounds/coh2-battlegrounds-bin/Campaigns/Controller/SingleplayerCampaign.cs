@@ -40,6 +40,7 @@ namespace Battlegrounds.Campaigns.Controller {
         private HashSet<string> m_allowedSummerAtmospheres;
         private HashSet<string> m_allowedWinterAtmospheres;
 
+        private ICampaignGoalManager m_goalManager;
         private ICampaignEventManager m_eventManager;
         private ICampaignMap m_map;
         private ICampaignScriptHandler m_scriptHandler;
@@ -51,6 +52,8 @@ namespace Battlegrounds.Campaigns.Controller {
         private CampaignMapAI m_opponentAI;
 
         private Localize m_locale;
+
+        public ICampaignGoalManager Goals => this.m_goalManager;
 
         public ICampaignEventManager Events => this.m_eventManager;
 
@@ -491,6 +494,10 @@ namespace Battlegrounds.Campaigns.Controller {
                 package.CampaignTurnData.End
             }, package.CampaignTurnData.TurnLength);
             campaign.Turn.SetWinterDates(new[] { package.CampaignWeatherData.WinterStart, package.CampaignWeatherData.WinterEnd });
+
+            // Create goals
+            campaign.m_goalManager = new SingleplayerCampaignGoalManager();
+            // TODO: Read goals
 
             // Set atmospheres
             campaign.m_allowedSummerAtmospheres = package.CampaignWeatherData.SummerAtmospheres;

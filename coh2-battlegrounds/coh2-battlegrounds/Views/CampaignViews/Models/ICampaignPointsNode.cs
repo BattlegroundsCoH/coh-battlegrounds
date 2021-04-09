@@ -3,7 +3,7 @@ using Battlegrounds.Campaigns.API;
 
 namespace BattlegroundsApp.Views.CampaignViews.Models {
     
-    public interface ICampaignPointsNode : ICampaignMapVisual {
+    public interface ICampaignPointsNode : ICampaignMapVisual, ICampaignSelectable {
 
         ICampaignMapNode Node { get; }
 

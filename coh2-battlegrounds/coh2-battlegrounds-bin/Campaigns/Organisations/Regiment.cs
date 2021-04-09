@@ -31,6 +31,12 @@ namespace Battlegrounds.Campaigns.Organisations {
         private Regiment.Company[] m_companies;
         private int m_initialCompanyCount;
 
+        public const string UT_INFANTRY = "UT_INFANTRY";
+        public const string UT_SUPPORT = "UT_SUPPORT";
+        public const string UT_VEHICLE = "UT_VEHICLE";
+        public const string UT_TANK = "UT_TANK";
+        public const string UT_AIR = "UT_AIR";
+
         public LocaleKey Name { get; }
 
         public string RegimentType { get; }
@@ -80,6 +86,21 @@ namespace Battlegrounds.Campaigns.Organisations {
                 }
             });
             return any;
+        }
+
+        public int CountType(string uType) {
+            int count = 0;
+            this.EachCompany(x => {
+                count += uType switch {
+                    UT_INFANTRY => x.Units.Count(x => x.SBP.IsInfantry),
+                    UT_SUPPORT => x.Units.Count(x => x.SBP.IsTeamWeapon),
+                    UT_VEHICLE => x.Units.Count(x => x.SBP.IsVehicle),
+                    UT_TANK => x.Units.Count(x => x.SBP.IsArmour),
+                    UT_AIR => x.Units.Count(x => x.SBP.IsVehicleCrew), // TODO: Fix
+                    _ => 0
+                };
+            });
+            return count;
         }
 
     }

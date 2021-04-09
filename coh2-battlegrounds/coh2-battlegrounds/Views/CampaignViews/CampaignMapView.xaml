@@ -9,11 +9,11 @@
              d:DesignHeight="600" d:DesignWidth="1000">
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition MaxWidth="290" MinWidth="290"/>
+            <ColumnDefinition MaxWidth="360" MinWidth="360"/>
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition MaxHeight="76" MinHeight="76"/>
+            <RowDefinition MaxHeight="64" MinHeight="64"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
 
@@ -21,11 +21,13 @@
         <Grid Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2">
 
             <Grid.ColumnDefinitions>
-                <ColumnDefinition MinWidth="290" MaxWidth="290"/>
+                <ColumnDefinition MinWidth="360" MaxWidth="360"/>
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
 
-            <Button Grid.Column="0" Name="LeaveAndSaveButton" Click="LeaveAndSaveButton_Click">
+            <Button Grid.Column="0" Name="LeaveAndSaveButton" 
+                    Margin="4, 15"
+                    Click="LeaveAndSaveButton_Click">
                 Leave Campaign
             </Button>
 
@@ -37,18 +39,9 @@
 
                 <DockPanel>
                     <Label DockPanel.Dock="Top">Available Armies</Label>
-                    <StackPanel Orientation="Horizontal">
-                        <Image Name="DeployableDivisionIcon1" Width="48" Height="48"></Image>
-                        <Image Name="DeployableDivisionIcon2" Width="48" Height="48"></Image>
-                        <Image Name="DeployableDivisionIcon3" Width="48" Height="48"></Image>
-                        <Image Name="DeployableDivisionIcon4" Width="48" Height="48"></Image>
-                        <Image Name="DeployableDivisionIcon5" Width="48" Height="48"></Image>
-                        <Image Name="DeployableDivisionIcon6" Width="48" Height="48"></Image>
-                        <Image Name="DeployableDivisionIcon7" Width="48" Height="48"></Image>
-                        <Image Name="DeployableDivisionIcon8" Width="48" Height="48"></Image>
-                        <Image Name="DeployableDivisionIcon9" Width="48" Height="48"></Image>
-                        <Image Name="DeployableDivisionIcon10" Width="48" Height="48"></Image>
-                    </StackPanel>
+                    <ItemsControl>
+                        
+                    </ItemsControl>
                 </DockPanel>
 
                 <StackPanel Grid.Column="1"
@@ -70,9 +63,9 @@
         <!-- Selection View -->
         <Grid Grid.Row="1" Grid.Column="0">
             <Grid.RowDefinitions>
+                <RowDefinition MinHeight="60" MaxHeight="120"/>
                 <RowDefinition/>
-                <RowDefinition/>
-                <RowDefinition/>
+                <RowDefinition MaxHeight="240" MinHeight="80"/>
             </Grid.RowDefinitions>
             
             <!-- Campaign View -->
@@ -85,23 +78,52 @@
                     <ColumnDefinition/>
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
-                    <RowDefinition/>
+                    <RowDefinition MinHeight="24" MaxHeight="24"/>
                     <RowDefinition/>
                 </Grid.RowDefinitions>
                 
                 <!-- Row 1-->
                 
-                <Image Grid.Column="0" Width="32" Height="32"/>
+                <Image Grid.Column="0" Width="24" Height="24"/>
                 <Label Grid.Column="1" Content="{Binding CampaignAlliesPoints}"/>
                 <Label Grid.Column="2">vs</Label>
                 <Label Grid.Column="3" Content="{Binding CampaignAxisPoints}"/>
-                <Image Grid.Column="4" Width="32" Height="32"/>
+                <Image Grid.Column="4" Width="24" Height="24"/>
 
+                <!-- Row 2-->
+                <DockPanel Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="5">
+                    <Label DockPanel.Dock="Top" Content="Objectives:"/>
+                    <ScrollViewer VerticalScrollBarVisibility="Auto">
+                        <ItemsControl>
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <StackPanel>
+                                        <WrapPanel>
+                                            <Image Source="pack://application:,,,/Resources/campaign/obj_main.png"/>
+                                            <Label Content="{Binding ObjectiveText}"/>
+                                        </WrapPanel>
+                                        <ItemsControl>
+                                            <ItemsControl.ItemTemplate>
+                                                <DataTemplate>
+                                                    <WrapPanel>
+                                                        <Image Source="pack://application:,,,/Resources/campaign/obj_secondary.png"/>
+                                                        <Label Content="{Binding ObjectiveText}"/>
+                                                    </WrapPanel>
+                                                </DataTemplate>
+                                            </ItemsControl.ItemTemplate>
+                                        </ItemsControl>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </ScrollViewer>
+                </DockPanel>
+                
             </Grid>
             
             <!-- Selection View -->
-            
-            
+            <ItemsControl Grid.Row="1" Margin="2" ItemsSource="{Binding Selection.SelectionView}"/>
+
             <!-- Chat View -->
             <chatting:ChatView x:Name="CampaignChat" Grid.Row="2"/>
 

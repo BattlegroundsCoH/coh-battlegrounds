@@ -22,6 +22,10 @@ namespace BattlegroundsApp.Views.CampaignViews.Models {
 
         public Func<ICampaignFormation, CampaignUnitFormationModel> ModelFromFormation { get; init; }
 
+        public string Title => this.Node.NodeName;
+
+        public string Description => $"Owned by {this.Node.Owner}";
+
         private double m_formationXOffset;
         private double m_formationYOffset;
 
@@ -125,6 +129,15 @@ namespace BattlegroundsApp.Views.CampaignViews.Models {
                 tuple.y += ny;
             }
             return tuple;
+        }
+
+        public CampaignSelectableInfoSection[] GetInfoSections() {
+            CampaignSelectableInfoSection[] sections = new CampaignSelectableInfoSection[] { 
+                new CampaignSelectableInfoSection(this.ResourceContext.GetResource($"{this.Node.NodeName}_preview"), 0, 0, string.Empty),
+                new CampaignSelectableInfoSection(this.ResourceContext.GetResource("victory_points"), 18, 18, $"{this.Node.Value} Victory Points", "Victory Points generated each turn."),
+                new CampaignSelectableInfoSection(this.ResourceContext.GetResource("attrition_value"), 18, 18, $"{this.Node.Attrition} Attrition Value", "Attrition suffered in each turn."),
+            };
+            return sections;
         }
 
     }

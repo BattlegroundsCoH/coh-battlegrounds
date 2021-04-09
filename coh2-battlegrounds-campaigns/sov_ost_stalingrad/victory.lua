@@ -55,3 +55,26 @@ end
 function DoesAxisOwnCity()
     return Team_OwnsAll(TEAM_AXIS, __stalingradNodes);
 end
+
+function obj_stalingrad_soviet_isdone()
+    return false;
+end
+
+function obj_stalingrad_soviet_isfailed()
+    return false;
+end
+
+function obj_stalingrad_soviet_updateui()
+end
+
+function obj_stalingrad_soviet_volga_isfailed()
+    return false;
+end
+
+function obj_stalingrad_german_isdone()
+    return false;
+end
+
+function obj_stalingrad_german_volga_isdone()
+    return false;
+end
