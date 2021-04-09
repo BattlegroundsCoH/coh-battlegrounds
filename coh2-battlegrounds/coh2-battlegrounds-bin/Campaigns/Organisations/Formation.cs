@@ -1,7 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Battlegrounds.Campaigns.API;
+using Battlegrounds.Game.Gameplay;
 using Battlegrounds.Lua;
+using Battlegrounds.Util.Lists;
 
 namespace Battlegrounds.Campaigns.Organisations {
     
@@ -15,6 +18,7 @@ namespace Battlegrounds.Campaigns.Organisations {
         private ICampaignMapNode m_location;
         private int m_moveDistance;
         private int m_maxMoveDistance;
+        private int m_deployTime;
 
         /// <summary>
         /// Get the divisions represented in the formation.
@@ -49,6 +53,8 @@ namespace Battlegrounds.Campaigns.Organisations {
             this.m_regiments = new List<Regiment>();
             this.m_moveDistance = 1;
             this.m_maxMoveDistance = 1;
+            this.m_path = new List<ICampaignMapNode>();
+            this.m_deployTime = 0;
         }
 
         /// <summary>
@@ -90,13 +96,43 @@ namespace Battlegrounds.Campaigns.Organisations {
         /// Set the list of destinations for the formation and move max capacity.
         /// </summary>
         /// <param name="nodes">The node destinations.</param>
-        public void SetNodeDestinations(List<ICampaignMapNode> nodes) => this.m_path = nodes;
+        public void SetNodeDestinations(List<ICampaignMapNode> nodes) {
+            this.m_path.Clear();
+            this.m_path.AddRange(nodes);
+        }
 
         /// <summary>
         /// Applies attrition to the formation.
         /// </summary>
         /// <param name="attrition">The amount of attrition to apply.</param>
         public void ApplyAttrition(double attrition) {
+
+            // Get modified attrition
+            double modifiedAttrition = attrition * this.Node.Occupants.Count;
+            modifiedAttrition = Math.Log10((this.m_regiments.Count / modifiedAttrition) + this.m_deployTime);
+
+            // Determine amount of units to 'off'.
+            int killSquads = (int)Math.Ceiling(modifiedAttrition);
+
+            // Loop through amount
+            for (int i = 0; i < killSquads; i++) {
+
+                // Find random regiment
+                var regiment = this.m_regiments[BattlegroundsInstance.RNG.Next(0, this.m_regiments.Count)];
+
+                // Select company
+                var company = regiment.RandomCompany(BattlegroundsInstance.RNG);
+
+                // Select squad
+                var weighted = company.Units.ToWeightedList(s => 1.0 - (s.VeterancyRank / 5.1));
+
+                // Pick random
+                var pick = weighted.Pick(BattlegroundsInstance.RNG);
+
+                // Remove the picked unit
+                company.Units.Remove(pick);
+
+            }
 
         }
 
@@ -137,9 +173,8 @@ namespace Battlegrounds.Campaigns.Organisations {
         /// Remove all regiments in list.
         /// </summary>
         /// <param name="regiments">The list of regiments to remove.</param>
-        public void RemoveRegiment(List<Regiment> regiments) {
-
-        }
+        public void RemoveRegiment(List<Regiment> regiments)
+            => this.m_regiments.RemoveAll(x => regiments.Contains(x));
 
         /// <summary>
         /// Split the <see cref="Formation"/> into two smaller formations.
@@ -233,6 +268,7 @@ namespace Battlegrounds.Campaigns.Organisations {
 
             // Reset max move distance
             this.m_moveDistance = this.m_maxMoveDistance;
+            this.m_deployTime++;
 
             // Apply attrition
             this.ApplyAttrition(this.Node.Attrition);

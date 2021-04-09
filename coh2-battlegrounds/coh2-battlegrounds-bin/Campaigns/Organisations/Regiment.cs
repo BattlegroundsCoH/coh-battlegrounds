@@ -103,6 +103,9 @@ namespace Battlegrounds.Campaigns.Organisations {
             return count;
         }
 
+        public Company RandomCompany(Random random)
+            => this.m_companies[random.Next(0, this.m_companies.Length)];
+
     }
 
 }

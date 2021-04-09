@@ -123,6 +123,7 @@ namespace BattlegroundsApp.Views.CampaignViews.Models {
             }
 
             return infos.ToArray();
+
         }
 
     }

@@ -83,6 +83,45 @@ namespace Battlegrounds.Util.Lists {
             return pick;
         }
 
+        /// <summary>
+        /// Get a copy of the <see cref="WeightedList{T}"/> as <see cref="List{T}"/>.
+        /// </summary>
+        /// <remarks>
+        /// This will drop the weights.
+        /// </remarks>
+        /// <returns>A <see cref="List{T}"/> consisting of elements from the <see cref="WeightedList{T}"/>.</returns>
+        public List<T> ToList() {
+            List<T> elements = new List<T>(this.Count);
+            var e = this.GetEnumerator();
+            while (e.MoveNext()) {
+                elements.Add(e.Current.Key);
+            }
+            return elements;
+        }
+
+    }
+
+    /// <summary>
+    /// Static helper class for offering extension methods related to the <see cref="WeightedList{T}"/> class.
+    /// </summary>
+    public static class WeightedListExtension {
+
+        /// <summary>
+        /// Convert <see cref="IEnumerable{T}"/> to a weighted list where each element in <paramref name="enumerable"/> is weighted by <paramref name="weightFunction"/>.
+        /// </summary>
+        /// <typeparam name="T">The generic object that is to be weighted.</typeparam>
+        /// <param name="enumerable">The enumerable to convert into a weighted list.</param>
+        /// <param name="weightFunction">The weight function to apply on each element in <paramref name="enumerable"/></param>
+        /// <returns>A <see cref="WeightedList{T}"/> consisting of <paramref name="enumerable"/> elements.</returns>
+        public static WeightedList<T> ToWeightedList<T>(this IEnumerable<T> enumerable, Func<T,double> weightFunction) {
+            var e = enumerable.GetEnumerator();
+            WeightedList<T> list = new WeightedList<T>();
+            while (e.MoveNext()) {
+                list.Add(e.Current, weightFunction(e.Current));
+            }
+            return list;
+        }
+
     }
 
 }
