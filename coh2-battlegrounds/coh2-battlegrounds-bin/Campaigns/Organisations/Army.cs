@@ -183,7 +183,7 @@ namespace Battlegrounds.Campaigns.Organisations {
                                 $"{nameof(Army)}::{nameof(NewDivision)}");
                         }
                     }
-                    return new LuaNil(); // "Continue"
+                    return LuaNil.Nil; // "Continue"
                 });
 
             });

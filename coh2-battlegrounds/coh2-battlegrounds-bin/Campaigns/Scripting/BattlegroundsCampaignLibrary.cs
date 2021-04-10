@@ -64,7 +64,7 @@ namespace Battlegrounds.Campaigns.Scripting {
                 if ((v as LuaUserObject).GetObject<ICampaignMapNode>().Owner != team) {
                     return new LuaBool(false);
                 } else {
-                    return new LuaNil();
+                    return LuaNil.Nil;
                 }
             });
             if (result is LuaNil) {

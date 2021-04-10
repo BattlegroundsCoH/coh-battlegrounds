@@ -3,6 +3,8 @@ using Battlegrounds.Lua;
 using Battlegrounds.Lua.Runtime;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
+using static Battlegrounds.Lua.LuaNil;
+
 namespace coh2_battlegrounds_bin_tests.LuaLib {
     
     [TestClass]
@@ -18,16 +20,16 @@ namespace coh2_battlegrounds_bin_tests.LuaLib {
 
         [TestMethod]
         public void CanPushElement() {
-            stack.Push(new LuaNil());
+            stack.Push(Nil);
             Assert.AreEqual(1, stack.Top);
             Assert.AreEqual(true, stack.Any);
         }
 
         [TestMethod]
         public void CanPopElement() {
-            stack.Push(new LuaNil());
+            stack.Push(Nil);
             LuaValue var = stack.Pop();
-            Assert.AreEqual(new LuaNil(), var);
+            Assert.AreEqual(Nil, var);
             Assert.AreEqual(0, stack.Top);
             Assert.AreEqual(false, stack.Any);
         }
@@ -45,46 +47,46 @@ namespace coh2_battlegrounds_bin_tests.LuaLib {
 
         [TestMethod]
         public void CanPopMultipleElements() {
-            stack.Push(new LuaNil());
+            stack.Push(Nil);
             stack.Push(new LuaBool(true));
             stack.Push(new LuaBool(false));
             LuaValue[] values = stack.Pop(3);
             Assert.AreEqual(new LuaBool(false), values[0]);
             Assert.AreEqual(new LuaBool(true), values[1]);
-            Assert.AreEqual(new LuaNil(), values[2]);
+            Assert.AreEqual(Nil, values[2]);
             Assert.AreEqual(0, stack.Top);
             Assert.AreEqual(false, stack.Any);
         }
 
         [TestMethod]
         public void CanPopMultipleElementsWithNil() {
-            stack.Push(new LuaNil());
+            stack.Push(Nil);
             stack.Push(new LuaBool(true));
             stack.Push(new LuaBool(false));
             LuaValue[] values = stack.Pop(5);
             Assert.AreEqual(new LuaBool(false), values[0]);
             Assert.AreEqual(new LuaBool(true), values[1]);
-            Assert.AreEqual(new LuaNil(), values[2]);
-            Assert.AreEqual(new LuaNil(), values[3]);
-            Assert.AreEqual(new LuaNil(), values[4]);
+            Assert.AreEqual(Nil, values[2]);
+            Assert.AreEqual(Nil, values[3]);
+            Assert.AreEqual(Nil, values[4]);
             Assert.AreEqual(0, stack.Top);
             Assert.AreEqual(false, stack.Any);
         }
         [TestMethod]
         public void WillIncreaseCapacity() {
-            stack.Push(new LuaNil());
-            stack.Push(new LuaNil());
-            stack.Push(new LuaNil());
-            stack.Push(new LuaNil());
-            stack.Push(new LuaNil());
-            stack.Push(new LuaNil());
-            stack.Push(new LuaNil());
+            stack.Push(Nil);
+            stack.Push(Nil);
+            stack.Push(Nil);
+            stack.Push(Nil);
+            stack.Push(Nil);
+            stack.Push(Nil);
+            stack.Push(Nil);
             Assert.AreEqual(7, stack.Top);
             Assert.AreEqual(8, stack.Capacity);
-            stack.Push(new LuaNil());
+            stack.Push(Nil);
             Assert.AreEqual(8, stack.Top);
             Assert.AreEqual(16, stack.Capacity);
-            stack.Push(new LuaNil());
+            stack.Push(Nil);
             Assert.AreEqual(9, stack.Top);
             Assert.AreEqual(16, stack.Capacity);
         }
@@ -110,7 +112,7 @@ namespace coh2_battlegrounds_bin_tests.LuaLib {
             stack.Push(new LuaNumber(0));
             Assert.AreEqual(true, stack.Any);
             Assert.AreEqual(new LuaNumber(0), stack.Pop());
-            Assert.AreEqual(new LuaNil(), stack.PopOrNil());
+            Assert.AreEqual(Nil, stack.PopOrNil());
             stack.Unlock();
             Assert.AreEqual(new LuaNumber(1), stack.Pop());
         }

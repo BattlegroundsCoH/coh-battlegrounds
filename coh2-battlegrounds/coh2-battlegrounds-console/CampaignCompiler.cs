@@ -15,6 +15,8 @@ using Battlegrounds.Util;
 using CampaignArmies = System.Collections.Generic.List<coh2_battlegrounds_console.CampaignCompiler.CampaignArmy>;
 using CampaignResources = System.Collections.Generic.List<coh2_battlegrounds_console.CampaignCompiler.CampaignResource>;
 
+using static Battlegrounds.Lua.LuaNil;
+
 namespace coh2_battlegrounds_console {
     
     public static class CampaignCompiler {
@@ -57,6 +59,19 @@ namespace coh2_battlegrounds_console {
             public HashSet<string> summerAtmospheres;
         }
 
+        internal class CampaignArmyGoal {
+            public LocaleKey name;
+            public LocaleKey desc;
+            public int priority;
+            public bool hidden;
+            public CampaignArmyGoal[] subGoals;
+            public string ondone;
+            public string onfail;
+            public string onui;
+            public string ontrigger;
+            public byte goalType;
+        }
+
         internal class CampaignArmy {
             public string army;
             public int min;
@@ -64,6 +79,7 @@ namespace coh2_battlegrounds_console {
             public LocaleKey name;
             public LocaleKey desc;
             public LuaTable armyComposition;
+            public CampaignArmyGoal[] goals;
         }
         
         public static void Compile(string dir) {
@@ -78,6 +94,9 @@ namespace coh2_battlegrounds_console {
             settingsState._G["UNARY"] = LuaMarshal.ToLuaValue("unary");
             settingsState._G["TEAM_AXIS"] = LuaMarshal.ToLuaValue("axis");
             settingsState._G["TEAM_ALLIES"] = LuaMarshal.ToLuaValue("allies");
+            settingsState._G["OT_PRIMARY"] = 0;
+            settingsState._G["OT_SECONDARY"] = 1;
+            settingsState._G["OT_SPECIAL"] = 2;
 
             // Verify file exists
             string settingsFile = Path.Combine(dir, "campaign.lua");
@@ -108,9 +127,8 @@ namespace coh2_battlegrounds_console {
                             }
                             break;
                         case "armies":
-                            LuaState armyReader = new LuaState();
                             if (v is LuaTable t) {
-                                ParseArmies(t, dir, armyReader, campaignArmies);
+                                ParseArmies(t, dir, campaignArmies);
                             }
                             break;
                         case "resources":
@@ -303,6 +321,61 @@ namespace coh2_battlegrounds_console {
                     bw.Write(0);
                 }
 
+                // Method for recursively write nested goals
+                void WriteGoals(CampaignArmyGoal[] goals) {
+
+                    // Write script function names if any.
+                    void WriteIfFlagged(byte flag, byte mask, string text) {
+                        if ((flag & mask) != 0) {
+                            byte[] bytes = Encoding.Unicode.GetBytes(text);
+                            bw.Write(bytes.Length);
+                            bw.Write(bytes);
+                        }
+                    }
+
+                    // Write goals
+                    byte goalCount = (byte)(goals?.Length ?? 0);
+                    bw.Write(goalCount);
+                    for (byte i = 0; i < goalCount; i++) {
+
+                        // Get unicode text ID
+                        byte[] goalTitle = goals[i].name.LocaleID.Encode(Encoding.Unicode);
+                        byte[] goalDesc = goals[i].desc.LocaleID.Encode(Encoding.Unicode);
+
+                        // Write visual data
+                        bw.Write(goalTitle.Length);
+                        bw.Write(goalDesc.Length);
+                        bw.Write(goals[i].priority);
+                        bw.Write(goals[i].hidden);
+
+                        // Write bytes
+                        bw.Write(goalTitle);
+                        bw.Write(goalDesc);
+
+                        // Write script flag
+                        byte hasFail = (byte)(string.IsNullOrEmpty(goals[i].onfail) ? 0x0 : 0x1);
+                        byte hasDone = (byte)(string.IsNullOrEmpty(goals[i].ondone) ? 0x0 : 0x1);
+                        byte hasUI = (byte)(string.IsNullOrEmpty(goals[i].onui) ? 0x0 : 0x1);
+                        byte hasTrigger = (byte)(string.IsNullOrEmpty(goals[i].ontrigger) ? 0x0 : 0x1);
+                        byte scriptFlag = (byte)((hasFail << 0) | (hasDone << 1) | (hasUI << 2) | (hasTrigger << 3) | (goals[i].goalType << 4));
+                        bw.Write(scriptFlag);
+
+                        // Write names if flagged
+                        WriteIfFlagged(scriptFlag, 0b_0001, goals[i].onfail);
+                        WriteIfFlagged(scriptFlag, 0b_0010, goals[i].ondone);
+                        WriteIfFlagged(scriptFlag, 0b_0100, goals[i].onui);
+                        WriteIfFlagged(scriptFlag, 0b_1000, goals[i].ontrigger);
+
+                        // Call recursively to write subgoals.
+                        WriteGoals(goals[i].subGoals);
+
+                    }
+
+                }
+
+                // Write goals
+                WriteGoals(x.goals);
+
             });
 
             // Write map definition table
@@ -409,7 +482,7 @@ namespace coh2_battlegrounds_console {
             return false;
         }
 
-        private static void ParseArmies(LuaTable lTable, string dir, LuaState armyReadState, List<CampaignArmy> armies) {
+        private static void ParseArmies(LuaTable lTable, string dir, CampaignArmies armies) {
             lTable.Pairs((k, v) => {
                 if (v is LuaTable table) {
                     if (Faction.FromName(k.Str()) is Faction) { // Verify it's a faction
@@ -422,19 +495,48 @@ namespace coh2_battlegrounds_console {
                         };
                         if (table["army_file"] is LuaString armyfile) {
                             string readfrom = Path.Combine(dir, armyfile.Str());
-                            if (LuaVM.DoFile(armyReadState, readfrom) is LuaNil) {
-                                if (armyReadState._G["army"] is LuaTable armyTable) {
+                            var state = new LuaState();
+                            if (LuaVM.DoFile(state, readfrom) is LuaNil) {
+                                if (state._G["army"] is LuaTable armyTable) {
                                     army.armyComposition = armyTable;
                                 } else {
                                     Console.WriteLine($"Invalid army'{k.Str()}' (Missing global lua table 'army').");
                                     return;
                                 }
                             } else {
-                                Console.WriteLine(armyReadState.GetError());
+                                Console.WriteLine(state.GetError());
                             }
                             armies.Add(army);
                         } else {
                             Console.WriteLine($"Invalid army'{k.Str()}' (Missing army data).");
+                        }
+                        static CampaignArmyGoal[] ReadGoals(LuaTable goals) {
+                            CampaignArmyGoal[] result = new CampaignArmyGoal[goals.Size];
+                            for (int i = 0; i < result.Length; i++) {
+                                var kv = goals.KeyValueByRawIndex(i);
+                                var vt = kv.Value as LuaTable;
+                                result[i] = new CampaignArmyGoal() {
+                                    name = new LocaleKey(kv.Key.Str()),
+                                    desc = new LocaleKey($"{kv.Key.Str()}_desc"),
+                                    priority = (vt.GetOrDefault("fe_priority", 0) as LuaNumber)?.ToInt() ?? 0,
+                                    hidden = (vt.GetOrDefault("hidden", false) as LuaBool)?.IsTrue ?? false,
+                                    goalType = (byte)((vt.GetOrDefault("type", 0) as LuaNumber)?.ToInt() ?? 0),
+                                    ondone = vt.GetOrDefault("script_isdone", LuaString.Empty).Str(),
+                                    onfail = vt.GetOrDefault("script_isfail", LuaString.Empty).Str(),
+                                    onui = vt.GetOrDefault("script_ui", LuaString.Empty).Str(),
+                                    ontrigger = vt.GetOrDefault("script_trigger", LuaString.Empty).Str(),
+                                };
+                                if (vt.GetOrDefault("subgoals", Nil) is LuaTable sub) {
+                                    result[i].subGoals = ReadGoals(sub);
+                                }
+                            }
+                            return result;
+                        }
+                        if (table.GetOrDefault("goals", Nil) is LuaTable goals) {
+                            army.goals = ReadGoals(goals);
+                        } else {
+                            army.goals = Array.Empty<CampaignArmyGoal>();
+                            Console.WriteLine($"Warning: Campaign for army {k.Str()} has no goals.");
                         }
                     } else {
                         Console.WriteLine($"Failed to read army data for entry '{k.Str()}'.");

@@ -2,6 +2,7 @@
 using System.Text;
 
 using Battlegrounds.Lua;
+using static Battlegrounds.Lua.LuaNil;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -73,7 +74,7 @@ namespace coh2_battlegrounds_bin_tests.LuaLib {
             ";
 
             // Run string
-            Assert.AreEqual(new LuaNil(), lState.DoString(code));
+            Assert.AreEqual(Nil, lState.DoString(code));
 
             // Make assertions on output
             string[] lns = writerOutput.ToString().Split(writer.NewLine);
@@ -96,7 +97,7 @@ namespace coh2_battlegrounds_bin_tests.LuaLib {
             ";
 
             // Run string
-            Assert.AreEqual(new LuaNil(), lState.DoString(code));
+            Assert.AreEqual(Nil, lState.DoString(code));
 
             // Make assertions on output
             string[] lns = writerOutput.ToString().Split(writer.NewLine);
@@ -118,7 +119,7 @@ namespace coh2_battlegrounds_bin_tests.LuaLib {
             ";
 
             // Run string
-            Assert.AreEqual(new LuaNil(), lState.DoString(code));
+            Assert.AreEqual(Nil, lState.DoString(code));
 
             // Make assertions on output
             string[] lns = writerOutput.ToString().Split(writer.NewLine);

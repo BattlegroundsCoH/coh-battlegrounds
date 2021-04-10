@@ -1,31 +1,49 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Battlegrounds.Lua {
 
+    /// <summary>
+    /// Represents a numeric lua value. Assumes <see cref="double"/> represention. Can be converted to an integer.
+    /// </summary>
     public class LuaNumber : LuaValue {
 
+        /// <summary>
+        /// Culture encoding value to use when printing and parsing <see cref="LuaNumber"/> values. Read-only field.
+        /// </summary>
         public static readonly CultureInfo NumberCulture = CultureInfo.GetCultureInfo("en-GB");
 
         private double m_number;
         private bool m_treatAsInteger;
 
+        /// <summary>
+        /// Initialise a new <see cref="LuaNumber"/> class with <see cref="double"/> <paramref name="value"/>.
+        /// </summary>
+        /// <param name="value">The floating-point value of the number.</param>
         public LuaNumber(double value) {
             this.m_number = value;
             this.m_treatAsInteger = IsInteger();
         }
 
+        /// <summary>
+        /// Initialise a new <see cref="LuaNumber"/> class with an <see cref="int"/> <paramref name="value"/>.
+        /// </summary>
+        /// <param name="value">The integer value of the number.</param>
         public LuaNumber(int value) {
             this.m_number = value;
             this.m_treatAsInteger = true;
         }
 
+        /// <summary>
+        /// Get a new <see cref="LuaNumber"/> where value is an integer representation.
+        /// </summary>
+        /// <returns>New <see cref="LuaNumber"/>.</returns>
         public LuaNumber AsInteger() => new LuaNumber((int)this.m_number);
 
+        /// <summary>
+        /// Get if the numeric represented is an integer.
+        /// </summary>
+        /// <returns>If number is within epsilon range, <see langword="true"/>; Otherwise <see langword="false"/>.</returns>
         public bool IsInteger() => (this.m_number % 1) <= double.Epsilon * 100;
 
         public override bool Equals(LuaValue value) => value is LuaNumber n && n.m_number == this.m_number;

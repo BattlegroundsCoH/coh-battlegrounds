@@ -119,11 +119,11 @@ namespace Battlegrounds.Lua {
                 // Get all values
                 for (int i = 0; i < values.Length; i++) {
                     values[i] = GetLuaBinaryTypeFromByte(reader.ReadByte()) switch {
-                        LuaBinaryType.LT_Nil => new LuaNil(),
+                        LuaBinaryType.LT_Nil => LuaNil.Nil,
                         LuaBinaryType.LT_Str => new LuaString(reader.ReadEncodedString(encoding)),
                         LuaBinaryType.LT_Num => new LuaNumber(BitConverter.ToDouble(reader.ReadBytes(sizeof(double)))),
                         LuaBinaryType.Lt_Bol => new LuaBool(reader.ReadByte() == 0x1),
-                        _ => throw new Exception()
+                        _ => throw new InvalidDataException()
                     };
                 }
 
@@ -137,7 +137,7 @@ namespace Battlegrounds.Lua {
                         SET => new LuaSet(),
                         NEW => new LuaNewTable(),
                         POP => new LuaPopTable(),
-                        _ => throw new Exception()
+                        _ => throw new InvalidDataException()
                     });
                 }
 
@@ -180,7 +180,7 @@ namespace Battlegrounds.Lua {
             }
 
             // Return nil
-            return new LuaNil();
+            return LuaNil.Nil;
 
         }
 

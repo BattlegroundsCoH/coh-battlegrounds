@@ -6,6 +6,8 @@ using System.Reflection;
 using Battlegrounds.Lua.Debugging;
 using Battlegrounds.Lua.Runtime;
 
+using static Battlegrounds.Lua.LuaNil;
+
 namespace Battlegrounds.Lua {
     
     /// <summary>
@@ -75,7 +77,7 @@ namespace Battlegrounds.Lua {
                         stack.Push(state._G.ByKey<LuaTable>(this.ObjectType.Name)[key]);
                     }
                 } else {
-                    stack.Push(new LuaNil()); // Might have to throw error here
+                    stack.Push(Nil); // Might have to throw error here
                 }
                 return 1;
             });
@@ -158,7 +160,7 @@ namespace Battlegrounds.Lua {
                         stack.Push(state._G.ByKey<LuaTable>(objectType.ObjectType.Name)[key]);
                     }
                 } else {
-                    stack.Push(new LuaNil()); // Might have to throw error here
+                    stack.Push(Nil); // Might have to throw error here
                 }
                 return 1;
             });

@@ -22,7 +22,7 @@ namespace Battlegrounds.Lua.Runtime {
                         return this.ParentFrame.TryGet(key, out value, out container);
                     } else {
                         container = null;
-                        value = new LuaNil();
+                        value = LuaNil.Nil;
                         return false;
                     }
                 }

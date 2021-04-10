@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Linq;
 
+using static Battlegrounds.Lua.LuaNil;
+
 namespace Battlegrounds.Lua.Runtime {
     
     /// <summary>
@@ -75,7 +77,7 @@ namespace Battlegrounds.Lua.Runtime {
                 i++;
             }
             if (i != count) {
-                Array.Fill(vals, new LuaNil(), i, count - i);
+                Array.Fill(vals, Nil, i, count - i);
             }
             return vals;
         }
@@ -114,7 +116,7 @@ namespace Battlegrounds.Lua.Runtime {
             if (this.Any) {
                 return this.Pop();
             } else {
-                return new LuaNil();
+                return Nil;
             }
         }
 

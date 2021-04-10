@@ -36,11 +36,6 @@ namespace Battlegrounds.Campaigns {
     /// <summary>
     /// 
     /// </summary>
-    public record CampaignArmy(LocaleKey Name, LocaleKey Desc, Faction Army, int Min, int Max);
-
-    /// <summary>
-    /// 
-    /// </summary>
     public record CampaignDate(int Year, int Month, int Day);
 
     /// <summary>
@@ -61,7 +56,12 @@ namespace Battlegrounds.Campaigns {
         /// <summary>
         /// 
         /// </summary>
-        public record ArmyData(LocaleKey Name, LocaleKey Desc, Faction Army, int MinPlayers, int MaxPlayers, LuaTable FullArmyData);
+        public record ArmyData(LocaleKey Name, LocaleKey Desc, Faction Army, int MinPlayers, int MaxPlayers, LuaTable FullArmyData, ArmyGoalData[] Goals);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public record ArmyGoalData(LocaleKey Title, LocaleKey Desc, int Priority, byte Type, bool Hidden, string OnDone, string OnFail, string OnUI, string OnTrigger, ArmyGoalData[] SubGoals);
 
         /// <summary>
         /// 
@@ -400,6 +400,9 @@ namespace Battlegrounds.Campaigns {
             LocaleKey name = new LocaleKey(reader.ReadUnicodeString(keyLengths[0]), locale);
             LocaleKey desc = new LocaleKey(reader.ReadUnicodeString(keyLengths[1]), locale);
 
+            // Army table
+            LuaTable armyTable = null;
+
             // Read lengths
             int length = reader.ReadInt32();
             if (length > 0) {
@@ -407,14 +410,18 @@ namespace Battlegrounds.Campaigns {
                 // Read bytes
                 using var ms = reader.FillStream(length);
 
+                // Parse
+                armyTable = LuaBinary.FromBinary(ms, Encoding.Unicode) as LuaTable;
+
                 // Parse lua table
-                if (LuaBinary.FromBinary(ms, Encoding.Unicode) is LuaTable armyTable) {
+                if (armyTable is null) {
 
-                    // Assign data
-                    this.CampaignArmies[index] = new ArmyData(name, desc, Faction.FromName(army), players[0], players[1], armyTable);
+                    // Log
+                    Trace.WriteLine($"Campaign '{Path.GetFileName(binaryFilepath)}' has an army ('{army}') with invalid army data.", nameof(CampaignPackage));
 
-                } else {
+                    // Return false
                     return false;
+
                 }
 
             } else {
@@ -422,11 +429,70 @@ namespace Battlegrounds.Campaigns {
                 // Log
                 Trace.WriteLine($"Campaign '{Path.GetFileName(binaryFilepath)}' has an army ('{army}') with no army data.", nameof(CampaignPackage));
                 
-                // Save anyways
-                this.CampaignArmies[index] = new ArmyData(name, desc, Faction.FromName(army), players[0], players[1], null);
+            }
+
+            // Read goals
+            ArmyGoalData[] ReadGoals() {
+
+                // Will fetch string based on flag and mask
+                string GetString(byte flag, byte mask) { 
+                    if ((flag & mask) != 0) {
+                        return reader.ReadUnicodeString();
+                    } else {
+                        return string.Empty;
+                    }
+                }
+
+                // Read byte
+                byte objCount = reader.ReadByte();
+
+                // Alloc array for goals
+                ArmyGoalData[] result = new ArmyGoalData[objCount];
+
+                // Loop over goals
+                for (byte i = 0; i < objCount; i++) {
+
+                    // Read lengths 
+                    // Read priority and state
+                    int gTitleLength = reader.ReadInt32();
+                    int gDescLength = reader.ReadInt32();
+                    int priority = reader.ReadInt32();
+                    bool hidden = reader.ReadBoolean();
+
+                    // Read keys
+                    var gTitle = new LocaleKey(reader.ReadUnicodeString(gTitleLength), locale);
+                    var gDesc = new LocaleKey(reader.ReadUnicodeString(gDescLength), locale);
+
+                    // Read flag
+                    byte flag = reader.ReadByte();
+
+                    // Get goal states
+                    string onFail = GetString(flag, 0b_0000_0001);
+                    string onDone = GetString(flag, 0b_0000_0010);
+                    string onUI = GetString(flag, 0b_0000_0100);
+                    string onTrigger = GetString(flag, 0b_0000_1000);
+                    byte type = (byte)(flag >> 4);
+
+                    // Read child goals
+                    var childGoals = ReadGoals();
+
+                    // Save goal data
+                    result[i] = new ArmyGoalData(gTitle, gDesc, priority, type, hidden, onDone, onFail, onUI, onTrigger, childGoals);
+
+                }
+
+                // Return results
+                return result;
 
             }
 
+            // Read goals
+            var goals = ReadGoals();
+
+            // Save anyways
+            this.CampaignArmies[index] = new ArmyData(name, desc, Faction.FromName(army), players[0], players[1], armyTable, goals);
+
+            // Return true
             return true;
 
         }

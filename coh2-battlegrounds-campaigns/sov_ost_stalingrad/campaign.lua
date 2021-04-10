@@ -41,12 +41,14 @@ campaign = {
             max_players = 4,
             goals = {
                 ["obj_stalingrad_soviet"] = {
+                    type = OT_PRIMARY,
                     fe_priority = 1,
                     script_isdone = "obj_stalingrad_soviet_isdone",
                     script_isfail = "obj_stalingrad_soviet_isfailed",
                     script_ui = "obj_stalingrad_soviet_updateui",
                     subgoals = {
                         ["obj_hold_volga"] = {
+                            type = OT_SECONDARY,
                             script_isfail = "obj_stalingrad_soviet_volga_isfailed"
                         }
                     }
@@ -64,10 +66,12 @@ campaign = {
             max_players = 4,
             goals = {
                 ["obj_stalingrad_german"] = {
+                    type = OT_PRIMARY,
                     fe_priority = 1,
                     script_isdone = "obj_stalingrad_german_isdone",
                     subgoals = {
                         ["obj_take_volga"] = {
+                            type = OT_SECONDARY,
                             script_isdone = "obj_stalingrad_german_volga_isdone"
                         }
                     }

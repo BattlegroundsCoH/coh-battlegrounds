@@ -9,6 +9,8 @@ using Battlegrounds.Lua.Debugging;
 using Battlegrounds.Lua.Parsing;
 using Battlegrounds.Lua.Runtime;
 
+using static Battlegrounds.Lua.LuaNil;
+
 namespace Battlegrounds.Lua {
 
     /// <summary>
@@ -77,7 +79,7 @@ namespace Battlegrounds.Lua {
             (LuaTable scope, LuaValue key) GetAssignable(LuaIdentifierExpr idExpr, bool declareLocal) {
                 LuaString lstrKey = new LuaString(idExpr.Identifier);
                 if (declareLocal) {
-                    luaState.Envionment.Define(idExpr.Identifier, new LuaNil());
+                    luaState.Envionment.Define(idExpr.Identifier, Nil);
                     return (luaState.Envionment.Table, new LuaString(idExpr.Identifier));
                 }
                 if (luaState.Envionment.Lookup(GetTop(false) as LuaTable, idExpr.Identifier, out LuaTable envt) is LuaValue v) {
@@ -175,7 +177,7 @@ namespace Battlegrounds.Lua {
                             int vars = varExprLst.Values.Count;
                             int stackDelta = stackNewTop - stackTop;
                             for (int k = 0; k < vars; k++) {
-                                LuaValue value = new LuaNil();
+                                LuaValue value = Nil;
                                 if (stackDelta > 0) {
                                     value = stack.Pop();
                                     stackDelta--;
@@ -451,7 +453,7 @@ namespace Battlegrounds.Lua {
                                         var cv = luaState.Envionment.Define(varID, stack.Pop());
                                         if (k == 0) { v = cv; }
                                     } else {
-                                        luaState.Envionment.Define(varID, new LuaNil());
+                                        luaState.Envionment.Define(varID, Nil);
                                     }
                                 }
                                 if (v is LuaNil) {
@@ -549,12 +551,12 @@ namespace Battlegrounds.Lua {
                 if (stack.Any) {
                     value = stack.Pop();
                 } else {
-                    value = new LuaNil();
+                    value = Nil;
                 }
             } catch (LuaRuntimeError runtime) {
                 luaState.SetLastError(runtime);
                 Trace.WriteLine(runtime.Message, "LuaRuntimeError");
-                return new LuaNil();
+                return Nil;
             } catch {
                 throw;
             }
@@ -618,7 +620,7 @@ namespace Battlegrounds.Lua {
             } else {
 
                 // Return nil
-                return new LuaNil();
+                return Nil;
 
             }
 
@@ -683,7 +685,7 @@ namespace Battlegrounds.Lua {
             if (LoadChunk(luaState, luaExpression, luaSource) is LuaChunk chunk) {
                 return new LuaClosure(new LuaFunction(chunk));
             } else {
-                return new LuaNil();
+                return Nil;
             }
 
         }

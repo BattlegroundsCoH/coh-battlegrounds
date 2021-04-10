@@ -1,9 +1,19 @@
 ﻿namespace Battlegrounds.Lua {
 
     /// <summary>
-    /// 
+    /// Represents a nil value in the Lua runtime.
     /// </summary>
     public sealed class LuaNil : LuaValue {
+
+        /// <summary>
+        /// Represents the <see cref="LuaNil"/> value. This is a read-only field.
+        /// </summary>
+        public static readonly LuaNil Nil = new LuaNil();
+
+        /// <summary>
+        /// Privator constructor for instances of the <see cref="LuaNil"/> class.
+        /// </summary>
+        private LuaNil() {}
 
         public override bool Equals(LuaValue value) => value is LuaNil;
 

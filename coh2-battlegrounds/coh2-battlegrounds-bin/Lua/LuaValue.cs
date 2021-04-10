@@ -45,6 +45,12 @@
         /// <param name="v">The value to convert.</param>
         public static implicit operator LuaValue(int v) => new LuaNumber(v);
 
+        /// <summary>
+        /// Convert <paramref name="v"/> into the proper <see cref="LuaBool"/> representation.
+        /// </summary>
+        /// <param name="v">The value to convert.</param>
+        public static implicit operator LuaValue(bool v) => new LuaBool(v);
+
     }
 
 }

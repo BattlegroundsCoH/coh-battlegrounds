@@ -51,7 +51,7 @@ namespace Battlegrounds.Lua.Runtime {
                     return v;
                 }
             }
-            return new LuaNil();
+            return LuaNil.Nil;
         }
 
     }

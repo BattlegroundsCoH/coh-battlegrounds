@@ -3,12 +3,14 @@ using System.Linq;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
+using System.Diagnostics;
 
 using Battlegrounds.Functional;
 using Battlegrounds.Lua.Debugging;
 using Battlegrounds.Lua.Runtime;
 using Battlegrounds.Lua.Parsing;
-using System.Diagnostics;
+
+using static Battlegrounds.Lua.LuaNil;
 
 namespace Battlegrounds.Lua {
     
@@ -176,7 +178,7 @@ namespace Battlegrounds.Lua {
         public void RegisterFunction(string name, Action<LuaState, LuaStack> action)
             => this._G[name] = new LuaClosure(new LuaFunction((a,b) => {
                 action(a, b);
-                b.Push(new LuaNil());
+                b.Push(Nil);
                 return 1;
             }));
 

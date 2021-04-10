@@ -2,6 +2,8 @@
 using Battlegrounds.Lua.Parsing;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
+using static Battlegrounds.Lua.LuaNil;
+
 namespace coh2_battlegrounds_bin_tests.LuaLib {
     
     [TestClass]
@@ -26,7 +28,7 @@ namespace coh2_battlegrounds_bin_tests.LuaLib {
             ";
 
             // Assert parsing and execution runs fine
-            Assert.AreEqual(new LuaNil(), LuaVM.DoString(lState, sourcefile));
+            Assert.AreEqual(Nil, LuaVM.DoString(lState, sourcefile));
 
             // Assert table values
             Assert.IsNotNull(lState._G["settings"]);
@@ -35,7 +37,7 @@ namespace coh2_battlegrounds_bin_tests.LuaLib {
             Assert.AreEqual(new LuaNumber(1), (lState._G["settings"] as LuaTable)["c"]);
             Assert.AreEqual(new LuaNumber(2.3), (lState._G["settings"] as LuaTable)["d"]);
             Assert.AreEqual(new LuaBool(false), (lState._G["settings"] as LuaTable)["e"]);
-            Assert.AreEqual(new LuaNil(), (lState._G["settings"] as LuaTable)["f"]);
+            Assert.AreEqual(Nil, (lState._G["settings"] as LuaTable)["f"]);
 
         }
 
@@ -52,7 +54,7 @@ namespace coh2_battlegrounds_bin_tests.LuaLib {
             }";
 
             // Assert parsing and execution runs fine
-            Assert.AreEqual(new LuaNil(), LuaVM.DoString(lState, sourcefile));
+            Assert.AreEqual(Nil, LuaVM.DoString(lState, sourcefile));
 
             // Assert table values
             Assert.IsNotNull(lState._G["test"]);
@@ -78,7 +80,7 @@ namespace coh2_battlegrounds_bin_tests.LuaLib {
             ";
 
             // Assert parsing and execution runs fine
-            Assert.AreEqual(new LuaNil(), LuaVM.DoString(lState, sourcefile));
+            Assert.AreEqual(Nil, LuaVM.DoString(lState, sourcefile));
 
             // Assert table values
             Assert.IsNotNull(lState._G["test"]);
@@ -104,7 +106,7 @@ namespace coh2_battlegrounds_bin_tests.LuaLib {
             ";
 
             // Assert parsing and execution runs fine
-            Assert.AreEqual(new LuaNil(), LuaVM.DoString(lState, sourcefile));
+            Assert.AreEqual(Nil, LuaVM.DoString(lState, sourcefile));
 
             // Assert table values
             Assert.IsNotNull(lState._G["test"]);
@@ -134,7 +136,7 @@ namespace coh2_battlegrounds_bin_tests.LuaLib {
             ";
 
             // Assert parsing and execution runs fine
-            Assert.AreEqual(new LuaNil(), LuaVM.DoString(lState, sourcefile));
+            Assert.AreEqual(Nil, LuaVM.DoString(lState, sourcefile));
 
             // Assert table values
             Assert.IsNotNull(lState._G["test"]);
@@ -166,7 +168,7 @@ namespace coh2_battlegrounds_bin_tests.LuaLib {
             ";
 
             // Assert parsing and execution runs fine
-            Assert.AreEqual(new LuaNil(), LuaVM.DoString(lState, sourcefile));
+            Assert.AreEqual(Nil, LuaVM.DoString(lState, sourcefile));
 
             // Assert table values
             Assert.IsNotNull(lState._G["test"]);
@@ -333,10 +335,10 @@ namespace coh2_battlegrounds_bin_tests.LuaLib {
             Assert.AreEqual(new LuaNumber(10), LuaVM.DoString(lState, "return 10 or 20"));
             Assert.AreEqual(new LuaNumber(10), LuaVM.DoString(lState, "return 10 or error()"));
             Assert.AreEqual(new LuaString("a"), LuaVM.DoString(lState, "return nil or \"a\""));
-            Assert.AreEqual(new LuaNil(), LuaVM.DoString(lState, "return nil and 10"));
+            Assert.AreEqual(Nil, LuaVM.DoString(lState, "return nil and 10"));
             Assert.AreEqual(new LuaBool(false), LuaVM.DoString(lState, "return false and nil"));
             Assert.AreEqual(new LuaBool(false), LuaVM.DoString(lState, "return false and error()"));
-            Assert.AreEqual(new LuaNil(), LuaVM.DoString(lState, "return false or nil"));
+            Assert.AreEqual(Nil, LuaVM.DoString(lState, "return false or nil"));
             Assert.AreEqual(new LuaNumber(20), LuaVM.DoString(lState, "return 10 and 20"));
 
         }

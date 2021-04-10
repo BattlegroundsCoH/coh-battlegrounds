@@ -114,7 +114,7 @@ namespace Battlegrounds.Lua.Runtime {
         /// <returns>The amount of new values pushed to the stack.</returns>
         public static int Pairs(LuaState state, LuaStack stack) {
             if (stack.Pop() is LuaTable t) {
-                stack.Push(new LuaNil());
+                stack.Push(LuaNil.Nil);
                 stack.Push(t);
                 stack.Push(state._G["next"]);
             } else {
@@ -147,7 +147,7 @@ namespace Battlegrounds.Lua.Runtime {
             } else if (top is LuaNumber) {
                 stack.Push(top);
             } else {
-                stack.Push(new LuaNil());
+                stack.Push(LuaNil.Nil);
             }
             return 1;
         }

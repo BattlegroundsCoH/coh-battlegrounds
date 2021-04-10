@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using System.Linq;
 using Battlegrounds.Lua.Runtime;
 
+using static Battlegrounds.Lua.LuaNil;
+
 namespace Battlegrounds.Lua {
 
     /// <summary>
@@ -93,7 +95,7 @@ namespace Battlegrounds.Lua {
         /// <param name="key"></param>
         /// <returns></returns>
         public LuaValue this[LuaValue key] {
-            get => this.m_table.ContainsKey(key) ? this.m_table[key] : new LuaNil();
+            get => this.m_table.ContainsKey(key) ? this.m_table[key] : Nil;
             set => this.SetIndexValue(key, value);
         }
 
@@ -148,12 +150,26 @@ namespace Battlegrounds.Lua {
         /// Retrieve a <see cref="LuaValue"/> by absolute index.
         /// </summary>
         /// <typeparam name="T">The expected <see cref="LuaValue"/> type.</typeparam>
-        /// <param name="index">The absolute index to lookup table value by.</param>
+        /// <param name="index">The absolute index to lookup table value by (0-indexed).</param>
         /// <returns>The value found at specified raw index.</returns>
         /// <exception cref="KeyNotFoundException"/>
         public T RawIndex<T>(int index) where T : LuaValue {
             if (this.m_rawIndices.ContainsKey(index)) {
                 return this.m_table[this.m_rawIndices[index]] as T;
+            } else {
+                throw new KeyNotFoundException();
+            }
+        }
+
+        /// <summary>
+        /// Retrieve the key-value pair found at absolute <paramref name="index"/>.
+        /// </summary>
+        /// <param name="index">The absolte index to lookup pair by (0-indexed).</param>
+        /// <returns>The value found at specified index.</returns>
+        /// <exception cref="KeyNotFoundException"/>
+        public KeyValuePair<LuaValue, LuaValue> KeyValueByRawIndex(int index) {
+            if (this.m_rawIndices.TryGetValue(index, out LuaValue k)) {
+                return new KeyValuePair<LuaValue, LuaValue>(k, this[k]);
             } else {
                 throw new KeyNotFoundException();
             }
@@ -176,7 +192,7 @@ namespace Battlegrounds.Lua {
         /// Do a pairs run on the table.
         /// </summary>
         /// <param name="pairs">The delegate to run on each pair iteration.</param>
-        public void Pairs(Action<LuaValue, LuaValue> pairsAction) => this.Pairs((k, v) => { pairsAction(k, v); return new LuaNil(); });
+        public void Pairs(Action<LuaValue, LuaValue> pairsAction) => this.Pairs((k, v) => { pairsAction(k, v); return Nil; });
 
         /// <summary>
         /// Do a pairs run on the table.
@@ -185,14 +201,13 @@ namespace Battlegrounds.Lua {
         /// <returns><see cref="LuaNil"/> if pairs iterator reached the end of the table. Otherwise returned <see cref="LuaValue"/>.</returns>
         public LuaValue Pairs(Pairs pairs) {
             var e = this.GetEnumerator();
-            var nil = new LuaNil();
             while (e.MoveNext()) {
                 var s = pairs(e.Current.Key, e.Current.Value);
-                if (!s.Equals(nil)) {
+                if (!s.Equals(Nil)) {
                     return s;
                 }
             }
-            return nil;
+            return Nil;
         }
 
         /// <summary>
@@ -250,8 +265,31 @@ namespace Battlegrounds.Lua {
                     return true;
                 }
             }
-            value = new LuaNil();
+            value = Nil;
             return false;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="key"></param>
+        /// <param name="defaultValue"></param>
+        /// <returns></returns>
+        public LuaValue GetOrDefault(string key, LuaValue defaultValue)
+            => this.GetOrDefault(new LuaString(key), defaultValue);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="key"></param>
+        /// <param name="defaultValue"></param>
+        /// <returns></returns>
+        public LuaValue GetOrDefault(LuaString key, LuaValue defaultValue) {
+            if (this.m_table.TryGetValue(key, out LuaValue v)) {
+                return v;
+            } else {
+                return defaultValue;
+            }
         }
 
         /// <summary>
@@ -304,8 +342,8 @@ namespace Battlegrounds.Lua {
                     }
                 }
             }
-            nextKey = new LuaNil();
-            return new LuaNil();
+            nextKey = Nil;
+            return Nil;
         }
 
         /// <summary>
@@ -315,9 +353,9 @@ namespace Battlegrounds.Lua {
         /// <param name="i"></param>
         /// <returns></returns>
         public LuaValue Next(LuaValue current, out LuaValue i) {
-            i = new LuaNil();
+            i = Nil;
             if (this.m_rawIndices.Count == 0) {
-                return new LuaNil();
+                return i;
             }
             if (current is LuaNil) {
                 i = this.m_rawIndices[0];

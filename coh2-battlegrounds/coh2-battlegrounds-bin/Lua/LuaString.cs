@@ -8,6 +8,11 @@
         private string m_internalStringValue;
 
         /// <summary>
+        /// Represents the empty <see cref="LuaString"/>. This is a read-only field.
+        /// </summary>
+        public static readonly LuaString Empty = new LuaString(string.Empty);
+
+        /// <summary>
         /// Get the length of the string.
         /// </summary>
         public int Length => this.m_internalStringValue.Length;
@@ -26,7 +31,7 @@
             if (double.TryParse(this.m_internalStringValue, out double n)) {
                 return new LuaNumber(n);
             } else {
-                return new LuaNil();
+                return LuaNil.Nil;
             }
         }
 

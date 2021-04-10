@@ -8,6 +8,8 @@ using Battlegrounds.Lua;
 using Battlegrounds.Lua.Runtime;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
+using static Battlegrounds.Lua.LuaNil;
+
 namespace coh2_battlegrounds_bin_tests.LuaLib {
 
     [TestClass]    
@@ -28,7 +30,7 @@ namespace coh2_battlegrounds_bin_tests.LuaLib {
 
         [TestMethod]
         public void HasBaseLoaded() {
-            Assert.AreNotEqual(new LuaNil(), lState._G["print"]);
+            Assert.AreNotEqual(Nil, lState._G["print"]);
             var print = lState._G["print"];
             Assert.IsInstanceOfType(print, typeof(LuaClosure));
             Assert.IsTrue((print as LuaClosure).Function.IsCFunction);
@@ -44,7 +46,7 @@ namespace coh2_battlegrounds_bin_tests.LuaLib {
             ds9()";
 
             var result = LuaVM.DoString(this.lState, sourceText);
-            Assert.AreEqual(new LuaNil(), result);
+            Assert.AreEqual(Nil, result);
             Assert.AreEqual($"Hello Space{writer.NewLine}", writerOutput.ToString());
 
         }
@@ -61,7 +63,7 @@ namespace coh2_battlegrounds_bin_tests.LuaLib {
             print(a)";
 
             var result = LuaVM.DoString(this.lState, sourceText);
-            Assert.AreEqual(new LuaNil(), result);
+            Assert.AreEqual(Nil, result);
             Assert.AreEqual($"42{writer.NewLine}69{writer.NewLine}nil{writer.NewLine}", writerOutput.ToString());
 
         }
@@ -78,7 +80,7 @@ namespace coh2_battlegrounds_bin_tests.LuaLib {
             print(b)";
 
             var result = LuaVM.DoString(this.lState, sourceText);
-            Assert.AreEqual(new LuaNil(), result);
+            Assert.AreEqual(Nil, result);
             Assert.AreEqual($"111{writer.NewLine}2898{writer.NewLine}", writerOutput.ToString());
 
         }
@@ -95,7 +97,7 @@ namespace coh2_battlegrounds_bin_tests.LuaLib {
             print(b)";
 
             var result = LuaVM.DoString(this.lState, sourceText);
-            Assert.AreEqual(new LuaNil(), result);
+            Assert.AreEqual(Nil, result);
             Assert.AreEqual($"111{writer.NewLine}nil{writer.NewLine}", writerOutput.ToString());
 
         }
@@ -117,7 +119,7 @@ namespace coh2_battlegrounds_bin_tests.LuaLib {
 
             // Run and check output
             var result = LuaVM.DoString(this.lState, sourceText);
-            Assert.AreEqual(new LuaNil(), result);
+            Assert.AreEqual(Nil, result);
 
             string[] lns = writerOutput.ToString().Split(writer.NewLine);
             Assert.AreEqual(4, lns.Length);
@@ -126,8 +128,8 @@ namespace coh2_battlegrounds_bin_tests.LuaLib {
             Assert.AreEqual("2", lns[2]);
 
             // Verify locals are done correctly
-            Assert.AreEqual(new LuaNil(), this.lState._G["k"]);
-            Assert.AreEqual(new LuaNil(), this.lState._G["dumdum"]);
+            Assert.AreEqual(Nil, this.lState._G["k"]);
+            Assert.AreEqual(Nil, this.lState._G["dumdum"]);
             //Assert.AreEqual(0, this.lState.Envionment.Size); // Environment should now be closed --> We sould not be able to access k or dumdum
 
         }
@@ -144,7 +146,7 @@ namespace coh2_battlegrounds_bin_tests.LuaLib {
 
             // Run and check output
             var result = LuaVM.DoString(this.lState, sourceText);
-            Assert.AreEqual(new LuaNil(), result);
+            Assert.AreEqual(Nil, result);
 
             string[] lns = writerOutput.ToString().Split(writer.NewLine);
             Assert.AreEqual(51, lns.Length);
@@ -165,7 +167,7 @@ namespace coh2_battlegrounds_bin_tests.LuaLib {
 
             // Run and check output
             var result = LuaVM.DoString(this.lState, sourceText);
-            Assert.AreEqual(new LuaNil(), result);
+            Assert.AreEqual(Nil, result);
 
             string[] lns = writerOutput.ToString().Split(writer.NewLine);
             Assert.AreEqual(5, lns.Length);
@@ -186,7 +188,7 @@ namespace coh2_battlegrounds_bin_tests.LuaLib {
 
             // Run and check output
             var result = LuaVM.DoString(this.lState, sourceText);
-            Assert.AreEqual(new LuaNil(), result);
+            Assert.AreEqual(Nil, result);
 
             string[] lns = writerOutput.ToString().Split(writer.NewLine);
             Assert.AreEqual(9, lns.Length);
@@ -208,7 +210,7 @@ namespace coh2_battlegrounds_bin_tests.LuaLib {
 
             // Run and check output
             var result = LuaVM.DoString(this.lState, sourceText);
-            Assert.AreEqual(new LuaNil(), result);
+            Assert.AreEqual(Nil, result);
 
             string[] lns = writerOutput.ToString().Split(writer.NewLine);
             Assert.AreEqual(13, lns.Length);
@@ -234,7 +236,7 @@ namespace coh2_battlegrounds_bin_tests.LuaLib {
 
             // Run and check output
             var result = LuaVM.DoString(this.lState, sourceText);
-            Assert.AreEqual(new LuaNil(), result);
+            Assert.AreEqual(Nil, result);
 
             string[] lns = writerOutput.ToString().Split(writer.NewLine);
             Assert.AreEqual(2, lns.Length);
@@ -258,7 +260,7 @@ namespace coh2_battlegrounds_bin_tests.LuaLib {
 
             // Run and check output
             var result = LuaVM.DoString(this.lState, sourceText);
-            Assert.AreEqual(new LuaNil(), result);
+            Assert.AreEqual(Nil, result);
 
             string[] lns = writerOutput.ToString().Split(writer.NewLine);
             Assert.AreEqual(2, lns.Length);
@@ -282,7 +284,7 @@ namespace coh2_battlegrounds_bin_tests.LuaLib {
 
             // Run and check output
             var result = LuaVM.DoString(this.lState, sourceText);
-            Assert.AreEqual(new LuaNil(), result);
+            Assert.AreEqual(Nil, result);
 
             string[] lns = writerOutput.ToString().Split(writer.NewLine);
             Assert.AreEqual(1, lns.Length);
@@ -304,7 +306,7 @@ namespace coh2_battlegrounds_bin_tests.LuaLib {
 
             // Run and check output
             var result = LuaVM.DoString(this.lState, sourceText);
-            Assert.AreEqual(new LuaNil(), result);
+            Assert.AreEqual(Nil, result);
 
             string[] lns = writerOutput.ToString().Split(writer.NewLine);
             Assert.AreEqual(7, lns.Length);
@@ -357,7 +359,7 @@ namespace coh2_battlegrounds_bin_tests.LuaLib {
 
             // Run and check output
             var result = LuaVM.DoString(this.lState, sourceText);
-            Assert.AreEqual(new LuaNil(), result);
+            Assert.AreEqual(Nil, result);
 
             string[] lns = writerOutput.ToString().Split(writer.NewLine);
             Assert.AreEqual(51, lns.Length);
@@ -388,7 +390,7 @@ namespace coh2_battlegrounds_bin_tests.LuaLib {
 
             // Run and check output
             var result = LuaVM.DoString(this.lState, sourceText);
-            Assert.AreEqual(new LuaNil(), result);
+            Assert.AreEqual(Nil, result);
 
             // Make assertions on output
             string[] lns = writerOutput.ToString().Split(writer.NewLine);
@@ -414,7 +416,7 @@ namespace coh2_battlegrounds_bin_tests.LuaLib {
 
             // Run and check output
             var result = LuaVM.DoString(this.lState, sourceText);
-            Assert.AreEqual(new LuaNil(), result);
+            Assert.AreEqual(Nil, result);
 
             // Make assertions on output
             string[] lns = writerOutput.ToString().Split(writer.NewLine);
@@ -439,7 +441,7 @@ namespace coh2_battlegrounds_bin_tests.LuaLib {
 
             // Run and check output
             var result = LuaVM.DoString(this.lState, sourceText);
-            Assert.AreEqual(new LuaNil(), result);
+            Assert.AreEqual(Nil, result);
 
             // Make assertions on output
             string[] lns = writerOutput.ToString().Split(writer.NewLine);
@@ -460,7 +462,7 @@ namespace coh2_battlegrounds_bin_tests.LuaLib {
 
             // Run and check output
             var result = LuaVM.DoString(this.lState, sourceText);
-            Assert.AreEqual(new LuaNil(), result);
+            Assert.AreEqual(Nil, result);
 
             // Make assertions on output
             string[] lns = writerOutput.ToString().Split(writer.NewLine);
@@ -484,7 +486,7 @@ namespace coh2_battlegrounds_bin_tests.LuaLib {
 
             // Run and check output
             var result = LuaVM.DoString(this.lState, sourceText);
-            Assert.AreEqual(new LuaNil(), result);
+            Assert.AreEqual(Nil, result);
 
             // Make assertions on output
             string[] lns = writerOutput.ToString().Split(writer.NewLine);
@@ -516,7 +518,7 @@ namespace coh2_battlegrounds_bin_tests.LuaLib {
 
             // Run and check output
             var result = LuaVM.DoString(this.lState, sourceText);
-            Assert.AreEqual(new LuaNil(), result);
+            Assert.AreEqual(Nil, result);
 
             // Make assertions on output
             string[] lns = writerOutput.ToString().Split(writer.NewLine);
@@ -547,7 +549,7 @@ namespace coh2_battlegrounds_bin_tests.LuaLib {
 
             // Run and check output
             var result = LuaVM.DoString(this.lState, sourceText);
-            Assert.AreEqual(new LuaNil(), result);
+            Assert.AreEqual(Nil, result);
 
             // Make assertions on output
             string[] lns = writerOutput.ToString().Split(writer.NewLine);

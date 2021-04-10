@@ -36,7 +36,7 @@ namespace Battlegrounds.Lua {
             int i => new LuaNumber(i),
             string s => new LuaString(s),
             bool b => new LuaBool(b),
-            null => new LuaNil(),
+            null => LuaNil.Nil,
             _ => new LuaUserObject(value)
         };
 
