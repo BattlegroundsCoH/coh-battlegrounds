@@ -34,10 +34,8 @@
         <!-- 2nd Setting -->
         <Label Grid.Row="2" Grid.Column="0">Side:</Label>
         <ComboBox Grid.Row="2" Grid.Column="1" 
-                  SelectedIndex="{Binding SelectedCampaignSide}">
-            <ComboBoxItem>Allies</ComboBoxItem>
-            <ComboBoxItem>Axis</ComboBoxItem>
-        </ComboBox>
+                  SelectedIndex="{Binding SelectedCampaignSide}"
+                  ItemsSource="{Binding AvailableArmies}"/>
 
         <!-- 3rd Setting -->
         <Label Grid.Row="3" Grid.Column="0">Difficulty:</Label>

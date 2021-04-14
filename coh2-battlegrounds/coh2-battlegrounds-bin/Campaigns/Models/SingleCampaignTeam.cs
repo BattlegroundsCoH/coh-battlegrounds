@@ -31,8 +31,8 @@ namespace Battlegrounds.Campaigns.Models {
             this.m_victoryValue = 0;
         }
 
-        public void CreatePlayer(int playerIndex, string name, ulong uid)
-            => this.Players[playerIndex] = new SingleCampaignPlayer(name, uid, this);
+        public void CreatePlayer(int playerIndex, string name, ulong uid, string faction)
+            => this.Players[playerIndex] = new SingleCampaignPlayer(name, uid, this, faction);
 
         public void AddReserveArmy(Army army)
             => army.Divisions.ForEach(AddReserveDivision);

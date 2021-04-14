@@ -39,9 +39,7 @@
 
                 <DockPanel>
                     <Label DockPanel.Dock="Top">Available Armies</Label>
-                    <ItemsControl>
-                        
-                    </ItemsControl>
+                    <ItemsControl ItemsSource="{Binding CampaignUnitReserveModel}"/>
                 </DockPanel>
 
                 <StackPanel Grid.Column="1"

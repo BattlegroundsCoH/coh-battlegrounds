@@ -4,6 +4,9 @@ using Battlegrounds.Locale;
 
 namespace Battlegrounds.Campaigns.Models {
 
+    /// <summary>
+    /// Singleplayer representation of a campaign goal. Implements <see cref="ICampaignGoal"/>.
+    /// </summary>
     public class SingleplayerCampaignGoal : ICampaignGoal {
 
         private CampaignGoalState m_state;
@@ -43,11 +46,14 @@ namespace Battlegrounds.Campaigns.Models {
             if (!string.IsNullOrEmpty(this.m_scriptOnDone) && scriptHandler.GetGlobalAndInvoke(this.m_scriptOnDone)) {
                 this.SetState(CampaignGoalState.Completed);
             }
-            if (!string.IsNullOrEmpty(this.m_scriptOnTrigger) && scriptHandler.GetGlobalAndInvoke(this.m_scriptOnTrigger)) {
-                this.SetState(CampaignGoalState.Started);
-            }
-            if (!string.IsNullOrEmpty(this.m_scriptOnUI)) {
-                scriptHandler.GetGlobalAndInvoke(this.m_scriptOnUI);
+            if (this.m_state == CampaignGoalState.Inactive) {
+                if (!string.IsNullOrEmpty(this.m_scriptOnTrigger) && scriptHandler.GetGlobalAndInvoke(this.m_scriptOnTrigger)) {
+                    this.SetState(CampaignGoalState.Started);
+                }
+            } else {
+                if (!string.IsNullOrEmpty(this.m_scriptOnUI)) {
+                    scriptHandler.GetGlobalAndInvoke(this.m_scriptOnUI);
+                }
             }
         }
 

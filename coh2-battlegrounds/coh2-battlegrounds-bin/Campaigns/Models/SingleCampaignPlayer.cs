@@ -1,31 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Battlegrounds.Campaigns.API;
+﻿using Battlegrounds.Campaigns.API;
 
 namespace Battlegrounds.Campaigns.Models {
 
     /// <summary>
-    /// 
+    /// Represents a player in a singleplayer campaign.
     /// </summary>
     public class SingleCampaignPlayer : ICampaignPlayer {
         
-        /// <summary>
-        /// 
-        /// </summary>
         public ICampaignTeam Team { get; }
 
         /// <summary>
-        /// 
+        /// The unique ID identifying the player.
         /// </summary>
         public ulong Uid { get; }
 
-        /// <summary>
-        /// 
-        /// </summary>
         public string DisplayName { get; }
+
+        public string FactionName { get; }
 
         /// <summary>
         /// 
@@ -33,10 +24,12 @@ namespace Battlegrounds.Campaigns.Models {
         /// <param name="display"></param>
         /// <param name="id"></param>
         /// <param name="team"></param>
-        public SingleCampaignPlayer(string display, ulong id, ICampaignTeam team) {
+        /// <param name="faction"></param>
+        public SingleCampaignPlayer(string display, ulong id, ICampaignTeam team, string faction) {
             this.Team = team;
             this.Uid = id;
             this.DisplayName = display;
+            this.FactionName = faction;
         }
 
     }

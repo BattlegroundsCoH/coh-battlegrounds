@@ -94,16 +94,16 @@ namespace BattlegroundsApp.Views {
 
                     // Create start args
                     CampaignStartData startData = new CampaignStartData() { 
-                        HumanAlliesPlayers = campaignData.CampaignHostSide == "allies" ? 1 : 0,
-                        HumanAxisPlayers = campaignData.CampaignHostSide == "axis" ? 1 : 0
+                        HumanAlliesPlayers = campaignData.CampaignHostSide.IsAllied ? 1 : 0,
+                        HumanAxisPlayers = campaignData.CampaignHostSide.IsAxis ? 1 : 0
                     };
 
                     // Get steam profile
                     var steamProfile = BattlegroundsInstance.Steam.User;
 
                     // Create single player
-                    CampaignArmyTeam team = campaignData.CampaignHostSide == "axis" ? CampaignArmyTeam.TEAM_AXIS : CampaignArmyTeam.TEAM_ALLIES;
-                    startData.AddHuman(steamProfile.Name, steamProfile.ID, string.Empty, team);
+                    CampaignArmyTeam team = campaignData.CampaignHostSide.IsAxis ? CampaignArmyTeam.TEAM_AXIS : CampaignArmyTeam.TEAM_ALLIES;
+                    startData.AddHuman(steamProfile.Name, steamProfile.ID, campaignData.CampaignHostSide.Name, team);
 
                     // Create campaign control
                     var spCampaign = SingleplayerCampaign.FromPackage(campaignData.CampaignToLoad, campaignData.CampaignDifficulty, startData);

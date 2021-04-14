@@ -4,7 +4,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using Battlegrounds;
 using Battlegrounds.Campaigns;
-
+using Battlegrounds.Game.Gameplay;
 using BattlegroundsApp.Dialogs.Service;
 using BattlegroundsApp.Models.Campaigns;
 using BattlegroundsApp.Resources;
@@ -41,6 +41,13 @@ namespace BattlegroundsApp.Dialogs.NewCampaign {
         }
         public override string ToString() => BattlegroundsInstance.Localize.GetEnum(this.Mode);
     }
+    public class NewCampaignDialogViewSelectedArmy {
+        public Faction Faction { get; }
+        public NewCampaignDialogViewSelectedArmy(Faction faction) {
+            this.Faction = faction;
+        }
+        public override string ToString() => Faction.Name;
+    }
     #endregion
 
     public class NewCampaignDialogViewModel : DialogControlBase<NewCampaignDialogResult> {
@@ -73,13 +80,16 @@ namespace BattlegroundsApp.Dialogs.NewCampaign {
 
         public List<NewCampaignDialogViewSelectedMode> AvailableModes { get; }
 
+        public List<NewCampaignDialogViewSelectedArmy> AvailableArmies { get; }
+
         private NewCampaignDialogViewModel(string title, CampaignPackage[] campaigns) {
 
             // Set title
             this.Title = title;
 
-            // Init available modes
+            // Init available list
             this.AvailableModes = new List<NewCampaignDialogViewSelectedMode>();
+            this.AvailableArmies = new List<NewCampaignDialogViewSelectedArmy>();
 
             // Set campaigns
             this.Campaigns = new List<NewCampaignDialogViewSelectionOption>();
@@ -112,15 +122,21 @@ namespace BattlegroundsApp.Dialogs.NewCampaign {
                 this.Campaigns[this.SelectedCampaignIndex].GetPackage(),
                 this.SelectedCampaignDifficulty,
                 mode,
-                this.SelectedCampaignSide == 0 ? "allies" : "axis");
+                this.AvailableArmies[this.SelectedCampaignSide].Faction);
             this.CloseDialogWithResult(caller, mode == CampaignMode.Singleplayer ? NewCampaignDialogResult.NewSingleplayer : NewCampaignDialogResult.HostCampaign);
         }
 
         private void SelectedCampaignChanged(int newValue) {
             if (this.Campaigns[newValue].GetPackage() is CampaignPackage package) {
+                
                 this.SelectedCampaignImageSource = PngImageSource.FromMemory(package.MapData.RawImageData);
+                
                 this.AvailableModes.Clear();
                 this.AvailableModes.AddRange(package.CampaignModes.Select(x => new NewCampaignDialogViewSelectedMode(x)));
+                
+                this.AvailableArmies.Clear();
+                this.AvailableArmies.AddRange(package.CampaignArmies.Select(x => new NewCampaignDialogViewSelectedArmy(x.Army)));
+
             }
         }
 

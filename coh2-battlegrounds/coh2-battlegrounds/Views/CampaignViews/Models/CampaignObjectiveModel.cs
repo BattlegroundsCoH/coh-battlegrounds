@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows.Media;
 using Battlegrounds.Campaigns.API;
@@ -18,7 +18,7 @@ namespace BattlegroundsApp.Views.CampaignViews.Models {
 
         public string ObjectiveDesc { get; }
 
-        public List<CampaignObjectiveModel> ObjectiveSubGoals { get; }
+        public ObservableCollection<CampaignObjectiveModel> ObjectiveSubGoals { get; }
 
         public CampaignObjectiveModel(ICampaignGoal goal, CampaignResourceContext resourceContext) {
             this.ObjectiveIcon = goal.Type switch {
@@ -33,7 +33,7 @@ namespace BattlegroundsApp.Views.CampaignViews.Models {
             };
             this.ObjectiveText = resourceContext.GetString(goal.Title);
             this.ObjectiveDesc = resourceContext.GetString(goal.Desc);
-            this.ObjectiveSubGoals = goal.SubGoals.Select(x => new CampaignObjectiveModel(x, resourceContext)).ToList();
+            this.ObjectiveSubGoals = new ObservableCollection<CampaignObjectiveModel>(goal.SubGoals.Select(x => new CampaignObjectiveModel(x, resourceContext)));
         }
 
     }

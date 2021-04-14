@@ -1,4 +1,5 @@
 ﻿using Battlegrounds.Campaigns;
+using Battlegrounds.Game.Gameplay;
 
 namespace BattlegroundsApp.Models.Campaigns {
     
@@ -25,9 +26,9 @@ namespace BattlegroundsApp.Models.Campaigns {
         /// <summary>
         /// Get the side of the host to play on.
         /// </summary>
-        public readonly string CampaignHostSide { get; }
+        public readonly Faction CampaignHostSide { get; }
 
-        public NewCampaignData(CampaignPackage cmp, int diff, CampaignMode mode, string side) {
+        public NewCampaignData(CampaignPackage cmp, int diff, CampaignMode mode, Faction side) {
             this.CampaignDifficulty = diff;
             this.CampaignHostSide = side;
             this.CampaignMode = mode;

@@ -67,6 +67,8 @@ namespace BattlegroundsApp.Views.CampaignViews {
 
         public ObservableCollection<CampaignObjectiveModel> CampaignActiveGoals { get; }
 
+        public ObservableCollection<CampaignUnitReserveModel> CampaignAvailableReserves { get; }
+
         public GUIThreadDispatcher ThreadDispatcher => (GUIThreadDispatcher)this.Dispatcher;
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -105,13 +107,19 @@ namespace BattlegroundsApp.Views.CampaignViews {
 
             }
 
+            // Self
+            var self = this.Controller.GetSelf();
+
             // Loop over objectives
-            var goals = controller.Goals.GetGoals("german"); // TODO: Fix fake-it code
+            var goals = controller.Goals.GetGoals(self.FactionName); // TODO: Fix fake-it code
             foreach (var goal in goals) {
                 if (goal.State == CampaignGoalState.Started) {
                     this.CampaignActiveGoals.Add(new CampaignObjectiveModel(goal, this.ResourceContext));
                 }
             }
+
+            // Loop over reserves
+
 
         }
 

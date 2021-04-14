@@ -52,7 +52,8 @@ namespace Battlegrounds.Campaigns.API {
         /// <param name="playerIndex">The index of the player on the team.</param>
         /// <param name="name">The display name of the player.</param>
         /// <param name="uid">The unique ID of the player.</param>
-        void CreatePlayer(int playerIndex, string name, ulong uid);
+        /// <param name="faction">The faction the player is using.</param>
+        void CreatePlayer(int playerIndex, string name, ulong uid, string faction);
 
         /// <summary>
         /// Add a whole <see cref="Army"/> to the team reserves.

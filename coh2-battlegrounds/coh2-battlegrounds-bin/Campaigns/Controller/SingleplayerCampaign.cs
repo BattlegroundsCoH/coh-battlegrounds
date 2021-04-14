@@ -473,8 +473,24 @@ namespace Battlegrounds.Campaigns.Controller {
                 new SingleCampaignTeam(CampaignArmyTeam.TEAM_ALLIES, 1),
                 new SingleCampaignTeam(CampaignArmyTeam.TEAM_AXIS, 1)
             };
-            campaign.m_teams[0].CreatePlayer(0, human.Team == CampaignArmyTeam.TEAM_ALLIES ? human.Name : string.Empty, human.Team == CampaignArmyTeam.TEAM_ALLIES ? human.SteamID : 0);
-            campaign.m_teams[1].CreatePlayer(0, human.Team == CampaignArmyTeam.TEAM_AXIS ? human.Name : string.Empty, human.Team == CampaignArmyTeam.TEAM_AXIS ? human.SteamID : 0);
+
+            // Init 1v1 data
+            string[] playerName = {
+                human.Team == CampaignArmyTeam.TEAM_ALLIES ? human.Name : string.Empty,
+                human.Team == CampaignArmyTeam.TEAM_AXIS ? human.Name : string.Empty,
+            };
+            ulong[] playerID = {
+                human.Team == CampaignArmyTeam.TEAM_ALLIES ? human.SteamID : 0,
+                human.Team == CampaignArmyTeam.TEAM_AXIS ? human.SteamID : 0
+            };
+            string[] playerFaction = {
+                human.Team == CampaignArmyTeam.TEAM_ALLIES ? human.Faction : package.CampaignArmies.FirstOrDefault(x => x.Army.IsAllied).Army.Name,
+                human.Team == CampaignArmyTeam.TEAM_AXIS ? human.Faction : package.CampaignArmies.FirstOrDefault(x => x.Army.IsAxis).Army.Name,
+            };
+
+            // Create players
+            campaign.m_teams[0].CreatePlayer(0, playerName[0], playerID[0], playerFaction[0]);
+            campaign.m_teams[1].CreatePlayer(0, playerName[1], playerID[1], playerFaction[1]);
 
             // Counter to keep track of diviions
             uint divisionCount = 0;
