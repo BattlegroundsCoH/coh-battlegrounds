@@ -5,6 +5,7 @@ using System.Windows.Media.Imaging;
 using Battlegrounds.Campaigns.Controller;
 using Battlegrounds.Functional;
 using Battlegrounds.Gfx;
+using Battlegrounds.Locale;
 
 namespace BattlegroundsApp.Views.CampaignViews.Models {
     
@@ -46,7 +47,10 @@ namespace BattlegroundsApp.Views.CampaignViews.Models {
                 ["unit_support"] = new BitmapImage(new Uri("pack://application:,,,/Resources/campaign/icon_unittype_support.png")),
                 ["unit_vehicle"] = new BitmapImage(new Uri("pack://application:,,,/Resources/campaign/icon_unittype_vehicle.png")),
                 ["unit_tank"] = new BitmapImage(new Uri("pack://application:,,,/Resources/campaign/icon_unittype_tank.png")),
-                ["unit_air"] = new BitmapImage(new Uri("pack://application:,,,/Resources/campaign/icon_unittype_air.png"))
+                ["unit_air"] = new BitmapImage(new Uri("pack://application:,,,/Resources/campaign/icon_unittype_air.png")),
+                ["objt_1"] = new BitmapImage(new Uri("pack://application:,,,/Resources/campaign/obj_main.png")),
+                ["objt_2"] = new BitmapImage(new Uri("pack://application:,,,/Resources/campaign/obj_secondary.png")),
+                ["objt_3"] = new BitmapImage(new Uri("pack://application:,,,/Resources/campaign/obj_star.png")),
             };
 
             // For each GFX map
@@ -67,6 +71,9 @@ namespace BattlegroundsApp.Views.CampaignViews.Models {
             });
 
         }
+
+        public string GetString(LocaleKey localeKey)
+            => this.Controller.Locale.GetString(localeKey);
 
         /// <summary>
         /// Get resource identified by <paramref name="resourceKey"/>.

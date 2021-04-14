@@ -26,6 +26,14 @@ namespace Battlegrounds.Campaigns.API {
         object[] CallGlobal(string globalName, params object[] args);
 
         /// <summary>
+        /// Get a global variable and invoke it if it's a function.
+        /// </summary>
+        /// <param name="globalName"></param>
+        /// <param name="args"></param>
+        /// <returns>If global is a function returning a boolean, the value of the boolean is returned; Otherwise <see langword="false"/>.</returns>
+        bool GetGlobalAndInvoke(string globalName, params object[] args);
+
+        /// <summary>
         /// 
         /// </summary>
         /// <param name="globalName"></param>

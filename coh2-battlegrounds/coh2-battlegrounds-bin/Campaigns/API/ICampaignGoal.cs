@@ -1,4 +1,6 @@
-﻿namespace Battlegrounds.Campaigns.API {
+﻿using Battlegrounds.Locale;
+
+namespace Battlegrounds.Campaigns.API {
     
     /// <summary>
     /// 
@@ -15,8 +17,11 @@
     public enum CampaignGoalState {
         Started,
         Completed,
-        Failed
+        Failed,
+        Inactive,
     }
+
+    public delegate void OnGoalStateHandler(ICampaignGoal goal, CampaignGoalState newState);
 
     /// <summary>
     /// 
@@ -46,12 +51,26 @@
         /// <summary>
         /// 
         /// </summary>
-        string Title { get; }
+        LocaleKey Title { get; }
 
         /// <summary>
         /// 
         /// </summary>
-        string Desc { get; }
+        LocaleKey Desc { get; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        event OnGoalStateHandler OnState;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="onDone"></param>
+        /// <param name="onFail"></param>
+        /// <param name="onTrigger"></param>
+        /// <param name="onUI"></param>
+        void SetScriptPointers(string onDone, string onFail, string onTrigger, string onUI);
 
         /// <summary>
         /// 

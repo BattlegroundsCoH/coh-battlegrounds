@@ -37,17 +37,38 @@ namespace Battlegrounds.Campaigns.Scripting {
 
         }
 
-        public object[] CallGlobal(string globalName, params object[] args) {
-            if (this.m_lState._G[globalName] is LuaClosure closure) {
-                try {
-                    return LuaMarshal.InvokeClosureManaged(closure, this.m_lState, args);
-                } catch (LuaRuntimeError lre) {
-                    Trace.WriteLine($"Fatal lua error :: {lre}", nameof(CampaignScriptHandler));
-                }
+        private object[] InvokeGlobal(LuaClosure closure, object[] args) {
+            try {
+                return LuaMarshal.InvokeClosureManaged(closure, this.m_lState, args);
+            } catch (LuaRuntimeError lre) {
+                Trace.WriteLine($"Fatal lua error :: {lre}", nameof(CampaignScriptHandler));
             }
             return Array.Empty<object>();
         }
-        
+
+        public object[] CallGlobal(string globalName, params object[] args) {
+            if (this.m_lState._G[globalName] is LuaClosure closure) {
+                return this.InvokeGlobal(closure, args);
+            }
+            return Array.Empty<object>();
+        }
+
+        public bool GetGlobalAndInvoke(string globalName, params object[] args) {
+            if (this.m_lState._G[globalName] is LuaValue v) {
+                if (v is LuaClosure closure) {
+                    object[] result = this.InvokeGlobal(closure, args);
+                    if (result.Length > 0) {
+                        if (result[0] is bool br) {
+                            return br;
+                        }
+                    }
+                } else if (v is LuaBool b) {
+                    return b.IsTrue;
+                }
+            }
+            return false;
+        }
+
         public void LoadScript(string scriptContent) {
             if (this.ScriptState.DoString(scriptContent) is not LuaNil) {
                 Trace.WriteLine($"Fatal lua error :: {this.ScriptState.GetError()}", nameof(CampaignScriptHandler));

@@ -94,28 +94,7 @@
                 <DockPanel Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="5">
                     <Label DockPanel.Dock="Top" Content="Objectives:"/>
                     <ScrollViewer VerticalScrollBarVisibility="Auto">
-                        <ItemsControl>
-                            <ItemsControl.ItemTemplate>
-                                <DataTemplate>
-                                    <StackPanel>
-                                        <WrapPanel>
-                                            <Image Source="pack://application:,,,/Resources/campaign/obj_main.png"/>
-                                            <Label Content="{Binding ObjectiveText}"/>
-                                        </WrapPanel>
-                                        <ItemsControl>
-                                            <ItemsControl.ItemTemplate>
-                                                <DataTemplate>
-                                                    <WrapPanel>
-                                                        <Image Source="pack://application:,,,/Resources/campaign/obj_secondary.png"/>
-                                                        <Label Content="{Binding ObjectiveText}"/>
-                                                    </WrapPanel>
-                                                </DataTemplate>
-                                            </ItemsControl.ItemTemplate>
-                                        </ItemsControl>
-                                    </StackPanel>
-                                </DataTemplate>
-                            </ItemsControl.ItemTemplate>
-                        </ItemsControl>
+                        <ItemsControl ItemsSource="{Binding CampaignActiveGoals}"/>
                     </ScrollViewer>
                 </DockPanel>
                 

@@ -497,7 +497,9 @@ namespace Battlegrounds.Campaigns.Controller {
 
             // Create goals
             campaign.m_goalManager = new SingleplayerCampaignGoalManager();
-            // TODO: Read goals
+            for (int i = 0; i < package.CampaignArmies.Length; i++) {
+                RegisterGoalInManager(campaign.m_goalManager as SingleplayerCampaignGoalManager, null, package.CampaignArmies[i], package.CampaignArmies[i].Goals);
+            }
 
             // Set atmospheres
             campaign.m_allowedSummerAtmospheres = package.CampaignWeatherData.SummerAtmospheres;
@@ -509,6 +511,26 @@ namespace Battlegrounds.Campaigns.Controller {
             // Return campaign
             return campaign;
 
+        }
+
+        private static void RegisterGoalInManager(SingleplayerCampaignGoalManager manager, SingleplayerCampaignGoal parent, CampaignPackage.ArmyData army, CampaignPackage.ArmyGoalData[] goals) {
+            List<ICampaignGoal> newGoals = new List<ICampaignGoal>();
+            for (int i = 0; i < goals.Length; i++) {
+                var bp = goals[i];
+                var goal = new SingleplayerCampaignGoal(bp.Title, bp.Desc, (CampaignGoalType)bp.Type, parent, bp.Hidden ? CampaignGoalState.Inactive : CampaignGoalState.Started);
+                goal.SetScriptPointers(bp.OnDone, bp.OnFail, bp.OnTrigger, bp.OnUI);
+                if (bp.SubGoals.Length > 0) {
+                    RegisterGoalInManager(manager, goal, army, bp.SubGoals);
+                }
+                if (parent is null) {
+                    manager.AddGoal(army.Army.Name, goal.Title.LocaleID, goal);
+                } else {
+                    newGoals.Add(goal);
+                }
+            }
+            if (parent is not null) {
+                parent.SubGoals = newGoals.ToArray();
+            }
         }
 
         private static void PopulateListWithFormations(WeightedList<Squad> squads, bool isDefence, ICampaignFormation[] formations) {

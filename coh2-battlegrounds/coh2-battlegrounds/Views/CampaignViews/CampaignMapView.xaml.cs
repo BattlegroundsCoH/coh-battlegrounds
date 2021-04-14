@@ -65,6 +65,8 @@ namespace BattlegroundsApp.Views.CampaignViews {
 
         public bool CanEndTurn => this.Controller.IsSelfTurn();
 
+        public ObservableCollection<CampaignObjectiveModel> CampaignActiveGoals { get; }
+
         public GUIThreadDispatcher ThreadDispatcher => (GUIThreadDispatcher)this.Dispatcher;
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -78,6 +80,7 @@ namespace BattlegroundsApp.Views.CampaignViews {
             this.Controller.OnTurn += this.OnTurnOverEvent;
 
             // Init lists
+            this.CampaignActiveGoals = new ObservableCollection<CampaignObjectiveModel>();
             this.m_formationViews = new List<CampaignUnitFormationModel>();
             this.m_nodes = new List<ICampaignPointsNode>();
 
@@ -100,6 +103,14 @@ namespace BattlegroundsApp.Views.CampaignViews {
                 // TODO: Expand selection view
             } else {
 
+            }
+
+            // Loop over objectives
+            var goals = controller.Goals.GetGoals("german"); // TODO: Fix fake-it code
+            foreach (var goal in goals) {
+                if (goal.State == CampaignGoalState.Started) {
+                    this.CampaignActiveGoals.Add(new CampaignObjectiveModel(goal, this.ResourceContext));
+                }
             }
 
         }
