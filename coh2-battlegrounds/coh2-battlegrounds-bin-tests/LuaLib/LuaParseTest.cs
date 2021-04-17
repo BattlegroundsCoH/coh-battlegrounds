@@ -841,6 +841,27 @@ namespace coh2_battlegrounds_bin_tests.LuaLib {
 
         }
 
+        [TestMethod]
+        public void LuaFunctionalTest24() {
+
+            // Src
+            string src = @"
+            str = ""test\\path.txt""
+            ";
+
+            // Parse and verify top-level
+            var luaAST = LuaParser.ParseLuaSource(src);
+            Assert.AreEqual(1, luaAST.Count);
+            Assert.IsInstanceOfType(luaAST[0], typeof(LuaAssignExpr));
+
+            // Verify string content
+            var _lstr = ((luaAST[0] as LuaAssignExpr).Right as LuaConstValueExpr).Value;
+            Assert.IsInstanceOfType(_lstr, typeof(LuaString));
+            var lstr = _lstr as LuaString;
+            Assert.AreEqual("test\\path.txt", lstr.Str());
+
+        }
+
     }
 
 }

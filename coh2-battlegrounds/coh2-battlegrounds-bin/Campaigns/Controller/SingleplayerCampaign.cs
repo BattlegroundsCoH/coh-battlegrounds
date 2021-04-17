@@ -291,6 +291,19 @@ namespace Battlegrounds.Campaigns.Controller {
             _ => null
         };
 
+        public Division[] GetReserves(CampaignArmyTeam teamType) {
+            var armies = this.Armies.Where(x => x.Team == teamType);
+            List<Division> divs = new List<Division>();
+            foreach (var army in armies) {
+                foreach (var div in army.Divisions) {
+                    if (!div.Regiments.Any(x => x.IsDeployed)) {
+                        divs.Add(div);
+                    }
+                }
+            }
+            return divs.ToArray();
+        }
+
         public ICampaignPlayer GetSelf() => this.m_player;
 
         public async void HandleAttack(ICampaignMapNode attackedNode, ICampaignFormation[] formations) {
@@ -436,6 +449,18 @@ namespace Battlegrounds.Campaigns.Controller {
                 }
             });
             divCount = tmp;
+        }
+
+        public ICampaignFormation Deploy(Division reserve, ICampaignMapNode node) {
+
+            // Create formation
+            Formation formation = new Formation();
+            formation.FromDivision(reserve);
+            formation.SetNodeLocation(node);
+
+            // Return formation
+            return formation;
+
         }
 
         public static SingleplayerCampaign FromPackage(CampaignPackage package, int difficulty, CampaignStartData createArgs) {

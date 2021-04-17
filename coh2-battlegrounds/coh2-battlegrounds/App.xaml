@@ -49,6 +49,9 @@
         <DataTemplate DataType="{x:Type campaignModels:CampaignObjectiveModel}">
             <campaignViews:CampaignObjectiveView/>
         </DataTemplate>
+        <DataTemplate DataType="{x:Type campaignModels:CampaignUnitReserveModel}">
+            <campaignViews:CampaignUnitReserveView/>
+        </DataTemplate>
 
         <Style x:Key="MainButtonStyle" TargetType="{x:Type Button}">
             <Setter Property="Background">

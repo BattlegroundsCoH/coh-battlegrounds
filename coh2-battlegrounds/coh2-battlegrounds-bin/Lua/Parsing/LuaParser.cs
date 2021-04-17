@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Text.RegularExpressions;
 
 using Battlegrounds.Lua.Debugging;
@@ -145,7 +146,7 @@ namespace Battlegrounds.Lua.Parsing {
                     LuaTokenType.Identifier => new LuaIdentifierExpr(tokens[i].Val, tokens[i].Pos),
                     LuaTokenType.Integer => new LuaConstValueExpr(new LuaNumber(int.Parse(tokens[i].Val)), tokens[i].Pos),
                     LuaTokenType.Nil => new LuaConstValueExpr(LuaNil.Nil, tokens[i].Pos),
-                    LuaTokenType.String => new LuaConstValueExpr(new LuaString(tokens[i].Val), tokens[i].Pos),
+                    LuaTokenType.String => new LuaConstValueExpr(new LuaString(SanitizeString(tokens[i].Val)), tokens[i].Pos),
                     LuaTokenType.Number => new LuaConstValueExpr(new LuaNumber(double.Parse(tokens[i].Val)), tokens[i].Pos),
                     LuaTokenType.Comma or LuaTokenType.Equals or LuaTokenType.IndexClose or
                     LuaTokenType.IndexOpen or LuaTokenType.Semicolon or LuaTokenType.TableClose or
@@ -194,6 +195,9 @@ namespace Battlegrounds.Lua.Parsing {
                 }
             }
         }
+
+        static string SanitizeString(string str)
+            => str.Replace("\\\\", "\\").Replace("\\n", "\n").Replace("\\t", "\t");
 
         static LuaSyntaxError ForExpectNear(List<LuaExpr> luaExprs, int i) {
             bool isGeneric = luaExprs.Any(x => x is LuaKeyword { Keyword: "in" });

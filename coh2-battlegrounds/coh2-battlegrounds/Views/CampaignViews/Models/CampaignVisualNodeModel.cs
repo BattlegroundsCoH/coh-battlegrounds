@@ -22,9 +22,11 @@ namespace BattlegroundsApp.Views.CampaignViews.Models {
 
         public Func<ICampaignFormation, CampaignUnitFormationModel> ModelFromFormation { get; init; }
 
-        public string Title => this.Node.NodeName;
+        public Func<ICampaignFormation, CampaignUnitFormationModel> NewModelFromFormation { get; init; }
 
-        public string Description => $"Owned by {this.Node.Owner}";
+        public string Title => this.ResourceContext.GetString(new Battlegrounds.Locale.LocaleKey(this.Node.NodeName), this.Node.NodeName);
+
+        public string Description => $"Owned by {(this.Node.Owner == CampaignArmyTeam.TEAM_ALLIES ? "allies" : "axis")}.";
 
         private double m_formationXOffset;
         private double m_formationYOffset;
@@ -45,16 +47,19 @@ namespace BattlegroundsApp.Views.CampaignViews.Models {
             this.VisualElement = visual is null ? new Ellipse {
                 Width = 32,
                 Height = 32,
+                AllowDrop = true,
             } : new Image() { 
                 Source = visual,
                 Width = 32,
-                Height = 32
+                Height = 32,
+                AllowDrop = true
             };
 
             // Subscribe to events
             this.OwnershipChanged(node, node.Owner);
             this.VisualElement.MouseLeftButtonDown += (a, b) => this.LeftClick();
             this.VisualElement.MouseRightButtonDown += (a, b) => this.RightClick();
+            this.VisualElement.Drop += this.OnDrop;
 
             // Set position of node
             (this as ICampaignPointsNode).SetPosition(node.U * resourceContext.MapWidth - (32.0 / 2.0), node.V * resourceContext.MapHeight - (32.0 / 2.0));
@@ -73,6 +78,11 @@ namespace BattlegroundsApp.Views.CampaignViews.Models {
         }
 
         public void OccupantAdded(ICampaignMapNode node, ICampaignFormation formation) {
+            if (this.ModelFromFormation(formation) is null) {
+                if (this.NewModelFromFormation(formation) is var model) {
+                    this.AddFormation(model);
+                }
+            }
         }
 
         public void OccupantRemoved(ICampaignMapNode node, ICampaignFormation formation) {
@@ -95,11 +105,15 @@ namespace BattlegroundsApp.Views.CampaignViews.Models {
         public void RefreshFormations(IEnumerable<CampaignUnitFormationModel> models) {
             models.ForEach(q => {
                 if (q.Formation.Node == this.Node) {
-                    (double x, double y) = this.GetNextOffset(true);
-                    (x, y) = this.GetRelative(x, y);
-                    (q as ICampaignMapVisual).SetPosition(x, y);
+                    this.AddFormation(q);
                 }
             });
+        }
+
+        private void AddFormation(CampaignUnitFormationModel model) {
+            (double x, double y) = this.GetNextOffset(true);
+            (x, y) = this.GetRelative(x, y);
+            (model as ICampaignMapVisual).SetPosition(x, y);
         }
 
         public (double x, double y) GetNextOffset(bool increment) {
@@ -138,6 +152,26 @@ namespace BattlegroundsApp.Views.CampaignViews.Models {
                 new CampaignSelectableInfoSection(this.ResourceContext.GetResource("attrition_value"), 18, 18, $"{this.Node.Attrition} Attrition Value", "Attrition suffered in each turn."),
             };
             return sections;
+        }
+
+        private void OnDrop(object sender, DragEventArgs e) {
+
+            // Get model
+            CampaignUnitReserveModel model = e.Data.GetData("Unit") as CampaignUnitReserveModel;
+
+            // Make sure we can deploy here
+            if (this.Node.Owner == model.Reserve.EleemntOf.Team) {
+                
+                // Deploy and update UI
+                this.ResourceContext.Controller.Deploy(model.Reserve, this.Node);
+                model.ReserveDeployed?.Execute(model);
+                
+                // Mark handled
+                e.Effects = DragDropEffects.Move;
+                e.Handled = true;
+
+            }
+
         }
 
     }

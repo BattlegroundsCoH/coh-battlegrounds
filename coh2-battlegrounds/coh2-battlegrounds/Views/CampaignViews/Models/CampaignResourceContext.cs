@@ -75,6 +75,15 @@ namespace BattlegroundsApp.Views.CampaignViews.Models {
         public string GetString(LocaleKey localeKey)
             => this.Controller.Locale.GetString(localeKey);
 
+        public string GetString(string localeKey)
+            => this.Controller.Locale.GetString(localeKey);
+
+        public string GetString(LocaleKey localeKey, string backup)
+            => this.Controller.Locale.GetString(localeKey).IfTrue(x => !string.IsNullOrEmpty(x)).ThenDo(x => x).OrDefaultTo(() => backup);
+
+        public string GetString(string localeKey, string backup)
+            => this.Controller.Locale.GetString(localeKey).IfTrue(x => !string.IsNullOrEmpty(x)).ThenDo(x => x).OrDefaultTo(() => backup);
+
         /// <summary>
         /// Get resource identified by <paramref name="resourceKey"/>.
         /// </summary>

@@ -59,12 +59,14 @@ namespace BattlegroundsApp.Views.CampaignViews.Models {
         public bool All(Predicate<CampaignUnitFormationModel> predicate) => this.m_selection.All(x => predicate(x));
 
         public bool Shares<T>(Func<CampaignUnitFormationModel, T> selector) {
-            if (this.Size > 0) {
-                var def = selector(this.m_selection.FirstOrDefault());
-                return this.All(x => def.Equals(selector(x)));
-            } else {
-                return false;
+            if (this.Size == 1) {
+                return true;
+            } else if (this.Size > 0) {
+                if (selector(this.m_selection.FirstOrDefault()) is CampaignUnitFormationModel def) {
+                    return this.m_selection.All(x => def.Equals(selector(x)));
+                }
             }
+            return false;
         }
 
         public List<ICampaignFormation> Get() => this.m_selection.Select(x => x.Formation).ToList();
@@ -80,6 +82,12 @@ namespace BattlegroundsApp.Views.CampaignViews.Models {
                 }
             }
             return count;
+        }
+
+        public void SetSelectionView(ICampaignSelectable selectable) {
+            this.m_selection.Clear();
+            this.SelectionView.Clear();
+            this.SelectionView.Add(new CampaignModelSelectionViewModel(selectable));
         }
 
         public ICampaignFormation[] ToArray() => this.m_selection.Select(x => x.Formation).ToArray();

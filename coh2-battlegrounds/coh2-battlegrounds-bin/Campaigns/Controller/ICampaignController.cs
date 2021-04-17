@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using Battlegrounds.Campaigns.API;
+using Battlegrounds.Campaigns.Organisations;
 using Battlegrounds.Campaigns.Scripting;
 using Battlegrounds.Functional;
 using Battlegrounds.Game.DataCompany;
@@ -149,6 +150,13 @@ namespace Battlegrounds.Campaigns.Controller {
         /// </summary>
         /// <param name="teamType"></param>
         /// <returns></returns>
+        Division[] GetReserves(CampaignArmyTeam teamType);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="teamType"></param>
+        /// <returns></returns>
         ICampaignTeam GetTeam(CampaignArmyTeam teamType);
 
         /// <summary>
@@ -185,6 +193,13 @@ namespace Battlegrounds.Campaigns.Controller {
         /// </summary>
         /// <param name="engagementData"></param>
         void HandleDefender(ref CampaignEngagementData engagementData);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="reserve"></param>
+        /// <param name="node"></param>
+        ICampaignFormation Deploy(Division reserve, ICampaignMapNode node);
 
         /// <summary>
         /// 

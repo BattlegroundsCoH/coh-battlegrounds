@@ -19,4 +19,9 @@ gfx = {
         width = 32,
         height = 32,
     },
+    ["ger_71st_icon"] = {
+        gfx = "divs\\ger_71st.png",
+        width = 32,
+        height = 32,
+    }
 }

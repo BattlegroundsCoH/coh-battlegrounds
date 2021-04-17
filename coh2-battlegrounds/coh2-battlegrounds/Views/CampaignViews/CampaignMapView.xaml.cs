@@ -1,22 +1,12 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.Linq;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Animation;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
 using System.Windows.Shapes;
 
 using Battlegrounds.Campaigns.API;
@@ -83,6 +73,7 @@ namespace BattlegroundsApp.Views.CampaignViews {
 
             // Init lists
             this.CampaignActiveGoals = new ObservableCollection<CampaignObjectiveModel>();
+            this.CampaignAvailableReserves = new ObservableCollection<CampaignUnitReserveModel>();
             this.m_formationViews = new List<CampaignUnitFormationModel>();
             this.m_nodes = new List<ICampaignPointsNode>();
 
@@ -103,12 +94,10 @@ namespace BattlegroundsApp.Views.CampaignViews {
             if (controller.IsSingleplayer) {
                 this.CampaignChat.Visibility = Visibility.Collapsed;
                 // TODO: Expand selection view
-            } else {
-
             }
 
             // Self
-            var self = this.Controller.GetSelf();
+            var self = controller.GetSelf();
 
             // Loop over objectives
             var goals = controller.Goals.GetGoals(self.FactionName); // TODO: Fix fake-it code
@@ -118,8 +107,8 @@ namespace BattlegroundsApp.Views.CampaignViews {
                 }
             }
 
-            // Loop over reserves
-
+            // Refresh reserves
+            this.RefreshReserves();
 
         }
 
@@ -281,7 +270,8 @@ namespace BattlegroundsApp.Views.CampaignViews {
 
                 // TODO: Check if leaf then create different model
                 ICampaignPointsNode visualNode = new CampaignVisualNodeModel(n, this.ResourceContext) {
-                    ModelFromFormation = this.FromFormation
+                    ModelFromFormation = this.FromFormation,
+                    NewModelFromFormation = this.NewFormation
                 };
 
                 // Add click check
@@ -325,48 +315,53 @@ namespace BattlegroundsApp.Views.CampaignViews {
             this.ClearFormations();
 
             // Loop through all formations and display them
-            this.Controller.Map.EachFormation(f => {
-
-                // Banner file
-                string banner_element = $"{f.Army}_banner";
-
-                // Create space for UI element (default to null)
-                UIElement displayElement = null;
-
-                // If it exists, use an image, otherwise some other default pinkish shape
-                if (this.m_resourceContext.GetResource(banner_element) is ImageSource img) {
-
-                    // Create image
-                    displayElement = new Image() {
-                        Source = img,
-                        Width = 24,
-                        Height = 32,
-                        Tag = f,
-                    };
-
-                    // Add handler(s)
-                    displayElement.MouseDown += this.BannerClicked;
-
-                    // Add to canvas
-                    this.CampaignMapCanvas.Children.Add(displayElement);
-
-                }
-
-                // Create container type
-                CampaignUnitFormationModel cufv = new CampaignUnitFormationModel(displayElement, f, this.ResourceContext) {
-                    NodeModelFetcher = this.FromNode,
-                    UnitModelFetcher = this.FromFormation,
-                    ThreadDispatcher = this.ThreadDispatcher,
-                    RemoveHandle = this.RemoveFormation
-                };
-
-                // Add to formation view
-                this.m_formationViews.Add(cufv);
-
-            });
+            this.Controller.Map.EachFormation(f => this.NewFormation(f));
 
             // Refresh formations
             this.m_nodes.ForEach(x => (x as CampaignVisualNodeModel)?.RefreshFormations(this.m_formationViews));
+
+        }
+
+        private CampaignUnitFormationModel NewFormation(ICampaignFormation formation) {
+
+            // Banner file
+            string banner_element = $"{formation.Army}_banner";
+
+            // Create space for UI element (default to null)
+            UIElement displayElement = null;
+
+            // If it exists, use an image, otherwise some other default pinkish shape
+            if (this.m_resourceContext.GetResource(banner_element) is ImageSource img) {
+
+                // Create image
+                displayElement = new Image() {
+                    Source = img,
+                    Width = 24,
+                    Height = 32,
+                    Tag = formation,
+                };
+
+                // Add handler(s)
+                displayElement.MouseDown += this.BannerClicked;
+
+                // Add to canvas
+                this.CampaignMapCanvas.Children.Add(displayElement);
+
+            }
+
+            // Create container type
+            CampaignUnitFormationModel cufv = new CampaignUnitFormationModel(displayElement, formation, this.ResourceContext) {
+                NodeModelFetcher = this.FromNode,
+                UnitModelFetcher = this.FromFormation,
+                ThreadDispatcher = this.ThreadDispatcher,
+                RemoveHandle = this.RemoveFormation
+            };
+
+            // Add to formation view
+            this.m_formationViews.Add(cufv);
+
+            // Return new formation
+            return cufv;
 
         }
 
@@ -528,6 +523,30 @@ namespace BattlegroundsApp.Views.CampaignViews {
                 this.CampaignMapCanvas.Children.Remove(model.VisualElement);
             }
         }
+
+        private void RefreshReserves() {
+
+            // Get self
+            var self = this.Controller.GetSelf();
+
+            // Loop over reserves
+            var reserves = this.Controller.GetReserves(self.Team.Team);
+            foreach (var reserve in reserves) {
+                if (reserve.EleemntOf.Faction.Name == self.FactionName) {
+                    this.CampaignAvailableReserves.Add(new CampaignUnitReserveModel(reserve, this.ResourceContext) {
+                        ReserveClicked = new RelayCommand<CampaignUnitReserveModel>(ReserveUnitClicked),
+                        ReserveDeployed = new RelayCommand<CampaignUnitReserveModel>(ReserveUnitDeployed),
+                    });
+                }
+            }
+
+        }
+
+        private void ReserveUnitClicked(CampaignUnitReserveModel model)
+            => this.Selection.SetSelectionView(model);
+
+        private void ReserveUnitDeployed(CampaignUnitReserveModel model)
+            => this.CampaignAvailableReserves.Remove(model);
 
     }
 

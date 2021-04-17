@@ -3,10 +3,12 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
+
 using Battlegrounds.Campaigns.API;
 using Battlegrounds.Campaigns.Organisations;
 using Battlegrounds.Functional;
 using Battlegrounds.Util.Coroutines;
+
 using BattlegroundsApp.Utilities;
 
 namespace BattlegroundsApp.Views.CampaignViews.Models {
@@ -25,11 +27,11 @@ namespace BattlegroundsApp.Views.CampaignViews.Models {
 
         public GUIThreadDispatcher ThreadDispatcher { get; init; }
 
-        public string Title => this.Formation.Army;
+        public CampaignResourceContext ResourceContext { get; }
+
+        public string Title => this.ResourceContext.GetString(this.Formation.Regiments.FirstOrDefault().ElementOf.Name);
 
         public string Description => "No description available";
-
-        public CampaignResourceContext ResourceContext { get; }
 
         public CampaignUnitFormationModel(UIElement element, ICampaignFormation formation, CampaignResourceContext resourceContext) {
             this.VisualElement = element;
@@ -95,34 +97,45 @@ namespace BattlegroundsApp.Views.CampaignViews.Models {
             List<CampaignSelectableInfoSection> infos = new List<CampaignSelectableInfoSection>() {
                 new CampaignSelectableInfoSection(this.ResourceContext.GetResource("unit_infantry"), 24, 24, $"{(this.Formation.CalculateStrength()*100.0):0}% Combat Strength")
             };
+            infos.AddRange(GetUnitData(this.Formation.Regiments, this.ResourceContext));
+            return infos.ToArray();
 
-            int infantry = this.Formation.Regiments.Sum(x => x.CountType(Regiment.UT_INFANTRY));
-            int support = this.Formation.Regiments.Sum(x => x.CountType(Regiment.UT_SUPPORT));
-            int vehicle = this.Formation.Regiments.Sum(x => x.CountType(Regiment.UT_VEHICLE));
-            int tank = this.Formation.Regiments.Sum(x => x.CountType(Regiment.UT_TANK));
-            int air = this.Formation.Regiments.Sum(x => x.CountType(Regiment.UT_AIR));
+        }
+
+        public static List<CampaignSelectableInfoSection> GetUnitData(IEnumerable<Regiment> regiments, CampaignResourceContext context) {
+
+            // Init container
+            List<CampaignSelectableInfoSection> infos = new List<CampaignSelectableInfoSection>();
+
+            // Get counts
+            int infantry = regiments.Sum(x => x.CountType(Regiment.UT_INFANTRY));
+            int support = regiments.Sum(x => x.CountType(Regiment.UT_SUPPORT));
+            int vehicle = regiments.Sum(x => x.CountType(Regiment.UT_VEHICLE));
+            int tank = regiments.Sum(x => x.CountType(Regiment.UT_TANK));
+            int air = regiments.Sum(x => x.CountType(Regiment.UT_AIR));
 
             if (infantry >= 1) {
-                infos.Add(new CampaignSelectableInfoSection(this.ResourceContext.GetResource("unit_infantry"), 24, 24, $"{infantry} Infantry units available."));
+                infos.Add(new CampaignSelectableInfoSection(context.GetResource("unit_infantry"), 24, 24, $"{infantry} Infantry units available."));
             }
 
             if (support >= 1) {
-                infos.Add(new CampaignSelectableInfoSection(this.ResourceContext.GetResource("unit_support"), 24, 24, $"{support} Support units available."));
-            }
-            
-            if (vehicle >= 1) {
-                infos.Add(new CampaignSelectableInfoSection(this.ResourceContext.GetResource("unit_vehicle"), 24, 24, $"{vehicle} Vehicle units available."));
-            }
-            
-            if (tank >= 1) {
-                infos.Add(new CampaignSelectableInfoSection(this.ResourceContext.GetResource("unit_tank"), 24, 24, $"{tank} Armour units available."));
-            }
-            
-            if (air >= 1) {
-                infos.Add(new CampaignSelectableInfoSection(this.ResourceContext.GetResource("unit_air"), 24, 24, $"{air} Air units available."));
+                infos.Add(new CampaignSelectableInfoSection(context.GetResource("unit_support"), 24, 24, $"{support} Support units available."));
             }
 
-            return infos.ToArray();
+            if (vehicle >= 1) {
+                infos.Add(new CampaignSelectableInfoSection(context.GetResource("unit_vehicle"), 24, 24, $"{vehicle} Vehicle units available."));
+            }
+
+            if (tank >= 1) {
+                infos.Add(new CampaignSelectableInfoSection(context.GetResource("unit_tank"), 24, 24, $"{tank} Armour units available."));
+            }
+
+            if (air >= 1) {
+                infos.Add(new CampaignSelectableInfoSection(context.GetResource("unit_air"), 24, 24, $"{air} Air units available."));
+            }
+
+            // Return data
+            return infos;
 
         }
 
