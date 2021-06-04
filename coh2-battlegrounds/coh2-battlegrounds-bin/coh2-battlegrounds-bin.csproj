@@ -14,4 +14,10 @@
     <Folder Include="Lua\Correctness\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Reference Include="coh2-battlegrounds-networking">
+      <HintPath>..\coh2-battlegrounds-networking.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
 </Project>

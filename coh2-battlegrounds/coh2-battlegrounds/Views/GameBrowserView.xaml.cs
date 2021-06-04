@@ -1,24 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
+﻿using System.Windows;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using System.Diagnostics;
+using System.Threading.Tasks;
 
 using Battlegrounds;
-using Battlegrounds.Online.Services;
-using BattlegroundsApp.Dialogs.HostGame;
-using BattlegroundsApp.Dialogs.Service;
-using BattlegroundsApp.Utilities;
+using Battlegrounds.Networking;
+using Battlegrounds.Networking.Server;
 using Battlegrounds.Online.Lobby;
+using Battlegrounds.Online.Services;
+
+using BattlegroundsApp.Dialogs.HostGame;
+using BattlegroundsApp.Utilities;
 using BattlegroundsApp.Dialogs.LobbyPassword;
+using Battlegrounds.Networking.Lobby;
 
 namespace BattlegroundsApp.Views {
 
@@ -30,56 +24,64 @@ namespace BattlegroundsApp.Views {
         public ICommand HostGameCommand { get; private set; }
 
         private LobbyHub m_hub;
-
-        /// <summary>
-        /// Flag: Can connect to the external <see cref="LobbyHub"/>.
-        /// </summary>
-        public static bool HasLobbyHubConnection => LobbyHub.CanConnect();
+        private ServerAPI m_api;
 
         public GameBrowserView() {
 
             // Initialize component
-            InitializeComponent();
+            this.InitializeComponent();
+
+            // Create API Instance
+            this.m_api = new ServerAPI("194.37.80.249");
 
             // Create lobby hub with local steam user
-            this.m_hub = new LobbyHub {
+            /*this.m_hub = new LobbyHub {
                 User = BattlegroundsInstance.Steam.User
-            };
+            };*/
 
-            HostGameCommand = new RelayCommand(HostLobby);
+            // Set host game command
+            this.HostGameCommand = new RelayCommand(this.HostLobby);
 
         }
 
-        private void GetLobbyList() {
+        public void RefreshLobby() {
 
             // Clear the current lobby list
-            GameLobbyList.Items.Clear();
-
-            // Get connectable lobbies and add them
-            this.m_hub.GetConnectableLobbies(x => this.UpdateGUI(() => this.GameLobbyList.Items.Add(x)), true);
+            this.GameLobbyList.Items.Clear();
 
             // Log refresh
             Trace.WriteLine("Refreshing lobby list", "GameBrowserView");
 
+            // Get lobbies async
+            Task.Run(() => {
+
+                // Get lobbies
+                var lobbies = this.m_api.GetLobbies();
+
+                // update lobbies
+                this.UpdateGUI(() => lobbies.ForEach(x => this.GameLobbyList.Items.Add(x)));
+
+            });
+
         }
 
-        private void RefreshLobbyList_Click(object sender, RoutedEventArgs e) => this.GetLobbyList();
+        private void RefreshLobbyList_Click(object sender, RoutedEventArgs e) => this.RefreshLobby();
 
         private void JoinLobby_Click(object sender, RoutedEventArgs e) {
 
-            if (GameLobbyList.SelectedItem is ConnectableLobby lobby) {
+            if (this.GameLobbyList.SelectedItem is ConnectableLobby lobby) {
 
                 // Get password (if any)
                 string lobbyPassword = string.Empty;
                 if (lobby.IsPasswordProtected) {
-                    var result = LobbyPasswordDialogViewModel.ShowLobbyPasswordDialog("Connect to lobby", out lobbyPassword);
+                    LobbyPasswordDialogResult result = LobbyPasswordDialogViewModel.ShowLobbyPasswordDialog("Connect to lobby", out lobbyPassword);
                     if (result == LobbyPasswordDialogResult.Cancel) {
                         return;
                     }
                 }
 
                 // Create new connecting view
-                var connectingView = new GameLobbyConnectingView(this.m_hub, lobby.LobbyGUID, lobby.LobbyName, lobbyPassword);
+                GameLobbyConnectingView connectingView = new GameLobbyConnectingView(this.m_hub, lobby.LobbyGUID, lobby.LobbyName, lobbyPassword);
 
                 // Change state to connecting view
                 this.StateChangeRequest?.Invoke(connectingView);
@@ -90,12 +92,33 @@ namespace BattlegroundsApp.Views {
 
         private void HostLobby() {
 
-            var result = HostGameDialogViewModel.ShowHostGameDialog("Host Game", out string lobbyName, out string lobbyPwd);
+            // Get host information
+            HostGameDialogResult result = HostGameDialogViewModel.ShowHostGameDialog("Host Game", out string lobbyName, out string lobbyPwd);
             
+            // Check if user actually wants to host.
             if (result == HostGameDialogResult.Host) {
 
-                // Call the host function
-                ManagedLobby.Host(this.m_hub, lobbyName, lobbyPwd, this.HostLobbyServerResponse);
+                // Check for null
+                if (lobbyPwd is null) {
+                    lobbyPwd = string.Empty;
+                }
+
+                // Create lobby
+                Task.Run(() => LobbyUtil.HostLobby(this.m_api, lobbyName, lobbyPwd, this.HostLobbyResponse));
+
+            }
+
+        }
+
+        private void HostLobbyResponse(bool result, LobbyHandler lobby) {
+
+            if (result) {
+
+                Trace.WriteLine("Succsefully hosted lobby.", nameof(GameBrowserView));
+
+            } else {
+
+                Trace.WriteLine("Failed to host host lobby.", nameof(GameBrowserView));
 
             }
 
@@ -131,7 +154,7 @@ namespace BattlegroundsApp.Views {
             if (this.GameLobbyList.Items.Count == 0) {
 
                 // Get lobby list
-                this.GetLobbyList();
+                this.RefreshLobby();
 
             }
 
