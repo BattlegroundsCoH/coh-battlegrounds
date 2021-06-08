@@ -5,7 +5,6 @@ using System.Diagnostics;
 using System.Diagnostics.Contracts;
 using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media.Imaging;
@@ -17,16 +16,12 @@ using Battlegrounds.Game.DataCompany;
 using Battlegrounds.Game.Gameplay;
 using Battlegrounds.Game.Match;
 using Battlegrounds.Modding;
-using Battlegrounds.Networking;
 using Battlegrounds.Networking.Lobby;
 using Battlegrounds.Online.Lobby;
 
 using BattlegroundsApp.Controls.Lobby;
-using BattlegroundsApp.Dialogs.YesNo;
-using BattlegroundsApp.LocalData;
 using BattlegroundsApp.Models;
 using BattlegroundsApp.Resources;
-using BattlegroundsApp.Views.ViewComponent;
 
 namespace BattlegroundsApp.Views {
 
@@ -36,16 +31,13 @@ namespace BattlegroundsApp.Views {
     public partial class GameLobbyView : ViewState, INotifyPropertyChanged {
 
         private class GameLobbyViewScenarioItem {
-            private Scenario m_scenario;
-            public Scenario Scenario => this.m_scenario;
+            public Scenario Scenario { get; }
             private string m_display;
             public GameLobbyViewScenarioItem(Scenario scenario) {
-                this.m_scenario = scenario;
-                this.m_display = this.m_scenario.Name;
-                if (this.m_scenario.Name.StartsWith("$")) {
-                    if (uint.TryParse(this.m_scenario.Name[1..], out uint key)) {
-                        this.m_display = GameLocale.GetString(key);
-                    }
+                this.Scenario = scenario;
+                this.m_display = this.Scenario.Name;
+                if (this.Scenario.Name.StartsWith("$") && uint.TryParse(this.Scenario.Name[1..], out uint key)) {
+                    this.m_display = GameLocale.GetString(key);
                 }
             }
             public override string ToString() => this.m_display;
@@ -95,30 +87,48 @@ namespace BattlegroundsApp.Views {
 
         }
 
-        private void UpdateAvailableGamemodes() {
+        private void UpdateAvailableGamemodes(Scenario scenario) {
+            Contract.Requires(scenario is not null, "Scenario cannot be null");
 
-        }
+            // Keep track of old gamemode
+            Wincondition currentGamemode = this.Gamemode.SelectedItem as Wincondition;
+            int currentOption = this.GamemodeOption.SelectedIndex;
 
-        private void Map_SelectedItemChanged(object sender, SelectionChangedEventArgs e) {
-            if (this.Map.State is OtherState) {
+            // Set available gamemodes
+            List<Wincondition> source = scenario.Gamemodes.Count > 0 ? scenario.Gamemodes : WinconditionList.GetDefaultList();
+            if (source.All(this.Gamemode.Items.Contains)) { // if nore changes are made, just dont update
                 return;
             }
-            if (this.Map.SelectedItem is GameLobbyViewScenarioItem scenarioItem) {
-                Scenario scenario = scenarioItem.Scenario;
-                if (scenario is not null) {
-                    HostedLobby lobby = this.m_handler.Lobby as HostedLobby;
-                    lobby.SetMode(scenario.Name, null, null);
-                    this.UpdateMapPreview(scenario);
+
+            this.Gamemode.ItemsSource = source;
+            int oldgamemode = this.Gamemode.Items.IndexOf(currentGamemode);
+            this.Gamemode.SelectedIndex = oldgamemode == -1 ? 0 : oldgamemode;
+
+            // If current gamemode was found
+            if (this.Gamemode.SelectedItem is Wincondition wincon) {
+                if (wincon.Options?.Length > 0) {
+                    this.Gamemode.Visibility = Visibility.Visible;
+                    if (oldgamemode != -1) {
+                        this.Gamemode.SelectedIndex = currentOption;
+                    } else {
+                        this.GamemodeOption.SelectedIndex = wincon.DefaultOptionIndex;
+                    }
+                } else {
+                    this.GamemodeOption.Visibility = Visibility.Hidden;
                 }
+            } else {
+                Trace.WriteLine($"Failed to get wincondition list for scenario {scenario.RelativeFilename}", nameof(GameLobbyView));
             }
+
         }
 
         private void UpdateMapPreview(Scenario scenario) {
-            
-            // Verify contract
             Contract.Requires(scenario is not null, "Scenario cannot be null");
 
+            // Get Path
             string fullpath = Path.GetFullPath($"bin\\gfx\\map_icons\\{scenario.RelativeFilename}_map.tga");
+
+            // Check if file exists
             if (File.Exists(fullpath)) {
                 try {
                     this.mapImage.Source = TgaImageSource.TargaBitmapSourceFromFile(fullpath);
@@ -140,9 +150,12 @@ namespace BattlegroundsApp.Views {
                 }
             }
 
-            this.mapImage.Source = new BitmapImage(new Uri("pack://application:,,,/Resources/ingame/unknown_map.png"));
+            // If no image is set, set to unknown
+            this.SetUnknownMapPreview();
 
         }
+
+        private void SetUnknownMapPreview() => this.mapImage.Source = new BitmapImage(new Uri("pack://application:,,,/Resources/ingame/unknown_map.png"));
 
         public SessionInfo CreateSessionInfo() {
 
@@ -159,7 +172,7 @@ namespace BattlegroundsApp.Views {
 
             //this.m_gamemode.SaveDefaults();
 
-            Scenario selectedScenario = (Map.SelectedItem as GameLobbyViewScenarioItem).Scenario;
+            Scenario selectedScenario = (this.Map.SelectedItem as GameLobbyViewScenarioItem).Scenario;
             if (selectedScenario is null) {
                 // TODO: Handle
             }
@@ -183,27 +196,68 @@ namespace BattlegroundsApp.Views {
 
         }
 
-        private void UpdateGamemodeOptions(Wincondition wc) {
+        private void Map_SelectedItemChanged(object sender, SelectionChangedEventArgs e) {
+
+            if (this.Map.State is OtherState) {
+                return;
+            }
+
+            if (this.Map.SelectedItem is GameLobbyViewScenarioItem scenarioItem) {
+                Scenario scenario = scenarioItem.Scenario;
+                if (scenario is not null) {
+
+                    // Update lobby data
+                    HostedLobby lobby = this.m_handler.Lobby as HostedLobby;
+                    lobby.SetMode(scenario.Name, null, null);
+
+                    this.UpdateMapPreview(scenario);
+                    this.UpdateAvailableGamemodes(scenario);
+                }
+            }
+
         }
 
         private void Gamemode_SelectedItemChanged(object sender, SelectionChangedEventArgs e) {
-            if (Gamemode.State is OtherState) {
+
+            // Do not update if not able to
+            if (this.Gamemode.State is OtherState) {
                 return;
             }
-            if (Gamemode.SelectedItem is Wincondition wincon) {
-                this.UpdateGamemodeOptions(wincon);
+
+            // If gamemode is selected, update option
+            if (this.Gamemode.SelectedItem is Wincondition wincon) {
+
+                this.GamemodeOption.Visibility = (wincon.Options is null || wincon.Options.Length == 0) ? Visibility.Hidden : Visibility.Visible;
+                this.GamemodeOption.ItemsSource = wincon.Options;
+                this.GamemodeOption.SelectedIndex = wincon.DefaultOptionIndex;
+
+                // Update lobby data
+                HostedLobby lobby = this.m_handler.Lobby as HostedLobby;
+                lobby.SetMode(null, wincon.Name, null);
+
             }
+
         }
 
         private void GamemodeOption_SelectedItemChanged(object sender, SelectionChangedEventArgs e) {
-            if (GamemodeOption.State is OtherState) {
+
+            // Do not update if not able to
+            if (this.GamemodeOption.State is OtherState) {
                 return;
             }
-            if (GamemodeOption.SelectedItem is WinconditionOption) {
+
+            // If valid option
+            if (this.GamemodeOption.SelectedItem is WinconditionOption option) {
+
+                // Update lobby data
+                HostedLobby lobby = this.m_handler.Lobby as HostedLobby;
+                lobby.SetMode(null, null, option.Title);
+
             }
+
         }
 
-        private void UpdateStartMatchButton() => this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(CanStartMatch)));
+        private void UpdateStartMatchButton() => this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(this.CanStartMatch)));
 
         private bool IsLegalMatch()
             => false;
@@ -262,14 +316,10 @@ namespace BattlegroundsApp.Views {
 
         }
 
-        public void RefreshGameSettings() {
-
-        }
-
         private void PopulateDropdowns() {
 
             // Get the scenarios and set source
-            var scenarioSource = ScenarioList.GetList().Select(x => new GameLobbyViewScenarioItem(x)).ToList();
+            List<GameLobbyViewScenarioItem> scenarioSource = ScenarioList.GetList().Select(x => new GameLobbyViewScenarioItem(x)).ToList();
             this.Map.ItemsSource = scenarioSource;
 
             // If no mapp has been selected
@@ -278,12 +328,6 @@ namespace BattlegroundsApp.Views {
                 // Find map to select
                 int selectedScenario = scenarioSource.FindIndex(x => x.Scenario.RelativeFilename.CompareTo(BattlegroundsInstance.LastPlayedMap) == 0);
                 this.Map.SelectedIndex = selectedScenario != -1 ? selectedScenario : 0;
-
-                // Get selected scenario and update lobby accordingly
-                var scen = (this.Map.SelectedItem as GameLobbyViewScenarioItem).Scenario;
-
-                // Update available gamemodes
-                this.UpdateAvailableGamemodes();
 
             }
 
