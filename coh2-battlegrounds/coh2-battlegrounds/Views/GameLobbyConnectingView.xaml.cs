@@ -66,12 +66,7 @@ namespace BattlegroundsApp.Views {
                 this.UpdateGUI(() => {
                     
                     // Create lobby view
-                    this.m_lobby = new GameLobbyView();
-                    this.m_lobby.CreateMessageHandler(result);
-                    this.m_lobby.AddMetaMessageListener(this.OnMetaMessage);
-                    this.m_lobby.AddJoinMessageListener(this.OnPlayerJoin);
-                    this.m_lobby.EnableHostMode(false);
-                    this.m_lobby.RefreshGameSettings();
+                    this.m_lobby = new GameLobbyView(null);
 
                 });
 
@@ -105,10 +100,6 @@ namespace BattlegroundsApp.Views {
                     Trace.WriteLine("Received join OK", "ConnectingState");
 
                     // TODO: Do more here
-
-                    // Remove self as listener
-                    this.m_lobby.RemoveMetaMessageListener(this.OnMetaMessage);
-                    this.m_lobby.RemoveJoinMessageListener(this.OnPlayerJoin);
 
                     // Begin refresh
                     this.m_lobby.RefreshTeams(this.OnTeamsRefreshed);

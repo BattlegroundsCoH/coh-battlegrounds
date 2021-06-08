@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 using Battlegrounds.Networking.Communication;
 using Battlegrounds.Networking.Communication.Messaging;
@@ -17,7 +13,7 @@ namespace Battlegrounds.Networking.Lobby {
 
     public static class LobbyUtil {
 
-        public static void HostLobby(ServerAPI serverAPI, string lobbyName, string lobbyPassword,  Action<bool, LobbyHandler> onLobbyCreated) {
+        public static void HostLobby(ServerAPI serverAPI, string lobbyName, string lobbyPassword, Action<bool, LobbyHandler> onLobbyCreated) {
 
             // Get steam user
             SteamUser steamUser = BattlegroundsInstance.Steam.User;
@@ -40,17 +36,18 @@ namespace Battlegrounds.Networking.Lobby {
 
             // Success flag
             bool success = false;
-            
+
             // Define handler
             LobbyHandler handler = null;
 
             try {
 
                 // Establish connection
-                TcpConnection connection = TcpConnection.EstablishConnectionTo("194.37.80.249", 11000, steamUser.ID);
+                TcpConnection connection = TcpConnection.EstablishConnectionTo(NetworkingInstance.GetBestAddress(), 11000, steamUser.ID);
 
                 // Create handler
                 HostRequestHandler requestHandler = new HostRequestHandler(connection, service, cachedPool);
+                lobby.RequestHandler = requestHandler;
 
                 // Set connection
                 connection.SetRequestHandler(requestHandler);

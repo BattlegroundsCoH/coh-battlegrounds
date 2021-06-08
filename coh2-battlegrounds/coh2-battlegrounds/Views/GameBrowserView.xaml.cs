@@ -31,14 +31,6 @@ namespace BattlegroundsApp.Views {
             // Initialize component
             this.InitializeComponent();
 
-            // Create API Instance
-            this.m_api = new ServerAPI("194.37.80.249");
-
-            // Create lobby hub with local steam user
-            /*this.m_hub = new LobbyHub {
-                User = BattlegroundsInstance.Steam.User
-            };*/
-
             // Set host game command
             this.HostGameCommand = new RelayCommand(this.HostLobby);
 
@@ -115,25 +107,10 @@ namespace BattlegroundsApp.Views {
             if (result) {
 
                 Trace.WriteLine("Succsefully hosted lobby.", nameof(GameBrowserView));
-
-            } else {
-
-                Trace.WriteLine("Failed to host host lobby.", nameof(GameBrowserView));
-
-            }
-
-        }
-
-        private void HostLobbyServerResponse(ManagedLobbyStatus status, ManagedLobby result) {
-
-            // Make sure it was a success
-            if (status.Success) {
-
                 this.UpdateGUI(() => {
 
                     // Create lobby view
-                    GameLobbyView lobbyView = new GameLobbyView();
-                    lobbyView.CreateMessageHandler(result);
+                    GameLobbyView lobbyView = new GameLobbyView(lobby);
 
                     // Request state change
                     if (this.StateChangeRequest?.Invoke(lobbyView) is false) {
@@ -143,12 +120,26 @@ namespace BattlegroundsApp.Views {
                 });
 
             } else {
-                MessageBox.Show($"Failed to create lobby.\nServer Message: {status.Message}", "Server Error", MessageBoxButton.OK, MessageBoxImage.Error);
+
+                Trace.WriteLine("Failed to host lobby.", nameof(GameBrowserView));
+                MessageBox.Show("Failed to host lobby (Failed to connect to server).", "Failure", MessageBoxButton.OK, MessageBoxImage.Error);
+
             }
 
         }
 
         public override void StateOnFocus() {
+
+            if (this.m_api is null) {
+
+#if DEBUG
+                Trace.WriteLine($"Local server instance detected = {NetworkingInstance.HasLocalServer()}", nameof(GameBrowserView));
+#endif
+
+                // Create API Instance
+                this.m_api = NetworkingInstance.GetServerAPI();
+
+            }
 
             // Should only do this if there are no servers already listed
             if (this.GameLobbyList.Items.Count == 0) {
