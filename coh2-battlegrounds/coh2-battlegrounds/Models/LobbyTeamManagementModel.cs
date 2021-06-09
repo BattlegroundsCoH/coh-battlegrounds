@@ -31,6 +31,7 @@ namespace BattlegroundsApp.Models {
         private Dictionary<LobbyTeamType, TeamPlayerCard[]> m_teamSetup;
 
         private LobbyHandler m_handler;
+        private TeamPlayerCard m_selfCard;
 
         public event Action<LobbyTeamType, TeamPlayerCard, object, string> OnTeamEvent;
 
@@ -45,6 +46,13 @@ namespace BattlegroundsApp.Models {
                 [LobbyTeamType.Allies] = teamPlayerCards[1],
                 [LobbyTeamType.Axis] = teamPlayerCards[2],
             };
+
+            // Init cards
+            foreach (KeyValuePair<LobbyTeamType, TeamPlayerCard[]> kvp in this.m_teamSetup) {
+                for (int i = 0; i < kvp.Value.Length; i++) {
+                    kvp.Value[i].Init(this.m_handler, kvp.Key, i);
+                }
+            }
 
         }
 
@@ -109,12 +117,18 @@ namespace BattlegroundsApp.Models {
 
                 // Get the occupant
                 ILobbyMember occupant = slot.SlotOccupant;
+                LobbyAIMember ai = occupant as LobbyAIMember;
+                bool isAI = ai is not null;
 
                 // Determine viewstate
                 if (isObserver) {
                     playerCard.SetCardState(TeamPlayerCard.OBSERVERSTATE);
                 } else {
-                    playerCard.SetCardState(occupant.IsLocalMachine ? TeamPlayerCard.SELFSTATE : TeamPlayerCard.OCCUPIEDSTATE);
+                    if (this.m_handler.IsHost && isAI) {
+                        playerCard.SetCardState(TeamPlayerCard.AISTATE);
+                    } else {
+                        playerCard.SetCardState(occupant.Equals(this.m_handler.Self) ? TeamPlayerCard.SELFSTATE : TeamPlayerCard.OCCUPIEDSTATE);
+                    }
                 }
 
                 // Set player visual data
@@ -124,11 +138,43 @@ namespace BattlegroundsApp.Models {
                 playerCard.IsAllies = !isObserver && Faction.FromName(occupant.Army).IsAllied;
 
                 // If self, make refresh army and company data
-                if (occupant.IsLocalMachine && !isObserver) {
-                    playerCard.SetSelfDataIfNone();
+                if (occupant.Equals(this.m_handler.Self) && !isObserver) {
+                    playerCard.RefreshArmyData();
+                    playerCard.OnFactionChangedHandle = this.SelfChangedArmy;
+                    playerCard.OnCompanyChangedHandle = this.SelfChangedCompany;
+                    this.m_selfCard = playerCard;
+                } else {
+                    if (this.m_handler.IsHost && isAI) {
+                        playerCard.OnFactionChangedHandle = x => this.AIChangedArmy(ai, x);
+                        playerCard.OnCompanyChangedHandle = x => this.AIChangedCompany(ai, x);
+                    } else {
+                        playerCard.OnCompanyChangedHandle = null;
+                        playerCard.OnFactionChangedHandle = null;
+                    }
                 }
 
             }
+
+        }
+
+        private void SelfChangedCompany(TeamPlayerCompanyItem companyItem) {
+            if (companyItem is not null) {
+                this.m_handler.Lobby.Self.SetCompany(companyItem.Name, companyItem.Strength);
+            }
+        }
+
+        private void SelfChangedArmy(TeamPlayerArmyItem armyItem) {
+            if (armyItem is not null && Faction.FromName(armyItem.Name) is Faction faction) {
+                this.m_handler.Lobby.Self.SetArmy(faction.Name);
+                this.m_selfCard.RefreshCompanyData();
+            }
+        }
+
+        private void AIChangedCompany(LobbyAIMember lobbyAIMember, TeamPlayerCompanyItem companyItem) {
+
+        }
+
+        private void AIChangedArmy(LobbyAIMember lobbyAIMember, TeamPlayerArmyItem armyItem) {
 
         }
 
