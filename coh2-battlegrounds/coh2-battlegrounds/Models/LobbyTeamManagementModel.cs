@@ -10,6 +10,7 @@ using Battlegrounds.Game;
 using Battlegrounds.Game.DataCompany;
 using Battlegrounds.Game.Gameplay;
 using Battlegrounds.Game.Match;
+using Battlegrounds.Networking.Lobby;
 using Battlegrounds.Online.Lobby;
 
 using BattlegroundsApp.LocalData;
@@ -23,8 +24,9 @@ namespace BattlegroundsApp.Models {
 
         private Grid m_teamGrid;
         private int m_maxPlayerCount;
-        private bool m_isHost;
         private Dictionary<ManagedLobbyTeamType, List<PlayerCardView>> m_teamSetup;
+
+        private LobbyHandler m_handler;
 
         public event Action<ManagedLobbyTeamType, PlayerCardView, object, string> OnTeamEvent;
 
@@ -39,21 +41,26 @@ namespace BattlegroundsApp.Models {
         public int TotalHumanCount =>
             this.m_teamSetup[ManagedLobbyTeamType.Axis].Count(x => !x.IsAI && x.IsOccupied) + this.m_teamSetup[ManagedLobbyTeamType.Allies].Count(x => !x.IsAI && x.IsOccupied);
 
-        public LobbyTeamManagementModel(Grid teamGrid) {
-            
+        public LobbyTeamManagementModel(Grid teamGrid, LobbyHandler lobbyHandler) {
+
+            // Set the handler
+            this.m_handler = lobbyHandler;
+
+            // Prepare team grid
             this.m_teamGrid = teamGrid;
             this.m_teamSetup = new Dictionary<ManagedLobbyTeamType, List<PlayerCardView>>() {
                 [ManagedLobbyTeamType.Allies] = new List<PlayerCardView>(),
                 [ManagedLobbyTeamType.Axis] = new List<PlayerCardView>(),
             };
             
+            // Create player cards.
             for (int i = 0; i < MAX_TEAM_PLAYERCOUNT; i++) {
                 this.CreatePlayercard(i, ManagedLobbyTeamType.Allies);
                 this.CreatePlayercard(i, ManagedLobbyTeamType.Axis);
             }
-            
-            this.SetMaxPlayers(2);
-            this.m_isHost = false;
+
+            // Set host state
+            this.SetIsHost(this.m_handler.IsHost);
 
         }
 
@@ -172,9 +179,11 @@ namespace BattlegroundsApp.Models {
             => this.m_teamSetup[ManagedLobbyTeamType.Allies].Contains(playerCard) ? ManagedLobbyTeamType.Allies : ManagedLobbyTeamType.Axis;
 
         private void OnCardActionHandler(PlayerCardView sender, string reason) {
-            if (!(this.m_isHost || BattlegroundsInstance.IsLocalUser(sender.PlayerSteamID))) {
+            
+            if (!(this.m_handler.IsHost || BattlegroundsInstance.IsLocalUser(sender.PlayerSteamID))) {
                 return;
             }
+
             ManagedLobbyTeamType teamOf = this.GetTeamOfCard(sender);
             switch (reason) {
                 case "AddAI":
@@ -238,8 +247,7 @@ namespace BattlegroundsApp.Models {
             return null;
         }
 
-        public void SetIsHost(bool isHost) {
-            this.m_isHost = isHost;
+        private void SetIsHost(bool isHost) {
             foreach (var pair in this.m_teamSetup) {
                 foreach (var card in pair.Value) {
                     card.SetStateBasedOnContext(isHost, card.IsAI, card.PlayerSteamID);

@@ -28,46 +28,64 @@
 
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="auto"/>
+            <ColumnDefinition Width="*" MaxWidth="512"/>
             <ColumnDefinition Width="auto"/>
-            <ColumnDefinition Width="auto"/>
-            <ColumnDefinition Width="auto"/>
-            <ColumnDefinition Width="auto"/>
-            <ColumnDefinition Width="auto"/>
-            <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
         
         <!-- Row 0-->
-        <Image x:Name="mapImage" Height="200" Width="200"/>
+        
+        
+        <!-- Column 3-->
+        <Border
+            Grid.Column="2" 
+            BorderThickness="1.2"
+            BorderBrush="Black"
+            Padding="0.2">
+            <Image 
+                x:Name="mapImage" 
+                Height="256" 
+                Width="256"
+                Source="pack://application:,,,/Resources/ingame/unknown_map.png"/>
+        </Border>
 
         <!-- Row 1 -->
+
+
+        <!-- Column 3-->
         <components:LobbyDropdown 
             x:Name="Map" 
-            Grid.Row="1" Grid.Column="0" 
+            Grid.Row="1" Grid.Column="2" 
             Description="Map:" 
             DescriptionMinWidth="90"
             MinWidth="120" 
             SelectedItemChanged="Map_SelectedItemChanged"/>
         
         <!-- Row 2 -->
+
+
+        <!-- Column 3-->
         <components:LobbyDropdown 
             x:Name="Gamemode" 
-            Grid.Row="2" Grid.Column="0" 
+            Grid.Row="2" Grid.Column="2" 
             Description="Gamemode:" 
             DescriptionMinWidth="90"
             MinWidth="120" 
             SelectedItemChanged="Gamemode_SelectedItemChanged"/>
 
         <!-- Row 3 -->
+
+
+        <!-- Column 3-->
         <components:LobbyDropdown 
             x:Name="GamemodeOption" 
-            Grid.Row="3" Grid.Column="0" 
+            Grid.Row="3" Grid.Column="2" 
             Description="Setting:" 
             DescriptionMinWidth="90"
             MinWidth="120" 
             SelectedItemChanged="GamemodeOption_SelectedItemChanged"/>
 
         <!-- Row 4 -->
-        <Grid Grid.Row="4" Grid.Column="3" MinHeight="260" Name="TeamGridview">
+        <Grid Grid.Row="0" Grid.RowSpan="4" Grid.Column="1" MinHeight="260" Name="TeamGridview">
             <Grid.RowDefinitions>
                 <RowDefinition Height="auto"/>
                 <RowDefinition Height="auto"/>
@@ -82,9 +100,7 @@
 
         <!-- Row 5 -->
         <chatting:ChatView x:Name="LobbyChat" Grid.Column="1" Grid.Row="5"/>
-
-        <!-- Row 6 -->
-        <Button Grid.Row="6" Grid.Column="0" Name="StartGameBttn" Content="Start Game" Margin=" 0,2.5,0,0" Click="StartGame_Click" IsEnabled="{Binding CanStartMatch}"/>
+        <Button Grid.Row="5" Grid.Column="2" Name="StartGameBttn" Content="Start Game" Margin=" 0,2.5,0,0" Click="StartGame_Click" IsEnabled="{Binding CanStartMatch}"/>
 
         <!-- Row 7 -->
         <Button Grid.Row="7" Grid.Column="0" Content="Leave Lobby" Margin="0,2.5,0,0" Click="LeaveLobby_Click" IsEnabled="{Binding CanLeave}"/>

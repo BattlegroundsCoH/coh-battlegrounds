@@ -293,6 +293,9 @@ namespace BattlegroundsApp.Views {
 
             }
 
+            // Setup team management.
+            this.m_teamManagement = new LobbyTeamManagementModel(this.TeamGridview, this.m_handler);
+
         }
 
         public override void StateOnLostFocus() {
@@ -300,9 +303,6 @@ namespace BattlegroundsApp.Views {
         }
 
         public void EnableHostMode(bool hostMode) {
-
-            // Set team management
-            this.m_teamManagement?.SetIsHost(hostMode);
 
             // Enable or disable game settings (AI and ID properties not relevant to these elements)
             this.Map.SetStateBasedOnContext(hostMode, hostMode, 0);
