@@ -55,7 +55,7 @@ namespace BattlegroundsApp.Models {
             IFinalizeStrategy finalizeStrategy = null;
 
             // Pick and initialize proper startup strategy
-            if (this.m_view.TeamManager.TotalHumanCount == 1) {
+            if (/*this.m_view.TeamManager.TotalHumanCount == 1*/ true) {
 
                 // Startup strategy
                 startupStrategy = new SingleplayerStartupStrategy {
@@ -102,7 +102,7 @@ namespace BattlegroundsApp.Models {
                 };
 
                 // Log strategy choice
-                Trace.WriteLine($"Using multiplayer strategy ({this.m_view.TeamManager.TotalHumanCount} human players)", "GameLobbyView");
+                //Trace.WriteLine($"Using multiplayer strategy ({this.m_view.TeamManager.TotalHumanCount} human players)", "GameLobbyView");
 
             }
 

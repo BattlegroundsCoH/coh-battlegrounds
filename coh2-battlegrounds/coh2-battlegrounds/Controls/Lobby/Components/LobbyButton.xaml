@@ -10,20 +10,24 @@
     <lobby:HostOnlyState> <!-- Putting this as first element so it will have higher presedence-->
         <Button 
             x:Name="HostButton" 
-            Content="{Binding Path=Text, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:LobbyButton}}}"
-            Width="{Binding Path=Width, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:LobbyButton}}}"
-            Height="{Binding Path=Height, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:LobbyButton}}}"
+            VerticalContentAlignment="Center"
+            HorizontalContentAlignment="Center"
+            Content="{Binding Path=Text}"
+            Width="{Binding Path=Width}"
+            Height="{Binding Path=Height}"
             />
     </lobby:HostOnlyState>
     <lobby:SelfState>
         <Button 
             x:Name="SelfButton" 
-            Content="{Binding Path=Text, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:LobbyButton}}}"
-            Width="{Binding Path=Width, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:LobbyButton}}}"
-            Height="{Binding Path=Height, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:LobbyButton}}}"
+            VerticalContentAlignment="Center"
+            HorizontalContentAlignment="Center"
+            Content="{Binding Path=Text}"
+            Width="{Binding Path=Width}"
+            Height="{Binding Path=Height}"
             />
     </lobby:SelfState>
     <lobby:OtherState x:Name="ButtonOtherState" x:FieldModifier="private">
-        <Label x:Name="OtherOptionalText" Content="{Binding Path=OptionalText, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:LobbyButton}}}"/>
+        <Label x:Name="OtherOptionalText" Content="{Binding Path=OptionalText}"/>
     </lobby:OtherState>
 </lobby:LobbyControl>

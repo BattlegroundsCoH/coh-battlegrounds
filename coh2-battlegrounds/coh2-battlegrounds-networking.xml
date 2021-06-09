@@ -1981,6 +1981,14 @@
             Close the lobby, terminating the host socket.
             </summary>
         </member>
+        <member name="T:Battlegrounds.Networking.Server.ServerAPIResponseStringTranslator">
+            <summary>
+            Delegate function for translating server string values.
+            </summary>
+            <param name="rawTextInput">The raw server string that was received.</param>
+            <param name="propertyName">The property name storing the raw string value.</param>
+            <returns>A translated string of the server-stored value.</returns>
+        </member>
         <member name="T:Battlegrounds.Networking.Server.ServerAPI">
             <summary>
             API instance for interacting with the server.
@@ -2098,6 +2106,87 @@
             </summary>
             <param name="binary">The binary contents of the downloaded gamemode.</param>
             <returns>If download was successful, true; Otherwise false.</returns>
+        </member>
+        <member name="T:Battlegrounds.Networking.Server.ServerLobby">
+            <summary>
+            API representation of a server lobby.
+            </summary>
+        </member>
+        <member name="P:Battlegrounds.Networking.Server.ServerLobby.Name">
+            <summary>
+            Get (or set) the actual name of the server lobby.
+            </summary>
+        </member>
+        <member name="P:Battlegrounds.Networking.Server.ServerLobby.Type">
+            <summary>
+            Get (or set) the numeric type 
+            </summary>
+        </member>
+        <member name="P:Battlegrounds.Networking.Server.ServerLobby.Members">
+            <summary>
+            Get (or set) the current amount of active members in the lobby (includes AI).
+            </summary>
+        </member>
+        <member name="P:Battlegrounds.Networking.Server.ServerLobby.Capacity">
+            <summary>
+            Get (or set) the current capacity of the lobby.
+            </summary>
+        </member>
+        <member name="P:Battlegrounds.Networking.Server.ServerLobby.State">
+            <summary>
+            Get (or set) the current state of the lobby.
+            </summary>
+        </member>
+        <member name="P:Battlegrounds.Networking.Server.ServerLobby.TranslatedState">
+            <summary>
+            Get the translated version of <see cref="P:Battlegrounds.Networking.Server.ServerLobby.State"/>.
+            </summary>
+            <remarks>
+            Returns <see cref="P:Battlegrounds.Networking.Server.ServerLobby.State"/> raw if <see cref="P:Battlegrounds.Networking.Server.ServerLobby.StringTranslator"/> is not defined.
+            <br/>
+            This is not saved in json.
+            </remarks>
+        </member>
+        <member name="P:Battlegrounds.Networking.Server.ServerLobby.Mode">
+            <summary>
+            Get (or set) the current mode played by the lobby.
+            </summary>
+        </member>
+        <member name="P:Battlegrounds.Networking.Server.ServerLobby.TranslatedMode">
+            <summary>
+            Get the translated version of <see cref="P:Battlegrounds.Networking.Server.ServerLobby.Mode"/>.
+            </summary>
+            <remarks>
+            Returns <see cref="P:Battlegrounds.Networking.Server.ServerLobby.Mode"/> raw if <see cref="P:Battlegrounds.Networking.Server.ServerLobby.StringTranslator"/> is not defined.
+            <br/>
+            This is not saved in json.
+            </remarks>
+        </member>
+        <member name="P:Battlegrounds.Networking.Server.ServerLobby.Guid">
+            <summary>
+            Get (or set) the GUID associated with the lobby.
+            </summary>
+        </member>
+        <member name="P:Battlegrounds.Networking.Server.ServerLobby.HasPassword">
+            <summary>
+            Get (or set) if the lobby is password-protected.
+            </summary>
+        </member>
+        <member name="P:Battlegrounds.Networking.Server.ServerLobby.CapacityString">
+            <summary>
+            Get the string describing the filled slots of the lobby.
+            </summary>
+            <remarks>
+            This is not serialised in Json.
+            </remarks>
+        </member>
+        <member name="P:Battlegrounds.Networking.Server.ServerLobby.StringTranslator">
+            <summary>
+            Get or set the translator functionality that will translate the server-stored value.
+            </summary>
+            <remarks>
+            This is not serialised in Json and must be defined by the local machine.
+            </remarks>
         </member>
         <member name="T:Battlegrounds.Networking.Server.ServerMatchResults">
             <summary>

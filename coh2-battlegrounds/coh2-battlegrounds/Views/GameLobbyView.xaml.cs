@@ -22,6 +22,7 @@ using Battlegrounds.Online.Lobby;
 using BattlegroundsApp.Controls.Lobby;
 using BattlegroundsApp.Models;
 using BattlegroundsApp.Resources;
+using BattlegroundsApp.Views.ViewComponent;
 
 namespace BattlegroundsApp.Views {
 
@@ -54,6 +55,8 @@ namespace BattlegroundsApp.Views {
         private volatile bool m_updateLobby;
 
         public event PropertyChangedEventHandler PropertyChanged;
+
+        public string LobbyName => $"Game Lobby: {this.m_handler.Lobby.LobbyName}";
 
         public bool CanLeave => true;
 
@@ -293,8 +296,16 @@ namespace BattlegroundsApp.Views {
 
             }
 
+            // Create card overview
+            TeamPlayerCard[][] cards = new TeamPlayerCard[][]{
+                new TeamPlayerCard[] { this.PlayerCard01, this.PlayerCard02, this.PlayerCard03, this.PlayerCard04 },
+                new TeamPlayerCard[] { this.PlayerCard11, this.PlayerCard12, this.PlayerCard13, this.PlayerCard14 },
+                new TeamPlayerCard[] { this.PlayerCard21, this.PlayerCard22, this.PlayerCard23, this.PlayerCard24 }
+            };
+
             // Setup team management.
-            this.m_teamManagement = new LobbyTeamManagementModel(this.TeamGridview, this.m_handler);
+            this.m_teamManagement = new LobbyTeamManagementModel(cards, this.m_handler);
+            this.m_teamManagement.RefreshAll(true);
 
         }
 

@@ -4,7 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:BattlegroundsApp.Views"
-             xmlns:bg="clr-namespace:BattlegroundsApp" xmlns:components="clr-namespace:BattlegroundsApp.Controls.Lobby.Components" xmlns:chatting="clr-namespace:BattlegroundsApp.Controls.Lobby.Chatting"
+             xmlns:bg="clr-namespace:BattlegroundsApp" xmlns:components="clr-namespace:BattlegroundsApp.Controls.Lobby.Components" xmlns:chatting="clr-namespace:BattlegroundsApp.Controls.Lobby.Chatting" xmlns:viewcomponent="clr-namespace:BattlegroundsApp.Views.ViewComponent"
               mc:Ignorable="d" Background="White"
              d:DesignHeight="700" d:DesignWidth="800">
     <Grid>
@@ -12,32 +12,36 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
             <RowDefinition Height="auto"/>
-            <RowDefinition Height="auto"/>
-            <RowDefinition Height="auto"/>
-            <RowDefinition Height="auto"/>
-            <RowDefinition Height="auto"/>
-            <RowDefinition Height="auto"/>
-            <RowDefinition Height="auto"/>
-            <RowDefinition Height="auto"/>
-            <RowDefinition Height="auto"/>
-            <RowDefinition Height="auto"/>
-            <RowDefinition Height="auto"/>
-            <RowDefinition Height="auto"/>
+            <RowDefinition MaxHeight="32" MinHeight="28"/>
+            <RowDefinition MaxHeight="32" MinHeight="28"/>
+            <RowDefinition Height="*"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="auto"/>
-            <ColumnDefinition Width="*" MaxWidth="512"/>
-            <ColumnDefinition Width="auto"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="256"/>
         </Grid.ColumnDefinitions>
+
+
+        <!-- Row 1 -->
+        <Label 
+            Grid.Row="0" Grid.Column="0"
+            Content="{Binding LobbyName}"
+            FontSize="18"
+            FontWeight="Bold"/>
         
-        <!-- Row 0-->
-        
-        
-        <!-- Column 3-->
+        <Button Grid.Row="0" 
+                Grid.Column="1" 
+                Content="Leave Lobby" 
+                Margin="0,2.5,0,0" 
+                Click="LeaveLobby_Click" 
+                IsEnabled="{Binding CanLeave}"/>
+
+        <!-- Column 2-->
         <Border
-            Grid.Column="2" 
+            Grid.Column="1" 
+            Grid.Row="1"
             BorderThickness="1.2"
             BorderBrush="Black"
             Padding="0.2">
@@ -48,15 +52,12 @@
                 Source="pack://application:,,,/Resources/ingame/unknown_map.png"/>
         </Border>
 
-        <!-- Row 1 -->
-
-
         <!-- Column 3-->
         <components:LobbyDropdown 
             x:Name="Map" 
-            Grid.Row="1" Grid.Column="2" 
+            Grid.Row="2" Grid.Column="1" 
             Description="Map:" 
-            DescriptionMinWidth="90"
+            DescriptionMinWidth="115"
             MinWidth="120" 
             SelectedItemChanged="Map_SelectedItemChanged"/>
         
@@ -66,45 +67,99 @@
         <!-- Column 3-->
         <components:LobbyDropdown 
             x:Name="Gamemode" 
-            Grid.Row="2" Grid.Column="2" 
+            Grid.Row="3" Grid.Column="1" 
             Description="Gamemode:" 
-            DescriptionMinWidth="90"
+            DescriptionMinWidth="115"
             MinWidth="120" 
             SelectedItemChanged="Gamemode_SelectedItemChanged"/>
 
         <!-- Row 3 -->
 
+        <!-- Column 2-->
+        <StackPanel Grid.Row="4" Grid.Column="1" 
+            VerticalAlignment="Top">
 
-        <!-- Column 3-->
-        <components:LobbyDropdown 
-            x:Name="GamemodeOption" 
-            Grid.Row="3" Grid.Column="2" 
-            Description="Setting:" 
-            DescriptionMinWidth="90"
-            MinWidth="120" 
-            SelectedItemChanged="GamemodeOption_SelectedItemChanged"/>
+            <components:LobbyDropdown 
+                x:Name="GamemodeOption"             
+                Description="Setting:" 
+                DescriptionMinWidth="115"
+                MinWidth="120" 
+                MaxHeight="32"
+                MinHeight="28"
+                Margin="0,0,0,24"
+                SelectedItemChanged="GamemodeOption_SelectedItemChanged"/>
 
+            <components:LobbyDropdown         
+                Description="Dynamic Weather:" 
+                DescriptionMinWidth="115"
+                MinWidth="120" 
+                MaxHeight="32"
+                MinHeight="28"/>
+            
+            <components:LobbyDropdown         
+                Description="Tuning Mod:" 
+                DescriptionMinWidth="115"
+                MinWidth="120" 
+                MaxHeight="32"
+                MinHeight="28"/>
+
+        </StackPanel>
+        
         <!-- Row 4 -->
-        <Grid Grid.Row="0" Grid.RowSpan="4" Grid.Column="1" MinHeight="260" Name="TeamGridview">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="auto"/>
-                <RowDefinition Height="auto"/>
-                <RowDefinition Height="auto"/>
-                <RowDefinition Height="*"/>
-            </Grid.RowDefinitions>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="auto"/>
-                <ColumnDefinition Width="*"/>
-            </Grid.ColumnDefinitions>
-        </Grid>
+        <StackPanel Grid.Row="1" Grid.RowSpan="4" Grid.Column="0" Name="TeamStackView">
+            <ContentControl>
+                <Label Content="Allies" Background="#FFECECEC"/>
+            </ContentControl>
+            <StackPanel MinHeight="132">
+                <viewcomponent:TeamPlayerCard InitialState="SelfState" x:Name="PlayerCard11"/>
+                <viewcomponent:TeamPlayerCard InitialState="AvailableState" x:Name="PlayerCard12"/>
+                <viewcomponent:TeamPlayerCard InitialState="LockedState" x:Name="PlayerCard13"/>
+                <viewcomponent:TeamPlayerCard InitialState="LockedState" x:Name="PlayerCard14"/>
+            </StackPanel>
+            <ContentControl>
+                <Label Content="Axis" Background="#FFECECEC"/>
+            </ContentControl>
+            <StackPanel MinHeight="132">
+                <viewcomponent:TeamPlayerCard InitialState="OccupiedState" x:Name="PlayerCard21"/>
+                <viewcomponent:TeamPlayerCard InitialState="AvailableState" x:Name="PlayerCard22"/>
+                <viewcomponent:TeamPlayerCard InitialState="LockedState" x:Name="PlayerCard23"/>
+                <viewcomponent:TeamPlayerCard InitialState="LockedState" x:Name="PlayerCard24"/>
+            </StackPanel>
+            <ContentControl>
+                <DockPanel Background="#FFECECEC">
+                    <CheckBox 
+                        Content="Enable Observers" 
+                        DockPanel.Dock="Right"
+                        VerticalContentAlignment="Center"
+                        HorizontalContentAlignment="Right"
+                        Margin="0, 0, 7.5, 0"
+                        IsChecked="True"
+                        />
+                    <Label Content="Observers" DockPanel.Dock="Left"/>
+                </DockPanel>
+            </ContentControl>
+            <StackPanel MinHeight="132">
+                <viewcomponent:TeamPlayerCard InitialState="ObserverState" x:Name="PlayerCard01"/>
+                <viewcomponent:TeamPlayerCard InitialState="ObserverState" x:Name="PlayerCard02"/>
+                <viewcomponent:TeamPlayerCard InitialState="ObserverState" x:Name="PlayerCard03"/>
+                <viewcomponent:TeamPlayerCard InitialState="ObserverState" x:Name="PlayerCard04"/>
+            </StackPanel>
+        </StackPanel>
 
         <!-- Row 5 -->
-        <chatting:ChatView x:Name="LobbyChat" Grid.Column="1" Grid.Row="5"/>
-        <Button Grid.Row="5" Grid.Column="2" Name="StartGameBttn" Content="Start Game" Margin=" 0,2.5,0,0" Click="StartGame_Click" IsEnabled="{Binding CanStartMatch}"/>
-
-        <!-- Row 7 -->
-        <Button Grid.Row="7" Grid.Column="0" Content="Leave Lobby" Margin="0,2.5,0,0" Click="LeaveLobby_Click" IsEnabled="{Binding CanLeave}"/>
-
+        <!-- Column 1-->        
+        <chatting:ChatView x:Name="LobbyChat" Grid.Column="0" Grid.Row="5" MinHeight="148"/>
+        <!-- Column 2-->
+        <Button Grid.Row="5" Grid.Column="1" 
+                Name="StartGameBttn" 
+                Content="Start Game" 
+                VerticalAlignment="Bottom"
+                Margin=" 0,2.5,2.5,2.5" 
+                Height="26"
+                Width="96"
+                HorizontalAlignment="Right"
+                Click="StartGame_Click" 
+                IsEnabled="{Binding CanStartMatch}"/>
 
     </Grid>
 </bg:ViewState>
