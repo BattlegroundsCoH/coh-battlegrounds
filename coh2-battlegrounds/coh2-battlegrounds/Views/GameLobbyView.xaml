@@ -120,17 +120,17 @@
             <StackPanel MinHeight="132">
                 <viewcomponent:TeamPlayerCard InitialState="SelfState" x:Name="PlayerCard11"/>
                 <viewcomponent:TeamPlayerCard InitialState="AvailableState" x:Name="PlayerCard12"/>
-                <viewcomponent:TeamPlayerCard InitialState="LockedState" x:Name="PlayerCard13"/>
-                <viewcomponent:TeamPlayerCard InitialState="LockedState" x:Name="PlayerCard14"/>
+                <viewcomponent:TeamPlayerCard InitialState="AvailableState" x:Name="PlayerCard13"/>
+                <viewcomponent:TeamPlayerCard InitialState="AvailableState" x:Name="PlayerCard14"/>
             </StackPanel>
             <ContentControl>
                 <Label Content="Axis" Background="#FFECECEC"/>
             </ContentControl>
             <StackPanel MinHeight="132">
-                <viewcomponent:TeamPlayerCard InitialState="OccupiedState" x:Name="PlayerCard21"/>
+                <viewcomponent:TeamPlayerCard InitialState="AvailableState" x:Name="PlayerCard21"/>
                 <viewcomponent:TeamPlayerCard InitialState="AvailableState" x:Name="PlayerCard22"/>
-                <viewcomponent:TeamPlayerCard InitialState="LockedState" x:Name="PlayerCard23"/>
-                <viewcomponent:TeamPlayerCard InitialState="LockedState" x:Name="PlayerCard24"/>
+                <viewcomponent:TeamPlayerCard InitialState="AvailableState" x:Name="PlayerCard23"/>
+                <viewcomponent:TeamPlayerCard InitialState="AvailableState" x:Name="PlayerCard24"/>
             </StackPanel>
             <ContentControl>
                 <DockPanel Background="#FFECECEC">
@@ -146,16 +146,24 @@
                 </DockPanel>
             </ContentControl>
             <StackPanel MinHeight="132">
-                <viewcomponent:TeamPlayerCard InitialState="ObserverState" x:Name="PlayerCard01"/>
-                <viewcomponent:TeamPlayerCard InitialState="ObserverState" x:Name="PlayerCard02"/>
-                <viewcomponent:TeamPlayerCard InitialState="ObserverState" x:Name="PlayerCard03"/>
-                <viewcomponent:TeamPlayerCard InitialState="ObserverState" x:Name="PlayerCard04"/>
+                <viewcomponent:TeamPlayerCard InitialState="AvailableState" x:Name="PlayerCard01"/>
+                <viewcomponent:TeamPlayerCard InitialState="AvailableState" x:Name="PlayerCard02"/>
+                <viewcomponent:TeamPlayerCard InitialState="AvailableState" x:Name="PlayerCard03"/>
+                <viewcomponent:TeamPlayerCard InitialState="AvailableState" x:Name="PlayerCard04"/>
             </StackPanel>
         </StackPanel>
 
         <!-- Row 5 -->
-        <!-- Column 1-->        
-        <chatting:ChatView x:Name="LobbyChat" Grid.Column="0" Grid.Row="5" MinHeight="148"/>
+        <!-- Column 1-->
+        <chatting:ChatView x:Name="LobbyChat" 
+                           Grid.Column="0" 
+                           Grid.Row="5" 
+                           MinHeight="148">
+            <chatting:ChatView.Channels>
+                <chatting:ChatChannel ChannelName="All" ChannelColour="Black"/>
+                <chatting:ChatChannel ChannelName="Team" ChannelColour="#003300"/>
+            </chatting:ChatView.Channels>
+        </chatting:ChatView>
         <!-- Column 2-->
         <Button Grid.Row="5" Grid.Column="1" 
                 Name="StartGameBttn" 

@@ -191,11 +191,15 @@ namespace BattlegroundsApp.Models {
         }
 
         private void AIChangedCompany(IAILobbyMember lobbyAIMember, TeamPlayerCompanyItem companyItem) {
-
+            if (companyItem is not null) {
+                lobbyAIMember.SetCompany(companyItem.Name, companyItem.Strength);
+            }
         }
 
         private void AIChangedArmy(IAILobbyMember lobbyAIMember, TeamPlayerArmyItem armyItem) {
-
+            if (armyItem is not null && Faction.FromName(armyItem.Name) is Faction faction) {
+                lobbyAIMember.SetArmy(faction.Name);
+            }
         }
 
         public List<SessionParticipant> GetParticipants(LobbyTeamType team) {

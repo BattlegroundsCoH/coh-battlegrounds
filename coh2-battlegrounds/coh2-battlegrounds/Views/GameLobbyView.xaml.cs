@@ -7,6 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
 using Battlegrounds;
@@ -20,6 +21,7 @@ using Battlegrounds.Networking.Lobby;
 using Battlegrounds.Online.Lobby;
 
 using BattlegroundsApp.Controls.Lobby;
+using BattlegroundsApp.Controls.Lobby.Chatting;
 using BattlegroundsApp.LocalData;
 using BattlegroundsApp.Models;
 using BattlegroundsApp.Resources;
@@ -30,7 +32,7 @@ namespace BattlegroundsApp.Views {
     /// <summary>
     /// Interaction logic for GameLobbyView.xaml
     /// </summary>
-    public partial class GameLobbyView : ViewState, INotifyPropertyChanged {
+    public partial class GameLobbyView : ViewState, INotifyPropertyChanged, IChatController {
 
         private class GameLobbyViewScenarioItem {
             public Scenario Scenario { get; }
@@ -60,6 +62,8 @@ namespace BattlegroundsApp.Views {
         public bool CanStartMatch => this.m_handler.IsHost && this.IsLegalMatch();
 
         public LobbyTeamManagementModel TeamManager { get; private set; }
+
+        public ChatMessageSent OnSend => this.OnSendChatMessage;
 
         public GameLobbyView(LobbyHandler handler) {
 
@@ -344,6 +348,28 @@ namespace BattlegroundsApp.Views {
             this.TeamManager.RefreshAll(true);
             this.TeamManager.OnModelNotification += this.OnTeamManagerNotification;
 
+            // Setup chat receiver
+            this.m_handler.Lobby.ChatNotification = (channel, sender, message) => {
+                string name = sender.Name; // Don't do this on the GUI thread in case of remoting!
+                this.UpdateGUI(() => this.LobbyChat.DisplayMessage($"{name}: {message}", channel));
+            };
+
+            // Setup system receiver
+            this.m_handler.Lobby.SystemNotification = systemInfo => {
+                this.UpdateGUI(() => this.LobbyChat.DisplayMessage($"[System] {systemInfo}", 0));
+            };
+
+            // Set chat handler as self
+            this.LobbyChat.Chat = this;
+
+        }
+
+        private void OnSendChatMessage(int channel, string message) {
+            if (channel is 0) {
+                this.m_handler.Lobby.SendChatMessage(message);
+            } else if (channel is 1) {
+                /*this.m_handler.Lobby.SendTeamChatMessage(message);*/
+            }
         }
 
         private void OnTeamManagerNotification() => this.UpdateGUI(() => {

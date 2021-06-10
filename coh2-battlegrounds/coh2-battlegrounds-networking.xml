@@ -740,6 +740,12 @@
             <param name="gamemode"></param>
             <param name="gamemodeOption"></param>
         </member>
+        <member name="M:Battlegrounds.Networking.Lobby.HostedLobby.SetState(Battlegrounds.Networking.Lobby.LobbyState)">
+            <summary>
+            Set the current state of the lobby.
+            </summary>
+            <param name="state">The new state of the lobby</param>
+        </member>
         <member name="T:Battlegrounds.Networking.Lobby.IAILobbyMember">
             <summary>
             Interface representing AI members of a lobby. Extends <see cref="T:Battlegrounds.Networking.Lobby.ILobbyMember"/>.
@@ -786,10 +792,31 @@
         </member>
         <member name="T:Battlegrounds.Networking.Lobby.LobbyChatNotification">
             <summary>
-            
+            Delegate for handling when a chat notification has been received.
             </summary>
-            <param name="sender"></param>
-            <param name="message"></param>
+            <param name="channel">The channel ID where the chat was sent.</param>
+            <param name="sender">The sender of the chat message.</param>
+            <param name="message">The full text message</param>
+        </member>
+        <member name="T:Battlegrounds.Networking.Lobby.LobbyState">
+            <summary>
+            Signals the state of an <see cref="T:Battlegrounds.Networking.Lobby.ILobby"/> instance.
+            </summary>
+        </member>
+        <member name="F:Battlegrounds.Networking.Lobby.LobbyState.LOBBY_INLOBBY">
+            <summary>
+            The lobby is currently not starting or playing a match.
+            </summary>
+        </member>
+        <member name="F:Battlegrounds.Networking.Lobby.LobbyState.LOBBY_STARTING">
+            <summary>
+            The lobby is starting a match.
+            </summary>
+        </member>
+        <member name="F:Battlegrounds.Networking.Lobby.LobbyState.LOBBY_PLAYING">
+            <summary>
+            The lobby is currently playing a match.
+            </summary>
         </member>
         <member name="T:Battlegrounds.Networking.Lobby.ILobby">
             <summary>

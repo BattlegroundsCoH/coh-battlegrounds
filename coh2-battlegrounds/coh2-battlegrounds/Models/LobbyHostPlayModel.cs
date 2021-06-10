@@ -49,6 +49,9 @@ namespace BattlegroundsApp.Models {
             // Set cancel handler
             this.m_cancelHandler = cancelHandler;
 
+            // Set to starting
+            this.HostedLobby.SetState(LobbyState.LOBBY_STARTING);
+
             // Inform local host that game is about to be started.
             Trace.WriteLine("Start game button was clicked -- Picking startup strategy.", nameof(LobbyHostPlayModel));
 
@@ -131,9 +134,6 @@ namespace BattlegroundsApp.Models {
             this.m_shouldStop = false;
             this.m_canStop = true;
 
-            // Set to starting
-            this.HostedLobby.SetState(LobbyState.LOBBY_STARTING);
-
             // Play the match
             this.m_controller.Control();
 
@@ -206,6 +206,9 @@ namespace BattlegroundsApp.Models {
 
             // Invoke the cancel handler
             this.m_cancelHandler?.Invoke();
+
+            // Update lobby state
+            this.HostedLobby.SetState(LobbyState.LOBBY_INLOBBY);
 
         }
 
