@@ -33,7 +33,7 @@ namespace BattlegroundsApp.Models {
         private LobbyHandler m_handler;
         private TeamPlayerCard m_selfCard;
 
-        public event Action<LobbyTeamType, TeamPlayerCard, object, string> OnTeamEvent;
+        public event Action OnModelNotification;
 
         public LobbyTeamManagementModel(TeamPlayerCard[][] teamPlayerCards, LobbyHandler lobbyHandler) {
 
@@ -52,10 +52,15 @@ namespace BattlegroundsApp.Models {
                 for (int i = 0; i < kvp.Value.Length; i++) {
                     kvp.Value[i].Init(this.m_handler, kvp.Key, i);
                     kvp.Value[i].RequestFullRefresh = x => this.RefreshCard(x, x.TeamSlot, x.TeamType);
+                    kvp.Value[i].NotifyLobby = () => this.OnModelNotification?.Invoke();
                 }
             }
 
         }
+
+        public bool All(LobbyTeamType team, Predicate<TeamPlayerCard> predicate) => this.m_teamSetup[team].All(x => predicate(x));
+
+        public bool Any(LobbyTeamType team, Predicate<TeamPlayerCard> predicate) => this.m_teamSetup[team].Any(x => predicate(x));
 
         public void SetMaxPlayers(int count) {
 

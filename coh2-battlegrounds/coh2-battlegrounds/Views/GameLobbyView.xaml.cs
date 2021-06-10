@@ -52,8 +52,6 @@ namespace BattlegroundsApp.Views {
         //private Task m_lobbyUpdate;
         private LobbyHandler m_handler;
 
-        private volatile bool m_updateLobby;
-
         public event PropertyChangedEventHandler PropertyChanged;
 
         public string LobbyName => $"Game Lobby: {this.m_handler.Lobby.LobbyName}";
@@ -262,8 +260,26 @@ namespace BattlegroundsApp.Views {
 
         private void UpdateStartMatchButton() => this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(this.CanStartMatch)));
 
-        private bool IsLegalMatch()
-            => false;
+        private bool IsLegalMatch() {
+
+            // Get if allies are ready
+            bool alliesPlayReady = this.m_teamManagement.All(LobbyTeamType.Allies, x => x.IsPlayReady());
+            bool alliesAtLeastOnePlayer = this.m_teamManagement.Any(LobbyTeamType.Allies, 
+                x => x.CardState is TeamPlayerCard.AISTATE or TeamPlayerCard.SELFSTATE or TeamPlayerCard.OBSERVERSTATE);
+
+            bool allies = alliesAtLeastOnePlayer && alliesPlayReady;
+            if (!allies) {
+                return false;
+            }
+
+            // Get if axis are ready
+            bool axisPlayReady = this.m_teamManagement.All(LobbyTeamType.Axis, x => x.IsPlayReady());
+            bool axisAtLeastOnePlayer = this.m_teamManagement.Any(LobbyTeamType.Axis,
+                x => x.CardState is TeamPlayerCard.AISTATE or TeamPlayerCard.SELFSTATE or TeamPlayerCard.OBSERVERSTATE);
+
+            return axisPlayReady && axisAtLeastOnePlayer;
+
+        }
 
         public Company GetLocalCompany() {
             /*var card = this.m_teamManagement.GetLocalPlayercard();
@@ -306,8 +322,13 @@ namespace BattlegroundsApp.Views {
             // Setup team management.
             this.m_teamManagement = new LobbyTeamManagementModel(cards, this.m_handler);
             this.m_teamManagement.RefreshAll(true);
+            this.m_teamManagement.OnModelNotification += this.OnTeamManagerNotification;
 
         }
+
+        private void OnTeamManagerNotification() => this.UpdateGUI(() => {
+            this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(CanStartMatch)));
+        });
 
         public override void StateOnLostFocus() {
 

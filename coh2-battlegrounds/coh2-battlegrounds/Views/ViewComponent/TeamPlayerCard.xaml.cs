@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
@@ -77,6 +78,8 @@ namespace BattlegroundsApp.Views.ViewComponent {
         public Action<TeamPlayerCompanyItem> OnCompanyChangedHandle { get; set; }
 
         public Action<TeamPlayerCard> RequestFullRefresh { get; set; }
+
+        public Action NotifyLobby { get; set; }
 
         public TeamPlayerCard() {
 
@@ -166,22 +169,25 @@ namespace BattlegroundsApp.Views.ViewComponent {
                 }
 
                 // Set selected index
-                this.CompanySelector.SelectedIndex = 0;
+                (this.CardState is AISTATE ? this.AICompanySelector : this.CompanySelector).SelectedIndex = 0;
 
             }
 
         }
 
         public bool IsPlayReady() {
-            if (this.CardState is OCCUPIEDSTATE) {
-
-            } else if (this.CardState is SELFSTATE) {
+            if (this.CardState is SELFSTATE) {
                 if (this.CompanySelector.SelectedItem is TeamPlayerCompanyItem companyItem) {
+                    return companyItem.State is CompanyItemState.Company;
+                }
+            } else if (this.CardState is AISTATE) {
+                if (this.AICompanySelector.SelectedItem is TeamPlayerCompanyItem companyItem) {
                     return companyItem.State is CompanyItemState.Company or CompanyItemState.Generate;
                 }
             } else {
                 return true;
             }
+            // TODO: Maybe add a check to verify occuped state has a company
             return false;
         }
 
@@ -261,7 +267,7 @@ namespace BattlegroundsApp.Views.ViewComponent {
             };
 
             // Get AI member
-            if (this.m_handler.Lobby.JoinAIPlayer((int)this.TeamType, m_teamSlotIndex) is LobbyAIMember aiMember) {
+            if (this.m_handler.Lobby.JoinAIPlayer((int)this.TeamType, this.m_teamSlotIndex) is LobbyAIMember aiMember) {
 
                 // Set difficulty
                 aiMember.Difficulty = difficulty;
@@ -269,7 +275,14 @@ namespace BattlegroundsApp.Views.ViewComponent {
 
                 // Request refresh of card
                 this.RequestFullRefresh(this);
-                
+
+                // Notify lobby that
+                this.NotifyLobby?.Invoke();
+
+            } else {
+
+                Trace.WriteLine("Failed to add AI player to lobby!", nameof(TeamPlayerCard));
+
             }
 
         }

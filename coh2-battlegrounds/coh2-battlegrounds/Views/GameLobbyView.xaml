@@ -95,7 +95,14 @@
                 MinWidth="120" 
                 MaxHeight="32"
                 MinHeight="28"/>
-            
+
+            <components:LobbyDropdown         
+                Description="Supply System:" 
+                DescriptionMinWidth="115"
+                MinWidth="120" 
+                MaxHeight="32"
+                MinHeight="28"/>
+
             <components:LobbyDropdown         
                 Description="Tuning Mod:" 
                 DescriptionMinWidth="115"
