@@ -4,6 +4,7 @@ using Battlegrounds.Game.Match.Data;
 using Battlegrounds.Game.Match.Finalizer;
 using Battlegrounds.Game.Match.Play;
 using Battlegrounds.Game.Match.Startup;
+using Battlegrounds.Networking.Lobby;
 using Battlegrounds.Online.Debug;
 using Battlegrounds.Online.Lobby;
 
@@ -17,14 +18,9 @@ namespace Battlegrounds.Game.Match.Composite {
         private bool m_isStarted;
         private bool m_isCancelled;
         private bool m_hasSuccessAnalysis;
-        private ManagedLobby m_lobby;
+        private LobbyHandler m_lobby;
         private IPlayStrategy m_playStrategyResult;
         private IAnalyzedMatch m_analyzedMatch;
-
-        /// <summary>
-        /// Get the <see cref="ManagedLobby"/> associated with this <see cref="MultiplayerSession"/>.
-        /// </summary>
-        public ManagedLobby Lobby => this.m_lobby;
 
         public bool HasStarted => this.m_isStarted;
 
@@ -38,7 +34,7 @@ namespace Battlegrounds.Game.Match.Composite {
 
         public event AnalysisCancelledHandler AnalysisCancelled;
 
-        public MultiplayerSession(ManagedLobby lobby) {
+        public MultiplayerSession(LobbyHandler lobby) {
             this.m_isCancelled = false;
             this.m_isStarted = false;
             this.m_lobby = lobby;

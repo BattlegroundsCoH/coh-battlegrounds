@@ -31,7 +31,14 @@ namespace BattlegroundsApp.Models {
         private Dictionary<LobbyTeamType, TeamPlayerCard[]> m_teamSetup;
 
         private LobbyHandler m_handler;
-        private TeamPlayerCard m_selfCard;
+
+        public TeamPlayerCard Self { get; private set; }
+
+        public int HumanCount => this.AlliedHumanCount + this.AxisHumanCount;
+
+        public int AlliedHumanCount => this.m_teamSetup[LobbyTeamType.Allies].Count(x => x.CardState is TeamPlayerCard.SELFSTATE or TeamPlayerCard.OCCUPIEDSTATE);
+
+        public int AxisHumanCount => this.m_teamSetup[LobbyTeamType.Axis].Count(x => x.CardState is TeamPlayerCard.SELFSTATE or TeamPlayerCard.OCCUPIEDSTATE);
 
         public event Action OnModelNotification;
 
@@ -153,7 +160,9 @@ namespace BattlegroundsApp.Models {
                     playerCard.RefreshArmyData();
                     playerCard.OnFactionChangedHandle = this.SelfChangedArmy;
                     playerCard.OnCompanyChangedHandle = this.SelfChangedCompany;
-                    this.m_selfCard = playerCard;
+                    if (occupant.Equals(this.m_handler.Self)) {
+                        this.Self = playerCard;
+                    }
                 } else {
                     if (this.m_handler.IsHost && isAI) {
                         playerCard.OnFactionChangedHandle = x => this.AIChangedArmy(ai, x);
@@ -177,7 +186,7 @@ namespace BattlegroundsApp.Models {
         private void SelfChangedArmy(TeamPlayerArmyItem armyItem) {
             if (armyItem is not null && Faction.FromName(armyItem.Name) is Faction faction) {
                 this.m_handler.Lobby.Self.SetArmy(faction.Name);
-                this.m_selfCard.RefreshCompanyData();
+                this.Self.RefreshCompanyData();
             }
         }
 
@@ -189,36 +198,38 @@ namespace BattlegroundsApp.Models {
 
         }
 
-        private PlayercardCompanyItem CreateCompanyFromOccupant(ManagedLobbyMember member) {
-            if (member is HumanLobbyMember human) {
-                if (!string.IsNullOrEmpty(human.CompanyName) && human.CompanyName.CompareTo("NULL") != 0) {
-                    return new PlayercardCompanyItem(CompanyItemState.Company, human.CompanyName, human.CompanyStrength);
-                } else {
-                    return new PlayercardCompanyItem(CompanyItemState.None, "NULL");
-                }
-            } else if (member is AILobbyMember ai) {
-                if (!string.IsNullOrEmpty(ai.CompanyName) && ai.CompanyName.CompareTo("NULL") != 0) {
-                    return new PlayercardCompanyItem(CompanyItemState.Company, ai.CompanyName, ai.CompanyStrength);
-                } else if (ai.CompanyName.CompareTo("AUGEN") == 0) {
-                    return new PlayercardCompanyItem(CompanyItemState.Generate, "AUGEN");
-                } else {
-                    return new PlayercardCompanyItem(CompanyItemState.None, "NULL");
-                }
-            } else {
-                throw new NotImplementedException();
-            }
-        }
-
-        public List<SessionParticipant> GetParticipants(ManagedLobbyTeamType team) {
+        public List<SessionParticipant> GetParticipants(LobbyTeamType team) {
 
             List<SessionParticipant> participants = new List<SessionParticipant>();
+            SessionParticipantTeam participantTeam = team == LobbyTeamType.Allies ? SessionParticipantTeam.TEAM_ALLIES : SessionParticipantTeam.TEAM_AXIS;
+
+            byte i = 0;
+            foreach (TeamPlayerCard slot in this.m_teamSetup[team]) {
+                SessionParticipant? participant = slot.CardState switch {
+                    TeamPlayerCard.SELFSTATE or TeamPlayerCard.OCCUPIEDSTATE => new SessionParticipant(slot.Playername, slot.TeamSlot.SlotOccupant.ID, null, participantTeam, i),
+                    TeamPlayerCard.AISTATE => new SessionParticipant((AIDifficulty)(slot.TeamSlot.SlotOccupant as IAILobbyMember).Difficulty, GetAICompany(slot), participantTeam, i),
+                    _ => null
+                };
+                if (participant.HasValue) {
+                    participants.Add(participant.Value);
+                    i++;
+                }
+            }
 
             return participants;
 
         }
 
-        private ManagedLobbyTeamType GetTeamOfCard(TeamPlayerCard playerCard) 
-            => this.m_teamSetup[LobbyTeamType.Allies].Contains(playerCard) ? ManagedLobbyTeamType.Allies : ManagedLobbyTeamType.Axis;
+        private static Company GetAICompany(TeamPlayerCard aiPlayercard) {
+            if (aiPlayercard.AICompanySelector.SelectedItem is TeamPlayerCompanyItem companyItem) {
+                if (companyItem.State == CompanyItemState.Company) {
+                    return PlayerCompanies.FromNameAndFaction(companyItem.Name, Faction.FromName(companyItem.Army));
+                } else if (companyItem.State == CompanyItemState.Generate) {
+                    return CompanyGenerator.Generate(Faction.FromName(companyItem.Army), BattlegroundsInstance.BattleGroundsTuningMod.Guid.GUID, false, true, true);
+                }
+            }
+            throw new Exception();
+        }
 
     }
 

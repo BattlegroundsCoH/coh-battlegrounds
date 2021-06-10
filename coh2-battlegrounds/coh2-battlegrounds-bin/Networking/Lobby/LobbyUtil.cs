@@ -11,8 +11,18 @@ using Battlegrounds.Steam;
 
 namespace Battlegrounds.Networking.Lobby {
 
+    /// <summary>
+    /// 
+    /// </summary>
     public static class LobbyUtil {
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="serverAPI"></param>
+        /// <param name="lobbyName"></param>
+        /// <param name="lobbyPassword"></param>
+        /// <param name="onLobbyCreated"></param>
         public static void HostLobby(ServerAPI serverAPI, string lobbyName, string lobbyPassword, Action<bool, LobbyHandler> onLobbyCreated) {
 
             // Get steam user
@@ -70,6 +80,7 @@ namespace Battlegrounds.Networking.Lobby {
                         Trace.WriteLine(msg?.Message, nameof(LobbyUtil));
                         success = false;
                     }
+                    lobby.SetState(LobbyState.LOBBY_INLOBBY);
                     success = true;
                 } else {
                     success = false;

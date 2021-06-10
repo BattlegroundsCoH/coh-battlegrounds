@@ -20,6 +20,7 @@ using Battlegrounds.Networking.Lobby;
 using Battlegrounds.Online.Lobby;
 
 using BattlegroundsApp.Controls.Lobby;
+using BattlegroundsApp.LocalData;
 using BattlegroundsApp.Models;
 using BattlegroundsApp.Resources;
 using BattlegroundsApp.Views.ViewComponent;
@@ -45,10 +46,8 @@ namespace BattlegroundsApp.Views {
         }
 
         //private bool m_hasCreatedLobbyOnce;
-        //private ILobbyPlayModel m_playModel;
-        //private ServerMessageHandler m_smh;
-        private LobbyTeamManagementModel m_teamManagement;
-        //private LobbyGamemodeModel m_gamemode;
+        private ILobbyPlayModel m_playModel;
+
         //private Task m_lobbyUpdate;
         private LobbyHandler m_handler;
 
@@ -60,7 +59,7 @@ namespace BattlegroundsApp.Views {
 
         public bool CanStartMatch => this.m_handler.IsHost && this.IsLegalMatch();
 
-        public LobbyTeamManagementModel TeamManager => this.m_teamManagement;
+        public LobbyTeamManagementModel TeamManager { get; private set; }
 
         public GameLobbyView(LobbyHandler handler) {
 
@@ -73,6 +72,22 @@ namespace BattlegroundsApp.Views {
         }
 
         private void StartGame_Click(object sender, RoutedEventArgs e) {
+
+            if (!this.m_handler.IsHost) {
+                return;
+            }
+
+            // Show a miss-click failsafe
+            if (MessageBox.Show("Are you sure you want to start the match?", "Start Match?", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes) {
+
+                this.m_playModel = new LobbyHostPlayModel(this, this.m_handler);
+                this.m_playModel.PlayGame(this.CancelGame);
+
+            }
+
+        }
+
+        private void CancelGame() {
 
         }
 
@@ -160,32 +175,26 @@ namespace BattlegroundsApp.Views {
 
         public SessionInfo CreateSessionInfo() {
 
-            int option = 0;
-            Wincondition selectedWincondition = null;
-            /*if (this.m_gamemode.GetGamemode()) {
-                selectedWincondition = this.m_gamemode.Wincondition;
-                option = this.m_gamemode.GamemodeOptionIndex;
-            } else {
-                selectedWincondition = WinconditionList.GetWinconditionByName(WinconditionList.VictoryPoints);
-                option = selectedWincondition.DefaultOptionIndex;
-                Trace.WriteLine("Failed to set gamemode", "GameLobbyView");
-            }*/
+            // Get gamemode data
+            int option = this.GamemodeOption.SelectedIndex;
+            Wincondition selectedWincondition = this.Gamemode.SelectedItem as Wincondition;
 
-            //this.m_gamemode.SaveDefaults();
-
+            // Get scenario data
             Scenario selectedScenario = (this.Map.SelectedItem as GameLobbyViewScenarioItem).Scenario;
             if (selectedScenario is null) {
                 // TODO: Handle
             }
 
-            List<SessionParticipant> alliedTeam = this.m_teamManagement.GetParticipants(ManagedLobbyTeamType.Allies);
-            List<SessionParticipant> axisTeam = this.m_teamManagement.GetParticipants(ManagedLobbyTeamType.Axis);
+            // Get team data
+            List<SessionParticipant> alliedTeam = this.TeamManager.GetParticipants(LobbyTeamType.Allies);
+            List<SessionParticipant> axisTeam = this.TeamManager.GetParticipants(LobbyTeamType.Axis);
 
+            // Compile into session data
             SessionInfo sinfo = new SessionInfo() {
                 SelectedGamemode = selectedWincondition,
                 SelectedGamemodeOption = option,
                 SelectedScenario = selectedScenario,
-                IsOptionValue = true,
+                IsOptionValue = false,
                 SelectedTuningMod = new BattlegroundsTuning(), // TODO: Allow users to change this somewhere
                 Allies = alliedTeam.ToArray(),
                 Axis = axisTeam.ToArray(),
@@ -193,6 +202,7 @@ namespace BattlegroundsApp.Views {
                 DefaultDifficulty = AIDifficulty.AI_Hard,
             };
 
+            // Return session data
             return sinfo;
 
         }
@@ -258,13 +268,11 @@ namespace BattlegroundsApp.Views {
 
         }
 
-        private void UpdateStartMatchButton() => this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(this.CanStartMatch)));
-
         private bool IsLegalMatch() {
 
             // Get if allies are ready
-            bool alliesPlayReady = this.m_teamManagement.All(LobbyTeamType.Allies, x => x.IsPlayReady());
-            bool alliesAtLeastOnePlayer = this.m_teamManagement.Any(LobbyTeamType.Allies, 
+            bool alliesPlayReady = this.TeamManager.All(LobbyTeamType.Allies, x => x.IsPlayReady());
+            bool alliesAtLeastOnePlayer = this.TeamManager.Any(LobbyTeamType.Allies, 
                 x => x.CardState is TeamPlayerCard.AISTATE or TeamPlayerCard.SELFSTATE or TeamPlayerCard.OBSERVERSTATE);
 
             bool allies = alliesAtLeastOnePlayer && alliesPlayReady;
@@ -273,8 +281,8 @@ namespace BattlegroundsApp.Views {
             }
 
             // Get if axis are ready
-            bool axisPlayReady = this.m_teamManagement.All(LobbyTeamType.Axis, x => x.IsPlayReady());
-            bool axisAtLeastOnePlayer = this.m_teamManagement.Any(LobbyTeamType.Axis,
+            bool axisPlayReady = this.TeamManager.All(LobbyTeamType.Axis, x => x.IsPlayReady());
+            bool axisAtLeastOnePlayer = this.TeamManager.Any(LobbyTeamType.Axis,
                 x => x.CardState is TeamPlayerCard.AISTATE or TeamPlayerCard.SELFSTATE or TeamPlayerCard.OBSERVERSTATE);
 
             return axisPlayReady && axisAtLeastOnePlayer;
@@ -282,12 +290,24 @@ namespace BattlegroundsApp.Views {
         }
 
         public Company GetLocalCompany() {
-            /*var card = this.m_teamManagement.GetLocalPlayercard();
-            if (card is not null) {
-                return PlayerCompanies.FromNameAndFaction(card.PlayerSelectedCompanyItem.Name, Faction.FromName(card.PlayerArmy));
+            
+            TeamPlayerCard card = this.TeamManager.Self;
+            if (card is null) {
+                return null;
+            }
+
+            if (card.CompanySelector.SelectedItem is not TeamPlayerCompanyItem companyItem ) {
+                return null;
+            }
+
+            // Get company
+            var company = companyItem.State == CompanyItemState.Company ? PlayerCompanies.FromNameAndFaction(companyItem.Name, Faction.FromName(companyItem.Army)) : null;
+            if (company is not null) {
+                return company;
             } else {
-                */return null;
-            //}
+                throw new Exception();
+            }
+
         }
 
         public override void StateOnFocus() {
@@ -320,9 +340,9 @@ namespace BattlegroundsApp.Views {
             };
 
             // Setup team management.
-            this.m_teamManagement = new LobbyTeamManagementModel(cards, this.m_handler);
-            this.m_teamManagement.RefreshAll(true);
-            this.m_teamManagement.OnModelNotification += this.OnTeamManagerNotification;
+            this.TeamManager = new LobbyTeamManagementModel(cards, this.m_handler);
+            this.TeamManager.RefreshAll(true);
+            this.TeamManager.OnModelNotification += this.OnTeamManagerNotification;
 
         }
 
