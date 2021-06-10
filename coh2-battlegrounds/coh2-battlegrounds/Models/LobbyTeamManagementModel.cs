@@ -51,6 +51,7 @@ namespace BattlegroundsApp.Models {
             foreach (KeyValuePair<LobbyTeamType, TeamPlayerCard[]> kvp in this.m_teamSetup) {
                 for (int i = 0; i < kvp.Value.Length; i++) {
                     kvp.Value[i].Init(this.m_handler, kvp.Key, i);
+                    kvp.Value[i].RequestFullRefresh = x => this.RefreshCard(x, x.TeamSlot, x.TeamType);
                 }
             }
 
@@ -99,11 +100,13 @@ namespace BattlegroundsApp.Models {
         public void RefreshTeam(LobbyTeamType teamType) {
             ILobbyTeam team = this.GetLobbyTeamFromType(teamType);
             for (int i = 0; i < MAXTEAMPLAYERCOUNT; i++) {
-                this.RefreshCard(this.m_teamSetup[teamType][i], team.GetSlotAt(i), teamType == LobbyTeamType.Observers);
+                this.RefreshCard(this.m_teamSetup[teamType][i], team.GetSlotAt(i), teamType);
             }
         }
 
-        public void RefreshCard(TeamPlayerCard playerCard, ILobbyTeamSlot slot, bool isObserver) {
+        public void RefreshCard(TeamPlayerCard playerCard, ILobbyTeamSlot slot, LobbyTeamType teamType) {
+
+            playerCard.IsAllies = teamType == LobbyTeamType.Allies;
 
             if (slot.SlotState == LobbyTeamSlotState.OPEN) {
 
@@ -117,11 +120,11 @@ namespace BattlegroundsApp.Models {
 
                 // Get the occupant
                 ILobbyMember occupant = slot.SlotOccupant;
-                LobbyAIMember ai = occupant as LobbyAIMember;
+                IAILobbyMember ai = occupant as IAILobbyMember;
                 bool isAI = ai is not null;
 
                 // Determine viewstate
-                if (isObserver) {
+                if (teamType == LobbyTeamType.Observers) {
                     playerCard.SetCardState(TeamPlayerCard.OBSERVERSTATE);
                 } else {
                     if (this.m_handler.IsHost && isAI) {
@@ -132,13 +135,16 @@ namespace BattlegroundsApp.Models {
                 }
 
                 // Set player visual data
-                playerCard.Playername = occupant.Name;
+                playerCard.Playername = isAI ? ((AIDifficulty)ai.Difficulty).GetIngameDisplayName() : occupant.Name;
                 playerCard.Playercompany = occupant.CompanyName;
                 playerCard.Playerarmy = occupant.Army;
-                playerCard.IsAllies = !isObserver && Faction.FromName(occupant.Army).IsAllied;
+
+                // Triger value update
+                playerCard.RefreshVisualProperty(nameof(playerCard.Playername));
+                playerCard.RefreshVisualProperty(nameof(playerCard.Playercompany));
 
                 // If self, make refresh army and company data
-                if (occupant.Equals(this.m_handler.Self) && !isObserver) {
+                if (playerCard.CardState is TeamPlayerCard.SELFSTATE or TeamPlayerCard.AISTATE && teamType != LobbyTeamType.Observers) {
                     playerCard.RefreshArmyData();
                     playerCard.OnFactionChangedHandle = this.SelfChangedArmy;
                     playerCard.OnCompanyChangedHandle = this.SelfChangedCompany;
@@ -170,11 +176,11 @@ namespace BattlegroundsApp.Models {
             }
         }
 
-        private void AIChangedCompany(LobbyAIMember lobbyAIMember, TeamPlayerCompanyItem companyItem) {
+        private void AIChangedCompany(IAILobbyMember lobbyAIMember, TeamPlayerCompanyItem companyItem) {
 
         }
 
-        private void AIChangedArmy(LobbyAIMember lobbyAIMember, TeamPlayerArmyItem armyItem) {
+        private void AIChangedArmy(IAILobbyMember lobbyAIMember, TeamPlayerArmyItem armyItem) {
 
         }
 

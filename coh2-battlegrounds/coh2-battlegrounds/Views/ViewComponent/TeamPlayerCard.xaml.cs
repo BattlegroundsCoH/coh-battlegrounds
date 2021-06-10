@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media.Imaging;
 
 using Battlegrounds.Functional;
+using Battlegrounds.Game;
 using Battlegrounds.Game.DataCompany;
 using Battlegrounds.Networking.Lobby;
 using BattlegroundsApp.Controls;
@@ -28,7 +30,7 @@ namespace BattlegroundsApp.Views.ViewComponent {
     /// <summary>
     /// Interaction logic for TeamPlayerCard.xaml
     /// </summary>
-    public partial class TeamPlayerCard : LobbyControl {
+    public partial class TeamPlayerCard : LobbyControl, INotifyPropertyChanged {
 
         private static TeamPlayerArmyItem[] AlliedArmyItems = new TeamPlayerArmyItem[] {
             new TeamPlayerArmyItem(new BitmapImage(new Uri("pack://application:,,,/Resources/ingame/aef.png")), "US Forces", "aef"),
@@ -41,8 +43,6 @@ namespace BattlegroundsApp.Views.ViewComponent {
             new TeamPlayerArmyItem(new BitmapImage(new Uri("pack://application:,,,/Resources/ingame/west_german.png")), "Oberkommando West", "west_german"),
         };
 
-        private static ObservableCollection<TeamPlayerCompanyItem> StaticPlayerCompanyItems = new ObservableCollection<TeamPlayerCompanyItem>();
-
         public const string OCCUPIEDSTATE = "OccupiedState";
         public const string OPENSTATE = "AvailableState";
         public const string OBSERVERSTATE = "ObserverState";
@@ -52,8 +52,13 @@ namespace BattlegroundsApp.Views.ViewComponent {
 
         private string m_playerCompany;
         private LobbyHandler m_handler;
-        private LobbyTeamType m_team;
         private int m_teamSlotIndex;
+
+        public LobbyTeamType TeamType { get; private set; }
+
+        public ILobbyTeamSlot TeamSlot { get; private set; }
+
+        public event PropertyChangedEventHandler PropertyChanged;
 
         public string Playername { get; set; }
 
@@ -65,11 +70,13 @@ namespace BattlegroundsApp.Views.ViewComponent {
 
         public string CardState => this.State.StateName;
 
-        public ObservableCollection<TeamPlayerCompanyItem> PlayerCompanyItems => StaticPlayerCompanyItems;
+        public ObservableCollection<TeamPlayerCompanyItem> PlayerCompanyItems { get; }
 
         public Action<TeamPlayerArmyItem> OnFactionChangedHandle { get; set; }
 
         public Action<TeamPlayerCompanyItem> OnCompanyChangedHandle { get; set; }
+
+        public Action<TeamPlayerCard> RequestFullRefresh { get; set; }
 
         public TeamPlayerCard() {
 
@@ -82,13 +89,15 @@ namespace BattlegroundsApp.Views.ViewComponent {
             // Set default values
             this.Playername = "Connecting...";
             this.Playercompany = "No Company Selected";
+            this.PlayerCompanyItems = new ObservableCollection<TeamPlayerCompanyItem>();
 
         }
 
         public void Init(LobbyHandler handler, LobbyTeamType teamType, int slotIndex) {
             this.m_handler = handler;
-            this.m_team = teamType;
+            this.TeamType = teamType;
             this.m_teamSlotIndex = slotIndex;
+            this.TeamSlot = this.GetLobbyTeamFromType(this.TeamType).GetSlotAt(slotIndex);
         }
 
         public void SetCardState(string statename) => this.TrySetStateByName(statename);
@@ -96,23 +105,40 @@ namespace BattlegroundsApp.Views.ViewComponent {
         public void RefreshArmyData() {
 
             // Disable events
-            this.ArmySelector.EnableEvents = false;
+            (this.CardState is SELFSTATE ? this.ArmySelector : this.AIArmySelector).EnableEvents = false;
+
+            // Get index of selected army
+            int toSelect = -1;
 
             // Update army selector
             if (this.IsAllies) {
-                this.ArmySelector.SetItemSource(AlliedArmyItems, x => new IconComboBoxItem(x.Icon, x.DisplayName, x));
+                (this.CardState is SELFSTATE ? this.ArmySelector : this.AIArmySelector).SetItemSource(AlliedArmyItems, x => new IconComboBoxItem(x.Icon, x.DisplayName, x));
+                toSelect = AlliedArmyItems.IndexOf(x => x.Name == this.Playerarmy);
             } else {
-                this.ArmySelector.SetItemSource(AxisArmyItems, x => new IconComboBoxItem(x.Icon, x.DisplayName, x));
+                (this.CardState is SELFSTATE ? this.ArmySelector : this.AIArmySelector).SetItemSource(AxisArmyItems, x => new IconComboBoxItem(x.Icon, x.DisplayName, x));
+                toSelect = AxisArmyItems.IndexOf(x => x.Name == this.Playerarmy);
             }
 
-            // Set selected index
-            this.ArmySelector.SelectedIndex = AlliedArmyItems.IndexOf(x => x.Name == this.Playerarmy);
+            // Try set to selected army.
+            if (toSelect != -1) {
 
-            // Enable events
-            this.ArmySelector.EnableEvents = true;
+                // Set selected index and Enable events
+                if (this.CardState is SELFSTATE) {
 
-            // Refresh Company data
-            this.RefreshCompanyData();
+                    this.ArmySelector.SelectedIndex = toSelect;
+                    this.ArmySelector.EnableEvents = true;
+
+                } else {
+                    
+                    this.AIArmySelector.SelectedIndex = toSelect;
+                    this.AIArmySelector.EnableEvents = true;
+
+                }
+
+                // Refresh Company data
+                this.RefreshCompanyData();
+
+            }
 
         }
 
@@ -128,11 +154,19 @@ namespace BattlegroundsApp.Views.ViewComponent {
                 List<Company> all = PlayerCompanies.FindAll(x => x.Army.Name == this.Playerarmy);
                 if (all.Count > 0) {
                     all.ForEach(x => this.PlayerCompanyItems.Add(CompanyItemFromCompany(x)));
-                    this.CompanySelector.SelectedIndex = 0;
+                    if (this.CardState is AISTATE) {
+                        this.PlayerCompanyItems.Add(new TeamPlayerCompanyItem(CompanyItemState.Generate, "Generate Company", string.Empty));
+                    }
                 } else {
-                    this.PlayerCompanyItems.Add(new TeamPlayerCompanyItem(CompanyItemState.None, "No Companies Available", string.Empty));
-                    this.CompanySelector.SelectedIndex = 0;
+                    if (this.CardState is AISTATE) {
+                        this.PlayerCompanyItems.Add(new TeamPlayerCompanyItem(CompanyItemState.Generate, "Generate Company", string.Empty));
+                    } else {
+                        this.PlayerCompanyItems.Add(new TeamPlayerCompanyItem(CompanyItemState.None, "No Companies Available", string.Empty));
+                    }
                 }
+
+                // Set selected index
+                this.CompanySelector.SelectedIndex = 0;
 
             }
 
@@ -167,13 +201,13 @@ namespace BattlegroundsApp.Views.ViewComponent {
         private void ContextMenu_Opened(object sender, RoutedEventArgs e) {
             
             // Hide if right-clicked on self
-            if (this.GetLobbyTeamFromType(this.m_team).GetSlotAt(this.m_teamSlotIndex).SlotOccupant?.Equals(this.m_handler.Self) ?? false) { // Should be cached so participants will use this less
+            if (this.TeamSlot.SlotOccupant?.Equals(this.m_handler.Self) ?? false) { // Should be cached so participants will use this less
                 e.Handled = true;
                 this.ContextMenu.Visibility = Visibility.Collapsed;
             }
 
             // Set AI visibility data
-            Visibility aiVsibility = (this.m_handler.IsHost && this.CardState is OPENSTATE or LOCKEDSTATE) ? Visibility.Visible : Visibility.Collapsed;
+            Visibility aiVsibility = (this.m_handler.IsHost && this.CardState is OPENSTATE && this.TeamType is not LobbyTeamType.Observers) ? Visibility.Visible : Visibility.Collapsed;
             this.ContextMenu_AISeperator.Visibility = aiVsibility;
             this.ContextMenu_EasyAI.Visibility = aiVsibility;
             this.ContextMenu_StandardAI.Visibility = aiVsibility;
@@ -181,7 +215,7 @@ namespace BattlegroundsApp.Views.ViewComponent {
             this.ContextMenu_ExpertAI.Visibility = aiVsibility;
 
             // Set lock/unlock
-            this.ContextMenu_LockUnlock.Visibility = (this.CardState is OCCUPIEDSTATE or SELFSTATE or OBSERVERSTATE) ? Visibility.Collapsed : Visibility.Visible;
+            this.ContextMenu_LockUnlock.Visibility = (this.CardState is OCCUPIEDSTATE or SELFSTATE or OBSERVERSTATE or AISTATE) ? Visibility.Collapsed : Visibility.Visible;
             this.ContextMenu_LockUnlock.Header = this.CardState is LOCKEDSTATE ? "Unlock Slot" : "Lock Slot";
 
             // Set kick
@@ -196,24 +230,51 @@ namespace BattlegroundsApp.Views.ViewComponent {
         private void ContextMenu_LockUnlock_Click(object sender, RoutedEventArgs e) {
             if (this.CardState is LOCKEDSTATE) {
                 this.TrySetStateByName(OPENSTATE);
-                this.GetLobbyTeamFromType(this.m_team).GetSlotAt(this.m_teamSlotIndex).SlotState = LobbyTeamSlotState.OPEN;
+                this.TeamSlot.SlotState = LobbyTeamSlotState.OPEN;
             } else {
                 this.TrySetStateByName(LOCKEDSTATE);
-                this.GetLobbyTeamFromType(this.m_team).GetSlotAt(this.m_teamSlotIndex).SlotState = LobbyTeamSlotState.LOCKED;
+                this.TeamSlot.SlotState = LobbyTeamSlotState.LOCKED;
             }
         }
 
         private void ContextMenu_Position_Click(object sender, RoutedEventArgs e) {
 
+
+
         }
 
         private void ContextMenu_Kick_Click(object sender, RoutedEventArgs e) {
+
+
 
         }
 
         private void ContextMenu_AddAI_Click(object sender, RoutedEventArgs e) {
 
+            // Determine difficulty
+            byte difficulty = (sender as MenuItem).Name switch {
+                "ContextMenu_EasyAI" => 1,
+                "ContextMenu_StandardAI" => 2,
+                "ContextMenu_HardAI" => 3,
+                "ContextMenu_ExpertAI" => 4,
+                _ => throw new ArgumentException("Cannot determine difficulty as origin was not a context menu.", nameof(sender))
+            };
+
+            // Get AI member
+            if (this.m_handler.Lobby.JoinAIPlayer((int)this.TeamType, m_teamSlotIndex) is LobbyAIMember aiMember) {
+
+                // Set difficulty
+                aiMember.Difficulty = difficulty;
+                aiMember.SetArmy(this.IsAllies ? "soviet" : "german");
+
+                // Request refresh of card
+                this.RequestFullRefresh(this);
+                
+            }
+
         }
+
+        public void RefreshVisualProperty(string property) => this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(property));
 
         private ILobbyTeam GetLobbyTeamFromType(LobbyTeamType lobbyTeamType) => lobbyTeamType switch {
             LobbyTeamType.Allies => this.m_handler.Lobby.AlliesTeam,
