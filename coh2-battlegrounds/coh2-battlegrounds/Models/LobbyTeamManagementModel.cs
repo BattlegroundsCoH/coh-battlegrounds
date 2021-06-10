@@ -71,13 +71,14 @@ namespace BattlegroundsApp.Models {
 
         public void SetMaxPlayers(int count) {
 
-            if (count is < 0 or > MAXTEAMPLAYERCOUNT) {
+            if (count is < 0 or > (2 * MAXTEAMPLAYERCOUNT)) {
                 return;
             }
 
             for (int i = 0; i < MAXTEAMPLAYERCOUNT; i++) {
-                this.m_teamSetup[LobbyTeamType.Allies][i].Visibility = i < (count / 2) ? Visibility.Visible : Visibility.Hidden;
-                this.m_teamSetup[LobbyTeamType.Axis][i].Visibility = i < (count / 2) ? Visibility.Visible : Visibility.Hidden;
+                bool show = i < (count / 2);
+                this.m_teamSetup[LobbyTeamType.Allies][i].Visibility = show ? Visibility.Visible : Visibility.Hidden;
+                this.m_teamSetup[LobbyTeamType.Axis][i].Visibility = show ? Visibility.Visible : Visibility.Hidden;
             }
 
         }

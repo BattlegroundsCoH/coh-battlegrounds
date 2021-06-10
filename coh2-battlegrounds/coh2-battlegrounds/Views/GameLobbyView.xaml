@@ -94,21 +94,32 @@
                 DescriptionMinWidth="115"
                 MinWidth="120" 
                 MaxHeight="32"
-                MinHeight="28"/>
+                MinHeight="28"
+                SelectedIndex="0">
+                <ComboBoxItem Content="Off"/>
+                <ComboBoxItem Content="On"/>
+            </components:LobbyDropdown>
 
             <components:LobbyDropdown         
                 Description="Supply System:" 
                 DescriptionMinWidth="115"
                 MinWidth="120" 
                 MaxHeight="32"
-                MinHeight="28"/>
+                MinHeight="28"
+                SelectedIndex="0">
+                <ComboBoxItem Content="Off"/>
+                <ComboBoxItem Content="On"/>
+            </components:LobbyDropdown>
 
             <components:LobbyDropdown         
                 Description="Tuning Mod:" 
                 DescriptionMinWidth="115"
                 MinWidth="120" 
                 MaxHeight="32"
-                MinHeight="28"/>
+                MinHeight="28"
+                SelectedIndex="0">
+                <ComboBoxItem Content="Battlegrounds"/>
+            </components:LobbyDropdown>
 
         </StackPanel>
         

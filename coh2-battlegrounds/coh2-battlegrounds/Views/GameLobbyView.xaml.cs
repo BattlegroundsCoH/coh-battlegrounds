@@ -7,7 +7,6 @@ using System.IO;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
 using Battlegrounds;
@@ -50,6 +49,8 @@ namespace BattlegroundsApp.Views {
         //private bool m_hasCreatedLobbyOnce;
         private ILobbyPlayModel m_playModel;
 
+        private GameLobbyViewScenarioItem m_lastScenario;
+
         //private Task m_lobbyUpdate;
         private LobbyHandler m_handler;
 
@@ -57,7 +58,7 @@ namespace BattlegroundsApp.Views {
 
         public string LobbyName => $"Game Lobby: {this.m_handler.Lobby.LobbyName}";
 
-        public bool CanLeave => true;
+        public bool CanLeave => this.m_playModel is null;
 
         public bool CanStartMatch => this.m_handler.IsHost && this.IsLegalMatch();
 
@@ -221,12 +222,32 @@ namespace BattlegroundsApp.Views {
                 Scenario scenario = scenarioItem.Scenario;
                 if (scenario is not null) {
 
-                    // Update lobby data
+                    // Get host
                     HostedLobby lobby = this.m_handler.Lobby as HostedLobby;
-                    lobby.SetMode(scenario.Name, null, null);
 
-                    this.UpdateMapPreview(scenario);
-                    this.UpdateAvailableGamemodes(scenario);
+                    // Set capacity
+                    if (lobby.SetCapacity(scenario.MaxPlayers)) {
+
+                        // Update selected scenario
+                        lobby.SetMode(scenario.Name, null, null);
+
+                        // Set max players in team manager
+                        this.TeamManager.SetMaxPlayers(scenario.MaxPlayers);
+
+                        // Update preview and gamemodes
+                        this.UpdateMapPreview(scenario);
+                        this.UpdateAvailableGamemodes(scenario);
+
+                        // Set last selection incase user picks unavailable scenario
+                        this.m_lastScenario = scenarioItem;
+
+                    } else {
+
+                        // Reset selection
+                        this.Map.SelectedItem = this.m_lastScenario;
+
+                    }
+
                 }
             }
 
@@ -323,19 +344,6 @@ namespace BattlegroundsApp.Views {
 
         private void SetupLobby() {
 
-            // If host, setup everything
-            if (this.m_handler.IsHost) {
-
-                // Enable host mode (and because true, will update populate the dropdowns).
-                this.EnableHostMode(true);
-
-            } else {
-
-                // lock everything
-                this.EnableHostMode(false);
-
-            }
-
             // Create card overview
             TeamPlayerCard[][] cards = new TeamPlayerCard[][]{
                 new TeamPlayerCard[] { this.PlayerCard01, this.PlayerCard02, this.PlayerCard03, this.PlayerCard04 },
@@ -361,6 +369,19 @@ namespace BattlegroundsApp.Views {
 
             // Set chat handler as self
             this.LobbyChat.Chat = this;
+
+            // If host, setup everything
+            if (this.m_handler.IsHost) {
+
+                // Enable host mode (and because true, will update populate the dropdowns).
+                this.EnableHostMode(true);
+
+            } else {
+
+                // lock everything
+                this.EnableHostMode(false);
+
+            }
 
         }
 
