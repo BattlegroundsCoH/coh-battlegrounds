@@ -38,7 +38,14 @@
         <TextBlock Grid.Row="0" Grid.Column="0" Text="{Binding CompanyName}" Margin="2.5"/>
 
         <!-- For company size use the size variable from Company.cs file -->
-        <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding CompanySizeText, Mode=OneWay}" Margin="2.5"/>
+        <TextBlock Grid.Row="0" Grid.Column="1" Margin="2.5">
+            <TextBlock.Text>
+                <MultiBinding StringFormat="{}Company Size: {0}/{1}">
+                    <Binding Path="CompanySize" Mode="TwoWay"/>
+                    <Binding Path="CompanyMaxSize"/>
+                </MultiBinding>
+            </TextBlock.Text>
+        </TextBlock>
 
         <!-- Row 1 -->
         <TextBlock Grid.Row="1" Grid.Column="0" Text="Infantry"/>

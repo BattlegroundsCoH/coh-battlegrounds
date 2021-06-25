@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -25,7 +27,7 @@ namespace BattlegroundsApp.Views {
     /// Interaction logic for CompanyBuilderView.xaml
     /// </summary>
 
-    public partial class CompanyBuilderView : ViewState {
+    public partial class CompanyBuilderView : ViewState, INotifyPropertyChanged {
 
         public struct SquadCategory {
 
@@ -36,10 +38,17 @@ namespace BattlegroundsApp.Views {
 
         }
 
+        public event PropertyChangedEventHandler PropertyChanged;
+        private void NotifyPropertyChanged([CallerMemberName] String propertyName = "") {
+            if (PropertyChanged != null) {
+                PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+            }
+        }
+
         public string CompanyName { get; }
-        public string CompanySize { get; }
-        public string CompanyMaxSize { get { return Company.MAX_SIZE.ToString(); } }
-        public string CompanySizeText => $"Company Size: {this.CompanySize}/{this.CompanyMaxSize}";
+        private int _companySize;
+        public int CompanySize { get { return this._companySize; } set { this._companySize = value; NotifyPropertyChanged(); } }
+        public int CompanyMaxSize { get { return Company.MAX_SIZE; } }
         public Faction CompanyFaction { get; }
         public string CompanyGUID { get; }
 
@@ -71,7 +80,7 @@ namespace BattlegroundsApp.Views {
         public CompanyBuilderView(Company company) : this() {
             builder = new CompanyBuilder().DesignCompany(company);
             CompanyName = company.Name;
-            CompanySize = company.Units.Length.ToString();
+            CompanySize = company.Units.Length;
             CompanyFaction = company.Army;
             CompanyGUID = company.TuningGUID;
             ShowCompany();
@@ -81,7 +90,7 @@ namespace BattlegroundsApp.Views {
         public CompanyBuilderView(string companyName, Faction faction, CompanyType type) : this() {
             builder = new CompanyBuilder().NewCompany(faction).ChangeName(companyName).ChangeType(type).ChangeTuningMod(BattlegroundsInstance.BattleGroundsTuningMod.Guid);
             CompanyName = companyName;
-            CompanySize = "0";
+            CompanySize = 0;
             CompanyFaction = faction;
             CompanyGUID = BattlegroundsInstance.BattleGroundsTuningMod.Guid;
             ShowCompany();
@@ -158,6 +167,7 @@ namespace BattlegroundsApp.Views {
         public void AddUnitToCompany(UnitBuilder unitBuilder) {
             builder.AddUnit(unitBuilder);
             builder.Commit();
+            CompanySize = CompanySize + 1;
             ShowCompany();
         }
 
@@ -168,6 +178,7 @@ namespace BattlegroundsApp.Views {
 
         public void RemoveUnitFromCompany(uint unitID) {
             builder.RemoveUnit(unitID);
+            CompanySize = CompanySize - 1; 
             ShowCompany();
 
         }
