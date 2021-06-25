@@ -147,10 +147,12 @@ namespace BattlegroundsApp.Views {
             UnitSlot AddSlotAbility = new UnitSlot(this, UnitSlotType.Ability);
             AddSlotAbility.SetUnit(null);
 
-            this.InfantryList.Children.Add(AddSlotInfantry);
-            this.SupportList.Children.Add(AddSlotSupport);
-            this.VehicleList.Children.Add(AddSlotVehicle);
-            this.AbilityList.Children.Add(AddSlotAbility);
+            if (CompanySize != CompanyMaxSize) {
+                this.InfantryList.Children.Add(AddSlotInfantry);
+                this.SupportList.Children.Add(AddSlotSupport);
+                this.VehicleList.Children.Add(AddSlotVehicle);
+                this.AbilityList.Children.Add(AddSlotAbility);
+            }
         }
 
         public void AddUnitToCompany(UnitBuilder unitBuilder) {
