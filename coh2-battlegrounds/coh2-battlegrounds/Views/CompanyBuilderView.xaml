@@ -50,7 +50,7 @@
         <!-- Row 1 -->
         <TextBlock Grid.Row="1" Grid.Column="0" Text="Infantry"/>
         
-        <TextBlock Grid.Row="1" Grid.Column="1" Text="Support"/>
+        <TextBlock Grid.Row="1" Grid.Column="1" Text="Support Weapons"/>
         
         <TextBlock Grid.Row="1" Grid.Column="2" Text="Vehicles"/>
 

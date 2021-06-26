@@ -40,7 +40,7 @@ namespace BattlegroundsApp.Views {
 
         public event PropertyChangedEventHandler PropertyChanged;
         private void NotifyPropertyChanged([CallerMemberName] String propertyName = "") {
-            if (PropertyChanged != null) {
+            if (PropertyChanged is not null) {
                 PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
             }
         }
@@ -167,7 +167,7 @@ namespace BattlegroundsApp.Views {
         public void AddUnitToCompany(UnitBuilder unitBuilder) {
             builder.AddUnit(unitBuilder);
             builder.Commit();
-            CompanySize = CompanySize + 1;
+            CompanySize++;
             ShowCompany();
         }
 
@@ -178,7 +178,7 @@ namespace BattlegroundsApp.Views {
 
         public void RemoveUnitFromCompany(uint unitID) {
             builder.RemoveUnit(unitID);
-            CompanySize = CompanySize - 1; 
+            CompanySize--; 
             ShowCompany();
 
         }
