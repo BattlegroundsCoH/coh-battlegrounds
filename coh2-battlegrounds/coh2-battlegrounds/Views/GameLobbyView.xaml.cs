@@ -326,12 +326,8 @@ namespace BattlegroundsApp.Views {
             }
 
             // Get company
-            var company = companyItem.State == CompanyItemState.Company ? PlayerCompanies.FromNameAndFaction(companyItem.Name, Faction.FromName(companyItem.Army)) : null;
-            if (company is not null) {
-                return company;
-            } else {
-                throw new Exception();
-            }
+            Company company = companyItem.State == CompanyItemState.Company ? PlayerCompanies.FromNameAndFaction(companyItem.Name, Faction.FromName(companyItem.Army)) : null;
+            return company is not null ? company : throw new Exception();
 
         }
 
