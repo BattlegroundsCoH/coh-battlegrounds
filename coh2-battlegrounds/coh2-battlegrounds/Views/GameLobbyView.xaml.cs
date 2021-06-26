@@ -347,11 +347,6 @@ namespace BattlegroundsApp.Views {
                 new TeamPlayerCard[] { this.PlayerCard21, this.PlayerCard22, this.PlayerCard23, this.PlayerCard24 }
             };
 
-            // Setup team management.
-            this.TeamManager = new LobbyTeamManagementModel(cards, this.m_handler);
-            this.TeamManager.RefreshAll(true);
-            this.TeamManager.OnModelNotification += this.OnTeamManagerNotification;
-
             // Setup chat receiver
             this.m_handler.Lobby.ChatNotification = (channel, sender, message) => {
                 string name = sender.Name; // Don't do this on the GUI thread in case of remoting!
@@ -368,6 +363,11 @@ namespace BattlegroundsApp.Views {
 
             // If host, setup everything
             if (this.m_handler.IsHost) {
+
+                // Setup team management.
+                this.TeamManager = new LobbyTeamManagementModel(cards, this.m_handler);
+                this.TeamManager.RefreshAll(true);
+                this.TeamManager.OnModelNotification += this.OnTeamManagerNotification;
 
                 // Enable host mode (and because true, will update populate the dropdowns).
                 this.EnableHostMode(true);

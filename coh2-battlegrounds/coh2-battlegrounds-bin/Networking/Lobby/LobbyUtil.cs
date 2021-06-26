@@ -128,6 +128,7 @@ namespace Battlegrounds.Networking.Lobby {
                         nameof(HostedLobby) => new ProxyLobby(objectID, requestHandler, serverAPI),
                         nameof(LobbyMember) => new ProxyLobbyMember(objectID, requestHandler, new AuthObject(steamUser.ID, steamUser.Name)),
                         nameof(LobbyTeam) => new ProxyLobbyTeam(objectID, requestHandler),
+                        nameof(LobbyTeamSlot) => new ProxyLobbyTeamSlot(requestHandler, objectID),
                         _ => null
                     }
                 };

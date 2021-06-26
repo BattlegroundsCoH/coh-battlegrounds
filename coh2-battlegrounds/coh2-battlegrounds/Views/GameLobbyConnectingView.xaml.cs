@@ -51,7 +51,7 @@ namespace BattlegroundsApp.Views {
             if (!this.m_isConnecting) {
 
                 // Invoke utility
-                LobbyUtil.JoinLobby(this.m_api, this.m_target, this.m_passwd, this.OnLobbyJoined);
+                Task.Run(() => LobbyUtil.JoinLobby(this.m_api, this.m_target, this.m_passwd, this.OnLobbyJoined));
 
                 // Set connecting flag
                 this.m_isConnecting = true; // TODO: Add check to see if not connected after 1 min. -> Then assume failure
@@ -63,13 +63,18 @@ namespace BattlegroundsApp.Views {
         private void OnLobbyJoined(bool joined, LobbyHandler handler) {
             if (joined) {
 
-                // Create new lobby view
-                GameLobbyView lobbyView = new GameLobbyView(handler);
+                // Call on UI thread
+                this.UpdateGUI(() => {
 
-                // Request state change
-                if (this.StateChangeRequest?.Invoke(lobbyView) is false) {
-                    Trace.WriteLine("Somehow failed to change state"); // TODO: Better error handling
-                }
+                    // Create new lobby view
+                    GameLobbyView lobbyView = new GameLobbyView(handler);
+
+                    // Request state change
+                    if (this.StateChangeRequest?.Invoke(lobbyView) is false) {
+                        Trace.WriteLine("Somehow failed to change state"); // TODO: Better error handling
+                    }
+
+                });
 
             } else {
 

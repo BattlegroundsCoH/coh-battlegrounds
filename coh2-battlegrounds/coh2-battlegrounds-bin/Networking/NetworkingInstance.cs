@@ -26,17 +26,18 @@ namespace Battlegrounds.Networking {
         /// <returns></returns>
         public static string GetBestAddress() {
             if (BestAddress is null) {
+#if DEBUG
                 if (HasLocalServer()) {
                     BestAddress = "localhost";
-                }
-#if DEBUG
-                try {
-                    var connection = TcpConnection.EstablishConnectionTo("192.168.1.107", 11000, 1);
-                    BestAddress = connection.Ping() >= 0 ? "192.168.1.107" : "194.37.80.249";
-                    connection.Shutdown();
-                } catch (Exception e) {
-                    Trace.WriteLine(e, nameof(NetworkingInstance));
-                    BestAddress = "194.37.80.249";
+                } else {
+                    try {
+                        var connection = TcpConnection.EstablishConnectionTo("192.168.1.107", 11000, 1);
+                        BestAddress = connection.Ping() >= 0 ? "192.168.1.107" : "194.37.80.249";
+                        connection.Shutdown();
+                    } catch (Exception e) {
+                        Trace.WriteLine(e, nameof(NetworkingInstance));
+                        BestAddress = "194.37.80.249";
+                    }
                 }
 #else
                 BestAddress = "194.37.80.249";
