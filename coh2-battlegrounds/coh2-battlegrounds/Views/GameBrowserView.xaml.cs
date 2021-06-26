@@ -23,7 +23,6 @@ namespace BattlegroundsApp.Views {
 
         public ICommand HostGameCommand { get; private set; }
 
-        private LobbyHub m_hub;
         private ServerAPI m_api;
 
         public GameBrowserView() {
@@ -61,21 +60,24 @@ namespace BattlegroundsApp.Views {
 
         private void JoinLobby_Click(object sender, RoutedEventArgs e) {
 
-            if (this.GameLobbyList.SelectedItem is ConnectableLobby lobby) {
+            if (this.GameLobbyList.SelectedItem is ServerLobby lobby) {
+
+                // Bail fast if capacity is reached.
+                if (lobby.Members >= lobby.Capacity) {
+                    return;
+                }
 
                 // Get password (if any)
                 string lobbyPassword = string.Empty;
-                if (lobby.IsPasswordProtected) {
+                if (lobby.HasPassword) {
                     LobbyPasswordDialogResult result = LobbyPasswordDialogViewModel.ShowLobbyPasswordDialog("Connect to lobby", out lobbyPassword);
                     if (result == LobbyPasswordDialogResult.Cancel) {
                         return;
                     }
                 }
 
-                // Create new connecting view
-                GameLobbyConnectingView connectingView = new GameLobbyConnectingView(this.m_hub, lobby.LobbyGUID, lobby.LobbyName, lobbyPassword);
-
-                // Change state to connecting view
+                // Create connecting view and start joining
+                GameLobbyConnectingView connectingView = new GameLobbyConnectingView(this.m_api, lobby, lobbyPassword);
                 this.StateChangeRequest?.Invoke(connectingView);
 
             }

@@ -1,13 +1,16 @@
 ﻿using System.Diagnostics;
 
+using Battlegrounds.Networking.Communication;
 using Battlegrounds.Networking.Server;
 
 namespace Battlegrounds.Networking {
-    
+
     /// <summary>
     /// 
     /// </summary>
     public static class NetworkingInstance {
+
+        private static string BestAddress;
 
         /// <summary>
         /// 
@@ -21,11 +24,21 @@ namespace Battlegrounds.Networking {
         /// </summary>
         /// <returns></returns>
         public static string GetBestAddress() {
-            if (HasLocalServer()) {
-                return "localhost";
-            } else {
-                return "194.37.80.249";
+            if (BestAddress is null) {
+                if (HasLocalServer()) {
+                    BestAddress = "localhost";
+                }
+#if DEBUG
+                try {
+                    var connection = TcpConnection.EstablishConnectionTo("192.168.1.107", 11000, 1);
+                    BestAddress = connection.Ping() >= 0 ? "192.168.1.107" : "194.37.80.249";
+                    connection.Shutdown();
+                } catch { }
+#else
+                BestAddress = "194.37.80.249";
+#endif
             }
+            return BestAddress;
         }
 
         /// <summary>

@@ -14,8 +14,9 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using Battlegrounds.Online.Lobby;
-using Battlegrounds.Online.Services;
+
+using Battlegrounds.Networking.Lobby;
+using Battlegrounds.Networking.Server;
 
 namespace BattlegroundsApp.Views {
 
@@ -24,114 +25,23 @@ namespace BattlegroundsApp.Views {
     /// </summary>
     public partial class GameLobbyConnectingView : ViewState { // TODO: Add a time-out functionality in case the host disconnected or some other error occured (like a change in host).
 
-        private LobbyHub m_hub;
-        private string m_guid;
-        private string m_name;
-        private string m_passwd;
         private bool m_isConnecting;
+        private string m_passwd;
+        private ServerLobby m_target;
+        private ServerAPI m_api;
 
-        private ulong m_listenfor;
-
-        private GameLobbyView m_lobby;
-        private ManagedLobby m_vlobby;
-
-        private Regex m_joinFullyRegex = new Regex(@"(?<id>\d+)-join-(?<state>\w+)");
-
-        public GameLobbyConnectingView(LobbyHub hub, string guid, string name, string password) {
+        public GameLobbyConnectingView(ServerAPI api, ServerLobby lobby, string password) {
             
             // Init components
-            InitializeComponent();
+            this.InitializeComponent();
 
-            // Set basic connection data
-            this.m_hub = hub;
-            this.m_guid = guid;
-            this.m_name = name;
+            // Set target
+            this.m_target = lobby;
             this.m_passwd = password;
-            this.m_listenfor = hub.User.ID;
+            this.m_api = api;
 
             // Set flag
             this.m_isConnecting = false;
-
-        }
-
-        public void OnServerResponse(ManagedLobbyStatus status, ManagedLobby result) {
-
-            // Success?
-            if (status.Success) {
-
-                // Set (virtual) lobby
-                this.m_vlobby = result;
-
-                // Call on GUI thread
-                this.UpdateGUI(() => {
-                    
-                    // Create lobby view
-                    this.m_lobby = new GameLobbyView(null);
-
-                });
-
-            } else {
-
-                // Show error
-                MessageBox.Show($"Failed to join lobby.\nServer Message: {status.Message}", "Server Error", MessageBoxButton.OK, MessageBoxImage.Error);
-
-                // Return to gamebrowser
-                this.StateChangeRequest?.Invoke(MainWindow.GAMEBROWSERSTATE);
-
-            }
-
-        }
-
-        private void OnMetaMessage(string from, string msg) {
-
-            // Check if we received the join meta message
-            var match = this.m_joinFullyRegex.Match(msg);
-
-            // Success?
-            if (match.Success) {
-
-                // Get index who's allowed to join?
-                ulong ul = ulong.Parse(match.Groups["id"].Value);
-
-                // The acceptable user to listen for?
-                if (ul == this.m_listenfor) {
-
-                    // Log success
-                    Trace.WriteLine("Received join OK", "ConnectingState");
-
-                    // TODO: Do more here
-
-                    // Begin refresh
-                    this.m_lobby.RefreshTeams(this.OnTeamsRefreshed);
-
-                }
-
-            }
-
-        }
-
-        private void OnTeamsRefreshed(ManagedLobby lobby) {
-
-            // Teams data has been updated
-            Trace.WriteLine("Received join OK", "ConnectingState");
-
-            // Set is connecting flag to false (So we can goto the correct view without leaving immediately)
-            this.m_isConnecting = false;
-
-            // Request state change
-            if (this.StateChangeRequest?.Invoke(this.m_lobby) is false) {
-                Trace.WriteLine("Somehow failed to change state", "ConnectingState"); // TODO: Better error handling
-            }
-
-        }
-
-        private void OnPlayerJoin(string player, ulong id) {
-
-            // Update who we're listening for
-            this.m_listenfor = id;
-
-            // Log
-            Trace.WriteLine($"Now listening for {player} to be allowed to join", "GameLobbyConnectingView");
 
         }
 
@@ -140,24 +50,34 @@ namespace BattlegroundsApp.Views {
             // If we're not already connecting
             if (!this.m_isConnecting) {
 
-                // Tell it to join
-                ManagedLobby.Join(this.m_hub, this.m_guid, this.m_passwd, this.OnServerResponse);
+                // Invoke utility
+                LobbyUtil.JoinLobby(this.m_api, this.m_target, this.m_passwd, this.OnLobbyJoined);
 
-                // Update connection flag
-                this.m_isConnecting = true;
+                // Set connecting flag
+                this.m_isConnecting = true; // TODO: Add check to see if not connected after 1 min. -> Then assume failure
 
             }
 
         }
 
+        private void OnLobbyJoined(bool joined, LobbyHandler handler) {
+            if (joined) {
+
+                // Create new lobby view
+                GameLobbyView lobbyView = new GameLobbyView(handler);
+
+                // Request state change
+                if (this.StateChangeRequest?.Invoke(lobbyView) is false) {
+                    Trace.WriteLine("Somehow failed to change state"); // TODO: Better error handling
+                }
+
+            } else {
+
+            }
+        }
+
         public override void StateOnLostFocus() { 
             
-            if (this.m_isConnecting) {
-                // Send leave message
-                this.m_vlobby.Leave(null); // don't wait for OK
-                this.m_isConnecting = false;
-            }
-
         }
 
     }
