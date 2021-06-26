@@ -66,26 +66,31 @@ namespace coh2_battlegrounds_installer {
         private async void InstallProduct() {
 
             await Task.Delay(300);
+            this.StatusOutput.AppendText($"Establishing connection to server ...{Environment.NewLine}");
 
-            this.StatusOutput.AppendText($"Establishing connection to server...{Environment.NewLine}");
             string[] address_attempts = {
                 "localhost",
+                "192.168.1.107",
                 "194.37.80.249"
             };
 
             int addr = -1;
             string[] manifest = null;
             for (int i = 0; i < address_attempts.Length; i++) {
-                var response = await this.GET(address_attempts[i], "dist/manifest");
-                if (response.Success) {
-                    addr = i;
-                    manifest = JsonSerializer.Deserialize<string[]>(new StreamReader(response.Content).ReadToEnd());
-                    this.StatusOutput.AppendText($"Downloaded manifest ({manifest.Length} files){Environment.NewLine}");
-                    break;
-                }
+                try {
+                    var response = await this.GET(address_attempts[i], "dist/manifest");
+                    if (response.Success) {
+                        addr = i;
+                        manifest = JsonSerializer.Deserialize<string[]>(new StreamReader(response.Content).ReadToEnd());
+                        this.StatusOutput.AppendText($"Downloaded manifest ({manifest.Length} files){Environment.NewLine}");
+                        break;
+                    }
+                } catch { }
             }
 
             if (manifest is null || addr is -1) {
+                _ = MessageBox.Show("The download and installation process failed to install one or more files.", "Failed to install.", MessageBoxButton.OK, MessageBoxImage.Error);
+                Environment.Exit(-1);
                 return;
             }
 
@@ -140,19 +145,27 @@ namespace coh2_battlegrounds_installer {
                 Method = HttpMethod.Get,
             };
 
-            // Send and get response
-            using var response = await this.m_client.SendAsync(request);
+            try {
 
-            // If success
-            if (response.IsSuccessStatusCode) {
+                // Send and get response
+                using var response = await this.m_client.SendAsync(request);
 
-                // Read stream and return
-                return new ServerAPIGETResponseData(true, response.Content.ReadAsStream(), Encoding.ASCII);
+                // If success
+                if (response.IsSuccessStatusCode) {
 
-            } else {
+                    // Read stream and return
+                    return new ServerAPIGETResponseData(true, response.Content.ReadAsStream(), Encoding.ASCII);
 
-                // Return a null response
-                return new ServerAPIGETResponseData(false, response.Content.ReadAsStream(), Encoding.ASCII);
+                } else {
+
+                    // Return a null response
+                    return new ServerAPIGETResponseData(false, response.Content.ReadAsStream(), Encoding.ASCII);
+
+                }
+
+            } catch {
+
+                return new ServerAPIGETResponseData(false, null, null);
 
             }
 
