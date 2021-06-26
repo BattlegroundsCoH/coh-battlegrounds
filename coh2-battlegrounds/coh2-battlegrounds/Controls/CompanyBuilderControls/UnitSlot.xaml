@@ -4,17 +4,49 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:BattlegroundsApp.Controls.CompanyBuilderControls"
+             xmlns:convertor="clr-namespace:BattlegroundsApp.Utilities.Converters"
              mc:Ignorable="d" 
              d:DesignHeight="64" d:DesignWidth="225">
-    
+
+    <local:UnitSlotControl.Resources>
+        <convertor:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
+    </local:UnitSlotControl.Resources>
+
     <local:AddState x:Name="AddState">
         <Button Width="225" Height="64" Content="Add" Click="AddUnit_Click"/>
     </local:AddState>
 
     <local:OccupiedState x:Name="OccupiedState">
         <Canvas Width="225" Height="64">
-            <Button Width="225" Height="64" Content="{Binding UnitName, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:OccupiedState}}}" 
-                Click="ReplaceUnit_Click"/>
+            <Button Width="225" Height="64" Click="ReplaceUnit_Click">
+                <Canvas Width="225" Height="64">
+                    <TextBlock Text="{Binding UnitName, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:OccupiedState}}}" Canvas.Left="50" Canvas.Top="5"/>
+                    
+                    <Image Canvas.Left="5" Canvas.Top="5" Source="{Binding UnitIcon, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:OccupiedState}}, TargetNullValue={x:Null}}"
+                           Width="42" Height="42"/>
+                    
+                    <TextBlock Text="{Binding UnitCost.Manpower, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:OccupiedState}}}" Canvas.Left="5" Canvas.Bottom="3" Foreground="DarkOrange"/>
+                    
+                    <TextBlock Text="{Binding UnitCost.Fuel, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:OccupiedState}}}" Canvas.Left="35" Canvas.Bottom="3" Foreground="green"/>
+                    
+                    <TextBlock Text="{Binding UnitCost.Munitions, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:OccupiedState}}}" Canvas.Left="65" Canvas.Bottom="3" Foreground="red"/>
+                    
+                    <!-- TODO: REPLACE THE ICON OF TRANSPORT TO THE ACTUAL TRANSPORT ICON -->
+                    <Image Canvas.Right="5" Canvas.Bottom="0" Visibility="{Binding UnitIsTransported, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:OccupiedState}}, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter=False}">
+                        <Image.Source>
+                            <BitmapImage DecodePixelWidth="23" DecodePixelHeight="23" UriSource="pack://application:,,,/Resources/ingame/test_unit_transport.png"/>
+                        </Image.Source>
+                    </Image>
+
+                    <StackPanel Canvas.Left="50" Canvas.Bottom="20" Orientation="Horizontal">
+                        <Image>
+                            <Image.Source>
+                                <BitmapImage DecodePixelWidth="13" DecodePixelHeight="13" UriSource="pack://application:,,,/Resources/ingame/test_unit_veterancy.png"/>
+                            </Image.Source>
+                        </Image>
+                    </StackPanel>
+                </Canvas>
+            </Button>
             <Button Width="25" Height="25" Content="X" Canvas.Left="200" Click="RemoveUnit_Click"/>
         </Canvas>
     </local:OccupiedState>
