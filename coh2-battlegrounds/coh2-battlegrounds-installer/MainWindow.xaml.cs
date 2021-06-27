@@ -1,28 +1,31 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
+using System.IO;
 using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace coh2_battlegrounds_installer {
-    
+
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
     public partial class MainWindow : NavigationWindow {
-        
+
+        private static readonly string[] DefaultPaths = new string[] {
+            ""
+        };
+
         public MainWindow() {
-            InitializeComponent();
-            this.Navigate(new ActionPage(false,  string.Empty, this));
+            
+            this.InitializeComponent();
+            
+            string path = this.TryFindBattlegrondsInstallDirectory();
+            bool isInstalled = File.Exists(Path.Combine(path, "coh2-battlegrounds.exe"));
+            this.Navigate(new ActionPage(isInstalled, path, this));
+
+        }
+
+        private string TryFindBattlegrondsInstallDirectory() {
+            // TODO: Lookup in windows registry
+            return Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles), "coh2-bg\\");
         }
 
     }

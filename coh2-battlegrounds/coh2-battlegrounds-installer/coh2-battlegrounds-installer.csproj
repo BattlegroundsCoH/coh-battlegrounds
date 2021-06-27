@@ -5,6 +5,7 @@
     <TargetFramework>net5.0-windows</TargetFramework>
     <RootNamespace>coh2_battlegrounds_installer</RootNamespace>
     <UseWPF>true</UseWPF>
+    <StartupObject>coh2_battlegrounds_installer.App</StartupObject>
   </PropertyGroup>
 
 </Project>

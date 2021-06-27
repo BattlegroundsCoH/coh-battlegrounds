@@ -5,5 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:coh2_battlegrounds_installer"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800" ShowsNavigationUI="False">
+        Title="MainWindow" Height="450" Width="600" ShowsNavigationUI="False"
+                  WindowStartupLocation="CenterScreen"
+                  WindowStyle="SingleBorderWindow"
+                  ResizeMode="NoResize">
 </NavigationWindow>

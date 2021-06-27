@@ -1,22 +1,16 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using System.Net.Http;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 
 namespace coh2_battlegrounds_installer {
-    
+
     /// <summary>
     /// Interaction logic for InstallPage.xaml
     /// </summary>
@@ -53,17 +47,18 @@ namespace coh2_battlegrounds_installer {
             this.Window = window;
             this.TargetPath = path;
 
+            if (!Directory.Exists(this.TargetPath)) {
+                Directory.CreateDirectory(this.TargetPath);
+            }
+
             this.m_client = new();
 
             // Init component
             this.InitializeComponent();
 
-            // Trigger installer
-            this.InstallProduct();
-
         }
     
-        private async void InstallProduct() {
+        public async void InstallProduct() {
 
             await Task.Delay(300);
             this.StatusOutput.AppendText($"Establishing connection to server ...{Environment.NewLine}");
@@ -130,7 +125,10 @@ namespace coh2_battlegrounds_installer {
                 _ = MessageBox.Show("The download and installation process failed to install one or more files.", "Failed to install.", MessageBoxButton.OK, MessageBoxImage.Error);
                 // TODO: Cleanup all possibly installed files
             } else {
-                _ = MessageBox.Show("The download and installation process has successfully installed Company of Heroes 2: Battlegrounds.", "Battlegrounds installed.", MessageBoxButton.OK, MessageBoxImage.Information);
+                var result = MessageBox.Show("The download and installation process has successfully installed Company of Heroes 2: Battlegrounds. Would you like to launch Battlegrounds?", "Battlegrounds installed.", MessageBoxButton.YesNo, MessageBoxImage.Information);
+                if (result == MessageBoxResult.Yes) {
+                    Process.Start(Path.Combine(TargetPath, "coh2-battlegrounds.exe"));
+                }
             }
 
             Environment.Exit(errcount > 0 ? -1 : 0);
