@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Diagnostics;
-using System.Net.NetworkInformation;
 
 using Battlegrounds.Networking.Communication;
 using Battlegrounds.Networking.Server;
@@ -33,9 +32,7 @@ namespace Battlegrounds.Networking {
                     BestAddress = "localhost";
                 } else {
                     try {
-                        var p = new Ping().Send("http://192.168.1.107:11000");
-                        BestAddress = p.Status == IPStatus.Success ? "192.168.1.107" : "194.37.80.249";
-                        //BestAddress = TcpConnection.CanConnect("192.168.1.107", 11000) ? "192.168.1.107" : "194.37.80.249";
+                        BestAddress = HttpConnection.PingServer("192.168.1.107", 80) ? "192.168.1.107" : "194.37.80.249";
                     } catch (Exception e) {
                         Trace.WriteLine(e, nameof(NetworkingInstance));
                         BestAddress = "194.37.80.249";
