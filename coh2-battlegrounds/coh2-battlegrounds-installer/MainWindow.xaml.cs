@@ -25,7 +25,12 @@ namespace coh2_battlegrounds_installer {
 
         private string TryFindBattlegrondsInstallDirectory() {
             // TODO: Lookup in windows registry
-            return Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles), "coh2-bg\\");
+            if (Environment.CurrentDirectory == Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "Downloads")) {
+                return Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles), "coh2-bg\\");
+            } else {
+                return Environment.CurrentDirectory;
+            }
+
         }
 
     }
