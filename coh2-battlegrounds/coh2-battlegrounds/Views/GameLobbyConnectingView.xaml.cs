@@ -63,6 +63,8 @@ namespace BattlegroundsApp.Views {
         private void OnLobbyJoined(bool joined, LobbyHandler handler) {
             if (joined) {
 
+                Trace.WriteLine("Sucessfully joined lobby -> Transfering to game lobby view.");
+
                 // Call on UI thread
                 this.UpdateGUI(() => {
 

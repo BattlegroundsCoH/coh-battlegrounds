@@ -377,14 +377,14 @@ namespace BattlegroundsApp.Views {
 
                 // lock everything
                 this.EnableHostMode(false);
-
+                /*
                 // Get game data
                 string map = this.m_handler.Lobby.LobbyMap;
                 string wc = this.m_handler.Lobby.LobbyGamemode;
                 string wco = this.m_handler.Lobby.LobbyGamemodeOption;
 
                 Trace.WriteLine($"{map}, {wc} ({wco})");
-
+                */
             }
 
         }

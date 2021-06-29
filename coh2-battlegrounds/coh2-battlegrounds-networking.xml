@@ -606,6 +606,14 @@
             <param name="introMessage">The introduction message to send to the HTTP server.</param>
             <returns>If connection is established a <see cref="T:Battlegrounds.Networking.Communication.HttpConnection"/> instance. Otherwise <see langword="null"/>.</returns>
         </member>
+        <member name="M:Battlegrounds.Networking.Communication.HttpConnection.PingServer(System.String,System.Int32)">
+            <summary>
+            Ping specified server at <paramref name="address"/> using <paramref name="port"/>.
+            </summary>
+            <param name="address">The addres to ping.</param>
+            <param name="port">The port to ping.</param>
+            <returns>If a ping response was given, <see langword="true"/>; Otherwise <see langword="false"/>.</returns>
+        </member>
         <member name="T:Battlegrounds.Networking.Communication.HttpPayloadMessage">
             <summary>
             Represents a message in a <see cref="T:Battlegrounds.Networking.Communication.HttpPayload"/> object with raw key-value representation of the message.

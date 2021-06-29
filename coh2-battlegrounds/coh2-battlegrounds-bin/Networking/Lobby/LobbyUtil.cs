@@ -118,7 +118,7 @@ namespace Battlegrounds.Networking.Lobby {
                 ObjectInstanceHandler instanceHandler = new ObjectInstanceHandler();
 
                 // Create intro
-                var intro = new IntroMessage(false, lobby.Guid, password, 1);
+                IntroMessage intro = new IntroMessage(false, lobby.Guid, password, 1);
 
                 // Establish TCP connection
                 HttpConnection connection = HttpConnection.EstablishConnection(NetworkingInstance.GetBestAddress(), 11000, steamUser.ID, intro);
@@ -140,17 +140,8 @@ namespace Battlegrounds.Networking.Lobby {
                 // Set request handler
                 connection.SetRequestHandler(participantHandler);
                 
-                // Send intro message
-                /*if (connection.SendMessage(new IntroMessage(false, lobby.Name, password, 1), true) is StringMessage str) {
-                    if (str.Message != "OK") {
-                        throw new Exception(str.Message);
-                    }
-                } else {
-                    throw new Exception("Failed to get response from server");
-                }*/
-
                 // Get proxy
-                var proxyObj = participantHandler.SendRequest(null, "lobby");
+                object proxyObj = participantHandler.SendRequest(null, "lobby");
                 instanceHandler.RegisterInstance(proxyObj as ProxyLobby);
 
                 // Get self
@@ -171,7 +162,8 @@ namespace Battlegrounds.Networking.Lobby {
                 // Set success flag
                 success = true;
 
-                Trace.WriteLine($"Sucessfully joined lobby [lobby = {handler.Lobby is not null}, self = {handler.Self is not null}, self machine = {handler.Self.IsLocalMachine}]", methoddb);
+                // Set sucess flag
+                Trace.WriteLine($"Sucessfully joined lobby [lobby = {handler.Lobby is not null}, self = {handler.Self is not null}, self machine = {handler.Self?.IsLocalMachine}]", methoddb);
 
             } catch (Exception ex) {
 
