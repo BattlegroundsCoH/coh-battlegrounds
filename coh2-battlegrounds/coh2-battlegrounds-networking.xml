@@ -1647,6 +1647,13 @@
             
             </summary>
         </member>
+        <member name="M:Battlegrounds.Networking.Lobby.ILobby.GetGameModOption(System.String)">
+            <summary>
+            
+            </summary>
+            <param name="optionValue"></param>
+            <returns></returns>
+        </member>
         <member name="T:Battlegrounds.Networking.Lobby.ILobbyMember">
             <summary>
             Interface representing the lobby member role.

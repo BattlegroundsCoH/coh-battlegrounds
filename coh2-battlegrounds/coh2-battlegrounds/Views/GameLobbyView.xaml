@@ -6,7 +6,7 @@
              xmlns:local="clr-namespace:BattlegroundsApp.Views"
              xmlns:bg="clr-namespace:BattlegroundsApp" xmlns:components="clr-namespace:BattlegroundsApp.Controls.Lobby.Components" xmlns:chatting="clr-namespace:BattlegroundsApp.Controls.Lobby.Chatting" xmlns:viewcomponent="clr-namespace:BattlegroundsApp.Views.ViewComponent"
               mc:Ignorable="d" Background="White"
-             d:DesignHeight="700" d:DesignWidth="800">
+             d:DesignHeight="800" d:DesignWidth="800">
     <Grid>
 
         <Grid.RowDefinitions>
@@ -129,7 +129,7 @@
                 <Label Content="Allies" Background="#FFECECEC"/>
             </ContentControl>
             <StackPanel MinHeight="132">
-                <viewcomponent:TeamPlayerCard InitialState="SelfState" x:Name="PlayerCard11"/>
+                <viewcomponent:TeamPlayerCard InitialState="AvailableState" x:Name="PlayerCard11"/>
                 <viewcomponent:TeamPlayerCard InitialState="AvailableState" x:Name="PlayerCard12"/>
                 <viewcomponent:TeamPlayerCard InitialState="AvailableState" x:Name="PlayerCard13"/>
                 <viewcomponent:TeamPlayerCard InitialState="AvailableState" x:Name="PlayerCard14"/>
@@ -151,7 +151,8 @@
                         VerticalContentAlignment="Center"
                         HorizontalContentAlignment="Right"
                         Margin="0, 0, 7.5, 0"
-                        IsChecked="True"
+                        IsChecked="False"
+                        IsEnabled="False"
                         />
                     <Label Content="Observers" DockPanel.Dock="Left"/>
                 </DockPanel>
