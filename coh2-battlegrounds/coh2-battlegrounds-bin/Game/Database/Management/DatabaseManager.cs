@@ -103,7 +103,7 @@ namespace Battlegrounds.Game.Database.Management {
                     "..\\..\\..\\..\\db-battlegrounds\\",
                     "..\\..\\..\\db-battlegrounds\\",
                     "db-battlegrounds\\",
-                    "data\\json-db\\", // should be the place for release builds!
+                    "bin\\data\\json-db\\", // should be the place for release builds!
                 };
                 foreach (string path in testPaths) {
                     if (Directory.Exists(path)) {

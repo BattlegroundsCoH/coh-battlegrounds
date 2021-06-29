@@ -52,8 +52,14 @@ namespace Battlegrounds.Networking.Lobby {
 
             try {
 
+                // Create intro
+                var intro = new IntroMessage(true, lobbyName, lobbyPassword, 1);
+
                 // Establish connection
-                TcpConnection connection = TcpConnection.EstablishConnectionTo(NetworkingInstance.GetBestAddress(), 11000, steamUser.ID);
+                HttpConnection connection = HttpConnection.EstablishConnection(NetworkingInstance.GetBestAddress(), 11000, steamUser.ID, intro);
+                if (connection is null) {
+                    throw new Exception("Failed to establish HTTP connection.");
+                }
 
                 // Create handler
                 HostRequestHandler requestHandler = new HostRequestHandler(connection, service, cachedPool);
@@ -61,7 +67,6 @@ namespace Battlegrounds.Networking.Lobby {
 
                 // Set connection
                 connection.SetRequestHandler(requestHandler);
-                IMessage response = connection.SendMessage(new IntroMessage(true, lobbyName, lobbyPassword, 1), true);
 
                 // Create handler
                 handler = new LobbyHandler(serverAPI, true) {
@@ -74,17 +79,8 @@ namespace Battlegrounds.Networking.Lobby {
                     Self = self,
                 };
 
-                // Check response
-                if (response is StringMessage msg) {
-                    if (msg.Message != "OK") {
-                        Trace.WriteLine(msg?.Message, nameof(LobbyUtil));
-                        success = false;
-                    }
-                    lobby.SetState(LobbyState.LOBBY_INLOBBY);
-                    success = true;
-                } else {
-                    success = false;
-                }
+                lobby.SetState(LobbyState.LOBBY_INLOBBY);
+                success = true;
 
             } catch (Exception ex) {
 
@@ -101,6 +97,8 @@ namespace Battlegrounds.Networking.Lobby {
         }
 
         public static void JoinLobby(ServerAPI serverAPI, ServerLobby lobby, string password, Action<bool, LobbyHandler> onLobbyJoined) {
+
+            const string methoddb = $"{nameof(LobbyUtil)}::{nameof(JoinLobby)}";
 
             // Get steam user
             SteamUser steamUser = BattlegroundsInstance.Steam.User;
@@ -119,8 +117,14 @@ namespace Battlegrounds.Networking.Lobby {
                 // Create instance handler
                 ObjectInstanceHandler instanceHandler = new ObjectInstanceHandler();
 
+                // Create intro
+                var intro = new IntroMessage(false, lobby.Guid, password, 1);
+
                 // Establish TCP connection
-                TcpConnection connection = TcpConnection.EstablishConnectionTo(NetworkingInstance.GetBestAddress(), 11000, steamUser.ID);
+                HttpConnection connection = HttpConnection.EstablishConnection(NetworkingInstance.GetBestAddress(), 11000, steamUser.ID, intro);
+                if (connection is null) {
+                    throw new Exception("Failed to establish HTTP connection.");
+                }
 
                 // Create handler
                 ParticipantRequestHandler participantHandler = new ParticipantRequestHandler(connection, instanceHandler) {
@@ -137,13 +141,13 @@ namespace Battlegrounds.Networking.Lobby {
                 connection.SetRequestHandler(participantHandler);
                 
                 // Send intro message
-                if (connection.SendMessage(new IntroMessage(false, lobby.Name, password, 1), true) is StringMessage str) {
+                /*if (connection.SendMessage(new IntroMessage(false, lobby.Name, password, 1), true) is StringMessage str) {
                     if (str.Message != "OK") {
                         throw new Exception(str.Message);
                     }
                 } else {
                     throw new Exception("Failed to get response from server");
-                }
+                }*/
 
                 // Get proxy
                 var proxyObj = participantHandler.SendRequest(null, "lobby");
@@ -160,15 +164,19 @@ namespace Battlegrounds.Networking.Lobby {
                     ObjectPool = null,
                     Lobby = proxyObj as ILobby,
                     Self = self,
+                    InstanceHandler = instanceHandler,
+                    LobbyID = (proxyObj as ProxyLobby).ObjectID
                 };
 
                 // Set success flag
                 success = true;
 
+                Trace.WriteLine($"Sucessfully joined lobby [lobby = {handler.Lobby is not null}, self = {handler.Self is not null}, self machine = {handler.Self.IsLocalMachine}]", methoddb);
+
             } catch (Exception ex) {
 
                 // Log error
-                Trace.WriteLine(ex, $"{nameof(LobbyUtil)}::{nameof(JoinLobby)}");
+                Trace.WriteLine(ex, methoddb);
 
             } finally {
                 onLobbyJoined?.Invoke(success, handler);

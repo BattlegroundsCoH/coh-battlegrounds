@@ -38,6 +38,11 @@ namespace Battlegrounds.Networking.Lobby {
         /// <summary>
         /// 
         /// </summary>
+        public ISingleInstanceHandler InstanceHandler { get; init; }
+
+        /// <summary>
+        /// 
+        /// </summary>
         public IStaticInterface StaticInterface { get; init; }
 
         /// <summary>

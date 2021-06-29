@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.Diagnostics.Contracts;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media.Imaging;
@@ -99,7 +100,7 @@ namespace BattlegroundsApp.Views {
         private void LeaveLobby_Click(object sender, RoutedEventArgs e) {
 
             // Leave lobby
-            this.m_handler.Lobby.Leave();
+            Task.Run(() => this.m_handler.Lobby.Leave());
 
             // Change state
             if (this.StateChangeRequest.Invoke(MainWindow.GAMEBROWSERSTATE) is false) {
