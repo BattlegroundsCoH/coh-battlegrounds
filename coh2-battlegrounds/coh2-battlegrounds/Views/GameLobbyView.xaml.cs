@@ -528,22 +528,24 @@ namespace BattlegroundsApp.Views {
         }
 
         private void OnLobbyVariable(LobbyRefreshVariable refreshVariable, object refreshArgument) {
-            switch (refreshVariable) {
-                case LobbyRefreshVariable.TEAM:
-                    if (refreshArgument is null) {
-                        this.TeamManager.RefreshAll(false);
-                    } else {
-                        if (refreshArgument is ILobbyTeam t) {
-                            this.TeamManager.RefreshTeam(t.TeamIndex == 1 ? LobbyTeamType.Allies : LobbyTeamType.Axis);
+            this.UpdateGUI(() => {
+                switch (refreshVariable) {
+                    case LobbyRefreshVariable.TEAM:
+                        if (refreshArgument is null) {
+                            this.TeamManager.RefreshAll(false);
                         } else {
-                            Trace.WriteLine($"Refresh variable argument not implemented : {refreshVariable}::{refreshArgument}");
+                            if (refreshArgument is ILobbyTeam t) {
+                                this.TeamManager.RefreshTeam(t.TeamIndex == 1 ? LobbyTeamType.Allies : LobbyTeamType.Axis);
+                            } else {
+                                Trace.WriteLine($"Refresh variable argument not implemented : {refreshVariable}::{refreshArgument}");
+                            }
                         }
-                    }
-                    break;
-                default:
-                    Trace.WriteLine($"Refresh variable not implemented : {refreshVariable}");
-                    break;
-            }
+                        break;
+                    default:
+                        Trace.WriteLine($"Refresh variable not implemented : {refreshVariable}");
+                        break;
+                }
+            });
         }
 
     }
