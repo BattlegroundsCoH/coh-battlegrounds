@@ -18,7 +18,6 @@ using Battlegrounds.Game.Gameplay;
 using Battlegrounds.Game.Match;
 using Battlegrounds.Modding;
 using Battlegrounds.Networking.Lobby;
-using Battlegrounds.Online.Lobby;
 
 using BattlegroundsApp.Controls.Lobby;
 using BattlegroundsApp.Controls.Lobby.Chatting;
@@ -295,7 +294,7 @@ namespace BattlegroundsApp.Views {
 
                 // Update lobby data
                 HostedLobby lobby = this.m_handler.Lobby as HostedLobby;
-                lobby.SetMode(null, null, option.Title, this.TranslateOption);
+                lobby.SetMode(null, null, option.Value.ToString(), this.TranslateOption);
 
             }
 
@@ -355,6 +354,9 @@ namespace BattlegroundsApp.Views {
                 new TeamPlayerCard[] { this.PlayerCard21, this.PlayerCard22, this.PlayerCard23, this.PlayerCard24 }
             };
 
+            // Setup variable callback
+            this.m_handler.Lobby.VariableCallback = this.OnLobbyVariable;
+
             // Setup chat receiver
             this.m_handler.Lobby.ChatNotification = (channel, sender, message) => {
                 string name = sender.Name; // Don't do this on the GUI thread in case of remoting!
@@ -363,7 +365,7 @@ namespace BattlegroundsApp.Views {
 
             // Setup system receiver
             this.m_handler.Lobby.SystemNotification = systemInfo => {
-                this.UpdateGUI(() => this.LobbyChat.DisplayMessage($"[System] {systemInfo}", 0));
+                this.UpdateGUI(() => this.LobbyChat.DisplayMessage(TranslateSystem(systemInfo), 0));
             };
 
             // Set chat handler as self
@@ -460,6 +462,9 @@ namespace BattlegroundsApp.Views {
             // Set the scenario
             this.SetScenario(map);
 
+            // Set the gamemode
+            this.SetGamemode(wc, wco);
+
         }
 
         public void SetScenario(string scenario) {
@@ -477,7 +482,47 @@ namespace BattlegroundsApp.Views {
 
         }
 
+        public void SetGamemode(string gamemode, string option) {
+
+            // If wincondition is found
+            if (WinconditionList.GetWinconditionByName(gamemode) is Wincondition wc) {
+
+                // Set gamemode
+                this.Gamemode.SelectedItem = wc;
+
+                // Try set gamemode option
+                if (int.TryParse(option, out int value)) {
+                    if (wc.Options is not null) {
+                        this.GamemodeOption.SelectedItem = wc.Options.FirstOrDefault(x => x.Value == value);
+                    }
+                }
+
+            }
+
+        }
+
         private string TranslateOption(string key, string value) => value;
+
+        private static string TranslateSystem(string notification) {
+            int i = notification.IndexOf('$');
+            if (i != -1) {
+                string key = notification[0..i];
+                string value = notification[(i + 1)..];
+                string loc = key switch { // TODO: Properly translate
+                    "JOIN" => $"{value} has joined.",
+                    "KICK" => $"{value} was kicked by host.",
+                    "LEAVE" => $"{value} has left.",
+                    _ => value
+                };
+                return $"[System] {loc}";
+            } else {
+                return $"[System] {notification} (Invalid System Message)";
+            }
+        }
+
+        private void OnLobbyVariable(LobbyRefreshVariable refreshVariable, object refreshArgument) {
+
+        }
 
     }
 
