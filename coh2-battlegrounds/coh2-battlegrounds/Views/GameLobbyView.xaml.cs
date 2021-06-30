@@ -416,6 +416,9 @@ namespace BattlegroundsApp.Views {
             this.Map.SetStateBasedOnContext(hostMode, hostMode, 0);
             this.Gamemode.SetStateBasedOnContext(hostMode, hostMode, 0);
             this.GamemodeOption.SetStateBasedOnContext(hostMode, hostMode, 0);
+            this.WeatherOption.SetStateBasedOnContext(hostMode, hostMode, 0);
+            this.SupplyOption.SetStateBasedOnContext(hostMode, hostMode, 0);
+            this.TuningOption.SetStateBasedOnContext(hostMode, hostMode, 0);
 
             // If host-mode is enabled, populate the dropdowns
             if (hostMode) {
@@ -490,9 +493,13 @@ namespace BattlegroundsApp.Views {
                 // Set gamemode
                 this.Gamemode.SelectedItem = wc;
 
+                // Hide the option by default
+                this.GamemodeOption.Visibility = Visibility.Hidden;
+
                 // Try set gamemode option
                 if (int.TryParse(option, out int value)) {
                     if (wc.Options is not null) {
+                        this.GamemodeOption.Visibility = Visibility.Visible;
                         this.GamemodeOption.SelectedItem = wc.Options.FirstOrDefault(x => x.Value == value);
                     }
                 }
@@ -521,7 +528,22 @@ namespace BattlegroundsApp.Views {
         }
 
         private void OnLobbyVariable(LobbyRefreshVariable refreshVariable, object refreshArgument) {
-
+            switch (refreshVariable) {
+                case LobbyRefreshVariable.TEAM:
+                    if (refreshArgument is null) {
+                        this.TeamManager.RefreshAll(false);
+                    } else {
+                        if (refreshArgument is ILobbyTeam t) {
+                            this.TeamManager.RefreshTeam(t.TeamIndex == 1 ? LobbyTeamType.Allies : LobbyTeamType.Axis);
+                        } else {
+                            Trace.WriteLine($"Refresh variable argument not implemented : {refreshVariable}::{refreshArgument}");
+                        }
+                    }
+                    break;
+                default:
+                    Trace.WriteLine($"Refresh variable not implemented : {refreshVariable}");
+                    break;
+            }
         }
 
     }
