@@ -1943,7 +1943,12 @@
         </member>
         <member name="F:Battlegrounds.Networking.Lobby.LobbyRefreshVariable.MODOPTION">
             <summary>
-            A mod option has changed.
+            One or more mod options have changed.
+            </summary>
+        </member>
+        <member name="F:Battlegrounds.Networking.Lobby.LobbyRefreshVariable.MATCHOPTION">
+            <summary>
+            One or more match options have changed.
             </summary>
         </member>
         <member name="T:Battlegrounds.Networking.Lobby.LobbyRefreshVariableCallback">

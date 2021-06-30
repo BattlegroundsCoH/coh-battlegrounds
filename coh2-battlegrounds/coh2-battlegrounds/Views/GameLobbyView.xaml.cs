@@ -558,6 +558,9 @@ namespace BattlegroundsApp.Views {
                             }
                         }
                         break;
+                    case LobbyRefreshVariable.MATCHOPTION:
+                        this.RefreshDropdowns();
+                        break;
                     default:
                         Trace.WriteLine($"Refresh variable not implemented : {refreshVariable}");
                         break;
