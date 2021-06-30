@@ -24,7 +24,9 @@
         x:Name="OccupiedCardState"
         StateName="OccupiedState">
         <DockPanel>
-            <Image Width="24" DockPanel.Dock="Left"/>
+            <Image Width="24" 
+                   DockPanel.Dock="Left" 
+                   Source="{Binding PlayerArmyIcon}"/>
             <Label Content="{Binding Playername}" Width="128" DockPanel.Dock="Left"/>
             <Label Content="{Binding Playercompany}"/>
         </DockPanel>

@@ -67,9 +67,11 @@ namespace BattlegroundsApp.Views {
 
         public bool CanStartMatch => this.m_handler.IsHost && this.IsLegalMatch();
 
-        public string TeamString_Allies => $"Allies ({this.m_handler.Lobby.AlliesTeam.Size}/{this.m_handler.Lobby.AlliesTeam.Capacity})";
-        public string TeamString_Axis => $"Axis ({this.m_handler.Lobby.AxisTeam.Size}/{this.m_handler.Lobby.AxisTeam.Capacity})";
-        public string TeamString_Spectators => $"Observers ({this.m_handler.Lobby.SpectatorTeam.Size}/{this.m_handler.Lobby.SpectatorTeam.Capacity})";
+        public string TeamStringAllies => $"Allies ({this.m_handler.Lobby.AlliesTeam.Size}/{this.m_handler.Lobby.AlliesTeam.Capacity})";
+
+        public string TeamStringAxis => $"Axis ({this.m_handler.Lobby.AxisTeam.Size}/{this.m_handler.Lobby.AxisTeam.Capacity})";
+
+        public string TeamStringSpectators => $"Observers ({this.m_handler.Lobby.SpectatorTeam.Size}/{this.m_handler.Lobby.SpectatorTeam.Capacity})";
 
         public LobbyTeamManagementModel TeamManager { get; private set; }
 

@@ -154,6 +154,7 @@ namespace BattlegroundsApp.Models {
                 playerCard.Playername = isAI ? ((AIDifficulty)ai.Difficulty).GetIngameDisplayName() : occupant.Name;
                 playerCard.Playercompany = occupant.CompanyName;
                 playerCard.Playerarmy = occupant.Army;
+                playerCard.SetArmyIconIfNotHost();
 
                 // Triger value update
                 playerCard.RefreshVisualProperty(nameof(playerCard.Playername));

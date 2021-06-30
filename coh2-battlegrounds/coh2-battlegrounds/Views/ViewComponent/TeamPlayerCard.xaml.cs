@@ -6,6 +6,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
 using Battlegrounds.Functional;
@@ -37,15 +38,19 @@ namespace BattlegroundsApp.Views.ViewComponent {
         private static TeamPlayerArmyItem[] AxisArmyItems = Array.Empty<TeamPlayerArmyItem>();
 
         static TeamPlayerCard() {
-            AlliedArmyItems = new TeamPlayerArmyItem[] {
-                new TeamPlayerArmyItem(new BitmapImage(new Uri("pack://application:,,,/Resources/ingame/aef.png")), "US Forces", "aef"),
-                new TeamPlayerArmyItem(new BitmapImage(new Uri("pack://application:,,,/Resources/ingame/british.png")), "UK Forces", "british"),
-                new TeamPlayerArmyItem(new BitmapImage(new Uri("pack://application:,,,/Resources/ingame/soviet.png")), "Soviet Union", "soviet"),
-            };
-            AxisArmyItems = new TeamPlayerArmyItem[] {
-                new TeamPlayerArmyItem(new BitmapImage(new Uri("pack://application:,,,/Resources/ingame/german.png")), "Wehrmacht", "german"),
-                new TeamPlayerArmyItem(new BitmapImage(new Uri("pack://application:,,,/Resources/ingame/west_german.png")), "Oberkommando West", "west_german"),
-            };
+            try {
+                AlliedArmyItems = new TeamPlayerArmyItem[] {
+                    new TeamPlayerArmyItem(new BitmapImage(new Uri("pack://application:,,,/Resources/ingame/aef.png")), "US Forces", "aef"),
+                    new TeamPlayerArmyItem(new BitmapImage(new Uri("pack://application:,,,/Resources/ingame/british.png")), "UK Forces", "british"),
+                    new TeamPlayerArmyItem(new BitmapImage(new Uri("pack://application:,,,/Resources/ingame/soviet.png")), "Soviet Union", "soviet"),
+                };
+                AxisArmyItems = new TeamPlayerArmyItem[] {
+                    new TeamPlayerArmyItem(new BitmapImage(new Uri("pack://application:,,,/Resources/ingame/german.png")), "Wehrmacht", "german"),
+                    new TeamPlayerArmyItem(new BitmapImage(new Uri("pack://application:,,,/Resources/ingame/west_german.png")), "Oberkommando West", "west_german"),
+                };
+            } catch {
+
+            }
         }
 
         public const string OCCUPIEDSTATE = "OccupiedState";
@@ -70,6 +75,8 @@ namespace BattlegroundsApp.Views.ViewComponent {
         public string Playercompany { get => this.m_playerCompany; set => this.m_playerCompany = string.IsNullOrEmpty(value) ? "No Company Selected" : value; }
 
         public string Playerarmy { get; set; }
+
+        public ImageSource PlayerArmyIcon { get; set; }
 
         public bool IsAllies { get; set; }
 
@@ -195,6 +202,13 @@ namespace BattlegroundsApp.Views.ViewComponent {
             }
             // TODO: Maybe add a check to verify occuped state has a company
             return false;
+        }
+
+        public void SetArmyIconIfNotHost() {
+            if (this.State.StateName is OCCUPIEDSTATE) {
+                this.PlayerArmyIcon = (this.Playerarmy is "german" or "west_german" ? AxisArmyItems : AlliedArmyItems).FirstOrDefault(x => x.Name == this.Playerarmy)?.Icon ?? null;
+                this.RefreshVisualProperty(nameof(this.PlayerArmyIcon));
+            }
         }
 
         private static TeamPlayerCompanyItem CompanyItemFromCompany(Company company)
