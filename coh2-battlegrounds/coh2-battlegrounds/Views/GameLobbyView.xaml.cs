@@ -57,6 +57,7 @@ namespace BattlegroundsApp.Views {
 
         //private Task m_lobbyUpdate;
         private LobbyHandler m_handler;
+        private bool m_ignoreEvents;
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -101,6 +102,9 @@ namespace BattlegroundsApp.Views {
         }
 
         private void LeaveLobby_Click(object sender, RoutedEventArgs e) {
+
+            // Set event ignore flag
+            this.m_ignoreEvents = true;
 
             // Leave lobby
             Task.Run(() => this.m_handler.Lobby.Leave());
@@ -528,6 +532,9 @@ namespace BattlegroundsApp.Views {
         }
 
         private void OnLobbyVariable(LobbyRefreshVariable refreshVariable, object refreshArgument) {
+            if (this.m_ignoreEvents) {
+                return;
+            }
             this.UpdateGUI(() => {
                 switch (refreshVariable) {
                     case LobbyRefreshVariable.TEAM:
