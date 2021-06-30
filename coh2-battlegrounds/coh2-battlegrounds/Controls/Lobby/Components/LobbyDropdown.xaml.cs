@@ -138,7 +138,13 @@ namespace BattlegroundsApp.Controls.Lobby.Components {
         private void SetSelectedValue(object value) {
 
             if (this.State is SelfState) {
-                this.SelfOptions.SelectedIndex = this.SelfOptions.Items.IndexOf(value);
+                object option = null;
+                foreach (object item in this.SelfOptions.Items) {
+                    if (item is IDropdownElement e && e.IsSame(value)) {
+                        option = item;
+                    }
+                }
+                this.SelfOptions.SelectedIndex = this.SelfOptions.Items.IndexOf(option ?? value);
             } else if (this.State is OtherState) {
                 this.OtherSelected.Content = this.m_setSelectedValue = value;
                 this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(this.OtherSelectedItem)));
@@ -179,6 +185,10 @@ namespace BattlegroundsApp.Controls.Lobby.Components {
             return cntr;
         }
 
+    }
+
+    public interface IDropdownElement {
+        bool IsSame(object source);
     }
 
 }

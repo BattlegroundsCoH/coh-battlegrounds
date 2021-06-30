@@ -20,7 +20,10 @@
             <StackPanel DockPanel.Dock="Top" Margin="0,0,0,5">
                 <Label Content="Installing..." Name="StatusLabel"/>
                 <DockPanel>
-                    <Label Content="0%" DockPanel.Dock="Right" Name="ProgressPercentage" Width="64"/>
+                    <Label Content="0%" 
+                           DockPanel.Dock="Right" 
+                           Name="ProgressPercentage" Width="64"
+                           HorizontalContentAlignment="Center"/>
                     <ProgressBar Height="26" Value="0" Name="Progress"/>
                 </DockPanel>
             </StackPanel>

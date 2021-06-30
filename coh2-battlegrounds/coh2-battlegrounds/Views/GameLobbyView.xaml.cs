@@ -22,6 +22,7 @@ using Battlegrounds.Online.Lobby;
 
 using BattlegroundsApp.Controls.Lobby;
 using BattlegroundsApp.Controls.Lobby.Chatting;
+using BattlegroundsApp.Controls.Lobby.Components;
 using BattlegroundsApp.LocalData;
 using BattlegroundsApp.Models;
 using BattlegroundsApp.Resources;
@@ -34,7 +35,7 @@ namespace BattlegroundsApp.Views {
     /// </summary>
     public partial class GameLobbyView : ViewState, INotifyPropertyChanged, IChatController {
 
-        private class GameLobbyViewScenarioItem {
+        private class GameLobbyViewScenarioItem : IDropdownElement {
             public Scenario Scenario { get; }
             private string m_display;
             public GameLobbyViewScenarioItem(Scenario scenario) {
@@ -44,7 +45,10 @@ namespace BattlegroundsApp.Views {
                     this.m_display = GameLocale.GetString(key);
                 }
             }
+
             public override string ToString() => this.m_display;
+            public bool IsSame(object source)
+                => (source is string s && this.Scenario.RelativeFilename == s) || source == this.Scenario || (source is GameLobbyViewScenarioItem i && i.Scenario == this.Scenario);
         }
 
         //private bool m_hasCreatedLobbyOnce;
@@ -230,7 +234,7 @@ namespace BattlegroundsApp.Views {
                     if (lobby.SetCapacity(scenario.MaxPlayers)) {
 
                         // Update selected scenario
-                        lobby.SetMode(scenario.Name, null, null);
+                        lobby.SetMode(scenario.RelativeFilename, null, null);
 
                         // Set max players in team manager
                         this.TeamManager.SetMaxPlayers(scenario.MaxPlayers);
@@ -241,6 +245,9 @@ namespace BattlegroundsApp.Views {
 
                         // Set last selection incase user picks unavailable scenario
                         this.m_lastScenario = scenarioItem;
+
+                        // Update players last scenario
+                        BattlegroundsInstance.LastPlayedMap = scenario.RelativeFilename;
 
                     } else {
 
@@ -377,14 +384,10 @@ namespace BattlegroundsApp.Views {
 
                 // lock everything
                 this.EnableHostMode(false);
-                /*
-                // Get game data
-                string map = this.m_handler.Lobby.LobbyMap;
-                string wc = this.m_handler.Lobby.LobbyGamemode;
-                string wco = this.m_handler.Lobby.LobbyGamemodeOption;
 
-                Trace.WriteLine($"{map}, {wc} ({wco})");
-                */
+                // Refresh dropdowns
+                this.RefreshDropdowns();
+
             }
 
         }
@@ -414,7 +417,15 @@ namespace BattlegroundsApp.Views {
 
             // If host-mode is enabled, populate the dropdowns
             if (hostMode) {
+                
+                // Add pop data
                 this.PopulateDropdowns();
+
+                // Try set recent scenario
+                if (!string.IsNullOrEmpty(BattlegroundsInstance.LastPlayedMap)) {
+                    this.SetScenario(BattlegroundsInstance.LastPlayedMap);
+                }
+
             }
 
         }
@@ -432,6 +443,36 @@ namespace BattlegroundsApp.Views {
                 int selectedScenario = scenarioSource.FindIndex(x => x.Scenario.RelativeFilename.CompareTo(BattlegroundsInstance.LastPlayedMap) == 0);
                 this.Map.SelectedIndex = selectedScenario != -1 ? selectedScenario : 0;
 
+            }
+
+        }
+
+        private void RefreshDropdowns() {
+
+            // Get game data
+            string map = this.m_handler.Lobby.LobbyMap;
+            string wc = this.m_handler.Lobby.LobbyGamemode;
+            string wco = this.m_handler.Lobby.LobbyGamemodeOption;
+
+            // Write received data
+            Trace.WriteLine($"{map}, {wc} ({wco})", nameof(GameLobbyView));
+
+            // Set the scenario
+            this.SetScenario(map);
+
+        }
+
+        public void SetScenario(string scenario) {
+
+            // Get the scenario
+            Scenario s = ScenarioList.FromRelativeFilename(scenario);
+
+            // Display in dropdown
+            this.Map.SelectedItem = new GameLobbyViewScenarioItem(s);
+
+            // Update preview
+            if (this.Map.State is OtherState) {
+                this.UpdateMapPreview(s);
             }
 
         }
