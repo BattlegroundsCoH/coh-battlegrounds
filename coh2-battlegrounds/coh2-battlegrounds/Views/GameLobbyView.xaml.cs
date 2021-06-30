@@ -234,7 +234,7 @@ namespace BattlegroundsApp.Views {
                     if (lobby.SetCapacity(scenario.MaxPlayers)) {
 
                         // Update selected scenario
-                        lobby.SetMode(scenario.RelativeFilename, null, null);
+                        lobby.SetMode(scenario.RelativeFilename, null, null, this.TranslateOption);
 
                         // Set max players in team manager
                         this.TeamManager.SetMaxPlayers(scenario.MaxPlayers);
@@ -277,7 +277,7 @@ namespace BattlegroundsApp.Views {
 
                 // Update lobby data
                 HostedLobby lobby = this.m_handler.Lobby as HostedLobby;
-                lobby.SetMode(null, wincon.Name, null);
+                lobby.SetMode(null, wincon.Name, null, this.TranslateOption);
 
             }
 
@@ -295,7 +295,7 @@ namespace BattlegroundsApp.Views {
 
                 // Update lobby data
                 HostedLobby lobby = this.m_handler.Lobby as HostedLobby;
-                lobby.SetMode(null, null, option.Title);
+                lobby.SetMode(null, null, option.Title, this.TranslateOption);
 
             }
 
@@ -477,7 +477,7 @@ namespace BattlegroundsApp.Views {
 
         }
 
-        public void RefreshTeams(ManagedLobbyTaskDone overrideDone) { }
+        private string TranslateOption(string key, string value) => value;
 
     }
 

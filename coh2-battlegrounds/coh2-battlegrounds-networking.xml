@@ -387,115 +387,115 @@
         </member>
         <member name="T:Battlegrounds.Networking.Communication.HttpPOSTResponseData">
             <summary>
-            
+            Represents HTTP response data to a POST request.
             </summary>
         </member>
         <member name="F:Battlegrounds.Networking.Communication.HttpPOSTResponseData.Success">
             <summary>
-            
+            Flag showing if the request yielded a successful response.
             </summary>
         </member>
         <member name="F:Battlegrounds.Networking.Communication.HttpPOSTResponseData.Status">
             <summary>
-            
+            The status string of the response.
             </summary>
         </member>
         <member name="F:Battlegrounds.Networking.Communication.HttpPOSTResponseData.Content">
             <summary>
-            
+            The received data content of the response.
             </summary>
         </member>
         <member name="M:Battlegrounds.Networking.Communication.HttpPOSTResponseData.#ctor(System.Boolean,System.String,System.IO.Stream,System.Text.Encoding)">
             <summary>
-            
+            Initialize a new <see cref="T:Battlegrounds.Networking.Communication.HttpPOSTResponseData"/> instance with fields defined.
             </summary>
-            <param name="b"></param>
-            <param name="s"></param>
-            <param name="p"></param>
-            <param name="encoding"></param>
+            <param name="b">Is the request responded to with a success code.</param>
+            <param name="s">The status code of the response.</param>
+            <param name="p">The content sent with the response.</param>
+            <param name="encoding">The encoding of the response data.</param>
         </member>
         <member name="T:Battlegrounds.Networking.Communication.HttpGETResponseData">
             <summary>
-            
+            Represents HTTP response data to a GET request.
             </summary>
         </member>
         <member name="F:Battlegrounds.Networking.Communication.HttpGETResponseData.Success">
             <summary>
-            
+            Flag showing if the request yielded a successful response.
             </summary>
         </member>
         <member name="F:Battlegrounds.Networking.Communication.HttpGETResponseData.Content">
             <summary>
-            
+            The received data content of the response.
             </summary>
         </member>
         <member name="P:Battlegrounds.Networking.Communication.HttpGETResponseData.Value">
             <summary>
-            
+            Get the <see cref="F:Battlegrounds.Networking.Communication.HttpGETResponseData.Content"/> parsed as a string.
             </summary>
         </member>
         <member name="F:Battlegrounds.Networking.Communication.HttpGETResponseData.statusCode">
             <summary>
-            
+            The received status code.
             </summary>
         </member>
         <member name="M:Battlegrounds.Networking.Communication.HttpGETResponseData.#ctor(System.Boolean,System.IO.Stream,System.Text.Encoding,System.Net.HttpStatusCode)">
             <summary>
-            
+            Initialize a new <see cref="T:Battlegrounds.Networking.Communication.HttpGETResponseData"/> instance with fields defined.
             </summary>
-            <param name="b"></param>
-            <param name="s"></param>
-            <param name="encoding"></param>
-            <param name="httpStatus"></param>
+            <param name="b">Is the request responded to with a success code.</param>
+            <param name="s">The returned body stream content of the response.</param>
+            <param name="encoding">The encoding of the received stream content.</param>
+            <param name="httpStatus">The status code of the response.</param>
         </member>
         <member name="T:Battlegrounds.Networking.Communication.HttpCom">
             <summary>
-            
+            Static extension class for send HTTP requests (GET and POST)
             </summary>
         </member>
         <member name="M:Battlegrounds.Networking.Communication.HttpCom.POST(System.Net.Http.HttpClient,System.String,System.String,System.Net.Http.HttpContent,System.Int32)">
             <summary>
-            
+            Send a POST request to <paramref name="address"/> with <paramref name="data"/>.
             </summary>
-            <param name="client"></param>
-            <param name="address"></param>
-            <param name="api"></param>
-            <param name="data"></param>
-            <param name="port"></param>
-            <returns></returns>
+            <param name="client">The client to use for sending the request.</param>
+            <param name="address">The address of the server to send request to.</param>
+            <param name="api">The api to invoke with request.</param>
+            <param name="data">The data to post.</param>
+            <param name="port">The specific port to use when sending the request.</param>
+            <returns>A <see cref="T:Battlegrounds.Networking.Communication.HttpPOSTResponseData"/> instance containing the response to the request.</returns>
         </member>
         <member name="M:Battlegrounds.Networking.Communication.HttpCom.AsyncPOST(System.Net.Http.HttpClient,System.String,System.String,System.Net.Http.HttpContent,System.Int32)">
             <summary>
-            
+            Send a POST request to <paramref name="address"/> with <paramref name="data"/>.
             </summary>
-            <param name="client"></param>
-            <param name="address"></param>
-            <param name="api"></param>
-            <param name="data"></param>
-            <param name="port"></param>
-            <returns></returns>
+            <param name="client">The client to use for sending the request.</param>
+            <param name="address">The address of the server to send request to.</param>
+            <param name="api">The api to invoke with request.</param>
+            <param name="data">The data to post.</param>
+            <param name="port">The specific port to use when sending the request.</param>
+            <returns>A <see cref="T:Battlegrounds.Networking.Communication.HttpPOSTResponseData"/> instance containing the response to the request.</returns>
         </member>
         <member name="M:Battlegrounds.Networking.Communication.HttpCom.GET(System.Net.Http.HttpClient,System.String,System.String,System.Int32,System.Boolean)">
             <summary>
-            
+            Send a GET request to <paramref name="address"/> using specified <paramref name="api"/> query string.
             </summary>
-            <param name="client"></param>
-            <param name="address"></param>
-            <param name="api"></param>
-            <param name="port"></param>
-            <param name="log"></param>
-            <returns></returns>
+            <param name="client">The client to use for sending the request.</param>
+            <param name="address">The address of the server to send request to.</param>
+            <param name="api">The api to invoke with request.</param>
+            <param name="port">The specific port to use when sending the request.</param>
+            <param name="log">Should the runtime log this GET request.</param>
+            <returns>A <see cref="T:Battlegrounds.Networking.Communication.HttpGETResponseData"/> instance containing the response to the request.</returns>
         </member>
         <member name="M:Battlegrounds.Networking.Communication.HttpCom.AsyncGET(System.Net.Http.HttpClient,System.String,System.String,System.Int32,System.Boolean)">
             <summary>
-            
+            Send a GET request to <paramref name="address"/> using specified <paramref name="api"/> query string.
             </summary>
-            <param name="client"></param>
-            <param name="address"></param>
-            <param name="api"></param>
-            <param name="port"></param>
-            <param name="log"></param>
-            <returns></returns>
+            <param name="client">The client to use for sending the request.</param>
+            <param name="address">The address of the server to send request to.</param>
+            <param name="api">The api to invoke with request.</param>
+            <param name="port">The specific port to use when sending the request.</param>
+            <param name="log">Should the runtime log this GET request.</param>
+            <returns>A <see cref="T:Battlegrounds.Networking.Communication.HttpGETResponseData"/> instance containing the response to the request.</returns>
         </member>
         <member name="T:Battlegrounds.Networking.Communication.HttpConnection">
             <summary>
@@ -1348,14 +1348,47 @@
             </summary>
             <param name="requestHandler">The request handler that will handle the actual requests.</param>
         </member>
+        <member name="T:Battlegrounds.Networking.Lobby.ServerModeTranslator">
+            <summary>
+            Translator delegate for handling lobby mode element translation.
+            </summary>
+            <param name="modeKey">The name of the key to translate.</param>
+            <param name="modeValue">The value to translate.</param>
+            <returns>The translated string to upload onto the server.</returns>
+        </member>
         <member name="T:Battlegrounds.Networking.Lobby.HostedLobby">
             <summary>
             Represents a lobby where the local machine is the host.
             </summary>
         </member>
+        <member name="P:Battlegrounds.Networking.Lobby.HostedLobby.LobbyName">
+            <summary>
+            Get the given name of the lobby.
+            </summary>
+        </member>
+        <member name="P:Battlegrounds.Networking.Lobby.HostedLobby.LobbyMap">
+            <summary>
+            Get the relative filename of the map currently selected in the lobby.
+            </summary>
+        </member>
+        <member name="P:Battlegrounds.Networking.Lobby.HostedLobby.LobbyGamemode">
+            <summary>
+            Get scar name of the currently selected win condition.
+            </summary>
+        </member>
+        <member name="P:Battlegrounds.Networking.Lobby.HostedLobby.LobbyGamemodeOption">
+            <summary>
+            Get the currently selected gamemode option (if any).
+            </summary>
+        </member>
         <member name="P:Battlegrounds.Networking.Lobby.HostedLobby.RequestHandler">
             <summary>
             Get or set the <see cref="T:Battlegrounds.Networking.Requests.HostRequestHandler"/> used by the <see cref="T:Battlegrounds.Networking.Lobby.HostedLobby"/>.
+            </summary>
+        </member>
+        <member name="P:Battlegrounds.Networking.Lobby.HostedLobby.MemberCount">
+            <summary>
+            Get the current amopunt of members in the lobby.
             </summary>
         </member>
         <member name="P:Battlegrounds.Networking.Lobby.HostedLobby.MemberCapacity">
@@ -1373,19 +1406,38 @@
             Get or set if the lobby allows for spectators.
             </summary>
         </member>
+        <member name="P:Battlegrounds.Networking.Lobby.HostedLobby.VariableCallback">
+            <summary>
+            Get or set the callback function for handling variable refresh callbacks.
+            </summary>
+        </member>
         <member name="M:Battlegrounds.Networking.Lobby.HostedLobby.#ctor(System.String,Battlegrounds.Networking.Server.ServerAPI)">
             <summary>
             Initialize a new <see cref="T:Battlegrounds.Networking.Lobby.HostedLobby"/> instance with specified <paramref name="lobbyname"/>.
             </summary>
             <param name="lobbyname">The name of the lobby.</param>
         </member>
-        <member name="M:Battlegrounds.Networking.Lobby.HostedLobby.SetMode(System.String,System.String,System.String)">
+        <member name="M:Battlegrounds.Networking.Lobby.HostedLobby.JoinAIPlayer(System.Int32,System.Int32)">
             <summary>
-            
+            Add an AI player to the lobby on specified team (<paramref name="teamIndex"/>) and at specified slot (<paramref name="teamPosition"/>).
             </summary>
-            <param name="scenarioName"></param>
+            <param name="teamIndex">The index of the team to add new AI to (0 = ALLIES, 1 = AXIS, 2 = SPECTATOR)</param>
+            <param name="teamPosition">The position on the team to add AI to (the specific slot).</param>
+            <returns>If successful, a <see cref="T:Battlegrounds.Networking.Lobby.IAILobbyMember"/> instance; Otherwise <see langword="null"/>.</returns>
+        </member>
+        <member name="M:Battlegrounds.Networking.Lobby.HostedLobby.Leave">
+            <summary>
+            Close the lobby on the server and close the underlying <see cref="T:Battlegrounds.Networking.Requests.IRequestHandler"/> instance.
+            </summary>
+        </member>
+        <member name="M:Battlegrounds.Networking.Lobby.HostedLobby.SetMode(System.String,System.String,System.String,Battlegrounds.Networking.Lobby.ServerModeTranslator)">
+            <summary>
+            Set the mode of the lobby.
+            </summary>
+            <param name="scenarioName">The relative filename of the scenario.</param>
             <param name="gamemode"></param>
             <param name="gamemodeOption"></param>
+            <param name="serverTranslator"></param>
         </member>
         <member name="M:Battlegrounds.Networking.Lobby.HostedLobby.SetState(Battlegrounds.Networking.Lobby.LobbyState)">
             <summary>
@@ -1398,6 +1450,20 @@
             Set the lobby capacity on teams.
             </summary>
             <param name="maxPlayerCount">The new maximum amount of players allowed in the lobby.</param>
+        </member>
+        <member name="M:Battlegrounds.Networking.Lobby.HostedLobby.GetGameModOption(System.String)">
+            <summary>
+            
+            </summary>
+            <param name="optionKey"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Battlegrounds.Networking.Lobby.HostedLobby.SetGameModOption(System.String,System.String)">
+            <summary>
+            
+            </summary>
+            <param name="optionKey"></param>
+            <param name="optionValue"></param>
         </member>
         <member name="T:Battlegrounds.Networking.Lobby.IAILobbyMember">
             <summary>
@@ -1413,43 +1479,6 @@
             <summary>
             Get if the AI is using a randomly generated company.
             </summary>
-        </member>
-        <member name="T:Battlegrounds.Networking.Lobby.LobbyResultsAvailable">
-            <summary>
-            Delegate for handling when match results become available for the played company.
-            </summary>
-            <param name="companyJson">The json file representing the new company.</param>
-        </member>
-        <member name="T:Battlegrounds.Networking.Lobby.LobbyGamemodeAvailable">
-            <summary>
-            Delegate for handling when the match gamemode become available for the played company.
-            </summary>
-            <param name="gamemodeData">The raw binary contents of the gamemode.</param>
-        </member>
-        <member name="T:Battlegrounds.Networking.Lobby.LobbyMatchStart">
-            <summary>
-            Delegate informing the participant the game should be started.
-            </summary>
-        </member>
-        <member name="T:Battlegrounds.Networking.Lobby.LobbyGetCompanyHandler">
-            <summary>
-            Delegate for requesting the company file of the participant.
-            </summary>
-            <returns>The json representation of the company file.</returns>
-        </member>
-        <member name="T:Battlegrounds.Networking.Lobby.LobbySystemNotification">
-            <summary>
-            Delegate for handling when a system notification is received.
-            </summary>
-            <param name="notificationText">The contents of the system notification.</param>
-        </member>
-        <member name="T:Battlegrounds.Networking.Lobby.LobbyChatNotification">
-            <summary>
-            Delegate for handling when a chat notification has been received.
-            </summary>
-            <param name="channel">The channel ID where the chat was sent.</param>
-            <param name="sender">The sender of the chat message.</param>
-            <param name="message">The full text message</param>
         </member>
         <member name="T:Battlegrounds.Networking.Lobby.LobbyState">
             <summary>
@@ -1569,6 +1598,11 @@
         <member name="P:Battlegrounds.Networking.Lobby.ILobby.ChatNotification">
             <summary>
             
+            </summary>
+        </member>
+        <member name="P:Battlegrounds.Networking.Lobby.ILobby.VariableCallback">
+            <summary>
+            Get or set the callback function for handling variable refresh callbacks.
             </summary>
         </member>
         <member name="M:Battlegrounds.Networking.Lobby.ILobby.GetLobbyMember(System.UInt64)">
@@ -1813,6 +1847,83 @@
             
             </summary>
         </member>
+        <member name="T:Battlegrounds.Networking.Lobby.LobbyResultsAvailable">
+            <summary>
+            Delegate for handling when match results become available for the played company.
+            </summary>
+            <param name="companyJson">The json file representing the new company.</param>
+        </member>
+        <member name="T:Battlegrounds.Networking.Lobby.LobbyGamemodeAvailable">
+            <summary>
+            Delegate for handling when the match gamemode become available for the played company.
+            </summary>
+            <param name="gamemodeData">The raw binary contents of the gamemode.</param>
+        </member>
+        <member name="T:Battlegrounds.Networking.Lobby.LobbyMatchStart">
+            <summary>
+            Delegate informing the participant the game should be started.
+            </summary>
+        </member>
+        <member name="T:Battlegrounds.Networking.Lobby.LobbyGetCompanyHandler">
+            <summary>
+            Delegate for requesting the company file of the participant.
+            </summary>
+            <returns>The json representation of the company file.</returns>
+        </member>
+        <member name="T:Battlegrounds.Networking.Lobby.LobbySystemNotification">
+            <summary>
+            Delegate for handling when a system notification is received.
+            </summary>
+            <param name="notificationText">The contents of the system notification.</param>
+        </member>
+        <member name="T:Battlegrounds.Networking.Lobby.LobbyChatNotification">
+            <summary>
+            Delegate for handling when a chat notification has been received.
+            </summary>
+            <param name="channel">The channel ID where the chat was sent.</param>
+            <param name="sender">The sender of the chat message.</param>
+            <param name="message">The full text message</param>
+        </member>
+        <member name="T:Battlegrounds.Networking.Lobby.LobbyRefreshVariable">
+            <summary>
+            Enum representing a variable in an <see cref="T:Battlegrounds.Networking.Lobby.ILobby"/> that can be refreshed.
+            </summary>
+        </member>
+        <member name="F:Battlegrounds.Networking.Lobby.LobbyRefreshVariable.TEAM">
+            <summary>
+            One or all teams have been altered.
+            </summary>
+        </member>
+        <member name="F:Battlegrounds.Networking.Lobby.LobbyRefreshVariable.SCENARIO">
+            <summary>
+            The scenario has changed.
+            </summary>
+        </member>
+        <member name="F:Battlegrounds.Networking.Lobby.LobbyRefreshVariable.GAMEMODE">
+            <summary>
+            The gamemode has changed.
+            </summary>
+        </member>
+        <member name="F:Battlegrounds.Networking.Lobby.LobbyRefreshVariable.GAMEMODEOPTION">
+            <summary>
+            The gamemode option has changed.
+            </summary>
+        </member>
+        <member name="F:Battlegrounds.Networking.Lobby.LobbyRefreshVariable.MODOPTION">
+            <summary>
+            A mod option has changed.
+            </summary>
+        </member>
+        <member name="T:Battlegrounds.Networking.Lobby.LobbyRefreshVariableCallback">
+            <summary>
+            Callback invoked when a lobby variable should be refreshed.
+            </summary>
+            <param name="refreshVariable">The variable that should be refreshed.</param>
+            <param name="callbackArgument">Additional argument containing additional variable refresh information.</param>
+            <remarks>
+            The <paramref name="callbackArgument"/> may be <see langword="null"/> and should be checked for such cases.
+            </remarks>
+        </member>
         <member name="T:Battlegrounds.Networking.Lobby.LobbyService">
             <summary>
             Represents a clientside lobby service for keeping track of static elements that are retrievable by remote clients.
@@ -1937,6 +2048,11 @@
         <member name="T:Battlegrounds.Networking.Lobby.ProxyLobby">
             <summary>
             Proxy instance for some remote <see cref="T:Battlegrounds.Networking.Lobby.ILobby"/> implementation.
+            </summary>
+        </member>
+        <member name="P:Battlegrounds.Networking.Lobby.ProxyLobby.VariableCallback">
+            <summary>
+            Get or set the callback function for handling variable refresh callbacks.
             </summary>
         </member>
         <member name="T:Battlegrounds.Networking.Proxy.IProxy">
