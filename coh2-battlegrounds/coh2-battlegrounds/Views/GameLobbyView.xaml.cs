@@ -67,6 +67,10 @@ namespace BattlegroundsApp.Views {
 
         public bool CanStartMatch => this.m_handler.IsHost && this.IsLegalMatch();
 
+        public string TeamString_Allies => $"Allies ({this.m_handler.Lobby.AlliesTeam.Size}/{this.m_handler.Lobby.AlliesTeam.Capacity})";
+        public string TeamString_Axis => $"Axis ({this.m_handler.Lobby.AxisTeam.Size}/{this.m_handler.Lobby.AxisTeam.Capacity})";
+        public string TeamString_Spectators => $"Observers ({this.m_handler.Lobby.SpectatorTeam.Size}/{this.m_handler.Lobby.SpectatorTeam.Capacity})";
+
         public LobbyTeamManagementModel TeamManager { get; private set; }
 
         public ChatMessageSent OnSend => this.OnSendChatMessage;
@@ -380,6 +384,9 @@ namespace BattlegroundsApp.Views {
             this.TeamManager.RefreshAll(true);
             this.TeamManager.OnModelNotification += this.OnTeamManagerNotification;
 
+            // (Remove this line in case Relic fixes spectators for custom matches)
+            this.TeamManager.SetMaxObservers(0);
+
             // If host, setup everything
             if (this.m_handler.IsHost) {
 
@@ -484,6 +491,7 @@ namespace BattlegroundsApp.Views {
 
             // Update preview
             if (this.Map.State is OtherState) {
+                this.TeamManager.SetMaxPlayers(s.MaxPlayers);
                 this.UpdateMapPreview(s);
             }
 

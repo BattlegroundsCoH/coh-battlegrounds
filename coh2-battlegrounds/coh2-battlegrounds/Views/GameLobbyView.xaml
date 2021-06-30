@@ -129,7 +129,7 @@
         <!-- Row 4 -->
         <StackPanel Grid.Row="1" Grid.RowSpan="4" Grid.Column="0" Name="TeamStackView">
             <ContentControl>
-                <Label Content="Allies" Background="#FFECECEC"/>
+                <Label Content="{Binding TeamString_Allies}" Background="#FFECECEC"/>
             </ContentControl>
             <StackPanel MinHeight="132">
                 <viewcomponent:TeamPlayerCard InitialState="AvailableState" x:Name="PlayerCard11"/>
@@ -138,7 +138,7 @@
                 <viewcomponent:TeamPlayerCard InitialState="AvailableState" x:Name="PlayerCard14"/>
             </StackPanel>
             <ContentControl>
-                <Label Content="Axis" Background="#FFECECEC"/>
+                <Label Content="{Binding TeamString_Axis}" Background="#FFECECEC"/>
             </ContentControl>
             <StackPanel MinHeight="132">
                 <viewcomponent:TeamPlayerCard InitialState="AvailableState" x:Name="PlayerCard21"/>
@@ -157,7 +157,8 @@
                         IsChecked="False"
                         IsEnabled="False"
                         />
-                    <Label Content="Observers" DockPanel.Dock="Left"/>
+                    <Label Content="{Binding TeamString_Spectators}" 
+                           DockPanel.Dock="Left"/>
                 </DockPanel>
             </ContentControl>
             <StackPanel MinHeight="132">

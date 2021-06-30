@@ -112,8 +112,11 @@ namespace BattlegroundsApp.Models {
 
         public void RefreshTeam(LobbyTeamType teamType) {
             ILobbyTeam team = this.GetLobbyTeamFromType(teamType);
+            int cap = team.Capacity;
             for (int i = 0; i < MAXTEAMPLAYERCOUNT; i++) {
-                this.RefreshCard(this.m_teamSetup[teamType][i], team.GetSlotAt(i), teamType);
+                if (i < cap) {
+                    this.RefreshCard(this.m_teamSetup[teamType][i], team.GetSlotAt(i), teamType);
+                }
             }
         }
 

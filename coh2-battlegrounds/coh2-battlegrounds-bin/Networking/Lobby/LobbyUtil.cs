@@ -38,7 +38,7 @@ namespace Battlegrounds.Networking.Lobby {
 
             // Create lobby
             HostedLobby lobby = (cachedPool.Get(lobID) as CachedObject).Obj<HostedLobby>();
-            lobby.AllowSpectators = true;
+            lobby.AllowSpectators = false;
             lobby.AutoAssignTeams = true;
 
             // Get self

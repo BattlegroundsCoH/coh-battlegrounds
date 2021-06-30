@@ -9,14 +9,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "coh2-battlegrounds-bin", "c
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "coh2-battlegrounds-console", "coh2-battlegrounds-console\coh2-battlegrounds-console.csproj", "{A7E7769E-3205-4CA1-BB63-0C62DF284E90}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{E036A334-46EB-4B11-ABFB-653DCDA89A6E}"
-	ProjectSection(SolutionItems) = preProject
-		.editorconfig = .editorconfig
-	EndProjectSection
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "coh2-battlegrounds-bin-tests", "coh2-battlegrounds-bin-tests\coh2-battlegrounds-bin-tests.csproj", "{592A0336-9A86-4E03-BE73-7C835E5E3126}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "coh2-battlegrounds-installer", "coh2-battlegrounds-installer\coh2-battlegrounds-installer.csproj", "{B73A8356-2020-4447-84CA-9E3897A0863F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "coh2-battlegrounds-installer", "coh2-battlegrounds-installer\coh2-battlegrounds-installer.csproj", "{B73A8356-2020-4447-84CA-9E3897A0863F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
