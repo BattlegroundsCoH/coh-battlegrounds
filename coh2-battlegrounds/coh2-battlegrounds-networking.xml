@@ -263,6 +263,17 @@
         </member>
         <!-- Badly formed XML comment ignored for member "M:Battlegrounds.Networking.Communication.Messaging.Binary.BinaryMessageReader.Parse(System.Byte[])" -->
         <!-- Badly formed XML comment ignored for member "M:Battlegrounds.Networking.Communication.Messaging.Binary.BinaryMessageReader.Parse(System.IO.MemoryStream)" -->
+        <member name="T:Battlegrounds.Networking.Communication.Messaging.EnumMessage">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Battlegrounds.Networking.Communication.Messaging.EnumMessage.GetEnumValue">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
         <member name="T:Battlegrounds.Networking.Communication.Messaging.IMessage">
             <summary>
             Represents a message that can be sent between clients.
@@ -2544,16 +2555,16 @@
         </member>
         <member name="T:Battlegrounds.Networking.Remoting.RemoteMarshal">
             <summary>
-            
+            Static helper class for marshalling remote values.
             </summary>
         </member>
         <member name="M:Battlegrounds.Networking.Remoting.RemoteMarshal.MarshalToMessage(System.Object,Battlegrounds.Networking.Remoting.IObjectPool)">
             <summary>
-            
+            Marshal an object into the best <see cref="T:Battlegrounds.Networking.Communication.Messaging.IMessage"/> representation.
             </summary>
-            <param name="result"></param>
-            <param name="pool"></param>
-            <returns></returns>
+            <param name="marshalValue">The value to marshal into message.</param>
+            <param name="pool">The object pool to use if the marshalled value is to be proxified.</param>
+            <returns>The best possible <see cref="T:Battlegrounds.Networking.Communication.Messaging.IMessage"/> representation of the <paramref name="marshalValue"/>.</returns>
         </member>
         <member name="T:Battlegrounds.Networking.Requests.HostRequestHandler">
             <summary>

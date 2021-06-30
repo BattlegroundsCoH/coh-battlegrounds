@@ -351,13 +351,6 @@ namespace BattlegroundsApp.Views {
 
         private void SetupLobby() {
 
-            // Create card overview
-            TeamPlayerCard[][] cards = new TeamPlayerCard[][]{
-                new TeamPlayerCard[] { this.PlayerCard01, this.PlayerCard02, this.PlayerCard03, this.PlayerCard04 },
-                new TeamPlayerCard[] { this.PlayerCard11, this.PlayerCard12, this.PlayerCard13, this.PlayerCard14 },
-                new TeamPlayerCard[] { this.PlayerCard21, this.PlayerCard22, this.PlayerCard23, this.PlayerCard24 }
-            };
-
             // Setup variable callback
             this.m_handler.Lobby.VariableCallback = this.OnLobbyVariable;
 
@@ -375,13 +368,20 @@ namespace BattlegroundsApp.Views {
             // Set chat handler as self
             this.LobbyChat.Chat = this;
 
+            // Create card overview
+            TeamPlayerCard[][] cards = new TeamPlayerCard[][]{
+                new TeamPlayerCard[] { this.PlayerCard01, this.PlayerCard02, this.PlayerCard03, this.PlayerCard04 },
+                new TeamPlayerCard[] { this.PlayerCard11, this.PlayerCard12, this.PlayerCard13, this.PlayerCard14 },
+                new TeamPlayerCard[] { this.PlayerCard21, this.PlayerCard22, this.PlayerCard23, this.PlayerCard24 }
+            };
+
+            // Setup team management.
+            this.TeamManager = new LobbyTeamManagementModel(cards, this.m_handler);
+            this.TeamManager.RefreshAll(true);
+            this.TeamManager.OnModelNotification += this.OnTeamManagerNotification;
+
             // If host, setup everything
             if (this.m_handler.IsHost) {
-
-                // Setup team management.
-                this.TeamManager = new LobbyTeamManagementModel(cards, this.m_handler);
-                this.TeamManager.RefreshAll(true);
-                this.TeamManager.OnModelNotification += this.OnTeamManagerNotification;
 
                 // Enable host mode (and because true, will update populate the dropdowns).
                 this.EnableHostMode(true);
