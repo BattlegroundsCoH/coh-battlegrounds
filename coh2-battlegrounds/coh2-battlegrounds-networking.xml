@@ -1396,6 +1396,21 @@
             Get the max capacity for members in the lobby.
             </summary>
         </member>
+        <member name="P:Battlegrounds.Networking.Lobby.HostedLobby.AlliesTeam">
+            <summary>
+            Get the allied team in the lobby.
+            </summary>
+        </member>
+        <member name="P:Battlegrounds.Networking.Lobby.HostedLobby.AxisTeam">
+            <summary>
+            Get the axis team in the lobby.
+            </summary>
+        </member>
+        <member name="P:Battlegrounds.Networking.Lobby.HostedLobby.SpectatorTeam">
+            <summary>
+            Get the spectator team in the lobby.
+            </summary>
+        </member>
         <member name="P:Battlegrounds.Networking.Lobby.HostedLobby.AutoAssignTeams">
             <summary>
             Get or set if the lobby should automatically assign new members to a team.
@@ -1404,6 +1419,11 @@
         <member name="P:Battlegrounds.Networking.Lobby.HostedLobby.AllowSpectators">
             <summary>
             Get or set if the lobby allows for spectators.
+            </summary>
+        </member>
+        <member name="P:Battlegrounds.Networking.Lobby.HostedLobby.Self">
+            <summary>
+            Get the <see cref="T:Battlegrounds.Networking.Lobby.ILobbyMember"/> representing the local machine.
             </summary>
         </member>
         <member name="P:Battlegrounds.Networking.Lobby.HostedLobby.VariableCallback">
@@ -1416,12 +1436,13 @@
             Initialize a new <see cref="T:Battlegrounds.Networking.Lobby.HostedLobby"/> instance with specified <paramref name="lobbyname"/>.
             </summary>
             <param name="lobbyname">The name of the lobby.</param>
+            <param name="apiInstance">The server API instance the host may use for specific API requests.</param>
         </member>
         <member name="M:Battlegrounds.Networking.Lobby.HostedLobby.JoinAIPlayer(System.Int32,System.Int32)">
             <summary>
             Add an AI player to the lobby on specified team (<paramref name="teamIndex"/>) and at specified slot (<paramref name="teamPosition"/>).
             </summary>
-            <param name="teamIndex">The index of the team to add new AI to (0 = ALLIES, 1 = AXIS, 2 = SPECTATOR)</param>
+            <param name="teamIndex">The index of the team to add new AI to (0 = SPECTATOR, 1 = ALLIES, 2 = AXIS)</param>
             <param name="teamPosition">The position on the team to add AI to (the specific slot).</param>
             <returns>If successful, a <see cref="T:Battlegrounds.Networking.Lobby.IAILobbyMember"/> instance; Otherwise <see langword="null"/>.</returns>
         </member>
