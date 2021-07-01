@@ -41,9 +41,6 @@ namespace Battlegrounds.Networking.Lobby {
             lobby.AllowSpectators = false;
             lobby.AutoAssignTeams = true;
 
-            // Get self
-            ILobbyMember self = lobby.Join(steamUser.ID, steamUser.Name);
-
             // Success flag
             bool success = false;
 
@@ -67,6 +64,9 @@ namespace Battlegrounds.Networking.Lobby {
 
                 // Set connection
                 connection.SetRequestHandler(requestHandler);
+
+                // Get self
+                ILobbyMember self = lobby.Join(steamUser.ID, steamUser.Name);
 
                 // Create handler
                 handler = new LobbyHandler(serverAPI, true) {
