@@ -222,7 +222,7 @@ namespace BattlegroundsApp.Views.ViewComponent {
         }
 
         private void CompanySelector_SelectionChanged(object sender, SelectionChangedEventArgs e)
-            => this.OnFactionChangedHandle?.Invoke((sender == this.CompanySelector ? this.CompanySelector.SelectedItem : this.AICompanySelector.SelectedItem) as TeamPlayerArmyItem);
+            => this.OnCompanyChangedHandle?.Invoke((sender == this.CompanySelector ? this.CompanySelector.SelectedItem : this.AICompanySelector.SelectedItem) as TeamPlayerCompanyItem);
 
         private void ContextMenu_Opened(object sender, RoutedEventArgs e) {
             
