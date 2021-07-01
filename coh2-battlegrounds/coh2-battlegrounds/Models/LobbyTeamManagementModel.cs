@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Windows;
-using System.Windows.Controls;
 
 using Battlegrounds;
 using Battlegrounds.Game;
@@ -11,7 +9,6 @@ using Battlegrounds.Game.DataCompany;
 using Battlegrounds.Game.Gameplay;
 using Battlegrounds.Game.Match;
 using Battlegrounds.Networking.Lobby;
-using Battlegrounds.Online.Lobby;
 
 using BattlegroundsApp.LocalData;
 using BattlegroundsApp.Views.ViewComponent;

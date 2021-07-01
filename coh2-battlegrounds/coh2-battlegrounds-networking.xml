@@ -2081,6 +2081,12 @@
             <param name="pid">The ID of the player owning the company.</param>
             <param name="company">The json data representing the company.</param>
         </member>
+        <member name="T:Battlegrounds.Networking.Lobby.Match.PlayerCompanyCallback">
+            <summary>
+            
+            </summary>
+            <param name="playerCompanyFile"></param>
+        </member>
         <member name="T:Battlegrounds.Networking.Lobby.Match.ILobbyMatchContext">
             <summary>
             Interface representing a context object for communicating match data.
@@ -2137,6 +2143,13 @@
             Get if all players have uploaded their company.
             </summary>
             <returns>True iff all playing players have uploaded their company.</returns>
+        </member>
+        <member name="M:Battlegrounds.Networking.Lobby.Match.ILobbyMatchContext.CollectPlayerCompanies(Battlegrounds.Networking.Lobby.Match.PlayerCompanyCallback)">
+            <summary>
+            
+            </summary>
+            <param name="companyCallback"></param>
+            <returns></returns>
         </member>
         <member name="M:Battlegrounds.Networking.Lobby.Match.ILobbyMatchContext.GetStartTimer(System.Int32,System.Double)">
             <summary>

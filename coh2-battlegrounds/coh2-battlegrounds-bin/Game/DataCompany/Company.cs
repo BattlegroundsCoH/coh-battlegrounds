@@ -402,6 +402,25 @@ namespace Battlegrounds.Game.DataCompany {
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="jsonString"></param>
+        /// <returns></returns>
+        public static Company ReadCompanyFromString(string jsonString) {
+            Company company = JsonParser.ParseString<Company>(jsonString);
+            if (company.VerifyChecksum()) {
+                return company;
+            } else {
+#if RELEASE
+                throw new ChecksumViolationException();
+#else
+                File.WriteAllText("errCompanyData.json", jsonString);
+                return null;
+#endif
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <param name="jsonfilepath"></param>
         /// <returns></returns>
         /// <exception cref="JsonTypeException"/>

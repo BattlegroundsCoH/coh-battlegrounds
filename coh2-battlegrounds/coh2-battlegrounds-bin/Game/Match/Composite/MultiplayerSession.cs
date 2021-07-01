@@ -49,15 +49,13 @@ namespace Battlegrounds.Game.Match.Composite {
             // Local method for play
             void ManagedLobbyPlayer() {
 
+                // Start context
+                this.m_lobby.MatchContext = this.m_lobby.Lobby.StartMatch();
+
                 // Begin
                 if (!startupStrategy.OnBegin(this.m_lobby)) {
                     startupStrategy.OnCancel(this, "One or more players stopped the host from launching.");
                     return;
-                }
-
-                // Make sure we're the host
-                if (!this.m_lobby.IsHost) {
-                    throw new PermissionDeniedException(PermissionDeniedException.HOST_ONLY);
                 }
 
                 // Tell the strategy to prepare

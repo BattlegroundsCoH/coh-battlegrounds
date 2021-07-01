@@ -1,4 +1,5 @@
 ﻿using Battlegrounds.Networking.Communication;
+using Battlegrounds.Networking.Lobby.Match;
 using Battlegrounds.Networking.Remoting;
 using Battlegrounds.Networking.Requests;
 using Battlegrounds.Networking.Server;
@@ -9,7 +10,7 @@ namespace Battlegrounds.Networking.Lobby {
     /// 
     /// </summary>
     public class LobbyHandler {
-    
+
         /// <summary>
         /// 
         /// </summary>
@@ -49,6 +50,11 @@ namespace Battlegrounds.Networking.Lobby {
         /// 
         /// </summary>
         public IConnection Connection { get; init; }
+
+        /// <summary>
+        /// Get or set the current match context of  the handler (<see langword="null"/> by default).
+        /// </summary>
+        public ILobbyMatchContext MatchContext { get; set; }
 
         /// <summary>
         /// 
