@@ -315,7 +315,7 @@ namespace BattlegroundsApp.Views {
             // Get if allies are ready
             bool alliesPlayReady = this.TeamManager.All(LobbyTeamType.Allies, x => x.IsPlayReady());
             bool alliesAtLeastOnePlayer = this.TeamManager.Any(LobbyTeamType.Allies, 
-                x => x.CardState is TeamPlayerCard.AISTATE or TeamPlayerCard.SELFSTATE or TeamPlayerCard.OBSERVERSTATE);
+                x => x.CardState is TeamPlayerCard.AISTATE or TeamPlayerCard.SELFSTATE or TeamPlayerCard.OCCUPIEDSTATE);
 
             bool allies = alliesAtLeastOnePlayer && alliesPlayReady;
             if (!allies) {
@@ -325,7 +325,7 @@ namespace BattlegroundsApp.Views {
             // Get if axis are ready
             bool axisPlayReady = this.TeamManager.All(LobbyTeamType.Axis, x => x.IsPlayReady());
             bool axisAtLeastOnePlayer = this.TeamManager.Any(LobbyTeamType.Axis,
-                x => x.CardState is TeamPlayerCard.AISTATE or TeamPlayerCard.SELFSTATE or TeamPlayerCard.OBSERVERSTATE);
+                x => x.CardState is TeamPlayerCard.AISTATE or TeamPlayerCard.SELFSTATE or TeamPlayerCard.OCCUPIEDSTATE);
 
             return axisPlayReady && axisAtLeastOnePlayer;
 
