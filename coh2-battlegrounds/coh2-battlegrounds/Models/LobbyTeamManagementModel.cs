@@ -156,8 +156,6 @@ namespace BattlegroundsApp.Models {
                 playerCard.Playerarmy = occupant.Army;
                 playerCard.SetArmyIconIfNotHost();
 
-                Trace.WriteLine($"{playerCard.Playername} has company {playerCard.Playercompany}", nameof(LobbyTeamManagementModel));
-
                 // Triger value update
                 playerCard.RefreshVisualProperty(nameof(playerCard.Playername));
                 playerCard.RefreshVisualProperty(nameof(playerCard.Playercompany));

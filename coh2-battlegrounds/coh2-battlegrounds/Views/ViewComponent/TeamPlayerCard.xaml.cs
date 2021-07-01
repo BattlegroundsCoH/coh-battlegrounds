@@ -197,10 +197,11 @@ namespace BattlegroundsApp.Views.ViewComponent {
                 if (this.AICompanySelector.SelectedItem is TeamPlayerCompanyItem companyItem) {
                     return companyItem.State is CompanyItemState.Company or CompanyItemState.Generate;
                 }
+            } else if (this.CardState is OCCUPIEDSTATE) {
+                return this.Playercompany is not "No Company Selected";
             } else {
                 return true;
             }
-            // TODO: Maybe add a check to verify occuped state has a company
             return false;
         }
 

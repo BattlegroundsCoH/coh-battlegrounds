@@ -542,9 +542,13 @@ namespace BattlegroundsApp.Views {
         }
 
         private void OnLobbyVariable(LobbyRefreshVariable refreshVariable, object refreshArgument) {
+            
+            // Do not refresh if we're currently ignoring events.
             if (this.m_ignoreEvents) {
                 return;
             }
+
+            // Invoke the following on the GUI thread
             this.UpdateGUI(() => {
                 switch (refreshVariable) {
                     case LobbyRefreshVariable.TEAM:
@@ -557,6 +561,9 @@ namespace BattlegroundsApp.Views {
                                 Trace.WriteLine($"Refresh variable argument not implemented : {refreshVariable}::{refreshArgument}");
                             }
                         }
+                        this.OnTeamManagerNotification();
+                        this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(TeamStringAllies)));
+                        this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(TeamStringAxis)));
                         break;
                     case LobbyRefreshVariable.MATCHOPTION:
                         this.RefreshDropdowns();
