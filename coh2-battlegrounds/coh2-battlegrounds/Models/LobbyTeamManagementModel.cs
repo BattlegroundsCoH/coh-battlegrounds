@@ -184,7 +184,11 @@ namespace BattlegroundsApp.Models {
 
         private void SelfChangedCompany(TeamPlayerCompanyItem companyItem) {
             if (companyItem is not null) {
-                this.m_handler.Lobby.Self.SetCompany(companyItem.Name, companyItem.Strength);
+                if (companyItem.State is CompanyItemState.Company) {
+                    this.m_handler.Lobby.Self.SetCompany(companyItem.Name, companyItem.Strength);
+                } else {
+                    this.m_handler.Lobby.Self.SetCompany(string.Empty, -1.0);
+                }
             }
         }
 
