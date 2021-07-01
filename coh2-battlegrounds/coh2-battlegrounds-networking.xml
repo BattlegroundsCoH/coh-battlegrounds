@@ -1497,6 +1497,13 @@
             <param name="optionKey"></param>
             <param name="optionValue"></param>
         </member>
+        <member name="M:Battlegrounds.Networking.Lobby.HostedLobby.TrigerRefreshVariable(Battlegrounds.Networking.Lobby.LobbyRefreshVariable,System.Object)">
+            <summary>
+            Trigger a refresh variable.
+            </summary>
+            <param name="refreshVariable">The variable to refresh.</param>
+            <param name="arg">The argument to pass along with the refresh.</param>
+        </member>
         <member name="T:Battlegrounds.Networking.Lobby.IAILobbyMember">
             <summary>
             Interface representing AI members of a lobby. Extends <see cref="T:Battlegrounds.Networking.Lobby.ILobbyMember"/>.
@@ -2004,13 +2011,13 @@
             If <see langword="true"/>, this also means thiis is the host.
             </remarks>
         </member>
-        <member name="M:Battlegrounds.Networking.Lobby.LobbyMember.#ctor(System.UInt64,System.String,Battlegrounds.Networking.Requests.IRequestHandler)">
+        <member name="M:Battlegrounds.Networking.Lobby.LobbyMember.#ctor(System.UInt64,System.String,Battlegrounds.Networking.Lobby.HostedLobby)">
             <summary>
             Initialize a new <see cref="T:Battlegrounds.Networking.Lobby.LobbyMember"/> class with an ID and display name.
             </summary>
             <param name="id">The unique ID of the lobby member.</param>
             <param name="name">The display name of the lobby member.</param>
-            <param name="requestHandler">The handler the <see cref="T:Battlegrounds.Networking.Lobby.LobbyMember"/> will use.</param>
+            <param name="lobby">The lobby hosting this member.</param>
         </member>
         <member name="M:Battlegrounds.Networking.Lobby.LobbyMember.SetArmy(System.String)">
             <summary>
