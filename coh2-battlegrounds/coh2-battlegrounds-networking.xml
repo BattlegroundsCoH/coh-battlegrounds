@@ -1961,6 +1961,76 @@
             The <paramref name="callbackArgument"/> may be <see langword="null"/> and should be checked for such cases.
             </remarks>
         </member>
+        <member name="T:Battlegrounds.Networking.Lobby.LobbyMember">
+            <summary>
+            Class representing a lobby member.
+            </summary>
+        </member>
+        <member name="P:Battlegrounds.Networking.Lobby.LobbyMember.ID">
+            <summary>
+            Get the unique ID of the member.
+            </summary>
+        </member>
+        <member name="P:Battlegrounds.Networking.Lobby.LobbyMember.Name">
+            <summary>
+            Get the display name of the member.
+            </summary>
+        </member>
+        <member name="P:Battlegrounds.Networking.Lobby.LobbyMember.Army">
+            <summary>
+            Get the selected army for the <see cref="T:Battlegrounds.Networking.Lobby.LobbyMember"/>.
+            </summary>
+        </member>
+        <member name="P:Battlegrounds.Networking.Lobby.LobbyMember.HasCompany">
+            <summary>
+            Get if a company has been selected.
+            </summary>
+        </member>
+        <member name="P:Battlegrounds.Networking.Lobby.LobbyMember.CompanyName">
+            <summary>
+            Get the name of the selected company.
+            </summary>
+        </member>
+        <member name="P:Battlegrounds.Networking.Lobby.LobbyMember.CompanyValue">
+            <summary>
+            Get the strength of the selected company.
+            </summary>
+        </member>
+        <member name="P:Battlegrounds.Networking.Lobby.LobbyMember.IsLocalMachine">
+            <summary>
+            Get if this <see cref="T:Battlegrounds.Networking.Lobby.LobbyMember"/> instance is the local machine.
+            </summary>
+            <remarks>
+            If <see langword="true"/>, this also means thiis is the host.
+            </remarks>
+        </member>
+        <member name="M:Battlegrounds.Networking.Lobby.LobbyMember.#ctor(System.UInt64,System.String,Battlegrounds.Networking.Requests.IRequestHandler)">
+            <summary>
+            Initialize a new <see cref="T:Battlegrounds.Networking.Lobby.LobbyMember"/> class with an ID and display name.
+            </summary>
+            <param name="id">The unique ID of the lobby member.</param>
+            <param name="name">The display name of the lobby member.</param>
+            <param name="requestHandler">The handler the <see cref="T:Battlegrounds.Networking.Lobby.LobbyMember"/> will use.</param>
+        </member>
+        <member name="M:Battlegrounds.Networking.Lobby.LobbyMember.SetArmy(System.String)">
+            <summary>
+            Set the army used by the player.
+            </summary>
+            <remarks>
+            If <see cref="P:Battlegrounds.Networking.Lobby.LobbyMember.IsLocalMachine"/> is <see langword="true"/>, a broadcast message is sent aswell.
+            </remarks>
+            <param name="army">The army scar name to assign.</param>
+        </member>
+        <member name="M:Battlegrounds.Networking.Lobby.LobbyMember.SetCompany(System.String,System.Double)">
+            <summary>
+            Set the company in use by the lobby member.
+            </summary>
+            <remarks>
+            If <see cref="P:Battlegrounds.Networking.Lobby.LobbyMember.IsLocalMachine"/> is <see langword="true"/>, a broadcast message is sent aswell.
+            </remarks>
+            <param name="name">The name of the selected company.</param>
+            <param name="value">The calculated strength of the company.</param>
+        </member>
         <member name="T:Battlegrounds.Networking.Lobby.LobbyService">
             <summary>
             Represents a clientside lobby service for keeping track of static elements that are retrievable by remote clients.
