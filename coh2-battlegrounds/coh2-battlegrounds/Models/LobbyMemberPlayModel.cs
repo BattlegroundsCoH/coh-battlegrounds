@@ -152,7 +152,12 @@ namespace BattlegroundsApp.Models {
         private string OnGetCompany() {
 
             // Get self from team manager
-            Company self = this.m_view.GetLocalCompany();
+            Company self = null;
+
+            // Invoke the following on the GUI thread and wait for it to compute.
+            _ = this.m_view.UpdateGUI(() => {
+                self = this.m_view.GetLocalCompany();
+            }).Wait();
 
             // Make sure we're valid
             if (self is not null) {
