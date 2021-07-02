@@ -8,11 +8,8 @@ using System.Threading;
 using Battlegrounds.Compiler;
 using Battlegrounds.Game.DataCompany;
 using Battlegrounds.Game.Match.Play;
-using Battlegrounds.Networking.DataStructures;
 using Battlegrounds.Networking.Lobby;
 using Battlegrounds.Networking.Lobby.Match;
-using Battlegrounds.Online;
-using Battlegrounds.Online.Lobby;
 using Battlegrounds.Online.Services;
 
 namespace Battlegrounds.Game.Match.Startup {
@@ -95,7 +92,6 @@ namespace Battlegrounds.Game.Match.Startup {
             ILobbyMatchContext context = lobby.MatchContext;
 
             // Initialize variables
-            bool success = false;
             this.m_playerCompanies = new List<Company>();
 
             // Request companies
@@ -150,7 +146,7 @@ namespace Battlegrounds.Game.Match.Startup {
             }
 
             // Return success value;
-            return success;
+            return count == lobby.Lobby.Humans - 1;
 
         }
 

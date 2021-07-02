@@ -1440,6 +1440,11 @@
             Get the max capacity for members in the lobby.
             </summary>
         </member>
+        <member name="P:Battlegrounds.Networking.Lobby.HostedLobby.Humans">
+            <summary>
+            Get the amount of human players within the lobby
+            </summary>
+        </member>
         <member name="P:Battlegrounds.Networking.Lobby.HostedLobby.AlliesTeam">
             <summary>
             Get the allied team in the lobby.
@@ -1620,6 +1625,11 @@
         <member name="P:Battlegrounds.Networking.Lobby.ILobby.MemberCount">
             <summary>
             Get the current amount of members in the lobby.
+            </summary>
+        </member>
+        <member name="P:Battlegrounds.Networking.Lobby.ILobby.Humans">
+            <summary>
+            
             </summary>
         </member>
         <member name="P:Battlegrounds.Networking.Lobby.ILobby.Self">
