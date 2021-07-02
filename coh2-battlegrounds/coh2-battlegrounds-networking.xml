@@ -169,6 +169,11 @@
             
             </summary>
         </member>
+        <member name="P:Battlegrounds.Networking.Communication.ClosedConnection.ConnectionID">
+            <summary>
+            
+            </summary>
+        </member>
         <member name="M:Battlegrounds.Networking.Communication.ClosedConnection.#ctor">
             <summary>
             
@@ -239,6 +244,11 @@
         <member name="F:Battlegrounds.Networking.Communication.Messaging.EventConnection.RESEND_ATTEMPTS">
             <summary>
             The amount of resends to attempt for a response.
+            </summary>
+        </member>
+        <member name="P:Battlegrounds.Networking.Communication.Messaging.EventConnection.ConnectionID">
+            <summary>
+            
             </summary>
         </member>
         <member name="M:Battlegrounds.Networking.Communication.Messaging.EventConnection.EstablishConnectionTo(System.String,System.Int32,System.UInt64)">
@@ -752,9 +762,19 @@
             Interface for representing a connection from local client to some endpoint.
             </summary>
         </member>
+        <member name="P:Battlegrounds.Networking.Communication.IConnection.ConnectionID">
+            <summary>
+            Get the ID assigned to this connection.
+            </summary>
+        </member>
         <member name="P:Battlegrounds.Networking.Communication.IConnection.RequestHandler">
             <summary>
             Get the request handler used by the connection to handle connection requests.
+            </summary>
+        </member>
+        <member name="P:Battlegrounds.Networking.Communication.IConnection.IsConnected">
+            <summary>
+            Get if the connection is currently connected to remote endpoint.
             </summary>
         </member>
         <member name="M:Battlegrounds.Networking.Communication.IConnection.SendMessage(Battlegrounds.Networking.Communication.Messaging.IMessage,System.Boolean)">
@@ -762,6 +782,7 @@
             Send a message through the connection.
             </summary>
             <param name="message">The message to send to the connection endpoint.</param>
+            <param name="awaitResponse">Shoud this method run asynchronously and ignore response from endpoint.</param>
             <returns>The <see cref="T:Battlegrounds.Networking.Communication.Messaging.IMessage"/> instance response from the connection endpoint.</returns>
         </member>
         <member name="M:Battlegrounds.Networking.Communication.IConnection.SendBrokerMessage(Battlegrounds.Networking.Communication.Messaging.IMessage,System.Boolean,System.UInt64[])">
@@ -769,6 +790,8 @@
             Send a message through the connection directly to the broker.
             </summary>
             <param name="message">The message to send to the broker.</param>
+            <param name="awaitResponse">Shoud this method run asynchronously and ignore response from endpoint.</param>
+            <param name="filter">The fillter to apply on the broker to decide who should receive the message.</param>
             <returns>A response from the broker.</returns>
         </member>
         <member name="M:Battlegrounds.Networking.Communication.IConnection.SendBroadcastMessage(Battlegrounds.Networking.Communication.Messaging.IMessage,System.UInt64[])">
@@ -1080,6 +1103,11 @@
             </summary>
         </member>
         <member name="P:Battlegrounds.Networking.Communication.TcpConnection.IsConnected">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:Battlegrounds.Networking.Communication.TcpConnection.ConnectionID">
             <summary>
             
             </summary>

@@ -47,6 +47,7 @@ namespace Battlegrounds.Game.Match.Startup {
 
             // Get managed lobby
             LobbyHandler lobby = caller as LobbyHandler;
+            lobby.API.SetLobbyGuid(lobby.Connection.ConnectionID);
 
             // Should stop?
             bool shouldStop = false;
