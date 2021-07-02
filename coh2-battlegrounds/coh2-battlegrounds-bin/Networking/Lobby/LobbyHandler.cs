@@ -1,4 +1,5 @@
 ﻿using Battlegrounds.Networking.Communication;
+using Battlegrounds.Networking.DataStructures;
 using Battlegrounds.Networking.Lobby.Match;
 using Battlegrounds.Networking.Remoting;
 using Battlegrounds.Networking.Requests;
@@ -55,6 +56,11 @@ namespace Battlegrounds.Networking.Lobby {
         /// Get or set the current match context of  the handler (<see langword="null"/> by default).
         /// </summary>
         public ILobbyMatchContext MatchContext { get; set; }
+
+        /// <summary>
+        /// Get or set the match start/close timer.
+        /// </summary>
+        public ISynchronizedTimer MatchStartTimer { get; set; }
 
         /// <summary>
         /// 

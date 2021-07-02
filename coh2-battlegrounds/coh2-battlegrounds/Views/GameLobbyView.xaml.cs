@@ -403,6 +403,9 @@ namespace BattlegroundsApp.Views {
                 // Refresh dropdowns
                 this.RefreshDropdowns();
 
+                // Create playmodel for member
+                this.m_playModel = new LobbyMemberPlayModel(this, m_handler);
+
             }
 
         }

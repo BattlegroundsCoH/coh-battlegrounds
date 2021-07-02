@@ -1,12 +1,11 @@
 ﻿using System.Threading.Tasks;
+
 using Battlegrounds.Game.Match.Analyze;
 using Battlegrounds.Game.Match.Data;
 using Battlegrounds.Game.Match.Finalizer;
 using Battlegrounds.Game.Match.Play;
 using Battlegrounds.Game.Match.Startup;
 using Battlegrounds.Networking.Lobby;
-using Battlegrounds.Online.Debug;
-using Battlegrounds.Online.Lobby;
 
 namespace Battlegrounds.Game.Match.Composite {
 

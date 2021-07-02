@@ -52,10 +52,10 @@ namespace Battlegrounds.Game.Match.Startup {
             bool shouldStop = false;
 
             // Get timer
-            ISynchronizedTimer synchronizedTimer = lobby.MatchContext.GetStartTimer(5, 1.5);
-            synchronizedTimer.OnPulse += x => this.StartMatchWait?.Invoke((int)x.TotalSeconds);
-            synchronizedTimer.OnTimedDown += () => this.m_beginWaitHandle.Set();
-            synchronizedTimer.OnCancel += x => {
+            lobby.MatchStartTimer = lobby.MatchContext.GetStartTimer(5, 1.5);
+            lobby.MatchStartTimer.OnPulse += x => this.StartMatchWait?.Invoke((int)x.TotalSeconds);
+            lobby.MatchStartTimer.OnTimedDown += () => this.m_beginWaitHandle.Set();
+            lobby.MatchStartTimer.OnCancel += x => {
                 shouldStop = true;
                 this.m_beginWaitHandle.Set();
             };
@@ -186,7 +186,7 @@ namespace Battlegrounds.Game.Match.Startup {
             LobbyHandler lobby = caller as LobbyHandler;
 
             // Create compiler
-            var compiler = this.GetSessionCompiler();
+            ISessionCompiler compiler = this.GetSessionCompiler();
             compiler.SetCompanyCompiler(this.GetCompanyCompiler());
 
             // Send feedback that match data is being compiled

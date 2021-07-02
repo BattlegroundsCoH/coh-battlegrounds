@@ -157,16 +157,10 @@ namespace BattlegroundsApp.Models {
                     // Append to lobby chat
                     this.m_view.LobbyChat.DisplayMessage($"[System] A fatal error was detected while playing.\n");
 
-                    // Trigger system message
-                    //this.m_lobby.TriggerSystemMessage("A fatal error was detected while playing.");
-
                 } else if (reason is IMatchData matchEvents) {
 
                     // Append to lobby chat
                     this.m_view.LobbyChat.DisplayMessage($"[System] {message} \n");
-
-                    // Trigger system message
-                    //this.m_lobby.TriggerSystemMessage(message);
 
                 }
 
@@ -201,8 +195,10 @@ namespace BattlegroundsApp.Models {
             // Tell the match to stop
             this.m_shouldStop = true;
 
-            // Tell startup to cancel
-            //this.m_lobby.GetConnection().SendSelfMessage(new Message(MessageType.LOBBY_CANCEL));
+            // Send cancel
+            if (this.m_lobby.MatchStartTimer is not null && this.m_lobby.MatchStartTimer.IsStarted) {
+                this.m_lobby.MatchStartTimer.Cancel(this.m_lobby.Self.Name);
+            }
 
             // Invoke the cancel handler
             this.m_cancelHandler?.Invoke();
@@ -234,7 +230,7 @@ namespace BattlegroundsApp.Models {
 
         private void HandleStartupInformation(IStartupStrategy strategy, object caller, string message) {
             if (caller == this.m_lobby && strategy is OnlineStartupStrategy) {
-                //this.m_lobby.TriggerSystemMessage(message);
+                this.m_view.LobbyChat.DisplayMessage($"[System] {message}");
             } else {
                 if (message == "Launching game...") {
                     // Update lobby state
