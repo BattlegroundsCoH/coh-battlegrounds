@@ -38,6 +38,7 @@ namespace BattlegroundsApp.Models {
             lobby.Lobby.StartGame = this.OnStartMatch;
             lobby.Lobby.GamemodeAvailable = this.OnGamemodeAvailable;
             lobby.Lobby.ResultsAvailable = this.OnResultsAvailable;
+            lobby.Lobby.GetCompany = this.OnGetCompany;
 
             // Get timer publish
             if (lobby.RequestHandler is ParticipantRequestHandler participant) {
@@ -145,6 +146,28 @@ namespace BattlegroundsApp.Models {
                 }
 
             });
+
+        }
+
+        private string OnGetCompany() {
+
+            // Get self from team manager
+            Company self = this.m_view.GetLocalCompany();
+
+            // Make sure we're valid
+            if (self is not null) {
+
+                // Convert to json
+                return self.SaveToString();
+
+            } else {
+
+                Trace.WriteLine("Failed to find local company and returning NULL!", nameof(LobbyMemberPlayModel));
+
+                // Return empty object
+                return "{}";
+
+            }
 
         }
 

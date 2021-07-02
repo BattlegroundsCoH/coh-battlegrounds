@@ -307,6 +307,16 @@ namespace Battlegrounds.Game.DataCompany {
             File.WriteAllText(jsonfile, this.SerializeAsJson());
         }
 
+        /// <summary>
+        /// Save all <see cref="Company"/> data to json format.
+        /// </summary>
+        /// <returns>The json string representation of the <see cref="Company"/>.</returns>
+        public string SaveToString() {
+            this.m_checksum = string.Empty;
+            this.m_checksum = this.GetChecksum();
+            return this.SerializeAsJson();
+        }
+
         public void SetType(CompanyType type) => this.m_companyType = type;
 
         public void SetArmy(Faction faction) => this.m_companyArmy = faction;
@@ -386,7 +396,10 @@ namespace Battlegrounds.Game.DataCompany {
         /// <param name="jsonbytes"></param>
         /// <returns></returns>
         public static Company ReadCompanyFromBytes(byte[] jsonbytes) {
-            Company company = JsonParser.ParseString<Company>(Encoding.UTF8.GetString(jsonbytes));
+            Company company = JsonParser.ParseString<Company>(Encoding.UTF8.GetString(jsonbytes)); 
+            if (company is null) {
+                throw new InvalidDataException("Failed to parse json company representation. Please verify json content.");
+            }
             if (company.VerifyChecksum()) {
                 return company;
             } else {
@@ -406,6 +419,9 @@ namespace Battlegrounds.Game.DataCompany {
         /// <returns></returns>
         public static Company ReadCompanyFromString(string jsonString) {
             Company company = JsonParser.ParseString<Company>(jsonString);
+            if (company is null) {
+                throw new InvalidDataException("Failed to parse json company representation. Please verify json content.");
+            }
             if (company.VerifyChecksum()) {
                 return company;
             } else {

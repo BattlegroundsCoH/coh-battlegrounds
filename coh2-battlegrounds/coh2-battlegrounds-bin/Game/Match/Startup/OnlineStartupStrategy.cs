@@ -114,16 +114,25 @@ namespace Battlegrounds.Game.Match.Startup {
 
             // Collect companies
             int count = context.CollectPlayerCompanies(x => {
-                
-                // Read in the company file and add to list.
-                Company company = Company.ReadCompanyFromString(x.playerCompanyData);
-                company.Owner = x.playerID.ToString();
 
-                // Register company
-                this.m_playerCompanies.Add(company);
+                try {
 
-                // Log
-                Trace.WriteLine($"Downloaded company from user {x.playerID} titled '{company.Name}'", nameof(OnlineStartupStrategy));
+                    // Read in the company file and add to list.
+                    Company company = Company.ReadCompanyFromString(x.playerCompanyData);
+                    company.Owner = x.playerID.ToString();
+
+                    // Register company
+                    this.m_playerCompanies.Add(company);
+
+                    // Log
+                    Trace.WriteLine($"Downloaded company from user {x.playerID} titled '{company.Name}'", nameof(OnlineStartupStrategy));
+
+                } catch {
+
+                    // Log
+                    Trace.WriteLine($"Failed to download company from user {x.playerID}.", nameof(OnlineStartupStrategy));
+
+                }
 
             });
 
