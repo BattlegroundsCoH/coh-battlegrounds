@@ -2,6 +2,7 @@
 using Battlegrounds.Networking.DataStructures;
 using Battlegrounds.Networking.Lobby.Match;
 using Battlegrounds.Networking.Remoting;
+using Battlegrounds.Networking.Remoting.Objects;
 using Battlegrounds.Networking.Requests;
 using Battlegrounds.Networking.Server;
 

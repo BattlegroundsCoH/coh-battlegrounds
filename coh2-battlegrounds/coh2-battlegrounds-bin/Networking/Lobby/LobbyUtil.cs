@@ -3,7 +3,7 @@ using System.Diagnostics;
 
 using Battlegrounds.Networking.Communication;
 using Battlegrounds.Networking.Communication.Messaging;
-using Battlegrounds.Networking.Remoting;
+using Battlegrounds.Networking.Remoting.Objects;
 using Battlegrounds.Networking.Remoting.Reflection;
 using Battlegrounds.Networking.Requests;
 using Battlegrounds.Networking.Server;

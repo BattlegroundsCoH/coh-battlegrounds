@@ -356,7 +356,7 @@
             <param name="mangledString"></param>
             <param name="args"></param>
         </member>
-        <member name="M:Battlegrounds.Networking.Communication.Messaging.RemoteCallMessage.UpdateArguments(Battlegrounds.Networking.Remoting.IObjectPool)">
+        <member name="M:Battlegrounds.Networking.Communication.Messaging.RemoteCallMessage.UpdateArguments(Battlegrounds.Networking.Remoting.Objects.IObjectPool)">
             <summary>
             
             </summary>
@@ -394,6 +394,11 @@
         <member name="P:Battlegrounds.Networking.Communication.Messaging.StringMessage.Type">
             <summary>
             
+            </summary>
+        </member>
+        <member name="T:Battlegrounds.Networking.Communication.Messaging.VoidMessage">
+            <summary>
+            Class representing a void return-value message.
             </summary>
         </member>
         <member name="T:Battlegrounds.Networking.Communication.HttpPOSTResponseData">
@@ -2048,7 +2053,7 @@
             Get the lobby instance associated with this element.
             </summary>
         </member>
-        <member name="M:Battlegrounds.Networking.Lobby.LobbyService.#ctor(Battlegrounds.Networking.Remoting.IObjectPool)">
+        <member name="M:Battlegrounds.Networking.Lobby.LobbyService.#ctor(Battlegrounds.Networking.Remoting.Objects.IObjectPool)">
             <summary>
             Initialize a new <see cref="T:Battlegrounds.Networking.Lobby.LobbyService"/> with an <paramref name="objectPool"/>.
             </summary>
@@ -2220,7 +2225,7 @@
             Get the trackable ID associated with the object.
             </summary>
         </member>
-        <member name="M:Battlegrounds.Networking.Proxy.IProxyTrackable.SetId(Battlegrounds.Networking.Remoting.IObjectID)">
+        <member name="M:Battlegrounds.Networking.Proxy.IProxyTrackable.SetId(Battlegrounds.Networking.Remoting.Objects.IObjectID)">
             <summary>
             Set the ID that the object can use to track itself.
             </summary>
@@ -2276,68 +2281,6 @@
             <param name="remoteMethodName">The name of the remote method to invoke.</param>
             <param name="args">The arguments to send along with the request.</param>
         </member>
-        <member name="T:Battlegrounds.Networking.Proxy.ProxyMethodAttribute">
-            <summary>
-            
-            </summary>
-        </member>
-        <member name="M:Battlegrounds.Networking.Proxy.ProxyMethodAttribute.#ctor(System.String)">
-            <summary>
-            
-            </summary>
-            <param name="remoteName"></param>
-        </member>
-        <member name="T:Battlegrounds.Networking.Remoting.IObjectPool">
-            <summary>
-            Interface for representing a pool of objects that are identified by a unique <see cref="T:Battlegrounds.Networking.Remoting.IObjectID"/>.
-            </summary>
-        </member>
-        <member name="M:Battlegrounds.Networking.Remoting.IObjectPool.Register(System.Object)">
-            <summary>
-            Register a new object in the pool.
-            </summary>
-            <param name="obj">The instance to register in object pool.</param>
-            <returns>The unique ID assigned to the object.</returns>
-        </member>
-        <member name="M:Battlegrounds.Networking.Remoting.IObjectPool.RegisterIfNotFound(System.Object)">
-            <summary>
-            Register a new object in the pool if it is not already registered.
-            </summary>
-            <param name="obj">The instance to register if not found.</param>
-            <returns>The unique ID assigned to the object.</returns>
-        </member>
-        <member name="M:Battlegrounds.Networking.Remoting.IObjectPool.Get(Battlegrounds.Networking.Remoting.IObjectID)">
-            <summary>
-            Get the instance by <paramref name="id"/>.
-            </summary>
-            <param name="id">The unique ID to get object with.</param>
-            <returns>If object exists in pool, then the requested <see cref="T:System.Object"/> is returned; Otherwise <see langword="null"/>.</returns>
-        </member>
-        <member name="M:Battlegrounds.Networking.Remoting.IObjectPool.Exists(Battlegrounds.Networking.Remoting.IObjectID)">
-            <summary>
-            Check if the specified <paramref name="id"/> exists in the pool.
-            </summary>
-            <param name="id">The unique ID to check.</param>
-            <returns>If ID is registered, <see langword="true"/>; Otherwise <see langword="false"/>.</returns>
-        </member>
-        <member name="T:Battlegrounds.Networking.Remoting.ISendableObject">
-            <summary>
-            
-            </summary>
-        </member>
-        <member name="M:Battlegrounds.Networking.Remoting.ISendableObject.Reconstruct(System.Byte[],Battlegrounds.Networking.Requests.IRequestHandler)">
-            <summary>
-            
-            </summary>
-            <param name="data"></param>
-            <param name="requestHandler"></param>
-        </member>
-        <member name="M:Battlegrounds.Networking.Remoting.ISendableObject.ToBytes">
-            <summary>
-            
-            </summary>
-            <returns></returns>
-        </member>
         <member name="T:Battlegrounds.Networking.Remoting.IStaticInterface">
             <summary>
             Represents a static interface for interacting with static objects.
@@ -2345,7 +2288,7 @@
         </member>
         <member name="P:Battlegrounds.Networking.Remoting.IStaticInterface.ObjectPool">
             <summary>
-            Get the <see cref="T:Battlegrounds.Networking.Remoting.IObjectPool"/> which keeps track of the static instances.
+            Get the <see cref="T:Battlegrounds.Networking.Remoting.Objects.IObjectPool"/> which keeps track of the static instances.
             </summary>
         </member>
         <member name="M:Battlegrounds.Networking.Remoting.IStaticInterface.Create``1(System.String,System.Object[])">
@@ -2355,7 +2298,7 @@
             <typeparam name="T">The type of object to instantiate.</typeparam>
             <param name="identifier">The name to use to identify the object.</param>
             <param name="args">The arguments to pass along to the constructor.</param>
-            <returns>The <see cref="T:Battlegrounds.Networking.Remoting.IObjectID"/> returned by the <see cref="T:Battlegrounds.Networking.Remoting.IObjectPool"/> on register.</returns>
+            <returns>The <see cref="T:Battlegrounds.Networking.Remoting.Objects.IObjectID"/> returned by the <see cref="T:Battlegrounds.Networking.Remoting.Objects.IObjectPool"/> on register.</returns>
         </member>
         <member name="M:Battlegrounds.Networking.Remoting.IStaticInterface.FromID(System.String)">
             <summary>
@@ -2402,54 +2345,123 @@
             <param name="mangled">The string to demangle.</param>
             <returns>A tuple of three string values that contains the demangled strings.</returns>
         </member>
-        <member name="T:Battlegrounds.Networking.Remoting.ObjectCachedPool">
+        <member name="T:Battlegrounds.Networking.Remoting.Objects.IObjectID">
+            <summary>
+            Interface for ID of objects that can be accessed remotely.
+            </summary>
+        </member>
+        <member name="M:Battlegrounds.Networking.Remoting.Objects.IObjectID.ToString">
+            <summary>
+            Convert the Id into a string representation.
+            </summary>
+            <returns>A string representation of the ID.</returns>
+        </member>
+        <member name="M:Battlegrounds.Networking.Remoting.Objects.IObjectID.FromString(System.String)">
+            <summary>
+            Parse the <paramref name="str"/> input into a <see cref="T:Battlegrounds.Networking.Remoting.Objects.IObjectID"/> representation.
+            </summary>
+            <param name="str">The string value to convert into a <see cref="T:Battlegrounds.Networking.Remoting.Objects.IObjectID"/> object.</param>
+            <exception cref="T:System.ArgumentException"/>
+        </member>
+        <member name="T:Battlegrounds.Networking.Remoting.Objects.IObjectPool">
+            <summary>
+            Interface for representing a pool of objects that are identified by a unique <see cref="T:Battlegrounds.Networking.Remoting.Objects.IObjectID"/>.
+            </summary>
+        </member>
+        <member name="M:Battlegrounds.Networking.Remoting.Objects.IObjectPool.Register(System.Object)">
+            <summary>
+            Register a new object in the pool.
+            </summary>
+            <param name="obj">The instance to register in object pool.</param>
+            <returns>The unique ID assigned to the object.</returns>
+        </member>
+        <member name="M:Battlegrounds.Networking.Remoting.Objects.IObjectPool.RegisterIfNotFound(System.Object)">
+            <summary>
+            Register a new object in the pool if it is not already registered.
+            </summary>
+            <param name="obj">The instance to register if not found.</param>
+            <returns>The unique ID assigned to the object.</returns>
+        </member>
+        <member name="M:Battlegrounds.Networking.Remoting.Objects.IObjectPool.Get(Battlegrounds.Networking.Remoting.Objects.IObjectID)">
+            <summary>
+            Get the instance by <paramref name="id"/>.
+            </summary>
+            <param name="id">The unique ID to get object with.</param>
+            <returns>If object exists in pool, then the requested <see cref="T:System.Object"/> is returned; Otherwise <see langword="null"/>.</returns>
+        </member>
+        <member name="M:Battlegrounds.Networking.Remoting.Objects.IObjectPool.Exists(Battlegrounds.Networking.Remoting.Objects.IObjectID)">
+            <summary>
+            Check if the specified <paramref name="id"/> exists in the pool.
+            </summary>
+            <param name="id">The unique ID to check.</param>
+            <returns>If ID is registered, <see langword="true"/>; Otherwise <see langword="false"/>.</returns>
+        </member>
+        <member name="T:Battlegrounds.Networking.Remoting.Objects.ISendableObject">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Battlegrounds.Networking.Remoting.Objects.ISendableObject.Reconstruct(System.Byte[],Battlegrounds.Networking.Requests.IRequestHandler)">
+            <summary>
+            
+            </summary>
+            <param name="data"></param>
+            <param name="requestHandler"></param>
+        </member>
+        <member name="M:Battlegrounds.Networking.Remoting.Objects.ISendableObject.ToBytes">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:Battlegrounds.Networking.Remoting.Objects.ObjectCachedPool">
             <summary>
             Object pool keeping track of <see cref="T:Battlegrounds.Networking.Remoting.Reflection.CachedObject"/> instances optimised for remote-call functionality.
             </summary>
         </member>
-        <member name="M:Battlegrounds.Networking.Remoting.ObjectCachedPool.#ctor">
+        <member name="M:Battlegrounds.Networking.Remoting.Objects.ObjectCachedPool.#ctor">
             <summary>
-            Initialize a new and empty <see cref="T:Battlegrounds.Networking.Remoting.ObjectCachedPool"/> instance.
+            Initialize a new and empty <see cref="T:Battlegrounds.Networking.Remoting.Objects.ObjectCachedPool"/> instance.
             </summary>
         </member>
-        <member name="T:Battlegrounds.Networking.Remoting.ObjectInstanceHandler">
-            <summary>
-            
-            </summary>
-        </member>
-        <member name="M:Battlegrounds.Networking.Remoting.ObjectInstanceHandler.#ctor">
+        <member name="T:Battlegrounds.Networking.Remoting.Objects.ObjectInstanceHandler">
             <summary>
             
             </summary>
         </member>
-        <member name="T:Battlegrounds.Networking.Remoting.ObjectKey">
+        <member name="M:Battlegrounds.Networking.Remoting.Objects.ObjectInstanceHandler.#ctor">
             <summary>
             
             </summary>
         </member>
-        <member name="M:Battlegrounds.Networking.Remoting.ObjectKey.#ctor">
+        <member name="T:Battlegrounds.Networking.Remoting.Objects.ObjectKey">
             <summary>
             
             </summary>
         </member>
-        <member name="M:Battlegrounds.Networking.Remoting.ObjectKey.#ctor(System.Int32)">
+        <member name="M:Battlegrounds.Networking.Remoting.Objects.ObjectKey.#ctor">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Battlegrounds.Networking.Remoting.Objects.ObjectKey.#ctor(System.Int32)">
             <summary>
             
             </summary>
             <param name="key"></param>
         </member>
-        <member name="M:Battlegrounds.Networking.Remoting.ObjectKey.#ctor(System.String)">
+        <member name="M:Battlegrounds.Networking.Remoting.Objects.ObjectKey.#ctor(System.String)">
             <summary>
             
             </summary>
             <param name="k"></param>
         </member>
-        <member name="T:Battlegrounds.Networking.Remoting.ObjectPool">
+        <member name="T:Battlegrounds.Networking.Remoting.Objects.ObjectPool">
             <summary>
             
             </summary>
         </member>
-        <member name="M:Battlegrounds.Networking.Remoting.ObjectPool.#ctor">
+        <member name="M:Battlegrounds.Networking.Remoting.Objects.ObjectPool.#ctor">
             <summary>
             
             </summary>
@@ -2653,7 +2665,7 @@
             Static helper class for marshalling remote values.
             </summary>
         </member>
-        <member name="M:Battlegrounds.Networking.Remoting.RemoteMarshal.MarshalToMessage(System.Object,Battlegrounds.Networking.Remoting.IObjectPool)">
+        <member name="M:Battlegrounds.Networking.Remoting.RemoteMarshal.MarshalToMessage(System.Object,Battlegrounds.Networking.Remoting.Objects.IObjectPool)">
             <summary>
             Marshal an object into the best <see cref="T:Battlegrounds.Networking.Communication.Messaging.IMessage"/> representation.
             </summary>
@@ -2661,12 +2673,22 @@
             <param name="pool">The object pool to use if the marshalled value is to be proxified.</param>
             <returns>The best possible <see cref="T:Battlegrounds.Networking.Communication.Messaging.IMessage"/> representation of the <paramref name="marshalValue"/>.</returns>
         </member>
+        <member name="T:Battlegrounds.Networking.Remoting.VoidValue">
+            <summary>
+            Represents a void value returned by calling a method returning void.
+            </summary>
+        </member>
+        <member name="F:Battlegrounds.Networking.Remoting.VoidValue.Void">
+            <summary>
+            Static readonly instance of the void variable.
+            </summary>
+        </member>
         <member name="T:Battlegrounds.Networking.Requests.HostRequestHandler">
             <summary>
             Request handler for handling host-related requests.
             </summary>
         </member>
-        <member name="M:Battlegrounds.Networking.Requests.HostRequestHandler.#ctor(Battlegrounds.Networking.Communication.IConnection,Battlegrounds.Networking.Remoting.IStaticInterface,Battlegrounds.Networking.Remoting.IObjectPool)">
+        <member name="M:Battlegrounds.Networking.Requests.HostRequestHandler.#ctor(Battlegrounds.Networking.Communication.IConnection,Battlegrounds.Networking.Remoting.IStaticInterface,Battlegrounds.Networking.Remoting.Objects.IObjectPool)">
             <summary>
             Initialize a new <see cref="T:Battlegrounds.Networking.Requests.HostRequestHandler"/> class with a connection, static interface, and object pool.
             </summary>
@@ -2690,7 +2712,7 @@
         </member>
         <member name="P:Battlegrounds.Networking.Requests.IManagingRequestHandler.ObjectPool">
             <summary>
-            Get the <see cref="T:Battlegrounds.Networking.Remoting.IObjectPool"/> containing proxied objects.
+            Get the <see cref="T:Battlegrounds.Networking.Remoting.Objects.IObjectPool"/> containing proxied objects.
             </summary>
         </member>
         <member name="P:Battlegrounds.Networking.Requests.IManagingRequestHandler.ServerInterface">
