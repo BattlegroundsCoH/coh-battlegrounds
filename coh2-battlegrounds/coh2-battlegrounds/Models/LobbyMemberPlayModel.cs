@@ -162,11 +162,16 @@ namespace BattlegroundsApp.Models {
             // Make sure we're valid
             if (self is not null) {
 
+                // Get string
+                string json = self.SaveToString();
+                Trace.WriteLine($"Uploading json data: {json}", nameof(LobbyMemberPlayModel));
+
                 // Convert to json
-                return self.SaveToString();
+                return json;
 
             } else {
 
+                // Log failure
                 Trace.WriteLine("Failed to find local company and returning NULL!", nameof(LobbyMemberPlayModel));
 
                 // Return empty object

@@ -58,6 +58,9 @@ namespace Battlegrounds.Networking.Lobby {
                     throw new Exception("Failed to establish HTTP connection.");
                 }
 
+                // Set API
+                serverAPI.SetLobbyGuid(connection.ConnectionID);
+
                 // Create handler
                 HostRequestHandler requestHandler = new HostRequestHandler(connection, service, cachedPool);
                 lobby.RequestHandler = requestHandler;
@@ -126,6 +129,9 @@ namespace Battlegrounds.Networking.Lobby {
                     throw new Exception("Failed to establish HTTP connection.");
                 }
 
+                // Set API
+                serverAPI.SetLobbyGuid(connection.ConnectionID);
+
                 // Create handler
                 ParticipantRequestHandler participantHandler = new ParticipantRequestHandler(connection, instanceHandler) {
                     DependencyInjector = (t, objectID, requestHandler) => t switch {
@@ -139,7 +145,7 @@ namespace Battlegrounds.Networking.Lobby {
 
                 // Set request handler
                 connection.SetRequestHandler(participantHandler);
-                
+
                 // Get proxy
                 object proxyObj = participantHandler.SendRequest(null, "lobby");
                 instanceHandler.RegisterInstance(proxyObj as ProxyLobby);
