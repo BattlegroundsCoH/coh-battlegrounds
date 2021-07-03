@@ -361,13 +361,13 @@ namespace BattlegroundsApp.Views {
             this.m_handler.Lobby.VariableCallback = this.OnLobbyVariable;
 
             // Setup chat receiver
-            this.m_handler.Lobby.ChatNotification = (channel, sender, message) => {
+            this.m_handler.Lobby.ChatNotification += (channel, sender, message) => {
                 string name = sender.Name; // Don't do this on the GUI thread in case of remoting!
                 this.UpdateGUI(() => this.LobbyChat.DisplayMessage($"{name}: {message}", channel));
             };
 
             // Setup system receiver
-            this.m_handler.Lobby.SystemNotification = systemInfo => {
+            this.m_handler.Lobby.SystemNotification += systemInfo => {
                 this.UpdateGUI(() => this.LobbyChat.DisplayMessage(TranslateSystem(systemInfo), 0));
             };
 

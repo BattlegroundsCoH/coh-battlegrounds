@@ -523,6 +523,13 @@
             <param name="log">Should the runtime log this GET request.</param>
             <returns>A <see cref="T:Battlegrounds.Networking.Communication.HttpGETResponseData"/> instance containing the response to the request.</returns>
         </member>
+        <member name="T:Battlegrounds.Networking.Communication.HttpConnectionClosedHandler">
+            <summary>
+            Delegate for handling when a connection is closed.
+            </summary>
+            <param name="remote">Is connection closed by the remote endpoint.</param>
+            <param name="connectionID">The ID of the connection that was closed.</param>
+        </member>
         <member name="T:Battlegrounds.Networking.Communication.HttpConnection">
             <summary>
             Class representing a continous HTTP connection to a remote server. Implements <see cref="T:Battlegrounds.Networking.Communication.IConnection"/>.
@@ -546,6 +553,11 @@
         <member name="P:Battlegrounds.Networking.Communication.HttpConnection.ConnectionID">
             <summary>
             Get the ID used to identify the connection endpoint.
+            </summary>
+        </member>
+        <member name="E:Battlegrounds.Networking.Communication.HttpConnection.OnConnectionClosed">
+            <summary>
+            Event triggered when the connection is closed.
             </summary>
         </member>
         <member name="P:Battlegrounds.Networking.Communication.HttpConnection.HTTP_BROKER">
@@ -632,12 +644,13 @@
             <param name="introMessage">The introduction message to send to the HTTP server.</param>
             <returns>If connection is established a <see cref="T:Battlegrounds.Networking.Communication.HttpConnection"/> instance. Otherwise <see langword="null"/>.</returns>
         </member>
-        <member name="M:Battlegrounds.Networking.Communication.HttpConnection.PingServer(System.String,System.Int32)">
+        <member name="M:Battlegrounds.Networking.Communication.HttpConnection.PingServer(System.String,System.Int32,System.Int32)">
             <summary>
             Ping specified server at <paramref name="address"/> using <paramref name="port"/>.
             </summary>
             <param name="address">The addres to ping.</param>
             <param name="port">The port to ping.</param>
+            <param name="timeout">The amount of milliseconds to wait before timing out the ping request.</param>
             <returns>If a ping response was given, <see langword="true"/>; Otherwise <see langword="false"/>.</returns>
         </member>
         <member name="T:Battlegrounds.Networking.Communication.HttpPayloadMessage">
@@ -1475,9 +1488,24 @@
             Get the <see cref="T:Battlegrounds.Networking.Lobby.ILobbyMember"/> representing the local machine.
             </summary>
         </member>
+        <member name="E:Battlegrounds.Networking.Lobby.HostedLobby.SystemNotification">
+            <summary>
+            Get or set the function handling when a system notification is received.
+            </summary>
+        </member>
+        <member name="E:Battlegrounds.Networking.Lobby.HostedLobby.ChatNotification">
+            <summary>
+            Get or set the function handling when a chat notification is received.
+            </summary>
+        </member>
         <member name="P:Battlegrounds.Networking.Lobby.HostedLobby.VariableCallback">
             <summary>
             Get or set the callback function for handling variable refresh callbacks.
+            </summary>
+        </member>
+        <member name="E:Battlegrounds.Networking.Lobby.HostedLobby.FileReceivedVerify">
+            <summary>
+            Get or set the function to handle when a file is received.
             </summary>
         </member>
         <member name="M:Battlegrounds.Networking.Lobby.HostedLobby.#ctor(System.String,Battlegrounds.Networking.Server.ServerAPI)">
@@ -1541,6 +1569,13 @@
             </summary>
             <param name="refreshVariable">The variable to refresh.</param>
             <param name="arg">The argument to pass along with the refresh.</param>
+        </member>
+        <member name="M:Battlegrounds.Networking.Lobby.HostedLobby.VerifyFile(System.UInt64,System.String)">
+            <summary>
+            
+            </summary>
+            <param name="sender"></param>
+            <param name="fileKey"></param>
         </member>
         <member name="T:Battlegrounds.Networking.Lobby.IAILobbyMember">
             <summary>
@@ -1672,19 +1707,24 @@
             Get or set when the results of the gamemode have been made available.
             </summary>
         </member>
-        <member name="P:Battlegrounds.Networking.Lobby.ILobby.SystemNotification">
+        <member name="E:Battlegrounds.Networking.Lobby.ILobby.SystemNotification">
             <summary>
-            
+            Get or set the function handling when a system notification is received.
             </summary>
         </member>
-        <member name="P:Battlegrounds.Networking.Lobby.ILobby.ChatNotification">
+        <member name="E:Battlegrounds.Networking.Lobby.ILobby.ChatNotification">
             <summary>
-            
+            Get or set the function handling when a chat notification is received.
             </summary>
         </member>
         <member name="P:Battlegrounds.Networking.Lobby.ILobby.VariableCallback">
             <summary>
             Get or set the callback function for handling variable refresh callbacks.
+            </summary>
+        </member>
+        <member name="E:Battlegrounds.Networking.Lobby.ILobby.FileReceivedVerify">
+            <summary>
+            Get or set the function to handle when a file is received.
             </summary>
         </member>
         <member name="M:Battlegrounds.Networking.Lobby.ILobby.GetLobbyMember(System.UInt64)">
@@ -1941,6 +1981,13 @@
             </summary>
             <param name="gamemodeData">The raw binary contents of the gamemode.</param>
         </member>
+        <member name="T:Battlegrounds.Networking.Lobby.LobbyVerifyFileReceived">
+            <summary>
+            Delegate for handling response to a file received verification.
+            </summary>
+            <param name="recipientID">The recipient or verifier of the file.</param>
+            <param name="fileKey">The key of he file to verify.</param>
+        </member>
         <member name="T:Battlegrounds.Networking.Lobby.LobbyMatchStart">
             <summary>
             Delegate informing the participant the game should be started.
@@ -2194,6 +2241,18 @@
             <param name="companyCallback"></param>
             <returns></returns>
         </member>
+        <member name="M:Battlegrounds.Networking.Lobby.Match.ILobbyMatchContext.HasAllGamemode">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Battlegrounds.Networking.Lobby.Match.ILobbyMatchContext.HasAllResults">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
         <member name="M:Battlegrounds.Networking.Lobby.Match.ILobbyMatchContext.GetStartTimer(System.Int32,System.Double)">
             <summary>
             Get a starting timer that can be used to warn lobby members the game is about to start.
@@ -2204,7 +2263,7 @@
         </member>
         <member name="T:Battlegrounds.Networking.Lobby.Match.OnlineMatchContext">
             <summary>
-            
+            Class representing a match context for online games.
             </summary>
         </member>
         <member name="M:Battlegrounds.Networking.Lobby.Match.OnlineMatchContext.#ctor(Battlegrounds.Networking.Lobby.ILobby,Battlegrounds.Networking.Requests.IManagingRequestHandler,Battlegrounds.Networking.Server.ServerAPI)">
@@ -2215,14 +2274,41 @@
             <param name="requestHandler"></param>
             <param name="API"></param>
         </member>
+        <member name="M:Battlegrounds.Networking.Lobby.Match.OnlineMatchContext.HasAllGamemode">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Battlegrounds.Networking.Lobby.Match.OnlineMatchContext.HasAllResults">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
         <member name="T:Battlegrounds.Networking.Lobby.ProxyLobby">
             <summary>
             Proxy instance for some remote <see cref="T:Battlegrounds.Networking.Lobby.ILobby"/> implementation.
             </summary>
         </member>
+        <member name="E:Battlegrounds.Networking.Lobby.ProxyLobby.SystemNotification">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="E:Battlegrounds.Networking.Lobby.ProxyLobby.ChatNotification">
+            <summary>
+            
+            </summary>
+        </member>
         <member name="P:Battlegrounds.Networking.Lobby.ProxyLobby.VariableCallback">
             <summary>
             Get or set the callback function for handling variable refresh callbacks.
+            </summary>
+        </member>
+        <member name="E:Battlegrounds.Networking.Lobby.ProxyLobby.FileReceivedVerify">
+            <summary>
+            Get or set the function to handle when a file is received.
             </summary>
         </member>
         <member name="T:Battlegrounds.Networking.Proxy.IProxy">
