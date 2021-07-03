@@ -1,14 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+
 using Battlegrounds.Game.Match.Data;
-using Battlegrounds.Online;
-using Battlegrounds.Online.Lobby;
-using Battlegrounds.Online.Services;
 
 namespace Battlegrounds.Game.Match.Analyze {
 
     /// <summary>
-    /// Multiplayer match analysis strategy for analyzing multiplayer match data through a <see cref="ManagedLobby"/> instance. Extension of <see cref="SingleplayerMatchAnalyzer"/>.
+    /// Multiplayer match analysis strategy for analyzing multiplayer match data. Extension of <see cref="SingleplayerMatchAnalyzer"/>.
     /// Can be extended with custom behaviour.
     /// </summary>
     public class OnlineMatchAnalyzer : SingleplayerMatchAnalyzer {
@@ -33,7 +30,7 @@ namespace Battlegrounds.Game.Match.Analyze {
             } else {
                 // TODO: Handle
             }
-
+            /*
             // Get the managed lobby
             var lobby = caller as ManagedLobby;
 
@@ -78,13 +75,13 @@ namespace Battlegrounds.Game.Match.Analyze {
 
             } else {
                 // TODO: Handle
-            }
+            }*/
 
         }
 
         public override void OnAnalyze(object caller) {
             if (this.AnalyzePlaybackData(this.m_selfData)) {
-                foreach (IMatchData matchData in this.m_matchData) {
+                /*foreach (IMatchData matchData in this.m_matchData) {
                     if (matchData is JsonPlayback playback) {
                         if (!playback.CompareAgainst(this.m_analysisResult)) {
                             
@@ -96,7 +93,7 @@ namespace Battlegrounds.Game.Match.Analyze {
                     } else {
                         throw new NotImplementedException();
                     }
-                }
+                }*/
             } else {
                 // TODO: Handle
             }

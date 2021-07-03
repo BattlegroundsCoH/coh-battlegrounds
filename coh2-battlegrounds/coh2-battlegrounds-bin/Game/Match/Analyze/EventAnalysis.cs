@@ -44,6 +44,8 @@ namespace Battlegrounds.Game.Match.Analyze {
 
         public IReadOnlyCollection<Player> Players => this.m_players;
 
+        public TimeSpan Length => this.m_timespan;
+
         public ISession Session { get; }
 
         public EventAnalysis(ISession session) {

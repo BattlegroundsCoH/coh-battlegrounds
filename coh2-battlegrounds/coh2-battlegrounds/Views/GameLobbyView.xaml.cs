@@ -17,6 +17,7 @@ using Battlegrounds.Game.DataCompany;
 using Battlegrounds.Game.Gameplay;
 using Battlegrounds.Game.Match;
 using Battlegrounds.Modding;
+using Battlegrounds.Networking.Communication;
 using Battlegrounds.Networking.Lobby;
 
 using BattlegroundsApp.Controls.Lobby;
@@ -55,15 +56,15 @@ namespace BattlegroundsApp.Views {
 
         private GameLobbyViewScenarioItem m_lastScenario;
 
-        //private Task m_lobbyUpdate;
         private LobbyHandler m_handler;
         private bool m_ignoreEvents;
+        private bool m_hasLoadedLobby;
 
         public event PropertyChangedEventHandler PropertyChanged;
 
         public string LobbyName => $"Game Lobby: {this.m_handler.Lobby.LobbyName}";
 
-        public bool CanLeave => this.m_playModel is null;
+        public bool CanLeave => this.m_playModel is null || !this.m_playModel.CanCancel;
 
         public bool CanStartMatch => this.m_handler.IsHost && this.IsLegalMatch();
 
@@ -113,7 +114,7 @@ namespace BattlegroundsApp.Views {
             this.m_ignoreEvents = true;
 
             // Leave lobby
-            Task.Run(() => this.m_handler.Lobby.Leave());
+            _ = Task.Run(() => this.m_handler.Lobby.Leave());
 
             // Change state
             if (this.StateChangeRequest.Invoke(MainWindow.GAMEBROWSERSTATE) is false) {
@@ -314,7 +315,7 @@ namespace BattlegroundsApp.Views {
 
             // Get if allies are ready
             bool alliesPlayReady = this.TeamManager.All(LobbyTeamType.Allies, x => x.IsPlayReady());
-            bool alliesAtLeastOnePlayer = this.TeamManager.Any(LobbyTeamType.Allies, 
+            bool alliesAtLeastOnePlayer = this.TeamManager.Any(LobbyTeamType.Allies,
                 x => x.CardState is TeamPlayerCard.AISTATE or TeamPlayerCard.SELFSTATE or TeamPlayerCard.OCCUPIEDSTATE);
 
             bool allies = alliesAtLeastOnePlayer && alliesPlayReady;
@@ -332,12 +333,14 @@ namespace BattlegroundsApp.Views {
         }
 
         public Company GetLocalCompany() {
-            
+
+            // Get self in team model
             TeamPlayerCard card = this.TeamManager.Self;
             if (card is null) {
                 return null;
             }
 
+            // Verify we got the company
             if (card.CompanySelector.SelectedItem is not TeamPlayerCompanyItem companyItem ) {
                 return null;
             }
@@ -350,8 +353,20 @@ namespace BattlegroundsApp.Views {
 
         public override void StateOnFocus() {
 
-            // Setup the lobby
-            this.SetupLobby();
+            if (!this.m_hasLoadedLobby) {
+
+                // Setup the lobby
+                this.SetupLobby();
+
+                // Subscribe to closed event
+                if (this.m_handler.Connection is HttpConnection http) {
+                    http.OnConnectionClosed += this.OnConnectionLost;
+                }
+
+                // Set flag to true
+                this.m_hasLoadedLobby = true;
+
+            }
 
         }
 
@@ -363,12 +378,12 @@ namespace BattlegroundsApp.Views {
             // Setup chat receiver
             this.m_handler.Lobby.ChatNotification += (channel, sender, message) => {
                 string name = sender.Name; // Don't do this on the GUI thread in case of remoting!
-                this.UpdateGUI(() => this.LobbyChat.DisplayMessage($"{name}: {message}", channel));
+                _ = this.UpdateGUI(() => this.LobbyChat.DisplayMessage($"{name}: {message}", channel));
             };
 
             // Setup system receiver
             this.m_handler.Lobby.SystemNotification += systemInfo => {
-                this.UpdateGUI(() => this.LobbyChat.DisplayMessage(TranslateSystem(systemInfo), 0));
+                _ = this.UpdateGUI(() => this.LobbyChat.DisplayMessage(TranslateSystem(systemInfo), 0));
             };
 
             // Set chat handler as self
@@ -404,7 +419,7 @@ namespace BattlegroundsApp.Views {
                 this.RefreshDropdowns();
 
                 // Create playmodel for member
-                this.m_playModel = new LobbyMemberPlayModel(this, m_handler);
+                this.m_playModel = new LobbyMemberPlayModel(this, this.m_handler);
 
             }
 
@@ -419,7 +434,7 @@ namespace BattlegroundsApp.Views {
         }
 
         private void OnTeamManagerNotification() => this.UpdateGUI(() => {
-            this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(CanStartMatch)));
+            this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(this.CanStartMatch)));
         });
 
         public override void StateOnLostFocus() {
@@ -438,7 +453,7 @@ namespace BattlegroundsApp.Views {
 
             // If host-mode is enabled, populate the dropdowns
             if (hostMode) {
-                
+
                 // Add pop data
                 this.PopulateDropdowns();
 
@@ -461,7 +476,7 @@ namespace BattlegroundsApp.Views {
             if (this.Map.SelectedIndex == -1) {
 
                 // Find map to select
-                int selectedScenario = scenarioSource.FindIndex(x => x.Scenario.RelativeFilename.CompareTo(BattlegroundsInstance.LastPlayedMap) == 0);
+                int selectedScenario = scenarioSource.FindIndex(x => x.Scenario.RelativeFilename == BattlegroundsInstance.LastPlayedMap);
                 this.Map.SelectedIndex = selectedScenario != -1 ? selectedScenario : 0;
 
             }
@@ -545,14 +560,14 @@ namespace BattlegroundsApp.Views {
         }
 
         private void OnLobbyVariable(LobbyRefreshVariable refreshVariable, object refreshArgument) {
-            
+
             // Do not refresh if we're currently ignoring events.
             if (this.m_ignoreEvents) {
                 return;
             }
 
             // Invoke the following on the GUI thread
-            this.UpdateGUI(() => {
+            _ = this.UpdateGUI(() => {
                 switch (refreshVariable) {
                     case LobbyRefreshVariable.TEAM:
                         if (refreshArgument is null) {
@@ -565,17 +580,52 @@ namespace BattlegroundsApp.Views {
                             }
                         }
                         this.OnTeamManagerNotification();
-                        this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(TeamStringAllies)));
-                        this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(TeamStringAxis)));
+                        this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(this.TeamStringAllies)));
+                        this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(this.TeamStringAxis)));
                         break;
                     case LobbyRefreshVariable.MATCHOPTION:
                         this.RefreshDropdowns();
+                        break;
+                    case LobbyRefreshVariable.SCENARIO:
+                        break;
+                    case LobbyRefreshVariable.GAMEMODE:
+                        break;
+                    case LobbyRefreshVariable.GAMEMODEOPTION:
+                        break;
+                    case LobbyRefreshVariable.MODOPTION:
                         break;
                     default:
                         Trace.WriteLine($"Refresh variable not implemented : {refreshVariable}");
                         break;
                 }
             });
+        }
+
+        public void OnConnectionLost(bool remoteClosed, string connectionID) {
+
+            // Bail if ignoring events like these
+            if (this.m_ignoreEvents) {
+                return;
+            }
+
+            // If remotely closed
+            if (remoteClosed) {
+
+                // Show message telling the user they've been kicked from the lobby.
+                _ = MessageBox.Show("You have been kicked from the lobby.", "Kicked from lobby.", MessageBoxButton.OK, MessageBoxImage.Information);
+
+                // Try to change state
+                if (!this.StateChangeRequest?.Invoke(MainWindow.GAMEBROWSERSTATE) ?? true) {
+
+                    // Log
+                    Trace.WriteLine("Failed to change state to gamebrowser state on connection closed remotely!", nameof(GameLobbyView));
+
+                    // Exit
+                    Environment.Exit(-1);
+
+                }
+            }
+
         }
 
     }

@@ -139,7 +139,7 @@ namespace Battlegrounds.Game.Match.Startup {
                 this.OnFeedback(null, $"Received all company files.");
 
             } else {
-                
+
                 // Log
                 this.OnFeedback(null, $"Failed to receive one or more company files.");
 
@@ -153,9 +153,9 @@ namespace Battlegrounds.Game.Match.Startup {
         public override bool OnCollectMatchInfo(object caller) {
 
             // Invoke the external session info collector
-            var info = this.SessionInfoCollector?.Invoke();
+            SessionInfo? info = this.SessionInfoCollector?.Invoke();
             if (info.HasValue) {
-                
+
                 // Get session info
                 this.m_sessionInfo = info.Value;
 
@@ -241,6 +241,8 @@ namespace Battlegrounds.Game.Match.Startup {
 
             // Tell context to launch
             lobby.MatchContext.LaunchMatch();
+
+            // TODO: Add verification check
 
             // Return true -> All players have downloaded the gamemode.
             return true;
