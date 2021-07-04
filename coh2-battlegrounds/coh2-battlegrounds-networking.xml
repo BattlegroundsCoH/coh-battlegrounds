@@ -1270,7 +1270,7 @@
             <summary>
             Get the remaining amount of time.
             </summary>
-            <returns>A timespan describing the reamining time.</returns>
+            <returns>A <see cref="T:System.TimeSpan"/> describing the reamining time.</returns>
         </member>
         <member name="M:Battlegrounds.Networking.DataStructures.ISynchronizedTimer.Start">
             <summary>
@@ -1298,6 +1298,41 @@
             Represents a time down object that can time down across multiple machines in a semi-synchronized order.
             </summary>
         </member>
+        <member name="P:Battlegrounds.Networking.DataStructures.SynchronizedTimer.IsStarted">
+            <summary>
+            Get if the timer has started.
+            </summary>
+        </member>
+        <member name="P:Battlegrounds.Networking.DataStructures.SynchronizedTimer.ElapsedTime">
+            <summary>
+            Get the amount of time passed since timer was started.
+            </summary>
+        </member>
+        <member name="P:Battlegrounds.Networking.DataStructures.SynchronizedTimer.TrackingID">
+            <summary>
+            Get the ID of the <see cref="T:Battlegrounds.Networking.DataStructures.SynchronizedTimer"/> such that proxy objects can refer to it.
+            </summary>
+        </member>
+        <member name="E:Battlegrounds.Networking.DataStructures.SynchronizedTimer.OnStarted">
+            <summary>
+            Event triggered when timer is started.
+            </summary>
+        </member>
+        <member name="E:Battlegrounds.Networking.DataStructures.SynchronizedTimer.OnTimedDown">
+            <summary>
+            Even triggered when timer has timed down.
+            </summary>
+        </member>
+        <member name="E:Battlegrounds.Networking.DataStructures.SynchronizedTimer.OnCancel">
+            <summary>
+            Event triggered when timer is cancelled.
+            </summary>
+        </member>
+        <member name="E:Battlegrounds.Networking.DataStructures.SynchronizedTimer.OnPulse">
+            <summary>
+            Event triggered when timer is set to pulse.
+            </summary>
+        </member>
         <member name="M:Battlegrounds.Networking.DataStructures.SynchronizedTimer.#ctor(Battlegrounds.Networking.Requests.IRequestHandler,System.TimeSpan,System.TimeSpan)">
             <summary>
             Initialize a new <see cref="T:Battlegrounds.Networking.DataStructures.SynchronizedTimer"/> class intended for remote-timing.
@@ -1306,10 +1341,108 @@
             <param name="time">The amount of time to time down from.</param>
             <param name="syncDelay">The amount of time to wait before starting the countdown on the host-side.</param>
         </member>
-        <member name="T:Battlegrounds.Networking.DataStructures.ProxySyncronizedTimer">
+        <member name="M:Battlegrounds.Networking.DataStructures.SynchronizedTimer.GetRemaining">
+            <summary>
+            Get the remaining amount of time.
+            </summary>
+            <returns>A <see cref="T:System.TimeSpan"/> describing the reamining time.</returns>
+        </member>
+        <member name="M:Battlegrounds.Networking.DataStructures.SynchronizedTimer.Start">
+            <summary>
+            Start the timer.
+            </summary>
+        </member>
+        <member name="M:Battlegrounds.Networking.DataStructures.SynchronizedTimer.Cancel(System.Object)">
+            <summary>
+            Cancel the timer.
+            </summary>
+            <param name="argument">The argument to pass along when cancelling.</param>
+        </member>
+        <member name="M:Battlegrounds.Networking.DataStructures.SynchronizedTimer.SetId(Battlegrounds.Networking.Remoting.Objects.IObjectID)">
+            <summary>
+            Set the tracking ID of the <see cref="T:Battlegrounds.Networking.DataStructures.SynchronizedTimer"/>.
+            </summary>
+            <param name="id">The ID assigned to the instance.</param>
+        </member>
+        <member name="T:Battlegrounds.Networking.DataStructures.ProxySynchronizedTimer">
             <summary>
             Proxy representation of a remote <see cref="T:Battlegrounds.Networking.DataStructures.ISynchronizedTimer"/> instance.
             </summary>
+        </member>
+        <member name="E:Battlegrounds.Networking.DataStructures.ProxySynchronizedTimer.OnStarted">
+            <summary>
+            Event triggered when timer is started.
+            </summary>
+        </member>
+        <member name="E:Battlegrounds.Networking.DataStructures.ProxySynchronizedTimer.OnTimedDown">
+            <summary>
+            Even triggered when timer has timed down.
+            </summary>
+        </member>
+        <member name="E:Battlegrounds.Networking.DataStructures.ProxySynchronizedTimer.OnCancel">
+            <summary>
+            Event triggered when timer is cancelled.
+            </summary>
+        </member>
+        <member name="E:Battlegrounds.Networking.DataStructures.ProxySynchronizedTimer.OnPulse">
+            <summary>
+            Event triggered when timer is set to pulse.
+            </summary>
+        </member>
+        <member name="P:Battlegrounds.Networking.DataStructures.ProxySynchronizedTimer.RequestHandler">
+            <summary>
+            Get the request handler of the timer.
+            </summary>
+        </member>
+        <member name="P:Battlegrounds.Networking.DataStructures.ProxySynchronizedTimer.ObjectID">
+            <summary>
+            Get the Object ID of the timer.
+            </summary>
+        </member>
+        <member name="P:Battlegrounds.Networking.DataStructures.ProxySynchronizedTimer.ObjectRole">
+            <summary>
+            Get the role of the proxy.
+            </summary>
+            <remarks>
+            Role: <see cref="T:Battlegrounds.Networking.DataStructures.ISynchronizedTimer"/>
+            </remarks>
+        </member>
+        <member name="P:Battlegrounds.Networking.DataStructures.ProxySynchronizedTimer.IsStarted">
+            <summary>
+            Get if the timer has started.
+            </summary>
+        </member>
+        <member name="M:Battlegrounds.Networking.DataStructures.ProxySynchronizedTimer.#ctor(Battlegrounds.Networking.Remoting.Objects.IObjectID,Battlegrounds.Networking.Requests.IRequestHandler)">
+            <summary>
+            Create a new <see cref="T:Battlegrounds.Networking.DataStructures.ProxySynchronizedTimer"/> instance.
+            </summary>
+            <param name="objectID">The ID of the proxy.</param>
+            <param name="requestHandler">The request handler for handling communication with remote object.</param>
+        </member>
+        <member name="M:Battlegrounds.Networking.DataStructures.ProxySynchronizedTimer.Invoke(System.String,System.Object[])">
+            <summary>
+            Invoke a method on the <see cref="T:Battlegrounds.Networking.Proxy.IProxy"/>.
+            </summary>
+            <param name="method">The name of the method to invoke.</param>
+            <param name="args">The arguments to pass to the method.</param>
+            <returns>The return value of the method. If none is returned, <see langword="null"/> is returned.</returns>
+        </member>
+        <member name="M:Battlegrounds.Networking.DataStructures.ProxySynchronizedTimer.Start">
+            <summary>
+            Start the timer.
+            </summary>
+        </member>
+        <member name="M:Battlegrounds.Networking.DataStructures.ProxySynchronizedTimer.Cancel(System.Object)">
+            <summary>
+            Cancel the timer.
+            </summary>
+            <param name="argument">The argument to pass along when cancelling.</param>
+        </member>
+        <member name="M:Battlegrounds.Networking.DataStructures.ProxySynchronizedTimer.GetRemaining">
+            <summary>
+            Get the remaining amount of time.
+            </summary>
+            <returns>A <see cref="T:System.TimeSpan"/> describing the reamining time.</returns>
         </member>
         <member name="T:Battlegrounds.Networking.DataStructures.VolatileList`1">
             <summary>
