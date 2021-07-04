@@ -1951,6 +1951,12 @@
             <param name="optionValue"></param>
             <returns></returns>
         </member>
+        <member name="M:Battlegrounds.Networking.Lobby.ILobby.DisconnectPlayerByID(System.UInt64)">
+            <summary>
+            
+            </summary>
+            <param name="identifer"></param>
+        </member>
         <member name="T:Battlegrounds.Networking.Lobby.ILobbyMember">
             <summary>
             Interface representing the lobby member role.
