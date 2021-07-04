@@ -104,6 +104,7 @@ namespace Battlegrounds.Game.Database {
         /// <param name="optionsfile">The path to the options file</param>
         /// <exception cref="ArgumentNullException"/>
         public Scenario(string infofile, string optionsfile) {
+
             // Make sure infofile is not null
             if (infofile is null) {
                 throw new ArgumentNullException(nameof(infofile), "Info filepath cannot be null");
