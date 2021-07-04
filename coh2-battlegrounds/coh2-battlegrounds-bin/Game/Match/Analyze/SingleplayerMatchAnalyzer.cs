@@ -1,10 +1,11 @@
 ﻿using System.Diagnostics;
 using System.Linq;
+
 using Battlegrounds.Game.Match.Data;
 using Battlegrounds.Game.Match.Data.Events;
 
 namespace Battlegrounds.Game.Match.Analyze {
-    
+
     /// <summary>
     /// Singleplayer analysis strategy for analyzing a singleplayer match. Implementation of <see cref="IAnalyzeStrategy"/>. Can be extended with custom behaviour.
     /// </summary>

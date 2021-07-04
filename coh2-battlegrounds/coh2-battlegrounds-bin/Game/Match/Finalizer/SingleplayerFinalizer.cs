@@ -12,6 +12,7 @@ namespace Battlegrounds.Game.Match.Finalizer {
     public class SingleplayerFinalizer : IFinalizeStrategy {
 
         protected Dictionary<Player, Company> m_companies;
+        protected IAnalyzedMatch m_matchData;
 
         /// <summary>
         /// Get or set if finalizer should also notify AI company changes. Default value is <see langword="false"/>.
@@ -25,6 +26,9 @@ namespace Battlegrounds.Game.Match.Finalizer {
         }
 
         public virtual void Finalize(IAnalyzedMatch analyzedMatch) {
+
+            // Save match data (for potential use in inheriting classes
+            this.m_matchData = analyzedMatch;
 
             // Get the session
             var session = analyzedMatch.Session;
@@ -108,7 +112,7 @@ namespace Battlegrounds.Game.Match.Finalizer {
             return original;
         }
 
-        public virtual void Synchronize(object syncronizerObject) {
+        public virtual void Synchronize(object synchronizeObject) {
 
             // Make sure we log this unfortunate event
             if (this.CompanyHandler is null) {

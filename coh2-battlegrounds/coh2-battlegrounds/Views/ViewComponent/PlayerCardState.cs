@@ -9,10 +9,6 @@ namespace BattlegroundsApp.Views.ViewComponent {
     /// </summary>
     public class PlayerCardState : LobbyControlState {
 
-        public static readonly DependencyProperty StateNameProperty = DependencyProperty.Register("StateName", typeof(string), typeof(PlayerCardState));
-
-        public string StateName { get => this.GetValue(StateNameProperty) as string; set => this.SetValue(StateNameProperty, value); }
-
         public ulong SteamID { get; private set; }
 
         public bool IsLocalUser { get; private set; }

@@ -12,6 +12,8 @@ namespace BattlegroundsApp.Controls.Lobby {
         private LobbyControlState m_controlState;
         private LobbyControlContext m_context;
 
+        public string InitialState { set => this.TrySetStateByName(value); }
+
         public LobbyControlState State { get => this.m_controlState; set => this.SetState(value); }
 
         public StateChangeRequestHandler GetRequestHandler() => this.StateChangeRequest;
@@ -23,6 +25,9 @@ namespace BattlegroundsApp.Controls.Lobby {
             this.Background = Brushes.Transparent;
             this.BorderBrush = Brushes.Transparent;
             this.BorderThickness = new Thickness(0);
+            this.Padding = new Thickness(0);
+            this.VerticalAlignment = VerticalAlignment.Center;
+            this.VerticalContentAlignment = VerticalAlignment.Center;
         }
 
         public void SetState(LobbyControlState state) {
@@ -49,6 +54,17 @@ namespace BattlegroundsApp.Controls.Lobby {
         }
 
         protected virtual LobbyControlState OnStateChange(LobbyControlState newState, LobbyControlContext controlContext) => newState;
+
+        protected virtual void TrySetStateByName(string name) {
+            foreach (object item in this.Items) {
+                if (item is LobbyControlState state) {
+                    if (state.StateName == name) {
+                        this.SetState(state);
+                        break;
+                    }
+                }
+            }
+        }
 
     }
 

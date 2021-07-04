@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+
 using Battlegrounds.Game.DataCompany;
 using Battlegrounds.Game.Match;
 using Battlegrounds.Game.Match.Analyze;
@@ -9,8 +10,8 @@ using Battlegrounds.Game.Match.Finalizer;
 using Battlegrounds.Game.Match.Play;
 using Battlegrounds.Game.Match.Play.Factory;
 using Battlegrounds.Game.Match.Startup;
-using Battlegrounds.Online;
-using Battlegrounds.Online.Lobby;
+using Battlegrounds.Networking.Lobby;
+
 using BattlegroundsApp.LocalData;
 using BattlegroundsApp.Views;
 
@@ -30,13 +31,15 @@ namespace BattlegroundsApp.Models {
         private bool m_canStop = false;
 
         private GameLobbyView m_view;
-        private ManagedLobby m_lobby;
+        private LobbyHandler m_lobby;
         private MatchController m_controller;
         private PlayCancelHandler m_cancelHandler;
 
+        private HostedLobby HostedLobby => this.m_lobby.Lobby as HostedLobby;
+
         public bool CanCancel => this.m_canStop;
 
-        public LobbyHostPlayModel(GameLobbyView gameLobby, ManagedLobby lobby) {
+        public LobbyHostPlayModel(GameLobbyView gameLobby, LobbyHandler lobby) {
             this.m_view = gameLobby;
             this.m_lobby = lobby;
         }
@@ -46,8 +49,11 @@ namespace BattlegroundsApp.Models {
             // Set cancel handler
             this.m_cancelHandler = cancelHandler;
 
+            // Set to starting
+            this.HostedLobby.SetState(LobbyState.LOBBY_STARTING);
+
             // Inform local host that game is about to be started.
-            Trace.WriteLine("Start game button was clicked -- Picking startup strategy.", "GameLobbyView");
+            Trace.WriteLine("Start game button was clicked -- Picking startup strategy.", nameof(LobbyHostPlayModel));
 
             // The strategies to use
             IStartupStrategy startupStrategy = null;
@@ -55,7 +61,7 @@ namespace BattlegroundsApp.Models {
             IFinalizeStrategy finalizeStrategy = null;
 
             // Pick and initialize proper startup strategy
-            if (this.m_view.TeamManager.TotalHumanCount == 1) {
+            if (this.m_view.TeamManager.HumanCount == 1) {
 
                 // Startup strategy
                 startupStrategy = new SingleplayerStartupStrategy {
@@ -75,7 +81,7 @@ namespace BattlegroundsApp.Models {
                 };
 
                 // Log strategy choice
-                Trace.WriteLine("Using singleplayer strategy (1 human player)", "GameLobbyView");
+                Trace.WriteLine("Using singleplayer strategy (1 human player)", nameof(LobbyHostPlayModel));
 
                 // Trigger handler for self-purposes
                 this.HandleStartupInformation(null, null, "Starting match");
@@ -102,7 +108,7 @@ namespace BattlegroundsApp.Models {
                 };
 
                 // Log strategy choice
-                Trace.WriteLine($"Using multiplayer strategy ({this.m_view.TeamManager.TotalHumanCount} human players)", "GameLobbyView");
+                Trace.WriteLine($"Using multiplayer strategy ({this.m_view.TeamManager.HumanCount} human players)", nameof(LobbyHostPlayModel));
 
             }
 
@@ -122,7 +128,7 @@ namespace BattlegroundsApp.Models {
             this.m_controller.Error += this.OnError;
 
             // Log state
-            Trace.WriteLine($"The multiplayer session has been created and will now begin.", "GameLobbyView");
+            Trace.WriteLine($"The multiplayer session has been created and will now begin.", nameof(LobbyHostPlayModel));
 
             // Set flags
             this.m_shouldStop = false;
@@ -140,7 +146,7 @@ namespace BattlegroundsApp.Models {
         private void OnError(object reason, string message) {
 
             // Write to console
-            Trace.WriteLine($"[{reason}] -- {message} (OnError)", "GameLobbyView");
+            Trace.WriteLine($"[{reason}] -- {message} (OnError)", nameof(LobbyHostPlayModel));
 
             // Report the rest on the UI thread
             this.m_view.UpdateGUI(() => {
@@ -151,16 +157,10 @@ namespace BattlegroundsApp.Models {
                     // Append to lobby chat
                     this.m_view.LobbyChat.DisplayMessage($"[System] A fatal error was detected while playing.\n");
 
-                    // Trigger system message
-                    this.m_lobby.TriggerSystemMessage("A fatal error was detected while playing.");
-
                 } else if (reason is IMatchData matchEvents) {
 
                     // Append to lobby chat
                     this.m_view.LobbyChat.DisplayMessage($"[System] {message} \n");
-
-                    // Trigger system message
-                    this.m_lobby.TriggerSystemMessage(message);
 
                 }
 
@@ -168,6 +168,9 @@ namespace BattlegroundsApp.Models {
                 this.m_cancelHandler.Invoke();
 
             });
+
+            // Update lobby state
+            this.HostedLobby.SetState(LobbyState.LOBBY_INLOBBY);
 
         }
 
@@ -181,6 +184,10 @@ namespace BattlegroundsApp.Models {
                 this.m_cancelHandler.Invoke();
 
             });
+
+            // Update lobby state
+            this.HostedLobby.SetState(LobbyState.LOBBY_INLOBBY);
+
         }
 
         public void CancelGame() {
@@ -188,11 +195,16 @@ namespace BattlegroundsApp.Models {
             // Tell the match to stop
             this.m_shouldStop = true;
 
-            // Tell startup to cancel
-            this.m_lobby.GetConnection().SendSelfMessage(new Message(MessageType.LOBBY_CANCEL));
+            // Send cancel
+            if (this.m_lobby.MatchStartTimer is not null && this.m_lobby.MatchStartTimer.IsStarted) {
+                this.m_lobby.MatchStartTimer.Cancel(this.m_lobby.Self.Name);
+            }
 
             // Invoke the cancel handler
             this.m_cancelHandler?.Invoke();
+
+            // Update lobby state
+            this.HostedLobby.SetState(LobbyState.LOBBY_INLOBBY);
 
         }
 
@@ -207,6 +219,9 @@ namespace BattlegroundsApp.Models {
                 }
             });
 
+            // Update lobby state
+            this.HostedLobby.SetState(LobbyState.LOBBY_INLOBBY);
+
             return this.m_shouldStop;
 
         }
@@ -215,8 +230,12 @@ namespace BattlegroundsApp.Models {
 
         private void HandleStartupInformation(IStartupStrategy strategy, object caller, string message) {
             if (caller == this.m_lobby && strategy is OnlineStartupStrategy) {
-                this.m_lobby.TriggerSystemMessage(message);
+                this.m_view.LobbyChat.DisplayMessage($"[System] {message}");
             } else {
+                if (message == "Launching game...") {
+                    // Update lobby state
+                    this.HostedLobby.SetState(LobbyState.LOBBY_PLAYING); // TEMP - FIND BETTER LOCATION FOR THIS
+                }
                 this.m_view.UpdateGUI(() => {
                     this.m_view.LobbyChat.DisplayMessage($"[System] {message}{Environment.NewLine}");
                 });

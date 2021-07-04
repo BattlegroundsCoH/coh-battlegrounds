@@ -14,6 +14,8 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Resources\app\padlock_locked.png" />
+    <None Remove="Resources\app\padlock_open.png" />
     <None Remove="Resources\campaign\icon_attrition.png" />
     <None Remove="Resources\campaign\icon_unittype_air.png" />
     <None Remove="Resources\campaign\icon_unittype_arty.png" />
@@ -223,7 +225,22 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="Resources\app\padlock_locked.png" />
+    <Resource Include="Resources\app\padlock_open.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.Diagnostics.Contracts" Version="4.3.0" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\coh2-battlegrounds-bin\coh2-battlegrounds-bin.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="coh2-battlegrounds-networking">
+      <HintPath>..\coh2-battlegrounds-networking.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
   <ItemGroup>

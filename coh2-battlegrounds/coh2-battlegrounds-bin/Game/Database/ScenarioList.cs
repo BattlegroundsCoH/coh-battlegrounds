@@ -278,7 +278,7 @@ namespace Battlegrounds.Game.Database {
         /// </summary>
         /// <param name="filename"></param>
         /// <returns></returns>
-        public static Scenario FromRelativeFilename(string filename) => __scenarios.FirstOrDefault(x => x.Value.RelativeFilename.CompareTo(filename) == 0).Value;
+        public static Scenario FromRelativeFilename(string filename) => __scenarios.FirstOrDefault(x => x.Value.RelativeFilename == filename).Value;
 
         /// <summary>
         /// 

@@ -8,8 +8,8 @@ using System.Threading;
 using Battlegrounds.Compiler;
 using Battlegrounds.Game.DataCompany;
 using Battlegrounds.Game.Match.Play;
-using Battlegrounds.Online;
-using Battlegrounds.Online.Lobby;
+using Battlegrounds.Networking.Lobby;
+using Battlegrounds.Networking.Lobby.Match;
 using Battlegrounds.Online.Services;
 
 namespace Battlegrounds.Game.Match.Startup {
@@ -32,62 +32,51 @@ namespace Battlegrounds.Game.Match.Startup {
         private List<Company> m_playerCompanies;
         private SessionInfo m_sessionInfo;
         private Session m_session;
-        private int m_humanCount;
+
+        private ManualResetEventSlim m_beginWaitHandle;
 
         public OnlineStartupStrategy() {
-            this.m_playerCompanies = null;
             this.m_session = null;
+            this.m_beginWaitHandle = new(false);
         }
 
         public override bool OnBegin(object caller) { // This can be cancelled by host as well by sending a self-message through the connection object.
 
             // Get managed lobby
-            ManagedLobby lobby = caller as ManagedLobby;
+            LobbyHandler lobby = caller as LobbyHandler;
+            lobby.API.SetLobbyGuid(lobby.Connection.ConnectionID);
 
-            // Send begin
-            if (lobby.GetConnection() is Connection connection) {
+            // Should stop?
+            bool shouldStop = false;
 
-                // Should stop?
-                bool shouldStop = false;
-                string sender = string.Empty;
+            // Get timer
+            lobby.MatchStartTimer = lobby.MatchContext.GetStartTimer(5, 1.5);
+            lobby.MatchStartTimer.OnPulse += x => this.StartMatchWait?.Invoke((int)x.TotalSeconds);
+            lobby.MatchStartTimer.OnTimedDown += () => this.m_beginWaitHandle.Set();
+            lobby.MatchStartTimer.OnCancel += x => {
+                shouldStop = true;
+                this.m_beginWaitHandle.Set();
+            };
 
-                // Send starting message with timeout and wait for stop listener
-                connection.SendMessageWithResponseListener(new Message(MessageType.LOBBY_STARTING, this.StopMatchSeconds.ToString()), 
-                    MessageType.LOBBY_CANCEL,
-                    x => {
-                        shouldStop = true; sender = x.Argument1;
-                    }
-                );
+            // Wait
+            this.m_beginWaitHandle.Wait();
 
-                // If we get stop message, false is returned, otherwise, if we timeout, return true (received no stop message).
-                // 1000 ms * StopMatchSeconds attempts = StopMatchSeconds seconds to stop match from starting.
-                bool result = SyncService.WaitAndPulseUntil(() => shouldStop == true, this.StartMatchWait, this.StopMatchSeconds, 1000);
-
-                // Remove cancel listener
-                connection.ClearTypeListener(MessageType.LOBBY_CANCEL);
-
-                // Did we timeout?
-                if (result) {
-                    this.OnFeedback(caller, $"Match will soon begin");
-                } else {
-                    this.OnFeedback(caller, $"{sender} has stopped the match.");
-                }
-
-                // Return result
-                return result;
-
+            // Did we timeout?
+            if (!shouldStop) {
+                this.OnFeedback(caller, $"Match will soon begin");
             } else {
-                
-                return false; // No connection to lobby
-
+                this.OnFeedback(caller, $"The match countdown was stopped.");
             }
+
+            // Return result
+            return !shouldStop;
 
         }
 
         public override bool OnPrepare(object caller) {
 
             // Get managed lobby
-            ManagedLobby lobby = caller as ManagedLobby;
+            LobbyHandler lobby = caller as LobbyHandler;
 
             // TODO: Check if local player is participating - if not, continue, otherwise, error out.
 
@@ -99,93 +88,74 @@ namespace Battlegrounds.Game.Match.Startup {
         public override bool OnCollectCompanies(object caller) {
 
             // Get managed lobby
-            ManagedLobby lobby = caller as ManagedLobby;
+            LobbyHandler lobby = caller as LobbyHandler;
+            ILobbyMatchContext context = lobby.MatchContext;
 
             // Initialize variables
-            bool success = false;
             this.m_playerCompanies = new List<Company>();
 
-            // Calculate amount of human players (exluding the host).
-            this.m_humanCount = -1;
-            lobby.Teams.ForEach(x => x.ForEachMember(y => this.m_humanCount += y is HumanLobbyMember ? 1 : 0));
+            // Request companies
+            context.RequestCompanies();
 
-            // Keep an attempts counter
-            int attempts = 0;
+            // Wait slightly
+            Thread.Sleep(100);
 
-            // Keep track of members from which it was possible to find company files.
-            HashSet<HumanLobbyMember> members = new HashSet<HumanLobbyMember>();
+            // Attempt counter
+            DateTime time = DateTime.Now;
 
-            // While not all human companies have been downloaded and attempts are still below 100
-            while (members.Count != this.m_humanCount && attempts < 100) {
-
-                // Go through each team and its members
-                lobby.Teams.ForEach(x => {
-                    x.ForEachMember(y => {
-                        if (!members.Contains(y)) { // If we've not yet downloaded this members company
-                            if (y is HumanLobbyMember && y.ID != lobby.Self.ID) { // and this member is a human and not self.
-
-                                 // Define destination
-                                string destination = BattlegroundsInstance.GetRelativePath(BattlegroundsPaths.SESSION_FOLDER, $"{y.ID}_company.json");
-
-                                // Try and download the company
-                                if (lobby.GetLobbyCompany(y.ID, destination)) {
-
-                                    // Read in the company file and add to list.
-                                    Company company = Company.ReadCompanyFromFile(destination);
-                                    company.Owner = y.ID.ToString();
-
-                                    // Register member in downloaded set.
-                                    this.m_playerCompanies.Add(company);
-                                    members.Add(y as HumanLobbyMember);
-
-                                    // Log that we downloaded user company
-                                    Trace.WriteLine($"Downloaded company for user {y.ID} ({y.Name}) titled '{company.Name}'", "OnlineStartupStrategy");
-                                    this.OnFeedback(caller, $"Received company from {y.Name}");
-
-                                } else { // If fail, log and try again in 100ms
-                                    Trace.WriteLine($"Failed to download company for user {y.ID}. Will attempt again in 100ms", "OnlineStartupStrategy");
-                                    // TODO: Send message to user it wasn't possible to download their file.
-                                }
-                            }
-                        }
-                    });
-                });
-
-                // Wait 100ms to give users a chance to uploaded
+            // Wait for all companies to be uploaded
+            while ((DateTime.Now - time).TotalSeconds < 5 && !context.HasAllPlayerCompanies()) {
                 Thread.Sleep(100);
-
-                // Increase attempts counter
-                attempts++;
-
             }
 
-            // Did we get all members?
-            success = members.Count == this.m_humanCount;
+            // Collect companies
+            int count = context.CollectPlayerCompanies(x => {
 
-            // Log
-            Trace.WriteLine($"Found {members.Count} and expected {this.m_humanCount}, following {attempts} attempts, thus retrieving companies will return {success}", "OnlineStartupStrategy");
+                try {
+
+                    // Read in the company file and add to list.
+                    Company company = Company.ReadCompanyFromString(x.playerCompanyData);
+                    company.Owner = x.playerID.ToString();
+
+                    // Register company
+                    this.m_playerCompanies.Add(company);
+
+                    // Log
+                    Trace.WriteLine($"Downloaded company from user {x.playerID} titled '{company.Name}'", nameof(OnlineStartupStrategy));
+
+                } catch {
+
+                    // Log
+                    Trace.WriteLine($"Failed to download company from user {x.playerID}.", nameof(OnlineStartupStrategy));
+
+                }
+
+            });
 
             // Log depending on outcome
-            if (success) {
+            if (count > 0) {
 
                 // Log
                 this.OnFeedback(null, $"Received all company files.");
 
             } else {
+
+                // Log
                 this.OnFeedback(null, $"Failed to receive one or more company files.");
+
             }
 
             // Return success value;
-            return success;
+            return count == lobby.Lobby.Humans - 1;
 
         }
 
         public override bool OnCollectMatchInfo(object caller) {
 
             // Invoke the external session info collector
-            var info = this.SessionInfoCollector?.Invoke();
+            SessionInfo? info = this.SessionInfoCollector?.Invoke();
             if (info.HasValue) {
-                
+
                 // Get session info
                 this.m_sessionInfo = info.Value;
 
@@ -219,10 +189,10 @@ namespace Battlegrounds.Game.Match.Startup {
         public override bool OnCompile(object caller) {
 
             // Get managed lobby
-            ManagedLobby lobby = caller as ManagedLobby;
+            LobbyHandler lobby = caller as LobbyHandler;
 
             // Create compiler
-            var compiler = this.GetSessionCompiler();
+            ISessionCompiler compiler = this.GetSessionCompiler();
             compiler.SetCompanyCompiler(this.GetCompanyCompiler());
 
             // Send feedback that match data is being compiled
@@ -237,17 +207,11 @@ namespace Battlegrounds.Game.Match.Startup {
             this.OnFeedback(caller, "Gamemode has been compiled and is being uploaded");
 
             // Return true
-            return UploadGamemode(lobby);
+            return UploadGamemode(lobby.MatchContext);
 
         }
 
-        private static bool UploadGamemode(ManagedLobby lobby) {
-
-            // Get the connection
-            Connection connection = lobby.GetConnection();
-            if (connection is null) {
-                return false;
-            }
+        private static bool UploadGamemode(ILobbyMatchContext matchContext) {
 
             // Get path to win condition
             string sgapath = $"{Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)}\\my games\\Company of Heroes 2\\mods\\gamemode\\subscriptions\\coh2_battlegrounds_wincondition.sga";
@@ -255,18 +219,11 @@ namespace Battlegrounds.Game.Match.Startup {
             // Verify the archive file actually exists
             if (File.Exists(sgapath)) {
 
-                // Upload (and make sure the file was uploaded)
-                if (FileHub.UploadFile(sgapath, "gamemode.sga", lobby.LobbyFileID)) {
+                // Read binary
+                byte[] gamemode = File.ReadAllBytes(sgapath);
 
-                    // Return true
-                    return true;
-
-                } else {
-
-                    // Failed to upload gamemode
-                    return false;
-
-                }
+                // Upload gamemode
+                return matchContext.UploadGamemode(gamemode);
 
             } else {
 
@@ -280,43 +237,12 @@ namespace Battlegrounds.Game.Match.Startup {
         public override bool OnWaitForStart(object caller) { // Wait for all players to notify they've downloaded and installed the gamemode.
 
             // Get lobby
-            var lobby = caller as ManagedLobby;
+            LobbyHandler lobby = caller as LobbyHandler;
 
-            // Get the connection
-            Connection connection = lobby.GetConnection();
-            if (connection is null) {
-                return false;
-            }
+            // Tell context to launch
+            lobby.MatchContext.LaunchMatch();
 
-            // The "ok" messages
-            int sentOK = 0;
-
-            // The response handler
-            void OnResponse(Message message) {
-                if (message.Descriptor == MessageType.CONFIRMATION_MESSAGE) {
-                    sentOK++;
-                } else if (message.Descriptor == MessageType.ERROR_MESSAGE) {
-                    this.OnCancel(caller, "Failed to receive gamemode.");
-                } else {
-                    Trace.WriteLine(message.Argument1, "OnlineStartupStrategy");
-                }
-            }
-
-            // Notify lobby players the gamemode is available
-            int id = connection.SendMessageWithResponse(new Message(MessageType.LOBBY_NOTIFY_GAMEMODE), OnResponse);
-
-            // Wait until condition
-            bool timeout = SyncService.WaitUntil(() => sentOK >= this.m_humanCount, 100, 50).Then(() => { 
-                // TODO: Handle
-            });
-
-            // Clear the identifier
-            connection.ClearIdentifierReceiver(id);
-
-            // return false if timed out
-            if (timeout) {
-                return false;
-            }
+            // TODO: Add verification check
 
             // Return true -> All players have downloaded the gamemode.
             return true;
@@ -324,46 +250,6 @@ namespace Battlegrounds.Game.Match.Startup {
         }
 
         public override bool OnWaitForAllToSignal(object caller) { // Wait for all players to signal they've launched
-
-            // Get lobby
-            var lobby = caller as ManagedLobby;
-
-            // Get the connection
-            Connection connection = lobby.GetConnection();
-            if (connection is null) {
-                return false;
-            }
-
-            // The "ok" messages
-            int sentOK = 0;
-
-            // The response handler
-            void OnResponse(Message message) {
-                if (message.Descriptor == MessageType.CONFIRMATION_MESSAGE) {
-                    sentOK++;
-                    this.OnFeedback(null, $"{message.Argument1} has started the game.");
-                } else if (message.Descriptor == MessageType.ERROR_MESSAGE) {
-                    this.OnCancel(caller, "Failed to make player start game.");
-                } else {
-                    Trace.WriteLine(message.Argument1, "OnlineStartupStrategy");
-                }
-            }
-
-            // Notify lobby players the gamemode is available
-            int id = connection.SendMessageWithResponse(new Message(MessageType.LOBBY_STARTMATCH), OnResponse);
-
-            // Wait until condition
-            bool timeout = SyncService.WaitUntil(() => sentOK >= this.m_humanCount, 100, 50).Then(() => {
-                // TODO: Handle
-            });
-
-            // Clear the identifier
-            connection.ClearIdentifierReceiver(id);
-
-            // return false if timed out
-            if (timeout) {
-                return false;
-            }
 
             // Return true -> All players have launched
             return true;

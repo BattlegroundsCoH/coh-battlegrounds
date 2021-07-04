@@ -1,7 +1,9 @@
 ﻿using System.Diagnostics;
-using Battlegrounds.Online;
-using Battlegrounds.Online.Lobby;
-using Battlegrounds.Online.Services;
+using System.Linq;
+
+using Battlegrounds.Networking.Lobby;
+using Battlegrounds.Networking.Lobby.Match;
+using Battlegrounds.Networking.Server;
 
 namespace Battlegrounds.Game.Match.Finalizer {
 
@@ -14,38 +16,24 @@ namespace Battlegrounds.Game.Match.Finalizer {
 
             // Make sure we log this unfortunate event
             if (this.CompanyHandler is null) {
-                Trace.WriteLine("{Warning} -- The company handler is NULL and changes will therefore not be saved!", "MultiplayerFinalizer");
+                Trace.WriteLine("{Warning} -- The company handler is NULL and changes will therefore not be saved!", nameof(MultiplayerFinalizer));
             }
 
-            // Get the lobby object
-            var lobby = synchronizeObject as ManagedLobby;
+            // Get handler
+            LobbyHandler handler = synchronizeObject as LobbyHandler;
 
-            // Get the connection
-            if (lobby.GetConnection() is Connection connection) {
+            // Get player results
+            LobbyPlayerCompanyFile[] playerFiles = this.m_companies.Select(x => new LobbyPlayerCompanyFile(x.Key.SteamID, x.Value.SaveToString())).ToArray();
+            ServerMatchResults matchResults = new() {
+                Gamemode = this.m_matchData.Session.Gamemode.Name,
+                Map = this.m_matchData.Session.Scenario.RelativeFilename,
+                Option = "0",
+                Length = this.m_matchData.Length,
+                LengthTicks = this.m_matchData.Length.Ticks,
+            };
 
-                // Upload all external user companies and save own company on local machine
-                foreach (var pair in this.m_companies) {
-                    if (pair.Key.IsAIPlayer) {
-                        continue;
-                    }
-                    if (!BattlegroundsInstance.IsLocalUser(pair.Key.ID)) {
-
-                        string uploadName = $"{pair.Key.ID}_company.json";
-                        byte[] companyBytes = pair.Value.ToBytes();
-
-                        if (!FileHub.UploadFile(companyBytes, uploadName, lobby.LobbyFileID)) {
-                            // TODO: Handle
-                        }
-
-                    } else {
-                        this.CompanyHandler?.Invoke(pair.Value);
-                    }
-                }
-
-                // Send message to external users that they can now get their updated company from the filehub.
-                connection.SendMessage(new Message(MessageType.LOBBY_NOTIFY_MATCH));
-
-            }
+            // Inform members the results are available
+            handler.MatchContext.UploadResults(matchResults, playerFiles);
 
         }
 

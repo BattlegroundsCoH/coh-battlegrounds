@@ -45,7 +45,8 @@ namespace BattlegroundsApp.Controls.Lobby.Components {
         }
 
         public LobbyButton() {
-            InitializeComponent();
+            this.InitializeComponent();
+            this.DataContext = this;
             this.SelfButton.Click += this.HandleButton_Click;
             this.HostButton.Click += this.HandleButton_Click;
         }

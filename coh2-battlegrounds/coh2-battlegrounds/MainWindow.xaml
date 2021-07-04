@@ -7,7 +7,7 @@
         xmlns:views="clr-namespace:BattlegroundsApp.Views"
         xmlns:caseConverter="clr-namespace:BattlegroundsApp.Utilities.Converters"
         mc:Ignorable="d"
-        Title="Battlegrounds" Height="1080" Width="1920" WindowStartupLocation="CenterScreen" WindowStyle="SingleBorderWindow" MinHeight="850" MinWidth="1400">
+        Title="Battlegrounds" Height="540" Width="960" WindowStartupLocation="CenterScreen" WindowStyle="SingleBorderWindow" MinHeight="850" MinWidth="1400">
     <local:CoreAppWindow.Background>
         <ImageBrush ImageSource="pack://application:,,,/Resources/ingame/application/app_background.png"/>
     </local:CoreAppWindow.Background>

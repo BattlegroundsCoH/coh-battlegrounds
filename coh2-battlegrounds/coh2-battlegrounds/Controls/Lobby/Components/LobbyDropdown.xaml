@@ -19,7 +19,7 @@
                 DockPanel.Dock="Left" 
                 Padding="1.75,0,5,0" 
                 VerticalAlignment="Center"/>
-            <ComboBox x:Name="SelfOptions"/>
+            <ComboBox x:Name="SelfOptions" SelectedIndex="{Binding SelectedIndex}"/>
         </DockPanel>
     </lobby:SelfState>
     <lobby:OtherState>

@@ -38,10 +38,11 @@
                             <Setter Property="IsHitTestVisible" Value="False"/>
                         </Style>
                     </GridView.ColumnHeaderContainerStyle>
-                    <GridViewColumn Header="Name" Width="525" DisplayMemberBinding="{Binding LobbyName}"/>
-                    <GridViewColumn Header="Players" Width="100" DisplayMemberBinding="{Binding LobbyPlayers}"/>
-                    <GridViewColumn Header="Map" Width="100" DisplayMemberBinding="{Binding LobbyMap}"/>
-                    <GridViewColumn Header="Password" Width="75" DisplayMemberBinding="{Binding IsPasswordProtected}"/>
+                    <GridViewColumn Header="Name" Width="320" DisplayMemberBinding="{Binding Name}"/>
+                    <GridViewColumn Header="Gamemode" Width="175" DisplayMemberBinding="{Binding TranslatedMode}"/>
+                    <GridViewColumn Header="State" Width="125" DisplayMemberBinding="{Binding TranslatedState}"/>
+                    <GridViewColumn Header="Players" Width="100" DisplayMemberBinding="{Binding CapacityString}"/>
+                    <GridViewColumn Header="Password" Width="80" DisplayMemberBinding="{Binding HasPassword}"/>
                 </GridView>
             </ListView.View>
         </ListView>

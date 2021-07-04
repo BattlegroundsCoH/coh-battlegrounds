@@ -15,6 +15,8 @@ namespace Battlegrounds.Game.Match.Analyze {
 
         public ISession Session => null;
 
+        public TimeSpan Length => TimeSpan.MaxValue;
+
         public bool CompileResults() => true;
 
         public bool IsWinner(Player player) => false;

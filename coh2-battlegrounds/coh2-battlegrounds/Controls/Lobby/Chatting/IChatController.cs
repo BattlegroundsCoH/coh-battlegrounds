@@ -1,11 +1,11 @@
 ﻿namespace BattlegroundsApp.Controls.Lobby.Chatting {
 
     /// <summary>
-    /// Delegate for handing receiving messages.
+    /// Delegate for handling sending messages.
     /// </summary>
-    /// <param name="sender">The user or system sending message.</param>
+    /// <param name="channel">The channel ID</param>
     /// <param name="message">The actual message.</param>
-    public delegate void ChatMessageReceived(string sender, string message);
+    public delegate void ChatMessageSent(int channel, string message);
 
     /// <summary>
     /// Interface for bridging interactions between a chat UI and actual chat handler.
@@ -13,20 +13,9 @@
     public interface IChatController {
 
         /// <summary>
-        /// Occurs whenever a chat message is received.
+        /// Occurs whenever a chat message is sent.
         /// </summary>
-        event ChatMessageReceived OnReceived;
-
-        /// <summary>
-        /// Get the display name of self.
-        /// </summary>
-        string Self { get; }
-
-        /// <summary>
-        /// Send a message from the UI to other chat members.
-        /// </summary>
-        /// <param name="message">The string message to send.</param>
-        void SendChatMessage(string message);
+        ChatMessageSent OnSend { get; }
 
     }
 

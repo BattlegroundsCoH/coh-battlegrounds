@@ -1,222 +1,133 @@
 ﻿using System;
-using System.Text;
+using System.IO;
+using System.Diagnostics;
 using System.Threading.Tasks;
 
-using Battlegrounds;
-using Battlegrounds.Json;
-using Battlegrounds.Online;
-using Battlegrounds.Online.Lobby;
 using Battlegrounds.Game.Match;
 using Battlegrounds.Game.Match.Data;
 using Battlegrounds.Game.Match.Play;
 using Battlegrounds.Game.DataCompany;
-using Battlegrounds.Verification;
+
+using Battlegrounds.Networking.Lobby;
+using Battlegrounds.Networking.Requests;
+using Battlegrounds.Networking.DataStructures;
 
 using BattlegroundsApp.Views;
 using BattlegroundsApp.LocalData;
 
 namespace BattlegroundsApp.Models {
-    
+
     public class LobbyMemberPlayModel : ILobbyPlayModel {
 
-        private int m_maxTime = 0;
-        private int m_remainingTime = 0;
-        private bool m_canStop = false;
-        private ManagedLobby m_lobby;
+        private LobbyHandler m_lobby;
         private GameLobbyView m_view;
         private IMatchData m_playResults;
         private ISession m_session;
         private PlayCancelHandler m_cancelHandler;
+        private ISynchronizedTimer m_timer;
 
-        public bool CanCancel => this.m_canStop;
+        public bool CanCancel { get; private set; }
 
-        public LobbyMemberPlayModel(GameLobbyView view, ManagedLobby lobby) {
+        public LobbyMemberPlayModel(GameLobbyView view, LobbyHandler lobby) {
+
+            // Set fields
             this.m_lobby = lobby;
             this.m_view = view;
-        }
 
-        public void StartCountdown(int time) {
-            this.m_canStop = true;
-            this.m_maxTime = time;
-            this.m_remainingTime = time;
-            this.DoCountdownAndUpdate();
-        }
+            // Add events
+            lobby.Lobby.StartGame = this.OnStartMatch;
+            lobby.Lobby.GamemodeAvailable = this.OnGamemodeAvailable;
+            lobby.Lobby.ResultsAvailable = this.OnResultsAvailable;
+            lobby.Lobby.GetCompany = this.OnGetCompany;
 
-        private async void DoCountdownAndUpdate() {
-            this.m_remainingTime = this.m_maxTime;
-            while (this.m_remainingTime > 0) {
-                _ = this.m_view.UpdateGUI(() => {
-                    this.m_view.StartGameBttn.Content = $"Stop Match ({this.m_remainingTime}s)";
-                    this.m_view.StartGameBttn.ToolTip = "Stop the match from starting";
-                });
-                await Task.Delay(1000);
-                this.m_remainingTime--;
+            // Get timer publish
+            if (lobby.RequestHandler is ParticipantRequestHandler participant) {
+                participant.ObjectPublished += x => {
+                    if (x is ISynchronizedTimer y) {
+                        Trace.WriteLine("Received timer object.", nameof(LobbyMemberPlayModel));
+                        this.m_timer = y;
+                        ISynchronizedTimer.RegisterEvents(y,
+                            this.TimerOver,
+                            this.StartCountdown,
+                            this.CancelTimerExternal,
+                            this.Pulse);
+                    }
+                };
+            } else {
+                Trace.WriteLine($"Error: Cannot register timer on requesthandler {lobby.RequestHandler.GetType().Name}", nameof(LobbyMemberPlayModel));
             }
-            this.m_canStop = false;
+
+        }
+
+        public void StartCountdown() {
+            Trace.WriteLine("Started countdown", nameof(LobbyMemberPlayModel));
             _ = this.m_view.UpdateGUI(() => {
-                this.m_view.StartGameBttn.Content = $"Start Match";
-                this.m_view.StartGameBttn.ToolTip = "Only the host can start the match";
+                this.m_view.LobbyChat.DisplayMessage($"[System] The host has pressed the start match button.");
+                this.CanCancel = true;
             });
         }
+
+        private void Pulse(TimeSpan time) {
+            Trace.WriteLine($"Timer pulse : {time}", nameof(LobbyMemberPlayModel));
+            _ = this.m_view.UpdateGUI(() => {
+                this.m_view.LobbyChat.DisplayMessage($"[System] The match will start in {(int)time.TotalSeconds} seconds.");
+            });
+        }
+
+        private void CancelTimerExternal(object arg) {
+            Trace.WriteLine("Stopped countdown", nameof(LobbyMemberPlayModel));
+            _ = this.m_view.UpdateGUI(() => {
+                if (arg is null) {
+                    arg = "the host";
+                }
+                this.m_view.LobbyChat.DisplayMessage($"[System] The match countdown was stopped by {arg}.");
+                this.CanCancel = false;
+            });
+        }
+
+        private void TimerOver() => this.m_view.UpdateGUI(() => {
+            this.m_view.LobbyChat.DisplayMessage($"[System] The match will begin shortly.");
+            this.CanCancel = false;
+        });
 
         public void CreateSession(string guid) => this.m_session = new RemoteSession(guid);
 
-        public void PlayGame(PlayCancelHandler cancelHandler) {
+        public void PlayGame(PlayCancelHandler cancelHandler) => this.m_cancelHandler = cancelHandler; // Assign cancel handler
 
-            // Assign cancel handler
-            this.m_cancelHandler = cancelHandler;
+        private void OnResultsAvailable(string jsondata) {
 
-            // Set listeners
-            this.m_lobby.AddListener(MessageType.LOBBY_STARTMATCH, this.OnStartMatch);
-            this.m_lobby.AddListener(MessageType.LOBBY_SYNCMATCH, this.OnSyncMatch);
-            this.m_lobby.AddListener(MessageType.LOBBY_NOTIFY_GAMEMODE, this.OnGamemodeAvailable);
-            this.m_lobby.AddListener(MessageType.LOBBY_NOTIFY_MATCH, this.OnResultsAvailable);
-            this.m_lobby.AddListener(MessageType.LOBBY_SYSINFO, this.OnSysInfo, true);
+            // Load company
+            Company company = Company.ReadCompanyFromString(jsondata);
+
+            // Now save the company
+            PlayerCompanies.SaveCompany(company);
 
         }
 
-        private void OnSysInfo(Message message) {
-            this.m_view.UpdateGUI(() => {
-                this.m_view.LobbyChat.DisplayMessage($"{message.Argument1}\n");
-            });
-        }
-
-        private void OnResultsAvailable(Message message) {
-
-            // Define save location
-            string path = BattlegroundsInstance.GetRelativePath(BattlegroundsPaths.SESSION_FOLDER, "updated_company.json");
-
-            // Download file
-            if (this.m_lobby.DownloadFile($"{this.m_lobby.Self.ID}_company.json", path)) {
-
-                // Download company
-                Company company = null;
-
-                try {
-
-                    // Try and load the company
-                    company = Company.ReadCompanyFromFile(path);
-
-                    // Now save the company
-                    PlayerCompanies.SaveCompany(company);
-
-                } catch (ChecksumViolationException check) {
-
-                    // Answer host
-                    this.m_lobby.AnswerMessage(message, MessageType.ERROR_MESSAGE, check.Message);
-
-                    // Inform user the gamemode was NOT validated
-                    this.m_view.UpdateGUI(() => {
-                        this.m_view.LobbyChat.DisplayMessage($"[System] Updated company failed validation.\n");
-                    });
-
-                    // Stop here
-                    return;
-
-                }
-
-                // Answer host
-                this.m_lobby.AnswerMessage(message, MessageType.CONFIRMATION_MESSAGE, string.Empty);
-
-                // Inform user the gamemode was NOT downloaded
-                this.m_view.UpdateGUI(() => {
-                    this.m_view.LobbyChat.DisplayMessage($"[System] Updated company \"{company.Name}\" with match information.\n");
-                });
-
-            } else {
-
-                // Answer host
-                this.m_lobby.AnswerMessage(message, MessageType.ERROR_MESSAGE, "Failed to download.");
-
-                // Inform user the gamemode was NOT downloaded
-                this.m_view.UpdateGUI(() => {
-                    this.m_view.LobbyChat.DisplayMessage($"[System] Updated company failed to download.\n");
-                });
-
-            }
-
-        }
-
-        private void OnGamemodeAvailable(Message message) {
+        private void OnGamemodeAvailable(byte[] binary) {
 
             // Define save location
             string path = $"{Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)}\\my games\\Company of Heroes 2\\mods\\gamemode\\subscriptions\\coh2_battlegrounds_wincondition.sga";
 
-            // Try and download
-            if (this.m_lobby.DownloadFile("gamemode.sga", path)) {
-                
-                // Answer host
-                this.m_lobby.AnswerMessage(message, MessageType.CONFIRMATION_MESSAGE, string.Empty);
-
-                // Inform user the gamemode was downloaded
-                this.m_view.UpdateGUI(() => {
-                    this.m_view.LobbyChat.DisplayMessage($"[System] Gamemode was downloaded and installed.\n");
-                });
-
-            } else {
-                
-                // Answer host
-                this.m_lobby.AnswerMessage(message, MessageType.ERROR_MESSAGE, "Failed to download.");
-
-                // Inform user the gamemode was NOT downloaded
-                this.m_view.UpdateGUI(() => {
-                    this.m_view.LobbyChat.DisplayMessage($"[System] Gamemode failed to download - Stopping match.\n");
-                });
-
+            // Remove file if it already exists
+            if (File.Exists(path)) {
+                File.Delete(path);
             }
 
-        }
-        
-        private void OnSyncMatch(Message message) {
-
-            // Create session
-            this.CreateSession(message.Argument1);
-
-            // Get json playback
-            if (this.m_playResults is JsonPlayback playback) {
-
-                // Serialize and convert to bytes
-                string json = playback.SerializeAsJson();
-                byte[] bytes = Encoding.UTF8.GetBytes(json);
-
-                // Upload company
-                if (this.m_lobby.UploadPlayback(bytes)) {
-                    this.m_lobby.AnswerMessage(message, MessageType.CONFIRMATION_MESSAGE, string.Empty);
-                } else {
-                    this.m_lobby.AnswerMessage(message, MessageType.ERROR_MESSAGE, "Failed to upload.");
-                }
-
-            } else {
-                // TODO: Handle
-            }
-
-        }
-        
-        private void OnStartMatch(Message message) {
-
-            // Response callback for letting the host know the game was launched.
-            void Respond(bool isLaunched) {
-                if (isLaunched) {
-                    this.m_lobby.AnswerMessage(message, MessageType.CONFIRMATION_MESSAGE, string.Empty);
-                } else {
-                    this.m_lobby.AnswerMessage(message, MessageType.ERROR_MESSAGE, "Failed to launch game.");
-                }
-            }
-
-            // Launch game
-            this.WatchoverPlaySession(Respond);
+            // Write file
+            File.WriteAllBytes(path, binary);
 
         }
 
-        private async void WatchoverPlaySession(Action<bool> launchCallback) {
+        private async void OnStartMatch() {
             await Task.Run(() => {
+
+                // Create session
+                this.CreateSession(new Guid().ToString());
 
                 // Create strategy and launch game
                 MemberOverwatchStrategy strategy = new MemberOverwatchStrategy(this.m_session);
                 strategy.Launch();
-
-                // Invoke callback
-                launchCallback?.Invoke(strategy.IsLaunched);
 
                 // If launched
                 if (strategy.IsLaunched) {
@@ -231,32 +142,62 @@ namespace BattlegroundsApp.Models {
                         this.m_playResults = strategy.GetResults();
 
                     } else {
-                        
-                        // Let the host know a problem occured
-                        this.m_lobby.SendClientProblem(true, "Game crashed or scar error was detected.");
+
+                        // Log
+                        Trace.WriteLine("Game crashed or scar error was detected. -- Currently no error is sent to HOST!!!!", nameof(LobbyMemberPlayModel));
 
                     }
 
                 }
 
             });
+
+        }
+
+        private string OnGetCompany() {
+
+            // Get self from team manager
+            Company self = null;
+
+            // Invoke the following on the GUI thread and wait for it to compute.
+            _ = this.m_view.UpdateGUI(() => {
+                self = this.m_view.GetLocalCompany();
+            }).Wait();
+
+            // Make sure we're valid
+            if (self is not null) {
+
+                // Get string
+                string json = self.SaveToString();
+                Trace.WriteLine($"Uploading json data: {json}", nameof(LobbyMemberPlayModel));
+
+                // Convert to json
+                return json;
+
+            } else {
+
+                // Log failure
+                Trace.WriteLine("Failed to find local company and returning NULL!", nameof(LobbyMemberPlayModel));
+
+                // Return empty object
+                return "{}";
+
+            }
+
         }
 
         public void CancelGame() {
 
             // If we can stop, send cancel message
-            if (this.m_canStop) {
-                this.m_lobby.SendCancelMessage();
+            if (this.CanCancel) {
+                this.m_lobby.MatchStartTimer.Cancel(this.m_lobby.Self.Name);
             }
-
-            // Unsubscribe from events
-            // TODO: Implement
 
             // Invoke the cancel handler
             this.m_cancelHandler?.Invoke();
 
         }
-    
+
     }
 
 }
