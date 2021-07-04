@@ -4,12 +4,12 @@ using System.Net;
 using System.Text;
 
 namespace Battlegrounds.Online {
-    
+
     /// <summary>
     /// Utility for downloading content from a URL address.
     /// </summary>
     public static class SourceDownloader {
-    
+
         /// <summary>
         /// Download the source code (the raw string content) found at the url path.
         /// </summary>

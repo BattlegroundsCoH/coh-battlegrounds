@@ -4,14 +4,16 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 
 using Battlegrounds.Game.Database;
+using Battlegrounds.Game.Database.Management;
 using Battlegrounds.Json;
+using Battlegrounds.Functional;
 
 namespace Battlegrounds.Game.Gameplay {
 
     /// <summary>
     /// The method in which to deploy a <see cref="Squad"/>.
     /// </summary>
-    public enum DeploymentMethod {
+    public enum DeploymentMethod : byte {
 
         /// <summary>
         /// No special method is defined (units walks unto the battlefield)
@@ -43,7 +45,7 @@ namespace Battlegrounds.Game.Gameplay {
     /// <summary>
     /// The phase in which a <see cref="Squad"/> can be deployed.
     /// </summary>
-    public enum DeploymentPhase {
+    public enum DeploymentPhase : byte {
 
         /// <summary>
         /// No phase - <see cref="Squad"/> may not be deployed in any standard way.
@@ -77,18 +79,24 @@ namespace Battlegrounds.Game.Gameplay {
     /// </summary>
     public class Squad : IJsonObject {
 
-        [JsonIgnoreIfValue((byte)0)] private byte m_veterancyRank;
-        [JsonIgnoreIfValue(0.0f)] private float m_veterancyProgress;
+        #region Private Fields
 
-        [JsonIgnoreIfValue(false)] private bool m_isCrewSquad;
-        [JsonIgnoreIfValue(DeploymentMethod.None)][JsonEnum(typeof(DeploymentMethod))] private DeploymentMethod m_deployMode;
-        [JsonIgnoreIfValue(DeploymentPhase.PhaseNone)][JsonEnum(typeof(DeploymentPhase))] private DeploymentPhase m_deployPhase;
-        [JsonIgnoreIfNull] private Squad m_crewSquad;
-        [JsonReference(typeof(BlueprintManager))][JsonIgnoreIfNull] private Blueprint m_deployBp;
+        private byte m_veterancyRank;
+        private float m_veterancyProgress;
 
-        [JsonReference(typeof(BlueprintManager))][JsonIgnoreIfEmpty] private HashSet<Blueprint> m_upgrades;
-        [JsonReference(typeof(BlueprintManager))][JsonIgnoreIfEmpty] private HashSet<Blueprint> m_slotItems;
-        [JsonIgnoreIfEmpty] private HashSet<Modifier> m_modifiers;
+        private bool m_isCrewSquad;
+        private DeploymentMethod m_deployMode;
+        private DeploymentPhase m_deployPhase;
+        private Squad m_crewSquad;
+        private Blueprint m_deployBp;
+
+        private HashSet<Blueprint> m_upgrades;
+        private HashSet<Blueprint> m_slotItems;
+        private HashSet<Modifier> m_modifiers;
+
+        private TimeSpan m_combatTime;
+
+        #endregion
 
         /// <summary>
         /// The unique squad ID used to identify the <see cref="Squad"/>.
@@ -111,31 +119,39 @@ namespace Battlegrounds.Game.Gameplay {
         /// <summary>
         /// The squad or entity <see cref="Database.Blueprint"/> to support this squad.
         /// </summary>
-        [JsonIgnore]
+        [JsonBackingField(nameof(m_deployBp))]
+        [JsonReference(typeof(BlueprintManager))]
+        [JsonIgnoreIfNull]
         public Blueprint SupportBlueprint => this.m_deployBp;
 
         /// <summary>
         /// The method to use when deploying a <see cref="Squad"/>.
         /// </summary>
-        [JsonIgnore]
+        [JsonBackingField(nameof(m_deployMode))]
+        [JsonIgnoreIfValue(DeploymentMethod.None)]
+        [JsonEnum(typeof(DeploymentMethod))]
         public DeploymentMethod DeploymentMethod => this.m_deployMode;
 
         /// <summary>
         /// The phase in which a squad can be deployed.
         /// </summary>
-        [JsonIgnore]
+        [JsonBackingField(nameof(m_deployPhase))]
+        [JsonIgnoreIfValue(DeploymentPhase.PhaseNone)]
+        [JsonEnum(typeof(DeploymentPhase))]
         public DeploymentPhase DeploymentPhase => this.m_deployPhase;
 
         /// <summary>
         /// The squad data for the crew.
         /// </summary>
-        [JsonIgnore]
+        [JsonBackingField(nameof(m_crewSquad))]
+        [JsonIgnoreIfNull]
         public Squad Crew => this.m_crewSquad;
 
         /// <summary>
         /// Is the <see cref="Squad"/> the crew for another <see cref="Squad"/> instance.
         /// </summary>
-        [JsonIgnore]
+        [JsonBackingField(nameof(m_isCrewSquad))]
+        [JsonIgnoreIfValue(false)]
         public bool IsCrew => this.m_isCrewSquad;
 
         /// <summary>
@@ -148,32 +164,45 @@ namespace Battlegrounds.Game.Gameplay {
         /// <summary>
         /// The achieved veterancy rank of a <see cref="Squad"/>.
         /// </summary>
-        [JsonIgnore]
+        [JsonBackingField(nameof(m_veterancyRank))]
+        [JsonIgnoreIfValue((byte)0)]
         public byte VeterancyRank => this.m_veterancyRank;
 
         /// <summary>
         /// The current veterancy progress of a <see cref="Squad"/>.
         /// </summary>
-        [JsonIgnore]
+        [JsonBackingField(nameof(m_veterancyProgress))]
+        [JsonIgnoreIfValue(0.0f)]
         public float VeterancyProgress => this.m_veterancyProgress;
 
         /// <summary>
         /// The current upgrades applied to a <see cref="Squad"/>.
         /// </summary>
-        [JsonIgnore]
-        public ImmutableHashSet<Blueprint> Upgrades => m_upgrades.ToImmutableHashSet();
+        [JsonBackingField(nameof(m_upgrades))]
+        [JsonReference(typeof(BlueprintManager))]
+        [JsonIgnoreIfEmpty]
+        public ImmutableHashSet<Blueprint> Upgrades => this.m_upgrades.ToImmutableHashSet();
 
         /// <summary>
         /// The current slot items carried by the <see cref="Squad"/>.
         /// </summary>
-        [JsonIgnore]
-        public ImmutableHashSet<Blueprint> SlotItems => m_slotItems.ToImmutableHashSet();
+        [JsonBackingField(nameof(m_slotItems))]
+        [JsonReference(typeof(BlueprintManager))]
+        [JsonIgnoreIfEmpty]
+        public ImmutableHashSet<Blueprint> SlotItems => this.m_slotItems.ToImmutableHashSet();
 
         /// <summary>
-        /// The current modifiers applied to the <see cref="Squad"/>.
+        /// Get the current modifiers applied to the <see cref="Squad"/>.
         /// </summary>
-        [JsonIgnore]
-        public ImmutableHashSet<Modifier> Modifiers => m_modifiers.ToImmutableHashSet();
+        [JsonBackingField(nameof(m_modifiers))]
+        [JsonIgnoreIfEmpty]
+        public ImmutableHashSet<Modifier> Modifiers => this.m_modifiers.ToImmutableHashSet();
+
+        /// <summary>
+        /// Get the total amount of time the <see cref="Squad"/> has been in combat.
+        /// </summary>
+        [JsonBackingField(nameof(m_combatTime))]
+        public TimeSpan CombatTime => this.m_combatTime;
 
         /// <summary>
         /// Create a basic <see cref="Squad"/> instance without any identifying values.
@@ -219,6 +248,21 @@ namespace Battlegrounds.Game.Gameplay {
         }
 
         /// <summary>
+        /// Increase the veterancy of the <see cref="Squad"/>.  The veterancy rank achievable is max 5.
+        /// </summary>
+        /// <remarks>
+        /// <paramref name="progressValue"/> must be an absolute value and cannot be a difference.
+        /// </remarks>
+        /// <param name="rankChange">The change in veterancy rank.</param>
+        /// <param name="progressValue">The total amount of experience achieved by the <see cref="Squad"/>.</param>
+        public void IncreaseVeterancy(byte rankChange, float progressValue = 0.0f) {
+            this.m_veterancyRank = (byte)Math.Clamp(this.m_veterancyRank + rankChange, 0, 5);
+            if (progressValue != 0.0f) {
+                this.m_veterancyProgress = progressValue;
+            }
+        }
+
+        /// <summary>
         /// Set the deployment method used by a <see cref="Squad"/>.
         /// </summary>
         /// <param name="transportBlueprint">The <see cref="Database.Blueprint"/> to use as transport unit.</param>
@@ -252,6 +296,13 @@ namespace Battlegrounds.Game.Gameplay {
         public void AddUpgrade(Blueprint upgradeBP) => this.m_upgrades.Add(upgradeBP);
 
         /// <summary>
+        /// Add an <see cref="UpgradeBlueprint"/> to the <see cref="Squad"/> if it doesn't already have the upgrade.
+        /// </summary>
+        /// <param name="upgradeBlueprint">The <see cref="UpgradeBlueprint"/> to add to squad's internal list of upgrades.</param>
+        public void AddUpgradeIfNotFound(UpgradeBlueprint upgradeBlueprint) 
+            => this.m_upgrades.Contains(upgradeBlueprint).IfFalse().Then(() => this.m_upgrades.Add(upgradeBlueprint));
+
+        /// <summary>
         /// Add a slot item to the squad
         /// </summary>
         /// <param name="slotItemBP">The slot item blueprint to add</param>
@@ -268,6 +319,13 @@ namespace Battlegrounds.Game.Gameplay {
         /// </summary>
         /// <param name="modifierName"></param>
         public void RemoveModifier(string modifierName) => this.m_modifiers.RemoveWhere(x => x.Name.CompareTo(modifierName) == 0);
+
+        /// <summary>
+        /// Increase the amount of combat time the <see cref="Squad"/> has had.
+        /// </summary>
+        /// <param name="time">The <see cref="TimeSpan"/> to increase combat time by.</param>
+        public void IncreaseCombatTime(TimeSpan time)
+            => this.m_combatTime += time;
 
         /// <summary>
         /// Calculate the actual cost of a <see cref="Squad"/>.
@@ -316,6 +374,7 @@ namespace Battlegrounds.Game.Gameplay {
         /// 
         /// </summary>
         /// <param name="squad"></param>
+        [Obsolete("Please use designed set methods instead of this method.")]
         public void ApplyBattlefieldSquad(Squad squad) {
 
             // Set the squad veterancy

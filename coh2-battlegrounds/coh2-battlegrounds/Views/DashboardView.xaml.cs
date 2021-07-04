@@ -12,12 +12,19 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 
 namespace BattlegroundsApp.Views {
+
     /// <summary>
     /// Interaction logic for DashboardView.xaml
     /// </summary>
-    public partial class DashboardView : UserControl {
+    public partial class DashboardView : ViewState {
+
         public DashboardView() {
             InitializeComponent();
         }
+
+        public override void StateOnFocus() => throw new NotImplementedException();
+        public override void StateOnLostFocus() => throw new NotImplementedException();
+
     }
+
 }

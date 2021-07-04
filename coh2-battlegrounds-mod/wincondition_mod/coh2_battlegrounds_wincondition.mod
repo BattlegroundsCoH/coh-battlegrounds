@@ -66,6 +66,14 @@
 											<BurnSettings i:nil="true" />
 											<RelativeName>auxiliary_scripts\shared_lookups.scar</RelativeName>
 										</d2p1:anyType>
+										<d2p1:anyType i:type="BurnFile">
+											<BurnSettings i:nil="true" />
+											<RelativeName>auxiliary_scripts\shared_constants.scar</RelativeName>
+										</d2p1:anyType>
+										<d2p1:anyType i:type="BurnFile">
+											<BurnSettings i:nil="true" />
+											<RelativeName>auxiliary_scripts\system_tow.scar</RelativeName>
+										</d2p1:anyType>
 									</Children>
 									<IsExpanded>true</IsExpanded>
 									<Name>auxiliary_scripts</Name>

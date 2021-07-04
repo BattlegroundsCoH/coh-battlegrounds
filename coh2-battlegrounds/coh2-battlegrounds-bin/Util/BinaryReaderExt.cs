@@ -28,6 +28,23 @@ namespace Battlegrounds.Util {
             => Encoding.ASCII.GetString(reader.ReadBytes(length));
 
         /// <summary>
+        /// Read a Unicode string from a length that's given before the string
+        /// </summary>
+        /// <param name="reader">The stream to read string from</param>
+        /// <returns>The read string</returns>
+        public static string ReadUnicodeString(this BinaryReader reader)
+            => reader.ReadUnicodeString((int)reader.ReadUInt32());
+
+        /// <summary>
+        /// Read a Unicode string from a known length
+        /// </summary>
+        /// <param name="reader">The stream to read string from</param>
+        /// <param name="length"></param>
+        /// <returns>The read string</returns>
+        public static string ReadUnicodeString(this BinaryReader reader, int length)
+            => Encoding.Unicode.GetString(reader.ReadBytes(length));
+
+        /// <summary>
         /// Read a UTF-8 string of unknown length
         /// </summary>
         /// <param name="reader">The stream to read string from</param>
@@ -59,6 +76,25 @@ namespace Battlegrounds.Util {
                 strBuilder.Append((char)u);
             }
             return strBuilder.ToString();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="reader"></param>
+        /// <param name="encoding"></param>
+        /// <param name="characterCount"></param>
+        /// <returns></returns>
+        public static string ReadEncodedString(this BinaryReader reader, Encoding encoding, int characterCount = -1) {
+            if (encoding == Encoding.ASCII) {
+                return characterCount == -1 ? reader.ReadASCIIString() : reader.ReadASCIIString(characterCount);
+            } else if (encoding == Encoding.UTF8) {
+                return characterCount == -1 ? reader.ReadUTF8String() : reader.ReadUTF8String((uint)characterCount);
+            } else if (encoding == Encoding.Unicode) {
+                return characterCount == -1 ? reader.ReadUnicodeString() : reader.ReadUnicodeString(characterCount);
+            } else {
+                throw new NotSupportedException();
+            }
         }
 
         /// <summary>
@@ -113,6 +149,29 @@ namespace Battlegrounds.Util {
                 }
             }
             return content.ToArray();
+        }
+
+        /// <summary>
+        /// Read <paramref name="amount"/> bytes into a <see cref="MemoryStream"/>.
+        /// </summary>
+        /// <param name="reader">The <see cref="BinaryReader"/> to use when filling stream with data.</param>
+        /// <param name="amount">The amount of bytes to read from <paramref name="reader"/>.</param>
+        /// <param name="memory">The final <see cref="MemoryStream"/> populated with read byte data.</param>
+        public static void FillStream(this BinaryReader reader, int amount, out MemoryStream memory) {
+            memory = new MemoryStream(reader.ReadBytes(amount)) {
+                Position = 0 // Just to be safe...
+            };
+        }
+
+        /// <summary>
+        /// Read <paramref name="amount"/> bytes into a <see cref="MemoryStream"/>.
+        /// </summary>
+        /// <param name="reader">The <see cref="BinaryReader"/> to use when filling stream with data.</param>
+        /// <param name="amount">The amount of bytes to read from <paramref name="reader"/>.</param>
+        /// <returns>The populated <see cref="MemoryStream"/> instance filled with read byte data.</returns>
+        public static MemoryStream FillStream(this BinaryReader reader, int amount) {
+            FillStream(reader, amount, out MemoryStream mem);
+            return mem;
         }
 
     }

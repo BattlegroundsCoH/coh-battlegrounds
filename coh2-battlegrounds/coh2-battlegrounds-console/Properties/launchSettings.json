@@ -1,7 +1,8 @@
 {
   "profiles": {
     "coh2-battlegrounds-console": {
-      "commandName": "Project"
+      "commandName": "Project",
+      "commandLineArgs": "-campaign \"E:\\coh2_battlegrounds\\coh2-battlegrounds-campaigns\\sov_ost_stalingrad\""
     }
   }
 }

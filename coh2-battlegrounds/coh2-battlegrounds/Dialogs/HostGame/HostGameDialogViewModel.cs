@@ -1,34 +1,60 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Windows.Input;
+﻿using System.Windows.Input;
+
 using BattlegroundsApp.Dialogs.Service;
 using BattlegroundsApp.Utilities;
 
 namespace BattlegroundsApp.Dialogs.HostGame {
-    public class HostGameDialogViewModel : DialogViewModelBase<DialogResults> {
+    
+    public enum HostGameDialogResult {
+        Host,
+        Cancel
+    }
+
+    public class HostGameDialogViewModel : DialogControlBase<HostGameDialogResult> {
 
         public ICommand HostCommand { get; private set; }
         public ICommand CancelCommand { get; private set; }
 
-        public HostGameDialogViewModel(string title) : base(title) {
+        private string _lobbyName;
+        public string LobbyName {
+            get => this._lobbyName;
+            set {
+                this._lobbyName = value;
+                OnPropertyChanged(nameof(this.LobbyName));
+            }
+        }
 
-            HostCommand = new RelayCommand<IDialogWindow>(Host);
-            CancelCommand = new RelayCommand<IDialogWindow>(Cancel);
+        private string _lobbyPassword;
+        public string LobbyPassword {
+            get => this._lobbyPassword;
+            set {
+                this._lobbyPassword = value;
+                this.OnPropertyChanged(nameof(this.LobbyPassword));
+            }
 
         }
 
-        private void Host(IDialogWindow window) {
+        private HostGameDialogViewModel(string title) {
 
-            CloseDialogWithResult(window, DialogResults.Host);
-
-        }
-
-        private void Cancel(IDialogWindow window) {
-
-            CloseDialogWithResult(window, DialogResults.Cancel);
+            this.Title = title;
+            this.HostCommand = new RelayCommand<DialogWindow>(this.Host);
+            this.CancelCommand = new RelayCommand<DialogWindow>(this.Cancel);
+            this.DialogCloseDefault = HostGameDialogResult.Cancel;
 
         }
+
+        public static HostGameDialogResult ShowHostGameDialog(string title, out string lobbyName, out string lobbyPwd) {
+            var dialog = new HostGameDialogViewModel(title);
+            var result = dialog.ShowDialog();
+            lobbyName = dialog.LobbyName;
+            lobbyPwd = dialog.LobbyPassword;
+            return result;
+        }
+
+        private void Host(DialogWindow window) => this.CloseDialogWithResult(window, HostGameDialogResult.Host);
+
+        private void Cancel(DialogWindow window) => this.CloseDialogWithResult(window, HostGameDialogResult.Cancel);
 
     }
+
 }

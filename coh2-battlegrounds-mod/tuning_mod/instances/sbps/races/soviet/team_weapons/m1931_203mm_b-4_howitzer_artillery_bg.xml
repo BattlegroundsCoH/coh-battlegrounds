@@ -868,6 +868,7 @@
 		<template_reference name="squadexts" value="sbpextensions\squad_ability_ext">
 			<list name="abilities">
 				<instance_reference name="ability" value="abilities\german\modal_ability\artillery\artillery_barrage_ability\howitzer_default_reface_action" />
+				<instance_reference name="ability" value="abilities\battlegrounds_generic\timed_ability\detach_weapon_tow_bg" mod="142b113740474c82a60b0a428bd553d5" />
 			</list>
 			<bool name="allow_targeted_abilities_whilst_moving" value="False" />
 		</template_reference>

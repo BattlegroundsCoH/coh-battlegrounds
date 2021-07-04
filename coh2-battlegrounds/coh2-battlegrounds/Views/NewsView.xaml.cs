@@ -15,9 +15,12 @@ namespace BattlegroundsApp.Views {
     /// <summary>
     /// Interaction logic for NewsView.xaml
     /// </summary>
-    public partial class NewsView : UserControl {
+    public partial class NewsView : ViewState {
         public NewsView() {
             InitializeComponent();
         }
+
+        public override void StateOnFocus() => throw new NotImplementedException();
+        public override void StateOnLostFocus() => throw new NotImplementedException();
     }
 }

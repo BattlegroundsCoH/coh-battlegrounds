@@ -4,23 +4,23 @@ namespace BattlegroundsApp.Controls {
     
     public class IconComboBoxItem {
 
-        ImageSource m_icon;
-        string m_text;
+        public ImageSource Icon { get; }
 
-        public ImageSource Icon => this.m_icon;
-
-        public string Text => this.m_text;
+        public string Text { get; }
 
         public object Source { get; set; }
 
-        public bool HasText => !string.IsNullOrEmpty(this.m_text);
+        public bool HasText => !string.IsNullOrEmpty(this.Text);
 
-        public IconComboBoxItem(ImageSource icon, object text) {
-            this.m_icon = icon;
-            this.m_text = text?.ToString() ?? string.Empty;
+        public IconComboBoxItem(ImageSource icon, object text, object source) {
+            this.Icon = icon;
+            this.Text = text?.ToString() ?? string.Empty;
+            this.Source = source;
         }
 
-        public IconComboBoxItem(ImageSource icon) : this(icon, null) { }
+        public IconComboBoxItem(ImageSource icon, object text) : this(icon, text, null) { }
+
+        public IconComboBoxItem(ImageSource icon) : this(icon, null, null) { }
 
         public bool GetSource<T>(out T source) {
             if (this.Source is T s) {

@@ -75,7 +75,7 @@ function BGAI_RegisterAIPlayer(index, player)
     };
 
     -- Get the update time
-    local updateTime = 60 - (difficulty * 15);
+    local updateTime = 60 - (_bg_aiData[index].difficulty * 14.5);
 
     -- Set update interval
     _bg_aiData[index].update_interval = updateTime;
@@ -106,8 +106,8 @@ function BGAI_GetDifficultyFromValue(d)
 end
 
 function BGAI_GetAIPlayerID(player)
-    for i=1, #_bg_aiData do
-        if _bg_aiData[i].player == player then
+    for i,v in ipairs(_bg_aiData) do
+        if v.player == player then
             return i;
         end
     end
@@ -195,7 +195,7 @@ function BGAI_EvalProduction(index)
         if not BGAI_BuySomething(index, "infantry") then -- always try to buy infantry
             if not BGAI_BuySomething(index, "vehicle") then -- Then vehicles
                 if not BGAI_BuySomething(index, "vehicle", true) then  -- Then heavy vehicles
-                    --BGAI_BuySomething(index, "team_weapon"); -- Then team weapons
+                    BGAI_BuySomething(index, "team_weapon"); -- Then team weapons
                 end
             end
         end
@@ -286,19 +286,27 @@ function BGAI_FindAffordableUnits(index, type, heavy)
     local fuel = Player_GetResource(_bg_aiData[index].player, RT_Fuel);
     local affordable_set = {}
 
-    for i=1, #_bg_aiData[index].company.units do
+    if heavy == nil then
+        heavy = false;
+    end
 
-        local heavyProperty = _bg_aiData[index].company.units[i].heavy or false;
-        local heavyCondition = (heavy and heavyProperty) or ((heavy == false or heavy == nil) and heavyProperty);
+    for _, unit in pairs(_bg_aiData[index].company.units) do
 
-        if (not _bg_aiData[index].company.units[i].spawned) and (type == nil or _bg_aiData[index].company.units[i].category == type) and heavyCondition then
+        if unit.phase <= _bg_custom.phase_current then
 
-            local costManpower = _bg_aiData[index].company.units[i].cost.manpower or 0;
-            local costMunitions = _bg_aiData[index].company.units[i].cost.munitions or 0;
-            local costFuel = _bg_aiData[index].company.units[i].cost.fuel or 0;
+            local heavyProperty = unit.heavy or false;
+            local heavyCondition = (heavy and heavyProperty) or (heavy == false and not heavyProperty);
 
-            if manpower >= costManpower and munitions >= costMunitions and fuel >= costFuel then
-                bg_set:add(affordable_set, _bg_aiData[index].company.units[i]);
+            if (not unit.spawned) and (type == nil or unit.category == type) and heavyCondition then
+
+                local costManpower = unit.cost.manpower or 0;
+                local costMunitions = unit.cost.munitions or 0;
+                local costFuel = unit.cost.fuel or 0;
+
+                if manpower >= costManpower and munitions >= costMunitions and fuel >= costFuel then
+                    bg_set:add(affordable_set, unit);
+                end
+
             end
 
         end
@@ -311,6 +319,11 @@ end
 
 function BGAI_BuyRandom(index, set)
 
+    -- Don't call in unit if the match has stopped
+    if _bg_matchStopped == true then
+        return;
+    end
+
     -- Get the index of random unit
     local i = World_GetRand(1, bg_set:size(set));
 
@@ -320,7 +333,42 @@ function BGAI_BuyRandom(index, set)
     local spawnfrom = Player_GetNearestMapEntry(player, gotopos);
 
     -- Call in the unit
-    BG_CallInUnit(set[i], player, gotopos, spawnfrom);
+    local squad, crew, transport = BG_CallInUnit(set[i], player, gotopos, spawnfrom);
+
+    -- If log AI is enabled, then log the AI
+    if _bg_custom.log_ai then
+
+        -- Register squad
+        _bg_aiData[index].deployed[Squad_GetGameID(squad)] = set[i];
+
+        -- Broadcast that a unit was spawned
+        Battlegrounds_LogEvent(nil, BG_EVENT_ONDEPLOY, set[i].company_id, player);
+
+        -- Add events
+        Rule_AddSquadEvent(BGAI_OnSquadDeath, squad, GE_SquadKilled);
+        if crew ~= nil then
+            _bg_aiData[index].deployed[Squad_GetGameID(crew)] = set[i].crew;
+            Rule_AddSquadEvent(BGAI_OnSquadDeath, crew, GE_SquadKilled);
+        end
+
+    end
+
+end
+
+function BGAI_OnSquadDeath(squad)
+
+    -- Get player data
+    local player = Squad_GetPlayerOwner(squad);
+    local index = BGAI_GetAIPlayerID(player);
+    if index == -1 then
+        return;
+    end
+
+    -- Get squad data
+    local squadData = _bg_aiData[index].deployed[Squad_GetGameID(squad)];
+
+    -- Broadcast that the unit was killed
+    Battlegrounds_LogEvent(nil, BG_EVENT_ONDEATH, squadData.company_id, player);
 
 end
 

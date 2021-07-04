@@ -10,19 +10,24 @@ using Battlegrounds.Functional;
 namespace Battlegrounds.Json {
     
     /// <summary>
-    /// Json interface for converting object to and from a Json object. Implements <see cref="IJsonElement"/>.
+    /// Interface for converting objects to and from a Json object. Implements <see cref="IJsonElement"/>.
     /// </summary>
     public interface IJsonObject : IJsonElement {
 
-        public static IFormatProvider JsonStandardFormatter = new CultureInfo("en-GB");
+        private static readonly IFormatProvider JSStandardFormat = new CultureInfo("en-GB");
+
+        /// <summary>
+        /// Get the <see cref="IFormatProvider"/> used when formatting a JSon object.
+        /// </summary>
+        public static IFormatProvider JsonStandardFormatter => JSStandardFormat;
 
         private struct JsonAttributeSet {
             private JsonIgnoreIfValueAttribute IgnoreIfValueAttribute;
             private JsonIgnoreIfEmptyAttribute IgnoreIfEmptyAttribute;
             private JsonIgnoreIfNullAttribute IgnoreIfNullAttribute;
             private JsonIgnoreAttribute IgnoreAttribute;
-            private JsonEnumAttribute EnumAttribute;
             private JsonReferenceAttribute ReferenceAttribute;
+            private JsonBackingFieldAttribute BackingAttribute;
 
             public bool IgnoreIfNull => this.IgnoreIfNullAttribute is JsonIgnoreIfNullAttribute;
 
@@ -36,21 +41,26 @@ namespace Battlegrounds.Json {
 
             public bool IgnoreIfEmpty => this.IgnoreIfEmptyAttribute is JsonIgnoreIfEmptyAttribute;
 
+            public bool HasBackingField => this.BackingAttribute is JsonBackingFieldAttribute;
+
+            public string BackingFieldName => this.BackingAttribute.Field;
+
             public JsonAttributeSet(PropertyInfo pinfo) {
                 this.IgnoreIfEmptyAttribute = pinfo.GetCustomAttribute<JsonIgnoreIfEmptyAttribute>();
                 this.IgnoreIfValueAttribute = pinfo.GetCustomAttribute<JsonIgnoreIfValueAttribute>();
                 this.IgnoreIfNullAttribute = pinfo.GetCustomAttribute<JsonIgnoreIfNullAttribute>();
                 this.IgnoreAttribute = pinfo.GetCustomAttribute<JsonIgnoreAttribute>();
-                this.EnumAttribute = pinfo.GetCustomAttribute<JsonEnumAttribute>();
                 this.ReferenceAttribute = pinfo.GetCustomAttribute<JsonReferenceAttribute>();
+                this.BackingAttribute = pinfo.GetCustomAttribute<JsonBackingFieldAttribute>();
             }
             public JsonAttributeSet(FieldInfo finfo) {
                 this.IgnoreIfEmptyAttribute = finfo.GetCustomAttribute<JsonIgnoreIfEmptyAttribute>();
                 this.IgnoreIfValueAttribute = finfo.GetCustomAttribute<JsonIgnoreIfValueAttribute>();
                 this.IgnoreIfNullAttribute = finfo.GetCustomAttribute<JsonIgnoreIfNullAttribute>();
                 this.IgnoreAttribute = finfo.GetCustomAttribute<JsonIgnoreAttribute>();
-                this.EnumAttribute = finfo.GetCustomAttribute<JsonEnumAttribute>();
                 this.ReferenceAttribute = finfo.GetCustomAttribute<JsonReferenceAttribute>();
+                this.BackingAttribute = finfo.GetCustomAttribute<JsonBackingFieldAttribute>();
+
             }
         }
 
@@ -64,18 +74,23 @@ namespace Battlegrounds.Json {
         /// Serialize self into a json object
         /// </summary>
         /// <returns>The json string representation of the <see cref="IJsonObject"/>.</returns>
-        public virtual string Serialize()
+        public string Serialize()
             => this.Serialize(0);
 
         /// <summary>
         /// Serialize self into a json object
         /// </summary>
         /// <returns>The json string representation of the <see cref="IJsonObject"/>.</returns>
-        public virtual string Serialize(int indent)
+        public string Serialize(int indent)
             => SerializeObject(indent, this);
 
+        /// <summary>
+        /// Serialize some object (Note, the object can ignore the <see cref="IJsonObject"/> constraint and may expose fields that should not be exposed).
+        /// </summary>
+        /// <param name="indent">The level of indent to use while serializing.</param>
+        /// <param name="obj">The <see cref="object"/> to serialize.</param>
+        /// <returns>Will return a <see cref="string"/> representation of the <paramref name="obj"/> in Json format.</returns>
         public static string SerializeObject(int indent, object obj) {
-
 
             Type il_type = obj.GetType();
             TxtBuilder jsonbuilder = new TxtBuilder();
@@ -89,22 +104,42 @@ namespace Battlegrounds.Json {
             IEnumerable<PropertyInfo> properties = il_type.GetProperties(BindingFlags.FlattenHierarchy | BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)
                 .Where(x => x.GetCustomAttribute<JsonIgnoreAttribute>() is null);
 
+            // Remove fields acting as backing fields of JsonBackingFieldAttributed properties
+            properties.ForEach(x => {
+                if (x.GetCustomAttribute<JsonBackingFieldAttribute>() is JsonBackingFieldAttribute backer) {
+                    fields = fields.Without(x => x.Name.CompareTo(backer.Field) == 0);
+                }
+            });
+
+            // Derecord the object
+            properties = JsonRecord.Derecord(obj, properties);
+
+            // Begin building
             jsonbuilder.AppendLine("{");
             jsonbuilder.IncreaseIndent();
 
+            // Write C# type
             jsonbuilder.AppendLine($"\"jsdbtype\": \"{il_type.FullName}\"{((fields.Count() + properties.Count() > 0) ? "," : "")}");
 
+            // Write out all properties
             foreach (PropertyInfo pinfo in properties) {
-                WriteKeyValuePair(
-                    jsonbuilder,
-                    pinfo.PropertyType,
-                    new JsonAttributeSet(pinfo),
-                    pinfo.Name,
-                    pinfo.GetValue(obj),
-                    pinfo != properties.Last() || fields.Count() > 0
-                    );
+                var attribSet = new JsonAttributeSet(pinfo);
+                if (attribSet.HasBackingField) {
+                    FieldInfo finfo = il_type.GetField(attribSet.BackingFieldName, BindingFlags.FlattenHierarchy | BindingFlags.Instance | BindingFlags.NonPublic);
+                    WriteKeyValuePair(jsonbuilder, finfo.FieldType, attribSet, pinfo.Name, finfo.GetValue(obj), pinfo != properties.Last() || fields.Any());
+                } else {
+                    WriteKeyValuePair(
+                        jsonbuilder,
+                        pinfo.PropertyType,
+                        attribSet,
+                        pinfo.Name,
+                        pinfo.GetValue(obj),
+                        pinfo != properties.Last() || fields.Any()
+                        );
+                }
             }
 
+            // Then write out all properties
             foreach (FieldInfo finfo in fields) {
                 WriteKeyValuePair(
                     jsonbuilder,
@@ -116,6 +151,7 @@ namespace Battlegrounds.Json {
                     );
             }
 
+            // Fix syntax
             if (jsonbuilder.EndsWith(",", true)) {
                 int lComma = jsonbuilder.LastIndexOf(',');
                 jsonbuilder.Popback(jsonbuilder.Length - lComma);
@@ -125,8 +161,8 @@ namespace Battlegrounds.Json {
             jsonbuilder.DecreaseIndent();
             jsonbuilder.AppendLine("}");
 
+            // Return the built string.
             return jsonbuilder.GetContent();
-
 
         }
 
@@ -166,19 +202,19 @@ namespace Battlegrounds.Json {
                         Type t = kvp.Value.GetType();
                         string entryName = kvp.Key.ToString();
                         if (t.IsPrimitive || kvp.Value is string) {
-                            jsonbuilder.Append($"\"{entryName}\" : \"{(kvp.Value as string).Replace("\\", "\\\\")}\"{((i < j) ? ",\n" : "")}");
+                            jsonbuilder.AppendLine($"\"{entryName}\": \"{(kvp.Value as string).Replace("\\", "\\\\")}\"{((i < j) ? "," : "")}");
                         } else if (kvp.Value is IJsonObject jso2) {
                             if (attributeSet.UseRef) {
-                                jsonbuilder.Append($"\"{entryName}\" : \"{jso2.ToJsonReference()}\"{((i < j) ? ",\n" : "")}");
+                                jsonbuilder.AppendLine($"\"{entryName}\": \"{jso2.ToJsonReference()}\"{((i < j) ? "," : "")}");
                             } else {
-                                jsonbuilder.Append($"\"{entryName}\" : {jso2.Serialize(jsonbuilder.GetIndent()).TrimEnd('\n')}{((i < j) ? ",\n" : "")}", false);
+                                jsonbuilder.AppendLine($"\"{entryName}\": {jso2.Serialize(jsonbuilder.GetIndent()).TrimEnd('\n').TrimStart('\t')}{((i < j) ? "," : "")}");
                             }
                         }
                         i++;
                     }
-                    if (j >= 0) {
+                    /*if (j >= 0 &) {
                         jsonbuilder.Append("\n", false);
-                    }
+                    }*/
                     jsonbuilder.DecreaseIndent();
                     jsonbuilder.AppendLine($"}}{((appendComma) ? "," : "")}");
                 } else if (type.GenericTypeArguments.Length > 0 && type.GetInterfaces().Contains(typeof(IEnumerable<>).MakeGenericType(type.GenericTypeArguments))) {
@@ -188,6 +224,9 @@ namespace Battlegrounds.Json {
                     int i = 0;
                     int j = dynVal.Count - 1;
                     foreach (dynamic c in dynVal) {
+                        if (c is null) {
+                            continue;
+                        }
                         Type t = c.GetType();
                         if (t.IsPrimitive || c is string) {
                             jsonbuilder.Append($"\"{name}\"{((i < j) ? "," : "")}");
@@ -205,6 +244,25 @@ namespace Battlegrounds.Json {
                     }
                     jsonbuilder.DecreaseIndent();
                     jsonbuilder.AppendLine($"]{((appendComma) ? "," : "")}");
+                } else if (type.IsArray) {
+                    jsonbuilder.AppendLine($"\"{name}\": [");
+                    jsonbuilder.IncreaseIndent();
+                    dynamic arr = val; // BAD
+                    for (int i = 0; i < arr.Length; i++) {
+                        dynamic element = arr[i];
+                        Type t = element.GetType();
+                        if (t.IsPrimitive || element is string) {
+                            jsonbuilder.AppendLine($"\"{i}\"{((i + 1 != arr.Length) ? "," : "")}");
+                        } else if (element is IJsonObject jso2) {
+                            if (attributeSet.UseRef) {
+                                jsonbuilder.AppendLine($"\"{jso2.ToJsonReference()}\"{((i + 1 != arr.Length) ? "," : "")}");
+                            } else {
+                                jsonbuilder.Append($"{jso2.Serialize(jsonbuilder.GetIndent()).TrimEnd('\n')}{((i + 1 != arr.Length) ? ",\n" : "\n")}", false);
+                            }
+                        }
+                    }                        
+                    jsonbuilder.DecreaseIndent();
+                    jsonbuilder.AppendLine($"]{((appendComma) ? "," : "")}");
                 } else {
                     jsonbuilder.AppendLine($"\"{name}\": \"{val}\"{((appendComma) ? "," : "")}");
                 }
@@ -217,6 +275,8 @@ namespace Battlegrounds.Json {
         /// </summary>
         /// <param name="parsedJson">The parsed input of a json object</param>
         /// <returns>A deserialized instance of the json input string</returns>
+        /// <exception cref="NullReferenceException"/>
+        /// <exception cref="InvalidCastException"/>
         internal static object Deserialize(Dictionary<string, object> parsedJson) {
 
             // Solve type
@@ -228,7 +288,7 @@ namespace Battlegrounds.Json {
 
             // Make sure type is valid
             if (type is null) {
-                throw new ArgumentNullException("The given 'jsdbtype' was null!");
+                throw new NullReferenceException("The given 'jsdbtype' was null!");
             }
 
             // Get the type
@@ -283,19 +343,37 @@ namespace Battlegrounds.Json {
                         // Use the reference method
                         bool useRef = !(refAttrib is null);
 
-                        // Do we have a set method?
-                        if (pinfo.SetMethod != null) {
-
-                            // Set value using the 'SetMethod'
-                            SetValue(source, pair.Value, pinfo.PropertyType, useRef, pinfo.SetValue, refAttrib?.GetReferenceFunction(), enumAttrib);
-
-                        } else {
+                        // If it has a backing field with specific name
+                        if (pinfo.GetCustomAttribute<JsonBackingFieldAttribute>() is JsonBackingFieldAttribute backAttrib) {
 
                             // Get the backing field
-                            FieldInfo backingField = il_type.GetField($"<{pinfo.Name}>k__BackingField", BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.FlattenHierarchy);
+                            FieldInfo backingField = il_type.GetField(backAttrib.Field, BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.FlattenHierarchy);
 
                             // Set the value of the backing field.
                             SetValue(source, pair.Value, backingField.FieldType, useRef, backingField.SetValue, refAttrib?.GetReferenceFunction(), enumAttrib);
+
+                        } else {
+
+                            // Do we have a set method?
+                            if (pinfo.SetMethod != null) {
+
+                                // Set value using the 'SetMethod'
+                                SetValue(source, pair.Value, pinfo.PropertyType, useRef, pinfo.SetValue, refAttrib?.GetReferenceFunction(), enumAttrib);
+
+                            } else {
+
+                                // Get the backing field
+                                FieldInfo backingField = il_type.GetField($"<{pinfo.Name}>k__BackingField", BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.FlattenHierarchy);
+
+                                // Do if any backing field (otherwise it might just be a get-only, precalculated variable.
+                                if (backingField is not null) {
+
+                                    // Set the value of the backing field.
+                                    SetValue(source, pair.Value, backingField.FieldType, useRef, backingField.SetValue, refAttrib?.GetReferenceFunction(), enumAttrib);
+
+                                }
+
+                            }
 
                         }
 
@@ -351,8 +429,18 @@ namespace Battlegrounds.Json {
                     // If the attribute is not valid
                     if (eAttrib is null) {
 
+                        // Value to set
+                        object valueToSet;
+
+                        // If there exists a converter
+                        if (JsonConverters.HasConverter(valueType)) {
+                            valueToSet = JsonConverters.GetConverter(valueType).ConvertFromString(value as string);
+                        } else {
+                            valueToSet = Convert.ChangeType(value, valueType, JsonStandardFormatter);
+                        }
+
                         // Set value
-                        setValueMethod.Invoke(instance, Convert.ChangeType(value, valueType, JsonStandardFormatter));
+                        setValueMethod.Invoke(instance, valueToSet);
 
                     } else {
 
@@ -400,6 +488,20 @@ namespace Battlegrounds.Json {
         }
 
 
+    }
+
+    /// <summary>
+    /// Static helper extension class for <see cref="IJsonObject"/> functionality.
+    /// </summary>
+    public static class JsonSerializer {
+
+        /// <summary>
+        /// Serialize the <typeparamref name="T"/> object into its Json <see cref="string"/> representation.
+        /// </summary>
+        /// <typeparam name="T">The <see cref="IJsonObject"/> object type.</typeparam>
+        /// <param name="obj">The <typeparamref name="T"/> to serialize.</param>
+        /// <returns>A <see cref="string"/> representation of the given <typeparamref name="T"/> object.</returns>
+        public static string SerializeAsJson<T>(this T obj) where T : IJsonObject => obj.Serialize();
     }
 
 }

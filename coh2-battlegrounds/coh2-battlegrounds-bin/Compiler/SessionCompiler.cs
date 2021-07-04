@@ -2,10 +2,13 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 
-using Battlegrounds.Game.Battlegrounds;
+using Battlegrounds.Game.Database.Management;
+using Battlegrounds.Game.DataCompany;
 using Battlegrounds.Game.Database;
 using Battlegrounds.Game.Gameplay;
+using Battlegrounds.Game.Match;
 using Battlegrounds.Functional;
 using Battlegrounds.Modding;
 using Battlegrounds.Util;
@@ -13,26 +16,27 @@ using Battlegrounds.Util;
 namespace Battlegrounds.Compiler {
 
     /// <summary>
-    /// Basic <see cref="Session"/> to Lua code compiler. Can be inherited to add custom features.
+    /// Basic <see cref="Session"/> to Lua code compiler. Can be extended to add support for custom features.
     /// </summary>
-    /// <typeparam name="T">The type of <see cref="CompanyCompiler"/> to use to compile a <see cref="Company"/> to Lua code.</typeparam>
-    public class SessionCompiler<T> where T : CompanyCompiler {
+    public class SessionCompiler : ISessionCompiler {
+
+        private ICompanyCompiler m_companyCompiler;
 
         /// <summary>
         /// Create a new <see cref="SessionCompiler{T}"/> instance.
         /// </summary>
-        public SessionCompiler() {}
+        public SessionCompiler() {
+            this.m_companyCompiler = null;
+        }
 
-        /// <summary>
-        /// Compile a <see cref="Session"/> into Lua Source Code.
-        /// </summary>
-        /// <param name="session">The <see cref="Session"/> instance to compile.</param>
-        /// <returns>A formatted string containing Lua Source Code.</returns>
         public virtual string CompileSession(Session session) {
 
-            // Create the compiler instance
-            CompanyCompiler compiler = Activator.CreateInstance<T>();
+            // Make sure we have a compiler compiler
+            if (this.m_companyCompiler is null) {
+                throw new ArgumentNullException(nameof(this.m_companyCompiler), "Cannot compile a session without a Company Compiler instance.");
+            }
 
+            // Create txt builder
             TxtBuilder lua = new TxtBuilder();
 
             lua.AppendLine($"bg_settings = {{");
@@ -82,7 +86,7 @@ namespace Battlegrounds.Compiler {
             lua.IncreaseIndent();
 
             foreach (SessionParticipant participant in session.Participants) {
-                lua.AppendLine(compiler.CompileToLua(participant.ParticipantCompany, !participant.IsHumanParticipant, participant.PlayerIndexOnTeam));
+                lua.AppendLine(this.m_companyCompiler.CompileToLua(participant.ParticipantCompany, !participant.IsHumanParticipant, participant.PlayerIndexOnTeam, 1));
             }
 
             lua.DecreaseIndent();
@@ -144,13 +148,25 @@ namespace Battlegrounds.Compiler {
         /// <param name="players">The players on the team.</param>
         protected virtual void WriteTeam(TxtBuilder lua, string team, IEnumerable<SessionParticipant> players) {
 
+            // Create team table
             lua.AppendLine($"[\"{team}\"] = {{");
             lua.IncreaseIndent();
 
+            // Foreach participant
             foreach (SessionParticipant player in players) {
-                lua.AppendLine($"{{ display_name = \"{player.GetName()}\", ai_value = {(byte)player.Difficulty}, id = {player.PlayerIndexOnTeam}, }},");
+                StringBuilder blder = new StringBuilder();
+                blder.Append($"{{{Environment.NewLine}\t\t\t\t");
+                blder.Append($"display_name = \"{player.GetName()}\", ");
+                if (player.Difficulty == Game.AIDifficulty.Human) {
+                    blder.Append($"steam_index = \"{player.GetID()}\",{Environment.NewLine}\t\t\t\t");
+                }
+                blder.Append($"ai_value = {(byte)player.Difficulty}, ");
+                blder.Append($"id = {player.PlayerIndexOnTeam},{Environment.NewLine}");
+                blder.Append($"\t\t\t}},{Environment.NewLine}");
+                lua.Append(blder.ToString());
             }
 
+            // End table
             lua.DecreaseIndent();
             lua.AppendLine("},");
 
@@ -199,6 +215,8 @@ namespace Battlegrounds.Compiler {
             }
 
         }
+
+        public void SetCompanyCompiler(ICompanyCompiler companyCompiler) => this.m_companyCompiler = companyCompiler;
 
     }
 

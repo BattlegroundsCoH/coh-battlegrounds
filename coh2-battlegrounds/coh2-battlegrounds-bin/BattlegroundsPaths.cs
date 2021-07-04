@@ -41,6 +41,11 @@
         public const string DATABASE_FOLDER = "database_folder";
 
         /// <summary>
+        /// Get the binary folder - containing shipped binary files
+        /// </summary>
+        public const string BINARY_FOLDER = "bin_folder";
+
+        /// <summary>
         /// Path ID for the locale folder
         /// </summary>
         public const string LOCALE_FOLDER = "locale_folder";

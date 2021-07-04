@@ -1,28 +1,31 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
+using System.Diagnostics.Contracts;
+using System.IO;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+
 using Battlegrounds;
 using Battlegrounds.Game;
-using Battlegrounds.Game.Battlegrounds;
 using Battlegrounds.Game.Database;
+using Battlegrounds.Game.DataCompany;
 using Battlegrounds.Game.Gameplay;
+using Battlegrounds.Game.Match;
 using Battlegrounds.Modding;
-using Battlegrounds.Online.Lobby;
+using Battlegrounds.Networking.Communication;
+using Battlegrounds.Networking.Lobby;
 
+using BattlegroundsApp.Controls.Lobby;
+using BattlegroundsApp.Controls.Lobby.Chatting;
+using BattlegroundsApp.Controls.Lobby.Components;
 using BattlegroundsApp.LocalData;
 using BattlegroundsApp.Models;
+using BattlegroundsApp.Resources;
 using BattlegroundsApp.Views.ViewComponent;
 
 namespace BattlegroundsApp.Views {
@@ -30,297 +33,599 @@ namespace BattlegroundsApp.Views {
     /// <summary>
     /// Interaction logic for GameLobbyView.xaml
     /// </summary>
-    public partial class GameLobbyView : UserControl {
+    public partial class GameLobbyView : ViewState, INotifyPropertyChanged, IChatController {
 
-        ServerMessageHandler m_smh;
+        private class GameLobbyViewScenarioItem : IDropdownElement {
+            public Scenario Scenario { get; }
+            private string m_display;
+            public GameLobbyViewScenarioItem(Scenario scenario) {
+                this.Scenario = scenario;
+                this.m_display = this.Scenario.Name;
+                if (this.Scenario.Name.StartsWith("$") && uint.TryParse(this.Scenario.Name[1..], out uint key)) {
+                    this.m_display = GameLocale.GetString(key);
+                }
+            }
 
-        private MainWindow m_hostWindow;
-        private Task m_lobbyUpdate;
-        private LobbyTeamManagementModel m_teamManagement;
-
-        public event Action<bool, GameLobbyView> OnServerAcceptanceResponse;
-
-        public GameLobbyView(MainWindow hostWindow) {
-
-            this.m_hostWindow = hostWindow;
-            this.m_lobbyUpdate = new Task(this.UpdateLobby);
-
-            InitializeComponent();
-
-            this.m_teamManagement = new LobbyTeamManagementModel(this.TeamGridview);
-            this.m_teamManagement.OnTeamEvent += this.OnTeamManagementCallbackHandler;
-
+            public override string ToString() => this.m_display;
+            public bool IsSame(object source)
+                => (source is string s && this.Scenario.RelativeFilename == s) || source == this.Scenario || (source is GameLobbyViewScenarioItem i && i.Scenario == this.Scenario);
         }
 
-        public void SetSMH(ServerMessageHandler smh) => this.m_smh = smh;
+        //private bool m_hasCreatedLobbyOnce;
+        private ILobbyPlayModel m_playModel;
 
-        private void SendMessage_Click(object sender, RoutedEventArgs e) {
+        private GameLobbyViewScenarioItem m_lastScenario;
 
-            string messageContent = messageText.Text;
-            string messageSender = BattlegroundsInstance.LocalSteamuser.Name;
+        private LobbyHandler m_handler;
+        private bool m_ignoreEvents;
+        private bool m_hasLoadedLobby;
 
-            string message = $"{messageSender}: {messageContent}";
+        public event PropertyChangedEventHandler PropertyChanged;
 
-            lobbyChat.Text += $"{message}\n";
-            lobbyChat.ScrollToEnd();
+        public string LobbyName => $"Game Lobby: {this.m_handler.Lobby.LobbyName}";
 
-            messageText.Clear();
+        public bool CanLeave => this.m_playModel is null || !this.m_playModel.CanCancel;
 
-            // Send message to server (so other players can see)
-            this.m_smh.Lobby.SendChatMessage(messageContent);
+        public bool CanStartMatch => this.m_handler.IsHost && this.IsLegalMatch();
 
-        }
+        public string TeamStringAllies => $"Allies ({this.m_handler.Lobby.AlliesTeam.Size}/{this.m_handler.Lobby.AlliesTeam.Capacity})";
 
-        private void ChangeTeam_Click(object sender, RoutedEventArgs e) {
+        public string TeamStringAxis => $"Axis ({this.m_handler.Lobby.AxisTeam.Size}/{this.m_handler.Lobby.AxisTeam.Capacity})";
 
-           // TODO: 
+        public string TeamStringSpectators => $"Observers ({this.m_handler.Lobby.SpectatorTeam.Size}/{this.m_handler.Lobby.SpectatorTeam.Capacity})";
+
+        public LobbyTeamManagementModel TeamManager { get; private set; }
+
+        public ChatMessageSent OnSend => this.OnSendChatMessage;
+
+        public GameLobbyView(LobbyHandler handler) {
+
+            // Init components
+            this.InitializeComponent();
+
+            // Set handler
+            this.m_handler = handler;
 
         }
 
         private void StartGame_Click(object sender, RoutedEventArgs e) {
-            this.m_smh.Lobby.CompileAndStartMatch(this.OnStartMatchCancelled);
-            this.UpdateGUI(() => this.lobbyChat.AppendText("[Info] Starting match\n"));
+
+            if (!this.m_handler.IsHost) {
+                return;
+            }
+
+            // Show a miss-click failsafe
+            if (MessageBox.Show("Are you sure you want to start the match?", "Start Match?", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes) {
+
+                this.m_playModel = new LobbyHostPlayModel(this, this.m_handler);
+                this.m_playModel.PlayGame(this.CancelGame);
+
+            }
+
         }
 
-        private void OnStartMatchCancelled(string reason) {
-            Trace.WriteLine(reason, "GameLobbyView-OnMatchCancelled.cs");
-            if (reason.CompareTo(SessionStatus.S_Compiling.ToString()) == 0) {
-                this.UpdateGUI(() => this.lobbyChat.AppendText("[Info] Generating ingame match details...\n"));
-            } else if (reason.CompareTo(SessionStatus.S_Playing.ToString()) == 0) {
-                this.UpdateGUI(() => this.lobbyChat.AppendText("[Info] Starting game...\n"));
-            }
+        private void CancelGame() {
+
         }
 
         private void LeaveLobby_Click(object sender, RoutedEventArgs e) {
 
-            if (this.m_smh.Lobby != null) {
-                this.m_smh.LeaveLobby();
-                this.m_hostWindow.SetView(new GameBrowserView(m_hostWindow));
+            // Set event ignore flag
+            this.m_ignoreEvents = true;
+
+            // Leave lobby
+            _ = Task.Run(() => this.m_handler.Lobby.Leave());
+
+            // Change state
+            if (this.StateChangeRequest.Invoke(MainWindow.GAMEBROWSERSTATE) is false) {
+                Trace.WriteLine("Somehow failed to change state", nameof(GameLobbyView)); // TODO: Better error handling
             }
 
         }
 
-        public void UpdateGUI(Action a) {
-            try {
-                this.Dispatcher.Invoke(a);
-            } catch (ObjectDisposedException) {
+        private void UpdateAvailableGamemodes(Scenario scenario) {
+            Contract.Requires(scenario is not null, "Scenario cannot be null");
 
-            } catch {
+            // Keep track of old gamemode
+            Wincondition currentGamemode = this.Gamemode.SelectedItem as Wincondition;
+            int currentOption = this.GamemodeOption.SelectedIndex;
 
-            }
-        }
-
-        public void ServerConnectResponse(bool connected) {
-            this.OnServerAcceptanceResponse?.Invoke(connected, this);
-            if (!connected) {
-                this.m_hostWindow.SetView(new GameBrowserView(this.m_hostWindow));
-                MessageBox.Show("An unexpected server error occured and it was not possible to join the lobby.", "Server Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            // Set available gamemodes
+            List<Wincondition> source = scenario.Gamemodes.Count > 0 ? scenario.Gamemodes : WinconditionList.GetDefaultList();
+            if (source.All(this.Gamemode.Items.Contains)) { // if nore changes are made, just dont update
                 return;
-            } else {
-                this.UpdateGUI(this.CreateLobbyData);
-            }
-        }
-
-        private void CreateLobbyData() {
-            if (this.m_smh.Lobby.IsHost) {
-
-                var scenarioSource = ScenarioList.GetList().OrderBy(x => x.ToString()).ToList();
-                Map.ItemsSource = scenarioSource;
-
-                int selectedScenario = scenarioSource.FindIndex(x => x.RelativeFilename.CompareTo(BattlegroundsInstance.LastPlayedMap) == 0);
-                Map.SelectedIndex = selectedScenario != -1 ? selectedScenario : 0;
-
-                var scen = Map.SelectedItem as Scenario;
-                this.m_smh.Lobby.SetMap(scen);
-                this.m_smh.Lobby.SetLobbyCapacity(scen.MaxPlayers);
-
-                this.UpdateAvailableGamemodes();
-
-            } else {
-
-                // lock everything
-
-                throw new NotImplementedException(); // TODO: Fetch lobby data
-
-            }
-            this.UpdateLobbyVisuals();
-            this.m_lobbyUpdate.Start();
-        }
-
-        private void UpdateAvailableGamemodes() {
-
-            if (Map.SelectedItem is Scenario scenario) {
-
-                if (scenario.Gamemodes.Count > 0) {
-                    Gamemode.ItemsSource = scenario.Gamemodes.OrderBy(x => x.ToString()).ToList();
-                    Gamemode.SelectedIndex = 0;
-                } else {
-                    var def = WinconditionList.GetDefaultList().OrderBy(x => x.ToString()).ToList();
-                    Gamemode.ItemsSource = def;
-                    Gamemode.SelectedIndex = def.FindIndex(x => x.Name.CompareTo("Victory Points") == 0);
-                }
-
-                this.UpdateGamemodeOptions(Gamemode.SelectedItem as Wincondition);
-
             }
 
-        }
+            this.Gamemode.ItemsSource = source;
+            int oldgamemode = this.Gamemode.Items.IndexOf(currentGamemode);
+            this.Gamemode.SelectedIndex = oldgamemode == -1 ? 0 : oldgamemode;
 
-        private void Map_SelectionChanged(object sender, SelectionChangedEventArgs e) {
-            if (Map.SelectedItem is Scenario scenario) {
-                if (scenario.RelativeFilename.CompareTo(this.m_smh.Lobby.SelectedMap) != 0) {
-                    if (scenario.MaxPlayers < this.m_smh.Lobby.PlayerCount) {
-                        // Do something
+            // If current gamemode was found
+            if (this.Gamemode.SelectedItem is Wincondition wincon) {
+                if (wincon.Options?.Length > 0) {
+                    this.Gamemode.Visibility = Visibility.Visible;
+                    if (oldgamemode != -1) {
+                        this.Gamemode.SelectedIndex = currentOption;
+                    } else {
+                        this.GamemodeOption.SelectedIndex = wincon.DefaultOptionIndex;
                     }
-                    this.UpdateAvailableGamemodes();
-                    this.m_teamManagement.SetMaxPlayers(scenario.MaxPlayers);
-                    this.m_smh.Lobby.SetMap(scenario);
-                    this.m_smh.Lobby.SetLobbyCapacity(scenario.MaxPlayers);
+                } else {
+                    this.GamemodeOption.Visibility = Visibility.Hidden;
+                }
+            } else {
+                Trace.WriteLine($"Failed to get wincondition list for scenario {scenario.RelativeFilename}", nameof(GameLobbyView));
+            }
+
+        }
+
+        private void UpdateMapPreview(Scenario scenario) {
+            Contract.Requires(scenario is not null, "Scenario cannot be null");
+
+            // Get Path
+            string fullpath = Path.GetFullPath($"bin\\gfx\\map_icons\\{scenario.RelativeFilename}_map.tga");
+
+            // Check if file exists
+            if (File.Exists(fullpath)) {
+                try {
+                    this.mapImage.Source = TgaImageSource.TargaBitmapSourceFromFile(fullpath);
+                    return;
+                } catch (BadImageFormatException bife) {
+                    Trace.WriteLine(bife, "GameLobbyView@UpdateMapPreview");
+                }
+            } else {
+                fullpath = Path.GetFullPath($"usr\\mods\\map_icons\\{scenario.RelativeFilename}_map.tga");
+                if (File.Exists(fullpath)) {
+                    try {
+                        this.mapImage.Source = TgaImageSource.TargaBitmapSourceFromFile(fullpath);
+                        return;
+                    } catch (BadImageFormatException bife) {
+                        Trace.WriteLine(bife, "GameLobbyView@UpdateMapPreview");
+                    }
+                } else {
+                    Trace.WriteLine($"Failed to locate file: {fullpath}");
                 }
             }
+
+            // If no image is set, set to unknown
+            this.SetUnknownMapPreview();
+
         }
+
+        private void SetUnknownMapPreview() => this.mapImage.Source = new BitmapImage(new Uri("pack://application:,,,/Resources/ingame/unknown_map.png"));
 
         public SessionInfo CreateSessionInfo() {
 
-            Wincondition selectedWincondition = Gamemode.SelectedItem as Wincondition;
-            if (selectedWincondition is null) {
-                // TODO: Handle
-            }
+            // Get gamemode data
+            int option = this.GamemodeOption.SelectedIndex;
+            Wincondition selectedWincondition = this.Gamemode.SelectedItem as Wincondition;
 
-            Scenario selectedScenario = Map.SelectedItem as Scenario;
+            // Get scenario data
+            Scenario selectedScenario = (this.Map.SelectedItem as GameLobbyViewScenarioItem).Scenario;
             if (selectedScenario is null) {
                 // TODO: Handle
             }
 
-            List<SessionParticipant> alliedTeam = this.m_teamManagement.GetParticipants(ManagedLobbyTeamType.Allies);
-            List<SessionParticipant> axisTeam = this.m_teamManagement.GetParticipants(ManagedLobbyTeamType.Axis);
+            // Get team data
+            List<SessionParticipant> alliedTeam = this.TeamManager.GetParticipants(LobbyTeamType.Allies);
+            List<SessionParticipant> axisTeam = this.TeamManager.GetParticipants(LobbyTeamType.Axis);
 
+            // Compile into session data
             SessionInfo sinfo = new SessionInfo() {
                 SelectedGamemode = selectedWincondition,
-                SelectedGamemodeOption = 1,
+                SelectedGamemodeOption = option,
                 SelectedScenario = selectedScenario,
-                SelectedTuningMod = new BattlegroundsTuning(),
+                IsOptionValue = false,
+                SelectedTuningMod = new BattlegroundsTuning(), // TODO: Allow users to change this somewhere
                 Allies = alliedTeam.ToArray(),
                 Axis = axisTeam.ToArray(),
                 FillAI = false,
                 DefaultDifficulty = AIDifficulty.AI_Hard,
             };
 
+            // Return session data
             return sinfo;
 
         }
 
-        private async void UpdateLobby() {
-            while (true && this is not null) {
-                if (this.m_smh.Lobby.IsConnectedToServer) {
-                    this.UpdateLobbyVisuals();
-                    await Task.Delay(1500);
-                } else {
-                    break;
+        private void Map_SelectedItemChanged(object sender, SelectionChangedEventArgs e) {
+
+            if (this.Map.State is OtherState) {
+                return;
+            }
+
+            if (this.Map.SelectedItem is GameLobbyViewScenarioItem scenarioItem) {
+                Scenario scenario = scenarioItem.Scenario;
+                if (scenario is not null) {
+
+                    // Get host
+                    HostedLobby lobby = this.m_handler.Lobby as HostedLobby;
+
+                    // Set capacity
+                    if (lobby.SetCapacity(scenario.MaxPlayers)) {
+
+                        // Update selected scenario
+                        lobby.SetMode(scenario.RelativeFilename, null, null, this.TranslateOption);
+
+                        // Set max players in team manager
+                        this.TeamManager.SetMaxPlayers(scenario.MaxPlayers);
+
+                        // Update preview and gamemodes
+                        this.UpdateMapPreview(scenario);
+                        this.UpdateAvailableGamemodes(scenario);
+
+                        // Set last selection incase user picks unavailable scenario
+                        this.m_lastScenario = scenarioItem;
+
+                        // Update players last scenario
+                        BattlegroundsInstance.LastPlayedMap = scenario.RelativeFilename;
+
+                    } else {
+
+                        // Reset selection
+                        this.Map.SelectedItem = this.m_lastScenario;
+
+                    }
+
                 }
+            }
+
+        }
+
+        private void Gamemode_SelectedItemChanged(object sender, SelectionChangedEventArgs e) {
+
+            // Do not update if not able to
+            if (this.Gamemode.State is OtherState) {
+                return;
+            }
+
+            // If gamemode is selected, update option
+            if (this.Gamemode.SelectedItem is Wincondition wincon) {
+
+                this.GamemodeOption.Visibility = (wincon.Options is null || wincon.Options.Length == 0) ? Visibility.Hidden : Visibility.Visible;
+                this.GamemodeOption.ItemsSource = wincon.Options;
+                this.GamemodeOption.SelectedIndex = wincon.DefaultOptionIndex;
+
+                // Update lobby data
+                HostedLobby lobby = this.m_handler.Lobby as HostedLobby;
+                lobby.SetMode(null, wincon.Name, null, this.TranslateOption);
+
+            }
+
+        }
+
+        private void GamemodeOption_SelectedItemChanged(object sender, SelectionChangedEventArgs e) {
+
+            // Do not update if not able to
+            if (this.GamemodeOption.State is OtherState) {
+                return;
+            }
+
+            // If valid option
+            if (this.GamemodeOption.SelectedItem is WinconditionOption option) {
+
+                // Update lobby data
+                HostedLobby lobby = this.m_handler.Lobby as HostedLobby;
+                lobby.SetMode(null, null, option.Value.ToString(), this.TranslateOption);
+
+            }
+
+        }
+
+        private bool IsLegalMatch() {
+
+            // Get if allies are ready
+            bool alliesPlayReady = this.TeamManager.All(LobbyTeamType.Allies, x => x.IsPlayReady());
+            bool alliesAtLeastOnePlayer = this.TeamManager.Any(LobbyTeamType.Allies,
+                x => x.CardState is TeamPlayerCard.AISTATE or TeamPlayerCard.SELFSTATE or TeamPlayerCard.OCCUPIEDSTATE);
+
+            bool allies = alliesAtLeastOnePlayer && alliesPlayReady;
+            if (!allies) {
+                return false;
+            }
+
+            // Get if axis are ready
+            bool axisPlayReady = this.TeamManager.All(LobbyTeamType.Axis, x => x.IsPlayReady());
+            bool axisAtLeastOnePlayer = this.TeamManager.Any(LobbyTeamType.Axis,
+                x => x.CardState is TeamPlayerCard.AISTATE or TeamPlayerCard.SELFSTATE or TeamPlayerCard.OCCUPIEDSTATE);
+
+            return axisPlayReady && axisAtLeastOnePlayer;
+
+        }
+
+        public Company GetLocalCompany() {
+
+            // Get self in team model
+            TeamPlayerCard card = this.TeamManager.Self;
+            if (card is null) {
+                return null;
+            }
+
+            // Verify we got the company
+            if (card.CompanySelector.SelectedItem is not TeamPlayerCompanyItem companyItem ) {
+                return null;
+            }
+
+            // Get company
+            Company company = companyItem.State == CompanyItemState.Company ? PlayerCompanies.FromNameAndFaction(companyItem.Name, Faction.FromName(companyItem.Army)) : null;
+            return company is not null ? company : throw new Exception();
+
+        }
+
+        public override void StateOnFocus() {
+
+            if (!this.m_hasLoadedLobby) {
+
+                // Setup the lobby
+                this.SetupLobby();
+
+                // Subscribe to closed event
+                if (this.m_handler.Connection is HttpConnection http) {
+                    http.OnConnectionClosed += this.OnConnectionLost;
+                }
+
+                // Set flag to true
+                this.m_hasLoadedLobby = true;
+
+            }
+
+        }
+
+        private void SetupLobby() {
+
+            // Setup variable callback
+            this.m_handler.Lobby.VariableCallback = this.OnLobbyVariable;
+
+            // Setup chat receiver
+            this.m_handler.Lobby.ChatNotification += (channel, sender, message) => {
+                string name = sender.Name; // Don't do this on the GUI thread in case of remoting!
+                _ = this.UpdateGUI(() => this.LobbyChat.DisplayMessage($"{name}: {message}", channel));
+            };
+
+            // Setup system receiver
+            this.m_handler.Lobby.SystemNotification += systemInfo => {
+                _ = this.UpdateGUI(() => this.LobbyChat.DisplayMessage(TranslateSystem(systemInfo), 0));
+            };
+
+            // Set chat handler as self
+            this.LobbyChat.Chat = this;
+
+            // Create card overview
+            TeamPlayerCard[][] cards = new TeamPlayerCard[][]{
+                new TeamPlayerCard[] { this.PlayerCard01, this.PlayerCard02, this.PlayerCard03, this.PlayerCard04 },
+                new TeamPlayerCard[] { this.PlayerCard11, this.PlayerCard12, this.PlayerCard13, this.PlayerCard14 },
+                new TeamPlayerCard[] { this.PlayerCard21, this.PlayerCard22, this.PlayerCard23, this.PlayerCard24 }
+            };
+
+            // Setup team management.
+            this.TeamManager = new LobbyTeamManagementModel(cards, this.m_handler);
+            this.TeamManager.RefreshAll(true);
+            this.TeamManager.OnModelNotification += this.OnTeamManagerNotification;
+
+            // (Remove this line in case Relic fixes spectators for custom matches)
+            this.TeamManager.SetMaxObservers(0);
+
+            // If host, setup everything
+            if (this.m_handler.IsHost) {
+
+                // Enable host mode (and because true, will update populate the dropdowns).
+                this.EnableHostMode(true);
+
+            } else {
+
+                // lock everything
+                this.EnableHostMode(false);
+
+                // Refresh dropdowns
+                this.RefreshDropdowns();
+
+                // Create playmodel for member
+                this.m_playModel = new LobbyMemberPlayModel(this, this.m_handler);
+
+            }
+
+        }
+
+        private void OnSendChatMessage(int channel, string message) {
+            if (channel is 0) {
+                this.m_handler.Lobby.SendChatMessage(message);
+            } else if (channel is 1) {
+                /*this.m_handler.Lobby.SendTeamChatMessage(message);*/
             }
         }
 
-        private void UpdateLobbyVisuals() {
-            this.UpdateGUI(() => {
-                this.m_teamManagement.UpdateTeamview(this.m_smh.Lobby, this.m_smh.Lobby.IsHost);
+        private void OnTeamManagerNotification() => this.UpdateGUI(() => {
+            this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(this.CanStartMatch)));
+        });
+
+        public override void StateOnLostFocus() {
+
+        }
+
+        public void EnableHostMode(bool hostMode) {
+
+            // Enable or disable game settings (AI and ID properties not relevant to these elements)
+            this.Map.SetStateBasedOnContext(hostMode, hostMode, 0);
+            this.Gamemode.SetStateBasedOnContext(hostMode, hostMode, 0);
+            this.GamemodeOption.SetStateBasedOnContext(hostMode, hostMode, 0);
+            this.WeatherOption.SetStateBasedOnContext(hostMode, hostMode, 0);
+            this.SupplyOption.SetStateBasedOnContext(hostMode, hostMode, 0);
+            this.TuningOption.SetStateBasedOnContext(hostMode, hostMode, 0);
+
+            // If host-mode is enabled, populate the dropdowns
+            if (hostMode) {
+
+                // Add pop data
+                this.PopulateDropdowns();
+
+                // Try set recent scenario
+                if (!string.IsNullOrEmpty(BattlegroundsInstance.LastPlayedMap)) {
+                    this.SetScenario(BattlegroundsInstance.LastPlayedMap);
+                }
+
+            }
+
+        }
+
+        private void PopulateDropdowns() {
+
+            // Get the scenarios and set source
+            List<GameLobbyViewScenarioItem> scenarioSource = ScenarioList.GetList().Select(x => new GameLobbyViewScenarioItem(x)).ToList();
+            this.Map.ItemsSource = scenarioSource;
+
+            // If no mapp has been selected
+            if (this.Map.SelectedIndex == -1) {
+
+                // Find map to select
+                int selectedScenario = scenarioSource.FindIndex(x => x.Scenario.RelativeFilename == BattlegroundsInstance.LastPlayedMap);
+                this.Map.SelectedIndex = selectedScenario != -1 ? selectedScenario : 0;
+
+            }
+
+        }
+
+        private void RefreshDropdowns() {
+
+            // Get game data
+            string map = this.m_handler.Lobby.LobbyMap;
+            string wc = this.m_handler.Lobby.LobbyGamemode;
+            string wco = this.m_handler.Lobby.LobbyGamemodeOption;
+
+            // Write received data
+            Trace.WriteLine($"{map}, {wc} ({wco})", nameof(GameLobbyView));
+
+            // Set the scenario
+            this.SetScenario(map);
+
+            // Set the gamemode
+            this.SetGamemode(wc, wco);
+
+        }
+
+        public void SetScenario(string scenario) {
+
+            // Get the scenario
+            Scenario s = ScenarioList.FromRelativeFilename(scenario);
+
+            // Display in dropdown
+            this.Map.SelectedItem = new GameLobbyViewScenarioItem(s);
+
+            // Update preview
+            if (this.Map.State is OtherState) {
+                this.TeamManager.SetMaxPlayers(s.MaxPlayers);
+                this.UpdateMapPreview(s);
+            }
+
+        }
+
+        public void SetGamemode(string gamemode, string option) {
+
+            // If wincondition is found
+            if (WinconditionList.GetWinconditionByName(gamemode) is Wincondition wc) {
+
+                // Set gamemode
+                this.Gamemode.SelectedItem = wc;
+
+                // Hide the option by default
+                this.GamemodeOption.Visibility = Visibility.Hidden;
+
+                // Try set gamemode option
+                if (int.TryParse(option, out int value)) {
+                    if (wc.Options is not null) {
+                        this.GamemodeOption.Visibility = Visibility.Visible;
+                        this.GamemodeOption.SelectedItem = wc.Options.FirstOrDefault(x => x.Value == value);
+                    }
+                }
+
+            }
+
+        }
+
+        private string TranslateOption(string key, string value) => value;
+
+        private static string TranslateSystem(string notification) {
+            int i = notification.IndexOf('$');
+            if (i != -1) {
+                string key = notification[0..i];
+                string value = notification[(i + 1)..];
+                string loc = key switch { // TODO: Properly translate
+                    "JOIN" => $"{value} has joined.",
+                    "KICK" => $"{value} was kicked by host.",
+                    "LEAVE" => $"{value} has left.",
+                    _ => value
+                };
+                return $"[System] {loc}";
+            } else {
+                return $"[System] {notification} (Invalid System Message)";
+            }
+        }
+
+        private void OnLobbyVariable(LobbyRefreshVariable refreshVariable, object refreshArgument) {
+
+            // Do not refresh if we're currently ignoring events.
+            if (this.m_ignoreEvents) {
+                return;
+            }
+
+            // Invoke the following on the GUI thread
+            _ = this.UpdateGUI(() => {
+                switch (refreshVariable) {
+                    case LobbyRefreshVariable.TEAM:
+                        if (refreshArgument is null) {
+                            this.TeamManager.RefreshAll(false);
+                        } else {
+                            if (refreshArgument is ILobbyTeam t) {
+                                this.TeamManager.RefreshTeam(t.TeamIndex == 1 ? LobbyTeamType.Allies : LobbyTeamType.Axis);
+                            } else {
+                                Trace.WriteLine($"Refresh variable argument not implemented : {refreshVariable}::{refreshArgument}");
+                            }
+                        }
+                        this.OnTeamManagerNotification();
+                        this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(this.TeamStringAllies)));
+                        this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(this.TeamStringAxis)));
+                        break;
+                    case LobbyRefreshVariable.MATCHOPTION:
+                        this.RefreshDropdowns();
+                        break;
+                    case LobbyRefreshVariable.SCENARIO:
+                        break;
+                    case LobbyRefreshVariable.GAMEMODE:
+                        break;
+                    case LobbyRefreshVariable.GAMEMODEOPTION:
+                        break;
+                    case LobbyRefreshVariable.MODOPTION:
+                        break;
+                    default:
+                        Trace.WriteLine($"Refresh variable not implemented : {refreshVariable}");
+                        break;
+                }
             });
         }
 
-        private void OnTeamManagementCallbackHandler(ManagedLobbyTeamType team, PlayercardView card, object arg, string reason) {
-            switch (reason) {
-                case "AddAI":
-                    card.IsRegistered = false;
-                    int aiid = this.m_smh.Lobby.CreateAIPlayer(card.Difficulty, card.Playerarmy, team);
-                    if (aiid != -1) {
-                        card.UpdatePlayerID((ulong)aiid);
-                        card.IsRegistered = true;
-                        Trace.WriteLine($"Adding AI [{team}][{card.Difficulty}][{card.Playerarmy}]", "GameLobbyView");
-                    } else {
-                        Trace.WriteLine("Failed to add AI...");
-                        card.SetCardState(PlayercardViewstate.Open);
-                    }
-                    break;
-                case "ChangedArmy":
-                    if (!card.IsRegistered) {
-                        break;
-                    }
-                    if (card.Playerarmy.CompareTo(this.m_smh.Lobby.TryFindPlayerFromID(card.Playerid)?.Faction) != 0) {
-                        this.m_smh.Lobby.SetFaction(card.Playerid, card.Playerarmy);
-                        Trace.WriteLine($"Changing faction [{card.Playerid}][{card.Difficulty}][{card.Playerarmy}]", "GameLobbyView");
-                    }
-                    break;
-                case "ChangedCompany":
-                    if (!card.IsRegistered) {
-                        break;
-                    }
-                    if (card.Playercompany.CompareTo(this.m_smh.Lobby.TryFindPlayerFromID(card.Playerid)?.CompanyName) != 0) {
-                        if (card.IsAI || card.Playerid == this.m_smh.Lobby.Self.ID) {
-                            PlayercardCompanyItem companyItem = (PlayercardCompanyItem)arg;
-                            if (companyItem.State == PlayercardCompanyItem.CompanyItemState.Company && card.Playerid == this.m_smh.Lobby.Self.ID) {
-                                Company company = PlayerCompanies.FromNameAndFaction(companyItem.Name, Faction.FromName(card.Playerarmy));
-                                if (company is not null) {
-                                    this.m_smh.Lobby.SetCompany(company);
-                                    Trace.WriteLine($"Changing company [{card.Playerid}][{card.Difficulty}][{card.Playerarmy}][{card.Playercompany}]", "GameLobbyView");
-                                } else {
-                                    throw new NotImplementedException();
-                                }
-                            } else if (companyItem.State == PlayercardCompanyItem.CompanyItemState.Generate && card.IsAI) {
-                                this.m_smh.Lobby.SetCompany(card.Playerid, "AUGEN", -1.0);
-                                Trace.WriteLine($"Changing company [{card.Playerid}][{card.Difficulty}][{card.Playerarmy}][Auto-generated]", "GameLobbyView");
-                            } else {
-                                this.m_smh.Lobby.SetCompany(card.Playerid, "NULL", -1.0);
-                                Trace.WriteLine($"Changing company [{card.Playerid}][{card.Difficulty}][{card.Playerarmy}][{card.Playercompany}]", "GameLobbyView");
-                            }
-                        }
-                    }
-                    break;
-                case "RemovePlayer":
-                    card.IsRegistered = false;
-                    this.m_smh.Lobby.RemovePlayer(card.Playerid, true);
-                    Trace.WriteLine($"Removing player [{team}][{arg}][{card.Difficulty}][{card.Playerarmy}]", "GameLobbyView");
-                    break;
-                default:
-                    break;
+        public void OnConnectionLost(bool remoteClosed, string connectionID) {
+
+            // Bail if ignoring events like these
+            if (this.m_ignoreEvents) {
+                return;
             }
-            this.UpdateStartMatchButton();
-        }
 
-        private void UpdateGamemodeOptions(Wincondition wc) {
-            if (wc.Options is not null) {
-                GamemodeOption.Visibility = Visibility.Visible;
-                GamemodeOption.ItemsSource = wc.Options.OrderBy(x => x.Value).ToList();
-                GamemodeOption.SelectedIndex = wc.DefaultOptionIndex;
-            } else {
-                GamemodeOption.Visibility = Visibility.Collapsed;
+            // If remotely closed
+            if (remoteClosed) {
+
+                // Show message telling the user they've been kicked from the lobby.
+                _ = MessageBox.Show("You have been kicked from the lobby.", "Kicked from lobby.", MessageBoxButton.OK, MessageBoxImage.Information);
+
+                // Try to change state
+                if (!this.StateChangeRequest?.Invoke(MainWindow.GAMEBROWSERSTATE) ?? true) {
+
+                    // Log
+                    Trace.WriteLine("Failed to change state to gamebrowser state on connection closed remotely!", nameof(GameLobbyView));
+
+                    // Exit
+                    Environment.Exit(-1);
+
+                }
             }
-        }
 
-        private void Gamemode_SelectionChanged(object sender, SelectionChangedEventArgs e) {
-            if (Gamemode.SelectedItem is Wincondition wincon) {
-                this.m_smh.Lobby.SetGamemode(wincon.Name);
-                this.UpdateGamemodeOptions(wincon);
-            }
-        }
-
-        private void GamemodeOption_SelectionChanged(object sender, SelectionChangedEventArgs e) {
-            if (GamemodeOption.SelectedItem is WinconditionOption) {
-                this.m_smh.Lobby.SetGamemodeOption(GamemodeOption.SelectedIndex);
-            }
-        }
-
-        private void UpdateStartMatchButton() => StartGameBttn.IsEnabled = this.IsLegalMatch();
-
-        private bool IsLegalMatch() 
-            => this.m_teamManagement.GetTeamSize(ManagedLobbyTeamType.Allies) > 0 && this.m_teamManagement.GetTeamSize(ManagedLobbyTeamType.Axis) > 0;
-
-        public Company GetLocalCompany() {
-            var card = this.m_teamManagement.GetLocalPlayercard();
-            if (card is not null) {
-                return PlayerCompanies.FromNameAndFaction(card.Playercompany, Faction.FromName(card.Playerarmy));
-            } else {
-                return null;
-            }
         }
 
     }

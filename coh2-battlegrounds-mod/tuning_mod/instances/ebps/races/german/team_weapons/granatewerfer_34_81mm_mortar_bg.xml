@@ -212,6 +212,7 @@
 				<instance_reference name="ability" value="abilities\german\modal_ability\artillery\mortar_barrage_ability\mortar_team_incendiary_barrage_mp" />
 				<instance_reference name="ability" value="abilities\german\timed_ability\team_weapon_suppression_stun_mp" />
 				<instance_reference name="ability" value="abilities\german\timed_ability\mortar_veterancy_3_mp" />
+				<instance_reference name="ability" value="abilities\german\modal_ability\german_mortar_fire_flares_ability_bg" mod="142b113740474c82a60b0a428bd553d5" />
 			</list>
 		</template_reference>
 		<template_reference name="exts" value="ebpextensions\combat_ext">
@@ -298,6 +299,21 @@
 							<enum name="type" value="default" />
 							<instance_reference name="weapon" value="weapon\axis\explosive_weapons\mortar\grw34_81mm_mortar_counter_barrage_mp" />
 						</group>
+						<group name="weapon">
+							<group name="heading">
+								<float name="x" value="0" />
+								<float name="y" value="0" />
+								<float name="z" value="1" />
+							</group>
+							<float name="length" value="0" />
+							<group name="origin">
+								<float name="x" value="0" />
+								<float name="y" value="0.5" />
+								<float name="z" value="0" />
+							</group>
+							<enum name="type" value="default" />
+							<instance_reference name="weapon" value="" />
+						</group>
 					</list>
 					<bool name="receives_attack_commands" value="False" />
 				</group>
@@ -339,6 +355,27 @@
 							</group>
 							<enum name="type" value="default" />
 							<instance_reference name="weapon" value="weapon\axis\flame_throwers\mortar\grw34_81mm_incendiary_mortar_barrage_mp" />
+						</group>
+					</list>
+					<bool name="receives_attack_commands" value="False" />
+				</group>
+				<group name="hardpoint">
+					<float name="parent_hardpoint" value="1" />
+					<list name="weapon_table">
+						<group name="weapon">
+							<group name="heading">
+								<float name="x" value="0" />
+								<float name="y" value="0" />
+								<float name="z" value="1" />
+							</group>
+							<float name="length" value="0" />
+							<group name="origin">
+								<float name="x" value="0" />
+								<float name="y" value="5" />
+								<float name="z" value="0" />
+							</group>
+							<enum name="type" value="default" />
+							<instance_reference name="weapon" value="weapon\soviet\explosive_weapons\mortar\pm41_82mm_mortar_flare_mp" />
 						</group>
 					</list>
 					<bool name="receives_attack_commands" value="False" />

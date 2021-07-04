@@ -17,6 +17,7 @@ namespace Battlegrounds.Compiler.Source {
             @"https://raw.githubusercontent.com/JustCodiex/coh2-battlegrounds/scar-release-branch/coh2-battlegrounds-mod/wincondition_mod/auxiliary_scripts/shared_util.scar",
             @"https://raw.githubusercontent.com/JustCodiex/coh2-battlegrounds/scar-release-branch/coh2-battlegrounds-mod/wincondition_mod/auxiliary_scripts/shared_units.scar",
             @"https://raw.githubusercontent.com/JustCodiex/coh2-battlegrounds/scar-release-branch/coh2-battlegrounds-mod/wincondition_mod/auxiliary_scripts/shared_handler.scar",
+            @"https://raw.githubusercontent.com/JustCodiex/coh2-battlegrounds/scar-release-branch/coh2-battlegrounds-mod/wincondition_mod/auxiliary_scripts/shared_constants.scar",
             @"https://raw.githubusercontent.com/JustCodiex/coh2-battlegrounds/scar-release-branch/coh2-battlegrounds-mod/wincondition_mod/auxiliary_scripts/shared_sessionloader.scar",
             @"https://raw.githubusercontent.com/JustCodiex/coh2-battlegrounds/scar-release-branch/coh2-battlegrounds-mod/wincondition_mod/auxiliary_scripts/shared_ai.scar",
             @"https://raw.githubusercontent.com/JustCodiex/coh2-battlegrounds/scar-release-branch/coh2-battlegrounds-mod/wincondition_mod/auxiliary_scripts/shared_lookups.scar",
@@ -54,48 +55,48 @@ namespace Battlegrounds.Compiler.Source {
             this.m_branch = branchname;
         }
 
-        public WinconoditionSourceFile GetInfoFile(IWinconditionMod mod) 
-            => new WinconoditionSourceFile($"info\\{ModGuid.FromGuid(mod.Guid)}.info", Encoding.UTF8.GetBytes(SourceDownloader.DownloadSourceCode(CorrectBranch(InfoFile))));
+        public WinconditionSourceFile GetInfoFile(IWinconditionMod mod) 
+            => new WinconditionSourceFile($"info\\{mod.Guid}.info", Encoding.UTF8.GetBytes(SourceDownloader.DownloadSourceCode(CorrectBranch(InfoFile))));
 
-        public WinconoditionSourceFile[] GetLocaleFiles() {
-            var files = new List<WinconoditionSourceFile>();
+        public WinconditionSourceFile[] GetLocaleFiles() {
+            var files = new List<WinconditionSourceFile>();
             LocaleFiles.ForEach(x => {
                 string correct = this.CorrectBranch(x);
                 byte[] byteContent = (new byte[] { 0xff, 0xfe }).Union(Encoding.Unicode.GetBytes(SourceDownloader.DownloadSourceCode(correct))).ToArray();
-                files.Add(new WinconoditionSourceFile(correct[this.GetCut()..].Replace("/", "\\"), byteContent));
+                files.Add(new WinconditionSourceFile(correct[this.GetCut()..].Replace("/", "\\"), byteContent));
             });
             return files.ToArray();
         }
 
-        public WinconoditionSourceFile[] GetScarFiles() {
-            var files = new List<WinconoditionSourceFile>();
+        public WinconditionSourceFile[] GetScarFiles() {
+            var files = new List<WinconditionSourceFile>();
             ScarFiles.ForEach(x => {
                 string correct = this.CorrectBranch(x);
-                files.Add(new WinconoditionSourceFile(correct[this.GetCut()..].Replace("/", "\\"), Encoding.UTF8.GetBytes(SourceDownloader.DownloadSourceCode(correct))));
+                files.Add(new WinconditionSourceFile(correct[this.GetCut()..].Replace("/", "\\"), Encoding.UTF8.GetBytes(SourceDownloader.DownloadSourceCode(correct))));
             });
             return files.ToArray();
         }
 
-        public WinconoditionSourceFile[] GetWinFiles() {
-            var files = new List<WinconoditionSourceFile>();
+        public WinconditionSourceFile[] GetWinFiles() {
+            var files = new List<WinconditionSourceFile>();
             WinFiles.ForEach(x => {
                 string correct = this.CorrectBranch(x);
-                files.Add(new WinconoditionSourceFile(correct[this.GetCut()..].Replace("/", "\\"), Encoding.UTF8.GetBytes(SourceDownloader.DownloadSourceCode(correct))));
+                files.Add(new WinconditionSourceFile(correct[this.GetCut()..].Replace("/", "\\"), Encoding.UTF8.GetBytes(SourceDownloader.DownloadSourceCode(correct))));
             });
             return files.ToArray();
         }
 
-        public WinconoditionSourceFile[] GetUIFiles(IWinconditionMod mod) {
+        public WinconditionSourceFile[] GetUIFiles(IWinconditionMod mod) {
             try {
                 string[] local = Directory.GetFiles("bin\\gfx\\");
                 if (local.Length > 0) {
-                    var files = new List<WinconoditionSourceFile>();
+                    var files = new List<WinconditionSourceFile>();
                     for (int i = 0; i < local.Length; i++) {
                         byte[] contents = File.ReadAllBytes(local[i]);
                         if (local[i].EndsWith(".gfx")) {
-                            files.Add(new WinconoditionSourceFile($"data\\ui\\Bin\\{ModGuid.FromGuid(mod.Guid)}.gfx", contents));
+                            files.Add(new WinconditionSourceFile($"data\\ui\\Bin\\{mod.Guid}.gfx", contents));
                         } else if (local[i].EndsWith(".dds")) {
-                            files.Add(new WinconoditionSourceFile($"data\\ui\\Assets\\Textures\\{Path.GetFileName(local[i])}", contents));
+                            files.Add(new WinconditionSourceFile($"data\\ui\\Assets\\Textures\\{Path.GetFileName(local[i])}", contents));
                         } // else ... ignore
                     }
                     return files.ToArray();
@@ -107,11 +108,11 @@ namespace Battlegrounds.Compiler.Source {
             }
         }
 
-        public WinconoditionSourceFile GetModGraphic() {
+        public WinconditionSourceFile GetModGraphic() {
             const string path = "bin\\coh2_battlegrounds_wincondition_preview.dds";
             if (File.Exists(path)) {
                 byte[] ddsBytes = File.ReadAllBytes(path);
-                return new WinconoditionSourceFile($"info\\coh2_battlegrounds_wincondition_preview.dds", ddsBytes);
+                return new WinconditionSourceFile($"info\\coh2_battlegrounds_wincondition_preview.dds", ddsBytes);
             } else {
                 throw new EnvironmentException($"Failed to find shipped file \"{path}\"");
             }

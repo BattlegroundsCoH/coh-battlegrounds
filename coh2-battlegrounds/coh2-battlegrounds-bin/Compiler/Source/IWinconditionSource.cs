@@ -11,39 +11,39 @@ namespace Battlegrounds.Compiler.Source {
         /// Get all scar code files
         /// </summary>
         /// <returns>Array of all scar files</returns>
-        WinconoditionSourceFile[] GetScarFiles();
+        WinconditionSourceFile[] GetScarFiles();
 
         /// <summary>
         /// Get all wincondition files
         /// </summary>
         /// <returns>Array of all win files</returns>
-        WinconoditionSourceFile[] GetWinFiles();
+        WinconditionSourceFile[] GetWinFiles();
 
         /// <summary>
         /// Get all locale files
         /// </summary>
         /// <returns>Array of all locale files</returns>
-        WinconoditionSourceFile[] GetLocaleFiles();
+        WinconditionSourceFile[] GetLocaleFiles();
 
         /// <summary>
         /// Get all ingame UI files (in .dds format).
         /// </summary>
         /// <param name="mod">The <see cref="IWinconditionMod"/> mod associated with these UI files</param>
         /// <returns>Array of all ui files for ingame use.</returns>
-        WinconoditionSourceFile[] GetUIFiles(IWinconditionMod mod);
+        WinconditionSourceFile[] GetUIFiles(IWinconditionMod mod);
 
         /// <summary>
         /// Get the preview graphic for the mod.
         /// </summary>
-        /// <returns>The preview graphic <see cref="WinconoditionSourceFile"/>.</returns>
-        WinconoditionSourceFile GetModGraphic();
+        /// <returns>The preview graphic <see cref="WinconditionSourceFile"/>.</returns>
+        WinconditionSourceFile GetModGraphic();
 
         /// <summary>
         /// Get the info file.
         /// </summary>
         /// <param name="mod">The <see cref="IWinconditionMod"/> mod associated with the info file</param>
         /// <returns>The info file</returns>
-        WinconoditionSourceFile GetInfoFile(IWinconditionMod mod);
+        WinconditionSourceFile GetInfoFile(IWinconditionMod mod);
 
     }
 

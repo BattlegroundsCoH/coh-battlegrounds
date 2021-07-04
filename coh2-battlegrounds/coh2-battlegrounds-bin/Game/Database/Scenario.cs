@@ -1,10 +1,10 @@
-﻿using System.Collections.Generic;
-using System.Text.RegularExpressions;
-using System.Linq;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
-
+using Battlegrounds.Functional;
 using Battlegrounds.Game.Gameplay;
 using Battlegrounds.Json;
+using Battlegrounds.Lua;
 
 namespace Battlegrounds.Game.Database {
 
@@ -34,6 +34,8 @@ namespace Battlegrounds.Game.Database {
     /// Represents a scenario. Implements <see cref="IJsonObject"/>. This class cannot be inherited.
     /// </summary>
     public sealed class Scenario : IJsonObject {
+
+        public const string INVALID_SGA = "INVALID SGA";
 
         /// <summary>
         /// The text-name for the <see cref="Scenario"/>.
@@ -72,6 +74,17 @@ namespace Battlegrounds.Game.Database {
         public bool IsWintermap { get; set; }
 
         /// <summary>
+        /// Get if the given scenario is visible in the lobby.
+        /// </summary>
+        public bool IsVisibleInLobby { get; set; }
+
+        /// <summary>
+        /// Get if the <see cref="Scenario"/> is a workshop map.
+        /// </summary>
+        [JsonIgnore]
+        public bool IsWorkshopMap => this.SgaName != "MPScenarios" && this.SgaName != "MPXP1Scenarios";
+
+        /// <summary>
         /// The <see cref="Wincondition"/> instances designed for this <see cref="Scenario"/>. Empty list means all <see cref="Wincondition"/> instances can be used.
         /// </summary>
         [JsonReference] 
@@ -80,36 +93,54 @@ namespace Battlegrounds.Game.Database {
         public string ToJsonReference() => this.RelativeFilename;
 
         public Scenario() {
-            this.SgaName = string.Empty;
+            this.SgaName = INVALID_SGA;
             this.Gamemodes = new List<Wincondition>();
         }
 
+        /// <summary>
+        /// New <see cref="Scenario"/> instance with data from either an infor or options file.
+        /// </summary>
+        /// <param name="infofile">The path to the info file.</param>
+        /// <param name="optionsfile">The path to the options file</param>
+        /// <exception cref="ArgumentNullException"/>
         public Scenario(string infofile, string optionsfile) {
+            // Make sure infofile is not null
+            if (infofile is null) {
+                throw new ArgumentNullException(nameof(infofile), "Info filepath cannot be null");
+            }
+
+            // Make sure optionsfile is not null
+            if (optionsfile is null) {
+                throw new ArgumentNullException(nameof(optionsfile), "Options filepath cannot be null");
+            }
 
             this.RelativeFilename = Path.GetFileNameWithoutExtension(infofile);
             this.Gamemodes = new List<Wincondition>();
             this.SgaName = string.Empty;
 
-            string infolua = File.ReadAllText(infofile);
-            string optionslua = File.ReadAllText(optionsfile);
+            LuaState scenarioState = new LuaState();
+            LuaVM.DoFile(scenarioState, infofile);
+            LuaVM.DoFile(scenarioState, optionsfile);
 
-            string matchpattern = @"(?<key>\w+)\s+=\s+(?<value>(\w+|\d+|(\"".*\"")))";
-            var infomatches = Regex.Matches(infolua, matchpattern);
-            var optionsmatches = Regex.Matches(infolua, matchpattern);
+            LuaTable headerInfo = scenarioState._G["HeaderInfo"] as LuaTable;
+            this.Name = headerInfo["scenarioname"].Str();
+            this.Description = headerInfo["scenariodescription"].Str();
+            this.MaxPlayers = (byte)(headerInfo["maxplayers"] as LuaNumber);
 
-            this.Name = infomatches.FirstOrDefault(x => x.Groups["key"].Value.CompareTo("scenarioname") == 0)?.Groups["value"].Value.Trim(' ', '\"') ?? "???";
-            this.Description = infomatches.FirstOrDefault(x => x.Groups["key"].Value.CompareTo("scenariodescription") == 0)?.Groups["value"].Value.Trim(' ', '\"') ?? "???";
-            this.Description = this.Description.Replace(@"\""", "'");
+            int battlefront = (int)(LuaNumber)headerInfo["scenario_battlefront"].IfTrue(x => x is LuaNumber).ThenDo(x => x as LuaNumber).OrDefaultTo(() => new LuaNumber(2));
+            this.Theatre = battlefront == 2 ? ScenarioTheatre.EasternFront : battlefront == 5 ? ScenarioTheatre.WesternFront : ScenarioTheatre.SharedFront;
 
-            if (byte.TryParse(infomatches.FirstOrDefault(x => x.Groups["key"].Value.CompareTo("maxplayers") == 0)?.Groups["value"].Value ?? "2", out byte maxplayers)) {
-                this.MaxPlayers = maxplayers;
+#pragma warning disable IDE0019 // Use pattern matching
+            LuaTable skins = headerInfo["default_skins"] as LuaTable;
+#pragma warning restore IDE0019 // Use pattern matching
+
+            // Get the skins table (apperantly both are accepted...)
+            if (skins == null) {
+                skins = headerInfo["default_skin"] as LuaTable;
             }
 
-            if (int.TryParse(infomatches.FirstOrDefault(x => x.Groups["key"].Value.CompareTo("scenario_battlefront") == 0)?.Groups["value"].Value ?? "2", out int battlefront)) {
-                this.Theatre = battlefront == 2 ? ScenarioTheatre.EasternFront : battlefront == 5 ? ScenarioTheatre.WesternFront : ScenarioTheatre.SharedFront;
-            }
-
-            this.IsWintermap = infolua.Contains("\"winter\"");
+            this.IsWintermap = skins?.Contains("winter") ?? false;
+            this.IsVisibleInLobby = (scenarioState._G["visible_in_lobby"] as LuaBool)?.IsTrue ?? true;
 
         }
 

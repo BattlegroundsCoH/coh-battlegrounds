@@ -659,6 +659,8 @@
 			<list name="abilities">
 				<instance_reference name="ability" value="abilities\global\cold\blizzard_effect" />
 				<instance_reference name="ability" value="abilities\german\toggle_ability\radio_setup_251_correct_mp" />
+				<instance_reference name="ability" value="abilities\battlegrounds_generic\modal_ability\transport_heavy_vehicle_bg" mod="142b113740474c82a60b0a428bd553d5" />
+				<instance_reference name="ability" value="abilities\battlegrounds_generic\timed_ability\detach_tow_bg" mod="142b113740474c82a60b0a428bd553d5" />
 			</list>
 			<bool name="allow_targeted_abilities_whilst_moving" value="False" />
 		</template_reference>

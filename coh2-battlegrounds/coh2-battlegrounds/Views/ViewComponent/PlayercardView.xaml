@@ -1,29 +1,63 @@
-﻿<UserControl x:Class="BattlegroundsApp.Views.ViewComponent.PlayercardView"
+﻿<lobby:LobbyControl  
+    xmlns:lobby="clr-namespace:BattlegroundsApp.Controls.Lobby"
+    x:Class="BattlegroundsApp.Views.ViewComponent.PlayerCardView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:BattlegroundsApp.Views.ViewComponent" xmlns:controls="clr-namespace:BattlegroundsApp.Controls"
-             mc:Ignorable="d" 
-             d:DesignHeight="64" d:DesignWidth="200">
-    <DockPanel LastChildFill="False">
-        <DockPanel Name="OpenDockState" Visibility="Collapsed" Width="200">
-            <Button Margin="5" Height="28" Width="90" Name="NewAIPlayerButton" Click="NewAIPlayerButton_Click">Add AI Player</Button>
-        </DockPanel>
-        <StackPanel Name="OccupiedStackState" Width="200">
-            <DockPanel LastChildFill="True">
-                <controls:IconComboBox x:Name="PlayerArmySelection" Margin="2.25" Width="24" SelectionChanged="PlayerArmySelection_SelectionChanged" DockPanel.Dock="Left"/>
-                <Button Name="PlayerKickButton" Margin="2.25" Width="24" Click="PlayerKickButton_Click" DockPanel.Dock="Right">X</Button>
-                <Label Name="PlayerName" Margin="5.75,1,1,1">Player Connecting...</Label>
-            </DockPanel>
-            <StackPanel>
-                <DockPanel Name="IsSelfPanel" LastChildFill="False">
-                    <ComboBox Name="SelfCompanySelector" Margin="0,0,2.5,0" Width="166" DockPanel.Dock="Right" SelectionChanged="SelfCompanySelector_SelectionChanged"/>
-                </DockPanel>
-                <StackPanel Name="IsNotSelfPanel" Orientation="Horizontal">
-                    <!-- Calculated data here -->
-                </StackPanel>
-            </StackPanel>
+             xmlns:local="clr-namespace:BattlegroundsApp.Controls.Lobby.Components" 
+    xmlns:viewcomponent="clr-namespace:BattlegroundsApp.Views.ViewComponent"
+    mc:Ignorable="d" 
+             d:DesignHeight="64" d:DesignWidth="320" MinWidth="320" MinHeight="64" MaxHeight="64" BorderThickness="0.5" BorderBrush="Black">
+    <viewcomponent:PlayerCardState 
+        x:Name="m_freeCardState"
+        Width="320"
+        StateName="FreeState">
+        <StackPanel>
+            <Label HorizontalAlignment="Center">Open Slot</Label>
+            <StackPanel Orientation="Horizontal">
+                <Button x:Name="MoveHereButton" Click="MoveHereButton_Click">Move Here</Button>
+                <local:LobbyButton x:Name="AddAIButton" Click="AddAIButton_Click" IsHostOnly="True">Add AI</local:LobbyButton>
+                <local:LobbyButton x:Name="LockSlotButton" Click="LockSlotButton_Click" IsHostOnly="True">Lock Slot</local:LobbyButton>
+            </StackPanel>            
         </StackPanel>
-    </DockPanel>    
-</UserControl>
+    </viewcomponent:PlayerCardState>
+    <viewcomponent:PlayerCardState 
+        x:Name="m_lockedCardState"
+        Width="320"
+        StateName="LockedState">
+        <StackPanel>
+            <Label HorizontalAlignment="Center">Locked</Label>
+            <local:LobbyButton x:Name="UnlockSlotButton" Click="UnlockSlotButton_Click">Open Slot</local:LobbyButton>
+        </StackPanel>
+    </viewcomponent:PlayerCardState>
+    <viewcomponent:PlayerCardState 
+        x:Name="m_occupiedCardState"
+        Width="320"
+        StateName="OccupiedState">
+        <StackPanel>
+            <DockPanel>
+                <local:LobbyIconDropdown 
+                    DockPanel.Dock="Left" 
+                    x:Name="PlayerArmySelection" 
+                    SelectedItemChanged="PlayerArmySelection_SelectionChanged"
+                    Width="24"
+                    Height="24"
+                    />
+                <local:LobbyButton 
+                    DockPanel.Dock="Right" 
+                    x:Name="RemovePlayerButton" 
+                    IsHostOnly="True" 
+                    Click="RemovePlayerButton_Click"
+                    Visibility="{Binding Path=ShowRemove, UpdateSourceTrigger=PropertyChanged, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type viewcomponent:PlayerCardView}}}"
+                    >X</local:LobbyButton>
+                <Label 
+                    Content="{Binding Path=PlayerName, UpdateSourceTrigger=PropertyChanged, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type viewcomponent:PlayerCardView}}}" 
+                    x:Name="PlayerDisplayName"
+                    Height="26"
+                    />
+            </DockPanel>
+            <local:LobbyDropdown Description="Company:" x:Name="PlayerCompanySelection" SelectedItemChanged="PlayerCompanySelection_SelectionChanged"/>
+        </StackPanel>
+    </viewcomponent:PlayerCardState>
+</lobby:LobbyControl>

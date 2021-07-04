@@ -171,14 +171,6 @@
 		</template_reference>
 		<template_reference name="squadexts" value="sbpextensions\squad_requirement_ext">
 			<list name="requirement_table">
-				<template_reference name="required" value="requirements\required_player_upgrade">
-					<enum name="reason" value="usage" />
-					<locstring name="ui_name" value="11166300" />
-					<bool name="is_present" value="True" />
-					<float name="max_completed" value="100" />
-					<float name="min_completed" value="1" />
-					<instance_reference name="upgrade_name" value="upgrade\german\research\battle_phase_2_mp" />
-				</template_reference>
 			</list>
 		</template_reference>
 		<template_reference name="squadexts" value="sbpextensions\squad_upgrade_apply_ext">
@@ -494,7 +486,7 @@
 								<enum name="application_type" value="apply_to_ability" />
 								<bool name="exclusive" value="False" />
 								<string name="modifier_id" value="" />
-								<instance_reference name="target_type_name" value="abilities\german\modal_ability\grenades\panzer_grenadier_bundled_grenade_mp" />
+								<instance_reference name="target_type_name" value="abilities\german\modal_ability\grenades\panzer_grenadier_bundled_grenade_bg" mod="142b113740474c82a60b0a428bd553d5" />
 								<enum name="usage_type" value="multiplication" />
 								<float name="value" value="0.67" />
 								<instance_reference name="tooltip" value="modifier_tooltip\ability_max_range_modifier" />
@@ -708,7 +700,7 @@
 												<enum name="application_type" value="apply_to_ability" />
 												<bool name="exclusive" value="False" />
 												<string name="modifier_id" value="" />
-												<instance_reference name="target_type_name" value="abilities\german\modal_ability\grenades\panzer_grenadier_bundled_grenade_mp" />
+												<instance_reference name="target_type_name" value="abilities\german\modal_ability\grenades\panzer_grenadier_bundled_grenade_bg" mod="142b113740474c82a60b0a428bd553d5" />
 												<enum name="usage_type" value="multiplication" />
 												<float name="value" value="1.25" />
 												<instance_reference name="tooltip" value="modifier_tooltip\ability_max_range_modifier" />
@@ -814,11 +806,11 @@
 				<instance_reference name="ability" value="abilities\german\modal_ability\commander_ability\german_hulldown_ability" />
 				<instance_reference name="ability" value="abilities\german\timed_ability\retreat_to_forward_hq" />
 				<instance_reference name="ability" value="abilities\german\timed_ability\stormtrooper_sprint_mp" />
-				<instance_reference name="ability" value="abilities\german\modal_ability\grenades\panzer_grenadier_bundled_grenade_mp" />
 				<instance_reference name="ability" value="abilities\german\timed_ability\panzer_grenadiers_combined_arms" />
 				<instance_reference name="ability" value="abilities\german\modal_ability\panzer_grenadier_rudimentary_repair_ability_mp" />
 				<instance_reference name="ability" value="abilities\german\modal_ability\panzer_grenadier_mark_target" />
 				<instance_reference name="ability" value="abilities\german\modal_ability\grenades\model_24_smoke_grenade_panzergrenadiers_mp" />
+				<instance_reference name="ability" value="abilities\german\modal_ability\grenades\panzer_grenadier_bundled_grenade_bg" mod="142b113740474c82a60b0a428bd553d5" />
 			</list>
 			<bool name="allow_targeted_abilities_whilst_moving" value="False" />
 		</template_reference>

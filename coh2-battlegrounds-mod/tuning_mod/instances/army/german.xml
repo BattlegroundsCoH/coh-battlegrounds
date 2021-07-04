@@ -361,7 +361,7 @@
 			</group>
 			<group name="starting_building">
 				<string name="key" value="default_mp" />
-				<instance_reference name="building" value="ebps\races\german\buildings\base_building\hq\german_hq_mp" />
+				<instance_reference name="building" value="ebps\races\german\buildings\base_building\hq\german_hq_mp" mod="142b113740474c82a60b0a428bd553d5" />
 				<list name="starting_squads">
 					<group name="starting_squad">
 						<instance_reference name="squad" value="sbps\races\german\soldiers\pioneer_squad\pioneer_squad_mp" />

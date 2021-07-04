@@ -103,6 +103,20 @@ namespace Battlegrounds.Functional {
             return -1;
         }
 
+        /// <summary>
+        /// Append <paramref name="element"/> to the end of a copied <paramref name="array"/>.
+        /// </summary>
+        /// <typeparam name="T">The type of the array.</typeparam>
+        /// <param name="array">The source array to append element to.</param>
+        /// <param name="element">The element to append to the end of the source array.</param>
+        /// <returns>A new array with <paramref name="element"/> as the last element.</returns>
+        public static T[] Append<T>(this T[] array, T element) { // This should be faster than LINQ which possibly iterates over it and then appends (and will then require a .ToArray call)
+            T[] buffer = new T[array.Length + 1];
+            Array.Copy(array, buffer, array.Length);
+            buffer[^1] = element;
+            return buffer;
+        }
+
     }
 
 }

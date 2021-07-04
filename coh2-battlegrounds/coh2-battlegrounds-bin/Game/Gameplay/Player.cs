@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using Battlegrounds.Game.Database;
 
 namespace Battlegrounds.Game.Gameplay {
     
@@ -13,6 +14,8 @@ namespace Battlegrounds.Game.Gameplay {
         /// 
         /// </summary>
         public uint ID { get; }
+
+        public ulong SteamID { get; }
 
         /// <summary>
         /// 
@@ -37,7 +40,12 @@ namespace Battlegrounds.Game.Gameplay {
         /// <summary>
         /// 
         /// </summary>
-        public bool IsAIPlayer { get; set; }
+        public bool IsAIPlayer { get; init; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public ServerItem[] Skins { get; } = new ServerItem[3]; 
 
         /// <summary>
         /// 
@@ -47,8 +55,9 @@ namespace Battlegrounds.Game.Gameplay {
         /// <param name="name"></param>
         /// <param name="faction"></param>
         /// <param name="aiprofile"></param>
-        public Player(uint id, uint tID, string name, Faction faction, string aiprofile) {
+        public Player(uint id, ulong sid, uint tID, string name, Faction faction, string aiprofile) {
             this.ID = id;
+            this.SteamID = sid;
             this.TeamID = tID;
             this.Name = name;
             this.Army = faction;

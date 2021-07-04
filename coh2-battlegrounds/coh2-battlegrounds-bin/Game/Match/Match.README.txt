@@ -1,0 +1,19 @@
+﻿Welcome to Composite Design hell :P
+
+This is an extreme case of the 3-1-2 process, where all variability points possible have been identified and turned into interfaces and tasks delegated.
+However, this should now allow for a highly modular and well-controlled playing session protocol.
+
+A battlegrounds match consists of four elements:
+1. Startup:
+	- Here all relevant match data is collected and compiled into the .sga archive. This may vary depending on who and what kind of gamemode is being played.
+2. Playing:
+	- Here the players play the match. This can be controlled (Though the OverwatchStrategy : IPlayStrategy) will handle most behaviour here.
+	- It's technically possible to simulate a match here.
+3. Analysis:
+	- Here the match data retrieved from the previous phase is analyzed and it's decided what changes to make to participating companies. (Other stuff may also be retrieved from this).
+4. Finalize:
+	- Here the analysis modification suggestions are finalized (if applicable) and changes to participating companies are finalized.
+
+To start a match, it's much easier to let the MatchController handle the actual protocol. However, you can set custom strategies defining how the 4 elements mentioned above are to be executed.
+The matchcontroller will also need impementations of IMatchX interfaces that handle the small sub-elements. Pick one in the Composite namespace (SingleplayerSession or MultiplayerSession).
+They will have all the functionality required already implemented. You can also implement your own, or split them over several objects.

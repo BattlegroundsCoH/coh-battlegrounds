@@ -7,7 +7,9 @@ using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 
 namespace BattlegroundsApp.Controls {
-    
+
+    public delegate void SelectedItemChangedHandler(object sender, IconComboBoxItem newItem);
+
     public class IconComboBox : UserControl {
 
         private class IconComboBoxPopup : Popup {
@@ -48,9 +50,11 @@ namespace BattlegroundsApp.Controls {
 
         public int SelectedIndex { get => this.m_selectedIndex; set => this.SetSelectedIndex(value); }
 
+        public bool EnableEvents { get; set; }
+
         public IconComboBoxItem SelectedItem => this.m_items[this.m_selectedIndex];
 
-        public event Action SelectionChanged;
+        public event SelectedItemChangedHandler SelectionChanged;
 
         public IconComboBox() {
             this.m_selectedIndex = -1;
@@ -65,6 +69,7 @@ namespace BattlegroundsApp.Controls {
             this.LostMouseCapture += this.OnLostMouseCapture;
             this.m_items = new List<IconComboBoxItem>();
             this.Content = this.m_imageControl;
+            this.EnableEvents = true;
         }
 
         private void OnLostMouseCapture(object sender, MouseEventArgs e) => this.m_popup.IsOpen = false;
@@ -73,8 +78,10 @@ namespace BattlegroundsApp.Controls {
 
         private void OnLeftMouseButtonImage(object sender, MouseButtonEventArgs e) => this.m_popup.IsOpen = !this.m_popup.IsOpen;
 
-        public void SetItemSource<T>(IEnumerable<T> obj, Func<T, IconComboBoxItem> converter) {
-            this.m_items = obj.Select(x => converter(x)).ToList();
+        public void SetItemSource<T>(IEnumerable<T> obj, Func<T, IconComboBoxItem> converter) => this.SetItemSource(obj.Select(x => converter(x)).ToList());
+
+        public void SetItemSource(List<IconComboBoxItem> items) {
+            this.m_items = items;
             this.m_popup.SetItems(this.m_items);
             this.SetSelectedIndex(0);
         }
@@ -85,17 +92,22 @@ namespace BattlegroundsApp.Controls {
         }
 
         private void SetSelectedIndex(int index) {
+            if (index < 0) {
+                throw new ArgumentOutOfRangeException(nameof(index), $"The index given is out of range (is: {index})");
+            }
             this.m_imageControl.Source = this.m_items[index].Icon;
             this.m_selectedIndex = index;
             this.SelectionChangedMethod(index, false);
         }
 
         private void SelectionChangedMethod(int index, bool update = true) {
+            if (this.EnableEvents) {
+                this.SelectionChanged?.Invoke(this, this.m_items[index]);
+            }
             if (update) {
                 this.SetSelectedIndex(index);
             }
             this.m_popup.IsOpen = false;
-            this.SelectionChanged?.Invoke();
         }
 
     }

@@ -21,6 +21,8 @@ TOCStart name="data" alias="data" path="" relativeroot="data"
 	E:\coh2_battlegrounds\coh2-battlegrounds-mod\wincondition_mod\coh2_battlegrounds_wincondition Intermediate Cache\Intermediate Files\data\scar\winconditions\auxiliary_scripts\shared_ai.scar
 	E:\coh2_battlegrounds\coh2-battlegrounds-mod\wincondition_mod\coh2_battlegrounds_wincondition Intermediate Cache\Intermediate Files\data\scar\winconditions\auxiliary_scripts\shared_sessionloader.scar
 	E:\coh2_battlegrounds\coh2-battlegrounds-mod\wincondition_mod\coh2_battlegrounds_wincondition Intermediate Cache\Intermediate Files\data\scar\winconditions\auxiliary_scripts\shared_lookups.scar
+	E:\coh2_battlegrounds\coh2-battlegrounds-mod\wincondition_mod\coh2_battlegrounds_wincondition Intermediate Cache\Intermediate Files\data\scar\winconditions\auxiliary_scripts\shared_constants.scar
+	E:\coh2_battlegrounds\coh2-battlegrounds-mod\wincondition_mod\coh2_battlegrounds_wincondition Intermediate Cache\Intermediate Files\data\scar\winconditions\auxiliary_scripts\system_tow.scar
 	E:\coh2_battlegrounds\coh2-battlegrounds-mod\wincondition_mod\coh2_battlegrounds_wincondition Intermediate Cache\Intermediate Files\data\scar\winconditions\ui_api\button.scar
 	E:\coh2_battlegrounds\coh2-battlegrounds-mod\wincondition_mod\coh2_battlegrounds_wincondition Intermediate Cache\Intermediate Files\data\scar\winconditions\ui_api\class.scar
 	E:\coh2_battlegrounds\coh2-battlegrounds-mod\wincondition_mod\coh2_battlegrounds_wincondition Intermediate Cache\Intermediate Files\data\scar\winconditions\ui_api\color.scar

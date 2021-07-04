@@ -22,13 +22,17 @@ function BG_LoadSessionData()
             _bg_playerData[j].gainsData = {};
             _bg_playerData[j].lossData = {};
             _bg_playerData[j].teamStr = BG_GetTeamString(_bg_playerData[j].race);
-            if not BG_VerifyPlayer(_bg_playerData[j].name, _bg_playerData[j].teamStr, false) then
+            local isVerified, steamID = BG_VerifyPlayer(_bg_playerData[j].name, _bg_playerData[j].teamStr, false);
+            if not isVerified then
                 return BG_LocStringFormat(9, Player_GetDisplayName(player));
+            else
+                _bg_playerData[j].steamID = steamID;
             end
             j = j + 1;
         else
             _bg_aiData[k] = {};
             _bg_aiData[k].player = player;
+            _bg_aiData[k].steamID = "0";
             _bg_aiData[k].name = Player_GetDisplayName(player)[1];
             _bg_aiData[k].playerID = Player_GetID(player);
             _bg_aiData[k].race = race;
@@ -72,19 +76,18 @@ function BG_GetTeamString(race)
 end
 
 function BG_VerifyPlayer(name, side, isAI)
-
-    for i=1, #bg_settings.team_setup[side] do
+    for _, this in pairs(bg_settings.team_setup[side]) do
         if not isAI then
-            if bg_settings.team_setup[side][i].display_name == name and bg_settings.team_setup[side][i].ai_value == 0 then
-                return true;
+            if this.display_name == name and this.ai_value == 0 then
+                -- We have no definitive method of verifying this - but we'll make the assumption that right here it is correct.
+                -- We could make this more secure with faction data and enforcing fixed team positions
+                return true, this.steam_index;
             end
-        elseif bg_settings.team_setup[side][i].ai_value ~= 0 then
-            return true, bg_settings.team_setup[side][i].ai_value, bg_settings.team_setup[side][i].id;
+        elseif this.ai_value ~= 0 then
+            return true, this.ai_value, this.id;
         end
     end
-
     return false;
-
 end
 
 function BG_SetupWincondition()
@@ -94,7 +97,7 @@ function BG_SetupWincondition()
         -- Import the VP ticker code
         import("Prototype/VPTickerWin-Annihilate_Functions.scar")
 
-        -- Override this method
+        -- Override this function
         Setup_GetWinConditionOption = function()
             return bg_settings.gameoptions.gamemode_setting;
         end
@@ -118,6 +121,8 @@ function BG_LoadCompanies()
 
     -- Run through all players and set this up
     for i = 1, #_bg_playerData do
+
+        -- TODO: Remake this so it's based on the found steam ID
 
         -- Make sure the player is valid
         if bg_companies[_bg_playerData[i].name] == nil then

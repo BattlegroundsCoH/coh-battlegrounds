@@ -8,4 +8,4 @@
 ###############################################################################
 *.scar linguist-language=Lua
 *.win linguist-language=Lua
-*.ucs binary
+*.ucs text working-tree-encoding=UTF-16

@@ -1,17 +1,26 @@
-﻿<Window x:Class="BattlegroundsApp.MainWindow"
+﻿<local:CoreAppWindow x:Class="BattlegroundsApp.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:BattlegroundsApp"
         xmlns:views="clr-namespace:BattlegroundsApp.Views"
+        xmlns:caseConverter="clr-namespace:BattlegroundsApp.Utilities.Converters"
         mc:Ignorable="d"
-        Title="Battlegrounds" Height="650" Width="1150" WindowStartupLocation="CenterScreen">
-
+        Title="Battlegrounds" Height="540" Width="960" WindowStartupLocation="CenterScreen" WindowStyle="SingleBorderWindow" MinHeight="850" MinWidth="1400">
+    <local:CoreAppWindow.Background>
+        <ImageBrush ImageSource="pack://application:,,,/Resources/ingame/application/app_background.png"/>
+    </local:CoreAppWindow.Background>
+    <local:CoreAppWindow.Resources>
+        <!-- CaseConverter -->
+        <caseConverter:CaseConverter Case="Upper" x:Key="CaseConverterUpper"/>
+    </local:CoreAppWindow.Resources>
     <Grid>
 
         <Grid.RowDefinitions>
             <RowDefinition Height="20"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
             <RowDefinition Height="auto"/>
             <RowDefinition Height="auto"/>
             <RowDefinition Height="auto"/>
@@ -37,33 +46,40 @@
         </Grid.ColumnDefinitions>
         
         <!-- Row 1 -->
-        <TextBlock Grid.Row="1" Grid.Column="1" Text="Battlegrounds Logo" FontSize="22" Margin="0,0,0,10"/>
-
+        <Image Grid.Row="1" Grid.Column="1" Source="pack://application:,,,/Resources/ingame/application/app_logo1.png" Width="250"/>
+        
         <!-- Row 2 -->
-        <ContentControl Grid.Row="2" Grid.Column="2" Grid.RowSpan="7" Grid.ColumnSpan="7" Margin="5,0,0,0" Content="{Binding}"/>
-
-        <Button x:Name="DashboardButton" Grid.Row="2" Grid.Column="1" Content="Dashboard" Margin="0,0,0,0"
-                Click="Dashboard_Click"/>
+        <Image Grid.Row="2" Grid.Column="1" Source="pack://application:,,,/Resources/ingame/application/app_logo2.png" Width="250" Margin="0,0,0,25"/>
 
         <!-- Row 3 -->
-        <Button x:Name="NewsButton" Grid.Row="3" Grid.Column="1" Content="News" Margin="0,5,0,0" IsEnabled="False"
-                Click="News_Click"/>
+        <ContentControl Name="AppContent" Grid.Row="3" Grid.Column="2" Grid.RowSpan="8" Grid.ColumnSpan="7" Margin="20,0,0,0" Content="{Binding}"/>
+
+        <Button x:Name="DashboardButton" Grid.Row="3" Grid.Column="1" Content="{Binding DashboardButtonContent, Converter={StaticResource CaseConverterUpper}, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}"
+                Margin="0,0,0,0" IsEnabled="False" Click="Dashboard_Click" Style="{StaticResource MainButtonStyle}" ToolTip="Personal overall statistics"/>
 
         <!-- Row 4 -->
-        <Button x:Name="CompanyBuilderButton" Grid.Row="4" Grid.Column="1" Content="Company Builder" Margin="0,5,0,0"
-                Click="CompanyBuilder_Click"/>
+        <Button x:Name="NewsButton" Grid.Row="4" Grid.Column="1" Content="{Binding NewsButtonContent, Converter={StaticResource CaseConverterUpper}, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}" 
+                Margin="0,10,0,0" IsEnabled="False" Click="News_Click" Style="{StaticResource MainButtonStyle}" ToolTip="Shows the latest news"/>
 
         <!-- Row 5 -->
-        <Button x:Name="CampaignButton" Grid.Row="5" Grid.Column="1" Content="Campaign" Margin="0,5,0,0" IsEnabled="False"
-                Click="Campaign_Click"/>
+        <Button x:Name="CompanyBuilderButton" Grid.Row="5" Grid.Column="1" Content="{Binding CompanyBuilderButtonContent, Converter={StaticResource CaseConverterUpper}, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}" 
+                Margin="0,10,0,0" Click="CompanyBuilder_Click" Style="{StaticResource MainButtonStyle}" ToolTip="Create or edit your compenies"/>
 
         <!-- Row 6 -->
-        <Button x:Name="GameBrowserButton" Grid.Row="6" Grid.Column="1" Content="Game Browser" Margin="0,5,0,0"
-                Click="GameBrowser_Click"/>
+        <Button x:Name="CampaignButton" Grid.Row="6" Grid.Column="1" Content="{Binding CampaignButtonContent, Converter={StaticResource CaseConverterUpper}, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}" 
+                Margin="0,10,0,0" IsEnabled="True" Click="Campaign_Click" Style="{StaticResource MainButtonStyle}" ToolTip="Play singleplayer or coop campaign"/>
 
         <!-- Row 7 -->
-        <Button x:Name="ExitButton" Grid.Row="7" Grid.Column="1" Content="Exit" Margin="0,15,0,0"
-                Click="Exit_Click"/>
+        <Button x:Name="GameBrowserButton" Grid.Row="7" Grid.Column="1" Content="{Binding GameBrowserButtonContent, Converter={StaticResource CaseConverterUpper}, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}" 
+                Margin="0,10,0,0" Click="GameBrowser_Click" Style="{StaticResource MainButtonStyle}" ToolTip="Browse through a list of available lobbies"/>
+
+        <!-- Row 8 -->
+        <Button x:Name="SettingsButton" Grid.Row="8" Grid.Column="1" Content="{Binding SettingsButtonContent, Converter={StaticResource CaseConverterUpper}, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}" 
+                Margin="0,10,0,0" IsEnabled="False" Style="{StaticResource MainButtonStyle}" ToolTip="Adjust application settings"/>
+
+        <!-- Row 9 -->
+        <Button x:Name="ExitButton" Grid.Row="9" Grid.Column="1" Content="{Binding ExitButtonContent, Converter={StaticResource CaseConverterUpper}, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}" 
+                Margin="0,35,0,0" Click="Exit_Click" Style="{StaticResource MainButtonStyle}" ToolTip="Exit the application"/>
 
     </Grid>
-</Window>
+</local:CoreAppWindow>

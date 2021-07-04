@@ -275,6 +275,19 @@
 		</enum_table>
 		<enum name="ui_group_cast_type" value="single" />
 		<list name="requirements_target">
+			<template_reference name="required" value="requirements\required_not">
+				<enum name="reason" value="usage" />
+				<locstring name="ui_name" value="47" mod="142b113740474c82a60b0a428bd553d5" />
+				<list name="requirement_table">
+					<template_reference name="required" value="requirements\required_squad_upgrade">
+						<enum name="reason" value="usage" />
+						<locstring name="ui_name" value="0" />
+						<bool name="include_queued" value="False" />
+						<bool name="is_present" value="True" />
+						<instance_reference name="upgrade_name" value="upgrade\is_towed" mod="142b113740474c82a60b0a428bd553d5" />
+					</template_reference>
+				</list>
+			</template_reference>
 		</list>
 		<template_reference name="targeted_ability_option" value="options\none">
 		</template_reference>

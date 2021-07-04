@@ -4,8 +4,8 @@ using System.Diagnostics;
 using System.IO;
 
 using Battlegrounds.Functional;
-using Battlegrounds.Game.Battlegrounds;
 using Battlegrounds.Json;
+using Battlegrounds.Locale;
 using Battlegrounds.Modding;
 using Battlegrounds.Steam;
 
@@ -21,36 +21,39 @@ namespace Battlegrounds {
         /// </summary>
         public class InternalInstance : IJsonObject {
 
-            /// <summary>
-            /// 
-            /// </summary>
-            [JsonReference(typeof(SteamUser))] public SteamUser User { get; set; }
-
-            /// <summary>
-            /// 
-            /// </summary>
             public Dictionary<string, string> Paths { get; set; }
 
             public string LastPlayedScenario { get; set; }
 
             public string LastPlayedGamemode { get; set; }
 
+            public int LastPlayedGamemodeSetting { get; set; }
+
+            public SteamInstance SteamData { get; set; }
+
+            [JsonEnum(typeof(LocaleLanguage))]
+            public LocaleLanguage Language { get; set; }
+
             /// <summary>
-            /// 
+            /// Initialize a new <see cref="InternalInstance"/> class with default data.
             /// </summary>
             public InternalInstance() {
-                this.User = null;
+                this.SteamData = new SteamInstance();
                 this.Paths = new Dictionary<string, string>();
+                this.LastPlayedGamemode = "Victory Points";
+                this.LastPlayedGamemodeSetting = 1;
             }
 
             /// <summary>
-            /// 
+            /// Resolve paths. Automatically called when the json variant is deserialized.
             /// </summary>
             [JsonOnDeserialized]
             public void ResolvePaths() {
 
-                Trace.WriteLine($"Resolving paths (Local to: {Environment.CurrentDirectory})");
+                // Log
+                Trace.WriteLine($"Resolving paths (Local to: {Environment.CurrentDirectory})", "BattlegroundsInstance");
 
+                // Paths
                 string installpath = $"{Environment.CurrentDirectory}\\";
                 string binpath = $"{installpath}bin\\";
                 string userpath = $"{installpath}usr\\";
@@ -59,13 +62,18 @@ namespace Battlegrounds {
                 // Create data directory if it does not exist
                 if (!Directory.Exists(binpath)) {
                     Directory.CreateDirectory(binpath);
-                    Trace.WriteLine("Bin path missing - this may cause errors");
+                    Trace.WriteLine("Bin path missing - this may cause errors", "BattlegroundsInstance");
+                    this.Paths.Add(BattlegroundsPaths.BINARY_FOLDER, binpath);
+                } else {
+                    if (!this.Paths.ContainsKey(BattlegroundsPaths.BINARY_FOLDER)) {
+                        this.Paths.Add(BattlegroundsPaths.BINARY_FOLDER, binpath);
+                    }
                 }
 
                 // Create user directory if it does not exist
                 if (!Directory.Exists(userpath)) {
                     Directory.CreateDirectory(userpath);
-                    Trace.WriteLine("User path missing - this may cause errors");
+                    Trace.WriteLine("User path missing - this may cause errors", "BattlegroundsInstance");
                 }
 
                 // User folder
@@ -87,7 +95,7 @@ namespace Battlegrounds {
                         Directory.GetFiles(tmppath).ForEach(File.Delete);
                         Directory.GetDirectories(tmppath).ForEach(x => Directory.Delete(x, true));
                     } catch {
-                        Trace.WriteLine("Unexpected IO error occured while attempting to clean tmp folder!");
+                        Trace.WriteLine("Unexpected IO error occured while attempting to clean tmp folder!", "BattlegroundsInstance");
                     }
                 }
 
@@ -109,8 +117,8 @@ namespace Battlegrounds {
                         Directory.CreateDirectory(cFolder);
                     }
                 } catch (Exception e) {
-                    Trace.WriteLine($"Failed to resolve directory \"{pathID}\"");
-                    Trace.WriteLine(e);
+                    Trace.WriteLine($"Failed to resolve directory \"{pathID}\"", "BattlegroundsInstance");
+                    Trace.WriteLine(e, "BattlegroundsInstance");
                 }
             }
 
@@ -127,26 +135,16 @@ namespace Battlegrounds {
                 }
             }
 
-            /// <summary>
-            /// 
-            /// </summary>
-            /// <returns></returns>
             public string ToJsonReference() => throw new NotSupportedException();
 
         }
 
         private static InternalInstance __instance;
+        private static Localize __localeManagement;
+        private static Random __rng;
 
         /// <summary>
-        /// The current local steam user instance.
-        /// </summary>
-        public static SteamUser LocalSteamuser {
-            get => __instance.User;
-            set => __instance.User = value;
-        }
-
-        /// <summary>
-        /// The last played map.
+        /// Get or set the last played map.
         /// </summary>
         public static string LastPlayedMap {
             get => __instance.LastPlayedScenario;
@@ -154,7 +152,7 @@ namespace Battlegrounds {
         }
 
         /// <summary>
-        /// The last played gamemode.
+        /// Get or set the last played gamemode.
         /// </summary>
         public static string LastPlayedGamemode {
             get => __instance.LastPlayedGamemode;
@@ -162,29 +160,57 @@ namespace Battlegrounds {
         }
 
         /// <summary>
-        /// This this the first time the application has been launched
+        /// Get or set the last played gamemode setting
+        /// </summary>
+        public static int LastPlayedGamemodeSetting {
+            get => __instance.LastPlayedGamemodeSetting;
+            set => __instance.LastPlayedGamemodeSetting = value;
+        }
+
+        /// <summary>
+        /// Get the random number generator instance.
+        /// </summary>
+        public static Random RNG => __rng;
+
+        /// <summary>
+        /// Get if this is the first time the application has been launched
         /// </summary>
         public static bool IsFirstRun { get; internal set; }
 
         /// <summary>
-        /// 
+        /// Get the active <see cref="SteamInstance"/>
         /// </summary>
-        /// <param name="pathID"></param>
-        /// <param name="appendPath"></param>
-        /// <returns></returns>
+        public static SteamInstance Steam => __instance.SteamData;
+
+        /// <summary>
+        /// Get the localize manager for the instance
+        /// </summary>
+        public static Localize Localize => __localeManagement;
+
+        /// <summary>
+        /// Get the relative path to a predefined app path. Can be appened with remaining direct path to obtain the full path.
+        /// </summary>
+        /// <param name="pathID">The <see cref="string"/> path ID.</param>
+        /// <param name="appendPath">The optional path to append to the relative path.</param>
+        /// <returns>The relative path + potential append path.</returns>
+        /// <exception cref="ArgumentException"/>
         public static string GetRelativePath(string pathID, string appendPath)
             => Path.Combine(__instance.GetPath(pathID), appendPath);
 
         private static ITuningMod __bgTuningInstance;
 
+        /// <summary>
+        /// Get the Battlegrounds tuning mod instance.
+        /// </summary>
         public static ITuningMod BattleGroundsTuningMod => __bgTuningInstance;
 
         /// <summary>
-        /// 
+        /// Load the current instance data.
         /// </summary>
         public static void LoadInstance() {
 
-            __instance = JsonParser.Parse<InternalInstance>("local.json");
+            // Load instance data
+            __instance = JsonParser.ParseFile<InternalInstance>("local.json");
             if (__instance == null) {
                 __instance = new InternalInstance();
                 __instance.ResolvePaths();
@@ -193,15 +219,36 @@ namespace Battlegrounds {
                 IsFirstRun = false;
             }
 
+            // Create locale manager
+            __localeManagement = new Localize(__instance.Language);
+
+            // Create tuning
             __bgTuningInstance = new BattlegroundsTuning();
+
+            // Create RNG
+            __rng = new Random();
 
         }
 
         /// <summary>
-        /// 
+        /// Verify if the given <see cref="SteamUser"/> is the local user.
+        /// </summary>
+        /// <param name="user">The <see cref="SteamUser"/> to verify.</param>
+        /// <returns>Will return <see langword="true"/> if local user. Otherwise <see langword="false"/>.</returns>
+        public static bool IsLocalUser(SteamUser user) => __instance.SteamData.User.ID == user.ID;
+
+        /// <summary>
+        /// Verify if the given user ID is the local user ID.
+        /// </summary>
+        /// <param name="userID">The user ID to verify.</param>
+        /// <returns>Will return <see langword="true"/> if local user. Otherwise <see langword="false"/>.</returns>
+        public static bool IsLocalUser(ulong userID) => __instance.SteamData.User.ID == userID;
+
+        /// <summary>
+        /// Save the currently stored data of this instance.
         /// </summary>
         public static void SaveInstance() 
-            => File.WriteAllText("local.json", (__instance as IJsonObject).Serialize());
+            => File.WriteAllText("local.json", __instance.SerializeAsJson());
 
     }
 
