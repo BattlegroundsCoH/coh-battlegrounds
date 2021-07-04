@@ -59,18 +59,23 @@ namespace BattlegroundsApp.Models {
 
         }
 
-        public void StartCountdown() => this.m_view.UpdateGUI(() => {
-            this.m_view.LobbyChat.DisplayMessage($"[System] The host has pressed the start match button.");
-            this.CanCancel = true;
-        });
+        public void StartCountdown() {
+            Trace.WriteLine("Started countdown", nameof(LobbyMemberPlayModel));
+            _ = this.m_view.UpdateGUI(() => {
+                this.m_view.LobbyChat.DisplayMessage($"[System] The host has pressed the start match button.");
+                this.CanCancel = true;
+            });
+        }
 
         private void Pulse(TimeSpan time) {
+            Trace.WriteLine($"Timer pulse : {time}", nameof(LobbyMemberPlayModel));
             _ = this.m_view.UpdateGUI(() => {
                 this.m_view.LobbyChat.DisplayMessage($"[System] The match will start in {(int)time.TotalSeconds} seconds.");
             });
         }
 
         private void CancelTimerExternal(object arg) {
+            Trace.WriteLine("Stopped countdown", nameof(LobbyMemberPlayModel));
             _ = this.m_view.UpdateGUI(() => {
                 if (arg is null) {
                     arg = "the host";

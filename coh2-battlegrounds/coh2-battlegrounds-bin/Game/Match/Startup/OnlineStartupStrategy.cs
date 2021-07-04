@@ -59,7 +59,7 @@ namespace Battlegrounds.Game.Match.Startup {
             };
 
             // Wait
-            this.m_beginWaitHandle.Wait(8000);
+            this.m_beginWaitHandle.Wait();
 
             // Did we timeout?
             if (!shouldStop) {
