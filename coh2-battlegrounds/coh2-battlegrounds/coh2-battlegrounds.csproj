@@ -115,6 +115,7 @@
     <None Remove="Resources\ingame\unit_icons\Icons_units_unit_west_german_sturmpioneers.png" />
     <None Remove="Resources\ingame\unit_icons\Icons_units_unit_west_german_terror_officer.png" />
     <None Remove="Resources\ingame\unit_icons\Icons_units_unit_west_german_waffen_honor_guard.png" />
+    <None Remove="Resources\ingame\unit_icons\Icons_vehicles_cargo_truck.png" />
     <None Remove="Resources\ingame\unit_icons\Icons_vehicles_vehicle_aef_57mm_at_gun.png" />
     <None Remove="Resources\ingame\unit_icons\Icons_vehicles_vehicle_aef_browning_m2_50cal_hmg.png" />
     <None Remove="Resources\ingame\unit_icons\Icons_vehicles_vehicle_aef_calliope.png" />
@@ -342,6 +343,7 @@
     <Resource Include="Resources\ingame\unit_icons\Icons_units_unit_west_german_sturmpioneers.png" />
     <Resource Include="Resources\ingame\unit_icons\Icons_units_unit_west_german_terror_officer.png" />
     <Resource Include="Resources\ingame\unit_icons\Icons_units_unit_west_german_waffen_honor_guard.png" />
+    <Resource Include="Resources\ingame\unit_icons\Icons_vehicles_cargo_truck.png" />
     <Resource Include="Resources\ingame\unit_icons\Icons_vehicles_vehicle_aef_57mm_at_gun.png" />
     <Resource Include="Resources\ingame\unit_icons\Icons_vehicles_vehicle_aef_browning_m2_50cal_hmg.png" />
     <Resource Include="Resources\ingame\unit_icons\Icons_vehicles_vehicle_aef_calliope.png" />
