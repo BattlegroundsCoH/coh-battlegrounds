@@ -42,7 +42,7 @@
         <!-- Row 3 -->
         <TextBlock Grid.Row="3" Grid.Column="1" Margin="2.5" Text="Type:"/>
 
-        <ComboBox x:Name="companyType" Grid.Row="3" Grid.Column="2" Margin="2.5" ItemsSource="{Binding Source={x:Static type:CompanyTypeExtension.CompanyTypes}}" SelectedIndex="0"/>
+        <ComboBox x:Name="companyType" Grid.Row="3" Grid.Column="2" Margin="2.5" ItemsSource="{Binding Source={x:Static type:CompanyTypeExtension.CompanyTypes}}" SelectedItem="{Binding CompanyType, Mode=TwoWay}"/>
 
         <!-- Row 4 -->
         <!-- TODO: MultiBinding? User will also have to pick type? Or just make one type default and leave this as single binding -->
