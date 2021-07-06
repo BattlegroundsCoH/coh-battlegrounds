@@ -21,7 +21,7 @@ namespace BattlegroundsApp.Controls.CompanyBuilderControls {
             UnitIcon = $"pack://application:,,,/Resources/ingame/unit_icons/{squad.SBP.Icon}.png";
             UnitCost = squad.SBP.Cost;
             UnitVeterancy = squad.VeterancyRank;
-            UnitIsTransported = (squad.SupportBlueprint is not null);
+            UnitIsTransported = squad.SupportBlueprint is not null;
         }
     }
 }
