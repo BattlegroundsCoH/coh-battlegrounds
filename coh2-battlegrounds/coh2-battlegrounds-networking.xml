@@ -159,6 +159,212 @@
             <param name="buffer"></param>
             <returns></returns>
         </member>
+        <member name="T:Battlegrounds.Networking.Communication.BinaryPayloadMessage">
+            <summary>
+            Represents a message in a <see cref="T:Battlegrounds.Networking.Communication.HttpPayload"/> object with an unpacked <see cref="T:Battlegrounds.Networking.Communication.Messaging.IMessage"/>.
+            </summary>
+        </member>
+        <member name="P:Battlegrounds.Networking.Communication.BinaryPayloadMessage.Message">
+            <summary>
+            Get the message that was unpacked.
+            </summary>
+        </member>
+        <member name="P:Battlegrounds.Networking.Communication.BinaryPayloadMessage.MessageID">
+            <summary>
+            Get the associated message ID.
+            </summary>
+        </member>
+        <member name="M:Battlegrounds.Networking.Communication.BinaryPayloadMessage.#ctor(Battlegrounds.Networking.Communication.Messaging.IMessage,System.UInt64)">
+            <summary>
+            Initialize a new <see cref="T:Battlegrounds.Networking.Communication.BinaryPayloadMessage"/> with the unpacked message and associated message ID.
+            </summary>
+            <param name="message">The unpacked message instance.</param>
+            <param name="id">The ID associated with the message.</param>
+        </member>
+        <member name="T:Battlegrounds.Networking.Communication.BinaryStatusCode">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:Battlegrounds.Networking.Communication.BinaryStatusCode.OK">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:Battlegrounds.Networking.Communication.BinaryStatusCode.NOTIMPLEMENTED">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:Battlegrounds.Networking.Communication.BinaryStatusCode.NOTFOUND">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:Battlegrounds.Networking.Communication.BinaryStatusCode.FORBIDDEN">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:Battlegrounds.Networking.Communication.BinaryPayloadRequest">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:Battlegrounds.Networking.Communication.BinaryPayloadRequest.PING">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:Battlegrounds.Networking.Communication.BinaryPayloadRequest.REQUEST">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:Battlegrounds.Networking.Communication.BinaryPayloadRequest.RESPOND">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:Battlegrounds.Networking.Communication.BinaryPayloadRequest.COLLECT">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:Battlegrounds.Networking.Communication.BinaryPayloadRequest.COLLECTRESPONSE">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:Battlegrounds.Networking.Communication.BinaryPayloadRequest.BROKER">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:Battlegrounds.Networking.Communication.BinaryPayloadRequest.INTRO">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:Battlegrounds.Networking.Communication.BinaryPayload">
+            <summary>
+            Represents a payload sent along the HTTP protocol used by <see cref="T:Battlegrounds.Networking.Communication.HttpConnection"/>.
+            </summary>
+        </member>
+        <member name="F:Battlegrounds.Networking.Communication.BinaryPayload.BUFFER_MAX_SIZE">
+            <summary>
+            Max buffer size of a <see cref="T:Battlegrounds.Networking.Communication.BinaryPayload"/> send/receive stream.
+            </summary>
+        </member>
+        <member name="P:Battlegrounds.Networking.Communication.BinaryPayload.Messages">
+            <summary>
+            Get or set the actual messages within the payload
+            </summary>
+        </member>
+        <member name="P:Battlegrounds.Networking.Communication.BinaryPayload.Filter">
+            <summary>
+            Get or set the user ID filter
+            </summary>
+        </member>
+        <member name="P:Battlegrounds.Networking.Communication.BinaryPayload.Sender">
+            <summary>
+            Get or set the sender of the payload
+            </summary>
+        </member>
+        <member name="P:Battlegrounds.Networking.Communication.BinaryPayload.FireAndForget">
+            <summary>
+            Get or set if this message is fire and forget.
+            </summary>
+        </member>
+        <member name="P:Battlegrounds.Networking.Communication.BinaryPayload.Broadcast">
+            <summary>
+            Get or set if this message is to be broadcast
+            </summary>
+        </member>
+        <member name="P:Battlegrounds.Networking.Communication.BinaryPayload.Request">
+            <summary>
+            Get or set the request type
+            </summary>
+        </member>
+        <member name="P:Battlegrounds.Networking.Communication.BinaryPayload.Lobby">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:Battlegrounds.Networking.Communication.BinaryPayload.StatusCode">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Battlegrounds.Networking.Communication.BinaryPayload.#ctor(Battlegrounds.Networking.Communication.BinaryPayloadRequest,System.Boolean,System.UInt64)">
+            <summary>
+            
+            </summary>
+            <param name="request"></param>
+            <param name="fireAndForget"></param>
+            <param name="sender"></param>
+        </member>
+        <member name="M:Battlegrounds.Networking.Communication.BinaryPayload.#ctor(Battlegrounds.Networking.Communication.BinaryPayloadRequest,System.Boolean,System.UInt64,System.UInt64[],Battlegrounds.Networking.Communication.Messaging.IMessage[])">
+            <summary>
+            Initialize a new <see cref="T:Battlegrounds.Networking.Communication.BinaryPayload"/>.
+            </summary>
+            <param name="request"></param>
+            <param name="fireAndForget">Is message fire and forget</param>
+            <param name="sender"></param>
+            <param name="filter">The filter to apply on the server.</param>
+            <param name="messages">The messages to send along the payload. The messages are converted into <see cref="T:Battlegrounds.Networking.Communication.HttpPayloadMessage"/> instances with randomly assigned IDs</param>
+        </member>
+        <member name="M:Battlegrounds.Networking.Communication.BinaryPayload.#ctor(Battlegrounds.Networking.Communication.BinaryPayloadRequest,System.Boolean,System.UInt64,System.UInt64[],Battlegrounds.Networking.Communication.BinaryPayloadMessage[])">
+            <summary>
+            Initialize a new <see cref="T:Battlegrounds.Networking.Communication.HttpPayload"/>.
+            </summary>
+            <param name="request"></param>
+            <param name="fireAndForget">Is message fire and forget</param>
+            <param name="sender">The ID of the sender of the payload.</param>
+            <param name="filter">The filter to apply on the server.</param>
+            <param name="messages">The messages to send along the payload.</param>
+        </member>
+        <member name="M:Battlegrounds.Networking.Communication.BinaryPayload.#ctor(Battlegrounds.Networking.Communication.BinaryPayloadRequest,System.Boolean,System.UInt64,System.UInt64[],Battlegrounds.Networking.Communication.Messaging.IMessage)">
+            <summary>
+            Initialize a new <see cref="T:Battlegrounds.Networking.Communication.HttpPayload"/>.
+            </summary>
+            <param name="request"></param>
+            <param name="fireAndForget">Is message fire and forget</param>
+            <param name="sender">The ID of the sender of the payload.</param>
+            <param name="filter">The filter to apply on the server.</param>
+            <param name="message">The single message to attach to the payload.</param>
+        </member>
+        <member name="M:Battlegrounds.Networking.Communication.BinaryPayload.#ctor(Battlegrounds.Networking.Communication.BinaryPayloadRequest,System.Boolean,System.UInt64,System.UInt64[],Battlegrounds.Networking.Communication.BinaryPayloadMessage)">
+            <summary>
+            Initialize a new <see cref="T:Battlegrounds.Networking.Communication.HttpPayload"/>.
+            </summary>
+            <param name="request"></param>
+            <param name="fireAndForget">Is message fire and forget</param>
+            <param name="sender">The ID of the sender of the payload.</param>
+            <param name="filter">The filter to apply on the server.</param>
+            <param name="message">The single message to send along the payload.</param>
+        </member>
+        <member name="M:Battlegrounds.Networking.Communication.BinaryPayload.GetBytes">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Battlegrounds.Networking.Communication.BinaryPayload.GetPayloads(System.Byte[])">
+            <summary>
+            
+            </summary>
+            <param name="binaryData"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Battlegrounds.Networking.Communication.BinaryPayload.FromBytes(System.Byte[],System.UInt16)">
+            <summary>
+            
+            </summary>
+            <param name="binaryData"></param>
+            <param name="size"></param>
+            <returns></returns>
+        </member>
         <member name="T:Battlegrounds.Networking.Communication.ClosedConnection">
             <summary>
             
@@ -273,6 +479,66 @@
         </member>
         <!-- Badly formed XML comment ignored for member "M:Battlegrounds.Networking.Communication.Messaging.Binary.BinaryMessageReader.Parse(System.Byte[])" -->
         <!-- Badly formed XML comment ignored for member "M:Battlegrounds.Networking.Communication.Messaging.Binary.BinaryMessageReader.Parse(System.IO.MemoryStream)" -->
+        <member name="T:Battlegrounds.Networking.Communication.Messaging.ByteObjectMessage">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:Battlegrounds.Networking.Communication.Messaging.ByteObjectMessage.BYTEOBJ_BYTE_ID">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:Battlegrounds.Networking.Communication.Messaging.ByteObjectMessage.Type">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:Battlegrounds.Networking.Communication.Messaging.ByteObjectMessage.Object">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:Battlegrounds.Networking.Communication.Messaging.ByteObjectMessage.ObjectConstructor">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:Battlegrounds.Networking.Communication.Messaging.ByteObjectMessage.ObjectType">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Battlegrounds.Networking.Communication.Messaging.ByteObjectMessage.#ctor">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Battlegrounds.Networking.Communication.Messaging.ByteObjectMessage.#ctor(Battlegrounds.Networking.Remoting.Objects.ISendableObject)">
+            <summary>
+            
+            </summary>
+            <param name="sendableObject"></param>
+        </member>
+        <member name="M:Battlegrounds.Networking.Communication.Messaging.ByteObjectMessage.GetBytes">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Battlegrounds.Networking.Communication.Messaging.ByteObjectMessage.SetChunk(System.Int32,Battlegrounds.Networking.Communication.Messaging.Binary.BinaryChunkReader)">
+            <summary>
+            
+            </summary>
+            <param name="chunk"></param>
+            <param name="reader"></param>
+        </member>
+        <member name="M:Battlegrounds.Networking.Communication.Messaging.ByteObjectMessage.ToJson">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
         <member name="T:Battlegrounds.Networking.Communication.Messaging.EnumMessage">
             <summary>
             
@@ -287,6 +553,11 @@
         <member name="T:Battlegrounds.Networking.Communication.Messaging.IMessage">
             <summary>
             Represents a message that can be sent between clients.
+            </summary>
+        </member>
+        <member name="P:Battlegrounds.Networking.Communication.Messaging.IMessage.Type">
+            <summary>
+            
             </summary>
         </member>
         <member name="M:Battlegrounds.Networking.Communication.Messaging.IMessage.GetBytes">
@@ -327,6 +598,50 @@
             <summary>
             Constant byte ID identifier of a byte message.
             </summary>
+        </member>
+        <member name="T:Battlegrounds.Networking.Communication.Messaging.QueryMessage">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:Battlegrounds.Networking.Communication.Messaging.QueryMessage.QUERY_BTYE_ID">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:Battlegrounds.Networking.Communication.Messaging.QueryMessage.Query">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:Battlegrounds.Networking.Communication.Messaging.QueryMessage.Type">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Battlegrounds.Networking.Communication.Messaging.QueryMessage.#ctor">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Battlegrounds.Networking.Communication.Messaging.QueryMessage.GetBytes">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Battlegrounds.Networking.Communication.Messaging.QueryMessage.SetChunk(System.Int32,Battlegrounds.Networking.Communication.Messaging.Binary.BinaryChunkReader)">
+            <summary>
+            
+            </summary>
+            <param name="chunk"></param>
+            <param name="reader"></param>
+        </member>
+        <member name="M:Battlegrounds.Networking.Communication.Messaging.QueryMessage.ToJson">
+            <summary>
+            
+            </summary>
+            <returns></returns>
         </member>
         <member name="T:Battlegrounds.Networking.Communication.Messaging.RemoteCallMessage">
             <summary>
@@ -409,6 +724,19 @@
         <member name="T:Battlegrounds.Networking.Communication.Messaging.VoidMessage">
             <summary>
             Class representing a void return-value message.
+            </summary>
+            <remarks>
+            Implements <see cref="T:Battlegrounds.Networking.Communication.Messaging.IMessage"/>.
+            </remarks>
+        </member>
+        <member name="F:Battlegrounds.Networking.Communication.Messaging.VoidMessage.VOID_BYTE_ID">
+            <summary>
+            The unique byte ID assigned to this message type.
+            </summary>
+        </member>
+        <member name="P:Battlegrounds.Networking.Communication.Messaging.VoidMessage.Type">
+            <summary>
+            Get the unique byte ID assigned to the <see cref="T:Battlegrounds.Networking.Communication.Messaging.IMessage"/>.
             </summary>
         </member>
         <member name="T:Battlegrounds.Networking.Communication.HttpPOSTResponseData">
@@ -914,6 +1242,132 @@
             <param name="incoming"></param>
             <param name="message"></param>
         </member>
+        <member name="T:Battlegrounds.Networking.Communication.SocketConnectionClosedHandler">
+            <summary>
+            Delegate for handling when a connection is closed.
+            </summary>
+            <param name="remote">Is connection closed by the remote endpoint.</param>
+            <param name="connectionID">The ID of the connection that was closed.</param>
+        </member>
+        <member name="T:Battlegrounds.Networking.Communication.SocketConnection">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:Battlegrounds.Networking.Communication.SocketConnection.SocketLock">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:Battlegrounds.Networking.Communication.SocketConnection.ConnectionID">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:Battlegrounds.Networking.Communication.SocketConnection.RequestHandler">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:Battlegrounds.Networking.Communication.SocketConnection.IsConnected">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:Battlegrounds.Networking.Communication.SocketConnection.Identifier">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:Battlegrounds.Networking.Communication.SocketConnection.Stream">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:Battlegrounds.Networking.Communication.SocketConnection.Client">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="E:Battlegrounds.Networking.Communication.SocketConnection.OnConnectionClosed">
+            <summary>
+            Event triggered when the connection is closed.
+            </summary>
+        </member>
+        <member name="M:Battlegrounds.Networking.Communication.SocketConnection.#ctor(System.Net.Sockets.TcpClient,System.UInt64)">
+            <summary>
+            
+            </summary>
+            <param name="client"></param>
+            <param name="identifier"></param>
+        </member>
+        <member name="M:Battlegrounds.Networking.Communication.SocketConnection.Listen">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Battlegrounds.Networking.Communication.SocketConnection.Ping">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Battlegrounds.Networking.Communication.SocketConnection.SendBroadcastMessage(Battlegrounds.Networking.Communication.Messaging.IMessage,System.UInt64[])">
+            <summary>
+            
+            </summary>
+            <param name="message"></param>
+            <param name="filter"></param>
+        </member>
+        <member name="M:Battlegrounds.Networking.Communication.SocketConnection.SendBrokerMessage(Battlegrounds.Networking.Communication.Messaging.IMessage,System.Boolean,System.UInt64[])">
+            <summary>
+            
+            </summary>
+            <param name="message"></param>
+            <param name="awaitResponse"></param>
+            <param name="filter"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Battlegrounds.Networking.Communication.SocketConnection.SendMessage(Battlegrounds.Networking.Communication.Messaging.IMessage,System.Boolean)">
+            <summary>
+            
+            </summary>
+            <param name="message"></param>
+            <param name="awaitResponse"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Battlegrounds.Networking.Communication.SocketConnection.SetRequestHandler(Battlegrounds.Networking.Requests.IRequestHandler)">
+            <summary>
+            
+            </summary>
+            <param name="handler"></param>
+        </member>
+        <member name="M:Battlegrounds.Networking.Communication.SocketConnection.Shutdown">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Battlegrounds.Networking.Communication.SocketConnection.Shutdown(System.Boolean)">
+            <summary>
+            
+            </summary>
+            <param name="sendCloseMessage"></param>
+        </member>
+        <member name="M:Battlegrounds.Networking.Communication.SocketConnection.Dispose">
+            <summary>
+            Release the resources in use by the <see cref="T:Battlegrounds.Networking.Communication.HttpConnection"/>.
+            </summary>
+        </member>
+        <member name="M:Battlegrounds.Networking.Communication.SocketConnection.EstablishConnection(System.String,System.Int32,System.UInt64,Battlegrounds.Networking.Communication.Messaging.IntroMessage)">
+            <summary>
+            Establish a <see cref="T:Battlegrounds.Networking.Communication.HttpConnection"/> to specified HTTP server.
+            </summary>
+            <param name="address">The address of the HTTP server.</param>
+            <param name="port">The port of the HTTP server.</param>
+            <param name="identifier">The identifier of the user sending HTTP requests.</param>
+            <param name="introMessage">The introduction message to send to the HTTP server.</param>
+            <returns>If connection is established a <see cref="T:Battlegrounds.Networking.Communication.HttpConnection"/> instance. Otherwise <see langword="null"/>.</returns>
+        </member>
         <member name="T:Battlegrounds.Networking.Communication.Sockets.SocketDataReceived">
             <summary>
             
@@ -1235,6 +1689,82 @@
             </summary>
             <param name="seed">The random seed to help generate a random ID.</param>
             <returns>A random ID that can be used to identify messages.</returns>
+        </member>
+        <member name="T:Battlegrounds.Networking.DataStructures.FixedLengthStack`1">
+            <summary>
+            Class representing a stack of fixed length with extended stack manipulation functionality.
+            </summary>
+            <typeparam name="T">The type of the object being stored within the stack.</typeparam>
+        </member>
+        <member name="P:Battlegrounds.Networking.DataStructures.FixedLengthStack`1.Top">
+            <summary>
+            Get the current index of the top-stack pointer.
+            </summary>
+        </member>
+        <member name="P:Battlegrounds.Networking.DataStructures.FixedLengthStack`1.Length">
+            <summary>
+            Get the fixed length of the stack.
+            </summary>
+        </member>
+        <member name="P:Battlegrounds.Networking.DataStructures.FixedLengthStack`1.Count">
+            <summary>
+            Get the current amount of items on the stack.
+            </summary>
+        </member>
+        <member name="M:Battlegrounds.Networking.DataStructures.FixedLengthStack`1.#ctor(System.Int32)">
+            <summary>
+            Initialise a new and empty <see cref="T:Battlegrounds.Networking.DataStructures.FixedLengthStack`1"/> instance of fixed-length <paramref name="stackSize"/>.
+            </summary>
+            <param name="stackSize">The size of the stack.</param>
+        </member>
+        <member name="M:Battlegrounds.Networking.DataStructures.FixedLengthStack`1.Select``1(System.Func{`0,``0})">
+            <summary>
+            Select all values on the stack using the <paramref name="selector"/> function.
+            </summary>
+            <typeparam name="V">The result of the selector operation.</typeparam>
+            <param name="selector">The function to apply on each element on the stack.</param>
+            <returns>An array containing the result of the <paramref name="selector"/> function applied on each stack element.</returns>
+        </member>
+        <member name="M:Battlegrounds.Networking.DataStructures.FixedLengthStack`1.Clear">
+            <summary>
+            Clear the stack so no elements remain on the stack.
+            </summary>
+        </member>
+        <member name="M:Battlegrounds.Networking.DataStructures.FixedLengthStack`1.Push(`0)">
+            <summary>
+            Push <paramref name="value"/> onto the stack.
+            </summary>
+            <param name="value">The value to push onto the stack.</param>
+        </member>
+        <member name="M:Battlegrounds.Networking.DataStructures.FixedLengthStack`1.Pop">
+            <summary>
+            Pop the top-level value from the stack.
+            </summary>
+            <returns>The top-level value.</returns>
+        </member>
+        <member name="M:Battlegrounds.Networking.DataStructures.FixedLengthStack`1.Pop(System.Int32)">
+            <summary>
+            Pop <paramref name="count"/> elements from the stack.
+            </summary>
+            <param name="count">The amount of elements to pop from the stack.</param>
+            <returns>An array containing all the popped elements (in order).</returns>
+        </member>
+        <member name="M:Battlegrounds.Networking.DataStructures.FixedLengthStack`1.Peek">
+            <summary>
+            Get the top-stack value without popping it from the stack.
+            </summary>
+            <returns>The top value of the stack.</returns>
+        </member>
+        <member name="M:Battlegrounds.Networking.DataStructures.FixedLengthStack`1.Swap(System.Int32)">
+            <summary>
+            Swap the current top-level stack value with one further down the stack.
+            </summary>
+            <param name="stackOffset">The offset from the top of the stack to swap with.</param>
+        </member>
+        <member name="M:Battlegrounds.Networking.DataStructures.FixedLengthStack`1.Duplicate">
+            <summary>
+            Duplicates the current top-stack value.
+            </summary>
         </member>
         <member name="T:Battlegrounds.Networking.DataStructures.ISynchronizedTimer">
             <summary>
@@ -1703,6 +2233,12 @@
             <param name="refreshVariable">The variable to refresh.</param>
             <param name="arg">The argument to pass along with the refresh.</param>
         </member>
+        <member name="M:Battlegrounds.Networking.Lobby.HostedLobby.CaptureState">
+            <summary>
+            Captures the state of the hosted lobby.
+            </summary>
+            <returns></returns>
+        </member>
         <member name="M:Battlegrounds.Networking.Lobby.HostedLobby.VerifyFile(System.UInt64,System.String)">
             <summary>
             
@@ -2035,6 +2571,11 @@
             
             </summary>
         </member>
+        <member name="P:Battlegrounds.Networking.Lobby.ILobbyTeam.Slots">
+            <summary>
+            
+            </summary>
+        </member>
         <member name="M:Battlegrounds.Networking.Lobby.ILobbyTeam.JoinTeam(Battlegrounds.Networking.Lobby.ILobbyMember)">
             <summary>
             
@@ -2283,6 +2824,17 @@
             </summary>
             <param name="objectPool">The object pool to keep track of static elements.</param>
         </member>
+        <member name="P:Battlegrounds.Networking.Lobby.LobbyTeam.Slots">
+            <summary>
+            Get the slots of the team.
+            </summary>
+        </member>
+        <member name="M:Battlegrounds.Networking.Lobby.LobbyTeam.ToString">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
         <member name="T:Battlegrounds.Networking.Lobby.LobbyTeamSlot">
             <summary>
             
@@ -2494,6 +3046,17 @@
             </summary>
             <param name="id">The ID of the object.</param>
         </member>
+        <member name="T:Battlegrounds.Networking.Proxy.IStateCapturable">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Battlegrounds.Networking.Proxy.IStateCapturable.CaptureState">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
         <member name="T:Battlegrounds.Networking.Proxy.ProxyCall">
             <summary>
             Static utility class for extending the functionality of a proxy call.
@@ -2659,23 +3222,48 @@
             <param name="id">The unique ID to check.</param>
             <returns>If ID is registered, <see langword="true"/>; Otherwise <see langword="false"/>.</returns>
         </member>
-        <member name="T:Battlegrounds.Networking.Remoting.Objects.ISendableObject">
+        <member name="T:Battlegrounds.Networking.Remoting.Objects.SendableObjectConstructor">
             <summary>
             
+            </summary>
+        </member>
+        <member name="F:Battlegrounds.Networking.Remoting.Objects.SendableObjectConstructor.None">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:Battlegrounds.Networking.Remoting.Objects.SendableObjectConstructor.Binary">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:Battlegrounds.Networking.Remoting.Objects.SendableObjectConstructor.BinaryRequestHandler">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:Battlegrounds.Networking.Remoting.Objects.ISendableObject">
+            <summary>
+            Interface of an object that can be sent along with an <see cref="T:Battlegrounds.Networking.Communication.Messaging.IMessage"/>.
+            </summary>
+        </member>
+        <member name="P:Battlegrounds.Networking.Remoting.Objects.ISendableObject.Constructor">
+            <summary>
+            Get the method in which the object should be reconstructed.
             </summary>
         </member>
         <member name="M:Battlegrounds.Networking.Remoting.Objects.ISendableObject.Reconstruct(System.Byte[],Battlegrounds.Networking.Requests.IRequestHandler)">
             <summary>
-            
+            Reconstruct the object from its binary representation.
             </summary>
-            <param name="data"></param>
-            <param name="requestHandler"></param>
+            <param name="data">The binary representation of the object.</param>
+            <param name="requestHandler">The request handler to use while deconstructing the object.</param>
         </member>
         <member name="M:Battlegrounds.Networking.Remoting.Objects.ISendableObject.ToBytes">
             <summary>
-            
+            Convert the object into its binary representation.
             </summary>
-            <returns></returns>
+            <returns>A binary representation of the object.</returns>
         </member>
         <member name="T:Battlegrounds.Networking.Remoting.Objects.ObjectCachedPool">
             <summary>
@@ -2728,6 +3316,608 @@
             <summary>
             
             </summary>
+        </member>
+        <member name="T:Battlegrounds.Networking.Remoting.Query.CommandQuery">
+            <summary>
+            Class representing a query consisting of executable command instructions that can be executed locally or remotely through a <see cref="T:Battlegrounds.Networking.Requests.IRequestHandler"/>.
+            </summary>
+            <remarks>
+            Usage motivation: Invoke a sequence of commands remotely, causuing less server communication.
+            </remarks>
+        </member>
+        <member name="P:Battlegrounds.Networking.Remoting.Query.CommandQuery.Constructor">
+            <summary>
+            Get the method in which the object should be reconstructed.
+            </summary>
+        </member>
+        <member name="P:Battlegrounds.Networking.Remoting.Query.CommandQuery.Instructions">
+            <summary>
+            Get the instructions of the query.
+            </summary>
+            <remarks>
+            This is an internal property!
+            </remarks>
+        </member>
+        <member name="M:Battlegrounds.Networking.Remoting.Query.CommandQuery.#ctor(System.Byte[],Battlegrounds.Networking.Requests.IRequestHandler)">
+            <summary>
+            
+            </summary>
+            <param name="binaryData"></param>
+            <param name="requestHandler"></param>
+        </member>
+        <member name="M:Battlegrounds.Networking.Remoting.Query.CommandQuery.Execute(Battlegrounds.Networking.Requests.IRequestHandler,Battlegrounds.Networking.Remoting.Objects.IObjectPool)">
+            <summary>
+            Execute the <see cref="T:Battlegrounds.Networking.Remoting.Query.CommandQuery"/> using the <paramref name="requestHandler"/> and <paramref name="objectPool"/>.
+            </summary>
+            <param name="requestHandler">The request handler to use for handling specific requests.</param>
+            <param name="objectPool">The object pool to fetch objects from.</param>
+            <returns>A <see cref="T:Battlegrounds.Networking.Remoting.Query.CommandQueryResult"/> instance containing the collected query results.</returns>
+        </member>
+        <member name="M:Battlegrounds.Networking.Remoting.Query.CommandQuery.ExecuteRemote(Battlegrounds.Networking.Requests.IRequestHandler)">
+            <summary>
+            Execute the <see cref="T:Battlegrounds.Networking.Remoting.Query.CommandQuery"/> instance on a remote instance through the <see cref="T:Battlegrounds.Networking.Requests.IRequestHandler"/>.
+            </summary>
+            <param name="requestHandler">The request handler to use for sending and receiving the query data.</param>
+            <returns>The <see cref="T:Battlegrounds.Networking.Remoting.Query.CommandQueryResult"/> returned by the remote instance.</returns>
+        </member>
+        <member name="M:Battlegrounds.Networking.Remoting.Query.CommandQuery.CreateQuery(Battlegrounds.Networking.Remoting.Query.CommandQueryBuilder)">
+            <summary>
+            Create a <see cref="T:Battlegrounds.Networking.Remoting.Query.CommandQuery"/> instance from a <see cref="T:Battlegrounds.Networking.Remoting.Query.CommandQueryBuilder"/> instance.
+            </summary>
+            <param name="builder">The builder containing the command query instructions.</param>
+            <returns>A <see cref="T:Battlegrounds.Networking.Remoting.Query.CommandQuery"/> instance based on the data from the <paramref name="builder"/>.</returns>
+        </member>
+        <member name="M:Battlegrounds.Networking.Remoting.Query.CommandQuery.Reconstruct(System.Byte[],Battlegrounds.Networking.Requests.IRequestHandler)">
+            <summary>
+            Reconstruct the object from its binary representation.
+            </summary>
+            <param name="data">The binary representation of the object.</param>
+            <param name="requestHandler">The request handler to use while deconstructing the object.</param>
+        </member>
+        <member name="M:Battlegrounds.Networking.Remoting.Query.CommandQuery.ToBytes">
+            <summary>
+            Convert the object into its binary representation.
+            </summary>
+            <returns>A binary representation of the object.</returns>
+        </member>
+        <member name="T:Battlegrounds.Networking.Remoting.Query.CommandQueryBuilder">
+            <summary>
+            Class that is used for building a <see cref="T:Battlegrounds.Networking.Remoting.Query.CommandQuery"/> through a series of chained method calls.
+            </summary>
+        </member>
+        <member name="M:Battlegrounds.Networking.Remoting.Query.CommandQueryBuilder.#ctor">
+            <summary>
+            Initialise a new <see cref="T:Battlegrounds.Networking.Remoting.Query.CommandQueryBuilder"/> instance.
+            </summary>
+        </member>
+        <member name="M:Battlegrounds.Networking.Remoting.Query.CommandQueryBuilder.#ctor(Battlegrounds.Networking.Requests.IRequestHandler)">
+            <summary>
+            Initialise a new <see cref="T:Battlegrounds.Networking.Remoting.Query.CommandQueryBuilder"/> instance bound to a specific <see cref="T:Battlegrounds.Networking.Requests.IRequestHandler"/>.
+            </summary>
+            <param name="requestHandler">The reuest handler to bind to the command query.</param>
+        </member>
+        <member name="M:Battlegrounds.Networking.Remoting.Query.CommandQueryBuilder.#ctor(Battlegrounds.Networking.Remoting.Query.CommandQuery)">
+            <summary>
+            Initialise a new <see cref="T:Battlegrounds.Networking.Remoting.Query.CommandQueryBuilder"/> instance based on the existing <paramref name="commandQuery"/>.
+            </summary>
+            <param name="commandQuery">The command query to construct the new query from.</param>
+        </member>
+        <member name="M:Battlegrounds.Networking.Remoting.Query.CommandQueryBuilder.Clear">
+            <summary>
+            Clear the instructions currently defined in the query.
+            </summary>
+        </member>
+        <member name="M:Battlegrounds.Networking.Remoting.Query.CommandQueryBuilder.GetObject(Battlegrounds.Networking.Remoting.Objects.IObjectID)">
+            <summary>
+            Instruct the query to fetch an object by its <see cref="T:Battlegrounds.Networking.Remoting.Objects.IObjectID"/> and push it onto the stack.
+            </summary>
+            <param name="objectID">The ID of the object to fetch.</param>
+            <returns>The <see cref="T:Battlegrounds.Networking.Remoting.Query.CommandQueryBuilder"/> that is constructing the <see cref="T:Battlegrounds.Networking.Remoting.Query.CommandQuery"/>.</returns>
+        </member>
+        <member name="M:Battlegrounds.Networking.Remoting.Query.CommandQueryBuilder.Load(System.String)">
+            <summary>
+            Instruct the query to load the value of a stored variable <paramref name="varname"/> onto the stack. If the <paramref name="varname"/> contains <i>%i</i> 
+            the instruction will be saved as a <see cref="F:Battlegrounds.Networking.Remoting.Query.CommandQueryInstructionID.LOAD_INDEXED"/> instruction and will use the index specified by the enclosing loop instruction.
+            </summary>
+            <remarks>
+            This will push to the top-stack value.
+            </remarks>
+            <param name="varname">The name of the variable to load value from.</param>
+            <returns>The <see cref="T:Battlegrounds.Networking.Remoting.Query.CommandQueryBuilder"/> that is constructing the <see cref="T:Battlegrounds.Networking.Remoting.Query.CommandQuery"/>.</returns>
+        </member>
+        <member name="M:Battlegrounds.Networking.Remoting.Query.CommandQueryBuilder.Push(System.Object[])">
+            <summary>
+            Push the specified constant <paramref name="values"/> onto the top of the stack.
+            </summary>
+            <remarks>
+            The values being pushed should ONLY be simple value types.
+            </remarks>
+            <param name="values"></param>
+            <returns>The <see cref="T:Battlegrounds.Networking.Remoting.Query.CommandQueryBuilder"/> that is constructing the <see cref="T:Battlegrounds.Networking.Remoting.Query.CommandQuery"/>.</returns>
+        </member>
+        <member name="M:Battlegrounds.Networking.Remoting.Query.CommandQueryBuilder.Duplicate(System.Int32)">
+            <summary>
+            Duplicate the value at the top of the stack.
+            </summary>
+            <remarks>
+            This will not pop the original value.
+            </remarks>
+            <param name="count">The amount of duplicates to produce.</param>
+            <returns>The <see cref="T:Battlegrounds.Networking.Remoting.Query.CommandQueryBuilder"/> that is constructing the <see cref="T:Battlegrounds.Networking.Remoting.Query.CommandQuery"/>.</returns>
+            <exception cref="T:System.ArgumentOutOfRangeException"/>
+        </member>
+        <member name="M:Battlegrounds.Networking.Remoting.Query.CommandQueryBuilder.Call(System.String)">
+            <summary>
+            Invoke the specified <paramref name="methodName"/> on the top-stack object using the current stack values as arguments.
+            </summary>
+            <remarks>
+            This will <b><i>NOT</i></b> keep the object on the top of the stack.
+            </remarks>
+            <param name="methodName">The name of the method to invoke.</param>
+            <returns>The <see cref="T:Battlegrounds.Networking.Remoting.Query.CommandQueryBuilder"/> that is constructing the <see cref="T:Battlegrounds.Networking.Remoting.Query.CommandQuery"/>.</returns>
+        </member>
+        <member name="M:Battlegrounds.Networking.Remoting.Query.CommandQueryBuilder.Call(System.String,System.Int32)">
+            <summary>
+            Invoke the specified <paramref name="methodName"/> on the top-stack object using the current stack values as arguments.
+            </summary>
+            <remarks>
+            This will <b><i>NOT</i></b> keep the object on the top of the stack.
+            </remarks>
+            <param name="methodName">The name of the method to invoke.</param>
+            <param name="count">The amount of stack values to pop as arguments</param>
+            <returns>The <see cref="T:Battlegrounds.Networking.Remoting.Query.CommandQueryBuilder"/> that is constructing the <see cref="T:Battlegrounds.Networking.Remoting.Query.CommandQuery"/>.</returns>
+        </member>
+        <member name="M:Battlegrounds.Networking.Remoting.Query.CommandQueryBuilder.GetProperty(System.String)">
+            <summary>
+            Get the value of the property of the top-stack object.
+            </summary>
+            <param name="propertyName"></param>
+            <remarks>
+            This will <b><i>NOT</i></b> keep the object on the top of the stack.
+            </remarks>
+            <returns>The <see cref="T:Battlegrounds.Networking.Remoting.Query.CommandQueryBuilder"/> that is constructing the <see cref="T:Battlegrounds.Networking.Remoting.Query.CommandQuery"/>.</returns>
+        </member>
+        <member name="M:Battlegrounds.Networking.Remoting.Query.CommandQueryBuilder.GetProperties(System.String[])">
+            <summary>
+            Get the value of all the specified properties.
+            </summary>
+            <remarks>
+            This will <b><i>NOT</i></b> keep the object on the top of the stack.
+            </remarks>
+            <param name="propertyNames">The name of all the properties to get the value of.</param>
+            <returns>The <see cref="T:Battlegrounds.Networking.Remoting.Query.CommandQueryBuilder"/> that is constructing the <see cref="T:Battlegrounds.Networking.Remoting.Query.CommandQuery"/>.</returns>
+            <exception cref="T:System.ArgumentException"/>
+        </member>
+        <member name="M:Battlegrounds.Networking.Remoting.Query.CommandQueryBuilder.SetProperty(System.String)">
+            <summary>
+            Set the value of the property of the top-stack value with the second top-stack value on the stack.
+            </summary>
+            <param name="propertyName"></param>
+            <remarks>
+            This will keep the object on the top of the stack.
+            </remarks>
+            <returns>The <see cref="T:Battlegrounds.Networking.Remoting.Query.CommandQueryBuilder"/> that is constructing the <see cref="T:Battlegrounds.Networking.Remoting.Query.CommandQuery"/>.</returns>
+        </member>
+        <member name="M:Battlegrounds.Networking.Remoting.Query.CommandQueryBuilder.Pop">
+            <summary>
+            Pop the top-stack value from the value stack.
+            </summary>
+            <returns>The <see cref="T:Battlegrounds.Networking.Remoting.Query.CommandQueryBuilder"/> that is constructing the <see cref="T:Battlegrounds.Networking.Remoting.Query.CommandQuery"/>.</returns>
+        </member>
+        <member name="M:Battlegrounds.Networking.Remoting.Query.CommandQueryBuilder.Stringify">
+            <summary>
+            Pop the top-stack value from the value stack and invoke "ToString" on it. Then push the return value of "ToString" onto the stack.
+            </summary>
+            <returns>The <see cref="T:Battlegrounds.Networking.Remoting.Query.CommandQueryBuilder"/> that is constructing the <see cref="T:Battlegrounds.Networking.Remoting.Query.CommandQuery"/>.</returns>
+        </member>
+        <member name="M:Battlegrounds.Networking.Remoting.Query.CommandQueryBuilder.Swap(System.Int32)">
+            <summary>
+            Swap the current top-stack value with the value of the <paramref name="offset"/> from the top of the stack.
+            </summary>
+            <param name="offset">The amount of elements to go back from the top of the stack to swap with.</param>
+            <returns>The <see cref="T:Battlegrounds.Networking.Remoting.Query.CommandQueryBuilder"/> that is constructing the <see cref="T:Battlegrounds.Networking.Remoting.Query.CommandQuery"/>.</returns>
+            <exception cref="T:System.ArgumentOutOfRangeException"/>
+        </member>
+        <member name="M:Battlegrounds.Networking.Remoting.Query.CommandQueryBuilder.Store(System.String)">
+            <summary>
+            Instruct the query to store the current top-stack value in the results object using <paramref name="varname"/>. If the <paramref name="varname"/> contains <i>%i</i>
+            the instruction will be saved as a <see cref="F:Battlegrounds.Networking.Remoting.Query.CommandQueryInstructionID.STORE_INDEXED"/> instruction and will use the index specified by the enclosing loop instruction.
+            If the <paramref name="varname"/> starts with <i>$stack-</i> followed by an integer, the instruction will be saved as a <see cref="F:Battlegrounds.Networking.Remoting.Query.CommandQueryInstructionID.STORE_STACK"/>
+            where it will then use the stack value specified by offset as the storage name. If the offset is 0, it will also pop the value from the stack.
+            </summary>
+            <remarks>
+            This will pop the top-stack value.
+            </remarks>
+            <param name="varname">The name of the variable to store the top-stack value in.</param>
+            <returns>The <see cref="T:Battlegrounds.Networking.Remoting.Query.CommandQueryBuilder"/> that is constructing the <see cref="T:Battlegrounds.Networking.Remoting.Query.CommandQuery"/>.</returns>
+        </member>
+        <member name="M:Battlegrounds.Networking.Remoting.Query.CommandQueryBuilder.Loop(System.Func{Battlegrounds.Networking.Remoting.Query.CommandQueryBuilder,Battlegrounds.Networking.Remoting.Query.CommandQueryBuilder},System.Boolean)">
+            <summary>
+            Instruct the query to loop over the collection represented by the top-stack value. If <paramref name="indexed"/> is <see langword="true"/>, the execution engine will keep 
+            track of the index in the loop; Enabling the usage of indexed operations such as <see cref="F:Battlegrounds.Networking.Remoting.Query.CommandQueryInstructionID.STORE_INDEXED"/>.
+            </summary>
+            <remarks>
+            The <see cref="T:Battlegrounds.Networking.Remoting.Query.CommandQuery"/> execution engine guarantees the collection value is pushed to the value stack before the subquery is invoked on the value.
+            </remarks>
+            <param name="builder">The function to generate the subquery to invoke on each member of collection.</param>
+            <param name="indexed">Should the query attempt to loop over the collection using an index. (Top-stack value must be an array).</param>
+            <returns>The <see cref="T:Battlegrounds.Networking.Remoting.Query.CommandQueryBuilder"/> that is constructing the <see cref="T:Battlegrounds.Networking.Remoting.Query.CommandQuery"/>.</returns>
+        </member>
+        <member name="M:Battlegrounds.Networking.Remoting.Query.CommandQueryBuilder.Vector(System.Int32)">
+            <summary>
+            Take the specified <paramref name="count"/> from the stack and put them inside a <see cref="T:Battlegrounds.Networking.Remoting.Query.CommandQueryResultVector"/> object that can be iterated over and stored as a
+            collection of ordered values. This will preserve the stack order, meaning the top-stack value will be the first element in the vector.
+            </summary>
+            <param name="count">The amount of items to pop from the stack and vectorise.</param>
+            <returns>The <see cref="T:Battlegrounds.Networking.Remoting.Query.CommandQueryBuilder"/> that is constructing the <see cref="T:Battlegrounds.Networking.Remoting.Query.CommandQuery"/>.</returns>
+            <exception cref="T:System.ArgumentOutOfRangeException"/>
+        </member>
+        <member name="M:Battlegrounds.Networking.Remoting.Query.CommandQueryBuilder.TestNull(System.Func{Battlegrounds.Networking.Remoting.Query.CommandQueryBuilder,Battlegrounds.Networking.Remoting.Query.CommandQueryBuilder},System.Func{Battlegrounds.Networking.Remoting.Query.CommandQueryBuilder,Battlegrounds.Networking.Remoting.Query.CommandQueryBuilder})">
+            <summary>
+            Pop the top-stack value and test if the value is <see langword="null"/>. If the value is <see langword="null"/>, the sub-query constructed from <paramref name="ifCase"/> will
+            be executed. Otherwise the <paramref name="ifNotCase"/> sub-query will be executed, where the non-<see langword="null"/> value is the top-stack element.
+            </summary>
+            <param name="ifCase">The sub-query constructor for the case where the top-stack value is <see langword="null"/>.</param>
+            <param name="ifNotCase">The sub-query constructor for the case where the top-stack value is not <see langword="null"/>.</param>
+            <returns>The <see cref="T:Battlegrounds.Networking.Remoting.Query.CommandQueryBuilder"/> that is constructing the <see cref="T:Battlegrounds.Networking.Remoting.Query.CommandQuery"/>.</returns>
+        </member>
+        <member name="M:Battlegrounds.Networking.Remoting.Query.CommandQueryBuilder.Optimise">
+            <summary>
+            Attempt to apply small instructional optimisations to the query to further increase query execution speed.
+            </summary>
+            <returns>The <see cref="T:Battlegrounds.Networking.Remoting.Query.CommandQueryBuilder"/> that is constructing the <see cref="T:Battlegrounds.Networking.Remoting.Query.CommandQuery"/>.</returns>
+        </member>
+        <member name="M:Battlegrounds.Networking.Remoting.Query.CommandQueryBuilder.Continue(Battlegrounds.Networking.Remoting.Query.CommandQuery)">
+            <summary>
+            Instruct the current query to execute the secondary <paramref name="query"/> as a continuation.
+            </summary>
+            <param name="query">The query to continue executing after the current query.</param>
+            <returns>The <see cref="T:Battlegrounds.Networking.Remoting.Query.CommandQueryBuilder"/> that is constructing the <see cref="T:Battlegrounds.Networking.Remoting.Query.CommandQuery"/>.</returns>
+        </member>
+        <member name="M:Battlegrounds.Networking.Remoting.Query.CommandQueryBuilder.GetQuery">
+            <summary>
+            Get the <see cref="T:Battlegrounds.Networking.Remoting.Query.CommandQuery"/> that can currently be constructed from the <see cref="T:Battlegrounds.Networking.Remoting.Query.CommandQueryBuilder"/> instance.
+            </summary>
+            <returns>A <see cref="T:Battlegrounds.Networking.Remoting.Query.CommandQuery"/> that will execute the specified instructions.</returns>
+        </member>
+        <member name="M:Battlegrounds.Networking.Remoting.Query.CommandQueryBuilder.SendQuery">
+            <summary>
+            Send the query to the remote query executor.
+            </summary>
+            <returns>The <see cref="T:Battlegrounds.Networking.Remoting.Query.CommandQueryResult"/> returned from the remote host.</returns>
+        </member>
+        <member name="M:Battlegrounds.Networking.Remoting.Query.CommandQueryBuilder.GetInstructions">
+            <summary>
+            Get the currently added <see cref="T:Battlegrounds.Networking.Remoting.Query.CommandQueryInstruction"/> elements added to the query.
+            </summary>
+            <returns>An array of <see cref="T:Battlegrounds.Networking.Remoting.Query.CommandQueryInstruction"/> elements.</returns>
+        </member>
+        <member name="T:Battlegrounds.Networking.Remoting.Query.CommandQueryInstructionID">
+            <summary>
+            Enum representing all available opcodes that can be executed by the <see cref="T:Battlegrounds.Networking.Remoting.Query.CommandQuery"/> engine.
+            </summary>
+        </member>
+        <member name="F:Battlegrounds.Networking.Remoting.Query.CommandQueryInstructionID.NOP">
+            <summary>
+            No operation instruction.
+            </summary>
+        </member>
+        <member name="F:Battlegrounds.Networking.Remoting.Query.CommandQueryInstructionID.CALL">
+            <summary>
+            Call instruction.
+            </summary>
+        </member>
+        <member name="F:Battlegrounds.Networking.Remoting.Query.CommandQueryInstructionID.LOAD">
+            <summary>
+            Load value instruction.
+            </summary>
+        </member>
+        <member name="F:Battlegrounds.Networking.Remoting.Query.CommandQueryInstructionID.LOAD_INDEXED">
+            <summary>
+            Load value by index instruction.
+            </summary>
+        </member>
+        <member name="F:Battlegrounds.Networking.Remoting.Query.CommandQueryInstructionID.PUSH">
+            <summary>
+            Push constant value instruction.
+            </summary>
+        </member>
+        <member name="F:Battlegrounds.Networking.Remoting.Query.CommandQueryInstructionID.STORE">
+            <summary>
+            Store stack value instruction.
+            </summary>
+        </member>
+        <member name="F:Battlegrounds.Networking.Remoting.Query.CommandQueryInstructionID.STORE_INDEXED">
+            <summary>
+            Store stack valye by index instruction.
+            </summary>
+        </member>
+        <member name="F:Battlegrounds.Networking.Remoting.Query.CommandQueryInstructionID.STORE_STACK">
+            <summary>
+            Store top-stack value by the name of the name of the specified value.
+            </summary>
+        </member>
+        <member name="F:Battlegrounds.Networking.Remoting.Query.CommandQueryInstructionID.GETOBJ">
+            <summary>
+            Get object from local object pool instruction.
+            </summary>
+        </member>
+        <member name="F:Battlegrounds.Networking.Remoting.Query.CommandQueryInstructionID.GETPROP">
+            <summary>
+            Get property of object instruction.
+            </summary>
+        </member>
+        <member name="F:Battlegrounds.Networking.Remoting.Query.CommandQueryInstructionID.SETPROP">
+            <summary>
+            Set property value of object instruction.
+            </summary>
+        </member>
+        <member name="F:Battlegrounds.Networking.Remoting.Query.CommandQueryInstructionID.LOOP">
+            <summary>
+            Loop over collection instruction.
+            </summary>
+        </member>
+        <member name="F:Battlegrounds.Networking.Remoting.Query.CommandQueryInstructionID.LOOP_INDEXED">
+            <summary>
+            Loop over array instruction.
+            </summary>
+        </member>
+        <member name="F:Battlegrounds.Networking.Remoting.Query.CommandQueryInstructionID.POP">
+            <summary>
+            Pop top-value instruction.
+            </summary>
+        </member>
+        <member name="F:Battlegrounds.Networking.Remoting.Query.CommandQueryInstructionID.DUP">
+            <summary>
+            Duplicate top-value instruction.
+            </summary>
+        </member>
+        <member name="F:Battlegrounds.Networking.Remoting.Query.CommandQueryInstructionID.VECTOR">
+            <summary>
+            Convert the specified stack elements into a vector that can be operated on instruction.
+            </summary>
+        </member>
+        <member name="F:Battlegrounds.Networking.Remoting.Query.CommandQueryInstructionID.SWAP">
+            <summary>
+            Swap two objects on the stack instruction.
+            </summary>
+        </member>
+        <member name="F:Battlegrounds.Networking.Remoting.Query.CommandQueryInstructionID.STRINGIFY">
+            <summary>
+            Get obj as string instruction.
+            </summary>
+        </member>
+        <member name="F:Battlegrounds.Networking.Remoting.Query.CommandQueryInstructionID.TESTNULL">
+            <summary>
+            Test top-stack for null-value instruction.
+            </summary>
+        </member>
+        <member name="F:Battlegrounds.Networking.Remoting.Query.CommandQueryInstructionID.TESTEQUAL">
+            <summary>
+            Test top-stack if equal to second top-stack value instruction.
+            </summary>
+        </member>
+        <member name="F:Battlegrounds.Networking.Remoting.Query.CommandQueryInstructionID.TESTFLAG">
+            <summary>
+            Test if top stack is equal to instruction flag instruction.
+            </summary>
+        </member>
+        <member name="T:Battlegrounds.Networking.Remoting.Query.CommandQueryInstruction">
+            <summary>
+            Reoresents an instruction that can be executed by a <see cref="T:Battlegrounds.Networking.Remoting.Query.CommandQuery"/>.
+            </summary>
+        </member>
+        <member name="F:Battlegrounds.Networking.Remoting.Query.CommandQueryInstruction.Instruction">
+            <summary>
+            The instruction to be executed.
+            </summary>
+        </member>
+        <member name="F:Battlegrounds.Networking.Remoting.Query.CommandQueryInstruction.Identifier">
+            <summary>
+            The associated string identifier for the instruction.
+            </summary>
+        </member>
+        <member name="F:Battlegrounds.Networking.Remoting.Query.CommandQueryInstruction.Arguments">
+            <summary>
+            Additional arguments to be used by the instruction.
+            </summary>
+        </member>
+        <member name="M:Battlegrounds.Networking.Remoting.Query.CommandQueryInstruction.#ctor(Battlegrounds.Networking.Remoting.Query.CommandQueryInstructionID,System.String,System.Object[])">
+            <summary>
+            Initialise a new <see cref="T:Battlegrounds.Networking.Remoting.Query.CommandQueryInstruction"/> with values defined.
+            </summary>
+            <param name="instructionID">The ID of the instruction to invoke.</param>
+            <param name="identifier">The non-unique identifier of the instruction.</param>
+            <param name="args">The additional arguments of the instruction</param>
+        </member>
+        <member name="M:Battlegrounds.Networking.Remoting.Query.CommandQueryInstruction.ToBytes">
+            <summary>
+            Convert the <see cref="T:Battlegrounds.Networking.Remoting.Query.CommandQueryInstruction"/> into a binary representation.
+            </summary>
+            <returns>The binary representation of the query instruction.</returns>
+        </member>
+        <member name="M:Battlegrounds.Networking.Remoting.Query.CommandQueryInstruction.ToString">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:Battlegrounds.Networking.Remoting.Query.CommandQueryResult">
+            <summary>
+            Class representing the results of the execution of a <see cref="T:Battlegrounds.Networking.Remoting.Query.CommandQuery"/>.
+            </summary>
+        </member>
+        <member name="P:Battlegrounds.Networking.Remoting.Query.CommandQueryResult.Constructor">
+            <summary>
+            Get the method in which the object should be reconstructed.
+            </summary>
+        </member>
+        <member name="P:Battlegrounds.Networking.Remoting.Query.CommandQueryResult.WasExecuted">
+            <summary>
+            Get if the <see cref="T:Battlegrounds.Networking.Remoting.Query.CommandQuery"/> was executed.
+            </summary>
+        </member>
+        <member name="P:Battlegrounds.Networking.Remoting.Query.CommandQueryResult.QueryResults">
+            <summary>
+            Get a readonly dictionary over the query results.
+            </summary>
+        </member>
+        <member name="M:Battlegrounds.Networking.Remoting.Query.CommandQueryResult.#ctor">
+            <summary>
+            Initialise a new and oped <see cref="T:Battlegrounds.Networking.Remoting.Query.CommandQueryResult"/> instance thay can be modified.
+            </summary>
+        </member>
+        <member name="M:Battlegrounds.Networking.Remoting.Query.CommandQueryResult.#ctor(System.Boolean)">
+            <summary>
+            Initialise a new and oped <see cref="T:Battlegrounds.Networking.Remoting.Query.CommandQueryResult"/> instance thay can NOT be modified.
+            </summary>
+            <param name="wasExecuted">Flag setting whether the query was executed or not.</param>
+        </member>
+        <member name="M:Battlegrounds.Networking.Remoting.Query.CommandQueryResult.Lock">
+            <summary>
+            Lock the query from further modifications.
+            </summary>
+        </member>
+        <member name="P:Battlegrounds.Networking.Remoting.Query.CommandQueryResult.Item(System.String)">
+            <summary>
+            Get or set the stored value of a query key.
+            </summary>
+            <remarks>
+            The value cannot be changed when the query has been locked.
+            </remarks>
+            <param name="queryKey">The name of the query key to look up.</param>
+            <returns>The object associated with <paramref name="queryKey"/> if found; Otherwise <see langword="null"/>.</returns>
+            <exception cref="T:System.InvalidOperationException"/>
+        </member>
+        <member name="M:Battlegrounds.Networking.Remoting.Query.CommandQueryResult.Reconstruct(System.Byte[],Battlegrounds.Networking.Requests.IRequestHandler)">
+            <summary>
+            Reconstruct the object from its binary representation.
+            </summary>
+            <param name="data">The binary representation of the object.</param>
+            <param name="requestHandler">The request handler to use while deconstructing the object.</param>
+        </member>
+        <member name="M:Battlegrounds.Networking.Remoting.Query.CommandQueryResult.ToBytes">
+            <summary>
+            Convert the object into its binary representation.
+            </summary>
+            <returns>A binary representation of the object.</returns>
+        </member>
+        <member name="T:Battlegrounds.Networking.Remoting.Query.CommandQueryResultVector">
+            <summary>
+            Class representing a vector of up to 256 dimensions of collected values in a <see cref="T:Battlegrounds.Networking.Remoting.Query.CommandQuery"/>.
+            </summary>
+        </member>
+        <member name="P:Battlegrounds.Networking.Remoting.Query.CommandQueryResultVector.Constructor">
+            <summary>
+            Get the <see cref="T:Battlegrounds.Networking.Remoting.Objects.ISendableObject"/> construction method.
+            </summary>
+        </member>
+        <member name="P:Battlegrounds.Networking.Remoting.Query.CommandQueryResultVector.Dimensions">
+            <summary>
+            Get the dimension count (Length) of the vector.
+            </summary>
+        </member>
+        <member name="P:Battlegrounds.Networking.Remoting.Query.CommandQueryResultVector.Values">
+            <summary>
+            Get a read-only collection of the vector values
+            </summary>
+        </member>
+        <member name="M:Battlegrounds.Networking.Remoting.Query.CommandQueryResultVector.#ctor">
+            <summary>
+            Initialise a new and empty <see cref="T:Battlegrounds.Networking.Remoting.Query.CommandQueryResultVector"/> instance.
+            </summary>
+        </member>
+        <member name="M:Battlegrounds.Networking.Remoting.Query.CommandQueryResultVector.#ctor(System.Object[])">
+            <summary>
+            Initialise a new <see cref="T:Battlegrounds.Networking.Remoting.Query.CommandQueryResultVector"/> instance with <paramref name="vector"/> content.
+            </summary>
+            <param name="vector">The content of the vector.</param>
+        </member>
+        <member name="P:Battlegrounds.Networking.Remoting.Query.CommandQueryResultVector.Item(System.Int32)">
+            <summary>
+            Get the vector element found at dimension <paramref name="index"/>.
+            </summary>
+            <param name="index">The index of the vector dimension.</param>
+            <returns>The stored element at <paramref name="index"/>.</returns>
+        </member>
+        <member name="M:Battlegrounds.Networking.Remoting.Query.CommandQueryResultVector.AsArray">
+            <summary>
+            Get the vector as an array.
+            </summary>
+            <returns>The underlying array representation of the vector.</returns>
+        </member>
+        <member name="M:Battlegrounds.Networking.Remoting.Query.CommandQueryResultVector.ToString">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Battlegrounds.Networking.Remoting.Query.CommandQueryResultVector.Reconstruct(System.Byte[],Battlegrounds.Networking.Requests.IRequestHandler)">
+            <summary>
+            Reconstruct the object from its binary representation.
+            </summary>
+            <param name="data">The binary representation of the object.</param>
+            <param name="requestHandler">The request handler to use while deconstructing the object.</param>
+        </member>
+        <member name="M:Battlegrounds.Networking.Remoting.Query.CommandQueryResultVector.ToBytes">
+            <summary>
+            Convert the object into its binary representation.
+            </summary>
+            <returns>A binary representation of the object.</returns>
+        </member>
+        <member name="M:Battlegrounds.Networking.Remoting.Query.CommandQueryResultVector.GetEnumerator">
+            <summary>
+            Returns an enumerator that iterates through the collection.
+            </summary>
+            <returns>An enumerator that can be used to iterate through the collection.</returns>
+        </member>
+        <member name="T:Battlegrounds.Networking.Remoting.Query.CommandQueryUtil">
+            <summary>
+            Static utility class for extending the functionality of <see cref="T:Battlegrounds.Networking.Remoting.Query.CommandQuery"/> objects.
+            </summary>
+        </member>
+        <member name="M:Battlegrounds.Networking.Remoting.Query.CommandQueryUtil.GetObjectAsBinary(System.Object)">
+            <summary>
+            Get <paramref name="obj"/> in a binary form tied to a binary type ID.
+            </summary>
+            <remarks>
+            This can only convert primitive value-types, strings, and <see cref="T:Battlegrounds.Networking.Remoting.Objects.IObjectID"/> values.
+            </remarks>
+            <param name="obj">The object to convert to binary.</param>
+            <returns>A tuple containing the byte ID of the object and the binary representation of <paramref name="obj"/>.</returns>
+        </member>
+        <member name="M:Battlegrounds.Networking.Remoting.Query.CommandQueryUtil.GetStringArg(System.String,System.Text.Encoding)">
+            <summary>
+            Get the string <paramref name="s"/> in a binary form using the specified <paramref name="encoding"/>.
+            </summary>
+            <param name="s">The string to get binary representation of.</param>
+            <param name="encoding">The encoding to use to encode the string in binary.</param>
+            <returns>A binary representation of the string, where the first byte defines the length of the string.</returns>
+        </member>
+        <member name="M:Battlegrounds.Networking.Remoting.Query.CommandQueryUtil.GetArg(System.Byte,System.IO.BinaryReader)">
+            <summary>
+            Get the object in a <see cref="T:Battlegrounds.Networking.Remoting.Query.CommandQueryInstruction"/> argument using specified type <paramref name="id"/>.
+            </summary>
+            <param name="id">The read type ID of the object to read.</param>
+            <param name="reader">The reader to use to read the object value.</param>
+            <returns>The object representation of the binary value.</returns>
+        </member>
+        <member name="M:Battlegrounds.Networking.Remoting.Query.CommandQueryUtil.BeginQuery(System.Object,System.Object[])">
+            <summary>
+            Begin the construction of command query using the specified <paramref name="obj"/> as first call argument. If <paramref name="obj"/> is an <see cref="T:Battlegrounds.Networking.Proxy.IProxy"/>
+            instance it will propogate the call to <see cref="M:Battlegrounds.Networking.Remoting.Query.CommandQueryUtil.BeginQuery(Battlegrounds.Networking.Proxy.IProxy,System.Object[])"/>.
+            </summary>
+            <param name="obj">The object to use as first argument in a call-sequence.</param>
+            <param name="args">The arguments to pass along to the call.</param>
+            <returns>A <see cref="T:Battlegrounds.Networking.Remoting.Query.CommandQueryBuilder"/> instance that can be used for constructing a <see cref="T:Battlegrounds.Networking.Remoting.Query.CommandQuery"/>.</returns>
+        </member>
+        <member name="M:Battlegrounds.Networking.Remoting.Query.CommandQueryUtil.BeginQuery(Battlegrounds.Networking.Proxy.IProxy,System.Object[])">
+            <summary>
+            Begin the construction of a command query on the <paramref name="proxy"/> object.
+            </summary>
+            <param name="proxy">The proxy object to invoke the query on.</param>
+            <param name="args">The arguments to pass to a first potential CALL, GET or SET property query instruction.</param>
+            <returns>A <see cref="T:Battlegrounds.Networking.Remoting.Query.CommandQueryBuilder"/> instance that can be used for constructing a <see cref="T:Battlegrounds.Networking.Remoting.Query.CommandQuery"/>.</returns>
         </member>
         <member name="T:Battlegrounds.Networking.Remoting.Reflection.CacheCreator">
             <summary>
@@ -2958,6 +4148,13 @@
             <param name="connection">The connection the request handler will use to handle requests.</param>
             <param name="staticInterface">The static interface a server may interface with.</param>
             <param name="objectPool">The object pool that keeps track of proxy objects.</param>
+        </member>
+        <member name="M:Battlegrounds.Networking.Requests.HostRequestHandler.HandleRequest(Battlegrounds.Networking.Communication.Messaging.IMessage)">
+            <summary>
+            
+            </summary>
+            <param name="message"></param>
+            <returns></returns>
         </member>
         <member name="M:Battlegrounds.Networking.Requests.HostRequestHandler.DispatchCall(System.String,System.String,System.Object[])">
             <summary>

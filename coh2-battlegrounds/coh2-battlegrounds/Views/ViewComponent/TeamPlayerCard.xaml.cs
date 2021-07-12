@@ -111,7 +111,7 @@ namespace BattlegroundsApp.Views.ViewComponent {
             this.m_handler = handler;
             this.TeamType = teamType;
             this.m_teamSlotIndex = slotIndex;
-            this.TeamSlot = this.GetLobbyTeamFromType(this.TeamType).GetSlotAt(slotIndex);
+            this.TeamSlot = this.GetLobbyTeamFromType(this.TeamType)?.GetSlotAt(slotIndex) ?? null;
         }
 
         public void SetCardState(string statename) => this.TrySetStateByName(statename);
