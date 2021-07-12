@@ -7,7 +7,7 @@
              xmlns:local="clr-namespace:BattlegroundsApp.Views"
              xmlns:card="clr-namespace:BattlegroundsApp.Controls.CompanyBuilderControls"
              mc:Ignorable="d"
-             d:DesignHeight="450" d:DesignWidth="1000" Background="white">
+             d:DesignHeight="650" d:DesignWidth="1000" Background="white">
     <Grid>
 
         <Grid.RowDefinitions>
@@ -35,9 +35,15 @@
         </Grid.ColumnDefinitions>
 
         <!-- Row 0 -->
-        <TextBlock Grid.Row="0" Grid.Column="0" Text="{Binding CompanyName}" Margin="2.5"/>
+        <TextBlock Grid.Row="0" Grid.Column="0" Margin="2.5">
+            <TextBlock.Text>
+                <MultiBinding StringFormat="{}{0} [{1}]">
+                    <Binding Path="CompanyName"/>
+                    <Binding Path="CompanyType"/>
+                </MultiBinding>
+            </TextBlock.Text>
+        </TextBlock>
 
-        <!-- For company size use the size variable from Company.cs file -->
         <TextBlock Grid.Row="0" Grid.Column="1" Margin="2.5">
             <TextBlock.Text>
                 <MultiBinding StringFormat="{}Company Size: {0}/{1}">
@@ -48,47 +54,43 @@
         </TextBlock>
 
         <!-- Row 1 -->
-        <TextBlock Grid.Row="1" Grid.Column="0" Text="Infantry"/>
-        
-        <TextBlock Grid.Row="1" Grid.Column="1" Text="Support Weapons"/>
-        
-        <TextBlock Grid.Row="1" Grid.Column="2" Text="Vehicles"/>
 
-        <TextBlock Grid.Row="1" Grid.Column="3" Text="Abilities"/>
-        
         <!-- Row 2 -->
-        <!-- Infantry -->
-        <ScrollViewer Grid.Row="2" Grid.Column="0" CanContentScroll="False" VerticalScrollBarVisibility="Visible" Height="575" MaxHeight="575">
-            <StackPanel x:Name="InfantryList">
+        <TextBlock Grid.Row="2" Grid.Column="5" Text="Available Units"/>
+
+        <!-- Row 3 -->
+        <TabControl Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="5" Height="400" Width="650">
+            <TabItem Header="Units">
+                <StackPanel x:Name="UnitTypeStack" Orientation="Vertical" AllowDrop="True" Drop="OnDrop">
+                    <WrapPanel x:Name="InfantryWrap" Orientation="Horizontal" Width="150">
+
+                    </WrapPanel>
+                    <WrapPanel x:Name="SupportWrap" Orientation="Horizontal" Width="150">
+
+                    </WrapPanel>
+                    <WrapPanel x:Name="VehicleWrap" Orientation="Horizontal" Width="150">
+                        
+                    </WrapPanel>
+                </StackPanel>
+            </TabItem>
+            <TabItem Header="Abilities">
+                
+            </TabItem>
+            <TabItem Header="Inventory">
+                
+            </TabItem>
+        </TabControl>
+
+        <ScrollViewer Grid.Row="3" Grid.Column="5" CanContentScroll="False" VerticalScrollBarVisibility="Visible" Height="400">
+            <StackPanel x:Name="AvailableUnitsStack">
                 
             </StackPanel>
         </ScrollViewer>
 
-        <!-- Support -->
-        <ScrollViewer Grid.Row="2" Grid.Column="1" CanContentScroll="False" VerticalScrollBarVisibility="Visible" Height="575" MaxHeight="575">
-            <StackPanel x:Name="SupportList">
+        <!-- Row 4 -->
+        <Button x:Name="saveButton" Grid.Row="4" Grid.Column="0" Content="Save" Margin="2.5" Width="125" Click="SaveButton_Click"/>
 
-            </StackPanel>
-        </ScrollViewer>
-
-        <!-- Vehicles -->
-        <ScrollViewer Grid.Row="2" Grid.Column="2" CanContentScroll="False" VerticalScrollBarVisibility="Visible" Height="575" MaxHeight="575">
-            <StackPanel x:Name="VehicleList">
-
-            </StackPanel>
-        </ScrollViewer>
-
-        <!-- Abilities -->
-        <ScrollViewer Grid.Row="2" Grid.Column="3" CanContentScroll="False" VerticalScrollBarVisibility="Visible" Height="575" MaxHeight="575">
-            <StackPanel x:Name="AbilityList">
-
-            </StackPanel>
-        </ScrollViewer>
-
-        <!-- Row 3 -->
-        <Button x:Name="saveButton" Grid.Row="3" Grid.Column="0" Content="Save" Margin="2.5" Width="125" Click="SaveButton_Click"/>
-
-        <Button x:Name="backButton" Grid.Row="3" Grid.Column="1" Content="Back" Margin="2.5" Width="125" Click="BackButton_Click"/>
+        <Button x:Name="backButton" Grid.Row="4" Grid.Column="1" Content="Back" Margin="2.5" Width="125" Click="BackButton_Click"/>
 
     </Grid>
 </bg:ViewState>
