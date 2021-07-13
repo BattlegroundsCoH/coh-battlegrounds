@@ -3827,6 +3827,9 @@
             <summary>
             Lock the query from further modifications.
             </summary>
+            <remarks>
+            This will also remove stored results prefixed with 'tmp_'
+            </remarks>
         </member>
         <member name="P:Battlegrounds.Networking.Remoting.Query.CommandQueryResult.Item(System.String)">
             <summary>
@@ -3895,6 +3898,89 @@
             Get the vector as an array.
             </summary>
             <returns>The underlying array representation of the vector.</returns>
+        </member>
+        <member name="M:Battlegrounds.Networking.Remoting.Query.CommandQueryResultVector.Reverse">
+            <summary>
+            Get a reversed instance of the result vector.
+            </summary>
+            <returns>A new <see cref="T:Battlegrounds.Networking.Remoting.Query.CommandQueryResultVector"/> containing the result of the reverse operation.</returns>
+        </member>
+        <member name="M:Battlegrounds.Networking.Remoting.Query.CommandQueryResultVector.ToTuple``2">
+            <summary>
+            Get the <see cref="T:Battlegrounds.Networking.Remoting.Query.CommandQueryResultVector"/> as a tuple of 2 elements
+            </summary>
+            <typeparam name="T1">The type of the first element.</typeparam>
+            <typeparam name="T2">The type of the second element.</typeparam>
+            <returns>A tuple consisting of 2 elments from the vector.</returns>
+        </member>
+        <member name="M:Battlegrounds.Networking.Remoting.Query.CommandQueryResultVector.ToTuple``3">
+            <summary>
+            Get the <see cref="T:Battlegrounds.Networking.Remoting.Query.CommandQueryResultVector"/> as a tuple of 3 elements
+            </summary>
+            <typeparam name="T1">The type of the first element.</typeparam>
+            <typeparam name="T2">The type of the second element.</typeparam>
+            <typeparam name="T3">The type of the third element.</typeparam>
+            <returns>A tuple consisting of 3 elments from the vector.</returns>
+        </member>
+        <member name="M:Battlegrounds.Networking.Remoting.Query.CommandQueryResultVector.ToTuple``4">
+            <summary>
+            Get the <see cref="T:Battlegrounds.Networking.Remoting.Query.CommandQueryResultVector"/> as a tuple of 4 elements
+            </summary>
+            <typeparam name="T1">The type of the first element.</typeparam>
+            <typeparam name="T2">The type of the second element.</typeparam>
+            <typeparam name="T3">The type of the third element.</typeparam>
+            <typeparam name="T4">The type of the fourth element.</typeparam>
+            <returns>A tuple consisting of 4 elments from the vector.</returns>
+        </member>
+        <member name="M:Battlegrounds.Networking.Remoting.Query.CommandQueryResultVector.ToTuple``5">
+            <summary>
+            Get the <see cref="T:Battlegrounds.Networking.Remoting.Query.CommandQueryResultVector"/> as a tuple of 5 elements
+            </summary>
+            <typeparam name="T1">The type of the first element.</typeparam>
+            <typeparam name="T2">The type of the second element.</typeparam>
+            <typeparam name="T3">The type of the third element.</typeparam>
+            <typeparam name="T4">The type of the fourth element.</typeparam>
+            <typeparam name="T5">The type of the fifth element.</typeparam>
+            <returns>A tuple consisting of 5 elments from the vector.</returns>
+        </member>
+        <member name="M:Battlegrounds.Networking.Remoting.Query.CommandQueryResultVector.ToTuple``6">
+            <summary>
+            Get the <see cref="T:Battlegrounds.Networking.Remoting.Query.CommandQueryResultVector"/> as a tuple of 6 elements
+            </summary>
+            <typeparam name="T1">The type of the first element.</typeparam>
+            <typeparam name="T2">The type of the second element.</typeparam>
+            <typeparam name="T3">The type of the third element.</typeparam>
+            <typeparam name="T4">The type of the fourth element.</typeparam>
+            <typeparam name="T5">The type of the fifth element.</typeparam>
+            <typeparam name="T6">The type of the sixth element.</typeparam>
+            <returns>A tuple consisting of 6 elments from the vector.</returns>
+        </member>
+        <member name="M:Battlegrounds.Networking.Remoting.Query.CommandQueryResultVector.ToTuple``7">
+            <summary>
+            Get the <see cref="T:Battlegrounds.Networking.Remoting.Query.CommandQueryResultVector"/> as a tuple of 7 elements
+            </summary>
+            <typeparam name="T1">The type of the first element.</typeparam>
+            <typeparam name="T2">The type of the second element.</typeparam>
+            <typeparam name="T3">The type of the third element.</typeparam>
+            <typeparam name="T4">The type of the fourth element.</typeparam>
+            <typeparam name="T5">The type of the fifth element.</typeparam>
+            <typeparam name="T6">The type of the sixth element.</typeparam>
+            <typeparam name="T7">The type of the seventh element.</typeparam>
+            <returns>A tuple consisting of 7 elments from the vector.</returns>
+        </member>
+        <member name="M:Battlegrounds.Networking.Remoting.Query.CommandQueryResultVector.ToTuple``8">
+            <summary>
+            Get the <see cref="T:Battlegrounds.Networking.Remoting.Query.CommandQueryResultVector"/> as a tuple of 8 elements
+            </summary>
+            <typeparam name="T1">The type of the first element.</typeparam>
+            <typeparam name="T2">The type of the second element.</typeparam>
+            <typeparam name="T3">The type of the third element.</typeparam>
+            <typeparam name="T4">The type of the fourth element.</typeparam>
+            <typeparam name="T5">The type of the fifth element.</typeparam>
+            <typeparam name="T6">The type of the sixth element.</typeparam>
+            <typeparam name="T7">The type of the seventh element.</typeparam>
+            <typeparam name="T8">The type of the eighth element.</typeparam>
+            <returns>A tuple consisting of 8 elments from the vector.</returns>
         </member>
         <member name="M:Battlegrounds.Networking.Remoting.Query.CommandQueryResultVector.ToString">
             <summary>

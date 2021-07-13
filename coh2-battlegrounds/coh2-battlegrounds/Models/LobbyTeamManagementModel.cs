@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Windows;
 
@@ -9,6 +10,10 @@ using Battlegrounds.Game.DataCompany;
 using Battlegrounds.Game.Gameplay;
 using Battlegrounds.Game.Match;
 using Battlegrounds.Networking.Lobby;
+using Battlegrounds.Networking.Proxy;
+using Battlegrounds.Networking.Remoting.Objects;
+using Battlegrounds.Networking.Remoting.Query;
+using Battlegrounds.Networking.Requests;
 
 using BattlegroundsApp.LocalData;
 using BattlegroundsApp.Views.ViewComponent;
@@ -25,9 +30,16 @@ namespace BattlegroundsApp.Models {
 
         public const int MAXTEAMPLAYERCOUNT = 4;
 
+        private ILobbyTeam m_mockAllies;
+        private ILobbyTeam m_mockAxis;
+        private ILobbyTeam m_mockObservers;
+
         private Dictionary<LobbyTeamType, TeamPlayerCard[]> m_teamSetup;
 
         private LobbyHandler m_handler;
+
+        private static CommandQuery GetTeamsQuery;
+        private CommandQueryResult GetTeamsQueryLatestResult;
 
         public TeamPlayerCard Self { get; private set; }
 
@@ -58,6 +70,29 @@ namespace BattlegroundsApp.Models {
                     kvp.Value[i].RequestFullRefresh = x => this.RefreshCard(x, x.TeamSlot, x.TeamType);
                     kvp.Value[i].NotifyLobby = () => this.OnModelNotification?.Invoke();
                 }
+            }
+
+            // Create queries if not host
+            if (!lobbyHandler.IsHost) {
+
+                // Create the 'Get Teams' Query
+                GetTeamsQuery = lobbyHandler.Lobby.BeginQuery()
+                    .GetProperties(nameof(ILobby.AlliesTeam), nameof(ILobby.AxisTeam), nameof(ILobby.SpectatorTeam))
+                    .Vector()
+                    .Loop(x => x.Duplicate().Stringify().Store("tmp_name").GetProperty(nameof(ILobbyTeam.Slots)).Loop(
+                        y => y.GetProperties(nameof(ILobbyTeamSlot.SlotState), nameof(ILobbyTeamSlot.SlotOccupant)).TestNull(
+                            yes => yes.Push(0ul, string.Empty, string.Empty, string.Empty, 0.0),
+                            no => no.GetProperties(
+                                nameof(ILobbyMember.ID),
+                                nameof(ILobbyMember.Name),
+                                nameof(ILobbyMember.Army),
+                                nameof(ILobbyMember.CompanyName),
+                                nameof(ILobbyMember.CompanyValue))
+                        ).Vector(6), true).Vector().Load("tmp_name").Swap(1).Store("$stack-0"), false)
+                    .GetQuery();
+
+                Trace.WriteLine($"Created '{nameof(GetTeamsQuery)}' query.", nameof(LobbyTeamManagementModel));
+
             }
 
         }
@@ -93,13 +128,24 @@ namespace BattlegroundsApp.Models {
         }
 
         private ILobbyTeam GetLobbyTeamFromType(LobbyTeamType lobbyTeamType) => lobbyTeamType switch {
-            LobbyTeamType.Allies => this.m_handler.Lobby.AlliesTeam,
-            LobbyTeamType.Axis => this.m_handler.Lobby.AxisTeam,
-            LobbyTeamType.Observers => this.m_handler.Lobby.SpectatorTeam,
+            LobbyTeamType.Allies => this.m_handler.IsHost ? this.m_handler.Lobby.AlliesTeam : this.m_mockAllies,
+            LobbyTeamType.Axis => this.m_handler.IsHost ? this.m_handler.Lobby.AxisTeam : this.m_mockAxis,
+            LobbyTeamType.Observers => this.m_handler.IsHost ? this.m_handler.Lobby.SpectatorTeam : this.m_mockObservers,
             _ => throw new Exception()
         };
 
         public void RefreshAll(bool refreshObservers) {
+
+            if (!this.m_handler.IsHost) {
+                this.GetTeamsQueryLatestResult = GetTeamsQuery.ExecuteRemote(this.m_handler.RequestHandler);
+                if (!this.GetTeamsQueryLatestResult.WasExecuted) {
+                    Trace.WriteLine("Failed to get response to command query requesting all team data.", nameof(LobbyTeamManagementModel));
+                    return;
+                } else {
+                    this.CreateMockData();
+                }
+            }
+
             this.RefreshTeam(LobbyTeamType.Allies);
             this.RefreshTeam(LobbyTeamType.Axis);
             if (refreshObservers) {
@@ -230,6 +276,15 @@ namespace BattlegroundsApp.Models {
 
         }
 
+        private void CreateMockData() {
+
+            // Create mock teams based on vector data
+            this.m_mockAllies = new MockLobbyTeamModel(1, this.m_handler, this.GetTeamsQueryLatestResult["AlliesTeam"] as CommandQueryResultVector);
+            this.m_mockAxis = new MockLobbyTeamModel(2, this.m_handler, this.GetTeamsQueryLatestResult["AxisTeam"] as CommandQueryResultVector);
+            this.m_mockObservers = new MockLobbyTeamModel(0, this.m_handler, this.GetTeamsQueryLatestResult["SpectatorTeam"] as CommandQueryResultVector);
+
+        }
+
         private static Company GetAICompany(TeamPlayerCard aiPlayercard) {
             if (aiPlayercard.AICompanySelector.SelectedItem is TeamPlayerCompanyItem companyItem) {
                 if (companyItem.State == CompanyItemState.Company) {
@@ -240,6 +295,131 @@ namespace BattlegroundsApp.Models {
             }
             throw new Exception();
         }
+
+    }
+
+    public class MockLobbyTeamModel : ILobbyTeam {
+
+        private CommandQueryResultVector m_data;
+        private ILobbyTeamSlot[] m_slots;
+
+        public int Capacity { get; }
+
+        public int Size => this.m_slots.Count(x => x.SlotState is LobbyTeamSlotState.OCCUPIED);
+
+        public int TeamIndex { get; }
+
+        public bool HasOpenSlot => this.m_slots.Any(x => x.SlotState is LobbyTeamSlotState.OPEN);
+
+        public ILobbyTeamSlot[] Slots => this.m_slots;
+
+        public IRequestHandler RequestHandler { get; }
+
+        public MockLobbyTeamModel(int tid, LobbyHandler handler, CommandQueryResultVector dataVector) {
+            
+            // Set data
+            this.RequestHandler = handler.RequestHandler;
+            this.m_data = dataVector.Reverse();
+
+            // Set Team Index
+            this.TeamIndex = tid;
+
+            // Set capacity
+            this.Capacity = this.m_data.Dimensions;
+            this.m_slots = new ILobbyTeamSlot[this.Capacity];
+
+            // Parse vector data
+            for (int i = 0; i < this.m_data.Dimensions; i++) {
+
+                // Get the slot data
+                var slot = (this.m_data[i] as CommandQueryResultVector).Reverse();
+                var (slotState, id, name, army, company, companyValue) = slot.ToTuple<string, ulong, string, string, string, double>();
+                if (slotState is not "OCCUPIED") {
+                    this.m_slots[i] = new MockLobbyTeamSlotModel(slotState, null);
+                } else {
+
+                    if (id == handler.Self.ID) {
+                        this.m_slots[i] = new MockLobbyTeamSlotModel(slotState, handler.Self);
+                    } else {
+                        this.m_slots[i] = new MockLobbyTeamSlotModel(slotState, new MockLobbyTeamMemberModel(id, name, army, company, companyValue));
+                    }
+
+                }
+
+            }
+
+        }
+
+        public bool CanSetCapacity(int capacity) => throw new NotSupportedException();
+
+        public ILobbyTeamSlot GetSlotAt(int index) => this.m_slots[index];
+
+        public bool IsMember(ILobbyMember member) {
+            for (int i = 0; i < this.Slots.Length; i++) {
+                if (this.Slots[i].SlotState is LobbyTeamSlotState.OCCUPIED && this.Slots[i].SlotOccupant.ID == member.ID) {
+                    return true;
+                }
+            }
+            return false;
+        }
+        
+        public void JoinTeam(ILobbyMember member) => throw new NotSupportedException();
+        
+        public void LeaveTeam(ILobbyMember member) => throw new NotSupportedException();
+        
+        public void SetCapacity(int capacity) => throw new NotSupportedException();
+        
+        public void SwapSlots(ILobbyMember from, int to) => throw new NotSupportedException();
+        
+        public void SwapSlots(int from, int to) => throw new NotSupportedException();
+
+    }
+
+    public class MockLobbyTeamSlotModel : ILobbyTeamSlot {
+        
+        public LobbyTeamSlotState SlotState { get; set; }
+        
+        public ILobbyMember SlotOccupant { get; set; }
+
+        public MockLobbyTeamSlotModel(string slotState, ILobbyMember member) {
+
+            // Get slot state
+            this.SlotState = Enum.Parse<LobbyTeamSlotState>(slotState);
+
+            // Set member
+            this.SlotOccupant = member;
+
+        }
+
+    }
+
+    public class MockLobbyTeamMemberModel : ILobbyMember {
+
+        public ulong ID { get; }
+
+        public string Name { get; }
+
+        public string Army { get; }
+
+        public bool HasCompany => !string.IsNullOrEmpty(this.CompanyName);
+
+        public string CompanyName { get; }
+
+        public double CompanyValue { get; }
+
+        public bool IsLocalMachine => false;
+
+        public MockLobbyTeamMemberModel(ulong id, string name, string army, string company, double companyValue) {
+            this.ID = id;
+            this.Name = name;
+            this.Army = army;
+            this.CompanyName = company;
+            this.CompanyValue = companyValue;
+        }
+
+        public void SetArmy(string army) => throw new NotSupportedException();
+
+        public void SetCompany(string name, double value) => throw new NotSupportedException();
 
     }
 
