@@ -1717,6 +1717,12 @@
             </summary>
             <param name="stackSize">The size of the stack.</param>
         </member>
+        <member name="M:Battlegrounds.Networking.DataStructures.FixedLengthStack`1.#ctor(Battlegrounds.Networking.DataStructures.FixedLengthStack{`0})">
+            <summary>
+            Initialise a new <see cref="T:Battlegrounds.Networking.DataStructures.FixedLengthStack`1"/> instance based on the <paramref name="stack"/> instance.
+            </summary>
+            <param name="stack">The stack to copy stack data from.</param>
+        </member>
         <member name="M:Battlegrounds.Networking.DataStructures.FixedLengthStack`1.Select``1(System.Func{`0,``0})">
             <summary>
             Select all values on the stack using the <paramref name="selector"/> function.
@@ -3531,16 +3537,20 @@
             <param name="varname">The name of the variable to store the top-stack value in.</param>
             <returns>The <see cref="T:Battlegrounds.Networking.Remoting.Query.CommandQueryBuilder"/> that is constructing the <see cref="T:Battlegrounds.Networking.Remoting.Query.CommandQuery"/>.</returns>
         </member>
-        <member name="M:Battlegrounds.Networking.Remoting.Query.CommandQueryBuilder.Loop(System.Func{Battlegrounds.Networking.Remoting.Query.CommandQueryBuilder,Battlegrounds.Networking.Remoting.Query.CommandQueryBuilder},System.Boolean)">
+        <member name="M:Battlegrounds.Networking.Remoting.Query.CommandQueryBuilder.Loop(System.Func{Battlegrounds.Networking.Remoting.Query.CommandQueryBuilder,Battlegrounds.Networking.Remoting.Query.CommandQueryBuilder},System.Boolean,System.Boolean)">
             <summary>
             Instruct the query to loop over the collection represented by the top-stack value. If <paramref name="indexed"/> is <see langword="true"/>, the execution engine will keep 
             track of the index in the loop; Enabling the usage of indexed operations such as <see cref="F:Battlegrounds.Networking.Remoting.Query.CommandQueryInstructionID.STORE_INDEXED"/>.
+            If <paramref name="parallel"/> is <see langword="true"/>, the execution engine will execute the subqeru in parallel with the looped object, through the
+            <see cref="F:Battlegrounds.Networking.Remoting.Query.CommandQueryInstructionID.LOOP_PARRALLEL"/> instruction. If <paramref name="indexed"/> is also <see langword="true"/>, the 
+            <see cref="F:Battlegrounds.Networking.Remoting.Query.CommandQueryInstructionID.LOOP_INDEXED_PARRALLEL"/> instruction will be used, and an index will be made available for indexed operations.
             </summary>
             <remarks>
             The <see cref="T:Battlegrounds.Networking.Remoting.Query.CommandQuery"/> execution engine guarantees the collection value is pushed to the value stack before the subquery is invoked on the value.
             </remarks>
             <param name="builder">The function to generate the subquery to invoke on each member of collection.</param>
             <param name="indexed">Should the query attempt to loop over the collection using an index. (Top-stack value must be an array).</param>
+            <param name="parallel">Should the query run the constructed subqery in parallel. (Should only be done if dataset is known to be large).</param>
             <returns>The <see cref="T:Battlegrounds.Networking.Remoting.Query.CommandQueryBuilder"/> that is constructing the <see cref="T:Battlegrounds.Networking.Remoting.Query.CommandQuery"/>.</returns>
         </member>
         <member name="M:Battlegrounds.Networking.Remoting.Query.CommandQueryBuilder.Vector(System.Int32)">
@@ -3561,17 +3571,42 @@
             <param name="ifNotCase">The sub-query constructor for the case where the top-stack value is not <see langword="null"/>.</param>
             <returns>The <see cref="T:Battlegrounds.Networking.Remoting.Query.CommandQueryBuilder"/> that is constructing the <see cref="T:Battlegrounds.Networking.Remoting.Query.CommandQuery"/>.</returns>
         </member>
+        <member name="M:Battlegrounds.Networking.Remoting.Query.CommandQueryBuilder.TestEqual(System.Func{Battlegrounds.Networking.Remoting.Query.CommandQueryBuilder,Battlegrounds.Networking.Remoting.Query.CommandQueryBuilder},System.Func{Battlegrounds.Networking.Remoting.Query.CommandQueryBuilder,Battlegrounds.Networking.Remoting.Query.CommandQueryBuilder})">
+            <summary>
+            Pop the two top-stack values and test if they are equal. Two stack values are considered equal if <see cref="M:System.Object.Equals(System.Object,System.Object)"/> yields <see langword="true"/>.
+            If both objects are equal, the subquery constructed from <paramref name="ifCase"/> will be executed, with both objects restored to the stack. If they are not equal,
+            the subqery from <paramref name="ifNotCase"/> will be executed, with neither object on the stack.
+            </summary>
+            <param name="ifCase">The subquery to execute if both stack values are equal. This will have both objects on the stack.</param>
+            <param name="ifNotCase">The subquery to execute if the stack values are not equal. This will have neither object on the stack.</param>
+            <returns>The <see cref="T:Battlegrounds.Networking.Remoting.Query.CommandQueryBuilder"/> that is constructing the <see cref="T:Battlegrounds.Networking.Remoting.Query.CommandQuery"/>.</returns>
+        </member>
+        <member name="M:Battlegrounds.Networking.Remoting.Query.CommandQueryBuilder.TestFlag(System.Func{Battlegrounds.Networking.Remoting.Query.CommandQueryBuilder,Battlegrounds.Networking.Remoting.Query.CommandQueryBuilder},System.Func{Battlegrounds.Networking.Remoting.Query.CommandQueryBuilder,Battlegrounds.Networking.Remoting.Query.CommandQueryBuilder},System.Object)">
+            <summary>
+            Pop the top-stack value and test if it is equal to <paramref name="flag"/>. Two values are considered equal if <see cref="M:System.Object.Equals(System.Object,System.Object)"/> 
+            yields <see langword="true"/>. If the objects are equal, the subquery constructed from <paramref name="ifCase"/> will be executed, with the object restored to the stack. 
+            If they are not equal, the subqery from <paramref name="ifNotCase"/> will be executed, with no object on the stack.
+            </summary>
+            <param name="ifCase">The subquery to execute if stack value is equal to <paramref name="flag"/>. This will the object on the stack.</param>
+            <param name="ifNotCase">The subquery to execute if the stack value is not equal to <paramref name="flag"/>.</param>
+            <param name="flag">The flag value to test against.</param>
+            <returns>The <see cref="T:Battlegrounds.Networking.Remoting.Query.CommandQueryBuilder"/> that is constructing the <see cref="T:Battlegrounds.Networking.Remoting.Query.CommandQuery"/>.</returns>
+        </member>
         <member name="M:Battlegrounds.Networking.Remoting.Query.CommandQueryBuilder.Optimise">
             <summary>
             Attempt to apply small instructional optimisations to the query to further increase query execution speed.
             </summary>
             <returns>The <see cref="T:Battlegrounds.Networking.Remoting.Query.CommandQueryBuilder"/> that is constructing the <see cref="T:Battlegrounds.Networking.Remoting.Query.CommandQuery"/>.</returns>
         </member>
-        <member name="M:Battlegrounds.Networking.Remoting.Query.CommandQueryBuilder.Continue(Battlegrounds.Networking.Remoting.Query.CommandQuery)">
+        <member name="M:Battlegrounds.Networking.Remoting.Query.CommandQueryBuilder.Continue(Battlegrounds.Networking.Remoting.Query.CommandQuery,System.Boolean)">
             <summary>
-            Instruct the current query to execute the secondary <paramref name="query"/> as a continuation.
+            Instruct the current query to execute the secondary <paramref name="query"/> as a continuation*.
             </summary>
+            <remarks>
+            * Unless the <paramref name="asParallel"/> flag is set.
+            </remarks>
             <param name="query">The query to continue executing after the current query.</param>
+            <param name="asParallel">Should the query run as parallel sub-query to encapsulating query.</param>
             <returns>The <see cref="T:Battlegrounds.Networking.Remoting.Query.CommandQueryBuilder"/> that is constructing the <see cref="T:Battlegrounds.Networking.Remoting.Query.CommandQuery"/>.</returns>
         </member>
         <member name="M:Battlegrounds.Networking.Remoting.Query.CommandQueryBuilder.GetQuery">
@@ -3662,6 +3697,16 @@
             Loop over array instruction.
             </summary>
         </member>
+        <member name="F:Battlegrounds.Networking.Remoting.Query.CommandQueryInstructionID.LOOP_PARRALLEL">
+            <summary>
+            Run loop in parallel instruction.
+            </summary>
+        </member>
+        <member name="F:Battlegrounds.Networking.Remoting.Query.CommandQueryInstructionID.LOOP_INDEXED_PARRALLEL">
+            <summary>
+            Run loop in parallel with index instruction.
+            </summary>
+        </member>
         <member name="F:Battlegrounds.Networking.Remoting.Query.CommandQueryInstructionID.POP">
             <summary>
             Pop top-value instruction.
@@ -3700,6 +3745,11 @@
         <member name="F:Battlegrounds.Networking.Remoting.Query.CommandQueryInstructionID.TESTFLAG">
             <summary>
             Test if top stack is equal to instruction flag instruction.
+            </summary>
+        </member>
+        <member name="F:Battlegrounds.Networking.Remoting.Query.CommandQueryInstructionID.SUBQUERY">
+            <summary>
+            Execute a query in parallel with parent query instruction.
             </summary>
         </member>
         <member name="T:Battlegrounds.Networking.Remoting.Query.CommandQueryInstruction">
