@@ -10,8 +10,6 @@ using Battlegrounds.Game.DataCompany;
 using Battlegrounds.Game.Gameplay;
 using Battlegrounds.Game.Match;
 using Battlegrounds.Networking.Lobby;
-using Battlegrounds.Networking.Proxy;
-using Battlegrounds.Networking.Remoting.Objects;
 using Battlegrounds.Networking.Remoting.Query;
 using Battlegrounds.Networking.Requests;
 

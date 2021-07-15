@@ -1554,6 +1554,25 @@
             </summary>
             <param name="id">The unique ID to assign to the socket.</param>
         </member>
+        <member name="T:Battlegrounds.Networking.Communication.StringDirectory">
+            <summary>
+            Static helper class for converting a string between a directory path and namespace path.
+            </summary>
+        </member>
+        <member name="M:Battlegrounds.Networking.Communication.StringDirectory.GetPathAsNamespaceString(System.String)">
+            <summary>
+            Get <paramref name="input"/> as a namespace string.
+            </summary>
+            <param name="input">The input string to convert.</param>
+            <returns>A new string instance representing the namespace path of <paramref name="input"/>.</returns>
+        </member>
+        <member name="M:Battlegrounds.Networking.Communication.StringDirectory.GetNamespaceStringAsPath(System.String)">
+            <summary>
+            Get <paramref name="input"/> as a directory path string.
+            </summary>
+            <param name="input">The input string to convert.</param>
+            <returns>A new string instance representing the directory path of <paramref name="input"/>.</returns>
+        </member>
         <member name="T:Battlegrounds.Networking.Communication.TcpConnection">
             <summary>
             Represents a TCP-compliant connection between local machine and some endpoint. Implements <see cref="T:Battlegrounds.Networking.Communication.IConnection"/>.
@@ -3007,6 +3026,88 @@
             <summary>
             Get or set the function to handle when a file is received.
             </summary>
+        </member>
+        <member name="T:Battlegrounds.Networking.Memory.ObjectCache">
+            <summary>
+            Class representing an object that is being cached in memory.
+            </summary>
+        </member>
+        <member name="P:Battlegrounds.Networking.Memory.ObjectCache.Value">
+            <summary>
+            Get the current cached value.
+            </summary>
+        </member>
+        <member name="P:Battlegrounds.Networking.Memory.ObjectCache.IsValid">
+            <summary>
+            Get if the current cached value is considered valid.
+            </summary>
+        </member>
+        <member name="M:Battlegrounds.Networking.Memory.ObjectCache.#ctor(System.TimeSpan)">
+            <summary>
+            Initialise a new <see cref="T:Battlegrounds.Networking.Memory.ObjectCache"/> instance where a value is stored by <paramref name="cacheLifeSpan"/>.
+            </summary>
+            <param name="cacheLifeSpan">The amount of time to keep a value cached before the value is updated.</param>
+        </member>
+        <member name="M:Battlegrounds.Networking.Memory.ObjectCache.#ctor(System.Object,System.TimeSpan)">
+            <summary>
+            Initialise a new <see cref="T:Battlegrounds.Networking.Memory.ObjectCache"/> with time and initial value specified.
+            </summary>
+            <param name="cacheValue">The value to store in memory.</param>
+            <param name="cacheLifeSpan">The amount of time to keep a value cached before the value is updated.</param>
+        </member>
+        <member name="M:Battlegrounds.Networking.Memory.ObjectCache.GetCachedValue(System.Func{System.Object})">
+            <summary>
+            Get the cached value or get an updated one through <paramref name="updateMethod"/>.
+            </summary>
+            <param name="updateMethod">The method to invoke to get an updated cache value.</param>
+            <returns>The stored cache value.</returns>
+        </member>
+        <member name="M:Battlegrounds.Networking.Memory.ObjectCache.GetCachedValue(System.Object,System.Func{System.Object,System.Object})">
+            <summary>
+            Get the cached value or get an updated one through <paramref name="updateMethod"/>.
+            </summary>
+            <param name="updateArgument">The argument to pass along to the update method.</param>
+            <param name="updateMethod">The method to invoke to get an updated cache value.</param>
+            <returns>The stored cache value.</returns>
+        </member>
+        <member name="T:Battlegrounds.Networking.Memory.ObjectCache`1">
+            <summary>
+            Class representing an object that is being cached in memory.
+            </summary>
+            <typeparam name="T">The type of the stored value.</typeparam>
+        </member>
+        <member name="P:Battlegrounds.Networking.Memory.ObjectCache`1.Value">
+            <summary>
+            Get the current cached value.
+            </summary>
+        </member>
+        <member name="M:Battlegrounds.Networking.Memory.ObjectCache`1.#ctor(System.TimeSpan)">
+            <summary>
+            Initialise a new <see cref="T:Battlegrounds.Networking.Memory.ObjectCache"/> instance where a value is stored by <paramref name="cacheLifeSpan"/>.
+            </summary>
+            <param name="cacheLifeSpan">The amount of time to keep a value cached before the value is updated.</param>
+        </member>
+        <member name="M:Battlegrounds.Networking.Memory.ObjectCache`1.#ctor(System.Object,System.TimeSpan)">
+            <summary>
+            Initialise a new <see cref="T:Battlegrounds.Networking.Memory.ObjectCache"/> with time and initial value specified.
+            </summary>
+            <param name="cacheValue">The value to store in memory.</param>
+            <param name="cacheLifeSpan">The amount of time to keep a value cached before the value is updated.</param>
+        </member>
+        <member name="M:Battlegrounds.Networking.Memory.ObjectCache`1.GetCachedValue(System.Func{`0})">
+            <summary>
+            Get the cached value or get an updated one through <paramref name="updateMethod"/>.
+            </summary>
+            <param name="updateMethod">The method to invoke to get an updated cache value.</param>
+            <returns>The stored cache value.</returns>
+        </member>
+        <member name="M:Battlegrounds.Networking.Memory.ObjectCache`1.GetCachedValue(System.Object,System.Func{System.Object,`0})">
+            <summary>
+            Get the cached value or get an updated one through <paramref name="updateMethod"/>.
+            </summary>
+            <param name="updateArgument">The argument to pass along to the update method.</param>
+            <param name="updateMethod">The method to invoke to get an updated cache value.</param>
+            <returns>The stored cache value.</returns>
         </member>
         <member name="T:Battlegrounds.Networking.Proxy.IProxy">
             <summary>
@@ -4666,6 +4767,12 @@
             </summary>
             <param name="binary">The binary contents of the downloaded gamemode.</param>
             <returns>If download was successful, true; Otherwise false.</returns>
+        </member>
+        <member name="M:Battlegrounds.Networking.Server.ServerAPI.DownloadGamemodeFiles">
+            <summary>
+            Download all the files required for compiling a gamemode.
+            </summary>
+            <returns>An array of filedata containing the files to download.</returns>
         </member>
         <member name="T:Battlegrounds.Networking.Server.ServerLobby">
             <summary>
