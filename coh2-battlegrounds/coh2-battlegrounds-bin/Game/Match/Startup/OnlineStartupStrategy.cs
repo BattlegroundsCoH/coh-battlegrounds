@@ -199,7 +199,7 @@ namespace Battlegrounds.Game.Match.Startup {
             this.OnFeedback(caller, "Compiling match data into gamemode.");
 
             // Compile session
-            if (!SessionUtility.CompileSession(compiler, this.m_session)) {
+            if (!SessionUtility.CompileSession(compiler, this.m_session, lobby.API)) {
                 return false;
             }
 

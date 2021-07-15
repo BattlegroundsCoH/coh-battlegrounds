@@ -85,6 +85,54 @@ namespace Battlegrounds.Game.DataCompany {
 
         public static List<CompanyType> CompanyTypes => Enum.GetValues<CompanyType>().ToList();
 
+        public static int GetMaxInfantry(this CompanyType companyType) => companyType switch {
+            CompanyType.Infantry => 20,
+            CompanyType.Motorized => 15,
+            CompanyType.Mechanized => 15,
+            //CompanyType.Armoured => 10,
+            //CompanyType.TankDestroyer => 10,
+            CompanyType.Airborne => 14,
+            CompanyType.Engineer => 12,
+            //CompanyType.Artillery => 10,
+            _ => 10
+        };
+
+        public static int GetMaxSupportWeapons(this CompanyType companyType) => companyType switch {
+            CompanyType.Infantry => 14,
+            //CompanyType.Motorized => 12,
+            //CompanyType.Mechanized => 12,
+            CompanyType.Armoured => 10,
+            CompanyType.TankDestroyer => 10,
+            //CompanyType.Airborne => 12,
+            //CompanyType.Engineer => 12,
+            CompanyType.Artillery => 18,
+            _ => 12
+        };
+
+        public static int GetMaxVehicles(this CompanyType companyType) => companyType switch {
+            CompanyType.Infantry => 6,
+            //CompanyType.Motorized => 10,
+            //CompanyType.Mechanized => 10,
+            CompanyType.Armoured => 15,
+            CompanyType.TankDestroyer => 12,
+            //CompanyType.Airborne => 10,
+            //CompanyType.Engineer => 10,
+            //CompanyType.Artillery => 10,
+            _ => 10
+        };
+
+        public static int GetMaxAbilities(this CompanyType companyType) => companyType switch {
+            //CompanyType.Infantry => 10,
+            //CompanyType.Motorized => 10,
+            //CompanyType.Mechanized => 10,
+            //CompanyType.Armoured => 10,
+            //CompanyType.TankDestroyer => 10,
+            CompanyType.Airborne => 14,
+            //CompanyType.Engineer => 10,
+            CompanyType.Artillery => 14,
+            _ => 10
+        };
+    
     }
 
 }

@@ -1,6 +1,8 @@
 ﻿using Battlegrounds.Compiler;
 using Battlegrounds.Game.Match.Composite;
 using Battlegrounds.Game.Match.Play;
+using Battlegrounds.Networking;
+using Battlegrounds.Networking.Server;
 
 namespace Battlegrounds.Game.Match.Startup {
 
@@ -46,8 +48,11 @@ namespace Battlegrounds.Game.Match.Startup {
             // Log state
             this.OnFeedback(null, "Compiling gamemode");
 
+            // Create server API instance
+            var serverAPI = new ServerAPI(NetworkingInstance.GetBestAddress());
+
             // Compile session
-            bool result = SessionUtility.CompileSession(compiler, this.m_collectedSession);
+            bool result = SessionUtility.CompileSession(compiler, this.m_collectedSession, serverAPI);
 
             // Log result
             if (result) {

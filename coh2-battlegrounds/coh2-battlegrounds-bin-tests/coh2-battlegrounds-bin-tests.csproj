@@ -31,4 +31,10 @@
     <ProjectReference Include="..\coh2-battlegrounds-bin\coh2-battlegrounds-bin.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Reference Include="coh2-battlegrounds-networking">
+      <HintPath>..\coh2-battlegrounds-networking.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
 </Project>

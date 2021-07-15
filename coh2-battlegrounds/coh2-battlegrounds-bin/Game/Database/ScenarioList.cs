@@ -9,6 +9,7 @@ using Battlegrounds.Functional;
 using Battlegrounds.Compiler;
 using Battlegrounds.Json;
 using Battlegrounds.Game.Database.Management;
+using Battlegrounds.Lua.Debugging;
 
 namespace Battlegrounds.Game.Database {
     
@@ -174,11 +175,16 @@ namespace Battlegrounds.Game.Database {
                         if (dirs.Length > 0) {
                             readfrom = dirs[0];
 
-                            // Read and add scenario
-                            workshopScenarios.Add(GetScenarioFromDirectory(readfrom, sga, "usr\\mods\\map_icons\\"));
+                            // Try and read scenario
+                            if (GetScenarioFromDirectory(readfrom, sga, "usr\\mods\\map_icons\\") is Scenario wrkscen) {
 
-                            // Increment new entries
-                            newWorkshopEntries++;
+                                // Add scenario
+                                workshopScenarios.Add(wrkscen);
+
+                                // Increment new entries
+                                newWorkshopEntries++;
+
+                            }
 
                         } else {
                             Trace.WriteLine($"Failed to read sga \"{sga}\" (Skipping, unknown file structure)", "ScenarioList::WorkshopExtract");
@@ -218,23 +224,34 @@ namespace Battlegrounds.Game.Database {
                     return null;
                 }
 
-                // Create scenario
-                Scenario scen = new Scenario(info, opt) {
-                    SgaName = sga
-                };
+                // Define scenario variable
+                Scenario scen = null;
 
-                // Find the index of the minimap
-                int minimapFile = scenarioFiles.IndexOf(x => x.EndsWith("_preview.tga")).IfTrue(x => x == -1).Then(x => scenarioFiles.IndexOf(x => x.EndsWith("_mm.tga")));
+                try {
 
-                // Make sure it's a valid index
-                if (minimapFile != -1) {
+                    // Create scenario
+                    scen = new Scenario(info, opt) {
+                        SgaName = sga
+                    };
 
-                    // Save destination
-                    string destination = $"{mmSavePath}{scen.RelativeFilename}_map.tga";
+                    // Find the index of the minimap
+                    int minimapFile = scenarioFiles.IndexOf(x => x.EndsWith("_preview.tga")).IfTrue(x => x == -1).Then(x => scenarioFiles.IndexOf(x => x.EndsWith("_mm.tga")));
 
-                    // Copy the found index file
-                    File.Copy(scenarioFiles[minimapFile], destination, true);
+                    // Make sure it's a valid index
+                    if (minimapFile != -1) {
 
+                        // Save destination
+                        string destination = $"{mmSavePath}{scen.RelativeFilename}_map.tga";
+
+                        // Copy the found index file
+                        File.Copy(scenarioFiles[minimapFile], destination, true);
+
+                    }
+
+                } catch (LuaException lex) {
+                    Trace.WriteLine($"Failed to read scenario {sga}.sga (Lua Error): {lex.Message}", nameof(ScenarioList));
+                } catch (Exception ex) {
+                    Trace.WriteLine($"Failed to read scenario {sga}.sga; {ex.Message}", nameof(ScenarioList));
                 }
 
                 // Delete the extracted files

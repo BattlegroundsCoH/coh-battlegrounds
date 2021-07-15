@@ -54,6 +54,25 @@ namespace BattlegroundsApp {
                 GetSteamUserWithPermission(window); // We don't so try and get one
             }
 
+            // Trigger discord setup
+            this.SetupDiscord();
+
+        }
+
+        private void SetupDiscord() {
+
+            try {
+
+                // Create discord instance
+                
+               // Trace.WriteLine($"Successfully initialised Discord connection with user: {DiscordInstance.GetUserManager().GetCurrentUser().Id}", "DiscordAPI");
+
+            } catch (Exception dex) {
+
+                Trace.WriteLine($"Failed to initialise discord API: {dex}", "DiscordAPI");
+
+            }
+
         }
 
         private static void GetSteamUserWithPermission(MainWindow window) {

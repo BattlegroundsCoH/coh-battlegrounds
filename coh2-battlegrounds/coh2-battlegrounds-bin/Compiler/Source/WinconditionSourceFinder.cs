@@ -1,5 +1,7 @@
-﻿using System.IO;
+﻿using System.Diagnostics;
+using System.IO;
 using Battlegrounds.Modding;
+using Battlegrounds.Networking.Server;
 
 namespace Battlegrounds.Compiler.Source {
     
@@ -23,7 +25,7 @@ namespace Battlegrounds.Compiler.Source {
 
         private static bool HasManifest() => File.Exists(BattlegroundsInstance.GetRelativePath(BattlegroundsPaths.BINARY_FOLDER, "scripts.manifest"));
 
-        public static IWinconditionSource GetSource(IWinconditionMod wincondition) {
+        public static IWinconditionSource GetSource(IWinconditionMod wincondition, ServerAPI serverAPI) {
 
             // TODO: Checkup on the wincondition
 
@@ -31,21 +33,14 @@ namespace Battlegrounds.Compiler.Source {
                 return new LocalSource(path);
             } else {
                 if (HasManifest()) {
-                    return new ManifestSource();
+                    return new ManifestSource(serverAPI);
                 } else {
-                    return new GithubSource(GetBranch());
+                    Trace.WriteLine("Failed to source location of wincondition code.", nameof(WinconditionSourceFinder));
+                    return new NoSource();
                 }
             }
 
         }
-
-        private static string GetBranch() =>
-#if DEBUG
-            "scar-dev-branch";
-#else
-            "scar-release-branch";
-#endif
-
 
     }
 
