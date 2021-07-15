@@ -3,12 +3,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+
+using Battlegrounds;
+using Battlegrounds.Game.Database.Management;
 using Battlegrounds.Game.Gameplay;
 using Battlegrounds.Game.Match;
 using Battlegrounds.Game.Match.Analyze;
 using Battlegrounds.Game.Match.Data;
 using Battlegrounds.Game.Match.Data.Events;
 using Battlegrounds.Game.Match.Play;
+
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace coh2_battlegrounds_bin_tests.MatchSim {
@@ -26,6 +30,12 @@ namespace coh2_battlegrounds_bin_tests.MatchSim {
 
         [TestInitialize]
         public void Setup() {
+            if (BattlegroundsInstance.BattleGroundsTuningMod is null) {
+                Environment.CurrentDirectory = @"E:\coh2_battlegrounds\coh2-battlegrounds\coh2-battlegrounds\bin\Debug\net5.0-windows";
+                BattlegroundsInstance.LoadInstance();
+                BlueprintManager.CreateDatabase();
+                BlueprintManager.LoadDatabaseWithMod("battlegrounds", BattlegroundsInstance.BattleGroundsTuningMod.Guid.ToString());
+            }
             session = new NullSession();
             playStrategy = new BattleSimulatorStrategy(session);
             analyzeStrategy = new SingleplayerMatchAnalyzer();
@@ -35,13 +45,8 @@ namespace coh2_battlegrounds_bin_tests.MatchSim {
             };
         }
 
-        [TestMethod]
-        public void CanDeployAndKillWithoutError() {
-            
-            // Create events
-            playStrategy.BattleEvent(TimeSpan.FromSeconds(1), new DeployEvent(0, new string[] { "0", }, SOVIET));
-            playStrategy.BattleEvent(TimeSpan.FromSeconds(3.8), new KillEvent(1, new string[] { "0", }, SOVIET));
-            
+        private (SimulatedMatchData, IAnalyzedMatch) AnalyseAndAssert(int eventCount = -1, TimeSpan time = default) {
+
             // Get and initialize simulated data
             SimulatedMatchData data = playStrategy.GetResults() as SimulatedMatchData;
             data.CreatePlayer(SOVIET);
@@ -49,18 +54,37 @@ namespace coh2_battlegrounds_bin_tests.MatchSim {
 
             // Verify simulated data is registered
             Assert.IsNotNull(data);
-            Assert.AreEqual(2, data.Count());
-            Assert.AreEqual(TimeSpan.FromSeconds(3.8), data.Length);
-            
+            if (eventCount is not -1) {
+                Assert.AreEqual(eventCount, data.Count());
+            }
+            if (time != default) {
+                Assert.AreEqual(time, data.Length);
+            }
+
             // Put through analysis
             analyzeStrategy.OnPrepare(null, data);
             analyzeStrategy.OnAnalyze(null);
-            
+
             // Compile analysis
             var result = analyzeStrategy.OnCleanup(null);
             Assert.IsNotNull(result);
             Assert.IsInstanceOfType(result, typeof(EventAnalysis));
             Assert.AreEqual(true, result.CompileResults());
+
+            // Return results
+            return (data, result);
+
+        }
+
+        [TestMethod]
+        public void CanDeployAndKillWithoutError() {
+            
+            // Create events
+            playStrategy.BattleEvent(TimeSpan.FromSeconds(1), new DeployEvent(0, new string[] { "0", }, SOVIET));
+            playStrategy.BattleEvent(TimeSpan.FromSeconds(3.8), new KillEvent(1, new string[] { "0", }, SOVIET));
+
+            // Analyse and assert
+            var (data, result) = AnalyseAndAssert(2, TimeSpan.FromSeconds(3.8));
             Assert.AreEqual(1, result.Units.Count);
 
             // Verify Analysis
@@ -82,25 +106,8 @@ namespace coh2_battlegrounds_bin_tests.MatchSim {
             playStrategy.BattleEvent(TimeSpan.FromSeconds(1), new DeployEvent(0, new string[] { "0", }, SOVIET));
             playStrategy.BattleEvent(TimeSpan.FromSeconds(3.8), new RetreatEvent(1, new string[] { "0", "1", "100" }, SOVIET));
 
-            // Get and initialize simulated data
-            SimulatedMatchData data = playStrategy.GetResults() as SimulatedMatchData;
-            data.CreatePlayer(SOVIET);
-            data.CreatePlayer(GERMAN);
-
-            // Verify simulated data is registered
-            Assert.IsNotNull(data);
-            Assert.AreEqual(2, data.Count());
-            Assert.AreEqual(TimeSpan.FromSeconds(3.8), data.Length);
-
-            // Put through analysis
-            analyzeStrategy.OnPrepare(null, data);
-            analyzeStrategy.OnAnalyze(null);
-
-            // Compile analysis
-            var result = analyzeStrategy.OnCleanup(null);
-            Assert.IsNotNull(result);
-            Assert.IsInstanceOfType(result, typeof(EventAnalysis));
-            Assert.AreEqual(true, result.CompileResults());
+            // Analyse and assert
+            var (data, result) = AnalyseAndAssert(2, TimeSpan.FromSeconds(3.8));
             Assert.AreEqual(1, result.Units.Count);
 
             // Verify Analysis
@@ -116,6 +123,27 @@ namespace coh2_battlegrounds_bin_tests.MatchSim {
             Assert.AreEqual(TimeSpan.FromSeconds(3.8 - 1.0), status.CombatTime);
 
         }
+
+        [TestMethod]
+        public void CanPickupItem() {
+
+            // Define item to pick up
+            var slot_item = "ppsh41_assault_package_bg";
+
+            // Analyse and assert
+            playStrategy.BattleEvent(TimeSpan.FromSeconds(1), new DeployEvent(0, new string[] { "0", }, SOVIET));
+            playStrategy.BattleEvent(TimeSpan.FromSeconds(5), new PickupEvent(0, new string[] { "0", slot_item }, SOVIET));
+
+            // Get and initialize simulated data
+            var (data, result) = AnalyseAndAssert(2);
+
+            // Assert unit
+            var status = result.Units[0];
+            Assert.AreEqual(1, status.CapturedSlotItems.Count);
+            Assert.AreEqual(BlueprintManager.FromBlueprintName(slot_item, BlueprintType.IBP), status.CapturedSlotItems[0]);
+
+        }
+
     }
 
 }

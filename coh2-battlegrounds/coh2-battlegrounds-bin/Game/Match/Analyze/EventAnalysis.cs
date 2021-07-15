@@ -136,8 +136,8 @@ namespace Battlegrounds.Game.Match.Analyze {
                         break;
                     case DeployEvent deployEvent:
                         int deployID = this.m_units.FindIndex(x => x.UnitID == deployEvent.SquadID && x.PlayerOwner.ID == deployEvent.DeployingPlayer.ID);
-                        if (deployID == -1) {
-                            UnitStatus status = new UnitStatus(deployEvent.DeployingPlayer, deployEvent.SquadID);
+                        if (deployID is -1) {
+                            var status = new UnitStatus(deployEvent.DeployingPlayer, deployEvent.SquadID);
                             if (status.Deploy(stamp)) {
                                 this.m_units.Add(status);
                             } else {
@@ -152,7 +152,10 @@ namespace Battlegrounds.Game.Match.Analyze {
                         }
                         break;
                     case PickupEvent pickupEvent:
-                        // TODO: Implement
+                        int pickupID = this.m_units.FindIndex(x => x.UnitID == pickupEvent.PickupSquadID && x.PlayerOwner.ID == pickupEvent.PickupPlayer.ID);
+                        if (pickupID is >=0) {
+                            this.m_units[pickupID].CapturedSlotItems.Add(pickupEvent.PickupItem);
+                        }
                         break;
                     case CaptureEvent captureEvent:
                         // TODO: Implement

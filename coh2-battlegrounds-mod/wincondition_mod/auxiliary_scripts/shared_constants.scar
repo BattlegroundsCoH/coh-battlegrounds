@@ -28,7 +28,9 @@ BG_EVENT_ONCAPTURE = 4; -- On capture
 BG_EVENT_ONITEM = 5; -- On item picked up
 BG_EVENT_ONVICTORY = 6; -- On victory
 BG_EVENT_ONVERIFY = 7; -- On verify
+BG_EVENT_ONWITHDRAW = 8; -- On Withdraw
 
+-- Number to Char mapper
 _bg_logs = {
     [BG_EVENT_ONDEATH] = "K",
     [BG_EVENT_ONDEPLOY] = "D",
@@ -38,7 +40,8 @@ _bg_logs = {
     [BG_EVENT_ONITEM] = "I",
     [BG_EVENT_ONVICTORY] = "V",
     [BG_EVENT_ONVERIFY] = "G",
-}
+    [BG_EVENT_ONWITHDRAW] = "W"
+};
 
 ------------------------------------------------------------------------------------
 -- Message types
