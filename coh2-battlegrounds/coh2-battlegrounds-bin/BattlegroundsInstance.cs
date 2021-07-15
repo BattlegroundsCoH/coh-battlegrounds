@@ -211,7 +211,7 @@ namespace Battlegrounds {
 
             // Load instance data
             __instance = JsonParser.ParseFile<InternalInstance>("local.json");
-            if (__instance == null) {
+            if (__instance is null) {
                 __instance = new InternalInstance();
                 __instance.ResolvePaths();
                 IsFirstRun = true;
