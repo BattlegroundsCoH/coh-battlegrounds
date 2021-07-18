@@ -1,7 +1,7 @@
 [
   {
     "jsdbtype": "Battlegrounds.Game.Database.EntityBlueprint",
-    "PBGID": "8",
+    "PBGID": "1562",
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
     "Name": "mg42_hmg_mp",
     "LocaleName": "2153001",
@@ -19,7 +19,7 @@
   },
   {
     "jsdbtype": "Battlegrounds.Game.Database.EntityBlueprint",
-    "PBGID": "19",
+    "PBGID": "1582",
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
     "Name": "panzer_iv_sdkfz_161_mp",
     "LocaleName": "11046559",
@@ -33,6 +33,24 @@
       "Munition": "0",
       "Fuel": "120",
       "BuildTime": "50"
+    }
+  },
+  {
+    "jsdbtype": "Battlegrounds.Game.Database.EntityBlueprint",
+    "PBGID": "1553",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "Name": "pak40_75mm_at_gun_mp",
+    "LocaleName": "11043016",
+    "LocaleDescription": "11044776",
+    "Army": "german",
+    "Icon": "Icons_vehicles_vehicle_german_pak_40_75mm_at_gun",
+    "Symbol": "Icons_symbols_vehicle_german_pak_40_75mm_at_gun_symbol",
+    "Cost": {
+      "jsdbtype": "Battlegrounds.Game.Gameplay.Cost",
+      "Manpower": "140",
+      "Munition": "0",
+      "Fuel": "0",
+      "BuildTime": "18"
     }
   }
 ]

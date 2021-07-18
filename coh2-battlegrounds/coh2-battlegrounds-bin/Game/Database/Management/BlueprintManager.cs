@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
+
 using Battlegrounds.Functional;
 using Battlegrounds.Json;
 using Battlegrounds.Modding;
+
 using RegexMatch = System.Text.RegularExpressions.Match;
 
 namespace Battlegrounds.Game.Database.Management {
@@ -57,14 +59,14 @@ namespace Battlegrounds.Game.Database.Management {
         /// </summary>
         public const ushort InvalidLocalBlueprint = 0;
 
-        private static Dictionary<ulong, Blueprint> __entities;
-        private static Dictionary<ulong, Blueprint> __squads;
-        private static Dictionary<ulong, Blueprint> __abilities;
-        private static Dictionary<ulong, Blueprint> __upgrades;
-        private static Dictionary<ulong, Blueprint> __criticals;
-        private static Dictionary<ulong, Blueprint> __slotitems;
+        private static Dictionary<BlueprintUID, Blueprint> __entities;
+        private static Dictionary<BlueprintUID, Blueprint> __squads;
+        private static Dictionary<BlueprintUID, Blueprint> __abilities;
+        private static Dictionary<BlueprintUID, Blueprint> __upgrades;
+        private static Dictionary<BlueprintUID, Blueprint> __criticals;
+        private static Dictionary<BlueprintUID, Blueprint> __slotitems;
 
-        private static List<Dictionary<ulong, Blueprint>> __selfList;
+        private static List<Dictionary<BlueprintUID, Blueprint>> __selfList;
 
         /// <summary>
         /// Create the database (or clear it) and load the vcoh database.
@@ -72,15 +74,15 @@ namespace Battlegrounds.Game.Database.Management {
         public static void CreateDatabase() {
 
             // Create Dictionaries
-            __entities = new Dictionary<ulong, Blueprint>();
-            __squads = new Dictionary<ulong, Blueprint>();
-            __abilities = new Dictionary<ulong, Blueprint>();
-            __upgrades = new Dictionary<ulong, Blueprint>();
-            __criticals = new Dictionary<ulong, Blueprint>();
-            __slotitems = new Dictionary<ulong, Blueprint>();
+            __entities = new();
+            __squads = new();
+            __abilities = new();
+            __upgrades = new();
+            __criticals = new();
+            __slotitems = new();
 
             // Create list over self
-            __selfList = new List<Dictionary<ulong, Blueprint>>() {
+            __selfList = new List<Dictionary<BlueprintUID, Blueprint>>() {
                 __abilities,
                 __criticals,
                 __entities,
@@ -135,6 +137,9 @@ namespace Battlegrounds.Game.Database.Management {
 
         internal static bool LoadJsonDatabase(string jsonfile, BlueprintType bType, string guid, ref ushort bpCntr) {
 
+            // Create the ModGUID
+            var modguid = ModGuid.FromGuid(guid);
+
             // Parse the file
             var ls = JsonParser.Parse(jsonfile);
 
@@ -164,7 +169,7 @@ namespace Battlegrounds.Game.Database.Management {
                         bp.BlueprintType = bType;
                         bp.ModGUID = ModGuid.FromGuid(guid);
                         bp.ModPBGID = bpCntr++;
-                        targetDictionary.Add(bp.PBGID, bp);
+                        targetDictionary.Add(new(bp.PBGID, modguid), bp);
                     } else {
                         return false;
                     }
@@ -218,7 +223,7 @@ namespace Battlegrounds.Game.Database.Management {
         /// <exception cref="ArgumentNullException"/>
         /// <exception cref="KeyNotFoundException"/>
         /// <returns>The correct <see cref="Blueprint"/>, null if not found or a <see cref="ArgumentException"/> if <see cref="BlueprintType"/> was somehow invalid.</returns>
-        public static Blueprint FromPbgId(ushort id, BlueprintType bType) => GetAllBlueprintsOfType(bType)[id];
+        public static Blueprint FromPbgId(ushort id, BlueprintType bType) => GetAllBlueprintsOfType(bType)[new(id)];
 
         /// <summary>
         /// Get a <see cref="Blueprint"/> instance from its string name (file name).
@@ -270,7 +275,7 @@ namespace Battlegrounds.Game.Database.Management {
         /// </summary>
         /// <param name="type"></param>
         /// <returns></returns>
-        public static Dictionary<ulong, Blueprint> GetAllBlueprintsOfType(BlueprintType type) => type switch {
+        public static Dictionary<BlueprintUID, Blueprint> GetAllBlueprintsOfType(BlueprintType type) => type switch {
             BlueprintType.ABP => __abilities,
             BlueprintType.CBP => __criticals,
             BlueprintType.EBP => __entities,
@@ -287,8 +292,8 @@ namespace Battlegrounds.Game.Database.Management {
         /// <param name="type"></param>
         /// <returns></returns>
         public static ulong GetUIDValueExtrema(bool isMax, BlueprintType type)
-                => isMax.Then(() => GetAllBlueprintsOfType(type).Max(x => x.Key))
-                .Else(_ => GetAllBlueprintsOfType(type).Min(x => x.Key));
+                => isMax.Then(() => GetAllBlueprintsOfType(type).Max(x => x.Key.UniqueIdentifier))
+                .Else(_ => GetAllBlueprintsOfType(type).Min(x => x.Key.UniqueIdentifier));
 
         /// <summary>
         /// 
@@ -298,7 +303,7 @@ namespace Battlegrounds.Game.Database.Management {
         /// <param name="type"></param>
         /// <param name="selector"></param>
         /// <returns></returns>
-        public static TResult GetValueExtrema<TResult>(bool isMax, BlueprintType type, Func<Blueprint, TResult> selector, Predicate<KeyValuePair<ulong, Blueprint>> predicate = null)
+        public static TResult GetValueExtrema<TResult>(bool isMax, BlueprintType type, Func<Blueprint, TResult> selector, Predicate<KeyValuePair<BlueprintUID, Blueprint>> predicate = null)
             => isMax.Then(() => GetAllBlueprintsOfType(type).Where(x => predicate?.Invoke(x) ?? true).Max(x => selector(x.Value)))
                 .Else(_ => GetAllBlueprintsOfType(type).Where(x => predicate?.Invoke(x) ?? true).Min(x => selector(x.Value)));
 
@@ -310,13 +315,13 @@ namespace Battlegrounds.Game.Database.Management {
         /// <param name="isMax"></param>
         /// <param name="selector"></param>
         /// <returns></returns>
-        public static TResult GetValueExtrema<TBlueprint, TResult>(bool isMax, Func<TBlueprint, TResult> selector, Predicate<KeyValuePair<ulong, TBlueprint>> predicate = null) 
+        public static TResult GetValueExtrema<TBlueprint, TResult>(bool isMax, Func<TBlueprint, TResult> selector, Predicate<KeyValuePair<BlueprintUID, TBlueprint>> predicate = null) 
             where TBlueprint : Blueprint
             => isMax.Then(() => GetAllBlueprintsOfType(BlueprintTypeFromType<TBlueprint>())
-            .Where(x => predicate?.Invoke(new KeyValuePair<ulong, TBlueprint>(x.Key, x.Value as TBlueprint)) ?? true)
+            .Where(x => predicate?.Invoke(new KeyValuePair<BlueprintUID, TBlueprint>(x.Key, x.Value as TBlueprint)) ?? true)
             .Max(x => selector(x.Value as TBlueprint)))
                 .Else(_ => GetAllBlueprintsOfType(BlueprintTypeFromType<TBlueprint>())
-                .Where(x => predicate?.Invoke(new KeyValuePair<ulong, TBlueprint>(x.Key, x.Value as TBlueprint)) ?? true).Min(x => selector(x.Value as TBlueprint)));
+                .Where(x => predicate?.Invoke(new KeyValuePair<BlueprintUID, TBlueprint>(x.Key, x.Value as TBlueprint)) ?? true).Min(x => selector(x.Value as TBlueprint)));
 
         /// <summary>
         /// 
@@ -341,6 +346,13 @@ namespace Battlegrounds.Game.Database.Management {
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="bpname"></param>
+        /// <param name="modGuid"></param>
+        /// <param name="bp"></param>
+        /// <returns></returns>
         public static bool GetModGUID(string bpname, out ModGuid modGuid, out string bp) {
             int j = bpname.IndexOf(':');
             if (j == ModGuid.FIXED_LENGTH) {

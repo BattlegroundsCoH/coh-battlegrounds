@@ -479,7 +479,8 @@ function BG_RecallCompanySquad(unit_data, squadID, companyID, playerData, reset)
 end
 
 function BG_OnItemCaptured(entity, capturer)
-    PrintOnScreen(Entity_GetGameID(entity) .. " - " .. Squad_GetGameID(capturer));
+    local captureSquadID = Entity_GetSquad(entity);
+    PrintOnScreen(Squad_GetGameID(captureSquadID) .. " - " .. Squad_GetGameID(capturer));
 end
 
 function BG_HandleCapturedEquipment(playerData, gameID, squadID, bpName)

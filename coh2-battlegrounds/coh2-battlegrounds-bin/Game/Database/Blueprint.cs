@@ -1,6 +1,7 @@
 ﻿using Battlegrounds.Game.Database.Management;
 using Battlegrounds.Game.Scar;
 using Battlegrounds.Json;
+using Battlegrounds.Modding;
 
 namespace Battlegrounds.Game.Database {
     
@@ -47,6 +48,12 @@ namespace Battlegrounds.Game.Database {
                 return $"\"{this.ModGUID.Replace("-", "")}:{this.Name}\"";
             }
         }
+
+        /// <summary>
+        /// Get the <see cref="BlueprintUID"/> associated with this <see cref="Blueprint"/> instance.
+        /// </summary>
+        /// <returns>The <see cref="BlueprintUID"/> identifying the <see cref="Blueprint"/>.</returns>
+        public virtual BlueprintUID GetBlueprintUID() => new(this.PBGID, ModGuid.FromGuid(this.ModGUID));
 
         /// <summary>
         /// Returns a string that represents the current object.

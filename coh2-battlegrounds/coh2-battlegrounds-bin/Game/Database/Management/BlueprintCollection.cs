@@ -11,12 +11,12 @@ namespace Battlegrounds.Game.Database.Management {
     /// <typeparam name="T">The specific <see cref="Blueprint"/> type the collection is to consist of.</typeparam>
     public class BlueprintCollection<T> : IEnumerable<T> where T : Blueprint {
 
-        private IEnumerable<KeyValuePair<ulong, T>> m_internalDictionary; // Not meant to be an actual dictionary
+        private IEnumerable<KeyValuePair<BlueprintUID, T>> m_internalDictionary; // Not meant to be an actual dictionary
 
         /// <summary>
         /// Get enumerable for all property bag IDs
         /// </summary>
-        public IEnumerable<ulong> PropertyBagIDs => m_internalDictionary.Select(x => x.Key);
+        public IEnumerable<BlueprintUID> PropertyBagIDs => this.m_internalDictionary.Select(x => x.Key);
 
         /// <summary>
         /// Is this <see cref="BlueprintCollection{T}"/> a generic collection (<typeparamref name="T"/>=<see cref="Blueprint"/>).
@@ -27,16 +27,16 @@ namespace Battlegrounds.Game.Database.Management {
         /// Create new <see cref="BlueprintCollection{T}"/> from an enumerable of <see cref="KeyValuePair{TKey, TValue}"/> with <typeparamref name="T"/>=TValue.
         /// </summary>
         /// <param name="initial">The initial collection of the instance</param>
-        public BlueprintCollection(IEnumerable<KeyValuePair<ulong, T>> initial) {
+        public BlueprintCollection(IEnumerable<KeyValuePair<BlueprintUID, T>> initial) {
             this.m_internalDictionary = initial;
         }
 
         /// <summary>
-        /// Create new <see cref="BlueprintCollection{T}"/> from a <see cref="Dictionary{ulong, T}"/>.
+        /// Create new <see cref="BlueprintCollection{T}"/> from a <see cref="Dictionary{BlueprintUID, T}"/>.
         /// </summary>
         /// <param name="dictionaries">The initial dictionary.</param>
-        public BlueprintCollection(Dictionary<ulong, Blueprint> dictionaries) {
-            this.m_internalDictionary = dictionaries.Select(x => new KeyValuePair<ulong, T>(x.Key, x.Value as T));
+        public BlueprintCollection(Dictionary<BlueprintUID, Blueprint> dictionaries) {
+            this.m_internalDictionary = dictionaries.Select(x => new KeyValuePair<BlueprintUID, T>(x.Key, x.Value as T));
         }
 
         /// <summary>

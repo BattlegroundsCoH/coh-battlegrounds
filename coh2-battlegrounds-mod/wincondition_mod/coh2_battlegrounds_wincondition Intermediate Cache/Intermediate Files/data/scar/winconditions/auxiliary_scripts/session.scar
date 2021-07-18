@@ -1395,53 +1395,6 @@ bg_companies = {
 				spawned = false,
 			},
 			{
-				bp_name = "142b113740474c82a60b0a428bd553d5:sniper_squad_bg",
-				company_id = 10,
-				symbol = "Icons_symbols_unit_german_sniper_symbol",
-				category = "infantry",
-				phase = -1,
-				veterancy_rank = 4,
-				veterancy_progress = 0.00,
-				special = true,
-				cost = {
-					manpower = 360.00,
-					fieldtime = 15.00,
-				},
-				upgrades = {
-				},
-				slot_items = {
-				},
-				modifiers = {
-				},
-				spawned = false,
-			},
-			{
-				bp_name = "142b113740474c82a60b0a428bd553d5:sniper_squad_bg",
-				company_id = 40,
-				symbol = "Icons_symbols_unit_german_sniper_symbol",
-				category = "infantry",
-				phase = -1,
-				veterancy_rank = 5,
-				veterancy_progress = 0.00,
-				special = true,
-				transport = {
-					sbp = "142b113740474c82a60b0a428bd553d5:opel_blitz_transport_squad_bg",
-					symbol = "Icons_symbols_vehicle_german_opel_blitz_symbol",
-					mode = 2,
-				},
-				cost = {
-					manpower = 555.00,
-					fieldtime = 24.75,
-				},
-				upgrades = {
-				},
-				slot_items = {
-				},
-				modifiers = {
-				},
-				spawned = false,
-			},
-			{
 				bp_name = "142b113740474c82a60b0a428bd553d5:mortar_team_81mm_bg",
 				company_id = 22,
 				symbol = "Icons_symbols_unit_german_granatwerfer_34_mortar_symbol",
