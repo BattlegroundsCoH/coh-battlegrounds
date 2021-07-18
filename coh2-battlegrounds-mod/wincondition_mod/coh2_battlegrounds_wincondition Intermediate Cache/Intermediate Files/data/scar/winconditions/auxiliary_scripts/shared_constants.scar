@@ -2,6 +2,7 @@
 -- Mod GUID
 ------------------------------------------------------------------------------------
 _bg_guid = "6a0a13b89555402ca75b85dc30f5cb04"; -- GUID for the mod
+_bg_tuning_guid = "142b113740474c82a60b0a428bd553d5";
 
 ------------------------------------------------------------------------------------
 -- Match Settings
@@ -15,6 +16,7 @@ _bg_custom.phase_time_left = 330; -- 5 minutes 30 seconds
 _bg_custom.phase_time = 330;
 _bg_custom.phase_pasued = false;
 _bg_custom.team_voting = {};
+_bg_custom.log_ai = true; -- Will log certain AI events.
 
 ------------------------------------------------------------------------------------
 -- Logging Constants
@@ -27,7 +29,9 @@ BG_EVENT_ONCAPTURE = 4; -- On capture
 BG_EVENT_ONITEM = 5; -- On item picked up
 BG_EVENT_ONVICTORY = 6; -- On victory
 BG_EVENT_ONVERIFY = 7; -- On verify
+BG_EVENT_ONWITHDRAW = 8; -- On Withdraw
 
+-- Number to Char mapper
 _bg_logs = {
     [BG_EVENT_ONDEATH] = "K",
     [BG_EVENT_ONDEPLOY] = "D",
@@ -37,7 +41,8 @@ _bg_logs = {
     [BG_EVENT_ONITEM] = "I",
     [BG_EVENT_ONVICTORY] = "V",
     [BG_EVENT_ONVERIFY] = "G",
-}
+    [BG_EVENT_ONWITHDRAW] = "W"
+};
 
 ------------------------------------------------------------------------------------
 -- Message types

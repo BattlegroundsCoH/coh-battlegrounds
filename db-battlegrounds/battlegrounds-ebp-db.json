@@ -757,6 +757,24 @@
   },
   {
     "jsdbtype": "Battlegrounds.Game.Database.EntityBlueprint",
+    "PBGID": "1073741925",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "Name": "panzer_iv_sdkfz_161_bg_test_decrewed",
+    "LocaleName": "11046559",
+    "LocaleDescription": "11046558",
+    "Army": "german",
+    "Icon": "Icons_abilities_ability_german_hull_down_set",
+    "Symbol": "Icons_symbols_vehicle_german_panzer_iv_symbol",
+    "Cost": {
+      "jsdbtype": "Battlegrounds.Game.Gameplay.Cost",
+      "Manpower": "350",
+      "Munition": "0",
+      "Fuel": "120",
+      "BuildTime": "50"
+    }
+  },
+  {
+    "jsdbtype": "Battlegrounds.Game.Database.EntityBlueprint",
     "PBGID": "1073741903",
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
     "Name": "panzer_iv_sdkfz_ausf1_bg",

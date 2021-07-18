@@ -175,6 +175,9 @@ function BG_DeploySquad(player, unit_id)
 
         -- Add events
         Rule_AddSquadEvent(BG_OnSquadDeath, squad, GE_SquadKilled);
+        if crewSquad ~= nil then
+            Rule_AddSquadEvent(BG_OnSquadDeath, crewSquad, GE_SquadKilled);
+        end
 
         -- Was it the local player who spawned this unit?
         if player == Game_GetLocalPlayer() then
@@ -235,7 +238,7 @@ function BG_CallInUnit(unit_data, player, gotopos, spawnfrom)
                 Command_SquadPos(player, sg_transport_temp, SCMD_Move, gotopos, false);
 
                 -- Tow-transport from off-map
-                Battlegrounds_TowFromOffmap(transportSquad, squad);
+                Battlegrounds_TowFromOffmap(transportSquad, squad, BG_ExitTransport);
 
                 -- If deploy and exit - tell squad to exit once squad is deployed.
                 if unit_data.transport.mode == 1 then
@@ -277,9 +280,6 @@ function BG_CallInUnit(unit_data, player, gotopos, spawnfrom)
 
             -- Apply company data
             BG_ApplyCompanyData(player, crewSquad, temp_crew, unit_data.crew);
-
-            -- Add death registry
-            Rule_AddSquadEvent(BG_OnSquadDeath, crewSquad, GE_SquadKilled);
 
         end
 
@@ -339,7 +339,7 @@ function BG_OnSquadDeath(squad)
     local playerRefID = BG_GetPlayerID(playerOwner);
     local id = Squad_GetGameID(squad);
 
-    -- If not found - dont do anything. (This might be an AI unit) TODO: Also allow for keeping track of AI units, in case of campaigns etc.
+    -- If not found - dont do anything. (This might be an AI unit)
     if _bg_playerData[playerRefID] == nil then
         return;
     end
@@ -478,6 +478,10 @@ function BG_RecallCompanySquad(unit_data, squadID, companyID, playerData, reset)
     end
 end
 
+function BG_OnItemCaptured(entity, capturer)
+    PrintOnScreen(Entity_GetGameID(entity) .. " - " .. Squad_GetGameID(capturer));
+end
+
 function BG_HandleCapturedEquipment(playerData, gameID, squadID, bpName)
 
     -- Get the save data
@@ -551,9 +555,15 @@ function BG_DeployAndExit(group, deployPos)
                 local pos = Player_GetNearestMapEntry(Util_GetPlayerOwner(group), Util_GetPosition(group));
                 SGroup_MoveAndDespawn(group, pos);
             end
-        end, nil, group, deployPos, 2.5, nil, 4 );
+        end, nil, group, deployPos, 7.5, nil, 1 ); -- TODO: Add cleanup for this (So we don't slow down the game)
     end
 
+end
+
+function BG_ExitTransport(transport, safeTransport)
+    local group = SGroup_FromSquad(transport);
+    local pos = Player_GetNearestMapEntry(Util_GetPlayerOwner(group), Util_GetPosition(group));
+    SGroup_MoveAndDespawn(group, pos);
 end
 
 function BG_CollectSquadSlotItems(squad)

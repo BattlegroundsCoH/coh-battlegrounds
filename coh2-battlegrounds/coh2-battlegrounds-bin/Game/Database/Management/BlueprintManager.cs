@@ -228,7 +228,12 @@ namespace Battlegrounds.Game.Database.Management {
         /// <exception cref="ArgumentException"/>
         /// <exception cref="ArgumentNullException"/>
         /// <returns>The correct <see cref="Blueprint"/>, null if not found or a <see cref="ArgumentException"/> if <see cref="BlueprintType"/> was somehow invalid.</returns>
-        public static Blueprint FromBlueprintName(string id, BlueprintType bType) => GetAllBlueprintsOfType(bType).FirstOrDefault(x => (x.Value.Name ?? "").CompareTo(id) == 0).Value;
+        public static Blueprint FromBlueprintName(string id, BlueprintType bType) {
+            if (GetModGUID(id, out ModGuid guid, out string bp)) {
+                return GetAllBlueprintsOfType(bType).FirstOrDefault(x => x.Value?.ModGUID == guid.GUID && x.Value?.Name == bp).Value;
+            }
+            return GetAllBlueprintsOfType(bType).FirstOrDefault(x => x.Value?.Name == id).Value;
+        }
 
         /// <summary>
         /// Get a <see cref="Blueprint"/> instance from its string name (file name).
@@ -333,6 +338,19 @@ namespace Battlegrounds.Game.Database.Management {
                 return BlueprintType.UBP;
             } else {
                 throw new ArgumentException("Invalid type argument");
+            }
+        }
+
+        public static bool GetModGUID(string bpname, out ModGuid modGuid, out string bp) {
+            int j = bpname.IndexOf(':');
+            if (j == ModGuid.FIXED_LENGTH) {
+                modGuid = ModGuid.FromGuid(bpname[0..j]);
+                bp = bpname[(j + 1)..];
+                return true;
+            } else {
+                modGuid = ModGuid.FromGuid(Guid.Empty);
+                bp = bpname;
+                return false;
             }
         }
 

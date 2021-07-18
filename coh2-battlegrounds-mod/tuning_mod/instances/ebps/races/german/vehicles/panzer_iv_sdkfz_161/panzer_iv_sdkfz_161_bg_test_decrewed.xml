@@ -30,7 +30,7 @@
 					<string name="state_machine_name" value="Fake_Wreck" />
 					<string name="undo_action_state_name" value="" />
 					<bool name="retrigger" value="False" />
-					<uniqueid name="id" value="1073744154" />
+					<uniqueid name="id" value="1073744651" />
 				</template_reference>
 				<template_reference name="action" value="action\animator_set_state">
 					<string name="do_action_state_name" value="axis" />
@@ -38,7 +38,7 @@
 					<bool name="apply_to_leader_only" value="False" />
 					<bool name="retrigger" value="False" />
 					<string name="undo_action_state_name" value="" />
-					<uniqueid name="id" value="1073744155" />
+					<uniqueid name="id" value="1073744652" />
 				</template_reference>
 				<template_reference name="action" value="action\requirement_action">
 					<bool name="check_self" value="False" />
@@ -89,7 +89,7 @@
 									<instance_reference name="tooltip" value="modifier_tooltip\range_weapon_modifier" />
 								</template_reference>
 							</list>
-							<uniqueid name="id" value="1073744156" />
+							<uniqueid name="id" value="1073744653" />
 						</template_reference>
 						<template_reference name="action" value="action\apply_deformation_action">
 							<group name="deform_decal">
@@ -169,7 +169,7 @@
 							<float name="scale_x" value="8" />
 							<float name="scale_y" value="10" />
 							<bool name="undoable" value="True" />
-							<uniqueid name="id" value="1073744157" />
+							<uniqueid name="id" value="1073744654" />
 						</template_reference>
 						<template_reference name="action" value="action\change_target_action">
 							<list name="actions">
@@ -181,14 +181,14 @@
 										<icon name="icon_name" value="Icons_abilities_ability_german_hull_down_set" />
 										<string name="hotkey_name" value="" />
 									</template_reference>
-									<uniqueid name="id" value="1073744158" />
+									<uniqueid name="id" value="1073744655" />
 								</template_reference>
 							</list>
 							<enum name="change_target_type" value="squad" />
-							<uniqueid name="id" value="1073744159" />
+							<uniqueid name="id" value="1073744656" />
 						</template_reference>
 					</list>
-					<uniqueid name="id" value="1073744160" />
+					<uniqueid name="id" value="1073744657" />
 					<bool name="fire_and_forget_non_global" value="False" />
 					<template_reference name="ui_help_text" value="tables\help_text_phrase">
 						<int name="phrase_order" value="0" />
@@ -252,14 +252,14 @@
 											<instance_reference name="tooltip" value="modifier_tooltip\sight_radius_modifier" />
 										</template_reference>
 									</list>
-									<uniqueid name="id" value="1073744161" />
+									<uniqueid name="id" value="1073744658" />
 								</template_reference>
 							</list>
-							<uniqueid name="id" value="1073744162" />
+							<uniqueid name="id" value="1073744659" />
 							<bool name="can_prevent_refund" value="True" />
 						</template_reference>
 					</list>
-					<uniqueid name="id" value="1073744163" />
+					<uniqueid name="id" value="1073744660" />
 					<bool name="fire_and_forget_non_global" value="False" />
 					<template_reference name="ui_help_text" value="tables\help_text_phrase">
 						<int name="phrase_order" value="0" />
@@ -269,7 +269,7 @@
 				<template_reference name="action" value="action\remove_crew_action">
 					<string name="crew_name" value="Gunner" />
 					<bool name="kill" value="False" />
-					<uniqueid name="id" value="1073744164" />
+					<uniqueid name="id" value="1073744661" />
 				</template_reference>
 				<template_reference name="action" value="action\requirement_action">
 					<bool name="check_self" value="False" />
@@ -315,10 +315,10 @@
 									<instance_reference name="tooltip" value="modifier_tooltip\weapon_scatter" />
 								</template_reference>
 							</list>
-							<uniqueid name="id" value="1073744165" />
+							<uniqueid name="id" value="1073744662" />
 						</template_reference>
 					</list>
-					<uniqueid name="id" value="1073744166" />
+					<uniqueid name="id" value="1073744663" />
 					<bool name="fire_and_forget_non_global" value="False" />
 					<template_reference name="ui_help_text" value="tables\help_text_phrase">
 						<int name="phrase_order" value="0" />
@@ -354,15 +354,19 @@
 						<template_reference name="action" value="action\slot_item_add">
 							<instance_reference name="slot_item" value="slot_item\german\small_arms\mg42_turret_mounted_pziv_mp" />
 							<bool name="permanent" value="True" />
-							<uniqueid name="id" value="1073744167" />
+							<uniqueid name="id" value="1073744664" />
 						</template_reference>
 					</list>
-					<uniqueid name="id" value="1073744168" />
+					<uniqueid name="id" value="1073744665" />
 					<bool name="fire_and_forget_non_global" value="False" />
 					<template_reference name="ui_help_text" value="tables\help_text_phrase">
 						<int name="phrase_order" value="0" />
 						<locstring name="phrase" value="0" />
 					</template_reference>
+				</template_reference>
+				<template_reference name="action" value="action\abandon_action">
+					<uniqueid name="id" value="1073744676" />
+					<bool name="safe_abandon" value="False" />
 				</template_reference>
 			</list>
 		</template_reference>
@@ -963,7 +967,7 @@
 						<bool name="fire_and_forget" value="True" />
 						<bool name="is_terrain_only" value="False" />
 						<bool name="allies_only" value="False" />
-						<uniqueid name="id" value="1073744169" />
+						<uniqueid name="id" value="1073744666" />
 					</template_reference>
 				</list>
 			</group>
@@ -981,7 +985,7 @@
 						<bool name="fire_and_forget" value="True" />
 						<bool name="is_terrain_only" value="False" />
 						<bool name="allies_only" value="False" />
-						<uniqueid name="id" value="1073744170" />
+						<uniqueid name="id" value="1073744667" />
 					</template_reference>
 				</list>
 			</group>
@@ -999,7 +1003,7 @@
 						<bool name="fire_and_forget" value="True" />
 						<bool name="is_terrain_only" value="False" />
 						<bool name="allies_only" value="False" />
-						<uniqueid name="id" value="1073744171" />
+						<uniqueid name="id" value="1073744668" />
 					</template_reference>
 				</list>
 			</group>
@@ -1017,7 +1021,7 @@
 						<bool name="fire_and_forget" value="True" />
 						<bool name="is_terrain_only" value="False" />
 						<bool name="allies_only" value="False" />
-						<uniqueid name="id" value="1073744172" />
+						<uniqueid name="id" value="1073744669" />
 					</template_reference>
 				</list>
 			</group>
@@ -1035,7 +1039,7 @@
 						<bool name="fire_and_forget" value="True" />
 						<bool name="is_terrain_only" value="False" />
 						<bool name="allies_only" value="False" />
-						<uniqueid name="id" value="1073744173" />
+						<uniqueid name="id" value="1073744670" />
 					</template_reference>
 				</list>
 			</group>
@@ -1063,7 +1067,7 @@
 						<bool name="fire_and_forget" value="True" />
 						<bool name="is_terrain_only" value="False" />
 						<bool name="allies_only" value="False" />
-						<uniqueid name="id" value="1073744174" />
+						<uniqueid name="id" value="1073744671" />
 					</template_reference>
 				</list>
 			</group>
@@ -1325,7 +1329,7 @@
 										<bool name="retrigger" value="False" />
 										<string name="state_machine_name" value="upgrade_vis" />
 										<string name="undo_action_state_name" value="" />
-										<uniqueid name="id" value="1073744297" />
+										<uniqueid name="id" value="1073744672" />
 									</template_reference>
 								</list>
 							</group>
@@ -1336,7 +1340,7 @@
 						<list name="apply_to_driver_action">
 							<template_reference name="action" value="action\scar_function_call">
 								<string name="function_name" value="BG_OnItemCaptured" />
-								<uniqueid name="id" value="1073744649" />
+								<uniqueid name="id" value="1073744673" />
 							</template_reference>
 						</list>
 						<float name="driver_death_chance_on_entity_death" value="1" />
@@ -1359,7 +1363,7 @@
 										<bool name="retrigger" value="False" />
 										<string name="state_machine_name" value="upgrade_vis" />
 										<string name="undo_action_state_name" value="" />
-										<uniqueid name="id" value="1073744298" />
+										<uniqueid name="id" value="1073744674" />
 									</template_reference>
 								</list>
 							</group>
@@ -1370,7 +1374,7 @@
 						<list name="apply_to_driver_action">
 							<template_reference name="action" value="action\scar_function_call">
 								<string name="function_name" value="BG_OnItemCaptured" />
-								<uniqueid name="id" value="1073744650" />
+								<uniqueid name="id" value="1073744675" />
 							</template_reference>
 						</list>
 						<float name="driver_death_chance_on_entity_death" value="1" />
@@ -1396,5 +1400,5 @@
 			<bool name="use_simbox_range_plus_spots" value="True" />
 		</template_reference>
 	</list>
-	<uniqueid name="pbgid" value="1073741902" />
+	<uniqueid name="pbgid" value="1073741925" />
 </instance>

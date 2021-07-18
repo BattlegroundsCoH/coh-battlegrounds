@@ -10,7 +10,7 @@ namespace Battlegrounds.Modding {
         private readonly string m_guid;
 
         /// <summary>
-        /// The fixed length of the company GUI
+        /// The fixed length of the GUID string
         /// </summary>
         public const byte FIXED_LENGTH = 32;
 

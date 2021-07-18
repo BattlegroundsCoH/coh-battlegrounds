@@ -1,0 +1,38 @@
+[
+  {
+    "jsdbtype": "Battlegrounds.Game.Database.EntityBlueprint",
+    "PBGID": "8",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "Name": "mg42_hmg_mp",
+    "LocaleName": "2153001",
+    "LocaleDescription": "2153000",
+    "Army": "german",
+    "Icon": "Icons_upgrades_icon_upgrade_german_mg42",
+    "Symbol": "",
+    "Cost": {
+      "jsdbtype": "Battlegrounds.Game.Gameplay.Cost",
+      "Manpower": "80",
+      "Munition": "0",
+      "Fuel": "0",
+      "BuildTime": "18"
+    }
+  },
+  {
+    "jsdbtype": "Battlegrounds.Game.Database.EntityBlueprint",
+    "PBGID": "19",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "Name": "panzer_iv_sdkfz_161_mp",
+    "LocaleName": "11046559",
+    "LocaleDescription": "11046558",
+    "Army": "german",
+    "Icon": "Icons_abilities_ability_german_hull_down_set",
+    "Symbol": "Icons_symbols_vehicle_german_panzer_iv_symbol",
+    "Cost": {
+      "jsdbtype": "Battlegrounds.Game.Gameplay.Cost",
+      "Manpower": "350",
+      "Munition": "0",
+      "Fuel": "120",
+      "BuildTime": "50"
+    }
+  }
+]
