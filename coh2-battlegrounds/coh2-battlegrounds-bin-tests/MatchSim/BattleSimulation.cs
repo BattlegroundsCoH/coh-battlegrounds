@@ -1,10 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 using Battlegrounds;
+using Battlegrounds.Functional;
 using Battlegrounds.Game.Database;
 using Battlegrounds.Game.Database.Management;
 using Battlegrounds.Game.DataCompany;
@@ -31,6 +29,7 @@ namespace coh2_battlegrounds_bin_tests.MatchSim {
         Company company;
 
         private Player SOVIET => players[0];
+
         private Player GERMAN => players[1];
 
         [TestInitialize]
@@ -42,13 +41,15 @@ namespace coh2_battlegrounds_bin_tests.MatchSim {
                 BlueprintManager.LoadDatabaseWithMod("battlegrounds", BattlegroundsInstance.BattleGroundsTuningMod.Guid.ToString());
             }
             var s = new NullSession(true);
-            s.CreateCompany(0, Faction.Soviet, "TestCompany", 
+            s.CreateCompany(0, Faction.Soviet, "Allies", 
                 x => x.AddUnit(y => y.SetBlueprint(BlueprintManager.FromBlueprintName<SquadBlueprint>("conscript_squad_bg")))
                 .AddUnit(y => y.SetBlueprint(BlueprintManager.FromBlueprintName<SquadBlueprint>("conscript_squad_bg"))));
+            s.CreateCompany(1, Faction.Wehrmacht, "Axis",
+                x => x.AddUnit(y => y.SetBlueprint(BlueprintManager.FromBlueprintName<SquadBlueprint>("panzer_iv_squad_bg"))));
             session = s;
             playStrategy = new BattleSimulatorStrategy(session);
             analyzeStrategy = new SingleplayerMatchAnalyzer();
-            finalizeStrategy = new SingleplayerFinalizer() { CompanyHandler = x => company = x };
+            finalizeStrategy = new SingleplayerFinalizer() { CompanyHandler = x => x.IfTrue(x => x.Army == Faction.Soviet).Then(() => company = x) };
             players = new Player[] {
                 new Player (0, 0, 0, "Player 1", Faction.Soviet, string.Empty),
                 new Player (1, 1, 1, "Player 2", Faction.Wehrmacht, string.Empty),
@@ -143,7 +144,7 @@ namespace coh2_battlegrounds_bin_tests.MatchSim {
 
             // Analyse and assert
             playStrategy.BattleEvent(TimeSpan.FromSeconds(1), new DeployEvent(0, new string[] { "0", }, SOVIET));
-            playStrategy.BattleEvent(TimeSpan.FromSeconds(5), new PickupEvent(0, new string[] { "0", slot_item }, SOVIET));
+            playStrategy.BattleEvent(TimeSpan.FromSeconds(5), new PickupEvent(1, new string[] { "0", slot_item }, SOVIET));
 
             // Get and initialize simulated data
             var (data, result) = AnalyseAndAssert(2);
@@ -162,6 +163,28 @@ namespace coh2_battlegrounds_bin_tests.MatchSim {
             var squad = this.company.GetSquadByIndex(0);
             Assert.AreEqual(1, squad.SlotItems.Count);
             Assert.IsTrue(squad.SlotItems.Contains(slot_item_bp));
+
+        }
+
+        [TestMethod]
+        public void CanCaptureTank() {
+
+            // Analyse and assert
+            playStrategy.BattleEvent(TimeSpan.FromSeconds(1.5), new DeployEvent(0, new string[] { "0", }, GERMAN));
+            playStrategy.BattleEvent(TimeSpan.FromSeconds(2), new DeployEvent(1, new string[] { "0", }, SOVIET));
+            playStrategy.BattleEvent(TimeSpan.FromSeconds(8), new KillEvent(2, new string[] { "0", }, GERMAN));
+            playStrategy.BattleEvent(TimeSpan.FromSeconds(10), new CaptureEvent(3, new string[] { "panzer_iv_sdkfz_161_bg", "1", "EBP" }, SOVIET));
+
+            // Get and initialize simulated data
+            var (data, result) = AnalyseAndAssert(4);
+
+            // Test finalise
+            this.finalizeStrategy.Finalize(result);
+            this.finalizeStrategy.Synchronize(null);
+            Assert.IsNotNull(this.company);
+
+            // Assert is found in company items
+            Assert.IsTrue(this.company.Inventory.Contains(BlueprintManager.FromBlueprintName<EntityBlueprint>("panzer_iv_sdkfz_161_bg")));
 
         }
 

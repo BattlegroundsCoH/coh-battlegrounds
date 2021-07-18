@@ -36,6 +36,9 @@ namespace Battlegrounds.Game.Match.Finalizer {
             // Get the units
             var units = analyzedMatch.Units;
 
+            // Get the items
+            var items = analyzedMatch.Items;
+
             // Get the players
             var players = analyzedMatch.Players;
 
@@ -100,13 +103,20 @@ namespace Battlegrounds.Game.Match.Finalizer {
                         }
                     }
 
-                    // TODO: Apply pickups
-
                 }
 
             }
 
-            // TODO: Save captured items etc.
+            // Loop over captured items
+            foreach (var item in items) {
+
+                // Get the relevant company
+                var company = this.m_companies[item.PlayerOwner];
+
+                // Add to captured items
+                company.AddInventoryItem(item.Blueprint);
+
+            }
 
         }
 
