@@ -188,6 +188,26 @@ namespace coh2_battlegrounds_bin_tests.MatchSim {
 
         }
 
+        [TestMethod]
+        public void CanCaptureTeamWeapon() {
+
+            // Analyse and assert
+            playStrategy.BattleEvent(TimeSpan.FromSeconds(2), new DeployEvent(0, new string[] { "0", }, SOVIET));
+            playStrategy.BattleEvent(TimeSpan.FromSeconds(10), new CaptureEvent(1, new string[] { "mg42_hmg_bg", "2", "EBP" }, SOVIET));
+
+            // Get and initialize simulated data
+            var (data, result) = AnalyseAndAssert(2);
+
+            // Test finalise
+            this.finalizeStrategy.Finalize(result);
+            this.finalizeStrategy.Synchronize(null);
+            Assert.IsNotNull(this.company);
+
+            // Assert is found in company items
+            Assert.IsTrue(this.company.Inventory.Contains(BlueprintManager.FromBlueprintName<EntityBlueprint>("mg42_hmg_bg")));
+
+        }
+
     }
 
 }
