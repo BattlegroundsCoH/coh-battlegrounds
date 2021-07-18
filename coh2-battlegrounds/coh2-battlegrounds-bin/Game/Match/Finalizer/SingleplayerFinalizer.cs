@@ -93,6 +93,13 @@ namespace Battlegrounds.Game.Match.Finalizer {
                     // Update combat time
                     squad.IncreaseCombatTime(status.CombatTime);
 
+                    // Picked up any items?
+                    if (status.CapturedSlotItems.Count > 0) {
+                        foreach (var item in status.CapturedSlotItems) {
+                            squad.AddSlotItem(item);
+                        }
+                    }
+
                     // TODO: Apply pickups
 
                 }

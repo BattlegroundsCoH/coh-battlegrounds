@@ -231,6 +231,17 @@ namespace Battlegrounds.Game.Database.Management {
         public static Blueprint FromBlueprintName(string id, BlueprintType bType) => GetAllBlueprintsOfType(bType).FirstOrDefault(x => (x.Value.Name ?? "").CompareTo(id) == 0).Value;
 
         /// <summary>
+        /// Get a <see cref="Blueprint"/> instance from its string name (file name).
+        /// </summary>
+        /// <typeparam name="Bp">The specific <see cref="Blueprint"/> type to fetch.</typeparam>
+        /// <param name="bpName">The string ID to look for.</param>
+        /// <exception cref="ArgumentException"/>
+        /// <exception cref="ArgumentNullException"/>
+        /// <returns>The correct <see cref="Blueprint"/>, null if not found or a <see cref="ArgumentException"/> if <see cref="BlueprintType"/> was somehow invalid.</returns>
+        public static Bp FromBlueprintName<Bp>(string bpName) where Bp : Blueprint
+            => (Bp)FromBlueprintName(bpName, BlueprintTypeFromType<Bp>());
+
+        /// <summary>
         /// Dereference a <see cref="Blueprint"/> reference from a json reference string of the form "BPT:BPName".
         /// </summary>
         /// <param name="jsonReference">The json reference string to dereference.</param>

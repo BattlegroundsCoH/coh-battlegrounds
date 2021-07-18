@@ -5,12 +5,15 @@ using System.Text;
 using System.Threading.Tasks;
 
 using Battlegrounds;
+using Battlegrounds.Game.Database;
 using Battlegrounds.Game.Database.Management;
+using Battlegrounds.Game.DataCompany;
 using Battlegrounds.Game.Gameplay;
 using Battlegrounds.Game.Match;
 using Battlegrounds.Game.Match.Analyze;
 using Battlegrounds.Game.Match.Data;
 using Battlegrounds.Game.Match.Data.Events;
+using Battlegrounds.Game.Match.Finalizer;
 using Battlegrounds.Game.Match.Play;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -23,7 +26,9 @@ namespace coh2_battlegrounds_bin_tests.MatchSim {
         ISession session;
         BattleSimulatorStrategy playStrategy;
         IAnalyzeStrategy analyzeStrategy;
+        IFinalizeStrategy finalizeStrategy;
         Player[] players;
+        Company company;
 
         private Player SOVIET => players[0];
         private Player GERMAN => players[1];
@@ -36,12 +41,17 @@ namespace coh2_battlegrounds_bin_tests.MatchSim {
                 BlueprintManager.CreateDatabase();
                 BlueprintManager.LoadDatabaseWithMod("battlegrounds", BattlegroundsInstance.BattleGroundsTuningMod.Guid.ToString());
             }
-            session = new NullSession();
+            var s = new NullSession(true);
+            s.CreateCompany(0, Faction.Soviet, "TestCompany", 
+                x => x.AddUnit(y => y.SetBlueprint(BlueprintManager.FromBlueprintName<SquadBlueprint>("conscript_squad_bg")))
+                .AddUnit(y => y.SetBlueprint(BlueprintManager.FromBlueprintName<SquadBlueprint>("conscript_squad_bg"))));
+            session = s;
             playStrategy = new BattleSimulatorStrategy(session);
             analyzeStrategy = new SingleplayerMatchAnalyzer();
+            finalizeStrategy = new SingleplayerFinalizer() { CompanyHandler = x => company = x };
             players = new Player[] {
                 new Player (0, 0, 0, "Player 1", Faction.Soviet, string.Empty),
-                new Player (1, 0, 1, "Player 2", Faction.Wehrmacht, string.Empty),
+                new Player (1, 1, 1, "Player 2", Faction.Wehrmacht, string.Empty),
             };
         }
 
@@ -128,7 +138,8 @@ namespace coh2_battlegrounds_bin_tests.MatchSim {
         public void CanPickupItem() {
 
             // Define item to pick up
-            var slot_item = "ppsh41_assault_package_bg";
+            const string slot_item = "ppsh41_assault_package_bg";
+            var slot_item_bp = BlueprintManager.FromBlueprintName<SlotItemBlueprint>(slot_item);
 
             // Analyse and assert
             playStrategy.BattleEvent(TimeSpan.FromSeconds(1), new DeployEvent(0, new string[] { "0", }, SOVIET));
@@ -140,7 +151,17 @@ namespace coh2_battlegrounds_bin_tests.MatchSim {
             // Assert unit
             var status = result.Units[0];
             Assert.AreEqual(1, status.CapturedSlotItems.Count);
-            Assert.AreEqual(BlueprintManager.FromBlueprintName(slot_item, BlueprintType.IBP), status.CapturedSlotItems[0]);
+            Assert.AreEqual(slot_item_bp, status.CapturedSlotItems[0]);
+
+            // Test finalise
+            this.finalizeStrategy.Finalize(result);
+            this.finalizeStrategy.Synchronize(null);
+            Assert.IsNotNull(this.company);
+
+            // Test if company unit got item
+            var squad = this.company.GetSquadByIndex(0);
+            Assert.AreEqual(1, squad.SlotItems.Count);
+            Assert.IsTrue(squad.SlotItems.Contains(slot_item_bp));
 
         }
 

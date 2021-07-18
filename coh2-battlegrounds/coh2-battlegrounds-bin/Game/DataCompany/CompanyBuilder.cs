@@ -111,6 +111,18 @@ namespace Battlegrounds.Game.DataCompany {
         /// <summary>
         /// Add a unit to the <see cref="Company"/> using a <see cref="UnitBuilder"/>.
         /// </summary>
+        /// <param name="builder">The function to build the unit.</param>
+        /// <returns>The calling <see cref="CompanyBuilder"/> instance.</returns>
+        public virtual CompanyBuilder AddUnit(Func<UnitBuilder, UnitBuilder> builder) {
+            UnitBuilder bld = new();
+            bld.SetModGUID(this.m_companyGUID.ToString());
+            this.AddUnit(builder(bld));
+            return this;
+        }
+
+        /// <summary>
+        /// Add a unit to the <see cref="Company"/> using a <see cref="UnitBuilder"/>.
+        /// </summary>
         /// <param name="builder">The <see cref="UnitBuilder"/> instance containing specific <see cref="Squad"/> data.</param>
         /// <returns>The calling <see cref="CompanyBuilder"/> instance.</returns>
         public virtual CompanyBuilder AddUnit(UnitBuilder builder) {
@@ -198,6 +210,16 @@ namespace Battlegrounds.Game.DataCompany {
         /// <returns>The calling <see cref="CompanyBuilder"/> instance.</returns>
         public virtual CompanyBuilder ChangeTuningMod(string tuningGUID) {
             this.m_companyGUID = ModGuid.FromGuid(tuningGUID);
+            return this;
+        }
+
+        /// <summary>
+        /// Change the associated <see cref="Guid"/> of the <see cref="Company"/>. (This will decide from where the blueprints can be drawn from).
+        /// </summary>
+        /// <param name="tuningGUID">The tuning mod GUID.</param>
+        /// <returns>The calling <see cref="CompanyBuilder"/> instance.</returns>
+        public virtual CompanyBuilder ChangeTuningMod(ModGuid tuningGUID) {
+            this.m_companyGUID = tuningGUID;
             return this;
         }
 
