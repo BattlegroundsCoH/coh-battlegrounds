@@ -31,7 +31,19 @@ namespace CoH2XML2JSON {
         };
 
         private static string GetFactionFromPath(string path) {
-            string army = path.Substring(path.IndexOf("races") + 6, path.Length - path.IndexOf("races") - 6).Split("\\")[0];
+            int rid = path.IndexOf("races");
+            string army = path;
+            if (rid != -1) {
+                army = path.Substring(rid + 6, path.Length - rid - 6).Split("\\")[0];
+            } else {
+                for (int i = 0; i < racebps.Length; i++) {
+                    string k = racebps[i][8..];
+                    if (path.Contains(k)) {
+                        return k;
+                    }
+                }
+                army = "NULL";
+            }
             if (army == "soviets") {
                 army = "soviet";
             } else if (army == "brits") {
@@ -218,7 +230,6 @@ namespace CoH2XML2JSON {
                         try {
                             var item = new SlotItem(document, modguid, name) { };
                             slotItems.Add(item);
-                            string ebpsJson = JsonSerializer.Serialize(item, serializerOptions);
                         } catch (Exception) {
                             Console.WriteLine("Failed to parse entity: " + name);
                         }
@@ -360,90 +371,21 @@ namespace CoH2XML2JSON {
                 } else {
                     int filesToProcces = Directory.GetFiles(instancesPath + @"\abilities", "*.xml", SearchOption.AllDirectories).Length;
                     int proccessedFiles = 0;
-
-                    using (FileStream fs = File.Create(fileName)) {
-                        using (StreamWriter sw = new StreamWriter(fs)) {
-                            sw.WriteLine("[");
-                            foreach (string path in Directory.GetFiles(instancesPath + @"\abilities", "*xml", SearchOption.AllDirectories)) {
-                                XmlDocument document = new XmlDocument();
-                                document.Load(path);
-                                /*
-                                string jsdbType = "Battlegrounds.Game.Database.AbilityBlueprint";
-
-                                XmlElement e_pbgid = document["instance"]["uniqueid"];
-                                string pbgid = e_pbgid.GetAttribute("value");
-
-                                string name = path[(path.LastIndexOf(@"\") + 1)..];
-                                name = name.Remove(name.Length - 4);
-
-                                string localeName = "";
-                                string localeDescription = "";
-                                string icon = "";
-
-                                if (document.SelectSingleNode(@"//group[@name='ui_info']") != null) {
-                                    XmlElement e_localeName = document.SelectSingleNode("//locstring[@name='screen_name']") as XmlElement;
-                                    localeName = e_localeName.GetAttribute("value");
-
-                                    XmlElement e_localeDescription = document.SelectSingleNode("//locstring[@name='help_text']") as XmlElement;
-                                    localeDescription = e_localeDescription.GetAttribute("value");
-
-                                    XmlElement e_icon = document.SelectSingleNode("//icon[@name='icon_name']") as XmlElement;
-                                    icon = e_icon.GetAttribute("value");
-                                }
-
-                                string army = path.Substring(path.IndexOf("abilities") + 10, path.Length - path.IndexOf("abilities") - 10).Split("\\")[0];
-                                if (army == "soviets") {
-                                    army = army.Replace("soviets", "soviet");
-                                } else if (army == "brits") {
-                                    army = army.Replace("brits", "british");
-                                }
-
-                                string costJsdbType = "Battlegrounds.Game.Gameplay.Cost";
-
-                                string costManpower = "0";
-                                string costMunition = "0";
-                                string costFuel = "0";
-
-                                if (document.SelectSingleNode(@"//group[@name='cost']") != null) {
-                                    XmlElement e_manpower = document.SelectSingleNode("//float[@name='manpower']") as XmlElement;
-                                    costManpower = e_manpower.GetAttribute("value");
-
-                                    XmlElement e_munition = document.SelectSingleNode("//float[@name='munition']") as XmlElement;
-                                    costMunition = e_munition.GetAttribute("value");
-
-                                    XmlElement e_fuel = document.SelectSingleNode("//float[@name='fuel']") as XmlElement;
-                                    costFuel = e_fuel.GetAttribute("value");
-                                }
-
-                                dynamic ability = new JObject();
-                                ability.jsdbtype = jsdbType;
-                                ability.PBGID = pbgid;
-                                ability.ModGUID = modguid;
-                                ability.Name = name;
-                                ability.LocaleName = localeName;
-                                ability.LocaleDescription = localeDescription;
-                                ability.Army = army;
-                                ability.Icon = icon;
-                                ability.Cost = new JObject();
-                                ability.Cost.jsdbtype = costJsdbType;
-                                ability.Cost.Manpower = costManpower;
-                                ability.Cost.Munition = costMunition;
-                                ability.Cost.Fuel = costFuel;
-
-                                string abilityJson = JsonConvert.SerializeObject(ability, Newtonsoft.Json.Formatting.Indented);
-
-                                proccessedFiles++;
-
-                                if (proccessedFiles < filesToProcces) {
-                                    sw.WriteLine(abilityJson + ",");
-                                } else {
-                                    sw.WriteLine(abilityJson);
-                                }
-                                */
-                            }
-                            sw.WriteLine("]");
+                    List<ABP> abps = new();
+                    foreach (string path in Directory.GetFiles(instancesPath + @"\abilities", "*xml", SearchOption.AllDirectories)) {
+                        string name = path[(path.LastIndexOf(@"\") + 1)..^4];
+                        Console.WriteLine(name);
+                        XmlDocument document = new XmlDocument();
+                        document.Load(path);
+                        try {
+                            var abp = new ABP(document, modguid, name) { Army = GetFactionFromPath(path) };
+                            abps.Add(abp);
+                        } catch (Exception) {
+                            Console.WriteLine("Failed to parse entity: " + name);
                         }
+                        proccessedFiles++;
                     }
+                    File.WriteAllText(fileName, JsonSerializer.Serialize(abps.ToArray(), serializerOptions));
 
                     Console.WriteLine("Abilities database created with " + proccessedFiles.ToString() + "/" + filesToProcces.ToString() + " items added!");
                 }

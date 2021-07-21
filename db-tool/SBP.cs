@@ -79,7 +79,7 @@ namespace CoH2XML2JSON {
                 }
                 this.SquadCost = new(costList.ToArray());
                 this.Entities = squadLoadoutData.ToArray();
-                this.FemaleChance = float.Parse(squadLoadout.GetValue("//float [@name='squad_female_chance']"));
+                this.FemaleChance = float.Parse(squadLoadout.GetValue("//float [@name='squad_female_chance']")) / 10.0f;
             }
 
             // Load squad abilities

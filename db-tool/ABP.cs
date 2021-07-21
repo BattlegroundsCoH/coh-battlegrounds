@@ -11,13 +11,30 @@ namespace CoH2XML2JSON {
 
         public UI Display { get; }
 
+        public string Army { get; init; }
+
         public override string ModGUID { get; }
 
         public override ulong PBGID { get; }
 
         public override string Name { get; }
 
-        public ABP(XmlDocument xmlDocument) {
+        public ABP(XmlDocument xmlDocument, string guid, string name) {
+
+            // Set the name
+            this.Name = name;
+
+            // Set mod GUID
+            this.ModGUID = guid;
+
+            // Load pbgid
+            this.PBGID = ulong.Parse(xmlDocument["instance"]["uniqueid"].GetAttribute("value"));
+
+            // Load display
+            this.Display = new(xmlDocument.SelectSingleNode(@"//group[@name='ui_info']") as XmlElement);
+
+            // Load Cost
+            this.Cost = new(xmlDocument.SelectSingleNode(@"//group[@name='cost']") as XmlElement);
 
         }
 
