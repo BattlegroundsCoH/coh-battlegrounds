@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml;
+﻿using System.Xml;
 
 namespace CoH2XML2JSON {
 
@@ -15,7 +10,21 @@ namespace CoH2XML2JSON {
 
         public override string Name { get; }
 
-        public Critical(XmlDocument xmlDocument) {
+        public UI Display { get; }
+
+        public Critical(XmlDocument xmlDocument, string guid, string name) {
+
+            // Set the name
+            this.Name = name;
+
+            // Set mod GUID
+            this.ModGUID = string.IsNullOrEmpty(guid) ? null : guid;
+
+            // Load pbgid
+            this.PBGID = ulong.Parse(xmlDocument["instance"]["uniqueid"].GetAttribute("value"));
+
+            // Load display
+            this.Display = new(xmlDocument.SelectSingleNode(@"//template_reference[@name='ui_info']") as XmlElement);
 
         }
 

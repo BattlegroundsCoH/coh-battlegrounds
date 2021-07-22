@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel;
+using System.IO;
 using System.Xml;
 
 namespace CoH2XML2JSON {
@@ -46,7 +47,7 @@ namespace CoH2XML2JSON {
             this.Name = name;
 
             // Set mod GUID
-            this.ModGUID = guid;
+            this.ModGUID = string.IsNullOrEmpty(guid) ? null : guid;
 
             // Load pbgid
             this.PBGID = ulong.Parse(xmlDocument["instance"]["uniqueid"].GetAttribute("value"));
@@ -58,11 +59,11 @@ namespace CoH2XML2JSON {
             this.Cost = new(xmlDocument.SelectSingleNode(@"//template_reference[@name='exts'] [@value='ebpextensions\cost_ext']") as XmlElement);
 
             // Load abilities
-            if (xmlDocument.SelectSingleNode("//template_reference[@name='exts'] [@value='ebpextensions\ability_ext']") is XmlElement abilities) {
+            if (xmlDocument.SelectSingleNode(@"//template_reference[@name='exts'] [@value='ebpextensions\ability_ext']") is XmlElement abilities) {
                 var nodes = abilities.SelectNodes("//instance_reference[@name='ability']");
                 List<string> abps = new();
                 foreach (XmlNode ability in nodes) {
-                    abps.Add(ability.Attributes["value"].Value);
+                    abps.Add(Path.GetFileNameWithoutExtension(ability.Attributes["value"].Value));
                 }
                 if (abps.Count > 0) {
                     this.Abilities = abps.ToArray();
@@ -70,7 +71,7 @@ namespace CoH2XML2JSON {
             }
 
             // Load drivers (if any)
-            if (xmlDocument.SelectSingleNode("//template_reference[@name='exts'] [@value='ebpextensions\recrewable_ext']") is XmlElement recrewable) {
+            if (xmlDocument.SelectSingleNode(@"//template_reference[@name='exts'] [@value='ebpextensions\recrewable_ext']") is XmlElement recrewable) {
                 List<EBPCrew> crews = new();
                 for (int i = 0; i < Program.racebps.Length; i++) {
                     if (recrewable.FindSubnode("instance_reference", "ext_key", $"{Program.racebps[i]}") is XmlElement instRef) {
@@ -91,7 +92,10 @@ namespace CoH2XML2JSON {
                 var nodes = hardpoints.SelectNodes("//instance_reference[@name='weapon']");
                 List<string> wpbs = new();
                 foreach (XmlNode wpn in nodes) {
-                    wpbs.Add(wpn.Attributes["value"].Value);
+                    var hardpoint = wpn.Attributes["value"].Value;
+                    if (!string.IsNullOrEmpty(hardpoint)) {
+                        wpbs.Add(Path.GetFileNameWithoutExtension(hardpoint));
+                    }
                 }
                 if (wpbs.Count > 0) {
                     this.Hardpoints = wpbs.ToArray();

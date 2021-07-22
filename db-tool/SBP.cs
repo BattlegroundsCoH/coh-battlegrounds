@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.IO;
 using System.Linq;
 using System.Xml;
 
@@ -37,13 +39,19 @@ namespace CoH2XML2JSON {
 
         public string[] Types { get; }
 
+        [DefaultValue(0)]
+        public int SlotPickupCapacity { get; }
+
+        [DefaultValue(false)]
+        public bool CanPickupItems { get; }
+
         public SBP(XmlDocument xmlDocument, string guid, string name, List<EBP> entities) {
 
             // Set the name
             this.Name = name;
 
             // Set mod GUID
-            this.ModGUID = guid;
+            this.ModGUID = string.IsNullOrEmpty(guid) ? null : guid;
 
             // Load pbgid
             this.PBGID = ulong.Parse(xmlDocument["instance"]["uniqueid"].GetAttribute("value"));
@@ -73,9 +81,9 @@ namespace CoH2XML2JSON {
                     string entity = loadout_data.FindSubnode("instance_reference", "type").GetAttribute("value");
                     EBP ebp = entities.FirstOrDefault(x => entity.EndsWith(x.Name));
                     Cost[] dups = new Cost[num];
-                    Array.Fill(dups, ebp.Cost);
+                    Array.Fill(dups, ebp?.Cost ?? new Cost(0,0,0,0));
                     costList.AddRange(dups);
-                    squadLoadoutData.Add(new(ebp.Name, num));
+                    squadLoadoutData.Add(new(ebp?.Name ?? Path.GetFileNameWithoutExtension(entity), num));
                 }
                 this.SquadCost = new(costList.ToArray());
                 this.Entities = squadLoadoutData.ToArray();
@@ -87,7 +95,7 @@ namespace CoH2XML2JSON {
                 var nodes = squadAbilities.SelectNodes("//instance_reference[@name='ability']");
                 List<string> abps = new();
                 foreach (XmlNode ability in nodes) {
-                    abps.Add(ability.Attributes["value"].Value);
+                    abps.Add(Path.GetFileNameWithoutExtension(ability.Attributes["value"].Value));
                 }
                 if (abps.Count > 0) {
                     this.Abilities = abps.ToArray();
@@ -96,8 +104,7 @@ namespace CoH2XML2JSON {
 
             // Load squad loadout
             if (xmlDocument.SelectSingleNode(@"//template_reference[@name='squadexts'] [@value='sbpextensions\squad_veterancy_ext']") is XmlElement squadVet) {
-                var racedata = squadVet.SelectSingleNode("//group[@name='race_data']") as XmlElement;
-                var ranks = racedata.SelectNodes("//group[@name='veterancy_rank']");
+                var ranks = squadVet.SelectNodes("//group[@name='veterancy_rank']");
                 var ranks_data = new List<VeterancyLevel>();
                 foreach (XmlElement rank in ranks) {
                     ranks_data.Add(new(
@@ -106,6 +113,12 @@ namespace CoH2XML2JSON {
                         ));
                 }
                 this.Veterancy = ranks_data.ToArray();
+            }
+
+            // Load pickup data
+            if (xmlDocument.SelectSingleNode(@"//template_reference[@name='squadexts'] [@value='sbpextensions\squad_item_slot_ext']") is XmlElement squadItmes) {
+                this.CanPickupItems = squadItmes.FindSubnode("bool", "can_pick_up").GetAttribute("value") == bool.TrueString;
+                this.SlotPickupCapacity = int.Parse(squadItmes.FindSubnode("float", "num_slots").GetAttribute("value"));
             }
 
             // Determine if syncweapon (has team_weapon extension)

@@ -14,7 +14,7 @@ namespace CoH2XML2JSON {
 
         public UI Display { get; }
 
-        [DefaultValue("")]
+        [DefaultValue(null)]
         public string WPB { get; }
 
         [DefaultValue(0)]
@@ -26,7 +26,7 @@ namespace CoH2XML2JSON {
             this.Name = name;
 
             // Set mod GUID
-            this.ModGUID = guid;
+            this.ModGUID = string.IsNullOrEmpty(guid) ? null : guid;
 
             // Load pbgid
             this.PBGID = ulong.Parse(xmlDocument["instance"]["uniqueid"].GetAttribute("value"));
@@ -39,6 +39,9 @@ namespace CoH2XML2JSON {
 
             // Get weapon
             this.WPB = Path.GetFileNameWithoutExtension((xmlDocument.SelectSingleNode("//instance_reference[@name='weapon']") as XmlElement).GetAttribute("value"));
+            if (string.IsNullOrEmpty(this.WPB)) {
+                this.WPB = null;
+            }
 
         }
 

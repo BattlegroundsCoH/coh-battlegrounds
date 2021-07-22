@@ -25,11 +25,12 @@ namespace CoH2XML2JSON {
             foreach (XmlElement sub in e) {
                 if (sub.Name == type && sub.HasAttribute("name") && sub.GetAttribute("name") == name) {
                     return sub;
-                } else {
-                    var subsub = FindSubnode(sub, type, name);
-                    if (subsub is not null) {
-                        return subsub;
-                    }
+                }
+            }
+            foreach (XmlElement sub in e) { // Call on children of elements (but top-layer has priority)
+                var subsub = FindSubnode(sub, type, name);
+                if (subsub is not null) {
+                    return subsub;
                 }
             }
             return null;

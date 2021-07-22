@@ -25,7 +25,7 @@ namespace CoH2XML2JSON {
             this.Name = name;
 
             // Set mod GUID
-            this.ModGUID = guid;
+            this.ModGUID = string.IsNullOrEmpty(guid) ? null : guid;
 
             // Load pbgid
             this.PBGID = ulong.Parse(xmlDocument["instance"]["uniqueid"].GetAttribute("value"));

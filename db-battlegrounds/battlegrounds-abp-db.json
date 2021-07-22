@@ -1,211 +1,355 @@
 [
   {
-    "jsdbtype": "Battlegrounds.Game.Database.AbilityBlueprint",
-    "PBGID": "1073741824",
+    "Cost": {},
+    "Display": {
+      "LocaleName": "1",
+      "LocaleDescriptionLong": "13",
+      "LocaleDescriptionShort": "14",
+      "Icon": "Icons_buildings_building_common_radio_tower"
+    },
+    "Army": "NULL",
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
-    "Name": "bg_deploy_destination",
-    "LocaleName": "1",
-    "LocaleDescription": "13",
-    "Army": "battlegrounds_generic",
-    "Icon": "Icons_buildings_building_common_radio_tower",
-    "Cost": {
-      "jsdbtype": "Battlegrounds.Game.Gameplay.Cost",
-      "Manpower": "0",
-      "Munition": "0",
-      "Fuel": "0"
-    }
+    "PBGID": 1073741824,
+    "Name": "bg_deploy_destination"
   },
   {
-    "jsdbtype": "Battlegrounds.Game.Database.AbilityBlueprint",
-    "PBGID": "1073741823",
+    "Cost": {},
+    "Display": {
+      "LocaleName": "11036222",
+      "LocaleDescriptionLong": "11036223",
+      "LocaleDescriptionShort": "11050157",
+      "Icon": "Icons_abilities_ability_soviet_transfer_orders"
+    },
+    "Army": "NULL",
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
-    "Name": "bg_withdraw_unit",
-    "LocaleName": "11036222",
-    "LocaleDescription": "11036223",
-    "Army": "battlegrounds_generic",
-    "Icon": "Icons_abilities_ability_soviet_transfer_orders",
-    "Cost": {
-      "jsdbtype": "Battlegrounds.Game.Gameplay.Cost",
-      "Manpower": "0",
-      "Munition": "0",
-      "Fuel": "0"
-    }
+    "PBGID": 1073741823,
+    "Name": "bg_withdraw_unit"
   },
   {
-    "jsdbtype": "Battlegrounds.Game.Database.AbilityBlueprint",
-    "PBGID": "1073741826",
+    "Cost": {},
+    "Display": {
+      "LocaleName": "18",
+      "LocaleDescriptionLong": "19",
+      "LocaleDescriptionShort": "20",
+      "Icon": "Icons_tooltips_pick_up_item"
+    },
+    "Army": "NULL",
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
-    "Name": "transport_heavy_vehicle_bg",
-    "LocaleName": "18",
-    "LocaleDescription": "19",
-    "Army": "battlegrounds_generic",
-    "Icon": "Icons_tooltips_pick_up_item",
-    "Cost": {
-      "jsdbtype": "Battlegrounds.Game.Gameplay.Cost",
-      "Manpower": "0",
-      "Munition": "0",
-      "Fuel": "0"
-    }
+    "PBGID": 1073741826,
+    "Name": "transport_heavy_vehicle_bg"
   },
   {
-    "jsdbtype": "Battlegrounds.Game.Database.AbilityBlueprint",
-    "PBGID": "1073741827",
+    "Cost": {},
+    "Display": {
+      "LocaleName": "21",
+      "LocaleDescriptionLong": "23",
+      "LocaleDescriptionShort": "22",
+      "Icon": "Icons_abilities_ability_german_lockdown_enable"
+    },
+    "Army": "NULL",
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
-    "Name": "detach_tow_bg",
-    "LocaleName": "21",
-    "LocaleDescription": "23",
-    "Army": "battlegrounds_generic",
-    "Icon": "Icons_abilities_ability_german_lockdown_enable",
-    "Cost": {
-      "jsdbtype": "Battlegrounds.Game.Gameplay.Cost",
-      "Manpower": "0",
-      "Munition": "0",
-      "Fuel": "0"
-    }
+    "PBGID": 1073741827,
+    "Name": "detach_tow_bg"
   },
   {
-    "jsdbtype": "Battlegrounds.Game.Database.AbilityBlueprint",
-    "PBGID": "1073741834",
+    "Cost": {},
+    "Display": {
+      "LocaleName": "48",
+      "LocaleDescriptionLong": "49",
+      "LocaleDescriptionShort": "50",
+      "Icon": "Icons_commands_icon_command_cancel"
+    },
+    "Army": "NULL",
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
-    "Name": "vehicle_abandon_vehicle_bg",
-    "LocaleName": "11072165",
-    "LocaleDescription": "11072161",
-    "Army": "battlegrounds_generic",
-    "Icon": "Icons_abilities_ability_aef_abandon_vehicle",
-    "Cost": {
-      "jsdbtype": "Battlegrounds.Game.Gameplay.Cost",
-      "Manpower": "0",
-      "Munition": "0",
-      "Fuel": "0"
-    }
+    "PBGID": 1073741847,
+    "Name": "detach_weapon_tow_bg"
   },
   {
-    "jsdbtype": "Battlegrounds.Game.Database.AbilityBlueprint",
-    "PBGID": "1073741825",
+    "Cost": {},
+    "Display": {
+      "LocaleName": "11072165",
+      "LocaleDescriptionLong": "11072161",
+      "LocaleDescriptionShort": "11072163",
+      "Icon": "Icons_abilities_ability_aef_abandon_vehicle"
+    },
+    "Army": "NULL",
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
-    "Name": "vehicle_decrew_vehicle_crew_bg",
-    "LocaleName": "11072165",
-    "LocaleDescription": "11072161",
-    "Army": "battlegrounds_generic",
-    "Icon": "Icons_abilities_ability_aef_abandon_vehicle",
-    "Cost": {
-      "jsdbtype": "Battlegrounds.Game.Gameplay.Cost",
-      "Manpower": "0",
-      "Munition": "0",
-      "Fuel": "0"
-    }
+    "PBGID": 1073741834,
+    "Name": "vehicle_abandon_vehicle_bg"
   },
   {
-    "jsdbtype": "Battlegrounds.Game.Database.AbilityBlueprint",
-    "PBGID": "1073741835",
+    "Cost": {},
+    "Display": {
+      "LocaleName": "11072165",
+      "LocaleDescriptionLong": "11072161",
+      "LocaleDescriptionShort": "11072163",
+      "Icon": "Icons_abilities_ability_aef_abandon_vehicle"
+    },
+    "Army": "NULL",
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
-    "Name": "merge_ability_bg",
-    "LocaleName": "11030555",
-    "LocaleDescription": "11030556",
+    "PBGID": 1073741825,
+    "Name": "vehicle_decrew_vehicle_crew_bg"
+  },
+  {
+    "Cost": {
+      "Munition": 30
+    },
+    "Display": {
+      "LocaleName": "11007411",
+      "LocaleDescriptionLong": "11007409",
+      "LocaleDescriptionShort": "11039272",
+      "Icon": "Icons_abilities_ability_soviet_flare"
+    },
+    "Army": "german",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741843,
+    "Name": "german_mortar_fire_flares_ability_bg"
+  },
+  {
+    "Cost": {},
+    "Display": {
+      "LocaleName": "11030555",
+      "LocaleDescriptionLong": "11030556",
+      "LocaleDescriptionShort": "11039267",
+      "Icon": "Icons_abilities_ability_soviet_merge"
+    },
     "Army": "soviet",
-    "Icon": "Icons_abilities_ability_soviet_merge",
-    "Cost": {
-      "jsdbtype": "Battlegrounds.Game.Gameplay.Cost",
-      "Manpower": "0",
-      "Munition": "0",
-      "Fuel": "0"
-    }
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741835,
+    "Name": "merge_ability_bg"
   },
   {
-    "jsdbtype": "Battlegrounds.Game.Database.AbilityBlueprint",
-    "PBGID": "1073741833",
-    "ModGUID": "142b113740474c82a60b0a428bd553d5",
-    "Name": "conscript_oorah_bg",
-    "LocaleName": "11046520",
-    "LocaleDescription": "11046521",
-    "Army": "soviet",
-    "Icon": "Icons_abilities_ability_soviet_oorah",
     "Cost": {
-      "jsdbtype": "Battlegrounds.Game.Gameplay.Cost",
-      "Manpower": "0",
-      "Munition": "15",
-      "Fuel": "0"
-    }
+      "Munition": 15
+    },
+    "Display": {
+      "LocaleName": "11007722",
+      "LocaleDescriptionLong": "11007723",
+      "LocaleDescriptionShort": "11039281",
+      "Icon": "Icons_abilities_ability_soviet_oorah"
+    },
+    "Army": "soviet",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741833,
+    "Name": "conscript_oorah_bg"
   },
   {
-    "jsdbtype": "Battlegrounds.Game.Database.AbilityBlueprint",
-    "PBGID": "1073741831",
-    "ModGUID": "142b113740474c82a60b0a428bd553d5",
-    "Name": "anti_tank_grenade_bg",
-    "LocaleName": "11025826",
-    "LocaleDescription": "11025827",
-    "Army": "soviet",
-    "Icon": "Icons_abilities_ability_soviet_rpg_43_at_grenade",
     "Cost": {
-      "jsdbtype": "Battlegrounds.Game.Gameplay.Cost",
-      "Manpower": "0",
-      "Munition": "25",
-      "Fuel": "0"
-    }
+      "Munition": 25
+    },
+    "Display": {
+      "LocaleName": "11007164",
+      "LocaleDescriptionLong": "11007163",
+      "LocaleDescriptionShort": "11039177",
+      "Icon": "Icons_abilities_ability_german_panzerfaust"
+    },
+    "Army": "german",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741846,
+    "Name": "grenadier_panzerfaust_bg"
   },
   {
-    "jsdbtype": "Battlegrounds.Game.Database.AbilityBlueprint",
-    "PBGID": "1073741828",
-    "ModGUID": "142b113740474c82a60b0a428bd553d5",
-    "Name": "conscript_molotov_cocktail_bg",
-    "LocaleName": "11006607",
-    "LocaleDescription": "11006747",
-    "Army": "soviet",
-    "Icon": "Icons_abilities_ability_soviet_molotov_cocktail",
     "Cost": {
-      "jsdbtype": "Battlegrounds.Game.Gameplay.Cost",
-      "Manpower": "0",
-      "Munition": "20",
-      "Fuel": "0"
-    }
+      "Munition": 30
+    },
+    "Display": {
+      "LocaleName": "11009042",
+      "LocaleDescriptionLong": "11009043",
+      "LocaleDescriptionShort": "11038417",
+      "Icon": "Icons_abilities_ability_german_rifle_grenade_shot"
+    },
+    "Army": "german",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741845,
+    "Name": "grenadier_rifle_grenade_ability_bg"
   },
   {
-    "jsdbtype": "Battlegrounds.Game.Database.AbilityBlueprint",
-    "PBGID": "1073741829",
-    "ModGUID": "142b113740474c82a60b0a428bd553d5",
-    "Name": "rgd_1_smoke_grenade_bg",
-    "LocaleName": "11032146",
-    "LocaleDescription": "11032147",
-    "Army": "soviet",
-    "Icon": "Icons_abilities_ability_soviet_rgd_1_smoke_grenade",
     "Cost": {
-      "jsdbtype": "Battlegrounds.Game.Gameplay.Cost",
-      "Manpower": "0",
-      "Munition": "15",
-      "Fuel": "0"
-    }
+      "Munition": 35
+    },
+    "Display": {
+      "LocaleName": "11007182",
+      "LocaleDescriptionLong": "11007183",
+      "LocaleDescriptionShort": "11039147",
+      "Icon": "Icons_abilities_ability_german_bundled_grenade"
+    },
+    "Army": "german",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741844,
+    "Name": "panzer_grenadier_bundled_grenade_bg"
   },
   {
-    "jsdbtype": "Battlegrounds.Game.Database.AbilityBlueprint",
-    "PBGID": "1073741830",
-    "ModGUID": "142b113740474c82a60b0a428bd553d5",
-    "Name": "rg_42_anti_personnel_grenade_bg",
-    "LocaleName": "11008244",
-    "LocaleDescription": "11008245",
+    "Cost": {},
+    "Display": {
+      "LocaleName": "46",
+      "LocaleDescriptionLong": "0",
+      "LocaleDescriptionShort": "0"
+    },
     "Army": "soviet",
-    "Icon": "Icons_abilities_ability_soviet_rg_42_grenade",
-    "Cost": {
-      "jsdbtype": "Battlegrounds.Game.Gameplay.Cost",
-      "Manpower": "0",
-      "Munition": "30",
-      "Fuel": "0"
-    }
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741836,
+    "Name": "soviet_paratrooper_setpos"
   },
   {
-    "jsdbtype": "Battlegrounds.Game.Database.AbilityBlueprint",
-    "PBGID": "1073741832",
-    "ModGUID": "142b113740474c82a60b0a428bd553d5",
-    "Name": "satchel_charge_throw_ability_bg",
-    "LocaleName": "11145736",
-    "LocaleDescription": "11140709",
+    "Cost": {},
+    "Display": {
+      "LocaleName": "0",
+      "LocaleDescriptionLong": "0",
+      "LocaleDescriptionShort": "0"
+    },
     "Army": "soviet",
-    "Icon": "Icons_abilities_ability_soviet_satchel_charge",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741839,
+    "Name": "soviet_air_bombing_run"
+  },
+  {
+    "Cost": {},
+    "Display": {
+      "LocaleName": "0",
+      "LocaleDescriptionLong": "0",
+      "LocaleDescriptionShort": "0"
+    },
+    "Army": "soviet",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741840,
+    "Name": "soviet_air_infantry_overwatch"
+  },
+  {
+    "Cost": {},
+    "Display": {
+      "LocaleName": "0",
+      "LocaleDescriptionLong": "0",
+      "LocaleDescriptionShort": "0"
+    },
+    "Army": "soviet",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741837,
+    "Name": "soviet_air_recon"
+  },
+  {
+    "Cost": {},
+    "Display": {
+      "LocaleName": "0",
+      "LocaleDescriptionLong": "0",
+      "LocaleDescriptionShort": "0"
+    },
+    "Army": "soviet",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741838,
+    "Name": "soviet_air_strafe"
+  },
+  {
+    "Cost": {},
+    "Display": {
+      "LocaleName": "0",
+      "LocaleDescriptionLong": "0",
+      "LocaleDescriptionShort": "0"
+    },
+    "Army": "soviet",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741841,
+    "Name": "soviet_air_vehicle_overwatch"
+  },
+  {
+    "Cost": {},
+    "Display": {
+      "LocaleName": "0",
+      "LocaleDescriptionLong": "0",
+      "LocaleDescriptionShort": "0"
+    },
+    "Army": "soviet",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741842,
+    "Name": "soviet_hunt_tarrget"
+  },
+  {
     "Cost": {
-      "jsdbtype": "Battlegrounds.Game.Gameplay.Cost",
-      "Manpower": "0",
-      "Munition": "45",
-      "Fuel": "0"
-    }
+      "Munition": 25
+    },
+    "Display": {
+      "LocaleName": "11025826",
+      "LocaleDescriptionLong": "11025827",
+      "LocaleDescriptionShort": "11038229",
+      "Icon": "Icons_abilities_ability_soviet_rpg_43_at_grenade"
+    },
+    "Army": "soviet",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741831,
+    "Name": "anti_tank_grenade_bg"
+  },
+  {
+    "Cost": {
+      "Munition": 20
+    },
+    "Display": {
+      "LocaleName": "11006607",
+      "LocaleDescriptionLong": "11006747",
+      "LocaleDescriptionShort": "11038231",
+      "Icon": "Icons_abilities_ability_soviet_molotov_cocktail"
+    },
+    "Army": "soviet",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741828,
+    "Name": "conscript_molotov_cocktail_bg"
+  },
+  {
+    "Cost": {
+      "Munition": 15
+    },
+    "Display": {
+      "LocaleName": "11032146",
+      "LocaleDescriptionLong": "11032147",
+      "LocaleDescriptionShort": "11039253",
+      "Icon": "Icons_abilities_ability_soviet_rgd_1_smoke_grenade"
+    },
+    "Army": "soviet",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741829,
+    "Name": "rgd_1_smoke_grenade_bg"
+  },
+  {
+    "Cost": {
+      "Munition": 30
+    },
+    "Display": {
+      "LocaleName": "11008244",
+      "LocaleDescriptionLong": "11008245",
+      "LocaleDescriptionShort": "11008246",
+      "Icon": "Icons_abilities_ability_soviet_rg_42_grenade"
+    },
+    "Army": "soviet",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741830,
+    "Name": "rg_42_anti_personnel_grenade_bg"
+  },
+  {
+    "Cost": {
+      "Munition": 45
+    },
+    "Display": {
+      "LocaleName": "11145736",
+      "LocaleDescriptionLong": "11140709",
+      "LocaleDescriptionShort": "11145593",
+      "Icon": "Icons_abilities_ability_soviet_satchel_charge"
+    },
+    "Army": "soviet",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741832,
+    "Name": "satchel_charge_throw_ability_bg"
+  },
+  {
+    "Cost": {
+      "Munition": 35
+    },
+    "Display": {
+      "LocaleName": "11007466",
+      "LocaleDescriptionLong": "11007483",
+      "LocaleDescriptionShort": "11038386",
+      "Icon": "Icons_abilities_ability_soviet_high_explosive_rounds"
+    },
+    "Army": "soviet",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741848,
+    "Name": "at_76mm_he_barrage_ability_bg"
   }
-  ]
-  
+]

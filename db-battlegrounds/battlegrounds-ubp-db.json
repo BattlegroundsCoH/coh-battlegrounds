@@ -1,89 +1,123 @@
 [
   {
-    "jsdbtype": "Battlegrounds.Game.Database.UpgradeBlueprint",
-    "PBGID": "1073741823",
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741823,
     "Name": "bg_verify",
-    "LocaleName": "0",
-    "LocaleDescription": "0",
-    "Icon": "",
-    "Cost": {
-      "jsdbtype": "Battlegrounds.Game.Gameplay.Cost",
-      "Manpower": "0",
-      "Munition": "0",
-      "Fuel": "0"
+    "Display": {
+      "LocaleName": "0",
+      "LocaleDescriptionLong": "0",
+      "LocaleDescriptionShort": "0"
     },
-    "SlotItems": []
+    "Cost": {}
   },
   {
-    "jsdbtype": "Battlegrounds.Game.Database.UpgradeBlueprint",
-    "PBGID": "1073741827",
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741827,
     "Name": "is_towed",
-    "LocaleName": "0",
-    "LocaleDescription": "0",
-    "Icon": "",
-    "Cost": {
-      "jsdbtype": "Battlegrounds.Game.Gameplay.Cost",
-      "Manpower": "0",
-      "Munition": "0",
-      "Fuel": "0"
+    "Display": {
+      "LocaleName": "0",
+      "LocaleDescriptionLong": "0",
+      "LocaleDescriptionShort": "0"
     },
-    "SlotItems": []
+    "Cost": {},
+    "OwnerType": "self"
   },
   {
-    "jsdbtype": "Battlegrounds.Game.Database.UpgradeBlueprint",
-    "PBGID": "1073741826",
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741826,
     "Name": "is_towing",
-    "LocaleName": "0",
-    "LocaleDescription": "0",
-    "Icon": "",
-    "Cost": {
-      "jsdbtype": "Battlegrounds.Game.Gameplay.Cost",
-      "Manpower": "0",
-      "Munition": "0",
-      "Fuel": "0"
+    "Display": {
+      "LocaleName": "0",
+      "LocaleDescriptionLong": "0",
+      "LocaleDescriptionShort": "0"
     },
-    "SlotItems": []
+    "Cost": {},
+    "OwnerType": "self"
   },
   {
-    "jsdbtype": "Battlegrounds.Game.Database.UpgradeBlueprint",
-    "PBGID": "1073741825",
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
-    "Name": "dp-28_lmg_upgrade_bg",
-    "LocaleName": "15",
-    "LocaleDescription": "16",
-    "Icon": "Icons_upgrades_icon_upgrade_soviet_dp28_lmg",
-    "Cost": {
-      "jsdbtype": "Battlegrounds.Game.Gameplay.Cost",
-      "Manpower": "0",
-      "Munition": "75",
-      "Fuel": "0"
+    "PBGID": 1073741829,
+    "Name": "phase_alpha",
+    "Display": {
+      "LocaleName": "52",
+      "LocaleDescriptionLong": "0",
+      "LocaleDescriptionShort": "0"
     },
+    "Cost": {},
+    "OwnerType": "player"
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741830,
+    "Name": "phase_beta",
+    "Display": {
+      "LocaleName": "53",
+      "LocaleDescriptionLong": "0",
+      "LocaleDescriptionShort": "0"
+    },
+    "Cost": {},
+    "OwnerType": "player"
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741831,
+    "Name": "phase_gamma",
+    "Display": {
+      "LocaleName": "54",
+      "LocaleDescriptionLong": "0",
+      "LocaleDescriptionShort": "0"
+    },
+    "Cost": {},
+    "OwnerType": "player"
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741828,
+    "Name": "phase_initial",
+    "Display": {
+      "LocaleName": "0",
+      "LocaleDescriptionLong": "0",
+      "LocaleDescriptionShort": "0"
+    },
+    "Cost": {},
+    "OwnerType": "player"
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741825,
+    "Name": "dp-28_lmg_upgrade_bg",
+    "Display": {
+      "LocaleName": "15",
+      "LocaleDescriptionLong": "16",
+      "LocaleDescriptionShort": "17",
+      "Icon": "Icons_upgrades_icon_upgrade_soviet_dp28_lmg"
+    },
+    "Cost": {
+      "Munition": 75,
+      "FieldTime": 40
+    },
+    "OwnerType": "self",
     "SlotItems": [
       "dp-28_light_machine_gun_package_bg"
-    ],
-    "Symbol": "Icons_weapons_weapon_dp_28_lmg"
+    ]
   },
   {
-    "jsdbtype": "Battlegrounds.Game.Database.UpgradeBlueprint",
-    "PBGID": "1073741824",
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741824,
     "Name": "ppsh-41_sub_machine_gun_upgrade_bg",
-    "LocaleName": "11008975",
-    "LocaleDescription": "11008976",
-    "Icon": "Icons_upgrades_icon_upgrade_soviet_conscript_assault_package",
-    "Cost": {
-      "jsdbtype": "Battlegrounds.Game.Gameplay.Cost",
-      "Manpower": "0",
-      "Munition": "60",
-      "Fuel": "0"
+    "Display": {
+      "LocaleName": "11008975",
+      "LocaleDescriptionLong": "11008976",
+      "LocaleDescriptionShort": "11038814",
+      "Icon": "Icons_upgrades_icon_upgrade_soviet_conscript_assault_package"
     },
+    "Cost": {
+      "Munition": 60,
+      "FieldTime": 20
+    },
+    "OwnerType": "self",
     "SlotItems": [
       "ppsh41_assault_package_dummy_item_bg"
-    ],
-    "Symbol": "Icons_weapons_weapon_pps"
+    ]
   }
-  ]
-  
+]

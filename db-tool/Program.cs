@@ -122,7 +122,7 @@ namespace CoH2XML2JSON {
                         proccessedFiles++;
                     }
 
-                    File.WriteAllText(fileName, JsonSerializer.Serialize(entities.ToArray()));
+                    File.WriteAllText(fileName, JsonSerializer.Serialize(entities.ToArray(), serializerOptions));
 
                     Console.WriteLine("Ebps database created with " + proccessedFiles.ToString() + "/" + filesToProcces.ToString() + " items added!");
                 }
@@ -145,61 +145,22 @@ namespace CoH2XML2JSON {
                 } else {
                     int filesToProcces = Directory.GetFiles(instancesPath + @"\critical", "*.xml", SearchOption.AllDirectories).Length;
                     int proccessedFiles = 0;
+                    List<Critical> criticals = new();
 
-                    using (FileStream fs = File.Create(fileName)) {
-                        using (StreamWriter sw = new StreamWriter(fs)) {
-                            sw.WriteLine("[");
-                            foreach (string path in Directory.GetFiles(instancesPath + @"\critical", "*xml", SearchOption.AllDirectories)) {
-                                XmlDocument document = new XmlDocument();
-                                document.Load(path);
-                                /*
-                                string jsdbType = "Battlegrounds.Game.Database.CriticalBlueprint";
-
-                                XmlElement e_pbgid = document["instance"]["uniqueid"];
-                                string pbgid = e_pbgid.GetAttribute("value");
-
-                                string name = path[(path.LastIndexOf(@"\") + 1)..];
-                                name = name.Remove(name.Length - 4);
-
-                                string localeName = "";
-                                string localeDescription = "";
-                                string icon = "";
-
-                                if (document.SelectSingleNode(@"//template_reference[@name='ui_info'] [@value='tables\ui_info']") != null) {
-                                    XmlElement e_localeName = document.SelectSingleNode("//locstring[@name='screen_name']") as XmlElement;
-                                    localeName = e_localeName.GetAttribute("value");
-
-                                    XmlElement e_localeDescription = document.SelectSingleNode("//locstring[@name='help_text']") as XmlElement;
-                                    localeDescription = e_localeDescription.GetAttribute("value");
-
-                                    XmlElement e_icon = document.SelectSingleNode("//icon[@name='icon_name']") as XmlElement;
-                                    icon = e_icon.GetAttribute("value");
-                                }
-
-                                dynamic critical = new JObject();
-                                critical.jsdbtype = jsdbType;
-                                critical.PBGID = pbgid;
-                                critical.ModGUID = modguid;
-                                critical.Name = name;
-                                critical.LocaleName = localeName;
-                                critical.LocaleDescription = localeDescription;
-                                critical.Icon = icon;
-
-                                string criticalJson = JsonConvert.SerializeObject(critical, Newtonsoft.Json.Formatting.Indented);
-                                */
-                                proccessedFiles++;
-
-                                if (proccessedFiles < filesToProcces) {
-                                    //sw.WriteLine(criticalJson + ",");
-                                } else {
-                                    //sw.WriteLine(criticalJson);
-                                }
-
-                            }
-                            sw.WriteLine("]");
+                    foreach (string path in Directory.GetFiles(instancesPath + @"\critical", "*xml", SearchOption.AllDirectories)) {
+                        string name = path[(path.LastIndexOf(@"\") + 1)..^4];
+                        Console.WriteLine(name);
+                        XmlDocument document = new XmlDocument();
+                        document.Load(path);
+                        try {
+                            var critical = new Critical(document, modguid, name);
+                            criticals.Add(critical);
+                        } catch (Exception) {
+                            Console.WriteLine("Failed to parse critical: " + name);
                         }
+                        proccessedFiles++;
                     }
-
+                    File.WriteAllText(fileName, JsonSerializer.Serialize(criticals.ToArray(), serializerOptions));
                     Console.WriteLine("Critical database created with " + proccessedFiles.ToString() + "/" + filesToProcces.ToString() + " items added!");
                 }
             } catch (Exception e) {
@@ -258,97 +219,21 @@ namespace CoH2XML2JSON {
                 } else {
                     int filesToProcces = Directory.GetFiles(instancesPath + @"\upgrade", "*.xml", SearchOption.AllDirectories).Length;
                     int proccessedFiles = 0;
-
-                    using (FileStream fs = File.Create(fileName)) {
-                        using (StreamWriter sw = new StreamWriter(fs)) {
-                            sw.WriteLine("[");
-                            foreach (string path in Directory.GetFiles(instancesPath + @"\upgrade", "*xml", SearchOption.AllDirectories)) {
-                                XmlDocument document = new XmlDocument();
-                                document.Load(path);
-                                /*
-                                string jsdbType = "Battlegrounds.Game.Database.UpgradeBlueprint";
-
-                                XmlElement e_pbgid = document["instance"]["uniqueid"];
-                                string pbgid = e_pbgid.GetAttribute("value");
-
-                                string name = path[(path.LastIndexOf(@"\") + 1)..];
-                                name = name.Remove(name.Length - 4);
-
-                                string localeName = "";
-                                string localeDescription = "";
-                                string icon = "";
-
-                                if (document.SelectSingleNode(@"//group[@name='ui_info']") != null) {
-                                    XmlElement e_localeName = document.SelectSingleNode("//locstring[@name='screen_name']") as XmlElement;
-                                    localeName = e_localeName.GetAttribute("value");
-
-                                    XmlElement e_localeDescription = document.SelectSingleNode("//locstring[@name='help_text']") as XmlElement;
-                                    localeDescription = e_localeDescription.GetAttribute("value");
-
-                                    XmlElement e_icon = document.SelectSingleNode("//icon[@name='icon_name']") as XmlElement;
-                                    icon = e_icon.GetAttribute("value");
-                                }
-
-                                string costJsdbType = "Battlegrounds.Game.Gameplay.Cost";
-
-                                string costManpower = "0";
-                                string costMunition = "0";
-                                string costFuel = "0";
-
-                                if (document.SelectSingleNode(@"//group[@name='time_cost']") != null) {
-                                    XmlElement e_manpower = document.SelectSingleNode("//float[@name='manpower']") as XmlElement;
-                                    costManpower = e_manpower.GetAttribute("value");
-
-                                    XmlElement e_munition = document.SelectSingleNode("//float[@name='munition']") as XmlElement;
-                                    costMunition = e_munition.GetAttribute("value");
-
-                                    XmlElement e_fuel = document.SelectSingleNode("//float[@name='fuel']") as XmlElement;
-                                    costFuel = e_fuel.GetAttribute("value");
-                                }
-
-                                List<string> slotItems = new List<string>();
-                                XmlNodeList e_slotItems = document.SelectNodes("//instance_reference[@name='slot_item']");
-                                foreach (XmlNode slotItem in e_slotItems) {
-                                    slotItems.Add(Path.GetFileNameWithoutExtension(slotItem.Attributes["value"].Value));
-                                }
-                                IEnumerable<string> uniqueSlotItems = slotItems.Distinct<string>();
-
-                                dynamic upgrade = new JObject();
-                                upgrade.jsdbtype = jsdbType;
-                                upgrade.PBGID = pbgid;
-                                upgrade.ModGUID = modguid;
-                                upgrade.Name = name;
-                                upgrade.LocaleName = localeName;
-                                upgrade.LocaleDescription = localeDescription;
-                                upgrade.Icon = icon;
-                                upgrade.Cost = new JObject();
-                                upgrade.Cost.jsdbtype = costJsdbType;
-                                upgrade.Cost.Manpower = costManpower;
-                                upgrade.Cost.Munition = costMunition;
-                                upgrade.Cost.Fuel = costFuel;
-                                upgrade.SlotItems = new JArray(uniqueSlotItems);
-
-                                if (slotItems.FirstOrDefault() is string item) {
-                                    if (slotItemSymbols.TryGetValue(item, out string itemSymbol)) {
-                                        upgrade.Symbol = itemSymbol;
-                                    }
-                                }
-
-                                string upgradeJson = JsonConvert.SerializeObject(upgrade, Newtonsoft.Json.Formatting.Indented);
-
-                                proccessedFiles++;
-
-                                if (proccessedFiles < filesToProcces) {
-                                    sw.WriteLine(upgradeJson + ",");
-                                } else {
-                                    sw.WriteLine(upgradeJson);
-                                }
-                                */
-                            }
-                            sw.WriteLine("]");
+                    List<UBP> upgrades = new();
+                    foreach (string path in Directory.GetFiles(instancesPath + @"\upgrade", "*xml", SearchOption.AllDirectories)) {
+                        string name = path[(path.LastIndexOf(@"\") + 1)..^4];
+                        Console.WriteLine(name);
+                        XmlDocument document = new XmlDocument();
+                        document.Load(path);
+                        try {
+                            var upgrade = new UBP(document, modguid, name) { };
+                            upgrades.Add(upgrade);
+                        } catch (Exception) {
+                            Console.WriteLine("Failed to parse entity: " + name);
                         }
+                        proccessedFiles++;
                     }
-
+                    File.WriteAllText(fileName, JsonSerializer.Serialize(upgrades.ToArray(), serializerOptions));
                     Console.WriteLine("Upgrade database created with " + proccessedFiles.ToString() + "/" + filesToProcces.ToString() + " items added!");
                 }
 
@@ -397,6 +282,45 @@ namespace CoH2XML2JSON {
 
         }
 
+        private static void CreateWeaponDatabase() {
+            string fileName = dirPath + @"\weapons_database.json";
+
+            try {
+                if (File.Exists(fileName)) {
+                    File.Delete(fileName);
+                }
+
+                if (!Directory.Exists(instancesPath + @"\weapon")) {
+                    Console.WriteLine("ERROR: \"weapon\" folder not found!");
+                } else {
+                    int filesToProcces = Directory.GetFiles(instancesPath + @"\weapon", "*.xml", SearchOption.AllDirectories).Length;
+                    int proccessedFiles = 0;
+                    List<WBP> wbps = new();
+                    foreach (string path in Directory.GetFiles(instancesPath + @"\weapon", "*xml", SearchOption.AllDirectories)) {
+                        string name = path[(path.LastIndexOf(@"\") + 1)..^4];
+                        Console.WriteLine(name);
+                        XmlDocument document = new XmlDocument();
+                        document.Load(path);
+                        try {
+                            var wbp = new WBP(document, modguid, name);
+                            wbps.Add(wbp);
+                        } catch (Exception) {
+                            Console.WriteLine("Failed to parse entity: " + name);
+                        }
+                        proccessedFiles++;
+                    }
+                    File.WriteAllText(fileName, JsonSerializer.Serialize(wbps.ToArray(), serializerOptions));
+
+                    Console.WriteLine("Weapons database created with " + proccessedFiles.ToString() + "/" + filesToProcces.ToString() + " items added!");
+                }
+
+            } catch (Exception e) {
+                Console.WriteLine(e.ToString());
+                Console.ReadLine();
+            }
+
+        }
+
         public static void Main(string[] args) {
 
             Console.WriteLine("Set path where you want the files to be created to: ");
@@ -434,7 +358,9 @@ namespace CoH2XML2JSON {
             CreateCriticalDatabase();
             CreateSlotItemDatabase();
             CreateUpgradeDatabase();
+            CreateWeaponDatabase();
 
+            Console.WriteLine();
             Console.WriteLine("Created databases - Press any key to exit");
             Console.Read();
 
