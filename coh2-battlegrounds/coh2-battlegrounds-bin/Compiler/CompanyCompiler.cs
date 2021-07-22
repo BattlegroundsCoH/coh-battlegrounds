@@ -4,6 +4,7 @@ using System.Collections.Immutable;
 using System.Linq;
 
 using Battlegrounds.Game.Database;
+using Battlegrounds.Game.Database.Extensions;
 using Battlegrounds.Game.DataCompany;
 using Battlegrounds.Game.Gameplay;
 using Battlegrounds.Util;
@@ -151,7 +152,7 @@ namespace Battlegrounds.Compiler {
             }
 
             // Get the squad cost
-            Cost fCost = squad.GetCost();
+            CostExtension fCost = squad.GetCost();
 
             builder.AppendLine($"cost = {{");
             builder.IncreaseIndent();

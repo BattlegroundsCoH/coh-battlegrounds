@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
-using Battlegrounds.Game.Gameplay;
+
+using Battlegrounds.Game.Database.Extensions;
+using Battlegrounds.Game.Database.Management;
 
 namespace Battlegrounds.Game.Database {
 
@@ -8,6 +10,14 @@ namespace Battlegrounds.Game.Database {
     /// </summary>
     public class UpgradeBlueprint : Blueprint {
 
+        /// <summary>
+        /// The unique PropertyBagGroupdID assigned to this blueprint.
+        /// </summary>
+        public override BlueprintUID PBGID { get; }
+
+        public override BlueprintType BlueprintType => BlueprintType.UBP;
+
+        public override string Name { get; }
         /// <summary>
         /// The UI symbol used in-game to show unit type
         /// </summary>
@@ -31,7 +41,7 @@ namespace Battlegrounds.Game.Database {
         /// <summary>
         /// The base <see cref="Gameplay.Cost"/> to field instances of the <see cref="SquadBlueprint"/>.
         /// </summary>
-        public Cost Cost { get; set; }
+        public CostExtension Cost { get; set; }
 
         /// <summary>
         /// The names of the granted <see cref="SlotItemBlueprint"/> by the <see cref="UpgradeBlueprint"/>.

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using Battlegrounds.Functional;
 using Battlegrounds.Game.Database;
 using Battlegrounds.Game.Database.Management;
@@ -34,8 +33,7 @@ namespace Battlegrounds.Game.DataCompany {
             // Our selection query
             bool selectQuery(Blueprint x) {
                 if (x is SquadBlueprint sbp) {
-                    string guid = sbp.ModGUID.Replace("-", "");
-                    return sbp.Army.CompareTo(army.Name) == 0 && ((borrowVanilla && guid.CompareTo(string.Empty) == 0) || (guid.CompareTo(tuningGUID) == 0));
+                    return sbp.Army == army.Name && (borrowVanilla && string.IsNullOrEmpty(sbp.PBGID.Mod)) || sbp.PBGID.Mod.GUID == tuningGUID;
                 } else {
                     return false;
                 }

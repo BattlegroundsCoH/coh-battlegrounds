@@ -6,6 +6,7 @@ using Battlegrounds.Functional;
 using Battlegrounds.Game.Database;
 using Battlegrounds.Game.Database.Management;
 using Battlegrounds.Game.Gameplay;
+using Battlegrounds.Modding;
 
 namespace Battlegrounds.Game.DataCompany {
     
@@ -19,7 +20,7 @@ namespace Battlegrounds.Game.DataCompany {
 
         byte m_vetrank;
         float m_vetexperience;
-        string m_modGuid;
+        ModGuid m_modGuid;
         SquadBlueprint m_blueprint;
         SquadBlueprint m_transportBlueprint;
         DeploymentMethod m_deploymentMethod;
@@ -39,7 +40,7 @@ namespace Battlegrounds.Game.DataCompany {
         /// New basic <see cref="UnitBuilder"/> instance of for building a <see cref="Squad"/>.
         /// </summary>
         public UnitBuilder() {
-            this.m_modGuid = string.Empty;
+            this.m_modGuid = ModGuid.BaseGame;
             this.m_blueprint = null;
             this.m_transportBlueprint = null;
             this.m_crewBuilder = null;
@@ -69,7 +70,7 @@ namespace Battlegrounds.Game.DataCompany {
             this.m_transportBlueprint = squad.SupportBlueprint as SquadBlueprint;
             this.m_deploymentPhase = squad.DeploymentPhase;
             this.m_deploymentMethod = squad.DeploymentMethod;
-            this.m_modGuid = string.Empty;
+            this.m_modGuid = ModGuid.BaseGame;
             
             if (squad.Crew != null) {
                 this.m_crewBuilder = new UnitBuilder(squad.Crew, overrideIndex);
@@ -96,7 +97,7 @@ namespace Battlegrounds.Game.DataCompany {
             this.m_transportBlueprint = squad.SupportBlueprint as SquadBlueprint;
             this.m_deploymentPhase = squad.DeploymentPhase;
             this.m_deploymentMethod = squad.DeploymentMethod;
-            this.m_modGuid = string.Empty;
+            this.m_modGuid = ModGuid.BaseGame;
             if (squad.Crew != null) {
                 this.m_crewBuilder = new UnitBuilder(squad.Crew, true);
             }
@@ -108,6 +109,16 @@ namespace Battlegrounds.Game.DataCompany {
         /// <param name="guid">The GUID (in coh2 string format).</param>
         /// <returns>The modified instance the method is invoked with.</returns>
         public UnitBuilder SetModGUID(string guid) {
+            this.m_modGuid = ModGuid.FromGuid(guid);
+            return this;
+        }
+
+        /// <summary>
+        /// Set the tuning pack GUID this unit should be based on.
+        /// </summary>
+        /// <param name="guid">The GUID (in coh2 string format).</param>
+        /// <returns>The modified instance the method is invoked with.</returns>
+        public UnitBuilder SetModGUID(ModGuid guid) {
             this.m_modGuid = guid;
             return this;
         }

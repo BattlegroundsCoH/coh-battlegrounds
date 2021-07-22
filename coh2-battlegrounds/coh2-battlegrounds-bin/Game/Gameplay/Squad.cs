@@ -7,6 +7,7 @@ using Battlegrounds.Game.Database;
 using Battlegrounds.Game.Database.Management;
 using Battlegrounds.Json;
 using Battlegrounds.Functional;
+using Battlegrounds.Game.Database.Extensions;
 
 namespace Battlegrounds.Game.Gameplay {
 
@@ -332,9 +333,9 @@ namespace Battlegrounds.Game.Gameplay {
         /// </summary>
         /// <returns>The cost of the squad.</returns>
         /// <exception cref="NullReferenceException"/>
-        public Cost GetCost() {
+        public CostExtension GetCost() {
 
-            Cost c = new Cost(SBP.Cost.Manpower, SBP.Cost.Munitions, SBP.Cost.Fuel, SBP.Cost.FieldTime);
+            CostExtension c = new (this.SBP.Cost.Manpower, this.SBP.Cost.Munitions, this.SBP.Cost.Fuel, this.SBP.Cost.FieldTime);
             c = this.m_upgrades.Select(x => (x as UpgradeBlueprint).Cost).Aggregate(c, (a, b) => a + b);
 
             if (this.m_deployBp is SquadBlueprint sbp) {

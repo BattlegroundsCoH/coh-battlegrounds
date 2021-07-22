@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+
+using Battlegrounds.Game.Database.Extensions;
 using Battlegrounds.Game.Gameplay;
 using BattlegroundsApp.Resources;
 
@@ -10,7 +12,7 @@ namespace BattlegroundsApp.Controls.CompanyBuilderControls {
     public class OccupiedState : UnitSlotState {
         public string UnitName { get; set; }
         public string UnitIcon { get; set; }
-        public Cost UnitCost { get; set; }
+        public CostExtension UnitCost { get; set; }
         public byte UnitVeterancy { get; set; }
         public bool UnitIsTransported { get; set; }
 

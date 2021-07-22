@@ -3,6 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
+using Battlegrounds.Modding;
+
 namespace Battlegrounds.Game.Database.Management {
     
     /// <summary>
@@ -51,7 +53,14 @@ namespace Battlegrounds.Game.Database.Management {
         /// </summary>
         /// <param name="modguid">The mod GUID to filter by.</param>
         /// <returns>A new <see cref="BlueprintCollection{T}"/> containing only <typeparamref name="T"/> instances of specifiied mod GUID.</returns>
-        public BlueprintCollection<T> FilterByMod(string modguid) => new BlueprintCollection<T>(this.m_internalDictionary.Where(x => x.Value.ModGUID.CompareTo(modguid) == 0));
+        public BlueprintCollection<T> FilterByMod(ModGuid modguid) => new BlueprintCollection<T>(this.m_internalDictionary.Where(x => x.Value.PBGID.Mod == modguid));
+
+        /// <summary>
+        /// Get a new <see cref="BlueprintCollection{T}"/> where all <typeparamref name="T"/> instances belong to the specified mod GUID.
+        /// </summary>
+        /// <param name="modguid">The mod GUID to filter by.</param>
+        /// <returns>A new <see cref="BlueprintCollection{T}"/> containing only <typeparamref name="T"/> instances of specifiied mod GUID.</returns>
+        public BlueprintCollection<T> FilterByMod(string modguid) => new BlueprintCollection<T>(this.m_internalDictionary.Where(x => x.Value.PBGID.Mod == modguid));
 
         /// <summary>
         /// Get a new <see cref="BlueprintCollection{T}"/> where all <typeparamref name="T"/> instances matching the predicate.

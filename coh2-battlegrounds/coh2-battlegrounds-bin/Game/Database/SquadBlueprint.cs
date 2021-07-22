@@ -2,6 +2,8 @@
 using System.Linq;
 
 using Battlegrounds.Functional;
+using Battlegrounds.Game.Database.Extensions;
+using Battlegrounds.Game.Database.Management;
 using Battlegrounds.Game.Gameplay;
 using Battlegrounds.Json;
 
@@ -11,7 +13,16 @@ namespace Battlegrounds.Game.Database {
     /// Representation of a <see cref="Blueprint"/> with <see cref="Squad"/> specific values. Inherits from <see cref="Blueprint"/>. This class cannot be inherited.
     /// </summary>
     public sealed class SquadBlueprint : Blueprint {
-    
+
+        /// <summary>
+        /// The unique PropertyBagGroupdID assigned to this blueprint.
+        /// </summary>
+        public override BlueprintUID PBGID { get; }
+
+        public override BlueprintType BlueprintType => BlueprintType.SBP;
+
+        public override string Name { get; }
+
         /// <summary>
         /// The UI symbol used in-game to show unit type
         /// </summary>
@@ -38,9 +49,9 @@ namespace Battlegrounds.Game.Database {
         public string LocaleDescription { get; set; }
 
         /// <summary>
-        /// The base <see cref="Gameplay.Cost"/> to field instances of the <see cref="SquadBlueprint"/>.
+        /// The base <see cref="CostExtension"/> to field instances of the <see cref="SquadBlueprint"/>.
         /// </summary>
-        public Cost Cost { get; set; }
+        public CostExtension Cost { get; set; }
 
         /// <summary>
         /// Does the squad the bluperint is for, require a crew.

@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text.Json;
 using System.Text.RegularExpressions;
 
 using Battlegrounds.Functional;
-using Battlegrounds.Json;
 using Battlegrounds.Modding;
 
 using RegexMatch = System.Text.RegularExpressions.Match;
@@ -47,6 +47,11 @@ namespace Battlegrounds.Game.Database.Management {
         /// </summary>
         SBP = 32,
 
+        /// <summary>
+        /// Weapon Blueprint
+        /// </summary>
+        WBP = 64,
+
     }
 
     /// <summary>
@@ -65,6 +70,7 @@ namespace Battlegrounds.Game.Database.Management {
         private static Dictionary<BlueprintUID, Blueprint> __upgrades;
         private static Dictionary<BlueprintUID, Blueprint> __criticals;
         private static Dictionary<BlueprintUID, Blueprint> __slotitems;
+        private static Dictionary<BlueprintUID, Blueprint> __weapons;
 
         private static List<Dictionary<BlueprintUID, Blueprint>> __selfList;
 
@@ -80,6 +86,7 @@ namespace Battlegrounds.Game.Database.Management {
             __upgrades = new();
             __criticals = new();
             __slotitems = new();
+            __weapons = new();
 
             // Create list over self
             __selfList = new List<Dictionary<BlueprintUID, Blueprint>>() {
@@ -89,6 +96,7 @@ namespace Battlegrounds.Game.Database.Management {
                 __slotitems,
                 __squads,
                 __upgrades,
+                __weapons,
             };
 
             // Load the vcoh database
@@ -129,7 +137,8 @@ namespace Battlegrounds.Game.Database.Management {
                 }
             }
 
-            if (failCounter > 0 || loadCounter == 0) {
+            // Throw exceptions if anything failed or no database was loaded.
+            if (failCounter is not 0 || loadCounter is 0) {
                 throw new Exception("Failed to load one or more blueprint databases!");
             }
 
@@ -141,44 +150,27 @@ namespace Battlegrounds.Game.Database.Management {
             var modguid = ModGuid.FromGuid(guid);
 
             // Parse the file
-            var ls = JsonParser.Parse(jsonfile);
+            var jsonFileData = File.ReadAllText(jsonfile);
+            var typeArray = GetUnmanagedTypeFromBlueprintType(bType).MakeArrayType();
+            var blueprints = JsonSerializer.Deserialize(jsonFileData, typeArray) as Array;
 
             // If Empty
-            if (ls.Count == 0) {
+            if (blueprints.Length is 0) {
                 return false;
             }
 
-            // Make sure we got a json array
-            if (ls.First() is JsonArray content) {
+            // Get target array
+            var target = GetAllBlueprintsOfType(bType);
 
-                // Get the target dictionary
-                var targetDictionary = bType switch
-                {
-                    BlueprintType.ABP => __abilities,
-                    BlueprintType.CBP => __criticals,
-                    BlueprintType.EBP => __entities,
-                    BlueprintType.SBP => __squads,
-                    BlueprintType.UBP => __upgrades,
-                    BlueprintType.IBP => __slotitems,
-                    _ => throw new ArgumentException("Unkown blueprint type", nameof(bType)),
-                };
-
-                // Add all the found elements
-                foreach (IJsonElement element in content) {
-                    if (element is Blueprint bp) {
-                        bp.BlueprintType = bType;
-                        bp.ModGUID = ModGuid.FromGuid(guid);
-                        bp.ModPBGID = bpCntr++;
-                        targetDictionary.Add(new(bp.PBGID, modguid), bp);
-                    } else {
-                        return false;
-                    }
+            // Loop over blueprints
+            for (int i = 0; i < blueprints.Length; i++) {
+                if (blueprints.GetValue(i) is Blueprint bp) {
+                    bp.ModPBGID = bpCntr++;
+                    target.Add(bp.PBGID, bp);
                 }
-
-            } else {
-                return false;
             }
 
+            // Return true
             return true;
 
         }
@@ -235,7 +227,7 @@ namespace Battlegrounds.Game.Database.Management {
         /// <returns>The correct <see cref="Blueprint"/>, null if not found or a <see cref="ArgumentException"/> if <see cref="BlueprintType"/> was somehow invalid.</returns>
         public static Blueprint FromBlueprintName(string id, BlueprintType bType) {
             if (GetModGUID(id, out ModGuid guid, out string bp)) {
-                return GetAllBlueprintsOfType(bType).FirstOrDefault(x => x.Value?.ModGUID == guid.GUID && x.Value?.Name == bp).Value;
+                return GetAllBlueprintsOfType(bType).FirstOrDefault(x => x.Value?.PBGID.Mod == guid && x.Value?.Name == bp).Value;
             }
             return GetAllBlueprintsOfType(bType).FirstOrDefault(x => x.Value?.Name == id).Value;
         }
@@ -252,25 +244,6 @@ namespace Battlegrounds.Game.Database.Management {
             => (Bp)FromBlueprintName(bpName, BlueprintTypeFromType<Bp>());
 
         /// <summary>
-        /// Dereference a <see cref="Blueprint"/> reference from a json reference string of the form "BPT:BPName".
-        /// </summary>
-        /// <param name="jsonReference">The json reference string to dereference.</param>
-        /// <returns>The <see cref="Blueprint"/> instance matching the reference in the database.</returns>
-        /// <exception cref="ArgumentException"/>
-        /// <exception cref="ArgumentNullException"/>
-        /// <exception cref="ArgumentOutOfRangeException"/>
-        /// <exception cref="OverflowException"/>
-        /// <exception cref="FormatException"/>
-        public static IJsonObject JsonDereference(string jsonReference) {
-            BlueprintType type = (BlueprintType)Enum.Parse(typeof(BlueprintType), jsonReference.Substring(0, 3));
-            if (ushort.TryParse(jsonReference[4..], out ushort result)) {
-                return FromPbgId(result, type);
-            } else {
-                return FromBlueprintName(jsonReference[4..], type);
-            }
-        }
-
-        /// <summary>
         /// 
         /// </summary>
         /// <param name="type"></param>
@@ -282,7 +255,24 @@ namespace Battlegrounds.Game.Database.Management {
             BlueprintType.SBP => __squads,
             BlueprintType.UBP => __upgrades,
             BlueprintType.IBP => __slotitems,
+            BlueprintType.WBP => __weapons,
             _ => throw new ArgumentException(null, nameof(type)),
+        };
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        public static Type GetUnmanagedTypeFromBlueprintType(BlueprintType type) => type switch {
+            BlueprintType.ABP => typeof(AbilityBlueprint),
+            BlueprintType.CBP => typeof(CriticalBlueprint),
+            BlueprintType.EBP => typeof(EntityBlueprint),
+            BlueprintType.SBP => typeof(SquadBlueprint),
+            BlueprintType.UBP => typeof(UpgradeBlueprint),
+            BlueprintType.IBP => typeof(SlotItemBlueprint),
+            BlueprintType.WBP => typeof(WeaponBlueprint),
+            _ => throw new ArgumentException($"Cannot get blueprint type of '{type}'", nameof(type))
         };
 
         /// <summary>
@@ -341,6 +331,8 @@ namespace Battlegrounds.Game.Database.Management {
                 return BlueprintType.CBP;
             } else if (typeof(T) == typeof(UpgradeBlueprint)) {
                 return BlueprintType.UBP;
+            } else if (typeof(T) == typeof(WeaponBlueprint)) {
+                return BlueprintType.WBP;
             } else {
                 throw new ArgumentException("Invalid type argument");
             }
