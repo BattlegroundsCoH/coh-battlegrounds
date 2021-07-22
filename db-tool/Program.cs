@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Xml;
 using System.IO;
-using System.Linq;
 using System.Collections.Generic;
 using System.Text.Json;
 
 namespace CoH2XML2JSON {
-    
+
+    public delegate T BlueprintFactory<T>(XmlDocument document, string path, string name) where T : BP;
+
     public class Program {
 
         static readonly JsonSerializerOptions serializerOptions = new() { 
@@ -52,278 +53,61 @@ namespace CoH2XML2JSON {
             return army;
         }
 
-        private static void CreateSbpsDatabase() {
+        public static void GenericDatabase<T>(string dbname, string lookpath, BlueprintFactory<T> instanceCreator) where T : BP {
 
-            string fileName = dirPath + @"\sbps_database.json";
+            // Get destination
+            string fileName = Path.Combine(dirPath, dbname);
 
             try {
+
+                // If file already exists, delete it.
                 if (File.Exists(fileName)) {
                     File.Delete(fileName);
                 }
 
-                if (!Directory.Exists(instancesPath + @"\sbps")) {
-                    Console.WriteLine("ERROR: \"sbps\" folder not found!");
+                // Get folder to search and read .xml files from
+                string searchDir = Path.Combine(instancesPath, lookpath);
+
+                // Make sure there's a folder to read
+                if (!Directory.Exists(searchDir)) {
+                    
+                    Console.WriteLine($"INFO: \"{lookpath}\" folder not found - the database creaton will be skipped.");
+
                 } else {
-                    int filesToProcces = Directory.GetFiles(instancesPath + @"\sbps", "*.xml", SearchOption.AllDirectories).Length;
-                    int proccessedFiles = 0;
-                    List<SBP> sbps = new();
 
-                    foreach (string path in Directory.GetFiles(instancesPath + @"\sbps", "*xml", SearchOption.AllDirectories)) {
+                    var files = Directory.GetFiles(searchDir, "*.xml", SearchOption.AllDirectories);
+                    List<T> bps = new();
 
-                        Console.WriteLine(Path.GetFileNameWithoutExtension(path));
+                    foreach (string path in files) {
 
                         XmlDocument document = new XmlDocument();
                         document.Load(path);
 
                         string name = path[(path.LastIndexOf(@"\") + 1)..^4];
-                        var sbp = new SBP(document, modguid, name, entities) { Army = GetFactionFromPath(path) };
-                        string sbpsJson = JsonSerializer.Serialize(sbp, serializerOptions);
+                        T bp = instanceCreator(document, path, name);
+                        string sbpsJson = JsonSerializer.Serialize(bp, serializerOptions);
 
-                        proccessedFiles++;
-                        sbps.Add(sbp);
+                        bps.Add(bp);
 
                     }
 
-                    File.WriteAllText(fileName, JsonSerializer.Serialize(sbps.ToArray(), serializerOptions));
+                    File.WriteAllText(fileName, JsonSerializer.Serialize(bps.ToArray(), serializerOptions));
+                    Console.WriteLine($"Created database: {fileName}");
 
-                    Console.WriteLine("Sbps database created with " + proccessedFiles.ToString() + "/" + filesToProcces.ToString() + " items added!");
                 }
             } catch (Exception e) {
+                
+                // Log error and wait for user to exit
                 Console.WriteLine(e.ToString());
                 Console.ReadLine();
-            }
-        }
 
-        private static void CreateEbpsDatabase() {
-            string fileName = dirPath + @"\ebps_database.json";
-
-            try {
-                if (File.Exists(fileName)) {
-                    File.Delete(fileName);
-                }
-
-                if (!Directory.Exists(instancesPath + @"\ebps")) {
-                    Console.WriteLine("ERROR: \"ebps\" folder not found!");
-                } else {
-                    int filesToProcces = Directory.GetFiles(instancesPath + @"\ebps\races", "*.xml", SearchOption.AllDirectories).Length;
-                    int proccessedFiles = 0;
-
-                    foreach (string path in Directory.GetFiles(instancesPath + @"\ebps\races", "*xml", SearchOption.AllDirectories)) {
-                        string name = path[(path.LastIndexOf(@"\") + 1)..^4];
-                        Console.WriteLine(name);
-                        XmlDocument document = new XmlDocument();
-                        document.Load(path);
-                        try {
-                            var ebp = new EBP(document, modguid, name) { Army = GetFactionFromPath(path) };
-                            entities.Add(ebp);
-                        } catch (Exception) {
-                            Console.WriteLine("Failed to parse entity: " + name);
-                        }
-                        proccessedFiles++;
-                    }
-
-                    File.WriteAllText(fileName, JsonSerializer.Serialize(entities.ToArray(), serializerOptions));
-
-                    Console.WriteLine("Ebps database created with " + proccessedFiles.ToString() + "/" + filesToProcces.ToString() + " items added!");
-                }
-            } catch (Exception e) {
-                Console.WriteLine(e.ToString());
-                Console.ReadLine();
-            }
-        }
-
-        private static void CreateCriticalDatabase() {
-            string fileName = dirPath + @"\critical_database.json";
-
-            try {
-                if (File.Exists(fileName)) {
-                    File.Delete(fileName);
-                }
-
-                if (!Directory.Exists(instancesPath + @"\critical")) {
-                    Console.WriteLine("ERROR: \"critical\" folder not found!");
-                } else {
-                    int filesToProcces = Directory.GetFiles(instancesPath + @"\critical", "*.xml", SearchOption.AllDirectories).Length;
-                    int proccessedFiles = 0;
-                    List<Critical> criticals = new();
-
-                    foreach (string path in Directory.GetFiles(instancesPath + @"\critical", "*xml", SearchOption.AllDirectories)) {
-                        string name = path[(path.LastIndexOf(@"\") + 1)..^4];
-                        Console.WriteLine(name);
-                        XmlDocument document = new XmlDocument();
-                        document.Load(path);
-                        try {
-                            var critical = new Critical(document, modguid, name);
-                            criticals.Add(critical);
-                        } catch (Exception) {
-                            Console.WriteLine("Failed to parse critical: " + name);
-                        }
-                        proccessedFiles++;
-                    }
-                    File.WriteAllText(fileName, JsonSerializer.Serialize(criticals.ToArray(), serializerOptions));
-                    Console.WriteLine("Critical database created with " + proccessedFiles.ToString() + "/" + filesToProcces.ToString() + " items added!");
-                }
-            } catch (Exception e) {
-                Console.WriteLine(e.ToString());
-                Console.ReadLine();
-            }
-        }
-
-        private static void CreateSlotItemDatabase() {
-            string fileName = dirPath + @"\slot_item_database.json";
-
-            try {
-                if (File.Exists(fileName)) {
-                    File.Delete(fileName);
-                }
-
-                if (!Directory.Exists(instancesPath + @"\slot_item")) {
-                    Console.WriteLine("ERROR: \"slot_item\" folder not found!");
-                } else {
-                    int filesToProcces = Directory.GetFiles(instancesPath + @"\slot_item", "*.xml", SearchOption.AllDirectories).Length;
-                    int proccessedFiles = 0;
-                    List<SlotItem> slotItems = new();
-                    foreach (string path in Directory.GetFiles(instancesPath + @"\slot_item", "*xml", SearchOption.AllDirectories)) {
-                        string name = path[(path.LastIndexOf(@"\") + 1)..^4];
-                        Console.WriteLine(name);
-                        XmlDocument document = new XmlDocument();
-                        document.Load(path);
-                        try {
-                            var item = new SlotItem(document, modguid, name) { };
-                            slotItems.Add(item);
-                        } catch (Exception) {
-                            Console.WriteLine("Failed to parse entity: " + name);
-                        }
-                        proccessedFiles++;
-                    }
-                    File.WriteAllText(fileName, JsonSerializer.Serialize(slotItems.ToArray(), serializerOptions));
-                    Console.WriteLine("Slot item database created with " + proccessedFiles.ToString() + "/" + filesToProcces.ToString() + " items added!");
-                }
-
-            } catch (Exception e) {
-                Console.WriteLine(e.ToString());
-                Console.ReadLine();
-            }
-        }
-
-        private static void CreateUpgradeDatabase() {
-            string fileName = dirPath + @"\upgrade_database.json";
-
-            try {
-                if (File.Exists(fileName)) {
-                    File.Delete(fileName);
-                }
-
-                if (!Directory.Exists(instancesPath + @"\upgrade")) {
-                    Console.WriteLine("ERROR: \"upgrade\" folder not found!");
-                } else {
-                    int filesToProcces = Directory.GetFiles(instancesPath + @"\upgrade", "*.xml", SearchOption.AllDirectories).Length;
-                    int proccessedFiles = 0;
-                    List<UBP> upgrades = new();
-                    foreach (string path in Directory.GetFiles(instancesPath + @"\upgrade", "*xml", SearchOption.AllDirectories)) {
-                        string name = path[(path.LastIndexOf(@"\") + 1)..^4];
-                        Console.WriteLine(name);
-                        XmlDocument document = new XmlDocument();
-                        document.Load(path);
-                        try {
-                            var upgrade = new UBP(document, modguid, name) { };
-                            upgrades.Add(upgrade);
-                        } catch (Exception) {
-                            Console.WriteLine("Failed to parse entity: " + name);
-                        }
-                        proccessedFiles++;
-                    }
-                    File.WriteAllText(fileName, JsonSerializer.Serialize(upgrades.ToArray(), serializerOptions));
-                    Console.WriteLine("Upgrade database created with " + proccessedFiles.ToString() + "/" + filesToProcces.ToString() + " items added!");
-                }
-
-            } catch (Exception e) {
-                Console.WriteLine(e.ToString());
-                Console.ReadLine();
-            }
-        }
-
-        private static void CreateAbilityDatabase() {
-            string fileName = dirPath + @"\abilities_database.json";
-
-            try {
-                if (File.Exists(fileName)) {
-                    File.Delete(fileName);
-                }
-
-                if (!Directory.Exists(instancesPath + @"\abilities")) {
-                    Console.WriteLine("ERROR: \"abilities\" folder not found!");
-                } else {
-                    int filesToProcces = Directory.GetFiles(instancesPath + @"\abilities", "*.xml", SearchOption.AllDirectories).Length;
-                    int proccessedFiles = 0;
-                    List<ABP> abps = new();
-                    foreach (string path in Directory.GetFiles(instancesPath + @"\abilities", "*xml", SearchOption.AllDirectories)) {
-                        string name = path[(path.LastIndexOf(@"\") + 1)..^4];
-                        Console.WriteLine(name);
-                        XmlDocument document = new XmlDocument();
-                        document.Load(path);
-                        try {
-                            var abp = new ABP(document, modguid, name) { Army = GetFactionFromPath(path) };
-                            abps.Add(abp);
-                        } catch (Exception) {
-                            Console.WriteLine("Failed to parse entity: " + name);
-                        }
-                        proccessedFiles++;
-                    }
-                    File.WriteAllText(fileName, JsonSerializer.Serialize(abps.ToArray(), serializerOptions));
-
-                    Console.WriteLine("Abilities database created with " + proccessedFiles.ToString() + "/" + filesToProcces.ToString() + " items added!");
-                }
-
-            } catch (Exception e) {
-                Console.WriteLine(e.ToString());
-                Console.ReadLine();
-            }
-
-        }
-
-        private static void CreateWeaponDatabase() {
-            string fileName = dirPath + @"\weapons_database.json";
-
-            try {
-                if (File.Exists(fileName)) {
-                    File.Delete(fileName);
-                }
-
-                if (!Directory.Exists(instancesPath + @"\weapon")) {
-                    Console.WriteLine("ERROR: \"weapon\" folder not found!");
-                } else {
-                    int filesToProcces = Directory.GetFiles(instancesPath + @"\weapon", "*.xml", SearchOption.AllDirectories).Length;
-                    int proccessedFiles = 0;
-                    List<WBP> wbps = new();
-                    foreach (string path in Directory.GetFiles(instancesPath + @"\weapon", "*xml", SearchOption.AllDirectories)) {
-                        string name = path[(path.LastIndexOf(@"\") + 1)..^4];
-                        Console.WriteLine(name);
-                        XmlDocument document = new XmlDocument();
-                        document.Load(path);
-                        try {
-                            var wbp = new WBP(document, modguid, name);
-                            wbps.Add(wbp);
-                        } catch (Exception) {
-                            Console.WriteLine("Failed to parse entity: " + name);
-                        }
-                        proccessedFiles++;
-                    }
-                    File.WriteAllText(fileName, JsonSerializer.Serialize(wbps.ToArray(), serializerOptions));
-
-                    Console.WriteLine("Weapons database created with " + proccessedFiles.ToString() + "/" + filesToProcces.ToString() + " items added!");
-                }
-
-            } catch (Exception e) {
-                Console.WriteLine(e.ToString());
-                Console.ReadLine();
             }
 
         }
 
         public static void Main(string[] args) {
 
-            Console.WriteLine("Set path where you want the files to be created to: ");
+            Console.Write("Set path where you want the files to be created to: ");
             dirPath = Console.ReadLine();
 
             while (!Directory.Exists(dirPath)) {
@@ -336,7 +120,7 @@ namespace CoH2XML2JSON {
                 dirPath = Console.ReadLine();
             }
 
-            Console.WriteLine("Set path to your \"instances\" folder: ");
+            Console.Write("Set path to your \"instances\" folder: ");
             instancesPath = Console.ReadLine();
 
             while (!Directory.Exists(instancesPath) && !instancesPath.EndsWith(@"\instances")) {
@@ -344,21 +128,19 @@ namespace CoH2XML2JSON {
                 instancesPath = Console.ReadLine();
             }
 
-            Console.WriteLine("Mod GUID (Leave empty if not desired/available):");
+            Console.Write("Mod GUID (Leave empty if not desired/available):");
             modguid = Console.ReadLine().Replace("-", "");
             if (modguid.Length != 32) {
                 modguid = string.Empty;
             }
 
-            Console.WriteLine();
-
-            CreateAbilityDatabase();
-            CreateEbpsDatabase();
-            CreateSbpsDatabase();
-            CreateCriticalDatabase();
-            CreateSlotItemDatabase();
-            CreateUpgradeDatabase();
-            CreateWeaponDatabase();
+            GenericDatabase("abilities_database.json", "abilities", (doc, path, name) => new ABP(doc, modguid, name) { Army = GetFactionFromPath(path) });
+            GenericDatabase("entities_database.json", "ebps\\races", (doc, path, name) => new EBP(doc, modguid, name) { Army = GetFactionFromPath(path) });
+            GenericDatabase("squads_database.json", "sbps\\races", (doc, path, name) => new SBP(doc, modguid, name, entities) { Army = GetFactionFromPath(path) });
+            GenericDatabase("criticals_database.json", "critical", (doc, path, name) => new Critical(doc, modguid, name));
+            GenericDatabase("slotitems_database.json", "slot_item", (doc, path, name) => new SlotItem(doc, modguid, name));
+            GenericDatabase("upgrades_database.json", "upgrade", (doc, path, name) => new UBP(doc, modguid, name));
+            GenericDatabase("weapons_database.json", "weapon", (doc, path, name) => new WBP(doc, modguid, name));
 
             Console.WriteLine();
             Console.WriteLine("Created databases - Press any key to exit");
