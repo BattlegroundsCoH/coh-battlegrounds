@@ -210,7 +210,7 @@ namespace Battlegrounds.Compiler {
                     subIfTable = "{}";
                 }
 
-                lua.AppendLine($"bg_db.slot_items[\"{ibp.Name}\"] = {{ ignore_if = {subIfTable}, icon = \"{ibp.Icon}\", }};");
+                lua.AppendLine($"bg_db.slot_items[\"{ibp.Name}\"] = {{ ignore_if = {subIfTable}, icon = \"{ibp.UI.Icon}\", }};");
                 // TODO: Write better format (Just write the IScarSerializable...)
             }
 

@@ -831,6 +831,12 @@
       "blizzard_effect_vehicle",
       "usf_hold_fire_mp"
     ],
+    "Drivers": [
+      {
+        "Army": "racebps\\german",
+        "SBP": "german_tank_crew_bg"
+      }
+    ],
     "Hardpoints": [
       "brummbar_150mm_mp",
       "brummbar_150mm_bunker_buster_mp",
@@ -863,6 +869,12 @@
       "wehr_vehicle_hold_fire_mp",
       "usf_hold_fire_mp"
     ],
+    "Drivers": [
+      {
+        "Army": "racebps\\german",
+        "SBP": "german_tank_crew_bg"
+      }
+    ],
     "Hardpoints": [
       "elefant_88mm_gun_mp",
       "mg34_hull_mp"
@@ -889,6 +901,12 @@
       "supply_truck_lockdown",
       "opel_supply_territory_check"
     ],
+    "Drivers": [
+      {
+        "Army": "racebps\\german",
+        "SBP": "german_vehicle_driver_bg"
+      }
+    ],
     "Health": 160
   },
   {
@@ -910,6 +928,12 @@
     "Abilities": [
       "supply_truck_lockdown",
       "opel_supply_territory_check"
+    ],
+    "Drivers": [
+      {
+        "Army": "racebps\\german",
+        "SBP": "german_vehicle_driver_bg"
+      }
     ],
     "Health": 160
   },
@@ -935,6 +959,12 @@
       "german_hulldown_disable",
       "blizzard_effect_vehicle",
       "usf_hold_fire_mp"
+    ],
+    "Drivers": [
+      {
+        "Army": "racebps\\german",
+        "SBP": "german_tank_crew_bg"
+      }
     ],
     "Hardpoints": [
       "ostwind_flak_43_37mm_mp",
@@ -966,6 +996,12 @@
       "wehr_vehicle_hold_fire_mp",
       "usf_hold_fire_mp"
     ],
+    "Drivers": [
+      {
+        "Army": "racebps\\german",
+        "SBP": "german_tank_crew_bg"
+      }
+    ],
     "Hardpoints": [
       "panther_75mm_mp",
       "generic_mg34_coaxial_mp",
@@ -996,6 +1032,12 @@
       "blizzard_effect_vehicle",
       "wehr_vehicle_hold_fire_mp",
       "usf_hold_fire_mp"
+    ],
+    "Drivers": [
+      {
+        "Army": "racebps\\german",
+        "SBP": "german_tank_crew_bg"
+      }
     ],
     "Hardpoints": [
       "panther_75mm_mp",
@@ -1030,6 +1072,12 @@
       "panzerwerfer_counter_barrage_mp",
       "panzerwerfer_counter_barrage_attack_mp"
     ],
+    "Drivers": [
+      {
+        "Army": "racebps\\german",
+        "SBP": "german_tank_crew_bg"
+      }
+    ],
     "Hardpoints": [
       "panzerwerfer_rockets_nofire_mp",
       "panzerwerfer_rockets_mp",
@@ -1062,6 +1110,12 @@
       "blizzard_effect_vehicle",
       "usf_hold_fire_mp"
     ],
+    "Drivers": [
+      {
+        "Army": "racebps\\german",
+        "SBP": "german_tank_crew_bg"
+      }
+    ],
     "Hardpoints": [
       "panzer_4_75mm_short_mp",
       "generic_mg34_coaxial_mp",
@@ -1092,6 +1146,12 @@
       "blizzard_effect_vehicle",
       "wehr_vehicle_hold_fire_mp",
       "usf_hold_fire_mp"
+    ],
+    "Drivers": [
+      {
+        "Army": "racebps\\german",
+        "SBP": "german_tank_crew_bg"
+      }
     ],
     "Hardpoints": [
       "panzer_4_75mm_mp",
@@ -1124,6 +1184,12 @@
       "wehr_vehicle_hold_fire_mp",
       "usf_hold_fire_mp"
     ],
+    "Drivers": [
+      {
+        "Army": "racebps\\german",
+        "SBP": "german_tank_crew_bg"
+      }
+    ],
     "Hardpoints": [
       "panzer_4_75mm_mp",
       "generic_mg34_coaxial_mp",
@@ -1154,6 +1220,12 @@
       "blizzard_effect_vehicle",
       "wehr_vehicle_hold_fire_mp",
       "usf_hold_fire_mp"
+    ],
+    "Drivers": [
+      {
+        "Army": "racebps\\german",
+        "SBP": "german_tank_crew_bg"
+      }
     ],
     "Hardpoints": [
       "panzer_4_75mm_short_mp",
@@ -1187,6 +1259,12 @@
       "wehr_vehicle_hold_fire_mp",
       "usf_hold_fire_mp"
     ],
+    "Drivers": [
+      {
+        "Army": "racebps\\german",
+        "SBP": "german_vehicle_crew_bg"
+      }
+    ],
     "Hardpoints": [
       "scout_car_mg34_pintle_generic_mp"
     ],
@@ -1217,6 +1295,12 @@
       "wehr_vehicle_hold_fire_mp",
       "usf_hold_fire_mp"
     ],
+    "Drivers": [
+      {
+        "Army": "racebps\\german",
+        "SBP": "german_vehicle_crew_bg"
+      }
+    ],
     "Hardpoints": [
       "scout_car_mg34_pintle_generic_mp"
     ],
@@ -1246,6 +1330,12 @@
       "scout_car_halftrack_infantry_awareness_mp",
       "wehr_vehicle_hold_fire_mp",
       "usf_hold_fire_mp"
+    ],
+    "Drivers": [
+      {
+        "Army": "racebps\\german",
+        "SBP": "german_vehicle_crew_bg"
+      }
     ],
     "Hardpoints": [
       "scout_car_mg34_pintle_generic_mp"
@@ -1382,6 +1472,12 @@
       "wehr_vehicle_hold_fire_mp",
       "usf_hold_fire_mp"
     ],
+    "Drivers": [
+      {
+        "Army": "racebps\\german",
+        "SBP": "german_vehicle_crew_bg"
+      }
+    ],
     "Hardpoints": [
       "puma_50mm_mp",
       "puma_mg42_mp"
@@ -1409,6 +1505,12 @@
       "stug_elefant_pak40_pak43_brummbar_critical_shots_mp",
       "blizzard_effect_vehicle",
       "german_hulldown_disable"
+    ],
+    "Drivers": [
+      {
+        "Army": "racebps\\german",
+        "SBP": "german_tank_crew_bg"
+      }
     ],
     "Hardpoints": [
       "stug_75mm_short_mp"
@@ -1440,6 +1542,12 @@
       "wehr_vehicle_hold_fire_mp",
       "usf_hold_fire_mp"
     ],
+    "Drivers": [
+      {
+        "Army": "racebps\\german",
+        "SBP": "german_tank_crew_bg"
+      }
+    ],
     "Hardpoints": [
       "stug_75mm_mp"
     ],
@@ -1468,6 +1576,12 @@
       "blizzard_effect_vehicle",
       "wehr_vehicle_hold_fire_mp",
       "usf_hold_fire_mp"
+    ],
+    "Drivers": [
+      {
+        "Army": "racebps\\german",
+        "SBP": "german_tank_crew_bg"
+      }
     ],
     "Hardpoints": [
       "tiger_kwk36_88mm_mp",
@@ -1499,6 +1613,12 @@
       "blizzard_effect_vehicle",
       "wehr_vehicle_hold_fire_mp",
       "usf_hold_fire_mp"
+    ],
+    "Drivers": [
+      {
+        "Army": "racebps\\german",
+        "SBP": "german_tank_crew_bg"
+      }
     ],
     "Hardpoints": [
       "tiger_kwk36_88mm_mp",
@@ -2232,6 +2352,12 @@
       "usf_hold_fire_mp",
       "brit_vehicle_crew_repair_mp"
     ],
+    "Drivers": [
+      {
+        "Army": "racebps\\soviet",
+        "SBP": "soviet_male_vehicle_crew_bg"
+      }
+    ],
     "Hardpoints": [
       "churchill_mk7_75mm_mp",
       "churchill_mk7_coaxial_vehicle_turret_mp",
@@ -2267,6 +2393,12 @@
       "tank_ambush_mp",
       "is2_fragmentation_he_mp"
     ],
+    "Drivers": [
+      {
+        "Army": "racebps\\soviet",
+        "SBP": "soviet_male_vehicle_crew_bg"
+      }
+    ],
     "Hardpoints": [
       "is2_d25t_122mm_mp",
       "is2_coaxial_vehicle_turret_mp",
@@ -2299,6 +2431,12 @@
       "isu152_ammo_switch_ap_shell_mp",
       "usf_hold_fire_mp"
     ],
+    "Drivers": [
+      {
+        "Army": "racebps\\soviet",
+        "SBP": "soviet_male_vehicle_crew_bg"
+      }
+    ],
     "Hardpoints": [
       "isu152_ml-20s_152mm_armor_piercing_mp",
       "isu152_ml-20s_152mm_howitzer_gun_mp",
@@ -2330,6 +2468,12 @@
       "kaytusha_rocket_truck_barrage_victortarget_mp",
       "katushya_creeping_barrage_mp"
     ],
+    "Drivers": [
+      {
+        "Army": "racebps\\soviet",
+        "SBP": "soviet_male_vehicle_2_crew_bg"
+      }
+    ],
     "Hardpoints": [
       "katyusha_bm_13_16_rocket_no_fire_mp",
       "katyusha_bm_13_16_rocket_mp",
@@ -2360,6 +2504,12 @@
       "blizzard_effect_vehicle",
       "sov_vehicle_hold_fire_mp",
       "usf_hold_fire_mp"
+    ],
+    "Drivers": [
+      {
+        "Army": "racebps\\soviet",
+        "SBP": "soviet_male_vehicle_crew_bg"
+      }
     ],
     "Hardpoints": [
       "t34_kv1_m1940_f-34_76mm__mp",
@@ -2393,6 +2543,12 @@
       "usf_hold_fire_mp",
       "sov_vehicle_hold_fire_mp"
     ],
+    "Drivers": [
+      {
+        "Army": "racebps\\soviet",
+        "SBP": "soviet_male_vehicle_crew_bg"
+      }
+    ],
     "Hardpoints": [
       "kv2_m10_152mm",
       "kv2_m10_152mm_indirect",
@@ -2425,6 +2581,12 @@
       "usf_hold_fire_mp",
       "sov_vehicle_hold_fire_mp"
     ],
+    "Drivers": [
+      {
+        "Army": "racebps\\soviet",
+        "SBP": "soviet_male_vehicle_crew_bg"
+      }
+    ],
     "Hardpoints": [
       "kv8_ato-41_flamethrower_mp",
       "kv-8_45mm_mp",
@@ -2454,6 +2616,12 @@
       "german_hulldown_disable",
       "blizzard_effect_vehicle",
       "handbrake_mode_new_mp"
+    ],
+    "Drivers": [
+      {
+        "Army": "racebps\\soviet",
+        "SBP": "soviet_male_vehicle_2_crew_bg"
+      }
     ],
     "Hardpoints": [
       "m3a1_scout_car_m2hb_hmg_mp",
@@ -2485,6 +2653,12 @@
       "handbrake_mode_new_mp",
       "usf_hold_fire_mp"
     ],
+    "Drivers": [
+      {
+        "Army": "racebps\\soviet",
+        "SBP": "soviet_male_vehicle_2_crew_bg"
+      }
+    ],
     "Hardpoints": [
       "m5_halftrack_m2hb_hmg_mp",
       "halftrack_250_dummy"
@@ -2515,6 +2689,12 @@
       "sherman_76mm_ammo_switch_ap_shell_mp",
       "sherman_76mm_ammo_switch_hvap_shell_mp",
       "smoke_sherman_76_mm_mortar_barrage_mp"
+    ],
+    "Drivers": [
+      {
+        "Army": "racebps\\soviet",
+        "SBP": "soviet_male_vehicle_crew_bg"
+      }
     ],
     "Hardpoints": [
       "sherman_76mm_gun",
@@ -2550,6 +2730,12 @@
       "usf_hold_fire_mp",
       "tank_ambush_mp"
     ],
+    "Drivers": [
+      {
+        "Army": "racebps\\soviet",
+        "SBP": "soviet_male_vehicle_crew_bg"
+      }
+    ],
     "Hardpoints": [
       "su76_76mm_zis-3sh_gun_mp"
     ],
@@ -2579,6 +2765,12 @@
       "sov_vehicle_hold_fire_mp",
       "usf_hold_fire_mp",
       "tank_ambush_mp"
+    ],
+    "Drivers": [
+      {
+        "Army": "racebps\\soviet",
+        "SBP": "soviet_male_vehicle_crew_bg"
+      }
     ],
     "Hardpoints": [
       "su85_d5t_85mm__mp"
@@ -2610,6 +2802,12 @@
       "usf_hold_fire_mp",
       "tank_ambush_mp"
     ],
+    "Drivers": [
+      {
+        "Army": "racebps\\soviet",
+        "SBP": "soviet_male_vehicle_crew_bg"
+      }
+    ],
     "Hardpoints": [
       "ot-34_ato-41_flamethrower_mp",
       "t34_76_85_coaxial_vehicle_turret_mp"
@@ -2640,6 +2838,12 @@
       "sov_vehicle_hold_fire_mp",
       "usf_hold_fire_mp",
       "tank_ambush_mp"
+    ],
+    "Drivers": [
+      {
+        "Army": "racebps\\soviet",
+        "SBP": "soviet_male_vehicle_crew_bg"
+      }
     ],
     "Hardpoints": [
       "t34_76mm_mp",
@@ -2673,6 +2877,12 @@
       "usf_hold_fire_mp",
       "tank_ambush_mp"
     ],
+    "Drivers": [
+      {
+        "Army": "racebps\\soviet",
+        "SBP": "soviet_male_vehicle_crew_bg"
+      }
+    ],
     "Hardpoints": [
       "t34_85_zis-s-53_85mm_t34_mp",
       "t34_76_85_coaxial_vehicle_turret_mp",
@@ -2705,6 +2915,12 @@
       "vehicle_recon_toggle_mp",
       "tank_ambush_mp"
     ],
+    "Drivers": [
+      {
+        "Army": "racebps\\soviet",
+        "SBP": "soviet_male_vehicle_2_crew_bg"
+      }
+    ],
     "Hardpoints": [
       "t70_m1938_45mm_mp",
       "t70_coaxial_vehicle_turret_mp"
@@ -2735,6 +2951,12 @@
       "command_vehicle_plane",
       "usf_hold_fire_mp",
       "brit_vehicle_crew_repair_mp"
+    ],
+    "Drivers": [
+      {
+        "Army": "racebps\\soviet",
+        "SBP": "soviet_male_vehicle_2_crew_bg"
+      }
     ],
     "Hardpoints": [
       "valentine_75mm_mp",
@@ -2768,6 +2990,12 @@
       "usf_hold_fire_mp",
       "brit_vehicle_crew_repair_mp"
     ],
+    "Drivers": [
+      {
+        "Army": "racebps\\soviet",
+        "SBP": "soviet_male_vehicle_crew_bg"
+      }
+    ],
     "Hardpoints": [
       "valentine_75mm_mp",
       "cromwell_coaxial_vehicle_turret_mp",
@@ -2795,6 +3023,12 @@
     "Abilities": [
       "german_hulldown_disable",
       "blizzard_effect_vehicle"
+    ],
+    "Drivers": [
+      {
+        "Army": "racebps\\soviet",
+        "SBP": "soviet_male_vehicle_driver_bg"
+      }
     ],
     "Hardpoints": [
       "dummy_weapon_mp"

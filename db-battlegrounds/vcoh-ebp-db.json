@@ -2298,6 +2298,12 @@
       "handbrake_mode_new_mp",
       "usf_hold_fire_mp"
     ],
+    "Drivers": [
+      {
+        "Army": "racebps\\aef",
+        "SBP": "vehicle_crew_squad_mp"
+      }
+    ],
     "Hardpoints": [
       "halftrack_250_dummy",
       "halftrack_250_dummy",
@@ -2330,6 +2336,12 @@
       "blizzard_effect_vehicle",
       "ambulance_heal_area"
     ],
+    "Drivers": [
+      {
+        "Army": "racebps\\aef",
+        "SBP": "usf_medic_squad_mp"
+      }
+    ],
     "Health": 160
   },
   {
@@ -2351,6 +2363,12 @@
     "Abilities": [
       "blizzard_effect_vehicle",
       "wc51_speed_boost_mp"
+    ],
+    "Drivers": [
+      {
+        "Army": "racebps\\aef",
+        "SBP": "vehicle_crew_squad_mp"
+      }
     ],
     "Hardpoints": [
       "dodge_wc51_m1917_30cal_mp",
@@ -2382,6 +2400,12 @@
     "Abilities": [
       "blizzard_effect_vehicle",
       "wc51_speed_boost_mp"
+    ],
+    "Drivers": [
+      {
+        "Army": "racebps\\aef",
+        "SBP": "pathfinder_squad_recon_mp"
+      }
     ],
     "Hardpoints": [
       "halftrack_mg42_vehicle_mp",
@@ -2417,6 +2441,12 @@
       "usf_hold_fire_mp",
       "brit_vehicle_crew_repair_mp"
     ],
+    "Drivers": [
+      {
+        "Army": "racebps\\aef",
+        "SBP": "vehicle_crew_squad_mp"
+      }
+    ],
     "Hardpoints": [
       "m10_m5_3inch_gun_mp",
       "m10_m5_3inch_ap_gun_mp"
@@ -2445,6 +2475,12 @@
       "flanking_speed",
       "usf_vehicle_hold_fire_mp",
       "usf_hold_fire_mp"
+    ],
+    "Drivers": [
+      {
+        "Army": "racebps\\aef",
+        "SBP": "vehicle_crew_squad_mp"
+      }
     ],
     "Hardpoints": [
       "m10_m5_3inch_gun_mp",
@@ -2475,6 +2511,12 @@
       "m20_smoke",
       "usf_hold_fire_mp",
       "m8_lay_heavy_mine_vet_3"
+    ],
+    "Drivers": [
+      {
+        "Army": "racebps\\aef",
+        "SBP": "vehicle_crew_squad_mp"
+      }
     ],
     "Hardpoints": [
       "m20_utility_car_m2hb_50cal_mounted_mp"
@@ -2532,6 +2574,12 @@
       "usf_vehicle_hold_fire_mp",
       "usf_hold_fire_mp"
     ],
+    "Drivers": [
+      {
+        "Army": "racebps\\aef",
+        "SBP": "vehicle_crew_squad_mp"
+      }
+    ],
     "Hardpoints": [
       "m36_m4_90mm_gun_mp",
       "m36_m4_90mm_ap_gun_mp"
@@ -2559,6 +2607,12 @@
       "blizzard_effect_vehicle",
       "handbrake_mode_mp",
       "usf_hold_fire_hardpoint2_mp"
+    ],
+    "Drivers": [
+      {
+        "Army": "racebps\\aef",
+        "SBP": "vehicle_crew_squad_mp"
+      }
     ],
     "Hardpoints": [
       "m15a1_aa_half_track_dummy_mp",
@@ -2593,6 +2647,12 @@
       "m21_mortar_smoke_barrage_mp",
       "mortar_veterancy_3_mp"
     ],
+    "Drivers": [
+      {
+        "Army": "racebps\\aef",
+        "SBP": "vehicle_crew_squad_mp"
+      }
+    ],
     "Hardpoints": [
       "m1_81mm_mortar_mp",
       "m1_81mm_mortar_barrage_mp",
@@ -2625,6 +2685,12 @@
       "drop_medpack_ability_half_track_mp",
       "usf_hold_fire_mp"
     ],
+    "Drivers": [
+      {
+        "Army": "racebps\\aef",
+        "SBP": "assault_engineer_squad_mp"
+      }
+    ],
     "Hardpoints": [
       "m3_halftrack_m2hb_50cal_mp",
       "halftrack_250_dummy"
@@ -2654,6 +2720,12 @@
       "drop_medpack_ability_half_track_mp",
       "usf_hold_fire_mp"
     ],
+    "Drivers": [
+      {
+        "Army": "racebps\\aef",
+        "SBP": "vehicle_crew_squad_mp"
+      }
+    ],
     "Hardpoints": [
       "m3_halftrack_m2hb_50cal_mp",
       "halftrack_250_dummy"
@@ -2679,6 +2751,12 @@
     "Abilities": [
       "blizzard_effect_vehicle",
       "handbrake_mode_new_mp"
+    ],
+    "Drivers": [
+      {
+        "Army": "racebps\\aef",
+        "SBP": "vehicle_crew_squad_mp"
+      }
     ],
     "Hardpoints": [
       "m3_halftrack_m2hb_50cal_mp",
@@ -2707,6 +2785,12 @@
       "smoke_sherman_mortar_barrage_mp",
       "usf_vehicle_hold_fire_mp",
       "usf_hold_fire_mp"
+    ],
+    "Drivers": [
+      {
+        "Army": "racebps\\aef",
+        "SBP": "vehicle_crew_squad_mp"
+      }
     ],
     "Hardpoints": [
       "sherman_m1_76mm_easy8_mp",
@@ -2740,6 +2824,12 @@
       "sherman_76mm_ammo_switch_hvap_shell_mp",
       "smoke_sherman_76_mm_mortar_barrage_mp"
     ],
+    "Drivers": [
+      {
+        "Army": "racebps\\aef",
+        "SBP": "vehicle_crew_squad_mp"
+      }
+    ],
     "Hardpoints": [
       "sherman_76mm_gun",
       "sherman_76mm_hvap_gun",
@@ -2770,6 +2860,12 @@
       "smoke_sherman_mortar_barrage_mp",
       "usf_hold_fire_mp"
     ],
+    "Drivers": [
+      {
+        "Army": "racebps\\aef",
+        "SBP": "vehicle_crew_squad_mp"
+      }
+    ],
     "Hardpoints": [
       "sherman_m1_76mm",
       "sherman_m4a3_vehicle_hull_mp",
@@ -2797,6 +2893,12 @@
       "blizzard_effect_vehicle",
       "smoke_sherman_mortar_barrage_bulldozer_mp",
       "usf_hold_fire_mp"
+    ],
+    "Drivers": [
+      {
+        "Army": "racebps\\aef",
+        "SBP": "vehicle_crew_squad_mp"
+      }
     ],
     "Hardpoints": [
       "sherman_m3_105mm_he_shell_mp",
@@ -2832,6 +2934,12 @@
       "sherman_ammo_switch_he_shell_mp",
       "sherman_smoke_shell_shot_wp_mp"
     ],
+    "Drivers": [
+      {
+        "Army": "racebps\\aef",
+        "SBP": "vehicle_crew_squad_mp"
+      }
+    ],
     "Hardpoints": [
       "sherman_m3_75mm_mp",
       "sherman_m3_75mm_he_shell_mp",
@@ -2864,6 +2972,12 @@
       "usf_vehicle_hold_fire_mp",
       "usf_hold_fire_mp"
     ],
+    "Drivers": [
+      {
+        "Army": "racebps\\aef",
+        "SBP": "vehicle_crew_squad_mp"
+      }
+    ],
     "Hardpoints": [
       "m5a1_stuart_m6_37mm_mp",
       "m5_stuart_shell_shock_shot_mp",
@@ -2893,6 +3007,12 @@
       "blizzard_effect_vehicle",
       "handbrake_mode_new_mp",
       "usf_hold_fire_mp"
+    ],
+    "Drivers": [
+      {
+        "Army": "racebps\\aef",
+        "SBP": "vehicle_crew_squad_mp"
+      }
     ],
     "Hardpoints": [
       "m5_halftrack_m2hb_hmg_mp",
@@ -2954,6 +3074,12 @@
       "m36_m8_concealing_smoke_vet",
       "usf_hold_fire_mp"
     ],
+    "Drivers": [
+      {
+        "Army": "racebps\\aef",
+        "SBP": "vehicle_crew_squad_mp"
+      }
+    ],
     "Hardpoints": [
       "m8a1_hmc_m3_75mm_direct_mp",
       "m8a1_hmc_smoke_mp",
@@ -2984,6 +3110,12 @@
       "m8_canister_shot",
       "usf_vehicle_hold_fire_mp",
       "luchs_hold_fire_mp"
+    ],
+    "Drivers": [
+      {
+        "Army": "racebps\\aef",
+        "SBP": "vehicle_crew_squad_mp"
+      }
     ],
     "Hardpoints": [
       "m8_greyhound_m6_37mm_mp",
@@ -4646,6 +4778,12 @@
       "aec_tread_shot_vet_0_mp",
       "aec_tread_shot_vet_1mp"
     ],
+    "Drivers": [
+      {
+        "Army": "racebps\\aef",
+        "SBP": "vehicle_crew_squad_mp"
+      }
+    ],
     "Hardpoints": [
       "aec_75mm_ap_mp",
       "aec_coaxial_vehicle_turret_mp"
@@ -4987,6 +5125,12 @@
       "handbrake_mode_new_mp",
       "brit_vehicle_crew_repair_mp"
     ],
+    "Drivers": [
+      {
+        "Army": "racebps\\aef",
+        "SBP": "vehicle_crew_squad_mp"
+      }
+    ],
     "Hardpoints": [
       "m3_halftrack_m2hb_50cal_mp",
       "halftrack_250_dummy"
@@ -5249,6 +5393,12 @@
     },
     "Abilities": [
       "blizzard_effect_vehicle"
+    ],
+    "Drivers": [
+      {
+        "Army": "racebps\\aef",
+        "SBP": "vehicle_crew_squad_mp"
+      }
     ],
     "Hardpoints": [
       "m7b1_priest_m2a1_105mm_dummy_mp",
@@ -15567,6 +15717,12 @@
       "sherman_ammo_switch_he_shell_mp",
       "sherman_ammo_switch_ap_shell_mp"
     ],
+    "Drivers": [
+      {
+        "Army": "racebps\\aef",
+        "SBP": "vehicle_crew_squad_mp"
+      }
+    ],
     "Hardpoints": [
       "sherman_m3_75mm_mp",
       "sherman_m3_75mm_he_shell_mp",
@@ -15798,6 +15954,12 @@
     "Abilities": [
       "blizzard_effect_vehicle",
       "wc51_speed_boost_mp"
+    ],
+    "Drivers": [
+      {
+        "Army": "racebps\\aef",
+        "SBP": "vehicle_crew_squad_mp"
+      }
     ],
     "Hardpoints": [
       "dodge_wc51_m2hb_50cal_mp",

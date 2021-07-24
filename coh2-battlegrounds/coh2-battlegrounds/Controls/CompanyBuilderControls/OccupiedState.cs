@@ -19,8 +19,8 @@ namespace BattlegroundsApp.Controls.CompanyBuilderControls {
         public override bool isOccupied => true;
 
         public void SetUnit(Squad squad) {
-            UnitName = GameLocale.GetString(uint.Parse(squad.SBP.LocaleName));
-            UnitIcon = $"pack://application:,,,/Resources/ingame/unit_icons/{squad.SBP.Icon}.png";
+            UnitName = GameLocale.GetString(uint.Parse(squad.SBP.UI.ScreenName));
+            UnitIcon = $"pack://application:,,,/Resources/ingame/unit_icons/{squad.SBP.UI.Icon}.png";
             UnitCost = squad.SBP.Cost;
             UnitVeterancy = squad.VeterancyRank;
             UnitIsTransported = squad.SupportBlueprint is not null;

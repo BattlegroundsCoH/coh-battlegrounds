@@ -73,13 +73,11 @@ namespace CoH2XML2JSON {
             // Load drivers (if any)
             if (xmlDocument.SelectSingleNode(@"//template_reference[@name='exts'] [@value='ebpextensions\recrewable_ext']") is XmlElement recrewable) {
                 List<EBPCrew> crews = new();
-                for (int i = 0; i < Program.racebps.Length; i++) {
-                    if (recrewable.FindSubnode("instance_reference", "ext_key", $"{Program.racebps[i]}") is XmlElement instRef) {
-                        if (instRef.FindSubnode("instance_reference", "driver_squad_blueprint") is XmlNode driverBp) {
-                            if (!string.IsNullOrEmpty(driverBp.Attributes["value"].Value)) {
-                                crews.Add(new(Program.racebps[i], driverBp.Attributes["value"].Value));
-                            }
-                        }
+                var nodes = recrewable.SelectNodes(@"//instance_reference[@name='driver_squad_blueprint']");
+                foreach (XmlElement driver in nodes) {
+                    if (!string.IsNullOrEmpty(driver.GetAttribute("value"))) {
+                        var armyNode = driver.ParentNode.PreviousSibling as XmlElement;
+                        crews.Add(new(armyNode.GetAttribute("value"), Path.GetFileNameWithoutExtension(driver.GetAttribute("value"))));
                     }
                 }
                 if (crews.Count > 0) {
