@@ -5,10 +5,12 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using System.Text.Json.Serialization;
 
 using Battlegrounds.Game.Database;
 using Battlegrounds.Game.Gameplay;
 using Battlegrounds.Json;
+using Battlegrounds.Modding;
 using Battlegrounds.Steam;
 using Battlegrounds.Verification;
 
@@ -17,6 +19,7 @@ namespace Battlegrounds.Game.DataCompany {
     /// <summary>
     /// Represents a Company. Implements <see cref="IJsonObject"/> and <see cref="IChecksumItem"/>.
     /// </summary>
+    [JsonConverter(typeof(CompanySerializer))]
     public class Company : IJsonObject, IChecksumItem {
 
         /// <summary>
@@ -44,7 +47,6 @@ namespace Battlegrounds.Game.DataCompany {
         /// </summary>
         public string Name { get; set; }
 
-        [JsonIgnore]
         public double Strength => this.GetStrength();
 
         /// <summary>
@@ -70,7 +72,7 @@ namespace Battlegrounds.Game.DataCompany {
         /// <summary>
         /// The GUID of the tuning mod used to create this company.
         /// </summary>
-        public string TuningGUID { get; set; }
+        public ModGuid TuningGUID { get; set; }
 
         /// <summary>
         /// The <see cref="Faction"/> this company is associated with.
@@ -82,7 +84,6 @@ namespace Battlegrounds.Game.DataCompany {
         /// <summary>
         /// The display name of who owns the <see cref="Company"/>. This property is used by the compilers. This will be overriden.
         /// </summary>
-        [JsonIgnore]
         public string Owner { get; set; } = string.Empty;
 
         /// <summary>
@@ -132,9 +133,8 @@ namespace Battlegrounds.Game.DataCompany {
         [JsonBackingField(nameof(m_checksum))]
         public string Checksum => this.m_checksum;
 
-
         [JsonBackingField(nameof(m_nextSquadId))]
-        protected ushort NextSquadID => this.m_nextSquadId;
+        public ushort NextSquadID => this.m_nextSquadId;
 
         /// <summary>
         /// New empty <see cref="Company"/> instance.
@@ -171,7 +171,7 @@ namespace Battlegrounds.Game.DataCompany {
             this.Name = name;
             this.Owner = user?.Name ?? "Unknown Player";
             this.m_companyArmy = army;
-            this.TuningGUID = tuningGUID.Replace("-", "");
+            this.TuningGUID = ModGuid.FromGuid(tuningGUID);
             this.m_companyType = CompanyType.Unspecified;
             this.m_companyStatistics = new CompanyStatistics();
 
@@ -301,11 +301,8 @@ namespace Battlegrounds.Game.DataCompany {
         /// Save all <see cref="Company"/> data to a Json file.
         /// </summary>
         /// <param name="jsonfile">The path of the file to save <see cref="Company"/> data into.</param>
-        public void SaveToFile(string jsonfile) {
-            this.m_checksum = string.Empty;
-            this.m_checksum = this.GetChecksum();
-            File.WriteAllText(jsonfile, this.SerializeAsJson());
-        }
+        public void SaveToFile(string jsonfile)
+            => File.WriteAllText(jsonfile, this.SaveToString());
 
         /// <summary>
         /// Save all <see cref="Company"/> data to json format.

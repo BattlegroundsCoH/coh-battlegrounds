@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text.Json;
 using System.Text.RegularExpressions;
 
 using Battlegrounds.Functional;
+using Battlegrounds.Json;
 using Battlegrounds.Modding;
 
 using RegexMatch = System.Text.RegularExpressions.Match;
@@ -152,7 +154,7 @@ namespace Battlegrounds.Game.Database.Management {
             // Parse the file
             var jsonFileData = File.ReadAllText(jsonfile);
             var typeArray = GetUnmanagedTypeFromBlueprintType(bType).MakeArrayType();
-            var blueprints = JsonSerializer.Deserialize(jsonFileData, typeArray) as Array;
+            var blueprints = System.Text.Json.JsonSerializer.Deserialize(jsonFileData, typeArray) as Array;
 
             // If Empty
             if (blueprints.Length is 0) {
@@ -169,6 +171,9 @@ namespace Battlegrounds.Game.Database.Management {
                     target.Add(bp.PBGID, bp);
                 }
             }
+
+            // Log
+            Trace.WriteLine($"Loaded {blueprints.Length} {bType}s for {(string.IsNullOrEmpty(guid) ? "base game" : $"mod[{guid}]")}", nameof(BlueprintManager));
 
             // Return true
             return true;
@@ -242,6 +247,25 @@ namespace Battlegrounds.Game.Database.Management {
         /// <returns>The correct <see cref="Blueprint"/>, null if not found or a <see cref="ArgumentException"/> if <see cref="BlueprintType"/> was somehow invalid.</returns>
         public static Bp FromBlueprintName<Bp>(string bpName) where Bp : Blueprint
             => (Bp)FromBlueprintName(bpName, BlueprintTypeFromType<Bp>());
+
+        /// <summary>
+        /// Dereference a <see cref="Blueprint"/> reference from a json reference string of the form "BPT:BPName".
+        /// </summary>
+        /// <param name="jsonReference">The json reference string to dereference.</param>
+        /// <returns>The <see cref="Blueprint"/> instance matching the reference in the database.</returns>
+        /// <exception cref="ArgumentException"/>
+        /// <exception cref="ArgumentNullException"/>
+        /// <exception cref="ArgumentOutOfRangeException"/>
+        /// <exception cref="OverflowException"/>
+        /// <exception cref="FormatException"/>
+        public static object JsonDereference(string jsonReference) {
+            BlueprintType type = (BlueprintType)Enum.Parse(typeof(BlueprintType), jsonReference.Substring(0, 3));
+            if (ushort.TryParse(jsonReference[4..], out ushort result)) {
+                return FromPbgId(result, type);
+            } else {
+                return FromBlueprintName(jsonReference[4..], type);
+            }
+        }
 
         /// <summary>
         /// 

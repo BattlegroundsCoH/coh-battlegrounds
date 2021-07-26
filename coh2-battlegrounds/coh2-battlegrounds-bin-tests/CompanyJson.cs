@@ -31,6 +31,16 @@ namespace coh2_battlegrounds_bin_tests {
             Assert.IsNotNull(read);
         }
 
+        [TestMethod]
+        public void CanSerialiseAndDeserialise() {
+            var str = CompanySerializer.GetCompanyAsJson(company, true);
+            File.WriteAllText("testCompanyJson.json", str);
+            Assert.IsNotNull(str);
+            Company read = CompanySerializer.GetCompanyFromJson(str);
+            Assert.IsNull(read);
+            Assert.AreEqual(read.Name, company.Name);
+        }
+
     }
 
 }
