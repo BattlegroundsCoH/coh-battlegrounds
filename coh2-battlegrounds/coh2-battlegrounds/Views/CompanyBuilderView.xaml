@@ -6,6 +6,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:BattlegroundsApp.Views"
              xmlns:card="clr-namespace:BattlegroundsApp.Controls.CompanyBuilderControls"
+             xmlns:dropArea="clr-namespace:BattlegroundsApp.Controls.DropArea"
              mc:Ignorable="d"
              d:DesignHeight="650" d:DesignWidth="1000" Background="white">
     <Grid>
@@ -59,25 +60,33 @@
         <TextBlock Grid.Row="2" Grid.Column="5" Text="Available Units"/>
 
         <!-- Row 3 -->
-        <TabControl Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="5" Height="400" Width="650">
+        <TabControl Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="5" Grid.RowSpan="3" Height="550" Width="750">
             <TabItem Header="Units">
-                <StackPanel x:Name="UnitTypeStack" Orientation="Vertical" AllowDrop="True" Drop="OnDrop">
-                    <WrapPanel x:Name="InfantryWrap" Orientation="Horizontal" Width="150">
+                <dropArea:DropArea AllowDrop="True" Drop="OnDrop" Width="740" Height="370" Background="White" BorderThickness="1.5" BorderBrush="Black">
+                    <StackPanel x:Name="UnitTypeStack" Orientation="Horizontal">
+                        <ScrollViewer CanContentScroll="False" VerticalScrollBarVisibility="Visible">
+                            <WrapPanel x:Name="InfantryWrap" Orientation="Horizontal" Width="228">
 
-                    </WrapPanel>
-                    <WrapPanel x:Name="SupportWrap" Orientation="Horizontal" Width="150">
+                            </WrapPanel>
+                        </ScrollViewer>
+                        <ScrollViewer CanContentScroll="False" VerticalScrollBarVisibility="Visible">
+                            <WrapPanel x:Name="SupportWrap" Orientation="Horizontal" Width="228">
 
-                    </WrapPanel>
-                    <WrapPanel x:Name="VehicleWrap" Orientation="Horizontal" Width="150">
-                        
-                    </WrapPanel>
-                </StackPanel>
+                            </WrapPanel>
+                        </ScrollViewer>
+                        <ScrollViewer CanContentScroll="False" VerticalScrollBarVisibility="Visible">
+                            <WrapPanel x:Name="VehicleWrap" Orientation="Horizontal" Width="228">
+
+                            </WrapPanel>
+                        </ScrollViewer>
+                    </StackPanel>
+                </dropArea:DropArea>
             </TabItem>
             <TabItem Header="Abilities">
                 
             </TabItem>
             <TabItem Header="Inventory">
-                
+
             </TabItem>
         </TabControl>
 
@@ -88,9 +97,9 @@
         </ScrollViewer>
 
         <!-- Row 4 -->
-        <Button x:Name="saveButton" Grid.Row="4" Grid.Column="0" Content="Save" Margin="2.5" Width="125" Click="SaveButton_Click"/>
+        <Button x:Name="saveButton" Grid.Row="6" Grid.Column="0" Content="Save" Margin="2.5" Width="125" Click="SaveButton_Click"/>
 
-        <Button x:Name="backButton" Grid.Row="4" Grid.Column="1" Content="Back" Margin="2.5" Width="125" Click="BackButton_Click"/>
+        <Button x:Name="backButton" Grid.Row="6" Grid.Column="1" Content="Back" Margin="2.5" Width="125" Click="BackButton_Click"/>
 
     </Grid>
 </bg:ViewState>
