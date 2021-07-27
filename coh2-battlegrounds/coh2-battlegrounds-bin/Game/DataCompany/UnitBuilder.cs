@@ -20,7 +20,9 @@ namespace Battlegrounds.Game.DataCompany {
 
         byte m_vetrank;
         float m_vetexperience;
+        bool m_isCrew;
         ModGuid m_modGuid;
+        TimeSpan m_combatTime;
         SquadBlueprint m_blueprint;
         SquadBlueprint m_transportBlueprint;
         DeploymentMethod m_deploymentMethod;
@@ -49,6 +51,8 @@ namespace Battlegrounds.Game.DataCompany {
             this.m_modifiers = new HashSet<Modifier>();
             this.m_deploymentMethod = DeploymentMethod.None;
             this.m_deploymentPhase = DeploymentPhase.PhaseNone;
+            this.m_combatTime = TimeSpan.Zero;
+            this.m_isCrew = false;
         }
 
         /// <summary>
@@ -71,7 +75,9 @@ namespace Battlegrounds.Game.DataCompany {
             this.m_deploymentPhase = squad.DeploymentPhase;
             this.m_deploymentMethod = squad.DeploymentMethod;
             this.m_modGuid = ModGuid.BaseGame;
-            
+            this.m_combatTime = TimeSpan.Zero;
+            this.m_isCrew = false;
+
             if (squad.Crew != null) {
                 this.m_crewBuilder = new UnitBuilder(squad.Crew, overrideIndex);
             }
@@ -327,6 +333,16 @@ namespace Battlegrounds.Game.DataCompany {
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="ibps"></param>
+        /// <returns>The modified instance the method is invoked with.</returns>
+        public virtual UnitBuilder AddSlotItem(string[] ibps) {
+            ibps.ForEach(x => this.AddSlotItem(x));
+            return this;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <param name="modifier"></param>
         /// <returns>The modified instance the method is invoked with.</returns>
         public virtual UnitBuilder AddModifier(Modifier modifier) {
@@ -377,9 +393,10 @@ namespace Battlegrounds.Game.DataCompany {
             if (!this.m_blueprint.HasCrew) {
                 throw new InvalidOperationException();
             }
-            if (this.m_crewBuilder == null) {
+            if (this.m_crewBuilder is null) {
                 this.m_crewBuilder = new UnitBuilder();
             }
+            this.m_crewBuilder.m_isCrew = true;
             return this.m_crewBuilder;
         }
 
@@ -397,12 +414,13 @@ namespace Battlegrounds.Game.DataCompany {
             Squad squad = new Squad(ID, null, this.m_blueprint);
             squad.SetDeploymentMethod(this.m_transportBlueprint, this.m_deploymentMethod, this.m_deploymentPhase);
             squad.SetVeterancy(this.m_vetrank, this.m_vetexperience);
+            squad.IncreaseCombatTime(this.m_combatTime);
 
-            if (this.m_blueprint?.HasCrew ?? false && this.m_crewBuilder == null) {
+            if (this.m_blueprint?.HasCrew ?? false && this.m_crewBuilder is null) {
                 this.CreateAndGetCrew();
             }
 
-            if (this.m_crewBuilder != null) {
+            if (this.m_crewBuilder is not null) {
                 squad.SetCrew(this.m_crewBuilder.Build((ushort)(ID + 1)));
             }
 
@@ -426,6 +444,26 @@ namespace Battlegrounds.Game.DataCompany {
         }
 
         /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="span"></param>
+        /// <returns></returns>
+        public virtual UnitBuilder SetCombatTime(TimeSpan span) {
+            this.m_combatTime = span;
+            return this;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="isCrew"></param>
+        /// <returns></returns>
+        public virtual UnitBuilder SetIsCrew(bool isCrew) {
+            this.m_isCrew = isCrew;
+            return this;
+        }
+
+        /// <summary>
         /// Reset all the values set by the <see cref="UnitBuilder"/>.
         /// </summary>
         public virtual void Reset() {
@@ -442,6 +480,7 @@ namespace Battlegrounds.Game.DataCompany {
             this.m_upgrades.Clear();
             this.m_vetexperience = 0;
             this.m_vetrank = 0;
+            this.m_combatTime = TimeSpan.Zero;
 
         }
 

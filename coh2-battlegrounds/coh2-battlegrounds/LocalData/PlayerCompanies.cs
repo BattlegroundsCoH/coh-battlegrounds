@@ -17,16 +17,19 @@ namespace BattlegroundsApp.LocalData {
 
         public static void LoadAll() {
 
-            if (__companies == null) {
-                __companies = new List<Company>();
-            } else {
-                __companies.Clear();
-            }
-
             try {
 
                 string companyFolder = BattlegroundsInstance.GetRelativePath(BattlegroundsPaths.COMPANY_FOLDER, string.Empty);
                 string[] companies = Directory.GetFiles(companyFolder, "*.json");
+
+                if (__companies == null) {
+                    __companies = new List<Company>();
+                } else {
+                    if (__companies.Count == companies.Length) {
+                        return;
+                    }
+                    __companies.Clear();
+                }
 
                 foreach (string companypath in companies) {
                     try {
@@ -34,17 +37,17 @@ namespace BattlegroundsApp.LocalData {
                         if (company?.Name?.Replace(" ", "_")?.CompareTo(Path.GetFileNameWithoutExtension(companypath)) == 0) {
                             __companies.Add(company);
                         } else {
-                            Trace.WriteLine($"Failed to verify company \"{companypath}\" (Name Mismatch)", "PlayerCompanies");
+                            Trace.WriteLine($"Failed to verify company \"{companypath}\" (Name Mismatch)", nameof(PlayerCompanies));
                         }
                     } catch (ChecksumViolationException checksumViolation) {
-                        Trace.WriteLine($"Failed to verify company \"{companypath}\" ({checksumViolation.Message})", "PlayerCompanies");
+                        Trace.WriteLine($"Failed to verify company \"{companypath}\" ({checksumViolation.Message})", nameof(PlayerCompanies));
                     }
                 }
 
-                Trace.WriteLine($"Loaded {__companies.Count} user companies", "PlayerCompanies");
+                Trace.WriteLine($"Loaded {__companies.Count} user companies", nameof(PlayerCompanies));
 
-            } catch {
-
+            } catch (Exception ex) {
+                Trace.WriteLine(ex, nameof(PlayerCompanies));
             }
 
         }

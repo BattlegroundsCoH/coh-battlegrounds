@@ -37,8 +37,8 @@ namespace coh2_battlegrounds_bin_tests {
             File.WriteAllText("testCompanyJson.json", str);
             Assert.IsNotNull(str);
             Company read = CompanySerializer.GetCompanyFromJson(str);
-            Assert.IsNull(read);
-            Assert.AreEqual(read.Name, company.Name);
+            Assert.IsNotNull(read);
+            Assert.AreEqual(read.Checksum, company.Checksum);
         }
 
     }

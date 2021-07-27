@@ -18,17 +18,27 @@ namespace coh2_battlegrounds_bin_tests {
             companyBuilder.AddUnit(unitBuilder.SetBlueprint("conscript_squad_bg").SetVeterancyRank(2).SetDeploymentPhase(DeploymentPhase.PhaseA).GetAndReset());
             companyBuilder.AddUnit(unitBuilder.SetBlueprint("conscript_squad_bg").SetVeterancyRank(1).SetDeploymentPhase(DeploymentPhase.PhaseA).GetAndReset());
             companyBuilder.AddUnit(unitBuilder.SetBlueprint("conscript_squad_bg").SetVeterancyRank(4).SetDeploymentPhase(DeploymentPhase.PhaseA).GetAndReset());
-            companyBuilder.AddUnit(unitBuilder.SetBlueprint("conscript_squad_bg").SetVeterancyRank(3).SetDeploymentPhase(DeploymentPhase.PhaseA).GetAndReset());
+            companyBuilder.AddUnit(unitBuilder.SetBlueprint("conscript_squad_bg")
+                .SetVeterancyRank(3)
+                .SetDeploymentPhase(DeploymentPhase.PhaseA)
+                .AddSlotItem("dp-28_light_machine_gun_package_bg").GetAndReset());
             companyBuilder.AddUnit(unitBuilder.SetBlueprint("conscript_squad_bg").SetVeterancyRank(5).SetDeploymentPhase(DeploymentPhase.PhaseA).GetAndReset());
             companyBuilder.AddUnit(unitBuilder.SetBlueprint("conscript_squad_bg").SetVeterancyRank(2).SetDeploymentPhase(DeploymentPhase.PhaseC).GetAndReset());
             companyBuilder.AddUnit(unitBuilder.SetBlueprint("conscript_squad_bg").SetVeterancyRank(2).SetDeploymentPhase(DeploymentPhase.PhaseC).GetAndReset());
             companyBuilder.AddUnit(unitBuilder.SetBlueprint("t_34_76_squad_bg").SetVeterancyRank(3).SetDeploymentPhase(DeploymentPhase.PhaseB).GetAndReset());
-            companyBuilder.AddUnit(unitBuilder.SetBlueprint("conscript_squad_bg").SetVeterancyRank(2).SetDeploymentPhase(DeploymentPhase.PhaseA).GetAndReset());
+            companyBuilder.AddUnit(unitBuilder.SetBlueprint("conscript_squad_bg")
+                .SetVeterancyRank(2)
+                .SetDeploymentPhase(DeploymentPhase.PhaseA)
+                .AddSlotItem("dp-28_light_machine_gun_package_bg")
+                .AddSlotItem("ppsh41_assault_package_bg").GetAndReset());
             companyBuilder.AddUnit(unitBuilder.SetBlueprint("conscript_squad_bg").SetVeterancyRank(1).SetDeploymentPhase(DeploymentPhase.PhaseA).GetAndReset());
             companyBuilder.AddUnit(unitBuilder.SetBlueprint("conscript_squad_bg").SetVeterancyRank(4).SetDeploymentPhase(DeploymentPhase.PhaseA).GetAndReset());
             companyBuilder.AddUnit(unitBuilder.SetBlueprint("conscript_squad_bg").SetVeterancyRank(3).SetDeploymentPhase(DeploymentPhase.PhaseA).GetAndReset());
             companyBuilder.AddUnit(unitBuilder.SetBlueprint("conscript_squad_bg").SetVeterancyRank(5).SetDeploymentPhase(DeploymentPhase.PhaseA).GetAndReset());
-            companyBuilder.AddUnit(unitBuilder.SetBlueprint("conscript_squad_bg").SetVeterancyRank(2).SetDeploymentPhase(DeploymentPhase.PhaseB).GetAndReset());
+            companyBuilder.AddUnit(unitBuilder.SetBlueprint("conscript_squad_bg")
+                .SetVeterancyRank(2)
+                .SetDeploymentPhase(DeploymentPhase.PhaseB)
+                .AddSlotItem("dp-28_light_machine_gun_package_bg").GetAndReset());
             companyBuilder.AddUnit(unitBuilder.SetBlueprint("conscript_squad_bg").SetVeterancyRank(2).SetDeploymentPhase(DeploymentPhase.PhaseB).GetAndReset());
             companyBuilder.AddUnit(unitBuilder.SetBlueprint("conscript_squad_bg").SetVeterancyRank(3).SetDeploymentPhase(DeploymentPhase.PhaseB).GetAndReset());
             companyBuilder.AddUnit(unitBuilder.SetBlueprint("t_34_76_squad_bg").SetVeterancyRank(2).SetDeploymentPhase(DeploymentPhase.PhaseB).GetAndReset());

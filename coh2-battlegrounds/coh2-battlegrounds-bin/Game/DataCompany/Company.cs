@@ -7,6 +7,7 @@ using System.Reflection;
 using System.Text;
 using System.Text.Json.Serialization;
 
+using Battlegrounds.Functional;
 using Battlegrounds.Game.Database;
 using Battlegrounds.Game.Gameplay;
 using Battlegrounds.Json;
@@ -45,6 +46,7 @@ namespace Battlegrounds.Game.DataCompany {
         /// <summary>
         /// The name of the company.
         /// </summary>
+        [ChecksumProperty]
         public string Name { get; set; }
 
         public double Strength => this.GetStrength();
@@ -54,6 +56,7 @@ namespace Battlegrounds.Game.DataCompany {
         /// </summary>
         [JsonBackingField(nameof(m_companyType))]
         [JsonEnum(typeof(CompanyType))]
+        [ChecksumProperty]
         public CompanyType Type => this.m_companyType;
 
         /// <summary>
@@ -61,17 +64,20 @@ namespace Battlegrounds.Game.DataCompany {
         /// </summary>
         [JsonBackingField(nameof(m_availabilityType))]
         [JsonEnum(typeof(CompanyAvailabilityType))]
+        [ChecksumProperty]
         public CompanyAvailabilityType AvailabilityType => this.m_availabilityType;
 
         /// <summary>
         /// The version that was used to generate this company.
         /// </summary>
         [JsonBackingField(nameof(m_lastEditVersion))]
+        [ChecksumProperty]
         public string AppVersion => this.m_lastEditVersion;
 
         /// <summary>
         /// The GUID of the tuning mod used to create this company.
         /// </summary>
+        [ChecksumProperty]
         public ModGuid TuningGUID { get; set; }
 
         /// <summary>
@@ -79,6 +85,7 @@ namespace Battlegrounds.Game.DataCompany {
         /// </summary>
         [JsonBackingField(nameof(m_companyArmy))]
         [JsonReference(typeof(Faction))]
+        [ChecksumProperty]
         public Faction Army => this.m_companyArmy;
 
         /// <summary>
@@ -91,6 +98,7 @@ namespace Battlegrounds.Game.DataCompany {
         /// </summary>
         [JsonBackingField(nameof(m_squads))]
         [JsonIgnoreIfEmpty]
+        [ChecksumProperty(IsCollection = true)]
         public ImmutableArray<Squad> Units => this.m_squads.ToImmutableArray();
 
         /// <summary>
@@ -98,6 +106,7 @@ namespace Battlegrounds.Game.DataCompany {
         /// </summary>
         [JsonBackingField(nameof(m_inventory))]
         [JsonIgnoreIfEmpty]
+        [ChecksumProperty(IsCollection = true)]
         public ImmutableArray<Blueprint> Inventory => this.m_inventory.ToImmutableArray();
 
         /// <summary>
@@ -105,6 +114,7 @@ namespace Battlegrounds.Game.DataCompany {
         /// </summary>
         [JsonBackingField(nameof(m_upgrades))]
         [JsonIgnoreIfEmpty]
+        [ChecksumProperty(IsCollection = true)]
         public ImmutableArray<UpgradeBlueprint> Upgrades => this.m_upgrades.ToImmutableArray();
 
         /// <summary>
@@ -112,6 +122,7 @@ namespace Battlegrounds.Game.DataCompany {
         /// </summary>
         [JsonBackingField(nameof(m_modifiers))]
         [JsonIgnoreIfEmpty]
+        [ChecksumProperty(IsCollection = true)]
         public ImmutableArray<Modifier> Modifiers => this.m_modifiers.ToImmutableArray();
 
         /// <summary>
@@ -119,12 +130,14 @@ namespace Battlegrounds.Game.DataCompany {
         /// </summary>
         [JsonBackingField(nameof(m_abilities))]
         [JsonIgnoreIfEmpty]
+        [ChecksumProperty(IsCollection = true)]
         public ImmutableArray<SpecialAbility> Abilities => this.m_abilities.ToImmutableArray();
 
         /// <summary>
         /// Statistics tied to the <see cref="Company"/>.
         /// </summary>
         [JsonBackingField(nameof(m_companyStatistics))]
+        [ChecksumProperty]
         public CompanyStatistics Statistics => this.m_companyStatistics;
 
         /// <summary>
@@ -203,12 +216,6 @@ namespace Battlegrounds.Game.DataCompany {
         }
 
         /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="squadID"></param>
-        public void RemoveSquad(uint squadID) => this.m_squads.RemoveAll(x => x.SquadID == squadID);
-
-        /// <summary>
         /// Get the company <see cref="Squad"/> by its company index.
         /// </summary>
         /// <param name="squadID">The index of the squad to get</param>
@@ -263,11 +270,7 @@ namespace Battlegrounds.Game.DataCompany {
         /// Get the complete checksum in string format.
         /// </summary>
         /// <returns>The string representation of the checksum.</returns>
-        public string GetChecksum() {
-            long aggr = Encoding.UTF8.GetBytes(this.SerializeAsJson()).Aggregate<byte, long>(0, (a, b) => a + b + (a % b));
-            aggr &= 0xffff;
-            return aggr.ToString("X8");
-        }
+        private string GetChecksum() => new Checksum(this).GetCheckksum().ToString("X8");
 
         /// <summary>
         /// 
@@ -296,6 +299,12 @@ namespace Battlegrounds.Game.DataCompany {
             return result;
 
         }
+
+        public bool VerifyChecksum(string checksum)
+            => this.m_checksum == checksum;
+
+        public void CalculateChecksum()
+            => this.m_checksum = this.GetChecksum();
 
         /// <summary>
         /// Save all <see cref="Company"/> data to a Json file.
@@ -463,6 +472,8 @@ namespace Battlegrounds.Game.DataCompany {
                 throw new InvalidOperationException();
             }
         }
+
+        public void SetAppVersion(string version) => this.m_lastEditVersion = version;
 
     }
 

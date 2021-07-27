@@ -156,7 +156,7 @@ namespace Battlegrounds.Game.DataCompany {
 
         public virtual CompanyBuilder RemoveUnit(uint unitID) {
 
-            this.m_companyTarget.RemoveSquad(unitID);
+            this.m_companyTarget.RemoveSquad((ushort)unitID);
 
             // Return self for method chaining
             return this;
@@ -229,6 +229,11 @@ namespace Battlegrounds.Game.DataCompany {
             return this;
         }
 
+        public virtual CompanyBuilder ChangeAvailability(CompanyAvailabilityType availabilityType) {
+            this.m_availabilityType = availabilityType;
+            return this;
+        }
+
         /// <summary>
         /// Commit all unsaved changes to the <see cref="Company"/> target instance.
         /// </summary>
@@ -248,6 +253,7 @@ namespace Battlegrounds.Game.DataCompany {
             // Update company fluff
             this.m_companyTarget.SetType(this.m_companyType);
             this.m_companyTarget.SetAvailability(this.m_availabilityType);
+            this.m_companyTarget.SetAppVersion(this.m_companyAppVersion);
             this.m_companyTarget.Name = this.m_companyName;
             this.m_companyTarget.TuningGUID = this.m_companyGUID;
             this.m_companyTarget.Owner = this.m_companyUsername;

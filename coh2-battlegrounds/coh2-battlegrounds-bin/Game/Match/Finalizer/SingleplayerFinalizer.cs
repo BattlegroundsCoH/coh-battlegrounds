@@ -135,6 +135,7 @@ namespace Battlegrounds.Game.Match.Finalizer {
             // Make sure we log this unfortunate event
             if (this.CompanyHandler is null) {
                 Trace.WriteLine("{Warning} -- The company handler is NULL and changes will therefore not be handled further!", "SingleplayerFinalizer");
+                return;
             }
 
             // Loop through all companies and save
