@@ -44,7 +44,7 @@ namespace BattlegroundsApp.Dialogs.CreateCompany {
             }
         }
 
-        private CompanyType _companyType;
+        private CompanyType _companyType = CompanyType.Unspecified;
         public CompanyType CompanyType {
             get {
                 return this._companyType;

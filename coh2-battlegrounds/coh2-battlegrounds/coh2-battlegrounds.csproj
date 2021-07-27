@@ -43,6 +43,7 @@
     <None Remove="Resources\ingame\test_unit_icon.png" />
     <None Remove="Resources\ingame\test_unit_transport.png" />
     <None Remove="Resources\ingame\test_unit_veterancy.png" />
+    <None Remove="Resources\ingame\unit_icons\Icons_commander_dshk_icon.png" />
     <None Remove="Resources\ingame\unit_icons\Icons_units_unit_aef_assault_engineers.png" />
     <None Remove="Resources\ingame\unit_icons\Icons_units_unit_aef_cavalry_riflemen.png" />
     <None Remove="Resources\ingame\unit_icons\Icons_units_unit_aef_medic.png" />
@@ -116,6 +117,7 @@
     <None Remove="Resources\ingame\unit_icons\Icons_units_unit_west_german_sturmpioneers.png" />
     <None Remove="Resources\ingame\unit_icons\Icons_units_unit_west_german_terror_officer.png" />
     <None Remove="Resources\ingame\unit_icons\Icons_units_unit_west_german_waffen_honor_guard.png" />
+    <None Remove="Resources\ingame\unit_icons\Icons_vehicles_cargo_truck.png" />
     <None Remove="Resources\ingame\unit_icons\Icons_vehicles_vehicle_aef_57mm_at_gun.png" />
     <None Remove="Resources\ingame\unit_icons\Icons_vehicles_vehicle_aef_browning_m2_50cal_hmg.png" />
     <None Remove="Resources\ingame\unit_icons\Icons_vehicles_vehicle_aef_calliope.png" />
@@ -191,6 +193,7 @@
     <None Remove="Resources\ingame\unit_icons\Icons_vehicles_vehicle_soviet_kv1_heavy_tank.png" />
     <None Remove="Resources\ingame\unit_icons\Icons_vehicles_vehicle_soviet_kv2_heavy_tank.png" />
     <None Remove="Resources\ingame\unit_icons\Icons_vehicles_vehicle_soviet_kv8.png" />
+    <None Remove="Resources\ingame\unit_icons\Icons_vehicles_vehicle_soviet_kv8_flame.png" />
     <None Remove="Resources\ingame\unit_icons\Icons_vehicles_vehicle_soviet_m1942_76mm_at_gun.png" />
     <None Remove="Resources\ingame\unit_icons\Icons_vehicles_vehicle_soviet_m1942_at_gun.png" />
     <None Remove="Resources\ingame\unit_icons\Icons_vehicles_vehicle_soviet_m3a1_armored_personnel_carrier.png" />
@@ -270,6 +273,7 @@
     <Resource Include="Resources\ingame\test_unit_icon.png" />
     <Resource Include="Resources\ingame\test_unit_transport.png" />
     <Resource Include="Resources\ingame\test_unit_veterancy.png" />
+    <Resource Include="Resources\ingame\unit_icons\Icons_commander_dshk_icon.png" />
     <Resource Include="Resources\ingame\unit_icons\Icons_units_unit_aef_assault_engineers.png" />
     <Resource Include="Resources\ingame\unit_icons\Icons_units_unit_aef_cavalry_riflemen.png" />
     <Resource Include="Resources\ingame\unit_icons\Icons_units_unit_aef_medic.png" />
@@ -343,6 +347,7 @@
     <Resource Include="Resources\ingame\unit_icons\Icons_units_unit_west_german_sturmpioneers.png" />
     <Resource Include="Resources\ingame\unit_icons\Icons_units_unit_west_german_terror_officer.png" />
     <Resource Include="Resources\ingame\unit_icons\Icons_units_unit_west_german_waffen_honor_guard.png" />
+    <Resource Include="Resources\ingame\unit_icons\Icons_vehicles_cargo_truck.png" />
     <Resource Include="Resources\ingame\unit_icons\Icons_vehicles_vehicle_aef_57mm_at_gun.png" />
     <Resource Include="Resources\ingame\unit_icons\Icons_vehicles_vehicle_aef_browning_m2_50cal_hmg.png" />
     <Resource Include="Resources\ingame\unit_icons\Icons_vehicles_vehicle_aef_calliope.png" />
@@ -418,6 +423,7 @@
     <Resource Include="Resources\ingame\unit_icons\Icons_vehicles_vehicle_soviet_kv1_heavy_tank.png" />
     <Resource Include="Resources\ingame\unit_icons\Icons_vehicles_vehicle_soviet_kv2_heavy_tank.png" />
     <Resource Include="Resources\ingame\unit_icons\Icons_vehicles_vehicle_soviet_kv8.png" />
+    <Resource Include="Resources\ingame\unit_icons\Icons_vehicles_vehicle_soviet_kv8_flame.png" />
     <Resource Include="Resources\ingame\unit_icons\Icons_vehicles_vehicle_soviet_m1942_76mm_at_gun.png" />
     <Resource Include="Resources\ingame\unit_icons\Icons_vehicles_vehicle_soviet_m1942_at_gun.png" />
     <Resource Include="Resources\ingame\unit_icons\Icons_vehicles_vehicle_soviet_m3a1_armored_personnel_carrier.png" />
