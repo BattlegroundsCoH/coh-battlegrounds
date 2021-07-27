@@ -62,7 +62,7 @@
         <!-- Row 3 -->
         <TabControl Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="5" Grid.RowSpan="3" Height="550" Width="750">
             <TabItem Header="Units">
-                <dropArea:DropArea AllowDrop="True" Drop="OnDrop" Width="740" Height="370" Background="White" BorderThickness="1.5" BorderBrush="Black">
+                <dropArea:DropArea AllowDrop="True" Drop="OnDrop" Width="740" Height="520" Background="White" BorderThickness="1.5" BorderBrush="Black">
                     <StackPanel x:Name="UnitTypeStack" Orientation="Horizontal">
                         <ScrollViewer CanContentScroll="False" VerticalScrollBarVisibility="Visible">
                             <WrapPanel x:Name="InfantryWrap" Orientation="Horizontal" Width="228">
