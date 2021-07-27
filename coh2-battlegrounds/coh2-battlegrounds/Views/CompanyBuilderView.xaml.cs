@@ -161,25 +161,6 @@ namespace BattlegroundsApp.Views {
                 // TODO: Add abilities to list
 
             });
-
-            UnitSlot AddSlotInfantry = new UnitSlot(this, UnitSlotType.Infantry);
-            AddSlotInfantry.SetUnit(null);
-
-            UnitSlot AddSlotSupport = new UnitSlot(this, UnitSlotType.Support);
-            AddSlotSupport.SetUnit(null);
-
-            UnitSlot AddSlotVehicle = new UnitSlot(this, UnitSlotType.Vehicle);
-            AddSlotVehicle.SetUnit(null);
-
-            UnitSlot AddSlotAbility = new UnitSlot(this, UnitSlotType.Ability);
-            AddSlotAbility.SetUnit(null);
-
-            if (CompanySize != CompanyMaxSize) {
-                //this.InfantryList.Children.Add(AddSlotInfantry);
-                //this.SupportList.Children.Add(AddSlotSupport);
-                //this.VehicleList.Children.Add(AddSlotVehicle);
-                //this.AbilityList.Children.Add(AddSlotAbility);
-            }
         }
 
         public void AddUnitToCompany(UnitBuilder unitBuilder) {
@@ -202,19 +183,20 @@ namespace BattlegroundsApp.Views {
 
         private void OnDrop(object sender, DragEventArgs e) {
 
-            SquadBlueprint squadBlueprint = e.Data.GetData("Squad") as SquadBlueprint;
+            if (CompanySize != CompanyMaxSize) {
+                SquadBlueprint squadBlueprint = e.Data.GetData("Squad") as SquadBlueprint;
 
-            UnitBuilder unitBuilder = new UnitBuilder();
-            unitBuilder.SetBlueprint(squadBlueprint);
+                UnitBuilder unitBuilder = new UnitBuilder();
+                unitBuilder.SetBlueprint(squadBlueprint);
 
-            var squad = builder.AddAndCommitUnit(unitBuilder);
-            CompanySize++;
+                var squad = builder.AddAndCommitUnit(unitBuilder);
+                CompanySize++;
 
-            ShowCompany();
+                ShowCompany();
 
-            e.Effects = DragDropEffects.Move;
-            e.Handled = true;
-
+                e.Effects = DragDropEffects.Move;
+                e.Handled = true;
+            }
         }
 
     }
