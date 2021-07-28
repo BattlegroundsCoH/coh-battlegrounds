@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+
 using Battlegrounds.Functional;
 using Battlegrounds.Game.Gameplay;
 using Battlegrounds.Modding;
@@ -17,6 +18,7 @@ namespace Battlegrounds.Game.DataCompany {
         private CompanyAvailabilityType m_availabilityType;
         private string m_companyName;
         private string m_companyUsername;
+        private string m_companyAppVersion;
         private ModGuid m_companyGUID;
         private Stack<UnitBuilder> m_uncommittedSquads;
         private Stack<UnitBuilder> m_redo;
@@ -56,10 +58,7 @@ namespace Battlegrounds.Game.DataCompany {
         /// <param name="faction">The <see cref="Faction"/> that the company will belong to.</param>
         /// <returns>The calling <see cref="CompanyBuilder"/> instance.</returns>
         public virtual CompanyBuilder NewCompany(Faction faction) {
-#pragma warning disable CS0618 // Type or member is obsolete
-            this.m_companyTarget = new Company(); // This is intentional
-#pragma warning restore CS0618 // Type or member is obsolete
-            this.m_companyTarget.SetArmy(faction);
+            this.m_companyTarget = new Company(faction); // This is intentional
             this.m_companyName = "New Company";
             return this;
         }
@@ -73,7 +72,7 @@ namespace Battlegrounds.Game.DataCompany {
             this.m_companyTarget = companyTarget;
             this.m_companyType = companyTarget.Type;
             this.m_companyName = companyTarget.Name;
-            this.m_companyGUID = ModGuid.FromGuid(companyTarget.TuningGUID);
+            this.m_companyGUID = companyTarget.TuningGUID;
             return this;
         }
 
@@ -92,7 +91,7 @@ namespace Battlegrounds.Game.DataCompany {
             this.m_companyTarget = CompanyTemplate.FromTemplate(template);
             this.m_companyName = newName;
             this.m_companyType = this.m_companyTarget.Type;
-            this.m_companyGUID = ModGuid.FromGuid(company.TuningGUID);
+            this.m_companyGUID = this.m_companyTarget.TuningGUID;
             this.m_availabilityType = companyAvailability;
             return this;
         }
@@ -105,6 +104,18 @@ namespace Battlegrounds.Game.DataCompany {
             this.m_companyTarget = null;
             this.m_companyType = CompanyType.Unspecified;
             this.m_companyName = string.Empty;
+            return this;
+        }
+
+        /// <summary>
+        /// Add a unit to the <see cref="Company"/> using a <see cref="UnitBuilder"/>.
+        /// </summary>
+        /// <param name="builder">The function to build the unit.</param>
+        /// <returns>The calling <see cref="CompanyBuilder"/> instance.</returns>
+        public virtual CompanyBuilder AddUnit(Func<UnitBuilder, UnitBuilder> builder) {
+            UnitBuilder bld = new();
+            bld.SetModGUID(this.m_companyGUID.ToString());
+            this.AddUnit(builder(bld));
             return this;
         }
 
@@ -169,9 +180,14 @@ namespace Battlegrounds.Game.DataCompany {
 
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="unitID"></param>
+        /// <returns></returns>
         public virtual CompanyBuilder RemoveUnit(uint unitID) {
 
-            this.m_companyTarget.RemoveSquad(unitID);
+            this.m_companyTarget.RemoveSquad((ushort)unitID);
 
             // Return self for method chaining
             return this;
@@ -230,6 +246,36 @@ namespace Battlegrounds.Game.DataCompany {
         }
 
         /// <summary>
+        /// Change the associated <see cref="Guid"/> of the <see cref="Company"/>. (This will decide from where the blueprints can be drawn from).
+        /// </summary>
+        /// <param name="tuningGUID">The tuning mod GUID.</param>
+        /// <returns>The calling <see cref="CompanyBuilder"/> instance.</returns>
+        public virtual CompanyBuilder ChangeTuningMod(ModGuid tuningGUID) {
+            this.m_companyGUID = tuningGUID;
+            return this;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="version"></param>
+        /// <returns></returns>
+        public virtual CompanyBuilder ChangeAppVersion(string version) {
+            this.m_companyAppVersion = version;
+            return this;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="availabilityType"></param>
+        /// <returns></returns>
+        public virtual CompanyBuilder ChangeAvailability(CompanyAvailabilityType availabilityType) {
+            this.m_availabilityType = availabilityType;
+            return this;
+        }
+
+        /// <summary>
         /// Commit all unsaved changes to the <see cref="Company"/> target instance.
         /// </summary>
         /// <remarks>
@@ -248,6 +294,7 @@ namespace Battlegrounds.Game.DataCompany {
             // Update company fluff
             this.m_companyTarget.SetType(this.m_companyType);
             this.m_companyTarget.SetAvailability(this.m_availabilityType);
+            this.m_companyTarget.SetAppVersion(this.m_companyAppVersion);
             this.m_companyTarget.Name = this.m_companyName;
             this.m_companyTarget.TuningGUID = this.m_companyGUID;
             this.m_companyTarget.Owner = this.m_companyUsername;
@@ -269,22 +316,6 @@ namespace Battlegrounds.Game.DataCompany {
             // Return self.
             return this;
 
-        }
-
-        /// <summary>
-        /// Undo adding a squad.
-        /// </summary>
-        public void UndoSquad() {
-            if (this.m_uncommittedSquads.Count > 0)
-                this.m_redo.Push(this.m_uncommittedSquads.Pop());
-        }
-
-        /// <summary>
-        /// Redo adding a squad.
-        /// </summary>
-        public void RedoSquad() {
-            if (this.m_redo.Count > 0)
-                this.m_uncommittedSquads.Push(this.m_redo.Pop());
         }
 
         /// <summary>

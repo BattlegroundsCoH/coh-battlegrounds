@@ -6,6 +6,7 @@ using Battlegrounds.Functional;
 using Battlegrounds.Game.Database;
 using Battlegrounds.Game.Database.Management;
 using Battlegrounds.Game.Gameplay;
+using Battlegrounds.Modding;
 
 namespace Battlegrounds.Game.DataCompany {
     
@@ -19,7 +20,9 @@ namespace Battlegrounds.Game.DataCompany {
 
         byte m_vetrank;
         float m_vetexperience;
-        string m_modGuid;
+        bool m_isCrew;
+        ModGuid m_modGuid;
+        TimeSpan m_combatTime;
         SquadBlueprint m_blueprint;
         SquadBlueprint m_transportBlueprint;
         DeploymentMethod m_deploymentMethod;
@@ -39,7 +42,7 @@ namespace Battlegrounds.Game.DataCompany {
         /// New basic <see cref="UnitBuilder"/> instance of for building a <see cref="Squad"/>.
         /// </summary>
         public UnitBuilder() {
-            this.m_modGuid = string.Empty;
+            this.m_modGuid = ModGuid.BaseGame;
             this.m_blueprint = null;
             this.m_transportBlueprint = null;
             this.m_crewBuilder = null;
@@ -48,6 +51,8 @@ namespace Battlegrounds.Game.DataCompany {
             this.m_modifiers = new HashSet<Modifier>();
             this.m_deploymentMethod = DeploymentMethod.None;
             this.m_deploymentPhase = DeploymentPhase.PhaseNone;
+            this.m_combatTime = TimeSpan.Zero;
+            this.m_isCrew = false;
         }
 
         /// <summary>
@@ -69,8 +74,10 @@ namespace Battlegrounds.Game.DataCompany {
             this.m_transportBlueprint = squad.SupportBlueprint as SquadBlueprint;
             this.m_deploymentPhase = squad.DeploymentPhase;
             this.m_deploymentMethod = squad.DeploymentMethod;
-            this.m_modGuid = string.Empty;
-            
+            this.m_modGuid = squad.SBP?.PBGID.Mod ?? ModGuid.BaseGame;
+            this.m_combatTime = squad.CombatTime;
+            this.m_isCrew = squad.IsCrew;
+
             if (squad.Crew != null) {
                 this.m_crewBuilder = new UnitBuilder(squad.Crew, overrideIndex);
             }
@@ -96,7 +103,7 @@ namespace Battlegrounds.Game.DataCompany {
             this.m_transportBlueprint = squad.SupportBlueprint as SquadBlueprint;
             this.m_deploymentPhase = squad.DeploymentPhase;
             this.m_deploymentMethod = squad.DeploymentMethod;
-            this.m_modGuid = string.Empty;
+            this.m_modGuid = ModGuid.BaseGame;
             if (squad.Crew != null) {
                 this.m_crewBuilder = new UnitBuilder(squad.Crew, true);
             }
@@ -108,6 +115,16 @@ namespace Battlegrounds.Game.DataCompany {
         /// <param name="guid">The GUID (in coh2 string format).</param>
         /// <returns>The modified instance the method is invoked with.</returns>
         public UnitBuilder SetModGUID(string guid) {
+            this.m_modGuid = ModGuid.FromGuid(guid);
+            return this;
+        }
+
+        /// <summary>
+        /// Set the tuning pack GUID this unit should be based on.
+        /// </summary>
+        /// <param name="guid">The GUID (in coh2 string format).</param>
+        /// <returns>The modified instance the method is invoked with.</returns>
+        public UnitBuilder SetModGUID(ModGuid guid) {
             this.m_modGuid = guid;
             return this;
         }
@@ -316,6 +333,16 @@ namespace Battlegrounds.Game.DataCompany {
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="ibps"></param>
+        /// <returns>The modified instance the method is invoked with.</returns>
+        public virtual UnitBuilder AddSlotItem(string[] ibps) {
+            ibps.ForEach(x => this.AddSlotItem(x));
+            return this;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <param name="modifier"></param>
         /// <returns>The modified instance the method is invoked with.</returns>
         public virtual UnitBuilder AddModifier(Modifier modifier) {
@@ -357,19 +384,35 @@ namespace Battlegrounds.Game.DataCompany {
         /// Create or get a new <see cref="UnitBuilder"/> instance representing the <see cref="Squad"/> crew of the current <see cref="UnitBuilder"/> instance.
         /// </summary>
         /// <returns>The vehicle crew <see cref="UnitBuilder"/> instance for  the (vehicle/crewable) <see cref="UnitBuilder"/> instance.</returns>
-        /// <exception cref="ArgumentNullException"/>
         /// <exception cref="InvalidOperationException"/>
-        public virtual UnitBuilder CreateAndGetCrew() {
+        public virtual UnitBuilder CreateAndGetCrew(Func<UnitBuilder, UnitBuilder> builder) {
             if (this.m_blueprint == null) {
-                throw new ArgumentNullException();
+                throw new InvalidOperationException("Attempt to create a crew for a unit without a blueprint.");
             }
             if (!this.m_blueprint.HasCrew) {
-                throw new InvalidOperationException();
+                throw new InvalidOperationException("Attempt to create a crew for a unit that does not support crews.");
             }
-            if (this.m_crewBuilder == null) {
-                this.m_crewBuilder = new UnitBuilder();
+            if (this.m_crewBuilder is null) {
+                var crewDefaultBP = this.m_blueprint.GetCrewBlueprint();
+                var crewBuilder = new UnitBuilder().SetModGUID(this.m_modGuid);
+                if (crewDefaultBP is not null) {
+                    crewBuilder.SetBlueprint(crewDefaultBP);
+                }
+                this.m_crewBuilder = builder?.Invoke(crewBuilder) ?? crewBuilder;
             }
-            return this.m_crewBuilder;
+            this.m_crewBuilder.m_isCrew = true;
+            return this;
+        }
+
+        public virtual UnitBuilder SetCrew(Squad squad, bool overrideIndex = true) {
+            if (this.m_blueprint == null) {
+                throw new InvalidOperationException("Attempt to create a crew for a unit without a blueprint.");
+            }
+            if (!this.m_blueprint.HasCrew) {
+                throw new InvalidOperationException("Attempt to create a crew for a unit that does not support crews.");
+            }
+            this.m_crewBuilder = new(squad, overrideIndex);
+            return this;
         }
 
         /// <summary>
@@ -386,12 +429,14 @@ namespace Battlegrounds.Game.DataCompany {
             Squad squad = new Squad(ID, null, this.m_blueprint);
             squad.SetDeploymentMethod(this.m_transportBlueprint, this.m_deploymentMethod, this.m_deploymentPhase);
             squad.SetVeterancy(this.m_vetrank, this.m_vetexperience);
+            squad.IncreaseCombatTime(this.m_combatTime);
+            squad.SetIsCrew(this.m_isCrew);
 
-            if (this.m_blueprint?.HasCrew ?? false && this.m_crewBuilder == null) {
-                this.CreateAndGetCrew();
+            if (this.m_blueprint?.HasCrew ?? false && this.m_crewBuilder is null) {
+                this.CreateAndGetCrew(null);
             }
 
-            if (this.m_crewBuilder != null) {
+            if (this.m_crewBuilder is not null) {
                 squad.SetCrew(this.m_crewBuilder.Build((ushort)(ID + 1)));
             }
 
@@ -415,6 +460,26 @@ namespace Battlegrounds.Game.DataCompany {
         }
 
         /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="span"></param>
+        /// <returns></returns>
+        public virtual UnitBuilder SetCombatTime(TimeSpan span) {
+            this.m_combatTime = span;
+            return this;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="isCrew"></param>
+        /// <returns></returns>
+        public virtual UnitBuilder SetIsCrew(bool isCrew) {
+            this.m_isCrew = isCrew;
+            return this;
+        }
+
+        /// <summary>
         /// Reset all the values set by the <see cref="UnitBuilder"/>.
         /// </summary>
         public virtual void Reset() {
@@ -431,6 +496,7 @@ namespace Battlegrounds.Game.DataCompany {
             this.m_upgrades.Clear();
             this.m_vetexperience = 0;
             this.m_vetrank = 0;
+            this.m_combatTime = TimeSpan.Zero;
 
         }
 

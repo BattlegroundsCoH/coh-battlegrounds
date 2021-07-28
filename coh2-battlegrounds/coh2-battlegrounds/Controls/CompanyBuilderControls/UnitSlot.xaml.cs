@@ -38,7 +38,10 @@ namespace BattlegroundsApp.Controls.CompanyBuilderControls {
         public UnitSlotType UnitType { get; }
         private uint SlotOccupantID { get; set; }
 
-        private List<SquadBlueprint> SquadList => BlueprintManager.GetCollection<SquadBlueprint>().FilterByMod(_companyBuilderView.CompanyGUID).Filter(x => x.Army == _companyBuilderView.CompanyFaction.ToString() && _companyBuilderView.Category[(int)this.UnitType].IsValid(x)).ToList();
+        private List<SquadBlueprint> SquadList 
+            => BlueprintManager.GetCollection<SquadBlueprint>()
+            .FilterByMod(_companyBuilderView.CompanyGUID)
+            .Filter(x => x.Army == _companyBuilderView.CompanyFaction.ToString() && _companyBuilderView.Category[(int)this.UnitType].IsValid(x)).ToList();
 
         private CompanyBuilderView _companyBuilderView { get; set; }
 

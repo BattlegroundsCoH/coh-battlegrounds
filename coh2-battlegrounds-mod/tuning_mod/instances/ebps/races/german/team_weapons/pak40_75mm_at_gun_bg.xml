@@ -790,6 +790,10 @@
 						<int name="recrew_max_squad_size" value="6" />
 						<bool name="abandoned_allows_pass_through" value="False" />
 						<list name="apply_to_driver_action">
+							<template_reference name="action" value="action\scar_function_call">
+								<string name="function_name" value="BG_OnItemCaptured" />
+								<uniqueid name="id" value="1073744677" />
+							</template_reference>
 						</list>
 						<float name="driver_death_chance_on_entity_death" value="1" />
 						<instance_reference name="driver_squad_blueprint" value="" />
@@ -807,6 +811,10 @@
 						<int name="recrew_max_squad_size" value="4" />
 						<bool name="abandoned_allows_pass_through" value="False" />
 						<list name="apply_to_driver_action">
+							<template_reference name="action" value="action\scar_function_call">
+								<string name="function_name" value="BG_OnItemCaptured" />
+								<uniqueid name="id" value="1073744678" />
+							</template_reference>
 						</list>
 						<float name="driver_death_chance_on_entity_death" value="1" />
 						<instance_reference name="driver_squad_blueprint" value="" />
@@ -824,6 +832,10 @@
 						<int name="recrew_max_squad_size" value="4" />
 						<bool name="abandoned_allows_pass_through" value="False" />
 						<list name="apply_to_driver_action">
+							<template_reference name="action" value="action\scar_function_call">
+								<string name="function_name" value="BG_OnItemCaptured" />
+								<uniqueid name="id" value="1073744679" />
+							</template_reference>
 						</list>
 						<float name="driver_death_chance_on_entity_death" value="1" />
 						<instance_reference name="driver_squad_blueprint" value="" />
@@ -841,6 +853,10 @@
 						<int name="recrew_max_squad_size" value="4" />
 						<bool name="abandoned_allows_pass_through" value="False" />
 						<list name="apply_to_driver_action">
+							<template_reference name="action" value="action\scar_function_call">
+								<string name="function_name" value="BG_OnItemCaptured" />
+								<uniqueid name="id" value="1073744680" />
+							</template_reference>
 						</list>
 						<float name="driver_death_chance_on_entity_death" value="1" />
 						<instance_reference name="driver_squad_blueprint" value="" />

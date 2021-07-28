@@ -35,12 +35,15 @@ namespace Battlegrounds.Game.Match.Analyze {
         private Player[] m_players;
 
         private List<UnitStatus> m_units;
+        private List<ItemStatus> m_items;
 
         public int EventCount => this.m_eventCount;
 
         public bool IsFinalizableMatch => this.m_isFinalizable && this.Session.AllowPersistency;
 
         public IReadOnlyList<UnitStatus> Units => this.m_units.AsReadOnly();
+
+        public IReadOnlyList<ItemStatus> Items => this.m_items.AsReadOnly();
 
         public IReadOnlyCollection<Player> Players => this.m_players;
 
@@ -113,8 +116,9 @@ namespace Battlegrounds.Game.Match.Analyze {
             // Sort by time
             this.m_events = this.m_events.OrderBy(x => x.time).ToList();
 
-            // Create new list
+            // Create new lists
             this.m_units = new();
+            this.m_items = new();
 
             // Now loop through all events.
             for (int i = 0; i < this.m_events.Count; i++) {
@@ -136,8 +140,8 @@ namespace Battlegrounds.Game.Match.Analyze {
                         break;
                     case DeployEvent deployEvent:
                         int deployID = this.m_units.FindIndex(x => x.UnitID == deployEvent.SquadID && x.PlayerOwner.ID == deployEvent.DeployingPlayer.ID);
-                        if (deployID == -1) {
-                            UnitStatus status = new UnitStatus(deployEvent.DeployingPlayer, deployEvent.SquadID);
+                        if (deployID is -1) {
+                            var status = new UnitStatus(deployEvent.DeployingPlayer, deployEvent.SquadID);
                             if (status.Deploy(stamp)) {
                                 this.m_units.Add(status);
                             } else {
@@ -152,10 +156,13 @@ namespace Battlegrounds.Game.Match.Analyze {
                         }
                         break;
                     case PickupEvent pickupEvent:
-                        // TODO: Implement
+                        int pickupID = this.m_units.FindIndex(x => x.UnitID == pickupEvent.PickupSquadID && x.PlayerOwner.ID == pickupEvent.PickupPlayer.ID);
+                        if (pickupID is >=0) {
+                            this.m_units[pickupID].CapturedSlotItems.Add(pickupEvent.PickupItem);
+                        }
                         break;
                     case CaptureEvent captureEvent:
-                        // TODO: Implement
+                        this.m_items.Add(new(captureEvent.CapturingPlayer, captureEvent.CapturedBlueprint));
                         break;
                     case RetreatEvent retreatEvent: // retreat/withdraw
                         int retreatID = this.m_units.FindIndex(x => x.UnitID == retreatEvent.WithdrawingUnitID && x.PlayerOwner.ID == retreatEvent.WithdrawPlayer.ID);

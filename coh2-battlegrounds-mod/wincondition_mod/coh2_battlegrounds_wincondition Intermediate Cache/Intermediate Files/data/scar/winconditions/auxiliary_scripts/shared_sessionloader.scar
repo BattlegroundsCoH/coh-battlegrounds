@@ -32,7 +32,6 @@ function BG_LoadSessionData()
         else
             _bg_aiData[k] = {};
             _bg_aiData[k].player = player;
-            _bg_aiData[k].steamID = "0";
             _bg_aiData[k].name = Player_GetDisplayName(player)[1];
             _bg_aiData[k].playerID = Player_GetID(player);
             _bg_aiData[k].race = race;
@@ -112,6 +111,38 @@ function BG_SetupWincondition()
 
 end
 
+function BG_PrepareMapdata()
+
+    -- Trigger map entry point collector
+    BG_UTIL_collect_map_entries();
+
+    -- Spawn dummy vehicle
+    local mkr_dummy = "bgtest_vehicle";
+    if bg_isDebugMap and Marker_Exists(mkr_dummy, "") then
+        local dummypos = Marker_GetPosition(Marker_FromName(mkr_dummy, ""));
+        local eid = Entity_CreateENV(BP_GetEntityBlueprint(_bg_tuning_guid .. ":panzer_iv_sdkfz_161_bg_test_decrewed"), dummypos, dummypos);
+        Entity_Spawn(eid);
+    end
+
+    -- Spawn dummy team_weapon
+    mkr_dummy = "bgtest_weapon";
+    if bg_isDebugMap and Marker_Exists(mkr_dummy, "") then
+        local dummypos = Marker_GetPosition(Marker_FromName(mkr_dummy, ""));
+        local eid = Entity_CreateENV(BP_GetEntityBlueprint(_bg_tuning_guid .. ":pak40_75mm_at_gun_bg"), dummypos, dummypos);
+        Entity_Spawn(eid);
+    end
+
+    for i = 0, World_GetNumEntities() - 1 do
+        local entity = World_GetEntity(i);
+        local ebp = Entity_GetBlueprint(entity);
+        if Entity_IsVehicle(entity) and not Entity_IsBuilding(entity) then
+            Entity_SetRecrewable(entity, bg_isDebugMap); -- Set crewable if debug map OTHERWISE, set to false
+        end
+    end
+
+
+end
+
 function BG_LoadCompanies()
 
     -- Make sure the player count is matching
@@ -152,19 +183,21 @@ function BG_LoadAIData()
         ["axis"] = 0,
     }
 
-    for i = 1, #_bg_aiData do
+    for _, ai in pairs(_bg_aiData) do
 
-        local side = _bg_aiData[i].teamStr;
+        local side = ai.teamStr;
 
         for k,v in pairs(bg_companies) do
             if k == "AIPlayer#" ..tostring(counters[side]) then
-                _bg_aiData[i].company = v;
+                ai.company = v;
+                ai.steamID = counters[side];
+                ai.ttype = side;
                 counters[side] = counters[side] + 1;
                 break;
             end
         end
 
-        if _bg_aiData[i].company == nil then
+        if ai.company == nil then
             return BG_LocString(11);
         end
 

@@ -1,0 +1,12 @@
+{
+    "Lua.diagnostics.globals": [
+        "import",
+        "Player_GetSquads",
+        "Rule_AddOneShot",
+        "Rule_Add",
+        "Rule_AddInterval",
+        "Game_GetLocalPlayer",
+        "Rule_AddGlobalEvent",
+        "GE_BroadcastMessage"
+    ],
+}

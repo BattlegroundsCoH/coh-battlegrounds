@@ -25,8 +25,8 @@ namespace BattlegroundsApp.Controls.CompanyBuilderControls {
 
         public SquadSlotSmall(SquadBlueprint squad) {
             this.DataContext = this;
-            SquadName = GameLocale.GetString(uint.Parse(squad.LocaleName));
-            SquadIcon = $"pack://application:,,,/Resources/ingame/unit_icons/{squad.Icon}.png";
+            SquadName = GameLocale.GetString(uint.Parse(squad.UI.ScreenName));
+            SquadIcon = $"pack://application:,,,/Resources/ingame/unit_icons/{squad.UI.Icon}.png";
             Squad = squad;
             InitializeComponent();
         }

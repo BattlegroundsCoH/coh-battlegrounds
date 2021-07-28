@@ -2,11 +2,15 @@
 using System.Linq;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Text.Json.Serialization;
+using System.Text.Json;
 
 using Battlegrounds.Game.Database;
-using Battlegrounds.Game.Database.Management;
-using Battlegrounds.Json;
+using Battlegrounds.Game.Database.Extensions;
 using Battlegrounds.Functional;
+using Battlegrounds.Verification;
+using Battlegrounds.Game.DataCompany;
+using Battlegrounds.Modding;
 
 namespace Battlegrounds.Game.Gameplay {
 
@@ -77,9 +81,8 @@ namespace Battlegrounds.Game.Gameplay {
     /// <summary>
     /// Representation of a Squad. Implements <see cref="IJsonObject"/>.
     /// </summary>
-    public class Squad : IJsonObject {
-
-        #region Private Fields
+    [JsonConverter(typeof(SquadJson))]
+    public class Squad : IChecksumItem {
 
         private byte m_veterancyRank;
         private float m_veterancyProgress;
@@ -96,112 +99,98 @@ namespace Battlegrounds.Game.Gameplay {
 
         private TimeSpan m_combatTime;
 
-        #endregion
-
         /// <summary>
         /// The unique squad ID used to identify the <see cref="Squad"/>.
         /// </summary>
+        [ChecksumProperty]
         public ushort SquadID { get; }
 
         /// <summary>
         /// The player who (currently) owns the <see cref="Squad"/>.
         /// </summary>
-        [JsonIgnore]
         public Player PlayerOwner { get; }
+
+        /// <summary>
+        /// Get or privately set the checksum value
+        /// </summary>
+        public ulong Checksum { get; private set; }
 
         /// <summary>
         /// The (crew if squad is a vehicle) <see cref="Database.Blueprint"/> the <see cref="Squad"/> is a type of.
         /// </summary>
-        [JsonReference(typeof(BlueprintManager))]
-        [JsonIgnoreIfNull]
+        [ChecksumProperty]
         public Blueprint Blueprint { get; }
 
         /// <summary>
         /// The squad or entity <see cref="Database.Blueprint"/> to support this squad.
         /// </summary>
-        [JsonBackingField(nameof(m_deployBp))]
-        [JsonReference(typeof(BlueprintManager))]
-        [JsonIgnoreIfNull]
+        [ChecksumProperty]
         public Blueprint SupportBlueprint => this.m_deployBp;
 
         /// <summary>
         /// The method to use when deploying a <see cref="Squad"/>.
         /// </summary>
-        [JsonBackingField(nameof(m_deployMode))]
-        [JsonIgnoreIfValue(DeploymentMethod.None)]
-        [JsonEnum(typeof(DeploymentMethod))]
+        [ChecksumProperty]
         public DeploymentMethod DeploymentMethod => this.m_deployMode;
 
         /// <summary>
         /// The phase in which a squad can be deployed.
         /// </summary>
-        [JsonBackingField(nameof(m_deployPhase))]
-        [JsonIgnoreIfValue(DeploymentPhase.PhaseNone)]
-        [JsonEnum(typeof(DeploymentPhase))]
+        [ChecksumProperty]
         public DeploymentPhase DeploymentPhase => this.m_deployPhase;
 
         /// <summary>
         /// The squad data for the crew.
         /// </summary>
-        [JsonBackingField(nameof(m_crewSquad))]
-        [JsonIgnoreIfNull]
+        [ChecksumProperty]
         public Squad Crew => this.m_crewSquad;
 
         /// <summary>
         /// Is the <see cref="Squad"/> the crew for another <see cref="Squad"/> instance.
         /// </summary>
-        [JsonBackingField(nameof(m_isCrewSquad))]
-        [JsonIgnoreIfValue(false)]
+        [ChecksumProperty]
         public bool IsCrew => this.m_isCrewSquad;
 
         /// <summary>
         /// The <see cref="Blueprint"/> in a <see cref="SquadBlueprint"/> form.
         /// </summary>
         /// <exception cref="InvalidCastException"/>
-        [JsonIgnore]
         public SquadBlueprint SBP => this.Blueprint as SquadBlueprint;
 
         /// <summary>
         /// The achieved veterancy rank of a <see cref="Squad"/>.
         /// </summary>
-        [JsonBackingField(nameof(m_veterancyRank))]
-        [JsonIgnoreIfValue((byte)0)]
+        [ChecksumProperty]
         public byte VeterancyRank => this.m_veterancyRank;
 
         /// <summary>
         /// The current veterancy progress of a <see cref="Squad"/>.
         /// </summary>
-        [JsonBackingField(nameof(m_veterancyProgress))]
-        [JsonIgnoreIfValue(0.0f)]
+        [ChecksumProperty]
         public float VeterancyProgress => this.m_veterancyProgress;
 
         /// <summary>
         /// The current upgrades applied to a <see cref="Squad"/>.
         /// </summary>
-        [JsonBackingField(nameof(m_upgrades))]
-        [JsonReference(typeof(BlueprintManager))]
-        [JsonIgnoreIfEmpty]
+        [ChecksumProperty]
         public ImmutableHashSet<Blueprint> Upgrades => this.m_upgrades.ToImmutableHashSet();
 
         /// <summary>
         /// The current slot items carried by the <see cref="Squad"/>.
         /// </summary>
-        [JsonBackingField(nameof(m_slotItems))]
-        [JsonReference(typeof(BlueprintManager))]
-        [JsonIgnoreIfEmpty]
+        [ChecksumProperty]
         public ImmutableHashSet<Blueprint> SlotItems => this.m_slotItems.ToImmutableHashSet();
 
         /// <summary>
         /// Get the current modifiers applied to the <see cref="Squad"/>.
         /// </summary>
-        [JsonBackingField(nameof(m_modifiers))]
-        [JsonIgnoreIfEmpty]
+        [ChecksumProperty]
         public ImmutableHashSet<Modifier> Modifiers => this.m_modifiers.ToImmutableHashSet();
 
         /// <summary>
         /// Get the total amount of time the <see cref="Squad"/> has been in combat.
         /// </summary>
-        [JsonBackingField(nameof(m_combatTime))]
+        [ChecksumProperty]
         public TimeSpan CombatTime => this.m_combatTime;
 
         /// <summary>
@@ -332,9 +321,9 @@ namespace Battlegrounds.Game.Gameplay {
         /// </summary>
         /// <returns>The cost of the squad.</returns>
         /// <exception cref="NullReferenceException"/>
-        public Cost GetCost() {
+        public CostExtension GetCost() {
 
-            Cost c = new Cost(SBP.Cost.Manpower, SBP.Cost.Munitions, SBP.Cost.Fuel, SBP.Cost.FieldTime);
+            CostExtension c = new (this.SBP.Cost.Manpower, this.SBP.Cost.Munitions, this.SBP.Cost.Fuel, this.SBP.Cost.FieldTime);
             c = this.m_upgrades.Select(x => (x as UpgradeBlueprint).Cost).Aggregate(c, (a, b) => a + b);
 
             if (this.m_deployBp is SquadBlueprint sbp) {
@@ -388,17 +377,236 @@ namespace Battlegrounds.Game.Gameplay {
         }
 
         /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
-        public string ToJsonReference() => this.SquadID.ToString();
-
-        /// <summary>
         /// Returns a string that represents the current object.
         /// </summary>
         /// <returns>A string that represents the current object.</returns>
         public override string ToString() => $"{this.SBP.Name}${this.SquadID}";
         
+        public bool VerifyChecksum() => throw new NotSupportedException("Please use external checksum verification.");
+
+        public bool VerifyChecksum(string checksum) => this.Checksum.ToString("X8") == checksum;
+
+        public void CalculateChecksum() => this.Checksum = new Checksum(this).GetCheckksum();
+
+    }
+
+    /// <summary>
+    /// Class for constructing a <see cref="Squad"/> from json data.
+    /// </summary>
+    public class SquadJson : JsonConverter<Squad> {
+        
+        public override Squad Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options) {
+
+            // Create builder
+            UnitBuilder unitBuilder = new();
+
+            // Read open object
+            reader.Read();
+
+            // Read squad ID
+            ushort squadID = (ushort)ReadNumberProperty(ref reader, nameof(Squad.SquadID));
+
+            // Read checksum
+            string checksum = ReadStringProperty(ref reader, nameof(Squad.Checksum));
+            string sbpName = ReadStringProperty(ref reader, nameof(Squad.SBP));
+            ModGuid modGuid = ModGuid.BaseGame;
+
+            // Read 
+            if (reader.GetString() is nameof(Squad.SBP.PBGID.Mod)) {
+                modGuid = ModGuid.FromGuid(ReadStringProperty(ref reader, nameof(Squad.SBP.PBGID.Mod)));
+            }
+
+            // Set mod guid and get deployment phase and combat time
+            unitBuilder.SetModGUID(modGuid).SetBlueprint(sbpName);
+            unitBuilder.SetDeploymentPhase(Enum.Parse<DeploymentPhase>(ReadStringPropertyIfThere(ref reader, nameof(Squad.DeploymentPhase), nameof(DeploymentPhase.PhaseNone))));
+            unitBuilder.SetCombatTime(TimeSpan.Parse(ReadStringPropertyIfThere(ref reader, nameof(Squad.CombatTime), TimeSpan.Zero.ToString())));
+
+            // Get deployment method
+            string supportBP = ReadStringPropertyIfThere(ref reader, nameof(Squad.SupportBlueprint), string.Empty);
+            if (!string.IsNullOrEmpty(supportBP)) {
+                unitBuilder.SetTransportBlueprint(supportBP);
+            }
+            unitBuilder.SetDeploymentMethod(Enum.Parse<DeploymentMethod>(ReadStringPropertyIfThere(ref reader, nameof(Squad.DeploymentMethod), nameof(DeploymentMethod.None))));
+            
+            // Get veterancy
+            unitBuilder.SetVeterancyRank((byte)ReadNumberPropertyIfThere(ref reader, nameof(Squad.VeterancyRank), 0));
+            unitBuilder.SetVeterancyExperience((byte)ReadNumberPropertyIfThere(ref reader, nameof(Squad.VeterancyProgress), 0.0f));
+
+            // Read if crew
+            unitBuilder.SetIsCrew(ReadBooleanPropertyIfThere(ref reader, nameof(Squad.IsCrew), false));
+
+            // Get crew if there
+            Squad crew = ReadPropertyThroughSerialisationIfThere<Squad>(ref reader, nameof(Squad.Crew), null);
+            if (crew is not null) {
+                unitBuilder.SetCrew(crew, false);
+                reader.Read(); // goto next object
+            }
+
+            // Get upgrades
+            if (reader.TokenType is not JsonTokenType.EndObject && reader.GetString() is nameof(Squad.Upgrades) && reader.Read()) {
+                unitBuilder.AddUpgrade(reader.GetStringArray());
+                reader.Read();
+            }
+
+            // Get upgrades
+            if (reader.TokenType is not JsonTokenType.EndObject && reader.GetString() is nameof(Squad.SlotItems) && reader.Read()) {
+                unitBuilder.AddSlotItem(reader.GetStringArray());
+                reader.Read();
+            }
+
+            // Get upgrades
+            if (reader.TokenType is not JsonTokenType.EndObject && reader.GetString() is nameof(Squad.Modifiers) && reader.Read()) {
+                throw new NotImplementedException();
+            }
+
+            // Get squad
+            var squad = unitBuilder.Build(squadID);
+            squad.CalculateChecksum();
+            if (squad.VerifyChecksum(checksum)) {
+                return squad;
+            } else {
+                throw new ChecksumViolationException();
+            }
+
+        }
+
+        private static bool ReadBooleanPropertyIfThere(ref Utf8JsonReader reader, string property, bool defaultValue) {
+            if (reader.TokenType is not JsonTokenType.EndObject && reader.GetString() == property) {
+                reader.Read();
+                return reader.ReadBoolProperty();
+            } else {
+                return defaultValue;
+            }
+        }
+
+        private static string ReadStringPropertyIfThere(ref Utf8JsonReader reader, string property, string defaultValue) {
+            if (reader.TokenType is not JsonTokenType.EndObject && reader.GetString() == property) {
+                reader.Read();
+                return reader.ReadProperty();
+            } else {
+                return defaultValue;
+            }
+        }
+
+        private static string ReadStringProperty(ref Utf8JsonReader reader, string property) {
+            if (reader.GetString() == property && reader.Read()) {
+                return reader.ReadProperty();
+            } else {
+                return null;
+            }
+        }
+
+        private static float ReadNumberPropertyIfThere(ref Utf8JsonReader reader, string property, float defaultValue) {
+            if (reader.TokenType is not JsonTokenType.EndObject && reader.GetString() == property) {
+                reader.Read();
+                return reader.ReadNumberProperty();
+            } else {
+                return defaultValue;
+            }
+        }
+
+        private static float ReadNumberProperty(ref Utf8JsonReader reader, string property) {
+            if (reader.GetString() == property && reader.Read()) {
+                return reader.ReadNumberProperty();
+            } else {
+                return float.NaN;
+            }
+        }
+
+        public static T ReadPropertyThroughSerialisationIfThere<T>(ref Utf8JsonReader reader, string property, T defaultValue) {
+            if (reader.TokenType is not JsonTokenType.EndObject && reader.GetString() == property) {
+                reader.Read();
+                return JsonSerializer.Deserialize<T>(ref reader);
+            } else {
+                return defaultValue;
+            }
+        }
+
+        public override void Write(Utf8JsonWriter writer, Squad value, JsonSerializerOptions options) {
+
+            // Calculate checksum
+            value.CalculateChecksum();
+
+            // Start squad object
+            writer.WriteStartObject();
+
+            // Write data
+            writer.WriteNumber(nameof(Squad.SquadID), value.SquadID);
+            writer.WriteString(nameof(Squad.Checksum), value.Checksum.ToString("X8"));
+            writer.WriteString(nameof(Squad.SBP), value.SBP.Name);
+            if (value.SBP.PBGID.Mod != ModGuid.BaseGame) {
+                writer.WriteString(nameof(Squad.SBP.PBGID.Mod), value.SBP.PBGID.Mod.GUID);
+            }
+
+            writer.WriteString(nameof(Squad.DeploymentPhase), value.DeploymentPhase.ToString());
+
+            // Write combat time
+            if (value.CombatTime.TotalSeconds > 0) {
+                writer.WriteString(nameof(Squad.CombatTime), value.CombatTime.ToString());
+            }
+
+            // Write deployment method
+            if (value.DeploymentMethod is not DeploymentMethod.None) {
+                writer.WriteString(nameof(Squad.SupportBlueprint), value.SupportBlueprint.Name);
+                writer.WriteString(nameof(Squad.DeploymentMethod), value.DeploymentMethod.ToString());
+            }
+
+            // Write rank if there
+            if (value.VeterancyRank > 0) {
+                writer.WriteNumber(nameof(Squad.VeterancyRank), value.VeterancyRank);
+            }
+
+            // Write experience if there
+            if (value.VeterancyProgress > 0) {
+                writer.WriteNumber(nameof(Squad.VeterancyProgress), value.VeterancyProgress);
+            }
+
+            // If crew
+            if (value.IsCrew) {
+                writer.WriteBoolean(nameof(Squad.IsCrew), value.IsCrew);
+            }
+
+            // If crew
+            if (value.Crew is not null) {
+                writer.WritePropertyName(nameof(Squad.Crew));
+                JsonSerializer.Serialize(writer, value.Crew, options);
+            }
+
+            // Write upgrades (if any)
+            if (value.Upgrades.Count > 0) {
+                writer.WritePropertyName(nameof(Squad.Upgrades));
+                writer.WriteStartArray();
+                foreach (var item in value.Upgrades) {
+                    writer.WriteStringValue(item.Name);
+                }
+                writer.WriteEndArray();
+            }
+
+            // Write slot items (if any)
+            if (value.SlotItems.Count > 0) {
+                writer.WritePropertyName(nameof(Squad.SlotItems));
+                writer.WriteStartArray();
+                foreach (var item in value.SlotItems) {
+                    writer.WriteStringValue(item.Name);
+                }
+                writer.WriteEndArray();
+            }
+
+            // Write modifiers (if any)
+            if (value.Modifiers.Count > 0) {
+                writer.WritePropertyName(nameof(Squad.Modifiers));
+                writer.WriteStartArray();
+                foreach (var item in value.Modifiers) {
+                    JsonSerializer.Serialize(writer, item, options);
+                }
+                writer.WriteEndArray();
+            }
+
+            // Start end object
+            writer.WriteEndObject();
+
+        }
+
     }
 
 }

@@ -126,12 +126,12 @@ namespace Battlegrounds.Game.Match.Data {
                     Arg2 = r.WithdrawingUnitVeterancyExperience.ToString() 
                 },
                 VictoryEvent v => new Event() { UID = e.Uid, Type = nameof(VictoryEvent), Player = v.VictorID },
-                PickupEvent i => new Event() { UID = e.Uid, Type = nameof(PickupEvent), Player = i.PickupPlayer.SteamID, Id = i.PickupSquadID, Arg1 = i.PickupItem.ToJsonReference() },
+                PickupEvent i => new Event() { UID = e.Uid, Type = nameof(PickupEvent), Player = i.PickupPlayer.SteamID, Id = i.PickupSquadID, Arg1 = i.PickupItem.PBGID.ToString() },
                 VerificationEvent g => new Event() { UID = e.Uid, Type = nameof(VerificationEvent), Player = ulong.MaxValue, Id = ushort.MaxValue, 
                     Arg1 = g.VerificationType.ToString(), 
                     Arg2 = g.VerificationArgument 
                 },
-                CaptureEvent c => new Event() { UID = e.Uid, Type = nameof(CaptureEvent), Player = c.CapturingPlayer.SteamID, Id = ushort.MaxValue, Arg1 = c.CapturedBlueprint.ToJsonReference() },
+                CaptureEvent c => new Event() { UID = e.Uid, Type = nameof(CaptureEvent), Player = c.CapturingPlayer.SteamID, Id = ushort.MaxValue, Arg1 = c.CapturedBlueprint.PBGID.ToString() },
                 _ => new Event() { UID = e.Uid },
             };
         }

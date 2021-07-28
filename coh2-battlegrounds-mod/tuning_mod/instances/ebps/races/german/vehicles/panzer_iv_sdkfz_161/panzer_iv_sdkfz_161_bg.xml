@@ -1334,6 +1334,10 @@
 						<int name="recrew_max_squad_size" value="1" />
 						<bool name="abandoned_allows_pass_through" value="False" />
 						<list name="apply_to_driver_action">
+							<template_reference name="action" value="action\scar_function_call">
+								<string name="function_name" value="BG_OnItemCaptured" />
+								<uniqueid name="id" value="1073744649" />
+							</template_reference>
 						</list>
 						<float name="driver_death_chance_on_entity_death" value="1" />
 						<instance_reference name="driver_squad_blueprint" value="sbps\races\german\soldiers\vehicle_crew\german_tank_crew_bg" mod="142b113740474c82a60b0a428bd553d5" />
@@ -1364,6 +1368,10 @@
 						<int name="recrew_max_squad_size" value="1" />
 						<bool name="abandoned_allows_pass_through" value="False" />
 						<list name="apply_to_driver_action">
+							<template_reference name="action" value="action\scar_function_call">
+								<string name="function_name" value="BG_OnItemCaptured" />
+								<uniqueid name="id" value="1073744650" />
+							</template_reference>
 						</list>
 						<float name="driver_death_chance_on_entity_death" value="1" />
 						<instance_reference name="driver_squad_blueprint" value="" />

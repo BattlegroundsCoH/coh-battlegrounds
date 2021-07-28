@@ -7,10 +7,15 @@ namespace Battlegrounds.Modding {
     /// </summary>
     public readonly struct ModGuid {
 
+        /// <summary>
+        /// The GUID representing the base-game.
+        /// </summary>
+        public static readonly ModGuid BaseGame = new(Guid.Empty);
+
         private readonly string m_guid;
 
         /// <summary>
-        /// The fixed length of the company GUI
+        /// The fixed length of the GUID string
         /// </summary>
         public const byte FIXED_LENGTH = 32;
 
@@ -33,6 +38,18 @@ namespace Battlegrounds.Modding {
         public static implicit operator string(ModGuid guid) => guid.m_guid;
 
         public static implicit operator Guid(ModGuid guid) => new Guid(guid.m_guid);
+
+        public override bool Equals(object obj) => obj is ModGuid guid && guid.m_guid == this.m_guid;
+
+        public static bool operator ==(ModGuid left, ModGuid right) => left.Equals(right);
+
+        public static bool operator !=(ModGuid left, ModGuid right) => !(left == right);
+
+        public override int GetHashCode() {
+            HashCode code = new();
+            code.Add(this.m_guid);
+            return code.ToHashCode();
+        }
 
         /// <summary>
         /// Convert a <see cref="Guid"/> instance into a Company of Heroes 2 mod GUID format compliant representation.

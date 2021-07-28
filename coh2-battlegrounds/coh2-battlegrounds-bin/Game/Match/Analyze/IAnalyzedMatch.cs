@@ -20,6 +20,11 @@ namespace Battlegrounds.Game.Match.Analyze {
         IReadOnlyList<UnitStatus> Units { get; }
 
         /// <summary>
+        /// Get the status of an item after the match.
+        /// </summary>
+        IReadOnlyList<ItemStatus> Items { get; }
+
+        /// <summary>
         /// Get the players involved in the match (May include AI players).
         /// </summary>
         IReadOnlyCollection<Player> Players { get; }

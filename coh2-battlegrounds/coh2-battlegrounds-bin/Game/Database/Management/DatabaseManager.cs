@@ -17,14 +17,13 @@ namespace Battlegrounds.Game.Database.Management {
     /// </summary>
     public static class DatabaseManager {
 
-        private static bool m_databasesLoaded = false;
-
-        private static string m_databaseFoundPath = null;
+        private static bool __databasesLoaded = false;
+        private static string __databaseFoundPath = null;
 
         /// <summary>
         /// Has the databases been loaded.
         /// </summary>
-        public static bool DatabaseLoaded => m_databasesLoaded;
+        public static bool DatabaseLoaded => __databasesLoaded;
 
         /// <summary>
         /// Load all databases in a non-interupting manner.
@@ -32,11 +31,11 @@ namespace Battlegrounds.Game.Database.Management {
         public static async void LoadAllDatabases(DatabaseLoadedCallbackHandler onDatabaseLoaded) {
 
             // There's no need to do this twice
-            if (m_databasesLoaded) {
+            if (__databasesLoaded) {
                 return;
             }
 
-            Console.WriteLine($"Database path: \"{SolveDatabasepath()}\"");
+            Trace.WriteLine($"Database path: \"{SolveDatabasepath()}\"", nameof(DatabaseManager));
 
             int loaded = 0;
             int failed = 0;
@@ -60,7 +59,7 @@ namespace Battlegrounds.Game.Database.Management {
                 loaded++;
 
             } catch (Exception e) {
-                Console.WriteLine($"Failed to load database: Blueprints [{e.Message}]");
+                Trace.WriteLine($"Failed to load database: Blueprints [{e.Message}]", nameof(DatabaseManager));
                 failed++;
             }
 
@@ -73,7 +72,7 @@ namespace Battlegrounds.Game.Database.Management {
                 loaded++;
 
             } catch (Exception e) {
-                Console.WriteLine($"Failed to load database: Scenarios [{e.Message}]");
+                Trace.WriteLine($"Failed to load database: Scenarios [{e.Message}]", nameof(DatabaseManager));
                 failed++;
             }
 
@@ -81,8 +80,8 @@ namespace Battlegrounds.Game.Database.Management {
             await Task.Run(WinconditionList.CreateAndLoadDatabase);
             loaded++;
 
-            // Set database loaded
-            m_databasesLoaded = true;
+            // Set database loaded flag
+            __databasesLoaded = true;
 
             // Invoke the callback
             onDatabaseLoaded?.Invoke(loaded, failed);
@@ -94,8 +93,8 @@ namespace Battlegrounds.Game.Database.Management {
         /// </summary>
         /// <returns>The first valid database path found or the empty string if no path is found.</returns>
         public static string SolveDatabasepath() {
-            if (m_databaseFoundPath != null) {
-                return m_databaseFoundPath;
+            if (__databaseFoundPath != null) {
+                return __databaseFoundPath;
             } else {
                 string[] testPaths = new string[] {
                     "..\\..\\..\\..\\..\\..\\db-battlegrounds\\",
@@ -107,13 +106,13 @@ namespace Battlegrounds.Game.Database.Management {
                 };
                 foreach (string path in testPaths) {
                     if (Directory.Exists(path)) {
-                        m_databaseFoundPath = Path.GetFullPath(path);
-                        return m_databaseFoundPath;
+                        __databaseFoundPath = Path.GetFullPath(path);
+                        return __databaseFoundPath;
                     }
                 }
-                m_databaseFoundPath = string.Empty;
-                Trace.WriteLine("Failed to find any valid path to the database folder. Please verify install path.", "DatabaseManager");
-                return m_databaseFoundPath;
+                __databaseFoundPath = string.Empty;
+                Trace.WriteLine("Failed to find any valid path to the database folder. Please verify install path.", nameof(DatabaseManager));
+                return __databaseFoundPath;
             }
         }
 

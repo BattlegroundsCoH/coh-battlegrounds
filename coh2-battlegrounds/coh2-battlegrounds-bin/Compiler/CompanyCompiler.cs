@@ -4,6 +4,7 @@ using System.Collections.Immutable;
 using System.Linq;
 
 using Battlegrounds.Game.Database;
+using Battlegrounds.Game.Database.Extensions;
 using Battlegrounds.Game.DataCompany;
 using Battlegrounds.Game.Gameplay;
 using Battlegrounds.Util;
@@ -99,7 +100,7 @@ namespace Battlegrounds.Compiler {
             // Write the basics of the units
             builder.AppendLine($"bp_name = {squad.SBP.ToScar()},");
             builder.AppendLine($"company_id = {squad.SquadID},");
-            builder.AppendLine($"symbol = \"{squad.SBP.Symbol}\",");
+            builder.AppendLine($"symbol = \"{squad.SBP.UI.Symbol}\",");
             builder.AppendLine($"category = \"{squad.GetCategory(true)}\",");
             builder.AppendLine($"phase = {(int)(squad.DeploymentPhase - 1)},");
             builder.AppendLine($"veterancy_rank = {squad.VeterancyRank},");
@@ -125,7 +126,7 @@ namespace Battlegrounds.Compiler {
                 builder.AppendLine("transport = {");
                 builder.IncreaseIndent();
                 builder.AppendLine($"sbp = {squad.SupportBlueprint.ToScar()},");
-                builder.AppendLine($"symbol = \"{(squad.SupportBlueprint as SquadBlueprint).Symbol}\",");
+                builder.AppendLine($"symbol = \"{(squad.SupportBlueprint as SquadBlueprint).UI.Symbol}\",");
                 builder.AppendLine($"mode = {(int)squad.DeploymentMethod},");
                 if (squad.DeploymentMethod != DeploymentMethod.None && (squad.SBP.IsHeavyArtillery || (!squad.SBP.IsHeavyArtillery && squad.SBP.IsAntiTank))) {
                     builder.AppendLine("tow = true,");
@@ -151,7 +152,7 @@ namespace Battlegrounds.Compiler {
             }
 
             // Get the squad cost
-            Cost fCost = squad.GetCost();
+            CostExtension fCost = squad.GetCost();
 
             builder.AppendLine($"cost = {{");
             builder.IncreaseIndent();
@@ -165,7 +166,7 @@ namespace Battlegrounds.Compiler {
             builder.DecreaseIndent();
             builder.AppendLine("},");
 
-            CompileList(builder, "upgrades", squad.Upgrades, x => { UpgradeBlueprint y = x as UpgradeBlueprint; return $"{{ bp={y.ToScar()}, symbol=\"{y.Symbol}\" }}"; });
+            CompileList(builder, "upgrades", squad.Upgrades, x => { UpgradeBlueprint y = x as UpgradeBlueprint; return $"{{ bp={y.ToScar()}, symbol=\"{y.UI.Icon}\" }}"; });
             CompileList(builder, "slot_items", squad.SlotItems, x => { SlotItemBlueprint y = x as SlotItemBlueprint; return $"{y.ToScar()}"; });
             CompileList(builder, "modifiers", squad.Modifiers, x => x.ToScar());
 

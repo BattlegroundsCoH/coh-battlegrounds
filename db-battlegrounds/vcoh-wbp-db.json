@@ -1,0 +1,5790 @@
+[
+  {
+    "PBGID": 4199,
+    "Name": "pm_off_at_barrage_weapon",
+    "Range": 106,
+    "Damage": 350
+  },
+  {
+    "PBGID": 17118,
+    "Name": "pm_off_at_barrage_weapon_highap",
+    "Range": 106,
+    "Damage": 350
+  },
+  {
+    "PBGID": 17961,
+    "Name": "pm_off_at_barrage_weapon_highap_stun",
+    "Range": 106,
+    "Damage": 350
+  },
+  {
+    "PBGID": 17125,
+    "Name": "pm_off_at_barrage_weapon_stun",
+    "Range": 106,
+    "Damage": 350
+  },
+  {
+    "PBGID": 4185,
+    "Name": "pm_off_map_incendiary_dot_weapon",
+    "Range": 70,
+    "Damage": 8
+  },
+  {
+    "PBGID": 4184,
+    "Name": "pm_off_map_incendiary_weapon",
+    "Range": 106,
+    "Damage": 65
+  },
+  {
+    "PBGID": 17962,
+    "Name": "pm_off_map_incendiary_weapon_explosive",
+    "Range": 106,
+    "Damage": 65
+  },
+  {
+    "PBGID": 17129,
+    "Name": "pm_off_map_incendiary_weapon_phospherous",
+    "Range": 106,
+    "Damage": 65
+  },
+  {
+    "PBGID": 16084,
+    "Name": "pm_quick_artillery",
+    "Range": 106,
+    "Damage": 160
+  },
+  {
+    "PBGID": 15007,
+    "Name": "assault_engineer_flamethrower",
+    "Range": 20,
+    "Damage": 16
+  },
+  {
+    "PBGID": 97791,
+    "Name": "usf_flamethrower_dot",
+    "Range": 70,
+    "Damage": 2
+  },
+  {
+    "PBGID": 19451,
+    "Name": "p47_tracker",
+    "Range": 225
+  },
+  {
+    "PBGID": 16185,
+    "Name": "paratrooper_plane_mp",
+    "Range": 120
+  },
+  {
+    "PBGID": 107,
+    "Name": "fire_artillery_weapon_mp",
+    "Range": 106,
+    "Damage": 10
+  },
+  {
+    "PBGID": 108,
+    "Name": "flare_ground_hit_mp",
+    "Range": 20,
+    "Damage": 10
+  },
+  {
+    "PBGID": 109,
+    "Name": "halftrack_flammenwerfer",
+    "Range": 30,
+    "Damage": 40
+  },
+  {
+    "PBGID": 110,
+    "Name": "halftrack_flammenwerfer_fake_mp",
+    "Range": 30
+  },
+  {
+    "PBGID": 111,
+    "Name": "halftrack_flammenwerfer_mp",
+    "Range": 30,
+    "Damage": 10
+  },
+  {
+    "PBGID": 112,
+    "Name": "halftrack_flammenwerfer_right",
+    "Range": 30,
+    "Damage": 40
+  },
+  {
+    "PBGID": 113,
+    "Name": "halftrack_flammenwerfer_right_mp",
+    "Range": 30,
+    "Damage": 10
+  },
+  {
+    "PBGID": 118,
+    "Name": "pioneer_flamethrower",
+    "Range": 20,
+    "Damage": 40
+  },
+  {
+    "PBGID": 119,
+    "Name": "pioneer_flamethrower_ability",
+    "Range": 20,
+    "Damage": 80
+  },
+  {
+    "PBGID": 120,
+    "Name": "pioneer_flamethrower_ability_mp",
+    "Range": 20,
+    "Damage": 80
+  },
+  {
+    "PBGID": 97790,
+    "Name": "pioneer_flamethrower_dot",
+    "Range": 70,
+    "Damage": 2
+  },
+  {
+    "PBGID": 121,
+    "Name": "pioneer_flamethrower_mp",
+    "Range": 20,
+    "Damage": 16
+  },
+  {
+    "PBGID": 122,
+    "Name": "pioneer_flamethrower_mp_nodmg",
+    "Range": 20
+  },
+  {
+    "PBGID": 2002,
+    "Name": "stuka_incendiary_bombs",
+    "Range": 300,
+    "Damage": 40
+  },
+  {
+    "PBGID": 14308,
+    "Name": "urban_assault_flamethrower_mp",
+    "Range": 20,
+    "Damage": 16
+  },
+  {
+    "PBGID": 92476,
+    "Name": "sapper_clearing_charge",
+    "Range": 8,
+    "Damage": 15
+  },
+  {
+    "PBGID": 92745,
+    "Name": "churchill_flamethrower_dotdamage_mp",
+    "Range": 70,
+    "Damage": 2
+  },
+  {
+    "PBGID": 89114,
+    "Name": "churchill_flamethrower_mp",
+    "Range": 32,
+    "Damage": 7
+  },
+  {
+    "PBGID": 92665,
+    "Name": "churchill_flamethrower_sweep_mp",
+    "Range": 32,
+    "Damage": 6
+  },
+  {
+    "PBGID": 94998,
+    "Name": "tommy_flamethrower",
+    "Range": 20,
+    "Damage": 16
+  },
+  {
+    "PBGID": 92744,
+    "Name": "universal_carrier_flamthrower_dot",
+    "Range": 70,
+    "Damage": 2
+  },
+  {
+    "PBGID": 89099,
+    "Name": "universal_carrier_ronson_flamethrower_system_mp",
+    "Range": 30,
+    "Damage": 10
+  },
+  {
+    "PBGID": 88404,
+    "Name": "cover_splat",
+    "Range": 250
+  },
+  {
+    "PBGID": 16943,
+    "Name": "fatality_incendiary_artillery",
+    "Range": 106,
+    "Damage": 20
+  },
+  {
+    "PBGID": 18466,
+    "Name": "fatality_incendiary_bomb",
+    "Range": 106,
+    "Damage": 25
+  },
+  {
+    "PBGID": 16944,
+    "Name": "fatality_incendiary_dot",
+    "Range": 70,
+    "Damage": 20
+  },
+  {
+    "PBGID": 284,
+    "Name": "flamethrower_roks3",
+    "Range": 20,
+    "Damage": 40
+  },
+  {
+    "PBGID": 285,
+    "Name": "flamethrower_roks3_mp",
+    "Range": 20,
+    "Damage": 16
+  },
+  {
+    "PBGID": 290,
+    "Name": "kv8_ato-41_flamethrower_mp",
+    "Range": 30,
+    "Damage": 10
+  },
+  {
+    "PBGID": 291,
+    "Name": "roks2_backpack_flamethrower",
+    "Range": 20,
+    "Damage": 40
+  },
+  {
+    "PBGID": 292,
+    "Name": "roks2_backpack_flamethrower_mp",
+    "Range": 20,
+    "Damage": 16
+  },
+  {
+    "PBGID": 358,
+    "Name": "demo_offmapartillery_harmless"
+  },
+  {
+    "PBGID": 359,
+    "Name": "m01_mortar_single_precise_harmless"
+  },
+  {
+    "PBGID": 362,
+    "Name": "m01_offmap_precise_fast",
+    "Range": 175,
+    "Damage": 120
+  },
+  {
+    "PBGID": 360,
+    "Name": "m01_off_map_arty_harmless"
+  },
+  {
+    "PBGID": 361,
+    "Name": "m01_off_map_arty_real",
+    "Damage": 150
+  },
+  {
+    "PBGID": 363,
+    "Name": "offmapartillery_accurate",
+    "Damage": 130
+  },
+  {
+    "PBGID": 378,
+    "Name": "flamethrower_roks3_fake",
+    "Range": 20,
+    "Damage": 10
+  },
+  {
+    "PBGID": 14504,
+    "Name": "boot_stomp",
+    "Range": 20,
+    "Damage": 80
+  },
+  {
+    "PBGID": 14505,
+    "Name": "shoulder_charge",
+    "Range": 10,
+    "Damage": 80
+  },
+  {
+    "PBGID": 14507,
+    "Name": "double_sweep",
+    "Range": 20,
+    "Damage": 80
+  },
+  {
+    "PBGID": 97792,
+    "Name": "flamethrower_dot_weapon",
+    "Range": 70,
+    "Damage": 2
+  },
+  {
+    "PBGID": 96095,
+    "Name": "hetzer_keobe_flamethrower__mp",
+    "Range": 35,
+    "Damage": 9
+  },
+  {
+    "PBGID": 15495,
+    "Name": "walking_stuka_napalm",
+    "Range": 300,
+    "Damage": 10
+  },
+  {
+    "PBGID": 15662,
+    "Name": "m1_57mm_at_gun_vet_mp",
+    "Range": 60,
+    "Damage": 160
+  },
+  {
+    "PBGID": 2787,
+    "Name": "m1_57mm_at_gun__mp",
+    "Range": 60,
+    "Damage": 160
+  },
+  {
+    "PBGID": 2788,
+    "Name": "m9_bazooka_mp",
+    "Range": 35,
+    "Damage": 26
+  },
+  {
+    "PBGID": 12741850,
+    "Name": "m9_bazooka_paratrooper_mp",
+    "Range": 35,
+    "Damage": 34
+  },
+  {
+    "PBGID": 91165,
+    "Name": "m10_m5_3inch_ap_gun_mp",
+    "Range": 50,
+    "Damage": 160
+  },
+  {
+    "PBGID": 2789,
+    "Name": "m10_m5_3inch_gun_mp",
+    "Range": 50,
+    "Damage": 160
+  },
+  {
+    "PBGID": 2848,
+    "Name": "m15a1_halftrack_37mm_mp",
+    "Range": 40,
+    "Damage": 40
+  },
+  {
+    "PBGID": 16757,
+    "Name": "m15a1_halftrack_37mm_special_aa_mp",
+    "Range": 45,
+    "Damage": 40
+  },
+  {
+    "PBGID": 89681,
+    "Name": "m26_m3_90mm_gun_mp",
+    "Range": 45,
+    "Damage": 160
+  },
+  {
+    "PBGID": 96519,
+    "Name": "m26_pershing_90mm_hvap_piercing_shot_mp",
+    "Range": 70,
+    "Damage": 240
+  },
+  {
+    "PBGID": 91163,
+    "Name": "m36_m4_90mm_ap_gun_mp",
+    "Range": 60,
+    "Damage": 200
+  },
+  {
+    "PBGID": 3257,
+    "Name": "m36_m4_90mm_gun_mp",
+    "Range": 60,
+    "Damage": 160
+  },
+  {
+    "PBGID": 2791,
+    "Name": "m5a1_stuart_m6_37mm_mp",
+    "Range": 40,
+    "Damage": 80
+  },
+  {
+    "PBGID": 4344,
+    "Name": "m5_stuart_damage_engine_shot_mp",
+    "Range": 40,
+    "Damage": 40
+  },
+  {
+    "PBGID": 4343,
+    "Name": "m5_stuart_shell_shock_shot_mp",
+    "Range": 40,
+    "Damage": 40
+  },
+  {
+    "PBGID": 4336,
+    "Name": "m8_greyhound_m6_37mm_canister_shot_mp",
+    "Range": 40,
+    "Damage": 80
+  },
+  {
+    "PBGID": 2849,
+    "Name": "m8_greyhound_m6_37mm_mp",
+    "Range": 40,
+    "Damage": 40
+  },
+  {
+    "PBGID": 16445,
+    "Name": "m8_greyhound_m6_37mm_vet_mp",
+    "Range": 40,
+    "Damage": 40
+  },
+  {
+    "PBGID": 14577,
+    "Name": "sherman_m1_76mm",
+    "Range": 45,
+    "Damage": 160
+  },
+  {
+    "PBGID": 14331,
+    "Name": "sherman_m1_76mm_easy8_mp",
+    "Range": 40,
+    "Damage": 160
+  },
+  {
+    "PBGID": 16212,
+    "Name": "sherman_m1_76mm_he",
+    "Range": 40,
+    "Damage": 80
+  },
+  {
+    "PBGID": 14210,
+    "Name": "sherman_m3_105mm_he_shell_mp",
+    "Range": 35,
+    "Damage": 160
+  },
+  {
+    "PBGID": 2792,
+    "Name": "sherman_m3_75mm_he_shell_mp",
+    "Range": 40,
+    "Damage": 160
+  },
+  {
+    "PBGID": 3258,
+    "Name": "sherman_m3_75mm_mp",
+    "Range": 40,
+    "Damage": 160
+  },
+  {
+    "PBGID": 188712,
+    "Name": "sherman_smoke_wp_shot_mp",
+    "Range": 40,
+    "Damage": 10
+  },
+  {
+    "PBGID": 15649,
+    "Name": "m23_smoke_at_mp",
+    "Range": 40
+  },
+  {
+    "PBGID": 2795,
+    "Name": "m23_smoke_mp",
+    "Range": 40
+  },
+  {
+    "PBGID": 2796,
+    "Name": "mk2_mp",
+    "Range": 20,
+    "Damage": 80
+  },
+  {
+    "PBGID": 14226,
+    "Name": "mk2_paratrooper_mp",
+    "Range": 20,
+    "Damage": 80
+  },
+  {
+    "PBGID": 16026,
+    "Name": "paratrooper_timed_demo_charge",
+    "Range": 8,
+    "Damage": 312
+  },
+  {
+    "PBGID": 188045,
+    "Name": "rear_echelon_m17_rifle_grenade_commander_mp",
+    "Range": 35,
+    "Damage": 40
+  },
+  {
+    "PBGID": 15569,
+    "Name": "rear_echelon_m17_rifle_grenade_mp",
+    "Range": 40,
+    "Damage": 40
+  },
+  {
+    "PBGID": 16613,
+    "Name": "rifleman_at_rifle_grenade",
+    "Range": 30,
+    "Damage": 100
+  },
+  {
+    "PBGID": 17144,
+    "Name": "riflemen_flare",
+    "Range": 150
+  },
+  {
+    "PBGID": 16863,
+    "Name": "155mm_artillery",
+    "Range": 250,
+    "Damage": 120
+  },
+  {
+    "PBGID": 15018,
+    "Name": "howitzer_240mm",
+    "Range": 1000,
+    "Damage": 320
+  },
+  {
+    "PBGID": 16632,
+    "Name": "m7b1_priest_m2a1_105mm_creeping_barrage_mp",
+    "Range": 180,
+    "Damage": 200
+  },
+  {
+    "PBGID": 14256,
+    "Name": "m7b1_priest_m2a1_105mm_dummy_mp",
+    "Range": 180
+  },
+  {
+    "PBGID": 2803,
+    "Name": "m7b1_priest_m2a1_105mm_mp",
+    "Range": 180,
+    "Damage": 200
+  },
+  {
+    "PBGID": 85868,
+    "Name": "m7b1_priest_m2a1_105mm_victor_target_mp",
+    "Range": 500,
+    "Damage": 200
+  },
+  {
+    "PBGID": 2804,
+    "Name": "m7b1_priest_m89_smoke_mp",
+    "Range": 180
+  },
+  {
+    "PBGID": 16784,
+    "Name": "major_offmap_105mm_mp",
+    "Range": 250,
+    "Damage": 160
+  },
+  {
+    "PBGID": 15627,
+    "Name": "p47_rockets",
+    "Range": 200,
+    "Damage": 65
+  },
+  {
+    "PBGID": 19538,
+    "Name": "pm_p47_rockets_left",
+    "Range": 225,
+    "Damage": 120
+  },
+  {
+    "PBGID": 19533,
+    "Name": "pm_p47_rockets_right",
+    "Range": 225,
+    "Damage": 120
+  },
+  {
+    "PBGID": 4349,
+    "Name": "sp_250mm_off_map_artillery_weapon",
+    "Range": 106,
+    "Damage": 320
+  },
+  {
+    "PBGID": 196619,
+    "Name": "time_on_target_offmap_105mm_mp",
+    "Range": 250,
+    "Damage": 160
+  },
+  {
+    "PBGID": 14831,
+    "Name": "m8a1_hmc_m3_75mm_direct_mp",
+    "Range": 60,
+    "Damage": 100
+  },
+  {
+    "PBGID": 14592,
+    "Name": "m8a1_hmc_m3_75mm_dummy_mp",
+    "Range": 100
+  },
+  {
+    "PBGID": 2805,
+    "Name": "m8a1_hmc_m3_75mm_mp",
+    "Range": 80,
+    "Damage": 100
+  },
+  {
+    "PBGID": 85869,
+    "Name": "m8a1_hmc_m3_75mm_victor_target_mp",
+    "Range": 500,
+    "Damage": 120
+  },
+  {
+    "PBGID": 2806,
+    "Name": "m8a1_hmc_smoke_mp",
+    "Range": 100
+  },
+  {
+    "PBGID": 2800,
+    "Name": "pack_howitzer_75mm_auto_attack_mp",
+    "Range": 80,
+    "Damage": 80
+  },
+  {
+    "PBGID": 16306,
+    "Name": "pack_howitzer_75mm_barrage_heat_mp",
+    "Range": 120,
+    "Damage": 160
+  },
+  {
+    "PBGID": 16017,
+    "Name": "pack_howitzer_75mm_barrage_mp",
+    "Range": 120,
+    "Damage": 80
+  },
+  {
+    "PBGID": 85870,
+    "Name": "pack_howitzer_75mm_barrage_victor_target_mp",
+    "Range": 500,
+    "Damage": 80
+  },
+  {
+    "PBGID": 15670,
+    "Name": "pack_howitzer_75mm_heat_mp",
+    "Range": 80,
+    "Damage": 120
+  },
+  {
+    "PBGID": 2802,
+    "Name": "pack_howitzer_75mm_vet3_mp",
+    "Range": 80,
+    "Damage": 80
+  },
+  {
+    "PBGID": 15644,
+    "Name": "pack_howitzer_75mm_white_phosphorous_dot_mp",
+    "Range": 70
+  },
+  {
+    "PBGID": 15642,
+    "Name": "pack_howitzer_75mm_white_phosphorous_mp",
+    "Range": 120,
+    "Damage": 20
+  },
+  {
+    "PBGID": 99341,
+    "Name": "pershing_auto_crew_grenades_driver",
+    "Range": 15,
+    "Damage": 60
+  },
+  {
+    "PBGID": 99349,
+    "Name": "pershing_auto_crew_grenades_gunner",
+    "Range": 20,
+    "Damage": 80
+  },
+  {
+    "PBGID": 17580,
+    "Name": "rifle_company_white_phosphorous_mp",
+    "Range": 160,
+    "Damage": 3
+  },
+  {
+    "PBGID": 92471,
+    "Name": "t34_calliope_rocket_mp",
+    "Range": 200,
+    "Damage": 80
+  },
+  {
+    "PBGID": 92472,
+    "Name": "t34_calliope_rocket_no_fire_mp",
+    "Range": 200
+  },
+  {
+    "PBGID": 16890,
+    "Name": "aef_assault_engineer_demoliion",
+    "Range": 35,
+    "Damage": 250
+  },
+  {
+    "PBGID": 98286,
+    "Name": "usf_mine_mp",
+    "Range": 35,
+    "Damage": 200
+  },
+  {
+    "PBGID": 3111,
+    "Name": "aef_mine_mp",
+    "Range": 35
+  },
+  {
+    "PBGID": 97008,
+    "Name": "aef_mine_regular_mp",
+    "Range": 35,
+    "Damage": 200
+  },
+  {
+    "PBGID": 2807,
+    "Name": "m20_m6_mine_mp",
+    "Range": 35,
+    "Damage": 400
+  },
+  {
+    "PBGID": 12741852,
+    "Name": "m83_cluster_mine_mp",
+    "Range": 35,
+    "Damage": 30
+  },
+  {
+    "PBGID": 12741841,
+    "Name": "rear_echelon_mines_mp",
+    "Range": 35,
+    "Damage": 80
+  },
+  {
+    "PBGID": 2809,
+    "Name": "m1_81mm_mortar_barrage_mp",
+    "Range": 80,
+    "Damage": 80
+  },
+  {
+    "PBGID": 89072,
+    "Name": "m1_81mm_mortar_barrage_victor_target_mp",
+    "Range": 500,
+    "Damage": 80
+  },
+  {
+    "PBGID": 2810,
+    "Name": "m1_81mm_mortar_counter_barrage_mp",
+    "Range": 80,
+    "Damage": 80
+  },
+  {
+    "PBGID": 2811,
+    "Name": "m1_81mm_mortar_mp",
+    "Range": 80,
+    "Damage": 80
+  },
+  {
+    "PBGID": 14479,
+    "Name": "m1_81mm_mortar_short_delay_barrage_mp",
+    "Range": 80,
+    "Damage": 160
+  },
+  {
+    "PBGID": 12741853,
+    "Name": "m1_81mm_mortar_smoke_barrage_mp",
+    "Range": 85
+  },
+  {
+    "PBGID": 10741827,
+    "Name": "m1_81mm_mortar_team_barrage_mp",
+    "Range": 75,
+    "Damage": 80
+  },
+  {
+    "PBGID": 10741826,
+    "Name": "m1_81mm_mortar_team_mp",
+    "Range": 75,
+    "Damage": 80
+  },
+  {
+    "PBGID": 2812,
+    "Name": "m1_81mm_mortar_team_smoke_mp",
+    "Range": 85
+  },
+  {
+    "PBGID": 14473,
+    "Name": "m1_81mm_mortar_white_phosphorous_barrage_dot_mp",
+    "Range": 70
+  },
+  {
+    "PBGID": 14442,
+    "Name": "m1_81mm_mortar_white_phosphorous_barrage_mp",
+    "Range": 80,
+    "Damage": 10
+  },
+  {
+    "PBGID": 2813,
+    "Name": "m2_60mm_mortar_barrage_mp",
+    "Range": 106,
+    "Damage": 80
+  },
+  {
+    "PBGID": 2814,
+    "Name": "m2_60mm_mortar_counter_barrage_mp",
+    "Range": 80,
+    "Damage": 80
+  },
+  {
+    "PBGID": 2815,
+    "Name": "m2_60mm_mortar_mp",
+    "Range": 80,
+    "Damage": 80
+  },
+  {
+    "PBGID": 2816,
+    "Name": "m2_60mm_mortar_team_smoke_mp",
+    "Range": 106
+  },
+  {
+    "PBGID": 2817,
+    "Name": "sherman_m3_2inch_mortar_smoke_mp",
+    "Range": 55
+  },
+  {
+    "PBGID": 188706,
+    "Name": "riflemen_molotov_weapon_mp",
+    "Range": 15,
+    "Damage": 10
+  },
+  {
+    "PBGID": 16467,
+    "Name": "pm_aef_airborne_paratrooper_plane_gun",
+    "Range": 120
+  },
+  {
+    "PBGID": 16542,
+    "Name": "pm_aef_airborne_smoke_launcher_gun",
+    "Range": 120
+  },
+  {
+    "PBGID": 16561,
+    "Name": "pm_aef_airborne_supply_drop_plane_gun",
+    "Range": 120
+  },
+  {
+    "Name": "75mm_pak_40",
+    "Range": 45,
+    "Damage": 80
+  },
+  {
+    "PBGID": 91310,
+    "Name": "75mm_pak_40_ap_mp",
+    "Range": 60,
+    "Damage": 160
+  },
+  {
+    "PBGID": 1,
+    "Name": "75mm_pak_40_mp",
+    "Range": 60,
+    "Damage": 160
+  },
+  {
+    "PBGID": 2,
+    "Name": "pak43_88mm_atg",
+    "Range": 60,
+    "Damage": 120
+  },
+  {
+    "PBGID": 91315,
+    "Name": "pak43_88mm_atg_ap_mp",
+    "Range": 80,
+    "Damage": 320
+  },
+  {
+    "PBGID": 3,
+    "Name": "pak43_88mm_atg_mp",
+    "Range": 80,
+    "Damage": 320
+  },
+  {
+    "PBGID": 4,
+    "Name": "panzerbusche_39",
+    "Range": 40,
+    "Damage": 60
+  },
+  {
+    "PBGID": 5,
+    "Name": "panzerbusche_39_mp",
+    "Range": 40,
+    "Damage": 60
+  },
+  {
+    "PBGID": 6,
+    "Name": "panzerfaust_atw",
+    "Range": 20,
+    "Damage": 120
+  },
+  {
+    "PBGID": 7,
+    "Name": "panzerfaust_atw_mp",
+    "Range": 30,
+    "Damage": 100
+  },
+  {
+    "PBGID": 8,
+    "Name": "panzerschreck_atw",
+    "Range": 40,
+    "Damage": 80
+  },
+  {
+    "PBGID": 9,
+    "Name": "panzerschreck_atw_mp",
+    "Range": 35,
+    "Damage": 40
+  },
+  {
+    "PBGID": 10,
+    "Name": "brummbar_150mm",
+    "Range": 40,
+    "Damage": 180
+  },
+  {
+    "PBGID": 19124,
+    "Name": "brummbar_150mm_bunker_buster_mp",
+    "Range": 60,
+    "Damage": 160
+  },
+  {
+    "PBGID": 174024,
+    "Name": "brummbar_150mm_bunker_buster_scatter_mp",
+    "Range": 60,
+    "Damage": 160
+  },
+  {
+    "PBGID": 11,
+    "Name": "brummbar_150mm_mp",
+    "Range": 35,
+    "Damage": 160
+  },
+  {
+    "PBGID": 12,
+    "Name": "brummbar_critical_shot_mp",
+    "Range": 40,
+    "Damage": 160
+  },
+  {
+    "PBGID": 13,
+    "Name": "demo_stuka_37mm",
+    "Range": 175,
+    "Damage": 55
+  },
+  {
+    "PBGID": 14,
+    "Name": "demo_stuka_37mm_mp",
+    "Range": 175,
+    "Damage": 55
+  },
+  {
+    "PBGID": 15,
+    "Name": "elefant_88mm_gun",
+    "Range": 100,
+    "Damage": 180
+  },
+  {
+    "PBGID": 16,
+    "Name": "elefant_88mm_gun_mp",
+    "Range": 70,
+    "Damage": 300
+  },
+  {
+    "PBGID": 17,
+    "Name": "elefant_critical_shot_mp",
+    "Range": 70,
+    "Damage": 300
+  },
+  {
+    "PBGID": 18,
+    "Name": "ostwind_flak_43_37mm",
+    "Range": 40,
+    "Damage": 55
+  },
+  {
+    "PBGID": 19,
+    "Name": "ostwind_flak_43_37mm_mp",
+    "Range": 40,
+    "Damage": 40
+  },
+  {
+    "PBGID": 3433,
+    "Name": "ostwind_flak_43_37mm_vet2_mp",
+    "Range": 40,
+    "Damage": 40
+  },
+  {
+    "PBGID": 20,
+    "Name": "pak40_critical_shot_mp",
+    "Range": 60,
+    "Damage": 160
+  },
+  {
+    "PBGID": 21,
+    "Name": "pak43_critical_shot_mp",
+    "Range": 100,
+    "Damage": 320
+  },
+  {
+    "PBGID": 22,
+    "Name": "panther_75mm",
+    "Range": 40,
+    "Damage": 120
+  },
+  {
+    "PBGID": 3387,
+    "Name": "panther_75mm_commander_mp",
+    "Range": 50,
+    "Damage": 160
+  },
+  {
+    "PBGID": 23,
+    "Name": "panther_75mm_mp",
+    "Range": 50,
+    "Damage": 160
+  },
+  {
+    "PBGID": 24,
+    "Name": "panzer_4_75mm",
+    "Range": 40,
+    "Damage": 80
+  },
+  {
+    "PBGID": 25,
+    "Name": "panzer_4_75mm_mp",
+    "Range": 40,
+    "Damage": 160
+  },
+  {
+    "PBGID": 26,
+    "Name": "panzer_4_75mm_short",
+    "Range": 45,
+    "Damage": 120
+  },
+  {
+    "PBGID": 27,
+    "Name": "panzer_4_75mm_short_mp",
+    "Range": 40,
+    "Damage": 80
+  },
+  {
+    "PBGID": 1993,
+    "Name": "panzer_iii_50mm_mp",
+    "Range": 40,
+    "Damage": 40
+  },
+  {
+    "PBGID": 16622,
+    "Name": "puma_50mm_mp",
+    "Range": 50,
+    "Damage": 120
+  },
+  {
+    "PBGID": 16866,
+    "Name": "puma_critical_shot_mp",
+    "Range": 50,
+    "Damage": 60
+  },
+  {
+    "PBGID": 28,
+    "Name": "sp_tiger_kwk36_88mm",
+    "Range": 40,
+    "Damage": 120
+  },
+  {
+    "PBGID": 29,
+    "Name": "sp_tiger_kwk36_88mm_mp",
+    "Range": 40,
+    "Damage": 120
+  },
+  {
+    "PBGID": 30,
+    "Name": "stug_75mm",
+    "Range": 60,
+    "Damage": 120
+  },
+  {
+    "PBGID": 31,
+    "Name": "stug_75mm_mp",
+    "Range": 50,
+    "Damage": 160
+  },
+  {
+    "PBGID": 32,
+    "Name": "stug_75mm_short",
+    "Range": 45,
+    "Damage": 180
+  },
+  {
+    "PBGID": 1994,
+    "Name": "stug_75mm_short_commander_mp",
+    "Range": 50,
+    "Damage": 80
+  },
+  {
+    "PBGID": 33,
+    "Name": "stug_75mm_short_mp",
+    "Range": 45,
+    "Damage": 120
+  },
+  {
+    "PBGID": 34,
+    "Name": "stug_critical_shot_mp",
+    "Range": 50,
+    "Damage": 80
+  },
+  {
+    "PBGID": 35,
+    "Name": "stug_elefant_pak40_pak43_brummbar_critical_shot",
+    "Range": 40,
+    "Damage": 80
+  },
+  {
+    "PBGID": 36,
+    "Name": "stug_elefant_pak40_pak43_brummbar_critical_shot_mp",
+    "Range": 40,
+    "Damage": 80
+  },
+  {
+    "PBGID": 10741825,
+    "Name": "stug_e_critical_shot_mp",
+    "Range": 50,
+    "Damage": 40
+  },
+  {
+    "PBGID": 15498,
+    "Name": "tiger_ace_critical_shot_mp",
+    "Range": 50,
+    "Damage": 160
+  },
+  {
+    "PBGID": 37,
+    "Name": "tiger_kwk36_88mm",
+    "Range": 40,
+    "Damage": 120
+  },
+  {
+    "PBGID": 38,
+    "Name": "tiger_kwk36_88mm_mp",
+    "Range": 45,
+    "Damage": 160
+  },
+  {
+    "PBGID": 188701,
+    "Name": "tiger_kwk36_88mm_spearhead_mp",
+    "Range": 45,
+    "Damage": 160
+  },
+  {
+    "PBGID": 1995,
+    "Name": "tiger_kwk36_88mm_tow",
+    "Range": 40,
+    "Damage": 120
+  },
+  {
+    "PBGID": 10741837,
+    "Name": "assault_grenadier_squad_stielgranate_mp",
+    "Range": 20,
+    "Damage": 40
+  },
+  {
+    "PBGID": 1996,
+    "Name": "assault_grenadier_stielgranate_mp",
+    "Range": 20,
+    "Damage": 40
+  },
+  {
+    "PBGID": 39,
+    "Name": "bk_2h_frangible_blinding_grenade",
+    "Range": 20,
+    "Damage": 10
+  },
+  {
+    "PBGID": 40,
+    "Name": "bk_2h_frangible_blinding_grenade_mp",
+    "Range": 20,
+    "Damage": 10
+  },
+  {
+    "PBGID": 41,
+    "Name": "grenadier_kar_98k_antitank_rifle_grenade",
+    "Range": 45,
+    "Damage": 80
+  },
+  {
+    "PBGID": 42,
+    "Name": "grenadier_kar_98k_antitank_rifle_grenade_mp",
+    "Range": 45,
+    "Damage": 40
+  },
+  {
+    "PBGID": 43,
+    "Name": "grenadier_kar_98k_rifle_grenade",
+    "Range": 40,
+    "Damage": 80
+  },
+  {
+    "PBGID": 44,
+    "Name": "grenadier_kar_98k_rifle_grenade_mp",
+    "Range": 30,
+    "Damage": 80
+  },
+  {
+    "PBGID": 45,
+    "Name": "grenadier_kar_98k_rifle_grenade_tutorial",
+    "Range": 40,
+    "Damage": 80
+  },
+  {
+    "PBGID": 12741849,
+    "Name": "model_24_smoke_mp",
+    "Range": 20
+  },
+  {
+    "PBGID": 46,
+    "Name": "panzer_grenadier_bundled_campaign",
+    "Range": 20,
+    "Damage": 80
+  },
+  {
+    "PBGID": 47,
+    "Name": "panzer_grenadier_bundled_campaign_mp",
+    "Range": 20,
+    "Damage": 80
+  },
+  {
+    "PBGID": 48,
+    "Name": "panzer_grenadier_bundled_stielgranate",
+    "Range": 20,
+    "Damage": 80
+  },
+  {
+    "PBGID": 49,
+    "Name": "panzer_grenadier_bundled_stielgranate_mp",
+    "Range": 20,
+    "Damage": 100
+  },
+  {
+    "PBGID": 50,
+    "Name": "panzer_grenadier_bundled_tutorial",
+    "Range": 20,
+    "Damage": 80
+  },
+  {
+    "PBGID": 14310,
+    "Name": "urban_assault_satchel_charge_mp",
+    "Range": 15,
+    "Damage": 340
+  },
+  {
+    "PBGID": 51,
+    "Name": "howitzer_105mm_disabled_gun_mp",
+    "Range": 250,
+    "Damage": 200
+  },
+  {
+    "PBGID": 52,
+    "Name": "howitzer_105mm_gun",
+    "Range": 3325,
+    "Damage": 200
+  },
+  {
+    "PBGID": 53,
+    "Name": "howitzer_105mm_gun_counter_barrage_mp",
+    "Range": 250,
+    "Damage": 200
+  },
+  {
+    "PBGID": 16130,
+    "Name": "howitzer_105mm_gun_major_mp",
+    "Range": 250,
+    "Damage": 160
+  },
+  {
+    "PBGID": 54,
+    "Name": "howitzer_105mm_gun_mp",
+    "Range": 250,
+    "Damage": 160
+  },
+  {
+    "PBGID": 55,
+    "Name": "howitzer_105mm_gun_vet3_mp",
+    "Range": 3325,
+    "Damage": 160
+  },
+  {
+    "PBGID": 56,
+    "Name": "howitzer_105mm_victor_target_gun_mp",
+    "Range": 500,
+    "Damage": 200
+  },
+  {
+    "PBGID": 57,
+    "Name": "howitzer_75mm_light_support_gun",
+    "Range": 300,
+    "Damage": 90
+  },
+  {
+    "PBGID": 58,
+    "Name": "howitzer_75mm_light_support_gun_mp",
+    "Range": 250,
+    "Damage": 30
+  },
+  {
+    "PBGID": 59,
+    "Name": "railway_gun_80_cm_shell",
+    "Range": 1000,
+    "Damage": 600
+  },
+  {
+    "PBGID": 60,
+    "Name": "railway_gun_80_cm_shell_first_shot",
+    "Range": 1000,
+    "Damage": 600
+  },
+  {
+    "PBGID": 62,
+    "Name": "sector_105mm_gun",
+    "Range": 175,
+    "Damage": 160
+  },
+  {
+    "PBGID": 64,
+    "Name": "stuka_500_lb_bomb",
+    "Range": 1000,
+    "Damage": 400
+  },
+  {
+    "PBGID": 65,
+    "Name": "stuka_500_lb_bomb_m09",
+    "Range": 1000,
+    "Damage": 400
+  },
+  {
+    "PBGID": 66,
+    "Name": "stuka_500_lb_bomb_mp",
+    "Range": 1000,
+    "Damage": 750
+  },
+  {
+    "PBGID": 1997,
+    "Name": "stuka_500_lb_bomb_nodecap",
+    "Range": 1000,
+    "Damage": 400
+  },
+  {
+    "PBGID": 4282,
+    "Name": "stuka_500_lb_bomb_tow",
+    "Range": 1000,
+    "Damage": 400
+  },
+  {
+    "PBGID": 1998,
+    "Name": "stuka_bomb_break_point",
+    "Range": 1000,
+    "Damage": 100
+  },
+  {
+    "PBGID": 67,
+    "Name": "stuka_bomb_sp",
+    "Range": 75,
+    "Damage": 750
+  },
+  {
+    "PBGID": 68,
+    "Name": "stuka_plane_crash",
+    "Range": 1000,
+    "Damage": 750
+  },
+  {
+    "PBGID": 69,
+    "Name": "stuka_plane_crash_mp",
+    "Range": 1000,
+    "Damage": 240
+  },
+  {
+    "PBGID": 70,
+    "Name": "stuka_plane_dogfight_crash",
+    "Range": 1000,
+    "Damage": 750
+  },
+  {
+    "PBGID": 1999,
+    "Name": "tactical_bomber_bombs",
+    "Range": 300,
+    "Damage": 300
+  },
+  {
+    "PBGID": 2000,
+    "Name": "tactical_bomber_bombs_accurate",
+    "Range": 300,
+    "Damage": 300
+  },
+  {
+    "PBGID": 176679,
+    "Name": "tactical_bomber_bombs_sector_assault",
+    "Range": 300,
+    "Damage": 240
+  },
+  {
+    "PBGID": 71,
+    "Name": "officer_smoke_artillery_mp",
+    "Range": 175
+  },
+  {
+    "PBGID": 72,
+    "Name": "panzerwerfer_counter_barrage_rockets_mp",
+    "Range": 120,
+    "Damage": 80
+  },
+  {
+    "PBGID": 73,
+    "Name": "panzerwerfer_rockets",
+    "Range": 250,
+    "Damage": 80
+  },
+  {
+    "PBGID": 74,
+    "Name": "panzerwerfer_rockets_mp",
+    "Range": 160,
+    "Damage": 80
+  },
+  {
+    "PBGID": 75,
+    "Name": "panzerwerfer_rockets_nofire",
+    "Range": 250
+  },
+  {
+    "PBGID": 76,
+    "Name": "panzerwerfer_rockets_nofire_mp",
+    "Range": 160
+  },
+  {
+    "PBGID": 77,
+    "Name": "panzerwerfer_victor_target_rockets_mp",
+    "Range": 240,
+    "Damage": 80
+  },
+  {
+    "PBGID": 78,
+    "Name": "stuka_37mm_cannon",
+    "Range": 175,
+    "Damage": 100
+  },
+  {
+    "PBGID": 87326,
+    "Name": "stuka_37mm_cannon_left_mp",
+    "Range": 225,
+    "Damage": 50
+  },
+  {
+    "PBGID": 87335,
+    "Name": "stuka_37mm_cannon_left_superiority_mp",
+    "Range": 225,
+    "Damage": 20
+  },
+  {
+    "PBGID": 79,
+    "Name": "stuka_37mm_cannon_m06",
+    "Range": 175,
+    "Damage": 40
+  },
+  {
+    "PBGID": 80,
+    "Name": "stuka_37mm_cannon_right_mp",
+    "Range": 225,
+    "Damage": 50
+  },
+  {
+    "PBGID": 87336,
+    "Name": "stuka_37mm_cannon_right_superiority_mp",
+    "Range": 225,
+    "Damage": 20
+  },
+  {
+    "PBGID": 81,
+    "Name": "stuka_ab23_fragmentation_bomb",
+    "Range": 300,
+    "Damage": 100
+  },
+  {
+    "PBGID": 82,
+    "Name": "stuka_ab23_fragmentation_bomb_mp",
+    "Range": 175,
+    "Damage": 80
+  },
+  {
+    "PBGID": 83,
+    "Name": "stuka_mg_151_20mm_cannon_mp",
+    "Range": 175,
+    "Damage": 25
+  },
+  {
+    "PBGID": 84,
+    "Name": "stuka_nc_50kg_smoke_bomb",
+    "Range": 175
+  },
+  {
+    "PBGID": 85,
+    "Name": "stuka_nc_50kg_smoke_bomb_mp",
+    "Range": 175
+  },
+  {
+    "PBGID": 86,
+    "Name": "axis_mine",
+    "Range": 35,
+    "Damage": 200
+  },
+  {
+    "PBGID": 87,
+    "Name": "axis_mine_anti_personnel",
+    "Range": 35,
+    "Damage": 40
+  },
+  {
+    "PBGID": 88,
+    "Name": "axis_mine_anti_personnel_mp",
+    "Range": 35,
+    "Damage": 40
+  },
+  {
+    "PBGID": 89,
+    "Name": "axis_mine_mp",
+    "Range": 35,
+    "Damage": 400
+  },
+  {
+    "PBGID": 90,
+    "Name": "axis_riegel_43_mine_mp",
+    "Range": 35,
+    "Damage": 320
+  },
+  {
+    "PBGID": 89546,
+    "Name": "self_destruct_goliath_mp",
+    "Range": 45,
+    "Damage": 200
+  },
+  {
+    "PBGID": 101100,
+    "Name": "teller_mine_mp",
+    "Range": 35,
+    "Damage": 400
+  },
+  {
+    "PBGID": 91,
+    "Name": "grw34_81mm_mortar",
+    "Range": 60,
+    "Damage": 80
+  },
+  {
+    "PBGID": 92,
+    "Name": "grw34_81mm_mortar_barrage",
+    "Range": 85,
+    "Damage": 80
+  },
+  {
+    "PBGID": 93,
+    "Name": "grw34_81mm_mortar_barrage_mp",
+    "Range": 80,
+    "Damage": 80
+  },
+  {
+    "PBGID": 94,
+    "Name": "grw34_81mm_mortar_counter_barrage_mp",
+    "Range": 100,
+    "Damage": 80
+  },
+  {
+    "PBGID": 95,
+    "Name": "grw34_81mm_mortar_halftrack",
+    "Range": 70,
+    "Damage": 80
+  },
+  {
+    "PBGID": 96,
+    "Name": "grw34_81mm_mortar_halftrack_barrage",
+    "Range": 70,
+    "Damage": 80
+  },
+  {
+    "PBGID": 97,
+    "Name": "grw34_81mm_mortar_halftrack_barrage_mp",
+    "Range": 80,
+    "Damage": 80
+  },
+  {
+    "PBGID": 98,
+    "Name": "grw34_81mm_mortar_halftrack_counter_barrage_mp",
+    "Range": 100,
+    "Damage": 80
+  },
+  {
+    "PBGID": 99,
+    "Name": "grw34_81mm_mortar_halftrack_mp",
+    "Range": 80,
+    "Damage": 80
+  },
+  {
+    "PBGID": 100,
+    "Name": "grw34_81mm_mortar_halftrack_victor_target_mp",
+    "Range": 160,
+    "Damage": 80
+  },
+  {
+    "PBGID": 101,
+    "Name": "grw34_81mm_mortar_mp",
+    "Range": 80,
+    "Damage": 80
+  },
+  {
+    "PBGID": 102,
+    "Name": "grw34_81mm_mortar_team_smoke",
+    "Range": 85
+  },
+  {
+    "PBGID": 103,
+    "Name": "grw34_81mm_mortar_team_smoke_mp",
+    "Range": 85
+  },
+  {
+    "PBGID": 104,
+    "Name": "grw34_81mm_smoke_mortar_halftrack_barrage",
+    "Range": 70
+  },
+  {
+    "PBGID": 105,
+    "Name": "grw34_81mm_smoke_mortar_halftrack_barrage_mp",
+    "Range": 85
+  },
+  {
+    "PBGID": 106,
+    "Name": "grw34_81mm_victor_target_mortar_mp",
+    "Range": 160,
+    "Damage": 80
+  },
+  {
+    "PBGID": 14306,
+    "Name": "grw34_81mm_incendiary_mortar_barrage_mp",
+    "Range": 106,
+    "Damage": 10
+  },
+  {
+    "PBGID": 114,
+    "Name": "grw34_81mm_incendiary_mortar_halftrack_barrage",
+    "Range": 70,
+    "Damage": 3
+  },
+  {
+    "PBGID": 115,
+    "Name": "grw34_81mm_incendiary_mortar_halftrack_barrage_mp",
+    "Range": 80,
+    "Damage": 20
+  },
+  {
+    "PBGID": 116,
+    "Name": "halftrack_mortar_incendiary_dot",
+    "Range": 70,
+    "Damage": 2
+  },
+  {
+    "PBGID": 117,
+    "Name": "halftrack_mortar_incendiary_dot_mp",
+    "Range": 70,
+    "Damage": 2
+  },
+  {
+    "PBGID": 178,
+    "Name": "sdkfz_222_kwk38_20mm_",
+    "Range": 35,
+    "Damage": 20
+  },
+  {
+    "PBGID": 179,
+    "Name": "sdkfz_222_kwk38_20mm__mp",
+    "Range": 40,
+    "Damage": 20
+  },
+  {
+    "PBGID": 94928,
+    "Name": "17_pounder_atg_dummy_mp",
+    "Range": 80
+  },
+  {
+    "PBGID": 89299,
+    "Name": "17_pounder_atg_mp",
+    "Range": 80,
+    "Damage": 320
+  },
+  {
+    "PBGID": 90309,
+    "Name": "17_pounder_piercing_shot_mp",
+    "Range": 80,
+    "Damage": 320
+  },
+  {
+    "PBGID": 93765,
+    "Name": "17_pounder_victor_target",
+    "Range": 1000,
+    "Damage": 320
+  },
+  {
+    "PBGID": 89226,
+    "Name": "brit_6_pounder_at_gun_mp",
+    "Range": 60,
+    "Damage": 160
+  },
+  {
+    "PBGID": 89179,
+    "Name": "boys_at_rifle_mp",
+    "Range": 40,
+    "Damage": 14
+  },
+  {
+    "PBGID": 89188,
+    "Name": "boys_at_rifle_sniper_critical_shot_mp",
+    "Range": 50,
+    "Damage": 40
+  },
+  {
+    "PBGID": 89165,
+    "Name": "boys_at_rifle_sniper_mp",
+    "Range": 50,
+    "Damage": 40
+  },
+  {
+    "PBGID": 87374,
+    "Name": "piat_launcher_mp",
+    "Range": 35,
+    "Damage": 33
+  },
+  {
+    "PBGID": 89098,
+    "Name": "aec_75mm_ap_mp",
+    "Range": 40,
+    "Damage": 120
+  },
+  {
+    "PBGID": 89339,
+    "Name": "aec_75mm_target_optics_he_mp",
+    "Range": 40,
+    "Damage": 120
+  },
+  {
+    "PBGID": 89340,
+    "Name": "aec_75mm_target_turret_he_mp",
+    "Range": 40,
+    "Damage": 120
+  },
+  {
+    "PBGID": 93382,
+    "Name": "aec_tread_shot_mp",
+    "Range": 50,
+    "Damage": 40
+  },
+  {
+    "PBGID": 87448,
+    "Name": "archer_17p_76mm_hv_mp",
+    "Range": 70,
+    "Damage": 160
+  },
+  {
+    "PBGID": 89421,
+    "Name": "avre_crew_shrapnel_grenade_mp",
+    "Range": 40,
+    "Damage": 20
+  },
+  {
+    "PBGID": 89181,
+    "Name": "bofor_emplacement_40mm_autocannon",
+    "Range": 45,
+    "Damage": 30
+  },
+  {
+    "PBGID": 89258,
+    "Name": "bofor_emplacement_40mm_autocannon_barrage",
+    "Range": 90,
+    "Damage": 30
+  },
+  {
+    "PBGID": 94216,
+    "Name": "bofor_emplacement_40mm_autocannon_barrage_artillery_cover",
+    "Range": 1000,
+    "Damage": 15
+  },
+  {
+    "PBGID": 93740,
+    "Name": "bofor_emplacement_40mm_autocannon_barrage_victortarget",
+    "Range": 1000,
+    "Damage": 30
+  },
+  {
+    "PBGID": 89253,
+    "Name": "bofor_emplacement_40mm_autocannon_special",
+    "Range": 45,
+    "Damage": 30
+  },
+  {
+    "PBGID": 89480,
+    "Name": "centaur_aa_mk2_twin_polsten_20mm_aa_mp",
+    "Range": 50,
+    "Damage": 20
+  },
+  {
+    "PBGID": 89446,
+    "Name": "centaur_aa_mk2_twin_polsten_20mm_mp",
+    "Range": 40,
+    "Damage": 14
+  },
+  {
+    "PBGID": 89535,
+    "Name": "centaur_aa_mk2_twin_polsten_20mm_suppressing_barrage_mp",
+    "Range": 100,
+    "Damage": 20
+  },
+  {
+    "PBGID": 89572,
+    "Name": "centaur_aa_mk2_twin_polsten_20mm_weapon_burst_mp",
+    "Range": 40,
+    "Damage": 15
+  },
+  {
+    "PBGID": 93627,
+    "Name": "centaur_aa_mk2_twin_polsten_20mm_weapon_burst_test_mp",
+    "Range": 40,
+    "Damage": 15
+  },
+  {
+    "PBGID": 89116,
+    "Name": "churchill_avre_spigot_mortar_mp",
+    "Range": 35,
+    "Damage": 440
+  },
+  {
+    "PBGID": 92837,
+    "Name": "churchill_avre_spigot_mortar_vet_3_mp",
+    "Range": 35,
+    "Damage": 440
+  },
+  {
+    "PBGID": 93787,
+    "Name": "churchill_mk7_75mm_croc_mp",
+    "Range": 40,
+    "Damage": 160
+  },
+  {
+    "PBGID": 18754,
+    "Name": "churchill_mk7_75mm_mp",
+    "Range": 40,
+    "Damage": 160
+  },
+  {
+    "PBGID": 174756,
+    "Name": "churchill_smoke_shot_mp",
+    "Range": 80,
+    "Damage": 10
+  },
+  {
+    "PBGID": 18971,
+    "Name": "comet_17p_77mm_hv_mp",
+    "Range": 45,
+    "Damage": 160
+  },
+  {
+    "PBGID": 89441,
+    "Name": "comet_smoke_shot_mp",
+    "Range": 80,
+    "Damage": 10
+  },
+  {
+    "PBGID": 92923,
+    "Name": "comet_smoke_wp_shot_dot_mp",
+    "Range": 80
+  },
+  {
+    "PBGID": 92922,
+    "Name": "comet_smoke_wp_shot_mp",
+    "Range": 80,
+    "Damage": 10
+  },
+  {
+    "PBGID": 89087,
+    "Name": "cromwell_75mm_mp",
+    "Range": 40,
+    "Damage": 160
+  },
+  {
+    "PBGID": 89272,
+    "Name": "firefly_60lb_ap_rocket_left_mp",
+    "Range": 70,
+    "Damage": 320
+  },
+  {
+    "PBGID": 90317,
+    "Name": "firefly_60lb_ap_rocket_right_mp",
+    "Range": 70,
+    "Damage": 320
+  },
+  {
+    "PBGID": 19133,
+    "Name": "humber_m6_37mm_mp",
+    "Range": 40,
+    "Damage": 40
+  },
+  {
+    "PBGID": 93500,
+    "Name": "observation_searchlight_mp",
+    "Range": 120
+  },
+  {
+    "PBGID": 89086,
+    "Name": "sherman_firefly_76mm_mp",
+    "Range": 60,
+    "Damage": 200
+  },
+  {
+    "PBGID": 90436,
+    "Name": "sherman_firefly_rocket_left_mp",
+    "Range": 60,
+    "Damage": 120
+  },
+  {
+    "PBGID": 90515,
+    "Name": "sherman_firefly_rocket_right_mp",
+    "Range": 60,
+    "Damage": 120
+  },
+  {
+    "PBGID": 94171,
+    "Name": "valentine_75mm_mp",
+    "Range": 40,
+    "Damage": 120
+  },
+  {
+    "PBGID": 92287,
+    "Name": "at_gun_flare_mp",
+    "Range": 150
+  },
+  {
+    "PBGID": 90715,
+    "Name": "fwrd_hq_smoke_marker_grenade",
+    "Range": 40
+  },
+  {
+    "PBGID": 94914,
+    "Name": "lee_enfield_rifle_grenade_mp",
+    "Range": 40,
+    "Damage": 40
+  },
+  {
+    "PBGID": 188846,
+    "Name": "no77_wp_grenade_dot_mp",
+    "Range": 70
+  },
+  {
+    "PBGID": 188844,
+    "Name": "no77_wp_grenade_mp",
+    "Range": 15,
+    "Damage": 1
+  },
+  {
+    "PBGID": 89563,
+    "Name": "sapper_stun_grenade",
+    "Range": 20,
+    "Damage": 5
+  },
+  {
+    "PBGID": 92379,
+    "Name": "smoke_cover_grenade",
+    "Range": 20
+  },
+  {
+    "PBGID": 12741847,
+    "Name": "smoke_raid_grenade",
+    "Range": 20
+  },
+  {
+    "PBGID": 92951,
+    "Name": "sniper_smoke_marker_grenade",
+    "Range": 35
+  },
+  {
+    "PBGID": 89216,
+    "Name": "tommy_gammon_bomb_heavy",
+    "Range": 12,
+    "Damage": 340
+  },
+  {
+    "PBGID": 89217,
+    "Name": "tommy_gammon_bomb_medium",
+    "Range": 20,
+    "Damage": 100
+  },
+  {
+    "PBGID": 89218,
+    "Name": "tommy_mills_bomb",
+    "Range": 20,
+    "Damage": 80
+  },
+  {
+    "PBGID": 93194,
+    "Name": "tommy_mills_bomb_assault",
+    "Range": 20,
+    "Damage": 80
+  },
+  {
+    "PBGID": 90548,
+    "Name": "tommy_officer_smoke_marker_grenade",
+    "Range": 30
+  },
+  {
+    "PBGID": 200736,
+    "Name": "tommy_officer_smoke_marker_grenade_smoke_barrage",
+    "Range": 30
+  },
+  {
+    "PBGID": 93211,
+    "Name": "valentine_smoke_marker_grenade",
+    "Range": 20
+  },
+  {
+    "PBGID": 94215,
+    "Name": "155mm_artillery_cover",
+    "Range": 250,
+    "Damage": 60
+  },
+  {
+    "PBGID": 18998,
+    "Name": "25_pdr_flare_barrage_mp",
+    "Range": 700
+  },
+  {
+    "PBGID": 88369,
+    "Name": "25_pdr_set_piece_barrage_mp",
+    "Range": 700,
+    "Damage": 160
+  },
+  {
+    "PBGID": 93990,
+    "Name": "9_inch_incendiary_mortar",
+    "Range": 180,
+    "Damage": 100
+  },
+  {
+    "PBGID": 93529,
+    "Name": "hawker_typhoon_rocket_left",
+    "Range": 200,
+    "Damage": 80
+  },
+  {
+    "PBGID": 93535,
+    "Name": "hawker_typhoon_rocket_right",
+    "Range": 200,
+    "Damage": 80
+  },
+  {
+    "PBGID": 93321,
+    "Name": "qf_25lb_anti_tank_shell_base_mp",
+    "Range": 1000,
+    "Damage": 160
+  },
+  {
+    "PBGID": 100784,
+    "Name": "qf_25lb_counter_barrage_shell_base_mp",
+    "Range": 1000,
+    "Damage": 160
+  },
+  {
+    "PBGID": 93282,
+    "Name": "qf_25lb_direct_barrage_shell_base_mp",
+    "Range": 1000,
+    "Damage": 160
+  },
+  {
+    "PBGID": 90034,
+    "Name": "qf_25lb_disabled_base_mp",
+    "Range": 250
+  },
+  {
+    "PBGID": 89239,
+    "Name": "qf_25lb_disabled_mp",
+    "Range": 250
+  },
+  {
+    "PBGID": 90035,
+    "Name": "qf_25lb_howitzer_ap_shell_base_mp",
+    "Range": 100,
+    "Damage": 160
+  },
+  {
+    "PBGID": 89309,
+    "Name": "qf_25lb_howitzer_ap_shell_mp",
+    "Range": 100,
+    "Damage": 160
+  },
+  {
+    "PBGID": 92649,
+    "Name": "qf_25lb_howitzer_coordinated_airburst_shell_mp",
+    "Range": 1000,
+    "Damage": 160
+  },
+  {
+    "PBGID": 12741846,
+    "Name": "qf_25lb_howitzer_coordinated_fire_he_shell_base_accurate_mp",
+    "Range": 1000,
+    "Damage": 160
+  },
+  {
+    "PBGID": 90036,
+    "Name": "qf_25lb_howitzer_coordinated_fire_he_shell_base_mp",
+    "Range": 1000,
+    "Damage": 160
+  },
+  {
+    "PBGID": 93228,
+    "Name": "qf_25lb_howitzer_coordinated_fire_he_shell_base_overwatch_mp",
+    "Range": 1000,
+    "Damage": 160
+  },
+  {
+    "PBGID": 89287,
+    "Name": "qf_25lb_howitzer_coordinated_fire_he_shell_mp",
+    "Range": 1000,
+    "Damage": 160
+  },
+  {
+    "PBGID": 90037,
+    "Name": "qf_25lb_howitzer_counter_battery_he_shell_base_mp",
+    "Range": 250,
+    "Damage": 160
+  },
+  {
+    "PBGID": 89325,
+    "Name": "qf_25lb_howitzer_counter_battery_he_shell_mp",
+    "Range": 250,
+    "Damage": 160
+  },
+  {
+    "PBGID": 100811,
+    "Name": "qf_25lb_howitzer_creeping_barrage_mp",
+    "Range": 250,
+    "Damage": 160
+  },
+  {
+    "PBGID": 93280,
+    "Name": "qf_25lb_howitzer_fun_shell_base_matt_test_mp",
+    "Range": 250
+  },
+  {
+    "PBGID": 90038,
+    "Name": "qf_25lb_howitzer_he_shell_base_mp",
+    "Range": 1000,
+    "Damage": 160
+  },
+  {
+    "PBGID": 89241,
+    "Name": "qf_25lb_howitzer_he_shell_mp",
+    "Range": 250,
+    "Damage": 160
+  },
+  {
+    "PBGID": 90039,
+    "Name": "qf_25lb_howitzer_rapid_response_he_shell_base_mp",
+    "Range": 250,
+    "Damage": 160
+  },
+  {
+    "PBGID": 89298,
+    "Name": "qf_25lb_howitzer_rapid_response_he_shell_mp",
+    "Range": 250,
+    "Damage": 160
+  },
+  {
+    "PBGID": 93252,
+    "Name": "qf_25lb_howitzer_smoke_shell_base_matt_test_mp",
+    "Range": 250
+  },
+  {
+    "PBGID": 90040,
+    "Name": "qf_25lb_howitzer_smoke_shell_base_mp",
+    "Range": 250
+  },
+  {
+    "PBGID": 89553,
+    "Name": "qf_25lb_howitzer_smoke_shell_mp",
+    "Range": 250
+  },
+  {
+    "PBGID": 89039,
+    "Name": "qf_set_piece_explosive_shell_mp",
+    "Range": 700,
+    "Damage": 320
+  },
+  {
+    "PBGID": 89040,
+    "Name": "qf_set_piece_smoke_shell_mp",
+    "Range": 700
+  },
+  {
+    "PBGID": 94702,
+    "Name": "sexton_dummy_mp",
+    "Range": 180
+  },
+  {
+    "PBGID": 93822,
+    "Name": "sexton_spg_25_pounder_airburst_mp",
+    "Range": 400,
+    "Damage": 160
+  },
+  {
+    "PBGID": 94245,
+    "Name": "sexton_spg_25_pounder_creeping_mp",
+    "Range": 160,
+    "Damage": 160
+  },
+  {
+    "PBGID": 19093,
+    "Name": "sexton_spg_25_pounder_mp",
+    "Range": 160,
+    "Damage": 160
+  },
+  {
+    "PBGID": 93358,
+    "Name": "sexton_spg_25_pounder_supercharge_mp",
+    "Range": 400,
+    "Damage": 160
+  },
+  {
+    "PBGID": 89020,
+    "Name": "valentine_mortar",
+    "Range": 180,
+    "Damage": 100
+  },
+  {
+    "PBGID": 92695,
+    "Name": "valentine_mortar_he",
+    "Range": 1000,
+    "Damage": 300
+  },
+  {
+    "PBGID": 93080,
+    "Name": "artillery_flare_mp",
+    "Range": 106
+  },
+  {
+    "PBGID": 89482,
+    "Name": "churchill_crew_grenades",
+    "Range": 15,
+    "Damage": 80
+  },
+  {
+    "PBGID": 92915,
+    "Name": "comet_auto_crew_grenades_driver",
+    "Range": 15,
+    "Damage": 60
+  },
+  {
+    "PBGID": 92916,
+    "Name": "comet_auto_crew_grenades_gunner",
+    "Range": 15,
+    "Damage": 60
+  },
+  {
+    "PBGID": 92903,
+    "Name": "comet_crew_grenades",
+    "Range": 15,
+    "Damage": 80
+  },
+  {
+    "PBGID": 94008,
+    "Name": "early_warning_artillery_flare_mp",
+    "Range": 106
+  },
+  {
+    "PBGID": 89280,
+    "Name": "land_mattress_25lb_rocket_mp",
+    "Range": 75,
+    "Damage": 80
+  },
+  {
+    "PBGID": 89281,
+    "Name": "land_mattress_60lb_rocket_mp",
+    "Range": 120,
+    "Damage": 80
+  },
+  {
+    "PBGID": 89509,
+    "Name": "land_mattress_dummy_mp",
+    "Range": 180
+  },
+  {
+    "PBGID": 89304,
+    "Name": "land_mattress_phosphorus_rocket_dot_mp",
+    "Range": 70
+  },
+  {
+    "PBGID": 89282,
+    "Name": "land_mattress_phosphorus_rocket_mp",
+    "Range": 120,
+    "Damage": 40
+  },
+  {
+    "PBGID": 89311,
+    "Name": "land_mattress_rocket_arty_dummy_mp",
+    "Range": 180
+  },
+  {
+    "PBGID": 89419,
+    "Name": "avre_crew_demolition_charge",
+    "Range": 35,
+    "Damage": 320
+  },
+  {
+    "PBGID": 94220,
+    "Name": "brit_m6_mine_mp",
+    "Range": 35,
+    "Damage": 200
+  },
+  {
+    "PBGID": 89195,
+    "Name": "commando_demolition_charge",
+    "Range": 35,
+    "Damage": 320
+  },
+  {
+    "PBGID": 92783,
+    "Name": "brit_3_inch_mortar_1_auto_10lb_he_mp",
+    "Range": 90,
+    "Damage": 80
+  },
+  {
+    "PBGID": 92782,
+    "Name": "brit_3_inch_mortar_1_auto_light_he_mp",
+    "Range": 85,
+    "Damage": 80
+  },
+  {
+    "PBGID": 92786,
+    "Name": "brit_3_inch_mortar_1_barrage_10lb_he_mp",
+    "Range": 90,
+    "Damage": 80
+  },
+  {
+    "PBGID": 93750,
+    "Name": "brit_3_inch_mortar_1_barrage_10lb_he_victor_target_mp",
+    "Range": 1000,
+    "Damage": 80
+  },
+  {
+    "PBGID": 92788,
+    "Name": "brit_3_inch_mortar_1_barrage_light_he_mp",
+    "Range": 115,
+    "Damage": 80
+  },
+  {
+    "PBGID": 93490,
+    "Name": "brit_3_inch_mortar_1_barrage_smoke_mp",
+    "Range": 150
+  },
+  {
+    "PBGID": 92785,
+    "Name": "brit_3_inch_mortar_2_auto_10lb_he_mp",
+    "Range": 90,
+    "Damage": 80
+  },
+  {
+    "PBGID": 92784,
+    "Name": "brit_3_inch_mortar_2_auto_light_he_mp",
+    "Range": 85,
+    "Damage": 80
+  },
+  {
+    "PBGID": 92792,
+    "Name": "brit_3_inch_mortar_2_auto_white_phos_mp",
+    "Range": 90
+  },
+  {
+    "PBGID": 92790,
+    "Name": "brit_3_inch_mortar_2_barrage_10lb_he_mp",
+    "Range": 90,
+    "Damage": 80
+  },
+  {
+    "PBGID": 93751,
+    "Name": "brit_3_inch_mortar_2_barrage_10lb_he_victor_target_mp",
+    "Range": 1000,
+    "Damage": 80
+  },
+  {
+    "PBGID": 92789,
+    "Name": "brit_3_inch_mortar_2_barrage_light_he_mp",
+    "Range": 115,
+    "Damage": 80
+  },
+  {
+    "PBGID": 93491,
+    "Name": "brit_3_inch_mortar_2_barrage_smoke_mp",
+    "Range": 150
+  },
+  {
+    "PBGID": 92791,
+    "Name": "brit_3_inch_mortar_2_barrage_white_phos_mp",
+    "Range": 90
+  },
+  {
+    "PBGID": 12741838,
+    "Name": "brit_3_inch_mortar_site_weapon_mp",
+    "Range": 90,
+    "Damage": 80
+  },
+  {
+    "PBGID": 89365,
+    "Name": "brit_3_inch_mortar_white_phosphorous_dot_mp",
+    "Range": 70
+  },
+  {
+    "PBGID": 95458,
+    "Name": "brit_mortar_cover_mp",
+    "Range": 106,
+    "Damage": 80
+  },
+  {
+    "PBGID": 94144,
+    "Name": "valentine_canister_smoke_mp",
+    "Range": 55
+  },
+  {
+    "PBGID": 18976,
+    "Name": "cavalry_at_satchel_weapon",
+    "Range": 15,
+    "Damage": 250
+  },
+  {
+    "PBGID": 16012,
+    "Name": "riflemen_training_satchel_weapon",
+    "Range": 15,
+    "Damage": 140
+  },
+  {
+    "PBGID": 16845,
+    "Name": "infantry_oma_105mm",
+    "Range": 1000,
+    "Damage": 120
+  },
+  {
+    "PBGID": 17882,
+    "Name": "infantry_oma_105mm_stun",
+    "Range": 1000,
+    "Damage": 120
+  },
+  {
+    "PBGID": 16846,
+    "Name": "infantry_oma_240mm",
+    "Range": 1000,
+    "Damage": 600
+  },
+  {
+    "PBGID": 17964,
+    "Name": "sector_105mm_gun_large_aoe",
+    "Range": 175,
+    "Damage": 160
+  },
+  {
+    "PBGID": 14364,
+    "Name": "long_duration_smoke",
+    "Range": 85
+  },
+  {
+    "PBGID": 180,
+    "Name": "53k_45mm_m1937_at_gun",
+    "Range": 40,
+    "Damage": 55
+  },
+  {
+    "PBGID": 174991,
+    "Name": "53k_45mm_m1937_at_gun_canister_mp",
+    "Range": 35,
+    "Damage": 60
+  },
+  {
+    "PBGID": 181,
+    "Name": "53k_45mm_m1937_at_gun_mp",
+    "Range": 60,
+    "Damage": 80
+  },
+  {
+    "PBGID": 182,
+    "Name": "zis3_76mm_m1942__at_gun",
+    "Range": 45,
+    "Damage": 80
+  },
+  {
+    "PBGID": 183,
+    "Name": "zis3_76mm_m1942__at_gun_mp",
+    "Range": 60,
+    "Damage": 160
+  },
+  {
+    "PBGID": 94085,
+    "Name": "conscipt_ptrs_41_mp",
+    "Range": 40,
+    "Damage": 14
+  },
+  {
+    "PBGID": 184,
+    "Name": "guard_troop_ptrs_41",
+    "Range": 40,
+    "Damage": 38
+  },
+  {
+    "PBGID": 185,
+    "Name": "guard_troop_ptrs_41_mp",
+    "Range": 40,
+    "Damage": 14
+  },
+  {
+    "PBGID": 10741828,
+    "Name": "penal_ptrs_41_mp",
+    "Range": 40,
+    "Damage": 14
+  },
+  {
+    "PBGID": 177587,
+    "Name": "152mm_overwatch_anti_tank_mp",
+    "Range": 250,
+    "Damage": 60
+  },
+  {
+    "PBGID": 2006,
+    "Name": "b4_203_direct_fire",
+    "Range": 250,
+    "Damage": 640
+  },
+  {
+    "PBGID": 186,
+    "Name": "is2_d25t_122mm",
+    "Range": 40,
+    "Damage": 180
+  },
+  {
+    "PBGID": 12741830,
+    "Name": "is2_d25t_122mm_fragmentation_mp",
+    "Range": 40,
+    "Damage": 120
+  },
+  {
+    "PBGID": 187,
+    "Name": "is2_d25t_122mm_mp",
+    "Range": 40,
+    "Damage": 160
+  },
+  {
+    "PBGID": 89092,
+    "Name": "isu152_ml-20s_152mm_armor_piercing_mp",
+    "Range": 70,
+    "Damage": 240
+  },
+  {
+    "PBGID": 188,
+    "Name": "isu152_ml-20s_152mm_howitzer_gun",
+    "Range": 100,
+    "Damage": 270
+  },
+  {
+    "PBGID": 189,
+    "Name": "isu152_ml-20s_152mm_howitzer_gun_barrage",
+    "Range": 130,
+    "Damage": 270
+  },
+  {
+    "PBGID": 190,
+    "Name": "isu152_ml-20s_152mm_howitzer_gun_barrage_mp",
+    "Range": 100,
+    "Damage": 240
+  },
+  {
+    "PBGID": 191,
+    "Name": "isu152_ml-20s_152mm_howitzer_gun_mp",
+    "Range": 70,
+    "Damage": 240
+  },
+  {
+    "PBGID": 192,
+    "Name": "isu152_ml-20s_152mm_howitzer_gun_no_fire",
+    "Range": 250,
+    "Damage": 270
+  },
+  {
+    "PBGID": 193,
+    "Name": "isu152_ml-20s_152mm_howitzer_gun_no_fire_mp",
+    "Range": 250,
+    "Damage": 180
+  },
+  {
+    "PBGID": 3373,
+    "Name": "isu152_ml-20s_152mm_howitzer_gun_piercing_shot",
+    "Range": 130,
+    "Damage": 270
+  },
+  {
+    "PBGID": 3374,
+    "Name": "isu152_ml-20s_152mm_howitzer_gun_piercing_shot_mp",
+    "Range": 70,
+    "Damage": 240
+  },
+  {
+    "PBGID": 194,
+    "Name": "kv-8_45mm_mp",
+    "Range": 40,
+    "Damage": 80
+  },
+  {
+    "PBGID": 2007,
+    "Name": "kv2_m10_152mm",
+    "Range": 40,
+    "Damage": 240
+  },
+  {
+    "PBGID": 4070,
+    "Name": "kv2_m10_152mm_indirect",
+    "Range": 70,
+    "Damage": 240
+  },
+  {
+    "PBGID": 2008,
+    "Name": "kv2_m10_152mm_sp",
+    "Range": 40,
+    "Damage": 200
+  },
+  {
+    "PBGID": 2009,
+    "Name": "kv2_m10_152mm_tow",
+    "Range": 40,
+    "Damage": 200
+  },
+  {
+    "PBGID": 16642,
+    "Name": "sherman_76mm_gun",
+    "Range": 40,
+    "Damage": 160
+  },
+  {
+    "PBGID": 174617,
+    "Name": "sherman_76mm_hvap_gun",
+    "Range": 40,
+    "Damage": 160
+  },
+  {
+    "PBGID": 195,
+    "Name": "su76_76mm_zis-3sh_gun",
+    "Range": 60,
+    "Damage": 80
+  },
+  {
+    "PBGID": 196,
+    "Name": "su76_76mm_zis-3sh_gun_mp",
+    "Range": 60,
+    "Damage": 120
+  },
+  {
+    "PBGID": 197,
+    "Name": "su85_d5t_85mm_",
+    "Range": 60,
+    "Damage": 120
+  },
+  {
+    "PBGID": 198,
+    "Name": "su85_d5t_85mm__mp",
+    "Range": 60,
+    "Damage": 160
+  },
+  {
+    "PBGID": 200,
+    "Name": "t-34_ramming_self_dmg_weapon_mp",
+    "Range": 1,
+    "Damage": 160
+  },
+  {
+    "PBGID": 202,
+    "Name": "t-34_ramming_weapon_mp",
+    "Range": 1,
+    "Damage": 160
+  },
+  {
+    "PBGID": 18741,
+    "Name": "t34_76mm_mp",
+    "Range": 40,
+    "Damage": 160
+  },
+  {
+    "PBGID": 203,
+    "Name": "t34_85_zis-s-53_85mm_t34",
+    "Range": 40,
+    "Damage": 120
+  },
+  {
+    "PBGID": 204,
+    "Name": "t34_85_zis-s-53_85mm_t34_mp",
+    "Range": 40,
+    "Damage": 160
+  },
+  {
+    "PBGID": 205,
+    "Name": "t34_kv1_m1940_f-34_76mm_",
+    "Range": 40,
+    "Damage": 80
+  },
+  {
+    "PBGID": 3431,
+    "Name": "t34_kv1_m1940_f-34_76mm_green_mp",
+    "Range": 40,
+    "Damage": 160
+  },
+  {
+    "PBGID": 206,
+    "Name": "t34_kv1_m1940_f-34_76mm__mp",
+    "Range": 40,
+    "Damage": 160
+  },
+  {
+    "PBGID": 207,
+    "Name": "t70_m1938_45mm",
+    "Range": 40,
+    "Damage": 55
+  },
+  {
+    "PBGID": 208,
+    "Name": "t70_m1938_45mm_mp",
+    "Range": 40,
+    "Damage": 40
+  },
+  {
+    "PBGID": 211,
+    "Name": "flare_mp",
+    "Range": 150
+  },
+  {
+    "PBGID": 2010,
+    "Name": "flare_tiger_tow",
+    "Range": 150
+  },
+  {
+    "PBGID": 212,
+    "Name": "guard_troop_rgd_33_sleeved",
+    "Range": 20,
+    "Damage": 80
+  },
+  {
+    "PBGID": 213,
+    "Name": "guard_troop_rgd_33_sleeved_longtimer",
+    "Range": 20,
+    "Damage": 80
+  },
+  {
+    "PBGID": 214,
+    "Name": "guard_troop_rgd_33_sleeved_mp",
+    "Range": 20,
+    "Damage": 80
+  },
+  {
+    "PBGID": 215,
+    "Name": "penal_troop_pinning_rg_42",
+    "Range": 20,
+    "Damage": 3
+  },
+  {
+    "PBGID": 216,
+    "Name": "penal_troop_pinning_rg_42_mp",
+    "Range": 20,
+    "Damage": 3
+  },
+  {
+    "PBGID": 10741832,
+    "Name": "penal_troop_satchel_charge_at_mp",
+    "Range": 10,
+    "Damage": 340
+  },
+  {
+    "PBGID": 10741836,
+    "Name": "penal_troop_satchel_charge_at_skillshot_mp",
+    "Range": 10,
+    "Damage": 340
+  },
+  {
+    "PBGID": 217,
+    "Name": "penal_troop_satchel_charge_mp",
+    "Range": 10,
+    "Damage": 340
+  },
+  {
+    "PBGID": 221,
+    "Name": "rgd_1_smoke",
+    "Range": 20
+  },
+  {
+    "PBGID": 222,
+    "Name": "rgd_1_smoke_mp",
+    "Range": 20
+  },
+  {
+    "PBGID": 218,
+    "Name": "rg_42",
+    "Range": 20,
+    "Damage": 80
+  },
+  {
+    "PBGID": 220,
+    "Name": "rg_42_mp",
+    "Range": 20,
+    "Damage": 80
+  },
+  {
+    "PBGID": 223,
+    "Name": "152mm_m-30",
+    "Range": 250,
+    "Damage": 300
+  },
+  {
+    "PBGID": 224,
+    "Name": "152mm_m-30_barrage",
+    "Range": 175,
+    "Damage": 200
+  },
+  {
+    "PBGID": 225,
+    "Name": "152mm_m-30_barrage_mp",
+    "Range": 250,
+    "Damage": 200
+  },
+  {
+    "PBGID": 226,
+    "Name": "152mm_m-30_barrage_slow",
+    "Range": 250,
+    "Damage": 200
+  },
+  {
+    "PBGID": 227,
+    "Name": "152mm_m-30_barrage_slow_mp",
+    "Range": 250,
+    "Damage": 200
+  },
+  {
+    "PBGID": 228,
+    "Name": "152mm_m-30_disabled_mp",
+    "Range": 250,
+    "Damage": 200
+  },
+  {
+    "PBGID": 229,
+    "Name": "152mm_m-30_mp",
+    "Range": 250,
+    "Damage": 200
+  },
+  {
+    "PBGID": 230,
+    "Name": "152mm_m-30_precision_mp",
+    "Range": 250,
+    "Damage": 200
+  },
+  {
+    "PBGID": 231,
+    "Name": "152mm_m-30_vet3_mp",
+    "Range": 3325,
+    "Damage": 200
+  },
+  {
+    "PBGID": 3194,
+    "Name": "152mm_m-30_victortarget_mp",
+    "Range": 500,
+    "Damage": 200
+  },
+  {
+    "PBGID": 232,
+    "Name": "203mm_b-4_barrage_mp",
+    "Range": 500,
+    "Damage": 220
+  },
+  {
+    "PBGID": 233,
+    "Name": "203mm_b-4_barrage_slow_mp",
+    "Range": 500,
+    "Damage": 220
+  },
+  {
+    "PBGID": 2012,
+    "Name": "203mm_b-4_commander_mp",
+    "Range": 250,
+    "Damage": 640
+  },
+  {
+    "PBGID": 2013,
+    "Name": "203mm_b-4_commander_precise_mp",
+    "Range": 250,
+    "Damage": 640
+  },
+  {
+    "PBGID": 3195,
+    "Name": "203mm_b-4_commander_victortarget_mp",
+    "Range": 500,
+    "Damage": 640
+  },
+  {
+    "PBGID": 234,
+    "Name": "203mm_b-4_mp",
+    "Range": 500,
+    "Damage": 220
+  },
+  {
+    "PBGID": 235,
+    "Name": "flares_mp",
+    "Range": 75
+  },
+  {
+    "PBGID": 188213,
+    "Name": "il2_at_rockets",
+    "Range": 200,
+    "Damage": 20
+  },
+  {
+    "PBGID": 236,
+    "Name": "il2_rockets",
+    "Range": 75,
+    "Damage": 200
+  },
+  {
+    "PBGID": 237,
+    "Name": "il2_rockets_mp",
+    "Range": 1000,
+    "Damage": 320
+  },
+  {
+    "PBGID": 238,
+    "Name": "il2_rockets_sp",
+    "Range": 75,
+    "Damage": 750
+  },
+  {
+    "PBGID": 239,
+    "Name": "il_2_plane_crash",
+    "Range": 1000,
+    "Damage": 750
+  },
+  {
+    "PBGID": 240,
+    "Name": "il_2_plane_crash_mp",
+    "Range": 1000,
+    "Damage": 240
+  },
+  {
+    "PBGID": 241,
+    "Name": "off_map_propaganda_artillery",
+    "Range": 175
+  },
+  {
+    "PBGID": 242,
+    "Name": "off_map_propaganda_artillery_mp",
+    "Range": 250
+  },
+  {
+    "PBGID": 16252,
+    "Name": "off_map_propaganda_artillery_officer",
+    "Range": 175
+  },
+  {
+    "PBGID": 243,
+    "Name": "out_of_control_explosion_weapon_mp",
+    "Damage": 110
+  },
+  {
+    "PBGID": 2014,
+    "Name": "il2_anti_tank_bombs",
+    "Range": 175,
+    "Damage": 80
+  },
+  {
+    "PBGID": 244,
+    "Name": "il2_vya-23_autocannon",
+    "Range": 130,
+    "Damage": 35
+  },
+  {
+    "PBGID": 87329,
+    "Name": "il2_vya-23_autocannon_advanced_mp",
+    "Range": 225,
+    "Damage": 20
+  },
+  {
+    "PBGID": 245,
+    "Name": "il2_vya-23_autocannon_mp",
+    "Range": 225,
+    "Damage": 3
+  },
+  {
+    "PBGID": 188014,
+    "Name": "il2_vya-23_autocannon_strafing_mp",
+    "Range": 250,
+    "Damage": 2
+  },
+  {
+    "PBGID": 95501,
+    "Name": "katyusha_bm_13_16_creeping_rockets_mp",
+    "Range": 150,
+    "Damage": 80
+  },
+  {
+    "PBGID": 95499,
+    "Name": "katyusha_bm_13_16_creeping_rocket_mp",
+    "Range": 200,
+    "Damage": 80
+  },
+  {
+    "PBGID": 246,
+    "Name": "katyusha_bm_13_16_precision_rocket",
+    "Range": 150,
+    "Damage": 80
+  },
+  {
+    "PBGID": 247,
+    "Name": "katyusha_bm_13_16_precision_rocket_mp",
+    "Range": 150,
+    "Damage": 80
+  },
+  {
+    "PBGID": 248,
+    "Name": "katyusha_bm_13_16_rocket",
+    "Range": 250,
+    "Damage": 80
+  },
+  {
+    "PBGID": 249,
+    "Name": "katyusha_bm_13_16_rocket_mp",
+    "Range": 200,
+    "Damage": 80
+  },
+  {
+    "PBGID": 250,
+    "Name": "katyusha_bm_13_16_rocket_no_fire",
+    "Range": 250
+  },
+  {
+    "PBGID": 251,
+    "Name": "katyusha_bm_13_16_rocket_no_fire_mp",
+    "Range": 200
+  },
+  {
+    "PBGID": 3196,
+    "Name": "katyusha_bm_13_16_rocket_victortarget_mp",
+    "Range": 400,
+    "Damage": 80
+  },
+  {
+    "PBGID": 252,
+    "Name": "su76_zis-3sh_gun_barrage",
+    "Range": 100,
+    "Damage": 120
+  },
+  {
+    "PBGID": 253,
+    "Name": "su76_zis-3sh_gun_barrage_mp",
+    "Range": 80,
+    "Damage": 80
+  },
+  {
+    "PBGID": 254,
+    "Name": "zis3_at_gun_he_shots",
+    "Range": 80,
+    "Damage": 80
+  },
+  {
+    "PBGID": 255,
+    "Name": "zis3_at_gun_he_shots_mp",
+    "Range": 80,
+    "Damage": 80
+  },
+  {
+    "PBGID": 2015,
+    "Name": "booby_trap",
+    "Range": 35,
+    "Damage": 80
+  },
+  {
+    "PBGID": 12741839,
+    "Name": "demolition_dummy_mp",
+    "Range": 35
+  },
+  {
+    "PBGID": 256,
+    "Name": "engineer_demoliion",
+    "Range": 35,
+    "Damage": 312
+  },
+  {
+    "PBGID": 257,
+    "Name": "engineer_demoliion_mp",
+    "Range": 35,
+    "Damage": 250
+  },
+  {
+    "PBGID": 258,
+    "Name": "fieldcraft_mine",
+    "Range": 35
+  },
+  {
+    "PBGID": 259,
+    "Name": "fieldcraft_mine_mp",
+    "Range": 35,
+    "Damage": 80
+  },
+  {
+    "PBGID": 2016,
+    "Name": "light_anti_vehicle_mines",
+    "Range": 35,
+    "Damage": 40
+  },
+  {
+    "PBGID": 260,
+    "Name": "m11_engineer_demoliion",
+    "Range": 35,
+    "Damage": 400
+  },
+  {
+    "PBGID": 261,
+    "Name": "tm-35_mine",
+    "Range": 35,
+    "Damage": 200
+  },
+  {
+    "PBGID": 262,
+    "Name": "tm-35_mine_mp",
+    "Range": 35,
+    "Damage": 200
+  },
+  {
+    "PBGID": 2017,
+    "Name": "tm-35_mine_tow",
+    "Range": 35,
+    "Damage": 100
+  },
+  {
+    "PBGID": 263,
+    "Name": "hm_38_120mm_mortar",
+    "Range": 120,
+    "Damage": 120
+  },
+  {
+    "PBGID": 264,
+    "Name": "hm_38_120mm_mortar_barrage",
+    "Range": 120,
+    "Damage": 120
+  },
+  {
+    "PBGID": 265,
+    "Name": "hm_38_120mm_mortar_barrage_mp",
+    "Range": 100,
+    "Damage": 80
+  },
+  {
+    "PBGID": 266,
+    "Name": "hm_38_120mm_mortar_barrage_slow",
+    "Range": 120,
+    "Damage": 120
+  },
+  {
+    "PBGID": 267,
+    "Name": "hm_38_120mm_mortar_barrage_slow_mp",
+    "Range": 100,
+    "Damage": 80
+  },
+  {
+    "PBGID": 3197,
+    "Name": "hm_38_120mm_mortar_barrage_victortarget_mp",
+    "Range": 100,
+    "Damage": 100
+  },
+  {
+    "PBGID": 268,
+    "Name": "hm_38_120mm_mortar_dummy",
+    "Range": 100,
+    "Damage": 1
+  },
+  {
+    "PBGID": 269,
+    "Name": "hm_38_120mm_mortar_dummy_mp",
+    "Range": 100,
+    "Damage": 1
+  },
+  {
+    "PBGID": 95355,
+    "Name": "hm_38_120mm_mortar_flares_mp",
+    "Range": 100,
+    "Damage": 1
+  },
+  {
+    "PBGID": 95496,
+    "Name": "hm_38_120mm_mortar_flare_mp",
+    "Range": 100
+  },
+  {
+    "PBGID": 270,
+    "Name": "hm_38_120mm_mortar_mp",
+    "Range": 100,
+    "Damage": 80
+  },
+  {
+    "PBGID": 271,
+    "Name": "hm_38_120mm_mortar_precision_barrage",
+    "Range": 120,
+    "Damage": 200
+  },
+  {
+    "PBGID": 272,
+    "Name": "hm_38_120mm_mortar_precision_barrage_mp",
+    "Range": 100,
+    "Damage": 100
+  },
+  {
+    "PBGID": 273,
+    "Name": "hm_38_120mm_mortar_smoke",
+    "Range": 120
+  },
+  {
+    "PBGID": 274,
+    "Name": "hm_38_120mm_mortar_smoke_mp",
+    "Range": 120
+  },
+  {
+    "PBGID": 275,
+    "Name": "pm41_82mm_mortar",
+    "Range": 75,
+    "Damage": 80
+  },
+  {
+    "PBGID": 276,
+    "Name": "pm41_82mm_mortar_barrage",
+    "Range": 75,
+    "Damage": 80
+  },
+  {
+    "PBGID": 277,
+    "Name": "pm41_82mm_mortar_barrage_mp",
+    "Range": 80,
+    "Damage": 80
+  },
+  {
+    "PBGID": 278,
+    "Name": "pm41_82mm_mortar_barrage_slow_mp",
+    "Range": 80,
+    "Damage": 80
+  },
+  {
+    "PBGID": 3198,
+    "Name": "pm41_82mm_mortar_barrage_victortarget_mp",
+    "Range": 212,
+    "Damage": 80
+  },
+  {
+    "PBGID": 95354,
+    "Name": "pm41_82mm_mortar_flare_mp",
+    "Range": 80,
+    "Damage": 1
+  },
+  {
+    "PBGID": 279,
+    "Name": "pm41_82mm_mortar_mp",
+    "Range": 80,
+    "Damage": 80
+  },
+  {
+    "PBGID": 280,
+    "Name": "pm41_82mm_mortar_precision_barrage",
+    "Range": 80,
+    "Damage": 160
+  },
+  {
+    "PBGID": 281,
+    "Name": "pm41_82mm_mortar_precision_barrage_mp",
+    "Range": 80,
+    "Damage": 80
+  },
+  {
+    "PBGID": 282,
+    "Name": "pm41_82mm_mortar_smoke",
+    "Range": 75
+  },
+  {
+    "PBGID": 283,
+    "Name": "pm41_82mm_mortar_smoke_mp",
+    "Range": 85
+  },
+  {
+    "PBGID": 174929,
+    "Name": "scorched_earch_mortar_barrage_mp",
+    "Range": 80,
+    "Damage": 10
+  },
+  {
+    "PBGID": 174928,
+    "Name": "scorched_earth_mortar_mp",
+    "Range": 80,
+    "Damage": 10
+  },
+  {
+    "PBGID": 286,
+    "Name": "molotov_cocktail_dotdamage",
+    "Range": 70,
+    "Damage": 25
+  },
+  {
+    "PBGID": 287,
+    "Name": "molotov_cocktail_dotdamage_mp",
+    "Range": 70,
+    "Damage": 2
+  },
+  {
+    "PBGID": 288,
+    "Name": "molotov_cocktail_weapon",
+    "Range": 15,
+    "Damage": 25
+  },
+  {
+    "PBGID": 289,
+    "Name": "molotov_cocktail_weapon_mp",
+    "Range": 15,
+    "Damage": 10
+  },
+  {
+    "PBGID": 12741840,
+    "Name": "molotov_cocktail_weapon_vet_mp",
+    "Range": 15,
+    "Damage": 10
+  },
+  {
+    "PBGID": 357,
+    "Name": "panzerschreck_destroy_engine",
+    "Range": 40,
+    "Damage": 80
+  },
+  {
+    "PBGID": 364,
+    "Name": "m24_anti_tank_bundled_stielgranate",
+    "Range": 20,
+    "Damage": 240
+  },
+  {
+    "PBGID": 365,
+    "Name": "howitzer_105mm_gun_dummy",
+    "Range": 300
+  },
+  {
+    "PBGID": 366,
+    "Name": "howitzer_105mm_gun_precise",
+    "Range": 300,
+    "Damage": 200
+  },
+  {
+    "PBGID": 367,
+    "Name": "m01_stuka_bomb",
+    "Range": 1000,
+    "Damage": 120
+  },
+  {
+    "PBGID": 368,
+    "Name": "stuka_mg_151_20mm_cannon_high_damage",
+    "Range": 175,
+    "Damage": 180
+  },
+  {
+    "PBGID": 369,
+    "Name": "stuka_mg_151_20mm_high_damage_second_gun",
+    "Range": 175,
+    "Damage": 180
+  },
+  {
+    "PBGID": 370,
+    "Name": "zis3_at_gun_single_shot_accurate",
+    "Range": 60,
+    "Damage": 10
+  },
+  {
+    "PBGID": 371,
+    "Name": "moltke_detpack_weapon",
+    "Range": 35,
+    "Damage": 200
+  },
+  {
+    "PBGID": 372,
+    "Name": "axis_mine_anti_personnel_m03",
+    "Range": 35,
+    "Damage": 80
+  },
+  {
+    "PBGID": 373,
+    "Name": "engineer_demolition_large",
+    "Range": 35,
+    "Damage": 160
+  },
+  {
+    "PBGID": 97499,
+    "Name": "flare_demo",
+    "Range": 35
+  },
+  {
+    "PBGID": 374,
+    "Name": "m08_engineer_demoliion",
+    "Range": 35,
+    "Damage": 250
+  },
+  {
+    "PBGID": 375,
+    "Name": "tm-35_mine_m08",
+    "Range": 35,
+    "Damage": 80
+  },
+  {
+    "PBGID": 376,
+    "Name": "tm-35_mine_sp",
+    "Range": 35,
+    "Damage": 160
+  },
+  {
+    "PBGID": 377,
+    "Name": "m01_persistant_smoke",
+    "Range": 85
+  },
+  {
+    "PBGID": 14498,
+    "Name": "machete",
+    "Range": 3,
+    "Damage": 80
+  },
+  {
+    "PBGID": 16349,
+    "Name": "dummy_set_up"
+  },
+  {
+    "PBGID": 2850,
+    "Name": "pak40_75mm_wg_mp",
+    "Range": 60,
+    "Damage": 160
+  },
+  {
+    "PBGID": 2851,
+    "Name": "pak40_critical_shot_wg_mp",
+    "Range": 80,
+    "Damage": 160
+  },
+  {
+    "PBGID": 2853,
+    "Name": "raketenwerfer43_88mm_wg_mp",
+    "Range": 55,
+    "Damage": 160
+  },
+  {
+    "PBGID": 2854,
+    "Name": "panzerschreck_54_atw_mp",
+    "Range": 35,
+    "Damage": 120
+  },
+  {
+    "PBGID": 2855,
+    "Name": "volksgrenadier_panzerfaust_atw_mp",
+    "Range": 20,
+    "Damage": 100
+  },
+  {
+    "PBGID": 15245,
+    "Name": "volksgrenadier_panzerfaust_atw_vet_4_mp",
+    "Range": 20,
+    "Damage": 160
+  },
+  {
+    "PBGID": 95244,
+    "Name": "hetzer_pak_39_75mm_mp",
+    "Range": 60,
+    "Damage": 160
+  },
+  {
+    "PBGID": 2856,
+    "Name": "infrared_searchlight_mp",
+    "Range": 1
+  },
+  {
+    "PBGID": 14925,
+    "Name": "infrared_searchlight_sp",
+    "Range": 60
+  },
+  {
+    "PBGID": 2857,
+    "Name": "jagdpanzer_iv_pak_42_75mm_mp",
+    "Range": 60,
+    "Damage": 160
+  },
+  {
+    "PBGID": 2858,
+    "Name": "jagdtiger_pak_44_128mm_gun_mp",
+    "Range": 70,
+    "Damage": 300
+  },
+  {
+    "PBGID": 2859,
+    "Name": "jagdtiger_pak_44_128mm_gun_supporting_fire_mp",
+    "Range": 125,
+    "Damage": 160
+  },
+  {
+    "PBGID": 89094,
+    "Name": "jagdtiger_pak_44_128mm_piercing_gun_mp",
+    "Range": 70,
+    "Damage": 300
+  },
+  {
+    "PBGID": 3259,
+    "Name": "luchs_kwk38_20mm_mp",
+    "Range": 40,
+    "Damage": 16
+  },
+  {
+    "PBGID": 18110,
+    "Name": "luchs_kwk38_20mm_vet2_mp",
+    "Range": 40,
+    "Damage": 16
+  },
+  {
+    "PBGID": 2862,
+    "Name": "panther_kwk42_75mm_mp",
+    "Range": 50,
+    "Damage": 160
+  },
+  {
+    "PBGID": 17113,
+    "Name": "panther_kwk42_75mm_vet_mp",
+    "Range": 50,
+    "Damage": 160
+  },
+  {
+    "PBGID": 2863,
+    "Name": "panzer_iv_kwk40_75mm_mp",
+    "Range": 40,
+    "Damage": 160
+  },
+  {
+    "PBGID": 14265,
+    "Name": "sdkfz_234_puma_aimed_shot_mp",
+    "Range": 80,
+    "Damage": 120
+  },
+  {
+    "PBGID": 2864,
+    "Name": "sdkfz_234_puma_kwk39_5cm_mp",
+    "Range": 50,
+    "Damage": 120
+  },
+  {
+    "PBGID": 3260,
+    "Name": "sdkfz_251_17_flak_20mm_flak38",
+    "Range": 45,
+    "Damage": 16
+  },
+  {
+    "PBGID": 10741830,
+    "Name": "sdkfz_251_17_flak_20mm_flak38_dummy",
+    "Range": 45
+  },
+  {
+    "PBGID": 10741831,
+    "Name": "sdkfz_251_17_flak_20mm_flak38_dummy_vet2",
+    "Range": 45
+  },
+  {
+    "PBGID": 17106,
+    "Name": "sdkfz_251_17_flak_20mm_flak38_vet",
+    "Range": 45,
+    "Damage": 20
+  },
+  {
+    "PBGID": 2865,
+    "Name": "stug_kwk40_75mm_mp",
+    "Range": 50,
+    "Damage": 160
+  },
+  {
+    "PBGID": 2867,
+    "Name": "tiger_kwk36_88mm_wg_mp",
+    "Range": 40,
+    "Damage": 160
+  },
+  {
+    "PBGID": 2868,
+    "Name": "tiger_kwk43_88mm_mp",
+    "Range": 45,
+    "Damage": 240
+  },
+  {
+    "PBGID": 2869,
+    "Name": "tiger_kwk43_88mm_spearhead_mp",
+    "Range": 45,
+    "Damage": 240
+  },
+  {
+    "PBGID": 17504,
+    "Name": "wg_panther_75mm_commander_mp",
+    "Range": 50,
+    "Damage": 160
+  },
+  {
+    "PBGID": 14165,
+    "Name": "blendkorper_2h_smoke_grenade_dot_mp",
+    "Range": 70
+  },
+  {
+    "PBGID": 14160,
+    "Name": "blendkorper_2h_smoke_grenade_mp",
+    "Range": 15,
+    "Damage": 1
+  },
+  {
+    "PBGID": 15891,
+    "Name": "eihandgranate_grenade_mp",
+    "Range": 20,
+    "Damage": 10
+  },
+  {
+    "PBGID": 15917,
+    "Name": "panzerfusilier_at_rifle_grenade",
+    "Range": 30,
+    "Damage": 100
+  },
+  {
+    "PBGID": 14320,
+    "Name": "panzerfusilier_grenade",
+    "Range": 20,
+    "Damage": 80
+  },
+  {
+    "PBGID": 2871,
+    "Name": "stielgranate_grenade_mp",
+    "Range": 20,
+    "Damage": 80
+  },
+  {
+    "PBGID": 2870,
+    "Name": "waffen_bundled_assault_stielgranate",
+    "Range": 20,
+    "Damage": 100
+  },
+  {
+    "PBGID": 176682,
+    "Name": "howitzer_105mm_gun_direct_fire_mp",
+    "Range": 50,
+    "Damage": 200
+  },
+  {
+    "PBGID": 15470,
+    "Name": "le_ig_18_howitzer_75mm_hollow_charge_barrage_mp",
+    "Range": 100,
+    "Damage": 80
+  },
+  {
+    "PBGID": 97048,
+    "Name": "rocket_barrage_mp",
+    "Range": 1000,
+    "Damage": 160
+  },
+  {
+    "PBGID": 2866,
+    "Name": "sturmtiger_rw_61_380mm_rocket_launcher",
+    "Range": 40,
+    "Damage": 580
+  },
+  {
+    "PBGID": 2878,
+    "Name": "walking_stuka_rockets_mp",
+    "Range": 1000,
+    "Damage": 200
+  },
+  {
+    "PBGID": 2879,
+    "Name": "walking_stuka_rockets_nofire_mp",
+    "Range": 160
+  },
+  {
+    "PBGID": 2872,
+    "Name": "le_ig_18_howitzer_75mm_barrage_mp",
+    "Range": 100,
+    "Damage": 80
+  },
+  {
+    "PBGID": 12741829,
+    "Name": "le_ig_18_howitzer_75mm_barrage_smoke_mp",
+    "Range": 125
+  },
+  {
+    "PBGID": 12741835,
+    "Name": "le_ig_18_howitzer_75mm_hollow_charge_shot_mp",
+    "Range": 60,
+    "Damage": 100
+  },
+  {
+    "PBGID": 12741851,
+    "Name": "le_ig_18_howitzer_75mm_incendiary_mp",
+    "Range": 100,
+    "Damage": 20
+  },
+  {
+    "PBGID": 2874,
+    "Name": "le_ig_18_howitzer_75mm_mp",
+    "Range": 80,
+    "Damage": 80
+  },
+  {
+    "PBGID": 97068,
+    "Name": "stuka_strafe",
+    "Range": 225,
+    "Damage": 20
+  },
+  {
+    "PBGID": 2877,
+    "Name": "sturmtiger_nahvw_close_range_grenades",
+    "Range": 25,
+    "Damage": 80
+  },
+  {
+    "PBGID": 14520,
+    "Name": "assault_pioneers_heavy_mine_mp",
+    "Range": 35,
+    "Damage": 400
+  },
+  {
+    "PBGID": 99139,
+    "Name": "early_warning_flare_mp",
+    "Range": 35
+  },
+  {
+    "PBGID": 14155,
+    "Name": "schu_mine_mp",
+    "Range": 35,
+    "Damage": 200
+  },
+  {
+    "PBGID": 97597,
+    "Name": "flare_mine_mp",
+    "Range": 35
+  },
+  {
+    "PBGID": 16927,
+    "Name": "panzerfusilier_flare_mp",
+    "Range": 150
+  },
+  {
+    "PBGID": 16350,
+    "Name": "self_destruct_primary_mp",
+    "Range": 45,
+    "Damage": 640
+  },
+  {
+    "PBGID": 176814,
+    "Name": "self_destruct_scuttle_mp",
+    "Range": 45,
+    "Damage": 640
+  },
+  {
+    "PBGID": 16180,
+    "Name": "self_destruct_secondary_mp",
+    "Range": 20,
+    "Damage": 80
+  },
+  {
+    "PBGID": 2880,
+    "Name": "grw34_81mm_mortar_barrage_wg_mp",
+    "Range": 106,
+    "Damage": 80
+  },
+  {
+    "PBGID": 2881,
+    "Name": "grw34_81mm_mortar_counter_barrage_wg_mp",
+    "Range": 80,
+    "Damage": 80
+  },
+  {
+    "PBGID": 2882,
+    "Name": "grw34_81mm_mortar_team_smoke_wg_mp",
+    "Range": 106
+  },
+  {
+    "PBGID": 2883,
+    "Name": "grw34_81mm_mortar_wg_mp",
+    "Range": 80,
+    "Damage": 80
+  },
+  {
+    "PBGID": 2884,
+    "Name": "grw34_81mm_victor_target_mortar_wg_mp",
+    "Range": 160,
+    "Damage": 80
+  },
+  {
+    "PBGID": 176897,
+    "Name": "fire_grenade_stormtrooper_dot_mp",
+    "Range": 70,
+    "Damage": 2
+  },
+  {
+    "PBGID": 176896,
+    "Name": "fire_grenade_stormtrooper_weapon_mp",
+    "Range": 20,
+    "Damage": 10
+  },
+  {
+    "PBGID": 98284,
+    "Name": "fire_grenade_weapon_mp",
+    "Range": 20,
+    "Damage": 10
+  },
+  {
+    "PBGID": 14174,
+    "Name": "base_building_flak_20mm_flak38",
+    "Range": 45,
+    "Damage": 40
+  },
+  {
+    "PBGID": 12741844,
+    "Name": "base_building_flak_20mm_flak38_aa_mp",
+    "Range": 45,
+    "Damage": 40
+  },
+  {
+    "PBGID": 15570,
+    "Name": "flak_emplacement_20mm",
+    "Range": 40,
+    "Damage": 20
+  },
+  {
+    "PBGID": 17141,
+    "Name": "flak_emplacement_base_20mm",
+    "Range": 40,
+    "Damage": 15
+  },
+  {
+    "PBGID": 17863,
+    "Name": "p47_rocket_strafe",
+    "Range": 200,
+    "Damage": 120
+  },
+  {
+    "PBGID": 18724,
+    "Name": "pinpoint_offmap_105mm_mp",
+    "Range": 250,
+    "Damage": 160
+  },
+  {
+    "PBGID": 18807,
+    "Name": "pinpoint_offmap_155mm_mp",
+    "Range": 250,
+    "Damage": 160
+  },
+  {
+    "PBGID": 18806,
+    "Name": "aef_airdropped_mine_at_mp",
+    "Range": 35,
+    "Damage": 180
+  },
+  {
+    "PBGID": 18805,
+    "Name": "aef_airdropped_mine_large_aoe_mp",
+    "Range": 35,
+    "Damage": 120
+  },
+  {
+    "PBGID": 18804,
+    "Name": "aef_airdropped_mine_mp",
+    "Range": 35,
+    "Damage": 80
+  },
+  {
+    "PBGID": 17480,
+    "Name": "aef_base_m2hb_50cal_mp",
+    "Range": 45,
+    "Damage": 16
+  },
+  {
+    "PBGID": 14474,
+    "Name": "dodge_wc51_m1917_30cal_mp",
+    "Range": 45,
+    "Damage": 15
+  },
+  {
+    "PBGID": 2818,
+    "Name": "dodge_wc51_m2hb_50cal_mp",
+    "Range": 45,
+    "Damage": 8
+  },
+  {
+    "PBGID": 14546,
+    "Name": "dummy_airborne_beacon_mp",
+    "Range": 35
+  },
+  {
+    "PBGID": 4334,
+    "Name": "fighting_position_mg_dummy_mp",
+    "Range": 45
+  },
+  {
+    "PBGID": 4350,
+    "Name": "fighting_position_mg_mp",
+    "Range": 45,
+    "Damage": 3
+  },
+  {
+    "PBGID": 93315,
+    "Name": "hawker_typhoon_20mm_hispano_cannons",
+    "Range": 225,
+    "Damage": 10
+  },
+  {
+    "PBGID": 3178,
+    "Name": "m15a1_aa_half_track_50cal_left_mp",
+    "Range": 45,
+    "Damage": 8
+  },
+  {
+    "PBGID": 16758,
+    "Name": "m15a1_aa_half_track_50cal_left_special_aa_mp",
+    "Range": 45,
+    "Damage": 8
+  },
+  {
+    "PBGID": 3179,
+    "Name": "m15a1_aa_half_track_50cal_right_mp",
+    "Range": 45,
+    "Damage": 8
+  },
+  {
+    "PBGID": 16746,
+    "Name": "m15a1_aa_half_track_50cal_right_special_aa_mp",
+    "Range": 45,
+    "Damage": 8
+  },
+  {
+    "PBGID": 10741829,
+    "Name": "m15a1_aa_half_track_dummy_mp",
+    "Range": 45
+  },
+  {
+    "PBGID": 2821,
+    "Name": "m1919a4_30cal_mp",
+    "Range": 45,
+    "Damage": 4
+  },
+  {
+    "PBGID": 2822,
+    "Name": "m20_utility_car_m2hb_50cal_mounted_mp",
+    "Range": 40,
+    "Damage": 8
+  },
+  {
+    "PBGID": 15689,
+    "Name": "m2hb_50cal_fast_setup_mp",
+    "Range": 45,
+    "Damage": 16
+  },
+  {
+    "PBGID": 17028,
+    "Name": "m2hb_50cal_fighting_position_mp",
+    "Range": 45,
+    "Damage": 16
+  },
+  {
+    "PBGID": 2824,
+    "Name": "m2hb_50cal_mp",
+    "Range": 45,
+    "Damage": 16
+  },
+  {
+    "PBGID": 2825,
+    "Name": "m3_halftrack_m2hb_50cal_mp",
+    "Range": 40,
+    "Damage": 8
+  },
+  {
+    "PBGID": 15582,
+    "Name": "m5_stuart_top_mounted_30cal_mp",
+    "Range": 35,
+    "Damage": 5
+  },
+  {
+    "PBGID": 2826,
+    "Name": "m7b1_priest_m2hb_50cal_mounted_mp",
+    "Range": 35,
+    "Damage": 4
+  },
+  {
+    "PBGID": 2828,
+    "Name": "m8_greyhound_m2hb_50cal_mounted_mp",
+    "Range": 40,
+    "Damage": 8
+  },
+  {
+    "PBGID": 15460,
+    "Name": "p47_50cal_machineguns",
+    "Range": 225,
+    "Damage": 5
+  },
+  {
+    "PBGID": 2829,
+    "Name": "sherman_m10_m36_m2hb_50cal_mounted_tank_mp",
+    "Range": 35,
+    "Damage": 8
+  },
+  {
+    "PBGID": 2830,
+    "Name": "m5a1_stuart_m1919a4_30_cal_coaxial_mp",
+    "Range": 35,
+    "Damage": 4
+  },
+  {
+    "PBGID": 2831,
+    "Name": "m5a1_stuart_m1919a4_30_cal_hull_mp",
+    "Range": 35,
+    "Damage": 4
+  },
+  {
+    "PBGID": 2832,
+    "Name": "m5a1_stuart_m1919a4_30_cal_mounted_mp",
+    "Range": 35,
+    "Damage": 4
+  },
+  {
+    "PBGID": 16362,
+    "Name": "m8_greyhound_coaxial_vehicle_turret_mp",
+    "Range": 35,
+    "Damage": 5
+  },
+  {
+    "PBGID": 2833,
+    "Name": "m8_greyhound_m1919a4_30cal_coaxial_mp",
+    "Range": 35,
+    "Damage": 4
+  },
+  {
+    "PBGID": 2834,
+    "Name": "paratrooper_m1919a6_lmg_moving_mp",
+    "Range": 35,
+    "Damage": 5
+  },
+  {
+    "PBGID": 17461,
+    "Name": "paratrooper_m1919a6_lmg_moving_no_prone_mp",
+    "Range": 35,
+    "Damage": 5
+  },
+  {
+    "PBGID": 92299,
+    "Name": "pershing_coaxial_vehicle_turret_mp",
+    "Range": 35,
+    "Damage": 5
+  },
+  {
+    "PBGID": 92296,
+    "Name": "pershing_vehicle_hull_mp",
+    "Range": 35,
+    "Damage": 5
+  },
+  {
+    "PBGID": 15184,
+    "Name": "riflemen_30cal_lmg_mp",
+    "Range": 35,
+    "Damage": 5
+  },
+  {
+    "PBGID": 2835,
+    "Name": "riflemen_bar_30_06_light_machine_gun_mp",
+    "Range": 35,
+    "Damage": 8
+  },
+  {
+    "PBGID": 14248,
+    "Name": "sherman_m4a3_coaxial_vehicle_turret105_mp",
+    "Range": 35,
+    "Damage": 5
+  },
+  {
+    "PBGID": 2837,
+    "Name": "sherman_m4a3_coaxial_vehicle_turret_mp",
+    "Range": 35,
+    "Damage": 5
+  },
+  {
+    "PBGID": 2836,
+    "Name": "sherman_m4a3_vehicle_hull_mp",
+    "Range": 35,
+    "Damage": 5
+  },
+  {
+    "PBGID": 4308,
+    "Name": "captain_m1_thompson_mp",
+    "Range": 35,
+    "Damage": 5
+  },
+  {
+    "PBGID": 2838,
+    "Name": "engineer_m3_grease_gun_mp",
+    "Range": 35,
+    "Damage": 4
+  },
+  {
+    "PBGID": 4475,
+    "Name": "m3_grease_gun_vehicle_crew_mp",
+    "Range": 35,
+    "Damage": 2
+  },
+  {
+    "PBGID": 2839,
+    "Name": "paratrooper_m1_thompson_mp",
+    "Range": 35,
+    "Damage": 5
+  },
+  {
+    "PBGID": 18737,
+    "Name": "ranger_m1_thompson_mp",
+    "Range": 35,
+    "Damage": 5
+  },
+  {
+    "PBGID": 200738,
+    "Name": "tommy_9mm_sten_gun_bodyguard_mp",
+    "Range": 35,
+    "Damage": 5
+  },
+  {
+    "PBGID": 188841,
+    "Name": "tommy_9mm_sten_gun_mp",
+    "Range": 35,
+    "Damage": 4
+  },
+  {
+    "PBGID": 2840,
+    "Name": "m1911_45cal_pistol_mp",
+    "Range": 35,
+    "Damage": 5
+  },
+  {
+    "PBGID": 16780,
+    "Name": "medic_m1911_45cal_pistol_mp",
+    "Range": 35,
+    "Damage": 5
+  },
+  {
+    "PBGID": 2841,
+    "Name": "m1a1_carbine_paratrooper_mp",
+    "Range": 35,
+    "Damage": 10
+  },
+  {
+    "PBGID": 99265,
+    "Name": "m1a1_carbine_ranger_mp",
+    "Range": 35,
+    "Damage": 10
+  },
+  {
+    "PBGID": 87403,
+    "Name": "m1a1_carbine_rifleman_spec_mp",
+    "Range": 35,
+    "Damage": 10
+  },
+  {
+    "PBGID": 2844,
+    "Name": "m1_carbine_rear_echelon_mp",
+    "Range": 35,
+    "Damage": 8
+  },
+  {
+    "PBGID": 16475,
+    "Name": "m1_carbine_rear_echelon_volley_mp",
+    "Range": 35,
+    "Damage": 8
+  },
+  {
+    "PBGID": 2843,
+    "Name": "m1_garand_rifle_mortar_crew_mp",
+    "Range": 35,
+    "Damage": 16
+  },
+  {
+    "PBGID": 15519,
+    "Name": "m1_garand_rifle_rear_echelon_mp",
+    "Range": 35,
+    "Damage": 10
+  },
+  {
+    "PBGID": 2845,
+    "Name": "m1_garand_rifle_rifleman_mp",
+    "Range": 35,
+    "Damage": 8
+  },
+  {
+    "PBGID": 16342,
+    "Name": "pathfinder_m1garand_scope_mp",
+    "Range": 35,
+    "Damage": 16
+  },
+  {
+    "PBGID": 2847,
+    "Name": "springfield_sniper_rifle_mp",
+    "Range": 50,
+    "Damage": 16
+  },
+  {
+    "PBGID": 123,
+    "Name": "base_building_dummy_weapon_mp",
+    "Range": 35,
+    "Damage": 1
+  },
+  {
+    "PBGID": 124,
+    "Name": "bunker_mg42",
+    "Range": 45,
+    "Damage": 3
+  },
+  {
+    "PBGID": 125,
+    "Name": "bunker_mg42_mp",
+    "Range": 45,
+    "Damage": 3
+  },
+  {
+    "PBGID": 126,
+    "Name": "hmg_team_mg42",
+    "Range": 45,
+    "Damage": 605
+  },
+  {
+    "PBGID": 127,
+    "Name": "hmg_team_mg42_mp",
+    "Range": 45,
+    "Damage": 4
+  },
+  {
+    "PBGID": 128,
+    "Name": "mgnest_mg42t_dummy",
+    "Range": 45,
+    "Damage": 1
+  },
+  {
+    "PBGID": 129,
+    "Name": "mgnest_mg42t_dummy_mp",
+    "Range": 45,
+    "Damage": 1
+  },
+  {
+    "PBGID": 176713,
+    "Name": "pillbox_mg42_mp",
+    "Range": 45,
+    "Damage": 3
+  },
+  {
+    "PBGID": 130,
+    "Name": "stuka_mg_17",
+    "Range": 225,
+    "Damage": 25
+  },
+  {
+    "PBGID": 17574,
+    "Name": "stuka_mg_17_assault",
+    "Range": 225,
+    "Damage": 5
+  },
+  {
+    "PBGID": 131,
+    "Name": "stuka_mg_17_second_gun",
+    "Range": 175,
+    "Damage": 8
+  },
+  {
+    "PBGID": 196596,
+    "Name": "stuka_mg_17_sector_assault",
+    "Range": 225,
+    "Damage": 25
+  },
+  {
+    "PBGID": 132,
+    "Name": "trench_dummy_weapon_mp",
+    "Range": 1,
+    "Damage": 1
+  },
+  {
+    "PBGID": 135,
+    "Name": "grenadier_mg42lmg",
+    "Range": 35,
+    "Damage": 92
+  },
+  {
+    "PBGID": 17459,
+    "Name": "grenadier_mg42lmg_moving_mp",
+    "Range": 35,
+    "Damage": 4
+  },
+  {
+    "PBGID": 17462,
+    "Name": "grenadier_mg42lmg_moving_no_prone_mp",
+    "Range": 35,
+    "Damage": 4
+  },
+  {
+    "PBGID": 136,
+    "Name": "grenadier_mg42lmg_mp",
+    "Range": 35,
+    "Damage": 4
+  },
+  {
+    "PBGID": 2003,
+    "Name": "halftrack_250_dummy",
+    "Range": 35
+  },
+  {
+    "PBGID": 176968,
+    "Name": "halftrack_250_mg42_vehicle_lockdown_mp",
+    "Range": 35,
+    "Damage": 4
+  },
+  {
+    "PBGID": 176863,
+    "Name": "halftrack_250_mg42_vehicle_mp",
+    "Range": 35,
+    "Damage": 4
+  },
+  {
+    "PBGID": 137,
+    "Name": "halftrack_mg42_vehicle",
+    "Range": 35,
+    "Damage": 31
+  },
+  {
+    "PBGID": 138,
+    "Name": "halftrack_mg42_vehicle_mp",
+    "Range": 35,
+    "Damage": 4
+  },
+  {
+    "PBGID": 139,
+    "Name": "mg34_coaxial_generic",
+    "Range": 35,
+    "Damage": 1
+  },
+  {
+    "PBGID": 140,
+    "Name": "mg34_coaxial_generic_mp",
+    "Range": 35,
+    "Damage": 2
+  },
+  {
+    "PBGID": 4351,
+    "Name": "mg34_coaxial_generic_tigerace_mp",
+    "Range": 35,
+    "Damage": 4
+  },
+  {
+    "PBGID": 141,
+    "Name": "mg34_hull",
+    "Range": 35,
+    "Damage": 133
+  },
+  {
+    "PBGID": 142,
+    "Name": "mg34_hull_mp",
+    "Range": 35,
+    "Damage": 4
+  },
+  {
+    "PBGID": 143,
+    "Name": "mg42_turret_mounted_brummbar",
+    "Range": 35,
+    "Damage": 14
+  },
+  {
+    "PBGID": 144,
+    "Name": "mg42_turret_mounted_brummbar_mp",
+    "Range": 35,
+    "Damage": 4
+  },
+  {
+    "PBGID": 145,
+    "Name": "mg42_turret_mounted_panther",
+    "Range": 35,
+    "Damage": 14
+  },
+  {
+    "PBGID": 146,
+    "Name": "mg42_turret_mounted_panther_mp",
+    "Range": 35,
+    "Damage": 4
+  },
+  {
+    "PBGID": 2004,
+    "Name": "mg42_turret_mounted_panther_tow",
+    "Range": 35,
+    "Damage": 14
+  },
+  {
+    "PBGID": 147,
+    "Name": "mg42_turret_mounted_panzerwerfer_mp",
+    "Range": 35,
+    "Damage": 4
+  },
+  {
+    "PBGID": 148,
+    "Name": "mg42_turret_mounted_pziv",
+    "Range": 35,
+    "Damage": 14
+  },
+  {
+    "PBGID": 149,
+    "Name": "mg42_turret_mounted_pziv_mp",
+    "Range": 35,
+    "Damage": 4
+  },
+  {
+    "PBGID": 150,
+    "Name": "mg42_turret_mounted_stugiv",
+    "Range": 35,
+    "Damage": 14
+  },
+  {
+    "PBGID": 151,
+    "Name": "mg42_turret_mounted_stugiv_mp",
+    "Range": 40,
+    "Damage": 4
+  },
+  {
+    "PBGID": 152,
+    "Name": "mg42_turret_mounted_tiger_m08",
+    "Range": 35,
+    "Damage": 19
+  },
+  {
+    "PBGID": 10741838,
+    "Name": "ostwind_mg34_hull_mp",
+    "Range": 35,
+    "Damage": 4
+  },
+  {
+    "PBGID": 16623,
+    "Name": "puma_mg42_mp",
+    "Range": 35,
+    "Damage": 4
+  },
+  {
+    "PBGID": 153,
+    "Name": "scout_car_mg34_coaxial_generic",
+    "Range": 35,
+    "Damage": 4
+  },
+  {
+    "PBGID": 154,
+    "Name": "scout_car_mg34_coaxial_generic_mp",
+    "Range": 35,
+    "Damage": 4
+  },
+  {
+    "PBGID": 155,
+    "Name": "scout_car_mg34_pintle_generic",
+    "Range": 35,
+    "Damage": 72
+  },
+  {
+    "PBGID": 156,
+    "Name": "scout_car_mg34_pintle_generic_mp",
+    "Range": 35,
+    "Damage": 5
+  },
+  {
+    "PBGID": 133,
+    "Name": "_halftrack_mg42_vehicle_rear",
+    "Range": 35,
+    "Damage": 31
+  },
+  {
+    "PBGID": 134,
+    "Name": "_halftrack_mg42_vehicle_rear_mp",
+    "Range": 35,
+    "Damage": 4
+  },
+  {
+    "PBGID": 2005,
+    "Name": "assault_grenadier_mp40",
+    "Range": 35,
+    "Damage": 4
+  },
+  {
+    "PBGID": 15906,
+    "Name": "eg_pioneer_mp40_smg_mp",
+    "Range": 35,
+    "Damage": 4
+  },
+  {
+    "PBGID": 157,
+    "Name": "panzer_grenadier_mp40_smg",
+    "Range": 30,
+    "Damage": 25
+  },
+  {
+    "PBGID": 158,
+    "Name": "panzer_grenadier_mp40_smg_mp",
+    "Range": 30,
+    "Damage": 225
+  },
+  {
+    "PBGID": 159,
+    "Name": "panzer_grenadier_mp40_smg_sp",
+    "Range": 30,
+    "Damage": 7
+  },
+  {
+    "PBGID": 160,
+    "Name": "panzer_grenadier_mp44_smg",
+    "Range": 30,
+    "Damage": 71
+  },
+  {
+    "PBGID": 161,
+    "Name": "panzer_grenadier_mp44_smg_mp",
+    "Range": 35,
+    "Damage": 5
+  },
+  {
+    "PBGID": 176892,
+    "Name": "stormtrooper_mp40_smg_mp",
+    "Range": 35,
+    "Damage": 5
+  },
+  {
+    "PBGID": 16435,
+    "Name": "sturm_pioneer_mp44_smg_mp",
+    "Range": 35,
+    "Damage": 5
+  },
+  {
+    "PBGID": 14208,
+    "Name": "urban_panzer_grenadier_mp40_smg_mp",
+    "Range": 20,
+    "Damage": 4
+  },
+  {
+    "PBGID": 162,
+    "Name": "weapon_crew_\u0026_pioneer_mp40_smg",
+    "Range": 30,
+    "Damage": 26
+  },
+  {
+    "PBGID": 163,
+    "Name": "weapon_crew_\u0026_pioneer_mp40_smg_mp",
+    "Range": 35,
+    "Damage": 2
+  },
+  {
+    "PBGID": 164,
+    "Name": "luger_p08_9mm_pistol",
+    "Range": 35,
+    "Damage": 27
+  },
+  {
+    "PBGID": 165,
+    "Name": "luger_p08_9mm_pistol_mp",
+    "Range": 35,
+    "Damage": 8
+  },
+  {
+    "PBGID": 166,
+    "Name": "luger_p08_victor_target_flare_pistol_mp",
+    "Range": 50
+  },
+  {
+    "PBGID": 167,
+    "Name": "g43_sniper_incendiary_explosive_mp",
+    "Range": 50,
+    "Damage": 8
+  },
+  {
+    "PBGID": 168,
+    "Name": "g43_sniper_incendiary_mp",
+    "Range": 50
+  },
+  {
+    "PBGID": 169,
+    "Name": "g43_sniper_sniper",
+    "Range": 50
+  },
+  {
+    "PBGID": 3193,
+    "Name": "g43_sniper_sniper_mp",
+    "Range": 50
+  },
+  {
+    "PBGID": 171,
+    "Name": "grenadier_kar_98k_rifle",
+    "Range": 35,
+    "Damage": 27
+  },
+  {
+    "PBGID": 172,
+    "Name": "grenadier_kar_98k_rifle_mp",
+    "Range": 35,
+    "Damage": 16
+  },
+  {
+    "PBGID": 173,
+    "Name": "jaeger_g43_rifle",
+    "Range": 40,
+    "Damage": 27
+  },
+  {
+    "PBGID": 174,
+    "Name": "jaeger_g43_rifle_mp",
+    "Range": 35,
+    "Damage": 16
+  },
+  {
+    "PBGID": 175,
+    "Name": "jaeger_panzergren_g43_rifle_mp",
+    "Range": 35,
+    "Damage": 16
+  },
+  {
+    "PBGID": 176,
+    "Name": "ostruppen_kar_98k_rifle",
+    "Range": 35,
+    "Damage": 10
+  },
+  {
+    "PBGID": 177,
+    "Name": "ostruppen_kar_98k_rifle_mp",
+    "Range": 35,
+    "Damage": 8
+  },
+  {
+    "PBGID": 156218,
+    "Name": "panzer_grenadier_kar_98k_rifle_mp",
+    "Range": 35,
+    "Damage": 16
+  },
+  {
+    "PBGID": 14284,
+    "Name": "repair_pioneer_kar_98k_rifle_mp",
+    "Range": 35,
+    "Damage": 1
+  },
+  {
+    "PBGID": 4270,
+    "Name": "stormtrooper_g43",
+    "Range": 35,
+    "Damage": 16
+  },
+  {
+    "PBGID": 90483,
+    "Name": "17_pounder_gun_temp",
+    "Range": 80,
+    "Damage": 320
+  },
+  {
+    "PBGID": 93628,
+    "Name": "heat_grenade",
+    "Range": 20,
+    "Damage": 100
+  },
+  {
+    "PBGID": 90481,
+    "Name": "brit_25lb_howitzer_disabled_gun_temp",
+    "Range": 250,
+    "Damage": 200
+  },
+  {
+    "PBGID": 90482,
+    "Name": "brit_25lb_howitzer_gun_temp",
+    "Range": 250,
+    "Damage": 160
+  },
+  {
+    "PBGID": 93828,
+    "Name": "bunker_vickers_hmg_mp",
+    "Range": 45,
+    "Damage": 3
+  },
+  {
+    "PBGID": 12741848,
+    "Name": "hawker_typhoon_20mm_hispano_cannons_strategic_bombing",
+    "Range": 225,
+    "Damage": 8
+  },
+  {
+    "PBGID": 94691,
+    "Name": "sexton_mounted_machinegun_mp",
+    "Range": 35,
+    "Damage": 4
+  },
+  {
+    "PBGID": 89103,
+    "Name": "universal_carrier_bren_lmg_mp",
+    "Range": 35,
+    "Damage": 5
+  },
+  {
+    "PBGID": 89102,
+    "Name": "universal_carrier_vickers_mmg_mounted_mp",
+    "Range": 40,
+    "Damage": 4
+  },
+  {
+    "PBGID": 92479,
+    "Name": "universal_carrier_vickers_mmg_mounted_suppressive_mp",
+    "Range": 40,
+    "Damage": 4
+  },
+  {
+    "PBGID": 89251,
+    "Name": "vickers_hmg_mp",
+    "Range": 45,
+    "Damage": 4
+  },
+  {
+    "PBGID": 91957,
+    "Name": "aec_coaxial_vehicle_turret_mp",
+    "Range": 35,
+    "Damage": 5
+  },
+  {
+    "PBGID": 92812,
+    "Name": "churchill_hull_defense_left_mp",
+    "Range": 35,
+    "Damage": 5
+  },
+  {
+    "PBGID": 92811,
+    "Name": "churchill_hull_defense_right_mp",
+    "Range": 35,
+    "Damage": 5
+  },
+  {
+    "PBGID": 92628,
+    "Name": "churchill_mk7_coaxial_vehicle_turret_avre_mp",
+    "Range": 35,
+    "Damage": 5
+  },
+  {
+    "PBGID": 18755,
+    "Name": "churchill_mk7_coaxial_vehicle_turret_mp",
+    "Range": 35,
+    "Damage": 5
+  },
+  {
+    "PBGID": 18756,
+    "Name": "churchill_mk7_vehicle_hull_mp",
+    "Range": 35,
+    "Damage": 5
+  },
+  {
+    "PBGID": 18974,
+    "Name": "comet_coaxial_vehicle_turret_mp",
+    "Range": 35,
+    "Damage": 5
+  },
+  {
+    "PBGID": 18975,
+    "Name": "comet_vehicle_hull_gun_mp",
+    "Range": 35,
+    "Damage": 5
+  },
+  {
+    "PBGID": 89171,
+    "Name": "commando_bren_lmg_moving_mp",
+    "Range": 35,
+    "Damage": 5
+  },
+  {
+    "PBGID": 90140,
+    "Name": "cromwell_coaxial_vehicle_turret_mp",
+    "Range": 35,
+    "Damage": 5
+  },
+  {
+    "PBGID": 90141,
+    "Name": "cromwell_vehicle_hull_mp",
+    "Range": 35,
+    "Damage": 5
+  },
+  {
+    "PBGID": 90353,
+    "Name": "sapper_bren_light_machine_gun_mp",
+    "Range": 35,
+    "Damage": 5
+  },
+  {
+    "PBGID": 93847,
+    "Name": "sapper_vickers_k_machine_gun_mp",
+    "Range": 35,
+    "Damage": 5
+  },
+  {
+    "PBGID": 89414,
+    "Name": "sherman_firefly_coaxial_vehicle_turret_mp",
+    "Range": 35,
+    "Damage": 5
+  },
+  {
+    "PBGID": 88064,
+    "Name": "tommy_bren_light_machine_gun_mp",
+    "Range": 35,
+    "Damage": 5
+  },
+  {
+    "PBGID": 92657,
+    "Name": "vickers_k_universal_carrier",
+    "Range": 40,
+    "Damage": 4
+  },
+  {
+    "PBGID": 92658,
+    "Name": "vickers_k_universal_carrier_suppression",
+    "Range": 40,
+    "Damage": 4
+  },
+  {
+    "PBGID": 89424,
+    "Name": "avre_crew_sten_9mm_smg_mp",
+    "Range": 35,
+    "Damage": 25
+  },
+  {
+    "PBGID": 89157,
+    "Name": "commando_m1_thompson_mp",
+    "Range": 35,
+    "Damage": 5
+  },
+  {
+    "PBGID": 90294,
+    "Name": "commando_sten_mk_vi_silenced_smg_mp",
+    "Range": 35,
+    "Damage": 5
+  },
+  {
+    "PBGID": 19181,
+    "Name": "engineer_sten_9mm_smg_mp",
+    "Range": 35,
+    "Damage": 25
+  },
+  {
+    "PBGID": 89231,
+    "Name": "brit_medic_pistol_mp",
+    "Range": 35,
+    "Damage": 5
+  },
+  {
+    "PBGID": 95088,
+    "Name": "brit_officer_pistol_mp",
+    "Range": 35,
+    "Damage": 5
+  },
+  {
+    "PBGID": 89175,
+    "Name": "commando_de_lisle_carbine_assassinate_mp",
+    "Range": 25,
+    "Damage": 16
+  },
+  {
+    "PBGID": 89164,
+    "Name": "commando_de_lisle_carbine_mp",
+    "Range": 35,
+    "Damage": 10
+  },
+  {
+    "PBGID": 89250,
+    "Name": "commando_lee_enfield_rifle_mp",
+    "Range": 35,
+    "Damage": 16
+  },
+  {
+    "PBGID": 89145,
+    "Name": "medic_lee_enfield_rifle_mp",
+    "Range": 35,
+    "Damage": 16
+  },
+  {
+    "PBGID": 89146,
+    "Name": "sniper_lee_enfield_rifle_mp",
+    "Range": 50
+  },
+  {
+    "PBGID": 19182,
+    "Name": "tommy_lee_enfield_rifle_mp",
+    "Range": 35,
+    "Damage": 14
+  },
+  {
+    "PBGID": 93137,
+    "Name": "tommy_scoped_lee_enfield_rifle_mp",
+    "Range": 35,
+    "Damage": 16
+  },
+  {
+    "PBGID": 200689,
+    "Name": "tommy_scoped_lee_enfield_rifle_sniper_mp",
+    "Range": 35,
+    "Damage": 14
+  },
+  {
+    "PBGID": 89240,
+    "Name": "weapon_crew_lee_enfield_rifle_mp",
+    "Range": 35,
+    "Damage": 10
+  },
+  {
+    "PBGID": 19454,
+    "Name": "ranger_panzerschreck_atw_mp",
+    "Range": 35,
+    "Damage": 180
+  },
+  {
+    "PBGID": 17478,
+    "Name": "tank_hunter_shock_bazooka",
+    "Range": 35,
+    "Damage": 40
+  },
+  {
+    "PBGID": 2011,
+    "Name": "conscript_rpg_40_anti_tank_grenade_assault_mp",
+    "Range": 50,
+    "Damage": 50
+  },
+  {
+    "PBGID": 209,
+    "Name": "rpg_43_anti_tank_grenade",
+    "Range": 20,
+    "Damage": 120
+  },
+  {
+    "PBGID": 210,
+    "Name": "rpg_43_anti_tank_grenade_mp",
+    "Range": 20,
+    "Damage": 100
+  },
+  {
+    "PBGID": 293,
+    "Name": "bunker_starting_position_dshk",
+    "Range": 45,
+    "Damage": 5
+  },
+  {
+    "PBGID": 294,
+    "Name": "bunker_starting_position_dshk_mp",
+    "Range": 45,
+    "Damage": 4
+  },
+  {
+    "PBGID": 295,
+    "Name": "bunker_starting_position_maxim",
+    "Range": 45,
+    "Damage": 5
+  },
+  {
+    "PBGID": 296,
+    "Name": "bunker_starting_position_maxim_mp",
+    "Range": 45,
+    "Damage": 4
+  },
+  {
+    "PBGID": 297,
+    "Name": "dshk_38_pintle_mounted_tank",
+    "Range": 35,
+    "Damage": 286
+  },
+  {
+    "PBGID": 298,
+    "Name": "dshk_38_pintle_mounted_tank_mp",
+    "Range": 35,
+    "Damage": 8
+  },
+  {
+    "PBGID": 299,
+    "Name": "dshk_38_sokolov",
+    "Range": 45,
+    "Damage": 15
+  },
+  {
+    "PBGID": 300,
+    "Name": "dshk_38_sokolov_mp",
+    "Range": 45,
+    "Damage": 10
+  },
+  {
+    "PBGID": 301,
+    "Name": "dummy_weapon_mp",
+    "Range": 35
+  },
+  {
+    "PBGID": 302,
+    "Name": "m3a1_scout_car_m2hb_hmg",
+    "Range": 35,
+    "Damage": 1584
+  },
+  {
+    "PBGID": 303,
+    "Name": "m3a1_scout_car_m2hb_hmg_mp",
+    "Range": 35,
+    "Damage": 10
+  },
+  {
+    "PBGID": 304,
+    "Name": "m5_halftrack_m2hb_hmg",
+    "Range": 35,
+    "Damage": 156
+  },
+  {
+    "PBGID": 305,
+    "Name": "m5_halftrack_m2hb_hmg_mp",
+    "Range": 35,
+    "Damage": 8
+  },
+  {
+    "PBGID": 306,
+    "Name": "m5_halftrack_quad_50_cal_m2hb",
+    "Range": 45,
+    "Damage": 112
+  },
+  {
+    "PBGID": 307,
+    "Name": "m5_halftrack_quad_50_cal_m2hb_mp",
+    "Range": 45,
+    "Damage": 12
+  },
+  {
+    "PBGID": 308,
+    "Name": "maxim_m1910_hmg",
+    "Range": 45,
+    "Damage": 93
+  },
+  {
+    "PBGID": 309,
+    "Name": "maxim_m1910_hmg_mp",
+    "Range": 45,
+    "Damage": 3
+  },
+  {
+    "PBGID": 16718,
+    "Name": "sherman_top_gunner",
+    "Range": 35,
+    "Damage": 5
+  },
+  {
+    "PBGID": 310,
+    "Name": "coaxial_vehicle_hull",
+    "Range": 35,
+    "Damage": 2
+  },
+  {
+    "PBGID": 311,
+    "Name": "coaxial_vehicle_hull_mp",
+    "Range": 35,
+    "Damage": 4
+  },
+  {
+    "PBGID": 312,
+    "Name": "coaxial_vehicle_turret",
+    "Range": 35,
+    "Damage": 2
+  },
+  {
+    "PBGID": 313,
+    "Name": "coaxial_vehicle_turret_mp",
+    "Range": 35,
+    "Damage": 4
+  },
+  {
+    "PBGID": 314,
+    "Name": "coaxial_vehicle_turret_rear",
+    "Range": 35,
+    "Damage": 2
+  },
+  {
+    "PBGID": 315,
+    "Name": "coaxial_vehicle_turret_rear_mp",
+    "Range": 35,
+    "Damage": 4
+  },
+  {
+    "PBGID": 316,
+    "Name": "guard_troop_dp-28_light_machine_gun",
+    "Range": 35,
+    "Damage": 12
+  },
+  {
+    "PBGID": 17460,
+    "Name": "guard_troop_dp-28_light_machine_gun_moving_mp",
+    "Range": 35,
+    "Damage": 5
+  },
+  {
+    "PBGID": 17463,
+    "Name": "guard_troop_dp-28_light_machine_gun_moving_no_prone_mp",
+    "Range": 35,
+    "Damage": 5
+  },
+  {
+    "PBGID": 317,
+    "Name": "guard_troop_dp-28_light_machine_gun_mp",
+    "Range": 35,
+    "Damage": 5
+  },
+  {
+    "PBGID": 318,
+    "Name": "is2_coaxial_vehicle_turret_mp",
+    "Range": 35,
+    "Damage": 4
+  },
+  {
+    "PBGID": 196625,
+    "Name": "kv_coaxial_vehicle_hull_mp",
+    "Range": 35,
+    "Damage": 8
+  },
+  {
+    "PBGID": 196624,
+    "Name": "kv_coaxial_vehicle_turret_mp",
+    "Range": 35,
+    "Damage": 4
+  },
+  {
+    "PBGID": 319,
+    "Name": "m3a1_scout_car_30cal_browning_m1919__machine_gun",
+    "Range": 35,
+    "Damage": 7
+  },
+  {
+    "PBGID": 320,
+    "Name": "m3a1_scout_car_30cal_browning_m1919__machine_gun_mp",
+    "Range": 35,
+    "Damage": 5
+  },
+  {
+    "PBGID": 321,
+    "Name": "m3a1_scout_car_30cal_browning_m1919__machine_gun_rear",
+    "Range": 35,
+    "Damage": 7
+  },
+  {
+    "PBGID": 322,
+    "Name": "m3a1_scout_car_30cal_browning_m1919__machine_gun_rear_mp",
+    "Range": 35,
+    "Damage": 5
+  },
+  {
+    "PBGID": 15853,
+    "Name": "partisan_dp-28_light_machine_gun_mp",
+    "Range": 35,
+    "Damage": 4
+  },
+  {
+    "PBGID": 4403,
+    "Name": "partisan_mg42lmg_mp",
+    "Range": 35,
+    "Damage": 2
+  },
+  {
+    "PBGID": 16645,
+    "Name": "sherman_coaxil_turret_mp",
+    "Range": 35,
+    "Damage": 4
+  },
+  {
+    "PBGID": 16648,
+    "Name": "sherman_hull_gun_mp",
+    "Range": 35,
+    "Damage": 4
+  },
+  {
+    "PBGID": 323,
+    "Name": "t-70m_coaxial_vehicle",
+    "Range": 35,
+    "Damage": 13
+  },
+  {
+    "PBGID": 324,
+    "Name": "t-70m_coaxial_vehicle_mp",
+    "Range": 35,
+    "Damage": 2
+  },
+  {
+    "PBGID": 14217,
+    "Name": "t34_76_85_coaxial_vehicle_hull_greent34_mp",
+    "Range": 35,
+    "Damage": 2
+  },
+  {
+    "PBGID": 325,
+    "Name": "t34_76_85_coaxial_vehicle_hull_mp",
+    "Range": 35,
+    "Damage": 8
+  },
+  {
+    "PBGID": 14216,
+    "Name": "t34_76_85_coaxial_vehicle_turret_greent34_mp",
+    "Range": 35,
+    "Damage": 1
+  },
+  {
+    "PBGID": 326,
+    "Name": "t34_76_85_coaxial_vehicle_turret_mp",
+    "Range": 35,
+    "Damage": 4
+  },
+  {
+    "PBGID": 10741835,
+    "Name": "t70_coaxial_vehicle_turret_mp",
+    "Range": 35,
+    "Damage": 4
+  },
+  {
+    "PBGID": 16096,
+    "Name": "conscript_ppsh-41_sub_machine_gun_mp",
+    "Range": 35,
+    "Damage": 4
+  },
+  {
+    "PBGID": 94125,
+    "Name": "guard_troops_ppsh-41_sub_machine_gun_mp",
+    "Range": 35,
+    "Damage": 4
+  },
+  {
+    "PBGID": 4405,
+    "Name": "partisan_ppsh-41_sub_machine_gun_mp",
+    "Range": 35,
+    "Damage": 4
+  },
+  {
+    "PBGID": 98417,
+    "Name": "partisian_mp44_mp",
+    "Range": 35,
+    "Damage": 5
+  },
+  {
+    "PBGID": 2018,
+    "Name": "shock troops_ppsh-41_sub_machine_gun",
+    "Range": 30,
+    "Damage": 12
+  },
+  {
+    "PBGID": 2019,
+    "Name": "shock troops_ppsh-41_sub_machine_gun_mp",
+    "Range": 35,
+    "Damage": 4
+  },
+  {
+    "PBGID": 329,
+    "Name": "isakovich_colt_m1911_45_pistol",
+    "Range": 25,
+    "Damage": 4
+  },
+  {
+    "PBGID": 330,
+    "Name": "isakovich_colt_m1911_45_pistol_l",
+    "Range": 25,
+    "Damage": 4
+  },
+  {
+    "PBGID": 331,
+    "Name": "isakovich_colt_m1911_45_pistol_l_mp",
+    "Range": 25,
+    "Damage": 4
+  },
+  {
+    "PBGID": 332,
+    "Name": "isakovich_colt_m1911_45_pistol_mp",
+    "Range": 25,
+    "Damage": 4
+  },
+  {
+    "PBGID": 333,
+    "Name": "isakovich_colt_m1911_45_pistol_r",
+    "Range": 25,
+    "Damage": 4
+  },
+  {
+    "PBGID": 334,
+    "Name": "isakovich_colt_m1911_45_pistol_r_mp",
+    "Range": 25,
+    "Damage": 4
+  },
+  {
+    "PBGID": 335,
+    "Name": "nagant_m1895_revolver",
+    "Range": 35,
+    "Damage": 27
+  },
+  {
+    "PBGID": 336,
+    "Name": "nagant_m1895_revolver_227",
+    "Range": 35,
+    "Damage": 160
+  },
+  {
+    "PBGID": 337,
+    "Name": "nagant_m1895_revolver_227_enemy",
+    "Range": 35,
+    "Damage": 10
+  },
+  {
+    "PBGID": 338,
+    "Name": "nagant_m1895_revolver_mp",
+    "Range": 25,
+    "Damage": 8
+  },
+  {
+    "PBGID": 339,
+    "Name": "weapon_crew_colt_m1911_45_pistol",
+    "Range": 30,
+    "Damage": 15
+  },
+  {
+    "PBGID": 340,
+    "Name": "weapon_crew_colt_m1911_45_pistol_mp",
+    "Range": 30,
+    "Damage": 75
+  },
+  {
+    "PBGID": 341,
+    "Name": "fake_minesweeper_weapon",
+    "Range": 35
+  },
+  {
+    "PBGID": 342,
+    "Name": "guards_troops_mosin_nagant_rifle",
+    "Range": 35,
+    "Damage": 27
+  },
+  {
+    "PBGID": 343,
+    "Name": "guards_troops_mosin_nagant_rifle_mp",
+    "Range": 35,
+    "Damage": 16
+  },
+  {
+    "PBGID": 18954,
+    "Name": "mosin_nagant_rifle_combat_engineer_mp",
+    "Range": 35,
+    "Damage": 12
+  },
+  {
+    "PBGID": 344,
+    "Name": "mosin_nagant_rifle_conscript",
+    "Range": 35,
+    "Damage": 27
+  },
+  {
+    "PBGID": 345,
+    "Name": "mosin_nagant_rifle_conscript_dummy",
+    "Range": 35
+  },
+  {
+    "PBGID": 346,
+    "Name": "mosin_nagant_rifle_conscript_mp",
+    "Range": 35,
+    "Damage": 12
+  },
+  {
+    "PBGID": 347,
+    "Name": "mosin_nagant_rifle_sniper",
+    "Range": 35,
+    "Damage": 27
+  },
+  {
+    "PBGID": 14526,
+    "Name": "mosin_nagant_rifle_sniper_mp",
+    "Range": 50
+  },
+  {
+    "PBGID": 349,
+    "Name": "mosin_nagant_rifle_weapon_crew",
+    "Range": 35,
+    "Damage": 675
+  },
+  {
+    "PBGID": 350,
+    "Name": "mosin_nagant_rifle_weapon_crew_mp",
+    "Range": 35,
+    "Damage": 16
+  },
+  {
+    "PBGID": 351,
+    "Name": "mosin_nagant_sniper_rifle",
+    "Range": 50
+  },
+  {
+    "PBGID": 14527,
+    "Name": "mosin_nagant_sniper_rifle_mp",
+    "Range": 50
+  },
+  {
+    "PBGID": 353,
+    "Name": "mosin_nagant_suppressive_volley_mp",
+    "Range": 50
+  },
+  {
+    "PBGID": 4401,
+    "Name": "partisan_kar_98k_rifle_mp",
+    "Range": 35,
+    "Damage": 16
+  },
+  {
+    "PBGID": 4404,
+    "Name": "partisan_svt_rifle_mp",
+    "Range": 35,
+    "Damage": 10
+  },
+  {
+    "PBGID": 15855,
+    "Name": "partisan_troops_mosin_nagant_rifle_mp",
+    "Range": 35,
+    "Damage": 16
+  },
+  {
+    "PBGID": 354,
+    "Name": "penal_troops_svt_rifle",
+    "Range": 35,
+    "Damage": 248
+  },
+  {
+    "PBGID": 355,
+    "Name": "penal_troops_svt_rifle_mp",
+    "Range": 35,
+    "Damage": 10
+  },
+  {
+    "PBGID": 356,
+    "Name": "shock_troops_mosin_nagant_rifle_mp",
+    "Range": 35,
+    "Damage": 10
+  },
+  {
+    "PBGID": 379,
+    "Name": "hmg_team_mg42_attackground",
+    "Range": 45,
+    "Damage": 5
+  },
+  {
+    "PBGID": 380,
+    "Name": "stuka_dogfight_mg_17",
+    "Range": 55,
+    "Damage": 8
+  },
+  {
+    "PBGID": 381,
+    "Name": "stuka_dogfight_mg_17_second_gun",
+    "Range": 55,
+    "Damage": 8
+  },
+  {
+    "PBGID": 382,
+    "Name": "stuka_mg_17_fast",
+    "Range": 175,
+    "Damage": 8
+  },
+  {
+    "PBGID": 383,
+    "Name": "g43_sniper_sniper_ground_attack",
+    "Range": 80
+  },
+  {
+    "PBGID": 384,
+    "Name": "m11_ania_mosin_nagant_sniper_rifle",
+    "Range": 60
+  },
+  {
+    "PBGID": 385,
+    "Name": "mosin_nagant_rifle_conscript_harmless",
+    "Range": 35
+  },
+  {
+    "PBGID": 2889,
+    "Name": "howitzer_105mm_gun_ap_minichallenge",
+    "Range": 250,
+    "Damage": 500
+  },
+  {
+    "PBGID": 2890,
+    "Name": "howitzer_105mm_gun_he_minichallenge",
+    "Range": 250,
+    "Damage": 200
+  },
+  {
+    "PBGID": 17825,
+    "Name": "howitzer_105mm_long_range",
+    "Range": 3325,
+    "Damage": 200
+  },
+  {
+    "PBGID": 15619,
+    "Name": "hmg_team_mg34_mp",
+    "Range": 45,
+    "Damage": 3
+  },
+  {
+    "PBGID": 2891,
+    "Name": "hmg_team_mg42_wg_mp",
+    "Range": 45,
+    "Damage": 4
+  },
+  {
+    "PBGID": 2893,
+    "Name": "fallschirmjager_gewehr_42_mp",
+    "Range": 35,
+    "Damage": 8
+  },
+  {
+    "PBGID": 2894,
+    "Name": "generic_mg34_coaxial_mp",
+    "Range": 35,
+    "Damage": 4
+  },
+  {
+    "PBGID": 2895,
+    "Name": "generic_mg34_hull_mp",
+    "Range": 35,
+    "Damage": 4
+  },
+  {
+    "PBGID": 96084,
+    "Name": "hetzer_mg34_pintle_mp",
+    "Range": 40,
+    "Damage": 4
+  },
+  {
+    "PBGID": 17719,
+    "Name": "jagdtiger_mg34_hull_mp",
+    "Range": 35,
+    "Damage": 4
+  },
+  {
+    "PBGID": 2896,
+    "Name": "jagdtiger_mg42_rear_mp",
+    "Range": 35,
+    "Damage": 175
+  },
+  {
+    "PBGID": 2897,
+    "Name": "jagdtiger_mg42_rear_upgrade_mp",
+    "Range": 35,
+    "Damage": 10
+  },
+  {
+    "PBGID": 2898,
+    "Name": "kubelwagen_mg34_pintle_mp",
+    "Range": 35,
+    "Damage": 4
+  },
+  {
+    "PBGID": 2899,
+    "Name": "lmg_setup_mg42_wg_mp",
+    "Range": 45,
+    "Damage": 8
+  },
+  {
+    "PBGID": 2900,
+    "Name": "luchs_mg34_mounted_mp",
+    "Range": 35,
+    "Damage": 4
+  },
+  {
+    "PBGID": 166595,
+    "Name": "mg34_coaxial_panzer2_mp",
+    "Range": 35,
+    "Damage": 4
+  },
+  {
+    "PBGID": 2901,
+    "Name": "mg42_hull_mounted_sturmtiger_mp",
+    "Range": 35,
+    "Damage": 4
+  },
+  {
+    "PBGID": 14510,
+    "Name": "mg42_turret_mounted_jagdpanzer_iv_mp",
+    "Range": 35,
+    "Damage": 4
+  },
+  {
+    "PBGID": 15576,
+    "Name": "mg42_turret_mounted_king_tiger_mp",
+    "Range": 35,
+    "Damage": 4
+  },
+  {
+    "PBGID": 17506,
+    "Name": "mg42_turret_mounted_panther_wg_mp",
+    "Range": 35,
+    "Damage": 4
+  },
+  {
+    "PBGID": 17455,
+    "Name": "obersoldaten_mg34_lmg_generic_mp",
+    "Range": 35,
+    "Damage": 4
+  },
+  {
+    "PBGID": 17464,
+    "Name": "obersoldaten_mg34_lmg_moving_mp",
+    "Range": 35,
+    "Damage": 6
+  },
+  {
+    "PBGID": 2906,
+    "Name": "obersoldaten_mg34_lmg_moving_no_prone_mp",
+    "Range": 35,
+    "Damage": 6
+  },
+  {
+    "PBGID": 176671,
+    "Name": "scout_car_221_mg34_pintle_generic_mp",
+    "Range": 35,
+    "Damage": 4
+  },
+  {
+    "PBGID": 2902,
+    "Name": "sdkfz_234_mg42_mp",
+    "Range": 35,
+    "Damage": 4
+  },
+  {
+    "PBGID": 2903,
+    "Name": "sdkfz_250_mg34_mp",
+    "Range": 35,
+    "Damage": 175
+  },
+  {
+    "PBGID": 2904,
+    "Name": "sdkfz_251_mg42_mp",
+    "Range": 35,
+    "Damage": 175
+  },
+  {
+    "PBGID": 2905,
+    "Name": "sdkfz_251_mg42_rear_mp",
+    "Range": 35,
+    "Damage": 175
+  },
+  {
+    "PBGID": 16635,
+    "Name": "assault_pioneer_mp44_smg_mp",
+    "Range": 35,
+    "Damage": 5
+  },
+  {
+    "PBGID": 14295,
+    "Name": "panzerfusilier_mp44",
+    "Range": 30,
+    "Damage": 8
+  },
+  {
+    "PBGID": 2908,
+    "Name": "pioneer_mp40_smg_mp",
+    "Range": 35,
+    "Damage": 5
+  },
+  {
+    "PBGID": 105228,
+    "Name": "volksgrenadier_mp44_smg_mp",
+    "Range": 35,
+    "Damage": 4
+  },
+  {
+    "PBGID": 2909,
+    "Name": "waffen_elite_grenadier_mp44_smg_mp",
+    "Range": 30,
+    "Damage": 64
+  },
+  {
+    "PBGID": 2910,
+    "Name": "waffen_elite_grenadier_mp44_vampir_smg_mp",
+    "Range": 30,
+    "Damage": 64
+  },
+  {
+    "PBGID": 15502,
+    "Name": "waffen_mp44_infrared",
+    "Range": 35,
+    "Damage": 6
+  },
+  {
+    "PBGID": 2911,
+    "Name": "weapon_crew_mp40_smg_mp",
+    "Range": 30,
+    "Damage": 23
+  },
+  {
+    "PBGID": 2912,
+    "Name": "officer_luger_p08_9mm_pistol_mp",
+    "Range": 35,
+    "Damage": 16
+  },
+  {
+    "PBGID": 18744,
+    "Name": "jaeger_light_recon_g43",
+    "Range": 35,
+    "Damage": 16
+  },
+  {
+    "PBGID": 16363,
+    "Name": "mg34_kar_98k_rifle_mp",
+    "Range": 35,
+    "Damage": 16
+  },
+  {
+    "PBGID": 15602,
+    "Name": "panzerfusilier_g43",
+    "Range": 35,
+    "Damage": 14
+  },
+  {
+    "PBGID": 2913,
+    "Name": "panzerfusilier_kar_98k_rifle_mp",
+    "Range": 35,
+    "Damage": 10
+  },
+  {
+    "PBGID": 2914,
+    "Name": "volksgrenadier_kar_98k_rifle_mp",
+    "Range": 35,
+    "Damage": 12
+  },
+  {
+    "PBGID": 2915,
+    "Name": "waffen_wlite_kar_98k_rifle_mp",
+    "Range": 35,
+    "Damage": 16
+  },
+  {
+    "PBGID": 12741837,
+    "Name": "weapon_crew_kar_98k_rifle_mp",
+    "Range": 35,
+    "Damage": 12
+  },
+  {
+    "PBGID": 16569,
+    "Name": "p47_air_support",
+    "Range": 225,
+    "Damage": 15
+  },
+  {
+    "PBGID": 16570,
+    "Name": "p47_paradrop_mg",
+    "Range": 225,
+    "Damage": 2
+  },
+  {
+    "PBGID": 18968,
+    "Name": "cavalry_m1_thompson_mp",
+    "Range": 35,
+    "Damage": 5
+  },
+  {
+    "PBGID": 18382,
+    "Name": "m1a1_carbine_snipe_pathfinder_mp",
+    "Range": 35,
+    "Damage": 10
+  }
+]

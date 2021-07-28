@@ -63,6 +63,9 @@ function BG_Init()
         return;
     end
 
+    -- Setup map data
+    BG_PrepareMapdata();
+
     -- Activate the unit system
     BG_HookUnitSystem();
 
@@ -161,7 +164,7 @@ function _endgame_test()
 end
 
 function BG_FixUI()
-    -- Hide the CP meter (Perhaps display company name and statistics here...)
+    -- Hide the CP meter
     UI_SetAbilityCardVisibility(true);
     UI_SetCPMeterVisibility(false);
     UI_SetAllowLoadAndSave(false);
@@ -176,6 +179,9 @@ function BG_VerifyMatch()
     if (name ~= bg_settings.map and name ~= "bg_testmap") then -- "bg_testmap" can always be played.
         return BG_LocString(1);
     end
+
+    -- Set a global flag if testmap
+    bg_isDebugMap = name == "bg_testmap";
 
     -- Verify upgrade
     if not pcall(BP_GetUpgradeBlueprint, bg_settings.tuning_mod.mod_verify_upg) then
@@ -208,13 +214,6 @@ function BG_GetPlayerData(player)
     end
 end
 
-function BG_BroadcastVictory(player)
-    local pd = BG_GetPlayerData(player);
-    if pd ~= nil then
-        Battlegrounds_LogEvent(nil, BG_EVENT_ONVICTORY, pd.steamID);
-    end
-end
-
 function BG_OverrideGameEndingFunctionCalls()
 
     -- Create a backup "pointer" just in case
@@ -230,7 +229,9 @@ function BG_OverrideGameEndingFunctionCalls()
         BG_CollectEndofMatchData();
 
         -- Broadcast victory for each player
-        Team_ForEachPlayer(team, BG_BroadcastVictory);
+        if Player_GetTeam(Game_GetLocalPlayer()) == team then
+            Battlegrounds_LogEvent(nil, BG_EVENT_ONVICTORY, BG_GetPlayerData(Game_GetLocalPlayer()).steamID);
+        end
 
         -- Get the local player
         local locPlayer = Game_GetLocalPlayer();

@@ -111,6 +111,38 @@ function BG_SetupWincondition()
 
 end
 
+function BG_PrepareMapdata()
+
+    -- Trigger map entry point collector
+    BG_UTIL_collect_map_entries();
+
+    -- Spawn dummy vehicle
+    local mkr_dummy = "bgtest_vehicle";
+    if bg_isDebugMap and Marker_Exists(mkr_dummy, "") then
+        local dummypos = Marker_GetPosition(Marker_FromName(mkr_dummy, ""));
+        local eid = Entity_CreateENV(BP_GetEntityBlueprint(_bg_tuning_guid .. ":panzer_iv_sdkfz_161_bg_test_decrewed"), dummypos, dummypos);
+        Entity_Spawn(eid);
+    end
+
+    -- Spawn dummy team_weapon
+    mkr_dummy = "bgtest_weapon";
+    if bg_isDebugMap and Marker_Exists(mkr_dummy, "") then
+        local dummypos = Marker_GetPosition(Marker_FromName(mkr_dummy, ""));
+        local eid = Entity_CreateENV(BP_GetEntityBlueprint(_bg_tuning_guid .. ":pak40_75mm_at_gun_bg"), dummypos, dummypos);
+        Entity_Spawn(eid);
+    end
+
+    for i = 0, World_GetNumEntities() - 1 do
+        local entity = World_GetEntity(i);
+        local ebp = Entity_GetBlueprint(entity);
+        if Entity_IsVehicle(entity) and not Entity_IsBuilding(entity) then
+            Entity_SetRecrewable(entity, bg_isDebugMap); -- Set crewable if debug map OTHERWISE, set to false
+        end
+    end
+
+
+end
+
 function BG_LoadCompanies()
 
     -- Make sure the player count is matching

@@ -152,7 +152,7 @@ namespace Battlegrounds.Game.Match.Data {
 
                     // Get values
                     char msgtype = char.ToUpper(match.Groups["cmdtype"].Value[0]); // Always bump it to upper (incase it's forgotten in Scar script)
-                    string[] values = match.Groups["content"].Captures.ToList().Where(x => x.Value != "," && x.Value != " ").Select(x => x.Value).ToArray();
+                    string[] values = match.Groups["content"].Captures.ToList().Where(x => x.Value is not "," and not " ").Select(x => x.Value).ToArray();
 
                     // Define event UID
                     uint eventUID = 0;
@@ -214,6 +214,7 @@ namespace Battlegrounds.Game.Match.Data {
                         'R' => new RetreatEvent(eventUID, values, player),
                         'I' => new PickupEvent(eventUID, values, player),
                         'V' => new VictoryEvent(eventUID, values),
+                        'S' => new SurrenderEvent(eventUID, player),
                         'G' => this.CreateVerificationEvent(eventUID, values),
                         _ => null,
                     };

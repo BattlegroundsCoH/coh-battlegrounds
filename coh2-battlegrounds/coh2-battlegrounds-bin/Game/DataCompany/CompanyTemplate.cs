@@ -269,6 +269,8 @@ namespace Battlegrounds.Game.DataCompany {
             }
         }
 
+        public bool VerifyChecksum(string checksum) => throw new NotImplementedException();
+        public void CalculateChecksum() => throw new NotImplementedException();
     }
 
 }

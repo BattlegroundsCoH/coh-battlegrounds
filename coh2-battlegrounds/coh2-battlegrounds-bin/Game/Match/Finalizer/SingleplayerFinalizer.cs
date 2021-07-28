@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics;
+
 using Battlegrounds.Game.DataCompany;
 using Battlegrounds.Game.Gameplay;
 using Battlegrounds.Game.Match.Analyze;
@@ -35,6 +36,9 @@ namespace Battlegrounds.Game.Match.Finalizer {
 
             // Get the units
             var units = analyzedMatch.Units;
+
+            // Get the items
+            var items = analyzedMatch.Items;
 
             // Get the players
             var players = analyzedMatch.Players;
@@ -93,13 +97,27 @@ namespace Battlegrounds.Game.Match.Finalizer {
                     // Update combat time
                     squad.IncreaseCombatTime(status.CombatTime);
 
-                    // TODO: Apply pickups
+                    // Picked up any items?
+                    if (status.CapturedSlotItems.Count > 0) {
+                        foreach (var item in status.CapturedSlotItems) {
+                            squad.AddSlotItem(item);
+                        }
+                    }
 
                 }
 
             }
 
-            // TODO: Save captured items etc.
+            // Loop over captured items
+            foreach (var item in items) {
+
+                // Get the relevant company
+                var company = this.m_companies[item.PlayerOwner];
+
+                // Add to captured items
+                company.AddInventoryItem(item.Blueprint);
+
+            }
 
         }
 
@@ -117,6 +135,7 @@ namespace Battlegrounds.Game.Match.Finalizer {
             // Make sure we log this unfortunate event
             if (this.CompanyHandler is null) {
                 Trace.WriteLine("{Warning} -- The company handler is NULL and changes will therefore not be handled further!", "SingleplayerFinalizer");
+                return;
             }
 
             // Loop through all companies and save
