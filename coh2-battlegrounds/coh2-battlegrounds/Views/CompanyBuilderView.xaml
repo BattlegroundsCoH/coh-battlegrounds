@@ -13,7 +13,7 @@
 
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
-            <RowDefinition Height="auto"/>
+            <RowDefinition Height="128"/>
             <RowDefinition Height="auto"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="auto"/>
@@ -21,7 +21,7 @@
 
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="auto"/>
+            <ColumnDefinition Width="256"/>
         </Grid.ColumnDefinitions>
 
         <!-- Row 0 :: Company Name and Type -->
@@ -45,22 +45,42 @@
         </StackPanel>
         
         <!-- Row 1 :: Company Statistics -->
-        <StackPanel Grid.Row="1" Grid.Column="0" Name="CompanyStatistics">
-            <WrapPanel>
+        <Grid Grid.Row="1" Grid.Column="0" Name="CompanyStatistics">
+            <Grid.ColumnDefinitions>
                 
-            </WrapPanel>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                
+            </Grid.RowDefinitions>            
+        </Grid>
+
+        <!-- Row 1 :: Hover Data -->
+        <StackPanel Grid.Row="1" Grid.Column="1" Name="HoverField"
+                    Margin="3.35"
+                    Visibility="{Binding Path=HoverDataVisiblity}">
+            <StackPanel Orientation="Horizontal">
+                <Image Width="48" Height="48" 
+                    Source="{Binding Path=HoverData.Icon}"/>
+                <TextBlock Text="{Binding Path=HoverData.Name}"/>
+            </StackPanel>
+            <TextBlock Text="{Binding Path=HoverData.Description}" TextWrapping="Wrap"/>
+            <!-- Price -->
+            <StackPanel>
+                
+            </StackPanel>
+            <!-- Abilities -->
             <WrapPanel>
                 
             </WrapPanel>
         </StackPanel>
-
-        <!-- Row 1 :: Hover Data -->
-        <StackPanel Grid.Row="1" Grid.Column="1" Name="HoverField">
-
+        <StackPanel Grid.Row="1" Grid.Column="1"
+                    Visibility="{Binding Path=InverseHoverDataVisibility}">
+            <Label HorizontalContentAlignment="Center"
+                   VerticalContentAlignment="Center"> No unit data </Label>
         </StackPanel>
 
         <!-- Row 2 :: Content Explanation Text -->
-        <TextBlock Grid.Row="2" Grid.Column="0" Text="Company Units"/>
+        <TextBlock Grid.Row="2" Grid.Column="0" Text="Company Setup"/>
         <TextBlock Grid.Row="2" Grid.Column="1" Text="Available Units"/>
 
         <!-- Row 3 :: Company Overview -->
@@ -96,15 +116,11 @@
                 <Label Content="Captured Items"/>
                 <ScrollViewer CanContentScroll="False" 
                           VerticalScrollBarVisibility="Visible">
-                    <StackPanel x:Name="AvailableItems">
-
-                    </StackPanel>
+                    <StackPanel x:Name="AvailableItems"/>
                 </ScrollViewer>
             </StackPanel>
             <ScrollViewer CanContentScroll="False" VerticalScrollBarVisibility="Visible">
-                <StackPanel x:Name="AvailableUnitsStack">
-
-                </StackPanel>
+                <StackPanel x:Name="AvailableUnitsStack"/>
             </ScrollViewer>
         </DockPanel>
         

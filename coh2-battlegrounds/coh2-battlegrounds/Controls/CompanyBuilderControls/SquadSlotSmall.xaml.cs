@@ -1,47 +1,52 @@
 ﻿using Battlegrounds.Game.Database;
-using Battlegrounds.Game.Gameplay;
+
 using BattlegroundsApp.Resources;
+
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace BattlegroundsApp.Controls.CompanyBuilderControls {
     public partial class SquadSlotSmall : UserControl {
 
         public string SquadName { get; }
+
         public string SquadIcon { get; }
+
         public SquadBlueprint Squad { get; }
+
+        public ObjectHoverData HoverData { get; }
+
+        public event Action<SquadSlotSmall, bool> OnHoverUpdate;
 
         public SquadSlotSmall(SquadBlueprint squad) {
             this.DataContext = this;
-            SquadName = GameLocale.GetString(uint.Parse(squad.UI.ScreenName));
-            SquadIcon = $"pack://application:,,,/Resources/ingame/unit_icons/{squad.UI.Icon}.png";
-            Squad = squad;
-            InitializeComponent();
+            this.SquadName = GameLocale.GetString(squad.UI.ScreenName);
+            this.SquadIcon = $"pack://application:,,,/Resources/ingame/unit_icons/{squad.UI.Icon}.png";
+            this.Squad = squad;
+            this.HoverData = new(this.Squad);
+            this.InitializeComponent();
         }
 
         private void OnMouseMove(object sender, MouseEventArgs e) {
             base.OnMouseMove(e);
 
-            if (e.LeftButton == MouseButtonState.Pressed) {
+            if (e.LeftButton is MouseButtonState.Pressed) {
 
                 DataObject obj = new DataObject();
-                obj.SetData("Squad", Squad);
+                obj.SetData("Squad", this.Squad);
 
                 DragDrop.DoDragDrop(this, obj, DragDropEffects.Move);
 
             }
         }
+
+        private void OnMouseEnter(object sender, MouseEventArgs e)
+            => this.OnHoverUpdate?.Invoke(this, true);
+
+        private void OnMouseLeave(object sender, MouseEventArgs e)
+            => this.OnHoverUpdate?.Invoke(this, false);
+
     }
 }

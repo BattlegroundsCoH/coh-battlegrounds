@@ -29,8 +29,8 @@ namespace Battlegrounds.Game.Database.Extensions {
                 string prop = reader.ReadProperty();
                 values[prop switch {
                     "LocaleName" => 0,
-                    "LocaleDescriptionLong" => 1,
-                    "LocaleDescriptionShort" => 2,
+                    "LocaleDescriptionShort" => 1,
+                    "LocaleDescriptionLong" => 2,
                     "Icon" => 3,
                     "Symbol" => 4,
                     "Portrait" => 5,

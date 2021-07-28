@@ -54,6 +54,12 @@ namespace BattlegroundsApp.Views {
 
         public string CompanyType { get; }
 
+        public Visibility HoverDataVisiblity { get; set; } = Visibility.Hidden;
+
+        public Visibility InverseHoverDataVisibility => this.HoverDataVisiblity is Visibility.Hidden ? Visibility.Visible : Visibility.Hidden;
+
+        public ObjectHoverData HoverData { get; set; }
+
         private List<SquadBlueprint> SquadList
             => BlueprintManager.GetCollection<SquadBlueprint>().FilterByMod(this.CompanyGUID).Filter(x => x.Army == this.CompanyFaction.ToString()).ToList();
 
@@ -124,9 +130,24 @@ namespace BattlegroundsApp.Views {
 
             foreach(SquadBlueprint squad in SquadList) {
                 SquadSlotSmall unitSlot = new SquadSlotSmall(squad);
+                unitSlot.OnHoverUpdate += this.OnSlotHover;
                 this.AvailableUnitsStack.Children.Add(unitSlot);
             }
 
+        }
+
+        private void OnSlotHover(SquadSlotSmall unitSlot, bool enter) {
+            if (!enter) {
+                this.HoverDataVisiblity = Visibility.Hidden;
+                this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(this.HoverDataVisiblity)));
+                this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(this.InverseHoverDataVisibility)));
+                return;
+            }
+            this.HoverDataVisiblity = Visibility.Visible;
+            this.HoverData = unitSlot.HoverData;
+            this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(this.HoverData)));
+            this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(this.HoverDataVisiblity)));
+            this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(this.InverseHoverDataVisibility)));
         }
 
         private void ShowCompany() {
