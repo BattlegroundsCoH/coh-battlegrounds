@@ -15,6 +15,8 @@ using Battlegrounds.Game.Gameplay;
 using BattlegroundsApp.Controls.CompanyBuilderControls;
 using BattlegroundsApp.Dialogs.YesNo;
 using BattlegroundsApp.LocalData;
+using BattlegroundsApp.Modals;
+using BattlegroundsApp.Modals.CompanyBuilder;
 
 namespace BattlegroundsApp.Views {
     /// <summary>
@@ -60,6 +62,10 @@ namespace BattlegroundsApp.Views {
 
         public ObjectHoverData HoverData { get; set; }
 
+        public CompanyBuilder Builder { get; }
+
+        public CompanyStatistics Statistics { get; }
+
         private List<SquadBlueprint> SquadList
             => BlueprintManager.GetCollection<SquadBlueprint>().FilterByMod(this.CompanyGUID).Filter(x => x.Army == this.CompanyFaction.ToString()).ToList();
 
@@ -78,8 +84,6 @@ namespace BattlegroundsApp.Views {
             }
         };
 
-        public CompanyBuilder Builder { get; }
-
         public override void StateOnFocus() { }
         public override void StateOnLostFocus() { }
 
@@ -89,6 +93,7 @@ namespace BattlegroundsApp.Views {
 
         public CompanyBuilderView(Company company) : this() {
             this.Builder = new CompanyBuilder().DesignCompany(company);
+            this.Statistics = company.Statistics;
             this.CompanyName = company.Name;
             this.CompanySize = company.Units.Length;
             this.CompanyFaction = company.Army;
@@ -101,6 +106,7 @@ namespace BattlegroundsApp.Views {
         // TODO: CHANGE HOW YOU GET THE GUID! -- FOR THE FUTURE TO SUPPORT OTHER MODS (ITS FINE FOR NOW)
         public CompanyBuilderView(string companyName, Faction faction, CompanyType type) : this() {
             this.Builder = new CompanyBuilder().NewCompany(faction).ChangeName(companyName).ChangeType(type).ChangeTuningMod(BattlegroundsInstance.BattleGroundsTuningMod.Guid);
+            this.Statistics = new();
             this.CompanyName = companyName;
             this.CompanySize = 0;
             this.CompanyFaction = faction;
@@ -128,7 +134,7 @@ namespace BattlegroundsApp.Views {
 
         private void FillAvailableUnits() {
 
-            foreach(SquadBlueprint squad in SquadList) {
+            foreach(SquadBlueprint squad in this.SquadList) {
                 SquadSlotSmall unitSlot = new SquadSlotSmall(squad);
                 unitSlot.OnHoverUpdate += this.OnSlotHover;
                 this.AvailableUnitsStack.Children.Add(unitSlot);
@@ -159,21 +165,13 @@ namespace BattlegroundsApp.Views {
 
             // TODO: Make UnitSlot addition more generic
             this.Builder.EachUnit(x => {
-
-                if (x.GetCategory(true) == "infantry") {
-                    UnitSlot unitSlot = new UnitSlot(this, UnitSlotType.Infantry);
-                    unitSlot.SetUnit(x);
+                SquadSlotLarge unitSlot = new(x);
+                unitSlot.OnClick += this.OnSlotClicked;
+                if (x.GetCategory(true) is "infantry") {
                     this.InfantryWrap.Children.Add(unitSlot);
-
-                } else if (x.GetCategory(true) == "team_weapon") {
-                    UnitSlot unitSlot = new UnitSlot(this, UnitSlotType.Support);
-                    unitSlot.SetUnit(x);
+                } else if (x.GetCategory(true) is "team_weapon") {
                     this.SupportWrap.Children.Add(unitSlot);
-
-                }
-                else if (x.GetCategory(true) == "vehicle") {
-                    UnitSlot unitSlot = new UnitSlot(this, UnitSlotType.Vehicle);
-                    unitSlot.SetUnit(x);
+                } else if (x.GetCategory(true) is "vehicle") {
                     this.VehicleWrap.Children.Add(unitSlot);
                 }
 
@@ -197,6 +195,12 @@ namespace BattlegroundsApp.Views {
             this.Builder.RemoveUnit(unitID);
             this.CompanySize--;
             this.ShowCompany();
+        }
+
+        private void OnSlotClicked(SquadSlotLarge squadSlot) {
+            SelectedSquadModal squadModal = new(squadSlot);
+            // Some more stuff here?
+            this.ShowModal(squadModal);
         }
 
         private void OnDrop(object sender, DragEventArgs e) {

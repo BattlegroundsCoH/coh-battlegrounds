@@ -1,23 +1,16 @@
 ﻿using Battlegrounds.Game.Database.Extensions;
 using Battlegrounds.Game.Gameplay;
+
 using BattlegroundsApp.Dialogs.YesNo;
 using BattlegroundsApp.Resources;
+
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace BattlegroundsApp.Controls.CompanyBuilderControls {
+
     public partial class SquadSlotLarge : UserControl {
 
         public string SquadName { get; }
@@ -26,16 +19,18 @@ namespace BattlegroundsApp.Controls.CompanyBuilderControls {
         public byte SquadVeterancy { get; }
         public bool SquadIsTransported { get; }
 
-        private uint SlotOccupantID { get; set; }
+        private uint SlotOccupantID { get; }
+
+        public event Action<SquadSlotLarge> OnClick;
 
         public SquadSlotLarge(Squad squad) {
-            SquadName = GameLocale.GetString(uint.Parse(squad.SBP.UI.ScreenName));
-            SquadIcon = $"pack://application:,,,/Resources/ingame/unit_icons/{squad.SBP.UI.Icon}.png";
-            SquadCost = squad.SBP.Cost;
-            SquadVeterancy = squad.VeterancyRank;
-            SquadIsTransported = squad.SupportBlueprint is not null;
-            SlotOccupantID = squad.SquadID;
-            InitializeComponent();
+            this.SquadName = GameLocale.GetString(squad.SBP.UI.ScreenName);
+            this.SquadIcon = $"pack://application:,,,/Resources/ingame/unit_icons/{squad.SBP.UI.Icon}.png";
+            this.SquadCost = squad.SBP.Cost;
+            this.SquadVeterancy = squad.VeterancyRank;
+            this.SquadIsTransported = squad.SupportBlueprint is not null;
+            this.SlotOccupantID = squad.SquadID;
+            this.InitializeComponent();
         }
 
         private void RemoveUnit(object sender, RoutedEventArgs e) {
@@ -45,5 +40,10 @@ namespace BattlegroundsApp.Controls.CompanyBuilderControls {
                 //Remove unit here
             }
         }
+
+        private void OnMouseDown(object sender, MouseButtonEventArgs e)
+            => this.OnClick?.Invoke(this);
+
     }
+
 }

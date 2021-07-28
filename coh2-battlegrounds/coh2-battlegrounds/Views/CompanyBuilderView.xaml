@@ -9,7 +9,7 @@
              xmlns:dropArea="clr-namespace:BattlegroundsApp.Controls.DropArea"
              mc:Ignorable="d"
              d:DesignHeight="650" d:DesignWidth="1000" Background="white">
-    <Grid>
+    <Grid Margin="5">
 
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
@@ -21,6 +21,7 @@
 
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="5"/>
             <ColumnDefinition Width="256"/>
         </Grid.ColumnDefinitions>
 
@@ -39,7 +40,10 @@
         </StackPanel>
 
         <!-- Row 0 :: Save and Reset buttons -->
-        <StackPanel Grid.Row="0" Grid.Column="1" Orientation="Horizontal">
+        <StackPanel Grid.Row="0" Grid.Column="2" 
+                    Orientation="Horizontal"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center">
             <Button x:Name="resetButton" Grid.Row="6" Grid.Column="1" Content="Reset" Margin="2.5" Width="105" Click="BackButton_Click"/>
             <Button x:Name="saveButton" Grid.Row="6" Grid.Column="0" Content="Save" Margin="2.5" Width="105" Click="SaveButton_Click"/>
         </StackPanel>
@@ -47,15 +51,65 @@
         <!-- Row 1 :: Company Statistics -->
         <Grid Grid.Row="1" Grid.Column="0" Name="CompanyStatistics">
             <Grid.ColumnDefinitions>
-                
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
-                
-            </Grid.RowDefinitions>            
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            
+            <!-- Company Match History -->
+            <Label Content="Company Match History" FontStyle="Italic"
+                   Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="6"/>
+
+            <Label Content="Victories:" FontStyle="Italic"
+                   Grid.Row="1" Grid.Column="0"/>
+            <Label Content="0" FontStyle="Italic"
+                   Grid.Row="1" Grid.Column="1" HorizontalContentAlignment="Right"/>
+            <Label Content="Defeats:" FontStyle="Italic"
+                   Grid.Row="1" Grid.Column="2"/>
+            <Label Content="0" FontStyle="Italic" 
+                   Grid.Row="1" Grid.Column="3" HorizontalContentAlignment="Right"/>
+            <Label Content="Total:" FontStyle="Italic"
+                   Grid.Row="1" Grid.Column="4"/>
+            <Label Content="0" FontStyle="Italic"
+                   Grid.Row="1" Grid.Column="5" HorizontalContentAlignment="Right"/>
+
+            <!-- Company Experience -->
+            <Label Content="Company Experience" FontStyle="Italic"
+                   Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="6"/>
+
+            <Label Content="Infantry Losses:" FontStyle="Italic"
+                   Grid.Row="3" Grid.Column="0"/>
+            <Label Content="0" FontStyle="Italic" 
+                   Grid.Row="3" Grid.Column="1" HorizontalContentAlignment="Right"/>
+            <Label Content="Vehicle Losses:" FontStyle="Italic"
+                   Grid.Row="3" Grid.Column="2"/>
+            <Label Content="0" FontStyle="Italic"
+                   Grid.Row="3" Grid.Column="3" HorizontalContentAlignment="Right"/>
+            <Label Content="Total Losses:" FontStyle="Italic"
+                   Grid.Row="3" Grid.Column="4"/>
+            <Label Content="0" FontStyle="Italic"
+                   Grid.Row="3" Grid.Column="5" HorizontalContentAlignment="Right"/>
+
+            <!-- Company Rating -->
+            <Label Grid.Row="5" Grid.Column="0"
+                   Content="Company Rating:"/>
+            <Label Grid.Row="5" Grid.Column="1"
+                   Content="0" HorizontalContentAlignment="Right"/>
+
         </Grid>
 
         <!-- Row 1 :: Hover Data -->
-        <StackPanel Grid.Row="1" Grid.Column="1" Name="HoverField"
+        <StackPanel Grid.Row="1" Grid.Column="2" Name="HoverField"
                     Margin="3.35"
                     Visibility="{Binding Path=HoverDataVisiblity}">
             <StackPanel Orientation="Horizontal">
@@ -73,7 +127,7 @@
                 
             </WrapPanel>
         </StackPanel>
-        <StackPanel Grid.Row="1" Grid.Column="1"
+        <StackPanel Grid.Row="1" Grid.Column="2"
                     Visibility="{Binding Path=InverseHoverDataVisibility}">
             <Label HorizontalContentAlignment="Center"
                    VerticalContentAlignment="Center"> No unit data </Label>
@@ -81,7 +135,7 @@
 
         <!-- Row 2 :: Content Explanation Text -->
         <TextBlock Grid.Row="2" Grid.Column="0" Text="Company Setup"/>
-        <TextBlock Grid.Row="2" Grid.Column="1" Text="Available Units"/>
+        <TextBlock Grid.Row="2" Grid.Column="2" Text="Available Units"/>
 
         <!-- Row 3 :: Company Overview -->
         <TabControl Grid.Row="3" Grid.Column="0">
@@ -111,7 +165,7 @@
         </TabControl>
 
         <!-- Row 3 :: Available units -->
-        <DockPanel Grid.Row="3" Grid.Column="1" LastChildFill="True">
+        <DockPanel Grid.Row="3" Grid.Column="2" LastChildFill="True">
             <StackPanel DockPanel.Dock="Bottom" Name="CapturedItemsDroppableContainer">
                 <Label Content="Captured Items"/>
                 <ScrollViewer CanContentScroll="False" 

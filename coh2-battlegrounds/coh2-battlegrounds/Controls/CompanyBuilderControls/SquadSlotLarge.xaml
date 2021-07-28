@@ -12,36 +12,34 @@
         <convertor:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
     </UserControl.Resources>
 
-    <Canvas Width="225" Height="64">
-        <Button Width="225" Height="64">
-            <Canvas Width="225" Height="64">
-                <TextBlock Text="{Binding SquadName}" Canvas.Left="50" Canvas.Top="5"/>
+    <Canvas Width="225" Height="64"  MouseDown="OnMouseDown">
+        <Canvas Width="225" Height="64" Background="LightGray">
+            <TextBlock Text="{Binding SquadName}" Canvas.Left="50" Canvas.Top="5"/>
 
-                <Image Canvas.Left="5" Canvas.Top="5" Source="{Binding SquadIcon, TargetNullValue={x:Null}}"
+            <Image Canvas.Left="5" Canvas.Top="5" Source="{Binding SquadIcon, TargetNullValue={x:Null}}"
                            Width="42" Height="42"/>
 
-                <TextBlock Text="{Binding SquadCost.Manpower}" Canvas.Left="5" Canvas.Bottom="3" Foreground="DarkOrange"/>
+            <TextBlock Text="{Binding SquadCost.Manpower}" Canvas.Left="5" Canvas.Bottom="3" Foreground="DarkOrange"/>
 
-                <TextBlock Text="{Binding SquadCost.Fuel}" Canvas.Left="35" Canvas.Bottom="3" Foreground="green"/>
+            <TextBlock Text="{Binding SquadCost.Fuel}" Canvas.Left="35" Canvas.Bottom="3" Foreground="green"/>
 
-                <TextBlock Text="{Binding SquadCost.Munitions}" Canvas.Left="65" Canvas.Bottom="3" Foreground="red"/>
+            <TextBlock Text="{Binding SquadCost.Munitions}" Canvas.Left="65" Canvas.Bottom="3" Foreground="red"/>
 
-                <!-- TODO: REPLACE THE ICON OF TRANSPORT TO THE ACTUAL TRANSPORT ICON -->
-                <Image Canvas.Right="5" Canvas.Bottom="0" Visibility="{Binding SquadIsTransported, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter=False}">
+            <!-- TODO: REPLACE THE ICON OF TRANSPORT TO THE ACTUAL TRANSPORT ICON -->
+            <Image Canvas.Right="5" Canvas.Bottom="0" Visibility="{Binding SquadIsTransported, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter=False}">
+                <Image.Source>
+                    <BitmapImage DecodePixelWidth="23" DecodePixelHeight="23" UriSource="pack://application:,,,/Resources/ingame/test_unit_transport.png"/>
+                </Image.Source>
+            </Image>
+
+            <StackPanel Canvas.Left="50" Canvas.Bottom="20" Orientation="Horizontal">
+                <Image>
                     <Image.Source>
-                        <BitmapImage DecodePixelWidth="23" DecodePixelHeight="23" UriSource="pack://application:,,,/Resources/ingame/test_unit_transport.png"/>
+                        <BitmapImage DecodePixelWidth="13" DecodePixelHeight="13" UriSource="pack://application:,,,/Resources/ingame/test_unit_veterancy.png"/>
                     </Image.Source>
                 </Image>
-
-                <StackPanel Canvas.Left="50" Canvas.Bottom="20" Orientation="Horizontal">
-                    <Image>
-                        <Image.Source>
-                            <BitmapImage DecodePixelWidth="13" DecodePixelHeight="13" UriSource="pack://application:,,,/Resources/ingame/test_unit_veterancy.png"/>
-                        </Image.Source>
-                    </Image>
-                </StackPanel>
-            </Canvas>
-        </Button>
+            </StackPanel>
+        </Canvas>
         <Button Width="25" Height="25" Content="X" Canvas.Left="200" Click="RemoveUnit"/>
     </Canvas>
 </UserControl>
