@@ -155,6 +155,34 @@ namespace Battlegrounds.Game.DataCompany {
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="builder"></param>
+        /// <returns></returns>
+        public virtual Squad AddAndCommitUnit(UnitBuilder builder) {
+
+            // If null, throw error
+            if (builder == null) {
+                throw new ArgumentNullException(nameof(builder), "The given unit builder may not be null");
+            }
+
+            // If null, throw error
+            if (this.m_companyTarget == null) {
+                throw new NullReferenceException("Cannot add unit to a company that has not been created.");
+            }
+
+            // Set the mod GUID (So we get no conflicts between mods).
+            builder.SetModGUID(this.m_companyGUID);
+
+            // Add squad
+            ushort sid = this.m_companyTarget.AddSquad(builder);
+
+            // Ask for squad and return
+            return this.m_companyTarget.GetSquadByIndex(sid);
+
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <param name="unitID"></param>
         /// <returns></returns>
         public virtual CompanyBuilder RemoveUnit(uint unitID) {

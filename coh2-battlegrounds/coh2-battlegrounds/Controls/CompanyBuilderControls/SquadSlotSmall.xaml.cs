@@ -17,13 +17,13 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 
 namespace BattlegroundsApp.Controls.CompanyBuilderControls {
-    public partial class UnitSlotAdd : UserControl {
+    public partial class SquadSlotSmall : UserControl {
 
         public string SquadName { get; }
         public string SquadIcon { get; }
         public SquadBlueprint Squad { get; }
 
-        public UnitSlotAdd(SquadBlueprint squad) {
+        public SquadSlotSmall(SquadBlueprint squad) {
             this.DataContext = this;
             SquadName = GameLocale.GetString(uint.Parse(squad.UI.ScreenName));
             SquadIcon = $"pack://application:,,,/Resources/ingame/unit_icons/{squad.UI.Icon}.png";
