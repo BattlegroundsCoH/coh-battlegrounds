@@ -3,22 +3,15 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+
 using Battlegrounds;
 using Battlegrounds.Game.Database;
 using Battlegrounds.Game.Database.Management;
 using Battlegrounds.Game.DataCompany;
 using Battlegrounds.Game.Gameplay;
+
 using BattlegroundsApp.Controls.CompanyBuilderControls;
 using BattlegroundsApp.Dialogs.YesNo;
 using BattlegroundsApp.LocalData;
@@ -35,83 +28,86 @@ namespace BattlegroundsApp.Views {
             public string Type { get; init; }
             public string[] ExcludeTypes { get; init; }
 
-            public bool IsValid(SquadBlueprint squadBlueprint) => squadBlueprint.Types.Contains(this.Type) && ExcludeTypes.All(x => !squadBlueprint.Types.Contains(x));
+            public bool IsValid(SquadBlueprint squadBlueprint) => squadBlueprint.Types.Contains(this.Type) && this.ExcludeTypes.All(x => !squadBlueprint.Types.Contains(x));
 
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
-        private void NotifyPropertyChanged([CallerMemberName] String propertyName = "") {
+
+        private void NotifyPropertyChanged([CallerMemberName] string propertyName = "") {
             if (PropertyChanged is not null) {
                 PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
             }
         }
 
-        public string CompanyName { get; }
         private int _companySize;
-        public int CompanySize { get { return this._companySize; } set { this._companySize = value; NotifyPropertyChanged(); } }
-        public int CompanyMaxSize { get { return Company.MAX_SIZE; } }
+
+        public string CompanyName { get; }
+
+        public int CompanySize { get => this._companySize; set { this._companySize = value; this.NotifyPropertyChanged(); } }
+
         public Faction CompanyFaction { get; }
+
         public string CompanyGUID { get; }
+
         public string CompanyType { get; }
 
-        private List<SquadBlueprint> SquadList => BlueprintManager.GetCollection<SquadBlueprint>().FilterByMod(CompanyGUID).Filter(x => x.Army == CompanyFaction.ToString()).ToList();
+        private List<SquadBlueprint> SquadList
+            => BlueprintManager.GetCollection<SquadBlueprint>().FilterByMod(this.CompanyGUID).Filter(x => x.Army == this.CompanyFaction.ToString()).ToList();
 
-        public SquadCategory[] Category => new[] { 
+        public static SquadCategory[] Category => new[] {
             new SquadCategory {
                 Type = "infantry",
                 ExcludeTypes = new [] { "team_weapon" }
-            }, 
-            new SquadCategory { 
+            },
+            new SquadCategory {
                 Type = "team_weapon",
-                ExcludeTypes = new string[0]
-            }, 
-            new SquadCategory { 
+                ExcludeTypes = Array.Empty<string>()
+            },
+            new SquadCategory {
                 Type = "vehicle",
-                ExcludeTypes = new string[0]
-            } 
+                ExcludeTypes = Array.Empty<string>()
+            }
         };
 
-        private CompanyBuilder builder;
-        public CompanyBuilder Builder { get { return this.builder; } }
+        public CompanyBuilder Builder { get; }
 
         public override void StateOnFocus() { }
         public override void StateOnLostFocus() { }
 
         public CompanyBuilderView() {
-            InitializeComponent();
+            this.InitializeComponent();
         }
 
         public CompanyBuilderView(Company company) : this() {
-            builder = new CompanyBuilder().DesignCompany(company);
-            CompanyName = company.Name;
-            CompanySize = company.Units.Length;
-            CompanyFaction = company.Army;
-            CompanyGUID = company.TuningGUID;
-            CompanyType = company.Type.ToString();
-            FillAvailableUnits();
-            ShowCompany();
+            this.Builder = new CompanyBuilder().DesignCompany(company);
+            this.CompanyName = company.Name;
+            this.CompanySize = company.Units.Length;
+            this.CompanyFaction = company.Army;
+            this.CompanyGUID = company.TuningGUID;
+            this.CompanyType = company.Type.ToString();
+            this.FillAvailableUnits();
+            this.ShowCompany();
         }
 
         // TODO: CHANGE HOW YOU GET THE GUID! -- FOR THE FUTURE TO SUPPORT OTHER MODS (ITS FINE FOR NOW)
         public CompanyBuilderView(string companyName, Faction faction, CompanyType type) : this() {
-            builder = new CompanyBuilder().NewCompany(faction).ChangeName(companyName).ChangeType(type).ChangeTuningMod(BattlegroundsInstance.BattleGroundsTuningMod.Guid);
-            CompanyName = companyName;
-            CompanySize = 0;
-            CompanyFaction = faction;
-            CompanyGUID = BattlegroundsInstance.BattleGroundsTuningMod.Guid;
-            CompanyType = type.ToString();
-            FillAvailableUnits();
-            ShowCompany();
+            this.Builder = new CompanyBuilder().NewCompany(faction).ChangeName(companyName).ChangeType(type).ChangeTuningMod(BattlegroundsInstance.BattleGroundsTuningMod.Guid);
+            this.CompanyName = companyName;
+            this.CompanySize = 0;
+            this.CompanyFaction = faction;
+            this.CompanyGUID = BattlegroundsInstance.BattleGroundsTuningMod.Guid;
+            this.CompanyType = type.ToString();
+            this.FillAvailableUnits();
+            this.ShowCompany();
         }
 
-        private void SaveButton_Click(object sender, RoutedEventArgs e) {
-            var comapny = builder.Commit().Result;
-            PlayerCompanies.SaveCompany(comapny);
-        }
+        private void SaveButton_Click(object sender, RoutedEventArgs e) 
+            => PlayerCompanies.SaveCompany(this.Builder.Commit().Result);
 
         private void BackButton_Click(object sender, RoutedEventArgs e) {
 
-            var result = YesNoDialogViewModel.ShowYesNoDialog("Back", "Are you sure? All unsaved changes will be lost.");
+            YesNoDialogResult result = YesNoDialogViewModel.ShowYesNoDialog("Back", "Are you sure? All unsaved changes will be lost.");
 
             if (result == YesNoDialogResult.Confirm) {
                 this.StateChangeRequest(new CompanyView());
@@ -132,14 +128,14 @@ namespace BattlegroundsApp.Views {
         }
 
         private void ShowCompany() {
-
+            
             this.InfantryWrap.Children.Clear();
             this.SupportWrap.Children.Clear();
             this.VehicleWrap.Children.Clear();
             //this.AbilityList.Children.Clear();
 
             // TODO: Make UnitSlot addition more generic
-            builder.EachUnit(x => {
+            this.Builder.EachUnit(x => {
 
                 if (x.GetCategory(true) == "infantry") {
                     UnitSlot unitSlot = new UnitSlot(this, UnitSlotType.Infantry);
@@ -164,38 +160,38 @@ namespace BattlegroundsApp.Views {
         }
 
         public void AddUnitToCompany(UnitBuilder unitBuilder) {
-            builder.AddUnit(unitBuilder);
-            builder.Commit();
-            CompanySize++;
-            ShowCompany();
+            this.Builder.AddUnit(unitBuilder).Commit();
+            this.CompanySize++;
+            this.ShowCompany();
         }
 
         public void ReplaceUnitInCompany(UnitBuilder unitBuilder) {
             unitBuilder.Apply();
-            ShowCompany();
+            this.ShowCompany();
         }
 
         public void RemoveUnitFromCompany(uint unitID) {
-            builder.RemoveUnit(unitID);
-            CompanySize--;
-            ShowCompany();
+            this.Builder.RemoveUnit(unitID);
+            this.CompanySize--;
+            this.ShowCompany();
         }
 
         private void OnDrop(object sender, DragEventArgs e) {
 
-            if (CompanySize != CompanyMaxSize) {
+            if (this.CompanySize is not Company.MAX_SIZE) {
+
                 SquadBlueprint squadBlueprint = e.Data.GetData("Squad") as SquadBlueprint;
 
-                UnitBuilder unitBuilder = new UnitBuilder();
-                unitBuilder.SetBlueprint(squadBlueprint);
+                UnitBuilder unitBuilder = new UnitBuilder().SetBlueprint(squadBlueprint);
+                Squad squad = this.Builder.AddAndCommitUnit(unitBuilder);
 
-                var squad = builder.AddAndCommitUnit(unitBuilder);
-                CompanySize++;
+                this.CompanySize++;
 
-                ShowCompany();
+                this.ShowCompany();
 
                 e.Effects = DragDropEffects.Move;
                 e.Handled = true;
+
             }
         }
 

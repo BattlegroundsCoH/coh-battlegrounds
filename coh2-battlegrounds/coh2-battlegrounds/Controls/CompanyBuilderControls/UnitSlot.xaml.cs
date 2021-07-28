@@ -41,7 +41,7 @@ namespace BattlegroundsApp.Controls.CompanyBuilderControls {
         private List<SquadBlueprint> SquadList 
             => BlueprintManager.GetCollection<SquadBlueprint>()
             .FilterByMod(_companyBuilderView.CompanyGUID)
-            .Filter(x => x.Army == _companyBuilderView.CompanyFaction.ToString() && _companyBuilderView.Category[(int)this.UnitType].IsValid(x)).ToList();
+            .Filter(x => x.Army == _companyBuilderView.CompanyFaction.ToString() && CompanyBuilderView.Category[(int)this.UnitType].IsValid(x)).ToList();
 
         private CompanyBuilderView _companyBuilderView { get; set; }
 

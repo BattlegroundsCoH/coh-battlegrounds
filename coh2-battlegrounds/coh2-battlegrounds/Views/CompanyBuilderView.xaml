@@ -15,71 +15,74 @@
             <RowDefinition Height="auto"/>
             <RowDefinition Height="auto"/>
             <RowDefinition Height="auto"/>
-            <RowDefinition Height="auto"/>
-            <RowDefinition Height="auto"/>
-            <RowDefinition Height="auto"/>
-            <RowDefinition Height="auto"/>
             <RowDefinition Height="*"/>
+            <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
 
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="auto"/>
-            <ColumnDefinition Width="auto"/>
-            <ColumnDefinition Width="auto"/>
-            <ColumnDefinition Width="auto"/>
-            <ColumnDefinition Width="auto"/>
-            <ColumnDefinition Width="auto"/>
-            <ColumnDefinition Width="auto"/>
-            <ColumnDefinition Width="auto"/>
-            <ColumnDefinition Width="auto"/>
             <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="auto"/>
         </Grid.ColumnDefinitions>
 
         <!-- Row 0 -->
-        <TextBlock Grid.Row="0" Grid.Column="0" Margin="2.5">
-            <TextBlock.Text>
-                <MultiBinding StringFormat="{}{0} [{1}]">
-                    <Binding Path="CompanyName"/>
-                    <Binding Path="CompanyType"/>
-                </MultiBinding>
-            </TextBlock.Text>
-        </TextBlock>
+        <StackPanel Grid.Row="0" Grid.Column="0" Margin="2.5" 
+                    Orientation="Horizontal">
+            <TextBlock>
+                <TextBlock.Text>
+                    <MultiBinding StringFormat="{}{0} [{1}]">
+                        <Binding Path="CompanyName"/>
+                        <Binding Path="CompanyType"/>
+                    </MultiBinding>
+                </TextBlock.Text>
+            </TextBlock>
+            <TextBlock>
+                <TextBlock.Text>
+                    <MultiBinding StringFormat="{}Company Size: {0}/{1}">
+                        <Binding Path="CompanySize" Mode="TwoWay"/>
+                        <Binding Path="CompanyMaxSize"/>
+                    </MultiBinding>
+                </TextBlock.Text>
+            </TextBlock>
+        </StackPanel>
 
-        <TextBlock Grid.Row="0" Grid.Column="1" Margin="2.5">
-            <TextBlock.Text>
-                <MultiBinding StringFormat="{}Company Size: {0}/{1}">
-                    <Binding Path="CompanySize" Mode="TwoWay"/>
-                    <Binding Path="CompanyMaxSize"/>
-                </MultiBinding>
-            </TextBlock.Text>
-        </TextBlock>
+        <StackPanel Grid.Row="0" Grid.Column="1" Orientation="Horizontal">
 
+            <Button x:Name="resetButton" Grid.Row="6" Grid.Column="1" Content="Reset" Margin="2.5" Width="105" Click="BackButton_Click"/>
+
+            <Button x:Name="saveButton" Grid.Row="6" Grid.Column="0" Content="Save" Margin="2.5" Width="105" Click="SaveButton_Click"/>
+
+        </StackPanel>
+        
         <!-- Row 1 -->
+        <StackPanel Grid.Row="1" Grid.Column="0">
+            
+        </StackPanel>
+
+        <StackPanel Grid.Row="1" Grid.Column="1">
+
+        </StackPanel>
 
         <!-- Row 2 -->
-        <TextBlock Grid.Row="2" Grid.Column="5" Text="Available Units"/>
+        <TextBlock Grid.Row="2" Grid.Column="0" Text="Company Units"/>
+        <TextBlock Grid.Row="2" Grid.Column="1" Text="Available Units"/>
 
         <!-- Row 3 -->
-        <TabControl Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="5" Grid.RowSpan="3" Height="550" Width="750">
+        <TabControl Grid.Row="3" Grid.Column="0">
             <TabItem Header="Units">
-                <dropArea:DropArea AllowDrop="True" Drop="OnDrop" Width="740" Height="520" Background="White" BorderThickness="1.5" BorderBrush="Black">
-                    <StackPanel x:Name="UnitTypeStack" Orientation="Horizontal">
-                        <ScrollViewer CanContentScroll="False" VerticalScrollBarVisibility="Visible">
-                            <WrapPanel x:Name="InfantryWrap" Orientation="Horizontal" Width="228">
+                <dropArea:DropArea AllowDrop="True" Drop="OnDrop" Background="White" BorderThickness="1.5" BorderBrush="Black">
+                    <ScrollViewer>
+                        <StackPanel>
+                            <WrapPanel x:Name="InfantryWrap" Orientation="Horizontal">
 
                             </WrapPanel>
-                        </ScrollViewer>
-                        <ScrollViewer CanContentScroll="False" VerticalScrollBarVisibility="Visible">
-                            <WrapPanel x:Name="SupportWrap" Orientation="Horizontal" Width="228">
+                            <WrapPanel x:Name="SupportWrap" Orientation="Horizontal">
 
                             </WrapPanel>
-                        </ScrollViewer>
-                        <ScrollViewer CanContentScroll="False" VerticalScrollBarVisibility="Visible">
-                            <WrapPanel x:Name="VehicleWrap" Orientation="Horizontal" Width="228">
+                            <WrapPanel x:Name="VehicleWrap" Orientation="Horizontal">
 
                             </WrapPanel>
-                        </ScrollViewer>
-                    </StackPanel>
+                        </StackPanel>
+                    </ScrollViewer>
                 </dropArea:DropArea>
             </TabItem>
             <TabItem Header="Abilities">
@@ -90,16 +93,12 @@
             </TabItem>
         </TabControl>
 
-        <ScrollViewer Grid.Row="3" Grid.Column="5" CanContentScroll="False" VerticalScrollBarVisibility="Visible" Height="400">
+        <ScrollViewer Grid.Row="3" Grid.Column="1" CanContentScroll="False" VerticalScrollBarVisibility="Visible" Height="400">
             <StackPanel x:Name="AvailableUnitsStack">
                 
             </StackPanel>
         </ScrollViewer>
 
         <!-- Row 4 -->
-        <Button x:Name="saveButton" Grid.Row="6" Grid.Column="0" Content="Save" Margin="2.5" Width="125" Click="SaveButton_Click"/>
-
-        <Button x:Name="backButton" Grid.Row="6" Grid.Column="1" Content="Back" Margin="2.5" Width="125" Click="BackButton_Click"/>
-
     </Grid>
 </bg:ViewState>

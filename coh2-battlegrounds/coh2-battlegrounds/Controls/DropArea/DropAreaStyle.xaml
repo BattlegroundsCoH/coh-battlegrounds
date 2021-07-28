@@ -5,9 +5,7 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="dropArea:DropArea">
-                    <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}">
-                        <ContentPresenter Content="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Content}"/>
-                    </Border>
+                    <ContentPresenter Content="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=ControlContent}"/>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
