@@ -20,6 +20,5 @@ namespace BattlegroundsApp.Controls.DropArea {
             } catch { }
         }
 
-
     }
 }

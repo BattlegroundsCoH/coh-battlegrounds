@@ -24,10 +24,10 @@
             <ColumnDefinition Width="auto"/>
         </Grid.ColumnDefinitions>
 
-        <!-- Row 0 -->
+        <!-- Row 0 :: Company Name and Type -->
         <StackPanel Grid.Row="0" Grid.Column="0" Margin="2.5" 
                     Orientation="Horizontal">
-            <TextBlock>
+            <TextBlock FontSize="18" FontStyle="Oblique">
                 <TextBlock.Text>
                     <MultiBinding StringFormat="{}{0} [{1}]">
                         <Binding Path="CompanyName"/>
@@ -35,40 +35,37 @@
                     </MultiBinding>
                 </TextBlock.Text>
             </TextBlock>
-            <TextBlock>
-                <TextBlock.Text>
-                    <MultiBinding StringFormat="{}Company Size: {0}/{1}">
-                        <Binding Path="CompanySize" Mode="TwoWay"/>
-                        <Binding Path="CompanyMaxSize"/>
-                    </MultiBinding>
-                </TextBlock.Text>
-            </TextBlock>
-        </StackPanel>
-
-        <StackPanel Grid.Row="0" Grid.Column="1" Orientation="Horizontal">
-
-            <Button x:Name="resetButton" Grid.Row="6" Grid.Column="1" Content="Reset" Margin="2.5" Width="105" Click="BackButton_Click"/>
-
-            <Button x:Name="saveButton" Grid.Row="6" Grid.Column="0" Content="Save" Margin="2.5" Width="105" Click="SaveButton_Click"/>
-
-        </StackPanel>
-        
-        <!-- Row 1 -->
-        <StackPanel Grid.Row="1" Grid.Column="0">
             
         </StackPanel>
 
-        <StackPanel Grid.Row="1" Grid.Column="1">
+        <!-- Row 0 :: Save and Reset buttons -->
+        <StackPanel Grid.Row="0" Grid.Column="1" Orientation="Horizontal">
+            <Button x:Name="resetButton" Grid.Row="6" Grid.Column="1" Content="Reset" Margin="2.5" Width="105" Click="BackButton_Click"/>
+            <Button x:Name="saveButton" Grid.Row="6" Grid.Column="0" Content="Save" Margin="2.5" Width="105" Click="SaveButton_Click"/>
+        </StackPanel>
+        
+        <!-- Row 1 :: Company Statistics -->
+        <StackPanel Grid.Row="1" Grid.Column="0" Name="CompanyStatistics">
+            <WrapPanel>
+                
+            </WrapPanel>
+            <WrapPanel>
+                
+            </WrapPanel>
+        </StackPanel>
+
+        <!-- Row 1 :: Hover Data -->
+        <StackPanel Grid.Row="1" Grid.Column="1" Name="HoverField">
 
         </StackPanel>
 
-        <!-- Row 2 -->
+        <!-- Row 2 :: Content Explanation Text -->
         <TextBlock Grid.Row="2" Grid.Column="0" Text="Company Units"/>
         <TextBlock Grid.Row="2" Grid.Column="1" Text="Available Units"/>
 
-        <!-- Row 3 -->
+        <!-- Row 3 :: Company Overview -->
         <TabControl Grid.Row="3" Grid.Column="0">
-            <TabItem Header="Units">
+            <TabItem Header="{Binding Path=CompanyUnitHeaderItem}">
                 <dropArea:DropArea AllowDrop="True" Drop="OnDrop" Background="White" BorderThickness="1.5" BorderBrush="Black">
                     <ScrollViewer>
                         <StackPanel>
@@ -93,12 +90,23 @@
             </TabItem>
         </TabControl>
 
-        <ScrollViewer Grid.Row="3" Grid.Column="1" CanContentScroll="False" VerticalScrollBarVisibility="Visible" Height="400">
-            <StackPanel x:Name="AvailableUnitsStack">
-                
-            </StackPanel>
-        </ScrollViewer>
+        <!-- Row 3 :: Available units -->
+        <DockPanel Grid.Row="3" Grid.Column="1" LastChildFill="True">
+            <StackPanel DockPanel.Dock="Bottom" Name="CapturedItemsDroppableContainer">
+                <Label Content="Captured Items"/>
+                <ScrollViewer CanContentScroll="False" 
+                          VerticalScrollBarVisibility="Visible">
+                    <StackPanel x:Name="AvailableItems">
 
-        <!-- Row 4 -->
+                    </StackPanel>
+                </ScrollViewer>
+            </StackPanel>
+            <ScrollViewer CanContentScroll="False" VerticalScrollBarVisibility="Visible">
+                <StackPanel x:Name="AvailableUnitsStack">
+
+                </StackPanel>
+            </ScrollViewer>
+        </DockPanel>
+        
     </Grid>
 </bg:ViewState>

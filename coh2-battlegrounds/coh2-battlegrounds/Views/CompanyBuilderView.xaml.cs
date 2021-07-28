@@ -46,6 +46,8 @@ namespace BattlegroundsApp.Views {
 
         public int CompanySize { get => this._companySize; set { this._companySize = value; this.NotifyPropertyChanged(); } }
 
+        public string CompanyUnitHeaderItem => $"Units ({this.CompanySize}/{Company.MAX_SIZE})";
+
         public Faction CompanyFaction { get; }
 
         public string CompanyGUID { get; }
