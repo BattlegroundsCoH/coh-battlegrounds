@@ -1,4 +1,5 @@
-﻿using Battlegrounds.Game.Gameplay;
+﻿using Battlegrounds.Game.Database.Extensions;
+using Battlegrounds.Game.Gameplay;
 using BattlegroundsApp.Dialogs.YesNo;
 using BattlegroundsApp.Resources;
 using System;
@@ -21,15 +22,15 @@ namespace BattlegroundsApp.Controls.CompanyBuilderControls {
 
         public string SquadName { get; }
         public string SquadIcon { get; }
-        public Cost SquadCost { get; }
+        public CostExtension SquadCost { get; }
         public byte SquadVeterancy { get; }
         public bool SquadIsTransported { get; }
 
         private uint SlotOccupantID { get; set; }
 
         public SquadSlotLarge(Squad squad) {
-            SquadName = GameLocale.GetString(uint.Parse(squad.SBP.LocaleName));
-            SquadIcon = $"pack://application:,,,/Resources/ingame/unit_icons/{squad.SBP.Icon}.png";
+            SquadName = GameLocale.GetString(uint.Parse(squad.SBP.UI.ScreenName));
+            SquadIcon = $"pack://application:,,,/Resources/ingame/unit_icons/{squad.SBP.UI.Icon}.png";
             SquadCost = squad.SBP.Cost;
             SquadVeterancy = squad.VeterancyRank;
             SquadIsTransported = squad.SupportBlueprint is not null;
