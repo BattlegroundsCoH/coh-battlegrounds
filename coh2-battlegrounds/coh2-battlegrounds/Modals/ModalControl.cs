@@ -66,7 +66,10 @@ namespace BattlegroundsApp.Modals {
         /// <summary>
         /// Get or set the behaviour of the modal background mask.
         /// </summary>
-        public ModalBackgroundBehaviour ModalMaskBehaviour { get; set; }
+        public ModalBackgroundBehaviour ModalMaskBehaviour {
+            get => (ModalBackgroundBehaviour)this.GetValue(ModalMaskBehaviourProperty);
+            set => this.SetValue(ModalMaskBehaviourProperty, value);
+        }
 
         public ModalControl() : base() {
             this.m_currentModal = null;
@@ -140,6 +143,7 @@ namespace BattlegroundsApp.Modals {
             this.m_currentModal = null;
 
             // Update content
+            this.m_contentCanvas.Children.Clear();
             this.Content = this.m_backingContent;
 
             // Remove reference to backing content

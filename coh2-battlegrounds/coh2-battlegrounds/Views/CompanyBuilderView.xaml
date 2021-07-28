@@ -8,7 +8,9 @@
              xmlns:card="clr-namespace:BattlegroundsApp.Controls.CompanyBuilderControls"
              xmlns:dropArea="clr-namespace:BattlegroundsApp.Controls.DropArea"
              mc:Ignorable="d"
-             d:DesignHeight="650" d:DesignWidth="1000" Background="white">
+             d:DesignHeight="650" d:DesignWidth="1000" 
+               Background="white"
+               ModalMaskBehaviour="ExitWhenClicked">
     <Grid Margin="5">
 
         <Grid.RowDefinitions>

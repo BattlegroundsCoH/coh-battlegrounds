@@ -24,6 +24,7 @@ namespace BattlegroundsApp.Controls.CompanyBuilderControls {
         public event Action<SquadSlotLarge> OnClick;
 
         public SquadSlotLarge(Squad squad) {
+            this.DataContext = this;
             this.SquadName = GameLocale.GetString(squad.SBP.UI.ScreenName);
             this.SquadIcon = $"pack://application:,,,/Resources/ingame/unit_icons/{squad.SBP.UI.Icon}.png";
             this.SquadCost = squad.SBP.Cost;

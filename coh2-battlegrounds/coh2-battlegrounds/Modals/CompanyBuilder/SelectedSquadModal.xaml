@@ -8,6 +8,14 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <Border BorderBrush="Black" BorderThickness="2.5" Background="LightGray">
-        <Label>Hello</Label>
+        <StackPanel Orientation="Horizontal">
+            <Image Width="64" Height="64"/>
+            <StackPanel>
+                <TextBlock Text="Name" TextWrapping="Wrap"/>
+                <TextBlock Text="Long Description" TextWrapping="Wrap"/>
+                <TextBlock Text="Short Description" TextWrapping="Wrap"/>
+            </StackPanel>            
+        </StackPanel>
+        
     </Border>
 </modals:Modal>
