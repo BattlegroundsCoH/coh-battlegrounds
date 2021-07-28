@@ -135,7 +135,11 @@ namespace CoH2XML2JSON {
             }
 
             GenericDatabase("abilities_database.json", "abilities", (doc, path, name) => new ABP(doc, modguid, name) { Army = GetFactionFromPath(path) });
-            GenericDatabase("entities_database.json", "ebps\\races", (doc, path, name) => new EBP(doc, modguid, name) { Army = GetFactionFromPath(path) });
+            GenericDatabase("entities_database.json", "ebps\\races", (doc, path, name) => {
+                var ebp = new EBP(doc, modguid, name) { Army = GetFactionFromPath(path) };
+                entities.Add(ebp);
+                return ebp;
+            });
             GenericDatabase("squads_database.json", "sbps\\races", (doc, path, name) => new SBP(doc, modguid, name, entities) { Army = GetFactionFromPath(path) });
             GenericDatabase("criticals_database.json", "critical", (doc, path, name) => new Critical(doc, modguid, name));
             GenericDatabase("slotitems_database.json", "slot_item", (doc, path, name) => new SlotItem(doc, modguid, name));

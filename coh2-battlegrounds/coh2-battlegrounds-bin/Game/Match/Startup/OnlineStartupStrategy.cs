@@ -114,7 +114,7 @@ namespace Battlegrounds.Game.Match.Startup {
                 try {
 
                     // Read in the company file and add to list.
-                    Company company = Company.ReadCompanyFromString(x.playerCompanyData);
+                    Company company = CompanySerializer.GetCompanyFromJson(x.playerCompanyData);
                     company.Owner = x.playerID.ToString();
 
                     // Register company

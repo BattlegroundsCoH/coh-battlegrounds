@@ -67,7 +67,7 @@ namespace Battlegrounds.Verification {
                 var enumerator = (property.Value as IEnumerable).GetEnumerator();
                 int count = 0;
                 while (enumerator.MoveNext()) {
-                    if (enumerator.Current is IChecksumItem item) {
+                    if (enumerator.Current is IChecksumPropertyItem item) {
                         GetChecksumProperties(item).ForEach(x => this.AddValue(x));
                     } else {
                         this.m_sumItems.Add(enumerator.Current);
@@ -97,7 +97,7 @@ namespace Battlegrounds.Verification {
         /// </summary>
         /// <param name="item">The item to collect property data from.</param>
         /// <returns>An array of property data that can be used for getting checksum values.</returns>
-        public static Property[] GetChecksumProperties(IChecksumItem item) {
+        public static Property[] GetChecksumProperties(IChecksumPropertyItem item) {
             var properties = item.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance)
                 .Where(x => x.GetCustomAttribute<ChecksumPropertyAttribute>() is not null).ToArray();
             Property[] arr = new Property[properties.Length];

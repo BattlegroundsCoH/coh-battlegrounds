@@ -1,159 +1,132 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
-using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Text;
 using System.Text.Json.Serialization;
 
-using Battlegrounds.Functional;
 using Battlegrounds.Game.Database;
 using Battlegrounds.Game.Gameplay;
-using Battlegrounds.Json;
 using Battlegrounds.Modding;
-using Battlegrounds.Steam;
 using Battlegrounds.Verification;
 
 namespace Battlegrounds.Game.DataCompany {
 
     /// <summary>
-    /// Represents a Company. Implements <see cref="IJsonObject"/> and <see cref="IChecksumItem"/>.
+    /// Represents a Company. Implements <see cref="IChecksumItem"/>.
     /// </summary>
     [JsonConverter(typeof(CompanySerializer))]
-    public class Company : IJsonObject, IChecksumItem {
+    public class Company : IChecksumItem {
 
         /// <summary>
         /// The maximum size of a company.
         /// </summary>
         public const int MAX_SIZE = 40;
 
-        #region Private Fields
         private string m_checksum;
         private string m_lastEditVersion;
         private ushort m_nextSquadId;
+        private CompanyType m_companyType;
+        private CompanyAvailabilityType m_availabilityType;
         private List<Squad> m_squads;
         private List<Blueprint> m_inventory;
         private List<Modifier> m_modifiers;
         private List<UpgradeBlueprint> m_upgrades;
         private List<SpecialAbility> m_abilities;
-        private CompanyType m_companyType;
-        private CompanyAvailabilityType m_availabilityType;
-        private Faction m_companyArmy;
         private CompanyStatistics m_companyStatistics;
-        #endregion
 
         /// <summary>
-        /// The name of the company.
+        /// Get the name of the company.
         /// </summary>
         [ChecksumProperty]
         public string Name { get; set; }
 
+        /// <summary>
+        /// Get the calculated strength of the company.
+        /// </summary>
         public double Strength => this.GetStrength();
 
         /// <summary>
-        /// The <see cref="CompanyType"/> that can be used to describe the <see cref="Company"/> characteristics.
+        /// Get the <see cref="CompanyType"/> that can be used to describe the <see cref="Company"/> characteristics.
         /// </summary>
-        [JsonBackingField(nameof(m_companyType))]
-        [JsonEnum(typeof(CompanyType))]
         [ChecksumProperty]
         public CompanyType Type => this.m_companyType;
 
         /// <summary>
-        /// The <see cref="CompanyAvailabilityType"/> that will determine when the company is available.
+        /// Get the <see cref="CompanyAvailabilityType"/> that will determine when the company is available.
         /// </summary>
-        [JsonBackingField(nameof(m_availabilityType))]
-        [JsonEnum(typeof(CompanyAvailabilityType))]
         [ChecksumProperty]
         public CompanyAvailabilityType AvailabilityType => this.m_availabilityType;
 
         /// <summary>
-        /// The version that was used to generate this company.
+        /// Get the version that was used to generate this company.
         /// </summary>
-        [JsonBackingField(nameof(m_lastEditVersion))]
         [ChecksumProperty]
         public string AppVersion => this.m_lastEditVersion;
 
         /// <summary>
-        /// The GUID of the tuning mod used to create this company.
+        /// Get tthe GUID of the tuning mod used to create this company.
         /// </summary>
         [ChecksumProperty]
         public ModGuid TuningGUID { get; set; }
 
         /// <summary>
-        /// The <see cref="Faction"/> this company is associated with.
+        /// Get the <see cref="Faction"/> this company is associated with.
         /// </summary>
-        [JsonBackingField(nameof(m_companyArmy))]
-        [JsonReference(typeof(Faction))]
         [ChecksumProperty]
-        public Faction Army => this.m_companyArmy;
+        public Faction Army { get; }
 
         /// <summary>
-        /// The display name of who owns the <see cref="Company"/>. This property is used by the compilers. This will be overriden.
+        /// Get the display name of who owns the <see cref="Company"/>. This property is used by the compilers. This will be overriden.
         /// </summary>
         public string Owner { get; set; } = string.Empty;
 
         /// <summary>
-        /// <see cref="ImmutableArray{T}"/> representation of the units in the <see cref="Company"/>.
+        /// Get the <see cref="ImmutableArray{T}"/> representation of the units in the <see cref="Company"/>.
         /// </summary>
-        [JsonBackingField(nameof(m_squads))]
-        [JsonIgnoreIfEmpty]
         [ChecksumProperty(IsCollection = true)]
         public ImmutableArray<Squad> Units => this.m_squads.ToImmutableArray();
 
         /// <summary>
-        /// <see cref="ImmutableArray{T}"/> representation of a <see cref="Company"/> inventory of stored <see cref="Blueprint"/> objects.
+        /// Get the <see cref="ImmutableArray{T}"/> representation of a <see cref="Company"/> inventory of stored <see cref="Blueprint"/> objects.
         /// </summary>
-        [JsonBackingField(nameof(m_inventory))]
-        [JsonIgnoreIfEmpty]
         [ChecksumProperty(IsCollection = true)]
         public ImmutableArray<Blueprint> Inventory => this.m_inventory.ToImmutableArray();
 
         /// <summary>
-        /// <see cref="ImmutableArray{T}"/> representation of a <see cref="Company"/>'s upgrade list.
+        /// Get the <see cref="ImmutableArray{T}"/> representation of a <see cref="Company"/>'s upgrade list.
         /// </summary>
-        [JsonBackingField(nameof(m_upgrades))]
-        [JsonIgnoreIfEmpty]
         [ChecksumProperty(IsCollection = true)]
         public ImmutableArray<UpgradeBlueprint> Upgrades => this.m_upgrades.ToImmutableArray();
 
         /// <summary>
-        /// <see cref="ImmutableArray{T}"/> representation of a <see cref="Company"/>'s modifier list.
+        /// Get the <see cref="ImmutableArray{T}"/> representation of a <see cref="Company"/>'s modifier list.
         /// </summary>
-        [JsonBackingField(nameof(m_modifiers))]
-        [JsonIgnoreIfEmpty]
         [ChecksumProperty(IsCollection = true)]
         public ImmutableArray<Modifier> Modifiers => this.m_modifiers.ToImmutableArray();
 
         /// <summary>
-        /// <see cref="ImmutableArray{T}"/> representation of a <see cref="Company"/>'s special ability list.
+        /// Get the <see cref="ImmutableArray{T}"/> representation of a <see cref="Company"/>'s special ability list.
         /// </summary>
-        [JsonBackingField(nameof(m_abilities))]
-        [JsonIgnoreIfEmpty]
         [ChecksumProperty(IsCollection = true)]
         public ImmutableArray<SpecialAbility> Abilities => this.m_abilities.ToImmutableArray();
 
         /// <summary>
-        /// Statistics tied to the <see cref="Company"/>.
+        /// Get the statistics tied to the <see cref="Company"/>.
         /// </summary>
-        [JsonBackingField(nameof(m_companyStatistics))]
         [ChecksumProperty]
         public CompanyStatistics Statistics => this.m_companyStatistics;
 
         /// <summary>
-        /// The calculated company checksum.
+        /// Get the calculated company checksum.
         /// </summary>
-        [JsonBackingField(nameof(m_checksum))]
         public string Checksum => this.m_checksum;
-
-        [JsonBackingField(nameof(m_nextSquadId))]
-        public ushort NextSquadID => this.m_nextSquadId;
 
         /// <summary>
         /// New empty <see cref="Company"/> instance.
         /// </summary>
-        [Obsolete("Please use the CompanyBuilder to create a company")]
-        public Company() {
+        public Company(Faction faction) {
+            this.Army = faction;
             this.m_squads = new List<Squad>();
             this.m_inventory = new List<Blueprint>();
             this.m_modifiers = new List<Modifier>();
@@ -162,42 +135,6 @@ namespace Battlegrounds.Game.DataCompany {
             this.m_companyType = CompanyType.Unspecified;
             this.m_companyStatistics = new CompanyStatistics();
             this.m_lastEditVersion = Assembly.GetExecutingAssembly().GetName().Version.ToString();
-        }
-
-        /// <summary>
-        /// New <see cref="Company"/> instance with a <see cref="SteamUser"/> assigned.
-        /// </summary>
-        /// <param name="user">The <see cref="SteamUser"/> who can use the <see cref="Company"/>. (Can be null).</param>
-        /// <param name="name">The name of the company.</param>
-        /// <param name="army">The <see cref="Faction"/> that can use the <see cref="Company"/>.</param>
-        /// <param name="tuningGUID">The GUID of the tuning mod the <see cref="Company"/> is using blueprints from.</param>
-        /// <exception cref="ArgumentNullException"/>
-        [Obsolete("Please use the CompanyBuilder to create a company")]
-        public Company(SteamUser user, string name, Faction army, string tuningGUID) {
-
-            // Make sure it's a valid army
-            if (army is null) {
-                throw new ArgumentNullException(nameof(army), "Army cannot be null");
-            }
-
-            // Assign base values
-            this.Name = name;
-            this.Owner = user?.Name ?? "Unknown Player";
-            this.m_companyArmy = army;
-            this.TuningGUID = ModGuid.FromGuid(tuningGUID);
-            this.m_companyType = CompanyType.Unspecified;
-            this.m_companyStatistics = new CompanyStatistics();
-
-            // Prepare squad list
-            this.m_squads = new List<Squad>();
-            this.m_nextSquadId = 0;
-
-            // Misc stuff
-            this.m_inventory = new List<Blueprint>();
-
-            // Set last edit version
-            this.m_lastEditVersion = Assembly.GetExecutingAssembly().GetName().Version.ToString();
-
         }
 
         /// <summary>
@@ -306,26 +243,7 @@ namespace Battlegrounds.Game.DataCompany {
         public void CalculateChecksum()
             => this.m_checksum = this.GetChecksum();
 
-        /// <summary>
-        /// Save all <see cref="Company"/> data to a Json file.
-        /// </summary>
-        /// <param name="jsonfile">The path of the file to save <see cref="Company"/> data into.</param>
-        public void SaveToFile(string jsonfile)
-            => File.WriteAllText(jsonfile, this.SaveToString());
-
-        /// <summary>
-        /// Save all <see cref="Company"/> data to json format.
-        /// </summary>
-        /// <returns>The json string representation of the <see cref="Company"/>.</returns>
-        public string SaveToString() {
-            this.m_checksum = string.Empty;
-            this.m_checksum = this.GetChecksum();
-            return this.SerializeAsJson();
-        }
-
         public void SetType(CompanyType type) => this.m_companyType = type;
-
-        public void SetArmy(Faction faction) => this.m_companyArmy = faction;
 
         public void SetAvailability(CompanyAvailabilityType companyAvailability) => this.m_availabilityType = companyAvailability;
 
@@ -334,13 +252,25 @@ namespace Battlegrounds.Game.DataCompany {
         /// </summary>
         /// <returns></returns>
         public double GetStrength() {
-            double total = 1;
-            // TODO: Add other factors here
-            total *= 1.0 + this.m_companyStatistics.WinRate;
-            return total;
-        }
 
-        public string ToJsonReference() => this.Name;
+            // Calculate total strength
+            double total = 1.0;
+
+            // Sum experience (weighted to max rank and squad count)
+            total += this.m_squads.Aggregate(0.0, (a, b) => a + (b.VeterancyRank / 5.0) / this.m_squads.Count);
+
+            // Modify by win/loss rate
+            total *= 1.0 + (this.m_companyStatistics.WinRate - this.m_companyStatistics.LossRate);
+            
+            // Clamp to 0
+            if (total < 0.0) {
+                total = 0.0;
+            }
+
+            // Return total
+            return total;
+        
+        }
 
         /// <summary>
         /// Returns a string that represents the current object.
@@ -349,115 +279,10 @@ namespace Battlegrounds.Game.DataCompany {
         public override string ToString() => this.Name;
 
         /// <summary>
-        /// Convert the <see cref="Company"/> into a <see cref="byte"/> array.
-        /// </summary>
-        /// <returns>The binary representation of the <see cref="Company"/>.</returns>
-        public byte[] ToBytes() {
-            this.m_checksum = string.Empty;
-            this.m_checksum = this.GetChecksum();
-            return Encoding.UTF8.GetBytes(this.SerializeAsJson());
-        }
-
-        /// <summary>
         /// 
         /// </summary>
         /// <param name="updateFunction"></param>
         public void UpdateStatistics(Func<CompanyStatistics, CompanyStatistics> updateFunction) => this.m_companyStatistics = updateFunction(this.m_companyStatistics);
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="jsonfilepath"></param>
-        /// <returns></returns>
-        /// <exception cref="JsonTypeException"/>
-        public static Company ReadCompanyFromFile(string jsonfilepath) {
-            try {
-                // Load from json
-                Company c = JsonParser.ParseFile<Company>(jsonfilepath);
-                if (c.VerifyAppVersion()) {
-                    if (c.VerifyChecksum()) {
-                        return c;
-                    } else {
-#if RELEASE
-                        throw new ChecksumViolationException();
-#else
-                        return null;
-#endif
-                    }
-                } else {
-#if RELEASE
-                        throw new Exception("Version stuff");
-#else
-                    return null;
-#endif
-                }
-            } catch (JsonTypeException) {
-                throw;
-            }
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="jsonbytes"></param>
-        /// <returns></returns>
-        public static Company ReadCompanyFromBytes(byte[] jsonbytes) {
-            Company company = JsonParser.ParseString<Company>(Encoding.UTF8.GetString(jsonbytes)); 
-            if (company is null) {
-                throw new InvalidDataException("Failed to parse json company representation. Please verify json content.");
-            }
-            if (company.VerifyChecksum()) {
-                return company;
-            } else {
-#if RELEASE
-                throw new ChecksumViolationException();
-#else
-                File.WriteAllBytes("errCompanyData.json", jsonbytes);
-                return null;
-#endif
-            }
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="jsonString"></param>
-        /// <returns></returns>
-        public static Company ReadCompanyFromString(string jsonString) {
-            Company company = JsonParser.ParseString<Company>(jsonString);
-            if (company is null) {
-                throw new InvalidDataException("Failed to parse json company representation. Please verify json content.");
-            }
-            if (company.VerifyChecksum()) {
-                return company;
-            } else {
-#if RELEASE
-                throw new ChecksumViolationException();
-#else
-                File.WriteAllText("errCompanyData.json", jsonString);
-                return null;
-#endif
-            }
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="jsonfilepath"></param>
-        /// <returns></returns>
-        /// <exception cref="JsonTypeException"/>
-        public static Company UpgradeCompanyToCurrentAppVersion(string jsonfilepath) {
-            try {
-                if (JsonParser.ParseFile<Company>(jsonfilepath) is Company c) {
-                    c.m_lastEditVersion = Assembly.GetExecutingAssembly().GetName().Version.ToString();
-                    return c;
-                } else {
-                    return null;
-                }
-            } catch (JsonTypeException) {
-                throw;
-            }
-        }
 
         /// <summary>
         /// 
@@ -473,6 +298,10 @@ namespace Battlegrounds.Game.DataCompany {
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="version"></param>
         public void SetAppVersion(string version) => this.m_lastEditVersion = version;
 
     }

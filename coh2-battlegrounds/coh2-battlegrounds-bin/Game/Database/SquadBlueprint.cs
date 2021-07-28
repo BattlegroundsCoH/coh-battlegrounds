@@ -173,7 +173,7 @@ namespace Battlegrounds.Game.Database {
         /// <param name="femaleChance"></param>
         public SquadBlueprint(string name, BlueprintUID pbgid, Faction faction, 
             UIExtension ui, CostExtension cost, LoadoutExtension loadout, VeterancyExtension veterancy,
-            string[] types, string[] abilities, int slotCapacity, bool canPickup, bool isTeamWpn, float femaleChance) {
+            string[] types, string[] abilities, int slotCapacity, bool canPickup, bool isTeamWpn, bool hasCrew, float femaleChance) {
             this.Name = name;
             this.PBGID = pbgid;
             this.UI = ui;
@@ -187,6 +187,32 @@ namespace Battlegrounds.Game.Database {
             this.CanPickupItems = canPickup;
             this.Abilities = abilities;
             this.FemaleSquadChance = femaleChance;
+            this.HasCrew = hasCrew;
+        }
+
+        /// <summary>
+        /// Get the <see cref="SquadBlueprint"/> that is the crew of the <see cref="SquadBlueprint"/>
+        /// </summary>
+        /// <param name="faction">The faction to get crew SBP from.</param>
+        /// <returns>The crew <see cref="SquadBlueprint"/>. If not found for <paramref name="faction"/>, the default crew is returned.</returns>
+        public SquadBlueprint GetCrewBlueprint(Faction faction = null) {
+            
+            // Make sure there's actually a crew to get
+            if (!this.HasCrew) {
+                return null;
+            }
+
+            // Loop over entities in loadout
+            for (int i = 0; i < this.Loadout.Count; i++) {
+                var e = this.Loadout.GetEntity(i);
+                if (e.Drivers is DriverExtension drivers) {
+                    return faction is null ? drivers.GetSquad(this.Army) : drivers.GetSquad(faction);
+                }
+            }
+
+            // No driver was found
+            return null;
+
         }
 
     }
@@ -215,6 +241,7 @@ namespace Battlegrounds.Game.Database {
                     "SlotPickupCapacity" => reader.GetInt32(),
                     "CanPickupItems" => reader.GetBoolean(),
                     "FemaleChance" => reader.GetSingle(),
+                    "HasCrew" => reader.GetBoolean(),
                     _ => throw new NotImplementedException(prop)
                 };
             }
@@ -226,12 +253,13 @@ namespace Battlegrounds.Game.Database {
             var slotsize = (int)__lookup.GetValueOrDefault("SlotPickupCapacity", 0);
             var picker = (bool)__lookup.GetValueOrDefault("CanPickupItems", false);
             var issync = (bool)__lookup.GetValueOrDefault("IsSyncWeapon", false);
+            var hascrew = (bool)__lookup.GetValueOrDefault("HasCrew", false);
             var types = __lookup.GetValueOrDefault("Types", Array.Empty<string>()) as string[];
             var abilities = __lookup.GetValueOrDefault("Abilities", Array.Empty<string>()) as string[];
             var fac = __lookup.GetValueOrDefault("Army", "NULL") is "NULL" ? null : Faction.FromName(__lookup.GetValueOrDefault("Army", "NULL") as string);
             var modguid = __lookup.ContainsKey("ModGUID") ? ModGuid.FromGuid(__lookup["ModGUID"] as string) : ModGuid.BaseGame;
             var pbgid = new BlueprintUID((ulong)__lookup.GetValueOrDefault("PBGID", 0ul), modguid);
-            return new(__lookup.GetValueOrDefault("Name", string.Empty) as string, pbgid, fac, ui, cost, loadout, vet, types, abilities, slotsize, picker, issync, femalechance);
+            return new(__lookup.GetValueOrDefault("Name", string.Empty) as string, pbgid, fac, ui, cost, loadout, vet, types, abilities, slotsize, picker, issync, hascrew, femalechance);
         }
 
         public override void Write(Utf8JsonWriter writer, SquadBlueprint value, JsonSerializerOptions options) => writer.WriteStringValue(value.Name);

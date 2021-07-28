@@ -76,10 +76,12 @@ namespace CoH2XML2JSON {
                 var nodes = squadLoadout.SelectNodes("//group[@name='loadout_data']");
                 List<Cost> costList = new();
                 List<Loadout> squadLoadoutData = new();
+                List<EBP> tmpEbpCollect = new();
                 foreach (XmlElement loadout_data in nodes) {
                     int num = int.Parse(loadout_data.FindSubnode("float", "num").GetAttribute("value"));
                     string entity = loadout_data.FindSubnode("instance_reference", "type").GetAttribute("value");
                     EBP ebp = entities.FirstOrDefault(x => entity.EndsWith(x.Name));
+                    tmpEbpCollect.Add(ebp);
                     Cost[] dups = new Cost[num];
                     Array.Fill(dups, ebp?.Cost ?? new Cost(0,0,0,0));
                     costList.AddRange(dups);
@@ -88,6 +90,7 @@ namespace CoH2XML2JSON {
                 this.SquadCost = new(costList.ToArray());
                 this.Entities = squadLoadoutData.ToArray();
                 this.FemaleChance = float.Parse(squadLoadout.GetValue("//float [@name='squad_female_chance']")) / 10.0f;
+                this.HasCrew = tmpEbpCollect.Any(x => x?.Drivers?.Length > 0);
             }
 
             // Load squad abilities
@@ -102,7 +105,7 @@ namespace CoH2XML2JSON {
                 }
             }
 
-            // Load squad loadout
+            // Load squad veterancy
             if (xmlDocument.SelectSingleNode(@"//template_reference[@name='squadexts'] [@value='sbpextensions\squad_veterancy_ext']") is XmlElement squadVet) {
                 var ranks = squadVet.SelectNodes("//group[@name='veterancy_rank']");
                 var ranks_data = new List<VeterancyLevel>();
@@ -123,9 +126,6 @@ namespace CoH2XML2JSON {
 
             // Determine if syncweapon (has team_weapon extension)
             this.IsSyncWeapon = xmlDocument.SelectSingleNode(@"//template_reference[@name='squadexts'] [@value='sbpextensions\squad_team_weapon_ext']") is not null;
-
-            // Determine if has crew
-            this.HasCrew = entities.Any(x => x.Drivers?.Any(y => y.SBP == this.Name) ?? false);
 
         }
 

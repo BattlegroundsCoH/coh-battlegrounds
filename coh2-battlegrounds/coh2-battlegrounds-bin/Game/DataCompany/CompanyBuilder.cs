@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+
 using Battlegrounds.Functional;
 using Battlegrounds.Game.Gameplay;
 using Battlegrounds.Modding;
@@ -57,10 +58,7 @@ namespace Battlegrounds.Game.DataCompany {
         /// <param name="faction">The <see cref="Faction"/> that the company will belong to.</param>
         /// <returns>The calling <see cref="CompanyBuilder"/> instance.</returns>
         public virtual CompanyBuilder NewCompany(Faction faction) {
-#pragma warning disable CS0618 // Type or member is obsolete
-            this.m_companyTarget = new Company(); // This is intentional
-#pragma warning restore CS0618 // Type or member is obsolete
-            this.m_companyTarget.SetArmy(faction);
+            this.m_companyTarget = new Company(faction); // This is intentional
             this.m_companyName = "New Company";
             return this;
         }
@@ -154,6 +152,11 @@ namespace Battlegrounds.Game.DataCompany {
 
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="unitID"></param>
+        /// <returns></returns>
         public virtual CompanyBuilder RemoveUnit(uint unitID) {
 
             this.m_companyTarget.RemoveSquad((ushort)unitID);
@@ -224,11 +227,21 @@ namespace Battlegrounds.Game.DataCompany {
             return this;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="version"></param>
+        /// <returns></returns>
         public virtual CompanyBuilder ChangeAppVersion(string version) {
             this.m_companyAppVersion = version;
             return this;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="availabilityType"></param>
+        /// <returns></returns>
         public virtual CompanyBuilder ChangeAvailability(CompanyAvailabilityType availabilityType) {
             this.m_availabilityType = availabilityType;
             return this;
@@ -275,22 +288,6 @@ namespace Battlegrounds.Game.DataCompany {
             // Return self.
             return this;
 
-        }
-
-        /// <summary>
-        /// Undo adding a squad.
-        /// </summary>
-        public void UndoSquad() {
-            if (this.m_uncommittedSquads.Count > 0)
-                this.m_redo.Push(this.m_uncommittedSquads.Pop());
-        }
-
-        /// <summary>
-        /// Redo adding a squad.
-        /// </summary>
-        public void RedoSquad() {
-            if (this.m_redo.Count > 0)
-                this.m_uncommittedSquads.Push(this.m_redo.Pop());
         }
 
         /// <summary>

@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Text.Json;
-using System.Threading.Tasks;
 
 using Battlegrounds.Functional;
+using Battlegrounds.Game.Database.Management;
 using Battlegrounds.Game.Gameplay;
 
 namespace Battlegrounds.Game.Database.Extensions {
@@ -23,7 +21,14 @@ namespace Battlegrounds.Game.Database.Extensions {
 
         private Entry[] m_entries;
 
-        public SquadBlueprint GetSquad(Faction faction) => null;
+        public SquadBlueprint GetSquad(Faction faction) {
+            foreach (Entry e in this.m_entries) {
+                if (e.Faction == faction.RbpPath) {
+                    return BlueprintManager.FromBlueprintName<SquadBlueprint>(e.SquadBlueprint);
+                }
+            }
+            return null;
+        }
 
         public DriverExtension(Entry[] entries) {
             this.m_entries = entries;

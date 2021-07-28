@@ -295,6 +295,7 @@
       "Fuel": 150,
       "FieldTime": 55
     },
+    "HasCrew": true,
     "Entities": [
       {
         "EBP": "brummbar_sturmpanzer_iv_sdkfz_166_bg",
@@ -345,6 +346,7 @@
       "Fuel": 245,
       "FieldTime": 60
     },
+    "HasCrew": true,
     "Entities": [
       {
         "EBP": "elefant_sdkfz_184_bg",
@@ -443,6 +445,7 @@
       "Manpower": 300,
       "FieldTime": 20
     },
+    "HasCrew": true,
     "Entities": [
       {
         "EBP": "opel_blitz_supply_truck_bg",
@@ -473,6 +476,7 @@
       "Manpower": 300,
       "FieldTime": 20
     },
+    "HasCrew": true,
     "Entities": [
       {
         "EBP": "opel_blitz_transport_truck_bg",
@@ -508,6 +512,7 @@
       "Fuel": 100,
       "FieldTime": 45
     },
+    "HasCrew": true,
     "Entities": [
       {
         "EBP": "ostwind_flak_panzer_bg",
@@ -558,6 +563,7 @@
       "Fuel": 185,
       "FieldTime": 60
     },
+    "HasCrew": true,
     "Entities": [
       {
         "EBP": "panther_sdkfz_171_command_bg",
@@ -609,6 +615,7 @@
       "Fuel": 185,
       "FieldTime": 60
     },
+    "HasCrew": true,
     "Entities": [
       {
         "EBP": "panther_sdkfz_171_bg",
@@ -660,6 +667,7 @@
       "Fuel": 85,
       "FieldTime": 45
     },
+    "HasCrew": true,
     "Entities": [
       {
         "EBP": "panzerwerfer_sdkfz_4_1_bg",
@@ -708,6 +716,7 @@
       "Fuel": 100,
       "FieldTime": 55
     },
+    "HasCrew": true,
     "Entities": [
       {
         "EBP": "panzer_iv_commander_sdkfz_161_bg",
@@ -760,6 +769,7 @@
       "Fuel": 120,
       "FieldTime": 50
     },
+    "HasCrew": true,
     "Entities": [
       {
         "EBP": "panzer_iv_sdkfz_161_bg",
@@ -810,6 +820,7 @@
       "Fuel": 120,
       "FieldTime": 55
     },
+    "HasCrew": true,
     "Entities": [
       {
         "EBP": "panzer_iv_sdkfz_ausf1_bg",
@@ -860,6 +871,7 @@
       "Fuel": 30,
       "FieldTime": 30
     },
+    "HasCrew": true,
     "Entities": [
       {
         "EBP": "armored_car_sdkfz_221_bg",
@@ -908,6 +920,7 @@
       "Fuel": 30,
       "FieldTime": 30
     },
+    "HasCrew": true,
     "Entities": [
       {
         "EBP": "armored_car_sdkfz_221_command_bg",
@@ -956,6 +969,7 @@
       "Fuel": 30,
       "FieldTime": 30
     },
+    "HasCrew": true,
     "Entities": [
       {
         "EBP": "armored_car_sdkfz_222_bg",
@@ -1004,6 +1018,7 @@
       "Fuel": 70,
       "FieldTime": 40
     },
+    "HasCrew": true,
     "Entities": [
       {
         "EBP": "puma_234_armoured_car_ostheer_bg",
@@ -1154,6 +1169,7 @@
       "Fuel": 25,
       "FieldTime": 40
     },
+    "HasCrew": true,
     "Entities": [
       {
         "EBP": "stug_iii_e_sdkfz_141_1_bg",
@@ -1203,6 +1219,7 @@
       "Fuel": 90,
       "FieldTime": 50
     },
+    "HasCrew": true,
     "Entities": [
       {
         "EBP": "stug_iii_g_sdkfz_141_1_bg",
@@ -1252,6 +1269,7 @@
       "Fuel": 230,
       "FieldTime": 70
     },
+    "HasCrew": true,
     "Entities": [
       {
         "EBP": "tiger_sdkfz_181_command_bg",
@@ -1303,6 +1321,7 @@
       "Fuel": 230,
       "FieldTime": 70
     },
+    "HasCrew": true,
     "Entities": [
       {
         "EBP": "tiger_sdkfz_181_bg",
@@ -1804,6 +1823,7 @@
       "Fuel": 125,
       "FieldTime": 50
     },
+    "HasCrew": true,
     "Entities": [
       {
         "EBP": "sherman_76mm_lend_lease_bg",
@@ -1853,6 +1873,7 @@
       "Fuel": 165,
       "FieldTime": 60
     },
+    "HasCrew": true,
     "Entities": [
       {
         "EBP": "churchill_lend_lease_mp",
@@ -1903,6 +1924,7 @@
       "Fuel": 230,
       "FieldTime": 70
     },
+    "HasCrew": true,
     "Entities": [
       {
         "EBP": "is-2_heavy_tank_bg",
@@ -1954,6 +1976,7 @@
       "Fuel": 260,
       "FieldTime": 64
     },
+    "HasCrew": true,
     "Entities": [
       {
         "EBP": "isu_152_spg_bg",
@@ -2007,6 +2030,7 @@
       "Fuel": 85,
       "FieldTime": 50
     },
+    "HasCrew": true,
     "Entities": [
       {
         "EBP": "katyusha_bm-13n_bg",
@@ -2058,6 +2082,7 @@
       "Fuel": 75,
       "FieldTime": 60
     },
+    "HasCrew": true,
     "Entities": [
       {
         "EBP": "kv-1_bg",
@@ -2117,6 +2142,7 @@
       "Fuel": 230,
       "FieldTime": 60
     },
+    "HasCrew": true,
     "Entities": [
       {
         "EBP": "kv-2_bg",
@@ -2168,6 +2194,7 @@
       "Fuel": 145,
       "FieldTime": 55
     },
+    "HasCrew": true,
     "Entities": [
       {
         "EBP": "kv-8_bg",
@@ -2218,6 +2245,7 @@
       "Fuel": 15,
       "FieldTime": 30
     },
+    "HasCrew": true,
     "Entities": [
       {
         "EBP": "m3a1_scout_car_bg",
@@ -2271,6 +2299,7 @@
       "Fuel": 30,
       "FieldTime": 30
     },
+    "HasCrew": true,
     "Entities": [
       {
         "EBP": "m5_halftrack_bg",
@@ -2324,6 +2353,7 @@
       "Fuel": 100,
       "FieldTime": 50
     },
+    "HasCrew": true,
     "Entities": [
       {
         "EBP": "ot_34_76_bg",
@@ -2384,6 +2414,7 @@
       "Fuel": 75,
       "FieldTime": 45
     },
+    "HasCrew": true,
     "Entities": [
       {
         "EBP": "su_76m_bg",
@@ -2435,6 +2466,7 @@
       "Fuel": 130,
       "FieldTime": 50
     },
+    "HasCrew": true,
     "Entities": [
       {
         "EBP": "su_85_bg",
@@ -2487,6 +2519,7 @@
       "Fuel": 70,
       "FieldTime": 40
     },
+    "HasCrew": true,
     "Entities": [
       {
         "EBP": "t_70m_bg",
@@ -2538,6 +2571,7 @@
       "Fuel": 100,
       "FieldTime": 50
     },
+    "HasCrew": true,
     "Entities": [
       {
         "EBP": "t_34_76_bg",
@@ -2598,6 +2632,7 @@
       "Fuel": 130,
       "FieldTime": 45
     },
+    "HasCrew": true,
     "Entities": [
       {
         "EBP": "t_34_85_bg",
@@ -2657,6 +2692,7 @@
       "Fuel": 80,
       "FieldTime": 60
     },
+    "HasCrew": true,
     "Entities": [
       {
         "EBP": "valentine_bg",
@@ -2708,6 +2744,7 @@
       "Fuel": 80,
       "FieldTime": 60
     },
+    "HasCrew": true,
     "Entities": [
       {
         "EBP": "valentine_command_bg",
@@ -2759,6 +2796,7 @@
       "Fuel": 30,
       "FieldTime": 30
     },
+    "HasCrew": true,
     "Entities": [
       {
         "EBP": "zis_6_transport_bg",

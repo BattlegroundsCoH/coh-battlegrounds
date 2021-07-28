@@ -73,8 +73,8 @@ namespace coh2_battlegrounds_console {
                 Company testCompany = CreateSovietCompany();
                 Company germanCompany = CreateGermanCompany();
 
-                germanCompany.SaveToFile("69th_panzer.json");
-                testCompany.SaveToFile("26th_Rifle_Division.json");
+                File.WriteAllText("26th_Rifle_Division.json", CompanySerializer.GetCompanyAsJson(testCompany, true));
+                File.WriteAllText("69th_panzer.json", CompanySerializer.GetCompanyAsJson(germanCompany, true));
 
             }
 

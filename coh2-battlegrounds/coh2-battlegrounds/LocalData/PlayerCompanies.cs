@@ -33,7 +33,7 @@ namespace BattlegroundsApp.LocalData {
 
                 foreach (string companypath in companies) {
                     try {
-                        Company company = Company.ReadCompanyFromFile(companypath);
+                        Company company = CompanySerializer.GetCompanyFromJson(File.ReadAllText(companypath));
                         if (company?.Name?.Replace(" ", "_")?.CompareTo(Path.GetFileNameWithoutExtension(companypath)) == 0) {
                             __companies.Add(company);
                         } else {
@@ -76,7 +76,7 @@ namespace BattlegroundsApp.LocalData {
             if (File.Exists(filename)) {
                 File.Delete(filename);
             }
-            company.SaveToFile(filename);
+            File.WriteAllText(filename, CompanySerializer.GetCompanyAsJson(company));
         }
 
         public static void DeleteCompany(Company company) {

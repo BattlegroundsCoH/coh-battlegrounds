@@ -3,7 +3,7 @@
     /// <summary>
     /// Interface for calculating a checksum for a C# data object.
     /// </summary>
-    public interface IChecksumItem {
+    public interface IChecksumItem : IChecksumPropertyItem {
 
         /// <summary>
         /// Verify the checksum through internal checksum value.

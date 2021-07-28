@@ -19,6 +19,11 @@ namespace Battlegrounds.Game.Gameplay {
         public string Name { get; }
 
         /// <summary>
+        /// Get the racebps path.
+        /// </summary>
+        public string RbpPath { get; }
+
+        /// <summary>
         /// Is this <see cref="Faction"/> an allied faction.
         /// </summary>
         public bool IsAllied { get; }
@@ -33,9 +38,11 @@ namespace Battlegrounds.Game.Gameplay {
         /// </summary>
         public DLCPack RequiredDLC { get; }
 
-        private Faction(byte id, string name, bool isAllied, DLCPack requiredDLC) { // Private constructor, we can't have custom armies, doesn't make sense to allow them then.
+        private Faction(byte id, string name, string rbppath, bool isAllied, DLCPack requiredDLC) {
+            // Private constructor, we can't have custom armies, doesn't make sense to allow them then.
             this.UID = id;
             this.Name = name;
+            this.RbpPath = rbppath;
             this.IsAllied = isAllied;
             this.RequiredDLC = requiredDLC;
         }
@@ -52,13 +59,13 @@ namespace Battlegrounds.Game.Gameplay {
 
         public static explicit operator Faction(string name) => FromName(name);
 
-        private static readonly Faction base_soviet = new Faction(0, "soviet", true, DLCPack.Base);
-        private static readonly Faction base_wehrmacht = new Faction(1, "german", false, DLCPack.Base);
+        private static readonly Faction base_soviet = new Faction(0, "soviet", "racebps\\soviet", true, DLCPack.Base);
+        private static readonly Faction base_wehrmacht = new Faction(1, "german", "racebps\\german", false, DLCPack.Base);
 
-        private static readonly Faction wfa_aef = new Faction(2, "aef", true, DLCPack.WesternFrontArmiesUSA);
-        private static readonly Faction wfa_okw = new Faction(3, "west_german", false, DLCPack.WesternFrontArmiesOKW);
+        private static readonly Faction wfa_aef = new Faction(2, "aef", "racebps\\aef", true, DLCPack.WesternFrontArmiesUSA);
+        private static readonly Faction wfa_okw = new Faction(3, "west_german", "racebps\\west_german", false, DLCPack.WesternFrontArmiesOKW);
 
-        private static readonly Faction dlc_ukf = new Faction(4, "british", true, DLCPack.UKF);
+        private static readonly Faction dlc_ukf = new Faction(4, "british", "racebps\\british", true, DLCPack.UKF);
 
         /// <summary>
         /// The Soviet faction.

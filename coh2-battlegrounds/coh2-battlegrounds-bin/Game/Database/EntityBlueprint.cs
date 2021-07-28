@@ -78,7 +78,7 @@ namespace Battlegrounds.Game.Database {
             }
             var cost = __lookup.GetValueOrDefault("Cost", null) as CostExtension;
             var ui = __lookup.GetValueOrDefault("Display", null) as UIExtension;
-            var driver = __lookup.GetValueOrDefault("Display", new DriverExtension(Array.Empty<DriverExtension.Entry>())) as DriverExtension;
+            var driver = __lookup.GetValueOrDefault("Drivers", new DriverExtension(Array.Empty<DriverExtension.Entry>())) as DriverExtension;
             var abilities = __lookup.GetValueOrDefault("Abilities", Array.Empty<string[]>()) as string[];
             var hardpoints = __lookup.GetValueOrDefault("Hardpoints", Array.Empty<string[]>()) as string[];
             var hp = (float)__lookup.GetValueOrDefault("Health", 0.0f);

@@ -11,6 +11,9 @@ using Battlegrounds.Verification;
 
 namespace Battlegrounds.Game.DataCompany {
 
+    /// <summary>
+    /// Class for serializing a <see cref="Company"/> to and from json.
+    /// </summary>
     public class CompanySerializer : JsonConverter<Company> {
 
         public override Company Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options) {
@@ -87,6 +90,7 @@ namespace Battlegrounds.Game.DataCompany {
 
             // Verify checksum and return if success; otherwise throw checksum violation error
             Company result = builder.Result;
+            result.UpdateStatistics(x => stats); // This will set the stats
             result.CalculateChecksum();
             if (result.VerifyChecksum(checksum)) {
                 return result;
@@ -168,9 +172,20 @@ namespace Battlegrounds.Game.DataCompany {
 
         }
 
+        /// <summary>
+        /// Get a company in its json format.
+        /// </summary>
+        /// <param name="company">The company to serialise.</param>
+        /// <param name="indent">Should the json be indent formatted.</param>
+        /// <returns>The json string data.</returns>
         public static string GetCompanyAsJson(Company company, bool indent = true) 
             => JsonSerializer.Serialize(company, new JsonSerializerOptions() { WriteIndented = indent });
 
+        /// <summary>
+        /// Get a company from raw json data.
+        /// </summary>
+        /// <param name="rawJsonData">The raw json data to parse.</param>
+        /// <returns>The company built from the <paramref name="rawJsonData"/>. Will be <see langword="null"/> if deserialization fails.</returns>
         public static Company GetCompanyFromJson(string rawJsonData)
             => JsonSerializer.Deserialize<Company>(rawJsonData);
 

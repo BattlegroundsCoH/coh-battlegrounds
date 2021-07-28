@@ -1,6 +1,7 @@
 ﻿using System.Diagnostics;
 using System.Linq;
 
+using Battlegrounds.Game.DataCompany;
 using Battlegrounds.Networking.Lobby;
 using Battlegrounds.Networking.Lobby.Match;
 using Battlegrounds.Networking.Server;
@@ -23,7 +24,7 @@ namespace Battlegrounds.Game.Match.Finalizer {
             LobbyHandler handler = synchronizeObject as LobbyHandler;
 
             // Get player results
-            LobbyPlayerCompanyFile[] playerFiles = this.m_companies.Select(x => new LobbyPlayerCompanyFile(x.Key.SteamID, x.Value.SaveToString())).ToArray();
+            LobbyPlayerCompanyFile[] playerFiles = this.m_companies.Select(x => new LobbyPlayerCompanyFile(x.Key.SteamID, CompanySerializer.GetCompanyAsJson(x.Value, false))).ToArray();
             ServerMatchResults matchResults = new() {
                 Gamemode = this.m_matchData.Session.Gamemode.Name,
                 Map = this.m_matchData.Session.Scenario.RelativeFilename,

@@ -97,7 +97,7 @@ namespace BattlegroundsApp.Models {
         private void OnResultsAvailable(string jsondata) {
 
             // Load company
-            Company company = Company.ReadCompanyFromString(jsondata);
+            Company company = CompanySerializer.GetCompanyFromJson(jsondata);
 
             // Now save the company
             PlayerCompanies.SaveCompany(company);
@@ -168,7 +168,7 @@ namespace BattlegroundsApp.Models {
             if (self is not null) {
 
                 // Get string
-                string json = self.SaveToString();
+                string json = CompanySerializer.GetCompanyAsJson(self, false);
                 Trace.WriteLine($"Uploading json data: {json}", nameof(LobbyMemberPlayModel));
 
                 // Convert to json

@@ -84,8 +84,6 @@ namespace Battlegrounds.Game.Gameplay {
     [JsonConverter(typeof(SquadJson))]
     public class Squad : IChecksumItem {
 
-        #region Private Fields
-
         private byte m_veterancyRank;
         private float m_veterancyProgress;
 
@@ -101,8 +99,6 @@ namespace Battlegrounds.Game.Gameplay {
 
         private TimeSpan m_combatTime;
 
-        #endregion
-
         /// <summary>
         /// The unique squad ID used to identify the <see cref="Squad"/>.
         /// </summary>
@@ -112,7 +108,6 @@ namespace Battlegrounds.Game.Gameplay {
         /// <summary>
         /// The player who (currently) owns the <see cref="Squad"/>.
         /// </summary>
-        [JsonIgnore]
         public Player PlayerOwner { get; }
 
         /// <summary>
@@ -160,7 +155,6 @@ namespace Battlegrounds.Game.Gameplay {
         /// The <see cref="Blueprint"/> in a <see cref="SquadBlueprint"/> form.
         /// </summary>
         /// <exception cref="InvalidCastException"/>
-        [JsonIgnore]
         public SquadBlueprint SBP => this.Blueprint as SquadBlueprint;
 
         /// <summary>
@@ -396,6 +390,9 @@ namespace Battlegrounds.Game.Gameplay {
 
     }
 
+    /// <summary>
+    /// Class for constructing a <see cref="Squad"/> from json data.
+    /// </summary>
     public class SquadJson : JsonConverter<Squad> {
         
         public override Squad Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options) {
@@ -419,17 +416,31 @@ namespace Battlegrounds.Game.Gameplay {
                 modGuid = ModGuid.FromGuid(ReadStringProperty(ref reader, nameof(Squad.SBP.PBGID.Mod)));
             }
 
-            // Set mod guid
+            // Set mod guid and get deployment phase and combat time
             unitBuilder.SetModGUID(modGuid).SetBlueprint(sbpName);
             unitBuilder.SetDeploymentPhase(Enum.Parse<DeploymentPhase>(ReadStringPropertyIfThere(ref reader, nameof(Squad.DeploymentPhase), nameof(DeploymentPhase.PhaseNone))));
             unitBuilder.SetCombatTime(TimeSpan.Parse(ReadStringPropertyIfThere(ref reader, nameof(Squad.CombatTime), TimeSpan.Zero.ToString())));
+
+            // Get deployment method
+            string supportBP = ReadStringPropertyIfThere(ref reader, nameof(Squad.SupportBlueprint), string.Empty);
+            if (!string.IsNullOrEmpty(supportBP)) {
+                unitBuilder.SetTransportBlueprint(supportBP);
+            }
             unitBuilder.SetDeploymentMethod(Enum.Parse<DeploymentMethod>(ReadStringPropertyIfThere(ref reader, nameof(Squad.DeploymentMethod), nameof(DeploymentMethod.None))));
+            
+            // Get veterancy
             unitBuilder.SetVeterancyRank((byte)ReadNumberPropertyIfThere(ref reader, nameof(Squad.VeterancyRank), 0));
             unitBuilder.SetVeterancyExperience((byte)ReadNumberPropertyIfThere(ref reader, nameof(Squad.VeterancyProgress), 0.0f));
+
+            // Read if crew
             unitBuilder.SetIsCrew(ReadBooleanPropertyIfThere(ref reader, nameof(Squad.IsCrew), false));
 
             // Get crew if there
             Squad crew = ReadPropertyThroughSerialisationIfThere<Squad>(ref reader, nameof(Squad.Crew), null);
+            if (crew is not null) {
+                unitBuilder.SetCrew(crew, false);
+                reader.Read(); // goto next object
+            }
 
             // Get upgrades
             if (reader.TokenType is not JsonTokenType.EndObject && reader.GetString() is nameof(Squad.Upgrades) && reader.Read()) {
@@ -511,14 +522,6 @@ namespace Battlegrounds.Game.Gameplay {
             }
         }
 
-        private static T ReadPropertyThroughSerialisation<T>(ref Utf8JsonReader reader, string property) {
-            if (reader.GetString() == property && reader.Read()) {
-                return JsonSerializer.Deserialize<T>(ref reader);
-            } else {
-                return default;
-            }
-        }
-
         public override void Write(Utf8JsonWriter writer, Squad value, JsonSerializerOptions options) {
 
             // Calculate checksum
@@ -544,8 +547,8 @@ namespace Battlegrounds.Game.Gameplay {
 
             // Write deployment method
             if (value.DeploymentMethod is not DeploymentMethod.None) {
-                writer.WriteString(nameof(Squad.DeploymentMethod), value.DeploymentMethod.ToString());
                 writer.WriteString(nameof(Squad.SupportBlueprint), value.SupportBlueprint.Name);
+                writer.WriteString(nameof(Squad.DeploymentMethod), value.DeploymentMethod.ToString());
             }
 
             // Write rank if there

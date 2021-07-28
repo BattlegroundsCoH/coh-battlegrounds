@@ -74,9 +74,9 @@ namespace Battlegrounds.Game.DataCompany {
             this.m_transportBlueprint = squad.SupportBlueprint as SquadBlueprint;
             this.m_deploymentPhase = squad.DeploymentPhase;
             this.m_deploymentMethod = squad.DeploymentMethod;
-            this.m_modGuid = ModGuid.BaseGame;
-            this.m_combatTime = TimeSpan.Zero;
-            this.m_isCrew = false;
+            this.m_modGuid = squad.SBP?.PBGID.Mod ?? ModGuid.BaseGame;
+            this.m_combatTime = squad.CombatTime;
+            this.m_isCrew = squad.IsCrew;
 
             if (squad.Crew != null) {
                 this.m_crewBuilder = new UnitBuilder(squad.Crew, overrideIndex);
@@ -384,20 +384,35 @@ namespace Battlegrounds.Game.DataCompany {
         /// Create or get a new <see cref="UnitBuilder"/> instance representing the <see cref="Squad"/> crew of the current <see cref="UnitBuilder"/> instance.
         /// </summary>
         /// <returns>The vehicle crew <see cref="UnitBuilder"/> instance for  the (vehicle/crewable) <see cref="UnitBuilder"/> instance.</returns>
-        /// <exception cref="ArgumentNullException"/>
         /// <exception cref="InvalidOperationException"/>
-        public virtual UnitBuilder CreateAndGetCrew() {
+        public virtual UnitBuilder CreateAndGetCrew(Func<UnitBuilder, UnitBuilder> builder) {
             if (this.m_blueprint == null) {
-                throw new ArgumentNullException();
+                throw new InvalidOperationException("Attempt to create a crew for a unit without a blueprint.");
             }
             if (!this.m_blueprint.HasCrew) {
-                throw new InvalidOperationException();
+                throw new InvalidOperationException("Attempt to create a crew for a unit that does not support crews.");
             }
             if (this.m_crewBuilder is null) {
-                this.m_crewBuilder = new UnitBuilder();
+                var crewDefaultBP = this.m_blueprint.GetCrewBlueprint();
+                var crewBuilder = new UnitBuilder().SetModGUID(this.m_modGuid);
+                if (crewDefaultBP is not null) {
+                    crewBuilder.SetBlueprint(crewDefaultBP);
+                }
+                this.m_crewBuilder = builder?.Invoke(crewBuilder) ?? crewBuilder;
             }
             this.m_crewBuilder.m_isCrew = true;
-            return this.m_crewBuilder;
+            return this;
+        }
+
+        public virtual UnitBuilder SetCrew(Squad squad, bool overrideIndex = true) {
+            if (this.m_blueprint == null) {
+                throw new InvalidOperationException("Attempt to create a crew for a unit without a blueprint.");
+            }
+            if (!this.m_blueprint.HasCrew) {
+                throw new InvalidOperationException("Attempt to create a crew for a unit that does not support crews.");
+            }
+            this.m_crewBuilder = new(squad, overrideIndex);
+            return this;
         }
 
         /// <summary>
@@ -415,9 +430,10 @@ namespace Battlegrounds.Game.DataCompany {
             squad.SetDeploymentMethod(this.m_transportBlueprint, this.m_deploymentMethod, this.m_deploymentPhase);
             squad.SetVeterancy(this.m_vetrank, this.m_vetexperience);
             squad.IncreaseCombatTime(this.m_combatTime);
+            squad.SetIsCrew(this.m_isCrew);
 
             if (this.m_blueprint?.HasCrew ?? false && this.m_crewBuilder is null) {
-                this.CreateAndGetCrew();
+                this.CreateAndGetCrew(null);
             }
 
             if (this.m_crewBuilder is not null) {
