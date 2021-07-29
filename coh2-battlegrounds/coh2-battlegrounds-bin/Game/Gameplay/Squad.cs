@@ -381,7 +381,7 @@ namespace Battlegrounds.Game.Gameplay {
         /// </summary>
         /// <returns>A string that represents the current object.</returns>
         public override string ToString() => $"{this.SBP.Name}${this.SquadID}";
-        
+
         public bool VerifyChecksum() => throw new NotSupportedException("Please use external checksum verification.");
 
         public bool VerifyChecksum(string checksum) => this.Checksum.ToString("X8") == checksum;

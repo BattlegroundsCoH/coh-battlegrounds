@@ -1,24 +1,58 @@
-1	The played map does not match the map selected in the Battlegrounds Launcher!
-2	The played match is not using the tuning mod selected in the Battlegrounds Launcher!
-3	Insufficient Funds!
-4	The amount of players does not match the player count specified by the Battlegrounds Launcher!
-5	Unexpected Player '%1PLAYERNAME%'.
-6   Player '%1PLAYERNAME%' has picked the incorrect faction. Found '%2RACENAME%' but expected '%3RACENAME%'.
-7   %1COMPANYNAME% (%2COUNT%/%3MAX%)
-8   Can only field %1MAX% units on the battlefield.
-9   %1PLAYERNAME% is using an incorrect setup.
-10  One or more AI participants failed to verify.
-11  Failed to load company for one or more AI participants.
-12  Match Validation Error
-13  Match Setup Error
-14  Exit
-15  Exit to main menu.
-16  Phase B of the attack has begun.\nAdditional units are available.
-17  Phase C of the attack has begun.\nAdditional units are available - This is the final phase.
-18  Fielded Unit Cap Reached!
-19  Victory!
-20  Defeat
-21  Return to lobby
-22  Losses
-23  Gains
-24  Cannot tow target
+1	Set Deploy Position
+2	Withdraw Units
+3	Tank Crew
+4	Tank Crew
+5	Specializes in handling tanks.
+6	Capable of driving and repairing tanks.
+7	Tank Crews' main role on the battlefield is to steer and maintain their tanks. Ill-equipped for frontline combat without their tank.
+8	Vehicle Crew
+9	Vehicle Crew
+10	Vehicle Crews main role on the battlefield is to steer and maintain their vehicles. Ill-equipped for frontline combat without their vehicle.
+11	Capable of driving and repairing vehicles.
+12	Specializes in handling vehicles.
+13	Set the position where new units will be deployed to. All units currently being requested will also go to the designated position.
+14	Left-click anywhere within owned territory to set position.
+15	DP Light Machine Gun
+16	A DP light machine gun equals the firepower of three standard M1891/30 infantry rifles.
+17	One DP LMGs. Improved anti-infantry at range.
+18	Tow Heavy Weapon
+19	Transport Vehicles can use their towing capabilities to tow heavy weapons to, from, and around the battlefield faster than if the weapon crew.
+20	Left-click ability and left-click heavy weapon.
+21	Detach Towed Weapon
+22	Towed weapon is detached at current position.
+23	The towed weapon is detached at the current position and the vehicle can move freely again.
+24	VDV Infantry Section
+25	VDV Infantry
+26	Tank Buster Squad
+27	Tank Buster
+28	NKVD Frontline Squad
+29	NKVD Squad
+30	Scout Team
+31	Frontoviki Infantry Squad
+32	Frontoviki Squad
+33	Sapper Squad
+34	Tank Crew
+35	Vehicle Crew
+36	Luftwaffe Ground Forces
+37	Tankhunters
+38	Elite infantry who are experts at utilizing anti-tank weapons and ambush tactics. Fragile to infantry and should stay concealed unit an ambush attack becomes possible.
+39	Withdrawing
+40	Transport Driver
+41	Transport Driver
+42	Transport Driver
+43	Soviet Off-Map Artillery
+44	Soviet Air Support
+45	Soviet Aerial Reinforcements
+46	Deploy Paratroopers
+47	Cannot tow a gun already being towed
+48	Detach Weapon
+49	The weapon is detached transport vehicle.
+50	The weapon is detached from the transproting vehicle at the current position.
+51	Combat experience increases the survivability of the squad.
+52	Phase A
+53	Phase B
+54	Phase C
+55	Cannot use ability while being towed.
+56	Jäger Light Infantry
+57	OT-34/76
+58	OT-34/76 Flamethrower Tank

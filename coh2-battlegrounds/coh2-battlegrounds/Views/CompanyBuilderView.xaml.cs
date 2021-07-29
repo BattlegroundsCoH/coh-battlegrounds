@@ -43,6 +43,7 @@ namespace BattlegroundsApp.Views {
         }
 
         private int _companySize;
+        private string m_initialChecksum;
 
         public string CompanyName { get; }
 
@@ -101,6 +102,7 @@ namespace BattlegroundsApp.Views {
             this.CompanyType = company.Type.ToString();
             this.FillAvailableUnits();
             this.ShowCompany();
+            this.m_initialChecksum = company.Checksum;
         }
 
         // TODO: CHANGE HOW YOU GET THE GUID! -- FOR THE FUTURE TO SUPPORT OTHER MODS (ITS FINE FOR NOW)
@@ -114,6 +116,7 @@ namespace BattlegroundsApp.Views {
             this.CompanyType = type.ToString();
             this.FillAvailableUnits();
             this.ShowCompany();
+            this.m_initialChecksum = string.Empty;
         }
 
         private void SaveButton_Click(object sender, RoutedEventArgs e) 
@@ -121,11 +124,17 @@ namespace BattlegroundsApp.Views {
 
         private void BackButton_Click(object sender, RoutedEventArgs e) {
 
+            if (this.Builder.CalculateChecksum() == this.m_initialChecksum) {
+                this.StateChangeRequest(new CompanyView());
+                return;
+            }
+
             YesNoDialogResult result = YesNoDialogViewModel.ShowYesNoDialog("Back", "Are you sure? All unsaved changes will be lost.");
 
             if (result == YesNoDialogResult.Confirm) {
                 this.StateChangeRequest(new CompanyView());
             }
+
         }
 
         private void UnitSlot_SelectionChanged(object sender, SelectionChangedEventArgs e) {

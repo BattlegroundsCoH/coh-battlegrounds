@@ -2,7 +2,10 @@
     "ID": "Battlegrounds",
     "TuningGUID": "142b113740474c82a60b0a428bd553d5",
     "GamemodeGUID": "6a0a13b89555402ca75b85dc30f5cb04",
-    "LocaleFile": "bg\\locale\\english\\english.ucs",
+    "AssetGUID": "f0c3cb74008447268cad2804e3b9d565",
+    "LocaleFiles": [
+        "bg\\locale\\english\\english.ucs"
+    ],
     "Gamemodes": [
         {
             "ID": "bg_domination",
@@ -68,5 +71,7 @@
         "IsEnabled": true,
         "IsTowed": "is_towed",
         "IsTowing": "is_towing"
-    }
+    },
+    "AllowSupplySystem": true,
+    "AllowWeatherSystem": true
 }

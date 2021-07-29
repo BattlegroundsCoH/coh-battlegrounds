@@ -108,6 +108,12 @@ namespace Battlegrounds.Game.DataCompany {
         }
 
         /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public virtual string CalculateChecksum() => this.m_companyTarget.Checksum;
+
+        /// <summary>
         /// Add a unit to the <see cref="Company"/> using a <see cref="UnitBuilder"/>.
         /// </summary>
         /// <param name="builder">The function to build the unit.</param>
