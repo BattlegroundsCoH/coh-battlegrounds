@@ -1,0 +1,72 @@
+{
+    "ID": "Battlegrounds",
+    "TuningGUID": "142b113740474c82a60b0a428bd553d5",
+    "GamemodeGUID": "6a0a13b89555402ca75b85dc30f5cb04",
+    "LocaleFile": "bg\\locale\\english\\english.ucs",
+    "Gamemodes": [
+        {
+            "ID": "bg_domination",
+            "Files": [],
+            "Options": [
+                {
+                    "LocStr": "0",
+                    "Value": 250
+                },
+                {
+                    "LocStr": "0",
+                    "Value": 500
+                },
+                {
+                    "LocStr": "0",
+                    "Value": 750
+                },
+                {
+                    "LocStr": "0",
+                    "Value": 1000
+                },
+                {
+                    "LocStr": "0",
+                    "Value": 1250
+                },
+                {
+                    "LocStr": "0",
+                    "Value": 1500
+                }
+            ]
+        }
+    ],
+    "CustomOptions": [],
+    "FactionData": [
+        {
+            "Faction": "soviet",
+            "Drivers": [
+                {
+                    "Blueprint": "soviet_male_vehicle_2_crew_bg",
+                    "WhenType": "light_vehicle"
+                },
+                {
+                    "Blueprint": "soviet_male_vehicle_crew_bg",
+                    "WhenType": null
+                }
+            ],
+            "Transports": [
+                "m3a1_scout_car_squad_bg",
+                "m5_halftrack_squad_bg",
+                "zis_6_transport_truck_bg"
+            ],
+            "TowTransports": [
+                "m5_halftrack_squad_bg",
+                "zis_6_transport_truck_bg"
+            ],
+            "CanHaveParadropInCompanies": false,
+            "CanHaveGliderInCompanies": false
+        }
+    ],
+    "ParadropUnits": [],
+    "VerificationUpgrade": "bg_verify",
+    "Towing": {
+        "IsEnabled": true,
+        "IsTowed": "is_towed",
+        "IsTowing": "is_towing"
+    }
+}
