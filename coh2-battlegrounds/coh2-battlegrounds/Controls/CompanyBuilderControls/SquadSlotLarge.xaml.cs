@@ -21,16 +21,19 @@ namespace BattlegroundsApp.Controls.CompanyBuilderControls {
 
         private uint SlotOccupantID { get; }
 
+        public Squad SquadInstance { get; }
+
         public event Action<SquadSlotLarge> OnClick;
 
         public SquadSlotLarge(Squad squad) {
             this.DataContext = this;
-            this.SquadName = GameLocale.GetString(squad.SBP.UI.ScreenName);
-            this.SquadIcon = $"pack://application:,,,/Resources/ingame/unit_icons/{squad.SBP.UI.Icon}.png";
-            this.SquadCost = squad.SBP.Cost;
-            this.SquadVeterancy = squad.VeterancyRank;
-            this.SquadIsTransported = squad.SupportBlueprint is not null;
-            this.SlotOccupantID = squad.SquadID;
+            this.SquadInstance = squad;
+            this.SquadName = GameLocale.GetString(this.SquadInstance.SBP.UI.ScreenName);
+            this.SquadIcon = $"pack://application:,,,/Resources/ingame/unit_icons/{this.SquadInstance.SBP.UI.Icon}.png";
+            this.SquadCost = this.SquadInstance.SBP.Cost;
+            this.SquadVeterancy = this.SquadInstance.VeterancyRank;
+            this.SquadIsTransported = this.SquadInstance.SupportBlueprint is not null;
+            this.SlotOccupantID = this.SquadInstance.SquadID;
             this.InitializeComponent();
         }
 

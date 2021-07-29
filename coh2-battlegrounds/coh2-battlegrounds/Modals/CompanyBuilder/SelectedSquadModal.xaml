@@ -6,16 +6,240 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:BattlegroundsApp.Modals.CompanyBuilder"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
-    <Border BorderBrush="Black" BorderThickness="2.5" Background="LightGray">
-        <StackPanel Orientation="Horizontal">
-            <Image Width="64" Height="64"/>
-            <StackPanel>
-                <TextBlock Text="Name" TextWrapping="Wrap"/>
-                <TextBlock Text="Long Description" TextWrapping="Wrap"/>
-                <TextBlock Text="Short Description" TextWrapping="Wrap"/>
-            </StackPanel>            
-        </StackPanel>
-        
+             d:DesignHeight="340" d:DesignWidth="648"
+               Width="648" Height="320">
+    <Border BorderBrush="DarkGray" BorderThickness="1.5" Background="LightGray" Margin="5">
+        <modals:ModalControl x:Name="LayeredModal">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="250"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition Height="72"/>
+                    <RowDefinition Height="96"/>
+                </Grid.RowDefinitions>
+
+                <!-- R0 :: C0 :: Basic Unit Details -->
+                <DockPanel Grid.Row="0" Grid.Column="0">
+                    <StackPanel Orientation="Horizontal" DockPanel.Dock="Bottom" Margin="64,0,0,0">
+                        <Label Content="Deployment Cost: "/>
+                        <Image Width="24" Margin="1.75" 
+                               Visibility="{Binding Path=ManpowerCostVisible}">
+                            <Image.Source>
+                                <BitmapImage DecodePixelWidth="13" DecodePixelHeight="13" UriSource="pack://application:,,,/Resources/ingame/resource_icons/botb_manpower.png"/>
+                            </Image.Source>
+                        </Image>
+                        <Label Content="{Binding Path=ManpowerCost}" 
+                               Visibility="{Binding Path=ManpowerCostVisible}"/>
+                        
+                        <Image Width="24" Margin="1.75"
+                               Visibility="{Binding Path=MunitionCostVisible}">
+                            <Image.Source>
+                                <BitmapImage DecodePixelWidth="13" DecodePixelHeight="13" UriSource="pack://application:,,,/Resources/ingame/resource_icons/botb_munitions.png"/>
+                            </Image.Source>
+                        </Image>
+                        <Label Content="{Binding Path=MunitionCost}" 
+                               Visibility="{Binding Path=MunitionCostVisible}"/>
+                        
+                        <Image Width="24" Margin="1.75"
+                               Visibility="{Binding Path=FuelCostVisible}">
+                            <Image.Source>
+                                <BitmapImage DecodePixelWidth="13" DecodePixelHeight="13" UriSource="pack://application:,,,/Resources/ingame/resource_icons/botb_fuel.png"/>
+                            </Image.Source>
+                        </Image>
+                        <Label Content="{Binding Path=FuelCost}" 
+                               Visibility="{Binding Path=FuelCostVisible}"/>
+                    </StackPanel>
+                    <DockPanel DockPanel.Dock="Top">
+                        <Image Width="64" Height="64" DockPanel.Dock="Left"
+                       Source="{Binding Path=Icon}" VerticalAlignment="Top"/>
+                        <StackPanel >
+                            <WrapPanel>
+                                <TextBlock Text="{Binding Path=SBPName}" 
+                               TextWrapping="Wrap" FontSize="16" FontStyle="Italic"
+                               FontWeight="SemiBold"/>
+                                <Button Content="Edit" Visibility="{Binding Path=EditNamePossible}"/>
+                            </WrapPanel>
+                            <TextBlock Margin="0,5,0,0" 
+                               Text="{Binding Path=LongDesc}" TextWrapping="Wrap"/>
+                            <TextBlock Margin="0,4,0,0" Text="{Binding Path=ShortDesc}" 
+                               TextWrapping="Wrap" FontSize="12" FontStyle="Italic"/>
+                        </StackPanel>
+                    </DockPanel>
+                </DockPanel>
+
+                <!-- R0 :: C1 :: Unit Combat Experience and deployment Phase -->
+                <StackPanel Grid.Row="0" Grid.Column="1">
+                    <Label Content="Combat Experience" HorizontalAlignment="Center"/>
+                    <!-- Unit Experience -->
+                    <StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Margin="5" Width="96">
+                                <TextBlock.Text>
+                                    <MultiBinding StringFormat="{}Rank {0}/{1}">
+                                        <Binding Path="RankLevel"/>
+                                        <Binding Path="MaxRankLevel"/>
+                                    </MultiBinding>
+                                </TextBlock.Text>
+                            </TextBlock>
+                            <Image Width="24" Margin="1.75">
+                                <Image.Source>
+                                    <BitmapImage DecodePixelWidth="13" DecodePixelHeight="13" UriSource="pack://application:,,,/Resources/ingame/test_unit_veterancy.png"/>
+                                </Image.Source>
+                            </Image>
+                            <Image Width="24" Margin="1.75">
+                                <Image.Source>
+                                    <BitmapImage DecodePixelWidth="13" DecodePixelHeight="13" UriSource="pack://application:,,,/Resources/ingame/test_unit_veterancy.png"/>
+                                </Image.Source>
+                            </Image>
+                            <Image Width="24" Margin="1.75">
+                                <Image.Source>
+                                    <BitmapImage DecodePixelWidth="13" DecodePixelHeight="13" UriSource="pack://application:,,,/Resources/ingame/test_unit_veterancy.png"/>
+                                </Image.Source>
+                            </Image>
+                            <Image Width="24" Margin="1.75">
+                                <Image.Source>
+                                    <BitmapImage DecodePixelWidth="13" DecodePixelHeight="13" UriSource="pack://application:,,,/Resources/ingame/test_unit_veterancy.png"/>
+                                </Image.Source>
+                            </Image>
+                            <Image Width="24" Margin="1.75">
+                                <Image.Source>
+                                    <BitmapImage DecodePixelWidth="13" DecodePixelHeight="13" UriSource="pack://application:,,,/Resources/ingame/test_unit_veterancy.png"/>
+                                </Image.Source>
+                            </Image>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal" Height="30">
+                            <Label Content="Experience:" Width="96" Margin="5,0,5,0"/>
+                            <StackPanel>
+                                <Border Height="6" Width="136" Margin="1.75"
+                                BorderBrush="Black" BorderThickness="0.4"
+                                    HorizontalAlignment="Center">
+                                    <Rectangle Width="{Binding Path=ExperienceVisualLevel}" Fill="Yellow"
+                                       HorizontalAlignment="Left"/>
+                                </Border>
+                                <TextBlock FontSize="9" FontStyle="Italic"
+                                   HorizontalAlignment="Center" VerticalAlignment="Top">
+                                    <TextBlock.Text>
+                                        <MultiBinding StringFormat="{}{0}/{1}">
+                                            <Binding Path="ExperienceLevel"/>
+                                            <Binding Path="MaxExperienceLevel"/>
+                                        </MultiBinding>
+                                    </TextBlock.Text>
+                                </TextBlock>
+                            </StackPanel>
+
+                        </StackPanel>
+                    </StackPanel>
+
+                    <!-- Unit Combat Time -->
+                    <DockPanel>
+                        <Label Content="Combat Time:" Width="96" Margin="5,0,5,0"/>
+                        <Label Content="{Binding Path=CombatTime}" HorizontalAlignment="Right"/>
+                    </DockPanel>
+
+                </StackPanel>
+
+                <!-- R1 :: C0 :: Slot Items -->
+                <StackPanel Grid.Row="1" Grid.Column="0">
+                    <Label Content="Slot Items (0/6)" HorizontalAlignment="Center"/>
+                    <DockPanel Margin="5">
+                        <Button Content="+" DockPanel.Dock="Right"/>
+                        <ComboBox  DockPanel.Dock="Right" Width="72"/>
+                        <WrapPanel DockPanel.Dock="Left" Name="SlotItemList"/>
+                    </DockPanel>
+                </StackPanel>
+
+                <!-- R1 :: C1 :: Deployment Phase -->
+                <StackPanel Grid.Row="1" Grid.Column="1">
+                    <Label Content="Deployment Phase" HorizontalAlignment="Center"/>
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                        <!-- Initial Phase -->
+                        <Image Width="24" Margin="1.75" 
+                           ToolTip="Phase 0 - Deployed Immediately" 
+                           Tag="0" MouseDown="OnDeploymentPhaseClicked">
+                            <Image.Source>
+                                <BitmapImage DecodePixelWidth="13" DecodePixelHeight="13" UriSource="pack://application:,,,/Resources/ingame/no_icon.png"/>
+                            </Image.Source>
+                        </Image>
+                        <!-- Phase 1 -->
+                        <Image Width="24" Margin="1.75" 
+                           ToolTip="Phase 1 - Deployable At the start of the game." 
+                           Tag="0" MouseDown="OnDeploymentPhaseClicked">
+                            <Image.Source>
+                                <BitmapImage DecodePixelWidth="13" DecodePixelHeight="13" UriSource="pack://application:,,,/Resources/ingame/no_icon.png"/>
+                            </Image.Source>
+                        </Image>
+                        <!-- Phase 2 -->
+                        <Image Width="24" Margin="1.75" 
+                           ToolTip="Phase 2 - Deployable after ? Minutes." 
+                           Tag="0" MouseDown="OnDeploymentPhaseClicked">
+                            <Image.Source>
+                                <BitmapImage DecodePixelWidth="13" DecodePixelHeight="13" UriSource="pack://application:,,,/Resources/ingame/no_icon.png"/>
+                            </Image.Source>
+                        </Image>
+                        <!-- Phase 3 -->
+                        <Image Width="24" Margin="1.75" 
+                           ToolTip="Phase 3 - Deployable after ? Minutes."
+                           Tag="0" MouseDown="OnDeploymentPhaseClicked">
+                            <Image.Source>
+                                <BitmapImage DecodePixelWidth="13" DecodePixelHeight="13" UriSource="pack://application:,,,/Resources/ingame/no_icon.png"/>
+                            </Image.Source>
+                        </Image>
+                    </StackPanel>
+                </StackPanel>
+
+                <!-- R2 :: C0 :: Abilities -->
+                <StackPanel Grid.Row="2" Grid.Column="0">
+                    <Label Content="Unit Abilities" HorizontalAlignment="Center"/>
+                    <WrapPanel Name="AbilitiesList"/>
+                </StackPanel>
+
+                <!-- R2 :: C1 :: Transport/Crew -->
+                <StackPanel Grid.Row="2" Grid.Column="1" Name="TransportProperties">
+                    <Label Content="Deployment Method" HorizontalAlignment="Center"/>
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                        <!-- None -->
+                        <Image Width="24" Margin="1.75">
+                            <Image.Source>
+                                <BitmapImage DecodePixelWidth="13" DecodePixelHeight="13" UriSource="pack://application:,,,/Resources/ingame/no_icon.png"/>
+                            </Image.Source>
+                        </Image>
+                        <!-- Deploy And Exit -->
+                        <Image Width="24" Margin="1.75">
+                            <Image.Source>
+                                <BitmapImage DecodePixelWidth="13" DecodePixelHeight="13" UriSource="pack://application:,,,/Resources/ingame/no_icon.png"/>
+                            </Image.Source>
+                        </Image>
+                        <!-- Deploy And Stay -->
+                        <Image Width="24" Margin="1.75">
+                            <Image.Source>
+                                <BitmapImage DecodePixelWidth="13" DecodePixelHeight="13" UriSource="pack://application:,,,/Resources/ingame/no_icon.png"/>
+                            </Image.Source>
+                        </Image>
+                        <!-- Paradrop -->
+                        <Image Width="24" Margin="1.75">
+                            <Image.Source>
+                                <BitmapImage DecodePixelWidth="13" DecodePixelHeight="13" UriSource="pack://application:,,,/Resources/ingame/no_icon.png"/>
+                            </Image.Source>
+                        </Image>
+                        <!-- Glider -->
+                        <Image Width="24" Margin="1.75">
+                            <Image.Source>
+                                <BitmapImage DecodePixelWidth="13" DecodePixelHeight="13" UriSource="pack://application:,,,/Resources/ingame/no_icon.png"/>
+                            </Image.Source>
+                        </Image>
+                    </StackPanel>
+                    <ComboBox Width="142" Margin="0,5,0,0"/>
+                </StackPanel>
+                <StackPanel Grid.Row="2" Grid.Column="1" Name="CrewProperties" Visibility="Hidden">
+                    <Label Content="Vehicle Crew" HorizontalAlignment="Center"/>
+
+                </StackPanel>
+
+
+            </Grid>
+        </modals:ModalControl>        
     </Border>
 </modals:Modal>

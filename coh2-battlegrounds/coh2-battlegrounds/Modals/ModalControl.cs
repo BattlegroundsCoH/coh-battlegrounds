@@ -48,6 +48,16 @@ namespace BattlegroundsApp.Modals {
         /// </summary>
         public static readonly DependencyProperty ModalMaskBehaviourProperty = DependencyProperty.Register(nameof(ModalMaskBehaviour), typeof(ModalBackgroundBehaviour), typeof(ModalControl));
 
+        /// <summary>
+        /// Identifies the <see cref="ModalMaskBehaviour"/> attached property.
+        /// </summary>
+        public static readonly DependencyProperty ModalMaskColourProperty = DependencyProperty.Register(nameof(ModalMaskColour), typeof(Brush), typeof(ModalControl));
+
+        /// <summary>
+        /// Identifies the <see cref="ModalMaskBehaviour"/> attached property.
+        /// </summary>
+        public static readonly DependencyProperty ModalMaskOpacityProperty = DependencyProperty.Register(nameof(ModalMaskOpacity), typeof(double), typeof(ModalControl));
+
         private Modal m_currentModal;
         private Grid m_contentCanvas;
         private Rectangle m_contentRect;
@@ -71,16 +81,32 @@ namespace BattlegroundsApp.Modals {
             set => this.SetValue(ModalMaskBehaviourProperty, value);
         }
 
+        /// <summary>
+        /// Get or set the colour of the modal background mask.
+        /// </summary>
+        public Brush ModalMaskColour {
+            get => this.GetValue(ModalMaskColourProperty) as Brush;
+            set => this.SetValue(ModalMaskColourProperty, value);
+        }
+
+        /// <summary>
+        /// Get or set the opacity of the modal background mask.
+        /// </summary>
+        public double ModalMaskOpacity {
+            get => (double)this.GetValue(ModalMaskOpacityProperty);
+            set => this.SetValue(ModalMaskOpacityProperty, value);
+        }
+
         public ModalControl() : base() {
             this.m_currentModal = null;
             this.m_backingContent = null;
             this.m_contentCanvas = new();
-            this.m_contentRect = new() { Fill = Brushes.White, Opacity = 0.5 };
+            this.m_contentRect = new();
             this.m_contentRect.MouseDown += this.OnMaskMouseDown;
         }
 
         private void OnMaskMouseDown(object sender, MouseButtonEventArgs e) {
-            
+
             // If no modal, do nothing (Safety check)
             if (!this.IsModalActive) {
                 return;
@@ -88,7 +114,7 @@ namespace BattlegroundsApp.Modals {
 
             // If either modal exit triggerer is set and happened, close the modal
             if ((e.ClickCount is 1 && this.ModalMaskBehaviour is ModalBackgroundBehaviour.ExitWhenClicked)
-                || (e.ClickCount is >=2 && this.ModalMaskBehaviour is ModalBackgroundBehaviour.ExitWhenDoubleClicked)) {
+                || (e.ClickCount is >= 2 && this.ModalMaskBehaviour is ModalBackgroundBehaviour.ExitWhenDoubleClicked)) {
                 this.Modal.CloseModal();
             }
 
@@ -114,6 +140,8 @@ namespace BattlegroundsApp.Modals {
             // Set dimensions of blocking content
             this.m_contentRect.Width = this.Width;
             this.m_contentRect.Height = this.Height;
+            this.m_contentRect.Fill = this.ModalMaskColour;
+            this.m_contentRect.Opacity = this.ModalMaskOpacity;
 
             // Set new content
             this.Content = this.m_contentCanvas;

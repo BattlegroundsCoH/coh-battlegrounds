@@ -10,7 +10,9 @@
              mc:Ignorable="d"
              d:DesignHeight="650" d:DesignWidth="1000" 
                Background="white"
-               ModalMaskBehaviour="ExitWhenClicked">
+               ModalMaskBehaviour="ExitWhenClicked"
+               ModalMaskColour="Black"
+               ModalMaskOpacity="0.6">
     <Grid Margin="5">
 
         <Grid.RowDefinitions>

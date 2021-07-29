@@ -38,6 +38,10 @@
     <None Remove="Resources\ingame\application\app_logo2.png" />
     <None Remove="Resources\ingame\british.png" />
     <None Remove="Resources\ingame\german.png" />
+    <None Remove="Resources\ingame\no_icon.png" />
+    <None Remove="Resources\ingame\resource_icons\botb_fuel.png" />
+    <None Remove="Resources\ingame\resource_icons\botb_manpower.png" />
+    <None Remove="Resources\ingame\resource_icons\botb_munitions.png" />
     <None Remove="Resources\ingame\soviet.png" />
     <None Remove="Resources\ingame\test_unit_ veterancy.png" />
     <None Remove="Resources\ingame\test_unit_icon.png" />
@@ -269,6 +273,10 @@
     <Resource Include="Resources\ingame\application\app_logo2.png" />
     <Resource Include="Resources\ingame\british.png" />
     <Resource Include="Resources\ingame\german.png" />
+    <Resource Include="Resources\ingame\no_icon.png" />
+    <Resource Include="Resources\ingame\resource_icons\botb_fuel.png" />
+    <Resource Include="Resources\ingame\resource_icons\botb_manpower.png" />
+    <Resource Include="Resources\ingame\resource_icons\botb_munitions.png" />
     <Resource Include="Resources\ingame\soviet.png" />
     <Resource Include="Resources\ingame\test_unit_icon.png" />
     <Resource Include="Resources\ingame\test_unit_transport.png" />
