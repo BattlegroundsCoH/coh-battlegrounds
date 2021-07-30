@@ -11,7 +11,7 @@ using Battlegrounds.Functional;
 namespace BattlegroundsApp.Views.CampaignViews.Models {
 
     public class CampaignVisualNodeModel : ICampaignPointsNode {
-        
+
         public UIElement VisualElement { get; }
 
         public event Action<ICampaignMapNode, bool> NodeClicked;
@@ -32,7 +32,7 @@ namespace BattlegroundsApp.Views.CampaignViews.Models {
         private double m_formationYOffset;
 
         public CampaignVisualNodeModel(ICampaignMapNode node, CampaignResourceContext resourceContext) {
-            
+
             // Set fields and properties
             this.Node = node;
             this.Node.OnOwnershipChange += this.OwnershipChanged;
@@ -48,7 +48,7 @@ namespace BattlegroundsApp.Views.CampaignViews.Models {
                 Width = 32,
                 Height = 32,
                 AllowDrop = true,
-            } : new Image() { 
+            } : new Image() {
                 Source = visual,
                 Width = 32,
                 Height = 32,
@@ -146,7 +146,7 @@ namespace BattlegroundsApp.Views.CampaignViews.Models {
         }
 
         public CampaignSelectableInfoSection[] GetInfoSections() {
-            CampaignSelectableInfoSection[] sections = new CampaignSelectableInfoSection[] { 
+            CampaignSelectableInfoSection[] sections = new CampaignSelectableInfoSection[] {
                 new CampaignSelectableInfoSection(this.ResourceContext.GetResource($"{this.Node.NodeName}_preview"), 0, 0, string.Empty),
                 new CampaignSelectableInfoSection(this.ResourceContext.GetResource("victory_points"), 18, 18, $"{this.Node.Value} Victory Points", "Victory Points generated each turn."),
                 new CampaignSelectableInfoSection(this.ResourceContext.GetResource("attrition_value"), 18, 18, $"{this.Node.Attrition} Attrition Value", "Attrition suffered in each turn."),
@@ -161,11 +161,11 @@ namespace BattlegroundsApp.Views.CampaignViews.Models {
 
             // Make sure we can deploy here
             if (this.Node.Owner == model.Reserve.EleemntOf.Team) {
-                
+
                 // Deploy and update UI
                 this.ResourceContext.Controller.Deploy(model.Reserve, this.Node);
                 model.ReserveDeployed?.Execute(model);
-                
+
                 // Mark handled
                 e.Effects = DragDropEffects.Move;
                 e.Handled = true;

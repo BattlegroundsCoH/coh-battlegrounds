@@ -11,7 +11,7 @@ using BattlegroundsApp.LocalData;
 using BattlegroundsApp.Utilities;
 
 namespace BattlegroundsApp {
-    
+
     /// <summary>
     /// Interaction logic for App.xaml
     /// </summary>
@@ -64,8 +64,8 @@ namespace BattlegroundsApp {
             try {
 
                 // Create discord instance
-                
-               // Trace.WriteLine($"Successfully initialised Discord connection with user: {DiscordInstance.GetUserManager().GetCurrentUser().Id}", "DiscordAPI");
+
+                // Trace.WriteLine($"Successfully initialised Discord connection with user: {DiscordInstance.GetUserManager().GetCurrentUser().Id}", "DiscordAPI");
 
             } catch (Exception dex) {
 
@@ -83,7 +83,7 @@ namespace BattlegroundsApp {
 
                         // Log the found user
                         Trace.WriteLine($"Found steam user: {BattlegroundsInstance.Steam.User.ID} \"{BattlegroundsInstance.Steam.User.Name}\"", "App");
-                        
+
                         // Save all changes
                         BattlegroundsInstance.SaveInstance();
 

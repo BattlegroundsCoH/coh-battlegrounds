@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace Battlegrounds.Functional {
-    
+
     public static class FunctionalNumerics {
 
         public static bool InRange(this int n, int min, int max) => min <= n && n <= max;

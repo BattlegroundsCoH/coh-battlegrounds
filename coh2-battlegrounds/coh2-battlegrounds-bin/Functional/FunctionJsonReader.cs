@@ -2,9 +2,9 @@
 using System.Text.Json;
 
 namespace Battlegrounds.Functional {
-    
+
     public static class FunctionJsonReader {
-    
+
         public static string ReadProperty(this ref Utf8JsonReader reader) {
             string val = reader.GetString();
             reader.Read();

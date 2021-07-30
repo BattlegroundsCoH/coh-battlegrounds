@@ -2,7 +2,7 @@
 using Battlegrounds.Game.Match.Startup;
 
 namespace Battlegrounds.Game.Match {
-    
+
     /// <summary>
     /// Interface for an object capable of starting a Company of Heroes 2 Battlegrounds match.
     /// </summary>

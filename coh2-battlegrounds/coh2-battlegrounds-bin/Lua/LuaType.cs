@@ -1,5 +1,5 @@
 ﻿namespace Battlegrounds.Lua {
-    
+
     /// <summary>
     /// Lua value type.
     /// </summary>
@@ -44,7 +44,7 @@
         /// The <see cref="string"/> name of the type.
         /// </summary>
         public readonly string LuaTypeName;
-        
+
         private LuaType(string ls) => this.LuaTypeName = ls;
 
         /// <summary>

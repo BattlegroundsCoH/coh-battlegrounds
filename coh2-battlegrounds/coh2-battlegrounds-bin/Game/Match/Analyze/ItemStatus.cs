@@ -2,7 +2,7 @@
 using Battlegrounds.Game.Gameplay;
 
 namespace Battlegrounds.Game.Match.Analyze {
-    
+
     public class ItemStatus {
 
         public Player PlayerOwner { get; }

@@ -11,7 +11,7 @@ using Battlegrounds.Game.Gameplay;
 using Battlegrounds.Modding;
 
 namespace Battlegrounds.Game.Database {
-    
+
     /// <summary>
     /// Representation of a <see cref="Blueprint"/> with <see cref="Squad"/> specific values. Inherits from <see cref="Blueprint"/>. This class cannot be inherited.
     /// </summary>
@@ -90,7 +90,8 @@ namespace Battlegrounds.Game.Database {
         /// <summary>
         /// Can the <see cref="SquadBlueprint"/> be considered a heavy artillery piece.
         /// </summary>
-        [JsonIgnore] public bool IsHeavyArtillery 
+        [JsonIgnore]
+        public bool IsHeavyArtillery
             => this.Types.ToArray().ContainsWithout("team_weapon", "wg_team_weapons", "mortar", "hmg"); // 'wg_team_weapons' is to block the raketenwerfer be considered a heavy artillery piece
 
         /// <summary>
@@ -106,7 +107,8 @@ namespace Battlegrounds.Game.Database {
         /// <summary>
         /// Can the <see cref="SquadBlueprint"/> be considered a vehicle (not a tank).
         /// </summary>
-        [JsonIgnore] public bool IsVehicle 
+        [JsonIgnore]
+        public bool IsVehicle
             => ((!IsArmour && this.Types.Contains("vehicle")) || this.Types.Contains("light_vehicle")) && !this.Types.Contains("250_mortar_halftrack"); // Remove the change of mortar vehicles in this category
 
         /// <summary>
@@ -127,7 +129,8 @@ namespace Battlegrounds.Game.Database {
         /// <summary>
         /// Can the <see cref="SquadBlueprint"/> be considered a special (elite) infantry.
         /// </summary>
-        [JsonIgnore] public bool IsSpecialInfantry 
+        [JsonIgnore]
+        public bool IsSpecialInfantry
             => this.Types.Contains("guard_troops") || this.Types.Contains("shock_troops") || this.Types.Contains("stormtrooper");
 
         /// <summary>
@@ -171,7 +174,7 @@ namespace Battlegrounds.Game.Database {
         /// <param name="canPickup"></param>
         /// <param name="isTeamWpn"></param>
         /// <param name="femaleChance"></param>
-        public SquadBlueprint(string name, BlueprintUID pbgid, Faction faction, 
+        public SquadBlueprint(string name, BlueprintUID pbgid, Faction faction,
             UIExtension ui, CostExtension cost, LoadoutExtension loadout, VeterancyExtension veterancy,
             string[] types, string[] abilities, int slotCapacity, bool canPickup, bool isTeamWpn, bool hasCrew, float femaleChance) {
 
@@ -199,7 +202,7 @@ namespace Battlegrounds.Game.Database {
         /// <param name="faction">The faction to get crew SBP from.</param>
         /// <returns>The crew <see cref="SquadBlueprint"/>. If not found for <paramref name="faction"/>, the default crew is returned.</returns>
         public SquadBlueprint GetCrewBlueprint(Faction faction = null) {
-            
+
             // Make sure there's actually a crew to get
             if (!this.HasCrew) {
                 return null;
@@ -251,7 +254,7 @@ namespace Battlegrounds.Game.Database {
             var cost = __lookup.GetValueOrDefault("SquadCost", null) as CostExtension;
             var ui = __lookup.GetValueOrDefault("Display", null) as UIExtension;
             var loadout = __lookup.GetValueOrDefault("Entities", new VeterancyExtension(Array.Empty<VeterancyExtension.Rank>())) as LoadoutExtension;
-            var vet = __lookup.GetValueOrDefault("Veterancy", new VeterancyExtension(Array.Empty< VeterancyExtension.Rank>())) as VeterancyExtension;
+            var vet = __lookup.GetValueOrDefault("Veterancy", new VeterancyExtension(Array.Empty<VeterancyExtension.Rank>())) as VeterancyExtension;
             var femalechance = (float)__lookup.GetValueOrDefault("FemaleChance", 0.0f);
             var slotsize = (int)__lookup.GetValueOrDefault("SlotPickupCapacity", 0);
             var picker = (bool)__lookup.GetValueOrDefault("CanPickupItems", false);

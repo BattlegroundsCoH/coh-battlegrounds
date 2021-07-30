@@ -26,7 +26,7 @@ namespace Battlegrounds.Game.Match.Play {
 
         public void Launch() => this.m_isLaunched = CoH2Launcher.Launch();
 
-        public void WaitForExit() { 
+        public void WaitForExit() {
             if (this.m_isLaunched) {
                 if (CoH2Launcher.WatchProcess() == CoH2Launcher.PROCESS_OK) {
                     this.m_result = new JsonPlayback(new ReplayMatchData(this.m_session));

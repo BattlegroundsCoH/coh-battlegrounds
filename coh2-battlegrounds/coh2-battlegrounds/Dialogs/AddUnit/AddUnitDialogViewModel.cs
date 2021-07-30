@@ -4,7 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
+
 using Battlegrounds.Game.Database;
+
 using BattlegroundsApp.Dialogs.Service;
 using BattlegroundsApp.Utilities;
 
@@ -19,7 +21,7 @@ namespace BattlegroundsApp.Dialogs.AddUnit {
         public ICommand CancelCommand { get; set; }
 
         private SquadBlueprint _selectedUnit;
-        public SquadBlueprint SelectedUnit { 
+        public SquadBlueprint SelectedUnit {
             get {
                 return this._selectedUnit;
             }

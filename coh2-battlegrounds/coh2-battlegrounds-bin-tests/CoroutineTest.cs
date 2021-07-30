@@ -2,14 +2,16 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading;
+
 using Battlegrounds.Util.Coroutines;
+
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace coh2_battlegrounds_bin_tests {
 
     [TestClass]
     public class CoroutineTest {
-    
+
         [TestMethod]
         public void TestCoroutine01() {
 
@@ -25,7 +27,7 @@ namespace coh2_battlegrounds_bin_tests {
             Assert.IsTrue(test.Count != 2);
 
             int cntr = 0;
-            while(test.Count != 2 && cntr < 10) {
+            while (test.Count != 2 && cntr < 10) {
                 Thread.Sleep(100);
                 cntr++;
             }

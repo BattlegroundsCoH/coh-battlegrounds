@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 
 namespace BattlegroundsApp.Views.CampaignViews.Models {
-    
+
     public class CampaignModelSelectionViewModel {
 
         public string SelectedTitle => this.SelectedObject.Title;

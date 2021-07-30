@@ -6,7 +6,7 @@ using System.Text.RegularExpressions;
 using RegexMatch = System.Text.RegularExpressions.Match;
 
 namespace Battlegrounds.Game.DataSource {
-    
+
     /// <summary>
     /// Represents a localized file used by Company of Heroes to store text data.
     /// </summary>
@@ -40,7 +40,7 @@ namespace Battlegrounds.Game.DataSource {
 
                 Regex reg = new Regex(@"(?<key>\d+)\s*(?<value>.*)");
 
-                while(!string.IsNullOrEmpty(line = sr.ReadLine())) {
+                while (!string.IsNullOrEmpty(line = sr.ReadLine())) {
 
                     RegexMatch match = reg.Match(line);
 

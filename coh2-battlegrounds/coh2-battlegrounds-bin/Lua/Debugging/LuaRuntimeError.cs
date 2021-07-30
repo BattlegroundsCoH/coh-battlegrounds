@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+
 using Battlegrounds.Lua.Runtime;
 
 namespace Battlegrounds.Lua.Debugging {
@@ -23,7 +24,7 @@ namespace Battlegrounds.Lua.Debugging {
         /// </summary>
         public LuaRuntimeError() : base("Fatal and unexpected error occured while executing Lua code.") {
             this.State = null;
-            this.Stack = new ();
+            this.Stack = new();
         }
 
         /// <summary>
@@ -32,7 +33,7 @@ namespace Battlegrounds.Lua.Debugging {
         /// <param name="luaRuntimeErrMessage">The specialized error message to display when error is thrown.</param>
         public LuaRuntimeError(string luaRuntimeErrMessage) : base(luaRuntimeErrMessage) {
             this.State = null;
-            this.Stack = new ();
+            this.Stack = new();
         }
 
         /// <summary>

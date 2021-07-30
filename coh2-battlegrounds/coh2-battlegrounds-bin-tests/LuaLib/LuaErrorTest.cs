@@ -4,10 +4,10 @@ using Battlegrounds.Lua.Parsing;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace coh2_battlegrounds_bin_tests.LuaLib {
-    
+
     [TestClass]
     public class LuaErrorTest {
-    
+
         [TestMethod]
         [TestCategory("Syntax Error - if ... end")]
         public void LuaSyntaxError01() {

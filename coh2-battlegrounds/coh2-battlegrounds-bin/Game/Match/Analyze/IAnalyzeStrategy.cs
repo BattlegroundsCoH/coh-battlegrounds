@@ -1,7 +1,7 @@
 ﻿using Battlegrounds.Game.Match.Data;
 
 namespace Battlegrounds.Game.Match.Analyze {
-    
+
     /// <summary>
     /// Strategy interface for analyzing results of match data.
     /// </summary>

@@ -6,7 +6,6 @@ using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Controls;
 
-using Battlegrounds;
 using Battlegrounds.Game.Database;
 using Battlegrounds.Game.Database.Management;
 using Battlegrounds.Game.DataCompany;
@@ -16,10 +15,10 @@ using Battlegrounds.Modding;
 using BattlegroundsApp.Controls.CompanyBuilderControls;
 using BattlegroundsApp.Dialogs.YesNo;
 using BattlegroundsApp.LocalData;
-using BattlegroundsApp.Modals;
 using BattlegroundsApp.Modals.CompanyBuilder;
 
 namespace BattlegroundsApp.Views {
+
     /// <summary>
     /// Interaction logic for CompanyBuilderView.xaml
     /// </summary>
@@ -45,6 +44,7 @@ namespace BattlegroundsApp.Views {
 
         private int _companySize;
         private string m_initialChecksum;
+        private ModPackage m_activeModPackage;
 
         public string CompanyName { get; }
 
@@ -104,6 +104,7 @@ namespace BattlegroundsApp.Views {
             this.FillAvailableUnits();
             this.ShowCompany();
             this.m_initialChecksum = company.Checksum;
+            this.m_activeModPackage = ModManager.GetPackageFromGuid(company.TuningGUID);
         }
 
         public CompanyBuilderView(string companyName, Faction faction, CompanyType type, ModGuid modGuid) : this() {
@@ -117,9 +118,10 @@ namespace BattlegroundsApp.Views {
             this.FillAvailableUnits();
             this.ShowCompany();
             this.m_initialChecksum = string.Empty;
+            this.m_activeModPackage = ModManager.GetPackageFromGuid(modGuid);
         }
 
-        private void SaveButton_Click(object sender, RoutedEventArgs e) 
+        private void SaveButton_Click(object sender, RoutedEventArgs e)
             => PlayerCompanies.SaveCompany(this.Builder.Commit().Result);
 
         private void BackButton_Click(object sender, RoutedEventArgs e) {
@@ -143,7 +145,7 @@ namespace BattlegroundsApp.Views {
 
         private void FillAvailableUnits() {
 
-            foreach(SquadBlueprint squad in this.SquadList) {
+            foreach (SquadBlueprint squad in this.SquadList) {
                 SquadSlotSmall unitSlot = new SquadSlotSmall(squad);
                 unitSlot.OnHoverUpdate += this.OnSlotHover;
                 this.AvailableUnitsStack.Children.Add(unitSlot);
@@ -166,7 +168,7 @@ namespace BattlegroundsApp.Views {
         }
 
         private void ShowCompany() {
-            
+
             this.InfantryWrap.Children.Clear();
             this.SupportWrap.Children.Clear();
             this.VehicleWrap.Children.Clear();
@@ -207,7 +209,7 @@ namespace BattlegroundsApp.Views {
         }
 
         private void OnSlotClicked(SquadSlotLarge squadSlot) {
-            SelectedSquadModal squadModal = new(squadSlot);
+            SelectedSquadModal squadModal = new(squadSlot, this.m_activeModPackage);
             // Some more stuff here?
             this.ShowModal(squadModal);
         }

@@ -4,7 +4,7 @@
     /// Class representing a custom-defined asset pack.
     /// </summary>
     public class CustomAsset : IGameMod {
-        
+
         public ModGuid Guid { get; }
 
         public string Name { get; }

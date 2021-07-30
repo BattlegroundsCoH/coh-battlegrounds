@@ -220,7 +220,7 @@ namespace Battlegrounds.Game.DataCompany {
         /// </summary>
         /// <returns>true if the checksum is valid. False if the checksum does not match.</returns>
         public bool VerifyChecksum() {
-           
+
             // Backup and reset checksum
             string checksum = this.m_checksum;
             this.m_checksum = string.Empty;
@@ -261,7 +261,7 @@ namespace Battlegrounds.Game.DataCompany {
 
             // Modify by win/loss rate
             total *= 1.0 + (this.m_companyStatistics.WinRate - this.m_companyStatistics.LossRate);
-            
+
             // Clamp to 0
             if (total < 0.0) {
                 total = 0.0;
@@ -269,7 +269,7 @@ namespace Battlegrounds.Game.DataCompany {
 
             // Return total
             return total;
-        
+
         }
 
         /// <summary>

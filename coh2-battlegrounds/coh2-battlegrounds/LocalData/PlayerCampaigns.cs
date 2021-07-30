@@ -5,11 +5,12 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+
 using Battlegrounds;
 using Battlegrounds.Campaigns;
 
 namespace BattlegroundsApp.LocalData {
-    
+
     public static class PlayerCampaigns {
 
         public static List<CampaignPackage> CampaignPackages { get; private set; }

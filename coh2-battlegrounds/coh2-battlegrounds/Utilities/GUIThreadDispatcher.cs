@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Windows.Threading;
+
 using Battlegrounds.Util.Coroutines;
 
 namespace BattlegroundsApp.Utilities {
@@ -23,7 +24,7 @@ namespace BattlegroundsApp.Utilities {
 
         public void Invoke(Action action) => this.m_dispatcher?.Invoke(action);
 
-        public static explicit operator GUIThreadDispatcher(Dispatcher dispatcher) 
+        public static explicit operator GUIThreadDispatcher(Dispatcher dispatcher)
             => new GUIThreadDispatcher(dispatcher);
 
     }

@@ -2,10 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Controls;
+
 using Battlegrounds.Functional;
 
 namespace BattlegroundsApp.Controls.Lobby.Components {
-    
+
     /// <summary>
     /// Interaction logic for LobbyIconDropdown.xaml
     /// </summary>

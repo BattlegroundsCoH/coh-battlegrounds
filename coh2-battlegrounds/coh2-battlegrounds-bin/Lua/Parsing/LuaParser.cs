@@ -726,7 +726,7 @@ namespace Battlegrounds.Lua.Parsing {
                     } else {
                         // ERR
                     }
-                } else if (i - 2 >= 0 && luaExprs[i-1] is LuaOpExpr { Type: LuaTokenType.Comma } && luaExprs[i-2] is LuaAssignExpr assign) {
+                } else if (i - 2 >= 0 && luaExprs[i - 1] is LuaOpExpr { Type: LuaTokenType.Comma } && luaExprs[i - 2] is LuaAssignExpr assign) {
                     var rhs = new LuaExpressionList(new List<LuaExpr>() { assign.Right, luaExprs[i] }, luaExprs[i - 2].SourcePos);
                     FlattenTuple(rhs);
                     luaExprs[i - 2] = assign with { Right = rhs };
@@ -968,7 +968,7 @@ namespace Battlegrounds.Lua.Parsing {
         };
 
         private static string StatementExpected(LuaExpr e) => e switch {
-            LuaBinaryExpr binop when binop.Left is not LuaBinaryExpr => $"unexpected {GetTypeName(binop.Left)} '{GetNodeAsString(binop.Left)}' near '{binop.Operator}'", 
+            LuaBinaryExpr binop when binop.Left is not LuaBinaryExpr => $"unexpected {GetTypeName(binop.Left)} '{GetNodeAsString(binop.Left)}' near '{binop.Operator}'",
             LuaBinaryExpr binop => StatementExpected(binop.Left),
             _ => "<statement> expected"
         };

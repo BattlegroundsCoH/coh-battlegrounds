@@ -13,7 +13,7 @@ using Battlegrounds.Json;
 using Battlegrounds.Modding;
 
 namespace coh2_battlegrounds_console {
-    
+
     class Program {
 
         static bool recent_analysis;
@@ -428,7 +428,7 @@ namespace coh2_battlegrounds_console {
                 if (args[i].CompareTo("-recent_analysis") == 0) {
                     recent_analysis = true;
                     if (i + 1 < args.Length) {
-                        if (args[i+1][0] != '-') {
+                        if (args[i + 1][0] != '-') {
                             recent_file = args[i + 1];
                         }
                     }

@@ -1,12 +1,12 @@
 ﻿using System.Linq;
 
 namespace Battlegrounds.Util {
-    
+
     /// <summary>
     /// 
     /// </summary>
     public static class ByteUtil {
-    
+
         /// <summary>
         /// Check if a byte array matches the contents of the string.
         /// </summary>

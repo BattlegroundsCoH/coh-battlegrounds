@@ -1,7 +1,7 @@
 ﻿using Battlegrounds.Game.Match;
 
 namespace Battlegrounds.Compiler {
-    
+
     /// <summary>
     /// Interface for a <see cref="Session"/> to Lua compiler.
     /// </summary>

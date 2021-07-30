@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+
 using Battlegrounds.Modding;
 using Battlegrounds.Networking.Memory;
 using Battlegrounds.Networking.Server;
@@ -33,7 +34,7 @@ namespace Battlegrounds.Compiler.Source {
         private Dictionary<string, List<WinconditionSourceFile>> GetCachedFiles() {
 
             // Create dictionary to store categorised files in.
-            Dictionary<string, List<WinconditionSourceFile>> sourceFiles = new() { 
+            Dictionary<string, List<WinconditionSourceFile>> sourceFiles = new() {
                 ["scar"] = new(),
                 ["info"] = new(),
                 ["locale"] = new(),

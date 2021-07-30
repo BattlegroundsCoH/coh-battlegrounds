@@ -288,7 +288,7 @@ namespace Battlegrounds.Game.Gameplay {
         /// Add an <see cref="UpgradeBlueprint"/> to the <see cref="Squad"/> if it doesn't already have the upgrade.
         /// </summary>
         /// <param name="upgradeBlueprint">The <see cref="UpgradeBlueprint"/> to add to squad's internal list of upgrades.</param>
-        public void AddUpgradeIfNotFound(UpgradeBlueprint upgradeBlueprint) 
+        public void AddUpgradeIfNotFound(UpgradeBlueprint upgradeBlueprint)
             => this.m_upgrades.Contains(upgradeBlueprint).IfFalse().Then(() => this.m_upgrades.Add(upgradeBlueprint));
 
         /// <summary>
@@ -323,7 +323,7 @@ namespace Battlegrounds.Game.Gameplay {
         /// <exception cref="NullReferenceException"/>
         public CostExtension GetCost() {
 
-            CostExtension c = new (this.SBP.Cost.Manpower, this.SBP.Cost.Munitions, this.SBP.Cost.Fuel, this.SBP.Cost.FieldTime);
+            CostExtension c = new(this.SBP.Cost.Manpower, this.SBP.Cost.Munitions, this.SBP.Cost.Fuel, this.SBP.Cost.FieldTime);
             c = this.m_upgrades.Select(x => (x as UpgradeBlueprint).Cost).Aggregate(c, (a, b) => a + b);
 
             if (this.m_deployBp is SquadBlueprint sbp) {
@@ -394,7 +394,7 @@ namespace Battlegrounds.Game.Gameplay {
     /// Class for constructing a <see cref="Squad"/> from json data.
     /// </summary>
     public class SquadJson : JsonConverter<Squad> {
-        
+
         public override Squad Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options) {
 
             // Create builder
@@ -427,7 +427,7 @@ namespace Battlegrounds.Game.Gameplay {
                 unitBuilder.SetTransportBlueprint(supportBP);
             }
             unitBuilder.SetDeploymentMethod(Enum.Parse<DeploymentMethod>(ReadStringPropertyIfThere(ref reader, nameof(Squad.DeploymentMethod), nameof(DeploymentMethod.None))));
-            
+
             // Get veterancy
             unitBuilder.SetVeterancyRank((byte)ReadNumberPropertyIfThere(ref reader, nameof(Squad.VeterancyRank), 0));
             unitBuilder.SetVeterancyExperience((byte)ReadNumberPropertyIfThere(ref reader, nameof(Squad.VeterancyProgress), 0.0f));

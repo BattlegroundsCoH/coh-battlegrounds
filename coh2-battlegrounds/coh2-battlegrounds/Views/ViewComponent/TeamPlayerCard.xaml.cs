@@ -13,6 +13,7 @@ using Battlegrounds.Functional;
 using Battlegrounds.Game;
 using Battlegrounds.Game.DataCompany;
 using Battlegrounds.Networking.Lobby;
+
 using BattlegroundsApp.Controls;
 using BattlegroundsApp.Controls.Lobby;
 using BattlegroundsApp.LocalData;
@@ -145,7 +146,7 @@ namespace BattlegroundsApp.Views.ViewComponent {
                     this.ArmySelector.EnableEvents = true;
 
                 } else {
-                    
+
                     this.AIArmySelector.SelectedIndex = toSelect;
                     this.AIArmySelector.EnableEvents = true;
 
@@ -226,7 +227,7 @@ namespace BattlegroundsApp.Views.ViewComponent {
             => this.OnCompanyChangedHandle?.Invoke((sender == this.CompanySelector ? this.CompanySelector.SelectedItem : this.AICompanySelector.SelectedItem) as TeamPlayerCompanyItem);
 
         private void ContextMenu_Opened(object sender, RoutedEventArgs e) {
-            
+
             // Hide if right-clicked on self
             if (this.TeamSlot.SlotOccupant?.Equals(this.m_handler.Self) ?? false) { // Should be cached so participants will use this less
                 e.Handled = true;

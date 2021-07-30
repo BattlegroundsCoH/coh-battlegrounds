@@ -7,7 +7,7 @@ using static Battlegrounds.Lua.LuaNil;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace coh2_battlegrounds_bin_tests.LuaLib {
-    
+
     [TestClass]
     public class LuaUserdataTest {
 
@@ -25,7 +25,7 @@ namespace coh2_battlegrounds_bin_tests.LuaLib {
         }
 
         public class PlayerTestClass {
-            
+
             [LuaUserobjectProperty]
             public string Name { get; set; }
 

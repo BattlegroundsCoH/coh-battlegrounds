@@ -8,7 +8,7 @@ using Battlegrounds.Json;
 using Battlegrounds.Locale;
 
 namespace Battlegrounds.Campaigns.Organisations {
-    
+
     public class Regiment : IJsonObject {
 
         public class Company : IJsonObject {

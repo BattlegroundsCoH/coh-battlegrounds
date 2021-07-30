@@ -12,7 +12,7 @@ using Battlegrounds.Game.Database.Management;
 using Battlegrounds.Lua.Debugging;
 
 namespace Battlegrounds.Game.Database {
-    
+
     /// <summary>
     /// A list of all available scenarios that can be played.
     /// </summary>

@@ -1,10 +1,11 @@
 ﻿using System;
+
 using Battlegrounds.Campaigns.API;
 
 using static Battlegrounds.BattlegroundsInstance;
 
 namespace Battlegrounds.Campaigns.Models {
-    
+
     /// <summary>
     /// Class for handling singleplayer campaign turns.
     /// </summary>
@@ -47,7 +48,7 @@ namespace Battlegrounds.Campaigns.Models {
 
             // Set step data
             this.m_turnStep = new TimeSpan(days, hours, 0, 0);
-            
+
         }
 
         public void SetWinterDates((int year, int month, int day)[] dates) {
@@ -55,7 +56,7 @@ namespace Battlegrounds.Campaigns.Models {
             this.m_winterEnd = new DateTime(dates[1].year, dates[1].month, dates[1].day);
         }
 
-        public bool EndTurn(out bool wasRound) { 
+        public bool EndTurn(out bool wasRound) {
             if (this.m_currentTurn == CampaignArmyTeam.TEAM_ALLIES) {
                 this.m_currentTurn = CampaignArmyTeam.TEAM_AXIS;
             } else {

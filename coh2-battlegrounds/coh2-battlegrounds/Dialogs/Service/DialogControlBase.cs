@@ -37,7 +37,7 @@ namespace BattlegroundsApp.Dialogs.Service {
 
         }
 
-        public virtual void OnPropertyChanged(string propertyName) 
+        public virtual void OnPropertyChanged(string propertyName)
             => this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 
     }

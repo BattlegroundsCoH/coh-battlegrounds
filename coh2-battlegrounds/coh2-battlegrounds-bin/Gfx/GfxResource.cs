@@ -1,5 +1,5 @@
 ﻿namespace Battlegrounds.Gfx {
-    
+
     /// <summary>
     /// Represents a GFX resource that can be opened into a <see cref="GfxResourceStream"/> for reading.
     /// </summary>

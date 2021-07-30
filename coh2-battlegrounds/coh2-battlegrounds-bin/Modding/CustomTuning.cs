@@ -27,7 +27,7 @@
             this.TowUpgrade = package.IsTowedUpgrade;
             this.IsTowingEnabled = package.IsTowEnabled;
         }
-    
+
     }
 
 }

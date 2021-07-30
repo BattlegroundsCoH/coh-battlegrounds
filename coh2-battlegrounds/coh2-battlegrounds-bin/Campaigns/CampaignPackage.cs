@@ -12,7 +12,7 @@ using Battlegrounds.Lua;
 using Battlegrounds.Gfx;
 
 namespace Battlegrounds.Campaigns {
-    
+
     /// <summary>
     /// 
     /// </summary>
@@ -290,8 +290,7 @@ namespace Battlegrounds.Campaigns {
                 int winterEndDay = reader.ReadInt32();
 
                 // Mutate
-                this.CampaignWeatherData = this.CampaignWeatherData with
-                {
+                this.CampaignWeatherData = this.CampaignWeatherData with {
                     WinterStart = (winterStartYear, winterStartMonth, winterStartDay),
                     WinterEnd = (winterEndYear, winterEndMonth, winterEndDay)
                 };
@@ -425,17 +424,17 @@ namespace Battlegrounds.Campaigns {
                 }
 
             } else {
-                
+
                 // Log
                 Trace.WriteLine($"Campaign '{Path.GetFileName(binaryFilepath)}' has an army ('{army}') with no army data.", nameof(CampaignPackage));
-                
+
             }
 
             // Read goals
             ArmyGoalData[] ReadGoals() {
 
                 // Will fetch string based on flag and mask
-                string GetString(byte flag, byte mask) { 
+                string GetString(byte flag, byte mask) {
                     if ((flag & mask) != 0) {
                         return reader.ReadUnicodeString();
                     } else {

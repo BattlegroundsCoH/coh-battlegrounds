@@ -3,7 +3,7 @@
 using Battlegrounds.Modding;
 
 namespace Battlegrounds.Game.Database {
-    
+
     /// <summary>
     /// Readonly struct that epresents a unique identifier for a blueprint, by mod.
     /// </summary>
@@ -23,7 +23,7 @@ namespace Battlegrounds.Game.Database {
         /// Initialise a new <see cref="BlueprintUID"/> instance with <paramref name="uid"/> for a <see cref="ModGuid.BaseGame"/> blueprint.
         /// </summary>
         /// <param name="uid">The unique ID.</param>
-        public BlueprintUID(ulong uid) : this(uid, ModGuid.BaseGame) {}
+        public BlueprintUID(ulong uid) : this(uid, ModGuid.BaseGame) { }
 
         /// <summary>
         /// Initialise a new <see cref="BlueprintUID"/> instance with <paramref name="uid"/> for a <paramref name="mod"/> blueprint.
@@ -49,7 +49,7 @@ namespace Battlegrounds.Game.Database {
         public static bool operator ==(BlueprintUID left, BlueprintUID right) => left.Equals(right);
 
         public static bool operator !=(BlueprintUID left, BlueprintUID right) => !(left == right);
-    
+
     }
 
 }

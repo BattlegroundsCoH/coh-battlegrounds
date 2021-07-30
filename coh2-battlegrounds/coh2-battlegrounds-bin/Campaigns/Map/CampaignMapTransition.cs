@@ -1,27 +1,27 @@
 ﻿using Battlegrounds.Campaigns.API;
 
 namespace Battlegrounds.Campaigns.Map {
-    
+
     /// <summary>
     /// 
     /// </summary>
     public class CampaignMapTransition : ICampaignMapNodeTransition {
-        
+
         /// <summary>
         /// 
         /// </summary>
         public ICampaignMapNode From { get; }
-        
+
         /// <summary>
         /// 
         /// </summary>
         public ICampaignMapNode To { get; }
-        
+
         /// <summary>
         /// 
         /// </summary>
         public CampaignMapTransitionType TransitionType { get; }
-        
+
         /// <summary>
         /// 
         /// </summary>

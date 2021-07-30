@@ -6,9 +6,9 @@ using Battlegrounds.Functional;
 using Battlegrounds.Game.Database.Management;
 
 namespace Battlegrounds.Game.Database.Extensions {
-    
+
     public class LoadoutExtension {
-    
+
         public readonly struct Entry {
             public readonly int Count;
             public readonly string EntityBlueprint;
@@ -23,7 +23,7 @@ namespace Battlegrounds.Game.Database.Extensions {
 
         public int Count => this.m_entries.Sum(x => x.Count);
 
-        public EntityBlueprint GetEntity(int index) 
+        public EntityBlueprint GetEntity(int index)
             => 0 <= index && index < this.m_entries.Length ? BlueprintManager.FromBlueprintName<EntityBlueprint>(this.m_entries[index].EntityBlueprint) : null;
 
         public LoadoutExtension(Entry[] entries) {
@@ -35,7 +35,7 @@ namespace Battlegrounds.Game.Database.Extensions {
             while (reader.Read() && reader.TokenType is not JsonTokenType.EndArray) {
                 string ebp = string.Empty;
                 int count = 0;
-                while (reader.Read() &&  reader.TokenType is not JsonTokenType.EndObject) { 
+                while (reader.Read() && reader.TokenType is not JsonTokenType.EndObject) {
                     if (reader.ReadProperty() is "EBP") {
                         ebp = reader.GetString();
                     } else {

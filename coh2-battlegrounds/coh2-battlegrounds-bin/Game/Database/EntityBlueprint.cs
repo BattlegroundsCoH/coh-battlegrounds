@@ -10,7 +10,7 @@ using Battlegrounds.Game.Gameplay;
 using Battlegrounds.Modding;
 
 namespace Battlegrounds.Game.Database {
-    
+
     /// <summary>
     /// 
     /// </summary>
@@ -40,7 +40,7 @@ namespace Battlegrounds.Game.Database {
 
         public float Health { get; }
 
-        public EntityBlueprint(string name, BlueprintUID pbgid, Faction faction, 
+        public EntityBlueprint(string name, BlueprintUID pbgid, Faction faction,
             CostExtension cost, UIExtension ui, DriverExtension driverExtension,
             string[] abilities, string[] hardpoints, float health) {
             this.Name = name;
@@ -57,7 +57,7 @@ namespace Battlegrounds.Game.Database {
     }
 
     public class EntityBlueprintConverter : JsonConverter<EntityBlueprint> {
-        
+
         public override EntityBlueprint Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options) {
             Dictionary<string, object> __lookup = new();
             while (reader.Read() && reader.TokenType is not JsonTokenType.EndObject) {
@@ -87,7 +87,7 @@ namespace Battlegrounds.Game.Database {
             var pbgid = new BlueprintUID((ulong)__lookup.GetValueOrDefault("PBGID", 0ul), modguid);
             return new(__lookup.GetValueOrDefault("Name", string.Empty) as string, pbgid, fac, cost, ui, driver, abilities, hardpoints, hp);
         }
-        
+
         public override void Write(Utf8JsonWriter writer, EntityBlueprint value, JsonSerializerOptions options) => writer.WriteStringValue(value.Name);
 
     }

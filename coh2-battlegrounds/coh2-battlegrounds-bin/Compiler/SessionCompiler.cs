@@ -125,8 +125,7 @@ namespace Battlegrounds.Compiler {
         /// <param name="value">The C# value of the setting to set. The value is automatically converted to its Lua Source Code equivalent</param>
         protected virtual void WriteSetting(TxtBuilder lua, string setting, object value) {
 
-            string strval = value switch
-            {
+            string strval = value switch {
                 int i => i.ToString(),
                 byte by => by.ToString(),
                 double d => d.ToString("0.00"),
@@ -184,7 +183,7 @@ namespace Battlegrounds.Compiler {
 
             // Get all potential slot items used in this session
             List<SlotItemBlueprint> slotitems = companies.Aggregate(new List<Squad>(), (a, b) => { a.AddRange(b.Units); return a; })
-                .Aggregate(new List<SlotItemBlueprint>(), (a,b) => { 
+                .Aggregate(new List<SlotItemBlueprint>(), (a, b) => {
                     a.AddRange(b.SlotItems.Cast<SlotItemBlueprint>());
                     a.AddRange(b.Upgrades.Cast<UpgradeBlueprint>().Aggregate(new List<SlotItemBlueprint>(), (d, e) => {
                         var items = e.SlotItems.Select(x => BlueprintManager.FromBlueprintName(x, BlueprintType.IBP) as SlotItemBlueprint);
@@ -195,7 +194,7 @@ namespace Battlegrounds.Compiler {
                         );
                         return d;
                     }));
-                    return a; 
+                    return a;
                 })
                 .Distinct()
                 .ToList();

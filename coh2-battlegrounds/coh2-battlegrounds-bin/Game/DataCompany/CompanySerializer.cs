@@ -178,7 +178,7 @@ namespace Battlegrounds.Game.DataCompany {
         /// <param name="company">The company to serialise.</param>
         /// <param name="indent">Should the json be indent formatted.</param>
         /// <returns>The json string data.</returns>
-        public static string GetCompanyAsJson(Company company, bool indent = true) 
+        public static string GetCompanyAsJson(Company company, bool indent = true)
             => JsonSerializer.Serialize(company, new JsonSerializerOptions() { WriteIndented = indent });
 
         /// <summary>

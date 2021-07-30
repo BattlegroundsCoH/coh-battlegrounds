@@ -1,12 +1,18 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media.Imaging;
 
+using Battlegrounds.Game.Database;
+using Battlegrounds.Game.Database.Management;
 using Battlegrounds.Game.Gameplay;
+using Battlegrounds.Modding;
 
+using BattlegroundsApp.Controls;
 using BattlegroundsApp.Controls.CompanyBuilderControls;
 using BattlegroundsApp.Resources;
 
@@ -21,7 +27,7 @@ namespace BattlegroundsApp.Modals.CompanyBuilder {
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        private void NotifyPropertyChanged([CallerMemberName] string propertyName = "") 
+        private void NotifyPropertyChanged([CallerMemberName] string propertyName = "")
             => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 
         public string Icon => this.SquadSlot.SquadIcon;
@@ -64,11 +70,16 @@ namespace BattlegroundsApp.Modals.CompanyBuilder {
 
         public int FuelCost { get; set; }
 
+        public string SelectedSupportBlueprint { get; set; }
+
         public SquadSlotLarge SquadSlot { get; } // We keep a ref to this so we can instantly update it
 
-        public SelectedSquadModal(SquadSlotLarge squadSlot) {
+        private ModPackage m_package;
+
+        public SelectedSquadModal(SquadSlotLarge squadSlot, ModPackage modPackage) {
             this.DataContext = this;
             this.SquadSlot = squadSlot;
+            this.m_package = modPackage;
 
             // Get description
             this.LongDesc = GameLocale.GetString(squadSlot.SquadInstance.SBP.UI.LongDescription);
@@ -91,6 +102,9 @@ namespace BattlegroundsApp.Modals.CompanyBuilder {
             // Init component
             this.InitializeComponent();
 
+            // Refresh Transport Blueprint
+            this.RefreshTransportBlueprints();
+
         }
 
         private void OnDeploymentPhaseClicked(object sender, MouseButtonEventArgs e) {
@@ -110,13 +124,13 @@ namespace BattlegroundsApp.Modals.CompanyBuilder {
         }
 
         private void RefreshCost() {
-            
+
             // Get cost and update values
             var cost = this.SquadSlot.SquadInstance.GetCost();
             this.ManpowerCost = (int)cost.Manpower;
             this.MunitionCost = (int)cost.Munitions;
             this.FuelCost = (int)cost.Fuel;
-            
+
             // Notify property changes
             this.NotifyPropertyChanged(nameof(this.ManpowerCost));
             this.NotifyPropertyChanged(nameof(this.MunitionCost));
@@ -128,7 +142,8 @@ namespace BattlegroundsApp.Modals.CompanyBuilder {
         }
 
         private void OnDeploymentMethodClicked(object sender, MouseButtonEventArgs e) {
-            var obj = sender as Image;
+            Image obj = sender as Image;
+            SquadBlueprint sbp = this.TransportBlueprintCombobox.SelectedItem.Source as SquadBlueprint;
             switch (obj.Tag as string) {
                 case "0": // None
                     this.TransportBlueprintSelector = Visibility.Collapsed;
@@ -136,11 +151,11 @@ namespace BattlegroundsApp.Modals.CompanyBuilder {
                     break;
                 case "1": // Deploy and Exit
                     this.TransportBlueprintSelector = Visibility.Visible;
-                    this.SquadSlot.SquadInstance.SetDeploymentMethod(null, DeploymentMethod.DeployAndExit, this.SquadSlot.SquadInstance.DeploymentPhase);
+                    this.SquadSlot.SquadInstance.SetDeploymentMethod(sbp, DeploymentMethod.DeployAndExit, this.SquadSlot.SquadInstance.DeploymentPhase);
                     break;
                 case "2": // Deploy and Stay
                     this.TransportBlueprintSelector = Visibility.Visible;
-                    this.SquadSlot.SquadInstance.SetDeploymentMethod(null, DeploymentMethod.DeployAndStay, this.SquadSlot.SquadInstance.DeploymentPhase);
+                    this.SquadSlot.SquadInstance.SetDeploymentMethod(sbp, DeploymentMethod.DeployAndStay, this.SquadSlot.SquadInstance.DeploymentPhase);
                     break;
                 case "3": // Paradrop
                     this.TransportBlueprintSelector = Visibility.Collapsed;
@@ -154,6 +169,26 @@ namespace BattlegroundsApp.Modals.CompanyBuilder {
                     break;
             }
             this.NotifyPropertyChanged(nameof(this.TransportBlueprintSelector));
+        }
+
+        private void RefreshTransportBlueprints() {
+
+            // Get blueprints
+            var blueprints = this.m_package.FactionSettings[this.SquadSlot.SquadInstance.SBP.Army].Transports
+                .Select(x => BlueprintManager.FromBlueprintName<SquadBlueprint>(x))
+                .Select(x => new IconComboBoxItem(new BitmapImage(new Uri($"pack://application:,,,/Resources/ingame/unit_icons/{x.UI.Icon}.png")), GameLocale.GetString(x.UI.ScreenName), x))
+                .ToList();
+
+            // Add to combobox
+            this.TransportBlueprintCombobox.SetItemSource(blueprints);
+
+        }
+
+        private void TransportBlueprintCombobox_SelectionChanged(object sender, IconComboBoxItem newItem) {
+            SquadBlueprint sbp = newItem.Source as SquadBlueprint;
+            this.SelectedSupportBlueprint = GameLocale.GetString(sbp.UI.ScreenName);
+            this.SquadSlot.SquadInstance.SetDeploymentMethod(sbp, this.SquadSlot.SquadInstance.DeploymentMethod, this.SquadSlot.SquadInstance.DeploymentPhase);
+            this.NotifyPropertyChanged(nameof(this.SelectedSupportBlueprint));
         }
 
     }

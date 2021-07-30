@@ -23,7 +23,7 @@ using BattlegroundsApp.Views.CampaignViews;
 using Battlegrounds.Campaigns.API;
 
 namespace BattlegroundsApp.Views {
-    
+
     /// <summary>
     /// Interaction logic for CampaignView.xaml
     /// </summary>
@@ -36,11 +36,11 @@ namespace BattlegroundsApp.Views {
         public MainWindow MainWindow { get; set; }
 
         public CampaignBrowserView() {
-            
+
             InitializeComponent();
-            
+
             this.CanContinueCampaign = false;
-            
+
             this.m_actualState = null;
 
         }
@@ -59,12 +59,12 @@ namespace BattlegroundsApp.Views {
 
         }
 
-        public override void StateOnLostFocus() { 
-        
+        public override void StateOnLostFocus() {
+
         }
 
         private void ContinueCampaignButton_Click(object sender, RoutedEventArgs e) {
-            
+
             // Hide Left Panel
             MainWindow.ShowLeftPanel(false);
 
@@ -93,7 +93,7 @@ namespace BattlegroundsApp.Views {
                 } else if (state == NewCampaignDialogResult.NewSingleplayer) {
 
                     // Create start args
-                    CampaignStartData startData = new CampaignStartData() { 
+                    CampaignStartData startData = new CampaignStartData() {
                         HumanAlliesPlayers = campaignData.CampaignHostSide.IsAllied ? 1 : 0,
                         HumanAxisPlayers = campaignData.CampaignHostSide.IsAxis ? 1 : 0
                     };

@@ -102,28 +102,36 @@ namespace Battlegrounds.Modding {
         }
 
         /// <summary>
-        /// 
+        /// Get package from its <paramref name="packageID"/>.
         /// </summary>
-        /// <param name="packageID"></param>
-        /// <returns></returns>
+        /// <param name="packageID">The ID to use to identify the <see cref="ModPackage"/>.</param>
+        /// <returns>The <see cref="ModPackage"/> associated with <paramref name="packageID"/>.</returns>
         public static ModPackage GetPackage(string packageID)
             => __packages.FirstOrDefault(x => x.ID == packageID);
 
         /// <summary>
-        /// 
+        /// Iterate over each <see cref="ModPackage"/> in the system.
         /// </summary>
-        /// <param name="modPackageAction"></param>
+        /// <param name="modPackageAction">The action to invoke with each package element.</param>
         public static void EachPackage(Action<ModPackage> modPackageAction)
             => __packages.ForEach(modPackageAction);
 
         /// <summary>
-        /// 
+        /// Get the abstract <see cref="IGameMod"/> instance represented by <paramref name="guid"/>.
         /// </summary>
-        /// <typeparam name="TMod"></typeparam>
-        /// <param name="guid"></param>
-        /// <returns></returns>
+        /// <typeparam name="TMod">The specifc <see cref="IGameMod"/> type to get.</typeparam>
+        /// <param name="guid">The GUID of the mod to fetch.</param>
+        /// <returns>The <see cref="IGameMod"/> instance associated with the <paramref name="guid"/>.</returns>
         public static TMod GetMod<TMod>(ModGuid guid) where TMod : class, IGameMod
             => __mods[guid] as TMod;
+
+        /// <summary>
+        /// Get a <see cref="ModPackage"/> based on one of its submod <paramref name="guid"/> elements.
+        /// </summary>
+        /// <param name="guid">The <see cref="ModGuid"/> to get <see cref="ModPackage"/> from.</param>
+        /// <returns>The <see cref="ModPackage"/> associated with the submod associated <paramref name="guid"/>.</returns>
+        public static ModPackage GetPackageFromGuid(ModGuid guid)
+            => __packages.FirstOrDefault(x => x.TuningGUID == guid || x.GamemodeGUID == guid || x.AssetGUID == guid);
 
     }
 

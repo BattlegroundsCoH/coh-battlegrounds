@@ -110,6 +110,8 @@ namespace BattlegroundsApp.Controls {
             this.m_popup.IsOpen = false;
         }
 
+        protected override void OnLostFocus(RoutedEventArgs e) => this.m_popup.IsOpen = false;
+
     }
 
 }

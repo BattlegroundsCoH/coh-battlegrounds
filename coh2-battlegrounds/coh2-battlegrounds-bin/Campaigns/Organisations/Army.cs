@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+
 using Battlegrounds.Campaigns.API;
 using Battlegrounds.Functional;
 using Battlegrounds.Game.DataCompany;
@@ -13,14 +14,14 @@ using Battlegrounds.Modding;
 using Battlegrounds.Util.Lists;
 
 namespace Battlegrounds.Campaigns.Organisations {
-    
+
     /// <summary>
     /// 
     /// </summary>
     public class Army : IJsonObject {
 
         private record ArmyRegimentalUnitTemplate(string BlueprintName, string TransportBlueprint, Range VetRange, double Weight, int Count);
-        private record ArmyRegimentalTemplate(string RegimentType, int RegimentUnitSize, int RegimentCompanyCount, 
+        private record ArmyRegimentalTemplate(string RegimentType, int RegimentUnitSize, int RegimentCompanyCount,
             ArmyRegimentalUnitTemplate[] WeightedRegimentalUnitTemplates, ArmyRegimentalUnitTemplate[] CountedRegimentalUnitTemplates = null, bool IsArtillery = false);
 
         private Dictionary<string, List<ArmyRegimentalTemplate>> m_regimentTemplates;
@@ -108,7 +109,7 @@ namespace Battlegrounds.Campaigns.Organisations {
             // Make sure it's a valid division
             if (!this.m_regimentTemplates.ContainsKey(template)) {
                 Trace.WriteLine(
-                    $"Army '{this.ArmyName.LocaleID}' contains no template '{template}' and will therefore skip creating '{divisionName.LocaleID}'", 
+                    $"Army '{this.ArmyName.LocaleID}' contains no template '{template}' and will therefore skip creating '{divisionName.LocaleID}'",
                     $"{nameof(Army)}::{nameof(NewDivision)}");
                 return;
             }
@@ -159,13 +160,11 @@ namespace Battlegrounds.Campaigns.Organisations {
                                     if (unit is LuaTable unitTable) {
                                         if (CreateUnitTemplate(unitTable, out bool weighted) is ArmyRegimentalUnitTemplate unitTmpl) {
                                             if (weighted) {
-                                                otherRegimentalTemplate = otherRegimentalTemplate with
-                                                { // Why this ugly style...
+                                                otherRegimentalTemplate = otherRegimentalTemplate with { // Why this ugly style...
                                                     WeightedRegimentalUnitTemplates = otherRegimentalTemplate.WeightedRegimentalUnitTemplates.Append(unitTmpl)
                                                 };
                                             } else {
-                                                otherRegimentalTemplate = otherRegimentalTemplate with
-                                                {
+                                                otherRegimentalTemplate = otherRegimentalTemplate with {
                                                     CountedRegimentalUnitTemplates = otherRegimentalTemplate.CountedRegimentalUnitTemplates.Append(unitTmpl)
                                                 };
                                             }
@@ -273,7 +272,7 @@ namespace Battlegrounds.Campaigns.Organisations {
         }
 
         private static Squad CreateSquad(ArmyRegimentalUnitTemplate unitTemplate, ref ushort campaignUnitID) {
-            
+
             // Create unit builder
             UnitBuilder ub = new UnitBuilder();
             ub.SetModGUID(ModManager.GetPackage("bg_mod").TuningGUID);
@@ -293,7 +292,7 @@ namespace Battlegrounds.Campaigns.Organisations {
 
             // Return squad
             return squadResult;
-        
+
         }
 
         public string ToJsonReference() => this.ArmyName.LocaleID;

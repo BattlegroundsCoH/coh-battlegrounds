@@ -9,7 +9,7 @@ using Battlegrounds.Game.Database.Management;
 using Battlegrounds.Modding;
 
 namespace Battlegrounds.Game.Database {
-    
+
     /// <summary>
     /// 
     /// </summary>
@@ -54,7 +54,7 @@ namespace Battlegrounds.Game.Database {
     /// Converter for converting a string into an <see cref="CriticalBlueprint"/>.
     /// </summary>
     public sealed class CriticalBlueprintConverter : JsonConverter<CriticalBlueprint> {
-        
+
         public override CriticalBlueprint Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options) {
             Dictionary<string, object> __lookup = new();
             while (reader.Read() && reader.TokenType is not JsonTokenType.EndObject) {
@@ -70,7 +70,7 @@ namespace Battlegrounds.Game.Database {
             var ui = __lookup.GetValueOrDefault("Display", null) as UIExtension;
             var modguid = __lookup.ContainsKey("ModGUID") ? ModGuid.FromGuid(__lookup["ModGUID"] as string) : ModGuid.BaseGame;
             var pbgid = new BlueprintUID((ulong)__lookup.GetValueOrDefault("PBGID", 0ul), modguid);
-            return new(__lookup.GetValueOrDefault("Name", string.Empty) as string, pbgid,  ui);
+            return new(__lookup.GetValueOrDefault("Name", string.Empty) as string, pbgid, ui);
         }
 
         public override void Write(Utf8JsonWriter writer, CriticalBlueprint value, JsonSerializerOptions options) => writer.WriteStringValue(value.Name);

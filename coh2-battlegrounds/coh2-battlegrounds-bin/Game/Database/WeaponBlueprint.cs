@@ -8,7 +8,7 @@ using Battlegrounds.Game.Database.Management;
 using Battlegrounds.Modding;
 
 namespace Battlegrounds.Game.Database {
-    
+
     /// <summary>
     /// 
     /// </summary>
@@ -51,7 +51,7 @@ namespace Battlegrounds.Game.Database {
     }
 
     public class WeaponBlueprintConverter : JsonConverter<WeaponBlueprint> {
-        
+
         public override WeaponBlueprint Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options) {
             Dictionary<string, object> __lookup = new();
             while (reader.Read() && reader.TokenType is not JsonTokenType.EndObject) {

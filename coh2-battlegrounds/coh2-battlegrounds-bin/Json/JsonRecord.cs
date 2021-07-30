@@ -4,9 +4,9 @@ using System.Linq;
 using System.Reflection;
 
 namespace Battlegrounds.Json {
-    
+
     public static class JsonRecord {
-    
+
         public static bool IsRecordType(object type, out PropertyInfo equalityContractProperty) {
             equalityContractProperty = type.GetType().GetProperty("EqualityContract", BindingFlags.Instance | BindingFlags.NonPublic);
             if (equalityContractProperty is null) {

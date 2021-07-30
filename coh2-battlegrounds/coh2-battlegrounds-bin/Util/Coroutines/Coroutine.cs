@@ -5,22 +5,23 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+
 using Battlegrounds.Functional;
 
 namespace Battlegrounds.Util.Coroutines {
-    
+
     /// <summary>
     /// Utility class for running <see cref="Coroutine"/> functionality.
     /// </summary>
     public static class Coroutine {
 
         private class CoroutineMetaData {
-            
+
             public IEnumerator Enumerator { get; }
             public ICoroutineDispatcher Dispatcher { get; }
             public DateTime StartTime { get; }
             public int CoroutineID => this.Enumerator.GetHashCode();
-            
+
             private YieldInstruction currentYield;
 
             public CoroutineMetaData(IEnumerator enumerator, ICoroutineDispatcher dispatcher) {

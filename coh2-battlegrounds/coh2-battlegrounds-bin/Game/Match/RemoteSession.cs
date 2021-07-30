@@ -10,7 +10,7 @@ namespace Battlegrounds.Game.Match {
     /// A session that's being controlled remotely. Implements <see cref="ISession"/>.
     /// </summary>
     public sealed class RemoteSession : ISession {
-        
+
         public Guid SessionID { get; }
 
         public bool AllowPersistency => true;

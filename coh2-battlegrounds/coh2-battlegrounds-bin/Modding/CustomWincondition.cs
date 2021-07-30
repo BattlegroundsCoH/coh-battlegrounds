@@ -1,7 +1,7 @@
 ﻿using System;
 
 namespace Battlegrounds.Modding {
-    
+
     public class CustomWincondition : IWinconditionMod {
 
         public WinconditionOption[] Options { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }

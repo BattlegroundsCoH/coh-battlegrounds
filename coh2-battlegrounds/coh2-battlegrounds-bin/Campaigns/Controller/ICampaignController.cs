@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+
 using Battlegrounds.Campaigns.API;
 using Battlegrounds.Campaigns.Organisations;
 using Battlegrounds.Campaigns.Scripting;
@@ -14,7 +15,7 @@ using Battlegrounds.Locale;
 using Battlegrounds.Modding;
 
 namespace Battlegrounds.Campaigns.Controller {
-    
+
     /// <summary>
     /// 
     /// </summary>
@@ -253,7 +254,7 @@ namespace Battlegrounds.Campaigns.Controller {
         /// <param name="data"></param>
         /// <param name="company"></param>
         public static void HandleCompanyChanges(CampaignEngagementData data, Company company) { // Note: data is value type, but the fields affected are ref types
-            
+
             // Determine if company was attacking or defending
             bool isAttacker = data.attackingPlayerNames.Contains(company.Owner);
             if (!isAttacker && !data.defendingPlayerNames.Contains(company.Owner)) {
@@ -262,7 +263,7 @@ namespace Battlegrounds.Campaigns.Controller {
             } else {
                 Trace.WriteLine($"Handling company '{company.Name}' owned by '{company.Owner}' on {(isAttacker ? "attacking" : "defending")} side.", nameof(ICampaignController));
             }
-            
+
         }
 
         /// <summary>

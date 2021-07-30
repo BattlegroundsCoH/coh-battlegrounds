@@ -9,7 +9,7 @@ using Battlegrounds.Game.Database.Management;
 using Battlegrounds.Modding;
 
 namespace Battlegrounds.Game.Database {
-    
+
     /// <summary>
     /// 
     /// </summary>

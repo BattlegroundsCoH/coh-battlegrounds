@@ -7,7 +7,7 @@ using Battlegrounds.Functional;
 using Battlegrounds.Modding;
 
 namespace Battlegrounds.Compiler.Source {
-    
+
     public class LocalSource : IWinconditionSource {
 
         private string m_relpath;
@@ -46,7 +46,7 @@ namespace Battlegrounds.Compiler.Source {
             string[] scar = Directory
                 .GetFiles($"{this.m_relpath}auxiliary_scripts\\", "*.scar")
                 .Union(Directory.GetFiles($"{this.m_relpath}ui_api\\", "*.scar"))
-                .Union(new string[]{ $"{this.m_relpath}coh2_battlegrounds.scar" })
+                .Union(new string[] { $"{this.m_relpath}coh2_battlegrounds.scar" })
                 .ToArray();
             foreach (string file in scar) {
                 if (!file.EndsWith("session.scar")) {
@@ -72,7 +72,7 @@ namespace Battlegrounds.Compiler.Source {
             return files.ToArray();
         }
 
-        public WinconditionSourceFile GetModGraphic() 
+        public WinconditionSourceFile GetModGraphic()
             => new WinconditionSourceFile($"info\\coh2_battlegrounds_wincondition_preview.dds", File.ReadAllBytes($"{this.Intermediate}info\\coh2_battlegrounds_wincondition_preview.dds"));
 
         public override string ToString() => $"Local build from \"{this.m_relpath}\"";

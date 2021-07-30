@@ -1,10 +1,11 @@
 ﻿using System.Collections;
+
 using Battlegrounds.Campaigns.API;
 using Battlegrounds.Campaigns.Controller;
 using Battlegrounds.Util.Coroutines;
 
 namespace Battlegrounds.Campaigns.AI {
-    
+
     public class CampaignMapAI {
 
         public ICampaignTeam Team { get; }

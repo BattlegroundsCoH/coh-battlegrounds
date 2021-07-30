@@ -4,7 +4,7 @@
     /// Interface for a tuning mod. Extension of the <see cref="IGameMod"/> interface.
     /// </summary>
     public interface ITuningMod : IGameMod {
-    
+
         /// <summary>
         /// Get the blueprint name of the tuning verification upgrade.
         /// </summary>

@@ -1,5 +1,5 @@
 ﻿namespace Battlegrounds.Modding {
-    
+
     /// <summary>
     /// Enum representing the different types of mods.
     /// </summary>

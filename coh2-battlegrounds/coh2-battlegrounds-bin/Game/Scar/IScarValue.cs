@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 
 namespace Battlegrounds.Game.Scar {
-    
+
     /// <summary>
     /// .NET interface for representing a Scar value.
     /// </summary>

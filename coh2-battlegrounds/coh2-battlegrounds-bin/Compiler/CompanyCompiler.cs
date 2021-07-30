@@ -10,16 +10,16 @@ using Battlegrounds.Game.Gameplay;
 using Battlegrounds.Util;
 
 namespace Battlegrounds.Compiler {
-    
+
     /// <summary>
     /// Standard implementation for compiling a company into Lua format.
     /// </summary>
     public class CompanyCompiler : ICompanyCompiler {
-    
+
         /// <summary>
         /// New <see cref="CompanyCompiler"/> instance.
         /// </summary>
-        public CompanyCompiler() {}
+        public CompanyCompiler() { }
 
         /// <summary>
         /// Compile a <see cref="Company"/> into a formatted string representing a lua table. Only in-game values are compiled. (Virtual Method).

@@ -1,4 +1,5 @@
 ﻿using System;
+
 using Battlegrounds.Game.Database;
 using Battlegrounds.Game.Scar;
 using Battlegrounds.Json;
@@ -68,7 +69,7 @@ namespace Battlegrounds.Game.DataCompany {
         }
 
         public string ToJsonReference() => throw new NotSupportedException();
-        
+
         public string ToScar() => $"{{ abp = {this.ABP.ToScar()}, max_use = {this.m_useCount} }}";
 
     }

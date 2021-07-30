@@ -98,8 +98,8 @@ namespace BattlegroundsApp.Models {
                 };
 
                 // Create standard online match strategy.
-                matchAnalyzer = new OnlineMatchAnalyzer { 
-                    
+                matchAnalyzer = new OnlineMatchAnalyzer {
+
                 };
 
                 // Create standard online finalizer

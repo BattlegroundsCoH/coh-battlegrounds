@@ -1,7 +1,7 @@
 ﻿using Battlegrounds.Game.Scar;
 
 namespace Battlegrounds.Game.Gameplay {
-    
+
     /// <summary>
     /// Represents a <see cref="Modifier"/> to apply to a <see cref="Squad"/>. Implements <see cref="IScarValue"/>.
     /// </summary>

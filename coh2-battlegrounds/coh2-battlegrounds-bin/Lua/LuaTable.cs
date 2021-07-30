@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+
 using Battlegrounds.Lua.Runtime;
 
 using static Battlegrounds.Lua.LuaNil;
@@ -174,7 +175,7 @@ namespace Battlegrounds.Lua {
                 throw new KeyNotFoundException();
             }
         }
-        
+
         /// <summary>
         /// Retrieve an element by <see cref="string"/> key (Implict <see cref="LuaString"/>).
         /// </summary>
@@ -313,11 +314,11 @@ namespace Battlegrounds.Lua {
         public override LuaType GetLuaType() => LuaType.LUA_TABLE;
 
         public IEnumerator<KeyValuePair<LuaValue, LuaValue>> GetEnumerator() => ((IEnumerable<KeyValuePair<LuaValue, LuaValue>>)this.m_table).GetEnumerator();
-        
+
         IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable)this.m_table).GetEnumerator();
 
         public override int GetHashCode() => this.m_table.GetHashCode();
-        
+
         /// <summary>
         /// Get the length (as defined by the lua 5.1 manual, NOT accurate).
         /// </summary>

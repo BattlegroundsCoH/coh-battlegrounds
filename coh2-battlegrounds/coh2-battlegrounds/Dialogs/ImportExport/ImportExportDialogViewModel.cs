@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
+
 using BattlegroundsApp.Dialogs.Service;
 using BattlegroundsApp.Utilities;
 using BattlegroundsApp.ViewModels;
@@ -26,7 +27,7 @@ namespace BattlegroundsApp.Dialogs.ImportExport {
         public ImportExportDialogType Type { get; set; }
 
         private string _companyString;
-        public string CompanyString { 
+        public string CompanyString {
             get {
                 return _companyString;
             }

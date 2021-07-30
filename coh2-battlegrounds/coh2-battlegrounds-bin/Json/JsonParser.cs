@@ -6,7 +6,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 
 namespace Battlegrounds.Json {
-    
+
     /// <summary>
     /// Static utility class for parsing a Json file.
     /// </summary>
@@ -108,7 +108,7 @@ namespace Battlegrounds.Json {
                 StringBuilder sb = new StringBuilder();
 
                 while (i < contents.Length) {
-                    
+
                     if (contents[i] == ']') {
 
                         if (sb.Length > 0) {
@@ -147,7 +147,7 @@ namespace Battlegrounds.Json {
                 StringBuilder ln = new StringBuilder();
 
                 while (i < contents.Length) {
-                    
+
                     if (contents[i] == '}') {
                         i++;
                         break;

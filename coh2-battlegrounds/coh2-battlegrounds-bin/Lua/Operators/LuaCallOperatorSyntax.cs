@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+
 using Battlegrounds.Lua.Parsing;
 
 namespace Battlegrounds.Lua.Operators {
@@ -12,8 +13,8 @@ namespace Battlegrounds.Lua.Operators {
         public string OperatorSymbol => "()";
 
         public bool Apply(List<LuaExpr> luaExprs, int i, Action<List<LuaExpr>> recursiveFunction) {
-            if (i - 1 >= 0 && luaExprs[i-1] is LuaLookupIdExpr) {
-                
+            if (i - 1 >= 0 && luaExprs[i - 1] is LuaLookupIdExpr) {
+
                 // Set args
                 var largs = luaExprs[i] as LuaArguments;
                 luaExprs[i - 1] = new LuaCallExpr(luaExprs[i - 1], largs);

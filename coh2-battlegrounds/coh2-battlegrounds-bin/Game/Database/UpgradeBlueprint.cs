@@ -74,7 +74,7 @@ namespace Battlegrounds.Game.Database {
                     "Name" => reader.GetString(),
                     "ModGUID" => reader.GetString(),
                     "SlotItems" => reader.GetStringArray(),
-                    "OwnerType" => reader.GetString() switch { 
+                    "OwnerType" => reader.GetString() switch {
                         "self" => UpgradeBlueprint.OwnerType.Self,
                         "player" => UpgradeBlueprint.OwnerType.Player,
                         "entity_in_squad" => UpgradeBlueprint.OwnerType.EntityInSquad,

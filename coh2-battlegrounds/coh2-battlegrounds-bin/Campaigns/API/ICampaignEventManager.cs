@@ -1,7 +1,7 @@
 ﻿using Battlegrounds.Lua;
 
 namespace Battlegrounds.Campaigns.API {
-    
+
     /// <summary>
     /// 
     /// </summary>
@@ -29,14 +29,14 @@ namespace Battlegrounds.Campaigns.API {
         /// </summary>
         /// <returns></returns>
         bool UpdateVictory();
-        
+
         /// <summary>
         /// 
         /// </summary>
         /// <param name="eventType"></param>
         /// <param name="closure"></param>
         void NewLuaEventHandler(int eventType, LuaClosure closure);
-        
+
         /// <summary>
         /// 
         /// </summary>

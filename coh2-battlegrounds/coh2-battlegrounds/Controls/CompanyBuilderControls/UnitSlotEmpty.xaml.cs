@@ -13,15 +13,12 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace BattlegroundsApp.Controls.CompanyBuilderControls
-{
+namespace BattlegroundsApp.Controls.CompanyBuilderControls {
     /// <summary>
     /// Interaction logic for EmptyUnitSlot.xaml
     /// </summary>
-    public partial class UnitSlotEmpty : UserControl
-    {
-        public UnitSlotEmpty()
-        {
+    public partial class UnitSlotEmpty : UserControl {
+        public UnitSlotEmpty() {
             InitializeComponent();
         }
     }

@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Windows;
+
 using Battlegrounds.Game.Database;
 using Battlegrounds.Game.Database.Management;
 using Battlegrounds.Game.DataCompany;
 using Battlegrounds.Game.Gameplay;
+
 using BattlegroundsApp.Dialogs.AddUnit;
 using BattlegroundsApp.Dialogs.YesNo;
 using BattlegroundsApp.Utilities;
@@ -38,7 +40,7 @@ namespace BattlegroundsApp.Controls.CompanyBuilderControls {
         public UnitSlotType UnitType { get; }
         private uint SlotOccupantID { get; set; }
 
-        private List<SquadBlueprint> SquadList 
+        private List<SquadBlueprint> SquadList
             => BlueprintManager.GetCollection<SquadBlueprint>()
             .FilterByMod(_companyBuilderView.CompanyGUID)
             .Filter(x => x.Army == _companyBuilderView.CompanyFaction.ToString() && CompanyBuilderView.Category[(int)this.UnitType].IsValid(x)).ToList();

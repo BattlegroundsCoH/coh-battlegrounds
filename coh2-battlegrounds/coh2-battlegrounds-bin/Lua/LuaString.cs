@@ -50,7 +50,7 @@
         public override int GetHashCode() => this.m_internalStringValue.GetHashCode();
 
         public override string ToString() => this.m_internalStringValue;
-        
+
         public override LuaType GetLuaType() => LuaType.LUA_STRING;
 
     }

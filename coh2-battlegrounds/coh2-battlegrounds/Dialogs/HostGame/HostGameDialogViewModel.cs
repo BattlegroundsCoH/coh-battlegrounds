@@ -4,7 +4,7 @@ using BattlegroundsApp.Dialogs.Service;
 using BattlegroundsApp.Utilities;
 
 namespace BattlegroundsApp.Dialogs.HostGame {
-    
+
     public enum HostGameDialogResult {
         Host,
         Cancel

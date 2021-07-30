@@ -7,7 +7,7 @@ using System.Text;
 using Battlegrounds.Functional;
 
 namespace Battlegrounds.Verification {
-    
+
     /// <summary>
     /// Class that can calculate the numeric checksum value of an object implementing <see cref="IChecksumItem"/>.
     /// </summary>
@@ -53,7 +53,7 @@ namespace Battlegrounds.Verification {
         /// Initialise a new <see cref="Checksum"/> class based on the <see cref="IChecksumItem"/> <paramref name="item"/> instance.
         /// </summary>
         /// <param name="item">The <see cref="IChecksumItem"/> to represent.</param>
-        public Checksum(IChecksumItem item){
+        public Checksum(IChecksumItem item) {
             this.m_sumItems = new();
             GetChecksumProperties(item).ForEach(x => this.AddValue(x));
         }
@@ -87,7 +87,7 @@ namespace Battlegrounds.Verification {
         public ulong GetCheckksum() {
             ulong sum = (ulong)this.m_sumItems.Count;
             for (int i = 0; i < this.m_sumItems.Count; i++) {
-                sum += Encoding.UTF8.GetBytes(this.m_sumItems[i]?.ToString() ?? "NULL").Aggregate(0ul, (a,b) => a + b);
+                sum += Encoding.UTF8.GetBytes(this.m_sumItems[i]?.ToString() ?? "NULL").Aggregate(0ul, (a, b) => a + b);
             }
             return sum;
         }

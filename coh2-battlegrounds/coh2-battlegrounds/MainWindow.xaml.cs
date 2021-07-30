@@ -175,6 +175,6 @@ namespace BattlegroundsApp {
             }
         }
 
-    }   
+    }
 
 }

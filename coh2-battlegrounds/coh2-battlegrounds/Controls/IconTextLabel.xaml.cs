@@ -3,7 +3,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 
 namespace BattlegroundsApp.Controls {
-    
+
     /// <summary>
     /// Interaction logic for IconTextLabel.xaml
     /// </summary>

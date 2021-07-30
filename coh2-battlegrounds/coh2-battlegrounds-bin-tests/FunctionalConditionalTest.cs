@@ -3,14 +3,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+
 using Battlegrounds.Functional;
+
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace coh2_battlegrounds_bin_tests {
-    
+
     [TestClass]
     public class FunctionalConditionalTest {
-    
+
         [TestMethod]
         public void IsTrueTest1() {
             bool b = true.IfTrue().ToBool();

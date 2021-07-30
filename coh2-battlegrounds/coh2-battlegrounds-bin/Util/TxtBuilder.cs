@@ -3,7 +3,7 @@ using System.IO;
 using System.Text;
 
 namespace Battlegrounds.Util {
-    
+
     /// <summary>
     /// Simple text builder with support for indentation and lines. Content can be retrieved as a <see cref="string"/> or saved to a file. This class cannot be inherited.
     /// </summary>

@@ -20,7 +20,7 @@
         public bool IsTowingEnabled => true;
 
         public ModType GameModeType => ModType.Tuning;
-        
+
         public BattlegroundsTuning(ModPackage package) {
             this.Guid = package.TuningGUID;
             this.Name = "Battlegrounds";

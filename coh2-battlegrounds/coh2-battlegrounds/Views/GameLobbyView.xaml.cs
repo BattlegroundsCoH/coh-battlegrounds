@@ -347,7 +347,7 @@ namespace BattlegroundsApp.Views {
             }
 
             // Verify we got the company
-            if (card.CompanySelector.SelectedItem is not TeamPlayerCompanyItem companyItem ) {
+            if (card.CompanySelector.SelectedItem is not TeamPlayerCompanyItem companyItem) {
                 return null;
             }
 

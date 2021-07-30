@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+
 using Battlegrounds.Game.Database;
 
 namespace Battlegrounds.Game.Gameplay {
-    
+
     /// <summary>
     /// 
     /// </summary>

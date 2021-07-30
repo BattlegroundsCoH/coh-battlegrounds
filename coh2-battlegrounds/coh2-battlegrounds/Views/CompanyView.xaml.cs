@@ -19,7 +19,7 @@ namespace BattlegroundsApp.Views {
     /// </summary>
     public partial class CompanyView : ViewState, IStateMachine<ViewState> {
 
-        private ObservableCollection<Company>  m_player_companies;
+        private ObservableCollection<Company> m_player_companies;
 
         public CompanyView() {
             InitializeComponent();
@@ -40,7 +40,7 @@ namespace BattlegroundsApp.Views {
 
         }
 
-        public override void StateOnLostFocus() {}
+        public override void StateOnLostFocus() { }
 
         bool IStateMachine<ViewState>.StateChangeRequest(object request) => true;
 
@@ -49,7 +49,7 @@ namespace BattlegroundsApp.Views {
             ModGuid modGuid = ModManager.GetPackage("mod_bg").TuningGUID;
             Trace.TraceWarning("There is currently no method of setting tuning pack. This should be fixed ASAP.");
 
-            if (CreateCompanyDialogViewModel.ShowCreateCompanyDialog("Create", out string companyName, out Faction companyFaction, out CompanyType companyType) 
+            if (CreateCompanyDialogViewModel.ShowCreateCompanyDialog("Create", out string companyName, out Faction companyFaction, out CompanyType companyType)
                 is CreateCompanyDialogResult.Create) {
                 this.StateChangeRequest(new CompanyBuilderView(companyName, companyFaction, companyType, modGuid));
             }
@@ -95,7 +95,7 @@ namespace BattlegroundsApp.Views {
             }
         }
 
-        private void exportCompany_Click(object sender, RoutedEventArgs e) 
+        private void exportCompany_Click(object sender, RoutedEventArgs e)
             => ImportExportDialogViewModel.ShowExportDialog("Export", (CompanyTemplate.FromCompany(companyList.SelectedItem as Company)).ToTemplateString());
 
         private void importCompany_Click(object sender, RoutedEventArgs e) {
@@ -105,7 +105,7 @@ namespace BattlegroundsApp.Views {
                     var company = CompanyTemplate.FromString(companyString);
                     PlayerCompanies.SaveCompany(CompanyTemplate.FromTemplate(company));
                     UpdateCompanyList();
-                } catch(FormatException err) {
+                } catch (FormatException err) {
                     Trace.WriteLine(err); // TODO: Show message box featuring a detailed description of the problem 
                     // The causing error will be visible in err (You may need it when deciding on what to do from there).
                 }

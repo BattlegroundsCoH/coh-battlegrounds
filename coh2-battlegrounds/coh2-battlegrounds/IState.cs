@@ -1,5 +1,5 @@
 ﻿namespace BattlegroundsApp {
-    
+
     /// <summary>
     /// Interface for representing a state in a <see cref="IStateMachine{T}"/>.
     /// </summary>

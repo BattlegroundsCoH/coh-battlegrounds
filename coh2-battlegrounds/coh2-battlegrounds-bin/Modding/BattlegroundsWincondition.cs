@@ -6,7 +6,7 @@ namespace Battlegrounds.Modding {
     /// Sealed class representing a wincondition specifically tied to the Battlegrounds mod.
     /// </summary>
     public sealed class BattlegroundsWincondition : IWinconditionMod {
-        
+
         public ModGuid Guid { get; }
 
         public string Name { get; }
@@ -18,7 +18,7 @@ namespace Battlegrounds.Modding {
         public ModType GameModeType => ModType.Gamemode;
 
         public BattlegroundsWincondition(ModPackage package) {
-            
+
             // Set basic properties
             this.Guid = package.GamemodeGUID;
             this.Name = package.PackageName;

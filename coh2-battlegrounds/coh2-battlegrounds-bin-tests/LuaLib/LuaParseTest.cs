@@ -1,11 +1,12 @@
 ﻿using Battlegrounds.Lua;
 using Battlegrounds.Lua.Parsing;
+
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using static Battlegrounds.Lua.LuaNil;
 
 namespace coh2_battlegrounds_bin_tests.LuaLib {
-    
+
     [TestClass]
     public class LuaParseTest {
 

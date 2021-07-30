@@ -18,7 +18,7 @@ using CampaignResources = System.Collections.Generic.List<coh2_battlegrounds_con
 using static Battlegrounds.Lua.LuaNil;
 
 namespace coh2_battlegrounds_console {
-    
+
     public static class CampaignCompiler {
 
         public const uint COMPILER_VERSION = 10;
@@ -81,7 +81,7 @@ namespace coh2_battlegrounds_console {
             public LuaTable armyComposition;
             public CampaignArmyGoal[] goals;
         }
-        
+
         public static void Compile(string dir) {
 
             // Create lua state
@@ -106,8 +106,8 @@ namespace coh2_battlegrounds_console {
             }
 
             // List of resources loaded
-            CampaignResources campaignResources = new ();
-            CampaignArmies campaignArmies = new ();
+            CampaignResources campaignResources = new();
+            CampaignArmies campaignArmies = new();
             CampaignDisplay campaignDisplay = default;
             CampaignWeather campaignWeather = default;
 
@@ -117,7 +117,7 @@ namespace coh2_battlegrounds_console {
                     Console.WriteLine("Invalid campaign file. Global table 'campaign' is missing");
                     return;
                 }
-                manifest.Pairs((k,v) => {
+                manifest.Pairs((k, v) => {
                     switch (k.Str()) {
                         case "display":
                             if (v is LuaTable d) {
@@ -183,21 +183,21 @@ namespace coh2_battlegrounds_console {
 
             // Fix locale IDS (if any locale)
             if (campaignResources.FirstOrDefault(x => x.Rt == ResourceType.Locale) is CampaignResource rs) {
-                
+
                 // Fix campaign IDS
 
                 id = rs.Identifier;
-                for (int i = 0; i < campaignArmies.Count; i++) { 
+                for (int i = 0; i < campaignArmies.Count; i++) {
                     campaignArmies[i].name = campaignArmies[i].name with { LocaleSource = id };
                     campaignArmies[i].desc = campaignArmies[i].desc with { LocaleSource = id };
                 }
-                
+
                 // Fix displays
                 campaignDisplay.name = campaignDisplay.name with { LocaleSource = id };
                 campaignDisplay.desc = campaignDisplay.desc with { LocaleSource = id };
                 campaignDisplay.loc = campaignDisplay.loc with { LocaleSource = id };
 
-            }            
+            }
 
             Compile(dir, id, campaignDisplay, campaignWeather, campaignArmies, campaignResources, mapdef);
 
@@ -289,7 +289,7 @@ namespace coh2_battlegrounds_console {
 
             // Write each army
             armies.ForEach(x => {
-                
+
                 // Write army
                 byte[] arm = x.army.Encode();
                 bw.Write(arm.Length);
@@ -432,7 +432,7 @@ namespace coh2_battlegrounds_console {
 
                     // Run syntax check
                     if (LuaVM.LoadFile(campaignState, src) is not LuaNil) {
-                       
+
                         // Save raw
                         resource = new CampaignResource() {
                             Rt = rt,
@@ -566,7 +566,7 @@ namespace coh2_battlegrounds_console {
             if (table["winter"] is LuaTable winterTable) {
                 weather.winterStart = GetDate(winterTable["start_date"] as LuaTable);
                 weather.winterEnd = GetDate(winterTable["end_date"] as LuaTable);
-            } else {                
+            } else {
                 weather.winterStart = weather.winterEnd = new CampaignDate(2021, 1, 1);
             }
             if (table["allowed_atmospheres"] is LuaTable atmosTable) {
@@ -588,7 +588,7 @@ namespace coh2_battlegrounds_console {
 
         private static LocaleKey Loc(LuaValue lv) => new LocaleKey(lv.Str());
 
-        private static CampaignDate GetDate(LuaTable t) 
+        private static CampaignDate GetDate(LuaTable t)
             => new CampaignDate((int)(t["year"] as LuaNumber), (int)(t["month"] as LuaNumber), (int)(t["day"] as LuaNumber));
 
         private static int GetTurnTime(LuaTable table) {

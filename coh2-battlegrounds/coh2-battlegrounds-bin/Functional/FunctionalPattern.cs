@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace Battlegrounds.Functional {
-    
+
     public static class FunctionalPattern {
 
         public static T Then<T>(this T e, Func<T, T> function)

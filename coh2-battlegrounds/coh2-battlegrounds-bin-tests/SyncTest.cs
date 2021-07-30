@@ -1,9 +1,11 @@
 ﻿using System.Diagnostics;
+
 using Battlegrounds.Online.Services;
+
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace coh2_battlegrounds_bin_tests {
-    
+
     [TestClass]
     public class SyncTest {
 

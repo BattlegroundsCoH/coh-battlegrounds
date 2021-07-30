@@ -12,17 +12,17 @@ namespace Battlegrounds.Game.Database {
     /// The theatre of war a scenario is taking place in.
     /// </summary>
     public enum ScenarioTheatre {
-        
+
         /// <summary>
         /// Axis vs Soviets
         /// </summary>
         EasternFront,
-        
+
         /// <summary>
         /// Axis vs UKF & USF
         /// </summary>
         WesternFront,
-        
+
         /// <summary>
         /// Axis vs Allies (Germany)
         /// </summary>
@@ -87,7 +87,7 @@ namespace Battlegrounds.Game.Database {
         /// <summary>
         /// The <see cref="Wincondition"/> instances designed for this <see cref="Scenario"/>. Empty list means all <see cref="Wincondition"/> instances can be used.
         /// </summary>
-        [JsonReference] 
+        [JsonReference]
         public List<string> Gamemodes { get; set; }
 
         public string ToJsonReference() => this.RelativeFilename;

@@ -1,5 +1,5 @@
 ﻿namespace Battlegrounds.Lua.Parsing {
-    
+
     /// <summary>
     /// Represents a position in a Lua source file.
     /// </summary>

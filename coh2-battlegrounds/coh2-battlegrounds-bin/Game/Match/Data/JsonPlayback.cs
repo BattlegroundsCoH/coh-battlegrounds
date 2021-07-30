@@ -22,10 +22,10 @@ namespace Battlegrounds.Game.Match.Data {
             [JsonIgnore] public uint Uid => 0;
 
             public ulong UID;
-            [JsonIgnoreIfValue("")][JsonIgnoreIfNull] public string Type;
+            [JsonIgnoreIfValue("")] [JsonIgnoreIfNull] public string Type;
             [JsonIgnoreIfValue(ulong.MaxValue)] public ulong Player;
             [JsonIgnoreIfValue(ushort.MaxValue)] public ushort Id;
-            [JsonIgnoreIfValue("")][JsonIgnoreIfNull] public string Arg1;
+            [JsonIgnoreIfValue("")] [JsonIgnoreIfNull] public string Arg1;
             [JsonIgnoreIfValue("")] [JsonIgnoreIfNull] public string Arg2;
 
             public string ToJsonReference() => throw new InvalidOperationException();
@@ -120,16 +120,23 @@ namespace Battlegrounds.Game.Match.Data {
             return e switch {
                 KillEvent k => new Event() { UID = e.Uid, Type = nameof(KillEvent), Player = k.UnitOwner.SteamID, Id = k.UnitID },
                 DeployEvent d => new Event() { UID = e.Uid, Type = nameof(DeployEvent), Player = d.DeployingPlayer.SteamID, Id = d.SquadID },
-                RetreatEvent r => new Event() { UID = e.Uid, Type = nameof(RetreatEvent), Player = r.WithdrawPlayer.SteamID, 
-                    Id = r.WithdrawingUnitID, 
-                    Arg1 = r.WithdrawingUnitVeterancyChange.ToString(), 
-                    Arg2 = r.WithdrawingUnitVeterancyExperience.ToString() 
+                RetreatEvent r => new Event() {
+                    UID = e.Uid,
+                    Type = nameof(RetreatEvent),
+                    Player = r.WithdrawPlayer.SteamID,
+                    Id = r.WithdrawingUnitID,
+                    Arg1 = r.WithdrawingUnitVeterancyChange.ToString(),
+                    Arg2 = r.WithdrawingUnitVeterancyExperience.ToString()
                 },
                 VictoryEvent v => new Event() { UID = e.Uid, Type = nameof(VictoryEvent), Player = v.VictorID },
                 PickupEvent i => new Event() { UID = e.Uid, Type = nameof(PickupEvent), Player = i.PickupPlayer.SteamID, Id = i.PickupSquadID, Arg1 = i.PickupItem.PBGID.ToString() },
-                VerificationEvent g => new Event() { UID = e.Uid, Type = nameof(VerificationEvent), Player = ulong.MaxValue, Id = ushort.MaxValue, 
-                    Arg1 = g.VerificationType.ToString(), 
-                    Arg2 = g.VerificationArgument 
+                VerificationEvent g => new Event() {
+                    UID = e.Uid,
+                    Type = nameof(VerificationEvent),
+                    Player = ulong.MaxValue,
+                    Id = ushort.MaxValue,
+                    Arg1 = g.VerificationType.ToString(),
+                    Arg2 = g.VerificationArgument
                 },
                 CaptureEvent c => new Event() { UID = e.Uid, Type = nameof(CaptureEvent), Player = c.CapturingPlayer.SteamID, Id = ushort.MaxValue, Arg1 = c.CapturedBlueprint.PBGID.ToString() },
                 _ => new Event() { UID = e.Uid },
@@ -154,7 +161,7 @@ namespace Battlegrounds.Game.Match.Data {
         }
 
         IEnumerator IEnumerable.GetEnumerator() => this.GetEnumerator();
-    
+
     }
 
 }

@@ -15,6 +15,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
+
 using Battlegrounds.Campaigns;
 using Battlegrounds.Campaigns.API;
 using Battlegrounds.Campaigns.Controller;
@@ -24,11 +25,13 @@ using Battlegrounds.Game.Database;
 using Battlegrounds.Game.DataCompany;
 using Battlegrounds.Game.Gameplay;
 using Battlegrounds.Locale;
+
 using BattlegroundsApp.Resources;
+
 using static Battlegrounds.BattlegroundsInstance;
 
 namespace BattlegroundsApp.Views.CampaignViews {
-    
+
     /// <summary>
     /// Interaction logic for CampaignEngagementDialogView.xaml
     /// </summary>
@@ -108,7 +111,7 @@ namespace BattlegroundsApp.Views.CampaignViews {
 
         public bool HasPlayer4 => this.Players == 4;
 
-        public bool CanMoveAll 
+        public bool CanMoveAll
             => this.RegimentalUnits.Count > 0 && this.IndexableUnits[this.SelectedPlayer].Count < Company.MAX_SIZE;
 
         public bool CanAddToCompany
@@ -179,7 +182,7 @@ namespace BattlegroundsApp.Views.CampaignViews {
             });
         }
 
-        protected override void OnOpened() {}
+        protected override void OnOpened() { }
 
         private void Regiment_SelectionChanged(object sender, SelectionChangedEventArgs e) => this.RefreshDisplayedDivision();
 
@@ -214,19 +217,19 @@ namespace BattlegroundsApp.Views.CampaignViews {
             }
             this.RefreshProperties();
         }
-        
+
         private void MoveThis_Click(object sender, RoutedEventArgs e) {
             this.IndexableUnits[this.SelectedPlayer].Add(this.RegimentalUnits[this.SelectedRegimentUnit]);
             this.RegimentalUnits.RemoveAt(this.SelectedRegimentUnit);
             this.RefreshProperties();
         }
-        
+
         private void ReturnAll_Click(object sender, RoutedEventArgs e) {
             this.IndexableUnits[this.SelectedPlayer].Clear();
             this.RefreshDisplayedDivision();
             this.RefreshProperties();
         }
-        
+
         private void ReturnThis_Click(object sender, RoutedEventArgs e) {
             if (sender is ListView lv) {
                 this.IndexableUnits[this.SelectedPlayer].RemoveAt(lv.SelectedIndex);

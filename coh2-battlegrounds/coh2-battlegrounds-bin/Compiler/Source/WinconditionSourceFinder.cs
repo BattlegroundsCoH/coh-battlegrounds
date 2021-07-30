@@ -1,10 +1,11 @@
 ﻿using System.Diagnostics;
 using System.IO;
+
 using Battlegrounds.Modding;
 using Battlegrounds.Networking.Server;
 
 namespace Battlegrounds.Compiler.Source {
-    
+
     public static class WinconditionSourceFinder {
 
         private static bool HasLocalCopy(out string path) {
@@ -19,7 +20,7 @@ namespace Battlegrounds.Compiler.Source {
                         path = $"..\\{path}";
                     }
                 } while (top < 11);
-            } catch {}
+            } catch { }
             return false;
         }
 

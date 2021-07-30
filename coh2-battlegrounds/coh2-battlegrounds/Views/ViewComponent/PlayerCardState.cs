@@ -1,5 +1,7 @@
 ﻿using System.Windows;
+
 using Battlegrounds;
+
 using BattlegroundsApp.Controls.Lobby;
 
 namespace BattlegroundsApp.Views.ViewComponent {
@@ -30,9 +32,9 @@ namespace BattlegroundsApp.Views.ViewComponent {
             this.SetStateIdentifier(ownerID, isAI);
         }
 
-        public override void StateOnFocus() {}
-        
-        public override void StateOnLostFocus() {}
+        public override void StateOnFocus() { }
+
+        public override void StateOnLostFocus() { }
 
     }
 

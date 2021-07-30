@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 
 namespace Battlegrounds.Game.DataCompany {
-    
+
     /// <summary>
     /// Enumerated representation of recognized types that can be used to describe a <see cref="Company"/>.
     /// </summary>
     public enum CompanyType {
-    
+
         /// <summary>
         /// No specific type is specified
         /// </summary>
@@ -132,7 +132,7 @@ namespace Battlegrounds.Game.DataCompany {
             CompanyType.Artillery => 14,
             _ => 10
         };
-    
+
     }
 
 }

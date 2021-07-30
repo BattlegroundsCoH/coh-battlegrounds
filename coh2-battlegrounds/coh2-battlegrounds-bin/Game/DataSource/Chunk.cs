@@ -6,7 +6,7 @@ using System.Linq;
 using Battlegrounds.Util;
 
 namespace Battlegrounds.Game.DataSource {
-    
+
     /// <summary>
     /// Represents a chunk of data in a <see cref="ChunkyFile"/>.
     /// </summary>

@@ -9,7 +9,7 @@ using Battlegrounds.Game.Gameplay;
 using Battlegrounds.Modding;
 
 namespace Battlegrounds.Game.DataCompany {
-    
+
     /// <summary>
     /// Builder class for building a <see cref="Squad"/> instance with serial-style methods. Can be cleared for re-use.
     /// </summary>
@@ -62,7 +62,7 @@ namespace Battlegrounds.Game.DataCompany {
         /// <param name="overrideIndex">Should the built squad </param>
         /// <remarks>This will not modify the <see cref="Squad"/> instance.</remarks>
         public UnitBuilder(Squad squad, bool overrideIndex = true) {
-            
+
             this.m_hasOverrideIndex = overrideIndex;
             this.m_overrideIndex = squad.SquadID;
             this.m_modifiers = squad.Modifiers.ToHashSet();
@@ -83,7 +83,7 @@ namespace Battlegrounds.Game.DataCompany {
             }
 
         }
-        
+
         /// <summary>
         /// New <see cref="UnitBuilder"/> instance based on the settings of an already built <see cref="Squad"/> instance.
         /// </summary>
@@ -421,7 +421,7 @@ namespace Battlegrounds.Game.DataCompany {
         /// <param name="ID">The unique ID to use when creating the <see cref="Squad"/> instance.</param>
         /// <returns>A <see cref="Squad"/> instance with all the parameters defined by the <see cref="UnitBuilder"/>.</returns>
         public virtual Squad Build(ushort ID) {
-        
+
             if (this.m_hasOverrideIndex) {
                 ID = this.m_overrideIndex;
             }

@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+
 using Battlegrounds.Game.DataCompany;
 using Battlegrounds.Game.Match.Play;
 
@@ -12,7 +13,7 @@ namespace Battlegrounds.Game.Match.Startup {
         private Company m_localCompany;
 
         public LocalCompanyHandle LocalCompanyCollector { get; set; }
-        
+
         public SessionInfoHandle SessionInfoCollector { get; set; }
 
         public IPlayStrategyFactory PlayStrategyFactory { get; set; }

@@ -4,7 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 
 namespace Battlegrounds.Json {
-    
+
     /// <summary>
     /// Represents an array for <see cref="IJsonElement"/> elements. Implements <see cref="IList"/> and <see cref="IJsonElement"/>.
     /// </summary>
@@ -71,7 +71,7 @@ namespace Battlegrounds.Json {
                 } else {
 
                     // Add the element
-                    addMethod.Invoke(enumerable, new object[] { elem  });
+                    addMethod.Invoke(enumerable, new object[] { elem });
 
                 }
 

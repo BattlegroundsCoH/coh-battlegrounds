@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+
 using Battlegrounds.Functional;
 using Battlegrounds.Game.Database;
 using Battlegrounds.Game.Database.Management;
 using Battlegrounds.Game.Gameplay;
 
 namespace Battlegrounds.Game.DataCompany {
-    
+
     /// <summary>
     /// Utility class for generating random <see cref="Company"/> data ready for ingame-use.
     /// </summary>
@@ -113,7 +114,7 @@ namespace Battlegrounds.Game.DataCompany {
                     SquadBlueprint transport_blueprint = null;
                     DeploymentMethod deployMethod = DeploymentMethod.None;
 
-                    if (support.IsAntiTank &&__random.Next(0, 50) <= 24 && max_transport_use > 0) {
+                    if (support.IsAntiTank && __random.Next(0, 50) <= 24 && max_transport_use > 0) {
                         transport_blueprint = blueprintPool.Where(x => x.IsTransportVehicle).Random(__random);
                         deployMethod = DeploymentMethod.DeployAndExit;
                         max_transport_use--;

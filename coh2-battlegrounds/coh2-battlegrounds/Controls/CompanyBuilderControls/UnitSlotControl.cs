@@ -32,7 +32,7 @@ namespace BattlegroundsApp.Controls.CompanyBuilderControls {
         public bool StateChangeRequest(object request) {
             if (request is UnitSlotStateType type) {
                 if (type == UnitSlotStateType.Occupied) {
-                    foreach(object state in this.Items) {
+                    foreach (object state in this.Items) {
                         if (state is OccupiedState occupiedState) {
                             this.SetState(occupiedState);
                             return true;

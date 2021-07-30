@@ -120,7 +120,7 @@
         PCMD_AIPlayer_ObjectiveNotification,
         PCMD_SetCommander,
         PCMD_COUNT,
-        
+
         _UNKNOWN1,
 
         PCMD_BroadcastMessage,

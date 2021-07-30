@@ -19,7 +19,7 @@ using Battlegrounds.Modding;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace coh2_battlegrounds_bin_tests.MatchSim {
-    
+
     [TestClass]
     public class BattleSimulation {
 
@@ -41,13 +41,13 @@ namespace coh2_battlegrounds_bin_tests.MatchSim {
                 bool canContinue = false;
                 Environment.CurrentDirectory = @"E:\coh2_battlegrounds\coh2-battlegrounds\coh2-battlegrounds\bin\Debug\net5.0-windows";
                 BattlegroundsInstance.LoadInstance();
-                DatabaseManager.LoadAllDatabases((a,b) => canContinue = true);
+                DatabaseManager.LoadAllDatabases((a, b) => canContinue = true);
                 while (!canContinue) {
                     Thread.Sleep(1);
                 }
             }
             var s = new NullSession(true);
-            s.CreateCompany(0, Faction.Soviet, "Allies", 
+            s.CreateCompany(0, Faction.Soviet, "Allies",
                 x => x.AddUnit(y => y.SetBlueprint(BlueprintManager.FromBlueprintName<SquadBlueprint>("conscript_squad_bg")))
                 .AddUnit(y => y.SetBlueprint(BlueprintManager.FromBlueprintName<SquadBlueprint>("conscript_squad_bg"))));
             s.CreateCompany(1, Faction.Wehrmacht, "Axis",
@@ -95,7 +95,7 @@ namespace coh2_battlegrounds_bin_tests.MatchSim {
 
         [TestMethod]
         public void CanDeployAndKillWithoutError() {
-            
+
             // Create events
             playStrategy.BattleEvent(TimeSpan.FromSeconds(1), new DeployEvent(0, new string[] { "0", }, SOVIET));
             playStrategy.BattleEvent(TimeSpan.FromSeconds(3.8), new KillEvent(1, new string[] { "0", }, SOVIET));

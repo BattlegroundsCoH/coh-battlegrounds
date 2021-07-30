@@ -17,7 +17,7 @@ namespace BattlegroundsApp.Resources {
         private static Dictionary<ModGuid, UcsFile> ModLocales;
 
         static GameLocale() {
-            
+
             // Determine language to use
             string language = Battlegrounds.BattlegroundsInstance.Localize.Language.ToString();
             if (language == "Default") {
@@ -56,7 +56,7 @@ namespace BattlegroundsApp.Resources {
                 locStr = locStr[1..];
                 int j = locStr.IndexOf(':');
                 if (j > 0) {
-                    string numeric = locStr[(j+1)..];
+                    string numeric = locStr[(j + 1)..];
                     if (uint.TryParse(numeric, out uint modLocID)) {
                         ModGuid guid = ModGuid.FromGuid(locStr[0..j]);
                         if (guid.IsValid) {

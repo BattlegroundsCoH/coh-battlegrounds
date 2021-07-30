@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+
 using Battlegrounds.Game.Gameplay;
 
 namespace Battlegrounds.Game.Match.Data {
-    
+
     /// <summary>
     /// Interface for objects containing match data.
     /// </summary>

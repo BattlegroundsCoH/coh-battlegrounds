@@ -2,12 +2,12 @@
 using System.Linq;
 
 namespace Battlegrounds.Functional {
-    
+
     /// <summary>
     /// Functional helper functions for arrays.
     /// </summary>
     public static class FunctionalArray {
-    
+
         /// <summary>
         /// Loop through each element in an array and execute a function that can mutate the element.
         /// </summary>
@@ -30,7 +30,7 @@ namespace Battlegrounds.Functional {
         /// <param name="array">The array to run method on.</param>
         /// <param name="act">The function to run on each element.</param>
         /// <returns>Returns the given array.</returns>
-        public static T[] ForEach<T>(this T[]array, Action<T> act) {
+        public static T[] ForEach<T>(this T[] array, Action<T> act) {
             for (int i = 0; i < array.Length; i++) {
                 act(array[i]);
             }
@@ -84,7 +84,7 @@ namespace Battlegrounds.Functional {
         /// <param name="except">The elments that cannot be contained within the array.</param>
         /// <returns>If element is found and no instances from the except array is found, <see langword="true"/> is returned. Otherwise <see langword="false"/>.</returns>
         /// <exception cref="ArgumentNullException"/>
-        public static bool ContainsWithout<T>(this T[] array, T elem, params T[] except) 
+        public static bool ContainsWithout<T>(this T[] array, T elem, params T[] except)
             => array.Contains(elem) && !array.Any(x => except.Contains(x));
 
         /// <summary>

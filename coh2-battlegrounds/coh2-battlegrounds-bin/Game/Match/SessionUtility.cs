@@ -9,7 +9,7 @@ using Battlegrounds.Game.Match.Data;
 using Battlegrounds.Networking.Server;
 
 namespace Battlegrounds.Game.Match {
-    
+
     /// <summary>
     /// Static utility class for working with <see cref="Session"/> data.
     /// </summary>

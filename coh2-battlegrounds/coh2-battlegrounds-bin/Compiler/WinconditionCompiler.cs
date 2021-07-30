@@ -8,7 +8,7 @@ using Battlegrounds.Compiler.Source;
 using Battlegrounds.Modding;
 
 namespace Battlegrounds.Compiler {
-    
+
     /// <summary>
     /// Helper class for compiling a win condition in a JIT-style.
     /// </summary>
@@ -46,7 +46,7 @@ namespace Battlegrounds.Compiler {
 
             // The archive definition to use when compiling
             TxtBuilder archiveDef = new TxtBuilder();
-            
+
             // Scar/Data TOC section
             archiveDef.AppendLine($"Archive name=\"{wincondition.Guid}\" blocksize=\"262144\"");
             archiveDef.AppendLine("TOCStart name=\"data\" alias=\"data\" path=\"\" relativeroot=\"data\"");

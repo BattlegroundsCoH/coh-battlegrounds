@@ -5,7 +5,7 @@ using System.Text.Json;
 using Battlegrounds.Functional;
 
 namespace Battlegrounds.Game.Database.Extensions {
-    
+
     public class VeterancyExtension {
 
         public readonly struct Rank {

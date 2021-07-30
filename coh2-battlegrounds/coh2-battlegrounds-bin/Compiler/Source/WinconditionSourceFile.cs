@@ -1,5 +1,5 @@
 ﻿namespace Battlegrounds.Compiler.Source {
-    
+
     /// <summary>
     /// A source file for the <see cref="WinconditionCompiler"/> containing a path and binary file contents.
     /// </summary>

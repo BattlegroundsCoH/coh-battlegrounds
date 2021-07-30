@@ -76,7 +76,7 @@ namespace Battlegrounds.Modding {
         /// </summary>
         /// <param name="name"></param>
         /// <param name="guid"></param>
-        public Wincondition(string name, Guid guid) : this(name, ModGuid.FromGuid(guid)) {}
+        public Wincondition(string name, Guid guid) : this(name, ModGuid.FromGuid(guid)) { }
 
         /// <summary>
         /// 

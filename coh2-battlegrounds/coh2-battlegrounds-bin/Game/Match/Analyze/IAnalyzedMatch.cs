@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+
 using Battlegrounds.Game.Gameplay;
 
 namespace Battlegrounds.Game.Match.Analyze {
-    
+
     /// <summary>
     /// Interface for match analysis.
     /// </summary>
@@ -33,7 +34,7 @@ namespace Battlegrounds.Game.Match.Analyze {
         /// Get the session that was played with the match.
         /// </summary>
         ISession Session { get; }
-        
+
         /// <summary>
         /// Get the length of the match
         /// </summary>

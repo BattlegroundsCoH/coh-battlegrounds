@@ -1,10 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+
 using Battlegrounds.Campaigns.API;
 using Battlegrounds.Lua;
 
 namespace Battlegrounds.Campaigns.Models {
-    
+
     /// <summary>
     /// Campaign event handler for handling events.
     /// </summary>
@@ -16,7 +17,7 @@ namespace Battlegrounds.Campaigns.Models {
         /// <summary>
         /// Get or set the active script handler
         /// </summary>
-        public ICampaignScriptHandler ScriptHandler{ get; set; }
+        public ICampaignScriptHandler ScriptHandler { get; set; }
 
         /// <summary>
         /// Initialize a new <see cref="SingleplayerCampaignEventManager"/> class with no events.
@@ -72,7 +73,7 @@ namespace Battlegrounds.Campaigns.Models {
         /// </summary>
         /// <param name="eventType">The event type to invoke.</param>
         /// <param name="args">The arguments to call each function with.</param>
-        public void FireEvent(int eventType, params object[] args) { 
+        public void FireEvent(int eventType, params object[] args) {
             if (this.m_eventHandlers.TryGetValue(eventType, out List<LuaClosure> closures)) {
                 closures.ForEach(x => LuaMarshal.InvokeClosureManaged(x, this.ScriptHandler.ScriptState, args));
             }

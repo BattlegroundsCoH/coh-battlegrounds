@@ -1,5 +1,5 @@
 ﻿namespace Battlegrounds.Game.Database {
-    
+
     public enum ServerItemType {
         Undefined = 0,
         Skin = 1,

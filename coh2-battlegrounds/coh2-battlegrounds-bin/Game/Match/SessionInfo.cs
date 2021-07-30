@@ -2,7 +2,7 @@
 using Battlegrounds.Modding;
 
 namespace Battlegrounds.Game.Match {
-    
+
     /// <summary>
     /// Info struct used by a <see cref="Session"/> instance to infer information.
     /// </summary>

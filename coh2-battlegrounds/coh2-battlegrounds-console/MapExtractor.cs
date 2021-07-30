@@ -8,7 +8,7 @@ using Battlegrounds.Game.Database;
 using Battlegrounds.Json;
 
 namespace coh2_battlegrounds_console {
-    
+
     public static class MapExtractor {
 
         public static string Output { get; set; }

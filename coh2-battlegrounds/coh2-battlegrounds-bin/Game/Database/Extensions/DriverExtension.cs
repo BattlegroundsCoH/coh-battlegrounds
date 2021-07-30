@@ -7,7 +7,7 @@ using Battlegrounds.Game.Database.Management;
 using Battlegrounds.Game.Gameplay;
 
 namespace Battlegrounds.Game.Database.Extensions {
-    
+
     public class DriverExtension {
 
         public readonly struct Entry {

@@ -4,15 +4,17 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+
 using Battlegrounds.Lua;
 using Battlegrounds.Lua.Runtime;
+
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using static Battlegrounds.Lua.LuaNil;
 
 namespace coh2_battlegrounds_bin_tests.LuaLib {
 
-    [TestClass]    
+    [TestClass]
     public class LuaRuntimeTest {
 
         LuaState lState;
@@ -173,7 +175,7 @@ namespace coh2_battlegrounds_bin_tests.LuaLib {
             Assert.AreEqual(5, lns.Length);
 
             for (int i = 0; i < 8; i += 2) {
-                Assert.AreEqual((i+1).ToString(), lns[i / 2]);
+                Assert.AreEqual((i + 1).ToString(), lns[i / 2]);
             }
 
         }
@@ -217,7 +219,7 @@ namespace coh2_battlegrounds_bin_tests.LuaLib {
 
             for (int i = 0; i < 8; i++) {
                 int v = (int)Math.Pow(2, i + 1);
-                Assert.AreEqual($"2^{i+1} = {v}", lns[i]);
+                Assert.AreEqual($"2^{i + 1} = {v}", lns[i]);
             }
 
         }
@@ -526,7 +528,7 @@ namespace coh2_battlegrounds_bin_tests.LuaLib {
             Assert.AreEqual("6", lns[0]);
             Assert.AreEqual("8", lns[1]);
             Assert.AreEqual("11", lns[2]);
-        
+
         }
 
         [TestMethod]

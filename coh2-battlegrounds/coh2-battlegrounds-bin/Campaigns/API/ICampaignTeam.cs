@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+
 using Battlegrounds.Campaigns.Organisations;
 using Battlegrounds.Game.Gameplay;
 
@@ -8,7 +9,7 @@ namespace Battlegrounds.Campaigns.API {
     /// Represents a team in the campaign system.
     /// </summary>
     public enum CampaignArmyTeam {
-        
+
         /// <summary>
         /// Neutral team, no allegiance.
         /// </summary>
@@ -45,7 +46,7 @@ namespace Battlegrounds.Campaigns.API {
         /// Get the amount of victory points the team has.
         /// </summary>
         double VictoryPoints { get; }
-        
+
         /// <summary>
         /// Create a new <see cref="ICampaignPlayer"/> with specified index, name and index.
         /// </summary>
@@ -78,7 +79,7 @@ namespace Battlegrounds.Campaigns.API {
         /// </summary>
         /// <returns>List of undeployed regiments.</returns>
         List<Regiment> GetReserves();
-        
+
         /// <summary>
         /// Award specified amount of points to the team.
         /// </summary>
@@ -95,7 +96,7 @@ namespace Battlegrounds.Campaigns.API {
         /// </returns>
         public static CampaignArmyTeam GetArmyTeamFromFaction(string faction)
             => Faction.IsAlliedFaction(faction) ? CampaignArmyTeam.TEAM_ALLIES : CampaignArmyTeam.TEAM_AXIS;
-        
+
     }
 
 }

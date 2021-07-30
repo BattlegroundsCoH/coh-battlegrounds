@@ -73,7 +73,7 @@ namespace BattlegroundsApp.Resources {
                 Flags = binaryReader.ReadByte();
 
             } catch (Exception e) {
-                
+
                 throw new BadImageFormatException("Failed to read tga header.", e);
 
             }
@@ -91,12 +91,12 @@ namespace BattlegroundsApp.Resources {
             if (!IsValidDataType) {
                 throw new BadImageFormatException($"Unexpected tga file format '{DataType}'. Please save the .tga file in a different format!");
             }
-            
+
             // Verify header details
             if (!IsValidBPP) {
                 throw new BadImageFormatException($"Unexpected tga file format '{BitsPerPixel}' is not a valid BPP. Please save the .tga file with either 24 or 32 bits per pixel!");
             }
-            
+
             // Verify header details
             if (!IsValidFlag) {
                 throw new BadImageFormatException($"Unexpected tga file flag '{Flags}'. Please save the .tga file in a different format!");

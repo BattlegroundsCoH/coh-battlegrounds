@@ -1,10 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+
 using Battlegrounds.Util;
 
 namespace Battlegrounds.Game.DataSource {
-    
+
     /// <summary>
     /// Represents a chunky file containing <see cref="Chunk"/> data.
     /// </summary>
@@ -62,7 +63,7 @@ namespace Battlegrounds.Game.DataSource {
             stream.ReadBytes(stream.ReadInt32() - 28);
 
             // While there's content to read
-            while(stream.BaseStream.Position < stream.BaseStream.Length) {
+            while (stream.BaseStream.Position < stream.BaseStream.Length) {
 
                 // Read chunk
                 Chunk chunk = new Chunk(this.m_version);

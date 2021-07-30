@@ -13,7 +13,7 @@ using Battlegrounds.Game.DataCompany;
 using static Battlegrounds.Game.Match.SessionParticipantTeam;
 
 namespace Battlegrounds.Game.Match {
-    
+
     /// <summary>
     /// Represents a game session where a match will take place between players with a pre-selected <see cref="Company"/> and using a set of preset settings.
     /// Implements <see cref="ISession"/> and <see cref="IJsonObject"/>.
@@ -82,7 +82,7 @@ namespace Battlegrounds.Game.Match {
         /// </summary>
         /// <param name="steamIndex">The index of the steam user.</param>
         /// <returns>The <see cref="Company"/> associated with the given steam user.</returns>
-        public Company GetPlayerCompany(ulong steamIndex) 
+        public Company GetPlayerCompany(ulong steamIndex)
             => this.m_participants.FirstOrDefault(x => x.UserID == steamIndex).ParticipantCompany;
 
         /// <summary>
@@ -165,7 +165,7 @@ namespace Battlegrounds.Game.Match {
 
             // If matching count, simply sum them
             if (alliesCount == axisCount) {
-                
+
                 return alliesCount + axisCount;
 
             } else if (fillAI) { // not matching - and we should fill
@@ -179,9 +179,9 @@ namespace Battlegrounds.Game.Match {
                 }
 
             } else { // not matching - but we should not fill
-                
+
                 return alliesCount + axisCount;
-            
+
             }
 
         }

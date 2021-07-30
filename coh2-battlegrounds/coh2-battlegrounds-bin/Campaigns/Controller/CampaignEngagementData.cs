@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+
 using Battlegrounds.Campaigns.API;
 using Battlegrounds.Game;
 using Battlegrounds.Game.Database;
@@ -6,9 +7,9 @@ using Battlegrounds.Game.Gameplay;
 using Battlegrounds.Modding;
 
 namespace Battlegrounds.Campaigns.Controller {
-    
+
     public struct CampaignEngagementData {
-        
+
         public CampaignArmyTeam attackers;
         public CampaignArmyTeam defenders;
 

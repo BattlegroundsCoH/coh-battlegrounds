@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+
 using Battlegrounds.Functional;
 using Battlegrounds.Util;
 
 namespace Battlegrounds.Locale {
-    
+
     public class LocalizedFile {
 
         private Dictionary<LocaleLanguage, List<(LocaleKey key, string value)>> m_loadedStrings;
@@ -142,7 +143,7 @@ namespace Battlegrounds.Locale {
             // Sort by keys
             this.m_loadedStrings.ForEach(lang => {
                 bw.Write((byte)lang.Key);
-                lang.Value.ForEach(v => {                    
+                lang.Value.ForEach(v => {
                     int k = Array.IndexOf(this.DistinctKeys, v.key.LocaleID);
                     if (k >= 0) {
                         bw.Write(k);
@@ -170,7 +171,7 @@ namespace Battlegrounds.Locale {
 
             // Read identifier
             string identifier = reader.ReadUnicodeString();
-            if (identifier != this.m_sourceID) { 
+            if (identifier != this.m_sourceID) {
                 if (this.m_sourceID == Localize.UndefinedSource) {
                     this.m_sourceID = identifier;
                 } else {

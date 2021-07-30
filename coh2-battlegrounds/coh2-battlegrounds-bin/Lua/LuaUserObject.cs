@@ -1,4 +1,5 @@
 ﻿using System;
+
 using Battlegrounds.Functional;
 
 namespace Battlegrounds.Lua {
@@ -55,7 +56,7 @@ namespace Battlegrounds.Lua {
         public override bool Equals(object obj) => obj is LuaValue v ? this.Equals(v) : base.Equals(obj);
 
         public override int GetHashCode() => this.m_obj.GetHashCode();
-        
+
         public override string Str() => $"0x{this.m_obj.GetHashCode():X8}";
 
         public override LuaType GetLuaType() => LuaType.LUA_USEROBJECT;

@@ -2,7 +2,7 @@
 using System.Windows.Controls;
 
 namespace BattlegroundsApp.Modals {
-    
+
     /// <summary>
     /// Abstract class with base implementation of a <see cref="Modal"/> dialog control.
     /// </summary>

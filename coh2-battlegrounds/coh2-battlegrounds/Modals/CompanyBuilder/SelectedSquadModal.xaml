@@ -4,8 +4,8 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:BattlegroundsApp.Modals.CompanyBuilder"
-             mc:Ignorable="d" 
+             xmlns:local="clr-namespace:BattlegroundsApp.Modals.CompanyBuilder" xmlns:controls="clr-namespace:BattlegroundsApp.Controls"
+               mc:Ignorable="d" 
              d:DesignHeight="340" d:DesignWidth="648"
                Width="648" Height="320">
     <Border BorderBrush="DarkGray" BorderThickness="1.5" Background="LightGray" Margin="5">
@@ -245,7 +245,17 @@
                             </Image>
                         </StackPanel>
                     </StackPanel>
-                    <ComboBox Width="142" Margin="0,5,0,0" Visibility="{Binding Path=TransportBlueprintSelector}"/>
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                        <controls:IconComboBox Width="28" 
+                                           Height="28"
+                                           Margin="0,5,0,0" 
+                                           Visibility="{Binding Path=TransportBlueprintSelector}"
+                                           SelectionChanged="TransportBlueprintCombobox_SelectionChanged"
+                                               x:Name="TransportBlueprintCombobox"/>
+                        <Label Content="{Binding Path=SelectedSupportBlueprint}"
+                               Visibility="{Binding Path=TransportBlueprintSelector}"
+                               VerticalContentAlignment="Center"/>
+                    </StackPanel>
                 </StackPanel>
                 <StackPanel Grid.Row="2" Grid.Column="1" Name="CrewProperties" Visibility="Hidden">
                     <Label Content="Vehicle Crew" HorizontalAlignment="Center"/>

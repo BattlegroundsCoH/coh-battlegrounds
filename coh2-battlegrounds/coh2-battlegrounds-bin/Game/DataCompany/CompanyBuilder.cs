@@ -7,7 +7,7 @@ using Battlegrounds.Game.Gameplay;
 using Battlegrounds.Modding;
 
 namespace Battlegrounds.Game.DataCompany {
-    
+
     /// <summary>
     /// Builder class for building a <see cref="Company"/>. Inherit if you wish to extend functionality. This class is intended to be used for method chaining (But is not required for use).
     /// </summary>
@@ -152,7 +152,7 @@ namespace Battlegrounds.Game.DataCompany {
             } else {
                 throw new InvalidOperationException("Cannot add more units to company - Please verify before adding!");
             }
-            
+
             // Return self for method chaining
             return this;
 
@@ -306,7 +306,7 @@ namespace Battlegrounds.Game.DataCompany {
             this.m_companyTarget.Owner = this.m_companyUsername;
 
             // While there are squads to add
-            while(this.m_uncommittedSquads.Count > 0) {
+            while (this.m_uncommittedSquads.Count > 0) {
 
                 // Pop top element of uncommited
                 UnitBuilder unit = this.m_uncommittedSquads.Pop();

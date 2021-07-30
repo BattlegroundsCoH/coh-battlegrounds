@@ -18,7 +18,7 @@ using System.Windows.Shapes;
 using Microsoft.Win32;
 
 namespace coh2_battlegrounds_installer {
-    
+
     /// <summary>
     /// Interaction logic for ActionPage.xaml
     /// </summary>
@@ -63,11 +63,11 @@ namespace coh2_battlegrounds_installer {
             };
 
             if (dialog.ShowDialog() == true) {
-                
+
                 string path = dialog.FileName;
                 path = path.Replace("\\select.this.directory", "");
                 path = path.Replace(".this.directory", "");
-                
+
                 if (!Directory.Exists(path)) {
                     Directory.CreateDirectory(path);
                 }
