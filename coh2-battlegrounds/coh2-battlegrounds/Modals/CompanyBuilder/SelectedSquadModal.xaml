@@ -141,14 +141,10 @@
 
                 </StackPanel>
 
-                <!-- R1 :: C0 :: Slot Items -->
+                <!-- R1 :: C0 :: Abilities -->
                 <StackPanel Grid.Row="1" Grid.Column="0">
-                    <Label Content="Slot Items (0/6)" HorizontalAlignment="Center"/>
-                    <DockPanel Margin="5">
-                        <Button Content="+" DockPanel.Dock="Right"/>
-                        <ComboBox  DockPanel.Dock="Right" Width="72"/>
-                        <WrapPanel DockPanel.Dock="Left" Name="SlotItemList"/>
-                    </DockPanel>
+                    <Label Content="Unit Abilities" HorizontalAlignment="Center"/>
+                    <WrapPanel Name="AbilitiesList"/>
                 </StackPanel>
 
                 <!-- R1 :: C1 :: Deployment Phase -->
@@ -190,10 +186,14 @@
                     </StackPanel>
                 </StackPanel>
 
-                <!-- R2 :: C0 :: Abilities -->
+                <!-- R2 :: C0 :: Slot Items -->
                 <StackPanel Grid.Row="2" Grid.Column="0">
-                    <Label Content="Unit Abilities" HorizontalAlignment="Center"/>
-                    <WrapPanel Name="AbilitiesList"/>
+                    <Label Content="Slot Items (0/6)" HorizontalAlignment="Center"/>
+                    <DockPanel Margin="5">
+                        <Button Content="+" DockPanel.Dock="Right" Width="24"/>
+                        <ComboBox  DockPanel.Dock="Right" Width="96" Margin="2.5,0,2.5,0"/>
+                        <WrapPanel DockPanel.Dock="Left" Name="SlotItemList"/>
+                    </DockPanel>
                 </StackPanel>
 
                 <!-- R2 :: C1 :: Transport/Crew -->
@@ -261,7 +261,6 @@
                     <Label Content="Vehicle Crew" HorizontalAlignment="Center"/>
 
                 </StackPanel>
-
 
             </Grid>
         </modals:ModalControl>        

@@ -109,16 +109,23 @@ namespace BattlegroundsApp.Modals.CompanyBuilder {
 
         private void OnDeploymentPhaseClicked(object sender, MouseButtonEventArgs e) {
             var obj = sender as Image;
+            var sbp = this.SquadSlot.SquadInstance.SupportBlueprint as SquadBlueprint;
+            var dmode = this.SquadSlot.SquadInstance.DeploymentMethod;
             switch (obj.Tag as string) {
                 case "0":
+                    this.SquadSlot.SquadInstance.SetDeploymentMethod(sbp, dmode, DeploymentPhase.PhaseInitial);
                     break;
                 case "1":
+                    this.SquadSlot.SquadInstance.SetDeploymentMethod(sbp, dmode, DeploymentPhase.PhaseA);
                     break;
                 case "2":
+                    this.SquadSlot.SquadInstance.SetDeploymentMethod(sbp, dmode, DeploymentPhase.PhaseB);
                     break;
                 case "3":
+                    this.SquadSlot.SquadInstance.SetDeploymentMethod(sbp, dmode, DeploymentPhase.PhaseC);
                     break;
                 default:
+                    this.SquadSlot.SquadInstance.SetDeploymentMethod(sbp, dmode, DeploymentPhase.PhaseNone);
                     break;
             }
         }
