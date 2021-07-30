@@ -21,7 +21,7 @@ namespace Battlegrounds.Compiler.Source {
             }
         }
 
-        public WinconditionSourceFile GetInfoFile(IWinconditionMod mod) {
+        public WinconditionSourceFile GetInfoFile(IGamemode mod) {
             string[] info = {
                 "hidden=false",
                 $"name=\"{mod.Name}\"",
@@ -63,7 +63,7 @@ namespace Battlegrounds.Compiler.Source {
             return files.ToArray();
         }
 
-        public WinconditionSourceFile[] GetUIFiles(IWinconditionMod mod) {
+        public WinconditionSourceFile[] GetUIFiles(IGamemode mod) {
             List<WinconditionSourceFile> files = new List<WinconditionSourceFile> {
                 new WinconditionSourceFile($"data\\ui\\Bin\\{mod.Guid}.gfx", File.ReadAllBytes($"{this.Intermediate}data\\ui\\Bin\\{mod.Guid}.gfx"))
             };

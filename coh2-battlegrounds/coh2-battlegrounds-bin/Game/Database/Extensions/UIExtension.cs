@@ -1,16 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Text.Json;
-using System.Threading.Tasks;
 
 using Battlegrounds.Functional;
 
 namespace Battlegrounds.Game.Database.Extensions {
-    
+
     public class UIExtension {
-    
+
         public string ScreenName { get; init; }
 
         public string ShortDescription { get; init; }

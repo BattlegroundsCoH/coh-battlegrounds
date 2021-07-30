@@ -174,6 +174,8 @@ namespace Battlegrounds.Game.Database {
         public SquadBlueprint(string name, BlueprintUID pbgid, Faction faction, 
             UIExtension ui, CostExtension cost, LoadoutExtension loadout, VeterancyExtension veterancy,
             string[] types, string[] abilities, int slotCapacity, bool canPickup, bool isTeamWpn, bool hasCrew, float femaleChance) {
+
+            // Set properties
             this.Name = name;
             this.PBGID = pbgid;
             this.UI = ui;
@@ -188,6 +190,7 @@ namespace Battlegrounds.Game.Database {
             this.Abilities = abilities;
             this.FemaleSquadChance = femaleChance;
             this.HasCrew = hasCrew;
+
         }
 
         /// <summary>

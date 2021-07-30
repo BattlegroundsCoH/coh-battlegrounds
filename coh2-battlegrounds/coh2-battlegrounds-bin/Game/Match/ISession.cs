@@ -29,7 +29,7 @@ namespace Battlegrounds.Game.Match {
         /// <summary>
         /// Get the wincondition to be played.
         /// </summary>
-        public IWinconditionMod Gamemode { get; }
+        public IGamemode Gamemode { get; }
 
         /// <summary>
         /// Get the GUID or name of the tuning mod to be played with.

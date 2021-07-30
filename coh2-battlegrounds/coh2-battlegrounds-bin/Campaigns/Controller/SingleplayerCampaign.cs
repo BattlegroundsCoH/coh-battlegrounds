@@ -24,6 +24,7 @@ using Battlegrounds.Game.Match.Startup;
 using Battlegrounds.Gfx;
 using Battlegrounds.Locale;
 using Battlegrounds.Lua;
+using Battlegrounds.Modding;
 using Battlegrounds.Util.Coroutines;
 using Battlegrounds.Util.Lists;
 
@@ -619,9 +620,9 @@ namespace Battlegrounds.Campaigns.Controller {
             bool areAlliesAttacking = data.attackers == CampaignArmyTeam.TEAM_ALLIES;
             SessionInfo info = new SessionInfo() {
                 SelectedScenario = data.scenario,
-                SelectedGamemode = WinconditionList.GetWinconditionByName(WinconditionList.VictoryPoints), // TODO: Set according to CampaignEngagementData
+                SelectedGamemode = WinconditionList.GetGamemodeByName(ModManager.GetPackage("mod_bg").GamemodeGUID, "vp"), // TODO: Set according to CampaignEngagementData
                 SelectedGamemodeOption = 50, // TODO: Set according to CampaignEngagementData
-                SelectedTuningMod = BattlegroundsInstance.BattleGroundsTuningMod,
+                SelectedTuningMod = ModManager.GetMod<ITuningMod>(ModManager.GetPackage("mod_bg").TuningGUID),
                 DefaultDifficulty = AIDifficulty.AI_Hard,
                 FillAI = false,
                 IsOptionValue = true, // TODO: Set according to CampaignEngagementData

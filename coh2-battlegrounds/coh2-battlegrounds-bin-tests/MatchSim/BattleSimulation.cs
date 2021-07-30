@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Threading;
 
 using Battlegrounds;
 using Battlegrounds.Functional;
@@ -13,6 +14,7 @@ using Battlegrounds.Game.Match.Data;
 using Battlegrounds.Game.Match.Data.Events;
 using Battlegrounds.Game.Match.Finalizer;
 using Battlegrounds.Game.Match.Play;
+using Battlegrounds.Modding;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -22,6 +24,7 @@ namespace coh2_battlegrounds_bin_tests.MatchSim {
     public class BattleSimulation {
 
         ISession session;
+
         BattleSimulatorStrategy playStrategy;
         IAnalyzeStrategy analyzeStrategy;
         IFinalizeStrategy finalizeStrategy;
@@ -34,11 +37,14 @@ namespace coh2_battlegrounds_bin_tests.MatchSim {
 
         [TestInitialize]
         public void Setup() {
-            if (BattlegroundsInstance.BattleGroundsTuningMod is null) {
+            if (DatabaseManager.DatabaseLoaded is false) {
+                bool canContinue = false;
                 Environment.CurrentDirectory = @"E:\coh2_battlegrounds\coh2-battlegrounds\coh2-battlegrounds\bin\Debug\net5.0-windows";
                 BattlegroundsInstance.LoadInstance();
-                BlueprintManager.CreateDatabase();
-                BlueprintManager.LoadDatabaseWithMod("battlegrounds", BattlegroundsInstance.BattleGroundsTuningMod.Guid.ToString());
+                DatabaseManager.LoadAllDatabases((a,b) => canContinue = true);
+                while (!canContinue) {
+                    Thread.Sleep(1);
+                }
             }
             var s = new NullSession(true);
             s.CreateCompany(0, Faction.Soviet, "Allies", 

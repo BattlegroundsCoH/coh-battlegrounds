@@ -36,7 +36,7 @@ namespace Battlegrounds.Game.Match {
         /// <summary>
         /// Get the <see cref="Wincondition"/> to use when playing.
         /// </summary>
-        public IWinconditionMod Gamemode { get; }
+        public IGamemode Gamemode { get; }
 
         /// <summary>
         /// Get the associated <see cref="ITuningMod"/> with the <see cref="Session"/>.
@@ -52,7 +52,7 @@ namespace Battlegrounds.Game.Match {
 
         [JsonIgnore] public bool AllowPersistency => this.m_participants.All(x => x.Difficulty.AllowsPersistency());
 
-        private Session(Scenario scenario, IWinconditionMod gamemode, ITuningMod tuning) {
+        private Session(Scenario scenario, IGamemode gamemode, ITuningMod tuning) {
             this.Settings = new Dictionary<string, object>();
             this.SessionID = Guid.NewGuid();
             this.Scenario = scenario;

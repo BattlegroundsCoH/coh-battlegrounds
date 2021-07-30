@@ -2341,7 +2341,7 @@
     "Name": "ot_34_76_squad_bg",
     "Army": "soviet",
     "Display": {
-      "LocaleName": "58",
+      "LocaleName": "$142b113740474c82a60b0a428bd553d5:58",
       "LocaleDescriptionLong": "11006868",
       "LocaleDescriptionShort": "11007365",
       "Icon": "Icons_vehicles_vehicle_soviet_t34_76_heavy_tank",
@@ -3124,7 +3124,7 @@
     "Name": "jaeger_squad_bg",
     "Army": "german",
     "Display": {
-      "LocaleName": "56",
+      "LocaleName": "$142b113740474c82a60b0a428bd553d5:56",
       "LocaleDescriptionLong": "11007026",
       "LocaleDescriptionShort": "11009060",
       "Icon": "Icons_units_unit_german_panzer_grenadier",
@@ -3365,7 +3365,7 @@
     "Name": "ost_luftwaffe_ground_forces_bg",
     "Army": "german",
     "Display": {
-      "LocaleName": "36",
+      "LocaleName": "$142b113740474c82a60b0a428bd553d5:36",
       "LocaleDescriptionLong": "11052711",
       "LocaleDescriptionShort": "11052712",
       "Icon": "Icons_units_unit_german_stormtroopers",
@@ -3425,8 +3425,8 @@
     "Name": "ost_tankhunter_squad_bg",
     "Army": "german",
     "Display": {
-      "LocaleName": "37",
-      "LocaleDescriptionLong": "38",
+      "LocaleName": "$142b113740474c82a60b0a428bd553d5:37",
+      "LocaleDescriptionLong": "$142b113740474c82a60b0a428bd553d5:38",
       "LocaleDescriptionShort": "11052712",
       "Icon": "Icons_units_unit_german_stormtroopers",
       "Symbol": "Icons_symbols_unit_german_stormtroopers_symbol",
@@ -3564,7 +3564,7 @@
     "Name": "german_tank_crew_bg",
     "Army": "german",
     "Display": {
-      "LocaleName": "34",
+      "LocaleName": "$142b113740474c82a60b0a428bd553d5:34",
       "LocaleDescriptionLong": "11007011",
       "LocaleDescriptionShort": "11009061",
       "Icon": "Icons_units_unit_german_pioneer",
@@ -3619,7 +3619,7 @@
     "Name": "german_vehicle_crew_bg",
     "Army": "german",
     "Display": {
-      "LocaleName": "35",
+      "LocaleName": "$142b113740474c82a60b0a428bd553d5:35",
       "LocaleDescriptionLong": "11007011",
       "LocaleDescriptionShort": "11009061",
       "Icon": "Icons_units_unit_german_pioneer",
@@ -3674,7 +3674,7 @@
     "Name": "german_vehicle_driver_bg",
     "Army": "german",
     "Display": {
-      "LocaleName": "40",
+      "LocaleName": "$142b113740474c82a60b0a428bd553d5:40",
       "LocaleDescriptionLong": "11007011",
       "LocaleDescriptionShort": "11009061",
       "Icon": "Icons_units_unit_german_pioneer",
@@ -3789,7 +3789,7 @@
     "Name": "soviet_sapper_squad_bg",
     "Army": "soviet",
     "Display": {
-      "LocaleName": "33",
+      "LocaleName": "$142b113740474c82a60b0a428bd553d5:33",
       "LocaleDescriptionLong": "11007043",
       "LocaleDescriptionShort": "11009063",
       "Icon": "Icons_units_unit_soviet_engineer",
@@ -3912,7 +3912,7 @@
     "Name": "frontoviki_squad_bg",
     "Army": "soviet",
     "Display": {
-      "LocaleName": "31",
+      "LocaleName": "$142b113740474c82a60b0a428bd553d5:31",
       "LocaleDescriptionLong": "11007044",
       "LocaleDescriptionShort": "11009064",
       "Icon": "Icons_units_unit_soviet_conscript_03",
@@ -3979,7 +3979,7 @@
     "Name": "recon_team_bg",
     "Army": "soviet",
     "Display": {
-      "LocaleName": "30",
+      "LocaleName": "$142b113740474c82a60b0a428bd553d5:30",
       "LocaleDescriptionLong": "11007413",
       "LocaleDescriptionShort": "11009065",
       "Icon": "Icons_units_unit_soviet_sniper",
@@ -4251,7 +4251,7 @@
     "Name": "nkvd_squad_bg",
     "Army": "soviet",
     "Display": {
-      "LocaleName": "28",
+      "LocaleName": "$142b113740474c82a60b0a428bd553d5:28",
       "LocaleDescriptionLong": "11051611",
       "LocaleDescriptionShort": "11051612",
       "Icon": "Icons_units_unit_soviet_officer",
@@ -4418,7 +4418,7 @@
     "Name": "tank_buster_bg",
     "Army": "soviet",
     "Display": {
-      "LocaleName": "26",
+      "LocaleName": "$142b113740474c82a60b0a428bd553d5:26",
       "LocaleDescriptionLong": "11007044",
       "LocaleDescriptionShort": "11009064",
       "Icon": "Icons_units_unit_soviet_conscript_03",
@@ -4487,7 +4487,7 @@
     "Name": "vdv_troops_bg",
     "Army": "soviet",
     "Display": {
-      "LocaleName": "24",
+      "LocaleName": "$142b113740474c82a60b0a428bd553d5:24",
       "LocaleDescriptionLong": "11007198",
       "LocaleDescriptionShort": "11009066",
       "Icon": "Icons_units_unit_soviet_guards",
@@ -4537,9 +4537,9 @@
     "Name": "soviet_male_vehicle_2_crew_bg",
     "Army": "soviet",
     "Display": {
-      "LocaleName": "8",
-      "LocaleDescriptionLong": "10",
-      "LocaleDescriptionShort": "11",
+      "LocaleName": "$142b113740474c82a60b0a428bd553d5:8",
+      "LocaleDescriptionLong": "$142b113740474c82a60b0a428bd553d5:10",
+      "LocaleDescriptionShort": "$142b113740474c82a60b0a428bd553d5:11",
       "Icon": "Icons_units_unit_soviet_engineer",
       "Symbol": "Icons_symbols_building_soviet_heavy_factory_symbol",
       "Portrait": "Icons_portraits_unit_soviet_combat_engineer_s_portrait"
@@ -4594,9 +4594,9 @@
     "Name": "soviet_male_vehicle_crew_bg",
     "Army": "soviet",
     "Display": {
-      "LocaleName": "3",
-      "LocaleDescriptionLong": "7",
-      "LocaleDescriptionShort": "6",
+      "LocaleName": "$142b113740474c82a60b0a428bd553d5:3",
+      "LocaleDescriptionLong": "$142b113740474c82a60b0a428bd553d5:7",
+      "LocaleDescriptionShort": "$142b113740474c82a60b0a428bd553d5:6",
       "Icon": "Icons_units_unit_soviet_engineer",
       "Symbol": "Icons_symbols_building_soviet_heavy_factory_symbol",
       "Portrait": "Icons_portraits_unit_soviet_combat_engineer_s_portrait"
@@ -4651,9 +4651,9 @@
     "Name": "soviet_male_vehicle_driver_bg",
     "Army": "soviet",
     "Display": {
-      "LocaleName": "41",
-      "LocaleDescriptionLong": "10",
-      "LocaleDescriptionShort": "11",
+      "LocaleName": "$142b113740474c82a60b0a428bd553d5:41",
+      "LocaleDescriptionLong": "$142b113740474c82a60b0a428bd553d5:10",
+      "LocaleDescriptionShort": "$142b113740474c82a60b0a428bd553d5:11",
       "Icon": "Icons_units_unit_soviet_engineer",
       "Symbol": "Icons_symbols_building_soviet_heavy_factory_symbol",
       "Portrait": "Icons_portraits_unit_soviet_combat_engineer_s_portrait"

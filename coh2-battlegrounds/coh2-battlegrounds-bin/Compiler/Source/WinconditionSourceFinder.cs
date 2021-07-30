@@ -25,7 +25,7 @@ namespace Battlegrounds.Compiler.Source {
 
         private static bool HasManifest() => File.Exists(BattlegroundsInstance.GetRelativePath(BattlegroundsPaths.BINARY_FOLDER, "scripts.manifest"));
 
-        public static IWinconditionSource GetSource(IWinconditionMod wincondition, ServerAPI serverAPI) {
+        public static IWinconditionSource GetSource(IGamemode wincondition, ServerAPI serverAPI) {
 
             // TODO: Checkup on the wincondition
 

@@ -1,13 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
 using Battlegrounds.Functional;
-using Battlegrounds.Game.DataSource;
 using Battlegrounds.Game.Gameplay;
 
 namespace Battlegrounds.Modding {
@@ -27,14 +25,15 @@ namespace Battlegrounds.Modding {
                 string prop = reader.ReadProperty();
                 __lookup[prop] = prop switch {
                     "ID" => reader.GetString().ToLower(),
+                    "Name" => reader.GetString(),
                     "TuningGUID" => reader.GetString(),
                     "GamemodeGUID" => reader.GetString(),
                     "AssetGUID" => reader.GetString(),
-                    "LocaleFiles" => reader.GetStringArray(),
                     "ParadropUnits" => reader.GetStringArray(),
                     "VerificationUpgrade" => reader.GetString(),
                     "AllowSupplySystem" => reader.GetBoolean(),
                     "AllowWeatherSystem" => reader.GetBoolean(),
+                    "LocaleFiles" => JsonSerializer.Deserialize<ModPackage.ModLocale[]>(ref reader),
                     "FactionData" => JsonSerializer.Deserialize<ModPackage.FactionData[]>(ref reader),
                     "CustomOptions" => JsonSerializer.Deserialize<ModPackage.CustomOptions[]>(ref reader),
                     "Gamemodes" => JsonSerializer.Deserialize<ModPackage.Gamemode[]>(ref reader),
@@ -55,24 +54,31 @@ namespace Battlegrounds.Modding {
             // Get tow data
             (bool hastow, string istow, string istowing) = ((bool, string, string))__lookup.GetValueOrDefault("Towing", (false, string.Empty, string.Empty));
 
-            // Get locale file
-            List<UcsFile> localizedFile = new();
-            foreach (string locFile in __lookup.GetValueOrDefault("LocaleFiles", Array.Empty<string>()) as string[]) {
-                try {
-                    string locpath = BattlegroundsInstance.GetRelativePath(BattlegroundsPaths.MOD_OTHER_FOLDER, locFile);
-                    if (File.Exists(locpath)) {
-                        localizedFile.Add(UcsFile.LoadFromFile(locpath));
-                    } else if (locpath != BattlegroundsInstance.GetRelativePath(BattlegroundsPaths.MOD_OTHER_FOLDER)) {
-                        Trace.WriteLine($"Failed to locate ucs file '{locpath}'", nameof(ModPackageLoader));
-                    }
-                } catch (Exception locex) {
-                    Trace.WriteLine($"Failed to load ucs file for mod package '{__lookup.GetValueOrDefault("ID") as string}' ({locex.Message})", nameof(ModPackageLoader));
-                }
+            //// Get locale file
+            //List<UcsFile> localizedFile = new();
+            //foreach (string locFile in __lookup.GetValueOrDefault("LocaleFiles", Array.Empty<string>()) as string[]) {
+            //    try {
+            //        string locpath = BattlegroundsInstance.GetRelativePath(BattlegroundsPaths.MOD_OTHER_FOLDER, locFile);
+            //        if (File.Exists(locpath)) {
+            //            localizedFile.Add(UcsFile.LoadFromFile(locpath));
+            //        } else if (locpath != BattlegroundsInstance.GetRelativePath(BattlegroundsPaths.MOD_OTHER_FOLDER)) {
+            //            Trace.WriteLine($"Failed to locate ucs file '{locpath}'", nameof(ModPackageLoader));
+            //        }
+            //    } catch (Exception locex) {
+            //        Trace.WriteLine($"Failed to load ucs file for mod package '{__lookup.GetValueOrDefault("ID") as string}' ({locex.Message})", nameof(ModPackageLoader));
+            //    }
+            //}
+
+            // Get ID
+            string packageID = __lookup.GetValueOrDefault("ID") as string;
+            if (string.IsNullOrEmpty(packageID)) {
+                throw new InvalidDataException("Expected package ID but found none. Cannot read the mod package!");
             }
 
             // Return mod package
             return new ModPackage() {
-                ID = __lookup.GetValueOrDefault("ID") as string,
+                ID = packageID,
+                PackageName = __lookup.GetValueOrDefault("Name", packageID) as string,
                 TuningGUID = tuningGUID,
                 GamemodeGUID = gamemodeGUID,
                 AssetGUID = assetGUID,
@@ -82,7 +88,7 @@ namespace Battlegrounds.Modding {
                 IsTowingUpgrade = istowing,
                 VerificationUpgrade = __lookup.GetValueOrDefault("VerificationUpgrade", string.Empty) as string,
                 ParadropUnits = __lookup.GetValueOrDefault("ParadropUnits", Array.Empty<string>()) as string[],
-                LocaleFiles = localizedFile.ToArray(),
+                LocaleFiles = __lookup.GetValueOrDefault("LocaleFiles", Array.Empty<ModPackage.ModLocale>()) as ModPackage.ModLocale[],
                 AllowSupplySystem = (bool)__lookup.GetValueOrDefault("AllowSupplySystem", false),
                 AllowWeatherSystem = (bool)__lookup.GetValueOrDefault("AllowWeatherSystem", false),
                 Gamemodes = __lookup.GetValueOrDefault("Gamemodes", Array.Empty<ModPackage.Gamemode>()) as ModPackage.Gamemode[]

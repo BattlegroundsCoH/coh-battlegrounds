@@ -9,6 +9,7 @@ using Battlegrounds.Game;
 using Battlegrounds.Game.DataCompany;
 using Battlegrounds.Game.Gameplay;
 using Battlegrounds.Game.Match;
+using Battlegrounds.Modding;
 using Battlegrounds.Networking.Lobby;
 using Battlegrounds.Networking.Remoting.Query;
 using Battlegrounds.Networking.Requests;
@@ -288,7 +289,8 @@ namespace BattlegroundsApp.Models {
                 if (companyItem.State == CompanyItemState.Company) {
                     return PlayerCompanies.FromNameAndFaction(companyItem.Name, Faction.FromName(companyItem.Army));
                 } else if (companyItem.State == CompanyItemState.Generate) {
-                    return CompanyGenerator.Generate(Faction.FromName(companyItem.Army), BattlegroundsInstance.BattleGroundsTuningMod.Guid.GUID, false, true, true);
+                    Trace.TraceWarning("Using default BG tuning mod to generate company.");
+                    return CompanyGenerator.Generate(Faction.FromName(companyItem.Army), ModManager.GetPackage("mod_bg").TuningGUID.GUID, false, true, true);
                 }
             }
             throw new Exception();

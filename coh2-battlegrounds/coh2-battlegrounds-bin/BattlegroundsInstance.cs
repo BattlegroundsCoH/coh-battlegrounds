@@ -197,13 +197,6 @@ namespace Battlegrounds {
         public static string GetRelativePath(string pathID, string appendPath = "")
             => Path.Combine(__instance.GetPath(pathID), appendPath);
 
-        private static ITuningMod __bgTuningInstance;
-
-        /// <summary>
-        /// Get the Battlegrounds tuning mod instance.
-        /// </summary>
-        public static ITuningMod BattleGroundsTuningMod => __bgTuningInstance;
-
         /// <summary>
         /// Load the current instance data.
         /// </summary>
@@ -224,9 +217,6 @@ namespace Battlegrounds {
 
             // Load mods
             ModManager.Init();
-
-            // Create tuning
-            __bgTuningInstance = new BattlegroundsTuning();
 
             // Create RNG
             __rng = new Random();

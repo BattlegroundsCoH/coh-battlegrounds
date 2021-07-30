@@ -11,6 +11,7 @@ using Battlegrounds.Game.Database;
 using Battlegrounds.Game.Database.Management;
 using Battlegrounds.Game.DataCompany;
 using Battlegrounds.Game.Gameplay;
+using Battlegrounds.Modding;
 
 using BattlegroundsApp.Controls.CompanyBuilderControls;
 using BattlegroundsApp.Dialogs.YesNo;
@@ -105,14 +106,13 @@ namespace BattlegroundsApp.Views {
             this.m_initialChecksum = company.Checksum;
         }
 
-        // TODO: CHANGE HOW YOU GET THE GUID! -- FOR THE FUTURE TO SUPPORT OTHER MODS (ITS FINE FOR NOW)
-        public CompanyBuilderView(string companyName, Faction faction, CompanyType type) : this() {
-            this.Builder = new CompanyBuilder().NewCompany(faction).ChangeName(companyName).ChangeType(type).ChangeTuningMod(BattlegroundsInstance.BattleGroundsTuningMod.Guid);
+        public CompanyBuilderView(string companyName, Faction faction, CompanyType type, ModGuid modGuid) : this() {
+            this.Builder = new CompanyBuilder().NewCompany(faction).ChangeName(companyName).ChangeType(type).ChangeTuningMod(modGuid);
             this.Statistics = new();
             this.CompanyName = companyName;
             this.CompanySize = 0;
             this.CompanyFaction = faction;
-            this.CompanyGUID = BattlegroundsInstance.BattleGroundsTuningMod.Guid;
+            this.CompanyGUID = modGuid;
             this.CompanyType = type.ToString();
             this.FillAvailableUnits();
             this.ShowCompany();

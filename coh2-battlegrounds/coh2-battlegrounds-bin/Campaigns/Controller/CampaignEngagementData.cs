@@ -3,6 +3,7 @@ using Battlegrounds.Campaigns.API;
 using Battlegrounds.Game;
 using Battlegrounds.Game.Database;
 using Battlegrounds.Game.Gameplay;
+using Battlegrounds.Modding;
 
 namespace Battlegrounds.Campaigns.Controller {
     
@@ -32,7 +33,7 @@ namespace Battlegrounds.Campaigns.Controller {
         public List<ICampaignFormation> defendingFormations;
 
         public Scenario scenario;
-        public Wincondition gamemode;
+        public IGamemode gamemode;
         public int gamemodeValue;
         public ICampaignMapNode node;
 

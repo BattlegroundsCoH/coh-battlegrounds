@@ -1,26 +1,17 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+using System.Collections.ObjectModel;
+using System.Diagnostics;
+
 using BattlegroundsApp.Dialogs.CreateCompany;
-using BattlegroundsApp.Dialogs.Service;
 using BattlegroundsApp.Dialogs.YesNo;
 using BattlegroundsApp.Dialogs.ImportExport;
 using BattlegroundsApp.Dialogs.RenameCopyDialog;
 using BattlegroundsApp.LocalData;
+
 using Battlegrounds.Game.DataCompany;
-using Battlegrounds.Verification;
-using System.Collections.ObjectModel;
-using System.Diagnostics;
 using Battlegrounds.Game.Gameplay;
+using Battlegrounds.Modding;
 
 namespace BattlegroundsApp.Views {
     /// <summary>
@@ -55,10 +46,12 @@ namespace BattlegroundsApp.Views {
 
         private void createCompany_Click(object sender, RoutedEventArgs e) {
 
-            var result = CreateCompanyDialogViewModel.ShowCreateCompanyDialog("Create", out string companyName, out Faction companyFaction, out CompanyType companyType);
+            ModGuid modGuid = ModManager.GetPackage("mod_bg").TuningGUID;
+            Trace.TraceWarning("There is currently no method of setting tuning pack. This should be fixed ASAP.");
 
-            if (result == CreateCompanyDialogResult.Create) {
-                this.StateChangeRequest(new CompanyBuilderView(companyName, companyFaction, companyType));
+            if (CreateCompanyDialogViewModel.ShowCreateCompanyDialog("Create", out string companyName, out Faction companyFaction, out CompanyType companyType) 
+                is CreateCompanyDialogResult.Create) {
+                this.StateChangeRequest(new CompanyBuilderView(companyName, companyFaction, companyType, modGuid));
             }
 
         }

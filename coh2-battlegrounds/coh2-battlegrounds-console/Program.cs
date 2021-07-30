@@ -10,6 +10,7 @@ using Battlegrounds.Game.Gameplay;
 using Battlegrounds.Game.Match;
 using Battlegrounds.Game.Match.Data;
 using Battlegrounds.Json;
+using Battlegrounds.Modding;
 
 namespace coh2_battlegrounds_console {
     
@@ -27,6 +28,8 @@ namespace coh2_battlegrounds_console {
         static bool do_test_companies;
 
         static string output_path = null;
+
+        static ITuningMod tuningMod;
 
         static void Main(string[] args) {
 
@@ -93,6 +96,8 @@ namespace coh2_battlegrounds_console {
                 Thread.Sleep(100);
             }
 
+            tuningMod = ModManager.GetMod<ITuningMod>(ModManager.GetPackage("mod_bg").TuningGUID);
+
         }
 
         private static Company CreateSovietCompany() {
@@ -100,7 +105,7 @@ namespace coh2_battlegrounds_console {
             // Create a dummy company
             CompanyBuilder companyBuilder = new CompanyBuilder().NewCompany(Faction.Soviet)
                 .ChangeName("26th Rifle Division")
-                .ChangeTuningMod(BattlegroundsInstance.BattleGroundsTuningMod.Guid.ToString());
+                .ChangeTuningMod(tuningMod.Guid);
             UnitBuilder unitBuilder = new UnitBuilder();
 
             // Basic infantry
@@ -238,8 +243,7 @@ namespace coh2_battlegrounds_console {
             // Create a dummy company
             CompanyBuilder companyBuilder = new CompanyBuilder().NewCompany(Faction.Wehrmacht)
                 .ChangeName("69th Panzer Regiment")
-                .ChangeUser("Ragnar")
-                .ChangeTuningMod(BattlegroundsInstance.BattleGroundsTuningMod.Guid.ToString());
+                .ChangeTuningMod(tuningMod.Guid);
             UnitBuilder unitBuilder = new UnitBuilder();
 
             // Basic infantry

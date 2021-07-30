@@ -3,6 +3,8 @@ using System.Diagnostics;
 using System.IO;
 using System.Threading.Tasks;
 
+using Battlegrounds.Modding;
+
 namespace Battlegrounds.Game.Database.Management {
 
     /// <summary>
@@ -48,10 +50,11 @@ namespace Battlegrounds.Game.Database.Management {
                 // Wait for additional blueprint loaded
                 await Task.Run(() => {
 
-                    // Load the battlegrounds DB
-                    BlueprintManager.LoadDatabaseWithMod("battlegrounds", BattlegroundsInstance.BattleGroundsTuningMod.Guid.ToString());
-
-                    // TODO: Load more here if needed
+                    // Run through each mod package and load their database
+                    ModManager.EachPackage(x => {
+                        Trace.WriteLine($"Loading database for package '{x.PackageName}'.", nameof(DatabaseManager));
+                        BlueprintManager.LoadDatabaseWithMod(x.ID, x.TuningGUID.GUID);
+                    });
 
                 });
 
@@ -76,10 +79,6 @@ namespace Battlegrounds.Game.Database.Management {
                 failed++;
             }
 
-            // Create the win condition list (less troublesome)
-            await Task.Run(WinconditionList.CreateAndLoadDatabase);
-            loaded++;
-
             // Set database loaded flag
             __databasesLoaded = true;
 
@@ -102,7 +101,8 @@ namespace Battlegrounds.Game.Database.Management {
                     "..\\..\\..\\..\\db-battlegrounds\\",
                     "..\\..\\..\\db-battlegrounds\\",
                     "db-battlegrounds\\",
-                    "bin\\data\\json-db\\", // should be the place for release builds!
+                    "bin\\data\\db\\", // should be the place for release builds!
+                    "usr\\mods\\mod_db\\", // should be the place for mods
                 };
                 foreach (string path in testPaths) {
                     if (Directory.Exists(path)) {

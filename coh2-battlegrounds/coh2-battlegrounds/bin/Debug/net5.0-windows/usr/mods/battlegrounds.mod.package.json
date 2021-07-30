@@ -1,14 +1,57 @@
 {
-    "ID": "Battlegrounds",
+    "ID": "mod_bg",
+    "Name": "Battlegrounds Mod Pack",
     "TuningGUID": "142b113740474c82a60b0a428bd553d5",
     "GamemodeGUID": "6a0a13b89555402ca75b85dc30f5cb04",
     "AssetGUID": "f0c3cb74008447268cad2804e3b9d565",
     "LocaleFiles": [
-        "bg\\locale\\english\\english.ucs"
+        {
+            "Type": "Gamemode", 
+            "Path": "bg\\locale\\%LANG%\\%LANG%.gamemode.ucs"
+        },
+        {
+            "Type": "Tuning", 
+            "Path": "bg\\locale\\%LANG%\\%LANG%.tuning.ucs"
+        }
     ],
     "Gamemodes": [
         {
+            "ID": "bg_attrition",
+            "Display": "Attrition",
+            "DisplayDesc": "",
+            "DefaultOption": 0,
+            "Files": []
+        },
+        {
+            "ID": "bg_vp",
+            "Display": "Victory Points",
+            "DisplayDesc": "",
+            "DefaultOption": 1,
+            "Files": [],
+            "Options":[
+                {
+                    "LocStr":"0",
+                    "Value":250
+                },
+                {
+                    "LocStr":"0",
+                    "Value":500
+                },
+                {
+                    "LocStr":"0",
+                    "Value":750
+                },
+                {
+                    "LocStr":"0",
+                    "Value":1000
+                }
+            ]
+        },
+        {
             "ID": "bg_domination",
+            "Display": "Domination",
+            "DisplayDesc": "",
+            "DefaultOption": 2,
             "Files": [],
             "Options": [
                 {

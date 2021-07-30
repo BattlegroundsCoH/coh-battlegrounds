@@ -11,6 +11,7 @@ using Battlegrounds.Game.Gameplay;
 using Battlegrounds.Game.Match;
 using Battlegrounds.Gfx;
 using Battlegrounds.Locale;
+using Battlegrounds.Modding;
 
 namespace Battlegrounds.Campaigns.Controller {
     
@@ -216,7 +217,7 @@ namespace Battlegrounds.Campaigns.Controller {
             // Create company
             CompanyBuilder builder = new CompanyBuilder()
                 .NewCompany(isAttacker ? data.attackingFaction : data.defendingFaction)
-                .ChangeTuningMod(BattlegroundsInstance.BattleGroundsTuningMod.Guid)
+                .ChangeTuningMod(ModManager.GetPackage("mod_bg").TuningGUID)
                 .ChangeName(isAttacker ? data.attackingCompanyNames[index] : data.defendingCompanyNames[index])
                 .ChangeUser(isAttacker ? data.attackingPlayerNames[index] : data.defendingPlayerNames[index]);
 

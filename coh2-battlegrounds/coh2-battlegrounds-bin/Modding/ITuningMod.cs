@@ -20,6 +20,11 @@
         /// </summary>
         public string TowingUpgrade { get; }
 
+        /// <summary>
+        /// Get if the towing functionality is enabled for this mod.
+        /// </summary>
+        public bool IsTowingEnabled { get; }
+
     }
 
 }

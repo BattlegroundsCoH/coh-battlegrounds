@@ -9,6 +9,7 @@ using Battlegrounds.Game.Gameplay;
 using Battlegrounds.Json;
 using Battlegrounds.Locale;
 using Battlegrounds.Lua;
+using Battlegrounds.Modding;
 using Battlegrounds.Util.Lists;
 
 namespace Battlegrounds.Campaigns.Organisations {
@@ -275,7 +276,7 @@ namespace Battlegrounds.Campaigns.Organisations {
             
             // Create unit builder
             UnitBuilder ub = new UnitBuilder();
-            ub.SetModGUID(BattlegroundsInstance.BattleGroundsTuningMod.Guid);
+            ub.SetModGUID(ModManager.GetPackage("bg_mod").TuningGUID);
             ub.SetBlueprint(unitTemplate.BlueprintName);
 
             // Make sure the blueprint is valid
