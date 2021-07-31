@@ -76,11 +76,8 @@ namespace coh2_battlegrounds_console {
 
                 LoadBGAndProceed();
 
-                Company testCompany = CreateSovietCompany();
-                Company germanCompany = CreateGermanCompany();
-
-                File.WriteAllText("26th_Rifle_Division.json", CompanySerializer.GetCompanyAsJson(testCompany, true));
-                File.WriteAllText("69th_panzer.json", CompanySerializer.GetCompanyAsJson(germanCompany, true));
+                File.WriteAllText("26th_Rifle_Division.json", CompanySerializer.GetCompanyAsJson(CreateSovietCompany(), true));
+                File.WriteAllText("69th_panzer.json", CompanySerializer.GetCompanyAsJson(CreateGermanCompany(), true));
 
             } else if (gfxcompile) {
                 GfxFolderCompiler.Compile(gfxcompilepath, output_path);
@@ -93,15 +90,19 @@ namespace coh2_battlegrounds_console {
             // Load BG
             BattlegroundsInstance.LoadInstance();
 
+            // Wait for all to load
+            bool isLoaded = false;
+
             // Important this is done
-            DatabaseManager.LoadAllDatabases(null);
+            DatabaseManager.LoadAllDatabases((_, _) => isLoaded = true);
 
             // Wait for database to load
-            while (!DatabaseManager.DatabaseLoaded) {
+            while (!isLoaded) {
                 Thread.Sleep(100);
             }
 
-            tuningMod = ModManager.GetMod<ITuningMod>(ModManager.GetPackage("mod_bg").TuningGUID);
+            var package = ModManager.GetPackage("mod_bg");
+            tuningMod = ModManager.GetMod<ITuningMod>(package.TuningGUID);
 
         }
 
@@ -405,20 +406,6 @@ namespace coh2_battlegrounds_console {
             companyBuilder.AddUnit(unitBuilder.SetBlueprint("brummbar_squad_bg")
                 .SetDeploymentPhase(DeploymentPhase.PhaseA)
                 .SetVeterancyRank(3)
-                .GetAndReset());
-
-            // Artillery
-            companyBuilder.AddUnit(unitBuilder.SetBlueprint("howitzer_105mm_le_fh18_artillery_bg")
-                .SetTransportBlueprint("opel_blitz_transport_squad_bg")
-                .SetDeploymentMethod(DeploymentMethod.DeployAndStay)
-                .SetVeterancyRank(3)
-                .SetDeploymentPhase(DeploymentPhase.PhaseA)
-                .GetAndReset());
-            companyBuilder.AddUnit(unitBuilder.SetBlueprint("howitzer_105mm_le_fh18_artillery_bg")
-                .SetTransportBlueprint("opel_blitz_transport_squad_bg")
-                .SetDeploymentMethod(DeploymentMethod.DeployAndStay)
-                .SetVeterancyRank(3)
-                .SetDeploymentPhase(DeploymentPhase.PhaseA)
                 .GetAndReset());
 
             // Commit changes

@@ -222,7 +222,7 @@ namespace Battlegrounds.Game.Database {
         }
 
         public string[] GetAbilities(bool getEntityAbilities) {
-            
+
             // If not get entity abilities, return this ability list and be done
             if (!getEntityAbilities) {
                 return this.Abilities;

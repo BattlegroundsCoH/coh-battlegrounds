@@ -8,7 +8,6 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
 
 using Battlegrounds.Functional;
 using Battlegrounds.Game.Database;
@@ -125,6 +124,10 @@ namespace BattlegroundsApp.Modals.CompanyBuilder {
             // Refresh ability list
             this.RefreshAbilities();
 
+            // Refresh slot items
+            this.RefreshAvailableSlotItems();
+            this.RefreshSlotitems();
+
         }
 
         private void OnDeploymentPhaseClicked(object sender, MouseButtonEventArgs e) {
@@ -196,6 +199,7 @@ namespace BattlegroundsApp.Modals.CompanyBuilder {
                     break;
             }
             this.NotifyPropertyChanged(nameof(this.TransportBlueprintSelector));
+            this.RefreshCost();
         }
 
         private void RefreshTransportBlueprints() {
@@ -212,10 +216,13 @@ namespace BattlegroundsApp.Modals.CompanyBuilder {
         }
 
         private void TransportBlueprintCombobox_SelectionChanged(object sender, IconComboBoxItem newItem) {
-            SquadBlueprint sbp = newItem.Source as SquadBlueprint;
-            this.SelectedSupportBlueprint = GameLocale.GetString(sbp.UI.ScreenName);
-            this.SquadSlot.SquadInstance.SetDeploymentMethod(sbp, this.SquadSlot.SquadInstance.DeploymentMethod, this.SquadSlot.SquadInstance.DeploymentPhase);
-            this.NotifyPropertyChanged(nameof(this.SelectedSupportBlueprint));
+            if (this.SquadSlot.SquadInstance.DeploymentMethod is DeploymentMethod.DeployAndExit or DeploymentMethod.DeployAndStay) {
+                SquadBlueprint sbp = newItem.Source as SquadBlueprint;
+                this.SelectedSupportBlueprint = GameLocale.GetString(sbp.UI.ScreenName);
+                this.SquadSlot.SquadInstance.SetDeploymentMethod(sbp, this.SquadSlot.SquadInstance.DeploymentMethod, this.SquadSlot.SquadInstance.DeploymentPhase);
+                this.NotifyPropertyChanged(nameof(this.SelectedSupportBlueprint));
+                this.RefreshCost();
+            }
         }
 
         private void RefreshAbilities() {
@@ -239,6 +246,18 @@ namespace BattlegroundsApp.Modals.CompanyBuilder {
                 };
                 this.AbilitiesList.Children.Add(img);
             });
+
+        }
+
+        private void RefreshAvailableSlotItems() {
+
+
+
+        }
+
+        private void RefreshSlotitems() {
+
+
 
         }
 
