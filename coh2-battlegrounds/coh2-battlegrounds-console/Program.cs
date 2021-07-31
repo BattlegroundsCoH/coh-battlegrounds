@@ -20,6 +20,9 @@ namespace coh2_battlegrounds_console {
         static string recent_file = null;
         static bool compile_json;
 
+        static bool gfxcompile;
+        static string gfxcompilepath = null;
+
         static bool campaign_compile;
         static string campaign_compile_file = null;
 
@@ -79,6 +82,8 @@ namespace coh2_battlegrounds_console {
                 File.WriteAllText("26th_Rifle_Division.json", CompanySerializer.GetCompanyAsJson(testCompany, true));
                 File.WriteAllText("69th_panzer.json", CompanySerializer.GetCompanyAsJson(germanCompany, true));
 
+            } else if (gfxcompile) {
+                GfxFolderCompiler.Compile(gfxcompilepath, output_path);
             }
 
         }
@@ -425,16 +430,16 @@ namespace coh2_battlegrounds_console {
 
             for (int i = 0; i < args.Length; i++) {
 
-                if (args[i].CompareTo("-recent_analysis") == 0) {
+                if (args[i] is "-recent_analysis") {
                     recent_analysis = true;
                     if (i + 1 < args.Length) {
                         if (args[i + 1][0] != '-') {
                             recent_file = args[i + 1];
                         }
                     }
-                } else if (args[i].CompareTo("-json") == 0) {
+                } else if (args[i] is "-json") {
                     compile_json = true;
-                } else if (args[i].CompareTo("-campaign") == 0) {
+                } else if (args[i] is "-campaign") {
                     campaign_compile = true;
                     if (i + 1 < args.Length) {
                         campaign_compile_file = args[i + 1];
@@ -442,13 +447,20 @@ namespace coh2_battlegrounds_console {
                         Console.WriteLine("Cannot compile campaign - none specified!");
                         campaign_compile = false;
                     }
-                } else if (args[i].CompareTo("-coh2-extract-maps") == 0) {
+                } else if (args[i] is "-coh2-extract-maps") {
                     extract_coh2_maps = true;
-                } else if (args[i].CompareTo("-test_companies") == 0) {
+                } else if (args[i] is "-test_companies") {
                     do_test_companies = true;
-                } else if (args[i].CompareTo("-o") == 0) {
+                } else if (args[i] is "-o") {
                     if (i + 1 < args.Length) {
                         output_path = args[i + 1];
+                    } else {
+                        Environment.Exit(-1);
+                    }
+                } else if (args[i] is "-gfxdir") {
+                    gfxcompile = true;
+                    if (i + 1 < args.Length) {
+                        gfxcompilepath = args[i + 1];
                     } else {
                         Environment.Exit(-1);
                     }

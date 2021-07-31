@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
@@ -31,9 +32,8 @@ namespace BattlegroundsApp.Modals.CompanyBuilder {
             public ImageSource Ico { get; }
             public SelectSquadAbility(AbilityBlueprint abp) {
                 this.ABP = abp;
-                Uri uri = new Uri($"pack://application:,,,/Resources/ingame/ability_icons/{abp.UI.Icon}.png");
-                if (App.ResourceHandler.HasResource(uri)) {
-                    this.Ico = new BitmapImage(uri);
+                if (App.ResourceHandler.HasIcon("ability_icons", abp.UI.Icon)) {
+                    this.Ico = App.ResourceHandler.GetIcon("ability_icons", abp.UI.Icon);
                 } else {
                     Trace.WriteLine($"Failed to locate icon name '{abp.UI.Icon}'.", nameof(ResourceHandler));
                 }
@@ -47,7 +47,7 @@ namespace BattlegroundsApp.Modals.CompanyBuilder {
         private void NotifyPropertyChanged([CallerMemberName] string propertyName = "")
             => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 
-        public string Icon => this.SquadSlot.SquadIcon;
+        public ImageSource Icon => this.SquadSlot.SquadIcon;
 
         public string SBPName => this.SquadSlot.SquadName;
 
@@ -201,9 +201,9 @@ namespace BattlegroundsApp.Modals.CompanyBuilder {
         private void RefreshTransportBlueprints() {
 
             // Get blueprints
-            var blueprints = this.m_package.FactionSettings[this.SquadSlot.SquadInstance.SBP.Army].Transports
+            List<IconComboBoxItem> blueprints = this.m_package.FactionSettings[this.SquadSlot.SquadInstance.SBP.Army].Transports
                 .Select(x => BlueprintManager.FromBlueprintName<SquadBlueprint>(x))
-                .Select(x => new IconComboBoxItem(new BitmapImage(new Uri($"pack://application:,,,/Resources/ingame/unit_icons/{x.UI.Icon}.png")), GameLocale.GetString(x.UI.ScreenName), x))
+                .Select(x => new IconComboBoxItem(App.ResourceHandler.GetIcon("unit_icons", x.UI.Icon), GameLocale.GetString(x.UI.ScreenName), x))
                 .ToList();
 
             // Add to combobox

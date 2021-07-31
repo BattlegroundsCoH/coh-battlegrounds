@@ -8,13 +8,14 @@ using System;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media;
 
 namespace BattlegroundsApp.Controls.CompanyBuilderControls {
 
     public partial class SquadSlotLarge : UserControl {
 
         public string SquadName { get; }
-        public string SquadIcon { get; }
+        public ImageSource SquadIcon { get; }
         public CostExtension SquadCost { get; }
         public byte SquadVeterancy { get; }
         public bool SquadIsTransported { get; }
@@ -29,7 +30,7 @@ namespace BattlegroundsApp.Controls.CompanyBuilderControls {
             this.DataContext = this;
             this.SquadInstance = squad;
             this.SquadName = GameLocale.GetString(this.SquadInstance.SBP.UI.ScreenName);
-            this.SquadIcon = $"pack://application:,,,/Resources/ingame/unit_icons/{this.SquadInstance.SBP.UI.Icon}.png";
+            this.SquadIcon = App.ResourceHandler.GetIcon("unit_icons", this.SquadInstance.SBP.UI.Icon);
             this.SquadCost = this.SquadInstance.SBP.Cost;
             this.SquadVeterancy = this.SquadInstance.VeterancyRank;
             this.SquadIsTransported = this.SquadInstance.SupportBlueprint is not null;

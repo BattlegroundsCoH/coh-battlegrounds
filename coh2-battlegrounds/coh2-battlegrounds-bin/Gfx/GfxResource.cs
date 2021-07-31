@@ -10,6 +10,16 @@
         private byte[] m_raw;
 
         /// <summary>
+        /// Get the width dimension of the resource.
+        /// </summary>
+        public int Width => this.m_width;
+
+        /// <summary>
+        /// Get the height dimension of the resource.
+        /// </summary>
+        public int Height => this.m_height;
+
+        /// <summary>
         /// Initialize a new <see cref="GfxResource"/> class with raw data.
         /// </summary>
         /// <param name="id">The identifier to use when identifying the resource.</param>

@@ -2,7 +2,7 @@
   "profiles": {
     "coh2-battlegrounds-console": {
       "commandName": "Project",
-      "commandLineArgs": "-recent_analysis -json"
+      "commandLineArgs": "-gfxdir \"E:\\coh2_battlegrounds\\coh2-battlegrounds\\coh2-battlegrounds\\Resources\\ingame\\ability_icons\""
     }
   }
 }
