@@ -1,12 +1,15 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
+using Battlegrounds.Functional;
 using Battlegrounds.Game.Database;
 using Battlegrounds.Game.Database.Management;
 using Battlegrounds.Game.Gameplay;
@@ -22,6 +25,20 @@ namespace BattlegroundsApp.Modals.CompanyBuilder {
     /// Interaction logic for SelectedSquadModal.xaml
     /// </summary>
     public partial class SelectedSquadModal : Modal, INotifyPropertyChanged {
+
+        public class SelectSquadAbility {
+            public AbilityBlueprint ABP { get; }
+            public ImageSource Ico { get; }
+            public SelectSquadAbility(AbilityBlueprint abp) {
+                this.ABP = abp;
+                Uri uri = new Uri($"pack://application:,,,/Resources/ingame/ability_icons/{abp.UI.Icon}.png");
+                if (App.ResourceHandler.HasResource(uri)) {
+                    this.Ico = new BitmapImage(uri);
+                } else {
+                    Trace.WriteLine($"Failed to locate icon name '{abp.UI.Icon}'.", nameof(ResourceHandler));
+                }
+            }
+        }
 
         private const double VETEXPMAXWIDTH = 136.0;
 
@@ -104,6 +121,9 @@ namespace BattlegroundsApp.Modals.CompanyBuilder {
 
             // Refresh Transport Blueprint
             this.RefreshTransportBlueprints();
+
+            // Refresh ability list
+            this.RefreshAbilities();
 
         }
 
@@ -196,6 +216,30 @@ namespace BattlegroundsApp.Modals.CompanyBuilder {
             this.SelectedSupportBlueprint = GameLocale.GetString(sbp.UI.ScreenName);
             this.SquadSlot.SquadInstance.SetDeploymentMethod(sbp, this.SquadSlot.SquadInstance.DeploymentMethod, this.SquadSlot.SquadInstance.DeploymentPhase);
             this.NotifyPropertyChanged(nameof(this.SelectedSupportBlueprint));
+        }
+
+        private void RefreshAbilities() {
+
+            // Get all abilities
+            string[] abilities = this.SquadSlot.SquadInstance.SBP.GetAbilities(true);
+            var abps = abilities.Select(x => BlueprintManager.FromBlueprintName<AbilityBlueprint>(x))
+                .Where(x => !string.IsNullOrEmpty(x.UI.Icon));
+
+            // Map to abp presenter class
+            SelectSquadAbility[] presenters = abps.Select(x => new SelectSquadAbility(x)).Where(x => x.Ico is not null).ToArray();
+
+            // Create images and append
+            presenters.ForEach(x => {
+                Image img = new() {
+                    Source = x.Ico,
+                    Tag = x,
+                    ToolTip = GameLocale.GetString(x.ABP.UI.ScreenName),
+                    Width = 48,
+                    Height = 48
+                };
+                this.AbilitiesList.Children.Add(img);
+            });
+
         }
 
     }

@@ -221,6 +221,21 @@ namespace Battlegrounds.Game.Database {
 
         }
 
+        public string[] GetAbilities(bool getEntityAbilities) {
+            
+            // If not get entity abilities, return this ability list and be done
+            if (!getEntityAbilities) {
+                return this.Abilities;
+            }
+
+            // Select all entity abilities
+            string[] ebpabps = this.Loadout.SelectMany(x => BlueprintManager.FromBlueprintName<EntityBlueprint>(x.EntityBlueprint)?.Abilities ?? Array.Empty<string>());
+
+            // Return union
+            return ebpabps.Union(this.Abilities).ToArray();
+
+        }
+
     }
 
     /// <summary>

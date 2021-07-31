@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
 
@@ -29,6 +30,12 @@ namespace Battlegrounds.Game.Database.Extensions {
         public LoadoutExtension(Entry[] entries) {
             this.m_entries = entries;
         }
+
+        public T[] Select<T>(Func<Entry, T> mapFunction)
+            => this.m_entries.Select(mapFunction).ToArray();
+
+        public T[] SelectMany<T>(Func<Entry, T[]> mapFunction)
+            => this.m_entries.SelectMany(mapFunction).ToArray();
 
         public static LoadoutExtension FromJson(ref Utf8JsonReader reader) {
             List<Entry> entries = new();

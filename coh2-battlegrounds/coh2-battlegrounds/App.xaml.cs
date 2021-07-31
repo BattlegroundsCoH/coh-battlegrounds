@@ -9,6 +9,7 @@ using Battlegrounds.Steam;
 
 using BattlegroundsApp.LocalData;
 using BattlegroundsApp.Utilities;
+using BattlegroundsApp.Resources;
 
 namespace BattlegroundsApp {
 
@@ -17,12 +18,18 @@ namespace BattlegroundsApp {
     /// </summary>
     public partial class App : Application {
 
+        private static ResourceHandler __handler;
         private static Logger __logger;
+
+        public static ResourceHandler ResourceHandler => __handler;
 
         private void App_Startup(object sender, StartupEventArgs e) {
 
             // Setup logger
-            __logger = new Logger();
+            __logger = new();
+
+            // Setup resource handler
+            __handler = new();
 
             // Load BG .dll instance*
             BattlegroundsInstance.LoadInstance();
@@ -31,7 +38,7 @@ namespace BattlegroundsApp {
             LoadLocale();
 
             // Load databases (async)
-            DatabaseManager.LoadAllDatabases(OnDatabasesLoaded); // Important this is done (TODO: Add a callback handler)
+            DatabaseManager.LoadAllDatabases(OnDatabasesLoaded);
 
             // Create window and hook into window events
             var window = new MainWindow();

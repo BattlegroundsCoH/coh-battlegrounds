@@ -144,7 +144,7 @@
                 <!-- R1 :: C0 :: Abilities -->
                 <StackPanel Grid.Row="1" Grid.Column="0">
                     <Label Content="Unit Abilities" HorizontalAlignment="Center"/>
-                    <WrapPanel Name="AbilitiesList"/>
+                    <WrapPanel Name="AbilitiesList" HorizontalAlignment="Center"/>
                 </StackPanel>
 
                 <!-- R1 :: C1 :: Deployment Phase -->
