@@ -101,8 +101,15 @@ namespace Battlegrounds.Game.Database.Management {
                 __weapons,
             };
 
+            // Setup load timer
+            Stopwatch stopwatch = Stopwatch.StartNew();
+
             // Load the vcoh database
             LoadDatabaseWithMod("vcoh", string.Empty);
+
+            // Stop watch and log
+            stopwatch.Stop();
+            Trace.WriteLine($"Loaded database for basegame blueprints in {stopwatch.Elapsed.TotalSeconds:0.000}s.", nameof(BlueprintManager));
 
         }
 

@@ -65,12 +65,13 @@ namespace Battlegrounds.Game.DataCompany {
 
                 if (unit_type >= 10 && unit_type <= 28) { // infantry
 
-                    SquadBlueprint inf_blueprint = blueprintPool.Where(x => x.IsInfantry && !x.IsVehicleCrew && !x.IsSpecialInfantry && !x.IsCommandUnit && !x.IsSniper).Random(__random);
+                    SquadBlueprint inf_blueprint = blueprintPool.Where(
+                        x => x.Types.IsInfantry && !x.Types.IsVehicleCrew && !x.Types.IsSpecialInfantry && !x.Types.IsCommandUnit && !x.Types.IsSniper).Random(__random);
                     SquadBlueprint transportbp = null;
                     DeploymentMethod deployMethod = DeploymentMethod.None;
 
                     if (__random.Next(0, 50) <= 24 && max_transport_use > 0) {
-                        transportbp = blueprintPool.Where(x => x.IsTransportVehicle).Random(__random);
+                        transportbp = blueprintPool.Where(x => x.Types.IsTransportVehicle).Random(__random);
                         deployMethod = (type != CompanyType.Mechanized) ? DeploymentMethod.DeployAndExit : DeploymentMethod.DeployAndStay;
                         max_transport_use--;
                     }
@@ -81,12 +82,12 @@ namespace Battlegrounds.Game.DataCompany {
 
                 } else if (unit_type >= 3 && unit_type <= 9 && max_specialized_infantry > 0) { // special infantry
 
-                    SquadBlueprint sinf_blueprint = blueprintPool.Where(x => x.IsSpecialInfantry || x.IsSniper).Random(__random);
+                    SquadBlueprint sinf_blueprint = blueprintPool.Where(x => x.Types.IsSpecialInfantry || x.Types.IsSniper).Random(__random);
                     SquadBlueprint transportbp = null;
                     DeploymentMethod deployMethod = DeploymentMethod.None;
 
                     if (__random.Next(0, 40) <= 24 && max_transport_use > 0) {
-                        transportbp = blueprintPool.Where(x => x.IsTransportVehicle).Random(__random);
+                        transportbp = blueprintPool.Where(x => x.Types.IsTransportVehicle).Random(__random);
                         deployMethod = (type == CompanyType.Motorized) ? DeploymentMethod.DeployAndExit : DeploymentMethod.DeployAndStay;
                         max_transport_use--;
                     }
@@ -98,7 +99,7 @@ namespace Battlegrounds.Game.DataCompany {
 
                 } else if (unit_type >= 0 && unit_type <= 2 && max_command_units > 0) { // command unit
 
-                    SquadBlueprint cmd_bp = blueprintPool.Where(x => x.IsCommandUnit).Random(__random);
+                    SquadBlueprint cmd_bp = blueprintPool.Where(x => x.Types.IsCommandUnit).Random(__random);
                     if (cmd_bp != null) {
 
                         builder.AddUnit(unit.SetBlueprint(cmd_bp).SetVeterancyRank(vet_level).SetDeploymentMethod(DeploymentMethod.None).GetAndReset());
@@ -110,12 +111,12 @@ namespace Battlegrounds.Game.DataCompany {
 
                 } else if (unit_type >= 29 && unit_type <= 34 && max_support > 0) { // support
 
-                    SquadBlueprint support = blueprintPool.Where(x => x.IsTeamWeapon && !x.IsHeavyArtillery).Random(__random);
+                    SquadBlueprint support = blueprintPool.Where(x => x.IsTeamWeapon && !x.Types.IsHeavyArtillery).Random(__random);
                     SquadBlueprint transport_blueprint = null;
                     DeploymentMethod deployMethod = DeploymentMethod.None;
 
-                    if (support.IsAntiTank && __random.Next(0, 50) <= 24 && max_transport_use > 0) {
-                        transport_blueprint = blueprintPool.Where(x => x.IsTransportVehicle).Random(__random);
+                    if (support.Types.IsAntiTank && __random.Next(0, 50) <= 24 && max_transport_use > 0) {
+                        transport_blueprint = blueprintPool.Where(x => x.Types.IsTransportVehicle).Random(__random);
                         deployMethod = DeploymentMethod.DeployAndExit;
                         max_transport_use--;
                     }
@@ -143,7 +144,7 @@ namespace Battlegrounds.Game.DataCompany {
                     */
                 } else if (unit_type >= 38 && unit_type <= 45 && max_tanks > 0) { // tanks
 
-                    SquadBlueprint tank_blueprint = blueprintPool.Where(x => x.IsArmour || !x.IsVehicle).Random(__random);
+                    SquadBlueprint tank_blueprint = blueprintPool.Where(x => x.Types.IsArmour || !x.Types.IsVehicle).Random(__random);
                     builder.AddUnit(unit.SetBlueprint(tank_blueprint).SetVeterancyRank(vet_level).SetDeploymentMethod(DeploymentMethod.None).GetAndReset());
 
                     max_tanks--;
@@ -151,7 +152,7 @@ namespace Battlegrounds.Game.DataCompany {
 
                 } else if (unit_type >= 46 && unit_type <= 50 && max_vehicles > 0) { // vehicles
 
-                    SquadBlueprint vehicle_blueprint = blueprintPool.Where(x => !x.IsArmour || x.IsVehicle).Random(__random);
+                    SquadBlueprint vehicle_blueprint = blueprintPool.Where(x => !x.Types.IsArmour || x.Types.IsVehicle).Random(__random);
                     builder.AddUnit(unit.SetBlueprint(vehicle_blueprint).SetVeterancyRank(vet_level).SetDeploymentMethod(DeploymentMethod.None).GetAndReset());
 
                     max_vehicles--;
@@ -159,7 +160,7 @@ namespace Battlegrounds.Game.DataCompany {
 
                 } else if (max_heavy_tank > 0) { // heavy tank
 
-                    SquadBlueprint hv_blueprint = blueprintPool.Where(x => x.IsHeavyArmour).Random(__random);
+                    SquadBlueprint hv_blueprint = blueprintPool.Where(x => x.Types.IsHeavyArmour).Random(__random);
                     builder.AddUnit(unit.SetBlueprint(hv_blueprint).SetVeterancyRank(vet_level).SetDeploymentMethod(DeploymentMethod.None).GetAndReset());
 
                     max_heavy_tank--;

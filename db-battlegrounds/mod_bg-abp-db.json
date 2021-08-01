@@ -1,10 +1,9 @@
 [
   {
-    "Cost": {},
     "Display": {
-      "LocaleName": "1",
-      "LocaleDescriptionLong": "13",
-      "LocaleDescriptionShort": "14",
+      "LocaleName": "$142b113740474c82a60b0a428bd553d5:1",
+      "LocaleDescriptionLong": "$142b113740474c82a60b0a428bd553d5:13",
+      "LocaleDescriptionShort": "$142b113740474c82a60b0a428bd553d5:14",
       "Icon": "Icons_buildings_building_common_radio_tower"
     },
     "Army": "NULL",
@@ -13,7 +12,6 @@
     "Name": "bg_deploy_destination"
   },
   {
-    "Cost": {},
     "Display": {
       "LocaleName": "11036222",
       "LocaleDescriptionLong": "11036223",
@@ -26,46 +24,138 @@
     "Name": "bg_withdraw_unit"
   },
   {
-    "Cost": {},
     "Display": {
-      "LocaleName": "18",
-      "LocaleDescriptionLong": "19",
-      "LocaleDescriptionShort": "20",
+      "LocaleName": "$142b113740474c82a60b0a428bd553d5:18",
+      "LocaleDescriptionLong": "$142b113740474c82a60b0a428bd553d5:19",
+      "LocaleDescriptionShort": "$142b113740474c82a60b0a428bd553d5:20",
       "Icon": "Icons_tooltips_pick_up_item"
     },
     "Army": "NULL",
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
     "PBGID": 1073741826,
-    "Name": "transport_heavy_vehicle_bg"
+    "Name": "transport_heavy_vehicle_bg",
+    "Requirements": [
+      {
+        "RequirementType": "required_all_in_list",
+        "RequirementReason": "usage",
+        "UIText": "11043026",
+        "RequirementProperties": {
+          "requirements": null
+        }
+      },
+      {
+        "RequirementType": "required_not",
+        "RequirementReason": "usage_and_display",
+        "UIText": "0",
+        "RequirementProperties": {
+          "requirement_table": [
+            {
+              "RequirementType": "required_squad_upgrade",
+              "RequirementReason": "usage",
+              "UIText": "0",
+              "RequirementProperties": {
+                "include_queued": false,
+                "is_present": true,
+                "upgrade_name": "is_towing"
+              }
+            }
+          ]
+        }
+      }
+    ]
   },
   {
-    "Cost": {},
     "Display": {
-      "LocaleName": "21",
-      "LocaleDescriptionLong": "23",
-      "LocaleDescriptionShort": "22",
+      "LocaleName": "$142b113740474c82a60b0a428bd553d5:21",
+      "LocaleDescriptionLong": "$142b113740474c82a60b0a428bd553d5:23",
+      "LocaleDescriptionShort": "$142b113740474c82a60b0a428bd553d5:22",
       "Icon": "Icons_abilities_ability_german_lockdown_enable"
     },
     "Army": "NULL",
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
     "PBGID": 1073741827,
-    "Name": "detach_tow_bg"
+    "Name": "detach_tow_bg",
+    "Requirements": [
+      {
+        "RequirementType": "required_in_state",
+        "RequirementReason": "usage",
+        "UIText": "0",
+        "RequirementProperties": {
+          "garrisoned": false,
+          "healed": false,
+          "in_combat_since": 0,
+          "injured": false,
+          "leader": false,
+          "not_moving": true,
+          "not_retreating": false,
+          "pinned": false,
+          "suppressed": false,
+          "camouflaged": false
+        }
+      },
+      {
+        "RequirementType": "required_not",
+        "RequirementReason": "usage",
+        "UIText": "0",
+        "RequirementProperties": {
+          "requirement_table": [
+            {
+              "RequirementType": "required_in_state",
+              "RequirementReason": "usage",
+              "UIText": "0",
+              "RequirementProperties": {
+                "garrisoned": false,
+                "healed": false,
+                "in_combat_since": 10,
+                "injured": false,
+                "leader": false,
+                "not_moving": false,
+                "not_retreating": false,
+                "pinned": false,
+                "suppressed": false,
+                "camouflaged": false
+              }
+            }
+          ]
+        }
+      },
+      {
+        "RequirementType": "required_squad_upgrade",
+        "RequirementReason": "usage_and_display",
+        "UIText": "0",
+        "RequirementProperties": {
+          "include_queued": false,
+          "is_present": true,
+          "upgrade_name": "is_towing"
+        }
+      }
+    ]
   },
   {
-    "Cost": {},
     "Display": {
-      "LocaleName": "48",
-      "LocaleDescriptionLong": "49",
-      "LocaleDescriptionShort": "50",
+      "LocaleName": "$142b113740474c82a60b0a428bd553d5:48",
+      "LocaleDescriptionLong": "$142b113740474c82a60b0a428bd553d5:49",
+      "LocaleDescriptionShort": "$142b113740474c82a60b0a428bd553d5:50",
       "Icon": "Icons_commands_icon_command_cancel"
     },
     "Army": "NULL",
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
     "PBGID": 1073741847,
-    "Name": "detach_weapon_tow_bg"
+    "Name": "detach_weapon_tow_bg",
+    "Requirements": [
+      {
+        "RequirementType": "required_squad_upgrade",
+        "RequirementReason": "usage_and_display",
+        "UIText": "0",
+        "RequirementProperties": {
+          "include_queued": false,
+          "is_present": true,
+          "upgrade_name": "is_towed"
+        }
+      }
+    ]
   },
   {
-    "Cost": {},
     "Display": {
       "LocaleName": "11072165",
       "LocaleDescriptionLong": "11072161",
@@ -75,10 +165,29 @@
     "Army": "NULL",
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
     "PBGID": 1073741834,
-    "Name": "vehicle_abandon_vehicle_bg"
+    "Name": "vehicle_abandon_vehicle_bg",
+    "Requirements": [
+      {
+        "RequirementType": "required_interactive_stage",
+        "RequirementReason": "usage",
+        "UIText": "11072159",
+        "RequirementProperties": {}
+      },
+      {
+        "RequirementType": "required_slot_item",
+        "RequirementReason": "usage",
+        "UIText": "11073169",
+        "RequirementProperties": {
+          "check_item_on_entity": false,
+          "display_requirement": true,
+          "max_owned": 0,
+          "min_owned": 0,
+          "slot_item": "sturmtiger_reload_active"
+        }
+      }
+    ]
   },
   {
-    "Cost": {},
     "Display": {
       "LocaleName": "11072165",
       "LocaleDescriptionLong": "11072161",
@@ -88,7 +197,27 @@
     "Army": "NULL",
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
     "PBGID": 1073741825,
-    "Name": "vehicle_decrew_vehicle_crew_bg"
+    "Name": "vehicle_decrew_vehicle_crew_bg",
+    "Requirements": [
+      {
+        "RequirementType": "required_interactive_stage",
+        "RequirementReason": "usage",
+        "UIText": "11072159",
+        "RequirementProperties": {}
+      },
+      {
+        "RequirementType": "required_slot_item",
+        "RequirementReason": "usage",
+        "UIText": "11073169",
+        "RequirementProperties": {
+          "check_item_on_entity": false,
+          "display_requirement": true,
+          "max_owned": 0,
+          "min_owned": 0,
+          "slot_item": "sturmtiger_reload_active"
+        }
+      }
+    ]
   },
   {
     "Cost": {
@@ -103,10 +232,37 @@
     "Army": "german",
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
     "PBGID": 1073741843,
-    "Name": "german_mortar_fire_flares_ability_bg"
+    "Name": "german_mortar_fire_flares_ability_bg",
+    "Requirements": [
+      {
+        "RequirementType": "required_not",
+        "RequirementReason": "usage",
+        "UIText": "11050319",
+        "RequirementProperties": {
+          "requirement_table": [
+            {
+              "RequirementType": "required_in_state",
+              "RequirementReason": "usage",
+              "UIText": "0",
+              "RequirementProperties": {
+                "garrisoned": false,
+                "healed": false,
+                "in_combat_since": -1,
+                "injured": false,
+                "leader": false,
+                "not_moving": false,
+                "not_retreating": false,
+                "pinned": true,
+                "suppressed": false,
+                "camouflaged": false
+              }
+            }
+          ]
+        }
+      }
+    ]
   },
   {
-    "Cost": {},
     "Display": {
       "LocaleName": "11030555",
       "LocaleDescriptionLong": "11030556",
@@ -116,7 +272,51 @@
     "Army": "soviet",
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
     "PBGID": 1073741835,
-    "Name": "merge_ability_bg"
+    "Name": "merge_ability_bg",
+    "Requirements": [
+      {
+        "RequirementType": "required_none",
+        "RequirementReason": "usage",
+        "UIText": "0",
+        "RequirementProperties": {}
+      },
+      {
+        "RequirementType": "required_squad_upgrade",
+        "RequirementReason": "usage",
+        "UIText": "11042896",
+        "RequirementProperties": {
+          "include_queued": false,
+          "is_present": false,
+          "upgrade_name": "evasive_tactics_is_on"
+        }
+      },
+      {
+        "RequirementType": "required_not",
+        "RequirementReason": "usage",
+        "UIText": "11050319",
+        "RequirementProperties": {
+          "requirement_table": [
+            {
+              "RequirementType": "required_in_state",
+              "RequirementReason": "usage",
+              "UIText": "0",
+              "RequirementProperties": {
+                "garrisoned": false,
+                "healed": false,
+                "in_combat_since": -1,
+                "injured": false,
+                "leader": false,
+                "not_moving": false,
+                "not_retreating": false,
+                "pinned": true,
+                "suppressed": false,
+                "camouflaged": false
+              }
+            }
+          ]
+        }
+      }
+    ]
   },
   {
     "Cost": {
@@ -131,7 +331,17 @@
     "Army": "soviet",
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
     "PBGID": 1073741833,
-    "Name": "conscript_oorah_bg"
+    "Name": "conscript_oorah_bg",
+    "Requirements": [
+      {
+        "RequirementType": "required_all_in_list",
+        "RequirementReason": "usage",
+        "UIText": "0",
+        "RequirementProperties": {
+          "requirements": null
+        }
+      }
+    ]
   },
   {
     "Cost": {
@@ -146,7 +356,35 @@
     "Army": "german",
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
     "PBGID": 1073741846,
-    "Name": "grenadier_panzerfaust_bg"
+    "Name": "grenadier_panzerfaust_bg",
+    "Requirements": [
+      {
+        "RequirementType": "required_not",
+        "RequirementReason": "usage",
+        "UIText": "11050319",
+        "RequirementProperties": {
+          "requirement_table": [
+            {
+              "RequirementType": "required_in_state",
+              "RequirementReason": "usage",
+              "UIText": "0",
+              "RequirementProperties": {
+                "garrisoned": false,
+                "healed": false,
+                "in_combat_since": -1,
+                "injured": false,
+                "leader": false,
+                "not_moving": false,
+                "not_retreating": false,
+                "pinned": true,
+                "suppressed": false,
+                "camouflaged": false
+              }
+            }
+          ]
+        }
+      }
+    ]
   },
   {
     "Cost": {
@@ -161,7 +399,59 @@
     "Army": "german",
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
     "PBGID": 1073741845,
-    "Name": "grenadier_rifle_grenade_ability_bg"
+    "Name": "grenadier_rifle_grenade_ability_bg",
+    "Requirements": [
+      {
+        "RequirementType": "required_not",
+        "RequirementReason": "usage_and_display",
+        "UIText": "0",
+        "RequirementProperties": {
+          "requirement_table": [
+            {
+              "RequirementType": "required_in_cover",
+              "RequirementReason": "usage_and_display",
+              "UIText": "0",
+              "RequirementProperties": {
+                "cover_type_table": {
+                  "cover_type_01": "tp_trench",
+                  "cover_type_02": "",
+                  "cover_type_03": "",
+                  "cover_type_04": "",
+                  "cover_type_05": "",
+                  "cover_type_06": ""
+                }
+              }
+            }
+          ]
+        }
+      },
+      {
+        "RequirementType": "required_not",
+        "RequirementReason": "usage",
+        "UIText": "11050319",
+        "RequirementProperties": {
+          "requirement_table": [
+            {
+              "RequirementType": "required_in_state",
+              "RequirementReason": "usage",
+              "UIText": "0",
+              "RequirementProperties": {
+                "garrisoned": false,
+                "healed": false,
+                "in_combat_since": -1,
+                "injured": false,
+                "leader": false,
+                "not_moving": false,
+                "not_retreating": false,
+                "pinned": true,
+                "suppressed": false,
+                "camouflaged": false
+              }
+            }
+          ]
+        }
+      }
+    ]
   },
   {
     "Cost": {
@@ -176,12 +466,63 @@
     "Army": "german",
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
     "PBGID": 1073741844,
-    "Name": "panzer_grenadier_bundled_grenade_bg"
+    "Name": "panzer_grenadier_bundled_grenade_bg",
+    "Requirements": [
+      {
+        "RequirementType": "required_not",
+        "RequirementReason": "usage_and_display",
+        "UIText": "0",
+        "RequirementProperties": {
+          "requirement_table": [
+            {
+              "RequirementType": "required_in_cover",
+              "RequirementReason": "usage_and_display",
+              "UIText": "0",
+              "RequirementProperties": {
+                "cover_type_table": {
+                  "cover_type_01": "tp_trench",
+                  "cover_type_02": "",
+                  "cover_type_03": "",
+                  "cover_type_04": "",
+                  "cover_type_05": "",
+                  "cover_type_06": ""
+                }
+              }
+            }
+          ]
+        }
+      },
+      {
+        "RequirementType": "required_not",
+        "RequirementReason": "usage",
+        "UIText": "11050319",
+        "RequirementProperties": {
+          "requirement_table": [
+            {
+              "RequirementType": "required_in_state",
+              "RequirementReason": "usage",
+              "UIText": "0",
+              "RequirementProperties": {
+                "garrisoned": false,
+                "healed": false,
+                "in_combat_since": -1,
+                "injured": false,
+                "leader": false,
+                "not_moving": false,
+                "not_retreating": false,
+                "pinned": true,
+                "suppressed": false,
+                "camouflaged": false
+              }
+            }
+          ]
+        }
+      }
+    ]
   },
   {
-    "Cost": {},
     "Display": {
-      "LocaleName": "46",
+      "LocaleName": "$142b113740474c82a60b0a428bd553d5:46",
       "LocaleDescriptionLong": "0",
       "LocaleDescriptionShort": "0"
     },
@@ -191,7 +532,6 @@
     "Name": "soviet_paratrooper_setpos"
   },
   {
-    "Cost": {},
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -203,7 +543,6 @@
     "Name": "soviet_air_bombing_run"
   },
   {
-    "Cost": {},
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -215,7 +554,6 @@
     "Name": "soviet_air_infantry_overwatch"
   },
   {
-    "Cost": {},
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -227,7 +565,6 @@
     "Name": "soviet_air_recon"
   },
   {
-    "Cost": {},
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -239,7 +576,6 @@
     "Name": "soviet_air_strafe"
   },
   {
-    "Cost": {},
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -251,7 +587,6 @@
     "Name": "soviet_air_vehicle_overwatch"
   },
   {
-    "Cost": {},
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -275,7 +610,35 @@
     "Army": "soviet",
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
     "PBGID": 1073741831,
-    "Name": "anti_tank_grenade_bg"
+    "Name": "anti_tank_grenade_bg",
+    "Requirements": [
+      {
+        "RequirementType": "required_not",
+        "RequirementReason": "usage",
+        "UIText": "11050319",
+        "RequirementProperties": {
+          "requirement_table": [
+            {
+              "RequirementType": "required_in_state",
+              "RequirementReason": "usage",
+              "UIText": "0",
+              "RequirementProperties": {
+                "garrisoned": false,
+                "healed": false,
+                "in_combat_since": -1,
+                "injured": false,
+                "leader": false,
+                "not_moving": false,
+                "not_retreating": false,
+                "pinned": true,
+                "suppressed": false,
+                "camouflaged": false
+              }
+            }
+          ]
+        }
+      }
+    ]
   },
   {
     "Cost": {
@@ -290,7 +653,35 @@
     "Army": "soviet",
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
     "PBGID": 1073741828,
-    "Name": "conscript_molotov_cocktail_bg"
+    "Name": "conscript_molotov_cocktail_bg",
+    "Requirements": [
+      {
+        "RequirementType": "required_not",
+        "RequirementReason": "usage",
+        "UIText": "11050319",
+        "RequirementProperties": {
+          "requirement_table": [
+            {
+              "RequirementType": "required_in_state",
+              "RequirementReason": "usage",
+              "UIText": "0",
+              "RequirementProperties": {
+                "garrisoned": false,
+                "healed": false,
+                "in_combat_since": -1,
+                "injured": false,
+                "leader": false,
+                "not_moving": false,
+                "not_retreating": false,
+                "pinned": true,
+                "suppressed": false,
+                "camouflaged": false
+              }
+            }
+          ]
+        }
+      }
+    ]
   },
   {
     "Cost": {
@@ -305,7 +696,35 @@
     "Army": "soviet",
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
     "PBGID": 1073741829,
-    "Name": "rgd_1_smoke_grenade_bg"
+    "Name": "rgd_1_smoke_grenade_bg",
+    "Requirements": [
+      {
+        "RequirementType": "required_not",
+        "RequirementReason": "usage",
+        "UIText": "11050319",
+        "RequirementProperties": {
+          "requirement_table": [
+            {
+              "RequirementType": "required_in_state",
+              "RequirementReason": "usage",
+              "UIText": "0",
+              "RequirementProperties": {
+                "garrisoned": false,
+                "healed": false,
+                "in_combat_since": -1,
+                "injured": false,
+                "leader": false,
+                "not_moving": false,
+                "not_retreating": false,
+                "pinned": true,
+                "suppressed": false,
+                "camouflaged": false
+              }
+            }
+          ]
+        }
+      }
+    ]
   },
   {
     "Cost": {
@@ -320,7 +739,35 @@
     "Army": "soviet",
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
     "PBGID": 1073741830,
-    "Name": "rg_42_anti_personnel_grenade_bg"
+    "Name": "rg_42_anti_personnel_grenade_bg",
+    "Requirements": [
+      {
+        "RequirementType": "required_not",
+        "RequirementReason": "usage",
+        "UIText": "11050319",
+        "RequirementProperties": {
+          "requirement_table": [
+            {
+              "RequirementType": "required_in_state",
+              "RequirementReason": "usage",
+              "UIText": "0",
+              "RequirementProperties": {
+                "garrisoned": false,
+                "healed": false,
+                "in_combat_since": -1,
+                "injured": false,
+                "leader": false,
+                "not_moving": false,
+                "not_retreating": false,
+                "pinned": true,
+                "suppressed": false,
+                "camouflaged": false
+              }
+            }
+          ]
+        }
+      }
+    ]
   },
   {
     "Cost": {
@@ -335,7 +782,35 @@
     "Army": "soviet",
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
     "PBGID": 1073741832,
-    "Name": "satchel_charge_throw_ability_bg"
+    "Name": "satchel_charge_throw_ability_bg",
+    "Requirements": [
+      {
+        "RequirementType": "required_not",
+        "RequirementReason": "usage",
+        "UIText": "11050319",
+        "RequirementProperties": {
+          "requirement_table": [
+            {
+              "RequirementType": "required_in_state",
+              "RequirementReason": "usage",
+              "UIText": "0",
+              "RequirementProperties": {
+                "garrisoned": false,
+                "healed": false,
+                "in_combat_since": -1,
+                "injured": false,
+                "leader": false,
+                "not_moving": false,
+                "not_retreating": false,
+                "pinned": true,
+                "suppressed": false,
+                "camouflaged": false
+              }
+            }
+          ]
+        }
+      }
+    ]
   },
   {
     "Cost": {
@@ -350,6 +825,27 @@
     "Army": "soviet",
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
     "PBGID": 1073741848,
-    "Name": "at_76mm_he_barrage_ability_bg"
+    "Name": "at_76mm_he_barrage_ability_bg",
+    "Requirements": [
+      {
+        "RequirementType": "required_not",
+        "RequirementReason": "usage",
+        "UIText": "$142b113740474c82a60b0a428bd553d5:55",
+        "RequirementProperties": {
+          "requirement_table": [
+            {
+              "RequirementType": "required_squad_upgrade",
+              "RequirementReason": "usage",
+              "UIText": "0",
+              "RequirementProperties": {
+                "include_queued": false,
+                "is_present": true,
+                "upgrade_name": "is_towed"
+              }
+            }
+          ]
+        }
+      }
+    ]
   }
 ]

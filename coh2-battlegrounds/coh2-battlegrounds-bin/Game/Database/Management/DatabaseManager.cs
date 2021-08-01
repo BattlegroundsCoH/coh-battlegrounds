@@ -52,8 +52,10 @@ namespace Battlegrounds.Game.Database.Management {
 
                     // Run through each mod package and load their database
                     ModManager.EachPackage(x => {
-                        Trace.WriteLine($"Loading database for package '{x.PackageName}'.", nameof(DatabaseManager));
+                        Stopwatch stopwatch = Stopwatch.StartNew();
                         BlueprintManager.LoadDatabaseWithMod(x.ID, x.TuningGUID.GUID);
+                        stopwatch.Stop();
+                        Trace.WriteLine($"Loaded database for package '{x.PackageName}' in {stopwatch.Elapsed.TotalSeconds:0.000}s.", nameof(BlueprintManager));
                     });
 
                 });

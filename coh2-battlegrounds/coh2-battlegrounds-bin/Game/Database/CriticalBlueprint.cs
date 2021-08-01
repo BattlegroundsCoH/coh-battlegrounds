@@ -67,10 +67,10 @@ namespace Battlegrounds.Game.Database {
                     _ => throw new NotImplementedException(prop)
                 };
             }
-            var ui = __lookup.GetValueOrDefault("Display", null) as UIExtension;
+            var ui = __lookup.GetValueOrDefault("Display", new UIExtension());
             var modguid = __lookup.ContainsKey("ModGUID") ? ModGuid.FromGuid(__lookup["ModGUID"] as string) : ModGuid.BaseGame;
-            var pbgid = new BlueprintUID((ulong)__lookup.GetValueOrDefault("PBGID", 0ul), modguid);
-            return new(__lookup.GetValueOrDefault("Name", string.Empty) as string, pbgid, ui);
+            var pbgid = new BlueprintUID(__lookup.GetValueOrDefault("PBGID", 0ul), modguid);
+            return new(__lookup.GetValueOrDefault("Name", string.Empty), pbgid, ui);
         }
 
         public override void Write(Utf8JsonWriter writer, CriticalBlueprint value, JsonSerializerOptions options) => writer.WriteStringValue(value.Name);

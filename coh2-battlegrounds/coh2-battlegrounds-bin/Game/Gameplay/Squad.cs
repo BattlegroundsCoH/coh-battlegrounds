@@ -345,7 +345,7 @@ namespace Battlegrounds.Game.Gameplay {
 
             if (simplified) {
 
-                if (this.SBP.IsAntiTank || this.SBP.IsHeavyArtillery || this.SBP.Types.Contains("mortar") || this.SBP.Types.Contains("hmg")) {
+                if (this.SBP.Types.IsAntiTank || this.SBP.Types.IsHeavyArtillery || this.SBP.Types.Contains("mortar") || this.SBP.Types.Contains("hmg")) {
                     return "team_weapon";
                 } else if (this.SBP.Types.Contains("vehicle")) {
                     return "vehicle";

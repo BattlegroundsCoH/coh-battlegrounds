@@ -3,6 +3,7 @@
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
     "PBGID": 1073741827,
     "Name": "ptrs_41_anti_tank_rifle_dummy_bg",
+    "Army": "soviet",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -15,6 +16,7 @@
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
     "PBGID": 1073741824,
     "Name": "dp-28_light_machine_gun_package_bg",
+    "Army": "soviet",
     "Display": {
       "LocaleName": "11007104",
       "LocaleDescriptionLong": "11046271",
@@ -28,6 +30,7 @@
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
     "PBGID": 1073741823,
     "Name": "ppsh41_assault_package_bg",
+    "Army": "soviet",
     "Display": {
       "LocaleName": "11046314",
       "LocaleDescriptionLong": "11046265",
@@ -40,6 +43,7 @@
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
     "PBGID": 1073741826,
     "Name": "ppsh41_assault_package_dummy_item_bg",
+    "Army": "soviet",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -52,6 +56,7 @@
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
     "PBGID": 1073741825,
     "Name": "svt_bg",
+    "Army": "soviet",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",

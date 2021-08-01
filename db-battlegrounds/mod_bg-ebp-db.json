@@ -9,8 +9,7 @@
       "LocaleDescriptionLong": "0",
       "LocaleDescriptionShort": "0",
       "Symbol": ""
-    },
-    "Cost": {}
+    }
   },
   {
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
@@ -22,8 +21,7 @@
       "LocaleDescriptionLong": "0",
       "LocaleDescriptionShort": "0",
       "Symbol": ""
-    },
-    "Cost": {}
+    }
   },
   {
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
@@ -35,8 +33,7 @@
       "LocaleDescriptionLong": "0",
       "LocaleDescriptionShort": "0",
       "Symbol": ""
-    },
-    "Cost": {}
+    }
   },
   {
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
@@ -75,7 +72,8 @@
       "grw34_81mm_incendiary_mortar_barrage_mp",
       "pm41_82mm_mortar_flare_mp"
     ],
-    "Health": 350
+    "Health": 350,
+    "UpgradeCapacity": -1
   },
   {
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
@@ -110,7 +108,8 @@
       "howitzer_105mm_gun_vet3_mp",
       "howitzer_105mm_gun_direct_fire_mp"
     ],
-    "Health": 400
+    "Health": 400,
+    "UpgradeCapacity": -1
   },
   {
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
@@ -165,7 +164,8 @@
       "75mm_pak_40_mp",
       "75mm_pak_40_ap_mp"
     ],
-    "Health": 350
+    "Health": 350,
+    "UpgradeCapacity": -1
   },
   {
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
@@ -202,12 +202,11 @@
     "Name": "soviet_air_support",
     "Army": "soviet",
     "Display": {
-      "LocaleName": "44",
+      "LocaleName": "$142b113740474c82a60b0a428bd553d5:44",
       "LocaleDescriptionLong": "0",
       "LocaleDescriptionShort": "0",
       "Symbol": ""
     },
-    "Cost": {},
     "Abilities": [
       "soviet_air_bombing_run",
       "soviet_air_infantry_overwatch",
@@ -223,12 +222,11 @@
     "Name": "soviet_artillery",
     "Army": "soviet",
     "Display": {
-      "LocaleName": "43",
+      "LocaleName": "$142b113740474c82a60b0a428bd553d5:43",
       "LocaleDescriptionLong": "0",
       "LocaleDescriptionShort": "0",
       "Symbol": ""
-    },
-    "Cost": {}
+    }
   },
   {
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
@@ -236,12 +234,11 @@
     "Name": "soviet_paradrop",
     "Army": "soviet",
     "Display": {
-      "LocaleName": "45",
+      "LocaleName": "$142b113740474c82a60b0a428bd553d5:45",
       "LocaleDescriptionLong": "0",
       "LocaleDescriptionShort": "0",
       "Symbol": ""
-    },
-    "Cost": {}
+    }
   },
   {
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
@@ -417,7 +414,8 @@
       "luger_p08_9mm_pistol_mp",
       "luger_p08_victor_target_flare_pistol_mp"
     ],
-    "Health": 80
+    "Health": 80,
+    "UpgradeCapacity": -1
   },
   {
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
@@ -443,7 +441,8 @@
       "luger_p08_9mm_pistol_mp",
       "luger_p08_victor_target_flare_pistol_mp"
     ],
-    "Health": 80
+    "Health": 80,
+    "UpgradeCapacity": -1
   },
   {
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
@@ -467,7 +466,8 @@
     "Hardpoints": [
       "ostruppen_kar_98k_rifle_mp"
     ],
-    "Health": 80
+    "Health": 80,
+    "UpgradeCapacity": -1
   },
   {
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
@@ -547,7 +547,8 @@
       "g43_sniper_sniper_mp",
       "g43_sniper_incendiary_mp"
     ],
-    "Health": 82
+    "Health": 82,
+    "UpgradeCapacity": -1
   },
   {
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
@@ -842,7 +843,11 @@
       "brummbar_150mm_bunker_buster_mp",
       "brummbar_150mm_bunker_buster_scatter_mp"
     ],
-    "Health": 800
+    "Health": 800,
+    "Upgrades": [
+      "brummbar_top_gunner_mp"
+    ],
+    "UpgradeCapacity": -1
   },
   {
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
@@ -879,7 +884,8 @@
       "elefant_88mm_gun_mp",
       "mg34_hull_mp"
     ],
-    "Health": 1040
+    "Health": 1040,
+    "UpgradeCapacity": -1
   },
   {
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
@@ -907,7 +913,8 @@
         "SBP": "german_vehicle_driver_bg"
       }
     ],
-    "Health": 160
+    "Health": 160,
+    "UpgradeCapacity": -1
   },
   {
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
@@ -935,7 +942,8 @@
         "SBP": "german_vehicle_driver_bg"
       }
     ],
-    "Health": 160
+    "Health": 160,
+    "UpgradeCapacity": -1
   },
   {
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
@@ -970,7 +978,8 @@
       "ostwind_flak_43_37mm_mp",
       "ostwind_mg34_hull_mp"
     ],
-    "Health": 640
+    "Health": 640,
+    "UpgradeCapacity": -1
   },
   {
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
@@ -1007,7 +1016,11 @@
       "generic_mg34_coaxial_mp",
       "generic_mg34_hull_mp"
     ],
-    "Health": 960
+    "Health": 960,
+    "Upgrades": [
+      "panther_top_gunner_mp"
+    ],
+    "UpgradeCapacity": -1
   },
   {
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
@@ -1044,7 +1057,11 @@
       "generic_mg34_coaxial_mp",
       "generic_mg34_hull_mp"
     ],
-    "Health": 960
+    "Health": 960,
+    "Upgrades": [
+      "panther_top_gunner_mp"
+    ],
+    "UpgradeCapacity": -1
   },
   {
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
@@ -1085,7 +1102,8 @@
       "mg42_turret_mounted_panzerwerfer_mp",
       "panzerwerfer_counter_barrage_rockets_mp"
     ],
-    "Health": 160
+    "Health": 160,
+    "UpgradeCapacity": -1
   },
   {
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
@@ -1121,7 +1139,8 @@
       "generic_mg34_coaxial_mp",
       "generic_mg34_hull_mp"
     ],
-    "Health": 640
+    "Health": 640,
+    "UpgradeCapacity": -1
   },
   {
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
@@ -1158,7 +1177,11 @@
       "generic_mg34_coaxial_mp",
       "generic_mg34_hull_mp"
     ],
-    "Health": 640
+    "Health": 640,
+    "Upgrades": [
+      "panzer_top_gunner_mp"
+    ],
+    "UpgradeCapacity": -1
   },
   {
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
@@ -1195,7 +1218,11 @@
       "generic_mg34_coaxial_mp",
       "generic_mg34_hull_mp"
     ],
-    "Health": 640
+    "Health": 640,
+    "Upgrades": [
+      "panzer_top_gunner_mp"
+    ],
+    "UpgradeCapacity": -1
   },
   {
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
@@ -1232,7 +1259,11 @@
       "generic_mg34_coaxial_mp",
       "generic_mg34_hull_mp"
     ],
-    "Health": 640
+    "Health": 640,
+    "Upgrades": [
+      "panzer_top_gunner_mp"
+    ],
+    "UpgradeCapacity": -1
   },
   {
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
@@ -1268,7 +1299,8 @@
     "Hardpoints": [
       "scout_car_mg34_pintle_generic_mp"
     ],
-    "Health": 320
+    "Health": 320,
+    "UpgradeCapacity": -1
   },
   {
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
@@ -1304,7 +1336,8 @@
     "Hardpoints": [
       "scout_car_mg34_pintle_generic_mp"
     ],
-    "Health": 320
+    "Health": 320,
+    "UpgradeCapacity": -1
   },
   {
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
@@ -1340,7 +1373,8 @@
     "Hardpoints": [
       "scout_car_mg34_pintle_generic_mp"
     ],
-    "Health": 320
+    "Health": 320,
+    "UpgradeCapacity": -1
   },
   {
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
@@ -1371,7 +1405,8 @@
       "halftrack_250_mg42_vehicle_lockdown_mp",
       "halftrack_250_dummy"
     ],
-    "Health": 240
+    "Health": 240,
+    "UpgradeCapacity": -1
   },
   {
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
@@ -1406,7 +1441,11 @@
       "_halftrack_mg42_vehicle_rear_mp",
       "halftrack_250_dummy"
     ],
-    "Health": 320
+    "Health": 320,
+    "Upgrades": [
+      "sdkfz_251_halftrack_flammpanzerwagen_upgrade_mp"
+    ],
+    "UpgradeCapacity": -1
   },
   {
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
@@ -1445,7 +1484,8 @@
       "grw34_81mm_smoke_mortar_halftrack_barrage_mp",
       "grw34_81mm_mortar_halftrack_victor_target_mp"
     ],
-    "Health": 240
+    "Health": 240,
+    "UpgradeCapacity": -1
   },
   {
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
@@ -1482,7 +1522,8 @@
       "puma_50mm_mp",
       "puma_mg42_mp"
     ],
-    "Health": 400
+    "Health": 400,
+    "UpgradeCapacity": -1
   },
   {
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
@@ -1515,7 +1556,8 @@
     "Hardpoints": [
       "stug_75mm_short_mp"
     ],
-    "Health": 560
+    "Health": 560,
+    "UpgradeCapacity": -1
   },
   {
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
@@ -1551,7 +1593,11 @@
     "Hardpoints": [
       "stug_75mm_mp"
     ],
-    "Health": 560
+    "Health": 560,
+    "Upgrades": [
+      "stug_top_gunner_mp"
+    ],
+    "UpgradeCapacity": -1
   },
   {
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
@@ -1588,7 +1634,11 @@
       "mg34_coaxial_generic_mp",
       "mg34_hull_mp"
     ],
-    "Health": 1040
+    "Health": 1040,
+    "Upgrades": [
+      "tiger_top_gunner_mp"
+    ],
+    "UpgradeCapacity": -1
   },
   {
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
@@ -1625,7 +1675,11 @@
       "mg34_coaxial_generic_mp",
       "mg34_hull_mp"
     ],
-    "Health": 1040
+    "Health": 1040,
+    "Upgrades": [
+      "tiger_top_gunner_mp"
+    ],
+    "UpgradeCapacity": -1
   },
   {
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
@@ -2266,7 +2320,8 @@
     "Hardpoints": [
       "zis3_76mm_m1942__at_gun_mp"
     ],
-    "Health": 350
+    "Health": 350,
+    "UpgradeCapacity": -1
   },
   {
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
@@ -2292,7 +2347,8 @@
       "203mm_b-4_barrage_mp",
       "203mm_b-4_barrage_slow_mp"
     ],
-    "Health": 300
+    "Health": 300,
+    "UpgradeCapacity": -1
   },
   {
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
@@ -2324,7 +2380,8 @@
       "152mm_m-30_vet3_mp",
       "152mm_m-30_victortarget_mp"
     ],
-    "Health": 400
+    "Health": 400,
+    "UpgradeCapacity": -1
   },
   {
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
@@ -2366,7 +2423,8 @@
       "churchill_hull_defense_right_mp",
       "churchill_hull_defense_left_mp"
     ],
-    "Health": 1400
+    "Health": 1400,
+    "UpgradeCapacity": -1
   },
   {
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
@@ -2404,7 +2462,11 @@
       "is2_coaxial_vehicle_turret_mp",
       "coaxial_vehicle_turret_rear_mp"
     ],
-    "Health": 1040
+    "Health": 1040,
+    "Upgrades": [
+      "is2_top_gunner_mp"
+    ],
+    "UpgradeCapacity": -1
   },
   {
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
@@ -2442,7 +2504,11 @@
       "isu152_ml-20s_152mm_howitzer_gun_mp",
       "isu152_ml-20s_152mm_howitzer_gun_piercing_shot_mp"
     ],
-    "Health": 1040
+    "Health": 1040,
+    "Upgrades": [
+      "isu152_top_gunner_mp"
+    ],
+    "UpgradeCapacity": -1
   },
   {
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
@@ -2480,7 +2546,8 @@
       "katyusha_bm_13_16_precision_rocket_mp",
       "katyusha_bm_13_16_rocket_victortarget_mp"
     ],
-    "Health": 160
+    "Health": 160,
+    "UpgradeCapacity": -1
   },
   {
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
@@ -2517,7 +2584,8 @@
       "coaxial_vehicle_turret_rear_mp",
       "coaxial_vehicle_hull_mp"
     ],
-    "Health": 675
+    "Health": 675,
+    "UpgradeCapacity": -1
   },
   {
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
@@ -2555,7 +2623,8 @@
       "coaxial_vehicle_turret_rear_mp",
       "coaxial_vehicle_hull_mp"
     ],
-    "Health": 1040
+    "Health": 1040,
+    "UpgradeCapacity": -1
   },
   {
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
@@ -2593,7 +2662,8 @@
       "coaxial_vehicle_turret_rear_mp",
       "coaxial_vehicle_hull_mp"
     ],
-    "Health": 960
+    "Health": 960,
+    "UpgradeCapacity": -1
   },
   {
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
@@ -2628,7 +2698,8 @@
       "m3a1_scout_car_30cal_browning_m1919__machine_gun_rear_mp",
       "halftrack_250_dummy"
     ],
-    "Health": 200
+    "Health": 200,
+    "UpgradeCapacity": -1
   },
   {
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
@@ -2663,7 +2734,11 @@
       "m5_halftrack_m2hb_hmg_mp",
       "halftrack_250_dummy"
     ],
-    "Health": 320
+    "Health": 320,
+    "Upgrades": [
+      "m5_halftrack_72k_aa_gun_package_mp"
+    ],
+    "UpgradeCapacity": -1
   },
   {
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
@@ -2703,7 +2778,11 @@
       "sherman_hull_gun_mp",
       "sherman_m3_2inch_mortar_smoke_mp"
     ],
-    "Health": 640
+    "Health": 640,
+    "Upgrades": [
+      "sherman_soviet_top_gunner"
+    ],
+    "UpgradeCapacity": -1
   },
   {
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
@@ -2812,7 +2891,8 @@
       "ot-34_ato-41_flamethrower_mp",
       "t34_76_85_coaxial_vehicle_turret_mp"
     ],
-    "Health": 640
+    "Health": 640,
+    "UpgradeCapacity": -1
   },
   {
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
@@ -2850,7 +2930,8 @@
       "t34_76_85_coaxial_vehicle_turret_mp",
       "t34_76_85_coaxial_vehicle_hull_mp"
     ],
-    "Health": 640
+    "Health": 640,
+    "UpgradeCapacity": -1
   },
   {
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
@@ -2888,7 +2969,8 @@
       "t34_76_85_coaxial_vehicle_turret_mp",
       "t34_76_85_coaxial_vehicle_hull_mp"
     ],
-    "Health": 800
+    "Health": 800,
+    "UpgradeCapacity": -1
   },
   {
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
@@ -2925,7 +3007,8 @@
       "t70_m1938_45mm_mp",
       "t70_coaxial_vehicle_turret_mp"
     ],
-    "Health": 400
+    "Health": 400,
+    "UpgradeCapacity": -1
   },
   {
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
@@ -2963,7 +3046,8 @@
       "cromwell_coaxial_vehicle_turret_mp",
       "valentine_canister_smoke_mp"
     ],
-    "Health": 480
+    "Health": 480,
+    "UpgradeCapacity": -1
   },
   {
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
@@ -3001,7 +3085,8 @@
       "cromwell_coaxial_vehicle_turret_mp",
       "valentine_canister_smoke_mp"
     ],
-    "Health": 480
+    "Health": 480,
+    "UpgradeCapacity": -1
   },
   {
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
@@ -3033,7 +3118,8 @@
     "Hardpoints": [
       "dummy_weapon_mp"
     ],
-    "Health": 200
+    "Health": 200,
+    "UpgradeCapacity": 1
   },
   {
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
@@ -3051,6 +3137,12 @@
       "Manpower": 500,
       "FieldTime": 90
     },
-    "Health": 3000
+    "Health": 3000,
+    "Upgrades": [
+      "battle_phase_2_mp",
+      "battle_phase_3_mp",
+      "battle_phase_4_mp"
+    ],
+    "UpgradeCapacity": -1
   }
 ]

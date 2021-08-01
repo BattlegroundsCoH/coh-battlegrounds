@@ -47,6 +47,11 @@ namespace Battlegrounds.Game.Database {
         public HashSet<string> SlotItems { get; set; }
 
         /// <summary>
+        /// 
+        /// </summary>
+        public RequirementExtension[] Requirements { get; }
+
+        /// <summary>
         /// New <see cref="UpgradeBlueprint"/> instance. This should only ever be used by the database loader!
         /// </summary>
         public UpgradeBlueprint(string name, BlueprintUID pbgid, OwnerType ownertype, UIExtension ui, CostExtension cost, string[] slot_items) : base() {
@@ -79,16 +84,17 @@ namespace Battlegrounds.Game.Database {
                         "entity_in_squad" => UpgradeBlueprint.OwnerType.EntityInSquad,
                         _ => UpgradeBlueprint.OwnerType.None,
                     },
+                    "Requirements" => JsonSerializer.Deserialize<RequirementExtension[]>(ref reader, options),
                     _ => throw new NotImplementedException(prop)
                 };
             }
-            var ui = __lookup.GetValueOrDefault("Display", null) as UIExtension;
-            var cost = __lookup.GetValueOrDefault("Cost", null) as CostExtension;
-            var ot = (UpgradeBlueprint.OwnerType)__lookup.GetValueOrDefault("OwnerType", UpgradeBlueprint.OwnerType.None);
-            var items = __lookup.GetValueOrDefault("SlotItems", Array.Empty<string>()) as string[];
+            var ui = __lookup.GetValueOrDefault("Display", new UIExtension());
+            var cost = __lookup.GetValueOrDefault("Cost", new CostExtension());
+            var ot = __lookup.GetValueOrDefault("OwnerType", UpgradeBlueprint.OwnerType.None);
+            var items = __lookup.GetValueOrDefault("SlotItems", Array.Empty<string>());
             var modguid = __lookup.ContainsKey("ModGUID") ? ModGuid.FromGuid(__lookup["ModGUID"] as string) : ModGuid.BaseGame;
-            var pbgid = new BlueprintUID((ulong)__lookup.GetValueOrDefault("PBGID", 0ul), modguid);
-            return new(__lookup.GetValueOrDefault("Name", string.Empty) as string, pbgid, ot, ui, cost, items);
+            var pbgid = new BlueprintUID(__lookup.GetValueOrDefault("PBGID", 0ul), modguid);
+            return new(__lookup.GetValueOrDefault("Name", string.Empty), pbgid, ot, ui, cost, items);
         }
 
         public override void Write(Utf8JsonWriter writer, UpgradeBlueprint value, JsonSerializerOptions options) => writer.WriteStringValue(value.Name);

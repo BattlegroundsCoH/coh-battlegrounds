@@ -38,11 +38,17 @@ namespace Battlegrounds.Game.Database {
 
         public string[] Hardpoints { get; }
 
+        public string[] Upgrades { get; }
+
+        public string[] AppliedUpgrades { get; }
+
+        public int UpgradeCapacity { get; }
+
         public float Health { get; }
 
         public EntityBlueprint(string name, BlueprintUID pbgid, Faction faction,
             CostExtension cost, UIExtension ui, DriverExtension driverExtension,
-            string[] abilities, string[] hardpoints, float health) {
+            string[] abilities, string[] upgrades, string[] appliedUpgrades, int upgradeMax, string[] hardpoints, float health) {
             this.Name = name;
             this.PBGID = pbgid;
             this.Display = ui;
@@ -52,6 +58,9 @@ namespace Battlegrounds.Game.Database {
             this.Hardpoints = hardpoints;
             this.Health = health;
             this.Drivers = driverExtension;
+            this.UpgradeCapacity = upgradeMax;
+            this.Upgrades = upgrades;
+            this.AppliedUpgrades = appliedUpgrades;
         }
 
     }
@@ -73,19 +82,27 @@ namespace Battlegrounds.Game.Database {
                     "Abilities" => reader.GetStringArray(),
                     "Hardpoints" => reader.GetStringArray(),
                     "Drivers" => DriverExtension.FromJson(ref reader),
+                    "UpgradeCapacity" => reader.GetInt32(),
+                    "Upgrades" => reader.GetStringArray(),
+                    "AppliedUpgrades" => reader.GetStringArray(),
                     _ => throw new NotImplementedException(prop)
                 };
             }
-            var cost = __lookup.GetValueOrDefault("Cost", null) as CostExtension;
-            var ui = __lookup.GetValueOrDefault("Display", null) as UIExtension;
-            var driver = __lookup.GetValueOrDefault("Drivers", new DriverExtension(Array.Empty<DriverExtension.Entry>())) as DriverExtension;
-            var abilities = __lookup.GetValueOrDefault("Abilities", Array.Empty<string[]>()) as string[];
-            var hardpoints = __lookup.GetValueOrDefault("Hardpoints", Array.Empty<string[]>()) as string[];
-            var hp = (float)__lookup.GetValueOrDefault("Health", 0.0f);
-            var fac = __lookup.GetValueOrDefault("Army", "NULL") is "NULL" ? null : Faction.FromName(__lookup.GetValueOrDefault("Army", "NULL") as string);
-            var modguid = __lookup.ContainsKey("ModGUID") ? ModGuid.FromGuid(__lookup["ModGUID"] as string) : ModGuid.BaseGame;
-            var pbgid = new BlueprintUID((ulong)__lookup.GetValueOrDefault("PBGID", 0ul), modguid);
-            return new(__lookup.GetValueOrDefault("Name", string.Empty) as string, pbgid, fac, cost, ui, driver, abilities, hardpoints, hp);
+            Faction fac = __lookup.GetValueOrDefault("Army", "NULL") is "NULL" ? null : Faction.FromName(__lookup.GetValueOrDefault("Army", "NULL"));
+            ModGuid modguid = __lookup.ContainsKey("ModGUID") ? ModGuid.FromGuid(__lookup["ModGUID"] as string) : ModGuid.BaseGame;
+            BlueprintUID pbgid = new BlueprintUID(__lookup.GetValueOrDefault("PBGID", 0ul), modguid);
+            return new(__lookup.GetValueOrDefault("Name", string.Empty), 
+                pbgid, 
+                fac,
+                __lookup.GetValueOrDefault("Cost", new CostExtension()),
+                 __lookup.GetValueOrDefault("Display", new UIExtension()),
+                 __lookup.GetValueOrDefault("Drivers", new DriverExtension(Array.Empty<DriverExtension.Entry>())),
+                 __lookup.GetValueOrDefault("Abilities", Array.Empty<string>()),
+                 __lookup.GetValueOrDefault("Upgrades", Array.Empty<string>()),
+                 __lookup.GetValueOrDefault("AppliedUpgrades", Array.Empty<string>()),
+                 __lookup.GetValueOrDefault("UpgradeCapacity", 0),
+                 __lookup.GetValueOrDefault("Hardpoints", Array.Empty<string>()),
+                  (float)__lookup.GetValueOrDefault("Health", 0.0f));
         }
 
         public override void Write(Utf8JsonWriter writer, EntityBlueprint value, JsonSerializerOptions options) => writer.WriteStringValue(value.Name);

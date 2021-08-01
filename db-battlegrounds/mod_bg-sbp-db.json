@@ -50,6 +50,10 @@
       "fh18_howitzer",
       "artillery",
       "team_weapon"
+    ],
+    "UpgradeCapacity": -1,
+    "AppliedUpgrades": [
+      "is_manned"
     ]
   },
   {
@@ -109,7 +113,14 @@
       "team_weapon",
       "infantry"
     ],
-    "CanPickupItems": true
+    "CanPickupItems": true,
+    "UpgradeCapacity": -1,
+    "Upgrades": [
+      "ambush_camou_package"
+    ],
+    "AppliedUpgrades": [
+      "is_manned"
+    ]
   },
   {
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
@@ -166,7 +177,14 @@
       "team_weapon",
       "infantry"
     ],
-    "CanPickupItems": true
+    "CanPickupItems": true,
+    "UpgradeCapacity": -1,
+    "Upgrades": [
+      "medic_add_squad_upg"
+    ],
+    "AppliedUpgrades": [
+      "is_manned"
+    ]
   },
   {
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
@@ -221,7 +239,11 @@
       "german_team_weapons",
       "team_weapon"
     ],
-    "CanPickupItems": true
+    "CanPickupItems": true,
+    "UpgradeCapacity": -1,
+    "AppliedUpgrades": [
+      "is_manned"
+    ]
   },
   {
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
@@ -275,7 +297,8 @@
       "german_team_weapons",
       "team_weapon"
     ],
-    "SlotPickupCapacity": 1
+    "SlotPickupCapacity": 1,
+    "UpgradeCapacity": -1
   },
   {
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
@@ -326,7 +349,11 @@
       "heavy_vehicle",
       "heavy_vehicle_icon"
     ],
-    "SlotPickupCapacity": 2
+    "SlotPickupCapacity": 2,
+    "UpgradeCapacity": -1,
+    "Upgrades": [
+      "vehicles_optics"
+    ]
   },
   {
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
@@ -377,7 +404,11 @@
       "heavy_vehicle",
       "heavy_vehicle_icon"
     ],
-    "SlotPickupCapacity": 2
+    "SlotPickupCapacity": 2,
+    "UpgradeCapacity": -1,
+    "Upgrades": [
+      "vehicles_optics"
+    ]
   },
   {
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
@@ -426,7 +457,8 @@
       "light_vehicle",
       "vehicle"
     ],
-    "SlotPickupCapacity": 6
+    "SlotPickupCapacity": 6,
+    "UpgradeCapacity": -1
   },
   {
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
@@ -457,7 +489,8 @@
       "vehicle",
       "251_halftrack"
     ],
-    "SlotPickupCapacity": 2
+    "SlotPickupCapacity": 2,
+    "UpgradeCapacity": -1
   },
   {
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
@@ -492,7 +525,8 @@
       "vehicle",
       "251_halftrack"
     ],
-    "SlotPickupCapacity": 2
+    "SlotPickupCapacity": 2,
+    "UpgradeCapacity": -1
   },
   {
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
@@ -543,7 +577,11 @@
       "vehicle",
       "heavy_vehicle"
     ],
-    "SlotPickupCapacity": 2
+    "SlotPickupCapacity": 2,
+    "UpgradeCapacity": -1,
+    "Upgrades": [
+      "vehicles_optics"
+    ]
   },
   {
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
@@ -595,7 +633,11 @@
       "heavy_vehicle",
       "heavy_vehicle_icon"
     ],
-    "SlotPickupCapacity": 2
+    "SlotPickupCapacity": 2,
+    "UpgradeCapacity": -1,
+    "Upgrades": [
+      "vehicles_optics"
+    ]
   },
   {
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
@@ -647,7 +689,11 @@
       "heavy_vehicle",
       "heavy_vehicle_icon"
     ],
-    "SlotPickupCapacity": 2
+    "SlotPickupCapacity": 2,
+    "UpgradeCapacity": -1,
+    "Upgrades": [
+      "vehicles_optics"
+    ]
   },
   {
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
@@ -696,7 +742,11 @@
       "artillery",
       "vehicle"
     ],
-    "SlotPickupCapacity": 2
+    "SlotPickupCapacity": 2,
+    "UpgradeCapacity": -1,
+    "Upgrades": [
+      "vehicles_optics"
+    ]
   },
   {
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
@@ -749,7 +799,11 @@
       "heavy_vehicle",
       "panzer_command_tank"
     ],
-    "SlotPickupCapacity": 2
+    "SlotPickupCapacity": 2,
+    "UpgradeCapacity": -1,
+    "Upgrades": [
+      "vehicles_optics"
+    ]
   },
   {
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
@@ -800,7 +854,11 @@
       "vehicle",
       "heavy_vehicle"
     ],
-    "SlotPickupCapacity": 2
+    "SlotPickupCapacity": 2,
+    "UpgradeCapacity": -1,
+    "Upgrades": [
+      "vehicles_optics"
+    ]
   },
   {
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
@@ -851,7 +909,11 @@
       "vehicle",
       "heavy_vehicle"
     ],
-    "SlotPickupCapacity": 2
+    "SlotPickupCapacity": 2,
+    "UpgradeCapacity": -1,
+    "Upgrades": [
+      "vehicles_optics"
+    ]
   },
   {
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
@@ -900,7 +962,11 @@
       "light_vehicle",
       "vehicle"
     ],
-    "SlotPickupCapacity": 2
+    "SlotPickupCapacity": 2,
+    "UpgradeCapacity": -1,
+    "Upgrades": [
+      "vehicles_optics"
+    ]
   },
   {
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
@@ -949,7 +1015,11 @@
       "light_vehicle",
       "vehicle"
     ],
-    "SlotPickupCapacity": 2
+    "SlotPickupCapacity": 2,
+    "UpgradeCapacity": -1,
+    "Upgrades": [
+      "vehicles_optics"
+    ]
   },
   {
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
@@ -998,7 +1068,11 @@
       "light_vehicle",
       "vehicle"
     ],
-    "SlotPickupCapacity": 2
+    "SlotPickupCapacity": 2,
+    "UpgradeCapacity": -1,
+    "Upgrades": [
+      "vehicles_optics"
+    ]
   },
   {
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
@@ -1047,7 +1121,11 @@
       "light_vehicle",
       "vehicle"
     ],
-    "SlotPickupCapacity": 2
+    "SlotPickupCapacity": 2,
+    "UpgradeCapacity": -1,
+    "Upgrades": [
+      "vehicles_optics"
+    ]
   },
   {
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
@@ -1098,7 +1176,11 @@
       "light_vehicle",
       "vehicle"
     ],
-    "SlotPickupCapacity": 6
+    "SlotPickupCapacity": 6,
+    "UpgradeCapacity": -1,
+    "Upgrades": [
+      "vehicles_optics"
+    ]
   },
   {
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
@@ -1149,7 +1231,11 @@
       "light_vehicle",
       "vehicle"
     ],
-    "SlotPickupCapacity": 6
+    "SlotPickupCapacity": 6,
+    "UpgradeCapacity": -1,
+    "Upgrades": [
+      "vehicles_optics"
+    ]
   },
   {
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
@@ -1199,7 +1285,11 @@
       "vehicle",
       "heavy_vehicle"
     ],
-    "SlotPickupCapacity": 2
+    "SlotPickupCapacity": 2,
+    "UpgradeCapacity": -1,
+    "Upgrades": [
+      "vehicles_optics"
+    ]
   },
   {
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
@@ -1249,7 +1339,11 @@
       "vehicle",
       "heavy_vehicle"
     ],
-    "SlotPickupCapacity": 2
+    "SlotPickupCapacity": 2,
+    "UpgradeCapacity": -1,
+    "Upgrades": [
+      "vehicles_optics"
+    ]
   },
   {
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
@@ -1301,7 +1395,11 @@
       "heavy_vehicle",
       "heavy_vehicle_icon"
     ],
-    "SlotPickupCapacity": 2
+    "SlotPickupCapacity": 2,
+    "UpgradeCapacity": -1,
+    "Upgrades": [
+      "vehicles_optics"
+    ]
   },
   {
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
@@ -1353,7 +1451,11 @@
       "heavy_vehicle",
       "heavy_vehicle_icon"
     ],
-    "SlotPickupCapacity": 2
+    "SlotPickupCapacity": 2,
+    "UpgradeCapacity": -1,
+    "Upgrades": [
+      "vehicles_optics"
+    ]
   },
   {
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
@@ -1413,7 +1515,14 @@
       "infantry",
       "DSHK"
     ],
-    "CanPickupItems": true
+    "CanPickupItems": true,
+    "UpgradeCapacity": -1,
+    "Upgrades": [
+      "ambush_camou_package"
+    ],
+    "AppliedUpgrades": [
+      "is_manned"
+    ]
   },
   {
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
@@ -1470,7 +1579,11 @@
       "team_weapon",
       "infantry"
     ],
-    "CanPickupItems": true
+    "CanPickupItems": true,
+    "UpgradeCapacity": -1,
+    "AppliedUpgrades": [
+      "is_manned"
+    ]
   },
   {
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
@@ -1529,7 +1642,14 @@
       "team_weapon",
       "infantry"
     ],
-    "CanPickupItems": true
+    "CanPickupItems": true,
+    "UpgradeCapacity": -1,
+    "Upgrades": [
+      "ambush_camou_package"
+    ],
+    "AppliedUpgrades": [
+      "is_manned"
+    ]
   },
   {
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
@@ -1580,7 +1700,8 @@
     "Types": [
       "team_weapon",
       "b4_howtizer"
-    ]
+    ],
+    "UpgradeCapacity": -1
   },
   {
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
@@ -1634,6 +1755,10 @@
       "ml_20_howitzer",
       "artillery",
       "team_weapon"
+    ],
+    "UpgradeCapacity": -1,
+    "AppliedUpgrades": [
+      "is_manned"
     ]
   },
   {
@@ -1690,7 +1815,11 @@
       "soviet_team_weapons",
       "team_weapon"
     ],
-    "CanPickupItems": true
+    "CanPickupItems": true,
+    "UpgradeCapacity": -1,
+    "AppliedUpgrades": [
+      "is_manned"
+    ]
   },
   {
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
@@ -1746,7 +1875,11 @@
       "soviet_team_weapons",
       "team_weapon"
     ],
-    "CanPickupItems": true
+    "CanPickupItems": true,
+    "UpgradeCapacity": -1,
+    "AppliedUpgrades": [
+      "is_manned"
+    ]
   },
   {
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
@@ -1803,7 +1936,11 @@
       "team_weapon",
       "infantry"
     ],
-    "CanPickupItems": true
+    "CanPickupItems": true,
+    "UpgradeCapacity": -1,
+    "AppliedUpgrades": [
+      "is_manned"
+    ]
   },
   {
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
@@ -1853,7 +1990,8 @@
       "vehicle",
       "heavy_vehicle"
     ],
-    "SlotPickupCapacity": 2
+    "SlotPickupCapacity": 2,
+    "UpgradeCapacity": -1
   },
   {
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
@@ -1904,7 +2042,8 @@
       "heavy_vehicle",
       "heavy_vehicle_icon"
     ],
-    "SlotPickupCapacity": 2
+    "SlotPickupCapacity": 2,
+    "UpgradeCapacity": -1
   },
   {
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
@@ -1956,7 +2095,8 @@
       "heavy_vehicle",
       "heavy_vehicle_icon"
     ],
-    "SlotPickupCapacity": 3
+    "SlotPickupCapacity": 3,
+    "UpgradeCapacity": -1
   },
   {
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
@@ -2010,7 +2150,8 @@
       "heavy_vehicle",
       "heavy_vehicle_icon"
     ],
-    "SlotPickupCapacity": 2
+    "SlotPickupCapacity": 2,
+    "UpgradeCapacity": -1
   },
   {
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
@@ -2062,7 +2203,8 @@
       "artillery",
       "vehicle"
     ],
-    "SlotPickupCapacity": 6
+    "SlotPickupCapacity": 6,
+    "UpgradeCapacity": -1
   },
   {
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
@@ -2122,7 +2264,8 @@
       "vehicle",
       "heavy_vehicle"
     ],
-    "SlotPickupCapacity": 3
+    "SlotPickupCapacity": 3,
+    "UpgradeCapacity": -1
   },
   {
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
@@ -2174,7 +2317,8 @@
       "vehicle",
       "heavy_vehicle"
     ],
-    "SlotPickupCapacity": 3
+    "SlotPickupCapacity": 3,
+    "UpgradeCapacity": -1
   },
   {
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
@@ -2225,7 +2369,8 @@
       "vehicle",
       "heavy_vehicle"
     ],
-    "SlotPickupCapacity": 3
+    "SlotPickupCapacity": 3,
+    "UpgradeCapacity": -1
   },
   {
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
@@ -2279,7 +2424,8 @@
       "light_vehicle",
       "vehicle"
     ],
-    "SlotPickupCapacity": 1
+    "SlotPickupCapacity": 1,
+    "UpgradeCapacity": -1
   },
   {
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
@@ -2333,7 +2479,8 @@
       "light_vehicle",
       "vehicle"
     ],
-    "SlotPickupCapacity": 6
+    "SlotPickupCapacity": 6,
+    "UpgradeCapacity": -1
   },
   {
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
@@ -2394,7 +2541,8 @@
       "vehicle",
       "heavy_vehicle"
     ],
-    "SlotPickupCapacity": 2
+    "SlotPickupCapacity": 2,
+    "UpgradeCapacity": -1
   },
   {
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
@@ -2446,7 +2594,8 @@
       "vehicle",
       "light_vehicle"
     ],
-    "SlotPickupCapacity": 2
+    "SlotPickupCapacity": 2,
+    "UpgradeCapacity": -1
   },
   {
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
@@ -2499,7 +2648,8 @@
       "vehicle",
       "heavy_vehicle"
     ],
-    "SlotPickupCapacity": 2
+    "SlotPickupCapacity": 2,
+    "UpgradeCapacity": -1
   },
   {
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
@@ -2551,7 +2701,8 @@
       "light_vehicle",
       "vehicle"
     ],
-    "SlotPickupCapacity": 3
+    "SlotPickupCapacity": 3,
+    "UpgradeCapacity": -1
   },
   {
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
@@ -2612,7 +2763,8 @@
       "vehicle",
       "heavy_vehicle"
     ],
-    "SlotPickupCapacity": 2
+    "SlotPickupCapacity": 2,
+    "UpgradeCapacity": -1
   },
   {
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
@@ -2672,7 +2824,8 @@
       "vehicle",
       "heavy_vehicle"
     ],
-    "SlotPickupCapacity": 2
+    "SlotPickupCapacity": 2,
+    "UpgradeCapacity": -1
   },
   {
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
@@ -2724,7 +2877,8 @@
       "vehicle",
       "heavy_vehicle"
     ],
-    "SlotPickupCapacity": 2
+    "SlotPickupCapacity": 2,
+    "UpgradeCapacity": -1
   },
   {
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
@@ -2776,7 +2930,8 @@
       "vehicle",
       "heavy_vehicle"
     ],
-    "SlotPickupCapacity": 2
+    "SlotPickupCapacity": 2,
+    "UpgradeCapacity": -1
   },
   {
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
@@ -2814,7 +2969,8 @@
       "light_vehicle",
       "vehicle"
     ],
-    "SlotPickupCapacity": 6
+    "SlotPickupCapacity": 6,
+    "UpgradeCapacity": -1
   },
   {
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
@@ -2829,7 +2985,6 @@
       "Symbol": "Icons_symbols_unit_german_assault_grenadier_symbol",
       "Portrait": "Icons_portraits_unit_german_assault_grenadiers_s_portrait"
     },
-    "SquadCost": {},
     "Entities": [
       {
         "EBP": "assault_grenadiers_mp",
@@ -2864,7 +3019,11 @@
       "infantry"
     ],
     "SlotPickupCapacity": 2,
-    "CanPickupItems": true
+    "CanPickupItems": true,
+    "UpgradeCapacity": -1,
+    "Upgrades": [
+      "assault_grenadier_veteran_squad_leader_mp"
+    ]
   },
   {
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
@@ -2928,7 +3087,8 @@
       "infantry"
     ],
     "SlotPickupCapacity": 2,
-    "CanPickupItems": true
+    "CanPickupItems": true,
+    "UpgradeCapacity": -1
   },
   {
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
@@ -2994,7 +3154,8 @@
       "sov_officer"
     ],
     "SlotPickupCapacity": 1,
-    "CanPickupItems": true
+    "CanPickupItems": true,
+    "UpgradeCapacity": -1
   },
   {
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
@@ -3057,7 +3218,8 @@
       "infantry",
       "sov_officer"
     ],
-    "SlotPickupCapacity": 4
+    "SlotPickupCapacity": 4,
+    "UpgradeCapacity": -1
   },
   {
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
@@ -3116,7 +3278,8 @@
       "infantry"
     ],
     "SlotPickupCapacity": 1,
-    "CanPickupItems": true
+    "CanPickupItems": true,
+    "UpgradeCapacity": -1
   },
   {
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
@@ -3131,7 +3294,6 @@
       "Symbol": "Icons_symbols_unit_german_panzer_grenadier_symbol",
       "Portrait": "Icons_portraits_unit_german_panzer_grenadiers_s_portrait"
     },
-    "SquadCost": {},
     "Entities": [
       {
         "EBP": "panzer_grenadiers_mp",
@@ -3171,7 +3333,16 @@
       "infantry"
     ],
     "SlotPickupCapacity": 2,
-    "CanPickupItems": true
+    "CanPickupItems": true,
+    "UpgradeCapacity": -1,
+    "Upgrades": [
+      "light_infantry_panzergren_package",
+      "ambush_camou_package",
+      "panzerbusche_39_mp",
+      "panzer_grenadier_panzershreck_atw_item_mp",
+      "panzer_grenadier_panzershreck_atw_item_1_schrek_mp",
+      "panzer_grenadier_support_package_mp"
+    ]
   },
   {
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
@@ -3237,7 +3408,8 @@
       "infantry"
     ],
     "SlotPickupCapacity": 2,
-    "CanPickupItems": true
+    "CanPickupItems": true,
+    "UpgradeCapacity": -1
   },
   {
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
@@ -3299,7 +3471,8 @@
       "infantry"
     ],
     "SlotPickupCapacity": 2,
-    "CanPickupItems": true
+    "CanPickupItems": true,
+    "UpgradeCapacity": -1
   },
   {
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
@@ -3357,7 +3530,8 @@
       "infantry",
       "sniper_german"
     ],
-    "CanPickupItems": true
+    "CanPickupItems": true,
+    "UpgradeCapacity": -1
   },
   {
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
@@ -3417,7 +3591,8 @@
       "mobile_infantry"
     ],
     "SlotPickupCapacity": 2,
-    "CanPickupItems": true
+    "CanPickupItems": true,
+    "UpgradeCapacity": -1
   },
   {
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
@@ -3489,7 +3664,8 @@
       "tank_detection"
     ],
     "SlotPickupCapacity": 2,
-    "CanPickupItems": true
+    "CanPickupItems": true,
+    "UpgradeCapacity": -1
   },
   {
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
@@ -3556,7 +3732,8 @@
       "stormtrooper"
     ],
     "SlotPickupCapacity": 2,
-    "CanPickupItems": true
+    "CanPickupItems": true,
+    "UpgradeCapacity": -1
   },
   {
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
@@ -3611,7 +3788,8 @@
       "aef_vehicle_crew"
     ],
     "SlotPickupCapacity": 2,
-    "CanPickupItems": true
+    "CanPickupItems": true,
+    "UpgradeCapacity": -1
   },
   {
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
@@ -3666,7 +3844,8 @@
       "infantry"
     ],
     "SlotPickupCapacity": 2,
-    "CanPickupItems": true
+    "CanPickupItems": true,
+    "UpgradeCapacity": -1
   },
   {
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
@@ -3721,7 +3900,8 @@
       "infantry"
     ],
     "SlotPickupCapacity": 2,
-    "CanPickupItems": true
+    "CanPickupItems": true,
+    "UpgradeCapacity": -1
   },
   {
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
@@ -3781,7 +3961,8 @@
       "mobile_infantry"
     ],
     "SlotPickupCapacity": 2,
-    "CanPickupItems": true
+    "CanPickupItems": true,
+    "UpgradeCapacity": -1
   },
   {
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
@@ -3841,7 +4022,8 @@
       "mobile_infantry"
     ],
     "SlotPickupCapacity": 2,
-    "CanPickupItems": true
+    "CanPickupItems": true,
+    "UpgradeCapacity": -1
   },
   {
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
@@ -3904,7 +4086,14 @@
       "mobile_infantry"
     ],
     "SlotPickupCapacity": 1,
-    "CanPickupItems": true
+    "CanPickupItems": true,
+    "UpgradeCapacity": -1,
+    "AppliedUpgrades": [
+      "base_conscript_molotov_unlock_mp",
+      "base_conscript_oorah_unlock_mp",
+      "base_conscript_at_grenade_unlock_mp",
+      "base_conscript_repair_unlock_mp"
+    ]
   },
   {
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
@@ -3971,7 +4160,14 @@
       "mobile_infantry"
     ],
     "SlotPickupCapacity": 1,
-    "CanPickupItems": true
+    "CanPickupItems": true,
+    "UpgradeCapacity": -1,
+    "AppliedUpgrades": [
+      "base_conscript_molotov_unlock_mp",
+      "base_conscript_oorah_unlock_mp",
+      "base_conscript_at_grenade_unlock_mp",
+      "base_conscript_repair_unlock_mp"
+    ]
   },
   {
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
@@ -4022,7 +4218,8 @@
       "rapid_conscription",
       "mobile_infantry"
     ],
-    "CanPickupItems": true
+    "CanPickupItems": true,
+    "UpgradeCapacity": -1
   },
   {
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
@@ -4073,7 +4270,8 @@
       "rapid_conscription",
       "mobile_infantry"
     ],
-    "CanPickupItems": true
+    "CanPickupItems": true,
+    "UpgradeCapacity": -1
   },
   {
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
@@ -4131,7 +4329,8 @@
       "mobile_infantry"
     ],
     "SlotPickupCapacity": 2,
-    "CanPickupItems": true
+    "CanPickupItems": true,
+    "UpgradeCapacity": 1
   },
   {
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
@@ -4192,7 +4391,8 @@
       "mobile_infantry"
     ],
     "SlotPickupCapacity": 2,
-    "CanPickupItems": true
+    "CanPickupItems": true,
+    "UpgradeCapacity": 1
   },
   {
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
@@ -4243,7 +4443,11 @@
       "mobile_infantry"
     ],
     "SlotPickupCapacity": 4,
-    "CanPickupItems": true
+    "CanPickupItems": true,
+    "UpgradeCapacity": -1,
+    "AppliedUpgrades": [
+      "ptrs_41_at_rifle_package_guard_troop_mp"
+    ]
   },
   {
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
@@ -4300,7 +4504,8 @@
       "mobile_infantry"
     ],
     "SlotPickupCapacity": 2,
-    "CanPickupItems": true
+    "CanPickupItems": true,
+    "UpgradeCapacity": 1
   },
   {
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
@@ -4353,7 +4558,8 @@
       "mobile_infantry"
     ],
     "SlotPickupCapacity": 2,
-    "CanPickupItems": true
+    "CanPickupItems": true,
+    "UpgradeCapacity": -1
   },
   {
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
@@ -4410,7 +4616,11 @@
       "mobile_infantry"
     ],
     "SlotPickupCapacity": 2,
-    "CanPickupItems": true
+    "CanPickupItems": true,
+    "UpgradeCapacity": -1,
+    "AppliedUpgrades": [
+      ""
+    ]
   },
   {
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
@@ -4479,7 +4689,14 @@
       "attrition_infantry"
     ],
     "SlotPickupCapacity": 1,
-    "CanPickupItems": true
+    "CanPickupItems": true,
+    "UpgradeCapacity": -1,
+    "AppliedUpgrades": [
+      "base_conscript_molotov_unlock_mp",
+      "base_conscript_oorah_unlock_mp",
+      "base_conscript_at_grenade_unlock_mp",
+      "base_conscript_repair_unlock_mp"
+    ]
   },
   {
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
@@ -4529,7 +4746,11 @@
       "mobile_infantry"
     ],
     "SlotPickupCapacity": 4,
-    "CanPickupItems": true
+    "CanPickupItems": true,
+    "UpgradeCapacity": -1,
+    "AppliedUpgrades": [
+      "ptrs_41_at_rifle_package_guard_troop_mp"
+    ]
   },
   {
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
@@ -4586,7 +4807,8 @@
       "infantry"
     ],
     "SlotPickupCapacity": 2,
-    "CanPickupItems": true
+    "CanPickupItems": true,
+    "UpgradeCapacity": -1
   },
   {
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
@@ -4643,7 +4865,8 @@
       "infantry"
     ],
     "SlotPickupCapacity": 2,
-    "CanPickupItems": true
+    "CanPickupItems": true,
+    "UpgradeCapacity": -1
   },
   {
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
@@ -4700,6 +4923,7 @@
       "infantry"
     ],
     "SlotPickupCapacity": 2,
-    "CanPickupItems": true
+    "CanPickupItems": true,
+    "UpgradeCapacity": -1
   }
 ]

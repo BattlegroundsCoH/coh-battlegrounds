@@ -585,14 +585,14 @@ namespace Battlegrounds.Campaigns.Controller {
                 formations[i].Regiments.ForEach(x => {
                     x.FirstCompany().Units.ForEach(u => {
                         double priority = 0.05;
-                        if (u.SBP.IsAntiTank) {
+                        if (u.SBP.Types.IsAntiTank) {
                             priority += isDefence ? 0.7 : 0.2;
-                        } else if (u.SBP.IsInfantry) {
+                        } else if (u.SBP.Types.IsInfantry) {
                             priority += isDefence ? 0.8 : 0.6;
-                        } else if (u.SBP.IsVehicle) {
+                        } else if (u.SBP.Types.IsVehicle) {
                             priority += isDefence ? 0.3 : 0.5;
                         }
-                        if (u.SBP.IsCommandUnit) {
+                        if (u.SBP.Types.IsCommandUnit) {
                             priority = 1.0;
                         }
                         squads.Add(u, priority);

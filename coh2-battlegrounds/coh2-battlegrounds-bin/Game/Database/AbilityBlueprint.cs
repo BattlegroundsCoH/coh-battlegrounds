@@ -50,6 +50,11 @@ namespace Battlegrounds.Game.Database {
         /// <summary>
         /// 
         /// </summary>
+        public RequirementExtension[] Requirements { get; }
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <param name="name"></param>
         /// <param name="blueprintUID"></param>
         /// <param name="faction"></param>
@@ -81,11 +86,12 @@ namespace Battlegrounds.Game.Database {
                     "PBGID" => reader.GetUInt64(),
                     "Name" => reader.GetString(),
                     "ModGUID" => reader.GetString(),
+                    "Requirements" => JsonSerializer.Deserialize<RequirementExtension[]>(ref reader, options),
                     _ => throw new NotImplementedException(prop)
                 };
             }
-            var cost = __lookup.GetValueOrDefault("Cost", null) as CostExtension;
-            var ui = __lookup.GetValueOrDefault("Display", null) as UIExtension;
+            var cost = __lookup.GetValueOrDefault("Cost", new CostExtension()) as CostExtension;
+            var ui = __lookup.GetValueOrDefault("Display", new UIExtension()) as UIExtension;
             var fac = __lookup.GetValueOrDefault("Army", "NULL") is "NULL" ? null : Faction.FromName(__lookup.GetValueOrDefault("Army", "NULL") as string);
             var modguid = __lookup.ContainsKey("ModGUID") ? ModGuid.FromGuid(__lookup["ModGUID"] as string) : ModGuid.BaseGame;
             var pbgid = new BlueprintUID((ulong)__lookup.GetValueOrDefault("PBGID", 0ul), modguid);

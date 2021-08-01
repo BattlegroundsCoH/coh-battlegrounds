@@ -7,8 +7,7 @@
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
       "LocaleDescriptionShort": "0"
-    },
-    "Cost": {}
+    }
   },
   {
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
@@ -19,7 +18,6 @@
       "LocaleDescriptionLong": "0",
       "LocaleDescriptionShort": "0"
     },
-    "Cost": {},
     "OwnerType": "self"
   },
   {
@@ -31,7 +29,6 @@
       "LocaleDescriptionLong": "0",
       "LocaleDescriptionShort": "0"
     },
-    "Cost": {},
     "OwnerType": "self"
   },
   {
@@ -39,11 +36,10 @@
     "PBGID": 1073741829,
     "Name": "phase_alpha",
     "Display": {
-      "LocaleName": "52",
+      "LocaleName": "$142b113740474c82a60b0a428bd553d5:52",
       "LocaleDescriptionLong": "0",
       "LocaleDescriptionShort": "0"
     },
-    "Cost": {},
     "OwnerType": "player"
   },
   {
@@ -51,11 +47,10 @@
     "PBGID": 1073741830,
     "Name": "phase_beta",
     "Display": {
-      "LocaleName": "53",
+      "LocaleName": "$142b113740474c82a60b0a428bd553d5:53",
       "LocaleDescriptionLong": "0",
       "LocaleDescriptionShort": "0"
     },
-    "Cost": {},
     "OwnerType": "player"
   },
   {
@@ -63,11 +58,10 @@
     "PBGID": 1073741831,
     "Name": "phase_gamma",
     "Display": {
-      "LocaleName": "54",
+      "LocaleName": "$142b113740474c82a60b0a428bd553d5:54",
       "LocaleDescriptionLong": "0",
       "LocaleDescriptionShort": "0"
     },
-    "Cost": {},
     "OwnerType": "player"
   },
   {
@@ -79,7 +73,6 @@
       "LocaleDescriptionLong": "0",
       "LocaleDescriptionShort": "0"
     },
-    "Cost": {},
     "OwnerType": "player"
   },
   {
@@ -87,9 +80,9 @@
     "PBGID": 1073741825,
     "Name": "dp-28_lmg_upgrade_bg",
     "Display": {
-      "LocaleName": "15",
-      "LocaleDescriptionLong": "16",
-      "LocaleDescriptionShort": "17",
+      "LocaleName": "$142b113740474c82a60b0a428bd553d5:15",
+      "LocaleDescriptionLong": "$142b113740474c82a60b0a428bd553d5:16",
+      "LocaleDescriptionShort": "$142b113740474c82a60b0a428bd553d5:17",
       "Icon": "Icons_upgrades_icon_upgrade_soviet_dp28_lmg"
     },
     "Cost": {
@@ -118,6 +111,29 @@
     "OwnerType": "self",
     "SlotItems": [
       "ppsh41_assault_package_dummy_item_bg"
+    ],
+    "Requirements": [
+      {
+        "RequirementType": "required_squad_upgrade",
+        "RequirementReason": "usage_and_display",
+        "UIText": "0",
+        "RequirementProperties": {
+          "include_queued": true,
+          "is_present": false,
+          "upgrade_name": "ppsh-41_sub_machine_gun_upgrade_mp"
+        }
+      },
+      {
+        "RequirementType": "required_in_territory",
+        "RequirementReason": "usage",
+        "UIText": "0",
+        "RequirementProperties": {
+          "in_supply": true,
+          "is_secured": false,
+          "is_secured_by_checkpoint": false,
+          "not_in_transition": false
+        }
+      }
     ]
   }
 ]
