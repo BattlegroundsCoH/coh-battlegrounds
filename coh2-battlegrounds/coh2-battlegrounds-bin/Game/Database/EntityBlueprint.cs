@@ -12,7 +12,7 @@ using Battlegrounds.Modding;
 namespace Battlegrounds.Game.Database {
 
     /// <summary>
-    /// 
+    /// Representation of a <see cref="Blueprint"/> with <see cref="Entity"/> specific values. Inherits from <see cref="Blueprint"/>. This class cannot be inheritted.
     /// </summary>
     [JsonConverter(typeof(EntityBlueprintConverter))]
     public sealed class EntityBlueprint : Blueprint {
@@ -28,7 +28,7 @@ namespace Battlegrounds.Game.Database {
 
         public CostExtension Cost { get; }
 
-        public UIExtension Display { get; }
+        public UIExtension UI { get; }
 
         public DriverExtension Drivers { get; }
 
@@ -51,7 +51,7 @@ namespace Battlegrounds.Game.Database {
             string[] abilities, string[] upgrades, string[] appliedUpgrades, int upgradeMax, string[] hardpoints, float health) {
             this.Name = name;
             this.PBGID = pbgid;
-            this.Display = ui;
+            this.UI = ui;
             this.Cost = cost;
             this.Faction = faction;
             this.Abilities = abilities;
@@ -91,8 +91,8 @@ namespace Battlegrounds.Game.Database {
             Faction fac = __lookup.GetValueOrDefault("Army", "NULL") is "NULL" ? null : Faction.FromName(__lookup.GetValueOrDefault("Army", "NULL"));
             ModGuid modguid = __lookup.ContainsKey("ModGUID") ? ModGuid.FromGuid(__lookup["ModGUID"] as string) : ModGuid.BaseGame;
             BlueprintUID pbgid = new BlueprintUID(__lookup.GetValueOrDefault("PBGID", 0ul), modguid);
-            return new(__lookup.GetValueOrDefault("Name", string.Empty), 
-                pbgid, 
+            return new(__lookup.GetValueOrDefault("Name", string.Empty),
+                pbgid,
                 fac,
                 __lookup.GetValueOrDefault("Cost", new CostExtension()),
                  __lookup.GetValueOrDefault("Display", new UIExtension()),

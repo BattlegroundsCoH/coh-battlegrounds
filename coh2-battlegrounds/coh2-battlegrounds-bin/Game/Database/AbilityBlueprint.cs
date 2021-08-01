@@ -12,7 +12,7 @@ using Battlegrounds.Modding;
 namespace Battlegrounds.Game.Database {
 
     /// <summary>
-    /// 
+    /// Representation of a <see cref="Blueprint"/> with ability specific values. Inherits from <see cref="Blueprint"/>. This class cannot be inherited.
     /// </summary>
     [JsonConverter(typeof(AbilityBlueprintConverter))]
     public sealed class AbilityBlueprint : Blueprint {
@@ -33,22 +33,22 @@ namespace Battlegrounds.Game.Database {
         public override string Name { get; }
 
         /// <summary>
-        /// 
+        /// Get the cost extension of the ability.
         /// </summary>
         public CostExtension Cost { get; }
 
         /// <summary>
-        /// 
+        /// Get the UI extension of the ability.
         /// </summary>
         public UIExtension UI { get; }
 
         /// <summary>
-        /// 
+        /// Get the faction associated with the ability.
         /// </summary>
         public Faction Faction { get; }
 
         /// <summary>
-        /// 
+        /// Get the requirements required for using this ability.
         /// </summary>
         public RequirementExtension[] Requirements { get; }
 
@@ -60,12 +60,13 @@ namespace Battlegrounds.Game.Database {
         /// <param name="faction"></param>
         /// <param name="cost"></param>
         /// <param name="ui"></param>
-        public AbilityBlueprint(string name, BlueprintUID blueprintUID, Faction faction, CostExtension cost, UIExtension ui) {
+        public AbilityBlueprint(string name, BlueprintUID blueprintUID, Faction faction, CostExtension cost, UIExtension ui, RequirementExtension[] requirements) {
             this.Cost = cost;
             this.UI = ui;
             this.Faction = faction;
             this.Name = name;
             this.PBGID = blueprintUID;
+            this.Requirements = requirements;
         }
 
     }
@@ -90,12 +91,13 @@ namespace Battlegrounds.Game.Database {
                     _ => throw new NotImplementedException(prop)
                 };
             }
-            var cost = __lookup.GetValueOrDefault("Cost", new CostExtension()) as CostExtension;
-            var ui = __lookup.GetValueOrDefault("Display", new UIExtension()) as UIExtension;
-            var fac = __lookup.GetValueOrDefault("Army", "NULL") is "NULL" ? null : Faction.FromName(__lookup.GetValueOrDefault("Army", "NULL") as string);
-            var modguid = __lookup.ContainsKey("ModGUID") ? ModGuid.FromGuid(__lookup["ModGUID"] as string) : ModGuid.BaseGame;
-            var pbgid = new BlueprintUID((ulong)__lookup.GetValueOrDefault("PBGID", 0ul), modguid);
-            return new(__lookup.GetValueOrDefault("Name", string.Empty) as string, pbgid, fac, cost, ui);
+            Faction fac = __lookup.GetValueOrDefault("Army", "NULL") is "NULL" ? null : Faction.FromName(__lookup.GetValueOrDefault("Army", "NULL"));
+            ModGuid modguid = __lookup.ContainsKey("ModGUID") ? ModGuid.FromGuid(__lookup["ModGUID"] as string) : ModGuid.BaseGame;
+            BlueprintUID pbgid = new BlueprintUID(__lookup.GetValueOrDefault("PBGID", 0ul), modguid);
+            return new(__lookup.GetValueOrDefault("Name", string.Empty), pbgid, fac, 
+                __lookup.GetValueOrDefault("Cost", new CostExtension()), 
+                __lookup.GetValueOrDefault("Display", new UIExtension()),
+                __lookup.GetValueOrDefault("Requirements", Array.Empty<RequirementExtension>()));
         }
 
         public override void Write(Utf8JsonWriter writer, AbilityBlueprint value, JsonSerializerOptions options) => writer.WriteStringValue(value.Name);

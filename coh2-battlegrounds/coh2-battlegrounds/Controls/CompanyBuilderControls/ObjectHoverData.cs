@@ -29,8 +29,8 @@ namespace BattlegroundsApp.Controls.CompanyBuilderControls {
 
         public ObjectHoverData(EntityBlueprint ebp) {
             this.Abilities = ebp.Abilities;
-            this.Name = GameLocale.GetString(ebp.Display.ScreenName);
-            this.Description = GameLocale.GetString(ebp.Display.ShortDescription);
+            this.Name = GameLocale.GetString(ebp.UI.ScreenName);
+            this.Description = GameLocale.GetString(ebp.UI.ShortDescription);
             //this.Icon = $"pack://application:,,,/Resources/ingame/object_icons/{ebp.Display.Icon}.png";
             this.Cost = ebp.Cost;
         }
