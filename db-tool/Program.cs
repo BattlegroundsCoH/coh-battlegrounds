@@ -105,34 +105,64 @@ namespace CoH2XML2JSON {
 
         }
 
+        public class LastUse {
+            public string OutPath { get; set; } 
+            public string InstancePath { get; set; }
+            public string ModGuid { get; set; }
+        }
+
         public static void Main(string[] args) {
 
-            Console.Write("Set path where you want the files to be created to: ");
-            dirPath = Console.ReadLine();
-
-            while (!Directory.Exists(dirPath)) {
-                if (string.IsNullOrEmpty(dirPath)) { // Because I'm lazy - this is a quick method to simply use the directory of the .exe
-                    Console.WriteLine($"Using: {Environment.CurrentDirectory}");
-                    dirPath = Environment.CurrentDirectory;
-                    break;
+            LastUse last = null;
+            if (File.Exists("last.json")) {
+                last = JsonSerializer.Deserialize<LastUse>(File.ReadAllText("last.json"));
+                Console.WriteLine("Use settings from last execution?");
+                Console.WriteLine("Output Directory: " + last.OutPath);
+                Console.WriteLine("Instance Directory: " + last.InstancePath);
+                Console.WriteLine("ModGUID: " + last.ModGuid);
+                Console.WriteLine();
+                Console.Write("(Y/N): ");
+                if (Console.ReadLine().ToLower() is not "y") {
+                    last = null;
+                } else {
+                    dirPath = last.OutPath;
+                    modguid = last.ModGuid;
+                    instancesPath = last.InstancePath;
                 }
-                Console.WriteLine("Invalid path! Try again: ");
+            }
+
+            if (last is null) {
+                Console.Write("Set path where you want the files to be created to: ");
                 dirPath = Console.ReadLine();
-            }
 
-            Console.Write("Set path to your \"instances\" folder: ");
-            instancesPath = Console.ReadLine();
+                while (!Directory.Exists(dirPath)) {
+                    if (string.IsNullOrEmpty(dirPath)) { // Because I'm lazy - this is a quick method to simply use the directory of the .exe
+                        Console.WriteLine($"Using: {Environment.CurrentDirectory}");
+                        dirPath = Environment.CurrentDirectory;
+                        break;
+                    }
+                    Console.WriteLine("Invalid path! Try again: ");
+                    dirPath = Console.ReadLine();
+                }
 
-            while (!Directory.Exists(instancesPath) && !instancesPath.EndsWith(@"\instances")) {
-                Console.WriteLine("Invalid path! Try again: ");
+                Console.Write("Set path to your \"instances\" folder: ");
                 instancesPath = Console.ReadLine();
+
+                while (!Directory.Exists(instancesPath) && !instancesPath.EndsWith(@"\instances")) {
+                    Console.WriteLine("Invalid path! Try again: ");
+                    instancesPath = Console.ReadLine();
+                }
+
+                Console.Write("Mod GUID (Leave empty if not desired/available):");
+                modguid = Console.ReadLine().Replace("-", "");
+                if (modguid.Length != 32) {
+                    modguid = string.Empty;
+                }
+
             }
 
-            Console.Write("Mod GUID (Leave empty if not desired/available):");
-            modguid = Console.ReadLine().Replace("-", "");
-            if (modguid.Length != 32) {
-                modguid = string.Empty;
-            }
+            LastUse lu = new() { InstancePath = instancesPath, ModGuid = modguid, OutPath = dirPath };
+            File.WriteAllText("last.json", JsonSerializer.Serialize(lu));
 
             GenericDatabase("abilities_database.json", "abilities", (doc, path, name) => new ABP(doc, modguid, name) { Army = GetFactionFromPath(path) });
             GenericDatabase("entities_database.json", "ebps\\races", (doc, path, name) => {
@@ -142,7 +172,7 @@ namespace CoH2XML2JSON {
             });
             GenericDatabase("squads_database.json", "sbps\\races", (doc, path, name) => new SBP(doc, modguid, name, entities) { Army = GetFactionFromPath(path) });
             GenericDatabase("criticals_database.json", "critical", (doc, path, name) => new Critical(doc, modguid, name));
-            GenericDatabase("slotitems_database.json", "slot_item", (doc, path, name) => new SlotItem(doc, modguid, name));
+            GenericDatabase("slotitems_database.json", "slot_item", (doc, path, name) => new SlotItem(doc, modguid, name) { Army = GetFactionFromPath(path) });
             GenericDatabase("upgrades_database.json", "upgrade", (doc, path, name) => new UBP(doc, modguid, name));
             GenericDatabase("weapons_database.json", "weapon", (doc, path, name) => new WBP(doc, modguid, name));
 

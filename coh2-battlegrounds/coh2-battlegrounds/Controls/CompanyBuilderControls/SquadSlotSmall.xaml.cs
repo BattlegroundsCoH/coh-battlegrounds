@@ -6,13 +6,14 @@ using System;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media;
 
 namespace BattlegroundsApp.Controls.CompanyBuilderControls {
     public partial class SquadSlotSmall : UserControl {
 
         public string SquadName { get; }
 
-        public string SquadIcon { get; }
+        public ImageSource SquadIcon { get; }
 
         public SquadBlueprint Squad { get; }
 
@@ -23,7 +24,7 @@ namespace BattlegroundsApp.Controls.CompanyBuilderControls {
         public SquadSlotSmall(SquadBlueprint squad) {
             this.DataContext = this;
             this.SquadName = GameLocale.GetString(squad.UI.ScreenName);
-            this.SquadIcon = $"pack://application:,,,/Resources/ingame/unit_icons/{squad.UI.Icon}.png";
+            this.SquadIcon = App.ResourceHandler.GetIcon("unit_icons", squad.UI.Icon);
             this.Squad = squad;
             this.HoverData = new(this.Squad);
             this.InitializeComponent();

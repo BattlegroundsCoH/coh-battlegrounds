@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.ComponentModel;
 using System.Xml;
 
 namespace CoH2XML2JSON {
@@ -19,6 +17,9 @@ namespace CoH2XML2JSON {
 
         public override string Name { get; }
 
+        [DefaultValue(null)]
+        public Requirement[] Requirements { get; }
+
         public ABP(XmlDocument xmlDocument, string guid, string name) {
 
             // Set the name
@@ -35,6 +36,12 @@ namespace CoH2XML2JSON {
 
             // Load Cost
             this.Cost = new(xmlDocument.SelectSingleNode(@"//group[@name='cost']") as XmlElement);
+            if (this.Cost.IsNull) {
+                this.Cost = null;
+            }
+
+            // Load Requirements
+            this.Requirements = Requirement.GetRequirements(xmlDocument.SelectSingleNode(@"//list[@name='requirements']") as XmlElement);
 
         }
 

@@ -35,9 +35,17 @@ namespace CoH2XML2JSON {
             }
         }
 
-        private static string GetStr(XmlElement xmlElement, string tag, string name) {
-            string val = xmlElement.FindSubnode(tag, name)?.GetAttribute("value") ?? null;
-            if (val is not null && xmlElement.FindSubnode(tag, name)?.GetAttribute("mod") is string mod && !string.IsNullOrEmpty(mod)) {
+        public static string GetStr(XmlElement xmlElement, string tag, string name) {
+            var xmlNode = xmlElement.FindSubnode(tag, name);
+            if (xmlNode is not null) {
+                return GetStr(xmlNode);
+            }
+            return null;
+        }
+
+        public static string GetStr(XmlElement xmlElement) {
+            string val = xmlElement.GetAttribute("value") ?? null;
+            if (val is not null && xmlElement.GetAttribute("mod") is string mod && !string.IsNullOrEmpty(mod)) {
                 val = $"${mod}:{val}";
             }
             return val;

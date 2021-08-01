@@ -41,6 +41,15 @@ namespace CoH2XML2JSON {
         [DefaultValue(0.0f)]
         public float Health { get; }
 
+        [DefaultValue(null)]
+        public string[] Upgrades { get; }
+
+        [DefaultValue(null)]
+        public string[] AppliedUpgrades { get; }
+
+        [DefaultValue(0)]
+        public int UpgradeCapacity { get; }
+
         public EBP(XmlDocument xmlDocument, string guid, string name) {
 
             // Set the name
@@ -57,6 +66,9 @@ namespace CoH2XML2JSON {
 
             // Load Cost
             this.Cost = new(xmlDocument.SelectSingleNode(@"//template_reference[@name='exts'] [@value='ebpextensions\cost_ext']") as XmlElement);
+            if (this.Cost.IsNull) {
+                this.Cost = null;
+            }
 
             // Load abilities
             if (xmlDocument.SelectSingleNode(@"//template_reference[@name='exts'] [@value='ebpextensions\ability_ext']") is XmlElement abilities) {
@@ -103,6 +115,33 @@ namespace CoH2XML2JSON {
             // Get hitpoints (if any)
             if (xmlDocument.SelectSingleNode(@"//template_reference[@name='exts'] [@value='ebpextensions\health_ext']") is XmlElement health) {
                 this.Health = float.Parse(health.GetValue("//float[@name='hitpoints']"));
+            }
+
+
+            // Load upgrades
+            if (xmlDocument.SelectSingleNode(@"//template_reference[@name='exts'] [@value='ebpextensions\upgrade_ext']") is XmlElement upgrades) {
+                var nodes = upgrades.SelectSubnodes("instance_reference", "upgrade");
+                List<string> ubps = new();
+                foreach (XmlNode ability in nodes) {
+                    ubps.Add(Path.GetFileNameWithoutExtension(ability.Attributes["value"].Value));
+                }
+                if (ubps.Count > 0) {
+                    this.Upgrades = ubps.ToArray();
+                }
+                this.UpgradeCapacity = (int)float.Parse(upgrades.FindSubnode("float", "number_of_standard_slots").GetAttribute("value"));
+            }
+
+
+            // Load applied upgrades
+            if (xmlDocument.SelectSingleNode(@"//template_reference[@name='exts'] [@value='ebpextensions\upgrade_apply_ext']") is XmlElement appliedUpgrades) {
+                var nodes = appliedUpgrades.SelectSubnodes("instance_reference", "upgrade");
+                List<string> ubps = new();
+                foreach (XmlNode ability in nodes) {
+                    ubps.Add(Path.GetFileNameWithoutExtension(ability.Attributes["value"].Value));
+                }
+                if (ubps.Count > 0) {
+                    this.AppliedUpgrades = ubps.ToArray();
+                }
             }
 
         }

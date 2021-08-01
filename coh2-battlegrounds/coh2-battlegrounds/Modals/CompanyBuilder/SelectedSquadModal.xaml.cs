@@ -74,6 +74,12 @@ namespace BattlegroundsApp.Modals.CompanyBuilder {
 
         public bool AllowGlider { get; }
 
+        public Visibility SlotItemVisible { get; }
+
+        public int SlotItemCount { get; }
+
+        public int SlotItemCapacity { get; }
+
         public Visibility ManpowerCostVisible => this.ManpowerCost is 0 ? Visibility.Collapsed : Visibility.Visible;
 
         public Visibility MunitionCostVisible => this.MunitionCost is 0 ? Visibility.Collapsed : Visibility.Visible;
@@ -111,6 +117,11 @@ namespace BattlegroundsApp.Modals.CompanyBuilder {
             // Get rank
             this.RankLevel = squadSlot.SquadInstance.VeterancyRank;
             this.MaxRankLevel = squadSlot.SquadInstance.SBP.Veterancy.MaxRank;
+
+            // Get item
+            this.SlotItemCount = squadSlot.SquadInstance.SlotItems.Count;
+            this.SlotItemCapacity = squadSlot.SquadInstance.SBP.PickupCapacity;
+            this.SlotItemVisible = (squadSlot.SquadInstance.SBP.CanPickupItems && this.SlotItemCount > 0) ? Visibility.Visible : Visibility.Collapsed;
 
             // Refresh cost
             this.RefreshCost();
@@ -241,8 +252,8 @@ namespace BattlegroundsApp.Modals.CompanyBuilder {
                     Source = x.Ico,
                     Tag = x,
                     ToolTip = GameLocale.GetString(x.ABP.UI.ScreenName),
-                    Width = 48,
-                    Height = 48
+                    Width = 36,
+                    Height = 36
                 };
                 this.AbilitiesList.Children.Add(img);
             });

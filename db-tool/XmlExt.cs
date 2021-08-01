@@ -1,4 +1,5 @@
-﻿using System.Xml;
+﻿using System.Collections.Generic;
+using System.Xml;
 
 namespace CoH2XML2JSON {
     
@@ -34,6 +35,24 @@ namespace CoH2XML2JSON {
                 }
             }
             return null;
+        }
+
+        public static List<XmlElement> SelectSubnodes(this XmlElement e, string type, string name, bool deepSearch = true) {
+            List<XmlElement> list = new();
+            void Selector(XmlElement element) {
+                foreach (XmlElement sub in element) {
+                    if (sub.Name == type && sub.HasAttribute("name") && sub.GetAttribute("name") == name) {
+                        list.Add(sub);
+                    }
+                }
+                if (deepSearch) {
+                    foreach (XmlElement sub in element) {
+                        Selector(sub);
+                    }
+                }
+            }
+            Selector(e);
+            return list;
         }
 
     }
