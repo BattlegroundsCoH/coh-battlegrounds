@@ -184,6 +184,24 @@ namespace Battlegrounds.Game.Database {
 
         }
 
+        public string[] GetUpgrades(bool getEntityUpgrades, bool getAppliedUpgrades) {
+
+            // If not get entity abilities, return this ability list and be done
+            if (!getEntityUpgrades) {
+                return getAppliedUpgrades ? this.Upgrades.Union(this.AppliedUpgrades).ToArray() : this.Upgrades;
+            }
+
+            // Select all entity upgrades
+            string[] ebpubps = this.Loadout.SelectMany(
+                x => (BlueprintManager.FromBlueprintName<EntityBlueprint>(x.EntityBlueprint)?.Upgrades ?? Array.Empty<string>())
+                .Union(getAppliedUpgrades ? BlueprintManager.FromBlueprintName<EntityBlueprint>(x.EntityBlueprint)?.AppliedUpgrades ?? Array.Empty<string>()
+                : Array.Empty<string>()).ToArray());
+
+            // Return union
+            return ebpubps.Union(this.Upgrades).Union(getAppliedUpgrades ? this.AppliedUpgrades : Array.Empty<string>()).ToArray();
+
+        }
+
     }
 
     /// <summary>

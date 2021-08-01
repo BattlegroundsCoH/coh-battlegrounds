@@ -144,7 +144,14 @@
                 <!-- R1 :: C0 :: Abilities, then  -->
                 <StackPanel Grid.Row="1" Grid.Column="0" Grid.RowSpan="2">
                     <StackPanel Height="72" Visibility="{Binding Path=SlotItemVisible}">
-                        <Label Content="Unit Items (0/6)" HorizontalAlignment="Center"/>
+                        <TextBlock HorizontalAlignment="Center" Height="24">
+                            <TextBlock.Text>
+                                <MultiBinding StringFormat="{}Unit Items {0}/{1}">
+                                    <Binding Path="SlotItemCount"/>
+                                    <Binding Path="SlotItemCapacity"/>
+                                </MultiBinding>
+                            </TextBlock.Text>
+                        </TextBlock>
                         <WrapPanel DockPanel.Dock="Left" Name="SlotItemList"/>
                     </StackPanel>
                     <Grid>
@@ -152,12 +159,19 @@
                             <ColumnDefinition/>
                             <ColumnDefinition/>
                         </Grid.ColumnDefinitions>
-                        <StackPanel Grid.Column="0">
-                            <Label Content="Unit Abilities" HorizontalAlignment="Center"/>
+                        <StackPanel Grid.Column="0" Grid.ColumnSpan="{Binding Path=AbilitySpan}">
+                            <Label Content="Unit Abilities" HorizontalAlignment="Center" Height="24"/>
                             <WrapPanel Name="AbilitiesList" HorizontalAlignment="Center"/>
                         </StackPanel>
-                        <StackPanel Grid.Column="1">
-                            <Label Content="Unit Upgrades (0/3)" HorizontalAlignment="Center"/>
+                        <StackPanel Grid.Column="1" Visibility="{Binding Path=UpgradeVisibility}">
+                            <TextBlock HorizontalAlignment="Center" Height="24">
+                                <TextBlock.Text>
+                                    <MultiBinding StringFormat="{}Unit Upgrades {0}/{1}">
+                                        <Binding Path="UpgradesCount"/>
+                                        <Binding Path="UpgradesCapacity"/>
+                                    </MultiBinding>
+                                </TextBlock.Text>
+                            </TextBlock>
                             <WrapPanel DockPanel.Dock="Left" Name="UpgradeList"/>
                         </StackPanel>
                     </Grid>

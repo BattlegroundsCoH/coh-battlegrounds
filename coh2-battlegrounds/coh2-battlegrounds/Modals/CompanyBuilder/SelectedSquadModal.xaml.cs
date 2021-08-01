@@ -39,7 +39,22 @@ namespace BattlegroundsApp.Modals.CompanyBuilder {
             }
         }
 
+        public class SelectSquadUpgrade {
+            public UpgradeBlueprint UBP { get; }
+            public ImageSource Ico { get; }
+            public SelectSquadUpgrade(UpgradeBlueprint ubp) {
+                this.UBP = ubp;
+                if (App.ResourceHandler.HasIcon("upgrade_icons", ubp.UI.Icon)) {
+                    this.Ico = App.ResourceHandler.GetIcon("upgrade_icons", ubp.UI.Icon);
+                } else {
+                    Trace.WriteLine($"Failed to locate icon name '{ubp.UI.Icon}'.", nameof(ResourceHandler));
+                }
+            }
+        }
+
         private const double VETEXPMAXWIDTH = 136.0;
+
+        private string[] m_availableUpgrades;
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -79,6 +94,14 @@ namespace BattlegroundsApp.Modals.CompanyBuilder {
         public int SlotItemCount { get; }
 
         public int SlotItemCapacity { get; }
+
+        public int UpgradesCount { get; set; }
+
+        public int UpgradesCapacity { get; }
+
+        public int AbilitySpan => this.UpgradesCapacity is 0 ? 2 : 1;
+
+        public Visibility UpgradeVisibility => this.UpgradesCapacity is 0 ? Visibility.Collapsed : Visibility.Visible;
 
         public Visibility ManpowerCostVisible => this.ManpowerCost is 0 ? Visibility.Collapsed : Visibility.Visible;
 
@@ -123,6 +146,13 @@ namespace BattlegroundsApp.Modals.CompanyBuilder {
             this.SlotItemCapacity = squadSlot.SquadInstance.SBP.PickupCapacity;
             this.SlotItemVisible = (squadSlot.SquadInstance.SBP.CanPickupItems && this.SlotItemCount > 0) ? Visibility.Visible : Visibility.Collapsed;
 
+            // Get upgrades
+            this.m_availableUpgrades = this.SquadSlot.SquadInstance.SBP.GetUpgrades(true, false);
+            this.UpgradesCapacity = this.SquadSlot.SquadInstance.SBP.UpgradeCapacity;
+            if (this.UpgradesCapacity is -1) {
+                this.UpgradesCapacity = this.m_availableUpgrades.Length;
+            }
+
             // Refresh cost
             this.RefreshCost();
 
@@ -134,6 +164,9 @@ namespace BattlegroundsApp.Modals.CompanyBuilder {
 
             // Refresh ability list
             this.RefreshAbilities();
+
+            // Refresh upgrade list
+            this.RefreshUpgrades();
 
             // Refresh slot items
             this.RefreshAvailableSlotItems();
@@ -269,6 +302,37 @@ namespace BattlegroundsApp.Modals.CompanyBuilder {
         private void RefreshSlotitems() {
 
 
+
+        }
+
+        private void RefreshUpgrades() {
+
+            // Update capacities
+            this.UpgradesCount = this.SquadSlot.SquadInstance.Upgrades.Count;
+
+            // Check for upgrade count
+            if (this.m_availableUpgrades.Length > 0) {
+                
+                // Get upgrades
+                var ubps = this.m_availableUpgrades.Select(x => BlueprintManager.FromBlueprintName<UpgradeBlueprint>(x))
+                .Where(x => !string.IsNullOrEmpty(x.UI.Icon));
+
+                // Map to ubp presenter class
+                SelectSquadUpgrade[] presenters = ubps.Select(x => new SelectSquadUpgrade(x)).Where(x => x.Ico is not null).ToArray();
+
+                // Create images and append
+                presenters.ForEach(x => {
+                    Image img = new() {
+                        Source = x.Ico,
+                        Tag = x,
+                        ToolTip = GameLocale.GetString(x.UBP.UI.ScreenName),
+                        Width = 36,
+                        Height = 36
+                    };
+                    this.UpgradeList.Children.Add(img);
+                });
+
+            }
 
         }
 
