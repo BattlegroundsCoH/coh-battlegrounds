@@ -20,7 +20,8 @@ namespace BattlegroundsApp.Resources {
             "symbol_icons",
             "unit_icons",
             "upgrade_icons",
-            "phase_icons"
+            "phase_icons",
+            "deploy_icons",
         };
         private static readonly string[] __iconResourceFiles = {
             "resources/ingame/ability_icons.dat",
@@ -28,7 +29,8 @@ namespace BattlegroundsApp.Resources {
             "resources/ingame/symbol_icons.dat",
             "resources/ingame/unit_icons.dat",
             "resources/ingame/upgrade_icons.dat",
-            "resources/ingame/phase_icons.dat"
+            "resources/ingame/phase_icons.dat",
+            "resources/ingame/deploy_icons.dat"
         };
 
         private Dictionary<string, ImageSource> m_cache;

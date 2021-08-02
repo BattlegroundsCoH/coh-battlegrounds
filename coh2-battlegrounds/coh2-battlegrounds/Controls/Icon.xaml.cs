@@ -291,12 +291,12 @@ namespace BattlegroundsApp.Controls {
                     this.SetValue(MaskColourProperty, Brushes.White);
                     break;
                 case IconState.Available:
-                    this.SetValue(MaskColourProperty, Brushes.Gray);
-                    this.SetValue(MaskOpacityProperty, 0.3);
+                    this.SetValue(MaskColourProperty, Brushes.DarkGray);
+                    this.SetValue(MaskOpacityProperty, 0.6);
                     break;
                 case IconState.Disabled:
                     this.SetValue(MaskColourProperty, Brushes.Black);
-                    this.SetValue(MaskOpacityProperty, 0.45);
+                    this.SetValue(MaskOpacityProperty, 0.75);
                     break;
                 default:
                     break;
@@ -308,7 +308,7 @@ namespace BattlegroundsApp.Controls {
         protected override void OnMouseEnter(MouseEventArgs e) {
             base.OnMouseEnter(e);
             if (this.IconState is IconState.Available) {
-                this.SetValue(MaskOpacityProperty, 0.05);
+                this.SetValue(MaskOpacityProperty, 0.075);
                 this.NotifyPropertyChanged(nameof(this.MaskColour));
                 this.NotifyPropertyChanged(nameof(this.MaskOpacity));
             }
@@ -317,7 +317,7 @@ namespace BattlegroundsApp.Controls {
         protected override void OnMouseLeave(MouseEventArgs e) {
             base.OnMouseLeave(e);
             if (this.IconState is IconState.Available) {
-                this.SetValue(MaskOpacityProperty, 0.3);
+                this.SetValue(MaskOpacityProperty, 0.6);
                 this.NotifyPropertyChanged(nameof(this.MaskColour));
                 this.NotifyPropertyChanged(nameof(this.MaskOpacity));
             }

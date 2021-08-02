@@ -122,10 +122,6 @@ namespace BattlegroundsApp.Modals.CompanyBuilder {
 
         public Visibility CrewVisible { get; }
 
-        public bool AllowParadrop { get; }
-
-        public bool AllowGlider { get; }
-
         public Visibility SlotItemVisible { get; }
 
         public int SlotItemCount { get; }
@@ -207,6 +203,9 @@ namespace BattlegroundsApp.Modals.CompanyBuilder {
                 this.CrewVisible = Visibility.Collapsed;
                 this.SelectDeploymentMethodVisible = Visibility.Visible;
 
+                // Refresh deployment methods
+                this.RefreshDeplymentNethods();
+
                 // Refresh Transport Blueprint
                 this.RefreshTransportBlueprints(canTow);
 
@@ -278,7 +277,7 @@ namespace BattlegroundsApp.Modals.CompanyBuilder {
             this.CostField.Cost = this.SquadSlot.SquadInstance.GetCost(); // Get cost and update values
 
         private void OnDeploymentMethodClicked(object sender, MouseButtonEventArgs e) {
-            Image obj = sender as Image;
+            Icon obj = sender as Icon;
             SquadBlueprint sbp = this.TransportBlueprintCombobox.SelectedItem.Source as SquadBlueprint;
             switch (obj.Tag as string) {
                 case "0": // None
@@ -294,16 +293,21 @@ namespace BattlegroundsApp.Modals.CompanyBuilder {
                     this.SquadSlot.SquadInstance.SetDeploymentMethod(sbp, DeploymentMethod.DeployAndStay, this.SquadSlot.SquadInstance.DeploymentPhase);
                     break;
                 case "3": // Paradrop
-                    this.TransportBlueprintSelector = Visibility.Collapsed;
-                    this.SquadSlot.SquadInstance.SetDeploymentMethod(null, DeploymentMethod.Paradrop, this.SquadSlot.SquadInstance.DeploymentPhase);
+                    if (obj.IconState is not IconState.Disabled) {
+                        this.TransportBlueprintSelector = Visibility.Collapsed;
+                        this.SquadSlot.SquadInstance.SetDeploymentMethod(null, DeploymentMethod.Paradrop, this.SquadSlot.SquadInstance.DeploymentPhase);
+                    }
                     break;
                 case "4": // Glider
-                    this.TransportBlueprintSelector = Visibility.Collapsed;
-                    this.SquadSlot.SquadInstance.SetDeploymentMethod(null, DeploymentMethod.Glider, this.SquadSlot.SquadInstance.DeploymentPhase);
+                    if (obj.IconState is not IconState.Disabled) {
+                        this.TransportBlueprintSelector = Visibility.Collapsed;
+                        this.SquadSlot.SquadInstance.SetDeploymentMethod(null, DeploymentMethod.Glider, this.SquadSlot.SquadInstance.DeploymentPhase);
+                    }
                     break;
                 default:
                     break;
             }
+            this.RefreshDeplymentNethods();
             this.NotifyPropertyChanged(nameof(this.TransportBlueprintSelector));
             this.RefreshCost();
         }
@@ -425,6 +429,19 @@ namespace BattlegroundsApp.Modals.CompanyBuilder {
             this.NotifyPropertyChanged(nameof(this.CrewIcon));
             this.NotifyPropertyChanged(nameof(this.CrewName));
             this.NotifyPropertyChanged(nameof(this.CrewVeterancy));
+
+        }
+
+        private void RefreshDeplymentNethods() {
+
+            // Set method states
+            this.DeployIcon0.IconState = this.SquadSlot.SquadInstance.DeploymentMethod is DeploymentMethod.None ? IconState.Active : IconState.Available;
+            this.DeployIcon1.IconState = this.SquadSlot.SquadInstance.DeploymentMethod is DeploymentMethod.DeployAndExit ? IconState.Active : IconState.Available;
+            this.DeployIcon2.IconState = this.SquadSlot.SquadInstance.DeploymentMethod is DeploymentMethod.DeployAndStay ? IconState.Active : IconState.Available;
+
+            // TEMP SOLUTION
+            this.DeployIcon3.IconState = IconState.Disabled;
+            this.DeployIcon4.IconState = IconState.Disabled;
 
         }
 
