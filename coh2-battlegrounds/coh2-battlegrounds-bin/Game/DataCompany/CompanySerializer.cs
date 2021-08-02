@@ -92,11 +92,7 @@ namespace Battlegrounds.Game.DataCompany {
             Company result = builder.Result;
             result.UpdateStatistics(x => stats); // This will set the stats
             result.CalculateChecksum();
-            if (result.VerifyChecksum(checksum)) {
-                return result;
-            } else {
-                throw new ChecksumViolationException();
-            }
+            return result.VerifyChecksum(checksum) ? result : throw new ChecksumViolationException();
 
         }
 
@@ -118,10 +114,8 @@ namespace Battlegrounds.Game.DataCompany {
 
         public override void Write(Utf8JsonWriter writer, Company value, JsonSerializerOptions options) {
 
-            // If checksum is null
-            if (value.Checksum is null) {
-                value.CalculateChecksum();
-            }
+            // Recalculate the checksum
+            value.CalculateChecksum();
 
             // Begin object
             writer.WriteStartObject();

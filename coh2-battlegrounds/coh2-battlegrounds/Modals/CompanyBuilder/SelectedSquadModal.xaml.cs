@@ -235,10 +235,13 @@ namespace BattlegroundsApp.Modals.CompanyBuilder {
             this.RefreshAvailableSlotItems();
             this.RefreshSlotitems();
 
+            // Refresh deployment phase
+            this.RefreshDeploymentPhase();
+
         }
 
         private void OnDeploymentPhaseClicked(object sender, MouseButtonEventArgs e) {
-            var obj = sender as Image;
+            var obj = sender as Icon;
             var sbp = this.SquadSlot.SquadInstance.SupportBlueprint as SquadBlueprint;
             var dmode = this.SquadSlot.SquadInstance.DeploymentMethod;
             switch (obj.Tag as string) {
@@ -258,6 +261,17 @@ namespace BattlegroundsApp.Modals.CompanyBuilder {
                     this.SquadSlot.SquadInstance.SetDeploymentMethod(sbp, dmode, DeploymentPhase.PhaseNone);
                     break;
             }
+            this.RefreshDeploymentPhase();
+        }
+
+        private void RefreshDeploymentPhase() {
+
+            // Set phase states
+            this.PhaseIcon0.IconState = this.SquadSlot.SquadInstance.DeploymentPhase is DeploymentPhase.PhaseInitial ? IconState.Active : IconState.Available;
+            this.PhaseIcon1.IconState = this.SquadSlot.SquadInstance.DeploymentPhase is DeploymentPhase.PhaseA ? IconState.Active : IconState.Available;
+            this.PhaseIcon2.IconState = this.SquadSlot.SquadInstance.DeploymentPhase is DeploymentPhase.PhaseB ? IconState.Active : IconState.Available;
+            this.PhaseIcon3.IconState = this.SquadSlot.SquadInstance.DeploymentPhase is DeploymentPhase.PhaseC ? IconState.Active : IconState.Available;
+
         }
 
         private void RefreshCost() =>

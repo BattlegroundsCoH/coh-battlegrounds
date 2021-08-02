@@ -137,37 +137,41 @@
                     <Label Content="Deployment Phase" HorizontalAlignment="Center"/>
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                         <!-- Initial Phase -->
-                        <Image Width="24" Margin="1.75" 
-                           ToolTip="Phase 0 - Deployed Immediately" 
-                           Tag="0" MouseDown="OnDeploymentPhaseClicked">
-                            <Image.Source>
-                                <BitmapImage DecodePixelWidth="13" DecodePixelHeight="13" UriSource="pack://application:,,,/Resources/ingame/no_icon.png"/>
-                            </Image.Source>
-                        </Image>
+                        <controls:Icon Margin="1.75" 
+                                       Dimension="Size32x32" 
+                                       IconSource="phase_icons"
+                                       IconName="Icons_research_german_battle_phase_01"
+                                       Tag="0"
+                                       ToolTip="Phase 0 - Deployed Immediately"
+                                       MouseDown="OnDeploymentPhaseClicked"
+                                       x:Name="PhaseIcon0"/>
                         <!-- Phase 1 -->
-                        <Image Width="24" Margin="1.75" 
-                           ToolTip="Phase 1 - Deployable At the start of the game." 
-                           Tag="0" MouseDown="OnDeploymentPhaseClicked">
-                            <Image.Source>
-                                <BitmapImage DecodePixelWidth="13" DecodePixelHeight="13" UriSource="pack://application:,,,/Resources/ingame/no_icon.png"/>
-                            </Image.Source>
-                        </Image>
+                        <controls:Icon Margin="1.75" 
+                                       Dimension="Size32x32" 
+                                       IconSource="phase_icons"
+                                       IconName="Icons_research_german_battle_phase_02"
+                                       Tag="1"
+                                       ToolTip="Phase 1 -  Deployable At the start of the game."
+                                       MouseDown="OnDeploymentPhaseClicked"
+                                       x:Name="PhaseIcon1"/>
                         <!-- Phase 2 -->
-                        <Image Width="24" Margin="1.75" 
-                           ToolTip="Phase 2 - Deployable after ? Minutes." 
-                           Tag="0" MouseDown="OnDeploymentPhaseClicked">
-                            <Image.Source>
-                                <BitmapImage DecodePixelWidth="13" DecodePixelHeight="13" UriSource="pack://application:,,,/Resources/ingame/no_icon.png"/>
-                            </Image.Source>
-                        </Image>
+                        <controls:Icon Margin="1.75" 
+                                       Dimension="Size32x32" 
+                                       IconSource="phase_icons"
+                                       IconName="Icons_research_german_battle_phase_03"
+                                       Tag="2"
+                                       ToolTip="Phase 2 - Deployable after ? Minutes."
+                                       MouseDown="OnDeploymentPhaseClicked"
+                                       x:Name="PhaseIcon2"/>
                         <!-- Phase 3 -->
-                        <Image Width="24" Margin="1.75" 
-                           ToolTip="Phase 3 - Deployable after ? Minutes."
-                           Tag="0" MouseDown="OnDeploymentPhaseClicked">
-                            <Image.Source>
-                                <BitmapImage DecodePixelWidth="13" DecodePixelHeight="13" UriSource="pack://application:,,,/Resources/ingame/no_icon.png"/>
-                            </Image.Source>
-                        </Image>
+                        <controls:Icon Margin="1.75" 
+                                       Dimension="Size32x32" 
+                                       IconSource="phase_icons"
+                                       IconName="Icons_research_german_battle_phase_04"
+                                       Tag="3"
+                                       ToolTip="Phase 3 - Deployable after ? Minutes."
+                                       MouseDown="OnDeploymentPhaseClicked"
+                                       x:Name="PhaseIcon3"/>
                     </StackPanel>
                 </StackPanel>
 
