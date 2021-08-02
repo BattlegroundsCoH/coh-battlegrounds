@@ -33,6 +33,17 @@
   },
   {
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741832,
+    "Name": "no_ingame",
+    "Display": {
+      "LocaleName": "0",
+      "LocaleDescriptionLong": "0",
+      "LocaleDescriptionShort": "0"
+    },
+    "OwnerType": "player"
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
     "PBGID": 1073741829,
     "Name": "phase_alpha",
     "Display": {
@@ -92,6 +103,19 @@
     "OwnerType": "self",
     "SlotItems": [
       "dp-28_light_machine_gun_package_bg"
+    ],
+    "Requirements": [
+      {
+        "RequirementType": "required_player_upgrade",
+        "RequirementReason": "usage",
+        "UIText": "$142b113740474c82a60b0a428bd553d5:59",
+        "RequirementProperties": {
+          "is_present": true,
+          "max_completed": 100,
+          "min_completed": 1,
+          "upgrade_name": "no_ingame"
+        }
+      }
     ]
   },
   {
@@ -110,28 +134,115 @@
     },
     "OwnerType": "self",
     "SlotItems": [
-      "ppsh41_assault_package_dummy_item_bg"
+      "ppsh41_assault_package_bg",
+      "ppsh41_assault_package_bg"
     ],
     "Requirements": [
       {
-        "RequirementType": "required_squad_upgrade",
-        "RequirementReason": "usage_and_display",
-        "UIText": "0",
-        "RequirementProperties": {
-          "include_queued": true,
-          "is_present": false,
-          "upgrade_name": "ppsh-41_sub_machine_gun_upgrade_mp"
-        }
-      },
-      {
-        "RequirementType": "required_in_territory",
+        "RequirementType": "required_player_upgrade",
         "RequirementReason": "usage",
-        "UIText": "0",
+        "UIText": "$142b113740474c82a60b0a428bd553d5:59",
         "RequirementProperties": {
-          "in_supply": true,
-          "is_secured": false,
-          "is_secured_by_checkpoint": false,
-          "not_in_transition": false
+          "is_present": true,
+          "max_completed": 100,
+          "min_completed": 1,
+          "upgrade_name": "no_ingame"
+        }
+      }
+    ]
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741833,
+    "Name": "ptrs_41_at_rifle_package_bg",
+    "Display": {
+      "LocaleName": "11007678",
+      "LocaleDescriptionLong": "11007682",
+      "LocaleDescriptionShort": "11038236",
+      "Icon": "Icons_upgrades_icon_upgrade_soviet_ptrs_41"
+    },
+    "Cost": {
+      "FieldTime": 20
+    },
+    "OwnerType": "self",
+    "SlotItems": [
+      "ptrs_41_anti_tank_rifle_guard_troop_mp",
+      "ptrs_41_anti_tank_rifle_guard_troop_mp"
+    ],
+    "Requirements": [
+      {
+        "RequirementType": "required_player_upgrade",
+        "RequirementReason": "usage",
+        "UIText": "$142b113740474c82a60b0a428bd553d5:59",
+        "RequirementProperties": {
+          "is_present": true,
+          "max_completed": 100,
+          "min_completed": 1,
+          "upgrade_name": "no_ingame"
+        }
+      }
+    ]
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741835,
+    "Name": "soviet_flamethrower_bg",
+    "Display": {
+      "LocaleName": "11008280",
+      "LocaleDescriptionLong": "11008281",
+      "LocaleDescriptionShort": "11038222",
+      "Icon": "Icons_upgrades_icon_upgrade_soviet_flamethrower"
+    },
+    "Cost": {
+      "Munition": 60,
+      "FieldTime": 20
+    },
+    "OwnerType": "self",
+    "SlotItems": [
+      "flamethrower_roks3_item_mp"
+    ],
+    "Requirements": [
+      {
+        "RequirementType": "required_player_upgrade",
+        "RequirementReason": "usage",
+        "UIText": "$142b113740474c82a60b0a428bd553d5:59",
+        "RequirementProperties": {
+          "is_present": true,
+          "max_completed": 100,
+          "min_completed": 1,
+          "upgrade_name": "no_ingame"
+        }
+      }
+    ]
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741834,
+    "Name": "soviet_minesweeper_bg",
+    "Display": {
+      "LocaleName": "11017394",
+      "LocaleDescriptionLong": "11171768",
+      "LocaleDescriptionShort": "11171769",
+      "Icon": "Icons_upgrades_icon_upgrade_west_german_support_package"
+    },
+    "Cost": {
+      "Munition": 30,
+      "FieldTime": 10
+    },
+    "OwnerType": "self",
+    "SlotItems": [
+      "minesweeper"
+    ],
+    "Requirements": [
+      {
+        "RequirementType": "required_player_upgrade",
+        "RequirementReason": "usage",
+        "UIText": "$142b113740474c82a60b0a428bd553d5:59",
+        "RequirementProperties": {
+          "is_present": true,
+          "max_completed": 100,
+          "min_completed": 1,
+          "upgrade_name": "no_ingame"
         }
       }
     ]

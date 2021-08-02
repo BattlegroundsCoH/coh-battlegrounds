@@ -8,6 +8,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Media.Imaging;
 
 using Battlegrounds.Functional;
 using Battlegrounds.Game.Database;
@@ -17,7 +18,17 @@ using Battlegrounds.Modding;
 
 using BattlegroundsApp.Controls;
 using BattlegroundsApp.Controls.CompanyBuilderControls;
+using BattlegroundsApp.Popups;
 using BattlegroundsApp.Resources;
+
+/*
+ * 
+ * TODO:
+ *  Slot Items
+ *  Crew Slot Items
+ * 
+ * 
+ */
 
 namespace BattlegroundsApp.Modals.CompanyBuilder {
 
@@ -25,6 +36,12 @@ namespace BattlegroundsApp.Modals.CompanyBuilder {
     /// Interaction logic for SelectedSquadModal.xaml
     /// </summary>
     public partial class SelectedSquadModal : Modal, INotifyPropertyChanged {
+
+        public static readonly ImageSource VetRankAchieved
+            = new BitmapImage(new Uri($"pack://application:,,,/Resources/ingame/vet/vstar_yes.png"));
+
+        public static readonly ImageSource VetRankNotAchieved
+            = new BitmapImage(new Uri($"pack://application:,,,/Resources/ingame/vet/vstar_no.png"));
 
         public class SelectSquadAbility {
             public AbilityBlueprint ABP { get; }
@@ -81,9 +98,29 @@ namespace BattlegroundsApp.Modals.CompanyBuilder {
 
         public int MaxRankLevel { get; }
 
+        public ImageSource Rank1 { get; set; } = VetRankNotAchieved;
+
+        public ImageSource Rank2 { get; set; } = VetRankNotAchieved;
+
+        public ImageSource Rank3 { get; set; } = VetRankNotAchieved;
+
+        public ImageSource Rank4 { get; set; } = VetRankNotAchieved;
+
+        public ImageSource Rank5 { get; set; } = VetRankNotAchieved;
+
         public Visibility EditNamePossible => this.RankLevel >= 4 ? Visibility.Visible : Visibility.Collapsed;
 
+        public ImageSource CrewIcon { get; set; }
+
+        public ImageSource CrewVeterancy { get; set; }
+
+        public string CrewName { get; set; }
+
         public Visibility TransportBlueprintSelector { get; set; } = Visibility.Collapsed;
+
+        public Visibility SelectDeploymentMethodVisible { get; }
+
+        public Visibility CrewVisible { get; }
 
         public bool AllowParadrop { get; }
 
@@ -102,18 +139,6 @@ namespace BattlegroundsApp.Modals.CompanyBuilder {
         public int AbilitySpan => this.UpgradesCapacity is 0 ? 2 : 1;
 
         public Visibility UpgradeVisibility => this.UpgradesCapacity is 0 ? Visibility.Collapsed : Visibility.Visible;
-
-        public Visibility ManpowerCostVisible => this.ManpowerCost is 0 ? Visibility.Collapsed : Visibility.Visible;
-
-        public Visibility MunitionCostVisible => this.MunitionCost is 0 ? Visibility.Collapsed : Visibility.Visible;
-
-        public Visibility FuelCostVisible => this.FuelCost is 0 ? Visibility.Collapsed : Visibility.Visible;
-
-        public int ManpowerCost { get; set; }
-
-        public int MunitionCost { get; set; }
-
-        public int FuelCost { get; set; }
 
         public string SelectedSupportBlueprint { get; set; }
 
@@ -141,6 +166,13 @@ namespace BattlegroundsApp.Modals.CompanyBuilder {
             this.RankLevel = squadSlot.SquadInstance.VeterancyRank;
             this.MaxRankLevel = squadSlot.SquadInstance.SBP.Veterancy.MaxRank;
 
+            ImageSource[] rankIcoRefs = { this.Rank1, this.Rank2, this.Rank3, this.Rank4, this.Rank5 };
+
+            // Update rank icons
+            for (byte i = 0; i < this.RankLevel; i++) {
+                rankIcoRefs[i] = VetRankAchieved;
+            }
+
             // Get item
             this.SlotItemCount = squadSlot.SquadInstance.SlotItems.Count;
             this.SlotItemCapacity = squadSlot.SquadInstance.SBP.PickupCapacity;
@@ -153,14 +185,45 @@ namespace BattlegroundsApp.Modals.CompanyBuilder {
                 this.UpgradesCapacity = this.m_availableUpgrades.Length;
             }
 
-            // Refresh cost
-            this.RefreshCost();
-
             // Init component
             this.InitializeComponent();
 
-            // Refresh Transport Blueprint
-            this.RefreshTransportBlueprints();
+            // Refresh cost
+            this.RefreshCost();
+
+            // Determine if squad can be deployed through transport.
+            bool canTow = this.SquadSlot.SquadInstance.SBP.Types.IsAntiTank || this.SquadSlot.SquadInstance.SBP.Types.IsHeavyArtillery;
+            bool isTeamWeapon = this.SquadSlot.SquadInstance.SBP.IsTeamWeapon;
+            bool canSetDeploymentMethod = (this.SquadSlot.SquadInstance.SBP.Types.IsInfantry && !isTeamWeapon) || canTow;
+
+            // Set default visibility
+            this.CrewVisible = Visibility.Collapsed;
+            this.SelectDeploymentMethodVisible = Visibility.Collapsed;
+
+            // Determine if we can set deployment method, if possible, get proper blueprints
+            if (canSetDeploymentMethod) {
+
+                // Update visibility
+                this.CrewVisible = Visibility.Collapsed;
+                this.SelectDeploymentMethodVisible = Visibility.Visible;
+
+                // Refresh Transport Blueprint
+                this.RefreshTransportBlueprints(canTow);
+
+            } else if (this.SquadSlot.SquadInstance.Crew is Squad crew) {
+
+                // Update visibility
+                this.CrewVisible = Visibility.Visible;
+                this.SelectDeploymentMethodVisible = Visibility.Collapsed;
+
+                // Refresh crew
+                this.RefreshCrew(crew);
+
+            }
+
+            // Notify visibility changes
+            this.NotifyPropertyChanged(nameof(this.CrewVisible));
+            this.NotifyPropertyChanged(nameof(this.SelectDeploymentMethodVisible));
 
             // Refresh ability list
             this.RefreshAbilities();
@@ -197,23 +260,8 @@ namespace BattlegroundsApp.Modals.CompanyBuilder {
             }
         }
 
-        private void RefreshCost() {
-
-            // Get cost and update values
-            var cost = this.SquadSlot.SquadInstance.GetCost();
-            this.ManpowerCost = (int)cost.Manpower;
-            this.MunitionCost = (int)cost.Munitions;
-            this.FuelCost = (int)cost.Fuel;
-
-            // Notify property changes
-            this.NotifyPropertyChanged(nameof(this.ManpowerCost));
-            this.NotifyPropertyChanged(nameof(this.MunitionCost));
-            this.NotifyPropertyChanged(nameof(this.FuelCost));
-            this.NotifyPropertyChanged(nameof(this.ManpowerCostVisible));
-            this.NotifyPropertyChanged(nameof(this.MunitionCostVisible));
-            this.NotifyPropertyChanged(nameof(this.FuelCostVisible));
-
-        }
+        private void RefreshCost() =>
+            this.CostField.Cost = this.SquadSlot.SquadInstance.GetCost(); // Get cost and update values
 
         private void OnDeploymentMethodClicked(object sender, MouseButtonEventArgs e) {
             Image obj = sender as Image;
@@ -246,16 +294,22 @@ namespace BattlegroundsApp.Modals.CompanyBuilder {
             this.RefreshCost();
         }
 
-        private void RefreshTransportBlueprints() {
+        private void RefreshTransportBlueprints(bool isTow) {
 
-            // Get blueprints
-            List<IconComboBoxItem> blueprints = this.m_package.FactionSettings[this.SquadSlot.SquadInstance.SBP.Army].Transports
-                .Select(x => BlueprintManager.FromBlueprintName<SquadBlueprint>(x))
-                .Select(x => new IconComboBoxItem(App.ResourceHandler.GetIcon("unit_icons", x.UI.Icon), GameLocale.GetString(x.UI.ScreenName), x))
-                .ToList();
+            if (isTow) {
 
-            // Add to combobox
-            this.TransportBlueprintCombobox.SetItemSource(blueprints);
+            } else {
+
+                // Get blueprints
+                List<IconComboBoxItem> blueprints = this.m_package.FactionSettings[this.SquadSlot.SquadInstance.SBP.Army].Transports
+                    .Select(x => BlueprintManager.FromBlueprintName<SquadBlueprint>(x))
+                    .Select(x => new IconComboBoxItem(App.ResourceHandler.GetIcon("unit_icons", x.UI.Icon), GameLocale.GetString(x.UI.ScreenName), x))
+                    .ToList();
+
+                // Add to combobox
+                this.TransportBlueprintCombobox.SetItemSource(blueprints);
+
+            }
 
         }
 
@@ -284,7 +338,7 @@ namespace BattlegroundsApp.Modals.CompanyBuilder {
                 Image img = new() {
                     Source = x.Ico,
                     Tag = x,
-                    ToolTip = GameLocale.GetString(x.ABP.UI.ScreenName),
+                    ToolTip = new CostItemPopup(x.ABP, this.SquadSlot.SquadInstance),
                     Width = 36,
                     Height = 36
                 };
@@ -311,28 +365,52 @@ namespace BattlegroundsApp.Modals.CompanyBuilder {
             this.UpgradesCount = this.SquadSlot.SquadInstance.Upgrades.Count;
 
             // Check for upgrade count
-            if (this.m_availableUpgrades.Length > 0) {
-                
-                // Get upgrades
-                var ubps = this.m_availableUpgrades.Select(x => BlueprintManager.FromBlueprintName<UpgradeBlueprint>(x))
-                .Where(x => !string.IsNullOrEmpty(x.UI.Icon));
-
-                // Map to ubp presenter class
-                SelectSquadUpgrade[] presenters = ubps.Select(x => new SelectSquadUpgrade(x)).Where(x => x.Ico is not null).ToArray();
-
-                // Create images and append
-                presenters.ForEach(x => {
-                    Image img = new() {
-                        Source = x.Ico,
-                        Tag = x,
-                        ToolTip = GameLocale.GetString(x.UBP.UI.ScreenName),
-                        Width = 36,
-                        Height = 36
-                    };
-                    this.UpgradeList.Children.Add(img);
-                });
-
+            if (this.m_availableUpgrades.Length is <= 0) {
+                return;
             }
+
+            // Get upgrades
+            var ubps = this.m_availableUpgrades.Select(x => BlueprintManager.FromBlueprintName<UpgradeBlueprint>(x))
+            .Where(x => !string.IsNullOrEmpty(x.UI.Icon));
+
+            // Map to ubp presenter class
+            SelectSquadUpgrade[] presenters = ubps.Select(x => new SelectSquadUpgrade(x)).Where(x => x.Ico is not null).ToArray();
+
+            // Create images and append
+            presenters.ForEach(x => {
+                Image img = new() {
+                    Source = x.Ico,
+                    Tag = x,
+                    ToolTip = new CostItemPopup(x.UBP, this.SquadSlot.SquadInstance),
+                    Width = 36,
+                    Height = 36
+                };
+                this.UpgradeList.Children.Add(img);
+            });
+
+        }
+
+        private void RefreshCrew(Squad crew) {
+
+            // Get crew icon
+            if (App.ResourceHandler.HasIcon("unit_icons", crew.SBP.UI.Icon)) {
+                this.CrewIcon = App.ResourceHandler.GetIcon("unit_icons", crew.SBP.UI.Icon);
+            } else {
+                this.CrewIcon = new BitmapImage(new Uri("pack://application:,,,/Resources/ingame/no_icon.png"));
+            }
+
+            // Get crew sbp name
+            this.CrewName = GameLocale.GetString(crew.SBP.UI.ScreenName);
+
+            // Get veterancy
+            if (crew.VeterancyRank > 0) {
+                this.CrewVeterancy = new BitmapImage(new Uri($"pack://application:,,,/Resources/ingame/vet/vstar{crew.VeterancyRank}.png"));
+            }
+
+            // Notify property changes
+            this.NotifyPropertyChanged(nameof(this.CrewIcon));
+            this.NotifyPropertyChanged(nameof(this.CrewName));
+            this.NotifyPropertyChanged(nameof(this.CrewVeterancy));
 
         }
 

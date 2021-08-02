@@ -38,6 +38,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="Resources\app\checkmark.png" />
+    <None Remove="Resources\app\checkmark_not.png" />
     <None Remove="Resources\app\padlock_locked.png" />
     <None Remove="Resources\app\padlock_open.png" />
     <None Remove="Resources\campaign\icon_attrition.png" />
@@ -76,10 +78,19 @@
     <None Remove="Resources\ingame\unit_icons.dat" />
     <None Remove="Resources\ingame\unknown_map.png" />
     <None Remove="Resources\ingame\upgrade_icons.dat" />
+    <None Remove="Resources\ingame\vet\vstar1.png" />
+    <None Remove="Resources\ingame\vet\vstar2.png" />
+    <None Remove="Resources\ingame\vet\vstar3.png" />
+    <None Remove="Resources\ingame\vet\vstar4.png" />
+    <None Remove="Resources\ingame\vet\vstar5.png" />
+    <None Remove="Resources\ingame\vet\vstar_no.png" />
+    <None Remove="Resources\ingame\vet\vstar_yes.png" />
     <None Remove="Resources\ingame\west_german.png" />
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="Resources\app\checkmark.png" />
+    <Resource Include="Resources\app\checkmark_not.png" />
     <Resource Include="Resources\app\padlock_locked.png" />
     <Resource Include="Resources\app\padlock_open.png" />
   </ItemGroup>
@@ -134,6 +145,13 @@
     <Resource Include="Resources\ingame\unit_icons.dat" />
     <Resource Include="Resources\ingame\unknown_map.png" />
     <Resource Include="Resources\ingame\upgrade_icons.dat" />
+    <Resource Include="Resources\ingame\vet\vstar1.png" />
+    <Resource Include="Resources\ingame\vet\vstar2.png" />
+    <Resource Include="Resources\ingame\vet\vstar3.png" />
+    <Resource Include="Resources\ingame\vet\vstar4.png" />
+    <Resource Include="Resources\ingame\vet\vstar5.png" />
+    <Resource Include="Resources\ingame\vet\vstar_no.png" />
+    <Resource Include="Resources\ingame\vet\vstar_yes.png" />
     <Resource Include="Resources\ingame\west_german.png" />
   </ItemGroup>
 

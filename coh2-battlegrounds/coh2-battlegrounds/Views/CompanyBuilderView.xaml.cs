@@ -208,11 +208,8 @@ namespace BattlegroundsApp.Views {
             this.ShowCompany();
         }
 
-        private void OnSlotClicked(SquadSlotLarge squadSlot) {
-            SelectedSquadModal squadModal = new(squadSlot, this.m_activeModPackage);
-            // Some more stuff here?
-            this.ShowModal(squadModal);
-        }
+        private void OnSlotClicked(SquadSlotLarge squadSlot)
+            => this.ShowModal(new SelectedSquadModal(squadSlot, this.m_activeModPackage));
 
         private void OnDrop(object sender, DragEventArgs e) {
 
@@ -220,7 +217,7 @@ namespace BattlegroundsApp.Views {
 
                 SquadBlueprint squadBlueprint = e.Data.GetData("Squad") as SquadBlueprint;
 
-                UnitBuilder unitBuilder = new UnitBuilder().SetBlueprint(squadBlueprint);
+                UnitBuilder unitBuilder = new UnitBuilder().SetBlueprint(squadBlueprint).SetDeploymentPhase(DeploymentPhase.PhaseA);
                 Squad squad = this.Builder.AddAndCommitUnit(unitBuilder);
 
                 this.CompanySize++;

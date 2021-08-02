@@ -198,10 +198,6 @@
 		</template_reference>
 		<template_reference name="squadexts" value="sbpextensions\squad_upgrade_apply_ext">
 			<list name="upgrades">
-				<instance_reference name="upgrade" value="upgrade\soviet\items\base_conscript_molotov_unlock_mp" />
-				<instance_reference name="upgrade" value="upgrade\soviet\items\base_conscript_oorah_unlock_mp" />
-				<instance_reference name="upgrade" value="upgrade\soviet\items\base_conscript_at_grenade_unlock_mp" />
-				<instance_reference name="upgrade" value="upgrade\soviet\items\base_conscript_repair_unlock_mp" />
 			</list>
 		</template_reference>
 		<template_reference name="squadexts" value="sbpextensions\squad_upgrade_ext">

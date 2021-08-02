@@ -6,7 +6,7 @@ using Battlegrounds.Game.Gameplay;
 
 namespace Battlegrounds.Game.Database.Extensions.RequirementTypes {
 
-    public class RequireNot : RequirementExtension {
+    public class RequireNot : RequirementExtension, IRequirementList {
 
         public RequirementExtension[] Requirements { get; }
 

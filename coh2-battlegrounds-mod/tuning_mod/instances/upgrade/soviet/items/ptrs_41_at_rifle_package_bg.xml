@@ -1,4 +1,4 @@
-<instance description="DP-28 Light Machine Gun" template="upgrade">
+<instance description="" template="upgrade">
 	<group name="upgrade_bag">
 		<bool name="enable_in_hold" value="True" />
 		<float name="global_max_limit" value="0" />
@@ -11,7 +11,7 @@
 			<string name="code_3" value="" />
 		</group>
 		<group name="speech_code_3">
-			<string name="code_1" value="d28" />
+			<string name="code_1" value="atr" />
 			<string name="code_2" value="" />
 			<string name="code_3" value="" />
 		</group>
@@ -21,31 +21,36 @@
 				<float name="command" value="0" />
 				<float name="fuel" value="0" />
 				<float name="manpower" value="0" />
-				<float name="munition" value="75" />
+				<float name="munition" value="0" />
 				<float name="popcap" value="0" />
 			</group>
-			<float name="time_seconds" value="40" />
+			<float name="time_seconds" value="20" />
 		</group>
 		<bool name="ui_event_cue" value="True" />
 		<enum name="ui_group" value="unit_upgrade_panel" />
-		<int name="ui_position" value="1" />
+		<int name="ui_position" value="2" />
 		<group name="ui_info">
-			<locstring name="extra_text" value="17" mod="142b113740474c82a60b0a428bd553d5" />
-			<locstring name="help_text" value="16" mod="142b113740474c82a60b0a428bd553d5" />
-			<string name="hotkey_name" value="M" />
-			<icon name="icon_name" value="Icons_upgrades_icon_upgrade_soviet_dp28_lmg" />
+			<locstring name="extra_text" value="11038236" />
+			<locstring name="help_text" value="11007682" />
+			<string name="hotkey_name" value="U" />
+			<icon name="icon_name" value="Icons_upgrades_icon_upgrade_soviet_ptrs_41" />
 			<bool name="reveal_for_decryption" value="False" />
-			<locstring name="screen_name" value="15" mod="142b113740474c82a60b0a428bd553d5" />
-			<locstring name="brief_text" value="16" mod="142b113740474c82a60b0a428bd553d5" />
-			<locstring name="screen_name_short" value="0" />
+			<locstring name="screen_name" value="11007678" />
+			<locstring name="brief_text" value="11038811" />
+			<locstring name="screen_name_short" value="11045852" />
 			<enum name="ui_style" value="default" />
 		</group>
 		<bool name="validate_actions" value="True" />
 		<list name="actions">
 			<template_reference name="action" value="action\slot_item_add">
-				<instance_reference name="slot_item" value="slot_item\soviet\small_arms\dp-28_light_machine_gun_package_bg" mod="142b113740474c82a60b0a428bd553d5" />
+				<instance_reference name="slot_item" value="slot_item\soviet\anti_tank_weapon\ptrs_41_anti_tank_rifle_guard_troop_mp" />
 				<bool name="permanent" value="True" />
-				<uniqueid name="id" value="1073742305" />
+				<uniqueid name="id" value="1073744681" />
+			</template_reference>
+			<template_reference name="action" value="action\slot_item_add">
+				<instance_reference name="slot_item" value="slot_item\soviet\anti_tank_weapon\ptrs_41_anti_tank_rifle_guard_troop_mp" />
+				<bool name="permanent" value="True" />
+				<uniqueid name="id" value="1073744682" />
 			</template_reference>
 		</list>
 		<list name="requirements">
@@ -69,5 +74,5 @@
 		<list name="on_begin_actions">
 		</list>
 	</group>
-	<uniqueid name="pbgid" value="1073741825" />
+	<uniqueid name="pbgid" value="1073741833" />
 </instance>

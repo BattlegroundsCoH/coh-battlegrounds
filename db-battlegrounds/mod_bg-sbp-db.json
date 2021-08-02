@@ -4085,14 +4085,12 @@
       "tank_detection",
       "mobile_infantry"
     ],
-    "SlotPickupCapacity": 1,
+    "SlotPickupCapacity": 2,
     "CanPickupItems": true,
-    "UpgradeCapacity": -1,
-    "AppliedUpgrades": [
-      "base_conscript_molotov_unlock_mp",
-      "base_conscript_oorah_unlock_mp",
-      "base_conscript_at_grenade_unlock_mp",
-      "base_conscript_repair_unlock_mp"
+    "UpgradeCapacity": 1,
+    "Upgrades": [
+      "dp-28_lmg_upgrade_bg",
+      "ppsh-41_sub_machine_gun_upgrade_bg"
     ]
   },
   {
@@ -4159,14 +4157,12 @@
       "tank_detection",
       "mobile_infantry"
     ],
-    "SlotPickupCapacity": 1,
+    "SlotPickupCapacity": 2,
     "CanPickupItems": true,
-    "UpgradeCapacity": -1,
-    "AppliedUpgrades": [
-      "base_conscript_molotov_unlock_mp",
-      "base_conscript_oorah_unlock_mp",
-      "base_conscript_at_grenade_unlock_mp",
-      "base_conscript_repair_unlock_mp"
+    "UpgradeCapacity": 1,
+    "Upgrades": [
+      "dp-28_lmg_upgrade_bg",
+      "ppsh-41_sub_machine_gun_upgrade_bg"
     ]
   },
   {
@@ -4328,8 +4324,6 @@
       "tank_detection",
       "mobile_infantry"
     ],
-    "SlotPickupCapacity": 2,
-    "CanPickupItems": true,
     "UpgradeCapacity": 1
   },
   {
@@ -4390,8 +4384,6 @@
       "tank_detection",
       "mobile_infantry"
     ],
-    "SlotPickupCapacity": 2,
-    "CanPickupItems": true,
     "UpgradeCapacity": 1
   },
   {
@@ -4442,11 +4434,12 @@
       "rapid_conscription",
       "mobile_infantry"
     ],
-    "SlotPickupCapacity": 4,
+    "SlotPickupCapacity": 3,
     "CanPickupItems": true,
-    "UpgradeCapacity": -1,
-    "AppliedUpgrades": [
-      "ptrs_41_at_rifle_package_guard_troop_mp"
+    "UpgradeCapacity": 1,
+    "Upgrades": [
+      "ptrs_41_at_rifle_package_bg",
+      "dp-28_lmg_upgrade_bg"
     ]
   },
   {
@@ -4617,9 +4610,9 @@
     ],
     "SlotPickupCapacity": 2,
     "CanPickupItems": true,
-    "UpgradeCapacity": -1,
-    "AppliedUpgrades": [
-      ""
+    "UpgradeCapacity": 1,
+    "Upgrades": [
+      "soviet_flamethrower_bg"
     ]
   },
   {
@@ -4690,13 +4683,7 @@
     ],
     "SlotPickupCapacity": 1,
     "CanPickupItems": true,
-    "UpgradeCapacity": -1,
-    "AppliedUpgrades": [
-      "base_conscript_molotov_unlock_mp",
-      "base_conscript_oorah_unlock_mp",
-      "base_conscript_at_grenade_unlock_mp",
-      "base_conscript_repair_unlock_mp"
-    ]
+    "UpgradeCapacity": -1
   },
   {
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
@@ -4806,8 +4793,6 @@
       "aef_vehicle_crew",
       "infantry"
     ],
-    "SlotPickupCapacity": 2,
-    "CanPickupItems": true,
     "UpgradeCapacity": -1
   },
   {
@@ -4864,8 +4849,6 @@
       "aef_vehicle_crew",
       "infantry"
     ],
-    "SlotPickupCapacity": 2,
-    "CanPickupItems": true,
     "UpgradeCapacity": -1
   },
   {
@@ -4875,7 +4858,7 @@
     "Army": "soviet",
     "Display": {
       "LocaleName": "$142b113740474c82a60b0a428bd553d5:41",
-      "LocaleDescriptionLong": "$142b113740474c82a60b0a428bd553d5:10",
+      "LocaleDescriptionLong": "$142b113740474c82a60b0a428bd553d5:60",
       "LocaleDescriptionShort": "$142b113740474c82a60b0a428bd553d5:11",
       "Icon": "Icons_units_unit_soviet_engineer",
       "Symbol": "Icons_symbols_building_soviet_heavy_factory_symbol",
@@ -4922,8 +4905,6 @@
       "aef_vehicle_crew",
       "infantry"
     ],
-    "SlotPickupCapacity": 2,
-    "CanPickupItems": true,
     "UpgradeCapacity": -1
   }
 ]

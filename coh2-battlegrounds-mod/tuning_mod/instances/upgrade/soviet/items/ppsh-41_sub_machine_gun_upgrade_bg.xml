@@ -42,35 +42,6 @@
 		</group>
 		<bool name="validate_actions" value="True" />
 		<list name="actions">
-			<template_reference name="action" value="action\remove_weapon">
-				<bool name="fire_and_forget" value="False" />
-				<float name="hardpoint" value="1" />
-				<uniqueid name="id" value="1073742012" />
-			</template_reference>
-			<template_reference name="action" value="action\add_weapon">
-				<float name="hardpoint" value="1" />
-				<group name="weapon">
-					<group name="heading">
-						<float name="x" value="0" />
-						<float name="y" value="0" />
-						<float name="z" value="1" />
-					</group>
-					<float name="length" value="0" />
-					<group name="origin">
-						<float name="x" value="0" />
-						<float name="y" value="0.5" />
-						<float name="z" value="0" />
-					</group>
-					<enum name="type" value="default" />
-					<instance_reference name="weapon" value="weapon\soviet\small_arms\machine_gun\sub_machine_gun\shock troops_ppsh-41_sub_machine_gun_mp" />
-				</group>
-				<uniqueid name="id" value="1073742013" />
-			</template_reference>
-			<template_reference name="action" value="action\change_weapon">
-				<float name="hardpoint" value="1" />
-				<instance_reference name="weapon" value="weapon\soviet\small_arms\machine_gun\sub_machine_gun\shock troops_ppsh-41_sub_machine_gun_mp" />
-				<uniqueid name="id" value="1073742014" />
-			</template_reference>
 			<template_reference name="action" value="action\apply_modifiers_action">
 				<float name="duration" value="0" />
 				<bool name="permanent" value="False" />
@@ -88,26 +59,24 @@
 				<uniqueid name="id" value="1073742015" />
 			</template_reference>
 			<template_reference name="action" value="action\slot_item_add">
-				<instance_reference name="slot_item" value="slot_item\soviet\small_arms\ppsh41_assault_package_dummy_item_bg" mod="142b113740474c82a60b0a428bd553d5" />
+				<instance_reference name="slot_item" value="slot_item\soviet\small_arms\ppsh41_assault_package_bg" mod="142b113740474c82a60b0a428bd553d5" />
 				<bool name="permanent" value="True" />
 				<uniqueid name="id" value="1073742016" />
 			</template_reference>
+			<template_reference name="action" value="action\slot_item_add">
+				<instance_reference name="slot_item" value="slot_item\soviet\small_arms\ppsh41_assault_package_bg" mod="142b113740474c82a60b0a428bd553d5" />
+				<bool name="permanent" value="True" />
+				<uniqueid name="id" value="1073744683" />
+			</template_reference>
 		</list>
 		<list name="requirements">
-			<template_reference name="required" value="requirements\required_squad_upgrade">
-				<enum name="reason" value="usage_and_display" />
-				<locstring name="ui_name" value="0" />
-				<bool name="include_queued" value="True" />
-				<bool name="is_present" value="False" />
-				<instance_reference name="upgrade_name" value="upgrade\soviet\items\ppsh-41_sub_machine_gun_upgrade_mp" />
-			</template_reference>
-			<template_reference name="required" value="requirements\required_in_territory">
+			<template_reference name="required" value="requirements\required_player_upgrade">
 				<enum name="reason" value="usage" />
-				<locstring name="ui_name" value="0" />
-				<bool name="in_supply" value="True" />
-				<bool name="is_secured" value="False" />
-				<bool name="is_secured_by_checkpoint" value="False" />
-				<bool name="not_in_transition" value="False" />
+				<locstring name="ui_name" value="59" mod="142b113740474c82a60b0a428bd553d5" />
+				<bool name="is_present" value="True" />
+				<float name="max_completed" value="100" />
+				<float name="min_completed" value="1" />
+				<instance_reference name="upgrade_name" value="upgrade\battlegrounds\no_ingame" mod="142b113740474c82a60b0a428bd553d5" />
 			</template_reference>
 		</list>
 		<icon name="ui_kicker_icon_name" value="" />

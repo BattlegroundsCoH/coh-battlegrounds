@@ -197,12 +197,12 @@
 		</template_reference>
 		<template_reference name="squadexts" value="sbpextensions\squad_upgrade_apply_ext">
 			<list name="upgrades">
-				<instance_reference name="upgrade" value="" />
 			</list>
 		</template_reference>
 		<template_reference name="squadexts" value="sbpextensions\squad_upgrade_ext">
-			<float name="number_of_slots" value="-1" />
+			<float name="number_of_slots" value="1" />
 			<list name="upgrades">
+				<instance_reference name="upgrade" value="upgrade\soviet\items\soviet_flamethrower_bg" mod="142b113740474c82a60b0a428bd553d5" />
 			</list>
 		</template_reference>
 		<template_reference name="squadexts" value="sbpextensions\squad_combat_behaviour_ext">

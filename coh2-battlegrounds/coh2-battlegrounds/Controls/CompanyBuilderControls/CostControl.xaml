@@ -1,0 +1,32 @@
+﻿<UserControl x:Class="BattlegroundsApp.Controls.CompanyBuilderControls.CostControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:BattlegroundsApp.Controls.CompanyBuilderControls"
+             mc:Ignorable="d" 
+             d:DesignHeight="32" d:DesignWidth="128">
+    <StackPanel Orientation="Horizontal">
+        <Image Width="24" 
+                   Visibility="{Binding ManpowerCostVisible}"
+               Source="pack://application:,,,/Resources/ingame/resource_icons/botb_manpower.png">
+        </Image>
+        <Label Content="{Binding ManpowerCost}" 
+                               Visibility="{Binding ManpowerCostVisible}"
+               VerticalContentAlignment="Center" HorizontalContentAlignment="Left"/>
+        <Image Width="24"
+                               Visibility="{Binding MunitionCostVisible}"
+               Source="pack://application:,,,/Resources/ingame/resource_icons/botb_munitions.png">
+        </Image>
+        <Label Content="{Binding MunitionCost}" 
+                               Visibility="{Binding MunitionCostVisible}"
+               VerticalContentAlignment="Center" HorizontalContentAlignment="Left"/>
+        <Image Width="24"
+                               Visibility="{Binding FuelCostVisible}"
+               Source="pack://application:,,,/Resources/ingame/resource_icons/botb_fuel.png">
+        </Image>
+        <Label Content="{Binding FuelCost}" 
+                               Visibility="{Binding FuelCostVisible}"
+               VerticalContentAlignment="Center" HorizontalContentAlignment="Left"/>
+    </StackPanel>
+</UserControl>

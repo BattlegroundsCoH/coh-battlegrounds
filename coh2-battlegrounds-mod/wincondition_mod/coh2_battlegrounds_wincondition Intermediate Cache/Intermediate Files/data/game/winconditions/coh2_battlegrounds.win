@@ -12,27 +12,27 @@ starting_building_replacements = {
         starting_buildings = {
 	        {
                 race = "german",
-                building = "territory_point_invisible_command",
+                building = "142b113740474c82a60b0a428bd553d5:territory_point_invisible_command",
                 starting_squads = {},
             },
 	        {
                 race = "west_german",
-                building = "territory_point_invisible_command",
+                building = "142b113740474c82a60b0a428bd553d5:territory_point_invisible_command",
                 starting_squads = {},
             },
 	        {
                 race = "british",
-                building = "territory_point_invisible_command",
+                building = "142b113740474c82a60b0a428bd553d5:territory_point_invisible_command",
                 starting_squads = {},
             },
 	        {
                 race = "aef",
-		        building = "territory_point_invisible_command",
+		        building = "142b113740474c82a60b0a428bd553d5:territory_point_invisible_command",
 		        starting_squads = {},
             },
             {
                 race = "soviet",
-		        building = "territory_point_invisible_command",
+		        building = "142b113740474c82a60b0a428bd553d5:territory_point_invisible_command",
 		        starting_squads = {},
             },
         },
