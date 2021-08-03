@@ -282,6 +282,14 @@ namespace Battlegrounds.Game.DataCompany {
         }
 
         /// <summary>
+        /// Get the amount of units in the specified deployment <paramref name="phase"/>.
+        /// </summary>
+        /// <param name="phase">The phase to fetch amount of units from.</param>
+        /// <returns>The amount of units in specific phase</returns>
+        public virtual int CountUnitsInPhase(DeploymentPhase phase)
+            => this.m_companyTarget.Units.Count(x => x.DeploymentPhase == phase);
+
+        /// <summary>
         /// Commit all unsaved changes to the <see cref="Company"/> target instance.
         /// </summary>
         /// <remarks>

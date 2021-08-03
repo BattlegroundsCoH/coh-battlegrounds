@@ -23,6 +23,11 @@ namespace Battlegrounds.Game.DataCompany {
         /// </summary>
         public const int MAX_SIZE = 40;
 
+        /// <summary>
+        /// The max amount of initially deployed units.
+        /// </summary>
+        public const int MAX_INITIAL = 5;
+
         private string m_checksum;
         private string m_lastEditVersion;
         private ushort m_nextSquadId;

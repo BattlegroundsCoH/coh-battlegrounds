@@ -6,6 +6,7 @@ using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Controls;
 
+using Battlegrounds.Functional;
 using Battlegrounds.Game.Database;
 using Battlegrounds.Game.Database.Management;
 using Battlegrounds.Game.DataCompany;
@@ -148,7 +149,7 @@ namespace BattlegroundsApp.Views {
             foreach (SquadBlueprint squad in this.SquadList) {
                 SquadSlotSmall unitSlot = new SquadSlotSmall(squad);
                 unitSlot.OnHoverUpdate += this.OnSlotHover;
-                this.AvailableUnitsStack.Children.Add(unitSlot);
+                _ = this.AvailableUnitsStack.Children.Add(unitSlot);
             }
 
         }
@@ -174,21 +175,11 @@ namespace BattlegroundsApp.Views {
             this.VehicleWrap.Children.Clear();
             //this.AbilityList.Children.Clear();
 
-            // TODO: Make UnitSlot addition more generic
-            this.Builder.EachUnit(x => {
-                SquadSlotLarge unitSlot = new(x);
-                unitSlot.OnClick += this.OnSlotClicked;
-                if (x.GetCategory(true) is "infantry") {
-                    this.InfantryWrap.Children.Add(unitSlot);
-                } else if (x.GetCategory(true) is "team_weapon") {
-                    this.SupportWrap.Children.Add(unitSlot);
-                } else if (x.GetCategory(true) is "vehicle") {
-                    this.VehicleWrap.Children.Add(unitSlot);
-                }
+            // Add all units
+            this.Builder.EachUnit(AddUnitToDisplay);
 
-                // TODO: Add abilities to list
+            // TODO: Add abilities to list
 
-            });
         }
 
         public void AddUnitToCompany(UnitBuilder unitBuilder) {
@@ -217,17 +208,69 @@ namespace BattlegroundsApp.Views {
 
                 SquadBlueprint squadBlueprint = e.Data.GetData("Squad") as SquadBlueprint;
 
-                UnitBuilder unitBuilder = new UnitBuilder().SetBlueprint(squadBlueprint).SetDeploymentPhase(DeploymentPhase.PhaseA);
+                UnitBuilder unitBuilder = new UnitBuilder().SetBlueprint(squadBlueprint).SetDeploymentPhase(this.GetRecommendedDeploymentPhase());
                 Squad squad = this.Builder.AddAndCommitUnit(unitBuilder);
 
                 this.CompanySize++;
+                this.NotifyPropertyChanged(nameof(CompanyUnitHeaderItem));
 
-                this.ShowCompany();
+                // Add to display
+                this.AddUnitToDisplay(squad);
 
                 e.Effects = DragDropEffects.Move;
                 e.Handled = true;
 
             }
+        }
+
+        private DeploymentPhase GetRecommendedDeploymentPhase() {
+
+            // Get deployment phase counts
+            var dict = new Dictionary<DeploymentPhase, int>() {
+                [DeploymentPhase.PhaseInitial] = this.Builder.CountUnitsInPhase(DeploymentPhase.PhaseInitial),
+                [DeploymentPhase.PhaseA] = this.Builder.CountUnitsInPhase(DeploymentPhase.PhaseA),
+                [DeploymentPhase.PhaseB] = this.Builder.CountUnitsInPhase(DeploymentPhase.PhaseB),
+                [DeploymentPhase.PhaseC] = this.Builder.CountUnitsInPhase(DeploymentPhase.PhaseC),
+            };
+
+            // Remove initial if already full
+            if (dict[DeploymentPhase.PhaseInitial] >= Company.MAX_INITIAL) {
+                dict.Remove(DeploymentPhase.PhaseInitial);
+            }
+
+            // Calc constant threshold
+            const double removePhaseThreshold = (Company.MAX_SIZE - Company.MAX_INITIAL) * (1 / 3.0);
+
+            // Remove all where 1/3 is occupied
+            var phases = dict.Where(x => x.Value <= removePhaseThreshold).ToDictionary();
+
+            // Get the one with the smallest value
+            var min = phases.MinPair(x => x.Value);
+
+            // Return result
+            return min.Key;
+
+        }
+
+        private void AddUnitToDisplay(Squad squad) {
+
+            SquadSlotLarge unitSlot = new(squad);
+            unitSlot.OnClick += this.OnSlotClicked;
+
+            switch (squad.GetCategory(true)) {
+                case "infantry":
+                    _ = this.InfantryWrap.Children.Add(unitSlot);
+                    break;
+                case "team_weapon":
+                    _ = this.SupportWrap.Children.Add(unitSlot);
+                    break;
+                case "vehicle":
+                    _ = this.VehicleWrap.Children.Add(unitSlot);
+                    break;
+                default:
+                    break;
+            }
+
         }
 
     }
