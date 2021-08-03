@@ -193,14 +193,41 @@ namespace BattlegroundsApp.Views {
             this.ShowCompany();
         }
 
-        public void RemoveUnitFromCompany(uint unitID) {
-            this.Builder.RemoveUnit(unitID);
+        public void RemoveUnitFromCompany(Squad squad) {
+
+            // Remove unit
+            this.Builder.RemoveUnit(squad.SquadID);
+
+            // Update company Size
             this.CompanySize--;
-            this.ShowCompany();
+            this.NotifyPropertyChanged(nameof(this.CompanyUnitHeaderItem));
+
         }
 
         private void OnSlotClicked(SquadSlotLarge squadSlot)
             => this.ShowModal(new SelectedSquadModal(squadSlot, this.m_activeModPackage));
+
+        private void OnSlotRemoveClicked(SquadSlotLarge squadSlot) {
+
+            // Determine container and remove from there
+            switch (squadSlot.SquadInstance.GetCategory(true)) {
+                case "infantry":
+                    this.InfantryWrap.Children.Remove(squadSlot);
+                    break;
+                case "team_weapon":
+                    this.SupportWrap.Children.Remove(squadSlot);
+                    break;
+                case "vehicle":
+                    this.VehicleWrap.Children.Remove(squadSlot);
+                    break;
+                default:
+                    break;
+            }
+
+            // Remove from ocmpany
+            this.RemoveUnitFromCompany(squadSlot.SquadInstance);
+
+        }
 
         private void OnDrop(object sender, DragEventArgs e) {
 
@@ -212,7 +239,7 @@ namespace BattlegroundsApp.Views {
                 Squad squad = this.Builder.AddAndCommitUnit(unitBuilder);
 
                 this.CompanySize++;
-                this.NotifyPropertyChanged(nameof(CompanyUnitHeaderItem));
+                this.NotifyPropertyChanged(nameof(this.CompanyUnitHeaderItem));
 
                 // Add to display
                 this.AddUnitToDisplay(squad);
@@ -221,6 +248,7 @@ namespace BattlegroundsApp.Views {
                 e.Handled = true;
 
             }
+
         }
 
         private DeploymentPhase GetRecommendedDeploymentPhase() {
@@ -256,6 +284,7 @@ namespace BattlegroundsApp.Views {
 
             SquadSlotLarge unitSlot = new(squad);
             unitSlot.OnClick += this.OnSlotClicked;
+            unitSlot.OnRemove += this.OnSlotRemoveClicked;
 
             switch (squad.GetCategory(true)) {
                 case "infantry":

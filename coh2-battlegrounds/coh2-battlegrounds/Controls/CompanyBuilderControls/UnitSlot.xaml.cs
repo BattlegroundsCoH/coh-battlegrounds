@@ -90,7 +90,7 @@ namespace BattlegroundsApp.Controls.CompanyBuilderControls {
             var result = YesNoDialogViewModel.ShowYesNoDialog("Remove Unit", "Are you sure? This action can not be undone.");
 
             if (result == YesNoDialogResult.Confirm) {
-                this._companyBuilderView.RemoveUnitFromCompany(SlotOccupantID);
+                //this._companyBuilderView.RemoveUnitFromCompany(SlotOccupantID);
             }
         }
     }
