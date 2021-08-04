@@ -17,10 +17,7 @@ namespace BattlegroundsApp.Controls.CompanyBuilderControls {
 
         public CostExtension Cost { get; }
 
-        public string[] Abilities { get; }
-
         public ObjectHoverData(SquadBlueprint sbp) {
-            this.Abilities = sbp.Abilities;
             this.Name = GameLocale.GetString(sbp.UI.ScreenName);
             this.Description = GameLocale.GetString(sbp.UI.ShortDescription);
             this.Icon = App.ResourceHandler.GetIcon("unit_icons", sbp.UI.Icon);
@@ -28,7 +25,6 @@ namespace BattlegroundsApp.Controls.CompanyBuilderControls {
         }
 
         public ObjectHoverData(EntityBlueprint ebp) {
-            this.Abilities = ebp.Abilities;
             this.Name = GameLocale.GetString(ebp.UI.ScreenName);
             this.Description = GameLocale.GetString(ebp.UI.ShortDescription);
             //this.Icon = $"pack://application:,,,/Resources/ingame/object_icons/{ebp.Display.Icon}.png";

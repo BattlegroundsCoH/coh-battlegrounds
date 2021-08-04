@@ -21,12 +21,9 @@
 
             <local:CostControl x:Name="CostDisplay" Canvas.Bottom="0" Height="24"/>
 
-            <!-- TODO: REPLACE THE ICON OF TRANSPORT TO THE ACTUAL TRANSPORT ICON -->
-            <Image Canvas.Right="5" Canvas.Bottom="0" Visibility="{Binding SquadIsTransported, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter=False}">
-                <Image.Source>
-                    <BitmapImage DecodePixelWidth="23" DecodePixelHeight="23" UriSource="pack://application:,,,/Resources/ingame/test_unit_transport.png"/>
-                </Image.Source>
-            </Image>
+            <Image Canvas.Right="5" Canvas.Bottom="0" 
+                   Visibility="{Binding SquadIsTransported, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter=False}"
+                   Source="{Binding SquadTransportSymbol}"/>
 
             <Image  Canvas.Left="50" Canvas.Bottom="24" Width="36" Height="22" 
                     Source="{Binding SquadVeterancy}"/>

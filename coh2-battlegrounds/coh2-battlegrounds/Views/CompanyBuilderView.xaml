@@ -123,13 +123,7 @@
             </StackPanel>
             <TextBlock Text="{Binding Path=HoverData.Description}" TextWrapping="Wrap"/>
             <!-- Price -->
-            <StackPanel>
-                
-            </StackPanel>
-            <!-- Abilities -->
-            <WrapPanel>
-                
-            </WrapPanel>
+            <card:CostControl x:Name="HoverDataCost"/>
         </StackPanel>
         <StackPanel Grid.Row="1" Grid.Column="2"
                     Visibility="{Binding Path=InverseHoverDataVisibility}">
@@ -147,15 +141,24 @@
                 <dropArea:DropArea AllowDrop="True" Drop="OnDrop" Background="White" BorderThickness="1.5" BorderBrush="Black">
                     <ScrollViewer>
                         <StackPanel>
-                            <WrapPanel x:Name="InfantryWrap" Orientation="Horizontal">
-
-                            </WrapPanel>
-                            <WrapPanel x:Name="SupportWrap" Orientation="Horizontal">
-
-                            </WrapPanel>
-                            <WrapPanel x:Name="VehicleWrap" Orientation="Horizontal">
-
-                            </WrapPanel>
+                            <StackPanel>
+                                <Label Content="Infantry" FontStyle="Italic"/>
+                                <Separator Margin="2.5"/>
+                                <WrapPanel x:Name="InfantryWrap" Orientation="Horizontal"/>
+                                <Separator Margin="2.5"/>
+                            </StackPanel>
+                            <StackPanel>
+                                <Label Content="Support Weapons" FontStyle="Italic"/>
+                                <Separator Margin="2.5"/>
+                                <WrapPanel x:Name="SupportWrap" Orientation="Horizontal"/>
+                                <Separator Margin="2.5"/>
+                            </StackPanel>
+                            <StackPanel>
+                                <Label Content="Vehicles" FontStyle="Italic"/>
+                                <Separator Margin="2.5"/>
+                                <WrapPanel x:Name="VehicleWrap" Orientation="Horizontal"/>
+                                <Separator Margin="2.5"/>
+                            </StackPanel>
                         </StackPanel>
                     </ScrollViewer>
                 </dropArea:DropArea>

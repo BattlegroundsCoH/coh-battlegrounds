@@ -336,7 +336,13 @@ namespace Battlegrounds.Game.DataCompany {
         /// 
         /// </summary>
         /// <param name="squad"></param>
-        public void EachUnit(Action<Squad> squad) => this.m_companyTarget.Units.ForEach(squad);
+        public void EachUnit(Action<Squad> action, Func<Squad, int> sort) => this.m_companyTarget.Units.OrderBy(sort).ForEach(action);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="action"></param>
+        public void EachUnit(Action<Squad> action) => this.EachUnit(action, x => x.SquadID);
 
     }
 

@@ -163,6 +163,7 @@ namespace BattlegroundsApp.Views {
             }
             this.HoverDataVisiblity = Visibility.Visible;
             this.HoverData = unitSlot.HoverData;
+            this.HoverDataCost.Cost = this.HoverData.Cost;
             this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(this.HoverData)));
             this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(this.HoverDataVisiblity)));
             this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(this.InverseHoverDataVisibility)));
@@ -176,7 +177,7 @@ namespace BattlegroundsApp.Views {
             //this.AbilityList.Children.Clear();
 
             // Add all units
-            this.Builder.EachUnit(this.AddUnitToDisplay);
+            this.Builder.EachUnit(this.AddUnitToDisplay, x => (int)x.DeploymentPhase);
 
             // TODO: Add abilities to list
 

@@ -1,4 +1,5 @@
-﻿using Battlegrounds.Game.Database.Extensions;
+﻿using Battlegrounds.Game.Database;
+using Battlegrounds.Game.Database.Extensions;
 using Battlegrounds.Game.Gameplay;
 
 using BattlegroundsApp.Dialogs.YesNo;
@@ -21,6 +22,8 @@ namespace BattlegroundsApp.Controls.CompanyBuilderControls {
         public CostExtension SquadCost { get; set; }
         public ImageSource SquadVeterancy { get; set; }
         public bool SquadIsTransported { get; set; }
+
+        public ImageSource SquadTransportSymbol { get; set; }
 
         public Squad SquadInstance { get; }
 
@@ -65,6 +68,9 @@ namespace BattlegroundsApp.Controls.CompanyBuilderControls {
 
             // Set transport
             this.SquadIsTransported = this.SquadInstance.SupportBlueprint is not null;
+            if (this.SquadIsTransported && App.ResourceHandler.HasIcon("symbol_icons", (this.SquadInstance.SupportBlueprint as SquadBlueprint).UI.Symbol)) {
+                this.SquadTransportSymbol = App.ResourceHandler.GetIcon("symbol_icons", (this.SquadInstance.SupportBlueprint as SquadBlueprint).UI.Symbol);
+            }
 
             // Refresh
             this.PropertyChanged?.Invoke(this, new(nameof(this.SquadName)));
