@@ -11,7 +11,14 @@ namespace BattlegroundsApp.Controls.CompanyBuilderControls {
     /// </summary>
     public partial class CostControl : UserControl, INotifyPropertyChanged {
 
-        public static readonly DependencyProperty CostProperty = DependencyProperty.Register(nameof(Cost), typeof(CostExtension), typeof(CostControl));
+        /// <summary>
+        /// Identifies the <see cref="Cost"/> property.
+        /// </summary>
+        public static readonly DependencyProperty CostProperty
+            = DependencyProperty.Register(nameof(Cost), typeof(CostExtension), typeof(CostControl),
+                new FrameworkPropertyMetadata(new CostExtension(),
+                    FrameworkPropertyMetadataOptions.AffectsRender,
+                    (a, b) => (a as CostControl).Cost = b.NewValue as CostExtension));
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -29,21 +36,28 @@ namespace BattlegroundsApp.Controls.CompanyBuilderControls {
 
         public CostExtension Cost {
             get => this.GetValue(CostProperty) as CostExtension;
-            set {
-                this.SetValue(CostProperty, value);
-                this.PropertyChanged?.Invoke(this, new(nameof(this.ManpowerCost)));
-                this.PropertyChanged?.Invoke(this, new(nameof(this.ManpowerCostVisible)));
-                this.PropertyChanged?.Invoke(this, new(nameof(this.MunitionCost)));
-                this.PropertyChanged?.Invoke(this, new(nameof(this.MunitionCostVisible)));
-                this.PropertyChanged?.Invoke(this, new(nameof(this.FuelCost)));
-                this.PropertyChanged?.Invoke(this, new(nameof(this.FuelCostVisible)));
-                this.PropertyChanged?.Invoke(this, new(nameof(this.Cost)));
-            }
+            set => this.SetCost(value);
         }
 
         public CostControl() {
             this.DataContext = this;
             this.InitializeComponent();
+        }
+
+        private void SetCost(CostExtension value) {
+
+            // Set actual value
+            this.SetValue(CostProperty, value);
+
+            // Notify value changes
+            this.PropertyChanged?.Invoke(this, new(nameof(this.ManpowerCost)));
+            this.PropertyChanged?.Invoke(this, new(nameof(this.ManpowerCostVisible)));
+            this.PropertyChanged?.Invoke(this, new(nameof(this.MunitionCost)));
+            this.PropertyChanged?.Invoke(this, new(nameof(this.MunitionCostVisible)));
+            this.PropertyChanged?.Invoke(this, new(nameof(this.FuelCost)));
+            this.PropertyChanged?.Invoke(this, new(nameof(this.FuelCostVisible)));
+            this.PropertyChanged?.Invoke(this, new(nameof(this.Cost)));
+
         }
 
     }

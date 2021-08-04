@@ -26,7 +26,7 @@ using BattlegroundsApp.Resources;
  * TODO:
  *  Slot Items
  *  Crew Slot Items
- * 
+ * Trigger slot item refresh when closing (Will require some minor changes to the modal system and how it handles closing modals)
  * 
  */
 
@@ -442,6 +442,16 @@ namespace BattlegroundsApp.Modals.CompanyBuilder {
             // TEMP SOLUTION
             this.DeployIcon3.IconState = IconState.Disabled;
             this.DeployIcon4.IconState = IconState.Disabled;
+
+        }
+
+        protected override void OnModalClosing(ModalCloseEventArgs closeArgs) {
+
+            // Call base
+            base.OnModalClosing(closeArgs);
+
+            // Update slot
+            this.SquadSlot.RefreshData();
 
         }
 

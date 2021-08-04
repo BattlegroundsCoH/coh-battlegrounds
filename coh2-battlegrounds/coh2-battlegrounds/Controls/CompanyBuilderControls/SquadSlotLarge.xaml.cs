@@ -5,6 +5,7 @@ using BattlegroundsApp.Dialogs.YesNo;
 using BattlegroundsApp.Resources;
 
 using System;
+using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -13,7 +14,7 @@ using System.Windows.Media.Imaging;
 
 namespace BattlegroundsApp.Controls.CompanyBuilderControls {
 
-    public partial class SquadSlotLarge : UserControl {
+    public partial class SquadSlotLarge : UserControl, INotifyPropertyChanged {
 
         public string SquadName { get; set; }
         public ImageSource SquadIcon { get; }
@@ -26,6 +27,8 @@ namespace BattlegroundsApp.Controls.CompanyBuilderControls {
         public event Action<SquadSlotLarge> OnClick;
 
         public event Action<SquadSlotLarge> OnRemove;
+
+        public event PropertyChangedEventHandler PropertyChanged;
 
         public SquadSlotLarge(Squad squad) {
 
@@ -46,14 +49,14 @@ namespace BattlegroundsApp.Controls.CompanyBuilderControls {
 
         }
 
-        private void RefreshData() {
-
-            // Refresh cost
-            this.CostDisplay.Cost = this.SquadCost;
+        public void RefreshData() {
 
             // Get basic info
             this.SquadName = GameLocale.GetString(this.SquadInstance.SBP.UI.ScreenName);
             this.SquadCost = this.SquadInstance.GetCost();
+
+            // Refresh cost
+            this.CostDisplay.Cost = this.SquadCost;
 
             // Get veterancy
             if (this.SquadInstance.VeterancyRank > 0) {
@@ -62,6 +65,12 @@ namespace BattlegroundsApp.Controls.CompanyBuilderControls {
 
             // Set transport
             this.SquadIsTransported = this.SquadInstance.SupportBlueprint is not null;
+
+            // Refresh
+            this.PropertyChanged?.Invoke(this, new(nameof(this.SquadName)));
+            this.PropertyChanged?.Invoke(this, new(nameof(this.SquadCost)));
+            this.PropertyChanged?.Invoke(this, new(nameof(this.SquadVeterancy)));
+            this.PropertyChanged?.Invoke(this, new(nameof(this.SquadIsTransported)));
 
         }
 

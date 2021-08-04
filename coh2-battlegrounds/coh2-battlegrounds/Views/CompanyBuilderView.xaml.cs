@@ -134,7 +134,7 @@ namespace BattlegroundsApp.Views {
 
             YesNoDialogResult result = YesNoDialogViewModel.ShowYesNoDialog("Back", "Are you sure? All unsaved changes will be lost.");
 
-            if (result == YesNoDialogResult.Confirm) {
+            if (result is YesNoDialogResult.Confirm) {
                 this.StateChangeRequest(new CompanyView());
             }
 
@@ -176,7 +176,7 @@ namespace BattlegroundsApp.Views {
             //this.AbilityList.Children.Clear();
 
             // Add all units
-            this.Builder.EachUnit(AddUnitToDisplay);
+            this.Builder.EachUnit(this.AddUnitToDisplay);
 
             // TODO: Add abilities to list
 

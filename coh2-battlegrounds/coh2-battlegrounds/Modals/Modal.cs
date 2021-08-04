@@ -22,7 +22,23 @@ namespace BattlegroundsApp.Modals {
 
         public void DisplayModal(ModalControl modal) => this.m_controller = modal;
 
-        public virtual void CloseModal() => this.ModalControl.CloseModal();
+        protected virtual void OnModalClosing(ModalCloseEventArgs closeArgs) {}
+
+        public void CloseModal() {
+
+            // Create close args
+            ModalCloseEventArgs closeArgs = new();
+            this.OnModalClosing(closeArgs);
+
+            // Make sure we're supposed to cancel.
+            if (!closeArgs.Cancel) {
+
+                // Trigger the modal close
+                this.ModalControl.CloseModal();
+
+            }
+
+        }
 
     }
 
