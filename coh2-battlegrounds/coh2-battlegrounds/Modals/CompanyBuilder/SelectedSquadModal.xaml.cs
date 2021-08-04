@@ -430,7 +430,7 @@ namespace BattlegroundsApp.Modals.CompanyBuilder {
             // TODO: Verify upgrade
 
             // Add upgrade
-            this.SquadSlot.SquadInstance.Upgrades.Add(upb);
+            this.SquadSlot.SquadInstance.AddUpgradeIfNotFound(upb);
 
             // Update upgrade slot
             args.Element.IconState = IconState.Active;

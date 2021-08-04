@@ -87,6 +87,7 @@ namespace Battlegrounds.Game.Gameplay {
         private byte m_veterancyRank;
         private float m_veterancyProgress;
 
+        private string m_customName;
         private bool m_isCrewSquad;
         private DeploymentMethod m_deployMode;
         private DeploymentPhase m_deployPhase;
@@ -138,6 +139,12 @@ namespace Battlegrounds.Game.Gameplay {
         /// </summary>
         [ChecksumProperty]
         public DeploymentPhase DeploymentPhase => this.m_deployPhase;
+
+        /// <summary>
+        /// Get the custom name of the squad. This is null if no name is defined.
+        /// </summary>
+        [ChecksumProperty]
+        public string CustomName => this.m_customName;
 
         /// <summary>
         /// The squad data for the crew.
@@ -307,7 +314,7 @@ namespace Battlegrounds.Game.Gameplay {
         /// 
         /// </summary>
         /// <param name="modifierName"></param>
-        public void RemoveModifier(string modifierName) => this.m_modifiers.RemoveWhere(x => x.Name.CompareTo(modifierName) == 0);
+        public void RemoveModifier(string modifierName) => this.m_modifiers.RemoveWhere(x => x.Name == modifierName);
 
         /// <summary>
         /// Increase the amount of combat time the <see cref="Squad"/> has had.
@@ -315,6 +322,13 @@ namespace Battlegrounds.Game.Gameplay {
         /// <param name="time">The <see cref="TimeSpan"/> to increase combat time by.</param>
         public void IncreaseCombatTime(TimeSpan time)
             => this.m_combatTime += time;
+
+        /// <summary>
+        /// Set the custom name of the squad.
+        /// </summary>
+        /// <param name="customName">The custom name to set. A null value disable the custom name.</param>
+        public void SetName(string customName)
+            => this.m_customName = customName;
 
         /// <summary>
         /// Calculate the actual cost of a <see cref="Squad"/>.
@@ -335,6 +349,13 @@ namespace Battlegrounds.Game.Gameplay {
             return c;
 
         }
+
+        /// <summary>
+        /// Get the display name of the squad.
+        /// </summary>
+        /// <returns>If squad has a custom display name, it is returned; Otherwise the <see cref="SquadBlueprint.UI"/> screen name is returned.</returns>
+        public string GetName()
+            => string.IsNullOrEmpty(this.m_customName) ? this.SBP.UI.ScreenName : this.m_customName;
 
         /// <summary>
         /// Get the category the squad belongs to. This may change depending on certain parameters.
@@ -418,6 +439,7 @@ namespace Battlegrounds.Game.Gameplay {
 
             // Set mod guid and get deployment phase and combat time
             unitBuilder.SetModGUID(modGuid).SetBlueprint(sbpName);
+            unitBuilder.SetCustomName(ReadStringPropertyIfThere(ref reader, nameof(Squad.CustomName), null));
             unitBuilder.SetDeploymentPhase(Enum.Parse<DeploymentPhase>(ReadStringPropertyIfThere(ref reader, nameof(Squad.DeploymentPhase), nameof(DeploymentPhase.PhaseNone))));
             unitBuilder.SetCombatTime(TimeSpan.Parse(ReadStringPropertyIfThere(ref reader, nameof(Squad.CombatTime), TimeSpan.Zero.ToString())));
 
@@ -538,7 +560,15 @@ namespace Battlegrounds.Game.Gameplay {
                 writer.WriteString(nameof(Squad.SBP.PBGID.Mod), value.SBP.PBGID.Mod.GUID);
             }
 
-            writer.WriteString(nameof(Squad.DeploymentPhase), value.DeploymentPhase.ToString());
+            // Write custom name (if any)
+            if (!string.IsNullOrEmpty(value.CustomName)) {
+                writer.WriteString(nameof(Squad.CustomName), value.CustomName);
+            }
+
+            // Write deployment phase (if not none)
+            if (value.DeploymentPhase is not DeploymentPhase.PhaseNone) {
+                writer.WriteString(nameof(Squad.DeploymentPhase), value.DeploymentPhase.ToString());
+            }
 
             // Write combat time
             if (value.CombatTime.TotalSeconds > 0) {
@@ -576,7 +606,7 @@ namespace Battlegrounds.Game.Gameplay {
             if (value.Upgrades.Count > 0) {
                 writer.WritePropertyName(nameof(Squad.Upgrades));
                 writer.WriteStartArray();
-                foreach (var item in value.Upgrades) {
+                foreach (Blueprint item in value.Upgrades) {
                     writer.WriteStringValue(item.Name);
                 }
                 writer.WriteEndArray();
@@ -586,7 +616,7 @@ namespace Battlegrounds.Game.Gameplay {
             if (value.SlotItems.Count > 0) {
                 writer.WritePropertyName(nameof(Squad.SlotItems));
                 writer.WriteStartArray();
-                foreach (var item in value.SlotItems) {
+                foreach (Blueprint item in value.SlotItems) {
                     writer.WriteStringValue(item.Name);
                 }
                 writer.WriteEndArray();
@@ -596,7 +626,7 @@ namespace Battlegrounds.Game.Gameplay {
             if (value.Modifiers.Count > 0) {
                 writer.WritePropertyName(nameof(Squad.Modifiers));
                 writer.WriteStartArray();
-                foreach (var item in value.Modifiers) {
+                foreach (Modifier item in value.Modifiers) {
                     JsonSerializer.Serialize(writer, item, options);
                 }
                 writer.WriteEndArray();
