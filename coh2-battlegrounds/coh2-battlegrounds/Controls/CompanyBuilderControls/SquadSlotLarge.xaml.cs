@@ -18,9 +18,13 @@ namespace BattlegroundsApp.Controls.CompanyBuilderControls {
     public partial class SquadSlotLarge : UserControl, INotifyPropertyChanged {
 
         public string SquadName { get; set; }
+
         public ImageSource SquadIcon { get; }
+
         public CostExtension SquadCost { get; set; }
+
         public ImageSource SquadVeterancy { get; set; }
+
         public bool SquadIsTransported { get; set; }
 
         public ImageSource SquadTransportSymbol { get; set; }

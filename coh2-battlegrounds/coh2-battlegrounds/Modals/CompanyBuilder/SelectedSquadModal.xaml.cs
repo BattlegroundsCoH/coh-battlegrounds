@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
@@ -42,32 +43,6 @@ namespace BattlegroundsApp.Modals.CompanyBuilder {
 
         public static readonly ImageSource VetRankNotAchieved
             = new BitmapImage(new Uri($"pack://application:,,,/Resources/ingame/vet/vstar_no.png"));
-
-        public class SelectSquadAbility {
-            public AbilityBlueprint ABP { get; }
-            public ImageSource Ico { get; }
-            public SelectSquadAbility(AbilityBlueprint abp) {
-                this.ABP = abp;
-                if (App.ResourceHandler.HasIcon("ability_icons", abp.UI.Icon)) {
-                    this.Ico = App.ResourceHandler.GetIcon("ability_icons", abp.UI.Icon);
-                } else {
-                    Trace.WriteLine($"Failed to locate icon name '{abp.UI.Icon}'.", nameof(ResourceHandler));
-                }
-            }
-        }
-
-        public class SelectSquadUpgrade {
-            public UpgradeBlueprint UBP { get; }
-            public ImageSource Ico { get; }
-            public SelectSquadUpgrade(UpgradeBlueprint ubp) {
-                this.UBP = ubp;
-                if (App.ResourceHandler.HasIcon("upgrade_icons", ubp.UI.Icon)) {
-                    this.Ico = App.ResourceHandler.GetIcon("upgrade_icons", ubp.UI.Icon);
-                } else {
-                    Trace.WriteLine($"Failed to locate icon name '{ubp.UI.Icon}'.", nameof(ResourceHandler));
-                }
-            }
-        }
 
         private const double VETEXPMAXWIDTH = 136.0;
 
@@ -345,23 +320,15 @@ namespace BattlegroundsApp.Modals.CompanyBuilder {
 
             // Get all abilities
             string[] abilities = this.SquadSlot.SquadInstance.SBP.GetAbilities(true);
-            var abps = abilities.Select(x => BlueprintManager.FromBlueprintName<AbilityBlueprint>(x))
-                .Where(x => !string.IsNullOrEmpty(x.UI.Icon));
+            IEnumerable<AbilityBlueprint> abps = abilities.Select(x => BlueprintManager.FromBlueprintName<AbilityBlueprint>(x))
+                .Where(x => !string.IsNullOrEmpty(x.UI.Icon) && App.ResourceHandler.HasIcon("ability_icons", x.UI.Icon));
 
-            // Map to abp presenter class
-            SelectSquadAbility[] presenters = abps.Select(x => new SelectSquadAbility(x)).Where(x => x.Ico is not null).ToArray();
-
-            // Create images and append
-            presenters.ForEach(x => {
-                Image img = new() {
-                    Source = x.Ico,
-                    Tag = x,
-                    ToolTip = new CostItemPopup(x.ABP, this.SquadSlot.SquadInstance),
-                    Width = 36,
-                    Height = 36
-                };
-                this.AbilitiesList.Children.Add(img);
-            });
+            // Create observable collection
+            this.AbilitiesGrid.Icons = new(abps.Select(x => new IconGridElement() {
+                Icon = x.UI.Icon,
+                Tag = x,
+                Tooltip = new CostItemPopup(x, this.SquadSlot.SquadInstance)
+            }));
 
         }
 
@@ -388,24 +355,24 @@ namespace BattlegroundsApp.Modals.CompanyBuilder {
             }
 
             // Get upgrades
-            var ubps = this.m_availableUpgrades.Select(x => BlueprintManager.FromBlueprintName<UpgradeBlueprint>(x))
+            IEnumerable<UpgradeBlueprint> ubps = this.m_availableUpgrades.Select(x => BlueprintManager.FromBlueprintName<UpgradeBlueprint>(x))
             .Where(x => !string.IsNullOrEmpty(x.UI.Icon));
 
-            // Map to ubp presenter class
-            SelectSquadUpgrade[] presenters = ubps.Select(x => new SelectSquadUpgrade(x)).Where(x => x.Ico is not null).ToArray();
+            // Create observable collection
+            this.UpgradesGrid.Icons = new(ubps.Select(x => new IconGridElement() {
+                Icon = x.UI.Icon,
+                Tag = x,
+                Tooltip = new CostItemPopup(x, this.SquadSlot.SquadInstance),
+                State = this.GetUpgradeState(x)
+            }));
 
-            // Create images and append
-            presenters.ForEach(x => {
-                Image img = new() {
-                    Source = x.Ico,
-                    Tag = x,
-                    ToolTip = new CostItemPopup(x.UBP, this.SquadSlot.SquadInstance),
-                    Width = 36,
-                    Height = 36
-                };
-                this.UpgradeList.Children.Add(img);
-            });
+        }
 
+        private IconState GetUpgradeState(UpgradeBlueprint ubp) {
+            if (this.SquadSlot.SquadInstance.Upgrades.Contains(ubp)) {
+                return IconState.Active;
+            }
+            return ubp.Requirements.Length is 0 || ubp.Requirements.All(x => x.IsTrue(this.SquadSlot.SquadInstance)) ? IconState.Available : IconState.Disabled;
         }
 
         private void RefreshCrew(Squad crew) {
@@ -452,6 +419,21 @@ namespace BattlegroundsApp.Modals.CompanyBuilder {
 
             // Update slot
             this.SquadSlot.RefreshData();
+
+        }
+
+        private void UpgradesGrid_Clicked(object sender, IconGridIconClickedEventArgs args) {
+
+            // Get clicked blueprint
+            UpgradeBlueprint upb = args.ClickTag as UpgradeBlueprint;
+
+            // TODO: Verify upgrade
+
+            // Add upgrade
+            this.SquadSlot.SquadInstance.Upgrades.Add(upb);
+
+            // Update upgrade slot
+            args.Element.IconState = IconState.Active;
 
         }
 
