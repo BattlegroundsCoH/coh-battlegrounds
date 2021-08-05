@@ -9,7 +9,10 @@
              d:DesignHeight="340" d:DesignWidth="648"
                Width="648" Height="340">
     <Border BorderBrush="DarkGray" BorderThickness="1.5" Background="LightGray" Margin="5">
-        <modals:ModalControl x:Name="LayeredModal">
+        <modals:ModalControl x:Name="LayeredModal"
+                             ModalMaskColour="Black"
+                             ModalMaskOpacity="0.6"
+                             ModalMaskBehaviour="None">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>

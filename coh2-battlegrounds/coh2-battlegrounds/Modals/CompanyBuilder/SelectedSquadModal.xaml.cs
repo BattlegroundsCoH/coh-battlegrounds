@@ -15,6 +15,7 @@ using Battlegrounds.Modding;
 
 using BattlegroundsApp.Controls;
 using BattlegroundsApp.Controls.CompanyBuilderControls;
+using BattlegroundsApp.Dialogs.YesNo;
 using BattlegroundsApp.Popups;
 using BattlegroundsApp.Resources;
 
@@ -431,16 +432,32 @@ namespace BattlegroundsApp.Modals.CompanyBuilder {
 
         private void UpgradesGrid_Clicked(object sender, IconGridIconClickedEventArgs args) {
 
+            // Bail if already applied
+            if (args.Element.IconState is IconState.Active) {
+                return;
+            }
+
             // Get clicked blueprint
             UpgradeBlueprint upb = args.ClickTag as UpgradeBlueprint;
 
-            // TODO: Verify upgrade
+            // Create dialog to verify user wishes to upgrade.
+            ModalDialog confirmModal = ModalDialog.CreateModal("Apply Upgrade", $"Are you sure you want to apply upgrade {GameLocale.GetString(upb.UI.ScreenName)}?",
+                YesNoDialogResult.Confirm,
+                YesNoDialogResult.Cancel,
+                (sender, success, value) => {
+                    if (success) {
 
-            // Add upgrade
-            this.SquadSlot.SquadInstance.AddUpgradeIfNotFound(upb);
+                        // Add upgrade
+                        this.SquadSlot.SquadInstance.AddUpgradeIfNotFound(upb);
 
-            // Update upgrade slot
-            args.Element.IconState = IconState.Active;
+                        // Update upgrade slot
+                        args.Element.IconState = IconState.Active;
+
+                    }
+                });
+
+            // Show the modal
+            this.LayeredModal.ShowModal(confirmModal);
 
         }
 
