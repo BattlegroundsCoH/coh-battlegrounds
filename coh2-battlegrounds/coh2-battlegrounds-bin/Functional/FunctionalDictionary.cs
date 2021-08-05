@@ -42,7 +42,7 @@ namespace Battlegrounds.Functional {
         /// <param name="key">The key of the element to try and get value of.</param>
         /// <returns>If value is not found, <see langword="default"/> value of <typeparamref name="Z"/>; Otherwise the found value.</returns>
         public static Z GetValueOrDefault<X, Y, Z>(this IDictionary<X, Y> dict, X key) where Z : Y
-            => dict.GetValueOrDefault<X,Y,Z>(key, default);
+            => dict.GetValueOrDefault<X, Y, Z>(key, default);
 
         /// <summary>
         /// Get value of element tied to <paramref name="key"/> or <paramref name="defaultValue"/> if not found in dictionary.
@@ -63,7 +63,7 @@ namespace Battlegrounds.Functional {
         /// <typeparam name="X"></typeparam>
         /// <typeparam name="Y"></typeparam>
         /// <typeparam name="Z"></typeparam>
-        public readonly struct MinKeyValuePair<X,Y,Z> {
+        public readonly struct MinKeyValuePair<X, Y, Z> {
 
             /// <summary>
             /// 
@@ -106,8 +106,8 @@ namespace Battlegrounds.Functional {
         /// <param name="dict">The dictionary to find smallest value in.</param>
         /// <param name="selector">The selector function to select a <typeparamref name="Z"/> value.</param>
         /// <returns>The smallest <typeparamref name="Z"/> from a (<typeparamref name="X"/>,<typeparamref name="Y"/>) key value pair.</returns>
-        public static MinKeyValuePair<X,Y,Z> MinPair<X,Y,Z>(this IDictionary<X, Y> dict, Func<KeyValuePair<X, Y>, Z> selector) where Z : IComparable {
-            MinKeyValuePair<X, Y, Z>[] pairs = dict.Select(kvp => new MinKeyValuePair<X,Y,Z>(kvp.Key, kvp.Value, selector(kvp))).ToArray();
+        public static MinKeyValuePair<X, Y, Z> MinPair<X, Y, Z>(this IDictionary<X, Y> dict, Func<KeyValuePair<X, Y>, Z> selector) where Z : IComparable {
+            MinKeyValuePair<X, Y, Z>[] pairs = dict.Select(kvp => new MinKeyValuePair<X, Y, Z>(kvp.Key, kvp.Value, selector(kvp))).ToArray();
             int i = 0;
             for (int j = 0; j < pairs.Length; j++) {
                 if (pairs[j].Min.CompareTo(pairs[i].Min) < 0) {
@@ -135,7 +135,7 @@ namespace Battlegrounds.Functional {
         /// <param name="dict"></param>
         /// <param name="predicate"></param>
         /// <returns></returns>
-        public static Dictionary<X,Y> Without<X, Y>(this IDictionary<X, Y> dict, Predicate<KeyValuePair<X, Y>> predicate)
+        public static Dictionary<X, Y> Without<X, Y>(this IDictionary<X, Y> dict, Predicate<KeyValuePair<X, Y>> predicate)
             => dict.Where(kvp => !predicate(kvp)).ToDictionary(k => k.Key, v => v.Value);
 
         /// <summary>
@@ -145,7 +145,7 @@ namespace Battlegrounds.Functional {
         /// <typeparam name="Y">The value type.</typeparam>
         /// <param name="enumerable">The enumerable to generate dictionary from.</param>
         /// <returns>A <see cref="Dictionary{X, Y}"/> representation of <paramref name="enumerable"/>.</returns>
-        public static Dictionary<X, Y> ToDictionary<X,Y>(this IEnumerable<KeyValuePair<X, Y>> enumerable) {
+        public static Dictionary<X, Y> ToDictionary<X, Y>(this IEnumerable<KeyValuePair<X, Y>> enumerable) {
             Dictionary<X, Y> obj = new();
             IEnumerator<KeyValuePair<X, Y>> itt = enumerable.GetEnumerator();
             while (itt.MoveNext()) {

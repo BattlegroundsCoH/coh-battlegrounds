@@ -96,21 +96,11 @@ namespace Battlegrounds.Game.DataCompany {
 
         }
 
-        private static string ReadProperty(ref Utf8JsonReader reader, string property) {
-            if (reader.GetString() == property && reader.Read()) {
-                return reader.ReadProperty();
-            } else {
-                return null;
-            }
-        }
+        private static string ReadProperty(ref Utf8JsonReader reader, string property)
+            => reader.GetString() == property && reader.Read() ? reader.ReadProperty() : null;
 
-        private static T ReadPropertyThroughSerialisation<T>(ref Utf8JsonReader reader, string property) {
-            if (reader.GetString() == property && reader.Read()) {
-                return JsonSerializer.Deserialize<T>(ref reader);
-            } else {
-                return default;
-            }
-        }
+        private static T ReadPropertyThroughSerialisation<T>(ref Utf8JsonReader reader, string property)
+            => reader.GetString() == property && reader.Read() ? JsonSerializer.Deserialize<T>(ref reader) : default;
 
         public override void Write(Utf8JsonWriter writer, Company value, JsonSerializerOptions options) {
 

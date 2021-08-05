@@ -45,9 +45,7 @@ namespace Battlegrounds.Verification {
         /// <summary>
         /// Initialise a new and empty <see cref="Checksum"/> class.
         /// </summary>
-        public Checksum() {
-            this.m_sumItems = new();
-        }
+        public Checksum() => this.m_sumItems = new();
 
         /// <summary>
         /// Initialise a new <see cref="Checksum"/> class based on the <see cref="IChecksumItem"/> <paramref name="item"/> instance.

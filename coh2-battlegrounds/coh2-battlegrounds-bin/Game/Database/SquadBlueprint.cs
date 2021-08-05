@@ -238,10 +238,10 @@ namespace Battlegrounds.Game.Database {
             Faction fac = __lookup.GetValueOrDefault("Army", "NULL") is "NULL" ? null : Faction.FromName(__lookup.GetValueOrDefault("Army", "NULL"));
             ModGuid modguid = __lookup.ContainsKey("ModGUID") ? ModGuid.FromGuid(__lookup["ModGUID"] as string) : ModGuid.BaseGame;
             BlueprintUID pbgid = new BlueprintUID(__lookup.GetValueOrDefault("PBGID", 0ul), modguid);
-            return new(__lookup.GetValueOrDefault("Name", string.Empty), 
-                pbgid, 
+            return new(__lookup.GetValueOrDefault("Name", string.Empty),
+                pbgid,
                 fac,
-                __lookup.GetValueOrDefault("Display", new UIExtension()), 
+                __lookup.GetValueOrDefault("Display", new UIExtension()),
                 __lookup.GetValueOrDefault("SquadCost", new CostExtension()),
                 __lookup.GetValueOrDefault("Entities", new LoadoutExtension(Array.Empty<LoadoutExtension.Entry>())),
                 __lookup.GetValueOrDefault("Veterancy", new VeterancyExtension(Array.Empty<VeterancyExtension.Rank>())),
@@ -250,8 +250,8 @@ namespace Battlegrounds.Game.Database {
                 __lookup.GetValueOrDefault("Upgrades", Array.Empty<string>()),
                 __lookup.GetValueOrDefault("AppliedUpgrades", Array.Empty<string>()),
                 __lookup.GetValueOrDefault("UpgradeCapacity", 0),
-                __lookup.GetValueOrDefault("SlotPickupCapacity", 0), 
-                __lookup.GetValueOrDefault("CanPickupItems", false), 
+                __lookup.GetValueOrDefault("SlotPickupCapacity", 0),
+                __lookup.GetValueOrDefault("CanPickupItems", false),
                 __lookup.GetValueOrDefault("IsSyncWeapon", false),
                 __lookup.GetValueOrDefault("HasCrew", false),
                 __lookup.GetValueOrDefault("FemaleChance", 0.0f));

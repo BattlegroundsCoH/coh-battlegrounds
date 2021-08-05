@@ -31,7 +31,7 @@ namespace Battlegrounds.Game.Database.Extensions {
         }
 
         public class NoRequirement : RequirementExtension {
-            public NoRequirement(string ui, RequirementReason reason) : base(ui, reason) {}
+            public NoRequirement(string ui, RequirementReason reason) : base(ui, reason) { }
             public override bool IsTrue(Squad squad) => true;
         }
 
