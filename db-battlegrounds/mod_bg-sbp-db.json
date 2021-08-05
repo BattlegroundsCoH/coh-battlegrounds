@@ -3759,7 +3759,6 @@
       }
     ],
     "Abilities": [
-      "vehicle_decrew_vehicle_crew_bg",
       "soviet_repair_ability_mp",
       "german_hulldown_ability",
       "blizzard_effect",
@@ -3815,7 +3814,6 @@
       }
     ],
     "Abilities": [
-      "vehicle_decrew_vehicle_crew_bg",
       "soviet_repair_ability_mp",
       "german_hulldown_ability",
       "blizzard_effect",
@@ -3871,7 +3869,6 @@
       }
     ],
     "Abilities": [
-      "vehicle_abandon_vehicle_bg",
       "soviet_repair_ability_mp",
       "german_hulldown_ability",
       "blizzard_effect",
@@ -4049,7 +4046,6 @@
       }
     ],
     "Abilities": [
-      "vehicle_decrew_vehicle_crew_bg",
       "conscript_oorah_bg",
       "merge_ability_bg",
       "blizzard_effect",
@@ -4117,7 +4113,6 @@
       }
     ],
     "Abilities": [
-      "vehicle_decrew_vehicle_crew_bg",
       "conscript_oorah_bg",
       "merge_ability_bg",
       "conscript_evasive_tactics_mp",
@@ -4763,7 +4758,6 @@
       }
     ],
     "Abilities": [
-      "vehicle_decrew_vehicle_crew_bg",
       "soviet_repair_ability_mp",
       "blizzard_effect"
     ],
@@ -4819,7 +4813,6 @@
       }
     ],
     "Abilities": [
-      "vehicle_decrew_vehicle_crew_bg",
       "soviet_repair_ability_mp",
       "blizzard_effect"
     ],
@@ -4875,7 +4868,6 @@
       }
     ],
     "Abilities": [
-      "vehicle_abandon_vehicle_bg",
       "soviet_repair_ability_mp",
       "blizzard_effect"
     ],

@@ -6,6 +6,7 @@ using System.Reflection;
 using System.Text.Json.Serialization;
 
 using Battlegrounds.Game.Database;
+using Battlegrounds.Game.Database.Management;
 using Battlegrounds.Game.Gameplay;
 using Battlegrounds.Modding;
 using Battlegrounds.Verification;
@@ -21,12 +22,17 @@ namespace Battlegrounds.Game.DataCompany {
         /// <summary>
         /// The maximum size of a company.
         /// </summary>
-        public const int MAX_SIZE = 40;
+        public const int MAX_SIZE = 50;
 
         /// <summary>
         /// The max amount of initially deployed units.
         /// </summary>
         public const int MAX_INITIAL = 5;
+
+        /// <summary>
+        /// The max amount of abilities available to a company.
+        /// </summary>
+        public const int MAX_ABILITY = 6;
 
         private string m_checksum;
         private string m_lastEditVersion;
@@ -149,8 +155,8 @@ namespace Battlegrounds.Game.DataCompany {
         /// <returns></returns>
         public ushort AddSquad(UnitBuilder builder) {
             ushort id = this.m_nextSquadId++;
-            Squad squad = builder.Build(id);
-            if (squad.Crew != null) {
+            var squad = builder.Build(id);
+            if (squad.Crew is not null) {
                 this.m_nextSquadId++;
             }
             this.m_squads.Add(squad);
@@ -164,7 +170,7 @@ namespace Battlegrounds.Game.DataCompany {
         /// <returns>The squad with squad id matching requested squad ID or null.</returns>
         public Squad GetSquadByIndex(ushort squadID) {
             Squad s = this.m_squads.FirstOrDefault(x => x.SquadID == squadID);
-            if (s == null) { s = this.m_squads.FirstOrDefault(x => x.Crew.SquadID == squadID)?.Crew; }
+            if (s is null) { s = this.m_squads.FirstOrDefault(x => x.Crew.SquadID == squadID)?.Crew; }
             return s;
         }
 
@@ -232,7 +238,7 @@ namespace Battlegrounds.Game.DataCompany {
 
             // Calculate checksum
             string newChecksum = this.GetChecksum();
-            bool result = newChecksum.CompareTo(checksum) == 0;
+            bool result = newChecksum == checksum;
 
             // Restore checksum
             this.m_checksum = checksum;
@@ -287,7 +293,8 @@ namespace Battlegrounds.Game.DataCompany {
         /// 
         /// </summary>
         /// <param name="updateFunction"></param>
-        public void UpdateStatistics(Func<CompanyStatistics, CompanyStatistics> updateFunction) => this.m_companyStatistics = updateFunction(this.m_companyStatistics);
+        public void UpdateStatistics(Func<CompanyStatistics, CompanyStatistics> updateFunction) 
+            => this.m_companyStatistics = updateFunction(this.m_companyStatistics);
 
         /// <summary>
         /// 
@@ -296,7 +303,7 @@ namespace Battlegrounds.Game.DataCompany {
         /// <param name="squad"></param>
         public void ReplaceSquad(ushort squadIndex, Squad squad) {
             int arrIndex = this.m_squads.FindIndex(x => x.SquadID == squadIndex);
-            if (arrIndex != -1) {
+            if (arrIndex is not -1) {
                 this.m_squads[arrIndex] = squad;
             } else {
                 throw new InvalidOperationException();
@@ -308,6 +315,32 @@ namespace Battlegrounds.Game.DataCompany {
         /// </summary>
         /// <param name="version"></param>
         public void SetAppVersion(string version) => this.m_lastEditVersion = version;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public SpecialAbility[] GetSpecialUnitAbilities() {
+            ModPackage package = ModManager.GetPackageFromGuid(this.TuningGUID);
+            if (package is null) {
+                throw new InvalidOperationException();
+            }
+            var abps = package.FactionSettings[this.Army].UnitAbilities
+                .Where(x => this.m_squads.Any(y => y.SBP.Name == x.Blueprint))
+                .SelectMany(x => x.Abilities)
+                .Select(x => BlueprintManager.FromBlueprintName<AbilityBlueprint>(x))
+                .Where(x => x is not null);
+            return abps.Select(x => {
+                SpecialAbilityCategory category = x.Name.Contains("air_") ? SpecialAbilityCategory.AirSupport : x.Name.Contains("artillery_") ? SpecialAbilityCategory.Artillery
+                : SpecialAbilityCategory.Default;
+                int use = category switch { // TODO: Improve this
+                    SpecialAbilityCategory.AirSupport => 6,
+                    SpecialAbilityCategory.Artillery => 8,
+                    _ => 4
+                };
+                return new SpecialAbility(x, category, use);
+            }).ToArray();
+        }
 
     }
 

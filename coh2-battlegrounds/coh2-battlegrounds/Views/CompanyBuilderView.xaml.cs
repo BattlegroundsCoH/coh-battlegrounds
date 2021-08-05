@@ -44,7 +44,8 @@ namespace BattlegroundsApp.Views {
             }
         }
 
-        private int _companySize;
+        private int m_companySize;
+        private int m_companyAbilityCount;
         private string m_initialChecksum;
         private readonly ModPackage m_activeModPackage;
 
@@ -54,9 +55,13 @@ namespace BattlegroundsApp.Views {
 
         public string CompanyName { get; }
 
-        public int CompanySize { get => this._companySize; set { this._companySize = value; this.NotifyPropertyChanged(); } }
+        public int CompanySize { get => this.m_companySize; set { this.m_companySize = value; this.NotifyPropertyChanged(); } }
+
+        public int CompanyAbilityCount { get => this.m_companyAbilityCount; set { this.m_companyAbilityCount = value; this.NotifyPropertyChanged(); } }
 
         public string CompanyUnitHeaderItem => $"Units ({this.CompanySize}/{Company.MAX_SIZE})";
+
+        public string CompanyAbilityHeaderItem => $"Abilities ({this.CompanyAbilityCount}/{Company.MAX_ABILITY})";
 
         public Faction CompanyFaction { get; }
 
@@ -73,6 +78,8 @@ namespace BattlegroundsApp.Views {
         public CompanyBuilder Builder { get; }
 
         public CompanyStatistics Statistics { get; }
+
+        public bool CanAddAbilities => this.Builder.CanAddAbility;
 
         public bool CanAddUnits => this.Builder.CanAddUnit;
 
@@ -189,6 +196,9 @@ namespace BattlegroundsApp.Views {
             // Add all units
             this.Builder.EachUnit(this.AddUnitToDisplay, x => (int)x.DeploymentPhase);
 
+            // Add all abilities
+            this.Builder.EachAbility(this.AddAbilityToDisplay);
+
             // TODO: Add abilities to list
 
         }
@@ -236,19 +246,20 @@ namespace BattlegroundsApp.Views {
 
         private void OnUnitDrop(object sender, DragEventArgs e) {
 
-            if (this.CompanySize is not Company.MAX_SIZE) {
+            if (this.CompanySize is not Company.MAX_SIZE && e.Data.GetData("Squad") is SquadBlueprint sbp) {
 
-                SquadBlueprint squadBlueprint = e.Data.GetData("Squad") as SquadBlueprint;
-
-                var unitBuilder = new UnitBuilder().SetBlueprint(squadBlueprint).SetDeploymentPhase(this.GetRecommendedDeploymentPhase());
+                // Get squad and add to company
+                var unitBuilder = new UnitBuilder().SetBlueprint(sbp).SetDeploymentPhase(this.GetRecommendedDeploymentPhase());
                 var squad = this.Builder.AddAndCommitUnit(unitBuilder);
 
+                // Update company unit count
                 this.CompanySize++;
                 this.NotifyPropertyChanged(nameof(this.CompanyUnitHeaderItem));
 
                 // Add to display
                 this.AddUnitToDisplay(squad);
 
+                // Mark handled
                 e.Effects = DragDropEffects.Move;
                 e.Handled = true;
 
@@ -263,14 +274,36 @@ namespace BattlegroundsApp.Views {
 
         private void OnAbilityDrop(object sender, DragEventArgs e) {
         
+            // Make sure we got an ability blueprint
+            if (e.Data.GetData("Ability") is AbilityBlueprint abp) {
 
+                // Get special ability
+                var special = this.Builder.AddAndCommitAbility(abp);
+
+                // Update company ability count
+                this.CompanyAbilityCount++;
+                this.NotifyPropertyChanged(nameof(this.CompanyAbilityHeaderItem));
+
+                // Add to display
+                this.AddAbilityToDisplay(special, false);
+
+                // Mark handled
+                e.Effects = DragDropEffects.Move;
+                e.Handled = true;
+
+                // Check if we can no longer add units
+                if (!this.CanAddAbilities) {
+                    this.SetCanAddAbilities(false);
+                }
+
+            }
 
         }
 
         private DeploymentPhase GetRecommendedDeploymentPhase() {
 
             // Get deployment phase counts
-            var dict = new Dictionary<DeploymentPhase, int>() {
+            Dictionary<DeploymentPhase, int> dict = new() {
                 [DeploymentPhase.PhaseInitial] = this.Builder.CountUnitsInPhase(DeploymentPhase.PhaseInitial),
                 [DeploymentPhase.PhaseA] = this.Builder.CountUnitsInPhase(DeploymentPhase.PhaseA),
                 [DeploymentPhase.PhaseB] = this.Builder.CountUnitsInPhase(DeploymentPhase.PhaseB),
@@ -286,7 +319,7 @@ namespace BattlegroundsApp.Views {
             const double removePhaseThreshold = (Company.MAX_SIZE - Company.MAX_INITIAL) * (1 / 3.0);
 
             // Remove all where 1/3 is occupied
-            var phases = dict.Where(x => x.Value <= removePhaseThreshold).ToDictionary();
+            Dictionary<DeploymentPhase, int> phases = dict.Where(x => x.Value <= removePhaseThreshold).ToDictionary();
 
             // Get the one with the smallest value
             var min = phases.MinPair(x => x.Value);
@@ -298,10 +331,12 @@ namespace BattlegroundsApp.Views {
 
         private void AddUnitToDisplay(Squad squad) {
 
+            // Create display
             SquadSlotLarge unitSlot = new(squad);
             unitSlot.OnClick += this.OnSlotClicked;
             unitSlot.OnRemove += this.OnSlotRemoveClicked;
 
+            // Add to wrap container based on simplified category
             switch (squad.GetCategory(true)) {
                 case "infantry":
                     _ = this.InfantryWrap.Children.Add(unitSlot);
@@ -318,6 +353,16 @@ namespace BattlegroundsApp.Views {
 
         }
 
+        private void AddAbilityToDisplay(SpecialAbility specialAbility, bool isUnitAbility) {
+
+            // Build container
+            AbilitySlot slot = new(specialAbility);
+
+            // Determine source
+            _ = (isUnitAbility ? this.UnitAbilityWrap : this.AbilityWrap).Children.Add(slot);
+
+        }
+
         private void SetCanAddUnits(bool canAdd) {
             foreach (object obj in this.AvailableUnitsStack.Children) {
                 if (obj is AvailableItemSlot slot) {
@@ -326,10 +371,18 @@ namespace BattlegroundsApp.Views {
             }
         }
 
-        private async void FillStack<TBlueprint>(IEnumerable<TBlueprint> source, StackPanel target) where TBlueprint : Blueprint {
+        private void SetCanAddAbilities(bool canAdd) {
+            foreach (object obj in this.AvailableAbilities.Children) {
+                if (obj is AvailableItemSlot slot) {
+                    slot.CanAdd = canAdd;
+                }
+            }
+        }
+
+        private async void FillStack<TBlueprint>(IEnumerable<TBlueprint> source, StackPanel target, bool canAdd) where TBlueprint : Blueprint {
             foreach (var element in source) {
                 var slot = await this.Dispatcher.InvokeAsync(() => new AvailableItemSlot(element) {
-                    CanAdd = this.Builder.CanAddUnit
+                    CanAdd = canAdd
                 });
                 slot.OnHoverUpdate += this.OnSlotHover;
                 _ = await this.Dispatcher.InvokeAsync(() => target.Children.Add(slot));
@@ -364,8 +417,8 @@ namespace BattlegroundsApp.Views {
                     .ToList();
 
                 // Populate lists
-                this.FillStack(this.m_availableSquads, this.AvailableUnitsStack);
-                this.FillStack(this.m_abilities, this.AvailableAbilities);
+                this.FillStack(this.m_availableSquads, this.AvailableUnitsStack, this.CanAddUnits);
+                this.FillStack(this.m_abilities, this.AvailableAbilities, this.CanAddAbilities);
 
             });
 

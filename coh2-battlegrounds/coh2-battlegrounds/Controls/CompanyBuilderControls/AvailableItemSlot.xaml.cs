@@ -1,5 +1,4 @@
 ﻿using Battlegrounds.Game.Database;
-using Battlegrounds.Game.Gameplay;
 
 using BattlegroundsApp.Resources;
 
@@ -57,19 +56,26 @@ namespace BattlegroundsApp.Controls.CompanyBuilderControls {
         private void OnMouseMove(object sender, MouseEventArgs e) {
             base.OnMouseMove(e);
 
+            // If we can not add, return ==> Do not allow the user to drag/drop units
             if (!this.CanAdd) {
                 return;
             }
 
+            // If left button is pressed
             if (e.LeftButton is MouseButtonState.Pressed) {
 
+                // Create DB and set source
                 var obj = new DataObject();
+                obj.SetData("Source", this);
+
+                // Set blueprint based on type
                 if (this.Blueprint is SquadBlueprint sbp) {
                     obj.SetData("Squad", sbp);
                 } else if (this.Blueprint is AbilityBlueprint abp) {
                     obj.SetData("Ability", abp);
                 }
 
+                // Do the drag drop
                 DragDrop.DoDragDrop(this, obj, DragDropEffects.Move);
 
             }

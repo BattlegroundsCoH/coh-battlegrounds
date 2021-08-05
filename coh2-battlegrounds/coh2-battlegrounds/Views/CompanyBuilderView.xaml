@@ -141,7 +141,7 @@
 
         <!-- Row 3 :: Company Overview -->
         <TabControl Grid.Row="3" Grid.Column="0" SelectionChanged="OnOverviewSelectionChanged">
-            <TabItem Header="{Binding Path=CompanyUnitHeaderItem}">
+            <TabItem Header="{Binding CompanyUnitHeaderItem}">
                 <dropArea:DropArea AllowDrop="True" Drop="OnUnitDrop" Background="White" BorderThickness="1.5" BorderBrush="Black">
                     <ScrollViewer>
                         <StackPanel>
@@ -167,7 +167,7 @@
                     </ScrollViewer>
                 </dropArea:DropArea>
             </TabItem>
-            <TabItem Header="Abilities">
+            <TabItem Header="{Binding CompanyAbilityHeaderItem}">
                 <dropArea:DropArea AllowDrop="True" Drop="OnAbilityDrop" Background="White" BorderThickness="1.5" BorderBrush="Black">
                     <ScrollViewer>
                         <StackPanel>

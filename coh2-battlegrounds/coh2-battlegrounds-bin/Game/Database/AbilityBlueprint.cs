@@ -12,6 +12,38 @@ using Battlegrounds.Modding;
 namespace Battlegrounds.Game.Database {
 
     /// <summary>
+    /// Enum representing the method in which an ability is activated.
+    /// </summary>
+    public enum AbilityActivation {
+
+        /// <summary>
+        /// The ability has no activation method
+        /// </summary>
+        none,
+
+        /// <summary>
+        /// The ability is always on.
+        /// </summary>
+        always_on,
+
+        /// <summary>
+        /// The ability requires a target.
+        /// </summary>
+        targeted,
+
+        /// <summary>
+        /// The ability is timed.
+        /// </summary>
+        timed,
+
+        /// <summary>
+        /// The ability is toggled.
+        /// </summary>
+        toggle
+
+    }
+
+    /// <summary>
     /// Representation of a <see cref="Blueprint"/> with ability specific values. Inherits from <see cref="Blueprint"/>. This class cannot be inherited.
     /// </summary>
     [JsonConverter(typeof(AbilityBlueprintConverter))]
@@ -53,6 +85,11 @@ namespace Battlegrounds.Game.Database {
         public RequirementExtension[] Requirements { get; }
 
         /// <summary>
+        /// Get the activiation method of the ability.
+        /// </summary>
+        public AbilityActivation Activation { get; }
+
+        /// <summary>
         /// 
         /// </summary>
         /// <param name="name"></param>
@@ -60,13 +97,15 @@ namespace Battlegrounds.Game.Database {
         /// <param name="faction"></param>
         /// <param name="cost"></param>
         /// <param name="ui"></param>
-        public AbilityBlueprint(string name, BlueprintUID blueprintUID, Faction faction, CostExtension cost, UIExtension ui, RequirementExtension[] requirements) {
+        public AbilityBlueprint(string name, BlueprintUID blueprintUID, Faction faction, CostExtension cost, UIExtension ui,
+            RequirementExtension[] requirements, AbilityActivation abilityActivation) {
             this.Cost = cost;
             this.UI = ui;
             this.Faction = faction;
             this.Name = name;
             this.PBGID = blueprintUID;
             this.Requirements = requirements;
+            this.Activation = abilityActivation;
         }
 
     }
@@ -88,16 +127,25 @@ namespace Battlegrounds.Game.Database {
                     "Name" => reader.GetString(),
                     "ModGUID" => reader.GetString(),
                     "Requirements" => JsonSerializer.Deserialize<RequirementExtension[]>(ref reader, options),
+                    "Activation" => reader.GetString() switch {
+                        "none" or "" => AbilityActivation.none,
+                        "always_on" => AbilityActivation.always_on,
+                        "timed" => AbilityActivation.timed,
+                        "toggle" => AbilityActivation.toggle,
+                        "targeted" => AbilityActivation.targeted,
+                        _ => throw new FormatException()
+                    },
                     _ => throw new NotImplementedException(prop)
                 };
             }
-            Faction fac = __lookup.GetValueOrDefault("Army", "NULL") is "NULL" ? null : Faction.FromName(__lookup.GetValueOrDefault("Army", "NULL"));
-            ModGuid modguid = __lookup.ContainsKey("ModGUID") ? ModGuid.FromGuid(__lookup["ModGUID"] as string) : ModGuid.BaseGame;
-            BlueprintUID pbgid = new BlueprintUID(__lookup.GetValueOrDefault("PBGID", 0ul), modguid);
+            var fac = __lookup.GetValueOrDefault("Army", "NULL") is "NULL" ? null : Faction.FromName(__lookup.GetValueOrDefault("Army", "NULL"));
+            var modguid = __lookup.ContainsKey("ModGUID") ? ModGuid.FromGuid(__lookup["ModGUID"] as string) : ModGuid.BaseGame;
+            BlueprintUID pbgid = new(__lookup.GetValueOrDefault("PBGID", 0ul), modguid);
             return new(__lookup.GetValueOrDefault("Name", string.Empty), pbgid, fac,
                 __lookup.GetValueOrDefault("Cost", new CostExtension()),
                 __lookup.GetValueOrDefault("Display", new UIExtension()),
-                __lookup.GetValueOrDefault("Requirements", Array.Empty<RequirementExtension>()));
+                __lookup.GetValueOrDefault("Requirements", Array.Empty<RequirementExtension>()),
+                __lookup.GetValueOrDefault("Activation", AbilityActivation.none));
         }
 
         public override void Write(Utf8JsonWriter writer, AbilityBlueprint value, JsonSerializerOptions options) => writer.WriteStringValue(value.Name);

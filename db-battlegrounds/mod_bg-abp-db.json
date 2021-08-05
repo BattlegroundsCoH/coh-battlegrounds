@@ -1,39 +1,45 @@
 [
   {
+    "Name": "bg_deploy_destination",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741824,
     "Display": {
       "LocaleName": "$142b113740474c82a60b0a428bd553d5:1",
       "LocaleDescriptionLong": "$142b113740474c82a60b0a428bd553d5:13",
       "LocaleDescriptionShort": "$142b113740474c82a60b0a428bd553d5:14",
-      "Icon": "Icons_buildings_building_common_radio_tower"
+      "Icon": "Icons_buildings_building_common_radio_tower",
+      "Position": 22
     },
     "Army": "NULL",
-    "ModGUID": "142b113740474c82a60b0a428bd553d5",
-    "PBGID": 1073741824,
-    "Name": "bg_deploy_destination"
+    "Activation": "targeted"
   },
   {
+    "Name": "bg_withdraw_unit",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741823,
     "Display": {
       "LocaleName": "11036222",
       "LocaleDescriptionLong": "11036223",
       "LocaleDescriptionShort": "11050157",
-      "Icon": "Icons_abilities_ability_soviet_transfer_orders"
+      "Icon": "Icons_abilities_ability_soviet_transfer_orders",
+      "Position": 21
     },
     "Army": "NULL",
-    "ModGUID": "142b113740474c82a60b0a428bd553d5",
-    "PBGID": 1073741823,
-    "Name": "bg_withdraw_unit"
+    "Activation": "targeted"
   },
   {
+    "Name": "transport_heavy_vehicle_bg",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741826,
     "Display": {
       "LocaleName": "$142b113740474c82a60b0a428bd553d5:18",
       "LocaleDescriptionLong": "$142b113740474c82a60b0a428bd553d5:19",
       "LocaleDescriptionShort": "$142b113740474c82a60b0a428bd553d5:20",
-      "Icon": "Icons_tooltips_pick_up_item"
+      "Icon": "Icons_tooltips_pick_up_item",
+      "Position": 21
     },
     "Army": "NULL",
-    "ModGUID": "142b113740474c82a60b0a428bd553d5",
-    "PBGID": 1073741826,
-    "Name": "transport_heavy_vehicle_bg",
+    "Activation": "targeted",
     "Requirements": [
       {
         "RequirementType": "required_all_in_list",
@@ -65,16 +71,18 @@
     ]
   },
   {
+    "Name": "detach_tow_bg",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741827,
     "Display": {
       "LocaleName": "$142b113740474c82a60b0a428bd553d5:21",
       "LocaleDescriptionLong": "$142b113740474c82a60b0a428bd553d5:23",
       "LocaleDescriptionShort": "$142b113740474c82a60b0a428bd553d5:22",
-      "Icon": "Icons_abilities_ability_german_lockdown_enable"
+      "Icon": "Icons_abilities_ability_german_lockdown_enable",
+      "Position": 21
     },
     "Army": "NULL",
-    "ModGUID": "142b113740474c82a60b0a428bd553d5",
-    "PBGID": 1073741827,
-    "Name": "detach_tow_bg",
+    "Activation": "timed",
     "Requirements": [
       {
         "RequirementType": "required_in_state",
@@ -132,16 +140,18 @@
     ]
   },
   {
+    "Name": "detach_weapon_tow_bg",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741847,
     "Display": {
       "LocaleName": "$142b113740474c82a60b0a428bd553d5:48",
       "LocaleDescriptionLong": "$142b113740474c82a60b0a428bd553d5:49",
       "LocaleDescriptionShort": "$142b113740474c82a60b0a428bd553d5:50",
-      "Icon": "Icons_commands_icon_command_cancel"
+      "Icon": "Icons_commands_icon_command_cancel",
+      "Position": 21
     },
     "Army": "NULL",
-    "ModGUID": "142b113740474c82a60b0a428bd553d5",
-    "PBGID": 1073741847,
-    "Name": "detach_weapon_tow_bg",
+    "Activation": "timed",
     "Requirements": [
       {
         "RequirementType": "required_squad_upgrade",
@@ -156,48 +166,18 @@
     ]
   },
   {
-    "Display": {
-      "LocaleName": "11072165",
-      "LocaleDescriptionLong": "11072161",
-      "LocaleDescriptionShort": "11072163",
-      "Icon": "Icons_abilities_ability_aef_abandon_vehicle"
-    },
-    "Army": "NULL",
+    "Name": "vehicle_abandon_vehicle_bg",
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
     "PBGID": 1073741834,
-    "Name": "vehicle_abandon_vehicle_bg",
-    "Requirements": [
-      {
-        "RequirementType": "required_interactive_stage",
-        "RequirementReason": "usage",
-        "UIText": "11072159",
-        "RequirementProperties": {}
-      },
-      {
-        "RequirementType": "required_slot_item",
-        "RequirementReason": "usage",
-        "UIText": "11073169",
-        "RequirementProperties": {
-          "check_item_on_entity": false,
-          "display_requirement": true,
-          "max_owned": 0,
-          "min_owned": 0,
-          "slot_item": "sturmtiger_reload_active"
-        }
-      }
-    ]
-  },
-  {
     "Display": {
       "LocaleName": "11072165",
       "LocaleDescriptionLong": "11072161",
       "LocaleDescriptionShort": "11072163",
-      "Icon": "Icons_abilities_ability_aef_abandon_vehicle"
+      "Icon": "Icons_abilities_ability_aef_abandon_vehicle",
+      "Position": 24
     },
     "Army": "NULL",
-    "ModGUID": "142b113740474c82a60b0a428bd553d5",
-    "PBGID": 1073741825,
-    "Name": "vehicle_decrew_vehicle_crew_bg",
+    "Activation": "timed",
     "Requirements": [
       {
         "RequirementType": "required_interactive_stage",
@@ -220,6 +200,43 @@
     ]
   },
   {
+    "Name": "vehicle_decrew_vehicle_crew_bg",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741825,
+    "Display": {
+      "LocaleName": "11072165",
+      "LocaleDescriptionLong": "11072161",
+      "LocaleDescriptionShort": "11072163",
+      "Icon": "Icons_abilities_ability_aef_abandon_vehicle",
+      "Position": 24
+    },
+    "Army": "NULL",
+    "Activation": "timed",
+    "Requirements": [
+      {
+        "RequirementType": "required_interactive_stage",
+        "RequirementReason": "usage",
+        "UIText": "11072159",
+        "RequirementProperties": {}
+      },
+      {
+        "RequirementType": "required_slot_item",
+        "RequirementReason": "usage",
+        "UIText": "11073169",
+        "RequirementProperties": {
+          "check_item_on_entity": false,
+          "display_requirement": true,
+          "max_owned": 0,
+          "min_owned": 0,
+          "slot_item": "sturmtiger_reload_active"
+        }
+      }
+    ]
+  },
+  {
+    "Name": "german_mortar_fire_flares_ability_bg",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741843,
     "Cost": {
       "Munition": 30
     },
@@ -227,12 +244,11 @@
       "LocaleName": "11007411",
       "LocaleDescriptionLong": "11007409",
       "LocaleDescriptionShort": "11039272",
-      "Icon": "Icons_abilities_ability_soviet_flare"
+      "Icon": "Icons_abilities_ability_soviet_flare",
+      "Position": 33
     },
     "Army": "german",
-    "ModGUID": "142b113740474c82a60b0a428bd553d5",
-    "PBGID": 1073741843,
-    "Name": "german_mortar_fire_flares_ability_bg",
+    "Activation": "targeted",
     "Requirements": [
       {
         "RequirementType": "required_not",
@@ -263,16 +279,18 @@
     ]
   },
   {
+    "Name": "merge_ability_bg",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741835,
     "Display": {
       "LocaleName": "11030555",
       "LocaleDescriptionLong": "11030556",
       "LocaleDescriptionShort": "11039267",
-      "Icon": "Icons_abilities_ability_soviet_merge"
+      "Icon": "Icons_abilities_ability_soviet_merge",
+      "Position": 23
     },
     "Army": "soviet",
-    "ModGUID": "142b113740474c82a60b0a428bd553d5",
-    "PBGID": 1073741835,
-    "Name": "merge_ability_bg",
+    "Activation": "targeted",
     "Requirements": [
       {
         "RequirementType": "required_none",
@@ -319,6 +337,9 @@
     ]
   },
   {
+    "Name": "conscript_oorah_bg",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741833,
     "Cost": {
       "Munition": 15
     },
@@ -326,12 +347,11 @@
       "LocaleName": "11007722",
       "LocaleDescriptionLong": "11007723",
       "LocaleDescriptionShort": "11039281",
-      "Icon": "Icons_abilities_ability_soviet_oorah"
+      "Icon": "Icons_abilities_ability_soviet_oorah",
+      "Position": 33
     },
     "Army": "soviet",
-    "ModGUID": "142b113740474c82a60b0a428bd553d5",
-    "PBGID": 1073741833,
-    "Name": "conscript_oorah_bg",
+    "Activation": "timed",
     "Requirements": [
       {
         "RequirementType": "required_all_in_list",
@@ -344,6 +364,9 @@
     ]
   },
   {
+    "Name": "grenadier_panzerfaust_bg",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741846,
     "Cost": {
       "Munition": 25
     },
@@ -351,12 +374,11 @@
       "LocaleName": "11007164",
       "LocaleDescriptionLong": "11007163",
       "LocaleDescriptionShort": "11039177",
-      "Icon": "Icons_abilities_ability_german_panzerfaust"
+      "Icon": "Icons_abilities_ability_german_panzerfaust",
+      "Position": 31
     },
     "Army": "german",
-    "ModGUID": "142b113740474c82a60b0a428bd553d5",
-    "PBGID": 1073741846,
-    "Name": "grenadier_panzerfaust_bg",
+    "Activation": "targeted",
     "Requirements": [
       {
         "RequirementType": "required_not",
@@ -387,6 +409,9 @@
     ]
   },
   {
+    "Name": "grenadier_rifle_grenade_ability_bg",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741845,
     "Cost": {
       "Munition": 30
     },
@@ -394,12 +419,11 @@
       "LocaleName": "11009042",
       "LocaleDescriptionLong": "11009043",
       "LocaleDescriptionShort": "11038417",
-      "Icon": "Icons_abilities_ability_german_rifle_grenade_shot"
+      "Icon": "Icons_abilities_ability_german_rifle_grenade_shot",
+      "Position": 32
     },
     "Army": "german",
-    "ModGUID": "142b113740474c82a60b0a428bd553d5",
-    "PBGID": 1073741845,
-    "Name": "grenadier_rifle_grenade_ability_bg",
+    "Activation": "targeted",
     "Requirements": [
       {
         "RequirementType": "required_not",
@@ -454,6 +478,9 @@
     ]
   },
   {
+    "Name": "panzer_grenadier_bundled_grenade_bg",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741844,
     "Cost": {
       "Munition": 35
     },
@@ -461,12 +488,11 @@
       "LocaleName": "11007182",
       "LocaleDescriptionLong": "11007183",
       "LocaleDescriptionShort": "11039147",
-      "Icon": "Icons_abilities_ability_german_bundled_grenade"
+      "Icon": "Icons_abilities_ability_german_bundled_grenade",
+      "Position": 31
     },
     "Army": "german",
-    "ModGUID": "142b113740474c82a60b0a428bd553d5",
-    "PBGID": 1073741844,
-    "Name": "panzer_grenadier_bundled_grenade_bg",
+    "Activation": "targeted",
     "Requirements": [
       {
         "RequirementType": "required_not",
@@ -521,83 +547,156 @@
     ]
   },
   {
+    "Name": "soviet_paratrooper_setpos",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741836,
     "Display": {
       "LocaleName": "$142b113740474c82a60b0a428bd553d5:46",
       "LocaleDescriptionLong": "0",
-      "LocaleDescriptionShort": "0"
+      "LocaleDescriptionShort": "0",
+      "Position": 11
     },
     "Army": "soviet",
-    "ModGUID": "142b113740474c82a60b0a428bd553d5",
-    "PBGID": 1073741836,
-    "Name": "soviet_paratrooper_setpos"
+    "Activation": "targeted"
   },
   {
-    "Display": {
-      "LocaleName": "0",
-      "LocaleDescriptionLong": "0",
-      "LocaleDescriptionShort": "0"
-    },
-    "Army": "soviet",
+    "Name": "soviet_air_bombing_run",
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
     "PBGID": 1073741839,
-    "Name": "soviet_air_bombing_run"
-  },
-  {
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
-      "LocaleDescriptionShort": "0"
+      "LocaleDescriptionShort": "0",
+      "Position": -1
     },
     "Army": "soviet",
+    "Activation": ""
+  },
+  {
+    "Name": "soviet_air_infantry_overwatch",
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
     "PBGID": 1073741840,
-    "Name": "soviet_air_infantry_overwatch"
-  },
-  {
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
-      "LocaleDescriptionShort": "0"
+      "LocaleDescriptionShort": "0",
+      "Position": -1
     },
     "Army": "soviet",
+    "Activation": ""
+  },
+  {
+    "Name": "soviet_air_recon",
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
     "PBGID": 1073741837,
-    "Name": "soviet_air_recon"
-  },
-  {
+    "Cost": {
+      "Munition": 60
+    },
     "Display": {
-      "LocaleName": "0",
-      "LocaleDescriptionLong": "0",
-      "LocaleDescriptionShort": "0"
+      "LocaleName": "11010489",
+      "LocaleDescriptionLong": "11010488",
+      "LocaleDescriptionShort": "11039226",
+      "Icon": "Icons_commander_cmdr_soviet_il2_recon_plane",
+      "Position": 40
     },
     "Army": "soviet",
+    "Activation": "targeted"
+  },
+  {
+    "Name": "soviet_air_strafe",
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
     "PBGID": 1073741838,
-    "Name": "soviet_air_strafe"
-  },
-  {
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
-      "LocaleDescriptionShort": "0"
+      "LocaleDescriptionShort": "0",
+      "Position": -1
     },
     "Army": "soviet",
+    "Activation": ""
+  },
+  {
+    "Name": "soviet_air_vehicle_overwatch",
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
     "PBGID": 1073741841,
-    "Name": "soviet_air_vehicle_overwatch"
-  },
-  {
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
-      "LocaleDescriptionShort": "0"
+      "LocaleDescriptionShort": "0",
+      "Position": -1
     },
     "Army": "soviet",
-    "ModGUID": "142b113740474c82a60b0a428bd553d5",
-    "PBGID": 1073741842,
-    "Name": "soviet_hunt_tarrget"
+    "Activation": ""
   },
   {
+    "Name": "soviet_hunt_tarrget",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741842,
+    "Display": {
+      "LocaleName": "0",
+      "LocaleDescriptionLong": "0",
+      "LocaleDescriptionShort": "0",
+      "Position": -1
+    },
+    "Army": "soviet",
+    "Activation": ""
+  },
+  {
+    "Name": "soviet_artillery_fire",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741852,
+    "Display": {
+      "LocaleName": "0",
+      "LocaleDescriptionLong": "0",
+      "LocaleDescriptionShort": "0",
+      "Position": -1
+    },
+    "Army": "soviet",
+    "Activation": ""
+  },
+  {
+    "Name": "soviet_artillery_overwatch",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741850,
+    "Display": {
+      "LocaleName": "0",
+      "LocaleDescriptionLong": "0",
+      "LocaleDescriptionShort": "0",
+      "Position": -1
+    },
+    "Army": "soviet",
+    "Activation": ""
+  },
+  {
+    "Name": "soviet_artillery_propaganda",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741851,
+    "Display": {
+      "LocaleName": "0",
+      "LocaleDescriptionLong": "0",
+      "LocaleDescriptionShort": "0",
+      "Position": -1
+    },
+    "Army": "soviet",
+    "Activation": ""
+  },
+  {
+    "Name": "soviet_artillery_regimental_barrage",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741849,
+    "Display": {
+      "LocaleName": "0",
+      "LocaleDescriptionLong": "0",
+      "LocaleDescriptionShort": "0",
+      "Position": -1
+    },
+    "Army": "soviet",
+    "Activation": ""
+  },
+  {
+    "Name": "anti_tank_grenade_bg",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741831,
     "Cost": {
       "Munition": 25
     },
@@ -605,12 +704,11 @@
       "LocaleName": "11025826",
       "LocaleDescriptionLong": "11025827",
       "LocaleDescriptionShort": "11038229",
-      "Icon": "Icons_abilities_ability_soviet_rpg_43_at_grenade"
+      "Icon": "Icons_abilities_ability_soviet_rpg_43_at_grenade",
+      "Position": 33
     },
     "Army": "soviet",
-    "ModGUID": "142b113740474c82a60b0a428bd553d5",
-    "PBGID": 1073741831,
-    "Name": "anti_tank_grenade_bg",
+    "Activation": "targeted",
     "Requirements": [
       {
         "RequirementType": "required_not",
@@ -641,6 +739,9 @@
     ]
   },
   {
+    "Name": "conscript_molotov_cocktail_bg",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741828,
     "Cost": {
       "Munition": 20
     },
@@ -648,12 +749,11 @@
       "LocaleName": "11006607",
       "LocaleDescriptionLong": "11006747",
       "LocaleDescriptionShort": "11038231",
-      "Icon": "Icons_abilities_ability_soviet_molotov_cocktail"
+      "Icon": "Icons_abilities_ability_soviet_molotov_cocktail",
+      "Position": 31
     },
     "Army": "soviet",
-    "ModGUID": "142b113740474c82a60b0a428bd553d5",
-    "PBGID": 1073741828,
-    "Name": "conscript_molotov_cocktail_bg",
+    "Activation": "targeted",
     "Requirements": [
       {
         "RequirementType": "required_not",
@@ -684,6 +784,9 @@
     ]
   },
   {
+    "Name": "rgd_1_smoke_grenade_bg",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741829,
     "Cost": {
       "Munition": 15
     },
@@ -691,12 +794,11 @@
       "LocaleName": "11032146",
       "LocaleDescriptionLong": "11032147",
       "LocaleDescriptionShort": "11039253",
-      "Icon": "Icons_abilities_ability_soviet_rgd_1_smoke_grenade"
+      "Icon": "Icons_abilities_ability_soviet_rgd_1_smoke_grenade",
+      "Position": 32
     },
     "Army": "soviet",
-    "ModGUID": "142b113740474c82a60b0a428bd553d5",
-    "PBGID": 1073741829,
-    "Name": "rgd_1_smoke_grenade_bg",
+    "Activation": "targeted",
     "Requirements": [
       {
         "RequirementType": "required_not",
@@ -727,6 +829,9 @@
     ]
   },
   {
+    "Name": "rg_42_anti_personnel_grenade_bg",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741830,
     "Cost": {
       "Munition": 30
     },
@@ -734,12 +839,11 @@
       "LocaleName": "11008244",
       "LocaleDescriptionLong": "11008245",
       "LocaleDescriptionShort": "11008246",
-      "Icon": "Icons_abilities_ability_soviet_rg_42_grenade"
+      "Icon": "Icons_abilities_ability_soviet_rg_42_grenade",
+      "Position": 31
     },
     "Army": "soviet",
-    "ModGUID": "142b113740474c82a60b0a428bd553d5",
-    "PBGID": 1073741830,
-    "Name": "rg_42_anti_personnel_grenade_bg",
+    "Activation": "targeted",
     "Requirements": [
       {
         "RequirementType": "required_not",
@@ -770,6 +874,9 @@
     ]
   },
   {
+    "Name": "satchel_charge_throw_ability_bg",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741832,
     "Cost": {
       "Munition": 45
     },
@@ -777,12 +884,11 @@
       "LocaleName": "11145736",
       "LocaleDescriptionLong": "11140709",
       "LocaleDescriptionShort": "11145593",
-      "Icon": "Icons_abilities_ability_soviet_satchel_charge"
+      "Icon": "Icons_abilities_ability_soviet_satchel_charge",
+      "Position": 31
     },
     "Army": "soviet",
-    "ModGUID": "142b113740474c82a60b0a428bd553d5",
-    "PBGID": 1073741832,
-    "Name": "satchel_charge_throw_ability_bg",
+    "Activation": "targeted",
     "Requirements": [
       {
         "RequirementType": "required_not",
@@ -813,6 +919,9 @@
     ]
   },
   {
+    "Name": "at_76mm_he_barrage_ability_bg",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741848,
     "Cost": {
       "Munition": 35
     },
@@ -820,12 +929,11 @@
       "LocaleName": "11007466",
       "LocaleDescriptionLong": "11007483",
       "LocaleDescriptionShort": "11038386",
-      "Icon": "Icons_abilities_ability_soviet_high_explosive_rounds"
+      "Icon": "Icons_abilities_ability_soviet_high_explosive_rounds",
+      "Position": 31
     },
     "Army": "soviet",
-    "ModGUID": "142b113740474c82a60b0a428bd553d5",
-    "PBGID": 1073741848,
-    "Name": "at_76mm_he_barrage_ability_bg",
+    "Activation": "targeted",
     "Requirements": [
       {
         "RequirementType": "required_not",
@@ -847,5 +955,83 @@
         }
       }
     ]
+  },
+  {
+    "Name": "soviet_offmap_b4",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741858,
+    "Display": {
+      "LocaleName": "0",
+      "LocaleDescriptionLong": "0",
+      "LocaleDescriptionShort": "0",
+      "Position": -1
+    },
+    "Army": "soviet",
+    "Activation": ""
+  },
+  {
+    "Name": "soviet_offmap_katyusha",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741853,
+    "Display": {
+      "LocaleName": "0",
+      "LocaleDescriptionLong": "0",
+      "LocaleDescriptionShort": "0",
+      "Position": -1
+    },
+    "Army": "soviet",
+    "Activation": ""
+  },
+  {
+    "Name": "soviet_offmap_ml_20",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741856,
+    "Display": {
+      "LocaleName": "0",
+      "LocaleDescriptionLong": "0",
+      "LocaleDescriptionShort": "0",
+      "Position": -1
+    },
+    "Army": "soviet",
+    "Activation": ""
+  },
+  {
+    "Name": "soviet_offmap_ml_20_smoke",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741857,
+    "Display": {
+      "LocaleName": "0",
+      "LocaleDescriptionLong": "0",
+      "LocaleDescriptionShort": "0",
+      "Position": -1
+    },
+    "Army": "soviet",
+    "Activation": ""
+  },
+  {
+    "Name": "soviet_offmap_mortar",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741854,
+    "Display": {
+      "LocaleName": "0",
+      "LocaleDescriptionLong": "0",
+      "LocaleDescriptionShort": "0",
+      "Position": -1
+    },
+    "Army": "soviet",
+    "Activation": ""
+  },
+  {
+    "Name": "soviet_offmap_mortar_smoke",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741855,
+    "Display": {
+      "LocaleName": "0",
+      "LocaleDescriptionLong": "0",
+      "LocaleDescriptionShort": "0",
+      "Position": -1
+    },
+    "Army": "soviet",
+    "Activation": ""
   }
 ]

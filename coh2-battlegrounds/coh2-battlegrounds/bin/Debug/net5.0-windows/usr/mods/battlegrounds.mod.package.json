@@ -96,13 +96,49 @@
                 }
             ],
             "Abilities": [
-
+                "soviet_air_bombing_run",
+                "soviet_air_infantry_overwatch",
+                "soviet_air_recon",
+                "soviet_air_strafe",
+                "soviet_air_vehicle_overwatch",
+                "soviet_hunt_tarrget",
+                "soviet_artillery_regimental_barrage",
+                "soviet_artillery_overwatch",
+                "soviet_artillery_fire",
+                "soviet_artillery_propaganda"
             ],
             "UnitAbilities": [
                 {
-                    "Blueprint": "",
+                    "Blueprint": "katyusha_rocket_truck_bg",
                     "Abilities": [
-                        
+                        "soviet_offmap_katyusha"
+                    ]
+                },
+                {
+                    "Blueprint": "hm-120_38_mortar_squad_bg",
+                    "Abilities":[
+                        "soviet_offmap_mortar",
+                        "soviet_offmap_mortar_smoke"
+                    ]
+                },
+                {
+                    "Blueprint": "pm-82_41_mortar_squad_bg",
+                    "Abilities":[
+                        "soviet_offmap_mortar",
+                        "soviet_offmap_mortar_smoke"
+                    ]
+                },
+                {
+                    "Blueprint": "m1937_152mm_ml_20_artillery_bg",
+                    "Abilities":[
+                        "soviet_offmap_ml_20",
+                        "soviet_offmap_ml_20_smoke"
+                    ]
+                },
+                {
+                    "Blueprint": "m1931_203mm_b-4_howitzer_artillery_bg",
+                    "Abilities":[
+                        "soviet_offmap_b4"
                     ]
                 }
             ],

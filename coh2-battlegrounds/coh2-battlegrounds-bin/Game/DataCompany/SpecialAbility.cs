@@ -1,8 +1,5 @@
-﻿using System;
-
-using Battlegrounds.Game.Database;
+﻿using Battlegrounds.Game.Database;
 using Battlegrounds.Game.Scar;
-using Battlegrounds.Json;
 
 namespace Battlegrounds.Game.DataCompany {
 
@@ -17,7 +14,7 @@ namespace Battlegrounds.Game.DataCompany {
         Undefined,
 
         /// <summary>
-        /// Show up as a "commander" ability (Currently not compiled - CoDiEx 01/01/20).
+        /// Show up as a "commander" ability (Currently not compiled - CoDiEx 05/08/21).
         /// </summary>
         Default,
 
@@ -34,11 +31,9 @@ namespace Battlegrounds.Game.DataCompany {
     }
 
     /// <summary>
-    /// Represents a <see cref="SpecialAbility"/> ingame ability. Implements <see cref="IJsonObject"/> and <see cref="IScarValue"/>.
+    /// Represents a <see cref="SpecialAbility"/> ingame ability. Implements <see cref="IScarValue"/>.
     /// </summary>
-    public struct SpecialAbility : IJsonObject, IScarValue {
-
-        [JsonIgnoreIfValue(0)] private int m_useCount;
+    public class SpecialAbility : IScarValue {
 
         /// <summary>
         /// The <see cref="AbilityBlueprint"/> being granted by the <see cref="SpecialAbility"/>.
@@ -48,13 +43,17 @@ namespace Battlegrounds.Game.DataCompany {
         /// <summary>
         /// The <see cref="SpecialAbilityCategory"/> the <see cref="SpecialAbility"/> will belong to.
         /// </summary>
-        [JsonEnum(typeof(SpecialAbilityCategory))] public SpecialAbilityCategory Category { get; }
+        public SpecialAbilityCategory Category { get; }
 
         /// <summary>
         /// The amount of uses a player has during each match.
         /// </summary>
-        [JsonIgnore]
-        public int Uses { get => m_useCount; set => m_useCount = value; }
+        public int MaxUse { get; }
+
+        /// <summary>
+        /// Get or set the amount of times this special ability has been used.
+        /// </summary>
+        public int UsedCount { get; set; }
 
         /// <summary>
         /// Instantiate a new <see cref="SpecialAbility"/> with predefined <see cref="SpecialAbilityCategory"/> and use count.
@@ -62,15 +61,15 @@ namespace Battlegrounds.Game.DataCompany {
         /// <param name="blueprint">The ability blueprint.</param>
         /// <param name="category">The category.</param>
         /// <param name="maxUse">The maximum amount of uses each match.</param>
-        public SpecialAbility(AbilityBlueprint blueprint, SpecialAbilityCategory category, int maxUse) {
+        /// <param name="count">The amount of times this has been used.</param>
+        public SpecialAbility(AbilityBlueprint blueprint, SpecialAbilityCategory category, int maxUse, int count = 0) {
             this.ABP = blueprint;
             this.Category = category;
-            this.m_useCount = maxUse;
+            this.MaxUse = maxUse;
+            this.UsedCount = count;
         }
 
-        public string ToJsonReference() => throw new NotSupportedException();
-
-        public string ToScar() => $"{{ abp = {this.ABP.ToScar()}, max_use = {this.m_useCount} }}";
+        public string ToScar() => $"{{ abp = {this.ABP.ToScar()}, max_use = {this.MaxUse} }}";
 
     }
 

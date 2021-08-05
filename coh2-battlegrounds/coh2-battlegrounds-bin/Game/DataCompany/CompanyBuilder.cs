@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 
 using Battlegrounds.Functional;
+using Battlegrounds.Game.Database;
 using Battlegrounds.Game.Gameplay;
 using Battlegrounds.Modding;
 
@@ -39,9 +40,14 @@ namespace Battlegrounds.Game.DataCompany {
         public bool CanRedoSquad => this.m_redo.Count > 0;
 
         /// <summary>
-        /// Get if it's possible to add another unit.
+        /// Get if it is possible to add another unit.
         /// </summary>
         public bool CanAddUnit => this.m_uncommittedSquads.Count + 1 + this.m_companyTarget.Units.Length <= Company.MAX_SIZE;
+
+        /// <summary>
+        /// Get if it is possible to add another ability.
+        /// </summary>
+        public bool CanAddAbility => this.m_companyTarget.Abilities.Length <= Company.MAX_ABILITY;
 
         /// <summary>
         /// New instance of the <see cref="CompanyBuilder"/>.
@@ -183,6 +189,17 @@ namespace Battlegrounds.Game.DataCompany {
 
             // Ask for squad and return
             return this.m_companyTarget.GetSquadByIndex(sid);
+
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="abp"></param>
+        /// <returns></returns>
+        public virtual SpecialAbility AddAndCommitAbility(AbilityBlueprint abp) {
+
+            return new(abp, SpecialAbilityCategory.Default, 0);
 
         }
 
@@ -350,6 +367,15 @@ namespace Battlegrounds.Game.DataCompany {
         /// </summary>
         /// <param name="action"></param>
         public void EachUnit(Action<Squad> action) => this.EachUnit(action, x => x.SquadID);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="action"></param>
+        public void EachAbility(Action<SpecialAbility, bool> action) {
+            this.m_companyTarget.GetSpecialUnitAbilities().ForEach(x => action(x, true));
+            this.m_companyTarget.Abilities.ForEach(x => action(x, false));
+        }
 
     }
 

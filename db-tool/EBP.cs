@@ -72,7 +72,7 @@ namespace CoH2XML2JSON {
 
             // Load abilities
             if (xmlDocument.SelectSingleNode(@"//template_reference[@name='exts'] [@value='ebpextensions\ability_ext']") is XmlElement abilities) {
-                var nodes = abilities.SelectNodes("//instance_reference[@name='ability']");
+                var nodes = abilities.SelectSubnodes("instance_reference", "ability");
                 List<string> abps = new();
                 foreach (XmlNode ability in nodes) {
                     abps.Add(Path.GetFileNameWithoutExtension(ability.Attributes["value"].Value));

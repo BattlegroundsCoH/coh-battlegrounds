@@ -107,7 +107,7 @@ namespace CoH2XML2JSON {
 
             // Load squad abilities
             if (xmlDocument.SelectSingleNode(@"//template_reference[@name='squadexts'] [@value='sbpextensions\squad_ability_ext']") is XmlElement squadAbilities) {
-                var nodes = squadAbilities.SelectNodes("//instance_reference[@name='ability']");
+                var nodes = squadAbilities.SelectSubnodes("instance_reference", "ability");
                 List<string> abps = new();
                 foreach (XmlNode ability in nodes) {
                     abps.Add(Path.GetFileNameWithoutExtension(ability.Attributes["value"].Value));

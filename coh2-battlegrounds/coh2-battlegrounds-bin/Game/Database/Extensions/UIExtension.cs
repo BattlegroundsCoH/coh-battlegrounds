@@ -19,19 +19,26 @@ namespace Battlegrounds.Game.Database.Extensions {
 
         public string Portrait { get; init; }
 
+        public int Position { get; init; }
+
         public static UIExtension FromJson(ref Utf8JsonReader reader) {
             string[] values = new string[6];
+            int pos = 0;
             while (reader.Read() && reader.TokenType is not JsonTokenType.EndObject) {
                 string prop = reader.ReadProperty();
-                values[prop switch {
-                    "LocaleName" => 0,
-                    "LocaleDescriptionShort" => 1,
-                    "LocaleDescriptionLong" => 2,
-                    "Icon" => 3,
-                    "Symbol" => 4,
-                    "Portrait" => 5,
-                    _ => throw new Exception()
-                }] = reader.GetString();
+                if (prop is "Position") {
+                    pos = reader.GetInt32();
+                } else {
+                    values[prop switch {
+                        "LocaleName" => 0,
+                        "LocaleDescriptionShort" => 1,
+                        "LocaleDescriptionLong" => 2,
+                        "Icon" => 3,
+                        "Symbol" => 4,
+                        "Portrait" => 5,
+                        _ => throw new FormatException($"Unexpected UI property '{prop}'.")
+                    }] = reader.GetString();
+                }
             }
             return new() {
                 ScreenName = values[0] ?? string.Empty,
@@ -40,6 +47,7 @@ namespace Battlegrounds.Game.Database.Extensions {
                 Icon = values[3] ?? string.Empty,
                 Symbol = values[4] ?? string.Empty,
                 Portrait = values[5] ?? string.Empty,
+                Position = pos
             };
         }
 

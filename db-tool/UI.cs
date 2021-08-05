@@ -21,6 +21,9 @@ namespace CoH2XML2JSON {
         [DefaultValue(null)]
         public string Portrait { get; }
 
+        [DefaultValue(0)]
+        public int Position { get; set; }
+
         public UI(XmlElement xmlElement) {
             if (xmlElement is not null) {
                 this.LocaleName = GetStr(xmlElement, "locstring", "screen_name");
