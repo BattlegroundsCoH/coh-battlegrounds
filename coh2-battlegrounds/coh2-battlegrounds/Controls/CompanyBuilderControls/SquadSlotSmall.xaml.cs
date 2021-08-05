@@ -3,13 +3,16 @@
 using BattlegroundsApp.Resources;
 
 using System;
+using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 
 namespace BattlegroundsApp.Controls.CompanyBuilderControls {
-    public partial class SquadSlotSmall : UserControl {
+    public partial class SquadSlotSmall : UserControl, INotifyPropertyChanged {
+
+        private bool m_canAdd = true;
 
         public string SquadName { get; }
 
@@ -19,7 +22,17 @@ namespace BattlegroundsApp.Controls.CompanyBuilderControls {
 
         public ObjectHoverData HoverData { get; }
 
+        public bool CanAdd {
+            get => this.m_canAdd;
+            set {
+                this.m_canAdd = value;
+                this.PropertyChanged?.Invoke(this, new(nameof(this.CanAdd)));
+            }
+        }
+
         public event Action<SquadSlotSmall, bool> OnHoverUpdate;
+
+        public event PropertyChangedEventHandler PropertyChanged;
 
         public SquadSlotSmall(SquadBlueprint squad) {
             this.DataContext = this;
@@ -32,6 +45,10 @@ namespace BattlegroundsApp.Controls.CompanyBuilderControls {
 
         private void OnMouseMove(object sender, MouseEventArgs e) {
             base.OnMouseMove(e);
+
+            if (!this.CanAdd) {
+                return;
+            }
 
             if (e.LeftButton is MouseButtonState.Pressed) {
 

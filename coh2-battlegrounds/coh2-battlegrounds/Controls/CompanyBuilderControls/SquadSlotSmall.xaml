@@ -8,7 +8,7 @@
              d:DesignHeight="40" d:DesignWidth="275" Width="275" Height="40" >
     <Border Background="LightGray" BorderThickness="1.1" BorderBrush="Black" MouseMove="OnMouseMove" MouseEnter="OnMouseEnter" MouseLeave="OnMouseLeave">
         <Canvas>
-            <Button Content="+" Canvas.Top="5.5" Canvas.Left="5" Width="25" Height="25"/>
+            <Button Content="+" Canvas.Top="5.5" Canvas.Left="5" Width="25" Height="25" IsEnabled="{Binding CanAdd}"/>
             <Image Canvas.Left="35" Canvas.Top="2.7" Source="{Binding SquadIcon, TargetNullValue={x:Null}}"
                            Width="32" Height="32"/>
             <TextBlock Canvas.Top="10" Canvas.Left="80.5" Text="{Binding SquadName}"/>

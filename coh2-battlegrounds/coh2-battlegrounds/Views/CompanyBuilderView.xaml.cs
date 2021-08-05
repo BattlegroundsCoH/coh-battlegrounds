@@ -69,6 +69,8 @@ namespace BattlegroundsApp.Views {
 
         public CompanyStatistics Statistics { get; }
 
+        public bool CanAddUnits => this.Builder.CanAddUnit;
+
         private List<SquadBlueprint> SquadList
             => BlueprintManager.GetCollection<SquadBlueprint>().FilterByMod(this.CompanyGUID).Filter(x => x.Army == this.CompanyFaction.ToString()).ToList();
 
@@ -147,7 +149,9 @@ namespace BattlegroundsApp.Views {
         private void FillAvailableUnits() {
 
             foreach (SquadBlueprint squad in this.SquadList) {
-                SquadSlotSmall unitSlot = new SquadSlotSmall(squad);
+                SquadSlotSmall unitSlot = new SquadSlotSmall(squad) {
+                    CanAdd = this.Builder.CanAddUnit
+                };
                 unitSlot.OnHoverUpdate += this.OnSlotHover;
                 _ = this.AvailableUnitsStack.Children.Add(unitSlot);
             }
@@ -195,6 +199,11 @@ namespace BattlegroundsApp.Views {
         }
 
         public void RemoveUnitFromCompany(Squad squad) {
+
+            // If we can currently not add units, fix it so we can now (since we're removing one)
+            if (!this.CanAddUnits) {
+                this.SetCanAddUnits(true);
+            }
 
             // Remove unit
             this.Builder.RemoveUnit(squad.SquadID);
@@ -247,6 +256,11 @@ namespace BattlegroundsApp.Views {
 
                 e.Effects = DragDropEffects.Move;
                 e.Handled = true;
+
+                // Check if we can no longer add units
+                if (!this.CanAddUnits) {
+                    this.SetCanAddUnits(false);
+                }
 
             }
 
@@ -301,6 +315,14 @@ namespace BattlegroundsApp.Views {
                     break;
             }
 
+        }
+
+        private void SetCanAddUnits(bool canAdd) {
+            foreach (object obj in this.AvailableUnitsStack.Children) {
+                if (obj is SquadSlotSmall slot) {
+                    slot.CanAdd = canAdd;
+                }
+            }
         }
 
     }
