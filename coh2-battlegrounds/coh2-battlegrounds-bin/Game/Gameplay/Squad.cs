@@ -179,19 +179,19 @@ namespace Battlegrounds.Game.Gameplay {
         /// <summary>
         /// The current upgrades applied to a <see cref="Squad"/>.
         /// </summary>
-        [ChecksumProperty]
+        [ChecksumProperty(IsCollection = true)]
         public ImmutableHashSet<Blueprint> Upgrades => this.m_upgrades.ToImmutableHashSet();
 
         /// <summary>
         /// The current slot items carried by the <see cref="Squad"/>.
         /// </summary>
-        [ChecksumProperty]
+        [ChecksumProperty(IsCollection = true)]
         public ImmutableHashSet<Blueprint> SlotItems => this.m_slotItems.ToImmutableHashSet();
 
         /// <summary>
         /// Get the current modifiers applied to the <see cref="Squad"/>.
         /// </summary>
-        [ChecksumProperty]
+        [ChecksumProperty(IsCollection = true)]
         public ImmutableHashSet<Modifier> Modifiers => this.m_modifiers.ToImmutableHashSet();
 
         /// <summary>
