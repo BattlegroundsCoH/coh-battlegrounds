@@ -242,6 +242,7 @@
                                                x:Name="TransportBlueprintCombobox"/>
                         <Label Content="{Binding SelectedSupportBlueprint}"
                                Visibility="{Binding TransportBlueprintSelector}"
+                               ToolTip="{Binding SellectedSupportBlueprintTooltip}"
                                VerticalContentAlignment="Center"/>
                     </StackPanel>
                 </StackPanel>

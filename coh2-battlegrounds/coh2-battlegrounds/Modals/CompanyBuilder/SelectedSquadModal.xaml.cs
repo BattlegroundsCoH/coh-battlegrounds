@@ -1,17 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
-using Battlegrounds.Functional;
 using Battlegrounds.Game.Database;
 using Battlegrounds.Game.Database.Management;
 using Battlegrounds.Game.Gameplay;
@@ -27,7 +23,6 @@ using BattlegroundsApp.Resources;
  * TODO:
  *  Slot Items
  *  Crew Slot Items
- * Trigger slot item refresh when closing (Will require some minor changes to the modal system and how it handles closing modals)
  * 
  */
 
@@ -113,6 +108,8 @@ namespace BattlegroundsApp.Modals.CompanyBuilder {
 
         public string SelectedSupportBlueprint { get; set; }
 
+        public CostItemPopup SellectedSupportBlueprintTooltip { get; set; }
+
         public SquadSlotLarge SquadSlot { get; } // We keep a ref to this so we can instantly update it
 
         private ModPackage m_package;
@@ -184,6 +181,11 @@ namespace BattlegroundsApp.Modals.CompanyBuilder {
                 // Refresh Transport Blueprint
                 this.RefreshTransportBlueprints(canTow);
 
+                // Refresh deployment transport if any selected
+                if (this.SquadSlot.SquadInstance.SupportBlueprint is not null) {
+                    this.ShowSelectedTransport(this.SquadSlot.SquadInstance.SupportBlueprint as SquadBlueprint);
+                }
+
             } else if (this.SquadSlot.SquadInstance.Crew is Squad crew) {
 
                 // Update visibility
@@ -215,9 +217,9 @@ namespace BattlegroundsApp.Modals.CompanyBuilder {
         }
 
         private void OnDeploymentPhaseClicked(object sender, MouseButtonEventArgs e) {
-            var obj = sender as Icon;
-            var sbp = this.SquadSlot.SquadInstance.SupportBlueprint as SquadBlueprint;
-            var dmode = this.SquadSlot.SquadInstance.DeploymentMethod;
+            Icon obj = sender as Icon;
+            SquadBlueprint sbp = this.SquadSlot.SquadInstance.SupportBlueprint as SquadBlueprint;
+            DeploymentMethod dmode = this.SquadSlot.SquadInstance.DeploymentMethod;
             switch (obj.Tag as string) {
                 case "0":
                     this.SquadSlot.SquadInstance.SetDeploymentMethod(sbp, dmode, DeploymentPhase.PhaseInitial);
@@ -289,31 +291,38 @@ namespace BattlegroundsApp.Modals.CompanyBuilder {
 
         private void RefreshTransportBlueprints(bool isTow) {
 
-            if (isTow) {
+            // Determine transport list source
+            ModPackage.FactionData factionData = this.m_package.FactionSettings[this.SquadSlot.SquadInstance.SBP.Army];
+            string[] source = isTow ? factionData.TowTransports : factionData.Transports;
 
-            } else {
+            // Get blueprints
+            List<IconComboBoxItem> blueprints = source
+                .Select(x => BlueprintManager.FromBlueprintName<SquadBlueprint>(x))
+                .Select(x => new IconComboBoxItem(App.ResourceHandler.GetIcon("unit_icons", x.UI.Icon), GameLocale.GetString(x.UI.ScreenName), x))
+                .ToList();
 
-                // Get blueprints
-                List<IconComboBoxItem> blueprints = this.m_package.FactionSettings[this.SquadSlot.SquadInstance.SBP.Army].Transports
-                    .Select(x => BlueprintManager.FromBlueprintName<SquadBlueprint>(x))
-                    .Select(x => new IconComboBoxItem(App.ResourceHandler.GetIcon("unit_icons", x.UI.Icon), GameLocale.GetString(x.UI.ScreenName), x))
-                    .ToList();
+            // Add to combobox
+            this.TransportBlueprintCombobox.SetItemSource(blueprints);
 
-                // Add to combobox
-                this.TransportBlueprintCombobox.SetItemSource(blueprints);
-
-            }
+            // Update selected blueprint
+            this.NotifyPropertyChanged(nameof(this.SelectedSupportBlueprint));
 
         }
 
-        private void TransportBlueprintCombobox_SelectionChanged(object sender, IconComboBoxItem newItem) {
+        private void TransportBlueprintCombobox_SelectionChanged(object sender, IconComboBoxSelectedChangedEventArgs newItem) {
             if (this.SquadSlot.SquadInstance.DeploymentMethod is DeploymentMethod.DeployAndExit or DeploymentMethod.DeployAndStay) {
-                SquadBlueprint sbp = newItem.Source as SquadBlueprint;
-                this.SelectedSupportBlueprint = GameLocale.GetString(sbp.UI.ScreenName);
+                SquadBlueprint sbp = newItem.Item.Source as SquadBlueprint;
                 this.SquadSlot.SquadInstance.SetDeploymentMethod(sbp, this.SquadSlot.SquadInstance.DeploymentMethod, this.SquadSlot.SquadInstance.DeploymentPhase);
-                this.NotifyPropertyChanged(nameof(this.SelectedSupportBlueprint));
-                this.RefreshCost();
+                this.ShowSelectedTransport(sbp);
             }
+        }
+
+        private void ShowSelectedTransport(SquadBlueprint sbp) {
+            this.SelectedSupportBlueprint = GameLocale.GetString(sbp.UI.ScreenName);
+            this.SellectedSupportBlueprintTooltip = new CostItemPopup(sbp.UI, sbp.Cost);
+            this.NotifyPropertyChanged(nameof(this.SelectedSupportBlueprint));
+            this.NotifyPropertyChanged(nameof(this.SellectedSupportBlueprintTooltip));
+            this.RefreshCost();
         }
 
         private void RefreshAbilities() {
@@ -378,11 +387,9 @@ namespace BattlegroundsApp.Modals.CompanyBuilder {
         private void RefreshCrew(Squad crew) {
 
             // Get crew icon
-            if (App.ResourceHandler.HasIcon("unit_icons", crew.SBP.UI.Icon)) {
-                this.CrewIcon = App.ResourceHandler.GetIcon("unit_icons", crew.SBP.UI.Icon);
-            } else {
-                this.CrewIcon = new BitmapImage(new Uri("pack://application:,,,/Resources/ingame/no_icon.png"));
-            }
+            this.CrewIcon = App.ResourceHandler.HasIcon("unit_icons", crew.SBP.UI.Icon)
+                ? App.ResourceHandler.GetIcon("unit_icons", crew.SBP.UI.Icon)
+                : new BitmapImage(new Uri("pack://application:,,,/Resources/ingame/no_icon.png"));
 
             // Get crew sbp name
             this.CrewName = GameLocale.GetString(crew.SBP.UI.ScreenName);

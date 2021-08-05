@@ -2,6 +2,7 @@
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Controls;
@@ -293,6 +294,15 @@ namespace BattlegroundsApp.Controls {
                 if (j >= this.Columns) {
                     j = 0;
                     i++;
+                }
+
+                // Bail if eof has been reached
+                if (i == this.Rows && j == this.Columns) {
+                    int missing = this.Icons.Count - i * j;
+                    if (missing > 0) {
+                        Trace.WriteLine($"Warning: Failed to display {missing} (of {this.Icons.Count}) icons in icon grid of dimensions {this.Rows}x{this.Columns}", nameof(IconGrid));
+                        break;
+                    }
                 }
 
             }

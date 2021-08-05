@@ -81,6 +81,7 @@ namespace BattlegroundsApp.Controls.CompanyBuilderControls {
             this.PropertyChanged?.Invoke(this, new(nameof(this.SquadCost)));
             this.PropertyChanged?.Invoke(this, new(nameof(this.SquadVeterancy)));
             this.PropertyChanged?.Invoke(this, new(nameof(this.SquadIsTransported)));
+            this.PropertyChanged?.Invoke(this, new(nameof(this.SquadTransportSymbol)));
 
         }
 

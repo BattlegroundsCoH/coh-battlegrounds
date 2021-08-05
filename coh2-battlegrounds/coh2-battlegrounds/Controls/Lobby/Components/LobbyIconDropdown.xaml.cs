@@ -33,7 +33,8 @@ namespace BattlegroundsApp.Controls.Lobby.Components {
             this.SelfCombobox.SelectionChanged += this.SelfCombobox_SelectionChanged;
         }
 
-        private void SelfCombobox_SelectionChanged(object sender, IconComboBoxItem newItem) => this.EnableEvents.Then(() => this.SelectedItemChanged?.Invoke(sender, newItem));
+        private void SelfCombobox_SelectionChanged(object sender, IconComboBoxSelectedChangedEventArgs newItem) 
+            => this.EnableEvents.Then(() => this.SelectedItemChanged?.Invoke(sender, newItem));
 
         public void SetItemSource<T>(IEnumerable<T> obj, Func<T, IconComboBoxItem> converter) {
             this.m_items = obj.Select(x => converter(x)).ToList();
