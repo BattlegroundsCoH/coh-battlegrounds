@@ -43,9 +43,9 @@ namespace Battlegrounds.Modding {
             }
 
             // Get GUIDs
-            ModGuid tuningGUID = __lookup.ContainsKey("TuningGUID") ? ModGuid.FromGuid(__lookup["TuningGUID"] as string) : ModGuid.BaseGame;
-            ModGuid gamemodeGUID = __lookup.ContainsKey("GamemodeGUID") ? ModGuid.FromGuid(__lookup["GamemodeGUID"] as string) : ModGuid.BaseGame;
-            ModGuid assetGUID = __lookup.ContainsKey("AssetGUID") ? ModGuid.FromGuid(__lookup["AssetGUID"] as string) : ModGuid.BaseGame;
+            var tuningGUID = __lookup.ContainsKey("TuningGUID") ? ModGuid.FromGuid(__lookup["TuningGUID"] as string) : ModGuid.BaseGame;
+            var gamemodeGUID = __lookup.ContainsKey("GamemodeGUID") ? ModGuid.FromGuid(__lookup["GamemodeGUID"] as string) : ModGuid.BaseGame;
+            var assetGUID = __lookup.ContainsKey("AssetGUID") ? ModGuid.FromGuid(__lookup["AssetGUID"] as string) : ModGuid.BaseGame;
 
             // Get factions
             Dictionary<Faction, ModPackage.FactionData> factions = __lookup.GetValueOrDefault("FactionData", Array.Empty<ModPackage.FactionData>())

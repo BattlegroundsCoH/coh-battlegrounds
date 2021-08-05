@@ -18,19 +18,40 @@ namespace Battlegrounds.Modding {
 
         public readonly struct FactionData {
 
+            public readonly struct UnitAbility {
+
+                public string Blueprint { get; }
+
+                public string[] Abilities { get; }
+
+                [JsonConstructor]
+                public UnitAbility(string Blueprint, string[] Abilities) { 
+                    this.Blueprint = Blueprint;
+                    this.Abilities = Abilities;
+                }
+
+            }
+
             public readonly struct Driver {
+
                 public string Blueprint { get; }
                 public string WhenType { get; }
+
                 [JsonConstructor]
                 public Driver(string Blueprint, string WhenType) {
                     this.Blueprint = Blueprint;
                     this.WhenType = WhenType;
                 }
+
             }
 
             public string Faction { get; }
 
             public Driver[] Drivers { get; }
+
+            public string[] Abilities { get; }
+
+            public UnitAbility[] UnitAbilities { get; }
 
             public string[] Transports { get; }
 
@@ -41,9 +62,11 @@ namespace Battlegrounds.Modding {
             public bool CanHaveGliderInCompanies { get; }
 
             [JsonConstructor]
-            public FactionData(string Faction, Driver[] Drivers, string[] Transports, string[] TowTransports, bool CanHaveParadropInCompanies, bool CanHaveGliderInCompanies) {
+            public FactionData(string Faction, Driver[] Drivers, string[] Abilities, UnitAbility[] UnitAbilities, string[] Transports, string[] TowTransports, bool CanHaveParadropInCompanies, bool CanHaveGliderInCompanies) {
                 this.Faction = Faction;
                 this.Drivers = Drivers;
+                this.Abilities = Abilities;
+                this.UnitAbilities = UnitAbilities;
                 this.Transports = Transports;
                 this.TowTransports = TowTransports;
                 this.CanHaveGliderInCompanies = CanHaveGliderInCompanies;
@@ -152,12 +175,8 @@ namespace Battlegrounds.Modding {
 
         public Gamemode[] Gamemodes { get; init; }
 
-        public UcsFile GetLocale(ModType modType, string language) {
-            if (this.LocaleFiles.FirstOrDefault(x => x.ModType == modType) is ModLocale loc) {
-                return loc.GetLocale(this.ID, language);
-            }
-            return null;
-        }
+        public UcsFile GetLocale(ModType modType, string language) 
+            => this.LocaleFiles.FirstOrDefault(x => x.ModType == modType) is ModLocale loc ? loc.GetLocale(this.ID, language) : null;
 
     }
 

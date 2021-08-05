@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -45,7 +46,11 @@ namespace BattlegroundsApp.Views {
 
         private int _companySize;
         private string m_initialChecksum;
-        private ModPackage m_activeModPackage;
+        private readonly ModPackage m_activeModPackage;
+
+        private List<SquadBlueprint> m_availableSquads;
+        private List<AbilityBlueprint> m_abilities;
+        private List<AbilityBlueprint> m_unlockedAbilities;
 
         public string CompanyName { get; }
 
@@ -71,8 +76,13 @@ namespace BattlegroundsApp.Views {
 
         public bool CanAddUnits => this.Builder.CanAddUnit;
 
-        private List<SquadBlueprint> SquadList
-            => BlueprintManager.GetCollection<SquadBlueprint>().FilterByMod(this.CompanyGUID).Filter(x => x.Army == this.CompanyFaction.ToString()).ToList();
+        public string AvailableObjectType { get; set; } = "Available Units";
+
+        public Visibility AvailableUnitsVisible { get; set; } = Visibility.Visible;
+        
+        public Visibility AvailableAbilitiesVisible { get; set; } = Visibility.Collapsed;
+
+        public Visibility AvailableCrewsVisible { get; set; } = Visibility.Collapsed;
 
         public static SquadCategory[] Category => new[] {
             new SquadCategory {
@@ -92,11 +102,11 @@ namespace BattlegroundsApp.Views {
         public override void StateOnFocus() { }
         public override void StateOnLostFocus() { }
 
-        public CompanyBuilderView() {
-            this.InitializeComponent();
-        }
+        public CompanyBuilderView() => this.InitializeComponent();
 
         public CompanyBuilderView(Company company) : this() {
+
+            // Set company information
             this.Builder = new CompanyBuilder().DesignCompany(company);
             this.Statistics = company.Statistics;
             this.CompanyName = company.Name;
@@ -104,13 +114,20 @@ namespace BattlegroundsApp.Views {
             this.CompanyFaction = company.Army;
             this.CompanyGUID = company.TuningGUID;
             this.CompanyType = company.Type.ToString();
-            this.FillAvailableUnits();
-            this.ShowCompany();
+
+            // Set fields
             this.m_initialChecksum = company.Checksum;
             this.m_activeModPackage = ModManager.GetPackageFromGuid(company.TuningGUID);
+
+            // Load database and display
+            this.LoadFactionDatabase();
+            this.ShowCompany();
+
         }
 
         public CompanyBuilderView(string companyName, Faction faction, CompanyType type, ModGuid modGuid) : this() {
+
+            // Set properties
             this.Builder = new CompanyBuilder().NewCompany(faction).ChangeName(companyName).ChangeType(type).ChangeTuningMod(modGuid);
             this.Statistics = new();
             this.CompanyName = companyName;
@@ -118,14 +135,22 @@ namespace BattlegroundsApp.Views {
             this.CompanyFaction = faction;
             this.CompanyGUID = modGuid;
             this.CompanyType = type.ToString();
-            this.FillAvailableUnits();
-            this.ShowCompany();
+
+            // Set fields
             this.m_initialChecksum = string.Empty;
             this.m_activeModPackage = ModManager.GetPackageFromGuid(modGuid);
+
+            // Load database and display
+            this.LoadFactionDatabase();
+            this.ShowCompany();
+
         }
 
-        private void SaveButton_Click(object sender, RoutedEventArgs e)
-            => PlayerCompanies.SaveCompany(this.Builder.Commit().Result);
+        private void SaveButton_Click(object sender, RoutedEventArgs e) {
+            var company = this.Builder.Commit().Result;
+            PlayerCompanies.SaveCompany(company); // Side-effect: Will triger a checksum recalculation.
+            this.m_initialChecksum = company.Checksum; // Update edit detector checksum.
+        }
 
         private void BackButton_Click(object sender, RoutedEventArgs e) {
 
@@ -134,31 +159,13 @@ namespace BattlegroundsApp.Views {
                 return;
             }
 
-            YesNoDialogResult result = YesNoDialogViewModel.ShowYesNoDialog("Back", "Are you sure? All unsaved changes will be lost.");
-
-            if (result is YesNoDialogResult.Confirm) {
+            if (YesNoDialogViewModel.ShowYesNoDialog("Back", "Are you sure? All unsaved changes will be lost.") is YesNoDialogResult.Confirm) {
                 this.StateChangeRequest(new CompanyView());
             }
 
         }
 
-        private void UnitSlot_SelectionChanged(object sender, SelectionChangedEventArgs e) {
-
-        }
-
-        private void FillAvailableUnits() {
-
-            foreach (SquadBlueprint squad in this.SquadList) {
-                SquadSlotSmall unitSlot = new SquadSlotSmall(squad) {
-                    CanAdd = this.Builder.CanAddUnit
-                };
-                unitSlot.OnHoverUpdate += this.OnSlotHover;
-                _ = this.AvailableUnitsStack.Children.Add(unitSlot);
-            }
-
-        }
-
-        private void OnSlotHover(SquadSlotSmall unitSlot, bool enter) {
+        private void OnSlotHover(AvailableItemSlot itemSlot, bool enter) {
             if (!enter) {
                 this.HoverDataVisiblity = Visibility.Hidden;
                 this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(this.HoverDataVisiblity)));
@@ -166,7 +173,7 @@ namespace BattlegroundsApp.Views {
                 return;
             }
             this.HoverDataVisiblity = Visibility.Visible;
-            this.HoverData = unitSlot.HoverData;
+            this.HoverData = itemSlot.HoverData;
             this.HoverDataCost.Cost = this.HoverData.Cost;
             this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(this.HoverData)));
             this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(this.HoverDataVisiblity)));
@@ -178,24 +185,12 @@ namespace BattlegroundsApp.Views {
             this.InfantryWrap.Children.Clear();
             this.SupportWrap.Children.Clear();
             this.VehicleWrap.Children.Clear();
-            //this.AbilityList.Children.Clear();
 
             // Add all units
             this.Builder.EachUnit(this.AddUnitToDisplay, x => (int)x.DeploymentPhase);
 
             // TODO: Add abilities to list
 
-        }
-
-        public void AddUnitToCompany(UnitBuilder unitBuilder) {
-            this.Builder.AddUnit(unitBuilder).Commit();
-            this.CompanySize++;
-            this.ShowCompany();
-        }
-
-        public void ReplaceUnitInCompany(UnitBuilder unitBuilder) {
-            unitBuilder.Apply();
-            this.ShowCompany();
         }
 
         public void RemoveUnitFromCompany(Squad squad) {
@@ -239,14 +234,14 @@ namespace BattlegroundsApp.Views {
 
         }
 
-        private void OnDrop(object sender, DragEventArgs e) {
+        private void OnUnitDrop(object sender, DragEventArgs e) {
 
             if (this.CompanySize is not Company.MAX_SIZE) {
 
                 SquadBlueprint squadBlueprint = e.Data.GetData("Squad") as SquadBlueprint;
 
-                UnitBuilder unitBuilder = new UnitBuilder().SetBlueprint(squadBlueprint).SetDeploymentPhase(this.GetRecommendedDeploymentPhase());
-                Squad squad = this.Builder.AddAndCommitUnit(unitBuilder);
+                var unitBuilder = new UnitBuilder().SetBlueprint(squadBlueprint).SetDeploymentPhase(this.GetRecommendedDeploymentPhase());
+                var squad = this.Builder.AddAndCommitUnit(unitBuilder);
 
                 this.CompanySize++;
                 this.NotifyPropertyChanged(nameof(this.CompanyUnitHeaderItem));
@@ -266,6 +261,12 @@ namespace BattlegroundsApp.Views {
 
         }
 
+        private void OnAbilityDrop(object sender, DragEventArgs e) {
+        
+
+
+        }
+
         private DeploymentPhase GetRecommendedDeploymentPhase() {
 
             // Get deployment phase counts
@@ -278,7 +279,7 @@ namespace BattlegroundsApp.Views {
 
             // Remove initial if already full
             if (dict[DeploymentPhase.PhaseInitial] >= Company.MAX_INITIAL) {
-                dict.Remove(DeploymentPhase.PhaseInitial);
+                _ = dict.Remove(DeploymentPhase.PhaseInitial);
             }
 
             // Calc constant threshold
@@ -319,11 +320,92 @@ namespace BattlegroundsApp.Views {
 
         private void SetCanAddUnits(bool canAdd) {
             foreach (object obj in this.AvailableUnitsStack.Children) {
-                if (obj is SquadSlotSmall slot) {
+                if (obj is AvailableItemSlot slot) {
                     slot.CanAdd = canAdd;
                 }
             }
         }
 
+        private async void FillStack<TBlueprint>(IEnumerable<TBlueprint> source, StackPanel target) where TBlueprint : Blueprint {
+            foreach (var element in source) {
+                var slot = await this.Dispatcher.InvokeAsync(() => new AvailableItemSlot(element) {
+                    CanAdd = this.Builder.CanAddUnit
+                });
+                slot.OnHoverUpdate += this.OnSlotHover;
+                _ = await this.Dispatcher.InvokeAsync(() => target.Children.Add(slot));
+            }
+        }
+
+        private void LoadFactionDatabase() {
+
+            _ = Task.Run(() => {
+
+                // Get available squads
+                this.m_availableSquads = BlueprintManager.GetCollection<SquadBlueprint>()
+                    .FilterByMod(this.CompanyGUID)
+                    .Filter(x => x.Army == this.CompanyFaction.ToString())
+                    .Filter(x => !x.Types.IsVehicleCrew)
+                    .ToList();
+
+                // Get faction data
+                var faction = this.m_activeModPackage.FactionSettings[this.CompanyFaction];
+
+                // Get available abilities
+                this.m_abilities = BlueprintManager.GetCollection<AbilityBlueprint>()
+                    .FilterByMod(this.CompanyGUID)
+                    .Filter(x => faction.Abilities.Contains(x.Name))
+                    .ToList();
+
+                // Get abilities associated with company units
+                this.m_unlockedAbilities = BlueprintManager.GetCollection<AbilityBlueprint>()
+                    .FilterByMod(this.CompanyGUID)
+                    .Filter(x => faction.UnitAbilities.Any(y => y.Abilities.Contains(x.Name)))
+                    .Filter(x => faction.UnitAbilities.Any(y => this.Builder.HasUnit(y.Blueprint)))
+                    .ToList();
+
+                // Populate lists
+                this.FillStack(this.m_availableSquads, this.AvailableUnitsStack);
+                this.FillStack(this.m_abilities, this.AvailableAbilities);
+
+            });
+
+        }
+
+        private void OnOverviewSelectionChanged(object sender, SelectionChangedEventArgs e) {
+
+            // Get tabcontrol
+            TabControl tabControl = sender as TabControl;
+
+            // Switch all of by default
+            this.AvailableUnitsVisible = Visibility.Collapsed;
+            this.AvailableAbilitiesVisible = Visibility.Collapsed;
+            this.AvailableCrewsVisible = Visibility.Collapsed;
+
+            // Switch on selected index
+            switch (tabControl.SelectedIndex) {
+                case 0:
+                    this.AvailableObjectType = "Available Units";
+                    this.AvailableUnitsVisible = Visibility.Visible;
+                    break;
+                case 1:
+                    this.AvailableObjectType = "Available Abilities";
+                    this.AvailableAbilitiesVisible = Visibility.Visible;
+                    break;
+                case 2:
+                    this.AvailableObjectType = "Available Crews";
+                    this.AvailableCrewsVisible = Visibility.Visible;
+                    break;
+                default: break;
+            }
+
+            // Trigger refresh data
+            this.NotifyPropertyChanged(nameof(this.AvailableObjectType));
+            this.NotifyPropertyChanged(nameof(this.AvailableUnitsVisible));
+            this.NotifyPropertyChanged(nameof(this.AvailableAbilitiesVisible));
+            this.NotifyPropertyChanged(nameof(this.AvailableCrewsVisible));
+
+        }
+
     }
+
 }

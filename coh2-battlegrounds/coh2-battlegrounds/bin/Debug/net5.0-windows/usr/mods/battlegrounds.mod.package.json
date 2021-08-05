@@ -95,6 +95,17 @@
                     "WhenType": null
                 }
             ],
+            "Abilities": [
+
+            ],
+            "UnitAbilities": [
+                {
+                    "Blueprint": "",
+                    "Abilities": [
+                        
+                    ]
+                }
+            ],
             "Transports": [
                 "m3a1_scout_car_squad_bg",
                 "m5_halftrack_squad_bg",

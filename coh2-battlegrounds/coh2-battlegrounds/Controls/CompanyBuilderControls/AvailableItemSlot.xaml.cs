@@ -1,4 +1,5 @@
 ﻿using Battlegrounds.Game.Database;
+using Battlegrounds.Game.Gameplay;
 
 using BattlegroundsApp.Resources;
 
@@ -10,7 +11,8 @@ using System.Windows.Input;
 using System.Windows.Media;
 
 namespace BattlegroundsApp.Controls.CompanyBuilderControls {
-    public partial class SquadSlotSmall : UserControl, INotifyPropertyChanged {
+
+    public partial class AvailableItemSlot : UserControl, INotifyPropertyChanged {
 
         private bool m_canAdd = true;
 
@@ -18,7 +20,7 @@ namespace BattlegroundsApp.Controls.CompanyBuilderControls {
 
         public ImageSource SquadIcon { get; }
 
-        public SquadBlueprint Squad { get; }
+        public Blueprint Blueprint { get; }
 
         public ObjectHoverData HoverData { get; }
 
@@ -30,16 +32,25 @@ namespace BattlegroundsApp.Controls.CompanyBuilderControls {
             }
         }
 
-        public event Action<SquadSlotSmall, bool> OnHoverUpdate;
+        public event Action<AvailableItemSlot, bool> OnHoverUpdate;
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        public SquadSlotSmall(SquadBlueprint squad) {
+        public AvailableItemSlot(Blueprint bp) {
             this.DataContext = this;
-            this.SquadName = GameLocale.GetString(squad.UI.ScreenName);
-            this.SquadIcon = App.ResourceHandler.GetIcon("unit_icons", squad.UI.Icon);
-            this.Squad = squad;
-            this.HoverData = new(this.Squad);
+            if (bp is SquadBlueprint sbp) {
+                this.SquadName = GameLocale.GetString(sbp.UI.ScreenName);
+                this.SquadIcon = App.ResourceHandler.GetIcon("unit_icons", sbp.UI.Icon);
+                this.Blueprint = sbp;
+                this.HoverData = new(sbp);
+            } else if (bp is AbilityBlueprint abp) {
+                this.SquadName = GameLocale.GetString(abp.UI.ScreenName);
+                this.SquadIcon = App.ResourceHandler.GetIcon("ability_icons", abp.UI.Icon);
+                this.Blueprint = abp;
+                this.HoverData = new(abp);
+            } else {
+                throw new ArgumentException($"Invalid blueprint type '{bp.GetType().Name}'.", nameof(bp));
+            }
             this.InitializeComponent();
         }
 
@@ -52,12 +63,17 @@ namespace BattlegroundsApp.Controls.CompanyBuilderControls {
 
             if (e.LeftButton is MouseButtonState.Pressed) {
 
-                DataObject obj = new DataObject();
-                obj.SetData("Squad", this.Squad);
+                var obj = new DataObject();
+                if (this.Blueprint is SquadBlueprint sbp) {
+                    obj.SetData("Squad", sbp);
+                } else if (this.Blueprint is AbilityBlueprint abp) {
+                    obj.SetData("Ability", abp);
+                }
 
                 DragDrop.DoDragDrop(this, obj, DragDropEffects.Move);
 
             }
+
         }
 
         private void OnMouseEnter(object sender, MouseEventArgs e)
@@ -67,4 +83,5 @@ namespace BattlegroundsApp.Controls.CompanyBuilderControls {
             => this.OnHoverUpdate?.Invoke(this, false);
 
     }
+
 }

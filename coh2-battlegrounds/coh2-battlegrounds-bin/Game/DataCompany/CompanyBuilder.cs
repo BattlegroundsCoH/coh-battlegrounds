@@ -333,6 +333,13 @@ namespace Battlegrounds.Game.DataCompany {
         }
 
         /// <summary>
+        /// Get if the company under construction has a squad with specified <paramref name="blueprint"/>.
+        /// </summary>
+        /// <param name="blueprint">The name of the blueprint to check for.</param>
+        /// <returns><see langword="true"/>, if <paramref name="blueprint"/> is found; Otherwise <see langword="false"/>.</returns>
+        public bool HasUnit(string blueprint) => this.m_companyTarget.Units.Any(x => x.SBP.Name ==  blueprint);
+
+        /// <summary>
         /// 
         /// </summary>
         /// <param name="squad"></param>

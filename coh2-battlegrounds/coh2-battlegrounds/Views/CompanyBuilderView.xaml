@@ -6,8 +6,8 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:BattlegroundsApp.Views"
              xmlns:card="clr-namespace:BattlegroundsApp.Controls.CompanyBuilderControls"
-             xmlns:dropArea="clr-namespace:BattlegroundsApp.Controls.DropArea"
-             mc:Ignorable="d"
+             xmlns:dropArea="clr-namespace:BattlegroundsApp.Controls.DropArea" d:DataContext="{d:DesignInstance Type=local:CompanyBuilderView}"
+               mc:Ignorable="d"
              d:DesignHeight="650" d:DesignWidth="1000" 
                Background="white"
                ModalMaskBehaviour="ExitWhenClicked"
@@ -18,7 +18,7 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
             <RowDefinition Height="128"/>
-            <RowDefinition Height="auto"/>
+            <RowDefinition Height="32"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
@@ -132,13 +132,17 @@
         </StackPanel>
 
         <!-- Row 2 :: Content Explanation Text -->
-        <TextBlock Grid.Row="2" Grid.Column="0" Text="Company Setup"/>
-        <TextBlock Grid.Row="2" Grid.Column="2" Text="Available Units"/>
+        <TextBlock Grid.Row="2" Grid.Column="0" 
+                   Text="Company Composition" TextAlignment="Center"
+                   VerticalAlignment="Center" FontSize="14"/>
+        <TextBlock Grid.Row="2" Grid.Column="2" 
+                   Text="{Binding AvailableObjectType}" TextAlignment="Center"
+                   VerticalAlignment="Center" FontSize="14"/>
 
         <!-- Row 3 :: Company Overview -->
-        <TabControl Grid.Row="3" Grid.Column="0">
+        <TabControl Grid.Row="3" Grid.Column="0" SelectionChanged="OnOverviewSelectionChanged">
             <TabItem Header="{Binding Path=CompanyUnitHeaderItem}">
-                <dropArea:DropArea AllowDrop="True" Drop="OnDrop" Background="White" BorderThickness="1.5" BorderBrush="Black">
+                <dropArea:DropArea AllowDrop="True" Drop="OnUnitDrop" Background="White" BorderThickness="1.5" BorderBrush="Black">
                     <ScrollViewer>
                         <StackPanel>
                             <StackPanel>
@@ -164,15 +168,48 @@
                 </dropArea:DropArea>
             </TabItem>
             <TabItem Header="Abilities">
-                
+                <dropArea:DropArea AllowDrop="True" Drop="OnAbilityDrop" Background="White" BorderThickness="1.5" BorderBrush="Black">
+                    <ScrollViewer>
+                        <StackPanel>
+                            <StackPanel>
+                                <Label Content="Unit Abilities" FontStyle="Italic"/>
+                                <Separator Margin="2.5"/>
+                                <WrapPanel x:Name="UnitAbilityWrap" Orientation="Horizontal"/>
+                                <Separator Margin="2.5"/>
+                            </StackPanel>
+                            <StackPanel>
+                                <Label Content="Commander Abilities" FontStyle="Italic"/>
+                                <Separator Margin="2.5"/>
+                                <WrapPanel x:Name="AbilityWrap" Orientation="Horizontal"/>
+                                <Separator Margin="2.5"/>
+                            </StackPanel>
+                        </StackPanel>
+                    </ScrollViewer>
+                </dropArea:DropArea>
             </TabItem>
             <TabItem Header="Inventory">
-
+                <ScrollViewer>
+                    <StackPanel>
+                        <StackPanel>
+                            <Label Content="Captured Items" FontStyle="Italic"/>
+                            <Separator Margin="2.5"/>
+                            <WrapPanel x:Name="ItemWrap" Orientation="Horizontal"/>
+                            <Separator Margin="2.5"/>
+                        </StackPanel>
+                        <StackPanel>
+                            <Label Content="Captured Equipment" FontStyle="Italic"/>
+                            <Separator Margin="2.5"/>
+                            <WrapPanel x:Name="EquipmentWrap" Orientation="Horizontal"/>
+                            <Separator Margin="2.5"/>
+                        </StackPanel>
+                    </StackPanel>
+                </ScrollViewer>
             </TabItem>
         </TabControl>
 
-        <!-- Row 3 :: Available units -->
-        <DockPanel Grid.Row="3" Grid.Column="2" LastChildFill="True">
+        <!-- Row 3 :: Available Units -->
+        <DockPanel Grid.Row="3" Grid.Column="2" 
+                   LastChildFill="True" Visibility="{Binding AvailableUnitsVisible}">
             <StackPanel DockPanel.Dock="Bottom" Name="CapturedItemsDroppableContainer">
                 <Label Content="Captured Items"/>
                 <ScrollViewer CanContentScroll="False" 
@@ -184,6 +221,24 @@
                 <StackPanel x:Name="AvailableUnitsStack"/>
             </ScrollViewer>
         </DockPanel>
-        
+
+        <!-- Row 3 :: Available Abilities -->
+        <DockPanel Grid.Row="3" Grid.Column="2" 
+                   LastChildFill="True" Visibility="{Binding AvailableAbilitiesVisible}">
+            <ScrollViewer CanContentScroll="False" 
+                          VerticalScrollBarVisibility="Visible">
+                <StackPanel x:Name="AvailableAbilities"/>
+            </ScrollViewer>
+        </DockPanel>
+
+        <!-- Row 3 :: Available Crews -->
+        <DockPanel Grid.Row="3" Grid.Column="2" 
+                   LastChildFill="True" Visibility="{Binding AvailableCrewsVisible}">
+            <ScrollViewer CanContentScroll="False" 
+                          VerticalScrollBarVisibility="Visible">
+                <StackPanel x:Name="AvailableCrews"/>
+            </ScrollViewer>
+        </DockPanel>
+
     </Grid>
 </bg:ViewState>
