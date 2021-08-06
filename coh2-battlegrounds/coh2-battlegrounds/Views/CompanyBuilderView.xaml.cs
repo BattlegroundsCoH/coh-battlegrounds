@@ -15,6 +15,7 @@ using Battlegrounds.Game.Gameplay;
 using Battlegrounds.Modding;
 
 using BattlegroundsApp.Controls.CompanyBuilderControls;
+using BattlegroundsApp.Dialogs.OK;
 using BattlegroundsApp.Dialogs.YesNo;
 using BattlegroundsApp.LocalData;
 using BattlegroundsApp.Modals.CompanyBuilder;
@@ -157,6 +158,17 @@ namespace BattlegroundsApp.Views {
             var company = this.Builder.Commit().Result;
             PlayerCompanies.SaveCompany(company); // Side-effect: Will triger a checksum recalculation.
             this.m_initialChecksum = company.Checksum; // Update edit detector checksum.
+            _ = OKDialogViewModel.ShowOKDialog("Company Saved", "The company was successfully saved on the local machine");
+        }
+
+        private void ResetButton_Click(object sender, RoutedEventArgs e) {
+
+            if (YesNoDialogViewModel.ShowYesNoDialog("Reset Company", "Are you sure? The entiry company will be reset") is YesNoDialogResult.Confirm) {
+                var backup = this.Builder.Commit().Result;
+                _ = this.Builder.ReleaseCompany().NewCompany(backup.Army).ChangeTuningMod(backup.TuningGUID)
+                    .ChangeType(backup.Type).ChangeAvailability(CompanyAvailabilityType.MultiplayerOnly);
+            }
+
         }
 
         private void BackButton_Click(object sender, RoutedEventArgs e) {

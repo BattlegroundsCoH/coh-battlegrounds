@@ -48,7 +48,7 @@
                     Orientation="Horizontal"
                     HorizontalAlignment="Center"
                     VerticalAlignment="Center">
-            <Button x:Name="resetButton" Grid.Row="6" Grid.Column="1" Content="Reset" Margin="2.5" Width="105" Click="BackButton_Click"/>
+            <Button x:Name="resetButton" Grid.Row="6" Grid.Column="1" Content="Reset" Margin="2.5" Width="105" Click="ResetButton_Click"/>
             <Button x:Name="saveButton" Grid.Row="6" Grid.Column="0" Content="Save" Margin="2.5" Width="105" Click="SaveButton_Click"/>
         </StackPanel>
         
@@ -215,6 +215,8 @@
                 <ScrollViewer CanContentScroll="False" 
                           VerticalScrollBarVisibility="Visible">
                     <StackPanel x:Name="AvailableItems"/>
+                    <!-- Use this to display captured items that can be 
+                    dragged onto squads to apply slot item-->
                 </ScrollViewer>
             </StackPanel>
             <ScrollViewer CanContentScroll="False" VerticalScrollBarVisibility="Visible">
