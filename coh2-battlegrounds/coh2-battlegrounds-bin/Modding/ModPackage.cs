@@ -9,6 +9,7 @@ using System.Text.Json.Serialization;
 using Battlegrounds.Game.DataCompany;
 using Battlegrounds.Game.DataSource;
 using Battlegrounds.Game.Gameplay;
+using Battlegrounds.Locale;
 
 namespace Battlegrounds.Modding {
 
@@ -270,6 +271,16 @@ namespace Battlegrounds.Modding {
 
         public UcsFile GetLocale(ModType modType, string language)
             => this.LocaleFiles.FirstOrDefault(x => x.ModType == modType) is ModLocale loc ? loc.GetLocale(this.ID, language) : null;
+
+        public UcsFile GetLocale(ModType modType, LocaleLanguage language)
+            => this.GetLocale(modType, language switch {
+                LocaleLanguage.Default => "english",
+                LocaleLanguage.German => "german",
+                LocaleLanguage.French => "french",
+                LocaleLanguage.Spanish => "spanish",
+                LocaleLanguage.Russian => "russian",
+                _ => throw new NotSupportedException()
+            });
 
     }
 
