@@ -239,7 +239,7 @@ namespace Battlegrounds.Campaigns.Controller {
                     } else if (count > 12 && phase == DeploymentPhase.PhaseB) {
                         phase = DeploymentPhase.PhaseC;
                     }
-                    builder.AddUnit(uBld);
+                    builder.AddAndCommitUnit(uBld);
                 }
             }
 

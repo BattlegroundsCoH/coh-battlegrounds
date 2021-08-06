@@ -235,7 +235,7 @@ namespace Battlegrounds.Game.DataCompany {
                         .SetDeploymentPhase((DeploymentPhase)template.m_units[i].PHASE)
                         .IfTrue(x => template.m_units[i].TPBGID != BlueprintManager.InvalidLocalBlueprint).Then(x => x.SetTransportBlueprint(template.m_units[i].TPBGID))
                         .SetDeploymentMethod((DeploymentMethod)template.m_units[i].DMODE);
-                    builder.AddUnit(unit);
+                    builder.AddAndCommitUnit(unit);
                 }
             }
 

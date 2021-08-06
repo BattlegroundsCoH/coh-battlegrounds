@@ -115,55 +115,55 @@ namespace coh2_battlegrounds_console {
             UnitBuilder unitBuilder = new UnitBuilder();
 
             // Basic infantry
-            companyBuilder.AddUnit(unitBuilder.SetBlueprint("conscript_squad_bg").SetVeterancyRank(1).AddUpgrade("ppsh-41_sub_machine_gun_upgrade_bg").SetDeploymentPhase(DeploymentPhase.PhaseInitial).GetAndReset());
-            companyBuilder.AddUnit(unitBuilder.SetBlueprint("conscript_squad_bg").SetVeterancyRank(1).AddUpgrade("ppsh-41_sub_machine_gun_upgrade_bg").SetDeploymentPhase(DeploymentPhase.PhaseInitial).GetAndReset());
-            companyBuilder.AddUnit(unitBuilder.SetBlueprint("conscript_squad_bg").SetVeterancyRank(2).AddUpgrade("dp-28_lmg_upgrade_bg").SetDeploymentPhase(DeploymentPhase.PhaseA).GetAndReset());
-            companyBuilder.AddUnit(unitBuilder.SetBlueprint("conscript_squad_bg").SetVeterancyRank(2).AddUpgrade("dp-28_lmg_upgrade_bg").SetDeploymentPhase(DeploymentPhase.PhaseA).GetAndReset());
-            companyBuilder.AddUnit(unitBuilder.SetBlueprint("conscript_squad_bg").SetVeterancyRank(4).AddUpgrade("ppsh-41_sub_machine_gun_upgrade_bg").SetDeploymentPhase(DeploymentPhase.PhaseA).GetAndReset());
-            companyBuilder.AddUnit(unitBuilder.SetBlueprint("tank_buster_bg").SetVeterancyRank(2).SetDeploymentPhase(DeploymentPhase.PhaseA).GetAndReset());
-            companyBuilder.AddUnit(unitBuilder.SetBlueprint("tank_buster_bg").SetVeterancyRank(3).SetDeploymentPhase(DeploymentPhase.PhaseA).GetAndReset());
-            companyBuilder.AddUnit(unitBuilder.SetBlueprint("tank_buster_bg").SetVeterancyRank(3).SetDeploymentPhase(DeploymentPhase.PhaseA).GetAndReset());
-            companyBuilder.AddUnit(unitBuilder.SetBlueprint("shock_troops_bg").SetVeterancyRank(4).SetDeploymentPhase(DeploymentPhase.PhaseA).GetAndReset());
-            companyBuilder.AddUnit(unitBuilder.SetBlueprint("shock_troops_bg").SetVeterancyRank(3).SetDeploymentPhase(DeploymentPhase.PhaseA).GetAndReset());
-            companyBuilder.AddUnit(unitBuilder.SetBlueprint("shock_troops_bg").SetVeterancyRank(5).SetDeploymentPhase(DeploymentPhase.PhaseA).GetAndReset());
-            companyBuilder.AddUnit(unitBuilder.SetBlueprint("shock_troops_bg").SetVeterancyRank(2).SetDeploymentPhase(DeploymentPhase.PhaseB).GetAndReset());
-            companyBuilder.AddUnit(unitBuilder.SetBlueprint("shock_troops_bg").SetVeterancyRank(2).SetDeploymentPhase(DeploymentPhase.PhaseB).GetAndReset());
-            companyBuilder.AddUnit(unitBuilder.SetBlueprint("commissar_squad_bg").SetVeterancyRank(3).SetDeploymentPhase(DeploymentPhase.PhaseA).GetAndReset());
+            companyBuilder.AddAndCommitUnit(unitBuilder.SetBlueprint("conscript_squad_bg").SetVeterancyRank(1).AddUpgrade("ppsh-41_sub_machine_gun_upgrade_bg").SetDeploymentPhase(DeploymentPhase.PhaseInitial).GetAndReset());
+            companyBuilder.AddAndCommitUnit(unitBuilder.SetBlueprint("conscript_squad_bg").SetVeterancyRank(1).AddUpgrade("ppsh-41_sub_machine_gun_upgrade_bg").SetDeploymentPhase(DeploymentPhase.PhaseInitial).GetAndReset());
+            companyBuilder.AddAndCommitUnit(unitBuilder.SetBlueprint("conscript_squad_bg").SetVeterancyRank(2).AddUpgrade("dp-28_lmg_upgrade_bg").SetDeploymentPhase(DeploymentPhase.PhaseA).GetAndReset());
+            companyBuilder.AddAndCommitUnit(unitBuilder.SetBlueprint("conscript_squad_bg").SetVeterancyRank(2).AddUpgrade("dp-28_lmg_upgrade_bg").SetDeploymentPhase(DeploymentPhase.PhaseA).GetAndReset());
+            companyBuilder.AddAndCommitUnit(unitBuilder.SetBlueprint("conscript_squad_bg").SetVeterancyRank(4).AddUpgrade("ppsh-41_sub_machine_gun_upgrade_bg").SetDeploymentPhase(DeploymentPhase.PhaseA).GetAndReset());
+            companyBuilder.AddAndCommitUnit(unitBuilder.SetBlueprint("tank_buster_bg").SetVeterancyRank(2).SetDeploymentPhase(DeploymentPhase.PhaseA).GetAndReset());
+            companyBuilder.AddAndCommitUnit(unitBuilder.SetBlueprint("tank_buster_bg").SetVeterancyRank(3).SetDeploymentPhase(DeploymentPhase.PhaseA).GetAndReset());
+            companyBuilder.AddAndCommitUnit(unitBuilder.SetBlueprint("tank_buster_bg").SetVeterancyRank(3).SetDeploymentPhase(DeploymentPhase.PhaseA).GetAndReset());
+            companyBuilder.AddAndCommitUnit(unitBuilder.SetBlueprint("shock_troops_bg").SetVeterancyRank(4).SetDeploymentPhase(DeploymentPhase.PhaseA).GetAndReset());
+            companyBuilder.AddAndCommitUnit(unitBuilder.SetBlueprint("shock_troops_bg").SetVeterancyRank(3).SetDeploymentPhase(DeploymentPhase.PhaseA).GetAndReset());
+            companyBuilder.AddAndCommitUnit(unitBuilder.SetBlueprint("shock_troops_bg").SetVeterancyRank(5).SetDeploymentPhase(DeploymentPhase.PhaseA).GetAndReset());
+            companyBuilder.AddAndCommitUnit(unitBuilder.SetBlueprint("shock_troops_bg").SetVeterancyRank(2).SetDeploymentPhase(DeploymentPhase.PhaseB).GetAndReset());
+            companyBuilder.AddAndCommitUnit(unitBuilder.SetBlueprint("shock_troops_bg").SetVeterancyRank(2).SetDeploymentPhase(DeploymentPhase.PhaseB).GetAndReset());
+            companyBuilder.AddAndCommitUnit(unitBuilder.SetBlueprint("commissar_squad_bg").SetVeterancyRank(3).SetDeploymentPhase(DeploymentPhase.PhaseA).GetAndReset());
 
             // Transported Infantry
-            companyBuilder.AddUnit(unitBuilder.SetBlueprint("conscript_squad_bg")
+            companyBuilder.AddAndCommitUnit(unitBuilder.SetBlueprint("conscript_squad_bg")
                 .SetTransportBlueprint("zis_6_transport_truck_bg")
                 .SetDeploymentMethod(DeploymentMethod.DeployAndExit)
                 .SetDeploymentPhase(DeploymentPhase.PhaseA)
                 .GetAndReset());
-            companyBuilder.AddUnit(unitBuilder.SetBlueprint("conscript_squad_bg")
+            companyBuilder.AddAndCommitUnit(unitBuilder.SetBlueprint("conscript_squad_bg")
                 .SetTransportBlueprint("zis_6_transport_truck_bg")
                 .SetDeploymentMethod(DeploymentMethod.DeployAndExit)
                 .SetVeterancyRank(3)
                 .SetDeploymentPhase(DeploymentPhase.PhaseA)
                 .GetAndReset());
-            companyBuilder.AddUnit(unitBuilder.SetBlueprint("conscript_squad_bg")
+            companyBuilder.AddAndCommitUnit(unitBuilder.SetBlueprint("conscript_squad_bg")
                 .SetTransportBlueprint("zis_6_transport_truck_bg")
                 .SetDeploymentMethod(DeploymentMethod.DeployAndExit)
                 .SetVeterancyRank(4)
                 .AddUpgrade("ppsh-41_sub_machine_gun_upgrade_bg")
                 .SetDeploymentPhase(DeploymentPhase.PhaseA)
                 .GetAndReset());
-            companyBuilder.AddUnit(unitBuilder.SetBlueprint("conscript_squad_bg")
+            companyBuilder.AddAndCommitUnit(unitBuilder.SetBlueprint("conscript_squad_bg")
                 .SetTransportBlueprint("zis_6_transport_truck_bg")
                 .SetDeploymentMethod(DeploymentMethod.DeployAndExit)
                 .SetVeterancyRank(5)
                 .AddUpgrade("ppsh-41_sub_machine_gun_upgrade_bg")
                 .SetDeploymentPhase(DeploymentPhase.PhaseA)
                 .GetAndReset());
-            companyBuilder.AddUnit(unitBuilder.SetBlueprint("frontoviki_squad_bg")
+            companyBuilder.AddAndCommitUnit(unitBuilder.SetBlueprint("frontoviki_squad_bg")
                 .SetTransportBlueprint("m5_halftrack_squad_bg")
                 .SetDeploymentMethod(DeploymentMethod.DeployAndExit)
                 .SetVeterancyRank(0)
                 .AddUpgrade("ppsh-41_sub_machine_gun_upgrade_bg")
                 .SetDeploymentPhase(DeploymentPhase.PhaseB)
                 .GetAndReset());
-            companyBuilder.AddUnit(unitBuilder.SetBlueprint("frontoviki_squad_bg")
+            companyBuilder.AddAndCommitUnit(unitBuilder.SetBlueprint("frontoviki_squad_bg")
                 .SetTransportBlueprint("m5_halftrack_squad_bg")
                 .SetDeploymentMethod(DeploymentMethod.DeployAndExit)
                 .SetVeterancyRank(1)
@@ -172,69 +172,69 @@ namespace coh2_battlegrounds_console {
                 .GetAndReset());
 
             // Support Weapons
-            companyBuilder.AddUnit(unitBuilder.SetBlueprint("m1942_zis-3_76mm_at_gun_squad_bg")
+            companyBuilder.AddAndCommitUnit(unitBuilder.SetBlueprint("m1942_zis-3_76mm_at_gun_squad_bg")
                 .SetTransportBlueprint("zis_6_transport_truck_bg")
                 .SetDeploymentMethod(DeploymentMethod.DeployAndExit)
                 .SetDeploymentPhase(DeploymentPhase.PhaseA)
                 .GetAndReset());
-            companyBuilder.AddUnit(unitBuilder.SetBlueprint("m1942_zis-3_76mm_at_gun_squad_bg")
+            companyBuilder.AddAndCommitUnit(unitBuilder.SetBlueprint("m1942_zis-3_76mm_at_gun_squad_bg")
                 .SetTransportBlueprint("zis_6_transport_truck_bg")
                 .SetDeploymentMethod(DeploymentMethod.DeployAndExit)
                 .SetDeploymentPhase(DeploymentPhase.PhaseA)
                 .GetAndReset());
-            companyBuilder.AddUnit(unitBuilder.SetBlueprint("m1910_maxim_heavy_machine_gun_squad_bg")
+            companyBuilder.AddAndCommitUnit(unitBuilder.SetBlueprint("m1910_maxim_heavy_machine_gun_squad_bg")
                 .SetDeploymentPhase(DeploymentPhase.PhaseA)
                 .GetAndReset());
-            companyBuilder.AddUnit(unitBuilder.SetBlueprint("m1910_maxim_heavy_machine_gun_squad_bg")
+            companyBuilder.AddAndCommitUnit(unitBuilder.SetBlueprint("m1910_maxim_heavy_machine_gun_squad_bg")
                 .SetDeploymentPhase(DeploymentPhase.PhaseA)
                 .GetAndReset());
-            companyBuilder.AddUnit(unitBuilder.SetBlueprint("pm-82_41_mortar_squad_bg")
+            companyBuilder.AddAndCommitUnit(unitBuilder.SetBlueprint("pm-82_41_mortar_squad_bg")
                 .SetVeterancyRank(2)
                 .SetDeploymentPhase(DeploymentPhase.PhaseA)
                 .GetAndReset());
-            companyBuilder.AddUnit(unitBuilder.SetBlueprint("pm-82_41_mortar_squad_bg")
+            companyBuilder.AddAndCommitUnit(unitBuilder.SetBlueprint("pm-82_41_mortar_squad_bg")
                 .SetVeterancyRank(2)
                 .SetDeploymentPhase(DeploymentPhase.PhaseA)
                 .GetAndReset());
 
             // Vehicles
-            companyBuilder.AddUnit(unitBuilder.SetBlueprint("m5_halftrack_squad_bg")
+            companyBuilder.AddAndCommitUnit(unitBuilder.SetBlueprint("m5_halftrack_squad_bg")
                 .SetVeterancyRank(1)
                 .SetDeploymentPhase(DeploymentPhase.PhaseA)
                 .GetAndReset());
-            companyBuilder.AddUnit(unitBuilder.SetBlueprint("t_34_76_squad_bg")
+            companyBuilder.AddAndCommitUnit(unitBuilder.SetBlueprint("t_34_76_squad_bg")
                 .SetVeterancyRank(0)
                 .SetDeploymentPhase(DeploymentPhase.PhaseA)
                 .GetAndReset());
-            companyBuilder.AddUnit(unitBuilder.SetBlueprint("t_34_76_squad_bg")
+            companyBuilder.AddAndCommitUnit(unitBuilder.SetBlueprint("t_34_76_squad_bg")
                 .SetVeterancyRank(0)
                 .SetDeploymentPhase(DeploymentPhase.PhaseA)
                 .GetAndReset());
-            companyBuilder.AddUnit(unitBuilder.SetBlueprint("t_34_76_squad_bg")
+            companyBuilder.AddAndCommitUnit(unitBuilder.SetBlueprint("t_34_76_squad_bg")
                 .SetVeterancyRank(2)
                 .SetDeploymentPhase(DeploymentPhase.PhaseB)
                 .GetAndReset());
-            companyBuilder.AddUnit(unitBuilder.SetBlueprint("su-85_bg")
+            companyBuilder.AddAndCommitUnit(unitBuilder.SetBlueprint("su-85_bg")
                 .SetVeterancyRank(1)
                 .SetDeploymentPhase(DeploymentPhase.PhaseB)
                 .GetAndReset());
-            companyBuilder.AddUnit(unitBuilder.SetBlueprint("t_34_85_squad_bg")
+            companyBuilder.AddAndCommitUnit(unitBuilder.SetBlueprint("t_34_85_squad_bg")
                 .SetVeterancyRank(4)
                 .SetDeploymentPhase(DeploymentPhase.PhaseB)
                 .GetAndReset());
-            companyBuilder.AddUnit(unitBuilder.SetBlueprint("t_34_85_squad_bg")
+            companyBuilder.AddAndCommitUnit(unitBuilder.SetBlueprint("t_34_85_squad_bg")
                 .SetVeterancyRank(5)
                 .SetDeploymentPhase(DeploymentPhase.PhaseC)
                 .GetAndReset());
-            companyBuilder.AddUnit(unitBuilder.SetBlueprint("kv-1_bg")
+            companyBuilder.AddAndCommitUnit(unitBuilder.SetBlueprint("kv-1_bg")
                 .SetVeterancyRank(2)
                 .SetDeploymentPhase(DeploymentPhase.PhaseB)
                 .GetAndReset());
-            companyBuilder.AddUnit(unitBuilder.SetBlueprint("kv-1_bg")
+            companyBuilder.AddAndCommitUnit(unitBuilder.SetBlueprint("kv-1_bg")
                 .SetVeterancyRank(2)
                 .SetDeploymentPhase(DeploymentPhase.PhaseC)
                 .GetAndReset());
-            companyBuilder.AddUnit(unitBuilder.SetBlueprint("is-2_bg")
+            companyBuilder.AddAndCommitUnit(unitBuilder.SetBlueprint("is-2_bg")
                 .SetVeterancyRank(3)
                 .SetDeploymentPhase(DeploymentPhase.PhaseC)
                 .GetAndReset());
@@ -253,73 +253,73 @@ namespace coh2_battlegrounds_console {
             UnitBuilder unitBuilder = new UnitBuilder();
 
             // Basic infantry
-            companyBuilder.AddUnit(unitBuilder.SetBlueprint("pioneer_squad_bg").SetDeploymentPhase(DeploymentPhase.PhaseInitial).GetAndReset());
-            companyBuilder.AddUnit(unitBuilder.SetBlueprint("pioneer_squad_bg").SetDeploymentPhase(DeploymentPhase.PhaseA).GetAndReset());
-            companyBuilder.AddUnit(unitBuilder.SetBlueprint("pioneer_squad_bg").SetDeploymentPhase(DeploymentPhase.PhaseA).GetAndReset());
-            companyBuilder.AddUnit(unitBuilder.SetBlueprint("pioneer_squad_bg").SetDeploymentPhase(DeploymentPhase.PhaseA).GetAndReset());
-            companyBuilder.AddUnit(unitBuilder.SetBlueprint("sniper_squad_bg").SetDeploymentPhase(DeploymentPhase.PhaseInitial).GetAndReset());
-            companyBuilder.AddUnit(unitBuilder.SetBlueprint("sniper_squad_bg").SetDeploymentPhase(DeploymentPhase.PhaseA).GetAndReset());
+            companyBuilder.AddAndCommitUnit(unitBuilder.SetBlueprint("pioneer_squad_bg").SetDeploymentPhase(DeploymentPhase.PhaseInitial).GetAndReset());
+            companyBuilder.AddAndCommitUnit(unitBuilder.SetBlueprint("pioneer_squad_bg").SetDeploymentPhase(DeploymentPhase.PhaseA).GetAndReset());
+            companyBuilder.AddAndCommitUnit(unitBuilder.SetBlueprint("pioneer_squad_bg").SetDeploymentPhase(DeploymentPhase.PhaseA).GetAndReset());
+            companyBuilder.AddAndCommitUnit(unitBuilder.SetBlueprint("pioneer_squad_bg").SetDeploymentPhase(DeploymentPhase.PhaseA).GetAndReset());
+            companyBuilder.AddAndCommitUnit(unitBuilder.SetBlueprint("sniper_squad_bg").SetDeploymentPhase(DeploymentPhase.PhaseInitial).GetAndReset());
+            companyBuilder.AddAndCommitUnit(unitBuilder.SetBlueprint("sniper_squad_bg").SetDeploymentPhase(DeploymentPhase.PhaseA).GetAndReset());
 
             // Transported Infantry
-            companyBuilder.AddUnit(unitBuilder.SetBlueprint("grenadier_squad_bg")
+            companyBuilder.AddAndCommitUnit(unitBuilder.SetBlueprint("grenadier_squad_bg")
                 .SetTransportBlueprint("sdkfz_251_halftrack_squad_bg")
                 .SetDeploymentMethod(DeploymentMethod.DeployAndStay)
                 .SetDeploymentPhase(DeploymentPhase.PhaseA)
                 .GetAndReset());
-            companyBuilder.AddUnit(unitBuilder.SetBlueprint("grenadier_squad_bg")
+            companyBuilder.AddAndCommitUnit(unitBuilder.SetBlueprint("grenadier_squad_bg")
                 .SetTransportBlueprint("sdkfz_251_halftrack_squad_bg")
                 .SetDeploymentMethod(DeploymentMethod.DeployAndStay)
                 .SetDeploymentPhase(DeploymentPhase.PhaseA)
                 .GetAndReset());
-            companyBuilder.AddUnit(unitBuilder.SetBlueprint("grenadier_squad_bg")
+            companyBuilder.AddAndCommitUnit(unitBuilder.SetBlueprint("grenadier_squad_bg")
                 .SetTransportBlueprint("sdkfz_251_halftrack_squad_bg")
                 .SetDeploymentMethod(DeploymentMethod.DeployAndStay)
                 .SetDeploymentPhase(DeploymentPhase.PhaseA)
                 .GetAndReset());
-            companyBuilder.AddUnit(unitBuilder.SetBlueprint("grenadier_squad_bg")
+            companyBuilder.AddAndCommitUnit(unitBuilder.SetBlueprint("grenadier_squad_bg")
                 .SetTransportBlueprint("sdkfz_251_halftrack_squad_bg")
                 .SetDeploymentMethod(DeploymentMethod.DeployAndStay)
                 .SetDeploymentPhase(DeploymentPhase.PhaseA)
                 .GetAndReset());
 
-            companyBuilder.AddUnit(unitBuilder.SetBlueprint("grenadier_squad_bg")
+            companyBuilder.AddAndCommitUnit(unitBuilder.SetBlueprint("grenadier_squad_bg")
                 .SetTransportBlueprint("opel_blitz_transport_squad_bg")
                 .SetDeploymentMethod(DeploymentMethod.DeployAndExit)
                 .SetVeterancyRank(2)
                 .SetDeploymentPhase(DeploymentPhase.PhaseA)
                 .GetAndReset());
-            companyBuilder.AddUnit(unitBuilder.SetBlueprint("grenadier_squad_bg")
+            companyBuilder.AddAndCommitUnit(unitBuilder.SetBlueprint("grenadier_squad_bg")
                 .SetTransportBlueprint("opel_blitz_transport_squad_bg")
                 .SetDeploymentMethod(DeploymentMethod.DeployAndExit)
                 .SetVeterancyRank(2)
                 .SetDeploymentPhase(DeploymentPhase.PhaseA)
                 .GetAndReset());
-            companyBuilder.AddUnit(unitBuilder.SetBlueprint("grenadier_squad_bg")
+            companyBuilder.AddAndCommitUnit(unitBuilder.SetBlueprint("grenadier_squad_bg")
                 .SetTransportBlueprint("opel_blitz_transport_squad_bg")
                 .SetDeploymentMethod(DeploymentMethod.DeployAndExit)
                 .SetVeterancyRank(2)
                 .SetDeploymentPhase(DeploymentPhase.PhaseA)
                 .GetAndReset());
-            companyBuilder.AddUnit(unitBuilder.SetBlueprint("grenadier_squad_bg")
+            companyBuilder.AddAndCommitUnit(unitBuilder.SetBlueprint("grenadier_squad_bg")
                 .SetTransportBlueprint("opel_blitz_transport_squad_bg")
                 .SetDeploymentMethod(DeploymentMethod.DeployAndExit)
                 .SetVeterancyRank(2)
                 .SetDeploymentPhase(DeploymentPhase.PhaseA)
                 .GetAndReset());
 
-            companyBuilder.AddUnit(unitBuilder.SetBlueprint("panzer_grenadier_squad_bg")
+            companyBuilder.AddAndCommitUnit(unitBuilder.SetBlueprint("panzer_grenadier_squad_bg")
                 .SetTransportBlueprint("opel_blitz_transport_squad_bg")
                 .SetDeploymentMethod(DeploymentMethod.DeployAndExit)
                 .SetVeterancyRank(3)
                 .SetDeploymentPhase(DeploymentPhase.PhaseA)
                 .GetAndReset());
-            companyBuilder.AddUnit(unitBuilder.SetBlueprint("panzer_grenadier_squad_bg")
+            companyBuilder.AddAndCommitUnit(unitBuilder.SetBlueprint("panzer_grenadier_squad_bg")
                 .SetTransportBlueprint("opel_blitz_transport_squad_bg")
                 .SetDeploymentMethod(DeploymentMethod.DeployAndExit)
                 .SetVeterancyRank(3)
                 .SetDeploymentPhase(DeploymentPhase.PhaseA)
                 .GetAndReset());
-            companyBuilder.AddUnit(unitBuilder.SetBlueprint("panzer_grenadier_squad_bg")
+            companyBuilder.AddAndCommitUnit(unitBuilder.SetBlueprint("panzer_grenadier_squad_bg")
                 .SetTransportBlueprint("opel_blitz_transport_squad_bg")
                 .SetDeploymentMethod(DeploymentMethod.DeployAndExit)
                 .SetVeterancyRank(3)
@@ -327,83 +327,83 @@ namespace coh2_battlegrounds_console {
                 .GetAndReset());
 
             // Support Weapons
-            companyBuilder.AddUnit(unitBuilder.SetBlueprint("pak40_75mm_at_gun_squad_bg")
+            companyBuilder.AddAndCommitUnit(unitBuilder.SetBlueprint("pak40_75mm_at_gun_squad_bg")
                 .SetTransportBlueprint("opel_blitz_transport_squad_bg")
                 .SetDeploymentMethod(DeploymentMethod.DeployAndExit)
                 .SetDeploymentPhase(DeploymentPhase.PhaseA)
                 .GetAndReset());
-            companyBuilder.AddUnit(unitBuilder.SetBlueprint("pak40_75mm_at_gun_squad_bg")
+            companyBuilder.AddAndCommitUnit(unitBuilder.SetBlueprint("pak40_75mm_at_gun_squad_bg")
                 .SetTransportBlueprint("opel_blitz_transport_squad_bg")
                 .SetDeploymentMethod(DeploymentMethod.DeployAndExit)
                 .SetDeploymentPhase(DeploymentPhase.PhaseA)
                 .GetAndReset());
-            companyBuilder.AddUnit(unitBuilder.SetBlueprint("pak40_75mm_at_gun_squad_bg")
+            companyBuilder.AddAndCommitUnit(unitBuilder.SetBlueprint("pak40_75mm_at_gun_squad_bg")
                 .SetTransportBlueprint("opel_blitz_transport_squad_bg")
                 .SetDeploymentMethod(DeploymentMethod.DeployAndExit)
                 .SetDeploymentPhase(DeploymentPhase.PhaseA)
                 .GetAndReset());
-            companyBuilder.AddUnit(unitBuilder.SetBlueprint("mg42_heavy_machine_gun_squad_bg")
+            companyBuilder.AddAndCommitUnit(unitBuilder.SetBlueprint("mg42_heavy_machine_gun_squad_bg")
                 .SetDeploymentPhase(DeploymentPhase.PhaseInitial)
                 .GetAndReset());
-            companyBuilder.AddUnit(unitBuilder.SetBlueprint("mg42_heavy_machine_gun_squad_bg")
+            companyBuilder.AddAndCommitUnit(unitBuilder.SetBlueprint("mg42_heavy_machine_gun_squad_bg")
                 .SetDeploymentPhase(DeploymentPhase.PhaseA)
                 .GetAndReset());
-            companyBuilder.AddUnit(unitBuilder.SetBlueprint("mg42_heavy_machine_gun_squad_bg")
+            companyBuilder.AddAndCommitUnit(unitBuilder.SetBlueprint("mg42_heavy_machine_gun_squad_bg")
                 .SetDeploymentPhase(DeploymentPhase.PhaseA)
                 .GetAndReset());
-            companyBuilder.AddUnit(unitBuilder.SetBlueprint("mg42_heavy_machine_gun_squad_bg")
+            companyBuilder.AddAndCommitUnit(unitBuilder.SetBlueprint("mg42_heavy_machine_gun_squad_bg")
                 .SetDeploymentPhase(DeploymentPhase.PhaseA)
                 .GetAndReset());
 
-            companyBuilder.AddUnit(unitBuilder.SetBlueprint("mortar_team_81mm_bg").SetDeploymentPhase(DeploymentPhase.PhaseA).GetAndReset());
-            companyBuilder.AddUnit(unitBuilder.SetBlueprint("mortar_team_81mm_bg").SetDeploymentPhase(DeploymentPhase.PhaseA).GetAndReset());
+            companyBuilder.AddAndCommitUnit(unitBuilder.SetBlueprint("mortar_team_81mm_bg").SetDeploymentPhase(DeploymentPhase.PhaseA).GetAndReset());
+            companyBuilder.AddAndCommitUnit(unitBuilder.SetBlueprint("mortar_team_81mm_bg").SetDeploymentPhase(DeploymentPhase.PhaseA).GetAndReset());
 
             // Vehicles
-            companyBuilder.AddUnit(unitBuilder.SetBlueprint("sdkfz_234_puma_ost_bg")
+            companyBuilder.AddAndCommitUnit(unitBuilder.SetBlueprint("sdkfz_234_puma_ost_bg")
                 .SetVeterancyRank(1)
                 .SetDeploymentPhase(DeploymentPhase.PhaseA)
                 .GetAndReset());
-            companyBuilder.AddUnit(unitBuilder.SetBlueprint("sdkfz_234_puma_ost_bg")
-                .SetVeterancyRank(1)
-                .SetDeploymentPhase(DeploymentPhase.PhaseA)
-                .GetAndReset());
-
-            companyBuilder.AddUnit(unitBuilder.SetBlueprint("panther_squad_bg")
+            companyBuilder.AddAndCommitUnit(unitBuilder.SetBlueprint("sdkfz_234_puma_ost_bg")
                 .SetVeterancyRank(1)
                 .SetDeploymentPhase(DeploymentPhase.PhaseA)
                 .GetAndReset());
 
-            companyBuilder.AddUnit(unitBuilder.SetBlueprint("panzer_iv_squad_bg")
-                .SetDeploymentPhase(DeploymentPhase.PhaseA)
-                .GetAndReset());
-            companyBuilder.AddUnit(unitBuilder.SetBlueprint("panzer_iv_squad_bg")
-                .SetDeploymentPhase(DeploymentPhase.PhaseA)
-                .GetAndReset());
-            companyBuilder.AddUnit(unitBuilder.SetBlueprint("panzer_iv_squad_bg")
-                .SetDeploymentPhase(DeploymentPhase.PhaseA)
-                .GetAndReset());
-            companyBuilder.AddUnit(unitBuilder.SetBlueprint("panzer_iv_squad_bg")
+            companyBuilder.AddAndCommitUnit(unitBuilder.SetBlueprint("panther_squad_bg")
+                .SetVeterancyRank(1)
                 .SetDeploymentPhase(DeploymentPhase.PhaseA)
                 .GetAndReset());
 
-            companyBuilder.AddUnit(unitBuilder.SetBlueprint("ostwind_squad_bg")
+            companyBuilder.AddAndCommitUnit(unitBuilder.SetBlueprint("panzer_iv_squad_bg")
                 .SetDeploymentPhase(DeploymentPhase.PhaseA)
                 .GetAndReset());
-            companyBuilder.AddUnit(unitBuilder.SetBlueprint("ostwind_squad_bg")
+            companyBuilder.AddAndCommitUnit(unitBuilder.SetBlueprint("panzer_iv_squad_bg")
                 .SetDeploymentPhase(DeploymentPhase.PhaseA)
                 .GetAndReset());
-
-            companyBuilder.AddUnit(unitBuilder.SetBlueprint("tiger_squad_bg")
+            companyBuilder.AddAndCommitUnit(unitBuilder.SetBlueprint("panzer_iv_squad_bg")
                 .SetDeploymentPhase(DeploymentPhase.PhaseA)
                 .GetAndReset());
-            companyBuilder.AddUnit(unitBuilder.SetBlueprint("tiger_squad_bg")
-                .SetDeploymentPhase(DeploymentPhase.PhaseA)
-                .GetAndReset());
-            companyBuilder.AddUnit(unitBuilder.SetBlueprint("tiger_squad_bg")
+            companyBuilder.AddAndCommitUnit(unitBuilder.SetBlueprint("panzer_iv_squad_bg")
                 .SetDeploymentPhase(DeploymentPhase.PhaseA)
                 .GetAndReset());
 
-            companyBuilder.AddUnit(unitBuilder.SetBlueprint("brummbar_squad_bg")
+            companyBuilder.AddAndCommitUnit(unitBuilder.SetBlueprint("ostwind_squad_bg")
+                .SetDeploymentPhase(DeploymentPhase.PhaseA)
+                .GetAndReset());
+            companyBuilder.AddAndCommitUnit(unitBuilder.SetBlueprint("ostwind_squad_bg")
+                .SetDeploymentPhase(DeploymentPhase.PhaseA)
+                .GetAndReset());
+
+            companyBuilder.AddAndCommitUnit(unitBuilder.SetBlueprint("tiger_squad_bg")
+                .SetDeploymentPhase(DeploymentPhase.PhaseA)
+                .GetAndReset());
+            companyBuilder.AddAndCommitUnit(unitBuilder.SetBlueprint("tiger_squad_bg")
+                .SetDeploymentPhase(DeploymentPhase.PhaseA)
+                .GetAndReset());
+            companyBuilder.AddAndCommitUnit(unitBuilder.SetBlueprint("tiger_squad_bg")
+                .SetDeploymentPhase(DeploymentPhase.PhaseA)
+                .GetAndReset());
+
+            companyBuilder.AddAndCommitUnit(unitBuilder.SetBlueprint("brummbar_squad_bg")
                 .SetDeploymentPhase(DeploymentPhase.PhaseA)
                 .SetVeterancyRank(3)
                 .GetAndReset());

@@ -21,10 +21,10 @@ namespace Battlegrounds.Game.Database.Extensions {
             }
         }
 
-        private Entry[] m_entries;
+        private readonly Entry[] m_entries;
 
         public SquadBlueprint GetSquad(Faction faction) {
-            foreach (Entry e in this.m_entries) {
+            foreach (var e in this.m_entries) {
                 if (e.Faction == faction.RbpPath) {
                     return BlueprintManager.FromBlueprintName<SquadBlueprint>(e.SquadBlueprint);
                 }
@@ -33,7 +33,7 @@ namespace Battlegrounds.Game.Database.Extensions {
         }
 
         public SquadBlueprint GetCaptureSquad(Faction faction) {
-            foreach (Entry e in this.m_entries) {
+            foreach (var e in this.m_entries) {
                 if (e.Faction == faction.RbpPath) {
                     return BlueprintManager.FromBlueprintName<SquadBlueprint>(e.CaptureSquadBlueprint);
                 }
@@ -41,9 +41,7 @@ namespace Battlegrounds.Game.Database.Extensions {
             return null;
         }
 
-        public DriverExtension(Entry[] entries) {
-            this.m_entries = entries;
-        }
+        public DriverExtension(Entry[] entries) => this.m_entries = entries;
 
         public static DriverExtension FromJson(ref Utf8JsonReader reader) {
             List<Entry> entries = new();

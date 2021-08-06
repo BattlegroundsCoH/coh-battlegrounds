@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 
 using Battlegrounds.Functional;
@@ -21,8 +20,6 @@ namespace Battlegrounds.Game.DataCompany {
         private string m_companyUsername;
         private string m_companyAppVersion;
         private ModGuid m_companyGUID;
-        private Stack<UnitBuilder> m_uncommittedSquads;
-        private Stack<UnitBuilder> m_redo;
 
         /// <summary>
         /// Get the resulting <see cref="Company"/>. (Call <see cref="NewCompany(Faction)"/> and <see cref="Commit"/> to apply changes).
@@ -30,19 +27,9 @@ namespace Battlegrounds.Game.DataCompany {
         public Company Result => this.m_companyTarget;
 
         /// <summary>
-        /// Get if any uncomitted changes to squads can be undone.
-        /// </summary>
-        public bool CanUndoSquad => this.m_uncommittedSquads.Count > 0;
-
-        /// <summary>
-        /// Get if any undone changes can be redone.
-        /// </summary>
-        public bool CanRedoSquad => this.m_redo.Count > 0;
-
-        /// <summary>
         /// Get if it is possible to add another unit.
         /// </summary>
-        public bool CanAddUnit => this.m_uncommittedSquads.Count + 1 + this.m_companyTarget.Units.Length <= Company.MAX_SIZE;
+        public bool CanAddUnit => this.m_companyTarget.Units.Length <= Company.MAX_SIZE;
 
         /// <summary>
         /// Get if it is possible to add another ability.
@@ -52,11 +39,8 @@ namespace Battlegrounds.Game.DataCompany {
         /// <summary>
         /// New instance of the <see cref="CompanyBuilder"/>.
         /// </summary>
-        public CompanyBuilder() {
-            this.m_companyTarget = null;
-            this.m_uncommittedSquads = new Stack<UnitBuilder>();
-            this.m_redo = new Stack<UnitBuilder>();
-        }
+        public CompanyBuilder()
+            => this.m_companyTarget = null;
 
         /// <summary>
         /// Creates a new <see cref="Company"/> internally that the <see cref="CompanyBuilder"/> will modify while building.
@@ -127,41 +111,8 @@ namespace Battlegrounds.Game.DataCompany {
         public virtual CompanyBuilder AddUnit(Func<UnitBuilder, UnitBuilder> builder) {
             UnitBuilder bld = new();
             bld.SetModGUID(this.m_companyGUID.ToString());
-            this.AddUnit(builder(bld));
+            _ = this.AddAndCommitUnit(builder(bld));
             return this;
-        }
-
-        /// <summary>
-        /// Add a unit to the <see cref="Company"/> using a <see cref="UnitBuilder"/>.
-        /// </summary>
-        /// <param name="builder">The <see cref="UnitBuilder"/> instance containing specific <see cref="Squad"/> data.</param>
-        /// <returns>The calling <see cref="CompanyBuilder"/> instance.</returns>
-        public virtual CompanyBuilder AddUnit(UnitBuilder builder) {
-
-            // If null, throw error
-            if (builder == null) {
-                throw new ArgumentNullException(nameof(builder), "The given unit builder may not be null");
-            }
-
-            // If null, throw error
-            if (this.m_companyTarget == null) {
-                throw new NullReferenceException("Cannot add unit to a company that has not been created.");
-            }
-
-            // Set the mod GUID (So we get no conflicts between mods).
-            builder.SetModGUID(this.m_companyGUID);
-
-            // Add if we can
-            if (this.CanAddUnit) {
-                this.m_uncommittedSquads.Push(builder);
-                this.m_redo.Clear();
-            } else {
-                throw new InvalidOperationException("Cannot add more units to company - Please verify before adding!");
-            }
-
-            // Return self for method chaining
-            return this;
-
         }
 
         /// <summary>
@@ -346,20 +297,6 @@ namespace Battlegrounds.Game.DataCompany {
             this.m_companyTarget.Name = this.m_companyName;
             this.m_companyTarget.TuningGUID = this.m_companyGUID;
             this.m_companyTarget.Owner = this.m_companyUsername;
-
-            // While there are squads to add
-            while (this.m_uncommittedSquads.Count > 0) {
-
-                // Pop top element of uncommited
-                var unit = this.m_uncommittedSquads.Pop();
-
-                // Add squad
-                _ = this.m_companyTarget.AddSquad(unit);
-
-            }
-
-            // Clear the redo
-            this.m_redo.Clear();
 
             // Return self.
             return this;
