@@ -14,7 +14,7 @@ namespace Battlegrounds.Game.Database {
     /// Representation of a <see cref="Blueprint"/> with upgrade specific values. Inherits from <see cref="Blueprint"/>. This class cannot be inheritted.
     /// </summary>
     [JsonConverter(typeof(UpgradeBlueprintConverter))]
-    public class UpgradeBlueprint : Blueprint {
+    public class UpgradeBlueprint : Blueprint, IUIBlueprint {
 
         public enum OwnerType {
             None,
@@ -32,12 +32,18 @@ namespace Battlegrounds.Game.Database {
 
         public override string Name { get; }
 
-        public OwnerType Ownertype { get; }
+        /// <summary>
+        /// Get the <see cref="OwnerType"/> for the upgrade.
+        /// </summary>
+        public OwnerType OwnershipType { get; }
 
+        /// <summary>
+        /// Get the UI extension of the upgrade
+        /// </summary>
         public UIExtension UI { get; }
 
         /// <summary>
-        /// The base <see cref="Gameplay.Cost"/> to field instances of the <see cref="SquadBlueprint"/>.
+        /// Get the cost extension of the ability.
         /// </summary>
         public CostExtension Cost { get; }
 
@@ -47,19 +53,24 @@ namespace Battlegrounds.Game.Database {
         public HashSet<string> SlotItems { get; set; }
 
         /// <summary>
+        /// Get the requirements for getting the upgrade.
+        /// </summary>
+        public RequirementExtension[] Requirements { get; }
+
+        /// <summary>
         /// New <see cref="UpgradeBlueprint"/> instance. This should only ever be used by the database loader!
         /// </summary>
-        public UpgradeBlueprint(string name, BlueprintUID pbgid, OwnerType ownertype, UIExtension ui, CostExtension cost, string[] slot_items) : base() {
+        public UpgradeBlueprint(string name, BlueprintUID pbgid, OwnerType ownertype, UIExtension ui, CostExtension cost, RequirementExtension[] requirements, string[] slotItems) : base() {
             this.Name = name;
             this.PBGID = pbgid;
-            this.Ownertype = ownertype;
+            this.OwnershipType = ownertype;
             this.UI = ui;
             this.Cost = cost;
-            this.SlotItems = new(slot_items);
+            this.SlotItems = new(slotItems);
+            this.Requirements = requirements;
         }
 
     }
-
 
     public class UpgradeBlueprintConverter : JsonConverter<UpgradeBlueprint> {
 
@@ -74,27 +85,28 @@ namespace Battlegrounds.Game.Database {
                     "Name" => reader.GetString(),
                     "ModGUID" => reader.GetString(),
                     "SlotItems" => reader.GetStringArray(),
-                    "OwnerType" => reader.GetString() switch { 
+                    "OwnerType" => reader.GetString() switch {
                         "self" => UpgradeBlueprint.OwnerType.Self,
                         "player" => UpgradeBlueprint.OwnerType.Player,
                         "entity_in_squad" => UpgradeBlueprint.OwnerType.EntityInSquad,
                         _ => UpgradeBlueprint.OwnerType.None,
                     },
+                    "Requirements" => JsonSerializer.Deserialize<RequirementExtension[]>(ref reader, options),
                     _ => throw new NotImplementedException(prop)
                 };
             }
-            var ui = __lookup.GetValueOrDefault("Display", null) as UIExtension;
-            var cost = __lookup.GetValueOrDefault("Cost", null) as CostExtension;
-            var ot = (UpgradeBlueprint.OwnerType)__lookup.GetValueOrDefault("OwnerType", UpgradeBlueprint.OwnerType.None);
-            var items = __lookup.GetValueOrDefault("SlotItems", Array.Empty<string>()) as string[];
-            var modguid = __lookup.ContainsKey("ModGUID") ? ModGuid.FromGuid(__lookup["ModGUID"] as string) : ModGuid.BaseGame;
-            var pbgid = new BlueprintUID((ulong)__lookup.GetValueOrDefault("PBGID", 0ul), modguid);
-            return new(__lookup.GetValueOrDefault("Name", string.Empty) as string, pbgid, ot, ui, cost, items);
+            ModGuid modguid = __lookup.ContainsKey("ModGUID") ? ModGuid.FromGuid(__lookup["ModGUID"] as string) : ModGuid.BaseGame;
+            BlueprintUID pbgid = new BlueprintUID(__lookup.GetValueOrDefault("PBGID", 0ul), modguid);
+            return new(__lookup.GetValueOrDefault("Name", string.Empty), pbgid,
+                __lookup.GetValueOrDefault("OwnerType", UpgradeBlueprint.OwnerType.None),
+                __lookup.GetValueOrDefault("Display", new UIExtension()),
+                __lookup.GetValueOrDefault("Cost", new CostExtension()),
+                __lookup.GetValueOrDefault("Requirements", Array.Empty<RequirementExtension>()),
+                __lookup.GetValueOrDefault("SlotItems", Array.Empty<string>()));
         }
 
         public override void Write(Utf8JsonWriter writer, UpgradeBlueprint value, JsonSerializerOptions options) => writer.WriteStringValue(value.Name);
 
     }
-
 
 }

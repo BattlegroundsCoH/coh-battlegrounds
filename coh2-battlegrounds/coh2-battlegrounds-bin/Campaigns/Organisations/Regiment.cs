@@ -8,7 +8,7 @@ using Battlegrounds.Json;
 using Battlegrounds.Locale;
 
 namespace Battlegrounds.Campaigns.Organisations {
-    
+
     public class Regiment : IJsonObject {
 
         public class Company : IJsonObject {
@@ -92,11 +92,11 @@ namespace Battlegrounds.Campaigns.Organisations {
             int count = 0;
             this.EachCompany(x => {
                 count += uType switch {
-                    UT_INFANTRY => x.Units.Count(x => x.SBP.IsInfantry),
+                    UT_INFANTRY => x.Units.Count(x => x.SBP.Types.IsInfantry),
                     UT_SUPPORT => x.Units.Count(x => x.SBP.IsTeamWeapon),
-                    UT_VEHICLE => x.Units.Count(x => x.SBP.IsVehicle),
-                    UT_TANK => x.Units.Count(x => x.SBP.IsArmour),
-                    UT_AIR => x.Units.Count(x => x.SBP.IsVehicleCrew), // TODO: Fix
+                    UT_VEHICLE => x.Units.Count(x => x.SBP.Types.IsVehicle),
+                    UT_TANK => x.Units.Count(x => x.SBP.Types.IsArmour),
+                    UT_AIR => x.Units.Count(x => x.SBP.Types.IsVehicleCrew), // TODO: Fix
                     _ => 0
                 };
             });

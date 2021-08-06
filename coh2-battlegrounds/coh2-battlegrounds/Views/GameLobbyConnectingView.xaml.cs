@@ -31,7 +31,7 @@ namespace BattlegroundsApp.Views {
         private ServerAPI m_api;
 
         public GameLobbyConnectingView(ServerAPI api, ServerLobby lobby, string password) {
-            
+
             // Init components
             this.InitializeComponent();
 
@@ -83,8 +83,8 @@ namespace BattlegroundsApp.Views {
             }
         }
 
-        public override void StateOnLostFocus() { 
-            
+        public override void StateOnLostFocus() {
+
         }
 
     }

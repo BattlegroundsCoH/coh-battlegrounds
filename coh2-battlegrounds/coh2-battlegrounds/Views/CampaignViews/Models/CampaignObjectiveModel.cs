@@ -2,10 +2,11 @@
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows.Media;
+
 using Battlegrounds.Campaigns.API;
 
 namespace BattlegroundsApp.Views.CampaignViews.Models {
-    
+
     public class CampaignObjectiveModel {
 
         public ImageSource ObjectiveIcon { get; }

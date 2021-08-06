@@ -6,6 +6,6 @@ namespace Battlegrounds.Json {
     /// Json attribute marking method to be called once a deserialize operation is over.
     /// </summary>
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = false, Inherited = true)]
-    public class JsonOnDeserializedAttribute : Attribute {}
+    public class JsonOnDeserializedAttribute : Attribute { }
 
 }

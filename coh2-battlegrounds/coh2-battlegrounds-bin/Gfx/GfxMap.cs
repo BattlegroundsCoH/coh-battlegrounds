@@ -8,7 +8,7 @@ using Battlegrounds.Lua;
 using Battlegrounds.Util;
 
 namespace Battlegrounds.Gfx {
-    
+
     /// <summary>
     /// Representation of a map overview of GFX resources.
     /// </summary>
@@ -32,7 +32,7 @@ namespace Battlegrounds.Gfx {
             this.m_gfxMapResourceIdentifiers = new string[elements];
         }
 
-        private void CreateResource(int resourceIndex, byte[] rawBinary, string resourceID, double width, double height) { 
+        public void CreateResource(int resourceIndex, byte[] rawBinary, string resourceID, double width, double height) {
             this.m_gfxMapResources[resourceIndex] = new GfxResource(resourceID, rawBinary, width, height);
             this.m_gfxMapResourceIdentifiers[resourceIndex] = resourceID;
         }
@@ -163,7 +163,7 @@ namespace Battlegrounds.Gfx {
         }
 
         public static GfxMap FromLua(LuaTable gfxTable, string gfxFolder) {
-            
+
             // Create atlas
             var gfxMap = new GfxMap(gfxTable.Size);
 
@@ -205,7 +205,7 @@ namespace Battlegrounds.Gfx {
 
             // Return atlas
             return gfxMap;
-        
+
         }
 
     }

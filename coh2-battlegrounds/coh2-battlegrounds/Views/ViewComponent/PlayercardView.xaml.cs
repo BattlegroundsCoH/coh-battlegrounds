@@ -15,7 +15,7 @@ using BattlegroundsApp.Controls.Lobby;
 using BattlegroundsApp.LocalData;
 
 namespace BattlegroundsApp.Views.ViewComponent {
-    
+
     public enum PlayercardViewstate {
         Occupied,
         Open,
@@ -62,7 +62,7 @@ namespace BattlegroundsApp.Views.ViewComponent {
         private bool m_isAllied;
         private bool m_isHost;
 
-        public Visibility ShowRemove 
+        public Visibility ShowRemove
             => (this.m_isHost && BattlegroundsInstance.IsLocalUser(this.m_steamID)) ? Visibility.Collapsed : Visibility.Visible;
 
         public int TeamIndex { get; }
@@ -74,10 +74,10 @@ namespace BattlegroundsApp.Views.ViewComponent {
         public bool IsOccupied => this.m_state == PlayercardViewstate.Occupied;
 
         public string PlayerName => this.m_name;
-        
+
         public string PlayerArmy => this.m_army;
 
-        public PlayercardCompanyItem PlayerSelectedCompanyItem 
+        public PlayercardCompanyItem PlayerSelectedCompanyItem
             => this.PlayerCompanySelection.SelectedItem is not null ? (PlayercardCompanyItem)this.PlayerCompanySelection.SelectedItem : default;
 
         public ulong PlayerSteamID => this.m_steamID;
@@ -104,7 +104,7 @@ namespace BattlegroundsApp.Views.ViewComponent {
         public void SetAvailableArmies(bool isAllies) => isAllies
             .Then(() => { this.PlayerArmySelection.SetItemSource(alliedArmyItems, this.CreateArmyItem); this.m_isAllied = true; })
             .Else(() => { this.PlayerArmySelection.SetItemSource(axisArmyItems, this.CreateArmyItem); this.m_isAllied = false; });
-    
+
         public void SetPlayerData(string name, string army, PlayercardCompanyItem company) {
             this.m_diff = AIDifficulty.Human;
             this.SetPlayerName(name);
@@ -173,7 +173,7 @@ namespace BattlegroundsApp.Views.ViewComponent {
         }
 
         private void LoadSelfPlayerCompanies(string army, bool allowAutogen) {
-            
+
             var availableCompanies = PlayerCompanies.FindAll(x => x.Army.Name.CompareTo(army) == 0)
                 .Select(x => new PlayercardCompanyItem(CompanyItemState.Company, x.Name, x.GetStrength()))
                 .ToList();

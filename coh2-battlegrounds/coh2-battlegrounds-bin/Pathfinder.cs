@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 
 namespace Battlegrounds {
-    
+
     /// <summary>
     /// Pathfinder for finding the paths to relevant paths (eg. CoH2's documents folder)
     /// </summary>

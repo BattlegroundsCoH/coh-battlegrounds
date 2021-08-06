@@ -1,4 +1,5 @@
 ﻿using System;
+
 using Battlegrounds.Game.Gameplay;
 
 namespace Battlegrounds.Game.Match.Data.Events {
@@ -7,7 +8,7 @@ namespace Battlegrounds.Game.Match.Data.Events {
     /// <see cref="IMatchEvent"/> implementation for the event of squads being deployed.
     /// </summary>
     public class DeployEvent : IMatchEvent {
-        
+
         public char Identifier => 'D';
 
         public uint Uid { get; }

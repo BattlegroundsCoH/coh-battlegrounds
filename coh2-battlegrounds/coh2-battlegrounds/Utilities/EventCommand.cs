@@ -24,7 +24,7 @@ namespace BattlegroundsApp.Utilities {
             Command.Execute(this.CommandParameter);
             return 0.0;
         }
-    
+
     }
 
 }

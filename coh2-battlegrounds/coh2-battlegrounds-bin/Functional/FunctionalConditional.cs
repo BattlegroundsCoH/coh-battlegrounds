@@ -1,7 +1,7 @@
 ﻿using System;
 
 namespace Battlegrounds.Functional {
-    
+
     /// <summary>
     /// Functional-styled implmentation of a conditional statement.
     /// </summary>
@@ -49,9 +49,9 @@ namespace Battlegrounds.Functional {
             /// Will return <see langword="this"/> if value is present in case. 
             /// Otherwise a new <see cref="Otherwise{U, V}"/> object with value defined as return value of <paramref name="def"/>
             /// </returns>
-            public Otherwise<U,V> OrDefaultTo(Func<U> def) => _hasValue ? this : new Otherwise<U, V>(true, this.__subj, def());
+            public Otherwise<U, V> OrDefaultTo(Func<U> def) => _hasValue ? this : new Otherwise<U, V>(true, this.__subj, def());
 
-            public static implicit operator U(Otherwise<U,V> otherwise) => otherwise.__exist;
+            public static implicit operator U(Otherwise<U, V> otherwise) => otherwise.__exist;
 
         }
 
@@ -60,7 +60,7 @@ namespace Battlegrounds.Functional {
         /// </summary>
         /// <typeparam name="T"></typeparam>
         public class IsTrue<T> {
-            
+
             private T __subj;
             private readonly bool _yes; // non-mutable and based on initial condition value
 

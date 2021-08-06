@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Text.RegularExpressions;
+
 using Battlegrounds.Json;
 using Battlegrounds.Online;
 
@@ -10,7 +11,7 @@ namespace Battlegrounds.Steam {
     /// Represents a Steam User by ID and name. Implements <see cref="IJsonObject"/>. This class cannot be inherited.
     /// </summary>
     public sealed class SteamUser : IJsonObject {
-    
+
         /// <summary>
         /// The display name of a <see cref="SteamUser"/>. (Not the actual account name!)
         /// </summary>

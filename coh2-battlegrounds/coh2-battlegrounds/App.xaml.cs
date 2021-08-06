@@ -9,20 +9,27 @@ using Battlegrounds.Steam;
 
 using BattlegroundsApp.LocalData;
 using BattlegroundsApp.Utilities;
+using BattlegroundsApp.Resources;
 
 namespace BattlegroundsApp {
-    
+
     /// <summary>
     /// Interaction logic for App.xaml
     /// </summary>
     public partial class App : Application {
 
+        private static ResourceHandler __handler;
         private static Logger __logger;
+
+        public static ResourceHandler ResourceHandler => __handler;
 
         private void App_Startup(object sender, StartupEventArgs e) {
 
             // Setup logger
-            __logger = new Logger();
+            __logger = new();
+
+            // Setup resource handler
+            __handler = new();
 
             // Load BG .dll instance*
             BattlegroundsInstance.LoadInstance();
@@ -31,7 +38,7 @@ namespace BattlegroundsApp {
             LoadLocale();
 
             // Load databases (async)
-            DatabaseManager.LoadAllDatabases(OnDatabasesLoaded); // Important this is done (TODO: Add a callback handler)
+            DatabaseManager.LoadAllDatabases(OnDatabasesLoaded);
 
             // Create window and hook into window events
             var window = new MainWindow();
@@ -64,8 +71,8 @@ namespace BattlegroundsApp {
             try {
 
                 // Create discord instance
-                
-               // Trace.WriteLine($"Successfully initialised Discord connection with user: {DiscordInstance.GetUserManager().GetCurrentUser().Id}", "DiscordAPI");
+
+                // Trace.WriteLine($"Successfully initialised Discord connection with user: {DiscordInstance.GetUserManager().GetCurrentUser().Id}", "DiscordAPI");
 
             } catch (Exception dex) {
 
@@ -83,7 +90,7 @@ namespace BattlegroundsApp {
 
                         // Log the found user
                         Trace.WriteLine($"Found steam user: {BattlegroundsInstance.Steam.User.ID} \"{BattlegroundsInstance.Steam.User.Name}\"", "App");
-                        
+
                         // Save all changes
                         BattlegroundsInstance.SaveInstance();
 

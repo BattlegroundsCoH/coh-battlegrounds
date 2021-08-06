@@ -1,5 +1,4 @@
-﻿using System;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.IO;
 using System.Xml;
 
@@ -12,6 +11,8 @@ namespace CoH2XML2JSON {
         public override ulong PBGID { get; }
 
         public override string Name { get; }
+
+        public string Army { get; init; }
 
         public UI Display { get; }
 

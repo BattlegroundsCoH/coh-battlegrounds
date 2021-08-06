@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 
 namespace Battlegrounds.Lua.Parsing {
-    
+
     /// <summary>
     /// Interface for detecting lua statements.
     /// </summary>

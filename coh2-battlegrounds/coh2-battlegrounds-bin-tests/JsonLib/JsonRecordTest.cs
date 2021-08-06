@@ -4,11 +4,13 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+
 using Battlegrounds.Json;
+
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace coh2_battlegrounds_bin_tests.JsonLib {
-    
+
     [TestClass]
     public class JsonRecordTest {
 

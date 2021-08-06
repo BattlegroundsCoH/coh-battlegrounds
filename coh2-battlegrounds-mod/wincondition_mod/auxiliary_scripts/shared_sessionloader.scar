@@ -136,7 +136,7 @@ function BG_PrepareMapdata()
         local entity = World_GetEntity(i);
         local ebp = Entity_GetBlueprint(entity);
         if Entity_IsVehicle(entity) and not Entity_IsBuilding(entity) then
-            Entity_SetRecrewable(entity, bg_isDebugMap); -- Set crewable if debug map OTHERWISE, set to false
+            --Entity_SetRecrewable(entity, bg_isDebugMap); -- Set crewable if debug map OTHERWISE, set to false
         end
     end
 

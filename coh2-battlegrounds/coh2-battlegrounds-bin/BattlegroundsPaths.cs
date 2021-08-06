@@ -1,5 +1,5 @@
 ﻿namespace Battlegrounds {
-    
+
     /// <summary>
     /// The battlegrounds paths
     /// </summary>

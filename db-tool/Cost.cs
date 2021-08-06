@@ -13,6 +13,8 @@ namespace CoH2XML2JSON {
 
         public float FieldTime { get; }
 
+        public bool IsNull => (this.Manpower + this.Munition + this.Fuel + this.FieldTime) == 0.0;
+
         public Cost(params Cost[] costs) {
             this.Manpower = costs.Sum(x => x.Manpower);
             this.Munition = costs.Sum(x => x.Munition);

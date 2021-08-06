@@ -1,13 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 
 using Battlegrounds.Functional;
+using Battlegrounds.Game.Database;
 using Battlegrounds.Game.Gameplay;
 using Battlegrounds.Modding;
 
 namespace Battlegrounds.Game.DataCompany {
-    
+
     /// <summary>
     /// Builder class for building a <see cref="Company"/>. Inherit if you wish to extend functionality. This class is intended to be used for method chaining (But is not required for use).
     /// </summary>
@@ -20,8 +20,6 @@ namespace Battlegrounds.Game.DataCompany {
         private string m_companyUsername;
         private string m_companyAppVersion;
         private ModGuid m_companyGUID;
-        private Stack<UnitBuilder> m_uncommittedSquads;
-        private Stack<UnitBuilder> m_redo;
 
         /// <summary>
         /// Get the resulting <see cref="Company"/>. (Call <see cref="NewCompany(Faction)"/> and <see cref="Commit"/> to apply changes).
@@ -29,28 +27,20 @@ namespace Battlegrounds.Game.DataCompany {
         public Company Result => this.m_companyTarget;
 
         /// <summary>
-        /// Get if any uncomitted changes to squads can be undone.
+        /// Get if it is possible to add another unit.
         /// </summary>
-        public bool CanUndoSquad => this.m_uncommittedSquads.Count > 0;
+        public bool CanAddUnit => this.m_companyTarget.Units.Length <= Company.MAX_SIZE;
 
         /// <summary>
-        /// Get if any undone changes can be redone.
+        /// Get if it is possible to add another ability.
         /// </summary>
-        public bool CanRedoSquad => this.m_redo.Count > 0;
-
-        /// <summary>
-        /// Get if it's possible to add another unit.
-        /// </summary>
-        public bool CanAddUnit => this.m_uncommittedSquads.Count + 1 + this.m_companyTarget.Units.Length <= Company.MAX_SIZE;
+        public bool CanAddAbility => this.m_companyTarget.Abilities.Length <= Company.MAX_ABILITY;
 
         /// <summary>
         /// New instance of the <see cref="CompanyBuilder"/>.
         /// </summary>
-        public CompanyBuilder() {
-            this.m_companyTarget = null;
-            this.m_uncommittedSquads = new Stack<UnitBuilder>();
-            this.m_redo = new Stack<UnitBuilder>();
-        }
+        public CompanyBuilder()
+            => this.m_companyTarget = null;
 
         /// <summary>
         /// Creates a new <see cref="Company"/> internally that the <see cref="CompanyBuilder"/> will modify while building.
@@ -108,6 +98,12 @@ namespace Battlegrounds.Game.DataCompany {
         }
 
         /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public virtual string CalculateChecksum() => this.m_companyTarget.Checksum;
+
+        /// <summary>
         /// Add a unit to the <see cref="Company"/> using a <see cref="UnitBuilder"/>.
         /// </summary>
         /// <param name="builder">The function to build the unit.</param>
@@ -115,41 +111,8 @@ namespace Battlegrounds.Game.DataCompany {
         public virtual CompanyBuilder AddUnit(Func<UnitBuilder, UnitBuilder> builder) {
             UnitBuilder bld = new();
             bld.SetModGUID(this.m_companyGUID.ToString());
-            this.AddUnit(builder(bld));
+            _ = this.AddAndCommitUnit(builder(bld));
             return this;
-        }
-
-        /// <summary>
-        /// Add a unit to the <see cref="Company"/> using a <see cref="UnitBuilder"/>.
-        /// </summary>
-        /// <param name="builder">The <see cref="UnitBuilder"/> instance containing specific <see cref="Squad"/> data.</param>
-        /// <returns>The calling <see cref="CompanyBuilder"/> instance.</returns>
-        public virtual CompanyBuilder AddUnit(UnitBuilder builder) {
-
-            // If null, throw error
-            if (builder == null) {
-                throw new ArgumentNullException(nameof(builder), "The given unit builder may not be null");
-            }
-
-            // If null, throw error
-            if (this.m_companyTarget == null) {
-                throw new NullReferenceException("Cannot add unit to a company that has not been created.");
-            }
-
-            // Set the mod GUID (So we get no conflicts between mods).
-            builder.SetModGUID(this.m_companyGUID);
-
-            // Add if we can
-            if (this.CanAddUnit) {
-                this.m_uncommittedSquads.Push(builder);
-                this.m_redo.Clear();
-            } else {
-                throw new InvalidOperationException("Cannot add more units to company - Please verify before adding!");
-            }
-            
-            // Return self for method chaining
-            return this;
-
         }
 
         /// <summary>
@@ -166,7 +129,7 @@ namespace Battlegrounds.Game.DataCompany {
 
             // If null, throw error
             if (this.m_companyTarget == null) {
-                throw new NullReferenceException("Cannot add unit to a company that has not been created.");
+                throw new ArgumentNullException("CompanyTarget", "Cannot add unit to a company that has not been created.");
             }
 
             // Set the mod GUID (So we get no conflicts between mods).
@@ -178,6 +141,34 @@ namespace Battlegrounds.Game.DataCompany {
             // Ask for squad and return
             return this.m_companyTarget.GetSquadByIndex(sid);
 
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="abp"></param>
+        /// <returns></returns>
+        public virtual SpecialAbility AddAndCommitAbility(AbilityBlueprint abp, SpecialAbilityCategory specialAbility, int maxUse) {
+
+            // Create ability
+            SpecialAbility sabp = new(abp, SpecialAbilityCategory.Default, 0);
+
+            // Add ability
+            this.m_companyTarget.AddAbility(sabp);
+
+            // Return the special ability
+            return sabp;
+
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="ability"></param>
+        /// <returns></returns>
+        public virtual CompanyBuilder RemoveAbility(SpecialAbility ability) {
+            _ = this.m_companyTarget.RemoveAbility(ability);
+            return this;
         }
 
         /// <summary>
@@ -276,6 +267,14 @@ namespace Battlegrounds.Game.DataCompany {
         }
 
         /// <summary>
+        /// Get the amount of units in the specified deployment <paramref name="phase"/>.
+        /// </summary>
+        /// <param name="phase">The phase to fetch amount of units from.</param>
+        /// <returns>The amount of units in specific phase</returns>
+        public virtual int CountUnitsInPhase(DeploymentPhase phase)
+            => this.m_companyTarget.Units.Count(x => x.DeploymentPhase == phase);
+
+        /// <summary>
         /// Commit all unsaved changes to the <see cref="Company"/> target instance.
         /// </summary>
         /// <remarks>
@@ -299,20 +298,6 @@ namespace Battlegrounds.Game.DataCompany {
             this.m_companyTarget.TuningGUID = this.m_companyGUID;
             this.m_companyTarget.Owner = this.m_companyUsername;
 
-            // While there are squads to add
-            while(this.m_uncommittedSquads.Count > 0) {
-
-                // Pop top element of uncommited
-                UnitBuilder unit = this.m_uncommittedSquads.Pop();
-
-                // Add squad
-                this.m_companyTarget.AddSquad(unit);
-
-            }
-
-            // Clear the redo
-            this.m_redo.Clear();
-
             // Return self.
             return this;
 
@@ -321,8 +306,60 @@ namespace Battlegrounds.Game.DataCompany {
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        public bool HasAbility(string blueprint) => this.m_companyTarget.Abilities.Any(x => x.ABP.Name == blueprint);
+
+        /// <summary>
+        /// Get if the company under construction has a squad with specified <paramref name="blueprint"/>.
+        /// </summary>
+        /// <param name="blueprint">The name of the blueprint to check for.</param>
+        /// <returns><see langword="true"/>, if <paramref name="blueprint"/> is found; Otherwise <see langword="false"/>.</returns>
+        public bool HasUnit(string blueprint) => this.m_companyTarget.Units.Any(x => x.SBP.Name == blueprint);
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <param name="squad"></param>
-        public void EachUnit(Action<Squad> squad) => this.m_companyTarget.Units.ForEach(squad);
+        public void EachUnit(Action<Squad> action, Func<Squad, int> sort) => this.m_companyTarget.Units.OrderBy(sort).ForEach(action);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="action"></param>
+        public void EachUnit(Action<Squad> action) => this.EachUnit(action, x => x.SquadID);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="action"></param>
+        public void EachAbility(Action<SpecialAbility, bool> action) {
+            _ = this.m_companyTarget.GetSpecialUnitAbilities().ForEach(x => action(x, true));
+            _ = this.m_companyTarget.Abilities.ForEach(x => action(x, false));
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="action"></param>
+        public void EachItem(Action<Blueprint> action) => this.m_companyTarget.Inventory.ForEach(action);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="blueprint"></param>
+        public void AddEquipment(Blueprint blueprint)
+            => this.m_companyTarget.AddInventoryItem(blueprint);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="equipment"></param>
+        /// <returns></returns>
+        public CompanyBuilder RemoveEquipment(Blueprint equipment) {
+            this.m_companyTarget.RemoveInventoryItem(equipment);
+            return this;
+        }
 
     }
 

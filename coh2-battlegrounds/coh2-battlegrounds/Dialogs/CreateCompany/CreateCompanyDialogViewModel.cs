@@ -4,8 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
+
 using Battlegrounds.Game.DataCompany;
 using Battlegrounds.Game.Gameplay;
+
 using BattlegroundsApp.Dialogs.Service;
 using BattlegroundsApp.Utilities;
 using BattlegroundsApp.ViewModels;
@@ -16,7 +18,7 @@ namespace BattlegroundsApp.Dialogs.CreateCompany {
         Cancel
     }
     class CreateCompanyDialogViewModel : DialogControlBase<CreateCompanyDialogResult> {
-    
+
         public ICommand CreateCommand { get; set; }
         public ICommand CancelCommand { get; set; }
 

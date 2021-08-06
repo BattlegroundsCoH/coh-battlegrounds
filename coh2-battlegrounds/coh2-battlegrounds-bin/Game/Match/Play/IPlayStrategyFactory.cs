@@ -1,5 +1,5 @@
 ﻿namespace Battlegrounds.Game.Match.Play {
-    
+
     /// <summary>
     /// Interface for a factory constructing a <see cref="IPlayStrategy"/>.
     /// </summary>

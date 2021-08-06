@@ -49,6 +49,14 @@
 			</template_reference>
 		</list>
 		<list name="requirements">
+			<template_reference name="required" value="requirements\required_player_upgrade">
+				<enum name="reason" value="usage" />
+				<locstring name="ui_name" value="59" mod="142b113740474c82a60b0a428bd553d5" />
+				<bool name="is_present" value="True" />
+				<float name="max_completed" value="100" />
+				<float name="min_completed" value="1" />
+				<instance_reference name="upgrade_name" value="upgrade\battlegrounds\no_ingame" mod="142b113740474c82a60b0a428bd553d5" />
+			</template_reference>
 		</list>
 		<icon name="ui_kicker_icon_name" value="" />
 		<locstring name="ui_squad_name_override" value="0" />

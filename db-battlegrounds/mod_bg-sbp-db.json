@@ -1,0 +1,4902 @@
+[
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741886,
+    "Name": "howitzer_105mm_le_fh18_artillery_bg",
+    "Army": "german",
+    "Display": {
+      "LocaleName": "11031938",
+      "LocaleDescriptionLong": "11031937",
+      "LocaleDescriptionShort": "11038536",
+      "Icon": "Icons_vehicles_vehicle_german_howitzer",
+      "Symbol": "Icons_symbols_vehicle_german_howitzer_symbol",
+      "Portrait": "Icons_portraits_vehicle_german_howitzer_105mm_s_portrait"
+    },
+    "SquadCost": {
+      "Manpower": 460,
+      "Fuel": 50,
+      "FieldTime": 270
+    },
+    "IsSyncWeapon": true,
+    "Entities": [
+      {
+        "EBP": "howitzer_crew_bg",
+        "Count": 5
+      },
+      {
+        "EBP": "howitzer_105mm_le_fh18_bg",
+        "Count": 1
+      }
+    ],
+    "Abilities": [
+      "blizzard_effect",
+      "blizzard_howitzer"
+    ],
+    "Veterancy": [
+      {
+        "ScreenName": "11047329",
+        "Experience": 1200
+      },
+      {
+        "ScreenName": "11171758",
+        "Experience": 2400
+      },
+      {
+        "ScreenName": "11158955",
+        "Experience": 4800
+      }
+    ],
+    "Types": [
+      "fh18_howitzer",
+      "artillery",
+      "team_weapon"
+    ],
+    "UpgradeCapacity": -1,
+    "AppliedUpgrades": [
+      "is_manned"
+    ]
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741866,
+    "Name": "mg42_heavy_machine_gun_squad_bg",
+    "Army": "german",
+    "Display": {
+      "LocaleName": "11007136",
+      "LocaleDescriptionLong": "11007137",
+      "LocaleDescriptionShort": "11009059",
+      "Icon": "Icons_units_unit_german_m1910_hmg",
+      "Symbol": "Icons_symbols_unit_german_m1910_hmg_symbol",
+      "Portrait": "Icons_portraits_unit_german_mg42_crew_s_portrait"
+    },
+    "SquadCost": {
+      "Manpower": 215,
+      "FieldTime": 153
+    },
+    "IsSyncWeapon": true,
+    "Entities": [
+      {
+        "EBP": "mg42_hmg_bg",
+        "Count": 1
+      },
+      {
+        "EBP": "mg_crew_bg",
+        "Count": 3
+      }
+    ],
+    "Abilities": [
+      "blizzard_effect",
+      "garrisoned_squad_facing",
+      "garrisoned_squad_facing_unset",
+      "ambush_camouflage_upgrade",
+      "retreat_to_forward_hq",
+      "ambush_camo_hold_fire_mg_mp"
+    ],
+    "Veterancy": [
+      {
+        "ScreenName": "11047253",
+        "Experience": 480
+      },
+      {
+        "ScreenName": "11047236",
+        "Experience": 960
+      },
+      {
+        "ScreenName": "11047246",
+        "Experience": 1920
+      }
+    ],
+    "Types": [
+      "mg42_hmg",
+      "hmg",
+      "german_team_weapons",
+      "team_weapon",
+      "infantry"
+    ],
+    "CanPickupItems": true,
+    "UpgradeCapacity": -1,
+    "Upgrades": [
+      "ambush_camou_package"
+    ],
+    "AppliedUpgrades": [
+      "is_manned"
+    ]
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741867,
+    "Name": "mortar_team_81mm_bg",
+    "Army": "german",
+    "Display": {
+      "LocaleName": "11007542",
+      "LocaleDescriptionLong": "11007543",
+      "LocaleDescriptionShort": "11007826",
+      "Icon": "Icons_units_unit_german_granatwerfer_34_mortar",
+      "Symbol": "Icons_symbols_unit_german_granatwerfer_34_mortar_symbol",
+      "Portrait": "Icons_portraits_unit_german_mortar_crew_s_portrait"
+    },
+    "SquadCost": {
+      "Manpower": 195,
+      "FieldTime": 141
+    },
+    "IsSyncWeapon": true,
+    "Entities": [
+      {
+        "EBP": "granatewerfer_34_81mm_mortar_bg",
+        "Count": 1
+      },
+      {
+        "EBP": "mortar_crew_bg",
+        "Count": 3
+      }
+    ],
+    "Abilities": [
+      "blizzard_effect",
+      "blizzard_effect_mortars",
+      "german_mortar_hold_fire_mp",
+      "retreat_to_forward_hq"
+    ],
+    "Veterancy": [
+      {
+        "ScreenName": "11140644",
+        "Experience": 480
+      },
+      {
+        "ScreenName": "11047264",
+        "Experience": 960
+      },
+      {
+        "ScreenName": "11047265",
+        "Experience": 1920
+      }
+    ],
+    "Types": [
+      "81mm_german_mortar",
+      "mortar",
+      "german_team_weapons",
+      "team_weapon",
+      "infantry"
+    ],
+    "CanPickupItems": true,
+    "UpgradeCapacity": -1,
+    "Upgrades": [
+      "medic_add_squad_upg"
+    ],
+    "AppliedUpgrades": [
+      "is_manned"
+    ]
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741879,
+    "Name": "pak40_75mm_at_gun_squad_bg",
+    "Army": "german",
+    "Display": {
+      "LocaleName": "11007004",
+      "LocaleDescriptionLong": "11007016",
+      "LocaleDescriptionShort": "11009046",
+      "Icon": "Icons_vehicles_vehicle_german_pak_40_75mm_at_gun",
+      "Symbol": "Icons_symbols_vehicle_german_pak_40_75mm_at_gun_symbol",
+      "Portrait": "Icons_portraits_vehicle_german_pak_40_s_portrait"
+    },
+    "SquadCost": {
+      "Manpower": 320,
+      "FieldTime": 198
+    },
+    "IsSyncWeapon": true,
+    "Entities": [
+      {
+        "EBP": "pak40_75mm_at_gun_bg",
+        "Count": 1
+      },
+      {
+        "EBP": "atgun_crew_bg",
+        "Count": 4
+      }
+    ],
+    "Abilities": [
+      "blizzard_effect",
+      "at_gun_ambush_tactics",
+      "at_gun_ambush_tactics"
+    ],
+    "Veterancy": [
+      {
+        "ScreenName": "11047276",
+        "Experience": 1280
+      },
+      {
+        "ScreenName": "11047288",
+        "Experience": 2560
+      },
+      {
+        "ScreenName": "11047290",
+        "Experience": 5120
+      }
+    ],
+    "Types": [
+      "pak40_at_gun",
+      "at_gun",
+      "german_team_weapons",
+      "team_weapon"
+    ],
+    "CanPickupItems": true,
+    "UpgradeCapacity": -1,
+    "AppliedUpgrades": [
+      "is_manned"
+    ]
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741880,
+    "Name": "pak43_88mm_at_gun_squad_bg",
+    "Army": "german",
+    "Display": {
+      "LocaleName": "11007007",
+      "LocaleDescriptionLong": "11007024",
+      "LocaleDescriptionShort": "11009047",
+      "Icon": "Icons_vehicles_vehicle_german_pak_43_at_gun",
+      "Symbol": "Icons_symbols_vehicle_german_pak_43_at_gun_symbol",
+      "Portrait": "Icons_portraits_vehicle_german_pak_43_s_portrait"
+    },
+    "SquadCost": {
+      "Manpower": 395,
+      "Fuel": 45,
+      "FieldTime": 417
+    },
+    "IsSyncWeapon": true,
+    "Entities": [
+      {
+        "EBP": "pak43_88mm_at_gun_bg",
+        "Count": 1
+      },
+      {
+        "EBP": "atgun88_crew_bg",
+        "Count": 5
+      }
+    ],
+    "Abilities": [
+      "blizzard_effect"
+    ],
+    "Veterancy": [
+      {
+        "ScreenName": "11047274",
+        "Experience": 2000
+      },
+      {
+        "ScreenName": "11047289",
+        "Experience": 4000
+      },
+      {
+        "ScreenName": "11047291",
+        "Experience": 8000
+      }
+    ],
+    "Types": [
+      "pak43_at_gun",
+      "at_gun",
+      "german_team_weapons",
+      "team_weapon"
+    ],
+    "SlotPickupCapacity": 1,
+    "UpgradeCapacity": -1
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741881,
+    "Name": "brummbar_squad_bg",
+    "Army": "german",
+    "Display": {
+      "LocaleName": "11007030",
+      "LocaleDescriptionLong": "11007022",
+      "LocaleDescriptionShort": "11009048",
+      "Icon": "Icons_vehicles_vehicle_german_sturmpanzer",
+      "Symbol": "Icons_symbols_vehicle_german_sturmpanzer_symbol",
+      "Portrait": "Icons_portraits_vehicle_german_brummbar_s_portrait"
+    },
+    "SquadCost": {
+      "Manpower": 420,
+      "Fuel": 150,
+      "FieldTime": 55
+    },
+    "HasCrew": true,
+    "Entities": [
+      {
+        "EBP": "brummbar_sturmpanzer_iv_sdkfz_166_bg",
+        "Count": 1
+      }
+    ],
+    "Abilities": [
+      "blizzard_effect"
+    ],
+    "Veterancy": [
+      {
+        "ScreenName": "11047272",
+        "Experience": 2040
+      },
+      {
+        "ScreenName": "11047292",
+        "Experience": 4080
+      },
+      {
+        "ScreenName": "11047300",
+        "Experience": 8160
+      }
+    ],
+    "Types": [
+      "brummbar",
+      "assault_gun",
+      "vehicle",
+      "heavy_vehicle",
+      "heavy_vehicle_icon"
+    ],
+    "SlotPickupCapacity": 2,
+    "UpgradeCapacity": -1,
+    "Upgrades": [
+      "vehicles_optics"
+    ]
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741882,
+    "Name": "elefant_tank_destroyer_squad_bg",
+    "Army": "german",
+    "Display": {
+      "LocaleName": "11007744",
+      "LocaleDescriptionLong": "11007824",
+      "LocaleDescriptionShort": "11009049",
+      "Icon": "Icons_vehicles_vehicle_german_elefant_tank_destroyer",
+      "Symbol": "Icons_symbols_vehicle_german_elefant_tank_destroyer_symbol",
+      "Portrait": "Icons_portraits_vehicle_german_elephant_tank_destroyer_s_portrait"
+    },
+    "SquadCost": {
+      "Manpower": 720,
+      "Fuel": 245,
+      "FieldTime": 60
+    },
+    "HasCrew": true,
+    "Entities": [
+      {
+        "EBP": "elefant_sdkfz_184_bg",
+        "Count": 1
+      }
+    ],
+    "Abilities": [
+      "blizzard_effect"
+    ],
+    "Veterancy": [
+      {
+        "ScreenName": "11047279",
+        "Experience": 3880
+      },
+      {
+        "ScreenName": "11047295",
+        "Experience": 7760
+      },
+      {
+        "ScreenName": "11047303",
+        "Experience": 15520
+      }
+    ],
+    "Types": [
+      "elefant",
+      "heavy_tank",
+      "vehicle",
+      "heavy_vehicle",
+      "heavy_vehicle_icon"
+    ],
+    "SlotPickupCapacity": 2,
+    "UpgradeCapacity": -1,
+    "Upgrades": [
+      "vehicles_optics"
+    ]
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741883,
+    "Name": "mortar_250_halftrack_squad_bg",
+    "Army": "german",
+    "Display": {
+      "LocaleName": "11026002",
+      "LocaleDescriptionLong": "11019367",
+      "LocaleDescriptionShort": "11035160",
+      "Icon": "Icons_vehicles_vehicle_german_251_mortar_halftrack",
+      "Symbol": "Icons_symbols_vehicle_german_251_mortar_halftrack_symbol",
+      "Portrait": "Icons_portraits_vehicle_german_251_halftrack_mortar_s_portrait"
+    },
+    "SquadCost": {
+      "Manpower": 200,
+      "Fuel": 30,
+      "FieldTime": 40
+    },
+    "Entities": [
+      {
+        "EBP": "mortar_light_halftrack_250_7_bg",
+        "Count": 1
+      }
+    ],
+    "Abilities": [
+      "blizzard_effect",
+      "usf_hold_fire_mp"
+    ],
+    "Veterancy": [
+      {
+        "ScreenName": "11047309",
+        "Experience": 800
+      },
+      {
+        "ScreenName": "11047312",
+        "Experience": 1600
+      },
+      {
+        "ScreenName": "11047313",
+        "Experience": 3200
+      }
+    ],
+    "Types": [
+      "250_mortar_halftrack",
+      "light_vehicle",
+      "vehicle"
+    ],
+    "SlotPickupCapacity": 6,
+    "UpgradeCapacity": -1
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741888,
+    "Name": "opel_blitz_supply_squad_bg",
+    "Army": "german",
+    "Display": {
+      "LocaleName": "11035438",
+      "LocaleDescriptionLong": "11035439",
+      "LocaleDescriptionShort": "11046736",
+      "Icon": "Icons_vehicles_cargo_truck",
+      "Symbol": "Icons_symbols_vehicle_german_opel_blitz_symbol",
+      "Portrait": "Icons_portraits_vehicle_german_opal_blitz_s_portrait"
+    },
+    "SquadCost": {
+      "Manpower": 300,
+      "FieldTime": 20
+    },
+    "HasCrew": true,
+    "Entities": [
+      {
+        "EBP": "opel_blitz_supply_truck_bg",
+        "Count": 1
+      }
+    ],
+    "Types": [
+      "light_vehicle",
+      "vehicle",
+      "251_halftrack"
+    ],
+    "SlotPickupCapacity": 2,
+    "UpgradeCapacity": -1
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741887,
+    "Name": "opel_blitz_transport_squad_bg",
+    "Army": "german",
+    "Display": {
+      "LocaleName": "11035438",
+      "LocaleDescriptionLong": "11035439",
+      "LocaleDescriptionShort": "11046736",
+      "Icon": "Icons_vehicles_cargo_truck",
+      "Symbol": "Icons_symbols_vehicle_german_opel_blitz_symbol",
+      "Portrait": "Icons_portraits_vehicle_german_opal_blitz_s_portrait"
+    },
+    "SquadCost": {
+      "Manpower": 300,
+      "FieldTime": 20
+    },
+    "HasCrew": true,
+    "Entities": [
+      {
+        "EBP": "opel_blitz_transport_truck_bg",
+        "Count": 1
+      }
+    ],
+    "Abilities": [
+      "transport_heavy_vehicle_bg",
+      "detach_tow_bg"
+    ],
+    "Types": [
+      "light_vehicle",
+      "vehicle",
+      "251_halftrack"
+    ],
+    "SlotPickupCapacity": 2,
+    "UpgradeCapacity": -1
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741889,
+    "Name": "ostwind_squad_bg",
+    "Army": "german",
+    "Display": {
+      "LocaleName": "11007743",
+      "LocaleDescriptionLong": "11007828",
+      "LocaleDescriptionShort": "11009050",
+      "Icon": "Icons_vehicles_vehicle_german_ostwind_flak_panzer",
+      "Symbol": "Icons_symbols_vehicle_german_ostwind_flak_panzer_symbol",
+      "Portrait": "Icons_portraits_vehicle_german_ostwind_s_portrait"
+    },
+    "SquadCost": {
+      "Manpower": 300,
+      "Fuel": 100,
+      "FieldTime": 45
+    },
+    "HasCrew": true,
+    "Entities": [
+      {
+        "EBP": "ostwind_flak_panzer_bg",
+        "Count": 1
+      }
+    ],
+    "Abilities": [
+      "panzer_panther_tiger_ostwind_blitzkrieg_mp",
+      "blizzard_effect"
+    ],
+    "Veterancy": [
+      {
+        "ScreenName": "11047335",
+        "Experience": 1790
+      },
+      {
+        "ScreenName": "11047347",
+        "Experience": 3580
+      },
+      {
+        "ScreenName": "11047357",
+        "Experience": 7160
+      }
+    ],
+    "Types": [
+      "ostwind",
+      "medium_tank",
+      "vehicle",
+      "heavy_vehicle"
+    ],
+    "SlotPickupCapacity": 2,
+    "UpgradeCapacity": -1,
+    "Upgrades": [
+      "vehicles_optics"
+    ]
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741903,
+    "Name": "panther_command_squad_bg",
+    "Army": "german",
+    "Display": {
+      "LocaleName": "11007009",
+      "LocaleDescriptionLong": "11007023",
+      "LocaleDescriptionShort": "11009051",
+      "Icon": "Icons_vehicles_vehicle_german_panther",
+      "Symbol": "Icons_symbols_vehicle_german_panther_symbol",
+      "Portrait": "Icons_portraits_vehicle_german_panther_s_portrait"
+    },
+    "SquadCost": {
+      "Manpower": 490,
+      "Fuel": 185,
+      "FieldTime": 60
+    },
+    "HasCrew": true,
+    "Entities": [
+      {
+        "EBP": "panther_sdkfz_171_command_bg",
+        "Count": 1
+      }
+    ],
+    "Abilities": [
+      "panther_tiger_blitzkrieg_mp",
+      "blizzard_effect"
+    ],
+    "Veterancy": [
+      {
+        "ScreenName": "11047334",
+        "Experience": 2530
+      },
+      {
+        "ScreenName": "11047349",
+        "Experience": 5060
+      },
+      {
+        "ScreenName": "11047359",
+        "Experience": 10120
+      }
+    ],
+    "Types": [
+      "panther",
+      "medium_tank",
+      "vehicle",
+      "heavy_vehicle",
+      "heavy_vehicle_icon"
+    ],
+    "SlotPickupCapacity": 2,
+    "UpgradeCapacity": -1,
+    "Upgrades": [
+      "vehicles_optics"
+    ]
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741890,
+    "Name": "panther_squad_bg",
+    "Army": "german",
+    "Display": {
+      "LocaleName": "11007009",
+      "LocaleDescriptionLong": "11007023",
+      "LocaleDescriptionShort": "11009051",
+      "Icon": "Icons_vehicles_vehicle_german_panther",
+      "Symbol": "Icons_symbols_vehicle_german_panther_symbol",
+      "Portrait": "Icons_portraits_vehicle_german_panther_s_portrait"
+    },
+    "SquadCost": {
+      "Manpower": 490,
+      "Fuel": 185,
+      "FieldTime": 60
+    },
+    "HasCrew": true,
+    "Entities": [
+      {
+        "EBP": "panther_sdkfz_171_bg",
+        "Count": 1
+      }
+    ],
+    "Abilities": [
+      "panther_tiger_blitzkrieg_mp",
+      "blizzard_effect"
+    ],
+    "Veterancy": [
+      {
+        "ScreenName": "11047334",
+        "Experience": 2530
+      },
+      {
+        "ScreenName": "11047349",
+        "Experience": 5060
+      },
+      {
+        "ScreenName": "11047359",
+        "Experience": 10120
+      }
+    ],
+    "Types": [
+      "panther",
+      "medium_tank",
+      "vehicle",
+      "heavy_vehicle",
+      "heavy_vehicle_icon"
+    ],
+    "SlotPickupCapacity": 2,
+    "UpgradeCapacity": -1,
+    "Upgrades": [
+      "vehicles_optics"
+    ]
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741894,
+    "Name": "panzerwerfer_squad_bg",
+    "Army": "german",
+    "Display": {
+      "LocaleName": "11007751",
+      "LocaleDescriptionLong": "11007827",
+      "LocaleDescriptionShort": "11038541",
+      "Icon": "Icons_vehicles_vehicle_german_panzerwerfer",
+      "Symbol": "Icons_symbols_vehicle_german_panzerwerfer_symbol",
+      "Portrait": "Icons_portraits_vehicle_german_panzerwerfer_s_portrait"
+    },
+    "SquadCost": {
+      "Manpower": 360,
+      "Fuel": 85,
+      "FieldTime": 45
+    },
+    "HasCrew": true,
+    "Entities": [
+      {
+        "EBP": "panzerwerfer_sdkfz_4_1_bg",
+        "Count": 1
+      }
+    ],
+    "Abilities": [
+      "blizzard_effect"
+    ],
+    "Veterancy": [
+      {
+        "ScreenName": "11047371",
+        "Experience": 1256
+      },
+      {
+        "ScreenName": "11047370",
+        "Experience": 2512
+      },
+      {
+        "ScreenName": "11047369",
+        "Experience": 5024
+      }
+    ],
+    "Types": [
+      "panzerwerfer",
+      "artillery",
+      "vehicle"
+    ],
+    "SlotPickupCapacity": 2,
+    "UpgradeCapacity": -1,
+    "Upgrades": [
+      "vehicles_optics"
+    ]
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741893,
+    "Name": "panzer_iv_command_squad_bg",
+    "Army": "german",
+    "Display": {
+      "LocaleName": "11035442",
+      "LocaleDescriptionLong": "11035443",
+      "LocaleDescriptionShort": "11038539",
+      "Icon": "Icons_vehicles_vehicle_german_panzer_iv_command_tank",
+      "Symbol": "Icons_symbols_vehicle_german_panzer_iv_command_tank_symbol",
+      "Portrait": "Icons_portraits_vehicle_german_panzer_iv_command_s_portrait"
+    },
+    "SquadCost": {
+      "Manpower": 360,
+      "Fuel": 100,
+      "FieldTime": 55
+    },
+    "HasCrew": true,
+    "Entities": [
+      {
+        "EBP": "panzer_iv_commander_sdkfz_161_bg",
+        "Count": 1
+      }
+    ],
+    "Abilities": [
+      "panzer_panther_tiger_ostwind_blitzkrieg_mp",
+      "blizzard_effect",
+      "panzer_commander_aura_mp"
+    ],
+    "Veterancy": [
+      {
+        "ScreenName": "11047339",
+        "Experience": 1970
+      },
+      {
+        "ScreenName": "11047351",
+        "Experience": 3940
+      },
+      {
+        "ScreenName": "11047361",
+        "Experience": 7880
+      }
+    ],
+    "Types": [
+      "panzeriv",
+      "medium_tank",
+      "vehicle",
+      "heavy_vehicle",
+      "panzer_command_tank"
+    ],
+    "SlotPickupCapacity": 2,
+    "UpgradeCapacity": -1,
+    "Upgrades": [
+      "vehicles_optics"
+    ]
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741892,
+    "Name": "panzer_iv_squad_bg",
+    "Army": "german",
+    "Display": {
+      "LocaleName": "11007029",
+      "LocaleDescriptionLong": "11007021",
+      "LocaleDescriptionShort": "11009052",
+      "Icon": "Icons_vehicles_vehicle_german_panzer_iv",
+      "Symbol": "Icons_symbols_vehicle_german_panzer_iv_symbol",
+      "Portrait": "Icons_portraits_vehicle_german_panzer_iv_s_portrait"
+    },
+    "SquadCost": {
+      "Manpower": 350,
+      "Fuel": 120,
+      "FieldTime": 50
+    },
+    "HasCrew": true,
+    "Entities": [
+      {
+        "EBP": "panzer_iv_sdkfz_161_bg",
+        "Count": 1
+      }
+    ],
+    "Abilities": [
+      "panzer_panther_tiger_ostwind_blitzkrieg_mp",
+      "blizzard_effect"
+    ],
+    "Veterancy": [
+      {
+        "ScreenName": "11047341",
+        "Experience": 1950
+      },
+      {
+        "ScreenName": "11047353",
+        "Experience": 3900
+      },
+      {
+        "ScreenName": "11047363",
+        "Experience": 7800
+      }
+    ],
+    "Types": [
+      "panzeriv",
+      "medium_tank",
+      "vehicle",
+      "heavy_vehicle"
+    ],
+    "SlotPickupCapacity": 2,
+    "UpgradeCapacity": -1,
+    "Upgrades": [
+      "vehicles_optics"
+    ]
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741891,
+    "Name": "panzer_iv_stubby_squad_bg",
+    "Army": "german",
+    "Display": {
+      "LocaleName": "11048702",
+      "LocaleDescriptionLong": "11048703",
+      "LocaleDescriptionShort": "11048704",
+      "Icon": "Icons_vehicles_vehicle_german_panzer_iv_f1",
+      "Symbol": "Icons_symbols_vehicle_german_panzer_iv_f1_symbol",
+      "Portrait": "Icons_portraits_vehicle_german_panzer_iv_f1_s_portrait"
+    },
+    "SquadCost": {
+      "Manpower": 480,
+      "Fuel": 120,
+      "FieldTime": 55
+    },
+    "HasCrew": true,
+    "Entities": [
+      {
+        "EBP": "panzer_iv_sdkfz_ausf1_bg",
+        "Count": 1
+      }
+    ],
+    "Abilities": [
+      "panzer_panther_tiger_ostwind_blitzkrieg_mp",
+      "blizzard_effect"
+    ],
+    "Veterancy": [
+      {
+        "ScreenName": "11050262",
+        "Experience": 1920
+      },
+      {
+        "ScreenName": "11050274",
+        "Experience": 3840
+      },
+      {
+        "ScreenName": "11050276",
+        "Experience": 7680
+      }
+    ],
+    "Types": [
+      "panzeriv",
+      "medium_tank",
+      "vehicle",
+      "heavy_vehicle"
+    ],
+    "SlotPickupCapacity": 2,
+    "UpgradeCapacity": -1,
+    "Upgrades": [
+      "vehicles_optics"
+    ]
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741896,
+    "Name": "sdkfz_221_bg",
+    "Army": "german",
+    "Display": {
+      "LocaleName": "11097449",
+      "LocaleDescriptionLong": "11008216",
+      "LocaleDescriptionShort": "11009089",
+      "Icon": "Icons_vehicles_vehicle_german_222_armored_car",
+      "Symbol": "Icons_symbols_vehicle_german_222_armored_car_symbol",
+      "Portrait": "Icons_portraits_vehicle_german_222_scout_car_s_portrait"
+    },
+    "SquadCost": {
+      "Manpower": 200,
+      "Fuel": 30,
+      "FieldTime": 30
+    },
+    "HasCrew": true,
+    "Entities": [
+      {
+        "EBP": "armored_car_sdkfz_221_bg",
+        "Count": 1
+      }
+    ],
+    "Abilities": [
+      "blizzard_effect"
+    ],
+    "Veterancy": [
+      {
+        "ScreenName": "11140692",
+        "Experience": 720
+      },
+      {
+        "ScreenName": "11047321",
+        "Experience": 1440
+      },
+      {
+        "ScreenName": "11140694",
+        "Experience": 2880
+      }
+    ],
+    "Types": [
+      "222_armored_car",
+      "light_vehicle",
+      "vehicle"
+    ],
+    "SlotPickupCapacity": 2,
+    "UpgradeCapacity": -1,
+    "Upgrades": [
+      "vehicles_optics"
+    ]
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741898,
+    "Name": "sdkfz_221_command_bg",
+    "Army": "german",
+    "Display": {
+      "LocaleName": "11097449",
+      "LocaleDescriptionLong": "11008216",
+      "LocaleDescriptionShort": "11009089",
+      "Icon": "Icons_vehicles_vehicle_german_222_armored_car",
+      "Symbol": "Icons_symbols_vehicle_german_222_armored_car_symbol",
+      "Portrait": "Icons_portraits_vehicle_german_222_scout_car_s_portrait"
+    },
+    "SquadCost": {
+      "Manpower": 200,
+      "Fuel": 30,
+      "FieldTime": 30
+    },
+    "HasCrew": true,
+    "Entities": [
+      {
+        "EBP": "armored_car_sdkfz_221_command_bg",
+        "Count": 1
+      }
+    ],
+    "Abilities": [
+      "blizzard_effect"
+    ],
+    "Veterancy": [
+      {
+        "ScreenName": "11140692",
+        "Experience": 720
+      },
+      {
+        "ScreenName": "11047321",
+        "Experience": 1440
+      },
+      {
+        "ScreenName": "11140694",
+        "Experience": 2880
+      }
+    ],
+    "Types": [
+      "222_armored_car",
+      "light_vehicle",
+      "vehicle"
+    ],
+    "SlotPickupCapacity": 2,
+    "UpgradeCapacity": -1,
+    "Upgrades": [
+      "vehicles_optics"
+    ]
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741897,
+    "Name": "sdkfz_222_bg",
+    "Army": "german",
+    "Display": {
+      "LocaleName": "11097449",
+      "LocaleDescriptionLong": "11008216",
+      "LocaleDescriptionShort": "11009089",
+      "Icon": "Icons_vehicles_vehicle_german_222_armored_car",
+      "Symbol": "Icons_symbols_vehicle_german_222_armored_car_symbol",
+      "Portrait": "Icons_portraits_vehicle_german_222_scout_car_s_portrait"
+    },
+    "SquadCost": {
+      "Manpower": 200,
+      "Fuel": 30,
+      "FieldTime": 30
+    },
+    "HasCrew": true,
+    "Entities": [
+      {
+        "EBP": "armored_car_sdkfz_222_bg",
+        "Count": 1
+      }
+    ],
+    "Abilities": [
+      "blizzard_effect"
+    ],
+    "Veterancy": [
+      {
+        "ScreenName": "11140692",
+        "Experience": 720
+      },
+      {
+        "ScreenName": "11047321",
+        "Experience": 1440
+      },
+      {
+        "ScreenName": "11140694",
+        "Experience": 2880
+      }
+    ],
+    "Types": [
+      "222_armored_car",
+      "light_vehicle",
+      "vehicle"
+    ],
+    "SlotPickupCapacity": 2,
+    "UpgradeCapacity": -1,
+    "Upgrades": [
+      "vehicles_optics"
+    ]
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741895,
+    "Name": "sdkfz_234_puma_ost_bg",
+    "Army": "german",
+    "Display": {
+      "LocaleName": "11072073",
+      "LocaleDescriptionLong": "11072072",
+      "LocaleDescriptionShort": "11072071",
+      "Icon": "Icons_vehicles_vehicle_west_german_234_puma_armored_car",
+      "Symbol": "Icons_symbols_vehicle_west_german_234_puma_armored_car_symbol",
+      "Portrait": "Icons_portraits_vehicle_west_german_234_puma_armored_car_s_portrait"
+    },
+    "SquadCost": {
+      "Manpower": 270,
+      "Fuel": 70,
+      "FieldTime": 40
+    },
+    "HasCrew": true,
+    "Entities": [
+      {
+        "EBP": "puma_234_armoured_car_ostheer_bg",
+        "Count": 1
+      }
+    ],
+    "Abilities": [
+      "blizzard_effect"
+    ],
+    "Veterancy": [
+      {
+        "ScreenName": "11072116",
+        "Experience": 1160
+      },
+      {
+        "ScreenName": "11072117",
+        "Experience": 2320
+      },
+      {
+        "ScreenName": "11072118",
+        "Experience": 4640
+      }
+    ],
+    "Types": [
+      "222_armored_car",
+      "light_vehicle",
+      "vehicle"
+    ],
+    "SlotPickupCapacity": 2,
+    "UpgradeCapacity": -1,
+    "Upgrades": [
+      "vehicles_optics"
+    ]
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741884,
+    "Name": "sdkfz_250_halftrack_bg",
+    "Army": "german",
+    "Display": {
+      "LocaleName": "11051325",
+      "LocaleDescriptionLong": "11051326",
+      "LocaleDescriptionShort": "11051327",
+      "Icon": "Icons_vehicles_vehicle_german_250_halftrack",
+      "Symbol": "Icons_symbols_vehicle_german_250_halftrack_symbol",
+      "Portrait": "Icons_portraits_vehicle_german_251_halftrack_mortar_s_portrait"
+    },
+    "SquadCost": {
+      "Manpower": 210,
+      "Fuel": 20,
+      "FieldTime": 40
+    },
+    "Entities": [
+      {
+        "EBP": "halftrack_sdkfz_250_bg",
+        "Count": 1
+      }
+    ],
+    "Abilities": [
+      "blizzard_effect",
+      "m3a1_m5_moving_accuracy_mp",
+      "transport_heavy_vehicle_bg",
+      "detach_tow_bg"
+    ],
+    "Veterancy": [
+      {
+        "ScreenName": "11158313",
+        "Experience": 720
+      },
+      {
+        "ScreenName": "11158314",
+        "Experience": 1440
+      },
+      {
+        "ScreenName": "11140694",
+        "Experience": 2880
+      }
+    ],
+    "Types": [
+      "251_halftrack",
+      "light_vehicle",
+      "vehicle"
+    ],
+    "SlotPickupCapacity": 6,
+    "UpgradeCapacity": -1,
+    "Upgrades": [
+      "vehicles_optics"
+    ]
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741885,
+    "Name": "sdkfz_251_halftrack_squad_bg",
+    "Army": "german",
+    "Display": {
+      "LocaleName": "11007036",
+      "LocaleDescriptionLong": "11007018",
+      "LocaleDescriptionShort": "11010405",
+      "Icon": "Icons_vehicles_vehicle_german_251_halftrack",
+      "Symbol": "Icons_symbols_vehicle_german_251_halftrack_symbol",
+      "Portrait": "Icons_portraits_vehicle_german_251_halftrack_s_portrait"
+    },
+    "SquadCost": {
+      "Manpower": 200,
+      "Fuel": 30,
+      "FieldTime": 30
+    },
+    "Entities": [
+      {
+        "EBP": "halftrack_sdkfz_251_bg",
+        "Count": 1
+      }
+    ],
+    "Abilities": [
+      "blizzard_effect",
+      "radio_setup_251_correct_mp",
+      "transport_heavy_vehicle_bg",
+      "detach_tow_bg"
+    ],
+    "Veterancy": [
+      {
+        "ScreenName": "11047315",
+        "Experience": 540
+      },
+      {
+        "ScreenName": "11047319",
+        "Experience": 1080
+      },
+      {
+        "ScreenName": "11047323",
+        "Experience": 2160
+      }
+    ],
+    "Types": [
+      "251_halftrack",
+      "light_vehicle",
+      "vehicle"
+    ],
+    "SlotPickupCapacity": 6,
+    "UpgradeCapacity": -1,
+    "Upgrades": [
+      "vehicles_optics"
+    ]
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741899,
+    "Name": "stug_iii_e_squad_bg",
+    "Army": "german",
+    "Display": {
+      "LocaleName": "11024608",
+      "LocaleDescriptionLong": "11024609",
+      "LocaleDescriptionShort": "11024610",
+      "Icon": "Icons_vehicles_vehicle_german_stug_iii_e",
+      "Symbol": "Icons_symbols_vehicle_german_stug_iii_e_symbol",
+      "Portrait": "Icons_portraits_vehicle_german_stug_iii_e_s_portrait"
+    },
+    "SquadCost": {
+      "Manpower": 320,
+      "Fuel": 25,
+      "FieldTime": 40
+    },
+    "HasCrew": true,
+    "Entities": [
+      {
+        "EBP": "stug_iii_e_sdkfz_141_1_bg",
+        "Count": 1
+      }
+    ],
+    "Abilities": [
+      "blizzard_effect"
+    ],
+    "Veterancy": [
+      {
+        "ScreenName": "11047281",
+        "Experience": 640
+      },
+      {
+        "ScreenName": "11047297",
+        "Experience": 1280
+      },
+      {
+        "ScreenName": "11047305",
+        "Experience": 2560
+      }
+    ],
+    "Types": [
+      "stug_iii",
+      "assault_gun",
+      "vehicle",
+      "heavy_vehicle"
+    ],
+    "SlotPickupCapacity": 2,
+    "UpgradeCapacity": -1,
+    "Upgrades": [
+      "vehicles_optics"
+    ]
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741900,
+    "Name": "stug_iii_squad_bg",
+    "Army": "german",
+    "Display": {
+      "LocaleName": "11007006",
+      "LocaleDescriptionLong": "11007020",
+      "LocaleDescriptionShort": "11009053",
+      "Icon": "Icons_vehicles_vehicle_german_stug_iii_g",
+      "Symbol": "Icons_symbols_vehicle_german_stug_iii_g_symbol",
+      "Portrait": "Icons_portraits_vehicle_german_stug_iii_g_s_portrait"
+    },
+    "SquadCost": {
+      "Manpower": 280,
+      "Fuel": 90,
+      "FieldTime": 50
+    },
+    "HasCrew": true,
+    "Entities": [
+      {
+        "EBP": "stug_iii_g_sdkfz_141_1_bg",
+        "Count": 1
+      }
+    ],
+    "Abilities": [
+      "blizzard_effect"
+    ],
+    "Veterancy": [
+      {
+        "ScreenName": "11047283",
+        "Experience": 1510
+      },
+      {
+        "ScreenName": "11047299",
+        "Experience": 3020
+      },
+      {
+        "ScreenName": "11047307",
+        "Experience": 6040
+      }
+    ],
+    "Types": [
+      "stug_iii",
+      "assault_gun",
+      "vehicle",
+      "heavy_vehicle"
+    ],
+    "SlotPickupCapacity": 2,
+    "UpgradeCapacity": -1,
+    "Upgrades": [
+      "vehicles_optics"
+    ]
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741902,
+    "Name": "tiger_command_squad_bg",
+    "Army": "german",
+    "Display": {
+      "LocaleName": "2092402",
+      "LocaleDescriptionLong": "2092401",
+      "LocaleDescriptionShort": "11009054",
+      "Icon": "Icons_vehicles_vehicle_german_tiger",
+      "Symbol": "Icons_symbols_vehicle_german_tiger_symbol",
+      "Portrait": "Icons_portraits_vehicle_german_tiger_s_portrait"
+    },
+    "SquadCost": {
+      "Manpower": 640,
+      "Fuel": 230,
+      "FieldTime": 70
+    },
+    "HasCrew": true,
+    "Entities": [
+      {
+        "EBP": "tiger_sdkfz_181_command_bg",
+        "Count": 1
+      }
+    ],
+    "Abilities": [
+      "panther_tiger_blitzkrieg_mp",
+      "blizzard_effect"
+    ],
+    "Veterancy": [
+      {
+        "ScreenName": "11047343",
+        "Experience": 3090
+      },
+      {
+        "ScreenName": "11171586",
+        "Experience": 6180
+      },
+      {
+        "ScreenName": "11047365",
+        "Experience": 12360
+      }
+    ],
+    "Types": [
+      "tiger",
+      "heavy_tank",
+      "vehicle",
+      "heavy_vehicle",
+      "heavy_vehicle_icon"
+    ],
+    "SlotPickupCapacity": 2,
+    "UpgradeCapacity": -1,
+    "Upgrades": [
+      "vehicles_optics"
+    ]
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741901,
+    "Name": "tiger_squad_bg",
+    "Army": "german",
+    "Display": {
+      "LocaleName": "2092402",
+      "LocaleDescriptionLong": "2092401",
+      "LocaleDescriptionShort": "11009054",
+      "Icon": "Icons_vehicles_vehicle_german_tiger",
+      "Symbol": "Icons_symbols_vehicle_german_tiger_symbol",
+      "Portrait": "Icons_portraits_vehicle_german_tiger_s_portrait"
+    },
+    "SquadCost": {
+      "Manpower": 640,
+      "Fuel": 230,
+      "FieldTime": 70
+    },
+    "HasCrew": true,
+    "Entities": [
+      {
+        "EBP": "tiger_sdkfz_181_bg",
+        "Count": 1
+      }
+    ],
+    "Abilities": [
+      "panther_tiger_blitzkrieg_mp",
+      "blizzard_effect"
+    ],
+    "Veterancy": [
+      {
+        "ScreenName": "11047343",
+        "Experience": 3090
+      },
+      {
+        "ScreenName": "11171586",
+        "Experience": 6180
+      },
+      {
+        "ScreenName": "11047365",
+        "Experience": 12360
+      }
+    ],
+    "Types": [
+      "tiger",
+      "heavy_tank",
+      "vehicle",
+      "heavy_vehicle",
+      "heavy_vehicle_icon"
+    ],
+    "SlotPickupCapacity": 2,
+    "UpgradeCapacity": -1,
+    "Upgrades": [
+      "vehicles_optics"
+    ]
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741853,
+    "Name": "dshk_38_hmg_squad_bg",
+    "Army": "soviet",
+    "Display": {
+      "LocaleName": "11048751",
+      "LocaleDescriptionLong": "11048755",
+      "LocaleDescriptionShort": "11048759",
+      "Icon": "Icons_commander_dshk_icon",
+      "Symbol": "Icons_symbols_vehicle_soviet_dshk_38_50_cal_hmg_symbol",
+      "Portrait": "Icons_portraits_unit_german_mg42_crew_s_portrait"
+    },
+    "SquadCost": {
+      "Manpower": 290,
+      "Munition": 60,
+      "FieldTime": 22
+    },
+    "IsSyncWeapon": true,
+    "Entities": [
+      {
+        "EBP": "dhsk_38_machine_gun_bg",
+        "Count": 1
+      },
+      {
+        "EBP": "dshk_weapon_crew_bg",
+        "Count": 4
+      }
+    ],
+    "Abilities": [
+      "blizzard_effect",
+      "garrisoned_squad_facing",
+      "garrisoned_squad_facing_unset",
+      "sniper_hmg_sprint_mp",
+      "ambush_camo_hold_fire_mg_mp"
+    ],
+    "Veterancy": [
+      {
+        "ScreenName": "11053073",
+        "Experience": 720
+      },
+      {
+        "ScreenName": "11053074",
+        "Experience": 1440
+      },
+      {
+        "ScreenName": "11053075",
+        "Experience": 2880
+      }
+    ],
+    "Types": [
+      "soviet_team_weapons",
+      "hmg",
+      "team_weapon",
+      "rapid_conscription",
+      "infantry",
+      "DSHK"
+    ],
+    "CanPickupItems": true,
+    "UpgradeCapacity": -1,
+    "Upgrades": [
+      "ambush_camou_package"
+    ],
+    "AppliedUpgrades": [
+      "is_manned"
+    ]
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741850,
+    "Name": "hm-120_38_mortar_squad_bg",
+    "Army": "soviet",
+    "Display": {
+      "LocaleName": "11006676",
+      "LocaleDescriptionLong": "11007430",
+      "LocaleDescriptionShort": "11007375",
+      "Icon": "Icons_units_unit_soviet_mortar",
+      "Symbol": "Icons_symbols_unit_german_m1938_120mm_mortar_symbol",
+      "Portrait": "Icons_portraits_unit_soviet_mortar_crew_s_portrait"
+    },
+    "SquadCost": {
+      "Manpower": 280,
+      "FieldTime": 42
+    },
+    "IsSyncWeapon": true,
+    "Entities": [
+      {
+        "EBP": "hm-120_38_mortar_bg",
+        "Count": 1
+      },
+      {
+        "EBP": "mortar_120mm_weapon_crew_bg",
+        "Count": 4
+      }
+    ],
+    "Abilities": [
+      "blizzard_effect",
+      "blizzard_effect_mortars",
+      "german_mortar_hold_fire_mp"
+    ],
+    "Veterancy": [
+      {
+        "ScreenName": "11047107",
+        "Experience": 960
+      },
+      {
+        "ScreenName": "11047079",
+        "Experience": 1920
+      },
+      {
+        "ScreenName": "11047082",
+        "Experience": 3840
+      }
+    ],
+    "Types": [
+      "120mm_soviet_mortar",
+      "mortar",
+      "soviet_team_weapons",
+      "rapid_conscription",
+      "team_weapon",
+      "infantry"
+    ],
+    "CanPickupItems": true,
+    "UpgradeCapacity": -1,
+    "AppliedUpgrades": [
+      "is_manned"
+    ]
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741852,
+    "Name": "m1910_maxim_heavy_machine_gun_squad_bg",
+    "Army": "soviet",
+    "Display": {
+      "LocaleName": "11048748",
+      "LocaleDescriptionLong": "11048742",
+      "LocaleDescriptionShort": "11048746",
+      "Icon": "Icons_units_unit_soviet_mg",
+      "Symbol": "Icons_symbols_unit_soviet_mg_symbol",
+      "Portrait": "Icons_portraits_unit_german_mg42_crew_s_portrait"
+    },
+    "SquadCost": {
+      "Manpower": 260,
+      "Munition": 30,
+      "FieldTime": 22
+    },
+    "IsSyncWeapon": true,
+    "Entities": [
+      {
+        "EBP": "m1910_maxim_heavy_machine_gun_bg",
+        "Count": 1
+      },
+      {
+        "EBP": "maxim_weapon_crew_bg",
+        "Count": 4
+      }
+    ],
+    "Abilities": [
+      "blizzard_effect",
+      "garrisoned_squad_facing",
+      "garrisoned_squad_facing_unset",
+      "ambush_camo_hold_fire_mg_mp"
+    ],
+    "Veterancy": [
+      {
+        "ScreenName": "11141500",
+        "Experience": 480
+      },
+      {
+        "ScreenName": "11047071",
+        "Experience": 960
+      },
+      {
+        "ScreenName": "11047073",
+        "Experience": 1920
+      }
+    ],
+    "Types": [
+      "maxim_hmg",
+      "hmg",
+      "soviet_team_weapons",
+      "",
+      "team_weapon",
+      "infantry"
+    ],
+    "CanPickupItems": true,
+    "UpgradeCapacity": -1,
+    "Upgrades": [
+      "ambush_camou_package"
+    ],
+    "AppliedUpgrades": [
+      "is_manned"
+    ]
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741843,
+    "Name": "m1931_203mm_b-4_howitzer_artillery_bg",
+    "Army": "soviet",
+    "Display": {
+      "LocaleName": "11038377",
+      "LocaleDescriptionLong": "11038376",
+      "LocaleDescriptionShort": "11038375",
+      "Icon": "Icons_vehicles_vehicle_soviet_b4_artillery_gun",
+      "Symbol": "Icons_symbols_vehicle_soviet_b4_artillery_gun_symbol",
+      "Portrait": "Icons_portraits_vehicle_soviet_m1931_203mm_artillery_s_portrait"
+    },
+    "SquadCost": {
+      "Manpower": 600,
+      "FieldTime": 60
+    },
+    "IsSyncWeapon": true,
+    "Entities": [
+      {
+        "EBP": "howitzer_crew_soviet_bg",
+        "Count": 5
+      },
+      {
+        "EBP": "m1931_203mm_b-4_howitzer_artillery_bg",
+        "Count": 1
+      }
+    ],
+    "Abilities": [
+      "howitzer_default_reface_action",
+      "detach_weapon_tow_bg"
+    ],
+    "Veterancy": [
+      {
+        "ScreenName": "0",
+        "Experience": 720
+      },
+      {
+        "ScreenName": "11047376",
+        "Experience": 1440
+      },
+      {
+        "ScreenName": "0",
+        "Experience": 2880
+      }
+    ],
+    "Types": [
+      "team_weapon",
+      "b4_howtizer"
+    ],
+    "UpgradeCapacity": -1
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741859,
+    "Name": "m1937_152mm_ml_20_artillery_bg",
+    "Army": "soviet",
+    "Display": {
+      "LocaleName": "11006980",
+      "LocaleDescriptionLong": "11007435",
+      "LocaleDescriptionShort": "11038380",
+      "Icon": "Icons_vehicles_vehicle_soviet_ml20_artillery_gun",
+      "Symbol": "Icons_symbols_vehicle_soviet_ml20_artillery_gun_symbol",
+      "Portrait": "Icons_portraits_vehicle_soviet_ml20_152mm_artillery_s_portrait"
+    },
+    "SquadCost": {
+      "Manpower": 460,
+      "Fuel": 50,
+      "FieldTime": 270
+    },
+    "IsSyncWeapon": true,
+    "Entities": [
+      {
+        "EBP": "howitzer_crew_soviet_bg",
+        "Count": 5
+      },
+      {
+        "EBP": "m1937_152mm_ml_20_artillery_bg",
+        "Count": 1
+      }
+    ],
+    "Abilities": [
+      "blizzard_effect",
+      "blizzard_howitzer",
+      "detach_weapon_tow_bg"
+    ],
+    "Veterancy": [
+      {
+        "ScreenName": "11145724",
+        "Experience": 1200
+      },
+      {
+        "ScreenName": "11048369",
+        "Experience": 2400
+      },
+      {
+        "ScreenName": "11047213",
+        "Experience": 4800
+      }
+    ],
+    "Types": [
+      "ml_20_howitzer",
+      "artillery",
+      "team_weapon"
+    ],
+    "UpgradeCapacity": -1,
+    "AppliedUpgrades": [
+      "is_manned"
+    ]
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741837,
+    "Name": "m1937_53-k_45mm_at_gun_squad_bg",
+    "Army": "soviet",
+    "Display": {
+      "LocaleName": "11006681",
+      "LocaleDescriptionLong": "11007433",
+      "LocaleDescriptionShort": "11007373",
+      "Icon": "Icons_vehicles_vehicle_soviet_m1942_at_gun",
+      "Symbol": "Icons_symbols_vehicle_soviet_m1942_at_gun_symbol",
+      "Portrait": "Icons_portraits_vehicle_soviet_m1937_45mm_at_gun_s_portrait"
+    },
+    "SquadCost": {
+      "Manpower": 140,
+      "FieldTime": 14
+    },
+    "IsSyncWeapon": true,
+    "Entities": [
+      {
+        "EBP": "m1937_53-k_45mm_at_gun_bg",
+        "Count": 1
+      },
+      {
+        "EBP": "atgunzis_crew_bg",
+        "Count": 4
+      }
+    ],
+    "Abilities": [
+      "blizzard_effect",
+      "m42_tracking_ui_ui_item_mp",
+      "m42_at_gun_ambush_tactics_mp",
+      "detach_weapon_tow_bg"
+    ],
+    "Veterancy": [
+      {
+        "ScreenName": "11047166",
+        "Experience": 800
+      },
+      {
+        "ScreenName": "11054869",
+        "Experience": 1600
+      },
+      {
+        "ScreenName": "11054870",
+        "Experience": 3200
+      }
+    ],
+    "Types": [
+      "53k_at_gun",
+      "at_gun",
+      "soviet_team_weapons",
+      "team_weapon"
+    ],
+    "CanPickupItems": true,
+    "UpgradeCapacity": -1,
+    "AppliedUpgrades": [
+      "is_manned"
+    ]
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741838,
+    "Name": "m1942_zis-3_76mm_at_gun_squad_bg",
+    "Army": "soviet",
+    "Display": {
+      "LocaleName": "11006973",
+      "LocaleDescriptionLong": "11006972",
+      "LocaleDescriptionShort": "11009055",
+      "Icon": "Icons_vehicles_vehicle_soviet_m1942_76mm_at_gun",
+      "Symbol": "Icons_symbols_vehicle_soviet_m1942_76mm_at_gun_symbol",
+      "Portrait": "Icons_portraits_vehicle_soviet_m1942_76mm_at_gun_s_portrait"
+    },
+    "SquadCost": {
+      "Manpower": 290,
+      "FieldTime": 33
+    },
+    "IsSyncWeapon": true,
+    "Entities": [
+      {
+        "EBP": "m1942_76mm_divisional_gun_zis-3_bg",
+        "Count": 1
+      },
+      {
+        "EBP": "atgunzis_crew_bg",
+        "Count": 5
+      }
+    ],
+    "Abilities": [
+      "su76_su85_zis3_53k_isu152_infantry_tracking_mp",
+      "blizzard_effect",
+      "at_gun_ambush_tactics",
+      "detach_weapon_tow_bg"
+    ],
+    "Veterancy": [
+      {
+        "ScreenName": "11047167",
+        "Experience": 1280
+      },
+      {
+        "ScreenName": "11047173",
+        "Experience": 2560
+      },
+      {
+        "ScreenName": "11047180",
+        "Experience": 5120
+      }
+    ],
+    "Types": [
+      "zis-3_at_gun",
+      "at_gun",
+      "soviet_team_weapons",
+      "team_weapon"
+    ],
+    "CanPickupItems": true,
+    "UpgradeCapacity": -1,
+    "AppliedUpgrades": [
+      "is_manned"
+    ]
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741851,
+    "Name": "pm-82_41_mortar_squad_bg",
+    "Army": "soviet",
+    "Display": {
+      "LocaleName": "11006677",
+      "LocaleDescriptionLong": "11007431",
+      "LocaleDescriptionShort": "11007374",
+      "Icon": "Icons_units_unit_soviet_mortar",
+      "Symbol": "Icons_symbols_unit_soviet_mortar_symbol",
+      "Portrait": "Icons_portraits_unit_soviet_mortar_crew_s_portrait"
+    },
+    "SquadCost": {
+      "Manpower": 180,
+      "FieldTime": 18
+    },
+    "IsSyncWeapon": true,
+    "Entities": [
+      {
+        "EBP": "pm41_82mm_mortar_bg",
+        "Count": 1
+      },
+      {
+        "EBP": "mortar_weapon_crew_bg",
+        "Count": 4
+      }
+    ],
+    "Abilities": [
+      "blizzard_effect",
+      "blizzard_effect_mortars",
+      "german_mortar_hold_fire_mp"
+    ],
+    "Veterancy": [
+      {
+        "ScreenName": "11145684",
+        "Experience": 480
+      },
+      {
+        "ScreenName": "11047081",
+        "Experience": 960
+      },
+      {
+        "ScreenName": "11047084",
+        "Experience": 1920
+      }
+    ],
+    "Types": [
+      "82mm_soviet_mortar",
+      "mortar",
+      "soviet_team_weapons",
+      "rapid_conscription",
+      "team_weapon",
+      "infantry"
+    ],
+    "CanPickupItems": true,
+    "UpgradeCapacity": -1,
+    "AppliedUpgrades": [
+      "is_manned"
+    ]
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741836,
+    "Name": "76mm_sherman_lend_lease_bg",
+    "Army": "soviet",
+    "Display": {
+      "LocaleName": "11072112",
+      "LocaleDescriptionLong": "11072111",
+      "LocaleDescriptionShort": "11072110",
+      "Icon": "Icons_vehicles_vehicle_aef_m4a3_sherman_76mm",
+      "Symbol": "Icons_symbols_vehicle_aef_m4a3_sherman_76mm_symbol",
+      "Portrait": "Icons_portraits_vehicle_aef_m4a3_sherman_76mm_s_portrait"
+    },
+    "SquadCost": {
+      "Manpower": 380,
+      "Fuel": 125,
+      "FieldTime": 50
+    },
+    "HasCrew": true,
+    "Entities": [
+      {
+        "EBP": "sherman_76mm_lend_lease_bg",
+        "Count": 1
+      }
+    ],
+    "Abilities": [
+      "blizzard_effect",
+      "vehicle_crew_repair_toggle_mp"
+    ],
+    "Veterancy": [
+      {
+        "ScreenName": "11070873",
+        "Experience": 1820
+      },
+      {
+        "ScreenName": "11072114",
+        "Experience": 3640
+      },
+      {
+        "ScreenName": "11072115",
+        "Experience": 7280
+      }
+    ],
+    "Types": [
+      "medium_tank",
+      "vehicle",
+      "heavy_vehicle"
+    ],
+    "SlotPickupCapacity": 2,
+    "UpgradeCapacity": -1
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741863,
+    "Name": "churchill_lend_lease_squad_bg",
+    "Army": "soviet",
+    "Display": {
+      "LocaleName": "11077206",
+      "LocaleDescriptionLong": "11083412",
+      "LocaleDescriptionShort": "11083413",
+      "Icon": "Icons_vehicles_vehicle_british_churchill",
+      "Symbol": "Icons_symbols_vehicle_british_churchill_symbol",
+      "Portrait": "Icons_portraits_vehicle_british_churchill_s_portrait"
+    },
+    "SquadCost": {
+      "Manpower": 490,
+      "Fuel": 165,
+      "FieldTime": 60
+    },
+    "HasCrew": true,
+    "Entities": [
+      {
+        "EBP": "churchill_lend_lease_mp",
+        "Count": 1
+      }
+    ],
+    "Abilities": [
+      "blizzard_effect",
+      "tune_up_bonus_mp"
+    ],
+    "Veterancy": [
+      {
+        "ScreenName": "11090126",
+        "Experience": 2080
+      },
+      {
+        "ScreenName": "11090137",
+        "Experience": 4160
+      },
+      {
+        "ScreenName": "11090135",
+        "Experience": 8320
+      }
+    ],
+    "Types": [
+      "heavy_tank",
+      "vehicle",
+      "heavy_vehicle",
+      "heavy_vehicle_icon"
+    ],
+    "SlotPickupCapacity": 2,
+    "UpgradeCapacity": -1
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741828,
+    "Name": "is-2_bg",
+    "Army": "soviet",
+    "Display": {
+      "LocaleName": "11006769",
+      "LocaleDescriptionLong": "11007369",
+      "LocaleDescriptionShort": "11007367",
+      "Icon": "Icons_vehicles_vehicle_soviet_is2",
+      "Symbol": "Icons_symbols_vehicle_soviet_is2_symbol",
+      "Portrait": "Icons_portraits_vehicle_soviet_is2_heavy_tank_s_portrait"
+    },
+    "SquadCost": {
+      "Manpower": 640,
+      "Fuel": 230,
+      "FieldTime": 70
+    },
+    "HasCrew": true,
+    "Entities": [
+      {
+        "EBP": "is-2_heavy_tank_bg",
+        "Count": 1
+      }
+    ],
+    "Abilities": [
+      "vehicle_crew_repair_toggle_mp",
+      "blizzard_effect"
+    ],
+    "Veterancy": [
+      {
+        "ScreenName": "11047131",
+        "Experience": 3920
+      },
+      {
+        "ScreenName": "11047138",
+        "Experience": 7840
+      },
+      {
+        "ScreenName": "11047142",
+        "Experience": 15680
+      }
+    ],
+    "Types": [
+      "is-2",
+      "heavy_tank",
+      "vehicle",
+      "heavy_vehicle",
+      "heavy_vehicle_icon"
+    ],
+    "SlotPickupCapacity": 3,
+    "UpgradeCapacity": -1
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741829,
+    "Name": "isu-152_bg",
+    "Army": "soviet",
+    "Display": {
+      "LocaleName": "11006770",
+      "LocaleDescriptionLong": "11007371",
+      "LocaleDescriptionShort": "11007370",
+      "Icon": "Icons_vehicles_vehicle_soviet_isu152",
+      "Symbol": "Icons_symbols_vehicle_soviet_isu152_symbol",
+      "Portrait": "Icons_portraits_vehicle_soviet_isu_152_s_portrait"
+    },
+    "SquadCost": {
+      "Manpower": 680,
+      "Fuel": 260,
+      "FieldTime": 64
+    },
+    "HasCrew": true,
+    "Entities": [
+      {
+        "EBP": "isu_152_spg_bg",
+        "Count": 1
+      }
+    ],
+    "Abilities": [
+      "su76_su85_zis3_53k_isu152_infantry_tracking_mp",
+      "blizzard_effect",
+      "vehicle_crew_repair_toggle_mp",
+      "isu152_concrete_piercing_round_mp"
+    ],
+    "Veterancy": [
+      {
+        "ScreenName": "11047170",
+        "Experience": 4260
+      },
+      {
+        "ScreenName": "11047171",
+        "Experience": 8520
+      },
+      {
+        "ScreenName": "11047178",
+        "Experience": 17040
+      }
+    ],
+    "Types": [
+      "isu-152",
+      "assault_gun",
+      "vehicle",
+      "heavy_vehicle",
+      "heavy_vehicle_icon"
+    ],
+    "SlotPickupCapacity": 2,
+    "UpgradeCapacity": -1
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741830,
+    "Name": "katyusha_rocket_truck_bg",
+    "Army": "soviet",
+    "Display": {
+      "LocaleName": "11007512",
+      "LocaleDescriptionLong": "11006871",
+      "LocaleDescriptionShort": "11032045",
+      "Icon": "Icons_vehicles_vehicle_soviet_katyush_rocket_truck",
+      "Symbol": "Icons_symbols_vehicle_soviet_katyush_rocket_truck_symbol",
+      "Portrait": "Icons_portraits_vehicle_soviet_katyush_rocket_truck_s_portrait"
+    },
+    "SquadCost": {
+      "Manpower": 360,
+      "Fuel": 85,
+      "FieldTime": 50
+    },
+    "HasCrew": true,
+    "Entities": [
+      {
+        "EBP": "katyusha_bm-13n_bg",
+        "Count": 1
+      }
+    ],
+    "Abilities": [
+      "kaytusha_rocket_truck_barrage_mp",
+      "kaytusha_rocket_truck_barrage_vet3_mp",
+      "blizzard_effect",
+      "vehicle_crew_repair_toggle_mp"
+    ],
+    "Veterancy": [
+      {
+        "ScreenName": "11070912",
+        "Experience": 1570
+      },
+      {
+        "ScreenName": "11047220",
+        "Experience": 3140
+      },
+      {
+        "ScreenName": "11047372",
+        "Experience": 6280
+      }
+    ],
+    "Types": [
+      "katyusha",
+      "artillery",
+      "vehicle"
+    ],
+    "SlotPickupCapacity": 6,
+    "UpgradeCapacity": -1
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741831,
+    "Name": "kv-1_bg",
+    "Army": "soviet",
+    "Display": {
+      "LocaleName": "11007079",
+      "LocaleDescriptionLong": "11007327",
+      "LocaleDescriptionShort": "11007368",
+      "Icon": "Icons_vehicles_vehicle_soviet_kv1_heavy_tank",
+      "Symbol": "Icons_symbols_vehicle_soviet_kv1_heavy_tank_symbol",
+      "Portrait": "Icons_portraits_vehicle_soviet_kv1_heavy_tank_s_portrait"
+    },
+    "SquadCost": {
+      "Manpower": 600,
+      "Fuel": 75,
+      "FieldTime": 60
+    },
+    "HasCrew": true,
+    "Entities": [
+      {
+        "EBP": "kv-1_bg",
+        "Count": 1
+      }
+    ],
+    "Abilities": [
+      "blizzard_effect",
+      "tank_vet_point_capture_ability_mp",
+      "vehicle_crew_repair_toggle_mp"
+    ],
+    "Veterancy": [
+      {
+        "ScreenName": "11048834",
+        "Experience": 1950
+      },
+      {
+        "ScreenName": "11047373",
+        "Experience": 3900
+      },
+      {
+        "ScreenName": "11047386",
+        "Experience": 7800
+      },
+      {
+        "ScreenName": "0",
+        "Experience": 10000
+      },
+      {
+        "ScreenName": "0",
+        "Experience": 20000
+      }
+    ],
+    "Types": [
+      "kv-1",
+      "heavy_tank",
+      "vehicle",
+      "heavy_vehicle"
+    ],
+    "SlotPickupCapacity": 3,
+    "UpgradeCapacity": -1
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741832,
+    "Name": "kv-2_bg",
+    "Army": "soviet",
+    "Display": {
+      "LocaleName": "11052242",
+      "LocaleDescriptionLong": "11052246",
+      "LocaleDescriptionShort": "11020682",
+      "Icon": "Icons_vehicles_vehicle_soviet_kv2_heavy_tank",
+      "Symbol": "Icons_symbols_vehicle_soviet_kv2_heavy_tank_symbol",
+      "Portrait": "Icons_portraits_vehicle_soviet_kv2_heavy_tank_s_portrait"
+    },
+    "SquadCost": {
+      "Manpower": 630,
+      "Fuel": 230,
+      "FieldTime": 60
+    },
+    "HasCrew": true,
+    "Entities": [
+      {
+        "EBP": "kv-2_bg",
+        "Count": 1
+      }
+    ],
+    "Abilities": [
+      "blizzard_effect",
+      "vehicle_crew_repair_toggle_mp",
+      "kv_2_inspire_mp"
+    ],
+    "Veterancy": [
+      {
+        "ScreenName": "11053067",
+        "Experience": 3380
+      },
+      {
+        "ScreenName": "11054916",
+        "Experience": 6760
+      },
+      {
+        "ScreenName": "11158977",
+        "Experience": 13520
+      }
+    ],
+    "Types": [
+      "kv-8",
+      "heavy_tank",
+      "vehicle",
+      "heavy_vehicle"
+    ],
+    "SlotPickupCapacity": 3,
+    "UpgradeCapacity": -1
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741833,
+    "Name": "kv-8_bg",
+    "Army": "soviet",
+    "Display": {
+      "LocaleName": "11035124",
+      "LocaleDescriptionLong": "11038409",
+      "LocaleDescriptionShort": "11038408",
+      "Icon": "Icons_vehicles_vehicle_soviet_kv8_flame",
+      "Symbol": "Icons_symbols_vehicle_soviet_kv8_symbol",
+      "Portrait": "Icons_portraits_vehicle_soviet_kv8_flamethrower_tank_s_portrait"
+    },
+    "SquadCost": {
+      "Manpower": 390,
+      "Fuel": 145,
+      "FieldTime": 55
+    },
+    "HasCrew": true,
+    "Entities": [
+      {
+        "EBP": "kv-8_bg",
+        "Count": 1
+      }
+    ],
+    "Abilities": [
+      "blizzard_effect",
+      "vehicle_crew_repair_toggle_mp",
+      "kv_2_inspire_mp"
+    ],
+    "Veterancy": [
+      {
+        "ScreenName": "11047156",
+        "Experience": 2070
+      },
+      {
+        "ScreenName": "11047155",
+        "Experience": 4140
+      },
+      {
+        "ScreenName": "11047154",
+        "Experience": 8280
+      }
+    ],
+    "Types": [
+      "kv-8",
+      "vehicle",
+      "heavy_vehicle"
+    ],
+    "SlotPickupCapacity": 3,
+    "UpgradeCapacity": -1
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741834,
+    "Name": "m3a1_scout_car_squad_bg",
+    "Army": "soviet",
+    "Display": {
+      "LocaleName": "11007084",
+      "LocaleDescriptionLong": "11007323",
+      "LocaleDescriptionShort": "11007359",
+      "Icon": "Icons_vehicles_vehicle_soviet_m3a1_armored_personnel_carrier",
+      "Symbol": "Icons_symbols_vehicle_soviet_m3a1_armored_personnel_carrier_symbol",
+      "Portrait": "Icons_portraits_vehicle_soviet_m3a1_scout_car_s_portrait"
+    },
+    "SquadCost": {
+      "Manpower": 190,
+      "Fuel": 15,
+      "FieldTime": 30
+    },
+    "HasCrew": true,
+    "Entities": [
+      {
+        "EBP": "m3a1_scout_car_bg",
+        "Count": 1
+      }
+    ],
+    "Abilities": [
+      "m5_m3a1_overdrive_mp",
+      "blizzard_effect",
+      "m3a1_m5_moving_accuracy_mp",
+      "vehicle_crew_repair_toggle_mp",
+      "transport_heavy_vehicle_bg",
+      "detach_tow_bg"
+    ],
+    "Veterancy": [
+      {
+        "ScreenName": "11047204",
+        "Experience": 460
+      },
+      {
+        "ScreenName": "11047177",
+        "Experience": 920
+      },
+      {
+        "ScreenName": "11047183",
+        "Experience": 1840
+      }
+    ],
+    "Types": [
+      "m3a1_scout_car",
+      "light_vehicle",
+      "vehicle"
+    ],
+    "SlotPickupCapacity": 1,
+    "UpgradeCapacity": -1
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741835,
+    "Name": "m5_halftrack_squad_bg",
+    "Army": "soviet",
+    "Display": {
+      "LocaleName": "11007075",
+      "LocaleDescriptionLong": "11168854",
+      "LocaleDescriptionShort": "11140702",
+      "Icon": "Icons_vehicles_vehicle_soviet_m5_halftrack",
+      "Symbol": "Icons_symbols_vehicle_soviet_m5_halftrack_symbol",
+      "Portrait": "Icons_portraits_vehicle_soviet_m5_halftrack_s_portrait"
+    },
+    "SquadCost": {
+      "Manpower": 240,
+      "Fuel": 30,
+      "FieldTime": 30
+    },
+    "HasCrew": true,
+    "Entities": [
+      {
+        "EBP": "m5_halftrack_bg",
+        "Count": 1
+      }
+    ],
+    "Abilities": [
+      "m5_m3a1_overdrive_mp",
+      "blizzard_effect",
+      "m3a1_m5_moving_accuracy_mp",
+      "vehicle_crew_repair_toggle_mp",
+      "transport_heavy_vehicle_bg",
+      "detach_tow_bg"
+    ],
+    "Veterancy": [
+      {
+        "ScreenName": "11047204",
+        "Experience": 540
+      },
+      {
+        "ScreenName": "11047176",
+        "Experience": 1080
+      },
+      {
+        "ScreenName": "11047184",
+        "Experience": 2160
+      }
+    ],
+    "Types": [
+      "m5_halftrack",
+      "light_vehicle",
+      "vehicle"
+    ],
+    "SlotPickupCapacity": 6,
+    "UpgradeCapacity": -1
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741908,
+    "Name": "ot_34_76_squad_bg",
+    "Army": "soviet",
+    "Display": {
+      "LocaleName": "$142b113740474c82a60b0a428bd553d5:58",
+      "LocaleDescriptionLong": "11006868",
+      "LocaleDescriptionShort": "11007365",
+      "Icon": "Icons_vehicles_vehicle_soviet_t34_76_heavy_tank",
+      "Symbol": "Icons_symbols_vehicle_soviet_t34_76_heavy_tank_symbol",
+      "Portrait": "Icons_portraits_vehicle_soviet_t34_76_s_portrait"
+    },
+    "SquadCost": {
+      "Manpower": 300,
+      "Fuel": 100,
+      "FieldTime": 50
+    },
+    "HasCrew": true,
+    "Entities": [
+      {
+        "EBP": "ot_34_76_bg",
+        "Count": 1
+      }
+    ],
+    "FemaleChance": 0.5,
+    "Abilities": [
+      "blizzard_effect",
+      "tank_vet_point_capture_ability_mp",
+      "vehicle_crew_repair_toggle_mp"
+    ],
+    "Veterancy": [
+      {
+        "ScreenName": "11047133",
+        "Experience": 1410
+      },
+      {
+        "ScreenName": "11047139",
+        "Experience": 2820
+      },
+      {
+        "ScreenName": "11047143",
+        "Experience": 5640
+      },
+      {
+        "ScreenName": "0",
+        "Experience": 6000
+      },
+      {
+        "ScreenName": "0",
+        "Experience": 7000
+      }
+    ],
+    "Types": [
+      "t3476",
+      "medium_tank",
+      "vehicle",
+      "heavy_vehicle"
+    ],
+    "SlotPickupCapacity": 2,
+    "UpgradeCapacity": -1
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741839,
+    "Name": "su-76m_bg",
+    "Army": "soviet",
+    "Display": {
+      "LocaleName": "11007080",
+      "LocaleDescriptionLong": "11007362",
+      "LocaleDescriptionShort": "11007363",
+      "Icon": "Icons_vehicles_vehicle_soviet_su76m_assault_gun",
+      "Symbol": "Icons_symbols_vehicle_soviet_su76m_assault_gun_symbol",
+      "Portrait": "Icons_portraits_vehicle_soviet_su76_artillery_tank_s_portrait"
+    },
+    "SquadCost": {
+      "Manpower": 280,
+      "Fuel": 75,
+      "FieldTime": 45
+    },
+    "HasCrew": true,
+    "Entities": [
+      {
+        "EBP": "su_76m_bg",
+        "Count": 1
+      }
+    ],
+    "Abilities": [
+      "su76_su85_zis3_53k_isu152_infantry_tracking_mp",
+      "blizzard_effect",
+      "vehicle_crew_repair_toggle_mp"
+    ],
+    "Veterancy": [
+      {
+        "ScreenName": "11047168",
+        "Experience": 870
+      },
+      {
+        "ScreenName": "11047174",
+        "Experience": 1740
+      },
+      {
+        "ScreenName": "11047181",
+        "Experience": 3480
+      }
+    ],
+    "Types": [
+      "su-76",
+      "assault_gun",
+      "vehicle",
+      "light_vehicle"
+    ],
+    "SlotPickupCapacity": 2,
+    "UpgradeCapacity": -1
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741840,
+    "Name": "su-85_bg",
+    "Army": "soviet",
+    "Display": {
+      "LocaleName": "11006721",
+      "LocaleDescriptionLong": "11006870",
+      "LocaleDescriptionShort": "11007364",
+      "Icon": "Icons_vehicles_vehicle_soviet_su85_tank_destroyer",
+      "Symbol": "Icons_symbols_vehicle_soviet_su85_tank_destroyer_symbol",
+      "Portrait": "Icons_portraits_vehicle_soviet_su85_tank_destroyer_s_portrait"
+    },
+    "SquadCost": {
+      "Manpower": 350,
+      "Fuel": 130,
+      "FieldTime": 50
+    },
+    "HasCrew": true,
+    "Entities": [
+      {
+        "EBP": "su_85_bg",
+        "Count": 1
+      }
+    ],
+    "FemaleChance": 0.5,
+    "Abilities": [
+      "su76_su85_zis3_53k_isu152_infantry_tracking_mp",
+      "blizzard_effect",
+      "vehicle_crew_repair_toggle_mp"
+    ],
+    "Veterancy": [
+      {
+        "ScreenName": "11047169",
+        "Experience": 1790
+      },
+      {
+        "ScreenName": "11115576",
+        "Experience": 3580
+      },
+      {
+        "ScreenName": "11047182",
+        "Experience": 7160
+      }
+    ],
+    "Types": [
+      "su-85",
+      "assault_gun",
+      "vehicle",
+      "heavy_vehicle"
+    ],
+    "SlotPickupCapacity": 2,
+    "UpgradeCapacity": -1
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741841,
+    "Name": "t-70m_bg",
+    "Army": "soviet",
+    "Display": {
+      "LocaleName": "11006768",
+      "LocaleDescriptionLong": "11006869",
+      "LocaleDescriptionShort": "11140720",
+      "Icon": "Icons_vehicles_vehicle_soviet_t70m_light_tank",
+      "Symbol": "Icons_symbols_vehicle_soviet_t70m_light_tank_symbol",
+      "Portrait": "Icons_portraits_vehicle_soviet_t70m_light_tank_s_portrait"
+    },
+    "SquadCost": {
+      "Manpower": 260,
+      "Fuel": 70,
+      "FieldTime": 40
+    },
+    "HasCrew": true,
+    "Entities": [
+      {
+        "EBP": "t_70m_bg",
+        "Count": 1
+      }
+    ],
+    "FemaleChance": 0.5,
+    "Abilities": [
+      "blizzard_effect",
+      "t70_vet_point_capture_ability_mp",
+      "vehicle_crew_repair_toggle_mp"
+    ],
+    "Veterancy": [
+      {
+        "ScreenName": "11047137",
+        "Experience": 870
+      },
+      {
+        "ScreenName": "11047141",
+        "Experience": 1740
+      },
+      {
+        "ScreenName": "11140712",
+        "Experience": 3480
+      }
+    ],
+    "Types": [
+      "t-70m",
+      "light_vehicle",
+      "vehicle"
+    ],
+    "SlotPickupCapacity": 3,
+    "UpgradeCapacity": -1
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741826,
+    "Name": "t_34_76_squad_bg",
+    "Army": "soviet",
+    "Display": {
+      "LocaleName": "11006678",
+      "LocaleDescriptionLong": "11006868",
+      "LocaleDescriptionShort": "11007365",
+      "Icon": "Icons_vehicles_vehicle_soviet_t34_76_heavy_tank",
+      "Symbol": "Icons_symbols_vehicle_soviet_t34_76_heavy_tank_symbol",
+      "Portrait": "Icons_portraits_vehicle_soviet_t34_76_s_portrait"
+    },
+    "SquadCost": {
+      "Manpower": 300,
+      "Fuel": 100,
+      "FieldTime": 50
+    },
+    "HasCrew": true,
+    "Entities": [
+      {
+        "EBP": "t_34_76_bg",
+        "Count": 1
+      }
+    ],
+    "FemaleChance": 0.5,
+    "Abilities": [
+      "blizzard_effect",
+      "tank_vet_point_capture_ability_mp",
+      "vehicle_crew_repair_toggle_mp"
+    ],
+    "Veterancy": [
+      {
+        "ScreenName": "11047133",
+        "Experience": 1410
+      },
+      {
+        "ScreenName": "11047139",
+        "Experience": 2820
+      },
+      {
+        "ScreenName": "11047143",
+        "Experience": 5640
+      },
+      {
+        "ScreenName": "0",
+        "Experience": 6000
+      },
+      {
+        "ScreenName": "0",
+        "Experience": 7000
+      }
+    ],
+    "Types": [
+      "t3476",
+      "medium_tank",
+      "vehicle",
+      "heavy_vehicle"
+    ],
+    "SlotPickupCapacity": 2,
+    "UpgradeCapacity": -1
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741825,
+    "Name": "t_34_85_squad_bg",
+    "Army": "soviet",
+    "Display": {
+      "LocaleName": "11048080",
+      "LocaleDescriptionLong": "11007407",
+      "LocaleDescriptionShort": "11007406",
+      "Icon": "Icons_vehicles_vehicle_soviet_t34_85",
+      "Symbol": "Icons_symbols_vehicle_soviet_t34_85_symbol",
+      "Portrait": "Icons_portraits_vehicle_soviet_t34_85_s_portrait"
+    },
+    "SquadCost": {
+      "Manpower": 380,
+      "Fuel": 130,
+      "FieldTime": 45
+    },
+    "HasCrew": true,
+    "Entities": [
+      {
+        "EBP": "t_34_85_bg",
+        "Count": 1
+      }
+    ],
+    "Abilities": [
+      "blizzard_effect",
+      "tank_vet_point_capture_ability_mp",
+      "vehicle_crew_repair_toggle_mp"
+    ],
+    "Veterancy": [
+      {
+        "ScreenName": "11047135",
+        "Experience": 2020
+      },
+      {
+        "ScreenName": "11047140",
+        "Experience": 4040
+      },
+      {
+        "ScreenName": "11047144",
+        "Experience": 8080
+      },
+      {
+        "ScreenName": "0",
+        "Experience": 9000
+      },
+      {
+        "ScreenName": "0",
+        "Experience": 10000
+      }
+    ],
+    "Types": [
+      "t3485",
+      "medium_tank",
+      "vehicle",
+      "heavy_vehicle"
+    ],
+    "SlotPickupCapacity": 2,
+    "UpgradeCapacity": -1
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741861,
+    "Name": "valentine_lend_lease_bg",
+    "Army": "soviet",
+    "Display": {
+      "LocaleName": "11095127",
+      "LocaleDescriptionLong": "11095130",
+      "LocaleDescriptionShort": "11095129",
+      "Icon": "Icons_vehicles_vehicle_british_valentine",
+      "Symbol": "Icons_symbols_vehicle_british_valentine_symbol",
+      "Portrait": "Icons_portraits_vehicle_british_valentine_s_portrait"
+    },
+    "SquadCost": {
+      "Manpower": 300,
+      "Fuel": 80,
+      "FieldTime": 60
+    },
+    "HasCrew": true,
+    "Entities": [
+      {
+        "EBP": "valentine_bg",
+        "Count": 1
+      }
+    ],
+    "Abilities": [
+      "blizzard_effect",
+      "tune_up_bonus_mp",
+      "valentine_artillery_sexton_victor_target_concentration_barrage_mp",
+      "observation_mode"
+    ],
+    "Veterancy": [
+      {
+        "ScreenName": "11095295",
+        "Experience": 1020
+      },
+      {
+        "ScreenName": "11095132",
+        "Experience": 2040
+      },
+      {
+        "ScreenName": "11095133",
+        "Experience": 4080
+      }
+    ],
+    "Types": [
+      "medium_tank",
+      "vehicle",
+      "heavy_vehicle"
+    ],
+    "SlotPickupCapacity": 2,
+    "UpgradeCapacity": -1
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741862,
+    "Name": "valentine_lend_lease_command_bg",
+    "Army": "soviet",
+    "Display": {
+      "LocaleName": "11095127",
+      "LocaleDescriptionLong": "11095130",
+      "LocaleDescriptionShort": "11095129",
+      "Icon": "Icons_vehicles_vehicle_british_valentine",
+      "Symbol": "Icons_symbols_vehicle_british_valentine_symbol",
+      "Portrait": "Icons_portraits_vehicle_british_valentine_s_portrait"
+    },
+    "SquadCost": {
+      "Manpower": 300,
+      "Fuel": 80,
+      "FieldTime": 60
+    },
+    "HasCrew": true,
+    "Entities": [
+      {
+        "EBP": "valentine_command_bg",
+        "Count": 1
+      }
+    ],
+    "Abilities": [
+      "blizzard_effect",
+      "tune_up_bonus_mp",
+      "valentine_artillery_sexton_victor_target_concentration_barrage_mp",
+      "observation_mode"
+    ],
+    "Veterancy": [
+      {
+        "ScreenName": "11095295",
+        "Experience": 1020
+      },
+      {
+        "ScreenName": "11095132",
+        "Experience": 2040
+      },
+      {
+        "ScreenName": "11095133",
+        "Experience": 4080
+      }
+    ],
+    "Types": [
+      "medium_tank",
+      "vehicle",
+      "heavy_vehicle"
+    ],
+    "SlotPickupCapacity": 2,
+    "UpgradeCapacity": -1
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741824,
+    "Name": "zis_6_transport_truck_bg",
+    "Army": "soviet",
+    "Display": {
+      "LocaleName": "11048638",
+      "LocaleDescriptionLong": "11048650",
+      "LocaleDescriptionShort": "11048648",
+      "Icon": "Icons_vehicles_vehicle_soviet_su6_truck",
+      "Symbol": "Icons_symbols_vehicle_soviet_su6_truck_symbol",
+      "Portrait": "Icons_portraits_vehicle_soviet_us6_truck_s_portrait"
+    },
+    "SquadCost": {
+      "Manpower": 120,
+      "Fuel": 30,
+      "FieldTime": 30
+    },
+    "HasCrew": true,
+    "Entities": [
+      {
+        "EBP": "zis_6_transport_bg",
+        "Count": 1
+      }
+    ],
+    "Abilities": [
+      "blizzard_effect",
+      "vehicle_crew_repair_toggle_mp",
+      "transport_heavy_vehicle_bg",
+      "detach_tow_bg"
+    ],
+    "Types": [
+      "m5_halftrack",
+      "light_vehicle",
+      "vehicle"
+    ],
+    "SlotPickupCapacity": 6,
+    "UpgradeCapacity": -1
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741906,
+    "Name": "assault_grenadier_squad_bg",
+    "Army": "german",
+    "Display": {
+      "LocaleName": "11051314",
+      "LocaleDescriptionLong": "11051315",
+      "LocaleDescriptionShort": "11051316",
+      "Icon": "Icons_units_unit_german_assault_grenadier",
+      "Symbol": "Icons_symbols_unit_german_assault_grenadier_symbol",
+      "Portrait": "Icons_portraits_unit_german_assault_grenadiers_s_portrait"
+    },
+    "Entities": [
+      {
+        "EBP": "assault_grenadiers_mp",
+        "Count": 5
+      }
+    ],
+    "Abilities": [
+      "blizzard_effect",
+      "jaeger_interrogation",
+      "ambush_camouflage_upgrade",
+      "ambush_camo_hold_fire_mp",
+      "german_hulldown_ability",
+      "assault_grenadier_grenade",
+      "assault_grenadier_sprint_mp"
+    ],
+    "Veterancy": [
+      {
+        "ScreenName": "11140625",
+        "Experience": 560
+      },
+      {
+        "ScreenName": "11052740",
+        "Experience": 1120
+      },
+      {
+        "ScreenName": "11052741",
+        "Experience": 2240
+      }
+    ],
+    "Types": [
+      "grenadiers",
+      "infantry"
+    ],
+    "SlotPickupCapacity": 2,
+    "CanPickupItems": true,
+    "UpgradeCapacity": -1,
+    "Upgrades": [
+      "assault_grenadier_veteran_squad_leader_mp"
+    ]
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741864,
+    "Name": "grenadier_squad_bg",
+    "Army": "german",
+    "Display": {
+      "LocaleName": "11006996",
+      "LocaleDescriptionLong": "11007013",
+      "LocaleDescriptionShort": "11009058",
+      "Icon": "Icons_units_unit_german_grenadier",
+      "Symbol": "Icons_symbols_unit_german_grenadier_symbol",
+      "Portrait": "Icons_portraits_unit_german_grenadiers_s_portrait"
+    },
+    "SquadCost": {
+      "Manpower": 300,
+      "FieldTime": 30
+    },
+    "Entities": [
+      {
+        "EBP": "grenadiers_bg",
+        "Count": 5
+      }
+    ],
+    "Abilities": [
+      "blizzard_effect",
+      "jaeger_interrogation",
+      "ambush_camouflage_upgrade",
+      "ambush_camo_hold_fire_mp",
+      "german_hulldown_ability",
+      "infantry_medkits_mp",
+      "retreat_to_forward_hq",
+      "stormtrooper_sprint_mp",
+      "grenadier_panzerfaust_bg",
+      "grenadier_rifle_grenade_ability_bg"
+    ],
+    "Veterancy": [
+      {
+        "ScreenName": "11047222",
+        "Experience": 480
+      },
+      {
+        "ScreenName": "11047235",
+        "Experience": 960
+      },
+      {
+        "ScreenName": "11047245",
+        "Experience": 1920
+      },
+      {
+        "ScreenName": "0",
+        "Experience": 20000
+      },
+      {
+        "ScreenName": "0",
+        "Experience": 30000
+      }
+    ],
+    "Types": [
+      "grenadiers",
+      "infantry"
+    ],
+    "SlotPickupCapacity": 2,
+    "CanPickupItems": true,
+    "UpgradeCapacity": -1
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741869,
+    "Name": "assault_officer_squad_bg",
+    "Army": "german",
+    "Display": {
+      "LocaleName": "11035436",
+      "LocaleDescriptionLong": "11035437",
+      "LocaleDescriptionShort": "11038495",
+      "Icon": "Icons_units_unit_german_officer",
+      "Symbol": "Icons_symbols_unit_german_officer_symbol",
+      "Portrait": "Icons_portraits_unit_german_officer_s_portrait"
+    },
+    "SquadCost": {
+      "Manpower": 240,
+      "FieldTime": 24
+    },
+    "Entities": [
+      {
+        "EBP": "artillery_officer_bg",
+        "Count": 1
+      },
+      {
+        "EBP": "grenadiers_bg",
+        "Count": 3
+      }
+    ],
+    "Abilities": [
+      "blizzard_effect",
+      "stormtrooper_sprint_mp",
+      "assault_officer_inspiration",
+      "officer_smoke_artillery",
+      "assault_officer_inspiration_vet3",
+      "heavy_mortar_barrage_officer",
+      "assault_officer_draw_fire"
+    ],
+    "Veterancy": [
+      {
+        "ScreenName": "11047222",
+        "Experience": 580
+      },
+      {
+        "ScreenName": "11047268",
+        "Experience": 1060
+      },
+      {
+        "ScreenName": "11047270",
+        "Experience": 2120
+      },
+      {
+        "ScreenName": "0",
+        "Experience": 15000
+      },
+      {
+        "ScreenName": "0",
+        "Experience": 20000
+      }
+    ],
+    "Types": [
+      "pz_grenadiers",
+      "infantry",
+      "sov_officer"
+    ],
+    "SlotPickupCapacity": 1,
+    "CanPickupItems": true,
+    "UpgradeCapacity": -1
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741868,
+    "Name": "luftwaffe_officer_squad_bg",
+    "Army": "german",
+    "Display": {
+      "LocaleName": "11053774",
+      "LocaleDescriptionLong": "11053772",
+      "LocaleDescriptionShort": "11053773",
+      "Icon": "Icons_units_unit_german_officer",
+      "Symbol": "Icons_symbols_unit_german_officer_symbol",
+      "Portrait": "Icons_portraits_unit_german_officer_s_portrait"
+    },
+    "SquadCost": {
+      "Manpower": 300,
+      "FieldTime": 30
+    },
+    "Entities": [
+      {
+        "EBP": "luftwaffe_officer_bg",
+        "Count": 1
+      },
+      {
+        "EBP": "grenadiers_bg",
+        "Count": 2
+      }
+    ],
+    "Abilities": [
+      "blizzard_effect",
+      "officer_air_recon",
+      "officer_close_air_support",
+      "officer_fragmentation_bomb",
+      "retreat_to_forward_hq"
+    ],
+    "Veterancy": [
+      {
+        "ScreenName": "11053776",
+        "Experience": 480
+      },
+      {
+        "ScreenName": "11053777",
+        "Experience": 960
+      },
+      {
+        "ScreenName": "11053778",
+        "Experience": 1920
+      },
+      {
+        "ScreenName": "0",
+        "Experience": 15000
+      },
+      {
+        "ScreenName": "0",
+        "Experience": 20000
+      }
+    ],
+    "Types": [
+      "pz_grenadiers",
+      "infantry",
+      "sov_officer"
+    ],
+    "SlotPickupCapacity": 4,
+    "UpgradeCapacity": -1
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741870,
+    "Name": "ostruppen_squad_bg",
+    "Army": "german",
+    "Display": {
+      "LocaleName": "11010409",
+      "LocaleDescriptionLong": "11052756",
+      "LocaleDescriptionShort": "11038491",
+      "Icon": "Icons_units_unit_german_ostruppen",
+      "Symbol": "Icons_symbols_unit_german_ostruppen_symbol",
+      "Portrait": "Icons_portraits_unit_german_ostruppen_s_portrait"
+    },
+    "SquadCost": {
+      "Manpower": 1999998,
+      "FieldTime": 210
+    },
+    "Entities": [
+      {
+        "EBP": "ostruppen_soldier_bg",
+        "Count": 6
+      }
+    ],
+    "Abilities": [
+      "blizzard_effect",
+      "infantry_medkits_mp",
+      "stormtrooper_sprint_mp",
+      "ostruppen_cover_bonus",
+      "grenadier_panzerfaust_bg"
+    ],
+    "Veterancy": [
+      {
+        "ScreenName": "11047222",
+        "Experience": 400
+      },
+      {
+        "ScreenName": "11047237",
+        "Experience": 800
+      },
+      {
+        "ScreenName": "11047247",
+        "Experience": 1600
+      },
+      {
+        "ScreenName": "0",
+        "Experience": 15000
+      },
+      {
+        "ScreenName": "0",
+        "Experience": 25000
+      }
+    ],
+    "Types": [
+      "pz_grenadiers",
+      "infantry"
+    ],
+    "SlotPickupCapacity": 1,
+    "CanPickupItems": true,
+    "UpgradeCapacity": -1
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741907,
+    "Name": "jaeger_squad_bg",
+    "Army": "german",
+    "Display": {
+      "LocaleName": "$142b113740474c82a60b0a428bd553d5:56",
+      "LocaleDescriptionLong": "11007026",
+      "LocaleDescriptionShort": "11009060",
+      "Icon": "Icons_units_unit_german_panzer_grenadier",
+      "Symbol": "Icons_symbols_unit_german_panzer_grenadier_symbol",
+      "Portrait": "Icons_portraits_unit_german_panzer_grenadiers_s_portrait"
+    },
+    "Entities": [
+      {
+        "EBP": "panzer_grenadiers_mp",
+        "Count": 4
+      }
+    ],
+    "Abilities": [
+      "blizzard_effect",
+      "jaeger_interrogation",
+      "ambush_camouflage_upgrade",
+      "ambush_camo_hold_fire_mp",
+      "german_hulldown_ability",
+      "retreat_to_forward_hq",
+      "stormtrooper_sprint_mp",
+      "panzer_grenadier_bundled_grenade_mp",
+      "panzer_grenadiers_combined_arms",
+      "panzer_grenadier_rudimentary_repair_ability_mp",
+      "panzer_grenadier_mark_target",
+      "model_24_smoke_grenade_panzergrenadiers_mp"
+    ],
+    "Veterancy": [
+      {
+        "ScreenName": "11140624",
+        "Experience": 680
+      },
+      {
+        "ScreenName": "11047238",
+        "Experience": 1360
+      },
+      {
+        "ScreenName": "11047248",
+        "Experience": 2720
+      }
+    ],
+    "Types": [
+      "pz_grenadiers",
+      "infantry"
+    ],
+    "SlotPickupCapacity": 2,
+    "CanPickupItems": true,
+    "UpgradeCapacity": -1,
+    "Upgrades": [
+      "light_infantry_panzergren_package",
+      "ambush_camou_package",
+      "panzerbusche_39_mp",
+      "panzer_grenadier_panzershreck_atw_item_mp",
+      "panzer_grenadier_panzershreck_atw_item_1_schrek_mp",
+      "panzer_grenadier_support_package_mp"
+    ]
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741871,
+    "Name": "panzer_grenadier_squad_bg",
+    "Army": "german",
+    "Display": {
+      "LocaleName": "11007025",
+      "LocaleDescriptionLong": "11007026",
+      "LocaleDescriptionShort": "11009060",
+      "Icon": "Icons_units_unit_german_panzer_grenadier",
+      "Symbol": "Icons_symbols_unit_german_panzer_grenadier_symbol",
+      "Portrait": "Icons_portraits_unit_german_panzer_grenadiers_s_portrait"
+    },
+    "SquadCost": {
+      "Manpower": 240,
+      "FieldTime": 24
+    },
+    "Entities": [
+      {
+        "EBP": "grenadiers_bg",
+        "Count": 4
+      }
+    ],
+    "Abilities": [
+      "blizzard_effect",
+      "jaeger_interrogation",
+      "ambush_camouflage_upgrade",
+      "ambush_camo_hold_fire_mp",
+      "german_hulldown_ability",
+      "retreat_to_forward_hq",
+      "stormtrooper_sprint_mp",
+      "panzer_grenadiers_combined_arms",
+      "panzer_grenadier_rudimentary_repair_ability_mp",
+      "panzer_grenadier_mark_target",
+      "model_24_smoke_grenade_panzergrenadiers_mp",
+      "panzer_grenadier_bundled_grenade_bg"
+    ],
+    "Veterancy": [
+      {
+        "ScreenName": "11140624",
+        "Experience": 680
+      },
+      {
+        "ScreenName": "11047238",
+        "Experience": 1360
+      },
+      {
+        "ScreenName": "11047248",
+        "Experience": 2720
+      },
+      {
+        "ScreenName": "0",
+        "Experience": 20000
+      },
+      {
+        "ScreenName": "0",
+        "Experience": 30000
+      }
+    ],
+    "Types": [
+      "pz_grenadiers",
+      "infantry"
+    ],
+    "SlotPickupCapacity": 2,
+    "CanPickupItems": true,
+    "UpgradeCapacity": -1
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741872,
+    "Name": "pioneer_squad_bg",
+    "Army": "german",
+    "Display": {
+      "LocaleName": "11006988",
+      "LocaleDescriptionLong": "11007011",
+      "LocaleDescriptionShort": "11009061",
+      "Icon": "Icons_units_unit_german_pioneer",
+      "Symbol": "Icons_symbols_unit_german_pioneer_symbol",
+      "Portrait": "Icons_portraits_unit_german_pioneer_s_portrait"
+    },
+    "SquadCost": {
+      "Manpower": 150,
+      "FieldTime": 15
+    },
+    "Entities": [
+      {
+        "EBP": "pioneer_bg",
+        "Count": 3
+      }
+    ],
+    "Abilities": [
+      "soviet_repair_ability_mp",
+      "german_hulldown_ability",
+      "blizzard_effect",
+      "retreat_to_forward_hq",
+      "stormtrooper_sprint_mp",
+      "pioneer_satchel_charge_throw_ability_mp",
+      "destroy_cover_pioneer_mp",
+      "infantry_medkits_mp"
+    ],
+    "Veterancy": [
+      {
+        "ScreenName": "11047222",
+        "Experience": 400
+      },
+      {
+        "ScreenName": "11047239",
+        "Experience": 800
+      },
+      {
+        "ScreenName": "11047249",
+        "Experience": 1600
+      },
+      {
+        "ScreenName": "0",
+        "Experience": 10000
+      },
+      {
+        "ScreenName": "0",
+        "Experience": 20000
+      }
+    ],
+    "Types": [
+      "pioneer",
+      "infantry"
+    ],
+    "SlotPickupCapacity": 2,
+    "CanPickupItems": true,
+    "UpgradeCapacity": -1
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741873,
+    "Name": "sniper_squad_bg",
+    "Army": "german",
+    "Display": {
+      "LocaleName": "11006997",
+      "LocaleDescriptionLong": "11007014",
+      "LocaleDescriptionShort": "11009062",
+      "Icon": "Icons_units_unit_german_sniper",
+      "Symbol": "Icons_symbols_unit_german_sniper_symbol",
+      "Portrait": "Icons_portraits_unit_german_sniper_s_portrait"
+    },
+    "SquadCost": {
+      "Manpower": 360,
+      "FieldTime": 36
+    },
+    "Entities": [
+      {
+        "EBP": "sniper_soldier_bg",
+        "Count": 1
+      }
+    ],
+    "Abilities": [
+      "sniper_hold_fire_mp",
+      "blizzard_effect",
+      "sniper_incendiary_round_mp",
+      "retreat_to_forward_hq",
+      "axis_sniper_delayed_cover_auto_camouflage_mp"
+    ],
+    "Veterancy": [
+      {
+        "ScreenName": "11047255",
+        "Experience": 720
+      },
+      {
+        "ScreenName": "11047258",
+        "Experience": 1440
+      },
+      {
+        "ScreenName": "11047259",
+        "Experience": 2880
+      },
+      {
+        "ScreenName": "0",
+        "Experience": 15000
+      },
+      {
+        "ScreenName": "0",
+        "Experience": 30000
+      }
+    ],
+    "Types": [
+      "infantry",
+      "sniper_german"
+    ],
+    "CanPickupItems": true,
+    "UpgradeCapacity": -1
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741876,
+    "Name": "ost_luftwaffe_ground_forces_bg",
+    "Army": "german",
+    "Display": {
+      "LocaleName": "$142b113740474c82a60b0a428bd553d5:36",
+      "LocaleDescriptionLong": "11052711",
+      "LocaleDescriptionShort": "11052712",
+      "Icon": "Icons_units_unit_german_stormtroopers",
+      "Symbol": "Icons_symbols_unit_german_stormtroopers_symbol",
+      "Portrait": "Icons_portraits_unit_german_jaeger_light_infantry_s_portrait"
+    },
+    "SquadCost": {
+      "Manpower": 3375,
+      "FieldTime": 3375
+    },
+    "Entities": [
+      {
+        "EBP": "luftwaffe_ground_forces_bg",
+        "Count": 5
+      }
+    ],
+    "Abilities": [
+      "blizzard_effect",
+      "german_hulldown_ability",
+      "stormtrooper_sprint_mp",
+      "retreat_to_forward_hq",
+      "stormtrooper_in_cover_auto_camouflage_mp",
+      "stormtrooper_assault_ambush_mp",
+      "stormtrooper_tank_detection_mp",
+      "stormtrooper_jaeger_interrogation",
+      "sniper_hold_fire_mp",
+      "blinding_grenade",
+      "stormtrooper_booby_trap",
+      "stormtrooper_fire_grenade_mp"
+    ],
+    "Veterancy": [
+      {
+        "ScreenName": "11158334",
+        "Experience": 680
+      },
+      {
+        "ScreenName": "11053094",
+        "Experience": 1360
+      },
+      {
+        "ScreenName": "11053096",
+        "Experience": 2720
+      }
+    ],
+    "Types": [
+      "pz_grenadiers",
+      "infantry",
+      "stormtrooper",
+      "mobile_infantry"
+    ],
+    "SlotPickupCapacity": 2,
+    "CanPickupItems": true,
+    "UpgradeCapacity": -1
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741875,
+    "Name": "ost_tankhunter_squad_bg",
+    "Army": "german",
+    "Display": {
+      "LocaleName": "$142b113740474c82a60b0a428bd553d5:37",
+      "LocaleDescriptionLong": "$142b113740474c82a60b0a428bd553d5:38",
+      "LocaleDescriptionShort": "11052712",
+      "Icon": "Icons_units_unit_german_stormtroopers",
+      "Symbol": "Icons_symbols_unit_german_stormtroopers_symbol",
+      "Portrait": "Icons_portraits_unit_german_jaeger_light_infantry_s_portrait"
+    },
+    "SquadCost": {
+      "Manpower": 2025,
+      "FieldTime": 2025
+    },
+    "Entities": [
+      {
+        "EBP": "tankhunter_bg",
+        "Count": 2
+      },
+      {
+        "EBP": "tankhunter_rifle_bg",
+        "Count": 1
+      }
+    ],
+    "Abilities": [
+      "blizzard_effect",
+      "german_hulldown_ability",
+      "stormtrooper_sprint_mp",
+      "retreat_to_forward_hq",
+      "stormtrooper_in_cover_auto_camouflage_mp",
+      "stormtrooper_assault_ambush_mp",
+      "stormtrooper_tank_detection_mp",
+      "stormtrooper_jaeger_interrogation",
+      "sniper_hold_fire_mp",
+      "blinding_grenade",
+      "stormtrooper_booby_trap",
+      "stormtrooper_fire_grenade_mp"
+    ],
+    "Veterancy": [
+      {
+        "ScreenName": "11158334",
+        "Experience": 680
+      },
+      {
+        "ScreenName": "11053094",
+        "Experience": 1360
+      },
+      {
+        "ScreenName": "11053096",
+        "Experience": 2720
+      },
+      {
+        "ScreenName": "0",
+        "Experience": 20000
+      },
+      {
+        "ScreenName": "0",
+        "Experience": 30000
+      }
+    ],
+    "Types": [
+      "pz_grenadiers",
+      "infantry",
+      "stormtrooper",
+      "tank_detection"
+    ],
+    "SlotPickupCapacity": 2,
+    "CanPickupItems": true,
+    "UpgradeCapacity": -1
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741874,
+    "Name": "stormtrooper_squad_bg",
+    "Army": "german",
+    "Display": {
+      "LocaleName": "11052710",
+      "LocaleDescriptionLong": "11052711",
+      "LocaleDescriptionShort": "11052712",
+      "Icon": "Icons_units_unit_german_stormtroopers",
+      "Symbol": "Icons_symbols_unit_german_stormtroopers_symbol",
+      "Portrait": "Icons_portraits_unit_german_jaeger_light_infantry_s_portrait"
+    },
+    "SquadCost": {
+      "Manpower": 3375,
+      "FieldTime": 3375
+    },
+    "Entities": [
+      {
+        "EBP": "stormtroopers_bg",
+        "Count": 5
+      }
+    ],
+    "Abilities": [
+      "blizzard_effect",
+      "german_hulldown_ability",
+      "stormtrooper_sprint_mp",
+      "retreat_to_forward_hq",
+      "stormtrooper_in_cover_auto_camouflage_mp",
+      "stormtrooper_assault_ambush_mp",
+      "stormtrooper_tank_detection_mp",
+      "stormtrooper_jaeger_interrogation",
+      "sniper_hold_fire_mp",
+      "blinding_grenade",
+      "stormtrooper_booby_trap",
+      "stormtrooper_fire_grenade_mp",
+      "panzer_grenadier_bundled_grenade_bg"
+    ],
+    "Veterancy": [
+      {
+        "ScreenName": "11158334",
+        "Experience": 680
+      },
+      {
+        "ScreenName": "11053094",
+        "Experience": 1360
+      },
+      {
+        "ScreenName": "11053096",
+        "Experience": 2720
+      },
+      {
+        "ScreenName": "0",
+        "Experience": 20000
+      },
+      {
+        "ScreenName": "0",
+        "Experience": 30000
+      }
+    ],
+    "Types": [
+      "infantry",
+      "stormtrooper"
+    ],
+    "SlotPickupCapacity": 2,
+    "CanPickupItems": true,
+    "UpgradeCapacity": -1
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741878,
+    "Name": "german_tank_crew_bg",
+    "Army": "german",
+    "Display": {
+      "LocaleName": "$142b113740474c82a60b0a428bd553d5:34",
+      "LocaleDescriptionLong": "11007011",
+      "LocaleDescriptionShort": "11009061",
+      "Icon": "Icons_units_unit_german_pioneer",
+      "Symbol": "Icons_symbols_unit_german_pioneer_symbol",
+      "Portrait": "Icons_portraits_unit_german_pioneer_s_portrait"
+    },
+    "SquadCost": {
+      "Manpower": 200,
+      "FieldTime": 20
+    },
+    "Entities": [
+      {
+        "EBP": "german_vehicle_crew_mp",
+        "Count": 4
+      }
+    ],
+    "Abilities": [
+      "soviet_repair_ability_mp",
+      "german_hulldown_ability",
+      "blizzard_effect",
+      "retreat_to_forward_hq",
+      "stormtrooper_sprint_mp",
+      "pioneer_satchel_charge_throw_ability_mp",
+      "destroy_cover_pioneer_mp",
+      "infantry_medkits_mp"
+    ],
+    "Veterancy": [
+      {
+        "ScreenName": "11047222",
+        "Experience": 400
+      },
+      {
+        "ScreenName": "11047239",
+        "Experience": 800
+      },
+      {
+        "ScreenName": "11047249",
+        "Experience": 1600
+      }
+    ],
+    "Types": [
+      "infantry",
+      "aef_vehicle_crew"
+    ],
+    "SlotPickupCapacity": 2,
+    "CanPickupItems": true,
+    "UpgradeCapacity": -1
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741877,
+    "Name": "german_vehicle_crew_bg",
+    "Army": "german",
+    "Display": {
+      "LocaleName": "$142b113740474c82a60b0a428bd553d5:35",
+      "LocaleDescriptionLong": "11007011",
+      "LocaleDescriptionShort": "11009061",
+      "Icon": "Icons_units_unit_german_pioneer",
+      "Symbol": "Icons_symbols_unit_german_pioneer_symbol",
+      "Portrait": "Icons_portraits_unit_german_pioneer_s_portrait"
+    },
+    "SquadCost": {
+      "Manpower": 100,
+      "FieldTime": 10
+    },
+    "Entities": [
+      {
+        "EBP": "german_vehicle_crew_mp",
+        "Count": 2
+      }
+    ],
+    "Abilities": [
+      "soviet_repair_ability_mp",
+      "german_hulldown_ability",
+      "blizzard_effect",
+      "retreat_to_forward_hq",
+      "stormtrooper_sprint_mp",
+      "pioneer_satchel_charge_throw_ability_mp",
+      "destroy_cover_pioneer_mp",
+      "infantry_medkits_mp"
+    ],
+    "Veterancy": [
+      {
+        "ScreenName": "11047222",
+        "Experience": 400
+      },
+      {
+        "ScreenName": "11047239",
+        "Experience": 800
+      },
+      {
+        "ScreenName": "11047249",
+        "Experience": 1600
+      }
+    ],
+    "Types": [
+      "aef_vehicle_crew",
+      "infantry"
+    ],
+    "SlotPickupCapacity": 2,
+    "CanPickupItems": true,
+    "UpgradeCapacity": -1
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741904,
+    "Name": "german_vehicle_driver_bg",
+    "Army": "german",
+    "Display": {
+      "LocaleName": "$142b113740474c82a60b0a428bd553d5:40",
+      "LocaleDescriptionLong": "11007011",
+      "LocaleDescriptionShort": "11009061",
+      "Icon": "Icons_units_unit_german_pioneer",
+      "Symbol": "Icons_symbols_unit_german_pioneer_symbol",
+      "Portrait": "Icons_portraits_unit_german_pioneer_s_portrait"
+    },
+    "SquadCost": {
+      "Manpower": 50,
+      "FieldTime": 5
+    },
+    "Entities": [
+      {
+        "EBP": "german_vehicle_crew_mp",
+        "Count": 1
+      }
+    ],
+    "Abilities": [
+      "soviet_repair_ability_mp",
+      "german_hulldown_ability",
+      "blizzard_effect",
+      "retreat_to_forward_hq",
+      "stormtrooper_sprint_mp",
+      "pioneer_satchel_charge_throw_ability_mp",
+      "destroy_cover_pioneer_mp",
+      "infantry_medkits_mp"
+    ],
+    "Veterancy": [
+      {
+        "ScreenName": "11047222",
+        "Experience": 400
+      },
+      {
+        "ScreenName": "11047239",
+        "Experience": 800
+      },
+      {
+        "ScreenName": "11047249",
+        "Experience": 1600
+      }
+    ],
+    "Types": [
+      "aef_vehicle_crew",
+      "infantry"
+    ],
+    "SlotPickupCapacity": 2,
+    "CanPickupItems": true,
+    "UpgradeCapacity": -1
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741854,
+    "Name": "combat_engineer_squad_bg",
+    "Army": "soviet",
+    "Display": {
+      "LocaleName": "11006670",
+      "LocaleDescriptionLong": "11007043",
+      "LocaleDescriptionShort": "11009063",
+      "Icon": "Icons_units_unit_soviet_engineer",
+      "Symbol": "Icons_symbols_unit_soviet_engineer_symbol",
+      "Portrait": "Icons_portraits_unit_soviet_combat_engineer_s_portrait"
+    },
+    "SquadCost": {
+      "Manpower": 2125,
+      "FieldTime": 2125
+    },
+    "Entities": [
+      {
+        "EBP": "combat_engineer_bg",
+        "Count": 5
+      }
+    ],
+    "Abilities": [
+      "soviet_repair_ability_mp",
+      "blizzard_effect",
+      "fieldcraft_trip_flare_engineers_mp",
+      "engineer_demo_mp"
+    ],
+    "Veterancy": [
+      {
+        "ScreenName": "11050384",
+        "Experience": 340
+      },
+      {
+        "ScreenName": "11047052",
+        "Experience": 680
+      },
+      {
+        "ScreenName": "11047054",
+        "Experience": 1360
+      },
+      {
+        "ScreenName": "0",
+        "Experience": 1500
+      },
+      {
+        "ScreenName": "0",
+        "Experience": 2000
+      }
+    ],
+    "Types": [
+      "combat_engineer",
+      "infantry",
+      "rapid_conscription",
+      "mobile_infantry"
+    ],
+    "SlotPickupCapacity": 2,
+    "CanPickupItems": true,
+    "UpgradeCapacity": -1
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741855,
+    "Name": "soviet_sapper_squad_bg",
+    "Army": "soviet",
+    "Display": {
+      "LocaleName": "$142b113740474c82a60b0a428bd553d5:33",
+      "LocaleDescriptionLong": "11007043",
+      "LocaleDescriptionShort": "11009063",
+      "Icon": "Icons_units_unit_soviet_engineer",
+      "Symbol": "Icons_symbols_unit_soviet_engineer_symbol",
+      "Portrait": "Icons_portraits_unit_soviet_combat_engineer_s_portrait"
+    },
+    "SquadCost": {
+      "Manpower": 1700,
+      "FieldTime": 1700
+    },
+    "Entities": [
+      {
+        "EBP": "sapper_soldier_bg",
+        "Count": 4
+      }
+    ],
+    "Abilities": [
+      "soviet_repair_ability_mp",
+      "blizzard_effect",
+      "fieldcraft_trip_flare_engineers_mp",
+      "engineer_demo_mp"
+    ],
+    "Veterancy": [
+      {
+        "ScreenName": "11050384",
+        "Experience": 340
+      },
+      {
+        "ScreenName": "11047052",
+        "Experience": 680
+      },
+      {
+        "ScreenName": "11047054",
+        "Experience": 1360
+      },
+      {
+        "ScreenName": "0",
+        "Experience": 1500
+      },
+      {
+        "ScreenName": "0",
+        "Experience": 2000
+      }
+    ],
+    "Types": [
+      "combat_engineer",
+      "infantry",
+      "rapid_conscription",
+      "mobile_infantry"
+    ],
+    "SlotPickupCapacity": 2,
+    "CanPickupItems": true,
+    "UpgradeCapacity": -1
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741823,
+    "Name": "conscript_squad_bg",
+    "Army": "soviet",
+    "Display": {
+      "LocaleName": "11006679",
+      "LocaleDescriptionLong": "11007044",
+      "LocaleDescriptionShort": "11009064",
+      "Icon": "Icons_units_unit_soviet_conscript_02",
+      "Symbol": "Icons_symbols_unit_soviet_conscript_02_symbol",
+      "Portrait": "Icons_portraits_unit_soviet_conscript_s_portrait"
+    },
+    "SquadCost": {
+      "Manpower": 280,
+      "FieldTime": 28
+    },
+    "Entities": [
+      {
+        "EBP": "conscript_soldier_bg",
+        "Count": 7
+      }
+    ],
+    "Abilities": [
+      "conscript_oorah_bg",
+      "merge_ability_bg",
+      "blizzard_effect",
+      "conscript_in_cover_stationary_camouflage_mp",
+      "ambush_camo_hold_fire_mp",
+      "conscript_cover_combat_bonus"
+    ],
+    "Veterancy": [
+      {
+        "ScreenName": "11145756",
+        "Experience": 2400
+      },
+      {
+        "ScreenName": "11047384",
+        "Experience": 4800
+      },
+      {
+        "ScreenName": "11047067",
+        "Experience": 9200
+      },
+      {
+        "ScreenName": "0",
+        "Experience": 13400
+      },
+      {
+        "ScreenName": "0",
+        "Experience": 17800
+      }
+    ],
+    "Types": [
+      "conscripts",
+      "infantry",
+      "tank_detection",
+      "mobile_infantry"
+    ],
+    "SlotPickupCapacity": 2,
+    "CanPickupItems": true,
+    "UpgradeCapacity": 1,
+    "Upgrades": [
+      "dp-28_lmg_upgrade_bg",
+      "ppsh-41_sub_machine_gun_upgrade_bg"
+    ]
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741856,
+    "Name": "frontoviki_squad_bg",
+    "Army": "soviet",
+    "Display": {
+      "LocaleName": "$142b113740474c82a60b0a428bd553d5:31",
+      "LocaleDescriptionLong": "11007044",
+      "LocaleDescriptionShort": "11009064",
+      "Icon": "Icons_units_unit_soviet_conscript_03",
+      "Symbol": "Icons_symbols_unit_soviet_conscript_frontviki",
+      "Portrait": "Icons_portraits_unit_soviet_conscript_s_portrait"
+    },
+    "SquadCost": {
+      "Manpower": 250,
+      "FieldTime": 20
+    },
+    "Entities": [
+      {
+        "EBP": "frontovik_bg",
+        "Count": 5
+      }
+    ],
+    "Abilities": [
+      "conscript_oorah_bg",
+      "merge_ability_bg",
+      "conscript_evasive_tactics_mp",
+      "soviet_conscript_repair_ability_mp",
+      "blizzard_effect",
+      "fieldcraft_trip_flare_mp",
+      "conscript_in_cover_stationary_camouflage_mp",
+      "conscript_tank_detection_mp",
+      "ambush_camo_hold_fire_mp",
+      "conscript_cover_combat_bonus"
+    ],
+    "Veterancy": [
+      {
+        "ScreenName": "11145756",
+        "Experience": 2400
+      },
+      {
+        "ScreenName": "11047384",
+        "Experience": 4800
+      },
+      {
+        "ScreenName": "11047067",
+        "Experience": 9200
+      },
+      {
+        "ScreenName": "0",
+        "Experience": 13400
+      },
+      {
+        "ScreenName": "0",
+        "Experience": 17800
+      }
+    ],
+    "Types": [
+      "conscripts",
+      "infantry",
+      "tank_detection",
+      "mobile_infantry"
+    ],
+    "SlotPickupCapacity": 2,
+    "CanPickupItems": true,
+    "UpgradeCapacity": 1,
+    "Upgrades": [
+      "dp-28_lmg_upgrade_bg",
+      "ppsh-41_sub_machine_gun_upgrade_bg"
+    ]
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741857,
+    "Name": "recon_team_bg",
+    "Army": "soviet",
+    "Display": {
+      "LocaleName": "$142b113740474c82a60b0a428bd553d5:30",
+      "LocaleDescriptionLong": "11007413",
+      "LocaleDescriptionShort": "11009065",
+      "Icon": "Icons_units_unit_soviet_sniper",
+      "Symbol": "Icons_symbols_unit_soviet_sniper_symbol",
+      "Portrait": "Icons_portraits_unit_soviet_sniper_s_portrait"
+    },
+    "SquadCost": {
+      "Manpower": 1080,
+      "FieldTime": 108
+    },
+    "Entities": [
+      {
+        "EBP": "recon_bg",
+        "Count": 3
+      }
+    ],
+    "FemaleChance": 0.5,
+    "Abilities": [
+      "sniper_hold_fire_mp",
+      "blizzard_effect",
+      "sniper_delayed_cover_auto_camouflage_mp"
+    ],
+    "Veterancy": [
+      {
+        "ScreenName": "11047107",
+        "Experience": 720
+      },
+      {
+        "ScreenName": "11047109",
+        "Experience": 1440
+      },
+      {
+        "ScreenName": "11047111",
+        "Experience": 2880
+      }
+    ],
+    "Types": [
+      "infantry",
+      "sniper_soviet",
+      "rapid_conscription",
+      "mobile_infantry"
+    ],
+    "CanPickupItems": true,
+    "UpgradeCapacity": -1
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 134,
+    "Name": "sniper_team_bg",
+    "Army": "soviet",
+    "Display": {
+      "LocaleName": "11007414",
+      "LocaleDescriptionLong": "11007413",
+      "LocaleDescriptionShort": "11009065",
+      "Icon": "Icons_units_unit_soviet_sniper",
+      "Symbol": "Icons_symbols_unit_soviet_sniper_symbol",
+      "Portrait": "Icons_portraits_unit_soviet_sniper_s_portrait"
+    },
+    "SquadCost": {
+      "Manpower": 720,
+      "FieldTime": 72
+    },
+    "Entities": [
+      {
+        "EBP": "sniper_bg",
+        "Count": 2
+      }
+    ],
+    "FemaleChance": 0.5,
+    "Abilities": [
+      "sniper_hold_fire_mp",
+      "blizzard_effect",
+      "sniper_delayed_cover_auto_camouflage_mp"
+    ],
+    "Veterancy": [
+      {
+        "ScreenName": "11047107",
+        "Experience": 720
+      },
+      {
+        "ScreenName": "11047109",
+        "Experience": 1440
+      },
+      {
+        "ScreenName": "11047111",
+        "Experience": 2880
+      }
+    ],
+    "Types": [
+      "infantry",
+      "sniper_soviet",
+      "rapid_conscription",
+      "mobile_infantry"
+    ],
+    "CanPickupItems": true,
+    "UpgradeCapacity": -1
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741847,
+    "Name": "commissar_squad_bg",
+    "Army": "soviet",
+    "Display": {
+      "LocaleName": "11051610",
+      "LocaleDescriptionLong": "11051611",
+      "LocaleDescriptionShort": "11051612",
+      "Icon": "Icons_units_unit_soviet_officer",
+      "Symbol": "Icons_symbols_unit_soviet_officer_symbol",
+      "Portrait": "Icons_portraits_unit_soviet_soviet_officer_s_portrait"
+    },
+    "SquadCost": {
+      "Manpower": 160,
+      "FieldTime": 12
+    },
+    "Entities": [
+      {
+        "EBP": "commissar_bg",
+        "Count": 1
+      },
+      {
+        "EBP": "conscript_soldier_bg",
+        "Count": 3
+      }
+    ],
+    "Veterancy": [
+      {
+        "ScreenName": "11145756",
+        "Experience": 2400
+      },
+      {
+        "ScreenName": "11047384",
+        "Experience": 4800
+      },
+      {
+        "ScreenName": "11047067",
+        "Experience": 9200
+      },
+      {
+        "ScreenName": "0",
+        "Experience": 13400
+      },
+      {
+        "ScreenName": "0",
+        "Experience": 17800
+      }
+    ],
+    "Types": [
+      "infantry",
+      "sov_officer",
+      "tank_detection",
+      "mobile_infantry"
+    ],
+    "UpgradeCapacity": 1
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741848,
+    "Name": "soviet_officer_squad_bg",
+    "Army": "soviet",
+    "Display": {
+      "LocaleName": "11032057",
+      "LocaleDescriptionLong": "11038358",
+      "LocaleDescriptionShort": "11038714",
+      "Icon": "Icons_units_unit_soviet_officer",
+      "Symbol": "Icons_symbols_unit_soviet_officer_symbol",
+      "Portrait": "Icons_portraits_unit_soviet_soviet_officer_s_portrait"
+    },
+    "SquadCost": {
+      "Manpower": 160,
+      "FieldTime": 12
+    },
+    "Entities": [
+      {
+        "EBP": "commissar_bg",
+        "Count": 1
+      },
+      {
+        "EBP": "conscript_soldier_bg",
+        "Count": 3
+      }
+    ],
+    "Abilities": [
+      "blizzard_effect"
+    ],
+    "Veterancy": [
+      {
+        "ScreenName": "11145756",
+        "Experience": 2400
+      },
+      {
+        "ScreenName": "11047384",
+        "Experience": 4800
+      },
+      {
+        "ScreenName": "11047067",
+        "Experience": 9200
+      },
+      {
+        "ScreenName": "0",
+        "Experience": 13400
+      },
+      {
+        "ScreenName": "0",
+        "Experience": 17800
+      }
+    ],
+    "Types": [
+      "infantry",
+      "sov_officer",
+      "tank_detection",
+      "mobile_infantry"
+    ],
+    "UpgradeCapacity": 1
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741844,
+    "Name": "guards_troops_bg",
+    "Army": "soviet",
+    "Display": {
+      "LocaleName": "11007197",
+      "LocaleDescriptionLong": "11007198",
+      "LocaleDescriptionShort": "11009066",
+      "Icon": "Icons_units_unit_soviet_guards",
+      "Symbol": "Icons_symbols_unit_soviet_guards_symbol",
+      "Portrait": "Icons_portraits_unit_soviet_guard_troops_s_portrait"
+    },
+    "SquadCost": {
+      "Manpower": 330,
+      "FieldTime": 330
+    },
+    "Entities": [
+      {
+        "EBP": "guard_troops_bg",
+        "Count": 6
+      }
+    ],
+    "Abilities": [
+      "blizzard_effect",
+      "guard_hit_the_dirt_mp"
+    ],
+    "Veterancy": [
+      {
+        "ScreenName": "11145754",
+        "Experience": 640
+      },
+      {
+        "ScreenName": "11047124",
+        "Experience": 1280
+      },
+      {
+        "ScreenName": "11047118",
+        "Experience": 2560
+      }
+    ],
+    "Types": [
+      "guard_troops",
+      "infantry",
+      "tank_detection",
+      "rapid_conscription",
+      "mobile_infantry"
+    ],
+    "SlotPickupCapacity": 3,
+    "CanPickupItems": true,
+    "UpgradeCapacity": 1,
+    "Upgrades": [
+      "ptrs_41_at_rifle_package_bg",
+      "dp-28_lmg_upgrade_bg"
+    ]
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741849,
+    "Name": "nkvd_squad_bg",
+    "Army": "soviet",
+    "Display": {
+      "LocaleName": "$142b113740474c82a60b0a428bd553d5:28",
+      "LocaleDescriptionLong": "11051611",
+      "LocaleDescriptionShort": "11051612",
+      "Icon": "Icons_units_unit_soviet_officer",
+      "Symbol": "Icons_symbols_unit_soviet_conscript_defensive",
+      "Portrait": "Icons_portraits_unit_soviet_soviet_officer_s_portrait"
+    },
+    "SquadCost": {
+      "Manpower": 300
+    },
+    "Entities": [
+      {
+        "EBP": "nkvd_bg",
+        "Count": 3
+      },
+      {
+        "EBP": "nkvd_leader_bg",
+        "Count": 1
+      }
+    ],
+    "Veterancy": [
+      {
+        "ScreenName": "11145754",
+        "Experience": 640
+      },
+      {
+        "ScreenName": "11047124",
+        "Experience": 1280
+      },
+      {
+        "ScreenName": "11047118",
+        "Experience": 2560
+      },
+      {
+        "ScreenName": "0",
+        "Experience": 3000
+      },
+      {
+        "ScreenName": "0",
+        "Experience": 5000
+      }
+    ],
+    "Types": [
+      "infantry",
+      "attrition_infantry",
+      "tank_detection",
+      "mobile_infantry"
+    ],
+    "SlotPickupCapacity": 2,
+    "CanPickupItems": true,
+    "UpgradeCapacity": 1
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741845,
+    "Name": "penal_battalion_bg",
+    "Army": "soviet",
+    "Display": {
+      "LocaleName": "11007195",
+      "LocaleDescriptionLong": "11007196",
+      "LocaleDescriptionShort": "11140724",
+      "Icon": "Icons_units_unit_soviet_penal_battalion",
+      "Symbol": "Icons_symbols_unit_soviet_penal_battalion_symbol",
+      "Portrait": "Icons_portraits_unit_soviet_penal_battalion_s_portrait"
+    },
+    "SquadCost": {
+      "Manpower": 300,
+      "FieldTime": 324
+    },
+    "Entities": [
+      {
+        "EBP": "penal_battalion_troops_bg",
+        "Count": 6
+      }
+    ],
+    "Abilities": [
+      "blizzard_effect",
+      "satchel_charge_throw_ability_mp",
+      "to_the_last_man_mp",
+      "penal_last_man_ui_mp",
+      "satchel_charge_throw_ability_homing_mp"
+    ],
+    "Veterancy": [
+      {
+        "ScreenName": "11115577",
+        "Experience": 640
+      },
+      {
+        "ScreenName": "11140675",
+        "Experience": 1280
+      },
+      {
+        "ScreenName": "11140662",
+        "Experience": 2560
+      }
+    ],
+    "Types": [
+      "infantry",
+      "penal_battalion",
+      "tank_detection",
+      "mobile_infantry"
+    ],
+    "SlotPickupCapacity": 2,
+    "CanPickupItems": true,
+    "UpgradeCapacity": -1
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741846,
+    "Name": "shock_troops_bg",
+    "Army": "soviet",
+    "Display": {
+      "LocaleName": "11046467",
+      "LocaleDescriptionLong": "11002190",
+      "LocaleDescriptionShort": "11002219",
+      "Icon": "Icons_units_unit_soviet_shock",
+      "Symbol": "Icons_symbols_unit_soviet_shock_symbol",
+      "Portrait": "Icons_portraits_unit_soviet_shock_troop_s_portrait"
+    },
+    "SquadCost": {
+      "Manpower": 300,
+      "FieldTime": 275
+    },
+    "Entities": [
+      {
+        "EBP": "shock_troops_bg",
+        "Count": 5
+      }
+    ],
+    "Abilities": [
+      "blizzard_effect"
+    ],
+    "Veterancy": [
+      {
+        "ScreenName": "11145673",
+        "Experience": 2720
+      },
+      {
+        "ScreenName": "11047128",
+        "Experience": 4352
+      },
+      {
+        "ScreenName": "11047122",
+        "Experience": 6964
+      },
+      {
+        "ScreenName": "51",
+        "Experience": 11142
+      },
+      {
+        "ScreenName": "0",
+        "Experience": 20000
+      }
+    ],
+    "Types": [
+      "infantry",
+      "shock_troops",
+      "tank_detection",
+      "mobile_infantry"
+    ],
+    "SlotPickupCapacity": 2,
+    "CanPickupItems": true,
+    "UpgradeCapacity": 1,
+    "Upgrades": [
+      "soviet_flamethrower_bg"
+    ]
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741858,
+    "Name": "tank_buster_bg",
+    "Army": "soviet",
+    "Display": {
+      "LocaleName": "$142b113740474c82a60b0a428bd553d5:26",
+      "LocaleDescriptionLong": "11007044",
+      "LocaleDescriptionShort": "11009064",
+      "Icon": "Icons_units_unit_soviet_conscript_03",
+      "Symbol": "Icons_symbols_unit_soviet_conscript_01_symbol",
+      "Portrait": "Icons_portraits_unit_soviet_conscript_s_portrait"
+    },
+    "SquadCost": {
+      "Manpower": 200,
+      "FieldTime": 16
+    },
+    "Entities": [
+      {
+        "EBP": "tank_buster_soldier_bg",
+        "Count": 2
+      },
+      {
+        "EBP": "tank_buster_soldier_ptrs_bg",
+        "Count": 2
+      }
+    ],
+    "Abilities": [
+      "conscript_evasive_tactics_mp",
+      "soviet_conscript_repair_ability_mp",
+      "blizzard_effect",
+      "fieldcraft_trip_flare_mp",
+      "conscript_in_cover_stationary_camouflage_mp",
+      "conscript_tank_detection_mp",
+      "ambush_camo_hold_fire_mp",
+      "conscript_cover_combat_bonus"
+    ],
+    "Veterancy": [
+      {
+        "ScreenName": "11145756",
+        "Experience": 2400
+      },
+      {
+        "ScreenName": "11047384",
+        "Experience": 4800
+      },
+      {
+        "ScreenName": "11047067",
+        "Experience": 9200
+      },
+      {
+        "ScreenName": "0",
+        "Experience": 13400
+      },
+      {
+        "ScreenName": "0",
+        "Experience": 17800
+      }
+    ],
+    "Types": [
+      "guard_troops",
+      "infantry",
+      "tank_detection",
+      "mobile_infantry",
+      "attrition_infantry"
+    ],
+    "SlotPickupCapacity": 1,
+    "CanPickupItems": true,
+    "UpgradeCapacity": -1
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741860,
+    "Name": "vdv_troops_bg",
+    "Army": "soviet",
+    "Display": {
+      "LocaleName": "$142b113740474c82a60b0a428bd553d5:24",
+      "LocaleDescriptionLong": "11007198",
+      "LocaleDescriptionShort": "11009066",
+      "Icon": "Icons_units_unit_soviet_guards",
+      "Symbol": "Icons_symbols_assault_guards_symbol",
+      "Portrait": "Icons_portraits_unit_soviet_guard_troops_s_portrait"
+    },
+    "SquadCost": {
+      "Manpower": 275,
+      "FieldTime": 275
+    },
+    "Entities": [
+      {
+        "EBP": "guard_troops_bg",
+        "Count": 5
+      }
+    ],
+    "Abilities": [
+      "blizzard_effect",
+      "guard_hit_the_dirt_mp"
+    ],
+    "Veterancy": [
+      {
+        "ScreenName": "11145754",
+        "Experience": 640
+      },
+      {
+        "ScreenName": "11047124",
+        "Experience": 1280
+      },
+      {
+        "ScreenName": "11047118",
+        "Experience": 2560
+      }
+    ],
+    "Types": [
+      "guard_troops",
+      "infantry",
+      "tank_detection",
+      "mobile_infantry"
+    ],
+    "SlotPickupCapacity": 4,
+    "CanPickupItems": true,
+    "UpgradeCapacity": -1,
+    "AppliedUpgrades": [
+      "ptrs_41_at_rifle_package_guard_troop_mp"
+    ]
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741842,
+    "Name": "soviet_male_vehicle_2_crew_bg",
+    "Army": "soviet",
+    "Display": {
+      "LocaleName": "$142b113740474c82a60b0a428bd553d5:8",
+      "LocaleDescriptionLong": "$142b113740474c82a60b0a428bd553d5:10",
+      "LocaleDescriptionShort": "$142b113740474c82a60b0a428bd553d5:11",
+      "Icon": "Icons_units_unit_soviet_engineer",
+      "Symbol": "Icons_symbols_building_soviet_heavy_factory_symbol",
+      "Portrait": "Icons_portraits_unit_soviet_combat_engineer_s_portrait"
+    },
+    "SquadCost": {
+      "Manpower": 850,
+      "FieldTime": 850
+    },
+    "Entities": [
+      {
+        "EBP": "vehicle_crew_male_bg",
+        "Count": 2
+      }
+    ],
+    "Abilities": [
+      "soviet_repair_ability_mp",
+      "blizzard_effect"
+    ],
+    "Veterancy": [
+      {
+        "ScreenName": "11050384",
+        "Experience": 340
+      },
+      {
+        "ScreenName": "11047052",
+        "Experience": 680
+      },
+      {
+        "ScreenName": "11047054",
+        "Experience": 1360
+      },
+      {
+        "ScreenName": "0",
+        "Experience": 1400
+      },
+      {
+        "ScreenName": "0",
+        "Experience": 1500
+      }
+    ],
+    "Types": [
+      "aef_vehicle_crew",
+      "infantry"
+    ],
+    "UpgradeCapacity": -1
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741827,
+    "Name": "soviet_male_vehicle_crew_bg",
+    "Army": "soviet",
+    "Display": {
+      "LocaleName": "$142b113740474c82a60b0a428bd553d5:3",
+      "LocaleDescriptionLong": "$142b113740474c82a60b0a428bd553d5:7",
+      "LocaleDescriptionShort": "$142b113740474c82a60b0a428bd553d5:6",
+      "Icon": "Icons_units_unit_soviet_engineer",
+      "Symbol": "Icons_symbols_building_soviet_heavy_factory_symbol",
+      "Portrait": "Icons_portraits_unit_soviet_combat_engineer_s_portrait"
+    },
+    "SquadCost": {
+      "Manpower": 1700,
+      "FieldTime": 1700
+    },
+    "Entities": [
+      {
+        "EBP": "tank_crew_male_bg",
+        "Count": 4
+      }
+    ],
+    "Abilities": [
+      "soviet_repair_ability_mp",
+      "blizzard_effect"
+    ],
+    "Veterancy": [
+      {
+        "ScreenName": "11050384",
+        "Experience": 340
+      },
+      {
+        "ScreenName": "11047052",
+        "Experience": 680
+      },
+      {
+        "ScreenName": "11047054",
+        "Experience": 1360
+      },
+      {
+        "ScreenName": "0",
+        "Experience": 1400
+      },
+      {
+        "ScreenName": "0",
+        "Experience": 1500
+      }
+    ],
+    "Types": [
+      "aef_vehicle_crew",
+      "infantry"
+    ],
+    "UpgradeCapacity": -1
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741905,
+    "Name": "soviet_male_vehicle_driver_bg",
+    "Army": "soviet",
+    "Display": {
+      "LocaleName": "$142b113740474c82a60b0a428bd553d5:41",
+      "LocaleDescriptionLong": "$142b113740474c82a60b0a428bd553d5:60",
+      "LocaleDescriptionShort": "$142b113740474c82a60b0a428bd553d5:11",
+      "Icon": "Icons_units_unit_soviet_engineer",
+      "Symbol": "Icons_symbols_building_soviet_heavy_factory_symbol",
+      "Portrait": "Icons_portraits_unit_soviet_combat_engineer_s_portrait"
+    },
+    "SquadCost": {
+      "Manpower": 425,
+      "FieldTime": 425
+    },
+    "Entities": [
+      {
+        "EBP": "vehicle_crew_male_bg",
+        "Count": 1
+      }
+    ],
+    "Abilities": [
+      "soviet_repair_ability_mp",
+      "blizzard_effect"
+    ],
+    "Veterancy": [
+      {
+        "ScreenName": "11050384",
+        "Experience": 340
+      },
+      {
+        "ScreenName": "11047052",
+        "Experience": 680
+      },
+      {
+        "ScreenName": "11047054",
+        "Experience": 1360
+      },
+      {
+        "ScreenName": "0",
+        "Experience": 1400
+      },
+      {
+        "ScreenName": "0",
+        "Experience": 1500
+      }
+    ],
+    "Types": [
+      "aef_vehicle_crew",
+      "infantry"
+    ],
+    "UpgradeCapacity": -1
+  }
+]

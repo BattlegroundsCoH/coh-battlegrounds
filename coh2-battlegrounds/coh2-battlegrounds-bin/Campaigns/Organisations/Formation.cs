@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+
 using Battlegrounds.Campaigns.API;
 using Battlegrounds.Game.Gameplay;
 using Battlegrounds.Lua;
 using Battlegrounds.Util.Lists;
 
 namespace Battlegrounds.Campaigns.Organisations {
-    
+
     /// <summary>
     /// Represents a movable organisation of regiments on the campaign map.
     /// </summary>
@@ -192,7 +193,7 @@ namespace Battlegrounds.Campaigns.Organisations {
         /// <param name="subElements"></param>
         /// <returns>The new formations excluding the original formation.</returns>
         public Formation[] Split(int subElements) {
-            
+
             // Define organisations
             Formation[] organisations = new Formation[subElements];
             organisations[0] = this;
@@ -204,7 +205,7 @@ namespace Battlegrounds.Campaigns.Organisations {
 
             // Move regiments while there are empty regiments
             while (j != subElements) {
-                
+
                 // Create formation if not found
                 if (organisations[j] is null) {
                     organisations[j] = new Formation {
@@ -223,7 +224,7 @@ namespace Battlegrounds.Campaigns.Organisations {
                     i = 0;
                     j++;
                 }
-            
+
             }
 
             // Return orgs

@@ -6,15 +6,16 @@ using System.Text.Json.Serialization;
 using Battlegrounds.Functional;
 using Battlegrounds.Game.Database.Extensions;
 using Battlegrounds.Game.Database.Management;
+using Battlegrounds.Game.Gameplay;
 using Battlegrounds.Modding;
 
 namespace Battlegrounds.Game.Database {
-    
+
     /// <summary>
     /// 
     /// </summary>
     [JsonConverter(typeof(SlotItemBlueprintConverter))]
-    public sealed class SlotItemBlueprint : Blueprint {
+    public sealed class SlotItemBlueprint : Blueprint, IUIBlueprint {
 
         /// <summary>
         /// The unique PropertyBagGroupdID assigned to this blueprint.
@@ -31,7 +32,9 @@ namespace Battlegrounds.Game.Database {
 
         public string Weapon { get; }
 
-        public SlotItemBlueprint(string name, BlueprintUID pbgid, UIExtension ui, int weight, string wpn) {
+        public Faction Army { get; }
+
+        public SlotItemBlueprint(string name, BlueprintUID pbgid, UIExtension ui, Faction faction, int weight, string wpn) {
             this.Name = name;
             this.PBGID = pbgid;
             this.UI = ui;
@@ -54,15 +57,17 @@ namespace Battlegrounds.Game.Database {
                     "ModGUID" => reader.GetString(),
                     "SlotSize" => reader.GetInt32(),
                     "WPB" => reader.GetString(),
+                    "Army" => reader.GetString(),
                     _ => throw new NotImplementedException(prop)
                 };
             }
-            var ui = __lookup.GetValueOrDefault("Display", null) as UIExtension;
-            var weight = (int)__lookup.GetValueOrDefault("SlotSize", 0);
-            string wpn = __lookup.GetValueOrDefault("WPB", string.Empty) as string;
+            var ui = __lookup.GetValueOrDefault("Display", new UIExtension());
+            var weight = __lookup.GetValueOrDefault("SlotSize", 0);
+            string wpn = __lookup.GetValueOrDefault("WPB", string.Empty);
+            var fac = __lookup.GetValueOrDefault("Army", "NULL") is "NULL" ? null : Faction.FromName(__lookup.GetValueOrDefault("Army", "NULL"));
             var modguid = __lookup.ContainsKey("ModGUID") ? ModGuid.FromGuid(__lookup["ModGUID"] as string) : ModGuid.BaseGame;
-            var pbgid = new BlueprintUID((ulong)__lookup.GetValueOrDefault("PBGID", 0ul), modguid);
-            return new(__lookup.GetValueOrDefault("Name", string.Empty) as string, pbgid, ui, weight, wpn);
+            var pbgid = new BlueprintUID(__lookup.GetValueOrDefault("PBGID", 0ul), modguid);
+            return new(__lookup.GetValueOrDefault("Name", string.Empty), pbgid, ui, fac, weight, wpn);
         }
 
         public override void Write(Utf8JsonWriter writer, SlotItemBlueprint value, JsonSerializerOptions options) => writer.WriteStringValue(value.Name);

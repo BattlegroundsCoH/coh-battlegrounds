@@ -2,7 +2,7 @@
   "profiles": {
     "coh2-battlegrounds-console": {
       "commandName": "Project",
-      "commandLineArgs": "-recent_analysis -json"
+      "commandLineArgs": "-test_companies"
     }
   }
 }

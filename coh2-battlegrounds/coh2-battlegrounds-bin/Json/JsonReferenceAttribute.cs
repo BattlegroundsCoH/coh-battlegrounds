@@ -7,7 +7,7 @@ namespace Battlegrounds.Json {
     /// </summary>
     [AttributeUsage(AttributeTargets.Field | AttributeTargets.Property, AllowMultiple = false, Inherited = true)]
     public class JsonReferenceAttribute : Attribute {
-    
+
         /// <summary>
         /// The <see cref="Type"/> that contains the derefence method.
         /// </summary>

@@ -1,7 +1,7 @@
 ﻿using Battlegrounds.Lua;
 
 namespace Battlegrounds.Campaigns.API {
-    
+
     /// <summary>
     /// Interface for turn handling in a campaign.
     /// </summary>

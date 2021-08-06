@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+
 using Battlegrounds.Functional;
-using Battlegrounds.Game.Gameplay;
 using Battlegrounds.Json;
 using Battlegrounds.Lua;
 
@@ -12,17 +12,17 @@ namespace Battlegrounds.Game.Database {
     /// The theatre of war a scenario is taking place in.
     /// </summary>
     public enum ScenarioTheatre {
-        
+
         /// <summary>
         /// Axis vs Soviets
         /// </summary>
         EasternFront,
-        
+
         /// <summary>
         /// Axis vs UKF & USF
         /// </summary>
         WesternFront,
-        
+
         /// <summary>
         /// Axis vs Allies (Germany)
         /// </summary>
@@ -82,19 +82,19 @@ namespace Battlegrounds.Game.Database {
         /// Get if the <see cref="Scenario"/> is a workshop map.
         /// </summary>
         [JsonIgnore]
-        public bool IsWorkshopMap => this.SgaName != "MPScenarios" && this.SgaName != "MPXP1Scenarios";
+        public bool IsWorkshopMap => this.SgaName is not "MPScenarios" and not "MPXP1Scenarios";
 
         /// <summary>
         /// The <see cref="Wincondition"/> instances designed for this <see cref="Scenario"/>. Empty list means all <see cref="Wincondition"/> instances can be used.
         /// </summary>
-        [JsonReference] 
-        public List<Wincondition> Gamemodes { get; set; }
+        [JsonReference]
+        public List<string> Gamemodes { get; set; }
 
         public string ToJsonReference() => this.RelativeFilename;
 
         public Scenario() {
             this.SgaName = INVALID_SGA;
-            this.Gamemodes = new List<Wincondition>();
+            this.Gamemodes = new List<string>();
         }
 
         /// <summary>
@@ -116,7 +116,7 @@ namespace Battlegrounds.Game.Database {
             }
 
             this.RelativeFilename = Path.GetFileNameWithoutExtension(infofile);
-            this.Gamemodes = new List<Wincondition>();
+            this.Gamemodes = new List<string>();
             this.SgaName = string.Empty;
 
             LuaState scenarioState = new LuaState();

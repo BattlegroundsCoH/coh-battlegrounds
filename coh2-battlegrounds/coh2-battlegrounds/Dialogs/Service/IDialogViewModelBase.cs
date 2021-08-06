@@ -9,7 +9,7 @@ namespace BattlegroundsApp.Dialogs.Service {
 
         public string Title { get; set; }
         public T DialogResult { get; set; }
-        public T DialogCloseDefault { get;  }
+        public T DialogCloseDefault { get; }
         public void CloseDialogWithResult(DialogWindow dialog, T result);
 
     }

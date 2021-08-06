@@ -156,7 +156,7 @@
 		</template_reference>
 		<template_reference name="squadexts" value="sbpextensions\squad_item_slot_ext">
 			<bool name="can_pick_up" value="True" />
-			<float name="num_slots" value="1" />
+			<float name="num_slots" value="2" />
 		</template_reference>
 		<template_reference name="squadexts" value="sbpextensions\squad_loadout_ext">
 			<list name="unit_list">
@@ -194,15 +194,13 @@
 		</template_reference>
 		<template_reference name="squadexts" value="sbpextensions\squad_upgrade_apply_ext">
 			<list name="upgrades">
-				<instance_reference name="upgrade" value="upgrade\soviet\items\base_conscript_molotov_unlock_mp" />
-				<instance_reference name="upgrade" value="upgrade\soviet\items\base_conscript_oorah_unlock_mp" />
-				<instance_reference name="upgrade" value="upgrade\soviet\items\base_conscript_at_grenade_unlock_mp" />
-				<instance_reference name="upgrade" value="upgrade\soviet\items\base_conscript_repair_unlock_mp" />
 			</list>
 		</template_reference>
 		<template_reference name="squadexts" value="sbpextensions\squad_upgrade_ext">
-			<float name="number_of_slots" value="-1" />
+			<float name="number_of_slots" value="1" />
 			<list name="upgrades">
+				<instance_reference name="upgrade" value="upgrade\soviet\items\dp-28_lmg_upgrade_bg" mod="142b113740474c82a60b0a428bd553d5" />
+				<instance_reference name="upgrade" value="upgrade\soviet\items\ppsh-41_sub_machine_gun_upgrade_bg" mod="142b113740474c82a60b0a428bd553d5" />
 			</list>
 		</template_reference>
 		<template_reference name="squadexts" value="sbpextensions\squad_combat_behaviour_ext">

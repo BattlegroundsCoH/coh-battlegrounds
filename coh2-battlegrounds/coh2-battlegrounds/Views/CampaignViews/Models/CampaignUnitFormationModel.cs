@@ -12,9 +12,9 @@ using Battlegrounds.Util.Coroutines;
 using BattlegroundsApp.Utilities;
 
 namespace BattlegroundsApp.Views.CampaignViews.Models {
-    
+
     public class CampaignUnitFormationModel : ICampaignMapVisual, ICampaignSelectable {
-    
+
         public ICampaignFormation Formation { get; }
 
         public UIElement VisualElement { get; }
@@ -58,7 +58,7 @@ namespace BattlegroundsApp.Views.CampaignViews.Models {
         }
 
         private void FormationMoved(ICampaignFormation formation, ICampaignMapNode origin, ICampaignMapNode destination) {
-            
+
             // Update formation, visually
             this.ThreadDispatcher.Invoke(() => {
 

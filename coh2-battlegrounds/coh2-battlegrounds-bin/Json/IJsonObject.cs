@@ -8,7 +8,7 @@ using Battlegrounds.Util;
 using Battlegrounds.Functional;
 
 namespace Battlegrounds.Json {
-    
+
     /// <summary>
     /// Interface for converting objects to and from a Json object. Implements <see cref="IJsonElement"/>.
     /// </summary>
@@ -184,7 +184,7 @@ namespace Battlegrounds.Json {
                 }
             }
             if (type.IsPrimitive || val is string) {
-                jsonbuilder.AppendLine($"\"{name}\": \"{val}\"{((appendComma)?",":"")}");
+                jsonbuilder.AppendLine($"\"{name}\": \"{val}\"{((appendComma) ? "," : "")}");
             } else {
                 if (val is IJsonObject jso) {
                     if (attributeSet.UseRef) {
@@ -260,7 +260,7 @@ namespace Battlegrounds.Json {
                                 jsonbuilder.Append($"{jso2.Serialize(jsonbuilder.GetIndent()).TrimEnd('\n')}{((i + 1 != arr.Length) ? ",\n" : "\n")}", false);
                             }
                         }
-                    }                        
+                    }
                     jsonbuilder.DecreaseIndent();
                     jsonbuilder.AppendLine($"]{((appendComma) ? "," : "")}");
                 } else {
@@ -391,7 +391,7 @@ namespace Battlegrounds.Json {
 
         }
 
-        internal static void SetValue(object instance, object value, Type valueType, bool byReference, 
+        internal static void SetValue(object instance, object value, Type valueType, bool byReference,
             Action<object, object> setValueMethod, Func<string, object> derefMethood, JsonEnumAttribute eAttrib) {
 
             // Is it an array?

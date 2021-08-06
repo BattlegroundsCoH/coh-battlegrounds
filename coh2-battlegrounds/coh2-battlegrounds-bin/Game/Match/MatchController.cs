@@ -110,7 +110,7 @@ namespace Battlegrounds.Game.Match {
             if (this.m_starter is null) {
                 throw new ArgumentNullException(nameof(this.m_starter), "Startup object cannot be null.");
             }
-            
+
             // Make sure we have a starter
             if (this.m_analyzer is null) {
                 throw new ArgumentNullException(nameof(this.m_analyzer), "Analysis object cannot be null.");
@@ -119,7 +119,7 @@ namespace Battlegrounds.Game.Match {
                     this.Error?.Invoke(cause, reason);
                 };
             }
-            
+
             // Make sure we have a starter
             if (this.m_finalizer is null) {
                 throw new ArgumentNullException(nameof(this.m_finalizer), "Finalizer object cannot be null.");

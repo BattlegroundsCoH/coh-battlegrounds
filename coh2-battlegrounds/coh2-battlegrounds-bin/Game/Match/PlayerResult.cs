@@ -1,10 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Collections.Immutable;
+
 using Battlegrounds.Game.Database;
 using Battlegrounds.Game.Gameplay;
 
 namespace Battlegrounds.Game.Match {
-    
+
     /// <summary>
     /// Class the keeps track of <see cref="Gameplay.Player"/> data throughout a <see cref="GameMatch"/>.
     /// </summary>
@@ -84,7 +85,7 @@ namespace Battlegrounds.Game.Match {
         /// <param name="entity"></param>
         public void RemoveEntity(Entity entity) => this.m_activeEntities.Remove(entity);
 
-        public override string ToString() => $"{this.Player} [{((this.IsOnWinningTeam)?"Won":"Lost")}]";
+        public override string ToString() => $"{this.Player} [{((this.IsOnWinningTeam) ? "Won" : "Lost")}]";
 
     }
 

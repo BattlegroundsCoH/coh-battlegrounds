@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
+
 using BattlegroundsApp.Dialogs.Service;
 using BattlegroundsApp.Utilities;
 
@@ -18,7 +19,7 @@ namespace BattlegroundsApp.Dialogs.RenameCopyDialog {
         Cancel
     }
     public class RenameCopyDialogViewModel : DialogControlBase<RenameCopyDialogResult> {
-    
+
         public ICommand RenameCopyCommand { get; set; }
         public ICommand CancelCommand { get; set; }
         public string ButtonName { get; set; }

@@ -45,6 +45,15 @@ namespace CoH2XML2JSON {
         [DefaultValue(false)]
         public bool CanPickupItems { get; }
 
+        [DefaultValue(0)]
+        public int UpgradeCapacity { get; }
+
+        [DefaultValue(null)]
+        public string[] Upgrades { get; }
+
+        [DefaultValue(null)]
+        public string[] AppliedUpgrades { get; }
+
         public SBP(XmlDocument xmlDocument, string guid, string name, List<EBP> entities) {
 
             // Set the name
@@ -88,6 +97,9 @@ namespace CoH2XML2JSON {
                     squadLoadoutData.Add(new(ebp?.Name ?? Path.GetFileNameWithoutExtension(entity), num));
                 }
                 this.SquadCost = new(costList.ToArray());
+                if (this.SquadCost.IsNull) {
+                    this.SquadCost = null;
+                }
                 this.Entities = squadLoadoutData.ToArray();
                 this.FemaleChance = float.Parse(squadLoadout.GetValue("//float [@name='squad_female_chance']")) / 10.0f;
                 this.HasCrew = tmpEbpCollect.Any(x => x?.Drivers?.Length > 0);
@@ -95,7 +107,7 @@ namespace CoH2XML2JSON {
 
             // Load squad abilities
             if (xmlDocument.SelectSingleNode(@"//template_reference[@name='squadexts'] [@value='sbpextensions\squad_ability_ext']") is XmlElement squadAbilities) {
-                var nodes = squadAbilities.SelectNodes("//instance_reference[@name='ability']");
+                var nodes = squadAbilities.SelectSubnodes("instance_reference", "ability");
                 List<string> abps = new();
                 foreach (XmlNode ability in nodes) {
                     abps.Add(Path.GetFileNameWithoutExtension(ability.Attributes["value"].Value));
@@ -126,6 +138,31 @@ namespace CoH2XML2JSON {
 
             // Determine if syncweapon (has team_weapon extension)
             this.IsSyncWeapon = xmlDocument.SelectSingleNode(@"//template_reference[@name='squadexts'] [@value='sbpextensions\squad_team_weapon_ext']") is not null;
+
+            // Load squad upgrades
+            if (xmlDocument.SelectSingleNode(@"//template_reference[@name='squadexts'] [@value='sbpextensions\squad_upgrade_ext']") is XmlElement squadUpgrades) {
+                var nodes = squadUpgrades.SelectSubnodes("instance_reference", "upgrade");
+                List<string> ubps = new();
+                foreach (XmlNode upgrade in nodes) {
+                    ubps.Add(Path.GetFileNameWithoutExtension(upgrade.Attributes["value"].Value));
+                }
+                if (ubps.Count > 0) {
+                    this.Upgrades = ubps.ToArray();
+                }
+                this.UpgradeCapacity = (int)float.Parse(squadUpgrades.FindSubnode("float", "number_of_slots").GetAttribute("value"));
+            }
+
+            // Load squad pre-applied upgrades
+            if (xmlDocument.SelectSingleNode(@"//template_reference[@name='squadexts'] [@value='sbpextensions\squad_upgrade_apply_ext']") is XmlElement squadAppliedUpgrades) {
+                var nodes = squadAppliedUpgrades.SelectSubnodes("instance_reference", "upgrade");
+                List<string> ubps = new();
+                foreach (XmlNode upgrade in nodes) {
+                    ubps.Add(Path.GetFileNameWithoutExtension(upgrade.Attributes["value"].Value));
+                }
+                if (ubps.Count > 0) {
+                    this.AppliedUpgrades = ubps.ToArray();
+                }
+            }
 
         }
 

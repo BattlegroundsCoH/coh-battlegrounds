@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace Battlegrounds.Util {
-    
+
     /// <summary>
     /// 
     /// </summary>
@@ -25,7 +25,7 @@ namespace Battlegrounds.Util {
         /// <param name="encoding"></param>
         /// <returns></returns>
         public static byte[] Encode(this string s, Encoding encoding) => encoding.GetBytes(s);
-    
+
     }
 
 }

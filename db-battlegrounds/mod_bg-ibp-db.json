@@ -1,0 +1,69 @@
+[
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741827,
+    "Name": "ptrs_41_anti_tank_rifle_dummy_bg",
+    "Army": "soviet",
+    "Display": {
+      "LocaleName": "0",
+      "LocaleDescriptionLong": "0",
+      "LocaleDescriptionShort": "0",
+      "Icon": "Icons_weapons_weapon_ptrs"
+    },
+    "SlotSize": 1
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741824,
+    "Name": "dp-28_light_machine_gun_package_bg",
+    "Army": "soviet",
+    "Display": {
+      "LocaleName": "11007104",
+      "LocaleDescriptionLong": "11046271",
+      "LocaleDescriptionShort": "11046270",
+      "Icon": "Icons_weapons_weapon_dp_28_lmg"
+    },
+    "WPB": "guard_troop_dp-28_light_machine_gun_mp",
+    "SlotSize": 1
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741823,
+    "Name": "ppsh41_assault_package_bg",
+    "Army": "soviet",
+    "Display": {
+      "LocaleName": "11046314",
+      "LocaleDescriptionLong": "11046265",
+      "LocaleDescriptionShort": "11046268",
+      "Icon": "Icons_weapons_weapon_pps"
+    },
+    "WPB": "conscript_ppsh-41_sub_machine_gun_mp"
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741826,
+    "Name": "ppsh41_assault_package_dummy_item_bg",
+    "Army": "soviet",
+    "Display": {
+      "LocaleName": "0",
+      "LocaleDescriptionLong": "0",
+      "LocaleDescriptionShort": "0",
+      "Icon": "Icons_weapons_weapon_pps"
+    },
+    "SlotSize": 1
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741825,
+    "Name": "svt_bg",
+    "Army": "soviet",
+    "Display": {
+      "LocaleName": "0",
+      "LocaleDescriptionLong": "0",
+      "LocaleDescriptionShort": "0",
+      "Icon": "Icons_weapons_svt_weapon"
+    },
+    "WPB": "penal_troops_svt_rifle_mp",
+    "SlotSize": 1
+  }
+]

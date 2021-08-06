@@ -2,7 +2,7 @@
 using Battlegrounds.Game.Scar;
 
 namespace Battlegrounds.Game.Database {
-    
+
     /// <summary>
     /// Represents a <see cref="Blueprint"/> for the behaviour of instances within Company of Heroes 2. Implements <see cref="IScarValue"/>.
     /// </summary>
@@ -28,7 +28,7 @@ namespace Battlegrounds.Game.Database {
         /// </summary>
         public abstract BlueprintType BlueprintType { get; }
 
-        public virtual string ToScar() { 
+        public virtual string ToScar() {
             if (string.IsNullOrEmpty(this.PBGID.Mod.GUID)) {
                 return $"\"{this.Name}\"";
             } else {
@@ -42,7 +42,7 @@ namespace Battlegrounds.Game.Database {
         /// <returns>A string that represents the current object.</returns>
         public override string ToString() => $"{this.BlueprintType}:{this.Name}";
 
-        public override bool Equals(object obj) { 
+        public override bool Equals(object obj) {
             if (obj is Blueprint bp && this != null) {
                 return bp.BlueprintType == this.BlueprintType && bp.PBGID == this.PBGID;
             } else {

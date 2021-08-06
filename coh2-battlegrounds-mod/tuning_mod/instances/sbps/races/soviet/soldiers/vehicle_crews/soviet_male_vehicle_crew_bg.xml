@@ -155,8 +155,8 @@
 			<bool name="support_weapons_to_flanks" value="True" />
 		</template_reference>
 		<template_reference name="squadexts" value="sbpextensions\squad_item_slot_ext">
-			<bool name="can_pick_up" value="True" />
-			<float name="num_slots" value="2" />
+			<bool name="can_pick_up" value="False" />
+			<float name="num_slots" value="0" />
 		</template_reference>
 		<template_reference name="squadexts" value="sbpextensions\squad_loadout_ext">
 			<list name="unit_list">

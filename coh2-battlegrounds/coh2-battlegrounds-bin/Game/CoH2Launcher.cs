@@ -3,7 +3,7 @@ using System.Text;
 using System.Threading;
 
 namespace Battlegrounds.Game {
-    
+
     /// <summary>
     /// Static class for launching Company of Heroes 2 with the proper set of arguments.
     /// </summary>

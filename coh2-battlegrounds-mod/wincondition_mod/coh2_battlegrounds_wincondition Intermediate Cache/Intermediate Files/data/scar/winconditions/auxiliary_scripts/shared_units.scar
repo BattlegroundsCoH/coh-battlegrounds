@@ -478,9 +478,9 @@ function BG_RecallCompanySquad(unit_data, squadID, companyID, playerData, reset)
     end
 end
 
-function BG_OnItemCaptured(entity, capturer)
+function BG_OnItemCaptured(entity, capturer) -- TODO: Write a better handler here for tracking who captured team weapons, since vehicle captures seem to work a bit different.
     local captureSquadID = Entity_GetSquad(entity);
-    PrintOnScreen(Squad_GetGameID(captureSquadID) .. " - " .. Squad_GetGameID(capturer));
+    --PrintOnScreen(Squad_GetGameID(captureSquadID) .. " - " .. Squad_GetGameID(capturer));
 end
 
 function BG_HandleCapturedEquipment(playerData, gameID, squadID, bpName)

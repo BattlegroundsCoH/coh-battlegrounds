@@ -1,7 +1,7 @@
 ﻿using Battlegrounds.Locale;
 
 namespace Battlegrounds.Campaigns.API {
-    
+
     /// <summary>
     /// Represents the type of goal.
     /// </summary>

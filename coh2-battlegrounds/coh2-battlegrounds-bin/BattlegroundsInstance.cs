@@ -51,7 +51,7 @@ namespace Battlegrounds {
             public void ResolvePaths() {
 
                 // Log
-                Trace.WriteLine($"Resolving paths (Local to: {Environment.CurrentDirectory})", "BattlegroundsInstance");
+                Trace.WriteLine($"Resolving paths (Local to: {Environment.CurrentDirectory})", nameof(BattlegroundsInstance));
 
                 // Paths
                 string installpath = $"{Environment.CurrentDirectory}\\";
@@ -62,7 +62,7 @@ namespace Battlegrounds {
                 // Create data directory if it does not exist
                 if (!Directory.Exists(binpath)) {
                     Directory.CreateDirectory(binpath);
-                    Trace.WriteLine("Bin path missing - this may cause errors", "BattlegroundsInstance");
+                    Trace.WriteLine("Bin path missing - this may cause errors", nameof(BattlegroundsInstance));
                     this.Paths.Add(BattlegroundsPaths.BINARY_FOLDER, binpath);
                 } else {
                     if (!this.Paths.ContainsKey(BattlegroundsPaths.BINARY_FOLDER)) {
@@ -73,7 +73,7 @@ namespace Battlegrounds {
                 // Create user directory if it does not exist
                 if (!Directory.Exists(userpath)) {
                     Directory.CreateDirectory(userpath);
-                    Trace.WriteLine("User path missing - this may cause errors", "BattlegroundsInstance");
+                    Trace.WriteLine("User path missing - this may cause errors", nameof(BattlegroundsInstance));
                 }
 
                 // User folder
@@ -95,7 +95,7 @@ namespace Battlegrounds {
                         Directory.GetFiles(tmppath).ForEach(File.Delete);
                         Directory.GetDirectories(tmppath).ForEach(x => Directory.Delete(x, true));
                     } catch {
-                        Trace.WriteLine("Unexpected IO error occured while attempting to clean tmp folder!", "BattlegroundsInstance");
+                        Trace.WriteLine("Unexpected IO error occured while attempting to clean tmp folder!", nameof(BattlegroundsInstance));
                     }
                 }
 
@@ -117,8 +117,8 @@ namespace Battlegrounds {
                         Directory.CreateDirectory(cFolder);
                     }
                 } catch (Exception e) {
-                    Trace.WriteLine($"Failed to resolve directory \"{pathID}\"", "BattlegroundsInstance");
-                    Trace.WriteLine(e, "BattlegroundsInstance");
+                    Trace.WriteLine($"Failed to resolve directory \"{pathID}\"", nameof(BattlegroundsInstance));
+                    Trace.WriteLine(e, nameof(BattlegroundsInstance));
                 }
             }
 
@@ -194,15 +194,8 @@ namespace Battlegrounds {
         /// <param name="appendPath">The optional path to append to the relative path.</param>
         /// <returns>The relative path + potential append path.</returns>
         /// <exception cref="ArgumentException"/>
-        public static string GetRelativePath(string pathID, string appendPath)
+        public static string GetRelativePath(string pathID, string appendPath = "")
             => Path.Combine(__instance.GetPath(pathID), appendPath);
-
-        private static ITuningMod __bgTuningInstance;
-
-        /// <summary>
-        /// Get the Battlegrounds tuning mod instance.
-        /// </summary>
-        public static ITuningMod BattleGroundsTuningMod => __bgTuningInstance;
 
         /// <summary>
         /// Load the current instance data.
@@ -222,8 +215,8 @@ namespace Battlegrounds {
             // Create locale manager
             __localeManagement = new Localize(__instance.Language);
 
-            // Create tuning
-            __bgTuningInstance = new BattlegroundsTuning();
+            // Load mods
+            ModManager.Init();
 
             // Create RNG
             __rng = new Random();
@@ -247,7 +240,7 @@ namespace Battlegrounds {
         /// <summary>
         /// Save the currently stored data of this instance.
         /// </summary>
-        public static void SaveInstance() 
+        public static void SaveInstance()
             => File.WriteAllText("local.json", __instance.SerializeAsJson());
 
     }

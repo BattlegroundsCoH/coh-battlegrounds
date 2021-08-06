@@ -54,6 +54,8 @@ namespace BattlegroundsApp.Views {
         //private bool m_hasCreatedLobbyOnce;
         private ILobbyPlayModel m_playModel;
 
+        private ModPackage m_selectedModPackage;
+
         private GameLobbyViewScenarioItem m_lastScenario;
 
         private LobbyHandler m_handler;
@@ -80,11 +82,15 @@ namespace BattlegroundsApp.Views {
 
         public GameLobbyView(LobbyHandler handler) {
 
-            // Init components
-            this.InitializeComponent();
-
             // Set handler
             this.m_handler = handler;
+
+            // Set mod package (TODO: Let users pick this before the lobby starts, on in lobby)
+            this.m_selectedModPackage = ModManager.GetPackage("mod_bg");
+            Trace.TraceWarning($"There's currently no method of chaning the mod package. Selecting 'mod_bg' by default.");
+
+            // Init components
+            this.InitializeComponent();
 
         }
 
@@ -131,7 +137,8 @@ namespace BattlegroundsApp.Views {
             int currentOption = this.GamemodeOption.SelectedIndex;
 
             // Set available gamemodes
-            List<Wincondition> source = scenario.Gamemodes.Count > 0 ? scenario.Gamemodes : WinconditionList.GetDefaultList();
+            var guid = this.m_selectedModPackage.GamemodeGUID;
+            List<IGamemode> source = scenario.Gamemodes.Count > 0 ? WinconditionList.GetGamemodes(guid, scenario.Gamemodes) : WinconditionList.GetGamemodes(guid);
             if (source.All(this.Gamemode.Items.Contains)) { // if nore changes are made, just dont update
                 return;
             }
@@ -215,7 +222,7 @@ namespace BattlegroundsApp.Views {
                 SelectedGamemodeOption = option,
                 SelectedScenario = selectedScenario,
                 IsOptionValue = false,
-                SelectedTuningMod = new BattlegroundsTuning(), // TODO: Allow users to change this somewhere
+                SelectedTuningMod = ModManager.GetMod<ITuningMod>(this.m_selectedModPackage.TuningGUID), // TODO: Allow users to change this somewhere
                 Allies = alliedTeam.ToArray(),
                 Axis = axisTeam.ToArray(),
                 FillAI = false,
@@ -341,7 +348,7 @@ namespace BattlegroundsApp.Views {
             }
 
             // Verify we got the company
-            if (card.CompanySelector.SelectedItem is not TeamPlayerCompanyItem companyItem ) {
+            if (card.CompanySelector.SelectedItem is not TeamPlayerCompanyItem companyItem) {
                 return null;
             }
 
@@ -520,7 +527,7 @@ namespace BattlegroundsApp.Views {
         public void SetGamemode(string gamemode, string option) {
 
             // If wincondition is found
-            if (WinconditionList.GetWinconditionByName(gamemode) is Wincondition wc) {
+            if (WinconditionList.GetGamemodeByName(this.m_selectedModPackage.GamemodeGUID, gamemode) is Wincondition wc) {
 
                 // Set gamemode
                 this.Gamemode.SelectedItem = wc;

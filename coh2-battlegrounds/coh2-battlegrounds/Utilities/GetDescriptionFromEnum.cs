@@ -11,7 +11,7 @@ namespace BattlegroundsApp.Utilities {
 
         public static string GetDescription(this Enum e) {
 
-            var attribute = 
+            var attribute =
                 e.GetType()
                     .GetTypeInfo()
                     .GetMember(e.ToString())

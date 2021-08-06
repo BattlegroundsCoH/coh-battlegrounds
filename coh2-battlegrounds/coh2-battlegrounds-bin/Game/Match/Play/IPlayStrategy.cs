@@ -1,12 +1,12 @@
 ﻿using Battlegrounds.Game.Match.Data;
 
 namespace Battlegrounds.Game.Match.Play {
-    
+
     /// <summary>
     /// Strategy interface for handling the play session.
     /// </summary>
     public interface IPlayStrategy {
-    
+
         /// <summary>
         /// Get if the strategy has launched the game.
         /// </summary>

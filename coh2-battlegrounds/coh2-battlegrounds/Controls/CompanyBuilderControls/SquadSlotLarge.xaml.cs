@@ -1,49 +1,99 @@
-﻿using Battlegrounds.Game.Database.Extensions;
+﻿using Battlegrounds.Game.Database;
+using Battlegrounds.Game.Database.Extensions;
 using Battlegrounds.Game.Gameplay;
+
 using BattlegroundsApp.Dialogs.YesNo;
 using BattlegroundsApp.Resources;
+
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace BattlegroundsApp.Controls.CompanyBuilderControls {
-    public partial class SquadSlotLarge : UserControl {
 
-        public string SquadName { get; }
-        public string SquadIcon { get; }
-        public CostExtension SquadCost { get; }
-        public byte SquadVeterancy { get; }
-        public bool SquadIsTransported { get; }
+    public partial class SquadSlotLarge : UserControl, INotifyPropertyChanged {
 
-        private uint SlotOccupantID { get; set; }
+        public string SquadName { get; set; }
+
+        public ImageSource SquadIcon { get; }
+
+        public CostExtension SquadCost { get; set; }
+
+        public ImageSource SquadVeterancy { get; set; }
+
+        public bool SquadIsTransported { get; set; }
+
+        public ImageSource SquadTransportSymbol { get; set; }
+
+        public Squad SquadInstance { get; }
+
+        public event Action<SquadSlotLarge> OnClick;
+
+        public event Action<SquadSlotLarge> OnRemove;
+
+        public event PropertyChangedEventHandler PropertyChanged;
 
         public SquadSlotLarge(Squad squad) {
-            SquadName = GameLocale.GetString(uint.Parse(squad.SBP.UI.ScreenName));
-            SquadIcon = $"pack://application:,,,/Resources/ingame/unit_icons/{squad.SBP.UI.Icon}.png";
-            SquadCost = squad.SBP.Cost;
-            SquadVeterancy = squad.VeterancyRank;
-            SquadIsTransported = squad.SupportBlueprint is not null;
-            SlotOccupantID = squad.SquadID;
-            InitializeComponent();
+
+            // Set squad instance
+            this.SquadInstance = squad;
+
+            // Set context
+            this.DataContext = this;
+
+            // Set data known not to change
+            this.SquadIcon = App.ResourceHandler.GetIcon("unit_icons", this.SquadInstance.SBP.UI.Icon);
+
+            // Update UI 
+            this.InitializeComponent();
+
+            // Refresh data
+            this.RefreshData();
+
+        }
+
+        public void RefreshData() {
+
+            // Get basic info
+            this.SquadName = GameLocale.GetString(this.SquadInstance.SBP.UI.ScreenName);
+            this.SquadCost = this.SquadInstance.GetCost();
+
+            // Refresh cost
+            this.CostDisplay.Cost = this.SquadCost;
+
+            // Get veterancy
+            if (this.SquadInstance.VeterancyRank > 0) {
+                this.SquadVeterancy = new BitmapImage(new Uri($"pack://application:,,,/Resources/ingame/vet/vstar{this.SquadInstance.VeterancyRank}.png"));
+            }
+
+            // Set transport
+            this.SquadIsTransported = this.SquadInstance.SupportBlueprint is not null;
+            if (this.SquadIsTransported && App.ResourceHandler.HasIcon("symbol_icons", (this.SquadInstance.SupportBlueprint as SquadBlueprint).UI.Symbol)) {
+                this.SquadTransportSymbol = App.ResourceHandler.GetIcon("symbol_icons", (this.SquadInstance.SupportBlueprint as SquadBlueprint).UI.Symbol);
+            }
+
+            // Refresh
+            this.PropertyChanged?.Invoke(this, new(nameof(this.SquadName)));
+            this.PropertyChanged?.Invoke(this, new(nameof(this.SquadCost)));
+            this.PropertyChanged?.Invoke(this, new(nameof(this.SquadVeterancy)));
+            this.PropertyChanged?.Invoke(this, new(nameof(this.SquadIsTransported)));
+            this.PropertyChanged?.Invoke(this, new(nameof(this.SquadTransportSymbol)));
+
         }
 
         private void RemoveUnit(object sender, RoutedEventArgs e) {
-            var result = YesNoDialogViewModel.ShowYesNoDialog("Remove Unit", "Are you sure? This action can not be undone.");
-
-            if (result == YesNoDialogResult.Confirm) {
-                //Remove unit here
+            if (YesNoDialogViewModel.ShowYesNoDialog("Remove Unit", "Are you sure? This action can not be undone.") is YesNoDialogResult.Confirm) {
+                this.OnRemove?.Invoke(this);
             }
         }
+
+        private void OnMouseDown(object sender, MouseButtonEventArgs e)
+            => this.OnClick?.Invoke(this);
+
     }
+
 }

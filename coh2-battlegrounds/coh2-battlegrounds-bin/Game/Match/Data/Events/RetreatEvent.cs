@@ -1,4 +1,5 @@
 ﻿using System;
+
 using Battlegrounds.Functional;
 using Battlegrounds.Game.Gameplay;
 
@@ -45,14 +46,14 @@ namespace Battlegrounds.Game.Match.Data.Events {
 
             // Set player
             this.WithdrawPlayer = player;
-            
+
             // Get unit ID
             if (ushort.TryParse(values[0], out ushort sid)) {
                 this.WithdrawingUnitID = sid;
             } else {
                 throw new FormatException();
             }
-            
+
             // Get the veterancy change
             if (sbyte.TryParse(values[1], out sbyte change)) {
                 this.WithdrawingUnitVeterancyChange = (byte)(change >= 0 ? (byte)change : 0);

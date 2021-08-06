@@ -6,11 +6,11 @@ namespace BattlegroundsApp.Views.CampaignViews {
     /// Interaction logic for CampaignModelSelectionView.xaml
     /// </summary>
     public partial class CampaignModelSelectionView : UserControl {
-    
+
         public CampaignModelSelectionView() {
             InitializeComponent();
         }
-    
+
     }
 
 }

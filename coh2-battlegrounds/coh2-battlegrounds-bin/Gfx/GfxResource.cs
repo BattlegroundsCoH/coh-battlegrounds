@@ -1,5 +1,5 @@
 ﻿namespace Battlegrounds.Gfx {
-    
+
     /// <summary>
     /// Represents a GFX resource that can be opened into a <see cref="GfxResourceStream"/> for reading.
     /// </summary>
@@ -8,6 +8,16 @@
         private string m_id;
         private int m_width, m_height;
         private byte[] m_raw;
+
+        /// <summary>
+        /// Get the width dimension of the resource.
+        /// </summary>
+        public int Width => this.m_width;
+
+        /// <summary>
+        /// Get the height dimension of the resource.
+        /// </summary>
+        public int Height => this.m_height;
 
         /// <summary>
         /// Initialize a new <see cref="GfxResource"/> class with raw data.

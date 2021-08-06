@@ -1,7 +1,7 @@
 ﻿using System;
 
 namespace Battlegrounds.Lua {
-    
+
     /// <summary>
     /// Userobject attribute for methods to be directly invoked by the Lua runtime.
     /// </summary>
@@ -12,7 +12,7 @@ namespace Battlegrounds.Lua {
         /// Allow the runtime to invoke the method as is without interacting with Lua values.
         /// </summary>
         public bool UseMarshalling { get; init; } = false;
-        
+
         /// <summary>
         /// Create per instance data after the contained type is returned.
         /// </summary>

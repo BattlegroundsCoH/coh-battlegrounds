@@ -2,16 +2,18 @@
 using System.Linq;
 using System.Windows.Input;
 using System.Windows.Media;
+
 using Battlegrounds;
 using Battlegrounds.Campaigns;
 using Battlegrounds.Game.Gameplay;
+
 using BattlegroundsApp.Dialogs.Service;
 using BattlegroundsApp.Models.Campaigns;
 using BattlegroundsApp.Resources;
 using BattlegroundsApp.Utilities;
 
 namespace BattlegroundsApp.Dialogs.NewCampaign {
-    
+
     public enum NewCampaignDialogResult {
         Cancel,
         NewSingleplayer,
@@ -20,7 +22,7 @@ namespace BattlegroundsApp.Dialogs.NewCampaign {
 
     #region Option Classes
     public abstract class NewCampaignDialogViewSelectionOption { public abstract CampaignPackage GetPackage(); }
-    
+
     public class NewCampaignDialogViewSelectedNone : NewCampaignDialogViewSelectionOption {
         public override CampaignPackage GetPackage() => null;
         public override string ToString() => "None Available";
@@ -62,7 +64,7 @@ namespace BattlegroundsApp.Dialogs.NewCampaign {
 
         public int SelectedCampaignIndex {
             get => this.m_selectedCampaignIndex;
-            set { 
+            set {
                 this.m_selectedCampaignIndex = value;
                 this.SelectedCampaignChanged(value);
             }
@@ -128,12 +130,12 @@ namespace BattlegroundsApp.Dialogs.NewCampaign {
 
         private void SelectedCampaignChanged(int newValue) {
             if (this.Campaigns[newValue].GetPackage() is CampaignPackage package) {
-                
+
                 this.SelectedCampaignImageSource = PngImageSource.FromMemory(package.MapData.RawImageData);
-                
+
                 this.AvailableModes.Clear();
                 this.AvailableModes.AddRange(package.CampaignModes.Select(x => new NewCampaignDialogViewSelectedMode(x)));
-                
+
                 this.AvailableArmies.Clear();
                 this.AvailableArmies.AddRange(package.CampaignArmies.Select(x => new NewCampaignDialogViewSelectedArmy(x.Army)));
 

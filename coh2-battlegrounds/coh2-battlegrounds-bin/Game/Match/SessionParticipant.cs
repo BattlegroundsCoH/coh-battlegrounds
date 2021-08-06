@@ -5,7 +5,7 @@ using Battlegrounds.Steam;
 using Battlegrounds.Game.DataCompany;
 
 namespace Battlegrounds.Game.Match {
-    
+
     /// <summary>
     /// Enum representing a team a <see cref="SessionParticipant"/> can be on.
     /// </summary>
@@ -106,7 +106,7 @@ namespace Battlegrounds.Game.Match {
             this.Difficulty = AIDifficulty.Human;
             this.TeamIndex = tIndex;
             this.PlayerIndexOnTeam = pIndex;
-            
+
             if (this.ParticipantCompany != null) {
                 this.TeamIndex = (this.ParticipantCompany.Army.IsAllied) ? SessionParticipantTeam.TEAM_ALLIES : SessionParticipantTeam.TEAM_AXIS;
             }
@@ -145,7 +145,7 @@ namespace Battlegrounds.Game.Match {
         public ulong GetID()
             => this.IsHumanParticipant ? this.UserID : 0;
 
-        public override string ToString() 
+        public override string ToString()
             => $"{this.GetName()} [{this.ParticipantCompany.Name}]";
 
     }

@@ -99,7 +99,7 @@ namespace Battlegrounds.Campaigns.Map {
         public void SetAttrition(double value) => this.Attrition = value;
 
         public void EndOfRound() {
-            
+
             // Apply attrition
             this.Occupants.ForEach(x => {
                 if (x.CanMove) {

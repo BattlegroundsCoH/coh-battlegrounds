@@ -2,7 +2,7 @@
 using System.Text;
 
 namespace Battlegrounds.Game.DataSource.Replay {
-    
+
     /// <summary>
     /// Represents an event that occured in a <see cref="GameTick"/>.
     /// </summary>
@@ -27,9 +27,9 @@ namespace Battlegrounds.Game.DataSource.Replay {
         /// The <see cref="GameEventType"/> representation of the Type. Make sure the <see cref="GameEvent"/> is within range before using.
         /// </summary>
         /// <exception cref="ArgumentOutOfRangeException"/>
-        public GameEventType EventType 
-            => (this.Type < (byte)GameEventType.EVENT_MAX) ? 
-            ((GameEventType)this.Type) : 
+        public GameEventType EventType
+            => (this.Type < (byte)GameEventType.EVENT_MAX) ?
+            ((GameEventType)this.Type) :
             throw new ArgumentOutOfRangeException($"The event type {this.Type} is out of range and cannot be interpreted.");
 
         /// <summary>
@@ -85,11 +85,11 @@ namespace Battlegrounds.Game.DataSource.Replay {
 
             // The target type
             this.TargetType = BitConverter.ToUInt16(eventData.AsSpan()[6..8]); // Most likely an enum
-                                                                      // 16 = Entity
-                                                                      // 32 = Squad
-                                                                      // 64 = ???
-                                                                      // ... = ...
-                                                                      // ??? = ???
+                                                                               // 16 = Entity
+                                                                               // 32 = Squad
+                                                                               // 64 = ???
+                                                                               // ... = ...
+                                                                               // ??? = ???
 
             // Read type-specific content
             if (this.Type < (byte)GameEventType.EVENT_MAX) {

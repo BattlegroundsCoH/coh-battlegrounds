@@ -4,7 +4,7 @@ using System.Linq;
 
 using Battlegrounds.Compiler;
 using Battlegrounds.Compiler.Source;
-using Battlegrounds.Game.Gameplay;
+using Battlegrounds.Modding;
 using Battlegrounds.Networking;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -14,7 +14,7 @@ namespace coh2_battlegrounds_bin_tests {
     [TestClass]
     public class ManifestSourceTest {
 
-        Wincondition gamemode;
+        IGamemode gamemode;
         ManifestSource ls;
         string sessionFile = "E:\\coh2_battlegrounds\\coh2-battlegrounds-mod\\wincondition_mod\\auxiliary_scripts\\session.scar";
 

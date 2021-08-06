@@ -6,7 +6,7 @@ namespace Battlegrounds.Game.Match.Data.Events {
     /// <see cref="IMatchEvent"/> implementation for an event with a timestamp.
     /// </summary>
     public class TimeEvent : IMatchEvent {
-        
+
         public char Identifier => 'A';
 
         public uint Uid => this.UnderlyingEvent.Uid;

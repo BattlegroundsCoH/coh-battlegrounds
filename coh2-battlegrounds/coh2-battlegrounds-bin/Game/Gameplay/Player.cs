@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+
 using Battlegrounds.Game.Database;
 
 namespace Battlegrounds.Game.Gameplay {
-    
+
     /// <summary>
     /// 
     /// </summary>
@@ -45,7 +46,7 @@ namespace Battlegrounds.Game.Gameplay {
         /// <summary>
         /// 
         /// </summary>
-        public ServerItem[] Skins { get; } = new ServerItem[3]; 
+        public ServerItem[] Skins { get; } = new ServerItem[3];
 
         /// <summary>
         /// 

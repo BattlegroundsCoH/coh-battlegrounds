@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+
 using Battlegrounds.Json.DataConverters;
 
 namespace Battlegrounds.Json {
-    
+
     /// <summary>
     /// Static helper class for Json data type converters
     /// </summary>

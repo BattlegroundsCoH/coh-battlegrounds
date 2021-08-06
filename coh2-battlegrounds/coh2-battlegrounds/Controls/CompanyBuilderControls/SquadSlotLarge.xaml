@@ -6,42 +6,29 @@
              xmlns:local="clr-namespace:BattlegroundsApp.Controls.CompanyBuilderControls"
              xmlns:convertor="clr-namespace:BattlegroundsApp.Utilities.Converters"
              mc:Ignorable="d" 
-             d:DesignHeight="64" d:DesignWidth="225">
+             d:DesignHeight="72" d:DesignWidth="236">
 
     <UserControl.Resources>
         <convertor:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
     </UserControl.Resources>
 
-    <Canvas Width="225" Height="64">
-        <Button Width="225" Height="64">
-            <Canvas Width="225" Height="64">
-                <TextBlock Text="{Binding SquadName}" Canvas.Left="50" Canvas.Top="5"/>
+    <Canvas Width="236" Height="72"  MouseDown="OnMouseDown">
+        <Canvas Width="236"  Height="72" Background="LightGray">
+            <TextBlock Text="{Binding SquadName}" Canvas.Left="50" Canvas.Top="5"/>
 
-                <Image Canvas.Left="5" Canvas.Top="5" Source="{Binding SquadIcon, TargetNullValue={x:Null}}"
+            <Image Canvas.Left="5" Canvas.Top="5" Source="{Binding SquadIcon, TargetNullValue={x:Null}}"
                            Width="42" Height="42"/>
 
-                <TextBlock Text="{Binding SquadCost.Manpower}" Canvas.Left="5" Canvas.Bottom="3" Foreground="DarkOrange"/>
+            <local:CostControl x:Name="CostDisplay" Canvas.Bottom="0" Height="24"/>
 
-                <TextBlock Text="{Binding SquadCost.Fuel}" Canvas.Left="35" Canvas.Bottom="3" Foreground="green"/>
+            <Image Canvas.Right="5" Canvas.Bottom="0" 
+                   Visibility="{Binding SquadIsTransported, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter=False}"
+                   Source="{Binding SquadTransportSymbol}"/>
 
-                <TextBlock Text="{Binding SquadCost.Munitions}" Canvas.Left="65" Canvas.Bottom="3" Foreground="red"/>
-
-                <!-- TODO: REPLACE THE ICON OF TRANSPORT TO THE ACTUAL TRANSPORT ICON -->
-                <Image Canvas.Right="5" Canvas.Bottom="0" Visibility="{Binding SquadIsTransported, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter=False}">
-                    <Image.Source>
-                        <BitmapImage DecodePixelWidth="23" DecodePixelHeight="23" UriSource="pack://application:,,,/Resources/ingame/test_unit_transport.png"/>
-                    </Image.Source>
-                </Image>
-
-                <StackPanel Canvas.Left="50" Canvas.Bottom="20" Orientation="Horizontal">
-                    <Image>
-                        <Image.Source>
-                            <BitmapImage DecodePixelWidth="13" DecodePixelHeight="13" UriSource="pack://application:,,,/Resources/ingame/test_unit_veterancy.png"/>
-                        </Image.Source>
-                    </Image>
-                </StackPanel>
-            </Canvas>
-        </Button>
-        <Button Width="25" Height="25" Content="X" Canvas.Left="200" Click="RemoveUnit"/>
+            <Image  Canvas.Left="50" Canvas.Bottom="24" Width="36" Height="22" 
+                    Source="{Binding SquadVeterancy}"/>
+            
+        </Canvas>
+        <Button Width="25" Height="25" Content="X" Canvas.Right="0" Click="RemoveUnit"/>
     </Canvas>
 </UserControl>

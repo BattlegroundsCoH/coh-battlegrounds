@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
+
 using BattlegroundsApp.Dialogs.Service;
 using BattlegroundsApp.Utilities;
 using BattlegroundsApp.ViewModels;

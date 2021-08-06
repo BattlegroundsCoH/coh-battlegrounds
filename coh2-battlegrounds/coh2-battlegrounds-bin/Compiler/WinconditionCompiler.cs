@@ -8,7 +8,7 @@ using Battlegrounds.Compiler.Source;
 using Battlegrounds.Modding;
 
 namespace Battlegrounds.Compiler {
-    
+
     /// <summary>
     /// Helper class for compiling a win condition in a JIT-style.
     /// </summary>
@@ -20,7 +20,7 @@ namespace Battlegrounds.Compiler {
         /// <param name="workdir">The temporary work directory.</param>
         /// <param name="sessionFile">The session file to include</param>
         /// <returns>True of the archive file was created sucessfully. False if any error occured.</returns>
-        public static bool CompileToSga(string workdir, string sessionFile, IWinconditionMod wincondition, IWinconditionSource source) {
+        public static bool CompileToSga(string workdir, string sessionFile, IGamemode wincondition, IWinconditionSource source) {
 
             // Verify is win condition source is valid
             if (source is null) {
@@ -46,7 +46,7 @@ namespace Battlegrounds.Compiler {
 
             // The archive definition to use when compiling
             TxtBuilder archiveDef = new TxtBuilder();
-            
+
             // Scar/Data TOC section
             archiveDef.AppendLine($"Archive name=\"{wincondition.Guid}\" blocksize=\"262144\"");
             archiveDef.AppendLine("TOCStart name=\"data\" alias=\"data\" path=\"\" relativeroot=\"data\"");

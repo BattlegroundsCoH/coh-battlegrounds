@@ -100,7 +100,7 @@ namespace Battlegrounds.Game.Match.Composite {
                     this.m_isStarted = true;
 
                 } else {
-                    
+
                     // Trigger on cancelled
                     startupStrategy.OnCancel(this.m_lobby, "Preparation was cancelled.");
 
@@ -114,7 +114,7 @@ namespace Battlegrounds.Game.Match.Composite {
         }
 
         private void StartupStrategy_StartupCancelled(IStartupStrategy sender, object caller, string reason) => this.m_isCancelled = true;
-        
+
         public void Analyze(IAnalyzeStrategy strategy, IMatchData matchResults) {
 
             // Set to false

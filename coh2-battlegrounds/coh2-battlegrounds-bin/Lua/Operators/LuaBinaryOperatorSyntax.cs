@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+
 using Battlegrounds.Lua.Parsing;
 
 namespace Battlegrounds.Lua.Operators {
@@ -18,10 +19,10 @@ namespace Battlegrounds.Lua.Operators {
         public bool PrePostCondtion(bool pre, bool post) => pre && post;
 
         public virtual bool Apply(List<LuaExpr> luaExprs, int i, Action<List<LuaExpr>> recursiveFunction) {
-            if (luaExprs[i+1] is LuaKeyword { Keyword: "function" }) {
+            if (luaExprs[i + 1] is LuaKeyword { Keyword: "function" }) {
                 return false;
             }
-            if (luaExprs[i-1] is LuaKeyword and not LuaKeyword { Keyword: "self" }) {
+            if (luaExprs[i - 1] is LuaKeyword and not LuaKeyword { Keyword: "self" }) {
                 return false;
             }
             luaExprs[i - 1] = new LuaBinaryExpr(luaExprs[i - 1], luaExprs[i + 1], this.OperatorSymbol);
@@ -37,8 +38,8 @@ namespace Battlegrounds.Lua.Operators {
     /// Lua operator syntax handler for assignment operations.
     /// </summary>
     public class LuaAssignOperatorSyntax : LuaBinaryOperatorSyntax {
-        
-        public LuaAssignOperatorSyntax() : base("=") {}
+
+        public LuaAssignOperatorSyntax() : base("=") { }
 
         public override bool Apply(List<LuaExpr> luaExprs, int i, Action<List<LuaExpr>> recursiveFunction) {
             if (base.Apply(luaExprs, i, recursiveFunction)) {
@@ -49,7 +50,7 @@ namespace Battlegrounds.Lua.Operators {
                 return false;
             }
         }
-        
+
         public override bool IsOperator(LuaExpr source) => source is LuaOpExpr { Type: LuaParser.LuaTokenType.Equals };
 
     }
@@ -58,7 +59,7 @@ namespace Battlegrounds.Lua.Operators {
     /// Lua operator syntax handler for lookup operations.
     /// </summary>
     public class LuaLookupOperatorSyntax : LuaBinaryOperatorSyntax {
-    
+
         public LuaLookupOperatorSyntax(string symbol) : base(symbol) { }
 
         public override bool Apply(List<LuaExpr> luaExprs, int i, Action<List<LuaExpr>> recursiveFunction) {

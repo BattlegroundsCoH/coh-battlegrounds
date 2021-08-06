@@ -1,7 +1,7 @@
 ﻿using System;
 
 namespace Battlegrounds.Modding {
-    
+
     /// <summary>
     /// Readonly representation of a <see cref="Guid"/> object to fit the Company of Heroes format.
     /// </summary>

@@ -87,6 +87,7 @@ namespace Battlegrounds.Game.Gameplay {
         private byte m_veterancyRank;
         private float m_veterancyProgress;
 
+        private string m_customName;
         private bool m_isCrewSquad;
         private DeploymentMethod m_deployMode;
         private DeploymentPhase m_deployPhase;
@@ -140,6 +141,12 @@ namespace Battlegrounds.Game.Gameplay {
         public DeploymentPhase DeploymentPhase => this.m_deployPhase;
 
         /// <summary>
+        /// Get the custom name of the squad. This is null if no name is defined.
+        /// </summary>
+        [ChecksumProperty]
+        public string CustomName => this.m_customName;
+
+        /// <summary>
         /// The squad data for the crew.
         /// </summary>
         [ChecksumProperty]
@@ -172,19 +179,19 @@ namespace Battlegrounds.Game.Gameplay {
         /// <summary>
         /// The current upgrades applied to a <see cref="Squad"/>.
         /// </summary>
-        [ChecksumProperty]
+        [ChecksumProperty(IsCollection = true)]
         public ImmutableHashSet<Blueprint> Upgrades => this.m_upgrades.ToImmutableHashSet();
 
         /// <summary>
         /// The current slot items carried by the <see cref="Squad"/>.
         /// </summary>
-        [ChecksumProperty]
+        [ChecksumProperty(IsCollection = true)]
         public ImmutableHashSet<Blueprint> SlotItems => this.m_slotItems.ToImmutableHashSet();
 
         /// <summary>
         /// Get the current modifiers applied to the <see cref="Squad"/>.
         /// </summary>
-        [ChecksumProperty]
+        [ChecksumProperty(IsCollection = true)]
         public ImmutableHashSet<Modifier> Modifiers => this.m_modifiers.ToImmutableHashSet();
 
         /// <summary>
@@ -288,7 +295,7 @@ namespace Battlegrounds.Game.Gameplay {
         /// Add an <see cref="UpgradeBlueprint"/> to the <see cref="Squad"/> if it doesn't already have the upgrade.
         /// </summary>
         /// <param name="upgradeBlueprint">The <see cref="UpgradeBlueprint"/> to add to squad's internal list of upgrades.</param>
-        public void AddUpgradeIfNotFound(UpgradeBlueprint upgradeBlueprint) 
+        public void AddUpgradeIfNotFound(UpgradeBlueprint upgradeBlueprint)
             => this.m_upgrades.Contains(upgradeBlueprint).IfFalse().Then(() => this.m_upgrades.Add(upgradeBlueprint));
 
         /// <summary>
@@ -307,7 +314,7 @@ namespace Battlegrounds.Game.Gameplay {
         /// 
         /// </summary>
         /// <param name="modifierName"></param>
-        public void RemoveModifier(string modifierName) => this.m_modifiers.RemoveWhere(x => x.Name.CompareTo(modifierName) == 0);
+        public void RemoveModifier(string modifierName) => this.m_modifiers.RemoveWhere(x => x.Name == modifierName);
 
         /// <summary>
         /// Increase the amount of combat time the <see cref="Squad"/> has had.
@@ -317,13 +324,20 @@ namespace Battlegrounds.Game.Gameplay {
             => this.m_combatTime += time;
 
         /// <summary>
+        /// Set the custom name of the squad.
+        /// </summary>
+        /// <param name="customName">The custom name to set. A null value disable the custom name.</param>
+        public void SetName(string customName)
+            => this.m_customName = customName;
+
+        /// <summary>
         /// Calculate the actual cost of a <see cref="Squad"/>.
         /// </summary>
         /// <returns>The cost of the squad.</returns>
         /// <exception cref="NullReferenceException"/>
         public CostExtension GetCost() {
 
-            CostExtension c = new (this.SBP.Cost.Manpower, this.SBP.Cost.Munitions, this.SBP.Cost.Fuel, this.SBP.Cost.FieldTime);
+            CostExtension c = new(this.SBP.Cost.Manpower, this.SBP.Cost.Munitions, this.SBP.Cost.Fuel, this.SBP.Cost.FieldTime);
             c = this.m_upgrades.Select(x => (x as UpgradeBlueprint).Cost).Aggregate(c, (a, b) => a + b);
 
             if (this.m_deployBp is SquadBlueprint sbp) {
@@ -337,6 +351,13 @@ namespace Battlegrounds.Game.Gameplay {
         }
 
         /// <summary>
+        /// Get the display name of the squad.
+        /// </summary>
+        /// <returns>If squad has a custom display name, it is returned; Otherwise the <see cref="SquadBlueprint.UI"/> screen name is returned.</returns>
+        public string GetName()
+            => string.IsNullOrEmpty(this.m_customName) ? this.SBP.UI.ScreenName : this.m_customName;
+
+        /// <summary>
         /// Get the category the squad belongs to. This may change depending on certain parameters.
         /// </summary>
         /// <param name="simplified">Use a simplified (3) category system (team_weapon, vehicle, or infantry).</param>
@@ -345,7 +366,7 @@ namespace Battlegrounds.Game.Gameplay {
 
             if (simplified) {
 
-                if (this.SBP.IsAntiTank || this.SBP.IsHeavyArtillery || this.SBP.Types.Contains("mortar") || this.SBP.Types.Contains("hmg")) {
+                if (this.SBP.Types.IsAntiTank || this.SBP.Types.IsHeavyArtillery || this.SBP.Types.Contains("mortar") || this.SBP.Types.Contains("hmg")) {
                     return "team_weapon";
                 } else if (this.SBP.Types.Contains("vehicle")) {
                     return "vehicle";
@@ -381,7 +402,7 @@ namespace Battlegrounds.Game.Gameplay {
         /// </summary>
         /// <returns>A string that represents the current object.</returns>
         public override string ToString() => $"{this.SBP.Name}${this.SquadID}";
-        
+
         public bool VerifyChecksum() => throw new NotSupportedException("Please use external checksum verification.");
 
         public bool VerifyChecksum(string checksum) => this.Checksum.ToString("X8") == checksum;
@@ -394,7 +415,7 @@ namespace Battlegrounds.Game.Gameplay {
     /// Class for constructing a <see cref="Squad"/> from json data.
     /// </summary>
     public class SquadJson : JsonConverter<Squad> {
-        
+
         public override Squad Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options) {
 
             // Create builder
@@ -418,6 +439,7 @@ namespace Battlegrounds.Game.Gameplay {
 
             // Set mod guid and get deployment phase and combat time
             unitBuilder.SetModGUID(modGuid).SetBlueprint(sbpName);
+            unitBuilder.SetCustomName(ReadStringPropertyIfThere(ref reader, nameof(Squad.CustomName), null));
             unitBuilder.SetDeploymentPhase(Enum.Parse<DeploymentPhase>(ReadStringPropertyIfThere(ref reader, nameof(Squad.DeploymentPhase), nameof(DeploymentPhase.PhaseNone))));
             unitBuilder.SetCombatTime(TimeSpan.Parse(ReadStringPropertyIfThere(ref reader, nameof(Squad.CombatTime), TimeSpan.Zero.ToString())));
 
@@ -427,7 +449,7 @@ namespace Battlegrounds.Game.Gameplay {
                 unitBuilder.SetTransportBlueprint(supportBP);
             }
             unitBuilder.SetDeploymentMethod(Enum.Parse<DeploymentMethod>(ReadStringPropertyIfThere(ref reader, nameof(Squad.DeploymentMethod), nameof(DeploymentMethod.None))));
-            
+
             // Get veterancy
             unitBuilder.SetVeterancyRank((byte)ReadNumberPropertyIfThere(ref reader, nameof(Squad.VeterancyRank), 0));
             unitBuilder.SetVeterancyExperience((byte)ReadNumberPropertyIfThere(ref reader, nameof(Squad.VeterancyProgress), 0.0f));
@@ -538,7 +560,15 @@ namespace Battlegrounds.Game.Gameplay {
                 writer.WriteString(nameof(Squad.SBP.PBGID.Mod), value.SBP.PBGID.Mod.GUID);
             }
 
-            writer.WriteString(nameof(Squad.DeploymentPhase), value.DeploymentPhase.ToString());
+            // Write custom name (if any)
+            if (!string.IsNullOrEmpty(value.CustomName)) {
+                writer.WriteString(nameof(Squad.CustomName), value.CustomName);
+            }
+
+            // Write deployment phase (if not none)
+            if (value.DeploymentPhase is not DeploymentPhase.PhaseNone) {
+                writer.WriteString(nameof(Squad.DeploymentPhase), value.DeploymentPhase.ToString());
+            }
 
             // Write combat time
             if (value.CombatTime.TotalSeconds > 0) {
@@ -576,7 +606,7 @@ namespace Battlegrounds.Game.Gameplay {
             if (value.Upgrades.Count > 0) {
                 writer.WritePropertyName(nameof(Squad.Upgrades));
                 writer.WriteStartArray();
-                foreach (var item in value.Upgrades) {
+                foreach (Blueprint item in value.Upgrades) {
                     writer.WriteStringValue(item.Name);
                 }
                 writer.WriteEndArray();
@@ -586,7 +616,7 @@ namespace Battlegrounds.Game.Gameplay {
             if (value.SlotItems.Count > 0) {
                 writer.WritePropertyName(nameof(Squad.SlotItems));
                 writer.WriteStartArray();
-                foreach (var item in value.SlotItems) {
+                foreach (Blueprint item in value.SlotItems) {
                     writer.WriteStringValue(item.Name);
                 }
                 writer.WriteEndArray();
@@ -596,7 +626,7 @@ namespace Battlegrounds.Game.Gameplay {
             if (value.Modifiers.Count > 0) {
                 writer.WritePropertyName(nameof(Squad.Modifiers));
                 writer.WriteStartArray();
-                foreach (var item in value.Modifiers) {
+                foreach (Modifier item in value.Modifiers) {
                     JsonSerializer.Serialize(writer, item, options);
                 }
                 writer.WriteEndArray();

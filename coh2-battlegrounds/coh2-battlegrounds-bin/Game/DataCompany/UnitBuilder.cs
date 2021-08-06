@@ -9,7 +9,7 @@ using Battlegrounds.Game.Gameplay;
 using Battlegrounds.Modding;
 
 namespace Battlegrounds.Game.DataCompany {
-    
+
     /// <summary>
     /// Builder class for building a <see cref="Squad"/> instance with serial-style methods. Can be cleared for re-use.
     /// </summary>
@@ -21,6 +21,7 @@ namespace Battlegrounds.Game.DataCompany {
         byte m_vetrank;
         float m_vetexperience;
         bool m_isCrew;
+        string m_customName;
         ModGuid m_modGuid;
         TimeSpan m_combatTime;
         SquadBlueprint m_blueprint;
@@ -53,6 +54,7 @@ namespace Battlegrounds.Game.DataCompany {
             this.m_deploymentPhase = DeploymentPhase.PhaseNone;
             this.m_combatTime = TimeSpan.Zero;
             this.m_isCrew = false;
+            this.m_customName = null;
         }
 
         /// <summary>
@@ -62,7 +64,7 @@ namespace Battlegrounds.Game.DataCompany {
         /// <param name="overrideIndex">Should the built squad </param>
         /// <remarks>This will not modify the <see cref="Squad"/> instance.</remarks>
         public UnitBuilder(Squad squad, bool overrideIndex = true) {
-            
+
             this.m_hasOverrideIndex = overrideIndex;
             this.m_overrideIndex = squad.SquadID;
             this.m_modifiers = squad.Modifiers.ToHashSet();
@@ -77,13 +79,13 @@ namespace Battlegrounds.Game.DataCompany {
             this.m_modGuid = squad.SBP?.PBGID.Mod ?? ModGuid.BaseGame;
             this.m_combatTime = squad.CombatTime;
             this.m_isCrew = squad.IsCrew;
-
+            this.m_customName = squad.CustomName;
             if (squad.Crew != null) {
                 this.m_crewBuilder = new UnitBuilder(squad.Crew, overrideIndex);
             }
 
         }
-        
+
         /// <summary>
         /// New <see cref="UnitBuilder"/> instance based on the settings of an already built <see cref="Squad"/> instance.
         /// </summary>
@@ -104,6 +106,7 @@ namespace Battlegrounds.Game.DataCompany {
             this.m_deploymentPhase = squad.DeploymentPhase;
             this.m_deploymentMethod = squad.DeploymentMethod;
             this.m_modGuid = ModGuid.BaseGame;
+            this.m_customName = squad.CustomName;
             if (squad.Crew != null) {
                 this.m_crewBuilder = new UnitBuilder(squad.Crew, true);
             }
@@ -381,6 +384,15 @@ namespace Battlegrounds.Game.DataCompany {
         }
 
         /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="customName"></param>
+        public virtual UnitBuilder SetCustomName(string customName) {
+            this.m_customName = customName;
+            return this;
+        }
+
+        /// <summary>
         /// Create or get a new <see cref="UnitBuilder"/> instance representing the <see cref="Squad"/> crew of the current <see cref="UnitBuilder"/> instance.
         /// </summary>
         /// <returns>The vehicle crew <see cref="UnitBuilder"/> instance for  the (vehicle/crewable) <see cref="UnitBuilder"/> instance.</returns>
@@ -421,12 +433,13 @@ namespace Battlegrounds.Game.DataCompany {
         /// <param name="ID">The unique ID to use when creating the <see cref="Squad"/> instance.</param>
         /// <returns>A <see cref="Squad"/> instance with all the parameters defined by the <see cref="UnitBuilder"/>.</returns>
         public virtual Squad Build(ushort ID) {
-        
+
             if (this.m_hasOverrideIndex) {
                 ID = this.m_overrideIndex;
             }
 
             Squad squad = new Squad(ID, null, this.m_blueprint);
+            squad.SetName(this.m_customName);
             squad.SetDeploymentMethod(this.m_transportBlueprint, this.m_deploymentMethod, this.m_deploymentPhase);
             squad.SetVeterancy(this.m_vetrank, this.m_vetexperience);
             squad.IncreaseCombatTime(this.m_combatTime);
@@ -496,6 +509,7 @@ namespace Battlegrounds.Game.DataCompany {
             this.m_upgrades.Clear();
             this.m_vetexperience = 0;
             this.m_vetrank = 0;
+            this.m_customName = null;
             this.m_combatTime = TimeSpan.Zero;
 
         }

@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics;
 using System.Diagnostics.Contracts;
+
 using Battlegrounds.Campaigns.API;
 using Battlegrounds.Campaigns.Controller;
 using Battlegrounds.Lua;

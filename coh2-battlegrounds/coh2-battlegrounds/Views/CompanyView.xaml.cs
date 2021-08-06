@@ -1,26 +1,17 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+using System.Collections.ObjectModel;
+using System.Diagnostics;
+
 using BattlegroundsApp.Dialogs.CreateCompany;
-using BattlegroundsApp.Dialogs.Service;
 using BattlegroundsApp.Dialogs.YesNo;
 using BattlegroundsApp.Dialogs.ImportExport;
 using BattlegroundsApp.Dialogs.RenameCopyDialog;
 using BattlegroundsApp.LocalData;
+
 using Battlegrounds.Game.DataCompany;
-using Battlegrounds.Verification;
-using System.Collections.ObjectModel;
-using System.Diagnostics;
 using Battlegrounds.Game.Gameplay;
+using Battlegrounds.Modding;
 
 namespace BattlegroundsApp.Views {
     /// <summary>
@@ -28,7 +19,7 @@ namespace BattlegroundsApp.Views {
     /// </summary>
     public partial class CompanyView : ViewState, IStateMachine<ViewState> {
 
-        private ObservableCollection<Company>  m_player_companies;
+        private ObservableCollection<Company> m_player_companies;
 
         public CompanyView() {
             InitializeComponent();
@@ -49,16 +40,18 @@ namespace BattlegroundsApp.Views {
 
         }
 
-        public override void StateOnLostFocus() {}
+        public override void StateOnLostFocus() { }
 
         bool IStateMachine<ViewState>.StateChangeRequest(object request) => true;
 
         private void createCompany_Click(object sender, RoutedEventArgs e) {
 
-            var result = CreateCompanyDialogViewModel.ShowCreateCompanyDialog("Create", out string companyName, out Faction companyFaction, out CompanyType companyType);
+            ModGuid modGuid = ModManager.GetPackage("mod_bg").TuningGUID;
+            Trace.TraceWarning("There is currently no method of setting tuning pack. This should be fixed ASAP.");
 
-            if (result == CreateCompanyDialogResult.Create) {
-                this.StateChangeRequest(new CompanyBuilderView(companyName, companyFaction, companyType));
+            if (CreateCompanyDialogViewModel.ShowCreateCompanyDialog("Create", out string companyName, out Faction companyFaction, out CompanyType companyType)
+                is CreateCompanyDialogResult.Create) {
+                this.StateChangeRequest(new CompanyBuilderView(companyName, companyFaction, companyType, modGuid));
             }
 
         }
@@ -102,7 +95,7 @@ namespace BattlegroundsApp.Views {
             }
         }
 
-        private void exportCompany_Click(object sender, RoutedEventArgs e) 
+        private void exportCompany_Click(object sender, RoutedEventArgs e)
             => ImportExportDialogViewModel.ShowExportDialog("Export", (CompanyTemplate.FromCompany(companyList.SelectedItem as Company)).ToTemplateString());
 
         private void importCompany_Click(object sender, RoutedEventArgs e) {
@@ -112,7 +105,7 @@ namespace BattlegroundsApp.Views {
                     var company = CompanyTemplate.FromString(companyString);
                     PlayerCompanies.SaveCompany(CompanyTemplate.FromTemplate(company));
                     UpdateCompanyList();
-                } catch(FormatException err) {
+                } catch (FormatException err) {
                     Trace.WriteLine(err); // TODO: Show message box featuring a detailed description of the problem 
                     // The causing error will be visible in err (You may need it when deciding on what to do from there).
                 }

@@ -21,7 +21,7 @@ namespace Battlegrounds.Game.Match.Data.Events {
     /// <see cref="IMatchEvent"/> implementation for handling verification.
     /// </summary>
     public sealed class VerificationEvent : IMatchEvent {
-        
+
         public char Identifier => 'G';
         public uint Uid { get; }
 

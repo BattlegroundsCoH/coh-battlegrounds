@@ -1,0 +1,275 @@
+﻿<modals:Modal  xmlns:modals="clr-namespace:BattlegroundsApp.Modals" 
+               x:Class="BattlegroundsApp.Modals.CompanyBuilder.SelectedSquadModal"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:BattlegroundsApp.Modals.CompanyBuilder" xmlns:controls="clr-namespace:BattlegroundsApp.Controls" xmlns:companybuildercontrols="clr-namespace:BattlegroundsApp.Controls.CompanyBuilderControls"
+               mc:Ignorable="d" 
+             d:DesignHeight="340" d:DesignWidth="648"
+               Width="648" Height="340">
+    <Border BorderBrush="DarkGray" BorderThickness="1.5" Background="LightGray" Margin="5">
+        <modals:ModalControl x:Name="LayeredModal"
+                             ModalMaskColour="Black"
+                             ModalMaskOpacity="0.6"
+                             ModalMaskBehaviour="None">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="250"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition Height="64"/>
+                    <RowDefinition Height="108"/>
+                </Grid.RowDefinitions>
+
+                <!-- R0 :: C0 :: Basic Unit Details -->
+                <DockPanel Grid.Row="0" Grid.Column="0">
+                    <StackPanel Orientation="Horizontal" DockPanel.Dock="Bottom" Margin="64,0,0,0">
+                        <Label Content="Deployment Cost: "/>
+                        <companybuildercontrols:CostControl x:Name="CostField"/>
+                    </StackPanel>
+                    <DockPanel DockPanel.Dock="Top">
+                        <Image Width="64" Height="64" DockPanel.Dock="Left"
+                       Source="{Binding Icon}" VerticalAlignment="Top"/>
+                        <StackPanel >
+                            <WrapPanel>
+                                <TextBlock Text="{Binding SBPName}" 
+                               TextWrapping="Wrap" FontSize="16" FontStyle="Italic"
+                               FontWeight="SemiBold"/>
+                                <Button Content="Edit" Visibility="{Binding EditNamePossible}"/>
+                            </WrapPanel>
+                            <TextBlock Margin="0,5,0,0" 
+                               Text="{Binding LongDesc}" TextWrapping="Wrap"/>
+                            <TextBlock Margin="0,4,0,0" Text="{Binding ShortDesc}" 
+                               TextWrapping="Wrap" FontSize="12" FontStyle="Italic"/>
+                        </StackPanel>
+                    </DockPanel>
+                </DockPanel>
+
+                <!-- R0 :: C1 :: Unit Combat Experience and deployment Phase -->
+                <StackPanel Grid.Row="0" Grid.Column="1">
+                    <Label Content="Combat Experience" HorizontalAlignment="Center"/>
+                    <!-- Unit Experience -->
+                    <StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Margin="5" Width="96">
+                                <TextBlock.Text>
+                                    <MultiBinding StringFormat="{}Rank {0}/{1}">
+                                        <Binding Path="RankLevel"/>
+                                        <Binding Path="MaxRankLevel"/>
+                                    </MultiBinding>
+                                </TextBlock.Text>
+                            </TextBlock>
+                            <Image Width="24" Margin="1.75" Source="{Binding Rank1}"/>
+                            <Image Width="24" Margin="1.75" Source="{Binding Rank2}"/>
+                            <Image Width="24" Margin="1.75" Source="{Binding Rank3}"/>
+                            <Image Width="24" Margin="1.75" Source="{Binding Rank4}"/>
+                            <Image Width="24" Margin="1.75" Source="{Binding Rank5}"/>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal" Height="30">
+                            <Label Content="Experience:" Width="96" Margin="5,0,5,0"/>
+                            <StackPanel>
+                                <Border Height="6" Width="136" Margin="1.75"
+                                BorderBrush="Black" BorderThickness="0.4"
+                                    HorizontalAlignment="Center">
+                                    <Rectangle Width="{Binding ExperienceVisualLevel}" Fill="Yellow"
+                                       HorizontalAlignment="Left"/>
+                                </Border>
+                                <TextBlock FontSize="9" FontStyle="Italic"
+                                   HorizontalAlignment="Center" VerticalAlignment="Top">
+                                    <TextBlock.Text>
+                                        <MultiBinding StringFormat="{}{0}/{1}">
+                                            <Binding Path="ExperienceLevel"/>
+                                            <Binding Path="MaxExperienceLevel"/>
+                                        </MultiBinding>
+                                    </TextBlock.Text>
+                                </TextBlock>
+                            </StackPanel>
+
+                        </StackPanel>
+                    </StackPanel>
+
+                    <!-- Unit Combat Time -->
+                    <DockPanel>
+                        <Label Content="Combat Time:" Width="96" Margin="5,0,5,0"/>
+                        <Label Content="{Binding CombatTime}" HorizontalAlignment="Right"/>
+                    </DockPanel>
+
+                </StackPanel>
+
+                <!-- R1 :: C0 :: Abilities, then  -->
+                <StackPanel Grid.Row="1" Grid.Column="0" Grid.RowSpan="2">
+                    <StackPanel Height="72" Visibility="{Binding SlotItemVisible}">
+                        <TextBlock HorizontalAlignment="Center" Height="24">
+                            <TextBlock.Text>
+                                <MultiBinding StringFormat="{}Unit Items {0}/{1}">
+                                    <Binding Path="SlotItemCount"/>
+                                    <Binding Path="SlotItemCapacity"/>
+                                </MultiBinding>
+                            </TextBlock.Text>
+                        </TextBlock>
+                        <WrapPanel DockPanel.Dock="Left" Name="SlotItemList"/>
+                    </StackPanel>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Grid.Column="0" Grid.ColumnSpan="{Binding AbilitySpan}"                                    >
+                            <Label Content="Unit Abilities"  Height="24" HorizontalAlignment="Center"/>
+                            <controls:IconGrid Rows="2" Columns="4" IconSource="ability_icons"
+                                               Dimension="Size36x36" x:Name="AbilitiesGrid"/>
+                        </StackPanel>
+                        <StackPanel Grid.Column="1" Visibility="{Binding UpgradeVisibility}"
+                                    HorizontalAlignment="Center">
+                            <TextBlock HorizontalAlignment="Center" Height="24">
+                                <TextBlock.Text>
+                                    <MultiBinding StringFormat="{}Unit Upgrades {0}/{1}">
+                                        <Binding Path="UpgradesCount"/>
+                                        <Binding Path="UpgradesCapacity"/>
+                                    </MultiBinding>
+                                </TextBlock.Text>
+                            </TextBlock>
+                            <controls:IconGrid Rows="2" Columns="4" IconSource="upgrade_icons"
+                                               Dimension="Size36x36" 
+                                               x:Name="UpgradesGrid"
+                                               Clicked="UpgradesGrid_Clicked"/>
+                        </StackPanel>
+                    </Grid>
+                </StackPanel>
+
+                <!-- R1 :: C1 :: Deployment Phase -->
+                <StackPanel Grid.Row="1" Grid.Column="1">
+                    <Label Content="Deployment Phase" HorizontalAlignment="Center"/>
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                        <!-- Initial Phase -->
+                        <controls:Icon Margin="1.75" 
+                                       Dimension="Size32x32" 
+                                       IconSource="phase_icons"
+                                       IconName="Icons_research_german_battle_phase_01"
+                                       Tag="0"
+                                       ToolTip="Phase 0 - Deployed Immediately"
+                                       MouseDown="OnDeploymentPhaseClicked"
+                                       x:Name="PhaseIcon0"/>
+                        <!-- Phase 1 -->
+                        <controls:Icon Margin="1.75" 
+                                       Dimension="Size32x32" 
+                                       IconSource="phase_icons"
+                                       IconName="Icons_research_german_battle_phase_02"
+                                       Tag="1"
+                                       ToolTip="Phase 1 -  Deployable At the start of the game."
+                                       MouseDown="OnDeploymentPhaseClicked"
+                                       x:Name="PhaseIcon1"/>
+                        <!-- Phase 2 -->
+                        <controls:Icon Margin="1.75" 
+                                       Dimension="Size32x32" 
+                                       IconSource="phase_icons"
+                                       IconName="Icons_research_german_battle_phase_03"
+                                       Tag="2"
+                                       ToolTip="Phase 2 - Deployable after ? Minutes."
+                                       MouseDown="OnDeploymentPhaseClicked"
+                                       x:Name="PhaseIcon2"/>
+                        <!-- Phase 3 -->
+                        <controls:Icon Margin="1.75" 
+                                       Dimension="Size32x32" 
+                                       IconSource="phase_icons"
+                                       IconName="Icons_research_german_battle_phase_04"
+                                       Tag="3"
+                                       ToolTip="Phase 3 - Deployable after ? Minutes."
+                                       MouseDown="OnDeploymentPhaseClicked"
+                                       x:Name="PhaseIcon3"/>
+                    </StackPanel>
+                </StackPanel>
+
+                <!-- R2 :: C1 :: Transport/Crew -->
+                <StackPanel Grid.Row="2" Grid.Column="1" Name="TransportProperties"
+                            Visibility="{Binding SelectDeploymentMethodVisible}">
+                    <StackPanel VerticalAlignment="Center">
+                        <Label Content="Deployment Method" HorizontalAlignment="Center"/>
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                            <!-- None -->
+                            <controls:Icon Margin="1.75" 
+                                       Dimension="Size32x32" 
+                                       IconSource="deploy_icons"
+                                       IconName="Icons_bg_deploy_none"
+                                       Tag="0"
+                                       ToolTip="None - No Special Deployment."
+                                       MouseDown="OnDeploymentMethodClicked"
+                                       x:Name="DeployIcon0"/>
+                            <!-- Deploy And Exit -->
+                            <controls:Icon Margin="1.75" 
+                                       Dimension="Size32x32" 
+                                       IconSource="deploy_icons"
+                                       IconName="Icons_bg_deploy_drop_exit"
+                                       Tag="1"
+                                       ToolTip="Deploy and Exit - Deploy the unit with a transport that leaves after deploying."
+                                       MouseDown="OnDeploymentMethodClicked"
+                                       x:Name="DeployIcon1"/>
+                            <!-- Deploy And Stay -->
+                            <controls:Icon Margin="1.75" 
+                                       Dimension="Size32x32" 
+                                       IconSource="deploy_icons"
+                                       IconName="Icons_bg_deploy_drop_stay"
+                                       Tag="2"
+                                       ToolTip="Deploy and Stay - Deploy the unit with a transport that stays after deploying."
+                                       MouseDown="OnDeploymentMethodClicked"
+                                       x:Name="DeployIcon2"/>
+                            <!-- Paradrop -->
+                            <controls:Icon Margin="1.75" 
+                                       Dimension="Size32x32" 
+                                       IconSource="deploy_icons"
+                                       IconName="Icons_bg_deploy_paradrop"
+                                       Tag="3"
+                                       ToolTip="Paradrop - The unit is paradropped through special ability."
+                                       MouseDown="OnDeploymentMethodClicked"
+                                       x:Name="DeployIcon3"/>
+                            <!-- Glider -->
+                            <controls:Icon Margin="1.75" 
+                                       Dimension="Size32x32" 
+                                       IconSource="deploy_icons"
+                                       IconName="Icons_bg_deploy_glider"
+                                       Tag="4"
+                                       ToolTip="Glider - The unit is deployed via glider through special ability."
+                                       MouseDown="OnDeploymentMethodClicked"
+                                       x:Name="DeployIcon4"/>
+                        </StackPanel>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                        <controls:IconComboBox Width="28" 
+                                           Height="28"
+                                           Margin="0,5,0,0" 
+                                           Visibility="{Binding TransportBlueprintSelector}"
+                                           SelectionChanged="TransportBlueprintCombobox_SelectionChanged"
+                                               x:Name="TransportBlueprintCombobox"/>
+                        <Label Content="{Binding SelectedSupportBlueprint}"
+                               Visibility="{Binding TransportBlueprintSelector}"
+                               ToolTip="{Binding SellectedSupportBlueprintTooltip}"
+                               VerticalContentAlignment="Center"/>
+                    </StackPanel>
+                </StackPanel>
+                <StackPanel Grid.Row="2" Grid.Column="1" Name="CrewProperties" 
+                            Visibility="{Binding CrewVisible}"
+                            Margin="5">
+                    <Label Content="Vehicle Crew" HorizontalAlignment="Center"/>
+                    <DockPanel LastChildFill="True">
+                        <Image Width="32" Height="32" Source="{Binding CrewIcon}"
+                               DockPanel.Dock="Left"/>
+                        <Image Width="24" Height="24" DockPanel.Dock="Right"
+                               Source="pack://application:,,,/Resources/Ingame/remove_item.png"
+                               MouseDown="OnRemoveCrew"
+                               ToolTip="Remove Crew"/>
+                        <Image HorizontalAlignment="Right" DockPanel.Dock="Right"
+                               Width="36" Height="22" Source="{Binding CrewVeterancy}"/>
+                        <TextBlock TextWrapping="Wrap" Text="{Binding CrewName}"
+                                   VerticalAlignment="Center"/>
+
+                    </DockPanel>
+                    <WrapPanel Margin="32,0,0,0" x:Name="CrewItemList"/>
+                </StackPanel>
+
+            </Grid>
+        </modals:ModalControl>        
+    </Border>
+</modals:Modal>

@@ -18,7 +18,7 @@ namespace Battlegrounds.Game.Database.Management {
     /// The type a <see cref="Blueprint"/> may represent in the <see cref="BlueprintManager"/>.
     /// </summary>
     public enum BlueprintType {
-        
+
         /// <summary>
         /// Ability Blueprint
         /// </summary>
@@ -28,7 +28,7 @@ namespace Battlegrounds.Game.Database.Management {
         /// Upgrade Blueprint
         /// </summary>
         UBP,
-        
+
         /// <summary>
         /// Critical Blueprint
         /// </summary>
@@ -101,8 +101,15 @@ namespace Battlegrounds.Game.Database.Management {
                 __weapons,
             };
 
+            // Setup load timer
+            Stopwatch stopwatch = Stopwatch.StartNew();
+
             // Load the vcoh database
             LoadDatabaseWithMod("vcoh", string.Empty);
+
+            // Stop watch and log
+            stopwatch.Stop();
+            Trace.WriteLine($"Loaded database for basegame blueprints in {stopwatch.Elapsed.TotalSeconds:0.000}s.", nameof(BlueprintManager));
 
         }
 
@@ -192,7 +199,7 @@ namespace Battlegrounds.Game.Database.Management {
             foreach (var type in __selfList) {
                 blueprints.AddRange(type.Values.Where(x => predicate(x)));
             }
-            
+
             return blueprints;
 
         }
@@ -329,7 +336,7 @@ namespace Battlegrounds.Game.Database.Management {
         /// <param name="isMax"></param>
         /// <param name="selector"></param>
         /// <returns></returns>
-        public static TResult GetValueExtrema<TBlueprint, TResult>(bool isMax, Func<TBlueprint, TResult> selector, Predicate<KeyValuePair<BlueprintUID, TBlueprint>> predicate = null) 
+        public static TResult GetValueExtrema<TBlueprint, TResult>(bool isMax, Func<TBlueprint, TResult> selector, Predicate<KeyValuePair<BlueprintUID, TBlueprint>> predicate = null)
             where TBlueprint : Blueprint
             => isMax.Then(() => GetAllBlueprintsOfType(BlueprintTypeFromType<TBlueprint>())
             .Where(x => predicate?.Invoke(new KeyValuePair<BlueprintUID, TBlueprint>(x.Key, x.Value as TBlueprint)) ?? true)

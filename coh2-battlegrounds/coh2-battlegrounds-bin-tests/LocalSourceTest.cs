@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
+
 using Battlegrounds.Compiler;
 using Battlegrounds.Compiler.Source;
 using Battlegrounds.Game.Gameplay;
@@ -9,7 +10,7 @@ using Battlegrounds.Modding;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace coh2_battlegrounds_bin_tests {
-    
+
     [TestClass]
     public class LocalSourceTest {
 

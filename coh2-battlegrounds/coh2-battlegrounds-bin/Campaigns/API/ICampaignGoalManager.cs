@@ -1,5 +1,5 @@
 ﻿namespace Battlegrounds.Campaigns.API {
-    
+
     /// <summary>
     /// Interface for managing goals in a campaign context.
     /// </summary>

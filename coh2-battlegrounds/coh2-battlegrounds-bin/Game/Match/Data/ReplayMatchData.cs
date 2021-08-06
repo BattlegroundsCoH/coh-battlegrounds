@@ -139,8 +139,8 @@ namespace Battlegrounds.Game.Match.Data {
 
         }
 
-        private IMatchEvent ParseBroadcastMessage(GameEvent gameEvent) { 
-            
+        private IMatchEvent ParseBroadcastMessage(GameEvent gameEvent) {
+
             // Make sure it's valid
             if (gameEvent.AttachedMessage.Length > 0) {
 
@@ -174,7 +174,7 @@ namespace Battlegrounds.Game.Match.Data {
                         string str = match.Groups["id"].Value;
                         if (str.StartsWith("ai")) {
                             int cut = str.LastIndexOf('_');
-                            string side = str[(cut+ 1)..];
+                            string side = str[(cut + 1)..];
                             int aiID = int.Parse(str[2..cut]);
                             int cnt = 0;
                             for (int i = 0; i < this.m_players.Length; i++) {
@@ -258,7 +258,7 @@ namespace Battlegrounds.Game.Match.Data {
         }
 
         public IEnumerator<IMatchEvent> GetEnumerator() => this.m_events.GetEnumerator();
-        
+
         IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable)this.m_events).GetEnumerator();
 
     }

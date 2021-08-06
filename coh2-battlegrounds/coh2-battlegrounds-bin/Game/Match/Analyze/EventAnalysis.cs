@@ -76,16 +76,16 @@ namespace Battlegrounds.Game.Match.Analyze {
             return true;
         }
 
-        public void SetLength(TimeSpan timeSpan) 
+        public void SetLength(TimeSpan timeSpan)
             => timeSpan.IfTrue(x => x > this.m_timespan).Then(x => this.m_timespan = x);
 
         public RegisterEventResult RegisterEvent(TimeEvent timeEvent) {
-            
+
             // Make sure it's within the time frame
             if (timeEvent.Timestamp > this.m_timespan) {
                 return new RegisterEventResult(false) { WasOutsideTime = true };
             }
-            
+
             // Does it exist somewhere else?
             if (this.m_events.FirstOrDefault(x => x.@event.Uid == timeEvent.Uid) is (TimeSpan time, IMatchEvent value)) {
                 if (!IsDifferenceGreaterThan(time, timeEvent.Timestamp, new TimeSpan(0, 0, 2))) { // More than 2 seconds of difference -> OK, probably not the same event
@@ -157,7 +157,7 @@ namespace Battlegrounds.Game.Match.Analyze {
                         break;
                     case PickupEvent pickupEvent:
                         int pickupID = this.m_units.FindIndex(x => x.UnitID == pickupEvent.PickupSquadID && x.PlayerOwner.ID == pickupEvent.PickupPlayer.ID);
-                        if (pickupID is >=0) {
+                        if (pickupID is >= 0) {
                             this.m_units[pickupID].CapturedSlotItems.Add(pickupEvent.PickupItem);
                         }
                         break;

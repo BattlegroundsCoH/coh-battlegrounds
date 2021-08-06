@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+
 using Battlegrounds.Game.Gameplay;
 
 namespace Battlegrounds.Game.Match.Analyze {
 
     public class NullAnalysis : IAnalyzedMatch {
-        
+
         public bool IsFinalizableMatch => false;
 
         public IReadOnlyList<UnitStatus> Units => new ReadOnlyCollection<UnitStatus>(Array.Empty<UnitStatus>());

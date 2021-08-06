@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Text;
+
 using Battlegrounds.Functional;
 using Battlegrounds.Game.Database.Management;
 using Battlegrounds.Game.Gameplay;
@@ -9,7 +10,7 @@ using Battlegrounds.Util;
 using Battlegrounds.Verification;
 
 namespace Battlegrounds.Game.DataCompany {
-    
+
     /// <summary>
     /// Readonly class representing a template for generating a <see cref="Company"/> instance.
     /// </summary>
@@ -54,7 +55,7 @@ namespace Battlegrounds.Game.DataCompany {
         public string GetChecksum() => this.ToString().Aggregate((uint)0, (a, b) => a + b + (b % (a + 1))).ToString("X8");
 
         public bool VerifyChecksum() {
-            
+
             // Backup and reset checksum
             string checksum = this.m_checksum;
             this.m_checksum = string.Empty;
@@ -83,7 +84,7 @@ namespace Battlegrounds.Game.DataCompany {
 
             // Get valid non-zero chunks
             sb.Append(StringCompression.CompressString($"{string.Join('-', this.m_units.Where(x => x.FILLED).Select(x => x.Collapse()))}<{this.m_checksum}>"));
-            
+
             // Return in string
             return sb.ToString();
 
@@ -118,7 +119,7 @@ namespace Battlegrounds.Game.DataCompany {
             var unitEnumerator = company.Units.GetEnumerator();
             for (int i = 0; i < Company.MAX_SIZE; i++) {
                 if (unitEnumerator.MoveNext()) {
-                    template.m_units[i] = new CompanyUnit() { 
+                    template.m_units[i] = new CompanyUnit() {
                         FILLED = true,
                         PBGID = unitEnumerator.Current.Blueprint.ModPBGID,
                         TPBGID = (unitEnumerator.Current.SupportBlueprint is not null) ? unitEnumerator.Current.SupportBlueprint.ModPBGID : BlueprintManager.InvalidLocalBlueprint,
@@ -234,7 +235,7 @@ namespace Battlegrounds.Game.DataCompany {
                         .SetDeploymentPhase((DeploymentPhase)template.m_units[i].PHASE)
                         .IfTrue(x => template.m_units[i].TPBGID != BlueprintManager.InvalidLocalBlueprint).Then(x => x.SetTransportBlueprint(template.m_units[i].TPBGID))
                         .SetDeploymentMethod((DeploymentMethod)template.m_units[i].DMODE);
-                    builder.AddUnit(unit);
+                    builder.AddAndCommitUnit(unit);
                 }
             }
 

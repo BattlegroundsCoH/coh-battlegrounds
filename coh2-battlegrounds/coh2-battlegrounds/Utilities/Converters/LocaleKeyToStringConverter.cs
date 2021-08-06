@@ -2,6 +2,7 @@
 using System.Globalization;
 using System.Windows;
 using System.Windows.Data;
+
 using Battlegrounds.Locale;
 
 namespace BattlegroundsApp.Utilities.Converters {
@@ -10,7 +11,7 @@ namespace BattlegroundsApp.Utilities.Converters {
 
         public static readonly DependencyProperty LocalizerProperty = DependencyProperty.Register(nameof(Localizer), typeof(Localize), typeof(LocaleKeyToStringConverter));
 
-        public Localize Localizer { get; set; } 
+        public Localize Localizer { get; set; }
 
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture) {
             if (value is string s) {

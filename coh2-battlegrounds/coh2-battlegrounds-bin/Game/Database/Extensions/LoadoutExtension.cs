@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
 
@@ -6,9 +7,9 @@ using Battlegrounds.Functional;
 using Battlegrounds.Game.Database.Management;
 
 namespace Battlegrounds.Game.Database.Extensions {
-    
+
     public class LoadoutExtension {
-    
+
         public readonly struct Entry {
             public readonly int Count;
             public readonly string EntityBlueprint;
@@ -23,19 +24,25 @@ namespace Battlegrounds.Game.Database.Extensions {
 
         public int Count => this.m_entries.Sum(x => x.Count);
 
-        public EntityBlueprint GetEntity(int index) 
+        public EntityBlueprint GetEntity(int index)
             => 0 <= index && index < this.m_entries.Length ? BlueprintManager.FromBlueprintName<EntityBlueprint>(this.m_entries[index].EntityBlueprint) : null;
 
         public LoadoutExtension(Entry[] entries) {
             this.m_entries = entries;
         }
 
+        public T[] Select<T>(Func<Entry, T> mapFunction)
+            => this.m_entries.Select(mapFunction).ToArray();
+
+        public T[] SelectMany<T>(Func<Entry, T[]> mapFunction)
+            => this.m_entries.SelectMany(mapFunction).ToArray();
+
         public static LoadoutExtension FromJson(ref Utf8JsonReader reader) {
             List<Entry> entries = new();
             while (reader.Read() && reader.TokenType is not JsonTokenType.EndArray) {
                 string ebp = string.Empty;
                 int count = 0;
-                while (reader.Read() &&  reader.TokenType is not JsonTokenType.EndObject) { 
+                while (reader.Read() && reader.TokenType is not JsonTokenType.EndObject) {
                     if (reader.ReadProperty() is "EBP") {
                         ebp = reader.GetString();
                     } else {

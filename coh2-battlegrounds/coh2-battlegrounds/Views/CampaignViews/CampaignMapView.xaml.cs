@@ -22,7 +22,7 @@ using BattlegroundsApp.Views.CampaignViews.Models;
 using static Battlegrounds.BattlegroundsInstance;
 
 namespace BattlegroundsApp.Views.CampaignViews {
-    
+
     /// <summary>
     /// Interaction logic for CampaignMapView.xaml
     /// </summary>
@@ -165,7 +165,7 @@ namespace BattlegroundsApp.Views.CampaignViews {
                     engagementDialogView.SetAttackingFormations(attackingFormations.ToList(), this.Controller.Locale);
                     engagementDialogView.SetupMatchData(this.Controller);
 
-                    this.ShowCampaignDialog(engagementDialogView); 
+                    this.ShowCampaignDialog(engagementDialogView);
 
                 });
 
@@ -227,8 +227,8 @@ namespace BattlegroundsApp.Views.CampaignViews {
                     engagementDialogView.SetAttackingFormations(engagementData.defendingFormations, this.Controller.Locale); // This is actually the defenders
                     engagementDialogView.SetupMatchData(this.Controller);
 
-                    this.ShowCampaignDialog(engagementDialogView); 
-                
+                    this.ShowCampaignDialog(engagementDialogView);
+
                 });
 
                 // Wait until we've gotten a result
@@ -245,9 +245,9 @@ namespace BattlegroundsApp.Views.CampaignViews {
             return engagementData;
 
         }
-        
+
         public override void StateOnFocus() {
-            
+
             // Start functionality
             if (!this.m_hasStarted) {
 
@@ -261,7 +261,7 @@ namespace BattlegroundsApp.Views.CampaignViews {
 
         }
 
-        public override void StateOnLostFocus() {}
+        public override void StateOnLostFocus() { }
 
         private void CreateNodeNetwork() {
 
@@ -443,7 +443,7 @@ namespace BattlegroundsApp.Views.CampaignViews {
 
         private void ApplyEngagementData(bool isAttackerData, ref CampaignEngagementData engagementData, CampaignEngagementDialogView view) {
             if (isAttackerData) {
-                
+
                 // Set company data
                 engagementData.attackingCompanyUnits = new List<Squad>[view.Players];
                 engagementData.attackingDifficulties = new AIDifficulty[view.Players];
@@ -500,11 +500,11 @@ namespace BattlegroundsApp.Views.CampaignViews {
         }
 
         private void ShowCampaignDialog(CampaignDialogView dialogView) {
-            
+
             // Set background visibility
             CampaignDialogVisible = Visibility.Visible;
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(CampaignDialogVisible)));
-            
+
             // Show Dialog
             dialogView.ShowDialogView(this.CampaignMapCanvas);
 

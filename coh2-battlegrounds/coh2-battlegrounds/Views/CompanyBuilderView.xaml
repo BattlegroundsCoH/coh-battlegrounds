@@ -6,100 +6,241 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:BattlegroundsApp.Views"
              xmlns:card="clr-namespace:BattlegroundsApp.Controls.CompanyBuilderControls"
-             xmlns:dropArea="clr-namespace:BattlegroundsApp.Controls.DropArea"
-             mc:Ignorable="d"
-             d:DesignHeight="650" d:DesignWidth="1000" Background="white">
-    <Grid>
+             xmlns:dropArea="clr-namespace:BattlegroundsApp.Controls.DropArea" d:DataContext="{d:DesignInstance Type=local:CompanyBuilderView}"
+               mc:Ignorable="d"
+             d:DesignHeight="650" d:DesignWidth="1000" 
+               Background="white"
+               ModalMaskBehaviour="ExitWhenClicked"
+               ModalMaskColour="Black"
+               ModalMaskOpacity="0.6">
+    <Grid Margin="5">
 
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
-            <RowDefinition Height="auto"/>
-            <RowDefinition Height="auto"/>
-            <RowDefinition Height="auto"/>
-            <RowDefinition Height="auto"/>
-            <RowDefinition Height="auto"/>
-            <RowDefinition Height="auto"/>
+            <RowDefinition Height="128"/>
+            <RowDefinition Height="32"/>
             <RowDefinition Height="*"/>
+            <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
 
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="auto"/>
-            <ColumnDefinition Width="auto"/>
-            <ColumnDefinition Width="auto"/>
-            <ColumnDefinition Width="auto"/>
-            <ColumnDefinition Width="auto"/>
-            <ColumnDefinition Width="auto"/>
-            <ColumnDefinition Width="auto"/>
-            <ColumnDefinition Width="auto"/>
-            <ColumnDefinition Width="auto"/>
             <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="5"/>
+            <ColumnDefinition Width="300"/>
         </Grid.ColumnDefinitions>
 
-        <!-- Row 0 -->
-        <TextBlock Grid.Row="0" Grid.Column="0" Margin="2.5">
-            <TextBlock.Text>
-                <MultiBinding StringFormat="{}{0} [{1}]">
-                    <Binding Path="CompanyName"/>
-                    <Binding Path="CompanyType"/>
-                </MultiBinding>
-            </TextBlock.Text>
-        </TextBlock>
+        <!-- Row 0 :: Company Name and Type -->
+        <StackPanel Grid.Row="0" Grid.Column="0" Margin="2.5" 
+                    Orientation="Horizontal">
+            <TextBlock FontSize="18" FontStyle="Oblique">
+                <TextBlock.Text>
+                    <MultiBinding StringFormat="{}{0} [{1}]">
+                        <Binding Path="CompanyName"/>
+                        <Binding Path="CompanyType"/>
+                    </MultiBinding>
+                </TextBlock.Text>
+            </TextBlock>
+            
+        </StackPanel>
 
-        <TextBlock Grid.Row="0" Grid.Column="1" Margin="2.5">
-            <TextBlock.Text>
-                <MultiBinding StringFormat="{}Company Size: {0}/{1}">
-                    <Binding Path="CompanySize" Mode="TwoWay"/>
-                    <Binding Path="CompanyMaxSize"/>
-                </MultiBinding>
-            </TextBlock.Text>
-        </TextBlock>
+        <!-- Row 0 :: Save and Reset buttons -->
+        <StackPanel Grid.Row="0" Grid.Column="2" 
+                    Orientation="Horizontal"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center">
+            <Button x:Name="resetButton" Grid.Row="6" Grid.Column="1" Content="Reset" Margin="2.5" Width="105" Click="ResetButton_Click"/>
+            <Button x:Name="saveButton" Grid.Row="6" Grid.Column="0" Content="Save" Margin="2.5" Width="105" Click="SaveButton_Click"/>
+        </StackPanel>
+        
+        <!-- Row 1 :: Company Statistics -->
+        <Grid Grid.Row="1" Grid.Column="0" Name="CompanyStatistics">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            
+            <!-- Company Match History -->
+            <Label Content="Company Match History" FontStyle="Italic"
+                   Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="6"/>
 
-        <!-- Row 1 -->
+            <Label Content="Victories:" FontStyle="Italic"
+                   Grid.Row="1" Grid.Column="0"/>
+            <Label Content="0" FontStyle="Italic"
+                   Grid.Row="1" Grid.Column="1" HorizontalContentAlignment="Right"/>
+            <Label Content="Defeats:" FontStyle="Italic"
+                   Grid.Row="1" Grid.Column="2"/>
+            <Label Content="0" FontStyle="Italic" 
+                   Grid.Row="1" Grid.Column="3" HorizontalContentAlignment="Right"/>
+            <Label Content="Total:" FontStyle="Italic"
+                   Grid.Row="1" Grid.Column="4"/>
+            <Label Content="0" FontStyle="Italic"
+                   Grid.Row="1" Grid.Column="5" HorizontalContentAlignment="Right"/>
 
-        <!-- Row 2 -->
-        <TextBlock Grid.Row="2" Grid.Column="5" Text="Available Units"/>
+            <!-- Company Experience -->
+            <Label Content="Company Experience" FontStyle="Italic"
+                   Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="6"/>
 
-        <!-- Row 3 -->
-        <TabControl Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="5" Grid.RowSpan="3" Height="550" Width="750">
-            <TabItem Header="Units">
-                <dropArea:DropArea AllowDrop="True" Drop="OnDrop" Width="740" Height="520" Background="White" BorderThickness="1.5" BorderBrush="Black">
-                    <StackPanel x:Name="UnitTypeStack" Orientation="Horizontal">
-                        <ScrollViewer CanContentScroll="False" VerticalScrollBarVisibility="Visible">
-                            <WrapPanel x:Name="InfantryWrap" Orientation="Horizontal" Width="228">
+            <Label Content="Infantry Losses:" FontStyle="Italic"
+                   Grid.Row="3" Grid.Column="0"/>
+            <Label Content="0" FontStyle="Italic" 
+                   Grid.Row="3" Grid.Column="1" HorizontalContentAlignment="Right"/>
+            <Label Content="Vehicle Losses:" FontStyle="Italic"
+                   Grid.Row="3" Grid.Column="2"/>
+            <Label Content="0" FontStyle="Italic"
+                   Grid.Row="3" Grid.Column="3" HorizontalContentAlignment="Right"/>
+            <Label Content="Total Losses:" FontStyle="Italic"
+                   Grid.Row="3" Grid.Column="4"/>
+            <Label Content="0" FontStyle="Italic"
+                   Grid.Row="3" Grid.Column="5" HorizontalContentAlignment="Right"/>
 
-                            </WrapPanel>
-                        </ScrollViewer>
-                        <ScrollViewer CanContentScroll="False" VerticalScrollBarVisibility="Visible">
-                            <WrapPanel x:Name="SupportWrap" Orientation="Horizontal" Width="228">
+            <!-- Company Rating -->
+            <Label Grid.Row="5" Grid.Column="0"
+                   Content="Company Rating:"/>
+            <Label Grid.Row="5" Grid.Column="1"
+                   Content="0" HorizontalContentAlignment="Right"/>
 
-                            </WrapPanel>
-                        </ScrollViewer>
-                        <ScrollViewer CanContentScroll="False" VerticalScrollBarVisibility="Visible">
-                            <WrapPanel x:Name="VehicleWrap" Orientation="Horizontal" Width="228">
+        </Grid>
 
-                            </WrapPanel>
-                        </ScrollViewer>
-                    </StackPanel>
+        <!-- Row 1 :: Hover Data -->
+        <StackPanel Grid.Row="1" Grid.Column="2" Name="HoverField"
+                    Margin="3.35"
+                    Visibility="{Binding Path=HoverDataVisiblity}">
+            <StackPanel Orientation="Horizontal">
+                <Image Width="48" Height="48" 
+                    Source="{Binding Path=HoverData.Icon}"/>
+                <TextBlock Text="{Binding Path=HoverData.Name}"/>
+            </StackPanel>
+            <TextBlock Text="{Binding Path=HoverData.Description}" TextWrapping="Wrap"/>
+            <!-- Price -->
+            <card:CostControl x:Name="HoverDataCost"/>
+        </StackPanel>
+        <StackPanel Grid.Row="1" Grid.Column="2"
+                    Visibility="{Binding Path=InverseHoverDataVisibility}">
+            <Label HorizontalContentAlignment="Center"
+                   VerticalContentAlignment="Center"> No unit data </Label>
+        </StackPanel>
+
+        <!-- Row 2 :: Content Explanation Text -->
+        <TextBlock Grid.Row="2" Grid.Column="0" 
+                   Text="Company Composition" TextAlignment="Center"
+                   VerticalAlignment="Center" FontSize="14"/>
+        <TextBlock Grid.Row="2" Grid.Column="2" 
+                   Text="{Binding AvailableObjectType}" TextAlignment="Center"
+                   VerticalAlignment="Center" FontSize="14"/>
+
+        <!-- Row 3 :: Company Overview -->
+        <TabControl Grid.Row="3" Grid.Column="0" SelectionChanged="OnOverviewSelectionChanged">
+            <TabItem Header="{Binding CompanyUnitHeaderItem}">
+                <dropArea:DropArea AllowDrop="True" Drop="OnUnitDrop" Background="White" BorderThickness="1.5" BorderBrush="Black">
+                    <ScrollViewer>
+                        <StackPanel>
+                            <StackPanel>
+                                <Label Content="Infantry" FontStyle="Italic"/>
+                                <Separator Margin="2.5"/>
+                                <WrapPanel x:Name="InfantryWrap" Orientation="Horizontal"/>
+                                <Separator Margin="2.5"/>
+                            </StackPanel>
+                            <StackPanel>
+                                <Label Content="Support Weapons" FontStyle="Italic"/>
+                                <Separator Margin="2.5"/>
+                                <WrapPanel x:Name="SupportWrap" Orientation="Horizontal"/>
+                                <Separator Margin="2.5"/>
+                            </StackPanel>
+                            <StackPanel>
+                                <Label Content="Vehicles" FontStyle="Italic"/>
+                                <Separator Margin="2.5"/>
+                                <WrapPanel x:Name="VehicleWrap" Orientation="Horizontal"/>
+                                <Separator Margin="2.5"/>
+                            </StackPanel>
+                        </StackPanel>
+                    </ScrollViewer>
                 </dropArea:DropArea>
             </TabItem>
-            <TabItem Header="Abilities">
-                
+            <TabItem Header="{Binding CompanyAbilityHeaderItem}">
+                <dropArea:DropArea AllowDrop="True" Drop="OnAbilityDrop" Background="White" BorderThickness="1.5" BorderBrush="Black">
+                    <ScrollViewer>
+                        <StackPanel>
+                            <StackPanel>
+                                <Label Content="Unit Abilities" FontStyle="Italic"/>
+                                <Separator Margin="2.5"/>
+                                <WrapPanel x:Name="UnitAbilityWrap" Orientation="Horizontal"/>
+                                <Separator Margin="2.5"/>
+                            </StackPanel>
+                            <StackPanel>
+                                <Label Content="Commander Abilities" FontStyle="Italic"/>
+                                <Separator Margin="2.5"/>
+                                <WrapPanel x:Name="AbilityWrap" Orientation="Horizontal"/>
+                                <Separator Margin="2.5"/>
+                            </StackPanel>
+                        </StackPanel>
+                    </ScrollViewer>
+                </dropArea:DropArea>
             </TabItem>
             <TabItem Header="Inventory">
-
+                <ScrollViewer>
+                    <StackPanel>
+                        <StackPanel>
+                            <Label Content="Captured Items" FontStyle="Italic"/>
+                            <Separator Margin="2.5"/>
+                            <WrapPanel x:Name="ItemWrap" Orientation="Horizontal"/>
+                            <Separator Margin="2.5"/>
+                        </StackPanel>
+                        <StackPanel>
+                            <Label Content="Captured Equipment" FontStyle="Italic"/>
+                            <Separator Margin="2.5"/>
+                            <WrapPanel x:Name="EquipmentWrap" Orientation="Horizontal"/>
+                            <Separator Margin="2.5"/>
+                        </StackPanel>
+                    </StackPanel>
+                </ScrollViewer>
             </TabItem>
         </TabControl>
 
-        <ScrollViewer Grid.Row="3" Grid.Column="5" CanContentScroll="False" VerticalScrollBarVisibility="Visible" Height="400">
-            <StackPanel x:Name="AvailableUnitsStack">
-                
+        <!-- Row 3 :: Available Units -->
+        <DockPanel Grid.Row="3" Grid.Column="2" 
+                   LastChildFill="True" Visibility="{Binding AvailableUnitsVisible}">
+            <StackPanel DockPanel.Dock="Bottom" Name="CapturedItemsDroppableContainer">
+                <Label Content="Captured Items"/>
+                <ScrollViewer CanContentScroll="False" 
+                          VerticalScrollBarVisibility="Visible">
+                    <StackPanel x:Name="AvailableItems"/>
+                    <!-- Use this to display captured items that can be 
+                    dragged onto squads to apply slot item-->
+                </ScrollViewer>
             </StackPanel>
-        </ScrollViewer>
+            <ScrollViewer CanContentScroll="False" VerticalScrollBarVisibility="Visible">
+                <StackPanel x:Name="AvailableUnitsStack"/>
+            </ScrollViewer>
+        </DockPanel>
 
-        <!-- Row 4 -->
-        <Button x:Name="saveButton" Grid.Row="6" Grid.Column="0" Content="Save" Margin="2.5" Width="125" Click="SaveButton_Click"/>
+        <!-- Row 3 :: Available Abilities -->
+        <DockPanel Grid.Row="3" Grid.Column="2" 
+                   LastChildFill="True" Visibility="{Binding AvailableAbilitiesVisible}">
+            <ScrollViewer CanContentScroll="False" 
+                          VerticalScrollBarVisibility="Visible">
+                <StackPanel x:Name="AvailableAbilities"/>
+            </ScrollViewer>
+        </DockPanel>
 
-        <Button x:Name="backButton" Grid.Row="6" Grid.Column="1" Content="Back" Margin="2.5" Width="125" Click="BackButton_Click"/>
+        <!-- Row 3 :: Available Crews -->
+        <DockPanel Grid.Row="3" Grid.Column="2" 
+                   LastChildFill="True" Visibility="{Binding AvailableCrewsVisible}">
+            <ScrollViewer CanContentScroll="False" 
+                          VerticalScrollBarVisibility="Visible">
+                <StackPanel x:Name="AvailableCrews"/>
+            </ScrollViewer>
+        </DockPanel>
 
     </Grid>
 </bg:ViewState>

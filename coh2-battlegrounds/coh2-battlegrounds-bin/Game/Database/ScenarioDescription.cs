@@ -1,10 +1,10 @@
 ﻿namespace Battlegrounds.Game.Database {
-    
+
     /// <summary>
     /// 
     /// </summary>
     public sealed class ScenarioDescription {
-    
+
         /// <summary>
         /// 
         /// </summary>

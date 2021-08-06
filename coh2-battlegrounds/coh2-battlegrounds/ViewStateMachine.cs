@@ -1,7 +1,7 @@
 ﻿using System.Windows;
 
 namespace BattlegroundsApp {
-    
+
     /// <summary>
     /// View State Machine for handling views for a <see cref="Window"/>. Inherits from <see cref="IStateMachine{ViewState}"/>. Abstract class
     /// </summary>

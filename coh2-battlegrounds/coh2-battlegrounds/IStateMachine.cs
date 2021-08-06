@@ -1,11 +1,11 @@
 ﻿namespace BattlegroundsApp {
-    
+
     /// <summary>
     /// Interface for a State Machine representation.
     /// </summary>
     /// <typeparam name="T">The specific implementation of the <see cref="IState"/>.</typeparam>
     public interface IStateMachine<T> where T : IState {
-    
+
         /// <summary>
         /// Gets or sets the currently active <see cref="IState"/>.
         /// </summary>

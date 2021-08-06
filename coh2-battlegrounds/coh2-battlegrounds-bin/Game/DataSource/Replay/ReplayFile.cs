@@ -96,27 +96,27 @@ namespace Battlegrounds.Game.DataSource.Replay {
         /// The header read when the file was parsed
         /// </summary>
         /// <exception cref="InvalidDataException"/>
-        public ReplayHeader Header 
+        public ReplayHeader Header
             => (this.m_isParsed) ? this.m_replayHeader : throw new InvalidDataException("Replayfile has not been loaded and parsed sucessfully.");
 
         /// <summary>
         /// The scenario used in the replay
         /// </summary>
         /// <exception cref="InvalidDataException"/>
-        public ScenarioDescription Scenario 
+        public ScenarioDescription Scenario
             => (this.m_isParsed) ? this.m_sdsc : throw new InvalidDataException("Replayfile has not been loaded and parsed sucessfully.");
 
         /// <summary>
         /// Array containing all players in the replay
         /// </summary>
-        public Player[] Players 
+        public Player[] Players
             => (this.m_isParsed) ? this.m_playerlist.ToArray() : throw new InvalidDataException("Replayfile has not been loaded and parsed sucessfully.");
 
         /// <summary>
         /// Sorted array containing all game ticks in the replay
         /// </summary>
-        public GameTick[] Ticks 
-            => (this.m_isParsed)?this.m_tickList.OrderBy(x => x.TimeStamp).ToArray() : throw new InvalidDataException("Replayfile has not been loaded and parsed sucessfully.");
+        public GameTick[] Ticks
+            => (this.m_isParsed) ? this.m_tickList.OrderBy(x => x.TimeStamp).ToArray() : throw new InvalidDataException("Replayfile has not been loaded and parsed sucessfully.");
 
         /// <summary>
         /// New instance of a <see cref="ReplayFile"/> from a given file path
@@ -227,9 +227,9 @@ namespace Battlegrounds.Game.DataSource.Replay {
 
         private bool ParseHeader() {
 
-            uint version = BitConverter.ToUInt32(this.m_header.AsSpan()[0 .. 4]); // read version (unsigned 32-bit integer ==> 4 bytes)
+            uint version = BitConverter.ToUInt32(this.m_header.AsSpan()[0..4]); // read version (unsigned 32-bit integer ==> 4 bytes)
             string name = Encoding.ASCII.GetString(this.m_header[4..12]); // read game version (ASCII, 1 char = 1 byte, length is fixed and equal to 8)
-            
+
             StringBuilder dateBuilder = new StringBuilder();
 
             int i = 12; // start position
@@ -289,7 +289,7 @@ namespace Battlegrounds.Game.DataSource.Replay {
                     // If we continue to read, we can get some mod data (asset packs)
 
                     // Create scenario description
-                    this.m_sdsc = new ScenarioDescription(scenariopath, scenarioname, (int)scenariodimensions[0], (int)scenariodimensions[1]) { 
+                    this.m_sdsc = new ScenarioDescription(scenariopath, scenarioname, (int)scenariodimensions[0], (int)scenariodimensions[1]) {
                         Description = scenariodesc,
                     };
 

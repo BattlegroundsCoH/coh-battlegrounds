@@ -1,5 +1,5 @@
 ﻿namespace Battlegrounds.Campaigns.API {
-    
+
     /// <summary>
     /// Interface for representing a campaign player.
     /// </summary>

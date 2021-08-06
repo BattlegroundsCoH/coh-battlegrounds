@@ -1,5 +1,5 @@
 ﻿namespace Battlegrounds.Game.Match.Data {
-    
+
     /// <summary>
     /// Interface for an ingame event.
     /// </summary>

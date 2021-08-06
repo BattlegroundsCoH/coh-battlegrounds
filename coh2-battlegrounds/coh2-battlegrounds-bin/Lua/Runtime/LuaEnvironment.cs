@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 
 namespace Battlegrounds.Lua.Runtime {
-    
+
     /// <summary>
     /// Represents the currently executing Lua variable environment.
     /// </summary>
@@ -78,9 +78,9 @@ namespace Battlegrounds.Lua.Runtime {
         /// <param name="id">The string ID</param>
         /// <param name="value">The value of the variable</param>
         /// <returns><paramref name="value"/>.</returns>
-        public LuaValue Define(string id, LuaValue value) { 
+        public LuaValue Define(string id, LuaValue value) {
             this.m_currentFrame.TableEnv[id] = value;
-            return value; 
+            return value;
         }
 
     }

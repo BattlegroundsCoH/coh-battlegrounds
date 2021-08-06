@@ -14,9 +14,9 @@ namespace coh2_battlegrounds_installer {
         };
 
         public MainWindow() {
-            
+
             this.InitializeComponent();
-            
+
             string path = this.TryFindBattlegrondsInstallDirectory();
             bool isInstalled = File.Exists(Path.Combine(path, "coh2-battlegrounds.exe"));
             this.Navigate(new ActionPage(isInstalled, path, this));

@@ -23,6 +23,9 @@ namespace CoH2XML2JSON {
         [DefaultValue(null)]
         public string[] SlotItems { get; }
 
+        [DefaultValue(null)]
+        public Requirement[] Requirements { get; }
+
         public UBP(XmlDocument xmlDocument, string guid, string name) {
 
             // Set the name
@@ -38,7 +41,10 @@ namespace CoH2XML2JSON {
             this.Display = new(xmlDocument.SelectSingleNode("//group[@name='ui_info']") as XmlElement);
 
             // Load cost
-            this.Cost = new(xmlDocument.SelectSingleNode("//group[@name='time_cost']") as XmlElement);
+            this.Cost = new(xmlDocument.SelectSingleNode("//group[@name='time_cost']") as XmlElement); 
+            if (this.Cost.IsNull) {
+                this.Cost = null;
+            }
 
             // Get ownertype
             this.OwnerType = (xmlDocument.SelectSingleNode("//enum[@name='owner_type']") as XmlElement).GetAttribute("value");
@@ -55,6 +61,9 @@ namespace CoH2XML2JSON {
             if (items.Count > 0) {
                 this.SlotItems = items.ToArray();
             }
+
+            // Load Requirements
+            this.Requirements = Requirement.GetRequirements(xmlDocument.SelectSingleNode(@"//list[@name='requirements']") as XmlElement);
 
         }
 

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+
 using Battlegrounds.Campaigns.API;
 using Battlegrounds.Campaigns.Organisations;
 using Battlegrounds.Campaigns.Scripting;
@@ -11,9 +12,10 @@ using Battlegrounds.Game.Gameplay;
 using Battlegrounds.Game.Match;
 using Battlegrounds.Gfx;
 using Battlegrounds.Locale;
+using Battlegrounds.Modding;
 
 namespace Battlegrounds.Campaigns.Controller {
-    
+
     /// <summary>
     /// 
     /// </summary>
@@ -216,7 +218,7 @@ namespace Battlegrounds.Campaigns.Controller {
             // Create company
             CompanyBuilder builder = new CompanyBuilder()
                 .NewCompany(isAttacker ? data.attackingFaction : data.defendingFaction)
-                .ChangeTuningMod(BattlegroundsInstance.BattleGroundsTuningMod.Guid)
+                .ChangeTuningMod(ModManager.GetPackage("mod_bg").TuningGUID)
                 .ChangeName(isAttacker ? data.attackingCompanyNames[index] : data.defendingCompanyNames[index])
                 .ChangeUser(isAttacker ? data.attackingPlayerNames[index] : data.defendingPlayerNames[index]);
 
@@ -237,7 +239,7 @@ namespace Battlegrounds.Campaigns.Controller {
                     } else if (count > 12 && phase == DeploymentPhase.PhaseB) {
                         phase = DeploymentPhase.PhaseC;
                     }
-                    builder.AddUnit(uBld);
+                    builder.AddAndCommitUnit(uBld);
                 }
             }
 
@@ -252,7 +254,7 @@ namespace Battlegrounds.Campaigns.Controller {
         /// <param name="data"></param>
         /// <param name="company"></param>
         public static void HandleCompanyChanges(CampaignEngagementData data, Company company) { // Note: data is value type, but the fields affected are ref types
-            
+
             // Determine if company was attacking or defending
             bool isAttacker = data.attackingPlayerNames.Contains(company.Owner);
             if (!isAttacker && !data.defendingPlayerNames.Contains(company.Owner)) {
@@ -261,7 +263,7 @@ namespace Battlegrounds.Campaigns.Controller {
             } else {
                 Trace.WriteLine($"Handling company '{company.Name}' owned by '{company.Owner}' on {(isAttacker ? "attacking" : "defending")} side.", nameof(ICampaignController));
             }
-            
+
         }
 
         /// <summary>

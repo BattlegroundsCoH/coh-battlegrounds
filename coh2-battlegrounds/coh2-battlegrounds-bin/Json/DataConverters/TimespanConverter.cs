@@ -4,7 +4,7 @@ using System.Linq;
 namespace Battlegrounds.Json.DataConverters {
 
     public class TimespanConverter : IJsonDataTypeConverter<TimeSpan> {
-        
+
         public TimeSpan ConvertFromString(string stringValue) {
             if (stringValue.Count(x => x == ':') == 2) {
                 string[] vals = stringValue.Split(':');

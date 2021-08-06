@@ -9,6 +9,7 @@ using Battlegrounds.Game;
 using Battlegrounds.Game.DataCompany;
 using Battlegrounds.Game.Gameplay;
 using Battlegrounds.Game.Match;
+using Battlegrounds.Modding;
 using Battlegrounds.Networking.Lobby;
 using Battlegrounds.Networking.Remoting.Query;
 using Battlegrounds.Networking.Requests;
@@ -288,7 +289,8 @@ namespace BattlegroundsApp.Models {
                 if (companyItem.State == CompanyItemState.Company) {
                     return PlayerCompanies.FromNameAndFaction(companyItem.Name, Faction.FromName(companyItem.Army));
                 } else if (companyItem.State == CompanyItemState.Generate) {
-                    return CompanyGenerator.Generate(Faction.FromName(companyItem.Army), BattlegroundsInstance.BattleGroundsTuningMod.Guid.GUID, false, true, true);
+                    Trace.TraceWarning("Using default BG tuning mod to generate company.");
+                    return CompanyGenerator.Generate(Faction.FromName(companyItem.Army), ModManager.GetPackage("mod_bg").TuningGUID.GUID, false, true, true);
                 }
             }
             throw new Exception();
@@ -314,7 +316,7 @@ namespace BattlegroundsApp.Models {
         public IRequestHandler RequestHandler { get; }
 
         public MockLobbyTeamModel(int tid, LobbyHandler handler, CommandQueryResultVector dataVector) {
-            
+
             // Set data
             this.RequestHandler = handler.RequestHandler;
             this.m_data = dataVector.Reverse();
@@ -360,23 +362,23 @@ namespace BattlegroundsApp.Models {
             }
             return false;
         }
-        
+
         public void JoinTeam(ILobbyMember member) => throw new NotSupportedException();
-        
+
         public void LeaveTeam(ILobbyMember member) => throw new NotSupportedException();
-        
+
         public void SetCapacity(int capacity) => throw new NotSupportedException();
-        
+
         public void SwapSlots(ILobbyMember from, int to) => throw new NotSupportedException();
-        
+
         public void SwapSlots(int from, int to) => throw new NotSupportedException();
 
     }
 
     public class MockLobbyTeamSlotModel : ILobbyTeamSlot {
-        
+
         public LobbyTeamSlotState SlotState { get; set; }
-        
+
         public ILobbyMember SlotOccupant { get; set; }
 
         public MockLobbyTeamSlotModel(string slotState, ILobbyMember member) {

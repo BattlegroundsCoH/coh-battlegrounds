@@ -3,7 +3,7 @@
 using Battlegrounds.Functional;
 
 namespace Battlegrounds.Game.Database.Extensions {
-    
+
     public class CostExtension {
 
         /// <summary>
@@ -26,7 +26,7 @@ namespace Battlegrounds.Game.Database.Extensions {
         /// </summary>
         public float FieldTime { get; set; }
 
-        public CostExtension() : this(0.0f, 0.0f, 0.0f) {}
+        public CostExtension() : this(0.0f, 0.0f, 0.0f) { }
 
         public CostExtension(CostExtension costExtension) {
             this.Munitions = costExtension.Munitions;

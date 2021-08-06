@@ -72,7 +72,7 @@ namespace Battlegrounds.Game.DataCompany {
                     switch (property) {
                         case nameof(Company.Units):
                             for (int i = 0; i < values.Length; i++) {
-                                builder.AddUnit(new UnitBuilder(values.GetValue(i) as Squad, false));
+                                builder.AddAndCommitUnit(new UnitBuilder(values.GetValue(i) as Squad, false));
                             }
                             break;
                         default:
@@ -92,36 +92,20 @@ namespace Battlegrounds.Game.DataCompany {
             Company result = builder.Result;
             result.UpdateStatistics(x => stats); // This will set the stats
             result.CalculateChecksum();
-            if (result.VerifyChecksum(checksum)) {
-                return result;
-            } else {
-                throw new ChecksumViolationException();
-            }
+            return result.VerifyChecksum(checksum) ? result : throw new ChecksumViolationException();
 
         }
 
-        private static string ReadProperty(ref Utf8JsonReader reader, string property) {
-            if (reader.GetString() == property && reader.Read()) {
-                return reader.ReadProperty();
-            } else {
-                return null;
-            }
-        }
+        private static string ReadProperty(ref Utf8JsonReader reader, string property)
+            => reader.GetString() == property && reader.Read() ? reader.ReadProperty() : null;
 
-        private static T ReadPropertyThroughSerialisation<T>(ref Utf8JsonReader reader, string property) {
-            if (reader.GetString() == property && reader.Read()) {
-                return JsonSerializer.Deserialize<T>(ref reader);
-            } else {
-                return default;
-            }
-        }
+        private static T ReadPropertyThroughSerialisation<T>(ref Utf8JsonReader reader, string property)
+            => reader.GetString() == property && reader.Read() ? JsonSerializer.Deserialize<T>(ref reader) : default;
 
         public override void Write(Utf8JsonWriter writer, Company value, JsonSerializerOptions options) {
 
-            // If checksum is null
-            if (value.Checksum is null) {
-                value.CalculateChecksum();
-            }
+            // Recalculate the checksum
+            value.CalculateChecksum();
 
             // Begin object
             writer.WriteStartObject();
@@ -178,7 +162,7 @@ namespace Battlegrounds.Game.DataCompany {
         /// <param name="company">The company to serialise.</param>
         /// <param name="indent">Should the json be indent formatted.</param>
         /// <returns>The json string data.</returns>
-        public static string GetCompanyAsJson(Company company, bool indent = true) 
+        public static string GetCompanyAsJson(Company company, bool indent = true)
             => JsonSerializer.Serialize(company, new JsonSerializerOptions() { WriteIndented = indent });
 
         /// <summary>

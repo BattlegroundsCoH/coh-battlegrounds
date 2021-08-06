@@ -5,7 +5,7 @@ using System.Reflection;
 using System.Text;
 
 namespace Battlegrounds.Json {
-    
+
     /// <summary>
     /// 
     /// </summary>

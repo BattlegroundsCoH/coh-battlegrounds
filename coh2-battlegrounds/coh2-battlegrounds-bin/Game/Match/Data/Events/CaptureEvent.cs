@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+
 using Battlegrounds.Game.Database;
 using Battlegrounds.Game.Database.Management;
 using Battlegrounds.Game.Gameplay;
@@ -19,7 +20,7 @@ namespace Battlegrounds.Game.Match.Data.Events {
         /// <summary>
         /// The captured type was a vehicle.
         /// </summary>
-        VEHICLE, 
+        VEHICLE,
 
         /// <summary>
         /// The captured type was a weapon.
@@ -32,7 +33,7 @@ namespace Battlegrounds.Game.Match.Data.Events {
     /// <see cref="IMatchEvent"/> implementation for the event of equipment being captured.
     /// </summary>
     public class CaptureEvent : IMatchEvent {
-        
+
         public char Identifier => 'T';
 
         public uint Uid { get; }
@@ -64,16 +65,16 @@ namespace Battlegrounds.Game.Match.Data.Events {
         /// <param name="player">The <see cref="Player"/> that captured the equipment.</param>
         /// <exception cref="ArgumentException"/>
         public CaptureEvent(uint id, string[] values, Player player) {
-            
+
             // Set id
             this.Uid = id;
-            
+
             // Verify input size
             if (values.Length == 3) {
 
                 // Set the player capturing the event.
                 this.CapturingPlayer = player;
-                
+
                 // Parse capture event type
                 if (int.TryParse(values[1], out int capType)) {
                     this.CaptureType = (CaptureEventType)capType;
@@ -81,13 +82,13 @@ namespace Battlegrounds.Game.Match.Data.Events {
                     this.CaptureType = CaptureEventType.UNKNOWN;
                     Trace.WriteLine($"Failed to parse '{values[1]}' as capture event - setting to 0 by default.", nameof(CaptureEvent));
                 }
-                
+
                 // Set properties
                 this.CapturedBlueprintType = Enum.Parse<BlueprintType>(values[2]);
                 this.CapturedBlueprint = BlueprintManager.FromBlueprintName(values[0], this.CapturedBlueprintType); // This may fail (return null).
 
             } else {
-                
+
                 // Throw argument out of range exception
                 throw new ArgumentOutOfRangeException(nameof(values), values.Length, "Argument was not of valid size. Expected 3 elements in array.");
 

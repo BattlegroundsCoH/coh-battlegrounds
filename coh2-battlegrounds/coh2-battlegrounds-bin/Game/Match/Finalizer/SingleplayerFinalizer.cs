@@ -85,7 +85,7 @@ namespace Battlegrounds.Game.Match.Finalizer {
                     }
 
                     // Update losses
-                    company.UpdateStatistics(x => UpdateLosses(x, !squad.SBP.IsVehicle, 0)); // TODO: Get proper loss sizes
+                    company.UpdateStatistics(x => UpdateLosses(x, !squad.SBP.Types.IsVehicle, 0)); // TODO: Get proper loss sizes
 
                 } else {
 

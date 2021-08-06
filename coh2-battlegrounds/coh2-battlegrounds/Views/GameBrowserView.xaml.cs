@@ -85,7 +85,7 @@ namespace BattlegroundsApp.Views {
 
             // Get host information
             HostGameDialogResult result = HostGameDialogViewModel.ShowHostGameDialog("Host Game", out string lobbyName, out string lobbyPwd);
-            
+
             // Check if user actually wants to host.
             if (result == HostGameDialogResult.Host) {
 

@@ -6,7 +6,7 @@ using System.Linq;
 using Battlegrounds.Modding;
 
 namespace Battlegrounds.Game.Database.Management {
-    
+
     /// <summary>
     /// A collection of <see cref="Blueprint"/> instances. Can contain inheriting types of <see cref="Blueprint"/>.
     /// </summary>
@@ -70,9 +70,9 @@ namespace Battlegrounds.Game.Database.Management {
         public BlueprintCollection<T> Filter(Predicate<T> predicate) => new BlueprintCollection<T>(this.m_internalDictionary.Where(x => predicate(x.Value)));
 
         public IEnumerator<T> GetEnumerator() => this.m_internalDictionary.Select(x => x.Value).GetEnumerator();
-        
+
         IEnumerator IEnumerable.GetEnumerator() => this.m_internalDictionary.Select(x => x.Value).GetEnumerator();
-        
+
     }
 
 }

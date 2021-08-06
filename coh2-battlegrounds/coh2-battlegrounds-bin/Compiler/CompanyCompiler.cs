@@ -10,16 +10,16 @@ using Battlegrounds.Game.Gameplay;
 using Battlegrounds.Util;
 
 namespace Battlegrounds.Compiler {
-    
+
     /// <summary>
     /// Standard implementation for compiling a company into Lua format.
     /// </summary>
     public class CompanyCompiler : ICompanyCompiler {
-    
+
         /// <summary>
         /// New <see cref="CompanyCompiler"/> instance.
         /// </summary>
-        public CompanyCompiler() {}
+        public CompanyCompiler() { }
 
         /// <summary>
         /// Compile a <see cref="Company"/> into a formatted string representing a lua table. Only in-game values are compiled. (Virtual Method).
@@ -107,17 +107,17 @@ namespace Battlegrounds.Compiler {
             builder.AppendLine($"veterancy_progress = {squad.VeterancyProgress:0.00},");
 
             // If heavy armour or heavy artillery
-            if (squad.SBP.IsHeavyArmour || squad.SBP.IsHeavyArtillery) {
+            if (squad.SBP.Types.IsHeavyArmour || squad.SBP.Types.IsHeavyArtillery) {
                 builder.AppendLine("heavy = true,");
             }
 
             // If command
-            if (squad.SBP.IsCommandUnit) {
+            if (squad.SBP.Types.IsCommandUnit) {
                 builder.AppendLine("command = true,");
             }
 
             // If specialized infantry
-            if (squad.SBP.IsSniper || squad.SBP.IsSpecialInfantry) {
+            if (squad.SBP.Types.IsSniper || squad.SBP.Types.IsSpecialInfantry) {
                 builder.AppendLine("special = true,");
             }
 
@@ -128,7 +128,7 @@ namespace Battlegrounds.Compiler {
                 builder.AppendLine($"sbp = {squad.SupportBlueprint.ToScar()},");
                 builder.AppendLine($"symbol = \"{(squad.SupportBlueprint as SquadBlueprint).UI.Symbol}\",");
                 builder.AppendLine($"mode = {(int)squad.DeploymentMethod},");
-                if (squad.DeploymentMethod != DeploymentMethod.None && (squad.SBP.IsHeavyArtillery || (!squad.SBP.IsHeavyArtillery && squad.SBP.IsAntiTank))) {
+                if (squad.DeploymentMethod != DeploymentMethod.None && (squad.SBP.Types.IsHeavyArtillery || (!squad.SBP.Types.IsHeavyArtillery && squad.SBP.Types.IsAntiTank))) {
                     builder.AppendLine("tow = true,");
                 }
                 builder.DecreaseIndent();
@@ -201,7 +201,7 @@ namespace Battlegrounds.Compiler {
                 if (order == 0) {
                     return lhs.VeterancyRank - rhs.VeterancyRank;
                 } else {
-                    if (lhs.SBP.IsCommandUnit) {
+                    if (lhs.SBP.Types.IsCommandUnit) {
                         return int.MaxValue;
                     } else {
                         return order;

@@ -2,7 +2,7 @@
 using System.Windows.Markup;
 
 namespace BattlegroundsApp.Controls.Lobby.Components {
-    
+
     /// <summary>
     /// Interaction logic for LobbyButton.xaml
     /// </summary>

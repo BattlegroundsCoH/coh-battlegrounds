@@ -87,7 +87,7 @@ namespace BattlegroundsApp.LocalData {
         }
 
         public static List<Company> GetAllCompanyes() => __companies;
-    
+
     }
 
 }

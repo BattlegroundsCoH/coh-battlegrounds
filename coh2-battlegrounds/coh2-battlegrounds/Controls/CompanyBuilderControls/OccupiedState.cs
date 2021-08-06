@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 using Battlegrounds.Game.Database.Extensions;
 using Battlegrounds.Game.Gameplay;
+
 using BattlegroundsApp.Resources;
 
 namespace BattlegroundsApp.Controls.CompanyBuilderControls {

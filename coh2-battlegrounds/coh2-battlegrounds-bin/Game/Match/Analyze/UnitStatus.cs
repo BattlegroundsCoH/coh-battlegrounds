@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+
 using Battlegrounds.Game.Database;
 using Battlegrounds.Game.Gameplay;
 
 namespace Battlegrounds.Game.Match.Analyze {
-    
+
     public class UnitStatus { // Maybe convert into an interface in the future
 
         public Player PlayerOwner { get; }

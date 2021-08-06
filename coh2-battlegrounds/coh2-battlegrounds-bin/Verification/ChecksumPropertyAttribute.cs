@@ -1,7 +1,7 @@
 ﻿using System;
 
 namespace Battlegrounds.Verification {
-    
+
     /// <summary>
     /// Attribute marking a property to be considered when calculating the checksum.
     /// </summary>

@@ -42,9 +42,7 @@ namespace BattlegroundsApp.Utilities {
         public override void Write(string message) {
             try {
                 this.m_writer?.Write(message);
-            } catch (ObjectDisposedException e) {
-               
-            }
+            } catch (ObjectDisposedException) { }
         }
 
         public override void WriteLine(string message) => this.Write($"[{DateTime.Now.ToLongTimeString()}] {message}{Environment.NewLine}");

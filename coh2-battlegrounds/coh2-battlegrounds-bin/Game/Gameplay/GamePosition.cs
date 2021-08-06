@@ -1,5 +1,5 @@
 ﻿namespace Battlegrounds.Game {
-    
+
     /// <summary>
     /// Represents a world position in the game using X,Y,Z variables
     /// </summary>
@@ -39,7 +39,7 @@
         /// <param name="x"></param>
         /// <param name="y"></param>
         /// <param name="z"></param>
-        public GamePosition(float x, float y, float z) : this(x,y) {
+        public GamePosition(float x, float y, float z) : this(x, y) {
             this._coords[2] = z;
         }
 

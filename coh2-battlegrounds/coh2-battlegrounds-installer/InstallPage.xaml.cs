@@ -38,11 +38,11 @@ namespace coh2_battlegrounds_installer {
         private HttpClient m_client;
 
         public NavigationWindow Window { get; }
-        
+
         public string TargetPath { get; }
 
         public InstallPage(NavigationWindow window, string path) {
-            
+
             // Set properties
             this.Window = window;
             this.TargetPath = path;
@@ -57,7 +57,7 @@ namespace coh2_battlegrounds_installer {
             this.InitializeComponent();
 
         }
-    
+
         public async void InstallProduct() {
 
             await Task.Delay(300);

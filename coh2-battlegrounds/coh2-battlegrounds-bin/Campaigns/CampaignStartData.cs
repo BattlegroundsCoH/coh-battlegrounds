@@ -1,8 +1,9 @@
 ﻿using System.Collections.Generic;
+
 using Battlegrounds.Campaigns.API;
 
 namespace Battlegrounds.Campaigns {
-    
+
     /// <summary>
     /// 
     /// </summary>
@@ -49,7 +50,7 @@ namespace Battlegrounds.Campaigns {
         /// <param name="id"></param>
         /// <param name="faction"></param>
         /// <param name="team"></param>
-        public void AddHuman(string name, ulong id, string faction, CampaignArmyTeam team) 
+        public void AddHuman(string name, ulong id, string faction, CampaignArmyTeam team)
             => this.m_humans.Add(new HumanData() { Name = name, SteamID = id, Faction = faction, Team = team });
 
     }

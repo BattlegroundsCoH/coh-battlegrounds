@@ -4,7 +4,7 @@ using System.Windows.Controls;
 using System.Windows.Media.Animation;
 
 namespace BattlegroundsApp.Views.CampaignViews.Models {
-    
+
     public interface ICampaignMapVisual {
 
         public UIElement VisualElement { get; }

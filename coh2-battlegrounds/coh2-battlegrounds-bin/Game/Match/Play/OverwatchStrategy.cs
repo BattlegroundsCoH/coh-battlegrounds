@@ -32,14 +32,14 @@ namespace Battlegrounds.Game.Match.Play {
             !SessionUtility.GotBugsplat().Result &&
             !SessionUtility.GotFatalScarError() &&
             SessionUtility.HasPlayback();
-        
-        public void Launch() { 
-            if (!this.IsLaunched) {                
+
+        public void Launch() {
+            if (!this.IsLaunched) {
                 this.m_hasLaunched = CoH2Launcher.Launch();
             }
         }
 
-        public void WaitForExit() { 
+        public void WaitForExit() {
             if (this.IsLaunched) {
                 this.m_procResponse = CoH2Launcher.WatchProcess();
             }

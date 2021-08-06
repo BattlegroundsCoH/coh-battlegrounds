@@ -21,9 +21,9 @@ namespace Battlegrounds.Game.Match {
 
         public Scenario Scenario => new Scenario();
 
-        public IWinconditionMod Gamemode => new Wincondition("Unknown Gamemode", new Guid());
+        public IGamemode Gamemode => new Wincondition("Unknown Gamemode", new Guid());
 
-        public ITuningMod TuningMod => BattlegroundsInstance.BattleGroundsTuningMod;
+        public ITuningMod TuningMod => ModManager.GetMod<ITuningMod>(ModManager.GetPackage("mod_bg").TuningGUID);
 
         public NullSession() { this.AllowPersistency = false; }
 

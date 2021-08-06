@@ -110,11 +110,11 @@ namespace Battlegrounds.Locale {
         /// <param name="sourceID"></param>
         /// <returns></returns>
         public bool LoadLocaleFileFromMemory(Stream memoryStream, string sourceID = UndefinedSource) {
-            
+
             // Read contents
             using StreamReader sr = new StreamReader(memoryStream, Encoding.Unicode);
             StringBuilder sb = new StringBuilder();
-            while(sr.ReadLine() is string s) {
+            while (sr.ReadLine() is string s) {
                 sb.AppendLine(s);
             }
 
@@ -123,7 +123,7 @@ namespace Battlegrounds.Locale {
             if (loc.LoadFromString(sb.ToString())) {
                 return LoadLocaleFile(loc);
             }
-            
+
             // Return false (Failed to load locale)
             return false;
 
@@ -193,7 +193,7 @@ namespace Battlegrounds.Locale {
         /// </summary>
         /// <param name="key">The <see cref="LocaleKey"/> to use when locating the string.</param>
         /// <returns>The UTF-16 encoded string sought after if present in system. Otherwise <paramref name="key"/>.LocaleID is returned.</returns>
-        public string GetString(LocaleKey key) { 
+        public string GetString(LocaleKey key) {
             if (string.IsNullOrEmpty(key.LocaleID)) {
                 return string.Empty;
             }

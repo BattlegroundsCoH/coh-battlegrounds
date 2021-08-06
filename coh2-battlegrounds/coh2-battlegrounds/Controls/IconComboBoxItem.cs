@@ -1,7 +1,7 @@
 ﻿using System.Windows.Media;
 
 namespace BattlegroundsApp.Controls {
-    
+
     public class IconComboBoxItem {
 
         public ImageSource Icon { get; }

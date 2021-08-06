@@ -8,7 +8,7 @@ using System.Windows.Markup;
 using Battlegrounds.Functional;
 
 namespace BattlegroundsApp.Controls.Lobby.Components {
-    
+
     /// <summary>
     /// Interaction logic for LobbyDropdown.xaml
     /// </summary>
@@ -49,8 +49,8 @@ namespace BattlegroundsApp.Controls.Lobby.Components {
         /// Get or set the description of the <see cref="LobbyDropdown"/>.
         /// </summary>
         public string Description {
-            get => this.GetValue(DescriptionProperty) as string; 
-            set => this.SetValue(DescriptionProperty, value); 
+            get => this.GetValue(DescriptionProperty) as string;
+            set => this.SetValue(DescriptionProperty, value);
         }
 
         public double DescriptionWidth {

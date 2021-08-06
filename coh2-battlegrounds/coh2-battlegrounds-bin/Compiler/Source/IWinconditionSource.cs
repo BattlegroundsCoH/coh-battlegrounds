@@ -1,7 +1,7 @@
 ﻿using Battlegrounds.Modding;
 
 namespace Battlegrounds.Compiler.Source {
-    
+
     /// <summary>
     /// Interface for retrieving source files for use by the <see cref="WinconditionCompiler"/>.
     /// </summary>
@@ -28,9 +28,9 @@ namespace Battlegrounds.Compiler.Source {
         /// <summary>
         /// Get all ingame UI files (in .dds format).
         /// </summary>
-        /// <param name="mod">The <see cref="IWinconditionMod"/> mod associated with these UI files</param>
+        /// <param name="mod">The <see cref="IGamemode"/> mod associated with these UI files</param>
         /// <returns>Array of all ui files for ingame use.</returns>
-        WinconditionSourceFile[] GetUIFiles(IWinconditionMod mod);
+        WinconditionSourceFile[] GetUIFiles(IGamemode mod);
 
         /// <summary>
         /// Get the preview graphic for the mod.
@@ -41,9 +41,9 @@ namespace Battlegrounds.Compiler.Source {
         /// <summary>
         /// Get the info file.
         /// </summary>
-        /// <param name="mod">The <see cref="IWinconditionMod"/> mod associated with the info file</param>
+        /// <param name="mod">The <see cref="IGamemode"/> mod associated with the info file</param>
         /// <returns>The info file</returns>
-        WinconditionSourceFile GetInfoFile(IWinconditionMod mod);
+        WinconditionSourceFile GetInfoFile(IGamemode mod);
 
     }
 

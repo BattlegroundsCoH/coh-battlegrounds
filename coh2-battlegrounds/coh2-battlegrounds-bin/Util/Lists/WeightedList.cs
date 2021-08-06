@@ -113,7 +113,7 @@ namespace Battlegrounds.Util.Lists {
         /// <param name="enumerable">The enumerable to convert into a weighted list.</param>
         /// <param name="weightFunction">The weight function to apply on each element in <paramref name="enumerable"/></param>
         /// <returns>A <see cref="WeightedList{T}"/> consisting of <paramref name="enumerable"/> elements.</returns>
-        public static WeightedList<T> ToWeightedList<T>(this IEnumerable<T> enumerable, Func<T,double> weightFunction) {
+        public static WeightedList<T> ToWeightedList<T>(this IEnumerable<T> enumerable, Func<T, double> weightFunction) {
             var e = enumerable.GetEnumerator();
             WeightedList<T> list = new WeightedList<T>();
             while (e.MoveNext()) {
