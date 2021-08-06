@@ -16,7 +16,7 @@ namespace Battlegrounds.Game.Database {
     /// Representation of a <see cref="Blueprint"/> with <see cref="Squad"/> specific values. Inherits from <see cref="Blueprint"/>. This class cannot be inherited.
     /// </summary>
     [JsonConverter(typeof(SquadBlueprintConverter))]
-    public sealed class SquadBlueprint : Blueprint {
+    public sealed class SquadBlueprint : Blueprint, IUIBlueprint {
 
         /// <summary>
         /// The unique PropertyBagGroupdID assigned to this blueprint.
@@ -199,6 +199,26 @@ namespace Battlegrounds.Game.Database {
 
             // Return union
             return ebpubps.Union(this.Upgrades).Union(getAppliedUpgrades ? this.AppliedUpgrades : Array.Empty<string>()).ToArray();
+
+        }
+
+        public EntityBlueprint GetVehicleBlueprint() {
+
+            // Get type
+            if (!(this.Types.IsVehicle || this.Types.IsTransportVehicle || this.Types.IsArmour || this.Types.IsHeavyArmour)) {
+                return null;
+            }
+
+            // Get ebps
+            var ebps = this.Loadout.Select(x => BlueprintManager.FromBlueprintName<EntityBlueprint>(x.EntityBlueprint)).ToArray();
+
+            // Return the first blueprint
+            if (ebps.Length is 1) {
+                return ebps[0];
+            }
+
+            // Return null
+            return null; // TODO: Check ebp types (if ever added to database tool)
 
         }
 

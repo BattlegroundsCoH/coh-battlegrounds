@@ -15,7 +15,7 @@ namespace Battlegrounds.Game.Database {
     /// Representation of a <see cref="Blueprint"/> with <see cref="Entity"/> specific values. Inherits from <see cref="Blueprint"/>. This class cannot be inheritted.
     /// </summary>
     [JsonConverter(typeof(EntityBlueprintConverter))]
-    public sealed class EntityBlueprint : Blueprint {
+    public sealed class EntityBlueprint : Blueprint, IUIBlueprint {
 
         /// <summary>
         /// The unique PropertyBagGroupdID assigned to this blueprint.
@@ -61,6 +61,35 @@ namespace Battlegrounds.Game.Database {
             this.UpgradeCapacity = upgradeMax;
             this.Upgrades = upgrades;
             this.AppliedUpgrades = appliedUpgrades;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="faction"></param>
+        /// <returns></returns>
+        public SquadBlueprint GetVehicleSquadBlueprint(Faction faction) {
+            
+            // Bail if no driver extension
+            if (this.Drivers is null) {
+                return null;
+            }
+
+            // Set default faction if none
+            if (faction is null) {
+                faction = this.Faction;
+            }
+
+            // Get driver from driver extension
+            if (this.Drivers.GetCaptureSquad(faction) is SquadBlueprint sbp) {
+                return sbp;
+            } else if (faction == this.Faction) {
+                return null;
+            }
+
+            // Get driver of null
+            return this.Drivers.GetCaptureSquad(this.Faction);
+
         }
 
     }

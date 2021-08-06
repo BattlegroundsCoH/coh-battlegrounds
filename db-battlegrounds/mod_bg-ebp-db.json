@@ -835,7 +835,8 @@
     "Drivers": [
       {
         "Army": "racebps\\german",
-        "SBP": "german_tank_crew_bg"
+        "SBP": "german_tank_crew_bg",
+        "Capture": "brummbar_squad_bg"
       }
     ],
     "Hardpoints": [
@@ -877,7 +878,8 @@
     "Drivers": [
       {
         "Army": "racebps\\german",
-        "SBP": "german_tank_crew_bg"
+        "SBP": "german_tank_crew_bg",
+        "Capture": "elefant_tank_destroyer_squad_bg"
       }
     ],
     "Hardpoints": [
@@ -910,7 +912,8 @@
     "Drivers": [
       {
         "Army": "racebps\\german",
-        "SBP": "german_vehicle_driver_bg"
+        "SBP": "german_vehicle_driver_bg",
+        "Capture": "opel_blitz_supply_squad_bg"
       }
     ],
     "Health": 160,
@@ -939,7 +942,8 @@
     "Drivers": [
       {
         "Army": "racebps\\german",
-        "SBP": "german_vehicle_driver_bg"
+        "SBP": "german_vehicle_driver_bg",
+        "Capture": "opel_blitz_transport_squad_bg"
       }
     ],
     "Health": 160,
@@ -971,7 +975,8 @@
     "Drivers": [
       {
         "Army": "racebps\\german",
-        "SBP": "german_tank_crew_bg"
+        "SBP": "german_tank_crew_bg",
+        "Capture": "ostwind_squad_bg"
       }
     ],
     "Hardpoints": [
@@ -1008,7 +1013,8 @@
     "Drivers": [
       {
         "Army": "racebps\\german",
-        "SBP": "german_tank_crew_bg"
+        "SBP": "german_tank_crew_bg",
+        "Capture": "panther_squad_bg"
       }
     ],
     "Hardpoints": [
@@ -1049,7 +1055,8 @@
     "Drivers": [
       {
         "Army": "racebps\\german",
-        "SBP": "german_tank_crew_bg"
+        "SBP": "german_tank_crew_bg",
+        "Capture": "panther_command_squad_bg"
       }
     ],
     "Hardpoints": [
@@ -1092,7 +1099,8 @@
     "Drivers": [
       {
         "Army": "racebps\\german",
-        "SBP": "german_tank_crew_bg"
+        "SBP": "german_tank_crew_bg",
+        "Capture": "panzerwerfer_squad_bg"
       }
     ],
     "Hardpoints": [
@@ -1131,7 +1139,8 @@
     "Drivers": [
       {
         "Army": "racebps\\german",
-        "SBP": "german_tank_crew_bg"
+        "SBP": "german_tank_crew_bg",
+        "Capture": "panzer_iv_command_squad_bg"
       }
     ],
     "Hardpoints": [
@@ -1169,7 +1178,8 @@
     "Drivers": [
       {
         "Army": "racebps\\german",
-        "SBP": "german_tank_crew_bg"
+        "SBP": "german_tank_crew_bg",
+        "Capture": "panzer_iv_squad_bg"
       }
     ],
     "Hardpoints": [
@@ -1210,7 +1220,8 @@
     "Drivers": [
       {
         "Army": "racebps\\german",
-        "SBP": "german_tank_crew_bg"
+        "SBP": "german_tank_crew_bg",
+        "Capture": "panzer_iv_squad_bg"
       }
     ],
     "Hardpoints": [
@@ -1251,7 +1262,8 @@
     "Drivers": [
       {
         "Army": "racebps\\german",
-        "SBP": "german_tank_crew_bg"
+        "SBP": "german_tank_crew_bg",
+        "Capture": "panzer_iv_stubby_squad_bg"
       }
     ],
     "Hardpoints": [
@@ -1293,7 +1305,8 @@
     "Drivers": [
       {
         "Army": "racebps\\german",
-        "SBP": "german_vehicle_crew_bg"
+        "SBP": "german_vehicle_crew_bg",
+        "Capture": "sdkfz_221_bg"
       }
     ],
     "Hardpoints": [
@@ -1330,7 +1343,8 @@
     "Drivers": [
       {
         "Army": "racebps\\german",
-        "SBP": "german_vehicle_crew_bg"
+        "SBP": "german_vehicle_crew_bg",
+        "Capture": "sdkfz_221_command_bg"
       }
     ],
     "Hardpoints": [
@@ -1367,7 +1381,8 @@
     "Drivers": [
       {
         "Army": "racebps\\german",
-        "SBP": "german_vehicle_crew_bg"
+        "SBP": "german_vehicle_crew_bg",
+        "Capture": "sdkfz_222_bg"
       }
     ],
     "Hardpoints": [
@@ -1515,7 +1530,8 @@
     "Drivers": [
       {
         "Army": "racebps\\german",
-        "SBP": "german_vehicle_crew_bg"
+        "SBP": "german_vehicle_crew_bg",
+        "Capture": "sdkfz_234_puma_ost_bg"
       }
     ],
     "Hardpoints": [
@@ -1550,7 +1566,8 @@
     "Drivers": [
       {
         "Army": "racebps\\german",
-        "SBP": "german_tank_crew_bg"
+        "SBP": "german_tank_crew_bg",
+        "Capture": "stug_iii_e_squad_bg"
       }
     ],
     "Hardpoints": [
@@ -1587,7 +1604,8 @@
     "Drivers": [
       {
         "Army": "racebps\\german",
-        "SBP": "german_tank_crew_bg"
+        "SBP": "german_tank_crew_bg",
+        "Capture": "stug_iii_squad_bg"
       }
     ],
     "Hardpoints": [
@@ -1626,7 +1644,8 @@
     "Drivers": [
       {
         "Army": "racebps\\german",
-        "SBP": "german_tank_crew_bg"
+        "SBP": "german_tank_crew_bg",
+        "Capture": "tiger_squad_bg"
       }
     ],
     "Hardpoints": [
@@ -1667,7 +1686,8 @@
     "Drivers": [
       {
         "Army": "racebps\\german",
-        "SBP": "german_tank_crew_bg"
+        "SBP": "german_tank_crew_bg",
+        "Capture": "tiger_command_squad_bg"
       }
     ],
     "Hardpoints": [
@@ -2412,7 +2432,8 @@
     "Drivers": [
       {
         "Army": "racebps\\soviet",
-        "SBP": "soviet_male_vehicle_crew_bg"
+        "SBP": "soviet_male_vehicle_crew_bg",
+        "Capture": "churchill_lend_lease_squad_bg"
       }
     ],
     "Hardpoints": [
@@ -2454,7 +2475,8 @@
     "Drivers": [
       {
         "Army": "racebps\\soviet",
-        "SBP": "soviet_male_vehicle_crew_bg"
+        "SBP": "soviet_male_vehicle_crew_bg",
+        "Capture": "is-2_bg"
       }
     ],
     "Hardpoints": [
@@ -2496,7 +2518,8 @@
     "Drivers": [
       {
         "Army": "racebps\\soviet",
-        "SBP": "soviet_male_vehicle_crew_bg"
+        "SBP": "soviet_male_vehicle_crew_bg",
+        "Capture": "isu-152_bg"
       }
     ],
     "Hardpoints": [
@@ -2537,7 +2560,8 @@
     "Drivers": [
       {
         "Army": "racebps\\soviet",
-        "SBP": "soviet_male_vehicle_2_crew_bg"
+        "SBP": "soviet_male_vehicle_2_crew_bg",
+        "Capture": "katyusha_rocket_truck_bg"
       }
     ],
     "Hardpoints": [
@@ -2575,7 +2599,8 @@
     "Drivers": [
       {
         "Army": "racebps\\soviet",
-        "SBP": "soviet_male_vehicle_crew_bg"
+        "SBP": "soviet_male_vehicle_crew_bg",
+        "Capture": "kv-1_bg"
       }
     ],
     "Hardpoints": [
@@ -2614,7 +2639,8 @@
     "Drivers": [
       {
         "Army": "racebps\\soviet",
-        "SBP": "soviet_male_vehicle_crew_bg"
+        "SBP": "soviet_male_vehicle_crew_bg",
+        "Capture": "kv-2_bg"
       }
     ],
     "Hardpoints": [
@@ -2653,7 +2679,8 @@
     "Drivers": [
       {
         "Army": "racebps\\soviet",
-        "SBP": "soviet_male_vehicle_crew_bg"
+        "SBP": "soviet_male_vehicle_crew_bg",
+        "Capture": "kv-8_bg"
       }
     ],
     "Hardpoints": [
@@ -2690,7 +2717,8 @@
     "Drivers": [
       {
         "Army": "racebps\\soviet",
-        "SBP": "soviet_male_vehicle_2_crew_bg"
+        "SBP": "soviet_male_vehicle_2_crew_bg",
+        "Capture": "m3a1_scout_car_squad_bg"
       }
     ],
     "Hardpoints": [
@@ -2727,7 +2755,8 @@
     "Drivers": [
       {
         "Army": "racebps\\soviet",
-        "SBP": "soviet_male_vehicle_2_crew_bg"
+        "SBP": "soviet_male_vehicle_2_crew_bg",
+        "Capture": "m5_halftrack_squad_bg"
       }
     ],
     "Hardpoints": [
@@ -2768,7 +2797,8 @@
     "Drivers": [
       {
         "Army": "racebps\\soviet",
-        "SBP": "soviet_male_vehicle_crew_bg"
+        "SBP": "soviet_male_vehicle_crew_bg",
+        "Capture": "76mm_sherman_lend_lease_bg"
       }
     ],
     "Hardpoints": [
@@ -2812,7 +2842,8 @@
     "Drivers": [
       {
         "Army": "racebps\\soviet",
-        "SBP": "soviet_male_vehicle_crew_bg"
+        "SBP": "soviet_male_vehicle_crew_bg",
+        "Capture": "su-76m_bg"
       }
     ],
     "Hardpoints": [
@@ -2848,7 +2879,8 @@
     "Drivers": [
       {
         "Army": "racebps\\soviet",
-        "SBP": "soviet_male_vehicle_crew_bg"
+        "SBP": "soviet_male_vehicle_crew_bg",
+        "Capture": "su-85_bg"
       }
     ],
     "Hardpoints": [
@@ -2884,7 +2916,8 @@
     "Drivers": [
       {
         "Army": "racebps\\soviet",
-        "SBP": "soviet_male_vehicle_crew_bg"
+        "SBP": "soviet_male_vehicle_crew_bg",
+        "Capture": "t_34_76_squad_bg"
       }
     ],
     "Hardpoints": [
@@ -2922,7 +2955,8 @@
     "Drivers": [
       {
         "Army": "racebps\\soviet",
-        "SBP": "soviet_male_vehicle_crew_bg"
+        "SBP": "soviet_male_vehicle_crew_bg",
+        "Capture": "t_34_76_squad_bg"
       }
     ],
     "Hardpoints": [
@@ -2961,7 +2995,8 @@
     "Drivers": [
       {
         "Army": "racebps\\soviet",
-        "SBP": "soviet_male_vehicle_crew_bg"
+        "SBP": "soviet_male_vehicle_crew_bg",
+        "Capture": "t_34_85_squad_bg"
       }
     ],
     "Hardpoints": [
@@ -3000,7 +3035,8 @@
     "Drivers": [
       {
         "Army": "racebps\\soviet",
-        "SBP": "soviet_male_vehicle_2_crew_bg"
+        "SBP": "soviet_male_vehicle_2_crew_bg",
+        "Capture": "t-70m_bg"
       }
     ],
     "Hardpoints": [
@@ -3038,7 +3074,8 @@
     "Drivers": [
       {
         "Army": "racebps\\soviet",
-        "SBP": "soviet_male_vehicle_2_crew_bg"
+        "SBP": "soviet_male_vehicle_2_crew_bg",
+        "Capture": "valentine_lend_lease_bg"
       }
     ],
     "Hardpoints": [
@@ -3077,7 +3114,8 @@
     "Drivers": [
       {
         "Army": "racebps\\soviet",
-        "SBP": "soviet_male_vehicle_crew_bg"
+        "SBP": "soviet_male_vehicle_crew_bg",
+        "Capture": "valentine_lend_lease_command_bg"
       }
     ],
     "Hardpoints": [
@@ -3112,7 +3150,8 @@
     "Drivers": [
       {
         "Army": "racebps\\soviet",
-        "SBP": "soviet_male_vehicle_driver_bg"
+        "SBP": "soviet_male_vehicle_driver_bg",
+        "Capture": "zis_6_transport_truck_bg"
       }
     ],
     "Hardpoints": [

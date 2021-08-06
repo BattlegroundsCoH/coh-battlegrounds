@@ -7,10 +7,15 @@ namespace CoH2XML2JSON {
     
     public class EBP : BP {
 
-        public struct EBPCrew {
+        public readonly struct EBPCrew {
             public string Army { get; }
             public string SBP { get; }
-            public EBPCrew(string army, string sbp) { this.Army = army; this.SBP = sbp; }
+            public string Capture { get; }
+            public EBPCrew(string army, string sbp, string capture) { 
+                this.Army = army; 
+                this.SBP = sbp;
+                this.Capture = capture;
+            }
         }
 
         public override string ModGUID { get; }
@@ -85,11 +90,15 @@ namespace CoH2XML2JSON {
             // Load drivers (if any)
             if (xmlDocument.SelectSingleNode(@"//template_reference[@name='exts'] [@value='ebpextensions\recrewable_ext']") is XmlElement recrewable) {
                 List<EBPCrew> crews = new();
-                var nodes = recrewable.SelectNodes(@"//instance_reference[@name='driver_squad_blueprint']");
+                var nodes = recrewable.SelectSubnodes("group", "race_data");
                 foreach (XmlElement driver in nodes) {
-                    if (!string.IsNullOrEmpty(driver.GetAttribute("value"))) {
-                        var armyNode = driver.ParentNode.PreviousSibling as XmlElement;
-                        crews.Add(new(armyNode.GetAttribute("value"), Path.GetFileNameWithoutExtension(driver.GetAttribute("value"))));
+                    var armyNode = driver.FindSubnode("instance_reference", "ext_key");
+                    var driverNode = driver.FindSubnode("instance_reference", "driver_squad_blueprint");
+                    if (!string.IsNullOrEmpty(driverNode.GetAttribute("value"))) {
+                        var captureNode = driver.FindSubnode("instance_reference", "capture_squad_blueprint");
+                        crews.Add(new(armyNode.GetAttribute("value"),
+                            Path.GetFileNameWithoutExtension(driverNode.GetAttribute("value")),
+                            Path.GetFileNameWithoutExtension(captureNode.GetAttribute("value"))));
                     }
                 }
                 if (crews.Count > 0) {

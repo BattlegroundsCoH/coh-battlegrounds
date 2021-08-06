@@ -351,10 +351,10 @@ namespace Battlegrounds.Game.DataCompany {
             while (this.m_uncommittedSquads.Count > 0) {
 
                 // Pop top element of uncommited
-                UnitBuilder unit = this.m_uncommittedSquads.Pop();
+                var unit = this.m_uncommittedSquads.Pop();
 
                 // Add squad
-                this.m_companyTarget.AddSquad(unit);
+                _ = this.m_companyTarget.AddSquad(unit);
 
             }
 
@@ -399,6 +399,29 @@ namespace Battlegrounds.Game.DataCompany {
         public void EachAbility(Action<SpecialAbility, bool> action) {
             _ = this.m_companyTarget.GetSpecialUnitAbilities().ForEach(x => action(x, true));
             _ = this.m_companyTarget.Abilities.ForEach(x => action(x, false));
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="action"></param>
+        public void EachItem(Action<Blueprint> action) => this.m_companyTarget.Inventory.ForEach(action);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="blueprint"></param>
+        public void AddEquipment(Blueprint blueprint)
+            => this.m_companyTarget.AddInventoryItem(blueprint);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="equipment"></param>
+        /// <returns></returns>
+        public CompanyBuilder RemoveEquipment(Blueprint equipment) {
+            this.m_companyTarget.RemoveInventoryItem(equipment);
+            return this;
         }
 
     }

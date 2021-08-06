@@ -113,6 +113,10 @@ namespace BattlegroundsApp.Modals.CompanyBuilder {
 
         public SquadSlotLarge SquadSlot { get; } // We keep a ref to this so we can instantly update it
 
+        public event Action<SquadSlotLarge> OnCrewRemove;
+
+        public event Action<SquadSlotLarge> OnCrewEject;
+
         private ModPackage m_package;
 
         public SelectedSquadModal(SquadSlotLarge squadSlot, ModPackage modPackage) {
@@ -220,7 +224,7 @@ namespace BattlegroundsApp.Modals.CompanyBuilder {
         private void OnDeploymentPhaseClicked(object sender, MouseButtonEventArgs e) {
             Icon obj = sender as Icon;
             SquadBlueprint sbp = this.SquadSlot.SquadInstance.SupportBlueprint as SquadBlueprint;
-            DeploymentMethod dmode = this.SquadSlot.SquadInstance.DeploymentMethod;
+            var dmode = this.SquadSlot.SquadInstance.DeploymentMethod;
             switch (obj.Tag as string) {
                 case "0":
                     this.SquadSlot.SquadInstance.SetDeploymentMethod(sbp, dmode, DeploymentPhase.PhaseInitial);
@@ -293,7 +297,7 @@ namespace BattlegroundsApp.Modals.CompanyBuilder {
         private void RefreshTransportBlueprints(bool isTow) {
 
             // Determine transport list source
-            ModPackage.FactionData factionData = this.m_package.FactionSettings[this.SquadSlot.SquadInstance.SBP.Army];
+            var factionData = this.m_package.FactionSettings[this.SquadSlot.SquadInstance.SBP.Army];
             string[] source = isTow ? factionData.TowTransports : factionData.Transports;
 
             // Get blueprints
@@ -330,7 +334,7 @@ namespace BattlegroundsApp.Modals.CompanyBuilder {
 
             // Get all abilities
             string[] abilities = this.SquadSlot.SquadInstance.SBP.GetAbilities(true);
-            IEnumerable<AbilityBlueprint> abps = abilities.Select(x => BlueprintManager.FromBlueprintName<AbilityBlueprint>(x))
+            var abps = abilities.Select(x => BlueprintManager.FromBlueprintName<AbilityBlueprint>(x))
                 .Where(x => !string.IsNullOrEmpty(x.UI.Icon) && App.ResourceHandler.HasIcon("ability_icons", x.UI.Icon));
 
             // Create observable collection
@@ -365,7 +369,7 @@ namespace BattlegroundsApp.Modals.CompanyBuilder {
             }
 
             // Get upgrades
-            IEnumerable<UpgradeBlueprint> ubps = this.m_availableUpgrades.Select(x => BlueprintManager.FromBlueprintName<UpgradeBlueprint>(x))
+            var ubps = this.m_availableUpgrades.Select(x => BlueprintManager.FromBlueprintName<UpgradeBlueprint>(x))
             .Where(x => !string.IsNullOrEmpty(x.UI.Icon));
 
             // Create observable collection
@@ -461,6 +465,23 @@ namespace BattlegroundsApp.Modals.CompanyBuilder {
 
         }
 
+        private void OnRemoveCrew(object sender, MouseButtonEventArgs e) {
+
+            // Create dialog to verify user wishes to upgrade.
+            ModalDialog confirmModal = ModalDialog.CreateModal("Remove Crew", $"Are you sure you want to remove the crew?\nThis will put the vehicle into the equipment view.",
+                YesNoDialogResult.Confirm,
+                YesNoDialogResult.Cancel,
+                (sender, success, value) => {
+                    if (success) {
+                        this.OnCrewRemove?.Invoke(this.SquadSlot);
+                        this.CloseModal(); // Close self
+                    }
+                });
+
+            // Show the modal
+            this.LayeredModal.ShowModal(confirmModal);
+
+        }
     }
 
 }

@@ -14,7 +14,7 @@ namespace Battlegrounds.Game.Database {
     /// Representation of a <see cref="Blueprint"/> with upgrade specific values. Inherits from <see cref="Blueprint"/>. This class cannot be inheritted.
     /// </summary>
     [JsonConverter(typeof(UpgradeBlueprintConverter))]
-    public class UpgradeBlueprint : Blueprint {
+    public class UpgradeBlueprint : Blueprint, IUIBlueprint {
 
         public enum OwnerType {
             None,

@@ -50,6 +50,7 @@ namespace BattlegroundsApp.Views {
         private readonly ModPackage m_activeModPackage;
 
         private List<SquadBlueprint> m_availableSquads;
+        private List<SquadBlueprint> m_availableCrews;
         private List<AbilityBlueprint> m_abilities;
 
         public string CompanyName { get; }
@@ -194,12 +195,17 @@ namespace BattlegroundsApp.Views {
             this.VehicleWrap.Children.Clear();
             this.AbilityWrap.Children.Clear();
             this.UnitAbilityWrap.Children.Clear();
+            this.EquipmentWrap.Children.Clear();
+            this.ItemWrap.Children.Clear();
 
             // Add all units
             this.Builder.EachUnit(this.AddUnitToDisplay, x => (int)x.DeploymentPhase);
 
             // Add all abilities
             this.Builder.EachAbility(this.AddAbilityToDisplay);
+
+            // Add all items
+            this.Builder.EachItem(this.AddEquipmentToDisplay);
 
         }
 
@@ -219,8 +225,12 @@ namespace BattlegroundsApp.Views {
 
         }
 
-        private void OnSlotClicked(SquadSlotLarge squadSlot)
-            => this.ShowModal(new SelectedSquadModal(squadSlot, this.m_activeModPackage));
+        private void OnSlotClicked(SquadSlotLarge squadSlot) {
+            SelectedSquadModal modal = new(squadSlot, this.m_activeModPackage);
+            modal.OnCrewRemove += this.RemoveCrewAndAddBlueprintToEquipment;
+            modal.OnCrewEject += this.EjectCrewAndAddBlueprintToPoolAndToEquipment;
+            this.ShowModal(modal);
+        }
 
         private void OnSlotRemoveClicked(SquadSlotLarge squadSlot) {
 
@@ -258,6 +268,20 @@ namespace BattlegroundsApp.Views {
             // Update company ability count
             this.CompanyAbilityCount--;
             this.NotifyPropertyChanged(nameof(this.CompanyAbilityHeaderItem));
+
+        }
+
+        private void OnEquipmentRemoveClicked(EquipmentSlot equipmentSlot) {
+
+            // Remove item visually
+            if (equipmentSlot.Equipment is SlotItemBlueprint) {
+                this.ItemWrap.Children.Remove(equipmentSlot);
+            } else {
+                this.EquipmentWrap.Children.Remove(equipmentSlot);
+            }
+
+            // Remove from company
+            _ = this.Builder.RemoveEquipment(equipmentSlot.Equipment);
 
         }
 
@@ -399,8 +423,25 @@ namespace BattlegroundsApp.Views {
 
         }
 
+        private void AddEquipmentToDisplay(Blueprint blueprint) {
+
+            // Build container
+            EquipmentSlot slot = new(blueprint);
+            slot.OnRemove += this.OnEquipmentRemoveClicked;
+            slot.OnEquipped += this.EquipItem;
+
+            // Determine source
+            _ = (blueprint is SlotItemBlueprint ? this.ItemWrap : this.EquipmentWrap).Children.Add(slot);
+
+        }
+
         private void SetCanAddUnits(bool canAdd) {
             foreach (object obj in this.AvailableUnitsStack.Children) {
+                if (obj is AvailableItemSlot slot) {
+                    slot.CanAdd = canAdd;
+                }
+            }
+            foreach (object obj in this.AvailableCrews.Children) {
                 if (obj is AvailableItemSlot slot) {
                     slot.CanAdd = canAdd;
                 }
@@ -436,6 +477,13 @@ namespace BattlegroundsApp.Views {
                     .Filter(x => !x.Types.IsVehicleCrew)
                     .ToList();
 
+                // Get available crews
+                this.m_availableCrews = BlueprintManager.GetCollection<SquadBlueprint>()
+                    .FilterByMod(this.CompanyGUID)
+                    .Filter(x => x.Army == this.CompanyFaction.ToString())
+                    .Filter(x => x.Types.IsVehicleCrew)
+                    .ToList();
+
                 // Get faction data
                 var faction = this.m_activeModPackage.FactionSettings[this.CompanyFaction];
 
@@ -447,6 +495,7 @@ namespace BattlegroundsApp.Views {
 
                 // Populate lists
                 this.FillStack(this.m_availableSquads, this.AvailableUnitsStack, this.CanAddUnits);
+                this.FillStack(this.m_availableCrews, this.AvailableCrews, this.CanAddUnits);
                 this.FillStack(this.m_abilities, this.AvailableAbilities, this.CanAddAbilities);
 
             });
@@ -485,6 +534,57 @@ namespace BattlegroundsApp.Views {
             this.NotifyPropertyChanged(nameof(this.AvailableUnitsVisible));
             this.NotifyPropertyChanged(nameof(this.AvailableAbilitiesVisible));
             this.NotifyPropertyChanged(nameof(this.AvailableCrewsVisible));
+
+        }
+
+        private void RemoveCrewAndAddBlueprintToEquipment(SquadSlotLarge squadSlot) {
+
+            // Get vehicle
+            var vehicle = squadSlot.SquadInstance;
+            var ebp = vehicle.SBP.GetVehicleBlueprint();
+
+            // Add to equipment
+            this.Builder.AddEquipment(ebp);
+
+            // Remove squad
+            this.OnSlotRemoveClicked(squadSlot);
+
+            // Add ebp to display
+            this.AddEquipmentToDisplay(ebp);
+
+        }
+
+        private void EjectCrewAndAddBlueprintToPoolAndToEquipment(SquadSlotLarge squadSlot) { }
+
+        private void EquipItem(EquipmentSlot equipmentSlot, SquadBlueprint sbp) {
+
+            // Remove equipment.
+            this.OnEquipmentRemoveClicked(equipmentSlot);
+
+            // Determine how to apply
+            if (equipmentSlot.Equipment is SlotItemBlueprint slotitem) {
+
+                // Throw exception for now
+                throw new NotImplementedException();
+
+            } else if (equipmentSlot.Equipment is EntityBlueprint ebp) {
+
+                // Get vehicle sbp
+                var vehicleSbp = ebp.GetVehicleSquadBlueprint(this.CompanyFaction);
+                var builder = new UnitBuilder().SetModGUID(this.CompanyGUID).SetBlueprint(vehicleSbp)
+                    .CreateAndGetCrew(x => x.SetBlueprint(sbp)).SetDeploymentPhase(this.GetRecommendedDeploymentPhase());
+
+                // Construct
+                var result = this.Builder.AddAndCommitUnit(builder);
+
+                // Add to display
+                this.AddUnitToDisplay(result);
+
+                // Update company unit count
+                this.CompanySize++;
+                this.NotifyPropertyChanged(nameof(this.CompanyUnitHeaderItem));
+
+            }
 
         }
 

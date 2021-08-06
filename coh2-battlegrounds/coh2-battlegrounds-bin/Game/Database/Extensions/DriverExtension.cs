@@ -13,9 +13,11 @@ namespace Battlegrounds.Game.Database.Extensions {
         public readonly struct Entry {
             public readonly string Faction;
             public readonly string SquadBlueprint;
-            public Entry(string faction, string sbp) {
+            public readonly string CaptureSquadBlueprint;
+            public Entry(string faction, string sbp, string capsbp) {
                 this.Faction = faction;
                 this.SquadBlueprint = sbp;
+                this.CaptureSquadBlueprint = capsbp;
             }
         }
 
@@ -30,6 +32,15 @@ namespace Battlegrounds.Game.Database.Extensions {
             return null;
         }
 
+        public SquadBlueprint GetCaptureSquad(Faction faction) {
+            foreach (Entry e in this.m_entries) {
+                if (e.Faction == faction.RbpPath) {
+                    return BlueprintManager.FromBlueprintName<SquadBlueprint>(e.CaptureSquadBlueprint);
+                }
+            }
+            return null;
+        }
+
         public DriverExtension(Entry[] entries) {
             this.m_entries = entries;
         }
@@ -37,15 +48,16 @@ namespace Battlegrounds.Game.Database.Extensions {
         public static DriverExtension FromJson(ref Utf8JsonReader reader) {
             List<Entry> entries = new();
             while (reader.Read() && reader.TokenType is not JsonTokenType.EndArray) {
-                string[] strValues = new string[2];
+                string[] strValues = new string[3];
                 while (reader.Read() && reader.TokenType is not JsonTokenType.EndObject) {
                     strValues[reader.ReadProperty() switch {
                         "SBP" => 0,
                         "Army" => 1,
-                        _ => throw new NotSupportedException()
+                        "Capture" => 2,
+                        _ => throw new FormatException()
                     }] = reader.GetString();
                 }
-                entries.Add(new(strValues[1], strValues[0]));
+                entries.Add(new(strValues[1], strValues[0], strValues[2]));
             }
             return new(entries.ToArray());
         }

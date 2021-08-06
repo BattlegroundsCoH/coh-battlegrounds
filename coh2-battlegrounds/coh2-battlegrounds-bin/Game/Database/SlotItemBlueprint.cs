@@ -15,7 +15,7 @@ namespace Battlegrounds.Game.Database {
     /// 
     /// </summary>
     [JsonConverter(typeof(SlotItemBlueprintConverter))]
-    public sealed class SlotItemBlueprint : Blueprint {
+    public sealed class SlotItemBlueprint : Blueprint, IUIBlueprint {
 
         /// <summary>
         /// The unique PropertyBagGroupdID assigned to this blueprint.

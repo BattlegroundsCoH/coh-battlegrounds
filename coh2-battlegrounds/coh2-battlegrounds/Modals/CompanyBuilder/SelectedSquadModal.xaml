@@ -253,9 +253,13 @@
                             Visibility="{Binding CrewVisible}"
                             Margin="5">
                     <Label Content="Vehicle Crew" HorizontalAlignment="Center"/>
-                    <DockPanel>
+                    <DockPanel LastChildFill="True">
                         <Image Width="32" Height="32" Source="{Binding CrewIcon}"
                                DockPanel.Dock="Left"/>
+                        <Image Width="24" Height="24" DockPanel.Dock="Right"
+                               Source="pack://application:,,,/Resources/Ingame/remove_item.png"
+                               MouseDown="OnRemoveCrew"
+                               ToolTip="Remove Crew"/>
                         <Image HorizontalAlignment="Right" DockPanel.Dock="Right"
                                Width="36" Height="22" Source="{Binding CrewVeterancy}"/>
                         <TextBlock TextWrapping="Wrap" Text="{Binding CrewName}"

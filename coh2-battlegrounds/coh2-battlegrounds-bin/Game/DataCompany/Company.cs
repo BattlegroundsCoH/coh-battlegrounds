@@ -198,6 +198,13 @@ namespace Battlegrounds.Game.DataCompany {
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="blueprint"></param>
+        public void RemoveInventoryItem(Blueprint blueprint)
+            => this.m_inventory.Remove(this.m_inventory.FirstOrDefault(x => x.Name == blueprint.Name));
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <param name="ability"></param>
         public void AddAbility(SpecialAbility ability) => this.m_abilities.Add(ability);
 
@@ -289,7 +296,7 @@ namespace Battlegrounds.Game.DataCompany {
             double total = 1.0;
 
             // Sum experience (weighted to max rank and squad count)
-            total += this.m_squads.Aggregate(0.0, (a, b) => a + (b.VeterancyRank / 5.0) / this.m_squads.Count);
+            total += this.m_squads.Aggregate(0.0, (a, b) => a + (b.VeterancyRank / 5.0 / this.m_squads.Count));
 
             // Modify by win/loss rate
             total *= 1.0 + (this.m_companyStatistics.WinRate - this.m_companyStatistics.LossRate);
@@ -314,7 +321,7 @@ namespace Battlegrounds.Game.DataCompany {
         /// 
         /// </summary>
         /// <param name="updateFunction"></param>
-        public void UpdateStatistics(Func<CompanyStatistics, CompanyStatistics> updateFunction) 
+        public void UpdateStatistics(Func<CompanyStatistics, CompanyStatistics> updateFunction)
             => this.m_companyStatistics = updateFunction(this.m_companyStatistics);
 
         /// <summary>
@@ -324,11 +331,7 @@ namespace Battlegrounds.Game.DataCompany {
         /// <param name="squad"></param>
         public void ReplaceSquad(ushort squadIndex, Squad squad) {
             int arrIndex = this.m_squads.FindIndex(x => x.SquadID == squadIndex);
-            if (arrIndex is not -1) {
-                this.m_squads[arrIndex] = squad;
-            } else {
-                throw new InvalidOperationException();
-            }
+            this.m_squads[arrIndex] = arrIndex is not -1 ? squad : throw new InvalidOperationException();
         }
 
         /// <summary>
@@ -342,7 +345,7 @@ namespace Battlegrounds.Game.DataCompany {
         /// </summary>
         /// <returns></returns>
         public SpecialAbility[] GetSpecialUnitAbilities() {
-            ModPackage package = ModManager.GetPackageFromGuid(this.TuningGUID);
+            var package = ModManager.GetPackageFromGuid(this.TuningGUID);
             if (package is null) {
                 throw new InvalidOperationException();
             }
@@ -352,7 +355,7 @@ namespace Battlegrounds.Game.DataCompany {
                 .Select(x => BlueprintManager.FromBlueprintName<AbilityBlueprint>(x.Blueprint))
                 .Where(x => x is not null);
             return abps.Select(x => {
-                SpecialAbilityCategory category = x.Name.Contains("air_") ? SpecialAbilityCategory.AirSupport : x.Name.Contains("artillery_") ? SpecialAbilityCategory.Artillery
+                var category = x.Name.Contains("air_") ? SpecialAbilityCategory.AirSupport : x.Name.Contains("artillery_") ? SpecialAbilityCategory.Artillery
                 : SpecialAbilityCategory.Default;
                 int use = category switch { // TODO: Read from mod package
                     SpecialAbilityCategory.AirSupport => 6,

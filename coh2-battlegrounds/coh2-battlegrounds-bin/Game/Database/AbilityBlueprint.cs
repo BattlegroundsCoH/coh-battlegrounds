@@ -47,7 +47,7 @@ namespace Battlegrounds.Game.Database {
     /// Representation of a <see cref="Blueprint"/> with ability specific values. Inherits from <see cref="Blueprint"/>. This class cannot be inherited.
     /// </summary>
     [JsonConverter(typeof(AbilityBlueprintConverter))]
-    public sealed class AbilityBlueprint : Blueprint {
+    public sealed class AbilityBlueprint : Blueprint, IUIBlueprint {
 
         /// <summary>
         /// The unique PropertyBagGroupdID assigned to this blueprint.
