@@ -136,7 +136,7 @@ namespace BattlegroundsApp.Views {
         public CompanyBuilderView(string companyName, Faction faction, CompanyType type, ModGuid modGuid) : this() {
 
             // Set properties
-            this.Builder = new CompanyBuilder().NewCompany(faction).ChangeName(companyName).ChangeType(type).ChangeTuningMod(modGuid);
+            this.Builder = new CompanyBuilder().NewCompany(faction).ChangeName(companyName).ChangeType(type).ChangeTuningMod(modGuid).Commit();
             this.Statistics = new();
             this.CompanyName = companyName;
             this.CompanySize = 0;

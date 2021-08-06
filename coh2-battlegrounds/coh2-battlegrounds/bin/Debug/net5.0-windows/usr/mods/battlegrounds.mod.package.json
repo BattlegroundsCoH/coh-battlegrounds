@@ -249,6 +249,16 @@
             ],
             "CanHaveParadropInCompanies": false,
             "CanHaveGliderInCompanies": false
+        },
+        {
+            "Faction": "german",
+            "CanHaveGliderInCompanies": false,
+            "CanHaveParadropInCompanies": false,
+            "Abilities": [],
+            "UnitAbilities": [],
+            "Drivers": [],
+            "TowTransports": [],
+            "Transports": []
         }
     ],
     "ParadropUnits": [],
