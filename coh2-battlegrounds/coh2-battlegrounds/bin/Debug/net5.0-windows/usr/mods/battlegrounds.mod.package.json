@@ -96,49 +96,145 @@
                 }
             ],
             "Abilities": [
-                "soviet_air_bombing_run",
-                "soviet_air_infantry_overwatch",
-                "soviet_air_recon",
-                "soviet_air_strafe",
-                "soviet_air_vehicle_overwatch",
-                "soviet_hunt_tarrget",
-                "soviet_artillery_regimental_barrage",
-                "soviet_artillery_overwatch",
-                "soviet_artillery_fire",
-                "soviet_artillery_propaganda"
+                {
+                    "Blueprint": "soviet_air_bombing_run",
+                    "AbilityCategory": "AirSupport",
+                    "MaxUsePerMatch": 3
+                },
+                {
+                    "Blueprint": "soviet_air_infantry_overwatch",
+                    "AbilityCategory": "AirSupport",
+                    "MaxUsePerMatch": 3
+                },
+                {
+                    "Blueprint": "soviet_air_recon",
+                    "AbilityCategory": "AirSupport",
+                    "MaxUsePerMatch": 3
+                },
+                {
+                    "Blueprint": "soviet_air_strafe",
+                    "AbilityCategory": "AirSupport",
+                    "MaxUsePerMatch": 3
+                },
+                {
+                    "Blueprint": "soviet_air_vehicle_overwatch",
+                    "AbilityCategory": "AirSupport",
+                    "MaxUsePerMatch": 3
+                },
+                {
+                    "Blueprint": "soviet_hunt_tarrget",
+                    "AbilityCategory": "AirSupport",
+                    "MaxUsePerMatch": 3
+                },
+                {
+                    "Blueprint": "soviet_artillery_regimental_barrage",
+                    "AbilityCategory": "Artillery",
+                    "MaxUsePerMatch": 3
+                },
+                {
+                    "Blueprint": "soviet_artillery_overwatch",
+                    "AbilityCategory": "Artillery",
+                    "MaxUsePerMatch": 3
+                },
+                {
+                    "Blueprint": "soviet_artillery_fire",
+                    "AbilityCategory": "Artillery",
+                    "MaxUsePerMatch": 3
+                },
+                {
+                    "Blueprint": "soviet_artillery_propaganda",
+                    "AbilityCategory": "Artillery",
+                    "MaxUsePerMatch": 3
+                }
             ],
             "UnitAbilities": [
                 {
                     "Blueprint": "katyusha_rocket_truck_bg",
                     "Abilities": [
-                        "soviet_offmap_katyusha"
+                        {
+                            "Blueprint": "soviet_offmap_katyusha",
+                            "AbilityCategory": "Artillery",
+                            "MaxUsePerMatch": -1,
+                            "RequireOffmap": true,
+                            "CanGrantVeterancy": true,
+                            "VeterancyExperienceGain": 10
+                        }
                     ]
                 },
                 {
                     "Blueprint": "hm-120_38_mortar_squad_bg",
                     "Abilities":[
-                        "soviet_offmap_mortar",
-                        "soviet_offmap_mortar_smoke"
+                        {
+                            "Blueprint": "soviet_offmap_mortar",
+                            "AbilityCategory": "Artillery",
+                            "MaxUsePerMatch": -1,
+                            "RequireOffmap": true,
+                            "CanGrantVeterancy": true,
+                            "VeterancyExperienceGain": 10
+                        },
+                        {
+                            "Blueprint": "soviet_offmap_mortar_smoke",
+                            "AbilityCategory": "Artillery",
+                            "MaxUsePerMatch": -1,
+                            "RequireOffmap": true,
+                            "CanGrantVeterancy": true,
+                            "VeterancyExperienceGain": 10
+                        }
                     ]
                 },
                 {
                     "Blueprint": "pm-82_41_mortar_squad_bg",
                     "Abilities":[
-                        "soviet_offmap_mortar",
-                        "soviet_offmap_mortar_smoke"
+                        {
+                            "Blueprint": "soviet_offmap_mortar",
+                            "AbilityCategory": "Artillery",
+                            "MaxUsePerMatch": -1,
+                            "RequireOffmap": true,
+                            "CanGrantVeterancy": true,
+                            "VeterancyExperienceGain": 10
+                        },
+                        {
+                            "Blueprint": "soviet_offmap_mortar_smoke",
+                            "AbilityCategory": "Artillery",
+                            "MaxUsePerMatch": -1,
+                            "RequireOffmap": true,
+                            "CanGrantVeterancy": true,
+                            "VeterancyExperienceGain": 10
+                        }
                     ]
                 },
                 {
                     "Blueprint": "m1937_152mm_ml_20_artillery_bg",
                     "Abilities":[
-                        "soviet_offmap_ml_20",
-                        "soviet_offmap_ml_20_smoke"
+                        {
+                            "Blueprint": "soviet_offmap_ml_20",
+                            "AbilityCategory": "Artillery",
+                            "MaxUsePerMatch": -1,
+                            "RequireOffmap": true,
+                            "CanGrantVeterancy": true,
+                            "VeterancyExperienceGain": 10
+                        },
+                        {
+                            "Blueprint": "soviet_offmap_ml_20_smoke",
+                            "AbilityCategory": "Artillery",
+                            "MaxUsePerMatch": -1,
+                            "RequireOffmap": true,
+                            "CanGrantVeterancy": true,
+                            "VeterancyExperienceGain": 10
+                        }
                     ]
                 },
                 {
                     "Blueprint": "m1931_203mm_b-4_howitzer_artillery_bg",
                     "Abilities":[
-                        "soviet_offmap_b4"
+                        {
+                            "Blueprint": "soviet_offmap_b4",
+                            "AbilityCategory": "Artillery",
+                            "MaxUsePerMatch": -1,
+                            "RequireOffmap": true,
+                            "CanGrantVeterancy": true,
+                            "VeterancyExperienceGain": 10
+                        }
                     ]
                 }
             ],

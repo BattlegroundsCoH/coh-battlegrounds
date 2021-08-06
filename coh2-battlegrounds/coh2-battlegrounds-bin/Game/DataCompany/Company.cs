@@ -196,6 +196,27 @@ namespace Battlegrounds.Game.DataCompany {
         public void AddInventoryItem(Blueprint blueprint) => this.m_inventory.Add(blueprint);
 
         /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="ability"></param>
+        public void AddAbility(SpecialAbility ability) => this.m_abilities.Add(ability);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="ability"></param>
+        /// <returns></returns>
+        public bool RemoveAbility(SpecialAbility ability) => this.m_abilities.Remove(ability);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="ability"></param>
+        /// <returns></returns>
+        public bool RemoveAbility(string ability)
+            => this.m_abilities.FirstOrDefault(x => x.ABP.Name == ability) is SpecialAbility abp && this.m_abilities.Remove(abp);
+
+        /// <summary>
         /// Reset most of the company data, including the company inventory.
         /// </summary>
         public void ResetCompany() => this.ResetCompany(true);
@@ -328,12 +349,12 @@ namespace Battlegrounds.Game.DataCompany {
             var abps = package.FactionSettings[this.Army].UnitAbilities
                 .Where(x => this.m_squads.Any(y => y.SBP.Name == x.Blueprint))
                 .SelectMany(x => x.Abilities)
-                .Select(x => BlueprintManager.FromBlueprintName<AbilityBlueprint>(x))
+                .Select(x => BlueprintManager.FromBlueprintName<AbilityBlueprint>(x.Blueprint))
                 .Where(x => x is not null);
             return abps.Select(x => {
                 SpecialAbilityCategory category = x.Name.Contains("air_") ? SpecialAbilityCategory.AirSupport : x.Name.Contains("artillery_") ? SpecialAbilityCategory.Artillery
                 : SpecialAbilityCategory.Default;
-                int use = category switch { // TODO: Improve this
+                int use = category switch { // TODO: Read from mod package
                     SpecialAbilityCategory.AirSupport => 6,
                     SpecialAbilityCategory.Artillery => 8,
                     _ => 4

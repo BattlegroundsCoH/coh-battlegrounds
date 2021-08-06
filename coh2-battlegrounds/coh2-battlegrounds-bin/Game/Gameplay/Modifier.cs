@@ -22,9 +22,9 @@ namespace Battlegrounds.Game.Gameplay {
         /// </summary>
         /// <param name="modifiername">The name of the modifier to apply.</param>
         /// <param name="value">The value to modify by.</param>
-        public Modifier(string modifiername, float value) {
-            this.Value = value;
-            this.Name = modifiername;
+        public Modifier(string Name, float Value) {
+            this.Value = Value;
+            this.Name = Name;
         }
 
         public override string ToString() => $"{this.Name} x{this.Value:0.00}";

@@ -51,7 +51,6 @@ namespace BattlegroundsApp.Views {
 
         private List<SquadBlueprint> m_availableSquads;
         private List<AbilityBlueprint> m_abilities;
-        private List<AbilityBlueprint> m_unlockedAbilities;
 
         public string CompanyName { get; }
 
@@ -86,7 +85,7 @@ namespace BattlegroundsApp.Views {
         public string AvailableObjectType { get; set; } = "Available Units";
 
         public Visibility AvailableUnitsVisible { get; set; } = Visibility.Visible;
-        
+
         public Visibility AvailableAbilitiesVisible { get; set; } = Visibility.Collapsed;
 
         public Visibility AvailableCrewsVisible { get; set; } = Visibility.Collapsed;
@@ -162,12 +161,12 @@ namespace BattlegroundsApp.Views {
         private void BackButton_Click(object sender, RoutedEventArgs e) {
 
             if (this.Builder.CalculateChecksum() == this.m_initialChecksum) {
-                this.StateChangeRequest(new CompanyView());
+                _ = this.StateChangeRequest(new CompanyView());
                 return;
             }
 
             if (YesNoDialogViewModel.ShowYesNoDialog("Back", "Are you sure? All unsaved changes will be lost.") is YesNoDialogResult.Confirm) {
-                this.StateChangeRequest(new CompanyView());
+                _ = this.StateChangeRequest(new CompanyView());
             }
 
         }
@@ -189,17 +188,18 @@ namespace BattlegroundsApp.Views {
 
         private void ShowCompany() {
 
+            // Clear the wraps
             this.InfantryWrap.Children.Clear();
             this.SupportWrap.Children.Clear();
             this.VehicleWrap.Children.Clear();
+            this.AbilityWrap.Children.Clear();
+            this.UnitAbilityWrap.Children.Clear();
 
             // Add all units
             this.Builder.EachUnit(this.AddUnitToDisplay, x => (int)x.DeploymentPhase);
 
             // Add all abilities
             this.Builder.EachAbility(this.AddAbilityToDisplay);
-
-            // TODO: Add abilities to list
 
         }
 
@@ -211,7 +211,7 @@ namespace BattlegroundsApp.Views {
             }
 
             // Remove unit
-            this.Builder.RemoveUnit(squad.SquadID);
+            _ = this.Builder.RemoveUnit(squad.SquadID);
 
             // Update company Size
             this.CompanySize--;
@@ -244,6 +244,23 @@ namespace BattlegroundsApp.Views {
 
         }
 
+        private void OnAbilityRemoveClicked(AbilitySlot abilitySlot) {
+
+            // Remove from display
+            this.AbilityWrap.Children.Remove(abilitySlot);
+
+            // Remove from company
+            _ = this.Builder.RemoveAbility(abilitySlot.Ability);
+
+            // Refresh
+            this.SetCanAddAbilities(this.CanAddAbilities);
+
+            // Update company ability count
+            this.CompanyAbilityCount--;
+            this.NotifyPropertyChanged(nameof(this.CompanyAbilityHeaderItem));
+
+        }
+
         private void OnUnitDrop(object sender, DragEventArgs e) {
 
             if (this.CompanySize is not Company.MAX_SIZE && e.Data.GetData("Squad") is SquadBlueprint sbp) {
@@ -273,12 +290,18 @@ namespace BattlegroundsApp.Views {
         }
 
         private void OnAbilityDrop(object sender, DragEventArgs e) {
-        
+
             // Make sure we got an ability blueprint
             if (e.Data.GetData("Ability") is AbilityBlueprint abp) {
 
+                // Get faction ability
+                var fabp = this.m_activeModPackage.FactionSettings[this.CompanyFaction].Abilities.FirstOrDefault(x => x.Blueprint == abp.Name);
+                if (fabp is null) {
+                    return;
+                }
+
                 // Get special ability
-                var special = this.Builder.AddAndCommitAbility(abp);
+                var special = this.Builder.AddAndCommitAbility(abp, fabp.AbilityCategory, fabp.MaxUsePerMatch);
 
                 // Update company ability count
                 this.CompanyAbilityCount++;
@@ -290,6 +313,11 @@ namespace BattlegroundsApp.Views {
                 // Mark handled
                 e.Effects = DragDropEffects.Move;
                 e.Handled = true;
+
+                // Get the item slot and disable it
+                if (e.Data.GetData("Source") is AvailableItemSlot itemSlot) {
+                    itemSlot.CanAdd = false;
+                }
 
                 // Check if we can no longer add units
                 if (!this.CanAddAbilities) {
@@ -357,6 +385,14 @@ namespace BattlegroundsApp.Views {
 
             // Build container
             AbilitySlot slot = new(specialAbility);
+            slot.OnRemove += this.OnAbilityRemoveClicked;
+
+            // If is unit ability, then update
+            if (isUnitAbility) {
+                var factionData = this.m_activeModPackage.FactionSettings[this.CompanyFaction];
+                var unitData = factionData.UnitAbilities.FirstOrDefault(x => x.Abilities.Any(y => y.Blueprint == specialAbility.ABP.Name));
+                slot.UpdateUnitData(unitData);
+            }
 
             // Determine source
             _ = (isUnitAbility ? this.UnitAbilityWrap : this.AbilityWrap).Children.Add(slot);
@@ -374,7 +410,7 @@ namespace BattlegroundsApp.Views {
         private void SetCanAddAbilities(bool canAdd) {
             foreach (object obj in this.AvailableAbilities.Children) {
                 if (obj is AvailableItemSlot slot) {
-                    slot.CanAdd = canAdd;
+                    slot.CanAdd = canAdd && !this.Builder.HasAbility(slot.Blueprint.Name);
                 }
             }
         }
@@ -406,14 +442,7 @@ namespace BattlegroundsApp.Views {
                 // Get available abilities
                 this.m_abilities = BlueprintManager.GetCollection<AbilityBlueprint>()
                     .FilterByMod(this.CompanyGUID)
-                    .Filter(x => faction.Abilities.Contains(x.Name))
-                    .ToList();
-
-                // Get abilities associated with company units
-                this.m_unlockedAbilities = BlueprintManager.GetCollection<AbilityBlueprint>()
-                    .FilterByMod(this.CompanyGUID)
-                    .Filter(x => faction.UnitAbilities.Any(y => y.Abilities.Contains(x.Name)))
-                    .Filter(x => faction.UnitAbilities.Any(y => this.Builder.HasUnit(y.Blueprint)))
+                    .Filter(x => faction.Abilities.Select(y => y.Blueprint).Contains(x.Name))
                     .ToList();
 
                 // Populate lists

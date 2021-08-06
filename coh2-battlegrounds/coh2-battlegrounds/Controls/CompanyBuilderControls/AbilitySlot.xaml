@@ -3,19 +3,39 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:BattlegroundsApp.Controls.CompanyBuilderControls"
+             xmlns:local="clr-namespace:BattlegroundsApp.Controls.CompanyBuilderControls" xmlns:controls="clr-namespace:BattlegroundsApp.Controls" xmlns:convertor="clr-namespace:BattlegroundsApp.Utilities.Converters"
              mc:Ignorable="d" 
-             d:DesignHeight="72" d:DesignWidth="236">
-    <Canvas Width="236" Height="72">
-        <Canvas Width="236"  Height="72" Background="LightGray">
-            <TextBlock Text="{Binding AbilityName}" Canvas.Left="50" Canvas.Top="5"/>
+             d:DesignHeight="100" d:DesignWidth="236">
 
-            <Image Canvas.Left="5" Canvas.Top="5" Source="{Binding AbilityIcon, TargetNullValue={x:Null}}"
+    <Canvas Width="236" Height="100">
+        <Canvas Width="236"  Height="100" Background="LightGray">
+            <TextBlock Text="{Binding AbilityName}"
+                       Canvas.Left="50" 
+                       Canvas.Top="5"/>
+            <TextBlock Text="{Binding AbilityDescription}" 
+                       Canvas.Left="50"
+                       Canvas.Top="26" 
+                       Width="180" Height="48"
+                       TextWrapping="Wrap"/>
+
+            <Image Canvas.Left="5" Canvas.Top="5" 
+                   Source="{Binding AbilityIcon, TargetNullValue={x:Null}}"
                            Width="42" Height="42"/>
 
-            <local:CostControl x:Name="CostDisplay" Canvas.Bottom="0" Height="24"/>
+            <local:CostControl 
+                x:Name="CostDisplay" 
+                Canvas.Bottom="0" 
+                Height="24"/>
 
         </Canvas>
-        <Button Width="25" Height="25" Content="X" Canvas.Right="0" Click="RemoveAbility"/>
+        <controls:Icon 
+            Dimension="Size24x24"
+            Canvas.Right="0"
+            IconSource="unit_icons"
+            x:Name="GranteeIcon"
+            Visibility="{Binding IsGranted}"/>
+        <Button Width="26" Height="26" Content="X" Canvas.Right="0" 
+                Click="RemoveAbility"
+                Visibility="{Binding IsRemoveAvailable}"/>
     </Canvas>
 </UserControl>

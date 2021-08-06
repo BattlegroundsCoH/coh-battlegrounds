@@ -178,7 +178,7 @@ namespace Battlegrounds.Game.DataCompany {
 
             // If null, throw error
             if (this.m_companyTarget == null) {
-                throw new NullReferenceException("Cannot add unit to a company that has not been created.");
+                throw new ArgumentNullException("CompanyTarget", "Cannot add unit to a company that has not been created.");
             }
 
             // Set the mod GUID (So we get no conflicts between mods).
@@ -197,10 +197,27 @@ namespace Battlegrounds.Game.DataCompany {
         /// </summary>
         /// <param name="abp"></param>
         /// <returns></returns>
-        public virtual SpecialAbility AddAndCommitAbility(AbilityBlueprint abp) {
+        public virtual SpecialAbility AddAndCommitAbility(AbilityBlueprint abp, SpecialAbilityCategory specialAbility, int maxUse) {
 
-            return new(abp, SpecialAbilityCategory.Default, 0);
+            // Create ability
+            SpecialAbility sabp = new(abp, SpecialAbilityCategory.Default, 0);
 
+            // Add ability
+            this.m_companyTarget.AddAbility(sabp);
+
+            // Return the special ability
+            return sabp;
+
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="ability"></param>
+        /// <returns></returns>
+        public virtual CompanyBuilder RemoveAbility(SpecialAbility ability) {
+            _ = this.m_companyTarget.RemoveAbility(ability);
+            return this;
         }
 
         /// <summary>
@@ -350,11 +367,18 @@ namespace Battlegrounds.Game.DataCompany {
         }
 
         /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        public bool HasAbility(string blueprint) => this.m_companyTarget.Abilities.Any(x => x.ABP.Name == blueprint);
+
+        /// <summary>
         /// Get if the company under construction has a squad with specified <paramref name="blueprint"/>.
         /// </summary>
         /// <param name="blueprint">The name of the blueprint to check for.</param>
         /// <returns><see langword="true"/>, if <paramref name="blueprint"/> is found; Otherwise <see langword="false"/>.</returns>
-        public bool HasUnit(string blueprint) => this.m_companyTarget.Units.Any(x => x.SBP.Name ==  blueprint);
+        public bool HasUnit(string blueprint) => this.m_companyTarget.Units.Any(x => x.SBP.Name == blueprint);
 
         /// <summary>
         /// 
@@ -373,8 +397,8 @@ namespace Battlegrounds.Game.DataCompany {
         /// </summary>
         /// <param name="action"></param>
         public void EachAbility(Action<SpecialAbility, bool> action) {
-            this.m_companyTarget.GetSpecialUnitAbilities().ForEach(x => action(x, true));
-            this.m_companyTarget.Abilities.ForEach(x => action(x, false));
+            _ = this.m_companyTarget.GetSpecialUnitAbilities().ForEach(x => action(x, true));
+            _ = this.m_companyTarget.Abilities.ForEach(x => action(x, false));
         }
 
     }

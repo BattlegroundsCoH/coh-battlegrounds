@@ -65,7 +65,7 @@ namespace BattlegroundsApp.Controls.CompanyBuilderControls {
             if (e.LeftButton is MouseButtonState.Pressed) {
 
                 // Create DB and set source
-                var obj = new DataObject();
+                DataObject obj = new();
                 obj.SetData("Source", this);
 
                 // Set blueprint based on type
@@ -76,7 +76,7 @@ namespace BattlegroundsApp.Controls.CompanyBuilderControls {
                 }
 
                 // Do the drag drop
-                DragDrop.DoDragDrop(this, obj, DragDropEffects.Move);
+                _ = DragDrop.DoDragDrop(this, obj, DragDropEffects.Move);
 
             }
 
