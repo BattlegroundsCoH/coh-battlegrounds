@@ -82,14 +82,15 @@ namespace BattlegroundsApp.Views {
 
         public GameLobbyView(LobbyHandler handler) {
 
-            // Init components
-            this.InitializeComponent();
-
             // Set handler
             this.m_handler = handler;
 
             // Set mod package (TODO: Let users pick this before the lobby starts, on in lobby)
             this.m_selectedModPackage = ModManager.GetPackage("mod_bg");
+            Trace.TraceWarning($"There's currently no method of chaning the mod package. Selecting 'mod_bg' by default.");
+
+            // Init components
+            this.InitializeComponent();
 
         }
 

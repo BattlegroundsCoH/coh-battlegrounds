@@ -216,8 +216,8 @@ namespace BattlegroundsApp.Views.ViewComponent {
         private static TeamPlayerCompanyItem CompanyItemFromCompany(Company company)
             => new TeamPlayerCompanyItem(CompanyItemState.Company, company.Name, company.Army.Name, company.Strength);
 
-        private void ArmySelector_SelectionChanged(object sender, IconComboBoxItem newItem) {
-            if (newItem.GetSource(out TeamPlayerArmyItem item) && item.Name != this.Playerarmy) {
+        private void ArmySelector_SelectionChanged(object sender, IconComboBoxSelectedChangedEventArgs args) {
+            if (args.Item.GetSource(out TeamPlayerArmyItem item) && item.Name != this.Playerarmy) {
                 this.Playerarmy = item.Name;
                 this.OnFactionChangedHandle?.Invoke(item);
             }
