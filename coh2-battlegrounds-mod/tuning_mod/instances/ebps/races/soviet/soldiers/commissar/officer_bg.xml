@@ -17,7 +17,7 @@
 			<list name="abilities">
 				<instance_reference name="ability" value="abilities\global\cold\blizzard_effect_deep_snow_camo" />
 				<instance_reference name="ability" value="abilities\global\custom_commander\heal_in_cover" />
-				<instance_reference name="ability" value="abilities\soviet\timed_ability\political_speech_bg" mod="142b113740474c82a60b0a428bd553d5" />
+				<instance_reference name="ability" value="abilities\soviet\modal_ability\inspire_unit_bg" mod="142b113740474c82a60b0a428bd553d5" />
 			</list>
 		</template_reference>
 		<template_reference name="exts" value="ebpextensions\action_apply_ext">
@@ -28,10 +28,10 @@
 					<string name="state_machine_name" value="RoleVariation" />
 					<string name="undo_action_state_name" value="" />
 					<bool name="retrigger" value="False" />
-					<uniqueid name="id" value="1073742664" />
+					<uniqueid name="id" value="1073744695" />
 				</template_reference>
 				<template_reference name="action" value="action\add_aura">
-					<instance_reference name="aura" value="aura\soviet_commissar_inspire" />
+					<instance_reference name="aura" value="aura\soviet_commissar_inspire_bg" mod="142b113740474c82a60b0a428bd553d5" />
 					<group name="area_info">
 						<float name="angle_left" value="0" />
 						<float name="angle_right" value="0" />
@@ -45,7 +45,7 @@
 						</list>
 					</template_reference>
 					<bool name="permanent" value="False" />
-					<uniqueid name="id" value="1073742665" />
+					<uniqueid name="id" value="1073744696" />
 				</template_reference>
 			</list>
 		</template_reference>
@@ -184,11 +184,11 @@
 							<list name="action_table">
 								<template_reference name="action" value="action\suppression">
 									<float name="suppression" value="100" />
-									<uniqueid name="id" value="1073742666" />
+									<uniqueid name="id" value="1073744697" />
 									<float name="supressionrecovertime" value="10" />
 								</template_reference>
 							</list>
-							<uniqueid name="id" value="1073742667" />
+							<uniqueid name="id" value="1073744698" />
 							<bool name="fire_and_forget_non_global" value="False" />
 							<template_reference name="ui_help_text" value="tables\help_text_phrase">
 								<int name="phrase_order" value="0" />
@@ -196,7 +196,7 @@
 							</template_reference>
 						</template_reference>
 					</list>
-					<uniqueid name="id" value="1073742668" />
+					<uniqueid name="id" value="1073744699" />
 					<bool name="any_subaction" value="False" />
 				</template_reference>
 			</list>
@@ -600,7 +600,7 @@
 						<bool name="fire_and_forget" value="True" />
 						<bool name="is_terrain_only" value="False" />
 						<bool name="allies_only" value="False" />
-						<uniqueid name="id" value="1073742669" />
+						<uniqueid name="id" value="1073744700" />
 					</template_reference>
 				</list>
 			</group>
@@ -618,7 +618,7 @@
 						<bool name="fire_and_forget" value="True" />
 						<bool name="is_terrain_only" value="False" />
 						<bool name="allies_only" value="False" />
-						<uniqueid name="id" value="1073742670" />
+						<uniqueid name="id" value="1073744701" />
 					</template_reference>
 				</list>
 			</group>
@@ -636,7 +636,7 @@
 						<bool name="fire_and_forget" value="True" />
 						<bool name="is_terrain_only" value="False" />
 						<bool name="allies_only" value="False" />
-						<uniqueid name="id" value="1073742671" />
+						<uniqueid name="id" value="1073744702" />
 					</template_reference>
 				</list>
 			</group>
@@ -654,7 +654,7 @@
 						<bool name="fire_and_forget" value="True" />
 						<bool name="is_terrain_only" value="False" />
 						<bool name="allies_only" value="False" />
-						<uniqueid name="id" value="1073742672" />
+						<uniqueid name="id" value="1073744703" />
 					</template_reference>
 				</list>
 			</group>
@@ -672,7 +672,7 @@
 						<bool name="fire_and_forget" value="True" />
 						<bool name="is_terrain_only" value="False" />
 						<bool name="allies_only" value="False" />
-						<uniqueid name="id" value="1073742673" />
+						<uniqueid name="id" value="1073744704" />
 					</template_reference>
 				</list>
 			</group>
@@ -700,7 +700,7 @@
 						<bool name="fire_and_forget" value="True" />
 						<bool name="is_terrain_only" value="False" />
 						<bool name="allies_only" value="False" />
-						<uniqueid name="id" value="1073742674" />
+						<uniqueid name="id" value="1073744705" />
 					</template_reference>
 				</list>
 			</group>
@@ -799,7 +799,7 @@
 		<template_reference name="exts" value="ebpextensions\crushee_ext">
 			<list name="on_crushed_actions">
 				<template_reference name="action" value="action\no_action">
-					<uniqueid name="id" value="1073742675" />
+					<uniqueid name="id" value="1073744706" />
 					<template_reference name="ui_help_text" value="options\none">
 					</template_reference>
 				</template_reference>
@@ -846,17 +846,17 @@
 											<instance_reference name="tooltip" value="modifier_tooltip\weapon_penetration_modifier" />
 										</template_reference>
 									</list>
-									<uniqueid name="id" value="1073744544" />
+									<uniqueid name="id" value="1073744707" />
 								</template_reference>
 							</list>
 							<enum name="change_target_type" value="entities" />
-							<uniqueid name="id" value="1073744545" />
+							<uniqueid name="id" value="1073744708" />
 						</template_reference>
 					</list>
-					<uniqueid name="id" value="1073744546" />
+					<uniqueid name="id" value="1073744709" />
 				</template_reference>
 			</list>
 		</template_reference>
 	</list>
-	<uniqueid name="pbgid" value="1073741847" />
+	<uniqueid name="pbgid" value="1073741926" />
 </instance>

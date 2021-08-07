@@ -297,7 +297,7 @@ namespace BattlegroundsApp.Controls {
                 }
 
                 // Bail if eof has been reached
-                if (i == this.Rows && j == this.Columns) {
+                if (i >= this.Rows && j == 0) {
                     int missing = this.Icons.Count - i * j;
                     if (missing > 0) {
                         Trace.WriteLine($"Warning: Failed to display {missing} (of {this.Icons.Count}) icons in icon grid of dimensions {this.Rows}x{this.Columns}", nameof(IconGrid));

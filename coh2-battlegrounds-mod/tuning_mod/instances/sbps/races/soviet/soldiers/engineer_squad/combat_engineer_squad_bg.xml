@@ -7,7 +7,7 @@
 				<group name="race_data">
 					<group name="info">
 						<bool name="allow_spawner_production" value="False" />
-						<locstring name="extra_text" value="11009063" />
+						<locstring name="extra_text" value="62" mod="142b113740474c82a60b0a428bd553d5" />
 						<bool name="has_speech_code" value="True" />
 						<locstring name="help_text" value="11007043" />
 						<string name="hotkey_name" value="E" />
@@ -178,8 +178,9 @@
 			</list>
 		</template_reference>
 		<template_reference name="squadexts" value="sbpextensions\squad_upgrade_ext">
-			<float name="number_of_slots" value="-1" />
+			<float name="number_of_slots" value="1" />
 			<list name="upgrades">
+				<instance_reference name="upgrade" value="upgrade\soviet\items\soviet_minesweeper_bg" mod="142b113740474c82a60b0a428bd553d5" />
 			</list>
 		</template_reference>
 		<template_reference name="squadexts" value="sbpextensions\squad_combat_behaviour_ext">
@@ -808,18 +809,6 @@
 							<int name="ui_position" value="11" />
 						</group>
 						<group name="construction_item">
-							<instance_reference name="ebp" value="ebps\races\soviet\team_weapons\soviet_field_artillery\m1937_152mm_ml_20_artillery_mp" />
-							<int name="ui_position" value="13" />
-						</group>
-						<group name="construction_item">
-							<instance_reference name="ebp" value="ebps\races\soviet\buildings\defensive_structures\barbed_wire_fence__construction__mp" />
-							<int name="ui_position" value="12" />
-						</group>
-						<group name="construction_item">
-							<instance_reference name="ebp" value="ebps\races\soviet\team_weapons\soviet_field_artillery\m1931_203mm_b-4_howitzer_artillery_commander_mp" />
-							<int name="ui_position" value="0" />
-						</group>
-						<group name="construction_item">
 							<instance_reference name="ebp" value="ebps\races\soviet\buildings\defensive_structures\repair_station_mp" />
 							<int name="ui_position" value="21" />
 						</group>
@@ -834,14 +823,6 @@
 						<group name="construction_item">
 							<instance_reference name="ebp" value="ebps\races\soviet\buildings\defensive_structures\light_anti_vehicle_mines" />
 							<int name="ui_position" value="22" />
-						</group>
-						<group name="construction_item">
-							<instance_reference name="ebp" value="ebps\races\soviet\buildings\defensive_structures\soviet_forward_hq_urban_defense_mp" />
-							<int name="ui_position" value="21" />
-						</group>
-						<group name="construction_item">
-							<instance_reference name="ebp" value="ebps\races\soviet\buildings\defensive_structures\soviet_rally_point_airbourne_mp" />
-							<int name="ui_position" value="13" />
 						</group>
 					</list>
 					<enum name="construction_type" value="tp_construction_soviet_engineer_basic" />
