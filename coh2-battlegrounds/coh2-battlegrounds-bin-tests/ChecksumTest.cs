@@ -188,6 +188,41 @@ namespace coh2_battlegrounds_bin_tests {
 
         }
 
+        [TestMethod]
+        [DataRow("conscript_squad_bg", "", DeploymentMethod.None, DeploymentPhase.PhaseInitial, 0, 0, 0)]
+        [DataRow("conscript_squad_bg", "", DeploymentMethod.None, DeploymentPhase.PhaseB, 0, 899, 0)]
+        [DataRow("shock_troops_bg", "", DeploymentMethod.None, DeploymentPhase.PhaseInitial, 0, 0, 0)]
+        [DataRow("conscript_squad_bg", "zis_6_transport_truck_bg", DeploymentMethod.DeployAndStay, DeploymentPhase.PhaseInitial, 5, 0, 789.0)]
+        [DataRow("conscript_squad_bg", "zis_6_transport_truck_bg", DeploymentMethod.DeployAndExit, DeploymentPhase.PhaseC, 3, 0, 0)]
+        [DataRow("shock_troops_bg", "", DeploymentMethod.None, DeploymentPhase.PhaseInitial, 1, 0, 0)]
+        [DataRow("conscript_squad_bg", "", DeploymentMethod.None, DeploymentPhase.PhaseA, 2, 275.9f, 2789.0)]
+        [DataRow("conscript_squad_bg", "", DeploymentMethod.None, DeploymentPhase.PhaseA, 4, 0, 0)]
+        public void RandomSquad(string bp, string sbp, DeploymentMethod method, DeploymentPhase phase, int rank, double xp, double time) {
+
+            // Create squad
+            var squad = new UnitBuilder().SetModGUID(package.TuningGUID).SetBlueprint(bp)
+                .SetVeterancyRank((byte)rank).SetVeterancyExperience((float)xp).SetDeploymentPhase(phase)
+                .SetTransportBlueprint(sbp).SetDeploymentMethod(method).SetCombatTime(TimeSpan.FromMinutes(time)).Build(0);
+            Assert.IsNotNull(squad);
+
+            // Serialise
+            string js = JsonSerializer.Serialize(squad);
+            Assert.IsNotNull(squad);
+
+            // Deserialise
+            var deserialised = JsonSerializer.Deserialize<Squad>(js);
+            Assert.IsNotNull(deserialised);
+            Assert.AreEqual(squad.SquadID, deserialised.SquadID);
+            Assert.AreEqual(squad.Blueprint, deserialised.Blueprint);
+            Assert.AreEqual(squad.VeterancyRank, deserialised.VeterancyRank);
+            Assert.AreEqual(squad.VeterancyProgress, deserialised.VeterancyProgress);
+            Assert.AreEqual(squad.SupportBlueprint, deserialised.SupportBlueprint);
+            Assert.AreEqual(squad.DeploymentMethod, deserialised.DeploymentMethod);
+            Assert.AreEqual(squad.DeploymentPhase, deserialised.DeploymentPhase);
+            Assert.AreEqual(squad.CombatTime, deserialised.CombatTime);
+
+        }
+
     }
 
 }
