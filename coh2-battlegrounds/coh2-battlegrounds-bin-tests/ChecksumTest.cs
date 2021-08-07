@@ -10,7 +10,8 @@ using Battlegrounds.Game.Database.Management;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace coh2_battlegrounds_bin_tests {
+namespace coh2_battlegrounds_bin_tests { // NOTE: This test file tests serialisation and deserialisation
+    // But the primary goal is to test that no checksum violations occur.
 
     [TestClass]
     public class ChecksumTest {

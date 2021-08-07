@@ -125,15 +125,11 @@ namespace BattlegroundsApp.Controls.Lobby.Components {
             this.SelfOptions.ItemsSource = source;
         }
 
-        private object GetSelectedValue() {
-            if (this.State is SelfState) {
-                return this.SelfOptions.SelectedItem;
-            } else if (this.State is OtherState) {
-                return this.m_setSelectedValue;
-            } else {
-                return "Unknown";
-            }
-        }
+        private object GetSelectedValue() => this.State switch {
+            SelfState => this.SelfOptions.SelectedItem,
+            OtherState => this.m_setSelectedValue,
+            _ => this.SelfOptions.Items.Count > 0 ? this.SelfOptions.Items[this.SelectedIndex] : "Unknown"
+        };
 
         private void SetSelectedValue(object value) {
 

@@ -115,14 +115,13 @@
 
             <components:LobbyDropdown      
                 x:Name="TuningOption"   
-                Description="Tuning Mod:" 
+                Description="Mod Package:" 
                 DescriptionMinWidth="115"
                 MinWidth="120" 
                 MaxHeight="32"
                 MinHeight="28"
-                SelectedIndex="0">
-                <ComboBoxItem Content="Battlegrounds"/>
-            </components:LobbyDropdown>
+                SelectedIndex="0"
+                SelectedItemChanged="TuningOption_SelectedItemChanged"/>
 
         </StackPanel>
         
