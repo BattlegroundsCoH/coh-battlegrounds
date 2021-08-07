@@ -17,6 +17,17 @@ namespace Battlegrounds.Functional {
             return val;
         }
 
+        public static double ReadAccurateNumberProperty(this ref Utf8JsonReader reader) {
+            double val = double.NaN;
+            if (reader.TokenType is JsonTokenType.String) {
+                _ = double.TryParse(reader.GetString(), out val);
+            } else if (reader.TokenType is JsonTokenType.Number) {
+                val = reader.GetDouble();
+            }
+            reader.Read();
+            return val;
+        }
+
         public static bool ReadBoolProperty(this ref Utf8JsonReader reader) {
             bool val = reader.GetBoolean();
             reader.Read();

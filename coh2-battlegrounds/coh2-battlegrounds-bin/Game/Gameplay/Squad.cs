@@ -452,7 +452,7 @@ namespace Battlegrounds.Game.Gameplay {
 
             // Get veterancy
             unitBuilder.SetVeterancyRank((byte)ReadNumberPropertyIfThere(ref reader, nameof(Squad.VeterancyRank), 0));
-            unitBuilder.SetVeterancyExperience((byte)ReadNumberPropertyIfThere(ref reader, nameof(Squad.VeterancyProgress), 0.0f));
+            unitBuilder.SetVeterancyExperience((float)ReadAccurateNumberPropertyIfThere(ref reader, nameof(Squad.VeterancyProgress), 0));
 
             // Read if crew
             unitBuilder.SetIsCrew(ReadBooleanPropertyIfThere(ref reader, nameof(Squad.IsCrew), false));
@@ -522,6 +522,15 @@ namespace Battlegrounds.Game.Gameplay {
             if (reader.TokenType is not JsonTokenType.EndObject && reader.GetString() == property) {
                 reader.Read();
                 return reader.ReadNumberProperty();
+            } else {
+                return defaultValue;
+            }
+        }
+
+        private static double ReadAccurateNumberPropertyIfThere(ref Utf8JsonReader reader, string property, double defaultValue) {
+            if (reader.TokenType is not JsonTokenType.EndObject && reader.GetString() == property) {
+                reader.Read();
+                return reader.ReadAccurateNumberProperty();
             } else {
                 return defaultValue;
             }
