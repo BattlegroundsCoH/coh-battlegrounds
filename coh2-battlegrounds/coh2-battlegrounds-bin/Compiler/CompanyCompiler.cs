@@ -86,6 +86,24 @@ namespace Battlegrounds.Compiler {
 
         }
 
+        public Dictionary<string, object> CompileToLua(Company company, bool isAIPlayer, byte indexOnTeam) {
+
+            // Create result
+            Dictionary<string, object> result = new() {
+                ["name"] = company.Name,
+                ["style"] = company.Type,
+                ["army"] = company.Army.Name,
+                ["specials"] = new Dictionary<string, object>() {
+                    ["artillery"] = company.Abilities.Where(x => x.Category is SpecialAbilityCategory.Artillery),
+                    ["air"] = company.Abilities.Where(x => x.Category is SpecialAbilityCategory.AirSupport),
+                }
+            };
+
+            // Return result
+            return result;
+
+        }
+
         /// <summary>
         /// Company a specific company unit into a formatted lua table string.
         /// </summary>

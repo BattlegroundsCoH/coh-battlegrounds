@@ -2,7 +2,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
-using System.Xml.Linq;
+
+using Battlegrounds.Lua.Generator.RuntimeServices;
 
 namespace Battlegrounds.Lua.Generator {
 
@@ -39,7 +40,7 @@ namespace Battlegrounds.Lua.Generator {
                     this.Writer.WriteValue(value);
                     break;
                 case object o:
-                    this.Writer.WriteTableValue(this.BuildTable(o));
+                    this.WriteObject(o);
                     break;
                 default:
                     this.Writer.WriteNilValue();
@@ -51,7 +52,7 @@ namespace Battlegrounds.Lua.Generator {
 
         public LuaSourceBuilder WriteFunction(string name, params string[] args) {
             if (this.Writer.Line > 0) {
-                this.Writer.EndLine(true);
+                this.Writer.NewLine();
             }
             if (this.Options.DenoteGeneratedFunctions) {
                 this.Writer.WriteSingleLineComment("@Auto-Generated");
@@ -217,6 +218,8 @@ namespace Battlegrounds.Lua.Generator {
 
         private LuaTable BuildTable(object obj) {
 
+
+
             // Create table
             LuaTable table = new();
 
@@ -236,7 +239,35 @@ namespace Battlegrounds.Lua.Generator {
 
         }
 
-        public string GetSourceTest() => this.Writer.GetContent();
+        private void WriteObject(object obj) {
+
+            // Get type to convert
+            var objType = obj.GetType();
+
+            // Check if there's a converter in place
+            if (objType.GetCustomAttribute<LuaConverterAttribute>() is LuaConverterAttribute converterAttrib) {
+
+                // Create converter
+                var converter = converterAttrib.CreateConverter();
+
+                // Make sure we can write to the type.
+                if (!converter.CanWrite(objType)) {
+                    throw new InvalidOperationException($"Cannot use converter '{converter.GetType().FullName}' on type '{objType.FullName}'.");
+                }
+
+                // Write
+                converter.Write(this.Writer, obj);
+
+            } else {
+
+                // Write object as raw table.
+                this.Writer.WriteTableValue(this.BuildTable(obj));
+
+            }
+
+        }
+
+        public string GetSourceText() => this.Writer.GetContent();
 
     }
 

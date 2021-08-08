@@ -32,7 +32,7 @@ namespace Battlegrounds.Lua.Generator {
         private int m_indent;
         private int m_line;
 
-        public bool IsEmptyLine => this.m_builder.Length is 0 || this.m_builder[^1] is '\n';
+        public bool IsEmptyLine => this.m_builder.Length is 0 || this.m_builder[^1] is '\n' or '\t';
 
         public int Line => this.m_line;
 
@@ -49,13 +49,13 @@ namespace Battlegrounds.Lua.Generator {
 
         public void DecreaseIndent() => this.m_indent--;
 
-        private void NewLine() {
+        public void NewLine() {
             _ = this.m_builder.Append(this.Options.NewLine).Append('\t', this.m_indent);
             this.m_line++;
         }
 
         public void EndLine(bool ignoreSemicolonAnyways) {
-            if (!ignoreSemicolonAnyways && this.Options.WriteSemicolon) {
+            if (!ignoreSemicolonAnyways && this.Options.WriteSemicolon && !this.IsEmptyLine) {
                 _ = this.m_builder.Append(';');
             }
             this.NewLine();
@@ -73,7 +73,7 @@ namespace Battlegrounds.Lua.Generator {
             }
             bool isEnd = keyword is LuaKw.End;
             if (isEnd || keyword is LuaKw.Then) {
-                this.EndLine(true); // Will always end line                
+                this.NewLine(); // Will always end line                
             }
             if (keyword is LuaKw.For or LuaKw.Function or LuaKw.If or LuaKw.Else or LuaKw.ElseIf) {
                 this.m_indent++; // Will always increase indent
