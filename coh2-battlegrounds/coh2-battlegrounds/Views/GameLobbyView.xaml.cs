@@ -653,6 +653,8 @@ namespace BattlegroundsApp.Views {
                 return;
             }
 
+            // TODO: Apply Choice
+
         }
 
     }

@@ -28,9 +28,9 @@ namespace BattlegroundsApp.Controls.Lobby.Components {
 
         public static readonly DependencyProperty OtherSelectedItemProperty = DependencyProperty.Register(nameof(OtherSelectedItem), typeof(object), typeof(LobbyDropdown));
 
-        public new static readonly DependencyProperty SelectedItemProperty = DependencyProperty.Register(nameof(SelectedItem), typeof(object), typeof(LobbyDropdown));
+        public static new readonly DependencyProperty SelectedItemProperty = DependencyProperty.Register(nameof(SelectedItem), typeof(object), typeof(LobbyDropdown));
 
-        public new static readonly DependencyProperty SelectedIndexProperty = DependencyProperty.Register(nameof(SelectedIndex), typeof(int), typeof(LobbyDropdown));
+        public static new readonly DependencyProperty SelectedIndexProperty = DependencyProperty.Register(nameof(SelectedIndex), typeof(int), typeof(LobbyDropdown));
 
         /// <summary>
         /// Get the <see cref="ItemCollection"/> used to generate the conents of the <see cref="LobbyDropdown"/>. Default is an empty collection.

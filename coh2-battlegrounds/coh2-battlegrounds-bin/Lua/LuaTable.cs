@@ -22,6 +22,11 @@ namespace Battlegrounds.Lua {
     /// </summary>
     public sealed class LuaTable : LuaValue, IEnumerable<KeyValuePair<LuaValue, LuaValue>>, ICloneable, IMetatableParent {
 
+        /// <summary>
+        /// Get an empty table. Do not write to this.
+        /// </summary>
+        public static readonly LuaTable Empty = new();
+
         /*private readonly struct TableKey {
             public readonly LuaValue key;
             public readonly int index;
@@ -42,8 +47,8 @@ namespace Battlegrounds.Lua {
         private List<LuaValue> m_tableElements;
         private HashSet<TableKey> m_tableKeys;*/
 
-        private Dictionary<LuaValue, LuaValue> m_table;
-        private Dictionary<int, LuaValue> m_rawIndices;
+        private readonly Dictionary<LuaValue, LuaValue> m_table;
+        private readonly Dictionary<int, LuaValue> m_rawIndices;
 
         /// <summary>
         /// Get the (C#) size of the table.
@@ -66,7 +71,27 @@ namespace Battlegrounds.Lua {
         public LuaState LuaState { get; }
 
         /// <summary>
-        /// Initialize a new state less <see cref="LuaTable"/> class without entries.
+        /// Get all the key entries in the table
+        /// </summary>
+        public LuaValue[] Keys => this.m_table.Keys.ToArray();
+
+        /// <summary>
+        /// Get all the key entries in the table as strings
+        /// </summary>
+        public string[] StringKeys => this.m_table.Keys.Select(x => x.Str()).ToArray();
+
+        /// <summary>
+        /// Get the first key in the table.
+        /// </summary>
+        public LuaValue FirstKey => this.m_table.First().Key;
+
+        /// <summary>
+        /// Get the last key in the table.
+        /// </summary>
+        public LuaValue LastKey => this.m_table.Last().Key;
+
+        /// <summary>
+        /// Initialize a new stateless <see cref="LuaTable"/> class without entries.
         /// </summary>
         public LuaTable() {
             this.m_table = new Dictionary<LuaValue, LuaValue>();
@@ -77,9 +102,7 @@ namespace Battlegrounds.Lua {
         /// Initialize a new <see cref="LuaTable"/> class without entries.
         /// </summary>
         /// <param name="state"></param>
-        public LuaTable(LuaState state) : this() {
-            this.LuaState = state;
-        }
+        public LuaTable(LuaState state) : this() => this.LuaState = state;
 
         public override bool Equals(LuaValue value) {
             if (value is LuaTable table) {
@@ -140,12 +163,7 @@ namespace Battlegrounds.Lua {
         /// <typeparam name="T">Expected <see cref="LuaValue"/> type.</typeparam>
         /// <param name="key">The <see cref="LuaValue"/> key to use when getting value.</param>
         /// <returns>The <see cref="LuaValue"/> identified by <paramref name="key"/>. Otherwise <see langword="default"/>.</returns>
-        public T ByKey<T>(LuaValue key) where T : LuaValue {
-            if (this[key] is T v)
-                return v;
-            else
-                return default;
-        }
+        public T ByKey<T>(LuaValue key) where T : LuaValue => this[key] is T v ? v : default;
 
         /// <summary>
         /// Retrieve a <see cref="LuaValue"/> by absolute index.

@@ -37,7 +37,7 @@ namespace Battlegrounds.Compiler {
             }
 
             // Create txt builder
-            TxtBuilder lua = new TxtBuilder();
+            TxtBuilder lua = new();
 
             lua.AppendLine($"bg_settings = {{");
             lua.IncreaseIndent();
@@ -153,7 +153,7 @@ namespace Battlegrounds.Compiler {
 
             // Foreach participant
             foreach (SessionParticipant player in players) {
-                StringBuilder blder = new StringBuilder();
+                StringBuilder blder = new();
                 blder.Append($"{{{Environment.NewLine}\t\t\t\t");
                 blder.Append($"display_name = \"{player.GetName()}\", ");
                 if (player.Difficulty == Game.AIDifficulty.Human) {
