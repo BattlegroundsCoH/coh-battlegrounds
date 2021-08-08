@@ -39,6 +39,16 @@ namespace Battlegrounds.Lua.Generator {
         public bool ExplicitNullAsNilValues { get; set; }
 
         /// <summary>
+        /// Get or set if the <see cref="LuaSourceBuilder"/> should apply code verification. (Default: <see langword="true"/>).
+        /// </summary>
+        public bool CodeVerification { get; set; }
+
+        /// <summary>
+        /// Get or set if functions built by the source builder should state it is auto-generated. (Default: <see langword="true"/>).
+        /// </summary>
+        public bool DenoteGeneratedFunctions { get; set; }
+
+        /// <summary>
         /// Initialsie a new default <see cref="LuaSourceBuilderOptions"/> instance.
         /// </summary>
         public LuaSourceBuilderOptions() {
@@ -47,6 +57,8 @@ namespace Battlegrounds.Lua.Generator {
             this.SingleLineTableLength = 64;
             this.NewLine = Environment.NewLine;
             this.ExplicitNullAsNilValues = false;
+            this.CodeVerification = true;
+            this.DenoteGeneratedFunctions = true;
             this.FormatProvider = CultureInfo.GetCultureInfo("en-US");
         }
 

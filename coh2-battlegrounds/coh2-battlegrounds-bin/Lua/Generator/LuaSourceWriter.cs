@@ -7,12 +7,34 @@ using Battlegrounds.Functional;
 
 namespace Battlegrounds.Lua.Generator {
 
+    public enum LuaKw {
+        Return,
+        End,
+        If,
+        ElseIf,
+        Else,
+        Then,
+        For,
+        Do,
+        While,
+        Break,
+        Function,
+        Repeat,
+        Until,
+        In
+    }
+
     public class LuaSourceWriter {
 
         private static readonly Regex VarRegex = new(@"[A-z_]+([A-z0-9_])*");
 
-        private StringBuilder m_builder;
+        private readonly StringBuilder m_builder;
         private int m_indent;
+        private int m_line;
+
+        public bool IsEmptyLine => this.m_builder.Length is 0 || this.m_builder[^1] is '\n';
+
+        public int Line => this.m_line;
 
         public LuaSourceBuilderOptions Options { get; set; }
 
@@ -20,22 +42,75 @@ namespace Battlegrounds.Lua.Generator {
             this.Options = new();
             this.m_builder = new();
             this.m_indent = 0;
+            this.m_line = 0;
         }
 
-        private void NewLine() => this.m_builder.Append(this.Options.NewLine).Append('\t', this.m_indent);
+        public void IncreaseIndent() => this.m_indent++;
 
-        public void EndLine() {
-            if (this.Options.WriteSemicolon) {
+        public void DecreaseIndent() => this.m_indent--;
+
+        private void NewLine() {
+            _ = this.m_builder.Append(this.Options.NewLine).Append('\t', this.m_indent);
+            this.m_line++;
+        }
+
+        public void EndLine(bool ignoreSemicolonAnyways) {
+            if (!ignoreSemicolonAnyways && this.Options.WriteSemicolon) {
                 _ = this.m_builder.Append(';');
             }
             this.NewLine();
         }
 
+        public void WriteSingleLineComment(string text) {
+            _ = this.m_builder.Append("-- ").Append(text);
+            this.EndLine(true);
+        }
+
+        public void WriteKeyword(LuaKw keyword) {
+            _ = this.m_builder.Append(keyword.ToString().ToLowerInvariant());
+            if (keyword is not LuaKw.End) {
+                _ = this.m_builder.Append(' ');
+            }
+            bool isEnd = keyword is LuaKw.End;
+            if (isEnd || keyword is LuaKw.Then) {
+                this.EndLine(true); // Will always end line                
+            }
+            if (keyword is LuaKw.For or LuaKw.Function or LuaKw.If or LuaKw.Else or LuaKw.ElseIf) {
+                this.m_indent++; // Will always increase indent
+            }
+        }
+
+        public void WriteOperator(char op) {
+            switch (op) {
+                case '=':
+                case '+':
+                case '-':
+                case '*':
+                case '/':
+                case '^':
+                    _ = this.m_builder.Append(' ').Append(op).Append(' ');
+                    break;
+                case ',':
+                    _ = this.m_builder.Append(", ");
+                    break;
+                case '(':
+                case ')':
+                    _ = this.m_builder.Append(op);
+                    break;
+                default:
+                    throw new InvalidOperationException($"'{op}' is not a valid operator.");
+            }
+        }
+
+        public void WriteVerbatim(string verbatim) => this.m_builder.Append(verbatim);
+
         public void WriteVariable(string variable)
             => this.m_builder.Append(variable);
 
-        public void WriteVariableAssignment(string variable)
-            => this.m_builder.Append(variable).Append(" = ");
+        public void WriteVariableAssignment(string variable) {
+            _ = this.m_builder.Append(variable);
+            this.WriteOperator('=');
+        }
 
         public void WriteStringValue(string value)
             => this.m_builder.Append('"').Append(value).Append('"');
@@ -101,6 +176,9 @@ namespace Battlegrounds.Lua.Generator {
 
         public void WriteValue(object value) {
             switch (value) {
+                case LuaValue luaValue:
+                    this.WriteValue(luaValue);
+                    break;
                 case string s:
                     this.WriteStringValue(s);
                     break;

@@ -88,6 +88,90 @@ namespace coh2_battlegrounds_bin_tests.LuaLib {
 
         }
 
+        [TestMethod]
+        public void CanWriteFunction() {
+
+            string[] expected = {
+                "-- @Auto-Generated",
+                "function test(a, b, c)",
+                "\treturn a, b, c;",
+                "end",
+                ""
+            };
+
+            string source = this.sourceBuilder.WriteFunction("test", "a", "b", "c").Return().Variables("a", "b", "c").End().GetSourceTest();
+            Assert.IsNotNull(source);
+
+            string[] sourceLines = source.Split(Environment.NewLine);
+            Assert.AreEqual(expected.Length, sourceLines.Length);
+
+            for (int i = 0; i < expected.Length; i++) {
+                Assert.AreEqual(expected[i].Length, sourceLines[i].Length);
+                Assert.AreEqual(expected[i], sourceLines[i]);
+            }
+
+        }
+
+        [TestMethod]
+        public void CanWriteFunctions() {
+
+            string[] expected = {
+                "-- @Auto-Generated",
+                "function add(a, b)",
+                "\treturn a + b;",
+                "end",
+                "",
+                "-- @Auto-Generated",
+                "function sub(a, b, c)",
+                "\treturn add(a, b) - c;",
+                "end",
+                ""
+            };
+
+            string source = this.sourceBuilder.WriteFunction("add", "a", "b").Return().Arithmetic("a", '+', "b").End()
+                .WriteFunction("sub", "a", "b", "c").Return().Call("add", "a", "b").Arithmetic('-', "c").End().GetSourceTest();
+            Assert.IsNotNull(source);
+
+            string[] sourceLines = source.Split(Environment.NewLine);
+            Assert.AreEqual(expected.Length, sourceLines.Length);
+
+            for (int i = 0; i < expected.Length; i++) {
+                Assert.AreEqual(expected[i].Length, sourceLines[i].Length);
+                Assert.AreEqual(expected[i], sourceLines[i]);
+            }
+
+        }
+
+        [TestMethod]
+        public void CanWriteFunctionWithNumber() {
+
+            string[] expected = {
+                "-- @Auto-Generated",
+                "function add(a, b)",
+                "\treturn a + b;",
+                "end",
+                "",
+                "-- @Auto-Generated",
+                "function sub(a, b)",
+                "\treturn add(a, b) / 1.5;",
+                "end",
+                ""
+            };
+
+            string source = this.sourceBuilder.WriteFunction("add", "a", "b").Return().Arithmetic("a", '+', "b").End()
+                .WriteFunction("sub", "a", "b").Return().Call("add", "a", "b").Arithmetic('/', 1.5).End().GetSourceTest();
+            Assert.IsNotNull(source);
+
+            string[] sourceLines = source.Split(Environment.NewLine);
+            Assert.AreEqual(expected.Length, sourceLines.Length);
+
+            for (int i = 0; i < expected.Length; i++) {
+                Assert.AreEqual(expected[i].Length, sourceLines[i].Length);
+                Assert.AreEqual(expected[i], sourceLines[i]);
+            }
+
+        }
+
     }
 
 }

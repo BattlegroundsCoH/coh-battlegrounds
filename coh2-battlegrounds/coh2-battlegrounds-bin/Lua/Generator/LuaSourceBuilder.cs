@@ -1,14 +1,8 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Text.RegularExpressions;
-
-using Battlegrounds.Functional;
-using Battlegrounds.Util;
+using System.Xml.Linq;
 
 namespace Battlegrounds.Lua.Generator {
 
@@ -17,41 +11,142 @@ namespace Battlegrounds.Lua.Generator {
     /// </summary>
     public sealed class LuaSourceBuilder {
 
-        private readonly LuaSourceWriter m_writer;
+        public LuaSourceWriter Writer { get; }
 
         public LuaSourceBuilderOptions Options {
-            get => this.m_writer.Options;
-            set => this.m_writer.Options = value;
+            get => this.Writer.Options;
+            set => this.Writer.Options = value;
         }
 
-        public LuaSourceBuilder() => this.m_writer = new();
+        public LuaSourceBuilder() => this.Writer = new();
 
         public LuaSourceBuilder WriteAssignment(string variable, object value) {
-            this.m_writer.WriteVariableAssignment(variable);
+            this.Writer.WriteVariableAssignment(variable);
             switch (value) {
                 case Array a:
-                    this.m_writer.WriteTableValue(this.BuildTable(a));
+                    this.Writer.WriteTableValue(this.BuildTable(a));
                     break;
                 case IDictionary dic:
-                    this.m_writer.WriteTableValue(this.BuildTable(dic));
+                    this.Writer.WriteTableValue(this.BuildTable(dic));
                     break;
                 case ICollection col:
-                    this.m_writer.WriteTableValue(this.BuildTable(col));
+                    this.Writer.WriteTableValue(this.BuildTable(col));
                     break;
                 case string str:
-                    this.m_writer.WriteStringValue(str);
+                    this.Writer.WriteStringValue(str);
                     break;
                 case ValueType:
-                    this.m_writer.WriteValue(value);
+                    this.Writer.WriteValue(value);
                     break;
                 case object o:
-                    this.m_writer.WriteTableValue(this.BuildTable(o));
+                    this.Writer.WriteTableValue(this.BuildTable(o));
                     break;
                 default:
-                    this.m_writer.WriteNilValue();
+                    this.Writer.WriteNilValue();
                     break;
             }
-            this.m_writer.EndLine();
+            this.Writer.EndLine(false);
+            return this;
+        }
+
+        public LuaSourceBuilder WriteFunction(string name, params string[] args) {
+            if (this.Writer.Line > 0) {
+                this.Writer.EndLine(true);
+            }
+            if (this.Options.DenoteGeneratedFunctions) {
+                this.Writer.WriteSingleLineComment("@Auto-Generated");
+            }
+            this.Writer.WriteKeyword(LuaKw.Function);
+            this.Writer.WriteVerbatim(name);
+            this.Writer.WriteOperator('(');
+            for (int i = 0; i < args.Length; i++) {
+                if (!LuaSourceWriter.IsLegalVariableName(args[i])) {
+                    throw new InvalidOperationException($"Cannot have '{args[i]}' as argument name.");
+                }
+                this.Writer.WriteVerbatim(args[i]);
+                if (i < args.Length - 1) {
+                    this.Writer.WriteOperator(',');
+                }
+            }
+            this.Writer.WriteOperator(')');
+            this.Writer.EndLine(true);
+            return this;
+        }
+
+        public LuaSourceBuilder Return() {
+            this.Writer.WriteKeyword(LuaKw.Return);
+            return this;
+        }
+
+        public LuaSourceBuilder End() {
+            this.Writer.DecreaseIndent();
+            if (!this.Writer.IsEmptyLine) {
+                this.Writer.EndLine(false);
+            }
+            this.Writer.WriteKeyword(LuaKw.End);
+            return this;
+        }
+
+        public LuaSourceBuilder Variables(params string[] vars) {
+            for (int i = 0; i < vars.Length; i++) {
+                this.Writer.WriteVerbatim(vars[i]);
+                if (i < vars.Length - 1) {
+                    this.Writer.WriteOperator(',');
+                }
+            }
+            return this;
+        }
+
+        public LuaSourceBuilder Arithmetic(string left, char arithmeticOperation, string right) {
+            this.Writer.WriteVerbatim(left);
+            this.Writer.WriteOperator(arithmeticOperation);
+            this.Writer.WriteVerbatim(right);
+            return this;
+        }
+
+        public LuaSourceBuilder Arithmetic(double left, char arithmeticOperation, string right) {
+            this.Writer.WriteNumberValue(left);
+            this.Writer.WriteOperator(arithmeticOperation);
+            this.Writer.WriteVerbatim(right);
+            return this;
+        }
+
+        public LuaSourceBuilder Arithmetic(string left, char arithmeticOperation, double right) {
+            this.Writer.WriteVerbatim(left);
+            this.Writer.WriteOperator(arithmeticOperation);
+            this.Writer.WriteNumberValue(right);
+            return this;
+        }
+
+        public LuaSourceBuilder Arithmetic(double left, char arithmeticOperation, double right) {
+            this.Writer.WriteNumberValue(left);
+            this.Writer.WriteOperator(arithmeticOperation);
+            this.Writer.WriteNumberValue(right);
+            return this;
+        }
+
+        public LuaSourceBuilder Arithmetic(char arithmeticOperation, string right) {
+            this.Writer.WriteOperator(arithmeticOperation);
+            this.Writer.WriteVerbatim(right);
+            return this;
+        }
+
+        public LuaSourceBuilder Arithmetic(char arithmeticOperation, double right) {
+            this.Writer.WriteOperator(arithmeticOperation);
+            this.Writer.WriteNumberValue(right);
+            return this;
+        }
+
+        public LuaSourceBuilder Call(string variable, params string[] args) {
+            this.Writer.WriteVerbatim(variable);
+            this.Writer.WriteOperator('(');
+            for (int i = 0; i < args.Length; i++) {
+                this.Writer.WriteVerbatim(args[i]);
+                if (i < args.Length - 1) {
+                    this.Writer.WriteOperator(',');
+                }
+            }
+            this.Writer.WriteOperator(')');
             return this;
         }
 
@@ -141,7 +236,7 @@ namespace Battlegrounds.Lua.Generator {
 
         }
 
-        public string GetSourceTest() => this.m_writer.GetContent();
+        public string GetSourceTest() => this.Writer.GetContent();
 
     }
 
