@@ -38,11 +38,17 @@ namespace Battlegrounds.Lua.Generator {
                 case ICollection col:
                     this.m_writer.WriteTableValue(this.BuildTable(col));
                     break;
+                case string str:
+                    this.m_writer.WriteStringValue(str);
+                    break;
+                case ValueType:
+                    this.m_writer.WriteValue(value);
+                    break;
                 case object o:
                     this.m_writer.WriteTableValue(this.BuildTable(o));
                     break;
                 default:
-                    this.m_writer.WriteValue(value);
+                    this.m_writer.WriteNilValue();
                     break;
             }
             this.m_writer.EndLine();

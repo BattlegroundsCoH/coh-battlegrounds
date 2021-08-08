@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 using Battlegrounds.Lua;
 using Battlegrounds.Lua.Generator;
@@ -21,9 +18,9 @@ namespace coh2_battlegrounds_bin_tests.LuaLib {
             public Dictionary<string, float> Floats { get; init; }
         }
 
-        LuaState luaState;
-        LuaSourceBuilder sourceBuilder;
-        DummyObject dummyObject;
+        private LuaState luaState;
+        private LuaSourceBuilder sourceBuilder;
+        private DummyObject dummyObject;
 
         [TestInitialize]
         public void Setup() {
