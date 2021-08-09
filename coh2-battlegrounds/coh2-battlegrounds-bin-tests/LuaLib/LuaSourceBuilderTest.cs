@@ -218,6 +218,43 @@ namespace coh2_battlegrounds_bin_tests.LuaLib {
                 Assert.AreEqual(expected[i], sourceLines[i]);
             }
 
+        }
+
+        [TestMethod]
+        public void CanWriteDictionary() {
+
+            // Dummy data
+            var data = new Dictionary<string, object>() {
+                ["Yellow"] = 555,
+                ["Green"] = 888,
+                ["Orange"] = 124
+            };
+
+            // Build
+            this.sourceBuilder.Writer.WriteTableValue(this.sourceBuilder.BuildTableRaw(data));
+            string source = this.sourceBuilder.GetSourceText();
+
+            // Assert are equal
+            Assert.AreEqual("{ Yellow = 555, Green = 888, Orange = 124 }", source);
+
+        }
+
+        [TestMethod]
+        public void CanWriteDictionaryWithType() {
+
+            // Dummy data
+            var data = new Dictionary<string, int>() { // <-- It's literally just the type that was changed here
+                ["Yellow"] = 555,
+                ["Green"] = 888,
+                ["Orange"] = 124
+            };
+
+            // Build
+            this.sourceBuilder.Writer.WriteTableValue(this.sourceBuilder.BuildTableRaw(data));
+            string source = this.sourceBuilder.GetSourceText();
+
+            // Assert are equal
+            Assert.AreEqual("{ Yellow = 555, Green = 888, Orange = 124 }", source);
 
         }
 

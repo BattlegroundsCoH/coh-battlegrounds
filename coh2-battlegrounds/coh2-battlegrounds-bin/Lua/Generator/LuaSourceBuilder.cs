@@ -364,6 +364,23 @@ namespace Battlegrounds.Lua.Generator {
             => this.BuildTable(obj);
 
         /// <summary>
+        /// Build the raw Lua table version of an object without converter-specified procedures.
+        /// </summary>
+        /// <param name="dict">The object to build table representation of.</param>
+        /// <returns>The <see cref="LuaTable"/> representation of <paramref name="dict"/>.</returns>
+        public LuaTable BuildTableRaw(IDictionary<string, object> dict)
+            => this.BuildTable(dict as IDictionary);
+
+        /// <summary>
+        /// Build the raw Lua table version of an object without converter-specified procedures.
+        /// </summary>
+        /// <typeparam name="TValue">The type of the dictionary value</typeparam>
+        /// <param name="dict">The object to build table representation of.</param>
+        /// <returns>The <see cref="LuaTable"/> representation of <paramref name="dict"/>.</returns>
+        public LuaTable BuildTableRaw<TValue>(IDictionary<string, TValue> dict)
+            => this.BuildTable(dict as IDictionary);
+
+        /// <summary>
         /// 
         /// </summary>
         /// <returns></returns>
