@@ -3,12 +3,18 @@ using System.Xml;
 using System.IO;
 using System.Collections.Generic;
 using System.Text.Json;
+using System.Globalization;
 
 namespace CoH2XML2JSON {
 
     public delegate T BlueprintFactory<T>(XmlDocument document, string path, string name) where T : BP;
 
     public class Program {
+
+        // Define the culture to use when parsing numbers etc.
+        public static readonly CultureInfo FormatCulture = CultureInfo.GetCultureInfo("en-US");
+
+        public static float GetFloat(string value) => float.Parse(value, FormatCulture);
 
         static readonly JsonSerializerOptions serializerOptions = new() { 
             WriteIndented = true, 

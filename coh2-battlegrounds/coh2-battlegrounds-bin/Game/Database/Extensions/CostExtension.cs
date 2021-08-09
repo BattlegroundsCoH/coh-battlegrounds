@@ -1,4 +1,5 @@
-﻿using System.Text.Json;
+﻿using System.Globalization;
+using System.Text.Json;
 
 using Battlegrounds.Functional;
 using Battlegrounds.Lua.Generator.RuntimeServices;

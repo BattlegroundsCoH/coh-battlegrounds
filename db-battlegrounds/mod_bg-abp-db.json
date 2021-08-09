@@ -279,6 +279,64 @@
     ]
   },
   {
+    "Name": "inspire_unit_bg",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741860,
+    "Display": {
+      "LocaleName": "11030555",
+      "LocaleDescriptionLong": "11030556",
+      "LocaleDescriptionShort": "11039267",
+      "Icon": "Icons_abilities_ability_soviet_merge",
+      "Position": 23
+    },
+    "Army": "soviet",
+    "Activation": "targeted",
+    "Requirements": [
+      {
+        "RequirementType": "required_none",
+        "RequirementReason": "usage",
+        "UIText": "0",
+        "RequirementProperties": {}
+      },
+      {
+        "RequirementType": "required_squad_upgrade",
+        "RequirementReason": "usage",
+        "UIText": "11042896",
+        "RequirementProperties": {
+          "include_queued": false,
+          "is_present": false,
+          "upgrade_name": "evasive_tactics_is_on"
+        }
+      },
+      {
+        "RequirementType": "required_not",
+        "RequirementReason": "usage",
+        "UIText": "11050319",
+        "RequirementProperties": {
+          "requirement_table": [
+            {
+              "RequirementType": "required_in_state",
+              "RequirementReason": "usage",
+              "UIText": "0",
+              "RequirementProperties": {
+                "garrisoned": false,
+                "healed": false,
+                "in_combat_since": -1,
+                "injured": false,
+                "leader": false,
+                "not_moving": false,
+                "not_retreating": false,
+                "pinned": true,
+                "suppressed": false,
+                "camouflaged": false
+              }
+            }
+          ]
+        }
+      }
+    ]
+  },
+  {
     "Name": "merge_ability_bg",
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
     "PBGID": 1073741835,
@@ -349,6 +407,33 @@
       "LocaleDescriptionShort": "11039281",
       "Icon": "Icons_abilities_ability_soviet_oorah",
       "Position": 33
+    },
+    "Army": "soviet",
+    "Activation": "timed",
+    "Requirements": [
+      {
+        "RequirementType": "required_all_in_list",
+        "RequirementReason": "usage",
+        "UIText": "0",
+        "RequirementProperties": {
+          "requirements": null
+        }
+      }
+    ]
+  },
+  {
+    "Name": "political_speech_bg",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741859,
+    "Cost": {
+      "Munition": 15
+    },
+    "Display": {
+      "LocaleName": "11007722",
+      "LocaleDescriptionLong": "11007723",
+      "LocaleDescriptionShort": "11039281",
+      "Icon": "Icons_abilities_ability_soviet_oorah",
+      "Position": 32
     },
     "Army": "soviet",
     "Activation": "timed",

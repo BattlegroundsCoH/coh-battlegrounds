@@ -71,7 +71,7 @@
     },
     "SquadCost": {
       "Manpower": 215,
-      "FieldTime": 153
+      "FieldTime": 31.5
     },
     "IsSyncWeapon": true,
     "Entities": [
@@ -137,7 +137,7 @@
     },
     "SquadCost": {
       "Manpower": 195,
-      "FieldTime": 141
+      "FieldTime": 19.5
     },
     "IsSyncWeapon": true,
     "Entities": [
@@ -201,7 +201,7 @@
     },
     "SquadCost": {
       "Manpower": 320,
-      "FieldTime": 198
+      "FieldTime": 36
     },
     "IsSyncWeapon": true,
     "Entities": [
@@ -261,7 +261,7 @@
     "SquadCost": {
       "Manpower": 395,
       "Fuel": 45,
-      "FieldTime": 417
+      "FieldTime": 214.5
     },
     "IsSyncWeapon": true,
     "Entities": [
@@ -3235,8 +3235,8 @@
       "Portrait": "Icons_portraits_unit_german_ostruppen_s_portrait"
     },
     "SquadCost": {
-      "Manpower": 1999998,
-      "FieldTime": 210
+      "Manpower": 199.99982,
+      "FieldTime": 21
     },
     "Entities": [
       {
@@ -3547,8 +3547,8 @@
       "Portrait": "Icons_portraits_unit_german_jaeger_light_infantry_s_portrait"
     },
     "SquadCost": {
-      "Manpower": 3375,
-      "FieldTime": 3375
+      "Manpower": 337.5,
+      "FieldTime": 33.75
     },
     "Entities": [
       {
@@ -3608,8 +3608,8 @@
       "Portrait": "Icons_portraits_unit_german_jaeger_light_infantry_s_portrait"
     },
     "SquadCost": {
-      "Manpower": 2025,
-      "FieldTime": 2025
+      "Manpower": 202.5,
+      "FieldTime": 20.25
     },
     "Entities": [
       {
@@ -3681,8 +3681,8 @@
       "Portrait": "Icons_portraits_unit_german_jaeger_light_infantry_s_portrait"
     },
     "SquadCost": {
-      "Manpower": 3375,
-      "FieldTime": 3375
+      "Manpower": 337.5,
+      "FieldTime": 33.75
     },
     "Entities": [
       {
@@ -3908,14 +3908,14 @@
     "Display": {
       "LocaleName": "11006670",
       "LocaleDescriptionLong": "11007043",
-      "LocaleDescriptionShort": "11009063",
+      "LocaleDescriptionShort": "$142b113740474c82a60b0a428bd553d5:62",
       "Icon": "Icons_units_unit_soviet_engineer",
       "Symbol": "Icons_symbols_unit_soviet_engineer_symbol",
       "Portrait": "Icons_portraits_unit_soviet_combat_engineer_s_portrait"
     },
     "SquadCost": {
-      "Manpower": 2125,
-      "FieldTime": 2125
+      "Manpower": 212.5,
+      "FieldTime": 21.25
     },
     "Entities": [
       {
@@ -3959,7 +3959,10 @@
     ],
     "SlotPickupCapacity": 2,
     "CanPickupItems": true,
-    "UpgradeCapacity": -1
+    "UpgradeCapacity": 1,
+    "Upgrades": [
+      "soviet_minesweeper_bg"
+    ]
   },
   {
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
@@ -3975,8 +3978,8 @@
       "Portrait": "Icons_portraits_unit_soviet_combat_engineer_s_portrait"
     },
     "SquadCost": {
-      "Manpower": 1700,
-      "FieldTime": 1700
+      "Manpower": 260,
+      "FieldTime": 10
     },
     "Entities": [
       {
@@ -4020,7 +4023,11 @@
     ],
     "SlotPickupCapacity": 2,
     "CanPickupItems": true,
-    "UpgradeCapacity": -1
+    "UpgradeCapacity": 1,
+    "Upgrades": [
+      "soviet_flamethrower_bg",
+      "soviet_minesweeper_bg"
+    ]
   },
   {
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
@@ -4287,7 +4294,7 @@
         "Count": 1
       },
       {
-        "EBP": "conscript_soldier_bg",
+        "EBP": "conscript_soldier_guard_bg",
         "Count": 3
       }
     ],
@@ -4340,11 +4347,11 @@
     },
     "Entities": [
       {
-        "EBP": "commissar_bg",
+        "EBP": "officer_bg",
         "Count": 1
       },
       {
-        "EBP": "conscript_soldier_bg",
+        "EBP": "conscript_soldier_guard_bg",
         "Count": 3
       }
     ],
@@ -4396,7 +4403,7 @@
     },
     "SquadCost": {
       "Manpower": 330,
-      "FieldTime": 330
+      "FieldTime": 33
     },
     "Entities": [
       {
@@ -4510,7 +4517,7 @@
     },
     "SquadCost": {
       "Manpower": 300,
-      "FieldTime": 324
+      "FieldTime": 32.4
     },
     "Entities": [
       {
@@ -4564,7 +4571,7 @@
     },
     "SquadCost": {
       "Manpower": 300,
-      "FieldTime": 275
+      "FieldTime": 27.5
     },
     "Entities": [
       {
@@ -4695,7 +4702,7 @@
     },
     "SquadCost": {
       "Manpower": 275,
-      "FieldTime": 275
+      "FieldTime": 27.5
     },
     "Entities": [
       {
@@ -4748,8 +4755,8 @@
       "Portrait": "Icons_portraits_unit_soviet_combat_engineer_s_portrait"
     },
     "SquadCost": {
-      "Manpower": 850,
-      "FieldTime": 850
+      "Manpower": 85,
+      "FieldTime": 8.5
     },
     "Entities": [
       {
@@ -4803,8 +4810,8 @@
       "Portrait": "Icons_portraits_unit_soviet_combat_engineer_s_portrait"
     },
     "SquadCost": {
-      "Manpower": 1700,
-      "FieldTime": 1700
+      "Manpower": 170,
+      "FieldTime": 17
     },
     "Entities": [
       {
@@ -4858,8 +4865,8 @@
       "Portrait": "Icons_portraits_unit_soviet_combat_engineer_s_portrait"
     },
     "SquadCost": {
-      "Manpower": 425,
-      "FieldTime": 425
+      "Manpower": 42.5,
+      "FieldTime": 4.25
     },
     "Entities": [
       {

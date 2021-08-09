@@ -10,7 +10,6 @@ using Battlegrounds.Game.Database;
 using Battlegrounds.Game.Database.Management;
 using Battlegrounds.Game.DataCompany;
 using Battlegrounds.Game.Match;
-using Battlegrounds.Lua;
 using Battlegrounds.Modding;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -18,14 +17,13 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace coh2_battlegrounds_bin_tests {
 
     [TestClass]
-    public class CompilerTest {
+    public class CompilerTest { // Integration testing
 
-        public const bool WRITE_FILES = true;
+        public const bool WRITE_FILES = true; // Set to false to disable file output (Will output to BG dir)
 
         ISessionCompiler sessionCompiler;
         ICompanyCompiler companyCompiler;
         ModPackage package;
-        LuaState luaState;
 
         SessionInfo info; // We can then modify this if needed...
 
@@ -64,6 +62,8 @@ namespace coh2_battlegrounds_bin_tests {
                 SelectedGamemode = WinconditionList.GetGamemodeByName(this.package.GamemodeGUID, "bg_vp"),
                 SelectedGamemodeOption = 1,
                 IsOptionValue = false,
+                EnableSupply = true,
+                EnableDayNightCycle = true,
                 SelectedScenario = new() { RelativeFilename = "2p_angoville_farms", MaxPlayers = 2 },
                 SelectedTuningMod = ModManager.GetMod<ITuningMod>(this.package.TuningGUID),
                 DefaultDifficulty = AIDifficulty.AI_Hard,

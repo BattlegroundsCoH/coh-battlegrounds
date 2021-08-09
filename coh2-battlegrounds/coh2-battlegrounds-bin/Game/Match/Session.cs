@@ -129,6 +129,16 @@ namespace Battlegrounds.Game.Match {
                 session.AddSetting("gamemode_setting", 500);
             }
 
+            // Set day/night flag
+            if (sessionInfo.EnableDayNightCycle) {
+                session.AddSetting("day_night_cycle", true);
+            }
+
+            // Set day/night flag
+            if (sessionInfo.EnableSupply) {
+                session.AddSetting("sypply_system", true);
+            }
+
             // Return the new session
             return session;
 

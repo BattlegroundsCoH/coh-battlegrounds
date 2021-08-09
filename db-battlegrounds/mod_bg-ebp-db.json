@@ -456,8 +456,8 @@
       "Symbol": ""
     },
     "Cost": {
-      "Manpower": 333333,
-      "FieldTime": 35
+      "Manpower": 33.3333,
+      "FieldTime": 3.5
     },
     "Abilities": [
       "blizzard_effect_deep_snow_camo",
@@ -562,8 +562,8 @@
       "Symbol": ""
     },
     "Cost": {
-      "Manpower": 675,
-      "FieldTime": 675
+      "Manpower": 67.5,
+      "FieldTime": 6.75
     },
     "Abilities": [
       "blizzard_effect_deep_snow_camo",
@@ -589,8 +589,8 @@
       "Symbol": ""
     },
     "Cost": {
-      "Manpower": 675,
-      "FieldTime": 675
+      "Manpower": 67.5,
+      "FieldTime": 6.75
     },
     "Abilities": [
       "blizzard_effect_deep_snow_camo",
@@ -616,8 +616,8 @@
       "Symbol": ""
     },
     "Cost": {
-      "Manpower": 675,
-      "FieldTime": 675
+      "Manpower": 67.5,
+      "FieldTime": 6.75
     },
     "Abilities": [
       "blizzard_effect_deep_snow_camo",
@@ -643,8 +643,8 @@
       "Symbol": ""
     },
     "Cost": {
-      "Manpower": 675,
-      "FieldTime": 675
+      "Manpower": 67.5,
+      "FieldTime": 6.75
     },
     "Abilities": [
       "blizzard_effect_deep_snow_camo",
@@ -697,7 +697,7 @@
     },
     "Cost": {
       "Manpower": 45,
-      "FieldTime": 45
+      "FieldTime": 4.5
     },
     "Abilities": [
       "blizzard_effect_deep_snow_camo",
@@ -722,7 +722,7 @@
     },
     "Cost": {
       "Manpower": 45,
-      "FieldTime": 45
+      "FieldTime": 4.5
     },
     "Abilities": [
       "blizzard_effect_deep_snow_camo",
@@ -771,7 +771,7 @@
     },
     "Cost": {
       "Manpower": 45,
-      "FieldTime": 45
+      "FieldTime": 4.5
     },
     "Abilities": [
       "blizzard_effect_deep_snow_camo",
@@ -796,7 +796,7 @@
     },
     "Cost": {
       "Manpower": 45,
-      "FieldTime": 45
+      "FieldTime": 4.5
     },
     "Abilities": [
       "blizzard_effect_deep_snow_camo",
@@ -1713,8 +1713,8 @@
       "Symbol": ""
     },
     "Cost": {
-      "Manpower": 425,
-      "FieldTime": 425
+      "Manpower": 42.5,
+      "FieldTime": 4.25
     },
     "Abilities": [
       "soviet_barbed_wire_cutting_ability_mp",
@@ -1742,8 +1742,8 @@
       "Symbol": ""
     },
     "Cost": {
-      "Manpower": 425,
-      "FieldTime": 425
+      "Manpower": 65,
+      "FieldTime": 2.5
     },
     "Abilities": [
       "soviet_barbed_wire_cutting_ability_mp",
@@ -1773,7 +1773,7 @@
     },
     "Cost": {
       "Manpower": 55,
-      "FieldTime": 55
+      "FieldTime": 5.5
     },
     "Abilities": [
       "guards_throw_defensive_grenade_mp",
@@ -1801,7 +1801,7 @@
     },
     "Cost": {
       "Manpower": 50,
-      "FieldTime": 54
+      "FieldTime": 5.4
     },
     "Abilities": [
       "army_item_global_cover_training",
@@ -1828,7 +1828,7 @@
     },
     "Cost": {
       "Manpower": 60,
-      "FieldTime": 55
+      "FieldTime": 5.5
     },
     "Abilities": [
       "rg_42_anti_personnel_grenade_mp",
@@ -1861,7 +1861,8 @@
     },
     "Abilities": [
       "blizzard_effect_deep_snow_camo",
-      "heal_in_cover"
+      "heal_in_cover",
+      "political_speech_bg"
     ],
     "Hardpoints": [
       "nagant_m1895_revolver_mp"
@@ -1916,6 +1917,30 @@
   },
   {
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741926,
+    "Name": "officer_bg",
+    "Army": "soviet",
+    "Display": {
+      "LocaleName": "0",
+      "LocaleDescriptionLong": "0",
+      "LocaleDescriptionShort": "0",
+      "Symbol": ""
+    },
+    "Cost": {
+      "Manpower": 40
+    },
+    "Abilities": [
+      "blizzard_effect_deep_snow_camo",
+      "heal_in_cover",
+      "inspire_unit_bg"
+    ],
+    "Hardpoints": [
+      "nagant_m1895_revolver_mp"
+    ],
+    "Health": 80
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
     "PBGID": 1073741823,
     "Name": "conscript_soldier_bg",
     "Army": "soviet",
@@ -1932,6 +1957,32 @@
     },
     "Abilities": [
       "conscript_molotov_cocktail_bg",
+      "blizzard_effect_deep_snow_camo",
+      "army_item_global_cover_training",
+      "heal_in_cover"
+    ],
+    "Hardpoints": [
+      "mosin_nagant_rifle_conscript_mp"
+    ],
+    "Health": 80
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741927,
+    "Name": "conscript_soldier_guard_bg",
+    "Army": "soviet",
+    "Display": {
+      "LocaleName": "0",
+      "LocaleDescriptionLong": "11007040",
+      "LocaleDescriptionShort": "0",
+      "Icon": "Icons_units_unit_soviet_conscript_02",
+      "Symbol": "Icons_symbols_unit_soviet_conscript_02_symbol"
+    },
+    "Cost": {
+      "Manpower": 40,
+      "FieldTime": 4
+    },
+    "Abilities": [
       "blizzard_effect_deep_snow_camo",
       "army_item_global_cover_training",
       "heal_in_cover"
@@ -2089,8 +2140,8 @@
       "Symbol": ""
     },
     "Cost": {
-      "Manpower": 425,
-      "FieldTime": 425
+      "Manpower": 42.5,
+      "FieldTime": 4.25
     },
     "Abilities": [
       "soviet_barbed_wire_cutting_ability_mp",
@@ -2119,8 +2170,8 @@
       "Symbol": ""
     },
     "Cost": {
-      "Manpower": 425,
-      "FieldTime": 425
+      "Manpower": 42.5,
+      "FieldTime": 4.25
     },
     "Abilities": [
       "soviet_barbed_wire_cutting_ability_mp",
