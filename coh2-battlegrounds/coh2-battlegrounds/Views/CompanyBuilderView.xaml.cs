@@ -417,7 +417,7 @@ namespace BattlegroundsApp.Views {
 
         }
 
-        private void AddAbilityToDisplay(SpecialAbility specialAbility, bool isUnitAbility) {
+        private void AddAbilityToDisplay(Ability specialAbility, bool isUnitAbility) {
 
             // Build container
             AbilitySlot slot = new(specialAbility);

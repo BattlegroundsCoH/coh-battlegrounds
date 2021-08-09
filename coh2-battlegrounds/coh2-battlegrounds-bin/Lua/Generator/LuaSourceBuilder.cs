@@ -12,21 +12,33 @@ namespace Battlegrounds.Lua.Generator {
     /// </summary>
     public sealed class LuaSourceBuilder {
 
+        /// <summary>
+        /// Get the underlying writer instance that handles the concrete code generation.
+        /// </summary>
         public LuaSourceWriter Writer { get; }
 
+        /// <summary>
+        /// Get or set the options of the underlying <see cref="LuaSourceWriter"/>.
+        /// </summary>
         public LuaSourceBuilderOptions Options {
             get => this.Writer.Options;
             set => this.Writer.Options = value;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public LuaSourceBuilder() => this.Writer = new();
 
-        public LuaSourceBuilder WriteAssignment(string variable, object value) {
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="variable"></param>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public LuaSourceBuilder Assignment(string variable, object value) {
             this.Writer.WriteVariableAssignment(variable);
             switch (value) {
-                case Array a:
-                    this.Writer.WriteTableValue(this.BuildTable(a));
-                    break;
                 case IDictionary dic:
                     this.Writer.WriteTableValue(this.BuildTable(dic));
                     break;
@@ -50,7 +62,13 @@ namespace Battlegrounds.Lua.Generator {
             return this;
         }
 
-        public LuaSourceBuilder WriteFunction(string name, params string[] args) {
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="args"></param>
+        /// <returns></returns>
+        public LuaSourceBuilder Function(string name, params string[] args) {
             if (this.Writer.Line > 0) {
                 this.Writer.NewLine();
             }
@@ -74,11 +92,19 @@ namespace Battlegrounds.Lua.Generator {
             return this;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public LuaSourceBuilder Return() {
             this.Writer.WriteKeyword(LuaKw.Return);
             return this;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public LuaSourceBuilder End() {
             this.Writer.DecreaseIndent();
             if (!this.Writer.IsEmptyLine) {
@@ -88,6 +114,11 @@ namespace Battlegrounds.Lua.Generator {
             return this;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="vars"></param>
+        /// <returns></returns>
         public LuaSourceBuilder Variables(params string[] vars) {
             for (int i = 0; i < vars.Length; i++) {
                 this.Writer.WriteVerbatim(vars[i]);
@@ -98,6 +129,13 @@ namespace Battlegrounds.Lua.Generator {
             return this;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="left"></param>
+        /// <param name="arithmeticOperation"></param>
+        /// <param name="right"></param>
+        /// <returns></returns>
         public LuaSourceBuilder Arithmetic(string left, char arithmeticOperation, string right) {
             this.Writer.WriteVerbatim(left);
             this.Writer.WriteOperator(arithmeticOperation);
@@ -105,6 +143,13 @@ namespace Battlegrounds.Lua.Generator {
             return this;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="left"></param>
+        /// <param name="arithmeticOperation"></param>
+        /// <param name="right"></param>
+        /// <returns></returns>
         public LuaSourceBuilder Arithmetic(double left, char arithmeticOperation, string right) {
             this.Writer.WriteNumberValue(left);
             this.Writer.WriteOperator(arithmeticOperation);
@@ -112,6 +157,13 @@ namespace Battlegrounds.Lua.Generator {
             return this;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="left"></param>
+        /// <param name="arithmeticOperation"></param>
+        /// <param name="right"></param>
+        /// <returns></returns>
         public LuaSourceBuilder Arithmetic(string left, char arithmeticOperation, double right) {
             this.Writer.WriteVerbatim(left);
             this.Writer.WriteOperator(arithmeticOperation);
@@ -119,6 +171,13 @@ namespace Battlegrounds.Lua.Generator {
             return this;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="left"></param>
+        /// <param name="arithmeticOperation"></param>
+        /// <param name="right"></param>
+        /// <returns></returns>
         public LuaSourceBuilder Arithmetic(double left, char arithmeticOperation, double right) {
             this.Writer.WriteNumberValue(left);
             this.Writer.WriteOperator(arithmeticOperation);
@@ -126,18 +185,36 @@ namespace Battlegrounds.Lua.Generator {
             return this;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="arithmeticOperation"></param>
+        /// <param name="right"></param>
+        /// <returns></returns>
         public LuaSourceBuilder Arithmetic(char arithmeticOperation, string right) {
             this.Writer.WriteOperator(arithmeticOperation);
             this.Writer.WriteVerbatim(right);
             return this;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="arithmeticOperation"></param>
+        /// <param name="right"></param>
+        /// <returns></returns>
         public LuaSourceBuilder Arithmetic(char arithmeticOperation, double right) {
             this.Writer.WriteOperator(arithmeticOperation);
             this.Writer.WriteNumberValue(right);
             return this;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="variable"></param>
+        /// <param name="args"></param>
+        /// <returns></returns>
         public LuaSourceBuilder Call(string variable, params string[] args) {
             this.Writer.WriteVerbatim(variable);
             this.Writer.WriteOperator('(');
@@ -173,15 +250,15 @@ namespace Battlegrounds.Lua.Generator {
             // Create table
             LuaTable table = new();
 
-            // Return result
-            return table;
-
-        }
-
-        private LuaTable BuildTable(Array array) {
-
-            // Create table
-            LuaTable table = new();
+            int i = 1;
+            foreach (var item in collection) {
+                if (item is null && this.Options.ExplicitNullAsNilValues) {
+                    table[i] = LuaNil.Nil;
+                } else if (item is not null) {
+                    table[i] = this.GetTableValue(item);
+                }
+                i++;
+            }
 
             // Return result
             return table;
@@ -198,7 +275,7 @@ namespace Battlegrounds.Lua.Generator {
                 if (entry.Value is null && this.Options.ExplicitNullAsNilValues) {
                     table[this.GetKeyName(entry.Key)] = LuaNil.Nil;
                 } else if (entry.Value is not null) {
-                    table[this.GetKeyName(entry.Key)] = LuaMarshal.ToLuaValue(entry.Value);
+                    table[this.GetKeyName(entry.Key)] = this.GetTableValue(entry.Value);
                 }
             }
 
@@ -218,19 +295,30 @@ namespace Battlegrounds.Lua.Generator {
 
         private LuaTable BuildTable(object obj) {
 
-
-
             // Create table
             LuaTable table = new();
 
+            // Get type
+            var type = obj.GetType();
+
             // Yay reflection...
-            var publicProperties = obj.GetType().GetProperties(BindingFlags.Instance | BindingFlags.Public);
+            var publicProperties = type.GetProperties(BindingFlags.Instance | BindingFlags.Public);
 
             // Add Properties
             foreach (var property in publicProperties) {
-                object tableValue = property.GetValue(obj);
-                if (this.GetTableValue(tableValue) is LuaValue val) {
-                    table[property.Name] = val;
+
+                // Make sure we're not supposed to ignore this
+                if (property.GetCustomAttribute<LuaIgnoreAttribute>() is null) {
+
+                    // Get table value and key
+                    object tableValue = property.GetValue(obj);
+                    string tableKey = property.GetCustomAttribute<LuaNameAttribute>() is LuaNameAttribute name ? name.Name : property.Name;
+
+                    // If converted, save
+                    if (this.GetTableValue(tableValue) is LuaValue val) {
+                        table[tableKey] = val;
+                    } // else ... error out?
+
                 }
             }
 
@@ -256,7 +344,7 @@ namespace Battlegrounds.Lua.Generator {
                 }
 
                 // Write
-                converter.Write(this.Writer, obj);
+                converter.Write(this, obj);
 
             } else {
 
@@ -267,6 +355,18 @@ namespace Battlegrounds.Lua.Generator {
 
         }
 
+        /// <summary>
+        /// Build the raw Lua table version of an object without converter-specified procedures.
+        /// </summary>
+        /// <param name="obj">The object to build table representation of.</param>
+        /// <returns>The <see cref="LuaTable"/> representation of <paramref name="obj"/>.</returns>
+        public LuaTable BuildTableRaw(object obj)
+            => this.BuildTable(obj);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public string GetSourceText() => this.Writer.GetContent();
 
     }

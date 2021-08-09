@@ -1,11 +1,13 @@
-﻿using Battlegrounds.Game.Scar;
+﻿using Battlegrounds.Game.Gameplay.DataConverters;
+using Battlegrounds.Lua.Generator.RuntimeServices;
 
 namespace Battlegrounds.Game.Gameplay {
 
     /// <summary>
     /// Represents a <see cref="Modifier"/> to apply to a <see cref="Squad"/>. Implements <see cref="IScarValue"/>.
     /// </summary>
-    public readonly struct Modifier : IScarValue {
+    [LuaConverter(typeof(ModifierConverter))]
+    public readonly struct Modifier {
 
         /// <summary>
         /// The modifier value.
@@ -28,8 +30,6 @@ namespace Battlegrounds.Game.Gameplay {
         }
 
         public override string ToString() => $"{this.Name} x{this.Value:0.00}";
-
-        public string ToScar() => $"{{ name = \"{this.Name}\", value = {this.Value:0.00} }}";
 
     }
 

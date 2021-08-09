@@ -146,12 +146,18 @@ namespace Battlegrounds.Game.DataCompany {
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="ability"></param>
+        public virtual void AddAndCommitAbility(Ability ability) => this.m_companyTarget.AddAbility(ability);
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <param name="abp"></param>
         /// <returns></returns>
-        public virtual SpecialAbility AddAndCommitAbility(AbilityBlueprint abp, SpecialAbilityCategory specialAbility, int maxUse) {
+        public virtual Ability AddAndCommitAbility(AbilityBlueprint abp, AbilityCategory specialAbility, int maxUse) {
 
             // Create ability
-            SpecialAbility sabp = new(abp, SpecialAbilityCategory.Default, 0);
+            Ability sabp = new(abp, AbilityCategory.Default, 0);
 
             // Add ability
             this.m_companyTarget.AddAbility(sabp);
@@ -166,7 +172,7 @@ namespace Battlegrounds.Game.DataCompany {
         /// </summary>
         /// <param name="ability"></param>
         /// <returns></returns>
-        public virtual CompanyBuilder RemoveAbility(SpecialAbility ability) {
+        public virtual CompanyBuilder RemoveAbility(Ability ability) {
             _ = this.m_companyTarget.RemoveAbility(ability);
             return this;
         }
@@ -333,7 +339,7 @@ namespace Battlegrounds.Game.DataCompany {
         /// 
         /// </summary>
         /// <param name="action"></param>
-        public void EachAbility(Action<SpecialAbility, bool> action) {
+        public void EachAbility(Action<Ability, bool> action) {
             _ = this.m_companyTarget.GetSpecialUnitAbilities().ForEach(x => action(x, true));
             _ = this.m_companyTarget.Abilities.ForEach(x => action(x, false));
         }

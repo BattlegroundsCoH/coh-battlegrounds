@@ -1,29 +1,37 @@
 ﻿using System.Text.Json;
 
 using Battlegrounds.Functional;
+using Battlegrounds.Lua.Generator.RuntimeServices;
 
 namespace Battlegrounds.Game.Database.Extensions {
 
+    /// <summary>
+    /// Class representing the cost extension attribute that is common among some <see cref="Blueprint"/> implementations.
+    /// </summary>
     public class CostExtension {
 
         /// <summary>
         /// Manpower cost of the <see cref="Cost"/> data.
         /// </summary>
+        [LuaName("manpower")]
         public float Manpower { get; set; }
 
         /// <summary>
         /// Munitions cost of the <see cref="Cost"/> data.
         /// </summary>
+        [LuaName("munitions")]
         public float Munitions { get; set; }
 
         /// <summary>
         /// Fuel cost of the <see cref="Cost"/> data.
         /// </summary>
+        [LuaName("fuel")]
         public float Fuel { get; set; }
 
         /// <summary>
         /// The amount of time it takes to field something.
         /// </summary>
+        [LuaName("fieldtime")]
         public float FieldTime { get; set; }
 
         public CostExtension() : this(0.0f, 0.0f, 0.0f) { }

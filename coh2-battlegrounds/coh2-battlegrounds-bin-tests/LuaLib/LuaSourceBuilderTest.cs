@@ -20,17 +20,17 @@ namespace coh2_battlegrounds_bin_tests.LuaLib {
         }
 
         public class AdditionalDummyObjectConverter : LuaConverter<AdditionalDummyObject> {
-            public override void Write(LuaSourceWriter luaSourceWriter, AdditionalDummyObject value) {
-                luaSourceWriter.WriteKeyword(LuaKw.Function);
-                luaSourceWriter.WriteOperator('(');
-                luaSourceWriter.WriteVerbatim("ships");
-                luaSourceWriter.WriteOperator(')');
-                luaSourceWriter.EndLine(true);
-                luaSourceWriter.WriteKeyword(LuaKw.Return);
-                luaSourceWriter.WriteVerbatim($"ships[\"{value.This}-{value.That}\"]");
-                luaSourceWriter.DecreaseIndent();
-                luaSourceWriter.EndLine(false);
-                luaSourceWriter.WriteKeyword(LuaKw.End);
+            public override void Write(LuaSourceBuilder luaSourceBuilder, AdditionalDummyObject value) {
+                luaSourceBuilder.Writer.WriteKeyword(LuaKw.Function);
+                luaSourceBuilder.Writer.WriteOperator('(');
+                luaSourceBuilder.Writer.WriteVerbatim("ships");
+                luaSourceBuilder.Writer.WriteOperator(')');
+                luaSourceBuilder.Writer.EndLine(true);
+                luaSourceBuilder.Writer.WriteKeyword(LuaKw.Return);
+                luaSourceBuilder.Writer.WriteVerbatim($"ships[\"{value.This}-{value.That}\"]");
+                luaSourceBuilder.Writer.DecreaseIndent();
+                luaSourceBuilder.Writer.EndLine(false);
+                luaSourceBuilder.Writer.WriteKeyword(LuaKw.End);
             }
         }
 
@@ -65,7 +65,7 @@ namespace coh2_battlegrounds_bin_tests.LuaLib {
 
         [TestMethod]
         public void CanWriteAssignment() {
-            string source = this.sourceBuilder.WriteAssignment("a", 5).GetSourceText();
+            string source = this.sourceBuilder.Assignment("a", 5).GetSourceText();
             Assert.IsNotNull(source);
             Assert.AreEqual("a = 5;\r\n", source);
         }
@@ -73,14 +73,14 @@ namespace coh2_battlegrounds_bin_tests.LuaLib {
         [TestMethod]
         public void CanWriteAssignmentWithoutSemicolon() {
             this.sourceBuilder.Options.WriteSemicolon = false;
-            string source = this.sourceBuilder.WriteAssignment("a", 5).GetSourceText();
+            string source = this.sourceBuilder.Assignment("a", 5).GetSourceText();
             Assert.IsNotNull(source);
             Assert.AreEqual("a = 5\r\n", source);
         }
 
         [TestMethod]
         public void CanWriteStringAssignment() {
-            string source = this.sourceBuilder.WriteAssignment("a", "Hello").GetSourceText();
+            string source = this.sourceBuilder.Assignment("a", "Hello").GetSourceText();
             Assert.IsNotNull(source);
             Assert.AreEqual("a = \"Hello\";\r\n", source);
         }
@@ -97,7 +97,7 @@ namespace coh2_battlegrounds_bin_tests.LuaLib {
                 ""
             };
 
-            string source = this.sourceBuilder.WriteAssignment("g_table", this.dummyObject).GetSourceText();
+            string source = this.sourceBuilder.Assignment("g_table", this.dummyObject).GetSourceText();
             Assert.IsNotNull(source);
 
             string[] sourceLines = source.Split(Environment.NewLine);
@@ -121,7 +121,7 @@ namespace coh2_battlegrounds_bin_tests.LuaLib {
                 ""
             };
 
-            string source = this.sourceBuilder.WriteFunction("test", "a", "b", "c").Return().Variables("a", "b", "c").End().GetSourceText();
+            string source = this.sourceBuilder.Function("test", "a", "b", "c").Return().Variables("a", "b", "c").End().GetSourceText();
             Assert.IsNotNull(source);
 
             string[] sourceLines = source.Split(Environment.NewLine);
@@ -150,8 +150,8 @@ namespace coh2_battlegrounds_bin_tests.LuaLib {
                 ""
             };
 
-            string source = this.sourceBuilder.WriteFunction("add", "a", "b").Return().Arithmetic("a", '+', "b").End()
-                .WriteFunction("sub", "a", "b", "c").Return().Call("add", "a", "b").Arithmetic('-', "c").End().GetSourceText();
+            string source = this.sourceBuilder.Function("add", "a", "b").Return().Arithmetic("a", '+', "b").End()
+                .Function("sub", "a", "b", "c").Return().Call("add", "a", "b").Arithmetic('-', "c").End().GetSourceText();
             Assert.IsNotNull(source);
 
             string[] sourceLines = source.Split(Environment.NewLine);
@@ -180,8 +180,8 @@ namespace coh2_battlegrounds_bin_tests.LuaLib {
                 ""
             };
 
-            string source = this.sourceBuilder.WriteFunction("add", "a", "b").Return().Arithmetic("a", '+', "b").End()
-                .WriteFunction("sub", "a", "b").Return().Call("add", "a", "b").Arithmetic('/', 1.5).End().GetSourceText();
+            string source = this.sourceBuilder.Function("add", "a", "b").Return().Arithmetic("a", '+', "b").End()
+                .Function("sub", "a", "b").Return().Call("add", "a", "b").Arithmetic('/', 1.5).End().GetSourceText();
             Assert.IsNotNull(source);
 
             string[] sourceLines = source.Split(Environment.NewLine);
@@ -207,7 +207,7 @@ namespace coh2_battlegrounds_bin_tests.LuaLib {
                 "",
             };
 
-            string source = this.sourceBuilder.WriteAssignment("Starship", obj).GetSourceText();
+            string source = this.sourceBuilder.Assignment("Starship", obj).GetSourceText();
             Assert.IsNotNull(source);
 
             string[] sourceLines = source.Split(Environment.NewLine);

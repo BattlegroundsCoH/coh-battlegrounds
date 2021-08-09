@@ -52,7 +52,7 @@ namespace Battlegrounds.Game.DataCompany {
 
             // Create helper dictionary
             var arrayTypes = new Dictionary<string, Type>() {
-                [nameof(Company.Abilities)] = typeof(SpecialAbility[]),
+                [nameof(Company.Abilities)] = typeof(Ability[]),
                 [nameof(Company.Units)] = typeof(Squad[]),
                 [nameof(Company.Upgrades)] = typeof(UpgradeBlueprint[]),
                 [nameof(Company.Modifiers)] = typeof(Modifier[]),
@@ -73,6 +73,11 @@ namespace Battlegrounds.Game.DataCompany {
                         case nameof(Company.Units):
                             for (int i = 0; i < values.Length; i++) {
                                 builder.AddAndCommitUnit(new UnitBuilder(values.GetValue(i) as Squad, false));
+                            }
+                            break;
+                        case nameof(Company.Abilities):
+                            for (int i = 0; i < values.Length; i++) {
+                                builder.AddAndCommitAbility(values.GetValue(i) as Ability);
                             }
                             break;
                         default:

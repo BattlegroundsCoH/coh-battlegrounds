@@ -52,7 +52,7 @@ namespace Battlegrounds.Modding {
                 /// <summary>
                 /// Get the ability category
                 /// </summary>
-                public SpecialAbilityCategory AbilityCategory { get; }
+                public AbilityCategory AbilityCategory { get; }
 
                 /// <summary>
                 /// Get the max use in a match (-1 = infinite)
@@ -96,7 +96,7 @@ namespace Battlegrounds.Modding {
                 [DefaultValue(0.0f)]
                 public float VeterancyExperienceGain { get; }
 
-                public FactionAbility(string Blueprint, SpecialAbilityCategory AbilityCategory, int MaxUsePerMatch, bool RequireOffmap, float OffmapCountEffectivenesss,
+                public FactionAbility(string Blueprint, AbilityCategory AbilityCategory, int MaxUsePerMatch, bool RequireOffmap, float OffmapCountEffectivenesss,
                     bool CanGrantVeterancy, AbilityVeterancy[] VeterancyRanks, VeterancyRequirement? VeterancyUsageRequirement,
                     float VeterancyExperienceGain) {
                     this.Blueprint = Blueprint;

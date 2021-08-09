@@ -43,7 +43,7 @@ namespace Battlegrounds.Game.DataCompany {
         private List<Blueprint> m_inventory;
         private List<Modifier> m_modifiers;
         private List<UpgradeBlueprint> m_upgrades;
-        private List<SpecialAbility> m_abilities;
+        private List<Ability> m_abilities;
         private CompanyStatistics m_companyStatistics;
 
         /// <summary>
@@ -120,7 +120,7 @@ namespace Battlegrounds.Game.DataCompany {
         /// Get the <see cref="ImmutableArray{T}"/> representation of a <see cref="Company"/>'s special ability list.
         /// </summary>
         [ChecksumProperty(IsCollection = true)]
-        public ImmutableArray<SpecialAbility> Abilities => this.m_abilities.ToImmutableArray();
+        public ImmutableArray<Ability> Abilities => this.m_abilities.ToImmutableArray();
 
         /// <summary>
         /// Get the statistics tied to the <see cref="Company"/>.
@@ -142,7 +142,7 @@ namespace Battlegrounds.Game.DataCompany {
             this.m_inventory = new List<Blueprint>();
             this.m_modifiers = new List<Modifier>();
             this.m_upgrades = new List<UpgradeBlueprint>();
-            this.m_abilities = new List<SpecialAbility>();
+            this.m_abilities = new List<Ability>();
             this.m_companyType = CompanyType.Unspecified;
             this.m_companyStatistics = new CompanyStatistics();
             this.m_lastEditVersion = Assembly.GetExecutingAssembly().GetName().Version.ToString();
@@ -206,14 +206,14 @@ namespace Battlegrounds.Game.DataCompany {
         /// 
         /// </summary>
         /// <param name="ability"></param>
-        public void AddAbility(SpecialAbility ability) => this.m_abilities.Add(ability);
+        public void AddAbility(Ability ability) => this.m_abilities.Add(ability);
 
         /// <summary>
         /// 
         /// </summary>
         /// <param name="ability"></param>
         /// <returns></returns>
-        public bool RemoveAbility(SpecialAbility ability) => this.m_abilities.Remove(ability);
+        public bool RemoveAbility(Ability ability) => this.m_abilities.Remove(ability);
 
         /// <summary>
         /// 
@@ -221,7 +221,7 @@ namespace Battlegrounds.Game.DataCompany {
         /// <param name="ability"></param>
         /// <returns></returns>
         public bool RemoveAbility(string ability)
-            => this.m_abilities.FirstOrDefault(x => x.ABP.Name == ability) is SpecialAbility abp && this.m_abilities.Remove(abp);
+            => this.m_abilities.FirstOrDefault(x => x.ABP.Name == ability) is Ability abp && this.m_abilities.Remove(abp);
 
         /// <summary>
         /// Reset most of the company data, including the company inventory.
@@ -344,7 +344,7 @@ namespace Battlegrounds.Game.DataCompany {
         /// 
         /// </summary>
         /// <returns></returns>
-        public SpecialAbility[] GetSpecialUnitAbilities() {
+        public Ability[] GetSpecialUnitAbilities() {
             var package = ModManager.GetPackageFromGuid(this.TuningGUID);
             if (package is null) {
                 throw new InvalidOperationException();
@@ -355,14 +355,14 @@ namespace Battlegrounds.Game.DataCompany {
                 .Select(x => BlueprintManager.FromBlueprintName<AbilityBlueprint>(x.Blueprint))
                 .Where(x => x is not null);
             return abps.Select(x => {
-                var category = x.Name.Contains("air_") ? SpecialAbilityCategory.AirSupport : x.Name.Contains("artillery_") ? SpecialAbilityCategory.Artillery
-                : SpecialAbilityCategory.Default;
+                var category = x.Name.Contains("air_") ? AbilityCategory.AirSupport : x.Name.Contains("artillery_") ? AbilityCategory.Artillery
+                : AbilityCategory.Default;
                 int use = category switch { // TODO: Read from mod package
-                    SpecialAbilityCategory.AirSupport => 6,
-                    SpecialAbilityCategory.Artillery => 8,
+                    AbilityCategory.AirSupport => 6,
+                    AbilityCategory.Artillery => 8,
                     _ => 4
                 };
-                return new SpecialAbility(x, category, use);
+                return new Ability(x, category, use);
             }).ToArray();
         }
 

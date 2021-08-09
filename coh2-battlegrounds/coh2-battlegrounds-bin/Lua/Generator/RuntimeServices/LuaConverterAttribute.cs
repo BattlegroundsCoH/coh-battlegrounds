@@ -5,7 +5,7 @@ namespace Battlegrounds.Lua.Generator.RuntimeServices {
     /// <summary>
     /// Attribute for marking a specific Lua converter for a class.
     /// </summary>
-    [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = false)]
+    [AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct, AllowMultiple = false, Inherited = false)]
     public class LuaConverterAttribute : Attribute {
 
         /// <summary>

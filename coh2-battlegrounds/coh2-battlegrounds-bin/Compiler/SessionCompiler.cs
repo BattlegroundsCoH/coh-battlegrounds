@@ -59,10 +59,10 @@ namespace Battlegrounds.Compiler {
 
             // Save to lua
             var sourceBuilder = new LuaSourceBuilder()
-                .WriteAssignment(nameof(bg_settings), bg_settings)
-                .WriteAssignment("bg_db.towing_upgrade", GetBlueprintName(session.TuningMod.Guid, session.TuningMod.TowingUpgrade))
-                .WriteAssignment("bg_db.towed_upgrade", GetBlueprintName(session.TuningMod.Guid, session.TuningMod.TowUpgrade))
-                .WriteAssignment(nameof(bg_companies), bg_companies);
+                .Assignment(nameof(bg_settings), bg_settings)
+                .Assignment("bg_db.towing_upgrade", GetBlueprintName(session.TuningMod.Guid, session.TuningMod.TowingUpgrade))
+                .Assignment("bg_db.towed_upgrade", GetBlueprintName(session.TuningMod.Guid, session.TuningMod.TowUpgrade))
+                .Assignment(nameof(bg_companies), bg_companies);
 
             // Write the precompiled database
             this.WritePrecompiledDatabase(sourceBuilder, session.Participants.Select(x => x.ParticipantCompany));
@@ -139,7 +139,7 @@ namespace Battlegrounds.Compiler {
                 };
 
                 // Write DB
-                _ = lua.WriteAssignment($"bg_db.slot_items[\"{ibp.Name}\"]", ibpData);
+                _ = lua.Assignment($"bg_db.slot_items[\"{ibp.GetScarName()}\"]", ibpData);
 
             }
 
