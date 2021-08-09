@@ -64,7 +64,7 @@ namespace coh2_battlegrounds_bin_tests {
                 SelectedGamemode = WinconditionList.GetGamemodeByName(this.package.GamemodeGUID, "bg_vp"),
                 SelectedGamemodeOption = 1,
                 IsOptionValue = false,
-                SelectedScenario = new() { RelativeFilename = "2p_angoville", MaxPlayers = 2 },
+                SelectedScenario = new() { RelativeFilename = "2p_angoville_farms", MaxPlayers = 2 },
                 SelectedTuningMod = ModManager.GetMod<ITuningMod>(this.package.TuningGUID),
                 DefaultDifficulty = AIDifficulty.AI_Hard,
                 Allies = new SessionParticipant[] { new("Red Army", 77789995, this.sovietCompany, SessionParticipantTeam.TEAM_ALLIES, 0) },

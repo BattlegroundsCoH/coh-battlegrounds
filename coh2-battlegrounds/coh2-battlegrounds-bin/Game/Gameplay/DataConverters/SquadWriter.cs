@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 using System.Text.Json;
@@ -13,7 +14,6 @@ using Battlegrounds.Functional;
 
 using Battlegrounds.Lua.Generator.RuntimeServices;
 using Battlegrounds.Lua.Generator;
-using System.Linq;
 
 namespace Battlegrounds.Game.Gameplay.DataConverters {
 
@@ -39,8 +39,8 @@ namespace Battlegrounds.Game.Gameplay.DataConverters {
                     ["veterancy_rank"] = value.VeterancyRank,
                     ["veterancy_progress"] = value.VeterancyProgress,
                     ["upgrades"] = value.Upgrades.Select(x => x.GetScarName()),
-                    ["modifiers"] = value.Modifiers,
                     ["slot_items"] = value.SlotItems.Select(x => x.GetScarName()),
+                    ["modifiers"] = value.Modifiers,
                     ["spawned"] = false,
                     ["cost"] = value.GetCost()
                 };
@@ -59,8 +59,8 @@ namespace Battlegrounds.Game.Gameplay.DataConverters {
                         ["veterancy_rank"] = crew.VeterancyRank,
                         ["veterancy_progress"] = crew.VeterancyProgress,
                         ["upgrades"] = crew.Upgrades.Select(x => x.GetScarName()),
+                        ["slot_items"] = crew.SlotItems.Select(x => x.GetScarName()),
                         ["modifiers"] = crew.Modifiers,
-                        ["slot_items"] = crew.SlotItems.Select(x => x.GetScarName())
                     };
                 }
 

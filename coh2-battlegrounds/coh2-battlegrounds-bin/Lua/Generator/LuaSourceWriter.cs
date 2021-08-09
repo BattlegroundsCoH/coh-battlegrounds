@@ -247,16 +247,19 @@ namespace Battlegrounds.Lua.Generator {
                 _ = this.m_builder.Append("{}");
                 return;
             }
+            bool isArray = table.IsArray();
             int pseudoSize = (this.m_indent * 4) + this.CalculateLengthOfTableEntries(table);
             bool singleLine = pseudoSize <= this.Options.SingleLineTableLength;
-            bool isFields = table.StringKeys.All(IsLegalVariableName);
+            bool isFields = !isArray && table.StringKeys.All(IsLegalVariableName);
             _ = this.m_builder.Append('{').IfFalse(_ => singleLine)
                 .Then(q => { this.m_indent++; this.NewLine(); })
                 .Else(q => q.Append(' '));
             var last = table.LastKey;
             foreach (var tableEntry in table) {
-                _ = isFields ? this.m_builder.Append(tableEntry.Key.Str()) : this.m_builder.Append("[\"").Append(tableEntry.Key.Str()).Append("\"]");
-                this.WriteOperator('=');
+                if (!isArray) {
+                    _ = isFields ? this.m_builder.Append(tableEntry.Key.Str()) : this.m_builder.Append("[\"").Append(tableEntry.Key.Str()).Append("\"]");
+                    this.WriteOperator('=');
+                }
                 if (tableEntry.Value is LuaTable subTable) {
                     this.WriteTableValue(subTable);
                 } else if (tableEntry.Value is LuaUserObject userObj && userObj.Object is LuaLazyConverter lazyConverter) {

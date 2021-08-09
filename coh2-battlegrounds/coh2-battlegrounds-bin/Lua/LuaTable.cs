@@ -395,7 +395,8 @@ namespace Battlegrounds.Lua {
                 return false;
             }
             int diff = (this.LastKey as LuaNumber).ToInt() - (this.FirstKey as LuaNumber).ToInt();
-            return diff == this.Len();
+            int len = this.Len() - 1;
+            return diff == len || len is 0;
         }
 
     }
