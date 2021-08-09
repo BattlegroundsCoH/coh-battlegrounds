@@ -242,6 +242,10 @@ namespace Battlegrounds.Lua.Generator {
         }
 
         public void WriteTableValue(LuaTable table) {
+            if (table.Size is 0) {
+                _ = this.m_builder.Append("{}");
+                return;
+            }
             int pseudoSize = (this.m_indent * 4) + this.CalculateLengthOfTableEntries(table);
             bool singleLine = pseudoSize <= this.Options.SingleLineTableLength;
             bool isFields = table.StringKeys.All(IsLegalVariableName);

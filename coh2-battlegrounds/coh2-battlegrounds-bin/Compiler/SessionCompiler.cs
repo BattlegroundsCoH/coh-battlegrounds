@@ -60,9 +60,9 @@ namespace Battlegrounds.Compiler {
             // Save to lua
             var sourceBuilder = new LuaSourceBuilder()
                 .Assignment(nameof(bg_settings), bg_settings)
+                .Assignment(nameof(bg_companies), bg_companies)
                 .Assignment("bg_db.towing_upgrade", GetBlueprintName(session.TuningMod.Guid, session.TuningMod.TowingUpgrade))
-                .Assignment("bg_db.towed_upgrade", GetBlueprintName(session.TuningMod.Guid, session.TuningMod.TowUpgrade))
-                .Assignment(nameof(bg_companies), bg_companies);
+                .Assignment("bg_db.towed_upgrade", GetBlueprintName(session.TuningMod.Guid, session.TuningMod.TowUpgrade));
 
             // Write the precompiled database
             this.WritePrecompiledDatabase(sourceBuilder, session.Participants.Select(x => x.ParticipantCompany));
