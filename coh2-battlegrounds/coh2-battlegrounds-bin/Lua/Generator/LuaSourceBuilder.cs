@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 
 using Battlegrounds.Lua.Generator.RuntimeServices;
@@ -245,13 +246,12 @@ namespace Battlegrounds.Lua.Generator {
             _ => throw new KeyNotFoundException(),
         };
 
-        private LuaTable BuildTable(ICollection collection) {
+        private LuaTable BuildTable(IEnumerable enumerable) {
 
             // Create table
             LuaTable table = new();
-
             int i = 1;
-            foreach (var item in collection) {
+            foreach (var item in enumerable) {
                 if (item is null && this.Options.ExplicitNullAsNilValues) {
                     table[i] = LuaNil.Nil;
                 } else if (item is not null) {
@@ -284,12 +284,30 @@ namespace Battlegrounds.Lua.Generator {
 
         }
 
+        private LuaValue GetEnumLuaValue(Enum e) {
+            bool asString = e.GetType().GetCustomAttribute<LuaEnumBehaviourAttribute>() is LuaEnumBehaviourAttribute eb && eb.SerialiseAsString;
+            if (asString || !this.Options.ByDefaultTreatEnumsAsNumerics) {
+                return new LuaString(e.ToString());
+            } else {
+                return LuaMarshal.ToLuaValue(Convert.ChangeType(e, e.GetType().BaseType));
+            }
+        }
+
+        private LuaValue GetObjectAsTable(object obj) {
+            if (HasConverter(obj, out LuaConverter converter)) {
+                return new LuaUserObject(new LuaLazyConverter(this, converter, obj));
+            }
+            return this.BuildTable(obj);
+        }
+
         private LuaValue GetTableValue(object value) => value switch {
-            Array array => this.BuildTable(array),
+            Enum e => this.GetEnumLuaValue(e),
+            string => LuaMarshal.ToLuaValue(value),
             IDictionary dictionary => this.BuildTable(dictionary),
-            ICollection collection => this.BuildTable(collection),
+            IEnumerable enumerable => this.BuildTable(enumerable),
+            ValueType => LuaMarshal.ToLuaValue(value),
             null when this.Options.ExplicitNullAsNilValues => LuaNil.Nil,
-            not null => LuaMarshal.ToLuaValue(value),
+            not null => this.GetObjectAsTable(value),
             _ => null
         };
 
@@ -317,9 +335,10 @@ namespace Battlegrounds.Lua.Generator {
                     // If converted, save
                     if (this.GetTableValue(tableValue) is LuaValue val) {
                         table[tableKey] = val;
-                    } // else ... error out?
+                    }
 
                 }
+
             }
 
             // Return result
@@ -327,16 +346,22 @@ namespace Battlegrounds.Lua.Generator {
 
         }
 
+        private static bool HasConverter(object obj, out LuaConverter luaConverter) {
+            if (obj.GetType().GetCustomAttribute<LuaConverterAttribute>() is LuaConverterAttribute luaConverterAttribute) {
+                luaConverter = luaConverterAttribute.CreateConverter();
+                return true;
+            }
+            luaConverter = null;
+            return false;
+        }
+
         private void WriteObject(object obj) {
 
-            // Get type to convert
-            var objType = obj.GetType();
-
             // Check if there's a converter in place
-            if (objType.GetCustomAttribute<LuaConverterAttribute>() is LuaConverterAttribute converterAttrib) {
+            if (HasConverter(obj, out LuaConverter converter)) {
 
-                // Create converter
-                var converter = converterAttrib.CreateConverter();
+                // Get type to convert
+                var objType = obj.GetType();
 
                 // Make sure we can write to the type.
                 if (!converter.CanWrite(objType)) {

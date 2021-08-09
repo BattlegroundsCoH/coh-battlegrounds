@@ -49,6 +49,11 @@ namespace Battlegrounds.Lua.Generator {
         public bool DenoteGeneratedFunctions { get; set; }
 
         /// <summary>
+        /// Get or set if enums should be trated as numerics if no other behaviour is specified. (Default: <see langword="true"/>).
+        /// </summary>
+        public bool ByDefaultTreatEnumsAsNumerics { get; set; }
+
+        /// <summary>
         /// Initialsie a new default <see cref="LuaSourceBuilderOptions"/> instance.
         /// </summary>
         public LuaSourceBuilderOptions() {
@@ -59,6 +64,7 @@ namespace Battlegrounds.Lua.Generator {
             this.ExplicitNullAsNilValues = false;
             this.CodeVerification = true;
             this.DenoteGeneratedFunctions = true;
+            this.ByDefaultTreatEnumsAsNumerics = true;
             this.FormatProvider = CultureInfo.GetCultureInfo("en-US");
         }
 

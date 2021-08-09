@@ -77,6 +77,7 @@ namespace Battlegrounds.Game.Gameplay.DataConverters {
 
                 // Write to builder
                 luaSourceBuilder.Writer.WriteTableValue(luaSourceBuilder.BuildTableRaw(data));
+
             }
 
             private static Dictionary<string, object> GetSupportBlueprint(Squad value) {

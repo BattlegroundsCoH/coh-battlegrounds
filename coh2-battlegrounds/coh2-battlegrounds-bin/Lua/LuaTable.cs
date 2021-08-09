@@ -384,6 +384,20 @@ namespace Battlegrounds.Lua {
             }
         }
 
+        /// <summary>
+        /// Determines if the <see cref="LuaTable"/> can be considered to be an array.
+        /// </summary>
+        /// <returns><see langword="true"/> if table is an array; Otherwise <see langword="false"/>.</returns>
+        public bool IsArray() {
+            bool hasFirst = this.FirstKey is not null && this.FirstKey is LuaNumber startIndex && startIndex.IsInteger() && startIndex == 1;
+            bool hasLast = this.LastKey is not null && this.LastKey is LuaNumber lastIndex && lastIndex.IsInteger();
+            if (!hasFirst || !hasLast) {
+                return false;
+            }
+            int diff = (this.LastKey as LuaNumber).ToInt() - (this.FirstKey as LuaNumber).ToInt();
+            return diff == this.Len();
+        }
+
     }
 
 }

@@ -4,6 +4,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 
 using Battlegrounds.Functional;
+using Battlegrounds.Lua.Generator.RuntimeServices;
 
 namespace Battlegrounds.Lua.Generator {
 
@@ -26,7 +27,7 @@ namespace Battlegrounds.Lua.Generator {
 
     public class LuaSourceWriter {
 
-        private static readonly Regex VarRegex = new(@"[A-z_]+([A-z0-9_])*");
+        private static readonly Regex VarRegex = new(@"^[A-z_]+([A-z0-9_])*$");
 
         private readonly StringBuilder m_builder;
         private int m_indent;
@@ -255,9 +256,11 @@ namespace Battlegrounds.Lua.Generator {
             var last = table.LastKey;
             foreach (var tableEntry in table) {
                 _ = isFields ? this.m_builder.Append(tableEntry.Key.Str()) : this.m_builder.Append("[\"").Append(tableEntry.Key.Str()).Append("\"]");
-                _ = this.m_builder.Append(" = ");
+                this.WriteOperator('=');
                 if (tableEntry.Value is LuaTable subTable) {
                     this.WriteTableValue(subTable);
+                } else if (tableEntry.Value is LuaUserObject userObj && userObj.Object is LuaLazyConverter lazyConverter) {
+                    lazyConverter.Convert();
                 } else {
                     this.WriteValue(LuaMarshal.FromLuaValue(tableEntry.Value));
                 }
