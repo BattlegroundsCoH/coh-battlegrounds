@@ -9,6 +9,9 @@ using Battlegrounds.Game.DataCompany;
 using Battlegrounds.Game.Database.Management;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using static Battlegrounds.Game.Database.Extensions.VeterancyExtension;
+using System.Numerics;
+using System.Timers;
 
 namespace coh2_battlegrounds_bin_tests { // NOTE: This test file tests serialisation and deserialisation
     // But the primary goal is to test that no checksum violations occur.
@@ -230,6 +233,63 @@ namespace coh2_battlegrounds_bin_tests { // NOTE: This test file tests serialisa
             // Create company
             Company company = new(Faction.Soviet);
             company.Name = "Test";
+            company.CalculateChecksum();
+
+            // Get the checksum
+            string chksum = company.Checksum;
+
+            // Serialise
+            string js = JsonSerializer.Serialize(company);
+            Assert.IsNotNull(js);
+
+            // Deserialise and verify
+            Company deserialised = JsonSerializer.Deserialize<Company>(js);
+            Assert.AreEqual(chksum, deserialised.Checksum);
+
+        }
+
+        [TestMethod]
+        public void CanSaveFullyPopulatedSovietCompany() {
+
+            // Create unit builder
+            UnitBuilder ub = new();
+
+            // Create company
+            Company company = new(Faction.Soviet);
+            company.Name = "Test";
+            for (int i = 0; i < Company.MAX_SIZE; i++) {
+                company.AddSquad(ub.SetModGUID(package.TuningGUID).SetBlueprint("conscript_squad_bg").GetAndReset());
+            }
+            company.CalculateChecksum();
+
+            // Get the checksum
+            string chksum = company.Checksum;
+
+            // Serialise
+            string js = JsonSerializer.Serialize(company);
+            Assert.IsNotNull(js);
+
+            // Deserialise and verify
+            Company deserialised = JsonSerializer.Deserialize<Company>(js);
+            Assert.AreEqual(chksum, deserialised.Checksum);
+
+        }
+
+        [TestMethod]
+        public void CanSavePopulatedSovietCompanyWithDeployPhases() {
+
+            // Create unit builder
+            UnitBuilder ub = new();
+
+            // Create company
+            Company company = new(Faction.Soviet);
+            company.Name = "Test";
+            for (int i = 0; i < Company.MAX_INITIAL; i++) {
+                company.AddSquad(ub.SetModGUID(package.TuningGUID).SetBlueprint("conscript_squad_bg").SetDeploymentPhase(DeploymentPhase.PhaseInitial).GetAndReset());
+            }
+            for (int i = 0; i < Company.MAX_SIZE - Company.MAX_INITIAL; i++) {
+                company.AddSquad(ub.SetModGUID(package.TuningGUID).SetBlueprint("guards_troops_bg").SetDeploymentPhase(DeploymentPhase.PhaseA).GetAndReset());
+            }
             company.CalculateChecksum();
 
             // Get the checksum
