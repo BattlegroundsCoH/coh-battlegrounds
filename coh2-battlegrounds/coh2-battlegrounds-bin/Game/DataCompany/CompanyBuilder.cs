@@ -50,6 +50,7 @@ namespace Battlegrounds.Game.DataCompany {
         public virtual CompanyBuilder NewCompany(Faction faction) {
             this.m_companyTarget = new Company(faction); // This is intentional
             this.m_companyName = "New Company";
+            this.m_companyAppVersion = this.m_companyTarget.AppVersion;
             return this;
         }
 
@@ -63,6 +64,7 @@ namespace Battlegrounds.Game.DataCompany {
             this.m_companyType = companyTarget.Type;
             this.m_companyName = companyTarget.Name;
             this.m_companyGUID = companyTarget.TuningGUID;
+            this.m_companyAppVersion = companyTarget.AppVersion;
             return this;
         }
 

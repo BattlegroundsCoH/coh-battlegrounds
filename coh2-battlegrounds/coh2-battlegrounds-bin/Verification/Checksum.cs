@@ -40,7 +40,7 @@ namespace Battlegrounds.Verification {
 
         }
 
-        private List<object> m_sumItems;
+        private readonly List<object> m_sumItems;
 
         /// <summary>
         /// Initialise a new and empty <see cref="Checksum"/> class.
@@ -51,8 +51,7 @@ namespace Battlegrounds.Verification {
         /// Initialise a new <see cref="Checksum"/> class based on the <see cref="IChecksumItem"/> <paramref name="item"/> instance.
         /// </summary>
         /// <param name="item">The <see cref="IChecksumItem"/> to represent.</param>
-        public Checksum(IChecksumItem item) {
-            this.m_sumItems = new();
+        public Checksum(IChecksumItem item) : this() {
             GetChecksumProperties(item).ForEach(x => this.AddValue(x));
         }
 
@@ -83,11 +82,11 @@ namespace Battlegrounds.Verification {
         /// </summary>
         /// <returns>The numeric checksum value represented by the added values.</returns>
         public ulong GetCheckksum() {
-            ulong sum = (ulong)this.m_sumItems.Count;
+            StringBuilder str = new();
             for (int i = 0; i < this.m_sumItems.Count; i++) {
-                sum += Encoding.UTF8.GetBytes(this.m_sumItems[i]?.ToString() ?? "NULL").Aggregate(0ul, (a, b) => a + b);
+                str.Append(this.m_sumItems[i]?.ToString() ?? string.Empty);
             }
-            return sum;
+            return Encoding.UTF8.GetBytes(str.ToString()).Aggregate(0ul, (a,b) => a + b);
         }
 
         /// <summary>
