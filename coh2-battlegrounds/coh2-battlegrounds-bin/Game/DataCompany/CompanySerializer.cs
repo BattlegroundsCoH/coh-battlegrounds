@@ -61,31 +61,25 @@ namespace Battlegrounds.Game.DataCompany {
             // Read arrays
             while (reader.Read() && reader.TokenType is not JsonTokenType.EndObject) {
 
-                string property = reader.GetString();
+                // Read property
+                string property = reader.ReadProperty();
                 var inputType = arrayTypes[property];
 
-                // Make sure we're reading an array
-                if (reader.Read() && reader.TokenType is JsonTokenType.StartArray) {
-
-                    // Read values and store them
-                    Array values = JsonSerializer.Deserialize(ref reader, inputType) as Array;
-                    switch (property) {
-                        case nameof(Company.Units):
-                            for (int i = 0; i < values.Length; i++) {
-                                builder.AddAndCommitUnit(new UnitBuilder(values.GetValue(i) as Squad, false));
-                            }
-                            break;
-                        case nameof(Company.Abilities):
-                            for (int i = 0; i < values.Length; i++) {
-                                builder.AddAndCommitAbility(values.GetValue(i) as Ability);
-                            }
-                            break;
-                        default:
-                            throw new NotImplementedException();
-                    }
-
-                } else {
-                    break;
+                // Get data and set it
+                Array values = JsonSerializer.Deserialize(ref reader, inputType) as Array;
+                switch (property) {
+                    case nameof(Company.Units):
+                        for (int i = 0; i < values.Length; i++) {
+                            builder.AddAndCommitUnit(new UnitBuilder(values.GetValue(i) as Squad, false));
+                        }
+                        break;
+                    case nameof(Company.Abilities):
+                        for (int i = 0; i < values.Length; i++) {
+                            builder.AddAndCommitAbility(values.GetValue(i) as Ability);
+                        }
+                        break;
+                    default:
+                        throw new NotImplementedException();
                 }
 
             }

@@ -208,7 +208,7 @@ namespace coh2_battlegrounds_bin_tests { // NOTE: This test file tests serialisa
 
             // Serialise
             string js = JsonSerializer.Serialize(squad);
-            Assert.IsNotNull(squad);
+            Assert.IsNotNull(js);
 
             // Deserialise
             var deserialised = JsonSerializer.Deserialize<Squad>(js);
@@ -221,6 +221,27 @@ namespace coh2_battlegrounds_bin_tests { // NOTE: This test file tests serialisa
             Assert.AreEqual(squad.DeploymentMethod, deserialised.DeploymentMethod);
             Assert.AreEqual(squad.DeploymentPhase, deserialised.DeploymentPhase);
             Assert.AreEqual(squad.CombatTime, deserialised.CombatTime);
+
+        }
+
+        [TestMethod]
+        public void CanSaveEmptyCompany() {
+
+            // Create company
+            Company company = new(Faction.Soviet);
+            company.Name = "Test";
+            company.CalculateChecksum();
+
+            // Get the checksum
+            string chksum = company.Checksum;
+
+            // Serialise
+            string js = JsonSerializer.Serialize(company);
+            Assert.IsNotNull(js);
+
+            // Deserialise and verify
+            Company deserialised = JsonSerializer.Deserialize<Company>(js);
+            Assert.AreEqual(chksum, deserialised.Checksum);
 
         }
 
