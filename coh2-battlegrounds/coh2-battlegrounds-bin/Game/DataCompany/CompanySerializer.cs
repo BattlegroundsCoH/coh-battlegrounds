@@ -91,7 +91,9 @@ namespace Battlegrounds.Game.DataCompany {
             Company result = builder.Result;
             result.UpdateStatistics(x => stats); // This will set the stats
             result.CalculateChecksum();
+#if DEBUG
             bool eq = checksum == result.Checksum;
+#endif
             return result.VerifyChecksum(checksum) ? result : throw new ChecksumViolationException();
 
         }

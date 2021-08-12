@@ -42,10 +42,10 @@ namespace Battlegrounds.Compiler {
                 ["tuning_mod"] = new Dictionary<string, object>() {
                     ["mod_name"] = session.TuningMod.Name,
                     ["mod_guid"] = session.TuningMod.Guid.GUID,
-                    ["mod_verify_upg"] = session.TuningMod.VerificationUpgrade,
+                    ["mod_verify_upg"] = $"{session.TuningMod.Guid.GUID}:{session.TuningMod.VerificationUpgrade}",
                 },
                 ["gamemode"] = session.Gamemode?.Name ?? "Victory Points",
-                ["gamemodeoptions"] = session.Settings,
+                ["gameoptions"] = session.Settings,
                 ["team_setup"] = new Dictionary<string, object>() {
                     ["allies"] = this.GetTeam("allies", session.Participants.Where(x => x.ParticipantFaction.IsAllied)),
                     ["axis"] = this.GetTeam("axis", session.Participants.Where(x => x.ParticipantFaction.IsAxis)),
@@ -76,7 +76,7 @@ namespace Battlegrounds.Compiler {
             => $"{guid.GUID}:{blueprint}";
 
         private static string GetCompanyUsername(SessionParticipant participant)
-            => participant.IsHumanParticipant ? participant.GetName() : $"AIPlayer#{participant}";
+            => participant.IsHumanParticipant ? participant.GetName() : $"AIPlayer#{participant.PlayerIndexOnTeam}";
 
         private KeyValuePair<string, Dictionary<string, object>> GetCompany(SessionParticipant x)
             => new(GetCompanyUsername(x), this.m_companyCompiler.CompileToLua(x.ParticipantCompany, !x.IsHumanParticipant, x.PlayerIndexOnTeam));
@@ -92,7 +92,7 @@ namespace Battlegrounds.Compiler {
                     ["id"] = player.PlayerIndexOnTeam,
                 };
                 if (player.Difficulty is AIDifficulty.Human) {
-                    data["steam_index"] = player.GetID();
+                    data["steam_index"] = player.GetID().ToString(); // Store as string (Not sure Lua can handle steam ids, 64-bit unsigned integers)
                 }
                 result.Add(data);
             }
