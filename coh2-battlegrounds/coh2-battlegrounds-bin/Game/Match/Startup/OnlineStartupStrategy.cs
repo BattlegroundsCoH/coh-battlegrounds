@@ -33,7 +33,7 @@ namespace Battlegrounds.Game.Match.Startup {
         private SessionInfo m_sessionInfo;
         private Session m_session;
 
-        private ManualResetEventSlim m_beginWaitHandle;
+        private readonly ManualResetEventSlim m_beginWaitHandle;
 
         public OnlineStartupStrategy() {
             this.m_session = null;
