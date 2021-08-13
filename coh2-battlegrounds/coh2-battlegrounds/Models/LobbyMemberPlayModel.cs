@@ -13,14 +13,14 @@ using Battlegrounds.Networking.Requests;
 using Battlegrounds.Networking.DataStructures;
 
 using BattlegroundsApp.Views;
-using BattlegroundsApp.LocalData;
 
 namespace BattlegroundsApp.Models {
 
     public class LobbyMemberPlayModel : ILobbyPlayModel {
 
-        private LobbyHandler m_lobby;
-        private GameLobbyView m_view;
+        private readonly LobbyHandler m_lobby;
+        private readonly GameLobbyView m_view;
+
         private IMatchData m_playResults;
         private ISession m_session;
         private PlayCancelHandler m_cancelHandler;
@@ -100,7 +100,7 @@ namespace BattlegroundsApp.Models {
             Company company = CompanySerializer.GetCompanyFromJson(jsondata);
 
             // Now save the company
-            PlayerCompanies.SaveCompany(company);
+            LobbyHostPlayModel.OnCompanySerialized(company);
 
         }
 

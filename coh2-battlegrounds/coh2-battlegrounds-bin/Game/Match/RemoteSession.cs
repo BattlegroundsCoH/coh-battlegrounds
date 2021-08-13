@@ -19,6 +19,8 @@ namespace Battlegrounds.Game.Match {
 
         public IGamemode Gamemode => new Wincondition("Unknown Gamemode", new Guid());
 
+        public string GamemodeOption => "0";
+
         public ITuningMod TuningMod => ModManager.GetMod<ITuningMod>(ModManager.GetPackage("mod_bg").TuningGUID);
 
         public RemoteSession(string session) => this.SessionID = Guid.Parse(session);

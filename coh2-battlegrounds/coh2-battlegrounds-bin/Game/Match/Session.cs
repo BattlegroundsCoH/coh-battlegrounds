@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Diagnostics;
+using System.Text.Json.Serialization;
 
-using Battlegrounds.Json;
 using Battlegrounds.Modding;
 using Battlegrounds.Functional;
 using Battlegrounds.Game.Gameplay;
@@ -16,9 +16,9 @@ namespace Battlegrounds.Game.Match {
 
     /// <summary>
     /// Represents a game session where a match will take place between players with a pre-selected <see cref="Company"/> and using a set of preset settings.
-    /// Implements <see cref="ISession"/> and <see cref="IJsonObject"/>.
+    /// Implements <see cref="ISession"/>.
     /// </summary>
-    public class Session : ISession, IJsonObject {
+    public class Session : ISession {
 
         SessionParticipant[] m_participants;
 
@@ -37,6 +37,11 @@ namespace Battlegrounds.Game.Match {
         /// Get the <see cref="Wincondition"/> to use when playing.
         /// </summary>
         public IGamemode Gamemode { get; }
+
+        /// <summary>
+        /// Get the <see cref="WinconditionOption"/>? to use when playing.
+        /// </summary>
+        public string GamemodeOption { get; private set; }
 
         /// <summary>
         /// Get the associated <see cref="ITuningMod"/> with the <see cref="Session"/>.
@@ -128,6 +133,9 @@ namespace Battlegrounds.Game.Match {
                 Trace.WriteLine("Failed to read selected gamemode - using 500 as default option", "Session.Create");
                 session.AddSetting("gamemode_setting", 500);
             }
+
+            // Set session gamemode
+            session.GamemodeOption = session.Settings["gamemode_setting"].ToString();
 
             // Set day/night flag
             if (sessionInfo.EnableDayNightCycle) {
@@ -233,8 +241,6 @@ namespace Battlegrounds.Game.Match {
             }
 
         }
-
-        public string ToJsonReference() => this.SessionID.ToString();
 
     }
 

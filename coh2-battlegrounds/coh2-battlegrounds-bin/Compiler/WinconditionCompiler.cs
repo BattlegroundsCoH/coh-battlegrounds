@@ -10,7 +10,7 @@ using Battlegrounds.Modding;
 namespace Battlegrounds.Compiler {
 
     /// <summary>
-    /// Helper class for compiling a win condition in a JIT-style.
+    /// Static helper class for compiling a win condition in a JIT-style.
     /// </summary>
     public static class WinconditionCompiler {
 

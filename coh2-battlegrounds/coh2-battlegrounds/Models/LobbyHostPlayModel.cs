@@ -77,7 +77,7 @@ namespace BattlegroundsApp.Models {
 
                 // Finalizer strategy
                 finalizeStrategy = new SingleplayerFinalizer {
-                    CompanyHandler = this.OnCompanySerialized,
+                    CompanyHandler = OnCompanySerialized,
                 };
 
                 // Log strategy choice
@@ -104,7 +104,7 @@ namespace BattlegroundsApp.Models {
 
                 // Create standard online finalizer
                 finalizeStrategy = new MultiplayerFinalizer {
-                    CompanyHandler = this.OnCompanySerialized,
+                    CompanyHandler = OnCompanySerialized,
                 };
 
                 // Log strategy choice
@@ -242,7 +242,7 @@ namespace BattlegroundsApp.Models {
             }
         }
 
-        private void OnCompanySerialized(Company selfCompany) {
+        public static void OnCompanySerialized(Company selfCompany) {
 
             // Old checksum
             string chksum = (0).ToString("X8");

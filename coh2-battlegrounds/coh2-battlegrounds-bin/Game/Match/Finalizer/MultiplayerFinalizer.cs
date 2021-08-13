@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using System.Globalization;
 using System.Linq;
 
 using Battlegrounds.Game.DataCompany;
@@ -28,7 +29,7 @@ namespace Battlegrounds.Game.Match.Finalizer {
             ServerMatchResults matchResults = new() {
                 Gamemode = this.m_matchData.Session.Gamemode.Name,
                 Map = this.m_matchData.Session.Scenario.RelativeFilename,
-                Option = "0",
+                Option = this.m_matchData.Session.GamemodeOption,
                 Length = this.m_matchData.Length,
                 LengthTicks = this.m_matchData.Length.Ticks,
             };

@@ -6,7 +6,6 @@ using System.Linq;
 using Battlegrounds.Game.Database.Management;
 using Battlegrounds.Game.DataCompany;
 using Battlegrounds.Game.Database;
-using Battlegrounds.Game.Gameplay;
 using Battlegrounds.Game.Match;
 using Battlegrounds.Functional;
 using Battlegrounds.Modding;
@@ -108,34 +107,21 @@ namespace Battlegrounds.Compiler {
         /// <param name="companies"></param>
         protected virtual void WritePrecompiledDatabase(LuaSourceBuilder lua, IEnumerable<Company> companies) {
 
-            // List for keeping track of dummy slot items (Slot items granted by an upgrade)
-            Dictionary<string, HashSet<string>> upgradeItems = new();
-
-            // Get all potential slot items used in this session
-            List<SlotItemBlueprint> slotitems = companies.Aggregate(new List<Squad>(), (a, b) => { a.AddRange(b.Units); return a; })
-                .Aggregate(new List<SlotItemBlueprint>(), (a, b) => {
-                    a.AddRange(b.SlotItems.Cast<SlotItemBlueprint>());
-                    a.AddRange(b.Upgrades.Cast<UpgradeBlueprint>().Aggregate(new List<SlotItemBlueprint>(), (d, e) => {
-                        var items = e.SlotItems.Select(x => BlueprintManager.FromBlueprintName(x, BlueprintType.IBP) as SlotItemBlueprint);
-                        d.AddRange(items);
-                        _ = items.ForEach(x => upgradeItems.IfTrue(y => y.ContainsKey(x.Name))
-                            .Then(y => y[x.Name].Add(e.Name))
-                            .Else(y => y.Add(x.Name, new HashSet<string>() { e.Name }))
-                        );
-                        return d;
-                    }));
-                    return a;
-                })
-                .Distinct()
-                .ToList();
+            // Get all potential slot items
+            var upgrades = companies.SelectMany(x => x.Units.SelectMany(y => y.Upgrades).Cast<UpgradeBlueprint>()).Distinct();
+            var itemsInUpgrades = upgrades
+                .SelectMany(x => x.SlotItems.Select(y => BlueprintManager.FromBlueprintName<SlotItemBlueprint>(y))).Distinct();
+            var items = companies.SelectMany(x => x.Units.SelectMany(y => y.SlotItems.Cast<SlotItemBlueprint>()))
+                .Union(itemsInUpgrades).Distinct();
+            var upgradeItems = itemsInUpgrades.ToDictionary(k => k, v => upgrades.Where(x => x.SlotItems.Any(y => y == v.Name)).ToHashSet());
 
             // Loop through all the items
-            foreach (var ibp in slotitems) {
+            foreach (var ibp in items) {
 
                 // Generate data entry
                 Dictionary<string, object> ibpData = new() {
                     ["icon"] = ibp.UI.Icon,
-                    ["ignore_if"] = upgradeItems.TryGetValue(ibp.Name, out var upgs) ? upgs : Array.Empty<string>()
+                    ["ignore_if"] = upgradeItems.TryGetValue(ibp, out var upgs) ? upgs.Select(x => x.GetScarName()) : Array.Empty<string>()
                 };
 
                 // Write DB
