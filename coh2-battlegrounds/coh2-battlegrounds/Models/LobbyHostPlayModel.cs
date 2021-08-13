@@ -30,8 +30,8 @@ namespace BattlegroundsApp.Models {
         private bool m_shouldStop = false;
         private bool m_canStop = false;
 
-        private GameLobbyView m_view;
-        private LobbyHandler m_lobby;
+        private readonly GameLobbyView m_view;
+        private readonly LobbyHandler m_lobby;
         private MatchController m_controller;
         private PlayCancelHandler m_cancelHandler;
 
@@ -77,7 +77,7 @@ namespace BattlegroundsApp.Models {
 
                 // Finalizer strategy
                 finalizeStrategy = new SingleplayerFinalizer {
-                    CompanyHandler = PlayerCompanies.SaveCompany,
+                    CompanyHandler = this.OnCompanySerialized,
                 };
 
                 // Log strategy choice
@@ -104,7 +104,7 @@ namespace BattlegroundsApp.Models {
 
                 // Create standard online finalizer
                 finalizeStrategy = new MultiplayerFinalizer {
-                    CompanyHandler = PlayerCompanies.SaveCompany,
+                    CompanyHandler = this.OnCompanySerialized,
                 };
 
                 // Log strategy choice
@@ -240,6 +240,28 @@ namespace BattlegroundsApp.Models {
                     this.m_view.LobbyChat.DisplayMessage($"[System] {message}{Environment.NewLine}");
                 });
             }
+        }
+
+        private void OnCompanySerialized(Company selfCompany) {
+
+            // Old checksum
+            string chksum = (0).ToString("X8");
+
+            // Find company
+            var oldCompany = PlayerCompanies.FromNameAndFaction(selfCompany.Name, selfCompany.Army);
+            if (oldCompany is null) {
+                Trace.WriteLine($"Saving a deleted or removed company '{selfCompany.Name}' [Faction: {selfCompany.Army.Name}]", nameof(LobbyHostPlayModel));
+            } else {
+                chksum = oldCompany.Checksum;
+            }
+
+            // Recalc checksum
+            selfCompany.CalculateChecksum();
+            Trace.WriteLine($"Company Checksum upgrade [{chksum},{selfCompany.Checksum}] : '{selfCompany.Name}' [Faction: {selfCompany.Army.Name}]", nameof(LobbyHostPlayModel));
+
+            // Save the company
+            PlayerCompanies.SaveCompany(selfCompany);
+
         }
 
     }

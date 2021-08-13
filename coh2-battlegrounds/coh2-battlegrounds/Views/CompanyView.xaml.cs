@@ -115,7 +115,7 @@ namespace BattlegroundsApp.Views {
         private void UpdateCompanyList() {
             PlayerCompanies.LoadAll();
             m_player_companies.Clear();
-            foreach (var company in PlayerCompanies.GetAllCompanyes()) {
+            foreach (var company in PlayerCompanies.GetAllCompanies()) {
                 m_player_companies.Add(company);
             }
         }

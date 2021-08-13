@@ -67,7 +67,7 @@ namespace Battlegrounds.Game.Match.Data {
 
             // Load the replay
             if (!this.m_replay.LoadReplay()) {
-                Trace.WriteLine($"Failed to read replay file {matchFile}", "ReplayMatchData");
+                Trace.WriteLine($"Failed to read replay file {matchFile}", nameof(ReplayMatchData));
                 return false;
             }
 
@@ -162,7 +162,7 @@ namespace Battlegrounds.Game.Match.Data {
                     if (match.Success) {
                         eventUID = uint.Parse(match.Groups["id"].Value);
                     } else {
-                        Trace.WriteLine($"{{Warning}} Event message has no UID \"{gameEvent.AttachedMessage}\" (Using UID = 0), this may cause problems.", "ReplayMatchData");
+                        Trace.WriteLine($"{{Warning}} Event message has no UID \"{gameEvent.AttachedMessage}\" (Using UID = 0), this may cause problems.", nameof(ReplayMatchData));
                     }
 
                     // Define invoking player
@@ -203,7 +203,7 @@ namespace Battlegrounds.Game.Match.Data {
                     // Handle case were player is not found
                     if (player is null) {
                         player = this.m_players.First(x => x.ID == gameEvent.PlayerID);
-                        Trace.WriteLine($"{{Warning}} Event message has no player ID \"{gameEvent.AttachedMessage}\" (Using event ID), this may cause problems.", "ReplayMatchData");
+                        Trace.WriteLine($"{{Warning}} Event message has no player ID \"{gameEvent.AttachedMessage}\" (Using event ID), this may cause problems.", nameof(ReplayMatchData));
                     }
 
                     // Return the proper type
@@ -227,8 +227,8 @@ namespace Battlegrounds.Game.Match.Data {
                     } else {
 
                         // Log this scenario
-                        Trace.WriteLine("Found a broadcast message for which the regex failed to match.", "ReplayMatchData");
-                        Trace.WriteLine($"Regex failure on : [{gameEvent.AttachedMessage}]", "ReplayMatchData");
+                        Trace.WriteLine("Found a broadcast message for which the regex failed to match.", nameof(ReplayMatchData));
+                        Trace.WriteLine($"Regex failure on : [{gameEvent.AttachedMessage}]", nameof(ReplayMatchData));
 
                         // No match -> Invalid broadcast message
                         return null;
@@ -240,7 +240,7 @@ namespace Battlegrounds.Game.Match.Data {
             } else {
 
                 // Log this case
-                Trace.WriteLine("Found broadcast message with message of length 0.", "ReplayMatchData");
+                Trace.WriteLine("Found broadcast message with message of length 0.", nameof(ReplayMatchData));
 
                 // Return null (nothing to parse)
                 return null;
@@ -253,6 +253,7 @@ namespace Battlegrounds.Game.Match.Data {
             VerificationEvent verification = new VerificationEvent(id, values);
             if (verification.VerificationType == VerificationType.SessionVerification) {
                 this.m_isSessionValid = verification.Verify(this.Session);
+                Trace.WriteLine($"Verification event returned: {this.m_isSessionValid}.", nameof(ReplayMatchData));
             }
             return verification;
         }

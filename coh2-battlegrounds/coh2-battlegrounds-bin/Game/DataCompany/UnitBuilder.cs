@@ -466,7 +466,9 @@ namespace Battlegrounds.Game.DataCompany {
         /// </summary>
         public virtual void Apply() {
             if (this.m_builder is not null && this.m_overrideIndex != ushort.MaxValue) {
-                this.m_builder.Result.ReplaceSquad(this.m_overrideIndex, this.Build(0));
+                if (!this.m_builder.Result.ReplaceSquad(this.m_overrideIndex, this.Build(0))) {
+                    throw new InvalidOperationException("Cannot apply changes to existing unit (Invalid unit ID)");
+                }
             } else {
                 throw new InvalidOperationException("Cannot apply changes as this is a new unit.");
             }

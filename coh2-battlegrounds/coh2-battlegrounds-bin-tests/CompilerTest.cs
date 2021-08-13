@@ -10,6 +10,7 @@ using Battlegrounds.Game.Database;
 using Battlegrounds.Game.Database.Management;
 using Battlegrounds.Game.DataCompany;
 using Battlegrounds.Game.Match;
+using Battlegrounds.Lua;
 using Battlegrounds.Modding;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -26,6 +27,8 @@ namespace coh2_battlegrounds_bin_tests {
         ModPackage package;
 
         SessionInfo info; // We can then modify this if needed...
+
+        LuaState luaState;
 
         Company sovietCompany;
         Company germanCompany;
@@ -71,9 +74,14 @@ namespace coh2_battlegrounds_bin_tests {
                 Axis = new SessionParticipant[] { new("Wehrmacht", 77789996, this.germanCompany, SessionParticipantTeam.TEAM_AXIS, 0) },
             };
 
+            // Create directory with compilte test files
             if (!Directory.Exists("compile_tests")) {
                 Directory.CreateDirectory("compile_tests");
             }
+
+            // Create lua state
+            luaState = new();
+            luaState._G["bg_db"] = new LuaTable(luaState);
 
         }
 
@@ -99,6 +107,30 @@ namespace coh2_battlegrounds_bin_tests {
             }
 
         }
+        /* // Currently disabled --> Lua Runtime issue
+        [TestMethod]
+        public void CanInterpretBasicSession() {
+
+            // Create session data
+            var session = Session.CreateSession(info);
+            Assert.IsNotNull(session);
+
+            // Compile the session
+            string sessionFile = this.sessionCompiler.CompileSession(session);
+            Assert.IsTrue(sessionFile.Length > 0);
+            if (WRITE_FILES) {
+                File.WriteAllText($"compile_tests\\{GetTestName()}_session.scar", sessionFile);
+            }
+
+            // Do the stuff
+            LuaVM.DoString(luaState, sessionFile, $"{GetTestName()}_session.scar");
+
+            // Assert table exists
+            Assert.IsTrue(luaState._G["bg_settings"] is not LuaNil);
+            Assert.IsTrue(luaState._G["bg_companies"] is not LuaNil);
+            Assert.IsTrue(luaState._G["bg_db.towing_upgrade"] is not LuaNil);
+
+        }*/
 
     }
 

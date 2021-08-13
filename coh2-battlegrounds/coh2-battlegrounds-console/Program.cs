@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Text.Json;
 using System.Threading;
 
 using Battlegrounds;
@@ -9,7 +10,7 @@ using Battlegrounds.Game.DataSource.Replay;
 using Battlegrounds.Game.Gameplay;
 using Battlegrounds.Game.Match;
 using Battlegrounds.Game.Match.Data;
-using Battlegrounds.Json;
+//using Battlegrounds.Json;
 using Battlegrounds.Modding;
 
 namespace coh2_battlegrounds_console {
@@ -58,7 +59,7 @@ namespace coh2_battlegrounds_console {
                     playback.SetReplayFile(replayFile);
                     if (playback.ParseMatchData()) {
                         JsonPlayback events = new JsonPlayback(playback);
-                        File.WriteAllText("playback.json", events.SerializeAsJson());
+                        File.WriteAllText("playback.json", JsonSerializer.Serialize(events));
                         Console.WriteLine("Saved to .json");
                     } else {
                         Console.WriteLine("Failed to compile to json...");

@@ -1,5 +1,7 @@
 ﻿using System.Diagnostics;
+using System.IO;
 using System.Linq;
+using System.Text.Json;
 
 using Battlegrounds.Game.Match.Data;
 using Battlegrounds.Game.Match.Data.Events;
@@ -32,6 +34,15 @@ namespace Battlegrounds.Game.Match.Analyze {
 
         protected virtual bool AnalyzePlaybackData(IMatchData replayMatchData) {
 
+            // Save
+            try {
+                if (replayMatchData is ReplayMatchData replayMatchDataConcrete) {
+                    File.WriteAllText("_last_matchdata.json", JsonSerializer.Serialize(new JsonPlayback(replayMatchDataConcrete)));
+                }
+            } catch {
+                Trace.WriteLine("Failed to save local json playback.", nameof(SingleplayerMatchAnalyzer));
+            }
+
             // Set length of match
             this.m_analysisResult.SetLength(replayMatchData.Length);
 
@@ -43,20 +54,20 @@ namespace Battlegrounds.Game.Match.Analyze {
                 var reg = this.m_analysisResult.RegisterEvent(timeEvent);
                 if (!reg) {
                     if (reg.WasOutsideTime) {
-                        Trace.WriteLine("Time event was after the length of the match (Out of range)", "SingleplayerMatchAnalyzer");
+                        Trace.WriteLine("Time event was after the length of the match (Out of range)", nameof(SingleplayerMatchAnalyzer));
                         return false; // For sure some problem
                     } else if (reg.ConflictingTimes) {
-                        Trace.WriteLine("Time event was conflicting in time", "SingleplayerMatchAnalyzer");
+                        Trace.WriteLine("Time event was conflicting in time", nameof(SingleplayerMatchAnalyzer));
                         return false; // Event time not adding up
                     } else {
-                        Trace.WriteLine("Time event found duplicate event", "SingleplayerMatchAnalyzer");
+                        Trace.WriteLine("Time event found duplicate event", nameof(SingleplayerMatchAnalyzer));
                         return false; // Duplicate event for something that doesn't allow duplicates
                     }
                 }
             }
 
             // Log success (Not required in UI)
-            Trace.WriteLine($"Successfully analyzed match data with {this.m_analysisResult.EventCount} events", "SingleplayerMatchAnalyzer");
+            Trace.WriteLine($"Successfully analyzed match data with {this.m_analysisResult.EventCount} events", nameof(SingleplayerMatchAnalyzer));
 
             // Return true -> Analysis "complete" for this type
             return true;
@@ -69,9 +80,10 @@ namespace Battlegrounds.Game.Match.Analyze {
             if (!this.m_analysisResult?.CompileResults() ?? true) {
                 Trace.WriteLine($"Failed to compile analysis report. (Mismatching events)", "SingleplayerMatchAnalyzer");
                 return new NullAnalysis();
-            } else {
-                Trace.WriteLine($"Successfully compiled match data into a finalizable match data object.", "SingleplayerMatchAnalyzer");
             }
+
+            // Log success
+            Trace.WriteLine($"Successfully compiled match data into a finalizable match data object.", "SingleplayerMatchAnalyzer");
 
             // Return the analysis
             return this.m_analysisResult;

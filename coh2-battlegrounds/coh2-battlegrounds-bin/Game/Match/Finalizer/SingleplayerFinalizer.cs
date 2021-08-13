@@ -57,7 +57,7 @@ namespace Battlegrounds.Game.Match.Finalizer {
                     }
                     this.m_companies.Add(player, company);
                 } else {
-                    Trace.WriteLine($"Failed to find a company for {player.SteamID} ({player.Name})", "SingleplayerFinalizer");
+                    Trace.WriteLine($"Failed to find a company for {player.SteamID} ({player.Name})", nameof(SingleplayerFinalizer));
                     // TODO: Handle
                 }
             }
@@ -134,7 +134,7 @@ namespace Battlegrounds.Game.Match.Finalizer {
 
             // Make sure we log this unfortunate event
             if (this.CompanyHandler is null) {
-                Trace.WriteLine("{Warning} -- The company handler is NULL and changes will therefore not be handled further!", "SingleplayerFinalizer");
+                Trace.WriteLine("{Warning} -- The company handler is NULL and changes will therefore not be handled further!", nameof(SingleplayerFinalizer));
                 return;
             }
 

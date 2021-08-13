@@ -381,23 +381,6 @@ namespace Battlegrounds.Game.Gameplay {
         }
 
         /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="squad"></param>
-        [Obsolete("Please use designed set methods instead of this method.")]
-        public void ApplyBattlefieldSquad(Squad squad) {
-
-            // Set the squad veterancy
-            this.SetVeterancy(squad.VeterancyRank, squad.VeterancyProgress);
-
-            // Update squad data
-            this.m_upgrades = squad.m_upgrades;
-            this.m_slotItems = squad.m_slotItems;
-            this.m_modifiers = squad.m_modifiers;
-
-        }
-
-        /// <summary>
         /// Returns a string that represents the current object.
         /// </summary>
         /// <returns>A string that represents the current object.</returns>
