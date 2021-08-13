@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 
 using Battlegrounds.Functional;
 using Battlegrounds.Game.Gameplay;
@@ -62,7 +63,7 @@ namespace Battlegrounds.Game.Match.Data.Events {
             }
 
             // Get unit veterancy experience (We might only need to set this)
-            if (float.TryParse(values[2], out float vet)) {
+            if (float.TryParse(values[2], NumberStyles.Float, IMatchEvent.NumberFormat, out float vet)) {
                 this.WithdrawingUnitVeterancyExperience = vet;
             } else {
                 throw new FormatException();
