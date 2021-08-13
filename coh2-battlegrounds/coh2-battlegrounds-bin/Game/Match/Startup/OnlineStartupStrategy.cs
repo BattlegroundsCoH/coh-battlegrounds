@@ -57,6 +57,7 @@ namespace Battlegrounds.Game.Match.Startup {
                 shouldStop = true;
                 this.m_beginWaitHandle.Set();
             };
+            lobby.MatchStartTimer.Start(); // Dont forget to start the timer...
 
             // Wait
             this.m_beginWaitHandle.Wait();

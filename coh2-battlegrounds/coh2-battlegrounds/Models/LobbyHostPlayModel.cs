@@ -25,7 +25,7 @@ namespace BattlegroundsApp.Models {
         /// <summary>
         /// Amount of seconds that players will have to stop a match from starting.
         /// </summary>
-        public const uint WAIT_TIME = 15;
+        public const uint WAIT_TIME = 5;
 
         private bool m_shouldStop = false;
         private bool m_canStop = false;
