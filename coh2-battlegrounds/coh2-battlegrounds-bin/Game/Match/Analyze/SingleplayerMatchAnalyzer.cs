@@ -37,7 +37,14 @@ namespace Battlegrounds.Game.Match.Analyze {
             // Save
             try {
                 if (replayMatchData is ReplayMatchData replayMatchDataConcrete) {
-                    File.WriteAllText("_last_matchdata.json", JsonSerializer.Serialize(new JsonPlayback(replayMatchDataConcrete)));
+                    var playback = new JsonPlayback(replayMatchDataConcrete);
+                    if (playback.ParseMatchData()) {
+                        File.WriteAllText("_last_matchdata.json", JsonSerializer.Serialize(new JsonPlayback(replayMatchDataConcrete), new JsonSerializerOptions() { 
+                            WriteIndented = true
+                        }));
+                    } else {
+                        Trace.WriteLine("Failed to save local json playback.", nameof(SingleplayerMatchAnalyzer));
+                    }
                 }
             } catch {
                 Trace.WriteLine("Failed to save local json playback.", nameof(SingleplayerMatchAnalyzer));
