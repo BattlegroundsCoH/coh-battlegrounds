@@ -89,7 +89,7 @@ namespace Battlegrounds.Verification {
                 str.Append(this.m_sumItems[i] switch {
                     float f => f.ToString(CultureInfo.InvariantCulture),
                     double d => d.ToString(CultureInfo.InvariantCulture),
-                    TimeSpan t => t.Ticks.ToString(CultureInfo.InvariantCulture),
+                    TimeSpan t => t.ToString("c", CultureInfo.InvariantCulture),
                     null => string.Empty,
                     _ => this.m_sumItems[i].ToString(),
                 });
