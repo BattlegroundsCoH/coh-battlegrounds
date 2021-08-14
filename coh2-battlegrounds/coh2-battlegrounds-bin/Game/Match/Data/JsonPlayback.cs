@@ -21,12 +21,12 @@ namespace Battlegrounds.Game.Match.Data {
             [JsonIgnore] public char Identifier => 'J';
             [JsonIgnore] public uint Uid => 0;
 
-            public ulong UID;
-            [DefaultValue(null)] public string Type;
-            [DefaultValue(ulong.MaxValue)] public ulong Player;
-            [DefaultValue(ushort.MaxValue)] public ushort Id;
-            [DefaultValue(null)] public string Arg1;
-            [DefaultValue(null)] public string Arg2;
+            [JsonInclude] public ulong UID;
+            [JsonInclude] [DefaultValue(null)] public string Type;
+            [JsonInclude] [DefaultValue(ulong.MaxValue)] public ulong Player;
+            [JsonInclude] [DefaultValue(ushort.MaxValue)] public ushort Id;
+            [JsonInclude] [DefaultValue(null)] public string Arg1;
+            [JsonInclude] [DefaultValue(null)] public string Arg2;
 
         }
 

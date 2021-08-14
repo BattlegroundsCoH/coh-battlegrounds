@@ -96,6 +96,13 @@ namespace BattlegroundsApp.Models {
 
         private void OnResultsAvailable(string jsondata) {
 
+            try {
+                // Save company
+                File.WriteAllText("~latest_company.json", jsondata);
+            } catch {
+                Trace.WriteLine("Failed to save latest company result.", nameof(LobbyMemberPlayModel));
+            }
+
             // Load company
             Company company = CompanySerializer.GetCompanyFromJson(jsondata);
 
