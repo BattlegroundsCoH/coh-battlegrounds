@@ -305,6 +305,53 @@ namespace coh2_battlegrounds_bin_tests { // NOTE: This test file tests serialisa
 
         }
 
+        [TestMethod]
+        public void CanSaveRandomGeneratedCompanies() {
+
+            // Create unit builder
+            UnitBuilder ub = new();
+            Random random = new();
+
+            string[] unitPool = { "conscript_squad_bg", "guards_troops_bg", "shock_troops_bg", "pm-82_41_mortar_squad_bg" };
+            DeploymentPhase[] phases = Enum.GetValues(typeof(DeploymentPhase)) as DeploymentPhase[];
+
+            for (int i = 0; i < 100; i++) {
+
+                // Create company
+                Company company = new(Faction.Soviet);
+                company.Name = "Test";
+                company.TuningGUID = ModGuid.FromGuid("142b113740474c82a60b0a428bd553d5");
+                company.UpdateStatistics(x => new() { 
+                    TotalInfantryLosses = (ulong)random.Next(0, ushort.MaxValue),
+                    TotalMatchCount = (ulong)random.Next(0, 200),
+                    TotalVehicleLosses = (ulong)random.Next(0, ushort.MaxValue),
+                    TotalMatchWinCount = (ulong)random.Next(0, 100),
+                    TotalMatchLossCount = (ulong)random.Next(0, 100),
+                });
+                for (int j = 0; j < Company.MAX_SIZE; j++) {
+                    int bp = random.Next(0, unitPool.Length);
+                    int ph = random.Next(0, phases.Length);
+                    TimeSpan tm = TimeSpan.FromMinutes(120.0 * random.NextDouble());
+                    company.AddSquad(ub.SetModGUID(package.TuningGUID).SetBlueprint(unitPool[bp]).SetDeploymentPhase(phases[ph])
+                        .SetCombatTime(tm).GetAndReset());
+                }
+                company.CalculateChecksum();
+
+                // Get the checksum
+                string chksum = company.Checksum;
+
+                // Serialise
+                string js = JsonSerializer.Serialize(company);
+                Assert.IsNotNull(js);
+
+                // Deserialise and verify
+                Company deserialised = JsonSerializer.Deserialize<Company>(js);
+                Assert.AreEqual(chksum, deserialised.Checksum);
+
+            }
+
+        }
+
     }
 
 }
