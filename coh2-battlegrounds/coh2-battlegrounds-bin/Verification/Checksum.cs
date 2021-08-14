@@ -1,5 +1,7 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -84,7 +86,12 @@ namespace Battlegrounds.Verification {
         public ulong GetCheckksum() {
             StringBuilder str = new();
             for (int i = 0; i < this.m_sumItems.Count; i++) {
-                str.Append(this.m_sumItems[i]?.ToString() ?? string.Empty);
+                str.Append(this.m_sumItems[i] switch {
+                    float f => f.ToString(CultureInfo.InvariantCulture),
+                    double d => d.ToString(CultureInfo.InvariantCulture),
+                    null => string.Empty,
+                    _ => this.m_sumItems[i].ToString(),
+                });
             }
             return Encoding.UTF8.GetBytes(str.ToString()).Aggregate(0ul, (a,b) => a + b);
         }

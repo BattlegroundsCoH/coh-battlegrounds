@@ -30,10 +30,10 @@ namespace Battlegrounds.Game.Match.Data {
         private Player[] m_players;
         private bool m_isSessionValid;
 
-        private readonly Regex broadcastRegex = new Regex(@"(?<cmdtype>\w)\[(?<content>(?<msg>(\w|_|-|:|\.|\d)+)|,|\s)*\]");
-        private readonly Regex broadcastIdRegex = new Regex(@"#(?<id>\d+)");
-        private readonly Regex broadcastCallerRegex = new Regex(@"@(?<id>(ai)?\d+(\.\d+e\+\d+)?(_(axis|allies))?)");
-        private readonly Regex broadcastUIDigitRegex = new Regex(@"\d+(,\d+)*");
+        private static readonly Regex broadcastRegex = new Regex(@"(?<cmdtype>\w)\[(?<content>(?<msg>(\w|_|-|:|\.|\d)+)|,|\s)*\]");
+        private static readonly Regex broadcastIdRegex = new Regex(@"#(?<id>\d+)");
+        private static readonly Regex broadcastCallerRegex = new Regex(@"@(?<id>(ai)?\d+(\.\d+e\+\d+)?(_(axis|allies))?)");
+        private static readonly Regex broadcastUIDigitRegex = new Regex(@"\d+(,\d+)*");
 
         public ISession Session { get; }
 
@@ -145,7 +145,7 @@ namespace Battlegrounds.Game.Match.Data {
             if (gameEvent.AttachedMessage.Length > 0) {
 
                 // Apply match
-                RegexMatch match = this.broadcastRegex.Match(gameEvent.AttachedMessage);
+                RegexMatch match = broadcastRegex.Match(gameEvent.AttachedMessage);
 
                 // Did we match?
                 if (match.Success) {

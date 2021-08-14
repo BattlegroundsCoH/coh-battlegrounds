@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 
 using Battlegrounds.Game.DataCompany;
 using Battlegrounds.Game.Gameplay;
@@ -145,6 +146,15 @@ namespace Battlegrounds.Game.Match.Finalizer {
                 }
             }
 
+        }
+
+        protected virtual Company GetLocalPlayerCompany() {
+            try {
+                ulong selfID = BattlegroundsInstance.Steam.User.ID;
+                return this.m_companies.FirstOrDefault(x => x.Key.SteamID == selfID).Value;
+            } catch {
+                return null;
+            }
         }
 
     }

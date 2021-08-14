@@ -15,6 +15,9 @@ namespace Battlegrounds.Game.Match.Finalizer {
 
         public override void Synchronize(object synchronizeObject) {
 
+            // Log
+            Trace.WriteLine("Synchronizing end of match results.", nameof(MultiplayerFinalizer));
+
             // Make sure we log this unfortunate event
             if (this.CompanyHandler is null) {
                 Trace.WriteLine("{Warning} -- The company handler is NULL and changes will therefore not be saved!", nameof(MultiplayerFinalizer));
@@ -35,6 +38,14 @@ namespace Battlegrounds.Game.Match.Finalizer {
 
             // Inform members the results are available
             handler.MatchContext.UploadResults(matchResults, playerFiles);
+
+            // Get self company (and invoke so host is also updated)
+            if (this.GetLocalPlayerCompany() is Company company) {
+                Trace.WriteLine($"Invoking company handler for host company '{company.Name}'", nameof(MultiplayerFinalizer));
+                this.CompanyHandler?.Invoke(company);
+            } else {
+                Trace.WriteLine("Failed to find host company and will, therefore, not update host company. (Potentially fatal).", nameof(MultiplayerFinalizer));
+            }
 
         }
 
