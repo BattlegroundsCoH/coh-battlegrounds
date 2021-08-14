@@ -171,7 +171,7 @@ namespace Battlegrounds.Game.Match {
                 Faction complementary = Faction.GetComplementaryFaction(complementaryFunc(i));
                 Company aiCompany = CompanyGenerator.Generate(complementary, this.TuningMod.Guid.ToString(), false, true, false);
                 aiCompany.Owner = "AIPlayer";
-                this.m_participants[pIndex] = new SessionParticipant(aIDifficulty, aiCompany, team, playerTeamIndex++);
+                this.m_participants[pIndex] = new SessionParticipant(aIDifficulty, aiCompany, team, playerTeamIndex++, pIndex);
             }
         }
 
@@ -221,7 +221,13 @@ namespace Battlegrounds.Game.Match {
                     int j = sessionInfo.Allies.IndexOf(x => x.GetID().ToString().CompareTo(allCompanies[i].Owner) == 0 && x.Difficulty == AIDifficulty.Human);
                     if (j >= 0) {
                         allCompanies[i].Owner = sessionInfo.Allies[j].UserDisplayname;
-                        sessionInfo.Allies[j] = new SessionParticipant(sessionInfo.Allies[j].UserDisplayname, sessionInfo.Allies[j].UserID, allCompanies[i], TEAM_ALLIES, 0);
+                        sessionInfo.Allies[j] = new SessionParticipant(
+                            sessionInfo.Allies[j].UserDisplayname, 
+                            sessionInfo.Allies[j].UserID, 
+                            allCompanies[i], 
+                            TEAM_ALLIES,
+                            sessionInfo.Allies[j].PlayerIndexOnTeam, 
+                            sessionInfo.Allies[j].PlayerIngameIndex);
                     } else {
                         Trace.WriteLine($"Failed to pair allied company '{allCompanies[i].Name}' with a player...", "Session.Zip");
                     }
@@ -231,7 +237,13 @@ namespace Battlegrounds.Game.Match {
                     int j = sessionInfo.Axis.IndexOf(x => x.GetID().ToString().CompareTo(allCompanies[i].Owner) == 0 && x.Difficulty == AIDifficulty.Human);
                     if (j >= 0) {
                         allCompanies[i].Owner = sessionInfo.Axis[j].UserDisplayname;
-                        sessionInfo.Axis[j] = new SessionParticipant(sessionInfo.Axis[j].UserDisplayname, sessionInfo.Axis[j].UserID, allCompanies[i], TEAM_AXIS, 0);
+                        sessionInfo.Axis[j] = new SessionParticipant(
+                            sessionInfo.Axis[j].UserDisplayname, 
+                            sessionInfo.Axis[j].UserID, 
+                            allCompanies[i], 
+                            TEAM_AXIS, 
+                            sessionInfo.Axis[j].PlayerIndexOnTeam, 
+                            sessionInfo.Axis[j].PlayerIngameIndex);
                     } else {
                         Trace.WriteLine($"Failed to pair axis company '{allCompanies[i].Name}' with a player...", "Session.Zip");
                     }

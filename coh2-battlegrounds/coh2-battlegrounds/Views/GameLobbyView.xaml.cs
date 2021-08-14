@@ -224,9 +224,12 @@ namespace BattlegroundsApp.Views {
                 // TODO: Handle
             }
 
+            // Player ID counter
+            byte pid = 0;
+
             // Get team data
-            var alliedTeam = this.TeamManager.GetParticipants(LobbyTeamType.Allies);
-            var axisTeam = this.TeamManager.GetParticipants(LobbyTeamType.Axis);
+            var alliedTeam = this.TeamManager.GetParticipants(LobbyTeamType.Allies, ref pid);
+            var axisTeam = this.TeamManager.GetParticipants(LobbyTeamType.Axis, ref pid);
 
             // Compile into session data
             SessionInfo sinfo = new() {

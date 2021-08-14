@@ -89,6 +89,7 @@ namespace Battlegrounds.Compiler {
                     ["display_name"] = player.GetName(),
                     ["ai_value"] = (byte)player.Difficulty,
                     ["id"] = player.PlayerIndexOnTeam,
+                    ["uid"] = player.PlayerIngameIndex
                 };
                 if (player.Difficulty is AIDifficulty.Human) {
                     data["steam_index"] = player.GetID().ToString(); // Store as string (Not sure Lua can handle steam ids, 64-bit unsigned integers)

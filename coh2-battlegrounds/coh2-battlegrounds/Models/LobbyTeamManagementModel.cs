@@ -253,7 +253,7 @@ namespace BattlegroundsApp.Models {
             }
         }
 
-        public List<SessionParticipant> GetParticipants(LobbyTeamType team) {
+        public List<SessionParticipant> GetParticipants(LobbyTeamType team, ref byte j) {
 
             List<SessionParticipant> participants = new List<SessionParticipant>();
             SessionParticipantTeam participantTeam = team == LobbyTeamType.Allies ? SessionParticipantTeam.TEAM_ALLIES : SessionParticipantTeam.TEAM_AXIS;
@@ -261,13 +261,14 @@ namespace BattlegroundsApp.Models {
             byte i = 0;
             foreach (TeamPlayerCard slot in this.m_teamSetup[team]) {
                 SessionParticipant? participant = slot.CardState switch {
-                    TeamPlayerCard.SELFSTATE or TeamPlayerCard.OCCUPIEDSTATE => new SessionParticipant(slot.Playername, slot.TeamSlot.SlotOccupant.ID, null, participantTeam, i),
-                    TeamPlayerCard.AISTATE => new SessionParticipant((AIDifficulty)(slot.TeamSlot.SlotOccupant as IAILobbyMember).Difficulty, GetAICompany(slot), participantTeam, i),
+                    TeamPlayerCard.SELFSTATE or TeamPlayerCard.OCCUPIEDSTATE => new SessionParticipant(slot.Playername, slot.TeamSlot.SlotOccupant.ID, null, participantTeam, i, j),
+                    TeamPlayerCard.AISTATE => new SessionParticipant((AIDifficulty)(slot.TeamSlot.SlotOccupant as IAILobbyMember).Difficulty, GetAICompany(slot), participantTeam, i, j),
                     _ => null
                 };
                 if (participant.HasValue) {
                     participants.Add(participant.Value);
                     i++;
+                    j++;
                 }
             }
 

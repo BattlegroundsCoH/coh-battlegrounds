@@ -377,7 +377,7 @@ function BG_CollectEndofMatchData()
                 unit_message = unit_message..","..Squad_GetVeterancyExperience(squad);
 
                 -- Broadcast the change
-                Battlegrounds_LogEvent(nil, BG_EVENT_ONRETREAT, unit_message);
+                Battlegrounds_LogEvent(nil, BG_EVENT_ONRETREAT, unit_message, _bg_playerData[i].player);
 
                 -- Save new slot items
                 local lastPickup = BG_SaveSlotItems(initial, squad);

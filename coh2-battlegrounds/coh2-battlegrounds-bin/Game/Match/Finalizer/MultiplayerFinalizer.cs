@@ -1,5 +1,4 @@
 ﻿using System.Diagnostics;
-using System.Globalization;
 using System.Linq;
 
 using Battlegrounds.Game.DataCompany;

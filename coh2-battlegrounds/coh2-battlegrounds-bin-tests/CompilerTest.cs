@@ -70,8 +70,8 @@ namespace coh2_battlegrounds_bin_tests {
                 SelectedScenario = new() { RelativeFilename = "2p_angoville_farms", MaxPlayers = 2 },
                 SelectedTuningMod = ModManager.GetMod<ITuningMod>(this.package.TuningGUID),
                 DefaultDifficulty = AIDifficulty.AI_Hard,
-                Allies = new SessionParticipant[] { new("Red Army", 77789995, this.sovietCompany, SessionParticipantTeam.TEAM_ALLIES, 0) },
-                Axis = new SessionParticipant[] { new("Wehrmacht", 77789996, this.germanCompany, SessionParticipantTeam.TEAM_AXIS, 0) },
+                Allies = new SessionParticipant[] { new("Red Army", 77789995, this.sovietCompany, SessionParticipantTeam.TEAM_ALLIES, 0, 0) },
+                Axis = new SessionParticipant[] { new("Wehrmacht", 77789996, this.germanCompany, SessionParticipantTeam.TEAM_AXIS, 0, 1) },
             };
 
             // Create directory with compilte test files
