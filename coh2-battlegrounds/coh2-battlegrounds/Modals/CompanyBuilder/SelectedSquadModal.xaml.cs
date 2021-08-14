@@ -129,7 +129,7 @@ namespace BattlegroundsApp.Modals.CompanyBuilder {
             this.ShortDesc = GameLocale.GetString(squadSlot.SquadInstance.SBP.UI.ShortDescription);
 
             // Get combat time
-            this.CombatTime = squadSlot.SquadInstance.CombatTime == TimeSpan.Zero ? "Has yet to see combat" : squadSlot.SquadInstance.CombatTime.ToString();
+            this.CombatTime = squadSlot.SquadInstance.CombatTime == TimeSpan.Zero ? "Has yet to see combat" : squadSlot.SquadInstance.CombatTime.ToString(@"hh\:mm:\ss");
 
             // Get experience
             this.ExperienceLevel = squadSlot.SquadInstance.VeterancyProgress;
