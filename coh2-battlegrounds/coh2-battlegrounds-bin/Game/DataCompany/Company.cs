@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using System.Text.Json.Serialization;
@@ -39,11 +40,11 @@ namespace Battlegrounds.Game.DataCompany {
         private ushort m_nextSquadId;
         private CompanyType m_companyType;
         private CompanyAvailabilityType m_availabilityType;
-        private List<Squad> m_squads;
-        private List<Blueprint> m_inventory;
-        private List<Modifier> m_modifiers;
-        private List<UpgradeBlueprint> m_upgrades;
-        private List<Ability> m_abilities;
+        private readonly List<Squad> m_squads;
+        private readonly List<Blueprint> m_inventory;
+        private readonly List<Modifier> m_modifiers;
+        private readonly List<UpgradeBlueprint> m_upgrades;
+        private readonly List<Ability> m_abilities;
         private CompanyStatistics m_companyStatistics;
 
         /// <summary>
@@ -246,7 +247,7 @@ namespace Battlegrounds.Game.DataCompany {
         /// Get the complete checksum in string format.
         /// </summary>
         /// <returns>The string representation of the checksum.</returns>
-        private string GetChecksum() => new Checksum(this).GetCheckksum().ToString("X8");
+        private string GetChecksum() => new Checksum(this).GetCheckksum().ToString("X8", CultureInfo.InvariantCulture);
 
         /// <summary>
         /// 
