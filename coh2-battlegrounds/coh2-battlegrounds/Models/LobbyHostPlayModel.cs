@@ -237,15 +237,19 @@ namespace BattlegroundsApp.Models {
                     this.HostedLobby.SetState(LobbyState.LOBBY_PLAYING); // TEMP - FIND BETTER LOCATION FOR THIS
                 }
                 this.m_view.UpdateGUI(() => {
-                    this.m_view.LobbyChat.DisplayMessage($"[System] {message}{Environment.NewLine}");
+                    this.m_view.LobbyChat.DisplayMessage($"[System] {message}");
                 });
             }
         }
 
+        /// <summary>
+        /// Will attempt to save the company in a proper and logged way. (Will log checksum updates)
+        /// </summary>
+        /// <param name="selfCompany">The company to save.</param>
         public static void OnCompanySerialized(Company selfCompany) {
 
             // Old checksum
-            string chksum = (0).ToString("X8");
+            string chksum = new string('0', 8);
 
             // Find company
             var oldCompany = PlayerCompanies.FromNameAndFaction(selfCompany.Name, selfCompany.Army);
