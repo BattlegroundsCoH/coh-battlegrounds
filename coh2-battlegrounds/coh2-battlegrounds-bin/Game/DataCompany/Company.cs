@@ -280,8 +280,17 @@ namespace Battlegrounds.Game.DataCompany {
         public bool VerifyChecksum(string checksum)
             => this.m_checksum == checksum;
 
-        public void CalculateChecksum()
-            => this.m_checksum = this.GetChecksum();
+        public void CalculateChecksum() {
+
+            // Trigger a checksum recalculation of squads
+            foreach (Squad squad in this.m_squads) {
+                squad.CalculateChecksum();
+            }
+
+            // Get the new checksum
+            this.m_checksum = this.GetChecksum();
+
+        }
 
         public void SetType(CompanyType type) => this.m_companyType = type;
 
