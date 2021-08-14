@@ -13,7 +13,7 @@ namespace Battlegrounds.Game.Database.Management {
     /// <typeparam name="T">The specific <see cref="Blueprint"/> type the collection is to consist of.</typeparam>
     public class BlueprintCollection<T> : IEnumerable<T> where T : Blueprint {
 
-        private IEnumerable<KeyValuePair<BlueprintUID, T>> m_internalDictionary; // Not meant to be an actual dictionary
+        private readonly IEnumerable<KeyValuePair<BlueprintUID, T>> m_internalDictionary; // Not meant to be an actual dictionary
 
         /// <summary>
         /// Get enumerable for all property bag IDs

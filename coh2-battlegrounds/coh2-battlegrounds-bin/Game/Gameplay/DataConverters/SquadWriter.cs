@@ -171,7 +171,7 @@ namespace Battlegrounds.Game.Gameplay.DataConverters {
                 if (squad.VerifyChecksum(checksum)) {
                     return squad;
                 } else {
-                    throw new ChecksumViolationException();
+                    throw new ChecksumViolationException(squad.Checksum.ToString("X8", CultureInfo.InvariantCulture), checksum);
                 }
 
             }
@@ -280,7 +280,7 @@ namespace Battlegrounds.Game.Gameplay.DataConverters {
                 }
 
                 // Write experience if there
-                if (value.VeterancyProgress > 0) {
+                if (value.VeterancyProgress != 0) {
                     writer.WriteNumber(nameof(Squad.VeterancyProgress), value.VeterancyProgress);
                 }
 

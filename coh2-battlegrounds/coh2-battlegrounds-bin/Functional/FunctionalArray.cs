@@ -117,6 +117,15 @@ namespace Battlegrounds.Functional {
             return buffer;
         }
 
+        private static readonly Random __funcRandom = new();
+
+        public static T Random<T>(this T[] array)
+            => Random(array, __funcRandom);
+
+        public static T Random<T>(this T[] array, Random random) {
+            return array[random.Next(0, array.Length)];
+        }
+
     }
 
 }

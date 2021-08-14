@@ -194,7 +194,7 @@ namespace Battlegrounds.Game.DataCompany {
 
                 // Verify checksum
                 if (!template.VerifyChecksum()) {
-                    throw new ChecksumViolationException();
+                    throw new ChecksumViolationException(template.m_checksum, "0");
                 }
 
                 // Return template
@@ -244,7 +244,7 @@ namespace Battlegrounds.Game.DataCompany {
 
         }
 
-        private static (char, string)[] ArmyEncodingDic = new (char, string)[] {
+        private static readonly (char, string)[] ArmyEncodingDic = new (char, string)[] {
             ('A', Faction.America.Name),
             ('U', Faction.British.Name),
             ('O', Faction.OberkommandoWest.Name),

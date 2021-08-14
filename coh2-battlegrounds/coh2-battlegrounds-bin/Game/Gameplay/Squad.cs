@@ -95,9 +95,9 @@ namespace Battlegrounds.Game.Gameplay {
         private Squad m_crewSquad;
         private Blueprint m_deployBp;
 
-        private HashSet<Blueprint> m_upgrades;
-        private HashSet<Blueprint> m_slotItems;
-        private HashSet<Modifier> m_modifiers;
+        private readonly HashSet<Blueprint> m_upgrades;
+        private readonly HashSet<Blueprint> m_slotItems;
+        private readonly HashSet<Modifier> m_modifiers;
 
         private TimeSpan m_combatTime;
 

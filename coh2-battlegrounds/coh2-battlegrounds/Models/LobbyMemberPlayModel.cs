@@ -13,6 +13,7 @@ using Battlegrounds.Networking.Requests;
 using Battlegrounds.Networking.DataStructures;
 
 using BattlegroundsApp.Views;
+using Battlegrounds.Verification;
 
 namespace BattlegroundsApp.Models {
 
@@ -106,16 +107,27 @@ namespace BattlegroundsApp.Models {
                 Trace.WriteLine("Failed to save latest company result.", nameof(LobbyMemberPlayModel));
             }
 
-            // Load company
-            Company company = CompanySerializer.GetCompanyFromJson(jsondata);
+            try {
 
-            // Now save the company
-            LobbyHostPlayModel.OnCompanySerialized(company);
-            
-            // Let client know the company was updated
-            _ = this.m_view.UpdateGUI(() => {
-                this.m_view.LobbyChat.DisplayMessage($"[System] Updated company '{company.Name}' with match results.");
-            });
+                // Load company
+                Company company = CompanySerializer.GetCompanyFromJson(jsondata);
+
+                // Now save the company
+                LobbyHostPlayModel.OnCompanySerialized(company);
+
+                // Let client know the company was updated
+                _ = this.m_view.UpdateGUI(() => {
+                    this.m_view.LobbyChat.DisplayMessage($"[System] Updated company '{company.Name}' with match results.");
+                });
+
+            } catch (ChecksumViolationException) {
+
+                // Let client know the company was not updated
+                _ = this.m_view.UpdateGUI(() => {
+                    this.m_view.LobbyChat.DisplayMessage($"[System] Failed to update played company, data was corrupted.");
+                });
+
+            }
 
         }
 

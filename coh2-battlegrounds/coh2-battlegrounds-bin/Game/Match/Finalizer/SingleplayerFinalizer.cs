@@ -93,6 +93,7 @@ namespace Battlegrounds.Game.Match.Finalizer {
                     // Update veterancy
                     if (status.VetChange >= 0) {
                         squad.IncreaseVeterancy(status.VetChange, status.VetExperience);
+                        Trace.WriteLine($"Unit ID '{status.UnitID}' from '{company.Name}' gained '{status.VetExperience}'.", nameof(SingleplayerFinalizer));
                     }
 
                     // Update combat time
