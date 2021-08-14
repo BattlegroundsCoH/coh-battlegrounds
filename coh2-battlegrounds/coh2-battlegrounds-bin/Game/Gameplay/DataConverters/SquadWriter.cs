@@ -14,6 +14,7 @@ using Battlegrounds.Functional;
 
 using Battlegrounds.Lua.Generator.RuntimeServices;
 using Battlegrounds.Lua.Generator;
+using System.Globalization;
 
 namespace Battlegrounds.Game.Gameplay.DataConverters {
 
@@ -246,7 +247,7 @@ namespace Battlegrounds.Game.Gameplay.DataConverters {
 
                 // Write data
                 writer.WriteNumber(nameof(Squad.SquadID), value.SquadID);
-                writer.WriteString(nameof(Squad.Checksum), value.Checksum.ToString("X8"));
+                writer.WriteString(nameof(Squad.Checksum), value.Checksum.ToString("X8", CultureInfo.InvariantCulture));
                 writer.WriteString(nameof(Squad.SBP), value.SBP.Name);
                 if (value.SBP.PBGID.Mod != ModGuid.BaseGame) {
                     writer.WriteString(nameof(Squad.SBP.PBGID.Mod), value.SBP.PBGID.Mod.GUID);

@@ -10,6 +10,7 @@ using Battlegrounds.Game.Gameplay.DataConverters;
 using Battlegrounds.Functional;
 using Battlegrounds.Verification;
 using Battlegrounds.Lua.Generator.RuntimeServices;
+using System.Globalization;
 
 namespace Battlegrounds.Game.Gameplay {
 
@@ -388,7 +389,7 @@ namespace Battlegrounds.Game.Gameplay {
 
         public bool VerifyChecksum() => throw new NotSupportedException("Please use external checksum verification.");
 
-        public bool VerifyChecksum(string checksum) => this.Checksum.ToString("X8") == checksum;
+        public bool VerifyChecksum(string checksum) => this.Checksum.ToString("X8", CultureInfo.InvariantCulture) == checksum;
 
         public void CalculateChecksum() => this.Checksum = new Checksum(this).GetCheckksum();
 
