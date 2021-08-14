@@ -125,7 +125,7 @@ namespace Battlegrounds.Game.Gameplay.DataConverters {
                 unitBuilder.SetModGUID(modGuid).SetBlueprint(sbpName);
                 unitBuilder.SetCustomName(ReadStringPropertyIfThere(ref reader, nameof(Squad.CustomName), null));
                 unitBuilder.SetDeploymentPhase(Enum.Parse<DeploymentPhase>(ReadStringPropertyIfThere(ref reader, nameof(Squad.DeploymentPhase), nameof(DeploymentPhase.PhaseNone))));
-                unitBuilder.SetCombatTime(TimeSpan.Parse(ReadStringPropertyIfThere(ref reader, nameof(Squad.CombatTime), TimeSpan.Zero.ToString())));
+                unitBuilder.SetCombatTime(TimeSpan.Parse(ReadStringPropertyIfThere(ref reader, nameof(Squad.CombatTime), TimeSpan.Zero.ToString()), CultureInfo.InvariantCulture));
 
                 // Get deployment method
                 string supportBP = ReadStringPropertyIfThere(ref reader, nameof(Squad.SupportBlueprint), string.Empty);
@@ -265,7 +265,7 @@ namespace Battlegrounds.Game.Gameplay.DataConverters {
 
                 // Write combat time
                 if (value.CombatTime.TotalSeconds > 0) {
-                    writer.WriteString(nameof(Squad.CombatTime), value.CombatTime.ToString());
+                    writer.WriteString(nameof(Squad.CombatTime), value.CombatTime.ToString("c", CultureInfo.InvariantCulture));
                 }
 
                 // Write deployment method
