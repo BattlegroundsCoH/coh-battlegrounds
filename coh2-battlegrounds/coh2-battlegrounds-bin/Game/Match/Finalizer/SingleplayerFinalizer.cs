@@ -52,9 +52,9 @@ namespace Battlegrounds.Game.Match.Finalizer {
                 var company = session.GetPlayerCompany(player.SteamID);
                 if (company is not null) {
                     if (analyzedMatch.IsWinner(player)) {
-                        company.UpdateStatistics(x => { x.TotalMatchWinCount++; return x; });
+                        company.UpdateStatistics(x => { x.TotalMatchWinCount++; x.TotalMatchCount++; return x; });
                     } else {
-                        company.UpdateStatistics(x => { x.TotalMatchLossCount++; return x; });
+                        company.UpdateStatistics(x => { x.TotalMatchLossCount++; x.TotalMatchCount++; return x; });
                     }
                     this.m_companies.Add(player, company);
                 } else {
