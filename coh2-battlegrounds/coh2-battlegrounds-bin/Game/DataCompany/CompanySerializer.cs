@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
@@ -56,6 +57,7 @@ namespace Battlegrounds.Game.DataCompany {
                 [nameof(Company.Units)] = typeof(Squad[]),
                 [nameof(Company.Upgrades)] = typeof(UpgradeBlueprint[]),
                 [nameof(Company.Modifiers)] = typeof(Modifier[]),
+                [nameof(Company.Inventory)] = typeof(Blueprint[]),
             };
 
             // Read arrays
@@ -79,7 +81,8 @@ namespace Battlegrounds.Game.DataCompany {
                         }
                         break;
                     default:
-                        throw new NotImplementedException();
+                        //throw new NotImplementedException();
+                        break;
                 }
 
             }
@@ -91,7 +94,11 @@ namespace Battlegrounds.Game.DataCompany {
             Company result = builder.Result;
             result.UpdateStatistics(x => stats); // This will set the stats
             result.CalculateChecksum();
-            return result.VerifyChecksum(checksum) ? result : throw new ChecksumViolationException(result.Checksum, checksum);
+            if (!result.VerifyChecksum(checksum)) {
+                Trace.WriteLine($"Warning - Company '{result.Name}' has been modified.", nameof(CompanySerializer));
+            }
+            return result;
+            //return result.VerifyChecksum(checksum) ? result : throw new ChecksumViolationException(result.Checksum, checksum);
 
         }
 
@@ -130,28 +137,20 @@ namespace Battlegrounds.Game.DataCompany {
             JsonSerializer.Serialize(writer, value.Units, options);
 
             // Write abilities
-            if (value.Abilities.Length > 0) {
-                writer.WritePropertyName(nameof(Company.Abilities));
-                JsonSerializer.Serialize(writer, value.Abilities, options);
-            }
+            writer.WritePropertyName(nameof(Company.Abilities));
+            JsonSerializer.Serialize(writer, value.Abilities, options);
 
             // Write inventory
-            if (value.Inventory.Length > 0) {
-                writer.WritePropertyName(nameof(Company.Inventory));
-                JsonSerializer.Serialize(writer, value.Inventory, options);
-            }
+            writer.WritePropertyName(nameof(Company.Inventory));
+            JsonSerializer.Serialize(writer, value.Inventory, options);
 
             // Write upgrades
-            if (value.Upgrades.Length > 0) {
-                writer.WritePropertyName(nameof(Company.Upgrades));
-                JsonSerializer.Serialize(writer, value.Upgrades, options);
-            }
+            writer.WritePropertyName(nameof(Company.Upgrades));
+            JsonSerializer.Serialize(writer, value.Upgrades, options);
 
             // Write modifiers
-            if (value.Modifiers.Length > 0) {
-                writer.WritePropertyName(nameof(Company.Modifiers));
-                JsonSerializer.Serialize(writer, value.Modifiers, options);
-            }
+            writer.WritePropertyName(nameof(Company.Modifiers));
+            JsonSerializer.Serialize(writer, value.Modifiers, options);
 
             // Close company object
             writer.WriteEndObject();

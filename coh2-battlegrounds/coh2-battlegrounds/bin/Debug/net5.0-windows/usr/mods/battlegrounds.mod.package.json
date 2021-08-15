@@ -30,6 +30,10 @@
             "Files": [],
             "Options":[
                 {
+                    "LocStr":"32",
+                    "Value":50
+                },
+                {
                     "LocStr":"26",
                     "Value":250
                 },

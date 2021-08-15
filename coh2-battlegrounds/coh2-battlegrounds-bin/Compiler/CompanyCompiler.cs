@@ -68,7 +68,8 @@ namespace Battlegrounds.Compiler {
                 lua.IncreaseIndent();
 
                 // Sort the units (important for how they're displayed ingame)
-                var units = company.Units.Sort((a, b) => this.CompareUnit(a, b));
+                var units = company.Units;
+                Array.Sort(units, (a, b) => this.CompareUnit(a, b));
 
                 foreach (Squad squad in units) {
                     this.CompileUnit(lua, squad);
@@ -88,6 +89,9 @@ namespace Battlegrounds.Compiler {
 
         public Dictionary<string, object> CompileToLua(Company company, bool isAIPlayer, byte indexOnTeam) {
 
+            var units = company.Units;
+            Array.Sort(units, (a, b) => this.CompareUnit(a, b));
+
             // Create result
             Dictionary<string, object> result = new() {
                 ["name"] = company.Name,
@@ -99,7 +103,7 @@ namespace Battlegrounds.Compiler {
                 },
                 ["upgrades"] = company.Upgrades.Select(x => x.GetScarName()),
                 ["modifiers"] = company.Modifiers,
-                ["units"] = company.Units.Sort((a, b) => this.CompareUnit(a, b))
+                ["units"] = units
             };
 
             // Return result

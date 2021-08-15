@@ -77,7 +77,6 @@ namespace Battlegrounds.Verification {
                     }
                     count++;
                 }
-                this.m_sumItems.Add(count);
             } else if (property.Value is IChecksumPropertyItem prop) {
                 GetChecksumProperties(prop).ForEach(this.AddValue);
             } else {

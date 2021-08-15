@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
@@ -116,7 +117,7 @@ namespace Battlegrounds.Game.DataCompany {
             };
 
             // Get unit enumerator and add all units (in a basic format).
-            var unitEnumerator = company.Units.GetEnumerator();
+            var unitEnumerator = company.Units.GetEnumerator() as IEnumerator<Squad>;
             for (int i = 0; i < Company.MAX_SIZE; i++) {
                 if (unitEnumerator.MoveNext()) {
                     template.m_units[i] = new CompanyUnit() {

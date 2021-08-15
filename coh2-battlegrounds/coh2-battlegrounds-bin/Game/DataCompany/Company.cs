@@ -97,7 +97,7 @@ namespace Battlegrounds.Game.DataCompany {
         /// Get the <see cref="ImmutableArray{T}"/> representation of the units in the <see cref="Company"/>.
         /// </summary>
         [ChecksumProperty(IsCollection = true)]
-        public ImmutableArray<Squad> Units => this.m_squads.ToImmutableArray();
+        public Squad[] Units => this.m_squads.ToArray();
 
         /// <summary>
         /// Get the <see cref="ImmutableArray{T}"/> representation of a <see cref="Company"/> inventory of stored <see cref="Blueprint"/> objects.
