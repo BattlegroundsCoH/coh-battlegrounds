@@ -47,7 +47,7 @@ namespace BattlegroundsApp.Views {
 
         private int m_companySize;
         private int m_companyAbilityCount;
-        private string m_initialChecksum;
+        private ulong m_initialChecksum;
         private readonly ModPackage m_activeModPackage;
 
         private List<SquadBlueprint> m_availableSquads;
@@ -145,7 +145,7 @@ namespace BattlegroundsApp.Views {
             this.CompanyType = type.ToString();
 
             // Set fields
-            this.m_initialChecksum = string.Empty;
+            this.m_initialChecksum = 0;
             this.m_activeModPackage = ModManager.GetPackageFromGuid(modGuid);
 
             // Load database and display

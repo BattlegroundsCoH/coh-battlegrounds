@@ -83,7 +83,7 @@ namespace Battlegrounds.Game.Gameplay {
     /// </summary>
     [JsonConverter(typeof(SquadWriter.SquadJson))]
     [LuaConverter(typeof(SquadWriter.SquadLua))]
-    public class Squad : IChecksumItem {
+    public class Squad : IChecksumPropertyItem {
 
         private byte m_veterancyRank;
         private float m_veterancyProgress;
@@ -111,11 +111,6 @@ namespace Battlegrounds.Game.Gameplay {
         /// The player who (currently) owns the <see cref="Squad"/>.
         /// </summary>
         public Player PlayerOwner { get; }
-
-        /// <summary>
-        /// Get or privately set the checksum value
-        /// </summary>
-        public ulong Checksum { get; private set; }
 
         /// <summary>
         /// The (crew if squad is a vehicle) <see cref="Database.Blueprint"/> the <see cref="Squad"/> is a type of.
@@ -379,12 +374,6 @@ namespace Battlegrounds.Game.Gameplay {
         /// </summary>
         /// <returns>A string that represents the current object.</returns>
         public override string ToString() => $"{this.SBP.Name}${this.SquadID}";
-
-        public bool VerifyChecksum() => throw new NotSupportedException("Please use external checksum verification.");
-
-        public bool VerifyChecksum(string checksum) => this.Checksum.ToString("X8", CultureInfo.InvariantCulture) == checksum;
-
-        public void CalculateChecksum() => this.Checksum = new Checksum(this).GetCheckksum();
 
     }
 

@@ -41,7 +41,7 @@ namespace Battlegrounds.Game.DataCompany {
                 .ChangeAppVersion(ReadProperty(ref reader, nameof(Company.AppVersion)));
 
             // Read checksum
-            string checksum = ReadProperty(ref reader, nameof(Company.Checksum));
+            ulong checksum = ReadChecksum(ref reader, nameof(Company.Checksum));
 
             // Read type(s)
             builder.ChangeType(Enum.Parse<CompanyType>(ReadProperty(ref reader, nameof(Company.Type))))
@@ -98,6 +98,9 @@ namespace Battlegrounds.Game.DataCompany {
         private static string ReadProperty(ref Utf8JsonReader reader, string property)
             => reader.GetString() == property && reader.Read() ? reader.ReadProperty() : null;
 
+        private static ulong ReadChecksum(ref Utf8JsonReader reader, string property)
+            => reader.GetString() == property && reader.Read() ? reader.ReadUlongProperty() : 0;
+
         private static T ReadPropertyThroughSerialisation<T>(ref Utf8JsonReader reader, string property)
             => reader.GetString() == property && reader.Read() ? JsonSerializer.Deserialize<T>(ref reader) : default;
 
@@ -114,7 +117,7 @@ namespace Battlegrounds.Game.DataCompany {
             writer.WriteString(nameof(Company.Army), value.Army.Name);
             writer.WriteString(nameof(Company.TuningGUID), value.TuningGUID.GUID);
             writer.WriteString(nameof(Company.AppVersion), value.AppVersion);
-            writer.WriteString(nameof(Company.Checksum), value.Checksum);
+            writer.WriteNumber(nameof(Company.Checksum), value.Checksum);
             writer.WriteString(nameof(Company.Type), value.Type.ToString());
             writer.WriteString(nameof(Company.AvailabilityType), value.AvailabilityType.ToString());
 

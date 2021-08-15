@@ -35,7 +35,7 @@ namespace Battlegrounds.Game.DataCompany {
         /// </summary>
         public const int MAX_ABILITY = 6;
 
-        private string m_checksum;
+        private ulong m_checksum;
         private string m_lastEditVersion;
         private ushort m_nextSquadId;
         private CompanyType m_companyType;
@@ -132,7 +132,7 @@ namespace Battlegrounds.Game.DataCompany {
         /// <summary>
         /// Get the calculated company checksum.
         /// </summary>
-        public string Checksum => this.m_checksum;
+        public ulong Checksum => this.m_checksum;
 
         /// <summary>
         /// New empty <see cref="Company"/> instance.
@@ -240,14 +240,8 @@ namespace Battlegrounds.Game.DataCompany {
                 this.m_inventory.Clear();
             }
             this.Name = string.Empty;
-            this.m_checksum = string.Empty;
+            this.m_checksum = 0;
         }
-
-        /// <summary>
-        /// Get the complete checksum in string format.
-        /// </summary>
-        /// <returns>The string representation of the checksum.</returns>
-        private string GetChecksum() => new Checksum(this).GetCheckksum().ToString("X8", CultureInfo.InvariantCulture);
 
         /// <summary>
         /// 
@@ -255,42 +249,11 @@ namespace Battlegrounds.Game.DataCompany {
         /// <returns></returns>
         public bool VerifyAppVersion() => this.m_lastEditVersion.CompareTo(this.m_lastEditVersion = Assembly.GetExecutingAssembly().GetName().Version.ToString()) == 0;
 
-        /// <summary>
-        /// Verify the checksum of the object.
-        /// </summary>
-        /// <returns>true if the checksum is valid. False if the checksum does not match.</returns>
-        public bool VerifyChecksum() {
-
-            // Backup and reset checksum
-            string checksum = this.m_checksum;
-            this.m_checksum = string.Empty;
-
-            // Calculate checksum
-            string newChecksum = this.GetChecksum();
-            bool result = newChecksum == checksum;
-
-            // Restore checksum
-            this.m_checksum = checksum;
-
-            // Return result
-            return result;
-
-        }
-
-        public bool VerifyChecksum(string checksum)
+        public bool VerifyChecksum(ulong checksum)
             => this.m_checksum == checksum;
 
-        public void CalculateChecksum() {
-
-            // Trigger a checksum recalculation of squads
-            foreach (Squad squad in this.m_squads) {
-                squad.CalculateChecksum();
-            }
-
-            // Get the new checksum
-            this.m_checksum = this.GetChecksum();
-
-        }
+        public void CalculateChecksum() 
+            => this.m_checksum = new Checksum(this).GetCheckksum();
 
         public void SetType(CompanyType type) => this.m_companyType = type;
 

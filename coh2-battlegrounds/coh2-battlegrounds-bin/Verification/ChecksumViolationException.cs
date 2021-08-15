@@ -11,22 +11,22 @@ namespace Battlegrounds.Verification {
         /// <summary>
         /// Get the checksum hex value causing the exception.
         /// </summary>
-        public string Checksum { get; }
+        public string Checksum => this.ChecksumValue.ToString("X8", CultureInfo.InvariantCulture);
 
         /// <summary>
         /// Get the expected checksum hex value.
         /// </summary>
-        public string Expected { get; }
+        public string Expected => this.ExpectedValue.ToString("X8", CultureInfo.InvariantCulture);
 
         /// <summary>
         /// Get the decimal checksum value.
         /// </summary>
-        public ulong ChecksumValue => ulong.Parse(this.Checksum, NumberStyles.HexNumber);
+        public ulong ChecksumValue { get; }
 
         /// <summary>
         /// Get the decimal expected checksum value.
         /// </summary>
-        public ulong ExpectedValue => ulong.Parse(this.Expected, NumberStyles.HexNumber);
+        public ulong ExpectedValue { get; }
 
         /// <summary>
         /// Get if this violation is likely caused by lacking data.
@@ -41,10 +41,10 @@ namespace Battlegrounds.Verification {
         /// <summary>
         /// New <see cref="ChecksumViolationException"/> instance.
         /// </summary>
-        public ChecksumViolationException(string calculated, string expected) 
-            : base($"Checksum verification error! (Expected '{expected}' but got '{calculated}')") {
-            this.Expected = expected;
-            this.Checksum = calculated;
+        public ChecksumViolationException(ulong calculated, ulong expected) 
+            : base($"Checksum verification error! (Expected '{expected:X8}' but got '{calculated:X8}')") {
+            this.ExpectedValue = expected;
+            this.ChecksumValue = calculated;
         }
 
     }

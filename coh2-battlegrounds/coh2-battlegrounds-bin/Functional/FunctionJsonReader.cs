@@ -17,6 +17,12 @@ namespace Battlegrounds.Functional {
             return val;
         }
 
+        public static ulong ReadUlongProperty(this ref Utf8JsonReader reader) {
+            ulong val = reader.GetUInt64();
+            reader.Read();
+            return val;
+        }
+
         public static double ReadAccurateNumberProperty(this ref Utf8JsonReader reader) {
             double val = double.NaN;
             if (reader.TokenType is JsonTokenType.String) {

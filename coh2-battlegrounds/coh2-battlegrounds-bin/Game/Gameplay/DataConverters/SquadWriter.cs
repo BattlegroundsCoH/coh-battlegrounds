@@ -111,8 +111,7 @@ namespace Battlegrounds.Game.Gameplay.DataConverters {
                 // Read squad ID
                 ushort squadID = (ushort)ReadNumberProperty(ref reader, nameof(Squad.SquadID));
 
-                // Read checksum
-                string checksum = ReadStringProperty(ref reader, nameof(Squad.Checksum));
+                // Read blueprint
                 string sbpName = ReadStringProperty(ref reader, nameof(Squad.SBP));
                 ModGuid modGuid = ModGuid.BaseGame;
 
@@ -166,13 +165,7 @@ namespace Battlegrounds.Game.Gameplay.DataConverters {
                 }
 
                 // Get squad
-                var squad = unitBuilder.Build(squadID);
-                squad.CalculateChecksum();
-                if (squad.VerifyChecksum(checksum)) {
-                    return squad;
-                } else {
-                    throw new ChecksumViolationException(squad.Checksum.ToString("X8", CultureInfo.InvariantCulture), checksum);
-                }
+                return unitBuilder.Build(squadID);
 
             }
 
@@ -239,15 +232,11 @@ namespace Battlegrounds.Game.Gameplay.DataConverters {
 
             public override void Write(Utf8JsonWriter writer, Squad value, JsonSerializerOptions options) {
 
-                // Calculate checksum
-                value.CalculateChecksum();
-
                 // Start squad object
                 writer.WriteStartObject();
 
                 // Write data
                 writer.WriteNumber(nameof(Squad.SquadID), value.SquadID);
-                writer.WriteString(nameof(Squad.Checksum), value.Checksum.ToString("X8", CultureInfo.InvariantCulture));
                 writer.WriteString(nameof(Squad.SBP), value.SBP.Name);
                 if (value.SBP.PBGID.Mod != ModGuid.BaseGame) {
                     writer.WriteString(nameof(Squad.SBP.PBGID.Mod), value.SBP.PBGID.Mod.GUID);

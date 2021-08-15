@@ -14,7 +14,7 @@ namespace Battlegrounds.Game.DataCompany {
     /// <summary>
     /// Readonly class representing a template for generating a <see cref="Company"/> instance.
     /// </summary>
-    public sealed class CompanyTemplate : IChecksumItem {
+    public sealed class CompanyTemplate {
 
         private struct CompanyUnit {
             public ushort PBGID { get; init; }
@@ -192,10 +192,10 @@ namespace Battlegrounds.Game.DataCompany {
                     }
                 }
 
-                // Verify checksum
-                if (!template.VerifyChecksum()) {
-                    throw new ChecksumViolationException(template.m_checksum, "0");
-                }
+                //// Verify checksum
+                //if (!template.VerifyChecksum()) {
+                //    throw new ChecksumViolationException(template.m_checksum, "0");
+                //}
 
                 // Return template
                 return template;

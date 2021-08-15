@@ -16,12 +16,7 @@ namespace Battlegrounds.Verification {
     /// </summary>
     public class Checksum {
 
-        public static bool DebugChecksum { get; set; } =
-#if DEBUG 
-            true;
-#else
-false;
-#endif
+        public static bool DebugChecksum { get; set; } = false;
 
         /// <summary>
         /// Readonly struct representing a property in a <see cref="IChecksumItem"/>.
@@ -82,6 +77,8 @@ false;
                     count++;
                 }
                 this.m_sumItems.Add(count);
+            } else if (property.Value is IChecksumPropertyItem prop) {
+                GetChecksumProperties(prop).ForEach(this.AddValue);
             } else {
                 this.m_sumItems.Add(property.Value);
             }
@@ -93,17 +90,22 @@ false;
         /// <returns>The numeric checksum value represented by the added values.</returns>
         public ulong GetCheckksum() {
             StringBuilder str = new();
+            ulong offset = 0;
             for (int i = 0; i < this.m_sumItems.Count; i++) {
+                if (this.m_sumItems[i] is IChecksumItem item) {
+                    item.CalculateChecksum();
+                    offset += item.Checksum;
+                }
                 str.Append(this.m_sumItems[i] switch {
                     float f => f.ToString(CultureInfo.InvariantCulture),
                     double d => d.ToString(CultureInfo.InvariantCulture),
-                    TimeSpan t => t.ToString("c", CultureInfo.InvariantCulture),
+                    TimeSpan t => t.Ticks,
                     null => string.Empty,
                     _ => this.m_sumItems[i].ToString(),
                 });
             }
             Trace.WriteLineIf(true, str.ToString(), "Checksum-Debug");
-            return Encoding.UTF8.GetBytes(str.ToString()).Aggregate(0ul, (a,b) => a + b);
+            return Encoding.UTF8.GetBytes(str.ToString()).Aggregate(offset, (a,b) => a + b);
         }
 
         /// <summary>

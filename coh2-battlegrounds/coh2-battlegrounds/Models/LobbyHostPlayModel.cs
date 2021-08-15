@@ -249,7 +249,7 @@ namespace BattlegroundsApp.Models {
         public static void OnCompanySerialized(Company selfCompany) {
 
             // Old checksum
-            string chksum = new string('0', 8);
+            ulong chksum = 0;
 
             // Find company
             var oldCompany = PlayerCompanies.FromNameAndFaction(selfCompany.Name, selfCompany.Army);

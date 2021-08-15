@@ -236,7 +236,7 @@ namespace coh2_battlegrounds_bin_tests { // NOTE: This test file tests serialisa
             company.CalculateChecksum();
 
             // Get the checksum
-            string chksum = company.Checksum;
+            ulong chksum = company.Checksum;
 
             // Serialise
             string js = CompanySerializer.GetCompanyAsJson(company);
@@ -263,7 +263,7 @@ namespace coh2_battlegrounds_bin_tests { // NOTE: This test file tests serialisa
             company.CalculateChecksum();
 
             // Get the checksum
-            string chksum = company.Checksum;
+            ulong chksum = company.Checksum;
 
             // Serialise
             string js = CompanySerializer.GetCompanyAsJson(company);
@@ -293,7 +293,7 @@ namespace coh2_battlegrounds_bin_tests { // NOTE: This test file tests serialisa
             company.CalculateChecksum();
 
             // Get the checksum
-            string chksum = company.Checksum;
+            ulong chksum = company.Checksum;
 
             // Serialise
             string js = CompanySerializer.GetCompanyAsJson(company);
@@ -343,7 +343,7 @@ namespace coh2_battlegrounds_bin_tests { // NOTE: This test file tests serialisa
                 company.CalculateChecksum();
 
                 // Get the checksum
-                string chksum = company.Checksum;
+                ulong chksum = company.Checksum;
 
                 // Serialise
                 string js = CompanySerializer.GetCompanyAsJson(company);
@@ -357,6 +357,57 @@ namespace coh2_battlegrounds_bin_tests { // NOTE: This test file tests serialisa
 
         }
 
+        [TestMethod]
+        public void CanSaveRandomGeneratedCompaniesWithoutChecksumPrecalc() {
+
+            // Create unit builder
+            UnitBuilder ub = new();
+            Random random = new();
+            ModGuid guid = ModGuid.FromGuid("142b113740474c82a60b0a428bd553d5");
+
+            var factions = new Faction[] { Faction.Soviet, Faction.Wehrmacht };
+            var unitPool = BlueprintManager.GetCollection<SquadBlueprint>().FilterByMod(guid);
+            var axisPool = unitPool.Filter(x => x.Army == Faction.Wehrmacht).ToArray();
+            var alliedPool = unitPool.Filter(x => x.Army == Faction.Soviet).ToArray();
+            DeploymentPhase[] phases = Enum.GetValues(typeof(DeploymentPhase)) as DeploymentPhase[];
+
+            for (int i = 0; i < 100; i++) {
+
+                // Create company
+                Company company = new(factions.Random());
+                company.Name = "Test";
+                company.TuningGUID = guid;
+                company.UpdateStatistics(x => new() {
+                    TotalInfantryLosses = (ulong)random.Next(0, ushort.MaxValue),
+                    TotalMatchCount = (ulong)random.Next(0, 200),
+                    TotalVehicleLosses = (ulong)random.Next(0, ushort.MaxValue),
+                    TotalMatchWinCount = (ulong)random.Next(0, 100),
+                    TotalMatchLossCount = (ulong)random.Next(0, 100),
+                });
+                for (int j = 0; j < Company.MAX_SIZE; j++) {
+                    int ph = random.Next(0, phases.Length);
+                    TimeSpan tm = TimeSpan.FromMinutes(120.0 * random.NextDouble());
+                    var bpool = company.Army == Faction.Wehrmacht ? axisPool : alliedPool;
+                    var bp = bpool.Random(random);
+                    company.AddSquad(ub.SetModGUID(package.TuningGUID).SetBlueprint(bp).SetDeploymentPhase(phases[ph])
+                        .SetCombatTime(tm).SetVeterancyExperience((float)(random.NextDouble() * bp.Veterancy.MaxExperience)).GetAndReset());
+                }
+
+                // Serialise
+                string js = CompanySerializer.GetCompanyAsJson(company);
+                Assert.IsNotNull(js);
+
+                // Deserialise and verify
+                Company deserialised = CompanySerializer.GetCompanyFromJson(js);
+                Assert.IsNotNull(deserialised);
+
+                Thread.Sleep(1);
+
+            }
+
+        }
+
     }
+
 
 }
