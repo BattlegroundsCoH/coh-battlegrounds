@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using System.Reflection;
@@ -14,6 +15,13 @@ namespace Battlegrounds.Verification {
     /// Class that can calculate the numeric checksum value of an object implementing <see cref="IChecksumItem"/>.
     /// </summary>
     public class Checksum {
+
+        public static bool DebugChecksum { get; set; } =
+#if DEBUG 
+            true;
+#else
+false;
+#endif
 
         /// <summary>
         /// Readonly struct representing a property in a <see cref="IChecksumItem"/>.
@@ -94,6 +102,7 @@ namespace Battlegrounds.Verification {
                     _ => this.m_sumItems[i].ToString(),
                 });
             }
+            Trace.WriteLineIf(true, str.ToString(), "Checksum-Debug");
             return Encoding.UTF8.GetBytes(str.ToString()).Aggregate(0ul, (a,b) => a + b);
         }
 
