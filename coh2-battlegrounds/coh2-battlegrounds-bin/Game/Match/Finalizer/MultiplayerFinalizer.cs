@@ -27,7 +27,10 @@ namespace Battlegrounds.Game.Match.Finalizer {
             LobbyHandler handler = synchronizeObject as LobbyHandler;
 
             // Get player results
-            LobbyPlayerCompanyFile[] playerFiles = this.m_companies.Select(x => new LobbyPlayerCompanyFile(x.Key.SteamID, CompanySerializer.GetCompanyAsJson(x.Value, false))).ToArray();
+            LobbyPlayerCompanyFile[] playerFiles = this.m_companies.Where(x => x.Key.SteamID != BattlegroundsInstance.Steam.User.ID).Select(
+                x => new LobbyPlayerCompanyFile(x.Key.SteamID, CompanySerializer.GetCompanyAsJson(x.Value))).ToArray();
+
+            // Get overall match results
             ServerMatchResults matchResults = new() {
                 Gamemode = this.m_matchData.Session.Gamemode.Name,
                 Map = this.m_matchData.Session.Scenario.RelativeFilename,
