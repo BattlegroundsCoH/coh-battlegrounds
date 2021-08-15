@@ -409,5 +409,4 @@ namespace coh2_battlegrounds_bin_tests { // NOTE: This test file tests serialisa
 
     }
 
-
 }

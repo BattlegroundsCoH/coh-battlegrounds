@@ -66,7 +66,8 @@ namespace Battlegrounds.Verification {
         /// <param name="property">The property to consider when calculating the checksum.</param>
         public void AddValue(Property property) {
             if (property.ChecksumAttribute.IsCollection) {
-                var enumerator = (property.Value as IEnumerable).GetEnumerator();
+                var collection = property.Value as ICollection;
+                var enumerator = collection.GetEnumerator();
                 int count = 0;
                 while (enumerator.MoveNext()) {
                     if (enumerator.Current is IChecksumPropertyItem item) {
@@ -105,7 +106,7 @@ namespace Battlegrounds.Verification {
                     });
                 }
             }
-            Trace.WriteLineIf(true, str.ToString(), "Checksum-Debug");
+            Trace.WriteLineIf(DebugChecksum, str.ToString(), "Checksum-Debug");
             return Encoding.UTF8.GetBytes(str.ToString()).Aggregate(offset, (a,b) => a + b);
         }
 
