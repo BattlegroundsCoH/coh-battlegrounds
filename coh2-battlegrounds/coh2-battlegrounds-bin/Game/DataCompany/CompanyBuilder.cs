@@ -199,7 +199,7 @@ namespace Battlegrounds.Game.DataCompany {
         /// <returns></returns>
         public virtual UnitBuilder GetUnit(uint squadId) {
             if (this.m_companyTarget.Units.FirstOrDefault(x => x.SquadID == squadId) is Squad s) {
-                return new UnitBuilder(s, this);
+                return new UnitBuilder(s, true);
             } else {
                 throw new IndexOutOfRangeException();
             }

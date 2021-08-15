@@ -123,7 +123,7 @@ namespace Battlegrounds.Game.Gameplay.DataConverters {
 
                 // Set mod guid and get deployment phase and combat time
                 unitBuilder.SetModGUID(modGuid).SetBlueprint(sbpName);
-                unitBuilder.SetCustomName(ReadStringPropertyIfThere(ref reader, nameof(Squad.CustomName), null));
+                unitBuilder.SetCustomName(ReadStringPropertyIfThere(ref reader, nameof(Squad.CustomName), string.Empty));
                 unitBuilder.SetDeploymentPhase(Enum.Parse<DeploymentPhase>(ReadStringPropertyIfThere(ref reader, nameof(Squad.DeploymentPhase), nameof(DeploymentPhase.PhaseNone))));
                 unitBuilder.SetCombatTime(TimeSpan.Parse(ReadStringPropertyIfThere(ref reader, nameof(Squad.CombatTime), TimeSpan.Zero.ToString()), CultureInfo.InvariantCulture));
 

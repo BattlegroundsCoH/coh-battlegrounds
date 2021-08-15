@@ -202,21 +202,6 @@ namespace Battlegrounds.Game.Gameplay {
         public TimeSpan CombatTime => this.m_combatTime;
 
         /// <summary>
-        /// Create a basic <see cref="Squad"/> instance without any identifying values.
-        /// </summary>
-        public Squad() {
-            this.SquadID = 0;
-            this.PlayerOwner = null;
-            this.Blueprint = null;
-            this.m_slotItems = new HashSet<Blueprint>();
-            this.m_upgrades = new HashSet<Blueprint>();
-            this.m_modifiers = new HashSet<Modifier>();
-            this.m_deployMode = DeploymentMethod.None;
-            this.m_deployPhase = DeploymentPhase.PhaseNone;
-            this.m_crewSquad = null;
-        }
-
-        /// <summary>
         /// Create new <see cref="Squad"/> instance with a unique squad ID, a <see cref="Player"/> owner and a <see cref="Database.Blueprint"/>.
         /// </summary>
         /// <param name="squadID">The unique squad ID used to identify the squad</param>
@@ -232,6 +217,7 @@ namespace Battlegrounds.Game.Gameplay {
             this.m_deployMode = DeploymentMethod.None;
             this.m_deployPhase = DeploymentPhase.PhaseNone;
             this.m_crewSquad = null;
+            this.m_customName = string.Empty;
         }
 
         /// <summary>
@@ -323,6 +309,13 @@ namespace Battlegrounds.Game.Gameplay {
         /// <param name="time">The <see cref="TimeSpan"/> to increase combat time by.</param>
         public void IncreaseCombatTime(TimeSpan time)
             => this.m_combatTime += time;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="time"></param>
+        public void SetCombatTime(TimeSpan time)
+            => this.m_combatTime = time;
 
         /// <summary>
         /// Set the custom name of the squad.

@@ -1,20 +1,17 @@
 ﻿using System;
+using System.Linq;
 using System.Text.Json;
 using System.Threading;
 
 using Battlegrounds;
 using Battlegrounds.Modding;
+using Battlegrounds.Functional;
 using Battlegrounds.Game.Gameplay;
+using Battlegrounds.Game.Database;
 using Battlegrounds.Game.DataCompany;
 using Battlegrounds.Game.Database.Management;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using static Battlegrounds.Game.Database.Extensions.VeterancyExtension;
-using System.Numerics;
-using System.Timers;
-using Battlegrounds.Game.Database;
-using Battlegrounds.Functional;
-using System.Linq;
 
 namespace coh2_battlegrounds_bin_tests { // NOTE: This test file tests serialisation and deserialisation
     // But the primary goal is to test that no checksum violations occur.
@@ -322,7 +319,7 @@ namespace coh2_battlegrounds_bin_tests { // NOTE: This test file tests serialisa
             var alliedPool = unitPool.Filter(x => x.Army == Faction.Soviet).ToArray();
             DeploymentPhase[] phases = Enum.GetValues(typeof(DeploymentPhase)) as DeploymentPhase[];
 
-            for (int i = 0; i < 500; i++) {
+            for (int i = 0; i < 100; i++) {
 
                 // Create company
                 Company company = new(factions.Random());
