@@ -11,6 +11,7 @@ using Battlegrounds.Game.Match.Play;
 using Battlegrounds.Game.Match.Play.Factory;
 using Battlegrounds.Game.Match.Startup;
 using Battlegrounds.Networking.Lobby;
+using Battlegrounds.Verification;
 
 using BattlegroundsApp.LocalData;
 using BattlegroundsApp.Views;
@@ -248,23 +249,21 @@ namespace BattlegroundsApp.Models {
         /// <param name="selfCompany">The company to save.</param>
         public static void OnCompanySerialized(Company selfCompany) {
 
-            // Old checksum
-            ulong chksum = 0;
+            // Run through a sanitizer
+            try {
+            
+                // Save the company (by literally converting it to and from json for checksum violation checks).
+                selfCompany = CompanySerializer.GetCompanyFromJson(CompanySerializer.GetCompanyAsJson(selfCompany));
 
-            // Find company
-            var oldCompany = PlayerCompanies.FromNameAndFaction(selfCompany.Name, selfCompany.Army);
-            if (oldCompany is null) {
-                Trace.WriteLine($"Saving a deleted or removed company '{selfCompany.Name}' [Faction: {selfCompany.Army.Name}]", nameof(LobbyHostPlayModel));
-            } else {
-                chksum = oldCompany.Checksum;
+                // Save the company
+                PlayerCompanies.SaveCompany(selfCompany);
+
+            } catch (ChecksumViolationException checksumViolation) {
+                
+                // Log checksum violation
+                Trace.WriteLine(checksumViolation, nameof(LobbyHostPlayModel));
+
             }
-
-            // Recalc checksum
-            selfCompany.CalculateChecksum();
-            Trace.WriteLine($"Company Checksum upgrade [{chksum},{selfCompany.Checksum}] : '{selfCompany.Name}' [Faction: {selfCompany.Army.Name}]", nameof(LobbyHostPlayModel));
-
-            // Save the company
-            PlayerCompanies.SaveCompany(selfCompany);
 
         }
 

@@ -95,14 +95,15 @@ namespace Battlegrounds.Verification {
                 if (this.m_sumItems[i] is IChecksumItem item) {
                     item.CalculateChecksum();
                     offset += item.Checksum;
+                } else {
+                    str.Append(this.m_sumItems[i] switch {
+                        float f => f.ToString(CultureInfo.InvariantCulture),
+                        double d => d.ToString(CultureInfo.InvariantCulture),
+                        TimeSpan t => t.Ticks,
+                        null => string.Empty,
+                        _ => this.m_sumItems[i].ToString(),
+                    });
                 }
-                str.Append(this.m_sumItems[i] switch {
-                    float f => f.ToString(CultureInfo.InvariantCulture),
-                    double d => d.ToString(CultureInfo.InvariantCulture),
-                    TimeSpan t => t.Ticks,
-                    null => string.Empty,
-                    _ => this.m_sumItems[i].ToString(),
-                });
             }
             Trace.WriteLineIf(true, str.ToString(), "Checksum-Debug");
             return Encoding.UTF8.GetBytes(str.ToString()).Aggregate(offset, (a,b) => a + b);
