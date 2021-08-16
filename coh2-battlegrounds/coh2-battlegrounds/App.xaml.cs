@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Windows;
 
 using Battlegrounds;
+using Battlegrounds.Networking;
 using Battlegrounds.Game.Database.Management;
 using Battlegrounds.Steam;
 
@@ -33,6 +34,9 @@ namespace BattlegroundsApp {
 
             // Load BG .dll instance*
             BattlegroundsInstance.LoadInstance();
+
+            // Load BG networking .dll instance*
+            NetworkInterface.Setup();
 
             // Load locale
             LoadLocale();

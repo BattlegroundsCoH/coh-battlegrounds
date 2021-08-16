@@ -53,7 +53,7 @@ namespace Battlegrounds.Networking.Lobby {
                 var intro = new IntroMessage(true, lobbyName, lobbyPassword, 1);
 
                 // Establish connection
-                var connection = SocketConnection.EstablishConnection(NetworkingInstance.GetBestAddress(), 11000, steamUser.ID, intro);
+                var connection = SocketConnection.EstablishConnection(NetworkInterface.GetBestAddress(), 11000, steamUser.ID, intro);
                 if (connection is null) {
                     throw new Exception("Failed to establish HTTP connection.");
                 }
@@ -124,7 +124,7 @@ namespace Battlegrounds.Networking.Lobby {
                 IntroMessage intro = new IntroMessage(false, lobby.Guid, password, 1);
 
                 // Establish TCP connection
-                var connection = SocketConnection.EstablishConnection(NetworkingInstance.GetBestAddress(), 11000, steamUser.ID, intro);
+                var connection = SocketConnection.EstablishConnection(NetworkInterface.GetBestAddress(), 11000, steamUser.ID, intro);
                 if (connection is null) {
                     throw new Exception("Failed to establish HTTP connection.");
                 }

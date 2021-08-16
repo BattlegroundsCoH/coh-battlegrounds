@@ -26,7 +26,7 @@ namespace coh2_battlegrounds_bin_tests {
                 Assert.Inconclusive("Incorrect testing environment!");
             }
             this.gamemode = new Wincondition("Battlegrounds Wincondition", new Guid("6a0a13b89555402ca75b85dc30f5cb04"));
-            this.ls = new(new(NetworkingInstance.GetBestAddress()));
+            this.ls = new(new(NetworkInterface.GetBestAddress()));
         }
 
         [TestCleanup]

@@ -131,12 +131,11 @@ namespace BattlegroundsApp.Views {
 
             if (this.m_api is null) {
 
-#if DEBUG
-                Trace.WriteLine($"Local server instance detected = {NetworkingInstance.HasLocalServer()}", nameof(GameBrowserView));
-#endif
+                // Log if local instance was found
+                Trace.WriteLine($"Local server instance detected = {NetworkInterface.HasLocalServer()}", nameof(GameBrowserView));
 
                 // Create API Instance
-                this.m_api = NetworkingInstance.GetServerAPI();
+                this.m_api = NetworkInterface.APIObject;
 
             }
 

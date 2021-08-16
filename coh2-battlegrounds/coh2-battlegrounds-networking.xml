@@ -251,11 +251,6 @@
             Represents a payload sent along the HTTP protocol used by <see cref="T:Battlegrounds.Networking.Communication.HttpConnection"/>.
             </summary>
         </member>
-        <member name="F:Battlegrounds.Networking.Communication.BinaryPayload.BUFFER_MAX_SIZE">
-            <summary>
-            Max buffer size of a <see cref="T:Battlegrounds.Networking.Communication.BinaryPayload"/> send/receive stream.
-            </summary>
-        </member>
         <member name="P:Battlegrounds.Networking.Communication.BinaryPayload.Messages">
             <summary>
             Get or set the actual messages within the payload
@@ -1251,8 +1246,11 @@
         </member>
         <member name="T:Battlegrounds.Networking.Communication.SocketConnection">
             <summary>
-            
+            Class representing a connection over a socket instance (using TCP).
             </summary>
+            <remarks>
+            Prefer this implementation over <see cref="T:Battlegrounds.Networking.Communication.TcpConnection"/>.
+            </remarks>
         </member>
         <member name="P:Battlegrounds.Networking.Communication.SocketConnection.SocketLock">
             <summary>
@@ -1577,6 +1575,9 @@
             <summary>
             Represents a TCP-compliant connection between local machine and some endpoint. Implements <see cref="T:Battlegrounds.Networking.Communication.IConnection"/>.
             </summary>
+            <remarks>
+            Prefer <see cref="T:Battlegrounds.Networking.Communication.SocketConnection"/> over this connection.
+            </remarks>
         </member>
         <member name="F:Battlegrounds.Networking.Communication.TcpConnection.RESPONSE_WAIT_TIME">
             <summary>
@@ -2061,6 +2062,32 @@
             </summary>
             <returns></returns>
         </member>
+        <member name="T:Battlegrounds.Networking.Debugging.Print">
+            <summary>
+            Static helper class containing functions for debuging code.
+            </summary>
+        </member>
+        <member name="M:Battlegrounds.Networking.Debugging.Print.Printf(System.Object,System.Object[])">
+            <summary>
+            Print formatted <paramref name="message"/>.
+            </summary>
+            <param name="message">The message to format and print.</param>
+            <param name="args">The arguments to pass to the formatting.</param>
+        </member>
+        <member name="M:Battlegrounds.Networking.Debugging.Print.PrintfIf(System.Boolean,System.Object,System.Object[])">
+            <summary>
+            Print formatted <paramref name="message"/> if <paramref name="condition"/>.
+            </summary>
+            <param name="condition">The condition to check</param>
+            <param name="message">The message to format and print.</param>
+            <param name="args">The arguments to pass to the formatting.</param>
+        </member>
+        <member name="M:Battlegrounds.Networking.Debugging.Print.Printuf(System.Object)">
+            <summary>
+            Print an unformatted <paramref name="message"/>.
+            </summary>
+            <param name="message">The message to print.</param>
+        </member>
         <member name="T:Battlegrounds.Networking.Debugging.TraceRequestHandler">
             <summary>
             Request handler that only traces requests. Will forward to sub-request handler if specified.
@@ -2092,6 +2119,46 @@
             Initialize a new <see cref="T:Battlegrounds.Networking.Debugging.TraceRequestHandler"/> with specified <paramref name="requestHandler"/> and underlying <see cref="T:Battlegrounds.Networking.Communication.IConnection"/>.
             </summary>
             <param name="requestHandler">The request handler that will handle the actual requests.</param>
+        </member>
+        <member name="T:Battlegrounds.Networking.Lobby.Data.LobbySettingsFile">
+            <summary>
+            Readonly struct representing a virtual file containing lobby settings.
+            </summary>
+        </member>
+        <member name="P:Battlegrounds.Networking.Lobby.Data.LobbySettingsFile.Name">
+            <summary>
+            Get the name of the lobby.
+            </summary>
+        </member>
+        <member name="P:Battlegrounds.Networking.Lobby.Data.LobbySettingsFile.Map">
+            <summary>
+            Get the current map of the lobby.
+            </summary>
+        </member>
+        <member name="P:Battlegrounds.Networking.Lobby.Data.LobbySettingsFile.Gamemode">
+            <summary>
+            Get the gamemode of the lobby.
+            </summary>
+        </member>
+        <member name="P:Battlegrounds.Networking.Lobby.Data.LobbySettingsFile.GamemodeOption">
+            <summary>
+            Get the gamemode option of the lobby.
+            </summary>
+        </member>
+        <member name="P:Battlegrounds.Networking.Lobby.Data.LobbySettingsFile.OtherOptions">
+            <summary>
+            Get additional mod settings.
+            </summary>
+        </member>
+        <member name="M:Battlegrounds.Networking.Lobby.Data.LobbySettingsFile.#ctor(System.String,System.String,System.String,System.String,System.Collections.Generic.Dictionary{System.String,System.String})">
+            <summary>
+            Initialise a new <see cref="T:Battlegrounds.Networking.Lobby.Data.LobbySettingsFile"/> instance populated with data.
+            </summary>
+            <param name="Name">The lobby name.</param>
+            <param name="Map">The lobby map.</param>
+            <param name="Gamemode">The gamemode in the lobby.</param>
+            <param name="GamemodeOption">The gamemode option in the lobby.</param>
+            <param name="OtherOptions">Other options in the lobby.</param>
         </member>
         <member name="T:Battlegrounds.Networking.Lobby.ServerModeTranslator">
             <summary>
@@ -2239,17 +2306,20 @@
         </member>
         <member name="M:Battlegrounds.Networking.Lobby.HostedLobby.GetGameModOption(System.String)">
             <summary>
-            
+            Get the lobby mod option for <paramref name="optionKey"/>.
             </summary>
-            <param name="optionKey"></param>
-            <returns></returns>
+            <param name="optionKey">The option key to get.</param>
+            <returns>If option key exists, the string value; Otherwise the empty string.</returns>
         </member>
         <member name="M:Battlegrounds.Networking.Lobby.HostedLobby.SetGameModOption(System.String,System.String)">
             <summary>
-            
+            Set <paramref name="optionValue"/> as the value of <paramref name="optionKey"/>.
             </summary>
-            <param name="optionKey"></param>
-            <param name="optionValue"></param>
+            <remarks>
+            A value of <see langword="null"/> will remove the setting.
+            </remarks>
+            <param name="optionKey">The option key to set.</param>
+            <param name="optionValue">The option value to set.</param>
         </member>
         <member name="M:Battlegrounds.Networking.Lobby.HostedLobby.TrigerRefreshVariable(Battlegrounds.Networking.Lobby.LobbyRefreshVariable,System.Object)">
             <summary>
@@ -2270,6 +2340,12 @@
             </summary>
             <param name="sender"></param>
             <param name="fileKey"></param>
+        </member>
+        <member name="M:Battlegrounds.Networking.Lobby.HostedLobby.GetLobbySettings">
+            <summary>
+            Get the lobby settings as a <see cref="T:Battlegrounds.Networking.Lobby.Data.LobbySettingsFile"/> instance.
+            </summary>
+            <returns>The lobby settings file data.</returns>
         </member>
         <member name="T:Battlegrounds.Networking.Lobby.IAILobbyMember">
             <summary>
@@ -2990,6 +3066,14 @@
             <param name="requestHandler"></param>
             <param name="API"></param>
         </member>
+        <member name="M:Battlegrounds.Networking.Lobby.Match.OnlineMatchContext.GetStartTimer(System.Int32,System.Double)">
+            <summary>
+            
+            </summary>
+            <param name="countdownSeconds"></param>
+            <param name="syncGraceSeconds"></param>
+            <returns></returns>
+        </member>
         <member name="M:Battlegrounds.Networking.Lobby.Match.OnlineMatchContext.HasAllGamemode">
             <summary>
             
@@ -3108,6 +3192,84 @@
             <param name="updateArgument">The argument to pass along to the update method.</param>
             <param name="updateMethod">The method to invoke to get an updated cache value.</param>
             <returns>The stored cache value.</returns>
+        </member>
+        <member name="T:Battlegrounds.Networking.NetworkInterface">
+            <summary>
+            Static class for setting global network interface values
+            </summary>
+        </member>
+        <member name="P:Battlegrounds.Networking.NetworkInterface.TimeoutMilliseconds">
+            <summary>
+            Get or set the amount of milliseconds to wait for a response (before resending a request)
+            </summary>
+        </member>
+        <member name="P:Battlegrounds.Networking.NetworkInterface.ResendAttempts">
+            <summary>
+            Get or set the amount of resends to attempt for a response.
+            </summary>
+        </member>
+        <member name="P:Battlegrounds.Networking.NetworkInterface.ReceiveBufferSize">
+            <summary>
+            Get or set the size of the receive buffer.
+            </summary>
+        </member>
+        <member name="P:Battlegrounds.Networking.NetworkInterface.SendBufferSize">
+            <summary>
+            Get or set the size of the send buffer.
+            </summary>
+        </member>
+        <member name="P:Battlegrounds.Networking.NetworkInterface.LogDispatchCalls">
+            <summary>
+            Get or set if dispatching class should be logged.
+            </summary>
+        </member>
+        <member name="P:Battlegrounds.Networking.NetworkInterface.LogAPICalls">
+            <summary>
+            Get or set if API class should be logged.
+            </summary>
+        </member>
+        <member name="P:Battlegrounds.Networking.NetworkInterface.AllowLocalServerInstance">
+            <summary>
+            Get or set if the interface will accept local server instances.
+            </summary>
+        </member>
+        <member name="P:Battlegrounds.Networking.NetworkInterface.LocalAddress">
+            <summary>
+            Get or set the local address
+            </summary>
+        </member>
+        <member name="P:Battlegrounds.Networking.NetworkInterface.APIObject">
+            <summary>
+            Get the <see cref="T:Battlegrounds.Networking.Server.ServerAPI"/>.
+            </summary>
+        </member>
+        <member name="M:Battlegrounds.Networking.NetworkInterface.Setup">
+            <summary>
+            Setup the network API.
+            </summary>
+        </member>
+        <member name="M:Battlegrounds.Networking.NetworkInterface.GetBestAddress">
+            <summary>
+            Get the best server address available.
+            </summary>
+            <returns>The IP address of the best available address that can be connected to.</returns>
+        </member>
+        <member name="M:Battlegrounds.Networking.NetworkInterface.HasLocalServer">
+            <summary>
+            Get if there's a local server instance running.
+            </summary>
+            <returns><see langword="true"/> if there's a local server instance running; Otherwise <see langword="false"/>.</returns>
+        </member>
+        <member name="M:Battlegrounds.Networking.NetworkInterface.RegisterConnection(Battlegrounds.Networking.Communication.IConnection)">
+            <summary>
+            Register a connection with the interface.
+            </summary>
+            <param name="connection">The connection instance to register</param>
+        </member>
+        <member name="M:Battlegrounds.Networking.NetworkInterface.Shutdown">
+            <summary>
+            Shutdown all active connections.
+            </summary>
         </member>
         <member name="T:Battlegrounds.Networking.Proxy.IProxy">
             <summary>
@@ -3617,6 +3779,12 @@
             </summary>
             <returns>The <see cref="T:Battlegrounds.Networking.Remoting.Query.CommandQueryBuilder"/> that is constructing the <see cref="T:Battlegrounds.Networking.Remoting.Query.CommandQuery"/>.</returns>
         </member>
+        <member name="M:Battlegrounds.Networking.Remoting.Query.CommandQueryBuilder.Jsonify">
+            <summary>
+            Pop the top-stack value from the value stack and invoke the json serialiser on it. Then push the return value onto the stack.
+            </summary>
+            <returns>The <see cref="T:Battlegrounds.Networking.Remoting.Query.CommandQueryBuilder"/> that is constructing the <see cref="T:Battlegrounds.Networking.Remoting.Query.CommandQuery"/>.</returns>
+        </member>
         <member name="M:Battlegrounds.Networking.Remoting.Query.CommandQueryBuilder.Swap(System.Int32)">
             <summary>
             Swap the current top-stack value with the value of the <paramref name="offset"/> from the top of the stack.
@@ -3831,6 +3999,11 @@
         <member name="F:Battlegrounds.Networking.Remoting.Query.CommandQueryInstructionID.STRINGIFY">
             <summary>
             Get obj as string instruction.
+            </summary>
+        </member>
+        <member name="F:Battlegrounds.Networking.Remoting.Query.CommandQueryInstructionID.JSONIFY">
+            <summary>
+            Get obj as json instruction.
             </summary>
         </member>
         <member name="F:Battlegrounds.Networking.Remoting.Query.CommandQueryInstructionID.TESTNULL">
@@ -4378,6 +4551,26 @@
             Request handler for handling host-related requests.
             </summary>
         </member>
+        <member name="F:Battlegrounds.Networking.Requests.HostRequestHandler.m_connection">
+            <summary>
+            The connection instance.
+            </summary>
+        </member>
+        <member name="P:Battlegrounds.Networking.Requests.HostRequestHandler.Connection">
+            <summary>
+            Get the <see cref="T:Battlegrounds.Networking.Communication.IConnection"/> instance handling connection between the host and the server.
+            </summary>
+        </member>
+        <member name="P:Battlegrounds.Networking.Requests.HostRequestHandler.ObjectPool">
+            <summary>
+            Get the <see cref="T:Battlegrounds.Networking.Remoting.Objects.IObjectPool"/> that keeps track of objects.
+            </summary>
+        </member>
+        <member name="P:Battlegrounds.Networking.Requests.HostRequestHandler.ServerInterface">
+            <summary>
+            Get the <see cref="T:Battlegrounds.Networking.Remoting.IStaticInterface"/> that handles static objects used across the connection session.
+            </summary>
+        </member>
         <member name="M:Battlegrounds.Networking.Requests.HostRequestHandler.#ctor(Battlegrounds.Networking.Communication.IConnection,Battlegrounds.Networking.Remoting.IStaticInterface,Battlegrounds.Networking.Remoting.Objects.IObjectPool)">
             <summary>
             Initialize a new <see cref="T:Battlegrounds.Networking.Requests.HostRequestHandler"/> class with a connection, static interface, and object pool.
@@ -4401,6 +4594,44 @@
             <param name="mangled">The mangled string containing the actual dispatch information.</param>
             <param name="args">The arguments to pass along to the called method.</param>
             <returns>The returned value of the invoked method in <see cref="T:Battlegrounds.Networking.Communication.Messaging.IMessage"/> form.</returns>
+        </member>
+        <member name="M:Battlegrounds.Networking.Requests.HostRequestHandler.SendRequest(System.String,System.String,System.Object[])">
+            <summary>
+            
+            </summary>
+            <param name="objectID"></param>
+            <param name="objectType"></param>
+            <param name="args"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Battlegrounds.Networking.Requests.HostRequestHandler.SendAndForgetRequest(System.String,System.String,System.Object[])">
+            <summary>
+            
+            </summary>
+            <param name="objectID"></param>
+            <param name="objectType"></param>
+            <param name="args"></param>
+        </member>
+        <member name="M:Battlegrounds.Networking.Requests.HostRequestHandler.NotifyBroker(System.String,System.Object)">
+            <summary>
+            
+            </summary>
+            <param name="informationKey"></param>
+            <param name="informationValue"></param>
+        </member>
+        <member name="M:Battlegrounds.Networking.Requests.HostRequestHandler.CloseHandler">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Battlegrounds.Networking.Requests.HostRequestHandler.BroadcastRequest(System.UInt64[],System.String,System.String,System.Object[])">
+            <summary>
+            
+            </summary>
+            <param name="filter"></param>
+            <param name="objectID"></param>
+            <param name="objectType"></param>
+            <param name="args"></param>
         </member>
         <member name="T:Battlegrounds.Networking.Requests.IManagingRequestHandler">
             <summary>
