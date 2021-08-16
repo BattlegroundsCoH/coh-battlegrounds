@@ -39,7 +39,7 @@ namespace Battlegrounds.Game.Match.Analyze {
                 if (replayMatchData is ReplayMatchData replayMatchDataConcrete) {
                     var playback = new JsonPlayback(replayMatchDataConcrete);
                     if (playback.ParseMatchData()) {
-                        File.WriteAllText("_last_matchdata.json", JsonSerializer.Serialize(new JsonPlayback(replayMatchDataConcrete), new JsonSerializerOptions() { 
+                        File.WriteAllText("_last_matchdata.json", JsonSerializer.Serialize(playback, new JsonSerializerOptions() { 
                             WriteIndented = true
                         }));
                     } else {
