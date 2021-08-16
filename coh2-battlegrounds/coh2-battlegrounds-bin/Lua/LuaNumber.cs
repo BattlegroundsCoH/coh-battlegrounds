@@ -11,10 +11,19 @@ namespace Battlegrounds.Lua {
         /// <summary>
         /// Culture encoding value to use when printing and parsing <see cref="LuaNumber"/> values. Read-only field.
         /// </summary>
-        public static readonly CultureInfo NumberCulture = CultureInfo.GetCultureInfo("en-GB");
+        public static readonly CultureInfo NumberCulture = CultureInfo.GetCultureInfo("en-US");
 
-        private double m_number;
-        private bool m_treatAsInteger;
+        private readonly double m_number;
+        private readonly bool m_treatAsInteger;
+
+        /// <summary>
+        /// Initialise a new <see cref="LuaNumber"/> class with <see cref="double"/> <paramref name="value"/>.
+        /// </summary>
+        /// <param name="value">The floating-point value of the number.</param>
+        public LuaNumber(float value) {
+            this.m_number = Convert.ToDouble(value.ToString());
+            this.m_treatAsInteger = this.IsInteger();
+        }
 
         /// <summary>
         /// Initialise a new <see cref="LuaNumber"/> class with <see cref="double"/> <paramref name="value"/>.
@@ -22,7 +31,7 @@ namespace Battlegrounds.Lua {
         /// <param name="value">The floating-point value of the number.</param>
         public LuaNumber(double value) {
             this.m_number = value;
-            this.m_treatAsInteger = IsInteger();
+            this.m_treatAsInteger = this.IsInteger();
         }
 
         /// <summary>
@@ -38,7 +47,7 @@ namespace Battlegrounds.Lua {
         /// Get a new <see cref="LuaNumber"/> where value is an integer representation.
         /// </summary>
         /// <returns>New <see cref="LuaNumber"/>.</returns>
-        public LuaNumber AsInteger() => new LuaNumber((int)this.m_number);
+        public LuaNumber AsInteger() => new((int)this.m_number);
 
         /// <summary>
         /// Get if the numeric represented is an integer.
@@ -50,7 +59,7 @@ namespace Battlegrounds.Lua {
 
         public override bool Equals(object obj) => obj is LuaValue v ? this.Equals(v) : base.Equals(obj);
 
-        public override string Str() => this.m_number.ToString();
+        public override string Str() => this.ToString();
 
         public override int GetHashCode() => this.m_number.GetHashCode() ^ this.m_treatAsInteger.GetHashCode();
 

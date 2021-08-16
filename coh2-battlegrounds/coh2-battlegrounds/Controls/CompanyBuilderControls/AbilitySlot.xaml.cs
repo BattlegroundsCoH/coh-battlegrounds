@@ -6,7 +6,7 @@ using System.Windows.Media;
 
 using Battlegrounds.Game.Database;
 using Battlegrounds.Game.Database.Management;
-using Battlegrounds.Game.DataCompany;
+using Battlegrounds.Game.Gameplay;
 using Battlegrounds.Modding;
 
 using BattlegroundsApp.Dialogs.YesNo;
@@ -33,9 +33,9 @@ namespace BattlegroundsApp.Controls.CompanyBuilderControls {
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        public SpecialAbility Ability { get; }
+        public Ability Ability { get; }
 
-        public AbilitySlot(SpecialAbility specialAbility) {
+        public AbilitySlot(Ability specialAbility) {
 
             // Set context
             this.DataContext = this;

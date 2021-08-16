@@ -1,12 +1,13 @@
 ﻿using Battlegrounds.Game.Database;
-using Battlegrounds.Game.Scar;
+using Battlegrounds.Game.Gameplay.DataConverters;
+using Battlegrounds.Lua.Generator.RuntimeServices;
 
-namespace Battlegrounds.Game.DataCompany {
+namespace Battlegrounds.Game.Gameplay {
 
     /// <summary>
     /// Special ability category an ability may belong to.
     /// </summary>
-    public enum SpecialAbilityCategory {
+    public enum AbilityCategory {
 
         /// <summary>
         /// The category is undefined (Will not be compiled).
@@ -28,22 +29,28 @@ namespace Battlegrounds.Game.DataCompany {
         /// </summary>
         AirSupport,
 
+        /// <summary>
+        /// The ability is a unit ability (Should not be compiled).
+        /// </summary>
+        Unit,
+
     }
 
     /// <summary>
-    /// Represents a <see cref="SpecialAbility"/> ingame ability. Implements <see cref="IScarValue"/>.
+    /// Represents a <see cref="Ability"/> ingame ability.
     /// </summary>
-    public class SpecialAbility : IScarValue {
+    [LuaConverter(typeof(AbilityConverter))]
+    public class Ability {
 
         /// <summary>
-        /// The <see cref="AbilityBlueprint"/> being granted by the <see cref="SpecialAbility"/>.
+        /// The <see cref="AbilityBlueprint"/> being granted by the <see cref="Ability"/>.
         /// </summary>
         public AbilityBlueprint ABP { get; }
 
         /// <summary>
-        /// The <see cref="SpecialAbilityCategory"/> the <see cref="SpecialAbility"/> will belong to.
+        /// The <see cref="AbilityCategory"/> the <see cref="Ability"/> will belong to.
         /// </summary>
-        public SpecialAbilityCategory Category { get; }
+        public AbilityCategory Category { get; }
 
         /// <summary>
         /// The amount of uses a player has during each match.
@@ -56,20 +63,18 @@ namespace Battlegrounds.Game.DataCompany {
         public int UsedCount { get; set; }
 
         /// <summary>
-        /// Instantiate a new <see cref="SpecialAbility"/> with predefined <see cref="SpecialAbilityCategory"/> and use count.
+        /// Instantiate a new <see cref="Ability"/> with predefined <see cref="AbilityCategory"/> and use count.
         /// </summary>
         /// <param name="blueprint">The ability blueprint.</param>
         /// <param name="category">The category.</param>
         /// <param name="maxUse">The maximum amount of uses each match.</param>
         /// <param name="count">The amount of times this has been used.</param>
-        public SpecialAbility(AbilityBlueprint blueprint, SpecialAbilityCategory category, int maxUse, int count = 0) {
+        public Ability(AbilityBlueprint blueprint, AbilityCategory category, int maxUse, int count = 0) {
             this.ABP = blueprint;
             this.Category = category;
             this.MaxUse = maxUse;
             this.UsedCount = count;
         }
-
-        public string ToScar() => $"{{ abp = {this.ABP.ToScar()}, max_use = {this.MaxUse} }}";
 
     }
 

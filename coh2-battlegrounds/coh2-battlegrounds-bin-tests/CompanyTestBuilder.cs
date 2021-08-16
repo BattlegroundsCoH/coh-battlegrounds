@@ -59,6 +59,7 @@ namespace coh2_battlegrounds_bin_tests {
 
         }
 
+
         private static UnitBuilder GetCrew(UnitBuilder builder) => builder;
 
         public static Company CreateAdvancedSovietCompany() {
@@ -152,6 +153,38 @@ namespace coh2_battlegrounds_bin_tests {
                 .CreateAndGetCrew(
                     x => x.SetBlueprint("soviet_male_vehicle_driver_bg").SetCombatTime(TimeSpan.FromMinutes(34.85)).SetVeterancyRank(3)
                 ).GetAndReset());
+
+            // Commit changes
+            companyBuilder.Commit();
+            var result = companyBuilder.Result;
+            result.UpdateStatistics(x => {
+                x.TotalMatchWinCount = 17;
+                x.TotalMatchLossCount = 5;
+                x.TotalMatchCount = 22;
+                x.TotalInfantryLosses = 347;
+                x.TotalVehicleLosses = 9;
+                return x;
+            });
+
+            return result;
+
+        }
+
+
+        public static Company CreateAdvancedGermanCompany() {
+
+            // Create a dummy company
+            CompanyBuilder companyBuilder = new CompanyBuilder().NewCompany(Faction.Wehrmacht)
+                .ChangeName("29th Panzer Regiment")
+                .ChangeTuningMod("142b113740474c82a60b0a428bd553d5");
+            UnitBuilder unitBuilder = new UnitBuilder();
+
+
+            // Basic infantry
+            companyBuilder.AddAndCommitUnit(unitBuilder.SetBlueprint("grenadier_squad_bg").SetDeploymentPhase(DeploymentPhase.PhaseInitial).GetAndReset());
+            companyBuilder.AddAndCommitUnit(unitBuilder.SetBlueprint("grenadier_squad_bg").SetDeploymentPhase(DeploymentPhase.PhaseInitial).GetAndReset());
+            companyBuilder.AddAndCommitUnit(unitBuilder.SetBlueprint("grenadier_squad_bg").SetDeploymentPhase(DeploymentPhase.PhaseInitial).GetAndReset());
+            companyBuilder.AddAndCommitUnit(unitBuilder.SetBlueprint("grenadier_squad_bg").SetDeploymentPhase(DeploymentPhase.PhaseA).GetAndReset());
 
             // Commit changes
             companyBuilder.Commit();

@@ -4,7 +4,7 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 
 using Battlegrounds.Functional;
-using Battlegrounds.Game.DataCompany;
+using Battlegrounds.Game.Gameplay;
 
 namespace Battlegrounds.Modding {
 
@@ -21,10 +21,10 @@ namespace Battlegrounds.Modding {
                 __lookup[prop] = prop switch {
                     "Blueprint" => reader.GetString(),
                     "AbilityCategory" => reader.GetString() switch {
-                        "Artillery" => SpecialAbilityCategory.Artillery,
-                        "AirSupport" => SpecialAbilityCategory.AirSupport,
-                        "Default" => SpecialAbilityCategory.Default,
-                        "Undefined" => SpecialAbilityCategory.Undefined,
+                        "Artillery" => AbilityCategory.Artillery,
+                        "AirSupport" => AbilityCategory.AirSupport,
+                        "Default" => AbilityCategory.Default,
+                        "Undefined" => AbilityCategory.Undefined,
                         _ => throw new FormatException()
                     },
                     "MaxUsePerMatch" => reader.GetInt32(),
@@ -40,7 +40,7 @@ namespace Battlegrounds.Modding {
 
             // Return
             return new(__lookup.GetValueOrDefault("Blueprint", string.Empty),
-                __lookup.GetValueOrDefault("AbilityCategory", SpecialAbilityCategory.Undefined),
+                __lookup.GetValueOrDefault("AbilityCategory", AbilityCategory.Undefined),
                 __lookup.GetValueOrDefault("MaxUsePerMatch", 0),
                 __lookup.GetValueOrDefault("RequireOffmap", false),
                 __lookup.GetValueOrDefault("OffmapCountEffectivenesss", 0.0f),

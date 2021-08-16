@@ -11,6 +11,7 @@ using Battlegrounds.Game.Match.Play;
 using Battlegrounds.Game.Match.Play.Factory;
 using Battlegrounds.Game.Match.Startup;
 using Battlegrounds.Networking.Lobby;
+using Battlegrounds.Verification;
 
 using BattlegroundsApp.LocalData;
 using BattlegroundsApp.Views;
@@ -25,13 +26,13 @@ namespace BattlegroundsApp.Models {
         /// <summary>
         /// Amount of seconds that players will have to stop a match from starting.
         /// </summary>
-        public const uint WAIT_TIME = 15;
+        public const uint WAIT_TIME = 5;
 
         private bool m_shouldStop = false;
         private bool m_canStop = false;
 
-        private GameLobbyView m_view;
-        private LobbyHandler m_lobby;
+        private readonly GameLobbyView m_view;
+        private readonly LobbyHandler m_lobby;
         private MatchController m_controller;
         private PlayCancelHandler m_cancelHandler;
 
@@ -77,7 +78,7 @@ namespace BattlegroundsApp.Models {
 
                 // Finalizer strategy
                 finalizeStrategy = new SingleplayerFinalizer {
-                    CompanyHandler = PlayerCompanies.SaveCompany,
+                    CompanyHandler = OnCompanySerialized,
                 };
 
                 // Log strategy choice
@@ -104,7 +105,7 @@ namespace BattlegroundsApp.Models {
 
                 // Create standard online finalizer
                 finalizeStrategy = new MultiplayerFinalizer {
-                    CompanyHandler = PlayerCompanies.SaveCompany,
+                    CompanyHandler = OnCompanySerialized,
                 };
 
                 // Log strategy choice
@@ -237,9 +238,33 @@ namespace BattlegroundsApp.Models {
                     this.HostedLobby.SetState(LobbyState.LOBBY_PLAYING); // TEMP - FIND BETTER LOCATION FOR THIS
                 }
                 this.m_view.UpdateGUI(() => {
-                    this.m_view.LobbyChat.DisplayMessage($"[System] {message}{Environment.NewLine}");
+                    this.m_view.LobbyChat.DisplayMessage($"[System] {message}");
                 });
             }
+        }
+
+        /// <summary>
+        /// Will attempt to save the company in a proper and logged way. (Will log checksum updates)
+        /// </summary>
+        /// <param name="selfCompany">The company to save.</param>
+        public static void OnCompanySerialized(Company selfCompany) {
+
+            // Run through a sanitizer
+            try {
+            
+                // Save the company (by literally converting it to and from json for checksum violation checks).
+                selfCompany = CompanySerializer.GetCompanyFromJson(CompanySerializer.GetCompanyAsJson(selfCompany));
+
+                // Save the company
+                PlayerCompanies.SaveCompany(selfCompany);
+
+            } catch (ChecksumViolationException checksumViolation) {
+                
+                // Log checksum violation
+                Trace.WriteLine(checksumViolation, nameof(LobbyHostPlayModel));
+
+            }
+
         }
 
     }

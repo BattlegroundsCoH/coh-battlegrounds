@@ -35,9 +35,15 @@ namespace BattlegroundsApp.Views {
     /// </summary>
     public partial class GameLobbyView : ViewState, INotifyPropertyChanged, IChatController {
 
+        private class GameLobbyViewModPackage {
+            public ModPackage Package { get; }
+            public GameLobbyViewModPackage(ModPackage package) => this.Package = package;
+            public override string ToString() => this.Package.PackageName;
+        }
+
         private class GameLobbyViewScenarioItem : IDropdownElement {
             public Scenario Scenario { get; }
-            private string m_display;
+            private readonly string m_display;
             public GameLobbyViewScenarioItem(Scenario scenario) {
                 this.Scenario = scenario;
                 this.m_display = this.Scenario.Name;
@@ -54,11 +60,11 @@ namespace BattlegroundsApp.Views {
         //private bool m_hasCreatedLobbyOnce;
         private ILobbyPlayModel m_playModel;
 
-        private ModPackage m_selectedModPackage;
+        private readonly List<GameLobbyViewModPackage> m_availableModPackages;
 
         private GameLobbyViewScenarioItem m_lastScenario;
 
-        private LobbyHandler m_handler;
+        private readonly LobbyHandler m_handler;
         private bool m_ignoreEvents;
         private bool m_hasLoadedLobby;
 
@@ -80,17 +86,23 @@ namespace BattlegroundsApp.Views {
 
         public ChatMessageSent OnSend => this.OnSendChatMessage;
 
+        public ModPackage SelectedModPackage => (this.TuningOption.Items.CurrentItem as GameLobbyViewModPackage).Package;
+
         public GameLobbyView(LobbyHandler handler) {
 
             // Set handler
             this.m_handler = handler;
 
-            // Set mod package (TODO: Let users pick this before the lobby starts, on in lobby)
-            this.m_selectedModPackage = ModManager.GetPackage("mod_bg");
-            Trace.TraceWarning($"There's currently no method of chaning the mod package. Selecting 'mod_bg' by default.");
+            // Create package list
+            this.m_availableModPackages = new();
+            ModManager.EachPackage(x => this.m_availableModPackages.Add(new(x)));
 
             // Init components
             this.InitializeComponent();
+
+            // Set package
+            this.TuningOption.ItemsSource = this.m_availableModPackages;
+            this.TuningOption.SelectedIndex = 0;
 
         }
 
@@ -137,8 +149,8 @@ namespace BattlegroundsApp.Views {
             int currentOption = this.GamemodeOption.SelectedIndex;
 
             // Set available gamemodes
-            var guid = this.m_selectedModPackage.GamemodeGUID;
-            List<IGamemode> source = scenario.Gamemodes.Count > 0 ? WinconditionList.GetGamemodes(guid, scenario.Gamemodes) : WinconditionList.GetGamemodes(guid);
+            var guid = this.SelectedModPackage.GamemodeGUID;
+            var source = scenario.Gamemodes.Count > 0 ? WinconditionList.GetGamemodes(guid, scenario.Gamemodes) : WinconditionList.GetGamemodes(guid);
             if (source.All(this.Gamemode.Items.Contains)) { // if nore changes are made, just dont update
                 return;
             }
@@ -207,22 +219,25 @@ namespace BattlegroundsApp.Views {
             Wincondition selectedWincondition = this.Gamemode.SelectedItem as Wincondition;
 
             // Get scenario data
-            Scenario selectedScenario = (this.Map.SelectedItem as GameLobbyViewScenarioItem).Scenario;
+            var selectedScenario = (this.Map.SelectedItem as GameLobbyViewScenarioItem).Scenario;
             if (selectedScenario is null) {
                 // TODO: Handle
             }
 
+            // Player ID counter
+            byte pid = 0;
+
             // Get team data
-            List<SessionParticipant> alliedTeam = this.TeamManager.GetParticipants(LobbyTeamType.Allies);
-            List<SessionParticipant> axisTeam = this.TeamManager.GetParticipants(LobbyTeamType.Axis);
+            var alliedTeam = this.TeamManager.GetParticipants(LobbyTeamType.Allies, ref pid);
+            var axisTeam = this.TeamManager.GetParticipants(LobbyTeamType.Axis, ref pid);
 
             // Compile into session data
-            SessionInfo sinfo = new SessionInfo() {
+            SessionInfo sinfo = new() {
                 SelectedGamemode = selectedWincondition,
                 SelectedGamemodeOption = option,
                 SelectedScenario = selectedScenario,
                 IsOptionValue = false,
-                SelectedTuningMod = ModManager.GetMod<ITuningMod>(this.m_selectedModPackage.TuningGUID), // TODO: Allow users to change this somewhere
+                SelectedTuningMod = ModManager.GetMod<ITuningMod>(this.SelectedModPackage.TuningGUID), // TODO: Allow users to change this somewhere
                 Allies = alliedTeam.ToArray(),
                 Axis = axisTeam.ToArray(),
                 FillAI = false,
@@ -241,7 +256,7 @@ namespace BattlegroundsApp.Views {
             }
 
             if (this.Map.SelectedItem is GameLobbyViewScenarioItem scenarioItem) {
-                Scenario scenario = scenarioItem.Scenario;
+                var scenario = scenarioItem.Scenario;
                 if (scenario is not null) {
 
                     // Get host
@@ -342,7 +357,7 @@ namespace BattlegroundsApp.Views {
         public Company GetLocalCompany() {
 
             // Get self in team model
-            TeamPlayerCard card = this.TeamManager.Self;
+            var card = this.TeamManager.Self;
             if (card is null) {
                 return null;
             }
@@ -353,7 +368,7 @@ namespace BattlegroundsApp.Views {
             }
 
             // Get company
-            Company company = companyItem.State == CompanyItemState.Company ? PlayerCompanies.FromNameAndFaction(companyItem.Name, Faction.FromName(companyItem.Army)) : null;
+            var company = companyItem.State == CompanyItemState.Company ? PlayerCompanies.FromNameAndFaction(companyItem.Name, Faction.FromName(companyItem.Army)) : null;
             return company is not null ? company : throw new Exception();
 
         }
@@ -511,7 +526,7 @@ namespace BattlegroundsApp.Views {
         public void SetScenario(string scenario) {
 
             // Get the scenario
-            Scenario s = ScenarioList.FromRelativeFilename(scenario);
+            var s = ScenarioList.FromRelativeFilename(scenario);
 
             // Display in dropdown
             this.Map.SelectedItem = new GameLobbyViewScenarioItem(s);
@@ -527,7 +542,7 @@ namespace BattlegroundsApp.Views {
         public void SetGamemode(string gamemode, string option) {
 
             // If wincondition is found
-            if (WinconditionList.GetGamemodeByName(this.m_selectedModPackage.GamemodeGUID, gamemode) is Wincondition wc) {
+            if (WinconditionList.GetGamemodeByName(this.SelectedModPackage.GamemodeGUID, gamemode) is Wincondition wc) {
 
                 // Set gamemode
                 this.Gamemode.SelectedItem = wc;
@@ -632,6 +647,16 @@ namespace BattlegroundsApp.Views {
 
                 }
             }
+
+        }
+
+        private void TuningOption_SelectedItemChanged(object sender, SelectionChangedEventArgs e) {
+
+            if (this.m_ignoreEvents) {
+                return;
+            }
+
+            // TODO: Apply Choice
 
         }
 

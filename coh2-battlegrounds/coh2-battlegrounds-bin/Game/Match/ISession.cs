@@ -32,6 +32,11 @@ namespace Battlegrounds.Game.Match {
         public IGamemode Gamemode { get; }
 
         /// <summary>
+        /// Get the gamemode option to be played.
+        /// </summary>
+        public string GamemodeOption{ get; }
+
+        /// <summary>
         /// Get the GUID or name of the tuning mod to be played with.
         /// </summary>
         public ITuningMod TuningMod { get; }

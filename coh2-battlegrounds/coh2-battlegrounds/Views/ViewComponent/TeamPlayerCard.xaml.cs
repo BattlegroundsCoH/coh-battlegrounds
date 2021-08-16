@@ -10,7 +10,6 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
 using Battlegrounds.Functional;
-using Battlegrounds.Game;
 using Battlegrounds.Game.DataCompany;
 using Battlegrounds.Networking.Lobby;
 
@@ -35,8 +34,8 @@ namespace BattlegroundsApp.Views.ViewComponent {
     /// </summary>
     public partial class TeamPlayerCard : LobbyControl, INotifyPropertyChanged {
 
-        private static TeamPlayerArmyItem[] AlliedArmyItems = Array.Empty<TeamPlayerArmyItem>();
-        private static TeamPlayerArmyItem[] AxisArmyItems = Array.Empty<TeamPlayerArmyItem>();
+        private static readonly TeamPlayerArmyItem[] AlliedArmyItems;
+        private static readonly TeamPlayerArmyItem[] AxisArmyItems;
 
         static TeamPlayerCard() {
             try {

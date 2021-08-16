@@ -13,14 +13,15 @@ using Battlegrounds.Networking.Requests;
 using Battlegrounds.Networking.DataStructures;
 
 using BattlegroundsApp.Views;
-using BattlegroundsApp.LocalData;
+using Battlegrounds.Verification;
 
 namespace BattlegroundsApp.Models {
 
     public class LobbyMemberPlayModel : ILobbyPlayModel {
 
-        private LobbyHandler m_lobby;
-        private GameLobbyView m_view;
+        private readonly LobbyHandler m_lobby;
+        private readonly GameLobbyView m_view;
+
         private IMatchData m_playResults;
         private ISession m_session;
         private PlayCancelHandler m_cancelHandler;
@@ -68,6 +69,9 @@ namespace BattlegroundsApp.Models {
         }
 
         private void Pulse(TimeSpan time) {
+            if (time == TimeSpan.Zero) {
+                return;
+            }
             Trace.WriteLine($"Timer pulse : {time}", nameof(LobbyMemberPlayModel));
             _ = this.m_view.UpdateGUI(() => {
                 this.m_view.LobbyChat.DisplayMessage($"[System] The match will start in {(int)time.TotalSeconds} seconds.");
@@ -96,11 +100,34 @@ namespace BattlegroundsApp.Models {
 
         private void OnResultsAvailable(string jsondata) {
 
-            // Load company
-            Company company = CompanySerializer.GetCompanyFromJson(jsondata);
+            try {
+                // Save company
+                File.WriteAllText("~latest_company.json", jsondata);
+            } catch {
+                Trace.WriteLine("Failed to save latest company result.", nameof(LobbyMemberPlayModel));
+            }
 
-            // Now save the company
-            PlayerCompanies.SaveCompany(company);
+            try {
+
+                // Load company
+                Company company = CompanySerializer.GetCompanyFromJson(jsondata);
+
+                // Now save the company
+                LobbyHostPlayModel.OnCompanySerialized(company);
+
+                // Let client know the company was updated
+                _ = this.m_view.UpdateGUI(() => {
+                    this.m_view.LobbyChat.DisplayMessage($"[System] Updated company '{company.Name}' with match results.");
+                });
+
+            } catch (ChecksumViolationException) {
+
+                // Let client know the company was not updated
+                _ = this.m_view.UpdateGUI(() => {
+                    this.m_view.LobbyChat.DisplayMessage($"[System] Failed to update played company, data was corrupted.");
+                });
+
+            }
 
         }
 
@@ -117,6 +144,11 @@ namespace BattlegroundsApp.Models {
             // Write file
             File.WriteAllBytes(path, binary);
 
+            // Let client know the company was updated
+            _ = this.m_view.UpdateGUI(() => {
+                this.m_view.LobbyChat.DisplayMessage($"[System] Downloaded gamemode file.");
+            });
+
         }
 
         private async void OnStartMatch() {
@@ -128,6 +160,11 @@ namespace BattlegroundsApp.Models {
                 // Create strategy and launch game
                 MemberOverwatchStrategy strategy = new MemberOverwatchStrategy(this.m_session);
                 strategy.Launch();
+                
+                // Inform client the game is starting
+                _ = this.m_view.UpdateGUI(() => {
+                    this.m_view.LobbyChat.DisplayMessage($"[System] Launching Company of Heroes 2.");
+                });
 
                 // If launched
                 if (strategy.IsLaunched) {

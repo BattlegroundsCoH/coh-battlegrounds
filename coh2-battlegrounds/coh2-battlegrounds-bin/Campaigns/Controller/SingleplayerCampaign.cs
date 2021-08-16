@@ -604,6 +604,7 @@ namespace Battlegrounds.Campaigns.Controller {
         }
 
         private static SessionInfo GetSessionFromEngagementData(CampaignEngagementData data) {
+            byte uidPlayerIndex = 0;
             SessionParticipant[] CreateTeam(bool isAttacker, List<Squad>[] companies, SessionParticipantTeam team) {
                 SessionParticipant[] participants = new SessionParticipant[companies.Length];
                 var diffs = isAttacker ? data.attackingDifficulties : data.defendingDifficulties;
@@ -611,9 +612,9 @@ namespace Battlegrounds.Campaigns.Controller {
                     var company = ICampaignController.GetCompanyFromEngagementData(data, isAttacker, i);
                     if (diffs[i] == AIDifficulty.Human) {
                         var usr = BattlegroundsInstance.Steam.User;
-                        participants[i] = new SessionParticipant(usr.Name, usr.ID, company, team, (byte)i);
+                        participants[i] = new SessionParticipant(usr.Name, usr.ID, company, team, (byte)i, uidPlayerIndex++);
                     } else {
-                        participants[i] = new SessionParticipant(diffs[i], company, team, (byte)i);
+                        participants[i] = new SessionParticipant(diffs[i], company, team, (byte)i, uidPlayerIndex++);
                     }
                 }
                 return participants;

@@ -169,7 +169,7 @@ namespace Battlegrounds.Game.Match.Analyze {
                         if (retreatID >= 0) {
                             if (!this.m_units[retreatID].Callback(stamp, retreatEvent.WithdrawingUnitVeterancyChange, retreatEvent.WithdrawingUnitVeterancyExperience)) {
                                 Trace.WriteLine($"Withdrew unit {retreatID} (Owner: {retreatEvent.WithdrawPlayer.Name}) that was either dead or not deployed", dbstring);
-                                success = false;
+                                //success = false;
                             }
                         } else {
                             Trace.WriteLine($"Invalid unitID was withdrawn ({retreatID})", dbstring);
@@ -179,7 +179,7 @@ namespace Battlegrounds.Game.Match.Analyze {
                     case VictoryEvent victoryEvent:
                         if (!this.m_winners.Add(victoryEvent.VictorID)) {
                             Trace.WriteLine($"Attempted to mark player {victoryEvent.VictorID} as winner, but has already been marked as winner.", dbstring);
-                            success = false;
+                            //success = false;
                         }
                         break;
                     default: break;

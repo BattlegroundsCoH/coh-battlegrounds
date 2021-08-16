@@ -52,23 +52,24 @@ namespace Battlegrounds.Compiler {
                 lua.AppendLine($"specials = {{");
                 lua.IncreaseIndent();
 
-                // Compile the list
-                this.CompileList(lua, "artillery", company.Abilities.Where(x => x.Category == SpecialAbilityCategory.Artillery).ToImmutableArray(), x => x.ToScar());
-                this.CompileList(lua, "air", company.Abilities.Where(x => x.Category == SpecialAbilityCategory.AirSupport).ToImmutableArray(), x => x.ToScar());
+                //// Compile the list
+                //this.CompileList(lua, "artillery", company.Abilities.Where(x => x.Category == AbilityCategory.Artillery).ToImmutableArray(), x => x.ToScar());
+                //this.CompileList(lua, "air", company.Abilities.Where(x => x.Category == AbilityCategory.AirSupport).ToImmutableArray(), x => x.ToScar());
 
                 lua.DecreaseIndent();
                 lua.AppendLine("},");
 
-                // Compile upgrades
-                this.CompileList(lua, "upgrades", company.Upgrades, x => x.ToScar());
-                this.CompileList(lua, "modifiers", company.Modifiers, x => x.ToScar());
+                //// Compile upgrades
+                //this.CompileList(lua, "upgrades", company.Upgrades, x => x.ToScar());
+                //this.CompileList(lua, "modifiers", company.Modifiers, x => x.ToScar());
 
                 // Write units table
                 lua.AppendLine($"units = {{");
                 lua.IncreaseIndent();
 
                 // Sort the units (important for how they're displayed ingame)
-                var units = company.Units.Sort((a, b) => this.CompareUnit(a, b));
+                var units = company.Units;
+                Array.Sort(units, (a, b) => this.CompareUnit(a, b));
 
                 foreach (Squad squad in units) {
                     this.CompileUnit(lua, squad);
@@ -86,6 +87,30 @@ namespace Battlegrounds.Compiler {
 
         }
 
+        public Dictionary<string, object> CompileToLua(Company company, bool isAIPlayer, byte indexOnTeam) {
+
+            var units = company.Units;
+            Array.Sort(units, (a, b) => this.CompareUnit(a, b));
+
+            // Create result
+            Dictionary<string, object> result = new() {
+                ["name"] = company.Name,
+                ["style"] = company.Type,
+                ["army"] = company.Army.Name,
+                ["specials"] = new Dictionary<string, object>() {
+                    ["artillery"] = company.Abilities.Where(x => x.Category is AbilityCategory.Artillery),
+                    ["air"] = company.Abilities.Where(x => x.Category is AbilityCategory.AirSupport),
+                },
+                ["upgrades"] = company.Upgrades.Select(x => x.GetScarName()),
+                ["modifiers"] = company.Modifiers,
+                ["units"] = units
+            };
+
+            // Return result
+            return result;
+
+        }
+
         /// <summary>
         /// Company a specific company unit into a formatted lua table string.
         /// </summary>
@@ -98,7 +123,7 @@ namespace Battlegrounds.Compiler {
             builder.IncreaseIndent();
 
             // Write the basics of the units
-            builder.AppendLine($"bp_name = {squad.SBP.ToScar()},");
+            //builder.AppendLine($"bp_name = {squad.SBP.ToScar()},");
             builder.AppendLine($"company_id = {squad.SquadID},");
             builder.AppendLine($"symbol = \"{squad.SBP.UI.Symbol}\",");
             builder.AppendLine($"category = \"{squad.GetCategory(true)}\",");
@@ -125,7 +150,7 @@ namespace Battlegrounds.Compiler {
             if (squad.SupportBlueprint != null) {
                 builder.AppendLine("transport = {");
                 builder.IncreaseIndent();
-                builder.AppendLine($"sbp = {squad.SupportBlueprint.ToScar()},");
+                //builder.AppendLine($"sbp = {squad.SupportBlueprint.ToScar()},");
                 builder.AppendLine($"symbol = \"{(squad.SupportBlueprint as SquadBlueprint).UI.Symbol}\",");
                 builder.AppendLine($"mode = {(int)squad.DeploymentMethod},");
                 if (squad.DeploymentMethod != DeploymentMethod.None && (squad.SBP.Types.IsHeavyArtillery || (!squad.SBP.Types.IsHeavyArtillery && squad.SBP.Types.IsAntiTank))) {
@@ -143,8 +168,8 @@ namespace Battlegrounds.Compiler {
                 builder.AppendLine($"veterancy_rank = {crew.VeterancyRank},");
                 builder.AppendLine($"veterancy_progress = {crew.VeterancyProgress:0.0},");
 
-                CompileList(builder, "upgrades", crew.Upgrades, x => { UpgradeBlueprint y = x as UpgradeBlueprint; return y.ToScar(); });
-                CompileList(builder, "slot_items", crew.SlotItems, x => { SlotItemBlueprint y = x as SlotItemBlueprint; return y.ToScar(); });
+                //CompileList(builder, "upgrades", crew.Upgrades, x => { UpgradeBlueprint y = x as UpgradeBlueprint; return y.ToScar(); });
+                //CompileList(builder, "slot_items", crew.SlotItems, x => { SlotItemBlueprint y = x as SlotItemBlueprint; return y.ToScar(); });
                 CompileList(builder, "modifiers", (Array.Empty<string>()).ToImmutableHashSet(), x => x);
 
                 builder.DecreaseIndent();
@@ -166,9 +191,9 @@ namespace Battlegrounds.Compiler {
             builder.DecreaseIndent();
             builder.AppendLine("},");
 
-            CompileList(builder, "upgrades", squad.Upgrades, x => { UpgradeBlueprint y = x as UpgradeBlueprint; return $"{{ bp={y.ToScar()}, symbol=\"{y.UI.Icon}\" }}"; });
-            CompileList(builder, "slot_items", squad.SlotItems, x => { SlotItemBlueprint y = x as SlotItemBlueprint; return $"{y.ToScar()}"; });
-            CompileList(builder, "modifiers", squad.Modifiers, x => x.ToScar());
+            //CompileList(builder, "upgrades", squad.Upgrades, x => { UpgradeBlueprint y = x as UpgradeBlueprint; return $"{{ bp={y.ToScar()}, symbol=\"{y.UI.Icon}\" }}"; });
+            //CompileList(builder, "slot_items", squad.SlotItems, x => { SlotItemBlueprint y = x as SlotItemBlueprint; return $"{y.ToScar()}"; });
+            //CompileList(builder, "modifiers", squad.Modifiers, x => x.ToScar());
 
             builder.AppendLine($"spawned = false,");
 
@@ -194,8 +219,8 @@ namespace Battlegrounds.Compiler {
         protected virtual int CompareUnit(Squad lhs, Squad rhs) {
             string catlhs = lhs.GetCategory(true);
             string catrhs = rhs.GetCategory(true);
-            int cilhs = (catlhs.CompareTo("infantry") == 0 ? 0 : (catlhs.CompareTo("team_weapon") == 0 ? 1 : 2));
-            int cirhs = (catrhs.CompareTo("infantry") == 0 ? 0 : (catrhs.CompareTo("team_weapon") == 0 ? 1 : 2));
+            int cilhs = catlhs.CompareTo("infantry") == 0 ? 0 : (catlhs.CompareTo("team_weapon") == 0 ? 1 : 2);
+            int cirhs = catrhs.CompareTo("infantry") == 0 ? 0 : (catrhs.CompareTo("team_weapon") == 0 ? 1 : 2);
             if (cirhs == cilhs) {
                 int order = lhs.Blueprint.Name.CompareTo(rhs.Blueprint.Name);
                 if (order == 0) {

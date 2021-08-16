@@ -502,7 +502,8 @@ function Battlegrounds_LogEvent(msgtype, type, value, player)
     end
     local pstr = BG_GetPlayerData(player);
     if pstr ~= nil then
-        pstr = pstr.steamID;
+        --pstr = tostring(pstr.uid);
+        pstr = pstr.steamID; --TEMP: Removed for new uid system
     elseif pstr == nil and AI_IsAIPlayer(player) then
         local index = BGAI_GetAIPlayerID(player);
         pstr = "ai".._bg_aiData[index].steamID .. "_" .._bg_aiData[index].ttype;

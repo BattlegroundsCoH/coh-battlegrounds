@@ -171,7 +171,7 @@ function BG_DeploySquad(player, unit_id)
         end
 
         -- Broadcast that a unit was spawned
-        Battlegrounds_LogEvent(nil, BG_EVENT_ONDEPLOY, unit_data.company_id);
+        Battlegrounds_LogEvent(nil, BG_EVENT_ONDEPLOY, unit_data.company_id, player);
 
         -- Add events
         Rule_AddSquadEvent(BG_OnSquadDeath, squad, GE_SquadKilled);
@@ -386,7 +386,7 @@ function BG_RegisterSquadDeath(playerData, companyID)
     end
 
     -- Broadcast that the unit was killed
-    Battlegrounds_LogEvent(nil, BG_EVENT_ONDEATH, companyID);
+    Battlegrounds_LogEvent(nil, BG_EVENT_ONDEATH, companyID, playerData.player);
 
     -- Add to player's loss list
     local lData = {
@@ -462,7 +462,7 @@ function BG_RecallCompanySquad(unit_data, squadID, companyID, playerData, reset)
         unit_data.veterancy_rank = unit_data.veterancy_rank + vet_rank_diff;
         unit_data.veterancy_progress = vet_rank_progress;
     end
-    Battlegrounds_LogEvent(nil, BG_EVENT_ONRETREAT, companyID .. "," .. vet_rank_diff .. "," .. vet_rank_progress);
+    Battlegrounds_LogEvent(nil, BG_EVENT_ONRETREAT, companyID .. "," .. vet_rank_diff .. "," .. vet_rank_progress, playerData.player);
     unit_data.spawned = false;
     unit_data.transport = nil; -- We no longer allow this unit to be brought in with transport (Infinite transports would be possible here).
     unit_data.isRecallDelayed = true;
@@ -518,16 +518,11 @@ end
 
 function BG_SaveCapturedItem(player, blueprint, type, bptype)
 
-    -- Only broadcast from local player
-    if player == Game_GetLocalPlayer() then
-
         -- Generate message
         local capture_message = "T["..blueprint..","..type..","..bptype.."]";
 
         -- Broadcast event
-        Battlegrounds_LogEvent(nil, BG_EVENT_ONCAPTURE, capture_message);
-
-    end
+        Battlegrounds_LogEvent(nil, BG_EVENT_ONCAPTURE, capture_message, player);
 
 end
 
@@ -594,7 +589,7 @@ function BG_SaveSlotItems(unit_data, squad)
     local items = BG_CollectSquadSlotItems(squad);
     local new_items = bg_set:diff(items, bg_set:select(unit_data.slot_items, function(e) return e.bp; end));
     for i = 1, #new_items do
-        Battlegrounds_LogEvent(nil, BG_EVENT_ONITEM, unit_data.company_id..","..new_items[i]);
+        Battlegrounds_LogEvent(nil, BG_EVENT_ONITEM, unit_data.company_id..","..new_items[i], Squad_GetPlayerOwner(squad));
     end
     local last_pickup = nil;
     local slot_items = {};

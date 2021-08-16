@@ -14,7 +14,7 @@ namespace Battlegrounds.Game.DataSource {
     /// </summary>
     public class UcsFile {
 
-        private Dictionary<uint, string> m_content;
+        private readonly Dictionary<uint, string> m_content;
 
         /// <summary>
         /// Get the max key index.
@@ -33,6 +33,27 @@ namespace Battlegrounds.Game.DataSource {
 
         private UcsFile() {
             this.m_content = new Dictionary<uint, string>();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="content"></param>
+        public UcsFile(string content) {
+            this.m_content = new() {
+                [0] = content
+            };
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="key"></param>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public UcsFile CreateKey(uint key, string value) {
+            this.m_content[key] = value;
+            return this;
         }
 
         /// <summary>

@@ -123,12 +123,6 @@ namespace Battlegrounds.Game.Match {
             // Make sure we have a starter
             if (this.m_finalizer is null) {
                 throw new ArgumentNullException(nameof(this.m_finalizer), "Finalizer object cannot be null.");
-            } else {
-                /*
-                this.m_finalizer.FinalizeCancelled += (cause, reason) => {
-                    this.Error?.Invoke(); // TODO: Proper error handling
-                };
-                 */
             }
 
             // Start game and wait for analyzing to finish.

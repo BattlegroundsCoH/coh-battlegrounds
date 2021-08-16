@@ -17,40 +17,40 @@
     "Gamemodes": [
         {
             "ID": "bg_attrition",
-            "Display": "Attrition",
-            "DisplayDesc": "",
+            "Display": "30",
+            "DisplayDesc": "31",
             "DefaultOption": 0,
             "Files": []
         },
         {
             "ID": "bg_vp",
-            "Display": "Victory Points",
-            "DisplayDesc": "",
+            "Display": "32",
+            "DisplayDesc": "33",
             "DefaultOption": 1,
             "Files": [],
             "Options":[
                 {
-                    "LocStr":"0",
+                    "LocStr":"26",
                     "Value":250
                 },
                 {
-                    "LocStr":"0",
+                    "LocStr":"27",
                     "Value":500
                 },
                 {
-                    "LocStr":"0",
+                    "LocStr":"28",
                     "Value":750
                 },
                 {
-                    "LocStr":"0",
+                    "LocStr":"29",
                     "Value":1000
                 }
             ]
         },
         {
             "ID": "bg_domination",
-            "Display": "Domination",
-            "DisplayDesc": "",
+            "Display": "34",
+            "DisplayDesc": "35",
             "DefaultOption": 2,
             "Files": [],
             "Options": [
@@ -249,6 +249,16 @@
             ],
             "CanHaveParadropInCompanies": false,
             "CanHaveGliderInCompanies": false
+        },
+        {
+            "Faction": "german",
+            "CanHaveGliderInCompanies": false,
+            "CanHaveParadropInCompanies": false,
+            "Abilities": [],
+            "UnitAbilities": [],
+            "Drivers": [],
+            "TowTransports": [],
+            "Transports": []
         }
     ],
     "ParadropUnits": [],

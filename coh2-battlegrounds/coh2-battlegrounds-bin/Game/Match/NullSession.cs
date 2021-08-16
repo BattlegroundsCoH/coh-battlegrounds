@@ -25,6 +25,8 @@ namespace Battlegrounds.Game.Match {
 
         public ITuningMod TuningMod => ModManager.GetMod<ITuningMod>(ModManager.GetPackage("mod_bg").TuningGUID);
 
+        public string GamemodeOption => "0";
+
         public NullSession() { this.AllowPersistency = false; }
 
         public NullSession(bool allowPersistency) { this.AllowPersistency = allowPersistency; }

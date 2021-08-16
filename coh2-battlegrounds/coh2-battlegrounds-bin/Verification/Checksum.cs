@@ -1,5 +1,8 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -12,6 +15,8 @@ namespace Battlegrounds.Verification {
     /// Class that can calculate the numeric checksum value of an object implementing <see cref="IChecksumItem"/>.
     /// </summary>
     public class Checksum {
+
+        public static bool DebugChecksum { get; set; } = false;
 
         /// <summary>
         /// Readonly struct representing a property in a <see cref="IChecksumItem"/>.
@@ -40,7 +45,7 @@ namespace Battlegrounds.Verification {
 
         }
 
-        private List<object> m_sumItems;
+        private readonly List<object> m_sumItems;
 
         /// <summary>
         /// Initialise a new and empty <see cref="Checksum"/> class.
@@ -51,8 +56,7 @@ namespace Battlegrounds.Verification {
         /// Initialise a new <see cref="Checksum"/> class based on the <see cref="IChecksumItem"/> <paramref name="item"/> instance.
         /// </summary>
         /// <param name="item">The <see cref="IChecksumItem"/> to represent.</param>
-        public Checksum(IChecksumItem item) {
-            this.m_sumItems = new();
+        public Checksum(IChecksumItem item) : this() {
             GetChecksumProperties(item).ForEach(x => this.AddValue(x));
         }
 
@@ -62,7 +66,8 @@ namespace Battlegrounds.Verification {
         /// <param name="property">The property to consider when calculating the checksum.</param>
         public void AddValue(Property property) {
             if (property.ChecksumAttribute.IsCollection) {
-                var enumerator = (property.Value as IEnumerable).GetEnumerator();
+                var collection = property.Value as ICollection;
+                var enumerator = collection.GetEnumerator();
                 int count = 0;
                 while (enumerator.MoveNext()) {
                     if (enumerator.Current is IChecksumPropertyItem item) {
@@ -72,7 +77,8 @@ namespace Battlegrounds.Verification {
                     }
                     count++;
                 }
-                this.m_sumItems.Add(count);
+            } else if (property.Value is IChecksumPropertyItem prop) {
+                GetChecksumProperties(prop).ForEach(this.AddValue);
             } else {
                 this.m_sumItems.Add(property.Value);
             }
@@ -83,11 +89,24 @@ namespace Battlegrounds.Verification {
         /// </summary>
         /// <returns>The numeric checksum value represented by the added values.</returns>
         public ulong GetCheckksum() {
-            ulong sum = (ulong)this.m_sumItems.Count;
+            StringBuilder str = new();
+            ulong offset = 0;
             for (int i = 0; i < this.m_sumItems.Count; i++) {
-                sum += Encoding.UTF8.GetBytes(this.m_sumItems[i]?.ToString() ?? "NULL").Aggregate(0ul, (a, b) => a + b);
+                if (this.m_sumItems[i] is IChecksumItem item) {
+                    item.CalculateChecksum();
+                    offset += item.Checksum;
+                } else {
+                    str.Append(this.m_sumItems[i] switch {
+                        float f => f.ToString(CultureInfo.InvariantCulture),
+                        double d => d.ToString(CultureInfo.InvariantCulture),
+                        TimeSpan t => t.Ticks,
+                        null => string.Empty,
+                        _ => this.m_sumItems[i].ToString(),
+                    });
+                }
             }
-            return sum;
+            Trace.WriteLineIf(DebugChecksum, str.ToString(), "Checksum-Debug");
+            return Encoding.UTF8.GetBytes(str.ToString()).Aggregate(offset, (a,b) => a + b);
         }
 
         /// <summary>

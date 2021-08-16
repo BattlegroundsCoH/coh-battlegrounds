@@ -144,10 +144,10 @@ namespace Battlegrounds.Lua.Parsing {
                 expressions.Add(tokens[i].Type switch {
                     LuaTokenType.Bool => new LuaConstValueExpr(new LuaBool(bool.Parse(tokens[i].Val)), tokens[i].Pos),
                     LuaTokenType.Identifier => new LuaIdentifierExpr(tokens[i].Val, tokens[i].Pos),
-                    LuaTokenType.Integer => new LuaConstValueExpr(new LuaNumber(int.Parse(tokens[i].Val)), tokens[i].Pos),
+                    LuaTokenType.Integer => new LuaConstValueExpr(new LuaNumber(int.Parse(tokens[i].Val, LuaNumber.NumberCulture)), tokens[i].Pos),
                     LuaTokenType.Nil => new LuaConstValueExpr(LuaNil.Nil, tokens[i].Pos),
                     LuaTokenType.String => new LuaConstValueExpr(new LuaString(SanitizeString(tokens[i].Val)), tokens[i].Pos),
-                    LuaTokenType.Number => new LuaConstValueExpr(new LuaNumber(double.Parse(tokens[i].Val)), tokens[i].Pos),
+                    LuaTokenType.Number => new LuaConstValueExpr(new LuaNumber(double.Parse(tokens[i].Val, LuaNumber.NumberCulture)), tokens[i].Pos),
                     LuaTokenType.Comma or LuaTokenType.Equals or LuaTokenType.IndexClose or
                     LuaTokenType.IndexOpen or LuaTokenType.Semicolon or LuaTokenType.TableClose or
                     LuaTokenType.TableOpen or LuaTokenType.Look or LuaTokenType.LookSelf or

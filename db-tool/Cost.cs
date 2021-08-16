@@ -31,10 +31,10 @@ namespace CoH2XML2JSON {
 
         public Cost(XmlElement xmlElement) {
             if (xmlElement is not null) {
-                this.Manpower = float.Parse(xmlElement.FindSubnode("float", "manpower").GetAttribute("value"));
-                this.Munition = float.Parse(xmlElement.FindSubnode("float", "munition").GetAttribute("value"));
-                this.Fuel = float.Parse(xmlElement.FindSubnode("float", "fuel").GetAttribute("value"));
-                this.FieldTime = float.Parse(xmlElement.FindSubnode("float", "time_seconds")?.GetAttribute("value") ?? "0");
+                this.Manpower = Program.GetFloat(xmlElement.FindSubnode("float", "manpower").GetAttribute("value"));
+                this.Munition = Program.GetFloat(xmlElement.FindSubnode("float", "munition").GetAttribute("value"));
+                this.Fuel = Program.GetFloat(xmlElement.FindSubnode("float", "fuel").GetAttribute("value"));
+                this.FieldTime = Program.GetFloat(xmlElement.FindSubnode("float", "time_seconds")?.GetAttribute("value") ?? "0");
             }
         }
 

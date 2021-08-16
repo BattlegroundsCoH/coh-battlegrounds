@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 
 using Battlegrounds.Game.DataCompany;
 using Battlegrounds.Game.Gameplay;
@@ -51,13 +52,13 @@ namespace Battlegrounds.Game.Match.Finalizer {
                 var company = session.GetPlayerCompany(player.SteamID);
                 if (company is not null) {
                     if (analyzedMatch.IsWinner(player)) {
-                        company.UpdateStatistics(x => { x.TotalMatchWinCount++; return x; });
+                        company.UpdateStatistics(x => { x.TotalMatchWinCount++; x.TotalMatchCount++; return x; });
                     } else {
-                        company.UpdateStatistics(x => { x.TotalMatchLossCount++; return x; });
+                        company.UpdateStatistics(x => { x.TotalMatchLossCount++; x.TotalMatchCount++; return x; });
                     }
                     this.m_companies.Add(player, company);
                 } else {
-                    Trace.WriteLine($"Failed to find a company for {player.SteamID} ({player.Name})", "SingleplayerFinalizer");
+                    Trace.WriteLine($"Failed to find a company for {player.SteamID} ({player.Name})", nameof(SingleplayerFinalizer));
                     // TODO: Handle
                 }
             }
@@ -92,6 +93,7 @@ namespace Battlegrounds.Game.Match.Finalizer {
                     // Update veterancy
                     if (status.VetChange >= 0) {
                         squad.IncreaseVeterancy(status.VetChange, status.VetExperience);
+                        Trace.WriteLine($"Unit ID '{status.UnitID}' from '{company.Name}' gained '{status.VetExperience}'.", nameof(SingleplayerFinalizer));
                     }
 
                     // Update combat time
@@ -134,7 +136,7 @@ namespace Battlegrounds.Game.Match.Finalizer {
 
             // Make sure we log this unfortunate event
             if (this.CompanyHandler is null) {
-                Trace.WriteLine("{Warning} -- The company handler is NULL and changes will therefore not be handled further!", "SingleplayerFinalizer");
+                Trace.WriteLine("{Warning} -- The company handler is NULL and changes will therefore not be handled further!", nameof(SingleplayerFinalizer));
                 return;
             }
 
@@ -145,6 +147,15 @@ namespace Battlegrounds.Game.Match.Finalizer {
                 }
             }
 
+        }
+
+        protected virtual Company GetLocalPlayerCompany() {
+            try {
+                ulong selfID = BattlegroundsInstance.Steam.User.ID;
+                return this.m_companies.FirstOrDefault(x => x.Key.SteamID == selfID).Value;
+            } catch {
+                return null;
+            }
         }
 
     }

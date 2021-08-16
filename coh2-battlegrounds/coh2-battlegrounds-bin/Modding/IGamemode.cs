@@ -1,4 +1,6 @@
-﻿namespace Battlegrounds.Modding {
+﻿using Battlegrounds.Game.DataSource;
+
+namespace Battlegrounds.Modding {
 
     /// <summary>
     /// Interface representing an option selectable in an <see cref="IGamemode"/>.
@@ -8,7 +10,7 @@
         /// <summary>
         /// The display title of the option.
         /// </summary>
-        string Title { get; }
+        UcsString Title { get; }
 
         /// <summary>
         /// The backing value of the option.
@@ -45,12 +47,12 @@
         /// <summary>
         /// Get the name that is displayed when selecting the gamemode.
         /// </summary>
-        string DisplayName { get; }
+        UcsString DisplayName { get; }
 
         /// <summary>
         /// Get the short display description of the gamemode.
         /// </summary>
-        string DisplayShortDescription { get; }
+        UcsString DisplayShortDescription { get; }
 
     }
 

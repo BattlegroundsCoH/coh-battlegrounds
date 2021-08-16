@@ -1,29 +1,30 @@
 <instance description="Safe-zone wherein enemy units cannot enter" template="aura">
 	<group name="aura_bag">
 		<list name="actions">
-			<template_reference name="action" value="action\blip_action">
-				<enum name="blip_type" value="reveal" />
-				<float name="duration" value="0" />
-				<uniqueid name="id" value="1073744562" />
-			</template_reference>
-			<template_reference name="action" value="action\retreat_action">
-				<instance_reference name="entity_type_to_retreat_to" value="" />
-				<enum name="retreat_type" value="forced_retreat" />
-				<uniqueid name="id" value="1073744563" />
-				<float name="refund_percent_after_retreat" value="0" />
-			</template_reference>
-			<template_reference name="action" value="action\delay">
-				<float name="delay" value="5" />
-				<float name="delay_min" value="3" />
-				<bool name="progress_bar" value="True" />
-				<bool name="randomize" value="True" />
-				<list name="delayed_actions">
-					<template_reference name="action" value="action\squad_cancel_retreat_action">
-						<uniqueid name="id" value="1073744565" />
+			<template_reference name="action" value="action\heal_action">
+				<float name="amount" value="0.5" />
+				<group name="target_info">
+					<template_reference name="target_info" value="type_ability_target_type\has_any_in_list">
+						<list name="target_infos">
+							<template_reference name="info" value="type_ability_target_type\has_unit_type">
+								<enum name="unit_type" value="aef_infantry" />
+							</template_reference>
+							<template_reference name="info" value="type_ability_target_type\has_unit_type">
+								<enum name="unit_type" value="brit_infantry" />
+							</template_reference>
+							<template_reference name="info" value="type_ability_target_type\has_unit_type">
+								<enum name="unit_type" value="soviet_infantry" />
+							</template_reference>
+							<template_reference name="info" value="type_ability_target_type\has_unit_type">
+								<enum name="unit_type" value="german_infantry" />
+							</template_reference>
+							<template_reference name="info" value="type_ability_target_type\has_unit_type">
+								<enum name="unit_type" value="west_german_infantry" />
+							</template_reference>
+						</list>
 					</template_reference>
-				</list>
-				<uniqueid name="id" value="1073744564" />
-				<bool name="can_prevent_refund" value="True" />
+				</group>
+				<uniqueid name="id" value="1073744767" />
 			</template_reference>
 		</list>
 		<bool name="affects_squads" value="True" />

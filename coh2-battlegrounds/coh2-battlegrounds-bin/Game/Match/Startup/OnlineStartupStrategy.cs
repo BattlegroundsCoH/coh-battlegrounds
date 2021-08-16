@@ -33,7 +33,7 @@ namespace Battlegrounds.Game.Match.Startup {
         private SessionInfo m_sessionInfo;
         private Session m_session;
 
-        private ManualResetEventSlim m_beginWaitHandle;
+        private readonly ManualResetEventSlim m_beginWaitHandle;
 
         public OnlineStartupStrategy() {
             this.m_session = null;
@@ -50,13 +50,14 @@ namespace Battlegrounds.Game.Match.Startup {
             bool shouldStop = false;
 
             // Get timer
-            lobby.MatchStartTimer = lobby.MatchContext.GetStartTimer(5, 1.5);
+            lobby.MatchStartTimer = lobby.MatchContext.GetStartTimer(5, 1.0);
             lobby.MatchStartTimer.OnPulse += x => this.StartMatchWait?.Invoke((int)x.TotalSeconds);
             lobby.MatchStartTimer.OnTimedDown += () => this.m_beginWaitHandle.Set();
             lobby.MatchStartTimer.OnCancel += x => {
                 shouldStop = true;
                 this.m_beginWaitHandle.Set();
             };
+            lobby.MatchStartTimer.Start(); // Dont forget to start the timer...
 
             // Wait
             this.m_beginWaitHandle.Wait();

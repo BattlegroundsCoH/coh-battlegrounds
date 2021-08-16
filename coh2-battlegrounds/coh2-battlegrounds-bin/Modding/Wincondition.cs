@@ -1,5 +1,7 @@
 ﻿using System;
 
+using Battlegrounds.Game.DataSource;
+
 namespace Battlegrounds.Modding {
 
     /// <summary>
@@ -10,7 +12,7 @@ namespace Battlegrounds.Modding {
         /// <summary>
         /// The display title of the option.
         /// </summary>
-        public string Title { get; }
+        public UcsString Title { get; }
 
         /// <summary>
         /// The backing value of the option.
@@ -23,11 +25,21 @@ namespace Battlegrounds.Modding {
         /// <param name="title">The name to display when picking the option.</param>
         /// <param name="val">The integer backing value that is used to represent the option in code.</param>
         public WinconditionOption(string title, int val) {
+            this.Title = UcsString.CreateLocString(title);
+            this.Value = val;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="title"></param>
+        /// <param name="val"></param>
+        public WinconditionOption(UcsString title, int val) {
             this.Title = title;
             this.Value = val;
         }
 
-        public void Deconstruct(out string title, out int value) {
+        public void Deconstruct(out UcsString title, out int value) {
             title = this.Title;
             value = this.Value;
         }
@@ -64,12 +76,12 @@ namespace Battlegrounds.Modding {
         /// <summary>
         /// 
         /// </summary>
-        public string DisplayName { get; init; }
+        public UcsString DisplayName { get; init; }
 
         /// <summary>
         /// 
         /// </summary>
-        public string DisplayShortDescription { get; init; }
+        public UcsString DisplayShortDescription { get; init; }
 
         /// <summary>
         /// 
@@ -87,7 +99,7 @@ namespace Battlegrounds.Modding {
             this.Name = name;
             this.Guid = guid;
             this.DefaultOptionIndex = 0;
-            this.DisplayName = name;
+            this.DisplayName = UcsString.CreateLocString(name);
         }
 
         public override string ToString() => this.DisplayName;

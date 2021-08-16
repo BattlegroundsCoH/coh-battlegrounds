@@ -57,9 +57,9 @@ namespace Battlegrounds.Game.Match {
         }
 
         /// <summary>
-        /// 
+        /// Check the latest log if any fatal scar error occured.
         /// </summary>
-        /// <returns></returns>
+        /// <returns><see langword="true"/> if a fatal scar error was detected; Otherwise <see langword="false"/>.</returns>
         public static bool GotFatalScarError() {
 
             string logPath = $"{Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)}\\my games\\company of heroes 2\\warnings.log";
@@ -75,9 +75,9 @@ namespace Battlegrounds.Game.Match {
         }
 
         /// <summary>
-        /// 
+        /// Check if a bugsplat occured.
         /// </summary>
-        /// <returns></returns>
+        /// <returns><see langword="true"/> if a bug splat was detected; Otherwise <see langword="false"/>.</returns>
         public static async Task<bool> GotBugsplat() {
 
             int count = 0;

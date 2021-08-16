@@ -72,11 +72,27 @@ namespace BattlegroundsApp.LocalData {
         /// </remarks>
         /// <param name="company">The <see cref="Company"/> instance to save.</param>
         public static void SaveCompany(Company company) {
-            string filename = BattlegroundsInstance.GetRelativePath(BattlegroundsPaths.COMPANY_FOLDER, $"{company.Name.Replace(" ", "_")}.json");
-            if (File.Exists(filename)) {
-                File.Delete(filename);
+            try {
+                string filename = BattlegroundsInstance.GetRelativePath(BattlegroundsPaths.COMPANY_FOLDER, $"{company.Name.Replace(" ", "_")}.json");
+                if (File.Exists(filename)) {
+                    Trace.WriteLine($"Deleting existing player company '{company.Name}'", nameof(PlayerCompanies));
+                    File.Delete(filename);
+                }
+                string data = CompanySerializer.GetCompanyAsJson(company);
+                File.WriteAllText(filename, data);
+                Trace.WriteLine($"Saved player company '{company.Name}' ({data.Length} characters).", nameof(PlayerCompanies));
+            } catch (IOException ioex) {
+                Trace.WriteLine($"Failed to save player company '{company.Name}'. ", nameof(PlayerCompanies));
+                Trace.WriteLine(ioex, nameof(PlayerCompanies));
+            } finally {
+                Company oldCompany = __companies.FirstOrDefault(x => x.Name == company.Name && x.Army == company.Army);
+                if (oldCompany is not null && oldCompany != company) { // If new reference
+                    __companies[__companies.IndexOf(oldCompany)] = company;
+                    Trace.WriteLine($"Updated player company '{company.Name}' object", nameof(PlayerCompanies));
+                } else if (oldCompany is null) {
+                    __companies.Add(company);
+                }
             }
-            File.WriteAllText(filename, CompanySerializer.GetCompanyAsJson(company));
         }
 
         public static void DeleteCompany(Company company) {
@@ -86,7 +102,7 @@ namespace BattlegroundsApp.LocalData {
             }
         }
 
-        public static List<Company> GetAllCompanyes() => __companies;
+        public static List<Company> GetAllCompanies() => __companies;
 
     }
 

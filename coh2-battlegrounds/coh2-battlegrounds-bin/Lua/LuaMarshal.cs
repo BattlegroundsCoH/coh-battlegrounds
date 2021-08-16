@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using System.Collections.Generic;
+
 using Battlegrounds.Lua.Debugging;
 using Battlegrounds.Lua.Runtime;
 
@@ -17,7 +18,7 @@ namespace Battlegrounds.Lua {
         /// <returns>The closest managed representation possible; Otherwise, if no proper representation can be found, <see langword="null"/> is returned.</returns>
         public static object FromLuaValue(LuaValue value) => value switch {
             LuaString s => s.Str(),
-            LuaNumber n => n.IsInteger() ? (int)n : (double)n,
+            LuaNumber n => n.IsInteger() ? n : (double)n,
             LuaBool b => b.IsTrue,
             LuaTable t => t,
             LuaUserObject u => u.Object,
@@ -33,8 +34,16 @@ namespace Battlegrounds.Lua {
         public static LuaValue ToLuaValue(object value) => value switch {
             double d => new LuaNumber(d),
             float f => new LuaNumber(f),
-            int i => new LuaNumber(i),
+            int i32 => new LuaNumber(i32),
+            short i16 => new LuaNumber(i16),
+            long i64 => new LuaNumber(i64),
+            sbyte i8 => new LuaNumber(i8),
+            byte ui8 => new LuaNumber(ui8),
+            ushort ui16 => new LuaNumber(ui16),
+            uint ui32 => new LuaNumber(ui32),
+            ulong ui64 => new LuaNumber(ui64),
             string s => new LuaString(s),
+            char c => new LuaNumber(c),
             bool b => new LuaBool(b),
             null => LuaNil.Nil,
             _ => new LuaUserObject(value)
@@ -48,7 +57,7 @@ namespace Battlegrounds.Lua {
         /// <param name="method">The actual method to invoke.</param>
         /// <returns>Always 1, as either the method return value is marshalled or returned; Otherwise <see cref="LuaNil"/> is returned.</returns>
         public static int InvokeAsLua(LuaState state, LuaStack stack, LuaUserObjectType.Method method) {
-            List<object> parameters = new List<object>();
+            List<object> parameters = new();
             int expectedCount = method.Info.GetParameters().Length + (method.Info.IsStatic ? 0 : 1);
             while (parameters.Count < expectedCount) {
                 parameters.Add(FromLuaValue(stack.PopOrNil()));
@@ -77,7 +86,7 @@ namespace Battlegrounds.Lua {
         /// <exception cref="LuaException"/>
         /// <exception cref="LuaRuntimeError"/>
         public static object[] InvokeClosureManaged(LuaClosure closure, LuaState state, params object[] args) {
-            LuaStack stack = new LuaStack();
+            LuaStack stack = new();
             for (int i = 0; i < args.Length; i++) {
                 var luaValue = ToLuaValue(args[i]);
                 if (luaValue is LuaUserObject obj) {

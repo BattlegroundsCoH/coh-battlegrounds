@@ -10,7 +10,7 @@ using Battlegrounds.Modding;
 namespace Battlegrounds.Compiler {
 
     /// <summary>
-    /// Helper class for compiling a win condition in a JIT-style.
+    /// Static helper class for compiling a win condition in a JIT-style.
     /// </summary>
     public static class WinconditionCompiler {
 
@@ -24,7 +24,7 @@ namespace Battlegrounds.Compiler {
 
             // Verify is win condition source is valid
             if (source is null) {
-                Trace.WriteLine("Failed to find a valid source", "Wincondition-Compiler");
+                Trace.WriteLine("Failed to find a valid source", nameof(WinconditionCompiler));
                 return false;
             }
 
@@ -168,7 +168,7 @@ namespace Battlegrounds.Compiler {
             string relpath = rpath + sourceFile.path;
             string abspath = Path.GetFullPath(workdir + relpath.Replace("/", "\\"));
 
-            Trace.WriteLine($"Adding file [ABS] <{abspath}>", "Wincondition-Compiler");
+            Trace.WriteLine($"Adding file [ABS] <{abspath}>", nameof(WinconditionCompiler));
 
             builder.AppendLine($"\t{abspath}");
 
@@ -219,7 +219,7 @@ namespace Battlegrounds.Compiler {
                     File.WriteAllBytes(gfxpath, uiFiles[i].contents);
                     builder.AppendLine($"\t{gfxpath}");
                 } else {
-                    Trace.Write($"Skipping graphics file \"{uiFiles[i].path}\"");
+                    Trace.Write($"Skipping graphics file \"{uiFiles[i].path}\"", nameof(WinconditionCompiler));
                 }
             }
 

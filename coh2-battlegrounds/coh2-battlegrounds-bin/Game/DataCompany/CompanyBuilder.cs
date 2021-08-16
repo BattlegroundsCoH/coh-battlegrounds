@@ -50,6 +50,7 @@ namespace Battlegrounds.Game.DataCompany {
         public virtual CompanyBuilder NewCompany(Faction faction) {
             this.m_companyTarget = new Company(faction); // This is intentional
             this.m_companyName = "New Company";
+            this.m_companyAppVersion = this.m_companyTarget.AppVersion;
             return this;
         }
 
@@ -63,6 +64,7 @@ namespace Battlegrounds.Game.DataCompany {
             this.m_companyType = companyTarget.Type;
             this.m_companyName = companyTarget.Name;
             this.m_companyGUID = companyTarget.TuningGUID;
+            this.m_companyAppVersion = companyTarget.AppVersion;
             return this;
         }
 
@@ -101,7 +103,7 @@ namespace Battlegrounds.Game.DataCompany {
         /// 
         /// </summary>
         /// <returns></returns>
-        public virtual string CalculateChecksum() => this.m_companyTarget.Checksum;
+        public virtual ulong CalculateChecksum() => this.m_companyTarget.Checksum;
 
         /// <summary>
         /// Add a unit to the <see cref="Company"/> using a <see cref="UnitBuilder"/>.
@@ -146,12 +148,18 @@ namespace Battlegrounds.Game.DataCompany {
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="ability"></param>
+        public virtual void AddAndCommitAbility(Ability ability) => this.m_companyTarget.AddAbility(ability);
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <param name="abp"></param>
         /// <returns></returns>
-        public virtual SpecialAbility AddAndCommitAbility(AbilityBlueprint abp, SpecialAbilityCategory specialAbility, int maxUse) {
+        public virtual Ability AddAndCommitAbility(AbilityBlueprint abp, AbilityCategory specialAbility, int maxUse) {
 
             // Create ability
-            SpecialAbility sabp = new(abp, SpecialAbilityCategory.Default, 0);
+            Ability sabp = new(abp, AbilityCategory.Default, 0);
 
             // Add ability
             this.m_companyTarget.AddAbility(sabp);
@@ -166,7 +174,7 @@ namespace Battlegrounds.Game.DataCompany {
         /// </summary>
         /// <param name="ability"></param>
         /// <returns></returns>
-        public virtual CompanyBuilder RemoveAbility(SpecialAbility ability) {
+        public virtual CompanyBuilder RemoveAbility(Ability ability) {
             _ = this.m_companyTarget.RemoveAbility(ability);
             return this;
         }
@@ -191,7 +199,7 @@ namespace Battlegrounds.Game.DataCompany {
         /// <returns></returns>
         public virtual UnitBuilder GetUnit(uint squadId) {
             if (this.m_companyTarget.Units.FirstOrDefault(x => x.SquadID == squadId) is Squad s) {
-                return new UnitBuilder(s, this);
+                return new UnitBuilder(s, true);
             } else {
                 throw new IndexOutOfRangeException();
             }
@@ -333,7 +341,7 @@ namespace Battlegrounds.Game.DataCompany {
         /// 
         /// </summary>
         /// <param name="action"></param>
-        public void EachAbility(Action<SpecialAbility, bool> action) {
+        public void EachAbility(Action<Ability, bool> action) {
             _ = this.m_companyTarget.GetSpecialUnitAbilities().ForEach(x => action(x, true));
             _ = this.m_companyTarget.Abilities.ForEach(x => action(x, false));
         }

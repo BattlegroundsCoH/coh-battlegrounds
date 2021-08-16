@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
@@ -14,7 +15,7 @@ namespace Battlegrounds.Game.DataCompany {
     /// <summary>
     /// Readonly class representing a template for generating a <see cref="Company"/> instance.
     /// </summary>
-    public sealed class CompanyTemplate : IChecksumItem {
+    public sealed class CompanyTemplate {
 
         private struct CompanyUnit {
             public ushort PBGID { get; init; }
@@ -116,7 +117,7 @@ namespace Battlegrounds.Game.DataCompany {
             };
 
             // Get unit enumerator and add all units (in a basic format).
-            var unitEnumerator = company.Units.GetEnumerator();
+            var unitEnumerator = company.Units.GetEnumerator() as IEnumerator<Squad>;
             for (int i = 0; i < Company.MAX_SIZE; i++) {
                 if (unitEnumerator.MoveNext()) {
                     template.m_units[i] = new CompanyUnit() {
@@ -192,10 +193,10 @@ namespace Battlegrounds.Game.DataCompany {
                     }
                 }
 
-                // Verify checksum
-                if (!template.VerifyChecksum()) {
-                    throw new ChecksumViolationException();
-                }
+                //// Verify checksum
+                //if (!template.VerifyChecksum()) {
+                //    throw new ChecksumViolationException(template.m_checksum, "0");
+                //}
 
                 // Return template
                 return template;
@@ -244,7 +245,7 @@ namespace Battlegrounds.Game.DataCompany {
 
         }
 
-        private static (char, string)[] ArmyEncodingDic = new (char, string)[] {
+        private static readonly (char, string)[] ArmyEncodingDic = new (char, string)[] {
             ('A', Faction.America.Name),
             ('U', Faction.British.Name),
             ('O', Faction.OberkommandoWest.Name),

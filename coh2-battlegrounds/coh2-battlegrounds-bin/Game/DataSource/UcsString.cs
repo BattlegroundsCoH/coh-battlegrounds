@@ -5,10 +5,14 @@ namespace Battlegrounds.Game.DataSource {
     /// <summary>
     /// Struct representing a reference to a string value in a <see cref="UcsFile"/>.
     /// </summary>
-    public struct UcsString {
+    public readonly struct UcsString {
 
-        private UcsFile m_ucs;
-        private uint m_key;
+        private static readonly UcsFile ucsFile = new UcsFile("0");
+
+        public static readonly UcsString None = new(ucsFile, 0);
+
+        private readonly UcsFile m_ucs;
+        private readonly uint m_key;
 
         /// <summary>
         /// Initialise a new <see cref="UcsString"/> instance referencing the string identified by <paramref name="key"/> in <paramref name="file"/>.
@@ -42,7 +46,11 @@ namespace Battlegrounds.Game.DataSource {
         public static implicit operator string(UcsString str)
             => str.m_ucs[str.m_key];
 
-        public override string ToString() => this;
+        /// <summary>
+        /// Returns the referenced locale string.
+        /// </summary>
+        /// <returns>The referenced string or base error message if not found.</returns>
+        public override string ToString() => this.m_ucs[this.m_key];
 
         /// <summary>
         /// Indicates whether a specified <see cref="UcsString"/> is null or the empty string or if value is "0".
@@ -59,6 +67,17 @@ namespace Battlegrounds.Game.DataSource {
         /// <returns><see langword="true"/> if <paramref name="str"/> is null or the empty string or if "0"; Otherwise <see langword="false"/>.</returns>
         public static bool IsNullOrEmpty(string str)
             => string.IsNullOrEmpty(str) || str is "0";
+
+        /// <summary>
+        /// Get a temporary localised key (this will prefix 'LOC:')
+        /// </summary>
+        /// <remarks>
+        /// Any calls to this method should be phased out ASAP.
+        /// </remarks>
+        /// <param name="loc">The localised content to display.</param>
+        /// <returns>A <see cref="UcsString"/> with string value of <paramref name="loc"/>.</returns>
+        public static UcsString CreateLocString(string loc)
+            => ucsFile.CreateKey((uint)ucsFile.KeyCount, loc).GetRef((uint)(ucsFile.KeyCount - 1));
 
     }
 

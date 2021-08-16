@@ -91,7 +91,11 @@ end
 
 function BG_SetupWincondition()
 
-    if bg_settings.gamemode == "Victory Points" then
+    -- Get local variable
+    local mode = bg_settings.gamemode;
+
+    -- Is Victory Points?
+    if mode == "Victory Points" or mode == "bg_vp" then
 
         -- Import the VP ticker code
         import("Prototype/VPTickerWin-Annihilate_Functions.scar")
@@ -139,7 +143,6 @@ function BG_PrepareMapdata()
             --Entity_SetRecrewable(entity, bg_isDebugMap); -- Set crewable if debug map OTHERWISE, set to false
         end
     end
-
 
 end
 

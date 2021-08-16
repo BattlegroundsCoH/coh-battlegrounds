@@ -63,7 +63,7 @@ namespace Battlegrounds.Modding {
         /// </summary>
         /// <param name="guid">The string instance to convert</param>
         /// <returns>A formatted <see cref="ModGuid"/> instance.</returns>
-        public static ModGuid FromGuid(string guid) => new ModGuid(guid.Replace("-", ""));
+        public static ModGuid FromGuid(string guid) => new ModGuid((guid ?? string.Empty).Replace("-", ""));
 
     }
 

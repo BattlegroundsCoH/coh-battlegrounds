@@ -15,6 +15,9 @@ namespace Battlegrounds.Game.Match.Finalizer {
 
         public override void Synchronize(object synchronizeObject) {
 
+            // Log
+            Trace.WriteLine("Synchronizing end of match results.", nameof(MultiplayerFinalizer));
+
             // Make sure we log this unfortunate event
             if (this.CompanyHandler is null) {
                 Trace.WriteLine("{Warning} -- The company handler is NULL and changes will therefore not be saved!", nameof(MultiplayerFinalizer));
@@ -24,17 +27,28 @@ namespace Battlegrounds.Game.Match.Finalizer {
             LobbyHandler handler = synchronizeObject as LobbyHandler;
 
             // Get player results
-            LobbyPlayerCompanyFile[] playerFiles = this.m_companies.Select(x => new LobbyPlayerCompanyFile(x.Key.SteamID, CompanySerializer.GetCompanyAsJson(x.Value, false))).ToArray();
+            LobbyPlayerCompanyFile[] playerFiles = this.m_companies.Where(x => x.Key.SteamID != BattlegroundsInstance.Steam.User.ID).Select(
+                x => new LobbyPlayerCompanyFile(x.Key.SteamID, CompanySerializer.GetCompanyAsJson(x.Value))).ToArray();
+
+            // Get overall match results
             ServerMatchResults matchResults = new() {
                 Gamemode = this.m_matchData.Session.Gamemode.Name,
                 Map = this.m_matchData.Session.Scenario.RelativeFilename,
-                Option = "0",
+                Option = this.m_matchData.Session.GamemodeOption,
                 Length = this.m_matchData.Length,
                 LengthTicks = this.m_matchData.Length.Ticks,
             };
 
             // Inform members the results are available
             handler.MatchContext.UploadResults(matchResults, playerFiles);
+
+            // Get self company (and invoke so host is also updated)
+            if (this.GetLocalPlayerCompany() is Company company) {
+                Trace.WriteLine($"Invoking company handler for host company '{company.Name}'", nameof(MultiplayerFinalizer));
+                this.CompanyHandler?.Invoke(company);
+            } else {
+                Trace.WriteLine("Failed to find host company and will, therefore, not update host company. (Potentially fatal).", nameof(MultiplayerFinalizer));
+            }
 
         }
 

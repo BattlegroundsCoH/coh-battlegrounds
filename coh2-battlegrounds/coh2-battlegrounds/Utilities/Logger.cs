@@ -26,7 +26,7 @@ namespace BattlegroundsApp.Utilities {
         public Logger() {
             FileStream file = Open();
             if (file is not null) {
-                if (file.Length > 1024 * 128) { // Delete if file exceeds 128 MB
+                if (file.Length > 1024 * 1024 * 8) { // Delete if file exceeds 8 MB (1024 * 1024 = 1MB)
                     file.Close();
                     File.Delete(OUT_PATH);
                     file = Open();

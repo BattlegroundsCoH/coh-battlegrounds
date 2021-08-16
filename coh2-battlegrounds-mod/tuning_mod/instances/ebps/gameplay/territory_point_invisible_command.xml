@@ -341,6 +341,19 @@
 					<uniqueid name="id" value="1073744567" />
 					<bool name="any_subaction" value="False" />
 				</template_reference>
+				<template_reference name="action" value="action\add_aura">
+					<instance_reference name="aura" value="aura\command_zone" mod="142b113740474c82a60b0a428bd553d5" />
+					<group name="area_info">
+						<float name="angle_left" value="0" />
+						<float name="angle_right" value="0" />
+						<enum name="area_type" value="sector" />
+						<float name="radius" value="0" />
+					</group>
+					<template_reference name="target_info" value="type_ability_target_type\allied">
+					</template_reference>
+					<bool name="permanent" value="True" />
+					<uniqueid name="id" value="1073744766" />
+				</template_reference>
 			</list>
 		</template_reference>
 		<template_reference name="exts" value="ebpextensions\supply_ext">

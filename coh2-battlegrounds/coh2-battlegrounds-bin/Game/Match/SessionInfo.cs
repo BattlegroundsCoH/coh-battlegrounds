@@ -53,6 +53,16 @@ namespace Battlegrounds.Game.Match {
         /// </summary>
         public AIDifficulty DefaultDifficulty { get; set; }
 
+        /// <summary>
+        /// Get or set if the day/night system should be enabled.
+        /// </summary>
+        public bool EnableDayNightCycle { get; set; }
+
+        /// <summary>
+        /// Get or set if the supply system should be enabled.
+        /// </summary>
+        public bool EnableSupply { get; set; }
+
     }
 
 }

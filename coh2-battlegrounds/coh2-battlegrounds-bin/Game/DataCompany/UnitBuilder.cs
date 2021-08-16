@@ -28,11 +28,11 @@ namespace Battlegrounds.Game.DataCompany {
         SquadBlueprint m_transportBlueprint;
         DeploymentMethod m_deploymentMethod;
         DeploymentPhase m_deploymentPhase;
-        HashSet<UpgradeBlueprint> m_upgrades;
-        HashSet<SlotItemBlueprint> m_slotitems;
-        HashSet<Modifier> m_modifiers;
         UnitBuilder m_crewBuilder;
-        CompanyBuilder m_builder;
+
+        readonly HashSet<UpgradeBlueprint> m_upgrades;
+        readonly HashSet<SlotItemBlueprint> m_slotitems;
+        readonly HashSet<Modifier> m_modifiers;
 
         /// <summary>
         /// Get the current blueprint of the unit.
@@ -54,7 +54,7 @@ namespace Battlegrounds.Game.DataCompany {
             this.m_deploymentPhase = DeploymentPhase.PhaseNone;
             this.m_combatTime = TimeSpan.Zero;
             this.m_isCrew = false;
-            this.m_customName = null;
+            this.m_customName = string.Empty;
         }
 
         /// <summary>
@@ -84,32 +84,6 @@ namespace Battlegrounds.Game.DataCompany {
                 this.m_crewBuilder = new UnitBuilder(squad.Crew, overrideIndex);
             }
 
-        }
-
-        /// <summary>
-        /// New <see cref="UnitBuilder"/> instance based on the settings of an already built <see cref="Squad"/> instance.
-        /// </summary>
-        /// <param name="squad">The <see cref="Squad"/> instance to copy the unit data from.</param>
-        /// <param name="builder"></param>
-        /// <remarks>This will not modify the <see cref="Squad"/> instance.</remarks>
-        public UnitBuilder(Squad squad, CompanyBuilder builder) {
-            this.m_hasOverrideIndex = true;
-            this.m_builder = builder;
-            this.m_overrideIndex = squad.SquadID;
-            this.m_modifiers = squad.Modifiers.ToHashSet();
-            this.m_upgrades = squad.Upgrades.Select(x => x as UpgradeBlueprint).ToHashSet();
-            this.m_slotitems = squad.SlotItems.Select(x => x as SlotItemBlueprint).ToHashSet();
-            this.m_vetexperience = squad.VeterancyProgress;
-            this.m_vetrank = squad.VeterancyRank;
-            this.m_blueprint = squad.SBP;
-            this.m_transportBlueprint = squad.SupportBlueprint as SquadBlueprint;
-            this.m_deploymentPhase = squad.DeploymentPhase;
-            this.m_deploymentMethod = squad.DeploymentMethod;
-            this.m_modGuid = ModGuid.BaseGame;
-            this.m_customName = squad.CustomName;
-            if (squad.Crew != null) {
-                this.m_crewBuilder = new UnitBuilder(squad.Crew, true);
-            }
         }
 
         /// <summary>
@@ -198,7 +172,7 @@ namespace Battlegrounds.Game.DataCompany {
         /// <param name="sbpName">The blueprint name to use when finding the <see cref="Blueprint"/>.</param>
         /// <returns>The modified instance the method is invoked with.</returns>
         public virtual UnitBuilder SetBlueprint(string sbpName) {
-            this.m_blueprint = BlueprintManager.FromBlueprintName(sbpName, BlueprintType.SBP) as SquadBlueprint;
+            this.m_blueprint = BlueprintManager.FromBlueprintName<SquadBlueprint>(sbpName);
             return this;
         }
 
@@ -442,7 +416,7 @@ namespace Battlegrounds.Game.DataCompany {
             squad.SetName(this.m_customName);
             squad.SetDeploymentMethod(this.m_transportBlueprint, this.m_deploymentMethod, this.m_deploymentPhase);
             squad.SetVeterancy(this.m_vetrank, this.m_vetexperience);
-            squad.IncreaseCombatTime(this.m_combatTime);
+            squad.SetCombatTime(this.m_combatTime);
             squad.SetIsCrew(this.m_isCrew);
 
             if (this.m_blueprint?.HasCrew ?? false && this.m_crewBuilder is null) {
@@ -459,17 +433,6 @@ namespace Battlegrounds.Game.DataCompany {
 
             return squad;
 
-        }
-
-        /// <summary>
-        /// Apply changes directly to the company.
-        /// </summary>
-        public virtual void Apply() {
-            if (this.m_builder is not null && this.m_overrideIndex != ushort.MaxValue) {
-                this.m_builder.Result.ReplaceSquad(this.m_overrideIndex, this.Build(0));
-            } else {
-                throw new InvalidOperationException("Cannot apply changes as this is a new unit.");
-            }
         }
 
         /// <summary>

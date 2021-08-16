@@ -47,7 +47,7 @@ namespace BattlegroundsApp.Views {
 
         private int m_companySize;
         private int m_companyAbilityCount;
-        private string m_initialChecksum;
+        private ulong m_initialChecksum;
         private readonly ModPackage m_activeModPackage;
 
         private List<SquadBlueprint> m_availableSquads;
@@ -136,7 +136,7 @@ namespace BattlegroundsApp.Views {
         public CompanyBuilderView(string companyName, Faction faction, CompanyType type, ModGuid modGuid) : this() {
 
             // Set properties
-            this.Builder = new CompanyBuilder().NewCompany(faction).ChangeName(companyName).ChangeType(type).ChangeTuningMod(modGuid);
+            this.Builder = new CompanyBuilder().NewCompany(faction).ChangeName(companyName).ChangeType(type).ChangeTuningMod(modGuid).Commit();
             this.Statistics = new();
             this.CompanyName = companyName;
             this.CompanySize = 0;
@@ -145,7 +145,7 @@ namespace BattlegroundsApp.Views {
             this.CompanyType = type.ToString();
 
             // Set fields
-            this.m_initialChecksum = string.Empty;
+            this.m_initialChecksum = 0;
             this.m_activeModPackage = ModManager.GetPackageFromGuid(modGuid);
 
             // Load database and display
@@ -417,7 +417,7 @@ namespace BattlegroundsApp.Views {
 
         }
 
-        private void AddAbilityToDisplay(SpecialAbility specialAbility, bool isUnitAbility) {
+        private void AddAbilityToDisplay(Ability specialAbility, bool isUnitAbility) {
 
             // Build container
             AbilitySlot slot = new(specialAbility);
