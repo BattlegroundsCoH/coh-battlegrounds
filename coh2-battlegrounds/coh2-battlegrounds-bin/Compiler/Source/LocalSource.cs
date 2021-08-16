@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -10,13 +11,13 @@ namespace Battlegrounds.Compiler.Source {
 
     public class LocalSource : IWinconditionSource {
 
-        private string m_relpath;
+        private readonly string m_relpath;
 
         private string Intermediate => $"{this.m_relpath}coh2_battlegrounds_wincondition Intermediate Cache\\Intermediate Files\\";
 
         public LocalSource(string path) {
             this.m_relpath = path;
-            if (!this.m_relpath.EndsWith("\\")) {
+            if (!this.m_relpath.EndsWith("\\", false, CultureInfo.InvariantCulture)) {
                 this.m_relpath += "\\";
             }
         }
@@ -42,14 +43,19 @@ namespace Battlegrounds.Compiler.Source {
         }
 
         public WinconditionSourceFile[] GetScarFiles() {
-            List<WinconditionSourceFile> files = new List<WinconditionSourceFile>();
+            List<WinconditionSourceFile> files = new();
             string[] scar = Directory
                 .GetFiles($"{this.m_relpath}auxiliary_scripts\\", "*.scar")
                 .Union(Directory.GetFiles($"{this.m_relpath}ui_api\\", "*.scar"))
-                .Union(new string[] { $"{this.m_relpath}coh2_battlegrounds.scar" })
+                .Union(new string[] {
+                    $"{this.m_relpath}coh2_battlegrounds.scar",
+                    $"{this.m_relpath}coh2_battlegrounds_supply.scar",
+                    $"{this.m_relpath}coh2_battlegrounds_supply_ui.scar",
+                    $"{this.m_relpath}coh2_battlegrounds_weather.scar"
+                })
                 .ToArray();
             foreach (string file in scar) {
-                if (!file.EndsWith("session.scar")) {
+                if (!file.EndsWith("session.scar", false, CultureInfo.InvariantCulture)) {
                     files.Add(new WinconditionSourceFile(file[this.m_relpath.Length..], File.ReadAllBytes(file)));
                 }
             }
@@ -57,8 +63,8 @@ namespace Battlegrounds.Compiler.Source {
         }
 
         public WinconditionSourceFile[] GetWinFiles() {
-            List<WinconditionSourceFile> files = new List<WinconditionSourceFile>();
-            Directory.GetFiles($"{this.m_relpath}", "*.win")
+            List<WinconditionSourceFile> files = new();
+            _ = Directory.GetFiles($"{this.m_relpath}", "*.win")
                 .ForEach(x => files.Add(new WinconditionSourceFile(x[this.m_relpath.Length..], File.ReadAllBytes(x))));
             return files.ToArray();
         }

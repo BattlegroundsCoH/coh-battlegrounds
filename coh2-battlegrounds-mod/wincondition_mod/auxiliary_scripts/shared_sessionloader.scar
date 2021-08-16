@@ -115,6 +115,36 @@ function BG_SetupWincondition()
 
 end
 
+function BG_SetupWeatherAndSupply()
+
+    -- If the day/night cycle is enabled, import the file
+    if bg_settings.gameoptions.day_night_cycle == true then
+        import("WinConditions/coh2_battlegrounds_weather.scar");
+    end
+
+    -- If the supply system is enabled, import the file
+    if bg_settings.gameoptions.sypply_system == true then
+        import("WinConditions/coh2_battlegrounds_supply_ui.scar");
+        import("WinConditions/coh2_battlegrounds_supply.scar");
+    end
+
+    -- Invoke the supply UI setup (if defined)
+    if BGSupply_SetupUI ~= nil then
+        BGSupply_SetupUI();
+    end
+
+    -- Invoke the supply setup (if defined)
+    if BGSupply_Setup ~= nil then
+        BGSupply_Setup();
+    end
+
+    -- Invoke the weather setup (if defined)
+    if BGWeather_Setup ~= nil then
+        BGWeather_Setup();
+    end
+
+end
+
 function BG_PrepareMapdata()
 
     -- Trigger map entry point collector

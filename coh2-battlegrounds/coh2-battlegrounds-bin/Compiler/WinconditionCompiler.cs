@@ -2,6 +2,7 @@
 using System.IO;
 using System.Text;
 using System.Diagnostics;
+using System.Globalization;
 
 using Battlegrounds.Util;
 using Battlegrounds.Compiler.Source;
@@ -29,15 +30,15 @@ namespace Battlegrounds.Compiler {
             }
 
             // Get the files
-            WinconditionSourceFile[] scarFiles = source.GetScarFiles();
-            WinconditionSourceFile[] winFiles = source.GetWinFiles();
-            WinconditionSourceFile[] localeFiles = source.GetLocaleFiles();
-            WinconditionSourceFile[] uiFiles = source.GetUIFiles(wincondition);
-            WinconditionSourceFile infoFile = source.GetInfoFile(wincondition);
-            WinconditionSourceFile modiconFile = source.GetModGraphic();
+            var scarFiles = source.GetScarFiles();
+            var winFiles = source.GetWinFiles();
+            var localeFiles = source.GetLocaleFiles();
+            var uiFiles = source.GetUIFiles(wincondition);
+            var infoFile = source.GetInfoFile(wincondition);
+            var modiconFile = source.GetModGraphic();
 
             // Fix potential missing '\'
-            if (!workdir.EndsWith("\\")) {
+            if (!workdir.EndsWith("\\", false, CultureInfo.InvariantCulture)) {
                 workdir += "\\";
             }
 
@@ -45,7 +46,7 @@ namespace Battlegrounds.Compiler {
             CreateWorkspace(workdir);
 
             // The archive definition to use when compiling
-            TxtBuilder archiveDef = new TxtBuilder();
+            TxtBuilder archiveDef = new();
 
             // Scar/Data TOC section
             archiveDef.AppendLine($"Archive name=\"{wincondition.Guid}\" blocksize=\"262144\"");
@@ -62,7 +63,7 @@ namespace Battlegrounds.Compiler {
             archiveDef.AppendLine("\tFileSettingsEnd");
 
             // Add and compile win file(s)
-            foreach (WinconditionSourceFile file in winFiles) {
+            foreach (var file in winFiles) {
                 if (!AddFile(archiveDef, "data\\game\\winconditions\\", workdir, file)) {
                     return false;
                 }
@@ -72,7 +73,7 @@ namespace Battlegrounds.Compiler {
             AddLocalFile(archiveDef, sessionFile, "data\\scar\\winconditions\\auxiliary_scripts\\", workdir);
 
             // Add and *compile* scar files
-            foreach (WinconditionSourceFile file in scarFiles) {
+            foreach (var file in scarFiles) {
                 if (!AddFile(archiveDef, "data\\scar\\winconditions\\", workdir, file)) {
                     return false;
                 }
@@ -100,7 +101,8 @@ namespace Battlegrounds.Compiler {
             archiveDef.AppendLine("\tFileSettingsEnd");
 
             // Add and compile locale files
-            foreach (WinconditionSourceFile file in localeFiles) {
+            foreach (var file in localeFiles) {
+                // TODO: Add locale injector here
                 if (!AddFile(archiveDef, string.Empty, workdir, file, true, Encoding.Unicode)) {
                     return false;
                 }
@@ -161,12 +163,13 @@ namespace Battlegrounds.Compiler {
 
         private static bool AddFile(TxtBuilder builder, string rpath, string workdir, WinconditionSourceFile sourceFile, bool useBytes = false, Encoding encoding = null) {
 
-            if (sourceFile.contents == null || sourceFile.contents.Length == 0) {
-                return false;
-            }
-
             string relpath = rpath + sourceFile.path;
             string abspath = Path.GetFullPath(workdir + relpath.Replace("/", "\\"));
+
+            if (sourceFile.contents == null || sourceFile.contents.Length == 0) {
+                Trace.WriteLine($"Error file [ABS] <{abspath}>", nameof(WinconditionCompiler));
+                return false;
+            }
 
             Trace.WriteLine($"Adding file [ABS] <{abspath}>", nameof(WinconditionCompiler));
 
@@ -231,11 +234,7 @@ namespace Battlegrounds.Compiler {
                 return false;
             }
 
-            if (!AddFile(builder, string.Empty, workdir, iconFile)) {
-                return false;
-            }
-
-            return true;
+            return AddFile(builder, string.Empty, workdir, iconFile);
 
         }
 

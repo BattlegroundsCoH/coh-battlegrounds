@@ -37,9 +37,9 @@ namespace Battlegrounds.Game.Match.Analyze {
             // Save
             try {
                 if (replayMatchData is ReplayMatchData replayMatchDataConcrete) {
-                    var playback = new JsonPlayback(replayMatchDataConcrete);
+                    JsonPlayback playback = new(replayMatchDataConcrete);
                     if (playback.ParseMatchData()) {
-                        File.WriteAllText("_last_matchdata.json", JsonSerializer.Serialize(playback, new JsonSerializerOptions() { 
+                        File.WriteAllText("_last_matchdata.json", JsonSerializer.Serialize(playback, new JsonSerializerOptions() {
                             WriteIndented = true
                         }));
                     } else {
@@ -54,7 +54,7 @@ namespace Battlegrounds.Game.Match.Analyze {
             this.m_analysisResult.SetLength(replayMatchData.Length);
 
             // Set players
-            this.m_analysisResult.SetPlayers(replayMatchData.Players.ToArray());
+            _ = this.m_analysisResult.SetPlayers(replayMatchData.Players.ToArray());
 
             // Register all events
             foreach (TimeEvent timeEvent in replayMatchData) {
@@ -85,12 +85,12 @@ namespace Battlegrounds.Game.Match.Analyze {
 
             // Compile the final result
             if (!this.m_analysisResult?.CompileResults() ?? true) {
-                Trace.WriteLine($"Failed to compile analysis report. (Mismatching events)", "SingleplayerMatchAnalyzer");
+                Trace.WriteLine($"Failed to compile analysis report. (Mismatching events)", nameof(SingleplayerMatchAnalyzer));
                 return new NullAnalysis();
             }
 
             // Log success
-            Trace.WriteLine($"Successfully compiled match data into a finalizable match data object.", "SingleplayerMatchAnalyzer");
+            Trace.WriteLine($"Successfully compiled match data into a finalizable match data object.", nameof(SingleplayerMatchAnalyzer));
 
             // Return the analysis
             return this.m_analysisResult;

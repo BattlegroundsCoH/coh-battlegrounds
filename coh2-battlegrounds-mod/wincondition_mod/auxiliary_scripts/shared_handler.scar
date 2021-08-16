@@ -11,7 +11,7 @@ _bg_aiData = {};
 import("WinConditions/auxiliary_scripts/shared_constants.scar") -- Must always be imported first
 import("WinConditions/auxiliary_scripts/shared_util.scar"); -- Then this (Contains several useful utility functions)
 import("WinConditions/auxiliary_scripts/shared_lookups.scar");
-import("WinConditions/auxiliary_scripts/session.scar");
+import("WinConditions/auxiliary_scripts/session.scar"); -- This file may contain overrides to the constants file (Which is why it must be imported AFTER constants)
 import("WinConditions/auxiliary_scripts/shared_sessionloader.scar");
 import("WinConditions/auxiliary_scripts/shared_units.scar");
 import("WinConditions/auxiliary_scripts/shared_ai.scar");
@@ -71,6 +71,9 @@ function BG_Init()
 
     -- Properly set up win condition data
     BG_SetupWincondition();
+
+    -- Setup optional BG systems
+    BG_SetupWeatherAndSupply();
 
     -- Create the UI
     UI_AddSetupFunction(function()
