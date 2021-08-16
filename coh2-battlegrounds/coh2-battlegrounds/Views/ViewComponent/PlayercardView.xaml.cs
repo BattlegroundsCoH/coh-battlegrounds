@@ -42,13 +42,13 @@ namespace BattlegroundsApp.Views.ViewComponent {
     /// </summary>
     public partial class PlayerCardView : LobbyControl, INotifyPropertyChanged {
 
-        static PlayercardArmyItem[] alliedArmyItems = new PlayercardArmyItem[] {
+        private static readonly PlayercardArmyItem[] alliedArmyItems = new PlayercardArmyItem[] {
             new PlayercardArmyItem(new BitmapImage(new Uri("pack://application:,,,/Resources/ingame/aef.png")), "US Forces", "aef"),
             new PlayercardArmyItem(new BitmapImage(new Uri("pack://application:,,,/Resources/ingame/british.png")), "UK Forces", "british"),
             new PlayercardArmyItem(new BitmapImage(new Uri("pack://application:,,,/Resources/ingame/soviet.png")), "Soviet Union", "soviet"),
         };
 
-        static PlayercardArmyItem[] axisArmyItems = new PlayercardArmyItem[] {
+        private static readonly PlayercardArmyItem[] axisArmyItems = new PlayercardArmyItem[] {
             new PlayercardArmyItem(new BitmapImage(new Uri("pack://application:,,,/Resources/ingame/german.png")), "Wehrmacht", "german"),
             new PlayercardArmyItem(new BitmapImage(new Uri("pack://application:,,,/Resources/ingame/west_german.png")), "Oberkommando West", "west_german"),
         };

@@ -9,6 +9,7 @@ using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
+using Battlegrounds.ErrorHandling.CommonExceptions;
 using Battlegrounds.Functional;
 using Battlegrounds.Game.DataCompany;
 using Battlegrounds.Networking.Lobby;
@@ -167,7 +168,7 @@ namespace BattlegroundsApp.Views.ViewComponent {
                 this.PlayerCompanyItems.Clear();
 
                 // Find all faction companies
-                List<Company> all = PlayerCompanies.FindAll(x => x.Army.Name == this.Playerarmy);
+                var all = PlayerCompanies.FindAll(x => x.Army.Name == this.Playerarmy);
                 if (all.Count > 0) {
                     all.ForEach(x => this.PlayerCompanyItems.Add(CompanyItemFromCompany(x)));
                     if (this.CardState is AISTATE) {
@@ -188,22 +189,13 @@ namespace BattlegroundsApp.Views.ViewComponent {
 
         }
 
-        public bool IsPlayReady() {
-            if (this.CardState is SELFSTATE) {
-                if (this.CompanySelector.SelectedItem is TeamPlayerCompanyItem companyItem) {
-                    return companyItem.State is CompanyItemState.Company;
-                }
-            } else if (this.CardState is AISTATE) {
-                if (this.AICompanySelector.SelectedItem is TeamPlayerCompanyItem companyItem) {
-                    return companyItem.State is CompanyItemState.Company or CompanyItemState.Generate;
-                }
-            } else if (this.CardState is OCCUPIEDSTATE) {
-                return this.Playercompany is not "No Company Selected";
-            } else {
-                return true;
-            }
-            return false;
-        }
+        public bool IsPlayReady() => this.CardState switch {
+            SELFSTATE when this.CompanySelector.SelectedItem is TeamPlayerCompanyItem companyItem => companyItem.State is CompanyItemState.Company,
+            AISTATE when this.AICompanySelector.SelectedItem is TeamPlayerCompanyItem companyItem => companyItem.State is CompanyItemState.Company or CompanyItemState.Generate,
+            OCCUPIEDSTATE => this.Playercompany is not "No Company Selected",
+            SELFSTATE or AISTATE or OCCUPIEDSTATE => false,
+            _ => true
+        };
 
         public void SetArmyIconIfNotHost() {
             if (this.State.StateName is OCCUPIEDSTATE) {
@@ -213,7 +205,7 @@ namespace BattlegroundsApp.Views.ViewComponent {
         }
 
         private static TeamPlayerCompanyItem CompanyItemFromCompany(Company company)
-            => new TeamPlayerCompanyItem(CompanyItemState.Company, company.Name, company.Army.Name, company.Strength);
+            => new(CompanyItemState.Company, company.Name, company.Army.Name, company.Strength);
 
         private void ArmySelector_SelectionChanged(object sender, IconComboBoxSelectedChangedEventArgs args) {
             if (args.Item.GetSource(out TeamPlayerArmyItem item) && item.Name != this.Playerarmy) {
@@ -234,7 +226,7 @@ namespace BattlegroundsApp.Views.ViewComponent {
             }
 
             // Set AI visibility data
-            Visibility aiVsibility = (this.m_handler.IsHost && this.CardState is OPENSTATE && this.TeamType is not LobbyTeamType.Observers) ? Visibility.Visible : Visibility.Collapsed;
+            var aiVsibility = (this.m_handler.IsHost && this.CardState is OPENSTATE && this.TeamType is not LobbyTeamType.Observers) ? Visibility.Visible : Visibility.Collapsed;
             this.ContextMenu_AISeperator.Visibility = aiVsibility;
             this.ContextMenu_EasyAI.Visibility = aiVsibility;
             this.ContextMenu_StandardAI.Visibility = aiVsibility;
@@ -272,7 +264,17 @@ namespace BattlegroundsApp.Views.ViewComponent {
 
         private void ContextMenu_Kick_Click(object sender, RoutedEventArgs e) {
 
+            // If AI
+            if (this.CardState is AISTATE) {
 
+                // Remove player
+                this.m_handler.Lobby.RemovePlayer(this.TeamSlot.SlotOccupant);
+
+                // Set self to open.
+                this.TrySetStateByName(OPENSTATE);
+                this.TeamSlot.SlotState = LobbyTeamSlotState.OPEN;
+
+            }
 
         }
 
@@ -314,7 +316,7 @@ namespace BattlegroundsApp.Views.ViewComponent {
             LobbyTeamType.Allies => this.m_handler.Lobby.AlliesTeam,
             LobbyTeamType.Axis => this.m_handler.Lobby.AxisTeam,
             LobbyTeamType.Observers => this.m_handler.Lobby.SpectatorTeam,
-            _ => throw new Exception()
+            _ => throw new EnumValueNotSupportedException<LobbyTeamType>(lobbyTeamType)
         };
 
     }
