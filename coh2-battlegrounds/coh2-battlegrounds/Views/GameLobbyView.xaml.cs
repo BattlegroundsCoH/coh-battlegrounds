@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Diagnostics.Contracts;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -11,6 +12,7 @@ using System.Windows.Controls;
 using System.Windows.Media.Imaging;
 
 using Battlegrounds;
+using Battlegrounds.ErrorHandling.CommonExceptions;
 using Battlegrounds.Game;
 using Battlegrounds.Game.Database;
 using Battlegrounds.Game.DataCompany;
@@ -47,7 +49,7 @@ namespace BattlegroundsApp.Views {
             public GameLobbyViewScenarioItem(Scenario scenario) {
                 this.Scenario = scenario;
                 this.m_display = this.Scenario.Name;
-                if (this.Scenario.Name.StartsWith("$") && uint.TryParse(this.Scenario.Name[1..], out uint key)) {
+                if (this.Scenario.Name.StartsWith("$", false, CultureInfo.InvariantCulture) && uint.TryParse(this.Scenario.Name[1..], out uint key)) {
                     this.m_display = GameLocale.GetString(key);
                 }
             }
@@ -57,7 +59,6 @@ namespace BattlegroundsApp.Views {
                 => (source is string s && this.Scenario.RelativeFilename == s) || source == this.Scenario || (source is GameLobbyViewScenarioItem i && i.Scenario == this.Scenario);
         }
 
-        //private bool m_hasCreatedLobbyOnce;
         private ILobbyPlayModel m_playModel;
 
         private readonly List<GameLobbyViewModPackage> m_availableModPackages;
@@ -237,11 +238,13 @@ namespace BattlegroundsApp.Views {
                 SelectedGamemodeOption = option,
                 SelectedScenario = selectedScenario,
                 IsOptionValue = false,
-                SelectedTuningMod = ModManager.GetMod<ITuningMod>(this.SelectedModPackage.TuningGUID), // TODO: Allow users to change this somewhere
+                SelectedTuningMod = ModManager.GetMod<ITuningMod>(this.SelectedModPackage.TuningGUID),
                 Allies = alliedTeam.ToArray(),
                 Axis = axisTeam.ToArray(),
                 FillAI = false,
                 DefaultDifficulty = AIDifficulty.AI_Hard,
+                EnableDayNightCycle = this.GetWeatherOption(),
+                EnableSupply = this.GetSupplyOption(),
             };
 
             // Return session data
@@ -327,7 +330,7 @@ namespace BattlegroundsApp.Views {
 
                 // Update lobby data
                 HostedLobby lobby = this.m_handler.Lobby as HostedLobby;
-                lobby.SetMode(null, null, option.Value.ToString(), this.TranslateOption);
+                lobby.SetMode(null, null, option.Value.ToString(CultureInfo.InvariantCulture), this.TranslateOption);
 
             }
 
@@ -369,7 +372,7 @@ namespace BattlegroundsApp.Views {
 
             // Get company
             var company = companyItem.State == CompanyItemState.Company ? PlayerCompanies.FromNameAndFaction(companyItem.Name, Faction.FromName(companyItem.Army)) : null;
-            return company is not null ? company : throw new Exception();
+            return company is not null ? company : throw new ObjectNotFoundException();
 
         }
 
@@ -627,6 +630,7 @@ namespace BattlegroundsApp.Views {
 
             // Bail if ignoring events like these
             if (this.m_ignoreEvents) {
+                Trace.WriteLine("Connection was lost but not updating, as IgnoreEvents flag is true.", nameof(GameLobbyView));
                 return;
             }
 
@@ -657,6 +661,36 @@ namespace BattlegroundsApp.Views {
             }
 
             // TODO: Apply Choice
+
+        }
+
+        private bool GetWeatherOption()
+            => this.WeatherOption.SelectedIndex == 1;
+
+        private bool GetSupplyOption()
+            => this.SupplyOption.SelectedIndex == 1;
+
+        private void WeatherOption_SelectedItemChanged(object sender, SelectionChangedEventArgs e) {
+
+            // Do nothing if ignoring events
+            if (this.m_ignoreEvents || !this.m_handler.IsHost) {
+                return;
+            }
+
+            // Set the gamemode option
+            (this.m_handler.Lobby as HostedLobby).SetGameModOption("weather", this.GetWeatherOption().ToString(CultureInfo.InvariantCulture));
+
+        }
+
+        private void SupplyOption_SelectedItemChanged(object sender, SelectionChangedEventArgs e) {
+
+            // Do nothing if ignoring events
+            if (this.m_ignoreEvents || !this.m_handler.IsHost) {
+                return;
+            }
+
+            // Set the gamemode option
+            (this.m_handler.Lobby as HostedLobby).SetGameModOption("supply", this.GetWeatherOption().ToString(CultureInfo.InvariantCulture));
 
         }
 

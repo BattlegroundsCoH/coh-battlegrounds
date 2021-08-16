@@ -100,12 +100,12 @@ namespace BattlegroundsApp {
 
                     } else {
                         MessageBox.Show("Unable to detect the current Steam user!", "No steam user found!", MessageBoxButton.OK, MessageBoxImage.Error);
-                        Trace.WriteLine("", "App");
+                        Trace.WriteLine("Unable to detect the current Steam user.", "App");
                         Environment.Exit(0);
                     }
                 } else {
                     MessageBox.Show("Unable to find a running instance of Steam. Please start Steam and try again.", "No steam instance running!", MessageBoxButton.OK, MessageBoxImage.Error);
-                    Trace.WriteLine("", "App");
+                    Trace.WriteLine("Unable to find a running instance of Steam.", "App");
                     Environment.Exit(0);
                 }
             } else {
@@ -117,6 +117,9 @@ namespace BattlegroundsApp {
 
             // Save all changes
             BattlegroundsInstance.SaveInstance();
+
+            // Close networking
+            NetworkInterface.Shutdown();
 
             // Save log
             __logger.SaveAndClose(0);
@@ -146,6 +149,7 @@ namespace BattlegroundsApp {
 
             if (failed > 0) {
                 // TODO: handle
+                Trace.WriteLine($"Failed to load {failed} databases!", nameof(App));
             }
 
             // Load all companies used by the player

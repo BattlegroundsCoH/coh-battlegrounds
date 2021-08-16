@@ -4,7 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Windows;
 
-using Battlegrounds;
+using Battlegrounds.ErrorHandling.CommonExceptions;
 using Battlegrounds.Game;
 using Battlegrounds.Game.DataCompany;
 using Battlegrounds.Game.Gameplay;
@@ -12,9 +12,9 @@ using Battlegrounds.Game.Match;
 using Battlegrounds.Modding;
 using Battlegrounds.Networking.Lobby;
 using Battlegrounds.Networking.Remoting.Query;
-using Battlegrounds.Networking.Requests;
 
 using BattlegroundsApp.LocalData;
+using BattlegroundsApp.Models.MockData;
 using BattlegroundsApp.Views.ViewComponent;
 
 namespace BattlegroundsApp.Models {
@@ -33,9 +33,9 @@ namespace BattlegroundsApp.Models {
         private ILobbyTeam m_mockAxis;
         private ILobbyTeam m_mockObservers;
 
-        private Dictionary<LobbyTeamType, TeamPlayerCard[]> m_teamSetup;
+        private readonly Dictionary<LobbyTeamType, TeamPlayerCard[]> m_teamSetup;
 
-        private LobbyHandler m_handler;
+        private readonly LobbyHandler m_handler;
 
         private static CommandQuery GetTeamsQuery;
         private CommandQueryResult GetTeamsQueryLatestResult;
@@ -130,7 +130,7 @@ namespace BattlegroundsApp.Models {
             LobbyTeamType.Allies => this.m_handler.IsHost ? this.m_handler.Lobby.AlliesTeam : this.m_mockAllies,
             LobbyTeamType.Axis => this.m_handler.IsHost ? this.m_handler.Lobby.AxisTeam : this.m_mockAxis,
             LobbyTeamType.Observers => this.m_handler.IsHost ? this.m_handler.Lobby.SpectatorTeam : this.m_mockObservers,
-            _ => throw new Exception()
+            _ => throw new NotSupportedException()
         };
 
         public void RefreshAll(bool refreshObservers) {
@@ -147,9 +147,11 @@ namespace BattlegroundsApp.Models {
 
             this.RefreshTeam(LobbyTeamType.Allies);
             this.RefreshTeam(LobbyTeamType.Axis);
+
             if (refreshObservers) {
                 this.RefreshTeam(LobbyTeamType.Observers);
             }
+
         }
 
         public void RefreshTeam(LobbyTeamType teamType) {
@@ -177,8 +179,8 @@ namespace BattlegroundsApp.Models {
             } else if (slot.SlotState == LobbyTeamSlotState.OCCUPIED) {
 
                 // Get the occupant
-                ILobbyMember occupant = slot.SlotOccupant;
-                IAILobbyMember ai = occupant as IAILobbyMember;
+                var occupant = slot.SlotOccupant;
+                var ai = occupant as IAILobbyMember;
                 bool isAI = ai is not null;
 
                 // Determine viewstate
@@ -294,133 +296,8 @@ namespace BattlegroundsApp.Models {
                     return CompanyGenerator.Generate(Faction.FromName(companyItem.Army), ModManager.GetPackage("mod_bg").TuningGUID.GUID, false, true, true);
                 }
             }
-            throw new Exception();
+            throw new ObjectNotFoundException();
         }
-
-    }
-
-    public class MockLobbyTeamModel : ILobbyTeam {
-
-        private CommandQueryResultVector m_data;
-        private ILobbyTeamSlot[] m_slots;
-
-        public int Capacity { get; }
-
-        public int Size => this.m_slots.Count(x => x.SlotState is LobbyTeamSlotState.OCCUPIED);
-
-        public int TeamIndex { get; }
-
-        public bool HasOpenSlot => this.m_slots.Any(x => x.SlotState is LobbyTeamSlotState.OPEN);
-
-        public ILobbyTeamSlot[] Slots => this.m_slots;
-
-        public IRequestHandler RequestHandler { get; }
-
-        public MockLobbyTeamModel(int tid, LobbyHandler handler, CommandQueryResultVector dataVector) {
-
-            // Set data
-            this.RequestHandler = handler.RequestHandler;
-            this.m_data = dataVector.Reverse();
-
-            // Set Team Index
-            this.TeamIndex = tid;
-
-            // Set capacity
-            this.Capacity = this.m_data.Dimensions;
-            this.m_slots = new ILobbyTeamSlot[this.Capacity];
-
-            // Parse vector data
-            for (int i = 0; i < this.m_data.Dimensions; i++) {
-
-                // Get the slot data
-                var slot = (this.m_data[i] as CommandQueryResultVector).Reverse();
-                var (slotState, id, name, army, company, companyValue) = slot.ToTuple<string, ulong, string, string, string, double>();
-                if (slotState is not "OCCUPIED") {
-                    this.m_slots[i] = new MockLobbyTeamSlotModel(slotState, null);
-                } else {
-
-                    if (id == handler.Self.ID) {
-                        this.m_slots[i] = new MockLobbyTeamSlotModel(slotState, handler.Self);
-                    } else {
-                        this.m_slots[i] = new MockLobbyTeamSlotModel(slotState, new MockLobbyTeamMemberModel(id, name, army, company, companyValue));
-                    }
-
-                }
-
-            }
-
-        }
-
-        public bool CanSetCapacity(int capacity) => throw new NotSupportedException();
-
-        public ILobbyTeamSlot GetSlotAt(int index) => this.m_slots[index];
-
-        public bool IsMember(ILobbyMember member) {
-            for (int i = 0; i < this.Slots.Length; i++) {
-                if (this.Slots[i].SlotState is LobbyTeamSlotState.OCCUPIED && this.Slots[i].SlotOccupant.ID == member.ID) {
-                    return true;
-                }
-            }
-            return false;
-        }
-
-        public void JoinTeam(ILobbyMember member) => throw new NotSupportedException();
-
-        public void LeaveTeam(ILobbyMember member) => throw new NotSupportedException();
-
-        public void SetCapacity(int capacity) => throw new NotSupportedException();
-
-        public void SwapSlots(ILobbyMember from, int to) => throw new NotSupportedException();
-
-        public void SwapSlots(int from, int to) => throw new NotSupportedException();
-
-    }
-
-    public class MockLobbyTeamSlotModel : ILobbyTeamSlot {
-
-        public LobbyTeamSlotState SlotState { get; set; }
-
-        public ILobbyMember SlotOccupant { get; set; }
-
-        public MockLobbyTeamSlotModel(string slotState, ILobbyMember member) {
-
-            // Get slot state
-            this.SlotState = Enum.Parse<LobbyTeamSlotState>(slotState);
-
-            // Set member
-            this.SlotOccupant = member;
-
-        }
-
-    }
-
-    public class MockLobbyTeamMemberModel : ILobbyMember {
-
-        public ulong ID { get; }
-
-        public string Name { get; }
-
-        public string Army { get; }
-
-        public bool HasCompany => !string.IsNullOrEmpty(this.CompanyName);
-
-        public string CompanyName { get; }
-
-        public double CompanyValue { get; }
-
-        public bool IsLocalMachine => false;
-
-        public MockLobbyTeamMemberModel(ulong id, string name, string army, string company, double companyValue) {
-            this.ID = id;
-            this.Name = name;
-            this.Army = army;
-            this.CompanyName = company;
-            this.CompanyValue = companyValue;
-        }
-
-        public void SetArmy(string army) => throw new NotSupportedException();
-
-        public void SetCompany(string name, double value) => throw new NotSupportedException();
 
     }
 
