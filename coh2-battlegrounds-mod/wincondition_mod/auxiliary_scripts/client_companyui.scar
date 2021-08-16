@@ -132,7 +132,7 @@ function BG_CreateCompanyView()
     bg_call_ui:add(bg_companyView);
 
     -- And we'll hide it
-    --BG_HideCompanyView(); -- When not being debugged...
+    BG_HideCompanyView(); -- When not being debugged...
 
 end
 
