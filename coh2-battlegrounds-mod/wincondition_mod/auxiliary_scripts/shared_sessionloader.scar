@@ -21,6 +21,7 @@ function BG_LoadSessionData()
             _bg_playerData[j].tempcrews = {};
             _bg_playerData[j].gainsData = {};
             _bg_playerData[j].lossData = {};
+            _bg_playerData[j].GetCallInDestination = BG_GetCallInPoint;
             _bg_playerData[j].teamStr = BG_GetTeamString(_bg_playerData[j].race);
             local isVerified, steamID = BG_VerifyPlayer(_bg_playerData[j].name, _bg_playerData[j].teamStr, false);
             if not isVerified then

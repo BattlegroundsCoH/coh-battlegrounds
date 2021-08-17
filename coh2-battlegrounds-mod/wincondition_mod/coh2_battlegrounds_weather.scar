@@ -23,7 +23,8 @@ g_weatherSystem = {
                 "dlc/mp_terek_lines.aps",
                 "dlc/mud_road_gloomy.aps",
                 "dlc/tow_road_to_kharkov_night.aps",
-                "dlc/tow_tiger_ace_night.aps"
+                "dlc/tow_tiger_ace_night.aps",                
+                "xp1/eschdorf_night.aps"
             },
             [E_TIME_OF_DAY.day] = { -- day
                 "dlc/anotherstalingrad.aps",
@@ -48,8 +49,8 @@ g_weatherSystem = {
                 "coh1new/8p_montargis_region_daysunny.aps",
                 "coh1new/8p_montargis_region_dayfoggy.aps",
                 "dlc/hill331.aps",
-                "dlc/mp_2p_langres_summer.aps",
-                "dlc/mp_2p_langres_summer02.aps",
+                "dlc/mp_4p_langres_summer.aps",
+                "dlc/mp_4p_langres_summer02.aps",
                 "dlc/mp_rails_and_metal.aps",
                 "dlc/mp_semois.aps",
                 "dlc/mp_volga_timber_yard.aps",
@@ -75,18 +76,18 @@ function BGWeather_Setup()
     -- Set atmosphere to random selection
     BGWeather_SetAtmosphere(0);
 
+    -- Spawn aura building (Might have to do this for all players)
+    local aura_origin = World_Pos(0, 0, 0); -- (0,0,0) is centre according to docs
+    g_weatherSystem.aura_entity = Entity_CreateENV(g_weatherSystem.ebp_aura, aura_origin, aura_origin);
+    g_weatherSystem.aura_entity_eg = EGroup_CreateIfNotFound("g_weatherSystem.aura_entity_eg");
+    EGroup_Add(g_weatherSystem.aura_entity_eg, g_weatherSystem.aura_entity);
+
     -- Determine which function to invoke
     if g_weatherSystem.time_of_day == E_TIME_OF_DAY.day then
         BGWeather_DoDay();
     else
         BGWeather_DoNight();
     end
-
-    -- Spawn aura building
-    local aura_origin = World_Pos(World_GetWidth() / 2, 0, World_GetLength() / 2);
-    g_weatherSystem.aura_entity = Entity_CreateENV(g_weatherSystem.ebp_aura, aura_origin, aura_origin);
-    g_weatherSystem.aura_entity_eg = EGroup_CreateIfNotFound("g_weatherSystem.aura_entity_eg");
-    EGroup_Add(g_weatherSystem.aura_entity_eg, g_weatherSystem.aura_entity);
 
 end
 
@@ -164,6 +165,9 @@ function BGWeather_DoNight()
     -- Apply night time upgrade
     BGWeather_ApplyTimeUpgrade(g_weatherSystem.upg_night, g_weatherSystem.upg_day);
 
+    -- Add night aura
+    BGWeather_SetNightAura(true);
+
     -- Add oneshot for transition to day
     Rule_AddOneShot(BGWeather_TransitionDay, g_weatherSystem.time_night);
 
@@ -186,6 +190,9 @@ function BGWeather_DoDay()
 
     -- Apply day time upgrade
     BGWeather_ApplyTimeUpgrade(g_weatherSystem.upg_day, g_weatherSystem.upg_night);
+
+    -- Remove night aura
+    BGWeather_SetNightAura(false);
 
     -- Add one shot for transition to night
     Rule_AddOneShot(BGWeather_TransitionNight, g_weatherSystem.time_day);

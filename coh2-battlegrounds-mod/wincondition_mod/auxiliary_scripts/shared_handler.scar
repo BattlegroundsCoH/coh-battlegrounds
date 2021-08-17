@@ -484,6 +484,12 @@ function BG_OnEnterNewPhase()
     else
         Util_MissionTitle(BG_LocString(17), 3, 8, 2 );
     end
+    for i=1, World_GetPlayerCount() do
+        local p = World_GetPlayerAt(i);
+        if p == Game_GetLocalPlayer() then
+            BG_RefreshCompanyView(); -- Refresh the company view
+        end
+    end
 end
 
 function BG_UpdatePlayerStats(refID)
@@ -499,7 +505,22 @@ function BG_SetCallinPoint(executer, target)
     if scartype(executer) == ST_PLAYER then
         local pid = BG_GetPlayerID(executer);
         _bg_playerData[pid].last_callin_point = target;
+        _bg_playerData[pid].last_callin_time = 0;
     end
+end
+
+function BG_GetCallInPoint(self) -- The intention of this function is to avoid telling units to deploy to the exact same position if within a 15s time interval
+    if self.last_callin_point == nil then
+        return Player_GetStartingPosition(self.player);
+    end
+    local t = World_GetGameTime();
+    local p = self.last_callin_point;
+    local d = t - (self.last_callin_time or 0);
+    if d < 15.0 then -- if less than 15s before last call-in, 
+        p = Util_GetRandomPosition(p, d + 10);
+    end
+    self.last_callin_time = t; -- Update call in time
+    return p;
 end
 
 function BG_ParadopNext(executer, target)
