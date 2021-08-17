@@ -2938,7 +2938,22 @@
         </member>
         <member name="T:Battlegrounds.Networking.Lobby.LobbyTeamSlot">
             <summary>
-            
+            Class representing a slot in a <see cref="T:Battlegrounds.Networking.Lobby.LobbyTeam"/>.
+            </summary>
+        </member>
+        <member name="P:Battlegrounds.Networking.Lobby.LobbyTeamSlot.SlotState">
+            <summary>
+            Get or set the slot state.
+            </summary>
+        </member>
+        <member name="P:Battlegrounds.Networking.Lobby.LobbyTeamSlot.SlotOccupant">
+            <summary>
+            Get or set the occupant.
+            </summary>
+        </member>
+        <member name="M:Battlegrounds.Networking.Lobby.LobbyTeamSlot.#ctor">
+            <summary>
+            Initialise a new <see cref="T:Battlegrounds.Networking.Lobby.LobbyTeamSlot"/> instance.
             </summary>
         </member>
         <member name="T:Battlegrounds.Networking.Lobby.Match.LobbyPlayerCompanyFile">

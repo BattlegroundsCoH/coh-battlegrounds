@@ -271,7 +271,6 @@ namespace BattlegroundsApp.Views.ViewComponent {
 
                 // Set self to open.
                 this.TrySetStateByName(OPENSTATE);
-                this.TeamSlot.SlotState = LobbyTeamSlotState.OPEN;
 
             }
 
