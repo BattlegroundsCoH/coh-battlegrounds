@@ -493,8 +493,12 @@ namespace BattlegroundsApp.Views {
 
         private void PopulateDropdowns() {
 
-            // Get the scenarios and set source
-            List<GameLobbyViewScenarioItem> scenarioSource = ScenarioList.GetList().Select(x => new GameLobbyViewScenarioItem(x)).ToList();
+            // Get the scenarios
+            List<GameLobbyViewScenarioItem> scenarioSource = ScenarioList.GetList()
+                .Where(x => x.IsVisibleInLobby)
+                .Select(x => new GameLobbyViewScenarioItem(x)).ToList();
+
+            // Set source
             this.Map.ItemsSource = scenarioSource;
 
             // If no mapp has been selected

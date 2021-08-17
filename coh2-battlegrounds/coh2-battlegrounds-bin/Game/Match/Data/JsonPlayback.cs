@@ -56,7 +56,7 @@ namespace Battlegrounds.Game.Match.Data {
         public Dictionary<TimeSpan, EventTick> Events { get; private set; }
 
         [JsonIgnore]
-        public ReadOnlyCollection<Player> Players => new ReadOnlyCollection<Player>(this.players.Select(x => x.FromData()).ToList());
+        public ReadOnlyCollection<Player> Players => new(this.players.Select(x => x.FromData()).ToList());
 
         public JsonPlayback() {
             this.Session = new NullSession();

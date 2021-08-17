@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Text.Json;
 
 using Battlegrounds.Functional;
-using Battlegrounds.Json;
 using Battlegrounds.Locale;
 using Battlegrounds.Modding;
 using Battlegrounds.Steam;
@@ -19,7 +19,7 @@ namespace Battlegrounds {
         /// <summary>
         /// Internal instance object
         /// </summary>
-        public class InternalInstance : IJsonObject {
+        public class InternalInstance {
 
             public Dictionary<string, string> Paths { get; set; }
 
@@ -31,7 +31,6 @@ namespace Battlegrounds {
 
             public SteamInstance SteamData { get; set; }
 
-            [JsonEnum(typeof(LocaleLanguage))]
             public LocaleLanguage Language { get; set; }
 
             /// <summary>
@@ -45,9 +44,8 @@ namespace Battlegrounds {
             }
 
             /// <summary>
-            /// Resolve paths. Automatically called when the json variant is deserialized.
+            /// Resolve paths for internal use.
             /// </summary>
-            [JsonOnDeserialized]
             public void ResolvePaths() {
 
                 // Log
@@ -203,13 +201,14 @@ namespace Battlegrounds {
         public static void LoadInstance() {
 
             // Load instance data
-            __instance = JsonParser.ParseFile<InternalInstance>("local.json");
+            __instance = File.Exists("local.json").Then(() => JsonSerializer.Deserialize<InternalInstance>(File.ReadAllText("local.json"))).Else(_ => null);
             if (__instance is null) {
                 __instance = new InternalInstance();
                 __instance.ResolvePaths();
                 IsFirstRun = true;
             } else {
                 IsFirstRun = false;
+                __instance.ResolvePaths();
             }
 
             // Create locale manager
@@ -241,7 +240,7 @@ namespace Battlegrounds {
         /// Save the currently stored data of this instance.
         /// </summary>
         public static void SaveInstance()
-            => File.WriteAllText("local.json", __instance.SerializeAsJson());
+            => File.WriteAllText("local.json", JsonSerializer.Serialize(__instance, new() { WriteIndented = true }));
 
     }
 

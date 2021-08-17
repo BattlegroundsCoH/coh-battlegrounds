@@ -1,25 +1,21 @@
-﻿using System;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.IO;
+using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
-
-using Battlegrounds.Json;
 
 namespace Battlegrounds.Steam {
 
     /// <summary>
     /// Class representation of a running Steam instance. Cannot be inheritted. Inherits from <see cref="IJsonObject"/>.
     /// </summary>
-    public sealed class SteamInstance : IJsonObject {
+    public sealed class SteamInstance {
 
         // The local user to use
-        [JsonIgnore] private SteamUser m_user;
+        private SteamUser m_user;
 
         /// <summary>
         /// Get the active <see cref="SteamUser"/> that is using this instance.
         /// </summary>
-        [JsonReference(typeof(SteamUser))]
-        [JsonBackingField(nameof(m_user))]
         public SteamUser User => this.m_user;
 
         /// <summary>
@@ -28,8 +24,12 @@ namespace Battlegrounds.Steam {
         [JsonIgnore]
         public bool HasUser => this.m_user is not null;
 
-        public SteamInstance() {
-            this.m_user = null;
+        public SteamInstance() => this.m_user = null;
+
+        [JsonConstructor]
+        public SteamInstance(SteamUser User) {
+            this.m_user = User;
+            Trace.WriteLine($"Found steam user '{User.Name}' ({User.ID}) as local user in local data.", nameof(SteamInstance));
         }
 
         /// <summary>
@@ -51,8 +51,6 @@ namespace Battlegrounds.Steam {
                 return false;
             }
         }
-
-        public string ToJsonReference() => throw new NotSupportedException();
 
         /// <summary>
         /// Fetch the <see cref="SteamUser"/> from the local instance of the Steam client.
@@ -80,7 +78,7 @@ namespace Battlegrounds.Steam {
 
                     // Read name and recent
                     Match name = Regex.Match(idMatch.Groups["body"].Value, @"\""PersonaName\""\s*\""(?<name>(\s|\w|\d)*)\""");
-                    Match recent = Regex.Match(idMatch.Groups["body"].Value, @"\""mostrecent\""\s*\""(?<recent>1|0)\""");
+                    Match recent = Regex.Match(idMatch.Groups["body"].Value, @"\""(MostRecent|mostrecent)\""\s*\""(?<recent>1|0)\""");
 
                     // If recent, use that (Most likely the one running).
                     if (recent.Groups["recent"].Value.CompareTo("1") == 0) {

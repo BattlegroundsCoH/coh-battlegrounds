@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
 
+using Battlegrounds.ErrorHandling.CommonExceptions;
 using Battlegrounds.Lua.Debugging;
 using Battlegrounds.Lua.Operators;
 
@@ -60,7 +60,7 @@ namespace Battlegrounds.Lua.Parsing {
         /// Regex for Lua tokens.
         /// </summary>
         private static readonly Regex LuaRegex
-            = new Regex(@"(?<c>--.*\n)|(?<n>\d*\.\d+)|(?<i>\d+)|(?<b>true|false)|(?<nil>nil)|(?<op>(=|,|\+|-|\*|/|;|\.|#|<|>|~|\^|:|%)+)|(?<e>\(|\))|(?<t>\{|\}|\[|\])|(?<id>(_|\w)(_|\d|\w)*)|(?<s>\"".*?\"")|(?<le>\n)");
+            = new(@"(?<c>--.*\n)|(?<n>\d*\.\d+)|(?<i>\d+)|(?<b>true|false)|(?<nil>nil)|(?<op>(=|,|\+|-|\*|/|;|\.|#|<|>|~|\^|:|%)+)|(?<e>\(|\))|(?<t>\{|\}|\[|\])|(?<id>(_|\w)(_|\d|\w)*)|(?<s>\"".*?(?<!\\)\"")|(?<le>\n)");
 
         /// <summary>
         /// Operator presedence table.
@@ -139,7 +139,7 @@ namespace Battlegrounds.Lua.Parsing {
             var tokens = Tokenize(sourceText, sourceFile);
 
             // Convert into epressions
-            List<LuaExpr> expressions = new List<LuaExpr>();
+            List<LuaExpr> expressions = new();
             for (int i = 0; i < tokens.Count; i++) {
                 expressions.Add(tokens[i].Type switch {
                     LuaTokenType.Bool => new LuaConstValueExpr(new LuaBool(bool.Parse(tokens[i].Val)), tokens[i].Pos),
@@ -155,7 +155,7 @@ namespace Battlegrounds.Lua.Parsing {
                     LuaTokenType.Comment => new LuaComment(tokens[i].Val, tokens[i].Pos),
                     LuaTokenType.StdOperator or LuaTokenType.RelOperator or LuaTokenType.Concat => new LuaOpExpr(tokens[i].Val, tokens[i].Pos),
                     LuaTokenType.Keyword => new LuaKeyword(tokens[i].Val, tokens[i].Pos),
-                    _ => throw new Exception(),
+                    _ => throw new EnumValueNotSupportedException<LuaTokenType>(tokens[i].Type),
                 });
                 if (expressions[^1] is LuaComment) {
                     expressions.RemoveAt(expressions.Count - 1);

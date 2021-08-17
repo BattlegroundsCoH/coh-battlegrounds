@@ -4,14 +4,13 @@ using System.Linq;
 
 using Battlegrounds.Functional;
 using Battlegrounds.Game.Gameplay;
-using Battlegrounds.Json;
 using Battlegrounds.Locale;
 
 namespace Battlegrounds.Campaigns.Organisations {
 
-    public class Regiment : IJsonObject {
+    public class Regiment {
 
-        public class Company : IJsonObject {
+        public class Company {
             public string Designation { get; } // Able, Baker.. etc
             public List<Squad> Units { get; }
             public int BaseStrength { get; private set; }
@@ -25,7 +24,6 @@ namespace Battlegrounds.Campaigns.Organisations {
                 this.Units.AddRange(units);
                 this.BaseStrength = units.Count;
             }
-            public string ToJsonReference() => throw new NotImplementedException();
         }
 
         private Regiment.Company[] m_companies;
@@ -64,8 +62,6 @@ namespace Battlegrounds.Campaigns.Organisations {
             this.m_companies[companyIndex].SetSquads(squads);
             this.m_initialCompanyCount++;
         }
-
-        public string ToJsonReference() => throw new NotSupportedException();
 
         public void EachCompany(Action<Regiment.Company> action) => this.m_companies.ForEach(action);
 

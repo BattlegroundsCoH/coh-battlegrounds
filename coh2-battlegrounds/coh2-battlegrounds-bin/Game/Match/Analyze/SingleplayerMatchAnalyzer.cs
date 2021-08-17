@@ -40,7 +40,8 @@ namespace Battlegrounds.Game.Match.Analyze {
                     JsonPlayback playback = new(replayMatchDataConcrete);
                     if (playback.ParseMatchData()) {
                         File.WriteAllText("_last_matchdata.json", JsonSerializer.Serialize(playback, new JsonSerializerOptions() {
-                            WriteIndented = true
+                            WriteIndented = true,
+                            IncludeFields = true,
                         }));
                     } else {
                         Trace.WriteLine("Failed to save local json playback.", nameof(SingleplayerMatchAnalyzer));

@@ -1,8 +1,7 @@
 ﻿using System;
-using System.IO;
-using System.Text.RegularExpressions;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
-using Battlegrounds.Json;
 using Battlegrounds.Online;
 
 namespace Battlegrounds.Steam {
@@ -10,7 +9,8 @@ namespace Battlegrounds.Steam {
     /// <summary>
     /// Represents a Steam User by ID and name. Implements <see cref="IJsonObject"/>. This class cannot be inherited.
     /// </summary>
-    public sealed class SteamUser : IJsonObject {
+    [JsonConverter(typeof(SteamUserJsonConverter))]
+    public sealed class SteamUser {
 
         /// <summary>
         /// The display name of a <see cref="SteamUser"/>. (Not the actual account name!)
@@ -18,7 +18,7 @@ namespace Battlegrounds.Steam {
         public string Name { get; set; }
 
         /// <summary>
-        /// The <see cref="UInt64"/> user ID.
+        /// The <see cref="ulong"/> user ID.
         /// </summary>
         public ulong ID { get; }
 
@@ -32,14 +32,12 @@ namespace Battlegrounds.Steam {
         /// </summary>
         public bool UpdateName() {
 
-            // So we don't have any real association with Steam
-            // Meaning we'll have to "stumble" upon this data from somewhere else (like a 3rd party website freely giving away this information)
-            // https://steamidfinder.com/lookup/76561198003529969/ ==> Will give a website containing the information
+            // https://steamidfinder.com/lookup/76561198003529969/ ==> Will give the needed information
 
             string str = SourceDownloader.DownloadSourceCode($"https://steamidfinder.com/lookup/{this.ID}/");
 
             const string lookfor = "name <code>";
-            int pos = str.IndexOf(lookfor);
+            int pos = str.IndexOf(lookfor, StringComparison.InvariantCulture);
 
             if (pos != -1) {
                 int len = str.IndexOf('<', pos + lookfor.Length + 1) - (pos + lookfor.Length);
@@ -67,7 +65,7 @@ namespace Battlegrounds.Steam {
         public static SteamUser FromID(ulong id) {
 
             // Create the user
-            SteamUser user = new SteamUser(id);
+            SteamUser user = new(id);
 
             // Update the user name (and make sure there's no problems fetching the name)
             if (!user.UpdateName()) {
@@ -79,24 +77,13 @@ namespace Battlegrounds.Steam {
 
         }
 
-        /// <summary>
-        /// Get the json string reference value.
-        /// </summary>
-        /// <returns>Json string reference value.</returns>
-        public string ToJsonReference() => this.ID.ToString();
+    }
 
-        /// <summary>
-        /// Dereference a json string into a the proper <see cref="SteamUser"/> equivalent.
-        /// </summary>
-        /// <param name="jsonReference">The json reference value.</param>
-        /// <returns>The steam user identified by the reference value. Null if no user could be found or the reference value is invalid.</returns>
-        public static SteamUser JsonDereference(string jsonReference) {
-            if (ulong.TryParse(jsonReference, out ulong i)) {
-                return FromID(i);
-            } else {
-                return null;
-            }
-        }
+    public class SteamUserJsonConverter : JsonConverter<SteamUser> {
+
+        public override SteamUser Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options) => SteamUser.FromID(reader.GetUInt64());
+
+        public override void Write(Utf8JsonWriter writer, SteamUser value, JsonSerializerOptions options) => writer.WriteNumberValue(value.ID);
 
     }
 
