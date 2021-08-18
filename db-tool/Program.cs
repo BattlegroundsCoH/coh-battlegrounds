@@ -180,7 +180,7 @@ namespace CoH2XML2JSON {
             GenericDatabase("criticals_database.json", "critical", (doc, path, name) => new Critical(doc, modguid, name));
             GenericDatabase("slotitems_database.json", "slot_item", (doc, path, name) => new SlotItem(doc, modguid, name) { Army = GetFactionFromPath(path) });
             GenericDatabase("upgrades_database.json", "upgrade", (doc, path, name) => new UBP(doc, modguid, name));
-            GenericDatabase("weapons_database.json", "weapon", (doc, path, name) => new WBP(doc, modguid, name));
+            GenericDatabase("weapons_database.json", "weapon", (doc, path, name) => new WBP(doc, modguid, name, path));
 
             Console.WriteLine();
             Console.WriteLine("Created databases - Press any key to exit");

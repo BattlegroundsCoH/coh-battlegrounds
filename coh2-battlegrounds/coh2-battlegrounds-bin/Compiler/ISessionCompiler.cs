@@ -14,11 +14,18 @@ namespace Battlegrounds.Compiler {
         void SetCompanyCompiler(ICompanyCompiler companyCompiler);
 
         /// <summary>
-        /// Compile a <see cref="Session"/> into Lua Source Code.
+        /// Compile a <see cref="ISession"/> into Lua Source Code.
         /// </summary>
-        /// <param name="session">The <see cref="Session"/> instance to compile.</param>
+        /// <param name="session">The <see cref="ISession"/> instance to compile.</param>
         /// <returns>A formatted <see cref="string"/> containing Lua Source Code.</returns>
-        string CompileSession(Session session);
+        string CompileSession(ISession session);
+
+        /// <summary>
+        /// Compile the supply data for an <see cref="ISession"/>.
+        /// </summary>
+        /// <param name="session">The session to compile data for.</param>
+        /// <returns>A formatted <see cref="string"/> containing Lua Source Code.</returns>
+        string CompileSupplyData(ISession session);
 
     }
 

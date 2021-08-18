@@ -165,6 +165,10 @@
 			<bool name="is_visible_in_game" value="True" />
 			<float name="precise_size" value="-1" />
 		</template_reference>
+		<template_reference name="exts" value="ebpextensions\ability_ext">
+			<list name="abilities">
+			</list>
+		</template_reference>
 	</list>
 	<uniqueid name="pbgid" value="1073741928" />
 </instance>

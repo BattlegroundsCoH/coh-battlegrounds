@@ -13,7 +13,7 @@ namespace Battlegrounds.Game.Match {
     /// </summary>
     public class NullSession : ISession {
 
-        private Dictionary<ulong, Company> m_dummyCompanies = new();
+        private readonly Dictionary<ulong, Company> m_dummyCompanies = new();
 
         public Guid SessionID => Guid.Empty;
 
@@ -26,6 +26,8 @@ namespace Battlegrounds.Game.Match {
         public ITuningMod TuningMod => ModManager.GetMod<ITuningMod>(ModManager.GetPackage("mod_bg").TuningGUID);
 
         public string GamemodeOption => "0";
+
+        public IDictionary<string, object> Settings => throw new NotSupportedException();
 
         public NullSession() { this.AllowPersistency = false; }
 
@@ -43,6 +45,7 @@ namespace Battlegrounds.Game.Match {
             this.m_dummyCompanies[steamID] = builder(bld.NewCompany(army).ChangeName(companyName).ChangeTuningMod(this.TuningMod.Guid)).Commit().Result;
         }
 
+        public ISessionParticipant[] GetParticipants() => throw new NotSupportedException();
     }
 
 }

@@ -11,6 +11,7 @@ using Battlegrounds.Functional;
 using Battlegrounds.Modding;
 using Battlegrounds.Lua.Generator;
 using Battlegrounds.Game;
+using Battlegrounds.Game.Gameplay.Supply;
 
 namespace Battlegrounds.Compiler {
 
@@ -26,16 +27,19 @@ namespace Battlegrounds.Compiler {
         /// </summary>
         public SessionCompiler() => this.m_companyCompiler = null;
 
-        public virtual string CompileSession(Session session) {
+        public virtual string CompileSession(ISession session) {
 
             // Make sure we have a compiler compiler
             if (this.m_companyCompiler is null) {
                 throw new ArgumentNullException(nameof(this.m_companyCompiler), "Cannot compile a session without a Company Compiler instance.");
             }
 
+            // Get the participants
+            var participants = session.GetParticipants();
+
             // Prepare game settings data
             Dictionary<string, object> bg_settings = new() {
-                ["playercount"] = session.Participants.Count(x => x.IsHumanParticipant),
+                ["playercount"] = participants.Count(x => x.IsHuman),
                 ["session_guid"] = session.SessionID.ToString(),
                 ["map"] = Path.GetFileNameWithoutExtension(session.Scenario.RelativeFilename),
                 ["tuning_mod"] = new Dictionary<string, object>() {
@@ -46,13 +50,13 @@ namespace Battlegrounds.Compiler {
                 ["gamemode"] = session.Gamemode?.Name ?? "Victory Points",
                 ["gameoptions"] = session.Settings,
                 ["team_setup"] = new Dictionary<string, object>() {
-                    ["allies"] = this.GetTeam("allies", session.Participants.Where(x => x.ParticipantFaction.IsAllied)),
-                    ["axis"] = this.GetTeam("axis", session.Participants.Where(x => x.ParticipantFaction.IsAxis)),
+                    ["allies"] = this.GetTeam("allies", participants.Where(x => x.TeamIndex is ParticipantTeam.TEAM_ALLIES)),
+                    ["axis"] = this.GetTeam("axis", participants.Where(x => x.TeamIndex is ParticipantTeam.TEAM_AXIS)),
                 },
             };
 
             // Prepare company data
-            Dictionary<string, Dictionary<string, object>> bg_companies = session.Participants
+            Dictionary<string, Dictionary<string, object>> bg_companies = participants
                 .Select(x => this.GetCompany(x))
                 .ToDictionary();
 
@@ -64,7 +68,7 @@ namespace Battlegrounds.Compiler {
                 .Assignment("bg_db.towed_upgrade", GetBlueprintName(session.TuningMod.Guid, session.TuningMod.TowUpgrade));
 
             // Write the precompiled database
-            this.WritePrecompiledDatabase(sourceBuilder, session.Participants.Select(x => x.ParticipantCompany));
+            this.WritePrecompiledDatabase(sourceBuilder, participants.Select(x => x.SelectedCompany));
 
             // Return built source code
             return sourceBuilder.GetSourceText();
@@ -74,13 +78,13 @@ namespace Battlegrounds.Compiler {
         private static string GetBlueprintName(ModGuid guid, string blueprint)
             => $"{guid.GUID}:{blueprint}";
 
-        private static string GetCompanyUsername(SessionParticipant participant)
-            => participant.IsHumanParticipant ? participant.GetName() : $"AIPlayer#{participant.PlayerIndexOnTeam}";
+        private static string GetCompanyUsername(ISessionParticipant participant)
+            => participant.IsHuman ? participant.GetName() : $"AIPlayer#{participant.PlayerIndexOnTeam}";
 
-        private KeyValuePair<string, Dictionary<string, object>> GetCompany(SessionParticipant x)
-            => new(GetCompanyUsername(x), this.m_companyCompiler.CompileToLua(x.ParticipantCompany, !x.IsHumanParticipant, x.PlayerIndexOnTeam));
+        private KeyValuePair<string, Dictionary<string, object>> GetCompany(ISessionParticipant x)
+            => new(GetCompanyUsername(x), this.m_companyCompiler.CompileToLua(x.SelectedCompany, !x.IsHuman, x.PlayerIndexOnTeam));
 
-        protected virtual List<Dictionary<string, object>> GetTeam(string team, IEnumerable<SessionParticipant> players) {
+        protected virtual List<Dictionary<string, object>> GetTeam(string team, IEnumerable<ISessionParticipant> players) {
 
             List<Dictionary<string, object>> result = new();
 
@@ -133,6 +137,34 @@ namespace Battlegrounds.Compiler {
         }
 
         public void SetCompanyCompiler(ICompanyCompiler companyCompiler) => this.m_companyCompiler = companyCompiler;
+        
+        public string CompileSupplyData(ISession session) {
+
+            // Get the participants
+            var participants = session.GetParticipants();
+
+            // Get the companies
+            var companies = participants.Select(x => x.SelectedCompany);
+
+            // Get the sqauds
+            var squads = companies.SelectMany(x => x.Units);
+
+            // TODO: Save squad specific upgrades
+
+            // Get blueprints and create generic profiles
+            var profiles = squads.Select(x => x.SBP)
+                .Distinct()
+                .Select(x => new KeyValuePair<string, SupplyProfile>(x.GetScarName(), new(x)))
+                .ToDictionary();
+
+            // Save to lua
+            var sourceBuilder = new LuaSourceBuilder()
+                .Assignment("bgsupplydata_profiles", profiles);
+
+            // Return source code
+            return sourceBuilder.GetSourceText();
+
+        }
 
     }
 

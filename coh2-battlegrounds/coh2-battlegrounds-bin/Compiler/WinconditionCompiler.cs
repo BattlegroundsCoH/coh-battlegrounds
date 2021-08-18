@@ -20,8 +20,11 @@ namespace Battlegrounds.Compiler {
         /// </summary>
         /// <param name="workdir">The temporary work directory.</param>
         /// <param name="sessionFile">The session file to include</param>
+        /// <param name="wincondition">The wincondition to compile.</param>
+        /// <param name="source">The wincondition source file locator.</param>
+        /// <param name="includeFiles">Additional files to include in the gamemode.</param>
         /// <returns>True of the archive file was created sucessfully. False if any error occured.</returns>
-        public static bool CompileToSga(string workdir, string sessionFile, IGamemode wincondition, IWinconditionSource source) {
+        public static bool CompileToSga(string workdir, string sessionFile, IGamemode wincondition, IWinconditionSource source, params string[] includeFiles) {
 
             // Verify is win condition source is valid
             if (source is null) {

@@ -258,7 +258,7 @@ namespace BattlegroundsApp.Models {
         public List<SessionParticipant> GetParticipants(LobbyTeamType team, ref byte j) {
 
             List<SessionParticipant> participants = new List<SessionParticipant>();
-            SessionParticipantTeam participantTeam = team == LobbyTeamType.Allies ? SessionParticipantTeam.TEAM_ALLIES : SessionParticipantTeam.TEAM_AXIS;
+            ParticipantTeam participantTeam = team == LobbyTeamType.Allies ? ParticipantTeam.TEAM_ALLIES : ParticipantTeam.TEAM_AXIS;
 
             byte i = 0;
             foreach (TeamPlayerCard slot in this.m_teamSetup[team]) {

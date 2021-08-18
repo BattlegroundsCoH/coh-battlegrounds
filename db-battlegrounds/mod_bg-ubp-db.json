@@ -1,6 +1,39 @@
 [
   {
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741836,
+    "Name": "bg_time_day",
+    "Display": {
+      "LocaleName": "0",
+      "LocaleDescriptionLong": "0",
+      "LocaleDescriptionShort": "0"
+    },
+    "OwnerType": "player"
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741837,
+    "Name": "bg_time_night",
+    "Display": {
+      "LocaleName": "0",
+      "LocaleDescriptionLong": "0",
+      "LocaleDescriptionShort": "0"
+    },
+    "OwnerType": "player"
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741838,
+    "Name": "bg_time_night_aura",
+    "Display": {
+      "LocaleName": "0",
+      "LocaleDescriptionLong": "0",
+      "LocaleDescriptionShort": "0"
+    },
+    "OwnerType": "self"
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
     "PBGID": 1073741823,
     "Name": "bg_verify",
     "Display": {
@@ -168,6 +201,38 @@
     "SlotItems": [
       "ptrs_41_anti_tank_rifle_guard_troop_mp",
       "ptrs_41_anti_tank_rifle_guard_troop_mp"
+    ],
+    "Requirements": [
+      {
+        "RequirementType": "required_player_upgrade",
+        "RequirementReason": "usage",
+        "UIText": "$142b113740474c82a60b0a428bd553d5:59",
+        "RequirementProperties": {
+          "is_present": true,
+          "max_completed": 100,
+          "min_completed": 1,
+          "upgrade_name": "no_ingame"
+        }
+      }
+    ]
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741839,
+    "Name": "sherman_soviet_top_gunner_bg",
+    "Display": {
+      "LocaleName": "11072134",
+      "LocaleDescriptionLong": "11072133",
+      "LocaleDescriptionShort": "11072132",
+      "Icon": "Icons_upgrades_icon_upgrade_aef_50_cal_machine_gun"
+    },
+    "Cost": {
+      "Munition": 60,
+      "FieldTime": 45
+    },
+    "OwnerType": "self",
+    "SlotItems": [
+      "m2hb_50cal_sherman"
     ],
     "Requirements": [
       {

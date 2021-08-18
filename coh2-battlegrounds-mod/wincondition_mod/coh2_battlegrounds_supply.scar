@@ -1,3 +1,34 @@
+-- Define supply table
+_bg_supply = {
+    ammo = {},
+    fuel = {},
+};
+
 function BGSupply_SetupUI()
+    
+    -- Import supply data
+    import("WinConditions/auxiliary_scripts/session_supply.scar");
+
+    -- Register spawn callback
+    BGAPI_AddUnitSpawnedCallback(BGSupply_NewUnit);
+
+end
+
+function BGSupply_NewUnit(player, squad, data)
+
+end
+
+-- Any weapon within the system must invoke this (Primary weapon)
+function ScarEvent_OnWeaponFired(...)
+
+end
+
+-- Any weapon within the system must invoke this (Secondary weapons)
+function ScarEvent_OnSecondaryWeaponFired(...)
+
+end
+
+-- Any weapon within the system must invoke this (Tertiary weapon)
+function ScarEvent_OnTertiaryWeaponFired(...)
 
 end

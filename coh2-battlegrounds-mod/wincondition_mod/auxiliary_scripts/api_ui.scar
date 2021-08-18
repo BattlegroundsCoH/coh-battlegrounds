@@ -173,3 +173,60 @@ function BGUI_HideAll()
 	end
 
 end
+
+---------------------------------------------------------------------------
+-- UI API - 3D --> 2D
+-- Developed by CoDiEx
+---------------------------------------------------------------------------
+__proj_matrix = {};
+
+function Matrix_GetProjection()
+	if __proj_matrix == nil then
+		local zn = Camera_GetTuningValue(TV_ClipNear);
+		local zf = Camera_GetTuningValue(TV_ClipFar);
+		local q = zf / (zf - zn);
+		__proj_matrix = {
+			{ UI_GetScreenWidth(), 0, 0, 0 },
+			{ 0, UI_GetScreenHeight(), 0, 0},
+			{ 0, 0, q, 1 },
+			{ 0, 0, -q * zn, 0}
+		}
+	end
+	return __proj_matrix;
+end
+
+function Matrix_GetView()
+	local v = vec3funcs;
+	local eye = Camera_GetCurrentTargetPos();
+	local up = { 0, 1, 0 };
+	local at = { 0, 0, 0 };
+	local z = v.unit(v.sub(eye, at));
+	local x = v.unit(v.cross(up, z);
+	local y = v.cross(z, x);
+	return {
+		{ x.x, y.x, z.x, 0 },
+		{ x.y, y.y, z.y, 0 },
+		{ x.z, y.z, z.z, 0 },
+		{ -v.dot(x, eye), -v.dot(y, eye), -v.dot(z, eye), 1 },
+	}
+end
+
+function Matrix_Mul(u, v)
+
+end
+
+function Matrix_MulVec(m, v)
+
+end
+
+function UI_GetCursorPosition()
+	local worldpos = Misc_GetMouseOnTerrain();
+	local view = Matrix_GetView();
+	local proj = Matrix_GetProjection();
+	local viewProjMatrix = Matrix_Mul(proj, view);
+	local pos = Matrix_MulVec(viewProjMatrix, worldpos);
+	return {
+		x = pos.x,
+		y = pos.y
+	}
+end

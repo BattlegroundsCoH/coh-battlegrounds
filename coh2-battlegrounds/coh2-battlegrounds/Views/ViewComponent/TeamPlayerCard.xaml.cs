@@ -293,6 +293,7 @@ namespace BattlegroundsApp.Views.ViewComponent {
                 // Set difficulty
                 aiMember.Difficulty = difficulty;
                 aiMember.SetArmy(this.IsAllies ? "soviet" : "german");
+                this.TeamSlot.SlotState = LobbyTeamSlotState.OCCUPIED;
 
                 // Request refresh of card
                 this.RequestFullRefresh(this);

@@ -1974,15 +1974,23 @@
     "Veterancy": [
       {
         "ScreenName": "11070873",
-        "Experience": 1820
-      },
-      {
-        "ScreenName": "11072114",
         "Experience": 3640
       },
       {
+        "ScreenName": "11072114",
+        "Experience": 11280
+      },
+      {
         "ScreenName": "11072115",
-        "Experience": 7280
+        "Experience": 1800
+      },
+      {
+        "ScreenName": "0",
+        "Experience": 2600
+      },
+      {
+        "ScreenName": "0",
+        "Experience": 3400
       }
     ],
     "Types": [
@@ -2425,6 +2433,61 @@
       "vehicle"
     ],
     "SlotPickupCapacity": 1,
+    "UpgradeCapacity": -1
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741909,
+    "Name": "m5_halftrack_quad_squad_bg",
+    "Army": "soviet",
+    "Display": {
+      "LocaleName": "11048706",
+      "LocaleDescriptionLong": "11048708",
+      "LocaleDescriptionShort": "11048710",
+      "Icon": "Icons_vehicles_vehicle_soviet_m5_halftrack",
+      "Symbol": "Icons_symbols_vehicle_soviet_m5_halftrack_symbol",
+      "Portrait": "Icons_portraits_vehicle_soviet_m5_halftrack_s_portrait"
+    },
+    "SquadCost": {
+      "Manpower": 240,
+      "Fuel": 30,
+      "FieldTime": 30
+    },
+    "HasCrew": true,
+    "Entities": [
+      {
+        "EBP": "m5_halftrack_quad_bg",
+        "Count": 1
+      }
+    ],
+    "Abilities": [
+      "m5_m3a1_overdrive_mp",
+      "blizzard_effect",
+      "m3a1_m5_moving_accuracy_mp",
+      "vehicle_crew_repair_toggle_mp",
+      "transport_heavy_vehicle_bg",
+      "detach_tow_bg"
+    ],
+    "Veterancy": [
+      {
+        "ScreenName": "11047204",
+        "Experience": 540
+      },
+      {
+        "ScreenName": "11047176",
+        "Experience": 1080
+      },
+      {
+        "ScreenName": "11047184",
+        "Experience": 2160
+      }
+    ],
+    "Types": [
+      "m5_halftrack",
+      "light_vehicle",
+      "vehicle"
+    ],
+    "SlotPickupCapacity": 6,
     "UpgradeCapacity": -1
   },
   {
@@ -4385,6 +4448,65 @@
       "sov_officer",
       "tank_detection",
       "mobile_infantry"
+    ],
+    "UpgradeCapacity": 1
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741910,
+    "Name": "team_weapon_crew_squad_bg",
+    "Army": "soviet",
+    "Display": {
+      "LocaleName": "11006679",
+      "LocaleDescriptionLong": "11007044",
+      "LocaleDescriptionShort": "11009064",
+      "Icon": "Icons_units_unit_soviet_conscript_02",
+      "Symbol": "Icons_symbols_unit_soviet_conscript_02_symbol",
+      "Portrait": "Icons_portraits_unit_soviet_conscript_s_portrait"
+    },
+    "SquadCost": {
+      "Manpower": 120,
+      "FieldTime": 12
+    },
+    "Entities": [
+      {
+        "EBP": "soviet_weapon_crew_bg",
+        "Count": 4
+      }
+    ],
+    "Abilities": [
+      "conscript_oorah_bg",
+      "merge_ability_bg",
+      "blizzard_effect",
+      "conscript_in_cover_stationary_camouflage_mp",
+      "ambush_camo_hold_fire_mp",
+      "conscript_cover_combat_bonus"
+    ],
+    "Veterancy": [
+      {
+        "ScreenName": "11145756",
+        "Experience": 2400
+      },
+      {
+        "ScreenName": "11047384",
+        "Experience": 4800
+      },
+      {
+        "ScreenName": "11047067",
+        "Experience": 9200
+      },
+      {
+        "ScreenName": "0",
+        "Experience": 13400
+      },
+      {
+        "ScreenName": "0",
+        "Experience": 17800
+      }
+    ],
+    "Types": [
+      "infantry_not_team_weapon",
+      "infantry"
     ],
     "UpgradeCapacity": 1
   },

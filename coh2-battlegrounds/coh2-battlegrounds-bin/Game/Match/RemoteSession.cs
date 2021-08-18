@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 using Battlegrounds.Game.Database;
 using Battlegrounds.Game.DataCompany;
@@ -23,9 +24,13 @@ namespace Battlegrounds.Game.Match {
 
         public ITuningMod TuningMod => ModManager.GetMod<ITuningMod>(ModManager.GetPackage("mod_bg").TuningGUID);
 
+        public IDictionary<string, object> Settings => throw new NotSupportedException();
+
         public RemoteSession(string session) => this.SessionID = Guid.Parse(session);
 
         public Company GetPlayerCompany(ulong steamID) => null;
+
+        public ISessionParticipant[] GetParticipants() => throw new NotSupportedException();
 
     }
 

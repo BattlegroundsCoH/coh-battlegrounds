@@ -476,7 +476,7 @@
 								<float name="z" value="0" />
 							</group>
 							<enum name="type" value="default" />
-							<instance_reference name="weapon" value="weapon\soviet\small_arms\machine_gun\sub_machine_gun\shock troops_ppsh-41_sub_machine_gun_mp" />
+							<instance_reference name="weapon" value="weapon\soviet\small_arms\machine_gun\sub_machine_gun\ppsh-41_sub_machine_gun_bg" mod="142b113740474c82a60b0a428bd553d5" />
 						</group>
 					</list>
 					<bool name="receives_attack_commands" value="False" />

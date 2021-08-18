@@ -1726,7 +1726,7 @@
       "engineer_booby_trap"
     ],
     "Hardpoints": [
-      "mosin_nagant_rifle_combat_engineer_mp"
+      "mosin_nagant_rifle_bg"
     ],
     "Health": 80
   },
@@ -1755,7 +1755,7 @@
       "engineer_booby_trap"
     ],
     "Hardpoints": [
-      "penal_troops_svt_rifle_mp"
+      "svt_rifle_bg"
     ],
     "Health": 80
   },
@@ -1784,7 +1784,7 @@
       "heal_in_cover"
     ],
     "Hardpoints": [
-      "guards_troops_mosin_nagant_rifle_mp"
+      "mosin_nagant_rifle_bg"
     ],
     "Health": 80
   },
@@ -1809,7 +1809,7 @@
       "heal_in_cover"
     ],
     "Hardpoints": [
-      "penal_troops_svt_rifle_mp",
+      "mosin_nagant_rifle_bg",
       "shock troops_ppsh-41_sub_machine_gun_mp"
     ],
     "Health": 80
@@ -1841,7 +1841,7 @@
     "Hardpoints": [
       "shock troops_ppsh-41_sub_machine_gun_mp",
       "shock troops_ppsh-41_sub_machine_gun_mp",
-      "shock troops_ppsh-41_sub_machine_gun_mp"
+      "ppsh-41_sub_machine_gun_bg"
     ],
     "Health": 80
   },
@@ -1865,7 +1865,7 @@
       "political_speech_bg"
     ],
     "Hardpoints": [
-      "nagant_m1895_revolver_mp"
+      "nagant_m1895_revolver_bg"
     ],
     "Health": 80
   },
@@ -1888,7 +1888,7 @@
       "heal_in_cover"
     ],
     "Hardpoints": [
-      "mosin_nagant_rifle_conscript_mp"
+      "ppsh-41_sub_machine_gun_bg"
     ],
     "Health": 80
   },
@@ -1911,7 +1911,7 @@
       "heal_in_cover"
     ],
     "Hardpoints": [
-      "nagant_m1895_revolver_mp"
+      "nagant_m1895_revolver_bg"
     ],
     "Health": 80
   },
@@ -1935,7 +1935,7 @@
       "inspire_unit_bg"
     ],
     "Hardpoints": [
-      "nagant_m1895_revolver_mp"
+      "nagant_m1895_revolver_bg"
     ],
     "Health": 80
   },
@@ -1962,7 +1962,7 @@
       "heal_in_cover"
     ],
     "Hardpoints": [
-      "mosin_nagant_rifle_conscript_mp"
+      "mosin_nagant_rifle_bg"
     ],
     "Health": 80
   },
@@ -1988,7 +1988,7 @@
       "heal_in_cover"
     ],
     "Hardpoints": [
-      "mosin_nagant_rifle_conscript_mp"
+      "ppsh-41_sub_machine_gun_bg"
     ],
     "Health": 80
   },
@@ -2016,7 +2016,7 @@
       "heal_in_cover"
     ],
     "Hardpoints": [
-      "penal_troops_svt_rifle_mp"
+      "svt_rifle_bg"
     ],
     "Health": 80
   },
@@ -2044,7 +2044,7 @@
       "rgd_1_smoke_grenade_bg"
     ],
     "Hardpoints": [
-      "conscript_ppsh-41_sub_machine_gun_mp"
+      "ppsh-41_sub_machine_gun_bg"
     ],
     "Health": 80
   },
@@ -2072,7 +2072,7 @@
       "rgd_1_smoke_grenade_bg"
     ],
     "Hardpoints": [
-      "conscipt_ptrs_41_mp"
+      "ptrs_41_bg"
     ],
     "Health": 80
   },
@@ -2098,7 +2098,7 @@
       "heal_in_cover"
     ],
     "Hardpoints": [
-      "mosin_nagant_sniper_rifle_mp"
+      "mosin_nagant_sniper_rifle_bg"
     ],
     "Health": 82
   },
@@ -2124,7 +2124,7 @@
       "heal_in_cover"
     ],
     "Hardpoints": [
-      "mosin_nagant_sniper_rifle_mp"
+      "mosin_nagant_sniper_rifle_bg"
     ],
     "Health": 82
   },
@@ -2153,8 +2153,7 @@
       "engineer_booby_trap"
     ],
     "Hardpoints": [
-      "mosin_nagant_rifle_combat_engineer_mp",
-      "penal_troops_svt_rifle_mp"
+      "colt_m1911_45_pistol_bg"
     ],
     "Health": 80
   },
@@ -2183,8 +2182,7 @@
       "engineer_booby_trap"
     ],
     "Hardpoints": [
-      "mosin_nagant_rifle_combat_engineer_mp",
-      "penal_troops_svt_rifle_mp"
+      "colt_m1911_45_pistol_bg"
     ],
     "Health": 80
   },
@@ -2209,7 +2207,7 @@
       "heal_in_cover"
     ],
     "Hardpoints": [
-      "mosin_nagant_rifle_weapon_crew_mp"
+      "mosin_nagant_rifle_bg"
     ],
     "Health": 80
   },
@@ -2234,7 +2232,7 @@
       "heal_in_cover"
     ],
     "Hardpoints": [
-      "mosin_nagant_rifle_weapon_crew_mp"
+      "mosin_nagant_rifle_bg"
     ],
     "Health": 80
   },
@@ -2258,7 +2256,7 @@
       "heal_in_cover"
     ],
     "Hardpoints": [
-      "mosin_nagant_rifle_weapon_crew_mp"
+      "mosin_nagant_rifle_bg"
     ],
     "Health": 80
   },
@@ -2283,7 +2281,7 @@
       "heal_in_cover"
     ],
     "Hardpoints": [
-      "mosin_nagant_rifle_weapon_crew_mp"
+      "mosin_nagant_rifle_bg"
     ],
     "Health": 80
   },
@@ -2308,7 +2306,7 @@
       "heal_in_cover"
     ],
     "Hardpoints": [
-      "mosin_nagant_rifle_weapon_crew_mp"
+      "mosin_nagant_rifle_bg"
     ],
     "Health": 80
   },
@@ -2333,7 +2331,32 @@
       "heal_in_cover"
     ],
     "Hardpoints": [
-      "mosin_nagant_rifle_weapon_crew_mp"
+      "mosin_nagant_rifle_bg"
+    ],
+    "Health": 80
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741930,
+    "Name": "soviet_weapon_crew_bg",
+    "Army": "soviet",
+    "Display": {
+      "LocaleName": "0",
+      "LocaleDescriptionLong": "0",
+      "LocaleDescriptionShort": "0",
+      "Symbol": ""
+    },
+    "Cost": {
+      "Manpower": 30,
+      "FieldTime": 3
+    },
+    "Abilities": [
+      "blizzard_effect_deep_snow_camo",
+      "army_item_global_cover_training",
+      "heal_in_cover"
+    ],
+    "Hardpoints": [
+      "mosin_nagant_rifle_bg"
     ],
     "Health": 80
   },
@@ -2815,9 +2838,45 @@
       "halftrack_250_dummy"
     ],
     "Health": 320,
-    "Upgrades": [
-      "m5_halftrack_72k_aa_gun_package_mp"
+    "UpgradeCapacity": -1
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741929,
+    "Name": "m5_halftrack_quad_bg",
+    "Army": "soviet",
+    "Display": {
+      "LocaleName": "11038346",
+      "LocaleDescriptionLong": "11038311",
+      "LocaleDescriptionShort": "11049073",
+      "Icon": "Icons_vehicles_vehicle_soviet_m5_halftrack",
+      "Symbol": "Icons_symbols_vehicle_soviet_m5_halftrack_symbol"
+    },
+    "Cost": {
+      "Manpower": 240,
+      "Fuel": 30,
+      "FieldTime": 30
+    },
+    "Abilities": [
+      "german_hulldown_disable",
+      "blizzard_effect_vehicle",
+      "handbrake_mode_new_mp",
+      "usf_hold_fire_mp"
     ],
+    "Drivers": [
+      {
+        "Army": "racebps\\soviet",
+        "SBP": "soviet_male_vehicle_2_crew_bg",
+        "Capture": "m5_halftrack_squad_bg"
+      }
+    ],
+    "Hardpoints": [
+      "m5_halftrack_quad_50_cal_m2hb_mp",
+      "m5_halftrack_quad_50_cal_m2hb_mp",
+      "m5_halftrack_m2hb_hmg_mp",
+      "halftrack_250_dummy"
+    ],
+    "Health": 320,
     "UpgradeCapacity": -1
   },
   {
@@ -2861,9 +2920,9 @@
     ],
     "Health": 640,
     "Upgrades": [
-      "sherman_soviet_top_gunner"
+      "sherman_soviet_top_gunner_bg"
     ],
-    "UpgradeCapacity": -1
+    "UpgradeCapacity": 1
   },
   {
     "ModGUID": "142b113740474c82a60b0a428bd553d5",

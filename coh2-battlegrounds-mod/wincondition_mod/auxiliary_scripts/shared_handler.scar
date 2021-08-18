@@ -530,3 +530,17 @@ function BG_ParadopNext(executer, target)
         -- TODO: Implement
     end
 end
+
+function BGAPI_AddUnitSpawnedCallback(callback)
+    if __bgapi_spawncallbacks == nil then
+        __bgapi_spawncallbacks = {};
+    end
+    table.insert( __bgapi_spawncallbacks, callback );
+end
+
+function BGAPI_AddUnitRemovedCallback(callback)
+    if __bgapi_removecallbacks == nil then
+        __bgapi_removecallbacks = {};
+    end
+    table.insert( __bgapi_removecallbacks, callback );
+end

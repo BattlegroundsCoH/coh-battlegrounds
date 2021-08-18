@@ -179,6 +179,16 @@ function BG_DeploySquad(player, unit_id)
             Rule_AddSquadEvent(BG_OnSquadDeath, crewSquad, GE_SquadKilled);
         end
 
+        -- Invoke additional hooks
+        if __bgapi_spawncallbacks ~= nil then
+            for _, func in pairs(__bgapi_spawncallbacks) do
+                func(player, squad, unit_data);
+                if crewSquad ~= nil then
+                    func(player, crewSquad, unit_data.crew);
+                end
+            end
+        end
+
         -- Was it the local player who spawned this unit?
         if player == Game_GetLocalPlayer() then
             BG_RefreshCompanyView();

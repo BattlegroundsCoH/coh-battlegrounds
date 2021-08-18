@@ -9,23 +9,17 @@
 				<bool name="no_retrigger" value="False" />
 				<bool name="validate_all_sub_actions" value="True" />
 				<list name="requirement_table">
-					<template_reference name="required" value="requirements\required_all_in_list">
+					<template_reference name="required" value="requirements\required_not">
 						<enum name="reason" value="usage" />
 						<locstring name="ui_name" value="0" />
-						<list name="requirements">
-							<template_reference name="requirement" value="requirements\required_not">
+						<list name="requirement_table">
+							<template_reference name="required" value="requirements\required_near_entity">
+								<enum name="alliance_requirement" value="neutral" />
+								<float name="radius_requirement" value="25" />
+								<instance_reference name="entity_pbg" value="ebps\projectile\airdrop_flare" />
 								<enum name="reason" value="usage" />
 								<locstring name="ui_name" value="0" />
-								<list name="requirement_table">
-									<template_reference name="required" value="requirements\required_near_entity">
-										<enum name="alliance_requirement" value="ally" />
-										<float name="radius_requirement" value="25" />
-										<instance_reference name="entity_pbg" value="ebps\projectile\airdrop_flare" />
-										<enum name="reason" value="usage" />
-										<locstring name="ui_name" value="0" />
-										<list name="near_entity_requirement">
-										</list>
-									</template_reference>
+								<list name="near_entity_requirement">
 								</list>
 							</template_reference>
 						</list>

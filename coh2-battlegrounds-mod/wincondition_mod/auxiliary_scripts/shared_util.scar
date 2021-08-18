@@ -102,7 +102,7 @@ vec3funcs = { -- Add additional mutable functions --> Less copy and assignment o
     dot = function(self, other)
         return self.x * other.x + self.y * other.y + self.z * other.z;
     end,
-    cross = function(self, other)
+    cross = function(self)
         local cx = self.y * other.z - self.z * other.y;
         local cy = self.z * other.x - self.x * other.z;
         local cz = self.x * other.y - self.y * other.x;
