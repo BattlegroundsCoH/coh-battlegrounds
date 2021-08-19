@@ -62,3 +62,11 @@
 63	Night Warfare
 64	This unit is currently being affected by the night.
 65	Light vehicle with good Anti-Infantry capabilities
+66	Out of Ammunition
+67	No Ammunition
+68	The unit is out of ammunition and cannot fight back. Retreat to supply zone to refill ammunition.
+69	No Fuel
+70	The vehicle is out of fuel and cannot move. Get the crew to bring fuel to the vehicle or have infantry deliver it.
+71	Out of fuel
+72	Forward Command Zone
+73	Units inside the forward command zone are protected foward defences.

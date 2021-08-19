@@ -404,12 +404,6 @@
 		</template_reference>
 		<template_reference name="squadexts" value="sbpextensions\squad_action_apply_ext">
 			<list name="actions">
-				<template_reference name="action" value="action\upgrade_add">
-					<bool name="apply_to_entities_in_squad" value="False" />
-					<bool name="trigger_publish_event" value="False" />
-					<instance_reference name="upgrade" value="upgrade\max_vet" />
-					<uniqueid name="id" value="1073742423" />
-				</template_reference>
 			</list>
 			<list name="squad_entity_actions">
 			</list>

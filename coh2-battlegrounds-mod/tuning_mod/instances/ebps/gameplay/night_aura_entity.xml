@@ -25,7 +25,7 @@
 								<float name="angle_left" value="0" />
 								<float name="angle_right" value="0" />
 								<enum name="area_type" value="circle" />
-								<float name="radius" value="99999" />
+								<float name="radius" value="1024" />
 							</group>
 							<template_reference name="target_info" value="type_ability_target_type\all">
 							</template_reference>

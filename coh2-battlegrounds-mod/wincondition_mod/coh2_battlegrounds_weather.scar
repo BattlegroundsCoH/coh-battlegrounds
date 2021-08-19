@@ -117,12 +117,7 @@ function BGWeather_HasTuningSupport()
 
     -- Get upgrade for day time
     success, g_weatherSystem.ebp_aura = pcall(BP_GetEntityBlueprint, mod_str .. "night_aura_entity");
-    if not success then
-        return false;
-    end
-
-    -- Return true ==> No errors getting bp stuff
-    return true;
+    return success;
 
 end
 

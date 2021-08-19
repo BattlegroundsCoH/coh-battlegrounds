@@ -7,24 +7,22 @@
 					<template_reference name="target_info" value="type_ability_target_type\has_any_in_list">
 						<list name="target_infos">
 							<template_reference name="info" value="type_ability_target_type\has_unit_type">
-								<enum name="unit_type" value="aef_infantry" />
-							</template_reference>
-							<template_reference name="info" value="type_ability_target_type\has_unit_type">
-								<enum name="unit_type" value="brit_infantry" />
-							</template_reference>
-							<template_reference name="info" value="type_ability_target_type\has_unit_type">
-								<enum name="unit_type" value="soviet_infantry" />
-							</template_reference>
-							<template_reference name="info" value="type_ability_target_type\has_unit_type">
-								<enum name="unit_type" value="german_infantry" />
-							</template_reference>
-							<template_reference name="info" value="type_ability_target_type\has_unit_type">
-								<enum name="unit_type" value="west_german_infantry" />
+								<enum name="unit_type" value="infantry" />
 							</template_reference>
 						</list>
 					</template_reference>
 				</group>
 				<uniqueid name="id" value="1073744767" />
+			</template_reference>
+			<template_reference name="action" value="action\ui_unit_modifier_action">
+				<bool name="die_with_creator" value="False" />
+				<template_reference name="ui_info" value="tables\ui_info">
+					<locstring name="screen_name" value="72" mod="142b113740474c82a60b0a428bd553d5" />
+					<locstring name="help_text" value="73" mod="142b113740474c82a60b0a428bd553d5" />
+					<icon name="icon_name" value="Icons_commander_cmdr_german_rally_forward_hq" />
+					<string name="hotkey_name" value="" />
+				</template_reference>
+				<uniqueid name="id" value="1073744987" />
 			</template_reference>
 		</list>
 		<bool name="affects_squads" value="True" />

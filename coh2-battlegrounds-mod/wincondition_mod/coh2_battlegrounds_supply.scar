@@ -6,11 +6,39 @@ _bg_supply = {
 
 function BGSupply_SetupUI()
     
+    -- Get supply blueprints
+    if not BGSupply_GetBlueprints() then
+        return
+    end
+
     -- Import supply data
     import("WinConditions/auxiliary_scripts/session_supply.scar");
 
+    -- Create Fuel sgroup
+    _bg_supply.fuel_sg = SGroup_CreateIfNotFound("_bg_supply_fuel_sg");
+
     -- Register spawn callback
     BGAPI_AddUnitSpawnedCallback(BGSupply_NewUnit);
+
+end
+
+function BGSupply_GetBlueprints()
+
+    local result = true;
+    local mod_str = bg_settings.tuning_mod.mod_guid .. ":";
+
+    result, _bg_supply.crit_fuel = pcall(BP_GetCriticalBlueprint, mod_str .. "_bg_out_of_fuel");
+    if not result then
+        return false;
+    end
+
+    result, _bg_supply.crit_ammo = pcall(BP_GetCriticalBlueprint, mod_str .. "_bg_out_of_ammo");
+    if not result then
+        return false;
+    end
+
+    result, _bg_supply.crit_ammo_tw = pcall(BP_GetCriticalBlueprint, mod_str .. "_bg_out_of_ammo_tw");
+    return result;
 
 end
 
@@ -24,7 +52,7 @@ function BGSupply_NewUnit(player, squad, data)
     end
 
     -- Create ammo profile (if any, and there's at least one clip carried in the profile)
-    if profile.WeaponProfiles ~= nil and profile.WeaponProfiles.ClipCarried > 0 then
+    if profile.WeaponProfiles ~= nil then
         BGSupply_NewAmmoUnit(squad, sid, profile.WeaponProfiles);
     end
 
@@ -32,7 +60,39 @@ end
 
 function BGSupply_NewFuelUnit(squad, id, fuelData)
 
+    -- Create entry
+    _bg_supply.fuel[id] = {
+        max = fuelData.Fuel,
+        current = fuelData.Fuel,
+        rate = fuelData.BurnRate
+    };
 
+    -- Add squad to sgroup
+    SGroup_Add(_bg_supply.fuel_sg, squad);
+
+    if not Rule_Exists(BGSupply_OnFuelUpdate) then
+        Rule_AddInterval(BGSupply_OnFuelUpdate, 0.25);
+    end
+
+end
+
+function BGSupply_OnFuelUpdate()
+
+    local __update_all_fuel = function(sgroupid, itemindex, squadID)
+        if not Squad_HasCritical(squadID, _bg_supply.crit_fuel) then
+            local still_mod = 0.05;
+            if Squad_IsMoving(squadID) then
+                still_mod = 1;
+            end
+            local target = _bg_supply.fuel[Squad_GetGameID(squadID)];
+            target.current = target.current - target.rate * still_mod * 0.25;
+            if target.current <= 0.0 then
+                Cmd_CriticalHit(Squad_GetPlayerOwner(squadID), squadID, _bg_supply.crit_fuel, 0.0); 
+            end
+        end
+    end
+
+    SGroup_ForEach(_bg_supply.fuel_sg, __update_all_fuel);
 
 end
 
@@ -107,12 +167,37 @@ function ScarEvent_OnSyncWeaponFired(target, executer)
 end
 
 function BGSupply_OnFireEvent(squad, weapon, slot)
-    local id = Squad_GetGameID(squad);
-    local target = _bg_supply.ammo[id];
+    local target = _bg_supply.ammo[Squad_GetGameID(squad)];
     if target ~= nil then
         target.slots[slot].current = target.slots[slot].current - (target.weapons[weapon] or 1);
         if target.slots[slot].current <= 0 then
-            -- TODO: Trigger out of ammo
+            BGSupply_OnOutOfAmmunition(squad);
         end
     end
+end
+
+function BGSupply_OnOutOfAmmunition(squad)
+    local crit = _bg_supply.crit_ammo;
+    if Squad_HasTeamWeapon(squad) then
+        crit = _bg_supply.crit_ammo_tw;
+    end
+    Cmd_CriticalHit(Squad_GetPlayerOwner(squad), squad, crit, 0.0); 
+end
+
+function BGSupplyAE_RefillAll(target, executer)
+    
+    -- Call the two other functiosn dedicated to each type
+    BGSupplyAE_RefillAmmo(target, executer);
+    BGSupplyAE_RefillFuel(target, executer);
+
+end
+
+function BGSupplyAE_RefillAmmo(target, executer)
+
+
+
+end
+
+function BGSupplyAE_RefillFuel(target, executer)
+
 end

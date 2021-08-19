@@ -1,0 +1,34 @@
+<instance description="" template="critical">
+	<group name="critical_bag">
+		<group name="critical_indicators">
+			<enum name="indicator_01" value="" />
+			<enum name="indicator_02" value="" />
+			<enum name="indicator_03" value="" />
+		</group>
+		<string name="description" value="" />
+		<bool name="is_unique" value="True" />
+		<group name="kicker_message">
+			<locstring name="message" value="0" />
+			<float name="message_colour_a" value="255" />
+			<float name="message_colour_b" value="0" />
+			<float name="message_colour_g" value="0" />
+			<float name="message_colour_r" value="255" />
+			<float name="message_seconds" value="1" />
+			<float name="offset_x" value="0" />
+			<float name="offset_y" value="0" />
+		</group>
+		<enum name="target" value="tp_entity" />
+		<list name="actions">
+		</list>
+		<list name="requirements">
+		</list>
+		<template_reference name="ui_info" value="tables\ui_info">
+			<locstring name="screen_name" value="67" mod="142b113740474c82a60b0a428bd553d5" />
+			<locstring name="help_text" value="68" mod="142b113740474c82a60b0a428bd553d5" />
+			<icon name="icon_name" value="Icons_criticals_killed_loader" />
+			<string name="hotkey_name" value="" />
+		</template_reference>
+		<bool name="repairable" value="False" />
+	</group>
+	<uniqueid name="pbgid" value="1073741824" />
+</instance>
