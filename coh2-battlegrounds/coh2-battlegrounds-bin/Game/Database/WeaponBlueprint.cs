@@ -41,8 +41,19 @@ namespace Battlegrounds.Game.Database {
         Mortar
     }
 
+    public enum WeaponOnFireCallbackType {
+        None,
+        ScarEvent_OnWeaponFired,
+        ScarEvent_OnSecondaryWeaponFired,
+        ScarEvent_OnTertiaryWeaponFired,
+        ScarEvent_OnSmokeWeaponFired,
+        ScarEvent_OnHEWeaponFired,
+        ScarEvent_OnFlameWeaponFired,
+        ScarEvent_OnSyncWeaponFired
+    }
+
     /// <summary>
-    /// 
+    /// Class representing a blueprint for weapon types.
     /// </summary>
     [JsonConverter(typeof(WeaponBlueprintConverter))]
     public class WeaponBlueprint : Blueprint {
@@ -57,44 +68,49 @@ namespace Battlegrounds.Game.Database {
         public override string Name { get; }
 
         /// <summary>
-        /// 
+        /// Get the max damage that can be done by the weapon.
         /// </summary>
         public float MaxDamage { get; }
 
         /// <summary>
-        /// 
+        /// Get the max range of the weapon.
         /// </summary>
         public float MaxRange { get; }
 
         /// <summary>
-        /// 
+        /// Get the magazine size of the weapon (How many shot calculations before reloading)
         /// </summary>
         public int MagazineSize { get; }
 
         /// <summary>
-        /// 
+        /// Get the amount of shot calculations to do in a burst.
         /// </summary>
         public float FireRate { get; }
 
         /// <summary>
-        /// 
+        /// Get the weapon category
         /// </summary>
         public WeaponCategory Category { get; }
 
         /// <summary>
-        /// 
+        /// Get the small arms type (Invalid if not applicable based on <see cref="Category"/>).
         /// </summary>
         public WeaponSmallArmsType SmallArmsType { get; }
 
         /// <summary>
-        /// 
+        /// Get the ballistics type (Invalid if not applicable based on <see cref="Category"/>).
         /// </summary>
         public WeaponBallisticType BallisticType { get; }
 
         /// <summary>
-        /// 
+        /// Get the explosive type (Invalid if not applicable based on <see cref="Category"/>).
         /// </summary>
         public WeaponExplosiveType ExplosiveType { get; }
+
+        /// <summary>
+        /// Get the ScarEvent that's triggered when this weapon fires.
+        /// </summary>
+        public WeaponOnFireCallbackType OnFireCallbackType { get; }
 
         /// <summary>
         /// 
@@ -103,7 +119,14 @@ namespace Battlegrounds.Game.Database {
         /// <param name="pbgid"></param>
         /// <param name="dmg"></param>
         /// <param name="range"></param>
-        public WeaponBlueprint(string name, BlueprintUID pbgid, WeaponCategory category, Enum specificType, float dmg, float range, int msize, float frate) {
+        public WeaponBlueprint(string name, 
+            BlueprintUID pbgid, 
+            WeaponCategory category, 
+            Enum specificType, 
+            WeaponOnFireCallbackType callbackType, 
+            float dmg, float range, int msize, float frate) {
+
+            // Set properties
             this.Name = name;
             this.PBGID = pbgid;
             this.MaxDamage = dmg;
@@ -122,6 +145,8 @@ namespace Battlegrounds.Game.Database {
                     this.SmallArmsType = (WeaponSmallArmsType)specificType;
                     break;
             }
+            this.OnFireCallbackType = callbackType;
+
         }
 
     }
@@ -168,6 +193,7 @@ namespace Battlegrounds.Game.Database {
                         "mortar" => WeaponExplosiveType.Mortar,
                         _ => WeaponExplosiveType.Invalid
                     },
+                    "CallbackType" => reader.GetString().Map(GetCallbackType),
                     _ => throw new NotImplementedException(prop)
                 };
             }
@@ -184,10 +210,19 @@ namespace Battlegrounds.Game.Database {
                     WeaponCategory.Explosive => __lookup.GetValueOrDefault("ExplosiveType", WeaponExplosiveType.Invalid),
                     _ => null
                 },
+                __lookup.GetValueOrDefault("CallbackType", WeaponOnFireCallbackType.None),
                 __lookup.GetValueOrDefault("Damage", 0.0f),
                 __lookup.GetValueOrDefault("Range", 0.0f),
                 __lookup.GetValueOrDefault("MagazineSize", 0),
                 __lookup.GetValueOrDefault("FireRate", 0.0f));
+        }
+
+        private static WeaponOnFireCallbackType GetCallbackType(string val) {
+            if (Enum.TryParse(val, out WeaponOnFireCallbackType r)) {
+                return r;
+            } else {
+                return WeaponOnFireCallbackType.None;
+            }
         }
 
         public override void Write(Utf8JsonWriter writer, WeaponBlueprint value, JsonSerializerOptions options) => writer.WriteStringValue(value.Name);

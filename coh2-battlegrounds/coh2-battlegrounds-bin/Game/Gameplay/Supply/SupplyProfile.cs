@@ -21,7 +21,11 @@ namespace Battlegrounds.Game.Gameplay.Supply {
 
             public float FireRate { get; }
 
-            public SupplyWeaponProfile(WeaponBlueprint wbp) {
+            public int Users { get; }
+
+            public int SystemSlot { get; }
+
+            public SupplyWeaponProfile(WeaponBlueprint wbp, int users) {
                 this.ClipSize = wbp.MagazineSize;
                 this.FireRate = wbp.FireRate;
                 this.ClipCarried = wbp.Category switch {
@@ -35,6 +39,8 @@ namespace Battlegrounds.Game.Gameplay.Supply {
                     },
                     _ => 0
                 };
+                this.Users = users;
+                this.SystemSlot = (int)wbp.OnFireCallbackType;
             }
 
         }
@@ -82,7 +88,9 @@ namespace Battlegrounds.Game.Gameplay.Supply {
             var wbps = ebps.SelectMany(x => x.Hardpoints).Select(x => BlueprintManager.FromBlueprintName<WeaponBlueprint>(x)).Distinct();
 
             // Get weapon profiles
-            this.WeaponProfiles = wbps.Select(x => new KeyValuePair<string, SupplyWeaponProfile>(x.GetScarName(), new SupplyWeaponProfile(x))).ToDictionary();
+            this.WeaponProfiles = wbps.Select(
+                x => new KeyValuePair<string, SupplyWeaponProfile>(x.GetScarName(), new SupplyWeaponProfile(x, ebps.Count(y => y.Hardpoints.Contains(x.Name)))))
+                .ToDictionary();
 
             // If vehicle
             if (sbp.Types.IsVehicle || sbp.Types.IsArmour || sbp.Types.IsHeavyArmour) {

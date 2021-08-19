@@ -262,7 +262,7 @@
       "dshk_armor_piercing"
     ],
     "Hardpoints": [
-      "dshk_38_sokolov_mp"
+      "dshk_38_sokolov_bg"
     ],
     "Health": 350
   },
@@ -321,7 +321,7 @@
       "maxim_sustained_fire_mp"
     ],
     "Hardpoints": [
-      "maxim_m1910_hmg_mp"
+      "maxim_m1910_hmg_bg"
     ],
     "Health": 350
   },
@@ -2678,7 +2678,7 @@
       }
     ],
     "Hardpoints": [
-      "t34_kv1_m1940_f-34_76mm__mp",
+      "t34_kv1_m1940_f-34_76mm_bg",
       "coaxial_vehicle_turret_mp",
       "coaxial_vehicle_turret_rear_mp",
       "coaxial_vehicle_hull_mp"
@@ -2718,7 +2718,7 @@
       }
     ],
     "Hardpoints": [
-      "kv2_m10_152mm",
+      "kv2_m10_152mm_bg",
       "kv2_m10_152mm_indirect",
       "coaxial_vehicle_turret_rear_mp",
       "coaxial_vehicle_hull_mp"
@@ -2758,8 +2758,8 @@
       }
     ],
     "Hardpoints": [
-      "kv8_ato-41_flamethrower_mp",
-      "kv-8_45mm_mp",
+      "kv8_ato-41_flamethrower_bg",
+      "kv-8_45mm_bg",
       "coaxial_vehicle_turret_rear_mp",
       "coaxial_vehicle_hull_mp"
     ],
@@ -2912,8 +2912,8 @@
       }
     ],
     "Hardpoints": [
-      "sherman_76mm_gun",
-      "sherman_76mm_hvap_gun",
+      "sherman_76mm_gun_bg",
+      "sherman_76mm_hvap_gun_bg",
       "sherman_coaxil_turret_mp",
       "sherman_hull_gun_mp",
       "sherman_m3_2inch_mortar_smoke_mp"
@@ -2957,7 +2957,7 @@
       }
     ],
     "Hardpoints": [
-      "su76_76mm_zis-3sh_gun_mp"
+      "su76_76mm_zis-3sh_gun_bg"
     ],
     "Health": 400
   },
@@ -2994,7 +2994,7 @@
       }
     ],
     "Hardpoints": [
-      "su85_d5t_85mm__mp"
+      "su85_d5t_85mm__bg"
     ],
     "Health": 640
   },
@@ -3032,7 +3032,7 @@
     ],
     "Hardpoints": [
       "ot-34_ato-41_flamethrower_mp",
-      "t34_76_85_coaxial_vehicle_turret_mp"
+      "ot-34_coaxial_vehicle_turret_bg"
     ],
     "Health": 640,
     "UpgradeCapacity": -1
@@ -3070,7 +3070,7 @@
       }
     ],
     "Hardpoints": [
-      "t34_76mm_mp",
+      "t34_76mm_bg",
       "t34_76_85_coaxial_vehicle_turret_mp",
       "t34_76_85_coaxial_vehicle_hull_mp"
     ],
@@ -3110,7 +3110,7 @@
       }
     ],
     "Hardpoints": [
-      "t34_85_zis-s-53_85mm_t34_mp",
+      "t34_85_zis-s-53_85mm_t34_bg",
       "t34_76_85_coaxial_vehicle_turret_mp",
       "t34_76_85_coaxial_vehicle_hull_mp"
     ],
@@ -3150,7 +3150,7 @@
       }
     ],
     "Hardpoints": [
-      "t70_m1938_45mm_mp",
+      "t70_m1938_45mm_bg",
       "t70_coaxial_vehicle_turret_mp"
     ],
     "Health": 400,

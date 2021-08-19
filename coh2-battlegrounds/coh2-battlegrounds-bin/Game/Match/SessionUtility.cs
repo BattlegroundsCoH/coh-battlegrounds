@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Text;
 using System.Threading.Tasks;
 
 using Battlegrounds.Compiler;
@@ -29,7 +30,7 @@ namespace Battlegrounds.Game.Match {
             string sessionScarFile = BattlegroundsInstance.GetRelativePath(BattlegroundsPaths.SESSION_FOLDER, "session.scar");
 
             // Conatiner for additional files to include
-            List<string> includeFiles = new();
+            List<WinconditionSourceFile> includeFiles = new();
 
             // Try the following
             try {
@@ -49,8 +50,13 @@ namespace Battlegrounds.Game.Match {
                     // Log compiler
                     Trace.WriteLine($"Compiling \"{sessionSupplyScarFile}\" into a scar file using '{compiler.GetType().Name}'", nameof(SessionUtility));
 
-                    // Write contents to session.scar
+#if DEBUG
+                    // Write contents to session_supply.scar
                     File.WriteAllText(sessionSupplyScarFile, compiler.CompileSupplyData(session));
+#endif
+
+                    // Add supply file to include files
+                    includeFiles.Add(new("auxiliary_scripts\\session_supply.scar", Encoding.UTF8.GetBytes(compiler.CompileSupplyData(session))));
 
                 }
 

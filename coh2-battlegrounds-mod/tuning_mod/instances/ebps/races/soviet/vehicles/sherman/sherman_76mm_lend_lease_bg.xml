@@ -628,7 +628,7 @@
 								<float name="z" value="0.7" />
 							</group>
 							<enum name="type" value="default" />
-							<instance_reference name="weapon" value="weapon\soviet\ballistic_weapon\tank_gun\sherman_76mm_gun" />
+							<instance_reference name="weapon" value="weapon\soviet\ballistic_weapon\tank_gun\sherman_76mm_gun_bg" mod="142b113740474c82a60b0a428bd553d5" />
 						</group>
 						<group name="weapon">
 							<group name="heading">
@@ -643,7 +643,7 @@
 								<float name="z" value="0.7" />
 							</group>
 							<enum name="type" value="default" />
-							<instance_reference name="weapon" value="weapon\soviet\ballistic_weapon\tank_gun\sherman_76mm_hvap_gun" />
+							<instance_reference name="weapon" value="weapon\soviet\ballistic_weapon\tank_gun\sherman_76mm_hvap_gun_bg" mod="142b113740474c82a60b0a428bd553d5" />
 						</group>
 					</list>
 					<bool name="receives_attack_commands" value="False" />

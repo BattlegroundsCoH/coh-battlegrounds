@@ -1,9 +1,9 @@
 <instance description="" template="weapon">
 	<group name="weapon_bag">
 		<group name="accuracy">
-			<float name="near" value="0.06" />
-			<float name="far" value="0.035" />
-			<float name="mid" value="0.0425" />
+			<float name="near" value="0.05" />
+			<float name="far" value="0.025" />
+			<float name="mid" value="0.0375" />
 		</group>
 		<group name="aim">
 			<group name="fire_aim_time">
@@ -43,12 +43,12 @@
 				<float name="angle_left" value="0" />
 				<float name="angle_right" value="0" />
 				<enum name="area_type" value="circle" />
-				<float name="radius" value="0.25" />
+				<float name="radius" value="2.5" />
 			</group>
 			<group name="damage">
 				<float name="far" value="0.05" />
-				<float name="near" value="0.25" />
-				<float name="mid" value="0.15" />
+				<float name="near" value="1" />
+				<float name="mid" value="0.35" />
 			</group>
 			<group name="damage_friendly">
 				<float name="far" value="0.025" />
@@ -56,9 +56,9 @@
 				<float name="mid" value="0.075" />
 			</group>
 			<group name="distance">
-				<float name="far" value="0.25" />
-				<float name="near" value="0.15" />
-				<float name="mid" value="0.2" />
+				<float name="far" value="1.875" />
+				<float name="near" value="0.625" />
+				<float name="mid" value="1.25" />
 			</group>
 			<bool name="has_friendly_fire" value="True" />
 			<bool name="can_harm_shooter" value="False" />
@@ -74,9 +74,9 @@
 			</group>
 			<bool name="damage_all_in_hold" value="True" />
 			<template_reference name="aoe_penetration" value="tables\range_table">
-				<float name="far" value="90" />
-				<float name="mid" value="105" />
-				<float name="near" value="120" />
+				<float name="far" value="40" />
+				<float name="mid" value="50" />
+				<float name="near" value="60" />
 			</template_reference>
 			<group name="building_damage">
 				<float name="near" value="1" />
@@ -109,7 +109,7 @@
 			<bool name="support_weapon" value="False" />
 			<bool name="surprises_idle" value="False" />
 			<bool name="piercing" value="False" />
-			<float name="reaction_radius" value="1.7" />
+			<float name="reaction_radius" value="2.1" />
 			<bool name="can_be_pilfered" value="True" />
 			<bool name="causes_combat" value="True" />
 			<bool name="can_abort_winddown" value="False" />
@@ -294,31 +294,31 @@
 			<float name="wind_up" value="0" />
 			<list name="on_fire_actions">
 				<template_reference name="action" value="action\scar_function_call">
-					<string name="function_name" value="ScarEvent_OnHEWeaponFired" />
-					<uniqueid name="id" value="1073744922" />
+					<string name="function_name" value="ScarEvent_OnWeaponFired" />
+					<uniqueid name="id" value="1073744915" />
 				</template_reference>
 			</list>
 		</group>
-		<float name="flinch_radius" value="2" />
+		<float name="flinch_radius" value="5" />
 		<string name="fx_action_target_name" value="" />
 		<bool name="fx_always_visible" value="False" />
 		<float name="fx_building_hit_delay" value="0" />
 		<float name="fx_delay_in_building" value="0" />
-		<string name="fx_munition_name" value="shell_heavy_heat" />
+		<string name="fx_munition_name" value="shell_medium" />
 		<string name="fx_tracer_name" value="" />
 		<float name="fx_tracer_speed" value="0" />
 		<bool name="fx_use_building_panel_normal" value="True" />
 		<locstring name="help_text" value="0" />
 		<icon name="icon_name" value="" />
 		<group name="moving">
-			<float name="accuracy_multiplier" value="0.75" />
+			<float name="accuracy_multiplier" value="0.5" />
 			<float name="burst_multiplier" value="1" />
 			<float name="cooldown_multiplier" value="1" />
 			<bool name="disable_moving_firing" value="False" />
 			<float name="moving_end_time" value="0" />
 			<float name="moving_start_time" value="0" />
 		</group>
-		<string name="name" value="sherman 76mm HVAP" />
+		<string name="name" value="f34 76mm T-34 Gun" />
 		<group name="offhand">
 			<float name="offhand_end_time" value="0" />
 			<float name="offhand_start_time" value="0" />
@@ -330,7 +330,7 @@
 				<float name="near" value="1" />
 				<float name="mid" value="1" />
 			</group>
-			<float name="rotation" value="-0.05" />
+			<float name="rotation" value="-0.1" />
 			<float name="window_bonus" value="0" />
 			<float name="threat" value="20" />
 			<float name="penetration" value="40" />
@@ -339,15 +339,15 @@
 		</group>
 		<group name="projectile">
 			<bool name="delete_previous_on_hit" value="False" />
-			<instance_reference name="projectile" value="ebps\projectile\aef_76mm_high_velocity_tank_shell_mp" />
+			<instance_reference name="projectile" value="ebps\projectile\soviet_76mm_tank_shell_mp" />
 		</group>
 		<group name="range">
 			<float name="max" value="40" />
 			<float name="min" value="0" />
 			<group name="distance">
-				<float name="near" value="0" />
-				<float name="far" value="40" />
-				<float name="mid" value="20" />
+				<float name="near" value="-1" />
+				<float name="far" value="-1" />
+				<float name="mid" value="-1" />
 			</group>
 		</group>
 		<group name="reload">
@@ -373,8 +373,8 @@
 			<float name="delay_bracket_change_chance" value="0" />
 			<float name="distance_bracket_count_air" value="0" />
 			<float name="distance_bracket_count_ground" value="1" />
-			<float name="distance_scatter_max" value="5" />
-			<float name="distance_scatter_obj_hit_min" value="10" />
+			<float name="distance_scatter_max" value="6.9" />
+			<float name="distance_scatter_obj_hit_min" value="5" />
 			<float name="distance_scatter_offset" value="0.25" />
 			<float name="distance_scatter_ratio" value="1" />
 			<float name="fow_angle_multiplier" value="1.25" />
@@ -438,9 +438,9 @@
 		<instance_reference name="ui_range" value="" />
 		<instance_reference name="ui_setfacing" value="" />
 		<group name="penetration">
-			<float name="near" value="220" />
-			<float name="far" value="165" />
-			<float name="mid" value="180" />
+			<float name="near" value="120" />
+			<float name="far" value="80" />
+			<float name="mid" value="100" />
 		</group>
 		<group name="ui_map_colour">
 			<int name="red" value="0" />
@@ -451,5 +451,5 @@
 		<list name="target_type_table">
 		</list>
 	</group>
-	<uniqueid name="pbgid" value="1073741881" />
+	<uniqueid name="pbgid" value="1073741889" />
 </instance>

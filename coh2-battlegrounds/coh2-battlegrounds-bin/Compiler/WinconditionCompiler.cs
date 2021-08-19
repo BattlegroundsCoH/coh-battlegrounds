@@ -7,6 +7,7 @@ using System.Globalization;
 using Battlegrounds.Util;
 using Battlegrounds.Compiler.Source;
 using Battlegrounds.Modding;
+using System.Linq;
 
 namespace Battlegrounds.Compiler {
 
@@ -24,7 +25,7 @@ namespace Battlegrounds.Compiler {
         /// <param name="source">The wincondition source file locator.</param>
         /// <param name="includeFiles">Additional files to include in the gamemode.</param>
         /// <returns>True of the archive file was created sucessfully. False if any error occured.</returns>
-        public static bool CompileToSga(string workdir, string sessionFile, IGamemode wincondition, IWinconditionSource source, params string[] includeFiles) {
+        public static bool CompileToSga(string workdir, string sessionFile, IGamemode wincondition, IWinconditionSource source, params WinconditionSourceFile[] includeFiles) {
 
             // Verify is win condition source is valid
             if (source is null) {
@@ -33,7 +34,7 @@ namespace Battlegrounds.Compiler {
             }
 
             // Get the files
-            var scarFiles = source.GetScarFiles();
+            var scarFiles = source.GetScarFiles().Union(includeFiles.Where(x => x.Path.EndsWith(".scar", StringComparison.InvariantCulture)));
             var winFiles = source.GetWinFiles();
             var localeFiles = source.GetLocaleFiles();
             var uiFiles = source.GetUIFiles(wincondition);
@@ -166,10 +167,10 @@ namespace Battlegrounds.Compiler {
 
         private static bool AddFile(TxtBuilder builder, string rpath, string workdir, WinconditionSourceFile sourceFile, bool useBytes = false, Encoding encoding = null) {
 
-            string relpath = rpath + sourceFile.path;
+            string relpath = rpath + sourceFile.Path;
             string abspath = Path.GetFullPath(workdir + relpath.Replace("/", "\\"));
 
-            if (sourceFile.contents == null || sourceFile.contents.Length == 0) {
+            if (sourceFile.Contents == null || sourceFile.Contents.Length == 0) {
                 Trace.WriteLine($"Error file [ABS] <{abspath}>", nameof(WinconditionCompiler));
                 return false;
             }
@@ -183,12 +184,12 @@ namespace Battlegrounds.Compiler {
             }
 
             if (useBytes) {
-                File.WriteAllBytes(abspath, sourceFile.contents);
+                File.WriteAllBytes(abspath, sourceFile.Contents);
             } else {
                 if (encoding is null) {
                     encoding = Encoding.UTF8;
                 }
-                File.WriteAllText(abspath, encoding.GetString(sourceFile.contents));
+                File.WriteAllText(abspath, encoding.GetString(sourceFile.Contents));
             }
 
             return true;
@@ -216,16 +217,16 @@ namespace Battlegrounds.Compiler {
 
             // Loop through gfx files and add them
             for (int i = 0; i < uiFiles.Length; i++) {
-                if (uiFiles[i].path.EndsWith(".dds")) {
-                    string ddspath = $"{ddsPath}{Path.GetFileName(uiFiles[i].path)}";
-                    File.WriteAllBytes(ddspath, uiFiles[i].contents);
+                if (uiFiles[i].Path.EndsWith(".dds")) {
+                    string ddspath = $"{ddsPath}{Path.GetFileName(uiFiles[i].Path)}";
+                    File.WriteAllBytes(ddspath, uiFiles[i].Contents);
                     builder.AppendLine($"\t{ddspath}");
-                } else if (uiFiles[i].path.EndsWith(".gfx")) {
-                    string gfxpath = $"{gfxPath}{Path.GetFileName(uiFiles[i].path)}";
-                    File.WriteAllBytes(gfxpath, uiFiles[i].contents);
+                } else if (uiFiles[i].Path.EndsWith(".gfx")) {
+                    string gfxpath = $"{gfxPath}{Path.GetFileName(uiFiles[i].Path)}";
+                    File.WriteAllBytes(gfxpath, uiFiles[i].Contents);
                     builder.AppendLine($"\t{gfxpath}");
                 } else {
-                    Trace.Write($"Skipping graphics file \"{uiFiles[i].path}\"", nameof(WinconditionCompiler));
+                    Trace.Write($"Skipping graphics file \"{uiFiles[i].Path}\"", nameof(WinconditionCompiler));
                 }
             }
 

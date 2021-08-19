@@ -16,19 +16,103 @@ end
 
 function BGSupply_NewUnit(player, squad, data)
 
+    local profile = bgsupplydata_profiles[data.bp_name];
+    local sid = Squad_GetGameID(squad);
+
+    if profile.FueldData ~= nil then
+        BGSupply_NewFuelUnit(squad, sid, profile.FueldData);
+    end
+
+    -- Create ammo profile (if any, and there's at least one clip carried in the profile)
+    if profile.WeaponProfiles ~= nil and profile.WeaponProfiles.ClipCarried > 0 then
+        BGSupply_NewAmmoUnit(squad, sid, profile.WeaponProfiles);
+    end
+
+end
+
+function BGSupply_NewFuelUnit(squad, id, fuelData)
+
+
+
+end
+
+function BGSupply_NewAmmoUnit(squad, id, ammoData)
+
+    -- Create entry
+    _bg_supply.ammo[id] = {
+        slots = {},
+        weapons = {}
+    };
+
+    -- Collect data
+    for k, v in pairs(ammoData) do
+        if v.SystemSlot > 0 then
+            local slot = _bg_supply.ammo[id].slots[v.SystemSlot];
+            local max_bullets = v.ClipSize * v.ClipCarried * v.Users;
+            if slot == nil then
+                _bg_supply.ammo[id].slots[v.SystemSlot] = {
+                    max = max_bullets,
+                    current = max_bullets
+                };
+            else
+                slot.max = slot.max + max_bullets;
+                slot.current = slot.current + max_bullets;
+            end
+            _bg_supply.ammo[id].weapons[k] = v.FireRate;
+        end
+    end
+
 end
 
 -- Any weapon within the system must invoke this (Primary weapon)
-function ScarEvent_OnWeaponFired(...)
-
+function ScarEvent_OnWeaponFired(target, executer)
+    local weapon = BP_GetName(Entity_GetWeaponBlueprint(executer, 0));
+    BGSupply_OnFireEvent(Entity_GetSquad(executer), weapon, 1);
 end
 
 -- Any weapon within the system must invoke this (Secondary weapons)
-function ScarEvent_OnSecondaryWeaponFired(...)
-
+function ScarEvent_OnSecondaryWeaponFired(target, executer)
+    local weapon = BP_GetName(Entity_GetWeaponBlueprint(executer, 1));
+    BGSupply_OnFireEvent(Entity_GetSquad(executer), weapon, 2);
 end
 
 -- Any weapon within the system must invoke this (Tertiary weapon)
-function ScarEvent_OnTertiaryWeaponFired(...)
+function ScarEvent_OnTertiaryWeaponFired(target, executer)
+    local weapon = BP_GetName(Entity_GetWeaponBlueprint(executer, 2));
+    BGSupply_OnFireEvent(Entity_GetSquad(executer), weapon, 3);
+end
 
+-- Any weapon within the system must invoke this (Smoke weapon)
+function ScarEvent_OnSmokeWeaponFired(target, executer)
+    local weapon = BP_GetName(Entity_GetWeaponBlueprint(executer, 0));
+    BGSupply_OnFireEvent(Entity_GetSquad(executer), weapon, 4);
+end
+
+-- Any weapon within the system must invoke this (HE - or other ammo type weapon)
+function ScarEvent_OnHEWeaponFired(target, executer)
+    local weapon = BP_GetName(Entity_GetWeaponBlueprint(executer, 0));
+    BGSupply_OnFireEvent(Entity_GetSquad(executer), weapon, 5);
+end
+
+-- Any weapon within the system must invoke this (Flame weapon)
+function ScarEvent_OnFlameWeaponFired(target, executer)
+    local weapon = BP_GetName(Entity_GetWeaponBlueprint(executer, 0));
+    BGSupply_OnFireEvent(Entity_GetSquad(executer), weapon, 6);
+end
+
+-- Any weapon within the system must invoke this (Team weapon)
+function ScarEvent_OnSyncWeaponFired(target, executer)
+    local weapon = BP_GetName(Entity_GetWeaponBlueprint(executer, 0));
+    BGSupply_OnFireEvent(Entity_GetSquad(executer), weapon, 7);
+end
+
+function BGSupply_OnFireEvent(squad, weapon, slot)
+    local id = Squad_GetGameID(squad);
+    local target = _bg_supply.ammo[id];
+    if target ~= nil then
+        target.slots[slot].current = target.slots[slot].current - (target.weapons[weapon] or 1);
+        if target.slots[slot].current <= 0 then
+            -- TODO: Trigger out of ammo
+        end
+    end
 end

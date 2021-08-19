@@ -7,7 +7,8 @@
     "Damage": 10,
     "MagazineSize": 1,
     "FireRate": 1,
-    "Category": "flame"
+    "Category": "flame",
+    "CallbackType": "ScarEvent_OnFlameWeaponFired"
   },
   {
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
@@ -17,7 +18,8 @@
     "Damage": 10,
     "MagazineSize": 1,
     "FireRate": 1,
-    "Category": "flame"
+    "Category": "flame",
+    "CallbackType": "ScarEvent_OnFlameWeaponFired"
   },
   {
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
@@ -27,7 +29,8 @@
     "Damage": 16,
     "MagazineSize": 5,
     "FireRate": 1,
-    "Category": "flame"
+    "Category": "flame",
+    "CallbackType": "ScarEvent_OnFlameWeaponFired"
   },
   {
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
@@ -82,7 +85,8 @@
     "MagazineSize": 1,
     "FireRate": 1,
     "Category": "ballistic",
-    "BalisticType": "tankgun"
+    "BalisticType": "tankgun",
+    "CallbackType": "ScarEvent_OnWeaponFired"
   },
   {
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
@@ -93,7 +97,8 @@
     "MagazineSize": 1,
     "FireRate": 1,
     "Category": "ballistic",
-    "BalisticType": "tankgun"
+    "BalisticType": "tankgun",
+    "CallbackType": "ScarEvent_OnWeaponFired"
   },
   {
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
@@ -104,7 +109,8 @@
     "MagazineSize": 1,
     "FireRate": 1,
     "Category": "ballistic",
-    "BalisticType": "tankgun"
+    "BalisticType": "tankgun",
+    "CallbackType": "ScarEvent_OnWeaponFired"
   },
   {
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
@@ -115,7 +121,8 @@
     "MagazineSize": 1,
     "FireRate": 1,
     "Category": "ballistic",
-    "BalisticType": "tankgun"
+    "BalisticType": "tankgun",
+    "CallbackType": "ScarEvent_OnWeaponFired"
   },
   {
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
@@ -126,7 +133,8 @@
     "MagazineSize": 1,
     "FireRate": 1,
     "Category": "ballistic",
-    "BalisticType": "tankgun"
+    "BalisticType": "tankgun",
+    "CallbackType": "ScarEvent_OnWeaponFired"
   },
   {
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
@@ -137,7 +145,8 @@
     "MagazineSize": 1,
     "FireRate": 1,
     "Category": "ballistic",
-    "BalisticType": "tankgun"
+    "BalisticType": "tankgun",
+    "CallbackType": "ScarEvent_OnHEWeaponFired"
   },
   {
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
@@ -148,7 +157,8 @@
     "MagazineSize": 1,
     "FireRate": 1,
     "Category": "ballistic",
-    "BalisticType": "tankgun"
+    "BalisticType": "tankgun",
+    "CallbackType": "ScarEvent_OnWeaponFired"
   },
   {
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
@@ -159,7 +169,20 @@
     "MagazineSize": 1,
     "FireRate": 1,
     "Category": "ballistic",
-    "BalisticType": "tankgun"
+    "BalisticType": "tankgun",
+    "CallbackType": "ScarEvent_OnWeaponFired"
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741889,
+    "Name": "t34_76mm_bg",
+    "Range": 40,
+    "Damage": 160,
+    "MagazineSize": 1,
+    "FireRate": 1,
+    "Category": "ballistic",
+    "BalisticType": "tankgun",
+    "CallbackType": "ScarEvent_OnWeaponFired"
   },
   {
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
@@ -170,7 +193,8 @@
     "MagazineSize": 1,
     "FireRate": 1,
     "Category": "ballistic",
-    "BalisticType": "tankgun"
+    "BalisticType": "tankgun",
+    "CallbackType": "ScarEvent_OnWeaponFired"
   },
   {
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
@@ -181,7 +205,8 @@
     "MagazineSize": 1,
     "FireRate": 1,
     "Category": "ballistic",
-    "BalisticType": "tankgun"
+    "BalisticType": "tankgun",
+    "CallbackType": "ScarEvent_OnWeaponFired"
   },
   {
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
@@ -192,7 +217,8 @@
     "MagazineSize": 1,
     "FireRate": 1,
     "Category": "ballistic",
-    "BalisticType": "tankgun"
+    "BalisticType": "tankgun",
+    "CallbackType": "ScarEvent_OnWeaponFired"
   },
   {
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
@@ -530,7 +556,8 @@
     "MagazineSize": 48,
     "FireRate": 8,
     "Category": "smallarms",
-    "SmallArmsType": "lightmachinegun"
+    "SmallArmsType": "lightmachinegun",
+    "CallbackType": "ScarEvent_OnWeaponFired"
   },
   {
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
@@ -611,6 +638,17 @@
   },
   {
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741888,
+    "Name": "ot-34_coaxial_vehicle_turret_bg",
+    "Range": 35,
+    "Damage": 4,
+    "MagazineSize": 48,
+    "FireRate": 8,
+    "Category": "smallarms",
+    "SmallArmsType": "lightmachinegun"
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
     "PBGID": 1073741831,
     "Name": "t-70m_coaxial_vehicle_bg",
     "Range": 35,
@@ -651,7 +689,8 @@
     "MagazineSize": 30,
     "FireRate": 6,
     "Category": "smallarms",
-    "SmallArmsType": "submachinegun"
+    "SmallArmsType": "submachinegun",
+    "CallbackType": "ScarEvent_OnWeaponFired"
   },
   {
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
@@ -662,7 +701,8 @@
     "MagazineSize": 7,
     "FireRate": 1,
     "Category": "smallarms",
-    "SmallArmsType": "pistol"
+    "SmallArmsType": "pistol",
+    "CallbackType": "ScarEvent_OnWeaponFired"
   },
   {
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
@@ -673,7 +713,8 @@
     "MagazineSize": 7,
     "FireRate": 1,
     "Category": "smallarms",
-    "SmallArmsType": "pistol"
+    "SmallArmsType": "pistol",
+    "CallbackType": "ScarEvent_OnWeaponFired"
   },
   {
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
@@ -684,7 +725,8 @@
     "MagazineSize": 8,
     "FireRate": 1,
     "Category": "smallarms",
-    "SmallArmsType": "rifle"
+    "SmallArmsType": "rifle",
+    "CallbackType": "ScarEvent_OnWeaponFired"
   },
   {
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
@@ -694,7 +736,8 @@
     "MagazineSize": 9,
     "FireRate": 1,
     "Category": "smallarms",
-    "SmallArmsType": "rifle"
+    "SmallArmsType": "rifle",
+    "CallbackType": "ScarEvent_OnWeaponFired"
   },
   {
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
@@ -705,6 +748,7 @@
     "MagazineSize": 10,
     "FireRate": 1,
     "Category": "smallarms",
-    "SmallArmsType": "rifle"
+    "SmallArmsType": "rifle",
+    "CallbackType": "ScarEvent_OnWeaponFired"
   }
 ]

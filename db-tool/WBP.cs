@@ -69,6 +69,8 @@ namespace CoH2XML2JSON {
 
         public WeaponExplosiveType ExplosiveType { get; }
 
+        public string CallbackType { get; }
+
         public WBP(XmlDocument xmlDocument, string guid, string name, string filepath) {
 
             // Set the name
@@ -139,6 +141,17 @@ namespace CoH2XML2JSON {
                 "light_artillery" or "heavy_artillery" => WeaponExplosiveType.artillery,
                 _ => WeaponExplosiveType.invalid
             }) : WeaponExplosiveType.invalid;
+
+            // Get callback type
+            XmlElement fireData = xmlDocument.SelectSingleNode("//group[@name='fire']") as XmlElement;
+            XmlElement onFireActions = fireData.FindSubnode("list", "on_fire_actions");
+            foreach (XmlElement action in onFireActions) {
+                if (action.Name == "template_reference" && action.GetAttribute("value") == "action\\scar_function_call") {
+                    if (action.FindSubnode("string", "function_name") is XmlElement func && func.GetAttribute("value").StartsWith("ScarEvent_")) {
+                        this.CallbackType = func.GetAttribute("value");
+                    }
+                }
+            }
 
         }
 

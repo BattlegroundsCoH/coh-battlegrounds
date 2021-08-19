@@ -40,7 +40,7 @@ g_weatherSystem = {
         [E_SEASON.summer] = { -- summer
             [E_TIME_OF_DAY.night] = { -- night
                 "coh1new/8p_montargis_region_night.aps",
-                "dlc/mp_mudroad331.aps",
+                --"dlc/mp_mudroad331.aps",
                 "dlc/mud_road.aps",
                 "dlc/tow_road_to_kharkov_night.aps",
             },

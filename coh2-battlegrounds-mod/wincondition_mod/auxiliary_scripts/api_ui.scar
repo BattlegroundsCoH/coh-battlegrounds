@@ -201,7 +201,7 @@ function Matrix_GetView()
 	local up = { 0, 1, 0 };
 	local at = { 0, 0, 0 };
 	local z = v.unit(v.sub(eye, at));
-	local x = v.unit(v.cross(up, z);
+	local x = v.unit(v.cross(up, z));
 	local y = v.cross(z, x);
 	return {
 		{ x.x, y.x, z.x, 0 },

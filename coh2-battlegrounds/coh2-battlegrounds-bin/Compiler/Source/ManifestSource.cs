@@ -66,13 +66,13 @@ namespace Battlegrounds.Compiler.Source {
         }
 
         public WinconditionSourceFile GetInfoFile(IGamemode mod)
-            => (ServerFiles.GetCachedValue(this.GetCachedFiles) as Dictionary<string, List<WinconditionSourceFile>>)["info"].FirstOrDefault(x => x.path.EndsWith(".info"));
+            => (ServerFiles.GetCachedValue(this.GetCachedFiles) as Dictionary<string, List<WinconditionSourceFile>>)["info"].FirstOrDefault(x => x.Path.EndsWith(".info"));
 
         public WinconditionSourceFile[] GetLocaleFiles()
             => (ServerFiles.GetCachedValue(this.GetCachedFiles) as Dictionary<string, List<WinconditionSourceFile>>)["locale"].ToArray();
 
         public WinconditionSourceFile GetModGraphic()
-            => (ServerFiles.GetCachedValue(this.GetCachedFiles) as Dictionary<string, List<WinconditionSourceFile>>)["info"].FirstOrDefault(x => x.path.EndsWith(".dds"));
+            => (ServerFiles.GetCachedValue(this.GetCachedFiles) as Dictionary<string, List<WinconditionSourceFile>>)["info"].FirstOrDefault(x => x.Path.EndsWith(".dds"));
 
         public WinconditionSourceFile[] GetScarFiles()
             => (ServerFiles.GetCachedValue(this.GetCachedFiles) as Dictionary<string, List<WinconditionSourceFile>>)["scar"].ToArray();

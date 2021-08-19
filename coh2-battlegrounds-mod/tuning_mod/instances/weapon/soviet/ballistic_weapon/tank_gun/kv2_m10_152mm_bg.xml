@@ -293,6 +293,10 @@
 			<float name="wind_down" value="0" />
 			<float name="wind_up" value="0" />
 			<list name="on_fire_actions">
+				<template_reference name="action" value="action\scar_function_call">
+					<string name="function_name" value="ScarEvent_OnWeaponFired" />
+					<uniqueid name="id" value="1073744924" />
+				</template_reference>
 			</list>
 		</group>
 		<float name="flinch_radius" value="0" />
