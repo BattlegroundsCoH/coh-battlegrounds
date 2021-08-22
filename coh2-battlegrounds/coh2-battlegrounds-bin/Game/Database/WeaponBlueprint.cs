@@ -46,6 +46,7 @@ namespace Battlegrounds.Game.Database {
         ScarEvent_OnWeaponFired,
         ScarEvent_OnSecondaryWeaponFired,
         ScarEvent_OnTertiaryWeaponFired,
+        ScarEvent_OnTopWeaponFired,
         ScarEvent_OnSmokeWeaponFired,
         ScarEvent_OnHEWeaponFired,
         ScarEvent_OnFlameWeaponFired,
@@ -206,7 +207,7 @@ namespace Battlegrounds.Game.Database {
                 cat,
                 cat switch {
                     WeaponCategory.Ballistic => __lookup.GetValueOrDefault("BalisticType", WeaponBallisticType.Invalid),
-                    WeaponCategory.SmallArms => __lookup.GetValueOrDefault("SmallArmsType", WeaponBallisticType.Invalid),
+                    WeaponCategory.SmallArms => __lookup.GetValueOrDefault("SmallArmsType", WeaponSmallArmsType.Invalid),
                     WeaponCategory.Explosive => __lookup.GetValueOrDefault("ExplosiveType", WeaponExplosiveType.Invalid),
                     _ => null
                 },

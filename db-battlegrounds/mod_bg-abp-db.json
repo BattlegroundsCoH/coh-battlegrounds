@@ -279,6 +279,23 @@
     ]
   },
   {
+    "Name": "button_vehicle_bg",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741861,
+    "Cost": {
+      "Munition": 40
+    },
+    "Display": {
+      "LocaleName": "11007797",
+      "LocaleDescriptionLong": "11007798",
+      "LocaleDescriptionShort": "11039262",
+      "Icon": "Icons_abilities_ability_soviet_button_vehicle",
+      "Position": 33
+    },
+    "Army": "soviet",
+    "Activation": "targeted"
+  },
+  {
     "Name": "inspire_unit_bg",
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
     "PBGID": 1073741860,

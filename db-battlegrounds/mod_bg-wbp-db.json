@@ -41,7 +41,8 @@
     "MagazineSize": 1,
     "FireRate": 1,
     "Category": "ballistic",
-    "BalisticType": "antitankgun"
+    "BalisticType": "antitankgun",
+    "CallbackType": "ScarEvent_OnSyncWeaponFired"
   },
   {
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
@@ -52,7 +53,8 @@
     "MagazineSize": 1,
     "FireRate": 1,
     "Category": "ballistic",
-    "BalisticType": "antitankgun"
+    "BalisticType": "antitankgun",
+    "CallbackType": "ScarEvent_OnSecondaryWeaponFired"
   },
   {
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
@@ -63,7 +65,8 @@
     "MagazineSize": 1,
     "FireRate": 1,
     "Category": "ballistic",
-    "BalisticType": "antitankgun"
+    "BalisticType": "antitankgun",
+    "CallbackType": "ScarEvent_OnSyncWeaponFired"
   },
   {
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
@@ -371,7 +374,20 @@
     "MagazineSize": 1,
     "FireRate": 1,
     "Category": "explosive",
-    "ExplosiveType": "mortar"
+    "ExplosiveType": "mortar",
+    "CallbackType": "ScarEvent_OnWeaponFired"
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741890,
+    "Name": "hm_38_120mm_mortar_bg",
+    "Range": 100,
+    "Damage": 80,
+    "MagazineSize": 1,
+    "FireRate": 1,
+    "Category": "explosive",
+    "ExplosiveType": "mortar",
+    "CallbackType": "ScarEvent_OnSyncWeaponFired"
   },
   {
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
@@ -382,7 +398,8 @@
     "MagazineSize": 3,
     "FireRate": 1,
     "Category": "explosive",
-    "ExplosiveType": "mortar"
+    "ExplosiveType": "mortar",
+    "CallbackType": "ScarEvent_OnSecondaryWeaponFired"
   },
   {
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
@@ -392,7 +409,8 @@
     "MagazineSize": 1,
     "FireRate": 1,
     "Category": "explosive",
-    "ExplosiveType": "mortar"
+    "ExplosiveType": "mortar",
+    "CallbackType": "ScarEvent_OnSmokeWeaponFired"
   },
   {
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
@@ -403,7 +421,20 @@
     "MagazineSize": 1,
     "FireRate": 1,
     "Category": "explosive",
-    "ExplosiveType": "mortar"
+    "ExplosiveType": "mortar",
+    "CallbackType": "ScarEvent_OnWeaponFired"
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741891,
+    "Name": "pm41_82mm_mortar_bg",
+    "Range": 80,
+    "Damage": 80,
+    "MagazineSize": 1,
+    "FireRate": 1,
+    "Category": "explosive",
+    "ExplosiveType": "mortar",
+    "CallbackType": "ScarEvent_OnSyncWeaponFired"
   },
   {
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
@@ -414,7 +445,8 @@
     "MagazineSize": 3,
     "FireRate": 1,
     "Category": "explosive",
-    "ExplosiveType": "mortar"
+    "ExplosiveType": "mortar",
+    "CallbackType": "ScarEvent_OnSecondaryWeaponFired"
   },
   {
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
@@ -424,7 +456,8 @@
     "MagazineSize": 1,
     "FireRate": 1,
     "Category": "explosive",
-    "ExplosiveType": "mortar"
+    "ExplosiveType": "mortar",
+    "CallbackType": "ScarEvent_OnSmokeWeaponFired"
   },
   {
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
@@ -523,7 +556,8 @@
     "MagazineSize": 48,
     "FireRate": 8,
     "Category": "smallarms",
-    "SmallArmsType": "lightmachinegun"
+    "SmallArmsType": "lightmachinegun",
+    "CallbackType": "ScarEvent_OnSecondaryWeaponFired"
   },
   {
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
@@ -534,7 +568,8 @@
     "MagazineSize": 48,
     "FireRate": 8,
     "Category": "smallarms",
-    "SmallArmsType": "lightmachinegun"
+    "SmallArmsType": "lightmachinegun",
+    "CallbackType": "ScarEvent_OnTertiaryWeaponFired"
   },
   {
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
@@ -568,7 +603,8 @@
     "MagazineSize": 48,
     "FireRate": 8,
     "Category": "smallarms",
-    "SmallArmsType": "lightmachinegun"
+    "SmallArmsType": "lightmachinegun",
+    "CallbackType": "ScarEvent_OnTertiaryWeaponFired"
   },
   {
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
@@ -579,7 +615,8 @@
     "MagazineSize": 48,
     "FireRate": 8,
     "Category": "smallarms",
-    "SmallArmsType": "lightmachinegun"
+    "SmallArmsType": "lightmachinegun",
+    "CallbackType": "ScarEvent_OnSecondaryWeaponFired"
   },
   {
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
@@ -590,7 +627,8 @@
     "MagazineSize": 48,
     "FireRate": 8,
     "Category": "smallarms",
-    "SmallArmsType": "lightmachinegun"
+    "SmallArmsType": "lightmachinegun",
+    "CallbackType": "ScarEvent_OnTertiaryWeaponFired"
   },
   {
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
@@ -612,7 +650,8 @@
     "MagazineSize": 84,
     "FireRate": 12,
     "Category": "smallarms",
-    "SmallArmsType": "lightmachinegun"
+    "SmallArmsType": "lightmachinegun",
+    "CallbackType": "ScarEvent_OnSecondaryWeaponFired"
   },
   {
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
@@ -623,7 +662,8 @@
     "MagazineSize": 48,
     "FireRate": 8,
     "Category": "smallarms",
-    "SmallArmsType": "lightmachinegun"
+    "SmallArmsType": "lightmachinegun",
+    "CallbackType": "ScarEvent_OnTertiaryWeaponFired"
   },
   {
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
@@ -634,7 +674,8 @@
     "MagazineSize": 48,
     "FireRate": 8,
     "Category": "smallarms",
-    "SmallArmsType": "lightmachinegun"
+    "SmallArmsType": "lightmachinegun",
+    "CallbackType": "ScarEvent_OnSecondaryWeaponFired"
   },
   {
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
@@ -645,7 +686,8 @@
     "MagazineSize": 48,
     "FireRate": 8,
     "Category": "smallarms",
-    "SmallArmsType": "lightmachinegun"
+    "SmallArmsType": "lightmachinegun",
+    "CallbackType": "ScarEvent_OnTertiaryWeaponFired"
   },
   {
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
@@ -656,7 +698,8 @@
     "MagazineSize": 48,
     "FireRate": 8,
     "Category": "smallarms",
-    "SmallArmsType": "lightmachinegun"
+    "SmallArmsType": "lightmachinegun",
+    "CallbackType": "ScarEvent_OnTertiaryWeaponFired"
   },
   {
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
@@ -667,7 +710,8 @@
     "MagazineSize": 48,
     "FireRate": 8,
     "Category": "smallarms",
-    "SmallArmsType": "lightmachinegun"
+    "SmallArmsType": "lightmachinegun",
+    "CallbackType": "ScarEvent_OnSecondaryWeaponFired"
   },
   {
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
@@ -678,7 +722,8 @@
     "MagazineSize": 48,
     "FireRate": 8,
     "Category": "smallarms",
-    "SmallArmsType": "lightmachinegun"
+    "SmallArmsType": "lightmachinegun",
+    "CallbackType": "ScarEvent_OnTertiaryWeaponFired"
   },
   {
     "ModGUID": "142b113740474c82a60b0a428bd553d5",

@@ -1,0 +1,208 @@
+-- Binary enum setting if day or night
+E_TIME_OF_DAY = {
+    day = false,
+    night = true
+};
+
+-- Binary enum setting if winter or summer
+E_SEASON = {
+    winter = true,
+    summer = false;
+}
+
+-- Define global table for weather (and day/night) system.
+g_weatherSystem = {
+    time_transition = 120, -- 2 * 60
+    time_day = 540, -- 9 * 60,
+    time_night = 420, -- 7 * 60
+    atmosphere_folder = "data:art/scenarios/presets/atmosphere/",
+    atmospheres = {
+        [E_SEASON.winter] = { -- winter
+            [E_TIME_OF_DAY.night] = { -- night
+                "dlc/mp_semois_winter.aps",
+                "dlc/mp_terek_lines.aps",
+                "dlc/mud_road_gloomy.aps",
+                "dlc/tow_road_to_kharkov_night.aps",
+                "dlc/tow_tiger_ace_night.aps",                
+                "xp1/eschdorf_night.aps"
+            },
+            [E_TIME_OF_DAY.day] = { -- day
+                "dlc/anotherstalingrad.aps",
+                "dlc/maps_stalingradwinter.aps",
+                "dlc/mp_2-4_compound.aps",
+                "dlc/mp_2p_coh2_resistance.aps",
+                "dlc/mp_another_stalingrad.aps",
+                "dlc/mp_langres_winter.aps",
+                "dlc/mp_rostov.aps",
+                "dlc/mp_semois_winter02.aps",
+            }
+        },
+        [E_SEASON.summer] = { -- summer
+            [E_TIME_OF_DAY.night] = { -- night
+                "coh1new/8p_montargis_region_night.aps",
+                --"dlc/mp_mudroad331.aps",
+                "dlc/mud_road.aps",
+                "dlc/tow_road_to_kharkov_night.aps",
+            },
+            [E_TIME_OF_DAY.day] = { -- day
+                "coh1new/2p_compound_original.aps",
+                "coh1new/8p_montargis_region_daysunny.aps",
+                "coh1new/8p_montargis_region_dayfoggy.aps",
+                "dlc/hill331.aps",
+                "dlc/mp_4p_langres_summer.aps",
+                "dlc/mp_4p_langres_summer02.aps",
+                "dlc/mp_rails_and_metal.aps",
+                "dlc/mp_semois.aps",
+                "dlc/mp_volga_timber_yard.aps",
+            }
+        },
+    }
+};
+
+function BGWeather_Setup()
+
+    -- Make sure there's tuning support
+    if not BGWeather_HasTuningSupport() then
+        return;
+    end
+
+    -- Determine if we should start at night
+    local start_night = World_GetRand(1, 100) < 30;
+
+    -- Set settings
+    g_weatherSystem.time_of_day = start_night;
+    g_weatherSystem.season = World_IsWinterMap()
+
+    -- Set atmosphere to random selection
+    BGWeather_SetAtmosphere(0);
+
+    -- Spawn aura building (Might have to do this for all players)
+    local aura_origin = World_Pos(0, 0, 0); -- (0,0,0) is centre according to docs
+    g_weatherSystem.aura_entity = Entity_CreateENV(g_weatherSystem.ebp_aura, aura_origin, aura_origin);
+    g_weatherSystem.aura_entity_eg = EGroup_CreateIfNotFound("g_weatherSystem.aura_entity_eg");
+    EGroup_Add(g_weatherSystem.aura_entity_eg, g_weatherSystem.aura_entity);
+
+    -- Determine which function to invoke
+    if g_weatherSystem.time_of_day == E_TIME_OF_DAY.day then
+        BGWeather_DoDay();
+    else
+        BGWeather_DoNight();
+    end
+
+end
+
+function BGWeather_HasTuningSupport()
+
+    -- Define local success value
+    local success = true;
+    local mod_str = bg_settings.tuning_mod.mod_guid .. ":";
+
+    -- Get upgrade for day time
+    success, g_weatherSystem.upg_day = pcall(BP_GetUpgradeBlueprint, mod_str .. "bg_time_day");
+    if not success then
+        return false;
+    end
+
+    -- Get upgrade for night time
+    success, g_weatherSystem.upg_night = pcall(BP_GetUpgradeBlueprint, mod_str .. "bg_time_night");
+    if not success then
+        return false;
+    end
+
+    -- Get upgrade for night time (entity)
+    success, g_weatherSystem.upg_night_ebp = pcall(BP_GetUpgradeBlueprint, mod_str .. "bg_time_night_aura");
+    if not success then
+        return false;
+    end
+
+    -- Get upgrade for day time
+    success, g_weatherSystem.ebp_aura = pcall(BP_GetEntityBlueprint, mod_str .. "night_aura_entity");
+    return success;
+
+end
+
+function BGWeather_SetAtmosphere(transition)
+
+    -- Set default transition time if arg is nil
+    if transition == nil then
+        transition = g_weatherSystem.time_transition;
+    end
+
+    -- Determine atmosphere
+    local atmospheres = g_weatherSystem.atmospheres[g_weatherSystem.season][g_weatherSystem.time_of_day];
+    local aps = g_weatherSystem.atmosphere_folder .. atmospheres[World_GetRand(1, #atmospheres)];
+    
+    -- Set atmosphere
+    Game_LoadAtmosphere(aps, transition);
+
+end
+
+function BGWeather_ApplyTimeUpgrade(upg_add, upg_remove)
+    for i=1, World_GetPlayerCount() do
+        local player = World_GetPlayerAt(i);
+        Cmd_InstantUpgrade(player, upg_add);
+        if Player_HasUpgrade(player, upg_remove) then
+            Player_RemoveUpgrade(player, upg_remove)
+        end
+    end
+end
+
+function BGWeather_SetNightAura(enable)
+    if enable then
+        Cmd_InstantUpgrade(g_weatherSystem.aura_entity_eg, g_weatherSystem.upg_night_ebp);
+    else
+        EGroup_RemoveUpgrade(g_weatherSystem.aura_entity_eg, g_weatherSystem.upg_night_ebp);
+    end
+end
+
+function BGWeather_DoNight()
+
+    -- Apply night time upgrade
+    BGWeather_ApplyTimeUpgrade(g_weatherSystem.upg_night, g_weatherSystem.upg_day);
+
+    -- Add night aura
+    BGWeather_SetNightAura(true);
+
+    -- Add oneshot for transition to day
+    Rule_AddOneShot(BGWeather_TransitionDay, g_weatherSystem.time_night);
+
+end
+
+function BGWeather_TransitionNight()
+
+    -- Update time of day
+    g_weatherSystem.time_of_day = E_TIME_OF_DAY.night;
+
+    -- Begin transition
+    BGWeather_SetAtmosphere();
+
+    -- Trigger night when transition is over
+    Rule_AddOneShot(BGWeather_DoNight, g_weatherSystem.time_transition);
+
+end
+
+function BGWeather_DoDay()
+
+    -- Apply day time upgrade
+    BGWeather_ApplyTimeUpgrade(g_weatherSystem.upg_day, g_weatherSystem.upg_night);
+
+    -- Remove night aura
+    BGWeather_SetNightAura(false);
+
+    -- Add one shot for transition to night
+    Rule_AddOneShot(BGWeather_TransitionNight, g_weatherSystem.time_day);
+
+end
+
+function BGWeather_TransitionDay()
+
+    -- Update time of day
+    g_weatherSystem.time_of_day = E_TIME_OF_DAY.day;
+
+    -- Begin transition
+    BGWeather_SetAtmosphere();
+
+    -- Trigger day when transition is over
+    Rule_AddOneShot(BGWeather_DoDay, g_weatherSystem.time_transition);
+
+end

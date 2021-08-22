@@ -251,6 +251,19 @@ function Squad_Surrender(squad)
     -- TODO: Implement
 end
 
+function Squad_RemoveCritical(squad, critical)
+    for i=0, Squad_Count(squad) - 1 do
+        local e = Squad_EntityAt(squad, i);
+        if Entity_HasCritical(e, critical) then
+            Entity_RemoveCritical(e, critical);
+        end
+    end
+end
+
+function Squad_IsGarrisoned(squad)
+    return Squad_IsInHoldEntity(squad) or Squad_IsInHoldSquad(squad);
+end
+
 ------------------------------------------------------------
 -- Entity functions
 ------------------------------------------------------------

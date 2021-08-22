@@ -29,23 +29,6 @@
 					<bool name="retrigger" value="False" />
 					<uniqueid name="id" value="1073742959" />
 				</template_reference>
-				<template_reference name="action" value="action\add_aura">
-					<instance_reference name="aura" value="aura\soviet_commissar_inspire" />
-					<group name="area_info">
-						<float name="angle_left" value="0" />
-						<float name="angle_right" value="0" />
-						<enum name="area_type" value="circle" />
-						<float name="radius" value="25" />
-					</group>
-					<template_reference name="target_info" value="type_ability_target_type\has_all_in_list">
-						<list name="target_infos">
-							<template_reference name="info" value="type_ability_target_type\allied">
-							</template_reference>
-						</list>
-					</template_reference>
-					<bool name="permanent" value="False" />
-					<uniqueid name="id" value="1073742960" />
-				</template_reference>
 			</list>
 		</template_reference>
 		<template_reference name="exts" value="ebpextensions\cost_ext">

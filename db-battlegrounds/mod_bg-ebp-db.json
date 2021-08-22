@@ -291,11 +291,10 @@
       "mortar_veterancy_3_mp"
     ],
     "Hardpoints": [
-      "hm_38_120mm_mortar_mp",
-      "hm_38_120mm_mortar_barrage_mp",
-      "hm_38_120mm_mortar_smoke_mp",
-      "hm_38_120mm_mortar_flares_mp",
-      "hm_38_120mm_mortar_barrage_victortarget_mp"
+      "hm_38_120mm_mortar_bg",
+      "hm_38_120mm_mortar_barrage_bg",
+      "hm_38_120mm_mortar_smoke_bg",
+      "hm_38_120mm_mortar_flares_bg"
     ],
     "Health": 350
   },
@@ -351,11 +350,10 @@
       "mortar_veterancy_3_mp"
     ],
     "Hardpoints": [
-      "pm41_82mm_mortar_mp",
-      "pm41_82mm_mortar_barrage_mp",
-      "pm41_82mm_mortar_smoke_mp",
-      "pm41_82mm_mortar_flare_mp",
-      "pm41_82mm_mortar_barrage_victortarget_mp"
+      "pm41_82mm_mortar_bg",
+      "pm41_82mm_mortar_barrage_bg",
+      "pm41_82mm_mortar_smoke_bg",
+      "pm41_82mm_mortar_flare_bg"
     ],
     "Health": 350
   },
@@ -1777,7 +1775,7 @@
     },
     "Abilities": [
       "guards_throw_defensive_grenade_mp",
-      "button_vehicle_mp",
+      "button_vehicle_bg",
       "army_item_global_cover_training",
       "army_item_soviet_not_gonna_die_like_this",
       "blizzard_effect_deep_snow_camo",
@@ -2384,8 +2382,8 @@
       "anti_tank_45mm_ammo_switch_cannister_shell_mp"
     ],
     "Hardpoints": [
-      "53k_45mm_m1937_at_gun_mp",
-      "53k_45mm_m1937_at_gun_canister_mp"
+      "53k_45mm_m1937_at_gun_bg",
+      "53k_45mm_m1937_at_gun_canister_bg"
     ],
     "Health": 230
   },
@@ -2412,7 +2410,7 @@
       "usf_hold_fire_mp"
     ],
     "Hardpoints": [
-      "zis3_76mm_m1942__at_gun_mp"
+      "zis3_76mm_m1942__at_gun_bg"
     ],
     "Health": 350,
     "UpgradeCapacity": -1
@@ -2914,8 +2912,8 @@
     "Hardpoints": [
       "sherman_76mm_gun_bg",
       "sherman_76mm_hvap_gun_bg",
-      "sherman_coaxil_turret_mp",
-      "sherman_hull_gun_mp",
+      "m4c_sherman_coaxil_turret_bg",
+      "m4c_sherman_hull_gun_bg",
       "sherman_m3_2inch_mortar_smoke_mp"
     ],
     "Health": 640,
@@ -3071,8 +3069,8 @@
     ],
     "Hardpoints": [
       "t34_76mm_bg",
-      "t34_76_85_coaxial_vehicle_turret_mp",
-      "t34_76_85_coaxial_vehicle_hull_mp"
+      "t34_76_85_coaxial_vehicle_turret_bg",
+      "t34_76_85_coaxial_vehicle_hull_bg"
     ],
     "Health": 640,
     "UpgradeCapacity": -1
@@ -3111,8 +3109,8 @@
     ],
     "Hardpoints": [
       "t34_85_zis-s-53_85mm_t34_bg",
-      "t34_76_85_coaxial_vehicle_turret_mp",
-      "t34_76_85_coaxial_vehicle_hull_mp"
+      "t34_76_85_coaxial_vehicle_turret_bg",
+      "t34_76_85_coaxial_vehicle_hull_bg"
     ],
     "Health": 800,
     "UpgradeCapacity": -1

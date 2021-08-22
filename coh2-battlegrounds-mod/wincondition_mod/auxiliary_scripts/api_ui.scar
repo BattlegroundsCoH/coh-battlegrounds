@@ -43,17 +43,25 @@ function UI_AddSetupFunction(func)
 	end
 end
 
+__ui_posmetatable = {
+	__add = function(l, r)
+		return UI_Pos2D(l.x + r.x, l.y + r.y);
+	end
+}
+
+function UI_Pos2D(_x, _y)
+	return setmetatable({ x = _x, y = _y }, __ui_posmetatable);
+end
+
 function UI_GetPosition(_x, _y)
 	local w = UI_GetScreenWidth(); -- Width
 	local h = UI_GetScreenHeight(); -- Height
-	local p = {
-		x = (_x / 1920) * w, -- x / max_width * width
-		y = h - _y -- height - max_height + y
-	};
+	local x = (_x / 1920) * w;
+	local y = h - _y;
 	--if (p.y < 0) then
 	--	p.y = 0;
 	--end
-	return p;
+	return UI_Pos2D(x, y);
 end
 
 function UI_UnpackPosition(p)
@@ -62,27 +70,27 @@ end
 
 -- Returns the position relative to bottom right [W,H]
 function UI_BottomRight(_x, _y)
-	return { x = UI_GetScreenWidth() - _x, y = UI_GetScreenHeight() - _y };
+	return UI_Pos2D(UI_GetScreenWidth() - _x, UI_GetScreenHeight() - _y);
 end
 
 -- Returns the position relative to bottom left [0,H]
 function UI_BottomLeft(_x, _y)
-	return { x = _x, y = UI_GetScreenHeight() - _y };
+	return UI_Pos2D(_x, UI_GetScreenHeight() - _y);
 end
 
 -- Returns the position relative to top right [W,0]
 function UI_TopRight(_x, _y)
-	return { x = UI_GetScreenWidth() - _x, y = _y };
+	return UI_Pos2D(UI_GetScreenWidth() - _x, _y);
 end
 
 -- Returns the position relative to top left [0, 0]
 function UI_TopLeft(_x, _y)
-	return { x = 0, y = 0 };
+	return UI_Pos2D(0, 0);
 end
 
 -- Returns the position of the centre of the screen
 function UI_Centre(_x, _y)
-	return { x = (UI_GetScreenWidth() / 2.0) + _x, y = (UI_GetScreenHeight() / 2.0) + _y };
+	return UI_Pos2D((UI_GetScreenWidth() / 2.0) + _x, (UI_GetScreenHeight() / 2.0) + _y);
 end
 
 function UI_TeamEventCue(player, title, description, iconPath, soundPath)

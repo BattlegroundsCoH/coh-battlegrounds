@@ -37,6 +37,12 @@ namespace Battlegrounds.Game.Gameplay.Supply {
                         WeaponSmallArmsType.HeavyMachineGun => 8,
                         _ => 0
                     },
+                    WeaponCategory.Ballistic => wbp.BallisticType switch {
+                        WeaponBallisticType.TankGun => 24,
+                        WeaponBallisticType.AntiTankGun => 18,
+                        WeaponBallisticType.InfantryAntiTankGun => 16,
+                        _ => 0
+                    },
                     _ => 0
                 };
                 this.Users = users;

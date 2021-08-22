@@ -640,7 +640,7 @@
 								<float name="z" value="0" />
 							</group>
 							<enum name="type" value="default" />
-							<instance_reference name="weapon" value="weapon\soviet\small_arms\machine_gun\light_machine_gun\t34_76_85_coaxial_vehicle_turret_mp" />
+							<instance_reference name="weapon" value="weapon\soviet\small_arms\machine_gun\light_machine_gun\t34_76_85_coaxial_vehicle_turret_bg" mod="142b113740474c82a60b0a428bd553d5" />
 						</group>
 					</list>
 					<bool name="receives_attack_commands" value="False" />
@@ -661,7 +661,7 @@
 								<float name="z" value="2.69" />
 							</group>
 							<enum name="type" value="default" />
-							<instance_reference name="weapon" value="weapon\soviet\small_arms\machine_gun\light_machine_gun\t34_76_85_coaxial_vehicle_hull_mp" />
+							<instance_reference name="weapon" value="weapon\soviet\small_arms\machine_gun\light_machine_gun\t34_76_85_coaxial_vehicle_hull_bg" mod="142b113740474c82a60b0a428bd553d5" />
 						</group>
 					</list>
 					<bool name="receives_attack_commands" value="False" />

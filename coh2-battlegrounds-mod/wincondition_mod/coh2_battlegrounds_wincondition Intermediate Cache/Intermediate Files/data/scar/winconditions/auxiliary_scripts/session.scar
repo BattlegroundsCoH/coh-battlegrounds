@@ -15,11 +15,11 @@ bg_settings = {
 		["allies"] = {
 			{
 				display_name = "CoDiEx", steam_index = "76561198003529969",
-				ai_value = 0, id = 0,
+				ai_value = 0, id = 0, uid = 0
 			},
 		},
 		["axis"] = {
-			{ display_name = "AI - Hard", ai_value = 3, id = 0, },
+			{ display_name = "AI - Hard", ai_value = 3, id = 0, uid = 1 },
 		},
 	},
 };

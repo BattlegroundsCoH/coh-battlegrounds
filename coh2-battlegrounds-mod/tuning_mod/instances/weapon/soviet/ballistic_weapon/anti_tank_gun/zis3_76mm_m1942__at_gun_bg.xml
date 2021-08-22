@@ -332,6 +332,10 @@
 					</list>
 					<uniqueid name="id" value="1073744883" />
 				</template_reference>
+				<template_reference name="action" value="action\scar_function_call">
+					<string name="function_name" value="ScarEvent_OnSyncWeaponFired" />
+					<uniqueid name="id" value="1073744999" />
+				</template_reference>
 			</list>
 		</group>
 		<float name="flinch_radius" value="0" />

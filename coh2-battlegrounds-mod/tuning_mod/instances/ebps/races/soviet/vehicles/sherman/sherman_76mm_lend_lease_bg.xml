@@ -664,7 +664,7 @@
 								<float name="z" value="1" />
 							</group>
 							<enum name="type" value="default" />
-							<instance_reference name="weapon" value="weapon\soviet\small_arms\machine_gun\light_machine_gun\sherman_coaxil_turret_mp" />
+							<instance_reference name="weapon" value="weapon\soviet\small_arms\machine_gun\light_machine_gun\m4c_sherman_coaxil_turret_bg" mod="142b113740474c82a60b0a428bd553d5" />
 						</group>
 					</list>
 					<bool name="receives_attack_commands" value="False" />
@@ -685,7 +685,7 @@
 								<float name="z" value="2.45" />
 							</group>
 							<enum name="type" value="default" />
-							<instance_reference name="weapon" value="weapon\soviet\small_arms\machine_gun\light_machine_gun\sherman_hull_gun_mp" />
+							<instance_reference name="weapon" value="weapon\soviet\small_arms\machine_gun\light_machine_gun\m4c_sherman_hull_gun_bg" mod="142b113740474c82a60b0a428bd553d5" />
 						</group>
 					</list>
 					<bool name="receives_attack_commands" value="False" />
@@ -708,12 +708,6 @@
 							<enum name="type" value="default" />
 							<instance_reference name="weapon" value="weapon\aef\explosive_weapons\mortar\sherman_m3_2inch_mortar_smoke_mp" />
 						</group>
-					</list>
-					<bool name="receives_attack_commands" value="False" />
-				</group>
-				<group name="hardpoint">
-					<float name="parent_hardpoint" value="-1" />
-					<list name="weapon_table">
 					</list>
 					<bool name="receives_attack_commands" value="False" />
 				</group>

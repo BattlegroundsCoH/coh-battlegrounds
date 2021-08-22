@@ -342,7 +342,7 @@
 					<bool name="any_subaction" value="False" />
 				</template_reference>
 				<template_reference name="action" value="action\interval_action">
-					<float name="interval_second" value="1.5" />
+					<float name="interval_second" value="2.5" />
 					<uniqueid name="id" value="1073744983" />
 					<list name="interval_subactions">
 						<group name="interval_subaction_group">

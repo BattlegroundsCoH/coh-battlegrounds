@@ -1,0 +1,136 @@
+-- Table to contain UI players
+_bg_selectionUI = {
+    settings = {
+        fuel = {
+            ["self_colour"] = { -- The colour to display when a player-owned vehicle is selected
+                R = 0,
+                G = 255,
+                B = 0,
+                A = 60,
+            },
+            ["allied_colour"] = { -- The colour to display when an allied vehicle is selected
+                R = 255,
+                G = 188,
+                B = 0,
+                A = 60,
+            },
+            ["enemy_colour"] = { -- The colour to display when an enemy vehicle is selected
+                R = 255,
+                G = 0,
+                B = 0,
+                A = 60,
+            },
+        },
+    },
+    players = {},
+    objects = {},
+};
+
+function BGSupply_SetupUI()
+
+    -- Go through all players in the world
+    for i=1, World_GetPlayerCount() do
+         
+        local p = World_GetPlayerAt(i); -- Get the player
+        local pid = Player_GetID(p); -- Get their index
+ 
+        -- Set the data with index of the players index
+        _bg_selectionUI.players[pid] = {
+            player = p;
+            selectionGroup = SGroup_CreateIfNotFound("SelectionUI_Current"..pid);
+            isdrawing = false;
+            lastsquadsize = 0;
+        }; -- A temproary table
+ 
+        if p == Game_GetLocalPlayer() then
+            _bg_uitarget = _bg_selectionUI.players[pid]; -- Store local ref to self data
+        end
+
+    end
+
+    -- Create UI elements
+    BGSupplyUI_CreateSingleSelect()
+
+    -- Add supply UI refresh
+    Rule_Add(BGSupplyUI_Refresh);
+
+end
+
+function BGSupplyUI_Refresh()
+
+    -- Get selection
+    Misc_GetSelectedSquads(_bg_uitarget.selectionGroup, false);
+
+    -- Get selection size
+    local size = SGroup_Count(_bg_uitarget.selectionGroup);
+
+    if size == 0 then -- None
+        BGSupplyUI_HideAll();
+    elseif size == 1 then -- Single
+        BGSupplyUI_ShowSingleUnit(SGroup_GetSpawnedSquadAt(_bg_uitarget.selectionGroup, 1));
+    else -- Multiselect
+        BGSupplyUI_HideAll(); -- The solution for now
+    end
+
+end
+
+function BGSupplyUI_HideAll()
+    _bg_selectionUI.objects.s_fuel:setPos(-999, 0);
+    _bg_selectionUI.objects.s_ammo:setPos(-999, 0);
+end
+
+-- Static
+function BGSupplyUI_CreateSingleSelect()
+
+    -- Define const pos
+    _bg_selectionUI.fpos = UI_BottomLeft(396, 196);
+    _bg_selectionUI.apos = UI_BottomLeft(587, 167);
+
+    -- Create fuel panel
+    _bg_selectionUI.objects.s_fuel = RootPanel();    
+    _bg_selectionUI.objects.s_fuel:add(Icon("ModIcons_6a0a13b89555402ca75b85dc30f5cb04_fuel_bar_frame", 24, 148, 0, 0));
+
+    -- Create fuel progress
+    _bg_selectionUI.objects.s_fuel_bar = Icon("ModIcons_6a0a13b89555402ca75b85dc30f5cb04_fuel_bar", 13, 120, 0, 0);
+    _bg_selectionUI.objects.s_fuel:add(_bg_selectionUI.objects.s_fuel_bar);
+
+    -- Create ammo panel
+    _bg_selectionUI.objects.s_ammo = RootPanel();
+    _bg_selectionUI.objects.s_ammo:add(Icon("ModIcons_6a0a13b89555402ca75b85dc30f5cb04_ammo_bar_frame", 44, 3, 0, 0));
+
+    -- Create ammo progress
+    _bg_selectionUI.objects.s_ammo_bar = Icon("ModIcons_6a0a13b89555402ca75b85dc30f5cb04_ammo_bar", 44, 3, 0, 0);
+    _bg_selectionUI.objects.s_ammo:add(_bg_selectionUI.objects.s_ammo_bar);
+
+end
+
+function BGSupplyUI_ShowSingleUnit(squad)
+
+    local id = Squad_GetGameID(squad);
+    if id ~= _bg_selectionUI.selectedID then
+        _bg_selectionUI.selectedID = id;
+        BGSupplyUI_HideAll();
+    end
+
+    local ammoData = _bg_supply.ammo[id];
+    local fuelData = _bg_supply.fuel[id];
+
+    if ammoData ~= nil then
+        local slotData = ammoData.slots[8] or ammoData.slots[7] or ammoData.slots[1];
+        if slotData ~= nil then
+            _bg_selectionUI.objects.s_ammo:setPos(UI_UnpackPosition(_bg_selectionUI.apos));
+            _bg_selectionUI.objects.s_ammo_bar:setSize((slotData.current / slotData.max) * 44, 3);
+        end
+    end
+
+    if fuelData ~= nil then
+        _bg_selectionUI.objects.s_fuel:setPos(UI_UnpackPosition(_bg_selectionUI.fpos));
+        _bg_selectionUI.objects.s_fuel_bar:setSize(13, (slotData.current / slotData.max) * 120);
+    end
+
+end
+
+-- Dynamic
+function BGSupplyUI_CreateMultiSelect()
+
+end

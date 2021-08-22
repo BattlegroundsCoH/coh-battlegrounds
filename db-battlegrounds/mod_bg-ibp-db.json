@@ -28,6 +28,20 @@
   },
   {
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741828,
+    "Name": "m2hb_50cal_sherman_bg",
+    "Army": "soviet",
+    "Display": {
+      "LocaleName": "0",
+      "LocaleDescriptionLong": "0",
+      "LocaleDescriptionShort": "0",
+      "Icon": "Icons_weapons_m2hb_pintle"
+    },
+    "WPB": "m4c_sherman_top_gunner_bg",
+    "SlotSize": 1
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
     "PBGID": 1073741823,
     "Name": "ppsh41_assault_package_bg",
     "Army": "soviet",

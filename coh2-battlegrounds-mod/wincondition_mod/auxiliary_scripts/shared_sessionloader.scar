@@ -129,13 +129,9 @@ function BG_SetupWeatherAndSupply()
         import("WinConditions/coh2_battlegrounds_supply.scar");
     end
 
-    -- Invoke the supply UI setup (if defined)
-    if BGSupply_SetupUI ~= nil then
-        BGSupply_SetupUI();
-    end
-
-    -- Invoke the supply setup (if defined)
-    if BGSupply_Setup ~= nil then
+    -- Make sure the supply system is defined
+    if BGSupply_Setup ~= nil then        
+        -- Invoke setup
         BGSupply_Setup();
     end
 
