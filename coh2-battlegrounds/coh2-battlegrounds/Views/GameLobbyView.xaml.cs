@@ -13,6 +13,7 @@ using System.Windows.Media.Imaging;
 
 using Battlegrounds;
 using Battlegrounds.ErrorHandling.CommonExceptions;
+using Battlegrounds.Functional;
 using Battlegrounds.Game;
 using Battlegrounds.Game.Database;
 using Battlegrounds.Game.DataCompany;
@@ -28,6 +29,7 @@ using BattlegroundsApp.Controls.Lobby.Components;
 using BattlegroundsApp.LocalData;
 using BattlegroundsApp.Models;
 using BattlegroundsApp.Resources;
+using BattlegroundsApp.Utilities;
 using BattlegroundsApp.Views.ViewComponent;
 
 namespace BattlegroundsApp.Views {
@@ -63,7 +65,11 @@ namespace BattlegroundsApp.Views {
 
         private readonly List<GameLobbyViewModPackage> m_availableModPackages;
 
-        private GameLobbyViewScenarioItem m_lastScenario;
+        private TimeLockedProperty<GameLobbyViewScenarioItem> m_lastScenario;
+        private TimeLockedProperty<IGamemode> m_lastWincon;
+        private TimeLockedProperty<IGamemodeOption> m_lastWinconOpt;
+        private TimeLockedProperty<bool> m_lastSupplyOpt;
+        private TimeLockedProperty<bool> m_lastWeatherOpt;
 
         private readonly LobbyHandler m_handler;
         private bool m_ignoreEvents;
@@ -258,6 +264,11 @@ namespace BattlegroundsApp.Views {
                 return;
             }
 
+            if (this.m_lastScenario.IsLocked) {
+                this.Map.SelectedItem = this.m_lastScenario.Value;
+                return;
+            }
+
             if (this.Map.SelectedItem is GameLobbyViewScenarioItem scenarioItem) {
                 var scenario = scenarioItem.Scenario;
                 if (scenario is not null) {
@@ -279,7 +290,7 @@ namespace BattlegroundsApp.Views {
                         this.UpdateAvailableGamemodes(scenario);
 
                         // Set last selection incase user picks unavailable scenario
-                        this.m_lastScenario = scenarioItem;
+                        this.m_lastScenario.Value = scenarioItem;
 
                         // Update players last scenario
                         BattlegroundsInstance.LastPlayedMap = scenario.RelativeFilename;
@@ -287,7 +298,7 @@ namespace BattlegroundsApp.Views {
                     } else {
 
                         // Reset selection
-                        this.Map.SelectedItem = this.m_lastScenario;
+                        this.Map.SelectedItem = this.m_lastScenario.Value;
 
                     }
 
@@ -303,18 +314,36 @@ namespace BattlegroundsApp.Views {
                 return;
             }
 
+            if (this.m_lastWincon.IsLocked) {
+                this.Gamemode.SelectedItem = this.m_lastWincon.Value;
+                this.RefreshGamemodeOptionVisibility(this.m_lastWincon.Value); // Reset display
+                return;
+            }
+
             // If gamemode is selected, update option
             if (this.Gamemode.SelectedItem is Wincondition wincon) {
 
-                this.GamemodeOption.Visibility = (wincon.Options is null || wincon.Options.Length == 0) ? Visibility.Hidden : Visibility.Visible;
-                this.GamemodeOption.ItemsSource = wincon.Options;
-                this.GamemodeOption.SelectedIndex = wincon.DefaultOptionIndex;
+                // Update display
+                this.RefreshGamemodeOptionVisibility(wincon);
+
+                // Set last played
+                BattlegroundsInstance.LastPlayedGamemode = wincon.Name;
+                this.m_lastWincon.Value = wincon;
 
                 // Update lobby data
                 HostedLobby lobby = this.m_handler.Lobby as HostedLobby;
                 lobby.SetMode(null, wincon.Name, null, this.TranslateOption);
 
             }
+
+        }
+
+        private void RefreshGamemodeOptionVisibility(IGamemode gamemode) {
+
+            // Update display
+            this.GamemodeOption.Visibility = (gamemode.Options is null || gamemode.Options.Length == 0) ? Visibility.Hidden : Visibility.Visible;
+            this.GamemodeOption.ItemsSource = gamemode.Options;
+            this.GamemodeOption.SelectedIndex = gamemode.DefaultOptionIndex;
 
         }
 
@@ -325,8 +354,17 @@ namespace BattlegroundsApp.Views {
                 return;
             }
 
+            if (this.m_lastWinconOpt.IsLocked) {
+                this.GamemodeOption.SelectedItem = this.m_lastWinconOpt.Value;
+                return;
+            }
+
             // If valid option
             if (this.GamemodeOption.SelectedItem is WinconditionOption option) {
+
+                // Set last played
+                BattlegroundsInstance.LastPlayedGamemodeSetting = option.Value;
+                this.m_lastWinconOpt.Value = option;
 
                 // Update lobby data
                 HostedLobby lobby = this.m_handler.Lobby as HostedLobby;
@@ -435,6 +473,44 @@ namespace BattlegroundsApp.Views {
                 // Enable host mode (and because true, will update populate the dropdowns).
                 this.EnableHostMode(true);
 
+                // Set map
+                this.Map.ItemsSource = ScenarioList.GetList()
+                    .Where(x => x.IsVisibleInLobby)
+                    .Select(x => new GameLobbyViewScenarioItem(x)).ToList();
+
+                // Get defaults
+                IGamemode defaultWin = WinconditionList.GetGamemodeByName(this.SelectedModPackage.GamemodeGUID, BattlegroundsInstance.LastPlayedGamemode);
+
+                // Set defaults
+                this.m_lastScenario = new(200);
+                this.m_lastWincon = new(defaultWin, 200);
+                this.m_lastWinconOpt = new(null, 200);
+                this.m_lastSupplyOpt = new(bool.Parse(BattlegroundsInstance.OtherOptions["supply"]), 200);
+                this.m_lastWeatherOpt = new(bool.Parse(BattlegroundsInstance.OtherOptions["weather"]), 200);
+
+                // Get option
+                if (defaultWin is not null && (defaultWin.Options?.Length ?? -1) > 0) {
+
+                    // Get first value match.
+                    int firstMatch = defaultWin.Options.IndexOf(x => x.Value == BattlegroundsInstance.LastPlayedGamemodeSetting);
+                    if (firstMatch >= 0) {
+                        this.m_lastWinconOpt.ForceSetvalue(defaultWin.Options[firstMatch]);
+                    }
+
+                }
+
+                // Set displays
+                this.Map.SelectFirstOrDefault(x => x is GameLobbyViewScenarioItem scen && scen.Scenario.RelativeFilename == BattlegroundsInstance.LastPlayedMap);
+                this.Gamemode.SelectFirstOrDefault(x => x == defaultWin);
+                if (this.m_lastWinconOpt.Value is not null) {
+                    this.RefreshGamemodeOptionVisibility(defaultWin);
+                    this.GamemodeOption.SelectFirstOrDefault(x => x == this.m_lastWinconOpt.Value);
+                }
+
+                // Set other option displats
+                this.WeatherOption.SelectedIndex = this.m_lastWeatherOpt.Value ? 1 : 0;
+                this.SupplyOption.SelectedIndex = this.m_lastSupplyOpt.Value ? 1 : 0;
+
             } else {
 
                 // lock everything
@@ -464,6 +540,8 @@ namespace BattlegroundsApp.Views {
 
         public override void StateOnLostFocus() {
 
+            // TODO: implement method of getting back to the lobby.
+
         }
 
         public void EnableHostMode(bool hostMode) {
@@ -475,40 +553,6 @@ namespace BattlegroundsApp.Views {
             this.WeatherOption.SetStateBasedOnContext(hostMode, hostMode, 0);
             this.SupplyOption.SetStateBasedOnContext(hostMode, hostMode, 0);
             this.TuningOption.SetStateBasedOnContext(hostMode, hostMode, 0);
-
-            // If host-mode is enabled, populate the dropdowns
-            if (hostMode) {
-
-                // Add pop data
-                this.PopulateDropdowns();
-
-                // Try set recent scenario
-                if (!string.IsNullOrEmpty(BattlegroundsInstance.LastPlayedMap)) {
-                    this.SetScenario(BattlegroundsInstance.LastPlayedMap);
-                }
-
-            }
-
-        }
-
-        private void PopulateDropdowns() {
-
-            // Get the scenarios
-            List<GameLobbyViewScenarioItem> scenarioSource = ScenarioList.GetList()
-                .Where(x => x.IsVisibleInLobby)
-                .Select(x => new GameLobbyViewScenarioItem(x)).ToList();
-
-            // Set source
-            this.Map.ItemsSource = scenarioSource;
-
-            // If no mapp has been selected
-            if (this.Map.SelectedIndex == -1) {
-
-                // Find map to select
-                int selectedScenario = scenarioSource.FindIndex(x => x.Scenario.RelativeFilename == BattlegroundsInstance.LastPlayedMap);
-                this.Map.SelectedIndex = selectedScenario != -1 ? selectedScenario : 0;
-
-            }
 
         }
 
@@ -681,8 +725,26 @@ namespace BattlegroundsApp.Views {
                 return;
             }
 
+            // Make sure we can update
+            if (this.m_lastWeatherOpt.IsLocked) {
+                int i = this.m_lastWeatherOpt.Value ? 1 : 0;
+                if (this.WeatherOption.SelectedIndex != i) {
+                    this.WeatherOption.SelectedIndex = i;
+                }
+                return;
+            }
+
+            // Update val
+            this.m_lastWeatherOpt.Value = this.GetWeatherOption();
+
+            // Get str value
+            string str = this.m_lastWeatherOpt.Value.ToString(CultureInfo.InvariantCulture);
+
             // Set the gamemode option
-            (this.m_handler.Lobby as HostedLobby).SetGameModOption("weather", this.GetWeatherOption().ToString(CultureInfo.InvariantCulture));
+            (this.m_handler.Lobby as HostedLobby).SetGameModOption("weather", str);
+
+            // Save selection
+            BattlegroundsInstance.OtherOptions["weather"] = str;
 
         }
 
@@ -693,8 +755,26 @@ namespace BattlegroundsApp.Views {
                 return;
             }
 
+            // Make sure we can update
+            if (this.m_lastSupplyOpt.IsLocked) {
+                int i = this.m_lastSupplyOpt.Value ? 1 : 0;
+                if (this.SupplyOption.SelectedIndex != i) {
+                    this.SupplyOption.SelectedIndex = i;
+                }
+                return;
+            }
+
+            // Update val
+            this.m_lastSupplyOpt.Value = this.GetSupplyOption();
+
+            // Get str value
+            string str = this.m_lastSupplyOpt.Value.ToString(CultureInfo.InvariantCulture);
+
             // Set the gamemode option
-            (this.m_handler.Lobby as HostedLobby).SetGameModOption("supply", this.GetWeatherOption().ToString(CultureInfo.InvariantCulture));
+            (this.m_handler.Lobby as HostedLobby).SetGameModOption("supply", str);
+
+            // Save selection
+            BattlegroundsInstance.OtherOptions["supply"] = str;
 
         }
 

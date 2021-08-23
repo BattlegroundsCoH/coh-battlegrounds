@@ -29,6 +29,8 @@ namespace Battlegrounds {
 
             public int LastPlayedGamemodeSetting { get; set; }
 
+            public Dictionary<string, string> OtherOptions { get; set; }
+
             public SteamInstance SteamData { get; set; }
 
             public LocaleLanguage Language { get; set; }
@@ -41,6 +43,7 @@ namespace Battlegrounds {
                 this.Paths = new Dictionary<string, string>();
                 this.LastPlayedGamemode = "Victory Points";
                 this.LastPlayedGamemodeSetting = 1;
+                this.OtherOptions = new();
             }
 
             /// <summary>
@@ -163,6 +166,14 @@ namespace Battlegrounds {
         public static int LastPlayedGamemodeSetting {
             get => __instance.LastPlayedGamemodeSetting;
             set => __instance.LastPlayedGamemodeSetting = value;
+        }
+
+        /// <summary>
+        /// Get or set other last played options
+        /// </summary>
+        public static Dictionary<string, string> OtherOptions {
+            get => __instance.OtherOptions;
+            set => __instance.OtherOptions = value;
         }
 
         /// <summary>

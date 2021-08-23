@@ -1,27 +1,5 @@
 -- Table to contain UI players
 _bg_selectionUI = {
-    settings = {
-        fuel = {
-            ["self_colour"] = { -- The colour to display when a player-owned vehicle is selected
-                R = 0,
-                G = 255,
-                B = 0,
-                A = 60,
-            },
-            ["allied_colour"] = { -- The colour to display when an allied vehicle is selected
-                R = 255,
-                G = 188,
-                B = 0,
-                A = 60,
-            },
-            ["enemy_colour"] = { -- The colour to display when an enemy vehicle is selected
-                R = 255,
-                G = 0,
-                B = 0,
-                A = 60,
-            },
-        },
-    },
     players = {},
     objects = {},
 };
