@@ -3,11 +3,9 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Text.Json;
 using System.Text.RegularExpressions;
 
 using Battlegrounds.Functional;
-using Battlegrounds.Json;
 using Battlegrounds.Modding;
 
 using RegexMatch = System.Text.RegularExpressions.Match;

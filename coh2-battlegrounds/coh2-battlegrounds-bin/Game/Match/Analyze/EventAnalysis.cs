@@ -131,7 +131,7 @@ namespace Battlegrounds.Game.Match.Analyze {
                         if (killID >= 0) {
                             if (!this.m_units[killID].MakeDead(stamp)) {
                                 Trace.WriteLine($"Killed unit {killID} (Owner: {killEvent.UnitOwner.Name}) but it was either not deployed or was withdrawn.", dbstring);
-                                success = false;
+                                //success = false;
                             }
                         } else {
                             Trace.WriteLine($"Invalid unitID was killed ({killEvent.UnitID})", dbstring);
@@ -141,7 +141,7 @@ namespace Battlegrounds.Game.Match.Analyze {
                     case DeployEvent deployEvent:
                         int deployID = this.m_units.FindIndex(x => x.UnitID == deployEvent.SquadID && x.PlayerOwner.ID == deployEvent.DeployingPlayer.ID);
                         if (deployID is -1) {
-                            var status = new UnitStatus(deployEvent.DeployingPlayer, deployEvent.SquadID);
+                            UnitStatus status = new(deployEvent.DeployingPlayer, deployEvent.SquadID);
                             if (status.Deploy(stamp)) {
                                 this.m_units.Add(status);
                             } else {

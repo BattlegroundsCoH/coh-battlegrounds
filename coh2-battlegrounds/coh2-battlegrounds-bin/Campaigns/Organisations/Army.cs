@@ -7,7 +7,6 @@ using Battlegrounds.Campaigns.API;
 using Battlegrounds.Functional;
 using Battlegrounds.Game.DataCompany;
 using Battlegrounds.Game.Gameplay;
-using Battlegrounds.Json;
 using Battlegrounds.Locale;
 using Battlegrounds.Lua;
 using Battlegrounds.Modding;
@@ -18,7 +17,7 @@ namespace Battlegrounds.Campaigns.Organisations {
     /// <summary>
     /// 
     /// </summary>
-    public class Army : IJsonObject {
+    public class Army {
 
         private record ArmyRegimentalUnitTemplate(string BlueprintName, string TransportBlueprint, Range VetRange, double Weight, int Count);
         private record ArmyRegimentalTemplate(string RegimentType, int RegimentUnitSize, int RegimentCompanyCount,
@@ -294,8 +293,6 @@ namespace Battlegrounds.Campaigns.Organisations {
             return squadResult;
 
         }
-
-        public string ToJsonReference() => this.ArmyName.LocaleID;
 
     }
 

@@ -70,8 +70,8 @@ namespace coh2_battlegrounds_bin_tests {
                 SelectedScenario = new() { RelativeFilename = "2p_angoville_farms", MaxPlayers = 2 },
                 SelectedTuningMod = ModManager.GetMod<ITuningMod>(this.package.TuningGUID),
                 DefaultDifficulty = AIDifficulty.AI_Hard,
-                Allies = new SessionParticipant[] { new("Red Army", 77789995, this.sovietCompany, SessionParticipantTeam.TEAM_ALLIES, 0, 0) },
-                Axis = new SessionParticipant[] { new("Wehrmacht", 77789996, this.germanCompany, SessionParticipantTeam.TEAM_AXIS, 0, 1) },
+                Allies = new SessionParticipant[] { new("Red Army", 77789995, this.sovietCompany, ParticipantTeam.TEAM_ALLIES, 0, 0) },
+                Axis = new SessionParticipant[] { new("Wehrmacht", 77789996, this.germanCompany, ParticipantTeam.TEAM_AXIS, 0, 1) },
             };
 
             // Create directory with compilte test files
@@ -107,6 +107,30 @@ namespace coh2_battlegrounds_bin_tests {
             }
 
         }
+
+        [TestMethod]
+        public void CanCompileBasicSessionAndSupplyNoVerify() {
+
+            // Create session data
+            var session = Session.CreateSession(info);
+            Assert.IsNotNull(session);
+
+            // Compile the session
+            string sessionFile = this.sessionCompiler.CompileSession(session);
+            Assert.IsTrue(sessionFile.Length > 0);
+            if (WRITE_FILES) {
+                File.WriteAllText($"compile_tests\\{GetTestName()}_session.scar", sessionFile);
+            }
+
+            // Compile the session
+            string sessionSupplyFile = this.sessionCompiler.CompileSupplyData(session);
+            Assert.IsTrue(sessionSupplyFile.Length > 0);
+            if (WRITE_FILES) {
+                File.WriteAllText($"compile_tests\\{GetTestName()}_session_supply.scar", sessionSupplyFile);
+            }
+
+        }
+
         /* // Currently disabled --> Lua Runtime issue
         [TestMethod]
         public void CanInterpretBasicSession() {

@@ -4,12 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-using Battlegrounds.Json;
 using Battlegrounds.Locale;
 
 namespace Battlegrounds.Campaigns.Organisations {
 
-    public class Division : IJsonObject {
+    public class Division {
 
         public LocaleKey Name { get; init; }
 
@@ -30,8 +29,6 @@ namespace Battlegrounds.Campaigns.Organisations {
             this.EleemntOf = army;
             this.Regiments = new List<Regiment>();
         }
-
-        public string ToJsonReference() => this.DivisionUid.ToString();
 
     }
 

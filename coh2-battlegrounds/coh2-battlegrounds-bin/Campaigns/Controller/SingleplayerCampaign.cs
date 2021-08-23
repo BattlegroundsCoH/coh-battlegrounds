@@ -605,7 +605,7 @@ namespace Battlegrounds.Campaigns.Controller {
 
         private static SessionInfo GetSessionFromEngagementData(CampaignEngagementData data) {
             byte uidPlayerIndex = 0;
-            SessionParticipant[] CreateTeam(bool isAttacker, List<Squad>[] companies, SessionParticipantTeam team) {
+            SessionParticipant[] CreateTeam(bool isAttacker, List<Squad>[] companies, ParticipantTeam team) {
                 SessionParticipant[] participants = new SessionParticipant[companies.Length];
                 var diffs = isAttacker ? data.attackingDifficulties : data.defendingDifficulties;
                 for (int i = 0; i < companies.Length; i++) {
@@ -628,8 +628,8 @@ namespace Battlegrounds.Campaigns.Controller {
                 DefaultDifficulty = AIDifficulty.AI_Hard,
                 FillAI = false,
                 IsOptionValue = true, // TODO: Set according to CampaignEngagementData
-                Allies = CreateTeam(areAlliesAttacking, areAlliesAttacking ? data.attackingCompanyUnits : data.defendingCompanyUnits, SessionParticipantTeam.TEAM_ALLIES),
-                Axis = CreateTeam(!areAlliesAttacking, !areAlliesAttacking ? data.attackingCompanyUnits : data.defendingCompanyUnits, SessionParticipantTeam.TEAM_AXIS)
+                Allies = CreateTeam(areAlliesAttacking, areAlliesAttacking ? data.attackingCompanyUnits : data.defendingCompanyUnits, ParticipantTeam.TEAM_ALLIES),
+                Axis = CreateTeam(!areAlliesAttacking, !areAlliesAttacking ? data.attackingCompanyUnits : data.defendingCompanyUnits, ParticipantTeam.TEAM_AXIS)
             };
             return info;
         }

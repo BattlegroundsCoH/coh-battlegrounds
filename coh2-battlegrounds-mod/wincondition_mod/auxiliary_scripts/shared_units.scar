@@ -150,7 +150,7 @@ function BG_DeploySquad(player, unit_id)
     if not unit_data.spawned then
 
         -- Get position data
-        local gotopos = _bg_playerData[playerRefID].last_callin_point or Player_GetStartingPosition(player);
+        local gotopos = _bg_playerData[playerRefID]:GetCallInDestination();
         local spawnfrom = Player_GetNearestMapEntry(player, gotopos);
 
         -- Call in the unit
@@ -177,6 +177,16 @@ function BG_DeploySquad(player, unit_id)
         Rule_AddSquadEvent(BG_OnSquadDeath, squad, GE_SquadKilled);
         if crewSquad ~= nil then
             Rule_AddSquadEvent(BG_OnSquadDeath, crewSquad, GE_SquadKilled);
+        end
+
+        -- Invoke additional hooks
+        if __bgapi_spawncallbacks ~= nil then
+            for _, func in pairs(__bgapi_spawncallbacks) do
+                func(player, squad, unit_data);
+                if crewSquad ~= nil then
+                    func(player, crewSquad, unit_data.crew);
+                end
+            end
         end
 
         -- Was it the local player who spawned this unit?
@@ -295,9 +305,9 @@ end
 
 function BG_ApplyCompanyData(player, squad, tempGroup, data)
 
-    -- Apply veterancy rank
+    -- Apply veterancy rank (This seems to be redundant tbh)
     if (data.veterancy_rank > 0) then
-        Squad_IncreaseVeterancyRank(squad, data.veterancy_rank, true );
+        --Squad_IncreaseVeterancyRank(squad, data.veterancy_rank, true );
     end
 
     -- Apply veterancy progress
@@ -382,6 +392,11 @@ function BG_RegisterSquadDeath(playerData, companyID)
     -- If we fail to get the company squad data - it might be because of some debug issue
     if companySquad == nil then
         -- TODO: if not in debug broadcast an error event
+        return;
+    end
+
+    -- Make sure we don't accidentally kill a squad that was successfully withdrawn or wasnt spawned at the time of this event
+    if not companySquad.spawned then
         return;
     end
 

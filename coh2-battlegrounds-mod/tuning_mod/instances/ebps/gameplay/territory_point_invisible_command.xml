@@ -303,12 +303,12 @@
 					<list name="subactions">
 						<template_reference name="action" value="action\blip_action">
 							<enum name="blip_type" value="reveal" />
-							<float name="duration" value="0" />
+							<float name="duration" value="5" />
 							<uniqueid name="id" value="1073744568" />
 						</template_reference>
 						<template_reference name="action" value="action\retreat_action">
 							<instance_reference name="entity_type_to_retreat_to" value="" />
-							<enum name="retreat_type" value="retreat" />
+							<enum name="retreat_type" value="forced_retreat" />
 							<uniqueid name="id" value="1073744569" />
 							<float name="refund_percent_after_retreat" value="0" />
 						</template_reference>
@@ -323,7 +323,7 @@
 								</template_reference>
 							</list>
 							<uniqueid name="id" value="1073744571" />
-							<bool name="can_prevent_refund" value="True" />
+							<bool name="can_prevent_refund" value="False" />
 						</template_reference>
 						<template_reference name="action" value="action\kicker_message_action">
 							<float name="loop_interval" value="0" />
@@ -341,6 +341,44 @@
 					<uniqueid name="id" value="1073744567" />
 					<bool name="any_subaction" value="False" />
 				</template_reference>
+				<template_reference name="action" value="action\interval_action">
+					<float name="interval_second" value="2.5" />
+					<uniqueid name="id" value="1073744983" />
+					<list name="interval_subactions">
+						<group name="interval_subaction_group">
+							<float name="trigger_time_second" value="0" />
+							<list name="actions">
+								<template_reference name="action" value="action\target">
+									<group name="area_info">
+										<float name="angle_left" value="0" />
+										<float name="angle_right" value="0" />
+										<enum name="area_type" value="sector" />
+										<float name="radius" value="0" />
+									</group>
+									<bool name="die_with_creator" value="True" />
+									<bool name="do_recalc_targets" value="True" />
+									<float name="duration" value="0" />
+									<bool name="entity_targets" value="False" />
+									<instance_reference name="entity_types_to_choose" value="" />
+									<bool name="stationary" value="True" />
+									<group name="target_info">
+										<template_reference name="target_info" value="type_ability_target_type\allied">
+										</template_reference>
+									</group>
+									<enum name="unit_type" value="" />
+									<list name="subactions">
+										<template_reference name="action" value="action\scar_function_call">
+											<string name="function_name" value="BGSupplyAE_RefillAll" />
+											<uniqueid name="id" value="1073744985" />
+										</template_reference>
+									</list>
+									<uniqueid name="id" value="1073744984" />
+									<bool name="any_subaction" value="False" />
+								</template_reference>
+							</list>
+						</group>
+					</list>
+				</template_reference>
 				<template_reference name="action" value="action\add_aura">
 					<instance_reference name="aura" value="aura\command_zone" mod="142b113740474c82a60b0a428bd553d5" />
 					<group name="area_info">
@@ -352,7 +390,7 @@
 					<template_reference name="target_info" value="type_ability_target_type\allied">
 					</template_reference>
 					<bool name="permanent" value="True" />
-					<uniqueid name="id" value="1073744766" />
+					<uniqueid name="id" value="1073744986" />
 				</template_reference>
 			</list>
 		</template_reference>

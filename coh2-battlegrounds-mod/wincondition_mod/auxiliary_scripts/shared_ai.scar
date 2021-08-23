@@ -40,15 +40,15 @@ _bg_AISettings = {
             aggressive_factor = 2.5,
             call_mod = 1.2,
             manpower_income = 1.4,
-            munitions_income = 2.1,
-            fuel_income = 2.3,
+            munitions_income = 1.8,
+            fuel_income = 2.2,
         },
         [4] = {
             aggressive_factor = 3.25,
             call_mod = 0.9,
             manpower_income = 1.6,
-            munitions_income = 2.3,
-            fuel_income = 2.8,
+            munitions_income = 2.2,
+            fuel_income = 2.2,
         }
     }
 };
@@ -356,6 +356,10 @@ function BGAI_BuyRandom(index, set)
 end
 
 function BGAI_OnSquadDeath(squad)
+
+    if World_OwnsSquad(squad) then
+        return; -- Fix where this is somehow triggered on world squads
+    end
 
     -- Get player data
     local player = Squad_GetPlayerOwner(squad);

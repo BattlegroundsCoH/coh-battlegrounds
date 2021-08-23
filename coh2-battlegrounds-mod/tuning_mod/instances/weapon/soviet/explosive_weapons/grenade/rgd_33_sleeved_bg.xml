@@ -1,0 +1,480 @@
+<instance description="This is the more powerful version of  the grenade more effective from cover etc.&#xA;Multiplayer Clone." template="weapon">
+	<group name="weapon_bag">
+		<group name="accuracy">
+			<float name="near" value="11" />
+			<float name="far" value="11" />
+			<float name="mid" value="11" />
+		</group>
+		<group name="aim">
+			<group name="fire_aim_time">
+				<float name="max" value="0.125" />
+				<float name="min" value="0.125" />
+			</group>
+			<float name="post_firing_aim_time" value="0" />
+			<float name="post_firing_cooldown_interval" value="0" />
+			<group name="ready_aim_time">
+				<float name="max" value="0.125" />
+				<float name="min" value="0.125" />
+			</group>
+			<group name="aim_time_multiplier">
+				<float name="near" value="1" />
+				<float name="far" value="1" />
+				<float name="mid" value="1" />
+			</group>
+		</group>
+		<group name="anim_table">
+			<string name="cooldown_time_name" value="" />
+			<string name="state_name" value="Grenade_State" />
+			<string name="track_horizontal" value="" />
+			<string name="track_horizontal_speed" value="" />
+			<string name="track_vertical" value="" />
+			<string name="track_vertical_speed" value="" />
+			<string name="variety_name" value="" />
+			<string name="visibility_name" value="grenade_rgd_visible" />
+			<string name="target_range_name" value="" />
+		</group>
+		<group name="area_effect">
+			<group name="accuracy">
+				<float name="far" value="5" />
+				<float name="near" value="5" />
+				<float name="mid" value="5" />
+			</group>
+			<group name="area_info">
+				<float name="angle_left" value="0" />
+				<float name="angle_right" value="0" />
+				<enum name="area_type" value="circle" />
+				<float name="radius" value="4" />
+			</group>
+			<group name="damage">
+				<float name="far" value="0.25" />
+				<float name="near" value="1" />
+				<float name="mid" value="0.75" />
+			</group>
+			<group name="damage_friendly">
+				<float name="far" value="0.25" />
+				<float name="near" value="0.25" />
+				<float name="mid" value="0.25" />
+			</group>
+			<group name="distance">
+				<float name="far" value="3" />
+				<float name="near" value="1" />
+				<float name="mid" value="2" />
+			</group>
+			<bool name="has_friendly_fire" value="True" />
+			<bool name="can_harm_shooter" value="True" />
+			<group name="suppression">
+				<float name="far" value="0.1" />
+				<float name="near" value="0.1" />
+				<float name="mid" value="0.1" />
+			</group>
+			<group name="suppression_friendly">
+				<float name="far" value="0.1" />
+				<float name="near" value="0.1" />
+				<float name="mid" value="0.1" />
+			</group>
+			<bool name="damage_all_in_hold" value="True" />
+			<template_reference name="aoe_penetration" value="tables\range_table">
+				<float name="far" value="25" />
+				<float name="mid" value="25" />
+				<float name="near" value="25" />
+			</template_reference>
+			<group name="building_damage">
+				<float name="near" value="1" />
+				<float name="mid" value="1" />
+				<float name="far" value="1" />
+			</group>
+			<instance_reference name="weapon_building_damage" value="weapon_building_damage\aoe_profile_grenade" />
+			<enum name="aoe_origin_and_direction" value="hit_position_and_direction" />
+			<int name="damage_max_members_per_squad" value="-1" />
+		</group>
+		<group name="behaviour">
+			<bool name="aa_weapon" value="False" />
+			<bool name="aa_weapon_shoot_through" value="False" />
+			<bool name="artillery_force_obey_los" value="False" />
+			<bool name="attack_team_weapon_user" value="False" />
+			<bool name="can_be_offhanded" value="False" />
+			<bool name="can_be_substituted" value="False" />
+			<float name="combat_slot_offset" value="0" />
+			<bool name="enable_auto_target_search" value="False" />
+			<bool name="fire_at_building_combat_slot" value="False" />
+			<float name="ground_hit_rate" value="1" />
+			<bool name="ignore_shot_blocking" value="True" />
+			<bool name="non_moving_setup" value="False" />
+			<bool name="point_blank" value="False" />
+			<bool name="prevents_prone" value="False" />
+			<bool name="reset_rotation_on_teardown" value="False" />
+			<bool name="share_parent_anim" value="False" />
+			<bool name="single_handed_weapon" value="True" />
+			<bool name="substitute_weapon" value="False" />
+			<bool name="support_weapon" value="False" />
+			<bool name="surprises_idle" value="False" />
+			<bool name="piercing" value="False" />
+			<float name="reaction_radius" value="5.1" />
+			<bool name="can_be_pilfered" value="True" />
+			<bool name="causes_combat" value="True" />
+			<bool name="can_abort_winddown" value="False" />
+			<enum name="reaction_type" value="normal" />
+			<bool name="ignore_relations" value="False" />
+			<template_reference name="wants_prone_firing_option" value="options\none">
+			</template_reference>
+			<enum name="attack_ground_type" value="outside_hold_only" />
+			<bool name="non_moving_setup_requires_facing" value="False" />
+		</group>
+		<group name="burst">
+			<bool name="can_burst" value="False" />
+			<group name="duration">
+				<float name="max" value="0" />
+				<float name="min" value="0" />
+			</group>
+			<group name="incremental_target_table">
+				<float name="accuracy_multiplier" value="1" />
+				<group name="search_radius">
+					<float name="far" value="0" />
+					<float name="near" value="0" />
+					<float name="mid" value="0" />
+				</group>
+			</group>
+			<group name="rate_of_fire">
+				<float name="max" value="0" />
+				<float name="min" value="0" />
+			</group>
+			<group name="duration_multiplier">
+				<float name="near" value="1" />
+				<float name="far" value="1" />
+				<float name="mid" value="1" />
+			</group>
+			<group name="rate_of_fire_multiplier">
+				<float name="near" value="1" />
+				<float name="far" value="1" />
+				<float name="mid" value="1" />
+			</group>
+			<bool name="focus_fire" value="False" />
+		</group>
+		<group name="cooldown">
+			<group name="duration">
+				<float name="max" value="0" />
+				<float name="min" value="0" />
+			</group>
+			<group name="duration_multiplier">
+				<float name="near" value="1" />
+				<float name="far" value="1" />
+				<float name="mid" value="1" />
+			</group>
+		</group>
+		<group name="cover_table">
+			<group name="tp_defcover">
+				<float name="accuracy_multiplier" value="1" />
+				<float name="damage_multiplier" value="1" />
+				<float name="penetration_multiplier" value="1" />
+				<float name="suppression_multiplier" value="1" />
+			</group>
+			<group name="tp_defcover_narrow">
+				<float name="accuracy_multiplier" value="1" />
+				<float name="damage_multiplier" value="1" />
+				<float name="penetration_multiplier" value="1" />
+				<float name="suppression_multiplier" value="1" />
+			</group>
+			<group name="tp_garrison_cover">
+				<float name="accuracy_multiplier" value="1" />
+				<float name="damage_multiplier" value="1" />
+				<float name="penetration_multiplier" value="1" />
+				<float name="suppression_multiplier" value="0" />
+			</group>
+			<group name="tp_garrison_halftrack">
+				<float name="accuracy_multiplier" value="0.5" />
+				<float name="damage_multiplier" value="0.5" />
+				<float name="penetration_multiplier" value="0.5" />
+				<float name="suppression_multiplier" value="0" />
+			</group>
+			<group name="tp_heavy">
+				<float name="accuracy_multiplier" value="1" />
+				<float name="damage_multiplier" value="0.5" />
+				<float name="penetration_multiplier" value="1" />
+				<float name="suppression_multiplier" value="0.1" />
+			</group>
+			<group name="tp_light">
+				<float name="accuracy_multiplier" value="1" />
+				<float name="damage_multiplier" value="1" />
+				<float name="penetration_multiplier" value="1" />
+				<float name="suppression_multiplier" value="0.5" />
+			</group>
+			<group name="tp_negative">
+				<float name="accuracy_multiplier" value="1" />
+				<float name="damage_multiplier" value="1.25" />
+				<float name="penetration_multiplier" value="1" />
+				<float name="suppression_multiplier" value="1.5" />
+			</group>
+			<group name="tp_open">
+				<float name="accuracy_multiplier" value="1.25" />
+				<float name="damage_multiplier" value="1" />
+				<float name="penetration_multiplier" value="1" />
+				<float name="suppression_multiplier" value="1" />
+			</group>
+			<group name="tp_smoke">
+				<float name="accuracy_multiplier" value="1" />
+				<float name="damage_multiplier" value="1" />
+				<float name="penetration_multiplier" value="1" />
+				<float name="suppression_multiplier" value="1" />
+			</group>
+			<group name="tp_trench">
+				<float name="accuracy_multiplier" value="1" />
+				<float name="damage_multiplier" value="1" />
+				<float name="penetration_multiplier" value="1" />
+				<float name="suppression_multiplier" value="0" />
+			</group>
+			<group name="tp_water">
+				<float name="accuracy_multiplier" value="1" />
+				<float name="damage_multiplier" value="1" />
+				<float name="penetration_multiplier" value="1" />
+				<float name="suppression_multiplier" value="1" />
+			</group>
+			<group name="tp_z_bunker">
+				<float name="accuracy_multiplier" value="1" />
+				<float name="damage_multiplier" value="0.5" />
+				<float name="penetration_multiplier" value="1" />
+				<float name="suppression_multiplier" value="0" />
+			</group>
+			<group name="tp_z_emplacement">
+				<float name="accuracy_multiplier" value="1" />
+				<float name="damage_multiplier" value="0.5" />
+				<float name="penetration_multiplier" value="1" />
+				<float name="suppression_multiplier" value="0.75" />
+			</group>
+			<group name="tp_z_ice">
+				<float name="accuracy_multiplier" value="1" />
+				<float name="damage_multiplier" value="1" />
+				<float name="penetration_multiplier" value="1" />
+				<float name="suppression_multiplier" value="1" />
+			</group>
+			<group name="tp_z_snow">
+				<float name="accuracy_multiplier" value="1" />
+				<float name="damage_multiplier" value="1" />
+				<float name="penetration_multiplier" value="1" />
+				<float name="suppression_multiplier" value="1" />
+			</group>
+			<group name="tp_zz_deep_snow">
+				<float name="accuracy_multiplier" value="1" />
+				<float name="damage_multiplier" value="1" />
+				<float name="penetration_multiplier" value="1" />
+				<float name="suppression_multiplier" value="1" />
+			</group>
+			<group name="tp_zz_mud">
+				<float name="accuracy_multiplier" value="1" />
+				<float name="damage_multiplier" value="0.25" />
+				<float name="penetration_multiplier" value="1" />
+				<float name="suppression_multiplier" value="1" />
+			</group>
+			<group name="tp_zz_team_weapon_heavy">
+				<float name="accuracy_multiplier" value="1" />
+				<float name="damage_multiplier" value="0.5" />
+				<float name="penetration_multiplier" value="1" />
+				<float name="suppression_multiplier" value="0.1" />
+			</group>
+		</group>
+		<group name="damage">
+			<float name="max" value="80" />
+			<float name="min" value="80" />
+			<list name="on_penetrated_actions">
+			</list>
+			<list name="post_damage_actions">
+			</list>
+		</group>
+		<group name="damage_over_time">
+			<template_reference name="damage_over_time" value="dot_type\none">
+			</template_reference>
+		</group>
+		<group name="deflection">
+			<float name="deflection_damage_multiplier" value="0" />
+			<bool name="has_deflection_damage" value="False" />
+			<list name="on_deflected_actions">
+			</list>
+		</group>
+		<group name="fire">
+			<float name="wind_down" value="0.75" />
+			<float name="wind_up" value="0.125" />
+			<list name="on_fire_actions">
+				<template_reference name="action" value="action\timed_action">
+					<float name="duration" value="10" />
+					<bool name="fire_and_forget" value="True" />
+					<list name="subactions">
+						<template_reference name="action" value="action\change_target_action">
+							<list name="actions">
+								<template_reference name="action" value="action\apply_modifiers_action">
+									<float name="duration" value="10" />
+									<bool name="permanent" value="False" />
+									<list name="modifiers">
+										<template_reference name="modifier" value="modifiers\camouflage_enable">
+											<enum name="application_type" value="apply_to_entity" />
+											<bool name="exclusive" value="True" />
+											<string name="modifier_id" value="" />
+											<string name="target_type_name" value="" />
+											<enum name="usage_type" value="enable" />
+											<float name="value" value="-1" />
+											<instance_reference name="tooltip" value="modifier_tooltip\camouflage_enable" />
+										</template_reference>
+									</list>
+									<uniqueid name="id" value="1073744877" />
+								</template_reference>
+							</list>
+							<enum name="change_target_type" value="squad" />
+							<uniqueid name="id" value="1073744878" />
+						</template_reference>
+					</list>
+					<uniqueid name="id" value="1073744879" />
+				</template_reference>
+			</list>
+		</group>
+		<float name="flinch_radius" value="15" />
+		<string name="fx_action_target_name" value="grenade_target" />
+		<bool name="fx_always_visible" value="False" />
+		<float name="fx_building_hit_delay" value="0" />
+		<float name="fx_delay_in_building" value="0.5" />
+		<string name="fx_munition_name" value="grenade" />
+		<string name="fx_tracer_name" value="" />
+		<float name="fx_tracer_speed" value="0" />
+		<bool name="fx_use_building_panel_normal" value="False" />
+		<locstring name="help_text" value="0" />
+		<icon name="icon_name" value="" />
+		<group name="moving">
+			<float name="accuracy_multiplier" value="1" />
+			<float name="burst_multiplier" value="1" />
+			<float name="cooldown_multiplier" value="1" />
+			<bool name="disable_moving_firing" value="False" />
+			<float name="moving_end_time" value="0" />
+			<float name="moving_start_time" value="0" />
+		</group>
+		<string name="name" value="RGD_33_Sleeved" />
+		<group name="offhand">
+			<float name="offhand_end_time" value="0" />
+			<float name="offhand_start_time" value="0" />
+		</group>
+		<group name="priority">
+			<float name="current_target" value="10" />
+			<group name="distance">
+				<float name="far" value="1" />
+				<float name="near" value="40" />
+				<float name="mid" value="20.5" />
+			</group>
+			<float name="rotation" value="-0.5" />
+			<float name="window_bonus" value="0" />
+			<float name="threat" value="20" />
+			<float name="penetration" value="80" />
+			<float name="suggested_target" value="1000" />
+			<bool name="over_penetration_priority_penalty" value="True" />
+		</group>
+		<group name="projectile">
+			<bool name="delete_previous_on_hit" value="False" />
+			<instance_reference name="projectile" value="ebps\projectile\rgd_33_sleeved_grenade_mp" />
+		</group>
+		<group name="range">
+			<float name="max" value="20" />
+			<float name="min" value="5" />
+			<group name="distance">
+				<float name="near" value="-1" />
+				<float name="far" value="-1" />
+				<float name="mid" value="-1" />
+			</group>
+		</group>
+		<group name="reload">
+			<group name="duration">
+				<float name="max" value="0" />
+				<float name="min" value="0" />
+			</group>
+			<group name="duration_multiplier">
+				<float name="far" value="1" />
+				<float name="near" value="1" />
+				<float name="mid" value="1" />
+			</group>
+			<group name="frequency">
+				<float name="max" value="0" />
+				<float name="min" value="0" />
+			</group>
+			<list name="on_reload_actions">
+			</list>
+		</group>
+		<group name="scatter">
+			<float name="angle_scatter" value="0" />
+			<bool name="burst_pattern_enable" value="False" />
+			<float name="delay_bracket_change_chance" value="0" />
+			<float name="distance_bracket_count_air" value="0" />
+			<float name="distance_bracket_count_ground" value="1" />
+			<float name="distance_scatter_max" value="0" />
+			<float name="distance_scatter_obj_hit_min" value="0" />
+			<float name="distance_scatter_offset" value="0" />
+			<float name="distance_scatter_ratio" value="0" />
+			<float name="fow_angle_multiplier" value="0" />
+			<float name="fow_distance_multiplier" value="0" />
+			<float name="max_tilt_angle" value="0" />
+			<float name="min_tilt_angle" value="0" />
+			<float name="tilt_max_distance" value="0" />
+			<float name="tilt_scatter_chance" value="0" />
+		</group>
+		<group name="setup">
+			<float name="duration" value="0" />
+			<bool name="has_instant_setup" value="False" />
+			<bool name="can_interrupt_setup" value="False" />
+			<float name="attach_duration" value="0" />
+		</group>
+		<group name="suppressed">
+			<float name="pinned_burst_multiplier" value="1" />
+			<float name="pinned_cooldown_multiplier" value="1" />
+			<float name="pinned_reload_multiplier" value="1" />
+			<float name="suppressed_burst_multiplier" value="1" />
+			<float name="suppressed_cooldown_multiplier" value="1" />
+			<float name="suppressed_reload_multiplier" value="1" />
+		</group>
+		<group name="suppression">
+			<float name="nearby_suppression_multiplier" value="0" />
+			<float name="nearby_suppression_radius" value="0" />
+			<group name="target_pinned_multipliers">
+				<float name="accuracy_multiplier" value="0.25" />
+				<float name="damage_multiplier" value="1" />
+				<float name="penetration_multiplier" value="1" />
+				<float name="suppression_multiplier" value="0.1" />
+			</group>
+			<group name="target_suppressed_multipliers">
+				<float name="accuracy_multiplier" value="0.5" />
+				<float name="damage_multiplier" value="1" />
+				<float name="penetration_multiplier" value="1" />
+				<float name="suppression_multiplier" value="0.5" />
+			</group>
+			<float name="amount" value="0" />
+		</group>
+		<group name="teardown">
+			<float name="duration" value="0" />
+		</group>
+		<group name="tracking">
+			<float name="fire_cone_angle" value="60" />
+			<group name="normal">
+				<float name="max_down" value="-90" />
+				<float name="max_left" value="-60" />
+				<float name="max_right" value="60" />
+				<float name="max_up" value="89" />
+				<float name="speed_horizontal" value="360" />
+				<float name="speed_vertical" value="360" />
+			</group>
+			<float name="pivot_end_time" value="0" />
+			<bool name="pivot_only" value="False" />
+			<float name="pivot_start_time" value="0" />
+			<float name="fire_cone_angle_vert" value="2" />
+		</group>
+		<locstring name="ui_name" value="0" />
+		<enum name="weapon_type" value="big_explosive" />
+		<instance_reference name="ui_range" value="" />
+		<instance_reference name="ui_setfacing" value="" />
+		<group name="penetration">
+			<float name="near" value="25" />
+			<float name="far" value="25" />
+			<float name="mid" value="25" />
+		</group>
+		<group name="ui_map_colour">
+			<int name="red" value="0" />
+			<int name="green" value="0" />
+			<int name="blue" value="0" />
+			<int name="alpha" value="0" />
+		</group>
+		<list name="target_type_table">
+		</list>
+	</group>
+	<uniqueid name="pbgid" value="1073741872" />
+</instance>

@@ -20,12 +20,9 @@ namespace Battlegrounds.Game.Database.Extensions {
             public override string ToString() => $"{this.EntityBlueprint}:{this.Count}";
         }
 
-        private Entry[] m_entries;
+        private readonly Entry[] m_entries;
 
         public int Count => this.m_entries.Sum(x => x.Count);
-
-        public EntityBlueprint GetEntity(int index)
-            => 0 <= index && index < this.m_entries.Length ? BlueprintManager.FromBlueprintName<EntityBlueprint>(this.m_entries[index].EntityBlueprint) : null;
 
         public LoadoutExtension(Entry[] entries) {
             this.m_entries = entries;
@@ -53,6 +50,15 @@ namespace Battlegrounds.Game.Database.Extensions {
             }
             return new(entries.ToArray());
         }
+
+        public EntityBlueprint[] GetEntities()
+            => (0..this.m_entries.Length).Map(i => this.GetEntity(i));
+
+        public EntityBlueprint GetEntity(Index index)
+            => this.GetEntity(index.IsFromEnd ? this.m_entries.Length - index.Value : index.Value);
+
+        public EntityBlueprint GetEntity(int index)
+            => 0 <= index && index < this.m_entries.Length ? BlueprintManager.FromBlueprintName<EntityBlueprint>(this.m_entries[index].EntityBlueprint) : null;
 
         public override string ToString() => string.Join(",", this.m_entries.Select(x => x.ToString()));
 

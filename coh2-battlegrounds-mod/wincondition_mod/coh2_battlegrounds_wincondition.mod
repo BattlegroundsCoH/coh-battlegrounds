@@ -124,6 +124,18 @@
 									<BurnSettings i:nil="true" />
 									<RelativeName>coh2_battlegrounds.scar</RelativeName>
 								</d2p1:anyType>
+								<d2p1:anyType i:type="BurnFile">
+									<BurnSettings i:nil="true" />
+									<RelativeName>coh2_battlegrounds_supply.scar</RelativeName>
+								</d2p1:anyType>
+								<d2p1:anyType i:type="BurnFile">
+									<BurnSettings i:nil="true" />
+									<RelativeName>coh2_battlegrounds_supply_ui.scar</RelativeName>
+								</d2p1:anyType>
+								<d2p1:anyType i:type="BurnFile">
+									<BurnSettings i:nil="true" />
+									<RelativeName>coh2_battlegrounds_weather.scar</RelativeName>
+								</d2p1:anyType>
 							</Children>
 							<IsExpanded>true</IsExpanded>
 							<Name>winconditions</Name>

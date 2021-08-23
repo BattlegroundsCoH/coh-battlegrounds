@@ -14,7 +14,7 @@
 					<float name="event_param_end" value="-1" />
 					<enum name="event_type" value="artillery_set" />
 					<bool name="event_send_to_target_player" value="False" />
-					<uniqueid name="id" value="1073744688" />
+					<uniqueid name="id" value="1073745020" />
 				</template_reference>
 				<template_reference name="action" value="action\air_strike_action">
 					<bool name="random_direction" value="False" />
@@ -49,7 +49,7 @@
 					<int name="number_aircraft" value="1" />
 					<bool name="search_attack_target" value="True" />
 					<instance_reference name="aircraft_squad_name" value="sbps\races\soviet\vehicles\il-2_stumovik_squad\il-2_sturmovik_recon_squad_mp" />
-					<uniqueid name="id" value="1073744689" />
+					<uniqueid name="id" value="1073745021" />
 					<template_reference name="ui_help_text" value="tables\help_text_phrase">
 						<int name="phrase_order" value="0" />
 						<locstring name="phrase" value="0" />
@@ -64,19 +64,19 @@
 					<string name="dca_action_name" value="UI\paradrop_warning_smoke" />
 					<float name="duration" value="5" />
 					<bool name="is_terrain_only" value="True" />
-					<uniqueid name="id" value="1073744690" />
+					<uniqueid name="id" value="1073745022" />
 				</template_reference>
 				<template_reference name="action" value="action\timed_action">
 					<float name="duration" value="75" />
 					<bool name="fire_and_forget" value="True" />
 					<list name="subactions">
 						<template_reference name="action" value="action\reticule_action">
-							<uniqueid name="id" value="1073744691" />
+							<uniqueid name="id" value="1073745023" />
 							<instance_reference name="ui_reticule" value="ui_reticule\ability_target_recon_pulse" />
 							<float name="radius" value="75" />
 						</template_reference>
 					</list>
-					<uniqueid name="id" value="1073744692" />
+					<uniqueid name="id" value="1073745024" />
 				</template_reference>
 			</list>
 		</group>
@@ -95,10 +95,10 @@
 		</group>
 		<string name="cursor_ghost_blueprint" value="" />
 		<float name="cursor_ghost_blueprint_angle" value="0" />
-		<bool name="disable_combat" value="True" />
+		<bool name="disable_combat" value="False" />
 		<bool name="disable_when_active" value="True" />
 		<float name="duration_time" value="60" />
-		<bool name="enable_in_building" value="False" />
+		<bool name="enable_in_building" value="True" />
 		<bool name="enable_in_vehicle" value="False" />
 		<bool name="engage_combat" value="False" />
 		<float name="entity_busy_time" value="0" />
@@ -114,9 +114,9 @@
 		<bool name="move_back" value="False" />
 		<float name="move_back_distance" value="10" />
 		<float name="range" value="85" />
-		<bool name="range_ignore" value="False" />
+		<bool name="range_ignore" value="True" />
 		<float name="recharge_time" value="90" />
-		<bool name="refundable" value="True" />
+		<bool name="refundable" value="False" />
 		<bool name="require_no_shot_block" value="False" />
 		<enum name="shared_timer" value="" />
 		<bool name="shared_timer_player_wide" value="False" />
@@ -158,7 +158,7 @@
 			<locstring name="screen_name_short" value="0" />
 		</group>
 		<locstring name="ui_usage_txt" value="0" />
-		<bool name="validate_actions" value="True" />
+		<bool name="validate_actions" value="False" />
 		<list name="global_self_actions">
 		</list>
 		<list name="requirements">

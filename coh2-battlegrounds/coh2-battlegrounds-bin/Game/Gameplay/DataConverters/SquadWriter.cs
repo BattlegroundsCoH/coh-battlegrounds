@@ -31,7 +31,7 @@ namespace Battlegrounds.Game.Gameplay.DataConverters {
             public override void Write(LuaSourceBuilder luaSourceBuilder, Squad value) {
 
                 // Get base data
-                var data = new Dictionary<string, object>() {
+                Dictionary<string, object> data = new() {
                     ["bp_name"] = value.SBP.GetScarName(),
                     ["company_id"] = value.SquadID,
                     ["symbol"] = value.SBP.UI.Symbol,
@@ -39,8 +39,8 @@ namespace Battlegrounds.Game.Gameplay.DataConverters {
                     ["phase"] = (byte)(value.DeploymentPhase - 1),
                     ["veterancy_rank"] = value.VeterancyRank,
                     ["veterancy_progress"] = value.VeterancyProgress,
-                    ["upgrades"] = value.Upgrades.Select(x => x.GetScarName()),
-                    ["slot_items"] = value.SlotItems.Select(x => x.GetScarName()),
+                    ["upgrades"] = value.Upgrades.Cast<UpgradeBlueprint>().Select(GetBlueprintWithSymbol),
+                    ["slot_items"] = value.SlotItems.Cast<SlotItemBlueprint>().Select(GetBlueprintWithSymbol),
                     ["modifiers"] = value.Modifiers,
                     ["spawned"] = false,
                     ["cost"] = value.GetCost()
@@ -59,8 +59,8 @@ namespace Battlegrounds.Game.Gameplay.DataConverters {
                         ["symbol"] = crew.SBP.UI.Symbol,
                         ["veterancy_rank"] = crew.VeterancyRank,
                         ["veterancy_progress"] = crew.VeterancyProgress,
-                        ["upgrades"] = crew.Upgrades.Select(x => x.GetScarName()),
-                        ["slot_items"] = crew.SlotItems.Select(x => x.GetScarName()),
+                        ["upgrades"] = crew.Upgrades.Cast<UpgradeBlueprint>().Select(GetBlueprintWithSymbol),
+                        ["slot_items"] = crew.SlotItems.Cast<SlotItemBlueprint>().Select(GetBlueprintWithSymbol),
                         ["modifiers"] = crew.Modifiers,
                     };
                 }
@@ -82,7 +82,7 @@ namespace Battlegrounds.Game.Gameplay.DataConverters {
             }
 
             private static Dictionary<string, object> GetSupportBlueprint(Squad value) {
-                var data = new Dictionary<string, object>() {
+                Dictionary<string, object> data = new() {
                     ["sbp"] = value.SupportBlueprint.GetScarName(),
                     ["symbol"] = (value.SupportBlueprint as SquadBlueprint).UI.Symbol,
                     ["mode"] = (byte)value.DeploymentMethod,
@@ -91,6 +91,13 @@ namespace Battlegrounds.Game.Gameplay.DataConverters {
                     data["tow"] = true;
                 }
                 return data;
+            }
+
+            private static Dictionary<string, object> GetBlueprintWithSymbol<T>(T upg) where T : Blueprint, IUIBlueprint {
+                return new() {
+                    ["bp"] = upg.GetScarName(),
+                    ["symbol"] = upg.UI.Symbol,
+                };
             }
 
         }

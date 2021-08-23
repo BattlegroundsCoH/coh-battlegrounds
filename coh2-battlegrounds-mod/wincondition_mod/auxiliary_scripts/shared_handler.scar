@@ -11,7 +11,7 @@ _bg_aiData = {};
 import("WinConditions/auxiliary_scripts/shared_constants.scar") -- Must always be imported first
 import("WinConditions/auxiliary_scripts/shared_util.scar"); -- Then this (Contains several useful utility functions)
 import("WinConditions/auxiliary_scripts/shared_lookups.scar");
-import("WinConditions/auxiliary_scripts/session.scar");
+import("WinConditions/auxiliary_scripts/session.scar"); -- This file may contain overrides to the constants file (Which is why it must be imported AFTER constants)
 import("WinConditions/auxiliary_scripts/shared_sessionloader.scar");
 import("WinConditions/auxiliary_scripts/shared_units.scar");
 import("WinConditions/auxiliary_scripts/shared_ai.scar");
@@ -72,10 +72,16 @@ function BG_Init()
     -- Properly set up win condition data
     BG_SetupWincondition();
 
+    -- Setup optional BG systems
+    BG_SetupWeatherAndSupply();
+
     -- Create the UI
     UI_AddSetupFunction(function()
         BG_CreateCallInUI(Game_GetLocalPlayer()); -- Call-in / Deploy UI
         BG_CreateAndDisplayMultiplayerActionsScreenOverride(Game_GetLocalPlayer()); -- Game actions (Vote on withdraw, Surrender)
+        if BGSupply_SetupUI ~= nil then -- Make the supply UI check here (TODO: Add more dynamic hook function for this)
+            BGSupply_SetupUI();
+        end
         --_endgame_test(); -- DISABLE WHEN DONE
     end);
 
@@ -481,6 +487,12 @@ function BG_OnEnterNewPhase()
     else
         Util_MissionTitle(BG_LocString(17), 3, 8, 2 );
     end
+    for i=1, World_GetPlayerCount() do
+        local p = World_GetPlayerAt(i);
+        if p == Game_GetLocalPlayer() then
+            BG_RefreshCompanyView(); -- Refresh the company view
+        end
+    end
 end
 
 function BG_UpdatePlayerStats(refID)
@@ -496,7 +508,22 @@ function BG_SetCallinPoint(executer, target)
     if scartype(executer) == ST_PLAYER then
         local pid = BG_GetPlayerID(executer);
         _bg_playerData[pid].last_callin_point = target;
+        _bg_playerData[pid].last_callin_time = 0;
     end
+end
+
+function BG_GetCallInPoint(self) -- The intention of this function is to avoid telling units to deploy to the exact same position if within a 15s time interval
+    if self.last_callin_point == nil then
+        return Player_GetStartingPosition(self.player);
+    end
+    local t = World_GetGameTime();
+    local p = self.last_callin_point;
+    local d = t - (self.last_callin_time or 0);
+    if d < 15.0 then -- if less than 15s before last call-in, 
+        p = Util_GetRandomPosition(p, d + 10);
+    end
+    self.last_callin_time = t; -- Update call in time
+    return p;
 end
 
 function BG_ParadopNext(executer, target)
@@ -505,4 +532,18 @@ function BG_ParadopNext(executer, target)
         local pid = BG_GetPlayerID(player);
         -- TODO: Implement
     end
+end
+
+function BGAPI_AddUnitSpawnedCallback(callback)
+    if __bgapi_spawncallbacks == nil then
+        __bgapi_spawncallbacks = {};
+    end
+    table.insert( __bgapi_spawncallbacks, callback );
+end
+
+function BGAPI_AddUnitRemovedCallback(callback)
+    if __bgapi_removecallbacks == nil then
+        __bgapi_removecallbacks = {};
+    end
+    table.insert( __bgapi_removecallbacks, callback );
 end

@@ -19,13 +19,11 @@ namespace Battlegrounds.Game.Match.Finalizer {
         /// <summary>
         /// Get or set if finalizer should also notify AI company changes. Default value is <see langword="false"/>.
         /// </summary>
-        public bool NotifyAI { get; set; } = false;
+        public bool NotifyAI { get; set; }
 
         public FinalizedCompanyHandler CompanyHandler { get; set; }
 
-        public SingleplayerFinalizer() {
-            this.m_companies = null;
-        }
+        public SingleplayerFinalizer() => this.m_companies = null;
 
         public virtual void Finalize(IAnalyzedMatch analyzedMatch) {
 
@@ -48,7 +46,7 @@ namespace Battlegrounds.Game.Match.Finalizer {
             this.m_companies = new();
 
             // Assign player companies
-            foreach (Player player in players) {
+            foreach (var player in players) {
                 var company = session.GetPlayerCompany(player.SteamID);
                 if (company is not null) {
                     if (analyzedMatch.IsWinner(player)) {
@@ -64,7 +62,7 @@ namespace Battlegrounds.Game.Match.Finalizer {
             }
 
             // Run through all units
-            foreach (UnitStatus status in units) {
+            foreach (var status in units) {
 
                 // Ignore AI player data
                 if (status.PlayerOwner.IsAIPlayer || this.NotifyAI) {
@@ -75,7 +73,7 @@ namespace Battlegrounds.Game.Match.Finalizer {
                 var company = this.m_companies[status.PlayerOwner];
 
                 // Get the squad
-                Squad squad = company.GetSquadByIndex(status.UnitID);
+                var squad = company.GetSquadByIndex(status.UnitID);
 
                 // If the unit is dead, remove it.
                 if (status.IsDead) {

@@ -21,6 +21,7 @@ function BG_LoadSessionData()
             _bg_playerData[j].tempcrews = {};
             _bg_playerData[j].gainsData = {};
             _bg_playerData[j].lossData = {};
+            _bg_playerData[j].GetCallInDestination = BG_GetCallInPoint;
             _bg_playerData[j].teamStr = BG_GetTeamString(_bg_playerData[j].race);
             local isVerified, steamID = BG_VerifyPlayer(_bg_playerData[j].name, _bg_playerData[j].teamStr, false);
             if not isVerified then
@@ -112,6 +113,32 @@ function BG_SetupWincondition()
         VPTicker_OnInit();
 
     end -- Add more gamemodes here!
+
+end
+
+function BG_SetupWeatherAndSupply()
+
+    -- If the day/night cycle is enabled, import the file
+    if bg_settings.gameoptions.day_night_cycle == true then
+        import("WinConditions/coh2_battlegrounds_weather.scar");
+    end
+
+    -- If the supply system is enabled, import the file
+    if bg_settings.gameoptions.sypply_system == true then
+        import("WinConditions/coh2_battlegrounds_supply_ui.scar");
+        import("WinConditions/coh2_battlegrounds_supply.scar");
+    end
+
+    -- Make sure the supply system is defined
+    if BGSupply_Setup ~= nil then        
+        -- Invoke setup
+        BGSupply_Setup();
+    end
+
+    -- Invoke the weather setup (if defined)
+    if BGWeather_Setup ~= nil then
+        BGWeather_Setup();
+    end
 
 end
 

@@ -255,6 +255,14 @@ namespace Battlegrounds.Functional {
         public static IsTrue<bool> IfTrue(this bool b) => new IsTrue<bool>(b, b);
 
         /// <summary>
+        /// Create a <see cref="IsTrue{T}"/> instance based on the <paramref name="isTrue"/> value as initial condition.
+        /// </summary>
+        /// <param name="isTrue">The initial value.</param>
+        /// <param name="seed">The default value to return given <paramref name="isTrue"/> is <see langword="true"/>.</param>
+        /// <returns>A new <see cref="IsTrue{T}"/> instance based on <see cref="bool"/> value.</returns>
+        public static IsTrue<T> IfTrueThen<T>(this bool isTrue, T seed) => new IsTrue<T>(isTrue, seed);
+
+        /// <summary>
         /// Invoke an action on a <see cref="bool"/> value, given it's <see langword="true"/>.
         /// </summary>
         /// <param name="b">The <see cref="bool"/> value.</param>

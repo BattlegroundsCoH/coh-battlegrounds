@@ -1,0 +1,444 @@
+<instance description="" template="ebps">
+	<list name="extensions">
+		<template_reference name="exts" value="ebpextensions\entity_blueprint_ext">
+			<string name="alternate_sua" value="" />
+			<bool name="always_revealed_in_fow" value="False" />
+			<file name="animator" value="gameplay\resource_points\resource_point_fuel\resource_point_fuel" />
+			<bool name="is_visible_in_game" value="True" />
+			<float name="precise_size" value="-1" />
+		</template_reference>
+		<template_reference name="exts" value="ebpextensions\sim_entity_ext">
+			<bool name="is_in_spatial_bucket" value="True" />
+			<float name="rotate_snap" value="360" />
+			<float name="transferable" value="1" />
+			<bool name="kill_paradrop" value="False" />
+		</template_reference>
+		<template_reference name="exts" value="ebpextensions\impass_ext">
+			<bool name="cant_build" value="True" />
+			<bool name="heavy_crush" value="True" />
+			<bool name="land" value="True" />
+			<bool name="light_crush" value="True" />
+			<bool name="medium_crush" value="True" />
+		</template_reference>
+		<template_reference name="exts" value="ebpextensions\line_of_sight_ext">
+			<group name="blocking_box">
+				<float name="x" value="0.01" />
+				<float name="y" value="0.01" />
+				<float name="z" value="0.01" />
+			</group>
+			<bool name="is_shot_blocking" value="False" />
+			<bool name="use_blocking_box" value="False" />
+			<enum name="does_block_line_of_sight" value="Never" />
+		</template_reference>
+		<template_reference name="exts" value="ebpextensions\resource_ext">
+			<enum name="default_choice" value="fuel" />
+			<group name="fuel_choice_ui_info">
+				<locstring name="extra_text" value="0" />
+				<locstring name="help_text" value="0" />
+				<string name="hotkey_name" value="" />
+				<icon name="icon_name" value="Icons_resources_flag_fuel" />
+				<string name="overlay_name" value="" />
+				<bool name="reveal_for_decryption" value="False" />
+				<locstring name="screen_name" value="0" />
+			</group>
+			<group name="manpower_choice_ui_info">
+				<locstring name="extra_text" value="0" />
+				<locstring name="help_text" value="0" />
+				<string name="hotkey_name" value="" />
+				<icon name="icon_name" value="Icons_resources_flag_fuel" />
+				<string name="overlay_name" value="" />
+				<bool name="reveal_for_decryption" value="False" />
+				<locstring name="screen_name" value="0" />
+			</group>
+			<group name="munition_choice_ui_info">
+				<locstring name="extra_text" value="0" />
+				<locstring name="help_text" value="0" />
+				<string name="hotkey_name" value="" />
+				<icon name="icon_name" value="Icons_resources_flag_fuel" />
+				<string name="overlay_name" value="" />
+				<bool name="reveal_for_decryption" value="False" />
+				<locstring name="screen_name" value="0" />
+			</group>
+			<group name="resource_choice_per_second">
+				<float name="action" value="0" />
+				<float name="command" value="0" />
+				<float name="fuel" value="0.1166667" />
+				<float name="manpower" value="0" />
+				<float name="munition" value="0" />
+				<float name="popcap" value="0" />
+			</group>
+			<group name="total_amount_of_resources">
+				<float name="action" value="999999" />
+				<float name="command" value="0" />
+				<float name="fuel" value="999999" />
+				<float name="manpower" value="0" />
+				<float name="munition" value="999999" />
+				<float name="popcap" value="0" />
+			</group>
+			<bool name="resources_divided_by_team_size" value="False" />
+			<bool name="enable_sector_linked_resourcing" value="True" />
+		</template_reference>
+		<template_reference name="exts" value="ebpextensions\sight_ext">
+			<group name="detect_camouflage">
+				<float name="tp_global" value="-1" />
+				<float name="tp_mine" value="-1" />
+			</group>
+			<bool name="extended_sight" value="False" />
+			<float name="extended_sight_radius" value="70" />
+			<float name="reveal_area_on_death_time" value="1.5" />
+			<group name="sight_package">
+				<float name="inner_height" value="0" />
+				<float name="inner_radius" value="5" />
+				<float name="outer_height" value="0" />
+				<float name="outer_radius" value="5" />
+				<float name="cone_angle" value="360" />
+				<float name="cone_start_radius" value="0" />
+			</group>
+			<group name="extended_sight_target_info">
+				<template_reference name="extended_sight_target_info" value="type_ability_target_type\all">
+				</template_reference>
+			</group>
+		</template_reference>
+		<template_reference name="exts" value="ebpextensions\site_ext">
+			<float name="extra_build_test_footprint" value="2" />
+			<bool name="require_all_cells_clear" value="True" />
+			<bool name="snap_to_terrain" value="False" />
+			<bool name="ignore_impass" value="False" />
+			<bool name="lock_to_impass" value="True" />
+		</template_reference>
+		<template_reference name="exts" value="ebpextensions\territory_ext">
+			<bool name="command_provider" value="False" />
+			<bool name="default_on" value="True" />
+			<bool name="secures_territory_sector" value="False" />
+			<enum name="sector_entity_type" value="sector_creator" />
+		</template_reference>
+		<template_reference name="exts" value="ebpextensions\type_ext">
+			<group name="unit_type_list">
+				<enum name="unit_type00" value="strategic_node" />
+				<enum name="unit_type01" value="resource_node" />
+				<enum name="unit_type02" value="supply_target" />
+				<enum name="unit_type03" value="fuel_resource_point" />
+				<enum name="unit_type04" value="" />
+				<enum name="unit_type05" value="" />
+				<enum name="unit_type06" value="" />
+				<enum name="unit_type07" value="" />
+				<enum name="unit_type08" value="" />
+				<enum name="unit_type09" value="" />
+				<enum name="unit_type10" value="" />
+				<enum name="unit_type11" value="" />
+				<enum name="unit_type12" value="" />
+				<enum name="unit_type13" value="" />
+				<enum name="unit_type14" value="" />
+				<enum name="unit_type15" value="" />
+			</group>
+			<enum name="weapon_targeting" value="no_targeting" />
+		</template_reference>
+		<template_reference name="exts" value="ebpextensions\ui_ext">
+			<bool name="ap_killed_kicker" value="True" />
+			<bool name="ap_loss_kicker" value="True" />
+			<bool name="cullsphere_selectable" value="False" />
+			<float name="decorator_offset" value="0" />
+			<bool name="ghost_enable" value="True" />
+			<bool name="has_speech_code" value="True" />
+			<locstring name="help_text" value="11075054" />
+			<string name="hotkey_name" value="" />
+			<icon name="icon_name" value="Icons_resources_flag_fuel" />
+			<enum name="kill_type" value="" />
+			<float name="minimap_color_a" value="255" />
+			<float name="minimap_color_b" value="227" />
+			<float name="minimap_color_g" value="227" />
+			<float name="minimap_color_r" value="227" />
+			<bool name="minimap_enable" value="True" />
+			<bool name="minimap_team_only" value="False" />
+			<bool name="minimap_teamcolor" value="False" />
+			<bool name="obb_selectable" value="True" />
+			<string name="overlay_name" value="" />
+			<bool name="reveal_for_decryption" value="False" />
+			<locstring name="screen_name" value="11035056" />
+			<enum name="selection_name" value="building" />
+			<float name="selection_scale" value="0.9" />
+			<enum name="selection_type" value="single_entity_select" />
+			<bool name="sloppy_selectable" value="False" />
+			<group name="speaker">
+				<string name="code_1" value="" />
+				<string name="code_2" value="" />
+				<string name="code_3" value="" />
+			</group>
+			<group name="speech_code_2">
+				<string name="code_1" value="fu" />
+				<string name="code_2" value="" />
+				<string name="code_3" value="" />
+			</group>
+			<group name="speech_code_3">
+				<string name="code_1" value="fue" />
+				<string name="code_2" value="" />
+				<string name="code_3" value="" />
+			</group>
+			<group name="speech_code_cover">
+				<string name="code_1" value="" />
+				<string name="code_2" value="" />
+				<string name="code_3" value="" />
+			</group>
+			<bool name="tacmap_team_only" value="False" />
+			<locstring name="tooltip_txt" value="11049148" />
+			<int name="ui_priority" value="0" />
+			<icon name="minimap_icon" value="Icons_resources_minimap_icon_fuel" />
+			<icon name="portrait_icon_winter" value="Icons_portraits_building_common_fuel_dump_w_portrait" />
+			<group name="speaker_alt">
+				<string name="code_1" value="" />
+				<string name="code_2" value="" />
+				<string name="code_3" value="" />
+			</group>
+			<float name="minimap_icon_scale" value="0.73" />
+			<icon name="portrait_icon_summer" value="Icons_portraits_building_common_fuel_dump_s_portrait" />
+			<locstring name="brief_text" value="0" />
+			<string name="extra_text_deprecated" value="" />
+			<locstring name="extra_text" value="0" />
+			<locstring name="screen_name_short" value="0" />
+			<bool name="show_in_build_log" value="True" />
+			<bool name="show_entity_appearance" value="True" />
+			<locstring name="screen_name_world" value="0" />
+			<locstring name="help_text_world" value="0" />
+			<locstring name="extra_text_world" value="0" />
+			<enum name="map_rotation_type_override" value="no_override" />
+			<icon name="symbol_icon_name" value="Icons_symbols_flag_fuel_symbol" />
+			<enum name="occlusion_state" value="can_be_occluded" />
+			<enum name="decorator_visibility" value="default" />
+			<string name="decorator_marker_name" value="Marker_FX_UI" />
+			<bool name="skin_pack_override" value="False" />
+			<string name="skin_summer" value="" />
+			<string name="skin_winter" value="" />
+		</template_reference>
+		<template_reference name="exts" value="ebpextensions\ability_ext">
+			<list name="abilities">
+			</list>
+		</template_reference>
+		<template_reference name="exts" value="ebpextensions\modifier_ext">
+		</template_reference>
+		<template_reference name="exts" value="ebpextensions\strategic_point_ext">
+			<float name="capture_time" value="30" />
+			<bool name="is_victory_point" value="False" />
+			<float name="revert_time" value="20" />
+			<float name="secure_radius" value="0" />
+			<bool name="use_decorator" value="True" />
+			<list name="captured_actions">
+			</list>
+			<list name="captured_actions_in_territory">
+			</list>
+			<list name="secured_actions">
+				<template_reference name="action" value="action\requirement_action">
+					<bool name="check_self" value="False" />
+					<bool name="global_fire_and_forget_on_success" value="False" />
+					<bool name="instant_requirement_check" value="False" />
+					<bool name="kill_action_on_failed_requirements" value="False" />
+					<bool name="no_retrigger" value="False" />
+					<bool name="validate_all_sub_actions" value="True" />
+					<list name="requirement_table">
+						<template_reference name="required" value="requirements\required_in_territory">
+							<enum name="reason" value="usage" />
+							<locstring name="ui_name" value="0" />
+							<bool name="in_supply" value="True" />
+							<bool name="is_secured" value="True" />
+							<bool name="is_secured_by_checkpoint" value="True" />
+							<bool name="not_in_transition" value="False" />
+						</template_reference>
+					</list>
+					<list name="action_table">
+						<template_reference name="action" value="action\animator_set_state">
+							<bool name="apply_to_leader_only" value="False" />
+							<string name="do_action_state_name" value="checkpoint" />
+							<bool name="retrigger" value="False" />
+							<string name="state_machine_name" value="secured_type" />
+							<string name="undo_action_state_name" value="hq" />
+							<uniqueid name="id" value="1073744963" />
+						</template_reference>
+					</list>
+					<uniqueid name="id" value="1073744964" />
+					<bool name="fire_and_forget_non_global" value="False" />
+					<template_reference name="ui_help_text" value="tables\help_text_phrase">
+						<int name="phrase_order" value="0" />
+						<locstring name="phrase" value="0" />
+					</template_reference>
+				</template_reference>
+				<template_reference name="action" value="action\animator_set_state">
+					<bool name="apply_to_leader_only" value="False" />
+					<string name="do_action_state_name" value="yes" />
+					<bool name="retrigger" value="False" />
+					<string name="state_machine_name" value="secured" />
+					<string name="undo_action_state_name" value="no" />
+					<uniqueid name="id" value="1073744965" />
+				</template_reference>
+			</list>
+			<list name="secured_actions_in_territory">
+			</list>
+			<list name="lost_territory_player_action">
+				<template_reference name="action" value="action\requirement_action">
+					<bool name="check_self" value="False" />
+					<bool name="global_fire_and_forget_on_success" value="False" />
+					<bool name="instant_requirement_check" value="False" />
+					<bool name="kill_action_on_failed_requirements" value="False" />
+					<bool name="no_retrigger" value="False" />
+					<bool name="validate_all_sub_actions" value="True" />
+					<list name="requirement_table">
+						<template_reference name="required" value="requirements\required_player_upgrade">
+							<enum name="reason" value="usage" />
+							<locstring name="ui_name" value="0" />
+							<bool name="is_present" value="True" />
+							<float name="max_completed" value="100" />
+							<float name="min_completed" value="1" />
+							<instance_reference name="upgrade_name" value="upgrade\soviet\commander\ability\order_227_lockdown" />
+						</template_reference>
+					</list>
+					<list name="action_table">
+						<template_reference name="action" value="action\modify_resources">
+							<template_reference name="resource_to_modify" value="tables\resource_table">
+								<float name="action" value="0" />
+								<float name="command" value="0" />
+								<float name="fuel" value="0" />
+								<float name="manpower" value="0" />
+								<float name="munition" value="0" />
+								<float name="soviet_progression" value="0" />
+								<float name="soviet_227" value="10" />
+								<float name="popcap" value="0" />
+							</template_reference>
+							<bool name="modify_per_second" value="False" />
+							<bool name="ignore_resource_cap" value="False" />
+							<uniqueid name="id" value="1073744966" />
+						</template_reference>
+					</list>
+					<uniqueid name="id" value="1073744967" />
+					<bool name="fire_and_forget_non_global" value="False" />
+					<template_reference name="ui_help_text" value="tables\help_text_phrase">
+						<int name="phrase_order" value="0" />
+						<locstring name="phrase" value="0" />
+					</template_reference>
+				</template_reference>
+			</list>
+			<list name="decapture_territory_player_action">
+				<template_reference name="action" value="action\change_target_action">
+					<list name="actions">
+						<template_reference name="action" value="action\target">
+							<group name="area_info">
+								<float name="angle_left" value="0" />
+								<float name="angle_right" value="0" />
+								<enum name="area_type" value="circle" />
+								<float name="radius" value="5" />
+							</group>
+							<bool name="die_with_creator" value="True" />
+							<bool name="do_recalc_targets" value="False" />
+							<float name="duration" value="0" />
+							<bool name="entity_targets" value="False" />
+							<instance_reference name="entity_types_to_choose" value="ebps\props\booby_trap" />
+							<bool name="stationary" value="False" />
+							<group name="target_info">
+								<template_reference name="target_info" value="type_ability_target_type\all">
+								</template_reference>
+							</group>
+							<enum name="unit_type" value="" />
+							<list name="subactions">
+								<template_reference name="action" value="action\make_dead">
+									<enum name="death_intensity" value="death_intensity_low" />
+									<bool name="ignore_invulnerability" value="False" />
+									<bool name="destroy" value="True" />
+									<list name="death_reaction_table">
+									</list>
+									<uniqueid name="id" value="1073744968" />
+								</template_reference>
+							</list>
+							<uniqueid name="id" value="1073744969" />
+							<bool name="any_subaction" value="False" />
+						</template_reference>
+					</list>
+					<enum name="change_target_type" value="self" />
+					<uniqueid name="id" value="1073744970" />
+				</template_reference>
+			</list>
+			<instance_reference name="entity_for_annihilation" value="" />
+			<list name="unsecure_time_by_race">
+			</list>
+			<bool name="auto_revert" value="False" />
+		</template_reference>
+		<template_reference name="exts" value="ebpextensions\action_apply_ext">
+			<list name="actions">
+				<template_reference name="action" value="action\requirement_action">
+					<bool name="check_self" value="False" />
+					<bool name="global_fire_and_forget_on_success" value="False" />
+					<bool name="instant_requirement_check" value="False" />
+					<bool name="kill_action_on_failed_requirements" value="False" />
+					<bool name="no_retrigger" value="False" />
+					<bool name="validate_all_sub_actions" value="True" />
+					<list name="requirement_table">
+						<template_reference name="required" value="requirements\required_any_in_list">
+							<enum name="reason" value="usage" />
+							<locstring name="ui_name" value="0" />
+							<list name="requirements">
+								<template_reference name="requirement" value="requirements\required_player_upgrade">
+									<enum name="reason" value="usage" />
+									<locstring name="ui_name" value="0" />
+									<bool name="is_present" value="True" />
+									<float name="max_completed" value="100" />
+									<float name="min_completed" value="1" />
+									<instance_reference name="upgrade_name" value="upgrade\british\research\company_anvil_point_sight_mp" />
+								</template_reference>
+								<template_reference name="requirement" value="requirements\required_player_upgrade">
+									<enum name="reason" value="usage" />
+									<locstring name="ui_name" value="0" />
+									<bool name="is_present" value="True" />
+									<float name="max_completed" value="100" />
+									<float name="min_completed" value="1" />
+									<instance_reference name="upgrade_name" value="upgrade\british\research\company_anvil_mp" />
+								</template_reference>
+							</list>
+						</template_reference>
+					</list>
+					<list name="action_table">
+						<template_reference name="action" value="action\apply_modifiers_action">
+							<float name="duration" value="0" />
+							<bool name="permanent" value="False" />
+							<list name="modifiers">
+								<template_reference name="modifier" value="modifiers\sight_radius_modifier">
+									<enum name="application_type" value="apply_to_entity" />
+									<bool name="exclusive" value="True" />
+									<string name="modifier_id" value="anvil_sight" />
+									<string name="target_type_name" value="" />
+									<enum name="usage_type" value="multiplication" />
+									<float name="value" value="2.5" />
+									<instance_reference name="tooltip" value="modifier_tooltip\sight_radius_modifier" />
+								</template_reference>
+							</list>
+							<uniqueid name="id" value="1073744971" />
+						</template_reference>
+					</list>
+					<uniqueid name="id" value="1073744972" />
+					<bool name="fire_and_forget_non_global" value="False" />
+					<template_reference name="ui_help_text" value="tables\help_text_phrase">
+						<int name="phrase_order" value="0" />
+						<locstring name="phrase" value="0" />
+					</template_reference>
+				</template_reference>
+			</list>
+		</template_reference>
+		<template_reference name="exts" value="ebpextensions\upgrade_ext">
+			<bool name="must_be_in_supply" value="False" />
+			<float name="number_of_standard_slots" value="1" />
+			<list name="standard_upgrades">
+			</list>
+		</template_reference>
+		<template_reference name="exts" value="ebpextensions\hit_object_ext">
+			<instance_reference name="hit_material" value="hit_material\stone" />
+			<bool name="hit_non_neutral" value="False" />
+			<float name="hit_percentage" value="1" />
+			<bool name="pass_through" value="False" />
+			<group name="projectile_pass_through">
+				<bool name="tp_artillery" value="True" />
+				<bool name="tp_artillery_inf" value="True" />
+				<bool name="tp_artillery_overwatch" value="True" />
+				<bool name="tp_homing" value="True" />
+				<bool name="tp_homing_inf" value="True" />
+				<bool name="tp_sticky" value="True" />
+				<bool name="tp_throw" value="True" />
+			</group>
+		</template_reference>
+	</list>
+	<uniqueid name="pbgid" value="1314" />
+</instance>

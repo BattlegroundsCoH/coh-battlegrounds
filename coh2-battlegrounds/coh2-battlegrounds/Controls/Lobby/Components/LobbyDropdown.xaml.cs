@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Windows;
@@ -179,6 +180,15 @@ namespace BattlegroundsApp.Controls.Lobby.Components {
                 cntr++;
             }
             return cntr;
+        }
+
+        public void SelectFirstOrDefault(Predicate<object> p) {
+            for (int i = 0; i < this.Items.Count; i++) {
+                if (p(this.Items[i])) {
+                    this.SelectedIndex = i;
+                    break;
+                }
+            }
         }
 
     }

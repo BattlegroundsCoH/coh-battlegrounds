@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
-using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using System.Text.Json.Serialization;
@@ -23,7 +22,7 @@ namespace Battlegrounds.Game.DataCompany {
         /// <summary>
         /// The maximum size of a company.
         /// </summary>
-        public const int MAX_SIZE = 50;
+        public const int MAX_SIZE = 40;
 
         /// <summary>
         /// The max amount of initially deployed units.

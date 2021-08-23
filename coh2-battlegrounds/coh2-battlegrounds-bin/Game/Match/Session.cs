@@ -10,7 +10,7 @@ using Battlegrounds.Game.Gameplay;
 using Battlegrounds.Game.Database;
 using Battlegrounds.Game.DataCompany;
 
-using static Battlegrounds.Game.Match.SessionParticipantTeam;
+using static Battlegrounds.Game.Match.ParticipantTeam;
 
 namespace Battlegrounds.Game.Match {
 
@@ -46,12 +46,13 @@ namespace Battlegrounds.Game.Match {
         /// <summary>
         /// Get the associated <see cref="ITuningMod"/> with the <see cref="Session"/>.
         /// </summary>
-        [JsonIgnore] public ITuningMod TuningMod { get; }
+        [JsonIgnore] 
+        public ITuningMod TuningMod { get; }
 
         /// <summary>
         /// Get a list of all settings to apply for the <see cref="Session"/>.
         /// </summary>
-        public Dictionary<string, object> Settings { get; }
+        public IDictionary<string, object> Settings { get; }
 
         public Guid SessionID { get; }
 
@@ -79,8 +80,15 @@ namespace Battlegrounds.Game.Match {
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public ISessionParticipant[] GetParticipants()
+            => this.m_participants.Cast<ISessionParticipant>().ToArray();
+
         public Company FindCompany(string playername, Faction faction)
-            => this.m_participants.FirstOrDefault(x => x.IsHumanParticipant && x.UserDisplayname.CompareTo(playername) == 0 && x.ParticipantFaction == faction).ParticipantCompany;
+            => this.m_participants.FirstOrDefault(x => x.IsHuman && x.UserDisplayname.CompareTo(playername) == 0 && x.ParticipantFaction == faction).SelectedCompany;
 
         /// <summary>
         /// Get the player company associated with the given steam index.
@@ -88,7 +96,7 @@ namespace Battlegrounds.Game.Match {
         /// <param name="steamIndex">The index of the steam user.</param>
         /// <returns>The <see cref="Company"/> associated with the given steam user.</returns>
         public Company GetPlayerCompany(ulong steamIndex)
-            => this.m_participants.FirstOrDefault(x => x.UserID == steamIndex).ParticipantCompany;
+            => this.m_participants.FirstOrDefault(x => x.UserID == steamIndex).SelectedCompany;
 
         /// <summary>
         /// Create a new <see cref="Session"/> instance with a unique <see cref="Guid"/>.
@@ -124,10 +132,12 @@ namespace Battlegrounds.Game.Match {
 
             // Set the game mode
             if (sessionInfo.SelectedGamemode != null) {
-                if (sessionInfo.IsOptionValue) {
+                if (sessionInfo.SelectedGamemode.Options is not null && sessionInfo.IsOptionValue) {
                     session.AddSetting("gamemode_setting", sessionInfo.SelectedGamemodeOption);
-                } else {
+                } else if (sessionInfo.SelectedGamemode.Options is not null && sessionInfo.SelectedGamemodeOption >= 0) {
                     session.AddSetting("gamemode_setting", sessionInfo.SelectedGamemode.Options[sessionInfo.SelectedGamemodeOption].Value);
+                } else {
+                    session.AddSetting("gamemode_setting", "none");
                 }
             } else {
                 Trace.WriteLine("Failed to read selected gamemode - using 500 as default option", "Session.Create");
@@ -152,7 +162,7 @@ namespace Battlegrounds.Game.Match {
 
         }
 
-        private void AssignPlayers(SessionParticipantTeam team, SessionParticipant[] participants, ref byte currentIndex, ref byte playerTeamIndex) {
+        private void AssignPlayers(ParticipantTeam team, SessionParticipant[] participants, ref byte currentIndex, ref byte playerTeamIndex) {
 
             if (participants != null) {
                 foreach (SessionParticipant participant in participants) {
@@ -165,7 +175,7 @@ namespace Battlegrounds.Game.Match {
 
         }
 
-        private void AddAIPlayers(SessionParticipantTeam team, AIDifficulty aIDifficulty, int fillAICount, ref byte currentIndex, ref byte playerTeamIndex, Func<int, Faction> complementaryFunc) {
+        private void AddAIPlayers(ParticipantTeam team, AIDifficulty aIDifficulty, int fillAICount, ref byte currentIndex, ref byte playerTeamIndex, Func<int, Faction> complementaryFunc) {
             for (int i = 0; i < fillAICount; i++) {
                 byte pIndex = currentIndex++;
                 Faction complementary = Faction.GetComplementaryFaction(complementaryFunc(i));

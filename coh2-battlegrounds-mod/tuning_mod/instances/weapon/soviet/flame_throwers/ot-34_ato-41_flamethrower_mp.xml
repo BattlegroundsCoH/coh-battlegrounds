@@ -24,7 +24,7 @@
 		</group>
 		<group name="anim_table">
 			<string name="cooldown_time_name" value="" />
-			<string name="state_name" value="flamethrower_state" />
+			<string name="state_name" value="hull_30cal_state" />
 			<string name="track_horizontal" value="hull_gun_horiz" />
 			<string name="track_horizontal_speed" value="hull_gun_horiz_speed" />
 			<string name="track_vertical" value="hull_gun_vertical" />
@@ -336,10 +336,14 @@
 			<float name="wind_down" value="0" />
 			<float name="wind_up" value="0" />
 			<list name="on_fire_actions">
+				<template_reference name="action" value="action\scar_function_call">
+					<string name="function_name" value="ScarEvent_OnFlameWeaponFired" />
+					<uniqueid name="id" value="1073744928" />
+				</template_reference>
 			</list>
 		</group>
 		<float name="flinch_radius" value="25" />
-		<string name="fx_action_target_name" value="kv8_flamethrower_target" />
+		<string name="fx_action_target_name" value="hull_hmg_target" />
 		<bool name="fx_always_visible" value="False" />
 		<float name="fx_building_hit_delay" value="0" />
 		<float name="fx_delay_in_building" value="0" />
@@ -458,14 +462,14 @@
 			<float name="duration" value="0" />
 		</group>
 		<group name="tracking">
-			<float name="fire_cone_angle" value="10" />
+			<float name="fire_cone_angle" value="5" />
 			<group name="normal">
 				<float name="max_down" value="-90" />
-				<float name="max_left" value="-180" />
-				<float name="max_right" value="180" />
+				<float name="max_left" value="-35" />
+				<float name="max_right" value="35" />
 				<float name="max_up" value="25" />
-				<float name="speed_horizontal" value="48" />
-				<float name="speed_vertical" value="35" />
+				<float name="speed_horizontal" value="120" />
+				<float name="speed_vertical" value="60" />
 			</group>
 			<float name="pivot_end_time" value="0" />
 			<bool name="pivot_only" value="False" />

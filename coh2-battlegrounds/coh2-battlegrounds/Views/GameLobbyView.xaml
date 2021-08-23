@@ -96,7 +96,8 @@
                 MinWidth="120" 
                 MaxHeight="32"
                 MinHeight="28"
-                SelectedIndex="0">
+                SelectedIndex="0"
+                SelectedItemChanged="WeatherOption_SelectedItemChanged">
                 <ComboBoxItem Content="Off"/>
                 <ComboBoxItem Content="On"/>
             </components:LobbyDropdown>
@@ -108,7 +109,8 @@
                 MinWidth="120" 
                 MaxHeight="32"
                 MinHeight="28"
-                SelectedIndex="0">
+                SelectedIndex="0"
+                SelectedItemChanged="SupplyOption_SelectedItemChanged">
                 <ComboBoxItem Content="Off"/>
                 <ComboBoxItem Content="On"/>
             </components:LobbyDropdown>
