@@ -1,0 +1,58 @@
+self_ability_data = {};
+
+function BGAE_Init()
+
+    -- Set phase tracker
+    UI_SetModalAbilityPhaseCallback(BGAE_OnModalPhase);
+
+end
+
+function BGAE_OnModalPhase(abp, phase) -- This is triggered for the client only!
+    local bpname = BP_GetName(abp);
+    local pos = Misc_GetMouseOnTerrain();
+    if phase == MAP_Placing then
+        self_ability_data[bpname] = {
+            a = pos,
+            b = nil,
+        };
+    elseif MAP_Facing then
+        if self_ability_data[bpname] ~= nil then
+            self_ability_data[bpname].b = pos;
+        end
+    elseif MAP_Confirmed then
+        if self_ability_data[bpname] ~= nil then
+            BGAE_OnModalPhaseConfirmed(bpname, self_ability_data[bpname].a, self_ability_data[bpname].b);
+            self_ability_data[bpname] = nil; -- Remove entry
+        end
+    end
+end
+
+function BGAE_OnModalPhaseConfirmed(abp, target, facing)
+    if facing == nil then
+        facing = target;
+    end
+    local str = abp .. "," .. Str_Pos(target) .. "," .. Str_Pos(facing);
+    Game_SendMessage(_bg_message_type_player_surrender, str);
+end
+
+function BGAE_TriggerAbillityFromStringData(executer, abp, target, facing)
+    local data = BG_GetPlayerData(executer);
+    local abpdata = nil;
+    if data ~= nil then
+        for i = 1, #data.company.specials do
+            if abpdata ~= nil then
+                break;
+            end
+            local specialAbility = data.company.specials[i];
+            for k, v in pairs(specialAbility) do
+                if k .. "_ui" == abp then
+                    abpdata = v;
+                    break; -- A goto statement would be ideal here but it doesn't look like this version of Lua supports it
+                end
+            end
+        end
+    end
+    if abpdata ~= nil then
+        Cmd_Ability(executer, BP_GetAbilityBlueprint(abpdata.abp), target, facing, true, false); 
+    end
+end

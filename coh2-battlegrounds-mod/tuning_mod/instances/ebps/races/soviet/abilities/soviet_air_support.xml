@@ -9,12 +9,12 @@
 		</template_reference>
 		<template_reference name="exts" value="ebpextensions\ability_ext">
 			<list name="abilities">
-				<instance_reference name="ability" value="abilities\soviet\modal_ability\air_support\soviet_air_bombing_run" mod="142b113740474c82a60b0a428bd553d5" />
-				<instance_reference name="ability" value="abilities\soviet\modal_ability\air_support\soviet_air_infantry_overwatch" mod="142b113740474c82a60b0a428bd553d5" />
-				<instance_reference name="ability" value="abilities\soviet\modal_ability\air_support\soviet_air_recon" mod="142b113740474c82a60b0a428bd553d5" />
-				<instance_reference name="ability" value="abilities\soviet\modal_ability\air_support\soviet_air_strafe" mod="142b113740474c82a60b0a428bd553d5" />
-				<instance_reference name="ability" value="abilities\soviet\modal_ability\air_support\soviet_air_vehicle_overwatch" mod="142b113740474c82a60b0a428bd553d5" />
-				<instance_reference name="ability" value="abilities\soviet\modal_ability\air_support\soviet_hunt_tarrget" mod="142b113740474c82a60b0a428bd553d5" />
+				<instance_reference name="ability" value="abilities\soviet\modal_ability\air_support\soviet_air_bombing_run_ui" mod="142b113740474c82a60b0a428bd553d5" />
+				<instance_reference name="ability" value="abilities\soviet\modal_ability\air_support\soviet_air_infantry_overwatch_ui" mod="142b113740474c82a60b0a428bd553d5" />
+				<instance_reference name="ability" value="abilities\soviet\modal_ability\air_support\soviet_air_recon_ui" mod="142b113740474c82a60b0a428bd553d5" />
+				<instance_reference name="ability" value="abilities\soviet\modal_ability\air_support\soviet_air_strafe_ui" mod="142b113740474c82a60b0a428bd553d5" />
+				<instance_reference name="ability" value="abilities\soviet\modal_ability\air_support\soviet_air_vehicle_overwatch_ui" mod="142b113740474c82a60b0a428bd553d5" />
+				<instance_reference name="ability" value="abilities\soviet\modal_ability\air_support\soviet_hunt_tarrget_ui" mod="142b113740474c82a60b0a428bd553d5" />
 			</list>
 		</template_reference>
 		<template_reference name="exts" value="ebpextensions\ui_ext">

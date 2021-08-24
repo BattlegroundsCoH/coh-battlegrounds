@@ -64,6 +64,7 @@ namespace Battlegrounds.Game.Gameplay {
         /// <summary>
         /// Get or set the amount of times this special ability has been used.
         /// </summary>
+        [JsonIgnore]
         public int UsedCount { get; set; }
 
         /// <summary>
