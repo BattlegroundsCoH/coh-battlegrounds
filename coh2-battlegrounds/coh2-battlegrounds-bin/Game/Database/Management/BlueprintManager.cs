@@ -254,25 +254,6 @@ namespace Battlegrounds.Game.Database.Management {
             => (Bp)FromBlueprintName(bpName, BlueprintTypeFromType<Bp>());
 
         /// <summary>
-        /// Dereference a <see cref="Blueprint"/> reference from a json reference string of the form "BPT:BPName".
-        /// </summary>
-        /// <param name="jsonReference">The json reference string to dereference.</param>
-        /// <returns>The <see cref="Blueprint"/> instance matching the reference in the database.</returns>
-        /// <exception cref="ArgumentException"/>
-        /// <exception cref="ArgumentNullException"/>
-        /// <exception cref="ArgumentOutOfRangeException"/>
-        /// <exception cref="OverflowException"/>
-        /// <exception cref="FormatException"/>
-        public static object JsonDereference(string jsonReference) {
-            BlueprintType type = (BlueprintType)Enum.Parse(typeof(BlueprintType), jsonReference.Substring(0, 3));
-            if (ushort.TryParse(jsonReference[4..], out ushort result)) {
-                return FromPbgId(result, type);
-            } else {
-                return FromBlueprintName(jsonReference[4..], type);
-            }
-        }
-
-        /// <summary>
         /// 
         /// </summary>
         /// <param name="type"></param>
