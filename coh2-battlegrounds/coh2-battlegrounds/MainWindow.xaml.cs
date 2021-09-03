@@ -21,6 +21,7 @@ using System.Diagnostics;
 
 using BattlegroundsApp.Views;
 using BattlegroundsApp.Dialogs.YesNo;
+using Battlegrounds.Locale;
 
 namespace BattlegroundsApp {
 
@@ -40,13 +41,13 @@ namespace BattlegroundsApp {
         private bool m_isReady;
         private Button[] m_leftPanelButtons;
 
-        public string DashboardButtonContent { get; }
-        public string NewsButtonContent { get; }
-        public string CompanyBuilderButtonContent { get; }
-        public string CampaignButtonContent { get; }
-        public string GameBrowserButtonContent { get; }
-        public string SettingsButtonContent { get; }
-        public string ExitButtonContent { get; }
+        public LocaleKey DashboardButtonContent { get; }
+        public LocaleKey NewsButtonContent { get; }
+        public LocaleKey CompanyBuilderButtonContent { get; }
+        public LocaleKey CampaignButtonContent { get; }
+        public LocaleKey GameBrowserButtonContent { get; }
+        public LocaleKey SettingsButtonContent { get; }
+        public LocaleKey ExitButtonContent { get; }
 
         private Dictionary<string, ViewState> m_constStates; // lookup table for all states that don't need initialization.
 
@@ -72,13 +73,13 @@ namespace BattlegroundsApp {
             };
 
             // Define locales
-            DashboardButtonContent = "Dashboard";
-            NewsButtonContent = "News";
-            CompanyBuilderButtonContent = "Company Builder";
-            CampaignButtonContent = "Campaign";
-            GameBrowserButtonContent = "Game Browser";
-            SettingsButtonContent = "Settings";
-            ExitButtonContent = "Exit";
+            DashboardButtonContent = new LocaleKey("MainWindow_Dashboard");
+            NewsButtonContent = new LocaleKey("MainWindow_News");
+            CompanyBuilderButtonContent = new LocaleKey("MainWindow_Company_Builder");
+            CampaignButtonContent = new LocaleKey("MainWindow_Campaign");
+            GameBrowserButtonContent = new LocaleKey("MainWindow_Game_Browser");
+            SettingsButtonContent = new LocaleKey("MainWindow_Settings");
+            ExitButtonContent = new LocaleKey("MainWindow_Exit");
 
             // Create all the views that can be created at startup
             this.m_constStates = new Dictionary<string, ViewState> {
