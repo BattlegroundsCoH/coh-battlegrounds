@@ -34,7 +34,7 @@ namespace BattlegroundsApp.Views {
 
         public GameBrowserView() {
 
-            this.DataContext = this;
+            //this.DataContext = this;
 
             // Define locales
             NameListWiewHeader = new LocaleKey("GameBrowserView_Name");
