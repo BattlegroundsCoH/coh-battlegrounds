@@ -53,3 +53,4 @@ english:
  GameBrowserView_Refresh: "Refresh"
  GameBrowserView_Host_Game: "Host Game"
  GameBrowserView_Join_Game: "Join Game"
+ GameLobbyConnectingView_Connecting: "Connecting ..."
