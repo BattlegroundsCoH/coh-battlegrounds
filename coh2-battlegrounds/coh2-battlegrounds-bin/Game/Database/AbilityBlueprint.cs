@@ -92,6 +92,11 @@ namespace Battlegrounds.Game.Database {
         /// <summary>
         /// 
         /// </summary>
+        public bool HasFacingPhase { get; }
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <param name="name"></param>
         /// <param name="blueprintUID"></param>
         /// <param name="faction"></param>
@@ -150,6 +155,7 @@ namespace Battlegrounds.Game.Database {
                         "targeted" => AbilityActivation.targeted,
                         _ => throw new FormatException()
                     },
+                    "HasFacingPhase" => reader.GetBoolean(),
                     _ => throw new NotImplementedException(prop)
                 };
             }

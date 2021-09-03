@@ -43,8 +43,8 @@
 		<bool name="is_default_action" value="False" />
 		<bool name="move_back" value="False" />
 		<float name="move_back_distance" value="10" />
-		<float name="range" value="85" />
-		<bool name="range_ignore" value="False" />
+		<float name="range" value="1024" />
+		<bool name="range_ignore" value="True" />
 		<float name="recharge_time" value="90" />
 		<bool name="refundable" value="True" />
 		<bool name="require_no_shot_block" value="False" />
