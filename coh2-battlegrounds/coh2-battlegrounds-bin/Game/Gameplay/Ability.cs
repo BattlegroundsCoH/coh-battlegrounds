@@ -1,4 +1,6 @@
-﻿using Battlegrounds.Game.Database;
+﻿using System.Text.Json.Serialization;
+
+using Battlegrounds.Game.Database;
 using Battlegrounds.Game.Gameplay.DataConverters;
 using Battlegrounds.Lua.Generator.RuntimeServices;
 
@@ -60,6 +62,7 @@ namespace Battlegrounds.Game.Gameplay {
         /// <summary>
         /// Get or set the amount of times this special ability has been used.
         /// </summary>
+        [JsonIgnore]
         public int UsedCount { get; set; }
 
         /// <summary>
@@ -69,11 +72,12 @@ namespace Battlegrounds.Game.Gameplay {
         /// <param name="category">The category.</param>
         /// <param name="maxUse">The maximum amount of uses each match.</param>
         /// <param name="count">The amount of times this has been used.</param>
-        public Ability(AbilityBlueprint blueprint, AbilityCategory category, int maxUse, int count = 0) {
-            this.ABP = blueprint;
-            this.Category = category;
-            this.MaxUse = maxUse;
-            this.UsedCount = count;
+        [JsonConstructor]
+        public Ability(AbilityBlueprint ABP, AbilityCategory Category, int MaxUse, int UsedCount = 0) {
+            this.ABP = ABP;
+            this.Category = Category;
+            this.MaxUse = MaxUse;
+            this.UsedCount = UsedCount;
         }
 
     }

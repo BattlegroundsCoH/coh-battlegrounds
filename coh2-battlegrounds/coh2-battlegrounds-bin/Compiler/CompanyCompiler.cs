@@ -98,8 +98,8 @@ namespace Battlegrounds.Compiler {
                 ["style"] = company.Type,
                 ["army"] = company.Army.Name,
                 ["specials"] = new Dictionary<string, object>() {
-                    ["artillery"] = company.Abilities.Where(x => x.Category is AbilityCategory.Artillery),
-                    ["air"] = company.Abilities.Where(x => x.Category is AbilityCategory.AirSupport),
+                    ["artillery"] = company.Abilities.Where(x => x.Category is AbilityCategory.Artillery).ToArray(),
+                    ["air"] = company.Abilities.Where(x => x.Category is AbilityCategory.AirSupport).ToArray(),
                 },
                 ["upgrades"] = company.Upgrades.Select(x => x.GetScarName()),
                 ["modifiers"] = company.Modifiers,

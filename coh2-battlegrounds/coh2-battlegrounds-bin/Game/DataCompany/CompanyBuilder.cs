@@ -159,7 +159,7 @@ namespace Battlegrounds.Game.DataCompany {
         public virtual Ability AddAndCommitAbility(AbilityBlueprint abp, AbilityCategory specialAbility, int maxUse) {
 
             // Create ability
-            Ability sabp = new(abp, AbilityCategory.Default, 0);
+            Ability sabp = new(abp, specialAbility, 0);
 
             // Add ability
             this.m_companyTarget.AddAbility(sabp);
