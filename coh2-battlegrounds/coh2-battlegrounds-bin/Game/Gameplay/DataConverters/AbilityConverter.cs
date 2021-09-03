@@ -10,7 +10,8 @@ namespace Battlegrounds.Game.Gameplay.DataConverters {
         public override void Write(LuaSourceBuilder luaSourceBuilder, Ability value) {
             luaSourceBuilder.Writer.WriteTableValue(luaSourceBuilder.BuildTableRaw(new Dictionary<string, object>() {
                 ["abp"] = value.ABP.GetScarName(),
-                ["max_use"] = value.MaxUse
+                ["max_use"] = value.MaxUse,
+                ["nofacing"] = !value.ABP.HasFacingPhase
             }));
         }
 

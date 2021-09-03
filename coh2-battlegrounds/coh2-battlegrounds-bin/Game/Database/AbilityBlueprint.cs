@@ -92,6 +92,11 @@ namespace Battlegrounds.Game.Database {
         /// <summary>
         /// 
         /// </summary>
+        public bool HasFacingPhase { get; }
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <param name="name"></param>
         /// <param name="blueprintUID"></param>
         /// <param name="faction"></param>
@@ -115,7 +120,22 @@ namespace Battlegrounds.Game.Database {
     /// </summary>
     public sealed class AbilityBlueprintConverter : JsonConverter<AbilityBlueprint> {
 
+        private static bool ReadFromString(ref Utf8JsonReader reader, out AbilityBlueprint abp) {
+            abp = null;
+            if (reader.TokenType is JsonTokenType.String) {
+                abp = BlueprintManager.FromBlueprintName<AbilityBlueprint>(reader.GetString());
+                return abp is not null;
+            }
+            return false;
+        }
+
         public override AbilityBlueprint Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options) {
+            
+            // Return abp from blueprint manager if string variant.
+            if (ReadFromString(ref reader, out AbilityBlueprint abp)) {
+                return abp;
+            }
+            
             Dictionary<string, object> __lookup = new();
             while (reader.Read() && reader.TokenType is not JsonTokenType.EndObject) {
                 string prop = reader.ReadProperty();
@@ -135,6 +155,7 @@ namespace Battlegrounds.Game.Database {
                         "targeted" => AbilityActivation.targeted,
                         _ => throw new FormatException()
                     },
+                    "HasFacingPhase" => reader.GetBoolean(),
                     _ => throw new NotImplementedException(prop)
                 };
             }
@@ -148,7 +169,8 @@ namespace Battlegrounds.Game.Database {
                 __lookup.GetValueOrDefault("Activation", AbilityActivation.none));
         }
 
-        public override void Write(Utf8JsonWriter writer, AbilityBlueprint value, JsonSerializerOptions options) => writer.WriteStringValue(value.Name);
+        public override void Write(Utf8JsonWriter writer, AbilityBlueprint value, JsonSerializerOptions options) 
+            => writer.WriteStringValue(value.PBGID.Mod != ModGuid.BaseGame ? $"{value.PBGID.Mod.GUID}:{value.Name}" : value.Name);
 
     }
 

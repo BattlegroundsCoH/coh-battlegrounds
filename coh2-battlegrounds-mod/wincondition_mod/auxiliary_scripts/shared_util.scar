@@ -439,6 +439,10 @@ function Str_CmdParse(str)
     return t_result;
 end
 
+function Str_Pos(pos)
+    return tostring(pos.x) .. "," .. tostring(pos.y) .. "," .. tostring(pos.z);
+end
+
 ------------------------------------------------------------
 -- Game functions
 ------------------------------------------------------------

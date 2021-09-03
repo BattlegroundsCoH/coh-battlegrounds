@@ -1,0 +1,69 @@
+self_ability_data = {};
+
+function BGAE_Init()
+
+    -- Set phase tracker
+    UI_SetModalAbilityPhaseCallback(BGAE_OnModalPhase);
+
+end
+
+function BGAE_OnModalPhase(abp, phase) -- This is triggered for the client only!
+    local bpname = BP_GetName(abp);
+    local pos = Misc_GetMouseOnTerrain();
+    local companyabp = BG_GetCompanyAbility(Game_GetLocalPlayer(), bpname);
+    if companyabp == nil then
+        return;
+    end
+    if phase == MAP_Placing then
+        self_ability_data[bpname] = {
+            point = nil
+        };
+    elseif MAP_Facing then -- This counts as confirmed if ability has no facing phase
+        if self_ability_data[bpname] ~= nil then
+            self_ability_data[bpname].point = pos;
+            if companyabp.nofacing then
+                BGAE_OnModalPhaseConfirmed(bpname, self_ability_data[bpname].point, nil);
+                self_ability_data[bpname] = nil; -- Remove entry
+            end
+        end
+    elseif MAP_Confirmed then
+        if self_ability_data[bpname] ~= nil then
+            BGAE_OnModalPhaseConfirmed(bpname, self_ability_data[bpname].point, pos);
+            self_ability_data[bpname] = nil; -- Remove entry
+        end
+    end
+end
+
+function BGAE_OnModalPhaseConfirmed(abp, target, facing)
+    if facing == nil then
+        facing = target;
+    end
+    local str = abp .. "," .. Str_Pos(target) .. "," .. Str_Pos(facing);
+    Game_SendMessage(_bg_message_type_player_surrender, str);
+end
+
+function BGAE_TriggerAbillityFromStringData(executer, abp, target, facing)
+    local data = BG_GetPlayerData(executer);
+    local abpdata = BG_GetCompanyAbility(executer, abp);
+    Util_MissionTitle(LOC(abp), 3, 8, 2 );
+    if abpdata ~= nil then
+        Cmd_Ability(executer, BP_GetAbilityBlueprint(abpdata.abp), target, facing, true, false); 
+    end
+end
+
+function BG_GetCompanyAbility(player, abp)
+    if (scartype(abp) == ST_PBG) then
+        abp = BP_GetName(abp);
+    end
+    local data = BG_GetPlayerData(executer);
+    if data ~= nil then
+        for _, v in pairs(data.company.specials) do
+            for k, ability in pairs(v) do
+                if (k .. "_ui") == abp then
+                    return ability;
+                end
+            end
+        end
+    end
+    return nil;
+end

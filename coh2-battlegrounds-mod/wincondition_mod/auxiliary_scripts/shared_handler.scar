@@ -14,6 +14,7 @@ import("WinConditions/auxiliary_scripts/shared_lookups.scar");
 import("WinConditions/auxiliary_scripts/session.scar"); -- This file may contain overrides to the constants file (Which is why it must be imported AFTER constants)
 import("WinConditions/auxiliary_scripts/shared_sessionloader.scar");
 import("WinConditions/auxiliary_scripts/shared_units.scar");
+import("WinConditions/auxiliary_scripts/shared_abilities.scar");
 import("WinConditions/auxiliary_scripts/shared_ai.scar");
 import("WinConditions/auxiliary_scripts/api_ui.scar");
 import("WinConditions/auxiliary_scripts/client_companyui.scar");
@@ -84,6 +85,9 @@ function BG_Init()
         end
         --_endgame_test(); -- DISABLE WHEN DONE
     end);
+
+    -- Init AE functions for BG
+    BGAE_Init();
 
     -- Add overrides to victory
     Rule_AddOneShot(BG_OverrideGameEndingFunctionCalls, 1);
@@ -231,13 +235,13 @@ function BG_OverrideGameEndingFunctionCalls()
         -- Stop the fighting
         BG_StopAll();
 
-        -- Collect end of match data (vet rank, progress etc)
-        BG_CollectEndofMatchData();
-
         -- Broadcast victory for each player
         if Player_GetTeam(Game_GetLocalPlayer()) == team then
             Battlegrounds_LogEvent(nil, BG_EVENT_ONVICTORY, BG_GetPlayerData(Game_GetLocalPlayer()).steamID);
         end
+
+        -- Collect end of match data (vet rank, progress etc)
+        BG_CollectEndofMatchData();
 
         -- Get the local player
         local locPlayer = Game_GetLocalPlayer();
@@ -424,6 +428,11 @@ function BG_GameBroadcastMessageReceived(sender, messageType, message)
         UI_TeamEventCue(sender, Util_CreateLocString("** Unit Cancelled **"), Util_CreateLocString("PlayerName has cancelled the deployment of ''."));
     elseif messageType == _bg_message_type_player_surrender then
         BG_PlayerSurrender(sender);
+    elseif messageType == _bg_message_type_player_ability then
+        local data = Str_CmdParse(message);
+        local target = World_Pos(tonumber(data[2]), tonumber(data[3]), tonumber(data[4]));
+        local facing = World_Pos(tonumber(data[5]), tonumber(data[6]), tonumber(data[7]));
+        BGAE_TriggerAbillityFromStringData(sender, data[1], target, facing);
     elseif messageType == _bg_message_type_team_request_withdraw then
         BG_WithdrawVoteSequence(sender);
     elseif messageType == _bg_message_type_team_vote_yes_withdraw then
