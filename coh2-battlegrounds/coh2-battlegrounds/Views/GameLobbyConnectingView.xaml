@@ -14,7 +14,7 @@
         
         <Label VerticalAlignment="Center"
                HorizontalAlignment="Center"
-               Content="Connecting...">
+               Content="{Binding ConnectingLabelContent, Converter={StaticResource LocaleConvertor}}">
         </Label>
     </Grid>
 </battlegroundsapp:ViewState>
