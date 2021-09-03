@@ -12,6 +12,7 @@ using BattlegroundsApp.LocalData;
 using Battlegrounds.Game.DataCompany;
 using Battlegrounds.Game.Gameplay;
 using Battlegrounds.Modding;
+using Battlegrounds.Locale;
 
 namespace BattlegroundsApp.Views {
     /// <summary>
@@ -21,9 +22,41 @@ namespace BattlegroundsApp.Views {
 
         private ObservableCollection<Company> m_player_companies;
 
+        public LocaleKey CreateButtonContent { get; }
+        public LocaleKey EditButtonContent { get; }
+        public LocaleKey RenameButtonContent { get; }
+        public LocaleKey DeleteButtonContent { get; }
+        public LocaleKey CopyButtonContent { get; }
+        public LocaleKey ExportButtonContent { get; }
+        public LocaleKey ImportButtonContent { get; }
+        public LocaleKey NameListWiewHeader { get; }
+        public LocaleKey RatingListWiewHeader { get; }
+        public LocaleKey TypeListWiewHeader { get; }
+        public LocaleKey AllianceListWiewHeader { get; }
+        public LocaleKey CountryListWiewHeader { get; }
+
         public CompanyView() {
+
+            this.DataContext = this;
+
+            // Define locales
+            CreateButtonContent = new LocaleKey("CompanyView_Create");
+            EditButtonContent = new LocaleKey("CompanyView_Edit");
+            RenameButtonContent = new LocaleKey("CompanyView_Rename");
+            DeleteButtonContent = new LocaleKey("CompanyView_Delete");
+            CopyButtonContent = new LocaleKey("CompanyView_Copy");
+            ExportButtonContent = new LocaleKey("CompanyView_Export");
+            ImportButtonContent = new LocaleKey("CompanyView_Import");
+            NameListWiewHeader = new LocaleKey("CompanyView_Name");
+            RatingListWiewHeader = new LocaleKey("CompanyView_Rating");
+            TypeListWiewHeader = new LocaleKey("CompanyView_Type");
+            AllianceListWiewHeader = new LocaleKey("CompanyView_Alliance");
+            CountryListWiewHeader = new LocaleKey("CompanyView_Country");
+
             InitializeComponent();
+
             m_player_companies = new ObservableCollection<Company>();
+
             companyList.ItemsSource = m_player_companies;
 
         }
