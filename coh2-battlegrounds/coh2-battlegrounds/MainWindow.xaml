@@ -67,7 +67,7 @@
 
         <!-- Row 6 -->
         <Button x:Name="CampaignButton" Grid.Row="6" Grid.Column="1" Content="{Binding CampaignButtonContent, Converter={StaticResource LocaleConvertor}, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}" 
-                Margin="0,10,0,0" IsEnabled="True" Click="Campaign_Click" Style="{StaticResource MainButtonStyle}" ToolTip="Play singleplayer or coop campaign"/>
+                Margin="0,10,0,0" IsEnabled="False" Click="Campaign_Click" Style="{StaticResource MainButtonStyle}" ToolTip="Play singleplayer or coop campaign"/>
 
         <!-- Row 7 -->
         <Button x:Name="GameBrowserButton" Grid.Row="7" Grid.Column="1" Content="{Binding GameBrowserButtonContent, Converter={StaticResource LocaleConvertor}, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}" 

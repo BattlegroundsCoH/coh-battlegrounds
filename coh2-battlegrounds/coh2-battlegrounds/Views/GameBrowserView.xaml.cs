@@ -10,6 +10,7 @@ using Battlegrounds.Networking.Server;
 using BattlegroundsApp.Dialogs.HostGame;
 using BattlegroundsApp.Utilities;
 using BattlegroundsApp.Dialogs.LobbyPassword;
+using Battlegrounds.Locale;
 
 namespace BattlegroundsApp.Views {
 
@@ -22,7 +23,28 @@ namespace BattlegroundsApp.Views {
 
         private ServerAPI m_api;
 
+        public LocaleKey NameListWiewHeader { get; }
+        public LocaleKey GamemodeListWiewHeader { get; }
+        public LocaleKey StateListWiewHeader { get; }
+        public LocaleKey PlayersListWiewHeader { get; }
+        public LocaleKey PasswordListWiewHeader { get; }
+        public LocaleKey RefreshButtonContent { get; }
+        public LocaleKey HostGameButtonContent { get; }
+        public LocaleKey JoinGameButtonContent { get; }
+
         public GameBrowserView() {
+
+            this.DataContext = this;
+
+            // Define locales
+            NameListWiewHeader = new LocaleKey("GameBrowserView_Name");
+            GamemodeListWiewHeader = new LocaleKey("GameBrowserView_Gamemode");
+            StateListWiewHeader = new LocaleKey("GameBrowserView_State");
+            PlayersListWiewHeader = new LocaleKey("GameBrowserView_Players");
+            PasswordListWiewHeader = new LocaleKey("GameBrowserView_Password");
+            RefreshButtonContent = new LocaleKey("GameBrowserView_Refresh");
+            HostGameButtonContent = new LocaleKey("GameBrowserView_Host_Game");
+            JoinGameButtonContent = new LocaleKey("GameBrowserView_Join_Game");
 
             // Initialize component
             this.InitializeComponent();
