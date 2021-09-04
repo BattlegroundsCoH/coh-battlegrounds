@@ -5,6 +5,20 @@ function BGAE_Init()
     -- Set phase tracker
     UI_SetModalAbilityPhaseCallback(BGAE_OnModalPhase);
 
+    -- Grant unlock abilities
+    for _, p in pairs(_bg_playerData) do
+        local apply_unlocks = function(player, source)
+            for _, v in pairs(source) do
+                if v.unlock ~= nil then
+                    local upg = BP_GetUpgradeBlueprint(v.unlock);
+                    Cmd_InstantUpgrade(player, upg);
+                end
+            end
+        end
+        apply_unlocks(p.player, p.company.specials.air);
+        apply_unlocks(p.player, p.company.specials.artillery);
+    end
+
 end
 
 function BGAE_OnModalPhase(abp, phase) -- This is triggered for the client only!
