@@ -429,10 +429,25 @@ function BG_GameBroadcastMessageReceived(sender, messageType, message)
     elseif messageType == _bg_message_type_player_surrender then
         BG_PlayerSurrender(sender);
     elseif messageType == _bg_message_type_player_ability then
+
+        -- Parse cmd
         local data = Str_CmdParse(message);
-        local target = World_Pos(tonumber(data[2]), tonumber(data[3]), tonumber(data[4]));
-        local facing = World_Pos(tonumber(data[5]), tonumber(data[6]), tonumber(data[7]));
-        BGAE_TriggerAbillityFromStringData(sender, data[1], target, facing);
+
+        -- Get origin coordinates
+        local x1 = tonumber(data[2]);
+        local y1 = tonumber(data[3]);
+        local z1 = tonumber(data[4]);
+        local o = World_Pos(x1, y1, z1);
+
+        -- Get facing coordinates
+        local x2 = tonumber(data[2]);
+        local y2 = tonumber(data[3]);
+        local z2 = tonumber(data[4]);
+        local f = World_Pos(x2, y2, z2);
+
+        -- Trigger ability
+        BGAE_TriggerAbillityFromStringData(sender, data[1], o, f);
+
     elseif messageType == _bg_message_type_team_request_withdraw then
         BG_WithdrawVoteSequence(sender);
     elseif messageType == _bg_message_type_team_vote_yes_withdraw then

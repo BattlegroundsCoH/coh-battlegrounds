@@ -433,14 +433,18 @@ end
 ------------------------------------------------------------
 function Str_CmdParse(str)
     local t_result = {};
-    for w in string.gmatch(str, "([%w-_]+)") do
+    for w in string.gmatch(str, "([%w-_.:]+)") do
         table.insert(t_result, w);
     end
     return t_result;
 end
 
+function Str_RoundNum(num, numDecimalPlaces)
+    return string.format("%." .. (numDecimalPlaces or 0) .. "f", num)
+end
+
 function Str_Pos(pos)
-    return tostring(pos.x) .. "," .. tostring(pos.y) .. "," .. tostring(pos.z);
+    return Str_RoundNum(pos.x, 3) .. "," .. Str_RoundNum(pos.y, 3) .. "," .. Str_RoundNum(pos.z, 3);
 end
 
 ------------------------------------------------------------
