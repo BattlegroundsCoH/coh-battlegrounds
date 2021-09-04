@@ -3,6 +3,7 @@ using System.Linq;
 
 using Battlegrounds.Functional;
 using Battlegrounds.Game.Database;
+using Battlegrounds.Game.Database.Management;
 using Battlegrounds.Game.Gameplay;
 using Battlegrounds.Modding;
 
@@ -156,10 +157,10 @@ namespace Battlegrounds.Game.DataCompany {
         /// </summary>
         /// <param name="abp"></param>
         /// <returns></returns>
-        public virtual Ability AddAndCommitAbility(AbilityBlueprint abp, AbilityCategory specialAbility, int maxUse) {
+        public virtual Ability AddAndCommitAbility(AbilityBlueprint abp, ModPackage.FactionData.FactionAbility factionAbility) {
 
             // Create ability
-            Ability sabp = new(abp, specialAbility, 0);
+            Ability sabp = new(abp, factionAbility.LockoutBlueprint, factionAbility.AbilityCategory, factionAbility.MaxUsePerMatch, 0);
 
             // Add ability
             this.m_companyTarget.AddAbility(sabp);

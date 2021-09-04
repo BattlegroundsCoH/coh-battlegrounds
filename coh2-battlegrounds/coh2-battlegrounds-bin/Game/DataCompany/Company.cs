@@ -317,29 +317,32 @@ namespace Battlegrounds.Game.DataCompany {
         public void SetAppVersion(string version) => this.m_lastEditVersion = version;
 
         /// <summary>
-        /// 
+        /// Get all special unit abilities available in the company.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>An array of <see cref="Ability"/> instances that are made available by units in the company.</returns>
+        /// <exception cref="InvalidOperationException"/>
         public Ability[] GetSpecialUnitAbilities() {
+            
+            // Get the relevant mod package
             var package = ModManager.GetPackageFromGuid(this.TuningGUID);
             if (package is null) {
                 throw new InvalidOperationException();
             }
+
+            // Select all relevant abilities
             var abps = package.FactionSettings[this.Army].UnitAbilities
                 .Where(x => this.m_squads.Any(y => y.SBP.Name == x.Blueprint))
                 .SelectMany(x => x.Abilities)
-                .Select(x => BlueprintManager.FromBlueprintName<AbilityBlueprint>(x.Blueprint))
-                .Where(x => x is not null);
-            return abps.Select(x => {
-                var category = x.Name.Contains("air_") ? AbilityCategory.AirSupport : x.Name.Contains("artillery_") ? AbilityCategory.Artillery
-                : AbilityCategory.Default;
-                int use = category switch { // TODO: Read from mod package
-                    AbilityCategory.AirSupport => 6,
-                    AbilityCategory.Artillery => 8,
-                    _ => 4
-                };
-                return new Ability(x, category, use);
+                .Select(x => (x, bp: BlueprintManager.FromBlueprintName<AbilityBlueprint>(x.Blueprint)))
+                .Where(x => x.bp is not null);
+
+            // Return array of ability instances
+            return abps.Select(abp => {
+                var category = abp.x.AbilityCategory;
+                int use = abp.x.MaxUsePerMatch;
+                return new Ability(abp.bp, abp.x.LockoutBlueprint, category, use, 0);
             }).ToArray();
+
         }
 
     }

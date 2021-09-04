@@ -20,6 +20,7 @@ namespace Battlegrounds.Modding {
                 string prop = reader.ReadProperty();
                 __lookup[prop] = prop switch {
                     "Blueprint" => reader.GetString(),
+                    "LockoutBlueprint" => reader.GetString(),
                     "AbilityCategory" => reader.GetString() switch {
                         "Artillery" => AbilityCategory.Artillery,
                         "AirSupport" => AbilityCategory.AirSupport,
@@ -40,6 +41,7 @@ namespace Battlegrounds.Modding {
 
             // Return
             return new(__lookup.GetValueOrDefault("Blueprint", string.Empty),
+                __lookup.GetValueOrDefault("LockoutBlueprint", string.Empty),
                 __lookup.GetValueOrDefault("AbilityCategory", AbilityCategory.Undefined),
                 __lookup.GetValueOrDefault("MaxUsePerMatch", 0),
                 __lookup.GetValueOrDefault("RequireOffmap", false),

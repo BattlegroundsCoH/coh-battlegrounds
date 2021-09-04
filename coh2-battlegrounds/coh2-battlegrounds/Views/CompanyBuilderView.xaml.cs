@@ -337,7 +337,7 @@ namespace BattlegroundsApp.Views {
                 }
 
                 // Get special ability
-                var special = this.Builder.AddAndCommitAbility(abp, fabp.AbilityCategory, fabp.MaxUsePerMatch);
+                var special = this.Builder.AddAndCommitAbility(abp, fabp);
 
                 // Update company ability count
                 this.CompanyAbilityCount++;
