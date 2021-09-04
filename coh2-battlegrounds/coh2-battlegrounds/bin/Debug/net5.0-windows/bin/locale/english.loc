@@ -110,3 +110,4 @@ english:
  MainWindow_YesNoDialog_Exit_Message: "Are you sure?"
  MainWindow_YesNoDialog_No_Steam_User_Title: "No Steam User Found"
  MainWindow_YesNoDialog_No_Steam_User_Message: "No Steam user was found on startup. Would you like to have the application find the local Steam user?"
+ CampaignBrowser_NewCampaignDiloag_Title: "Begin New Campaign"
