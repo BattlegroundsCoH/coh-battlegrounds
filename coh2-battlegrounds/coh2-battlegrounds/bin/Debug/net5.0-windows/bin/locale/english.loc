@@ -111,3 +111,5 @@ english:
  MainWindow_YesNoDialog_No_Steam_User_Title: "No Steam User Found"
  MainWindow_YesNoDialog_No_Steam_User_Message: "No Steam user was found on startup. Would you like to have the application find the local Steam user?"
  CampaignBrowser_NewCampaignDiloag_Title: "Begin New Campaign"
+ ChatView_Button_Send: "Send"
+ ChatView_Message: "Message:"
