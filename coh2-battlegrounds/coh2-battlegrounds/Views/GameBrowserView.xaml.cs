@@ -89,7 +89,7 @@ namespace BattlegroundsApp.Views {
                 // Get password (if any)
                 string lobbyPassword = string.Empty;
                 if (lobby.HasPassword) {
-                    if (LobbyPasswordDialogViewModel.ShowLobbyPasswordDialog("Connect to lobby", out lobbyPassword) is LobbyPasswordDialogResult.Cancel) {
+                    if (LobbyPasswordDialogViewModel.ShowLobbyPasswordDialog(new LocaleKey("GameBrowserView_LobbyPasswordDialog_Title"), out lobbyPassword) is LobbyPasswordDialogResult.Cancel) {
                         return;
                     }
                 }
@@ -105,7 +105,7 @@ namespace BattlegroundsApp.Views {
         private void HostLobby() {
 
             // Check if user actually wants to host.
-            if (HostGameDialogViewModel.ShowHostGameDialog("Host Game", out string lobbyName, out string lobbyPwd) is HostGameDialogResult.Host) {
+            if (HostGameDialogViewModel.ShowHostGameDialog(new LocaleKey("GameBrowserView_HostGameDialog_Title"), out string lobbyName, out string lobbyPwd) is HostGameDialogResult.Host) {
 
                 // Check for null
                 if (lobbyPwd is null) {

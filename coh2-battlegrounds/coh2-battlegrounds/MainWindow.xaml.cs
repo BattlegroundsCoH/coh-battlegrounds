@@ -113,7 +113,7 @@ namespace BattlegroundsApp {
         // Exit application
         private void Exit_Click(object sender, RoutedEventArgs e) {
 
-            var result = YesNoDialogViewModel.ShowYesNoDialog("Exit", "Are you sure?");
+            var result = YesNoDialogViewModel.ShowYesNoDialog(new LocaleKey("MainWindow_YesNoDialog_Exit_Title"), new LocaleKey("MainWindow_YesNoDialog_Exit_Message"));
 
             if (result == YesNoDialogResult.Confirm) {
 
@@ -148,7 +148,7 @@ namespace BattlegroundsApp {
         public override StateChangeRequestHandler GetRequestHandler() => this.StateChangeRequest;
 
         public bool AllowGetSteamUser()
-            => YesNoDialogViewModel.ShowYesNoDialog("No Steam User Found", "No Steam user was found on startup. Would you like to have the application find the local Steam user?") == YesNoDialogResult.Confirm;
+            => YesNoDialogViewModel.ShowYesNoDialog(new LocaleKey("MainWindow_YesNoDialog_No_Steam_User_Title"), new LocaleKey("MainWindow_YesNoDialog_No_Steam_User_Message")) == YesNoDialogResult.Confirm;
 
         protected override void OnContentRendered(EventArgs e) {
             base.OnContentRendered(e);

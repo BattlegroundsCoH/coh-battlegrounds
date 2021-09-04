@@ -4,7 +4,7 @@ using System.Windows.Controls;
 using System.Windows.Media;
 
 using Battlegrounds.Game.Database;
-
+using Battlegrounds.Locale;
 using BattlegroundsApp.Dialogs.YesNo;
 using BattlegroundsApp.Resources;
 
@@ -54,7 +54,7 @@ namespace BattlegroundsApp.Controls.CompanyBuilderControls {
         }
 
         private void RemoveEquipment(object sender, RoutedEventArgs e) {
-            if (YesNoDialogViewModel.ShowYesNoDialog("Remove Equipment", "Are you sure? This action can not be undone.") is YesNoDialogResult.Confirm) {
+            if (YesNoDialogViewModel.ShowYesNoDialog(new LocaleKey("EquipmentSlot_YesNoDialog_Remove_Equipment_Title"), new LocaleKey("EquipmentSlot_YesNoDialog_Remove_Equipment_Message")) is YesNoDialogResult.Confirm) {
                 this.OnRemove?.Invoke(this);
             }
         }

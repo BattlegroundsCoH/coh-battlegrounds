@@ -82,7 +82,7 @@ namespace BattlegroundsApp.Views {
             ModGuid modGuid = ModManager.GetPackage("mod_bg").TuningGUID;
             Trace.TraceWarning("There is currently no method of setting tuning pack. This should be fixed ASAP.");
 
-            if (CreateCompanyDialogViewModel.ShowCreateCompanyDialog("Create", out string companyName, out Faction companyFaction, out CompanyType companyType)
+            if (CreateCompanyDialogViewModel.ShowCreateCompanyDialog(new LocaleKey("CompanyView_CreateCompanyDialog_Title"), out string companyName, out Faction companyFaction, out CompanyType companyType)
                 is CreateCompanyDialogResult.Create) {
                 this.StateChangeRequest(new CompanyBuilderView(companyName, companyFaction, companyType, modGuid));
             }
@@ -94,7 +94,7 @@ namespace BattlegroundsApp.Views {
         }
 
         private void renameCompany_Click(object sender, RoutedEventArgs e) {
-            var result = RenameCopyDialogViewModel.ShowRenameDialog("Rename", out string companyName);
+            var result = RenameCopyDialogViewModel.ShowRenameDialog(new LocaleKey("CompanyView_RenameCopyDialog_Rename_Title"), out string companyName);
 
             if (result == RenameCopyDialogResult.Rename) {
                 var builder = new CompanyBuilder();
@@ -108,7 +108,7 @@ namespace BattlegroundsApp.Views {
 
         private void deleteCompany_Click(object sender, RoutedEventArgs e) {
 
-            var result = YesNoDialogViewModel.ShowYesNoDialog("Delete Company", "Are you sure?");
+            var result = YesNoDialogViewModel.ShowYesNoDialog(new LocaleKey("CompanyView_YesNoDialog_Delete_Company_Title"), new LocaleKey("CompanyView_YesNoDialog_Delete_Company_Message"));
 
             if (result == YesNoDialogResult.Confirm) {
                 PlayerCompanies.DeleteCompany(companyList.SelectedItem as Company);
@@ -118,7 +118,7 @@ namespace BattlegroundsApp.Views {
         }
 
         private void copyCompany_Click(object sender, RoutedEventArgs e) {
-            var result = RenameCopyDialogViewModel.ShowCopyDialog("Copy", out string companyName);
+            var result = RenameCopyDialogViewModel.ShowCopyDialog(new LocaleKey("CompanyView_RenameCopyDialog_Copy_Title"), out string companyName);
 
             if (result == RenameCopyDialogResult.Copy) {
                 var builder = new CompanyBuilder();
@@ -129,10 +129,10 @@ namespace BattlegroundsApp.Views {
         }
 
         private void exportCompany_Click(object sender, RoutedEventArgs e)
-            => ImportExportDialogViewModel.ShowExportDialog("Export", (CompanyTemplate.FromCompany(companyList.SelectedItem as Company)).ToTemplateString());
+            => ImportExportDialogViewModel.ShowExportDialog(new LocaleKey("CompanyView_ImportExportDialog_Export_Title"), (CompanyTemplate.FromCompany(companyList.SelectedItem as Company)).ToTemplateString());
 
         private void importCompany_Click(object sender, RoutedEventArgs e) {
-            var result = ImportExportDialogViewModel.ShowImportDialog("Export", out string companyString);
+            var result = ImportExportDialogViewModel.ShowImportDialog(new LocaleKey("CompanyView_ImportExportDialog_Import_Title"), out string companyString);
             if (result == ImportExportDialogResult.Import) {
                 try {
                     var company = CompanyTemplate.FromString(companyString);

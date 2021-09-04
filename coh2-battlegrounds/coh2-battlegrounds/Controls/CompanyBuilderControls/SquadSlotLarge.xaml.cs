@@ -1,7 +1,7 @@
 ﻿using Battlegrounds.Game.Database;
 using Battlegrounds.Game.Database.Extensions;
 using Battlegrounds.Game.Gameplay;
-
+using Battlegrounds.Locale;
 using BattlegroundsApp.Dialogs.YesNo;
 using BattlegroundsApp.Resources;
 
@@ -86,7 +86,7 @@ namespace BattlegroundsApp.Controls.CompanyBuilderControls {
         }
 
         private void RemoveUnit(object sender, RoutedEventArgs e) {
-            if (YesNoDialogViewModel.ShowYesNoDialog("Remove Unit", "Are you sure? This action can not be undone.") is YesNoDialogResult.Confirm) {
+            if (YesNoDialogViewModel.ShowYesNoDialog(new LocaleKey("SquadSlotLarge_YesNoDialog_Remove_Unit_Title"), new LocaleKey("SquadSlotLarge_YesNoDialog_Remove_Unit_Message")) is YesNoDialogResult.Confirm) {
                 this.OnRemove?.Invoke(this);
             }
         }

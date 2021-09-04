@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
-
+using Battlegrounds.Locale;
 using BattlegroundsApp.Dialogs.Service;
 using BattlegroundsApp.Utilities;
 
@@ -22,7 +22,8 @@ namespace BattlegroundsApp.Dialogs.RenameCopyDialog {
 
         public ICommand RenameCopyCommand { get; set; }
         public ICommand CancelCommand { get; set; }
-        public string ButtonName { get; set; }
+        public LocaleKey CompanyNameTextBlockText { get; }
+        public LocaleKey RenameCopyButtonContent { get; set; }
         public RenameCopyDialogType Type { get; set; }
         private string _companyName;
         public string CompanyName {
@@ -36,25 +37,26 @@ namespace BattlegroundsApp.Dialogs.RenameCopyDialog {
             }
         }
 
-        private RenameCopyDialogViewModel(RenameCopyDialogType type, string title) {
+        private RenameCopyDialogViewModel(RenameCopyDialogType type, LocaleKey title) {
 
             Title = title;
+            CompanyNameTextBlockText = new LocaleKey("RenameCopyDialogView_Company_Name");
             CancelCommand = new RelayCommand<DialogWindow>(Cancel);
             RenameCopyCommand = (type == RenameCopyDialogType.Rename) ? new RelayCommand<DialogWindow>(Rename) : new RelayCommand<DialogWindow>(Copy);
-            ButtonName = (type == RenameCopyDialogType.Rename) ? "Rename" : "Copy";
+            RenameCopyButtonContent = (type == RenameCopyDialogType.Rename) ? new LocaleKey("RenameCopyDialogView_Rename") : new LocaleKey("RenameCopyDialogView_Copy");
             Type = (type == RenameCopyDialogType.Rename) ? RenameCopyDialogType.Rename : RenameCopyDialogType.Copy;
             DialogCloseDefault = RenameCopyDialogResult.Cancel;
 
         }
 
-        public static RenameCopyDialogResult ShowRenameDialog(string title, out string companyName) {
+        public static RenameCopyDialogResult ShowRenameDialog(LocaleKey title, out string companyName) {
             var dialog = new RenameCopyDialogViewModel(RenameCopyDialogType.Rename, title);
             var result = dialog.ShowDialog();
             companyName = dialog.CompanyName;
             return result;
         }
 
-        public static RenameCopyDialogResult ShowCopyDialog(string title, out string companyName) {
+        public static RenameCopyDialogResult ShowCopyDialog(LocaleKey title, out string companyName) {
             var dialog = new RenameCopyDialogViewModel(RenameCopyDialogType.Copy, title);
             var result = dialog.ShowDialog();
             companyName = dialog.CompanyName;

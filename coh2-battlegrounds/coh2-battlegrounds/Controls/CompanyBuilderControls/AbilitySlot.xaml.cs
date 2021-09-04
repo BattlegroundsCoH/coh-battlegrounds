@@ -7,6 +7,7 @@ using System.Windows.Media;
 using Battlegrounds.Game.Database;
 using Battlegrounds.Game.Database.Management;
 using Battlegrounds.Game.Gameplay;
+using Battlegrounds.Locale;
 using Battlegrounds.Modding;
 
 using BattlegroundsApp.Dialogs.YesNo;
@@ -83,7 +84,7 @@ namespace BattlegroundsApp.Controls.CompanyBuilderControls {
         }
 
         private void RemoveAbility(object sender, RoutedEventArgs e) {
-            if (YesNoDialogViewModel.ShowYesNoDialog("Remove Ability", "Are you sure? This action can not be undone.") is YesNoDialogResult.Confirm) {
+            if (YesNoDialogViewModel.ShowYesNoDialog(new LocaleKey("AbilitySlot_YesNoDialog_Remove_Ability_Title"), new LocaleKey("AbilitySlot_YesNoDialog_Remove_Ability_Message")) is YesNoDialogResult.Confirm) {
                 this.OnRemove?.Invoke(this);
             }
         }

@@ -6,10 +6,16 @@
              xmlns:local="clr-namespace:BattlegroundsApp.Dialogs.CreateCompany"
              xmlns:factions="clr-namespace:Battlegrounds.Game.Gameplay;assembly=coh2-battlegrounds-bin"
              xmlns:type="clr-namespace:Battlegrounds.Game.DataCompany;assembly=coh2-battlegrounds-bin"
+             xmlns:converters="clr-namespace:BattlegroundsApp.Utilities.Converters"
              mc:Ignorable="d" 
              d:DesignHeight="150" d:DesignWidth="250">
     <Grid>
-        
+
+        <Grid.Resources>
+            <!-- LocaleConverter -->
+            <converters:LocaleKeyToStringConverter x:Key="LocaleConvertor"/>
+        </Grid.Resources>
+
         <Grid.RowDefinitions>
             <RowDefinition Height="20"/>
             <RowDefinition Height="auto"/>
@@ -30,26 +36,25 @@
         </Grid.ColumnDefinitions>
 
         <!-- Row 1 -->
-        <TextBlock Grid.Row="1" Grid.Column="1" Margin="2.5" Text="Name:"/>
+        <TextBlock Grid.Row="1" Grid.Column="1" Margin="2.5" Text="{Binding NameTextBlockText, Converter={StaticResource LocaleConvertor}}"/>
 
         <TextBox x:Name="companyName" Text="{Binding CompanyName, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Grid.Row="1" Grid.Column="2" Margin="2.5" Width="100"/>
 
         <!-- Row 2 -->
-        <TextBlock Grid.Row="2" Grid.Column="1" Margin="2.5" Text="Faction:"/>
+        <TextBlock Grid.Row="2" Grid.Column="1" Margin="2.5" Text="{Binding FactionTextBlockText, Converter={StaticResource LocaleConvertor}}"/>
 
         <ComboBox x:Name="companyFaction" Grid.Row="2" Grid.Column="2" Margin="2.5" ItemsSource="{Binding Source={x:Static factions:Faction.Factions}}" SelectedItem="{Binding CompanyFaction, Mode=TwoWay}"/>
 
         <!-- Row 3 -->
-        <TextBlock Grid.Row="3" Grid.Column="1" Margin="2.5" Text="Type:"/>
+        <TextBlock Grid.Row="3" Grid.Column="1" Margin="2.5" Text="{Binding TypeTextBlockText, Converter={StaticResource LocaleConvertor}}"/>
 
         <ComboBox x:Name="companyType" Grid.Row="3" Grid.Column="2" Margin="2.5" ItemsSource="{Binding Source={x:Static type:CompanyTypeExtension.CompanyTypes}}" SelectedItem="{Binding CompanyType, Mode=TwoWay}"/>
 
         <!-- Row 4 -->
-        <!-- TODO: MultiBinding? User will also have to pick type? Or just make one type default and leave this as single binding -->
-        <Button Grid.Row="4" Grid.Column="1" Margin="2.5" Content="Create" Width="75" IsEnabled="{Binding ElementName=companyName, Path=Text.Length, Mode=OneWay}"
+        <Button Grid.Row="4" Grid.Column="1" Margin="2.5" Content="{Binding CreateButtonContent, Converter={StaticResource LocaleConvertor}}" Width="75" IsEnabled="{Binding ElementName=companyName, Path=Text.Length, Mode=OneWay}"
                 Command="{Binding CreateCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}"/>
 
-        <Button Grid.Row="4" Grid.Column="2" Margin="2.5" Content="Cancel" Width="75"
+        <Button Grid.Row="4" Grid.Column="2" Margin="2.5" Content="{Binding CancelButtonContent, Converter={StaticResource LocaleConvertor}}" Width="75"
                 Command="{Binding CancelCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}"/>
 
     </Grid>
