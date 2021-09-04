@@ -7,6 +7,7 @@ using System.Windows.Controls;
 using System.Windows.Markup;
 
 using Battlegrounds.Functional;
+using Battlegrounds.Locale;
 
 namespace BattlegroundsApp.Controls.Lobby.Components {
 
@@ -19,7 +20,7 @@ namespace BattlegroundsApp.Controls.Lobby.Components {
         private IEnumerable m_itemSource;
         private object m_setSelectedValue;
 
-        public static readonly DependencyProperty DescriptionProperty = DependencyProperty.Register(nameof(Description), typeof(string), typeof(LobbyDropdown));
+        public static readonly DependencyProperty DescriptionProperty = DependencyProperty.Register(nameof(Description), typeof(object), typeof(LobbyDropdown));
 
         public static readonly DependencyProperty DescriptionWidthProperty = DependencyProperty.Register(nameof(DescriptionWidth), typeof(double), typeof(LobbyDropdown));
 
@@ -49,8 +50,8 @@ namespace BattlegroundsApp.Controls.Lobby.Components {
         /// <summary>
         /// Get or set the description of the <see cref="LobbyDropdown"/>.
         /// </summary>
-        public string Description {
-            get => this.GetValue(DescriptionProperty) as string;
+        public object Description {
+            get => this.GetValue(DescriptionProperty) as LocaleKey;
             set => this.SetValue(DescriptionProperty, value);
         }
 

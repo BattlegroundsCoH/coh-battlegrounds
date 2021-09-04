@@ -6,13 +6,19 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:BattlegroundsApp.Controls.Lobby.Components"
+             xmlns:converters="clr-namespace:BattlegroundsApp.Utilities.Converters"
              mc:Ignorable="d" 
              d:DesignHeight="48" d:DesignWidth="320">
+    <lobby:LobbyControl.Resources>
+        <!-- LocaleConverter -->
+        <converters:LocaleKeyToStringConverter x:Key="LocaleConvertor"/>
+    </lobby:LobbyControl.Resources>
+
     <lobby:SelfState>
         <DockPanel Margin="0.75">
             <Label 
                 x:Name="SelfTitle" 
-                Content="{Binding Path=Description, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:LobbyDropdown}}}" 
+                Content="{Binding Path=Description, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:LobbyDropdown}}, Converter={StaticResource LocaleConvertor}}" 
                 Width="{Binding Path=DescriptionWidth, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:LobbyDropdown}}}"
                 MinWidth="{Binding Path=DescriptionMinWidth, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:LobbyDropdown}}}"
                 MaxWidth="{Binding Path=DescriptionMaxWidth, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:LobbyDropdown}}}"
