@@ -11,6 +11,7 @@ using System.Windows.Media.Imaging;
 using Battlegrounds.ErrorHandling.CommonExceptions;
 using Battlegrounds.Functional;
 using Battlegrounds.Game.DataCompany;
+using Battlegrounds.Locale;
 using Battlegrounds.Networking.Lobby;
 
 using BattlegroundsApp.Controls;
@@ -92,6 +93,16 @@ namespace BattlegroundsApp.Views.ViewComponent {
 
         public Action NotifyLobby { get; set; }
 
+        public LocaleKey LockSlotMenuItemHeader { get; }
+        public LocaleKey MovePositionMenuItemHeader { get; }
+        public LocaleKey KickPlayerMenuItemHeader { get; }
+        public LocaleKey AddEasyAIMenuItemHeader { get; }
+        public LocaleKey AddStandardAIMenuItemHeader { get; }
+        public LocaleKey AddHardAIMenuItemHeader { get; }
+        public LocaleKey AddExpertAIMenuItemHeader { get; }
+        public LocaleKey OpenSlotLabelContent { get; }
+        public LocaleKey LockedSlotLabelContent { get; }
+
         public TeamPlayerCard() {
 
             // Initialize component
@@ -99,6 +110,17 @@ namespace BattlegroundsApp.Views.ViewComponent {
 
             // Update data context
             this.DataContext = this;
+
+            // Define locales
+            LockSlotMenuItemHeader = new LocaleKey("TeamPlayerCard_Menu_Item_Lock_Slot");
+            MovePositionMenuItemHeader = new LocaleKey("TeamPlayerCard_Menu_Item_Move_Position");
+            KickPlayerMenuItemHeader = new LocaleKey("TeamPlayerCard_Menu_Item_Kick_Player");
+            AddEasyAIMenuItemHeader = new LocaleKey("TeamPlayerCard_Menu_Item_Add_Easy_Ai");
+            AddStandardAIMenuItemHeader = new LocaleKey("TeamPlayerCard_Menu_Item_Add_Standard_Ai");
+            AddHardAIMenuItemHeader = new LocaleKey("TeamPlayerCard_Menu_Item_Add_Hard_Ai");
+            AddExpertAIMenuItemHeader = new LocaleKey("TeamPlayerCard_Menu_Item_Add_Expert_Ai");
+            OpenSlotLabelContent = new LocaleKey("TeamPlayerCard_Open_Slot");
+            LockedSlotLabelContent = new LocaleKey("TeamPlayerCard_Locked_Slot");
 
             // Set default values
             this.Playername = "Connecting...";

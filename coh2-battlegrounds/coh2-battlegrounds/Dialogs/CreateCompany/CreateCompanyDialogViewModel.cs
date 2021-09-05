@@ -7,7 +7,7 @@ using System.Windows.Input;
 
 using Battlegrounds.Game.DataCompany;
 using Battlegrounds.Game.Gameplay;
-
+using Battlegrounds.Locale;
 using BattlegroundsApp.Dialogs.Service;
 using BattlegroundsApp.Utilities;
 using BattlegroundsApp.ViewModels;
@@ -58,16 +58,30 @@ namespace BattlegroundsApp.Dialogs.CreateCompany {
             }
         }
 
-        private CreateCompanyDialogViewModel(string title) {
+        public LocaleKey NameTextBlockText { get; }
+        public LocaleKey FactionTextBlockText { get; }
+        public LocaleKey TypeTextBlockText { get; }
+        public LocaleKey CreateButtonContent {  get; }
+        public LocaleKey CancelButtonContent {  get; }
+
+        private CreateCompanyDialogViewModel(LocaleKey title) {
 
             Title = title;
+
+            // Define locales
+            NameTextBlockText = new LocaleKey("CreateCompanyDialogView_Name");
+            FactionTextBlockText = new LocaleKey("CreateCompanyDialogView_Faction");
+            TypeTextBlockText = new LocaleKey("CreateCompanyDialogView_Type");
+            CreateButtonContent = new LocaleKey("CreateCompanyDialogView_Button_Create");
+            CancelButtonContent = new LocaleKey("CreateCompanyDialogView_Button_Cancel");
+
             CreateCommand = new RelayCommand<DialogWindow>(Create);
             CancelCommand = new RelayCommand<DialogWindow>(Cancel);
             DialogCloseDefault = CreateCompanyDialogResult.Cancel;
 
         }
 
-        public static CreateCompanyDialogResult ShowCreateCompanyDialog(string title, out string companyName, out Faction faction, out CompanyType type) {
+        public static CreateCompanyDialogResult ShowCreateCompanyDialog(LocaleKey title, out string companyName, out Faction faction, out CompanyType type) {
             var dialog = new CreateCompanyDialogViewModel(title);
             var result = dialog.ShowDialog();
             companyName = dialog.CompanyName;

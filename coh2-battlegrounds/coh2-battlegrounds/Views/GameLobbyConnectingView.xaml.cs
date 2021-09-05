@@ -14,7 +14,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-
+using Battlegrounds.Locale;
 using Battlegrounds.Networking.Lobby;
 using Battlegrounds.Networking.Server;
 
@@ -30,7 +30,11 @@ namespace BattlegroundsApp.Views {
         private ServerLobby m_target;
         private ServerAPI m_api;
 
+        public LocaleKey ConnectingLabelContent { get; }
+
         public GameLobbyConnectingView(ServerAPI api, ServerLobby lobby, string password) {
+
+            ConnectingLabelContent = new LocaleKey("GameLobbyConnectingView_Connecting");
 
             // Init components
             this.InitializeComponent();

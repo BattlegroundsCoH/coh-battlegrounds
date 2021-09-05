@@ -1,76 +1,112 @@
 ﻿<lobby:LobbyControl  
-    x:Class="BattlegroundsApp.Views.ViewComponent.TeamPlayerCard"
-    xmlns:lobby="clr-namespace:BattlegroundsApp.Controls.Lobby" 
+             x:Class="BattlegroundsApp.Views.ViewComponent.TeamPlayerCard"
+             xmlns:lobby="clr-namespace:BattlegroundsApp.Controls.Lobby" 
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:BattlegroundsApp.Views.ViewComponent" xmlns:components="clr-namespace:BattlegroundsApp.Controls.Lobby.Components" xmlns:controls="clr-namespace:BattlegroundsApp.Controls"
-    mc:Ignorable="d" 
+             xmlns:local="clr-namespace:BattlegroundsApp.Views.ViewComponent" 
+             xmlns:components="clr-namespace:BattlegroundsApp.Controls.Lobby.Components" 
+             xmlns:controls="clr-namespace:BattlegroundsApp.Controls"
+             xmlns:converters="clr-namespace:BattlegroundsApp.Utilities.Converters"
+             mc:Ignorable="d" 
              d:DesignHeight="32" d:DesignWidth="444" MinHeight="32" MaxHeight="32">
+
+    <lobby:LobbyControl.Resources>
+        <!-- LocaleConverter -->
+        <converters:LocaleKeyToStringConverter x:Key="LocaleConvertor"/>
+    </lobby:LobbyControl.Resources>
+
     <lobby:LobbyControl.ContextMenu>
         <ContextMenu Opened="ContextMenu_Opened">
-            <MenuItem Header="Lock Slot" Name="ContextMenu_LockUnlock" Click="ContextMenu_LockUnlock_Click"/>
-            <MenuItem Header="Move Position" Name="ContextMenu_Position" Click="ContextMenu_Position_Click"/>
-            <MenuItem Header="Kick Player" Name="ContextMenu_Kick" Click="ContextMenu_Kick_Click"/>
+            <MenuItem Header="{Binding LockSlotMenuItemHeader, Converter={StaticResource LocaleConvertor}}" Name="ContextMenu_LockUnlock" Click="ContextMenu_LockUnlock_Click"/>
+            <MenuItem Header="{Binding MovePositionMenuItemHeader, Converter={StaticResource LocaleConvertor}}" Name="ContextMenu_Position" Click="ContextMenu_Position_Click"/>
+            <MenuItem Header="{Binding KickPlayerMenuItemHeader, Converter={StaticResource LocaleConvertor}}" Name="ContextMenu_Kick" Click="ContextMenu_Kick_Click"/>
             <Separator Name="ContextMenu_AISeperator"/>
-            <MenuItem Header="Add Easy AI" Name="ContextMenu_EasyAI" Click="ContextMenu_AddAI_Click"/>
-            <MenuItem Header="Add Standard AI" Name="ContextMenu_StandardAI" Click="ContextMenu_AddAI_Click"/>
-            <MenuItem Header="Add Hard AI" Name="ContextMenu_HardAI" Click="ContextMenu_AddAI_Click"/>
-            <MenuItem Header="Add Expert AI" Name="ContextMenu_ExpertAI" Click="ContextMenu_AddAI_Click"/>
+            <MenuItem Header="{Binding AddEasyAIMenuItemHeader, Converter={StaticResource LocaleConvertor}}" Name="ContextMenu_EasyAI" Click="ContextMenu_AddAI_Click"/>
+            <MenuItem Header="{Binding AddStandardAIMenuItemHeader, Converter={StaticResource LocaleConvertor}}" Name="ContextMenu_StandardAI" Click="ContextMenu_AddAI_Click"/>
+            <MenuItem Header="{Binding AddHardAIMenuItemHeader, Converter={StaticResource LocaleConvertor}}" Name="ContextMenu_HardAI" Click="ContextMenu_AddAI_Click"/>
+            <MenuItem Header="{Binding AddExpertAIMenuItemHeader, Converter={StaticResource LocaleConvertor}}" Name="ContextMenu_ExpertAI" Click="ContextMenu_AddAI_Click"/>
         </ContextMenu>
     </lobby:LobbyControl.ContextMenu>
+
     <local:PlayerCardState 
         x:Name="OccupiedCardState"
         StateName="OccupiedState">
         <DockPanel>
+
             <Image Width="24" 
                    DockPanel.Dock="Left" 
                    Source="{Binding PlayerArmyIcon}"/>
+
             <Label Content="{Binding Playername}" Width="128" DockPanel.Dock="Left"/>
+
             <Label Content="{Binding Playercompany}"/>
+
         </DockPanel>
     </local:PlayerCardState>
+    
     <local:PlayerCardState 
         x:Name="ObserverCardState"
         StateName="ObserverState">
         <DockPanel VerticalAlignment="Center">
+            
             <Image Width="24" DockPanel.Dock="Left"/>
+            
             <Label Content="{Binding Playername}" DockPanel.Dock="Left"/>
+            
         </DockPanel>
     </local:PlayerCardState>
+    
     <local:PlayerCardState 
         x:Name="SelfCardState"
         StateName="SelfState">
         <DockPanel>
+            
             <controls:IconComboBox Width="24" x:Name="ArmySelector" SelectionChanged="ArmySelector_SelectionChanged"/>
+            
             <Label Content="{Binding Playername}" Width="128"/>
+            
             <ComboBox ItemsSource="{Binding PlayerCompanyItems}" Name="CompanySelector" SelectionChanged="CompanySelector_SelectionChanged"/>
+            
         </DockPanel>
     </local:PlayerCardState>
+    
     <local:PlayerCardState 
         x:Name="AICardState"
         StateName="AIHostState">
         <DockPanel>
+            
             <controls:IconComboBox Width="24" x:Name="AIArmySelector" SelectionChanged="ArmySelector_SelectionChanged"/>
+            
             <Label Content="{Binding Playername}" Width="128"/>
+            
             <ComboBox ItemsSource="{Binding PlayerCompanyItems}" Name="AICompanySelector" SelectionChanged="CompanySelector_SelectionChanged"/>
+            
         </DockPanel>
     </local:PlayerCardState>
+    
     <local:PlayerCardState 
         x:Name="AvailableCardState"
         StateName="AvailableState">
         <DockPanel>
+            
             <Image Width="24" DockPanel.Dock="Left" Source="pack://application:,,,/Resources/app/padlock_open.png"/>
-            <Label Content="Open Slot"/>
+
+            <Label Content="{Binding OpenSlotLabelContent, Converter={StaticResource LocaleConvertor}}"/>
+            
         </DockPanel>
     </local:PlayerCardState>
+
     <local:PlayerCardState 
         x:Name="LockedCardState"
         StateName="LockedState">
         <DockPanel VerticalAlignment="Center">
+
             <Image Width="24" DockPanel.Dock="Left" Source="pack://application:,,,/Resources/app/padlock_locked.png"/>
-            <Label Content="Locked Slot"/>
+
+            <Label Content="{Binding LockedSlotLabelContent, Converter={StaticResource LocaleConvertor}}"/>
+
         </DockPanel>
     </local:PlayerCardState>
 </lobby:LobbyControl>

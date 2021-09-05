@@ -5,9 +5,15 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:BattlegroundsApp.Views"
              xmlns:bg="clr-namespace:BattlegroundsApp"
+             xmlns:converters="clr-namespace:BattlegroundsApp.Utilities.Converters"
              mc:Ignorable="d" Background="White"
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
+
+        <Grid.Resources>
+            <!-- LocaleConverter -->
+            <converters:LocaleKeyToStringConverter x:Key="LocaleConvertor"/>
+        </Grid.Resources>
 
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
@@ -38,11 +44,11 @@
                             <Setter Property="IsHitTestVisible" Value="False"/>
                         </Style>
                     </GridView.ColumnHeaderContainerStyle>
-                    <GridViewColumn Header="Name" Width="320" DisplayMemberBinding="{Binding Name}"/>
-                    <GridViewColumn Header="Gamemode" Width="175" DisplayMemberBinding="{Binding TranslatedMode}"/>
-                    <GridViewColumn Header="State" Width="125" DisplayMemberBinding="{Binding TranslatedState}"/>
-                    <GridViewColumn Header="Players" Width="100" DisplayMemberBinding="{Binding CapacityString}"/>
-                    <GridViewColumn Header="Password" Width="80" DisplayMemberBinding="{Binding HasPassword}"/>
+                    <GridViewColumn Header="{Binding NameListWiewHeader, Converter={StaticResource LocaleConvertor}}" Width="320" DisplayMemberBinding="{Binding Name}"/>
+                    <GridViewColumn Header="{Binding GamemodeListWiewHeader, Converter={StaticResource LocaleConvertor}}" Width="175" DisplayMemberBinding="{Binding TranslatedMode}"/>
+                    <GridViewColumn Header="{Binding StateListWiewHeader, Converter={StaticResource LocaleConvertor}}" Width="125" DisplayMemberBinding="{Binding TranslatedState}"/>
+                    <GridViewColumn Header="{Binding PlayersListWiewHeader, Converter={StaticResource LocaleConvertor}}" Width="100" DisplayMemberBinding="{Binding CapacityString}"/>
+                    <GridViewColumn Header="{Binding PasswordListWiewHeader, Converter={StaticResource LocaleConvertor}}" Width="80" DisplayMemberBinding="{Binding HasPassword}"/>
                 </GridView>
             </ListView.View>
         </ListView>
@@ -56,7 +62,7 @@
         <!-- Row 4 -->
 
         <!-- Row 5 -->
-        <Button x:Name="refreshLobbyListButton" Grid.Row="5" Grid.Column="2" Content="Refresh" Margin="0,5,0,0" Click="RefreshLobbyList_Click">
+        <Button x:Name="refreshLobbyListButton" Grid.Row="5" Grid.Column="2" Content="{Binding RefreshButtonContent, Converter={StaticResource LocaleConvertor}}" Margin="0,5,0,0" Click="RefreshLobbyList_Click">
             <Button.Style>
                 <Style TargetType="{x:Type Button}">
                     <Style.Triggers>
@@ -77,10 +83,10 @@
             </Button.Style>
         </Button>
 
-        <Button x:Name="hostGameButton" Grid.Row="5" Grid.Column="3" Content="Host Game" Margin="5,5,0,0"
+        <Button x:Name="hostGameButton" Grid.Row="5" Grid.Column="3" Content="{Binding HostGameButtonContent, Converter={StaticResource LocaleConvertor}}" Margin="5,5,0,0"
                 Command="{Binding HostGameCommand}"/>
 
-        <Button x:Name="joinGameButton" Grid.Row="5" Grid.Column="4" Content="Join Game" Margin="5,5,0,0" Click="JoinLobby_Click">
+        <Button x:Name="joinGameButton" Grid.Row="5" Grid.Column="4" Content="{Binding JoinGameButtonContent, Converter={StaticResource LocaleConvertor}}" Margin="5,5,0,0" Click="JoinLobby_Click">
             <Button.Style>
                 <Style TargetType="{x:Type Button}">
                     <Style.Triggers>

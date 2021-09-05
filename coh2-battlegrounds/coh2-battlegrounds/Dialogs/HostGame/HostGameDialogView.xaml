@@ -5,9 +5,15 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:BattlegroundsApp.Dialogs.HostGame" 
              xmlns:bindablepasswordbox="clr-namespace:BattlegroundsApp.Views.ViewComponent.BindablePasswordBox"
+             xmlns:converters="clr-namespace:BattlegroundsApp.Utilities.Converters"
              mc:Ignorable="d" 
              Height="150" Width="250">
     <Grid>
+
+        <Grid.Resources>
+            <!-- LocaleConverter -->
+            <converters:LocaleKeyToStringConverter x:Key="LocaleConvertor"/>
+        </Grid.Resources>
 
         <Grid.RowDefinitions>
             <RowDefinition Height="20"/>
@@ -28,20 +34,20 @@
         </Grid.ColumnDefinitions>
         
         <!-- Row 1 -->
-        <TextBlock Grid.Row="1" Grid.Column="1" Margin="2.5" Text="Game Name:"/>
+        <TextBlock Grid.Row="1" Grid.Column="1" Margin="2.5" Text="{Binding GameNameTextBlockText, Converter={StaticResource LocaleConvertor}}"/>
 
         <TextBox x:Name="LobbyName" Text="{Binding LobbyName, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Grid.Row="1" Grid.Column="2" Margin="2.5" Width="100"/>
 
         <!-- Row 3 -->
-        <TextBlock Grid.Row="3" Grid.Column="1" Margin="2.5" Text="Password:"/>
+        <TextBlock Grid.Row="3" Grid.Column="1" Margin="2.5" Text="{Binding PasswordTextBlockText, Converter={StaticResource LocaleConvertor}}"/>
 
         <bindablepasswordbox:BindablePasswordBox Password="{Binding LobbyPassword, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Grid.Row="3" Grid.Column="2" Margin="2.5" Width="100"/>
         
         <!-- Row 4 -->
-        <Button Grid.Row="4" Grid.Column="1" Margin="2.5" Content="Host Game" Width="75" IsEnabled="{Binding ElementName=LobbyName, Path=Text.Length, Mode=OneWay}"
+        <Button Grid.Row="4" Grid.Column="1" Margin="2.5" Content="{Binding HostGameButtonContent, Converter={StaticResource LocaleConvertor}}" Width="75" IsEnabled="{Binding ElementName=LobbyName, Path=Text.Length, Mode=OneWay}"
                 Command="{Binding HostCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}"/>
 
-        <Button Grid.Row="4" Grid.Column="2" Margin="2.5" Content="Cancel" Width="75"
+        <Button Grid.Row="4" Grid.Column="2" Margin="2.5" Content="{Binding CancelButtonContent, Converter={StaticResource LocaleConvertor}}" Width="75"
                 Command="{Binding CancelCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}"/>
 
     </Grid>

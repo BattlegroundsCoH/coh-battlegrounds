@@ -1,4 +1,6 @@
-﻿using System.Collections.ObjectModel;
+﻿using Battlegrounds.Locale;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
@@ -27,13 +29,20 @@ namespace BattlegroundsApp.Controls.Lobby.Chatting {
         /// </summary>
         public IChatController Chat { get; set; }
 
-        public ChatView() {
+        public LocaleKey SendButtonContent { get; }
+        public LocaleKey MessageLabelContent { get; }
 
-            // Initialize component
-            this.InitializeComponent();
+        public ChatView() {
 
             // Set datacontext
             this.DataContext = this;
+
+            // Declare locales
+            SendButtonContent = new LocaleKey("ChatView_Button_Send");
+            MessageLabelContent = new LocaleKey("ChatView_Message");
+
+            // Initialize component
+            this.InitializeComponent();
 
         }
 

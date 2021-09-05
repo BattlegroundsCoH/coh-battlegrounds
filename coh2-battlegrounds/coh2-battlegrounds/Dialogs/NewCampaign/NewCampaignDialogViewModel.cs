@@ -6,7 +6,7 @@ using System.Windows.Media;
 using Battlegrounds;
 using Battlegrounds.Campaigns;
 using Battlegrounds.Game.Gameplay;
-
+using Battlegrounds.Locale;
 using BattlegroundsApp.Dialogs.Service;
 using BattlegroundsApp.Models.Campaigns;
 using BattlegroundsApp.Resources;
@@ -57,7 +57,6 @@ namespace BattlegroundsApp.Dialogs.NewCampaign {
         int m_selectedCampaignIndex;
 
         public ICommand CancelCommand { get; }
-
         public ICommand BeginCommand { get; }
 
         public NewCampaignData CampaignData { get; private set; }
@@ -79,15 +78,34 @@ namespace BattlegroundsApp.Dialogs.NewCampaign {
         public ImageSource SelectedCampaignImageSource { get; set; }
 
         public List<NewCampaignDialogViewSelectionOption> Campaigns { get; }
-
         public List<NewCampaignDialogViewSelectedMode> AvailableModes { get; }
-
         public List<NewCampaignDialogViewSelectedArmy> AvailableArmies { get; }
 
-        private NewCampaignDialogViewModel(string title, CampaignPackage[] campaigns) {
+        public LocaleKey CampaignLabelContent { get; }
+        public LocaleKey SideLabelContent { get; }
+        public LocaleKey DifficultyLabelContent { get; }
+        public LocaleKey EasyDifficultyComboBoxItemContent { get; }
+        public LocaleKey MediumDifficultyComboBoxItemContent { get; }
+        public LocaleKey HardDifficultyComboBoxItemContent { get; }
+        public LocaleKey ModeLabelContent { get; }
+        public LocaleKey CancelButtonContent { get; }
+        public LocaleKey BeginButtonContent {  get; } 
+
+        private NewCampaignDialogViewModel(LocaleKey title, CampaignPackage[] campaigns) {
 
             // Set title
             this.Title = title;
+
+            // Define locales
+            CampaignLabelContent = new LocaleKey("NewCampaignDialogView_Campaign");
+            SideLabelContent = new LocaleKey("NewCampaignDialogView_Side");
+            DifficultyLabelContent = new LocaleKey("NewCampaignDialogView_Difficulty");
+            EasyDifficultyComboBoxItemContent = new LocaleKey("NewCampaignDialogView_Difficulty_Easy");
+            MediumDifficultyComboBoxItemContent = new LocaleKey("NewCampaignDialogView_Difficulty_Medium");
+            HardDifficultyComboBoxItemContent = new LocaleKey("NewCampaignDialogView_Difficulty_Hard");
+            ModeLabelContent = new LocaleKey("NewCampaignDialogView_Mode");
+            CancelButtonContent = new LocaleKey("NewCampaignDialogView_Button_Cancel");
+            BeginButtonContent = new LocaleKey("NewCampaignDialogView_Button_Begin");
 
             // Init available list
             this.AvailableModes = new List<NewCampaignDialogViewSelectedMode>();
@@ -142,7 +160,7 @@ namespace BattlegroundsApp.Dialogs.NewCampaign {
             }
         }
 
-        public static NewCampaignDialogResult ShowHostGameDialog(string title, out NewCampaignData campaignData, params CampaignPackage[] campaigns) {
+        public static NewCampaignDialogResult ShowHostGameDialog(LocaleKey title, out NewCampaignData campaignData, params CampaignPackage[] campaigns) {
             var dialog = new NewCampaignDialogViewModel(title, campaigns);
             var result = dialog.ShowDialog();
             campaignData = dialog.CampaignData;

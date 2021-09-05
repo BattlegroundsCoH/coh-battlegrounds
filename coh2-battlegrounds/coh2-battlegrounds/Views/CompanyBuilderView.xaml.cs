@@ -12,6 +12,7 @@ using Battlegrounds.Game.Database;
 using Battlegrounds.Game.Database.Management;
 using Battlegrounds.Game.DataCompany;
 using Battlegrounds.Game.Gameplay;
+using Battlegrounds.Locale;
 using Battlegrounds.Modding;
 
 using BattlegroundsApp.Controls.CompanyBuilderControls;
@@ -158,12 +159,12 @@ namespace BattlegroundsApp.Views {
             var company = this.Builder.Commit().Result;
             PlayerCompanies.SaveCompany(company); // Side-effect: Will triger a checksum recalculation.
             this.m_initialChecksum = company.Checksum; // Update edit detector checksum.
-            _ = OKDialogViewModel.ShowOKDialog("Company Saved", "The company was successfully saved on the local machine");
+            _ = OKDialogViewModel.ShowOKDialog(new LocaleKey("CompanyBuilderView_OKDialog_Company_Saved_Title"), new LocaleKey("CompanyBuilderView_OKDialog_Company_Saved_Message"));
         }
 
         private void ResetButton_Click(object sender, RoutedEventArgs e) {
 
-            if (YesNoDialogViewModel.ShowYesNoDialog("Reset Company", "Are you sure? The entiry company will be reset") is YesNoDialogResult.Confirm) {
+            if (YesNoDialogViewModel.ShowYesNoDialog(new LocaleKey("CompanyBuilderView_YesNoDialog_Reset_Company_Title"), new LocaleKey("CompanyBuilderView_YesNoDialog_Reset_Company_Message")) is YesNoDialogResult.Confirm) {
                 var backup = this.Builder.Commit().Result;
                 _ = this.Builder.ReleaseCompany().NewCompany(backup.Army).ChangeTuningMod(backup.TuningGUID)
                     .ChangeType(backup.Type).ChangeAvailability(CompanyAvailabilityType.MultiplayerOnly);
@@ -178,7 +179,7 @@ namespace BattlegroundsApp.Views {
                 return;
             }
 
-            if (YesNoDialogViewModel.ShowYesNoDialog("Back", "Are you sure? All unsaved changes will be lost.") is YesNoDialogResult.Confirm) {
+            if (YesNoDialogViewModel.ShowYesNoDialog(new LocaleKey("CompanyBuilderView_YesNoDialog_Back_Title"), new LocaleKey("CompanyBuilderView_YesNoDialog_Back_Message")) is YesNoDialogResult.Confirm) {
                 _ = this.StateChangeRequest(new CompanyView());
             }
 

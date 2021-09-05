@@ -5,14 +5,19 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:BattlegroundsApp.Controls.Lobby.Components"
+             xmlns:converters="clr-namespace:BattlegroundsApp.Utilities.Converters"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
+    <lobby:LobbyControl.Resources>
+        <!-- LocaleConverter -->
+        <converters:LocaleKeyToStringConverter x:Key="LocaleConvertor"/>
+    </lobby:LobbyControl.Resources>
     <lobby:HostOnlyState> <!-- Putting this as first element so it will have higher presedence-->
         <Button 
             x:Name="HostButton" 
             VerticalContentAlignment="Center"
             HorizontalContentAlignment="Center"
-            Content="{Binding Path=Text}"
+            Content="{Binding Path=Text, Converter={StaticResource LocaleConvertor}}"
             Width="{Binding Path=Width}"
             Height="{Binding Path=Height}"
             />
@@ -22,12 +27,12 @@
             x:Name="SelfButton" 
             VerticalContentAlignment="Center"
             HorizontalContentAlignment="Center"
-            Content="{Binding Path=Text}"
+            Content="{Binding Path=Text, Converter={StaticResource LocaleConvertor}}"
             Width="{Binding Path=Width}"
             Height="{Binding Path=Height}"
             />
     </lobby:SelfState>
     <lobby:OtherState x:Name="ButtonOtherState" x:FieldModifier="private">
-        <Label x:Name="OtherOptionalText" Content="{Binding Path=OptionalText}"/>
+        <Label x:Name="OtherOptionalText" Content="{Binding Path=OptionalText, Converter={StaticResource LocaleConvertor}}"/>
     </lobby:OtherState>
 </lobby:LobbyControl>
