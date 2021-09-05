@@ -1,5 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
+using Battlegrounds.Functional;
 using Battlegrounds.Game.Database;
 using Battlegrounds.Game.Database.Management;
 using Battlegrounds.Game.Gameplay.DataConverters;
@@ -56,6 +57,11 @@ namespace Battlegrounds.Game.Gameplay {
         public UpgradeBlueprint UnlockUpgrade { get; }
 
         /// <summary>
+        /// Get the unit blueprint that grants this ability.
+        /// </summary>
+        public SquadBlueprint[] GrantingBlueprints { get; }
+
+        /// <summary>
         /// The <see cref="AbilityCategory"/> the <see cref="Ability"/> will belong to.
         /// </summary>
         public AbilityCategory Category { get; }
@@ -79,10 +85,11 @@ namespace Battlegrounds.Game.Gameplay {
         /// <param name="Category">The category.</param>
         /// <param name="MaxUse">The maximum amount of uses each match.</param>
         /// <param name="UsedCount">The amount of times this has been used.</param>
-        public Ability(AbilityBlueprint ABP, string UnlockUpgrade, AbilityCategory Category, int MaxUse, int UsedCount = -1) {
+        public Ability(AbilityBlueprint ABP, string UnlockUpgrade, string[] GrantingBlueprints, AbilityCategory Category, int MaxUse, int UsedCount = -1) {
             this.ABP = ABP;
             this.Category = Category;
             this.UnlockUpgrade = BlueprintManager.FromBlueprintName<UpgradeBlueprint>(UnlockUpgrade);
+            this.GrantingBlueprints = GrantingBlueprints.Map(x => BlueprintManager.FromBlueprintName<SquadBlueprint>(x));
             this.MaxUse = MaxUse;
             this.UsedCount = UsedCount;
         }
@@ -95,10 +102,11 @@ namespace Battlegrounds.Game.Gameplay {
         /// <param name="Category">The category.</param>
         /// <param name="MaxUse">The maximum amount of uses each match.</param>
         [JsonConstructor]
-        public Ability(AbilityBlueprint ABP, UpgradeBlueprint UnlockUpgrade, AbilityCategory Category, int MaxUse) {
+        public Ability(AbilityBlueprint ABP, UpgradeBlueprint UnlockUpgrade, SquadBlueprint[] GrantingBlueprints, AbilityCategory Category, int MaxUse) {
             this.ABP = ABP;
             this.Category = Category;
             this.UnlockUpgrade = UnlockUpgrade;
+            this.GrantingBlueprints = GrantingBlueprints;
             this.MaxUse = MaxUse;
             this.UsedCount = -1;
         }

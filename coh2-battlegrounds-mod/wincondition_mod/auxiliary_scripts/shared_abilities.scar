@@ -24,8 +24,14 @@ end
 function BGAE_OnModalPhase(abp, phase) -- This is triggered for the client only!
     local bpname = BP_GetName(abp);
     local pos = Misc_GetMouseOnTerrain();
-    local companyabp = BG_GetCompanyAbility(Game_GetLocalPlayer(), bpname);
+    local locPlayer = Game_GetLocalPlayer();
+    local companyabp = BG_GetCompanyAbility(locPlayer, bpname);
     if companyabp == nil then
+        return;
+    end
+    local res, err = BG_CanUseAbility(locPlayer, companyabp);
+    if res == false then
+        BGUI_ShowWarning(err);
         return;
     end
     if phase == MAP_Placing then
@@ -91,4 +97,19 @@ function BG_GetCompanyAbility(player, abp)
         end
     end
     return nil;
+end
+
+function BG_CanUseAbility(player, ability)
+    if ability.uses == 0 then
+        return false, "No more uses available";
+    end
+    if ability.granters ~= nil then
+        for i=1, #ability.granters do -- Find if there's any unit granting this that is not deployed.
+            if BG_GetDeployedCountOfUnitType(player, ability.granters[i]) == 0 then
+                return true, nil;
+            end
+        end
+        return false, "Cannot use ability when granting units are deployed";
+    end
+    return true, nil;
 end

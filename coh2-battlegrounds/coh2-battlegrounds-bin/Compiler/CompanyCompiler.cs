@@ -92,14 +92,25 @@ namespace Battlegrounds.Compiler {
             var units = company.Units;
             Array.Sort(units, (a, b) => this.CompareUnit(a, b));
 
+            // Get unit abilities
+            var uabps = company.GetSpecialUnitAbilities();
+
+            // Get artillery
+            var artillery = company.Abilities.Where(x => x.Category is AbilityCategory.Artillery)
+                .Union(uabps.Where(x => x.Category is AbilityCategory.Artillery)).ToArray();
+
+            // Get air
+            var air = company.Abilities.Where(x => x.Category is AbilityCategory.AirSupport)
+                .Union(uabps.Where(x => x.Category is AbilityCategory.AirSupport)).ToArray();
+
             // Create result
             Dictionary<string, object> result = new() {
                 ["name"] = company.Name,
                 ["style"] = company.Type,
                 ["army"] = company.Army.Name,
                 ["specials"] = new Dictionary<string, object>() {
-                    ["artillery"] = company.Abilities.Where(x => x.Category is AbilityCategory.Artillery).ToArray(),
-                    ["air"] = company.Abilities.Where(x => x.Category is AbilityCategory.AirSupport).ToArray(),
+                    ["artillery"] = artillery,
+                    ["air"] = air,
                 },
                 ["upgrades"] = company.Upgrades.Select(x => x.GetScarName()),
                 ["modifiers"] = company.Modifiers,

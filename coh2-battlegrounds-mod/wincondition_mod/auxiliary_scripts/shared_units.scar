@@ -624,3 +624,17 @@ function BG_SaveSlotItems(unit_data, squad)
     unit_data.slot_items = slot_items;
     return last_pickup;
 end
+
+function BG_GetDeployedCountOfUnitType(player, blueprint)
+    if scartype(blueprint) == ST_PBG then
+        blueprint = BP_GetName(blueprint);
+    end
+    local data = BG_GetPlayerData(player);
+    local cntr = 0;
+    for _, v in pairs(data.deployed) do
+        if data.company.units[v] ~= nil and data.company.units[v].bp_name == blueprint then
+            cntr = cntr + 1;
+        end
+    end
+    return cntr;
+end

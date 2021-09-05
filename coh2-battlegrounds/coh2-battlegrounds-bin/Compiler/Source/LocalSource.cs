@@ -35,7 +35,7 @@ namespace Battlegrounds.Compiler.Source {
         public WinconditionSourceFile[] GetLocaleFiles() {
             List<WinconditionSourceFile> files = new List<WinconditionSourceFile>();
             string[] locFolders = Directory.GetDirectories($"{this.m_relpath}locale");
-            string[] loc = locFolders.ConvertAndMerge(x => Directory.GetFiles(x, "*.ucs"));
+            string[] loc = locFolders.MapAndMerge(x => Directory.GetFiles(x, "*.ucs"));
             foreach (string file in loc) {
                 files.Add(new WinconditionSourceFile(file[this.m_relpath.Length..], File.ReadAllBytes(file)));
             }

@@ -182,6 +182,26 @@ function BGUI_HideAll()
 
 end
 
+__bguiDestroyWarning = function()
+	if _bg_ae_warning ~= nil then
+		UI_TitleDestroy(_bg_ae_warning);
+	end
+end
+
+function BGUI_ShowWarning(locstr, time)
+	if scartype(locstr) == ST_STRING then
+		localstr = LOC(localstr);
+	end
+	if time == nil or time < 0 then
+		time = 3
+	end
+	_bg_ae_warning = UIWarning_Show(locstr);
+	if Rule_Exists(__bguiDestroyWarning) then
+		Rule_Remove(__bguiDestroyWarning);
+	end
+	Rule_AddOneShot(__bguiDestroyWarning, time)
+end
+
 ---------------------------------------------------------------------------
 -- UI API - 3D --> 2D
 -- Developed by CoDiEx
