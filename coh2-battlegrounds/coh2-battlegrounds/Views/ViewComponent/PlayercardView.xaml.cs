@@ -9,7 +9,7 @@ using System.Windows.Media.Imaging;
 using Battlegrounds;
 using Battlegrounds.Functional;
 using Battlegrounds.Game;
-
+using Battlegrounds.Locale;
 using BattlegroundsApp.Controls;
 using BattlegroundsApp.Controls.Lobby;
 using BattlegroundsApp.LocalData;
@@ -88,7 +88,23 @@ namespace BattlegroundsApp.Views.ViewComponent {
 
         public event PropertyChangedEventHandler PropertyChanged;
 
+        public LocaleKey OpenSlotLabelContent { get; }
+        public LocaleKey MoveHereButtonContent { get; }
+        public LocaleKey AddAILobbyButtonText {  get; }
+        public LocaleKey LockSlotLobbyButtonContent {  get; }
+        public LocaleKey LockedLabelContent { get; }
+        public LocaleKey OpenSlotLobbyButtonContent {  get; }
+
         public PlayerCardView() {
+
+            // Define locales
+            OpenSlotLabelContent = new LocaleKey("PlayercardView_Open_Slot");
+            MoveHereButtonContent = new LocaleKey("PlayercardView_Button_Move_Here");
+            AddAILobbyButtonText = new LocaleKey("PlayercardView_Button_Add_Ai");
+            LockSlotLobbyButtonContent = new LocaleKey("PlayercardView_Button_Lock_Slot");
+            LockedLabelContent = new LocaleKey("PlayercardView_Locked");
+            OpenSlotLobbyButtonContent = new LocaleKey("PlayercardView_Button_Open_Slot");
+
             this.InitializeComponent();
             this.SetCardState(PlayercardViewstate.Locked);
             this.m_isAIPlayer = true;
