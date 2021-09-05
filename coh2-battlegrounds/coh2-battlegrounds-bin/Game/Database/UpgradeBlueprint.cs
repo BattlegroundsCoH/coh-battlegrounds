@@ -74,7 +74,22 @@ namespace Battlegrounds.Game.Database {
 
     public class UpgradeBlueprintConverter : JsonConverter<UpgradeBlueprint> {
 
+        private static bool ReadFromString(ref Utf8JsonReader reader, out UpgradeBlueprint ubp) {
+            ubp = null;
+            if (reader.TokenType is JsonTokenType.String) {
+                ubp = BlueprintManager.FromBlueprintName<UpgradeBlueprint>(reader.GetString());
+                return ubp is not null;
+            }
+            return false;
+        }
+
         public override UpgradeBlueprint Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options) {
+
+            // Return ubp from blueprint manager if string variant.
+            if (ReadFromString(ref reader, out UpgradeBlueprint ubp)) {
+                return ubp;
+            }
+
             Dictionary<string, object> __lookup = new();
             while (reader.Read() && reader.TokenType is not JsonTokenType.EndObject) {
                 string prop = reader.ReadProperty();
@@ -105,7 +120,8 @@ namespace Battlegrounds.Game.Database {
                 __lookup.GetValueOrDefault("SlotItems", Array.Empty<string>()));
         }
 
-        public override void Write(Utf8JsonWriter writer, UpgradeBlueprint value, JsonSerializerOptions options) => writer.WriteStringValue(value.Name);
+        public override void Write(Utf8JsonWriter writer, UpgradeBlueprint value, JsonSerializerOptions options)
+            => writer.WriteStringValue(value.PBGID.Mod != ModGuid.BaseGame ? $"{value.PBGID.Mod.GUID}:{value.Name}" : value.Name);
 
     }
 

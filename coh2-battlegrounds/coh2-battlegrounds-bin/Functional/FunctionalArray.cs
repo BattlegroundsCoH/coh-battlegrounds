@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Battlegrounds.Functional {
@@ -38,19 +39,50 @@ namespace Battlegrounds.Functional {
         }
 
         /// <summary>
-        /// Convert an array of type <typeparamref name="U"/> into an array of type <typeparamref name="V"/> through a converter.
+        /// 
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="array"></param>
+        /// <param name="filter"></param>
+        /// <returns></returns>
+        public static T[] Filter<T>(this T[] array, Predicate<T> filter) {
+            List<T> list = new(array.Length);
+            for (int i = 0; i < array.Length; i++) {
+                if (filter(array[i])) {
+                    list.Add(array[i]);
+                }
+            }
+            return list.ToArray();
+        }
+
+        /// <summary>
+        /// Maps an array of type <typeparamref name="U"/> into an array of type <typeparamref name="V"/> through a mapping function.
         /// </summary>
         /// <typeparam name="U">The original type of the array.</typeparam>
         /// <typeparam name="V">The new type of the array.</typeparam>
-        /// <param name="array">The array to convert.</param>
-        /// <param name="func">The conversion method to convert a single element from <typeparamref name="U"/> to <typeparamref name="V"/>.</param>
+        /// <param name="array">The array to map over.</param>
+        /// <param name="func">The map funcion to map a single element from <typeparamref name="U"/> to <typeparamref name="V"/>.</param>
         /// <returns>An array consisting of elements of type <typeparamref name="V"/>.</returns>
-        public static V[] Convert<U, V>(this U[] array, Func<U, V> func) {
+        public static V[] Map<U, V>(this U[] array, Func<U, V> func) {
             V[] result = new V[array.Length];
             for (int i = 0; i < array.Length; i++) {
                 result[i] = func(array[i]);
             }
             return result;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="array"></param>
+        /// <returns></returns>
+        public static T[] Merge<T>(this T[][] array) {
+            List<T> ts= new List<T>(array.Length);
+            for (int i = 0; i < array.Length; i++) {
+                ts.AddRange(array[i]);
+            }
+            return ts.ToArray();
         }
 
         /// <summary>
@@ -62,8 +94,8 @@ namespace Battlegrounds.Functional {
         /// <param name="array">The <typeparamref name="U"/> array to convert.</param>
         /// <param name="func">The conversion method to convert a single element from <typeparamref name="U"/> to an array of type <typeparamref name="V"/>.</param>
         /// <returns>An array consisting of elements of type <typeparamref name="V"/>.</returns>
-        public static V[] ConvertAndMerge<U, V>(this U[] array, Func<U, V[]> func) {
-            V[][] non_merged = array.Convert(func);
+        public static V[] MapAndMerge<U, V>(this U[] array, Func<U, V[]> func) {
+            V[][] non_merged = array.Map(func);
             int len = non_merged.Aggregate(0, (a, b) => a + b.Length);
             V[] merged = new V[len];
             int i = 0;
@@ -73,6 +105,22 @@ namespace Battlegrounds.Functional {
                 }
             }
             return merged;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="array"></param>
+        /// <param name="predicate"></param>
+        /// <returns></returns>
+        public static bool Any<T>(this T[] array, Predicate<T> predicate) {
+            for (int i = 0; i < array.Length; i++) {
+                if (predicate(array[i])) {
+                    return true;
+                }
+            }
+            return false;
         }
 
         /// <summary>

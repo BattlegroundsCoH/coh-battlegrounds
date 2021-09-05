@@ -21,6 +21,9 @@ function BGSupply_Setup()
     -- Register spawn callback
     BGAPI_AddUnitSpawnedCallback(BGSupply_NewUnit);
 
+    -- Declare a definitive flag marking the supply system enabled
+    _bg_supply_enabled = true;
+
 end
 
 function BGSupply_GetBlueprints()

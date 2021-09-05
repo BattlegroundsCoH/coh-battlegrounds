@@ -6,7 +6,6 @@ using System.IO;
 using System.Linq;
 using System.Text.Json.Serialization;
 
-using Battlegrounds.Game.DataCompany;
 using Battlegrounds.Game.DataSource;
 using Battlegrounds.Game.Gameplay;
 using Battlegrounds.Locale;
@@ -48,6 +47,12 @@ namespace Battlegrounds.Modding {
                 /// Get the blueprint name of the ability.
                 /// </summary>
                 public string Blueprint { get; }
+
+                /// <summary>
+                /// Get the blueprint name that is required for this ability to be available.
+                /// </summary>
+                [DefaultValue("")]
+                public string LockoutBlueprint { get; }
 
                 /// <summary>
                 /// Get the ability category
@@ -96,10 +101,13 @@ namespace Battlegrounds.Modding {
                 [DefaultValue(0.0f)]
                 public float VeterancyExperienceGain { get; }
 
-                public FactionAbility(string Blueprint, AbilityCategory AbilityCategory, int MaxUsePerMatch, bool RequireOffmap, float OffmapCountEffectivenesss,
-                    bool CanGrantVeterancy, AbilityVeterancy[] VeterancyRanks, VeterancyRequirement? VeterancyUsageRequirement,
+                public FactionAbility(string Blueprint, string LockoutBlueprint, AbilityCategory AbilityCategory, int MaxUsePerMatch, bool RequireOffmap, 
+                    float OffmapCountEffectivenesss, bool CanGrantVeterancy, AbilityVeterancy[] VeterancyRanks, VeterancyRequirement? VeterancyUsageRequirement,
                     float VeterancyExperienceGain) {
+
+                    // Set properties
                     this.Blueprint = Blueprint;
+                    this.LockoutBlueprint = LockoutBlueprint;
                     this.AbilityCategory = AbilityCategory;
                     this.MaxUsePerMatch = MaxUsePerMatch;
                     this.RequireOffmap = RequireOffmap;
@@ -108,6 +116,7 @@ namespace Battlegrounds.Modding {
                     this.VeterancyRanks = VeterancyRanks;
                     this.VeterancyUsageRequirement = VeterancyUsageRequirement;
                     this.VeterancyExperienceGain = VeterancyExperienceGain;
+
                 }
 
             }

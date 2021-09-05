@@ -98,51 +98,61 @@
             "Abilities": [
                 {
                     "Blueprint": "soviet_air_bombing_run",
+                    "LockoutBlueprint": "soviet_air_bombing_run_unlock",
                     "AbilityCategory": "AirSupport",
                     "MaxUsePerMatch": 3
                 },
                 {
                     "Blueprint": "soviet_air_infantry_overwatch",
+                    "LockoutBlueprint": "soviet_air_infantry_overwatch_unlock",
                     "AbilityCategory": "AirSupport",
                     "MaxUsePerMatch": 3
                 },
                 {
                     "Blueprint": "soviet_air_recon",
+                    "LockoutBlueprint": "soviet_air_recon_unlock",
                     "AbilityCategory": "AirSupport",
                     "MaxUsePerMatch": 3
                 },
                 {
                     "Blueprint": "soviet_air_strafe",
+                    "LockoutBlueprint": "soviet_air_strafe_unlock",
                     "AbilityCategory": "AirSupport",
                     "MaxUsePerMatch": 3
                 },
                 {
                     "Blueprint": "soviet_air_vehicle_overwatch",
+                    "LockoutBlueprint": "soviet_air_vehicle_overwatch_unlock",
                     "AbilityCategory": "AirSupport",
                     "MaxUsePerMatch": 3
                 },
                 {
                     "Blueprint": "soviet_hunt_tarrget",
+                    "LockoutBlueprint": "soviet_hunt_tarrget",
                     "AbilityCategory": "AirSupport",
                     "MaxUsePerMatch": 3
                 },
                 {
                     "Blueprint": "soviet_artillery_regimental_barrage",
+                    "LockoutBlueprint": "soviet_artillery_regimental_barrage_unlock",
                     "AbilityCategory": "Artillery",
                     "MaxUsePerMatch": 3
                 },
                 {
                     "Blueprint": "soviet_artillery_overwatch",
+                    "LockoutBlueprint": "soviet_artillery_overwatch_unlock",
                     "AbilityCategory": "Artillery",
                     "MaxUsePerMatch": 3
                 },
                 {
                     "Blueprint": "soviet_artillery_fire",
+                    "LockoutBlueprint": "soviet_artillery_fire_unlock",
                     "AbilityCategory": "Artillery",
                     "MaxUsePerMatch": 3
                 },
                 {
                     "Blueprint": "soviet_artillery_propaganda",
+                    "LockoutBlueprint": "soviet_artillery_propaganda_unlock",
                     "AbilityCategory": "Artillery",
                     "MaxUsePerMatch": 3
                 }
@@ -153,6 +163,7 @@
                     "Abilities": [
                         {
                             "Blueprint": "soviet_offmap_katyusha",
+                            "LockoutBlueprint": "soviet_offmap_katyusha_unlock",
                             "AbilityCategory": "Artillery",
                             "MaxUsePerMatch": -1,
                             "RequireOffmap": true,
@@ -166,6 +177,7 @@
                     "Abilities":[
                         {
                             "Blueprint": "soviet_offmap_mortar",
+                            "LockoutBlueprint": "soviet_offmap_mortar_unlock",
                             "AbilityCategory": "Artillery",
                             "MaxUsePerMatch": -1,
                             "RequireOffmap": true,
@@ -174,6 +186,7 @@
                         },
                         {
                             "Blueprint": "soviet_offmap_mortar_smoke",
+                            "LockoutBlueprint": "soviet_offmap_mortar_smoke_unlock",
                             "AbilityCategory": "Artillery",
                             "MaxUsePerMatch": -1,
                             "RequireOffmap": true,
@@ -187,6 +200,7 @@
                     "Abilities":[
                         {
                             "Blueprint": "soviet_offmap_mortar",
+                            "LockoutBlueprint": "soviet_offmap_mortar_unlock",
                             "AbilityCategory": "Artillery",
                             "MaxUsePerMatch": -1,
                             "RequireOffmap": true,
@@ -195,6 +209,7 @@
                         },
                         {
                             "Blueprint": "soviet_offmap_mortar_smoke",
+                            "LockoutBlueprint": "soviet_offmap_mortar_smoke_unlock",
                             "AbilityCategory": "Artillery",
                             "MaxUsePerMatch": -1,
                             "RequireOffmap": true,
@@ -208,6 +223,7 @@
                     "Abilities":[
                         {
                             "Blueprint": "soviet_offmap_ml_20",
+                            "LockoutBlueprint": "soviet_offmap_ml_20_unlock",
                             "AbilityCategory": "Artillery",
                             "MaxUsePerMatch": -1,
                             "RequireOffmap": true,
@@ -216,6 +232,7 @@
                         },
                         {
                             "Blueprint": "soviet_offmap_ml_20_smoke",
+                            "LockoutBlueprint": "soviet_offmap_ml_20_smoke_unlock",
                             "AbilityCategory": "Artillery",
                             "MaxUsePerMatch": -1,
                             "RequireOffmap": true,
@@ -229,6 +246,7 @@
                     "Abilities":[
                         {
                             "Blueprint": "soviet_offmap_b4",
+                            "LockoutBlueprint": "soviet_offmap_b4_unlock",
                             "AbilityCategory": "Artillery",
                             "MaxUsePerMatch": -1,
                             "RequireOffmap": true,

@@ -675,9 +675,35 @@
     "Activation": ""
   },
   {
+    "Name": "soviet_air_bombing_run_ui",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741864,
+    "Display": {
+      "LocaleName": "0",
+      "LocaleDescriptionLong": "0",
+      "LocaleDescriptionShort": "0",
+      "Position": 13
+    },
+    "Army": "soviet",
+    "Activation": ""
+  },
+  {
     "Name": "soviet_air_infantry_overwatch",
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
     "PBGID": 1073741840,
+    "Display": {
+      "LocaleName": "0",
+      "LocaleDescriptionLong": "0",
+      "LocaleDescriptionShort": "0",
+      "Position": -1
+    },
+    "Army": "soviet",
+    "Activation": ""
+  },
+  {
+    "Name": "soviet_air_infantry_overwatch_ui",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741863,
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -702,6 +728,55 @@
       "Position": 40
     },
     "Army": "soviet",
+    "Activation": "targeted",
+    "Requirements": [
+      {
+        "RequirementType": "required_resource",
+        "RequirementReason": "usage",
+        "UIText": "11010485",
+        "RequirementProperties": {
+          "resource": null
+        }
+      },
+      {
+        "RequirementType": "required_player_upgrade",
+        "RequirementReason": "usage_and_display",
+        "UIText": "0",
+        "RequirementProperties": {
+          "is_present": true,
+          "max_completed": 100,
+          "min_completed": 1,
+          "upgrade_name": "il-2_recon"
+        }
+      },
+      {
+        "RequirementType": "required_player_upgrade",
+        "RequirementReason": "usage",
+        "UIText": "11045365",
+        "RequirementProperties": {
+          "is_present": false,
+          "max_completed": 100,
+          "min_completed": 1,
+          "upgrade_name": "blizzard_active"
+        }
+      }
+    ]
+  },
+  {
+    "Name": "soviet_air_recon_ui",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741862,
+    "Cost": {
+      "Munition": 5
+    },
+    "Display": {
+      "LocaleName": "11010489",
+      "LocaleDescriptionLong": "11010488",
+      "LocaleDescriptionShort": "11039226",
+      "Icon": "Icons_commander_cmdr_soviet_il2_recon_plane",
+      "Position": 11
+    },
+    "Army": "soviet",
     "Activation": "targeted"
   },
   {
@@ -718,9 +793,39 @@
     "Activation": ""
   },
   {
+    "Name": "soviet_air_strafe_ui",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741865,
+    "Cost": {
+      "Munition": 60
+    },
+    "Display": {
+      "LocaleName": "11166408",
+      "LocaleDescriptionLong": "11166407",
+      "LocaleDescriptionShort": "11166406",
+      "Icon": "Icons_abilities_ability_soviet_strafing_run",
+      "Position": 12
+    },
+    "Army": "soviet",
+    "Activation": "targeted"
+  },
+  {
     "Name": "soviet_air_vehicle_overwatch",
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
     "PBGID": 1073741841,
+    "Display": {
+      "LocaleName": "0",
+      "LocaleDescriptionLong": "0",
+      "LocaleDescriptionShort": "0",
+      "Position": -1
+    },
+    "Army": "soviet",
+    "Activation": ""
+  },
+  {
+    "Name": "soviet_air_vehicle_overwatch_ui",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741866,
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -744,9 +849,35 @@
     "Activation": ""
   },
   {
+    "Name": "soviet_hunt_tarrget_ui",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741867,
+    "Display": {
+      "LocaleName": "0",
+      "LocaleDescriptionLong": "0",
+      "LocaleDescriptionShort": "0",
+      "Position": -1
+    },
+    "Army": "soviet",
+    "Activation": ""
+  },
+  {
     "Name": "soviet_artillery_fire",
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
     "PBGID": 1073741852,
+    "Display": {
+      "LocaleName": "0",
+      "LocaleDescriptionLong": "0",
+      "LocaleDescriptionShort": "0",
+      "Position": -1
+    },
+    "Army": "soviet",
+    "Activation": ""
+  },
+  {
+    "Name": "soviet_artillery_fire_ui",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741868,
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -770,6 +901,19 @@
     "Activation": ""
   },
   {
+    "Name": "soviet_artillery_overwatch_ui",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741869,
+    "Display": {
+      "LocaleName": "0",
+      "LocaleDescriptionLong": "0",
+      "LocaleDescriptionShort": "0",
+      "Position": -1
+    },
+    "Army": "soviet",
+    "Activation": ""
+  },
+  {
     "Name": "soviet_artillery_propaganda",
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
     "PBGID": 1073741851,
@@ -783,9 +927,35 @@
     "Activation": ""
   },
   {
+    "Name": "soviet_artillery_propaganda_ui",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741870,
+    "Display": {
+      "LocaleName": "0",
+      "LocaleDescriptionLong": "0",
+      "LocaleDescriptionShort": "0",
+      "Position": -1
+    },
+    "Army": "soviet",
+    "Activation": ""
+  },
+  {
     "Name": "soviet_artillery_regimental_barrage",
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
     "PBGID": 1073741849,
+    "Display": {
+      "LocaleName": "0",
+      "LocaleDescriptionLong": "0",
+      "LocaleDescriptionShort": "0",
+      "Position": -1
+    },
+    "Army": "soviet",
+    "Activation": ""
+  },
+  {
+    "Name": "soviet_artillery_regimental_barrage_ui",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741871,
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -1072,9 +1242,35 @@
     "Activation": ""
   },
   {
+    "Name": "soviet_offmap_b4_ui",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741872,
+    "Display": {
+      "LocaleName": "0",
+      "LocaleDescriptionLong": "0",
+      "LocaleDescriptionShort": "0",
+      "Position": -1
+    },
+    "Army": "soviet",
+    "Activation": ""
+  },
+  {
     "Name": "soviet_offmap_katyusha",
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
     "PBGID": 1073741853,
+    "Display": {
+      "LocaleName": "0",
+      "LocaleDescriptionLong": "0",
+      "LocaleDescriptionShort": "0",
+      "Position": -1
+    },
+    "Army": "soviet",
+    "Activation": ""
+  },
+  {
+    "Name": "soviet_offmap_katyusha_ui",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741873,
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -1111,6 +1307,32 @@
     "Activation": ""
   },
   {
+    "Name": "soviet_offmap_ml_20_smoke_ui",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741875,
+    "Display": {
+      "LocaleName": "0",
+      "LocaleDescriptionLong": "0",
+      "LocaleDescriptionShort": "0",
+      "Position": -1
+    },
+    "Army": "soviet",
+    "Activation": ""
+  },
+  {
+    "Name": "soviet_offmap_ml_20_ui",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741874,
+    "Display": {
+      "LocaleName": "0",
+      "LocaleDescriptionLong": "0",
+      "LocaleDescriptionShort": "0",
+      "Position": -1
+    },
+    "Army": "soviet",
+    "Activation": ""
+  },
+  {
     "Name": "soviet_offmap_mortar",
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
     "PBGID": 1073741854,
@@ -1127,6 +1349,32 @@
     "Name": "soviet_offmap_mortar_smoke",
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
     "PBGID": 1073741855,
+    "Display": {
+      "LocaleName": "0",
+      "LocaleDescriptionLong": "0",
+      "LocaleDescriptionShort": "0",
+      "Position": -1
+    },
+    "Army": "soviet",
+    "Activation": ""
+  },
+  {
+    "Name": "soviet_offmap_mortar_smoke_ui",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741877,
+    "Display": {
+      "LocaleName": "0",
+      "LocaleDescriptionLong": "0",
+      "LocaleDescriptionShort": "0",
+      "Position": -1
+    },
+    "Army": "soviet",
+    "Activation": ""
+  },
+  {
+    "Name": "soviet_offmap_mortar_ui",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741876,
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",

@@ -5,13 +5,33 @@ function BGAE_Init()
     -- Set phase tracker
     UI_SetModalAbilityPhaseCallback(BGAE_OnModalPhase);
 
+    -- Grant unlock abilities
+    for _, p in pairs(_bg_playerData) do
+        local apply_unlocks = function(player, source)
+            for _, v in pairs(source) do
+                if v.unlock ~= nil then
+                    local upg = BP_GetUpgradeBlueprint(v.unlock);
+                    Cmd_InstantUpgrade(player, upg);
+                end
+            end
+        end
+        apply_unlocks(p.player, p.company.specials.air);
+        apply_unlocks(p.player, p.company.specials.artillery);
+    end
+
 end
 
 function BGAE_OnModalPhase(abp, phase) -- This is triggered for the client only!
     local bpname = BP_GetName(abp);
     local pos = Misc_GetMouseOnTerrain();
-    local companyabp = BG_GetCompanyAbility(Game_GetLocalPlayer(), bpname);
+    local locPlayer = Game_GetLocalPlayer();
+    local companyabp = BG_GetCompanyAbility(locPlayer, bpname);
     if companyabp == nil then
+        return;
+    end
+    local res, err = BG_CanUseAbility(locPlayer, companyabp);
+    if res == false then
+        BGUI_ShowWarning(err);
         return;
     end
     if phase == MAP_Placing then
@@ -39,15 +59,18 @@ function BGAE_OnModalPhaseConfirmed(abp, target, facing)
         facing = target;
     end
     local str = abp .. "," .. Str_Pos(target) .. "," .. Str_Pos(facing);
-    Game_SendMessage(_bg_message_type_player_surrender, str);
+    Game_SendMessage(_bg_message_type_player_ability, str);
 end
 
 function BGAE_TriggerAbillityFromStringData(executer, abp, target, facing)
     local data = BG_GetPlayerData(executer);
     local abpdata = BG_GetCompanyAbility(executer, abp);
-    Util_MissionTitle(LOC(abp), 3, 8, 2 );
+    local bp = BP_GetAbilityBlueprint(abpdata.abp);
     if abpdata ~= nil then
-        Cmd_Ability(executer, BP_GetAbilityBlueprint(abpdata.abp), target, facing, true, false); 
+        if not Player_HasAbility(executer, bp) then
+            Player_AddAbility(executer, bp)
+        end
+        Cmd_Ability(executer, bp, target, facing, true, false); 
     end
 end
 
@@ -55,15 +78,38 @@ function BG_GetCompanyAbility(player, abp)
     if (scartype(abp) == ST_PBG) then
         abp = BP_GetName(abp);
     end
-    local data = BG_GetPlayerData(executer);
+    local data = BG_GetPlayerData(player);
     if data ~= nil then
-        for _, v in pairs(data.company.specials) do
-            for k, ability in pairs(v) do
-                if (k .. "_ui") == abp then
+        local try_find = function(source)
+            for _, ability in pairs(source) do
+                if ability.abp .. "_ui" == abp then
                     return ability;
                 end
             end
         end
+        local airabp = try_find(data.company.specials.air)
+        if airabp ~= nil then
+            return airabp;
+        end
+        local artyabp = try_find(data.company.specials.artillery)
+        if artyabp ~= nil then
+            return artyabp;
+        end
     end
     return nil;
+end
+
+function BG_CanUseAbility(player, ability)
+    if ability.uses == 0 then
+        return false, "No more uses available";
+    end
+    if ability.granters ~= nil then
+        for i=1, #ability.granters do -- Find if there's any unit granting this that is not deployed.
+            if BG_GetDeployedCountOfUnitType(player, ability.granters[i]) == 0 then
+                return true, nil;
+            end
+        end
+        return false, "Cannot use ability when granting units are deployed";
+    end
+    return true, nil;
 end

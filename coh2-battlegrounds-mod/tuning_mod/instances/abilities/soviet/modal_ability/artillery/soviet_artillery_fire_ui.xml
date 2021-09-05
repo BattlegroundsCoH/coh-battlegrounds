@@ -98,7 +98,7 @@
 				<bool name="is_present" value="True" />
 				<float name="max_completed" value="100" />
 				<float name="min_completed" value="1" />
-				<instance_reference name="upgrade_name" value="upgrade\soviet\special_ability_unlocks\soviet_hunt_tarrget_unlock" mod="142b113740474c82a60b0a428bd553d5" />
+				<instance_reference name="upgrade_name" value="upgrade\soviet\special_ability_unlocks\soviet_artillery_fire_unlock" mod="142b113740474c82a60b0a428bd553d5" />
 			</template_reference>
 		</list>
 		<enum name="ability_super" value="tp_none" />
@@ -134,5 +134,5 @@
 		<bool name="can_cast_outside_active_battle_field" value="False" />
 		<bool name="ability_super_event_cue" value="False" />
 	</group>
-	<uniqueid name="pbgid" value="1073741867" />
+	<uniqueid name="pbgid" value="1073741868" />
 </instance>

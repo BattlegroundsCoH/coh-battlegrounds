@@ -9,6 +9,16 @@
 		</template_reference>
 		<template_reference name="exts" value="ebpextensions\ability_ext">
 			<list name="abilities">
+				<instance_reference name="ability" value="abilities\soviet\modal_ability\artillery\soviet_artillery_fire_ui" mod="142b113740474c82a60b0a428bd553d5" />
+				<instance_reference name="ability" value="abilities\soviet\modal_ability\artillery\soviet_artillery_overwatch_ui" mod="142b113740474c82a60b0a428bd553d5" />
+				<instance_reference name="ability" value="abilities\soviet\modal_ability\artillery\soviet_artillery_propaganda_ui" mod="142b113740474c82a60b0a428bd553d5" />
+				<instance_reference name="ability" value="abilities\soviet\modal_ability\artillery\soviet_artillery_regimental_barrage_ui" mod="142b113740474c82a60b0a428bd553d5" />
+				<instance_reference name="ability" value="abilities\soviet\modal_ability\artillery\offmap\soviet_offmap_b4_ui" mod="142b113740474c82a60b0a428bd553d5" />
+				<instance_reference name="ability" value="abilities\soviet\modal_ability\artillery\offmap\soviet_offmap_katyusha_ui" mod="142b113740474c82a60b0a428bd553d5" />
+				<instance_reference name="ability" value="abilities\soviet\modal_ability\artillery\offmap\soviet_offmap_ml_20_smoke_ui" mod="142b113740474c82a60b0a428bd553d5" />
+				<instance_reference name="ability" value="abilities\soviet\modal_ability\artillery\offmap\soviet_offmap_ml_20_ui" mod="142b113740474c82a60b0a428bd553d5" />
+				<instance_reference name="ability" value="abilities\soviet\modal_ability\artillery\offmap\soviet_offmap_mortar_smoke_ui" mod="142b113740474c82a60b0a428bd553d5" />
+				<instance_reference name="ability" value="abilities\soviet\modal_ability\artillery\offmap\soviet_offmap_mortar_ui" mod="142b113740474c82a60b0a428bd553d5" />
 			</list>
 		</template_reference>
 		<template_reference name="exts" value="ebpextensions\ui_ext">
