@@ -7,6 +7,7 @@
         mc:Ignorable="d"
         SizeToContent="WidthAndHeight"
         WindowStartupLocation="CenterScreen"
-        Height="250" Width="250">
+        ResizeMode="NoResize"
+        MinHeight="175" MinWidth="450">
     <ContentControl x:Name="ContentPresenter" Content="{Binding}"/>
 </Window>
