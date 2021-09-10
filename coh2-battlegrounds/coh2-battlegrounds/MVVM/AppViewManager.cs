@@ -51,22 +51,35 @@ namespace BattlegroundsApp.MVVM {
         }
 
         public void UpdateDisplay(AppDisplayTarget target, ViewModelType display) {
+            var model = this.SolveDisplay(display);
+            if (!this.UpdateDisplay(target, model)) {
+                throw new InvalidOperationException();
+            }
+        }
+
+        public T UpdateDisplay<T>(AppDisplayTarget target) where T : IViewModel {
+            var model = this.SolveDisplay(typeof(T));
+            return this.UpdateDisplay(target, model) ? (T)model : throw new InvalidOperationException();
+        }
+
+        private bool UpdateDisplay(AppDisplayTarget target, IViewModel model) {
             if (target == AppDisplayTarget.Full && this.m_window.DisplayState != AppDisplayState.Full) {
                 throw new InvalidOperationException();
             }
             switch (target) {
                 case AppDisplayTarget.Left:
-                    this.m_window.SetLeftPanel(this.SolveDisplay(display));
+                    this.m_window.SetLeftPanel(model);
                     break;
                 case AppDisplayTarget.Right:
-                    this.m_window.SetRightPanel(this.SolveDisplay(display));
+                    this.m_window.SetRightPanel(model);
                     break;
                 case AppDisplayTarget.Full:
-                    this.m_window.SetFull(this.SolveDisplay(display));
+                    this.m_window.SetFull(model);
                     break;
                 default:
-                    throw new InvalidOperationException();
+                    return false;
             }
+            return true;
         }
 
         public IViewModel CreateDisplay<T>(Func<T> creator) where T : IViewModel

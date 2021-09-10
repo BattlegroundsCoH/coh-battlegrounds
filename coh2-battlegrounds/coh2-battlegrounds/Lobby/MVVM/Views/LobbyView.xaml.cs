@@ -13,7 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace BattlegroundsApp.MVVM.Views {
+namespace BattlegroundsApp.Lobby.MVVM.Views {
     /// <summary>
     /// Interaction logic for LobbyView.xaml
     /// </summary>

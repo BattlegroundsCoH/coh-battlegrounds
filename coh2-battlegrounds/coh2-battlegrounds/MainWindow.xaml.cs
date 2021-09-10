@@ -170,21 +170,27 @@ namespace BattlegroundsApp {
             if (this.m_displayState != AppDisplayState.LeftRight) {
                 this.SetDisplayState(AppDisplayState.LeftRight);
             }
-            this.LeftContent.Content = lhs;
+            this.Dispatcher.Invoke(() => {
+                this.LeftContent.Content = lhs;
+            });
         }
 
         public void SetRightPanel(object rhs) {
             if (this.m_displayState != AppDisplayState.LeftRight) {
                 this.SetDisplayState(AppDisplayState.LeftRight);
             }
-            this.RightContent.Content = rhs;
+            this.Dispatcher.Invoke(() => {
+                this.RightContent.Content = rhs;
+            });
         }
 
         public void SetFull(object full) {
             if (this.m_displayState != AppDisplayState.Full) {
                 this.SetDisplayState(AppDisplayState.Full);
             }
-            this.LeftContent.Content = full;
+            this.Dispatcher.Invoke(() => {
+                this.LeftContent.Content = full;
+            });
         }
 
         private void SetDisplayState(AppDisplayState state) {

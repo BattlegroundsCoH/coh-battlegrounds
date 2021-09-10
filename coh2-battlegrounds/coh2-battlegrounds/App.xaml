@@ -15,6 +15,8 @@
              xmlns:campaignViews="clr-namespace:BattlegroundsApp.Views.CampaignViews"
              xmlns:views="clr-namespace:BattlegroundsApp.MVVM.Views"
              xmlns:models="clr-namespace:BattlegroundsApp.MVVM.Models"
+             xmlns:lobbyviews="clr-namespace:BattlegroundsApp.Lobby.MVVM.Views"
+             xmlns:lobbymodels="clr-namespace:BattlegroundsApp.Lobby.MVVM.Models"
              Startup="App_Startup"
              ShutdownMode="OnMainWindowClose">
     <Application.Resources>
@@ -62,8 +64,11 @@
         <DataTemplate DataType="{x:Type models:LobbyBrowserViewModel}">
             <views:LobbyBrowserView/>
         </DataTemplate>
-        <DataTemplate DataType="{x:Type models:LobbyViewModel}">
-            <views:LobbyView/>
+        <DataTemplate DataType="{x:Type lobbymodels:LobbyChatSpectatorModel}">
+            <lobbyviews:LobbyChatSpectatorView/>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type lobbymodels:LobbyModel}">
+            <lobbyviews:LobbyView/>
         </DataTemplate>
 
         <Style x:Key="MainButtonStyle" TargetType="{x:Type Button}">
@@ -120,24 +125,6 @@
                 </Setter.Value>
             </Setter>
         </Style>
-        
-        
-        <!--<Style x:Key="ListViewStyle" TargetType="{x:Type ListView}">
-            <Setter Property="SnapsToDevicePixels" Value="True"/>
-            <Setter Property="UseLayoutRounding" Value="True"/>
-            <Setter Property="Background" Value="#4a545f"/>
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="ListView">
-                        <ControlTemplate.Triggers>
-                            <Trigger Property="IsGrouping" Value="true">
-                                <Setter Property="ScrollViewer.CanContentScroll" Value="false" />
-                            </Trigger>
-                        </ControlTemplate.Triggers>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>-->
 
     </Application.Resources>
 </Application>

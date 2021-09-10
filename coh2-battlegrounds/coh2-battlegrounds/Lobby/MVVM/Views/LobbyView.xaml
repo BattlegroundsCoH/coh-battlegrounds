@@ -1,0 +1,102 @@
+﻿<UserControl x:Class="BattlegroundsApp.Lobby.MVVM.Views.LobbyView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:BattlegroundsApp.Lobby.MVVM.Views" xmlns:localeConvertor="clr-namespace:BattlegroundsApp.Utilities.Converters"
+             mc:Ignorable="d" Background="#273441"
+             d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.Resources>
+        <ResourceDictionary x:Name="LobbyIcons" Source="pack://application:,,,/coh2-battlegrounds;component/Resources/app/LobbyIcons.xaml"/>
+    </UserControl.Resources>
+    <Grid Margin="20">
+        <Grid.Resources>
+            <!-- LocaleConverter -->
+            <localeConvertor:LocaleKeyToStringConverter x:Key="LocaleConvertor"/>
+        </Grid.Resources>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="48"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="320"/>
+        </Grid.ColumnDefinitions>
+        
+        <Label Content="Awesome Game Lobby"
+               FontSize="28"
+               Foreground="#ffffff"
+               FontFamily="Open Sans"
+               FontWeight="SemiBold"
+               Grid.Row="0"
+               Grid.Column="0"
+               Grid.ColumnSpan="2"/>
+
+        <StackPanel Grid.Row="1" Grid.Column="0">
+            
+        </StackPanel>
+
+        <Grid Grid.Row="1" Grid.Column="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="38"/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            
+            <!-- Row 0 -->
+            <Button Grid.Column="0" 
+                    Grid.Row="0"
+                    Background="#334252"
+                    Margin="0,0,8,0"
+                    VerticalContentAlignment="Center"
+                    HorizontalContentAlignment="Center"
+                    Padding="5"
+                    Command="{Binding EditCompany.Click}"
+                    ToolTip="{Binding EditCompany.Tooltip}"
+                    BorderBrush="Transparent">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="{Binding EditCompany.Text, Converter={StaticResource LocaleConvertor}}"
+                               FontSize="14"
+                               Foreground="#FFFFFF"
+                               Margin="0,0,16,0"/>
+                    <Image 
+                        Width="16"
+                        Height="16"
+                        Source="{StaticResource EditCompanyIconDrawingImage}"/>
+                </StackPanel>
+            </Button>
+            <Button Grid.Column="1" 
+                    Grid.Row="0"
+                    Background="#582222"
+                    Margin="8,0,8,0"
+                    VerticalContentAlignment="Center"
+                    HorizontalContentAlignment="Center"
+                    Command="{Binding ExitLobby.Click}"
+                    ToolTip="{Binding ExitLobby.Tooltip}"
+                    BorderBrush="Transparent"
+                    Padding="5">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="{Binding ExitLobby.Text, Converter={StaticResource LocaleConvertor}}" 
+                               FontSize="14"
+                               Foreground="#FFFFFF"
+                               Margin="0,0,16,0"/>
+                    <Image 
+                        Width="16"
+                        Height="16"
+                        HorizontalAlignment="Right"
+                        Source="{StaticResource ExitLobbyIconDrawingImage}"/>
+                </StackPanel>
+            </Button>
+
+        </Grid>
+
+    </Grid>
+</UserControl>

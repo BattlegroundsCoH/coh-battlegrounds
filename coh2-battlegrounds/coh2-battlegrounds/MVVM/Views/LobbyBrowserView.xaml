@@ -16,7 +16,8 @@
 
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
-            <RowDefinition Height="36"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="52"/>
         </Grid.RowDefinitions>
 
         <Grid.ColumnDefinitions>
@@ -27,48 +28,84 @@
         </Grid.ColumnDefinitions>
 
         <!-- Row 0 -->
-        <ListView x:Name="GameLobbyList" Grid.Row="0" Grid.Column="0" 
+        <ListView x:Name="GameLobbyList" 
+                  Grid.Row="0" 
+                  Grid.Column="0" 
                   Grid.ColumnSpan="4"
+                  Background="#273441"
                   >
-            <!-- Style="{StaticResource ListViewStyle}" -->
             <ListView.View>
                 <GridView>
                     <GridView.ColumnHeaderContainerStyle>
                         <Style BasedOn="{StaticResource {x:Type GridViewColumnHeader}}" TargetType="{x:Type GridViewColumnHeader}">
                             <Setter Property="IsHitTestVisible" Value="False"/>
+                            <Setter Property="Background" Value="#334252"/>
+                            <Setter Property="Foreground" Value="#d8dbde"/>
                         </Style>
                     </GridView.ColumnHeaderContainerStyle>
-                    <GridViewColumn Header="{Binding NameListWiewHeader, Converter={StaticResource LocaleConvertor}}" Width="320" DisplayMemberBinding="{Binding Name}"/>
-                    <GridViewColumn Header="{Binding GamemodeListWiewHeader, Converter={StaticResource LocaleConvertor}}" Width="175" DisplayMemberBinding="{Binding TranslatedMode}"/>
-                    <GridViewColumn Header="{Binding StateListWiewHeader, Converter={StaticResource LocaleConvertor}}" Width="125" DisplayMemberBinding="{Binding TranslatedState}"/>
-                    <GridViewColumn Header="{Binding PlayersListWiewHeader, Converter={StaticResource LocaleConvertor}}" Width="100" DisplayMemberBinding="{Binding CapacityString}"/>
-                    <GridViewColumn Header="{Binding PasswordListWiewHeader, Converter={StaticResource LocaleConvertor}}" Width="80" DisplayMemberBinding="{Binding HasPassword}"/>
+                    <GridViewColumn 
+                        Header="{Binding NameListWiewHeader, Converter={StaticResource LocaleConvertor}}" 
+                        Width="{Binding ElementName=firstColumnSize, Path=ActualWidth}" 
+                        DisplayMemberBinding="{Binding Name}"/>
+                    <GridViewColumn 
+                        Header="{Binding GamemodeListWiewHeader, Converter={StaticResource LocaleConvertor}}" 
+                        Width="175" 
+                        DisplayMemberBinding="{Binding TranslatedMode}"/>
+                    <GridViewColumn 
+                        Header="{Binding StateListWiewHeader, Converter={StaticResource LocaleConvertor}}" 
+                        Width="125" 
+                        DisplayMemberBinding="{Binding TranslatedState}"/>
+                    <GridViewColumn 
+                        Header="{Binding PlayersListWiewHeader, Converter={StaticResource LocaleConvertor}}" 
+                        Width="100" 
+                        DisplayMemberBinding="{Binding CapacityString}"/>
+                    <GridViewColumn 
+                        Header="{Binding PasswordListWiewHeader, Converter={StaticResource LocaleConvertor}}" 
+                        Width="80" 
+                        DisplayMemberBinding="{Binding HasPassword}"/>
                 </GridView>
             </ListView.View>
         </ListView>
+        <!-- Fuck WPF - Hack that makes the GridView column sizing make sense -->
+        <Grid Visibility="Hidden" 
+              Grid.Row="0" 
+              Grid.Column="0"
+              Grid.ColumnSpan="4">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="175"/>
+                <ColumnDefinition Width="125"/>
+                <ColumnDefinition Width="100"/>
+                <ColumnDefinition Width="80"/>
+            </Grid.ColumnDefinitions>
+            <Grid x:Name="firstColumnSize"/>
+        </Grid>
 
         <!-- Row 1 -->
+        <Separator Grid.Row="1" Grid.ColumnSpan="4"/>
+
+        <!-- Row 2 -->
         <Button x:Name="refreshLobbyListButton" 
-                Grid.Row="5" 
+                Grid.Row="2" 
                 Grid.Column="1" 
                 Content="{Binding Refresh.Text, Converter={StaticResource LocaleConvertor}}" 
-                Margin="0,5,0,0" 
+                Margin="0,5,5,8" 
                 Command="{Binding Refresh.Click}"
                 Style="{StaticResource MainButtonStyle}"/>
 
         <Button x:Name="hostGameButton" 
-                Grid.Row="5" 
+                Grid.Row="2" 
                 Grid.Column="2" 
                 Content="{Binding Host.Text, Converter={StaticResource LocaleConvertor}}" 
-                Margin="5,5,0,0"
+                Margin="5,5,5,8"
                 Command="{Binding Host.Click}"
                 Style="{StaticResource MainButtonStyle}"/>
 
         <Button x:Name="joinGameButton" 
-                Grid.Row="5" 
+                Grid.Row="2" 
                 Grid.Column="3" 
                 Content="{Binding Join.Text, Converter={StaticResource LocaleConvertor}}" 
-                Margin="5,5,0,0" 
+                Margin="5,5,8,8" 
                 Command="{Binding Join.Click}"
                 Style="{StaticResource MainButtonStyle}"/>
         

@@ -98,7 +98,10 @@ namespace BattlegroundsApp.MVVM.Models {
         private void MatchFinderButton() {
 
             // Set RHS to lobby browser
-            App.ViewManager.UpdateDisplay(AppDisplayTarget.Right, typeof(LobbyBrowserViewModel));
+            var browser = App.ViewManager.UpdateDisplay<LobbyBrowserViewModel>(AppDisplayTarget.Right);
+
+            // Triger lobby refresh
+            browser.RefreshLobbies();
 
         }
 
