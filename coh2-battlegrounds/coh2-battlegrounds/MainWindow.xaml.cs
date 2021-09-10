@@ -22,6 +22,7 @@ using System.Diagnostics;
 using BattlegroundsApp.Views;
 using BattlegroundsApp.Dialogs.YesNo;
 using Battlegrounds.Locale;
+using BattlegroundsApp.MVVM;
 
 namespace BattlegroundsApp {
 
@@ -31,6 +32,10 @@ namespace BattlegroundsApp {
     /// Interaction logic for MainWindow.xaml
     /// </summary>
     public partial class MainWindow : CoreAppWindow {
+
+        private AppDisplayState m_displayState;
+
+        public AppDisplayState DisplayState => this.m_displayState;
 
         public const string GAMEBROWSERSTATE = "GAMEBROWSERVIEW";
         public const string CAMPAIGNBORWSESTATE = "CAMPAIGNVIEW";
@@ -61,15 +66,18 @@ namespace BattlegroundsApp {
             // Initialize components etc...
             InitializeComponent();
 
+            // Set self display state
+            this.m_displayState = AppDisplayState.LeftRight;
+
             // Define left panels buttons
             this.m_leftPanelButtons = new Button[] {
-                DashboardButton,
+                /*DashboardButton,
                 NewsButton,
                 CompanyBuilderButton,
                 CampaignButton,
                 GameBrowserButton,
                 SettingsButton,
-                ExitButton
+                ExitButton*/
             };
 
             // Define locales
@@ -158,6 +166,38 @@ namespace BattlegroundsApp {
             }
         }
 
+        public void SetLeftPanel(object lhs) {
+            if (this.m_displayState != AppDisplayState.LeftRight) {
+                this.SetDisplayState(AppDisplayState.LeftRight);
+            }
+            this.LeftContent.Content = lhs;
+        }
+
+        public void SetRightPanel(object rhs) {
+            if (this.m_displayState != AppDisplayState.LeftRight) {
+                this.SetDisplayState(AppDisplayState.LeftRight);
+            }
+            this.RightContent.Content = rhs;
+        }
+
+        public void SetFull(object full) {
+            if (this.m_displayState != AppDisplayState.Full) {
+                this.SetDisplayState(AppDisplayState.Full);
+            }
+            this.LeftContent.Content = full;
+        }
+
+        private void SetDisplayState(AppDisplayState state) {
+            switch (state) {
+                case AppDisplayState.LeftRight:
+                    break;
+                case AppDisplayState.Full:
+                    break;
+                default:
+                    break;
+            }
+        }
+
         /// <summary>
         /// Show or hide left-side panel. Use when additional space is required and it does not make sense to expose other data.
         /// </summary>
@@ -168,11 +208,11 @@ namespace BattlegroundsApp {
                 bttn.Visibility = vs;
             }
             if (show) {
-                this.AppContent.SetValue(Grid.ColumnProperty, 2);
-                this.AppContent.SetValue(Grid.ColumnSpanProperty, 7);
+                //this.AppContent.SetValue(Grid.ColumnProperty, 2);
+                //this.AppContent.SetValue(Grid.ColumnSpanProperty, 7);
             } else {
-                this.AppContent.SetValue(Grid.ColumnProperty, 1);
-                this.AppContent.SetValue(Grid.ColumnSpanProperty, 8);
+                //this.AppContent.SetValue(Grid.ColumnProperty, 1);
+                //this.AppContent.SetValue(Grid.ColumnSpanProperty, 8);
             }
         }
 

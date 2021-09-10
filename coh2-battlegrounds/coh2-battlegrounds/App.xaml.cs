@@ -2,6 +2,7 @@
 using System.IO;
 using System.Diagnostics;
 using System.Windows;
+using System.Globalization;
 
 using Battlegrounds;
 using Battlegrounds.Networking;
@@ -11,6 +12,8 @@ using Battlegrounds.Steam;
 using BattlegroundsApp.LocalData;
 using BattlegroundsApp.Utilities;
 using BattlegroundsApp.Resources;
+using BattlegroundsApp.MVVM;
+using BattlegroundsApp.MVVM.Models;
 
 namespace BattlegroundsApp {
 
@@ -19,10 +22,16 @@ namespace BattlegroundsApp {
     /// </summary>
     public partial class App : Application {
 
+        private static AppViewManager __viewManager;
         private static ResourceHandler __handler;
         private static Logger __logger;
 
+        private static LeftMenu __lmenu;
+        private static LobbyBrowserViewModel __lobbyBrowser;
+
         public static ResourceHandler ResourceHandler => __handler;
+
+        public static AppViewManager ViewManager => __viewManager;
 
         private void App_Startup(object sender, StartupEventArgs e) {
 
@@ -45,18 +54,23 @@ namespace BattlegroundsApp {
             DatabaseManager.LoadAllDatabases(OnDatabasesLoaded);
 
             // Create window and hook into window events
-            var window = new MainWindow();
-            window = new MainWindow();
-            window.Ready += MainWindow_Ready;
+            MainWindow window = new();
+            window.Ready += this.MainWindow_Ready;
             window.Closed += this.MainWindow_Closed;
+
+            // Create views
+            __lmenu = new();
+            __lobbyBrowser = new();
+
+            // Create app view manager
+            __viewManager = new(window);
+            __viewManager.SetDisplay(AppDisplayState.LeftRight, __lmenu, __lobbyBrowser); // TODO: Replace browser with dashboard when dashboard is implemented
 
             // Set main window and show
             this.MainWindow = window;
             this.MainWindow.Show();
 
         }
-
-        private void MainWindow_Initialized(object sender, EventArgs e) => throw new NotImplementedException();
 
         private void MainWindow_Ready(MainWindow window) {
 
@@ -131,14 +145,14 @@ namespace BattlegroundsApp {
 
         private static void LoadLocale() {
 
-            string lang = BattlegroundsInstance.Localize.Language.ToString().ToLower();
+            string lang = BattlegroundsInstance.Localize.Language.ToString().ToLower(CultureInfo.InvariantCulture);
             if (lang == "default") {
                 lang = "english";
             }
 
             string filepath = BattlegroundsInstance.GetRelativePath(BattlegroundsPaths.BINARY_FOLDER, $"locale\\{lang}.loc");
             if (File.Exists(filepath)) {
-                BattlegroundsInstance.Localize.LoadLocaleFile(filepath);
+                _ = BattlegroundsInstance.Localize.LoadLocaleFile(filepath);
             } else {
                 Trace.WriteLine($"Failed to locate locale file: {filepath}", "AppStartup");
             }

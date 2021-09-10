@@ -1,10 +1,9 @@
-﻿<bg:ViewState x:Class="BattlegroundsApp.Views.GameBrowserView"
+﻿<UserControl x:Class="BattlegroundsApp.MVVM.Views.LobbyBrowserView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:BattlegroundsApp.Views"
-             xmlns:bg="clr-namespace:BattlegroundsApp"
+             xmlns:local="clr-namespace:BattlegroundsApp.MVVM.Views" 
              xmlns:converters="clr-namespace:BattlegroundsApp.Utilities.Converters"
              mc:Ignorable="d" Background="#273441"
              d:DesignHeight="450" d:DesignWidth="800">
@@ -49,19 +48,29 @@
         </ListView>
 
         <!-- Row 1 -->
-        <Button x:Name="refreshLobbyListButton" Grid.Row="5" 
+        <Button x:Name="refreshLobbyListButton" 
+                Grid.Row="5" 
                 Grid.Column="1" 
-                Content="{Binding RefreshButtonContent, Converter={StaticResource LocaleConvertor}}" 
-                Margin="0,5,0,0" Click="RefreshLobbyList_Click"
+                Content="{Binding Refresh.Text, Converter={StaticResource LocaleConvertor}}" 
+                Margin="0,5,0,0" 
+                Command="{Binding Refresh.Click}"
                 Style="{StaticResource MainButtonStyle}"/>
 
-        <Button x:Name="hostGameButton" Grid.Row="5" Grid.Column="2" Content="{Binding HostGameButtonContent, Converter={StaticResource LocaleConvertor}}" Margin="5,5,0,0"
-                Command="{Binding HostGameCommand}"
+        <Button x:Name="hostGameButton" 
+                Grid.Row="5" 
+                Grid.Column="2" 
+                Content="{Binding Host.Text, Converter={StaticResource LocaleConvertor}}" 
+                Margin="5,5,0,0"
+                Command="{Binding Host.Click}"
                 Style="{StaticResource MainButtonStyle}"/>
 
-        <Button x:Name="joinGameButton" Grid.Row="5" Grid.Column="3" Content="{Binding JoinGameButtonContent, Converter={StaticResource LocaleConvertor}}" Margin="5,5,0,0" 
-                Click="JoinLobby_Click"
+        <Button x:Name="joinGameButton" 
+                Grid.Row="5" 
+                Grid.Column="3" 
+                Content="{Binding Join.Text, Converter={StaticResource LocaleConvertor}}" 
+                Margin="5,5,0,0" 
+                Command="{Binding Join.Click}"
                 Style="{StaticResource MainButtonStyle}"/>
-
+        
     </Grid>
-</bg:ViewState>
+</UserControl>

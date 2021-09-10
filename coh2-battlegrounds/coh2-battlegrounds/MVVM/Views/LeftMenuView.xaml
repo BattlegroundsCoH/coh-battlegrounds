@@ -1,0 +1,97 @@
+﻿<UserControl x:Class="BattlegroundsApp.MVVM.Views.LeftMenuView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:localeConvertor="clr-namespace:BattlegroundsApp.Utilities.Converters"
+             mc:Ignorable="d" 
+             d:DesignHeight="850" d:DesignWidth="270" MaxWidth="270"
+             Background="#212d3a">
+    
+    <Grid>
+        <Grid.Resources>
+            <!-- LocaleConverter -->
+            <localeConvertor:LocaleKeyToStringConverter x:Key="LocaleConvertor"/>
+        </Grid.Resources>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Row 1 -->
+        <Image Grid.Row="0" Source="pack://application:,,,/Resources/app/logo_main.png" Width="270"/>
+
+        <!-- Row 2-->
+        <StackPanel Grid.Row="1" Grid.Column="0" Margin="38, 32, 38, 0">
+
+            <Button x:Name="DashboardButton"
+                    Content="{Binding Dashboard.Text, Converter={StaticResource LocaleConvertor}}"
+                    IsEnabled="{Binding Dashboard.Enabled}" 
+                    Command="{Binding Dashboard.Click}" 
+                    ToolTip="Personal overall statistics"
+                    Style="{StaticResource MainButtonStyle}"/>
+            <Separator Style="{StaticResource ButtonSeperator}"/>
+
+            <!-- Row 4 -->
+            <Button x:Name="NewsButton" 
+                    Content="{Binding News.Text, Converter={StaticResource LocaleConvertor}}" 
+                    Margin="0,10,0,0" 
+                    IsEnabled="{Binding News.Enabled}" 
+                    Command="{Binding News.Click}" 
+                    ToolTip="Shows the latest news"
+                    Style="{StaticResource MainButtonStyle}"/>
+            <Separator Style="{StaticResource ButtonSeperator}"/>
+
+            <!-- Row 5 -->
+            <Button x:Name="CompanyBuilderButton" 
+                    Content="{Binding CompanyBuilder.Text, Converter={StaticResource LocaleConvertor}}" 
+                    Margin="0,10,0,0"                     
+                    IsEnabled="{Binding CompanyBuilder.Enabled}" 
+                    Command="{Binding CompanyBuilder.Click}" 
+                    ToolTip="Create or edit your compenies"
+                    Style="{StaticResource MainButtonStyle}"/>
+            <Separator Style="{StaticResource ButtonSeperator}"/>
+
+            <!-- Row 6 -->
+            <Button x:Name="CampaignButton" 
+                    Content="{Binding Campaign.Text, Converter={StaticResource LocaleConvertor}}" 
+                    Margin="0,10,0,0"
+                    IsEnabled="{Binding Campaign.Enabled}"  
+                    Command="{Binding Campaign.Click}" 
+                    ToolTip="Play singleplayer or coop campaign"
+                    Style="{StaticResource MainButtonStyle}"/>
+            <Separator Style="{StaticResource ButtonSeperator}"/>
+
+            <!-- Row 7 -->
+            <Button x:Name="GameBrowserButton" 
+                    Content="{Binding MatchFinder.Text, Converter={StaticResource LocaleConvertor}}" 
+                    Margin="0,10,0,0" 
+                    Command="{Binding MatchFinder.Click}"
+                    IsEnabled="{Binding MatchFinder.Enabled}" 
+                    ToolTip="Browse through a list of available lobbies"
+                    Style="{StaticResource MainButtonStyle}"/>
+            <Separator Style="{StaticResource ButtonSeperator}"/>
+
+            <!-- Row 8 -->
+            <Button x:Name="SettingsButton" 
+                    Content="{Binding Settings.Text, Converter={StaticResource LocaleConvertor}}" 
+                    Margin="0,10,0,0" 
+                    IsEnabled="{Binding Settings.Enabled}"
+                    Command="{Binding Settings.Click}"
+                    ToolTip="Adjust application settings"
+                    Style="{StaticResource MainButtonStyle}"/>
+
+        </StackPanel>
+
+        <!-- Row 9 -->
+        <Button x:Name="ExitButton" Grid.Row="3" Grid.Column="0" 
+                    Content="{Binding Exit.Text, Converter={StaticResource LocaleConvertor}}" 
+                    Margin="38,0,38,38" 
+                    IsEnabled="{Binding Exit.Enabled}" 
+                    Command="{Binding Exit.Click}" 
+                    ToolTip="Exit the application"
+                    Style="{StaticResource MainButtonStyle}"/>
+        
+    </Grid>
+</UserControl>

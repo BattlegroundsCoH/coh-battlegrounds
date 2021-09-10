@@ -13,6 +13,8 @@
              xmlns:addUnit="clr-namespace:BattlegroundsApp.Dialogs.AddUnit"
              xmlns:campaignModels="clr-namespace:BattlegroundsApp.Views.CampaignViews.Models"
              xmlns:campaignViews="clr-namespace:BattlegroundsApp.Views.CampaignViews"
+             xmlns:views="clr-namespace:BattlegroundsApp.MVVM.Views"
+             xmlns:models="clr-namespace:BattlegroundsApp.MVVM.Models"
              Startup="App_Startup"
              ShutdownMode="OnMainWindowClose">
     <Application.Resources>
@@ -53,11 +55,23 @@
             <campaignViews:CampaignUnitReserveView/>
         </DataTemplate>
 
+        <!-- New Lobby-View Models -->
+        <DataTemplate DataType="{x:Type models:LeftMenu}">
+            <views:LeftMenuView/>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type models:LobbyBrowserViewModel}">
+            <views:LobbyBrowserView/>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type models:LobbyViewModel}">
+            <views:LobbyView/>
+        </DataTemplate>
+
         <Style x:Key="MainButtonStyle" TargetType="{x:Type Button}">
             <Setter Property="SnapsToDevicePixels" Value="True"/>
             <Setter Property="UseLayoutRounding" Value="True"/>
             <Setter Property="FontSize" Value="22"/>
             <Setter Property="FontFamily" Value="Open Sans"/>
+            <Setter Property="FontWeight" Value="Thin"/>
             <Setter Property="Foreground" Value="#999ea4"/>
             <Setter Property="Background" Value="Transparent"/>
             <Setter Property="Template">
@@ -67,6 +81,7 @@
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsMouseOver" Value="True">
                                 <Setter Property="Foreground" Value="#ffffff"/>
+                                <Setter Property="FontWeight" Value="Regular"/>
                             </Trigger>
                             <Trigger Property="IsEnabled" Value="False">
                                 <Setter Property="Opacity" Value="0.65"/>
@@ -85,6 +100,44 @@
             <Setter Property="HorizontalAlignment" Value="Left"/>
             <Setter Property="Margin" Value="0,10,0,0"/>
         </Style>
+
+        <Style x:Key="ButtonVerticalSeperator" TargetType="{x:Type Separator}">
+            <Setter Property="SnapsToDevicePixels" Value="True"/>
+            <Setter Property="UseLayoutRounding" Value="True"/>
+            <Setter Property="Background" Value="#4a545f"/>
+            <Setter Property="Width" Value="105"/>
+            <Setter Property="HorizontalAlignment" Value="Left"/>
+            <Setter Property="Margin" Value="0,10,0,0"/>
+            <Setter Property="LayoutTransform">
+                <Setter.Value>
+                    <TransformGroup>
+                        <TransformGroup.Children>
+                            <TransformCollection>
+                                <RotateTransform Angle="90"/>
+                            </TransformCollection>
+                        </TransformGroup.Children>
+                    </TransformGroup>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        
+        
+        <!--<Style x:Key="ListViewStyle" TargetType="{x:Type ListView}">
+            <Setter Property="SnapsToDevicePixels" Value="True"/>
+            <Setter Property="UseLayoutRounding" Value="True"/>
+            <Setter Property="Background" Value="#4a545f"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ListView">
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsGrouping" Value="true">
+                                <Setter Property="ScrollViewer.CanContentScroll" Value="false" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>-->
 
     </Application.Resources>
 </Application>

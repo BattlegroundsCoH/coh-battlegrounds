@@ -18,75 +18,19 @@
     </local:CoreAppWindow.Resources>
     <Grid>
 
-        <Grid.RowDefinitions>
-            <RowDefinition Height="auto"/>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="auto"/>
-        </Grid.RowDefinitions>
-
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="auto"/>
+            <ColumnDefinition MaxWidth="270"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
-        
-        <!-- Row 1 -->
-        <Image Grid.Row="0" Grid.Column="0" Source="pack://application:,,,/Resources/app/logo_main.png" Width="270"/>
-        
-        <ContentControl Name="AppContent" 
+
+        <ContentControl Name="LeftContent" 
+                        Grid.Row="0" Grid.Column="0"
+                        Content="{Binding}" Background="#212d3a"/>
+
+        <ContentControl Name="RightContent" 
                         Grid.Row="0" Grid.Column="1" 
                         Grid.RowSpan="8"
                         Content="{Binding}" Background="#273441"/>
-
-        <!-- Row 2-->
-        <StackPanel Grid.Row="1" Grid.Column="0" Margin="38, 32, 38, 0">
-
-            <Button x:Name="DashboardButton" Content="{Binding DashboardButtonContent, Converter={StaticResource LocaleConvertor}, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}"
-                IsEnabled="False" Click="Dashboard_Click" ToolTip="Personal overall statistics"
-                    Style="{StaticResource MainButtonStyle}"/>
-            <Separator Style="{StaticResource ButtonSeperator}"/>
-
-            <!-- Row 4 -->
-            <Button x:Name="NewsButton" Content="{Binding NewsButtonContent, Converter={StaticResource LocaleConvertor}, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}" 
-                Margin="0,10,0,0" IsEnabled="False" Click="News_Click" 
-                    ToolTip="Shows the latest news"
-                    Style="{StaticResource MainButtonStyle}"/>
-            <Separator Style="{StaticResource ButtonSeperator}"/>
-
-            <!-- Row 5 -->
-            <Button x:Name="CompanyBuilderButton" Content="{Binding CompanyBuilderButtonContent, Converter={StaticResource LocaleConvertor}, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}" 
-                Margin="0,10,0,0" Click="CompanyBuilder_Click" 
-                    ToolTip="Create or edit your compenies"
-                    Style="{StaticResource MainButtonStyle}"/>
-            <Separator Style="{StaticResource ButtonSeperator}"/>
-
-            <!-- Row 6 -->
-            <Button x:Name="CampaignButton" Content="{Binding CampaignButtonContent, Converter={StaticResource LocaleConvertor}, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}" 
-                Margin="0,10,0,0" IsEnabled="False" Click="Campaign_Click" 
-                    ToolTip="Play singleplayer or coop campaign"
-                    Style="{StaticResource MainButtonStyle}"/>
-            <Separator Style="{StaticResource ButtonSeperator}"/>
-
-            <!-- Row 7 -->
-            <Button x:Name="GameBrowserButton" Content="{Binding GameBrowserButtonContent, Converter={StaticResource LocaleConvertor}, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}" 
-                Margin="0,10,0,0" Click="GameBrowser_Click" 
-                    ToolTip="Browse through a list of available lobbies"
-                    Style="{StaticResource MainButtonStyle}"/>
-            <Separator Style="{StaticResource ButtonSeperator}"/>
-
-            <!-- Row 8 -->
-            <Button x:Name="SettingsButton" Content="{Binding SettingsButtonContent, Converter={StaticResource LocaleConvertor}, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}" 
-                Margin="0,10,0,0" IsEnabled="False" 
-                    ToolTip="Adjust application settings"
-                    Style="{StaticResource MainButtonStyle}"/>
-
-        </StackPanel>
-        
-        <!-- Row 9 -->
-        <Button x:Name="ExitButton" Grid.Row="3" Grid.Column="0" 
-                Content="{Binding ExitButtonContent, Converter={StaticResource LocaleConvertor}, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}" 
-                Margin="38,0,38,38" Click="Exit_Click" 
-                ToolTip="Exit the application"
-                Style="{StaticResource MainButtonStyle}"/>
 
     </Grid>
 </local:CoreAppWindow>
