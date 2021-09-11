@@ -3,16 +3,34 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:BattlegroundsApp.Lobby.MVVM.Views" xmlns:localeConvertor="clr-namespace:BattlegroundsApp.Utilities.Converters"
+             xmlns:local="clr-namespace:BattlegroundsApp.Lobby.MVVM.Views" 
+             xmlns:localeConvertor="clr-namespace:BattlegroundsApp.Utilities.Converters" 
+             xmlns:controls="clr-namespace:BattlegroundsApp.Controls"
              mc:Ignorable="d" Background="#273441"
-             d:DesignHeight="450" d:DesignWidth="800">
+             d:DesignHeight="850" d:DesignWidth="1130">
     <UserControl.Resources>
-        <ResourceDictionary x:Name="LobbyIcons" Source="pack://application:,,,/coh2-battlegrounds;component/Resources/app/LobbyIcons.xaml"/>
+        <ResourceDictionary x:Name="LobbyUI">
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary x:Name="LobbyIcons" Source="pack://application:,,,/coh2-battlegrounds;component/Resources/app/LobbyIcons.xaml"/>
+                <ResourceDictionary x:Name="LobbyArt" Source="pack://application:,,,/coh2-battlegrounds;component/Resources/app/LobbyArt.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
     </UserControl.Resources>
     <Grid Margin="20">
         <Grid.Resources>
             <!-- LocaleConverter -->
             <localeConvertor:LocaleKeyToStringConverter x:Key="LocaleConvertor"/>
+            <Style x:Key="SettingLabel" TargetType="Label">
+                <Setter Property="Foreground" Value="#747c84"/>
+                <Setter Property="FontSize" Value="14"/>
+                <Setter Property="FontFamily" Value="Open Sans"/>
+            </Style>
+            <Style x:Key="SettingSeperator" TargetType="Separator">
+                <Setter Property="Background" Value="#4e5963"/>
+                <Setter Property="Margin" Value="4"/>
+                <Setter Property="Width" Value="64"/>
+                <Setter Property="HorizontalAlignment" Value="Left"/>
+            </Style>
         </Grid.Resources>
         <Grid.RowDefinitions>
             <RowDefinition Height="48"/>
@@ -20,7 +38,7 @@
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="320"/>
+            <ColumnDefinition Width="372"/>
         </Grid.ColumnDefinitions>
         
         <Label Content="Awesome Game Lobby"
@@ -39,62 +57,103 @@
         <Grid Grid.Row="1" Grid.Column="1">
             <Grid.RowDefinitions>
                 <RowDefinition Height="38"/>
-                <RowDefinition/>
-                <RowDefinition/>
-                <RowDefinition/>
-                <RowDefinition/>
-                <RowDefinition/>
-                <RowDefinition/>
+                <RowDefinition Height="356"/>
+                <RowDefinition Height="42"/>
+                <RowDefinition Height="42"/>
+                <RowDefinition Height="42"/>
+                <RowDefinition Height="42"/>
+                <RowDefinition Height="42"/>
+                <RowDefinition Height="42"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="38"/>
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="10"/>
                 <ColumnDefinition/>
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
             
             <!-- Row 0 -->
-            <Button Grid.Column="0" 
+            <controls:IconButton Grid.Column="1" 
                     Grid.Row="0"
-                    Background="#334252"
                     Margin="0,0,8,0"
                     VerticalContentAlignment="Center"
                     HorizontalContentAlignment="Center"
-                    Padding="5"
+                    Content="{Binding EditCompany.Text, Converter={StaticResource LocaleConvertor}}"
                     Command="{Binding EditCompany.Click}"
                     ToolTip="{Binding EditCompany.Tooltip}"
-                    BorderBrush="Transparent">
-                <StackPanel Orientation="Horizontal">
-                    <TextBlock Text="{Binding EditCompany.Text, Converter={StaticResource LocaleConvertor}}"
-                               FontSize="14"
-                               Foreground="#FFFFFF"
-                               Margin="0,0,16,0"/>
-                    <Image 
-                        Width="16"
-                        Height="16"
-                        Source="{StaticResource EditCompanyIconDrawingImage}"/>
-                </StackPanel>
-            </Button>
-            <Button Grid.Column="1" 
+                    Background="#334252"
+                    Foreground="#FFFFFF"
+                    HoverColour="#536375"
+                    ImageSource="{StaticResource EditCompanyIconDrawingImage}"
+                    ImageWidth="20"
+                    ImageHeight="18"/>
+            <controls:IconButton Grid.Column="2" 
                     Grid.Row="0"
-                    Background="#582222"
-                    Margin="8,0,8,0"
+                    Margin="0,0,8,0"
                     VerticalContentAlignment="Center"
                     HorizontalContentAlignment="Center"
+                    Content="{Binding ExitLobby.Text, Converter={StaticResource LocaleConvertor}}"
                     Command="{Binding ExitLobby.Click}"
                     ToolTip="{Binding ExitLobby.Tooltip}"
-                    BorderBrush="Transparent"
-                    Padding="5">
-                <StackPanel Orientation="Horizontal">
-                    <TextBlock Text="{Binding ExitLobby.Text, Converter={StaticResource LocaleConvertor}}" 
-                               FontSize="14"
-                               Foreground="#FFFFFF"
-                               Margin="0,0,16,0"/>
-                    <Image 
-                        Width="16"
-                        Height="16"
-                        HorizontalAlignment="Right"
-                        Source="{StaticResource ExitLobbyIconDrawingImage}"/>
-                </StackPanel>
-            </Button>
+                    Background="#582222"
+                    Foreground="#FFFFFF"
+                    HoverColour="#536375"
+                    ImageSource="{StaticResource ExitLobbyIconDrawingImage}"
+                    ImageWidth="20"
+                    ImageHeight="18"/>
+
+            <!-- Lots of hard-coded sizing - Be careful when editing this -->
+            <Grid Grid.Column="0"
+                  Grid.Row="1"
+                  Grid.ColumnSpan="3">
+                <Image
+                    Width="372"
+                    Source="pack://application:,,,/coh2-battlegrounds;component/Resources/app/LobbySettingMap.png"/>
+                <Image Margin="14,12,8,22"
+                    Source="{Binding SelectedMatchScenario}"/>
+            </Grid>
+
+            <StackPanel Grid.Column="1"
+                        Grid.Row="2">
+                <Label Content="MAP" Style="{StaticResource SettingLabel}"/>
+                <Separator Style="{StaticResource SettingSeperator}"/>
+            </StackPanel>
+
+            <StackPanel Grid.Column="1"
+                        Grid.Row="3">
+                <Label Content="GAMEMODE" Style="{StaticResource SettingLabel}"/>
+                <Separator Style="{StaticResource SettingSeperator}"/>
+            </StackPanel>
+
+            <StackPanel Grid.Column="1"
+                        Grid.Row="4">
+                <Label Content="SETTING" Style="{StaticResource SettingLabel}"/>
+                <Separator Style="{StaticResource SettingSeperator}"/>
+            </StackPanel>
+
+            <StackPanel Grid.Column="1"
+                        Grid.Row="5">
+                <Label Content="DYNAMIC WEATHER" Style="{StaticResource SettingLabel}"/>
+                <Separator Style="{StaticResource SettingSeperator}"/>
+            </StackPanel>
+
+            <StackPanel Grid.Column="1"
+                        Grid.Row="6">
+                <Label Content="SUPPLY SYSTEM" Style="{StaticResource SettingLabel}"/>
+                <Separator Style="{StaticResource SettingSeperator}"/>
+            </StackPanel>
+
+            <StackPanel Grid.Column="1"
+                        Grid.Row="7">
+                <Label Content="TUNING MOD" Style="{StaticResource SettingLabel}"/>
+                <Separator Style="{StaticResource SettingSeperator}"/>
+            </StackPanel>
+
+            <Button Grid.Column="1" 
+                    Grid.Row="9"
+                    Grid.ColumnSpan="2"
+                    Content="Start Match"/>
 
         </Grid>
 

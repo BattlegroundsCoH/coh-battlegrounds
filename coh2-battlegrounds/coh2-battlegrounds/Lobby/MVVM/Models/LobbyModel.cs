@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
+using System.Windows.Media;
 
 using Battlegrounds.Networking.Lobby;
 
@@ -23,10 +24,12 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
 
         public LobbyButtonModel StartMatch { get; }
 
+        public ImageSource SelectedMatchScenario { get; }
+
         public bool SingleInstanceOnly => false;
-    
+
         public LobbyModel(LobbyHandler handler) {
-            
+
             // Set handler
             this.m_handler = handler;
 

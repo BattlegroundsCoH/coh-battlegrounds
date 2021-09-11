@@ -15,4 +15,11 @@
     </DrawingGroup>
   </DrawingGroup>
   <DrawingImage x:Key="ExitLobbyIconDrawingImage" Drawing="{StaticResource ExitLobbyIconDrawingGroup}" />
+  <Geometry x:Key="ArrowDropdownGeometry">F1 M51.93,51.93z M0,0z M7,10L17.819,20.819 28.638,10z</Geometry>
+  <DrawingGroup x:Key="ArrowDropdownDrawingGroup" ClipGeometry="M0,0 V51.93 H51.93 V0 H0 Z">
+    <DrawingGroup Transform="1,0,0,1,8.146,11.638">
+      <GeometryDrawing Brush="#FFFFFFFF" Geometry="{StaticResource ArrowDropdownGeometry}" />
+    </DrawingGroup>
+  </DrawingGroup>
+  <DrawingImage x:Key="ArrowDropdownDrawingImage" Drawing="{StaticResource ArrowDropdownDrawingGroup}" />
 </ResourceDictionary>

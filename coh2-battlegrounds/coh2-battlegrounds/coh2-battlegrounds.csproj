@@ -41,6 +41,7 @@
     <None Remove="Resources\app\checkmark.png" />
     <None Remove="Resources\app\checkmark_not.png" />
     <None Remove="Resources\app\icon_bkg.png" />
+    <None Remove="Resources\app\LobbySettingMap.png" />
     <None Remove="Resources\app\logo_main.png" />
     <None Remove="Resources\app\padlock_locked.png" />
     <None Remove="Resources\app\padlock_open.png" />
@@ -97,6 +98,7 @@
     <Resource Include="Resources\app\checkmark.png" />
     <Resource Include="Resources\app\checkmark_not.png" />
     <Resource Include="Resources\app\icon_bkg.png" />
+    <Resource Include="Resources\app\LobbySettingMap.png" />
     <Resource Include="Resources\app\logo_main.png" />
     <Resource Include="Resources\app\padlock_locked.png" />
     <Resource Include="Resources\app\padlock_open.png" />

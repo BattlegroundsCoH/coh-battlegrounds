@@ -17,6 +17,7 @@
              xmlns:models="clr-namespace:BattlegroundsApp.MVVM.Models"
              xmlns:lobbyviews="clr-namespace:BattlegroundsApp.Lobby.MVVM.Views"
              xmlns:lobbymodels="clr-namespace:BattlegroundsApp.Lobby.MVVM.Models"
+             xmlns:controls="clr-namespace:BattlegroundsApp.Controls"
              Startup="App_Startup"
              ShutdownMode="OnMainWindowClose">
     <Application.Resources>
@@ -64,6 +65,8 @@
         <DataTemplate DataType="{x:Type models:LobbyBrowserViewModel}">
             <views:LobbyBrowserView/>
         </DataTemplate>
+        
+        <!-- Lobby View Models -->
         <DataTemplate DataType="{x:Type lobbymodels:LobbyChatSpectatorModel}">
             <lobbyviews:LobbyChatSpectatorView/>
         </DataTemplate>

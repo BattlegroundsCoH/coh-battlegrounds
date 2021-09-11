@@ -128,5 +128,6 @@ english:
  TeamPlayerCard_Menu_Item_Add_Expert_Ai: "Add Expert AI"
  TeamPlayerCard_Open_Slot: "Open Slot"
  TeamPlayerCard_Locked_Slot: "Locked Slot"
- LobbyView_EditCompany: "Edit Company"
- LobbyView_LeaveLobby: "Leave Lobby"
+ LobbyView_EditCompany: "EDIT COMPANY"
+ LobbyView_LeaveLobby: "LEAVE LOBBY"
+ LobbyView_StartMatch: "START MATCH"
