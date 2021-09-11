@@ -444,6 +444,10 @@ namespace BattlegroundsApp.Modals.CompanyBuilder {
             // Get clicked blueprint
             UpgradeBlueprint upb = args.ClickTag as UpgradeBlueprint;
 
+            if (upb == null) {
+                return;
+            }
+
             // Create dialog to verify user wishes to upgrade.
             ModalDialog confirmModal = ModalDialog.CreateModal("Apply Upgrade", $"Are you sure you want to apply upgrade {GameLocale.GetString(upb.UI.ScreenName)}?",
                 YesNoDialogResult.Confirm,
