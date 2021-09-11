@@ -22,8 +22,9 @@ namespace BattlegroundsApp.Dialogs.RenameCopyDialog {
 
         public ICommand RenameCopyCommand { get; set; }
         public ICommand CancelCommand { get; set; }
-        public LocaleKey CompanyNameTextBlockText { get; }
+        public LocaleKey CompanyNameTextBlockText { get; set; }
         public LocaleKey RenameCopyButtonContent { get; set; }
+        public LocaleKey CancelButtonContent { get; set; }
         public RenameCopyDialogType Type { get; set; }
         private string _companyName;
         public string CompanyName {
@@ -40,10 +41,14 @@ namespace BattlegroundsApp.Dialogs.RenameCopyDialog {
         private RenameCopyDialogViewModel(RenameCopyDialogType type, LocaleKey title) {
 
             Title = title;
+
+            // Define locales
             CompanyNameTextBlockText = new LocaleKey("RenameCopyDialogView_Company_Name");
+            RenameCopyButtonContent = (type == RenameCopyDialogType.Rename) ? new LocaleKey("RenameCopyDialogView_Rename") : new LocaleKey("RenameCopyDialogView_Copy");
+            CancelButtonContent = new LocaleKey("RenameCopyDialogView_Cancel");
+
             CancelCommand = new RelayCommand<DialogWindow>(Cancel);
             RenameCopyCommand = (type == RenameCopyDialogType.Rename) ? new RelayCommand<DialogWindow>(Rename) : new RelayCommand<DialogWindow>(Copy);
-            RenameCopyButtonContent = (type == RenameCopyDialogType.Rename) ? new LocaleKey("RenameCopyDialogView_Rename") : new LocaleKey("RenameCopyDialogView_Copy");
             Type = (type == RenameCopyDialogType.Rename) ? RenameCopyDialogType.Rename : RenameCopyDialogType.Copy;
             DialogCloseDefault = RenameCopyDialogResult.Cancel;
 
