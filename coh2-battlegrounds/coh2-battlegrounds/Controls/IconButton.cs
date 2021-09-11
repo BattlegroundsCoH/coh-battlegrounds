@@ -16,8 +16,6 @@ namespace BattlegroundsApp.Controls {
             }
         }
 
-        public IconButton() { }
-
         public int ImageWidth {
             get => (int)this.GetValue(ImageWidthProperty);
             set => this.SetValue(ImageWidthProperty, value);
@@ -49,12 +47,16 @@ namespace BattlegroundsApp.Controls {
                     this.SetValue(HoverColourProperty, brush);
                 } else if (value is Color col) {
                     this.SetValue(HoverColourProperty, new SolidColorBrush(col));
+                } else if (value is string s) {
+                    try {
+                        this.SetValue(HoverColourProperty, new SolidColorBrush((Color)ColorConverter.ConvertFromString(s)));
+                    } catch { }
                 }
             }
         }
 
         public static readonly DependencyProperty HoverColourProperty =
-            DependencyProperty.Register(nameof(HoverColour), typeof(object), typeof(IconButton), new PropertyMetadata(Colors.Transparent));
+            DependencyProperty.Register(nameof(HoverColour), typeof(object), typeof(IconButton), new PropertyMetadata("#536375"));
 
     }
 

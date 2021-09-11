@@ -6,7 +6,8 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type local:IconButton}">
-                    <Grid x:Name="GridContainer" Background="{Binding Background, RelativeSource={RelativeSource AncestorType=local:IconButton}, Mode=TwoWay}">
+                    <Grid x:Name="GridContainer" 
+                          Background="{Binding Background, RelativeSource={RelativeSource AncestorType=local:IconButton}, Mode=TwoWay}">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="*"/>
                         </Grid.RowDefinitions>
@@ -19,10 +20,13 @@
                                Height="{Binding ImageHeight, RelativeSource={RelativeSource AncestorType=local:IconButton}}"
                                Grid.Row="0"
                                Grid.Column="1"
-                               Margin="0,0,8,0"
-                               VerticalAlignment="Center" HorizontalAlignment="Center"></Image>
+                               Margin="0,2,8,2"
+                               VerticalAlignment="Center" 
+                               HorizontalAlignment="Center"/>
                         <ContentPresenter Grid.Row="0" Grid.Column="0" Content="{TemplateBinding Content}"
-                                          VerticalAlignment="Center" HorizontalAlignment="Center"></ContentPresenter>
+                                          VerticalAlignment="Center" 
+                                          HorizontalAlignment="{Binding HorizontalContentAlignment, RelativeSource={RelativeSource AncestorType=local:IconButton}}"
+                                          Margin="5,0,5,0"/>
                     </Grid>
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsMouseOver" Value="True">

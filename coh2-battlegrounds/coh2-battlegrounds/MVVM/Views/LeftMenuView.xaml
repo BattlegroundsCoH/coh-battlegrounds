@@ -5,7 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:localeConvertor="clr-namespace:BattlegroundsApp.Utilities.Converters"
              mc:Ignorable="d" 
-             d:DesignHeight="850" d:DesignWidth="270" MaxWidth="270"
+             d:DesignHeight="850" d:DesignWidth="300" MaxWidth="300"
              Background="#212d3a">
     
     <Grid>
@@ -20,7 +20,9 @@
         </Grid.RowDefinitions>
 
         <!-- Row 1 -->
-        <Image Grid.Row="0" Source="pack://application:,,,/Resources/app/logo_main.png" Width="270"/>
+        <Image Grid.Row="0" 
+               Source="pack://application:,,,/Resources/app/logo_main.png"
+               Width="300"/>
 
         <!-- Row 2-->
         <StackPanel Grid.Row="1" Grid.Column="0" Margin="38, 32, 38, 0">
