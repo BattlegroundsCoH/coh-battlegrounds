@@ -144,12 +144,32 @@
                 <Label Content="GAMEMODE" Style="{StaticResource SettingLabel}"/>
                 <Separator Style="{StaticResource SettingSeperator}"/>
             </StackPanel>
+            <Grid Grid.Column="2"
+                  Grid.Row="3">
+                <ComboBox Height="32"
+                          VerticalAlignment="Top"
+                          ItemsSource="{Binding GamemodeSelection.Items}"
+                          SelectedIndex="{Binding GamemodeSelection.CurrentIndex, Mode=TwoWay}"
+                          Visibility="{Binding GamemodeSelection.IsDropdownVisible}"
+                          Style="{StaticResource StandardBlueDropdown}"/>
+                <Label Visibility="{Binding GamemodeSelection.IsLabelVisible}"/>
+            </Grid>
 
             <StackPanel Grid.Column="1"
                         Grid.Row="4">
                 <Label Content="SETTING" Style="{StaticResource SettingLabel}"/>
                 <Separator Style="{StaticResource SettingSeperator}"/>
             </StackPanel>
+            <Grid Grid.Column="2"
+                  Grid.Row="4">
+                <ComboBox Height="32"
+                          VerticalAlignment="Top"
+                          ItemsSource="{Binding GamemodeOptionSelection.Items}"
+                          SelectedIndex="{Binding GamemodeOptionSelection.CurrentIndex, Mode=TwoWay}"
+                          Visibility="{Binding GamemodeOptionSelection.IsDropdownVisible}"
+                          Style="{StaticResource StandardBlueDropdown}"/>
+                <Label Visibility="{Binding GamemodeOptionSelection.IsLabelVisible}"/>
+            </Grid>
 
             <StackPanel Grid.Column="1"
                         Grid.Row="5">

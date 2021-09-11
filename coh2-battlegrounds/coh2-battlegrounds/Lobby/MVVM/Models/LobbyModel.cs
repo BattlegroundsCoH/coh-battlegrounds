@@ -11,6 +11,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
 using Battlegrounds;
+using Battlegrounds.Functional;
 using Battlegrounds.Game.Database;
 using Battlegrounds.Modding;
 using Battlegrounds.Networking.Lobby;
@@ -36,7 +37,13 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
     }
 
     public class LobbyGamemodeItem {
-
+        private readonly string m_display;
+        public IGamemode Gamemode { get; }
+        public LobbyGamemodeItem(IGamemode gamemode) {
+            this.Gamemode = gamemode;
+            this.m_display = GameLocale.GetString(gamemode.DisplayName);
+        }
+        public override string ToString() => this.m_display;
     }
 
     public class LobbyGamemodeOptionItem {
@@ -62,6 +69,8 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
         private static readonly ImageSource __mapNotFound = new BitmapImage(new Uri("pack://application:,,,/Resources/ingame/unknown_map.png"));
 
         private readonly LobbyHandler m_handler;
+        private ModPackage m_package;
+        private bool m_hasSetDefaults;
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -92,11 +101,6 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
             // Set handler
             this.m_handler = handler;
 
-
-            // Create package list
-            List<LobbyModPackageItem> modPackages = new();
-            ModManager.EachPackage(x => modPackages.Add(new(x)));
-
             // Create edit company button
             this.EditCompany = new() {
                 Click = new RelayCommand(this.EditSelfCompany),
@@ -121,6 +125,20 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
                 Text = new("LobbyView_StartMatch")
             };
 
+            // Create package list
+            List<LobbyModPackageItem> modPackages = new();
+            ModManager.EachPackage(x => modPackages.Add(new(x)));
+
+            // Create mod package dropdown
+            this.ModPackageSelection = new(true, this.m_handler.IsHost) {
+                Items = new(modPackages),
+            };
+
+            // Set package here
+            if (this.m_handler.IsHost) {
+                this.m_package = this.ModPackageSelection.Items[0].Package;
+            }
+
             // Create scenario selection dropdown
             this.ScenarioSelection = new(true, this.m_handler.IsHost) {
                 Items = new(ScenarioList.GetList()
@@ -131,10 +149,14 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
 
             // Create gamemode selection dropdown
             this.GamemodeSelection = new(true, this.m_handler.IsHost) {
+                Items = new(),
+                OnSelectionChanged = OnGamemodeChanged
             };
 
             // Create gamemode option selection dropdown
             this.GamemodeOptionSelection = new(true, this.m_handler.IsHost) {
+                Items = new(),
+                OnSelectionChanged = this.OnGamemodeOptionChanged
             };
 
             // Create weather selection dropdown
@@ -145,11 +167,6 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
             // Create supply selection dropdown
             this.SupplySystemSelection = new(true, this.m_handler.IsHost) {
                 Items = LobbyBinaryOptionItem.CreateCollection()
-            };
-
-            // Create mod package dropdown
-            this.ModPackageSelection = new(true, this.m_handler.IsHost) {
-                Items = new(modPackages)
             };
 
             // Init dropdown values (if host)
@@ -169,6 +186,11 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
 
         private void BeginMatch() {
 
+        }
+
+        private int OnPackageChanged(int current, int next, LobbyModPackageItem item) {
+            this.m_package = item.Package;
+            return next;
         }
 
         private void TrySetMapSource(Scenario scenario) {
@@ -208,6 +230,41 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
             if (item is not null) {
                 _ = Application.Current.Dispatcher.BeginInvoke(() => this.TrySetMapSource(item.Scenario));
             }
+            this.UpdateGamemodeAndOption(item.Scenario);
+            return next;
+        }
+
+        private void UpdateGamemodeAndOption(Scenario scenario) {
+
+            // Get available gamemodes
+            var guid = this.m_package.GamemodeGUID;
+            List<LobbyGamemodeItem> available = (scenario.Gamemodes.Count > 0 ? WinconditionList.GetGamemodes(guid, scenario.Gamemodes) : WinconditionList.GetGamemodes(guid))
+                .Select(x => new LobbyGamemodeItem(x)).ToList();
+
+            // Update if there's any change in available gamemodes 
+            if (this.GamemodeSelection.Items.Count != available.Count || available.Any(x => !this.GamemodeSelection.Items.Contains(x))) {
+
+                // Clear current gamemode selection
+                this.GamemodeSelection.Items.Clear();
+                available.ForEach(x => this.GamemodeSelection.Items.Add(x));
+
+                // Set default if not set
+                if (!this.m_hasSetDefaults) {
+                    this.GamemodeSelection.SetSelection(x => x.Gamemode.Name == BattlegroundsInstance.LastPlayedGamemode);
+                    this.m_hasSetDefaults = true;
+                } else {
+                    this.GamemodeSelection.SetSelection(_ => true);
+                }
+
+            }
+
+        }
+
+        private int OnGamemodeChanged(int current, int next, LobbyGamemodeItem item) {
+            return next;
+        }
+
+        private int OnGamemodeOptionChanged(int current, int next, LobbyGamemodeOptionItem item) {
             return next;
         }
 
