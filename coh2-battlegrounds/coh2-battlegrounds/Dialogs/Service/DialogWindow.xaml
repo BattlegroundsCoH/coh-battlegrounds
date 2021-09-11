@@ -9,5 +9,22 @@
         WindowStartupLocation="CenterScreen"
         ResizeMode="NoResize"
         MinHeight="175" MinWidth="450">
-    <ContentControl x:Name="ContentPresenter" Content="{Binding}"/>
+    <Grid VerticalAlignment="Stretch" HorizontalAlignment="Stretch"> 
+        <!--
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="auto"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        -->
+        
+        <ContentControl x:Name="ContentPresenter" VerticalAlignment="Center" HorizontalAlignment="Center" Content="{Binding}"/>
+        
+    </Grid>
 </Window>
