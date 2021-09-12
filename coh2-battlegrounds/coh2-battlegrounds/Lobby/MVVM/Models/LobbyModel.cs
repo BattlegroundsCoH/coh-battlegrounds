@@ -283,11 +283,6 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
                     this.GamemodeSelection.SetSelection(_ => true);
                 }
 
-                // Update lobby
-                if (this.m_handler.Lobby is HostedLobby lobby) {
-                    lobby.SetMode(string.Empty, this.GamemodeSelection.GetSelected().Gamemode.Name, string.Empty, this.LobbyServerTranslator);
-                }
-
             }
 
         }
@@ -306,8 +301,6 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
                 // Set options to hidden
                 this.GamemodeOptionSelection.IsVisible = false;
 
-                // Update lobby
-
             } else {
 
                 // Update options
@@ -325,7 +318,11 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
                 // Set options to hidden
                 this.GamemodeOptionSelection.IsVisible = true;
 
+            }
 
+            // Update lobby
+            if (this.m_handler.Lobby is HostedLobby lobby) {
+                lobby.SetMode(string.Empty, item.Gamemode.Name, string.Empty, this.LobbyServerTranslator);
             }
 
             // Return selected
@@ -336,8 +333,8 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
         private int OnGamemodeOptionChanged(int current, int next, LobbyGamemodeOptionItem item) {
 
             // Update lobby
-            if (this.m_handler.Lobby is HostedLobby lobby) {
-                string optionVal = this.GamemodeOptionSelection.GetSelected().Option.Value.ToString(CultureInfo.InvariantCulture);
+            if (this.m_handler.Lobby is HostedLobby lobby && item is not null) {
+                string optionVal = item.Option.Value.ToString(CultureInfo.InvariantCulture);
                 lobby.SetMode(string.Empty, string.Empty, optionVal, this.LobbyServerTranslator);
             }
 
