@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 using Battlegrounds.Game.Gameplay;
 
 namespace BattlegroundsApp.Lobby.MVVM.Models {
-    
+
     public class LobbyCompanyItem {
-    
+
         public string Name { get; set; }
 
         public Faction Army { get; set; }

@@ -1,7 +1,7 @@
 ﻿namespace BattlegroundsApp.Lobby.MVVM.Models {
 
     public class LobbyTeam {
-    
+
         public LobbySlot[] Slots { get; }
 
         public LobbyTeam() {

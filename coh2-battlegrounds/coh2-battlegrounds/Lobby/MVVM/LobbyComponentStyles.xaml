@@ -37,10 +37,21 @@
     </Style>
     <DataTemplate x:Key="SlotcompanyCurrentlySelectedItem">
         <Grid>
+            <Grid.Resources>
+                <converters:StringToCompanyTypeIconConverter x:Key="TypeIconConverter"/>
+            </Grid.Resources>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition/>
-                <ColumnDefinition Width="48"/>
+                <ColumnDefinition Width="16"/>
+                <ColumnDefinition Width="18"/>
+                <ColumnDefinition Width="16"/>
             </Grid.ColumnDefinitions>
+            <Image Source="{Binding Type, Converter={StaticResource TypeIconConverter}}"
+                   Grid.Column="2"
+                   Width="18"
+                   Height="18"
+                   VerticalAlignment="Center"
+                   HorizontalAlignment="Center"/>
             <TextBlock Text="{Binding Name}"
                        Foreground="#FFFFFF"
                        FontSize="20"
@@ -59,7 +70,7 @@
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="4"/>
                 <ColumnDefinition Width="32"/>
-                <ColumnDefinition Width="6"/>
+                <ColumnDefinition Width="8"/>
                 <ColumnDefinition/>
                 <ColumnDefinition Width="6"/>
                 <ColumnDefinition Width="24"/>
