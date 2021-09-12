@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System.Collections.ObjectModel;
+using System.Windows;
 using System.Windows.Controls;
 
 using BattlegroundsApp.Lobby.MVVM.Models;
@@ -17,6 +18,17 @@ namespace BattlegroundsApp.Lobby.MVVM.Views {
 
         public static readonly DependencyProperty SlotDataProperty
             = DependencyProperty.Register(nameof(SlotData), typeof(LobbySlot), typeof(LobbyPlayerSlot), new PropertyMetadata(null, OnSlotDataPropertyChanged));
+
+        public ObservableCollection<LobbyCompanyItem> CompanyItemsSource {
+            get => this.GetValue(CompanyItemsSourceProperty) as ObservableCollection<LobbyCompanyItem>;
+            set => this.SetValue(CompanyItemsSourceProperty, value);
+        }
+
+        public static readonly DependencyProperty CompanyItemsSourceProperty
+            = DependencyProperty.Register(nameof(CompanyItemsSource),
+                typeof(ObservableCollection<LobbyCompanyItem>),
+                typeof(LobbyPlayerSlot),
+                new PropertyMetadata(new ObservableCollection<LobbyCompanyItem>()));
 
         private static void OnSlotDataPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) {
             LobbyPlayerSlot self = d as LobbyPlayerSlot;

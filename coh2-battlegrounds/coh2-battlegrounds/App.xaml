@@ -288,7 +288,7 @@
                                         FontSize="12"
                                         FontFamily="Open Sans"
                                         Foreground="#FFFFFF"
-                                       VerticalAlignment="Center"/>
+                                        VerticalAlignment="Center"/>
                         </Border>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsSelected" Value="True">

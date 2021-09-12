@@ -73,13 +73,17 @@
                     <RowDefinition Height="72"/>
                 </Grid.RowDefinitions>
                 <local:LobbyPlayerSlot Grid.Row="0"
-                                       SlotData="{Binding Allies.Slots, Converter={StaticResource ArrayIndexer}, ConverterParameter=0}"/>
+                                       SlotData="{Binding Allies.Slots, Converter={StaticResource ArrayIndexer}, ConverterParameter=0}"
+                                       CompanyItemsSource="{Binding AlliedCompanies}"/>
                 <local:LobbyPlayerSlot Grid.Row="2"
-                                       SlotData="{Binding Allies.Slots, Converter={StaticResource ArrayIndexer}, ConverterParameter=1}"/>
+                                       SlotData="{Binding Allies.Slots, Converter={StaticResource ArrayIndexer}, ConverterParameter=1}"
+                                       CompanyItemsSource="{Binding AlliedCompanies}"/>
                 <local:LobbyPlayerSlot Grid.Row="4"
-                                       SlotData="{Binding Allies.Slots, Converter={StaticResource ArrayIndexer}, ConverterParameter=2}"/>
+                                       SlotData="{Binding Allies.Slots, Converter={StaticResource ArrayIndexer}, ConverterParameter=2}"
+                                       CompanyItemsSource="{Binding AlliedCompanies}"/>
                 <local:LobbyPlayerSlot Grid.Row="6"
-                                       SlotData="{Binding Allies.Slots, Converter={StaticResource ArrayIndexer}, ConverterParameter=3}"/>
+                                       SlotData="{Binding Allies.Slots, Converter={StaticResource ArrayIndexer}, ConverterParameter=3}"
+                                       CompanyItemsSource="{Binding AlliedCompanies}"/>
             </Grid>
             
             <!-- Axis -->

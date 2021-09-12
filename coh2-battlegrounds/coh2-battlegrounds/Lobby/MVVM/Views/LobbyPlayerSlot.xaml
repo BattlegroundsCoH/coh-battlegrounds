@@ -35,6 +35,7 @@
                VerticalAlignment="Center"/>
 
         <ComboBox Grid.Column="5"
+                  ItemsSource="{Binding CompanyItemsSource, RelativeSource={RelativeSource AncestorType={x:Type local:LobbyPlayerSlot}}}"
                   Visibility="{Binding CompanyVisibility}"
                   Style="{StaticResource SlotCompanySelection}"/>
 

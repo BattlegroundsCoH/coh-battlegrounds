@@ -13,6 +13,7 @@ using System.Windows.Media.Imaging;
 using Battlegrounds;
 using Battlegrounds.Functional;
 using Battlegrounds.Game.Database;
+using Battlegrounds.Game.Gameplay;
 using Battlegrounds.Modding;
 using Battlegrounds.Networking.Lobby;
 
@@ -108,12 +109,23 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
 
         public LobbyTeam Axis { get; }
 
+        public ObservableCollection<LobbyCompanyItem> AlliedCompanies { get; }
+
+        public ObservableCollection<LobbyCompanyItem> AxisCompanies { get; }
+
         public bool SingleInstanceOnly => false;
 
         public LobbyModel(LobbyHandler handler) {
 
             // Set handler
             this.m_handler = handler;
+
+            this.AlliedCompanies = new() {
+                new LobbyCompanyItem() { Name = "Able Company", Army = Faction.Soviet, Type = "" },
+                new LobbyCompanyItem() { Name = "Baker Company", Army = Faction.America, Type = "Airborne" },
+                new LobbyCompanyItem() { Name = "Charlie Company", Army = Faction.British, Type = "Armoured" },
+                new LobbyCompanyItem() { Name = "Dog Company", Army = Faction.Soviet, Type = "Infantry" }
+            };
 
             // Create edit company button
             this.EditCompany = new() {
