@@ -38,6 +38,17 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="Resources\app\army_icons\FactionAEF.png" />
+    <None Remove="Resources\app\army_icons\FactionAEFHighlighted.png" />
+    <None Remove="Resources\app\army_icons\FactionBRIT.png" />
+    <None Remove="Resources\app\army_icons\FactionBRITHighlighted.png" />
+    <None Remove="Resources\app\army_icons\FactionLOCKED.png" />
+    <None Remove="Resources\app\army_icons\FactionOKW.png" />
+    <None Remove="Resources\app\army_icons\FactionOKWHighlighted.png" />
+    <None Remove="Resources\app\army_icons\FactionSOVIET.png" />
+    <None Remove="Resources\app\army_icons\FactionSOVIETHighlighted.png" />
+    <None Remove="Resources\app\army_icons\FactionWEHR.png" />
+    <None Remove="Resources\app\army_icons\FactionWEHRHighlighted.png" />
     <None Remove="Resources\app\checkmark.png" />
     <None Remove="Resources\app\checkmark_not.png" />
     <None Remove="Resources\app\icon_bkg.png" />
@@ -95,6 +106,17 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="Resources\app\army_icons\FactionAEF.png" />
+    <Resource Include="Resources\app\army_icons\FactionAEFHighlighted.png" />
+    <Resource Include="Resources\app\army_icons\FactionBRIT.png" />
+    <Resource Include="Resources\app\army_icons\FactionBRITHighlighted.png" />
+    <Resource Include="Resources\app\army_icons\FactionLOCKED.png" />
+    <Resource Include="Resources\app\army_icons\FactionOKW.png" />
+    <Resource Include="Resources\app\army_icons\FactionOKWHighlighted.png" />
+    <Resource Include="Resources\app\army_icons\FactionSOVIET.png" />
+    <Resource Include="Resources\app\army_icons\FactionSOVIETHighlighted.png" />
+    <Resource Include="Resources\app\army_icons\FactionWEHR.png" />
+    <Resource Include="Resources\app\army_icons\FactionWEHRHighlighted.png" />
     <Resource Include="Resources\app\checkmark.png" />
     <Resource Include="Resources\app\checkmark_not.png" />
     <Resource Include="Resources\app\icon_bkg.png" />

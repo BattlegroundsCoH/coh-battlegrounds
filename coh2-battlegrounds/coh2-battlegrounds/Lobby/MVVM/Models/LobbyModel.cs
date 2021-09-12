@@ -104,6 +104,10 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
 
         public LobbyDropdownModel<LobbyModPackageItem> ModPackageSelection { get; }
 
+        public LobbyTeam Allies { get; }
+
+        public LobbyTeam Axis { get; }
+
         public bool SingleInstanceOnly => false;
 
         public LobbyModel(LobbyHandler handler) {
@@ -184,6 +188,11 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
             if (handler.IsHost) {
                 this.ScenarioSelection.SetSelection(x => x.Scenario.RelativeFilename == BattlegroundsInstance.LastPlayedMap);
             }
+
+            // Create teams
+            this.Allies = new();
+            this.Axis = new();
+            
 
         }
 

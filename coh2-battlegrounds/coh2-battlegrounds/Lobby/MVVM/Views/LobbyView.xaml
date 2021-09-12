@@ -4,7 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:BattlegroundsApp.Lobby.MVVM.Views" 
-             xmlns:localeConvertor="clr-namespace:BattlegroundsApp.Utilities.Converters" 
+             xmlns:converters="clr-namespace:BattlegroundsApp.Utilities.Converters" 
              xmlns:controls="clr-namespace:BattlegroundsApp.Controls"
              mc:Ignorable="d" Background="#273441"
              d:DesignHeight="850" d:DesignWidth="1100">
@@ -16,10 +16,11 @@
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </UserControl.Resources>
-    <Grid Margin="20">
+    <Grid Margin="36">
         <Grid.Resources>
             <!-- LocaleConverter -->
-            <localeConvertor:LocaleKeyToStringConverter x:Key="LocaleConvertor"/>
+            <converters:LocaleKeyToStringConverter x:Key="LocaleConvertor"/>
+            <converters:ArrayIndexer x:Key="ArrayIndexer"/>
             <Style x:Key="SettingLabel" TargetType="Label">
                 <Setter Property="Foreground" Value="#747c84"/>
                 <Setter Property="FontSize" Value="14"/>
@@ -39,6 +40,7 @@
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="36"/>
             <ColumnDefinition Width="372"/>
         </Grid.ColumnDefinitions>
         
@@ -49,13 +51,56 @@
                FontWeight="SemiBold"
                Grid.Row="0"
                Grid.Column="0"
-               Grid.ColumnSpan="2"/>
+               Grid.ColumnSpan="3"/>
 
-        <StackPanel Grid.Row="1" Grid.Column="0">
+        <Grid Grid.Row="1" Grid.Column="0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="312"/>
+                <RowDefinition Height="36"/>
+                <RowDefinition Height="312"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
             
-        </StackPanel>
+            <!-- Allies -->
+            <Grid Grid.Row="0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="72"/>
+                    <RowDefinition Height="6"/>
+                    <RowDefinition Height="72"/>
+                    <RowDefinition Height="6"/>
+                    <RowDefinition Height="72"/>
+                    <RowDefinition Height="6"/>
+                    <RowDefinition Height="72"/>
+                </Grid.RowDefinitions>
+                <local:LobbyPlayerSlot Grid.Row="0"
+                                       SlotData="{Binding Allies.Slots, Converter={StaticResource ArrayIndexer}, ConverterParameter=0}"/>
+                <local:LobbyPlayerSlot Grid.Row="2"
+                                       SlotData="{Binding Allies.Slots, Converter={StaticResource ArrayIndexer}, ConverterParameter=1}"/>
+                <local:LobbyPlayerSlot Grid.Row="4"
+                                       SlotData="{Binding Allies.Slots, Converter={StaticResource ArrayIndexer}, ConverterParameter=2}"/>
+                <local:LobbyPlayerSlot Grid.Row="6"
+                                       SlotData="{Binding Allies.Slots, Converter={StaticResource ArrayIndexer}, ConverterParameter=3}"/>
+            </Grid>
+            
+            <!-- Axis -->
+            <Grid Grid.Row="2">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="72"/>
+                    <RowDefinition Height="6"/>
+                    <RowDefinition Height="72"/>
+                    <RowDefinition Height="6"/>
+                    <RowDefinition Height="72"/>
+                    <RowDefinition Height="6"/>
+                    <RowDefinition Height="72"/>
+                </Grid.RowDefinitions>
+                <local:LobbyPlayerSlot Grid.Row="0"/>
+                <local:LobbyPlayerSlot Grid.Row="2"/>
+                <local:LobbyPlayerSlot Grid.Row="4"/>
+                <local:LobbyPlayerSlot Grid.Row="6"/>
+            </Grid>
+        </Grid>
 
-        <Grid Grid.Row="1" Grid.Column="1">
+        <Grid Grid.Row="1" Grid.Column="2">
             <Grid.RowDefinitions>
                 <RowDefinition Height="38"/>
                 <RowDefinition Height="356"/>
