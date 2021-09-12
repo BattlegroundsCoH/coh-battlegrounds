@@ -43,11 +43,21 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
             this.Gamemode = gamemode;
             this.m_display = GameLocale.GetString(gamemode.DisplayName);
         }
+        public override int GetHashCode() => base.GetHashCode();
+        public override bool Equals(object obj) => obj is LobbyGamemodeItem item && item.Gamemode == this.Gamemode;
         public override string ToString() => this.m_display;
     }
 
     public class LobbyGamemodeOptionItem {
-
+        private readonly string m_display;
+        public IGamemodeOption Option { get; }
+        public LobbyGamemodeOptionItem(IGamemodeOption gamemodeOption) {
+            this.Option = gamemodeOption;
+            this.m_display = GameLocale.GetString(gamemodeOption.Title);
+        }
+        public override int GetHashCode() => base.GetHashCode();
+        public override bool Equals(object obj) => obj is LobbyGamemodeOptionItem item && item.Option == this.Option;
+        public override string ToString() => this.m_display;
     }
 
     public class LobbyBinaryOptionItem {
@@ -132,6 +142,7 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
             // Create mod package dropdown
             this.ModPackageSelection = new(true, this.m_handler.IsHost) {
                 Items = new(modPackages),
+                OnSelectionChanged = this.OnPackageChanged
             };
 
             // Set package here
@@ -188,6 +199,8 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
 
         }
 
+        private string LobbyServerTranslator(string modeKey, string modeValue) => modeValue;
+
         private int OnPackageChanged(int current, int next, LobbyModPackageItem item) {
             this.m_package = item.Package;
             return next;
@@ -227,11 +240,26 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
         }
 
         private int OnScenarioChanged(int current, int next, LobbyScenarioItem item) {
+
+            // If item is not null
             if (item is not null) {
+
+                // Update map
                 _ = Application.Current.Dispatcher.BeginInvoke(() => this.TrySetMapSource(item.Scenario));
+
+                // Update gamemode (and option)
+                this.UpdateGamemodeAndOption(item.Scenario);
+
+                // Update lobby
+                if (this.m_handler.Lobby is HostedLobby lobby) {
+                    lobby.SetMode(item.Scenario.RelativeFilename, string.Empty, string.Empty, this.LobbyServerTranslator);
+                }
+
             }
-            this.UpdateGamemodeAndOption(item.Scenario);
+
+            // Return selected value
             return next;
+
         }
 
         private void UpdateGamemodeAndOption(Scenario scenario) {
@@ -251,9 +279,13 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
                 // Set default if not set
                 if (!this.m_hasSetDefaults) {
                     this.GamemodeSelection.SetSelection(x => x.Gamemode.Name == BattlegroundsInstance.LastPlayedGamemode);
-                    this.m_hasSetDefaults = true;
                 } else {
                     this.GamemodeSelection.SetSelection(_ => true);
+                }
+
+                // Update lobby
+                if (this.m_handler.Lobby is HostedLobby lobby) {
+                    lobby.SetMode(string.Empty, this.GamemodeSelection.GetSelected().Gamemode.Name, string.Empty, this.LobbyServerTranslator);
                 }
 
             }
@@ -261,11 +293,57 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
         }
 
         private int OnGamemodeChanged(int current, int next, LobbyGamemodeItem item) {
+
+            // Get options
+            var options = item.Gamemode.Options;
+
+            // Clear available options
+            this.GamemodeOptionSelection.Items.Clear();
+
+            // Hide options
+            if (options is null || options.Length is 0) {
+
+                // Set options to hidden
+                this.GamemodeOptionSelection.IsVisible = false;
+
+                // Update lobby
+
+            } else {
+
+                // Update options
+                _ = options.ForEach(x => this.GamemodeOptionSelection.Items.Add(new(x)));
+
+                // Set default
+                if (!this.m_hasSetDefaults) {
+                    this.GamemodeOptionSelection.SetSelection(x => x.Option.Value == BattlegroundsInstance.LastPlayedGamemodeSetting);
+                    this.m_hasSetDefaults = true;
+                } else {
+                    var defaultOption = item.Gamemode.Options[item.Gamemode.DefaultOptionIndex];
+                    this.GamemodeOptionSelection.SetSelection(x => x.Option == defaultOption);
+                }
+
+                // Set options to hidden
+                this.GamemodeOptionSelection.IsVisible = true;
+
+
+            }
+
+            // Return selected
             return next;
+
         }
 
         private int OnGamemodeOptionChanged(int current, int next, LobbyGamemodeOptionItem item) {
+
+            // Update lobby
+            if (this.m_handler.Lobby is HostedLobby lobby) {
+                string optionVal = this.GamemodeOptionSelection.GetSelected().Option.Value.ToString(CultureInfo.InvariantCulture);
+                lobby.SetMode(string.Empty, string.Empty, optionVal, this.LobbyServerTranslator);
+            }
+
+            // Return selected
             return next;
+
         }
 
     }
