@@ -5,9 +5,14 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:localeConvertor="clr-namespace:BattlegroundsApp.Utilities.Converters"
              mc:Ignorable="d" 
-             d:DesignHeight="850" d:DesignWidth="300" MaxWidth="300"
-             Background="#212d3a">
-    
+             d:DesignHeight="850" d:DesignWidth="300" MaxWidth="300">
+    <UserControl.Background>
+        <LinearGradientBrush StartPoint="0,0.5" EndPoint="1,0.5">
+            <GradientStop Offset="0" Color="#212d3a"/>
+            <GradientStop Offset="0.8" Color="#202c39"/>
+            <GradientStop Offset="1" Color="#1e2935"/>
+        </LinearGradientBrush>
+    </UserControl.Background>
     <Grid>
         <Grid.Resources>
             <!-- LocaleConverter -->

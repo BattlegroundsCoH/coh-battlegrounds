@@ -132,7 +132,7 @@ namespace BattlegroundsApp.MVVM.Models {
                 Trace.WriteLine("Succsefully hosted lobby.", nameof(LobbyBrowserViewModel));
 
                 // Create lobby models.
-                LobbyModel lobbyModel = new(lobby);
+                LobbyModel lobbyModel = LobbyModel.CreateModelAsHost(lobby);
                 LobbyChatSpectatorModel chatMode = new(lobby);
 
                 // Display it

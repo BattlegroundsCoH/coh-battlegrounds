@@ -27,7 +27,7 @@
                Stretch="Uniform"
                Grid.ColumnSpan="2"
                Visibility="{Binding LeftIconVisibility}"
-               Source="pack://application:,,,/coh2-battlegrounds;component/Resources/app/army_icons/FactionSOVIET.png"/>
+               Source="{Binding LeftIcon}"/>
 
         <Label Grid.Column="2"
                Content="{Binding LeftDisplayString}"
@@ -37,7 +37,9 @@
         <ComboBox Grid.Column="5"
                   ItemsSource="{Binding CompanyItemsSource, RelativeSource={RelativeSource AncestorType={x:Type local:LobbyPlayerSlot}}}"
                   Visibility="{Binding CompanyVisibility}"
-                  Style="{StaticResource SlotCompanySelection}"/>
+                  Style="{StaticResource SlotCompanySelection}"
+                  SelectedIndex="{Binding SelectedCompanyIndex, Mode=TwoWay}"
+                  SelectedItem="{Binding SelectedCompany, Mode=OneWayToSource}"/>
 
     </Grid>
 </UserControl>

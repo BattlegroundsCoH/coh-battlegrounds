@@ -25,7 +25,8 @@
 
         <ContentControl Name="LeftContent" 
                         Grid.Row="0" Grid.Column="0"
-                        Content="{Binding}" Background="#212d3a"/>
+                        Content="{Binding}">
+        </ContentControl>
 
         <ContentControl Name="RightContent" 
                         Grid.Row="0" Grid.Column="1" 

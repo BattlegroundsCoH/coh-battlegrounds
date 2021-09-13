@@ -97,10 +97,18 @@
                     <RowDefinition Height="6"/>
                     <RowDefinition Height="72"/>
                 </Grid.RowDefinitions>
-                <local:LobbyPlayerSlot Grid.Row="0"/>
-                <local:LobbyPlayerSlot Grid.Row="2"/>
-                <local:LobbyPlayerSlot Grid.Row="4"/>
-                <local:LobbyPlayerSlot Grid.Row="6"/>
+                <local:LobbyPlayerSlot Grid.Row="0"
+                                       SlotData="{Binding Axis.Slots, Converter={StaticResource ArrayIndexer}, ConverterParameter=0}"
+                                       CompanyItemsSource="{Binding AxisCompanies}"/>
+                <local:LobbyPlayerSlot Grid.Row="2"
+                                       SlotData="{Binding Axis.Slots, Converter={StaticResource ArrayIndexer}, ConverterParameter=1}"
+                                       CompanyItemsSource="{Binding AxisCompanies}"/>
+                <local:LobbyPlayerSlot Grid.Row="4"
+                                       SlotData="{Binding Axis.Slots, Converter={StaticResource ArrayIndexer}, ConverterParameter=2}"
+                                       CompanyItemsSource="{Binding AxisCompanies}"/>
+                <local:LobbyPlayerSlot Grid.Row="6"
+                                       SlotData="{Binding Axis.Slots, Converter={StaticResource ArrayIndexer}, ConverterParameter=3}"
+                                       CompanyItemsSource="{Binding AxisCompanies}"/>
             </Grid>
         </Grid>
 

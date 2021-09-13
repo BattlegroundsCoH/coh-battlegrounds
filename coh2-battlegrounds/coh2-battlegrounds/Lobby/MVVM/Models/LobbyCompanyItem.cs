@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
+﻿using Battlegrounds.Game.DataCompany;
 using Battlegrounds.Game.Gameplay;
 
 namespace BattlegroundsApp.Lobby.MVVM.Models {
@@ -16,8 +11,19 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
 
         public string Type { get; set; }
 
-        public LobbyCompanyItem() {
+        public bool IsAutoGeneration { get; }
 
+        public bool IsNoneAvailable { get; }
+
+        public LobbyCompanyItem(int type) {
+            this.IsNoneAvailable = type <= 0;
+            this.IsAutoGeneration = type == 1;
+        }
+
+        public LobbyCompanyItem(Company company) : this(2) {
+            this.Army = company.Army;
+            this.Name = company.Name;
+            this.Type = company.Type.ToString();
         }
 
     }
