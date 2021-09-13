@@ -17,6 +17,22 @@
             <ColumnDefinition/>
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
+        <Grid.ContextMenu>
+            <ContextMenu Style="{StaticResource LobbySlotContextMenu}"
+                         Name="SlotContextMenuObj">
+                <MenuItem Header="Show Playercard"/>
+                <Separator/>
+                <MenuItem Header="Kick Player"/>
+                <Separator/>
+                <MenuItem Header="Lock Slot"/>
+                <MenuItem Header="Open Slot"/>
+                <Separator/>
+                <MenuItem Header="Add Easy AI"/>
+                <MenuItem Header="Add Standard AI"/>
+                <MenuItem Header="Add Hard AI"/>
+                <MenuItem Header="Add Expert AI"/>
+            </ContextMenu>
+        </Grid.ContextMenu>
 
         <Grid Grid.Column="1" 
               Grid.ColumnSpan="5"
@@ -30,6 +46,7 @@
                Source="{Binding LeftIcon}"/>
 
         <Label Grid.Column="2"
+               IsHitTestVisible="False"
                Content="{Binding LeftDisplayString}"
                Style="{StaticResource SlotNameStyle}"
                VerticalAlignment="Center"/>

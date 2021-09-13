@@ -34,6 +34,7 @@ namespace BattlegroundsApp.Lobby.MVVM.Views {
             LobbyPlayerSlot self = d as LobbyPlayerSlot;
             self.SlotData = e.NewValue as LobbySlot;
             self.rootObj.DataContext = self.SlotData;
+            self.SlotContextMenuObj.DataContext = self.SlotData.SlotContextMenu;
         }
 
         public LobbyPlayerSlot() => this.InitializeComponent(); // Init component

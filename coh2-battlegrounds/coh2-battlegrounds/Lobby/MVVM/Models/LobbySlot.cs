@@ -59,6 +59,8 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
 
         public LobbyCompanyItem SelectedCompany { get => this.m_selfCompanySelected; set => this.OnCompanySelectionChanged(value); }
 
+        public LobbySlotContextMenu SlotContextMenu { get; }
+
         public LobbySlot(ILobbyTeamSlot teamSlot) {
 
             // Store reference to network interface
@@ -70,6 +72,9 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
             } else if (this.IsLocked) {
                 this.UpdateSlotFaction(string.Empty);
             }
+
+            // Create context menu
+            this.SlotContextMenu = new(this);
 
         }
 

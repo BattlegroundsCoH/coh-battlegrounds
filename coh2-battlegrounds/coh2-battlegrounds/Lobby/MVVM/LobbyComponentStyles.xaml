@@ -8,6 +8,9 @@
             <DataTrigger Binding="{Binding IsSelf}" Value="True">
                 <Setter Property="Background" Value="#334252"/>
             </DataTrigger>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Background" Value="#334252"/>
+            </Trigger>
         </Style.Triggers>
     </Style>
     <Style x:Key="SlotNameStyle" TargetType="{x:Type Label}">
@@ -82,16 +85,19 @@
                 <ColumnDefinition Width="8"/>
             </Grid.ColumnDefinitions>
             <Image Source="{Binding Army, Converter={StaticResource FactionIconConverter}}"
-                   Grid.Column="1"/>
+                   Grid.Column="1"
+                   IsHitTestVisible="False"/>
             <TextBlock Text="{Binding Name}"
                        Foreground="#FFFFFF"
                        FontSize="14"
                        FontFamily="Open Sans"
                        HorizontalAlignment="Left"
                        VerticalAlignment="Center"
-                       Grid.Column="3"/>
+                       Grid.Column="3"
+                       IsHitTestVisible="False"/>
             <Image Source="{Binding Type, Converter={StaticResource TypeIconConverter}}"
-                   Grid.Column="5"/>
+                   Grid.Column="5"
+                   IsHitTestVisible="False"/>
         </Grid>
     </DataTemplate>
     <Style x:Key="SlotCompanySelectionItem" TargetType="{x:Type ComboBoxItem}">
@@ -143,6 +149,25 @@
                             </Border>
                         </Popup>
                     </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <Style x:Key="LobbySlotContextMenu" TargetType="{x:Type ContextMenu}">
+        <Setter Property="SnapsToDevicePixels" Value="True"/>
+        <Setter Property="OverridesDefaultStyle" Value="True"/>
+        <Setter Property="Grid.IsSharedSizeScope" Value="true"/>
+        <Setter Property="HasDropShadow" Value="True"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ContextMenu}">
+                    <Border x:Name="Border"
+                            Background="#273441"
+                            BorderBrush="#212d3a"
+                            BorderThickness="1">
+                        <StackPanel IsItemsHost="True"
+                                    KeyboardNavigation.DirectionalNavigation="Cycle" />
+                    </Border>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
