@@ -270,13 +270,46 @@
         },
         {
             "Faction": "german",
-            "CanHaveGliderInCompanies": false,
-            "CanHaveParadropInCompanies": false,
-            "Abilities": [],
+            "Drivers": [
+                {
+                    "Blueprint": "german_tank_crew_bg",
+                    "WhenType": null
+                },
+                {
+                    "Blueprint": "german_vehicle_crew_bg",
+                    "WhenType": "light_vehicle"
+                },
+                {
+                    "Blueprint": "german_vehicle_driver_bg",
+                    "WhenType": "light_vehicle"
+                }
+            ],
+            "Abilities": [
+                {
+                    "Blueprint": "german_air_recon",
+                    "LockoutBlueprint": "german_air_recon_unlock",
+                    "AbilityCategory": "AirSupport",
+                    "MaxUsePerMatch": 3
+                },
+                {
+                    "Blueprint": "german_bombing_run",
+                    "LockoutBlueprint": "german_bombing_run_unlock",
+                    "AbilityCategory": "AirSupport",
+                    "MaxUsePerMatch": 3
+                }
+            ],
             "UnitAbilities": [],
-            "Drivers": [],
-            "TowTransports": [],
-            "Transports": []
+            "Transports": [
+                "opel_blitz_transport_squad_bg",
+                "sdkfz_250_halftrack_bg",
+                "sdkfz_251_halftrack_sqaud_bg"
+            ],
+            "TowTransports": [
+                "opel_blitz_transport_squad_bg",
+                "sdkfz_251_halftrack_sqaud_bg"
+            ],
+            "CanHaveGliderInCompanies": false,
+            "CanHaveParadropInCompanies": false
         }
     ],
     "ParadropUnits": [],
