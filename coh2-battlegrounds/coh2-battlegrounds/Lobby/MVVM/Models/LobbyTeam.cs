@@ -61,7 +61,7 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
             AIDifficulty diff = (AIDifficulty)byte.Parse(param, CultureInfo.InvariantCulture);
 
             // Join the AI player
-            if (this.m_lobby.CreateAIParticipant(diff, slot.NetworkInterface) is ILobbyAIParticipant ai) {
+            if (this.m_lobby.CreateAIParticipant(diff, slot.NetworkInterface) is ILobbyAIParticipant) {
 
                 // Trigger refresh on slot
                 slot.RefreshVisuals();

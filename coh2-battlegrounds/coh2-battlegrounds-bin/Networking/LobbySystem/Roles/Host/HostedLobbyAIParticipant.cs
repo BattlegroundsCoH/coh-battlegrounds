@@ -8,9 +8,11 @@ namespace Battlegrounds.Networking.LobbySystem.Roles.Host {
 
         private AIDifficulty m_diff;
 
-        public AIDifficulty AIDifficulty { get; }
+        public AIDifficulty AIDifficulty => this.m_diff;
 
         public override string Name => this.AIDifficulty.GetIngameDisplayName();
+
+        public override bool IsSelf => false;
 
         public HostedLobbyAIParticipant(AIDifficulty difficulty) : base(0, string.Empty) 
             => this.m_diff = difficulty;

@@ -32,6 +32,7 @@
             // Check if open, and assign occupant if that is the case
             if (this.m_state is TeamSlotState.Open) {
                 this.m_participant = occupant;
+                this.m_state = TeamSlotState.Occupied;
                 return true;
             }
 
@@ -48,8 +49,17 @@
                 return newState != TeamSlotState.Occupied;
             }
 
+            // Set state and return true
             this.m_state = newState;
             return true;
+
+        }
+
+        public void ClearOccupant() {
+
+            // Set values
+            this.m_participant = null;
+            this.m_state = TeamSlotState.Open;
 
         }
 

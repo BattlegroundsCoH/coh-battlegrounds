@@ -43,6 +43,13 @@
         /// <returns></returns>
         bool IsTeamMember(ILobbyParticipant participant);
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="participant"></param>
+        /// <returns></returns>
+        bool Remove(ILobbyParticipant participant);
+
     }
 
 }

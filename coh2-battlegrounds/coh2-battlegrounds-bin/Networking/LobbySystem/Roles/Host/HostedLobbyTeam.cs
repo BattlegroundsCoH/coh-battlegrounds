@@ -37,6 +37,16 @@ namespace Battlegrounds.Networking.LobbySystem.Roles.Host {
         public bool IsTeamMember(ILobbyParticipant participant)
             => this.Slots.Any(x => x.SlotOccupant.Equals(participant));
 
+        public bool Remove(ILobbyParticipant participant) {
+            for (int i = 0; i < this.Slots.Length; i++) {
+                if (this.Slots[i].SlotOccupant?.Equals(participant) ?? false) {
+                    this.Slots[i].ClearOccupant();
+                    return true;
+                }
+            }
+            return false;
+        }
+
     }
 
 }

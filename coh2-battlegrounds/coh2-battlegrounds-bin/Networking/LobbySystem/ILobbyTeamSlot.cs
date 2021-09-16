@@ -61,6 +61,11 @@
         /// <returns>If state was updated, <see langword="true"/>; Otherwise <see langword="false"/>.</returns>
         bool SetState(TeamSlotState newState);
 
+        /// <summary>
+        /// Clears the occupant and sets the slot state to open
+        /// </summary>
+        void ClearOccupant();
+
     }
 
 }

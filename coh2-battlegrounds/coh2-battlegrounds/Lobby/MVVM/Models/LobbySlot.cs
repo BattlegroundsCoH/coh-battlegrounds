@@ -43,7 +43,8 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
         public string LeftDisplayString => this.NetworkInterface.SlotState switch {
             TeamSlotState.Open => "Open",
             TeamSlotState.Locked => "Locked",
-            _ => this.NetworkInterface.SlotOccupant.Name
+            TeamSlotState.Occupied => this.NetworkInterface.SlotOccupant.Name,
+            _ => "Disabled"
         };
 
         public bool IsSelf => this.NetworkInterface.SlotOccupant?.IsSelf ?? false;

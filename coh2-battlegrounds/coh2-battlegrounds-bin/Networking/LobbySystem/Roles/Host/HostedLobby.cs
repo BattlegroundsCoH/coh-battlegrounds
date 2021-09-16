@@ -78,9 +78,21 @@ namespace Battlegrounds.Networking.LobbySystem.Roles.Host {
         
         private bool AddParticipant(ILobbyParticipant participant, ILobbyTeamSlot teamSlot) {
 
+            // Add as observer
+            if (teamSlot is null && this.m_allowSpectators) {
+                this.m_participants.Add(participant);
+                return true;
+            }
 
+            // If state is open
+            if (teamSlot.SetOccupant(participant)) {
+                this.m_participants.Add(participant);
+                return true;
+            }
 
-            return true;
+            // Return false ==> Failed to add participant
+            return false;
+
         }
 
         public IChatRoom GetChatRoom() => throw new NotImplementedException();
@@ -92,12 +104,27 @@ namespace Battlegrounds.Networking.LobbySystem.Roles.Host {
         public ILobbyParticipant[] GetParticipants() => this.m_participants.ToArray();
 
         public bool IsObserver(ILobbyParticipant participant)
-            => !this.Allies.IsTeamMember(participant) && !this.Axis.IsTeamMember(participant);
+            => !this.Allies.IsTeamMember(participant) && !this.Axis.IsTeamMember(participant) && this.m_participants.Contains(participant);
 
         public ILobbyTeam GetTeam(ILobbyParticipant participant)
             => this.Allies.IsTeamMember(participant) ? this.Allies : (this.Axis.IsTeamMember(participant) ? this.Axis : null);
 
-        public bool RemoveParticipant(ILobbyParticipant participant, bool kick) => throw new NotImplementedException();
+        public bool RemoveParticipant(ILobbyParticipant participant, bool kick) {
+
+            // Cannot kick or remove self
+            if (participant.IsSelf) {
+                return false;
+            }
+
+            // Remove from any occupied slot and remove from participant list
+            if (this.Allies.Remove(participant) || this.Axis.Remove(participant) || this.IsObserver(participant)) {
+                return this.m_participants.Remove(participant);
+            }
+
+            // Somehow failed then
+            return false;
+
+        }
 
         public bool SetLobbySetting(string lobbySetting, string lobbySettingValue) {
             this.m_settings[lobbySetting] = lobbySettingValue;

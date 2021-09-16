@@ -27,7 +27,7 @@ namespace Battlegrounds.Networking.LobbySystem {
         public static void HostLobby(ServerAPI serverAPI, string lobbyName, string lobbyPassword, Action<bool, LobbyHandler> onLobbyCreated) {
 
             // Get steam user
-            SteamUser steamUser = BattlegroundsInstance.Steam.User;
+            var steamUser = BattlegroundsInstance.Steam.User;
 
             // Log in with auth service
             AuthService.Login(steamUser.ID, steamUser.Name);
@@ -49,7 +49,7 @@ namespace Battlegrounds.Networking.LobbySystem {
             try {
 
                 // Create intro
-                var intro = new IntroMessage(true, lobbyName, lobbyPassword, 1);
+                IntroMessage intro = new(true, lobbyName, lobbyPassword, 1);
 
                 // Establish connection
                 var connection = SocketConnection.EstablishConnection(NetworkInterface.GetBestAddress(), 11000, steamUser.ID, intro);
