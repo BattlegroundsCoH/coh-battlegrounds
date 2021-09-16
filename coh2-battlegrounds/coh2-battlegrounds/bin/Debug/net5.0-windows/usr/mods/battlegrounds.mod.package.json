@@ -296,6 +296,84 @@
                     "LockoutBlueprint": "german_bombing_run_unlock",
                     "AbilityCategory": "AirSupport",
                     "MaxUsePerMatch": 3
+                },
+                {
+                    "Blueprint": "german_air_dropped_medical_supplies",
+                    "LockoutBlueprint": "german_air_dropped_medical_supplies_unlock",
+                    "AbilityCategory": "AirSupport",
+                    "MaxUsePerMatch": 3
+                },
+                {
+                    "Blueprint": "german_air_dropped_supplies",
+                    "LockoutBlueprint": "german_air_dropped_supplies_unlock",
+                    "AbilityCategory": "AirSupport",
+                    "MaxUsePerMatch": 3
+                },
+                {
+                    "Blueprint": "german_light_support_artillery",
+                    "LockoutBlueprint": "german_light_support_artillery_unlock",
+                    "AbilityCategory": "Artillery",
+                    "MaxUsePerMatch": 3
+                },
+                {
+                    "Blueprint": "german_railway_gun_artillery",
+                    "LockoutBlueprint": "german_railway_gun_artillery_unlock",
+                    "AbilityCategory": "Artillery",
+                    "MaxUsePerMatch": 3
+                },
+                {
+                    "Blueprint": "german_sector_artillery",
+                    "LockoutBlueprint": "german_sector_artillery_unlock",
+                    "AbilityCategory": "Artillery",
+                    "MaxUsePerMatch": 3
+                },
+                {
+                    "Blueprint": "german_strategic_bombing",
+                    "LockoutBlueprint": "german_strategic_bombing_unlock",
+                    "AbilityCategory": "AirSupport",
+                    "MaxUsePerMatch": 3
+                },
+                {
+                    "Blueprint": "german_aerial_superiority_close_air_support",
+                    "LockoutBlueprint": "german_aerial_superiority_close_air_support_unlock",
+                    "AbilityCategory": "AirSupport",
+                    "MaxUsePerMatch": 3
+                },
+                {
+                    "Blueprint": "german_aerial_superiority_strafing_run",
+                    "LockoutBlueprint": "german_aerial_superiority_strafing_run_unlock",
+                    "AbilityCategory": "AirSupport",
+                    "MaxUsePerMatch": 3
+                },
+                {
+                    "Blueprint": "german_close_air_support",
+                    "LockoutBlueprint": "german_close_air_support_unlock",
+                    "AbilityCategory": "AirSupport",
+                    "MaxUsePerMatch": 3
+                },
+                {
+                    "Blueprint": "german_fragmentation_bomb",
+                    "LockoutBlueprint": "german_fragmentation_bomb_unlock",
+                    "AbilityCategory": "AirSupport",
+                    "MaxUsePerMatch": 3
+                },
+                {
+                    "Blueprint": "german_incendiary_bombs",
+                    "LockoutBlueprint": "german_incendiary_bombs_unlock",
+                    "AbilityCategory": "AirSupport",
+                    "MaxUsePerMatch": 3
+                },
+                {
+                    "Blueprint": "german_smoke_bomb",
+                    "LockoutBlueprint": "german_smoke_bomb_unlock",
+                    "AbilityCategory": "AirSupport",
+                    "MaxUsePerMatch": 3
+                },
+                {
+                    "Blueprint": "german_strafing_run",
+                    "LockoutBlueprint": "german_strafing_run_unlock",
+                    "AbilityCategory": "AirSupport",
+                    "MaxUsePerMatch": 3
                 }
             ],
             "UnitAbilities": [],

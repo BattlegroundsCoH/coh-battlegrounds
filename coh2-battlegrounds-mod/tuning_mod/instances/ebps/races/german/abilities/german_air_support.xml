@@ -11,6 +11,16 @@
 			<list name="abilities">
 				<instance_reference name="ability" value="abilities\german\modal_ability\air_support\german_air_recon_ui" mod="142b113740474c82a60b0a428bd553d5" />
 				<instance_reference name="ability" value="abilities\german\modal_ability\air_support\german_bombing_run_ui" mod="142b113740474c82a60b0a428bd553d5" />
+				<instance_reference name="ability" value="abilities\german\modal_ability\air_support\german_aerial_superiority_close_air_support_ui" mod="142b113740474c82a60b0a428bd553d5" />
+				<instance_reference name="ability" value="abilities\german\modal_ability\air_support\german_aerial_superiority_strafing_run_ui" mod="142b113740474c82a60b0a428bd553d5" />
+				<instance_reference name="ability" value="abilities\german\modal_ability\air_support\german_air_dropped_medical_supplies_ui" mod="142b113740474c82a60b0a428bd553d5" />
+				<instance_reference name="ability" value="abilities\german\modal_ability\air_support\german_air_dropped_supplies_ui" mod="142b113740474c82a60b0a428bd553d5" />
+				<instance_reference name="ability" value="abilities\german\modal_ability\air_support\german_close_air_support_ui" mod="142b113740474c82a60b0a428bd553d5" />
+				<instance_reference name="ability" value="abilities\german\modal_ability\air_support\german_fragmentation_bomb_ui" mod="142b113740474c82a60b0a428bd553d5" />
+				<instance_reference name="ability" value="abilities\german\modal_ability\air_support\german_incendiary_bombs_ui" mod="142b113740474c82a60b0a428bd553d5" />
+				<instance_reference name="ability" value="abilities\german\modal_ability\air_support\german_smoke_bomb_ui" mod="142b113740474c82a60b0a428bd553d5" />
+				<instance_reference name="ability" value="abilities\german\modal_ability\air_support\german_strafing_run_ui" mod="142b113740474c82a60b0a428bd553d5" />
+				<instance_reference name="ability" value="abilities\german\modal_ability\air_support\german_strategic_bombing_ui" mod="142b113740474c82a60b0a428bd553d5" />
 			</list>
 		</template_reference>
 		<template_reference name="exts" value="ebpextensions\ui_ext">
