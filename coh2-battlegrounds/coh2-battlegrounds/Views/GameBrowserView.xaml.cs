@@ -11,6 +11,7 @@ using BattlegroundsApp.Dialogs.HostGame;
 using BattlegroundsApp.Utilities;
 using BattlegroundsApp.Dialogs.LobbyPassword;
 using Battlegrounds.Locale;
+using Battlegrounds.Networking.LobbySystem;
 
 namespace BattlegroundsApp.Views {
 
@@ -94,10 +95,6 @@ namespace BattlegroundsApp.Views {
                     }
                 }
 
-                // Create connecting view and start joining
-                GameLobbyConnectingView connectingView = new(this.m_api, lobby, lobbyPassword);
-                _ = this.StateChangeRequest?.Invoke(connectingView);
-
             }
 
         }
@@ -121,27 +118,6 @@ namespace BattlegroundsApp.Views {
 
         private void HostLobbyResponse(bool result, LobbyHandler lobby) {
 
-            if (result) {
-
-                Trace.WriteLine("Succsefully hosted lobby.", nameof(GameBrowserView));
-                _ = this.UpdateGUI(() => {
-
-                    // Create lobby view
-                    GameLobbyView lobbyView = new(lobby);
-
-                    // Request state change
-                    if (this.StateChangeRequest?.Invoke(lobbyView) is false) {
-                        Trace.WriteLine("Somehow failed to change state"); // TODO: Better error handling
-                    }
-
-                });
-
-            } else {
-
-                Trace.WriteLine("Failed to host lobby.", nameof(GameBrowserView));
-                _ = MessageBox.Show("Failed to host lobby (Failed to connect to server).", "Failure", MessageBoxButton.OK, MessageBoxImage.Error);
-
-            }
 
         }
 

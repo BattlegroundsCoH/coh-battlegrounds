@@ -2,8 +2,8 @@
 using System.Linq;
 
 using Battlegrounds.Game.DataCompany;
-using Battlegrounds.Networking.Lobby;
-using Battlegrounds.Networking.Lobby.Match;
+using Battlegrounds.Networking.LobbySystem;
+using Battlegrounds.Networking.LobbySystem.Playing;
 using Battlegrounds.Networking.Server;
 
 namespace Battlegrounds.Game.Match.Finalizer {
@@ -27,7 +27,7 @@ namespace Battlegrounds.Game.Match.Finalizer {
             LobbyHandler handler = synchronizeObject as LobbyHandler;
 
             // Get player results
-            LobbyPlayerCompanyFile[] playerFiles = this.m_companies.Where(x => x.Key.SteamID != BattlegroundsInstance.Steam.User.ID).Select(
+            var playerFiles = this.m_companies.Where(x => x.Key.SteamID != BattlegroundsInstance.Steam.User.ID).Select(
                 x => new LobbyPlayerCompanyFile(x.Key.SteamID, CompanySerializer.GetCompanyAsJson(x.Value))).ToArray();
 
             // Get overall match results

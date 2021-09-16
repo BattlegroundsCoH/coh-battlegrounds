@@ -8,8 +8,9 @@ using System.Threading;
 using Battlegrounds.Compiler;
 using Battlegrounds.Game.DataCompany;
 using Battlegrounds.Game.Match.Play;
-using Battlegrounds.Networking.Lobby;
-using Battlegrounds.Networking.Lobby.Match;
+using Battlegrounds.Networking;
+using Battlegrounds.Networking.LobbySystem;
+using Battlegrounds.Networking.LobbySystem.Playing;
 using Battlegrounds.Online.Services;
 
 namespace Battlegrounds.Game.Match.Startup {
@@ -44,7 +45,7 @@ namespace Battlegrounds.Game.Match.Startup {
 
             // Get managed lobby
             LobbyHandler lobby = caller as LobbyHandler;
-            lobby.API.SetLobbyGuid(lobby.Connection.ConnectionID);
+            NetworkInterface.APIObject.SetLobbyGuid(lobby.Connection.ConnectionID);
 
             // Should stop?
             bool shouldStop = false;
@@ -82,7 +83,7 @@ namespace Battlegrounds.Game.Match.Startup {
             // TODO: Check if local player is participating - if not, continue, otherwise, error out.
 
             // Return true if company was assigned
-            return this.GetLocalCompany(lobby.Self.ID);
+            return this.GetLocalCompany(lobby.Self.Id);
 
         }
 
@@ -200,7 +201,7 @@ namespace Battlegrounds.Game.Match.Startup {
             this.OnFeedback(caller, "Compiling match data into gamemode.");
 
             // Compile session
-            if (!SessionUtility.CompileSession(compiler, this.m_session, lobby.API)) {
+            if (!SessionUtility.CompileSession(compiler, this.m_session, NetworkInterface.APIObject)) {
                 return false;
             }
 

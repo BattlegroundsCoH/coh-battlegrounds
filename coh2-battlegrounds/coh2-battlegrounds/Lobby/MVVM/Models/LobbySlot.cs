@@ -6,7 +6,10 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
 using Battlegrounds.Game.Gameplay;
-using Battlegrounds.Networking.Lobby;
+using Battlegrounds.Networking.LobbySystem;
+using Battlegrounds.Networking.LobbySystem.Roles.Host;
+
+using BattlegroundsApp.Utilities;
 
 namespace BattlegroundsApp.Lobby.MVVM.Models {
 
@@ -33,21 +36,23 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
         public event PropertyChangedEventHandler PropertyChanged;
 
         private LobbyCompanyItem m_selfCompanySelected;
+        private readonly LobbyTeam m_teamModel;
 
         public ILobbyTeamSlot NetworkInterface { get; set; }
 
         public string LeftDisplayString => this.NetworkInterface.SlotState switch {
-            LobbyTeamSlotState.OCCUPIED => this.NetworkInterface.SlotOccupant.Name,
-            LobbyTeamSlotState.OPEN => "Open",
-            LobbyTeamSlotState.LOCKED => "Locked",
-            _ => "Invalid Slot State"
+            TeamSlotState.Open => "Open",
+            TeamSlotState.Locked => "Locked",
+            _ => this.NetworkInterface.SlotOccupant.Name
         };
 
-        public bool IsSelf => this.NetworkInterface.SlotOccupant?.IsLocalMachine ?? false;
+        public bool IsSelf => this.NetworkInterface.SlotOccupant?.IsSelf ?? false;
 
-        public bool IsOpen => this.NetworkInterface.SlotState is LobbyTeamSlotState.OPEN;
+        public bool IsOpen => this.NetworkInterface.SlotState is TeamSlotState.Open;
 
-        public bool IsLocked => this.NetworkInterface.SlotState is LobbyTeamSlotState.LOCKED;
+        public bool IsLocked => this.NetworkInterface.SlotState is TeamSlotState.Locked;
+
+        public bool IsAIOccupant => this.NetworkInterface.SlotOccupant is ILobbyAIParticipant;
 
         public Visibility LeftIconVisibility => this.IsOpen ? Visibility.Hidden : Visibility.Visible;
 
@@ -61,10 +66,15 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
 
         public LobbySlotContextMenu SlotContextMenu { get; }
 
-        public LobbySlot(ILobbyTeamSlot teamSlot) {
+        public bool IsProxyInterface => this.NetworkInterface is not HostedLobbyTeamSlot;
+
+        public LobbySlot(ILobbyTeamSlot teamSlot, LobbyTeam team) {
 
             // Store reference to network interface
             this.NetworkInterface = teamSlot;
+
+            // Store reference to lobby team
+            this.m_teamModel = team;
 
             // If local machine
             if (this.IsSelf) {
@@ -74,7 +84,13 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
             }
 
             // Create context menu
-            this.SlotContextMenu = new(this);
+            this.SlotContextMenu = new(this) {
+                ShowPlayerCard = new TargettedRelayCommand<LobbySlot>(this, this.m_teamModel.ShowPlayercard),
+                KickOccupant = new TargettedRelayCommand<LobbySlot>(this, this.m_teamModel.KickOccupant),
+                LockSlot = new TargettedRelayCommand<LobbySlot>(this, this.m_teamModel.Lock),
+                UnlockSlot = new TargettedRelayCommand<LobbySlot>(this, this.m_teamModel.Unlock),
+                AddAIPlayer = new TargettedRelayCommand<LobbySlot, string>(this, this.m_teamModel.AddAIPlayer)
+            };
 
         }
 
@@ -100,13 +116,23 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
 
         }
 
-        private void UpdateSlotFaction(string faction)
+        public void UpdateSlotFaction(string faction)
             => this.UpdateSlotLeftIcon(this.IsSelf ? FactionHoverIcons[faction] : FactionIcons[faction]);
 
         private void UpdateSlotLeftIcon(ImageSource img) {
             Application.Current.Dispatcher.Invoke(() => {
                 this.LeftIcon = img;
                 this.PropertyChanged?.Invoke(this, new(nameof(this.LeftIcon)));
+            });
+        }
+
+        public void RefreshVisuals() {
+            Application.Current.Dispatcher.Invoke(() => {
+                this.PropertyChanged?.Invoke(this, new(nameof(this.LeftIcon)));
+                this.PropertyChanged?.Invoke(this, new(nameof(this.LeftIconVisibility)));
+                this.PropertyChanged?.Invoke(this, new(nameof(this.LeftDisplayString)));
+                this.PropertyChanged?.Invoke(this, new(nameof(this.CompanyVisibility)));
+                this.SlotContextMenu.RefreshAvailability();
             });
         }
 

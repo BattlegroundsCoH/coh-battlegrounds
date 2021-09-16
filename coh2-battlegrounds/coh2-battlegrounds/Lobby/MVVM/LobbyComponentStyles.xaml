@@ -153,6 +153,10 @@
             </Setter.Value>
         </Setter>
     </Style>
+    <Style x:Key="LobbySlotContextMenuItem" TargetType="{x:Type MenuItem}">
+        <Setter Property="Foreground" Value="#FFFFFF"/>
+        <Setter Property="FontFamily" Value="Open Sans"/>
+    </Style>
     <Style x:Key="LobbySlotContextMenu" TargetType="{x:Type ContextMenu}">
         <Setter Property="SnapsToDevicePixels" Value="True"/>
         <Setter Property="OverridesDefaultStyle" Value="True"/>

@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
-using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Windows;
@@ -14,7 +13,7 @@ using Battlegrounds;
 using Battlegrounds.Functional;
 using Battlegrounds.Game.Database;
 using Battlegrounds.Modding;
-using Battlegrounds.Networking.Lobby;
+using Battlegrounds.Networking.LobbySystem;
 
 using BattlegroundsApp.LocalData;
 using BattlegroundsApp.MVVM;
@@ -147,8 +146,8 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
             }
 
             // Create teams
-            this.Allies = new(allies);
-            this.Axis = new(axis);
+            this.Allies = new(allies, handler.Lobby);
+            this.Axis = new(axis, handler.Lobby);
 
         }
 
@@ -225,9 +224,9 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
                 this.UpdateGamemodeAndOption(item.Scenario);
 
                 // Update lobby
-                if (this.m_handler.Lobby is HostedLobby lobby) {
+                /*if (this.m_handler.Lobby is HostedLobby lobby) {
                     lobby.SetMode(item.Scenario.RelativeFilename, string.Empty, string.Empty, this.LobbyServerTranslator);
-                }
+                }*/
 
             }
 
@@ -295,9 +294,9 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
             }
 
             // Update lobby
-            if (this.m_handler.Lobby is HostedLobby lobby) {
+            /*if (this.m_handler.Lobby is HostedLobby lobby) {
                 lobby.SetMode(string.Empty, item.Gamemode.Name, string.Empty, this.LobbyServerTranslator);
-            }
+            }*/
 
             // Return selected
             return next;
@@ -307,10 +306,10 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
         private int OnGamemodeOptionChanged(int current, int next, LobbyGamemodeOptionItem item) {
 
             // Update lobby
-            if (this.m_handler.Lobby is HostedLobby lobby && item is not null) {
+            /*if (this.m_handler.Lobby is HostedLobby lobby && item is not null) {
                 string optionVal = item.Option.Value.ToString(CultureInfo.InvariantCulture);
                 lobby.SetMode(string.Empty, string.Empty, optionVal, this.LobbyServerTranslator);
-            }
+            }*/
 
             // Return selected
             return next;
@@ -321,7 +320,7 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
             
 
 
-            return new(handler, handler.Lobby.AlliesTeam, handler.Lobby.AxisTeam);
+            return new(handler, handler.Lobby.Allies, handler.Lobby.Axis);
 
         }
 

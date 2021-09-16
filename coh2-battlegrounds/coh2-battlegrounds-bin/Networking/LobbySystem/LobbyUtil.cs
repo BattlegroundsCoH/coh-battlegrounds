@@ -3,13 +3,14 @@ using System.Diagnostics;
 
 using Battlegrounds.Networking.Communication;
 using Battlegrounds.Networking.Communication.Messaging;
+using Battlegrounds.Networking.LobbySystem.Roles.Host;
 using Battlegrounds.Networking.Remoting.Objects;
 using Battlegrounds.Networking.Remoting.Reflection;
 using Battlegrounds.Networking.Requests;
 using Battlegrounds.Networking.Server;
 using Battlegrounds.Steam;
 
-namespace Battlegrounds.Networking.Lobby {
+namespace Battlegrounds.Networking.LobbySystem {
 
     /// <summary>
     /// 
@@ -32,14 +33,12 @@ namespace Battlegrounds.Networking.Lobby {
             AuthService.Login(steamUser.ID, steamUser.Name);
 
             // Machine-specific data
-            ObjectCachedPool cachedPool = new ObjectCachedPool();
-            LobbyService service = new LobbyService(cachedPool);
-            IObjectID lobID = service.Create<HostedLobby>("lobby", lobbyName, serverAPI);
+            ObjectCachedPool cachedPool = new();
+            Lobby.LobbyService service = new(cachedPool);
+            var lobID = service.Create<HostedLobby>("lobby", lobbyName);
 
             // Create lobby
-            HostedLobby lobby = (cachedPool.Get(lobID) as CachedObject).Obj<HostedLobby>();
-            lobby.AllowSpectators = false;
-            lobby.AutoAssignTeams = true;
+            var lobby = (cachedPool.Get(lobID) as CachedObject).Obj<HostedLobby>();
 
             // Success flag
             bool success = false;
@@ -62,17 +61,17 @@ namespace Battlegrounds.Networking.Lobby {
                 serverAPI.SetLobbyGuid(connection.ConnectionID);
 
                 // Create handler
-                HostRequestHandler requestHandler = new HostRequestHandler(connection, service, cachedPool);
+                HostRequestHandler requestHandler = new(connection, service, cachedPool);
                 lobby.RequestHandler = requestHandler;
 
                 // Set connection
                 connection.SetRequestHandler(requestHandler);
 
                 // Get self
-                ILobbyMember self = lobby.Join(steamUser.ID, steamUser.Name);
+                var self = lobby.CreateParticipant(steamUser.ID, steamUser.Name);
 
                 // Create handler
-                handler = new LobbyHandler(serverAPI, true) {
+                handler = new LobbyHandler(true) {
                     RequestHandler = requestHandler,
                     StaticInterface = service,
                     Connection = connection,
@@ -82,7 +81,6 @@ namespace Battlegrounds.Networking.Lobby {
                     Self = self,
                 };
 
-                lobby.SetState(LobbyState.LOBBY_INLOBBY);
                 success = true;
 
             } catch (Exception ex) {
@@ -114,7 +112,7 @@ namespace Battlegrounds.Networking.Lobby {
 
             // Define handler
             LobbyHandler handler = null;
-
+            /*
             try {
 
                 // Create instance handler
@@ -179,7 +177,7 @@ namespace Battlegrounds.Networking.Lobby {
             } finally {
                 onLobbyJoined?.Invoke(success, handler);
             }
-
+            */
         }
 
     }

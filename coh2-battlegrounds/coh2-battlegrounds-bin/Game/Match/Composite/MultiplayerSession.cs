@@ -5,7 +5,7 @@ using Battlegrounds.Game.Match.Data;
 using Battlegrounds.Game.Match.Finalizer;
 using Battlegrounds.Game.Match.Play;
 using Battlegrounds.Game.Match.Startup;
-using Battlegrounds.Networking.Lobby;
+using Battlegrounds.Networking.LobbySystem;
 
 namespace Battlegrounds.Game.Match.Composite {
 
@@ -49,7 +49,7 @@ namespace Battlegrounds.Game.Match.Composite {
             void ManagedLobbyPlayer() {
 
                 // Start context
-                this.m_lobby.MatchContext = this.m_lobby.Lobby.StartMatch();
+                this.m_lobby.MatchContext = this.m_lobby.Lobby.CreateMatchContext();
 
                 // Begin
                 if (!startupStrategy.OnBegin(this.m_lobby)) {

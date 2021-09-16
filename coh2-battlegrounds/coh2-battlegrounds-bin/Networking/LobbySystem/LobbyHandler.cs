@@ -1,12 +1,11 @@
 ﻿using Battlegrounds.Networking.Communication;
 using Battlegrounds.Networking.DataStructures;
-using Battlegrounds.Networking.Lobby.Match;
+using Battlegrounds.Networking.LobbySystem.Playing;
 using Battlegrounds.Networking.Remoting;
 using Battlegrounds.Networking.Remoting.Objects;
 using Battlegrounds.Networking.Requests;
-using Battlegrounds.Networking.Server;
 
-namespace Battlegrounds.Networking.Lobby {
+namespace Battlegrounds.Networking.LobbySystem {
 
     /// <summary>
     /// 
@@ -26,7 +25,7 @@ namespace Battlegrounds.Networking.Lobby {
         /// <summary>
         /// 
         /// </summary>
-        public ILobbyMember Self { get; init; }
+        public ILobbyParticipant Self { get; init; }
 
         /// <summary>
         /// 
@@ -66,11 +65,6 @@ namespace Battlegrounds.Networking.Lobby {
         /// <summary>
         /// 
         /// </summary>
-        public ServerAPI API { get; }
-
-        /// <summary>
-        /// 
-        /// </summary>
         public bool IsHost { get; }
 
         /// <summary>
@@ -78,8 +72,7 @@ namespace Battlegrounds.Networking.Lobby {
         /// </summary>
         /// <param name="api"></param>
         /// <param name="lobby"></param>
-        public LobbyHandler(ServerAPI api, bool isHost) {
-            this.API = api;
+        public LobbyHandler(bool isHost) {
             this.IsHost = isHost;
         }
 

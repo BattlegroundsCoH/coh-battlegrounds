@@ -7,7 +7,7 @@ using System.Windows.Input;
 
 using Battlegrounds.Locale;
 using Battlegrounds.Networking;
-using Battlegrounds.Networking.Lobby;
+using Battlegrounds.Networking.LobbySystem;
 using Battlegrounds.Networking.Server;
 
 using BattlegroundsApp.Dialogs.HostGame;

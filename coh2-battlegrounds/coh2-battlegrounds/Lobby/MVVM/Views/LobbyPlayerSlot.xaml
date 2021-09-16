@@ -20,17 +20,44 @@
         <Grid.ContextMenu>
             <ContextMenu Style="{StaticResource LobbySlotContextMenu}"
                          Name="SlotContextMenuObj">
-                <MenuItem Header="Show Playercard"/>
-                <Separator/>
-                <MenuItem Header="Kick Player"/>
-                <Separator/>
-                <MenuItem Header="Lock Slot"/>
-                <MenuItem Header="Open Slot"/>
-                <Separator/>
-                <MenuItem Header="Add Easy AI"/>
-                <MenuItem Header="Add Standard AI"/>
-                <MenuItem Header="Add Hard AI"/>
-                <MenuItem Header="Add Expert AI"/>
+                <MenuItem Header="Show Playercard"
+                          Command="{Binding ShowPlayerCard}"
+                          Style="{StaticResource LobbySlotContextMenuItem}"/>
+                <Separator Visibility="{Binding KickVisibility}"/>
+                <MenuItem Header="Kick Player"
+                          Visibility="{Binding KickVisibility}"
+                          Command="{Binding KickOccupant}"
+                          Style="{StaticResource LobbySlotContextMenuItem}"/>
+                <Separator Visibility="{Binding StateSelectorVisibility}"/>
+                <MenuItem Header="Lock Slot"
+                          Visibility="{Binding LockVisibility}"
+                          Command="{Binding LockSlot}"
+                          Style="{StaticResource LobbySlotContextMenuItem}"/>
+                <MenuItem Header="Open Slot"
+                          Visibility="{Binding OpenVisibility}"
+                          Command="{Binding UnlockSlot}"
+                          Style="{StaticResource LobbySlotContextMenuItem}"/>
+                <Separator Visibility="{Binding AIOptionsVisibility}"/>
+                <MenuItem Header="Add Easy AI"
+                          Visibility="{Binding AIOptionsVisibility}"
+                          Command="{Binding AddAIPlayer}"
+                          CommandParameter="1"
+                          Style="{StaticResource LobbySlotContextMenuItem}"/>
+                <MenuItem Header="Add Standard AI"
+                          Visibility="{Binding AIOptionsVisibility}"
+                          Command="{Binding AddAIPlayer}"
+                          CommandParameter="2"
+                          Style="{StaticResource LobbySlotContextMenuItem}"/>
+                <MenuItem Header="Add Hard AI"
+                          Visibility="{Binding AIOptionsVisibility}"
+                          Command="{Binding AddAIPlayer}"
+                          CommandParameter="3"
+                          Style="{StaticResource LobbySlotContextMenuItem}"/>
+                <MenuItem Header="Add Expert AI"
+                          Visibility="{Binding AIOptionsVisibility}"
+                          Command="{Binding AddAIPlayer}"
+                          CommandParameter="4"
+                          Style="{StaticResource LobbySlotContextMenuItem}"/>
             </ContextMenu>
         </Grid.ContextMenu>
 
