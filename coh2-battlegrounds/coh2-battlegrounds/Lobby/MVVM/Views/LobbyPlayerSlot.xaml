@@ -10,7 +10,7 @@
     <UserControl.Resources>
         <ResourceDictionary Source="pack://application:,,,/coh2-battlegrounds;component/Lobby/MVVM/LobbyComponentStyles.xaml"/>
     </UserControl.Resources>
-    <Grid x:Name="rootObj">
+    <Grid x:Name="rootObj" Visibility="{Binding IsSlotVisible}">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="28"/>
             <ColumnDefinition Width="44"/>

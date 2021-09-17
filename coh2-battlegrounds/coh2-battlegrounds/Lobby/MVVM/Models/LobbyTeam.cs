@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Collections.ObjectModel;
 using System.Globalization;
 
 using Battlegrounds.Game;
+using Battlegrounds.Game.DataCompany;
 using Battlegrounds.Networking.LobbySystem;
 
 namespace BattlegroundsApp.Lobby.MVVM.Models {
@@ -12,6 +14,8 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
         private readonly ILobbyTeam m_team;
 
         public LobbySlot[] Slots { get; }
+
+        public ObservableCollection<LobbyCompanyItem> AvailableCompanies { get; set; }
 
         public LobbyTeam(ILobbyTeam lobbyTeam, ILobby lobby) {
 
@@ -49,9 +53,25 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
 
         public void Lock(LobbySlot slot) {
 
+            if (slot.NetworkInterface.SlotState is TeamSlotState.Disabled) {
+                return;
+            }
+
+            if (!slot.NetworkInterface.SetState(TeamSlotState.Locked)) {
+                // Meh?
+            }
+
         }
 
         public void Unlock(LobbySlot slot) {
+
+            if (slot.NetworkInterface.SlotState is TeamSlotState.Disabled) {
+                return;
+            }
+
+            if (!slot.NetworkInterface.SetState(TeamSlotState.Open)) {
+                // Meh?
+            }
 
         }
 
@@ -61,7 +81,10 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
             AIDifficulty diff = (AIDifficulty)byte.Parse(param, CultureInfo.InvariantCulture);
 
             // Join the AI player
-            if (this.m_lobby.CreateAIParticipant(diff, slot.NetworkInterface) is ILobbyAIParticipant) {
+            if (this.m_lobby.CreateAIParticipant(diff, slot.NetworkInterface, this.AvailableCompanies[0]) is not null) {
+
+                // Set default company index
+                slot.SelectedCompanyIndex = 0;
 
                 // Trigger refresh on slot
                 slot.RefreshVisuals();

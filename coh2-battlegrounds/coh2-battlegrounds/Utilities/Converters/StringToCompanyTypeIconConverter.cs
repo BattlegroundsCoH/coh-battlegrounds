@@ -20,11 +20,18 @@ namespace BattlegroundsApp.Utilities.Converters {
             [nameof(CompanyType.Artillery)] = new BitmapImage(new Uri("pack://application:,,,/coh2-battlegrounds;component/Resources/app/company_types/ct_artillery.png")),
             [nameof(CompanyType.TankDestroyer)] = new BitmapImage(new Uri("pack://application:,,,/coh2-battlegrounds;component/Resources/app/company_types/ct_td.png")),
             [nameof(CompanyType.Engineer)] = new BitmapImage(new Uri("pack://application:,,,/coh2-battlegrounds;component/Resources/app/company_types/ct_engineer.png")),
+            [nameof(CompanyType.Unspecified)] = new BitmapImage(new Uri("pack://application:,,,/coh2-battlegrounds;component/Resources/app/company_types/ct_unspecified.png")),
             [string.Empty] = new BitmapImage(new Uri("pack://application:,,,/coh2-battlegrounds;component/Resources/app/company_types/ct_unspecified.png"))
         };
 
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
-            => value is string icoType ? Icons.GetValueOrDefault(icoType, Icons[string.Empty]) : throw new ArgumentException("Invalid converter argument.", nameof(value));
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture) {
+            if (value is CompanyType t) {
+                return Icons.GetValueOrDefault(t.ToString(), Icons[string.Empty]);
+            } else if (value is string icoType) {
+                return Icons.GetValueOrDefault(icoType, Icons[string.Empty]);
+            }
+            throw new ArgumentException("Invalid converter argument.", nameof(value));
+        }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) => throw new NotSupportedException();
 

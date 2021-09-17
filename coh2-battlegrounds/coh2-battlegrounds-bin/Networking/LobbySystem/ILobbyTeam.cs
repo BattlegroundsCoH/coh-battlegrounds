@@ -50,6 +50,13 @@
         /// <returns></returns>
         bool Remove(ILobbyParticipant participant);
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="capacity"></param>
+        /// <returns></returns>
+        bool SetCapacity(int capacity);
+
     }
 
 }

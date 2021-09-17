@@ -47,6 +47,45 @@ namespace Battlegrounds.Networking.LobbySystem.Roles.Host {
             return false;
         }
 
+        public bool SetCapacity(int capacity) { // O(N + (N - C)) ?
+            bool[] swaps = new bool[this.Slots.Length];
+            for (int i = 0; i < this.Slots.Length; i++) {
+                swaps[i] = this.Slots[i].SlotState is TeamSlotState.Occupied;
+            }
+            for (int i = this.Slots.Length - 1; i >= 0; i--) {
+                if (i >= capacity) {
+                    if (swaps[i]) {
+                        for (int j = capacity; j >= 0; j--) {
+                            if (!swaps[j]) {
+                                this.SwapSlots(i, j);
+                                swaps[j] = false;
+                                break;
+                            }
+                        }
+                    }
+                    _ = this.Slots[i].SetState(TeamSlotState.Disabled);
+                } else if (!swaps[i]) {
+                    _ = this.Slots[i].SetState(TeamSlotState.Open);
+                }
+            }
+            return true;
+        }
+
+        private void SwapSlots(int fromIndex, int toIndex) {
+
+            // Store temp
+            var temp = this.Slots[fromIndex].SlotOccupant;
+
+            // Assign from
+            this.Slots[fromIndex].ClearOccupant();
+            _ = this.Slots[fromIndex].SetOccupant(this.Slots[toIndex].SlotOccupant);
+
+            // Assign to
+            this.Slots[toIndex].ClearOccupant();
+            _ = this.Slots[toIndex].SetOccupant(temp);
+
+        }
+
     }
 
 }

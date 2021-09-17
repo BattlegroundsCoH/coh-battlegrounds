@@ -1,6 +1,6 @@
 ﻿namespace Battlegrounds.Networking.LobbySystem {
 
-    public interface ILobbyParticipant {
+    public interface ILobbyParticipant : INetworkObjectObservable<ILobbyParticipant> {
 
         ulong Id { get; }
 

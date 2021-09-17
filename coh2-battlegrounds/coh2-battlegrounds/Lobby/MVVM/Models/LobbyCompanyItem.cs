@@ -1,29 +1,34 @@
 ﻿using Battlegrounds.Game.DataCompany;
 using Battlegrounds.Game.Gameplay;
+using Battlegrounds.Networking.LobbySystem;
 
 namespace BattlegroundsApp.Lobby.MVVM.Models {
 
-    public class LobbyCompanyItem {
+    public class LobbyCompanyItem : ILobbyCompany {
 
-        public string Name { get; set; }
+        public string Name { get; }
 
-        public Faction Army { get; set; }
+        public Faction Army { get; }
 
-        public string Type { get; set; }
+        public CompanyType Type { get; }
 
-        public bool IsAutoGeneration { get; }
+        public bool IsAuto { get; }
 
-        public bool IsNoneAvailable { get; }
+        public bool IsEmpty { get; }
+
+        public string Faction => this.Army.Name;
+
+        public double Strength => throw new System.NotImplementedException();
 
         public LobbyCompanyItem(int type) {
-            this.IsNoneAvailable = type <= 0;
-            this.IsAutoGeneration = type == 1;
+            this.IsEmpty = type <= 0;
+            this.IsAuto = type == 1;
         }
 
         public LobbyCompanyItem(Company company) : this(2) {
             this.Army = company.Army;
             this.Name = company.Name;
-            this.Type = company.Type.ToString();
+            this.Type = company.Type;
         }
 
     }

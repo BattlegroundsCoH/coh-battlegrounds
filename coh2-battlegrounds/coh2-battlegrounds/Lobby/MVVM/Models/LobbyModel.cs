@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Windows;
@@ -13,6 +14,7 @@ using Battlegrounds;
 using Battlegrounds.Functional;
 using Battlegrounds.Game.Database;
 using Battlegrounds.Modding;
+using Battlegrounds.Networking;
 using Battlegrounds.Networking.LobbySystem;
 
 using BattlegroundsApp.LocalData;
@@ -146,8 +148,8 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
             }
 
             // Create teams
-            this.Allies = new(allies, handler.Lobby);
-            this.Axis = new(axis, handler.Lobby);
+            this.Allies = new(allies, handler.Lobby) { AvailableCompanies = this.AlliedCompanies };
+            this.Axis = new(axis, handler.Lobby) { AvailableCompanies = this.AxisCompanies };
 
         }
 
@@ -172,11 +174,24 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
 
         }
 
-        private string LobbyServerTranslator(string modeKey, string modeValue) => modeValue;
-
         private int OnPackageChanged(int current, int next, LobbyModPackageItem item) {
+
+            // Bail if item is null
+            if (item is null) {
+                return next;
+            }
+
+            // Set package
             this.m_package = item.Package;
+
+            // Update lobby
+            if (!this.m_handler.Lobby.SetLobbySetting("selected_tuning", item.Package.ID)) {
+                Trace.WriteLine("Failed to set 'selected_tuning'", nameof(LobbyModel));
+            }
+
+            // Return selected
             return next;
+
         }
 
         private void TrySetMapSource(Scenario scenario) {
@@ -217,6 +232,11 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
             // If item is not null
             if (item is not null) {
 
+                // Update team capacity and go back to previous selection if capacity change fails
+                if (!this.m_handler.Lobby.SetTeamsCapacity(item.Scenario.MaxPlayers / 2)) {
+                    return current;
+                }
+
                 // Update map
                 _ = Application.Current.Dispatcher.BeginInvoke(() => this.TrySetMapSource(item.Scenario));
 
@@ -224,9 +244,9 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
                 this.UpdateGamemodeAndOption(item.Scenario);
 
                 // Update lobby
-                /*if (this.m_handler.Lobby is HostedLobby lobby) {
-                    lobby.SetMode(item.Scenario.RelativeFilename, string.Empty, string.Empty, this.LobbyServerTranslator);
-                }*/
+                if (!this.m_handler.Lobby.SetLobbySetting("selected_map", item.Scenario.RelativeFilename)) {
+                    Trace.WriteLine("Failed to set 'selected_map'", nameof(LobbyModel));
+                }
 
             }
 
@@ -294,9 +314,9 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
             }
 
             // Update lobby
-            /*if (this.m_handler.Lobby is HostedLobby lobby) {
-                lobby.SetMode(string.Empty, item.Gamemode.Name, string.Empty, this.LobbyServerTranslator);
-            }*/
+            if (!this.m_handler.Lobby.SetLobbySetting("selected_wc", item.Gamemode.Name)) {
+                Trace.WriteLine("Failed to set 'selected_wc'", nameof(LobbyModel));
+            }
 
             // Return selected
             return next;
@@ -306,26 +326,53 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
         private int OnGamemodeOptionChanged(int current, int next, LobbyGamemodeOptionItem item) {
 
             // Update lobby
-            /*if (this.m_handler.Lobby is HostedLobby lobby && item is not null) {
-                string optionVal = item.Option.Value.ToString(CultureInfo.InvariantCulture);
-                lobby.SetMode(string.Empty, string.Empty, optionVal, this.LobbyServerTranslator);
-            }*/
+            if (!this.m_handler.Lobby.SetLobbySetting("selected_wco", item.Option.Value.ToString(CultureInfo.InvariantCulture))) {
+                Trace.WriteLine("Failed to set 'selected_wco'", nameof(LobbyModel));
+            }
 
             // Return selected
             return next;
 
         }
 
+        private void OnHostedLobbyValueChanged(ILobby sender, ObservableValueChangedEventArgs eventArgs) { // Invoked when the hosted lobby values changed
+            switch (eventArgs.Property) {
+                case nameof(ILobby.Capacity):
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        private void OnRemoteLobbyValueChanged(ILobby sender, ObservableValueChangedEventArgs eventArgs) { // Invoked when the remote lobby values changed
+            switch (eventArgs.Property) {
+                case nameof(ILobby.Capacity):
+                    break;
+                default:
+                    break;
+            }
+        }
+
         public static LobbyModel CreateModelAsHost(LobbyHandler handler) {
-            
 
+            // Create model
+            LobbyModel model = new(handler, handler.Lobby.Allies, handler.Lobby.Axis);
+            handler.Lobby.ValueChanged += model.OnHostedLobbyValueChanged;
 
-            return new(handler, handler.Lobby.Allies, handler.Lobby.Axis);
+            // Return model
+            return model;
 
         }
 
         public static LobbyModel CreateModelAsParticipant(LobbyHandler handler) {
-            return new(handler, null, null);
+
+            // Create model
+            LobbyModel model = new(handler, null, null);
+            handler.Lobby.ValueChanged += model.OnRemoteLobbyValueChanged;
+
+            // Return model
+            return model;
+
         }
 
     }

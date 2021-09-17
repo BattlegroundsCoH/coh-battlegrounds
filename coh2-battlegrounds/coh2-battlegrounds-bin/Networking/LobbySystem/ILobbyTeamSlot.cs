@@ -30,7 +30,7 @@
     /// <summary>
     /// Interface representing a team slot on a <see cref="ILobbyTeam"/>.
     /// </summary>
-    public interface ILobbyTeamSlot {
+    public interface ILobbyTeamSlot : INetworkObjectObservable<ILobbyTeamSlot> {
 
         /// <summary>
         /// Get the team the slot belongs to.
