@@ -254,6 +254,20 @@
                             "VeterancyExperienceGain": 10
                         }
                     ]
+                },
+                {
+                    "Blueprint": "su_76m_bg",
+                    "Abilities": [
+                        {
+                            "Blueprint": "soviet_offmap_su-76_barrage",
+                            "LockoutBlueprint": "soviet_offmap_su-76_barrage_unlock",
+                            "AbilityCategory": "Artillery",
+                            "MaxUsePerMatch": -1,
+                            "RequireOffmap": true,
+                            "CanGrantVeterancy": true,
+                            "VeterancyExperienceGain": 10
+                        }
+                    ]
                 }
             ],
             "Transports": [
