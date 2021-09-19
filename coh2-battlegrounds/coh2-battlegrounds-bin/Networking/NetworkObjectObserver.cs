@@ -26,11 +26,12 @@ namespace Battlegrounds.Networking {
 
         public void AddInstance<T>(INetworkObjectObservable<T> observable) {
             if (this.m_observedObjects.Add(observable)) {
-                observable.ValueChanged += this.OnNetworkObjectEvent;
+                observable.ValueChanged += this.OnNetworkObjectValueEvent;
+                observable.MethodInvoked += this.OnNetworkObjectMethodEvent;
             }
         }
 
-        private void OnNetworkObjectEvent<T>(T sender, ObservableValueChangedEventArgs args) {
+        private void OnNetworkObjectValueEvent<T>(T sender, ObservableValueChangedEventArgs args) {
 
             // Get ID of sender
             var senderID = this.m_pool.RegisterIfNotFound(sender);
@@ -43,6 +44,10 @@ namespace Battlegrounds.Networking {
 
             // Send the broadcast message
             this.m_connection.SendBroadcastMessage(new RemoteCallMessage(senderID.ToString(), mangle, remoteArgs));
+
+        }
+
+        private void OnNetworkObjectMethodEvent<T>(T sender, string invokedMethod, params object[] args) {
 
         }
 

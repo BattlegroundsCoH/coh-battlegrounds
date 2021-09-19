@@ -51,6 +51,14 @@ namespace Battlegrounds.Networking {
     public delegate void ObservableValueChangedHandler<T>(T sender, ObservableValueChangedEventArgs e);
 
     /// <summary>
+    /// Delegate handler for handing observable method invokations
+    /// </summary>
+    /// <param name="sender">The observed object that triggered the handler.</param>
+    /// <param name="invokedMethod">The name of the invoked method.</param>
+    /// <param name="args">The arguments given to the method.</param>
+    public delegate void ObservableMethodInvokedHandler<T>(T sender, string invokedMethod, params object[] args);
+
+    /// <summary>
     /// Interface for subscribing to obersvable eventso of network objects.
     /// </summary>
     /// <typeparam name="T">The network object to observe.</typeparam>
@@ -60,6 +68,11 @@ namespace Battlegrounds.Networking {
         /// Event triggered when a network object value was changed.
         /// </summary>
         event ObservableValueChangedHandler<T> ValueChanged;
+
+        /// <summary>
+        /// Event triggered when a network object method is invoked.
+        /// </summary>
+        event ObservableMethodInvokedHandler<T> MethodInvoked;
 
     }
 

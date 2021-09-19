@@ -18,6 +18,7 @@ namespace Battlegrounds.Networking.LobbySystem.Roles.Host {
         private readonly List<ILobbyParticipant> m_participants;
 
         public event ObservableValueChangedHandler<ILobby> ValueChanged;
+        public event ObservableMethodInvokedHandler<ILobby> MethodInvoked;
 
         [RemotableProperty(GetOnly = true)]
         public bool AllowSpectators => this.m_allowSpectators;

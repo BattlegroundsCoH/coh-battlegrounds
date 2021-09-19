@@ -6,6 +6,7 @@
         private readonly AuthObject m_authObj;
 
         public event ObservableValueChangedHandler<ILobbyParticipant> ValueChanged;
+        public event ObservableMethodInvokedHandler<ILobbyParticipant> MethodInvoked;
 
         public ulong Id { get; }
 

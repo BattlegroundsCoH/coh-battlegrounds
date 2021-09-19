@@ -6,6 +6,7 @@
         TeamSlotState m_state;
 
         public event ObservableValueChangedHandler<ILobbyTeamSlot> ValueChanged;
+        public event ObservableMethodInvokedHandler<ILobbyTeamSlot> MethodInvoked;
 
         public ILobbyTeam SlotTeam { get; }
 
