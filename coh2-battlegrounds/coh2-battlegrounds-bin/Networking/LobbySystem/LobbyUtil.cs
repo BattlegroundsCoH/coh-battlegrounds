@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Diagnostics;
 
-using Battlegrounds.Networking.Communication;
+using Battlegrounds.ErrorHandling.Networking;
+using Battlegrounds.Networking.Communication.Connections;
 using Battlegrounds.Networking.Communication.Messaging;
 using Battlegrounds.Networking.LobbySystem.Roles.Host;
 using Battlegrounds.Networking.Remoting.Objects;
 using Battlegrounds.Networking.Remoting.Reflection;
-using Battlegrounds.Networking.Requests;
 using Battlegrounds.Networking.Server;
 using Battlegrounds.Steam;
 
@@ -34,7 +34,7 @@ namespace Battlegrounds.Networking.LobbySystem {
 
             // Machine-specific data
             ObjectCachedPool cachedPool = new();
-            Lobby.LobbyService service = new(cachedPool);
+            LobbyService service = new(cachedPool);
             var lobID = service.Create<HostedLobby>("lobby", lobbyName);
 
             // Create lobby
@@ -52,27 +52,22 @@ namespace Battlegrounds.Networking.LobbySystem {
                 IntroMessage intro = new(true, lobbyName, lobbyPassword, 1);
 
                 // Establish connection
-                var connection = SocketConnection.EstablishConnection(NetworkInterface.GetBestAddress(), 11000, steamUser.ID, intro);
+                SocketConnection connection = SocketConnection.EstablishConnection(NetworkInterface.GetBestAddress(), 11000, steamUser.ID, intro);
                 if (connection is null) {
-                    throw new Exception("Failed to establish HTTP connection.");
+                    throw new ConnectionFailedException("Failed to establish TCP connection.");
                 }
 
                 // Set API
                 serverAPI.SetLobbyGuid(connection.ConnectionID);
 
-                // Create handler
-                HostRequestHandler requestHandler = new(connection, service, cachedPool);
-                lobby.RequestHandler = requestHandler;
-
-                // Set connection
-                connection.SetRequestHandler(requestHandler);
+                // Create network handler
+                NetworkObjectHandler<ILobby> networkObject = new(lobby, connection, service, cachedPool);
 
                 // Get self
                 var self = lobby.CreateParticipant(steamUser.ID, steamUser.Name);
 
                 // Create handler
                 handler = new LobbyHandler(true) {
-                    RequestHandler = requestHandler,
                     StaticInterface = service,
                     Connection = connection,
                     ObjectPool = cachedPool,
@@ -81,7 +76,16 @@ namespace Battlegrounds.Networking.LobbySystem {
                     Self = self,
                 };
 
+                // Set success flag
                 success = true;
+
+            } catch (ConnectionFailedException connex) {
+
+                // Log error
+                Trace.WriteLine(connex, $"{nameof(LobbyUtil)}::{nameof(HostLobby)}");
+
+                // Propogate -> Let GUI handle this
+                throw;
 
             } catch (Exception ex) {
 

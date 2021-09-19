@@ -51,30 +51,6 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
 
         }
 
-        public void Lock(LobbySlot slot) {
-
-            if (slot.NetworkInterface.SlotState is TeamSlotState.Disabled) {
-                return;
-            }
-
-            if (!slot.NetworkInterface.SetState(TeamSlotState.Locked)) {
-                // Meh?
-            }
-
-        }
-
-        public void Unlock(LobbySlot slot) {
-
-            if (slot.NetworkInterface.SlotState is TeamSlotState.Disabled) {
-                return;
-            }
-
-            if (!slot.NetworkInterface.SetState(TeamSlotState.Open)) {
-                // Meh?
-            }
-
-        }
-
         public void AddAIPlayer(LobbySlot slot, string param) {
 
             // Get AI Difficulty

@@ -96,8 +96,8 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
             this.SlotContextMenu = new(this) {
                 ShowPlayerCard = new TargettedRelayCommand<LobbySlot>(this, this.m_teamModel.ShowPlayercard),
                 KickOccupant = new TargettedRelayCommand<LobbySlot>(this, this.m_teamModel.KickOccupant),
-                LockSlot = new TargettedRelayCommand<LobbySlot>(this, this.m_teamModel.Lock),
-                UnlockSlot = new TargettedRelayCommand<LobbySlot>(this, this.m_teamModel.Unlock),
+                LockSlot = new RelayCommand(this.Lock),
+                UnlockSlot = new RelayCommand(this.Unlock),
                 AddAIPlayer = new TargettedRelayCommand<LobbySlot, string>(this, this.m_teamModel.AddAIPlayer)
             };
 
@@ -169,6 +169,30 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
                     }
                 }
             });
+        }
+
+        private void Lock() {
+
+            if (this.NetworkInterface.SlotState is TeamSlotState.Disabled) {
+                return;
+            }
+
+            if (!this.NetworkInterface.SetState(TeamSlotState.Locked)) {
+                // Meh?
+            }
+
+        }
+
+        private void Unlock() {
+
+            if (this.NetworkInterface.SlotState is TeamSlotState.Disabled) {
+                return;
+            }
+
+            if (!this.NetworkInterface.SetState(TeamSlotState.Open)) {
+                // Meh?
+            }
+
         }
 
     }
