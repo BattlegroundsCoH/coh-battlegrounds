@@ -69,7 +69,7 @@ namespace Battlegrounds.Networking.LobbySystem.Roles.Host {
 
             // Create participant
             ILobbyAIParticipant participant = new HostedLobbyAIParticipant(difficulty);
-            participant.SetCompany(aiCompany);
+            _ = participant.SetCompany(aiCompany);
 
             // Return participant if they were added
             return this.AddParticipant(participant, teamSlot) ? participant : null;

@@ -14,9 +14,9 @@ namespace Battlegrounds.Networking {
     /// Class that listens for incoming events and dispatches them to targetted destination.
     /// </summary>
     public sealed class NetworkObjectListener : IIncomingRequestHandler {
-        
+
         public IConnection Connection { get; }
-        
+
         public IObjectPool SharedObjects { get; }
 
         public IStaticInterface StaticInterface { get; }
@@ -30,6 +30,7 @@ namespace Battlegrounds.Networking {
         public void CloseIncomingHandler() { }
 
         public IMessage HandleRequest(IMessage message) => message switch {
+            GetObjectMessage gom => this.HandleGetObjectRequest(gom),
             RemoteCallMessage rcm => this.HandleRemoteProcedureCall(rcm),
             _ => new NullMessage()
         };
@@ -87,6 +88,15 @@ namespace Battlegrounds.Networking {
 
             }
 
+        }
+
+        private IMessage HandleGetObjectRequest(GetObjectMessage getObjectMessage) {
+            if (getObjectMessage.IsStaticObject) {
+                var id = this.StaticInterface.FromID(getObjectMessage.ObjectType);
+                var obj = this.SharedObjects.Get(id);
+                return obj is CachedObject cobj ? new IDMessage(id, cobj.Type.Name) : new IDMessage(id, obj.GetType().Name);
+            }
+            return new NullMessage();
         }
 
     }

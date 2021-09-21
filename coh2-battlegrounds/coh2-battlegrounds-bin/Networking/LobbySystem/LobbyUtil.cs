@@ -5,6 +5,8 @@ using Battlegrounds.ErrorHandling.Networking;
 using Battlegrounds.Networking.Communication.Connections;
 using Battlegrounds.Networking.Communication.Messaging;
 using Battlegrounds.Networking.LobbySystem.Roles.Host;
+using Battlegrounds.Networking.LobbySystem.Roles.Participant;
+using Battlegrounds.Networking.Remoting;
 using Battlegrounds.Networking.Remoting.Objects;
 using Battlegrounds.Networking.Remoting.Reflection;
 using Battlegrounds.Networking.Server;
@@ -101,77 +103,72 @@ namespace Battlegrounds.Networking.LobbySystem {
 
         }
 
-        public static void JoinLobby(ServerAPI serverAPI, ServerLobby lobby, string password, Action<bool, LobbyHandler> onLobbyJoined) {
+        public static void JoinLobby(ServerAPI serverAPI, ServerLobby lobbyData, string password, Action<bool, LobbyHandler> onLobbyJoined) {
 
             const string methoddb = $"{nameof(LobbyUtil)}::{nameof(JoinLobby)}";
 
             // Get steam user
-            SteamUser steamUser = BattlegroundsInstance.Steam.User;
+            var steamUser = BattlegroundsInstance.Steam.User;
 
             // Log in with auth service
             AuthService.Login(steamUser.ID, steamUser.Name);
+
+            // Machine-specific data
+            ObjectCachedPool cachedPool = new();
+            LobbyService service = new(cachedPool);
 
             // Success flag
             bool success = false;
 
             // Define handler
             LobbyHandler handler = null;
-            /*
+
             try {
 
-                // Create instance handler
-                ObjectInstanceHandler instanceHandler = new ObjectInstanceHandler();
-
                 // Create intro
-                IntroMessage intro = new IntroMessage(false, lobby.Guid, password, 1);
+                IntroMessage intro = new(false, lobbyData.Guid, password, 1);
 
                 // Establish TCP connection
-                var connection = SocketConnection.EstablishConnection(NetworkInterface.GetBestAddress(), 11000, steamUser.ID, intro);
+                SocketConnection connection = SocketConnection.EstablishConnection(NetworkInterface.GetBestAddress(), 11000, steamUser.ID, intro);
                 if (connection is null) {
-                    throw new Exception("Failed to establish HTTP connection.");
+                    throw new ConnectionFailedException("Failed to establish TCP connection.");
                 }
 
                 // Set API
                 serverAPI.SetLobbyGuid(connection.ConnectionID);
 
-                // Create handler
-                ParticipantRequestHandler participantHandler = new ParticipantRequestHandler(connection, instanceHandler) {
-                    DependencyInjector = (t, objectID, requestHandler) => t switch {
-                        nameof(HostedLobby) => new ProxyLobby(objectID, requestHandler, serverAPI),
-                        nameof(LobbyMember) => new ProxyLobbyMember(objectID, requestHandler, new AuthObject(steamUser.ID, steamUser.Name)),
-                        nameof(LobbyTeam) => new ProxyLobbyTeam(objectID, requestHandler),
-                        nameof(LobbyTeamSlot) => new ProxyLobbyTeamSlot(requestHandler, objectID),
-                        _ => null
-                    }
-                };
+                // Get remote obj
+                var result = connection.SendMessage(new GetObjectMessage("lobby", true), true);
+                var lobID = result is IDMessage id ? id.ID : throw new ConnectionFailedException("Failed to establish connection with remote lobby instance.");
 
-                // Set request handler
-                connection.SetRequestHandler(participantHandler);
+                // Create lobby
+                RemoteLobby lobby = new(lobID);
 
-                // Get proxy
-                object proxyObj = participantHandler.SendRequest(null, "lobby");
-                instanceHandler.RegisterInstance(proxyObj as ProxyLobby);
-
-                // Get self
-                ILobbyMember self = (proxyObj as ILobby).Join(steamUser.ID, steamUser.Name);
+                // Create network handler
+                NetworkObjectHandler<ILobby> networkObject = new(lobby, connection, service, cachedPool);
 
                 // Set handler
-                handler = new LobbyHandler(serverAPI, false) {
-                    RequestHandler = participantHandler,
+                handler = new LobbyHandler(false) {
                     StaticInterface = null,
                     Connection = connection,
-                    ObjectPool = null,
-                    Lobby = proxyObj as ILobby,
-                    Self = self,
-                    InstanceHandler = instanceHandler,
-                    LobbyID = (proxyObj as ProxyLobby).ObjectID
+                    ObjectPool = cachedPool,
+                    Lobby = lobby,
+                    LobbyID = lobID
                 };
 
                 // Set success flag
                 success = true;
 
                 // Set sucess flag
-                Trace.WriteLine($"Sucessfully joined lobby [lobby = {handler.Lobby is not null}, self = {handler.Self is not null}, self machine = {handler.Self?.IsLocalMachine}]", methoddb);
+                Trace.WriteLine($"Sucessfully joined lobby [lobby = {handler.Lobby is not null}, self = {handler.Self is not null}, self machine = {handler.Self?.IsSelf}]", methoddb);
+
+            } catch (ConnectionFailedException connex) {
+
+                // Log error
+                Trace.WriteLine(connex, methoddb);
+
+                // Propogate -> Let GUI handle this
+                throw;
 
             } catch (Exception ex) {
 
@@ -181,7 +178,7 @@ namespace Battlegrounds.Networking.LobbySystem {
             } finally {
                 onLobbyJoined?.Invoke(success, handler);
             }
-            */
+
         }
 
     }
