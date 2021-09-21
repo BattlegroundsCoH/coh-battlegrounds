@@ -5,7 +5,6 @@ using Battlegrounds.Networking.Communication.Connections;
 using Battlegrounds.Networking.Communication.Messaging;
 using Battlegrounds.Networking.Remoting;
 using Battlegrounds.Networking.Remoting.Objects;
-using Battlegrounds.Networking.Requests;
 
 namespace Battlegrounds.Networking {
 
@@ -18,6 +17,8 @@ namespace Battlegrounds.Networking {
         private readonly IConnection m_connection;
         private readonly IObjectPool m_pool;
 
+        public event ObservableValueChangedHandler<object> BrokerNotify;
+
         public NetworkObjectObserver(IConnection connection, IObjectPool objectPool) {
             this.m_connection = connection;
             this.m_pool = objectPool;
@@ -27,27 +28,44 @@ namespace Battlegrounds.Networking {
         public void AddInstance<T>(INetworkObjectObservable<T> observable) {
             if (this.m_observedObjects.Add(observable)) {
                 observable.ValueChanged += this.OnNetworkObjectValueEvent;
-                observable.MethodInvoked += this.OnNetworkObjectMethodEvent;
+                observable.MethodInvoked += this.OnNetworkObjectRemoteMethodEvent;
             }
         }
 
         private void OnNetworkObjectValueEvent<T>(T sender, ObservableValueChangedEventArgs args) {
+            if (args.IsBrokerEvent) {
+                this.BrokerNotify?.Invoke(sender, args);
+            } else {
+                this.OnNetworkObjectRemoteValueEvent(sender, args);
+            }
+        }
+
+        private void OnNetworkObjectRemoteValueEvent<T>(T sender, ObservableValueChangedEventArgs args) {
 
             // Get ID of sender
             var senderID = this.m_pool.RegisterIfNotFound(sender);
 
             // Mangle
-            string mangle = Mangler.Mangle(sender.GetType().Name, "NetworkUpdate", args.HasValue ? Mangler.PROPERTY_SET : Mangler.PROPERTY_GET);
+            string mangle = Mangler.Mangle(sender.GetType().Name, args.Property, args.HasValue ? Mangler.PROPERTY_SET : Mangler.PROPERTY_GET);
 
             // Determine arguments
-            object[] remoteArgs = args.HasValue ? new object[] { args.Property, args.Value } : new object[] { args.Property };
+            object[] remoteArgs = args.HasValue ? new object[] { args.Value } : Array.Empty<object>();
 
             // Send the broadcast message
             this.m_connection.SendBroadcastMessage(new RemoteCallMessage(senderID.ToString(), mangle, remoteArgs));
 
         }
 
-        private void OnNetworkObjectMethodEvent<T>(T sender, string invokedMethod, params object[] args) {
+        private void OnNetworkObjectRemoteMethodEvent<T>(T sender, string invokedMethod, params object[] args) {
+
+            // Get ID of sender
+            var senderID = this.m_pool.RegisterIfNotFound(sender);
+
+            // Mangle
+            string mangle = Mangler.Mangle(sender.GetType().Name, invokedMethod);
+
+            // Send the broadcast message
+            this.m_connection.SendBroadcastMessage(new RemoteCallMessage(senderID.ToString(), mangle, args));
 
         }
 

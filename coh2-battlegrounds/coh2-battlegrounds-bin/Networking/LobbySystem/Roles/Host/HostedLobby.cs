@@ -7,6 +7,7 @@ using Battlegrounds.Networking.ChatSystem;
 using Battlegrounds.Networking.LobbySystem.Playing;
 using Battlegrounds.Networking.Remoting.Reflection;
 using Battlegrounds.Networking.Requests;
+using Battlegrounds.Networking.Server;
 
 namespace Battlegrounds.Networking.LobbySystem.Roles.Host {
 
@@ -84,6 +85,17 @@ namespace Battlegrounds.Networking.LobbySystem.Roles.Host {
             // Find the first available slot
             var slot = this.FindFirstAvailableSlot();
 
+            // Add participant
+            if (this.AddParticipant(participant, slot)) {
+
+                // Broadcast event
+                this.MethodInvoked?.Invoke(this, nameof(CreateParticipant), participantID, participantName);
+
+                // Return participant
+                return participant;
+
+            }
+
             // Return participant if they were added
             return this.AddParticipant(participant, slot) ? participant : null;
 
@@ -154,9 +166,27 @@ namespace Battlegrounds.Networking.LobbySystem.Roles.Host {
             // Notify
             this.ValueChanged?.Invoke(this, new(lobbySetting, lobbySettingValue));
 
+            // Try update server setting (if any)
+            this.UpdateServerSetting();
+
             // Return true
             return true;
 
+        }
+
+        private void UpdateServerSetting() {
+            if (this.m_settings.TryGetValue("selected_map", out string map)
+                && this.m_settings.TryGetValue("selected_wc", out string gamemode)
+                && this.m_settings.TryGetValue("selected_wco", out string gamemodeoption)) {
+
+                // Generate string to upload
+                string uploadstr = string.IsNullOrEmpty(gamemodeoption) ? "" : $" ({gamemodeoption})";
+                uploadstr = $"{map}, {gamemode}" + uploadstr;
+
+                // Update server hub
+                this.ValueChanged?.Invoke(this, new(nameof(IServerLobby.LobbyPlaymode), uploadstr) { IsBrokerEvent = true });
+
+            }
         }
 
         [RemotableMethod]
