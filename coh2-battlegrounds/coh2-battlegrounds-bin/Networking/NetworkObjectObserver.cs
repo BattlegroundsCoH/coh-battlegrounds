@@ -19,10 +19,13 @@ namespace Battlegrounds.Networking {
 
         public event ObservableValueChangedHandler<object> BrokerNotify;
 
+        public ICollection<string> MethodFilter { get; }
+
         public NetworkObjectObserver(IConnection connection, IObjectPool objectPool) {
             this.m_connection = connection;
             this.m_pool = objectPool;
             this.m_observedObjects = new();
+            this.MethodFilter = new List<string>();
         }
 
         public void AddInstance<T>(INetworkObjectObservable<T> observable) {
@@ -33,11 +36,19 @@ namespace Battlegrounds.Networking {
         }
 
         private void OnNetworkObjectValueEvent<T>(T sender, ObservableValueChangedEventArgs args) {
+            
+            // If GUI only, bail
+            if (args.GUIOnly) {
+                return;
+            }
+
+            // If broker, notify; otherwise invoke remote
             if (args.IsBrokerEvent) {
                 this.BrokerNotify?.Invoke(sender, args);
             } else {
                 this.OnNetworkObjectRemoteValueEvent(sender, args);
             }
+
         }
 
         private void OnNetworkObjectRemoteValueEvent<T>(T sender, ObservableValueChangedEventArgs args) {
@@ -57,6 +68,11 @@ namespace Battlegrounds.Networking {
         }
 
         private void OnNetworkObjectRemoteMethodEvent<T>(T sender, string invokedMethod, params object[] args) {
+
+            // Make sure it's not part of the method filter
+            if (this.MethodFilter.Contains(invokedMethod)) {
+                return;
+            }
 
             // Get ID of sender
             var senderID = this.m_pool.RegisterIfNotFound(sender);

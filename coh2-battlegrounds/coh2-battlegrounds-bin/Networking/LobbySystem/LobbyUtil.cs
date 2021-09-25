@@ -6,11 +6,9 @@ using Battlegrounds.Networking.Communication.Connections;
 using Battlegrounds.Networking.Communication.Messaging;
 using Battlegrounds.Networking.LobbySystem.Roles.Host;
 using Battlegrounds.Networking.LobbySystem.Roles.Participant;
-using Battlegrounds.Networking.Remoting;
 using Battlegrounds.Networking.Remoting.Objects;
 using Battlegrounds.Networking.Remoting.Reflection;
 using Battlegrounds.Networking.Server;
-using Battlegrounds.Steam;
 
 namespace Battlegrounds.Networking.LobbySystem {
 
@@ -134,6 +132,9 @@ namespace Battlegrounds.Networking.LobbySystem {
                     throw new ConnectionFailedException("Failed to establish TCP connection.");
                 }
 
+                // Create remote handle
+                IRemoteHandle handle = new RemoteHandle(connection);
+
                 // Set API
                 serverAPI.SetLobbyGuid(connection.ConnectionID);
 
@@ -142,10 +143,12 @@ namespace Battlegrounds.Networking.LobbySystem {
                 var lobID = result is IDMessage id ? id.ID : throw new ConnectionFailedException("Failed to establish connection with remote lobby instance.");
 
                 // Create lobby
-                RemoteLobby lobby = new(lobID);
+                RemoteLobby lobby = new(lobID, handle);
+                lobby.InitRemote();
 
                 // Create network handler
                 NetworkObjectHandler<ILobby> networkObject = new(lobby, connection, service, cachedPool);
+                SetupParticipantNetworkObjectHandler(networkObject);
 
                 // Set handler
                 handler = new LobbyHandler(false) {
@@ -178,6 +181,15 @@ namespace Battlegrounds.Networking.LobbySystem {
             } finally {
                 onLobbyJoined?.Invoke(success, handler);
             }
+
+        }
+
+        private static void SetupParticipantNetworkObjectHandler(NetworkObjectHandler<ILobby> networkObjectHandler) {
+
+            // Add methods to filter when observing.
+            networkObjectHandler.Observer.MethodFilter.Add(nameof(ILobby.RemoveParticipant));
+            networkObjectHandler.Observer.MethodFilter.Add(nameof(ILobby.CreateAIParticipant));
+            networkObjectHandler.Observer.MethodFilter.Add(nameof(ILobby.CreateParticipant));
 
         }
 

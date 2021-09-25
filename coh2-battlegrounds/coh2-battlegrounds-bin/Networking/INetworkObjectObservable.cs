@@ -23,9 +23,14 @@ namespace Battlegrounds.Networking {
         public object Value { get; }
 
         /// <summary>
-        /// Get or init if the observable value event is oriented towards the broker
+        /// Get or init if the observable value event is oriented towards the broker.
         /// </summary>
         public bool IsBrokerEvent { get; init; }
+
+        /// <summary>
+        /// Get or init if the observable value event is merely for GUI purposes.
+        /// </summary>
+        public bool GUIOnly { get; set; }
 
         /// <summary>
         /// Create a new <see cref="ObservableValueChangedEventArgs"/> instance with only the name of the changed property.

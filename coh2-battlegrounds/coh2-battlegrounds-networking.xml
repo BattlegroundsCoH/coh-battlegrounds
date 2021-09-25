@@ -3162,9 +3162,122 @@
             Get or set the function to handle when a file is received.
             </summary>
         </member>
+        <member name="T:Battlegrounds.Networking.Memory.CollectionCache`1">
+            <summary>
+            
+            </summary>
+            <typeparam name="T"></typeparam>
+        </member>
+        <member name="P:Battlegrounds.Networking.Memory.CollectionCache`1.Update">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:Battlegrounds.Networking.Memory.CollectionCache`1.Count">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:Battlegrounds.Networking.Memory.CollectionCache`1.IsReadOnly">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Battlegrounds.Networking.Memory.CollectionCache`1.#ctor(System.TimeSpan)">
+            <summary>
+            
+            </summary>
+            <param name="objectLifeSpan"></param>
+        </member>
+        <member name="M:Battlegrounds.Networking.Memory.CollectionCache`1.Add(`0)">
+            <summary>
+            
+            </summary>
+            <param name="item"></param>
+        </member>
+        <member name="M:Battlegrounds.Networking.Memory.CollectionCache`1.Clear">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Battlegrounds.Networking.Memory.CollectionCache`1.Contains(`0)">
+            <summary>
+            
+            </summary>
+            <param name="item"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Battlegrounds.Networking.Memory.CollectionCache`1.CopyTo(`0[],System.Int32)">
+            <summary>
+            
+            </summary>
+            <param name="array"></param>
+            <param name="arrayIndex"></param>
+        </member>
+        <member name="M:Battlegrounds.Networking.Memory.CollectionCache`1.Remove(`0)">
+            <summary>
+            
+            </summary>
+            <param name="item"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Battlegrounds.Networking.Memory.CollectionCache`1.GetEnumerator">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Battlegrounds.Networking.Memory.CollectionCache`1.GetCacheEnumerator">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Battlegrounds.Networking.Memory.CollectionCache`1.Lookup(System.Int32)">
+            <summary>
+            
+            </summary>
+            <param name="index"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Battlegrounds.Networking.Memory.CollectionCache`1.LookupValue(System.Int32,System.Func{`0})">
+            <summary>
+            
+            </summary>
+            <param name="index"></param>
+            <param name="update"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Battlegrounds.Networking.Memory.CollectionCache`1.LookupValue(System.Int32,System.Object,System.Func{System.Object,`0})">
+            <summary>
+            
+            </summary>
+            <param name="index"></param>
+            <param name="arg"></param>
+            <param name="update"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Battlegrounds.Networking.Memory.ObjectCacheChangedEventHandler`1">
+            <summary>
+            Event handler delegate for handling value changes in a <see cref="T:Battlegrounds.Networking.Memory.ObjectCache`1"/> object.
+            </summary>
+            <typeparam name="T">The class type being cached.</typeparam>
+            <param name="oldValue">The old cached value.</param>
+            <param name="newValue">The new cached value.</param>
+        </member>
         <member name="T:Battlegrounds.Networking.Memory.ObjectCache">
             <summary>
             Class representing an object that is being cached in memory.
+            </summary>
+        </member>
+        <member name="F:Battlegrounds.Networking.Memory.ObjectCache.m_cachedValue">
+            <summary>
+            The cached value.
+            </summary>
+        </member>
+        <member name="F:Battlegrounds.Networking.Memory.ObjectCache.m_lastUpdate">
+            <summary>
+            The date and time of last cache value update
             </summary>
         </member>
         <member name="P:Battlegrounds.Networking.Memory.ObjectCache.Value">
@@ -3175,6 +3288,11 @@
         <member name="P:Battlegrounds.Networking.Memory.ObjectCache.IsValid">
             <summary>
             Get if the current cached value is considered valid.
+            </summary>
+        </member>
+        <member name="E:Battlegrounds.Networking.Memory.ObjectCache.CachedValueChanged">
+            <summary>
+            Event triggered when the cached value is updated.
             </summary>
         </member>
         <member name="M:Battlegrounds.Networking.Memory.ObjectCache.#ctor(System.TimeSpan)">
@@ -3205,6 +3323,17 @@
             <param name="updateMethod">The method to invoke to get an updated cache value.</param>
             <returns>The stored cache value.</returns>
         </member>
+        <member name="M:Battlegrounds.Networking.Memory.ObjectCache.SetCachedValue(System.Object)">
+            <summary>
+            Set a new cached value and update lifetime.
+            </summary>
+            <param name="newValue">The new value to set as cached.</param>
+        </member>
+        <member name="M:Battlegrounds.Networking.Memory.ObjectCache.Null">
+            <summary>
+            Set the stored value to null.
+            </summary>
+        </member>
         <member name="T:Battlegrounds.Networking.Memory.ObjectCache`1">
             <summary>
             Class representing an object that is being cached in memory.
@@ -3214,6 +3343,11 @@
         <member name="P:Battlegrounds.Networking.Memory.ObjectCache`1.Value">
             <summary>
             Get the current cached value.
+            </summary>
+        </member>
+        <member name="E:Battlegrounds.Networking.Memory.ObjectCache`1.CachedValueChanged">
+            <summary>
+            Event triggered when the cached value is updated.
             </summary>
         </member>
         <member name="M:Battlegrounds.Networking.Memory.ObjectCache`1.#ctor(System.TimeSpan)">
@@ -3243,6 +3377,80 @@
             <param name="updateArgument">The argument to pass along to the update method.</param>
             <param name="updateMethod">The method to invoke to get an updated cache value.</param>
             <returns>The stored cache value.</returns>
+        </member>
+        <member name="M:Battlegrounds.Networking.Memory.ObjectCache`1.SetCachedValue(`0)">
+            <summary>
+            Set a new cached value and update lifetime.
+            </summary>
+            <param name="newValue">The new value to set as cached.</param>
+        </member>
+        <member name="T:Battlegrounds.Networking.Memory.ValueCacheChangedEventHandler`1">
+            <summary>
+            Event handler delegate for handling value changes in a <see cref="T:Battlegrounds.Networking.Memory.ValueCache`1"/> object.
+            </summary>
+            <typeparam name="T">The value type being cached.</typeparam>
+            <param name="oldValue">The old cached value.</param>
+            <param name="newValue">The new cached value.</param>
+        </member>
+        <member name="T:Battlegrounds.Networking.Memory.ValueCache`1">
+            <summary>
+            Class representing a value that is being cached in memory.
+            </summary>
+        </member>
+        <member name="P:Battlegrounds.Networking.Memory.ValueCache`1.Value">
+            <summary>
+            Get the current cached value.
+            </summary>
+        </member>
+        <member name="P:Battlegrounds.Networking.Memory.ValueCache`1.IsValid">
+            <summary>
+            Get if the current cached value is considered valid.
+            </summary>
+        </member>
+        <member name="E:Battlegrounds.Networking.Memory.ValueCache`1.CachedValueChanged">
+            <summary>
+            Event triggered when the cached value is updated.
+            </summary>
+        </member>
+        <member name="M:Battlegrounds.Networking.Memory.ValueCache`1.#ctor(System.TimeSpan)">
+            <summary>
+            Initialise a new <see cref="T:Battlegrounds.Networking.Memory.ObjectCache"/> instance where a value is stored by <paramref name="cacheLifeSpan"/>.
+            </summary>
+            <param name="cacheLifeSpan">The amount of time to keep a value cached before the value is updated.</param>
+        </member>
+        <member name="M:Battlegrounds.Networking.Memory.ValueCache`1.#ctor(`0,System.TimeSpan)">
+            <summary>
+            Initialise a new <see cref="T:Battlegrounds.Networking.Memory.ObjectCache"/> with time and initial value specified.
+            </summary>
+            <param name="cacheValue">The value to store in memory.</param>
+            <param name="cacheLifeSpan">The amount of time to keep a value cached before the value is updated.</param>
+        </member>
+        <member name="M:Battlegrounds.Networking.Memory.ValueCache`1.GetCachedValue(System.Func{`0})">
+            <summary>
+            Get the cached value or get an updated one through <paramref name="updateMethod"/>.
+            </summary>
+            <param name="updateMethod">The method to invoke to get an updated cache value.</param>
+            <returns>The stored cache value.</returns>
+        </member>
+        <member name="M:Battlegrounds.Networking.Memory.ValueCache`1.GetCachedValue(`0,System.Func{`0,`0})">
+            <summary>
+            Get the cached value or get an updated one through <paramref name="updateMethod"/>.
+            </summary>
+            <param name="updateArgument">The argument to pass along to the update method.</param>
+            <param name="updateMethod">The method to invoke to get an updated cache value.</param>
+            <returns>The stored cache value.</returns>
+        </member>
+        <member name="M:Battlegrounds.Networking.Memory.ValueCache`1.SetCachedValue(`0)">
+            <summary>
+            Set a new cached value and update lifetime.
+            </summary>
+            <param name="newValue">The new value to set as cached.</param>
+        </member>
+        <member name="M:Battlegrounds.Networking.Memory.ValueCache`1.op_Implicit(Battlegrounds.Networking.Memory.ValueCache{`0})~`0">
+            <summary>
+            
+            </summary>
+            <param name="cache"></param>
         </member>
         <member name="T:Battlegrounds.Networking.NetworkInterface">
             <summary>
@@ -3882,6 +4090,12 @@
             <returns>The <see cref="T:Battlegrounds.Networking.Remoting.Query.CommandQueryBuilder"/> that is constructing the <see cref="T:Battlegrounds.Networking.Remoting.Query.CommandQuery"/>.</returns>
             <exception cref="T:System.ArgumentOutOfRangeException"/>
         </member>
+        <member name="M:Battlegrounds.Networking.Remoting.Query.CommandQueryBuilder.CreateIdentifier">
+            <summary>
+            Take the top stack value and create and identifier for it and push the idenitifer on top of the stack.
+            </summary>
+            <returns>The <see cref="T:Battlegrounds.Networking.Remoting.Query.CommandQueryBuilder"/> that is constructing the <see cref="T:Battlegrounds.Networking.Remoting.Query.CommandQuery"/>.</returns>
+        </member>
         <member name="M:Battlegrounds.Networking.Remoting.Query.CommandQueryBuilder.TestNull(System.Func{Battlegrounds.Networking.Remoting.Query.CommandQueryBuilder,Battlegrounds.Networking.Remoting.Query.CommandQueryBuilder},System.Func{Battlegrounds.Networking.Remoting.Query.CommandQueryBuilder,Battlegrounds.Networking.Remoting.Query.CommandQueryBuilder})">
             <summary>
             Pop the top-stack value and test if the value is <see langword="null"/>. If the value is <see langword="null"/>, the sub-query constructed from <paramref name="ifCase"/> will
@@ -4075,6 +4289,11 @@
         <member name="F:Battlegrounds.Networking.Remoting.Query.CommandQueryInstructionID.SUBQUERY">
             <summary>
             Execute a query in parallel with parent query instruction.
+            </summary>
+        </member>
+        <member name="F:Battlegrounds.Networking.Remoting.Query.CommandQueryInstructionID.CREATEIDENTITY">
+            <summary>
+            Create and identifier of the object and push it to the stack instruction.
             </summary>
         </member>
         <member name="T:Battlegrounds.Networking.Remoting.Query.CommandQueryInstruction">
