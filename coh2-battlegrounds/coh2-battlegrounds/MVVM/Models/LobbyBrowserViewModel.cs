@@ -46,6 +46,8 @@ namespace BattlegroundsApp.MVVM.Models {
 
         public LocaleKey PasswordListWiewHeader { get; }
 
+        public EventCommand JoinLobbyDirectly { get; }
+
         public bool SingleInstanceOnly => true;
 
         public LobbyBrowserViewModel() {
@@ -67,6 +69,9 @@ namespace BattlegroundsApp.MVVM.Models {
                 Click = new RelayCommand(this.HostButton),
                 Text = new("GameBrowserView_Host_Game")
             };
+
+            // Create double-click
+            this.JoinLobbyDirectly = new EventCommand<MouseButtonEventArgs>(this.JoinLobby);
 
             // Create lobbies container (But do no populate it)
             this.Lobbies = new();
@@ -105,7 +110,7 @@ namespace BattlegroundsApp.MVVM.Models {
                 Trace.WriteLine($"Serverhub returned {lobbies.Count} lobbies.", nameof(LobbyBrowserViewModel));
 
                 // update lobbies
-                App.Current.Dispatcher.Invoke(() => {
+                Application.Current.Dispatcher.Invoke(() => {
                     lobbies.ForEach(this.Lobbies.Add);
                 });
 
@@ -158,7 +163,13 @@ namespace BattlegroundsApp.MVVM.Models {
 
         }
 
+        public void JoinLobby(object sender, MouseButtonEventArgs args) {
+
+        }
+
         public void JoinButton() {
+
+
 
         }
 
