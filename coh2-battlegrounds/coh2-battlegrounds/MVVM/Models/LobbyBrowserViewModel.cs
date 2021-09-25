@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Threading.Tasks;
@@ -24,6 +25,7 @@ namespace BattlegroundsApp.MVVM.Models {
 
     public class LobbyBrowserViewModel : IViewModel {
 
+        private readonly bool __useMockData = false; // SET TO FALSE WHEN TESTING IS OVER
         private DateTime m_lastRefresh;
 
         public LobbyBrowserButton Refresh { get; }
@@ -97,10 +99,15 @@ namespace BattlegroundsApp.MVVM.Models {
             _ = Task.Run(() => {
 
                 // Get lobbies
-                var lobbies = NetworkInterface.APIObject.GetLobbies();
+                var lobbies = this.GetLobbiesFromServer();
+
+                // Log amount of lobbies fetched
+                Trace.WriteLine($"Serverhub returned {lobbies.Count} lobbies.", nameof(LobbyBrowserViewModel));
 
                 // update lobbies
-                lobbies.ForEach(x => this.Lobbies.Add(x));
+                App.Current.Dispatcher.Invoke(() => {
+                    lobbies.ForEach(this.Lobbies.Add);
+                });
 
             });
 
@@ -153,6 +160,36 @@ namespace BattlegroundsApp.MVVM.Models {
 
         public void JoinButton() {
 
+        }
+
+        private List<ServerLobby> GetLobbiesFromServer() {
+            if (this.__useMockData) {
+                return new() {
+                    new() {
+                        Name = "Alfredo's Match",
+                        Capacity = 2,
+                        Members = 1,
+                        Type = 1,
+                        State = "2p_stalingrad, bg_vp (500)"
+                    },
+                    new() {
+                        Name = "Super Real Match",
+                        Capacity = 2,
+                        Members = 1,
+                        Type = 1,
+                        State = "2p_stalingrad, bg_vp (500)"
+                    },
+                    new() {
+                        Name = "WPF is bad",
+                        Capacity = 2,
+                        Members = 1,
+                        Type = 1,
+                        State = "2p_stalingrad, bg_vp (500)"
+                    },
+                };
+            } else {
+                return NetworkInterface.APIObject.GetLobbies();
+            }
         }
 
     }

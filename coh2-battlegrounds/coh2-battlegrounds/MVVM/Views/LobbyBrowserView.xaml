@@ -33,6 +33,7 @@
                   Grid.Column="0" 
                   Grid.ColumnSpan="4"
                   Background="#273441"
+                  ItemsSource="{Binding Lobbies}"
                   >
             <ListView.View>
                 <GridView>
