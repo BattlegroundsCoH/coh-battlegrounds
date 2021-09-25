@@ -16,7 +16,7 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
 
         public bool IsEmpty { get; }
 
-        public string Faction => this.Army.Name;
+        public string Faction => this.Army?.Name ?? string.Empty;
 
         public double Strength => throw new System.NotImplementedException();
 

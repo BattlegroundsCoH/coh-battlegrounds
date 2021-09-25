@@ -124,8 +124,13 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
                 // Update selected value
                 this.m_selfCompanySelected = val;
 
-                // Set slot faction
-                this.UpdateSlotFaction(val.Army.Name);
+                if (val.Army is not null)
+                {
+
+                    // Set slot faction
+                    this.UpdateSlotFaction(val.Army.Name);
+
+                }
 
                 // Update slot company
                 if (!this.NetworkInterface.SlotOccupant.SetCompany(val)) {
