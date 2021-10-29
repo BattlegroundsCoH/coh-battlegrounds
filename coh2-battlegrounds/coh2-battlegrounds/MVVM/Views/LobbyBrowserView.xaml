@@ -34,6 +34,8 @@
                   Grid.ColumnSpan="4"
                   Background="#273441"
                   ItemsSource="{Binding Lobbies}"
+                  SelectedIndex="{Binding SelectedLobbyIndex, Mode=TwoWay}"
+                  SelectedItem="{Binding SelectedLobby, Mode=TwoWay}"
                   MouseDoubleClick="{mvvm:EventBinding Handler=JoinLobbyDirectly}"
                   >
             <ListView.View>

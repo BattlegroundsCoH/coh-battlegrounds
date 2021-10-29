@@ -12,6 +12,7 @@ using Battlegrounds.Networking.LobbySystem;
 using Battlegrounds.Networking.Server;
 
 using BattlegroundsApp.Dialogs.HostGame;
+using BattlegroundsApp.Dialogs.LobbyPassword;
 using BattlegroundsApp.Lobby.MVVM.Models;
 using BattlegroundsApp.Utilities;
 
@@ -27,6 +28,8 @@ namespace BattlegroundsApp.MVVM.Models {
 
         private readonly bool __useMockData = false; // SET TO FALSE WHEN TESTING IS OVER
         private DateTime m_lastRefresh;
+
+        private readonly LocaleKey m_askpasswordkey;
 
         public LobbyBrowserButton Refresh { get; }
 
@@ -49,6 +52,10 @@ namespace BattlegroundsApp.MVVM.Models {
         public EventCommand JoinLobbyDirectly { get; }
 
         public bool SingleInstanceOnly => true;
+
+        public object SelectedLobby { get; set; }
+
+        public int SelectedLobbyIndex { get; set; }
 
         public LobbyBrowserViewModel() {
 
@@ -82,6 +89,7 @@ namespace BattlegroundsApp.MVVM.Models {
             this.StateListWiewHeader = new LocaleKey("GameBrowserView_State");
             this.PlayersListWiewHeader = new LocaleKey("GameBrowserView_Players");
             this.PasswordListWiewHeader = new LocaleKey("GameBrowserView_Password");
+            this.m_askpasswordkey = new LocaleKey("LobbyPasswordDialogView_Password_Title");
 
         }
 
@@ -163,13 +171,54 @@ namespace BattlegroundsApp.MVVM.Models {
 
         }
 
-        public void JoinLobby(object sender, MouseButtonEventArgs args) {
-
-        }
+        public void JoinLobby(object sender, MouseButtonEventArgs args)
+            => this.JoinButton();
 
         public void JoinButton() {
+            if (this.SelectedLobby is ServerLobby lobby) {
+
+                // Set password
+                string pswd = string.Empty;
+
+                // If password, ask for it
+                if (lobby.HasPassword) {
+                    if (LobbyPasswordDialogViewModel.ShowLobbyPasswordDialog(this.m_askpasswordkey, out pswd) is LobbyPasswordDialogResult.Cancel) {
+                        return;
+                    }
+                }
+
+                _ = Task.Run(() => {
+                    LobbyUtil.JoinLobby(NetworkInterface.APIObject, lobby, pswd, this.JoinLobbyResponse);
+                });
+
+            }
+        }
+
+        private void JoinLobbyResponse(bool joined, LobbyHandler lobby) { 
+            
+            if (joined) {
+
+                // Log success
+                Trace.WriteLine("Succsefully joined lobby.", nameof(LobbyBrowserViewModel));
+
+                // Create lobby models.
+                LobbyModel lobbyModel = LobbyModel.CreateModelAsParticipant(lobby);
+                //LobbyChatSpectatorModel chatMode = new(lobby);
+
+                // Display it
+                //App.ViewManager.UpdateDisplay(AppDisplayTarget.Left, chatMode);
+                App.ViewManager.UpdateDisplay(AppDisplayTarget.Right, lobbyModel);
 
 
+            } else {
+
+                // Log failure
+                Trace.WriteLine("Failed to join lobby.", nameof(LobbyBrowserViewModel));
+
+                // Give feedback to user.
+                _ = MessageBox.Show("Failed to join lobby (Failed to connect to server).", "Failure", MessageBoxButton.OK, MessageBoxImage.Error);
+
+            }
 
         }
 

@@ -73,6 +73,7 @@ english:
  LobbyPasswordDialogView_Password: "Password:"
  LobbyPasswordDialogView_Button_Join: "Join"
  LobbyPasswordDialogView_Button_Cancel: "Cancel"
+ LobbyPasswordDialogView_Password_Title: "Enter Lobby Password"
  ImportExportDialogView_Button_Import: "Import"
  ImportExportDialogView_Button_Copy: "Copy"
  ImportExportDialogView_Button_Cancel: "Cancel"
