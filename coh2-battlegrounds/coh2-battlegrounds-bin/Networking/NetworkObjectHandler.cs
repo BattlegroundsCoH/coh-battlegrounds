@@ -26,6 +26,7 @@ namespace Battlegrounds.Networking {
 
             // Set connection handler
             connection.SetRequestHandler(this.Listener);
+            connection.BeginListen();
 
             // Set observer instance
             this.Observer.AddInstance(networkObject);
