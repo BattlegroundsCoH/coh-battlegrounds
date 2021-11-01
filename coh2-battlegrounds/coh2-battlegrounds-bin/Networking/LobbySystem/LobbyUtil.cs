@@ -2,8 +2,8 @@
 using System.Diagnostics;
 
 using Battlegrounds.ErrorHandling.Networking;
+using Battlegrounds.Networking.Communication.Broker;
 using Battlegrounds.Networking.Communication.Connections;
-using Battlegrounds.Networking.Communication.Messaging;
 using Battlegrounds.Networking.LobbySystem.Roles.Host;
 using Battlegrounds.Networking.LobbySystem.Roles.Participant;
 using Battlegrounds.Networking.Remoting.Objects;
@@ -43,33 +43,38 @@ namespace Battlegrounds.Networking.LobbySystem {
             // Success flag
             bool success = false;
 
-            // Define handler
+            // Define handlers
             LobbyHandler handler = null;
 
             try {
 
                 // Create intro
-                IntroMessage intro = new(true, lobbyName, lobbyPassword, 1);
+                IntroMessage intro = new() { 
+                    Host = true, 
+                    LobbyName = lobbyName, LobbyPassword = lobbyPassword, 
+                    PlayerUID = steamUser.ID, PlayerName = steamUser.Name
+                };
 
                 // Establish connection
-                SocketConnection connection = SocketConnection.EstablishConnection(NetworkInterface.GetBestAddress(), 11000, steamUser.ID, intro);
+                ServerConnection connection = ServerConnection.ConnectToServer(NetworkInterface.GetBestAddress(), 11000, intro, out ulong lobbyID);
                 if (connection is null) {
                     throw new ConnectionFailedException("Failed to establish TCP connection.");
                 }
 
                 // Set API
-                serverAPI.SetLobbyGuid(connection.ConnectionID);
+                serverAPI.SetLobbyGuid(lobbyID);
+                var broker = new BrokerHandler(connection, cachedPool, service);
 
                 // Create network handler
-                NetworkObjectHandler<ILobby> networkObject = new(lobby, connection, service, cachedPool);
+                NetworkObjectHandler<ILobby> networkObject = new(lobby, broker, service, cachedPool);
 
                 // Get self
                 var self = lobby.CreateParticipant(steamUser.ID, steamUser.Name);
 
                 // Create handler
-                handler = new LobbyHandler(true) {
+                handler = new LobbyHandler(true, lobbyID) {
                     StaticInterface = service,
-                    Connection = connection,
+                    BrokerHandler = broker,
                     ObjectPool = cachedPool,
                     LobbyID = lobID,
                     Lobby = lobby,
@@ -124,36 +129,45 @@ namespace Battlegrounds.Networking.LobbySystem {
             try {
 
                 // Create intro
-                IntroMessage intro = new(false, lobbyData.Guid, password, 1);
+                IntroMessage intro = new() {
+                    Host = false,
+                    LobbyUID = lobbyData.UID,
+                    LobbyPassword = password,
+                    PlayerName = steamUser.Name,
+                    PlayerUID = steamUser.ID
+                };
 
                 // Establish TCP connection
-                SocketConnection connection = SocketConnection.EstablishConnection(NetworkInterface.GetBestAddress(), 11000, steamUser.ID, intro);
+                ServerConnection connection = ServerConnection.ConnectToServer(NetworkInterface.GetBestAddress(), 11000, intro, out ulong lobbyID);
                 if (connection is null) {
                     throw new ConnectionFailedException("Failed to establish TCP connection.");
                 }
 
-                // Create remote handle
-                IRemoteHandle handle = new RemoteHandle(connection);
-
                 // Set API
-                serverAPI.SetLobbyGuid(connection.ConnectionID);
+                serverAPI.SetLobbyGuid(lobbyID);
+
+                // Create broker handler
+                BrokerHandler broker = new(connection, cachedPool, service);
+
+                // Create remote handle
+                IRemoteHandle handle = new RemoteHandle(broker);
 
                 // Get remote obj
-                var result = connection.SendMessage(new GetObjectMessage("lobby", true), true);
-                var lobID = result is IDMessage id ? id.ID : throw new ConnectionFailedException("Failed to establish connection with remote lobby instance.");
+                var result = broker.GetObjectIDByName("lobby");
+                var lobID = result is IObjectID id ? id : throw new ConnectionFailedException("Failed to establish connection with remote lobby instance.");
 
                 // Create lobby
                 RemoteLobby lobby = new(lobID, handle);
                 lobby.InitRemote();
 
                 // Create network handler
-                NetworkObjectHandler<ILobby> networkObject = new(lobby, connection, service, cachedPool);
+                NetworkObjectHandler<ILobby> networkObject = new(lobby, broker, service, cachedPool);
                 SetupParticipantNetworkObjectHandler(networkObject);
 
                 // Set handler
-                handler = new LobbyHandler(false) {
+                handler = new LobbyHandler(false, lobbyID) {
                     StaticInterface = null,
-                    Connection = connection,
+                    BrokerHandler = broker,
                     ObjectPool = cachedPool,
                     Lobby = lobby,
                     LobbyID = lobID

@@ -1,5 +1,4 @@
-﻿using Battlegrounds.Networking.Communication.Connections;
-using Battlegrounds.Networking.Communication.Messaging;
+﻿using Battlegrounds.Networking.Communication.Broker;
 using Battlegrounds.Networking.Remoting;
 using Battlegrounds.Networking.Remoting.Objects;
 
@@ -7,7 +6,7 @@ namespace Battlegrounds.Networking {
     
     public sealed class NetworkObjectHandler<T> {
 
-        private readonly IConnection m_connection;
+        private readonly BrokerHandler m_broker;
         private readonly IStaticInterface m_interface;
         private readonly IObjectPool m_objects;
 
@@ -15,24 +14,20 @@ namespace Battlegrounds.Networking {
 
         public NetworkObjectListener Listener { get; }
 
-        public NetworkObjectHandler(INetworkObjectObservable<T> networkObject, IConnection connection, IStaticInterface staticInterface, IObjectPool objectPool) {
+        public NetworkObjectHandler(INetworkObjectObservable<T> networkObject, BrokerHandler broker, IStaticInterface staticInterface, IObjectPool objectPool) {
 
             // Create observer and subscribe to broker notify events
-            this.Observer = new(connection, objectPool);
+            this.Observer = new(broker, objectPool);
             this.Observer.BrokerNotify += this.OnNetworkBrokerNotify;
 
             // Create listener
-            this.Listener = new(connection, objectPool, staticInterface);
-
-            // Set connection handler
-            connection.SetRequestHandler(this.Listener);
-            connection.BeginListen();
+            this.Listener = new(broker, objectPool, staticInterface);
 
             // Set observer instance
             this.Observer.AddInstance(networkObject);
 
             // Set fields
-            this.m_connection = connection;
+            this.m_broker = broker;
             this.m_interface = staticInterface;
             this.m_objects = objectPool;
 
@@ -46,7 +41,9 @@ namespace Battlegrounds.Networking {
             }
 
             // Send message and forget it
-            this.m_connection.SendBrokerMessage(new StringMessage($"{args.Property}:{args.Value}"), false);
+            this.m_broker.Update(args.Property switch {
+                _ => BrokerFirstVal.Capacity
+            }, args.Value);
 
         }
 

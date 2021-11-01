@@ -1,4 +1,5 @@
-﻿using Battlegrounds.Networking.Communication.Connections;
+﻿using Battlegrounds.Networking.Communication.Broker;
+using Battlegrounds.Networking.Communication.Connections;
 using Battlegrounds.Networking.DataStructures;
 using Battlegrounds.Networking.LobbySystem.Playing;
 using Battlegrounds.Networking.Remoting;
@@ -35,11 +36,6 @@ namespace Battlegrounds.Networking.LobbySystem {
         /// <summary>
         /// 
         /// </summary>
-        public ISingleInstanceHandler InstanceHandler { get; init; }
-
-        /// <summary>
-        /// 
-        /// </summary>
         public IStaticInterface StaticInterface { get; init; }
 
         /// <summary>
@@ -58,6 +54,16 @@ namespace Battlegrounds.Networking.LobbySystem {
         public ISynchronizedTimer MatchStartTimer { get; set; }
 
         /// <summary>
+        /// Get or set the handler for broker
+        /// </summary>
+        public BrokerHandler BrokerHandler { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public ulong LobbyUID { get; }
+
+        /// <summary>
         /// 
         /// </summary>
         public bool IsHost { get; }
@@ -67,7 +73,10 @@ namespace Battlegrounds.Networking.LobbySystem {
         /// </summary>
         /// <param name="api"></param>
         /// <param name="lobby"></param>
-        public LobbyHandler(bool isHost) => this.IsHost = isHost;
+        public LobbyHandler(bool isHost, ulong luid) {
+            this.IsHost = isHost;
+            this.LobbyUID = luid;
+        }
 
     }
 

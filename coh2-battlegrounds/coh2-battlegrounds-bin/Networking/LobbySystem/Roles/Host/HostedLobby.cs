@@ -184,7 +184,7 @@ namespace Battlegrounds.Networking.LobbySystem.Roles.Host {
                 uploadstr = $"{map}, {gamemode}" + uploadstr;
 
                 // Update server hub
-                this.ValueChanged?.Invoke(this, new(nameof(IServerLobby.LobbyPlaymode), uploadstr) { IsBrokerEvent = true });
+                this.ValueChanged?.Invoke(this, new("LobbyPlaymode", uploadstr) { IsBrokerEvent = true });
 
             }
         }

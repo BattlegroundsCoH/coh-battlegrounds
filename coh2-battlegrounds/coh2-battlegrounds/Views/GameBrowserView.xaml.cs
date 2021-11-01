@@ -4,7 +4,6 @@ using System.Diagnostics;
 using System.Threading.Tasks;
 
 using Battlegrounds.Networking;
-using Battlegrounds.Networking.Lobby;
 using Battlegrounds.Networking.Server;
 
 using BattlegroundsApp.Dialogs.HostGame;

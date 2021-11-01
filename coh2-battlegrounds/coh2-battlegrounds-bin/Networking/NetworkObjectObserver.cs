@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 
-using Battlegrounds.Networking.Communication.Connections;
-using Battlegrounds.Networking.Communication.Messaging;
-using Battlegrounds.Networking.Remoting;
+using Battlegrounds.Networking.Communication.Broker;
+using Battlegrounds.Networking.LobbySystem.Roles;
 using Battlegrounds.Networking.Remoting.Objects;
 
 namespace Battlegrounds.Networking {
@@ -14,15 +13,15 @@ namespace Battlegrounds.Networking {
     public sealed class NetworkObjectObserver {
 
         private readonly HashSet<object> m_observedObjects;
-        private readonly IConnection m_connection;
+        private readonly BrokerHandler m_broker;
         private readonly IObjectPool m_pool;
 
         public event ObservableValueChangedHandler<object> BrokerNotify;
 
         public ICollection<string> MethodFilter { get; }
 
-        public NetworkObjectObserver(IConnection connection, IObjectPool objectPool) {
-            this.m_connection = connection;
+        public NetworkObjectObserver(BrokerHandler broker, IObjectPool objectPool) {
+            this.m_broker = broker;
             this.m_pool = objectPool;
             this.m_observedObjects = new();
             this.MethodFilter = new List<string>();
@@ -56,14 +55,18 @@ namespace Battlegrounds.Networking {
             // Get ID of sender
             var senderID = this.m_pool.RegisterIfNotFound(sender);
 
-            // Mangle
-            string mangle = Mangler.Mangle(sender.GetType().Name, args.Property, args.HasValue ? Mangler.PROPERTY_SET : Mangler.PROPERTY_GET);
-
             // Determine arguments
             object[] remoteArgs = args.HasValue ? new object[] { args.Value } : Array.Empty<object>();
+            
+            // Update args
+            for (int i = 0; i < remoteArgs.Length; i++) {
+                if (remoteArgs[i] is IRemoteReference remoteRef) {
+                    remoteArgs[i] = remoteRef.ObjectID;
+                }
+            }
 
             // Send the broadcast message
-            this.m_connection.SendBroadcastMessage(new RemoteCallMessage(senderID.ToString(), mangle, remoteArgs));
+            this.m_broker.RemoteCall(senderID, args.Property, remoteArgs, Broadcast: true);
 
         }
 
@@ -77,11 +80,15 @@ namespace Battlegrounds.Networking {
             // Get ID of sender
             var senderID = this.m_pool.RegisterIfNotFound(sender);
 
-            // Mangle
-            string mangle = Mangler.Mangle(sender.GetType().Name, invokedMethod);
+            // Update args
+            for (int i = 0; i < args.Length; i++) {
+                if (args[i] is IRemoteReference remoteRef) {
+                    args[i] = remoteRef.ObjectID;
+                }
+            }
 
             // Send the broadcast message
-            this.m_connection.SendBroadcastMessage(new RemoteCallMessage(senderID.ToString(), mangle, args));
+            this.m_broker.RemoteCall(senderID, invokedMethod, args, Broadcast: true);
 
         }
 
