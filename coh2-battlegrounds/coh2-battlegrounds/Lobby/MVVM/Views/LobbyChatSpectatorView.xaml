@@ -3,10 +3,104 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:BattlegroundsApp.Lobby.MVVM.Views"
+             xmlns:local="clr-namespace:BattlegroundsApp.Lobby.MVVM.Views" 
+             xmlns:controls="clr-namespace:BattlegroundsApp.Controls" 
+             xmlns:converters="clr-namespace:BattlegroundsApp.Utilities.Converters"
+             xmlns:utilities="clr-namespace:BattlegroundsApp.Utilities"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
+             d:DesignHeight="850" d:DesignWidth="300">
+    <UserControl.Resources>
+        <Style x:Key="ObserverLabel" TargetType="Label">
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="FontFamily" Value="Open Sans"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+        </Style>
+        <Style x:Key="ChatHistory" TargetType="FlowDocumentScrollViewer">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="VerticalScrollBarVisibility" Value="Auto"/>
+        </Style>
+        <Style x:Key="MessageBox" TargetType="TextBox">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderBrush" Value="#FFFFFF"/>
+            <Setter Property="BorderThickness" Value="0.5"/>
+            <Setter Property="Foreground" Value="#FFFFFF"/>
+            <Setter Property="Padding" Value="5,0,0,0"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="CaretBrush" Value="#FFFFFF"/>
+            <Style.Resources>
+                <VisualBrush x:Key="CueBannerBrush" 
+                             AlignmentX="Left" 
+                             AlignmentY="Center" 
+                             Stretch="None">
+                    <VisualBrush.Visual>
+                        <Label Content="Enter message..." 
+                               Foreground="DarkGray" 
+                               FontStyle="Italic" />
+                    </VisualBrush.Visual>
+                </VisualBrush>
+            </Style.Resources>
+            <Style.Triggers>
+                <Trigger Property="Text" Value="">
+                    <Setter Property="Background" Value="{StaticResource CueBannerBrush}" />
+                </Trigger>
+                <Trigger Property="Text" Value="{x:Null}">
+                    <Setter Property="Background" Value="{StaticResource CueBannerBrush}" />
+                </Trigger>
+                <Trigger Property="IsMouseCaptured" Value="True">
+                    <Setter Property="BorderBrush" Value="#FFFFFF"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+    </UserControl.Resources>
     <Grid>
-            
+        <Grid.Resources>
+            <converters:LocaleKeyToStringConverter x:Key="LocaleConvertor"/>
+        </Grid.Resources>
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+            <RowDefinition MaxHeight="96"/>
+        </Grid.RowDefinitions>
+        <DockPanel Grid.Row="0" LastChildFill="True">
+            <StackPanel MaxHeight="256" DockPanel.Dock="Top"
+                        Margin="10,5,10,5"
+                        Visibility="{Binding SpectatorVisibility}">
+                <Label Content="Observers" Style="{StaticResource ObserverLabel}"/>
+                <ListView MaxHeight="256"/>
+            </StackPanel>
+            <FlowDocumentScrollViewer Margin="6,8,6,0"
+                                      Style="{StaticResource ChatHistory}"
+                                      Document="{Binding MessageDocument}">
+            </FlowDocumentScrollViewer>
+        </DockPanel>
+        <Grid Grid.Row="1" Margin="10">
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <TextBox Height="36" Grid.ColumnSpan="2"
+                     Style="{StaticResource MessageBox}"
+                     Text="{Binding MessageContent, Mode=TwoWay}"/>
+            <ComboBox Grid.Row="1" Width="132" Height="36" 
+                      HorizontalAlignment="Left"
+                      Style="{StaticResource StandardBlueDropdown}"
+                      ItemsSource="{Binding SendFilter.Items}"
+                      SelectedIndex="{Binding SendFilter.SelectedFilter, Mode=TwoWay}">
+            </ComboBox>
+            <controls:IconButton Grid.Row="1" Grid.Column="1" 
+                                 Width="132" Height="36"
+                                 HorizontalAlignment="Right"
+                                 Background="#334252"
+                                 Foreground="#FFFFFF"
+                                 HoverColour="#536375"
+                                 Content="{Binding SendMessage.Text, Converter={StaticResource LocaleConvertor}}"
+                                 Command="{Binding SendMessage.Click}"
+                                 ToolTip="{Binding SendMessage.Tooltip}"/>
+        </Grid>
     </Grid>
 </UserControl>

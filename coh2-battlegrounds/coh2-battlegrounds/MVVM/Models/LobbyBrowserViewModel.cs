@@ -203,10 +203,10 @@ namespace BattlegroundsApp.MVVM.Models {
 
                 // Create lobby models.
                 LobbyModel lobbyModel = LobbyModel.CreateModelAsParticipant(lobby);
-                //LobbyChatSpectatorModel chatMode = new(lobby);
+                LobbyChatSpectatorModel chatMode = new(lobby);
 
                 // Display it
-                //App.ViewManager.UpdateDisplay(AppDisplayTarget.Left, chatMode);
+                App.ViewManager.UpdateDisplay(AppDisplayTarget.Left, chatMode);
                 App.ViewManager.UpdateDisplay(AppDisplayTarget.Right, lobbyModel);
 
 

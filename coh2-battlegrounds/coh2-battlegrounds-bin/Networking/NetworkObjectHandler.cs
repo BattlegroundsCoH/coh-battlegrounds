@@ -42,6 +42,7 @@ namespace Battlegrounds.Networking {
 
             // Send message and forget it
             this.m_broker.Update(args.Property switch {
+                "LobbyPlaymode" => BrokerFirstVal.Mode,
                 _ => BrokerFirstVal.Capacity
             }, args.Value);
 

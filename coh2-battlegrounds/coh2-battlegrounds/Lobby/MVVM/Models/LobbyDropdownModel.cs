@@ -112,17 +112,13 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
             }
 
             // Verify input
-            if (index < -1 || index >= this.Items.Count) {
+            if (index <= -1 || index >= this.Items.Count) {
                 return;
             }
 
-            // Determine action
-            if (index is -1) {
-                this.m_index = this.OnSelectionChanged?.Invoke(this.m_index, -1, default) ?? -1;
-            } else {
-                var item = this.Items[index];
-                this.m_index = this.OnSelectionChanged?.Invoke(this.m_index, index, item) ?? -1;
-            }
+            // Update
+            var item = this.Items[index];
+            this.m_index = this.OnSelectionChanged?.Invoke(this.m_index, index, item) ?? -1;
 
         }
 
