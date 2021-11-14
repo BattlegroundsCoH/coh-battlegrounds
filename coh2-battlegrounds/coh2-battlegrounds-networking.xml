@@ -360,6 +360,100 @@
             <param name="size"></param>
             <returns></returns>
         </member>
+        <member name="T:Battlegrounds.Networking.Communication.Broker.BrokerHandler">
+            <summary>
+            Class for handling interaction with the remote broker instance.
+            </summary>
+        </member>
+        <member name="F:Battlegrounds.Networking.Communication.Broker.BrokerHandler.UnmarshalContent">
+            <summary>
+            Function for unmarshalling content received while executing a remote call.
+            </summary>
+        </member>
+        <member name="E:Battlegrounds.Networking.Communication.Broker.BrokerHandler.UnhandledMessageHandler">
+            <summary>
+            Event for handling unhandled messages.
+            </summary>
+        </member>
+        <member name="E:Battlegrounds.Networking.Communication.Broker.BrokerHandler.ChatMessage">
+            <summary>
+            Event for handling chat messages.
+            </summary>
+        </member>
+        <member name="M:Battlegrounds.Networking.Communication.Broker.BrokerHandler.#ctor(Battlegrounds.Networking.Communication.Connections.ServerConnection,Battlegrounds.Networking.Remoting.Objects.IObjectPool,Battlegrounds.Networking.Remoting.IStaticInterface)">
+            <summary>
+            Create a new <see cref="T:Battlegrounds.Networking.Communication.Broker.BrokerHandler"/> instance using specified <paramref name="serverConnection"/>.
+            </summary>
+            <param name="serverConnection">The connection instance actually handling the sending and receiving of messages.</param>
+            <param name="pool">The object pool that will keep track of remotable objects.</param>
+            <param name="staticInterface">The interface handling remotable static objects.</param>
+        </member>
+        <member name="M:Battlegrounds.Networking.Communication.Broker.BrokerHandler.Disconnect">
+            <summary>
+            Properly disconnect the connection to the broker.
+            </summary>
+        </member>
+        <member name="M:Battlegrounds.Networking.Communication.Broker.BrokerHandler.RemoteCall(Battlegrounds.Networking.Remoting.Objects.IObjectID,System.String,System.Object[],System.Byte,System.UInt64,System.Boolean,System.Boolean)">
+            <summary>
+            Invoke a method on a remote instance and get the returned value.
+            </summary>
+            <param name="objectID">The ID of the object to trigger remote method call on.</param>
+            <param name="callname">The name of the method to invoke remotely.</param>
+            <param name="args">The arguments given to the remote call.</param>
+            <param name="RemoteAction">Flag defining what kind of remote procedure to trigger. 
+            <br/><br/>
+            0 = Invoke as method (Takes arguments, may return a value)<br/>
+            1 = Invoke as get property (No arguments, always returns a value)<br/>
+            2 = Invoke as set property (One argument [set value], never returns a value
+            </param>
+            <param name="Who">The UID of the user that should handle this remote call. A value of 0 means host.</param>
+            <param name="Broadcast">Flag marking this as a broadcast call. Broadcast calls may never return a value.</param>
+            <param name="FireandForget">Flag marking whether this call should trigger remotely but ignore the resulting value. This will continue execution
+            locally; while the remote machine may havent had a chance to execute.</param>
+            <returns>The returned value of the remote call. May be null if no value is returned.</returns>
+        </member>
+        <member name="M:Battlegrounds.Networking.Communication.Broker.BrokerHandler.GetObjectIDByName(System.String)">
+            <summary>
+            Get the ID of a remote object based on its simple name identifier.
+            </summary>
+            <param name="name">The simple name identifier.</param>
+            <returns>The ID of the remote object. If no valid response was given, the return value is null.</returns>
+        </member>
+        <member name="M:Battlegrounds.Networking.Communication.Broker.BrokerHandler.Kick(System.UInt64,System.String)">
+            <summary>
+            Kick a user from the broker lobby.
+            </summary>
+            <remarks>
+            This method may only succeed if calling user is also the lobby host.
+            </remarks>
+            <param name="kick">The UID of the user to kick.</param>
+            <param name="message">The message to give the kicked user.</param>
+        </member>
+        <member name="M:Battlegrounds.Networking.Communication.Broker.BrokerHandler.Update(Battlegrounds.Networking.Communication.Broker.BrokerFirstVal,System.Object)">
+            <summary>
+            Update a lobby variable.
+            </summary>
+            <remarks>
+            This method may only succeed if calling user is also the lobby host.
+            </remarks>
+            <param name="firstVal">The broker ID of the value to update.</param>
+            <param name="value">The actual value update property with.</param>
+        </member>
+        <member name="M:Battlegrounds.Networking.Communication.Broker.BrokerHandler.Query(Battlegrounds.Networking.Remoting.Query.CommandQuery,System.UInt64)">
+            <summary>
+            Send a query to be executed remotely.
+            </summary>
+            <param name="query">The <see cref="T:Battlegrounds.Networking.Remoting.Query.CommandQuery"/> to execute remotely.</param>
+            <param name="Who">The UID of the user to execute the remote query.</param>
+            <returns>The result of the executed query.</returns>
+        </member>
+        <member name="M:Battlegrounds.Networking.Communication.Broker.BrokerHandler.SendChatMessage(System.UInt64[],System.String)">
+            <summary>
+            Send a chat message to specified <paramref name="recipients"/>.
+            </summary>
+            <param name="recipients">The UIDs of all message recipients.</param>
+            <param name="message">The message to send.</param>
+        </member>
         <member name="T:Battlegrounds.Networking.Communication.Connections.IConnection">
             <summary>
             Interface for representing a connection from local client to some endpoint.

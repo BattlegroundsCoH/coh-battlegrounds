@@ -11,6 +11,7 @@ using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Media;
 
+using Battlegrounds.Functional;
 using Battlegrounds.Locale;
 using Battlegrounds.Networking.LobbySystem;
 
@@ -52,8 +53,6 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
 
         public string MessageContent { get; set; }
 
-        public int SelectedFilter { get; set; }
-
         public LobbyChatSpectatorModel(LobbyHandler lobbyHandler) {
             
             // Set internal handler
@@ -68,8 +67,7 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
                 Items = new() {
                     new(this.m_allFilter, 0),
                     new(this.m_teamFilter, 1)
-                },
-                CurrentIndex = 0
+                }
             };
 
             // Create chat history
@@ -92,11 +90,34 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
 
         public void Send() {
 
+            // Make sure there's actually content to send.
+            if (this.MessageContent.Length == 0) {
+                return;
+            }
+
             // Chat message
             Trace.WriteLine("Sending chat message: " + this.MessageContent);
 
             // Append message
-            this.NewMessage("Me", this.MessageContent, Color.FromRgb(255, 255, 255));
+            this.NewMessage(this.m_handler.Self.Name, this.MessageContent, Color.FromRgb(255, 255, 255));
+
+            // Send using broker
+            switch (this.SendFilter.CurrentIndex) {
+                case 0: // All
+                    this.m_handler.BrokerHandler.SendChatMessage(null, this.MessageContent);
+                    break;
+                case 1: // Team
+                    if (this.m_handler.Lobby.Allies.IsTeamMember(this.m_handler.Self)) {
+                        this.m_handler.BrokerHandler.SendChatMessage(this.m_handler.Lobby.Allies.Slots.Where(x => x.SlotState is TeamSlotState.Occupied)
+                            .Select(x => x.SlotOccupant.Id).ToArray(), this.MessageContent);
+                    } else if (this.m_handler.Lobby.Axis.IsTeamMember(this.m_handler.Self)) {
+                        this.m_handler.BrokerHandler.SendChatMessage(this.m_handler.Lobby.Axis.Slots.Where(x => x.SlotState is TeamSlotState.Occupied)
+                            .Select(x => x.SlotOccupant.Id).ToArray(), this.MessageContent);
+                    } else {
+                        // TODO: Implement
+                    }
+                    break;
+            }
 
             // Reset message content
             this.MessageContent = string.Empty;
