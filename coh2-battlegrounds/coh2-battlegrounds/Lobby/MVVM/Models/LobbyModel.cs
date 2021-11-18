@@ -18,6 +18,7 @@ using Battlegrounds.Modding;
 using Battlegrounds.Networking;
 using Battlegrounds.Networking.LobbySystem;
 
+using BattlegroundsApp.Lobby.MatchHandling;
 using BattlegroundsApp.LocalData;
 using BattlegroundsApp.Modals;
 using BattlegroundsApp.MVVM;
@@ -94,7 +95,7 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
 
             // Create start match button
             this.StartMatch = new() {
-                Click = new RelayCommand(this.BeginMatch),
+                Click = new RelayCommand(this.BeginMatchSetup),
                 Enabled = false,
                 Visible = Visibility.Visible,
                 Text = new("LobbyView_StartMatch")
@@ -166,7 +167,7 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
         }
 
         private void EditSelfCompany() {
-
+            Trace.WriteLine("Editing own company in lobby is currently not implemented!");
         }
 
         private void LeaveLobby() {
@@ -186,7 +187,33 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
 
         }
 
-        private void BeginMatch() {
+        private void BeginMatchSetup() {
+
+            // If not host -> bail.
+            if (!this.m_handler.IsHost) {
+                return;
+            }
+
+            // Get play model
+            var play = PlayModelFactory.GetModel(this.m_handler);
+
+            // prepare
+            play.Prepare(this.m_package, this.BeginMatch, this.CancelMatch);
+
+        }
+
+        private void BeginMatch(IPlayModel model) {
+
+            // Play match
+            model.Play(this.EndMatch);
+
+        }
+
+        private void EndMatch(IPlayModel model) {
+
+        }
+
+        private void CancelMatch(IPlayModel model) {
 
         }
 

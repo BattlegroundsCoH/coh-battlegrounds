@@ -279,7 +279,8 @@
             <Button Grid.Column="1" 
                     Grid.Row="9"
                     Grid.ColumnSpan="2"
-                    Content="Start Match"
+                    Content="{Binding StartMatch.Text, Converter={StaticResource LocaleConvertor}}"
+                    Command="{Binding StartMatch.Click}"
                     Style="{StaticResource StandardBlueButton}"/>
 
         </Grid>
