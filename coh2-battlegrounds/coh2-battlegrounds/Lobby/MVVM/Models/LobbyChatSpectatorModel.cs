@@ -1,20 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Documents;
+using System.Windows.Input;
 using System.Windows.Media;
 
-using Battlegrounds.Functional;
 using Battlegrounds.Locale;
 using Battlegrounds.Networking.LobbySystem;
 
+using BattlegroundsApp.Controls;
 using BattlegroundsApp.MVVM;
 using BattlegroundsApp.Utilities;
 
@@ -51,6 +47,8 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
 
         public LobbyButtonModel SendMessage { get; }
 
+        public EventCommand<KeyEventArgs> EnterKey { get; }
+
         public string MessageContent { get; set; }
 
         public LobbyChatSpectatorModel(LobbyHandler lobbyHandler) {
@@ -83,36 +81,53 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
                 Text = new("LobbyChat_Send"),
                 Enabled = true,
                 Visible = Visibility.Visible,
-                Click = new RelayCommand(this.Send)
+                Click = new RelayCommand(() => this.Send())
             };
+
+            // Create enter key
+            this.EnterKey = new EventCommand<KeyEventArgs>(this.SendEnter);
 
         }
 
-        public void Send() {
+        public void SendEnter(object sender, KeyEventArgs args) {
+            if (sender is not BGTextbox tb) {
+                return;
+            }
+            if (args.Key is Key.Enter) {
+                this.Send(tb.Text);
+            }
+        }
+
+        public void Send(string content = null) {
+
+            // Set message content
+            if (content is null) {
+                content = this.MessageContent;
+            }
 
             // Make sure there's actually content to send.
-            if (this.MessageContent.Length == 0) {
+            if (string.IsNullOrWhiteSpace(content)) {
                 return;
             }
 
             // Chat message
-            Trace.WriteLine("Sending chat message: " + this.MessageContent);
+            Trace.WriteLine("Sending chat message: " + content);
 
             // Append message
-            this.NewMessage(this.m_handler.Self.Name, this.MessageContent, Color.FromRgb(255, 255, 255));
+            this.NewMessage(this.m_handler.Self.Name, content, Color.FromRgb(255, 255, 255));
 
             // Send using broker
             switch (this.SendFilter.CurrentIndex) {
                 case 0: // All
-                    this.m_handler.BrokerHandler.SendChatMessage(null, this.MessageContent);
+                    this.m_handler.BrokerHandler.SendChatMessage(null, content);
                     break;
                 case 1: // Team
                     if (this.m_handler.Lobby.Allies.IsTeamMember(this.m_handler.Self)) {
                         this.m_handler.BrokerHandler.SendChatMessage(this.m_handler.Lobby.Allies.Slots.Where(x => x.SlotState is TeamSlotState.Occupied)
-                            .Select(x => x.SlotOccupant.Id).ToArray(), this.MessageContent);
+                            .Select(x => x.SlotOccupant.Id).ToArray(), content);
                     } else if (this.m_handler.Lobby.Axis.IsTeamMember(this.m_handler.Self)) {
                         this.m_handler.BrokerHandler.SendChatMessage(this.m_handler.Lobby.Axis.Slots.Where(x => x.SlotState is TeamSlotState.Occupied)
-                            .Select(x => x.SlotOccupant.Id).ToArray(), this.MessageContent);
+                            .Select(x => x.SlotOccupant.Id).ToArray(), content);
                     } else {
                         // TODO: Implement
                     }

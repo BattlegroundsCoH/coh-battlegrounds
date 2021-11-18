@@ -30,30 +30,32 @@ namespace BattlegroundsApp.MVVM {
                 throw new InvalidOperationException();
             }
 
-            // Get target property (target property on target object)
-            if (targetProvider.TargetProperty is not EventInfo eventInfo) {
-                throw new InvalidOperationException();
+            // if event
+            if (targetProvider.TargetProperty is EventInfo eventInfo) {
+
+                // Get event type
+                if (eventInfo.EventHandlerType is not Type eventType) {
+                    return null;
+                }
+
+                // Get invoke method
+                var invoke = eventType.GetMethod("Invoke");
+
+                // Create invoker
+                DynamicMethod method = new(string.Empty, invoke.ReturnType, invoke.GetParameters().Map(x => x.ParameterType));
+                var body = method.GetILGenerator();
+                body.Emit(OpCodes.Ldarg, 0); // Load first arg onto stack (the sender)
+                body.Emit(OpCodes.Ldarg, 1); // Load second arg onto stack (the event arguments)
+                body.Emit(OpCodes.Ldstr, this.Handler); // Push name of handler property to fetch on data context.
+                body.Emit(OpCodes.Call, Exec); // Invoke our custom defined ExecuteEvent intermediary method.
+                body.Emit(OpCodes.Ret); // Return (NOTE: This will likely cause unexpected behaviour (or crash) in case the event expects a return value).
+
+                // Return method
+                return method.CreateDelegate(eventType);
+
             }
 
-            // Get event type
-            if (eventInfo.EventHandlerType is not Type eventType) {
-                return null;
-            }
-
-            // Get invoke method
-            var invoke = eventType.GetMethod("Invoke");
-
-            // Create invoker
-            DynamicMethod method = new(string.Empty, invoke.ReturnType, invoke.GetParameters().Map(x => x.ParameterType));
-            var body = method.GetILGenerator();
-            body.Emit(OpCodes.Ldarg, 0); // Load first arg onto stack (the sender)
-            body.Emit(OpCodes.Ldarg, 1); // Load second arg onto stack (the event arguments)
-            body.Emit(OpCodes.Ldstr, this.Handler); // Push name of handler property to fetch on data context.
-            body.Emit(OpCodes.Call, Exec); // Invoke our custom defined ExecuteEvent intermediary method.
-            body.Emit(OpCodes.Ret); // Return (NOTE: This will likely cause unexpected behaviour (or crash) in case the event expects a return value).
-
-            // Return method
-            return method.CreateDelegate(eventType);
+            throw new InvalidOperationException();
 
         }
 

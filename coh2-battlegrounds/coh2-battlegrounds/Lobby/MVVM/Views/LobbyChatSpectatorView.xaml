@@ -6,7 +6,8 @@
              xmlns:local="clr-namespace:BattlegroundsApp.Lobby.MVVM.Views" 
              xmlns:controls="clr-namespace:BattlegroundsApp.Controls" 
              xmlns:converters="clr-namespace:BattlegroundsApp.Utilities.Converters"
-             xmlns:utilities="clr-namespace:BattlegroundsApp.Utilities"
+             xmlns:utilities="clr-namespace:BattlegroundsApp.Utilities" 
+             xmlns:mvvm="clr-namespace:BattlegroundsApp.MVVM"
              mc:Ignorable="d" 
              d:DesignHeight="850" d:DesignWidth="300">
     <UserControl.Resources>
@@ -75,6 +76,9 @@
             </FlowDocumentScrollViewer>
         </DockPanel>
         <Grid Grid.Row="1" Margin="10">
+            <Grid.Resources>
+                <ResourceDictionary x:Name="LobbyIcons" Source="pack://application:,,,/coh2-battlegrounds;component/Resources/app/LobbyIcons.xaml"/>
+            </Grid.Resources>
             <Grid.RowDefinitions>
                 <RowDefinition/>
                 <RowDefinition/>
@@ -83,24 +87,30 @@
                 <ColumnDefinition/>
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
-            <TextBox Height="36" Grid.ColumnSpan="2"
+            <controls:BGTextbox Height="36" Grid.ColumnSpan="2"
                      Style="{StaticResource MessageBox}"
-                     Text="{Binding MessageContent, Mode=TwoWay}"/>
-            <ComboBox Grid.Row="1" Width="132" Height="36" 
+                     Text="{Binding MessageContent, Mode=TwoWay}"
+                     KeyDownEvent="{mvvm:EventBinding Handler=EnterKey}"/>
+            <ComboBox Grid.Row="1" Width="132" Height="28" 
                       HorizontalAlignment="Left"
                       Style="{StaticResource StandardBlueDropdown}"
                       ItemsSource="{Binding SendFilter.Items}"
-                      SelectedIndex="{Binding SendFilter.SelectedFilter, Mode=TwoWay}">
+                      HorizontalContentAlignment="Center"
+                      SelectedIndex="{Binding SendFilter.CurrentIndex, Mode=TwoWay}">
             </ComboBox>
             <controls:IconButton Grid.Row="1" Grid.Column="1" 
-                                 Width="132" Height="36"
+                                 Width="132" Height="28"
                                  HorizontalAlignment="Right"
                                  Background="#334252"
                                  Foreground="#FFFFFF"
                                  HoverColour="#536375"
+                                 HorizontalContentAlignment="Center"
                                  Content="{Binding SendMessage.Text, Converter={StaticResource LocaleConvertor}}"
                                  Command="{Binding SendMessage.Click}"
-                                 ToolTip="{Binding SendMessage.Tooltip}"/>
+                                 ToolTip="{Binding SendMessage.Tooltip}"
+                                 ImageSource="{StaticResource SendMessageDrawingImage}"
+                                 ImageHeight="24"
+                                 ImageWidth="24"/>
         </Grid>
     </Grid>
 </UserControl>
