@@ -6,6 +6,7 @@ using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
@@ -18,7 +19,9 @@ using Battlegrounds.Networking;
 using Battlegrounds.Networking.LobbySystem;
 
 using BattlegroundsApp.LocalData;
+using BattlegroundsApp.Modals;
 using BattlegroundsApp.MVVM;
+using BattlegroundsApp.MVVM.Models;
 using BattlegroundsApp.Resources;
 using BattlegroundsApp.Utilities;
 
@@ -167,6 +170,19 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
         }
 
         private void LeaveLobby() {
+
+            // Show leave modal
+            App.ViewManager.GetModalControl().ShowModal(ModalDialog.CreateModal("Leave Lobby", "Are you sure you'd like to leave?", (sender, success, value) => {
+                if (success && value == ModalDialogResult.Confirm) {
+
+                    // Leave lobby
+                    Task.Run(this.m_handler.BrokerHandler.Disconnect);
+
+                    // Go back to browser view
+                    App.ViewManager.SetDisplay(AppDisplayState.LeftRight, typeof(LeftMenu), typeof(LobbyBrowserViewModel));
+
+                }
+            }));
 
         }
 

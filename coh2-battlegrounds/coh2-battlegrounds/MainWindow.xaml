@@ -5,8 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:BattlegroundsApp"
         xmlns:views="clr-namespace:BattlegroundsApp.Views"
-        xmlns:localeConvertor="clr-namespace:BattlegroundsApp.Utilities.Converters"
-        mc:Ignorable="d"
+        xmlns:localeConvertor="clr-namespace:BattlegroundsApp.Utilities.Converters" xmlns:modals="clr-namespace:BattlegroundsApp.Modals"
+                     mc:Ignorable="d"
         Title="Company of Heroes 2: Battlegrounds Mod Launcher" Height="850" Width="1400" 
                      WindowStartupLocation="CenterScreen" 
                      WindowStyle="SingleBorderWindow" 
@@ -16,22 +16,27 @@
         <!-- LocaleConverter -->
         <localeConvertor:LocaleKeyToStringConverter x:Key="LocaleConvertor"/>
     </local:CoreAppWindow.Resources>
-    <Grid>
+    <modals:ModalControl x:Name="ModalView" 
+                         ModalMaskBehaviour="None"
+                         ModalMaskOpacity="0.7"
+                         ModalMaskColour="Black">
+        <Grid>
 
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition MaxWidth="300"/>
-            <ColumnDefinition Width="*"/>
-        </Grid.ColumnDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition MaxWidth="300"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
 
-        <ContentControl Name="LeftContent" 
+            <ContentControl Name="LeftContent" 
                         Grid.Row="0" Grid.Column="0"
                         Content="{Binding}">
-        </ContentControl>
+            </ContentControl>
 
-        <ContentControl Name="RightContent" 
+            <ContentControl Name="RightContent" 
                         Grid.Row="0" Grid.Column="1" 
                         Grid.RowSpan="8"
                         Content="{Binding}" Background="#273441"/>
 
-    </Grid>
+        </Grid>
+    </modals:ModalControl>    
 </local:CoreAppWindow>

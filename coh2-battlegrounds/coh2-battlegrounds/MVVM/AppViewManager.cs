@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 
+using BattlegroundsApp.Modals;
+
 using ViewModelType = Battlegrounds.Functional.Either<string, System.Type, BattlegroundsApp.MVVM.IViewModel>;
 
 namespace BattlegroundsApp.MVVM {
@@ -84,6 +86,9 @@ namespace BattlegroundsApp.MVVM {
 
         public IViewModel CreateDisplay<T>(Func<T> creator) where T : IViewModel
             => this.m_models.TryGetValue(typeof(T).Name, out var model) ? model : (this.m_models[typeof(T).Name] = creator());
+
+        public ModalControl? GetModalControl() 
+            => this.m_window.ModalView;
 
     }
 

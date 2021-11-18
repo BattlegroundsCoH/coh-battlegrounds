@@ -8,6 +8,11 @@ namespace BattlegroundsApp.Modals {
 
     public delegate void ModalDialogClosed<T>(ModalDialog sender, bool success, T value) where T : Enum;
 
+    public enum ModalDialogResult {
+        Confirm,
+        Cancel
+    }
+
     public class ModalDialog : Modal {
 
         public ICommand ConfirmCommand { get; set; }
@@ -39,6 +44,9 @@ namespace BattlegroundsApp.Modals {
             root.DataContext = dialog;
             return dialog;
         }
+
+        public static ModalDialog CreateModal(string title, string message, ModalDialogClosed<ModalDialogResult> closed)
+            => CreateModal(title, message, ModalDialogResult.Confirm, ModalDialogResult.Cancel, closed);
 
     }
 

@@ -23,6 +23,7 @@ using BattlegroundsApp.Views;
 using BattlegroundsApp.Dialogs.YesNo;
 using Battlegrounds.Locale;
 using BattlegroundsApp.MVVM;
+using BattlegroundsApp.Modals;
 
 namespace BattlegroundsApp {
 
