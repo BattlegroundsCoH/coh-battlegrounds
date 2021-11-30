@@ -1,4 +1,5 @@
-﻿using Battlegrounds.Networking.LobbySystem;
+﻿using Battlegrounds.Modding;
+using Battlegrounds.Networking.LobbySystem;
 
 namespace BattlegroundsApp.Lobby.MatchHandling;
 

@@ -127,7 +127,7 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
             // Create gamemode selection dropdown
             this.GamemodeSelection = new(true, this.m_handler.IsHost) {
                 Items = new(),
-                OnSelectionChanged = OnGamemodeChanged
+                OnSelectionChanged = this.OnGamemodeChanged
             };
 
             // Create gamemode option selection dropdown
@@ -138,12 +138,14 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
 
             // Create weather selection dropdown
             this.WeatherSelection = new(true, this.m_handler.IsHost) {
-                Items = LobbyBinaryOptionItem.CreateCollection()
+                Items = LobbyBinaryOptionItem.CreateCollection(),
+                OnSelectionChanged = this.OnWeatherChanged
             };
 
             // Create supply selection dropdown
             this.SupplySystemSelection = new(true, this.m_handler.IsHost) {
-                Items = LobbyBinaryOptionItem.CreateCollection()
+                Items = LobbyBinaryOptionItem.CreateCollection(),
+                OnSelectionChanged = this.OnSupplyChanged
             };
 
             // Init dropdown values (if host)
@@ -230,6 +232,30 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
             // Update lobby
             if (!this.m_handler.Lobby.SetLobbySetting("selected_tuning", item.Package.ID)) {
                 Trace.WriteLine("Failed to set 'selected_tuning'", nameof(LobbyModel));
+            }
+
+            // Return selected
+            return next;
+
+        }
+
+        private int OnSupplyChanged(int current, int next, LobbyBinaryOptionItem item) {
+            
+            // Update lobby
+            if (!this.m_handler.Lobby.SetLobbySetting("selected_supply", item.IsOn ? "1" : "0")) {
+                Trace.WriteLine("Failed to set 'selected_supply'", nameof(LobbyModel));
+            }
+
+            // Return selected
+            return next;
+
+        }
+
+        private int OnWeatherChanged(int current, int next, LobbyBinaryOptionItem item) {
+
+            // Update lobby
+            if (!this.m_handler.Lobby.SetLobbySetting("selected_daynight", item.IsOn ? "1" : "0")) {
+                Trace.WriteLine("Failed to set 'selected_daynight'", nameof(LobbyModel));
             }
 
             // Return selected
