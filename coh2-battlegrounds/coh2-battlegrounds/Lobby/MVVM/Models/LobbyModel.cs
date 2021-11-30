@@ -33,6 +33,7 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
         private static readonly ImageSource __mapNotFound = new BitmapImage(new Uri("pack://application:,,,/Resources/ingame/unknown_map.png"));
 
         private readonly LobbyHandler m_handler;
+        private LobbyChatSpectatorModel m_chatModel;
         private ModPackage m_package;
         private bool m_hasSetDefaults;
 
@@ -197,7 +198,7 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
             }
 
             // Get play model
-            var play = PlayModelFactory.GetModel(this.m_handler);
+            var play = PlayModelFactory.GetModel(this.m_handler, this.m_chatModel);
 
             // prepare
             play.Prepare(this.m_package, this.BeginMatch, this.CancelMatch);
@@ -421,6 +422,9 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
                     break;
             }
         }
+
+        public void SetChatModel(LobbyChatSpectatorModel chatModel)
+            => this.m_chatModel = chatModel;
 
         public static LobbyModel CreateModelAsHost(LobbyHandler handler) {
 

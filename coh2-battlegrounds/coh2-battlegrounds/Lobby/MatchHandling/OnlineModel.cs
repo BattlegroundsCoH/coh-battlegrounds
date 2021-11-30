@@ -7,13 +7,15 @@ using System.Threading.Tasks;
 using Battlegrounds.Modding;
 using Battlegrounds.Networking.LobbySystem;
 
+using BattlegroundsApp.Lobby.MVVM.Models;
+
 namespace BattlegroundsApp.Lobby.MatchHandling;
 
 internal class OnlineModel : IPlayModel {
 
     private readonly LobbyHandler m_handler;
 
-    public OnlineModel(LobbyHandler handler) {
+    public OnlineModel(LobbyHandler handler, LobbyChatSpectatorModel lobbyChat) {
         this.m_handler = handler;
     }
 

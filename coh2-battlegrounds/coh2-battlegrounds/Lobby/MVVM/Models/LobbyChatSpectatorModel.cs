@@ -162,6 +162,31 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
 
         }
 
+        public void SystemMessage(string message, Color colour) {
+
+            // Run on GUI thread
+            Application.Current.Dispatcher.Invoke(() => {
+
+                // Create full message
+                var fullMessage = $"[System] {message}";
+
+                // Create paragraph to append
+                Paragraph p = new() {
+                    Margin = new(0)
+                };
+                p.Inlines.Add(new Run(fullMessage) {
+                    Foreground = new SolidColorBrush(colour),
+                    FontSize = 14.0,
+                    FontFamily = this.m_font
+                });
+
+                // Add to message history
+                this.MessageDocument.Blocks.Add(p);
+
+            });
+
+        }
+
     }
 
 }

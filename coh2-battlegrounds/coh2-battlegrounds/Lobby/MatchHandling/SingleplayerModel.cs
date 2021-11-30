@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Media;
 
 using Battlegrounds.Functional;
 using Battlegrounds.Game.Database;
@@ -21,6 +22,7 @@ using Battlegrounds.Networking.LobbySystem;
 using Battlegrounds.Util;
 using Battlegrounds.Verification;
 
+using BattlegroundsApp.Lobby.MVVM.Models;
 using BattlegroundsApp.LocalData;
 
 namespace BattlegroundsApp.Lobby.MatchHandling;
@@ -29,6 +31,7 @@ internal class SingleplayerModel : IPlayModel {
 
     // Load refs
     private readonly LobbyHandler m_handler;
+    private readonly LobbyChatSpectatorModel m_chat;
     private readonly ILobby m_lobby;
 
     // The strategies to use
@@ -44,10 +47,11 @@ internal class SingleplayerModel : IPlayModel {
     private MultiplayerSession m_session;
     private MatchController m_controller;
 
-    public SingleplayerModel(LobbyHandler handler) {
+    public SingleplayerModel(LobbyHandler handler, LobbyChatSpectatorModel lobbyChat) {
         
         // Set base stuff
         this.m_handler = handler;
+        this.m_chat = lobbyChat;
         this.m_lobby = this.m_handler.Lobby;
 
         // Startup strategy
@@ -100,8 +104,8 @@ internal class SingleplayerModel : IPlayModel {
         string scenario = this.m_lobby.GetLobbySetting("selected_map");
         string gamemode = this.m_lobby.GetLobbySetting("selected_wc");
         string gamemodeValue = this.m_lobby.GetLobbySetting("selected_wco");
-        bool enableSupply = this.m_lobby.GetLobbySetting("selected_supply") == "0" ? false : true;
-        bool enableWeather = this.m_lobby.GetLobbySetting("selected_daynight") == "0" ? false : true;
+        bool enableSupply = this.m_lobby.GetLobbySetting("selected_supply") != "0";
+        bool enableWeather = this.m_lobby.GetLobbySetting("selected_daynight") != "0";
 
         // Try get gamemode value
         if (!int.TryParse(gamemodeValue, out int gamemodeoption)) {
@@ -153,13 +157,11 @@ internal class SingleplayerModel : IPlayModel {
         }
     }
 
-    private void HandleStartupCancel(IStartupStrategy sender, object caller, string reason) {
-        // Display cancel
-    }
+    private void HandleStartupCancel(IStartupStrategy sender, object caller, string reason)
+        => this.m_chat.SystemMessage(reason, Colors.Red);
 
-    private void HandleStartupInformation(IStartupStrategy sender, object caller, string message) {
-        // Display message
-    }
+    private void HandleStartupInformation(IStartupStrategy sender, object caller, string message)
+        => this.m_chat.SystemMessage(message, Colors.DarkGray);
 
     private void OnCompanySerialized(Company company) {
 
@@ -185,16 +187,35 @@ internal class SingleplayerModel : IPlayModel {
 
         // Set on complete handler
         this.m_controller.Complete += m => _gameCompleteHandler(m, matchOver);
+        this.m_controller.Error += (o, r) => _gameErrorHandler(o, r, matchOver);
 
         // Begin match
         this.m_controller.Control();
 
     }
 
+    private void _gameErrorHandler(object o, string r, PlayOverHandler matchOver) {
+
+        // Log error
+        this.m_chat.SystemMessage($"Match Error - {r}", Colors.Red);
+
+        // Invoke over event in lobby model.
+        Application.Current.Dispatcher.Invoke(() => {
+            matchOver.Invoke(this);
+        });
+
+    }
+
     private void _gameCompleteHandler(IAnalyzedMatch match, PlayOverHandler handler) {
 
         // do stuff with match?
+        if (match.IsFinalizableMatch) {
+            this.m_chat.SystemMessage("Match over - Invalid match.", Colors.DarkGray);
+        } else {
+            this.m_chat.SystemMessage("Match over - Match saved.", Colors.DarkGray);
+        }
 
+        // Invoke over event in lobby model.
         Application.Current.Dispatcher.Invoke(() => {
             handler.Invoke(this);
         });

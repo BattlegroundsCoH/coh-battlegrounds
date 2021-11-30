@@ -154,6 +154,7 @@ namespace BattlegroundsApp.MVVM.Models {
                 // Create lobby models.
                 LobbyModel lobbyModel = LobbyModel.CreateModelAsHost(lobby);
                 LobbyChatSpectatorModel chatMode = new(lobby);
+                lobbyModel.SetChatModel(chatMode);
 
                 // Display it
                 App.ViewManager.UpdateDisplay(AppDisplayTarget.Left, chatMode);
@@ -204,6 +205,7 @@ namespace BattlegroundsApp.MVVM.Models {
                 // Create lobby models.
                 LobbyModel lobbyModel = LobbyModel.CreateModelAsParticipant(lobby);
                 LobbyChatSpectatorModel chatMode = new(lobby);
+                lobbyModel.SetChatModel(chatMode);
 
                 // Display it
                 App.ViewManager.UpdateDisplay(AppDisplayTarget.Left, chatMode);
