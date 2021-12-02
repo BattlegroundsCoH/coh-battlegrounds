@@ -281,6 +281,7 @@
                     Grid.ColumnSpan="2"
                     Content="{Binding StartMatch.Text, Converter={StaticResource LocaleConvertor}}"
                     Command="{Binding StartMatch.Click}"
+                    IsEnabled="{Binding StartMatch.Enabled}"
                     Style="{StaticResource StandardBlueButton}"/>
 
         </Grid>

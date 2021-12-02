@@ -405,9 +405,17 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
 
         }
 
+        private void EvaluateMatchLaunchable() {
+
+        }
+
         private void OnHostedLobbyValueChanged(ILobby sender, ObservableValueChangedEventArgs eventArgs) { // Invoked when the hosted lobby values changed
             switch (eventArgs.Property) {
                 case nameof(ILobby.Capacity):
+                    this.EvaluateMatchLaunchable();
+                    break;
+                case nameof(ILobby.Members):
+                    this.EvaluateMatchLaunchable();
                     break;
                 default:
                     break;
