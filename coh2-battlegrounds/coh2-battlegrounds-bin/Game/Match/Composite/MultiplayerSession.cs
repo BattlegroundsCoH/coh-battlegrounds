@@ -17,7 +17,7 @@ namespace Battlegrounds.Game.Match.Composite {
         private bool m_isStarted;
         private bool m_isCancelled;
         private bool m_hasSuccessAnalysis;
-        private LobbyHandler m_lobby;
+        private LobbyAPI m_lobby;
         private IPlayStrategy m_playStrategyResult;
         private IAnalyzedMatch m_analyzedMatch;
 
@@ -33,7 +33,7 @@ namespace Battlegrounds.Game.Match.Composite {
 
         public event AnalysisCancelledHandler AnalysisCancelled;
 
-        public MultiplayerSession(LobbyHandler lobby) {
+        public MultiplayerSession(LobbyAPI lobby) {
             this.m_isCancelled = false;
             this.m_isStarted = false;
             this.m_lobby = lobby;

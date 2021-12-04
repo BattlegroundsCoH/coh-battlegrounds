@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
@@ -9,7 +10,6 @@ using System.Windows.Media.Imaging;
 using Battlegrounds.Game.Gameplay;
 using Battlegrounds.Networking;
 using Battlegrounds.Networking.LobbySystem;
-using Battlegrounds.Networking.LobbySystem.Roles.Host;
 
 using BattlegroundsApp.Utilities;
 
@@ -40,13 +40,12 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
         private LobbyCompanyItem m_selfCompanySelected;
         private readonly LobbyTeam m_teamModel;
 
-        public ILobbyTeamSlot NetworkInterface { get; set; }
+        public LobbyAPIStructs.LobbySlot NetworkInterface { get; set; }
 
-        public string LeftDisplayString => this.NetworkInterface.SlotState switch {
-            TeamSlotState.Open => "Open",
-            TeamSlotState.Locked => "Locked",
-            TeamSlotState.Occupied => this.NetworkInterface.SlotOccupant.Name,
-            TeamSlotState.Disabled => "Disabled",
+        public string LeftDisplayString => this.NetworkInterface.State switch {
+            0 => "Open",
+            1 => this.NetworkInterface.Occupant.DisplayName,
+            2 => "Locked",
             _ => throw new NotImplementedException()
         };
 
@@ -74,13 +73,12 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
 
         public LobbySlotContextMenu SlotContextMenu { get; }
 
-        public bool IsProxyInterface => this.NetworkInterface is not HostedLobbyTeamSlot;
+        public bool IsProxyInterface => this.NetworkInterface.API.IsHost;
 
-        public LobbySlot(ILobbyTeamSlot teamSlot, LobbyTeam team) {
+        public LobbySlot(LobbyAPIStructs.LobbySlot teamSlot, LobbyTeam team) {
 
             // Store reference to network interface
             this.NetworkInterface = teamSlot;
-            this.NetworkInterface.ValueChanged += this.NetworkInterface_ValueChanged;
 
             // Store reference to lobby team
             this.m_teamModel = team;
@@ -178,25 +176,30 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
 
         private void Lock() {
 
-            if (this.NetworkInterface.SlotState is TeamSlotState.Disabled) {
-                return;
-            }
+            // Do async
+            Task.Run(() => {
 
-            if (!this.NetworkInterface.SetState(TeamSlotState.Locked)) {
-                // Meh?
-            }
+                // Invoke API unlock slot function
+                this.NetworkInterface.API.LockSlot(this.m_teamModel.Interface.TeamID, this.NetworkInterface.SlotID);
+
+                // Refresh
+                this.RefreshVisuals();
+
+            });
 
         }
 
         private void Unlock() {
 
-            if (this.NetworkInterface.SlotState is TeamSlotState.Disabled) {
-                return;
-            }
+            Task.Run(() => {
 
-            if (!this.NetworkInterface.SetState(TeamSlotState.Open)) {
-                // Meh?
-            }
+                // Invoke API unlock slot function
+                this.NetworkInterface.API.UnlockSlot(this.m_teamModel.Interface.TeamID, this.NetworkInterface.SlotID);
+
+                // Refresh
+                this.RefreshVisuals();
+
+            });
 
         }
 

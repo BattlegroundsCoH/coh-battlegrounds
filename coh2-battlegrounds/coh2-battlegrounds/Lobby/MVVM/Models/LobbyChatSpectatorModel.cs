@@ -1,7 +1,7 @@
-﻿using System.Collections.ObjectModel;
+﻿using System;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
-using System.Linq;
 using System.Windows;
 using System.Windows.Documents;
 using System.Windows.Input;
@@ -28,7 +28,7 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
 
     public class LobbyChatSpectatorModel : IViewModel, INotifyPropertyChanged {
 
-        private readonly LobbyHandler m_handler;
+        private readonly LobbyAPI m_handle;
         private readonly LocaleKey m_allFilter;
         private readonly LocaleKey m_teamFilter;
         private readonly FontFamily m_font = new FontFamily("Open Sans");
@@ -51,10 +51,11 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
 
         public string MessageContent { get; set; }
 
-        public LobbyChatSpectatorModel(LobbyHandler lobbyHandler) {
+        public LobbyChatSpectatorModel(LobbyAPI lobbyHandler) {
             
             // Set internal handler
-            this.m_handler = lobbyHandler;
+            this.m_handle = lobbyHandler;
+            this.m_handle.OnChatMessage += this.OnChatMessage;
 
             // Create locale keys
             this.m_allFilter = new("LobbyChat_FilterAll");
@@ -89,6 +90,16 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
 
         }
 
+        private void OnChatMessage(LobbyAPIStructs.LobbyMessage msg) {
+            
+            // Convert lobby message colour to System.Colour
+            var colour = (Color)ColorConverter.ConvertFromString(msg.Colour);
+
+            // Display
+            this.NewMessage(msg.Sender, msg.Message, colour, msg.Timestamp, msg.Channel);
+
+        }
+
         public void SendEnter(object sender, KeyEventArgs args) {
             if (sender is not BGTextbox tb) {
                 return;
@@ -113,26 +124,24 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
             // Chat message
             Trace.WriteLine("Sending chat message: " + content);
 
-            // Append message
-            this.NewMessage(this.m_handler.Self.Name, content, Color.FromRgb(255, 255, 255));
+            // Forward declare
+            string channel = "?";
+            string timestamp = DateTime.Now.ToShortTimeString();
 
             // Send using broker
             switch (this.SendFilter.CurrentIndex) {
                 case 0: // All
-                    this.m_handler.BrokerHandler.SendChatMessage(null, content);
+                    this.m_handle.GlobalChat(this.m_handle.Self.ID, content);
+                    channel = "All";
                     break;
                 case 1: // Team
-                    if (this.m_handler.Lobby.Allies.IsTeamMember(this.m_handler.Self)) {
-                        this.m_handler.BrokerHandler.SendChatMessage(this.m_handler.Lobby.Allies.Slots.Where(x => x.SlotState is TeamSlotState.Occupied)
-                            .Select(x => x.SlotOccupant.Id).ToArray(), content);
-                    } else if (this.m_handler.Lobby.Axis.IsTeamMember(this.m_handler.Self)) {
-                        this.m_handler.BrokerHandler.SendChatMessage(this.m_handler.Lobby.Axis.Slots.Where(x => x.SlotState is TeamSlotState.Occupied)
-                            .Select(x => x.SlotOccupant.Id).ToArray(), content);
-                    } else {
-                        // TODO: Implement
-                    }
+                    this.m_handle.TeamChat(this.m_handle.Self.ID, content);
+                    channel = "Team";
                     break;
             }
+
+            // Append message
+            this.NewMessage(this.m_handle.Self.Name, content, Color.FromRgb(255, 255, 255), timestamp, channel);
 
             // Reset message content
             this.MessageContent = string.Empty;
@@ -142,10 +151,10 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
 
         }
 
-        public void NewMessage(string from, string msg, Color colour) {
+        public void NewMessage(string from, string msg, Color colour, string time, string channel) {
 
             // Create full message
-            var fullMessage = $"{from}: {msg}";
+            var fullMessage = $"[{time}][{channel}]{from}: {msg}";
 
             // Create paragraph to append
             Paragraph p = new() {

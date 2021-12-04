@@ -1,0 +1,72 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Battlegrounds.Networking.LobbySystem {
+
+    /// <summary>
+    /// 
+    /// </summary>
+    public static class LobbyAPIStructs {
+
+        public interface IAPIObject {
+            public LobbyAPI API { get; set; }
+        }
+
+        public class LobbyCompany : IAPIObject {
+            public bool IsAuto { get; set; }
+            public bool IsNone { get; set; }
+            public string Name { get; set; }
+            public string Army { get; set; }
+            public float Strength { get; set; }
+            public string Specialisation { get; set; }
+            public LobbyAPI API { get; set; }
+        }
+
+        public class LobbyMember : IAPIObject {
+
+            public ulong MemberID { get; set; }
+            public string DisplayName { get; set; }
+            public int Role { get; set; }
+            public int AILevel { get; set; }
+            public LobbyCompany Company { get; set; }
+            public LobbyAPI API { get; set; }
+        }
+
+        public class LobbySlot : IAPIObject {
+
+            public int SlotID { get; set; }
+            public byte State { get; set; }
+            public LobbyMember Occupant { get; set; }
+            public LobbyAPI API { get; set; }
+
+        }
+
+        public class LobbyTeam : IAPIObject {
+
+            public LobbySlot[] Slots { get; set; }
+            public int TeamID { get; set; }
+            public int Capacity { get; set; }
+            public LobbyAPI API { get; set; }
+
+        }
+
+        public class LobbyMessage {
+            public string Timestamp { get; set; }
+            public string Sender { get; set; }
+            public string Message { get; set; }
+            public string Channel { get; set; }
+            public string Colour { get; set; }
+        }
+
+        public class LobbyRemote {
+            public ulong HostID { get; set; }
+            public LobbyTeam[] Teams { get; set; }
+            public Dictionary<string, string> Settings { get; set; }
+        }
+
+    }
+
+}

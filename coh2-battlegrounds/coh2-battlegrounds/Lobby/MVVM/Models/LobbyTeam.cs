@@ -1,29 +1,26 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.Globalization;
+using System.Windows;
+using System.Threading.Tasks;
 
 using Battlegrounds.Game;
-using Battlegrounds.Game.DataCompany;
 using Battlegrounds.Networking.LobbySystem;
 
 namespace BattlegroundsApp.Lobby.MVVM.Models {
 
     public class LobbyTeam {
 
-        private readonly ILobby m_lobby;
-        private readonly ILobbyTeam m_team;
-
         public LobbySlot[] Slots { get; }
 
         public ObservableCollection<LobbyCompanyItem> AvailableCompanies { get; set; }
 
-        public LobbyTeam(ILobbyTeam lobbyTeam, ILobby lobby) {
+        public LobbyAPIStructs.LobbyTeam Interface { get; }
+
+        public LobbyTeam(LobbyAPIStructs.LobbyTeam lobbyTeam) {
 
             // Store team
-            this.m_team = lobbyTeam;
-
-            // Store lobby
-            this.m_lobby = lobby;
+            this.Interface = lobbyTeam;
 
             // Define slot models
             this.Slots = new LobbySlot[4] {
@@ -41,13 +38,20 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
 
         public void KickOccupant(LobbySlot slot) {
 
-            // Kick the occupant
-            if (this.m_lobby.RemoveParticipant(slot.NetworkInterface.SlotOccupant, true)) {
+            // Run async so we dont block stuff
+            Task.Run(() => {
 
-                // Trigger refresh on slot
-                slot.RefreshVisuals();
+                // Remove Participant
+                slot.NetworkInterface.API.RemoveOccupant(this.Interface.TeamID, slot.NetworkInterface.SlotID);
 
-            }
+                Application.Current.Dispatcher.Invoke(() => {
+
+                    // Trigger refresh on slot
+                    slot.RefreshVisuals();
+
+                });
+
+            });
 
         }
 
@@ -56,16 +60,24 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
             // Get AI Difficulty
             AIDifficulty diff = (AIDifficulty)byte.Parse(param, CultureInfo.InvariantCulture);
 
-            // Join the AI player
-            if (this.m_lobby.CreateAIParticipant(diff, slot.NetworkInterface, this.AvailableCompanies[0]) is not null) {
+            // Run async so we dont block stuff
+            Task.Run(() => {
 
-                // Set default company index
-                slot.SelectedCompanyIndex = 0;
+                // Remove Participant
+                this.Interface.API.AddAI(this.Interface.TeamID, slot.NetworkInterface.SlotID, (int)diff, null);
 
-                // Trigger refresh on slot
-                slot.RefreshVisuals();
+                // Update UI
+                Application.Current.Dispatcher.Invoke(() => {
 
-            }
+                    // Set default company index
+                    slot.SelectedCompanyIndex = 0;
+
+                    // Trigger refresh on slot
+                    slot.RefreshVisuals();
+
+                });
+
+            });
 
         }
 

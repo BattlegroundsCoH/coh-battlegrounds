@@ -143,7 +143,7 @@ namespace BattlegroundsApp.MVVM.Models {
 
         }
 
-        private void HostLobbyResponse(bool result, LobbyHandler lobby) {
+        private void HostLobbyResponse(bool result, LobbyAPI lobby) {
 
             // If lobby was created.
             if (result) {
@@ -195,7 +195,7 @@ namespace BattlegroundsApp.MVVM.Models {
             }
         }
 
-        private void JoinLobbyResponse(bool joined, LobbyHandler lobby) { 
+        private void JoinLobbyResponse(bool joined, LobbyAPI lobby) { 
             
             if (joined) {
 

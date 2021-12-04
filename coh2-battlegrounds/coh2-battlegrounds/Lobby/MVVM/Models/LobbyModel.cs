@@ -32,7 +32,7 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
 
         private static readonly ImageSource __mapNotFound = new BitmapImage(new Uri("pack://application:,,,/Resources/ingame/unknown_map.png"));
 
-        private readonly LobbyHandler m_handler;
+        private readonly LobbyAPI m_handle;
         private LobbyChatSpectatorModel m_chatModel;
         private ModPackage m_package;
         private bool m_hasSetDefaults;
@@ -69,10 +69,10 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
 
         public bool SingleInstanceOnly => false;
 
-        private LobbyModel(LobbyHandler handler, ILobbyTeam allies, ILobbyTeam axis) {
+        private LobbyModel(LobbyAPI handle, LobbyAPIStructs.LobbyTeam allies, LobbyAPIStructs.LobbyTeam axis) {
 
             // Set handler
-            this.m_handler = handler;
+            this.m_handle = handle;
 
             // Init company lists
             InitCompanyList(this.AlliedCompanies = new(), isAllied: true);
@@ -107,18 +107,18 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
             ModManager.EachPackage(x => modPackages.Add(new(x)));
 
             // Create mod package dropdown
-            this.ModPackageSelection = new(true, this.m_handler.IsHost) {
+            this.ModPackageSelection = new(true, this.m_handle.IsHost) {
                 Items = new(modPackages),
                 OnSelectionChanged = this.OnPackageChanged
             };
 
             // Set package here
-            if (this.m_handler.IsHost) {
+            if (this.m_handle.IsHost) {
                 this.m_package = this.ModPackageSelection.Items[0].Package;
             }
 
             // Create scenario selection dropdown
-            this.ScenarioSelection = new(true, this.m_handler.IsHost) {
+            this.ScenarioSelection = new(true, this.m_handle.IsHost) {
                 Items = new(ScenarioList.GetList()
                     .Where(x => x.IsVisibleInLobby)
                     .Select(x => new LobbyScenarioItem(x))),
@@ -126,37 +126,37 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
             };
 
             // Create gamemode selection dropdown
-            this.GamemodeSelection = new(true, this.m_handler.IsHost) {
+            this.GamemodeSelection = new(true, this.m_handle.IsHost) {
                 Items = new(),
                 OnSelectionChanged = this.OnGamemodeChanged
             };
 
             // Create gamemode option selection dropdown
-            this.GamemodeOptionSelection = new(true, this.m_handler.IsHost) {
+            this.GamemodeOptionSelection = new(true, this.m_handle.IsHost) {
                 Items = new(),
                 OnSelectionChanged = this.OnGamemodeOptionChanged
             };
 
             // Create weather selection dropdown
-            this.WeatherSelection = new(true, this.m_handler.IsHost) {
+            this.WeatherSelection = new(true, this.m_handle.IsHost) {
                 Items = LobbyBinaryOptionItem.CreateCollection(),
                 OnSelectionChanged = this.OnWeatherChanged
             };
 
             // Create supply selection dropdown
-            this.SupplySystemSelection = new(true, this.m_handler.IsHost) {
+            this.SupplySystemSelection = new(true, this.m_handle.IsHost) {
                 Items = LobbyBinaryOptionItem.CreateCollection(),
                 OnSelectionChanged = this.OnSupplyChanged
             };
 
             // Init dropdown values (if host)
-            if (handler.IsHost) {
+            if (handle.IsHost) {
                 this.ScenarioSelection.SetSelection(x => x.Scenario.RelativeFilename == BattlegroundsInstance.LastPlayedMap);
             }
 
             // Create teams
-            this.Allies = new(allies, handler.Lobby) { AvailableCompanies = this.AlliedCompanies };
-            this.Axis = new(axis, handler.Lobby) { AvailableCompanies = this.AxisCompanies };
+            this.Allies = new(allies) { AvailableCompanies = this.AlliedCompanies };
+            this.Axis = new(axis) { AvailableCompanies = this.AxisCompanies };
 
         }
 
@@ -180,7 +180,7 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
                 if (success && value == ModalDialogResult.Confirm) {
 
                     // Leave lobby
-                    Task.Run(this.m_handler.BrokerHandler.Disconnect);
+                    Task.Run(this.m_handle.Disconnect);
 
                     // Go back to browser view
                     App.ViewManager.SetDisplay(AppDisplayState.LeftRight, typeof(LeftMenu), typeof(LobbyBrowserViewModel));
@@ -193,12 +193,12 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
         private void BeginMatchSetup() {
 
             // If not host -> bail.
-            if (!this.m_handler.IsHost) {
+            if (!this.m_handle.IsHost) {
                 return;
             }
 
             // Get play model
-            var play = PlayModelFactory.GetModel(this.m_handler, this.m_chatModel);
+            var play = PlayModelFactory.GetModel(this.m_handle, this.m_chatModel);
 
             // prepare
             play.Prepare(this.m_package, this.BeginMatch, this.CancelMatch);
@@ -231,9 +231,7 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
             this.m_package = item.Package;
 
             // Update lobby
-            if (!this.m_handler.Lobby.SetLobbySetting("selected_tuning", item.Package.ID)) {
-                Trace.WriteLine("Failed to set 'selected_tuning'", nameof(LobbyModel));
-            }
+            this.m_handle.SetLobbySetting("selected_tuning", item.Package.ID);
 
             // Return selected
             return next;
@@ -241,11 +239,9 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
         }
 
         private int OnSupplyChanged(int current, int next, LobbyBinaryOptionItem item) {
-            
+
             // Update lobby
-            if (!this.m_handler.Lobby.SetLobbySetting("selected_supply", item.IsOn ? "1" : "0")) {
-                Trace.WriteLine("Failed to set 'selected_supply'", nameof(LobbyModel));
-            }
+            this.m_handle.SetLobbySetting("selected_supply", item.IsOn ? "1" : "0");
 
             // Return selected
             return next;
@@ -255,9 +251,7 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
         private int OnWeatherChanged(int current, int next, LobbyBinaryOptionItem item) {
 
             // Update lobby
-            if (!this.m_handler.Lobby.SetLobbySetting("selected_daynight", item.IsOn ? "1" : "0")) {
-                Trace.WriteLine("Failed to set 'selected_daynight'", nameof(LobbyModel));
-            }
+            this.m_handle.SetLobbySetting("selected_daynight", item.IsOn ? "1" : "0");
 
             // Return selected
             return next;
@@ -303,7 +297,7 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
             if (item is not null) {
 
                 // Update team capacity and go back to previous selection if capacity change fails
-                if (!this.m_handler.Lobby.SetTeamsCapacity(item.Scenario.MaxPlayers / 2)) {
+                if (!this.m_handle.SetTeamsCapacity(item.Scenario.MaxPlayers / 2)) {
                     return current;
                 }
 
@@ -314,9 +308,7 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
                 this.UpdateGamemodeAndOption(item.Scenario);
 
                 // Update lobby
-                if (!this.m_handler.Lobby.SetLobbySetting("selected_map", item.Scenario.RelativeFilename)) {
-                    Trace.WriteLine("Failed to set 'selected_map'", nameof(LobbyModel));
-                }
+                this.m_handle.SetLobbySetting("selected_map", item.Scenario.RelativeFilename);
 
             }
 
@@ -384,9 +376,7 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
             }
 
             // Update lobby
-            if (!this.m_handler.Lobby.SetLobbySetting("selected_wc", item.Gamemode.Name)) {
-                Trace.WriteLine("Failed to set 'selected_wc'", nameof(LobbyModel));
-            }
+            this.m_handle.SetLobbySetting("selected_wc", item.Gamemode.Name);
 
             // Return selected
             return next;
@@ -396,9 +386,7 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
         private int OnGamemodeOptionChanged(int current, int next, LobbyGamemodeOptionItem item) {
 
             // Update lobby
-            if (!this.m_handler.Lobby.SetLobbySetting("selected_wco", item.Option.Value.ToString(CultureInfo.InvariantCulture))) {
-                Trace.WriteLine("Failed to set 'selected_wco'", nameof(LobbyModel));
-            }
+            this.m_handle.SetLobbySetting("selected_wco", item.Option.Value.ToString(CultureInfo.InvariantCulture));
 
             // Return selected
             return next;
@@ -409,47 +397,23 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
 
         }
 
-        private void OnHostedLobbyValueChanged(ILobby sender, ObservableValueChangedEventArgs eventArgs) { // Invoked when the hosted lobby values changed
-            switch (eventArgs.Property) {
-                case nameof(ILobby.Capacity):
-                    this.EvaluateMatchLaunchable();
-                    break;
-                case nameof(ILobby.Members):
-                    this.EvaluateMatchLaunchable();
-                    break;
-                default:
-                    break;
-            }
-        }
-
-        private void OnRemoteLobbyValueChanged(ILobby sender, ObservableValueChangedEventArgs eventArgs) { // Invoked when the remote lobby values changed
-            switch (eventArgs.Property) {
-                case nameof(ILobby.Capacity):
-                    break;
-                default:
-                    break;
-            }
-        }
-
         public void SetChatModel(LobbyChatSpectatorModel chatModel)
             => this.m_chatModel = chatModel;
 
-        public static LobbyModel CreateModelAsHost(LobbyHandler handler) {
+        public static LobbyModel CreateModelAsHost(LobbyAPI handler) {
 
             // Create model
-            LobbyModel model = new(handler, handler.Lobby.Allies, handler.Lobby.Axis);
-            handler.Lobby.ValueChanged += model.OnHostedLobbyValueChanged;
+            LobbyModel model = new(handler, handler.Allies, handler.Axis);
 
             // Return model
             return model;
 
         }
 
-        public static LobbyModel CreateModelAsParticipant(LobbyHandler handler) {
+        public static LobbyModel CreateModelAsParticipant(LobbyAPI handler) {
 
             // Create model
             LobbyModel model = new(handler, null, null);
-            handler.Lobby.ValueChanged += model.OnRemoteLobbyValueChanged;
 
             // Return model
             return model;
