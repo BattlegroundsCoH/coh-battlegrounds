@@ -109,14 +109,9 @@ namespace BattlegroundsApp.Views {
                 }
 
                 // Create lobby
-                _ = Task.Run(() => LobbyUtil.HostLobby(this.m_api, lobbyName, lobbyPwd, this.HostLobbyResponse));
+                //_ = Task.Run(() => LobbyUtil.HostLobby(this.m_api, lobbyName, lobbyPwd, this.HostLobbyResponse));
 
             }
-
-        }
-
-        private void HostLobbyResponse(bool result, LobbyHandler lobby) {
-
 
         }
 

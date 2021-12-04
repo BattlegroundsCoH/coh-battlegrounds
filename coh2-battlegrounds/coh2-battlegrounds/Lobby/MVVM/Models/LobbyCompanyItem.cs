@@ -4,7 +4,7 @@ using Battlegrounds.Networking.LobbySystem;
 
 namespace BattlegroundsApp.Lobby.MVVM.Models {
 
-    public class LobbyCompanyItem : ILobbyCompany {
+    public class LobbyCompanyItem {
 
         public string Name { get; }
 
@@ -18,7 +18,7 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
 
         public string Faction => this.Army?.Name ?? string.Empty;
 
-        public double Strength => throw new System.NotImplementedException();
+        public double Strength { get; }
 
         public LobbyCompanyItem(int type) {
             this.IsEmpty = type <= 0;
@@ -29,7 +29,19 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
             this.Army = company.Army;
             this.Name = company.Name;
             this.Type = company.Type;
+            this.Strength = company.Strength;
         }
+
+        public LobbyAPIStructs.LobbyCompany GetAPIObject()
+            => new LobbyAPIStructs.LobbyCompany() {
+                API = null,
+                Army = this.Army.Name,
+                Specialisation = this.Type.ToString(),
+                IsAuto = this.IsAuto,
+                IsNone = this.IsEmpty,
+                Name = this.Name,
+                Strength = (float)this.Strength
+            };
 
     }
 

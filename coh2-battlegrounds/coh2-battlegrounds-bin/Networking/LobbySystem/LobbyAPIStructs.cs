@@ -42,6 +42,20 @@ namespace Battlegrounds.Networking.LobbySystem {
             public LobbyMember Occupant { get; set; }
             public LobbyAPI API { get; set; }
 
+            public bool IsSelf() {
+                if (this.Occupant is LobbyMember mem) {
+                    return mem.MemberID == this.API.Self.ID;
+                }
+                return false;
+            }
+
+            public bool IsAI() {
+                if (this.Occupant is LobbyMember mem) {
+                    return mem.Role == 3;
+                }
+                return false;
+            }
+
         }
 
         public class LobbyTeam : IAPIObject {

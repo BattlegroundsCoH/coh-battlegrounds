@@ -13,10 +13,10 @@ namespace BattlegroundsApp.Lobby.MatchHandling;
 
 internal class OnlineModel : IPlayModel {
 
-    private readonly LobbyHandler m_handler;
+    private readonly LobbyAPI m_handle;
 
-    public OnlineModel(LobbyHandler handler, LobbyChatSpectatorModel lobbyChat) {
-        this.m_handler = handler;
+    public OnlineModel(LobbyAPI handler, LobbyChatSpectatorModel lobbyChat) {
+        this.m_handle = handler;
     }
 
     public void Prepare(ModPackage modPackage, PrepareOverHandler prepareOver, PrepareCancelledHandler prepareCancelled) {

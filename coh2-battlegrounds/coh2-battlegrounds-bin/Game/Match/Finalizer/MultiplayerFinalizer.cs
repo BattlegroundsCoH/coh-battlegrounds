@@ -1,9 +1,9 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
 using System.Linq;
 
 using Battlegrounds.Game.DataCompany;
 using Battlegrounds.Networking.LobbySystem;
-using Battlegrounds.Networking.LobbySystem.Playing;
 using Battlegrounds.Networking.Server;
 
 namespace Battlegrounds.Game.Match.Finalizer {
@@ -24,7 +24,7 @@ namespace Battlegrounds.Game.Match.Finalizer {
             }
 
             // Get handler
-            LobbyHandler handler = synchronizeObject as LobbyHandler;
+            LobbyAPI handler = synchronizeObject as LobbyAPI;
 
             // Get player results
             var playerFiles = this.m_companies.Where(x => x.Key.SteamID != BattlegroundsInstance.Steam.User.ID).Select(
@@ -40,7 +40,7 @@ namespace Battlegrounds.Game.Match.Finalizer {
             };
 
             // Inform members the results are available
-            handler.MatchContext.UploadResults(matchResults, playerFiles);
+            UploadResults(handler, matchResults, playerFiles);
 
             // Get self company (and invoke so host is also updated)
             if (this.GetLocalPlayerCompany() is Company company) {
@@ -51,6 +51,28 @@ namespace Battlegrounds.Game.Match.Finalizer {
             }
 
         }
+
+        private void UploadResults(LobbyAPI api, ServerMatchResults matchResults, LobbyPlayerCompanyFile[] companyFiles) {
+
+            // Loop over the files and trigger appropriate events
+            for (int i = 0; i < companyFiles.Length; i++) {
+                if (companyFiles[i].playerID == api.Self.ID) {
+                    throw new NotImplementedException();
+                } else {
+                    api.ServerHandle.UploadCompany(companyFiles[i].playerID, companyFiles[i].playerCompanyData);
+                }
+            }
+
+            // Upload result object
+            if (api.ServerHandle.UploadResults(matchResults)) {
+
+                // Release results
+                api.ReleaseResults();
+
+            }
+
+        }
+
 
     }
 

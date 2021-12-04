@@ -48,9 +48,6 @@ namespace Battlegrounds.Game.Match.Composite {
             // Local method for play
             void ManagedLobbyPlayer() {
 
-                // Start context
-                this.m_lobby.MatchContext = this.m_lobby.Lobby.CreateMatchContext();
-
                 // Begin
                 if (!startupStrategy.OnBegin(this.m_lobby)) {
                     startupStrategy.OnCancel(this, "One or more players stopped the host from launching.");

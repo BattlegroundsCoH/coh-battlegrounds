@@ -3,6 +3,7 @@ using System.Windows;
 using System.Windows.Media;
 
 using Battlegrounds.Functional;
+using Battlegrounds.Game;
 using Battlegrounds.Game.Database;
 using Battlegrounds.Game.DataCompany;
 using Battlegrounds.Game.Gameplay;
@@ -25,9 +26,8 @@ namespace BattlegroundsApp.Lobby.MatchHandling;
 internal class SingleplayerModel : IPlayModel {
 
     // Load refs
-    private readonly LobbyHandler m_handler;
+    private readonly LobbyAPI m_handle;
     private readonly LobbyChatSpectatorModel m_chat;
-    private readonly ILobby m_lobby;
 
     // The strategies to use
     private readonly IStartupStrategy m_startupStrategy;
@@ -42,12 +42,11 @@ internal class SingleplayerModel : IPlayModel {
     private MultiplayerSession m_session;
     private MatchController m_controller;
 
-    public SingleplayerModel(LobbyHandler handler, LobbyChatSpectatorModel lobbyChat) {
+    public SingleplayerModel(LobbyAPI handler, LobbyChatSpectatorModel lobbyChat) {
         
         // Set base stuff
-        this.m_handler = handler;
+        this.m_handle = handler;
         this.m_chat = lobbyChat;
-        this.m_lobby = this.m_handler.Lobby;
 
         // Startup strategy
         this.m_startupStrategy = new SingleplayerStartupStrategy {
@@ -78,7 +77,7 @@ internal class SingleplayerModel : IPlayModel {
         this.m_startupStrategy.StartupCancelled += this.HandleStartupCancel;
 
         // Create session
-        this.m_session = new MultiplayerSession(this.m_handler);
+        this.m_session = new MultiplayerSession(this.m_handle);
 
         // Create controller
         this.m_controller = new();
@@ -96,11 +95,11 @@ internal class SingleplayerModel : IPlayModel {
     private void CreateMatchInfo(ModPackage package) {
 
         // Collect settings
-        string scenario = this.m_lobby.GetLobbySetting("selected_map");
-        string gamemode = this.m_lobby.GetLobbySetting("selected_wc");
-        string gamemodeValue = this.m_lobby.GetLobbySetting("selected_wco");
-        bool enableSupply = this.m_lobby.GetLobbySetting("selected_supply") != "0";
-        bool enableWeather = this.m_lobby.GetLobbySetting("selected_daynight") != "0";
+        string scenario = this.m_handle.Settings["selected_map"];
+        string gamemode = this.m_handle.Settings["selected_wc"];
+        string gamemodeValue = this.m_handle.Settings["selected_wco"];
+        bool enableSupply = this.m_handle.Settings["selected_supply"] != "0";
+        bool enableWeather = this.m_handle.Settings["selected_daynight"] != "0";
 
         // Try get gamemode value
         if (!int.TryParse(gamemodeValue, out int gamemodeoption)) {
@@ -114,12 +113,12 @@ internal class SingleplayerModel : IPlayModel {
         ValRef<byte> axisCounter = 0;
 
         // Get allies
-        var allies = this.m_lobby.Allies.Slots.Filter(x => x.SlotState is TeamSlotState.Occupied)
-            .Map(x => x.SlotOccupant).Map(x => CreateParticipantFromLobbyMember(x, ParticipantTeam.TEAM_ALLIES, totalCounter, alliesCounter));
+        var allies = this.m_handle.Allies.Slots.Filter(x => x.State is 1)
+            .Map(x => x.Occupant).Map(x => CreateParticipantFromLobbyMember(x, ParticipantTeam.TEAM_ALLIES, totalCounter, alliesCounter));
 
         // Get axis
-        var axis = this.m_lobby.Axis.Slots.Filter(x => x.SlotState is TeamSlotState.Occupied)
-            .Map(x => x.SlotOccupant).Map(x => CreateParticipantFromLobbyMember(x, ParticipantTeam.TEAM_AXIS, totalCounter, axisCounter));
+        var axis = this.m_handle.Axis.Slots.Filter(x => x.State is 1)
+            .Map(x => x.Occupant).Map(x => CreateParticipantFromLobbyMember(x, ParticipantTeam.TEAM_AXIS, totalCounter, axisCounter));
 
         // Create info data
         this.m_info = new() {
@@ -137,18 +136,18 @@ internal class SingleplayerModel : IPlayModel {
 
     }
 
-    private SessionParticipant CreateParticipantFromLobbyMember(ILobbyParticipant participant, ParticipantTeam team, ValRef<byte> count, ValRef<byte> index) {
+    private SessionParticipant CreateParticipantFromLobbyMember(LobbyAPIStructs.LobbyMember participant, ParticipantTeam team, ValRef<byte> count, ValRef<byte> index) {
         byte tIndex = index.Change(x => x++);
         byte pIndex = count.Change(x => x++);
-        if (participant is ILobbyAIParticipant ai) {
+        if (participant.Role is 3) {
             var aiCompany = participant.Company;
-            var c = aiCompany.IsAuto ? null : PlayerCompanies.FromNameAndFaction(aiCompany.Name, Faction.FromName(aiCompany.Faction));
-            return new SessionParticipant(ai.AIDifficulty, c, team, tIndex, pIndex);
+            var c = aiCompany.IsAuto ? null : PlayerCompanies.FromNameAndFaction(aiCompany.Name, Faction.FromName(aiCompany.Army));
+            return new SessionParticipant((AIDifficulty)participant.AILevel, c, team, tIndex, pIndex);
         } else {
-            if (participant.IsSelf) {
-                this.m_selfCompany = PlayerCompanies.FromNameAndFaction(participant.Company.Name, Faction.FromName(participant.Company.Faction));
+            if (participant.MemberID == this.m_handle.Self.ID) {
+                this.m_selfCompany = PlayerCompanies.FromNameAndFaction(participant.Company.Name, Faction.FromName(participant.Company.Army));
             }
-            return new SessionParticipant(participant.Name, participant.Id, null, team, tIndex, pIndex);
+            return new SessionParticipant(participant.DisplayName, participant.MemberID, null, team, tIndex, pIndex);
         }
     }
 

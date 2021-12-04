@@ -110,10 +110,16 @@ namespace Battlegrounds.Networking.LobbySystem {
         public Dictionary<string, string> GetSettings()
             => RemoteCall<Dictionary<string, string>>("GetSettings");
 
+        public uint GetPlayerCount()
+            => RemoteCall<uint>("GetPlayerCount");
+
         private static string EncBool(bool b) => b ? "1" : "0";
 
         public void SetCompany(ulong mid, LobbyCompany company)
             => RemoteVoidCall("SetCompany", mid.ToString(), EncBool(company.IsAuto), EncBool(company.IsNone), company.Name, company.Army, company.Strength.ToString(), company.Specialisation);
+
+        public void SetAICompany(int tid, int sid, LobbyCompany company)
+            => throw new NotImplementedException();
 
         public void MoveSlot(ulong mid, int tid, int sid)
             => RemoteVoidCall("MoveSlot", mid.ToString(), tid.ToString(), sid.ToString());
@@ -137,14 +143,47 @@ namespace Battlegrounds.Networking.LobbySystem {
             => RemoteVoidCall("TeamChat", mid.ToString(), msg);
 
         public void SetLobbySetting(string setting, string value) {
-
+            if (this.m_isHost) {
+                RemoteVoidCall("SetLobbySetting", setting, value);
+            }
         }
 
         public bool SetTeamsCapacity(int newCapacity) {
-            return true;
+            if (this.m_isHost) {                
+                return this.RemoteCall<bool>("SetTeamCapacity", newCapacity.ToString());
+            }
+            return false;
+        }
+
+        public bool StartMatch(double cancelTime) {
+            return false;
+        }
+
+        public void LaunchMatch() {
+            if (this.m_isHost) {
+                this.RemoteVoidCall("LaunchGame");
+            }
+        }
+
+        public void RequestCompanyFiles(params ulong[] members) {
+
+        }
+
+
+        public void ReleaseGamemode() {
+            if (this.m_isHost) {
+                this.RemoteVoidCall("ReleaseGamemode");
+            }
+        }
+
+        public void ReleaseResults() {
+            if (this.m_isHost) {
+                this.RemoteVoidCall("ReleaseResults");
+            }
         }
 
         private T RemoteCall<T>(string method, params string[] args) {
+            
             Message msg = new Message() {
                 CID = this.m_cidcntr++,
                 Content = BrokerMarshal.JsonMarshal(new RemoteCallMessage() { Message = method, Arguments = args }),
@@ -152,16 +191,24 @@ namespace Battlegrounds.Networking.LobbySystem {
                 Sender = this.m_connection.SelfID,
                 Target = 0
             };
+
             if (this.m_connection.SendAndAwaitReply(msg) is ContentMessage response) {
-                if (BrokerMarshal.JsonUnmarshal<T>(response.Raw) is T settings) {
-                    if (settings is IAPIObject apiobj) {
-                        apiobj.API = this;
+                if (response.StrMsg == "Primitive") {
+                    Type t = Type.GetType(response.DotNetType);
+                    return (T)(dynamic)Convert.ChangeType(response.Raw, t);
+                } else {
+                    if (BrokerMarshal.JsonUnmarshal<T>(response.Raw) is T settings) {
+                        if (settings is IAPIObject apiobj) {
+                            apiobj.API = this;
+                        }
+                        return settings;
                     }
-                    return settings;
                 }
             }
+            
             // TODO: Warning
             return default;
+
         }
 
         private void RemoteVoidCall(string method, params string[] args) {
