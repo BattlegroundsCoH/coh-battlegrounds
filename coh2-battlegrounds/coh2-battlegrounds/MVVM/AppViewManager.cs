@@ -64,6 +64,8 @@ namespace BattlegroundsApp.MVVM {
             return this.UpdateDisplay(target, model) ? (T)model : throw new InvalidOperationException();
         }
 
+        public void TEMPRight_UpdateDisplay(IViewModel model) => this.m_window.SetRightPanel(model);
+
         private bool UpdateDisplay(AppDisplayTarget target, IViewModel model) {
             if (target == AppDisplayTarget.Full && this.m_window.DisplayState != AppDisplayState.Full) {
                 throw new InvalidOperationException();

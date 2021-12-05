@@ -65,7 +65,13 @@
         <DataTemplate DataType="{x:Type models:LobbyBrowserViewModel}">
             <views:LobbyBrowserView/>
         </DataTemplate>
+
+        <!-- New CompanyBrowser-View Models -->
+        <DataTemplate DataType="{x:Type models:CompanyBrowserViewModel}">
+            <views:CompanyBrowserView/>
+        </DataTemplate>
         
+
         <!-- Lobby View Models -->
         <DataTemplate DataType="{x:Type lobbymodels:LobbyChatSpectatorModel}">
             <lobbyviews:LobbyChatSpectatorView/>

@@ -28,6 +28,7 @@ namespace BattlegroundsApp {
 
         private static LeftMenu __lmenu;
         private static LobbyBrowserViewModel __lobbyBrowser;
+        private static CompanyBrowserViewModel __companyBrowser;
 
         public static ResourceHandler ResourceHandler => __handler;
 
@@ -61,6 +62,7 @@ namespace BattlegroundsApp {
             // Create views
             __lmenu = new();
             __lobbyBrowser = new();
+            __companyBrowser = new();
 
             // Create app view manager
             __viewManager = new(window);
