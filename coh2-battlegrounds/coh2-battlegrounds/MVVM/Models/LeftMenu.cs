@@ -89,8 +89,9 @@ namespace BattlegroundsApp.MVVM.Models {
         
         private void BuilderButton() {
 
-            var model = new CompanyBrowserViewModel();
-            App.ViewManager.TEMPRight_UpdateDisplay(model);
+            var browser  = new CompanyBrowserViewModel();
+            App.ViewManager.TEMPRight_UpdateDisplay(browser);
+            browser.UpdateCompanyList();
 
         }
 
