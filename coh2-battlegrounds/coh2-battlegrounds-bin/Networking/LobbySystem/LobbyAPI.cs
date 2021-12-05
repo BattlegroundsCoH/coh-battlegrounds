@@ -59,20 +59,26 @@ namespace Battlegrounds.Networking.LobbySystem {
             // Create get lobby message
             Message msg = new Message() {
                 CID = this.m_cidcntr++,
-                Content = BrokerMarshal.JsonMarshal(new RemoteCallMessage() { Message = "GetLobby", Arguments = Array.Empty<string>() }),
+                Content = BrokerMarshal.JsonMarshal(new RemoteCallMessage() { Method = "GetLobby", Arguments = Array.Empty<string>() }),
                 Mode = MessageMode.BrokerCall,
                 Sender = this.m_connection.SelfID,
                 Target = 0
             };
 
             // Make pull lobby request
-            if (this.m_connection.SendAndAwaitReply(msg) is ContentMessage response && BrokerMarshal.JsonUnmarshal<LobbyRemote>(response.Raw) is LobbyRemote remoteLobby) {
+            ContentMessage? reply = this.m_connection.SendAndAwaitReply(msg);
+            if (reply is ContentMessage response && BrokerMarshal.JsonUnmarshal<LobbyRemote>(response.Raw) is LobbyRemote remoteLobby) {
 
                 // Create team data
                 this.m_allies = new(remoteLobby.Teams[0], __cacheTime);
                 this.m_axis = new(remoteLobby.Teams[1], __cacheTime);
                 this.m_obs = new(remoteLobby.Teams[2], __cacheTime);
                 this.m_settings = new(remoteLobby.Settings, __cacheTime);
+
+            } else {
+
+                // Throw exception -> Failed to fully connect.
+                throw new Exception("Failed to retrieve light-lobby version.");
 
             }
 
@@ -150,7 +156,7 @@ namespace Battlegrounds.Networking.LobbySystem {
 
         public bool SetTeamsCapacity(int newCapacity) {
             if (this.m_isHost) {                
-                return this.RemoteCall<bool>("SetTeamCapacity", newCapacity.ToString());
+                return this.RemoteCall<bool>("SetTeamsCapacity", newCapacity.ToString());
             }
             return false;
         }
@@ -184,15 +190,20 @@ namespace Battlegrounds.Networking.LobbySystem {
 
         private T RemoteCall<T>(string method, params string[] args) {
             
+            // Create message
             Message msg = new Message() {
                 CID = this.m_cidcntr++,
-                Content = BrokerMarshal.JsonMarshal(new RemoteCallMessage() { Message = method, Arguments = args }),
+                Content = BrokerMarshal.JsonMarshal(new RemoteCallMessage() { Method = method, Arguments = args }),
                 Mode = MessageMode.BrokerCall,
                 Sender = this.m_connection.SelfID,
                 Target = 0
             };
 
+            // Send and await response
             if (this.m_connection.SendAndAwaitReply(msg) is ContentMessage response) {
+                if (response.MessageType == ContentMessgeType.Error) {
+                    throw new Exception(response.StrMsg);
+                }
                 if (response.StrMsg == "Primitive") {
                     Type t = Type.GetType(response.DotNetType);
                     return (T)(dynamic)Convert.ChangeType(response.Raw, t);
@@ -212,14 +223,19 @@ namespace Battlegrounds.Networking.LobbySystem {
         }
 
         private void RemoteVoidCall(string method, params string[] args) {
+            
+            // Create message
             Message msg = new Message() {
                 CID = this.m_cidcntr++,
-                Content = BrokerMarshal.JsonMarshal(new RemoteCallMessage() { Message = method, Arguments = args }),
+                Content = BrokerMarshal.JsonMarshal(new RemoteCallMessage() { Method = method, Arguments = args }),
                 Mode = MessageMode.BrokerCall,
                 Sender = this.m_connection.SelfID,
                 Target = 0
             };
+            
+            // Send but ignore response
             this.m_connection.SendMessage(msg);
+
         }
 
     }
