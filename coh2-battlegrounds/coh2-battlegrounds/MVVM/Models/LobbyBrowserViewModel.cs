@@ -26,7 +26,7 @@ namespace BattlegroundsApp.MVVM.Models {
 
     public class LobbyBrowserViewModel : IViewModel {
 
-        private readonly bool __useMockData = true; // SET TO FALSE WHEN TESTING IS OVER
+        private readonly bool __useMockData = false; // SET TO FALSE WHEN TESTING IS OVER
         private DateTime m_lastRefresh;
 
         private readonly LocaleKey m_askpasswordkey;

@@ -15,7 +15,7 @@ namespace BattlegroundsApp.MVVM.Models;
 public class CompanyBrowserButton {
     public ICommand Click { get; init; }
     public LocaleKey Text { get; init; }
-    public LocaleKey localeKey { get; init; }
+    public LocaleKey Tooltip { get; init; }
 }
 
 public class CompanyBrowserViewModel : IViewModel {
