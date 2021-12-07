@@ -6,6 +6,10 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
 
     public class LobbyCompanyItem {
 
+        public const int COMPANY_NONE = 0;
+        public const int COMPANY_AUTO = 1;
+        public const int COMPANY_SOME = 2;
+
         public string Name { get; }
 
         public Faction Army { get; }
@@ -21,11 +25,11 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
         public double Strength { get; }
 
         public LobbyCompanyItem(int type) {
-            this.IsEmpty = type <= 0;
-            this.IsAuto = type == 1;
+            this.IsEmpty = type <= COMPANY_NONE;
+            this.IsAuto = type == COMPANY_AUTO;
         }
 
-        public LobbyCompanyItem(Company company) : this(2) {
+        public LobbyCompanyItem(Company company) : this(COMPANY_SOME) {
             this.Army = company.Army;
             this.Name = company.Name;
             this.Type = company.Type;

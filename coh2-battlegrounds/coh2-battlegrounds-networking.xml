@@ -454,6 +454,136 @@
             <param name="recipients">The UIDs of all message recipients.</param>
             <param name="message">The message to send.</param>
         </member>
+        <member name="T:Battlegrounds.Networking.Communication.Broker.RemoteCallMessage">
+            <summary>
+            Represents a message that invoke methods on a remote machine.
+            </summary>
+        </member>
+        <member name="P:Battlegrounds.Networking.Communication.Broker.RemoteCallMessage.Method">
+            <summary>
+            Get or initialise the method to invoke.
+            </summary>
+        </member>
+        <member name="P:Battlegrounds.Networking.Communication.Broker.RemoteCallMessage.Arguments">
+            <summary>
+            Get or initialise the arguments to give in string form.
+            </summary>
+        </member>
+        <member name="M:Battlegrounds.Networking.Communication.Broker.RemoteCallMessage.Decode``1">
+            <summary>
+            Decode the remote call message to specified arguments.
+            </summary>
+            <typeparam name="T">First tuple type.</typeparam>
+            <returns>Decoded argument tuple.</returns>
+        </member>
+        <member name="M:Battlegrounds.Networking.Communication.Broker.RemoteCallMessage.Decode``2">
+            <summary>
+            Decode the remote call message to specified arguments.
+            </summary>
+            <typeparam name="T1">First tuple type.</typeparam>
+            <typeparam name="T2">Second tuple type.</typeparam>
+            <returns>Decoded argument tuple.</returns>
+        </member>
+        <member name="M:Battlegrounds.Networking.Communication.Broker.RemoteCallMessage.Decode``3">
+            <summary>
+            Decode the remote call message to specified arguments.
+            </summary>
+            <typeparam name="T1">First tuple type.</typeparam>
+            <typeparam name="T2">Second tuple type.</typeparam>
+            <typeparam name="T3">Third tuple type.</typeparam>
+            <returns>Decoded argument tuple.</returns>
+        </member>
+        <member name="M:Battlegrounds.Networking.Communication.Broker.RemoteCallMessage.Decode``4">
+            <summary>
+            Decode the remote call message to specified arguments.
+            </summary>
+            <typeparam name="T1">First tuple type.</typeparam>
+            <typeparam name="T2">Second tuple type.</typeparam>
+            <typeparam name="T3">Third tuple type.</typeparam>
+            <typeparam name="T4">Fourth tuple type.</typeparam>
+            <returns>Decoded argument tuple.</returns>
+        </member>
+        <member name="M:Battlegrounds.Networking.Communication.Broker.RemoteCallMessage.Decode``5">
+            <summary>
+            Decode the remote call message to specified arguments.
+            </summary>
+            <typeparam name="T1">First tuple type.</typeparam>
+            <typeparam name="T2">Second tuple type.</typeparam>
+            <typeparam name="T3">Third tuple type.</typeparam>
+            <typeparam name="T4">Fourth tuple type.</typeparam>
+            <typeparam name="T5">Fifth tuple type.</typeparam>
+            <returns>Decoded argument tuple.</returns>
+        </member>
+        <member name="M:Battlegrounds.Networking.Communication.Broker.RemoteCallMessage.Decode``6">
+            <summary>
+            Decode the remote call message to specified arguments.
+            </summary>
+            <typeparam name="T1">First tuple type.</typeparam>
+            <typeparam name="T2">Second tuple type.</typeparam>
+            <typeparam name="T3">Third tuple type.</typeparam>
+            <typeparam name="T4">Fourth tuple type.</typeparam>
+            <typeparam name="T5">Fifth tuple type.</typeparam>
+            <typeparam name="T6">Sixth tuple type.</typeparam>
+            <returns>Decoded argument tuple.</returns>
+        </member>
+        <member name="M:Battlegrounds.Networking.Communication.Broker.RemoteCallMessage.Decode``7">
+            <summary>
+            Decode the remote call message to specified arguments.
+            </summary>
+            <typeparam name="T1">First tuple type.</typeparam>
+            <typeparam name="T2">Second tuple type.</typeparam>
+            <typeparam name="T3">Third tuple type.</typeparam>
+            <typeparam name="T4">Fourth tuple type.</typeparam>
+            <typeparam name="T5">Fifth tuple type.</typeparam>
+            <typeparam name="T6">Sixth tuple type.</typeparam>
+            <typeparam name="T7">Seventh tuple type.</typeparam>
+            <returns>Decoded argument tuple.</returns>
+        </member>
+        <member name="M:Battlegrounds.Networking.Communication.Broker.RemoteCallMessage.Decode``8">
+            <summary>
+            Decode the remote call message to specified arguments.
+            </summary>
+            <typeparam name="T1">First tuple type.</typeparam>
+            <typeparam name="T2">Second tuple type.</typeparam>
+            <typeparam name="T3">Third tuple type.</typeparam>
+            <typeparam name="T4">Fourth tuple type.</typeparam>
+            <typeparam name="T5">Fifth tuple type.</typeparam>
+            <typeparam name="T6">Sixth tuple type.</typeparam>
+            <typeparam name="T7">Seventh tuple type.</typeparam>
+            <typeparam name="T8">Eigth tuple type.</typeparam>
+            <returns>Decoded argument tuple.</returns>
+        </member>
+        <member name="M:Battlegrounds.Networking.Communication.Broker.RemoteCallMessage.Decode``9">
+            <summary>
+            Decode the remote call message to specified arguments.
+            </summary>
+            <typeparam name="T1">First tuple type.</typeparam>
+            <typeparam name="T2">Second tuple type.</typeparam>
+            <typeparam name="T3">Third tuple type.</typeparam>
+            <typeparam name="T4">Fourth tuple type.</typeparam>
+            <typeparam name="T5">Fifth tuple type.</typeparam>
+            <typeparam name="T6">Sixth tuple type.</typeparam>
+            <typeparam name="T7">Seventh tuple type.</typeparam>
+            <typeparam name="T8">Eigth tuple type.</typeparam>
+            <typeparam name="T9">Ninth tuple type.</typeparam>
+            <returns>Decoded argument tuple.</returns>
+        </member>
+        <member name="M:Battlegrounds.Networking.Communication.Broker.RemoteCallMessage.Decode``10">
+            <summary>
+            Decode the remote call message to specified arguments.
+            </summary>
+            <typeparam name="T1">First tuple type.</typeparam>
+            <typeparam name="T2">Second tuple type.</typeparam>
+            <typeparam name="T3">Third tuple type.</typeparam>
+            <typeparam name="T4">Fourth tuple type.</typeparam>
+            <typeparam name="T5">Fifth tuple type.</typeparam>
+            <typeparam name="T6">Sixth tuple type.</typeparam>
+            <typeparam name="T7">Seventh tuple type.</typeparam>
+            <typeparam name="T8">Eigth tuple type.</typeparam>
+            <typeparam name="T9">Ninth tuple type.</typeparam>
+            <typeparam name="T10">Tenth tuple type.</typeparam>
+            <returns>Decoded argument tuple.</returns>
+        </member>
         <member name="T:Battlegrounds.Networking.Communication.Connections.IConnection">
             <summary>
             Interface for representing a connection from local client to some endpoint.

@@ -5,21 +5,24 @@ using System.Threading.Tasks;
 
 using Battlegrounds.Game;
 using Battlegrounds.Networking.LobbySystem;
+using BattlegroundsApp.LocalData;
 
 namespace BattlegroundsApp.Lobby.MVVM.Models {
 
     public class LobbyTeam {
 
+        private LobbyAPIStructs.LobbyTeam m_interface;
+
         public LobbySlot[] Slots { get; }
 
         public ObservableCollection<LobbyCompanyItem> AvailableCompanies { get; set; }
 
-        public LobbyAPIStructs.LobbyTeam Interface { get; }
+        public LobbyAPIStructs.LobbyTeam Interface => this.m_interface;
 
         public LobbyTeam(LobbyAPIStructs.LobbyTeam lobbyTeam) {
 
             // Store team
-            this.Interface = lobbyTeam;
+            this.m_interface = lobbyTeam;
 
             // Define slot models
             this.Slots = new LobbySlot[4] {
@@ -28,6 +31,28 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
                 new(lobbyTeam.Slots[2], this),
                 new(lobbyTeam.Slots[3], this)
             };
+
+        }
+
+        public void RefreshTeam(LobbyAPIStructs.LobbyTeam team) {
+            
+            // Set new interface
+            this.m_interface = team;
+
+            // Loop over slots and update
+            for (int i = 0; i < team.Slots.Length; i++) {
+                this.RefreshSlot(this.Slots[i], team.Slots[i]);
+            }
+
+        }
+
+        private void RefreshSlot(LobbySlot slot, LobbyAPIStructs.LobbySlot interfaceObject) {
+
+            // Update interface object
+            slot.Interface = interfaceObject;
+
+            // Triger refresh
+            slot.RefreshVisuals();
 
         }
 
@@ -41,7 +66,7 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
             Task.Run(() => {
 
                 // Remove Participant
-                slot.NetworkInterface.API.RemoveOccupant(this.Interface.TeamID, slot.NetworkInterface.SlotID);
+                slot.Interface.API.RemoveOccupant(this.Interface.TeamID, slot.Interface.SlotID);
 
                 Application.Current.Dispatcher.Invoke(() => {
 
@@ -54,16 +79,33 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
 
         }
 
+        private LobbyCompanyItem GetDefaultCompany(int team) {
+
+            // Fetch all of specified faction
+            var available = PlayerCompanies.FindAll(x => (x.Army.IsAllied ? 0 : 1) == team);
+
+            // If any available
+            if (available.Count > 0) {
+                return new LobbyCompanyItem(available[0]);
+            } else {
+                return new LobbyCompanyItem(LobbyCompanyItem.COMPANY_AUTO);
+            }
+
+        }
+
         public void AddAIPlayer(LobbySlot slot, string param) {
 
             // Get AI Difficulty
             AIDifficulty diff = (AIDifficulty)byte.Parse(param, CultureInfo.InvariantCulture);
 
+            // Get company
+            var company = GetDefaultCompany(slot.TeamID);
+
             // Run async so we dont block stuff
             Task.Run(() => {
 
-                // Remove Participant
-                this.Interface.API.AddAI(this.Interface.TeamID, slot.NetworkInterface.SlotID, (int)diff, null);
+                // Create AI
+                this.Interface.API.AddAI(this.Interface.TeamID, slot.Interface.SlotID, (int)diff, company.GetAPIObject());
 
                 // Update UI
                 Application.Current.Dispatcher.Invoke(() => {

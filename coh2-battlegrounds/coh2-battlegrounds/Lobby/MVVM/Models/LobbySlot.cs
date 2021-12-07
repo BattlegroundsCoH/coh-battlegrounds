@@ -6,6 +6,7 @@ using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
+using Battlegrounds.Game;
 using Battlegrounds.Game.Gameplay;
 using Battlegrounds.Networking.LobbySystem;
 
@@ -38,25 +39,25 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
         private LobbyCompanyItem m_selfCompanySelected;
         private readonly LobbyTeam m_teamModel;
 
-        public LobbyAPIStructs.LobbySlot NetworkInterface { get; set; }
+        public LobbyAPIStructs.LobbySlot Interface { get; set; }
 
-        public string LeftDisplayString => this.NetworkInterface.State switch {
+        public string LeftDisplayString => this.Interface.State switch {
             0 => "Open",
-            1 => this.NetworkInterface.Occupant.DisplayName,
+            1 => this.GetDisplayString(),
             2 => "Locked",
             3 => "Disabled",
             _ => throw new NotImplementedException()
         };
 
-        public bool IsSelf => this.NetworkInterface.IsSelf();
+        public bool IsSelf => this.Interface.IsSelf();
 
-        public bool IsOpen => this.NetworkInterface.State is 0;
+        public bool IsOpen => this.Interface.State is 0;
 
-        public bool IsLocked => this.NetworkInterface.State is 2;
+        public bool IsLocked => this.Interface.State is 2;
 
-        public bool IsDisabled => this.NetworkInterface.State is 3;
+        public bool IsDisabled => this.Interface.State is 3;
 
-        public bool IsAIOccupant => this.NetworkInterface.IsAI();
+        public bool IsAIOccupant => this.Interface.IsAI();
 
         public Visibility IsSlotVisible => this.IsDisabled ? Visibility.Hidden : Visibility.Visible;
 
@@ -72,14 +73,16 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
 
         public LobbySlotContextMenu SlotContextMenu { get; }
 
-        public bool IsProxyInterface => this.NetworkInterface.API.IsHost;
+        public bool IsHost => this.Interface.API.IsHost;
+
+        public bool IsNotHost => !this.IsHost;
 
         public int TeamID => this.m_teamModel.Interface.TeamID;
 
         public LobbySlot(LobbyAPIStructs.LobbySlot teamSlot, LobbyTeam team) {
 
             // Store reference to network interface
-            this.NetworkInterface = teamSlot;
+            this.Interface = teamSlot;
 
             // Store reference to lobby team
             this.m_teamModel = team;
@@ -110,11 +113,12 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
             }
 
             // Check if self
-            if (this.IsSelf || this.IsAIOccupant) {
+            if (this.IsSelf || (this.IsHost && this.IsAIOccupant)) {
 
                 // Update selected value
                 this.m_selfCompanySelected = val;
 
+                // If army, update
                 if (val.Army is not null) {
 
                     // Set slot faction
@@ -122,12 +126,9 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
 
                 }
 
-                if (this.IsAIOccupant) {
-                    this.NetworkInterface.API.SetAICompany(this.TeamID, this.NetworkInterface.SlotID, new());
-                } else {
-                    this.NetworkInterface.API.SetCompany(this.NetworkInterface.Occupant.MemberID, new());
-                }
-
+                // Set the company
+                this.Interface.API.SetCompany(this.TeamID, this.Interface.SlotID, this.m_selfCompanySelected.GetAPIObject());
+            
             }
 
         }
@@ -161,7 +162,7 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
                 if (this.CompanyVisibility is Visibility.Visible) {
                     this.PropertyChanged?.Invoke(this, new(nameof(this.SelectedCompanyIndex)));
                     if (this.LeftIcon is null || this.LeftIcon == FactionIcons[string.Empty]) {
-                        this.UpdateSlotFaction(this.NetworkInterface.Occupant.Company.Army);
+                        this.UpdateSlotFaction(this.Interface.Occupant.Company.Army);
                     }
                 }
             });
@@ -173,7 +174,7 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
             Task.Run(() => {
 
                 // Invoke API unlock slot function
-                this.NetworkInterface.API.LockSlot(this.TeamID, this.NetworkInterface.SlotID);
+                this.Interface.API.LockSlot(this.TeamID, this.Interface.SlotID);
 
                 // Refresh
                 this.RefreshVisuals();
@@ -187,13 +188,21 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
             Task.Run(() => {
 
                 // Invoke API unlock slot function
-                this.NetworkInterface.API.UnlockSlot(this.TeamID, this.NetworkInterface.SlotID);
+                this.Interface.API.UnlockSlot(this.TeamID, this.Interface.SlotID);
 
                 // Refresh
                 this.RefreshVisuals();
 
             });
 
+        }
+
+        private string GetDisplayString() { 
+            if (this.Interface.IsAI()) {
+                return ((AIDifficulty)this.Interface.Occupant.AILevel).GetIngameDisplayName();
+            } else {
+                return this.Interface.Occupant.DisplayName;
+            }
         }
 
     }

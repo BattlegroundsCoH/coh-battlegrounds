@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 
+using Battlegrounds.ErrorHandling.Networking;
 using Battlegrounds.Functional;
 using Battlegrounds.Networking.Communication.Broker;
 using Battlegrounds.Networking.Communication.Connections;
@@ -40,6 +42,18 @@ namespace Battlegrounds.Networking.LobbySystem {
         public SteamUser Self { get; }
 
         public event Action<LobbyMessage> OnChatMessage;
+
+        public event Action OnLobbySelfUpdate;
+
+        public event Action<LobbyTeam> OnLobbyTeamUpdate;
+
+        public event Action<int, LobbySlot> OnLobbySlotUpdate;
+
+        public event Action<int, int, LobbyMember> OnLobbyMemberUpdate;
+
+        public event Action<int, int, LobbyCompany> OnLobbyCompanyUpdate;
+
+        public event Action<string, string> OnLobbySettingUpdate;
 
         public LobbyAPI(bool isHost, SteamUser self, ServerConnection connection, ServerAPI serverAPI) {
 
@@ -93,18 +107,75 @@ namespace Battlegrounds.Networking.LobbySystem {
 
         }
 
+        private LobbyTeam GetTeamInstanceByIndex(int tid) => tid switch {
+            0 => this.m_allies.Value,
+            1 => this.m_axis.Value,
+            2 => this.m_obs.Value,
+            _ => throw new IndexOutOfRangeException($"Team ID '{tid}' is out of bounds.")
+        };
+
         private void OnMessage(uint cid, ulong sender, ContentMessage message) {
 
-            // Check message type
-            if (message.StrMsg == "Message") {
+            // Check if error message and display it
+            if (message.MessageType is ContentMessgeType.Error) {
+                Trace.WriteLine(message.StrMsg, nameof(LobbyAPI));
+                return;
+            }
 
-                // Unmarshal
-                LobbyMessage lobbyMessage = BrokerMarshal.JsonUnmarshal<LobbyMessage>(message.Raw);
-                //lobbyMessage.Timestamp = ... // TODO: Fix
+            // Switch on strmsg
+            switch (message.StrMsg) {
+                case "Message":
 
-                // Trigger event
-                this.OnChatMessage?.Invoke(lobbyMessage);
+                    // Unmarshal
+                    LobbyMessage lobbyMessage = BrokerMarshal.JsonUnmarshal<LobbyMessage>(message.Raw);
+                    //lobbyMessage.Timestamp = ... // TODO: Fix
 
+                    // Trigger event
+                    this.OnChatMessage?.Invoke(lobbyMessage);
+
+                    break;
+                case "Notify.Company":
+
+                    // Get call
+                    var companyCall = BrokerMarshal.JsonUnmarshal<RemoteCallMessage>(message.Raw);
+
+                    break;
+                case "Notify.Team":
+
+                    // This sends the whole team object
+                    var newTeam = BrokerMarshal.JsonUnmarshal<LobbyTeam>(message.Raw);
+
+                    // Trigger team update
+                    this.OnLobbyTeamUpdate?.Invoke(newTeam);
+
+                    break;
+                case "Notify.Slot":
+
+                    // This sends the whole team object
+                    var newSlot = BrokerMarshal.JsonUnmarshal<LobbySlot>(message.Raw);
+
+                    // Trigger team update
+                    this.OnLobbySlotUpdate?.Invoke((int)message.Who, newSlot);
+
+                    break;
+                case "Notify.Member":
+
+                    break;
+                case "Notify.Setting":
+
+                    // Get call
+                    var settingCall = BrokerMarshal.JsonUnmarshal<RemoteCallMessage>(message.Raw);
+
+                    // Decode
+                    var (settingKey, settingValue) = settingCall.Decode<string, string>();
+
+                    // Notify
+                    this.OnLobbySettingUpdate?.Invoke(settingKey, settingValue);
+
+                    break;
+                default:
+                    Trace.WriteLine($"Unsupported API event: {message.StrMsg}", nameof(LobbyAPI));
+                    break;
             }
 
         }
@@ -114,13 +185,13 @@ namespace Battlegrounds.Networking.LobbySystem {
         }
 
         public LobbyTeam GetTeam(int tid)
-            => RemoteCall<LobbyTeam>("GetTeam", tid.ToString());
+            => RemoteCall<LobbyTeam>("GetTeam", tid); // TODO: Trigger team refresh invoked
 
         public LobbyMember GetLobbyMember(ulong mid)
-            => RemoteCall<LobbyMember>("GetLobbyMember", mid.ToString());
+            => RemoteCall<LobbyMember>("GetLobbyMember", mid);
 
         public LobbyCompany GetCompany(ulong mid)
-            => RemoteCall<LobbyCompany>("GetCompany", mid.ToString());
+            => RemoteCall<LobbyCompany>("GetCompany", mid);
 
         public Dictionary<string, string> GetSettings()
             => RemoteCall<Dictionary<string, string>>("GetSettings");
@@ -130,32 +201,70 @@ namespace Battlegrounds.Networking.LobbySystem {
 
         private static string EncBool(bool b) => b ? "1" : "0";
 
-        public void SetCompany(ulong mid, LobbyCompany company)
-            => RemoteVoidCall("SetCompany", mid.ToString(), EncBool(company.IsAuto), EncBool(company.IsNone), company.Name, company.Army, company.Strength.ToString(), company.Specialisation);
+        public void SetCompany(int tid, int sid, LobbyCompany company) {
 
-        public void SetAICompany(int tid, int sid, LobbyCompany company)
-            => throw new NotImplementedException();
+            // Invoke remotely
+            this.RemoteVoidCall("SetCompany", tid, sid, EncBool(company.IsAuto), EncBool(company.IsNone), company.Name, company.Army, company.Strength, company.Specialisation);
+
+            // Trigger self update
+            this.OnLobbyCompanyUpdate?.Invoke(tid, sid, company);
+
+        }
 
         public void MoveSlot(ulong mid, int tid, int sid)
-            => RemoteVoidCall("MoveSlot", mid.ToString(), tid.ToString(), sid.ToString());
+            => RemoteVoidCall("MoveSlot", mid, tid, sid);
 
-        public void AddAI(int tid, int sid, int difficulty, LobbyCompany company)
-            => RemoteVoidCall("AddAI", tid.ToString(), sid.ToString(), difficulty.ToString() ,EncBool(company.IsAuto), EncBool(company.IsNone), company.Name, company.Army, company.Strength.ToString(), company.Specialisation);
+        public void AddAI(int tid, int sid, int difficulty, LobbyCompany company) {
+        
+            // Make sure we can
+            if (!this.m_isHost) {
+                throw new InvokePermissionAccessDeniedException("Cannot invoke remote method that requires host-privellige");
+            }
 
-        public void RemoveOccupant(int tid, int sid)
-            => RemoteVoidCall("RemoveOccupant", tid.ToString(), sid.ToString());
+            // Call AI
+            RemoteVoidCall("AddAI", tid, sid, difficulty, EncBool(company.IsAuto), EncBool(company.IsNone), company.Name, company.Army, company.Strength, company.Specialisation);
+
+            // Update team
+            var t = tid == 0 ? this.m_allies : this.m_axis;
+            t.Value.Slots[sid].Occupant = new() {
+                AILevel = difficulty,
+                Company = company,
+                Role = 3,
+                API = this
+            };
+            t.Value.Slots[sid].State = 1;
+
+            // Trigger self update
+            this.OnLobbySelfUpdate?.Invoke();
+
+        }
+
+        public void RemoveOccupant(int tid, int sid) {
+            
+            // Trigger remote call
+            RemoteVoidCall("RemoveOccupant", tid, sid);
+
+            // Clear slot
+            var t = tid == 0 ? this.m_allies : this.m_axis;
+            t.Value.Slots[sid].Occupant = null;
+            t.Value.Slots[sid].State = 0;
+
+            // Update self
+            this.OnLobbySelfUpdate?.Invoke();
+
+        }
 
         public void LockSlot(int tid, int sid)
-            => RemoteVoidCall("LockSlot", tid.ToString(), sid.ToString());
+            => RemoteVoidCall("LockSlot", tid, sid);
 
         public void UnlockSlot(int tid, int sid)
-            => RemoteVoidCall("UnlockSlot", tid.ToString(), sid.ToString());
+            => RemoteVoidCall("UnlockSlot", tid, sid);
 
         public void GlobalChat(ulong mid, string msg)
-            => RemoteVoidCall("GlobalChat", mid.ToString(), msg);
+            => RemoteVoidCall("GlobalChat", mid, msg);
 
         public void TeamChat(ulong mid, string msg)
-            => RemoteVoidCall("TeamChat", mid.ToString(), msg);
+            => RemoteVoidCall("TeamChat", mid, msg);
 
         public void SetLobbySetting(string setting, string value) {
             if (this.m_isHost) {
@@ -165,9 +274,9 @@ namespace Battlegrounds.Networking.LobbySystem {
 
         public bool SetTeamsCapacity(int newCapacity) {
             if (this.m_isHost) {                
-                return this.RemoteCall<bool>("SetTeamsCapacity", newCapacity.ToString());
+                return this.RemoteCall<bool>("SetTeamsCapacity", newCapacity);
             }
-            return false;
+            return true;
         }
 
         public bool StartMatch(double cancelTime) {
@@ -197,12 +306,12 @@ namespace Battlegrounds.Networking.LobbySystem {
             }
         }
 
-        private T RemoteCall<T>(string method, params string[] args) {
+        private T RemoteCall<T>(string method, params object[] args) {
             
             // Create message
             Message msg = new Message() {
                 CID = this.m_cidcntr++,
-                Content = BrokerMarshal.JsonMarshal(new RemoteCallMessage() { Method = method, Arguments = args }),
+                Content = BrokerMarshal.JsonMarshal(new RemoteCallMessage() { Method = method, Arguments = args.Map(x => x.ToString()) }),
                 Mode = MessageMode.BrokerCall,
                 Sender = this.m_connection.SelfID,
                 Target = 0
@@ -235,12 +344,12 @@ namespace Battlegrounds.Networking.LobbySystem {
 
         }
 
-        private void RemoteVoidCall(string method, params string[] args) {
+        private void RemoteVoidCall(string method, params object[] args) {
             
             // Create message
             Message msg = new Message() {
                 CID = this.m_cidcntr++,
-                Content = BrokerMarshal.JsonMarshal(new RemoteCallMessage() { Method = method, Arguments = args }),
+                Content = BrokerMarshal.JsonMarshal(new RemoteCallMessage() { Method = method, Arguments = args.Map(x => x.ToString()) }),
                 Mode = MessageMode.BrokerCall,
                 Sender = this.m_connection.SelfID,
                 Target = 0

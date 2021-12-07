@@ -73,6 +73,11 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
 
             // Set handler
             this.m_handle = handle;
+            this.m_handle.OnLobbySelfUpdate += this.OnSelfChanged;
+            this.m_handle.OnLobbyTeamUpdate += this.OnTeamChanged;
+            this.m_handle.OnLobbyCompanyUpdate += this.OnCompanyChanged;
+            this.m_handle.OnLobbyMemberUpdate += this.OnMemberChanged;
+            this.m_handle.OnLobbySlotUpdate += this.OnSlotChanged;
 
             // Init company lists
             InitCompanyList(this.AlliedCompanies = new(), isAllied: true);
@@ -158,6 +163,15 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
             this.Allies = new(allies) { AvailableCompanies = this.AlliedCompanies };
             this.Axis = new(axis) { AvailableCompanies = this.AxisCompanies };
 
+        }
+
+        private void OnSelfChanged() {
+            Application.Current.Dispatcher.Invoke(() => {
+
+                // Eval match launchability
+                this.EvaluateMatchLaunchable();
+
+            });
         }
 
         private static void InitCompanyList(ObservableCollection<LobbyCompanyItem> container, bool isAllied) {
@@ -395,6 +409,32 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
 
         private void EvaluateMatchLaunchable() {
 
+
+
+        }
+
+        private void OnTeamChanged(LobbyAPIStructs.LobbyTeam team) {
+
+        }
+
+        private void OnSlotChanged(int teamID, LobbyAPIStructs.LobbySlot slot) {
+
+        }
+
+        private void OnMemberChanged(int teamID, int slotID, LobbyAPIStructs.LobbyMember member) {
+
+        }
+
+        private void OnCompanyChanged(int teamID, int slotID, LobbyAPIStructs.LobbyCompany company) {
+
+            if (this.m_handle.IsHost) {
+                this.OnSelfChanged(); // Trigger a playability check
+            }
+
+        }
+
+        private void OnSettingChanged(string key, string value) {
+
         }
 
         public void SetChatModel(LobbyChatSpectatorModel chatModel)
@@ -414,6 +454,7 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
 
             // Create model
             LobbyModel model = new(handler, null, null);
+            model.m_handle.OnLobbySettingUpdate += model.OnSettingChanged;
 
             // Return model
             return model;
