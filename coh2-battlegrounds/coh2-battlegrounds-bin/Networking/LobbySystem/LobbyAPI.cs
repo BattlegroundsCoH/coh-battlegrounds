@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
+using Battlegrounds.Functional;
 using Battlegrounds.Networking.Communication.Broker;
 using Battlegrounds.Networking.Communication.Connections;
 using Battlegrounds.Networking.Memory;
@@ -28,9 +29,9 @@ namespace Battlegrounds.Networking.LobbySystem {
 
         public LobbyTeam Allies => this.m_allies.GetCachedValue(() => this.GetTeam(0));
 
-        public LobbyTeam Axis => this.m_allies.GetCachedValue(() => this.GetTeam(1));
+        public LobbyTeam Axis => this.m_axis.GetCachedValue(() => this.GetTeam(1));
 
-        public LobbyTeam Observers => this.m_allies.GetCachedValue(() => this.GetTeam(2));
+        public LobbyTeam Observers => this.m_obs.GetCachedValue(() => this.GetTeam(2));
 
         public Dictionary<string, string> Settings => this.m_settings.GetCachedValue(this.GetSettings);
 
@@ -68,6 +69,14 @@ namespace Battlegrounds.Networking.LobbySystem {
             // Make pull lobby request
             ContentMessage? reply = this.m_connection.SendAndAwaitReply(msg);
             if (reply is ContentMessage response && BrokerMarshal.JsonUnmarshal<LobbyRemote>(response.Raw) is LobbyRemote remoteLobby) {
+
+                // Make sure teams are valid
+                if (remoteLobby.Teams is null || remoteLobby.Teams.Any(x => x is null)) {
+                    throw new Exception("Received **NULL** team data.");
+                }
+
+                // Set API on team objects
+                remoteLobby.Teams.ForEach(x => x.SetAPI(this));
 
                 // Create team data
                 this.m_allies = new(remoteLobby.Teams[0], __cacheTime);
@@ -205,12 +214,16 @@ namespace Battlegrounds.Networking.LobbySystem {
                     throw new Exception(response.StrMsg);
                 }
                 if (response.StrMsg == "Primitive") {
-                    Type t = Type.GetType(response.DotNetType);
-                    return (T)(dynamic)Convert.ChangeType(response.Raw, t);
+                    // It feels nasty using 'dynamic'
+                    return (T)(dynamic)(response.DotNetType switch {
+                        nameof(Boolean) => response.Raw[0] == 1,
+                        nameof(UInt32) => BitConverter.ToUInt32(response.Raw),
+                        _ => throw new NotImplementedException($"Support for primitive response of type '{response.DotNetType}' not implemented.")
+                    });
                 } else {
                     if (BrokerMarshal.JsonUnmarshal<T>(response.Raw) is T settings) {
                         if (settings is IAPIObject apiobj) {
-                            apiobj.API = this;
+                            apiobj.SetAPI(this);
                         }
                         return settings;
                     }

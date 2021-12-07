@@ -138,6 +138,8 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
                     this.m_handle.TeamChat(this.m_handle.Self.ID, content);
                     channel = "Team";
                     break;
+                default:
+                    break;
             }
 
             // Append message
@@ -154,7 +156,7 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
         public void NewMessage(string from, string msg, Color colour, string time, string channel) {
 
             // Create full message
-            var fullMessage = $"[{time}][{channel}]{from}: {msg}";
+            var fullMessage = $"[{time}][{channel}] {from}: {msg}";
 
             // Create paragraph to append
             Paragraph p = new() {

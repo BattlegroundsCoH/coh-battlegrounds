@@ -13,6 +13,7 @@ namespace Battlegrounds.Networking.LobbySystem {
 
         public interface IAPIObject {
             public LobbyAPI API { get; set; }
+            public void SetAPI(LobbyAPI api);
         }
 
         public class LobbyCompany : IAPIObject {
@@ -23,6 +24,9 @@ namespace Battlegrounds.Networking.LobbySystem {
             public float Strength { get; set; }
             public string Specialisation { get; set; }
             public LobbyAPI API { get; set; }
+            public void SetAPI(LobbyAPI api) {
+                this.API = api;
+            }
         }
 
         public class LobbyMember : IAPIObject {
@@ -33,6 +37,10 @@ namespace Battlegrounds.Networking.LobbySystem {
             public int AILevel { get; set; }
             public LobbyCompany Company { get; set; }
             public LobbyAPI API { get; set; }
+            public void SetAPI(LobbyAPI api) {
+                this.API = api;
+                this.Company.API = api;
+            }
         }
 
         public class LobbySlot : IAPIObject {
@@ -55,6 +63,10 @@ namespace Battlegrounds.Networking.LobbySystem {
                 }
                 return false;
             }
+            public void SetAPI(LobbyAPI api) {
+                this.API = api;
+                this.Occupant?.SetAPI(api);
+            }
 
         }
 
@@ -64,7 +76,12 @@ namespace Battlegrounds.Networking.LobbySystem {
             public int TeamID { get; set; }
             public int Capacity { get; set; }
             public LobbyAPI API { get; set; }
-
+            public void SetAPI(LobbyAPI api) {
+                this.API = api;
+                for (int i = 0; i < this.Slots.Length; i++) {
+                    this.Slots[i].SetAPI(api);
+                }
+            }
         }
 
         public class LobbyMessage {

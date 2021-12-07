@@ -118,7 +118,7 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
 
             // Update
             var item = this.Items[index];
-            this.m_index = this.OnSelectionChanged?.Invoke(this.m_index, index, item) ?? -1;
+            this.m_index = this.OnSelectionChanged?.Invoke(this.m_index, index, item) ?? index;
 
         }
 
