@@ -2,7 +2,7 @@
 using System.Diagnostics;
 
 using Battlegrounds.ErrorHandling.Networking;
-using Battlegrounds.Networking.Communication.Broker;
+using Battlegrounds.Networking.Communication.Golang;
 using Battlegrounds.Networking.Communication.Connections;
 using Battlegrounds.Networking.Server;
 

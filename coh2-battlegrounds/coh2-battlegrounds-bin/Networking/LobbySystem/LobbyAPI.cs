@@ -4,7 +4,7 @@ using System.Diagnostics;
 
 using Battlegrounds.ErrorHandling.Networking;
 using Battlegrounds.Functional;
-using Battlegrounds.Networking.Communication.Broker;
+using Battlegrounds.Networking.Communication.Golang;
 using Battlegrounds.Networking.Communication.Connections;
 using Battlegrounds.Networking.Memory;
 using Battlegrounds.Networking.Server;
@@ -74,7 +74,7 @@ namespace Battlegrounds.Networking.LobbySystem {
             // Create get lobby message
             Message msg = new Message() {
                 CID = this.m_cidcntr++,
-                Content = BrokerMarshal.JsonMarshal(new RemoteCallMessage() { Method = "GetLobby", Arguments = Array.Empty<string>() }),
+                Content = GoMarshal.JsonMarshal(new RemoteCallMessage() { Method = "GetLobby", Arguments = Array.Empty<string>() }),
                 Mode = MessageMode.BrokerCall,
                 Sender = this.m_connection.SelfID,
                 Target = 0
@@ -82,7 +82,7 @@ namespace Battlegrounds.Networking.LobbySystem {
 
             // Make pull lobby request
             ContentMessage? reply = this.m_connection.SendAndAwaitReply(msg);
-            if (reply is ContentMessage response && BrokerMarshal.JsonUnmarshal<LobbyRemote>(response.Raw) is LobbyRemote remoteLobby) {
+            if (reply is ContentMessage response && GoMarshal.JsonUnmarshal<LobbyRemote>(response.Raw) is LobbyRemote remoteLobby) {
 
                 // Make sure teams are valid
                 if (remoteLobby.Teams is null || remoteLobby.Teams.Any(x => x is null)) {
@@ -127,7 +127,7 @@ namespace Battlegrounds.Networking.LobbySystem {
                 case "Message":
 
                     // Unmarshal
-                    LobbyMessage lobbyMessage = BrokerMarshal.JsonUnmarshal<LobbyMessage>(message.Raw);
+                    LobbyMessage lobbyMessage = GoMarshal.JsonUnmarshal<LobbyMessage>(message.Raw);
                     //lobbyMessage.Timestamp = ... // TODO: Fix
 
                     // Trigger event
@@ -137,13 +137,13 @@ namespace Battlegrounds.Networking.LobbySystem {
                 case "Notify.Company":
 
                     // Get call
-                    var companyCall = BrokerMarshal.JsonUnmarshal<RemoteCallMessage>(message.Raw);
+                    var companyCall = GoMarshal.JsonUnmarshal<RemoteCallMessage>(message.Raw);
 
                     break;
                 case "Notify.Team":
 
                     // This sends the whole team object
-                    var newTeam = BrokerMarshal.JsonUnmarshal<LobbyTeam>(message.Raw);
+                    var newTeam = GoMarshal.JsonUnmarshal<LobbyTeam>(message.Raw);
 
                     // Trigger team update
                     this.OnLobbyTeamUpdate?.Invoke(newTeam);
@@ -152,7 +152,7 @@ namespace Battlegrounds.Networking.LobbySystem {
                 case "Notify.Slot":
 
                     // This sends the whole team object
-                    var newSlot = BrokerMarshal.JsonUnmarshal<LobbySlot>(message.Raw);
+                    var newSlot = GoMarshal.JsonUnmarshal<LobbySlot>(message.Raw);
 
                     // Trigger team update
                     this.OnLobbySlotUpdate?.Invoke((int)message.Who, newSlot);
@@ -164,7 +164,7 @@ namespace Battlegrounds.Networking.LobbySystem {
                 case "Notify.Setting":
 
                     // Get call
-                    var settingCall = BrokerMarshal.JsonUnmarshal<RemoteCallMessage>(message.Raw);
+                    var settingCall = GoMarshal.JsonUnmarshal<RemoteCallMessage>(message.Raw);
 
                     // Decode
                     var (settingKey, settingValue) = settingCall.Decode<string, string>();
@@ -311,7 +311,7 @@ namespace Battlegrounds.Networking.LobbySystem {
             // Create message
             Message msg = new Message() {
                 CID = this.m_cidcntr++,
-                Content = BrokerMarshal.JsonMarshal(new RemoteCallMessage() { Method = method, Arguments = args.Map(x => x.ToString()) }),
+                Content = GoMarshal.JsonMarshal(new RemoteCallMessage() { Method = method, Arguments = args.Map(x => x.ToString()) }),
                 Mode = MessageMode.BrokerCall,
                 Sender = this.m_connection.SelfID,
                 Target = 0
@@ -330,7 +330,7 @@ namespace Battlegrounds.Networking.LobbySystem {
                         _ => throw new NotImplementedException($"Support for primitive response of type '{response.DotNetType}' not implemented.")
                     });
                 } else {
-                    if (BrokerMarshal.JsonUnmarshal<T>(response.Raw) is T settings) {
+                    if (GoMarshal.JsonUnmarshal<T>(response.Raw) is T settings) {
                         if (settings is IAPIObject apiobj) {
                             apiobj.SetAPI(this);
                         }
@@ -349,7 +349,7 @@ namespace Battlegrounds.Networking.LobbySystem {
             // Create message
             Message msg = new Message() {
                 CID = this.m_cidcntr++,
-                Content = BrokerMarshal.JsonMarshal(new RemoteCallMessage() { Method = method, Arguments = args.Map(x => x.ToString()) }),
+                Content = GoMarshal.JsonMarshal(new RemoteCallMessage() { Method = method, Arguments = args.Map(x => x.ToString()) }),
                 Mode = MessageMode.BrokerCall,
                 Sender = this.m_connection.SelfID,
                 Target = 0
