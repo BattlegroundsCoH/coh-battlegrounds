@@ -46,7 +46,7 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
 
         }
 
-        private void RefreshSlot(LobbySlot slot, LobbyAPIStructs.LobbySlot interfaceObject) {
+        public void RefreshSlot(LobbySlot slot, LobbyAPIStructs.LobbySlot interfaceObject) {
 
             // Update interface object
             slot.Interface = interfaceObject;
@@ -106,17 +106,6 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
 
                 // Create AI
                 this.Interface.API.AddAI(this.Interface.TeamID, slot.Interface.SlotID, (int)diff, company.GetAPIObject());
-
-                // Update UI
-                Application.Current.Dispatcher.Invoke(() => {
-
-                    // Set default company index
-                    slot.SelectedCompanyIndex = 0;
-
-                    // Trigger refresh on slot
-                    slot.RefreshVisuals();
-
-                });
 
             });
 

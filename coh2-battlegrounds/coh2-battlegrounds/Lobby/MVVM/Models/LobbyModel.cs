@@ -78,10 +78,15 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
             this.m_handle.OnLobbyCompanyUpdate += this.OnCompanyChanged;
             this.m_handle.OnLobbyMemberUpdate += this.OnMemberChanged;
             this.m_handle.OnLobbySlotUpdate += this.OnSlotChanged;
+            this.m_handle.OnLobbyConnectionLost += this.OnConnectionLost;
 
             // Init company lists
             InitCompanyList(this.AlliedCompanies = new(), isAllied: true);
             InitCompanyList(this.AxisCompanies = new(), isAllied: false);
+
+            // Create teams
+            this.Allies = new(allies) { AvailableCompanies = this.AlliedCompanies };
+            this.Axis = new(axis) { AvailableCompanies = this.AxisCompanies };
 
             // Create edit company button
             this.EditCompany = new() {
@@ -158,10 +163,6 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
             if (handle.IsHost) {
                 this.ScenarioSelection.SetSelection(x => x.Scenario.RelativeFilename == BattlegroundsInstance.LastPlayedMap);
             }
-
-            // Create teams
-            this.Allies = new(allies) { AvailableCompanies = this.AlliedCompanies };
-            this.Axis = new(axis) { AvailableCompanies = this.AxisCompanies };
 
         }
 
@@ -415,18 +416,70 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
 
         private void OnTeamChanged(LobbyAPIStructs.LobbyTeam team) {
 
+            // Refresh allies
+            if (team.TeamID == 0) {
+                this.Allies?.RefreshTeam(team);
+            }
+
+            // Refresh axis
+            if (team.TeamID == 1) {
+                this.Axis?.RefreshTeam(team);
+            }
+
+            // Trigger self change
+            if (this.m_handle.IsHost) {
+                this.OnSelfChanged(); // Trigger a playability check
+            }
+
         }
 
         private void OnSlotChanged(int teamID, LobbyAPIStructs.LobbySlot slot) {
+
+            // Get team
+            var team = teamID == 0 ? this.Allies : this.Axis;
+
+            // Trigger slot update
+            team.RefreshSlot(team.Slots[slot.SlotID], slot);
+
+            // Trigger self change
+            if (this.m_handle.IsHost) {
+                this.OnSelfChanged(); // Trigger a playability check
+            }
 
         }
 
         private void OnMemberChanged(int teamID, int slotID, LobbyAPIStructs.LobbyMember member) {
 
+            // Get team
+            var team = teamID == 0 ? this.Allies : this.Axis;
+
+            // Get slot
+            var slot = team.Slots[slotID];
+
+            // Set occupant and refresh
+            slot.Interface.Occupant = member;
+            slot.RefreshVisuals();
+
+            // Trigger self change
+            if (this.m_handle.IsHost) {
+                this.OnSelfChanged(); // Trigger a playability check
+            }
+
         }
 
         private void OnCompanyChanged(int teamID, int slotID, LobbyAPIStructs.LobbyCompany company) {
 
+            // Get team
+            var team = teamID == 0 ? this.Allies : this.Axis;
+
+            // Get slot
+            var slot = team.Slots[slotID];
+
+            // Set company and refresh
+            slot.Interface.Occupant.Company = company;
+            slot.RefreshCompany();
+
+            // Trigger self change
             if (this.m_handle.IsHost) {
                 this.OnSelfChanged(); // Trigger a playability check
             }
@@ -434,6 +487,27 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
         }
 
         private void OnSettingChanged(string key, string value) {
+
+            // Invoke changes
+            Application.Current.Dispatcher.Invoke(() => { 
+                
+
+
+            });
+
+        }
+
+        private void OnConnectionLost() {
+
+            // Show leave modal
+            App.ViewManager.GetModalControl().ShowModal(ModalDialog.CreateModal("Connection Lost", "Connection to server was lost.", (sender, success, value) => {
+                if (success && value == ModalDialogResult.Confirm) {
+
+                    // Go back to browser view
+                    App.ViewManager.SetDisplay(AppDisplayState.LeftRight, typeof(LeftMenu), typeof(LobbyBrowserViewModel));
+
+                }
+            }));
 
         }
 

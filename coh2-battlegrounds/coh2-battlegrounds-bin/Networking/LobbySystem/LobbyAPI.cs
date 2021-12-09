@@ -55,6 +55,8 @@ namespace Battlegrounds.Networking.LobbySystem {
 
         public event Action<string, string> OnLobbySettingUpdate;
 
+        public event Action OnLobbyConnectionLost;
+
         public LobbyAPI(bool isHost, SteamUser self, ServerConnection connection, ServerAPI serverAPI) {
 
             // Store ref to server handle
@@ -98,6 +100,11 @@ namespace Battlegrounds.Networking.LobbySystem {
                 this.m_obs = new(remoteLobby.Teams[2], __cacheTime);
                 this.m_settings = new(remoteLobby.Settings, __cacheTime);
 
+                // Register connection lost
+                this.m_connection.OnConnectionLost += () => {
+                    this.OnLobbyConnectionLost?.Invoke();
+                };
+
             } else {
 
                 // Throw exception -> Failed to fully connect.
@@ -118,7 +125,7 @@ namespace Battlegrounds.Networking.LobbySystem {
 
             // Check if error message and display it
             if (message.MessageType is ContentMessgeType.Error) {
-                Trace.WriteLine(message.StrMsg, nameof(LobbyAPI));
+                Trace.WriteLine($"Received Error = {message.StrMsg} to CID({cid})", nameof(LobbyAPI));
                 return;
             }
 
@@ -144,6 +151,7 @@ namespace Battlegrounds.Networking.LobbySystem {
 
                     // This sends the whole team object
                     var newTeam = GoMarshal.JsonUnmarshal<LobbyTeam>(message.Raw);
+                    newTeam.SetAPI(this);
 
                     // Trigger team update
                     this.OnLobbyTeamUpdate?.Invoke(newTeam);
@@ -153,6 +161,7 @@ namespace Battlegrounds.Networking.LobbySystem {
 
                     // This sends the whole team object
                     var newSlot = GoMarshal.JsonUnmarshal<LobbySlot>(message.Raw);
+                    newSlot.SetAPI(this);
 
                     // Trigger team update
                     this.OnLobbySlotUpdate?.Invoke((int)message.Who, newSlot);
@@ -292,7 +301,6 @@ namespace Battlegrounds.Networking.LobbySystem {
         public void RequestCompanyFiles(params ulong[] members) {
 
         }
-
 
         public void ReleaseGamemode() {
             if (this.m_isHost) {
