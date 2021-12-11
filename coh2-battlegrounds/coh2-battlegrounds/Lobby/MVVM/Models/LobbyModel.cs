@@ -575,13 +575,23 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
 
         }
 
-        private void OnConnectionLost() {
+        private void OnConnectionLost(string reason) {
+
+            // Decide on title and desc
+            string modalTitle = reason switch {
+                "KICK" => "Kicked from lobby",
+                _ => "Connection lost"
+            };
+            string modalDesc = reason switch {
+                "KICK" => "You were kicked from the lobby by the host",
+                _ => "Connection to server was lost."
+            };
 
             // Goto GUI thread and show connection lost.
             Application.Current.Dispatcher.Invoke(() => {
 
                 // Show leave modal
-                App.ViewManager.GetModalControl().ShowModal(ModalDialog.CreateModal("Connection Lost", "Connection to server was lost.", (sender, success, value) => {
+                App.ViewManager.GetModalControl().ShowModal(ModalDialog.CreateModal(modalTitle, modalDesc, (sender, success, value) => {
                     if (success && value == ModalDialogResult.Confirm) {
 
                         // Go back to browser view

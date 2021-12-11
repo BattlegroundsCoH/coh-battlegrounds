@@ -17,6 +17,7 @@ namespace Battlegrounds.Networking.LobbySystem {
     public class LobbyAPI {
 
         private static readonly TimeSpan __cacheTime = TimeSpan.FromSeconds(15);
+        private static readonly TimeZoneInfo __thisTimezone = TimeZoneInfo.Local;
 
         private ServerConnection m_connection;
         private bool m_isHost;
@@ -57,7 +58,7 @@ namespace Battlegrounds.Networking.LobbySystem {
 
         public event Action<string, string> OnLobbySettingUpdate;
 
-        public event Action OnLobbyConnectionLost;
+        public event Action<string> OnLobbyConnectionLost;
 
         public LobbyAPI(bool isHost, SteamUser self, ServerConnection connection, ServerAPI serverAPI) {
 
@@ -104,7 +105,7 @@ namespace Battlegrounds.Networking.LobbySystem {
 
                 // Register connection lost
                 this.m_connection.OnConnectionLost += () => {
-                    this.OnLobbyConnectionLost?.Invoke();
+                    this.OnLobbyConnectionLost?.Invoke("LOST");
                 };
 
             } else {
@@ -133,7 +134,11 @@ namespace Battlegrounds.Networking.LobbySystem {
 
             // If disconnect, handle
             if (message.MessageType is ContentMessgeType.Disconnect) {
-                this.OnSystemMessage?.Invoke(message.Who, message.StrMsg, message.Kick ? "KICK" : "LEFT");
+                if (message.Who == this.m_connection.SelfID) {
+                    this.OnLobbyConnectionLost?.Invoke(message.Kick ? "KICK" : "CLOSED");
+                } else {
+                    this.OnSystemMessage?.Invoke(message.Who, message.StrMsg, message.Kick ? "KICK" : "LEFT");
+                }
                 return;
             }
 
@@ -149,7 +154,11 @@ namespace Battlegrounds.Networking.LobbySystem {
 
                     // Unmarshal
                     LobbyMessage lobbyMessage = GoMarshal.JsonUnmarshal<LobbyMessage>(message.Raw);
-                    //lobbyMessage.Timestamp = ... // TODO: Fix
+                    var serverZone = TimeZoneInfo.FindSystemTimeZoneById(lobbyMessage.Timezone);
+
+                    // Create timestamp
+                    var datetime = TimeZoneInfo.ConvertTime(FromTimestamp(lobbyMessage.Timestamp), serverZone, __thisTimezone);
+                    lobbyMessage.Timestamp = $"{datetime.Hour}:{datetime.Minute}";
 
                     // Trigger event
                     this.OnChatMessage?.Invoke(lobbyMessage);
@@ -210,6 +219,14 @@ namespace Battlegrounds.Networking.LobbySystem {
                     break;
             }
 
+        }
+
+        private DateTime FromTimestamp(string stamp) {
+            string[] s = stamp.Split(':');
+            int h = int.Parse(s[0]);
+            int m = int.Parse(s[1]);
+            var today = DateTime.Now.Date;
+            return today.AddHours(h).AddMinutes(m);
         }
 
         public void Disconnect() {
