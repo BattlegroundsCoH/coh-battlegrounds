@@ -100,7 +100,7 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
             Application.Current.Dispatcher.Invoke(() => {
 
                 // Display
-                this.NewMessage(msg.Sender, msg.Message, colour, msg.Timestamp, msg.Channel);
+                this.NewMessage(msg.Sender.Trim(), msg.Message.Trim(), colour, msg.Timestamp, msg.Channel);
 
             });
 
@@ -138,6 +138,9 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
             if (content is null) {
                 content = this.MessageContent;
             }
+
+            // Trim content
+            content = content.Trim();
 
             // Make sure there's actually content to send.
             if (string.IsNullOrWhiteSpace(content)) {

@@ -86,6 +86,7 @@ namespace Battlegrounds.Networking.LobbySystem {
 
         public class LobbyMessage {
             public string Timestamp { get; set; }
+            public string Timezone { get; set; }
             public string Sender { get; set; }
             public string Message { get; set; }
             public string Channel { get; set; }
