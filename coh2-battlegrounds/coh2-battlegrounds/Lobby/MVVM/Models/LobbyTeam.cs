@@ -15,7 +15,7 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
 
         public LobbySlot[] Slots { get; }
 
-        public ObservableCollection<LobbyCompanyItem> AvailableCompanies { get; set; }
+        public ObservableCollection<LobbyCompanyItem> AvailableCompanies { get; }
 
         public LobbyAPIStructs.LobbyTeam Interface => this.m_interface;
 
@@ -24,14 +24,26 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
             // Store team
             this.m_interface = lobbyTeam;
 
+            // Store available companies
+            InitCompanyList(this.AvailableCompanies = new(), isAllied: lobbyTeam.TeamID == 0);
+
             // Define slot models
             this.Slots = new LobbySlot[4] {
                 new(lobbyTeam?.Slots[0], this),
                 new(lobbyTeam?.Slots[1], this),
                 new(lobbyTeam?.Slots[2], this),
-                new(lobbyTeam?.Slots[3], this)
+                new(lobbyTeam?.Slots[3], this),
             };
 
+        }
+
+        private static void InitCompanyList(ObservableCollection<LobbyCompanyItem> container, bool isAllied) {
+            var companies = PlayerCompanies.FindAll(x => x.Army.IsAllied == isAllied);
+            if (companies.Count > 0) {
+                companies.ForEach(x => container.Add(new(x)));
+            } else {
+                container.Add(new(0));
+            }
         }
 
         public void RefreshTeam(LobbyAPIStructs.LobbyTeam team) {

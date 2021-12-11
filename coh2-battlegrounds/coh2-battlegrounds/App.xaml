@@ -73,6 +73,9 @@
         <DataTemplate DataType="{x:Type lobbymodels:LobbyModel}">
             <lobbyviews:LobbyView/>
         </DataTemplate>
+        <DataTemplate DataType="{x:Type lobbymodels:LobbySlot}">
+            <lobbyviews:LobbyPlayerSlot/>
+        </DataTemplate>
 
         <Style x:Key="MainButtonStyle" TargetType="{x:Type Button}">
             <Setter Property="SnapsToDevicePixels" Value="True"/>

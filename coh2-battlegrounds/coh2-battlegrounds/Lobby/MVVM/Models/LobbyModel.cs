@@ -71,10 +71,6 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
 
         public LobbyTeam Axis { get; }
 
-        public ObservableCollection<LobbyCompanyItem> AlliedCompanies { get; }
-
-        public ObservableCollection<LobbyCompanyItem> AxisCompanies { get; }
-
         public bool SingleInstanceOnly => false;
 
         public LocaleKey ScenarioLabel { get; } = new("LobbyView_SettingScenario");
@@ -94,13 +90,9 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
             // Set handler
             this.m_handle = handle;
 
-            // Init company lists
-            InitCompanyList(this.AlliedCompanies = new(), isAllied: true);
-            InitCompanyList(this.AxisCompanies = new(), isAllied: false);
-
             // Create teams
-            this.Allies = new(allies) { AvailableCompanies = this.AlliedCompanies };
-            this.Axis = new(axis) { AvailableCompanies = this.AxisCompanies };
+            this.Allies = new(allies);
+            this.Axis = new(axis);
 
             // Create edit company button
             this.EditCompany = new() {
@@ -201,15 +193,6 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
                 this.EvaluateMatchLaunchable();
 
             });
-        }
-
-        private static void InitCompanyList(ObservableCollection<LobbyCompanyItem> container, bool isAllied) {
-            var companies = PlayerCompanies.FindAll(x => x.Army.IsAllied == isAllied);
-            if (companies.Count > 0) {
-                companies.ForEach(x => container.Add(new(x)));
-            } else {
-                container.Add(new(0));
-            }
         }
 
         private void EditSelfCompany() {

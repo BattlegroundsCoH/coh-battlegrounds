@@ -3,7 +3,9 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:BattlegroundsApp.Lobby.MVVM.Views"
+             xmlns:local="clr-namespace:BattlegroundsApp.Lobby.MVVM.Views" 
+             xmlns:mvvm="clr-namespace:BattlegroundsApp.MVVM"
+             xmlns:converters="clr-namespace:BattlegroundsApp.Utilities.Converters"
              mc:Ignorable="d" 
              d:DesignHeight="72" d:DesignWidth="800"
              Height="72">
@@ -21,41 +23,41 @@
             <ContextMenu Style="{StaticResource LobbySlotContextMenu}"
                          Name="SlotContextMenuObj">
                 <MenuItem Header="Show Playercard"
-                          Command="{Binding ShowPlayerCard}"
+                          Command="{Binding SlotContextMenu.ShowPlayerCard}"
                           Style="{StaticResource LobbySlotContextMenuItem}"/>
-                <Separator Visibility="{Binding KickVisibility}"/>
+                <Separator Visibility="{Binding SlotContextMenu.KickVisibility, Delay=100}"/>
                 <MenuItem Header="Kick Player"
-                          Visibility="{Binding KickVisibility}"
-                          Command="{Binding KickOccupant}"
+                          Visibility="{Binding SlotContextMenu.KickVisibility, Delay=100}"
+                          Command="{Binding SlotContextMenu.KickOccupant}"
                           Style="{StaticResource LobbySlotContextMenuItem}"/>
-                <Separator Visibility="{Binding StateSelectorVisibility}"/>
+                <Separator Visibility="{Binding SlotContextMenu.StateSelectorVisibility, Delay=5}"/>
                 <MenuItem Header="Lock Slot"
-                          Visibility="{Binding LockVisibility}"
-                          Command="{Binding LockSlot}"
+                          Visibility="{Binding SlotContextMenu.LockVisibility, Delay=100}"
+                          Command="{Binding SlotContextMenu.LockSlot}"
                           Style="{StaticResource LobbySlotContextMenuItem}"/>
                 <MenuItem Header="Open Slot"
-                          Visibility="{Binding OpenVisibility}"
-                          Command="{Binding UnlockSlot}"
+                          Visibility="{Binding SlotContextMenu.OpenVisibility, Delay=100}"
+                          Command="{Binding SlotContextMenu.UnlockSlot}"
                           Style="{StaticResource LobbySlotContextMenuItem}"/>
-                <Separator Visibility="{Binding AIOptionsVisibility}"/>
+                <Separator Visibility="{Binding SlotContextMenu.AIOptionsVisibility, Delay=100}"/>
                 <MenuItem Header="Add Easy AI"
-                          Visibility="{Binding AIOptionsVisibility}"
-                          Command="{Binding AddAIPlayer}"
+                          Visibility="{Binding SlotContextMenu.AIOptionsVisibility, Delay=100}"
+                          Command="{Binding SlotContextMenu.AddAIPlayer}"
                           CommandParameter="1"
                           Style="{StaticResource LobbySlotContextMenuItem}"/>
                 <MenuItem Header="Add Standard AI"
-                          Visibility="{Binding AIOptionsVisibility}"
-                          Command="{Binding AddAIPlayer}"
+                          Visibility="{Binding SlotContextMenu.AIOptionsVisibility, Delay=100}"
+                          Command="{Binding SlotContextMenu.AddAIPlayer}"
                           CommandParameter="2"
                           Style="{StaticResource LobbySlotContextMenuItem}"/>
                 <MenuItem Header="Add Hard AI"
-                          Visibility="{Binding AIOptionsVisibility}"
-                          Command="{Binding AddAIPlayer}"
+                          Visibility="{Binding SlotContextMenu.AIOptionsVisibility, Delay=100}"
+                          Command="{Binding SlotContextMenu.AddAIPlayer}"
                           CommandParameter="3"
                           Style="{StaticResource LobbySlotContextMenuItem}"/>
                 <MenuItem Header="Add Expert AI"
-                          Visibility="{Binding AIOptionsVisibility}"
-                          Command="{Binding AddAIPlayer}"
+                          Visibility="{Binding SlotContextMenu.AIOptionsVisibility, Delay=100}"
+                          Command="{Binding SlotContextMenu.AddAIPlayer}"
                           CommandParameter="4"
                           Style="{StaticResource LobbySlotContextMenuItem}"/>
             </ContextMenu>
@@ -79,11 +81,36 @@
                VerticalAlignment="Center"/>
 
         <ComboBox Grid.Column="5"
-                  ItemsSource="{Binding CompanyItemsSource, RelativeSource={RelativeSource AncestorType={x:Type local:LobbyPlayerSlot}}}"
+                  ItemsSource="{Binding AvailableSlotCompanies}"
                   Visibility="{Binding CompanyVisibility}"
                   Style="{StaticResource SlotCompanySelection}"
                   SelectedIndex="{Binding SelectedCompanyIndex, Mode=TwoWay}"
                   SelectedItem="{Binding SelectedCompany, Mode=OneWayToSource}"/>
+
+        <Grid Grid.Column="5"
+              Visibility="{Binding CompanyDataVisibility}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition Width="18"/>
+            </Grid.ColumnDefinitions>
+            <Grid.Resources>
+                <converters:StringToFactionIconConverter x:Key="FactionIconConverter"/>
+                <converters:StringToCompanyTypeIconConverter x:Key="TypeIconConverter"/>
+            </Grid.Resources>
+            <Image Source="{Binding ProxyCompanyType, Converter={StaticResource TypeIconConverter}}"
+                   Grid.Column="2"
+                   Width="18"
+                   Height="18"
+                   VerticalAlignment="Center"
+                   HorizontalAlignment="Center"/>
+            <TextBlock Text="{Binding ProxyCompanyName}"
+                       Foreground="#FFFFFF"
+                       FontSize="20"
+                       FontFamily="Open Sans"
+                       HorizontalAlignment="Right"
+                       VerticalAlignment="Center"
+                       Grid.Column="0"/>
+        </Grid>
 
     </Grid>
 </UserControl>

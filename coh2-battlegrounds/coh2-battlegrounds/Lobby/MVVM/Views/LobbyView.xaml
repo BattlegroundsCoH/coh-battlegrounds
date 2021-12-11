@@ -72,18 +72,15 @@
                     <RowDefinition Height="6"/>
                     <RowDefinition Height="72"/>
                 </Grid.RowDefinitions>
-                <local:LobbyPlayerSlot Grid.Row="0"
-                                       SlotData="{Binding Allies.Slots, Converter={StaticResource ArrayIndexer}, ConverterParameter=0}"
-                                       CompanyItemsSource="{Binding AlliedCompanies}"/>
-                <local:LobbyPlayerSlot Grid.Row="2"
-                                       SlotData="{Binding Allies.Slots, Converter={StaticResource ArrayIndexer}, ConverterParameter=1}"
-                                       CompanyItemsSource="{Binding AlliedCompanies}"/>
-                <local:LobbyPlayerSlot Grid.Row="4"
-                                       SlotData="{Binding Allies.Slots, Converter={StaticResource ArrayIndexer}, ConverterParameter=2}"
-                                       CompanyItemsSource="{Binding AlliedCompanies}"/>
-                <local:LobbyPlayerSlot Grid.Row="6"
-                                       SlotData="{Binding Allies.Slots, Converter={StaticResource ArrayIndexer}, ConverterParameter=3}"
-                                       CompanyItemsSource="{Binding AlliedCompanies}"/>
+                <ContentPresenter Grid.Row="0"
+                                  Content="{Binding Allies.Slots, Converter={StaticResource ArrayIndexer}, ConverterParameter=0}"/>
+                <ContentPresenter Grid.Row="2"
+                                  Content="{Binding Allies.Slots, Converter={StaticResource ArrayIndexer}, ConverterParameter=1}"/>
+                <ContentPresenter Grid.Row="4"
+                                  Content="{Binding Allies.Slots, Converter={StaticResource ArrayIndexer}, ConverterParameter=2}"/>
+                <ContentPresenter Grid.Row="6"
+                                  Content="{Binding Allies.Slots, Converter={StaticResource ArrayIndexer}, ConverterParameter=3}"/>
+                
             </Grid>
             
             <!-- Axis -->
@@ -97,18 +94,14 @@
                     <RowDefinition Height="6"/>
                     <RowDefinition Height="72"/>
                 </Grid.RowDefinitions>
-                <local:LobbyPlayerSlot Grid.Row="0"
-                                       SlotData="{Binding Axis.Slots, Converter={StaticResource ArrayIndexer}, ConverterParameter=0}"
-                                       CompanyItemsSource="{Binding AxisCompanies}"/>
-                <local:LobbyPlayerSlot Grid.Row="2"
-                                       SlotData="{Binding Axis.Slots, Converter={StaticResource ArrayIndexer}, ConverterParameter=1}"
-                                       CompanyItemsSource="{Binding AxisCompanies}"/>
-                <local:LobbyPlayerSlot Grid.Row="4"
-                                       SlotData="{Binding Axis.Slots, Converter={StaticResource ArrayIndexer}, ConverterParameter=2}"
-                                       CompanyItemsSource="{Binding AxisCompanies}"/>
-                <local:LobbyPlayerSlot Grid.Row="6"
-                                       SlotData="{Binding Axis.Slots, Converter={StaticResource ArrayIndexer}, ConverterParameter=3}"
-                                       CompanyItemsSource="{Binding AxisCompanies}"/>
+                <ContentPresenter Grid.Row="0"
+                                  Content="{Binding Axis.Slots, Converter={StaticResource ArrayIndexer}, ConverterParameter=0}"/>
+                <ContentPresenter Grid.Row="2"
+                                  Content="{Binding Axis.Slots, Converter={StaticResource ArrayIndexer}, ConverterParameter=1}"/>
+                <ContentPresenter Grid.Row="4"
+                                  Content="{Binding Axis.Slots, Converter={StaticResource ArrayIndexer}, ConverterParameter=2}"/>
+                <ContentPresenter Grid.Row="6"
+                                  Content="{Binding Axis.Slots, Converter={StaticResource ArrayIndexer}, ConverterParameter=3}"/>
             </Grid>
         </Grid>
 
