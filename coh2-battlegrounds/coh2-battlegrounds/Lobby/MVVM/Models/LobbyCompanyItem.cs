@@ -43,7 +43,7 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
                 Specialisation = this.IsEmpty ? string.Empty : this.Type.ToString(),
                 IsAuto = this.IsAuto,
                 IsNone = this.IsEmpty,
-                Name = this.Name,
+                Name = this.Name ?? string.Empty,
                 Strength = (float)this.Strength
             };
 

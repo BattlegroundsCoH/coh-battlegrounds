@@ -109,6 +109,9 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
                 case "LEFT":
                     this.SystemMessage($"{name} has left the lobby", Colors.Yellow);
                     break;
+                case "KICK":
+                    this.SystemMessage($"{name} was kicked from the lobby", Colors.Yellow);
+                    break;
                 default:
                     Trace.WriteLine($"Unknown context triggered by '{who}' ({name}) ctxt = {context}", nameof(LobbyChatSpectatorModel));
                     break;

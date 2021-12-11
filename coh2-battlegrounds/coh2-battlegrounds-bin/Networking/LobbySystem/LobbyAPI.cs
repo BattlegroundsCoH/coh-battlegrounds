@@ -133,7 +133,7 @@ namespace Battlegrounds.Networking.LobbySystem {
 
             // If disconnect, handle
             if (message.MessageType is ContentMessgeType.Disconnect) {
-                this.OnSystemMessage?.Invoke(message.Who, message.StrMsg, "LEFT");
+                this.OnSystemMessage?.Invoke(message.Who, message.StrMsg, message.Kick ? "KICK" : "LEFT");
                 return;
             }
 
