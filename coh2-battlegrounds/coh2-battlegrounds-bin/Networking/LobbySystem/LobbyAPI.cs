@@ -156,6 +156,15 @@ namespace Battlegrounds.Networking.LobbySystem {
                     // Trigger team update
                     this.OnLobbyTeamUpdate?.Invoke(newTeam);
 
+                    // And refresh self teams
+                    if (newTeam.TeamID == 0) {
+                        this.m_allies.SetCachedValue(newTeam);
+                    } else if (newTeam.TeamID == 1) {
+                        this.m_axis.SetCachedValue(newTeam);
+                    } else {
+                        this.m_obs.SetCachedValue(newTeam);
+                    }
+
                     break;
                 case "Notify.Slot":
 

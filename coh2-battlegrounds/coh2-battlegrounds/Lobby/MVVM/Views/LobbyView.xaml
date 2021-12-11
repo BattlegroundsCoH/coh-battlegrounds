@@ -193,7 +193,8 @@
                           SelectedIndex="{Binding ScenarioSelection.CurrentIndex, Mode=TwoWay}"
                           Visibility="{Binding ScenarioSelection.IsDropdownVisible}"
                           Style="{StaticResource StandardBlueDropdown}"/>
-                <Label Visibility="{Binding ScenarioSelection.IsLabelVisible}"/>
+                <Label Visibility="{Binding ScenarioSelection.IsLabelVisible}"
+                       Content="{Binding ScenarioSelection.LabelContent}"/>
             </Grid>
 
             <StackPanel Grid.Column="1"
@@ -209,7 +210,8 @@
                           SelectedIndex="{Binding GamemodeSelection.CurrentIndex, Mode=TwoWay}"
                           Visibility="{Binding GamemodeSelection.IsDropdownVisible}"
                           Style="{StaticResource StandardBlueDropdown}"/>
-                <Label Visibility="{Binding GamemodeSelection.IsLabelVisible}"/>
+                <Label Visibility="{Binding GamemodeSelection.IsLabelVisible}"
+                       Content="{Binding GamemodeSelection.LabelContent}"/>
             </Grid>
 
             <StackPanel Grid.Column="1"
@@ -225,7 +227,8 @@
                           SelectedIndex="{Binding GamemodeOptionSelection.CurrentIndex, Mode=TwoWay}"
                           Visibility="{Binding GamemodeOptionSelection.IsDropdownVisible}"
                           Style="{StaticResource StandardBlueDropdown}"/>
-                <Label Visibility="{Binding GamemodeOptionSelection.IsLabelVisible}"/>
+                <Label Visibility="{Binding GamemodeOptionSelection.IsLabelVisible}"
+                       Content="{Binding GamemodeOptionSelection.LabelContent}"/>
             </Grid>
 
             <StackPanel Grid.Column="1"
@@ -241,7 +244,8 @@
                           SelectedIndex="{Binding WeatherSelection.CurrentIndex, Mode=TwoWay}"
                           Visibility="{Binding WeatherSelection.IsDropdownVisible}"
                           Style="{StaticResource StandardBlueDropdown}"/>
-                <Label Visibility="{Binding WeatherSelection.IsLabelVisible}"/>
+                <Label Visibility="{Binding WeatherSelection.IsLabelVisible}"
+                       Content="{Binding WeatherSelection.LabelContent}"/>
             </Grid>
 
             <StackPanel Grid.Column="1"
@@ -257,7 +261,8 @@
                           SelectedIndex="{Binding SupplySystemSelection.CurrentIndex, Mode=TwoWay}"
                           Visibility="{Binding SupplySystemSelection.IsDropdownVisible}"
                           Style="{StaticResource StandardBlueDropdown}"/>
-                <Label Visibility="{Binding SupplySystemSelection.IsLabelVisible}"/>
+                <Label Visibility="{Binding SupplySystemSelection.IsLabelVisible}"
+                       Content="{Binding SupplySystemSelection.LabelContent}"/>
             </Grid>
 
             <StackPanel Grid.Column="1"
@@ -273,7 +278,8 @@
                           SelectedIndex="{Binding ModPackageSelection.CurrentIndex, Mode=TwoWay}"
                           Visibility="{Binding ModPackageSelection.IsDropdownVisible}"
                           Style="{StaticResource StandardBlueDropdown}"/>
-                <Label Visibility="{Binding ModPackageSelection.IsLabelVisible}"/>
+                <Label Visibility="{Binding ModPackageSelection.IsLabelVisible}"
+                       Content="{Binding ModPackageSelection.LabelContent}"/>
             </Grid>
 
             <Button Grid.Column="1" 

@@ -6,6 +6,7 @@ using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media;
@@ -36,6 +37,7 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
         private LobbyChatSpectatorModel m_chatModel;
         private ModPackage m_package;
         private bool m_hasSetDefaults;
+        private LobbyDropdownModel[] m_settings;
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -73,12 +75,6 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
 
             // Set handler
             this.m_handle = handle;
-            this.m_handle.OnLobbySelfUpdate += this.OnSelfChanged;
-            this.m_handle.OnLobbyTeamUpdate += this.OnTeamChanged;
-            this.m_handle.OnLobbyCompanyUpdate += this.OnCompanyChanged;
-            this.m_handle.OnLobbyMemberUpdate += this.OnMemberChanged;
-            this.m_handle.OnLobbySlotUpdate += this.OnSlotChanged;
-            this.m_handle.OnLobbyConnectionLost += this.OnConnectionLost;
 
             // Init company lists
             InitCompanyList(this.AlliedCompanies = new(), isAllied: true);
@@ -117,7 +113,7 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
             ModManager.EachPackage(x => modPackages.Add(new(x)));
 
             // Create mod package dropdown
-            this.ModPackageSelection = new(true, this.m_handle.IsHost) {
+            this.ModPackageSelection = new(true, this.m_handle.IsHost, "selected_tuning") {
                 Items = new(modPackages),
                 OnSelectionChanged = this.OnPackageChanged
             };
@@ -128,7 +124,7 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
             }
 
             // Create scenario selection dropdown
-            this.ScenarioSelection = new(true, this.m_handle.IsHost) {
+            this.ScenarioSelection = new(true, this.m_handle.IsHost, "selected_map") {
                 Items = new(ScenarioList.GetList()
                     .Where(x => x.IsVisibleInLobby)
                     .Select(x => new LobbyScenarioItem(x))),
@@ -136,33 +132,47 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
             };
 
             // Create gamemode selection dropdown
-            this.GamemodeSelection = new(true, this.m_handle.IsHost) {
+            this.GamemodeSelection = new(true, this.m_handle.IsHost, "selected_wc") {
                 Items = new(),
                 OnSelectionChanged = this.OnGamemodeChanged
             };
 
             // Create gamemode option selection dropdown
-            this.GamemodeOptionSelection = new(true, this.m_handle.IsHost) {
+            this.GamemodeOptionSelection = new(true, this.m_handle.IsHost, "selected_wco") {
                 Items = new(),
                 OnSelectionChanged = this.OnGamemodeOptionChanged
             };
 
             // Create weather selection dropdown
-            this.WeatherSelection = new(true, this.m_handle.IsHost) {
+            this.WeatherSelection = new(true, this.m_handle.IsHost, "selected_daynight") {
                 Items = LobbyBinaryOptionItem.CreateCollection(),
                 OnSelectionChanged = this.OnWeatherChanged
             };
 
             // Create supply selection dropdown
-            this.SupplySystemSelection = new(true, this.m_handle.IsHost) {
+            this.SupplySystemSelection = new(true, this.m_handle.IsHost, "selected_supply") {
                 Items = LobbyBinaryOptionItem.CreateCollection(),
                 OnSelectionChanged = this.OnSupplyChanged
+            };
+
+            // Save setting dropdowns
+            this.m_settings = new LobbyDropdownModel[] {
+                this.ScenarioSelection, this.GamemodeSelection, this.GamemodeOptionSelection,
+                this.ModPackageSelection, this.WeatherSelection, this.SupplySystemSelection
             };
 
             // Init dropdown values (if host)
             if (handle.IsHost) {
                 this.ScenarioSelection.SetSelection(x => x.Scenario.RelativeFilename == BattlegroundsInstance.LastPlayedMap);
             }
+
+            // Add handlers to remote updates
+            this.m_handle.OnLobbySelfUpdate += this.OnSelfChanged;
+            this.m_handle.OnLobbyTeamUpdate += this.OnTeamChanged;
+            this.m_handle.OnLobbyCompanyUpdate += this.OnCompanyChanged;
+            this.m_handle.OnLobbyMemberUpdate += this.OnMemberChanged;
+            this.m_handle.OnLobbySlotUpdate += this.OnSlotChanged;
+            this.m_handle.OnLobbyConnectionLost += this.OnConnectionLost;
 
         }
 
@@ -246,7 +256,7 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
             this.m_package = item.Package;
 
             // Update lobby
-            this.m_handle.SetLobbySetting("selected_tuning", item.Package.ID);
+            this.m_handle.SetLobbySetting(this.ModPackageSelection.DropdownID, item.Package.ID);
 
             // Return selected
             return next;
@@ -256,7 +266,7 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
         private int OnSupplyChanged(int current, int next, LobbyBinaryOptionItem item) {
 
             // Update lobby
-            this.m_handle.SetLobbySetting("selected_supply", item.IsOn ? "1" : "0");
+            this.m_handle.SetLobbySetting(this.SupplySystemSelection.DropdownID, item.IsOn ? "1" : "0");
 
             // Return selected
             return next;
@@ -266,17 +276,23 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
         private int OnWeatherChanged(int current, int next, LobbyBinaryOptionItem item) {
 
             // Update lobby
-            this.m_handle.SetLobbySetting("selected_daynight", item.IsOn ? "1" : "0");
+            this.m_handle.SetLobbySetting(this.WeatherSelection.DropdownID, item.IsOn ? "1" : "0");
 
             // Return selected
             return next;
 
         }
 
-        private void TrySetMapSource(Scenario scenario) {
+        private void TrySetMapSource(Scenario scenario, [CallerMemberName] string caller = "") {
 
             // Set to default case
             this.SelectedMatchScenario = __mapNotFound;
+
+            // Check scenario
+            if (scenario is null) {
+                Trace.WriteLine($"Failed to set **null** scenario (Caller = {caller}).", nameof(LobbyModel));
+                return;
+            }
 
             // Get Path
             string fullpath = Path.GetFullPath($"bin\\gfx\\map_icons\\{scenario.RelativeFilename}_map.tga");
@@ -323,7 +339,7 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
                 this.UpdateGamemodeAndOption(item.Scenario);
 
                 // Update lobby
-                this.m_handle.SetLobbySetting("selected_map", item.Scenario.RelativeFilename);
+                this.m_handle.SetLobbySetting(this.ScenarioSelection.DropdownID, item.Scenario.RelativeFilename);
 
             }
 
@@ -391,7 +407,7 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
             }
 
             // Update lobby
-            this.m_handle.SetLobbySetting("selected_wc", item.Gamemode.Name);
+            this.m_handle.SetLobbySetting(this.GamemodeSelection.DropdownID, item.Gamemode.Name);
 
             // Return selected
             return next;
@@ -401,7 +417,7 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
         private int OnGamemodeOptionChanged(int current, int next, LobbyGamemodeOptionItem item) {
 
             // Update lobby
-            this.m_handle.SetLobbySetting("selected_wco", item.Option.Value.ToString(CultureInfo.InvariantCulture));
+            this.m_handle.SetLobbySetting(this.GamemodeOptionSelection.DropdownID, item.Option.Value.ToString(CultureInfo.InvariantCulture));
 
             // Return selected
             return next;
@@ -488,10 +504,30 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
 
         private void OnSettingChanged(string key, string value) {
 
+            // If host; do nothing
+            if (this.m_handle.IsHost) {
+                return;
+            }
+
             // Invoke changes
             Application.Current.Dispatcher.Invoke(() => { 
                 
+                // Loop over settings
+                for (int i = 0; i < this.m_settings.Length; i++) {
+                    if (this.m_settings[i].DropdownID == key) {
+                        this.m_settings[i].LabelContent = value;
+                        
+                        // Update scenario preview if that is what was changed
+                        if (this.m_settings[i].DropdownID == this.ScenarioSelection.DropdownID) {
+                            this.TrySetMapSource(ScenarioSelection.Items.Select(x => x.Scenario).FirstOrDefault(x => x.RelativeFilename == value));
+                        }
 
+                        return;
+                    }
+                }
+
+                // Log missing k-v pair
+                Trace.WriteLine($"Failed to set setting '{key}' to '{value}' as setting dropdown was not defined.", nameof(LobbyModel));
 
             });
 
