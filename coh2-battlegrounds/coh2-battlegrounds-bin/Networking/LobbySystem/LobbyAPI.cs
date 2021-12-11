@@ -157,7 +157,7 @@ namespace Battlegrounds.Networking.LobbySystem {
                     var serverZone = TimeZoneInfo.FindSystemTimeZoneById(lobbyMessage.Timezone);
 
                     // Create timestamp
-                    var datetime = FromTimestamp(lobbyMessage.Timestamp) + (serverZone.BaseUtcOffset - __thisTimezone.BaseUtcOffset);
+                    var datetime = FromTimestamp(lobbyMessage.Timestamp) + (__thisTimezone.BaseUtcOffset - serverZone.BaseUtcOffset);
                     lobbyMessage.Timestamp = $"{datetime.Hour}:{datetime.Minute}";
 
                     // Trigger event
