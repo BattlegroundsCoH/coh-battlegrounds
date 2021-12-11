@@ -157,7 +157,7 @@ namespace Battlegrounds.Networking.LobbySystem {
                     var serverZone = TimeZoneInfo.FindSystemTimeZoneById(lobbyMessage.Timezone);
 
                     // Create timestamp
-                    var datetime = TimeZoneInfo.ConvertTime(FromTimestamp(lobbyMessage.Timestamp), serverZone, __thisTimezone);
+                    var datetime = FromTimestamp(lobbyMessage.Timestamp) + (serverZone.BaseUtcOffset - __thisTimezone.BaseUtcOffset);
                     lobbyMessage.Timestamp = $"{datetime.Hour}:{datetime.Minute}";
 
                     // Trigger event
@@ -225,8 +225,7 @@ namespace Battlegrounds.Networking.LobbySystem {
             string[] s = stamp.Split(':');
             int h = int.Parse(s[0]);
             int m = int.Parse(s[1]);
-            var today = DateTime.Now.Date;
-            return new DateTime(today.Year, today.Month, today.DayOfYear, h, m, 0, 0, null, DateTimeKind.Local);
+            return DateTime.Today.AddHours(h).AddMinutes(m);
         }
 
         public void Disconnect() {
