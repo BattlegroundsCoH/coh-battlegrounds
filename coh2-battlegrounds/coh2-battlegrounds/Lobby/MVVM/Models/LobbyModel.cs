@@ -605,7 +605,7 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
         public static LobbyModel CreateModelAsParticipant(LobbyAPI handler) {
 
             // Create model
-            LobbyModel model = new(handler, null, null);
+            LobbyModel model = new(handler, handler.Allies, handler.Axis);
             model.m_handle.OnLobbySettingUpdate += model.OnSettingChanged;
 
             // Return model

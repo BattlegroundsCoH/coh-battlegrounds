@@ -56,6 +56,7 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
             // Set internal handler
             this.m_handle = lobbyHandler;
             this.m_handle.OnChatMessage += this.OnChatMessage;
+            this.m_handle.OnSystemMessage += this.OnSystemMessage;
 
             // Create locale keys
             this.m_allFilter = new("LobbyChat_FilterAll");
@@ -98,6 +99,20 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
             // Display
             this.NewMessage(msg.Sender, msg.Message, colour, msg.Timestamp, msg.Channel);
 
+        }
+
+        private void OnSystemMessage(ulong who, string name, string context) {
+            switch (context) {
+                case "JOIN":
+                    this.SystemMessage($"{name} joined the lobby", Colors.Yellow);
+                    break;
+                case "LEFT":
+                    this.SystemMessage($"{name} has left the lobby", Colors.Yellow);
+                    break;
+                default:
+                    Trace.WriteLine($"Unknown context triggered by '{who}' ({name}) ctxt = {context}", nameof(LobbyChatSpectatorModel));
+                    break;
+            }
         }
 
         public void SendEnter(object sender, KeyEventArgs args) {

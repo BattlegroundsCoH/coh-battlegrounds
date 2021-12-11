@@ -43,6 +43,8 @@ namespace Battlegrounds.Networking.LobbySystem {
 
         public event Action<LobbyMessage> OnChatMessage;
 
+        public event Action<ulong, string, string> OnSystemMessage;
+
         public event Action OnLobbySelfUpdate;
 
         public event Action<LobbyTeam> OnLobbyTeamUpdate;
@@ -105,6 +107,13 @@ namespace Battlegrounds.Networking.LobbySystem {
                     this.OnLobbyConnectionLost?.Invoke();
                 };
 
+                // If not host, publish settings
+                if (!this.m_isHost) {
+                    foreach (var (k, v) in remoteLobby.Settings) {
+                        this.OnLobbySettingUpdate?.Invoke(k, v);
+                    }
+                }
+
             } else {
 
                 // Throw exception -> Failed to fully connect.
@@ -126,6 +135,18 @@ namespace Battlegrounds.Networking.LobbySystem {
             // Check if error message and display it
             if (message.MessageType is ContentMessgeType.Error) {
                 Trace.WriteLine($"Received Error = {message.StrMsg} to CID({cid})", nameof(LobbyAPI));
+                return;
+            }
+
+            // If disconnect, handle
+            if (message.MessageType is ContentMessgeType.Disconnect) {
+                this.OnSystemMessage?.Invoke(message.Who, message.StrMsg, "LEFT");
+                return;
+            }
+
+            // If join, handle
+            if (message.MessageType is ContentMessgeType.Join) {
+                this.OnSystemMessage?.Invoke(message.Who, message.StrMsg, "JOIN");
                 return;
             }
 

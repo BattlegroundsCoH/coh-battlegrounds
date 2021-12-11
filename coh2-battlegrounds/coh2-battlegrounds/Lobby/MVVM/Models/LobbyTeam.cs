@@ -26,10 +26,10 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
 
             // Define slot models
             this.Slots = new LobbySlot[4] {
-                new(lobbyTeam.Slots[0], this),
-                new(lobbyTeam.Slots[1], this),
-                new(lobbyTeam.Slots[2], this),
-                new(lobbyTeam.Slots[3], this)
+                new(lobbyTeam?.Slots[0], this),
+                new(lobbyTeam?.Slots[1], this),
+                new(lobbyTeam?.Slots[2], this),
+                new(lobbyTeam?.Slots[3], this)
             };
 
         }
