@@ -111,6 +111,32 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
 
         }
 
+        public (bool, bool) CanPlay() {
+
+            // Get slots in interface
+            var slots = this.m_interface.Slots;
+
+            // flag
+            bool flag1 = false; // any valid player
+            bool flag2 = true; // No invalid players
+
+            // Loop over slots and check if any valid
+            for (int i = 0; i < slots.Length; i++) {
+                if (slots[i].State == 1) {
+                    flag1 = true;
+                    if (slots[i].Occupant.Company.IsNone) {
+                        flag2 = false;
+                    } else {
+                        flag2 = flag2 && true;
+                    }
+                }
+            }
+
+            // Return if both flags yielded true
+            return (flag1, flag2);
+
+        }
+
     }
 
 }

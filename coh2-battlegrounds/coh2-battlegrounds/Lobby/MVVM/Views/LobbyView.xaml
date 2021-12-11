@@ -182,7 +182,8 @@
             <!-- Options -->
             <StackPanel Grid.Column="1"
                         Grid.Row="2">
-                <Label Content="MAP" Style="{StaticResource SettingLabel}"/>
+                <Label Content="{Binding ScenarioLabel, Converter={StaticResource LocaleConvertor}}" 
+                       Style="{StaticResource SettingLabel}"/>
                 <Separator Style="{StaticResource SettingSeperator}"/>
             </StackPanel>
             <Grid Grid.Column="2"
@@ -199,7 +200,8 @@
 
             <StackPanel Grid.Column="1"
                         Grid.Row="3">
-                <Label Content="GAMEMODE" Style="{StaticResource SettingLabel}"/>
+                <Label Content="{Binding GamemodeLabel, Converter={StaticResource LocaleConvertor}}" 
+                       Style="{StaticResource SettingLabel}"/>
                 <Separator Style="{StaticResource SettingSeperator}"/>
             </StackPanel>
             <Grid Grid.Column="2"
@@ -216,7 +218,8 @@
 
             <StackPanel Grid.Column="1"
                         Grid.Row="4">
-                <Label Content="SETTING" Style="{StaticResource SettingLabel}"/>
+                <Label Content="{Binding GamemodeOptionLabel, Converter={StaticResource LocaleConvertor}}" 
+                       Style="{StaticResource SettingLabel}"/>
                 <Separator Style="{StaticResource SettingSeperator}"/>
             </StackPanel>
             <Grid Grid.Column="2"
@@ -233,7 +236,8 @@
 
             <StackPanel Grid.Column="1"
                         Grid.Row="5">
-                <Label Content="DYNAMIC WEATHER" Style="{StaticResource SettingLabel}"/>
+                <Label Content="{Binding SupplyLabel, Converter={StaticResource LocaleConvertor}}"
+                       Style="{StaticResource SettingLabel}"/>
                 <Separator Style="{StaticResource SettingSeperator}"/>
             </StackPanel>
             <Grid Grid.Column="2"
@@ -250,7 +254,8 @@
 
             <StackPanel Grid.Column="1"
                         Grid.Row="6">
-                <Label Content="SUPPLY SYSTEM" Style="{StaticResource SettingLabel}"/>
+                <Label Content="{Binding WeatherLabel, Converter={StaticResource LocaleConvertor}}" 
+                       Style="{StaticResource SettingLabel}"/>
                 <Separator Style="{StaticResource SettingSeperator}"/>
             </StackPanel>
             <Grid Grid.Column="2"
@@ -267,7 +272,8 @@
 
             <StackPanel Grid.Column="1"
                         Grid.Row="7">
-                <Label Content="TUNING MOD" Style="{StaticResource SettingLabel}"/>
+                <Label Content="{Binding PackageLabel, Converter={StaticResource LocaleConvertor}}" 
+                       Style="{StaticResource SettingLabel}"/>
                 <Separator Style="{StaticResource SettingSeperator}"/>
             </StackPanel>
             <Grid Grid.Column="2"
@@ -288,6 +294,7 @@
                     Content="{Binding StartMatch.Text, Converter={StaticResource LocaleConvertor}}"
                     Command="{Binding StartMatch.Click}"
                     IsEnabled="{Binding StartMatch.Enabled}"
+                    ToolTip="{Binding StartMatch.Tooltip, Converter={StaticResource LocaleConvertor}}"
                     Style="{StaticResource StandardBlueButton}"/>
 
         </Grid>

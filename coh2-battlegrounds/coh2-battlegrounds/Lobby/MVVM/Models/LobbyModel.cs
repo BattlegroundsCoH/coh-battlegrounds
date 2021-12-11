@@ -15,6 +15,7 @@ using System.Windows.Media.Imaging;
 using Battlegrounds;
 using Battlegrounds.Functional;
 using Battlegrounds.Game.Database;
+using Battlegrounds.Locale;
 using Battlegrounds.Modding;
 using Battlegrounds.Networking;
 using Battlegrounds.Networking.LobbySystem;
@@ -32,6 +33,11 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
     public class LobbyModel : IViewModel, INotifyPropertyChanged {
 
         private static readonly ImageSource __mapNotFound = new BitmapImage(new Uri("pack://application:,,,/Resources/ingame/unknown_map.png"));
+
+        private static readonly LocaleKey __playabilityAlliesInvalid = new("LobbyView_StartMatchAlliesInvalid");
+        private static readonly LocaleKey __playabilityAlliesNoPlayers = new("LobbyView_StartMatchAlliesNoPlayers");
+        private static readonly LocaleKey __playabilityAxisInvalid = new("LobbyView_StartMatchAxisInvalid");
+        private static readonly LocaleKey __playabilityAxisNoPlayers = new("LobbyView_StartMatchAxisNoPlayers");
 
         private readonly LobbyAPI m_handle;
         private LobbyChatSpectatorModel m_chatModel;
@@ -70,6 +76,18 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
         public ObservableCollection<LobbyCompanyItem> AxisCompanies { get; }
 
         public bool SingleInstanceOnly => false;
+
+        public LocaleKey ScenarioLabel { get; } = new("LobbyView_SettingScenario");
+
+        public LocaleKey GamemodeLabel { get; } = new("LobbyView_SettingGamemode");
+
+        public LocaleKey GamemodeOptionLabel { get; } = new("LobbyView_SettingOption");
+
+        public LocaleKey SupplyLabel { get; } = new("LobbyView_SettingSupply");
+
+        public LocaleKey WeatherLabel { get; } = new("LobbyView_SettingWeather");
+
+        public LocaleKey PackageLabel { get; } = new("LobbyView_SettingTuning");
 
         private LobbyModel(LobbyAPI handle, LobbyAPIStructs.LobbyTeam allies, LobbyAPIStructs.LobbyTeam axis) {
 
@@ -426,6 +444,30 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
 
         private void EvaluateMatchLaunchable() {
 
+            // Skip check if not host
+            if (!this.m_handle.IsHost) {
+                return;
+            }
+
+            // Check allies
+            var (x1, y1) = this.Allies.CanPlay();
+            bool allied = x1 && y1;
+
+            // Check axis
+            var (x2, y2) = this.Axis.CanPlay();
+            bool axis = x2 && y2;
+
+            // If both playable
+            if (allied && axis) {
+                this.StartMatch.Enabled = true;
+                this.StartMatch.Tooltip = null;
+            } else if (!allied) {
+                this.StartMatch.Enabled = false;
+                this.StartMatch.Tooltip = x1 ? __playabilityAlliesNoPlayers : __playabilityAlliesInvalid;
+            } else {
+                this.StartMatch.Enabled = false;
+                this.StartMatch.Tooltip = x2 ? __playabilityAxisNoPlayers : __playabilityAxisInvalid;
+            }
 
 
         }
