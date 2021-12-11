@@ -107,13 +107,6 @@ namespace Battlegrounds.Networking.LobbySystem {
                     this.OnLobbyConnectionLost?.Invoke();
                 };
 
-                // If not host, publish settings
-                if (!this.m_isHost) {
-                    foreach (var (k, v) in remoteLobby.Settings) {
-                        this.OnLobbySettingUpdate?.Invoke(k, v);
-                    }
-                }
-
             } else {
 
                 // Throw exception -> Failed to fully connect.

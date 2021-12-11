@@ -608,6 +608,11 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
             LobbyModel model = new(handler, handler.Allies, handler.Axis);
             model.m_handle.OnLobbySettingUpdate += model.OnSettingChanged;
 
+            // Update settings
+            foreach (var (k, v) in handler.Settings) {
+                model.OnSettingChanged(k, v);
+            }
+
             // Return model
             return model;
 

@@ -39,8 +39,8 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
         public LobbyAPIStructs.LobbyCompany GetAPIObject()
             => new LobbyAPIStructs.LobbyCompany() {
                 API = null,
-                Army = this.Army.Name,
-                Specialisation = this.Type.ToString(),
+                Army = this.IsEmpty ? string.Empty : this.Army.Name,
+                Specialisation = this.IsEmpty ? string.Empty : this.Type.ToString(),
                 IsAuto = this.IsAuto,
                 IsNone = this.IsEmpty,
                 Name = this.Name,
