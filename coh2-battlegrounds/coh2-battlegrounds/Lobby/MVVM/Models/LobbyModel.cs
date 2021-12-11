@@ -577,15 +577,20 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
 
         private void OnConnectionLost() {
 
-            // Show leave modal
-            App.ViewManager.GetModalControl().ShowModal(ModalDialog.CreateModal("Connection Lost", "Connection to server was lost.", (sender, success, value) => {
-                if (success && value == ModalDialogResult.Confirm) {
+            // Goto GUI thread and show connection lost.
+            Application.Current.Dispatcher.Invoke(() => {
 
-                    // Go back to browser view
-                    App.ViewManager.SetDisplay(AppDisplayState.LeftRight, typeof(LeftMenu), typeof(LobbyBrowserViewModel));
+                // Show leave modal
+                App.ViewManager.GetModalControl().ShowModal(ModalDialog.CreateModal("Connection Lost", "Connection to server was lost.", (sender, success, value) => {
+                    if (success && value == ModalDialogResult.Confirm) {
 
-                }
-            }));
+                        // Go back to browser view
+                        App.ViewManager.SetDisplay(AppDisplayState.LeftRight, typeof(LeftMenu), typeof(LobbyBrowserViewModel));
+
+                    }
+                }));
+
+            });
 
         }
 

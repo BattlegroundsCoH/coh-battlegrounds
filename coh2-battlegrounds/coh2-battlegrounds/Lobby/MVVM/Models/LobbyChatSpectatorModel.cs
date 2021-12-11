@@ -96,8 +96,13 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
             // Convert lobby message colour to System.Colour
             var colour = (Color)ColorConverter.ConvertFromString(msg.Colour);
 
-            // Display
-            this.NewMessage(msg.Sender, msg.Message, colour, msg.Timestamp, msg.Channel);
+            // Invoke dispatcher
+            Application.Current.Dispatcher.Invoke(() => {
+
+                // Display
+                this.NewMessage(msg.Sender, msg.Message, colour, msg.Timestamp, msg.Channel);
+
+            });
 
         }
 
