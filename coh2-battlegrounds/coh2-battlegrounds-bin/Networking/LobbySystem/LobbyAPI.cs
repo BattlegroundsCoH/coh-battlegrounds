@@ -226,7 +226,7 @@ namespace Battlegrounds.Networking.LobbySystem {
             int h = int.Parse(s[0]);
             int m = int.Parse(s[1]);
             var today = DateTime.Now.Date;
-            return today.AddHours(h).AddMinutes(m);
+            return new DateTime(today.Year, today.Month, today.DayOfYear, h, m, 0, 0, null, DateTimeKind.Local);
         }
 
         public void Disconnect() {
