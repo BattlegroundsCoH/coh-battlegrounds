@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 
 using Battlegrounds.ErrorHandling.Networking;
 using Battlegrounds.Functional;
@@ -11,8 +12,6 @@ using Battlegrounds.Networking.Server;
 using Battlegrounds.Steam;
 
 using static Battlegrounds.Networking.LobbySystem.LobbyAPIStructs;
-using System.Globalization;
-using System.Text;
 
 namespace Battlegrounds.Networking.LobbySystem {
     
@@ -21,14 +20,14 @@ namespace Battlegrounds.Networking.LobbySystem {
         private static readonly TimeSpan __cacheTime = TimeSpan.FromSeconds(3.5);
         private static readonly TimeZoneInfo __thisTimezone = TimeZoneInfo.Local;
 
-        private ServerConnection m_connection;
+        private readonly ServerConnection m_connection;
         private volatile uint m_cidcntr;
         private bool m_isHost;
 
-        private ObjectCache<LobbyTeam> m_allies;
-        private ObjectCache<LobbyTeam> m_axis;
-        private ObjectCache<LobbyTeam> m_obs;
-        private ObjectCache<Dictionary<string, string>> m_settings;
+        private readonly ObjectCache<LobbyTeam> m_allies;
+        private readonly ObjectCache<LobbyTeam> m_axis;
+        private readonly ObjectCache<LobbyTeam> m_obs;
+        private readonly ObjectCache<Dictionary<string, string>> m_settings;
 
         public bool IsHost => this.m_isHost;
 
@@ -61,6 +60,14 @@ namespace Battlegrounds.Networking.LobbySystem {
         public event Action<string, string> OnLobbySettingUpdate;
 
         public event Action<string> OnLobbyConnectionLost;
+
+        public event Action<ulong> OnLobbyCancelStartup;
+
+        public event Action OnLobbyBeginMatch;
+
+        public event Action OnLobbyLaunchGame;
+
+        private Action? OnLobbyCancelReceived;
 
         public LobbyAPI(bool isHost, SteamUser self, ServerConnection connection, ServerAPI serverAPI) {
 
@@ -216,6 +223,16 @@ namespace Battlegrounds.Networking.LobbySystem {
                     this.OnLobbySettingUpdate?.Invoke(settingKey, settingValue);
 
                     break;
+                case "Notify.Start":
+                    this.OnLobbyBeginMatch?.Invoke();
+                    break;
+                case "Notify.Cancel":
+                    this.OnLobbyCancelReceived?.Invoke();
+                    this.OnLobbyCancelStartup?.Invoke(BitConvert(message.Raw, BitConverter.ToUInt64));
+                    break;
+                case "Notify.Launch":
+                    this.OnLobbyLaunchGame?.Invoke();
+                    break;
                 default:
                     Trace.WriteLine($"Unsupported API event: {message.StrMsg}", nameof(LobbyAPI));
                     break;
@@ -332,7 +349,28 @@ namespace Battlegrounds.Networking.LobbySystem {
         }
 
         public bool StartMatch(double cancelTime) {
-            return false;
+
+            // Send start match command
+            this.RemoteVoidCall("StartMatch");
+
+            // Flag marking whether the match was cancelled by others
+            bool wasCancelled = false;
+
+            // Set cancel listener
+            this.OnLobbyCancelReceived = () => wasCancelled = true;
+
+            // TODO: Wait for remote input (5s)
+
+            // Return false
+            return !wasCancelled;
+
+        }
+
+        public void CancelMatch() {
+
+            // Send cancel match command
+            this.RemoteVoidCall("CancelStartMatch");
+
         }
 
         public void LaunchMatch() {

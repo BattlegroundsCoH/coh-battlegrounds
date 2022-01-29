@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Globalization;
@@ -17,11 +16,9 @@ using Battlegrounds.Functional;
 using Battlegrounds.Game.Database;
 using Battlegrounds.Locale;
 using Battlegrounds.Modding;
-using Battlegrounds.Networking;
 using Battlegrounds.Networking.LobbySystem;
 
 using BattlegroundsApp.Lobby.MatchHandling;
-using BattlegroundsApp.LocalData;
 using BattlegroundsApp.Modals;
 using BattlegroundsApp.MVVM;
 using BattlegroundsApp.MVVM.Models;
@@ -227,11 +224,13 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
             var play = PlayModelFactory.GetModel(this.m_handle, this.m_chatModel);
 
             // prepare
-            play.Prepare(this.m_package, this.BeginMatch, this.CancelMatch);
+            play.Prepare(this.m_package, this.BeginMatch, x => this.EndMatch(x as IPlayModel));
 
         }
 
         private void BeginMatch(IPlayModel model) {
+
+            // Set lobby status here
 
             // Play match
             model.Play(this.EndMatch);
@@ -240,9 +239,7 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
 
         private void EndMatch(IPlayModel model) {
 
-        }
-
-        private void CancelMatch(IPlayModel model) {
+            // Set lobby status here
 
         }
 

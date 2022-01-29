@@ -19,14 +19,14 @@ namespace Battlegrounds.Game.Match.Startup {
     public class OnlineStartupStrategy : BaseStartupStrategy {
 
         /// <summary>
-        /// Get or set the wait pulse while waiting for the other players to cancel the match (if they so desire).
-        /// </summary>
-        public WaitPulsePredicate StartMatchWait { get; set; }
-
-        /// <summary>
         /// Get or set the amount of seconds all players have to press the stop button. (5 seconds by default).
         /// </summary>
         public uint StopMatchSeconds { get; set; } = 5;
+
+        /// <summary>
+        /// Get or set boolean flag whether the host has cancelled the match.
+        /// </summary>
+        public bool CancelledByHost { get; set; } = false;
 
         private List<Company> m_playerCompanies;
         private SessionInfo m_sessionInfo;
@@ -42,7 +42,7 @@ namespace Battlegrounds.Game.Match.Startup {
             LobbyAPI lobby = caller as LobbyAPI;
 
             // Return result
-            return lobby.StartMatch(this.StopMatchSeconds);
+            return lobby.StartMatch(this.StopMatchSeconds) && !this.CancelledByHost;
 
         }
 
