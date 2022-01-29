@@ -6,6 +6,7 @@
     <RootNamespace>BattlegroundsApp</RootNamespace>
     <UseWPF>true</UseWPF>
     <LangVersion>preview</LangVersion>
+    <AnalysisLevel>5.0</AnalysisLevel>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">

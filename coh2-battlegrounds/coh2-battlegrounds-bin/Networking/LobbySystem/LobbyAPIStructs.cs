@@ -82,6 +82,20 @@ namespace Battlegrounds.Networking.LobbySystem {
                     this.Slots[i].SetAPI(api);
                 }
             }
+
+            public bool IsMember(ulong memberID) {
+                return this.GetSlotOfMember(memberID) is not null;
+            }
+
+            public LobbySlot GetSlotOfMember(ulong memberID) {
+                for (int i = 0; i < this.Slots.Length; i++) {
+                    if (this.Slots[i].State == 1 && this.Slots[i].Occupant?.MemberID == memberID) {
+                        return this.Slots[i];
+                    }
+                }
+                return null;
+            }
+
         }
 
         public class LobbyMessage {

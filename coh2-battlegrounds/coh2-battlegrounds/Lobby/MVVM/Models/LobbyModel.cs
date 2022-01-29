@@ -12,13 +12,19 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
 using Battlegrounds;
+using Battlegrounds.Compiler;
 using Battlegrounds.Functional;
 using Battlegrounds.Game.Database;
+using Battlegrounds.Game.DataCompany;
+using Battlegrounds.Game.Gameplay;
+using Battlegrounds.Game.Match.Play;
 using Battlegrounds.Locale;
 using Battlegrounds.Modding;
 using Battlegrounds.Networking.LobbySystem;
+using Battlegrounds.Networking.Server;
 
 using BattlegroundsApp.Lobby.MatchHandling;
+using BattlegroundsApp.LocalData;
 using BattlegroundsApp.Modals;
 using BattlegroundsApp.MVVM;
 using BattlegroundsApp.MVVM.Models;
@@ -173,13 +179,93 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
                 this.ScenarioSelection.SetSelection(x => x.Scenario.RelativeFilename == BattlegroundsInstance.LastPlayedMap);
             }
 
-            // Add handlers to remote updates
+            // Add handlers to remote updates and notifications
             this.m_handle.OnLobbySelfUpdate += this.OnSelfChanged;
             this.m_handle.OnLobbyTeamUpdate += this.OnTeamChanged;
             this.m_handle.OnLobbyCompanyUpdate += this.OnCompanyChanged;
             this.m_handle.OnLobbyMemberUpdate += this.OnMemberChanged;
             this.m_handle.OnLobbySlotUpdate += this.OnSlotChanged;
             this.m_handle.OnLobbyConnectionLost += this.OnConnectionLost;
+            this.m_handle.OnLobbyRequestCompany += this.OnCompanyRequested;
+            this.m_handle.OnLobbyNotifyGamemode += this.OnGamemodeReleased;
+            this.m_handle.OnLobbyNotifyResults += this.OnResultsReleased;
+            this.m_handle.OnLobbyLaunchGame += this.OnLaunchGame;
+
+        }
+
+        private void OnLaunchGame() {
+
+            // Create overwatch strategy
+            var overwatch = new MemberOverwatchStrategy();
+
+            Task.Run(() => {
+
+                // Begin
+                overwatch.Launch();
+
+                // Wait for exit
+                overwatch.WaitForExit();
+
+                // Do some more?
+
+            });
+
+        }
+
+        private void OnResultsReleased(ServerAPI obj) {
+
+            // Try download company json
+            if (obj.DownloadCompany(this.m_handle.Self.ID) is string companyJson) {
+
+                // Load it
+                var company = CompanySerializer.GetCompanyFromJson(companyJson);
+
+                // Save it
+                PlayerCompanies.SaveCompany(company);
+
+            }
+
+        }
+
+        private void OnGamemodeReleased(ServerAPI obj) {
+
+            // Download the gamemode file
+            if (obj.DownloadGamemode(out byte[] sgaData)) {
+
+                // File sga to gamemode file
+                File.WriteAllBytes(WinconditionCompiler.GetArchivePath(), sgaData);
+
+            }
+
+        }
+
+        private void OnCompanyRequested(ServerAPI obj) {
+
+            // Get self
+            ulong selfid = this.m_handle.Self.ID;
+            var self = this.m_handle.Allies.GetSlotOfMember(selfid) ?? this.m_handle.Axis.GetSlotOfMember(selfid);
+            if (self is not null) {
+
+                // Make sure there's a company
+                if (self.Occupant.Company is null) {
+                    return;
+                }
+
+                // Get company name
+                string companyName = self.Occupant.Company.Name;
+
+                // Get company faction
+                Faction faction = Faction.FromName(self.Occupant.Company.Army);
+
+                // Get company json
+                string companyJson = CompanySerializer.GetCompanyAsJson(PlayerCompanies.FromNameAndFaction(companyName, faction), indent: false);
+
+                // Upload file
+                if (obj.UploadCompany(selfid, companyJson) is not UploadCompanyResult.UPLOAD_SUCCESS) {
+                    Trace.WriteLine("Failed to upload company json file.", nameof(LobbyModel));
+                }
+
+            }
 
         }
 

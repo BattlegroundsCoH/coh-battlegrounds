@@ -17,6 +17,13 @@ namespace Battlegrounds.Compiler {
     public static class WinconditionCompiler {
 
         /// <summary>
+        /// Get the path to where the gamemode archive is saved.
+        /// </summary>
+        /// <returns>The absolute path to the wincondition archive file.</returns>
+        public static string GetArchivePath()
+            => $"{Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)}\\my games\\Company of Heroes 2\\mods\\gamemode\\subscriptions\\coh2_battlegrounds_wincondition.sga";
+
+        /// <summary>
         /// Compile a session into a sga archive file.
         /// </summary>
         /// <param name="workdir">The temporary work directory.</param>
@@ -122,7 +129,7 @@ namespace Battlegrounds.Compiler {
             archiveDef.Save(archiveDefTxtPath);
 
             // The output archive
-            string outputArchive = $"{Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)}\\my games\\Company of Heroes 2\\mods\\gamemode\\subscriptions\\coh2_battlegrounds_wincondition.sga";
+            string outputArchive = GetArchivePath();
 
             // Call the archive
             if (!Archiver.Archive(archiveDefTxtPath, workdir, outputArchive)) {
