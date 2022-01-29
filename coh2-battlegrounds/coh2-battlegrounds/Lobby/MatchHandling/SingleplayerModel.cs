@@ -94,12 +94,15 @@ internal class SingleplayerModel : IPlayModel {
 
     private void CreateMatchInfo(ModPackage package) {
 
+        // Get settings (most up-to-date)
+        var settings = this.m_handle.GetSettings();
+
         // Collect settings
-        string scenario = this.m_handle.Settings["selected_map"];
-        string gamemode = this.m_handle.Settings["selected_wc"];
-        string gamemodeValue = this.m_handle.Settings["selected_wco"];
-        bool enableSupply = this.m_handle.Settings["selected_supply"] != "0";
-        bool enableWeather = this.m_handle.Settings["selected_daynight"] != "0";
+        string scenario = settings.GetValueOrDefault("selected_map", string.Empty);
+        string gamemode = settings.GetValueOrDefault("selected_wc", string.Empty);
+        string gamemodeValue = settings.GetValueOrDefault("selected_wco", string.Empty);
+        bool enableSupply = settings.GetValueOrDefault("selected_supply", "0") != "0";
+        bool enableWeather = settings.GetValueOrDefault("selected_daynight", "0") != "0";
 
         // Try get gamemode value
         if (!int.TryParse(gamemodeValue, out int gamemodeoption)) {
@@ -112,12 +115,16 @@ internal class SingleplayerModel : IPlayModel {
         ValRef<byte> alliesCounter = 0;
         ValRef<byte> axisCounter = 0;
 
+        // Get teams (most up-to-date)
+        var alliesLobby = this.m_handle.GetTeam(0);
+        var axisLobby = this.m_handle.GetTeam(1);
+
         // Get allies
-        var allies = this.m_handle.Allies.Slots.Filter(x => x.State is 1)
+        var allies = alliesLobby.Slots.Filter(x => x.State is 1)
             .Map(x => x.Occupant).Map(x => CreateParticipantFromLobbyMember(x, ParticipantTeam.TEAM_ALLIES, totalCounter, alliesCounter));
 
         // Get axis
-        var axis = this.m_handle.Axis.Slots.Filter(x => x.State is 1)
+        var axis = axisLobby.Slots.Filter(x => x.State is 1)
             .Map(x => x.Occupant).Map(x => CreateParticipantFromLobbyMember(x, ParticipantTeam.TEAM_AXIS, totalCounter, axisCounter));
 
         // Create info data

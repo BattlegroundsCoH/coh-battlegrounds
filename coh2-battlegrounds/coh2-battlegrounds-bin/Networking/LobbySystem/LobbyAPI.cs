@@ -11,17 +11,19 @@ using Battlegrounds.Networking.Server;
 using Battlegrounds.Steam;
 
 using static Battlegrounds.Networking.LobbySystem.LobbyAPIStructs;
+using System.Globalization;
+using System.Text;
 
 namespace Battlegrounds.Networking.LobbySystem {
     
     public class LobbyAPI {
 
-        private static readonly TimeSpan __cacheTime = TimeSpan.FromSeconds(15);
+        private static readonly TimeSpan __cacheTime = TimeSpan.FromSeconds(3.5);
         private static readonly TimeZoneInfo __thisTimezone = TimeZoneInfo.Local;
 
         private ServerConnection m_connection;
+        private volatile uint m_cidcntr;
         private bool m_isHost;
-        private uint m_cidcntr;
 
         private ObjectCache<LobbyTeam> m_allies;
         private ObjectCache<LobbyTeam> m_axis;
@@ -244,15 +246,17 @@ namespace Battlegrounds.Networking.LobbySystem {
         public Dictionary<string, string> GetSettings()
             => RemoteCall<Dictionary<string, string>>("GetSettings");
 
-        public uint GetPlayerCount()
-            => RemoteCall<uint>("GetPlayerCount");
+        public uint GetPlayerCount(bool humansOnly = false)
+            => RemoteCall<uint>("GetPlayerCount", EncBool(humansOnly));
 
         private static string EncBool(bool b) => b ? "1" : "0";
 
         public void SetCompany(int tid, int sid, LobbyCompany company) {
 
+            string strength = company.Strength.ToString(CultureInfo.InvariantCulture);
+
             // Invoke remotely
-            this.RemoteVoidCall("SetCompany", tid, sid, EncBool(company.IsAuto), EncBool(company.IsNone), company.Name, company.Army, company.Strength, company.Specialisation);
+            this.RemoteVoidCall("SetCompany", tid, sid, EncBool(company.IsAuto), EncBool(company.IsNone), company.Name, company.Army, strength, company.Specialisation);
 
             // Trigger self update
             this.OnLobbyCompanyUpdate?.Invoke(tid, sid, company);
@@ -353,6 +357,13 @@ namespace Battlegrounds.Networking.LobbySystem {
             }
         }
 
+        private static T BitConvert<T>(byte[] raw, Func<byte[], int, T> func) {
+            if (BitConverter.IsLittleEndian) {
+                Array.Reverse(raw);
+            }
+            return func(raw, 0);
+        }
+
         private T RemoteCall<T>(string method, params object[] args) {
             
             // Create message
@@ -367,13 +378,14 @@ namespace Battlegrounds.Networking.LobbySystem {
             // Send and await response
             if (this.m_connection.SendAndAwaitReply(msg) is ContentMessage response) {
                 if (response.MessageType == ContentMessgeType.Error) {
-                    throw new Exception(response.StrMsg);
+                    string e = response.StrMsg is null ? "Received error message from server with no description" : response.StrMsg;
+                    throw new Exception(e);
                 }
                 if (response.StrMsg == "Primitive") {
                     // It feels nasty using 'dynamic'
                     return (T)(dynamic)(response.DotNetType switch {
                         nameof(Boolean) => response.Raw[0] == 1,
-                        nameof(UInt32) => BitConverter.ToUInt32(response.Raw),
+                        nameof(UInt32) => BitConvert(response.Raw, BitConverter.ToUInt32),
                         _ => throw new NotImplementedException($"Support for primitive response of type '{response.DotNetType}' not implemented.")
                     });
                 } else {

@@ -26,6 +26,11 @@
                 <Setter Property="FontSize" Value="14"/>
                 <Setter Property="FontFamily" Value="Open Sans"/>
             </Style>
+            <Style x:Key="SettingValue" TargetType="Label">
+                <Setter Property="Foreground" Value="#747c84"/>
+                <Setter Property="FontSize" Value="14"/>
+                <Setter Property="FontFamily" Value="Open Sans"/>
+            </Style>
             <Style x:Key="SettingSeperator" TargetType="Separator">
                 <Setter Property="Background" Value="#4e5963"/>
                 <Setter Property="Margin" Value="4"/>
@@ -188,7 +193,8 @@
                           Visibility="{Binding ScenarioSelection.IsDropdownVisible}"
                           Style="{StaticResource StandardBlueDropdown}"/>
                 <Label Visibility="{Binding ScenarioSelection.IsLabelVisible}"
-                       Content="{Binding ScenarioSelection.LabelContent}"/>
+                       Content="{Binding ScenarioSelection.LabelContent}"
+                       Style="{StaticResource SettingValue}"/>
             </Grid>
 
             <StackPanel Grid.Column="1"
@@ -206,7 +212,8 @@
                           Visibility="{Binding GamemodeSelection.IsDropdownVisible}"
                           Style="{StaticResource StandardBlueDropdown}"/>
                 <Label Visibility="{Binding GamemodeSelection.IsLabelVisible}"
-                       Content="{Binding GamemodeSelection.LabelContent}"/>
+                       Content="{Binding GamemodeSelection.LabelContent}"
+                       Style="{StaticResource SettingValue}"/>
             </Grid>
 
             <StackPanel Grid.Column="1"
@@ -224,7 +231,8 @@
                           Visibility="{Binding GamemodeOptionSelection.IsDropdownVisible}"
                           Style="{StaticResource StandardBlueDropdown}"/>
                 <Label Visibility="{Binding GamemodeOptionSelection.IsLabelVisible}"
-                       Content="{Binding GamemodeOptionSelection.LabelContent}"/>
+                       Content="{Binding GamemodeOptionSelection.LabelContent}"
+                       Style="{StaticResource SettingValue}"/>
             </Grid>
 
             <StackPanel Grid.Column="1"
@@ -242,7 +250,8 @@
                           Visibility="{Binding WeatherSelection.IsDropdownVisible}"
                           Style="{StaticResource StandardBlueDropdown}"/>
                 <Label Visibility="{Binding WeatherSelection.IsLabelVisible}"
-                       Content="{Binding WeatherSelection.LabelContent}"/>
+                       Content="{Binding WeatherSelection.LabelContent}"
+                       Style="{StaticResource SettingValue}"/>
             </Grid>
 
             <StackPanel Grid.Column="1"
@@ -260,7 +269,8 @@
                           Visibility="{Binding SupplySystemSelection.IsDropdownVisible}"
                           Style="{StaticResource StandardBlueDropdown}"/>
                 <Label Visibility="{Binding SupplySystemSelection.IsLabelVisible}"
-                       Content="{Binding SupplySystemSelection.LabelContent}"/>
+                       Content="{Binding SupplySystemSelection.LabelContent}"
+                       Style="{StaticResource SettingValue}"/>
             </Grid>
 
             <StackPanel Grid.Column="1"
@@ -278,7 +288,8 @@
                           Visibility="{Binding ModPackageSelection.IsDropdownVisible}"
                           Style="{StaticResource StandardBlueDropdown}"/>
                 <Label Visibility="{Binding ModPackageSelection.IsLabelVisible}"
-                       Content="{Binding ModPackageSelection.LabelContent}"/>
+                       Content="{Binding ModPackageSelection.LabelContent}"
+                       Style="{StaticResource SettingValue}"/>
             </Grid>
 
             <Button Grid.Column="1" 

@@ -42,7 +42,7 @@ namespace Battlegrounds.Game.Match {
                 File.WriteAllText(sessionScarFile, compiler.CompileSession(session));
 
                 // If supply system exists
-                if (session.Settings.GetValueOrDefault("sypply_system", false) is true) {
+                if (session.Settings.GetCastValueOrDefault("sypply_system", false) is true) {
 
                     // Get the supply file
                     string sessionSupplyScarFile = BattlegroundsInstance.GetRelativePath(BattlegroundsPaths.SESSION_FOLDER, "session_supply.scar");

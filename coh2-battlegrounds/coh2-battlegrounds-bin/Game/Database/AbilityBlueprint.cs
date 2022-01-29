@@ -159,14 +159,14 @@ namespace Battlegrounds.Game.Database {
                     _ => throw new NotImplementedException(prop)
                 };
             }
-            var fac = __lookup.GetValueOrDefault("Army", "NULL") is "NULL" ? null : Faction.FromName(__lookup.GetValueOrDefault("Army", "NULL"));
+            var fac = __lookup.GetCastValueOrDefault("Army", "NULL") is "NULL" ? null : Faction.FromName(__lookup.GetCastValueOrDefault("Army", "NULL"));
             var modguid = __lookup.ContainsKey("ModGUID") ? ModGuid.FromGuid(__lookup["ModGUID"] as string) : ModGuid.BaseGame;
-            BlueprintUID pbgid = new(__lookup.GetValueOrDefault("PBGID", 0ul), modguid);
-            return new(__lookup.GetValueOrDefault("Name", string.Empty), pbgid, fac,
-                __lookup.GetValueOrDefault("Cost", new CostExtension()),
-                __lookup.GetValueOrDefault("Display", new UIExtension()),
-                __lookup.GetValueOrDefault("Requirements", Array.Empty<RequirementExtension>()),
-                __lookup.GetValueOrDefault("Activation", AbilityActivation.none));
+            BlueprintUID pbgid = new(__lookup.GetCastValueOrDefault("PBGID", 0ul), modguid);
+            return new(__lookup.GetCastValueOrDefault("Name", string.Empty), pbgid, fac,
+                __lookup.GetCastValueOrDefault("Cost", new CostExtension()),
+                __lookup.GetCastValueOrDefault("Display", new UIExtension()),
+                __lookup.GetCastValueOrDefault("Requirements", Array.Empty<RequirementExtension>()),
+                __lookup.GetCastValueOrDefault("Activation", AbilityActivation.none));
         }
 
         public override void Write(Utf8JsonWriter writer, AbilityBlueprint value, JsonSerializerOptions options) 
