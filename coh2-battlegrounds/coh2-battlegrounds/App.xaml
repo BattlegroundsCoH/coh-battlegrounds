@@ -370,5 +370,24 @@
             </Setter>
         </Style>
 
+        <Style x:Key="StandardBlueGridViewHeader" TargetType="{x:Type GridViewColumnHeader}">
+            <Setter Property="IsHitTestVisible" Value="False"/>
+            <Setter Property="Background" Value="#334252"/>
+            <Setter Property="Foreground" Value="#d8dbde"/>
+        </Style>
+
+        <Style x:Key="StandardBlueListView" TargetType="{x:Type ListViewItem}">
+            <Style.Triggers>
+                <MultiTrigger>
+                    <MultiTrigger.Conditions>
+                        <Condition Property="IsSelected" Value="true"/>
+                        <Condition Property="Selector.IsSelectionActive" Value="true"/>
+                    </MultiTrigger.Conditions>
+                    <Setter Property="Background" Value="Pink" />
+                    <Setter Property="Template" Value="{StaticResource SelectedTemplate}"/>
+                </MultiTrigger>
+            </Style.Triggers>
+        </Style>
+
     </Application.Resources>
 </Application>
