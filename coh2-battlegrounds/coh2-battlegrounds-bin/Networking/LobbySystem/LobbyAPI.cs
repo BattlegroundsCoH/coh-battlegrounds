@@ -67,6 +67,12 @@ namespace Battlegrounds.Networking.LobbySystem {
 
         public event Action OnLobbyLaunchGame;
 
+        public event Action<ServerAPI> OnLobbyRequestCompany;
+
+        public event Action<ServerAPI> OnLobbyNotifyGamemode;
+
+        public event Action<ServerAPI> OnLobbyNotifyResults;
+
         private Action? OnLobbyCancelReceived;
 
         public LobbyAPI(bool isHost, SteamUser self, ServerConnection connection, ServerAPI serverAPI) {
@@ -233,6 +239,15 @@ namespace Battlegrounds.Networking.LobbySystem {
                 case "Notify.Launch":
                     this.OnLobbyLaunchGame?.Invoke();
                     break;
+                case "Request.Company":
+                    this.OnLobbyRequestCompany?.Invoke(this.ServerHandle);
+                    break;
+                case "Notify.Gamemode":
+                    this.OnLobbyNotifyGamemode?.Invoke(this.ServerHandle);
+                    break;
+                case "Notify.Results":
+                    this.OnLobbyNotifyResults?.Invoke(this.ServerHandle);
+                    break;
                 default:
                     Trace.WriteLine($"Unsupported API event: {message.StrMsg}", nameof(LobbyAPI));
                     break;
@@ -380,7 +395,9 @@ namespace Battlegrounds.Networking.LobbySystem {
         }
 
         public void RequestCompanyFiles(params ulong[] members) {
-
+            for (int i = 0; i < members.Length; i++) {
+                this.RemoteVoidCall("GetCompanyFile", members[i]);
+            }
         }
 
         public void ReleaseGamemode() {
