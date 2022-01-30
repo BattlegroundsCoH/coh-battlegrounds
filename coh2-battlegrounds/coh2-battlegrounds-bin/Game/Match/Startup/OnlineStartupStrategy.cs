@@ -111,17 +111,17 @@ namespace Battlegrounds.Game.Match.Startup {
             if (count > 0) {
 
                 // Log
-                this.OnFeedback(null, $"Received all company files.");
+                this.OnFeedback(null, $"Received *some* company files.");
 
             } else {
 
                 // Log
-                this.OnFeedback(null, $"Failed to receive one or more company files.");
+                this.OnFeedback(null, $"Failed to receive any company files.");
 
             }
 
             // Return success value;
-            return count == lobby.GetPlayerCount() - 1;
+            return count == lobby.GetPlayerCount(humansOnly: true) - 1;
 
         }
 

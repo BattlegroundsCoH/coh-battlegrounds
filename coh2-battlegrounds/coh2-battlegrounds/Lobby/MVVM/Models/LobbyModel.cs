@@ -306,6 +306,9 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
                 return;
             }
 
+            // Set lobby status here
+            this.m_handle.SetLobbyState(LobbyAPIStructs.LobbyState.Starting);
+
             // Get play model
             var play = PlayModelFactory.GetModel(this.m_handle, this.m_chatModel);
 
@@ -317,6 +320,7 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
         private void BeginMatch(IPlayModel model) {
 
             // Set lobby status here
+            this.m_handle.SetLobbyState(LobbyAPIStructs.LobbyState.Playing);
 
             // Play match
             model.Play(this.EndMatch);
@@ -326,6 +330,7 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
         private void EndMatch(IPlayModel model) {
 
             // Set lobby status here
+            this.m_handle.SetLobbyState(LobbyAPIStructs.LobbyState.InLobby);
 
         }
 

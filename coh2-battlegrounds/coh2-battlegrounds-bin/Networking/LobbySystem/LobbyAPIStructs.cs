@@ -113,6 +113,13 @@ namespace Battlegrounds.Networking.LobbySystem {
             public Dictionary<string, string> Settings { get; set; }
         }
 
+        public enum LobbyState {
+            None = 0,
+            InLobby = 1,
+            Starting = 2,
+            Playing = 3
+        }
+
     }
 
 }

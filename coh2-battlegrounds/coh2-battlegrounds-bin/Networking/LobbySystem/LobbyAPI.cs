@@ -31,11 +31,11 @@ namespace Battlegrounds.Networking.LobbySystem {
 
         public bool IsHost => this.m_isHost;
 
-        public LobbyTeam Allies => this.m_allies.GetCachedValue(() => this.GetTeam(0));
+        public LobbyTeam Allies => this.m_allies.GetCachedValue(() => this.GetTeam(0, RefreshInternalReference: false));
 
-        public LobbyTeam Axis => this.m_axis.GetCachedValue(() => this.GetTeam(1));
+        public LobbyTeam Axis => this.m_axis.GetCachedValue(() => this.GetTeam(1, RefreshInternalReference: false));
 
-        public LobbyTeam Observers => this.m_obs.GetCachedValue(() => this.GetTeam(2));
+        public LobbyTeam Observers => this.m_obs.GetCachedValue(() => this.GetTeam(2, RefreshInternalReference: false));
 
         public Dictionary<string, string> Settings => this.m_settings.GetCachedValue(this.GetSettings);
 
@@ -266,29 +266,63 @@ namespace Battlegrounds.Networking.LobbySystem {
             this.m_connection.Shutdown();
         }
 
-        public LobbyTeam GetTeam(int tid)
-            => RemoteCall<LobbyTeam>("GetTeam", tid); // TODO: Trigger team refresh invoked
+        public LobbyTeam GetTeam(int tid, bool RefreshInternalReference = true) {
+
+            // Assert range
+            if (tid is < 0 or > 2)
+                throw new ArgumentOutOfRangeException(nameof(tid), tid, $"Team ID must be in range 0 <= tid <= 2");
+
+            // Get team
+            var team = this.RemoteCall<LobbyTeam>("GetTeam", tid);
+            
+            // Invoke team update
+            this.OnLobbyTeamUpdate?.Invoke(team);
+
+            // Update private field
+            if (RefreshInternalReference) {
+                switch (tid) {
+                    case 0:
+                        this.m_allies.SetCachedValue(team);
+                        break;
+                    case 1:
+                        this.m_axis.SetCachedValue(team);
+                        break;
+                    case 2:
+                        this.m_obs.SetCachedValue(team);
+                        break;
+                    default:
+                        break;
+                }
+            }
+
+            // Return team
+            return team;
+
+        }
 
         public LobbyMember GetLobbyMember(ulong mid)
-            => RemoteCall<LobbyMember>("GetLobbyMember", mid);
+            => this.RemoteCall<LobbyMember>("GetLobbyMember", mid);
 
         public LobbyCompany GetCompany(ulong mid)
-            => RemoteCall<LobbyCompany>("GetCompany", mid);
+            => this.RemoteCall<LobbyCompany>("GetCompany", mid);
 
         public Dictionary<string, string> GetSettings()
-            => RemoteCall<Dictionary<string, string>>("GetSettings");
+            => this.RemoteCall<Dictionary<string, string>>("GetSettings");
 
         public uint GetPlayerCount(bool humansOnly = false)
-            => RemoteCall<uint>("GetPlayerCount", EncBool(humansOnly));
+            => this.RemoteCall<uint>("GetPlayerCount", EncBool(humansOnly));
 
         private static string EncBool(bool b) => b ? "1" : "0";
 
         public void SetCompany(int tid, int sid, LobbyCompany company) {
 
+            // Convert to str
             string strength = company.Strength.ToString(CultureInfo.InvariantCulture);
+            string auto = EncBool(company.IsAuto);
+            string none = EncBool(company.IsNone);
 
             // Invoke remotely
-            this.RemoteVoidCall("SetCompany", tid, sid, EncBool(company.IsAuto), EncBool(company.IsNone), company.Name, company.Army, strength, company.Specialisation);
+            this.RemoteVoidCall("SetCompany", tid, sid, auto, none, company.Name, company.Army, strength, company.Specialisation);
 
             // Trigger self update
             this.OnLobbyCompanyUpdate?.Invoke(tid, sid, company);
@@ -296,7 +330,7 @@ namespace Battlegrounds.Networking.LobbySystem {
         }
 
         public void MoveSlot(ulong mid, int tid, int sid)
-            => RemoteVoidCall("MoveSlot", mid, tid, sid);
+            => this.RemoteVoidCall("MoveSlot", mid, tid, sid);
 
         public void AddAI(int tid, int sid, int difficulty, LobbyCompany company) {
         
@@ -326,7 +360,7 @@ namespace Battlegrounds.Networking.LobbySystem {
         public void RemoveOccupant(int tid, int sid) {
             
             // Trigger remote call
-            RemoteVoidCall("RemoveOccupant", tid, sid);
+            this.RemoteVoidCall("RemoveOccupant", tid, sid);
 
             // Clear slot
             var t = tid == 0 ? this.m_allies : this.m_axis;
@@ -339,20 +373,32 @@ namespace Battlegrounds.Networking.LobbySystem {
         }
 
         public void LockSlot(int tid, int sid)
-            => RemoteVoidCall("LockSlot", tid, sid);
+            => this.RemoteVoidCall("LockSlot", tid, sid);
 
         public void UnlockSlot(int tid, int sid)
-            => RemoteVoidCall("UnlockSlot", tid, sid);
+            => this.RemoteVoidCall("UnlockSlot", tid, sid);
 
         public void GlobalChat(ulong mid, string msg)
-            => RemoteVoidCall("GlobalChat", mid, msg);
+            => this.RemoteVoidCall("GlobalChat", mid, msg);
 
         public void TeamChat(ulong mid, string msg)
-            => RemoteVoidCall("TeamChat", mid, msg);
+            => this.RemoteVoidCall("TeamChat", mid, msg);
 
         public void SetLobbySetting(string setting, string value) {
             if (this.m_isHost) {
-                RemoteVoidCall("SetLobbySetting", setting, value);
+                this.RemoteVoidCall("SetLobbySetting", setting, value);
+            }
+        }
+
+        public void SetLobbyState(LobbyState state) {
+            if (this.m_isHost) {
+                this.RemoteVoidCall("SetLobbyState", state switch {
+                    LobbyState.Playing => "SERVERSTATUS_PLAYING",
+                    LobbyState.InLobby => "SERVERSTATUS_IN_LOBBY",
+                    LobbyState.Starting => "SERVERSTATUS_STARTING",
+                    LobbyState.None => "SERVERSTATUS_NO_STATUS",
+                    _ => throw new ArgumentException($"Invalid lobby state value 'LobbyState.{state}'", nameof(state))
+                });
             }
         }
 

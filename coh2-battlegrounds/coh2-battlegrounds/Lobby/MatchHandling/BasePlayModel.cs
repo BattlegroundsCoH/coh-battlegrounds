@@ -126,8 +126,12 @@ internal abstract class BasePlayModel {
     }
 
     protected SessionParticipant CreateParticipantFromLobbyMember(LobbyAPIStructs.LobbyMember participant, ParticipantTeam team, ValRef<byte> count, ValRef<byte> index) {
+        
+        // Update indicies
         byte tIndex = index.Change(x => x++);
         byte pIndex = count.Change(x => x++);
+        
+        // Add participant based on role
         if (participant.Role is 3) {
             var aiCompany = participant.Company;
             var c = aiCompany.IsAuto ? null : PlayerCompanies.FromNameAndFaction(aiCompany.Name, Faction.FromName(aiCompany.Army));
@@ -138,6 +142,7 @@ internal abstract class BasePlayModel {
             }
             return new SessionParticipant(participant.DisplayName, participant.MemberID, null, team, tIndex, pIndex);
         }
+
     }
 
     protected void HandleStartupCancel(IStartupStrategy sender, object caller, string reason) {

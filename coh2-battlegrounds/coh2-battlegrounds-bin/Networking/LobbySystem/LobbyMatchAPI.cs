@@ -61,7 +61,7 @@ public class LobbyMatchAPI {
     }
 
     public LobbyPlayerCompanyFile GetPlayerCompany(ulong playerID)
-            => new LobbyPlayerCompanyFile(playerID, this.m_lobby.Self.ID == playerID ? throw new NotImplementedException() : this.m_api.DownloadCompany(playerID));
+            => new LobbyPlayerCompanyFile(playerID, this.m_lobby.Self.ID == playerID ? throw new InvalidOperationException() : this.m_api.DownloadCompany(playerID));
 
     public bool HasAllPlayerCompanies() {
 
@@ -74,7 +74,7 @@ public class LobbyMatchAPI {
                 var slot = team.Slots[i];
 
                 // If occupied but no company file available, return false.
-                if (slot.State == 1 && !this.m_api.PlayerHasCompany(slot.Occupant.MemberID)) {
+                if (slot.State == 1 && !(slot.IsSelf() || slot.IsAI()) && !this.m_api.PlayerHasCompany(slot.Occupant.MemberID)) {
                     return false;
                 }
 
