@@ -110,14 +110,11 @@ namespace Battlegrounds {
 
             private void ResolveDirectory(string pathID, string defaultPath) {
                 try {
-                    if (!this.Paths.TryGetValue(pathID, out string? cFolder) || !Directory.Exists(cFolder)) {
-                        if (string.IsNullOrEmpty(cFolder)) {
-                            cFolder = defaultPath;
-                            this.Paths.Add(pathID, cFolder);
-                        } else {
-                            this.Paths[pathID] = cFolder;
-                        }
-                        Directory.CreateDirectory(cFolder);
+                    bool found = this.Paths.TryGetValue(pathID, out string? folder);
+                    // If not found, found was not properly defined, or no longer exist, we create it
+                    if (!found || string.IsNullOrEmpty(folder) || !Directory.Exists(folder)) {
+                        this.Paths[pathID] = defaultPath;
+                        Directory.CreateDirectory(this.Paths[pathID]);
                     }
                 } catch (Exception e) {
                     Trace.WriteLine($"Failed to resolve directory \"{pathID}\"", nameof(BattlegroundsInstance));
