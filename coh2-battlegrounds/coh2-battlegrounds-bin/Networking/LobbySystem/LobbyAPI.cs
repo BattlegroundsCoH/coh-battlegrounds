@@ -469,6 +469,9 @@ namespace Battlegrounds.Networking.LobbySystem {
         }
 
         public void RequestCompanyFiles(params ulong[] members) {
+            if (members.Length == 0) {
+                members = this.Allies.Slots.Concat(this.Axis.Slots).Filter(x => x.IsOccupied && !x.IsSelf()).Map(x => x.Occupant.MemberID);
+            }
             for (int i = 0; i < members.Length; i++) {
                 this.RemoteVoidCall("GetCompanyFile", members[i]);
             }

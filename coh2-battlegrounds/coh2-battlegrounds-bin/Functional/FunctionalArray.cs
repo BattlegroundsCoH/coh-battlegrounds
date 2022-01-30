@@ -158,6 +158,20 @@ namespace Battlegrounds.Functional {
         }
 
         /// <summary>
+        /// Concatenate two arrays.
+        /// </summary>
+        /// <typeparam name="T">The type of the array.</typeparam>
+        /// <param name="array">The source array</param>
+        /// <param name="other">The array to concatenate with.</param>
+        /// <returns>A new array where the first elements are from <paramref name="array"/> and the last elements are from <paramref name="other"/>.</returns>
+        public static T[] Concat<T>(this T[] array, T[] other) {
+            T[] buffer = new T[array.Length + other.Length];
+            Array.Copy(array, buffer, array.Length);
+            Array.Copy(other, 0, buffer, array.Length, other.Length);
+            return buffer;
+        }
+
+        /// <summary>
         /// Pick a random element from array.
         /// </summary>
         /// <typeparam name="T">The type the elements in the array are of.</typeparam>

@@ -241,6 +241,9 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
 
         private void OnCompanyRequested(ServerAPI obj) {
 
+            // Log request
+            Trace.WriteLine("Received request to upload company file", nameof(LobbyModel));
+
             // Get self
             ulong selfid = this.m_handle.Self.ID;
             var self = this.m_handle.Allies.GetSlotOfMember(selfid) ?? this.m_handle.Axis.GetSlotOfMember(selfid);
@@ -264,6 +267,11 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
                 if (obj.UploadCompany(selfid, companyJson) is not UploadCompanyResult.UPLOAD_SUCCESS) {
                     Trace.WriteLine("Failed to upload company json file.", nameof(LobbyModel));
                 }
+
+            } else {
+
+                // Log request
+                Trace.WriteLine("Failed to find self-instance and cannot upload company file.", nameof(LobbyModel));
 
             }
 

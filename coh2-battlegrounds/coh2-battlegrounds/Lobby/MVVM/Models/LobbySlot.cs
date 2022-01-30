@@ -38,7 +38,7 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
             [string.Empty] = new BitmapImage(new Uri("pack://application:,,,/coh2-battlegrounds;component/Resources/app/army_icons/FactionLOCKED.png")),
         };
 
-        public event PropertyChangedEventHandler PropertyChanged;
+        public event PropertyChangedEventHandler? PropertyChanged;
 
         private LobbyCompanyItem m_selfCompanySelected;
         private readonly LobbyTeam m_teamModel;

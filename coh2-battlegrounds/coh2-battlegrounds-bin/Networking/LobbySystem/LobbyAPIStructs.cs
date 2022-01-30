@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Text.Json.Serialization;
 
 namespace Battlegrounds.Networking.LobbySystem {
 
@@ -9,7 +10,8 @@ namespace Battlegrounds.Networking.LobbySystem {
     public static class LobbyAPIStructs {
 
         public interface IAPIObject {
-            
+
+            [JsonIgnore]
             public LobbyAPI API { get; set; }
 
             [MemberNotNull(nameof(API))]
@@ -56,6 +58,10 @@ namespace Battlegrounds.Networking.LobbySystem {
             public byte State { get; set; }
             public LobbyMember? Occupant { get; set; }
             public LobbyAPI? API { get; set; }
+
+            [JsonIgnore]
+            [MemberNotNullWhen(true, nameof(Occupant))]
+            public bool IsOccupied => this.State == 1;
 
             public bool IsSelf() {
                 if (this.Occupant is LobbyMember mem) {

@@ -134,9 +134,9 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
 
             // Loop over slots and check if any valid
             for (int i = 0; i < slots.Length; i++) {
-                if (slots[i].State == 1) {
+                if (slots[i].IsOccupied) {
                     flag1 = true;
-                    if (slots[i].Occupant.Company.IsNone) {
+                    if (slots[i].Occupant.Company?.IsNone ?? true) {
                         flag2 = false;
                     } else {
                         flag2 = flag2 && true;
