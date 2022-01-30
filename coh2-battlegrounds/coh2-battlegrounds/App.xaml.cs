@@ -14,6 +14,7 @@ using BattlegroundsApp.Utilities;
 using BattlegroundsApp.Resources;
 using BattlegroundsApp.MVVM;
 using BattlegroundsApp.MVVM.Models;
+using System.Diagnostics.CodeAnalysis;
 
 namespace BattlegroundsApp {
 
@@ -22,21 +23,32 @@ namespace BattlegroundsApp {
     /// </summary>
     public partial class App : Application {
 
-        private static AppViewManager __viewManager;
-        private static ResourceHandler __handler;
-        private static Logger __logger;
+        private static AppViewManager? __viewManager;
+        private static ResourceHandler? __handler;
+        private static Logger? __logger;
 
-        private static LeftMenu __lmenu;
-        private static LobbyBrowserViewModel __lobbyBrowser;
+        private static LeftMenu? __lmenu;
+        private static LobbyBrowserViewModel? __lobbyBrowser;
 
-        public static ResourceHandler ResourceHandler => __handler;
+        [NotNull] // "never" null; and invalid operation is throw if it is...
+        public static ResourceHandler ResourceHandler 
+            => IsStarted ? __handler : throw new InvalidOperationException("Cannot get resource handler before application window has initialised.");
 
-        public static AppViewManager ViewManager => __viewManager;
+        [NotNull] // "never" null; and invalid operation is throw if it is...
+        public static AppViewManager ViewManager 
+            => IsStarted ? __viewManager : throw new InvalidOperationException("Cannot get view manager before application window has initialised.");
 
+        [MemberNotNullWhen(true, nameof(__viewManager), nameof(__logger), nameof(__handler))]
+        public static bool IsStarted { get; private set; }
+
+        [MemberNotNull(nameof(__viewManager), nameof(__logger), nameof(__handler))]
         private void App_Startup(object sender, StartupEventArgs e) {
 
             // Setup logger
             __logger = new();
+
+            // Verify
+            this.VerifyIntegrity();
 
             // Setup resource handler
             __handler = new();
@@ -66,9 +78,19 @@ namespace BattlegroundsApp {
             __viewManager = new(window);
             __viewManager.SetDisplay(AppDisplayState.LeftRight, __lmenu, __lobbyBrowser); // TODO: Replace browser with dashboard when dashboard is implemented
 
+            // Set as started
+            IsStarted = true;
+
             // Set main window and show
             this.MainWindow = window;
             this.MainWindow.Show();
+
+
+        }
+
+        private void VerifyIntegrity() {
+
+            // TODO: Verify we have the bare essentials to run (Otherwise faulty install)
 
         }
 
@@ -127,7 +149,12 @@ namespace BattlegroundsApp {
             }
         }
 
-        private void MainWindow_Closed(object sender, EventArgs e) {
+        private void MainWindow_Closed(object? sender, EventArgs e) {
+
+            // Nothing to do, we have not even started...
+            if (!IsStarted) {
+                return;
+            }
 
             // Save all changes
             BattlegroundsInstance.SaveInstance();
@@ -137,6 +164,9 @@ namespace BattlegroundsApp {
 
             // Save log
             __logger.SaveAndClose(0);
+
+            // Set started flag
+            IsStarted = false;
 
             // Exit
             Environment.Exit(0);

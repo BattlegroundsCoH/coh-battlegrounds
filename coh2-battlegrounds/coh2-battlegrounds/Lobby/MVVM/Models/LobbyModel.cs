@@ -43,12 +43,12 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
         private static readonly LocaleKey __playabilityAxisNoPlayers = new("LobbyView_StartMatchAxisNoPlayers");
 
         private readonly LobbyAPI m_handle;
-        private LobbyChatSpectatorModel m_chatModel;
-        private ModPackage m_package;
+        private LobbyChatSpectatorModel? m_chatModel;
+        private ModPackage? m_package;
         private bool m_hasSetDefaults;
         private LobbyDropdownModel[] m_settings;
 
-        public event PropertyChangedEventHandler PropertyChanged;
+        public event PropertyChangedEventHandler? PropertyChanged;
 
         public LobbyButtonModel EditCompany { get; }
 
@@ -56,7 +56,7 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
 
         public LobbyButtonModel StartMatch { get; }
 
-        public ImageSource SelectedMatchScenario { get; set; }
+        public ImageSource? SelectedMatchScenario { get; set; }
 
         public LobbyDropdownModel<LobbyScenarioItem> ScenarioSelection { get; }
 
@@ -244,7 +244,7 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
             // Get self
             ulong selfid = this.m_handle.Self.ID;
             var self = this.m_handle.Allies.GetSlotOfMember(selfid) ?? this.m_handle.Axis.GetSlotOfMember(selfid);
-            if (self is not null) {
+            if (self is not null && self.Occupant is not null) {
 
                 // Make sure there's a company
                 if (self.Occupant.Company is null) {
@@ -285,7 +285,7 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
         private void LeaveLobby() {
 
             // Show leave modal
-            App.ViewManager.GetModalControl().ShowModal(ModalDialog.CreateModal("Leave Lobby", "Are you sure you'd like to leave?", (sender, success, value) => {
+            App.ViewManager.GetModalControl()?.ShowModal(ModalDialog.CreateModal("Leave Lobby", "Are you sure you'd like to leave?", (sender, success, value) => {
                 if (success && value == ModalDialogResult.Confirm) {
 
                     // Leave lobby
@@ -302,9 +302,16 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
         private void BeginMatchSetup() {
 
             // If not host -> bail.
-            if (!this.m_handle.IsHost) {
+            if (!this.m_handle.IsHost)
                 return;
-            }
+
+            // Bail if no chat model
+            if (this.m_chatModel is null)
+                return;
+
+            // Bail if no package defined
+            if (this.m_package is null)
+                return; // TODO: Show error
 
             // Set lobby status here
             this.m_handle.SetLobbyState(LobbyAPIStructs.LobbyState.Starting);
@@ -313,7 +320,7 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
             var play = PlayModelFactory.GetModel(this.m_handle, this.m_chatModel);
 
             // prepare
-            play.Prepare(this.m_package, this.BeginMatch, x => this.EndMatch(x as IPlayModel));
+            play.Prepare(this.m_package, this.BeginMatch, x => this.EndMatch(x is IPlayModel y ? y : throw new ArgumentNullException()));
 
         }
 
@@ -372,7 +379,7 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
 
         }
 
-        private void TrySetMapSource(Scenario scenario, [CallerMemberName] string caller = "") {
+        private void TrySetMapSource(Scenario? scenario, [CallerMemberName] string caller = "") {
 
             // Set to default case
             this.SelectedMatchScenario = __mapNotFound;
@@ -438,6 +445,10 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
         }
 
         private void UpdateGamemodeAndOption(Scenario scenario) {
+
+            // Bail if no package defined
+            if (this.m_package is null)
+                return;
 
             // Get available gamemodes
             var guid = this.m_package.GamemodeGUID;
@@ -604,6 +615,12 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
             // Get slot
             var slot = team.Slots[slotID];
 
+            // Verify there's an occupant
+            if (slot.Interface.Occupant is null) {
+                Trace.WriteLine("Failed to set company of null occupant - OnCompanyChanged", nameof(LobbyModel));
+                return;
+            }
+
             // Set company and refresh
             slot.Interface.Occupant.Company = company;
             slot.RefreshCompany();
@@ -662,7 +679,7 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
             Application.Current.Dispatcher.Invoke(() => {
 
                 // Show leave modal
-                App.ViewManager.GetModalControl().ShowModal(ModalDialog.CreateModal(modalTitle, modalDesc, (sender, success, value) => {
+                App.ViewManager.GetModalControl()?.ShowModal(ModalDialog.CreateModal(modalTitle, modalDesc, (sender, success, value) => {
                     if (success && value == ModalDialogResult.Confirm) {
 
                         // Go back to browser view
