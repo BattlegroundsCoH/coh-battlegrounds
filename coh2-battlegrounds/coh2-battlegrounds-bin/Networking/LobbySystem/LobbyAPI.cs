@@ -184,6 +184,34 @@ namespace Battlegrounds.Networking.LobbySystem {
                     // Get call
                     var companyCall = GoMarshal.JsonUnmarshal<RemoteCallMessage>(message.Raw);
 
+                    // Get args
+                    bool parsed = int.TryParse(companyCall.Arguments[0], out int tid);
+                    parsed &= int.TryParse(companyCall.Arguments[1], out int sid);
+                    if (!parsed) {
+                        Trace.WriteLine($"Failed to parse '{companyCall.Arguments[0]}' or '{companyCall.Arguments[1]}' as integers", nameof(LobbyAPI));
+                        return;
+                    }
+
+                    // Get strength
+                    if (!float.TryParse(companyCall.Arguments[6], out float strength)) {
+                        Trace.WriteLine($"Failed to parse '{companyCall.Arguments[6]}' as float32", nameof(LobbyAPI));
+                        return;
+                    }
+
+                    // Create company
+                    var company = new LobbyCompany() {
+                        API = this,
+                        IsAuto = companyCall.Arguments[2] == "1",
+                        IsNone = companyCall.Arguments[3] == "1",
+                        Name = companyCall.Arguments[4],
+                        Army = companyCall.Arguments[5],
+                        Strength = strength,
+                        Specialisation = companyCall.Arguments[7]
+                    };
+
+                    // Invoke handler
+                    this.OnLobbyCompanyUpdate?.Invoke(tid, sid, company);
+
                     break;
                 case "Notify.Team":
 
