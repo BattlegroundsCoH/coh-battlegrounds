@@ -4,9 +4,381 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:BattlegroundsApp.MVVM.Views"
+             xmlns:converters="clr-namespace:BattlegroundsApp.Utilities.Converters"
+             xmlns:card="clr-namespace:BattlegroundsApp.Controls.CompanyBuilderControls"
+             xmlns:dropArea="clr-namespace:BattlegroundsApp.Controls.DropArea"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
+
+        <Grid.Resources>
+            <!-- Locale Converter -->
+            <converters:LocaleKeyToStringConverter x:Key="LocaleConvertor"/>
+        </Grid.Resources>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+        </Grid.RowDefinitions>
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="auto"/>
+            <ColumnDefinition Width="auto"/>
+            <ColumnDefinition Width="auto"/>
+            <ColumnDefinition Width="auto"/>
+            <ColumnDefinition Width="auto"/>
+            <ColumnDefinition Width="auto"/>
+            <ColumnDefinition Width="auto"/>
+            <ColumnDefinition Width="auto"/>
+        </Grid.ColumnDefinitions>
+        
+        <!-- Row 0 :: Company Name & Type -->
+        <StackPanel Grid.Row="0"
+                    Grid.Column="0"
+                    Margin="10"
+                    Orientation="Horizontal">
+
+            <TextBlock FontSize="28"
+                       FontWeight="Bold"
+                       Foreground="White">
+
+                <TextBlock.Text>
+                    <MultiBinding StringFormat="{}{0} [{1}]">
+                        <Binding Path="CompanyName"/>
+                        <Binding Path="CompanyType"/>
+                    </MultiBinding>
+                </TextBlock.Text>
+
+            </TextBlock>
+        </StackPanel>
+        
+        <!-- Row 1 :: Company Overview -->
+        <TabControl Grid.Row="1"
+                    Grid.Column="0"
+                    Margin="10">
             
+            <!-- UNITS -->
+            <TabItem Header="{Binding CompanyUnitsHeaderItem, Converter={StaticResource LocaleConvertor}}">
+
+                <TabControl>
+                    
+                    <!-- Infantry -->
+                    <TabItem Header="{Binding InfantryHeaderItem, Converter={StaticResource LocaleConvertor}}">
+                        <dropArea:DropArea AllowDrop="True"
+                                           Background="White"
+                                           BorderThickness="1.5"
+                                           BorderBrush="Black">
+                            
+                        </dropArea:DropArea>
+                    </TabItem>
+
+                    <!-- Support -->
+                    <TabItem Header="{Binding SupportHeaderItem, Converter={StaticResource LocaleConvertor}}">
+                        <dropArea:DropArea AllowDrop="True"
+                                           Background="White"
+                                           BorderThickness="1.5"
+                                           BorderBrush="Black">
+
+                        </dropArea:DropArea>
+                    </TabItem>
+
+                    <!-- Vehicles -->
+                    <TabItem Header="{Binding VehiclesHeaderItem, Converter={StaticResource LocaleConvertor}}">
+                        <dropArea:DropArea AllowDrop="True"
+                                           Background="White"
+                                           BorderThickness="1.5"
+                                           BorderBrush="Black">
+
+                        </dropArea:DropArea>
+                    </TabItem>
+                    
+                </TabControl>
+                
+            </TabItem>
+            
+            <!-- ABILITIES -->
+            <TabItem Header="{Binding CompanyAbilitiesHeaderItem, Converter={StaticResource LocaleConvertor}}">
+                <TabControl>
+
+                    <!-- Commander Abilities -->
+                    <TabItem Header="{Binding CommanderAbilitiesHeaderItem, Converter={StaticResource LocaleConvertor}}">
+                        <dropArea:DropArea AllowDrop="True"
+                                           Background="White"
+                                           BorderThickness="1.5"
+                                           BorderBrush="Black">
+
+                        </dropArea:DropArea>
+                    </TabItem>
+
+                    <!-- Unit Abilities -->
+                    <TabItem Header="{Binding UnitAbilitiesHeaderItem, Converter={StaticResource LocaleConvertor}}">
+                        <dropArea:DropArea AllowDrop="True"
+                                           Background="White"
+                                           BorderThickness="1.5"
+                                           BorderBrush="Black">
+
+                        </dropArea:DropArea>
+                    </TabItem>
+                    
+                </TabControl>
+            </TabItem>
+
+            <!-- INVENTORY -->
+            <TabItem Header="{Binding CompanyInventoryHeaderItem, Converter={StaticResource LocaleConvertor}}">
+                <ScrollViewer>
+                    <StackPanel>
+                        
+                        <StackPanel>
+                            <Label Content="{Binding CapturedItemsLabelContent, Converter={StaticResource LocaleConvertor}}"/>
+                            <Separator Margin="2.5"/>
+                            <WrapPanel x:Name="ItemWrap" Orientation="Horizontal"/>
+                            <Separator Margin="2.5"/>
+                        </StackPanel>
+
+                        <StackPanel>
+                            <Label Content="{Binding CapturedEquipmentLabelContent, Converter={StaticResource LocaleConvertor}}"/>
+                            <Separator Margin="2.5"/>
+                            <WrapPanel x:Name="EquipmentWrap" Orientation="Horizontal"/>
+                            <Separator Margin="2.5"/>
+                        </StackPanel>
+                        
+                    </StackPanel>
+                </ScrollViewer>
+            </TabItem>
+
+            <!-- STATS -->
+            <TabItem Header="{Binding CompanyStatsHeaderItem, Converter={StaticResource LocaleConvertor}}">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+
+                    <!-- Company Match History -->
+                    <Label Content="{Binding CompanyMatchHistoryLabelContent, Converter={StaticResource LocaleConvertor}}" 
+                           FontStyle="Italic"
+                           Grid.Row="0"
+                           Grid.Column="0" 
+                           Grid.ColumnSpan="6"/>
+
+                    <Label Content="{Binding CompanyVictoriesLabelContent, Converter={StaticResource LocaleConvertor}}"
+                           FontStyle="Italic"
+                           Grid.Row="1" 
+                           Grid.Column="0"/>
+                    
+                    <Label Content="0"
+                           FontStyle="Italic"
+                           Grid.Row="1"
+                           Grid.Column="1"
+                           HorizontalContentAlignment="Right"/>
+
+                    <Label Content="{Binding CompanyDefeatsLabelContent, Converter={StaticResource LocaleConvertor}}"
+                           FontStyle="Italic"
+                           Grid.Row="1"
+                           Grid.Column="2"/>
+                    
+                    <Label Content="0"
+                           FontStyle="Italic" 
+                           Grid.Row="1"
+                           Grid.Column="3"
+                           HorizontalContentAlignment="Right"/>
+
+                    <Label Content="{Binding CompanyTotalLabelContent, Converter={StaticResource LocaleConvertor}}"
+                           FontStyle="Italic"
+                           Grid.Row="1"
+                           Grid.Column="4"/>
+                    
+                    <Label Content="0" 
+                           FontStyle="Italic"
+                           Grid.Row="1" 
+                           Grid.Column="5" 
+                           HorizontalContentAlignment="Right"/>
+
+                    <!-- Company Experience -->
+                    <Label Content="{Binding CompanyExperienceLabelContent, Converter={StaticResource LocaleConvertor}}"
+                           FontStyle="Italic"
+                           Grid.Row="2"
+                           Grid.Column="0"
+                           Grid.ColumnSpan="6"/>
+
+                    <Label Content="{Binding CompanyInfantryLossesLabelContent, Converter={StaticResource LocaleConvertor}}"
+                           FontStyle="Italic"
+                           Grid.Row="3"
+                           Grid.Column="0"/>
+                    
+                    <Label Content="0"
+                           FontStyle="Italic" 
+                           Grid.Row="3"
+                           Grid.Column="1" 
+                           HorizontalContentAlignment="Right"/>
+
+                    <Label Content="{Binding CompanyVehicleLossesLabelContent, Converter={StaticResource LocaleConvertor}}" 
+                           FontStyle="Italic"
+                           Grid.Row="3"
+                           Grid.Column="2"/>
+                    
+                    <Label Content="0"
+                           FontStyle="Italic"
+                           Grid.Row="3"
+                           Grid.Column="3"
+                           HorizontalContentAlignment="Right"/>
+
+                    <Label Content="{Binding CompanyTotalLossesLabelContent, Converter={StaticResource LocaleConvertor}}" 
+                           FontStyle="Italic"
+                           Grid.Row="3"
+                           Grid.Column="4"/>
+                    
+                    <Label Content="0"
+                           FontStyle="Italic"
+                           Grid.Row="3"
+                           Grid.Column="5"
+                           HorizontalContentAlignment="Right"/>
+
+                    <!-- Company Rating -->
+                    <Label Content="{Binding CompanyRatingLabelContent, Converter={StaticResource LocaleConvertor}}"
+                           Grid.Row="5"
+                           Grid.Column="0"/>
+
+                    <Label Content="0" 
+                           Grid.Row="5" 
+                           Grid.Column="1"
+                           HorizontalContentAlignment="Right"/>
+
+                </Grid>
+            </TabItem>
+
+        </TabControl>
+        
+        <!-- Row 1 :: Save & Reset Buttons -->
+        <StackPanel Grid.Row="1"
+                    Grid.Column="2" 
+                    Orientation="Horizontal"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center">
+            
+            <Button x:Name="resetButton"
+                    Grid.Row="6"
+                    Grid.Column="1"
+                    Content="{Binding CompanyResetButtonContent, Converter={StaticResource LocaleConvertor}}"
+                    Margin="2.5" 
+                    Width="105"/>
+            
+            <Button x:Name="saveButton" 
+                    Grid.Row="6" 
+                    Grid.Column="0" 
+                    Content="{Binding CompanySaveButtonContent, Converter={StaticResource LocaleConvertor}}" 
+                    Margin="2.5" 
+                    Width="105"/>
+            
+        </StackPanel>
+
+        <!-- Row 2 :: Available Units -->
+        <DockPanel Grid.Row="2"
+                   Grid.Column="1" 
+                   LastChildFill="True"
+                   Visibility="{Binding AvailableUnitsVisible}">
+
+            <StackPanel DockPanel.Dock="Bottom"
+                        Name="CapturedItemsDroppableContainer">
+
+                <Label Content="{Binding CapturedItemsLabelContent, Converter={StaticResource LocaleConvertor}}"/>
+
+                <ScrollViewer CanContentScroll="False" 
+                               VerticalScrollBarVisibility="Visible">
+
+                    <StackPanel x:Name="AvailableItems"/>
+                    <!-- Use this to display captured items that can be 
+                    dragged onto squads to apply slot item-->
+
+                </ScrollViewer>
+            </StackPanel>
+
+            <ScrollViewer CanContentScroll="False"
+                          VerticalScrollBarVisibility="Visible">
+
+                <StackPanel x:Name="AvailableUnitsStack"/>
+
+            </ScrollViewer>
+
+        </DockPanel>
+
+        <!-- Row 2 :: Available Abilities -->
+        <DockPanel Grid.Row="2"
+                   Grid.Column="1" 
+                   LastChildFill="True"
+                   Visibility="{Binding AvailableAbilitiesVisible}">
+            
+            <ScrollViewer CanContentScroll="False" 
+                          VerticalScrollBarVisibility="Visible">
+                
+                <StackPanel x:Name="AvailableAbilities"/>
+                
+            </ScrollViewer>
+            
+        </DockPanel>
+
+        <!-- Row 2 :: Available Crews -->
+        <DockPanel Grid.Row="2" 
+                   Grid.Column="1" 
+                   LastChildFill="True"
+                   Visibility="{Binding AvailableCrewsVisible}">
+            
+            <ScrollViewer CanContentScroll="False" 
+                          VerticalScrollBarVisibility="Visible">
+                
+                <StackPanel x:Name="AvailableCrews"/>
+                
+            </ScrollViewer>
+            
+        </DockPanel>
+
+        <!-- Row 3 :: Hover Data -->
+        <StackPanel Grid.Row="3" 
+                    Grid.Column="2" 
+                    Name="HoverField"
+                    Margin="3.35"
+                    Visibility="{Binding Path=HoverDataVisiblity}">
+            
+            <StackPanel Orientation="Horizontal">
+                
+                <Image Width="48" 
+                       Height="48" 
+                       Source="{Binding Path=HoverData.Icon}"/>
+                
+                <TextBlock Text="{Binding Path=HoverData.Name}"/>
+                
+            </StackPanel>
+            
+            <TextBlock Text="{Binding Path=HoverData.Description}"
+                       TextWrapping="Wrap"/>
+            
+            <!-- Price -->
+            <card:CostControl x:Name="HoverDataCost"/>
+            
+        </StackPanel>
+        
+        <StackPanel Grid.Row="3" 
+                    Grid.Column="2"
+                    Visibility="{Binding Path=InverseHoverDataVisibility}">
+
+            <Label Content="{Binding CompanyNoUnitDataLabelContent, Converter={StaticResource LocaleConvertor}}"
+                   HorizontalContentAlignment="Center"
+                   VerticalContentAlignment="Center"/>
+
+        </StackPanel>
+
+
     </Grid>
 </UserControl>

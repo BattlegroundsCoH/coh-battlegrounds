@@ -63,6 +63,52 @@ public class CompanyBuilderViewModel : IViewModel {
 
     public string CompanyType { get; }
 
+    public LocaleKey CompanyUnitsHeaderItem { get; }
+
+    public LocaleKey CompanyAbilitiesHeaderItem { get; }
+
+    public LocaleKey CompanyInventoryHeaderItem { get; }
+
+    public LocaleKey CompanyStatsHeaderItem { get; }
+
+    public LocaleKey InfantryHeaderItem { get; }
+
+    public LocaleKey SupportHeaderItem { get; }
+
+    public LocaleKey VehiclesHeaderItem { get; }
+
+    public LocaleKey CommanderAbilitiesHeaderItem { get; }
+
+    public LocaleKey UnitAbilitiesHeaderItem { get; }
+
+    public LocaleKey CapturedItemsLabelContent { get; }
+
+    public LocaleKey CapturedEquipmentLabelContent { get; }
+
+    public LocaleKey CompanyMatchHistoryLabelContent { get; }
+
+    public LocaleKey CompanyVictoriesLabelContent { get; }
+
+    public LocaleKey CompanyDefeatsLabelContent { get; }
+
+    public LocaleKey CompanyTotalLabelContent { get; }
+
+    public LocaleKey CompanyExperienceLabelContent { get; }
+
+    public LocaleKey CompanyInfantryLossesLabelContent { get; }
+
+    public LocaleKey CompanyVehicleLossesLabelContent { get; }
+
+    public LocaleKey CompanyTotalLossesLabelContent { get; }
+
+    public LocaleKey CompanyRatingLabelContent { get; }
+
+    public LocaleKey CompanyResetButtonContent { get; }
+
+    public LocaleKey CompanySaveButtonContent { get; }
+
+    public LocaleKey CompanyNoUnitDataLabelContent { get; }
+
     public CompanyBuilderViewModel() {
 
         // Create save
@@ -82,6 +128,31 @@ public class CompanyBuilderViewModel : IViewModel {
             Click = new RelayCommand(this.BackButton),
             Text = new("")
         };
+
+        // Define locales
+        this.CompanyUnitsHeaderItem = new LocaleKey("CompanyBuilder_Units");
+        this.CompanyAbilitiesHeaderItem = new LocaleKey("CompanyBuilder_Abilities");
+        this.CompanyInventoryHeaderItem = new LocaleKey("CompanyBuilder_Inventory");
+        this.CompanyStatsHeaderItem = new LocaleKey("CompanyBuilder_Stats");
+        this.InfantryHeaderItem = new LocaleKey("CompanyBuilder_Infantry");
+        this.SupportHeaderItem = new LocaleKey("CompanyBuilder_Support");
+        this.VehiclesHeaderItem = new LocaleKey("CompanyBuilder_Vehicles");
+        this.CommanderAbilitiesHeaderItem = new LocaleKey("CompanyBuilder_CommanderAbilities");
+        this.UnitAbilitiesHeaderItem = new LocaleKey("CompanyBuilder_UnitAbilities");
+        this.CapturedItemsLabelContent = new LocaleKey("CompanyBuilder_CapturedItems");
+        this.CapturedEquipmentLabelContent = new LocaleKey("CompanyBuilder_CapturedEquipment");
+        this.CompanyMatchHistoryLabelContent = new LocaleKey("CompanyBuilder_CompanyMatchHistory");
+        this.CompanyVictoriesLabelContent = new LocaleKey("CompanyBuilder_CompanyVictories");
+        this.CompanyDefeatsLabelContent = new LocaleKey("CompanyBuilder_CompanyDefeats");
+        this.CompanyTotalLabelContent = new LocaleKey("CompanyBuilder_CompanyTotal");
+        this.CompanyExperienceLabelContent = new LocaleKey("CompanyBuilder_CompanyExperience");
+        this.CompanyInfantryLossesLabelContent = new LocaleKey("CompanyBuilder_CompanyInfantryLosses");
+        this.CompanyVehicleLossesLabelContent = new LocaleKey("CompanyBuilder_CompanyVehicleLosses");
+        this.CompanyTotalLossesLabelContent = new LocaleKey("CompanyBuilder_CompanyTotalLosses");
+        this.CompanyRatingLabelContent = new LocaleKey("CompanyBuilder_CompanyRating");
+        this.CompanyResetButtonContent = new LocaleKey("CompanyBuilder_Reset");
+        this.CompanySaveButtonContent = new LocaleKey("CompanyBuilder_Save");
+        this.CompanyNoUnitDataLabelContent = new LocaleKey("CompanyBuilder_NoUnitData");
 
     }
 
