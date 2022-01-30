@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 
 using Battlegrounds.Networking.Server;
 
@@ -42,21 +41,12 @@ public class LobbyMatchAPI {
 
     private readonly ServerAPI m_api;
     private readonly LobbyAPI m_lobby;
-    private readonly int m_humans;
-
-    private readonly HashSet<ulong> m_gamemodeReceived;
-    private readonly HashSet<ulong> m_resultsReceived;
 
     public LobbyMatchAPI(LobbyAPI api) {
         
         // Set internal refs
         this.m_api = api.ServerHandle;
         this.m_lobby = api;
-        this.m_humans = (int)this.m_lobby.GetPlayerCount();
-
-        // Create hash sets
-        this.m_gamemodeReceived = new();
-        this.m_resultsReceived = new();
 
     }
 

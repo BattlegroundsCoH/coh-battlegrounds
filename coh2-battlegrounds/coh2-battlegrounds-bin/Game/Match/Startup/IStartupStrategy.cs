@@ -7,7 +7,7 @@ namespace Battlegrounds.Game.Match.Startup {
     /// Handle for getting the local company.
     /// </summary>
     /// <returns>A <see cref="Company"/> instance.</returns>
-    public delegate Company LocalCompanyHandle();
+    public delegate Company? LocalCompanyHandle();
 
     /// <summary>
     /// Handle for collecting the <see cref="SessionInfo"/> instance to generate <see cref="Session"/> data from.

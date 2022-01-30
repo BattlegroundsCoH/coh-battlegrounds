@@ -1,25 +1,15 @@
-﻿using System.Diagnostics;
+﻿using System;
 using System.Windows;
 using System.Windows.Media;
 
-using Battlegrounds.Functional;
-using Battlegrounds.Game;
-using Battlegrounds.Game.Database;
-using Battlegrounds.Game.DataCompany;
-using Battlegrounds.Game.Gameplay;
-using Battlegrounds.Game.Match;
 using Battlegrounds.Game.Match.Analyze;
-using Battlegrounds.Game.Match.Composite;
 using Battlegrounds.Game.Match.Finalizer;
 using Battlegrounds.Game.Match.Play.Factory;
 using Battlegrounds.Game.Match.Startup;
 using Battlegrounds.Modding;
 using Battlegrounds.Networking.LobbySystem;
-using Battlegrounds.Util;
-using Battlegrounds.Verification;
 
 using BattlegroundsApp.Lobby.MVVM.Models;
-using BattlegroundsApp.LocalData;
 
 namespace BattlegroundsApp.Lobby.MatchHandling;
 
@@ -58,16 +48,20 @@ internal class SingleplayerModel : BasePlayModel, IPlayModel {
 
     public void Play(PlayOverHandler matchOver) {
 
+        // Ensure controller exists
+        if (this.m_controller is null)
+            throw new InvalidOperationException("Cannot invoke 'Play' until a controller instance has been defined.");
+
         // Set on complete handler
         this.m_controller.Complete += m => GameCompleteHandler(m, matchOver);
-        this.m_controller.Error += (o, r) => GameErrorHandler(o, r, matchOver);
+        this.m_controller.Error += (_, r) => GameErrorHandler(r, matchOver);
 
         // Begin match
         this.m_controller.Control();
 
     }
 
-    private void GameErrorHandler(object o, string r, PlayOverHandler matchOver) {
+    private void GameErrorHandler(string r, PlayOverHandler matchOver) {
 
         // Log error
         this.m_chat.SystemMessage($"Match Error - {r}", Colors.Red);

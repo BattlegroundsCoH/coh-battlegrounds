@@ -9,7 +9,6 @@ using Battlegrounds.Game.DataCompany;
 using Battlegrounds.Game.Match.Play;
 using Battlegrounds.Networking;
 using Battlegrounds.Networking.LobbySystem;
-using Battlegrounds.Online.Services;
 
 namespace Battlegrounds.Game.Match.Startup {
 
@@ -28,9 +27,9 @@ namespace Battlegrounds.Game.Match.Startup {
         /// </summary>
         public bool CancelledByHost { get; set; } = false;
 
-        private List<Company> m_playerCompanies;
+        private List<Company>? m_playerCompanies;
         private SessionInfo m_sessionInfo;
-        private Session m_session;
+        private Session? m_session;
 
         public OnlineStartupStrategy() {
             this.m_session = null;
@@ -39,7 +38,9 @@ namespace Battlegrounds.Game.Match.Startup {
         public override bool OnBegin(object caller) { // This can be cancelled by host as well by sending a self-message through the connection object.
 
             // Get managed lobby
-            LobbyAPI lobby = caller as LobbyAPI;
+            if (caller is not LobbyAPI lobby) {
+                return false;
+            }
 
             // Return result
             return lobby.StartMatch(this.StopMatchSeconds) && !this.CancelledByHost;
@@ -49,7 +50,9 @@ namespace Battlegrounds.Game.Match.Startup {
         public override bool OnPrepare(object caller) {
 
             // Get managed lobby
-            LobbyAPI lobby = caller as LobbyAPI;
+            if (caller is not LobbyAPI lobby) {
+                return false;
+            }
 
             // TODO: Check if local player is participating - if not, continue, otherwise, error out.
 
@@ -61,7 +64,9 @@ namespace Battlegrounds.Game.Match.Startup {
         public override bool OnCollectCompanies(object caller) {
 
             // Get managed lobby
-            LobbyAPI lobby = caller as LobbyAPI;
+            if (caller is not LobbyAPI lobby) {
+                return false;
+            }
 
             // Initialize variables
             this.m_playerCompanies = new List<Company>();
@@ -164,7 +169,9 @@ namespace Battlegrounds.Game.Match.Startup {
         public override bool OnCompile(object caller) {
 
             // Get managed lobby
-            LobbyAPI lobby = caller as LobbyAPI;
+            if (caller is not LobbyAPI lobby) {
+                return false;
+            }
 
             // Create compiler
             ISessionCompiler compiler = this.GetSessionCompiler();
@@ -218,7 +225,9 @@ namespace Battlegrounds.Game.Match.Startup {
         public override bool OnWaitForStart(object caller) { // Wait for all players to notify they've downloaded and installed the gamemode.
 
             // Get lobby
-            LobbyAPI lobby = caller as LobbyAPI;
+            if (caller is not LobbyAPI lobby) {
+                return false;
+            }
 
             // Tell context to launch
             lobby.LaunchMatch();

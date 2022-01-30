@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Battlegrounds.Networking.LobbySystem {
 
@@ -12,8 +9,12 @@ namespace Battlegrounds.Networking.LobbySystem {
     public static class LobbyAPIStructs {
 
         public interface IAPIObject {
+            
             public LobbyAPI API { get; set; }
+
+            [MemberNotNull(nameof(API))]
             public void SetAPI(LobbyAPI api);
+
         }
 
         public class LobbyCompany : IAPIObject {
@@ -24,9 +25,12 @@ namespace Battlegrounds.Networking.LobbySystem {
             public float Strength { get; set; }
             public string Specialisation { get; set; }
             public LobbyAPI API { get; set; }
+
+            [MemberNotNull(nameof(API))]
             public void SetAPI(LobbyAPI api) {
                 this.API = api;
             }
+
         }
 
         public class LobbyMember : IAPIObject {
@@ -35,20 +39,23 @@ namespace Battlegrounds.Networking.LobbySystem {
             public string DisplayName { get; set; }
             public int Role { get; set; }
             public int AILevel { get; set; }
-            public LobbyCompany Company { get; set; }
+            public LobbyCompany? Company { get; set; }
             public LobbyAPI API { get; set; }
+
+            [MemberNotNull(nameof(API))]
             public void SetAPI(LobbyAPI api) {
                 this.API = api;
                 this.Company.API = api;
             }
+
         }
 
         public class LobbySlot : IAPIObject {
 
             public int SlotID { get; set; }
             public byte State { get; set; }
-            public LobbyMember Occupant { get; set; }
-            public LobbyAPI API { get; set; }
+            public LobbyMember? Occupant { get; set; }
+            public LobbyAPI? API { get; set; }
 
             public bool IsSelf() {
                 if (this.Occupant is LobbyMember mem) {
@@ -63,6 +70,8 @@ namespace Battlegrounds.Networking.LobbySystem {
                 }
                 return false;
             }
+
+            [MemberNotNull(nameof(API))]
             public void SetAPI(LobbyAPI api) {
                 this.API = api;
                 this.Occupant?.SetAPI(api);
@@ -75,7 +84,9 @@ namespace Battlegrounds.Networking.LobbySystem {
             public LobbySlot[] Slots { get; set; }
             public int TeamID { get; set; }
             public int Capacity { get; set; }
-            public LobbyAPI API { get; set; }
+            public LobbyAPI? API { get; set; }
+
+            [MemberNotNull(nameof(API))]
             public void SetAPI(LobbyAPI api) {
                 this.API = api;
                 for (int i = 0; i < this.Slots.Length; i++) {
@@ -87,7 +98,7 @@ namespace Battlegrounds.Networking.LobbySystem {
                 return this.GetSlotOfMember(memberID) is not null;
             }
 
-            public LobbySlot GetSlotOfMember(ulong memberID) {
+            public LobbySlot? GetSlotOfMember(ulong memberID) {
                 for (int i = 0; i < this.Slots.Length; i++) {
                     if (this.Slots[i].State == 1 && this.Slots[i].Occupant?.MemberID == memberID) {
                         return this.Slots[i];

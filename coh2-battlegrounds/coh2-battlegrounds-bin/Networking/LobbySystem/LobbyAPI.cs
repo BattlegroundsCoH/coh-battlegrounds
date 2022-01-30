@@ -43,35 +43,35 @@ namespace Battlegrounds.Networking.LobbySystem {
 
         public SteamUser Self { get; }
 
-        public event Action<LobbyMessage> OnChatMessage;
+        public event Action<LobbyMessage>? OnChatMessage;
 
-        public event Action<ulong, string, string> OnSystemMessage;
+        public event Action<ulong, string, string>? OnSystemMessage;
 
-        public event Action OnLobbySelfUpdate;
+        public event Action? OnLobbySelfUpdate;
 
-        public event Action<LobbyTeam> OnLobbyTeamUpdate;
+        public event Action<LobbyTeam>? OnLobbyTeamUpdate;
 
-        public event Action<int, LobbySlot> OnLobbySlotUpdate;
+        public event Action<int, LobbySlot>? OnLobbySlotUpdate;
 
-        public event Action<int, int, LobbyMember> OnLobbyMemberUpdate;
+        public event Action<int, int, LobbyMember>? OnLobbyMemberUpdate;
 
-        public event Action<int, int, LobbyCompany> OnLobbyCompanyUpdate;
+        public event Action<int, int, LobbyCompany>? OnLobbyCompanyUpdate;
 
-        public event Action<string, string> OnLobbySettingUpdate;
+        public event Action<string, string>? OnLobbySettingUpdate;
 
-        public event Action<string> OnLobbyConnectionLost;
+        public event Action<string>? OnLobbyConnectionLost;
 
-        public event Action<ulong> OnLobbyCancelStartup;
+        public event Action<ulong>? OnLobbyCancelStartup;
 
-        public event Action OnLobbyBeginMatch;
+        public event Action? OnLobbyBeginMatch;
 
-        public event Action OnLobbyLaunchGame;
+        public event Action? OnLobbyLaunchGame;
 
-        public event Action<ServerAPI> OnLobbyRequestCompany;
+        public event Action<ServerAPI>? OnLobbyRequestCompany;
 
-        public event Action<ServerAPI> OnLobbyNotifyGamemode;
+        public event Action<ServerAPI>? OnLobbyNotifyGamemode;
 
-        public event Action<ServerAPI> OnLobbyNotifyResults;
+        public event Action<ServerAPI>? OnLobbyNotifyResults;
 
         private Action? OnLobbyCancelReceived;
 

@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media;
 
@@ -52,6 +53,10 @@ internal class OnlineModel : BasePlayModel, IPlayModel {
     }
 
     public void Play(PlayOverHandler matchOver) {
+
+        // Ensure controller exists
+        if (this.m_controller is null)
+            throw new InvalidOperationException("Cannot invoke 'Play' until a controller instance has been defined.");
 
         // Set on complete handler
         this.m_controller.Complete += m => GameCompleteHandler(m, matchOver);

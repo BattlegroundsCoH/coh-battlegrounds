@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
 using System.Windows.Media;
 
 using Battlegrounds.Functional;
@@ -28,20 +29,20 @@ internal abstract class BasePlayModel {
     protected readonly LobbyChatSpectatorModel m_chat;
 
     // The strategies to use
-    protected IStartupStrategy m_startupStrategy;
-    protected IAnalyzeStrategy m_matchAnalyzer;
-    protected IFinalizeStrategy m_finalizeStrategy;
+    protected IStartupStrategy? m_startupStrategy;
+    protected IAnalyzeStrategy? m_matchAnalyzer;
+    protected IFinalizeStrategy? m_finalizeStrategy;
 
     // Local prepared data
     protected SessionInfo m_info;
-    protected Company m_selfCompany;
+    protected Company? m_selfCompany;
 
     // The session handler
-    protected MultiplayerSession m_session;
-    protected MatchController m_controller;
+    protected MultiplayerSession? m_session;
+    protected MatchController? m_controller;
 
     // handlers for cancel/error cases
-    private PrepareCancelHandler m_prepCancelHandler;
+    private PrepareCancelHandler? m_prepCancelHandler;
 
     public BasePlayModel(LobbyAPI handler, LobbyChatSpectatorModel lobbyChat) {
 
@@ -52,6 +53,11 @@ internal abstract class BasePlayModel {
     }
 
     protected void BasePrepare(ModPackage modPackage, PrepareCancelHandler cancelHandler) {
+
+        // Error if not set up
+        if (this.m_startupStrategy is null) {
+            throw new InvalidOperationException("Failed to invoke 'BasePlayModel.BasePrepare'. Please make sure the startup strategy is set.");
+        }
 
         // Create settings
         this.CreateMatchInfo(modPackage);

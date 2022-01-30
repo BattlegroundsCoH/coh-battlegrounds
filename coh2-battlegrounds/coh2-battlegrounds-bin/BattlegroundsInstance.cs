@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Text.Json;
 
@@ -43,6 +44,7 @@ namespace Battlegrounds {
                 this.Paths = new Dictionary<string, string>();
                 this.LastPlayedGamemode = "Victory Points";
                 this.LastPlayedGamemodeSetting = 1;
+                this.LastPlayedScenario = string.Empty;
                 this.OtherOptions = new();
             }
 
@@ -108,7 +110,7 @@ namespace Battlegrounds {
 
             private void ResolveDirectory(string pathID, string defaultPath) {
                 try {
-                    if (!this.Paths.TryGetValue(pathID, out string cFolder) || !Directory.Exists(cFolder)) {
+                    if (!this.Paths.TryGetValue(pathID, out string? cFolder) || !Directory.Exists(cFolder)) {
                         if (string.IsNullOrEmpty(cFolder)) {
                             cFolder = defaultPath;
                             this.Paths.Add(pathID, cFolder);
@@ -129,7 +131,7 @@ namespace Battlegrounds {
             /// <param name="pathID"></param>
             /// <returns></returns>
             public string GetPath(string pathID) {
-                if (this.Paths.TryGetValue(pathID, out string path)) {
+                if (this.Paths.TryGetValue(pathID, out string? path)) {
                     return path;
                 } else {
                     throw new ArgumentException($"Invalid path ID \"{pathID}\"");
@@ -207,18 +209,32 @@ namespace Battlegrounds {
             => Path.Combine(__instance.GetPath(pathID), appendPath);
 
         /// <summary>
+        /// Static constructor
+        /// </summary>
+        static BattlegroundsInstance() {
+            LoadInstance();
+        }
+
+        /// <summary>
         /// Load the current instance data.
         /// </summary>
+        [MemberNotNull(nameof(__instance), nameof(__localeManagement), nameof(__rng))]
         public static void LoadInstance() {
 
+            // Make sure we do not run this again
+            if (__instance is not null && __localeManagement is not null && __rng is not null) {
+                return;
+            }
+
             // Load instance data
-            __instance = File.Exists("local.json").Then(() => JsonSerializer.Deserialize<InternalInstance>(File.ReadAllText("local.json"))).Else(_ => null);
-            if (__instance is null) {
+            var instance = File.Exists("local.json").Then(() => JsonSerializer.Deserialize<InternalInstance?>(File.ReadAllText("local.json"))).Else(_ => null);
+            if (instance is null) {
                 __instance = new InternalInstance();
                 __instance.ResolvePaths();
                 IsFirstRun = true;
             } else {
                 IsFirstRun = false;
+                __instance = instance;
                 __instance.ResolvePaths();
             }
 
@@ -251,7 +267,7 @@ namespace Battlegrounds {
         /// Save the currently stored data of this instance.
         /// </summary>
         public static void SaveInstance()
-            => File.WriteAllText("local.json", JsonSerializer.Serialize(__instance, new() { WriteIndented = true }));
+            => File.WriteAllText("local.json", JsonSerializer.Serialize(__instance, new JsonSerializerOptions() { WriteIndented = true }));
 
     }
 
