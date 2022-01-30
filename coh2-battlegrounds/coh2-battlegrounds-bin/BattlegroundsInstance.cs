@@ -227,7 +227,8 @@ namespace Battlegrounds {
             }
 
             // Load instance data
-            var instance = File.Exists("local.json").Then(() => JsonSerializer.Deserialize<InternalInstance?>(File.ReadAllText("local.json"))).Else(_ => null);
+            bool hasLocal = File.Exists("local.json");
+            var instance = hasLocal.Then(() => JsonSerializer.Deserialize<InternalInstance?>(File.ReadAllText("local.json"))).Else(_ => null);
             if (instance is null) {
                 __instance = new InternalInstance();
                 __instance.ResolvePaths();
