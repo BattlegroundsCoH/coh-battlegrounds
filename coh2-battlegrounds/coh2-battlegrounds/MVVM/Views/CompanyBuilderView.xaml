@@ -9,7 +9,7 @@
              xmlns:dropArea="clr-namespace:BattlegroundsApp.Controls.DropArea"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
-    <Grid>
+    <Grid Margin="10">
 
         <Grid.Resources>
             <!-- Locale Converter -->
@@ -17,6 +17,7 @@
         </Grid.Resources>
 
         <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
             <RowDefinition Height="auto"/>
             <RowDefinition Height="auto"/>
             <RowDefinition Height="auto"/>
@@ -36,8 +37,8 @@
         <!-- Row 0 :: Company Name & Type -->
         <StackPanel Grid.Row="0"
                     Grid.Column="0"
-                    Margin="10"
-                    Orientation="Horizontal">
+                    Orientation="Horizontal"
+                    Margin="0 0 0 25">
 
             <TextBlock FontSize="28"
                        FontWeight="Bold"
@@ -56,10 +57,12 @@
         <!-- Row 1 :: Company Overview -->
         <TabControl Grid.Row="1"
                     Grid.Column="0"
-                    Margin="10">
+                    Grid.RowSpan="3">
             
             <!-- UNITS -->
-            <TabItem Header="{Binding CompanyUnitsHeaderItem, Converter={StaticResource LocaleConvertor}}">
+            <TabItem Header="{Binding CompanyUnitsHeaderItem, Converter={StaticResource LocaleConvertor}}"
+                     Width="150"
+                     Height="35">
 
                 <TabControl>
                     
@@ -98,7 +101,10 @@
             </TabItem>
             
             <!-- ABILITIES -->
-            <TabItem Header="{Binding CompanyAbilitiesHeaderItem, Converter={StaticResource LocaleConvertor}}">
+            <TabItem Header="{Binding CompanyAbilitiesHeaderItem, Converter={StaticResource LocaleConvertor}}"
+                     Width="150"
+                     Height="35">
+                
                 <TabControl>
 
                     <!-- Commander Abilities -->
@@ -125,7 +131,10 @@
             </TabItem>
 
             <!-- INVENTORY -->
-            <TabItem Header="{Binding CompanyInventoryHeaderItem, Converter={StaticResource LocaleConvertor}}">
+            <TabItem Header="{Binding CompanyInventoryHeaderItem, Converter={StaticResource LocaleConvertor}}"
+                     Width="150"
+                     Height="35">
+                
                 <ScrollViewer>
                     <StackPanel>
                         
@@ -148,7 +157,10 @@
             </TabItem>
 
             <!-- STATS -->
-            <TabItem Header="{Binding CompanyStatsHeaderItem, Converter={StaticResource LocaleConvertor}}">
+            <TabItem Header="{Binding CompanyStatsHeaderItem, Converter={StaticResource LocaleConvertor}}"
+                     Width="150"
+                     Height="35">
+                
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
@@ -263,24 +275,20 @@
         
         <!-- Row 1 :: Save & Reset Buttons -->
         <StackPanel Grid.Row="1"
-                    Grid.Column="2" 
+                    Grid.Column="1" 
                     Orientation="Horizontal"
                     HorizontalAlignment="Center"
                     VerticalAlignment="Center">
             
             <Button x:Name="resetButton"
-                    Grid.Row="6"
-                    Grid.Column="1"
                     Content="{Binding CompanyResetButtonContent, Converter={StaticResource LocaleConvertor}}"
-                    Margin="2.5" 
-                    Width="105"/>
+                    Width="105"
+                    Height="35"/>
             
             <Button x:Name="saveButton" 
-                    Grid.Row="6" 
-                    Grid.Column="0" 
                     Content="{Binding CompanySaveButtonContent, Converter={StaticResource LocaleConvertor}}" 
-                    Margin="2.5" 
-                    Width="105"/>
+                    Width="105"
+                    Height="35"/>
             
         </StackPanel>
 
@@ -346,7 +354,7 @@
 
         <!-- Row 3 :: Hover Data -->
         <StackPanel Grid.Row="3" 
-                    Grid.Column="2" 
+                    Grid.Column="1" 
                     Name="HoverField"
                     Margin="3.35"
                     Visibility="{Binding Path=HoverDataVisiblity}">
@@ -370,7 +378,7 @@
         </StackPanel>
         
         <StackPanel Grid.Row="3" 
-                    Grid.Column="2"
+                    Grid.Column="1"
                     Visibility="{Binding Path=InverseHoverDataVisibility}">
 
             <Label Content="{Binding CompanyNoUnitDataLabelContent, Converter={StaticResource LocaleConvertor}}"
