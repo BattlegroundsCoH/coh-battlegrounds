@@ -335,7 +335,7 @@ public class Company : IChecksumItem {
 
         // Select all relevant abilities
         var abps = uabps.Filter(x => this.m_squads.Any(y => y.SBP.Name == x.Blueprint))
-            .MapAndMerge(x => x.Abilities)
+            .MapAndFlatten(x => x.Abilities)
             .Map(x => (data: x, bp: BlueprintManager.FromBlueprintName<AbilityBlueprint>(x.Blueprint)))
             .Filter(x => x.bp is not null);
 
