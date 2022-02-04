@@ -3915,6 +3915,41 @@
             <param name="connection"></param>
             <param name="instanceHandler"></param>
         </member>
+        <member name="T:Battlegrounds.Networking.Server.APIException">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:Battlegrounds.Networking.Server.APIException.API">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Battlegrounds.Networking.Server.APIException.#ctor(System.String,System.String)">
+            <summary>
+            
+            </summary>
+            <param name="apicall"></param>
+            <param name="message"></param>
+        </member>
+        <member name="T:Battlegrounds.Networking.Server.UploadException">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Battlegrounds.Networking.Server.UploadException.#ctor(System.String)">
+            <summary>
+            
+            </summary>
+            <param name="api"></param>
+        </member>
+        <member name="M:Battlegrounds.Networking.Server.UploadException.#ctor(System.String,System.String)">
+            <summary>
+            
+            </summary>
+            <param name="api"></param>
+            <param name="serverMessage"></param>
+        </member>
         <member name="T:Battlegrounds.Networking.Server.ServerAPIResponseStringTranslator">
             <summary>
             Delegate function for translating server string values.
