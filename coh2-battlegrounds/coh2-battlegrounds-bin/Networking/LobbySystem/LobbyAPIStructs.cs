@@ -64,6 +64,9 @@ namespace Battlegrounds.Networking.LobbySystem {
             public bool IsOccupied => this.State == 1;
 
             public bool IsSelf() {
+                if (this.API is null) {
+                    return false;
+                }
                 if (this.Occupant is LobbyMember mem) {
                     return mem.MemberID == this.API.Self.ID;
                 }

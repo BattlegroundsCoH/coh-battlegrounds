@@ -87,9 +87,7 @@ public class LobbyMatchAPI {
             for (int i = 0; i < team.Slots.Length; i++) {
 
                 var slot = team.Slots[i];
-                if (slot.IsSelf())
-                    continue;
-                if (slot.IsAI())
+                if (slot.IsSelf() || slot.IsAI())
                     continue;
 
                 if (team.Slots[i].Occupant is LobbyAPIStructs.LobbyMember member) {
