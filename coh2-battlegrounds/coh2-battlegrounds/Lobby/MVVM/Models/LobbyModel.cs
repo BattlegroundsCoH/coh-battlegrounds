@@ -262,6 +262,10 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
 
                 // Get company json
                 string companyJson = CompanySerializer.GetCompanyAsJson(PlayerCompanies.FromNameAndFaction(companyName, faction), indent: false);
+                if (string.IsNullOrEmpty(companyJson)) {
+                    Trace.WriteLine($"Failed to upload company json file (Company '{companyName}' not found).", nameof(LobbyModel));
+                    return;
+                }
 
                 // Upload file
                 if (obj.UploadCompany(selfid, companyJson) is not UploadCompanyResult.UPLOAD_SUCCESS) {
