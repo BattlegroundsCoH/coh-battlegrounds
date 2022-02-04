@@ -113,7 +113,7 @@ namespace Battlegrounds.Game.Match.Startup {
             });
 
             // Log depending on outcome
-            if (count > 0) {
+            if (count > 1) {
 
                 // Log
                 this.OnFeedback(null, $"Received *some* company files.");

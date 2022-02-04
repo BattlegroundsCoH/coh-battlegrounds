@@ -89,6 +89,7 @@ namespace Battlegrounds.Compiler {
 
         public Dictionary<string, object> CompileToLua(Company company, bool isAIPlayer, byte indexOnTeam) {
 
+            // Grab units
             var units = company.Units;
             Array.Sort(units, (a, b) => this.CompareUnit(a, b));
 
