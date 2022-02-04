@@ -118,15 +118,18 @@ namespace Battlegrounds.Game.Match.Startup {
                 // Log
                 this.OnFeedback(null, $"Received *some* company files.");
 
+                // Return success value;
+                return count == lobby.GetPlayerCount(humansOnly: true) - 1;
+
             } else {
 
                 // Log
                 this.OnFeedback(null, $"Failed to receive any company files.");
 
-            }
+                // Bail
+                return false;
 
-            // Return success value;
-            return count == lobby.GetPlayerCount(humansOnly: true) - 1;
+            }
 
         }
 
