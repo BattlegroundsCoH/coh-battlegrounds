@@ -4048,7 +4048,7 @@
             </summary>
             <param name="lobbyGuid">The GUID of the lobby.</param>
             <param name="playerID">The ID of the player who owns the desired company.</param>
-            <returns><see langword="null"/> if no company was found; Otherwise the json representation of the company.</returns>
+            <returns>The empty string if no company was found; Otherwise the json representation of the company.</returns>
             <exception cref="T:Battlegrounds.Networking.Server.DownloadException"/>
         </member>
         <member name="M:Battlegrounds.Networking.Server.ServerAPI.DownloadCompany(System.UInt64)">

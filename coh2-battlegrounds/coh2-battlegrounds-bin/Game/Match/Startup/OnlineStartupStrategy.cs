@@ -83,9 +83,32 @@ namespace Battlegrounds.Game.Match.Startup {
             // Attempt counter
             DateTime time = DateTime.Now;
 
+            // Flag to determine if all player companies were received.
+            bool allFlag = false;
+
             // Wait for all companies to be uploaded
-            while ((DateTime.Now - time).TotalSeconds < 5 && !context.HasAllPlayerCompanies()) {
+            while ((DateTime.Now - time).TotalSeconds < 5.0) {
+                allFlag = context.HasAllPlayerCompanies();
+                if (allFlag) {
+                    break;
+                }
                 Thread.Sleep(100);
+            }
+
+            // If still false -> Bail
+            if (!allFlag) {
+
+                // Log
+                this.OnFeedback(null, $"Server reported not all players uploaded company file.");
+
+                // Halt method execution here
+                return false;
+
+            } else {
+
+                // Log
+                Trace.WriteLine($"Server reported all company files uploaded within {(DateTime.Now-time).TotalSeconds:0.00}s.", nameof(OnlineStartupStrategy));
+
             }
 
             // Collect companies

@@ -63,8 +63,11 @@ public class LobbyMatchAPI {
                 // Get slot at index
                 var slot = team.Slots[i];
 
+                // Flag if consider
+                var considerable = slot.IsOccupied && !slot.IsSelf() && !slot.IsAI();
+
                 // If occupied but no company file available, return false.
-                if (slot.State == 1 && !(slot.IsSelf() || slot.IsAI()) && !this.m_api.PlayerHasCompany(slot.Occupant.MemberID)) {
+                if (considerable && !this.m_api.PlayerHasCompany(slot.Occupant.MemberID)) {
                     return false;
                 }
 
