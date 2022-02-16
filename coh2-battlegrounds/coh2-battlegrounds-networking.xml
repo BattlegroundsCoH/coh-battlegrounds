@@ -3950,6 +3950,24 @@
             <param name="api"></param>
             <param name="serverMessage"></param>
         </member>
+        <member name="T:Battlegrounds.Networking.Server.DownloadException">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Battlegrounds.Networking.Server.DownloadException.#ctor(System.String)">
+            <summary>
+            
+            </summary>
+            <param name="api"></param>
+        </member>
+        <member name="M:Battlegrounds.Networking.Server.DownloadException.#ctor(System.String,System.String)">
+            <summary>
+            
+            </summary>
+            <param name="api"></param>
+            <param name="serverMessage"></param>
+        </member>
         <member name="T:Battlegrounds.Networking.Server.ServerAPIResponseStringTranslator">
             <summary>
             Delegate function for translating server string values.
@@ -4013,6 +4031,7 @@
             <param name="playerID">The player who owns the company.</param>
             <param name="jsonContent">The json content of the company.</param>
             <returns>If upload was successful, <see cref="F:Battlegrounds.Networking.Server.UploadCompanyResult.UPLOAD_SUCCESS"/>; Otherwise a more descriptive message.</returns>
+            <exception cref="T:Battlegrounds.Networking.Server.UploadException"/>
         </member>
         <member name="M:Battlegrounds.Networking.Server.ServerAPI.UploadCompany(System.UInt64,System.String)">
             <summary>
@@ -4021,6 +4040,7 @@
             <param name="playerID">The player who owns the company.</param>
             <param name="jsonContent">The json content of the company.</param>
             <returns>If upload was successful, <see cref="F:Battlegrounds.Networking.Server.UploadCompanyResult.UPLOAD_SUCCESS"/>; Otherwise a more descriptive message.</returns>
+            <exception cref="T:Battlegrounds.Networking.Server.UploadException"/>
         </member>
         <member name="M:Battlegrounds.Networking.Server.ServerAPI.DownloadCompany(System.String,System.UInt64)">
             <summary>
@@ -4029,6 +4049,7 @@
             <param name="lobbyGuid">The GUID of the lobby.</param>
             <param name="playerID">The ID of the player who owns the desired company.</param>
             <returns><see langword="null"/> if no company was found; Otherwise the json representation of the company.</returns>
+            <exception cref="T:Battlegrounds.Networking.Server.DownloadException"/>
         </member>
         <member name="M:Battlegrounds.Networking.Server.ServerAPI.DownloadCompany(System.UInt64)">
             <summary>
@@ -4036,6 +4057,7 @@
             </summary>
             <param name="playerID">The ID of the player who owns the desired company.</param>
             <returns><see langword="null"/> if no company was found; Otherwise the json representation of the company.</returns>
+            <exception cref="T:Battlegrounds.Networking.Server.DownloadException"/>
         </member>
         <member name="M:Battlegrounds.Networking.Server.ServerAPI.PlayerHasCompany(System.String,System.UInt64)">
             <summary>
