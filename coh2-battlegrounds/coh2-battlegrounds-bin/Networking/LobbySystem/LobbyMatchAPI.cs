@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Diagnostics;
+using System.Text;
 
 using Battlegrounds.Networking.Server;
 
@@ -50,8 +52,17 @@ public class LobbyMatchAPI {
 
     }
 
-    public LobbyPlayerCompanyFile GetPlayerCompany(ulong playerID)
-            => new LobbyPlayerCompanyFile(playerID, this.m_lobby.Self.ID == playerID ? throw new InvalidOperationException() : this.m_api.DownloadCompany(playerID));
+    public LobbyPlayerCompanyFile GetPlayerCompany(ulong playerID) {
+        string companyFile = string.Empty;
+        this.m_api.DownloadCompany(playerID, (status, data) => {
+            if (status is DownloadResult.DOWNLOAD_SUCCESS) {
+                companyFile = Encoding.UTF8.GetString(data);
+            } else {
+                Trace.WriteLine($"Failed to get company of player {playerID} ({status}).", nameof(LobbyMatchAPI));
+            }
+        }); // .DownloadCompany is a blocking call!
+        return new(playerID, companyFile);
+    }
 
     public bool HasAllPlayerCompanies() {
 

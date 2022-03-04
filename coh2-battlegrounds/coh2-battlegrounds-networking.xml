@@ -931,7 +931,7 @@
             Get the <see cref="F:Battlegrounds.Networking.Communication.HttpGETResponseData.Content"/> parsed as a string.
             </summary>
         </member>
-        <member name="F:Battlegrounds.Networking.Communication.HttpGETResponseData.statusCode">
+        <member name="F:Battlegrounds.Networking.Communication.HttpGETResponseData.StatusCode">
             <summary>
             The received status code.
             </summary>
@@ -3976,6 +3976,20 @@
             <param name="propertyName">The property name storing the raw string value.</param>
             <returns>A translated string of the server-stored value.</returns>
         </member>
+        <member name="T:Battlegrounds.Networking.Server.ServerAPIUploadCallback">
+            <summary>
+            
+            </summary>
+            <param name="currentChunk"></param>
+            <param name="chunkCount"></param>
+        </member>
+        <member name="T:Battlegrounds.Networking.Server.ServerAPIDownloadCallback">
+            <summary>
+            
+            </summary>
+            <param name="result"></param>
+            <param name="downloadedData"></param>
+        </member>
         <member name="T:Battlegrounds.Networking.Server.ServerAPI">
             <summary>
             API instance for interacting with the server.
@@ -4023,41 +4037,41 @@
             <param name="lobbyGuid">The GUID of the lobby.</param>
             <returns>If lobby was returned, a <see cref="T:Battlegrounds.Networking.Server.ServerLobby"/> API representation; Otherwise <see langword="null"/>.</returns>
         </member>
-        <member name="M:Battlegrounds.Networking.Server.ServerAPI.UploadCompany(System.String,System.UInt64,System.String)">
+        <member name="M:Battlegrounds.Networking.Server.ServerAPI.UploadCompany(System.String,System.UInt64,System.String,Battlegrounds.Networking.Server.ServerAPIUploadCallback)">
             <summary>
             Upload company json data to specified lobby.
             </summary>
             <param name="lobbyGuid">The GUID of the lobby.</param>
             <param name="playerID">The player who owns the company.</param>
             <param name="jsonContent">The json content of the company.</param>
-            <returns>If upload was successful, <see cref="F:Battlegrounds.Networking.Server.UploadCompanyResult.UPLOAD_SUCCESS"/>; Otherwise a more descriptive message.</returns>
-            <exception cref="T:Battlegrounds.Networking.Server.UploadException"/>
+            <param name="callback">The callback function to update on upload progress. (Optional)</param>
+            <returns>A <see cref="T:Battlegrounds.Networking.Server.UploadResult"/> value describing the result of the upload operation.</returns>
         </member>
-        <member name="M:Battlegrounds.Networking.Server.ServerAPI.UploadCompany(System.UInt64,System.String)">
+        <member name="M:Battlegrounds.Networking.Server.ServerAPI.UploadCompany(System.UInt64,System.String,Battlegrounds.Networking.Server.ServerAPIUploadCallback)">
             <summary>
             Upload company json data to specified lobby.
             </summary>
             <param name="playerID">The player who owns the company.</param>
             <param name="jsonContent">The json content of the company.</param>
-            <returns>If upload was successful, <see cref="F:Battlegrounds.Networking.Server.UploadCompanyResult.UPLOAD_SUCCESS"/>; Otherwise a more descriptive message.</returns>
-            <exception cref="T:Battlegrounds.Networking.Server.UploadException"/>
+            <param name="callback">The callback function to update on upload progress. (Optional)</param>
+            <returns>A <see cref="T:Battlegrounds.Networking.Server.UploadResult"/> value describing the result of the upload operation.</returns>
         </member>
-        <member name="M:Battlegrounds.Networking.Server.ServerAPI.DownloadCompany(System.String,System.UInt64)">
+        <member name="M:Battlegrounds.Networking.Server.ServerAPI.DownloadCompany(System.String,System.UInt64,Battlegrounds.Networking.Server.ServerAPIDownloadCallback)">
             <summary>
             Download company file from lobby.
             </summary>
             <param name="lobbyGuid">The GUID of the lobby.</param>
             <param name="playerID">The ID of the player who owns the desired company.</param>
-            <returns>The empty string if no company was found; Otherwise the json representation of the company.</returns>
-            <exception cref="T:Battlegrounds.Networking.Server.DownloadException"/>
+            <param name="callback">The callback function to handle on successful download.</param>
+            <returns>A <see cref="T:Battlegrounds.Networking.Server.DownloadResult"/> value indicating the result of the download API call.</returns>
         </member>
-        <member name="M:Battlegrounds.Networking.Server.ServerAPI.DownloadCompany(System.UInt64)">
+        <member name="M:Battlegrounds.Networking.Server.ServerAPI.DownloadCompany(System.UInt64,Battlegrounds.Networking.Server.ServerAPIDownloadCallback)">
             <summary>
             Download company file from lobby.
             </summary>
             <param name="playerID">The ID of the player who owns the desired company.</param>
-            <returns><see langword="null"/> if no company was found; Otherwise the json representation of the company.</returns>
-            <exception cref="T:Battlegrounds.Networking.Server.DownloadException"/>
+            <param name="callback">The callback function to handle on successful download.</param>
+            <returns>A <see cref="T:Battlegrounds.Networking.Server.DownloadResult"/> value indicating the result of the download API call.</returns>
         </member>
         <member name="M:Battlegrounds.Networking.Server.ServerAPI.PlayerHasCompany(System.String,System.UInt64)">
             <summary>
@@ -4074,41 +4088,170 @@
             <param name="playerID">The ID of the player who owns the desired company.</param>
             <returns>If company exists true; Otherwise false.</returns>
         </member>
-        <member name="M:Battlegrounds.Networking.Server.ServerAPI.UploadGamemode(System.String,System.Byte[])">
+        <member name="M:Battlegrounds.Networking.Server.ServerAPI.UploadGamemode(System.String,System.Byte[],Battlegrounds.Networking.Server.ServerAPIUploadCallback)">
             <summary>
             Upload gamemode .sga file to lobby.
             </summary>
             <param name="lobbyGuid">The GUID of the lobby.</param>
             <param name="binary">The binary .sga contents</param>
-            <returns>If file was uploaded true; Otherwise false.</returns>
+            <param name="callback">The callback function to update on upload progress. (Optional)</param>
+            <returns>A <see cref="T:Battlegrounds.Networking.Server.UploadResult"/> value describing the result of the upload operation.</returns>
         </member>
-        <member name="M:Battlegrounds.Networking.Server.ServerAPI.UploadGamemode(System.Byte[])">
+        <member name="M:Battlegrounds.Networking.Server.ServerAPI.UploadGamemode(System.Byte[],Battlegrounds.Networking.Server.ServerAPIUploadCallback)">
             <summary>
             Upload gamemode .sga file to lobby.
             </summary>
             <param name="binary">The binary .sga contents</param>
-            <returns>If file was uploaded true; Otherwise false.</returns>
+            <param name="callback">The callback function to update on upload progress. (Optional)</param>
+            <returns>A <see cref="T:Battlegrounds.Networking.Server.UploadResult"/> value describing the result of the upload operation.</returns>
         </member>
-        <member name="M:Battlegrounds.Networking.Server.ServerAPI.DownloadGamemode(System.String,System.Byte[]@)">
+        <member name="M:Battlegrounds.Networking.Server.ServerAPI.DownloadGamemode(System.String,Battlegrounds.Networking.Server.ServerAPIDownloadCallback)">
             <summary>
             Download the uploaded gamemode file for the lobby.
             </summary>
             <param name="lobbyGuid">The GUID of the lobby.</param>
-            <param name="binary">The binary contents of the downloaded gamemode.</param>
-            <returns>If download was successful, true; Otherwise false.</returns>
+            <param name="callback">The callback function to handle on successful download.</param>
+            <returns>A <see cref="T:Battlegrounds.Networking.Server.DownloadResult"/> value indicating the result of the download API call.</returns>
         </member>
-        <member name="M:Battlegrounds.Networking.Server.ServerAPI.DownloadGamemode(System.Byte[]@)">
+        <member name="M:Battlegrounds.Networking.Server.ServerAPI.DownloadGamemode(Battlegrounds.Networking.Server.ServerAPIDownloadCallback)">
             <summary>
             Download the uploaded gamemode file for the lobby.
             </summary>
-            <param name="binary">The binary contents of the downloaded gamemode.</param>
-            <returns>If download was successful, true; Otherwise false.</returns>
+            <param name="callback">The callback function to handle on successful download.</param>
+            <returns>A <see cref="T:Battlegrounds.Networking.Server.DownloadResult"/> value indicating the result of the download API call.</returns>
         </member>
-        <member name="M:Battlegrounds.Networking.Server.ServerAPI.DownloadGamemodeFiles">
+        <member name="M:Battlegrounds.Networking.Server.ServerAPI.HasGamemode(System.String)">
             <summary>
-            Download all the files required for compiling a gamemode.
+            
             </summary>
-            <returns>An array of filedata containing the files to download.</returns>
+            <param name="lobbyGuid"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Battlegrounds.Networking.Server.ServerAPI.HasGamemode">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:Battlegrounds.Networking.Server.UploadResult">
+            <summary>
+            Enum describing the result of an upload file API call.
+            </summary>
+        </member>
+        <member name="F:Battlegrounds.Networking.Server.UploadResult.UPLOAD_SUCCESS">
+            <summary>
+            File was uploaded.
+            </summary>
+        </member>
+        <member name="F:Battlegrounds.Networking.Server.UploadResult.UPLOAD_INVALIDGUID">
+            <summary>
+            Request had invalid GUID.
+            </summary>
+        </member>
+        <member name="F:Battlegrounds.Networking.Server.UploadResult.UPLOAD_INVALIDPLAYER">
+            <summary>
+            Request had invalid player ID.
+            </summary>
+        </member>
+        <member name="F:Battlegrounds.Networking.Server.UploadResult.UPLOAD_MISSINGGUID">
+            <summary>
+            Request had no GUID.
+            </summary>
+        </member>
+        <member name="F:Battlegrounds.Networking.Server.UploadResult.UPLOAD_MISSINGPLAYER">
+            <summary>
+            Request had no Player ID.
+            </summary>
+        </member>
+        <member name="F:Battlegrounds.Networking.Server.UploadResult.UPLOAD_INVALIDFILETYPE">
+            <summary>
+            Attempt to upload invalid filetype.
+            </summary>
+        </member>
+        <member name="F:Battlegrounds.Networking.Server.UploadResult.UPLOAD_ACCESS_DENIED">
+            <summary>
+            Atttempt to upload file without proper access.
+            </summary>
+        </member>
+        <member name="F:Battlegrounds.Networking.Server.UploadResult.UPLOAD_ERROR_UNDEFINED">
+            <summary>
+            Upload failed for unknown reasons
+            </summary>
+        </member>
+        <member name="T:Battlegrounds.Networking.Server.DownloadResult">
+            <summary>
+            Enum describing the result of a download API call
+            </summary>
+        </member>
+        <member name="F:Battlegrounds.Networking.Server.DownloadResult.DOWNLOAD_SUCCESS">
+            <summary>
+            Requested file was successfully downloaded
+            </summary>
+        </member>
+        <member name="F:Battlegrounds.Networking.Server.DownloadResult.DOWNLOAD_INVALIDGUID">
+            <summary>
+            Request had invalid GUID.
+            </summary>
+        </member>
+        <member name="F:Battlegrounds.Networking.Server.DownloadResult.DOWNLOAD_INVALIDPLAYER">
+            <summary>
+            Request had invalid player ID.
+            </summary>
+        </member>
+        <member name="F:Battlegrounds.Networking.Server.DownloadResult.DOWNLOAD_MISSINGGUID">
+            <summary>
+            Request had no GUID.
+            </summary>
+        </member>
+        <member name="F:Battlegrounds.Networking.Server.DownloadResult.DOWNLOAD_MISSINGPLAYER">
+            <summary>
+            Request had no Player ID.
+            </summary>
+        </member>
+        <member name="F:Battlegrounds.Networking.Server.DownloadResult.DOWNLOAD_ACCESS_DENIED">
+            <summary>
+            Access was denied
+            </summary>
+        </member>
+        <member name="F:Battlegrounds.Networking.Server.DownloadResult.DOWNLOAD_ERROR_UNDEFINED">
+            <summary>
+            Unknown error occured
+            </summary>
+        </member>
+        <member name="T:Battlegrounds.Networking.Server.ServerMatchResultsOutcome">
+            <summary>
+            Enum describing the outcome of a match.
+            </summary>
+        </member>
+        <member name="F:Battlegrounds.Networking.Server.ServerMatchResultsOutcome.UNDEFINED">
+            <summary>
+            Outcome is unknown or undefined.
+            </summary>
+        </member>
+        <member name="F:Battlegrounds.Networking.Server.ServerMatchResultsOutcome.AXIS_WIN">
+            <summary>
+            Axis win (WEH or OKW)
+            </summary>
+        </member>
+        <member name="F:Battlegrounds.Networking.Server.ServerMatchResultsOutcome.ALLIES_WIN">
+            <summary>
+            Allied wis (AEF, UKF, or SOV)
+            </summary>
+        </member>
+        <member name="F:Battlegrounds.Networking.Server.ServerMatchResultsOutcome.NO_WIN">
+            <summary>
+            No winners => No losers
+            </summary>
+        </member>
+        <member name="F:Battlegrounds.Networking.Server.ServerMatchResultsOutcome.SCAR_ERROR">
+            <summary>
+            Fatal Scar Error occured
+            </summary>
+        </member>
+        <member name="F:Battlegrounds.Networking.Server.ServerMatchResultsOutcome.BUGSPLAT_ERROR">
+            <summary>
+            One or more parties crashed
+            </summary>
         </member>
         <member name="T:Battlegrounds.Networking.Server.ServerLobby">
             <summary>

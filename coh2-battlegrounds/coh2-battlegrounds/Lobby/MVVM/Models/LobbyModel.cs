@@ -6,6 +6,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media;
@@ -214,28 +215,49 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
 
         private void OnResultsReleased(ServerAPI obj) {
 
-            // Try download company json
-            if (obj.DownloadCompany(this.m_handle.Self.ID) is string companyJson) {
+            // Instruct download
+            Task.Run(() => {
+                obj.DownloadCompany(this.m_handle.Self.ID, (status, data) => {
+                    if (status is DownloadResult.DOWNLOAD_SUCCESS) {
 
-                // Load it
-                var company = CompanySerializer.GetCompanyFromJson(companyJson);
 
-                // Save it
-                PlayerCompanies.SaveCompany(company);
+                        // Load it
+                        var company = CompanySerializer.GetCompanyFromJson(Encoding.UTF8.GetString(data));
 
-            }
+                        // Save it
+                        PlayerCompanies.SaveCompany(company);
+
+
+                    } else {
+                        Trace.WriteLine($"Failed to download company results!", nameof(LobbyModel));
+                    }
+                });
+            });
 
         }
 
         private void OnGamemodeReleased(ServerAPI obj) {
 
-            // Download the gamemode file
-            if (obj.DownloadGamemode(out byte[] sgaData)) {
+            // Start background thread
+            Task.Run(() => {
 
-                // File sga to gamemode file
-                File.WriteAllBytes(WinconditionCompiler.GetArchivePath(), sgaData);
+                // Download
+                obj.DownloadGamemode((status, data) => {
 
-            }
+                    if (status is DownloadResult.DOWNLOAD_SUCCESS) {
+
+                        // File sga to gamemode file
+                        File.WriteAllBytes(WinconditionCompiler.GetArchivePath(), data);
+
+                    } else {
+
+                        Trace.WriteLine($"Failed to download gamemode! (E = {status})", nameof(LobbyModel));
+
+                    }
+
+                });
+
+            });
 
         }
 
@@ -268,7 +290,7 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
                 }
 
                 // Upload file
-                if (obj.UploadCompany(selfid, companyJson) is not UploadCompanyResult.UPLOAD_SUCCESS) {
+                if (obj.UploadCompany(selfid, companyJson, (a,b) => Trace.WriteLine($"Upload company progress {a}/{b}", nameof(LobbyModel))) is not UploadResult.UPLOAD_SUCCESS) {
                     Trace.WriteLine("Failed to upload company json file.", nameof(LobbyModel));
                 }
 

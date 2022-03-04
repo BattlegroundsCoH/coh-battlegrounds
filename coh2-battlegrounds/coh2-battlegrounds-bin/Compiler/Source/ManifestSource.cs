@@ -43,7 +43,7 @@ namespace Battlegrounds.Compiler.Source {
             };
 
             // Download the files
-            var files = this.m_api.DownloadGamemodeFiles();
+            /*var files = this.m_api.DownloadGamemodeFiles();
             for (int i = 0; i < files.Length; i++) {
 
                 // If scar file, add to scar entry
@@ -59,7 +59,7 @@ namespace Battlegrounds.Compiler.Source {
                     sourceFiles["gfx"].Add(new WinconditionSourceFile(files[i].filepath, files[i].filedata));
                 }
 
-            }
+            }*/
 
             return sourceFiles;
 
