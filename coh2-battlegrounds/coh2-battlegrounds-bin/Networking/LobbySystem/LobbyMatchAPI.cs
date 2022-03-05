@@ -78,8 +78,21 @@ public class LobbyMatchAPI {
                 var considerable = slot.IsOccupied && !slot.IsSelf() && !slot.IsAI();
 
                 // If occupied but no company file available, return false.
-                if (considerable && !this.m_api.PlayerHasCompany(slot.Occupant.MemberID)) {
-                    return false;
+                if (considerable) {
+
+                    // Grab occupant
+                    var occupant = slot.Occupant;
+                    if (occupant is null) {
+                        return false;
+                    }
+
+                    // Flag
+                    bool hasCompany = this.m_api.PlayerHasCompany(occupant.MemberID);
+                    Trace.WriteLine($"Companny Status of {occupant.MemberID} = {hasCompany}", nameof(LobbyMatchAPI));
+                    if (!hasCompany) {
+                        return false;
+                    }
+
                 }
 
             }
@@ -89,8 +102,15 @@ public class LobbyMatchAPI {
 
         }
 
+        // Get
+        var allies = All(this.m_lobby.Allies);
+        var axis = All(this.m_lobby.Axis);
+
+        // Log
+        Trace.WriteLine($"Has players uploaded company status [Allies = {allies}; Axis = {axis}]", nameof(LobbyMatchAPI));
+
         // Run 'All' on allies and axis team
-        return All(this.m_lobby.Allies) && All(this.m_lobby.Axis);
+        return allies && axis;
 
     }
 
