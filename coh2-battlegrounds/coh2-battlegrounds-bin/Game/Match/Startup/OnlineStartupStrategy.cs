@@ -128,30 +128,33 @@ namespace Battlegrounds.Game.Match.Startup {
                     // Log
                     Trace.WriteLine($"Downloaded company from user {x.playerID} titled '{company.Name}'", nameof(OnlineStartupStrategy));
 
-                } catch {
+                } catch (Exception e) {
 
                     // Log
                     Trace.WriteLine($"Failed to download company from user {x.playerID}.", nameof(OnlineStartupStrategy));
+                    Trace.WriteLine($"Exception says:\n{e}", nameof(OnlineStartupStrategy));
 
                 }
 
             });
 
-            // Log depending on outcome
-            if (count > 1) {
+            // Get human count:
+            uint humans = lobby.GetPlayerCount(humansOnly: true);
+
+            // Check if received all
+            if (count == humans - 1) {
 
                 // Log
-                this.OnFeedback(null, $"Received *some* company files.");
+                this.OnFeedback(null, $"Received all company files.");
 
-                // Return success value;
-                return count == lobby.GetPlayerCount(humansOnly: true) - 1;
+                return true;
 
             } else {
 
                 // Log
-                this.OnFeedback(null, $"Failed to receive any company files.");
+                this.OnFeedback(null, $"Failed to receive {(count > 0 ? "all" : "any")} company files.");
 
-                // Bail
+                // Return false => Error
                 return false;
 
             }
