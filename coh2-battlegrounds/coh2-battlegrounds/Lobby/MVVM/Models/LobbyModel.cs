@@ -272,7 +272,7 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
                         File.WriteAllBytes(WinconditionCompiler.GetArchivePath(), data);
 
                         // Set as true
-                        this.m_hasDownloadedGamemode = false;
+                        this.m_hasDownloadedGamemode = true;
 
                     } else {
 
