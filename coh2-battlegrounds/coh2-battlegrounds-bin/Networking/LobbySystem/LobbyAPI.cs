@@ -12,6 +12,7 @@ using Battlegrounds.Networking.Server;
 using Battlegrounds.Steam;
 
 using static Battlegrounds.Networking.LobbySystem.LobbyAPIStructs;
+using Battlegrounds.ErrorHandling.CommonExceptions;
 
 namespace Battlegrounds.Networking.LobbySystem {
     
@@ -21,8 +22,8 @@ namespace Battlegrounds.Networking.LobbySystem {
         private static readonly TimeZoneInfo __thisTimezone = TimeZoneInfo.Local;
 
         private readonly ServerConnection m_connection;
+        private readonly bool m_isHost;
         private volatile uint m_cidcntr;
-        private bool m_isHost;
 
         private readonly ObjectCache<LobbyTeam> m_allies;
         private readonly ObjectCache<LobbyTeam> m_axis;
@@ -283,7 +284,7 @@ namespace Battlegrounds.Networking.LobbySystem {
 
         }
 
-        private DateTime FromTimestamp(string stamp) {
+        private static DateTime FromTimestamp(string stamp) {
             string[] s = stamp.Split(':');
             int h = int.Parse(s[0]);
             int m = int.Parse(s[1]);
@@ -302,6 +303,9 @@ namespace Battlegrounds.Networking.LobbySystem {
 
             // Get team
             var team = this.RemoteCall<LobbyTeam>("GetTeam", tid);
+            if (team is null) {
+                throw new ObjectNotFoundException("Failed to find lobby team instance.");
+            }
             
             // Invoke team update
             this.OnLobbyTeamUpdate?.Invoke(team);
@@ -329,13 +333,13 @@ namespace Battlegrounds.Networking.LobbySystem {
         }
 
         public LobbyMember GetLobbyMember(ulong mid)
-            => this.RemoteCall<LobbyMember>("GetLobbyMember", mid);
+            => this.RemoteCall<LobbyMember>("GetLobbyMember", mid) ?? throw new ObjectNotFoundException("Failed to get valid lobby member instance.");
 
         public LobbyCompany GetCompany(ulong mid)
-            => this.RemoteCall<LobbyCompany>("GetCompany", mid);
+            => this.RemoteCall<LobbyCompany>("GetCompany", mid) ?? throw new ObjectNotFoundException("Failed to get valid company instance.");
 
         public Dictionary<string, string> GetSettings()
-            => this.RemoteCall<Dictionary<string, string>>("GetSettings");
+            => this.RemoteCall<Dictionary<string, string>>("GetSettings") ?? new Dictionary<string, string>();
 
         public uint GetPlayerCount(bool humansOnly = false)
             => this.RemoteCall<uint>("GetPlayerCount", EncBool(humansOnly));
@@ -470,7 +474,7 @@ namespace Battlegrounds.Networking.LobbySystem {
 
         public void RequestCompanyFiles(params ulong[] members) {
             if (members.Length == 0) {
-                members = this.Allies.Slots.Concat(this.Axis.Slots).Filter(x => x.IsOccupied && !x.IsSelf()).Map(x => x.Occupant.MemberID);
+                members = this.Allies.Slots.Concat(this.Axis.Slots).Filter(x => x.IsOccupied && !x.IsSelf()).Map(x => x.Occupant?.MemberID ?? 0);
             }
             for (int i = 0; i < members.Length; i++) {
                 this.RemoteVoidCall("GetCompanyFile", members[i]);
@@ -496,7 +500,7 @@ namespace Battlegrounds.Networking.LobbySystem {
             return func(raw, 0);
         }
 
-        private T RemoteCall<T>(string method, params object[] args) {
+        private T? RemoteCall<T>(string method, params object[] args) {
             
             // Create message
             Message msg = new Message() {

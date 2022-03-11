@@ -58,7 +58,7 @@ namespace Battlegrounds.Game.Match {
         /// </summary>
         /// <param name="steamID">The unique steam ID of the player to get the <see cref="Company"/> of.</param>
         /// <returns>The <see cref="Company"/> belonging to the player with given <paramref name="steamID"/>. Otherwise <see langword="null"/>.</returns>
-        Company GetPlayerCompany(ulong steamID);
+        Company? GetPlayerCompany(ulong steamID);
 
     }
 

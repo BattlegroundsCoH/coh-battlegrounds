@@ -28,7 +28,7 @@ namespace Battlegrounds.Game.Match {
 
         public RemoteSession(string session) => this.SessionID = Guid.Parse(session);
 
-        public Company GetPlayerCompany(ulong steamID) => null;
+        public Company? GetPlayerCompany(ulong steamID) => null;
 
         public ISessionParticipant[] GetParticipants() => throw new NotSupportedException();
 

@@ -994,6 +994,17 @@
             <param name="log">Should the runtime log this GET request.</param>
             <returns>A <see cref="T:Battlegrounds.Networking.Communication.HttpGETResponseData"/> instance containing the response to the request.</returns>
         </member>
+        <member name="M:Battlegrounds.Networking.Communication.HttpCom.DELETE(System.Net.Http.HttpClient,System.String,System.String,System.Int32,System.Boolean)">
+            <summary>
+            Send a DELETE request to <paramref name="address"/> using specified <paramref name="api"/> query string.
+            </summary>
+            <param name="client">The client to use for sending the request.</param>
+            <param name="address">The address of the server to send request to.</param>
+            <param name="api">The api to invoke with request.</param>
+            <param name="port">The specific port to use when sending the request.</param>
+            <param name="log">Should the runtime log this GET request.</param>
+            <returns>If server returns a success code, <see langword="true"/>; Otherwise <see langword="false"/>.</returns>
+        </member>
         <member name="T:Battlegrounds.Networking.Communication.HttpPayloadMessage">
             <summary>
             Represents a message in a <see cref="T:Battlegrounds.Networking.Communication.HttpPayload"/> object with raw key-value representation of the message.
@@ -4092,9 +4103,9 @@
         </member>
         <member name="M:Battlegrounds.Networking.Server.ServerAPI.UploadResults(Battlegrounds.Networking.Server.ServerMatchResults)">
             <summary>
-            
+            Upload results to the server.
             </summary>
-            <param name="matchResults"></param>
+            <param name="matchResults">Server match data to upload as results.</param>
         </member>
         <member name="M:Battlegrounds.Networking.Server.ServerAPI.GetLobby(System.String)">
             <summary>
@@ -4153,6 +4164,21 @@
             </summary>
             <param name="playerID">The ID of the player who owns the desired company.</param>
             <returns>If company exists true; Otherwise false.</returns>
+        </member>
+        <member name="M:Battlegrounds.Networking.Server.ServerAPI.DeleteCompany(System.String,System.UInt64)">
+            <summary>
+            Delete the server company file.
+            </summary>
+            <param name="lobbyGuid">The GUID of the lobby.</param>
+            <param name="playerID">The ID of the player who owns the desired company.</param>
+            <returns>If company was deleted, <see langword="true"/>; Otherwise <see langword="false"/>.</returns>
+        </member>
+        <member name="M:Battlegrounds.Networking.Server.ServerAPI.DeleteCompany(System.UInt64)">
+            <summary>
+            Delete the server company file.
+            </summary>
+            <param name="playerID">The ID of the player who owns the desired company.</param>
+            <returns>If company was deleted, <see langword="true"/>; Otherwise <see langword="false"/>.</returns>
         </member>
         <member name="M:Battlegrounds.Networking.Server.ServerAPI.UploadGamemode(System.String,System.Byte[],Battlegrounds.Networking.Server.ServerAPIUploadCallback)">
             <summary>
