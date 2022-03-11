@@ -2221,6 +2221,67 @@
             </summary>
             <param name="newValue">The new value to set as cached.</param>
         </member>
+        <member name="T:Battlegrounds.Networking.Memory.Slice`1">
+            <summary>
+            Represents a slice of an array from a start position to an end position.
+            </summary>
+            <typeparam name="T">The slice element type.</typeparam>
+        </member>
+        <member name="P:Battlegrounds.Networking.Memory.Slice`1.Length">
+            <summary>
+            Get the length of the slice.
+            </summary>
+        </member>
+        <member name="M:Battlegrounds.Networking.Memory.Slice`1.#ctor(`0[],System.Int32,System.Int32)">
+            <summary>
+            Initialise a new slice instance, slicing data from <paramref name="source"/> starting at <paramref name="startIndex"/> and ending at <paramref name="endIndex"/>.
+            </summary>
+            <param name="source">The source array to slice data from.</param>
+            <param name="startIndex">The index of the start position of the slice.</param>
+            <param name="endIndex">The end index of the slice.</param>
+            <exception cref="T:System.IndexOutOfRangeException"/>
+        </member>
+        <member name="P:Battlegrounds.Networking.Memory.Slice`1.Item(System.Int32)">
+            <summary>
+            Get or set element in slice.
+            </summary>
+            <param name="index">The index to pick element from.</param>
+            <returns>The element specified within the slice range.</returns>
+            <exception cref="T:System.IndexOutOfRangeException"></exception>
+        </member>
+        <member name="M:Battlegrounds.Networking.Memory.Slice`1.GetSlice">
+            <summary>
+            Get the slice as a new array.
+            </summary>
+            <returns>Fresh array containing elements from source array within slice range.</returns>
+        </member>
+        <member name="M:Battlegrounds.Networking.Memory.Slice`1.GetEnumerator">
+            <summary>
+            Returns an enumerator that enumerates through the <see cref="T:Battlegrounds.Networking.Memory.Slice`1"/>.
+            </summary>
+            <returns>An enumerator for the <see cref="T:Battlegrounds.Networking.Memory.Slice`1"/>.</returns>
+        </member>
+        <member name="M:Battlegrounds.Networking.Memory.Slice`1.op_Implicit(Battlegrounds.Networking.Memory.Slice{`0})~`0[]">
+            <summary>
+            Implicit conversion from slice to array.
+            </summary>
+            <param name="slice"></param>
+        </member>
+        <member name="T:Battlegrounds.Networking.Memory.Slicing">
+            <summary>
+            Static extension class for adding a .Slice to all array types.
+            </summary>
+        </member>
+        <member name="M:Battlegrounds.Networking.Memory.Slicing.Slice``1(``0[],System.Int32,System.Int32)">
+            <summary>
+            Create a new slice of an array from specified <paramref name="start"/> to <paramref name="end"/>.
+            </summary>
+            <typeparam name="T">The slice element type.</typeparam>
+            <param name="array">The array to slice data from.</param>
+            <param name="start">Start index of slice.</param>
+            <param name="end">End index of slice.</param>
+            <returns>A slice of the <paramref name="array"/>.</returns>
+        </member>
         <member name="T:Battlegrounds.Networking.Memory.ValueCacheChangedEventHandler`1">
             <summary>
             Event handler delegate for handling value changes in a <see cref="T:Battlegrounds.Networking.Memory.ValueCache`1"/> object.

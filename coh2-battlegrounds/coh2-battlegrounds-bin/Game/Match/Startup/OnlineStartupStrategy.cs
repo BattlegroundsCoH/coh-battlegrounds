@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Threading;
 
@@ -159,6 +160,10 @@ namespace Battlegrounds.Game.Match.Startup {
 
         public override bool OnCollectMatchInfo(object caller) {
 
+            // Ensure player companies have been collected
+            if (this.m_playerCompanies is null)
+                return false;
+
             // Invoke the external session info collector
             SessionInfo? info = this.SessionInfoCollector?.Invoke();
             if (info.HasValue) {
@@ -197,6 +202,12 @@ namespace Battlegrounds.Game.Match.Startup {
 
             // Get managed lobby
             if (caller is not LobbyAPI lobby) {
+                return false;
+            }
+
+            // If no session, we cannot compile
+            if (this.m_session is null) {
+                this.OnFeedback(caller, "No session object was created!");
                 return false;
             }
 
@@ -271,7 +282,21 @@ namespace Battlegrounds.Game.Match.Startup {
 
         }
 
-        public override bool OnStart(object caller, out IPlayStrategy playStrategy) { // Launch CoH2 with Overwatch strategy
+        public override bool OnStart(object caller, [NotNullWhen(true)] out IPlayStrategy? playStrategy) { // Launch CoH2 with Overwatch strategy
+
+            // Set play strategy to null
+            playStrategy = null;
+
+            // Ensure play strategy factory exists
+            if (this.PlayStrategyFactory is null) {
+                this.OnFeedback(caller, "No play strategy set...");
+                return false;
+            }
+
+            if (this.m_session is null) {
+                this.OnFeedback(caller, "No session object was created!");
+                return false;
+            }
 
             // Use the overwatch strategy (and launch).
             playStrategy = this.PlayStrategyFactory.CreateStrategy(this.m_session);

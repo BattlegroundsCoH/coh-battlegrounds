@@ -88,7 +88,7 @@ public class LobbyMatchAPI {
 
                     // Flag
                     bool hasCompany = this.m_api.PlayerHasCompany(occupant.MemberID);
-                    Trace.WriteLine($"Companny Status of {occupant.MemberID} = {hasCompany}", nameof(LobbyMatchAPI));
+                    Trace.WriteLine($"Company Status of {occupant.MemberID} = {hasCompany}", nameof(LobbyMatchAPI));
                     if (!hasCompany) {
                         return false;
                     }
