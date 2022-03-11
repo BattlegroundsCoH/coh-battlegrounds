@@ -2395,6 +2395,11 @@
             Get or set the local address
             </summary>
         </member>
+        <member name="P:Battlegrounds.Networking.NetworkInterface.SelfIdentifier">
+            <summary>
+            Get or set the self identifier
+            </summary>
+        </member>
         <member name="P:Battlegrounds.Networking.NetworkInterface.APIObject">
             <summary>
             Get the <see cref="T:Battlegrounds.Networking.Server.ServerAPI"/>.

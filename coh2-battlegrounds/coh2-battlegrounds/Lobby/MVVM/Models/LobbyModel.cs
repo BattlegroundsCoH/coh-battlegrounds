@@ -49,6 +49,8 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
         private bool m_hasSetDefaults;
         private LobbyDropdownModel[] m_settings;
 
+        private bool m_hasDownloadedGamemode = false;
+
         public event PropertyChangedEventHandler? PropertyChanged;
 
         public LobbyButtonModel EditCompany { get; }
@@ -199,7 +201,22 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
             // Create overwatch strategy
             var overwatch = new MemberOverwatchStrategy();
 
-            Task.Run(() => {
+            // Run task
+            Task.Run(async () => {
+
+                // Get time
+                DateTime time = DateTime.Now;
+
+                // Wait for gamemode
+                while (!this.m_hasDownloadedGamemode) {
+                    if ((DateTime.Now - time).TotalSeconds > 15.0) {
+                        if (this.m_chatModel is not null) {
+                            this.m_chatModel.SystemMessage($"Failed to download gamemode file!", Colors.Gray);
+                        }
+                        return;
+                    }
+                    await Task.Delay(100);
+                }
 
                 // Begin
                 overwatch.Launch();
@@ -207,7 +224,10 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
                 // Wait for exit
                 overwatch.WaitForExit();
 
-                // Do some more?
+                // set received to false (may need to do some checksum stuff here so clients can reconnect if needed)
+                this.m_hasDownloadedGamemode = false;
+
+                // TODO: Check for bugsplats etc. and report accordingly
 
             });
 
@@ -241,6 +261,8 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
             // Start background thread
             Task.Run(() => {
 
+                Trace.WriteLine("Starting download of gamemode.", nameof(LobbyModel));
+
                 // Download
                 obj.DownloadGamemode((status, data) => {
 
@@ -248,6 +270,9 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
 
                         // File sga to gamemode file
                         File.WriteAllBytes(WinconditionCompiler.GetArchivePath(), data);
+
+                        // Set as true
+                        this.m_hasDownloadedGamemode = false;
 
                     } else {
 

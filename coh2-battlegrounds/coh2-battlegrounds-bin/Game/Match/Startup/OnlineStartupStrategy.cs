@@ -89,12 +89,13 @@ namespace Battlegrounds.Game.Match.Startup {
             bool allFlag = false;
 
             // Wait for all companies to be uploaded
-            while ((DateTime.Now - time).TotalSeconds <= 5.0) {
+            while ((DateTime.Now - time).TotalSeconds <= 15.0) {
                 allFlag = context.HasAllPlayerCompanies();
                 if (allFlag) {
                     break;
                 }
-                Thread.Sleep(750);
+                Trace.WriteLine($"Not all companies delivered after {(DateTime.Now - time).TotalSeconds}s", nameof(OnlineStartupStrategy));
+                Thread.Sleep(1000);
             }
 
             // If still false -> Bail

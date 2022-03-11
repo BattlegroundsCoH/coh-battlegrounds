@@ -101,6 +101,9 @@ namespace BattlegroundsApp {
                 GetSteamUserWithPermission(window); // We don't so try and get one
             }
 
+            // Set network user
+            NetworkInterface.SelfIdentifier = BattlegroundsInstance.Steam.User.ID;
+
             // Trigger discord setup
             this.SetupDiscord();
 
