@@ -213,6 +213,7 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
                         if (this.m_chatModel is not null) {
                             this.m_chatModel.SystemMessage($"Failed to download gamemode file!", Colors.Gray);
                         }
+                        // TODO: Report to host
                         return;
                     }
                     await Task.Delay(100);
@@ -261,6 +262,7 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
             // Start background thread
             Task.Run(() => {
 
+                // Log download operation
                 Trace.WriteLine("Starting download of gamemode.", nameof(LobbyModel));
 
                 // Download
