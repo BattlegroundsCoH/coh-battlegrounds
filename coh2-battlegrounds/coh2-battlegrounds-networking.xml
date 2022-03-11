@@ -2400,12 +2400,12 @@
             Get the <see cref="T:Battlegrounds.Networking.Server.ServerAPI"/>.
             </summary>
         </member>
-        <member name="M:Battlegrounds.Networking.NetworkInterface.Setup">
+        <member name="M:Battlegrounds.Networking.NetworkInterface.Setup(System.Boolean)">
             <summary>
             Setup the network API.
             </summary>
         </member>
-        <member name="M:Battlegrounds.Networking.NetworkInterface.GetBestAddress">
+        <member name="M:Battlegrounds.Networking.NetworkInterface.GetBestAddress(System.Int32)">
             <summary>
             Get the best server address available.
             </summary>
