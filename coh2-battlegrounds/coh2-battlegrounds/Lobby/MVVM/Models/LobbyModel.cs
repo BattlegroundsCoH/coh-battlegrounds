@@ -91,10 +91,15 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
 
         public LocaleKey PackageLabel { get; } = new("LobbyView_SettingTuning");
 
+        public string LobbyTitle { get; }
+
         private LobbyModel(LobbyAPI handle, LobbyAPIStructs.LobbyTeam allies, LobbyAPIStructs.LobbyTeam axis) {
 
             // Set handler
             this.m_handle = handle;
+
+            // Set title
+            this.LobbyTitle = handle.Title;
 
             // Create teams
             this.Allies = new(allies);
@@ -193,6 +198,44 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
             this.m_handle.OnLobbyNotifyGamemode += this.OnGamemodeReleased;
             this.m_handle.OnLobbyNotifyResults += this.OnResultsReleased;
             this.m_handle.OnLobbyLaunchGame += this.OnLaunchGame;
+            this.m_handle.OnLobbyBeginMatch += this.OnMatchBegin;
+            this.m_handle.OnLobbyCancelStartup += this.OnMatchStartupCancelled;
+
+        }
+
+        private void OnMatchStartupCancelled(ulong cancelPlayerId) {
+
+            // TODO: Find user name from ID
+
+            // Inform user
+            if (this.m_chatModel is not null) {
+                this.m_chatModel.SystemMessage($"The match startup was cancelled", Colors.Gray);
+            }
+
+            // Invoke on GUI
+            Application.Current.Dispatcher.Invoke(() => {
+
+                // Allow exit lobby
+                this.ExitLobby.Enabled = true;
+
+            });
+
+        }
+
+        private void OnMatchBegin() {
+
+            // Inform user
+            if (this.m_chatModel is not null) {
+                this.m_chatModel.SystemMessage($"The match is starting", Colors.Gray);
+            }
+
+            // Invoke on GUI
+            Application.Current.Dispatcher.Invoke(() => {
+
+                // Allow exit lobby
+                this.ExitLobby.Enabled = false;
+
+            });
 
         }
 
@@ -219,6 +262,11 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
                     await Task.Delay(100);
                 }
 
+                // Inform user
+                if (this.m_chatModel is not null) {
+                    this.m_chatModel.SystemMessage($"Laucnhing game", Colors.Gray);
+                }
+
                 // Begin
                 overwatch.Launch();
 
@@ -239,8 +287,9 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
             // Instruct download
             Task.Run(() => {
                 obj.DownloadCompany(this.m_handle.Self.ID, (status, data) => {
-                    if (status is DownloadResult.DOWNLOAD_SUCCESS) {
 
+                    // Check status
+                    if (status is DownloadResult.DOWNLOAD_SUCCESS) {
 
                         // Load it
                         var company = CompanySerializer.GetCompanyFromJson(Encoding.UTF8.GetString(data));
@@ -248,10 +297,20 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
                         // Save it
                         PlayerCompanies.SaveCompany(company);
 
-
                     } else {
                         Trace.WriteLine($"Failed to download company results!", nameof(LobbyModel));
                     }
+
+
+                    // Invoke on GUI - now allow to leave
+                    Application.Current.Dispatcher.Invoke(() => {
+
+                        // Allow exit lobby
+                        this.ExitLobby.Enabled = true;
+
+                    });
+
+
                 });
             });
 
@@ -276,7 +335,17 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
                         // Set as true
                         this.m_hasDownloadedGamemode = true;
 
+                        // Inform user
+                        if (this.m_chatModel is not null) {
+                            this.m_chatModel.SystemMessage($"Gamemode downloaded", Colors.Gray);
+                        }
+
                     } else {
+
+                        // Inform user
+                        if (this.m_chatModel is not null) {
+                            this.m_chatModel.SystemMessage($"Failed to download gamemode", Colors.DarkRed);
+                        }
 
                         Trace.WriteLine($"Failed to download gamemode! (E = {status})", nameof(LobbyModel));
 
@@ -374,6 +443,9 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
             if (this.m_package is null)
                 return; // TODO: Show error
 
+            // Disallow exit lobby
+            this.ExitLobby.Enabled = false;
+
             // Set lobby status here
             this.m_handle.SetLobbyState(LobbyAPIStructs.LobbyState.Starting);
 
@@ -399,6 +471,9 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
 
             // Set lobby status here
             this.m_handle.SetLobbyState(LobbyAPIStructs.LobbyState.InLobby);
+
+            // Allow exit lobby
+            this.ExitLobby.Enabled = true;
 
         }
 
@@ -706,7 +781,9 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
                 // Loop over settings
                 for (int i = 0; i < this.m_settings.Length; i++) {
                     if (this.m_settings[i].DropdownID == key) {
-                        this.m_settings[i].LabelContent = value;
+
+                        // Set label value
+                        this.m_settings[i].LabelContent = this.GetRemoteSettingValue(key, value);
                         
                         // Update scenario preview if that is what was changed
                         if (this.m_settings[i].DropdownID == this.ScenarioSelection.DropdownID) {
@@ -723,6 +800,11 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
             });
 
         }
+
+        private string GetRemoteSettingValue(string key, string value) => key switch {
+            "selected_map" => GameLocale.GetString(ScenarioList.ScenarioNameFromRelativeFilename(value)),
+            _ => value
+        };
 
         private void OnConnectionLost(string reason) {
 

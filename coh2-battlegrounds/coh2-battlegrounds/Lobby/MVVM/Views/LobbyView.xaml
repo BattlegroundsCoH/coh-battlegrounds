@@ -48,8 +48,8 @@
             <ColumnDefinition Width="36"/>
             <ColumnDefinition Width="372"/>
         </Grid.ColumnDefinitions>
-        
-        <Label Content="Awesome Game Lobby"
+
+        <Label Content="{Binding LobbyTitle}"
                FontSize="28"
                Foreground="#ffffff"
                FontFamily="Open Sans"

@@ -2,6 +2,7 @@
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Windows;
 using System.Windows.Documents;
 using System.Windows.Input;
@@ -33,7 +34,7 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
         private readonly LocaleKey m_teamFilter;
         private readonly FontFamily m_font = new FontFamily("Open Sans");
 
-        public event PropertyChangedEventHandler PropertyChanged;
+        public event PropertyChangedEventHandler? PropertyChanged;
 
         public bool SingleInstanceOnly => false;
 
@@ -41,7 +42,7 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
 
         public ObservableCollection<string> Spectators { get; set; }
 
-        public FlowDocument MessageDocument { get; set; }
+        public FlowDocument? MessageDocument { get; set; }
 
         public LobbyDropdownModel<LobbyChannelModel> SendFilter { get; }
 
@@ -49,7 +50,7 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
 
         public EventCommand<KeyEventArgs> EnterKey { get; }
 
-        public string MessageContent { get; set; }
+        public string? MessageContent { get; set; }
 
         public LobbyChatSpectatorModel(LobbyAPI lobbyHandler) {
             
@@ -132,7 +133,7 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
             }
         }
 
-        public void Send(string content = null) {
+        public void Send(string? content = null) {
 
             // Set message content
             if (content is null) {
@@ -140,7 +141,7 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
             }
 
             // Trim content
-            content = content.Trim();
+            content = content?.Trim() ?? string.Empty;
 
             // Make sure there's actually content to send.
             if (string.IsNullOrWhiteSpace(content)) {
@@ -195,7 +196,7 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
             });
 
             // Add to message history
-            this.MessageDocument.Blocks.Add(p);
+            this.MessageDocument?.Blocks.Add(p);
 
         }
 
@@ -218,7 +219,7 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
                 });
 
                 // Add to message history
-                this.MessageDocument.Blocks.Add(p);
+                this.MessageDocument?.Blocks.Add(p);
 
             });
 

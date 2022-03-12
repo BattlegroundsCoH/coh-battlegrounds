@@ -74,7 +74,7 @@ namespace Battlegrounds.Game.Match.Startup {
             this.m_playerCompanies = new List<Company>();
 
             // Request companies
-            lobby.RequestCompanyFiles();
+            lobby.RequestCompanyFile();
 
             // Wait slightly
             Thread.Sleep(100);

@@ -5,8 +5,16 @@ using Battlegrounds.ErrorHandling.Networking;
 using Battlegrounds.Networking.Communication.Golang;
 using Battlegrounds.Networking.Communication.Connections;
 using Battlegrounds.Networking.Server;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Battlegrounds.Networking.LobbySystem {
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="isSuccess"></param>
+    /// <param name="api"></param>
+    public delegate void LobbyConnectCallback(bool isSuccess, LobbyAPI? api);
 
     /// <summary>
     /// 
@@ -20,7 +28,7 @@ namespace Battlegrounds.Networking.LobbySystem {
         /// <param name="lobbyName"></param>
         /// <param name="lobbyPassword"></param>
         /// <param name="onLobbyCreated"></param>
-        public static void HostLobby(ServerAPI serverAPI, string lobbyName, string lobbyPassword, Action<bool, LobbyAPI> onLobbyCreated) {
+        public static void HostLobby(ServerAPI serverAPI, string lobbyName, string lobbyPassword, LobbyConnectCallback onLobbyCreated) {
 
             // Get steam user
             var steamUser = BattlegroundsInstance.Steam.User;
@@ -32,7 +40,7 @@ namespace Battlegrounds.Networking.LobbySystem {
             bool success = false;
 
             // Define handlers
-            LobbyAPI handle = null;
+            LobbyAPI? handle = null;
 
             try {
 
@@ -53,7 +61,7 @@ namespace Battlegrounds.Networking.LobbySystem {
                 serverAPI.SetLobbyGuid(lobbyID);
                 
                 // Create handler
-                handle = new LobbyAPI(true, steamUser, connection, serverAPI);
+                handle = new LobbyAPI(true, lobbyName, steamUser, connection, serverAPI);
 
                 // Set success flag
                 success = true;
@@ -80,7 +88,14 @@ namespace Battlegrounds.Networking.LobbySystem {
 
         }
 
-        public static void JoinLobby(ServerAPI serverAPI, ServerLobby lobbyData, string password, Action<bool, LobbyAPI> onLobbyJoined) {
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="serverAPI"></param>
+        /// <param name="lobbyData"></param>
+        /// <param name="password"></param>
+        /// <param name="onLobbyJoined"></param>
+        public static void JoinLobby(ServerAPI serverAPI, ServerLobby lobbyData, string password, LobbyConnectCallback onLobbyJoined) {
 
             const string methoddb = $"{nameof(LobbyUtil)}::{nameof(JoinLobby)}";
 
@@ -94,7 +109,7 @@ namespace Battlegrounds.Networking.LobbySystem {
             bool success = false;
 
             // Define handler
-            LobbyAPI handle = null;
+            LobbyAPI? handle = null;
 
             try {
 
@@ -117,7 +132,7 @@ namespace Battlegrounds.Networking.LobbySystem {
                 serverAPI.SetLobbyGuid(lobbyID);
 
                 // Create handler
-                handle = new LobbyAPI(false, steamUser, connection, serverAPI);
+                handle = new LobbyAPI(false, lobbyData.Name, steamUser, connection, serverAPI);
 
                 // Set success flag
                 success = true;

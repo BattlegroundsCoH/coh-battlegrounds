@@ -30,6 +30,8 @@ namespace Battlegrounds.Networking.LobbySystem {
         private readonly ObjectCache<LobbyTeam> m_obs;
         private readonly ObjectCache<Dictionary<string, string>> m_settings;
 
+        public string Title { get; }
+
         public bool IsHost => this.m_isHost;
 
         public LobbyTeam Allies => this.m_allies.GetCachedValue(() => this.GetTeam(0, RefreshInternalReference: false));
@@ -76,7 +78,7 @@ namespace Battlegrounds.Networking.LobbySystem {
 
         private Action? OnLobbyCancelReceived;
 
-        public LobbyAPI(bool isHost, SteamUser self, ServerConnection connection, ServerAPI serverAPI) {
+        public LobbyAPI(bool isHost, string title, SteamUser self, ServerConnection connection, ServerAPI serverAPI) {
 
             // Store ref to server handle
             this.ServerHandle = serverAPI;
@@ -88,6 +90,9 @@ namespace Battlegrounds.Networking.LobbySystem {
 
             // Store self (id)
             this.Self = self;
+
+            // Store title
+            this.Title = title;
 
             // Add private hook
             this.m_connection.MessageReceived = this.OnMessage;
@@ -472,7 +477,7 @@ namespace Battlegrounds.Networking.LobbySystem {
             }
         }
 
-        public void RequestCompanyFiles(params ulong[] members) {
+        public void RequestCompanyFile(params ulong[] members) {
             if (members.Length == 0) {
                 members = this.Allies.Slots.Concat(this.Axis.Slots).Filter(x => x.IsOccupied && !x.IsSelf()).Map(x => x.Occupant?.MemberID ?? 0);
             }
