@@ -4,6 +4,8 @@
 
         bool SingleInstanceOnly { get; }
 
+        bool UnloadViewModel();
+
     }
 
 }

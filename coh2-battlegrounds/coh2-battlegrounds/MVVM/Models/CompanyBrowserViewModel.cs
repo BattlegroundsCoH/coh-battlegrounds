@@ -221,4 +221,6 @@ public class CompanyBrowserViewModel : IViewModel {
 
     }
 
+    public bool UnloadViewModel() => true;
+
 }

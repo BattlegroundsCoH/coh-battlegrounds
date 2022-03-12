@@ -36,7 +36,7 @@ public class CompanyBuilderViewModel : IViewModel {
         }
     }
 
-    public bool SingleInstanceOnly => true;
+    public bool SingleInstanceOnly => false; // This will allow us to override
 
     private int m_companySize;
     private int m_companyAbilityCount;
@@ -217,5 +217,7 @@ public class CompanyBuilderViewModel : IViewModel {
     private void ShowCompany() { 
     
     }
+
+    public bool UnloadViewModel() => true;
 
 }
