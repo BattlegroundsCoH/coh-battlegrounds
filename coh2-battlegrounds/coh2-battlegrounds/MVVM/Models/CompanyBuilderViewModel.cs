@@ -55,10 +55,9 @@ public class CompanyBuilderViewModel : IViewModel {
     public ObservableCollection<SquadSlotLarge> CompanyInfantrySquads { get; set; }
     public ObservableCollection<SquadSlotLarge> CompanySupportSquads { get; set; }
     public ObservableCollection<SquadSlotLarge> CompanyVehicleSquads { get; set; }
-    public ObservableCollection<AbilitySlot> CompanyAbilities;
-    public ObservableCollection<AbilitySlot> CompanyUnitAbilities;
-    public ObservableCollection<EquipmentSlot> CompanyItems;
-    public ObservableCollection<EquipmentSlot> CompanyEquipment;
+    public ObservableCollection<AbilitySlot> CompanyAbilities { get; set; }
+    public ObservableCollection<AbilitySlot> CompanyUnitAbilities { get; set; }
+    public ObservableCollection<EquipmentSlot> CompanyEquipment { get; set; }
 
     public CompanyBuilder Builder { get; }
     public bool CanAddUnits => this.Builder.CanAddUnit;
@@ -76,15 +75,13 @@ public class CompanyBuilderViewModel : IViewModel {
 
     public LocaleKey CompanyUnitsHeaderItem { get; }
     public LocaleKey CompanyAbilitiesHeaderItem { get; }
-    public LocaleKey CompanyInventoryHeaderItem { get; }
+    public LocaleKey CompanyStorageHeaderItem { get; }
     public LocaleKey CompanyStatsHeaderItem { get; }
     public LocaleKey InfantryHeaderItem { get; }
     public LocaleKey SupportHeaderItem { get; }
     public LocaleKey VehiclesHeaderItem { get; }
     public LocaleKey CommanderAbilitiesHeaderItem { get; }
     public LocaleKey UnitAbilitiesHeaderItem { get; }
-    public LocaleKey CapturedItemsLabelContent { get; }
-    public LocaleKey CapturedEquipmentLabelContent { get; }
     public LocaleKey CompanyMatchHistoryLabelContent { get; }
     public LocaleKey CompanyVictoriesLabelContent { get; }
     public LocaleKey CompanyDefeatsLabelContent { get; }
@@ -121,15 +118,13 @@ public class CompanyBuilderViewModel : IViewModel {
         // Define locales
         this.CompanyUnitsHeaderItem = new LocaleKey("CompanyBuilder_Units");
         this.CompanyAbilitiesHeaderItem = new LocaleKey("CompanyBuilder_Abilities");
-        this.CompanyInventoryHeaderItem = new LocaleKey("CompanyBuilder_Inventory");
+        this.CompanyStorageHeaderItem = new LocaleKey("CompanyBuilder_Storage");
         this.CompanyStatsHeaderItem = new LocaleKey("CompanyBuilder_Stats");
         this.InfantryHeaderItem = new LocaleKey("CompanyBuilder_Infantry");
         this.SupportHeaderItem = new LocaleKey("CompanyBuilder_Support");
         this.VehiclesHeaderItem = new LocaleKey("CompanyBuilder_Vehicles");
         this.CommanderAbilitiesHeaderItem = new LocaleKey("CompanyBuilder_CommanderAbilities");
         this.UnitAbilitiesHeaderItem = new LocaleKey("CompanyBuilder_UnitAbilities");
-        this.CapturedItemsLabelContent = new LocaleKey("CompanyBuilder_CapturedItems");
-        this.CapturedEquipmentLabelContent = new LocaleKey("CompanyBuilder_CapturedEquipment");
         this.CompanyMatchHistoryLabelContent = new LocaleKey("CompanyBuilder_CompanyMatchHistory");
         this.CompanyVictoriesLabelContent = new LocaleKey("CompanyBuilder_CompanyVictories");
         this.CompanyDefeatsLabelContent = new LocaleKey("CompanyBuilder_CompanyDefeats");
@@ -148,7 +143,6 @@ public class CompanyBuilderViewModel : IViewModel {
         this.CompanyVehicleSquads = new();
         this.CompanyAbilities = new();
         this.CompanyUnitAbilities = new();
-        this.CompanyItems = new();
         this.CompanyEquipment = new();
 
     }
@@ -251,7 +245,6 @@ public class CompanyBuilderViewModel : IViewModel {
         this.CompanyVehicleSquads.Clear();
         this.CompanyAbilities.Clear();
         this.CompanyUnitAbilities.Clear();
-        this.CompanyItems.Clear();
         this.CompanyEquipment.Clear();
 
         // Add all units
@@ -314,11 +307,7 @@ public class CompanyBuilderViewModel : IViewModel {
         equipmentSlot.OnRemove += this.OnEquipmentRemoveClicked;
         equipmentSlot.OnEquipped += this.EquipItem;
 
-        if (blueprint is SlotItemBlueprint) {
-            this.CompanyItems.Add(equipmentSlot);
-        } else {
-            this.CompanyEquipment.Add(equipmentSlot);
-        }
+        this.CompanyEquipment.Add(equipmentSlot);
 
     }
 
