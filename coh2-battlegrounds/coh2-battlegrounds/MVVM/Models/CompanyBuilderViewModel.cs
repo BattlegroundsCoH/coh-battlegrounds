@@ -52,9 +52,9 @@ public class CompanyBuilderViewModel : IViewModel {
     private List<SquadBlueprint> m_availableCrews;
     private List<AbilityBlueprint> m_abilities;
 
-    public ObservableCollection<SquadSlotLarge> CompanyInfantrySquads;
-    public ObservableCollection<SquadSlotLarge> CompanySupportSquads;
-    public ObservableCollection<SquadSlotLarge> CompanyVehicleSquads;
+    public ObservableCollection<SquadSlotLarge> CompanyInfantrySquads { get; set; }
+    public ObservableCollection<SquadSlotLarge> CompanySupportSquads { get; set; }
+    public ObservableCollection<SquadSlotLarge> CompanyVehicleSquads { get; set; }
     public ObservableCollection<AbilitySlot> CompanyAbilities;
     public ObservableCollection<AbilitySlot> CompanyUnitAbilities;
     public ObservableCollection<EquipmentSlot> CompanyItems;

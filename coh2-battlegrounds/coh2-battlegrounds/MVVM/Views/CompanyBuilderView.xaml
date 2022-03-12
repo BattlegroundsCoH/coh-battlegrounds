@@ -69,7 +69,8 @@
         <TabControl Grid.Row="1"
                     Grid.Column="0"
                     Grid.RowSpan="3"
-                    Style="{StaticResource CompanyBuilderMainTabControl}">
+                    Style="{StaticResource CompanyBuilderMainTabControl}"
+                    Width="800">
             
             <!-- UNITS -->
             <TabItem Header="{Binding CompanyUnitsHeaderItem, Converter={StaticResource LocaleAndCaseConvertor}}"
@@ -87,7 +88,18 @@
                                            Background="White"
                                            BorderThickness="1.5"
                                            BorderBrush="Black">
- 
+                            <ScrollViewer>
+                                <StackPanel>
+                                    <ItemsControl ItemsSource="{Binding CompanyInfantrySquads}">
+                                        <ItemsControl.ItemsPanel>
+                                            <ItemsPanelTemplate>
+                                                <WrapPanel Orientation="Horizontal"
+                                                           Width="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type TabControl}}, Path=ActualWidth}"/>
+                                            </ItemsPanelTemplate>
+                                        </ItemsControl.ItemsPanel>
+                                    </ItemsControl>
+                                </StackPanel>
+                            </ScrollViewer>
                         </dropArea:DropArea>
                     </TabItem>
 
@@ -99,7 +111,18 @@
                                            Background="White"
                                            BorderThickness="1.5"
                                            BorderBrush="Black">
-
+                            <ScrollViewer>
+                                <StackPanel>
+                                    <ItemsControl ItemsSource="{Binding CompanySupportSquads}">
+                                        <ItemsControl.ItemsPanel>
+                                            <ItemsPanelTemplate>
+                                                <WrapPanel Orientation="Horizontal"
+                                                           Width="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type TabControl}}, Path=ActualWidth}"/>
+                                            </ItemsPanelTemplate>
+                                        </ItemsControl.ItemsPanel>
+                                    </ItemsControl>
+                                </StackPanel>
+                            </ScrollViewer>
                         </dropArea:DropArea>
                     </TabItem>
 
@@ -111,7 +134,18 @@
                                            Background="White"
                                            BorderThickness="1.5"
                                            BorderBrush="Black">
-
+                            <ScrollViewer>
+                                <StackPanel>
+                                    <ItemsControl ItemsSource="{Binding CompanyVehicleSquads}">
+                                        <ItemsControl.ItemsPanel>
+                                            <ItemsPanelTemplate>
+                                                <WrapPanel Orientation="Horizontal"
+                                                           Width="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type TabControl}}, Path=ActualWidth}"/>
+                                            </ItemsPanelTemplate>
+                                        </ItemsControl.ItemsPanel>
+                                    </ItemsControl>
+                                </StackPanel>
+                            </ScrollViewer>
                         </dropArea:DropArea>
                     </TabItem>
                     
