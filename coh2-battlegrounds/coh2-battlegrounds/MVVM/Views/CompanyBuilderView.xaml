@@ -168,7 +168,18 @@
                                            Background="White"
                                            BorderThickness="1.5"
                                            BorderBrush="Black">
-
+                            <ScrollViewer>
+                                <StackPanel>
+                                    <ItemsControl ItemsSource="{Binding CompanyAbilities}">
+                                        <ItemsControl.ItemsPanel>
+                                            <ItemsPanelTemplate>
+                                                <WrapPanel Orientation="Horizontal"
+                                                           Width="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type TabControl}}, Path=ActualWidth}"/>
+                                            </ItemsPanelTemplate>
+                                        </ItemsControl.ItemsPanel>
+                                    </ItemsControl>
+                                </StackPanel>
+                            </ScrollViewer>
                         </dropArea:DropArea>
                     </TabItem>
 
@@ -179,36 +190,40 @@
                                            Background="White"
                                            BorderThickness="1.5"
                                            BorderBrush="Black">
-
+                            <ScrollViewer>
+                                <StackPanel>
+                                    <ItemsControl ItemsSource="{Binding CompanyUnitAbilities}">
+                                        <ItemsControl.ItemsPanel>
+                                            <ItemsPanelTemplate>
+                                                <WrapPanel Orientation="Horizontal"
+                                                           Width="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type TabControl}}, Path=ActualWidth}"/>
+                                            </ItemsPanelTemplate>
+                                        </ItemsControl.ItemsPanel>
+                                    </ItemsControl>
+                                </StackPanel>
+                            </ScrollViewer>
                         </dropArea:DropArea>
                     </TabItem>
                     
                 </TabControl>
             </TabItem>
 
-            <!-- INVENTORY -->
-            <TabItem Header="{Binding CompanyInventoryHeaderItem, Converter={StaticResource LocaleAndCaseConvertor}}"
+            <!-- STORAGE -->
+            <TabItem Header="{Binding CompanyStorageHeaderItem, Converter={StaticResource LocaleAndCaseConvertor}}"
                      Width="150"
                      Height="35"
                      Style="{StaticResource CompanyBuilderMainTabItem}">
                 
                 <ScrollViewer>
                     <StackPanel>
-                        
-                        <StackPanel>
-                            <Label Content="{Binding CapturedItemsLabelContent, Converter={StaticResource LocaleConvertor}}"/>
-                            <Separator Margin="2.5"/>
-                            <WrapPanel x:Name="ItemWrap" Orientation="Horizontal"/>
-                            <Separator Margin="2.5"/>
-                        </StackPanel>
-
-                        <StackPanel>
-                            <Label Content="{Binding CapturedEquipmentLabelContent, Converter={StaticResource LocaleConvertor}}"/>
-                            <Separator Margin="2.5"/>
-                            <WrapPanel x:Name="EquipmentWrap" Orientation="Horizontal"/>
-                            <Separator Margin="2.5"/>
-                        </StackPanel>
-                        
+                        <ItemsControl ItemsSource="{Binding CompanyEquipment}">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <WrapPanel Orientation="Horizontal"
+                                               Width="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type TabControl}}, Path=ActualWidth}"/>
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                        </ItemsControl>
                     </StackPanel>
                 </ScrollViewer>
             </TabItem>
@@ -357,28 +372,7 @@
                    Grid.Column="1" 
                    LastChildFill="True"
                    Visibility="{Binding AvailableUnitsVisible}">
-
-            <StackPanel DockPanel.Dock="Bottom"
-                        Name="CapturedItemsDroppableContainer">
-
-                <Label Content="{Binding CapturedItemsLabelContent, Converter={StaticResource LocaleConvertor}}"/>
-
-                <ScrollViewer CanContentScroll="False" 
-                               VerticalScrollBarVisibility="Visible">
-
-                    <StackPanel x:Name="AvailableItems"/>
-                    <!-- Use this to display captured items that can be 
-                    dragged onto squads to apply slot item-->
-
-                </ScrollViewer>
-            </StackPanel>
-
-            <ScrollViewer CanContentScroll="False"
-                          VerticalScrollBarVisibility="Visible">
-
-                <StackPanel x:Name="AvailableUnitsStack"/>
-
-            </ScrollViewer>
+            
 
         </DockPanel>
 
@@ -402,51 +396,15 @@
                    Grid.Column="1" 
                    LastChildFill="True"
                    Visibility="{Binding AvailableCrewsVisible}">
-            
+
             <ScrollViewer CanContentScroll="False" 
                           VerticalScrollBarVisibility="Visible">
-                
+
                 <StackPanel x:Name="AvailableCrews"/>
-                
+
             </ScrollViewer>
-            
+
         </DockPanel>
-
-        <!-- Row 3 :: Hover Data -->
-        <StackPanel Grid.Row="3" 
-                    Grid.Column="1" 
-                    Name="HoverField"
-                    Margin="3.35"
-                    Visibility="{Binding Path=HoverDataVisiblity}">
-            
-            <StackPanel Orientation="Horizontal">
-                
-                <Image Width="48" 
-                       Height="48" 
-                       Source="{Binding Path=HoverData.Icon}"/>
-                
-                <TextBlock Text="{Binding Path=HoverData.Name}"/>
-                
-            </StackPanel>
-            
-            <TextBlock Text="{Binding Path=HoverData.Description}"
-                       TextWrapping="Wrap"/>
-            
-            <!-- Price -->
-            <card:CostControl x:Name="HoverDataCost"/>
-            
-        </StackPanel>
-        
-        <StackPanel Grid.Row="3" 
-                    Grid.Column="1"
-                    Visibility="{Binding Path=InverseHoverDataVisibility}">
-
-            <Label Content="{Binding CompanyNoUnitDataLabelContent, Converter={StaticResource LocaleConvertor}}"
-                   HorizontalContentAlignment="Center"
-                   VerticalContentAlignment="Center"/>
-
-        </StackPanel>
-
 
     </Grid>
 </UserControl>

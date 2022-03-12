@@ -135,7 +135,7 @@ english:
  LobbyChat_FilterTeam: "To: Team"
  CompanyBuilder_Units: "Units"
  CompanyBuilder_Abilities: "Abilities"
- CompanyBuilder_Inventory: "Inventory"
+ CompanyBuilder_Storage: "Storage"
  CompanyBuilder_Stats: "Stats"
  CompanyBuilder_Infantry: "Infantry"
  CompanyBuilder_Support: "Support"
