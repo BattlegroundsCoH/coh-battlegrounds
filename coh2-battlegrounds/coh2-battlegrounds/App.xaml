@@ -389,5 +389,75 @@
             </Style.Triggers>
         </Style>
 
+        <Style x:Key="CompanyBuilderMainTabControl" TargetType="{x:Type TabControl}">
+            <Setter Property="Background" Value="#212d3a"/>
+            <Setter Property="BorderThickness" Value="0"/>
+        </Style>
+
+        <Style x:Key="CompanyBuilderMainTabItem" TargetType="{x:Type TabItem}">
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type TabItem}">
+                        <Grid Name="Panel">
+                            <TextBlock x:Name="ContentSite"
+                                       VerticalAlignment="Center"
+                                       HorizontalAlignment="Center"
+                                       Text="{TemplateBinding Header}"
+                                       Margin="12, 2"
+                                       FontSize="16"/>
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsSelected" Value="True">
+                                <Setter TargetName="Panel" Property="Background" Value="#334252"/>
+                                <Setter TargetName="ContentSite" Property="FontWeight" Value="Bold"/>
+                            </Trigger>
+                            <Trigger Property="IsSelected" Value="False">
+                                <Setter TargetName="Panel" Property="Background" Value="#212d3a"/>
+                            </Trigger>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="Panel" Property="Background" Value="#334252"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="CompanyBuilderSecondaryTabControl" TargetType="{x:Type TabControl}">
+            <Setter Property="Background" Value="#212d3a"/>
+            <Setter Property="BorderThickness" Value="0"/>
+        </Style>
+
+        <Style x:Key="CompanyBuilderSecondaryTabItem" TargetType="{x:Type TabItem}">
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type TabItem}">
+                        <Grid Name="Panel">
+                            <TextBlock x:Name="ContentSite"
+                                        VerticalAlignment="Center"
+                                        HorizontalAlignment="Center"
+                                        Text="{TemplateBinding Header}"
+                                        Margin="12, 2"
+                                       FontSize="12"/>
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsSelected" Value="True">
+                                <Setter TargetName="Panel" Property="Background" Value="#334252"/>
+                                <Setter TargetName="ContentSite" Property="FontWeight" Value="Bold"/>
+                            </Trigger>
+                            <Trigger Property="IsSelected" Value="False">
+                                <Setter TargetName="Panel" Property="Background" Value="#212d3a"/>
+                            </Trigger>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="Panel" Property="Background" Value="#334252"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
     </Application.Resources>
 </Application>
