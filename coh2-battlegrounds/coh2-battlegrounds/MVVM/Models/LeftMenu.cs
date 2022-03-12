@@ -89,8 +89,10 @@ namespace BattlegroundsApp.MVVM.Models {
         
         private void BuilderButton() {
 
-            var browser  = new CompanyBrowserViewModel();
-            App.ViewManager.TEMPRight_UpdateDisplay(browser);
+            // Get browser
+            var browser = App.ViewManager.UpdateDisplay<CompanyBrowserViewModel>(AppDisplayTarget.Right);
+
+            // Trigger list refresh
             browser.UpdateCompanyList();
 
         }
@@ -115,6 +117,8 @@ namespace BattlegroundsApp.MVVM.Models {
 
         private void ExitButton() 
             => Application.Current.Shutdown();
+
+        public bool UnloadViewModel() => true;
 
     }
 

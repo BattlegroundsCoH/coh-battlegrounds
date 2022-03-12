@@ -254,6 +254,8 @@ namespace BattlegroundsApp.MVVM.Models {
             }
         }
 
+        public bool UnloadViewModel() => true;
+
     }
 
 }
