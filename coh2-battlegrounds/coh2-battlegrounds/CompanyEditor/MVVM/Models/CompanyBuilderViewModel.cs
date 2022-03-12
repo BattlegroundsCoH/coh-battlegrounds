@@ -6,6 +6,7 @@ using Battlegrounds.Locale;
 using Battlegrounds.Modding;
 using BattlegroundsApp.Controls.CompanyBuilderControls;
 using BattlegroundsApp.Modals.CompanyBuilder;
+using BattlegroundsApp.MVVM;
 using BattlegroundsApp.Utilities;
 using System;
 using System.Collections.Generic;
@@ -17,7 +18,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
-namespace BattlegroundsApp.MVVM.Models;
+namespace BattlegroundsApp.CompanyEditor.MVVM.Models;
 
 public class CompanyBuilderButton {
     public ICommand Click { get; init; }

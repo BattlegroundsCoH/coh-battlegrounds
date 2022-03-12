@@ -13,12 +13,12 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace BattlegroundsApp.MVVM.Views;
+namespace BattlegroundsApp.CompanyEditor.MVVM.Views;
 /// <summary>
-/// Interaction logic for CompanyBuilderView.xaml
+/// Interaction logic for CompanyBrowserView.xaml
 /// </summary>
-public partial class CompanyBuilderView : UserControl {
-    public CompanyBuilderView() {
+public partial class CompanyBrowserView : UserControl {
+    public CompanyBrowserView() {
         InitializeComponent();
     }
 }

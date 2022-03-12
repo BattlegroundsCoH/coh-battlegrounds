@@ -6,6 +6,7 @@ using BattlegroundsApp.Dialogs.CreateCompany;
 using BattlegroundsApp.Dialogs.RenameCopyDialog;
 using BattlegroundsApp.Dialogs.YesNo;
 using BattlegroundsApp.LocalData;
+using BattlegroundsApp.MVVM;
 using BattlegroundsApp.Utilities;
 using System;
 using System.Collections.Generic;
@@ -16,7 +17,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
-namespace BattlegroundsApp.MVVM.Models;
+namespace BattlegroundsApp.CompanyEditor.MVVM.Models;
 
 public class CompanyBrowserButton {
     public ICommand Click { get; init; }
@@ -40,7 +41,7 @@ public class CompanyBrowserViewModel : IViewModel {
 
     public CompanyBrowserButton Import { get; }
 
-    public EventCommand EditCompanyDirectly { get; }
+    public BattlegroundsApp.MVVM.EventCommand EditCompanyDirectly { get; }
 
     public ObservableCollection<Company> Companies { get; set; }
 

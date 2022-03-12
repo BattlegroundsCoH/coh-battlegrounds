@@ -14,6 +14,7 @@ using BattlegroundsApp.Utilities;
 using BattlegroundsApp.Resources;
 using BattlegroundsApp.MVVM;
 using BattlegroundsApp.MVVM.Models;
+using BattlegroundsApp.CompanyEditor.MVVM.Models;
 
 namespace BattlegroundsApp {
 

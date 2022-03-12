@@ -2,7 +2,7 @@
 using System.Windows.Input;
 
 using Battlegrounds.Locale;
-
+using BattlegroundsApp.CompanyEditor.MVVM.Models;
 using BattlegroundsApp.Utilities;
 
 namespace BattlegroundsApp.MVVM.Models {
