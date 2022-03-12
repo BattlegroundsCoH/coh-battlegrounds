@@ -74,10 +74,6 @@ public class CompanyBuilderViewModel : IViewModel {
     public string CompanyGUID { get; }
     public string CompanyType { get; }
 
-    public LocaleKey CompanyUnitsHeaderItem { get; }
-    public LocaleKey CompanyAbilitiesHeaderItem { get; }
-    public LocaleKey CompanyStorageHeaderItem { get; }
-    public LocaleKey CompanyStatsHeaderItem { get; }
     public LocaleKey InfantryHeaderItem { get; }
     public LocaleKey SupportHeaderItem { get; }
     public LocaleKey VehiclesHeaderItem { get; }
@@ -117,10 +113,6 @@ public class CompanyBuilderViewModel : IViewModel {
         };
 
         // Define locales
-        this.CompanyUnitsHeaderItem = new LocaleKey("CompanyBuilder_Units");
-        this.CompanyAbilitiesHeaderItem = new LocaleKey("CompanyBuilder_Abilities");
-        this.CompanyStorageHeaderItem = new LocaleKey("CompanyBuilder_Storage");
-        this.CompanyStatsHeaderItem = new LocaleKey("CompanyBuilder_Stats");
         this.InfantryHeaderItem = new LocaleKey("CompanyBuilder_Infantry");
         this.SupportHeaderItem = new LocaleKey("CompanyBuilder_Support");
         this.VehiclesHeaderItem = new LocaleKey("CompanyBuilder_Vehicles");

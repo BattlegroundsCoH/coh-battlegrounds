@@ -6,7 +6,7 @@
              xmlns:local="clr-namespace:BattlegroundsApp.MVVM.Views"
              xmlns:converters="clr-namespace:BattlegroundsApp.Utilities.Converters"
              xmlns:card="clr-namespace:BattlegroundsApp.Controls.CompanyBuilderControls"
-             xmlns:dropArea="clr-namespace:BattlegroundsApp.Controls.DropArea"
+             xmlns:dropArea="clr-namespace:BattlegroundsApp.Controls.DropArea" xmlns:controls="clr-namespace:BattlegroundsApp.Controls"
              mc:Ignorable="d"
              Background="#273441"
              d:DesignHeight="450" d:DesignWidth="800">
@@ -73,11 +73,10 @@
                     Width="800">
             
             <!-- UNITS -->
-            <TabItem Header="{Binding CompanyUnitsHeaderItem, Converter={StaticResource LocaleAndCaseConvertor}}"
+            <TabItem Header="CompanyBuilder_Units"
                      Width="150"
                      Height="35"
                      Style="{StaticResource CompanyBuilderMainTabItem}">
-
                 <TabControl Style="{StaticResource CompanyBuilderSecondaryTabControl}">
                     
                     <!-- Infantry -->
@@ -154,7 +153,7 @@
             </TabItem>
             
             <!-- ABILITIES -->
-            <TabItem Header="{Binding CompanyAbilitiesHeaderItem, Converter={StaticResource LocaleAndCaseConvertor}}"
+            <TabItem Header="CompanyBuilder_Abilities"
                      Width="150"
                      Height="35"
                      Style="{StaticResource CompanyBuilderMainTabItem}">
@@ -209,7 +208,7 @@
             </TabItem>
 
             <!-- STORAGE -->
-            <TabItem Header="{Binding CompanyStorageHeaderItem, Converter={StaticResource LocaleAndCaseConvertor}}"
+            <TabItem Header="CompanyBuilder_Storage"
                      Width="150"
                      Height="35"
                      Style="{StaticResource CompanyBuilderMainTabItem}">
@@ -229,7 +228,7 @@
             </TabItem>
 
             <!-- STATS -->
-            <TabItem Header="{Binding CompanyStatsHeaderItem, Converter={StaticResource LocaleAndCaseConvertor}}"
+            <TabItem Header="CompanyBuilder_Stats"
                      Width="150"
                      Height="35"
                      Style="{StaticResource CompanyBuilderMainTabItem}">

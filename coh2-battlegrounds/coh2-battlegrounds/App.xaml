@@ -402,12 +402,14 @@
                 <Setter.Value>
                     <ControlTemplate TargetType="{x:Type TabItem}">
                         <Grid Name="Panel">
-                            <TextBlock x:Name="ContentSite"
-                                       VerticalAlignment="Center"
-                                       HorizontalAlignment="Center"
-                                       Text="{TemplateBinding Header}"
-                                       Margin="12, 2"
-                                       FontSize="16"/>
+                            <controls:LocLabel
+                                x:Name="ContentSite"
+                                VerticalAlignment="Center"
+                                HorizontalAlignment="Center"
+                                LocKey="{Binding Header, RelativeSource={RelativeSource TemplatedParent}}"
+                                UpperCaseAll="True"
+                                Margin="12, 2"
+                                FontSize="16"/>
                         </Grid>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsSelected" Value="True">
