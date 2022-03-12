@@ -1,10 +1,15 @@
-﻿using Battlegrounds.Game.DataCompany;
+﻿using Battlegrounds.Game.Database;
+using Battlegrounds.Game.Database.Management;
+using Battlegrounds.Game.DataCompany;
 using Battlegrounds.Game.Gameplay;
 using Battlegrounds.Locale;
 using Battlegrounds.Modding;
+using BattlegroundsApp.Controls.CompanyBuilderControls;
+using BattlegroundsApp.Modals.CompanyBuilder;
 using BattlegroundsApp.Utilities;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
@@ -43,70 +48,54 @@ public class CompanyBuilderViewModel : IViewModel {
     private ulong m_initialChecksum;
     private readonly ModPackage m_activeModPackage;
 
+    private List<SquadBlueprint> m_availableSquads;
+    private List<SquadBlueprint> m_availableCrews;
+    private List<AbilityBlueprint> m_abilities;
+
+    public ObservableCollection<SquadSlotLarge> CompanyInfantrySquads;
+    public ObservableCollection<SquadSlotLarge> CompanySupportSquads;
+    public ObservableCollection<SquadSlotLarge> CompanyVehicleSquads;
+    public ObservableCollection<AbilitySlot> CompanyAbilities;
+    public ObservableCollection<AbilitySlot> CompanyUnitAbilities;
+    public ObservableCollection<EquipmentSlot> CompanyItems;
+    public ObservableCollection<EquipmentSlot> CompanyEquipment;
+
     public CompanyBuilder Builder { get; }
+    public bool CanAddUnits => this.Builder.CanAddUnit;
+    public bool CanAddAbilities => this.Builder.CanAddAbility;
 
     public CompanyStatistics Statistics { get; }
-
     public string CompanyName { get; }
-
     public int CompanySize { get => this.m_companySize; set { this.m_companySize = value; this.NotifyPropertyChanged(); } }
-
     public int CompanyAbilityCount { get => this.m_companyAbilityCount; set { this.m_companyAbilityCount = value; this.NotifyPropertyChanged(); } }
-
     public string CompanyUnitHeaderItem => $"Units ({this.CompanySize}/{Company.MAX_SIZE})";
-
     public string CompanyAbilityHeaderItem => $"Abilities ({this.CompanyAbilityCount}/{Company.MAX_ABILITY})";
-
     public Faction CompanyFaction { get; }
-
     public string CompanyGUID { get; }
-
     public string CompanyType { get; }
 
     public LocaleKey CompanyUnitsHeaderItem { get; }
-
     public LocaleKey CompanyAbilitiesHeaderItem { get; }
-
     public LocaleKey CompanyInventoryHeaderItem { get; }
-
     public LocaleKey CompanyStatsHeaderItem { get; }
-
     public LocaleKey InfantryHeaderItem { get; }
-
     public LocaleKey SupportHeaderItem { get; }
-
     public LocaleKey VehiclesHeaderItem { get; }
-
     public LocaleKey CommanderAbilitiesHeaderItem { get; }
-
     public LocaleKey UnitAbilitiesHeaderItem { get; }
-
     public LocaleKey CapturedItemsLabelContent { get; }
-
     public LocaleKey CapturedEquipmentLabelContent { get; }
-
     public LocaleKey CompanyMatchHistoryLabelContent { get; }
-
     public LocaleKey CompanyVictoriesLabelContent { get; }
-
     public LocaleKey CompanyDefeatsLabelContent { get; }
-
     public LocaleKey CompanyTotalLabelContent { get; }
-
     public LocaleKey CompanyExperienceLabelContent { get; }
-
     public LocaleKey CompanyInfantryLossesLabelContent { get; }
-
     public LocaleKey CompanyVehicleLossesLabelContent { get; }
-
     public LocaleKey CompanyTotalLossesLabelContent { get; }
-
     public LocaleKey CompanyRatingLabelContent { get; }
-
     public LocaleKey CompanyResetButtonContent { get; }
-
     public LocaleKey CompanySaveButtonContent { get; }
-
     public LocaleKey CompanyNoUnitDataLabelContent { get; }
 
     public CompanyBuilderViewModel() {
@@ -153,6 +142,14 @@ public class CompanyBuilderViewModel : IViewModel {
         this.CompanyResetButtonContent = new LocaleKey("CompanyBuilder_Reset");
         this.CompanySaveButtonContent = new LocaleKey("CompanyBuilder_Save");
         this.CompanyNoUnitDataLabelContent = new LocaleKey("CompanyBuilder_NoUnitData");
+
+        this.CompanyInfantrySquads = new();
+        this.CompanySupportSquads = new();
+        this.CompanyVehicleSquads = new();
+        this.CompanyAbilities = new();
+        this.CompanyUnitAbilities = new();
+        this.CompanyItems = new();
+        this.CompanyEquipment = new();
 
     }
 
@@ -210,11 +207,146 @@ public class CompanyBuilderViewModel : IViewModel {
 
     }
 
-    private void LoadFactionDatabase() { 
+    private void LoadFactionDatabase() {
+
+        _ = Task.Run(() => {
+
+            // Get available squads
+            this.m_availableSquads = BlueprintManager.GetCollection<SquadBlueprint>()
+                .FilterByMod(this.CompanyGUID)
+                .Filter(x => x.Army == this.CompanyFaction.ToString())
+                .Filter(x => !x.Types.IsVehicleCrew)
+                .ToList();
+
+            // Get available crews
+            this.m_availableCrews = BlueprintManager.GetCollection<SquadBlueprint>()
+                .FilterByMod(this.CompanyGUID)
+                .Filter(x => x.Army == this.CompanyFaction.ToString())
+                .Filter(x => x.Types.IsVehicleCrew)
+                .ToList();
+
+            // Get faction data
+            var faction = this.m_activeModPackage.FactionSettings[this.CompanyFaction];
+
+            // Get available abilities
+            this.m_abilities = BlueprintManager.GetCollection<AbilityBlueprint>()
+                .FilterByMod(this.CompanyGUID)
+                .Filter(x => faction.Abilities.Select(y => y.Blueprint).Contains(x.Name))
+                .ToList();
+
+            // Populate lists : TODO
+            //this.FillStack(this.m_availableSquads, this.AvailableUnitsStack, this.CanAddUnits);
+            //this.FillStack(this.m_availableCrews, this.AvailableCrews, this.CanAddUnits);
+            //this.FillStack(this.m_abilities, this.AvailableAbilities, this.CanAddAbilities);
+
+        });
+
+    }
+
+    private void ShowCompany() {
+
+        // Clear collections
+        this.CompanyInfantrySquads.Clear();
+        this.CompanySupportSquads.Clear();
+        this.CompanyVehicleSquads.Clear();
+        this.CompanyAbilities.Clear();
+        this.CompanyUnitAbilities.Clear();
+        this.CompanyItems.Clear();
+        this.CompanyEquipment.Clear();
+
+        // Add all units
+        this.Builder.EachUnit(this.AddUnitToDisplay, x => (int)x.DeploymentPhase);
+
+        // Add all abilities : TODO
+        this.Builder.EachAbility(this.AddAbilityToDisplay);
+
+        // Add all items : TODO
+        this.Builder.EachItem(this.AddEquipmentToDisplay);
+
+    }
+
+    private void AddUnitToDisplay(Squad squad) {
+
+        // Create display
+        SquadSlotLarge unitSlot = new(squad);
+        unitSlot.OnClick += this.OnSlotClicked;
+        unitSlot.OnRemove += this.OnSlotRemoveClicked;
+
+        // Add to collection based on category
+        switch (squad.GetCategory(true)) {
+            case "infantry":
+                this.CompanyInfantrySquads.Add(unitSlot);
+                break;
+            case "team_weapon":
+                this.CompanySupportSquads.Add(unitSlot);
+                break;
+            case "vehicle":
+                this.CompanyVehicleSquads.Add(unitSlot);
+                break;
+            default:
+                break;
+        }
+
+    }
+
+    private void AddAbilityToDisplay(Ability ability, bool isUnitAbility) {
+
+        // Create display
+        AbilitySlot abilitySlot = new(ability);
+        abilitySlot.OnRemove += this.OnAbilityRemoveClicked;
+
+        // If is unit ability, then update
+        if (isUnitAbility) {
+            var factionData = this.m_activeModPackage.FactionSettings[this.CompanyFaction];
+            var unitData = factionData.UnitAbilities.FirstOrDefault(x => x.Abilities.Any(y => y.Blueprint == ability.ABP.Name));
+            abilitySlot.UpdateUnitData(unitData);
+            this.CompanyUnitAbilities.Add(abilitySlot);
+        } else {
+            this.CompanyAbilities.Add(abilitySlot);
+        }
+
+    }
+
+    private void AddEquipmentToDisplay(Blueprint blueprint) {
+
+        // Create display
+        EquipmentSlot equipmentSlot = new(blueprint);
+        equipmentSlot.OnRemove += this.OnEquipmentRemoveClicked;
+        equipmentSlot.OnEquipped += this.EquipItem;
+
+        if (blueprint is SlotItemBlueprint) {
+            this.CompanyItems.Add(equipmentSlot);
+        } else {
+            this.CompanyEquipment.Add(equipmentSlot);
+        }
+
+    }
+
+    private void OnSlotClicked(SquadSlotLarge squadSlot) {
+
+    }
+
+    private void OnSlotRemoveClicked(SquadSlotLarge squadSlot) {
+
+    }
+
+    private void OnAbilityRemoveClicked(AbilitySlot abilitySlot) {
+
+    }
+
+    private void OnEquipmentRemoveClicked(EquipmentSlot equipmentSlot) { 
     
     }
 
-    private void ShowCompany() { 
+    private void EquipItem(EquipmentSlot equipmentSlot, SquadBlueprint sbp) { 
+    
+    }
+
+    private void RemoveCrewAndAddBlueprintToEquipment(SquadSlotLarge squadSlot) {
+
+    }
+
+    private void EjectCrewAndAddBlueprintToPoolAndToEquipment(SquadSlotLarge squadSlot) {
     
     }
 
