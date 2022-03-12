@@ -117,21 +117,21 @@ namespace Battlegrounds.Game.Database {
                     _ => throw new NotImplementedException(prop)
                 };
             }
-            Faction fac = __lookup.GetValueOrDefault("Army", "NULL") is "NULL" ? null : Faction.FromName(__lookup.GetValueOrDefault("Army", "NULL"));
+            Faction fac = __lookup.GetCastValueOrDefault("Army", "NULL") is "NULL" ? null : Faction.FromName(__lookup.GetCastValueOrDefault("Army", "NULL"));
             ModGuid modguid = __lookup.ContainsKey("ModGUID") ? ModGuid.FromGuid(__lookup["ModGUID"] as string) : ModGuid.BaseGame;
-            BlueprintUID pbgid = new BlueprintUID(__lookup.GetValueOrDefault("PBGID", 0ul), modguid);
-            return new(__lookup.GetValueOrDefault("Name", string.Empty),
+            BlueprintUID pbgid = new BlueprintUID(__lookup.GetCastValueOrDefault("PBGID", 0ul), modguid);
+            return new(__lookup.GetCastValueOrDefault("Name", string.Empty),
                 pbgid,
                 fac,
-                __lookup.GetValueOrDefault("Cost", new CostExtension()),
-                 __lookup.GetValueOrDefault("Display", new UIExtension()),
-                 __lookup.GetValueOrDefault("Drivers", new DriverExtension(Array.Empty<DriverExtension.Entry>())),
-                 __lookup.GetValueOrDefault("Abilities", Array.Empty<string>()),
-                 __lookup.GetValueOrDefault("Upgrades", Array.Empty<string>()),
-                 __lookup.GetValueOrDefault("AppliedUpgrades", Array.Empty<string>()),
-                 __lookup.GetValueOrDefault("UpgradeCapacity", 0),
-                 __lookup.GetValueOrDefault("Hardpoints", Array.Empty<string>()),
-                  (float)__lookup.GetValueOrDefault("Health", 0.0f));
+                __lookup.GetCastValueOrDefault("Cost", new CostExtension()),
+                 __lookup.GetCastValueOrDefault("Display", new UIExtension()),
+                 __lookup.GetCastValueOrDefault("Drivers", new DriverExtension(Array.Empty<DriverExtension.Entry>())),
+                 __lookup.GetCastValueOrDefault("Abilities", Array.Empty<string>()),
+                 __lookup.GetCastValueOrDefault("Upgrades", Array.Empty<string>()),
+                 __lookup.GetCastValueOrDefault("AppliedUpgrades", Array.Empty<string>()),
+                 __lookup.GetCastValueOrDefault("UpgradeCapacity", 0),
+                 __lookup.GetCastValueOrDefault("Hardpoints", Array.Empty<string>()),
+                  (float)__lookup.GetCastValueOrDefault("Health", 0.0f));
         }
 
         public override void Write(Utf8JsonWriter writer, EntityBlueprint value, JsonSerializerOptions options) => writer.WriteStringValue(value.Name);

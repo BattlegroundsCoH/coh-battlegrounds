@@ -48,14 +48,14 @@ namespace Battlegrounds.Modding {
             var assetGUID = __lookup.ContainsKey("AssetGUID") ? ModGuid.FromGuid(__lookup["AssetGUID"] as string) : ModGuid.BaseGame;
 
             // Get factions
-            Dictionary<Faction, ModPackage.FactionData> factions = __lookup.GetValueOrDefault("FactionData", Array.Empty<ModPackage.FactionData>())
+            Dictionary<Faction, ModPackage.FactionData> factions = __lookup.GetCastValueOrDefault("FactionData", Array.Empty<ModPackage.FactionData>())
                 .ToDictionary(x => Faction.FromName(x.Faction));
 
             // Get tow data
-            (bool hastow, string istow, string istowing) = __lookup.GetValueOrDefault("Towing", (false, string.Empty, string.Empty));
+            (bool hastow, string istow, string istowing) = __lookup.GetCastValueOrDefault("Towing", (false, string.Empty, string.Empty));
 
             // Get ID
-            string packageID = __lookup.GetValueOrDefault("ID", string.Empty);
+            string packageID = __lookup.GetCastValueOrDefault("ID", string.Empty);
             if (string.IsNullOrEmpty(packageID)) {
                 throw new InvalidDataException("Expected package ID but found none. Cannot read the mod package!");
             }
@@ -63,7 +63,7 @@ namespace Battlegrounds.Modding {
             // Return mod package
             return new ModPackage() {
                 ID = packageID,
-                PackageName = __lookup.GetValueOrDefault("Name", packageID),
+                PackageName = __lookup.GetCastValueOrDefault("Name", packageID),
                 TuningGUID = tuningGUID,
                 GamemodeGUID = gamemodeGUID,
                 AssetGUID = assetGUID,
@@ -71,12 +71,12 @@ namespace Battlegrounds.Modding {
                 IsTowEnabled = hastow,
                 IsTowedUpgrade = istow,
                 IsTowingUpgrade = istowing,
-                VerificationUpgrade = __lookup.GetValueOrDefault("VerificationUpgrade", string.Empty),
-                ParadropUnits = __lookup.GetValueOrDefault("ParadropUnits", Array.Empty<string>()),
-                LocaleFiles = __lookup.GetValueOrDefault("LocaleFiles", Array.Empty<ModPackage.ModLocale>()),
-                AllowSupplySystem = __lookup.GetValueOrDefault("AllowSupplySystem", false),
-                AllowWeatherSystem = __lookup.GetValueOrDefault("AllowWeatherSystem", false),
-                Gamemodes = __lookup.GetValueOrDefault("Gamemodes", Array.Empty<ModPackage.Gamemode>())
+                VerificationUpgrade = __lookup.GetCastValueOrDefault("VerificationUpgrade", string.Empty),
+                ParadropUnits = __lookup.GetCastValueOrDefault("ParadropUnits", Array.Empty<string>()),
+                LocaleFiles = __lookup.GetCastValueOrDefault("LocaleFiles", Array.Empty<ModPackage.ModLocale>()),
+                AllowSupplySystem = __lookup.GetCastValueOrDefault("AllowSupplySystem", false),
+                AllowWeatherSystem = __lookup.GetCastValueOrDefault("AllowWeatherSystem", false),
+                Gamemodes = __lookup.GetCastValueOrDefault("Gamemodes", Array.Empty<ModPackage.Gamemode>())
             };
 
         }

@@ -2,10 +2,13 @@
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net5.0-windows</TargetFramework>
+    <TargetFramework>net6.0-windows</TargetFramework>
     <RootNamespace>BattlegroundsApp</RootNamespace>
     <UseWPF>true</UseWPF>
     <LangVersion>preview</LangVersion>
+    <AnalysisLevel>5.0</AnalysisLevel>
+    <Nullable>enable</Nullable>
+    <ProduceReferenceAssembly>False</ProduceReferenceAssembly>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -38,9 +41,31 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="Resources\app\army_icons\FactionAEF.png" />
+    <None Remove="Resources\app\army_icons\FactionAEFHighlighted.png" />
+    <None Remove="Resources\app\army_icons\FactionBRIT.png" />
+    <None Remove="Resources\app\army_icons\FactionBRITHighlighted.png" />
+    <None Remove="Resources\app\army_icons\FactionLOCKED.png" />
+    <None Remove="Resources\app\army_icons\FactionOKW.png" />
+    <None Remove="Resources\app\army_icons\FactionOKWHighlighted.png" />
+    <None Remove="Resources\app\army_icons\FactionSOVIET.png" />
+    <None Remove="Resources\app\army_icons\FactionSOVIETHighlighted.png" />
+    <None Remove="Resources\app\army_icons\FactionWEHR.png" />
+    <None Remove="Resources\app\army_icons\FactionWEHRHighlighted.png" />
     <None Remove="Resources\app\checkmark.png" />
     <None Remove="Resources\app\checkmark_not.png" />
+    <None Remove="Resources\app\company_types\ct_airborne.png" />
+    <None Remove="Resources\app\company_types\ct_armoured.png" />
+    <None Remove="Resources\app\company_types\ct_artillery.png" />
+    <None Remove="Resources\app\company_types\ct_engineer.png" />
+    <None Remove="Resources\app\company_types\ct_infantry.png" />
+    <None Remove="Resources\app\company_types\ct_mechanized.png" />
+    <None Remove="Resources\app\company_types\ct_motorized.png" />
+    <None Remove="Resources\app\company_types\ct_td.png" />
+    <None Remove="Resources\app\company_types\ct_unspecified.png" />
     <None Remove="Resources\app\icon_bkg.png" />
+    <None Remove="Resources\app\LobbySettingMap.png" />
+    <None Remove="Resources\app\logo_main.png" />
     <None Remove="Resources\app\padlock_locked.png" />
     <None Remove="Resources\app\padlock_open.png" />
     <None Remove="Resources\campaign\icon_attrition.png" />
@@ -93,14 +118,37 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="Resources\app\army_icons\FactionAEF.png" />
+    <Resource Include="Resources\app\army_icons\FactionAEFHighlighted.png" />
+    <Resource Include="Resources\app\army_icons\FactionBRIT.png" />
+    <Resource Include="Resources\app\army_icons\FactionBRITHighlighted.png" />
+    <Resource Include="Resources\app\army_icons\FactionLOCKED.png" />
+    <Resource Include="Resources\app\army_icons\FactionOKW.png" />
+    <Resource Include="Resources\app\army_icons\FactionOKWHighlighted.png" />
+    <Resource Include="Resources\app\army_icons\FactionSOVIET.png" />
+    <Resource Include="Resources\app\army_icons\FactionSOVIETHighlighted.png" />
+    <Resource Include="Resources\app\army_icons\FactionWEHR.png" />
+    <Resource Include="Resources\app\army_icons\FactionWEHRHighlighted.png" />
     <Resource Include="Resources\app\checkmark.png" />
     <Resource Include="Resources\app\checkmark_not.png" />
+    <Resource Include="Resources\app\company_types\ct_airborne.png" />
+    <Resource Include="Resources\app\company_types\ct_armoured.png" />
+    <Resource Include="Resources\app\company_types\ct_artillery.png" />
+    <Resource Include="Resources\app\company_types\ct_engineer.png" />
+    <Resource Include="Resources\app\company_types\ct_infantry.png" />
+    <Resource Include="Resources\app\company_types\ct_mechanized.png" />
+    <Resource Include="Resources\app\company_types\ct_motorized.png" />
+    <Resource Include="Resources\app\company_types\ct_td.png" />
+    <Resource Include="Resources\app\company_types\ct_unspecified.png" />
     <Resource Include="Resources\app\icon_bkg.png" />
+    <Resource Include="Resources\app\LobbySettingMap.png" />
+    <Resource Include="Resources\app\logo_main.png" />
     <Resource Include="Resources\app\padlock_locked.png" />
     <Resource Include="Resources\app\padlock_open.png" />
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="SharpVectors" Version="1.7.6" />
     <PackageReference Include="System.Diagnostics.Contracts" Version="4.3.0" />
   </ItemGroup>
 

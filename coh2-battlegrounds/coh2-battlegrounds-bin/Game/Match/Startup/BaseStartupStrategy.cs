@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 
 using Battlegrounds.Game.DataCompany;
 using Battlegrounds.Game.Match.Play;
@@ -10,33 +11,33 @@ namespace Battlegrounds.Game.Match.Startup {
     /// </summary>
     public abstract class BaseStartupStrategy : IStartupStrategy {
 
-        private Company m_localCompany;
+        private Company? m_localCompany;
 
-        public LocalCompanyHandle LocalCompanyCollector { get; set; }
+        public LocalCompanyHandle? LocalCompanyCollector { get; set; }
 
-        public SessionInfoHandle SessionInfoCollector { get; set; }
+        public SessionInfoHandle? SessionInfoCollector { get; set; }
 
-        public IPlayStrategyFactory PlayStrategyFactory { get; set; }
+        public IPlayStrategyFactory? PlayStrategyFactory { get; set; }
 
         /// <summary>
         /// Get or set the local company used by the <see cref="IStartupStrategy"/>.
         /// </summary>
-        protected Company LocalCompany {
+        protected Company? LocalCompany {
             get => this.m_localCompany;
             set => this.m_localCompany = value;
         }
 
-        public event CancelHandler StartupCancelled;
-        public event InformationHandler StartupFeedback;
+        public event CancelHandler? StartupCancelled;
+        public event InformationHandler? StartupFeedback;
 
         public abstract bool OnBegin(object caller);
 
-        public virtual void OnCancel(object caller, string cancelReason) {
+        public virtual void OnCancel(object? caller, string cancelReason) {
             Trace.WriteLine($"Startup cancelled ({caller}): \"{cancelReason}\"", "IStartupStrategy");
             this.StartupCancelled?.Invoke(this, caller, cancelReason);
         }
 
-        protected virtual void OnFeedback(object caller, string message) => this.StartupFeedback?.Invoke(this, caller, message);
+        protected virtual void OnFeedback(object? caller, string message) => this.StartupFeedback?.Invoke(this, caller, message);
 
         public virtual bool OnCollectCompanies(object caller) => true;
 
@@ -46,7 +47,7 @@ namespace Battlegrounds.Game.Match.Startup {
 
         public abstract bool OnPrepare(object caller);
 
-        public abstract bool OnStart(object caller, out IPlayStrategy playStrategy);
+        public abstract bool OnStart(object caller, [NotNullWhen(true)] out IPlayStrategy? playStrategy);
 
         public virtual bool OnWaitForAllToSignal(object caller) => true;
 
@@ -58,6 +59,10 @@ namespace Battlegrounds.Game.Match.Startup {
         /// <param name="name">The unique ID of the local user.</param>
         /// <returns>Will return <see langword="true"/> if the local company was assigned. Otherwise <see langword="false"/>.</returns>
         protected bool GetLocalCompany(ulong id) {
+
+            // Return false if no company collector defined
+            if (this.LocalCompanyCollector is null)
+                return false;
 
             // Get own company
             this.m_localCompany = this.LocalCompanyCollector();

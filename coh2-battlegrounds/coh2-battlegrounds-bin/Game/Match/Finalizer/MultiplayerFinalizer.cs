@@ -2,8 +2,7 @@
 using System.Linq;
 
 using Battlegrounds.Game.DataCompany;
-using Battlegrounds.Networking.Lobby;
-using Battlegrounds.Networking.Lobby.Match;
+using Battlegrounds.Networking.LobbySystem;
 using Battlegrounds.Networking.Server;
 
 namespace Battlegrounds.Game.Match.Finalizer {
@@ -24,10 +23,13 @@ namespace Battlegrounds.Game.Match.Finalizer {
             }
 
             // Get handler
-            LobbyHandler handler = synchronizeObject as LobbyHandler;
+            if (synchronizeObject is not LobbyAPI handler) {
+                Trace.WriteLine("{Error} -- The synchronizeObject is NULL and changes will therefore not be saved anywhere!", nameof(MultiplayerFinalizer));
+                return;
+            }
 
             // Get player results
-            LobbyPlayerCompanyFile[] playerFiles = this.m_companies.Where(x => x.Key.SteamID != BattlegroundsInstance.Steam.User.ID).Select(
+            var playerFiles = this.m_companies.Where(x => x.Key.SteamID != BattlegroundsInstance.Steam.User.ID).Select(
                 x => new LobbyPlayerCompanyFile(x.Key.SteamID, CompanySerializer.GetCompanyAsJson(x.Value))).ToArray();
 
             // Get overall match results
@@ -40,7 +42,7 @@ namespace Battlegrounds.Game.Match.Finalizer {
             };
 
             // Inform members the results are available
-            handler.MatchContext.UploadResults(matchResults, playerFiles);
+            UploadResults(handler, matchResults, playerFiles);
 
             // Get self company (and invoke so host is also updated)
             if (this.GetLocalPlayerCompany() is Company company) {
@@ -51,6 +53,29 @@ namespace Battlegrounds.Game.Match.Finalizer {
             }
 
         }
+
+        private static void UploadResults(LobbyAPI api, ServerMatchResults matchResults, LobbyPlayerCompanyFile[] companyFiles) {
+
+            // Loop over the files and trigger appropriate events
+            for (int i = 0; i < companyFiles.Length; i++) {
+                if (companyFiles[i].playerID != api.Self.ID) {
+                    if (api.ServerHandle.UploadCompany(companyFiles[i].playerID, companyFiles[i].playerCompanyData,
+                        (a,b) => Trace.WriteLine($"Uploading company {a}/{b} for player {companyFiles[i].playerID}", nameof(MultiplayerFinalizer))) != UploadResult.UPLOAD_SUCCESS) {
+                        Trace.WriteLine($"Failed to upload result company for player {companyFiles[i].playerID}", nameof(MultiplayerFinalizer));
+                    }
+                }
+            }
+
+            // Upload result object
+            if (api.ServerHandle.UploadResults(matchResults)) {
+
+                // Release results
+                api.ReleaseResults();
+
+            }
+
+        }
+
 
     }
 

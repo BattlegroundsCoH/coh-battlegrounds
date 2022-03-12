@@ -41,8 +41,8 @@ namespace Battlegrounds.Functional {
         /// <param name="dict">The dictionary instance to retrieve default value from.</param>
         /// <param name="key">The key of the element to try and get value of.</param>
         /// <returns>If value is not found, <see langword="default"/> value of <typeparamref name="Z"/>; Otherwise the found value.</returns>
-        public static Z GetValueOrDefault<X, Y, Z>(this IDictionary<X, Y> dict, X key) where Z : Y
-            => dict.GetValueOrDefault<X, Y, Z>(key, default);
+        public static Z GetCastValueOrDefault<X, Y, Z>(this IDictionary<X, Y> dict, X key) where Z : Y
+            => dict.GetCastValueOrDefault<X, Y, Z>(key, default);
 
         /// <summary>
         /// Get value of element tied to <paramref name="key"/> or <paramref name="defaultValue"/> if not found in dictionary.
@@ -54,7 +54,7 @@ namespace Battlegrounds.Functional {
         /// <param name="key">The key of the element to try and get value of.</param>
         /// <param name="defaultValue">The default value to return if element is not found.</param>
         /// <returns>If value is not found, <paramref name="defaultValue"/>; Otherwise the found value.</returns>
-        public static Z GetValueOrDefault<X, Y, Z>(this IDictionary<X, Y> dict, X key, Z defaultValue) where Z : Y
+        public static Z GetCastValueOrDefault<X, Y, Z>(this IDictionary<X, Y> dict, X key, Z defaultValue) where Z : Y
             => dict.ContainsKey(key) ? (Z)dict[key] : defaultValue;
 
         /// <summary>

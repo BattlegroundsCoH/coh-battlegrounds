@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.30204.135
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.32112.339
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "coh2-battlegrounds", "coh2-battlegrounds\coh2-battlegrounds.csproj", "{16FC939E-9E79-41C1-A52E-7731E750239C}"
 EndProject
@@ -10,8 +10,6 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "coh2-battlegrounds-console", "coh2-battlegrounds-console\coh2-battlegrounds-console.csproj", "{A7E7769E-3205-4CA1-BB63-0C62DF284E90}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "coh2-battlegrounds-bin-tests", "coh2-battlegrounds-bin-tests\coh2-battlegrounds-bin-tests.csproj", "{592A0336-9A86-4E03-BE73-7C835E5E3126}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "coh2-battlegrounds-installer", "coh2-battlegrounds-installer\coh2-battlegrounds-installer.csproj", "{B73A8356-2020-4447-84CA-9E3897A0863F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -35,10 +33,6 @@ Global
 		{592A0336-9A86-4E03-BE73-7C835E5E3126}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{592A0336-9A86-4E03-BE73-7C835E5E3126}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{592A0336-9A86-4E03-BE73-7C835E5E3126}.Release|Any CPU.Build.0 = Release|Any CPU
-		{B73A8356-2020-4447-84CA-9E3897A0863F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{B73A8356-2020-4447-84CA-9E3897A0863F}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{B73A8356-2020-4447-84CA-9E3897A0863F}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{B73A8356-2020-4447-84CA-9E3897A0863F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

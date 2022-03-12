@@ -33,7 +33,7 @@ namespace Battlegrounds.Game.Match {
 
         public NullSession(bool allowPersistency) { this.AllowPersistency = allowPersistency; }
 
-        public Company GetPlayerCompany(ulong steamID) => this.m_dummyCompanies.ContainsKey(steamID) ? this.m_dummyCompanies[steamID] : null;
+        public Company? GetPlayerCompany(ulong steamID) => this.m_dummyCompanies.ContainsKey(steamID) ? this.m_dummyCompanies[steamID] : null;
 
         /// <summary>
         /// Create a company for specified <paramref name="steamID"/> using specified <paramref name="builder"/>.

@@ -1,6 +1,8 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <!-- Go die in a fire WPF -->
     <ResourceDictionary.MergedDictionaries>
-        <ResourceDictionary Source="Controls/DropArea/DropAreaStyle.xaml"/>
+        <ResourceDictionary Source="pack://application:,,,/coh2-battlegrounds;component/Controls/IconButtonStyle.xaml"/>
+        <ResourceDictionary Source="pack://application:,,,/coh2-battlegrounds;component/Controls/DropArea/DropAreaStyle.xaml"/>
     </ResourceDictionary.MergedDictionaries>
 </ResourceDictionary>

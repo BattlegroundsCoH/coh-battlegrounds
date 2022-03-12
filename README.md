@@ -62,8 +62,8 @@ Additionally, you must fullfill the following:
 
 ## Community
 
-The mod has an official website at: <<Website Link>>
-And you can join our discord <<Discord Link>>
+The mod has an official website at: <`<Website Link>`>
+And you can join our Discord [here](https://discord.gg/n26gXsk5R5)
 
 ---
 

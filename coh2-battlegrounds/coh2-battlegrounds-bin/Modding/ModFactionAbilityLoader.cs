@@ -40,16 +40,16 @@ namespace Battlegrounds.Modding {
             }
 
             // Return
-            return new(__lookup.GetValueOrDefault("Blueprint", string.Empty),
-                __lookup.GetValueOrDefault("LockoutBlueprint", string.Empty),
-                __lookup.GetValueOrDefault("AbilityCategory", AbilityCategory.Undefined),
-                __lookup.GetValueOrDefault("MaxUsePerMatch", 0),
-                __lookup.GetValueOrDefault("RequireOffmap", false),
-                __lookup.GetValueOrDefault("OffmapCountEffectivenesss", 0.0f),
-                __lookup.GetValueOrDefault("CanGrantVeterancy", false),
-                __lookup.GetValueOrDefault("VeterancyRanks", Array.Empty<ModPackage.FactionData.FactionAbility.AbilityVeterancy>()),
-                __lookup.GetValueOrDefault<string, object, ModPackage.FactionData.FactionAbility.VeterancyRequirement?>("VeterancyUsageRequirement", null),
-                __lookup.GetValueOrDefault("VeterancyExperienceGain", 0.0f));
+            return new(__lookup.GetCastValueOrDefault("Blueprint", string.Empty),
+                __lookup.GetCastValueOrDefault("LockoutBlueprint", string.Empty),
+                __lookup.GetCastValueOrDefault("AbilityCategory", AbilityCategory.Undefined),
+                __lookup.GetCastValueOrDefault("MaxUsePerMatch", 0),
+                __lookup.GetCastValueOrDefault("RequireOffmap", false),
+                __lookup.GetCastValueOrDefault("OffmapCountEffectivenesss", 0.0f),
+                __lookup.GetCastValueOrDefault("CanGrantVeterancy", false),
+                __lookup.GetCastValueOrDefault("VeterancyRanks", Array.Empty<ModPackage.FactionData.FactionAbility.AbilityVeterancy>()),
+                __lookup.GetCastValueOrDefault<string, object, ModPackage.FactionData.FactionAbility.VeterancyRequirement?>("VeterancyUsageRequirement", null),
+                __lookup.GetCastValueOrDefault("VeterancyExperienceGain", 0.0f));
 
         }
 
