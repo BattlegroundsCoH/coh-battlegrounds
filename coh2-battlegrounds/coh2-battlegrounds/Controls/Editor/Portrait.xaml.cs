@@ -126,6 +126,7 @@ public partial class Portrait : UserControl, INotifyPropertyChanged {
     public event PropertyChangedEventHandler PropertyChanged;
 
     public Portrait() {
+        this.DataContext = this;
         this.InitializeComponent();
     }
 

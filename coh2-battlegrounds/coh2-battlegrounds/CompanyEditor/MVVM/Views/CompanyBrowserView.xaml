@@ -43,6 +43,8 @@
                   ItemsSource="{Binding Companies}"
                   SelectedItem="{Binding SelectedCompany}"
                   MouseDoubleClick="{mvvm:EventBinding Handler=EditCompanyDirectly}"
+                  Style="{StaticResource StandardBlueListViewStyle}"
+                  ItemContainerStyle="{StaticResource StandardBlueListViewItem}"
                   >
             <ListView.View>
                 <GridView>

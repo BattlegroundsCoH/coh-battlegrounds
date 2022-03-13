@@ -372,13 +372,22 @@
             </Setter>
         </Style>
 
+        <Style x:Key="StandardBlueListViewStyle" TargetType="{x:Type ListView}">
+            <Setter Property="Background" Value="#334252"/>
+            <Setter Property="BorderBrush" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="0"/>
+        </Style>
+        
         <Style x:Key="StandardBlueGridViewHeader" TargetType="{x:Type GridViewColumnHeader}">
             <Setter Property="IsHitTestVisible" Value="False"/>
             <Setter Property="Background" Value="#334252"/>
             <Setter Property="Foreground" Value="#d8dbde"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="BorderBrush" Value="#334252"/>
         </Style>
 
-        <Style x:Key="StandardBlueListView" TargetType="{x:Type ListViewItem}">
+        <Style x:Key="StandardBlueListViewItem" TargetType="{x:Type ListViewItem}">
+            <Setter Property="Foreground" Value="#d8dbde"/>
             <Style.Triggers>
                 <MultiTrigger>
                     <MultiTrigger.Conditions>
@@ -386,7 +395,6 @@
                         <Condition Property="Selector.IsSelectionActive" Value="true"/>
                     </MultiTrigger.Conditions>
                     <Setter Property="Background" Value="Pink" />
-                    <Setter Property="Template" Value="{StaticResource SelectedTemplate}"/>
                 </MultiTrigger>
             </Style.Triggers>
         </Style>
@@ -406,6 +414,7 @@
                                 x:Name="ContentSite"
                                 VerticalAlignment="Center"
                                 HorizontalAlignment="Center"
+                                Foreground="White"
                                 LocKey="{Binding Header, RelativeSource={RelativeSource TemplatedParent}}"
                                 UpperCaseAll="True"
                                 Margin="12, 2"
