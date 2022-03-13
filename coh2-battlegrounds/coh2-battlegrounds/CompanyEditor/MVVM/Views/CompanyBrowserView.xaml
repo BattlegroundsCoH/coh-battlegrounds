@@ -5,7 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:BattlegroundsApp.MVVM.Views"
              xmlns:converters="clr-namespace:BattlegroundsApp.Utilities.Converters" 
-             xmlns:mvvm="clr-namespace:BattlegroundsApp.MVVM"
+             xmlns:mvvm="clr-namespace:BattlegroundsApp.MVVM" xmlns:controls="clr-namespace:BattlegroundsApp.Controls"
              mc:Ignorable="d" Background="#273441"
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
@@ -18,6 +18,7 @@
         </Grid.Resources>
 
         <Grid.RowDefinitions>
+            <RowDefinition Height="36"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="auto"/>
             <RowDefinition Height="52"/>
@@ -35,17 +36,25 @@
         </Grid.ColumnDefinitions>
         
         <!-- Row 0 -->
+        <controls:LocLabel
+            LocKey="CompanyView_Title"
+            Foreground="White"
+            FontSize="18"
+            Margin="15, 5, 0, 0"
+            VerticalContentAlignment="Center"
+            FontFamily="Open Sans"/>
+
+        <!-- Row 1 -->
         <ListView x:Name="CompanyList"
-                  Grid.Row="0"
+                  Grid.Row="1"
                   Grid.Column="0"
                   Grid.ColumnSpan="8"
-                  Background="#273441"
+                  Margin="15"
                   ItemsSource="{Binding Companies}"
                   SelectedItem="{Binding SelectedCompany}"
                   MouseDoubleClick="{mvvm:EventBinding Handler=EditCompanyDirectly}"
                   Style="{StaticResource StandardBlueListViewStyle}"
-                  ItemContainerStyle="{StaticResource StandardBlueListViewItem}"
-                  >
+                  ItemContainerStyle="{StaticResource StandardBlueListViewItem}">
             <ListView.View>
                 <GridView>
                     <GridViewColumn
@@ -55,7 +64,7 @@
                         HeaderContainerStyle="{StaticResource StandardBlueGridViewHeader}"/>
                     <GridViewColumn
                         Header="{Binding StrengthListViewHeader, Converter={StaticResource LocaleConvertor}}"
-                        Width="165"
+                        Width="175"
                         DisplayMemberBinding="{Binding Strength}"
                         HeaderContainerStyle="{StaticResource StandardBlueGridViewHeader}"/>
                     <GridViewColumn
@@ -70,33 +79,36 @@
                         HeaderContainerStyle="{StaticResource StandardBlueGridViewHeader}"/>
                     <GridViewColumn
                         Header="{Binding CountryListViewHeader, Converter={StaticResource LocaleConvertor}}"
-                        Width="80"
+                        Width="86"
                         DisplayMemberBinding="{Binding Army}"
                         HeaderContainerStyle="{StaticResource StandardBlueGridViewHeader}"/>
                 </GridView>
             </ListView.View>
         </ListView>
-
+        
+        <!-- Do not delete this, it's used for fitting sizes -->
         <Grid Visibility="Hidden"
-              Grid.Row="0"
+              Grid.Row="1"
               Grid.Column="0"
-              Grid.ColumnSpan="8">
+              Grid.ColumnSpan="8"
+              Margin="15">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="175"/>
                 <ColumnDefinition Width="125"/>
                 <ColumnDefinition Width="100"/>
-                <ColumnDefinition Width="80"/>
+                <ColumnDefinition Width="88"/>
             </Grid.ColumnDefinitions>
-            <Grid x:Name="firstColumnSize"/>
+            <Grid x:Name="firstColumnSize"
+                  Grid.Column="0"/>
         </Grid>
         
-        <!-- Row 1 -->
-        <Separator Grid.Row="1" Grid.ColumnSpan="8"/>
-        
         <!-- Row 2 -->
+        <Separator Grid.Row="2" Grid.ColumnSpan="8"/>
+        
+        <!-- Row 3 -->
         <Button x:Name="createCompanyButton"
-                Grid.Row="2"
+                Grid.Row="3"
                 Grid.Column="1"
                 Content="{Binding Create.Text, Converter={StaticResource LocaleConvertor}}"
                 Margin="0,5,5,8"
@@ -104,7 +116,7 @@
                 Style="{StaticResource MainButtonStyle}"/>
         
         <Button x:Name="editCompanyButton"
-                Grid.Row="2"
+                Grid.Row="3"
                 Grid.Column="2"
                 Content="{Binding Edit.Text, Converter={StaticResource LocaleConvertor}}"
                 Margin="5,5,5,8"
@@ -113,7 +125,7 @@
                 IsEnabled="{Binding ElementName=CompanyList, Path=SelectedItems.Count}"/>
 
         <Button x:Name="renameCompanyButton"
-                Grid.Row="2"
+                Grid.Row="3"
                 Grid.Column="3"
                 Content="{Binding Rename.Text, Converter={StaticResource LocaleConvertor}}"
                 Margin="5,5,5,8"
@@ -122,7 +134,7 @@
                 IsEnabled="False"/>
 
         <Button x:Name="deleteCompanyButton"
-                Grid.Row="2"
+                Grid.Row="3"
                 Grid.Column="4"
                 Content="{Binding Delete.Text, Converter={StaticResource LocaleConvertor}}"
                 Margin="5,5,5,8"
@@ -131,7 +143,7 @@
                 IsEnabled="{Binding ElementName=CompanyList, Path=SelectedItems.Count}"/>
 
         <Button x:Name="copyCompanyButton"
-                Grid.Row="2"
+                Grid.Row="3"
                 Grid.Column="5"
                 Content="{Binding Copy.Text, Converter={StaticResource LocaleConvertor}}"
                 Margin="5,5,5,8"
@@ -140,7 +152,7 @@
                 IsEnabled="False"/>
 
         <Button x:Name="exportCompanyButton"
-                Grid.Row="2"
+                Grid.Row="3"
                 Grid.Column="6"
                 Content="{Binding Export.Text, Converter={StaticResource LocaleConvertor}}"
                 Margin="5,5,5,8"
@@ -149,7 +161,7 @@
                 IsEnabled="False"/>
 
         <Button x:Name="importCompanyButton"
-                Grid.Row="2"
+                Grid.Row="3"
                 Grid.Column="7"
                 Content="{Binding Import.Text, Converter={StaticResource LocaleConvertor}}"
                 Margin="5,5,5,8"
