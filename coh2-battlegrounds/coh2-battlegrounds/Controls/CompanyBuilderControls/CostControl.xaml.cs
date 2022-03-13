@@ -22,12 +22,6 @@ namespace BattlegroundsApp.Controls.CompanyBuilderControls {
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        public Visibility ManpowerCostVisible => this.ManpowerCost is 0 ? Visibility.Collapsed : Visibility.Visible;
-
-        public Visibility MunitionCostVisible => this.MunitionCost is 0 ? Visibility.Collapsed : Visibility.Visible;
-
-        public Visibility FuelCostVisible => this.FuelCost is 0 ? Visibility.Collapsed : Visibility.Visible;
-
         public int ManpowerCost => (int)(this.Cost?.Manpower ?? 0.0f);
 
         public int MunitionCost => (int)(this.Cost?.Munitions ?? 0.0f);
@@ -40,7 +34,6 @@ namespace BattlegroundsApp.Controls.CompanyBuilderControls {
         }
 
         public CostControl() {
-            this.DataContext = this;
             this.InitializeComponent();
         }
 
@@ -49,14 +42,13 @@ namespace BattlegroundsApp.Controls.CompanyBuilderControls {
             // Set actual value
             this.SetValue(CostProperty, value);
 
-            // Notify value changes
-            this.PropertyChanged?.Invoke(this, new(nameof(this.ManpowerCost)));
-            this.PropertyChanged?.Invoke(this, new(nameof(this.ManpowerCostVisible)));
-            this.PropertyChanged?.Invoke(this, new(nameof(this.MunitionCost)));
-            this.PropertyChanged?.Invoke(this, new(nameof(this.MunitionCostVisible)));
-            this.PropertyChanged?.Invoke(this, new(nameof(this.FuelCost)));
-            this.PropertyChanged?.Invoke(this, new(nameof(this.FuelCostVisible)));
-            this.PropertyChanged?.Invoke(this, new(nameof(this.Cost)));
+            this.ManpowerCostIcon.Visibility = this.ManpowerCost is 0 ? Visibility.Collapsed : Visibility.Visible;
+            this.MunitionCostIcon.Visibility = this.MunitionCost is 0 ? Visibility.Collapsed : Visibility.Visible;
+            this.FuelCostIcon.Visibility = this.FuelCost is 0 ? Visibility.Collapsed : Visibility.Visible;
+
+            this.ManpowerCostValue.Content = value.Manpower;
+            this.MunitionCostValue.Content = value.Munitions;
+            this.FuelCostValue.Content = value.Fuel;
 
         }
 
