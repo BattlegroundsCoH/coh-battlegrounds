@@ -13,8 +13,14 @@
         <Grid.Resources>
             <!-- Locale Converter -->
             <converters:LocaleKeyToStringConverter x:Key="LocaleConvertor"/>
+            <!-- Faction to Icon Converter -->
+            <converters:StringToFactionIconConverter x:Key="FactionIconConverter"/>
+            <!-- Company Type to Icon Converter -->
+            <converters:StringToCompanyTypeIconConverter x:Key="TypeToIconConverter"/>
             <!-- FactionToAllianceConverter -->
             <converters:FactionToAllianceConverter x:Key="FactionToAllianceConverter"/>
+            <!-- FactionToAllianceConverter -->
+            <converters:DoubleToRatingConverter x:Key="RatingConverter"/>
         </Grid.Resources>
 
         <Grid.RowDefinitions>
@@ -38,7 +44,7 @@
         <!-- Row 0 -->
         <controls:LocLabel
             LocKey="CompanyView_Title"
-            Foreground="White"
+            Foreground="#d8dbde"
             FontSize="18"
             Margin="15, 5, 0, 0"
             VerticalContentAlignment="Center"
@@ -55,33 +61,79 @@
                   MouseDoubleClick="{mvvm:EventBinding Handler=EditCompanyDirectly}"
                   Style="{StaticResource StandardBlueListViewStyle}"
                   ItemContainerStyle="{StaticResource StandardBlueListViewItem}">
+            <ListView.Resources>
+                <Style x:Key="CompanyLabel" TargetType="{x:Type Label}">
+                    <Setter Property="Foreground" Value="#d8dbde"/>
+                    <Setter Property="FontWeight" Value="DemiBold"/>
+                    <Setter Property="FontFamily" Value="Open Sans"/>
+                    <Setter Property="HorizontalAlignment" Value="Center"/>
+                </Style>
+                <Style x:Key="NameLabel" 
+                       TargetType="{x:Type Label}"
+                       BasedOn="{StaticResource CompanyLabel}">
+                    <Setter Property="FontSize" Value="16"/>
+                </Style>
+            </ListView.Resources>
             <ListView.View>
                 <GridView>
                     <GridViewColumn
                         Header="{Binding NameListViewHeader, Converter={StaticResource LocaleConvertor}}"
                         Width="{Binding ElementName=firstColumnSize, Path=ActualWidth}"
-                        DisplayMemberBinding="{Binding Name}"
-                        HeaderContainerStyle="{StaticResource StandardBlueGridViewHeader}"/>
+                        HeaderContainerStyle="{StaticResource StandardBlueGridViewHeader}">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <Label Content="{Binding Name}"
+                                       Style="{StaticResource NameLabel}"/>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
                     <GridViewColumn
                         Header="{Binding StrengthListViewHeader, Converter={StaticResource LocaleConvertor}}"
                         Width="175"
-                        DisplayMemberBinding="{Binding Strength}"
-                        HeaderContainerStyle="{StaticResource StandardBlueGridViewHeader}"/>
+                        HeaderContainerStyle="{StaticResource StandardBlueGridViewHeader}">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <Label Content="{Binding Rating, Converter={StaticResource RatingConverter}}"
+                                       Style="{StaticResource CompanyLabel}"/>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
                     <GridViewColumn
                         Header="{Binding TypeListViewHeader, Converter={StaticResource LocaleConvertor}}"
                         Width="125"
-                        DisplayMemberBinding="{Binding Type}"
-                        HeaderContainerStyle="{StaticResource StandardBlueGridViewHeader}"/>
+                        HeaderContainerStyle="{StaticResource StandardBlueGridViewHeader}">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <Image Width="24" Height="24"
+                                       Source="{Binding Type, Converter={StaticResource TypeToIconConverter}}"
+                                       HorizontalAlignment="Center"/>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
                     <GridViewColumn
                         Header="{Binding AllianceListViewHeader, Converter={StaticResource LocaleConvertor}}"
                         Width="100"
-                        DisplayMemberBinding="{Binding Army, Converter={StaticResource FactionToAllianceConverter}}"
-                        HeaderContainerStyle="{StaticResource StandardBlueGridViewHeader}"/>
+                        HeaderContainerStyle="{StaticResource StandardBlueGridViewHeader}">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <Label Content="{Binding Army, Converter={StaticResource FactionToAllianceConverter}}"
+                                       Style="{StaticResource CompanyLabel}"/>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
                     <GridViewColumn
                         Header="{Binding CountryListViewHeader, Converter={StaticResource LocaleConvertor}}"
                         Width="86"
-                        DisplayMemberBinding="{Binding Army}"
-                        HeaderContainerStyle="{StaticResource StandardBlueGridViewHeader}"/>
+                        HeaderContainerStyle="{StaticResource StandardBlueGridViewHeader}">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <Image Width="36" Height="36"
+                                       Margin="8"
+                                       Source="{Binding Army, Converter={StaticResource FactionIconConverter}}"
+                                       HorizontalAlignment="Center"/>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
                 </GridView>
             </ListView.View>
         </ListView>

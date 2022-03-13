@@ -35,6 +35,11 @@ public class Company : IChecksumItem {
     /// </summary>
     public const int MAX_ABILITY = 6;
 
+    /// <summary>
+    /// The maximum rating value achievable
+    /// </summary>
+    public const double MAX_RATING = MAX_SIZE * 5.0;
+
     private ulong m_checksum;
     private string m_lastEditVersion;
     private ushort m_nextSquadId;
@@ -56,7 +61,16 @@ public class Company : IChecksumItem {
     /// <summary>
     /// Get the calculated strength of the company.
     /// </summary>
-    public double Strength => this.GetStrength();
+    /// <remarks>
+    /// Valid values within the closed interval [0, <see cref="MAX_RATING"/>]
+    /// </remarks>
+    public double Strength => Math.Round(this.GetStrength(), 2);
+
+    /// <summary>
+    /// Get the rating of the company.
+    /// </summary>
+    [JsonIgnore]
+    public double Rating => Math.Round(this.GetStrength() / MAX_RATING, 2);
 
     /// <summary>
     /// Get the <see cref="CompanyType"/> that can be used to describe the <see cref="Company"/> characteristics.
@@ -262,25 +276,14 @@ public class Company : IChecksumItem {
     /// <summary>
     /// Calculate the strength of the company
     /// </summary>
-    /// <returns></returns>
+    /// <returns>The calculated strength of the company based on squad veterancy levels relative to size of company and win rate</returns>
     public double GetStrength() {
 
-        // Calculate total strength
-        double total = 1.0;
-
-        // Sum experience (weighted to max rank and squad count)
-        total += this.m_squads.Aggregate(0.0, (a, b) => a + (b.VeterancyRank / 5.0 / this.m_squads.Count));
-
-        // Modify by win/loss rate
-        total *= 1.0 + (this.m_companyStatistics.WinRate - this.m_companyStatistics.LossRate);
-
-        // Clamp to 0
-        if (total < 0.0) {
-            total = 0.0;
-        }
+        // Get unit weight
+        var weight = this.m_squads.Count / (double)MAX_SIZE;
 
         // Return total
-        return total;
+        return this.m_squads.Aggregate(0.0, (a, b) => a + (b.VeterancyRank * weight)) * this.m_companyStatistics.WinRate;
 
     }
 
