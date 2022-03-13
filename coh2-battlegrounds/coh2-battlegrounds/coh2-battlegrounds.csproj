@@ -91,6 +91,7 @@
     <None Remove="Resources\ingame\item_icons.dat" />
     <None Remove="Resources\ingame\no_icon.png" />
     <None Remove="Resources\ingame\phase_icons.dat" />
+    <None Remove="Resources\ingame\portraits.dat" />
     <None Remove="Resources\ingame\remove_item.png" />
     <None Remove="Resources\ingame\resource_icons\botb_fuel.png" />
     <None Remove="Resources\ingame\resource_icons\botb_manpower.png" />
@@ -187,6 +188,7 @@
     <Resource Include="Resources\ingame\item_icons.dat" />
     <Resource Include="Resources\ingame\no_icon.png" />
     <Resource Include="Resources\ingame\phase_icons.dat" />
+    <Resource Include="Resources\ingame\portraits.dat" />
     <Resource Include="Resources\ingame\remove_item.png" />
     <Resource Include="Resources\ingame\resource_icons\botb_fuel.png" />
     <Resource Include="Resources\ingame\resource_icons\botb_manpower.png" />

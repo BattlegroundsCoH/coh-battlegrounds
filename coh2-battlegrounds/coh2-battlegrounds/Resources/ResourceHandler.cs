@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -22,6 +23,7 @@ namespace BattlegroundsApp.Resources {
             "upgrade_icons",
             "phase_icons",
             "deploy_icons",
+            "portraits"
         };
         private static readonly string[] __iconResourceFiles = {
             "resources/ingame/ability_icons.dat",
@@ -30,11 +32,12 @@ namespace BattlegroundsApp.Resources {
             "resources/ingame/unit_icons.dat",
             "resources/ingame/upgrade_icons.dat",
             "resources/ingame/phase_icons.dat",
-            "resources/ingame/deploy_icons.dat"
+            "resources/ingame/deploy_icons.dat",
+            "resources/ingame/portraits.dat"
         };
 
-        private Dictionary<string, ImageSource> m_cache;
-        private Dictionary<string, GfxMap> m_gfxMaps;
+        private readonly Dictionary<string, ImageSource> m_cache;
+        private readonly Dictionary<string, GfxMap> m_gfxMaps;
         private ResourceSet m_set;
 
         public ResourceHandler() {
@@ -56,7 +59,9 @@ namespace BattlegroundsApp.Resources {
                         var ms = new MemoryStream();
                         datastream.CopyTo(ms);
                         ms.Position = 0;
-                        this.m_gfxMaps[name] = GfxMap.FromBinary(ms);
+                        var gfxmap = GfxMap.FromBinary(ms);
+                        this.m_gfxMaps[name] = gfxmap;
+                        Trace.WriteLine($"Loaded gfx map {name}(v:0x{gfxmap.BinaryVersion:X2}) with {gfxmap.Resources.Length} gfx files.", nameof(ResourceHandler));
                     }
                     yield return resource.Key;
                 }
@@ -84,7 +89,7 @@ namespace BattlegroundsApp.Resources {
         }
 
         public bool HasIcon(string iconType, string iconName) 
-            => this.m_cache.ContainsKey(iconName) || (this.m_gfxMaps[iconType] is GfxMap gfx && gfx.GetResource(iconName) is GfxResource);
+            => this.m_cache.ContainsKey(iconName) || (this.m_gfxMaps[iconType] is GfxMap gfx && gfx.GetResource(iconName) is not null);
 
         public bool HasResource(string resourceName) => this.m_resourceNames.Contains(resourceName.ToLowerInvariant());
 

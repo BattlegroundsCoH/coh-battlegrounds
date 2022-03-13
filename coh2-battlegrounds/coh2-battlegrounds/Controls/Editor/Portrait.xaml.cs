@@ -15,6 +15,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 
 namespace BattlegroundsApp.Controls.Editor;
+
 /// <summary>
 /// Interaction logic for Portrait.xaml
 /// </summary>
@@ -28,7 +29,7 @@ public partial class Portrait : UserControl, INotifyPropertyChanged {
     /// <summary>
     /// Source to extract portraits from
     /// </summary>
-    public const string PORTRAIT_SOURCE = "portrait_icons"; // TODO: Improved...
+    public const string PORTRAIT_SOURCE = "portraits";
 
     /// <summary>
     /// Source to extract symbols from
