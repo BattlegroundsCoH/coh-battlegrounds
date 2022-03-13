@@ -14,7 +14,7 @@
              MinHeight="140">
     <Canvas Width="110" Height="140">
         <Canvas>
-            <Image Source="{Binding PortraitSource}"
+            <Image x:Name="PortraitImage"
                    Width="152"
                    Height="190"
                    Canvas.Left="-28"
@@ -25,7 +25,7 @@
             </Image>
         </Canvas>
         <Canvas>
-            <Image Source="{Binding SymbolSource}"
+            <Image x:Name="SymbolImage"
                    Width="36"
                    Height="36"
                    Canvas.Left="74"
@@ -33,6 +33,7 @@
             </Image>
         </Canvas>
         <Rectangle
+            x:Name="MaskRect"
             Fill="{Binding MaskColour}"
             Opacity="{Binding MaskOpacity}"
             Width="92"

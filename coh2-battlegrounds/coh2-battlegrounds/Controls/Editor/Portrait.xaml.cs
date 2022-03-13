@@ -79,26 +79,6 @@ public partial class Portrait : UserControl, INotifyPropertyChanged {
     }
 
     /// <summary>
-    /// Identifies the <see cref="PortraitSourceProperty"/> property.
-    /// </summary>
-    public static readonly DependencyProperty PortraitSourceProperty = DependencyProperty.Register(nameof(PortraitSource), typeof(ImageSource), typeof(Portrait));
-
-    /// <summary>
-    /// Get portrait image source
-    /// </summary>
-    public ImageSource PortraitSource => (ImageSource)this.GetValue(PortraitSourceProperty);
-
-    /// <summary>
-    /// Identifies the <see cref="SymbolSourceProperty"/> property.
-    /// </summary>
-    public static readonly DependencyProperty SymbolSourceProperty = DependencyProperty.Register(nameof(SymbolSource), typeof(ImageSource), typeof(Portrait));
-
-    /// <summary>
-    /// Get symbol image source
-    /// </summary>
-    public ImageSource SymbolSource => (ImageSource)this.GetValue(SymbolSourceProperty);
-
-    /// <summary>
     /// Identifies the <see cref="MaskOpacity"/> property.
     /// </summary>
     public static readonly DependencyProperty MaskOpacityProperty = DependencyProperty.Register(nameof(MaskOpacity), typeof(double), typeof(Portrait), new(1.0));
@@ -126,17 +106,16 @@ public partial class Portrait : UserControl, INotifyPropertyChanged {
     public event PropertyChangedEventHandler PropertyChanged;
 
     public Portrait() {
-        this.DataContext = this;
         this.InitializeComponent();
     }
 
     private void TrySetPortrait()
-        => this.TrySet(PortraitSourceProperty, PORTRAIT_SOURCE, PortraitName, nameof(PortraitSource));
+        => this.TrySet(PortraitImage, PORTRAIT_SOURCE, PortraitName);
 
     private void TrySetIcon()
-        => this.TrySet(SymbolSourceProperty, SYMBOL_SOURCE, SymbolName, nameof(SymbolSource));
+        => this.TrySet(SymbolImage, SYMBOL_SOURCE, SymbolName);
 
-    private void TrySet(DependencyProperty dp, string source, string name, string target) {
+    private void TrySet(Image img, string source, string name) {
 
         // Do nothing if name is not valid
         if (string.IsNullOrEmpty(name)) {
@@ -154,27 +133,26 @@ public partial class Portrait : UserControl, INotifyPropertyChanged {
         }
 
         // Set source
-        this.SetValue(dp, App.ResourceHandler.GetIcon(source, name));
-        this.PropertyChanged?.Invoke(this, new(target));
+        img.Source = App.ResourceHandler.GetIcon(source, name);
 
     }
 
     protected override void OnMouseEnter(MouseEventArgs e) {
         base.OnMouseEnter(e);
-        if (this.HoverHighlight) {
+        /*if (this.HoverHighlight) {
             this.SetValue(MaskOpacityProperty, 0.075);
             this.PropertyChanged?.Invoke(this, new(nameof(this.MaskColour)));
             this.PropertyChanged?.Invoke(this, new(nameof(this.MaskOpacity)));
-        }
+        }*/
     }
 
     protected override void OnMouseLeave(MouseEventArgs e) {
         base.OnMouseLeave(e);
-        if (this.HoverHighlight) {
+        /*if (this.HoverHighlight) {
             this.SetValue(MaskOpacityProperty, 0.6);
             this.PropertyChanged?.Invoke(this, new(nameof(this.MaskColour)));
             this.PropertyChanged?.Invoke(this, new(nameof(this.MaskOpacity)));
-        }
+        }*/
     }
 
 }
