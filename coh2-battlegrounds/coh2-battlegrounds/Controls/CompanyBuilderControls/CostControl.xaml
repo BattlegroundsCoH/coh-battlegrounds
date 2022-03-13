@@ -6,27 +6,40 @@
              xmlns:local="clr-namespace:BattlegroundsApp.Controls.CompanyBuilderControls"
              mc:Ignorable="d" 
              d:DesignHeight="32" d:DesignWidth="128">
+    
     <StackPanel Orientation="Horizontal">
-        <Image Width="24" 
-                   Visibility="{Binding ManpowerCostVisible}"
-               Source="pack://application:,,,/Resources/ingame/resource_icons/botb_manpower.png">
-        </Image>
-        <Label Content="{Binding ManpowerCost}" 
-                               Visibility="{Binding ManpowerCostVisible}"
+        <StackPanel>
+            <Label x:Name="ManpowerCostValue" 
+               Foreground="White"
+               VerticalContentAlignment="Center" HorizontalContentAlignment="Left"
+               Margin="0"/>
+
+            <Image Width="28" 
+               x:Name="ManpowerCostIcon"
+               Source="pack://application:,,,/Resources/ingame/resource_icons/botb_manpower.png"/>
+
+        </StackPanel>
+
+        <StackPanel>
+            <Label x:Name="MunitionCostValue"
+               Foreground="White"
                VerticalContentAlignment="Center" HorizontalContentAlignment="Left"/>
-        <Image Width="24"
-                               Visibility="{Binding MunitionCostVisible}"
-               Source="pack://application:,,,/Resources/ingame/resource_icons/botb_munitions.png">
-        </Image>
-        <Label Content="{Binding MunitionCost}" 
-                               Visibility="{Binding MunitionCostVisible}"
+
+            <Image Width="28"
+               x:Name="MunitionCostIcon"
+               Source="pack://application:,,,/Resources/ingame/resource_icons/botb_munitions.png"/>
+
+        </StackPanel>
+
+        <StackPanel>
+            <Label x:Name="FuelCostValue"
+               Foreground="White"
                VerticalContentAlignment="Center" HorizontalContentAlignment="Left"/>
-        <Image Width="24"
-                               Visibility="{Binding FuelCostVisible}"
-               Source="pack://application:,,,/Resources/ingame/resource_icons/botb_fuel.png">
-        </Image>
-        <Label Content="{Binding FuelCost}" 
-                               Visibility="{Binding FuelCostVisible}"
-               VerticalContentAlignment="Center" HorizontalContentAlignment="Left"/>
+
+            <Image Width="28"
+               x:Name="FuelCostIcon"
+               Source="pack://application:,,,/Resources/ingame/resource_icons/botb_fuel.png"/>
+
+        </StackPanel>
     </StackPanel>
 </UserControl>

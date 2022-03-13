@@ -53,9 +53,9 @@ public class CompanyBuilderViewModel : IViewModel {
     private List<SquadBlueprint> m_availableCrews;
     private List<AbilityBlueprint> m_abilities;
 
-    public ObservableCollection<SquadSlotLarge> CompanyInfantrySquads { get; set; }
-    public ObservableCollection<SquadSlotLarge> CompanySupportSquads { get; set; }
-    public ObservableCollection<SquadSlotLarge> CompanyVehicleSquads { get; set; }
+    public ObservableCollection<SquadSlotViewModel> CompanyInfantrySquads { get; set; }
+    public ObservableCollection<SquadSlotViewModel> CompanySupportSquads { get; set; }
+    public ObservableCollection<SquadSlotViewModel> CompanyVehicleSquads { get; set; }
     public ObservableCollection<AbilitySlot> CompanyAbilities { get; set; }
     public ObservableCollection<AbilitySlot> CompanyUnitAbilities { get; set; }
     public ObservableCollection<EquipmentSlot> CompanyEquipment { get; set; }
@@ -254,9 +254,9 @@ public class CompanyBuilderViewModel : IViewModel {
     private void AddUnitToDisplay(Squad squad) {
 
         // Create display
-        SquadSlotLarge unitSlot = new(squad);
-        unitSlot.OnClick += this.OnSlotClicked;
-        unitSlot.OnRemove += this.OnSlotRemoveClicked;
+        SquadSlotViewModel unitSlot = new(squad);
+        //unitSlot.OnClick += this.OnSlotClicked;
+        //unitSlot.OnRemove += this.OnSlotRemoveClicked;
 
         // Add to collection based on category
         switch (squad.GetCategory(true)) {
