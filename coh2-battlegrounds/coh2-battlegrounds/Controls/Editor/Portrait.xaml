@@ -6,13 +6,13 @@
              xmlns:local="clr-namespace:BattlegroundsApp.Controls.Editor"
              mc:Ignorable="d" 
              d:DesignHeight="140" d:DesignWidth="108"
-             Width="112"
-             MaxWidth="112"
-             MinWidth="112"
+             Width="110"
+             MaxWidth="110"
+             MinWidth="110"
              Height="140"
              MaxHeight="140"
              MinHeight="140">
-    <Canvas Width="190" Height="190">
+    <Canvas Width="110" Height="140">
         <Canvas>
             <Image Source="{Binding PortraitSource}"
                    Width="152"
@@ -28,7 +28,7 @@
             <Image Source="{Binding SymbolSource}"
                    Width="36"
                    Height="36"
-                   Canvas.Left="76"
+                   Canvas.Left="74"
                    Canvas.Top="0">
             </Image>
         </Canvas>
