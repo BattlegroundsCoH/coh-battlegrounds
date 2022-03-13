@@ -31,20 +31,7 @@ public class LocLabel : Label {
                 this.Content = string.Empty;
                 return;
             }
-            if (BattlegroundsInstance.Localize is not null) {
-                string str = value switch {
-                    string s => BattlegroundsInstance.Localize.GetString(s),
-                    LocaleKey k => BattlegroundsInstance.Localize.GetString(k),
-                    _ => value.ToString()
-                };
-                if (this.UpperCaseAll) {
-                    str = str.ToUpper();
-                }
-                this.Content = str;
-            } else {
-                
-                this.Content = this.UpperCaseAll ? value.ToString().ToUpper() : value.ToString();
-            }
+            this.RefreshDisplay();
         }
     }
 
@@ -56,11 +43,29 @@ public class LocLabel : Label {
         }
     }
 
+    private void RefreshDisplay() {
+        object value = this.GetValue(LocKeyProperty);
+        if (BattlegroundsInstance.Localize is not null) {
+            string str = value switch {
+                string s => BattlegroundsInstance.Localize.GetString(s),
+                LocaleKey k => BattlegroundsInstance.Localize.GetString(k),
+                _ => value.ToString()
+            };
+            if (this.UpperCaseAll) {
+                str = str.ToUpper();
+            }
+            this.Content = str;
+        } else {
+
+            this.Content = this.UpperCaseAll ? value.ToString().ToUpper() : value.ToString();
+        }
+    }
+
     /// <summary>
     /// 
     /// </summary>
     public static readonly DependencyProperty UpperCaseAllProperty =
-      DependencyProperty.Register("UpperCaseAll", typeof(bool), typeof(LocLabel), new PropertyMetadata(false));
+      DependencyProperty.Register("UpperCaseAll", typeof(bool), typeof(LocLabel), new PropertyMetadata(false, OnCaseChanged));
 
     /// <summary>
     /// Get or set if the label should be all upper case letters.
@@ -68,6 +73,13 @@ public class LocLabel : Label {
     public bool UpperCaseAll {
         get => (bool)this.GetValue(UpperCaseAllProperty);
         set => this.SetValue(UpperCaseAllProperty, value);
+    }
+
+    private static void OnCaseChanged(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs e) {
+        if (dependencyObject is LocLabel loc) { 
+            loc.UpperCaseAll = (bool)e.NewValue;
+            loc.RefreshDisplay();
+        }
     }
 
 }

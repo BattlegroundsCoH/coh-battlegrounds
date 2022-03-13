@@ -462,8 +462,8 @@
                                 VerticalAlignment="Center"
                                 HorizontalAlignment="Center"
                                 Foreground="White"
-                                LocKey="{Binding Header, RelativeSource={RelativeSource TemplatedParent}}"
                                 UpperCaseAll="True"
+                                LocKey="{Binding Header, RelativeSource={RelativeSource TemplatedParent}}"
                                 Margin="12, 2"
                                 FontSize="16"/>
                         </Grid>
