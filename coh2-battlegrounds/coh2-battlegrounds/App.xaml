@@ -77,9 +77,14 @@
         <DataTemplate DataType="{x:Type companyEditorModels:CompanyBuilderViewModel}">
             <companyEditorViews:CompanyBuilderView/>
         </DataTemplate>
+        
+        <!-- New SquadSlot-View Models -->
+        <DataTemplate DataType="{x:Type companyEditorModels:SquadSlotViewModel}">
+            <companyEditorViews:SquadSlotView/>
+        </DataTemplate>
 
 
-        <!-- Lobby View Models -->
+            <!-- Lobby View Models -->
         <DataTemplate DataType="{x:Type lobbymodels:LobbyChatSpectatorModel}">
             <lobbyviews:LobbyChatSpectatorView/>
         </DataTemplate>
