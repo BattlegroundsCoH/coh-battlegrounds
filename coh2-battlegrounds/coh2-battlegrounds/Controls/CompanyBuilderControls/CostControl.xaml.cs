@@ -46,6 +46,10 @@ namespace BattlegroundsApp.Controls.CompanyBuilderControls {
             this.MunitionCostIcon.Visibility = this.MunitionCost is 0 ? Visibility.Collapsed : Visibility.Visible;
             this.FuelCostIcon.Visibility = this.FuelCost is 0 ? Visibility.Collapsed : Visibility.Visible;
 
+            this.ManpowerCostValue.Visibility = this.ManpowerCost is 0 ? Visibility.Collapsed: Visibility.Visible;
+            this.MunitionCostValue.Visibility = this.MunitionCost is 0 ? Visibility.Collapsed: Visibility.Visible;
+            this.FuelCostValue.Visibility = this.FuelCost is 0 ? Visibility.Collapsed: Visibility.Visible;
+
             this.ManpowerCostValue.Content = value.Manpower;
             this.MunitionCostValue.Content = value.Munitions;
             this.FuelCostValue.Content = value.Fuel;
