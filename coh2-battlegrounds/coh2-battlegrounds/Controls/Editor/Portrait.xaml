@@ -5,14 +5,13 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:BattlegroundsApp.Controls.Editor"
              mc:Ignorable="d" 
-             d:DesignHeight="100" d:DesignWidth="108"
-             Width="110"
-             MaxWidth="110"
-             MinWidth="110"
-             Height="100"
-             MaxHeight="100"
-             MinHeight="100">
-    <Canvas Width="110" Height="78">
+             d:DesignHeight="100" d:DesignWidth="64"
+             MaxWidth="64"
+             MinWidth="64"
+             Height="78"
+             MaxHeight="78"
+             MinHeight="78">
+    <Canvas Width="64" Height="78">
         <Canvas>
             <Image x:Name="PortraitImage"
                    Width="80"
@@ -32,10 +31,10 @@
             Height="78"/>
         <Canvas>
             <Image x:Name="SymbolImage"
-                   Width="28"
-                   Height="28"
-                   Canvas.Left="27"
-                   Canvas.Top="5">
+                   Width="24"
+                   Height="24"
+                   Canvas.Left="28"
+                   Canvas.Top="6">
             </Image>
         </Canvas>
     </Canvas>
