@@ -8,32 +8,38 @@
              xmlns:cost="clr-namespace:BattlegroundsApp.Controls.CompanyBuilderControls"
              xmlns:convertor="clr-namespace:BattlegroundsApp.Utilities.Converters"
              mc:Ignorable="d" 
-             d:DesignHeight="100" d:DesignWidth="236">
+             d:DesignHeight="100" d:DesignWidth="250">
 
     <UserControl.Resources>
         <convertor:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
     </UserControl.Resources>
 
-    <Canvas Height="100" Width="236">
-        <Canvas Height="100" Width="236">
+    <Canvas Height="100" Width="250">
+        <Canvas Height="100" Width="250">
+            
+            <!-- Name -->
             <Label Content="{Binding SquadName}"
                    Canvas.Left="51"
                    Canvas.Top="5"
                    Foreground="White"
                    FontWeight="DemiBold"/>
-
+            
+            <!-- Portrait -->
             <portrait:Portrait PortraitName="{Binding SquadPortrait}"
                                SymbolName="{Binding SquadSymbol}"/>
-
-            <cost:CostControl Canvas.Bottom="0"
-                              Canvas.Left="51"
+            
+            <!-- Cost -->
+            <cost:CostControl Canvas.Top="40"
+                              Canvas.Left="48"
                               Height="50"
                               Cost="{Binding SquadCost}"/>
-
+            
+            <!-- Transport -->
             <Image Canvas.Right="5" Canvas.Bottom="0" 
                    Visibility="{Binding SquadIsTransported, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter=False}"
                    Source="{Binding SquadTransportIcon}"/>
-
+            
+            <!-- Veterancy -->
             <StackPanel Orientation="Horizontal"
                         Canvas.Left="51"
                         Canvas.Top="28">
@@ -58,6 +64,7 @@
                    Margin="1.75" 
                    Source="{Binding Rank5}"/>
             </StackPanel>
+            
         </Canvas>
     </Canvas>
     
