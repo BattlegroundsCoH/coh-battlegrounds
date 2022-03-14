@@ -24,7 +24,7 @@
         </Grid.Resources>
 
         <Grid.RowDefinitions>
-            <RowDefinition Height="36"/>
+            <RowDefinition Height="42"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="auto"/>
             <RowDefinition Height="52"/>
@@ -46,16 +46,17 @@
             LocKey="CompanyView_Title"
             Foreground="#d8dbde"
             FontSize="18"
+            FontFamily="Open Sans"
+            FontWeight="Bold"
             Margin="15, 5, 0, 0"
-            VerticalContentAlignment="Center"
-            FontFamily="Open Sans"/>
+            VerticalContentAlignment="Center"/>
 
         <!-- Row 1 -->
         <ListView x:Name="CompanyList"
                   Grid.Row="1"
                   Grid.Column="0"
                   Grid.ColumnSpan="8"
-                  Margin="15"
+                  Margin="15, 7.5, 15, 2"
                   ItemsSource="{Binding Companies}"
                   SelectedItem="{Binding SelectedCompany}"
                   MouseDoubleClick="{mvvm:EventBinding Handler=EditCompanyDirectly}"
@@ -76,6 +77,19 @@
             </ListView.Resources>
             <ListView.View>
                 <GridView>
+                    <GridViewColumn
+                        Header="{Binding CountryListViewHeader, Converter={StaticResource LocaleConvertor}}"
+                        Width="86"
+                        HeaderContainerStyle="{StaticResource StandardBlueGridViewHeader}">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <Image Width="36" Height="36"
+                                       Margin="8"
+                                       Source="{Binding Army, Converter={StaticResource FactionIconConverter}}"
+                                       HorizontalAlignment="Center"/>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
                     <GridViewColumn
                         Header="{Binding NameListViewHeader, Converter={StaticResource LocaleConvertor}}"
                         Width="{Binding ElementName=firstColumnSize, Path=ActualWidth}"
@@ -121,19 +135,6 @@
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>
-                    <GridViewColumn
-                        Header="{Binding CountryListViewHeader, Converter={StaticResource LocaleConvertor}}"
-                        Width="86"
-                        HeaderContainerStyle="{StaticResource StandardBlueGridViewHeader}">
-                        <GridViewColumn.CellTemplate>
-                            <DataTemplate>
-                                <Image Width="36" Height="36"
-                                       Margin="8"
-                                       Source="{Binding Army, Converter={StaticResource FactionIconConverter}}"
-                                       HorizontalAlignment="Center"/>
-                            </DataTemplate>
-                        </GridViewColumn.CellTemplate>
-                    </GridViewColumn>
                 </GridView>
             </ListView.View>
         </ListView>
@@ -145,18 +146,19 @@
               Grid.ColumnSpan="8"
               Margin="15">
             <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="88"/>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="175"/>
                 <ColumnDefinition Width="125"/>
                 <ColumnDefinition Width="100"/>
-                <ColumnDefinition Width="88"/>
             </Grid.ColumnDefinitions>
             <Grid x:Name="firstColumnSize"
-                  Grid.Column="0"/>
+                  Grid.Column="1"/>
         </Grid>
         
         <!-- Row 2 -->
-        <Separator Grid.Row="2" Grid.ColumnSpan="8"/>
+        <Separator Grid.Row="2" Grid.ColumnSpan="8"
+                   Margin="15, 5, 15, 5"/>
         
         <!-- Row 3 -->
         <Button x:Name="createCompanyButton"
@@ -216,7 +218,7 @@
                 Grid.Row="3"
                 Grid.Column="7"
                 Content="{Binding Import.Text, Converter={StaticResource LocaleConvertor}}"
-                Margin="5,5,5,8"
+                Margin="5,5,15,8"
                 Command="{Binding Import.Click}"
                 Style="{StaticResource MainButtonStyle}"
                 IsEnabled="False"/>
