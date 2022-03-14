@@ -42,7 +42,7 @@ english:
  CompanyView_Type: "Type"
  CompanyView_Alliance: "Alliace"
  CompanyView_Country: "Faction"
- CompanyView_Title: "Company Overview"
+ CompanyView_Title: "Company List"
  FactionToAllianceConverter_Unkown: "Unknown"
  FactionToAllianceConverter_Allies: "Allies"
  FactionToAllianceConverter_Axis: "Axis"

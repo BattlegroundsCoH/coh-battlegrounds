@@ -12,31 +12,31 @@
              Height="100"
              MaxHeight="100"
              MinHeight="100">
-    <Canvas Width="110" Height="100">
+    <Canvas Width="110" Height="78">
         <Canvas>
             <Image x:Name="PortraitImage"
                    Width="80"
                    Height="100"
                    Canvas.Left="-20"
-                   Canvas.Top="0">
+                   Canvas.Top="-8"
+                   Source="pack://application:,,,/coh2-battlegrounds;component/Resources/ingame/test_unit_portrait.png">
                 <Image.Clip>
-                    <RectangleGeometry Rect="20,8,40,100"/>
+                    <RectangleGeometry Rect="20,8,40,78"/>
                 </Image.Clip>
             </Image>
         </Canvas>
+        <Rectangle
+            Canvas.Top="0"
+            x:Name="MaskRect"
+            Width="40"
+            Height="78"/>
         <Canvas>
             <Image x:Name="SymbolImage"
-                   Width="32"
-                   Height="32"
-                   Canvas.Left="25"
+                   Width="28"
+                   Height="28"
+                   Canvas.Left="27"
                    Canvas.Top="5">
             </Image>
         </Canvas>
-        <Rectangle
-            x:Name="MaskRect"
-            Fill="{Binding MaskColour}"
-            Opacity="{Binding MaskOpacity}"
-            Width="92"
-            Height="140"/>
     </Canvas>
 </UserControl>

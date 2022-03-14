@@ -19,7 +19,7 @@ namespace BattlegroundsApp.Controls.Editor;
 /// <summary>
 /// Interaction logic for Portrait.xaml
 /// </summary>
-public partial class Portrait : UserControl, INotifyPropertyChanged {
+public partial class Portrait : UserControl {
 
     /// <summary>
     /// Clip dimensions (Currently only for storage purposes...)
@@ -53,7 +53,6 @@ public partial class Portrait : UserControl, INotifyPropertyChanged {
         set {
             this.SetValue(PortraitNameProperty, value);
             this.TrySetPortrait();
-            this.PropertyChanged?.Invoke(this, new(nameof(PortraitName)));
         }
     }
 
@@ -74,48 +73,51 @@ public partial class Portrait : UserControl, INotifyPropertyChanged {
         set {
             this.SetValue(SymbolNameProperty, value);
             this.TrySetIcon();
-            this.PropertyChanged?.Invoke(this, new(nameof(PortraitName)));
         }
     }
 
     /// <summary>
-    /// Identifies the <see cref="MaskOpacity"/> property.
-    /// </summary>
-    public static readonly DependencyProperty MaskOpacityProperty = DependencyProperty.Register(nameof(MaskOpacity), typeof(double), typeof(Portrait), new(1.0));
-
-    /// <summary>
-    /// Get the opacity of the mask
-    /// </summary>
-    public double MaskOpacity => (double)this.GetValue(MaskOpacityProperty);
-
-    /// <summary>
     /// Identifies the <see cref="MaskColour"/> property.
     /// </summary>
-    public static readonly DependencyProperty MaskColourProperty = DependencyProperty.Register(nameof(MaskColour), typeof(Brush), typeof(Portrait));
+    public static readonly DependencyProperty MaskColourProperty 
+        = DependencyProperty.Register(nameof(MaskColour), typeof(Brush), typeof(Portrait), new PropertyMetadata(Brushes.Black));
 
     /// <summary>
     /// Get the colour of the mask.
     /// </summary>
-    public Brush MaskColour => this.GetValue(MaskColourProperty) as Brush;
+    public Brush MaskColour {
+        get => this.GetValue(MaskColourProperty) as Brush;
+        set {
+            this.SetValue(MaskColourProperty, value);
+            this.RefreshMask();
+        }
+    }
 
     /// <summary>
-    /// Get or set if hover highlight effect is enabled (TODO: Something else for this class...)
+    /// Identifies the <see cref="IsSelected"/> property.
     /// </summary>
-    public bool HoverHighlight { get; set; }
+    public static readonly DependencyProperty IsSelectedProperty = DependencyProperty.Register(nameof(IsSelected), typeof(bool), typeof(Portrait));
 
-    public event PropertyChangedEventHandler PropertyChanged;
+    public bool IsSelected {
+        get => (bool)this.GetValue(IsSelectedProperty);
+        set {
+            this.SetValue(IsSelectedProperty, value);
+            this.RefreshMask();
+        }
+    }
 
     public Portrait() {
         this.InitializeComponent();
+        this.RefreshMask();
     }
 
     private void TrySetPortrait()
-        => this.TrySet(PortraitImage, PORTRAIT_SOURCE, PortraitName);
+        => TrySet(PortraitImage, PORTRAIT_SOURCE, PortraitName);
 
     private void TrySetIcon()
-        => this.TrySet(SymbolImage, SYMBOL_SOURCE, SymbolName);
+        => TrySet(SymbolImage, SYMBOL_SOURCE, SymbolName);
 
-    private void TrySet(Image img, string source, string name) {
+    private static void TrySet(Image img, string source, string name) {
 
         // Do nothing if name is not valid
         if (string.IsNullOrEmpty(name)) {
@@ -137,22 +139,10 @@ public partial class Portrait : UserControl, INotifyPropertyChanged {
 
     }
 
-    protected override void OnMouseEnter(MouseEventArgs e) {
-        base.OnMouseEnter(e);
-        /*if (this.HoverHighlight) {
-            this.SetValue(MaskOpacityProperty, 0.075);
-            this.PropertyChanged?.Invoke(this, new(nameof(this.MaskColour)));
-            this.PropertyChanged?.Invoke(this, new(nameof(this.MaskOpacity)));
-        }*/
-    }
-
-    protected override void OnMouseLeave(MouseEventArgs e) {
-        base.OnMouseLeave(e);
-        /*if (this.HoverHighlight) {
-            this.SetValue(MaskOpacityProperty, 0.6);
-            this.PropertyChanged?.Invoke(this, new(nameof(this.MaskColour)));
-            this.PropertyChanged?.Invoke(this, new(nameof(this.MaskOpacity)));
-        }*/
+    private void RefreshMask() {
+        bool selected = this.IsSelected;
+        this.MaskRect.Fill = selected ? Brushes.Transparent : this.MaskColour;
+        this.MaskRect.Opacity = selected ? 0 : 0.5; // TODO: Expose these two "magic" numbers
     }
 
 }
