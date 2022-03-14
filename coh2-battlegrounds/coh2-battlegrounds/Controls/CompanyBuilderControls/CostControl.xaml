@@ -5,7 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:BattlegroundsApp.Controls.CompanyBuilderControls"
              mc:Ignorable="d" 
-             d:DesignHeight="32" d:DesignWidth="92.5">
+             d:DesignHeight="44" d:DesignWidth="92.5">
 
     <Canvas>
 
@@ -13,30 +13,53 @@
         <!-- Manpower -->
         <Image Width="24" 
                x:Name="ManpowerCostIcon"
+               Canvas.Top="18"
+               Canvas.Left="4"
                Source="pack://application:,,,/Resources/ingame/resource_icons/botb_manpower.png"/>
 
         <Label x:Name="ManpowerCostValue" 
                Foreground="White"
-               VerticalContentAlignment="Center" HorizontalContentAlignment="Left"/>
+               Content="999"
+               FontSize="10"
+               FontFamily="Open Sans"
+               Width="30.833"
+               VerticalContentAlignment="Center" 
+               HorizontalContentAlignment="Center"/>
 
         <!-- Munitions -->
         <Image Width="24"
                x:Name="MunitionCostIcon"
+               Canvas.Top="18"
+               Canvas.Left="34.25"
                Source="pack://application:,,,/Resources/ingame/resource_icons/botb_munitions.png"/>
 
         <Label x:Name="MunitionCostValue"
                Foreground="White"
-               VerticalContentAlignment="Center" HorizontalContentAlignment="Left"/>
+               Content="999"
+               FontSize="10"
+               FontFamily="Open Sans"
+               Width="30.833"
+               Canvas.Left="30.833"
+               VerticalContentAlignment="Center" 
+               HorizontalContentAlignment="Center"/>
 
         <!-- Fuel -->
         <Image Width="24"
                x:Name="FuelCostIcon"
+               Canvas.Top="18"
+               Canvas.Left="65"
                Source="pack://application:,,,/Resources/ingame/resource_icons/botb_fuel.png"/>
 
 
         <Label x:Name="FuelCostValue"
                Foreground="White"
-               VerticalContentAlignment="Center" HorizontalContentAlignment="Left"/>
+               Content="999"
+               FontSize="10"
+               FontFamily="Open Sans"
+               Width="30.833"
+               Canvas.Left="61.6"
+               VerticalContentAlignment="Center" 
+               HorizontalContentAlignment="Center"/>
 
     </Canvas>
 </UserControl>

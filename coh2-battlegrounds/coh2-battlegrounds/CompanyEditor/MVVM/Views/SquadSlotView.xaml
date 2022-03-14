@@ -28,9 +28,10 @@
                                SymbolName="{Binding SquadSymbol}"/>
 
         <!-- Cost -->
-        <cost:CostControl Canvas.Top="40"
+        <cost:CostControl Canvas.Top="38"
                               Canvas.Left="52"
-                              Height="50"
+                              Height="44"
+                              Width="92.5"
                               Cost="{Binding SquadCost}"/>
 
         <!-- Transport -->

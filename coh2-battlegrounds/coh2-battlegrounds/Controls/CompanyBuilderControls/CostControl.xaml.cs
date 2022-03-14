@@ -1,4 +1,4 @@
-﻿using System.ComponentModel;
+﻿using System;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -9,7 +9,14 @@ namespace BattlegroundsApp.Controls.CompanyBuilderControls {
     /// <summary>
     /// Interaction logic for CostControl.xaml
     /// </summary>
-    public partial class CostControl : UserControl, INotifyPropertyChanged {
+    public partial class CostControl : UserControl {
+
+
+        private static readonly double[] lblLeft = { 0, 30.8333, 61.66 };
+        private static readonly double[] icoLeft = { 4, 34.25, 65 };
+
+        private readonly Label[] ValueLabels;
+        private readonly Image[] Icons;
 
         /// <summary>
         /// Identifies the <see cref="Cost"/> property.
@@ -19,8 +26,6 @@ namespace BattlegroundsApp.Controls.CompanyBuilderControls {
                 new FrameworkPropertyMetadata(new CostExtension(),
                     FrameworkPropertyMetadataOptions.AffectsRender,
                     (a, b) => (a as CostControl).Cost = b.NewValue as CostExtension));
-
-        public event PropertyChangedEventHandler PropertyChanged;
 
         public int ManpowerCost => (int)(this.Cost?.Manpower ?? 0.0f);
 
@@ -35,6 +40,12 @@ namespace BattlegroundsApp.Controls.CompanyBuilderControls {
 
         public CostControl() {
             this.InitializeComponent();
+            this.ValueLabels = new Label[] {
+                this.ManpowerCostValue, this.MunitionCostValue, this.FuelCostValue
+            };
+            this.Icons = new Image[] {
+                this.ManpowerCostIcon, this.MunitionCostIcon, this.FuelCostIcon
+            };
         }
 
         private void SetCost(CostExtension value) {
@@ -42,17 +53,33 @@ namespace BattlegroundsApp.Controls.CompanyBuilderControls {
             // Set actual value
             this.SetValue(CostProperty, value);
 
-            this.ManpowerCostIcon.Visibility = this.ManpowerCost is 0 ? Visibility.Collapsed : Visibility.Visible;
-            this.MunitionCostIcon.Visibility = this.MunitionCost is 0 ? Visibility.Collapsed : Visibility.Visible;
-            this.FuelCostIcon.Visibility = this.FuelCost is 0 ? Visibility.Collapsed : Visibility.Visible;
+            // Stor left index
+            int li = 0;
 
-            this.ManpowerCostValue.Visibility = this.ManpowerCost is 0 ? Visibility.Collapsed: Visibility.Visible;
-            this.MunitionCostValue.Visibility = this.MunitionCost is 0 ? Visibility.Collapsed: Visibility.Visible;
-            this.FuelCostValue.Visibility = this.FuelCost is 0 ? Visibility.Collapsed: Visibility.Visible;
+            // Get values
+            var cost = value.AsCostArray();
 
-            this.ManpowerCostValue.Content = value.Manpower;
-            this.MunitionCostValue.Content = value.Munitions;
-            this.FuelCostValue.Content = value.Fuel;
+            // Run through
+            for (int i = 0; i < cost.Length; i++) { 
+                if (cost[i] > 0.0f) {
+                    
+                    // Set visible
+                    this.ValueLabels[i].Visibility = Visibility.Visible;
+                    this.Icons[i].Visibility = Visibility.Visible;
+
+                    // Set offsets
+                    this.ValueLabels[i].SetValue(Canvas.LeftProperty, lblLeft[li]);
+                    this.Icons[i].SetValue(Canvas.LeftProperty, icoLeft[li]);
+
+                    // Set value
+                    this.ValueLabels[i].Content = (int)Math.Ceiling(cost[i]);
+
+                    li++;
+                } else {
+                    this.ValueLabels[i].Visibility = Visibility.Collapsed;
+                    this.Icons[i].Visibility = Visibility.Collapsed;
+                }
+            }
 
         }
 

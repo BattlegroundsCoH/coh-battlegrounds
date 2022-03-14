@@ -51,6 +51,8 @@ namespace Battlegrounds.Game.Database.Extensions {
             this.FieldTime = fieldTime;
         }
 
+        public float[] AsCostArray() => new[] { this.Manpower, this.Munitions, this.Fuel };
+
         public static CostExtension operator +(CostExtension left, CostExtension right)
             => new(left.Manpower + right.Manpower, left.Munitions + right.Munitions, left.Fuel + right.Fuel, left.FieldTime + right.FieldTime);
 
