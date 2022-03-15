@@ -9,19 +9,19 @@
              xmlns:dropArea="clr-namespace:BattlegroundsApp.Controls.DropArea" xmlns:controls="clr-namespace:BattlegroundsApp.Controls"
              mc:Ignorable="d"
              Background="#273441"
-             d:DesignHeight="450" d:DesignWidth="800">
+             d:DesignHeight="750" d:DesignWidth="1100">
     <Grid Margin="10">
 
         <Grid.Resources>
             <!-- Locale Converter -->
             <converters:LocaleKeyToStringConverter x:Key="LocaleConvertor"/>
-            
+
             <!-- Locale & Case Converter -->
             <converters:ValueConverterGroup x:Key="LocaleAndCaseConvertor">
                 <converters:LocaleKeyToStringConverter/>
                 <converters:CaseConverter/>
             </converters:ValueConverterGroup>
-            
+
             <!-- Case Converter -->
             <converters:CaseConverter x:Key="CaseConverter"/>
 
@@ -37,14 +37,8 @@
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="auto"/>
             <ColumnDefinition Width="auto"/>
-            <ColumnDefinition Width="auto"/>
-            <ColumnDefinition Width="auto"/>
-            <ColumnDefinition Width="auto"/>
-            <ColumnDefinition Width="auto"/>
-            <ColumnDefinition Width="auto"/>
-            <ColumnDefinition Width="auto"/>
         </Grid.ColumnDefinitions>
-        
+
         <!-- Row 0 :: Company Name & Type -->
         <StackPanel Grid.Row="0"
                     Grid.Column="0"
@@ -64,21 +58,21 @@
 
             </TextBlock>
         </StackPanel>
-        
+
         <!-- Row 1 :: Company Overview -->
         <TabControl Grid.Row="1"
                     Grid.Column="0"
                     Grid.RowSpan="3"
                     Style="{StaticResource CompanyBuilderMainTabControl}"
-                    Width="800">
-            
+                    Width="755">
+
             <!-- UNITS -->
             <TabItem Header="CompanyBuilder_Units"
                      Width="150"
                      Height="35"
                      Style="{StaticResource CompanyBuilderMainTabItem}">
                 <TabControl Style="{StaticResource CompanyBuilderSecondaryTabControl}">
-                    
+
                     <!-- Infantry -->
                     <TabItem Header="{Binding InfantryHeaderItem, Converter={StaticResource LocaleAndCaseConvertor}}"
                              Width="100"
@@ -87,7 +81,11 @@
                                            Background="White"
                                            BorderThickness="1.5"
                                            BorderBrush="Black">
-                            <ScrollViewer>
+
+                            <ScrollViewer VerticalScrollBarVisibility="Auto" 
+                                          HorizontalScrollBarVisibility="Disabled"
+                                          Height="660">
+
                                 <StackPanel>
                                     <ItemsControl ItemsSource="{Binding CompanyInfantrySquads}">
                                         <ItemsControl.ItemsPanel>
@@ -110,7 +108,11 @@
                                            Background="White"
                                            BorderThickness="1.5"
                                            BorderBrush="Black">
-                            <ScrollViewer>
+
+                            <ScrollViewer VerticalScrollBarVisibility="Auto" 
+                                          HorizontalScrollBarVisibility="Disabled"
+                                          Height="660">
+
                                 <StackPanel>
                                     <ItemsControl ItemsSource="{Binding CompanySupportSquads}">
                                         <ItemsControl.ItemsPanel>
@@ -133,7 +135,11 @@
                                            Background="White"
                                            BorderThickness="1.5"
                                            BorderBrush="Black">
-                            <ScrollViewer>
+
+                            <ScrollViewer VerticalScrollBarVisibility="Auto" 
+                                          HorizontalScrollBarVisibility="Disabled"
+                                          Height="660">
+
                                 <StackPanel>
                                     <ItemsControl ItemsSource="{Binding CompanyVehicleSquads}">
                                         <ItemsControl.ItemsPanel>
@@ -147,17 +153,17 @@
                             </ScrollViewer>
                         </dropArea:DropArea>
                     </TabItem>
-                    
+
                 </TabControl>
-                
+
             </TabItem>
-            
+
             <!-- ABILITIES -->
             <TabItem Header="CompanyBuilder_Abilities"
                      Width="150"
                      Height="35"
                      Style="{StaticResource CompanyBuilderMainTabItem}">
-                
+
                 <TabControl Style="{StaticResource CompanyBuilderSecondaryTabControl}">
 
                     <!-- Commander Abilities -->
@@ -167,7 +173,11 @@
                                            Background="White"
                                            BorderThickness="1.5"
                                            BorderBrush="Black">
-                            <ScrollViewer>
+
+                            <ScrollViewer VerticalScrollBarVisibility="Auto" 
+                                          HorizontalScrollBarVisibility="Disabled"
+                                          Height="660">
+
                                 <StackPanel>
                                     <ItemsControl ItemsSource="{Binding CompanyAbilities}">
                                         <ItemsControl.ItemsPanel>
@@ -189,7 +199,10 @@
                                            Background="White"
                                            BorderThickness="1.5"
                                            BorderBrush="Black">
-                            <ScrollViewer>
+                            <ScrollViewer VerticalScrollBarVisibility="Auto" 
+                                          HorizontalScrollBarVisibility="Disabled"
+                                          Height="660">
+
                                 <StackPanel>
                                     <ItemsControl ItemsSource="{Binding CompanyUnitAbilities}">
                                         <ItemsControl.ItemsPanel>
@@ -203,7 +216,7 @@
                             </ScrollViewer>
                         </dropArea:DropArea>
                     </TabItem>
-                    
+
                 </TabControl>
             </TabItem>
 
@@ -212,8 +225,11 @@
                      Width="150"
                      Height="35"
                      Style="{StaticResource CompanyBuilderMainTabItem}">
-                
-                <ScrollViewer>
+
+                <ScrollViewer VerticalScrollBarVisibility="Auto" 
+                              HorizontalScrollBarVisibility="Disabled"
+                              Height="660">
+
                     <StackPanel>
                         <ItemsControl ItemsSource="{Binding CompanyEquipment}">
                             <ItemsControl.ItemsPanel>
@@ -232,7 +248,7 @@
                      Width="150"
                      Height="35"
                      Style="{StaticResource CompanyBuilderMainTabItem}">
-                
+
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
@@ -261,7 +277,7 @@
                            FontStyle="Italic"
                            Grid.Row="1" 
                            Grid.Column="0"/>
-                    
+
                     <Label Content="0"
                            FontStyle="Italic"
                            Grid.Row="1"
@@ -272,7 +288,7 @@
                            FontStyle="Italic"
                            Grid.Row="1"
                            Grid.Column="2"/>
-                    
+
                     <Label Content="0"
                            FontStyle="Italic" 
                            Grid.Row="1"
@@ -283,7 +299,7 @@
                            FontStyle="Italic"
                            Grid.Row="1"
                            Grid.Column="4"/>
-                    
+
                     <Label Content="0" 
                            FontStyle="Italic"
                            Grid.Row="1" 
@@ -301,7 +317,7 @@
                            FontStyle="Italic"
                            Grid.Row="3"
                            Grid.Column="0"/>
-                    
+
                     <Label Content="0"
                            FontStyle="Italic" 
                            Grid.Row="3"
@@ -312,7 +328,7 @@
                            FontStyle="Italic"
                            Grid.Row="3"
                            Grid.Column="2"/>
-                    
+
                     <Label Content="0"
                            FontStyle="Italic"
                            Grid.Row="3"
@@ -323,7 +339,7 @@
                            FontStyle="Italic"
                            Grid.Row="3"
                            Grid.Column="4"/>
-                    
+
                     <Label Content="0"
                            FontStyle="Italic"
                            Grid.Row="3"
@@ -344,26 +360,27 @@
             </TabItem>
 
         </TabControl>
-        
+
         <!-- Row 1 :: Save & Reset Buttons -->
         <StackPanel Grid.Row="1"
-                    Grid.Column="1" 
-                    Orientation="Horizontal"
-                    HorizontalAlignment="Center"
-                    VerticalAlignment="Center">
-            
+                    Grid.Column="1"
+                    Orientation="Horizontal" 
+                    VerticalAlignment="Top"
+                    Margin="65,0,0,0">
+
             <Button x:Name="resetButton"
                     Content="{Binding CompanyResetButtonContent, Converter={StaticResource LocaleConvertor}}"
                     Width="105"
                     Height="35"
                     Style="{StaticResource StandardBlueButton}"/>
-            
+
             <Button x:Name="saveButton" 
                     Content="{Binding CompanySaveButtonContent, Converter={StaticResource LocaleConvertor}}" 
                     Width="105"
                     Height="35"
-                    Style="{StaticResource StandardBlueButton}"/>
-            
+                    Style="{StaticResource StandardBlueButton}" 
+                    Margin="10,0,0,0"/>
+
         </StackPanel>
 
         <!-- Row 2 :: Available Units -->
@@ -371,7 +388,14 @@
                    Grid.Column="1" 
                    LastChildFill="True"
                    Visibility="{Binding AvailableUnitsVisible}">
-            
+
+            <ScrollViewer CanContentScroll="False" 
+                          VerticalScrollBarVisibility="Visible">
+
+                <StackPanel x:Name="AvailableUnits"/>
+
+            </ScrollViewer>
+
 
         </DockPanel>
 
@@ -380,14 +404,14 @@
                    Grid.Column="1" 
                    LastChildFill="True"
                    Visibility="{Binding AvailableAbilitiesVisible}">
-            
+
             <ScrollViewer CanContentScroll="False" 
                           VerticalScrollBarVisibility="Visible">
-                
+
                 <StackPanel x:Name="AvailableAbilities"/>
-                
+
             </ScrollViewer>
-            
+
         </DockPanel>
 
         <!-- Row 2 :: Available Crews -->
