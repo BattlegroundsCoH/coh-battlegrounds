@@ -14,6 +14,8 @@ using System.Windows.Media.Imaging;
 
 namespace BattlegroundsApp.CompanyEditor.MVVM.Models;
 
+public delegate void SquadSlotViewModelEvent(object sender, SquadSlotViewModel slotViewModel);
+
 public class SquadSlotViewModel : IViewModel {
 
     public static readonly ImageSource VetRankAchieved
@@ -38,8 +40,6 @@ public class SquadSlotViewModel : IViewModel {
 
     public Squad SquadInstance { get; }
 
-    public event Action<SquadSlotViewModel> OnClick;
-    public event Action<SquadSlotViewModel> OnRemove;
     public event PropertyChangedEventHandler PropertyChanged;
 
     public ImageSource Rank1 { get; set; } = VetRankNotAchieved;
@@ -54,10 +54,18 @@ public class SquadSlotViewModel : IViewModel {
 
     public bool SingleInstanceOnly => false; // This will allow us to override
 
-    public SquadSlotViewModel(Squad squad) {
+    public SquadSlotViewModelEvent Click { get; }
+
+    public SquadSlotViewModelEvent RemoveClick { get; }
+
+    public SquadSlotViewModel(Squad squad, SquadSlotViewModelEvent onClick, SquadSlotViewModelEvent onRemove) {
 
         // Set squad instance
         this.SquadInstance = squad;
+
+        // Set events
+        this.Click = onClick;
+        this.RemoveClick = onRemove;
 
         // Set data known not to change
         this.SquadPortrait = this.SquadInstance.SBP.UI.Portrait;

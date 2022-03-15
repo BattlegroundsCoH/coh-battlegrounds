@@ -221,11 +221,6 @@ public class CompanyBuilderViewModel : IViewModel {
                 .Filter(x => faction.Abilities.Select(y => y.Blueprint).Contains(x.Name))
                 .ToList();
 
-            // Populate lists : TODO
-            //this.FillStack(this.m_availableSquads, this.AvailableUnitsStack, this.CanAddUnits);
-            //this.FillStack(this.m_availableCrews, this.AvailableCrews, this.CanAddUnits);
-            //this.FillStack(this.m_abilities, this.AvailableAbilities, this.CanAddAbilities);
-
         });
 
     }
@@ -254,9 +249,7 @@ public class CompanyBuilderViewModel : IViewModel {
     private void AddUnitToDisplay(Squad squad) {
 
         // Create display
-        SquadSlotViewModel unitSlot = new(squad);
-        //unitSlot.OnClick += this.OnSlotClicked;
-        //unitSlot.OnRemove += this.OnSlotRemoveClicked;
+        SquadSlotViewModel unitSlot = new(squad, this.OnUnitClicked, this.OnUnitRemoveClicked);
 
         // Add to collection based on category
         switch (squad.GetCategory(true)) {
@@ -304,11 +297,11 @@ public class CompanyBuilderViewModel : IViewModel {
 
     }
 
-    private void OnSlotClicked(SquadSlotLarge squadSlot) {
+    private void OnUnitClicked(object sender, SquadSlotViewModel squadViewModel) {
 
     }
 
-    private void OnSlotRemoveClicked(SquadSlotLarge squadSlot) {
+    private void OnUnitRemoveClicked(object sender, SquadSlotViewModel squadSlot) {
 
     }
 

@@ -9,23 +9,25 @@
              xmlns:convertor="clr-namespace:BattlegroundsApp.Utilities.Converters"
              mc:Ignorable="d" 
              d:DesignHeight="78" d:DesignWidth="250"
-             Background="#334252">
+             Background="#334252" x:Name="Self">
 
     <UserControl.Resources>
         <convertor:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
     </UserControl.Resources>
 
     <Canvas Height="78" Width="250">
-
+        
         <!-- Name -->
         <Label Content="{Binding SquadName}"
                    Canvas.Left="50"
+                   MaxWidth="180"
                    Foreground="White"
                    FontWeight="DemiBold"/>
 
         <!-- Portrait -->
         <portrait:Portrait PortraitName="{Binding SquadPortrait}"
-                               SymbolName="{Binding SquadSymbol}"/>
+                               SymbolName="{Binding SquadSymbol}"
+                           x:Name="PortraitElement"/>
 
         <!-- Cost -->
         <cost:CostControl Canvas.Top="38"
@@ -41,7 +43,7 @@
 
         <!-- Veterancy -->
         <StackPanel Orientation="Horizontal"
-                        Canvas.Left="52"
+                        Canvas.Left="50"
                         Canvas.Top="20">
 
             <Image Width="16" 
@@ -64,6 +66,15 @@
                    Margin="1.25" 
                    Source="{Binding Rank5}"/>
         </StackPanel>
+
+        <Button Width="16"
+                Height="78"
+                Canvas.Right="0"
+                Style="{StaticResource StandardRedButton}"
+                Content=">"
+                x:Name="RemoveButton"
+                Visibility="Collapsed"
+                Click="RemoveButton_Click"/>
 
     </Canvas>
     
