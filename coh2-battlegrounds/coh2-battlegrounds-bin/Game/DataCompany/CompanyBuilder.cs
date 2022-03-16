@@ -180,16 +180,27 @@ public class CompanyBuilder {
     }
 
     /// <summary>
-    /// 
+    /// Remove unit from with <paramref name="unitID"/> from the company.
     /// </summary>
-    /// <param name="unitID"></param>
-    /// <returns></returns>
-    public virtual CompanyBuilder RemoveUnit(uint unitID) {
+    /// <param name="unitID">The ID of the unit to remove.</param>
+    /// <returns>The calling <see cref="CompanyBuilder"/> instance.</returns>
+    public virtual CompanyBuilder RemoveUnit(ushort unitID)
+        => this.RemoveUnit(unitID, out bool _);
 
-        this.m_companyTarget.RemoveSquad((ushort)unitID);
+    /// <summary>
+    /// Remove unit from with <paramref name="unitID"/> from the company.
+    /// </summary>
+    /// <param name="unitID">The ID of the unit to remove.</param>
+    /// <param name="success">Boolean out parameter flagging if specified unit was removed.</param>
+    /// <returns>The calling <see cref="CompanyBuilder"/> instance.</returns>
+    public virtual CompanyBuilder RemoveUnit(ushort unitID, out bool success) {
+
+        // Remove unit
+        success = this.m_companyTarget.RemoveSquad(unitID);
 
         // Return self for method chaining
         return this;
+
     }
 
     /// <summary>

@@ -65,6 +65,7 @@
             <Image Width="16" 
                    Margin="1.25" 
                    Source="{Binding Rank5}"/>
+            
         </StackPanel>
 
         <Button Width="16"

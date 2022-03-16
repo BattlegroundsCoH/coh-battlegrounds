@@ -252,21 +252,16 @@ public class CompanyBuilderViewModel : IViewModel {
         SquadSlotViewModel unitSlot = new(squad, this.OnUnitClicked, this.OnUnitRemoveClicked);
 
         // Add to collection based on category
-        switch (squad.GetCategory(true)) {
-            case "infantry":
-                this.CompanyInfantrySquads.Add(unitSlot);
-                break;
-            case "team_weapon":
-                this.CompanySupportSquads.Add(unitSlot);
-                break;
-            case "vehicle":
-                this.CompanyVehicleSquads.Add(unitSlot);
-                break;
-            default:
-                break;
-        }
+        this.GetUnitCollection(squad).Add(unitSlot);
 
     }
+
+    private ObservableCollection<SquadSlotViewModel> GetUnitCollection(Squad squad) => squad.GetCategory(true) switch {
+        "infantry" => this.CompanyInfantrySquads,
+        "team_weapon" => this.CompanySupportSquads,
+        "vehicle" => this.CompanyVehicleSquads,
+        _ => throw new InvalidEnumArgumentException()
+    };
 
     private void AddAbilityToDisplay(Ability ability, bool isUnitAbility) {
 
@@ -302,6 +297,15 @@ public class CompanyBuilderViewModel : IViewModel {
     }
 
     private void OnUnitRemoveClicked(object sender, SquadSlotViewModel squadSlot) {
+
+        // Grab squad
+        var squad = squadSlot.SquadInstance;
+
+        // Remove from company
+        this.Builder.RemoveUnit(squad.SquadID);
+
+        // Remove view model
+        this.GetUnitCollection(squad).Remove(squadSlot);
 
     }
 
