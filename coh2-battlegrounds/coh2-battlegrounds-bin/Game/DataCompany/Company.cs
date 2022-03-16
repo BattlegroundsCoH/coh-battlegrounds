@@ -179,6 +179,23 @@ public class Company : IChecksumItem {
     }
 
     /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="squad"></param>
+    /// <returns></returns>
+    internal bool AddSquad(Squad squad) {
+        if (this.m_squads.Any(x => x.SquadID == squad.SquadID)) {
+            return false;
+        }
+        if (squad.Crew is not null) {
+            if (this.m_squads.Any(x => x.SquadID == squad.Crew.SquadID))
+                return false;
+        }
+        this.m_squads.Add(squad);
+        return true;
+    }
+
+    /// <summary>
     /// Get the company <see cref="Squad"/> by its company index.
     /// </summary>
     /// <param name="squadID">The index of the squad to get</param>

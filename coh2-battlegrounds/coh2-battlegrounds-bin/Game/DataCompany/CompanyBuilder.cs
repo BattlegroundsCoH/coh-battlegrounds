@@ -1,17 +1,41 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
+using Battlegrounds.ErrorHandling.CommonExceptions;
 using Battlegrounds.Functional;
 using Battlegrounds.Game.Database;
+using Battlegrounds.Game.DataCompany.Builder;
 using Battlegrounds.Game.Gameplay;
 using Battlegrounds.Modding;
 
 namespace Battlegrounds.Game.DataCompany;
 
 /// <summary>
-/// Builder class for building a <see cref="Company"/>. Inherit if you wish to extend functionality. This class is intended to be used for method chaining (But is not required for use).
+/// Builder class for building a <see cref="Company"/>. Inherit if you wish to extend functionality. 
+/// This class is intended to be used for method chaining (But is not required for use).
 /// </summary>
-public class CompanyBuilder {
+public class CompanyBuilder : IBuilder {
+
+    public sealed record RemoveUnitAction(ushort UnitId) : IEditAction<Company> {
+        private Squad m_removedUnit;
+        public IEditAction<Company>.ActionResult Apply(Company target) {
+            this.m_removedUnit = target.GetSquadByIndex(this.UnitId);
+            target.RemoveSquad(this.UnitId);
+            return target;
+        }
+        public IEditAction<Company>.ActionResult Undo(Company target)
+            => this.m_removedUnit is not null && target.AddSquad(this.m_removedUnit) ? target : null;
+    }
+
+    public sealed record AddUnitAction(UnitBuilder Builder) : IEditAction<Company> {
+        private ushort m_addedUid;
+        public IEditAction<Company>.ActionResult Apply(Company target) {
+            this.m_addedUid = target.AddSquad(this.Builder);
+            return target;
+        }
+        public IEditAction<Company>.ActionResult Undo(Company target) => target.RemoveSquad(this.m_addedUid) ? target : null;
+    }
 
     private Company m_companyTarget;
     private CompanyType m_companyType;
@@ -20,6 +44,9 @@ public class CompanyBuilder {
     private string m_companyUsername;
     private string m_companyAppVersion;
     private ModGuid m_companyGUID;
+
+    private readonly Stack<IEditAction<Company>> m_actions;
+    private readonly Stack<IEditAction<Company>> m_redoActions;
 
     /// <summary>
     /// Get the resulting <see cref="Company"/>. (Call <see cref="NewCompany(Faction)"/> and <see cref="Commit"/> to apply changes).
@@ -37,10 +64,28 @@ public class CompanyBuilder {
     public bool CanAddAbility => this.m_companyTarget.Abilities.Length <= Company.MAX_ABILITY;
 
     /// <summary>
+    /// 
+    /// </summary>
+    public bool IsChanged => this.m_actions.Count > 0;
+
+    /// <summary>
+    /// 
+    /// </summary>
+    public bool CanUndo => this.m_actions.Count > 0;
+
+    /// <summary>
+    /// 
+    /// </summary>
+    public bool CanRedo => this.m_redoActions.Count > 0;
+
+    /// <summary>
     /// New instance of the <see cref="CompanyBuilder"/>.
     /// </summary>
-    public CompanyBuilder()
-        => this.m_companyTarget = null;
+    public CompanyBuilder() {
+        this.m_companyTarget = null;
+        this.m_actions = new();
+        this.m_redoActions = new();
+    }
 
     /// <summary>
     /// Creates a new <see cref="Company"/> internally that the <see cref="CompanyBuilder"/> will modify while building.
@@ -48,7 +93,7 @@ public class CompanyBuilder {
     /// <param name="faction">The <see cref="Faction"/> that the company will belong to.</param>
     /// <returns>The calling <see cref="CompanyBuilder"/> instance.</returns>
     public virtual CompanyBuilder NewCompany(Faction faction) {
-        this.m_companyTarget = new Company(faction); // This is intentional
+        this.m_companyTarget = new Company(faction);
         this.m_companyName = "New Company";
         this.m_companyAppVersion = this.m_companyTarget.AppVersion;
         return this;
@@ -195,8 +240,14 @@ public class CompanyBuilder {
     /// <returns>The calling <see cref="CompanyBuilder"/> instance.</returns>
     public virtual CompanyBuilder RemoveUnit(ushort unitID, out bool success) {
 
+        // Create action
+        var action = new RemoveUnitAction(unitID);
+
+        // Add action
+        this.m_actions.Push(action);
+
         // Remove unit
-        success = this.m_companyTarget.RemoveSquad(unitID);
+        success = action.Apply(this.m_companyTarget);
 
         // Return self for method chaining
         return this;
@@ -286,6 +337,57 @@ public class CompanyBuilder {
     }
 
     /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="blueprint"></param>
+    public void AddEquipment(Blueprint blueprint)
+        => this.m_companyTarget.AddInventoryItem(blueprint);
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="equipment"></param>
+    /// <returns></returns>
+    public CompanyBuilder RemoveEquipment(Blueprint equipment) {
+        this.m_companyTarget.RemoveInventoryItem(equipment);
+        return this;
+    }
+
+    /// <summary>
+    /// Undo the most recent change.
+    /// </summary>
+    /// <exception cref="InvalidOperationException"></exception>
+    /// <exception cref="UndoActionFailedException"></exception>
+    public void Undo() {
+        if (!this.CanUndo) {
+            throw new InvalidOperationException("No actions to undo.");
+        }
+        var top = this.m_actions.Pop();
+        var (_, success) = top.Undo(this.m_companyTarget);
+        if (!success) {
+            throw new UndoActionFailedException($"Failed to undo action: {top}");
+        }
+        this.m_redoActions.Push(top);
+    }
+
+    /// <summary>
+    /// Redo the most recent action undone
+    /// </summary>
+    /// <exception cref="InvalidOperationException"></exception>
+    /// <exception cref="RedoActionFailedException"></exception>
+    public void Redo() {
+        if (!this.CanRedo) {
+            throw new InvalidOperationException("No actions to redo");
+        }
+        var top = this.m_redoActions.Pop();
+        var (_, success) = top.Apply(this.m_companyTarget);
+        if (!success) {
+            throw new RedoActionFailedException($"Failed to redo action: {top}");
+        }
+        this.m_actions.Push(top);
+    }
+
+    /// <summary>
     /// Get the amount of units in the specified deployment <paramref name="phase"/>.
     /// </summary>
     /// <param name="phase">The phase to fetch amount of units from.</param>
@@ -362,22 +464,5 @@ public class CompanyBuilder {
     /// </summary>
     /// <param name="action"></param>
     public void EachItem(Action<Blueprint> action) => this.m_companyTarget.Inventory.ForEach(action);
-
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="blueprint"></param>
-    public void AddEquipment(Blueprint blueprint)
-        => this.m_companyTarget.AddInventoryItem(blueprint);
-
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="equipment"></param>
-    /// <returns></returns>
-    public CompanyBuilder RemoveEquipment(Blueprint equipment) {
-        this.m_companyTarget.RemoveInventoryItem(equipment);
-        return this;
-    }
 
 }
