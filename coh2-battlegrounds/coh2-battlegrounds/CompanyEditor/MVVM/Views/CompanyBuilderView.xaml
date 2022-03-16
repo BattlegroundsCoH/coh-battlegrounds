@@ -25,6 +25,10 @@
             <!-- Case Converter -->
             <converters:CaseConverter x:Key="CaseConverter"/>
 
+            <!-- Company Icon Converter -->
+            <converters:StringToCompanyTypeIconConverter 
+                x:Key="CompanyTypeConverter"/>
+
         </Grid.Resources>
 
         <Grid.RowDefinitions>
@@ -49,12 +53,14 @@
                        FontWeight="Bold"
                        Foreground="White">
 
-                <TextBlock.Text>
-                    <MultiBinding StringFormat="{}{0} [{1}]">
-                        <Binding Path="CompanyName" Converter="{StaticResource CaseConverter}"/>
-                        <Binding Path="CompanyType"/>
-                    </MultiBinding>
-                </TextBlock.Text>
+                <Run Text="{Binding CompanyName, Converter={StaticResource CaseConverter}, Mode=OneWay}"
+                     BaselineAlignment="Center"/>
+                <InlineUIContainer BaselineAlignment="Center">
+                    <Image Width="28"
+                           Height="28"
+                           VerticalAlignment="Center"
+                           Source="{Binding CompanyType, Converter={StaticResource CompanyTypeConverter}}"/>
+                </InlineUIContainer>
 
             </TextBlock>
         </StackPanel>
@@ -369,16 +375,17 @@
                     Margin="65,0,0,0">
 
             <Button x:Name="resetButton"
-                    Content="{Binding CompanyResetButtonContent, Converter={StaticResource LocaleConvertor}}"
+                    Content="CompanyBuilder_Reset"
                     Width="105"
                     Height="35"
-                    Style="{StaticResource StandardBlueButton}"/>
+                    Style="{StaticResource StandardBlueLocButton}">
+            </Button>
 
             <Button x:Name="saveButton" 
-                    Content="{Binding CompanySaveButtonContent, Converter={StaticResource LocaleConvertor}}" 
+                    Content="CompanyBuilder_Save" 
                     Width="105"
                     Height="35"
-                    Style="{StaticResource StandardBlueButton}" 
+                    Style="{StaticResource StandardBlueLocButton}" 
                     Margin="10,0,0,0"/>
 
         </StackPanel>

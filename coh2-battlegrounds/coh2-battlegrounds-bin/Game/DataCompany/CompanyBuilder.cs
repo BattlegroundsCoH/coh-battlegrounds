@@ -407,7 +407,7 @@ public class CompanyBuilder : IBuilder {
     public virtual CompanyBuilder Commit() {
 
         // If null, throw error
-        if (this.m_companyTarget == null) {
+        if (this.m_companyTarget is null) {
             throw new ArgumentNullException("Internal Company Target", "Unable to commit changes to undefined company");
         }
 

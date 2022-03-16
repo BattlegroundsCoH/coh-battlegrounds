@@ -5,6 +5,7 @@ using Battlegrounds.Game.Gameplay;
 using Battlegrounds.Locale;
 using Battlegrounds.Modding;
 using BattlegroundsApp.Controls.CompanyBuilderControls;
+using BattlegroundsApp.LocalData;
 using BattlegroundsApp.Modals.CompanyBuilder;
 using BattlegroundsApp.MVVM;
 using BattlegroundsApp.Utilities;
@@ -56,6 +57,7 @@ public class CompanyBuilderViewModel : IViewModel {
     public ObservableCollection<SquadSlotViewModel> CompanyInfantrySquads { get; set; }
     public ObservableCollection<SquadSlotViewModel> CompanySupportSquads { get; set; }
     public ObservableCollection<SquadSlotViewModel> CompanyVehicleSquads { get; set; }
+
     public ObservableCollection<AbilitySlot> CompanyAbilities { get; set; }
     public ObservableCollection<AbilitySlot> CompanyUnitAbilities { get; set; }
     public ObservableCollection<EquipmentSlot> CompanyEquipment { get; set; }
@@ -88,8 +90,6 @@ public class CompanyBuilderViewModel : IViewModel {
     public LocaleKey CompanyVehicleLossesLabelContent { get; }
     public LocaleKey CompanyTotalLossesLabelContent { get; }
     public LocaleKey CompanyRatingLabelContent { get; }
-    public LocaleKey CompanyResetButtonContent { get; }
-    public LocaleKey CompanySaveButtonContent { get; }
     public LocaleKey CompanyNoUnitDataLabelContent { get; }
 
     public CompanyBuilderViewModel() {
@@ -97,13 +97,11 @@ public class CompanyBuilderViewModel : IViewModel {
         // Create save
         this.Save = new() {
             Click = new RelayCommand(this.SaveButton),
-            Text = new("")
         };
 
         // Create reset
         this.Reset = new() {
             Click = new RelayCommand(this.ResetButton),
-            Text = new("")
         };
 
         // Create back
@@ -127,10 +125,9 @@ public class CompanyBuilderViewModel : IViewModel {
         this.CompanyVehicleLossesLabelContent = new LocaleKey("CompanyBuilder_CompanyVehicleLosses");
         this.CompanyTotalLossesLabelContent = new LocaleKey("CompanyBuilder_CompanyTotalLosses");
         this.CompanyRatingLabelContent = new LocaleKey("CompanyBuilder_CompanyRating");
-        this.CompanyResetButtonContent = new LocaleKey("CompanyBuilder_Reset");
-        this.CompanySaveButtonContent = new LocaleKey("CompanyBuilder_Save");
         this.CompanyNoUnitDataLabelContent = new LocaleKey("CompanyBuilder_NoUnitData");
 
+        // Define observables
         this.CompanyInfantrySquads = new();
         this.CompanySupportSquads = new();
         this.CompanyVehicleSquads = new();
@@ -184,13 +181,27 @@ public class CompanyBuilderViewModel : IViewModel {
 
     public void SaveButton() {
 
+        // Commit changes
+        var company = this.Builder.Commit().Result;
+
+        // Save
+        PlayerCompanies.SaveCompany(company);
+
     }
 
     public void ResetButton() {
 
+        // TODO: Show modal warning
+
     }
 
     public void BackButton() {
+
+        if (this.Builder.IsChanged) {
+
+            // Await response
+
+        }
 
     }
 

@@ -134,6 +134,8 @@ namespace BattlegroundsApp {
 
         private void MainWindow_Closed(object sender, EventArgs e) {
 
+            // TODO: Close active view (in case it's in modifier state, like the company builder)
+
             // Save all changes
             BattlegroundsInstance.SaveInstance();
 
