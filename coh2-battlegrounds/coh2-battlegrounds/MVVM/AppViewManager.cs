@@ -102,6 +102,9 @@ namespace BattlegroundsApp.MVVM {
         public ModalControl? GetModalControl() 
             => this.m_window.ModalView;
 
+        public ModalControl? GetRightsideModalControl()
+            => this.m_window.RightModalView;
+
     }
 
 }

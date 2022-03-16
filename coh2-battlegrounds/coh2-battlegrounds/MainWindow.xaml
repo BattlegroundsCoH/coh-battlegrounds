@@ -32,10 +32,16 @@
                         Content="{Binding}">
             </ContentControl>
 
-            <ContentControl Name="RightContent" 
-                        Grid.Row="0" Grid.Column="1" 
-                        Grid.RowSpan="8"
+            <modals:ModalControl Grid.Row="0" Grid.Column="1" 
+                                 Grid.RowSpan="8"
+                                 x:Name="RightModalView"
+                                 ModalMaskBehaviour="ExitWhenClicked"
+                                 ModalMaskOpacity="0.7"
+                                 ModalMaskColour="Black">
+
+                <ContentControl Name="RightContent"                         
                         Content="{Binding}" Background="#273441"/>
+            </modals:ModalControl>
 
         </Grid>
     </modals:ModalControl>    

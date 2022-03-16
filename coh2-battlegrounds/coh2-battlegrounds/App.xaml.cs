@@ -15,6 +15,7 @@ using BattlegroundsApp.Resources;
 using BattlegroundsApp.MVVM;
 using BattlegroundsApp.MVVM.Models;
 using BattlegroundsApp.CompanyEditor.MVVM.Models;
+using System.Collections;
 
 namespace BattlegroundsApp {
 
@@ -179,6 +180,23 @@ namespace BattlegroundsApp {
             // Load all installed and active campaigns
             PlayerCampaigns.GetInstalledCampaigns();
             PlayerCampaigns.LoadActiveCampaigns();
+
+        }
+
+        /// <summary>
+        /// Try find a data template from <see cref="Application"/> resources.
+        /// </summary>
+        /// <param name="type">The type to try and find data template for.</param>
+        /// <returns>If found, the linked <see cref="DataTemplate"/> instance; Otherwise <see langword="null"/> if not found.</returns>
+        public static DataTemplate? TryFindDataTemplate(Type type) {
+
+            foreach (DictionaryEntry res in Current.Resources) {
+                if (res.Value is DataTemplate template && template.DataType.Equals(type)) {
+                    return template;
+                }
+            }
+
+            return null;
 
         }
 

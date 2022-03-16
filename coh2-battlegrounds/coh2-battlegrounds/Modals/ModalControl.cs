@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
@@ -59,9 +60,10 @@ namespace BattlegroundsApp.Modals {
         public static readonly DependencyProperty ModalMaskOpacityProperty = DependencyProperty.Register(nameof(ModalMaskOpacity), typeof(double), typeof(ModalControl));
 
         private Modal m_currentModal;
-        private Grid m_contentCanvas;
-        private Rectangle m_contentRect;
         private object m_backingContent;
+
+        private readonly Grid m_contentCanvas;
+        private readonly Rectangle m_contentRect;
 
         /// <summary>
         /// Get the currently active <see cref="Modals.Modal"/> instance.
@@ -97,6 +99,9 @@ namespace BattlegroundsApp.Modals {
             set => this.SetValue(ModalMaskOpacityProperty, value);
         }
 
+        /// <summary>
+        /// Initialise a new <see cref="ModalControl"/> instance.
+        /// </summary>
         public ModalControl() : base() {
             this.m_currentModal = null;
             this.m_backingContent = null;
@@ -117,6 +122,44 @@ namespace BattlegroundsApp.Modals {
                 || (e.ClickCount is >= 2 && this.ModalMaskBehaviour is ModalBackgroundBehaviour.ExitWhenDoubleClicked)) {
                 this.Modal.CloseModal();
             }
+
+        }
+
+        /// <summary>
+        /// Show the view modal for specified <paramref name="modal"/> model.
+        /// </summary>
+        /// <param name="modal">The object to try and create a modal instance from.</param>
+        /// <exception cref="Exception"></exception>
+        /// <exception cref="ArgumentNullException"></exception>
+        public void ShowModal(object modal) {
+
+            // Check if null
+            if (modal is null)
+                throw new ArgumentNullException(nameof(modal));
+
+            // Send call directly
+            if (modal is Modal m) {
+                this.ShowModal(m);
+                return;
+            }
+
+            // Try find matching data template
+            if (App.TryFindDataTemplate(modal.GetType()) is DataTemplate dataTemplate) {
+
+                // Create content
+                var content = dataTemplate.LoadContent();
+
+                // Ensure valid
+                if (content is Modal templatedModal) {
+                    templatedModal.DataContext = modal;
+                    this.ShowModal(templatedModal);
+                    return;
+                }
+
+            }
+
+            // Throw error => Failure
+            throw new Exception("Failed to create modal view from view model.");
 
         }
 
