@@ -82,11 +82,16 @@
         <DataTemplate DataType="{x:Type companyEditorModels:SquadSlotViewModel}">
             <companyEditorViews:SquadSlotView/>
         </DataTemplate>
+
         <DataTemplate DataType="{x:Type companyEditorModels:SquadOptionsViewModel}">
             <companyEditorViews:SquadOptionsView/>
         </DataTemplate>
         
-         <!-- Lobby View Models -->
+        <!-- New AvailableSquad-View Models -->
+        <DataTemplate DataType="{x:Type companyEditorModels:AvailableSquadViewModel}">
+            <companyEditorViews:AvailableSquadView/>
+        </DataTemplate>
+
         <DataTemplate DataType="{x:Type lobbymodels:LobbyChatSpectatorModel}">
             <lobbyviews:LobbyChatSpectatorView/>
         </DataTemplate>
