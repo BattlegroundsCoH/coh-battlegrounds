@@ -400,15 +400,7 @@
                       Grid.Column="1"
                       Grid.RowSpan="5">
 
-            <StackPanel>
-                <ItemsControl ItemsSource="{Binding AvailableSquads}">
-                    <ItemsControl.ItemsPanel>
-                        <ItemsPanelTemplate>
-                            <WrapPanel/>
-                        </ItemsPanelTemplate>
-                    </ItemsControl.ItemsPanel>
-                </ItemsControl>
-            </StackPanel>
+            <ListView ItemsSource="{Binding AvailableSquads}"/>
 
         </ScrollViewer>
 

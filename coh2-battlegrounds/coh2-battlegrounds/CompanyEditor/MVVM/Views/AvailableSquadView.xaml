@@ -7,8 +7,12 @@
              xmlns:cost="clr-namespace:BattlegroundsApp.Controls.CompanyBuilderControls"
              mc:Ignorable="d" 
              d:DesignHeight="50" d:DesignWidth="275" x:Name="Self">
-    
-    <Canvas>
+
+    <Border BorderBrush="Transparent"
+            BorderThickness="0"
+            Width="275"
+            Height="50">
+        <Canvas>
 
             <Button Height="50"
                     Width="20"
@@ -41,5 +45,7 @@
                               Width="92.5"
                               Cost="{Binding SquadCost}"/>
 
-    </Canvas>
+        </Canvas>
+    </Border>
+    
 </UserControl>
