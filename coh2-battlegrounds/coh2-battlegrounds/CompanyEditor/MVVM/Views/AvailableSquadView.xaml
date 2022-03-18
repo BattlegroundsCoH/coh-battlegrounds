@@ -6,7 +6,10 @@
              xmlns:local="clr-namespace:BattlegroundsApp.CompanyEditor.MVVM.Views"
              xmlns:cost="clr-namespace:BattlegroundsApp.Controls.CompanyBuilderControls"
              mc:Ignorable="d" 
-             d:DesignHeight="50" d:DesignWidth="275" x:Name="Self">
+             d:DesignHeight="50" 
+             d:DesignWidth="275" 
+             x:Name="Self"
+             Background="#334252">
 
     <Border BorderBrush="Transparent"
             BorderThickness="0"
@@ -17,27 +20,31 @@
             <Button Height="50"
                     Width="20"
                     Canvas.Left="0"
-                    Background="#489635"
+                    Style="{StaticResource StandardGreenButton}"
                     BorderThickness="0"
                     Content="&lt;"
                     Click="AddButton_Click"/>
 
             <Image Width="24"
-                    Height="24" 
-                    Canvas.Left="32"
-                    Canvas.Top="12"/>
+                   Height="24" 
+                   Canvas.Left="32"
+                   Canvas.Top="12"
+                   Source="{Binding SquadSymbol}"
+                   VerticalAlignment="Center"
+                   HorizontalAlignment="Center"/>
 
-            <Label Canvas.Left="60"
-                   Canvas.Top="10"
-                   Foreground="White"
-                   FontWeight="DemiBold"
-                   FontSize="12"
-                   Width="110">
+            <TextBlock Canvas.Left="60"
+                       Canvas.Top="10"
+                       Foreground="White"
+                       FontWeight="DemiBold"
+                       FontSize="12"
+                       Width="110"
+                       TextWrapping="WrapWithOverflow"
+                       TextAlignment="Center">
+                
+                <Run Text="{Binding SquadName, Mode=OneWay}" BaselineAlignment="Center"/>
 
-                <AccessText Text="{Binding SquadName}"
-                            TextWrapping="WrapWithOverflow"/>
-
-            </Label>
+            </TextBlock>
 
             <cost:CostControl Canvas.Top="5"
                               Canvas.Left="178"

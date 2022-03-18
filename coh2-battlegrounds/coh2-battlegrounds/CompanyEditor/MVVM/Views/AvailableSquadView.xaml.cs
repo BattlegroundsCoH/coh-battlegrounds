@@ -21,14 +21,27 @@ namespace BattlegroundsApp.CompanyEditor.MVVM.Views;
 /// </summary>
 public partial class AvailableSquadView : UserControl {
 
+    public static readonly Brush VIEW_DEFAULT = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#334252"));
+    public static readonly Brush VIEW_HOVER = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#536375"));
+
     public AvailableSquadView() {
         InitializeComponent();
+    }
+
+    protected override void OnMouseEnter(MouseEventArgs e) {
+        base.OnMouseEnter(e);
+        this.Background = VIEW_HOVER;
+    }
+
+    protected override void OnMouseLeave(MouseEventArgs e) {
+        base.OnMouseLeave(e);
+        this.Background = VIEW_DEFAULT;
     }
 
     protected override void OnMouseMove(MouseEventArgs e) {
         base.OnMouseMove(e);
         if (this.DataContext is AvailableSquadViewModel vm) {
-            vm.Move?.Invoke(this, vm);
+            vm.Move?.Invoke(this, vm, e);
         }
     }
 

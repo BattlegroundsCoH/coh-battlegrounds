@@ -12,7 +12,7 @@ using System.Windows.Media;
 
 namespace BattlegroundsApp.CompanyEditor.MVVM.Models;
 
-public delegate void AvailableSquadViewModelEvent(object sender, AvailableSquadViewModel availableSquadViewModel);
+public delegate void AvailableSquadViewModelEvent(object sender, AvailableSquadViewModel availableSquadViewModel, object args = null);
 
 public class AvailableSquadViewModel : IViewModel {
 
