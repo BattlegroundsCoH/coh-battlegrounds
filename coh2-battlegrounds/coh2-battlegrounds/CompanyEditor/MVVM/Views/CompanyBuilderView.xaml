@@ -386,55 +386,31 @@
                     Width="105"
                     Height="35"
                     Style="{StaticResource StandardBlueLocButton}" 
-                    Margin="10,0,0,0"/>
+                    Margin="10,0,0,0"
+                    Command="{Binding Save.Click}"/>
 
         </StackPanel>
 
         <!-- Row 2 :: Available Units -->
-        <DockPanel Grid.Row="2"
-                   Grid.Column="1" 
-                   LastChildFill="True"
-                   Visibility="{Binding AvailableUnitsVisible}">
 
-            <ScrollViewer CanContentScroll="False" 
-                          VerticalScrollBarVisibility="Visible">
+        <ScrollViewer VerticalScrollBarVisibility="Auto"
+                      HorizontalScrollBarVisibility="Disabled"
+                      Height="660"
+                      Grid.Row="2"
+                      Grid.Column="1"
+                      Grid.RowSpan="5">
 
-                <StackPanel x:Name="AvailableUnits"/>
+            <StackPanel>
+                <ItemsControl ItemsSource="{Binding AvailableSquads}">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <WrapPanel/>
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                </ItemsControl>
+            </StackPanel>
 
-            </ScrollViewer>
-
-
-        </DockPanel>
-
-        <!-- Row 2 :: Available Abilities -->
-        <DockPanel Grid.Row="2"
-                   Grid.Column="1" 
-                   LastChildFill="True"
-                   Visibility="{Binding AvailableAbilitiesVisible}">
-
-            <ScrollViewer CanContentScroll="False" 
-                          VerticalScrollBarVisibility="Visible">
-
-                <StackPanel x:Name="AvailableAbilities"/>
-
-            </ScrollViewer>
-
-        </DockPanel>
-
-        <!-- Row 2 :: Available Crews -->
-        <DockPanel Grid.Row="2" 
-                   Grid.Column="1" 
-                   LastChildFill="True"
-                   Visibility="{Binding AvailableCrewsVisible}">
-
-            <ScrollViewer CanContentScroll="False" 
-                          VerticalScrollBarVisibility="Visible">
-
-                <StackPanel x:Name="AvailableCrews"/>
-
-            </ScrollViewer>
-
-        </DockPanel>
+        </ScrollViewer>
 
     </Grid>
 </UserControl>

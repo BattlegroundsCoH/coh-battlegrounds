@@ -8,8 +8,7 @@
              mc:Ignorable="d" 
              d:DesignHeight="50" d:DesignWidth="275" x:Name="Self">
     
-    <Border>
-        <Canvas>
+    <Canvas>
 
             <Button Height="50"
                     Width="20"
@@ -24,12 +23,17 @@
                     Canvas.Left="32"
                     Canvas.Top="12"/>
 
-            <Label Content="{Binding SquadName}"
-                    Canvas.Left="60"
-                    Canvas.Top="10"
-                    Foreground="White"
-                    FontWeight="DemiBold"
-                    FontSize="12"/>
+            <Label Canvas.Left="60"
+                   Canvas.Top="10"
+                   Foreground="White"
+                   FontWeight="DemiBold"
+                   FontSize="12"
+                   Width="110">
+
+                <AccessText Text="{Binding SquadName}"
+                            TextWrapping="WrapWithOverflow"/>
+
+            </Label>
 
             <cost:CostControl Canvas.Top="5"
                               Canvas.Left="178"
@@ -37,7 +41,5 @@
                               Width="92.5"
                               Cost="{Binding SquadCost}"/>
 
-
-        </Canvas>
-    </Border>
+    </Canvas>
 </UserControl>

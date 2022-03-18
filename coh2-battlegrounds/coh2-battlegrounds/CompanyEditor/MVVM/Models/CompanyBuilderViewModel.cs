@@ -17,6 +17,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Input;
 
 namespace BattlegroundsApp.CompanyEditor.MVVM.Models;
@@ -53,6 +54,11 @@ public class CompanyBuilderViewModel : IViewModel {
     private List<SquadBlueprint> m_availableSquads;
     private List<SquadBlueprint> m_availableCrews;
     private List<AbilityBlueprint> m_abilities;
+
+    public ObservableCollection<AvailableSquadViewModel> AvailableSquads { get; set; }
+    public List<AvailableSquadViewModel> m_availableInfantrySquads;
+    public List<AvailableSquadViewModel> m_availableSupportSquads;
+    public List<AvailableSquadViewModel> m_availableVehicleSquads;
 
     public ObservableCollection<SquadSlotViewModel> CompanyInfantrySquads { get; set; }
     public ObservableCollection<SquadSlotViewModel> CompanySupportSquads { get; set; }
@@ -134,6 +140,12 @@ public class CompanyBuilderViewModel : IViewModel {
         this.CompanyAbilities = new();
         this.CompanyUnitAbilities = new();
         this.CompanyEquipment = new();
+        this.AvailableSquads = new();
+
+        // Define list
+        this.m_availableInfantrySquads = new();
+        this.m_availableSupportSquads = new();
+        this.m_availableVehicleSquads = new();
 
     }
 
@@ -177,6 +189,8 @@ public class CompanyBuilderViewModel : IViewModel {
         this.LoadFactionDatabase();
         this.ShowCompany();
 
+        this.m_availableInfantrySquads.ForEach(x => this.AvailableSquads.Add(x));
+
     }
 
     public void SaveButton() {
@@ -201,6 +215,20 @@ public class CompanyBuilderViewModel : IViewModel {
 
             // Await response
 
+        }
+
+    }
+
+    private void FillAvailableItemSlot<TBlueprint>(IEnumerable<TBlueprint> source, List<AvailableSquadViewModel> target, bool canAdd) where TBlueprint : Blueprint {
+
+        foreach (var element in source) {
+            
+            var slot = new AvailableSquadViewModel(element, this.OnUnitAddClicked, this.OnUnitMove) {
+                CanAdd = canAdd
+            };
+
+            target.Add(slot);
+ 
         }
 
     }
@@ -231,6 +259,22 @@ public class CompanyBuilderViewModel : IViewModel {
                 .FilterByMod(this.CompanyGUID)
                 .Filter(x => faction.Abilities.Select(y => y.Blueprint).Contains(x.Name))
                 .ToList();
+
+            // Populate lists
+            Application.Current.Dispatcher.Invoke(() => {
+
+                this.FillAvailableItemSlot(this.m_availableSquads.FindAll(s => s.Types.IsInfantry == true),
+                                           this.m_availableInfantrySquads, this.CanAddUnits);
+
+                this.FillAvailableItemSlot(this.m_availableSquads.FindAll(s => s.IsTeamWeapon == true),
+                                           this.m_availableSupportSquads, this.CanAddUnits);
+
+                this.FillAvailableItemSlot(this.m_availableSquads.FindAll(s => s.Types.IsVehicle == true || s.Types.IsArmour == true || s.Types.IsHeavyArmour == true),
+                                           this.m_availableVehicleSquads, this.CanAddUnits);
+
+                this.m_availableInfantrySquads.ForEach(x => this.AvailableSquads.Add(x));
+
+            });
 
         });
 
@@ -326,6 +370,23 @@ public class CompanyBuilderViewModel : IViewModel {
 
         // Remove view model
         this.GetUnitCollection(squad).Remove(squadSlot);
+
+    }
+
+    private void OnUnitAddClicked(object sender, AvailableSquadViewModel squadBlueprint) {
+
+        // Create squad
+        var unitBuilder = new UnitBuilder().SetBlueprint((SquadBlueprint)squadBlueprint.Blueprint);
+
+        // Add to company
+        var squad = this.Builder.AddAndCommitUnit(unitBuilder);
+
+        // Add to display
+        this.AddUnitToDisplay(squad);
+        
+    }
+
+    private void OnUnitMove(object sender, AvailableSquadViewModel squadSlot) {
 
     }
 

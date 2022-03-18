@@ -1,4 +1,5 @@
 ﻿using Battlegrounds.Game.Database;
+using Battlegrounds.Game.Database.Extensions;
 using BattlegroundsApp.MVVM;
 using BattlegroundsApp.Resources;
 using System;
@@ -19,6 +20,8 @@ public class AvailableSquadViewModel : IViewModel {
 
     public ImageSource SquadSymbol { get; }
 
+    public CostExtension SquadCost { get; set; }
+
     public Blueprint Blueprint { get; }
 
     public AvailableSquadViewModelEvent AddClick { get; }
@@ -34,8 +37,9 @@ public class AvailableSquadViewModel : IViewModel {
         if (bp is SquadBlueprint sbp) {
 
             this.SquadName = GameLocale.GetString(sbp.UI.ScreenName);
-            this.SquadSymbol = App.ResourceHandler.GetIcon("unit_symbols", sbp.UI.Symbol);
+            this.SquadSymbol = App.ResourceHandler.GetIcon("symbol_icons", sbp.UI.Symbol);
             this.Blueprint = sbp;
+            this.SquadCost = sbp.Cost;
 
         } else {
 
