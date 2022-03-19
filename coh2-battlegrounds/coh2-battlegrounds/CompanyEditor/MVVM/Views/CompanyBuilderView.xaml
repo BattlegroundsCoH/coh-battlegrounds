@@ -80,7 +80,7 @@
                      Height="35"
                      Style="{StaticResource CompanyBuilderMainTabItem}">
                 
-                <TabControl Style="{StaticResource CompanyBuilderSecondaryTabControl}">
+                <TabControl Style="{StaticResource CompanyBuilderSecondaryTabControl}" SelectedIndex="{Binding SelectedUnitTab}" SelectionChanged="ChangeTab">
 
                     <!-- Infantry -->
                     <TabItem Header="{Binding InfantryHeaderItem, Converter={StaticResource LocaleAndCaseConvertor}}"

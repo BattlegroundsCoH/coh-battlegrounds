@@ -13,14 +13,18 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
 
 namespace BattlegroundsApp.CompanyEditor.MVVM.Models;
+
+public delegate void CompanyBuilderViewModelEvent(object sender, CompanyBuilderViewModel companyBuilderViewModel, object args = null);
 
 public class CompanyBuilderButton {
     public ICommand Click { get; init; }
@@ -98,6 +102,11 @@ public class CompanyBuilderViewModel : IViewModel {
     public LocaleKey CompanyRatingLabelContent { get; }
     public LocaleKey CompanyNoUnitDataLabelContent { get; }
 
+    public int SelectedUnitTab { get; set; }
+
+    public CompanyBuilderViewModelEvent Drop => this.OnUnitDrop;
+    public CompanyBuilderViewModelEvent Change => this.OnTabChange;
+
     public CompanyBuilderViewModel() {
 
         // Create save
@@ -146,6 +155,8 @@ public class CompanyBuilderViewModel : IViewModel {
         this.m_availableInfantrySquads = new();
         this.m_availableSupportSquads = new();
         this.m_availableVehicleSquads = new();
+
+        this.SelectedUnitTab = 0;
 
     }
 
@@ -272,7 +283,7 @@ public class CompanyBuilderViewModel : IViewModel {
                 this.FillAvailableItemSlot(this.m_availableSquads.FindAll(s => s.Types.IsVehicle == true || s.Types.IsArmour == true || s.Types.IsHeavyArmour == true),
                                            this.m_availableVehicleSquads, this.CanAddUnits);
 
-                this.m_availableInfantrySquads.ForEach(x => this.AvailableSquads.Add(x));
+                this.UpdateAvailableUnits();
 
             });
 
@@ -373,10 +384,10 @@ public class CompanyBuilderViewModel : IViewModel {
 
     }
 
-    private void OnUnitAddClicked(object sender, AvailableSquadViewModel squadBlueprint) {
+    private void OnUnitAddClicked(object sender, AvailableSquadViewModel squadBlueprint, object arg) {
 
         // Create squad
-        var unitBuilder = new UnitBuilder().SetBlueprint((SquadBlueprint)squadBlueprint.Blueprint);
+        var unitBuilder = new UnitBuilder().SetBlueprint(squadBlueprint.Blueprint as SquadBlueprint);
 
         // Add to company
         var squad = this.Builder.AddAndCommitUnit(unitBuilder);
@@ -386,7 +397,82 @@ public class CompanyBuilderViewModel : IViewModel {
         
     }
 
-    private void OnUnitMove(object sender, AvailableSquadViewModel squadSlot) {
+    private void OnUnitMove(object sender, AvailableSquadViewModel squadSlot, object arg) {
+
+        if (arg is MouseEventArgs mEvent) {
+
+            if (mEvent.LeftButton is MouseButtonState.Pressed) {
+
+                DataObject obj = new();
+
+                if (squadSlot.Blueprint is SquadBlueprint sbp) {
+                    obj.SetData("Squad", sbp);
+                }
+
+                _ = DragDrop.DoDragDrop(sender as DependencyObject, obj, DragDropEffects.Move);
+
+            }
+
+        }
+
+    }
+
+    private void OnUnitDrop(object sender, CompanyBuilderViewModel squadSlot, object arg) {
+
+        if (arg is DragEventArgs dEvent) {
+
+            if (this.CompanySize is not Company.MAX_SIZE && dEvent.Data.GetData("Squad") is SquadBlueprint sbp) {
+
+                // Create squad
+                var unitBuilder = new UnitBuilder().SetBlueprint(sbp);
+
+                // Add to company
+                var squad = this.Builder.AddAndCommitUnit(unitBuilder);
+
+                // Add to display
+                this.AddUnitToDisplay(squad);
+
+                // Mark handled
+                dEvent.Effects = DragDropEffects.Move;
+                dEvent.Handled = true;
+
+            }
+
+        }
+
+    }
+
+    private void UpdateAvailableUnits() {
+
+        this.AvailableSquads.Clear();
+
+        switch (this.SelectedUnitTab) {
+            case 0:
+                this.m_availableInfantrySquads.ForEach(x => this.AvailableSquads.Add(x));
+                break;
+            case 1:
+                this.m_availableSupportSquads.ForEach(x => this.AvailableSquads.Add(x));
+                break;
+            case 2:
+                this.m_availableVehicleSquads.ForEach(x => this.AvailableSquads.Add(x));
+                break;
+            default:
+                break;
+        }
+
+    }
+
+    private void OnTabChange(object sender, CompanyBuilderViewModel squadSlot, object arg) {
+
+        if (arg is SelectionChangedEventArgs sEvent) {
+
+            if (sEvent.Source is TabControl) {
+
+                this.UpdateAvailableUnits();
+
+            }
+
+        }
 
     }
 
