@@ -6,6 +6,7 @@
              xmlns:local="clr-namespace:BattlegroundsApp.CompanyEditor.MVVM.Views"
              xmlns:convertor="clr-namespace:BattlegroundsApp.Utilities.Converters"
              xmlns:cost="clr-namespace:BattlegroundsApp.Controls.CompanyBuilderControls"
+             xmlns:icon="clr-namespace:BattlegroundsApp.Controls.Editor"
              mc:Ignorable="d" 
              d:DesignHeight="64" d:DesignWidth="250"
              Background="#334252"
@@ -20,17 +21,19 @@
         
         <!-- Name -->
         <Label Content="{Binding AbilityName}"
-               Canvas.Left="50"
+               Canvas.Left="75"
                MaxWidth="180"
                Foreground="White"
                FontWeight="DemiBold"/>
         
         <!-- Icon -->
-        <!-- TODO -->
-        
+        <icon:Icon IconName="{Binding AbilityIcon}"
+                   SymbolName="{Binding AbilitySymbol}"
+                   x:Name="IconElement"/>
+
         <!-- Cost -->
-        <cost:CostControl Canvas.Top="15"
-                          Canvas.Left="52"
+        <cost:CostControl Canvas.Top="18"
+                          Canvas.Left="77"
                           Height="44"
                           Width="92.5"
                           Cost="{Binding AbilityCost}"/>

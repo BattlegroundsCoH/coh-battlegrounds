@@ -30,12 +30,14 @@ public partial class AbilitySlotView : UserControl {
     protected override void OnMouseEnter(MouseEventArgs e) {
         base.OnMouseEnter(e);
         this.Background = VIEW_HOVER;
+        this.IconElement.IsSelected = true;
         this.RemoveButton.Visibility = Visibility.Visible;
     }
 
     protected override void OnMouseLeave(MouseEventArgs e) {
         base.OnMouseLeave(e);
         this.Background = VIEW_DEFAULT;
+        this.IconElement.IsSelected = false;
         this.RemoveButton.Visibility = Visibility.Collapsed;
     }
 
