@@ -79,6 +79,11 @@ public class CompanyBuilder : IBuilder {
     public bool CanRedo => this.m_redoActions.Count > 0;
 
     /// <summary>
+    /// Get the current size of the company
+    /// </summary>
+    public int Size => this.m_companyTarget.Units.Length;
+
+    /// <summary>
     /// New instance of the <see cref="CompanyBuilder"/>.
     /// </summary>
     public CompanyBuilder() {
