@@ -194,7 +194,7 @@
                      Height="35"
                      Style="{StaticResource CompanyBuilderMainTabItem}">
 
-                <TabControl Style="{StaticResource CompanyBuilderSecondaryTabControl}">
+                <TabControl Style="{StaticResource CompanyBuilderSecondaryTabControl}" SelectedIndex="{Binding SelectedAbilityTabItem}" SelectionChanged="ChangeTab">
 
                     <!-- Commander Abilities -->
                     <TabItem Header="{Binding CommanderAbilitiesHeaderItem, Converter={StaticResource LocaleAndCaseConvertor}}"
@@ -430,7 +430,7 @@
                         <Setter Property="Margin" Value="0, 5, 0, 0"/>
                     </Style>
                 </StackPanel.Resources>
-                <ItemsControl ItemsSource="{Binding AvailableSquads}">
+                <ItemsControl ItemsSource="{Binding AvailableItems}">
                     <ItemsControl.ItemsPanel>
                         <ItemsPanelTemplate>
                             <WrapPanel Orientation="Vertical"/>

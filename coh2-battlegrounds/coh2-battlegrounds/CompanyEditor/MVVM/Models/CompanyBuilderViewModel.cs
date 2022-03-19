@@ -59,10 +59,13 @@ public class CompanyBuilderViewModel : IViewModel {
     private List<SquadBlueprint> m_availableCrews;
     private List<AbilityBlueprint> m_abilities;
 
-    public ObservableCollection<AvailableItemViewModel> AvailableSquads { get; set; }
+    public ObservableCollection<AvailableItemViewModel> AvailableItems { get; set; }
+
     public List<AvailableItemViewModel> m_availableInfantrySquads;
     public List<AvailableItemViewModel> m_availableSupportSquads;
     public List<AvailableItemViewModel> m_availableVehicleSquads;
+
+    public List<AvailableItemViewModel> m_availableAbilities;
 
     public ObservableCollection<SquadSlotViewModel> CompanyInfantrySquads { get; set; }
     public ObservableCollection<SquadSlotViewModel> CompanySupportSquads { get; set; }
@@ -153,12 +156,13 @@ public class CompanyBuilderViewModel : IViewModel {
         this.CompanyAbilities = new();
         this.CompanyUnitAbilities = new();
         this.CompanyEquipment = new();
-        this.AvailableSquads = new();
+        this.AvailableItems = new();
 
         // Define list
         this.m_availableInfantrySquads = new();
         this.m_availableSupportSquads = new();
         this.m_availableVehicleSquads = new();
+        this.m_availableAbilities = new();
 
         // Set default tabs
         this.SelectedMainTab = 0;
@@ -209,7 +213,7 @@ public class CompanyBuilderViewModel : IViewModel {
         this.LoadFactionDatabase();
         this.ShowCompany();
 
-        this.m_availableInfantrySquads.ForEach(x => this.AvailableSquads.Add(x));
+        this.m_availableInfantrySquads.ForEach(x => this.AvailableItems.Add(x));
 
     }
 
@@ -291,6 +295,8 @@ public class CompanyBuilderViewModel : IViewModel {
 
                 this.FillAvailableItemSlot(this.m_availableSquads.FindAll(s => s.Types.IsVehicle == true || s.Types.IsArmour == true || s.Types.IsHeavyArmour == true),
                                            this.m_availableVehicleSquads, this.CanAddUnits);
+
+                this.FillAvailableItemSlot(this.m_abilities, this.m_availableAbilities, this.CanAddAbilities);
 
                 this.UpdateAvailableItems();
 
@@ -460,26 +466,36 @@ public class CompanyBuilderViewModel : IViewModel {
 
     private void UpdateAvailableItems() {
 
-        this.AvailableSquads.Clear();
+        this.AvailableItems.Clear();
 
         if (this.SelectedMainTab == 0) {
             this.AvailableItemsVisibility = Visibility.Visible;
             switch (this.SelectedUnitTabItem) {
                 case 0:
-                    this.m_availableInfantrySquads.ForEach(x => this.AvailableSquads.Add(x));
+                    this.m_availableInfantrySquads.ForEach(x => this.AvailableItems.Add(x));
                     break;
                 case 1:
-                    this.m_availableSupportSquads.ForEach(x => this.AvailableSquads.Add(x));
+                    this.m_availableSupportSquads.ForEach(x => this.AvailableItems.Add(x));
                     break;
                 case 2:
-                    this.m_availableVehicleSquads.ForEach(x => this.AvailableSquads.Add(x));
+                    this.m_availableVehicleSquads.ForEach(x => this.AvailableItems.Add(x));
                     break;
                 default:
                     break;
             }
         } else if (this.SelectedMainTab == 1) {
             this.AvailableItemsVisibility = Visibility.Visible;
-            // TODO
+            switch (this.SelectedAbilityTabItem) {
+                case 0:
+                    this.AvailableItemsVisibility = Visibility.Visible;
+                    this.m_availableAbilities.ForEach(x => this.AvailableItems.Add(x));
+                    break;
+                case 1:
+                    this.AvailableItemsVisibility = Visibility.Hidden;
+                    break;
+                default:
+                    break;
+            }
         } else if (this.SelectedMainTab == 2) {
             this.AvailableItemsVisibility = Visibility.Visible;
             // TODO
