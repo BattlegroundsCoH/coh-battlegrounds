@@ -138,6 +138,10 @@ public class CompanyBrowserViewModel : IViewModel {
 
     public void EditButton() {
 
+        if (this.SelectedCompany is null) {
+            return;
+        }
+
         CompanyBuilderViewModel companyBuilder = new CompanyBuilderViewModel(SelectedCompany);
 
         App.ViewManager.UpdateDisplay(AppDisplayTarget.Right, companyBuilder);
