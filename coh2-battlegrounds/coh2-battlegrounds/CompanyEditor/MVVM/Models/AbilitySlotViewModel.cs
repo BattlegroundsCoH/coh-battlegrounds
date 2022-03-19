@@ -1,5 +1,8 @@
-﻿using Battlegrounds.Game.Database.Extensions;
+﻿using Battlegrounds.Game.Database;
+using Battlegrounds.Game.Database.Extensions;
+using Battlegrounds.Game.Database.Management;
 using Battlegrounds.Game.Gameplay;
+using Battlegrounds.Modding;
 using BattlegroundsApp.MVVM;
 using BattlegroundsApp.Resources;
 using System;
@@ -7,6 +10,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace BattlegroundsApp.CompanyEditor.MVVM.Models;
 
@@ -28,6 +32,8 @@ public class AbilitySlotViewModel : IViewModel {
 
     public AbilitySlotViewModelEvent RemoveClick { get; }
 
+    public Visibility RemoveButtonVisibility { get; set; }
+
     public bool SingleInstanceOnly => false; // This will allow us to override
 
     public AbilitySlotViewModel(Ability ability, AbilitySlotViewModelEvent onClick, AbilitySlotViewModelEvent onRemove) {
@@ -45,6 +51,22 @@ public class AbilitySlotViewModel : IViewModel {
 
         this.AbilityIcon = this.AbilityInstance.ABP.UI.Icon;
         this.AbilitySymbol = this.AbilityInstance.ABP.UI.Symbol;
+
+    }
+
+    public void UpdateUnitData(ModPackage.FactionData.UnitAbility unitData) {
+
+        // Get blueprint
+        var sbp = BlueprintManager.FromBlueprintName<SquadBlueprint>(unitData.Blueprint);
+        if (sbp is null) {
+            return;
+        }
+
+        // Update remove button
+        // TODO
+
+        // Update symbol
+        this.AbilitySymbol = sbp.UI.Symbol;
 
     }
 

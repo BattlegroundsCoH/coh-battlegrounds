@@ -68,8 +68,8 @@ public class CompanyBuilderViewModel : IViewModel {
     public ObservableCollection<SquadSlotViewModel> CompanySupportSquads { get; set; }
     public ObservableCollection<SquadSlotViewModel> CompanyVehicleSquads { get; set; }
 
-    public ObservableCollection<AbilitySlot> CompanyAbilities { get; set; }
-    public ObservableCollection<AbilitySlot> CompanyUnitAbilities { get; set; }
+    public ObservableCollection<AbilitySlotViewModel> CompanyAbilities { get; set; }
+    public ObservableCollection<AbilitySlotViewModel> CompanyUnitAbilities { get; set; }
     public ObservableCollection<EquipmentSlot> CompanyEquipment { get; set; }
 
     public CompanyBuilder Builder { get; }
@@ -341,8 +341,7 @@ public class CompanyBuilderViewModel : IViewModel {
     private void AddAbilityToDisplay(Ability ability, bool isUnitAbility) {
 
         // Create display
-        AbilitySlot abilitySlot = new(ability);
-        abilitySlot.OnRemove += this.OnAbilityRemoveClicked;
+        AbilitySlotViewModel abilitySlot = new(ability, this.OnAbilityClicked, this.OnAbilityRemoveClicked);
 
         // If is unit ability, then update
         if (isUnitAbility) {
@@ -390,6 +389,14 @@ public class CompanyBuilderViewModel : IViewModel {
 
         // Remove view model
         this.GetUnitCollection(squad).Remove(squadSlot);
+
+    }
+
+    private void OnAbilityClicked(object sender, AbilitySlotViewModel abilityViewModel) {
+
+    }
+
+    private void OnAbilityRemoveClicked(object sender, AbilitySlotViewModel abilityViewModel) {
 
     }
 
@@ -493,10 +500,6 @@ public class CompanyBuilderViewModel : IViewModel {
             }
 
         }
-
-    }
-
-    private void OnAbilityRemoveClicked(AbilitySlot abilitySlot) {
 
     }
 
