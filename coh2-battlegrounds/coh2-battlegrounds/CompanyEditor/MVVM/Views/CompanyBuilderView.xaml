@@ -93,7 +93,7 @@
                                            Background="White"
                                            BorderThickness="1.5"
                                            BorderBrush="Black"
-                                           Drop="OnUnitDrop">
+                                           Drop="OnItemDrop">
 
                             <ScrollViewer VerticalScrollBarVisibility="Auto" 
                                           HorizontalScrollBarVisibility="Disabled"
@@ -126,7 +126,7 @@
                                            Background="White"
                                            BorderThickness="1.5"
                                            BorderBrush="Black"
-                                           Drop="OnUnitDrop">
+                                           Drop="OnItemDrop">
 
                             <ScrollViewer VerticalScrollBarVisibility="Auto" 
                                           HorizontalScrollBarVisibility="Disabled"
@@ -159,7 +159,7 @@
                                            Background="White"
                                            BorderThickness="1.5"
                                            BorderBrush="Black"
-                                           Drop="OnUnitDrop">
+                                           Drop="OnItemDrop">
 
                             <ScrollViewer VerticalScrollBarVisibility="Auto" 
                                           HorizontalScrollBarVisibility="Disabled"
@@ -202,7 +202,8 @@
                         <dropArea:DropArea AllowDrop="True"
                                            Background="White"
                                            BorderThickness="1.5"
-                                           BorderBrush="Black">
+                                           BorderBrush="Black"
+                                           Drop="OnItemDrop">
 
                             <ScrollViewer VerticalScrollBarVisibility="Auto" 
                                           HorizontalScrollBarVisibility="Disabled"

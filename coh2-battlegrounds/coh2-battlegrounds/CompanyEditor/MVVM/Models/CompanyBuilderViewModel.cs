@@ -111,7 +111,7 @@ public class CompanyBuilderViewModel : IViewModel {
 
     public Visibility AvailableItemsVisibility { get; set; }
 
-    public CompanyBuilderViewModelEvent Drop => this.OnUnitDrop;
+    public CompanyBuilderViewModelEvent Drop => this.OnItemDrop;
     public CompanyBuilderViewModelEvent Change => this.OnTabChange;
 
     public CompanyBuilderViewModel() {
@@ -247,7 +247,7 @@ public class CompanyBuilderViewModel : IViewModel {
 
         foreach (var element in source) {
             
-            var slot = new AvailableItemViewModel(element, this.OnUnitAddClicked, this.OnUnitMove) {
+            var slot = new AvailableItemViewModel(element, this.OnItemAddClicked, this.OnItemMove) {
                 CanAdd = canAdd
             };
 
@@ -406,29 +406,50 @@ public class CompanyBuilderViewModel : IViewModel {
 
     }
 
-    private void OnUnitAddClicked(object sender, AvailableItemViewModel squadBlueprint, object arg) {
+    private void OnItemAddClicked(object sender, AvailableItemViewModel itemBlueprint, object arg) {
 
-        // Create squad
-        var unitBuilder = new UnitBuilder().SetBlueprint(squadBlueprint.Blueprint as SquadBlueprint);
+        if (itemBlueprint.Blueprint is SquadBlueprint sbp) {
 
-        // Add to company
-        var squad = this.Builder.AddAndCommitUnit(unitBuilder);
+            // Create squad
+            var unitBuilder = new UnitBuilder().SetBlueprint(sbp);
 
-        // Add to display
-        this.AddUnitToDisplay(squad);
+            // Add to company
+            var squad = this.Builder.AddAndCommitUnit(unitBuilder);
+
+            // Add to display
+            this.AddUnitToDisplay(squad);
+
+        } else if (itemBlueprint.Blueprint is AbilityBlueprint abp) {
+
+            // Get faction ability
+            var fabp = this.m_activeModPackage.FactionSettings[this.CompanyFaction].Abilities.FirstOrDefault(x => x.Blueprint == abp.Name);
+            if (fabp is null) {
+                return;
+            }
+
+            // Get special ability
+            var special = this.Builder.AddAndCommitAbility(abp, fabp);
+
+            // Add to display
+            this.AddAbilityToDisplay(special, false);
+
+        }
         
     }
 
-    private void OnUnitMove(object sender, AvailableItemViewModel squadSlot, object arg) {
+    private void OnItemMove(object sender, AvailableItemViewModel itemSlot, object arg) {
 
         if (arg is MouseEventArgs mEvent) {
 
             if (mEvent.LeftButton is MouseButtonState.Pressed) {
 
                 DataObject obj = new();
+                obj.SetData("Source", this);
 
-                if (squadSlot.Blueprint is SquadBlueprint sbp) {
+                if (itemSlot.Blueprint is SquadBlueprint sbp) {
                     obj.SetData("Squad", sbp);
+                } else if (itemSlot.Blueprint is AbilityBlueprint abp) {
+                    obj.SetData("Ability", abp);
                 }
 
                 _ = DragDrop.DoDragDrop(sender as DependencyObject, obj, DragDropEffects.Move);
@@ -439,7 +460,7 @@ public class CompanyBuilderViewModel : IViewModel {
 
     }
 
-    private void OnUnitDrop(object sender, CompanyBuilderViewModel squadSlot, object arg) {
+    private void OnItemDrop(object sender, CompanyBuilderViewModel squadSlot, object arg) {
 
         if (arg is DragEventArgs dEvent) {
 
@@ -457,6 +478,29 @@ public class CompanyBuilderViewModel : IViewModel {
                 // Mark handled
                 dEvent.Effects = DragDropEffects.Move;
                 dEvent.Handled = true;
+
+            } else if (dEvent.Data.GetData("Ability") is AbilityBlueprint abp) {
+
+                // Get faction ability
+                var fabp = this.m_activeModPackage.FactionSettings[this.CompanyFaction].Abilities.FirstOrDefault(x => x.Blueprint == abp.Name);
+                if (fabp is null) {
+                    return;
+                }
+
+                // Get special ability
+                var special = this.Builder.AddAndCommitAbility(abp, fabp);
+
+                // Add to display
+                this.AddAbilityToDisplay(special, false);
+
+                // Mark handled
+                dEvent.Effects = DragDropEffects.Move;
+                dEvent.Handled = true;
+
+                // Get the item slot and disable it
+                if (dEvent.Data.GetData("Source") is AvailableItemViewModel itemSlot) {
+                    itemSlot.CanAdd = false;
+                }
 
             }
 

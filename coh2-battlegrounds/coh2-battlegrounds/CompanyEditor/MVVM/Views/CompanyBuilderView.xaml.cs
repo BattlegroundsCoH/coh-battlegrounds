@@ -24,7 +24,7 @@ public partial class CompanyBuilderView : UserControl {
         InitializeComponent();
     }
 
-    private void OnUnitDrop(object sender, DragEventArgs e) {
+    private void OnItemDrop(object sender, DragEventArgs e) {
         if (this.DataContext is CompanyBuilderViewModel vm) {
             vm.Drop?.Invoke(this, vm, e);
         }
