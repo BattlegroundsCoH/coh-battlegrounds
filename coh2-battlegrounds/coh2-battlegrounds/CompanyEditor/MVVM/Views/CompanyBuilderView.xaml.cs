@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BattlegroundsApp.CompanyEditor.MVVM.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -18,7 +19,21 @@ namespace BattlegroundsApp.CompanyEditor.MVVM.Views;
 /// Interaction logic for CompanyBuilderView.xaml
 /// </summary>
 public partial class CompanyBuilderView : UserControl {
+
     public CompanyBuilderView() {
         InitializeComponent();
     }
+
+    private void OnItemDrop(object sender, DragEventArgs e) {
+        if (this.DataContext is CompanyBuilderViewModel vm) {
+            vm.Drop?.Invoke(this, vm, e);
+        }
+    }
+
+    private void ChangeTab(object sender, SelectionChangedEventArgs e) {
+        if (this.DataContext is CompanyBuilderViewModel vm) {
+           vm.Change?.Invoke(this, vm, e);
+        }
+    }
+
 }

@@ -22,6 +22,7 @@
              xmlns:controls="clr-namespace:BattlegroundsApp.Controls"
              Startup="App_Startup"
              ShutdownMode="OnMainWindowClose">
+    
     <Application.Resources>
         <DataTemplate DataType="{x:Type hostGame:HostGameDialogViewModel}">
             <hostGame:HostGameDialogView/>
@@ -87,9 +88,14 @@
             <companyEditorViews:SquadOptionsView/>
         </DataTemplate>
         
+        <!-- Ability MVVM -->
+        <DataTemplate DataType="{x:Type companyEditorModels:AbilitySlotViewModel}">
+            <companyEditorViews:AbilitySlotView/>
+        </DataTemplate>
+
         <!-- New AvailableSquad-View Models -->
-        <DataTemplate DataType="{x:Type companyEditorModels:AvailableSquadViewModel}">
-            <companyEditorViews:AvailableSquadView/>
+        <DataTemplate DataType="{x:Type companyEditorModels:AvailableItemViewModel}">
+            <companyEditorViews:AvailableItemView/>
         </DataTemplate>
 
         <DataTemplate DataType="{x:Type lobbymodels:LobbyChatSpectatorModel}">
@@ -223,6 +229,31 @@
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsMouseOver" Value="True">
                                 <Setter TargetName="Gridbackground" Property="Background" Value="#ad4a4a"/>
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter Property="Opacity" Value="0.65"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="StandardGreenButton" TargetType="{x:Type Button}">
+            <Setter Property="SnapsToDevicePixels" Value="True"/>
+            <Setter Property="UseLayoutRounding" Value="True"/>
+            <Setter Property="FontSize" Value="18"/>
+            <Setter Property="FontFamily" Value="Open Sans"/>
+            <Setter Property="Foreground" Value="#FFFFFF"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Button}">
+                        <Grid x:Name="GridBackground" Background="#489635">
+                            <ContentPresenter x:Name="MyContentPresenter" Content="{TemplateBinding Content}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="GridBackground" Property="Background" Value="#8fe37b"/>
                             </Trigger>
                             <Trigger Property="IsEnabled" Value="False">
                                 <Setter Property="Opacity" Value="0.65"/>
