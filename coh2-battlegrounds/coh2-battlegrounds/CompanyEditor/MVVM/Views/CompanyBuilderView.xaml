@@ -79,15 +79,16 @@
             <!-- UNITS -->
             <TabItem Header="CompanyBuilder_Units"
                      Tag="{Binding UnitCapacity}"
-                     Width="150"
+                     Width="180"
                      Height="35"
                      Style="{StaticResource CompanyBuilderMainTabItem}">
                 
                 <TabControl Style="{StaticResource CompanyBuilderSecondaryTabControl}" SelectedIndex="{Binding SelectedUnitTabItem}" SelectionChanged="ChangeTab">
 
                     <!-- Infantry -->
-                    <TabItem Header="{Binding InfantryHeaderItem, Converter={StaticResource LocaleAndCaseConvertor}}"
-                             Width="100"
+                    <TabItem Header="CompanyBuilder_Infantry"
+                             Tag="{Binding InfantryCapacity}"
+                             Width="180"
                              Style="{StaticResource CompanyBuilderSecondaryTabItem}">
                         
                         <dropArea:DropArea AllowDrop="True"
@@ -120,8 +121,9 @@
                     </TabItem>
 
                     <!-- Support -->
-                    <TabItem Header="{Binding SupportHeaderItem, Converter={StaticResource LocaleAndCaseConvertor}}"
-                             Width="100"
+                    <TabItem Header="CompanyBuilder_Support"
+                             Tag="{Binding SupportCapacity}"
+                             Width="180"
                              Style="{StaticResource CompanyBuilderSecondaryTabItem}">
                         <dropArea:DropArea AllowDrop="True"
                                            Background="White"
@@ -153,8 +155,9 @@
                     </TabItem>
 
                     <!-- Vehicles -->
-                    <TabItem Header="{Binding VehiclesHeaderItem, Converter={StaticResource LocaleAndCaseConvertor}}"
-                             Width="100"
+                    <TabItem Header="CompanyBuilder_Vehicles"
+                             Tag="{Binding VehicleCapacity}"
+                             Width="180"
                              Style="{StaticResource CompanyBuilderSecondaryTabItem}">
                         <dropArea:DropArea AllowDrop="True"
                                            Background="White"
@@ -192,14 +195,15 @@
             <!-- ABILITIES -->
             <TabItem Header="CompanyBuilder_Abilities"
                      Tag="{Binding AbilityCapacity}"
-                     Width="150"
+                     Width="180"
                      Height="35"
                      Style="{StaticResource CompanyBuilderMainTabItem}">
 
                 <TabControl Style="{StaticResource CompanyBuilderSecondaryTabControl}" SelectedIndex="{Binding SelectedAbilityTabItem}" SelectionChanged="ChangeTab">
 
                     <!-- Commander Abilities -->
-                    <TabItem Header="{Binding CommanderAbilitiesHeaderItem, Converter={StaticResource LocaleAndCaseConvertor}}"
+                    <TabItem Header="CompanyBuilder_CommanderAbilities"
+                             Tag="{Binding AbilityCapacity}"
                              Style="{StaticResource CompanyBuilderSecondaryTabItem}">
                         <dropArea:DropArea AllowDrop="True"
                                            Background="White"
@@ -226,7 +230,7 @@
                     </TabItem>
 
                     <!-- Unit Abilities -->
-                    <TabItem Header="{Binding UnitAbilitiesHeaderItem, Converter={StaticResource LocaleAndCaseConvertor}}"
+                    <TabItem Header="CompanyBuilder_UnitAbilities"
                              Style="{StaticResource CompanyBuilderSecondaryTabItem}">
                         <dropArea:DropArea AllowDrop="True"
                                            Background="White"
@@ -256,7 +260,7 @@
             <!-- STORAGE -->
             <TabItem Header="CompanyBuilder_Storage"
                      Tag="{Binding StorageCapacity}"
-                     Width="150"
+                     Width="180"
                      Height="35"
                      Style="{StaticResource CompanyBuilderMainTabItem}">
 
@@ -279,7 +283,7 @@
 
             <!-- STATS -->
             <TabItem Header="CompanyBuilder_Stats"
-                     Width="150"
+                     Width="180"
                      Height="35"
                      Style="{StaticResource CompanyBuilderMainTabItem}">
 

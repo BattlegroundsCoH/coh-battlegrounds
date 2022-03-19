@@ -584,17 +584,20 @@
         </Style>
 
         <Style x:Key="CompanyBuilderSecondaryTabItem" TargetType="{x:Type TabItem}">
-            <Setter Property="Foreground" Value="White"/>
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="{x:Type TabItem}">
                         <Grid Name="Panel">
-                            <TextBlock x:Name="ContentSite"
-                                        VerticalAlignment="Center"
-                                        HorizontalAlignment="Center"
-                                        Text="{TemplateBinding Header}"
-                                        Margin="12, 2"
-                                       FontSize="12"/>
+                            <controls:LocLabel
+                                x:Name="ContentSite"
+                                VerticalAlignment="Center"
+                                HorizontalAlignment="Center"
+                                Foreground="White"
+                                UpperCaseAll="True"
+                                LocKey="{Binding Header, RelativeSource={RelativeSource TemplatedParent}}"
+                                Arguments="{Binding Tag, RelativeSource={RelativeSource TemplatedParent}}"
+                                Margin="12, 2"
+                                FontSize="12"/>
                         </Grid>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsSelected" Value="True">

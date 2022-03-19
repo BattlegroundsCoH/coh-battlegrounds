@@ -73,8 +73,7 @@ public partial class Icon : UserControl {
     /// Identifies the <see cref="MaskColour"/> property.
     /// </summary>
     public static readonly DependencyProperty MaskColourProperty
-        = DependencyProperty.Register(nameof(MaskColour), typeof(Brush), typeof(Icon), new PropertyMetadata(Brushes.Black));
-
+        = DependencyProperty.Register(nameof(MaskColour), typeof(Brush), typeof(Icon), new PropertyMetadata(Brushes.LightGray));
 
     /// <summary>
     /// Get the colour of the mask.
@@ -136,7 +135,7 @@ public partial class Icon : UserControl {
     private void RefreshMask() {
         bool selected = this.IsSelected;
         this.MaskRect.Fill = selected ? Brushes.Transparent : this.MaskColour;
-        this.MaskRect.Opacity = selected ? 0 : 0.5; // TODO: Expose these two "magic" numbers
+        this.MaskRect.Opacity = selected ? 0 : 0.25; // TODO: Expose these two "magic" numbers
     }
 
 }
