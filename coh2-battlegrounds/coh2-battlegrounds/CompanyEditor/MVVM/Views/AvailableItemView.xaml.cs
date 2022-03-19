@@ -19,12 +19,12 @@ namespace BattlegroundsApp.CompanyEditor.MVVM.Views;
 /// <summary>
 /// Interaction logic for AvailableSquadView.xaml
 /// </summary>
-public partial class AvailableSquadView : UserControl {
+public partial class AvailableItemView : UserControl {
 
     public static readonly Brush VIEW_DEFAULT = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#334252"));
     public static readonly Brush VIEW_HOVER = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#536375"));
 
-    public AvailableSquadView() {
+    public AvailableItemView() {
         InitializeComponent();
     }
 
@@ -40,13 +40,13 @@ public partial class AvailableSquadView : UserControl {
 
     protected override void OnMouseMove(MouseEventArgs e) {
         base.OnMouseMove(e);
-        if (this.DataContext is AvailableSquadViewModel vm) {
+        if (this.DataContext is AvailableItemViewModel vm) {
             vm.Move?.Invoke(this, vm, e);
         }
     }
 
     private void AddButton_Click(object sender, RoutedEventArgs e) { 
-        if (this.DataContext is AvailableSquadViewModel vm) {
+        if (this.DataContext is AvailableItemViewModel vm) {
             vm.AddClick?.Invoke(this, vm);
         }
     }

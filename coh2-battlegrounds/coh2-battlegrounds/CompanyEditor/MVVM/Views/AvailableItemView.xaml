@@ -1,4 +1,4 @@
-﻿<UserControl x:Class="BattlegroundsApp.CompanyEditor.MVVM.Views.AvailableSquadView"
+﻿<UserControl x:Class="BattlegroundsApp.CompanyEditor.MVVM.Views.AvailableItemView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -29,7 +29,7 @@
                    Height="24" 
                    Canvas.Left="32"
                    Canvas.Top="12"
-                   Source="{Binding SquadSymbol}"
+                   Source="{Binding ItemSymbol}"
                    VerticalAlignment="Center"
                    HorizontalAlignment="Center"/>
 
@@ -42,7 +42,7 @@
                        TextWrapping="WrapWithOverflow"
                        TextAlignment="Center">
                 
-                <Run Text="{Binding SquadName, Mode=OneWay}" BaselineAlignment="Center"/>
+                <Run Text="{Binding ItemName, Mode=OneWay}" BaselineAlignment="Center"/>
 
             </TextBlock>
 
@@ -50,7 +50,7 @@
                               Canvas.Left="178"
                               Height="40"
                               Width="92.5"
-                              Cost="{Binding SquadCost}"/>
+                              Cost="{Binding ItemCost}"/>
 
         </Canvas>
     </Border>

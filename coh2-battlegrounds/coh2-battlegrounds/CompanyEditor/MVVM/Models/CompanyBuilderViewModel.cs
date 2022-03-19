@@ -59,10 +59,10 @@ public class CompanyBuilderViewModel : IViewModel {
     private List<SquadBlueprint> m_availableCrews;
     private List<AbilityBlueprint> m_abilities;
 
-    public ObservableCollection<AvailableSquadViewModel> AvailableSquads { get; set; }
-    public List<AvailableSquadViewModel> m_availableInfantrySquads;
-    public List<AvailableSquadViewModel> m_availableSupportSquads;
-    public List<AvailableSquadViewModel> m_availableVehicleSquads;
+    public ObservableCollection<AvailableItemViewModel> AvailableSquads { get; set; }
+    public List<AvailableItemViewModel> m_availableInfantrySquads;
+    public List<AvailableItemViewModel> m_availableSupportSquads;
+    public List<AvailableItemViewModel> m_availableVehicleSquads;
 
     public ObservableCollection<SquadSlotViewModel> CompanyInfantrySquads { get; set; }
     public ObservableCollection<SquadSlotViewModel> CompanySupportSquads { get; set; }
@@ -239,11 +239,11 @@ public class CompanyBuilderViewModel : IViewModel {
 
     }
 
-    private void FillAvailableItemSlot<TBlueprint>(IEnumerable<TBlueprint> source, List<AvailableSquadViewModel> target, bool canAdd) where TBlueprint : Blueprint {
+    private void FillAvailableItemSlot<TBlueprint>(IEnumerable<TBlueprint> source, List<AvailableItemViewModel> target, bool canAdd) where TBlueprint : Blueprint {
 
         foreach (var element in source) {
             
-            var slot = new AvailableSquadViewModel(element, this.OnUnitAddClicked, this.OnUnitMove) {
+            var slot = new AvailableItemViewModel(element, this.OnUnitAddClicked, this.OnUnitMove) {
                 CanAdd = canAdd
             };
 
@@ -400,7 +400,7 @@ public class CompanyBuilderViewModel : IViewModel {
 
     }
 
-    private void OnUnitAddClicked(object sender, AvailableSquadViewModel squadBlueprint, object arg) {
+    private void OnUnitAddClicked(object sender, AvailableItemViewModel squadBlueprint, object arg) {
 
         // Create squad
         var unitBuilder = new UnitBuilder().SetBlueprint(squadBlueprint.Blueprint as SquadBlueprint);
@@ -413,7 +413,7 @@ public class CompanyBuilderViewModel : IViewModel {
         
     }
 
-    private void OnUnitMove(object sender, AvailableSquadViewModel squadSlot, object arg) {
+    private void OnUnitMove(object sender, AvailableItemViewModel squadSlot, object arg) {
 
         if (arg is MouseEventArgs mEvent) {
 
