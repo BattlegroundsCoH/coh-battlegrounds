@@ -32,7 +32,7 @@ public class CompanyBuilderButton {
     public LocaleKey Tooltip { get; init; }
 }
 
-public class CompanyBuilderViewModel : IViewModel {
+public class CompanyBuilderViewModel : IViewModel, INotifyPropertyChanged {
 
     public CompanyBuilderButton Save { get; }
 
@@ -114,6 +114,18 @@ public class CompanyBuilderViewModel : IViewModel {
     public CompanyBuilderViewModelEvent Drop => this.OnItemDrop;
     public CompanyBuilderViewModelEvent Change => this.OnTabChange;
 
+    public CapacityValue UnitCapacity { get; }
+
+    public CapacityValue AbilityCapacity { get; }
+
+    public CapacityValue StorageCapacity { get; }
+
+    public CapacityValue InfantryCapacity { get; }
+
+    public CapacityValue SupportCapacity { get; }
+
+    public CapacityValue VehicleCapacity { get; }
+
     public CompanyBuilderViewModel() {
 
         // Create save
@@ -170,6 +182,11 @@ public class CompanyBuilderViewModel : IViewModel {
         this.SelectedAbilityTabItem = 0;
 
         this.AvailableItemsVisibility = Visibility.Visible;
+
+        // Set capacities
+        this.UnitCapacity = new CapacityValue(0, Company.MAX_SIZE, () => this.Builder.Size);
+        this.AbilityCapacity = new CapacityValue(0, 0);
+        this.StorageCapacity = new CapacityValue(0, 0);
 
     }
 
@@ -335,6 +352,9 @@ public class CompanyBuilderViewModel : IViewModel {
         // Add to collection based on category
         this.GetUnitCollection(squad).Add(unitSlot);
 
+        // Notify change
+        this.UnitCapacity.Update(this);
+
     }
 
     private ObservableCollection<SquadSlotViewModel> GetUnitCollection(Squad squad) => squad.GetCategory(true) switch {
@@ -395,6 +415,9 @@ public class CompanyBuilderViewModel : IViewModel {
 
         // Remove view model
         this.GetUnitCollection(squad).Remove(squadSlot);
+        
+        // Notify change
+        this.UnitCapacity.Update(this);
 
     }
 

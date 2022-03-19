@@ -78,6 +78,7 @@
 
             <!-- UNITS -->
             <TabItem Header="CompanyBuilder_Units"
+                     Tag="{Binding UnitCapacity}"
                      Width="150"
                      Height="35"
                      Style="{StaticResource CompanyBuilderMainTabItem}">
@@ -190,6 +191,7 @@
 
             <!-- ABILITIES -->
             <TabItem Header="CompanyBuilder_Abilities"
+                     Tag="{Binding AbilityCapacity}"
                      Width="150"
                      Height="35"
                      Style="{StaticResource CompanyBuilderMainTabItem}">
@@ -253,6 +255,7 @@
 
             <!-- STORAGE -->
             <TabItem Header="CompanyBuilder_Storage"
+                     Tag="{Binding StorageCapacity}"
                      Width="150"
                      Height="35"
                      Style="{StaticResource CompanyBuilderMainTabItem}">

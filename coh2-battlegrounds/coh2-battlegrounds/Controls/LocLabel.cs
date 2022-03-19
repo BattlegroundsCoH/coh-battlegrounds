@@ -2,11 +2,28 @@
 using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Data;
 
 using Battlegrounds;
 using Battlegrounds.Locale;
 
+using BattlegroundsApp.MVVM;
+using BattlegroundsApp.Utilities;
+
 namespace BattlegroundsApp.Controls;
+
+/// <summary>
+/// Interface for objects that can be converted into a localised string argument list.
+/// </summary>
+public interface ILocLabelArgumentsObject : IObjectChanged {
+
+    /// <summary>
+    /// Get object as locale arguments.
+    /// </summary>
+    /// <returns>Array of arguments for localised string formatting.</returns>
+    object[] ToArgs();
+
+}
 
 /// <summary>
 /// Class representing a localised label using the <see cref="BattlegroundsInstance.Localize"/> instance to localise text. Extends <see cref="Label"/>.
@@ -15,10 +32,10 @@ namespace BattlegroundsApp.Controls;
 public class LocLabel : Label {
 
     /// <summary>
-    /// 
+    /// Identifiers the <see cref="LocKey"/> property.
     /// </summary>
     public static readonly DependencyProperty LocKeyProperty =
-      DependencyProperty.Register("LocKey", typeof(object), typeof(LocLabel), new PropertyMetadata(string.Empty, OnLocaleKeyChanged));
+      DependencyProperty.Register(nameof(LocKey), typeof(object), typeof(LocLabel), new PropertyMetadata(string.Empty, OnLocaleKeyChanged));
 
     /// <summary>
     /// Get or set the localisation key to use.
@@ -43,29 +60,11 @@ public class LocLabel : Label {
         }
     }
 
-    private void RefreshDisplay() {
-        object value = this.GetValue(LocKeyProperty);
-        if (BattlegroundsInstance.Localize is not null) {
-            string str = value switch {
-                string s => BattlegroundsInstance.Localize.GetString(s),
-                LocaleKey k => BattlegroundsInstance.Localize.GetString(k),
-                _ => value.ToString()
-            };
-            if (this.UpperCaseAll) {
-                str = str.ToUpper();
-            }
-            this.Content = str;
-        } else {
-
-            this.Content = this.UpperCaseAll ? value.ToString().ToUpper() : value.ToString();
-        }
-    }
-
     /// <summary>
-    /// 
+    /// Identifiers the <see cref="UpperCaseAll"/> property.
     /// </summary>
     public static readonly DependencyProperty UpperCaseAllProperty =
-      DependencyProperty.Register("UpperCaseAll", typeof(bool), typeof(LocLabel), new PropertyMetadata(false, OnCaseChanged));
+      DependencyProperty.Register(nameof(UpperCaseAll), typeof(bool), typeof(LocLabel), new PropertyMetadata(false, OnCaseChanged));
 
     /// <summary>
     /// Get or set if the label should be all upper case letters.
@@ -76,9 +75,82 @@ public class LocLabel : Label {
     }
 
     private static void OnCaseChanged(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs e) {
-        if (dependencyObject is LocLabel loc) { 
+        if (dependencyObject is LocLabel loc) {
             loc.UpperCaseAll = (bool)e.NewValue;
             loc.RefreshDisplay();
+        }
+    }
+
+    /// <summary>
+    /// Identifiers the <see cref="Arguments"/> property.
+    /// </summary>
+    public static readonly DependencyProperty ArgumentsProperty =
+      DependencyProperty.Register(nameof(Arguments), typeof(object), typeof(LocLabel), new PropertyMetadata(null, OnArgumentsChanged));
+
+    /// <summary>
+    /// Get or set arguments to the locale key.
+    /// </summary>
+    public object? Arguments {
+        get => this.GetValue(ArgumentsProperty);
+        set => this.SetValue(ArgumentsProperty, value);
+    }
+
+    private static void OnArgumentsChanged(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs e) {
+        if (dependencyObject is LocLabel loc) {
+            loc.Arguments = e.NewValue;
+            loc.RefreshDisplay();
+            if (e.NewValue is CapacityValue capNew) {
+                capNew.ObjectChanged += loc.OnArgumentsObjectChanged;
+            }
+            if (e.OldValue is CapacityValue capOld) {
+                capOld.ObjectChanged -= loc.OnArgumentsObjectChanged;
+            }
+        }
+    }
+
+    private void OnArgumentsObjectChanged(object sender, IObjectChanged val) 
+        => this.RefreshDisplay();
+
+    private object[] GetArgs() {
+        var args = this.Arguments;
+        if (args is not null && BattlegroundsInstance.Localize is not null) {
+            if (args is Array array) {
+                object[] vals = new object[array.Length];
+                for (int i = 0; i < vals.Length; i++) {
+                    vals[i] = array.GetValue(i) switch {
+                        LocaleKey k => BattlegroundsInstance.Localize.GetString(k),
+                        string s => BattlegroundsInstance.Localize.GetString(s),
+                        object o => o
+                    };
+                }
+                return vals;
+            } else if (args is LocaleKey k) {
+                return new[] { BattlegroundsInstance.Localize.GetString(k) };
+            } else if (args is string s) {
+                return new[] { BattlegroundsInstance.Localize.GetString(s) };
+            } else if (args is ILocLabelArgumentsObject obj) {
+                return obj.ToArgs();
+            } else if (args is Binding binding) {
+
+            }
+        }
+        return Array.Empty<object>();
+    }
+
+    private void RefreshDisplay() {
+        object value = this.GetValue(LocKeyProperty);
+        if (BattlegroundsInstance.Localize is not null) {
+            string str = value switch {
+                string s => BattlegroundsInstance.Localize.GetString(s, this.GetArgs()),
+                LocaleKey k => BattlegroundsInstance.Localize.GetString(k, this.GetArgs()),
+                _ => value.ToString()
+            };
+            if (this.UpperCaseAll) {
+                str = str.ToUpper();
+            }
+            this.Content = str;
+        } else {
+            this.Content = this.UpperCaseAll ? value.ToString().ToUpper() : value.ToString();
         }
     }
 

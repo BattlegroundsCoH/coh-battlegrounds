@@ -557,6 +557,7 @@
                                 Foreground="White"
                                 UpperCaseAll="True"
                                 LocKey="{Binding Header, RelativeSource={RelativeSource TemplatedParent}}"
+                                Arguments="{Binding Tag, RelativeSource={RelativeSource TemplatedParent}}"
                                 Margin="12, 2"
                                 FontSize="16"/>
                         </Grid>
