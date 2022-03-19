@@ -402,7 +402,16 @@ public class CompanyBuilderViewModel : IViewModel {
 
     }
 
-    private void OnAbilityRemoveClicked(object sender, AbilitySlotViewModel abilityViewModel) {
+    private void OnAbilityRemoveClicked(object sender, AbilitySlotViewModel abilitySlot) {
+
+        // Grab ability
+        var ability = abilitySlot.AbilityInstance;
+
+        // Remove from company
+        this.Builder.RemoveAbility(ability);
+
+        // Remove view model
+        this.CompanyAbilities.Remove(abilitySlot);
 
     }
 
