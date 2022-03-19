@@ -102,7 +102,11 @@ public class CompanyBuilderViewModel : IViewModel {
     public LocaleKey CompanyRatingLabelContent { get; }
     public LocaleKey CompanyNoUnitDataLabelContent { get; }
 
-    public int SelectedUnitTab { get; set; }
+    public int SelectedMainTab { get; set; }
+    public int SelectedUnitTabItem { get; set; }
+    public int SelectedAbilityTabItem { get; set; }
+
+    public Visibility AvailableItemsVisibility { get; set; }
 
     public CompanyBuilderViewModelEvent Drop => this.OnUnitDrop;
     public CompanyBuilderViewModelEvent Change => this.OnTabChange;
@@ -156,7 +160,12 @@ public class CompanyBuilderViewModel : IViewModel {
         this.m_availableSupportSquads = new();
         this.m_availableVehicleSquads = new();
 
-        this.SelectedUnitTab = 0;
+        // Set default tabs
+        this.SelectedMainTab = 0;
+        this.SelectedUnitTabItem = 0;
+        this.SelectedAbilityTabItem = 0;
+
+        this.AvailableItemsVisibility = Visibility.Visible;
 
     }
 
@@ -283,7 +292,7 @@ public class CompanyBuilderViewModel : IViewModel {
                 this.FillAvailableItemSlot(this.m_availableSquads.FindAll(s => s.Types.IsVehicle == true || s.Types.IsArmour == true || s.Types.IsHeavyArmour == true),
                                            this.m_availableVehicleSquads, this.CanAddUnits);
 
-                this.UpdateAvailableUnits();
+                this.UpdateAvailableItems();
 
             });
 
@@ -442,22 +451,33 @@ public class CompanyBuilderViewModel : IViewModel {
 
     }
 
-    private void UpdateAvailableUnits() {
+    private void UpdateAvailableItems() {
 
         this.AvailableSquads.Clear();
 
-        switch (this.SelectedUnitTab) {
-            case 0:
-                this.m_availableInfantrySquads.ForEach(x => this.AvailableSquads.Add(x));
-                break;
-            case 1:
-                this.m_availableSupportSquads.ForEach(x => this.AvailableSquads.Add(x));
-                break;
-            case 2:
-                this.m_availableVehicleSquads.ForEach(x => this.AvailableSquads.Add(x));
-                break;
-            default:
-                break;
+        if (this.SelectedMainTab == 0) {
+            this.AvailableItemsVisibility = Visibility.Visible;
+            switch (this.SelectedUnitTabItem) {
+                case 0:
+                    this.m_availableInfantrySquads.ForEach(x => this.AvailableSquads.Add(x));
+                    break;
+                case 1:
+                    this.m_availableSupportSquads.ForEach(x => this.AvailableSquads.Add(x));
+                    break;
+                case 2:
+                    this.m_availableVehicleSquads.ForEach(x => this.AvailableSquads.Add(x));
+                    break;
+                default:
+                    break;
+            }
+        } else if (this.SelectedMainTab == 1) {
+            this.AvailableItemsVisibility = Visibility.Visible;
+            // TODO
+        } else if (this.SelectedMainTab == 2) {
+            this.AvailableItemsVisibility = Visibility.Visible;
+            // TODO
+        } else if (this.SelectedMainTab == 3) {
+            this.AvailableItemsVisibility = Visibility.Hidden;
         }
 
     }
@@ -468,7 +488,7 @@ public class CompanyBuilderViewModel : IViewModel {
 
             if (sEvent.Source is TabControl) {
 
-                this.UpdateAvailableUnits();
+                this.UpdateAvailableItems();
 
             }
 

@@ -72,7 +72,9 @@
                     Grid.Column="0"
                     Grid.RowSpan="3"
                     Style="{StaticResource CompanyBuilderMainTabControl}"
-                    Width="770">
+                    Width="770"
+                    SelectedIndex="{Binding SelectedMainTab}"
+                    SelectionChanged="ChangeTab">
 
             <!-- UNITS -->
             <TabItem Header="CompanyBuilder_Units"
@@ -80,7 +82,7 @@
                      Height="35"
                      Style="{StaticResource CompanyBuilderMainTabItem}">
                 
-                <TabControl Style="{StaticResource CompanyBuilderSecondaryTabControl}" SelectedIndex="{Binding SelectedUnitTab}" SelectionChanged="ChangeTab">
+                <TabControl Style="{StaticResource CompanyBuilderSecondaryTabControl}" SelectedIndex="{Binding SelectedUnitTabItem}" SelectionChanged="ChangeTab">
 
                     <!-- Infantry -->
                     <TabItem Header="{Binding InfantryHeaderItem, Converter={StaticResource LocaleAndCaseConvertor}}"
@@ -413,13 +415,14 @@
 
         </StackPanel>
 
-        <!-- Row 2 :: Available Units -->
+        <!-- Row 2 :: Available Items -->
         <ScrollViewer VerticalScrollBarVisibility="Auto"
                       HorizontalScrollBarVisibility="Disabled"
                       Height="665"
                       Grid.Row="2"
                       Grid.Column="1"
-                      Margin="10, 0, 0, 0">
+                      Margin="10, 0, 0, 0"
+                      Visibility="{Binding AvailableItemsVisibility}">
             
             <StackPanel>
                 <StackPanel.Resources>
