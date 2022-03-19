@@ -216,6 +216,12 @@
                                           Height="660">
 
                                 <StackPanel>
+                                    <StackPanel.Resources>
+                                        <Style TargetType="{x:Type views:AbilitySlotView}">
+                                            <Setter Property="Margin" Value="0, 5, 5, 0"/>
+                                        </Style>
+                                    </StackPanel.Resources>
+                                    
                                     <ItemsControl ItemsSource="{Binding CompanyAbilities}">
                                         <ItemsControl.ItemsPanel>
                                             <ItemsPanelTemplate>
@@ -241,6 +247,11 @@
                                           Height="660">
 
                                 <StackPanel>
+                                    <StackPanel.Resources>
+                                        <Style TargetType="{x:Type views:AbilitySlotView}">
+                                            <Setter Property="Margin" Value="0, 5, 5, 0"/>
+                                        </Style>
+                                    </StackPanel.Resources>
                                     <ItemsControl ItemsSource="{Binding CompanyUnitAbilities}">
                                         <ItemsControl.ItemsPanel>
                                             <ItemsPanelTemplate>
