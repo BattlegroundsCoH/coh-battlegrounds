@@ -87,6 +87,11 @@
             <companyEditorViews:SquadOptionsView/>
         </DataTemplate>
         
+        <!-- Ability MVVM -->
+        <DataTemplate DataType="{x:Type companyEditorModels:AbilitySlotViewModel}">
+            <companyEditorViews:AbilitySlotView/>
+        </DataTemplate>
+        
         <!-- New AvailableSquad-View Models -->
         <DataTemplate DataType="{x:Type companyEditorModels:AvailableSquadViewModel}">
             <companyEditorViews:AvailableSquadView/>
