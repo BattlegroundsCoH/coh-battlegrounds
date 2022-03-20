@@ -313,10 +313,10 @@ public class CompanyBuilderViewModel : IViewModel {
         // Add all units
         this.Builder.EachUnit(this.AddUnitToDisplay, x => (int)x.DeploymentPhase);
 
-        // Add all abilities : TODO
+        // Add all abilities
         this.Builder.EachAbility(this.AddAbilityToDisplay);
 
-        // Add all items : TODO
+        // Add all items
         this.Builder.EachItem(this.AddEquipmentToDisplay);
 
     }
@@ -523,6 +523,7 @@ public class CompanyBuilderViewModel : IViewModel {
 
         if (this.SelectedMainTab == 0) {
             this.AvailableItemsVisibility = Visibility.Visible;
+
             switch (this.SelectedUnitTabItem) {
                 case 0:
                     this.m_availableInfantrySquads.ForEach(x => this.AvailableItems.Add(x));
@@ -538,6 +539,7 @@ public class CompanyBuilderViewModel : IViewModel {
             }
         } else if (this.SelectedMainTab == 1) {
             this.AvailableItemsVisibility = Visibility.Visible;
+            this.RefreshAbilityDisplay();
             switch (this.SelectedAbilityTabItem) {
                 case 0:
                     this.AvailableItemsVisibility = Visibility.Visible;
@@ -586,6 +588,16 @@ public class CompanyBuilderViewModel : IViewModel {
 
     private void EjectCrewAndAddBlueprintToPoolAndToEquipment(SquadSlotLarge squadSlot) {
     
+    }
+
+    private void RefreshAbilityDisplay() {
+
+        this.CompanyAbilities.Clear();
+        this.CompanyUnitAbilities.Clear();
+
+        // Add all abilities
+        this.Builder.EachAbility(this.AddAbilityToDisplay);
+
     }
 
     public bool UnloadViewModel() => true;
