@@ -11,7 +11,9 @@
              xmlns:views="clr-namespace:BattlegroundsApp.CompanyEditor.MVVM.Views"
              mc:Ignorable="d"
              Background="#273441"
-             d:DesignHeight="750" d:DesignWidth="1100">
+             d:DesignHeight="850" 
+             d:DesignWidth="1100"
+             Loaded="UserControl_Loaded">
     <Grid Margin="10">
 
         <Grid.Resources>
@@ -36,12 +38,12 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
             <RowDefinition Height="auto"/>
-            <RowDefinition Height="auto"/>
-            <RowDefinition Height="auto"/>
+            <RowDefinition/>
         </Grid.RowDefinitions>
 
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="auto"/>
+            <ColumnDefinition Width="8"/>
             <ColumnDefinition Width="auto"/>
         </Grid.ColumnDefinitions>
 
@@ -74,7 +76,7 @@
                     Style="{StaticResource CompanyBuilderMainTabControl}"
                     Width="770"
                     SelectedIndex="{Binding SelectedMainTab}"
-                    SelectionChanged="ChangeTab">
+                    SelectionChanged="ChangeMainTab">
 
             <!-- UNITS -->
             <TabItem Header="CompanyBuilder_Units"
@@ -83,25 +85,26 @@
                      Height="35"
                      Style="{StaticResource CompanyBuilderMainTabItem}">
                 
-                <TabControl Style="{StaticResource CompanyBuilderSecondaryTabControl}" SelectedIndex="{Binding SelectedUnitTabItem}" SelectionChanged="ChangeTab">
+                <TabControl Style="{StaticResource CompanyBuilderSecondaryTabControl}" 
+                            SelectedIndex="{Binding SelectedUnitTabItem}" 
+                            SelectionChanged="ChangeSubUnitTab">
 
                     <!-- Infantry -->
                     <TabItem Header="CompanyBuilder_Infantry"
                              Tag="{Binding InfantryCapacity}"
                              Width="180"
-                             Style="{StaticResource CompanyBuilderSecondaryTabItem}">
+                             Style="{StaticResource CompanyBuilderSecondaryTabItem}"
+                             x:Name="InfantryTab">
                         
                         <dropArea:DropArea AllowDrop="True"
                                            Background="White"
                                            BorderThickness="1.5"
                                            BorderBrush="Black"
                                            Drop="OnItemDrop">
-
-                            <ScrollViewer VerticalScrollBarVisibility="Auto" 
-                                          HorizontalScrollBarVisibility="Disabled"
-                                          Height="660">
-
-                                <StackPanel>
+                            <Canvas x:Name="InfantryCanvas" 
+                                    ClipToBounds="True">
+                                <StackPanel x:Name="InfantryPanel"
+                                            SizeChanged="InfantryPanel_SizeChanged">
                                     <StackPanel.Resources>
                                         <Style TargetType="{x:Type views:SquadSlotView}">
                                             <Setter Property="Margin" Value="0, 5, 5, 0"/>
@@ -116,7 +119,7 @@
                                         </ItemsControl.ItemsPanel>
                                     </ItemsControl>
                                 </StackPanel>
-                            </ScrollViewer>
+                            </Canvas>
                         </dropArea:DropArea>
                     </TabItem>
 
@@ -124,18 +127,16 @@
                     <TabItem Header="CompanyBuilder_Support"
                              Tag="{Binding SupportCapacity}"
                              Width="180"
-                             Style="{StaticResource CompanyBuilderSecondaryTabItem}">
+                             Style="{StaticResource CompanyBuilderSecondaryTabItem}"
+                             x:Name="SupportTab">
                         <dropArea:DropArea AllowDrop="True"
                                            Background="White"
                                            BorderThickness="1.5"
                                            BorderBrush="Black"
                                            Drop="OnItemDrop">
-
-                            <ScrollViewer VerticalScrollBarVisibility="Auto" 
-                                          HorizontalScrollBarVisibility="Disabled"
-                                          Height="660">
-
-                                <StackPanel>
+                            <Canvas x:Name="SupportCanvas">
+                                <StackPanel x:Name="SupportPanel"
+                                            SizeChanged="SupportPanel_SizeChanged">
                                     <StackPanel.Resources>
                                         <Style TargetType="{x:Type views:SquadSlotView}">
                                             <Setter Property="Margin" Value="0, 5, 5, 0"/>
@@ -150,7 +151,7 @@
                                         </ItemsControl.ItemsPanel>
                                     </ItemsControl>
                                 </StackPanel>
-                            </ScrollViewer>
+                            </Canvas>
                         </dropArea:DropArea>
                     </TabItem>
 
@@ -158,18 +159,16 @@
                     <TabItem Header="CompanyBuilder_Vehicles"
                              Tag="{Binding VehicleCapacity}"
                              Width="180"
-                             Style="{StaticResource CompanyBuilderSecondaryTabItem}">
+                             Style="{StaticResource CompanyBuilderSecondaryTabItem}"
+                             x:Name="VehicleTab">
                         <dropArea:DropArea AllowDrop="True"
                                            Background="White"
                                            BorderThickness="1.5"
                                            BorderBrush="Black"
                                            Drop="OnItemDrop">
-
-                            <ScrollViewer VerticalScrollBarVisibility="Auto" 
-                                          HorizontalScrollBarVisibility="Disabled"
-                                          Height="660">
-
-                                <StackPanel>
+                            <Canvas x:Name="VehicleCanvas">
+                                <StackPanel x:Name="VehiclePanel"
+                                            SizeChanged="VehiclePanel_SizeChanged">
                                     <StackPanel.Resources>
                                         <Style TargetType="{x:Type views:SquadSlotView}">
                                             <Setter Property="Margin" Value="0, 5, 5, 0"/>
@@ -184,7 +183,7 @@
                                         </ItemsControl.ItemsPanel>
                                     </ItemsControl>
                                 </StackPanel>
-                            </ScrollViewer>
+                            </Canvas>
                         </dropArea:DropArea>
                     </TabItem>
 
@@ -199,23 +198,22 @@
                      Height="35"
                      Style="{StaticResource CompanyBuilderMainTabItem}">
 
-                <TabControl Style="{StaticResource CompanyBuilderSecondaryTabControl}" SelectedIndex="{Binding SelectedAbilityTabItem}" SelectionChanged="ChangeTab">
+                <TabControl Style="{StaticResource CompanyBuilderSecondaryTabControl}" 
+                            SelectedIndex="{Binding SelectedAbilityTabItem}" 
+                            SelectionChanged="ChangeSubAbilityTab">
 
                     <!-- Commander Abilities -->
                     <TabItem Header="CompanyBuilder_CommanderAbilities"
                              Tag="{Binding AbilityCapacity}"
-                             Style="{StaticResource CompanyBuilderSecondaryTabItem}">
+                             Style="{StaticResource CompanyBuilderSecondaryTabItem}"
+                             x:Name="CommanderAbilityTab">
                         <dropArea:DropArea AllowDrop="True"
                                            Background="White"
                                            BorderThickness="1.5"
                                            BorderBrush="Black"
                                            Drop="OnItemDrop">
-
-                            <ScrollViewer VerticalScrollBarVisibility="Auto" 
-                                          HorizontalScrollBarVisibility="Disabled"
-                                          Height="660">
-
-                                <StackPanel>
+                            <Canvas>
+                                <StackPanel x:Name="CommanderAbilitiyPanel">
                                     <ItemsControl ItemsSource="{Binding CompanyAbilities}">
                                         <ItemsControl.ItemsPanel>
                                             <ItemsPanelTemplate>
@@ -225,22 +223,20 @@
                                         </ItemsControl.ItemsPanel>
                                     </ItemsControl>
                                 </StackPanel>
-                            </ScrollViewer>
+                            </Canvas>
                         </dropArea:DropArea>
                     </TabItem>
 
                     <!-- Unit Abilities -->
                     <TabItem Header="CompanyBuilder_UnitAbilities"
-                             Style="{StaticResource CompanyBuilderSecondaryTabItem}">
+                             Style="{StaticResource CompanyBuilderSecondaryTabItem}"
+                             x:Name="UnitAbilityTab">
                         <dropArea:DropArea AllowDrop="True"
                                            Background="White"
                                            BorderThickness="1.5"
                                            BorderBrush="Black">
-                            <ScrollViewer VerticalScrollBarVisibility="Auto" 
-                                          HorizontalScrollBarVisibility="Disabled"
-                                          Height="660">
-
-                                <StackPanel>
+                            <Canvas >
+                                <StackPanel x:Name="UnitAbilityPanel">
                                     <ItemsControl ItemsSource="{Binding CompanyUnitAbilities}">
                                         <ItemsControl.ItemsPanel>
                                             <ItemsPanelTemplate>
@@ -250,7 +246,7 @@
                                         </ItemsControl.ItemsPanel>
                                     </ItemsControl>
                                 </StackPanel>
-                            </ScrollViewer>
+                            </Canvas>
                         </dropArea:DropArea>
                     </TabItem>
 
@@ -399,12 +395,23 @@
 
         </TabControl>
 
+        <ScrollBar Grid.Row="2" 
+                   Grid.Column="1"
+                   Margin="0,43,0,0"
+                   Width="16"
+                   x:Name="RHS_ScrollBar"
+                   Scroll="RHS_ScrollBar_Scroll"
+                   SmallChange="5"
+                   LargeChange="30"
+                   Style="{StaticResource Dumb}"
+                   />
+
         <!-- Row 1 :: Save & Reset Buttons -->
         <StackPanel Grid.Row="1"
-                    Grid.Column="1"
+                    Grid.Column="2"
                     Orientation="Horizontal" 
                     VerticalAlignment="Top"
-                    Margin="65,0,0,0">
+                    Margin="55,0,0,0">
 
             <Button x:Name="resetButton"
                     Content="CompanyBuilder_Reset"
@@ -428,7 +435,7 @@
                       HorizontalScrollBarVisibility="Disabled"
                       Height="665"
                       Grid.Row="2"
-                      Grid.Column="1"
+                      Grid.Column="2"
                       Margin="10, 0, 0, 0"
                       Visibility="{Binding AvailableItemsVisibility}">
             

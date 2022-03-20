@@ -291,7 +291,7 @@
             </Setter>
         </Style>
 
-        <Style x:Key="StandardBlueDropdownScrollbar" TargetType="{x:Type ScrollBar}" BasedOn="{StaticResource {x:Type ScrollBar}}">
+        <Style x:Key="StandardBlueDropdownScrollbar" TargetType="{x:Type ScrollBar}">
             <Setter Property="SnapsToDevicePixels" Value="True" />
             <Setter Property="Template">
                 <Setter.Value>
@@ -308,6 +308,7 @@
                                           Foreground="#FFFFFF"
                                           Style="{StaticResource StandardBlueDropdownScrollbarButton}"/>
                             <Track Grid.Row="1"
+                                   x:Name="PART_Track"
                                    IsDirectionReversed="true">
                                 <Track.DecreaseRepeatButton>
                                     <RepeatButton Style="{StaticResource StandardBlueDropdownScrollbarPageButton}" Command="ScrollBar.PageUpCommand"/>
@@ -615,6 +616,119 @@
                 </Setter.Value>
             </Setter>
         </Style>
+
+        <Style x:Key="SmallBlueScrollBar" TargetType="{x:Type ScrollBar}">
+            <Setter Property="SnapsToDevicePixels" Value="True" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type ScrollBar}">
+                        <Grid Width="16" Background="#212d3a">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="16"/>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="16"/>
+                            </Grid.RowDefinitions>
+                            <RepeatButton Grid.Row="0"
+                                          Command="ScrollBar.LineUpCommand"
+                                          Content="ᐃ"
+                                          Foreground="#FFFFFF"
+                                          Style="{StaticResource StandardBlueDropdownScrollbarButton}"/>
+                            <Track Grid.Row="1"
+                                   Grid.ZIndex="-1"
+                                   IsDirectionReversed="true">
+                                <Track.DecreaseRepeatButton>
+                                    <RepeatButton Style="{StaticResource StandardBlueDropdownScrollbarPageButton}" Command="ScrollBar.PageUpCommand"/>
+                                </Track.DecreaseRepeatButton>
+                                <Track.Thumb>
+                                    <Thumb>
+                                        <Thumb.Style>
+                                            <Style TargetType="{x:Type Thumb}">
+                                                <Setter Property="SnapsToDevicePixels" Value="True" />
+                                                <Setter Property="IsTabStop" Value="false" />
+                                                <Setter Property="Focusable" Value="True" />
+                                                <Setter Property="Template">
+                                                    <Setter.Value>
+                                                        <ControlTemplate TargetType="{x:Type Thumb}">
+                                                            <Border CornerRadius="1"
+                                                                    Background="#334252"/>
+                                                        </ControlTemplate>
+                                                    </Setter.Value>
+                                                </Setter>
+
+                                            </Style>
+                                        </Thumb.Style>
+                                    </Thumb>
+                                </Track.Thumb>
+                                <Track.IncreaseRepeatButton>
+                                    <RepeatButton Style="{StaticResource StandardBlueDropdownScrollbarPageButton}" Command="ScrollBar.PageDownCommand"/>
+                                </Track.IncreaseRepeatButton>
+                            </Track>
+                            <RepeatButton Grid.Row="2"
+                                          Command="ScrollBar.LineDownCommand"
+                                          Content="ᐁ"
+                                          Foreground="#FFFFFF"
+                                          Style="{StaticResource StandardBlueDropdownScrollbarButton}"/>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="Dumb" TargetType="{x:Type ScrollBar}">
+            <Setter Property="BorderBrush" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type ScrollBar}">
+                        <Grid Name="Bg"
+                              Background="#212d3a"
+                              SnapsToDevicePixels="true">
+                            <Grid.RowDefinitions>
+                                <RowDefinition MaxHeight="{DynamicResource {x:Static SystemParameters.VerticalScrollBarButtonHeightKey}}"/>
+                                <RowDefinition Height="0.00001*"/>
+                                <RowDefinition MaxHeight="{DynamicResource {x:Static SystemParameters.VerticalScrollBarButtonHeightKey}}"/>
+                            </Grid.RowDefinitions>
+                            <RepeatButton 
+                                IsEnabled="{TemplateBinding IsMouseOver}"
+                                Height="18"
+                                Command="ScrollBar.LineUpCommand"
+                                Content="M 0 4 L 8 4 L 4 0 Z" />
+                            <Track Name="PART_Track"
+                                 IsDirectionReversed="true"
+                                 Grid.Row="1"
+                                 Grid.ZIndex="-1">
+                                <Track.DecreaseRepeatButton>
+                                    <RepeatButton Command="ScrollBar.PageUpCommand"
+                                                  Background="#212d3a"/>
+                                </Track.DecreaseRepeatButton>
+                                <Track.IncreaseRepeatButton>
+                                    <RepeatButton Command="ScrollBar.PageDownCommand"
+                                                  Background="#212d3a"/>
+                                </Track.IncreaseRepeatButton>
+                                <Track.Thumb>
+                                    <!-- Set the height of the Thumb.-->
+                                    <Thumb Background="#536375"
+                                           BorderThickness="0"
+                                           BorderBrush="Transparent"/>
+                                </Track.Thumb>
+                            </Track>
+                            <RepeatButton 
+                                Grid.Row="2" 
+                                Height="18"
+                                Command="ScrollBar.LineDownCommand"
+                                Content="M 0 0 L 4 4 L 8 0 Z"/>
+
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger SourceName="PART_Track" Property="IsEnabled" Value="false">
+                                <Setter TargetName="PART_Track" Property="Visibility" Value="Hidden"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
 
     </Application.Resources>
 </Application>
