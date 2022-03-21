@@ -84,13 +84,13 @@ namespace BattlegroundsApp.Views {
 
             if (CreateCompanyDialogViewModel.ShowCreateCompanyDialog(new LocaleKey("CompanyView_CreateCompanyDialog_Title"), out string companyName, out Faction companyFaction, out CompanyType companyType)
                 is CreateCompanyDialogResult.Create) {
-                this.StateChangeRequest(new CompanyBuilderView(companyName, companyFaction, companyType, modGuid));
+                //this.StateChangeRequest(new CompanyBuilderView(companyName, companyFaction, companyType, modGuid));
             }
 
         }
 
         private void editCompany_Click(object sender, RoutedEventArgs e) {
-            this.StateChangeRequest(new CompanyBuilderView(companyList.SelectedItem as Company));
+            //this.StateChangeRequest(new CompanyBuilderView(companyList.SelectedItem as Company));
         }
 
         private void renameCompany_Click(object sender, RoutedEventArgs e) {

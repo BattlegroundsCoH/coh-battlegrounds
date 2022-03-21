@@ -66,8 +66,9 @@ public class CompanyBuilderViewModel : IViewModel {
     public ObservableCollection<EquipmentSlot> CompanyEquipment { get; set; }
 
     public CompanyBuilder Builder { get; }
-    public bool CanAddUnits => this.Builder.CanAddUnit;
-    public bool CanAddAbilities => this.Builder.CanAddAbility;
+
+    public bool CanAddUnits => true;
+    public bool CanAddAbilities => true;
 
     public CompanyStatistics Statistics { get; }
     public string CompanyName { get; }
@@ -170,9 +171,9 @@ public class CompanyBuilderViewModel : IViewModel {
     }
 
     public CompanyBuilderViewModel(Company company) : this() {
-        
+
         // Set company information
-        this.Builder = new CompanyBuilder().DesignCompany(company);
+        this.Builder = CompanyBuilder.EditCompany(company);
         this.Statistics = company.Statistics;
         this.CompanyName = company.Name;
         this.CompanyFaction = company.Army;
@@ -192,7 +193,7 @@ public class CompanyBuilderViewModel : IViewModel {
     public CompanyBuilderViewModel(string companyName, Faction faction, CompanyType type, ModGuid modGuid) : this() {
 
         // Set properties
-        this.Builder = new CompanyBuilder().NewCompany(faction).ChangeName(companyName).ChangeType(type).ChangeTuningMod(modGuid).Commit();
+        this.Builder = CompanyBuilder.NewCompany(companyName, type, CompanyAvailabilityType.MultiplayerOnly, faction, modGuid);
         this.Statistics = new();
         this.CompanyName = companyName;
         this.CompanyFaction = faction;
@@ -311,7 +312,7 @@ public class CompanyBuilderViewModel : IViewModel {
         this.CompanyEquipment.Clear();
 
         // Add all units
-        this.Builder.EachUnit(this.AddUnitToDisplay, x => (int)x.DeploymentPhase);
+        //this.Builder.EachUnit(this.AddUnitToDisplay, x => (int)x.DeploymentPhase);
 
         // Add all abilities
         this.Builder.EachAbility(this.AddAbilityToDisplay);

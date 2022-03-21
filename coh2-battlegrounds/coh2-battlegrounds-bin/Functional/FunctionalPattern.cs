@@ -10,6 +10,11 @@ namespace Battlegrounds.Functional {
         public static V Map<U, V>(this U e, Func<U, V> function)
             => function(e);
 
+        public static T And<T>(this T t, Action a) {
+            a();
+            return t;
+        }
+
     }
 
 }

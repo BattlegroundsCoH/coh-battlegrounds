@@ -13,27 +13,55 @@ using Battlegrounds.Modding;
 namespace Battlegrounds.Game.Database {
 
     /// <summary>
+    /// Enum describing the category of a <see cref="SquadBlueprint"/>.
+    /// </summary>
+    public enum SquadCategory {
+        
+        /// <summary>
+        /// Infantry category.
+        /// </summary>
+        Infantry,
+    
+        /// <summary>
+        /// Support weapon/vehicle category (aka team weapon).
+        /// </summary>
+        Support,
+
+        /// <summary>
+        /// Vehicle category.
+        /// </summary>
+        Vehicle
+    
+    }
+
+    /// <summary>
     /// Representation of a <see cref="Blueprint"/> with <see cref="Squad"/> specific values. Inherits from <see cref="Blueprint"/>. This class cannot be inherited.
     /// </summary>
     [JsonConverter(typeof(SquadBlueprintConverter))]
     public sealed class SquadBlueprint : Blueprint, IUIBlueprint {
 
         /// <summary>
-        /// The unique PropertyBagGroupdID assigned to this blueprint.
+        /// Get the unique PropertyBagGroupdID assigned to this blueprint.
         /// </summary>
         public override BlueprintUID PBGID { get; }
 
+        /// <summary>
+        /// Get the blueprint type (Is <see cref="BlueprintType.SBP"/>).
+        /// </summary>
         public override BlueprintType BlueprintType => BlueprintType.SBP;
 
+        /// <summary>
+        /// Get the name of the <see cref="SquadBlueprint"/> instance.
+        /// </summary>
         public override string Name { get; }
 
         /// <summary>
-        /// The army the <see cref="SquadBlueprint"/> can be used by.
+        /// Get the army the <see cref="SquadBlueprint"/> can be used by.
         /// </summary>
         public Faction Army { get; }
 
         /// <summary>
-        /// 
+        /// Get the UI extension.
         /// </summary>
         public UIExtension UI { get; }
 
@@ -43,12 +71,12 @@ namespace Battlegrounds.Game.Database {
         public CostExtension Cost { get; }
 
         /// <summary>
-        /// 
+        /// Get the veterancy extension.
         /// </summary>
         public VeterancyExtension Veterancy { get; }
 
         /// <summary>
-        /// 
+        /// Get the loadout extension.
         /// </summary>
         public LoadoutExtension Loadout { get; }
 
@@ -101,6 +129,11 @@ namespace Battlegrounds.Game.Database {
         /// Array of types bound to the <see cref="SquadBlueprint"/>.
         /// </summary>
         public TypeList Types { get; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public SquadCategory Category => GetCategory(this.Types);
 
         /// <summary>
         /// 
@@ -169,6 +202,11 @@ namespace Battlegrounds.Game.Database {
 
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="getEntityAbilities"></param>
+        /// <returns></returns>
         public string[] GetAbilities(bool getEntityAbilities) {
 
             // If not get entity abilities, return this ability list and be done
@@ -184,6 +222,12 @@ namespace Battlegrounds.Game.Database {
 
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="getEntityUpgrades"></param>
+        /// <param name="getAppliedUpgrades"></param>
+        /// <returns></returns>
         public string[] GetUpgrades(bool getEntityUpgrades, bool getAppliedUpgrades) {
 
             // If not get entity abilities, return this ability list and be done
@@ -202,6 +246,10 @@ namespace Battlegrounds.Game.Database {
 
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public EntityBlueprint GetVehicleBlueprint() {
 
             // Get type
@@ -220,6 +268,20 @@ namespace Battlegrounds.Game.Database {
             // Return null
             return null; // TODO: Check ebp types (if ever added to database tool)
 
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="types"></param>
+        /// <returns></returns>
+        public static SquadCategory GetCategory(TypeList types) {
+            if (types.IsAntiTank || types.IsHeavyArtillery || types.Contains("mortar") || types.Contains("hmg")) {
+                return SquadCategory.Support;
+            } else if (types.Contains("vehicle")) {
+                return SquadCategory.Vehicle;
+            }
+            return SquadCategory.Infantry;
         }
 
     }

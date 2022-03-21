@@ -40,6 +40,11 @@ namespace Battlegrounds.Game.DataCompany {
         public SquadBlueprint Blueprint => this.m_blueprint;
 
         /// <summary>
+        /// Get the override index of the unit (0 if none)
+        /// </summary>
+        public ushort OverrideIndex => this.m_overrideIndex;
+
+        /// <summary>
         /// New basic <see cref="UnitBuilder"/> instance of for building a <see cref="Squad"/>.
         /// </summary>
         public UnitBuilder() {
@@ -61,7 +66,7 @@ namespace Battlegrounds.Game.DataCompany {
         /// New <see cref="UnitBuilder"/> instance based on the settings of an already built <see cref="Squad"/> instance.
         /// </summary>
         /// <param name="squad">The <see cref="Squad"/> instance to copy the unit data from.</param>
-        /// <param name="overrideIndex">Should the built squad </param>
+        /// <param name="overrideIndex">Should the built squad keep the index from <paramref name="squad"/>.</param>
         /// <remarks>This will not modify the <see cref="Squad"/> instance.</remarks>
         public UnitBuilder(Squad squad, bool overrideIndex = true) {
 

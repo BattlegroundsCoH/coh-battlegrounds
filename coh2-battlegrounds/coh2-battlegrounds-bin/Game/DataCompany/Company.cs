@@ -350,11 +350,18 @@ public class Company : IChecksumItem {
             throw new InvalidOperationException();
         }
 
+        // Return from this
+        return GetSpecialUnitAbilities(this.Army, package, this.m_squads.Select(x => x.SBP).Distinct().ToArray());
+
+    }
+
+    public static Ability[] GetSpecialUnitAbilities(Faction faction, ModPackage mod, IEnumerable<SquadBlueprint> squadBlueprints) {
+
         // Get unit abilities for faction
-        var uabps = package.FactionSettings[this.Army].UnitAbilities;
+        var uabps = mod.FactionSettings[faction].UnitAbilities;
 
         // Select all relevant abilities
-        var abps = uabps.Filter(x => this.m_squads.Any(y => y.SBP.Name == x.Blueprint))
+        var abps = uabps.Filter(x => squadBlueprints.Any(y => y.Name == x.Blueprint))
             .MapAndMerge(x => x.Abilities)
             .Map(x => (data: x, bp: BlueprintManager.FromBlueprintName<AbilityBlueprint>(x.Blueprint)))
             .Filter(x => x.bp is not null);
