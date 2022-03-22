@@ -151,22 +151,31 @@ public class CompanyBrowserViewModel : IViewModel {
     // TODO: CompanyTemplate.cs is broken
     public void RenameButton() {
 
+        // Safeguard
+        if (this.SelectedCompany is null)
+            return;
+
         if (RenameCopyDialogViewModel.ShowRenameDialog(new LocaleKey("CompanyView_RenameCopyDialog_Rename_Title"), out string companyName)
             is RenameCopyDialogResult.Rename) {
 
-            var builder = new CompanyBuilder();
-            builder.CloneCompany(SelectedCompany, companyName, CompanyAvailabilityType.MultiplayerOnly).Commit();
+            // Delete old company
+            PlayerCompanies.DeleteCompany(this.SelectedCompany);
 
-            PlayerCompanies.DeleteCompany(SelectedCompany);
-            PlayerCompanies.SaveCompany(builder.Result);
+            // Save new company
+            PlayerCompanies.SaveCompany(CompanyBuilder.EditCompany(this.SelectedCompany).ChangeName(companyName).Commit().Result);
 
+            // Trigger refresh of company
             UpdateCompanyList();
 
         }
 
     }
 
-    public void DeleteButton() { 
+    public void DeleteButton() {
+
+        // Safeguard
+        if (this.SelectedCompany is null)
+            return;
 
         if (YesNoDialogViewModel.ShowYesNoDialog(new LocaleKey("CompanyView_YesNoDialog_Delete_Company_Title"), new LocaleKey("CompanyView_YesNoDialog_Delete_Company_Message"))
             is YesNoDialogResult.Confirm) {
@@ -179,16 +188,17 @@ public class CompanyBrowserViewModel : IViewModel {
     
     }
 
-    // TODO: CompanyTemplate.cs is broken
     public void CopyButton() {
+
+        // Safeguard
+        if (this.SelectedCompany is null)
+            return;
 
         if (RenameCopyDialogViewModel.ShowCopyDialog(new LocaleKey("CompanyView_RenameCopyDialog_Copy_Title"), out string companyName)
             is RenameCopyDialogResult.Copy) {
 
-            var builder = new CompanyBuilder();
-            builder.CloneCompany(SelectedCompany, companyName, CompanyAvailabilityType.MultiplayerOnly).Commit();
-
-            PlayerCompanies.SaveCompany(builder.Result);
+            // 'edit' company but immediately commit and save result
+            PlayerCompanies.SaveCompany(CompanyBuilder.EditCompany(this.SelectedCompany).ChangeName(companyName).Commit().Result);
 
             UpdateCompanyList();
 

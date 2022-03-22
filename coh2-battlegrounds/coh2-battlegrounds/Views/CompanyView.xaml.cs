@@ -97,11 +97,11 @@ namespace BattlegroundsApp.Views {
             var result = RenameCopyDialogViewModel.ShowRenameDialog(new LocaleKey("CompanyView_RenameCopyDialog_Rename_Title"), out string companyName);
 
             if (result == RenameCopyDialogResult.Rename) {
-                var builder = new CompanyBuilder();
+                /*var builder = new CompanyBuilder();
                 var company = builder.CloneCompany(companyList.SelectedItem as Company, companyName, CompanyAvailabilityType.MultiplayerOnly).Commit().Result;
                 PlayerCompanies.DeleteCompany(companyList.SelectedItem as Company);
                 PlayerCompanies.SaveCompany(company);
-                UpdateCompanyList();
+                UpdateCompanyList();*/
             }
 
         }
@@ -121,10 +121,10 @@ namespace BattlegroundsApp.Views {
             var result = RenameCopyDialogViewModel.ShowCopyDialog(new LocaleKey("CompanyView_RenameCopyDialog_Copy_Title"), out string companyName);
 
             if (result == RenameCopyDialogResult.Copy) {
-                var builder = new CompanyBuilder();
+                /*var builder = new CompanyBuilder();
                 builder.CloneCompany(companyList.SelectedItem as Company, companyName, CompanyAvailabilityType.MultiplayerOnly).Commit();
                 PlayerCompanies.SaveCompany(builder.Result);
-                UpdateCompanyList();
+                UpdateCompanyList();*/
             }
         }
 
