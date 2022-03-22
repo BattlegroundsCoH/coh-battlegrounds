@@ -48,6 +48,25 @@ public class CompanyBuilder : IBuilder {
         };
     }
 
+    public sealed record RemoveAbilityAction(Ability Ability) : IEditAction<BuildableCompany> {
+        private Ability m_removedAbility; // cache ability incase we need to undo this
+        public BuildableCompany Apply(BuildableCompany target) => target with {
+            Abilities = target.Abilities.Except(this.m_removedAbility = target.Abilities.First(x => x == Ability))
+        };
+        public BuildableCompany Undo(BuildableCompany target) => target with {
+            Abilities = target.Abilities.Append(this.m_removedAbility)
+        };
+    }
+
+    public sealed record AddAbilityAction(Ability Ability) : IEditAction<BuildableCompany> {
+        public BuildableCompany Apply(BuildableCompany target) => target with {
+            Abilities = target.Abilities.Append(this.Ability)
+        };
+        public BuildableCompany Undo(BuildableCompany target) => target with {
+            Abilities = target.Abilities.Except(this.Ability)
+        };
+    }
+
     public sealed record RenameAction(string Name) : IEditAction<BuildableCompany> {
         private string m_prevName;
         public BuildableCompany Apply(BuildableCompany target) => target with {
@@ -226,7 +245,8 @@ public class CompanyBuilder : IBuilder {
     /// 
     /// </summary>
     /// <param name="ability"></param>
-    public virtual void AddAndCommitAbility(Ability ability) => this.m_companyResult.AddAbility(ability);
+    public virtual void AddAbility(Ability ability)
+        => this.ApplyAction(new AddAbilityAction(ability));
 
     /// <summary>
     /// 
@@ -251,10 +271,8 @@ public class CompanyBuilder : IBuilder {
     /// </summary>
     /// <param name="ability"></param>
     /// <returns></returns>
-    public virtual CompanyBuilder RemoveAbility(Ability ability) {
-        _ = this.m_companyResult.RemoveAbility(ability);
-        return this;
-    }
+    public virtual CompanyBuilder RemoveAbility(Ability ability)
+        => this.ApplyAction(new RemoveAbilityAction(ability));
 
     /// <summary>
     /// Remove unit from with <paramref name="unitID"/> from the company.
@@ -304,27 +322,6 @@ public class CompanyBuilder : IBuilder {
     /// <returns>The calling <see cref="CompanyBuilder"/> instance.</returns>
     public virtual CompanyBuilder ChangeTuningMod(ModGuid tuningGUID)
         => this.ApplyAction(new ModAction(tuningGUID));
-
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="version"></param>
-    /// <returns></returns>
-    [Obsolete("This method should never be invoked.")]
-    public virtual CompanyBuilder ChangeAppVersion(string version) {
-        //this.m_companyAppVersion = version;
-        return this;
-    }
-
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="availabilityType"></param>
-    /// <returns></returns>
-    public virtual CompanyBuilder ChangeAvailability(CompanyAvailabilityType availabilityType) {
-        this.AvailabilityType = availabilityType;
-        return this;
-    }
 
     /// <summary>
     /// 
@@ -410,6 +407,10 @@ public class CompanyBuilder : IBuilder {
         // Loop over units and add to company
         foreach (var unit in this.m_target.Units)
             company.AddSquad(unit);
+
+        // Loop over abilities and add to company
+        foreach (var ability in this.m_target.Abilities)
+            company.AddAbility(ability);
 
         // Set as result
         this.m_companyResult = company;

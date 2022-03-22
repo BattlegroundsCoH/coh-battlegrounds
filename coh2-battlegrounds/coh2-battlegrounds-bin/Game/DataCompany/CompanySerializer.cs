@@ -34,22 +34,20 @@ namespace Battlegrounds.Game.DataCompany {
                 return null;
             }
 
-            // Create builder instance
-            CompanyBuilder builder = new CompanyBuilder()
-                .NewCompany(Faction.FromName(army))
-                .ChangeName(name)
-                .ChangeTuningMod(ModGuid.FromGuid(ReadProperty(ref reader, nameof(Company.TuningGUID))))
-                .ChangeAppVersion(ReadProperty(ref reader, nameof(Company.AppVersion)));
+            // Read mod GUID and BG App version
+            var guid = ModGuid.FromGuid(ReadProperty(ref reader, nameof(Company.TuningGUID)));
+            var version = ReadProperty(ref reader, nameof(Company.AppVersion));
 
             // Read checksum
             ulong checksum = ReadChecksum(ref reader, nameof(Company.Checksum));
 
-            // Read type(s)
-            builder.ChangeType(Enum.Parse<CompanyType>(ReadProperty(ref reader, nameof(Company.Type))))
-                .ChangeAvailability(Enum.Parse<CompanyAvailabilityType>(ReadProperty(ref reader, nameof(Company.AvailabilityType))));
+            // Read type data
+            var type = Enum.Parse<CompanyType>(ReadProperty(ref reader, nameof(Company.Type)));
+            var availability = Enum.Parse<CompanyAvailabilityType>(ReadProperty(ref reader, nameof(Company.AvailabilityType)));
 
-            // Read statistics
-            var stats = ReadPropertyThroughSerialisation<CompanyStatistics>(ref reader, nameof(Company.Statistics));
+            // Create builder instance
+            CompanyBuilder builder = CompanyBuilder.NewCompany(name, type, availability, Faction.FromName(army), guid);
+            builder.Statistics = ReadPropertyThroughSerialisation<CompanyStatistics>(ref reader, nameof(Company.Statistics));
 
             // Create helper dictionary
             var arrayTypes = new Dictionary<string, Type>() {
@@ -72,12 +70,12 @@ namespace Battlegrounds.Game.DataCompany {
                 switch (property) {
                     case nameof(Company.Units):
                         for (int i = 0; i < values.Length; i++) {
-                            builder.AddAndCommitUnit(new UnitBuilder(values.GetValue(i) as Squad, false));
+                            builder.AddUnit(new UnitBuilder(values.GetValue(i) as Squad, overrideIndex: true));
                         }
                         break;
                     case nameof(Company.Abilities):
                         for (int i = 0; i < values.Length; i++) {
-                            builder.AddAndCommitAbility(values.GetValue(i) as Ability);
+                            builder.AddAbility(values.GetValue(i) as Ability);
                         }
                         break;
                     default:
@@ -92,7 +90,6 @@ namespace Battlegrounds.Game.DataCompany {
 
             // Verify checksum and return if success; otherwise throw checksum violation error
             Company result = builder.Result;
-            result.UpdateStatistics(x => stats); // This will set the stats
             result.CalculateChecksum();
             if (!result.VerifyChecksum(checksum)) {
                 Trace.WriteLine($"Warning - Company '{result.Name}' has been modified.", nameof(CompanySerializer));
