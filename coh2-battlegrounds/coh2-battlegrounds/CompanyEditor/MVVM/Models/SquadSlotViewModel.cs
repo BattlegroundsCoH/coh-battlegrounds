@@ -4,6 +4,7 @@ using System.Windows.Media.Imaging;
 
 using Battlegrounds.Game.Database.Extensions;
 using Battlegrounds.Game.DataCompany;
+using Battlegrounds.Game.Gameplay;
 
 using BattlegroundsApp.MVVM;
 using BattlegroundsApp.Resources;
@@ -45,6 +46,14 @@ public class SquadSlotViewModel : IViewModel {
     public ImageSource Rank4 { get; } = VetRankNotAchieved;
 
     public ImageSource Rank5 { get; } = VetRankNotAchieved;
+
+    public string SquadPhase => this.BuilderInstance.Phase switch {
+        DeploymentPhase.PhaseInitial => "I",
+        DeploymentPhase.PhaseA => "A",
+        DeploymentPhase.PhaseB => "B",
+        DeploymentPhase.PhaseC => "C",
+        _ => string.Empty
+    };
 
     public bool SingleInstanceOnly => false; // This will allow us to override
 

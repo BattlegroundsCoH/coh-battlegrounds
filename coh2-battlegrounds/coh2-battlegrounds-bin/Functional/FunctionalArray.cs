@@ -185,10 +185,9 @@ namespace Battlegrounds.Functional {
             int i = array.IndexOf(x => x.Equals(element));
             if (i == -1)
                 return array;
-            T[] buffer = new T[array.Length - 1];
-            Array.Copy(array, 0, buffer, 0, i);
-            Array.Copy(array, 0, buffer, i, array.Length - i);
-            return buffer;
+            var before = array[0..i];
+            var after = array[(i+1)..];
+            return before.Concat(after).ToArray();
         }
 
     }

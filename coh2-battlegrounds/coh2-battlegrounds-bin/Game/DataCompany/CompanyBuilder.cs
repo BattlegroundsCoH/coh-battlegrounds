@@ -108,6 +108,11 @@ public class CompanyBuilder : IBuilder<Company> {
     public CompanyAvailabilityType AvailabilityType { get; set; }
 
     /// <summary>
+    /// Get the current company type.
+    /// </summary>
+    public CompanyType CompanyType => this.m_target.Type;
+
+    /// <summary>
     /// Get or set the statistics of the company.
     /// </summary>
     public CompanyStatistics Statistics { get; set; }
@@ -136,9 +141,29 @@ public class CompanyBuilder : IBuilder<Company> {
     public bool CanRedo => this.m_redoActions.Count > 0;
 
     /// <summary>
-    /// Get the current size of the company
+    /// Get the current size of the company.
     /// </summary>
     public int Size => this.m_target.Units.Length;
+
+    /// <summary>
+    /// Get the current amount of abilities in the company.
+    /// </summary>
+    public int AbilityCount => this.m_target.Abilities.Length;
+
+    /// <summary>
+    /// Get the current infantry count.
+    /// </summary>
+    public int InfantryCount => this.m_target.Units.Count(x => x.Blueprint.Category is SquadCategory.Infantry);
+
+    /// <summary>
+    /// Get the current support unit count.
+    /// </summary>
+    public int SupportCount => this.m_target.Units.Count(x => x.Blueprint.Category is SquadCategory.Support);
+
+    /// <summary>
+    /// Get the current vehicle count.
+    /// </summary>
+    public int VehicleCount => this.m_target.Units.Count(x => x.Blueprint.Category is SquadCategory.Vehicle);
 
     /// <summary>
     /// New instance of the <see cref="CompanyBuilder"/>.
@@ -403,32 +428,32 @@ public class CompanyBuilder : IBuilder<Company> {
     /// </summary>
     /// <param name="name"></param>
     /// <returns></returns>
-    public bool HasAbility(string blueprint) => this.m_companyResult.Abilities.Any(x => x.ABP.Name == blueprint);
+    public virtual bool HasAbility(string blueprint) => this.m_companyResult.Abilities.Any(x => x.ABP.Name == blueprint);
 
     /// <summary>
     /// Get if the company under construction has a squad with specified <paramref name="blueprint"/>.
     /// </summary>
     /// <param name="blueprint">The name of the blueprint to check for.</param>
     /// <returns><see langword="true"/>, if <paramref name="blueprint"/> is found; Otherwise <see langword="false"/>.</returns>
-    public bool HasSquad(string blueprint) => this.m_target.Units.Any(x => x.Blueprint.Name == blueprint);
+    public virtual bool HasSquad(string blueprint) => this.m_target.Units.Any(x => x.Blueprint.Name == blueprint);
 
     /// <summary>
     /// 
     /// </summary>
     /// <param name="squad"></param>
-    public void EachUnit(Action<UnitBuilder> action, Func<UnitBuilder, int> sort) => this.m_target.Units.OrderBy(sort).ForEach(action);
+    public virtual void EachUnit(Action<UnitBuilder> action, Func<UnitBuilder, int> sort) => this.m_target.Units.OrderBy(sort).ForEach(action);
 
     /// <summary>
     /// 
     /// </summary>
     /// <param name="action"></param>
-    public void EachUnit(Action<UnitBuilder> action) => this.EachUnit(action, x => x.OverrideIndex);
+    public virtual void EachUnit(Action<UnitBuilder> action) => this.EachUnit(action, x => x.OverrideIndex);
 
     /// <summary>
     /// 
     /// </summary>
     /// <param name="action"></param>
-    public void EachAbility(Action<Ability, bool> action) {
+    public virtual void EachAbility(Action<Ability, bool> action) {
         var package = ModManager.GetPackageFromGuid(this.m_target.ModGuid);
         _ = Company.GetSpecialUnitAbilities(this.m_target.Faction, package, this.m_target.Units.Map(x => x.Blueprint).Distinct()).ForEach(x => action(x, true));
         _ = this.m_target.Abilities.ForEach(x => action(x, false));
@@ -438,7 +463,7 @@ public class CompanyBuilder : IBuilder<Company> {
     /// 
     /// </summary>
     /// <param name="action"></param>
-    public void EachItem(Action<Blueprint> action) => this.m_target.Items.ForEach(action);
+    public virtual void EachItem(Action<Blueprint> action) => this.m_target.Items.ForEach(action);
 
     /// <summary>
     /// 

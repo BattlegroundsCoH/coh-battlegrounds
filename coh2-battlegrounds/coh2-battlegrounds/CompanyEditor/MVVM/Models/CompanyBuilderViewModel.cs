@@ -157,15 +157,16 @@ public class CompanyBuilderViewModel : IViewModel {
         this.SelectedUnitTabItem = 0;
         this.SelectedAbilityTabItem = 0;
 
+        // Set item visibility
         this.AvailableItemsVisibility = Visibility.Visible;
 
         // Set capacities
         this.UnitCapacity = new CapacityValue(0, Company.MAX_SIZE, () => this.Builder.Size);
-        this.AbilityCapacity = new CapacityValue(0, Company.MAX_ABILITY);
+        this.AbilityCapacity = new CapacityValue(0, Company.MAX_ABILITY, () => this.Builder.AbilityCount);
         this.StorageCapacity = new CapacityValue(0, 0);
-        this.InfantryCapacity = new CapacityValue(0, 0);
-        this.SupportCapacity = new CapacityValue(0, 0);
-        this.VehicleCapacity = new CapacityValue(0, 0);
+        this.InfantryCapacity = new CapacityValue(0, 0, () => this.Builder.InfantryCount);
+        this.SupportCapacity = new CapacityValue(0, 0, () => this.Builder.SupportCount);
+        this.VehicleCapacity = new CapacityValue(0, 0, () => this.Builder.VehicleCount);
 
     }
 
@@ -185,6 +186,9 @@ public class CompanyBuilderViewModel : IViewModel {
         // Load database and display
         this.LoadFactionDatabase();
         this.ShowCompany();
+
+        // Update capacity values
+        this.SetCapacityValues();
 
     }
 
@@ -206,6 +210,22 @@ public class CompanyBuilderViewModel : IViewModel {
         this.ShowCompany();
 
         this.m_availableInfantrySquads.ForEach(x => this.AvailableItems.Add(x));
+
+        // Update capacity values
+        this.SetCapacityValues();
+
+    }
+
+    private void SetCapacityValues() {
+
+        // Update unit capacity values
+        this.InfantryCapacity.Capacity = this.Builder.CompanyType.GetMaxInfantry();
+        this.SupportCapacity.Capacity = this.Builder.CompanyType.GetMaxSupportWeapons();
+        this.VehicleCapacity.Capacity = this.Builder.CompanyType.GetMaxVehicles();
+        this.UnitCapacity.Capacity = Math.Min(Company.MAX_SIZE, this.InfantryCapacity.Capacity + this.SupportCapacity.Capacity + this.VehicleCapacity.Capacity);
+
+        // Update ability capacity value
+        this.AbilityCapacity.Capacity = Math.Min(Company.MAX_ABILITY, this.Builder.CompanyType.GetMaxAbilities());
 
     }
 
@@ -339,6 +359,13 @@ public class CompanyBuilderViewModel : IViewModel {
         _ => throw new InvalidEnumArgumentException()
     };
 
+    private CapacityValue GetUnitCapacity(UnitBuilder builder) => builder.Blueprint.Category switch {
+        SquadCategory.Infantry => this.InfantryCapacity,
+        SquadCategory.Support => this.SupportCapacity,
+        SquadCategory.Vehicle => this.VehicleCapacity,
+        _ => throw new InvalidEnumArgumentException()
+    };
+
     private void AddAbilityToDisplay(Ability ability, bool isUnitAbility) {
 
         // Create display
@@ -391,8 +418,9 @@ public class CompanyBuilderViewModel : IViewModel {
         // Remove view model
         this.GetUnitCollection(unitBuilder).Remove(squadSlot);
         
-        // Notify change
+        // Refresh capacities
         this.UnitCapacity.Update(this);
+        this.GetUnitCapacity(unitBuilder).Update(this);
 
     }
 

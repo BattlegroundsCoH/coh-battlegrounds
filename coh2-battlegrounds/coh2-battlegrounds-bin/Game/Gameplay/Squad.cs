@@ -10,7 +10,6 @@ using Battlegrounds.Game.Gameplay.DataConverters;
 using Battlegrounds.Functional;
 using Battlegrounds.Verification;
 using Battlegrounds.Lua.Generator.RuntimeServices;
-using System.Globalization;
 
 namespace Battlegrounds.Game.Gameplay {
 

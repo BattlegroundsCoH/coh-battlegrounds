@@ -36,11 +36,22 @@
                               Width="92.5"
                               Cost="{Binding SquadCost}"/>
 
-        <!-- Transport -->
-        <Image Canvas.Right="5" Canvas.Bottom="0" 
-                   Visibility="{Binding SquadIsTransported, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter=False}"
-                   Source="{Binding SquadTransportIcon}"/>
+        <!-- Phase -->
+        <Label Canvas.Bottom="4"
+               Canvas.Right="16"
+               FontFamily="Open Sans"
+               Foreground="White"
+            Content="{Binding SquadPhase}"/>
 
+        <!-- Transport -->
+        <Image Canvas.Right="32" Canvas.Bottom="4" 
+               Visibility="{Binding SquadIsTransported, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter=False}"
+               Source="{Binding SquadTransportIcon}"
+               Width="24"
+               Height="24"/>
+
+        
+        
         <!-- Veterancy -->
         <StackPanel Orientation="Horizontal"
                         Canvas.Left="50"
