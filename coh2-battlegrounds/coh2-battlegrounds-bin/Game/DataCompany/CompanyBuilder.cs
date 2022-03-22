@@ -415,6 +415,9 @@ public class CompanyBuilder : IBuilder<Company> {
         foreach (var ability in this.m_target.Abilities)
             company.AddAbility(ability);
 
+        // Trigger checksum calculation
+        company.CalculateChecksum();
+
         // Set as result
         this.m_companyResult = company;
 

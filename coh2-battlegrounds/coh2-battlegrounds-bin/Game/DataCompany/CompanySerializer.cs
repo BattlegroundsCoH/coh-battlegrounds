@@ -90,12 +90,15 @@ namespace Battlegrounds.Game.DataCompany {
 
             // Verify checksum and return if success; otherwise throw checksum violation error
             Company result = builder.Result;
-            result.CalculateChecksum();
+
+            // Verify checksum
             if (!result.VerifyChecksum(checksum)) {
-                Trace.WriteLine($"Warning - Company '{result.Name}' has been modified.", nameof(CompanySerializer));
+                Trace.WriteLine($"Warning - Company '{result.Name}' has been modified (0x{checksum:X} - 0x{result.Checksum:X}).", nameof(CompanySerializer));
+                throw new ChecksumViolationException(result.Checksum, checksum);
             }
+
+            // Return result
             return result;
-            //return result.VerifyChecksum(checksum) ? result : throw new ChecksumViolationException(result.Checksum, checksum);
 
         }
 
