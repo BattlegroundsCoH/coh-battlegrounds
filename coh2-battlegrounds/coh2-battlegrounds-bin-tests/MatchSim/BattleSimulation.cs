@@ -47,11 +47,10 @@ namespace coh2_battlegrounds_bin_tests.MatchSim {
                 }
             }
             var s = new NullSession(true);
-            s.CreateCompany(0, Faction.Soviet, "Allies",
-                x => x.AddUnit(y => y.SetBlueprint(BlueprintManager.FromBlueprintName<SquadBlueprint>("conscript_squad_bg")))
-                .AddUnit(y => y.SetBlueprint(BlueprintManager.FromBlueprintName<SquadBlueprint>("conscript_squad_bg"))));
+            s.CreateCompany(0, Faction.Soviet, "Allies", x => x.AddUnit(BlueprintManager.FromBlueprintName<SquadBlueprint>("conscript_squad_bg"), y => y)
+                .AddUnit(BlueprintManager.FromBlueprintName<SquadBlueprint>("conscript_squad_bg"), y => y));
             s.CreateCompany(1, Faction.Wehrmacht, "Axis",
-                x => x.AddUnit(y => y.SetBlueprint(BlueprintManager.FromBlueprintName<SquadBlueprint>("panzer_iv_squad_bg"))));
+                x => x.AddUnit(BlueprintManager.FromBlueprintName<SquadBlueprint>("panzer_iv_squad_bg"), y => y));
             session = s;
             playStrategy = new BattleSimulatorStrategy(session);
             analyzeStrategy = new SingleplayerMatchAnalyzer();

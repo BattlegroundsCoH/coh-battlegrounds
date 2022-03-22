@@ -16,7 +16,7 @@ namespace Battlegrounds.Game.DataCompany;
 /// Builder class for building a <see cref="Company"/>. Inherit to extend functionality and add support for modded companies. 
 /// This class is intended to be used for method chaining (But is not required for use).
 /// </summary>
-public class CompanyBuilder : IBuilder {
+public class CompanyBuilder : IBuilder<Company> {
 
     // Record detailing the current setup of the company
     // This is very much meant for functional style changes
@@ -29,13 +29,12 @@ public class CompanyBuilder : IBuilder {
         Ability[] Abilities,
         Blueprint[] Items);
 
-    public sealed record RemoveUnitAction(ushort UnitId) : IEditAction<BuildableCompany> {
-        private UnitBuilder m_removedUnit; // cache unit incase we need to undo this
+    public sealed record RemoveUnitAction(UnitBuilder Builder) : IEditAction<BuildableCompany> {
         public BuildableCompany Apply(BuildableCompany target) => target with {
-            Units = target.Units.Except(this.m_removedUnit = target.Units.First(x => x.OverrideIndex == this.UnitId))
+            Units = target.Units.Except(this.Builder)
         };
         public BuildableCompany Undo(BuildableCompany target) => target with {
-            Units = target.Units.Append(this.m_removedUnit)
+            Units = target.Units.Append(this.Builder)
         };
     }
 
@@ -194,13 +193,12 @@ public class CompanyBuilder : IBuilder {
     /// <summary>
     /// Add a unit to the <see cref="Company"/> using a <see cref="UnitBuilder"/>.
     /// </summary>
+    /// <param name="blueprint">The squad blueprint the new unit will have</param>
     /// <param name="builder">The function to build the unit.</param>
     /// <returns>The calling <see cref="CompanyBuilder"/> instance.</returns>
-    [Obsolete("Please use AddUnit")]
-    public virtual CompanyBuilder AddUnit(Func<UnitBuilder, UnitBuilder> builder) {
-        UnitBuilder bld = new();
-        bld.SetModGUID(this.m_target.ModGuid);
-        _ = this.AddAndCommitUnit(builder(bld));
+    public virtual CompanyBuilder AddUnit(SquadBlueprint blueprint, Func<UnitBuilder, UnitBuilder> builder) {
+        UnitBuilder bld = UnitBuilder.NewUnit(blueprint);
+        this.AddUnit(builder(bld));
         return this;
     }
 
@@ -210,7 +208,7 @@ public class CompanyBuilder : IBuilder {
     /// <param name="builder"></param>
     /// <returns></returns>
     [Obsolete("Please use AddUnit")]
-    public virtual Squad AddAndCommitUnit(UnitBuilder builder) {
+    public virtual void AddAndCommitUnit(UnitBuilder builder) {
 
         // If null, throw error
         if (builder == null) {
@@ -226,10 +224,7 @@ public class CompanyBuilder : IBuilder {
         builder.SetModGUID(this.m_target.ModGuid);
 
         // Add squad
-        ushort sid = this.m_companyResult.AddSquad(builder);
-
-        // Ask for squad and return
-        return this.m_companyResult.GetSquadByIndex(sid);
+        this.m_companyResult.AddSquad(builder);
 
     }
 
@@ -251,24 +246,6 @@ public class CompanyBuilder : IBuilder {
     /// <summary>
     /// 
     /// </summary>
-    /// <param name="abp"></param>
-    /// <returns></returns>
-    public virtual Ability AddAndCommitAbility(AbilityBlueprint abp, ModPackage.FactionData.FactionAbility factionAbility) {
-
-        // Create ability
-        Ability sabp = new(abp, factionAbility.LockoutBlueprint, Array.Empty<string>(), factionAbility.AbilityCategory, factionAbility.MaxUsePerMatch, 0);
-
-        // Add ability
-        this.m_companyResult.AddAbility(sabp);
-
-        // Return the special ability
-        return sabp;
-
-    }
-
-    /// <summary>
-    /// 
-    /// </summary>
     /// <param name="ability"></param>
     /// <returns></returns>
     public virtual CompanyBuilder RemoveAbility(Ability ability)
@@ -279,8 +256,8 @@ public class CompanyBuilder : IBuilder {
     /// </summary>
     /// <param name="unitID">The ID of the unit to remove.</param>
     /// <returns>The calling <see cref="CompanyBuilder"/> instance.</returns>
-    public virtual CompanyBuilder RemoveUnit(ushort unitID)
-        => this.ApplyAction(new RemoveUnitAction(unitID));
+    public virtual CompanyBuilder RemoveUnit(UnitBuilder builder)
+        => this.ApplyAction(new RemoveUnitAction(builder));
 
     /// <summary>
     /// Change the specified <see cref="CompanyType"/> of the <see cref="Company"/>.
@@ -389,11 +366,12 @@ public class CompanyBuilder : IBuilder {
     /// <remarks>
     /// Result can be extracted from the <see cref="Result"/> property.
     /// </remarks>
+    /// <param name="arg">Optional argument. Ignored by this method.</param>
     /// <returns>
     /// The calling <see cref="CompanyBuilder"/> instance.
     /// </returns>
     [MemberNotNull(nameof(Result), nameof(m_companyResult))]
-    public virtual CompanyBuilder Commit() {
+    public virtual IBuilder<Company> Commit(object arg = null) {
 
         // Update company fluff
         var company = new Company(this.m_target.Faction);
@@ -470,7 +448,7 @@ public class CompanyBuilder : IBuilder {
     public static CompanyBuilder EditCompany(Company company) {
 
         // Grab unit list as unit builders
-        var units = company.Units.Map(x => new UnitBuilder(x, overrideIndex: true));
+        var units = company.Units.Map(UnitBuilder.EditUnit);
 
         // Create buildable variant
         var buildable = new BuildableCompany(company.Name, company.Type, company.TuningGUID, company.Army, units, company.Abilities.ToArray(), company.Inventory.ToArray());

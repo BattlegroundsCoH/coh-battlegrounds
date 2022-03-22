@@ -168,31 +168,12 @@ public class Company : IChecksumItem {
     /// </summary>
     /// <param name="builder"></param>
     /// <returns></returns>
-    public ushort AddSquad(UnitBuilder builder) {
-        ushort id = this.m_nextSquadId++;
-        var squad = builder.Build(id);
-        if (squad.Crew is not null) {
-            this.m_nextSquadId++;
+    public void AddSquad(UnitBuilder builder) {
+        if (builder.HasIndex) {
+            this.m_squads.Add(builder.Commit((ushort)0).Result);
+        } else {
+            this.m_squads.Add(builder.Commit(this.m_nextSquadId++).Result);
         }
-        this.m_squads.Add(squad);
-        return id;
-    }
-
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="squad"></param>
-    /// <returns></returns>
-    internal bool AddSquad(Squad squad) {
-        if (this.m_squads.Any(x => x.SquadID == squad.SquadID)) {
-            return false;
-        }
-        if (squad.Crew is not null) {
-            if (this.m_squads.Any(x => x.SquadID == squad.Crew.SquadID))
-                return false;
-        }
-        this.m_squads.Add(squad);
-        return true;
     }
 
     /// <summary>
@@ -355,6 +336,13 @@ public class Company : IChecksumItem {
 
     }
 
+    /// <summary>
+    /// Get all special unit abilities based on blueprint collection.
+    /// </summary>
+    /// <param name="faction">The faction to collect unit abilities from.</param>
+    /// <param name="mod">The mod to collect unit abilities from.</param>
+    /// <param name="squadBlueprints">The blueprints of units who grant unit abilities.</param>
+    /// <returns>Array of special abilities that <paramref name="squadBlueprints"/> bring.</returns>
     public static Ability[] GetSpecialUnitAbilities(Faction faction, ModPackage mod, IEnumerable<SquadBlueprint> squadBlueprints) {
 
         // Get unit abilities for faction

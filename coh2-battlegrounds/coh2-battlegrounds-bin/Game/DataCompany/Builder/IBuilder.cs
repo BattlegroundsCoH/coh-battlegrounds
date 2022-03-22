@@ -31,3 +31,26 @@ public interface IBuilder {
     void Redo();
 
 }
+
+/// <summary>
+/// Interface for common functionality in builders of <typeparamref name="T"/> instances.
+/// </summary>
+/// <typeparam name="T">The instance to build.</typeparam>
+public interface IBuilder<T> : IBuilder {
+
+    /// <summary>
+    /// Get the result of the build action.
+    /// </summary>
+    /// <remarks>
+    /// Requires call to <see cref="Commit"/>.
+    /// </remarks>
+    T Result { get; }
+
+    /// <summary>
+    /// Commit all actions to the builder and construct <see cref="Result"/>.
+    /// </summary>
+    /// <param name="arg">Optional argument to give while building.</param>
+    /// <returns>Calling <see cref="IBuilder{T}"/> instance.</returns>
+    IBuilder<T> Commit(object arg = null);
+
+}

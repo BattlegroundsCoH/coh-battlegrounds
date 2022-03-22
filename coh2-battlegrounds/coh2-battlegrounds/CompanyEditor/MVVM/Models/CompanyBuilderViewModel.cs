@@ -42,7 +42,6 @@ public class CompanyBuilderViewModel : IViewModel {
 
     public bool SingleInstanceOnly => false; // This will allow us to override
 
-    private ulong m_initialChecksum;
     private readonly ModPackage m_activeModPackage;
 
     private List<SquadBlueprint> m_availableSquads;
@@ -181,7 +180,6 @@ public class CompanyBuilderViewModel : IViewModel {
         this.CompanyType = company.Type.ToString();
 
         // Set fields
-        this.m_initialChecksum = company.Checksum;
         this.m_activeModPackage = ModManager.GetPackageFromGuid(company.TuningGUID);
 
         // Load database and display
@@ -201,7 +199,6 @@ public class CompanyBuilderViewModel : IViewModel {
         this.CompanyType = type.ToString();
 
         // Set fields
-        this.m_initialChecksum = 0;
         this.m_activeModPackage = ModManager.GetPackageFromGuid(modGuid);
 
         // Load database and display
@@ -312,7 +309,7 @@ public class CompanyBuilderViewModel : IViewModel {
         this.CompanyEquipment.Clear();
 
         // Add all units
-        //this.Builder.EachUnit(this.AddUnitToDisplay, x => (int)x.DeploymentPhase);
+        this.Builder.EachUnit(this.AddUnitToDisplay, x => (int)x.Phase);
 
         // Add all abilities
         this.Builder.EachAbility(this.AddAbilityToDisplay);
@@ -322,23 +319,23 @@ public class CompanyBuilderViewModel : IViewModel {
 
     }
 
-    private void AddUnitToDisplay(Squad squad) {
+    private void AddUnitToDisplay(UnitBuilder builder) {
 
         // Create display
-        SquadSlotViewModel unitSlot = new(squad, this.OnUnitClicked, this.OnUnitRemoveClicked);
+        SquadSlotViewModel unitSlot = new(builder, this.OnUnitClicked, this.OnUnitRemoveClicked);
 
         // Add to collection based on category
-        this.GetUnitCollection(squad).Add(unitSlot);
+        this.GetUnitCollection(builder).Add(unitSlot);
 
         // Notify change
         this.UnitCapacity.Update(this);
 
     }
 
-    private ObservableCollection<SquadSlotViewModel> GetUnitCollection(Squad squad) => squad.GetCategory(true) switch {
-        "infantry" => this.CompanyInfantrySquads,
-        "team_weapon" => this.CompanySupportSquads,
-        "vehicle" => this.CompanyVehicleSquads,
+    private ObservableCollection<SquadSlotViewModel> GetUnitCollection(UnitBuilder builder) => builder.Blueprint.Category switch {
+        SquadCategory.Infantry => this.CompanyInfantrySquads,
+        SquadCategory.Support => this.CompanySupportSquads,
+        SquadCategory.Vehicle => this.CompanyVehicleSquads,
         _ => throw new InvalidEnumArgumentException()
     };
 
@@ -373,26 +370,26 @@ public class CompanyBuilderViewModel : IViewModel {
     private void OnUnitClicked(object sender, SquadSlotViewModel squadViewModel) {
 
         // Grab squad
-        var squad = squadViewModel.SquadInstance;
+        var squad = squadViewModel.BuilderInstance;
 
         // Create options view model
-        var model = new SquadOptionsViewModel(squad);
+        //var model = new SquadOptionsViewModel(squad);
 
         // Display modal
-        App.ViewManager.GetRightsideModalControl()?.ShowModal(model);
+        //App.ViewManager.GetRightsideModalControl()?.ShowModal(model);
 
     }
 
     private void OnUnitRemoveClicked(object sender, SquadSlotViewModel squadSlot) {
 
         // Grab squad
-        var squad = squadSlot.SquadInstance;
+        var unitBuilder = squadSlot.BuilderInstance;
 
         // Remove from company
-        this.Builder.RemoveUnit(squad.SquadID);
+        this.Builder.RemoveUnit(unitBuilder);
 
         // Remove view model
-        this.GetUnitCollection(squad).Remove(squadSlot);
+        this.GetUnitCollection(unitBuilder).Remove(squadSlot);
         
         // Notify change
         this.UnitCapacity.Update(this);
@@ -420,29 +417,13 @@ public class CompanyBuilderViewModel : IViewModel {
 
         if (itemBlueprint.Blueprint is SquadBlueprint sbp) {
 
-            // Create squad
-            var unitBuilder = new UnitBuilder().SetBlueprint(sbp);
-
-            // Add to company
-            var squad = this.Builder.AddAndCommitUnit(unitBuilder);
-
-            // Add to display
-            this.AddUnitToDisplay(squad);
+            // Trigger new unit
+            this.NewUnit(sbp);
 
         } else if (itemBlueprint.Blueprint is AbilityBlueprint abp) {
 
-            // Get faction ability
-            var fabp = this.m_activeModPackage.FactionSettings[this.CompanyFaction].Abilities.FirstOrDefault(x => x.Blueprint == abp.Name);
-            if (fabp is null) {
-                return;
-            }
-
-            // Get special ability
-            var special = this.Builder.AddAndCommitAbility(abp, fabp);
-
-            // Add to display
-            this.AddAbilityToDisplay(special, false);
-
+            // Trigger new ability
+            this.NewAbility(abp);
         }
         
     }
@@ -476,14 +457,8 @@ public class CompanyBuilderViewModel : IViewModel {
 
             if (dEvent.Data.GetData("Squad") is SquadBlueprint sbp) {
 
-                // Create squad
-                var unitBuilder = new UnitBuilder().SetBlueprint(sbp);
-
-                // Add to company
-                var squad = this.Builder.AddAndCommitUnit(unitBuilder);
-
-                // Add to display
-                this.AddUnitToDisplay(squad);
+                // Add unit
+                this.NewUnit(sbp);
 
                 // Mark handled
                 dEvent.Effects = DragDropEffects.Move;
@@ -491,17 +466,8 @@ public class CompanyBuilderViewModel : IViewModel {
 
             } else if (dEvent.Data.GetData("Ability") is AbilityBlueprint abp) {
 
-                // Get faction ability
-                var fabp = this.m_activeModPackage.FactionSettings[this.CompanyFaction].Abilities.FirstOrDefault(x => x.Blueprint == abp.Name);
-                if (fabp is null) {
-                    return;
-                }
-
-                // Get special ability
-                var special = this.Builder.AddAndCommitAbility(abp, fabp);
-
-                // Add to display
-                this.AddAbilityToDisplay(special, false);
+                // New ability
+                this.NewAbility(abp);
 
                 // Mark handled
                 dEvent.Effects = DragDropEffects.Move;
@@ -583,14 +549,6 @@ public class CompanyBuilderViewModel : IViewModel {
     
     }
 
-    private void RemoveCrewAndAddBlueprintToEquipment(SquadSlotLarge squadSlot) {
-
-    }
-
-    private void EjectCrewAndAddBlueprintToPoolAndToEquipment(SquadSlotLarge squadSlot) {
-    
-    }
-
     private void RefreshAbilityDisplay() {
 
         this.CompanyAbilities.Clear();
@@ -598,6 +556,38 @@ public class CompanyBuilderViewModel : IViewModel {
 
         // Add all abilities
         this.Builder.EachAbility(this.AddAbilityToDisplay);
+
+    }
+
+    private void NewUnit(SquadBlueprint sbp) {
+
+        // Create squad
+        var unitBuilder = UnitBuilder.NewUnit(sbp);
+
+        // Add to company
+        this.Builder.AddUnit(unitBuilder);
+
+        // Add to display
+        this.AddUnitToDisplay(unitBuilder);
+
+    }
+
+    private void NewAbility(AbilityBlueprint abp) {
+
+        // Get faction ability
+        var fabp = this.m_activeModPackage.FactionSettings[this.CompanyFaction].Abilities.FirstOrDefault(x => x.Blueprint == abp.Name);
+        if (fabp is null) {
+            return;
+        }
+
+        // Create ability
+        Ability sabp = new(abp, fabp.LockoutBlueprint, Array.Empty<string>(), fabp.AbilityCategory, fabp.MaxUsePerMatch, 0);
+
+        // Add to company
+        this.Builder.AddAbility(sabp);
+
+        // Add to display
+        this.AddAbilityToDisplay(sabp, false);
 
     }
 

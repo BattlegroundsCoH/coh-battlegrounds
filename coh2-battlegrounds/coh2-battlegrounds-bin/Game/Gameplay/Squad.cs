@@ -323,21 +323,8 @@ namespace Battlegrounds.Game.Gameplay {
         /// Calculate the actual cost of a <see cref="Squad"/>.
         /// </summary>
         /// <returns>The cost of the squad.</returns>
-        /// <exception cref="NullReferenceException"/>
-        public CostExtension GetCost() {
-
-            CostExtension c = new(this.SBP.Cost.Manpower, this.SBP.Cost.Munitions, this.SBP.Cost.Fuel, this.SBP.Cost.FieldTime);
-            c = this.m_upgrades.Select(x => (x as UpgradeBlueprint).Cost).Aggregate(c, (a, b) => a + b);
-
-            if (this.m_deployBp is SquadBlueprint sbp) {
-                c += sbp.Cost * (this.DeploymentMethod == DeploymentMethod.DeployAndExit ? 0.25f : 0.65f);
-            }
-
-            // TODO: More here
-
-            return c;
-
-        }
+        public CostExtension GetCost() 
+            => ComputeFullCost(this.SBP.Cost, this.VeterancyRank, this.m_upgrades.Select(x => x as UpgradeBlueprint), this.m_deployBp as SquadBlueprint, this.DeploymentMethod);
 
         /// <summary>
         /// Get the display name of the squad.
@@ -374,6 +361,30 @@ namespace Battlegrounds.Game.Gameplay {
         /// </summary>
         /// <returns>A string that represents the current object.</returns>
         public override string ToString() => $"{this.SBP.Name}${this.SquadID}";
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="initialCost"></param>
+        /// <param name="rank"></param>
+        /// <param name="upgrades"></param>
+        /// <param name="transport"></param>
+        /// <param name="deploymentMethod"></param>
+        /// <returns></returns>
+        public static CostExtension ComputeFullCost(CostExtension initialCost, byte rank, IEnumerable<UpgradeBlueprint> upgrades, SquadBlueprint transport, DeploymentMethod deploymentMethod) {
+
+            CostExtension c = new(initialCost.Manpower, initialCost.Munitions, initialCost.Fuel, initialCost.FieldTime);
+            c = upgrades.Select(x => x.Cost).Aggregate(c, (a, b) => a + b);
+
+            if (transport is SquadBlueprint sbp) {
+                c += sbp.Cost * (deploymentMethod == DeploymentMethod.DeployAndExit ? 0.25f : 0.65f);
+            }
+
+            // TODO: More here
+
+            return c;
+
+        }
 
     }
 

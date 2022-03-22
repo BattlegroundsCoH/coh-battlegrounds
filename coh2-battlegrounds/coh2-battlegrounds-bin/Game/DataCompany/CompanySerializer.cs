@@ -70,7 +70,7 @@ namespace Battlegrounds.Game.DataCompany {
                 switch (property) {
                     case nameof(Company.Units):
                         for (int i = 0; i < values.Length; i++) {
-                            builder.AddUnit(new UnitBuilder(values.GetValue(i) as Squad, overrideIndex: true));
+                            builder.AddUnit(UnitBuilder.EditUnit(values.GetValue(i) as Squad));
                         }
                         break;
                     case nameof(Company.Abilities):

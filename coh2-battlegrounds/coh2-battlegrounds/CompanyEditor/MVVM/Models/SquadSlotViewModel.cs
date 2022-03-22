@@ -1,16 +1,12 @@
-﻿using Battlegrounds.Game.Database;
-using Battlegrounds.Game.Database.Extensions;
-using Battlegrounds.Game.Gameplay;
-using BattlegroundsApp.MVVM;
-using BattlegroundsApp.Resources;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+
+using Battlegrounds.Game.Database.Extensions;
+using Battlegrounds.Game.DataCompany;
+
+using BattlegroundsApp.MVVM;
+using BattlegroundsApp.Resources;
 
 namespace BattlegroundsApp.CompanyEditor.MVVM.Models;
 
@@ -38,19 +34,17 @@ public class SquadSlotViewModel : IViewModel {
 
     public ImageSource SquadTransportIcon { get; set; }
 
-    public Squad SquadInstance { get; }
+    public UnitBuilder BuilderInstance { get; }
 
-    public event PropertyChangedEventHandler PropertyChanged;
+    public ImageSource Rank1 { get; } = VetRankNotAchieved;
 
-    public ImageSource Rank1 { get; set; } = VetRankNotAchieved;
+    public ImageSource Rank2 { get; } = VetRankNotAchieved;
 
-    public ImageSource Rank2 { get; set; } = VetRankNotAchieved;
+    public ImageSource Rank3 { get; } = VetRankNotAchieved;
 
-    public ImageSource Rank3 { get; set; } = VetRankNotAchieved;
+    public ImageSource Rank4 { get; } = VetRankNotAchieved;
 
-    public ImageSource Rank4 { get; set; } = VetRankNotAchieved;
-
-    public ImageSource Rank5 { get; set; } = VetRankNotAchieved;
+    public ImageSource Rank5 { get; } = VetRankNotAchieved;
 
     public bool SingleInstanceOnly => false; // This will allow us to override
 
@@ -58,21 +52,21 @@ public class SquadSlotViewModel : IViewModel {
 
     public SquadSlotViewModelEvent RemoveClick { get; }
 
-    public SquadSlotViewModel(Squad squad, SquadSlotViewModelEvent onClick, SquadSlotViewModelEvent onRemove) {
+    public SquadSlotViewModel(UnitBuilder builder, SquadSlotViewModelEvent onClick, SquadSlotViewModelEvent onRemove) {
 
         // Set squad instance
-        this.SquadInstance = squad;
+        this.BuilderInstance = builder;
 
         // Set events
         this.Click = onClick;
         this.RemoveClick = onRemove;
 
         // Set data known not to change
-        this.SquadPortrait = this.SquadInstance.SBP.UI.Portrait;
-        this.SquadSymbol = this.SquadInstance.SBP.UI.Symbol;
+        this.SquadPortrait = this.BuilderInstance.Blueprint.UI.Portrait;
+        this.SquadSymbol = this.BuilderInstance.Blueprint.UI.Symbol;
 
         // Get rank
-        var rankLevel =  this.SquadInstance.VeterancyRank;
+        var rankLevel =  this.BuilderInstance.Rank;
 
         // Update rank icons
         this.Rank1 = rankLevel >= 1 ? VetRankAchieved : VetRankNotAchieved;
@@ -87,18 +81,19 @@ public class SquadSlotViewModel : IViewModel {
 
     public void RefreshData() {
 
-        this.SquadName = GameLocale.GetString(this.SquadInstance.SBP.UI.ScreenName);
-        this.SquadCost = this.SquadInstance.GetCost();
+        // Set basic info
+        this.SquadName = GameLocale.GetString(this.BuilderInstance.Blueprint.UI.ScreenName);
+        this.SquadCost = this.BuilderInstance.GetCost();
 
         // Get veterancy
-        if (this.SquadInstance.VeterancyRank > 0) {
-            this.SquadVeterancy = new BitmapImage(new Uri($"pack://application:,,,/Resources/ingame/vet/vstar{this.SquadInstance.VeterancyRank}.png"));
+        if (this.BuilderInstance.Rank > 0) {
+            this.SquadVeterancy = new BitmapImage(new Uri($"pack://application:,,,/Resources/ingame/vet/vstar{this.BuilderInstance.Rank}.png"));
         }
 
         // Set transport
-        this.SquadIsTransported = this.SquadInstance.SupportBlueprint is not null;
-        if (this.SquadIsTransported && App.ResourceHandler.HasIcon("symbol_icons", (this.SquadInstance.SupportBlueprint as SquadBlueprint).UI.Symbol)) {
-            this.SquadTransportIcon = App.ResourceHandler.GetIcon("symbol_icons", (this.SquadInstance.SupportBlueprint as SquadBlueprint).UI.Symbol);
+        this.SquadIsTransported = this.BuilderInstance.Transport is not null;
+        if (this.SquadIsTransported && App.ResourceHandler.HasIcon("symbol_icons", this.BuilderInstance.Transport.UI.Symbol)) {
+            this.SquadTransportIcon = App.ResourceHandler.GetIcon("symbol_icons", this.BuilderInstance.Transport.UI.Symbol);
         }
 
     }

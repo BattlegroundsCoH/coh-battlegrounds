@@ -27,7 +27,7 @@ namespace coh2_battlegrounds_bin_tests {
             companyBuilder.AddAndCommitUnit(unitBuilder.SetBlueprint("conscript_squad_bg").SetVeterancyRank(5).SetDeploymentPhase(DeploymentPhase.PhaseA).GetAndReset());
             companyBuilder.AddAndCommitUnit(unitBuilder.SetBlueprint("conscript_squad_bg").SetVeterancyRank(2).SetDeploymentPhase(DeploymentPhase.PhaseC).GetAndReset());
             companyBuilder.AddAndCommitUnit(unitBuilder.SetBlueprint("conscript_squad_bg").SetVeterancyRank(2).SetDeploymentPhase(DeploymentPhase.PhaseC).GetAndReset());
-            companyBuilder.AddAndCommitUnit(unitBuilder.SetBlueprint("t_34_76_squad_bg").CreateAndGetCrew(GetCrew).SetVeterancyRank(3).SetDeploymentPhase(DeploymentPhase.PhaseB).GetAndReset());
+            companyBuilder.AddAndCommitUnit(unitBuilder.SetBlueprint("t_34_76_squad_bg").SetVeterancyRank(3).SetDeploymentPhase(DeploymentPhase.PhaseB).GetAndReset());
             companyBuilder.AddAndCommitUnit(unitBuilder.SetBlueprint("conscript_squad_bg")
                 .SetVeterancyRank(2)
                 .SetDeploymentPhase(DeploymentPhase.PhaseA)
@@ -43,9 +43,9 @@ namespace coh2_battlegrounds_bin_tests {
                 .AddSlotItem("dp-28_light_machine_gun_package_bg").GetAndReset());
             companyBuilder.AddAndCommitUnit(unitBuilder.SetBlueprint("conscript_squad_bg").SetVeterancyRank(2).SetDeploymentPhase(DeploymentPhase.PhaseB).GetAndReset());
             companyBuilder.AddAndCommitUnit(unitBuilder.SetBlueprint("conscript_squad_bg").SetVeterancyRank(3).SetDeploymentPhase(DeploymentPhase.PhaseB).GetAndReset());
-            companyBuilder.AddAndCommitUnit(unitBuilder.SetBlueprint("t_34_76_squad_bg").CreateAndGetCrew(GetCrew).SetVeterancyRank(2).SetDeploymentPhase(DeploymentPhase.PhaseB).GetAndReset());
-            companyBuilder.AddAndCommitUnit(unitBuilder.SetBlueprint("t_34_76_squad_bg").CreateAndGetCrew(GetCrew).SetVeterancyRank(1).SetDeploymentPhase(DeploymentPhase.PhaseC).GetAndReset());
-            companyBuilder.AddAndCommitUnit(unitBuilder.SetBlueprint("t_34_76_squad_bg").CreateAndGetCrew(GetCrew).SetVeterancyRank(4).SetDeploymentPhase(DeploymentPhase.PhaseC).GetAndReset());
+            companyBuilder.AddAndCommitUnit(unitBuilder.SetBlueprint("t_34_76_squad_bg").SetVeterancyRank(2).SetDeploymentPhase(DeploymentPhase.PhaseB).GetAndReset());
+            companyBuilder.AddAndCommitUnit(unitBuilder.SetBlueprint("t_34_76_squad_bg").SetVeterancyRank(1).SetDeploymentPhase(DeploymentPhase.PhaseC).GetAndReset());
+            companyBuilder.AddAndCommitUnit(unitBuilder.SetBlueprint("t_34_76_squad_bg").SetVeterancyRank(4).SetDeploymentPhase(DeploymentPhase.PhaseC).GetAndReset());
             companyBuilder.AddAndCommitUnit(unitBuilder.SetBlueprint("conscript_squad_bg").SetVeterancyRank(3).SetDeploymentPhase(DeploymentPhase.PhaseA).GetAndReset());
             companyBuilder.AddAndCommitUnit(unitBuilder.SetBlueprint("conscript_squad_bg").SetVeterancyRank(5).SetDeploymentPhase(DeploymentPhase.PhaseA).GetAndReset());
             companyBuilder.AddAndCommitUnit(unitBuilder.SetBlueprint("conscript_squad_bg").SetVeterancyRank(2).SetDeploymentPhase(DeploymentPhase.PhaseA).GetAndReset());
@@ -58,9 +58,6 @@ namespace coh2_battlegrounds_bin_tests {
             return result;
 
         }
-
-
-        private static UnitBuilder GetCrew(UnitBuilder builder) => builder;
 
         public static Company CreateAdvancedSovietCompany() {
 
@@ -143,16 +140,10 @@ namespace coh2_battlegrounds_bin_tests {
                 .GetAndReset());
             companyBuilder.AddAndCommitUnit(unitBuilder.SetBlueprint("t_34_76_squad_bg")
                 .SetDeploymentPhase(DeploymentPhase.PhaseA)
-                .SetVeterancyRank(2).SetCombatTime(TimeSpan.FromMinutes(34.76))
-                .CreateAndGetCrew(
-                    x => x.SetBlueprint("soviet_male_vehicle_driver_bg").SetCombatTime(TimeSpan.FromMinutes(34.76)).SetVeterancyRank(3)
-                ).GetAndReset());
+                .SetVeterancyRank(2).SetCombatTime(TimeSpan.FromMinutes(34.76)).GetAndReset());
             companyBuilder.AddAndCommitUnit(unitBuilder.SetBlueprint("t_34_76_squad_bg")
                 .SetDeploymentPhase(DeploymentPhase.PhaseA)
-                .SetVeterancyRank(2).SetCombatTime(TimeSpan.FromMinutes(34.85))
-                .CreateAndGetCrew(
-                    x => x.SetBlueprint("soviet_male_vehicle_driver_bg").SetCombatTime(TimeSpan.FromMinutes(34.85)).SetVeterancyRank(3)
-                ).GetAndReset());
+                .SetVeterancyRank(2).SetCombatTime(TimeSpan.FromMinutes(34.85)).GetAndReset());
 
             // Commit changes
             companyBuilder.Commit();
