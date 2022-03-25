@@ -1,22 +1,21 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
 
 using Battlegrounds.Functional;
 using Battlegrounds.Game.Database;
+using Battlegrounds.Game.Database.Extensions;
 using Battlegrounds.Game.Database.Management;
 using Battlegrounds.Game.DataCompany;
 using Battlegrounds.Game.Gameplay;
 
 using BattlegroundsApp.MVVM;
 using BattlegroundsApp.Resources;
+using BattlegroundsApp.Utilities;
 
 namespace BattlegroundsApp.CompanyEditor.MVVM.Models;
 
@@ -99,12 +98,25 @@ public class SquadOptionsViewModel {
 
     public ObservableCollection<DeployUnitButton> DeployUnits { get; }
 
+    public TimeSpan CombatTime => this.BuilderInstance.CombatTime;
+
+    public RelayCommand SaveExitCommand { get; }
+
+    public CostExtension Cost => this.BuilderInstance.GetCost();
+
+    public Visibility NameButtonVisibility => this.BuilderInstance.Rank >= 3 ? Visibility.Visible : Visibility.Collapsed;
+
+    public ProgressValue Experience => new ProgressValue(this.BuilderInstance.Experience, this.BuilderInstance.Blueprint.Veterancy.MaxExperience);
+
     public SquadOptionsViewModel(SquadSlotViewModel triggerer, CompanyBuilder companyBuilder) {
         
         // Store trigger and instance refs
         this.TriggerModel = triggerer;
         this.BuilderInstance = triggerer.BuilderInstance;
         this.CompanyBuilder = companyBuilder;
+
+        // Create relay command
+        this.SaveExitCommand = new(CloseModal);
 
         // Collect all abilities
         var abilities = this.BuilderInstance.Abilities.Filter(x => x.UI.Icon is not "").Filter(x => App.ResourceHandler.HasIcon("ability_icons", x.UI.Icon));
@@ -256,5 +268,8 @@ public class SquadOptionsViewModel {
         this.TriggerModel.RefreshData();
 
     }
+
+    public static void CloseModal()
+        => App.ViewManager.GetRightsideModalControl()?.CloseModal();
 
 }

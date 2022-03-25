@@ -6,6 +6,8 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 
+using Battlegrounds.Functional;
+
 namespace Battlegrounds.Locale {
 
     /// <summary>
@@ -38,7 +40,8 @@ namespace Battlegrounds.Locale {
         /// </summary>
         public const string UndefinedSource = "Default";
 
-        private Dictionary<LocaleKey, string> m_allText;
+        private readonly Dictionary<LocaleKey, string> m_allText;
+        private readonly Dictionary<Type, LocaleConverter> m_converters;
 
         /// <summary>
         /// Get the locale language being stored.
@@ -46,12 +49,38 @@ namespace Battlegrounds.Locale {
         public LocaleLanguage Language { get; }
 
         /// <summary>
+        /// Get dictionary containing a specific converter for a specific type.
+        /// </summary>
+        public Dictionary<Type, LocaleConverter> Converters => this.m_converters;
+
+        /// <summary>
         /// Initialize a new <see cref="Localize"/> class with language set for <paramref name="language"/>.
         /// </summary>
         /// <param name="language">The <see cref="LocaleLanguage"/> to contain localized data for.</param>
         public Localize(LocaleLanguage language) {
+
+            // Set language
             this.Language = language;
-            this.m_allText = new Dictionary<LocaleKey, string>();
+
+            // Init private fields
+            this.m_allText = new();
+            this.m_converters = new();
+            
+            // Register some simple converters
+            this.RegisterObjectConverter(new TimespanLocaleConverter());
+
+        }
+
+        /// <summary>
+        /// Register a new object to localised string converter. Throws an exception if a converter has already been registered.
+        /// </summary>
+        /// <param name="converter">The converter to register.</param>
+        /// <exception cref="Exception"></exception>
+        public void RegisterObjectConverter(LocaleConverter converter) {
+            if (this.m_converters.ContainsKey(converter.ConvertType))
+                throw new Exception("Converter already registered for type.");
+            else 
+                this.m_converters[converter.ConvertType] = converter; 
         }
 
         /// <summary>
@@ -219,7 +248,7 @@ namespace Battlegrounds.Locale {
         public string GetString(LocaleKey key, params object[] args) {
             string str = this.GetString(key);
             for (int i = 0; i < args.Length; i++) {
-                string value = args[i] switch {
+                string value = TryGetObjectAsString(args[i]) switch {
                     LocaleKey lc => this.GetString(lc),
                     _ => args[i].ToString()
                 };
@@ -241,7 +270,7 @@ namespace Battlegrounds.Locale {
         /// <param name="key">The raw locale key to use when locating the string.</param>
         /// <param name="args">The argument values to give to the string parameters.</param>
         /// <returns>The UTF-16 encoded <see cref="string"/> with filled parameters sought after if present in system. Otherwsie <paramref name="key"/> is returned.</returns>
-        public string GetString(string key, params object[] args) => this.GetString(new LocaleKey(key), args);
+        public string GetString(string key, params object[] args) => this.GetString(new LocaleKey(key), args.Map(TryGetObjectAsString));
 
         /// <summary>
         /// Get the UTF-16 encoded string represented by the enum value.
@@ -253,6 +282,26 @@ namespace Battlegrounds.Locale {
         public string GetEnum<T>(T enumValue, string sourceID = UndefinedSource) where T : Enum {
             string lookup = $"{typeof(T).Name}_{enumValue}";
             return this.GetString(new LocaleKey(lookup, sourceID));
+        }
+
+        /// <summary>
+        /// Get an object as a localised string using a converter specified by the <see cref="Converters"/> dictionary.
+        /// </summary>
+        /// <param name="obj">The object to localise.</param>
+        /// <returns>The localised object.</returns>
+        /// <exception cref="Exception"></exception>
+        public string GetObjectAsString(object obj) {
+            if (this.m_converters.TryGetValue(obj.GetType(), out var converter))
+                return converter.GetLocalisedString(this, obj);
+            else
+                throw new Exception($"Converter does not exist for object of type {obj.GetType().Name}.");
+        }
+
+        private object TryGetObjectAsString(object obj) {
+            if (this.m_converters.TryGetValue(obj.GetType(), out var converter))
+                return converter.GetLocalisedString(this, obj);
+            else
+                return obj;
         }
 
         /// <summary>

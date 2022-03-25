@@ -3,6 +3,7 @@ using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
+using System.Windows.Markup;
 
 using Battlegrounds;
 using Battlegrounds.Locale;
@@ -28,7 +29,8 @@ public interface ILocLabelArgumentsObject : IObjectChanged {
 /// <summary>
 /// Class representing a localised label using the <see cref="BattlegroundsInstance.Localize"/> instance to localise text. Extends <see cref="Label"/>.
 /// </summary>
-[DefaultProperty("LocKey")]
+[DefaultProperty(nameof(LocKey))]
+[ContentProperty(nameof(LocKey))]
 public class LocLabel : Label {
 
     /// <summary>
@@ -127,7 +129,7 @@ public class LocLabel : Label {
             } else if (args is LocaleKey k) {
                 return new[] { BattlegroundsInstance.Localize.GetString(k) };
             } else if (args is string s) {
-                return new[] { BattlegroundsInstance.Localize.GetString(s) };
+                return new[] { BattlegroundsInstance.Localize.GetString(s) ?? s };
             } else if (args is ILocLabelArgumentsObject obj) {
                 return obj.ToArgs();
             } else if (args is Binding binding) {
@@ -139,11 +141,12 @@ public class LocLabel : Label {
 
     private void RefreshDisplay() {
         object value = this.GetValue(LocKeyProperty);
-        if (BattlegroundsInstance.Localize is not null) {
+        var loc = BattlegroundsInstance.Localize;
+        if (loc is not null) {
             string str = value switch {
-                string s => BattlegroundsInstance.Localize.GetString(s, this.GetArgs()),
-                LocaleKey k => BattlegroundsInstance.Localize.GetString(k, this.GetArgs()),
-                _ => value.ToString()
+                string s => loc.GetString(s, this.GetArgs()),
+                LocaleKey k => loc.GetString(k, this.GetArgs()),
+                _ => loc.Converters.ContainsKey(value.GetType()) ? loc.GetObjectAsString(value) : value.ToString()
             };
             if (this.UpperCaseAll) {
                 str = str.ToUpper();
