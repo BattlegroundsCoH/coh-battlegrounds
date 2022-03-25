@@ -168,4 +168,11 @@ english:
  CompanySquadView_Phases: "Deployment Phase"
  CompanySquadView_Methods: "Deployment Method"
  CompanySquadView_Close: "Close"
- 
+ CompanySquadView_PhaseA: "Phase A"
+ CompanySquadView_PhaseB: "Phase B"
+ CompanySquadView_PhaseC: "Phase C"
+ CompanySquadView_PhaseI: "Phase I"
+ CompanySquadView_PhaseA_Desc: "Units deployed within this phase are available from the beginning of the match."
+ CompanySquadView_PhaseB_Desc: "Units in this phase can be deployed 8 minutes into the match."
+ CompanySquadView_PhaseC_Desc: "Units in this phase can be deployed 15 minutes into this match."
+ CompanySquadView_PhaseI_Desc: "Units are deployed immediately in this phase. You can only deploy {1} units in this phase. (Currently {0}/{1})"

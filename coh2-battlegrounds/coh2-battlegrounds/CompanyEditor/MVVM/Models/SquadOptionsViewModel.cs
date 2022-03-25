@@ -6,6 +6,7 @@ using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
 
+using Battlegrounds;
 using Battlegrounds.Functional;
 using Battlegrounds.Game.Database;
 using Battlegrounds.Game.Database.Extensions;
@@ -28,11 +29,14 @@ public class SquadOptionsViewModel {
         public CostExtension Cost => this.Abp.Cost;
     }
 
-    public record UpgradeButton(UpgradeBlueprint Ubp, bool IsApplied, EventCommand Clicked) {
-        public ImageSource Icon => App.ResourceHandler.GetIcon("upgrade_icons", Ubp.UI.Icon);
+    public record UpgradeButton(UpgradeBlueprint Ubp, bool IsApplied, bool IsAvailable, EventCommand Clicked) {
+        public ImageSource Icon => App.ResourceHandler.GetIcon("upgrade_icons", this.Ubp.UI.Icon);
+        public string Title => GameLocale.GetString(this.Ubp.UI.ScreenName);
+        public string Desc => GameLocale.GetString(this.Ubp.UI.LongDescription);
+        public CostExtension Cost => this.Ubp.Cost;
     }
 
-    public record PhaseButton(DeploymentPhase Phase, Func<bool> IsActive, EventCommand Clicked) : INotifyPropertyChanged {
+    public record PhaseButton(DeploymentPhase Phase, Func<bool> IsActive, CapacityValue PhaseCap, EventCommand Clicked) : INotifyPropertyChanged {
         public bool IsActivePhase => this.IsActive();
         public bool IsPickable { get; set; }
         public event PropertyChangedEventHandler PropertyChanged;
@@ -41,6 +45,20 @@ public class SquadOptionsViewModel {
             DeploymentPhase.PhaseA => App.ResourceHandler.GetIcon("phase_icons", "Icons_research_german_battle_phase_02"),
             DeploymentPhase.PhaseB => App.ResourceHandler.GetIcon("phase_icons", "Icons_research_german_battle_phase_03"),
             DeploymentPhase.PhaseC => App.ResourceHandler.GetIcon("phase_icons", "Icons_research_german_battle_phase_04"),
+            _ => throw new InvalidEnumArgumentException()
+        };
+        public string Title => this.Phase switch {
+            DeploymentPhase.PhaseInitial => BattlegroundsInstance.Localize.GetString("CompanySquadView_PhaseI"),
+            DeploymentPhase.PhaseA => BattlegroundsInstance.Localize.GetString("CompanySquadView_PhaseA"),
+            DeploymentPhase.PhaseB => BattlegroundsInstance.Localize.GetString("CompanySquadView_PhaseB"),
+            DeploymentPhase.PhaseC => BattlegroundsInstance.Localize.GetString("CompanySquadView_PhaseC"),
+            _ => throw new InvalidEnumArgumentException()
+        };
+        public string Desc => this.Phase switch {
+            DeploymentPhase.PhaseInitial => BattlegroundsInstance.Localize.GetString("CompanySquadView_PhaseI_Desc", PhaseCap.ToArgs()),
+            DeploymentPhase.PhaseA => BattlegroundsInstance.Localize.GetString("CompanySquadView_PhaseA_Desc"),
+            DeploymentPhase.PhaseB => BattlegroundsInstance.Localize.GetString("CompanySquadView_PhaseB_Desc"),
+            DeploymentPhase.PhaseC => BattlegroundsInstance.Localize.GetString("CompanySquadView_PhaseC_Desc"),
             _ => throw new InvalidEnumArgumentException()
         };
         public void Update(bool pickable) {
@@ -85,6 +103,10 @@ public class SquadOptionsViewModel {
 
     public string UnitDesc => GameLocale.GetString(this.BuilderInstance.Blueprint.UI.LongDescription);
 
+    public string UnitPortrait => this.BuilderInstance.Blueprint.UI.Portrait;
+
+    public string UnitSymbol => this.BuilderInstance.Blueprint.UI.Symbol;
+
     public ObservableCollection<object> Veterancy => new ObservableCollection<object>( Enumerable.Range(0, this.BuilderInstance.Rank).Select(x => (object)x) );
 
     public ObservableCollection<AbilityButton> Abilities { get; }
@@ -111,6 +133,10 @@ public class SquadOptionsViewModel {
 
     public ProgressValue Experience => new ProgressValue(this.BuilderInstance.Experience, this.BuilderInstance.Blueprint.Veterancy.MaxExperience);
 
+    public CapacityValue UpgradeCapacity { get; }
+
+    public CapacityValue PhaseICap { get; }
+
     public SquadOptionsViewModel(SquadSlotViewModel triggerer, CompanyBuilder companyBuilder) {
         
         // Store trigger and instance refs
@@ -125,22 +151,28 @@ public class SquadOptionsViewModel {
         var abilities = this.BuilderInstance.Abilities.Filter(x => x.UI.Icon is not "").Filter(x => App.ResourceHandler.HasIcon("ability_icons", x.UI.Icon));
         this.Abilities = new ObservableCollection<AbilityButton>(abilities.Map(x => new AbilityButton(x)));
 
+        // Create upgrade cap
+        this.UpgradeCapacity = new(this.BuilderInstance.Blueprint.UpgradeCapacity, () => this.BuilderInstance.Upgrades.Length);
+
         // Collect all upgrades        
         this.Upgrades = new();
         this.RefreshUpgrades();
 
+        // Create phase capacity
+        this.PhaseICap = new(Company.MAX_INITIAL, () => this.CompanyBuilder.CountUnitsInPhase(DeploymentPhase.PhaseInitial));
+
         // Create phase buttons
         this.Phases = new ObservableCollection<PhaseButton>() {
-            new PhaseButton(DeploymentPhase.PhaseInitial, () => this.BuilderInstance.Phase == DeploymentPhase.PhaseInitial, new EventCommand<MouseEventArgs>(this.PhaseCommand)) {
+            new PhaseButton(DeploymentPhase.PhaseInitial, () => this.BuilderInstance.Phase == DeploymentPhase.PhaseInitial, this.PhaseICap, new EventCommand<MouseEventArgs>(this.PhaseCommand)) {
                 IsPickable = this.CompanyBuilder.IsPhaseAvailable(DeploymentPhase.PhaseInitial)
             },
-            new PhaseButton(DeploymentPhase.PhaseA, () => this.BuilderInstance.Phase == DeploymentPhase.PhaseA, new EventCommand<MouseEventArgs>(this.PhaseCommand)){
+            new PhaseButton(DeploymentPhase.PhaseA, () => this.BuilderInstance.Phase == DeploymentPhase.PhaseA, null, new EventCommand<MouseEventArgs>(this.PhaseCommand)){
                 IsPickable = this.CompanyBuilder.IsPhaseAvailable(DeploymentPhase.PhaseA)
             },
-            new PhaseButton(DeploymentPhase.PhaseB, () => this.BuilderInstance.Phase == DeploymentPhase.PhaseB, new EventCommand<MouseEventArgs>(this.PhaseCommand)){
+            new PhaseButton(DeploymentPhase.PhaseB, () => this.BuilderInstance.Phase == DeploymentPhase.PhaseB, null, new EventCommand<MouseEventArgs>(this.PhaseCommand)){
                 IsPickable = this.CompanyBuilder.IsPhaseAvailable(DeploymentPhase.PhaseB)
             },
-            new PhaseButton(DeploymentPhase.PhaseC, () => this.BuilderInstance.Phase == DeploymentPhase.PhaseC, new EventCommand<MouseEventArgs>(this.PhaseCommand)){
+            new PhaseButton(DeploymentPhase.PhaseC, () => this.BuilderInstance.Phase == DeploymentPhase.PhaseC, null, new EventCommand<MouseEventArgs>(this.PhaseCommand)){
                 IsPickable = this.CompanyBuilder.IsPhaseAvailable(DeploymentPhase.PhaseC)
             }
         };
@@ -170,6 +202,10 @@ public class SquadOptionsViewModel {
             return;
         }
 
+        // Bail if at capacity
+        if (this.UpgradeCapacity.IsAtCapacity)
+            return;
+
         // Grab bp
         var bp = model.Ubp;
 
@@ -179,6 +215,9 @@ public class SquadOptionsViewModel {
         } else {
             this.BuilderInstance.AddUpgrade(bp);
         }
+
+        // Refresh
+        this.UpgradeCapacity.Update(this);
 
         // Refresh upgrades
         this.RefreshUpgrades();
@@ -194,7 +233,7 @@ public class SquadOptionsViewModel {
         var upgrades = this.BuilderInstance.Blueprint.Upgrades
             .Map(x => BlueprintManager.FromBlueprintName<UpgradeBlueprint>(x))
             .Filter(x => x.UI.Icon is not "" && App.ResourceHandler.HasIcon("upgrade_icons", x.UI.Icon))
-            .Map(x => new UpgradeButton(x, this.BuilderInstance.Upgrades.Contains(x), new EventCommand<MouseEventArgs>(this.UpgradeCommand)))
+            .Map(x => new UpgradeButton(x, this.BuilderInstance.Upgrades.Contains(x), !this.UpgradeCapacity.IsAtCapacity, new EventCommand<MouseEventArgs>(this.UpgradeCommand)))
             .ForEach(this.Upgrades.Add);
 
     }
@@ -217,6 +256,9 @@ public class SquadOptionsViewModel {
         foreach (var phase in this.Phases) {
             phase.Update(this.CompanyBuilder.IsPhaseAvailable(phase.Phase));
         }
+
+        // Update phase cap
+        this.PhaseICap.Update(this);
 
     }
 

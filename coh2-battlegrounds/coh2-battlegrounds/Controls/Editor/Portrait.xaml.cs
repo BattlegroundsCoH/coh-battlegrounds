@@ -96,7 +96,8 @@ public partial class Portrait : UserControl {
     /// <summary>
     /// Identifies the <see cref="IsSelected"/> property.
     /// </summary>
-    public static readonly DependencyProperty IsSelectedProperty = DependencyProperty.Register(nameof(IsSelected), typeof(bool), typeof(Portrait));
+    public static readonly DependencyProperty IsSelectedProperty = 
+        DependencyProperty.Register(nameof(IsSelected), typeof(bool), typeof(Portrait), new PropertyMetadata(false, (a,b) => (a as Portrait).IsSelected = (bool)b.NewValue));
 
     public bool IsSelected {
         get => (bool)this.GetValue(IsSelectedProperty);

@@ -31,7 +31,9 @@
             <DockPanel>
                 <editor:Portrait DockPanel.Dock="Left" 
                              VerticalAlignment="Top"
-                             IsSelected="True"/>
+                             IsSelected="True"
+                                 PortraitName="{Binding UnitPortrait}"
+                                 SymbolName="{Binding UnitSymbol}"/>
                 <DockPanel Margin="2.5">
                     <TextBlock DockPanel.Dock="Top"
                                FontSize="14"
@@ -185,10 +187,11 @@
 
                 <!-- Unit Upgrades -->
                 <StackPanel Visibility="{Binding ShowUpgrades}">
-                    <Label HorizontalAlignment="Center"
-                       Foreground="White">
-                        Upgrades
-                    </Label>
+                    <controls:LocLabel HorizontalAlignment="Center"
+                       Foreground="White"
+                                       Arguments="{Binding UpgradeCapacity}">
+                        CompanySquadView_Upgrades
+                    </controls:LocLabel>
                     <ItemsControl ItemsSource="{Binding Upgrades}"
                               HorizontalAlignment="Center">
                         <ItemsControl.ItemsPanel>
@@ -207,6 +210,28 @@
                                            x:Name="__overlay"
                                            Fill="Black"
                                            Opacity="0.35"/>
+                                    <Canvas.ToolTip>
+                                        <ToolTip Style="{StaticResource BlueTooltip}">
+                                            <Border BorderThickness="1.15"
+                                                Background="#212d3a"
+                                                BorderBrush="#3d4854"
+                                                    Padding="7.45">
+                                                <StackPanel>
+                                                    <TextBlock Text="{Binding Title, Mode=OneWay}"
+                                                               FontSize="14"
+                                                               Foreground="White"/>
+                                                    <TextBlock Text="{Binding Desc, Mode=OneWay}"
+                                                           TextWrapping="Wrap"
+                                                           MaxWidth="256"
+                                                               FontSize="11"
+                                                               Foreground="White"/>
+                                                    <companybuildercontrols:CostControl
+                                                    Cost="{Binding Cost}"
+                                                    HorizontalAlignment="Right"/>
+                                                </StackPanel>
+                                            </Border>
+                                        </ToolTip>
+                                    </Canvas.ToolTip>
                                 </Canvas>
                                 <DataTemplate.Triggers>
                                     <DataTrigger Binding="{Binding ElementName=__canv, Path=IsMouseOver}"
@@ -214,6 +239,12 @@
                                         <Setter TargetName="__overlay"
                                             Property="Opacity"
                                             Value="0.125"/>
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding IsAvailable}"
+                                             Value="False">
+                                        <Setter TargetName="__overlay"
+                                            Property="Opacity"
+                                            Value="0.5"/>
                                     </DataTrigger>
                                     <DataTrigger Binding="{Binding IsApplied}"
                                              Value="True">
@@ -271,6 +302,25 @@
                                            x:Name="__overlay"
                                            Fill="Black"
                                            Opacity="0.35"/>
+                                    <Canvas.ToolTip>
+                                        <ToolTip Style="{StaticResource BlueTooltip}">
+                                            <Border BorderThickness="1.15"
+                                                Background="#212d3a"
+                                                BorderBrush="#3d4854"
+                                                    Padding="7.45">
+                                                <StackPanel>
+                                                    <TextBlock Text="{Binding Title, Mode=OneWay}"
+                                                               FontSize="14"
+                                                               Foreground="White"/>
+                                                    <TextBlock Text="{Binding Desc, Mode=OneWay}"
+                                                           TextWrapping="Wrap"
+                                                           MaxWidth="256"
+                                                               FontSize="11"
+                                                               Foreground="White"/>
+                                                </StackPanel>
+                                            </Border>
+                                        </ToolTip>
+                                    </Canvas.ToolTip>
                                 </Canvas>
                                 <DataTemplate.Triggers>
                                     <DataTrigger Binding="{Binding ElementName=__canv, Path=IsMouseOver}"

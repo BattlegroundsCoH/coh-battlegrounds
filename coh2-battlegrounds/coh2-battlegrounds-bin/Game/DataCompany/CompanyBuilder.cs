@@ -392,7 +392,7 @@ public class CompanyBuilder : IBuilder<Company> {
     /// <param name="phase">The phase to check if new units can be assiged to.</param>
     /// <returns>If phase has capaciy <see langword="true"/>; Otherwise <see langword="false"/>.</returns>
     public bool IsPhaseAvailable(DeploymentPhase phase) => (phase, this.CountUnitsInPhase(phase)) switch {
-        (DeploymentPhase.PhaseInitial, int x) => x <= Company.MAX_INITIAL,
+        (DeploymentPhase.PhaseInitial, int x) => x < Company.MAX_INITIAL,
         (DeploymentPhase.PhaseA, _) => true,
         (DeploymentPhase.PhaseB, _) => true,
         (DeploymentPhase.PhaseC, _) => true,
