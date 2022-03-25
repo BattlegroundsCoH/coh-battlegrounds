@@ -41,21 +41,51 @@ namespace BattlegroundsApp.MVVM {
                 // Get invoke method
                 var invoke = eventType.GetMethod("Invoke");
 
-                // Create invoker
-                DynamicMethod method = new(string.Empty, invoke.ReturnType, invoke.GetParameters().Map(x => x.ParameterType));
-                var body = method.GetILGenerator();
-                body.Emit(OpCodes.Ldarg, 0); // Load first arg onto stack (the sender)
-                body.Emit(OpCodes.Ldarg, 1); // Load second arg onto stack (the event arguments)
-                body.Emit(OpCodes.Ldstr, this.Handler); // Push name of handler property to fetch on data context.
-                body.Emit(OpCodes.Call, Exec); // Invoke our custom defined ExecuteEvent intermediary method.
-                body.Emit(OpCodes.Ret); // Return (NOTE: This will likely cause unexpected behaviour (or crash) in case the event expects a return value).
-
                 // Return method
-                return method.CreateDelegate(eventType);
+                return this.CreateDelegate(eventType, invoke.ReturnType, invoke.GetParameters().Map(x => x.ParameterType));
+
+            } else if (targetProvider.TargetProperty is MethodInfo methodInfo) {
+
+                // Grab parameters
+                var methodParams = methodInfo.GetParameters();
+                if (methodParams.Length != 2) {
+                    throw new NotSupportedException();
+                }
+
+                // Grab delegate data
+                var delegateType = methodParams[1].ParameterType;
+                var invoke = delegateType.GetMethod("Invoke");
+
+                // Grab delegate
+                var del = this.CreateDelegate(delegateType, invoke.ReturnType, invoke.GetParameters().Map(x => x.ParameterType));
+
+                // Invoke it
+                methodInfo.Invoke(null, new object[] { targetProvider.TargetObject, del });
+
+                // Return delegate
+                return del;
 
             }
 
+            var ty = targetProvider.TargetProperty.GetType();
+
             throw new InvalidOperationException();
+
+        }
+
+        private Delegate CreateDelegate(Type delegateType, Type returnType, Type[] parameters) {
+
+            // Create invoker
+            DynamicMethod method = new(string.Empty, returnType, parameters);
+            var body = method.GetILGenerator();
+            body.Emit(OpCodes.Ldarg, 0); // Load first arg onto stack (the sender)
+            body.Emit(OpCodes.Ldarg, 1); // Load second arg onto stack (the event arguments)
+            body.Emit(OpCodes.Ldstr, this.Handler); // Push name of handler property to fetch on data context.
+            body.Emit(OpCodes.Call, Exec); // Invoke our custom defined ExecuteEvent intermediary method.
+            body.Emit(OpCodes.Ret); // Return (NOTE: This will likely cause unexpected behaviour (or crash) in case the event expects a return value).
+
+            // Return delegate to dynamic method
+            return method.CreateDelegate(delegateType);
 
         }
 
@@ -66,7 +96,7 @@ namespace BattlegroundsApp.MVVM {
             object dataContext = GetDataContext(senderFrameworkElement);
             if (dataContext is not null) {
                 var propType = dataContext.GetType().GetProperty(handler, BindingFlags.Public | BindingFlags.Instance);
-                if (propType.GetValue(dataContext) is EventCommand cmd) {
+                if (propType?.GetValue(dataContext) is EventCommand cmd) {
                     cmd.Exec(sender, eventArgs);
                 }
             }

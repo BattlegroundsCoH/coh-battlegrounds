@@ -4,10 +4,203 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:BattlegroundsApp.CompanyEditor.MVVM.Views"
-             mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
-    <Grid>
+             xmlns:local="clr-namespace:BattlegroundsApp.CompanyEditor.MVVM.Views" xmlns:editor="clr-namespace:BattlegroundsApp.Controls.Editor" xmlns:controls="clr-namespace:BattlegroundsApp.Controls" xmlns:mvvm="clr-namespace:BattlegroundsApp.MVVM"
+               mc:Ignorable="d" 
+             d:DesignHeight="450" 
+             d:DesignWidth="512"
+              Background="#212d3a">
+    <Grid Width="512"
+          Height="450">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="128"/>
+            <RowDefinition/>
+            <RowDefinition Height="36"/>
+        </Grid.RowDefinitions>
+        
+        <!-- Basic unit info -->
+        <DockPanel>
+            <editor:Portrait DockPanel.Dock="Left" 
+                             VerticalAlignment="Top"/>
+            <DockPanel Margin="2.5">
+                <DockPanel DockPanel.Dock="Top">
+                    <ItemsControl ItemsSource="{Binding Veterancy}"
+                                  DockPanel.Dock="Right"
+                                  VerticalAlignment="Center">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <StackPanel Orientation="Horizontal"/>
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Image
+                                            Width="16"
+                                            Height="16"
+                                            Source="pack://application:,,,/coh2-battlegrounds;component/Resources/ingame/vet/vstar_yes.png"/>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                    <TextBlock DockPanel.Dock="Top"
+                               FontSize="14"
+                               Foreground="White"
+                               FontFamily="Open Sans">
+                        <Run Text="{Binding UnitName, Mode=OneWay}"/>
+                        <InlineUIContainer BaselineAlignment="Center">
+                            <Button Content="Edit"/>
+                        </InlineUIContainer>
+                    </TextBlock>
+                </DockPanel>
+                <TextBlock TextWrapping="Wrap"
+                           Foreground="White"
+                           FontFamily="Open Sans"
+                           FontSize="10"
+                           FontStyle="Italic"
+                           Text="{Binding UnitDesc, Mode=OneWay}"/>
+            </DockPanel>
+        </DockPanel>
+
+        <!-- Unit Data -->
+        <StackPanel Grid.Row="1" VerticalAlignment="Top">
+
+            <!-- Unit Abilities -->
+            <StackPanel Visibility="{Binding ShowAbilities}">
+                <Label HorizontalAlignment="Center"
+                       Foreground="White">
+                    Abilities
+                </Label>
+                <ItemsControl ItemsSource="{Binding Abilities}"
+                              HorizontalAlignment="Center">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <StackPanel Orientation="Horizontal"/>
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Image Width="32" Height="32"
+                                   Source="{Binding Icon}"
+                                   Margin="2.5"/>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </StackPanel>
+
+            <!-- Unit Upgrades -->
+            <StackPanel Visibility="{Binding ShowUpgrades}">
+                <Label HorizontalAlignment="Center"
+                       Foreground="White">
+                    Upgrades
+                </Label>
+                <ItemsControl ItemsSource="{Binding Upgrades}"
+                              HorizontalAlignment="Center">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <StackPanel Orientation="Horizontal"/>
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Canvas x:Name="__canv" Width="32" Height="32"
+                                    MouseUp="{mvvm:EventBinding Handler=Clicked}">
+                                <Image Width="32" Height="32"
+                                   Source="{Binding Icon}"
+                                   Margin="2.5"/>
+                                <Rectangle Width="32" Height="32"
+                                           x:Name="__overlay"
+                                           Fill="Black"
+                                           Opacity="0.35"/>
+                            </Canvas>
+                            <DataTemplate.Triggers>
+                                <DataTrigger Binding="{Binding ElementName=__canv, Path=IsMouseOver}"
+                                             Value="True">
+                                    <Setter TargetName="__overlay"
+                                            Property="Opacity"
+                                            Value="0.125"/>
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding IsApplied}"
+                                             Value="True">
+                                    <Setter TargetName="__overlay"
+                                            Property="Opacity"
+                                            Value="0"/>
+                                </DataTrigger>
+                            </DataTemplate.Triggers>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </StackPanel>
+
+            <!-- Unit Deployment and phase -->
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <Label Grid.Row="0"
+                       Grid.Column="0"
+                       HorizontalAlignment="Center"
+                       Foreground="White">
+                    Deployment Phase
+                </Label>
+                <Label Grid.Row="0"
+                       Grid.Column="1"
+                       HorizontalAlignment="Center"
+                       Foreground="White">
+                    Deployment Method
+                </Label>
+                <ItemsControl Grid.Column="0"
+                              Grid.Row="1"
+                              ItemsSource="{Binding Phases}"
+                              HorizontalAlignment="Center">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <StackPanel Orientation="Horizontal"/>
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Image Width="32" Height="32"
+                                   Source="{Binding Icon}"
+                                   Margin="2.5"/>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+                <ItemsControl Grid.Column="1"
+                              Grid.Row="1"
+                              ItemsSource="{Binding DeploySettings}"
+                              HorizontalAlignment="Center">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <StackPanel Orientation="Horizontal"/>
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Image Width="32" Height="32"
+                                   Source="{Binding Icon}"/>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </Grid>
             
+        </StackPanel>
+
+        <!-- Save, close buttons -->
+        <StackPanel Grid.Row="2"
+                    Orientation="Horizontal"
+                    HorizontalAlignment="Center">
+
+            <Button>Save</Button>
+
+            <Button>Close</Button>
+
+        </StackPanel>
+        
     </Grid>
 </modals:Modal>

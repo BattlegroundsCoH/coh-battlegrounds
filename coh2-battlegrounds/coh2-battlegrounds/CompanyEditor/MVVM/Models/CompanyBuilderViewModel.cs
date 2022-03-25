@@ -396,14 +396,11 @@ public class CompanyBuilderViewModel : IViewModel {
 
     private void OnUnitClicked(object sender, SquadSlotViewModel squadViewModel) {
 
-        // Grab squad
-        var squad = squadViewModel.BuilderInstance;
-
         // Create options view model
-        //var model = new SquadOptionsViewModel(squad);
+        var model = new SquadOptionsViewModel(squadViewModel);
 
         // Display modal
-        //App.ViewManager.GetRightsideModalControl()?.ShowModal(model);
+        App.ViewManager.GetRightsideModalControl()?.ShowModal(model);
 
     }
 

@@ -213,6 +213,11 @@ namespace Battlegrounds.Game.DataCompany {
         /// <summary>
         /// 
         /// </summary>
+        public AbilityBlueprint[] Abilities => this.m_target.Blueprint.Abilities.Map(x => BlueprintManager.FromBlueprintName<AbilityBlueprint>(x));
+
+        /// <summary>
+        /// 
+        /// </summary>
         public Modifier[] Mods => this.m_target.Modifiers;
 
         /// <summary>
@@ -274,6 +279,15 @@ namespace Battlegrounds.Game.DataCompany {
             this.m_redoActions = new();
 
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public string GetName() => this.m_target.CustomName switch {
+            "" => this.m_target.Blueprint.UI.ScreenName,
+            _ => this.m_target.CustomName
+        };
 
         /// <summary>
         /// Set the tuning pack GUID this unit should be based on.
