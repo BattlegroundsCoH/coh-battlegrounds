@@ -287,7 +287,7 @@ namespace Battlegrounds.Modding {
                 LocaleLanguage.German => "german",
                 LocaleLanguage.French => "french",
                 LocaleLanguage.Spanish => "spanish",
-                LocaleLanguage.Russian => "russian",
+                //LocaleLanguage.Russian => "russian",
                 _ => throw new NotSupportedException()
             });
 

@@ -22,7 +22,10 @@ namespace BattlegroundsApp.CompanyEditor.MVVM.Models;
 public class SquadOptionsViewModel {
 
     public record AbilityButton(AbilityBlueprint Abp) {
-        public ImageSource Icon => App.ResourceHandler.GetIcon("ability_icons", Abp.UI.Icon);
+        public ImageSource Icon => App.ResourceHandler.GetIcon("ability_icons", this.Abp.UI.Icon);
+        public string Title => GameLocale.GetString(this.Abp.UI.ScreenName);
+        public string Desc => GameLocale.GetString(this.Abp.UI.LongDescription);
+        public CostExtension Cost => this.Abp.Cost;
     }
 
     public record UpgradeButton(UpgradeBlueprint Ubp, bool IsApplied, EventCommand Clicked) {

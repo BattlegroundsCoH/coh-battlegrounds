@@ -67,25 +67,25 @@
                     <RowDefinition Height="56"/>
                 </Grid.RowDefinitions>
 
-                <Label HorizontalAlignment="Center"
+                <controls:LocLabel HorizontalAlignment="Center"
                        Foreground="White"
                    Grid.Column="0">
-                    Cost
-                </Label>
-                <Label HorizontalAlignment="Center"
+                    CompanySquadView_Cost
+                </controls:LocLabel>
+                <controls:LocLabel HorizontalAlignment="Center"
                        Foreground="White"
                    Grid.Column="1">
-                    Veterancy
-                </Label>
-                <Label HorizontalAlignment="Center"
+                    CompanySquadView_Veterancy
+                </controls:LocLabel>
+                <controls:LocLabel HorizontalAlignment="Center"
                        Foreground="White"
                    Grid.Column="2">
-                    Combat Time
-                </Label>
+                    CompanySquadView_ServiceTime
+                </controls:LocLabel>
 
                 <companybuildercontrols:CostControl
                           HorizontalAlignment="Center"
-                               VerticalAlignment="Center"
+                               VerticalAlignment="Top"
                 Cost="{Binding Cost}"
                 Grid.Row="1"/>
 
@@ -127,7 +127,7 @@
                 <controls:LocLabel Grid.Column="2"
                                Grid.Row="1"
                                HorizontalAlignment="Center"
-                               VerticalAlignment="Center"
+                               VerticalAlignment="Top"
                                Foreground="White"
                                LocKey="{Binding CombatTime}">
                 </controls:LocLabel>
@@ -154,7 +154,30 @@
                             <DataTemplate>
                                 <Image Width="48" Height="48"
                                    Source="{Binding Icon}"
-                                   Margin="2.5"/>
+                                   Margin="2.5">
+                                    <Image.ToolTip>
+                                        <ToolTip Style="{StaticResource BlueTooltip}">
+                                            <Border BorderThickness="1.15"
+                                                Background="#212d3a"
+                                                BorderBrush="#3d4854"
+                                                    Padding="7.45">
+                                                <StackPanel>
+                                                    <TextBlock Text="{Binding Title, Mode=OneWay}"
+                                                               FontSize="14"
+                                                               Foreground="White"/>
+                                                    <TextBlock Text="{Binding Desc, Mode=OneWay}"
+                                                           TextWrapping="Wrap"
+                                                           MaxWidth="256"
+                                                               FontSize="11"
+                                                               Foreground="White"/>
+                                                    <companybuildercontrols:CostControl
+                                                    Cost="{Binding Cost}"
+                                                    HorizontalAlignment="Right"/>
+                                                </StackPanel>
+                                            </Border>
+                                        </ToolTip>
+                                    </Image.ToolTip>
+                                </Image>
                             </DataTemplate>
                         </ItemsControl.ItemTemplate>
                     </ItemsControl>

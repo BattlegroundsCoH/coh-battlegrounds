@@ -33,8 +33,8 @@
         <cost:CostControl Canvas.Top="38"
                               Canvas.Left="52"
                               Height="44"
-                              Width="92.5"
-                              Cost="{Binding SquadCost}"/>
+                              Cost="{Binding SquadCost}"
+                          HorizontalAlignment="Left"/>
 
         <!-- Phase -->
         <Label Canvas.Bottom="4"

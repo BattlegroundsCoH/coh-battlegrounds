@@ -7,7 +7,7 @@
              mc:Ignorable="d" 
              d:DesignHeight="44" d:DesignWidth="92.5">
 
-    <Canvas Height="44" Width="92.5">
+    <Canvas Height="44" Width="92.5" x:Name="_SelfCanvas">
 
         
         <!-- Manpower -->

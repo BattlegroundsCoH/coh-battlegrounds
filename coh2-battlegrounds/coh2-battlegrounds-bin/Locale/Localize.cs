@@ -21,13 +21,39 @@ namespace Battlegrounds.Locale {
     /// Enum representation of supported languages.
     /// </summary>
     public enum LocaleLanguage {
+
+        /// <summary>
+        /// Language not defined
+        /// </summary>
         Undefined = -1,
+
+        /// <summary>
+        /// Default language (English)
+        /// </summary>
         Default = 0,
+
+        /// <summary>
+        /// English language
+        /// </summary>
         English = Default,
+
+        /// <summary>
+        /// German language
+        /// </summary>
         German,
+
+        /// <summary>
+        /// French language
+        /// </summary>
         French,
+
+        /// <summary>
+        /// Spanish language
+        /// </summary>
         Spanish,
-        Russian,
+        
+        //Russian, // Leave Ukraine, then maybe
+
     }
 
     /// <summary>
@@ -84,10 +110,10 @@ namespace Battlegrounds.Locale {
         }
 
         /// <summary>
-        /// 
+        /// Load locale file from a disk file.
         /// </summary>
-        /// <param name="localefilepath"></param>
-        /// <returns></returns>
+        /// <param name="localefilepath">Relative path to locale file.</param>
+        /// <returns>If loaded successfully <see langword="true"/> is returned; Otherwise <see langword="false"/>.</returns>
         public bool LoadLocaleFile(string localefilepath) {
             if (File.Exists(localefilepath)) {
                 var loc = new LocalizedFile(Path.GetFileNameWithoutExtension(localefilepath));
@@ -99,18 +125,19 @@ namespace Battlegrounds.Locale {
         }
 
         /// <summary>
-        /// 
+        /// Load locale file from memory
         /// </summary>
-        /// <param name="memorypath"></param>
-        /// <returns></returns>
+        /// <param name="memorypath">In-memory path.</param>
+        /// <returns>If loaded successfully <see langword="true"/> is returned; Otherwise <see langword="false"/>.</returns>
         public bool LoadLocaleFileFromMemory(string memorypath) => LoadLocaleFileFromMemory(memorypath, Assembly.GetExecutingAssembly());
 
         /// <summary>
-        /// 
+        /// Load locale file from memory
         /// </summary>
-        /// <param name="memorypath"></param>
-        /// <param name="assembly"></param>
-        /// <returns></returns>
+        /// <param name="memorypath">The path of the memory file</param>
+        /// <param name="assembly">The assembly to load data from.</param>
+        /// <param name="sourceID">The localise source being read from.</param>
+        /// <returns>If loaded successfully <see langword="true"/> is returned; Otherwise <see langword="false"/>.</returns>
         public bool LoadLocaleFileFromMemory(string memorypath, Assembly assembly, string sourceID = null) {
             if (assembly.GetManifestResourceStream(memorypath) is Stream fs) {
                 if (sourceID is null) {
@@ -133,11 +160,11 @@ namespace Battlegrounds.Locale {
         }
 
         /// <summary>
-        /// 
+        /// Load locale file from memory
         /// </summary>
-        /// <param name="memoryStream"></param>
-        /// <param name="sourceID"></param>
-        /// <returns></returns>
+        /// <param name="memoryStream">The stream to read memory contents from.</param>
+        /// <param name="sourceID">The localise source being read from.</param>
+        /// <returns>If loaded successfully <see langword="true"/> is returned; Otherwise <see langword="false"/>.</returns>
         public bool LoadLocaleFileFromMemory(Stream memoryStream, string sourceID = UndefinedSource) {
 
             // Read contents
@@ -195,9 +222,9 @@ namespace Battlegrounds.Locale {
         /// <summary>
         /// Load a binary locale file
         /// </summary>
-        /// <param name="stream"></param>
-        /// <param name="sourceID"></param>
-        /// <returns></returns>
+        /// <param name="stream">The memory stream to load binary locale file from.</param>
+        /// <param name="sourceID">The localise source being read from.</param>
+        /// <returns>If loaded successfully <see langword="true"/> is returned; Otherwise <see langword="false"/>.</returns>
         public bool LoadBinaryLocaleFile(MemoryStream stream, string sourceID = UndefinedSource) {
 
             // Define file

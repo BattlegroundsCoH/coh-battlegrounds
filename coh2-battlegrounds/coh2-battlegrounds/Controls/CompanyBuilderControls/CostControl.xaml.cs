@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -14,6 +15,8 @@ namespace BattlegroundsApp.Controls.CompanyBuilderControls {
 
         private static readonly double[] lblLeft = { 0, 30.8333, 61.66 };
         private static readonly double[] icoLeft = { 4, 34.25, 65 };
+
+        private static readonly double[] widths = { 92.5, 92.5 - (92.5 / 3.0), 92.5 / 3.0, 0 };
 
         private readonly Label[] ValueLabels;
         private readonly Image[] Icons;
@@ -32,6 +35,8 @@ namespace BattlegroundsApp.Controls.CompanyBuilderControls {
         public int MunitionCost => (int)(this.Cost?.Munitions ?? 0.0f);
 
         public int FuelCost => (int)(this.Cost?.Fuel ?? 0.0f);
+
+        private double VisualWidth => widths[(this.Cost.AsCostArray().Count(x => x <= 0))];
 
         public CostExtension Cost {
             get => this.GetValue(CostProperty) as CostExtension;
@@ -80,6 +85,8 @@ namespace BattlegroundsApp.Controls.CompanyBuilderControls {
                     this.Icons[i].Visibility = Visibility.Collapsed;
                 }
             }
+
+            this._SelfCanvas.Width = this.VisualWidth;
 
         }
 
