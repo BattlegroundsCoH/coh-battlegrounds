@@ -48,13 +48,29 @@ public class SquadOptionsViewModel {
         }
     }
 
-    public record DeployButton(DeploymentMethod Method, Func<bool> IsActive) {
+    public record DeployButton(DeploymentMethod Method, Func<bool> IsActive, EventCommand Clicked) : INotifyPropertyChanged {
+        public bool IsActiveMethod => this.IsActive();
+        public bool IsTransportOptionsVisible => this.IsActiveMethod && this.Method is not DeploymentMethod.None;
+        public event PropertyChangedEventHandler PropertyChanged;
         public ImageSource Icon => this.Method switch {
             DeploymentMethod.None => App.ResourceHandler.GetIcon("deploy_icons", "Icons_bg_deploy_none"),
             DeploymentMethod.DeployAndExit => App.ResourceHandler.GetIcon("deploy_icons", "Icons_bg_deploy_drop_exit"),
             DeploymentMethod.DeployAndStay => App.ResourceHandler.GetIcon("deploy_icons", "Icons_bg_deploy_drop_stay"),
             _ => throw new InvalidEnumArgumentException()
         };
+        public void Update() {
+            this.PropertyChanged?.Invoke(this, new(nameof(IsActiveMethod)));
+            this.PropertyChanged?.Invoke(this, new(nameof(IsTransportOptionsVisible)));
+        }
+    }
+
+    public record DeployUnitButton(SquadBlueprint Blueprint, Func<bool> IsActive, EventCommand Clicked) : INotifyPropertyChanged {
+        public bool IsActiveMethod => this.IsActive();
+        public event PropertyChangedEventHandler PropertyChanged;
+        public ImageSource Icon => App.ResourceHandler.GetIcon("unit_icons", this.Blueprint.UI.Icon);
+        public void Update() {
+            this.PropertyChanged?.Invoke(this, new(nameof(IsActiveMethod)));
+        }
     }
 
     public UnitBuilder BuilderInstance { get; }
@@ -80,6 +96,8 @@ public class SquadOptionsViewModel {
     public ObservableCollection<PhaseButton> Phases { get; }
 
     public ObservableCollection<DeployButton> DeploySettings { get; }
+
+    public ObservableCollection<DeployUnitButton> DeployUnits { get; }
 
     public SquadOptionsViewModel(SquadSlotViewModel triggerer, CompanyBuilder companyBuilder) {
         
@@ -112,12 +130,21 @@ public class SquadOptionsViewModel {
             }
         };
 
+        // Create event command
+        var dcmd = new EventCommand<MouseEventArgs>(this.DeployCommand);
+
         // Create deploy buttons
         this.DeploySettings = new() {
-            new DeployButton(DeploymentMethod.None, () => this.BuilderInstance.DeployMethod == DeploymentMethod.None),
-            new DeployButton(DeploymentMethod.DeployAndExit, () => this.BuilderInstance.DeployMethod == DeploymentMethod.DeployAndExit),
-            new DeployButton(DeploymentMethod.DeployAndStay, () => this.BuilderInstance.DeployMethod == DeploymentMethod.DeployAndStay),
+            new DeployButton(DeploymentMethod.None, () => this.BuilderInstance.DeployMethod == DeploymentMethod.None, dcmd),
+            new DeployButton(DeploymentMethod.DeployAndExit, () => this.BuilderInstance.DeployMethod == DeploymentMethod.DeployAndExit, dcmd),
+            new DeployButton(DeploymentMethod.DeployAndStay, () => this.BuilderInstance.DeployMethod == DeploymentMethod.DeployAndStay, dcmd),
         };
+
+        // Create deploy unit buttons
+        this.DeployUnits = new();
+        this.BuilderInstance.GetTransportUnits(this.CompanyBuilder)
+            .Map(x => new DeployUnitButton(x, () => this.BuilderInstance.Transport == x, new EventCommand<MouseEventArgs>(this.DeployUnitCommand)))
+            .ForEach(this.DeployUnits.Add);
 
     }
 
@@ -164,7 +191,7 @@ public class SquadOptionsViewModel {
             return;
         }
 
-        // Do nothing is not pickable
+        // Do nothing if not pickable
         if (!model.IsPickable)
             return;
 
@@ -175,6 +202,58 @@ public class SquadOptionsViewModel {
         foreach (var phase in this.Phases) {
             phase.Update(this.CompanyBuilder.IsPhaseAvailable(phase.Phase));
         }
+
+    }
+
+    private void DeployCommand(object sender, MouseEventArgs args) {
+
+        // Grab model
+        if ((sender as FrameworkElement).DataContext is not DeployButton model) {
+            return;
+        }
+
+        // Set method
+        this.BuilderInstance.SetDeploymentMethod(model.Method);
+        if (model.Method is DeploymentMethod.None) {
+            this.BuilderInstance.SetTransportBlueprint(string.Empty);
+        } else if (this.BuilderInstance.Transport is null && model.Method is not DeploymentMethod.None) {
+            this.BuilderInstance.SetTransportBlueprint(this.DeployUnits.FirstOrDefault().Blueprint); 
+            foreach (var bp in this.DeployUnits) {
+                bp.Update();
+            }
+        } 
+
+        // Refresh all
+        foreach (var method in this.DeploySettings) {
+            method.Update();
+        }
+
+    }
+
+    private void DeployUnitCommand(object sender, MouseEventArgs args) {
+
+        // Grab model
+        if ((sender as FrameworkElement).DataContext is not DeployUnitButton model) {
+            return;
+        }
+
+        // Set transport
+        this.BuilderInstance.SetTransportBlueprint(model.Blueprint);
+
+        // Refresh all
+        foreach (var bp in this.DeployUnits) {
+            bp.Update();
+        }
+
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    public void OnClose() {
+
+        // Make the model refresh its visual representation
+        this.TriggerModel.RefreshData();
 
     }
 

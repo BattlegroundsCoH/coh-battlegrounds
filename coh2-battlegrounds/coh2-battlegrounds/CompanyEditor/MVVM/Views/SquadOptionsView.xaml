@@ -4,7 +4,11 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:BattlegroundsApp.CompanyEditor.MVVM.Views" xmlns:editor="clr-namespace:BattlegroundsApp.Controls.Editor" xmlns:controls="clr-namespace:BattlegroundsApp.Controls" xmlns:mvvm="clr-namespace:BattlegroundsApp.MVVM"
+             xmlns:local="clr-namespace:BattlegroundsApp.CompanyEditor.MVVM.Views"
+               xmlns:vm="clr-namespace:BattlegroundsApp.CompanyEditor.MVVM.Models"
+               xmlns:editor="clr-namespace:BattlegroundsApp.Controls.Editor" 
+               xmlns:controls="clr-namespace:BattlegroundsApp.Controls" 
+               xmlns:mvvm="clr-namespace:BattlegroundsApp.MVVM"
                mc:Ignorable="d" 
              d:DesignHeight="450" 
              d:DesignWidth="512"
@@ -209,8 +213,77 @@
                     </ItemsControl.ItemsPanel>
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
-                            <Image Width="32" Height="32"
-                                   Source="{Binding Icon}"/>
+                            <Canvas x:Name="__canv" Width="32" Height="32"
+                                    MouseUp="{mvvm:EventBinding Handler=Clicked}">
+                                <Image Width="32" Height="32"
+                                   Source="{Binding Icon}"
+                                   Margin="2.5"/>
+                                <Rectangle Width="32" Height="32"
+                                           x:Name="__overlay"
+                                           Fill="Black"
+                                           Opacity="0.35"/>
+                                <ItemsControl ItemsSource="{Binding RelativeSource={RelativeSource AncestorType={x:Type local:SquadOptionsView}, Mode=FindAncestor}, Path=DataContext.DeployUnits}"
+                                              Canvas.Top="36"
+                                              x:Name="__items"
+                                              Visibility="Collapsed">
+                                    <ItemsControl.ItemsPanel>
+                                        <ItemsPanelTemplate>
+                                            <StackPanel Orientation="Horizontal"/>
+                                        </ItemsPanelTemplate>
+                                    </ItemsControl.ItemsPanel>
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <Canvas Width="24" Height="24" Margin="1.25"
+                                                    x:Name="__canv"
+                                                    MouseUp="{mvvm:EventBinding Handler=Clicked}">
+                                                <Image Width="24"
+                                                       Height="24"
+                                                       Source="{Binding Icon}"/>
+                                                <Rectangle
+                                                    Width="24"
+                                                    Height="24"
+                                                    x:Name="__overlay"
+                                                    Fill="Black"
+                                                    Opacity="0.5"/>
+                                            </Canvas>
+                                            <DataTemplate.Triggers>
+                                                <DataTrigger Binding="{Binding ElementName=__canv, Path=IsMouseOver}"
+                                                             Value="True">
+                                                    <Setter TargetName="__overlay"
+                                                            Property="Opacity"
+                                                            Value="0.125"/>
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding IsActiveMethod}"
+                                                             Value="True">
+                                                    <Setter TargetName="__overlay"
+                                                            Property="Opacity"
+                                                            Value="0"/>
+                                                </DataTrigger>
+                                            </DataTemplate.Triggers>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </Canvas>
+                            <DataTemplate.Triggers>
+                                <DataTrigger Binding="{Binding ElementName=__canv, Path=IsMouseOver}"
+                                             Value="True">
+                                    <Setter TargetName="__overlay"
+                                            Property="Opacity"
+                                            Value="0.125"/>
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding IsActiveMethod}"
+                                             Value="True">
+                                    <Setter TargetName="__overlay"
+                                            Property="Opacity"
+                                            Value="0"/>
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding IsTransportOptionsVisible}"
+                                             Value="True">
+                                    <Setter TargetName="__items"
+                                            Property="Visibility"
+                                            Value="Visible"/>
+                                </DataTrigger>
+                            </DataTemplate.Triggers>
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
                 </ItemsControl>

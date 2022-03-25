@@ -1,26 +1,24 @@
-﻿using Battlegrounds.Game.Database;
+﻿using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.Linq;
+using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Input;
+
+using Battlegrounds.Game.Database;
 using Battlegrounds.Game.Database.Management;
 using Battlegrounds.Game.DataCompany;
 using Battlegrounds.Game.Gameplay;
 using Battlegrounds.Locale;
 using Battlegrounds.Modding;
+
 using BattlegroundsApp.Controls.CompanyBuilderControls;
 using BattlegroundsApp.LocalData;
-using BattlegroundsApp.Modals.CompanyBuilder;
 using BattlegroundsApp.MVVM;
 using BattlegroundsApp.Utilities;
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Diagnostics;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Input;
 
 namespace BattlegroundsApp.CompanyEditor.MVVM.Models;
 

@@ -530,6 +530,14 @@ namespace Battlegrounds.Game.DataCompany {
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="builder"></param>
+        /// <returns></returns>
+        public SquadBlueprint[] GetTransportUnits(CompanyBuilder builder)
+            => builder.GetTransports(this.Blueprint.Types.IsHeavyArtillery || this.Blueprint.Types.IsAntiTank);
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <param name="arg"></param>
         /// <returns></returns>
         /// <exception cref="ArgumentException"></exception>

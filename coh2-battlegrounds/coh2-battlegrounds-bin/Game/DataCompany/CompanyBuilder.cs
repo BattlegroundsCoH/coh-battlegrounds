@@ -6,6 +6,7 @@ using System.Reflection;
 
 using Battlegrounds.Functional;
 using Battlegrounds.Game.Database;
+using Battlegrounds.Game.Database.Management;
 using Battlegrounds.Game.DataCompany.Builder;
 using Battlegrounds.Game.Gameplay;
 using Battlegrounds.Modding;
@@ -397,6 +398,21 @@ public class CompanyBuilder : IBuilder<Company> {
         (DeploymentPhase.PhaseC, _) => true,
         _ => false
     };
+
+    /// <summary>
+    /// Get a list of available transport units based on the settings of the <see cref="CompanyBuilder"/>.
+    /// </summary>
+    /// <param name="isTow">Flag setting whether transport units should be for towing or not.</param>
+    /// <returns>Array of blueprints for transport use.</returns>
+    public SquadBlueprint[] GetTransports(bool isTow) {
+
+        // Grab faction data
+        var data = ModManager.GetPackageFromGuid(this.m_target.ModGuid).FactionSettings[this.m_target.Faction];
+
+        // Return based on boolean flag
+        return (isTow ? data.TowTransports : data.Transports).Map(x => BlueprintManager.FromBlueprintName<SquadBlueprint>(x));
+
+    }
 
     /// <summary>
     /// Commit all unsaved changes to the <see cref="Company"/> target instance.
