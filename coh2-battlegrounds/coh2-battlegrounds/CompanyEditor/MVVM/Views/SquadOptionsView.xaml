@@ -165,9 +165,36 @@
                     </ItemsControl.ItemsPanel>
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
-                            <Image Width="32" Height="32"
+                            <Canvas x:Name="__canv" Width="32" Height="32"
+                                    MouseUp="{mvvm:EventBinding Handler=Clicked}">
+                                <Image Width="32" Height="32"
                                    Source="{Binding Icon}"
                                    Margin="2.5"/>
+                                <Rectangle Width="32" Height="32"
+                                           x:Name="__overlay"
+                                           Fill="Black"
+                                           Opacity="0.35"/>
+                            </Canvas>
+                            <DataTemplate.Triggers>
+                                <DataTrigger Binding="{Binding ElementName=__canv, Path=IsMouseOver}"
+                                             Value="True">
+                                    <Setter TargetName="__overlay"
+                                            Property="Opacity"
+                                            Value="0.125"/>
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding IsPickable}"
+                                             Value="False">
+                                    <Setter TargetName="__overlay"
+                                            Property="Opacity"
+                                            Value="0.75"/>
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding IsActivePhase}"
+                                             Value="True">
+                                    <Setter TargetName="__overlay"
+                                            Property="Opacity"
+                                            Value="0"/>
+                                </DataTrigger>
+                            </DataTemplate.Triggers>
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
                 </ItemsControl>

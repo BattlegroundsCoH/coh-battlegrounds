@@ -383,7 +383,20 @@ public class CompanyBuilder : IBuilder<Company> {
     /// <param name="phase">The phase to fetch amount of units from.</param>
     /// <returns>The amount of units in specific phase</returns>
     public virtual int CountUnitsInPhase(DeploymentPhase phase)
-        => this.m_companyResult.Units.Count(x => x.DeploymentPhase == phase);
+        => this.m_target.Units.Count(x => x.Phase == phase);
+
+    /// <summary>
+    /// Get if the phase has capacity for more units in specified phase.
+    /// </summary>
+    /// <param name="phase">The phase to check if new units can be assiged to.</param>
+    /// <returns>If phase has capaciy <see langword="true"/>; Otherwise <see langword="false"/>.</returns>
+    public bool IsPhaseAvailable(DeploymentPhase phase) => (phase, this.CountUnitsInPhase(phase)) switch {
+        (DeploymentPhase.PhaseInitial, int x) => x <= Company.MAX_INITIAL,
+        (DeploymentPhase.PhaseA, _) => true,
+        (DeploymentPhase.PhaseB, _) => true,
+        (DeploymentPhase.PhaseC, _) => true,
+        _ => false
+    };
 
     /// <summary>
     /// Commit all unsaved changes to the <see cref="Company"/> target instance.

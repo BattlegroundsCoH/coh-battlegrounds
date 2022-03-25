@@ -295,16 +295,6 @@ namespace Battlegrounds.Game.DataCompany {
         /// <param name="guid">The GUID (in coh2 string format).</param>
         /// <returns>The modified instance the method is invoked with.</returns>
         [Obsolete("Should not set mod GUID")]
-        public UnitBuilder SetModGUID(string guid) {
-            return this;
-        }
-
-        /// <summary>
-        /// Set the tuning pack GUID this unit should be based on.
-        /// </summary>
-        /// <param name="guid">The GUID (in coh2 string format).</param>
-        /// <returns>The modified instance the method is invoked with.</returns>
-        [Obsolete("Should not set mod GUID")]
         public UnitBuilder SetModGUID(ModGuid guid) {
             return this;
         }
@@ -333,19 +323,6 @@ namespace Battlegrounds.Game.DataCompany {
         /// <returns>The modified instance the method is invoked with.</returns>
         [Obsolete("Unit builder should already know blueprint.")]
         public virtual UnitBuilder SetBlueprint(SquadBlueprint sbp) {
-            return this;
-        }
-
-        /// <summary>
-        /// Set the <see cref="SquadBlueprint"/> the <see cref="Squad"/> instance being built will use.
-        /// </summary>
-        /// /// <remarks>
-        /// This must be called before certain other methods.
-        /// </remarks>
-        /// <param name="localBPID">The local property bag ID given to the blueprint.</param>
-        /// <returns>The modified instance the method is invoked with.</returns>
-        [Obsolete("Unit builder should already know blueprint.")]
-        public virtual UnitBuilder SetBlueprint(ushort localBPID) {
             return this;
         }
 
@@ -543,9 +520,19 @@ namespace Battlegrounds.Game.DataCompany {
             return this;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public CostExtension GetCost()
             => Squad.ComputeFullCost(this.Blueprint.Cost, this.Rank, this.Upgrades, this.Transport, this.DeployMethod);
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="arg"></param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentException"></exception>
         public IBuilder<Squad> Commit(object arg) {
 
             // Get the ID to use

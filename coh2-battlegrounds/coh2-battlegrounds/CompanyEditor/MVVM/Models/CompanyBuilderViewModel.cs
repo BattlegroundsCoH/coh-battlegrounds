@@ -397,7 +397,7 @@ public class CompanyBuilderViewModel : IViewModel {
     private void OnUnitClicked(object sender, SquadSlotViewModel squadViewModel) {
 
         // Create options view model
-        var model = new SquadOptionsViewModel(squadViewModel);
+        var model = new SquadOptionsViewModel(squadViewModel, this.Builder);
 
         // Display modal
         App.ViewManager.GetRightsideModalControl()?.ShowModal(model);

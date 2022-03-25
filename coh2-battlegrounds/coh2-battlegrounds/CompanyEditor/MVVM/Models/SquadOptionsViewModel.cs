@@ -30,7 +30,10 @@ public class SquadOptionsViewModel {
         public ImageSource Icon => App.ResourceHandler.GetIcon("upgrade_icons", Ubp.UI.Icon);
     }
 
-    public record PhaseButton(DeploymentPhase Phase, Func<bool> IsActive) {
+    public record PhaseButton(DeploymentPhase Phase, Func<bool> IsActive, EventCommand Clicked) : INotifyPropertyChanged {
+        public bool IsActivePhase => this.IsActive();
+        public bool IsPickable { get; set; }
+        public event PropertyChangedEventHandler PropertyChanged;
         public ImageSource Icon => this.Phase switch {
             DeploymentPhase.PhaseInitial => App.ResourceHandler.GetIcon("phase_icons", "Icons_research_german_battle_phase_01"),
             DeploymentPhase.PhaseA => App.ResourceHandler.GetIcon("phase_icons", "Icons_research_german_battle_phase_02"),
@@ -38,6 +41,11 @@ public class SquadOptionsViewModel {
             DeploymentPhase.PhaseC => App.ResourceHandler.GetIcon("phase_icons", "Icons_research_german_battle_phase_04"),
             _ => throw new InvalidEnumArgumentException()
         };
+        public void Update(bool pickable) {
+            this.IsPickable = pickable;
+            this.PropertyChanged?.Invoke(this, new(nameof(IsPickable)));
+            this.PropertyChanged?.Invoke(this, new(nameof(IsActivePhase)));
+        }
     }
 
     public record DeployButton(DeploymentMethod Method, Func<bool> IsActive) {
@@ -50,6 +58,8 @@ public class SquadOptionsViewModel {
     }
 
     public UnitBuilder BuilderInstance { get; }
+
+    public CompanyBuilder CompanyBuilder { get; }
 
     public SquadSlotViewModel TriggerModel { get; }
 
@@ -71,11 +81,12 @@ public class SquadOptionsViewModel {
 
     public ObservableCollection<DeployButton> DeploySettings { get; }
 
-    public SquadOptionsViewModel(SquadSlotViewModel triggerer) {
+    public SquadOptionsViewModel(SquadSlotViewModel triggerer, CompanyBuilder companyBuilder) {
         
         // Store trigger and instance refs
         this.TriggerModel = triggerer;
         this.BuilderInstance = triggerer.BuilderInstance;
+        this.CompanyBuilder = companyBuilder;
 
         // Collect all abilities
         var abilities = this.BuilderInstance.Abilities.Filter(x => x.UI.Icon is not "").Filter(x => App.ResourceHandler.HasIcon("ability_icons", x.UI.Icon));
@@ -87,10 +98,18 @@ public class SquadOptionsViewModel {
 
         // Create phase buttons
         this.Phases = new ObservableCollection<PhaseButton>() {
-            new PhaseButton(DeploymentPhase.PhaseInitial, () => this.BuilderInstance.Phase == DeploymentPhase.PhaseInitial),
-            new PhaseButton(DeploymentPhase.PhaseA, () => this.BuilderInstance.Phase == DeploymentPhase.PhaseA),
-            new PhaseButton(DeploymentPhase.PhaseB, () => this.BuilderInstance.Phase == DeploymentPhase.PhaseB),
-            new PhaseButton(DeploymentPhase.PhaseC, () => this.BuilderInstance.Phase == DeploymentPhase.PhaseC)
+            new PhaseButton(DeploymentPhase.PhaseInitial, () => this.BuilderInstance.Phase == DeploymentPhase.PhaseInitial, new EventCommand<MouseEventArgs>(this.PhaseCommand)) {
+                IsPickable = this.CompanyBuilder.IsPhaseAvailable(DeploymentPhase.PhaseInitial)
+            },
+            new PhaseButton(DeploymentPhase.PhaseA, () => this.BuilderInstance.Phase == DeploymentPhase.PhaseA, new EventCommand<MouseEventArgs>(this.PhaseCommand)){
+                IsPickable = this.CompanyBuilder.IsPhaseAvailable(DeploymentPhase.PhaseA)
+            },
+            new PhaseButton(DeploymentPhase.PhaseB, () => this.BuilderInstance.Phase == DeploymentPhase.PhaseB, new EventCommand<MouseEventArgs>(this.PhaseCommand)){
+                IsPickable = this.CompanyBuilder.IsPhaseAvailable(DeploymentPhase.PhaseB)
+            },
+            new PhaseButton(DeploymentPhase.PhaseC, () => this.BuilderInstance.Phase == DeploymentPhase.PhaseC, new EventCommand<MouseEventArgs>(this.PhaseCommand)){
+                IsPickable = this.CompanyBuilder.IsPhaseAvailable(DeploymentPhase.PhaseC)
+            }
         };
 
         // Create deploy buttons
@@ -135,6 +154,27 @@ public class SquadOptionsViewModel {
             .Filter(x => x.UI.Icon is not "" && App.ResourceHandler.HasIcon("upgrade_icons", x.UI.Icon))
             .Map(x => new UpgradeButton(x, this.BuilderInstance.Upgrades.Contains(x), new EventCommand<MouseEventArgs>(this.UpgradeCommand)))
             .ForEach(this.Upgrades.Add);
+
+    }
+
+    private void PhaseCommand(object sender, MouseEventArgs args) {
+
+        // Grab model
+        if ((sender as FrameworkElement).DataContext is not PhaseButton model) {
+            return;
+        }
+
+        // Do nothing is not pickable
+        if (!model.IsPickable)
+            return;
+
+        // Set phase
+        this.BuilderInstance.SetDeploymentPhase(model.Phase);
+
+        // Refresh all
+        foreach (var phase in this.Phases) {
+            phase.Update(this.CompanyBuilder.IsPhaseAvailable(phase.Phase));
+        }
 
     }
 
