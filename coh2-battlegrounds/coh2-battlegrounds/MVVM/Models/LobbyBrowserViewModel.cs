@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using System.Windows;
@@ -14,14 +15,16 @@ using Battlegrounds.Networking.Server;
 using BattlegroundsApp.Dialogs.HostGame;
 using BattlegroundsApp.Dialogs.LobbyPassword;
 using BattlegroundsApp.Lobby.MVVM.Models;
+using BattlegroundsApp.LocalData;
 using BattlegroundsApp.Utilities;
 
 namespace BattlegroundsApp.MVVM.Models {
 
-    public class LobbyBrowserButton {
-        public ICommand? Click { get; init; }
-        public LocaleKey? Text { get; init; }
-        public LocaleKey? Tooltip { get; init; }
+    public record LobbyBrowserButton(ICommand Click, Func<bool> IsEnabledCheck) : INotifyPropertyChanged {
+        public bool IsEnabled => this.IsEnabledCheck();
+
+        public event PropertyChangedEventHandler? PropertyChanged;
+        public void Update(object sender) => this.PropertyChanged?.Invoke(sender, new(nameof(IsEnabled)));
     }
 
     public class LobbyBrowserViewModel : IViewModel {
@@ -60,22 +63,13 @@ namespace BattlegroundsApp.MVVM.Models {
         public LobbyBrowserViewModel() {
 
             // Create refresh
-            this.Refresh = new() {
-                Click = new RelayCommand(this.RefreshButton),
-                Text = new("GameBrowserView_Refresh")
-            };
+            this.Refresh = new(new RelayCommand(this.RefreshButton), () => true);
 
             // Create join
-            this.Join = new() {
-                Click = new RelayCommand(this.JoinButton),
-                Text = new("GameBrowserView_Join_Game")
-            };
+            this.Join = new(new RelayCommand(this.JoinButton), PlayerCompanies.HasCompanyForBothAlliances);
 
             // Create host
-            this.Host = new() {
-                Click = new RelayCommand(this.HostButton),
-                Text = new("GameBrowserView_Host_Game")
-            };
+            this.Host = new(new RelayCommand(this.HostButton), PlayerCompanies.HasCompanyForBothAlliances);
 
             // Create double-click
             this.JoinLobbyDirectly = new EventCommand<MouseButtonEventArgs>(this.JoinLobby);

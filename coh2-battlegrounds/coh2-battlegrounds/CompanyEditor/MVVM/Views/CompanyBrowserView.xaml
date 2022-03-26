@@ -45,7 +45,7 @@
         <controls:LocLabel
             LocKey="CompanyView_Title"
             Foreground="#d8dbde"
-            FontSize="18"
+            FontSize="28"
             FontFamily="Open Sans"
             FontWeight="Bold"
             Margin="15, 5, 0, 0"

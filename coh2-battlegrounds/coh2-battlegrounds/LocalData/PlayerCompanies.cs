@@ -13,7 +13,14 @@ namespace BattlegroundsApp.LocalData {
 
     public static class PlayerCompanies {
 
-        private static List<Company> __companies;
+        private static readonly List<Company> __companies = new();
+
+        public static bool HasCompanyForBothAlliances() {
+            if (__companies.Count is 0) {
+                LoadAll();
+            }
+            return __companies.Any(x => x.Army.IsAxis) && __companies.Any(x => x.Army.IsAllied);
+        }
 
         public static void LoadAll() {
 
@@ -22,14 +29,11 @@ namespace BattlegroundsApp.LocalData {
                 string companyFolder = BattlegroundsInstance.GetRelativePath(BattlegroundsPaths.COMPANY_FOLDER, string.Empty);
                 string[] companies = Directory.GetFiles(companyFolder, "*.json");
 
-                if (__companies == null) {
-                    __companies = new List<Company>();
-                } else {
-                    if (__companies.Count == companies.Length) {
-                        return;
-                    }
-                    __companies.Clear();
+                if (__companies.Count == companies.Length) {
+                    return;
                 }
+
+                __companies.Clear();
 
                 foreach (string companypath in companies) {
                     try {
@@ -52,6 +56,11 @@ namespace BattlegroundsApp.LocalData {
 
         }
 
+        /// <summary>
+        /// Find all companies matching <paramref name="predicate"/>.
+        /// </summary>
+        /// <param name="predicate">The predicate function to apply on all companies.</param>
+        /// <returns>List of companies matching specified predicate.</returns>
         public static List<Company> FindAll(Predicate<Company> predicate) {
             List<Company> matches = new List<Company>();
             foreach (Company c in __companies) {
@@ -62,7 +71,14 @@ namespace BattlegroundsApp.LocalData {
             return matches;
         }
 
-        public static Company FromNameAndFaction(string name, Faction faction) => FindAll(x => x.Name.CompareTo(name) == 0 && x.Army == faction).FirstOrDefault();
+        /// <summary>
+        /// Get a company based on its name and faction.
+        /// </summary>
+        /// <param name="name">The fully qualified name of the company.</param>
+        /// <param name="faction">The faction the company will belong to.</param>
+        /// <returns>The company with <paramref name="name"/> and <paramref name="faction"/> if found; Otherwise <see langword="null"/> is returned.</returns>
+        public static Company? FromNameAndFaction(string name, Faction faction) 
+            => FindAll(x => x.Name == name && x.Army == faction).FirstOrDefault();
 
         /// <summary>
         /// Save the <see cref="Company"/> instance safely in the users local company storage folder.
@@ -85,7 +101,7 @@ namespace BattlegroundsApp.LocalData {
                 Trace.WriteLine($"Failed to save player company '{company.Name}'. ", nameof(PlayerCompanies));
                 Trace.WriteLine(ioex, nameof(PlayerCompanies));
             } finally {
-                Company oldCompany = __companies.FirstOrDefault(x => x.Name == company.Name && x.Army == company.Army);
+                Company? oldCompany = __companies.FirstOrDefault(x => x.Name == company.Name && x.Army == company.Army);
                 if (oldCompany is not null && oldCompany != company) { // If new reference
                     __companies[__companies.IndexOf(oldCompany)] = company;
                     Trace.WriteLine($"Updated player company '{company.Name}' object", nameof(PlayerCompanies));
@@ -95,6 +111,10 @@ namespace BattlegroundsApp.LocalData {
             }
         }
 
+        /// <summary>
+        /// Delete specified company from local storage.
+        /// </summary>
+        /// <param name="company">The company to delete.</param>
         public static void DeleteCompany(Company company) {
             string filename = BattlegroundsInstance.GetRelativePath(BattlegroundsPaths.COMPANY_FOLDER, $"{company.Name.Replace(" ", "_")}.json");
             if (File.Exists(filename)) {
@@ -102,6 +122,10 @@ namespace BattlegroundsApp.LocalData {
             }
         }
 
+        /// <summary>
+        /// Get list of all companies stored locally.
+        /// </summary>
+        /// <returns>List of <see cref="Company"/> instances.</returns>
         public static List<Company> GetAllCompanies() => __companies;
 
     }

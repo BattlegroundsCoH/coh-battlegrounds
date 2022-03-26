@@ -57,6 +57,7 @@ english:
  GameBrowserView_Refresh: "Refresh"
  GameBrowserView_Host_Game: "Host Game"
  GameBrowserView_Join_Game: "Join Game"
+ GameBrowserView_Title: "Game Browser"
  GameLobbyConnectingView_Connecting: "Connecting ..."
  YesNoDialogView_Confirm: "Confirm"
  YesNoDialogView_Cancel: "Cancel"
