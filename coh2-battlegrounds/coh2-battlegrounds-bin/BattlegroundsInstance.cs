@@ -58,7 +58,7 @@ namespace Battlegrounds {
 
                 // Paths
                 string installpath = $"{Environment.CurrentDirectory}\\";
-                string binpath = $"{installpath}bin\\";
+                string binpath = $"{installpath}bg_common\\";
                 string userpath = $"{installpath}usr\\";
                 string tmppath = $"{installpath}~tmp\\";
 
