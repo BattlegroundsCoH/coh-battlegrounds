@@ -398,13 +398,15 @@
         <ScrollBar Grid.Row="2" 
                    Grid.Column="1"
                    Margin="0,43,0,0"
-                   Width="16"
+                   Width="8"
                    x:Name="RHS_ScrollBar"
                    Scroll="RHS_ScrollBar_Scroll"
                    SmallChange="5"
                    LargeChange="30"
-                   Style="{StaticResource Dumb}"
-                   />
+                   Orientation="Vertical"
+                   Visibility="Visible"
+                   Style="{StaticResource OutOfViewVScrollbar}">
+        </ScrollBar>
 
         <!-- Row 1 :: Save & Reset Buttons -->
         <StackPanel Grid.Row="1"
