@@ -176,3 +176,10 @@ english:
  CompanySquadView_PhaseB_Desc: "Units in this phase can be deployed 8 minutes into the match."
  CompanySquadView_PhaseC_Desc: "Units in this phase can be deployed 15 minutes into this match."
  CompanySquadView_PhaseI_Desc: "Units are deployed immediately in this phase. You can only deploy {1} units in this phase. (Currently {0}/{1})"
+ CompanySquadView_Deploy_None: "Standard Deployment"
+ CompanySquadView_Deploy_Exit: "Drop Deployment"
+ CompanySquadView_Deploy_Stay: "Vehicle Deployment"
+ CompanySquadView_Deploy_None_Desc: "The unit is deployed by foot."
+ CompanySquadView_Deploy_Exit_Desc: "The transport vehicle drops the unit of at designated deploy point and leaves the battlefield."
+ CompanySquadView_Deploy_Stay_Desc: "The transport vehicle transports the unit to the designated deploy point and stays on the battlefield."
+ 

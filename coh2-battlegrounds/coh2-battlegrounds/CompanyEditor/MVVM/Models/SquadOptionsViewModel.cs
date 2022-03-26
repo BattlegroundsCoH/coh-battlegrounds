@@ -78,6 +78,18 @@ public class SquadOptionsViewModel {
             DeploymentMethod.DeployAndStay => App.ResourceHandler.GetIcon("deploy_icons", "Icons_bg_deploy_drop_stay"),
             _ => throw new InvalidEnumArgumentException()
         };
+        public string Title => this.Method switch {
+            DeploymentMethod.None => BattlegroundsInstance.Localize.GetString("CompanySquadView_Deploy_None"),
+            DeploymentMethod.DeployAndExit => BattlegroundsInstance.Localize.GetString("CompanySquadView_Deploy_Exit"),
+            DeploymentMethod.DeployAndStay => BattlegroundsInstance.Localize.GetString("CompanySquadView_Deploy_Stay"),
+            _ => throw new InvalidEnumArgumentException()
+        };
+        public string Desc => this.Method switch {
+            DeploymentMethod.None => BattlegroundsInstance.Localize.GetString("CompanySquadView_Deploy_None_Desc"),
+            DeploymentMethod.DeployAndExit => BattlegroundsInstance.Localize.GetString("CompanySquadView_Deploy_Exit_Desc"),
+            DeploymentMethod.DeployAndStay => BattlegroundsInstance.Localize.GetString("CompanySquadView_Deploy_Stay_Desc"),
+            _ => throw new InvalidEnumArgumentException()
+        };
         public void Update() {
             this.PropertyChanged?.Invoke(this, new(nameof(IsActiveMethod)));
             this.PropertyChanged?.Invoke(this, new(nameof(IsTransportOptionsVisible)));
@@ -88,6 +100,9 @@ public class SquadOptionsViewModel {
         public bool IsActiveMethod => this.IsActive();
         public event PropertyChangedEventHandler PropertyChanged;
         public ImageSource Icon => App.ResourceHandler.GetIcon("unit_icons", this.Blueprint.UI.Icon);
+        public string Title => GameLocale.GetString(this.Blueprint.UI.ScreenName);
+        public string Desc => GameLocale.GetString(this.Blueprint.UI.LongDescription);
+        public CostExtension Cost => this.Blueprint.Cost;
         public void Update() {
             this.PropertyChanged?.Invoke(this, new(nameof(IsActiveMethod)));
         }

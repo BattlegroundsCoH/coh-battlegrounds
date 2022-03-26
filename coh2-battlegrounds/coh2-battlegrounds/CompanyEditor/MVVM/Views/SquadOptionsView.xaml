@@ -408,6 +408,25 @@
                                             </DataTemplate>
                                         </ItemsControl.ItemTemplate>
                                     </ItemsControl>
+                                    <Canvas.ToolTip>
+                                        <ToolTip Style="{StaticResource BlueTooltip}">
+                                            <Border BorderThickness="1.15"
+                                                Background="#212d3a"
+                                                BorderBrush="#3d4854"
+                                                    Padding="7.45">
+                                                <StackPanel>
+                                                    <TextBlock Text="{Binding Title, Mode=OneWay}"
+                                                               FontSize="14"
+                                                               Foreground="White"/>
+                                                    <TextBlock Text="{Binding Desc, Mode=OneWay}"
+                                                           TextWrapping="Wrap"
+                                                           MaxWidth="256"
+                                                               FontSize="11"
+                                                               Foreground="White"/>
+                                                </StackPanel>
+                                            </Border>
+                                        </ToolTip>
+                                    </Canvas.ToolTip>
                                 </Canvas>
                                 <DataTemplate.Triggers>
                                     <DataTrigger Binding="{Binding ElementName=__canv, Path=IsMouseOver}"
