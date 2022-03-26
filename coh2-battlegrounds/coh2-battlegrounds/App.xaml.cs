@@ -136,7 +136,7 @@ namespace BattlegroundsApp {
 #if DEBUG
                     Trace.WriteLine($"<DEBUG> Integrity check failed - UPDATE CHECKSUM.TXT (Checksum = {IntegrityHashString})", nameof(App));
 #else
-                    throw new FatalAppException();
+                    throw new FatalAppException($"Checksum integrity check failed. {IntegrityHashString}"); // Should not actually write this
 #endif
                 } else {
 
