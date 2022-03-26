@@ -229,7 +229,7 @@ namespace Battlegrounds.Game.DataCompany {
 
             // Create Units
             for (int i = 0; i < template.m_units.Length; i++) {
-                if (template.m_units[i].FILLED) {
+                /*if (template.m_units[i].FILLED) {
                     UnitBuilder unit = new UnitBuilder()
                         .SetModGUID(template.m_guid)
                         .SetBlueprint(template.m_units[i].PBGID)
@@ -237,7 +237,7 @@ namespace Battlegrounds.Game.DataCompany {
                         .IfTrue(x => template.m_units[i].TPBGID != BlueprintManager.InvalidLocalBlueprint).Then(x => x.SetTransportBlueprint(template.m_units[i].TPBGID))
                         .SetDeploymentMethod((DeploymentMethod)template.m_units[i].DMODE);
                     builder.AddAndCommitUnit(unit);
-                }
+                }*/
             }
 
             // Commit changes and get result

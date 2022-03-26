@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -9,7 +10,16 @@ namespace BattlegroundsApp.Controls.CompanyBuilderControls {
     /// <summary>
     /// Interaction logic for CostControl.xaml
     /// </summary>
-    public partial class CostControl : UserControl, INotifyPropertyChanged {
+    public partial class CostControl : UserControl {
+
+
+        private static readonly double[] lblLeft = { 0, 30.8333, 61.66 };
+        private static readonly double[] icoLeft = { 4, 34.25, 65 };
+
+        private static readonly double[] widths = { 92.5, 92.5 - (92.5 / 3.0), 92.5 / 3.0, 0 };
+
+        private readonly Label[] ValueLabels;
+        private readonly Image[] Icons;
 
         /// <summary>
         /// Identifies the <see cref="Cost"/> property.
@@ -20,19 +30,13 @@ namespace BattlegroundsApp.Controls.CompanyBuilderControls {
                     FrameworkPropertyMetadataOptions.AffectsRender,
                     (a, b) => (a as CostControl).Cost = b.NewValue as CostExtension));
 
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        public Visibility ManpowerCostVisible => this.ManpowerCost is 0 ? Visibility.Collapsed : Visibility.Visible;
-
-        public Visibility MunitionCostVisible => this.MunitionCost is 0 ? Visibility.Collapsed : Visibility.Visible;
-
-        public Visibility FuelCostVisible => this.FuelCost is 0 ? Visibility.Collapsed : Visibility.Visible;
-
         public int ManpowerCost => (int)(this.Cost?.Manpower ?? 0.0f);
 
         public int MunitionCost => (int)(this.Cost?.Munitions ?? 0.0f);
 
         public int FuelCost => (int)(this.Cost?.Fuel ?? 0.0f);
+
+        private double VisualWidth => widths[(this.Cost.AsCostArray().Count(x => x <= 0))];
 
         public CostExtension Cost {
             get => this.GetValue(CostProperty) as CostExtension;
@@ -40,8 +44,13 @@ namespace BattlegroundsApp.Controls.CompanyBuilderControls {
         }
 
         public CostControl() {
-            this.DataContext = this;
             this.InitializeComponent();
+            this.ValueLabels = new Label[] {
+                this.ManpowerCostValue, this.MunitionCostValue, this.FuelCostValue
+            };
+            this.Icons = new Image[] {
+                this.ManpowerCostIcon, this.MunitionCostIcon, this.FuelCostIcon
+            };
         }
 
         private void SetCost(CostExtension value) {
@@ -49,14 +58,35 @@ namespace BattlegroundsApp.Controls.CompanyBuilderControls {
             // Set actual value
             this.SetValue(CostProperty, value);
 
-            // Notify value changes
-            this.PropertyChanged?.Invoke(this, new(nameof(this.ManpowerCost)));
-            this.PropertyChanged?.Invoke(this, new(nameof(this.ManpowerCostVisible)));
-            this.PropertyChanged?.Invoke(this, new(nameof(this.MunitionCost)));
-            this.PropertyChanged?.Invoke(this, new(nameof(this.MunitionCostVisible)));
-            this.PropertyChanged?.Invoke(this, new(nameof(this.FuelCost)));
-            this.PropertyChanged?.Invoke(this, new(nameof(this.FuelCostVisible)));
-            this.PropertyChanged?.Invoke(this, new(nameof(this.Cost)));
+            // Stor left index
+            int li = 0;
+
+            // Get values
+            var cost = value.AsCostArray();
+
+            // Run through
+            for (int i = 0; i < cost.Length; i++) { 
+                if (cost[i] > 0.0f) {
+                    
+                    // Set visible
+                    this.ValueLabels[i].Visibility = Visibility.Visible;
+                    this.Icons[i].Visibility = Visibility.Visible;
+
+                    // Set offsets
+                    this.ValueLabels[i].SetValue(Canvas.LeftProperty, lblLeft[li]);
+                    this.Icons[i].SetValue(Canvas.LeftProperty, icoLeft[li]);
+
+                    // Set value
+                    this.ValueLabels[i].Content = (int)Math.Ceiling(cost[i]);
+
+                    li++;
+                } else {
+                    this.ValueLabels[i].Visibility = Visibility.Collapsed;
+                    this.Icons[i].Visibility = Visibility.Collapsed;
+                }
+            }
+
+            this._SelfCanvas.Width = this.VisualWidth;
 
         }
 

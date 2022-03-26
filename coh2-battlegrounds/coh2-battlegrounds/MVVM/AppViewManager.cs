@@ -39,15 +39,24 @@ namespace BattlegroundsApp.MVVM {
             }
         }
 
-        public IViewModel SolveDisplay(ViewModelType view) {
+        public IViewModel? SolveDisplay(ViewModelType view) {
             if (view.IfFirstOption(out string str)) {
                 return this.m_models.GetValueOrDefault(str, null);
             } else if (view.IfSecondOption(out var t)) {
                 return this.m_models.GetValueOrDefault(t.Name, null);
             } else if (view.IfThirdOption(out var mdl)) {
-                // TODO: Add some kind of unhook functionality here, so when re-assigning to dictionary, any existing entry will be told they're being removed
-                // So we can avoid hanging views etc.
-                return mdl.SingleInstanceOnly && this.m_models.TryGetValue(mdl.GetType().Name, out var m) ? m : (this.m_models[mdl.GetType().Name] = mdl);
+                string tyKey = mdl.GetType().Name;
+                if (mdl.SingleInstanceOnly) {
+                    if (this.m_models.TryGetValue(tyKey, out var model)) {
+                        return model;
+                    }
+                    return this.m_models[tyKey] = mdl;
+                } else {
+                    if (this.m_models.TryGetValue(tyKey, out var model) && !model.UnloadViewModel()) {
+                        return model;
+                    }
+                    return this.m_models[tyKey] = mdl;
+                }
             }
             return null;
         }
@@ -84,11 +93,17 @@ namespace BattlegroundsApp.MVVM {
             return true;
         }
 
-        public IViewModel CreateDisplay<T>(Func<T> creator) where T : IViewModel
-            => this.m_models.TryGetValue(typeof(T).Name, out var model) ? model : (this.m_models[typeof(T).Name] = creator());
+        public T? CreateDisplayIfNotFound<T>(Func<T> creator) where T : class, IViewModel
+            => (this.m_models.TryGetValue(typeof(T).Name, out var model) ? model : (this.m_models[typeof(T).Name] = creator())) as T;
+
+        public bool CloseDisplay<T>()
+            => this.m_models.TryGetValue(typeof(T).Name, out var model) && model.UnloadViewModel();
 
         public ModalControl? GetModalControl() 
             => this.m_window.ModalView;
+
+        public ModalControl? GetRightsideModalControl()
+            => this.m_window.RightModalView;
 
     }
 

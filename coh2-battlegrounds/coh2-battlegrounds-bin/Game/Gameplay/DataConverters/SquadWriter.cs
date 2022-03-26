@@ -109,9 +109,6 @@ namespace Battlegrounds.Game.Gameplay.DataConverters {
 
             public override Squad Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options) {
 
-                // Create builder
-                UnitBuilder unitBuilder = new();
-
                 // Read open object
                 reader.Read();
 
@@ -128,7 +125,7 @@ namespace Battlegrounds.Game.Gameplay.DataConverters {
                 }
 
                 // Set mod guid and get deployment phase and combat time
-                unitBuilder.SetModGUID(modGuid).SetBlueprint(sbpName);
+                var unitBuilder = UnitBuilder.NewUnit(sbpName, modGuid);
                 unitBuilder.SetCustomName(ReadStringPropertyIfThere(ref reader, nameof(Squad.CustomName), string.Empty));
                 unitBuilder.SetDeploymentPhase(Enum.Parse<DeploymentPhase>(ReadStringPropertyIfThere(ref reader, nameof(Squad.DeploymentPhase), nameof(DeploymentPhase.PhaseNone))));
                 unitBuilder.SetCombatTime(TimeSpan.Parse(ReadStringPropertyIfThere(ref reader, nameof(Squad.CombatTime), TimeSpan.Zero.ToString()), CultureInfo.InvariantCulture));
@@ -144,13 +141,10 @@ namespace Battlegrounds.Game.Gameplay.DataConverters {
                 unitBuilder.SetVeterancyRank((byte)ReadNumberPropertyIfThere(ref reader, nameof(Squad.VeterancyRank), 0));
                 unitBuilder.SetVeterancyExperience((float)ReadAccurateNumberPropertyIfThere(ref reader, nameof(Squad.VeterancyProgress), 0));
 
-                // Read if crew
-                unitBuilder.SetIsCrew(ReadBooleanPropertyIfThere(ref reader, nameof(Squad.IsCrew), false));
-
                 // Get crew if there
                 Squad crew = ReadPropertyThroughSerialisationIfThere<Squad>(ref reader, nameof(Squad.Crew), null);
                 if (crew is not null) {
-                    unitBuilder.SetCrew(crew, false);
+                    unitBuilder.SetCrew(crew);
                     reader.Read(); // goto next object
                 }
 
@@ -172,17 +166,8 @@ namespace Battlegrounds.Game.Gameplay.DataConverters {
                 }
 
                 // Get squad
-                return unitBuilder.Build(squadID);
+                return unitBuilder.Commit(squadID).Result;
 
-            }
-
-            private static bool ReadBooleanPropertyIfThere(ref Utf8JsonReader reader, string property, bool defaultValue) {
-                if (reader.TokenType is not JsonTokenType.EndObject && reader.GetString() == property) {
-                    reader.Read();
-                    return reader.ReadBoolProperty();
-                } else {
-                    return defaultValue;
-                }
             }
 
             private static string ReadStringPropertyIfThere(ref Utf8JsonReader reader, string property, string defaultValue) {
@@ -278,11 +263,6 @@ namespace Battlegrounds.Game.Gameplay.DataConverters {
                 // Write experience if there
                 if (value.VeterancyProgress != 0) {
                     writer.WriteNumber(nameof(Squad.VeterancyProgress), value.VeterancyProgress);
-                }
-
-                // If crew
-                if (value.IsCrew) {
-                    writer.WriteBoolean(nameof(Squad.IsCrew), value.IsCrew);
                 }
 
                 // If crew

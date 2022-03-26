@@ -1,0 +1,504 @@
+﻿<modals:Modal  xmlns:modals="clr-namespace:BattlegroundsApp.Modals"
+               x:Class="BattlegroundsApp.CompanyEditor.MVVM.Views.SquadOptionsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:BattlegroundsApp.CompanyEditor.MVVM.Views"
+               xmlns:vm="clr-namespace:BattlegroundsApp.CompanyEditor.MVVM.Models"
+               xmlns:editor="clr-namespace:BattlegroundsApp.Controls.Editor" 
+               xmlns:controls="clr-namespace:BattlegroundsApp.Controls" 
+               xmlns:mvvm="clr-namespace:BattlegroundsApp.MVVM" xmlns:companybuildercontrols="clr-namespace:BattlegroundsApp.Controls.CompanyBuilderControls"
+               mc:Ignorable="d" 
+             d:DesignHeight="450" 
+             d:DesignWidth="512"
+              Background="#212d3a">
+    <Border Width="512"
+            BorderBrush="#3d4854"
+            BorderThickness="1.25">
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="96"/>
+                <RowDefinition Height="86"/>
+                <RowDefinition/>
+                <RowDefinition Height="64"/>
+            </Grid.RowDefinitions>
+
+            <!-- Basic unit info -->
+            <DockPanel>
+                <editor:Portrait DockPanel.Dock="Left" 
+                             VerticalAlignment="Top"
+                             IsSelected="True"
+                                 PortraitName="{Binding UnitPortrait}"
+                                 SymbolName="{Binding UnitSymbol}"/>
+                <DockPanel Margin="2.5">
+                    <TextBlock DockPanel.Dock="Top"
+                               FontSize="14"
+                               Foreground="White"
+                               FontFamily="Open Sans">
+                        <Run Text="{Binding UnitName, Mode=OneWay}"/>
+                        <InlineUIContainer BaselineAlignment="Center">
+                            <Button Content="Edit"
+                                    Style="{StaticResource StandardGreenButton}"
+                                    FontSize="12"
+                                    Width="36"
+                                    Height="16"
+                                    Visibility="{Binding NameButtonVisibility}"/>
+                        </InlineUIContainer>
+                    </TextBlock>
+                    <TextBlock TextWrapping="Wrap"
+                           Foreground="White"
+                           FontFamily="Open Sans"
+                           FontSize="11"
+                           FontStyle="Italic"
+                           Text="{Binding UnitDesc, Mode=OneWay}"/>
+                </DockPanel>
+            </DockPanel>
+
+            <Grid Grid.Row="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="30"/>
+                    <RowDefinition Height="56"/>
+                </Grid.RowDefinitions>
+
+                <controls:LocLabel HorizontalAlignment="Center"
+                       Foreground="White"
+                   Grid.Column="0">
+                    CompanySquadView_Cost
+                </controls:LocLabel>
+                <controls:LocLabel HorizontalAlignment="Center"
+                       Foreground="White"
+                   Grid.Column="1">
+                    CompanySquadView_Veterancy
+                </controls:LocLabel>
+                <controls:LocLabel HorizontalAlignment="Center"
+                       Foreground="White"
+                   Grid.Column="2">
+                    CompanySquadView_ServiceTime
+                </controls:LocLabel>
+
+                <companybuildercontrols:CostControl
+                          HorizontalAlignment="Center"
+                               VerticalAlignment="Top"
+                Cost="{Binding Cost}"
+                Grid.Row="1"/>
+
+                <StackPanel Grid.Column="1"
+                          Grid.Row="1">
+                    <ItemsControl ItemsSource="{Binding Veterancy}"
+                          
+                          VerticalAlignment="Center"
+                          HorizontalAlignment="Center">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <StackPanel Orientation="Horizontal"/>
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Image
+                                            Width="16"
+                                            Height="16"
+                                            Source="pack://application:,,,/coh2-battlegrounds;component/Resources/ingame/vet/vstar_yes.png"/>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                    <ProgressBar Width="78"
+                             Height="4"
+                             Foreground="#c6b24a"
+                             Background="#334252"
+                             BorderThickness="0"
+                             BorderBrush="Transparent"
+                             Margin="0,5,0,1"
+                             Value="{Binding Experience.Value, Mode=OneWay}"
+                             Maximum="{Binding Experience.Max}"/>
+                    <Label HorizontalAlignment="Center"
+                       Foreground="#c6b24a"
+                       FontFamily="Open Sans"
+                       FontSize="10"
+                       Content="{Binding Experience}"/>
+                </StackPanel>
+                <controls:LocLabel Grid.Column="2"
+                               Grid.Row="1"
+                               HorizontalAlignment="Center"
+                               VerticalAlignment="Top"
+                               Foreground="White"
+                               LocKey="{Binding CombatTime}">
+                </controls:LocLabel>
+
+            </Grid>
+
+            <!-- Unit Data -->
+            <StackPanel Grid.Row="2" VerticalAlignment="Top">
+
+                <!-- Unit Abilities -->
+                <StackPanel Visibility="{Binding ShowAbilities}">
+                    <controls:LocLabel
+                    Foreground="White"
+                    HorizontalAlignment="Center"
+                    LocKey="CompanySquadView_Abilities"/>
+                    <ItemsControl ItemsSource="{Binding Abilities}"
+                              HorizontalAlignment="Center">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <StackPanel Orientation="Horizontal"/>
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Image Width="48" Height="48"
+                                   Source="{Binding Icon}"
+                                   Margin="2.5">
+                                    <Image.ToolTip>
+                                        <ToolTip Style="{StaticResource BlueTooltip}">
+                                            <Border BorderThickness="1.15"
+                                                Background="#212d3a"
+                                                BorderBrush="#3d4854"
+                                                    Padding="7.45">
+                                                <StackPanel>
+                                                    <TextBlock Text="{Binding Title, Mode=OneWay}"
+                                                               FontSize="14"
+                                                               Foreground="White"/>
+                                                    <TextBlock Text="{Binding Desc, Mode=OneWay}"
+                                                           TextWrapping="Wrap"
+                                                           MaxWidth="256"
+                                                               FontSize="11"
+                                                               Foreground="White"/>
+                                                    <companybuildercontrols:CostControl
+                                                    Cost="{Binding Cost}"
+                                                    HorizontalAlignment="Right"/>
+                                                </StackPanel>
+                                            </Border>
+                                        </ToolTip>
+                                    </Image.ToolTip>
+                                </Image>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </StackPanel>
+
+                <!-- Unit Upgrades -->
+                <StackPanel Visibility="{Binding ShowUpgrades}">
+                    <controls:LocLabel HorizontalAlignment="Center"
+                       Foreground="White"
+                                       Arguments="{Binding UpgradeCapacity}">
+                        CompanySquadView_Upgrades
+                    </controls:LocLabel>
+                    <ItemsControl ItemsSource="{Binding Upgrades}"
+                              HorizontalAlignment="Center">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <StackPanel Orientation="Horizontal"/>
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Canvas x:Name="__canv" Width="48" Height="48"
+                                    MouseUp="{mvvm:EventBinding Handler=Clicked}">
+                                    <Image Width="48" Height="48"
+                                   Source="{Binding Icon}"
+                                   Margin="2.5"/>
+                                    <Rectangle Width="48" Height="48"
+                                           x:Name="__overlay"
+                                           Fill="Black"
+                                           Opacity="0.35"/>
+                                    <Canvas.ToolTip>
+                                        <ToolTip Style="{StaticResource BlueTooltip}">
+                                            <Border BorderThickness="1.15"
+                                                Background="#212d3a"
+                                                BorderBrush="#3d4854"
+                                                    Padding="7.45">
+                                                <StackPanel>
+                                                    <TextBlock Text="{Binding Title, Mode=OneWay}"
+                                                               FontSize="14"
+                                                               Foreground="White"/>
+                                                    <TextBlock Text="{Binding Desc, Mode=OneWay}"
+                                                           TextWrapping="Wrap"
+                                                           MaxWidth="256"
+                                                               FontSize="11"
+                                                               Foreground="White"/>
+                                                    <companybuildercontrols:CostControl
+                                                    Cost="{Binding Cost}"
+                                                    HorizontalAlignment="Right"/>
+                                                </StackPanel>
+                                            </Border>
+                                        </ToolTip>
+                                    </Canvas.ToolTip>
+                                </Canvas>
+                                <DataTemplate.Triggers>
+                                    <DataTrigger Binding="{Binding ElementName=__canv, Path=IsMouseOver}"
+                                             Value="True">
+                                        <Setter TargetName="__overlay"
+                                            Property="Opacity"
+                                            Value="0.125"/>
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding IsAvailable}"
+                                             Value="False">
+                                        <Setter TargetName="__overlay"
+                                            Property="Opacity"
+                                            Value="0.5"/>
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding IsApplied}"
+                                             Value="True">
+                                        <Setter TargetName="__overlay"
+                                            Property="Opacity"
+                                            Value="0"/>
+                                    </DataTrigger>
+                                </DataTemplate.Triggers>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </StackPanel>
+
+                <!-- Unit Deployment and phase -->
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition Height="96"/>
+                    </Grid.RowDefinitions>
+
+                    <controls:LocLabel
+                    Grid.Row="0"
+                    Grid.Column="0"
+                    Grid.ColumnSpan="{Binding LowerSpan}"
+                    Foreground="White"
+                    HorizontalAlignment="Center"
+                    LocKey="CompanySquadView_Phases"/>
+                    <controls:LocLabel
+                    Grid.Row="0"
+                    Grid.Column="1"
+                    Foreground="White"
+                    HorizontalAlignment="Center"
+                        Visibility="{Binding DeployMethodsVisible}"
+                    LocKey="CompanySquadView_Methods"/>
+                    <ItemsControl Grid.Column="0"
+                              Grid.Row="1"
+                                  Grid.ColumnSpan="{Binding LowerSpan}"
+                              ItemsSource="{Binding Phases}"
+                              HorizontalAlignment="Center"
+                              VerticalAlignment="Top">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <StackPanel Orientation="Horizontal"/>
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Canvas x:Name="__canv" Width="48" Height="48"
+                                    MouseUp="{mvvm:EventBinding Handler=Clicked}">
+                                    <Image Width="48" Height="48"
+                                   Source="{Binding Icon}"
+                                   Margin="2.5"/>
+                                    <Rectangle Width="48" Height="48"
+                                           x:Name="__overlay"
+                                           Fill="Black"
+                                           Opacity="0.35"/>
+                                    <Canvas.ToolTip>
+                                        <ToolTip Style="{StaticResource BlueTooltip}">
+                                            <Border BorderThickness="1.15"
+                                                Background="#212d3a"
+                                                BorderBrush="#3d4854"
+                                                    Padding="7.45">
+                                                <StackPanel>
+                                                    <TextBlock Text="{Binding Title, Mode=OneWay}"
+                                                               FontSize="14"
+                                                               Foreground="White"/>
+                                                    <TextBlock Text="{Binding Desc, Mode=OneWay}"
+                                                           TextWrapping="Wrap"
+                                                           MaxWidth="256"
+                                                               FontSize="11"
+                                                               Foreground="White"/>
+                                                </StackPanel>
+                                            </Border>
+                                        </ToolTip>
+                                    </Canvas.ToolTip>
+                                </Canvas>
+                                <DataTemplate.Triggers>
+                                    <DataTrigger Binding="{Binding ElementName=__canv, Path=IsMouseOver}"
+                                             Value="True">
+                                        <Setter TargetName="__overlay"
+                                            Property="Opacity"
+                                            Value="0.125"/>
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding IsPickable}"
+                                             Value="False">
+                                        <Setter TargetName="__overlay"
+                                            Property="Opacity"
+                                            Value="0.75"/>
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding IsActivePhase}"
+                                             Value="True">
+                                        <Setter TargetName="__overlay"
+                                            Property="Opacity"
+                                            Value="0"/>
+                                    </DataTrigger>
+                                </DataTemplate.Triggers>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                    <ItemsControl Grid.Column="1"
+                              Grid.Row="1"
+                              ItemsSource="{Binding DeploySettings}"
+                              HorizontalAlignment="Center"
+                              VerticalAlignment="Top"
+                        Visibility="{Binding DeployMethodsVisible}">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <StackPanel Orientation="Horizontal"/>
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Canvas x:Name="__canv" Width="48" Height="48"
+                                    MouseUp="{mvvm:EventBinding Handler=Clicked}">
+                                    <Image Width="48" Height="48"
+                                   Source="{Binding Icon}"
+                                   Margin="2.5"/>
+                                    <Rectangle Width="48" Height="48"
+                                           x:Name="__overlay"
+                                           Fill="Black"
+                                           Opacity="0.35"/>
+                                    <ItemsControl ItemsSource="{Binding RelativeSource={RelativeSource AncestorType={x:Type local:SquadOptionsView}, Mode=FindAncestor}, Path=DataContext.DeployUnits}"
+                                              Canvas.Top="52"
+                                              x:Name="__items"
+                                              Visibility="Collapsed">
+                                        <ItemsControl.ItemsPanel>
+                                            <ItemsPanelTemplate>
+                                                <StackPanel Orientation="Horizontal"/>
+                                            </ItemsPanelTemplate>
+                                        </ItemsControl.ItemsPanel>
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate>
+                                                <Canvas Width="32" Height="32" 
+                                                    Margin="1.25"
+                                                    x:Name="__canv"
+                                                    MouseUp="{mvvm:EventBinding Handler=Clicked}">
+                                                    <Image Width="32"
+                                                       Height="32"
+                                                       Source="{Binding Icon}"/>
+                                                    <Rectangle
+                                                    Width="32"
+                                                    Height="32"
+                                                    x:Name="__overlay"
+                                                    Fill="Black"
+                                                    Opacity="0.5"/>
+                                                    <Canvas.ToolTip>
+                                                        <ToolTip Style="{StaticResource BlueTooltip}">
+                                                            <Border BorderThickness="1.15"
+                                                Background="#212d3a"
+                                                BorderBrush="#3d4854"
+                                                    Padding="7.45">
+                                                                <StackPanel>
+                                                                    <TextBlock Text="{Binding Title, Mode=OneWay}"
+                                                               FontSize="14"
+                                                               Foreground="White"/>
+                                                                    <TextBlock Text="{Binding Desc, Mode=OneWay}"
+                                                           TextWrapping="Wrap"
+                                                           MaxWidth="256"
+                                                               FontSize="11"
+                                                               Foreground="White"/>
+                                                                    <companybuildercontrols:CostControl
+                                                    Cost="{Binding Cost}"
+                                                    HorizontalAlignment="Right"/>
+                                                                </StackPanel>
+                                                            </Border>
+                                                        </ToolTip>
+                                                    </Canvas.ToolTip>
+                                                </Canvas>
+                                                <DataTemplate.Triggers>
+                                                    <DataTrigger Binding="{Binding ElementName=__canv, Path=IsMouseOver}"
+                                                             Value="True">
+                                                        <Setter TargetName="__overlay"
+                                                            Property="Opacity"
+                                                            Value="0.125"/>
+                                                    </DataTrigger>
+                                                    <DataTrigger Binding="{Binding IsActiveMethod}"
+                                                             Value="True">
+                                                        <Setter TargetName="__overlay"
+                                                            Property="Opacity"
+                                                            Value="0"/>
+                                                    </DataTrigger>
+                                                </DataTemplate.Triggers>
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
+                                    <Canvas.ToolTip>
+                                        <ToolTip Style="{StaticResource BlueTooltip}">
+                                            <Border BorderThickness="1.15"
+                                                Background="#212d3a"
+                                                BorderBrush="#3d4854"
+                                                    Padding="7.45">
+                                                <StackPanel>
+                                                    <TextBlock Text="{Binding Title, Mode=OneWay}"
+                                                               FontSize="14"
+                                                               Foreground="White"/>
+                                                    <TextBlock Text="{Binding Desc, Mode=OneWay}"
+                                                           TextWrapping="Wrap"
+                                                           MaxWidth="256"
+                                                               FontSize="11"
+                                                               Foreground="White"/>
+                                                </StackPanel>
+                                            </Border>
+                                        </ToolTip>
+                                    </Canvas.ToolTip>
+                                </Canvas>
+                                <DataTemplate.Triggers>
+                                    <DataTrigger Binding="{Binding ElementName=__canv, Path=IsMouseOver}"
+                                             Value="True">
+                                        <Setter TargetName="__overlay"
+                                            Property="Opacity"
+                                            Value="0.125"/>
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding IsActiveMethod}"
+                                             Value="True">
+                                        <Setter TargetName="__overlay"
+                                            Property="Opacity"
+                                            Value="0"/>
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding IsTransportOptionsVisible}"
+                                             Value="True">
+                                        <Setter TargetName="__items"
+                                            Property="Visibility"
+                                            Value="Visible"/>
+                                    </DataTrigger>
+                                </DataTemplate.Triggers>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </Grid>
+
+            </StackPanel>
+
+            <!-- Save, close buttons -->
+            <StackPanel Grid.Row="3"
+                    Orientation="Horizontal"
+                    HorizontalAlignment="Center">
+
+                <Button Style="{StaticResource StandardBlueButton}"
+                    Width="156"
+                    Height="36"
+                    Margin="2.5"
+                    Command="{Binding SaveExitCommand}">
+                    <controls:LocLabel
+                    Foreground="White"
+                    HorizontalAlignment="Center"
+                    LocKey="CompanySquadView_Close"/>
+                </Button>
+
+            </StackPanel>
+
+        </Grid>
+    </Border>
+</modals:Modal>

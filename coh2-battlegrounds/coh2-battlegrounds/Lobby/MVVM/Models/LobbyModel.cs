@@ -864,6 +864,8 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
 
         }
 
+        public bool UnloadViewModel() => true;
+
     }
 
 }

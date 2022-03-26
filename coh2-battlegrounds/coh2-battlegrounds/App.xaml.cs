@@ -3,6 +3,8 @@ using System.IO;
 using System.Diagnostics;
 using System.Windows;
 using System.Globalization;
+using System.Collections;
+using System.Diagnostics.CodeAnalysis;
 
 using Battlegrounds;
 using Battlegrounds.Networking;
@@ -14,7 +16,7 @@ using BattlegroundsApp.Utilities;
 using BattlegroundsApp.Resources;
 using BattlegroundsApp.MVVM;
 using BattlegroundsApp.MVVM.Models;
-using System.Diagnostics.CodeAnalysis;
+using BattlegroundsApp.CompanyEditor.MVVM.Models;
 
 namespace BattlegroundsApp {
 
@@ -29,6 +31,7 @@ namespace BattlegroundsApp {
 
         private static LeftMenu? __lmenu;
         private static LobbyBrowserViewModel? __lobbyBrowser;
+        private static CompanyBrowserViewModel? __companyBrowser;
 
         [NotNull] // "never" null; and invalid operation is throw if it is...
         public static ResourceHandler ResourceHandler 
@@ -70,7 +73,7 @@ namespace BattlegroundsApp {
             window.Ready += this.MainWindow_Ready;
             window.Closed += this.MainWindow_Closed;
 
-            // Create views
+            // Create initial left/right views
             __lmenu = new();
             __lobbyBrowser = new();
 
@@ -78,6 +81,9 @@ namespace BattlegroundsApp {
             __viewManager = new(window);
             __viewManager.SetDisplay(AppDisplayState.LeftRight, __lmenu, __lobbyBrowser); // TODO: Replace browser with dashboard when dashboard is implemented
 
+            // Create other views that are directly accessible from LHS
+            __companyBrowser = __viewManager.CreateDisplayIfNotFound<CompanyBrowserViewModel>(() => new()) ?? throw new Exception("Failed to create company browser view model!");
+          
             // Set as started
             IsStarted = true;
 
@@ -159,6 +165,8 @@ namespace BattlegroundsApp {
                 return;
             }
 
+            // TODO: Close active view (in case it's in modifier state, like the company builder)
+
             // Save all changes
             BattlegroundsInstance.SaveInstance();
 
@@ -205,6 +213,23 @@ namespace BattlegroundsApp {
             // Load all installed and active campaigns
             PlayerCampaigns.GetInstalledCampaigns();
             PlayerCampaigns.LoadActiveCampaigns();
+
+        }
+
+        /// <summary>
+        /// Try find a data template from <see cref="Application"/> resources.
+        /// </summary>
+        /// <param name="type">The type to try and find data template for.</param>
+        /// <returns>If found, the linked <see cref="DataTemplate"/> instance; Otherwise <see langword="null"/> if not found.</returns>
+        public static DataTemplate? TryFindDataTemplate(Type type) {
+
+            foreach (DictionaryEntry res in Current.Resources) {
+                if (res.Value is DataTemplate template && template.DataType.Equals(type)) {
+                    return template;
+                }
+            }
+
+            return null;
 
         }
 

@@ -95,7 +95,7 @@ namespace Battlegrounds.Locale {
                     "german" => LocaleLanguage.German,
                     "french" => LocaleLanguage.French,
                     "spanish" => LocaleLanguage.Spanish,
-                    "russian" => LocaleLanguage.Russian,
+                    //"russian" => LocaleLanguage.Russian,
                     _ => LocaleLanguage.Undefined
                 };
                 return lang != LocaleLanguage.Undefined;

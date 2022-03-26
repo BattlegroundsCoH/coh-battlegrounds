@@ -84,24 +84,24 @@ namespace BattlegroundsApp.Views {
 
             if (CreateCompanyDialogViewModel.ShowCreateCompanyDialog(new LocaleKey("CompanyView_CreateCompanyDialog_Title"), out string companyName, out Faction companyFaction, out CompanyType companyType)
                 is CreateCompanyDialogResult.Create) {
-                this.StateChangeRequest(new CompanyBuilderView(companyName, companyFaction, companyType, modGuid));
+                //this.StateChangeRequest(new CompanyBuilderView(companyName, companyFaction, companyType, modGuid));
             }
 
         }
 
         private void editCompany_Click(object sender, RoutedEventArgs e) {
-            this.StateChangeRequest(new CompanyBuilderView(companyList.SelectedItem as Company));
+            //this.StateChangeRequest(new CompanyBuilderView(companyList.SelectedItem as Company));
         }
 
         private void renameCompany_Click(object sender, RoutedEventArgs e) {
             var result = RenameCopyDialogViewModel.ShowRenameDialog(new LocaleKey("CompanyView_RenameCopyDialog_Rename_Title"), out string companyName);
 
             if (result == RenameCopyDialogResult.Rename) {
-                var builder = new CompanyBuilder();
+                /*var builder = new CompanyBuilder();
                 var company = builder.CloneCompany(companyList.SelectedItem as Company, companyName, CompanyAvailabilityType.MultiplayerOnly).Commit().Result;
                 PlayerCompanies.DeleteCompany(companyList.SelectedItem as Company);
                 PlayerCompanies.SaveCompany(company);
-                UpdateCompanyList();
+                UpdateCompanyList();*/
             }
 
         }
@@ -121,10 +121,10 @@ namespace BattlegroundsApp.Views {
             var result = RenameCopyDialogViewModel.ShowCopyDialog(new LocaleKey("CompanyView_RenameCopyDialog_Copy_Title"), out string companyName);
 
             if (result == RenameCopyDialogResult.Copy) {
-                var builder = new CompanyBuilder();
+                /*var builder = new CompanyBuilder();
                 builder.CloneCompany(companyList.SelectedItem as Company, companyName, CompanyAvailabilityType.MultiplayerOnly).Commit();
                 PlayerCompanies.SaveCompany(builder.Result);
-                UpdateCompanyList();
+                UpdateCompanyList();*/
             }
         }
 

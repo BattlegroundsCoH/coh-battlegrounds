@@ -10,7 +10,7 @@ using Battlegrounds.Game.DataSource.Replay;
 using Battlegrounds.Game.Gameplay;
 using Battlegrounds.Game.Match;
 using Battlegrounds.Game.Match.Data;
-//using Battlegrounds.Json;
+using Battlegrounds.Gfx;
 using Battlegrounds.Modding;
 
 namespace coh2_battlegrounds_console {
@@ -23,6 +23,10 @@ namespace coh2_battlegrounds_console {
 
         static bool gfxcompile;
         static string gfxcompilepath = null;
+        static string gfxpattern = null;
+        static int gfxversion = GfxMap.GfxBinaryVersion;
+
+        static bool gfxverify;
 
         static bool campaign_compile;
         static string campaign_compile_file = null;
@@ -82,6 +86,28 @@ namespace coh2_battlegrounds_console {
 
             } else if (gfxcompile) {
                 GfxFolderCompiler.Compile(gfxcompilepath, output_path);
+            } else if (gfxverify) {
+
+                try {
+
+                    // Try read
+                    GfxMap map = GfxMap.FromBinary(File.OpenRead(gfxcompilepath));
+
+                    // Log details if read
+                    if (map is null) {
+                        Console.WriteLine($"Failed to read {gfxcompilepath}");
+                        return;
+                    }
+
+                    // Do stuff
+                    Console.WriteLine("Successfully parsed gfx file:");
+                    Console.WriteLine("\tBinary Version: " + map.BinaryVersion);
+                    Console.WriteLine("\tResource count: " + map.Resources.Length);
+
+                } catch (Exception ex) {
+                    Console.WriteLine(ex);
+                }
+
             }
 
         }
@@ -449,6 +475,25 @@ namespace coh2_battlegrounds_console {
                     gfxcompile = true;
                     if (i + 1 < args.Length) {
                         gfxcompilepath = args[i + 1];
+                    } else {
+                        Environment.Exit(-1);
+                    }
+                } else if (args[i] is "-gfxverify") {
+                    gfxverify = true;
+                    if (i + 1 < args.Length) {
+                        gfxcompilepath = args[i + 1];
+                    } else {
+                        Environment.Exit(-1);
+                    }
+                } else if (args[i] is "-gfxv") {
+                    if (i + 1 < args.Length && int.TryParse(args[i+1], out int gv)) {
+                        gfxversion = gv;
+                    } else {
+                        Environment.Exit(-1);
+                    }
+                } else if (args[i] is "-gfxregex") {
+                    if (i + 1 < args.Length) {
+                        gfxpattern = args[i + 1];
                     } else {
                         Environment.Exit(-1);
                     }

@@ -212,6 +212,22 @@ namespace Battlegrounds.Functional {
         
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="array"></param>
+        /// <param name="element"></param>
+        /// <returns></returns>
+        public static T[] Except<T>(this T[] array, T element) {
+            int i = array.IndexOf(x => x.Equals(element));
+            if (i == -1)
+                return array;
+            var before = array[0..i];
+            var after = array[(i+1)..];
+            return before.Concat(after).ToArray();
+        }
+
     }
 
 }

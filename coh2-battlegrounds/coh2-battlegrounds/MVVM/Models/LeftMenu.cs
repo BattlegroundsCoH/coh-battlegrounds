@@ -2,7 +2,7 @@
 using System.Windows.Input;
 
 using Battlegrounds.Locale;
-
+using BattlegroundsApp.CompanyEditor.MVVM.Models;
 using BattlegroundsApp.Utilities;
 
 namespace BattlegroundsApp.MVVM.Models {
@@ -89,6 +89,12 @@ namespace BattlegroundsApp.MVVM.Models {
         
         private void BuilderButton() {
 
+            // Get browser
+            var browser = App.ViewManager.UpdateDisplay<CompanyBrowserViewModel>(AppDisplayTarget.Right);
+
+            // Trigger list refresh
+            browser.UpdateCompanyList();
+
         }
 
         private void CampaignButton() {
@@ -111,6 +117,8 @@ namespace BattlegroundsApp.MVVM.Models {
 
         private void ExitButton() 
             => Application.Current.Shutdown();
+
+        public bool UnloadViewModel() => true;
 
     }
 
