@@ -64,9 +64,6 @@ public class CompanyBuilderViewModel : IViewModel {
 
     public CompanyBuilder Builder { get; }
 
-    public bool CanAddUnits => true;
-    public bool CanAddAbilities => true;
-
     public CompanyStatistics Statistics { get; }
     public string CompanyName { get; }
     public Faction CompanyFaction { get; }
@@ -253,13 +250,11 @@ public class CompanyBuilderViewModel : IViewModel {
 
     }
 
-    private void FillAvailableItemSlot<TBlueprint>(IEnumerable<TBlueprint> source, List<AvailableItemViewModel> target, bool canAdd) where TBlueprint : Blueprint {
+    private void FillAvailableItemSlot<TBlueprint>(IEnumerable<TBlueprint> source, List<AvailableItemViewModel> target) where TBlueprint : Blueprint {
 
         foreach (var element in source) {
-            
-            var slot = new AvailableItemViewModel(element, this.OnItemAddClicked, this.OnItemMove) {
-                CanAdd = canAdd
-            };
+
+            var slot = new AvailableItemViewModel(element, this.OnItemAddClicked, this.OnItemMove, this.CanAddBlueprint);
 
             target.Add(slot);
  
@@ -298,15 +293,15 @@ public class CompanyBuilderViewModel : IViewModel {
             Application.Current.Dispatcher.Invoke(() => {
 
                 this.FillAvailableItemSlot(this.m_availableSquads.FindAll(s => s.Types.IsInfantry == true),
-                                           this.m_availableInfantrySquads, this.CanAddUnits);
+                                           this.m_availableInfantrySquads);
 
                 this.FillAvailableItemSlot(this.m_availableSquads.FindAll(s => s.IsTeamWeapon == true),
-                                           this.m_availableSupportSquads, this.CanAddUnits);
+                                           this.m_availableSupportSquads);
 
                 this.FillAvailableItemSlot(this.m_availableSquads.FindAll(s => s.Types.IsVehicle == true || s.Types.IsArmour == true || s.Types.IsHeavyArmour == true),
-                                           this.m_availableVehicleSquads, this.CanAddUnits);
+                                           this.m_availableVehicleSquads);
 
-                this.FillAvailableItemSlot(this.m_abilities, this.m_availableAbilities, this.CanAddAbilities);
+                this.FillAvailableItemSlot(this.m_abilities, this.m_availableAbilities);
 
                 this.UpdateAvailableItems();
 
@@ -347,6 +342,7 @@ public class CompanyBuilderViewModel : IViewModel {
 
         // Notify change
         this.UnitCapacity.Update(this);
+        this.GetUnitCapacity(builder).Update(this);
 
     }
 
@@ -417,6 +413,9 @@ public class CompanyBuilderViewModel : IViewModel {
         this.UnitCapacity.Update(this);
         this.GetUnitCapacity(unitBuilder).Update(this);
 
+        // Loop over items and refresh (Expensive call!)
+        this.UpdateAvailableItems();
+
     }
 
     private void OnAbilityClicked(object sender, AbilitySlotViewModel abilityViewModel) {
@@ -433,6 +432,9 @@ public class CompanyBuilderViewModel : IViewModel {
 
         // Remove view model
         this.CompanyAbilities.Remove(abilitySlot);
+        
+        // Loop over items and refresh (Expensive call!)
+        this.UpdateAvailableItems();
 
     }
 
@@ -496,15 +498,24 @@ public class CompanyBuilderViewModel : IViewModel {
                 dEvent.Effects = DragDropEffects.Move;
                 dEvent.Handled = true;
 
-                // Get the item slot and disable it
-                if (dEvent.Data.GetData("Source") is AvailableItemViewModel itemSlot) {
-                    itemSlot.CanAdd = false;
-                }
-
             }
 
         }
 
+    }
+
+    private bool CanAddBlueprint(Blueprint bp) {
+        if (bp is SquadBlueprint sbp) {
+            return sbp.Category switch {
+                SquadCategory.Infantry => !this.InfantryCapacity.IsAtCapacity,
+                SquadCategory.Support => !this.SupportCapacity.IsAtCapacity,
+                SquadCategory.Vehicle => !this.VehicleCapacity.IsAtCapacity,
+                _ => false
+            };
+        } else if (bp is AbilityBlueprint abp) {
+            return !this.AbilityCapacity.IsAtCapacity;
+        }
+        return false;
     }
 
     private void UpdateAvailableItems() {
@@ -546,6 +557,11 @@ public class CompanyBuilderViewModel : IViewModel {
             // TODO
         } else if (this.SelectedMainTab == 3) {
             this.AvailableItemsVisibility = Visibility.Hidden;
+        }
+
+        // Loop over items and refresh
+        foreach (var item in this.AvailableItems) {
+            item.Refresh();
         }
 
     }
@@ -594,6 +610,12 @@ public class CompanyBuilderViewModel : IViewModel {
         // Add to display
         this.AddUnitToDisplay(unitBuilder);
 
+        // Update capacity values
+        this.SetCapacityValues();
+
+        // Loop over items and refresh (Expensive call!)
+        this.UpdateAvailableItems();
+
     }
 
     private void NewAbility(AbilityBlueprint abp) {
@@ -612,6 +634,9 @@ public class CompanyBuilderViewModel : IViewModel {
 
         // Add to display
         this.AddAbilityToDisplay(sabp, false);
+
+        // Loop over items and refresh (Expensive call!)
+        this.UpdateAvailableItems();
 
     }
 

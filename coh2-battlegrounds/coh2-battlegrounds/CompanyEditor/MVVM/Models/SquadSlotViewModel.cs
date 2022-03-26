@@ -86,6 +86,7 @@ public class SquadSlotViewModel : IViewModel {
 
         // Refresh data
         this.RefreshData();
+
     }
 
     public void RefreshData() {

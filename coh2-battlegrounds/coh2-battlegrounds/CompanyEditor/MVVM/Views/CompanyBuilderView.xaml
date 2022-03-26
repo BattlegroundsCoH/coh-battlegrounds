@@ -424,12 +424,14 @@
                     Grid.Column="2"
                     Orientation="Horizontal" 
                     VerticalAlignment="Top"
+                    HorizontalAlignment="Right"
                     Margin="55,0,0,0">
 
             <Button x:Name="resetButton"
                     Content="CompanyBuilder_Reset"
                     Width="105"
                     Height="35"
+                    Visibility="Collapsed"
                     Style="{StaticResource StandardBlueLocButton}">
             </Button>
 

@@ -1,20 +1,20 @@
-﻿using Battlegrounds.Game.Database;
+﻿using System;
+using System.ComponentModel;
+using System.Windows.Media;
+
+using Battlegrounds.Game.Database;
 using Battlegrounds.Game.Database.Extensions;
+
 using BattlegroundsApp.MVVM;
 using BattlegroundsApp.Resources;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Media;
 
 namespace BattlegroundsApp.CompanyEditor.MVVM.Models;
 
 public delegate void AvailableItemViewModelEvent(object sender, AvailableItemViewModel availableSquadViewModel, object args = null);
 
-public class AvailableItemViewModel : IViewModel {
+public delegate bool IsBlueprintAvailableHandler(Blueprint blueprint);
+
+public class AvailableItemViewModel : IViewModel, INotifyPropertyChanged {
 
     public string ItemName { get; }
 
@@ -28,12 +28,17 @@ public class AvailableItemViewModel : IViewModel {
 
     public AvailableItemViewModelEvent Move { get; }
 
-    public bool CanAdd { get; set; }
+    public IsBlueprintAvailableHandler AddEval { get; }
+
+    public bool CanAdd => this.AddEval(this.Blueprint);
 
     public bool SingleInstanceOnly => false; // This will allow us to override
 
-    public AvailableItemViewModel(Blueprint bp, AvailableItemViewModelEvent onAdd, AvailableItemViewModelEvent onMove) {
+    public event PropertyChangedEventHandler PropertyChanged;
 
+    public AvailableItemViewModel(Blueprint bp, AvailableItemViewModelEvent onAdd, AvailableItemViewModelEvent onMove, IsBlueprintAvailableHandler addable) {
+
+        // Switch on type
         if (bp is SquadBlueprint sbp) {
 
             this.ItemName = GameLocale.GetString(sbp.UI.ScreenName);
@@ -57,7 +62,12 @@ public class AvailableItemViewModel : IViewModel {
         // Set events
         this.AddClick = onAdd;
         this.Move = onMove;
+        this.AddEval = addable;
 
+    }
+
+    public void Refresh() {
+        this.PropertyChanged?.Invoke(this.Move, new(nameof(CanAdd)));
     }
 
     public bool UnloadViewModel() => true;
