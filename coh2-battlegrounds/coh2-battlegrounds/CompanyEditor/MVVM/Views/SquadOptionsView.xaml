@@ -272,6 +272,7 @@
                     <controls:LocLabel
                     Grid.Row="0"
                     Grid.Column="0"
+                    Grid.ColumnSpan="{Binding LowerSpan}"
                     Foreground="White"
                     HorizontalAlignment="Center"
                     LocKey="CompanySquadView_Phases"/>
@@ -280,9 +281,11 @@
                     Grid.Column="1"
                     Foreground="White"
                     HorizontalAlignment="Center"
+                        Visibility="{Binding DeployMethodsVisible}"
                     LocKey="CompanySquadView_Methods"/>
                     <ItemsControl Grid.Column="0"
                               Grid.Row="1"
+                                  Grid.ColumnSpan="{Binding LowerSpan}"
                               ItemsSource="{Binding Phases}"
                               HorizontalAlignment="Center"
                               VerticalAlignment="Top">
@@ -349,7 +352,8 @@
                               Grid.Row="1"
                               ItemsSource="{Binding DeploySettings}"
                               HorizontalAlignment="Center"
-                              VerticalAlignment="Top">
+                              VerticalAlignment="Top"
+                        Visibility="{Binding DeployMethodsVisible}">
                         <ItemsControl.ItemsPanel>
                             <ItemsPanelTemplate>
                                 <StackPanel Orientation="Horizontal"/>
@@ -390,6 +394,28 @@
                                                     x:Name="__overlay"
                                                     Fill="Black"
                                                     Opacity="0.5"/>
+                                                    <Canvas.ToolTip>
+                                                        <ToolTip Style="{StaticResource BlueTooltip}">
+                                                            <Border BorderThickness="1.15"
+                                                Background="#212d3a"
+                                                BorderBrush="#3d4854"
+                                                    Padding="7.45">
+                                                                <StackPanel>
+                                                                    <TextBlock Text="{Binding Title, Mode=OneWay}"
+                                                               FontSize="14"
+                                                               Foreground="White"/>
+                                                                    <TextBlock Text="{Binding Desc, Mode=OneWay}"
+                                                           TextWrapping="Wrap"
+                                                           MaxWidth="256"
+                                                               FontSize="11"
+                                                               Foreground="White"/>
+                                                                    <companybuildercontrols:CostControl
+                                                    Cost="{Binding Cost}"
+                                                    HorizontalAlignment="Right"/>
+                                                                </StackPanel>
+                                                            </Border>
+                                                        </ToolTip>
+                                                    </Canvas.ToolTip>
                                                 </Canvas>
                                                 <DataTemplate.Triggers>
                                                     <DataTrigger Binding="{Binding ElementName=__canv, Path=IsMouseOver}"

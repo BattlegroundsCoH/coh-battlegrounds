@@ -96,13 +96,13 @@ public class SquadOptionsViewModel {
         }
     }
 
-    public record DeployUnitButton(SquadBlueprint Blueprint, Func<bool> IsActive, EventCommand Clicked) : INotifyPropertyChanged {
+    public record DeployUnitButton(SquadBlueprint Blueprint, Func<bool> IsActive, Func<CostExtension, CostExtension> CostEval, EventCommand Clicked) : INotifyPropertyChanged {
         public bool IsActiveMethod => this.IsActive();
         public event PropertyChangedEventHandler PropertyChanged;
         public ImageSource Icon => App.ResourceHandler.GetIcon("unit_icons", this.Blueprint.UI.Icon);
         public string Title => GameLocale.GetString(this.Blueprint.UI.ScreenName);
         public string Desc => GameLocale.GetString(this.Blueprint.UI.LongDescription);
-        public CostExtension Cost => this.Blueprint.Cost;
+        public CostExtension Cost => this.CostEval(this.Blueprint.Cost);
         public void Update() {
             this.PropertyChanged?.Invoke(this, new(nameof(IsActiveMethod)));
         }
@@ -144,13 +144,17 @@ public class SquadOptionsViewModel {
 
     public CostExtension Cost => this.BuilderInstance.GetCost();
 
-    public Visibility NameButtonVisibility => this.BuilderInstance.Rank >= 3 ? Visibility.Visible : Visibility.Collapsed;
+    public Visibility NameButtonVisibility => Visibility.Collapsed; /* this.BuilderInstance.Rank >= 3 ? Visibility.Visible : Visibility.Collapsed; */ // TODO: Beta version
 
     public ProgressValue Experience => new ProgressValue(this.BuilderInstance.Experience, this.BuilderInstance.Blueprint.Veterancy.MaxExperience);
 
     public CapacityValue UpgradeCapacity { get; }
 
     public CapacityValue PhaseICap { get; }
+
+    public int LowerSpan => this.BuilderInstance.Blueprint.Category is SquadCategory.Vehicle ? 2 : 1;
+
+    public Visibility DeployMethodsVisible => this.LowerSpan == 1 ? Visibility.Visible : Visibility.Collapsed;
 
     public SquadOptionsViewModel(SquadSlotViewModel triggerer, CompanyBuilder companyBuilder) {
         
@@ -205,10 +209,13 @@ public class SquadOptionsViewModel {
         // Create deploy unit buttons
         this.DeployUnits = new();
         this.BuilderInstance.GetTransportUnits(this.CompanyBuilder)
-            .Map(x => new DeployUnitButton(x, () => this.BuilderInstance.Transport == x, new EventCommand<MouseEventArgs>(this.DeployUnitCommand)))
+            .Map(x => new DeployUnitButton(x, () => this.BuilderInstance.Transport == x, this.CalculateUnitCost, new EventCommand<MouseEventArgs>(this.DeployUnitCommand)))
             .ForEach(this.DeployUnits.Add);
 
     }
+
+    private CostExtension CalculateUnitCost(CostExtension transport)
+        => transport * Squad.GetDeployMethodTransportCostModifier(this.BuilderInstance.DeployMethod);
 
     private void UpgradeCommand(object sender, MouseEventArgs args) {
 

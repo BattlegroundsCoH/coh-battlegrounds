@@ -584,8 +584,9 @@ public class CompanyBuilderViewModel : IViewModel {
 
     private void NewUnit(SquadBlueprint sbp) {
 
-        // Create squad
-        var unitBuilder = UnitBuilder.NewUnit(sbp);
+        // Create squad (in initial phase or in phase A)
+        var unitBuilder = UnitBuilder.NewUnit(sbp)
+            .SetDeploymentPhase(this.Builder.IsPhaseAvailable(DeploymentPhase.PhaseInitial) ? DeploymentPhase.PhaseInitial : DeploymentPhase.PhaseA);
 
         // Add to company
         this.Builder.AddUnit(unitBuilder);

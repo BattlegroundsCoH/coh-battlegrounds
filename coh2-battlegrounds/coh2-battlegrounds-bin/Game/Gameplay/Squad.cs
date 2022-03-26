@@ -376,7 +376,7 @@ namespace Battlegrounds.Game.Gameplay {
             c = upgrades.Select(x => x.Cost).Aggregate(c, (a, b) => a + b);
 
             if (transport is SquadBlueprint sbp) {
-                c += sbp.Cost * (deploymentMethod == DeploymentMethod.DeployAndExit ? 0.25f : 0.65f);
+                c += sbp.Cost * GetDeployMethodTransportCostModifier(deploymentMethod);
             }
 
             // TODO: More here
@@ -384,6 +384,17 @@ namespace Battlegrounds.Game.Gameplay {
             return c;
 
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="method"></param>
+        /// <returns></returns>
+        public static float GetDeployMethodTransportCostModifier(DeploymentMethod method) => method switch {
+            DeploymentMethod.DeployAndExit => 0.25f,
+            DeploymentMethod.DeployAndStay => 0.65f,
+            _ => 0.0f
+        };
 
     }
 
