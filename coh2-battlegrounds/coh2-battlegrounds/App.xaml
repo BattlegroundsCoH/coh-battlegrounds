@@ -829,6 +829,21 @@
 
         <!-- SCROLLBAR STYLIING END -->
 
+        <Style x:Key="OutOfViewScrollBarThumb" TargetType="{x:Type Thumb}">
+            <Setter Property="SnapsToDevicePixels" Value="True"/>
+            <Setter Property="OverridesDefaultStyle" Value="True"/>
+            <Setter Property="IsTabStop" Value="False"/>
+            <Setter Property="Focusable" Value="False"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Thumb}">
+                        <Border CornerRadius="4" Background="#FF686868" BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="0" Width="8"/>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>            
+        </Style>
+        
         <Style x:Key="OutOfViewVScrollbar" TargetType="{x:Type ScrollBar}">
             <Setter Property="OverridesDefaultStyle" Value="True"/>
             <Setter Property="BorderBrush" Value="Transparent"/>
@@ -859,8 +874,7 @@
                                 </Track.DecreaseRepeatButton>
                                 <Track.Thumb>
                                     <!-- Set the height of the Thumb.-->
-                                    <Thumb Background="#536375"
-                                           Style="{StaticResource ScrollBarThumb}"/>
+                                    <Thumb Style="{StaticResource OutOfViewScrollBarThumb}"/>
                                 </Track.Thumb>
                                 <Track.IncreaseRepeatButton>
                                     <RepeatButton Command="ScrollBar.PageDownCommand"

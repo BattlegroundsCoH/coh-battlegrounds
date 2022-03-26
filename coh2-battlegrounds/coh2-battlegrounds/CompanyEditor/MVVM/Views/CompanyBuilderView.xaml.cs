@@ -158,4 +158,11 @@ public partial class CompanyBuilderView : UserControl {
     private void InfantryPanel_SizeChanged(object sender, SizeChangedEventArgs e)
         => this.RHS_ScrollBar_Refresh();
 
+    private void RHS_ScrollBar_MouseWheel(object sender, System.Windows.Input.MouseWheelEventArgs e) {
+        if (this.RHS_ScrollBar.Maximum > 0) {
+            this.RHS_ScrollBar.Value -= e.Delta * 0.25;
+            this.RHS_ScrollBar_Scroll(sender, new(ScrollEventType.ThumbTrack, this.RHS_ScrollBar.Value)); // For some reason this is not triggered when changing the value
+        }
+    }
+
 }

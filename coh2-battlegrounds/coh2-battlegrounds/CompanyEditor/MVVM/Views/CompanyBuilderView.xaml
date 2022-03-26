@@ -87,7 +87,8 @@
                 
                 <TabControl Style="{StaticResource CompanyBuilderSecondaryTabControl}" 
                             SelectedIndex="{Binding SelectedUnitTabItem}" 
-                            SelectionChanged="ChangeSubUnitTab">
+                            SelectionChanged="ChangeSubUnitTab"
+                                    MouseWheel="RHS_ScrollBar_MouseWheel">
 
                     <!-- Infantry -->
                     <TabItem Header="CompanyBuilder_Infantry"
@@ -102,7 +103,8 @@
                                            BorderBrush="Black"
                                            Drop="OnItemDrop">
                             <Canvas x:Name="InfantryCanvas" 
-                                    ClipToBounds="True">
+                                    ClipToBounds="True"
+                                    AllowDrop="True">
                                 <StackPanel x:Name="InfantryPanel"
                                             SizeChanged="InfantryPanel_SizeChanged">
                                     <StackPanel.Resources>
@@ -134,7 +136,9 @@
                                            BorderThickness="1.5"
                                            BorderBrush="Black"
                                            Drop="OnItemDrop">
-                            <Canvas x:Name="SupportCanvas">
+                            <Canvas x:Name="SupportCanvas"
+                                    ClipToBounds="True"
+                                    AllowDrop="True">
                                 <StackPanel x:Name="SupportPanel"
                                             SizeChanged="SupportPanel_SizeChanged">
                                     <StackPanel.Resources>
@@ -166,7 +170,9 @@
                                            BorderThickness="1.5"
                                            BorderBrush="Black"
                                            Drop="OnItemDrop">
-                            <Canvas x:Name="VehicleCanvas">
+                            <Canvas x:Name="VehicleCanvas"
+                                    ClipToBounds="True"
+                                    AllowDrop="True">
                                 <StackPanel x:Name="VehiclePanel"
                                             SizeChanged="VehiclePanel_SizeChanged">
                                     <StackPanel.Resources>
@@ -212,7 +218,9 @@
                                            BorderThickness="1.5"
                                            BorderBrush="Black"
                                            Drop="OnItemDrop">
-                            <Canvas>
+                            <Canvas
+                                    ClipToBounds="True"
+                                    AllowDrop="True">
                                 <StackPanel x:Name="CommanderAbilitiyPanel">
                                     <ItemsControl ItemsSource="{Binding CompanyAbilities}">
                                         <ItemsControl.ItemsPanel>
@@ -258,6 +266,7 @@
                      Tag="{Binding StorageCapacity}"
                      Width="180"
                      Height="35"
+                     Visibility="Collapsed"
                      Style="{StaticResource CompanyBuilderMainTabItem}">
 
                 <ScrollViewer VerticalScrollBarVisibility="Auto" 
@@ -281,6 +290,7 @@
             <TabItem Header="CompanyBuilder_Stats"
                      Width="180"
                      Height="35"
+                     Visibility="Collapsed"
                      Style="{StaticResource CompanyBuilderMainTabItem}">
 
                 <Grid>
@@ -401,6 +411,7 @@
                    Width="8"
                    x:Name="RHS_ScrollBar"
                    Scroll="RHS_ScrollBar_Scroll"
+                   MouseWheel="RHS_ScrollBar_MouseWheel"
                    SmallChange="5"
                    LargeChange="30"
                    Orientation="Vertical"
