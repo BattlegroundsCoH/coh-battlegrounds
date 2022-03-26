@@ -15,6 +15,6 @@ public interface IObjectChanged {
     /// <summary>
     /// Event triggered when object is changed.
     /// </summary>
-    event ObjectChangedEventHandler ObjectChanged;
+    event ObjectChangedEventHandler? ObjectChanged;
 
 }

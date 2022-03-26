@@ -209,7 +209,13 @@ namespace Battlegrounds {
         /// Static constructor
         /// </summary>
         static BattlegroundsInstance() {
-            LoadInstance();
+            try {
+                LoadInstance();
+            } catch {
+                __instance = new InternalInstance();
+                __localeManagement = new Localize(__instance.Language);
+                __rng = new();
+            }
         }
 
         /// <summary>

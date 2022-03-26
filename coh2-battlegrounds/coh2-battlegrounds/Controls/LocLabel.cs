@@ -122,7 +122,8 @@ public class LocLabel : Label {
                     vals[i] = array.GetValue(i) switch {
                         LocaleKey k => BattlegroundsInstance.Localize.GetString(k),
                         string s => BattlegroundsInstance.Localize.GetString(s),
-                        object o => o
+                        object o => o,
+                        _ => throw new InvalidProgramException()
                     };
                 }
                 return vals;
@@ -132,8 +133,6 @@ public class LocLabel : Label {
                 return new[] { BattlegroundsInstance.Localize.GetString(s) ?? s };
             } else if (args is ILocLabelArgumentsObject obj) {
                 return obj.ToArgs();
-            } else if (args is Binding binding) {
-
             }
         }
         return Array.Empty<object>();
@@ -141,19 +140,18 @@ public class LocLabel : Label {
 
     private void RefreshDisplay() {
         object value = this.GetValue(LocKeyProperty);
-        var loc = BattlegroundsInstance.Localize;
-        if (loc is not null) {
+        if (BattlegroundsInstance.Localize is Localize loc) {
             string str = value switch {
                 string s => loc.GetString(s, this.GetArgs()),
                 LocaleKey k => loc.GetString(k, this.GetArgs()),
-                _ => loc.Converters.ContainsKey(value.GetType()) ? loc.GetObjectAsString(value) : value.ToString()
+                _ => loc.Converters.ContainsKey(value.GetType()) ? loc.GetObjectAsString(value) : (value.ToString() ?? string.Empty)
             };
             if (this.UpperCaseAll) {
                 str = str.ToUpper();
             }
             this.Content = str;
         } else {
-            this.Content = this.UpperCaseAll ? value.ToString().ToUpper() : value.ToString();
+            this.Content = this.UpperCaseAll ? (value.ToString() ?? string.Empty).ToUpper() : value.ToString();
         }
     }
 

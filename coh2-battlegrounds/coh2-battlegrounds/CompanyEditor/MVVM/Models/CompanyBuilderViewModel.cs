@@ -8,6 +8,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 
+using Battlegrounds.Functional;
 using Battlegrounds.Game.Database;
 using Battlegrounds.Game.Database.Management;
 using Battlegrounds.Game.DataCompany;
@@ -22,13 +23,9 @@ using BattlegroundsApp.Utilities;
 
 namespace BattlegroundsApp.CompanyEditor.MVVM.Models;
 
-public delegate void CompanyBuilderViewModelEvent(object sender, CompanyBuilderViewModel companyBuilderViewModel, object args = null);
+public delegate void CompanyBuilderViewModelEvent(object sender, CompanyBuilderViewModel companyBuilderViewModel, object? args = null);
 
-public class CompanyBuilderButton {
-    public ICommand Click { get; init; }
-    public LocaleKey Text { get; init; }
-    public LocaleKey Tooltip { get; init; }
-}
+public record CompanyBuilderButton(ICommand Click, LocaleKey? Text, LocaleKey? Tooltip);
 
 public class CompanyBuilderViewModel : IViewModel {
 
@@ -42,9 +39,9 @@ public class CompanyBuilderViewModel : IViewModel {
 
     private readonly ModPackage m_activeModPackage;
 
-    private List<SquadBlueprint> m_availableSquads;
-    private List<SquadBlueprint> m_availableCrews;
-    private List<AbilityBlueprint> m_abilities;
+    private readonly List<SquadBlueprint> m_availableSquads;
+    private readonly List<SquadBlueprint> m_availableCrews;
+    private readonly List<AbilityBlueprint> m_abilities;
 
     public ObservableCollection<AvailableItemViewModel> AvailableItems { get; set; }
 
@@ -102,23 +99,22 @@ public class CompanyBuilderViewModel : IViewModel {
 
     public CapacityValue VehicleCapacity { get; }
 
-    public CompanyBuilderViewModel() {
+    private CompanyBuilderViewModel() {
 
         // Create save
-        this.Save = new() {
-            Click = new RelayCommand(this.SaveButton),
-        };
+        this.Save = new(new RelayCommand(this.SaveButton), null, null);
 
         // Create reset
-        this.Reset = new() {
-            Click = new RelayCommand(this.ResetButton),
-        };
+        this.Reset = new(new RelayCommand(this.ResetButton), null, null);
 
         // Create back
-        this.Back = new() {
-            Click = new RelayCommand(this.BackButton),
-            Text = new("")
-        };
+        this.Back = new(new RelayCommand(this.BackButton), null, null);
+
+        // Define basic values
+        this.CompanyFaction = Faction.Soviet;
+        this.CompanyGUID = ModGuid.BaseGame;
+        this.CompanyName = string.Empty;
+        this.CompanyType = string.Empty;
 
         // Define locales
         this.CompanyMatchHistoryLabelContent = new LocaleKey("CompanyBuilder_CompanyMatchHistory");
@@ -146,6 +142,9 @@ public class CompanyBuilderViewModel : IViewModel {
         this.m_availableSupportSquads = new();
         this.m_availableVehicleSquads = new();
         this.m_availableAbilities = new();
+        this.m_availableSquads = new();
+        this.m_availableCrews = new();
+        this.m_abilities = new();
 
         // Set default tabs
         this.SelectedMainTab = 0;
@@ -156,12 +155,12 @@ public class CompanyBuilderViewModel : IViewModel {
         this.AvailableItemsVisibility = Visibility.Visible;
 
         // Set capacities
-        this.UnitCapacity = new CapacityValue(0, Company.MAX_SIZE, () => this.Builder.Size);
-        this.AbilityCapacity = new CapacityValue(0, Company.MAX_ABILITY, () => this.Builder.AbilityCount);
+        this.UnitCapacity = new CapacityValue(0, Company.MAX_SIZE, () => this.Builder?.Size ?? 0);
+        this.AbilityCapacity = new CapacityValue(0, Company.MAX_ABILITY, () => this.Builder?.AbilityCount ?? 0);
         this.StorageCapacity = new CapacityValue(0, 0);
-        this.InfantryCapacity = new CapacityValue(0, 0, () => this.Builder.InfantryCount);
-        this.SupportCapacity = new CapacityValue(0, 0, () => this.Builder.SupportCount);
-        this.VehicleCapacity = new CapacityValue(0, 0, () => this.Builder.VehicleCount);
+        this.InfantryCapacity = new CapacityValue(0, 0, () => this.Builder?.InfantryCount ?? 0);
+        this.SupportCapacity = new CapacityValue(0, 0, () => this.Builder?.SupportCount ?? 0);
+        this.VehicleCapacity = new CapacityValue(0, 0, () => this.Builder?.VehicleCount ?? 0);
 
     }
 
@@ -267,27 +266,27 @@ public class CompanyBuilderViewModel : IViewModel {
         _ = Task.Run(() => {
 
             // Get available squads
-            this.m_availableSquads = BlueprintManager.GetCollection<SquadBlueprint>()
+            BlueprintManager.GetCollection<SquadBlueprint>()
                 .FilterByMod(this.CompanyGUID)
                 .Filter(x => x.Army == this.CompanyFaction.ToString())
                 .Filter(x => !x.Types.IsVehicleCrew)
-                .ToList();
+                .ForEach(this.m_availableSquads.Add);
 
             // Get available crews
-            this.m_availableCrews = BlueprintManager.GetCollection<SquadBlueprint>()
+            BlueprintManager.GetCollection<SquadBlueprint>()
                 .FilterByMod(this.CompanyGUID)
                 .Filter(x => x.Army == this.CompanyFaction.ToString())
                 .Filter(x => x.Types.IsVehicleCrew)
-                .ToList();
+                .ForEach(this.m_availableCrews.Add);
 
             // Get faction data
             var faction = this.m_activeModPackage.FactionSettings[this.CompanyFaction];
 
             // Get available abilities
-            this.m_abilities = BlueprintManager.GetCollection<AbilityBlueprint>()
+            BlueprintManager.GetCollection<AbilityBlueprint>()
                 .FilterByMod(this.CompanyGUID)
                 .Filter(x => faction.Abilities.Select(y => y.Blueprint).Contains(x.Name))
-                .ToList();
+                .ForEach(this.m_abilities.Add);
 
             // Populate lists
             Application.Current.Dispatcher.Invoke(() => {
@@ -336,6 +335,14 @@ public class CompanyBuilderViewModel : IViewModel {
 
         // Create display
         SquadSlotViewModel unitSlot = new(builder, this.OnUnitClicked, this.OnUnitRemoveClicked);
+        unitSlot.PropertyChanged += (sender, args) => {
+            if (args.PropertyName is nameof(SquadSlotViewModel.SquadPhase)) { // Refresh order 
+                var collection = GetUnitCollection(builder);
+                var backup = collection.ToArray();
+                collection.Clear();
+                backup.OrderBy(x => (int)x.BuilderInstance.Phase).ForEach(collection.Add);
+            }
+        };
 
         // Add to collection based on category
         this.GetUnitCollection(builder).Add(unitSlot);
@@ -438,7 +445,7 @@ public class CompanyBuilderViewModel : IViewModel {
 
     }
 
-    private void OnItemAddClicked(object sender, AvailableItemViewModel itemBlueprint, object arg) {
+    private void OnItemAddClicked(object sender, AvailableItemViewModel itemBlueprint, object? arg) {
 
         if (itemBlueprint.Blueprint is SquadBlueprint sbp) {
 
@@ -453,11 +460,15 @@ public class CompanyBuilderViewModel : IViewModel {
         
     }
 
-    private void OnItemMove(object sender, AvailableItemViewModel itemSlot, object arg) {
+    private void OnItemMove(object sender, AvailableItemViewModel itemSlot, object? arg) {
 
         if (arg is MouseEventArgs mEvent) {
 
             if (mEvent.LeftButton is MouseButtonState.Pressed) {
+
+                // Bail if can add is not possible
+                if (!itemSlot.CanAdd)
+                    return;
 
                 DataObject obj = new();
                 obj.SetData("Source", this);
@@ -476,7 +487,7 @@ public class CompanyBuilderViewModel : IViewModel {
 
     }
 
-    private void OnItemDrop(object sender, CompanyBuilderViewModel squadSlot, object arg) {
+    private void OnItemDrop(object sender, CompanyBuilderViewModel squadSlot, object? arg) {
 
         if (arg is DragEventArgs dEvent) {
 
@@ -566,7 +577,7 @@ public class CompanyBuilderViewModel : IViewModel {
 
     }
 
-    private void OnTabChange(object sender, CompanyBuilderViewModel squadSlot, object arg) {
+    private void OnTabChange(object sender, CompanyBuilderViewModel squadSlot, object? arg) {
 
         if (arg is SelectionChangedEventArgs sEvent) {
 

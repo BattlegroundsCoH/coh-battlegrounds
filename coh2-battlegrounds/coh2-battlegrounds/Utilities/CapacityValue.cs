@@ -8,12 +8,13 @@ namespace BattlegroundsApp.Utilities;
 
 public class CapacityValue : ILocLabelArgumentsObject, INotifyPropertyChanged {
 
-    private Func<int> m_eval;
+    private Func<int>? m_eval;
     private int m_value;
     private int m_backerValue;
 
-    public event ObjectChangedEventHandler ObjectChanged;
-    public event PropertyChangedEventHandler PropertyChanged;
+    public event ObjectChangedEventHandler? ObjectChanged;
+
+    public event PropertyChangedEventHandler? PropertyChanged;
 
     public int Current {
         get => this.m_eval is null ? this.m_value : this.m_eval.Invoke();
@@ -22,9 +23,9 @@ public class CapacityValue : ILocLabelArgumentsObject, INotifyPropertyChanged {
 
     public int Capacity { get; set; }
 
-    public bool IsAtCapacity => this.Current == this.Capacity;
+    public bool IsAtCapacity => this.Current >= this.Capacity;
 
-    public CapacityValue(int curr, int max, Func<int> eval = null) {
+    public CapacityValue(int curr, int max, Func<int>? eval = null) {
         this.Current = curr;
         this.Capacity = max;
         this.m_eval = eval;

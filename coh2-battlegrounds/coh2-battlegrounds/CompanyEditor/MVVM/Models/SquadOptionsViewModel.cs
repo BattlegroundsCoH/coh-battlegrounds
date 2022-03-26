@@ -36,10 +36,10 @@ public class SquadOptionsViewModel {
         public CostExtension Cost => this.Ubp.Cost;
     }
 
-    public record PhaseButton(DeploymentPhase Phase, Func<bool> IsActive, CapacityValue PhaseCap, EventCommand Clicked) : INotifyPropertyChanged {
+    public record PhaseButton(DeploymentPhase Phase, Func<bool> IsActive, CapacityValue? PhaseCap, EventCommand Clicked) : INotifyPropertyChanged {
         public bool IsActivePhase => this.IsActive();
         public bool IsPickable { get; set; }
-        public event PropertyChangedEventHandler PropertyChanged;
+        public event PropertyChangedEventHandler? PropertyChanged;
         public ImageSource Icon => this.Phase switch {
             DeploymentPhase.PhaseInitial => App.ResourceHandler.GetIcon("phase_icons", "Icons_research_german_battle_phase_01"),
             DeploymentPhase.PhaseA => App.ResourceHandler.GetIcon("phase_icons", "Icons_research_german_battle_phase_02"),
@@ -55,7 +55,7 @@ public class SquadOptionsViewModel {
             _ => throw new InvalidEnumArgumentException()
         };
         public string Desc => this.Phase switch {
-            DeploymentPhase.PhaseInitial => BattlegroundsInstance.Localize.GetString("CompanySquadView_PhaseI_Desc", PhaseCap.ToArgs()),
+            DeploymentPhase.PhaseInitial => BattlegroundsInstance.Localize.GetString("CompanySquadView_PhaseI_Desc", PhaseCap?.ToArgs() ?? Array.Empty<object>()),
             DeploymentPhase.PhaseA => BattlegroundsInstance.Localize.GetString("CompanySquadView_PhaseA_Desc"),
             DeploymentPhase.PhaseB => BattlegroundsInstance.Localize.GetString("CompanySquadView_PhaseB_Desc"),
             DeploymentPhase.PhaseC => BattlegroundsInstance.Localize.GetString("CompanySquadView_PhaseC_Desc"),
@@ -71,7 +71,7 @@ public class SquadOptionsViewModel {
     public record DeployButton(DeploymentMethod Method, Func<bool> IsActive, EventCommand Clicked) : INotifyPropertyChanged {
         public bool IsActiveMethod => this.IsActive();
         public bool IsTransportOptionsVisible => this.IsActiveMethod && this.Method is not DeploymentMethod.None;
-        public event PropertyChangedEventHandler PropertyChanged;
+        public event PropertyChangedEventHandler? PropertyChanged;
         public ImageSource Icon => this.Method switch {
             DeploymentMethod.None => App.ResourceHandler.GetIcon("deploy_icons", "Icons_bg_deploy_none"),
             DeploymentMethod.DeployAndExit => App.ResourceHandler.GetIcon("deploy_icons", "Icons_bg_deploy_drop_exit"),
@@ -98,7 +98,7 @@ public class SquadOptionsViewModel {
 
     public record DeployUnitButton(SquadBlueprint Blueprint, Func<bool> IsActive, Func<CostExtension, CostExtension> CostEval, EventCommand Clicked) : INotifyPropertyChanged {
         public bool IsActiveMethod => this.IsActive();
-        public event PropertyChangedEventHandler PropertyChanged;
+        public event PropertyChangedEventHandler? PropertyChanged;
         public ImageSource Icon => App.ResourceHandler.GetIcon("unit_icons", this.Blueprint.UI.Icon);
         public string Title => GameLocale.GetString(this.Blueprint.UI.ScreenName);
         public string Desc => GameLocale.GetString(this.Blueprint.UI.LongDescription);
@@ -164,7 +164,7 @@ public class SquadOptionsViewModel {
         this.CompanyBuilder = companyBuilder;
 
         // Create relay command
-        this.SaveExitCommand = new(CloseModal);
+        this.SaveExitCommand = new(this.CloseModal);
 
         // Collect all abilities
         var abilities = this.BuilderInstance.Abilities.Filter(x => x.UI.Icon is not "").Filter(x => App.ResourceHandler.HasIcon("ability_icons", x.UI.Icon));
@@ -219,8 +219,12 @@ public class SquadOptionsViewModel {
 
     private void UpgradeCommand(object sender, MouseEventArgs args) {
 
+        // Bail if null
+        if (sender is not FrameworkElement frameworkElement)
+            return;
+
         // Grab model
-        if ((sender as FrameworkElement).DataContext is not UpgradeButton model) {
+        if (frameworkElement.DataContext is not UpgradeButton model) {
             return;
         }
 
@@ -262,8 +266,12 @@ public class SquadOptionsViewModel {
 
     private void PhaseCommand(object sender, MouseEventArgs args) {
 
+        // Bail if null
+        if (sender is not FrameworkElement frameworkElement)
+            return;
+
         // Grab model
-        if ((sender as FrameworkElement).DataContext is not PhaseButton model) {
+        if (frameworkElement.DataContext is not PhaseButton model) {
             return;
         }
 
@@ -286,8 +294,12 @@ public class SquadOptionsViewModel {
 
     private void DeployCommand(object sender, MouseEventArgs args) {
 
+        // Bail if null
+        if (sender is not FrameworkElement frameworkElement)
+            return;
+
         // Grab model
-        if ((sender as FrameworkElement).DataContext is not DeployButton model) {
+        if (frameworkElement.DataContext is not DeployButton model) {
             return;
         }
 
@@ -296,9 +308,11 @@ public class SquadOptionsViewModel {
         if (model.Method is DeploymentMethod.None) {
             this.BuilderInstance.SetTransportBlueprint(string.Empty);
         } else if (this.BuilderInstance.Transport is null && model.Method is not DeploymentMethod.None) {
-            this.BuilderInstance.SetTransportBlueprint(this.DeployUnits.FirstOrDefault().Blueprint); 
-            foreach (var bp in this.DeployUnits) {
-                bp.Update();
+            if (this.DeployUnits.FirstOrDefault() is DeployUnitButton bttn) {
+                this.BuilderInstance.SetTransportBlueprint(bttn.Blueprint);
+                foreach (var bp in this.DeployUnits) {
+                    bp.Update();
+                }
             }
         } 
 
@@ -311,8 +325,12 @@ public class SquadOptionsViewModel {
 
     private void DeployUnitCommand(object sender, MouseEventArgs args) {
 
+        // Bail if null
+        if (sender is not FrameworkElement frameworkElement)
+            return;
+
         // Grab model
-        if ((sender as FrameworkElement).DataContext is not DeployUnitButton model) {
+        if (frameworkElement.DataContext is not DeployUnitButton model) {
             return;
         }
 
@@ -336,7 +354,9 @@ public class SquadOptionsViewModel {
 
     }
 
-    public static void CloseModal()
-        => App.ViewManager.GetRightsideModalControl()?.CloseModal();
+    public void CloseModal() {
+        this.OnClose();
+        App.ViewManager.GetRightsideModalControl()?.CloseModal();
+    }
 
 }

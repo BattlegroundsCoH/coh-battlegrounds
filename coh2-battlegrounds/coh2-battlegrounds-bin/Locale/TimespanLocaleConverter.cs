@@ -15,11 +15,11 @@ public sealed class TimespanLocaleConverter : LocaleConverter<TimeSpan> {
     /// <returns>The localised string representation of the <see cref="TimeSpan"/> instance.</returns>
     public override string GetLocalisedString(Localize locale, TimeSpan localeObject) {
         if (localeObject.Hours > 0)
-            return locale.GetString("TimeSpan_HHMMSS", localeObject.Hours.ToString("00"), localeObject.Minutes.ToString("00"), localeObject.Seconds.ToString("00"));
+            return locale.GetString("TimeSpan_HHMMSS", localeObject.Hours.ToString("0"), localeObject.Minutes.ToString("0"), localeObject.Seconds.ToString("0"));
         else if (localeObject.Minutes > 0)
-            return locale.GetString("TimeSpan_MMSS", localeObject.Minutes.ToString("00"), localeObject.Seconds.ToString("00"));
+            return locale.GetString("TimeSpan_MMSS", localeObject.Minutes.ToString("0"), localeObject.Seconds.ToString("0"));
         else
-            return locale.GetString("TimeSpan_SS", localeObject.Seconds.ToString("00"));
+            return locale.GetString("TimeSpan_SS", localeObject.Seconds.ToString("0"));
     }
 
 }

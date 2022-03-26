@@ -10,7 +10,7 @@ using BattlegroundsApp.Resources;
 
 namespace BattlegroundsApp.CompanyEditor.MVVM.Models;
 
-public delegate void AvailableItemViewModelEvent(object sender, AvailableItemViewModel availableSquadViewModel, object args = null);
+public delegate void AvailableItemViewModelEvent(object sender, AvailableItemViewModel availableSquadViewModel, object? args = null);
 
 public delegate bool IsBlueprintAvailableHandler(Blueprint blueprint);
 
@@ -34,7 +34,7 @@ public class AvailableItemViewModel : IViewModel, INotifyPropertyChanged {
 
     public bool SingleInstanceOnly => false; // This will allow us to override
 
-    public event PropertyChangedEventHandler PropertyChanged;
+    public event PropertyChangedEventHandler? PropertyChanged;
 
     public AvailableItemViewModel(Blueprint bp, AvailableItemViewModelEvent onAdd, AvailableItemViewModelEvent onMove, IsBlueprintAvailableHandler addable) {
 

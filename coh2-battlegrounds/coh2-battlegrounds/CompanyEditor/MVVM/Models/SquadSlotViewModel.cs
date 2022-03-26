@@ -1,4 +1,6 @@
 ﻿using System;
+using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
@@ -13,7 +15,7 @@ namespace BattlegroundsApp.CompanyEditor.MVVM.Models;
 
 public delegate void SquadSlotViewModelEvent(object sender, SquadSlotViewModel slotViewModel);
 
-public class SquadSlotViewModel : IViewModel {
+public class SquadSlotViewModel : IViewModel, INotifyPropertyChanged {
 
     public static readonly ImageSource VetRankAchieved
             = new BitmapImage(new Uri($"pack://application:,,,/Resources/ingame/vet/vstar_yes.png"));
@@ -21,31 +23,31 @@ public class SquadSlotViewModel : IViewModel {
     public static readonly ImageSource VetRankNotAchieved
         = new BitmapImage(new Uri($"pack://application:,,,/Resources/ingame/vet/vstar_no.png"));
 
+    public event PropertyChangedEventHandler? PropertyChanged;
+
     public string SquadName { get; set; }
 
     public string SquadPortrait { get; set; }
 
     public string SquadSymbol { get; set; }
 
-    public BitmapImage SquadVeterancy { get; set; }
-
     public CostExtension SquadCost { get; set; }
 
     public bool SquadIsTransported { get; set; }
 
-    public ImageSource SquadTransportIcon { get; set; }
+    public ImageSource? SquadTransportIcon { get; set; }
 
     public UnitBuilder BuilderInstance { get; }
 
-    public ImageSource Rank1 { get; } = VetRankNotAchieved;
+    public ImageSource Rank1 { get; private set; } = VetRankNotAchieved;
 
-    public ImageSource Rank2 { get; } = VetRankNotAchieved;
+    public ImageSource Rank2 { get; private set; } = VetRankNotAchieved;
 
-    public ImageSource Rank3 { get; } = VetRankNotAchieved;
+    public ImageSource Rank3 { get; private set; } = VetRankNotAchieved;
 
-    public ImageSource Rank4 { get; } = VetRankNotAchieved;
+    public ImageSource Rank4 { get; private set; } = VetRankNotAchieved;
 
-    public ImageSource Rank5 { get; } = VetRankNotAchieved;
+    public ImageSource Rank5 { get; private set; } = VetRankNotAchieved;
 
     public string SquadPhase => this.BuilderInstance.Phase switch {
         DeploymentPhase.PhaseInitial => "I",
@@ -74,8 +76,20 @@ public class SquadSlotViewModel : IViewModel {
         this.SquadPortrait = this.BuilderInstance.Blueprint.UI.Portrait;
         this.SquadSymbol = this.BuilderInstance.Blueprint.UI.Symbol;
 
+        // Refresh data
+        this.RefreshData();
+
+    }
+
+    [MemberNotNull(nameof(SquadName), nameof(SquadCost))]
+    public void RefreshData() {
+
+        // Set basic info
+        this.SquadName = GameLocale.GetString(this.BuilderInstance.Blueprint.UI.ScreenName);
+        this.SquadCost = this.BuilderInstance.GetCost();
+
         // Get rank
-        var rankLevel =  this.BuilderInstance.Rank;
+        var rankLevel = this.BuilderInstance.Rank;
 
         // Update rank icons
         this.Rank1 = rankLevel >= 1 ? VetRankAchieved : VetRankNotAchieved;
@@ -84,27 +98,23 @@ public class SquadSlotViewModel : IViewModel {
         this.Rank4 = rankLevel >= 4 ? VetRankAchieved : VetRankNotAchieved;
         this.Rank5 = rankLevel == 5 ? VetRankAchieved : VetRankNotAchieved;
 
-        // Refresh data
-        this.RefreshData();
-
-    }
-
-    public void RefreshData() {
-
-        // Set basic info
-        this.SquadName = GameLocale.GetString(this.BuilderInstance.Blueprint.UI.ScreenName);
-        this.SquadCost = this.BuilderInstance.GetCost();
-
-        // Get veterancy
-        if (this.BuilderInstance.Rank > 0) {
-            this.SquadVeterancy = new BitmapImage(new Uri($"pack://application:,,,/Resources/ingame/vet/vstar{this.BuilderInstance.Rank}.png"));
-        }
-
         // Set transport
-        this.SquadIsTransported = this.BuilderInstance.Transport is not null;
+        var transportBp = this.BuilderInstance.Transport;
+        this.SquadIsTransported = transportBp is not null;
         if (this.SquadIsTransported && App.ResourceHandler.HasIcon("symbol_icons", this.BuilderInstance.Transport.UI.Symbol)) {
             this.SquadTransportIcon = App.ResourceHandler.GetIcon("symbol_icons", this.BuilderInstance.Transport.UI.Symbol);
         }
+
+        // Refresh
+        this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(this.Rank1)));
+        this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(this.Rank2)));
+        this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(this.Rank3)));
+        this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(this.Rank4)));
+        this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(this.Rank5)));
+        this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(this.SquadCost)));
+        this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(this.SquadName)));
+        this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(this.SquadPhase)));
+        this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(this.SquadIsTransported)));
 
     }
 
