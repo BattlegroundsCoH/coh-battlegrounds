@@ -32,18 +32,27 @@ public partial class CompanyBuilderView : UserControl {
         => this.ViewModel.Drop?.Invoke(this, this.ViewModel, e);
 
     private void ChangeMainTab(object sender, SelectionChangedEventArgs e) {
+        if (this.DataContext is null) {
+            return;
+        }
         this.ViewModel.Change?.Invoke(this, this.ViewModel, e);
         this.m_selectedMainTab = this.ViewModel.SelectedMainTab;
         this.RHS_ScrollBar_Refresh();
     }
 
     private void ChangeSubUnitTab(object sender, SelectionChangedEventArgs e) {
+        if (this.DataContext is null) {
+            return;
+        }
         this.ViewModel.Change?.Invoke(this, this.ViewModel, e);
         this.m_selectedSubUnitTab = this.ViewModel.SelectedUnitTabItem;
         this.RHS_ScrollBar_Refresh();
     }
 
     private void ChangeSubAbilityTab(object sender, SelectionChangedEventArgs e) {
+        if (this.DataContext is null) {
+            return;
+        }
         this.ViewModel.Change?.Invoke(this, this.ViewModel, e);
         this.m_selectedSubAbilityTab = this.ViewModel.SelectedAbilityTabItem;
         this.RHS_ScrollBar_Refresh();
