@@ -20,7 +20,12 @@ namespace Battlegrounds.Game.Database.Management {
     public static class DatabaseManager {
 
         private static bool __databasesLoaded = false;
-        private static string __databaseFoundPath = null;
+        private static string __databaseFoundPath = string.Empty;
+
+        /// <summary>
+        /// Get the path of the mod database folder
+        /// </summary>
+        public static readonly string ModDatabaseSource = "usr\\mods\\mod_db\\";
 
         /// <summary>
         /// Has the databases been loaded.
@@ -94,28 +99,37 @@ namespace Battlegrounds.Game.Database.Management {
         /// </summary>
         /// <returns>The first valid database path found or the empty string if no path is found.</returns>
         public static string SolveDatabasepath() {
-            if (__databaseFoundPath != null) {
+            
+            // Bail fast if already solved
+            if (!string.IsNullOrEmpty(__databaseFoundPath)) {
                 return __databaseFoundPath;
-            } else {
-                string[] testPaths = new string[] {
+            }
+
+            // Define paths to test existance of.
+            string[] testPaths = new string[] {
                     "..\\..\\..\\..\\..\\..\\db-battlegrounds\\",
                     "..\\..\\..\\..\\..\\db-battlegrounds\\",
                     "..\\..\\..\\..\\db-battlegrounds\\",
                     "..\\..\\..\\db-battlegrounds\\",
                     "db-battlegrounds\\",
-                    "bin\\data\\db\\", // should be the place for release builds!
-                    "usr\\mods\\mod_db\\", // should be the place for mods
+                    "bg_common\\data\\db\\", // should be the place for release builds!
+                    ModDatabaseSource, // should be the place for mods
                 };
-                foreach (string path in testPaths) {
-                    if (Directory.Exists(path)) {
-                        __databaseFoundPath = Path.GetFullPath(path);
-                        return __databaseFoundPath;
-                    }
+            
+            // Do exist check, return first
+            foreach (string path in testPaths) {
+                if (Directory.Exists(path)) {
+                    __databaseFoundPath = Path.GetFullPath(path);
+                    return __databaseFoundPath;
                 }
-                __databaseFoundPath = string.Empty;
-                Trace.WriteLine("Failed to find any valid path to the database folder. Please verify install path.", nameof(DatabaseManager));
-                return __databaseFoundPath;
             }
+
+            // Log failure
+            Trace.WriteLine("Failed to find any valid path to the database folder. Please verify install path.", nameof(DatabaseManager));
+
+            // Return none
+            return __databaseFoundPath;
+
         }
 
     }

@@ -220,7 +220,7 @@ namespace Battlegrounds.Functional {
         /// <param name="element"></param>
         /// <returns></returns>
         public static T[] Except<T>(this T[] array, T element) {
-            int i = array.IndexOf(x => x.Equals(element));
+            int i = array.IndexOf(x => x?.Equals(element) ?? false);
             if (i == -1)
                 return array;
             var before = array[0..i];
