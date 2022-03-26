@@ -3,6 +3,8 @@ using System.IO;
 using System.Diagnostics;
 using System.Windows;
 using System.Globalization;
+using System.Collections;
+using System.Diagnostics.CodeAnalysis;
 
 using Battlegrounds;
 using Battlegrounds.Networking;
@@ -15,7 +17,6 @@ using BattlegroundsApp.Resources;
 using BattlegroundsApp.MVVM;
 using BattlegroundsApp.MVVM.Models;
 using BattlegroundsApp.CompanyEditor.MVVM.Models;
-using System.Collections;
 
 namespace BattlegroundsApp {
 
@@ -24,22 +25,33 @@ namespace BattlegroundsApp {
     /// </summary>
     public partial class App : Application {
 
-        private static AppViewManager __viewManager;
-        private static ResourceHandler __handler;
-        private static Logger __logger;
+        private static AppViewManager? __viewManager;
+        private static ResourceHandler? __handler;
+        private static Logger? __logger;
 
-        private static LeftMenu __lmenu;
-        private static LobbyBrowserViewModel __lobbyBrowser;
-        private static CompanyBrowserViewModel __companyBrowser;
+        private static LeftMenu? __lmenu;
+        private static LobbyBrowserViewModel? __lobbyBrowser;
+        private static CompanyBrowserViewModel? __companyBrowser;
 
-        public static ResourceHandler ResourceHandler => __handler;
+        [NotNull] // "never" null; and invalid operation is throw if it is...
+        public static ResourceHandler ResourceHandler 
+            => IsStarted ? __handler : throw new InvalidOperationException("Cannot get resource handler before application window has initialised.");
 
-        public static AppViewManager ViewManager => __viewManager;
+        [NotNull] // "never" null; and invalid operation is throw if it is...
+        public static AppViewManager ViewManager 
+            => IsStarted ? __viewManager : throw new InvalidOperationException("Cannot get view manager before application window has initialised.");
 
+        [MemberNotNullWhen(true, nameof(__viewManager), nameof(__logger), nameof(__handler))]
+        public static bool IsStarted { get; private set; }
+
+        [MemberNotNull(nameof(__viewManager), nameof(__logger), nameof(__handler))]
         private void App_Startup(object sender, StartupEventArgs e) {
 
             // Setup logger
             __logger = new();
+
+            // Verify
+            this.VerifyIntegrity();
 
             // Setup resource handler
             __handler = new();
@@ -71,10 +83,20 @@ namespace BattlegroundsApp {
 
             // Create other views that are directly accessible from LHS
             __companyBrowser = __viewManager.CreateDisplayIfNotFound<CompanyBrowserViewModel>(() => new()) ?? throw new Exception("Failed to create company browser view model!");
+          
+            // Set as started
+            IsStarted = true;
 
             // Set main window and show
             this.MainWindow = window;
             this.MainWindow.Show();
+
+
+        }
+
+        private void VerifyIntegrity() {
+
+            // TODO: Verify we have the bare essentials to run (Otherwise faulty install)
 
         }
 
@@ -84,6 +106,9 @@ namespace BattlegroundsApp {
             if (!BattlegroundsInstance.Steam.HasUser) {
                 GetSteamUserWithPermission(window); // We don't so try and get one
             }
+
+            // Set network user
+            NetworkInterface.SelfIdentifier = BattlegroundsInstance.Steam.User.ID;
 
             // Trigger discord setup
             this.SetupDiscord();
@@ -133,7 +158,12 @@ namespace BattlegroundsApp {
             }
         }
 
-        private void MainWindow_Closed(object sender, EventArgs e) {
+        private void MainWindow_Closed(object? sender, EventArgs e) {
+
+            // Nothing to do, we have not even started...
+            if (!IsStarted) {
+                return;
+            }
 
             // TODO: Close active view (in case it's in modifier state, like the company builder)
 
@@ -145,6 +175,9 @@ namespace BattlegroundsApp {
 
             // Save log
             __logger.SaveAndClose(0);
+
+            // Set started flag
+            IsStarted = false;
 
             // Exit
             Environment.Exit(0);

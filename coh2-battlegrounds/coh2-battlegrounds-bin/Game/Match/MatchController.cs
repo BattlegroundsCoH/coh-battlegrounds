@@ -23,9 +23,9 @@ namespace Battlegrounds.Game.Match {
     /// </summary>
     public sealed class MatchController {
 
-        private IMatchStarter m_starter;
-        private IMatchAnalyzer m_analyzer;
-        private IMatchFinalizer m_finalizer;
+        private IMatchStarter? m_starter;
+        private IMatchAnalyzer? m_analyzer;
+        private IMatchFinalizer? m_finalizer;
         private IStartupStrategy m_startupStrategy;
         private IAnalyzeStrategy m_analyzeStrategy;
         private IFinalizeStrategy m_finalizeStrategy;
@@ -33,12 +33,12 @@ namespace Battlegrounds.Game.Match {
         /// <summary>
         /// Occurs when the whole match is completed.
         /// </summary>
-        public event MatchCompletedHandler Complete;
+        public event MatchCompletedHandler? Complete;
 
         /// <summary>
         /// Occurs when the controller receives an error message.
         /// </summary>
-        public event MatchErrorHandler Error;
+        public event MatchErrorHandler? Error;
 
         /// <summary>
         /// Create a new <see cref="MatchController"/> instance with default strategies.

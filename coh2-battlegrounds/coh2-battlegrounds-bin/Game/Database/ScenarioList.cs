@@ -11,6 +11,7 @@ using Battlegrounds.Compiler;
 using Battlegrounds.Game.Database.Management;
 using Battlegrounds.Lua.Debugging;
 using System.Globalization;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Battlegrounds.Game.Database {
 
@@ -19,7 +20,7 @@ namespace Battlegrounds.Game.Database {
     /// </summary>
     public static class ScenarioList {
 
-        private static Dictionary<string, Scenario> __scenarios;
+        private static Dictionary<string, Scenario>? __scenarios;
 
         /// <summary>
         /// Create and load a basic list of scenarios.
@@ -79,7 +80,8 @@ namespace Battlegrounds.Game.Database {
             List<Scenario> workshopScenarios = new();
             if (File.Exists(workshop_dbpath)) {
                 string rawJson = File.ReadAllText(workshop_dbpath);
-                _ = JsonSerializer.Deserialize<Scenario[]>(rawJson).ForEach(x => workshopScenarios.Add(x));
+                var scenarios = JsonSerializer.Deserialize<Scenario[]?>(rawJson);
+                scenarios?.ForEach(x => workshopScenarios.Add(x));
             }
 
             return workshopScenarios;
@@ -96,6 +98,12 @@ namespace Battlegrounds.Game.Database {
         }
 
         private static void LoadNewWorkshopScenarios(List<Scenario> workshopScenarios, out int newWorkshopEntries) {
+
+            // Bail if no scenario list
+            if (__scenarios is null) {
+                newWorkshopEntries = 0;
+                return;
+            }
 
             // Set new entry counter
             newWorkshopEntries = 0;
@@ -166,7 +174,7 @@ namespace Battlegrounds.Game.Database {
 
         }
 
-        public static Scenario GetScenarioFromDirectory(string scenarioDirectoryPath, string sga = "MPScenarios.sga", string mmSavePath = "bin\\gfx\\map_icons\\") {
+        public static Scenario? GetScenarioFromDirectory(string scenarioDirectoryPath, string sga = "MPScenarios.sga", string mmSavePath = "bin\\gfx\\map_icons\\") {
 
             // If valid scenario path
             if (Directory.Exists(scenarioDirectoryPath)) {
@@ -178,8 +186,8 @@ namespace Battlegrounds.Game.Database {
 
                 // Get scenario files
                 string[] scenarioFiles = Directory.GetFiles(scenarioDirectoryPath);
-                string info = scenarioFiles.FirstOrDefault(x => x.EndsWith(".info", false, CultureInfo.InvariantCulture));
-                string opt = scenarioFiles.FirstOrDefault(x => x.EndsWith(".options", false, CultureInfo.InvariantCulture));
+                string? info = scenarioFiles.FirstOrDefault(x => x.EndsWith(".info", false, CultureInfo.InvariantCulture));
+                string? opt = scenarioFiles.FirstOrDefault(x => x.EndsWith(".options", false, CultureInfo.InvariantCulture));
 
                 // Make sure there's actually a info file
                 if (string.IsNullOrEmpty(info)) {
@@ -192,7 +200,7 @@ namespace Battlegrounds.Game.Database {
                 }
 
                 // Define scenario variable
-                Scenario scen = null;
+                Scenario? scen = null;
 
                 try {
 
@@ -240,6 +248,12 @@ namespace Battlegrounds.Game.Database {
         /// <param name="scenario">The new scenario to add.</param>
         /// <returns>Will return true if the <see cref="Scenario"/> was added. Otherwise false - <see cref="Scenario"/> already exists.</returns>
         public static bool AddScenario(Scenario scenario) {
+            
+            // Make sure we have something to add scenario to
+            if (__scenarios is null)
+                return false;
+
+            // Try add scenario
             string relpath = Path.GetFileNameWithoutExtension(scenario.RelativeFilename);
             if (!__scenarios.ContainsKey(relpath)) {
                 __scenarios.Add(relpath, scenario);
@@ -247,6 +261,7 @@ namespace Battlegrounds.Game.Database {
             } else {
                 return false;
             }
+
         }
 
         /// <summary>
@@ -256,14 +271,27 @@ namespace Battlegrounds.Game.Database {
         /// <returns>The found scenario. If no matching scenario is found, an exception is thrown.</returns>
         /// <exception cref="ArgumentNullException"/>
         /// <exception cref="KeyNotFoundException"/>
-        public static Scenario FromFilename(string filename) => __scenarios[filename];
+        public static Scenario? FromFilename(string filename) => __scenarios is not null ? __scenarios[filename] : null;
 
         /// <summary>
         /// 
         /// </summary>
         /// <param name="filename"></param>
         /// <returns></returns>
-        public static Scenario FromRelativeFilename(string filename) => __scenarios.FirstOrDefault(x => x.Value.RelativeFilename == filename).Value;
+        public static Scenario? FromRelativeFilename(string filename) => __scenarios?.FirstOrDefault(x => x.Value.RelativeFilename == filename).Value;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="filename"></param>
+        /// <returns></returns>
+        public static string ScenarioNameFromRelativeFilename(string filename) {
+            if (FromRelativeFilename(filename) is Scenario scen) {
+                return scen.Name;
+            } else {
+                return filename;
+            }
+        }
 
         /// <summary>
         /// 
@@ -271,7 +299,11 @@ namespace Battlegrounds.Game.Database {
         /// <param name="identifier"></param>
         /// <param name="scenario"></param>
         /// <returns></returns>
-        public static bool TryFindScenario(string identifier, out Scenario scenario) {
+        public static bool TryFindScenario(string identifier, [NotNullWhen(true)] out Scenario? scenario) {
+            scenario = null;
+            if (__scenarios is null) {
+                return false;
+            }
             if (__scenarios.ContainsKey(identifier)) {
                 scenario = __scenarios[identifier];
                 return true;
@@ -281,7 +313,7 @@ namespace Battlegrounds.Game.Database {
             }
         }
 
-        public static List<Scenario> GetList() => __scenarios.Values.Where(x => x.HasValidInfoOrOptionsFile).ToList();
+        public static List<Scenario> GetList() => __scenarios?.Values.Where(x => x.HasValidInfoOrOptionsFile).ToList() ?? new();
 
     }
 

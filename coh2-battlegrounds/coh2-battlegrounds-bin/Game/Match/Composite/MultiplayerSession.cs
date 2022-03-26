@@ -17,21 +17,21 @@ namespace Battlegrounds.Game.Match.Composite {
         private bool m_isStarted;
         private bool m_isCancelled;
         private bool m_hasSuccessAnalysis;
-        private LobbyAPI m_lobby;
-        private IPlayStrategy m_playStrategyResult;
-        private IAnalyzedMatch m_analyzedMatch;
+        private readonly LobbyAPI m_lobby;
+        private IPlayStrategy? m_playStrategyResult;
+        private IAnalyzedMatch? m_analyzedMatch;
 
         public bool HasStarted => this.m_isStarted;
 
         public bool IsCancelled => this.m_isCancelled;
 
-        public IPlayStrategy PlayObject => this.m_playStrategyResult;
+        public IPlayStrategy? PlayObject => this.m_playStrategyResult;
 
-        public IAnalyzedMatch MatchAnalysis => this.m_analyzedMatch;
+        public IAnalyzedMatch? MatchAnalysis => this.m_analyzedMatch;
 
         public bool AnalysisSuccess => this.m_hasSuccessAnalysis;
 
-        public event AnalysisCancelledHandler AnalysisCancelled;
+        public event AnalysisCancelledHandler? AnalysisCancelled;
 
         public MultiplayerSession(LobbyAPI lobby) {
             this.m_isCancelled = false;

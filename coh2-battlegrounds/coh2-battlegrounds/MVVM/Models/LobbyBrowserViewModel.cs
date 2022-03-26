@@ -19,9 +19,9 @@ using BattlegroundsApp.Utilities;
 namespace BattlegroundsApp.MVVM.Models {
 
     public class LobbyBrowserButton {
-        public ICommand Click { get; init; }
-        public LocaleKey Text { get; init; }
-        public LocaleKey Tooltip { get; init; }
+        public ICommand? Click { get; init; }
+        public LocaleKey? Text { get; init; }
+        public LocaleKey? Tooltip { get; init; }
     }
 
     public class LobbyBrowserViewModel : IViewModel {
@@ -53,7 +53,7 @@ namespace BattlegroundsApp.MVVM.Models {
 
         public bool SingleInstanceOnly => true;
 
-        public object SelectedLobby { get; set; }
+        public object? SelectedLobby { get; set; }
 
         public int SelectedLobbyIndex { get; set; }
 
@@ -143,10 +143,10 @@ namespace BattlegroundsApp.MVVM.Models {
 
         }
 
-        private void HostLobbyResponse(bool result, LobbyAPI lobby) {
+        private void HostLobbyResponse(bool isSuccess, LobbyAPI? lobby) {
 
             // If lobby was created.
-            if (result) {
+            if (isSuccess && lobby is not null) {
 
                 // Log success
                 Trace.WriteLine("Succsefully hosted lobby.", nameof(LobbyBrowserViewModel));
@@ -195,9 +195,9 @@ namespace BattlegroundsApp.MVVM.Models {
             }
         }
 
-        private void JoinLobbyResponse(bool joined, LobbyAPI lobby) { 
+        private void JoinLobbyResponse(bool joined, LobbyAPI? lobby) { 
             
-            if (joined) {
+            if (joined && lobby is not null) {
 
                 // Log success
                 Trace.WriteLine("Succsefully joined lobby.", nameof(LobbyBrowserViewModel));

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Linq;
 
 using Battlegrounds.Game.DataCompany;
@@ -24,7 +23,10 @@ namespace Battlegrounds.Game.Match.Finalizer {
             }
 
             // Get handler
-            LobbyAPI handler = synchronizeObject as LobbyAPI;
+            if (synchronizeObject is not LobbyAPI handler) {
+                Trace.WriteLine("{Error} -- The synchronizeObject is NULL and changes will therefore not be saved anywhere!", nameof(MultiplayerFinalizer));
+                return;
+            }
 
             // Get player results
             var playerFiles = this.m_companies.Where(x => x.Key.SteamID != BattlegroundsInstance.Steam.User.ID).Select(
@@ -52,14 +54,15 @@ namespace Battlegrounds.Game.Match.Finalizer {
 
         }
 
-        private void UploadResults(LobbyAPI api, ServerMatchResults matchResults, LobbyPlayerCompanyFile[] companyFiles) {
+        private static void UploadResults(LobbyAPI api, ServerMatchResults matchResults, LobbyPlayerCompanyFile[] companyFiles) {
 
             // Loop over the files and trigger appropriate events
             for (int i = 0; i < companyFiles.Length; i++) {
-                if (companyFiles[i].playerID == api.Self.ID) {
-                    throw new NotImplementedException();
-                } else {
-                    api.ServerHandle.UploadCompany(companyFiles[i].playerID, companyFiles[i].playerCompanyData);
+                if (companyFiles[i].playerID != api.Self.ID) {
+                    if (api.ServerHandle.UploadCompany(companyFiles[i].playerID, companyFiles[i].playerCompanyData,
+                        (a,b) => Trace.WriteLine($"Uploading company {a}/{b} for player {companyFiles[i].playerID}", nameof(MultiplayerFinalizer))) != UploadResult.UPLOAD_SUCCESS) {
+                        Trace.WriteLine($"Failed to upload result company for player {companyFiles[i].playerID}", nameof(MultiplayerFinalizer));
+                    }
                 }
             }
 

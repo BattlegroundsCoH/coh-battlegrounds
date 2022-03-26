@@ -7,7 +7,15 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
 
     public delegate int LobbyDropdownModelSelectionChangedEvent<T>(int oldIndex, int newIndex, T newItem);
 
-    public class LobbyDropdownModel<T> : INotifyPropertyChanged {
+    public abstract class LobbyDropdownModel {
+
+        public abstract string DropdownID { get; }
+
+        public abstract string LabelContent { get; set; }
+
+    }
+
+    public class LobbyDropdownModel<T> : LobbyDropdownModel, INotifyPropertyChanged {
 
         private int m_index;
         private string m_label;
@@ -39,7 +47,7 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
 
         public Visibility ComponentVisible => this.IsVisible ? Visibility.Visible : Visibility.Hidden;
 
-        public string LabelContent {
+        public override string LabelContent {
             get => this.m_label;
             set {
                 this.m_label = value;
@@ -51,12 +59,15 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
 
         public LobbyDropdownModelSelectionChangedEvent<T> OnSelectionChanged { get; init; }
 
+        public override string DropdownID { get; }
+
         public int CurrentIndex {
             get => this.m_index;
             set => this.SelectionChanged(value);
         }
 
-        public LobbyDropdownModel(bool hostOnly, bool isHost) {
+        public LobbyDropdownModel(bool hostOnly, bool isHost, string uid = "") {
+            this.DropdownID = uid;
             this.IsHostOnly = hostOnly;
             this.IsHost = isHost;
             this.m_visible = true;
@@ -75,7 +86,7 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
             bool any = !this.IsHostOnly;
 
             // Return visiblity
-            return hostEnabled || any ? Visibility.Visible : Visibility.Collapsed;
+            return (hostEnabled || any) ? Visibility.Visible : Visibility.Collapsed;
 
         }
 
@@ -118,7 +129,7 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
 
             // Update
             var item = this.Items[index];
-            this.m_index = this.OnSelectionChanged?.Invoke(this.m_index, index, item) ?? -1;
+            this.m_index = this.OnSelectionChanged?.Invoke(this.m_index, index, item) ?? index;
 
         }
 

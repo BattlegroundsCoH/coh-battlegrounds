@@ -1,4 +1,6 @@
-﻿using Battlegrounds.Game.DataCompany;
+﻿using System.Diagnostics.CodeAnalysis;
+
+using Battlegrounds.Game.DataCompany;
 using Battlegrounds.Game.Match.Play;
 
 namespace Battlegrounds.Game.Match.Startup {
@@ -7,7 +9,7 @@ namespace Battlegrounds.Game.Match.Startup {
     /// Handle for getting the local company.
     /// </summary>
     /// <returns>A <see cref="Company"/> instance.</returns>
-    public delegate Company LocalCompanyHandle();
+    public delegate Company? LocalCompanyHandle();
 
     /// <summary>
     /// Handle for collecting the <see cref="SessionInfo"/> instance to generate <see cref="Session"/> data from.
@@ -21,7 +23,7 @@ namespace Battlegrounds.Game.Match.Startup {
     /// <param name="sender">The sending <see cref="IStartupStrategy"/> instance.</param>
     /// <param name="caller">The <see cref="object"/> that triggered the cancel event.</param>
     /// <param name="reason">The given reason for cancelling.</param>
-    public delegate void CancelHandler(IStartupStrategy sender, object caller, string reason);
+    public delegate void CancelHandler(IStartupStrategy sender, object? caller, string reason);
 
     /// <summary>
     /// Handler for handling information events triggered by <see cref="IStartupStrategy"/> objects.
@@ -29,7 +31,7 @@ namespace Battlegrounds.Game.Match.Startup {
     /// <param name="sender">The sending <see cref="IStartupStrategy"/> object.</param>
     /// <param name="caller">The <see cref="object"/> that triggered the information event.</param>
     /// <param name="message">The given missage.</param>
-    public delegate void InformationHandler(IStartupStrategy sender, object caller, string message);
+    public delegate void InformationHandler(IStartupStrategy sender, object? caller, string message);
 
     /// <summary>
     /// Strategy interface for handling game startup mechanisms.
@@ -130,7 +132,7 @@ namespace Battlegrounds.Game.Match.Startup {
         /// <param name="caller">The instance that called the method.</param>
         /// <param name="playStrategy">The resulting <see cref="IPlayStrategy"/> created from the startup strategy. (Tight coupling).</param>
         /// <returns>Should return <see langword="true"/> if startup should continue. Otherwise <see langword="false"/> if startup should terminate.</returns>
-        bool OnStart(object caller, out IPlayStrategy playStrategy);
+        bool OnStart(object caller, [NotNullWhen(true)] out IPlayStrategy? playStrategy);
 
         /// <summary>
         /// Invoked when the instance is to compile the match data.

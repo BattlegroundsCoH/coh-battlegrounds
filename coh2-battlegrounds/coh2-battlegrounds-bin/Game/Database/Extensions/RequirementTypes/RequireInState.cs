@@ -22,13 +22,13 @@ namespace Battlegrounds.Game.Database.Extensions.RequirementTypes {
         public bool IsCamouflaged { get; }
 
         public RequireInState(string ui, RequirementReason reason, Dictionary<string, object> properties) : base(ui, reason) {
-            this.InCombatSince = properties.GetValueOrDefault("in_combat_since", 0.0f);
-            this.IsGarrisoned = properties.GetValueOrDefault("garrisoned", false);
-            this.IsPinned = properties.GetValueOrDefault("pinned", false);
-            this.IsSuppressed = properties.GetValueOrDefault("suppressed", false);
-            this.IsNotMoving = properties.GetValueOrDefault("not_moving", false);
-            this.IsNotRetreating = properties.GetValueOrDefault("not_retreating", false);
-            this.IsCamouflaged = properties.GetValueOrDefault("camouflaged", false);
+            this.InCombatSince = properties.GetCastValueOrDefault("in_combat_since", 0.0f);
+            this.IsGarrisoned = properties.GetCastValueOrDefault("garrisoned", false);
+            this.IsPinned = properties.GetCastValueOrDefault("pinned", false);
+            this.IsSuppressed = properties.GetCastValueOrDefault("suppressed", false);
+            this.IsNotMoving = properties.GetCastValueOrDefault("not_moving", false);
+            this.IsNotRetreating = properties.GetCastValueOrDefault("not_retreating", false);
+            this.IsCamouflaged = properties.GetCastValueOrDefault("camouflaged", false);
         }
 
         public override bool IsTrue(Squad squad) => false;

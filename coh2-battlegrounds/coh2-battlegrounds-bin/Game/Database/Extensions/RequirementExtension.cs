@@ -67,9 +67,9 @@ namespace Battlegrounds.Game.Database.Extensions {
             };
 
         public static RequirementExtension CreateRequirement(Dictionary<string, object> lookup) => CreateRequirement(lookup["RequirementType"] as string,
-                lookup.GetValueOrDefault("UIText", string.Empty),
-                lookup.GetValueOrDefault("RequirementReason", RequirementReason.None),
-                lookup.GetValueOrDefault("RequirementProperties", new Dictionary<string, object>()));
+                lookup.GetCastValueOrDefault("UIText", string.Empty),
+                lookup.GetCastValueOrDefault("RequirementReason", RequirementReason.None),
+                lookup.GetCastValueOrDefault("RequirementProperties", new Dictionary<string, object>()));
 
         public static RequirementExtension CreateRequirement(string type, string ui, RequirementReason reason, Dictionary<string, object> properties)
             => type switch {

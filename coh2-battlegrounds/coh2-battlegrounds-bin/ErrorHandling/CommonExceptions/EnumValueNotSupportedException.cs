@@ -11,7 +11,7 @@ namespace Battlegrounds.ErrorHandling.CommonExceptions {
         /// <summary>
         /// Get the invalid enum value encountered. May be default if none is given.
         /// </summary>
-        public Enum InvalidComposition { get; }
+        public Enum? InvalidComposition { get; }
 
         /// <summary>
         /// Initialise a new <see cref="EnumValueNotSupportedException{T}"/> instance with no additional details.

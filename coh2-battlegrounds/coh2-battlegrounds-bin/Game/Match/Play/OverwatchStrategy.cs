@@ -7,10 +7,11 @@ namespace Battlegrounds.Game.Match.Play {
     /// </summary>
     public sealed class OverwatchStrategy : IPlayStrategy {
 
+        private readonly ISession m_session;
+
         private bool m_hasLaunched;
         private int m_procResponse;
-        private ISession m_session;
-        private IMatchData m_matchData;
+        private IMatchData? m_matchData;
 
         public ISession Session => this.m_session;
 

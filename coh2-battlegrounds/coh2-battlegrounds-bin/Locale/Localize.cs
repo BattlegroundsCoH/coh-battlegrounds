@@ -258,7 +258,11 @@ namespace Battlegrounds.Locale {
             } else {
                 if (key.LocaleSource == UndefinedSource) {
                     if (this.m_allText.FirstOrDefault(x => x.Key.LocaleID == key.LocaleID) is KeyValuePair<LocaleKey, string> kvp) {
-                        return kvp.Value;
+                        if (kvp.Value != null) {
+                            return kvp.Value;
+                        } else {
+                            return $"LOC: {key.LocaleID}";
+                        }
                     }
                 }
                 Trace.WriteLine($"Undefined locale key '{key.LocaleID}'@{key.LocaleSource}. (Lang : {this.Language})", nameof(Localize));

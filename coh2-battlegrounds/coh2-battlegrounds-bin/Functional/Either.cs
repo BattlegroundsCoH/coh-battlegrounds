@@ -1,36 +1,44 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Battlegrounds.Functional {
 
     /// <summary>
-    /// 
+    /// Struct holding either a value of type <typeparamref name="TOptionA"/> or a value of type <typeparamref name="TOptionB"/>.
     /// </summary>
-    /// <typeparam name="TOptionA"></typeparam>
-    /// <typeparam name="TOptionB"></typeparam>
-    public struct Either<TOptionA, TOptionB> {
+    /// <typeparam name="TOptionA">The first possible type.</typeparam>
+    /// <typeparam name="TOptionB">The second possible type.</typeparam>
+    public readonly struct Either<TOptionA, TOptionB> {
 
-        private readonly TOptionA m_a;
-        private readonly TOptionB m_b;
+        private readonly TOptionA? m_a;
+        private readonly TOptionB? m_b;
 
         /// <summary>
-        /// 
+        /// Represents a <see cref="Either{TOptionA, TOptionB}"/> instance where neither type is set.
         /// </summary>
+        public static readonly Either<TOptionA, TOptionB> Neither = new Either<TOptionA, TOptionB>(default, default);
+
+        /// <summary>
+        /// Get if the contained type is the first option.
+        /// </summary>
+        [MemberNotNullWhen(true, nameof(m_a))]
         public bool IsFirst { get; }
 
         /// <summary>
-        /// 
+        /// Get if the contained type is the second option.
         /// </summary>
+        [MemberNotNullWhen(true, nameof(m_b))]
         public bool IsSecond { get; }
 
         /// <summary>
-        /// 
+        /// Get if either type value is present.
         /// </summary>
         public bool Any => this.IsFirst || this.IsSecond;
 
         /// <summary>
-        /// 
+        /// Initialise new <see cref="Either{TOptionA, TOptionB}"/> instance where type option is <typeparamref name="TOptionA"/>.
         /// </summary>
-        /// <param name="a"></param>
+        /// <param name="a">The value of <typeparamref name="TOptionA"/>.</param>
         public Either(TOptionA a) {
 
             this.m_a = a;
@@ -42,9 +50,9 @@ namespace Battlegrounds.Functional {
         }
 
         /// <summary>
-        /// 
+        /// Initialise new <see cref="Either{TOptionA, TOptionB}"/> instance where type option is <typeparamref name="TOptionB"/>.
         /// </summary>
-        /// <param name="b"></param>
+        /// <param name="b">The value of <typeparamref name="TOptionB"/>.</param>
         public Either(TOptionB b) {
 
             this.m_b = b;
@@ -55,19 +63,26 @@ namespace Battlegrounds.Functional {
 
         }
 
+        private Either(TOptionA? a, TOptionB? b) {
+            this.m_a = a;
+            this.m_b = b;
+            this.IsSecond = false;
+            this.IsFirst = false;
+        }
+
         /// <summary>
-        /// 
+        /// Get value of <typeparamref name="TOptionA"/> if value is present.
         /// </summary>
         /// <param name="ifNot"></param>
-        /// <returns></returns>
+        /// <returns>Value of <typeparamref name="TOptionA"/> if set; otherwise <paramref name="ifNot"/>.</returns>
         public TOptionA FirstOption(TOptionA ifNot) => this.IsFirst ? this.m_a : ifNot;
 
         /// <summary>
-        /// 
+        /// Get value of <typeparamref name="TOptionA"/> if value is present.
         /// </summary>
-        /// <param name="val"></param>
-        /// <returns></returns>
-        public bool IfFirstOption(out TOptionA val) {
+        /// <param name="val">The contained value.</param>
+        /// <returns>if first option is set, <see langword="true"/>; Otherwise <see langword="false"/>.</returns>
+        public bool IfFirstOption([NotNullWhen(true)] out TOptionA? val) {
             if (this.IsFirst) {
                 val = this.m_a;
                 return true;
@@ -77,18 +92,18 @@ namespace Battlegrounds.Functional {
         }
 
         /// <summary>
-        /// 
+        /// Get value of <typeparamref name="TOptionB"/> if value is present.
         /// </summary>
         /// <param name="ifNot"></param>
-        /// <returns></returns>
+        /// <returns>Value of <typeparamref name="TOptionB"/> if set; otherwise <paramref name="ifNot"/>.</returns>
         public TOptionB SecondOption(TOptionB ifNot) => this.IsSecond ? this.m_b : ifNot;
 
         /// <summary>
-        /// 
+        /// Get value of <typeparamref name="TOptionB"/> if value is present.
         /// </summary>
-        /// <param name="val"></param>
-        /// <returns></returns>
-        public bool IfSecondOption(out TOptionB val) {
+        /// <param name="val">The contained value.</param>
+        /// <returns>if second option is set, <see langword="true"/>; Otherwise <see langword="false"/>.</returns>
+        public bool IfSecondOption([NotNullWhen(true)] out TOptionB? val) {
             if (this.IsSecond) {
                 val = this.m_b;
                 return true;
@@ -112,45 +127,55 @@ namespace Battlegrounds.Functional {
     }
 
     /// <summary>
-    /// 
+    /// Struct holding either a value of type <typeparamref name="TOptionA"/>, value of type <typeparamref name="TOptionB"/>
+    /// or a value of type <typeparamref name="TOptionC"/>.
     /// </summary>
-    /// <typeparam name="TOptionA"></typeparam>
-    /// <typeparam name="TOptionB"></typeparam>
+    /// <typeparam name="TOptionA">The first possible type.</typeparam>
+    /// <typeparam name="TOptionB">The second possible type.</typeparam>
+    /// <typeparam name="TOptionC">The third possible type.</typeparam>
     public struct Either<TOptionA, TOptionB, TOptionC> {
 
-        private readonly TOptionA m_a;
-        private readonly TOptionB m_b;
-        private readonly TOptionC m_c;
+        private readonly TOptionA? m_a;
+        private readonly TOptionB? m_b;
+        private readonly TOptionC? m_c;
 
         /// <summary>
-        /// 
+        /// Represents a <see cref="Either{TOptionA, TOptionB, TOptionC}"/> instance where neither type is set.
         /// </summary>
+        public static readonly Either<TOptionA, TOptionB, TOptionC> None = new Either<TOptionA, TOptionB, TOptionC>(default, default, default);
+
+        /// <summary>
+        /// Get if the contained type is the first option.
+        /// </summary>
+        [MemberNotNullWhen(true, nameof(m_a))]
         public bool IsFirst { get; }
 
         /// <summary>
-        /// 
+        /// Get if the contained type is the second option.
         /// </summary>
+        [MemberNotNullWhen(true, nameof(m_b))]
         public bool IsSecond { get; }
 
         /// <summary>
-        /// 
+        /// Get if the contained type is the third option.
         /// </summary>
+        [MemberNotNullWhen(true, nameof(m_c))]
         public bool IsThird { get; }
 
         /// <summary>
-        /// 
+        /// Get if any type value is present.
         /// </summary>
         public bool Any => this.IsFirst || this.IsSecond || this.IsThird;
 
         /// <summary>
-        /// 
+        /// Get the <see cref="Type"/> instance being represented.
         /// </summary>
         public Type ValueType => this.IsFirst ? typeof(TOptionA) : (this.IsSecond ? typeof(TOptionB) : typeof(TOptionC));
 
         /// <summary>
-        /// 
+        /// Initialise new <see cref="Either{TOptionA, TOptionB, TOptionC}"/> instance where type option is <typeparamref name="TOptionA"/>.
         /// </summary>
-        /// <param name="a"></param>
+        /// <param name="a">The value of <typeparamref name="TOptionA"/>.</param>
         public Either(TOptionA a) {
 
             this.m_a = a;
@@ -165,9 +190,9 @@ namespace Battlegrounds.Functional {
         }
 
         /// <summary>
-        /// 
+        /// Initialise new <see cref="Either{TOptionA, TOptionB, TOptionC}"/> instance where type option is <typeparamref name="TOptionB"/>.
         /// </summary>
-        /// <param name="b"></param>
+        /// <param name="b">The value of <typeparamref name="TOptionB"/>.</param>
         public Either(TOptionB b) {
 
             this.m_b = b;
@@ -182,9 +207,9 @@ namespace Battlegrounds.Functional {
         }
 
         /// <summary>
-        /// 
+        /// Initialise new <see cref="Either{TOptionA, TOptionB, TOptionC}"/> instance where type option is <typeparamref name="TOptionC"/>.
         /// </summary>
-        /// <param name="b"></param>
+        /// <param name="c">The value of <typeparamref name="TOptionC"/>.</param>
         public Either(TOptionC c) {
 
             this.m_c = c;
@@ -198,19 +223,28 @@ namespace Battlegrounds.Functional {
 
         }
 
+        private Either(TOptionA? a, TOptionB? b, TOptionC? c) {
+            this.m_a = a;
+            this.m_b = b;
+            this.m_c = c;
+            this.IsSecond = false;
+            this.IsFirst = false;
+            this.IsThird = false;
+        }
+
         /// <summary>
-        /// 
+        /// Get value of <typeparamref name="TOptionA"/> if value is present.
         /// </summary>
         /// <param name="ifNot"></param>
-        /// <returns></returns>
+        /// <returns>Value of <typeparamref name="TOptionA"/> if set; otherwise <paramref name="ifNot"/>.</returns>
         public TOptionA FirstOption(TOptionA ifNot) => this.IsFirst ? this.m_a : ifNot;
 
         /// <summary>
-        /// 
+        /// Get value of <typeparamref name="TOptionA"/> if value is present.
         /// </summary>
-        /// <param name="val"></param>
-        /// <returns></returns>
-        public bool IfFirstOption(out TOptionA val) {
+        /// <param name="val">The contained value.</param>
+        /// <returns>if first option is set, <see langword="true"/>; Otherwise <see langword="false"/>.</returns>
+        public bool IfFirstOption([NotNullWhen(true)] out TOptionA? val) {
             if (this.IsFirst) {
                 val = this.m_a;
                 return true;
@@ -220,18 +254,18 @@ namespace Battlegrounds.Functional {
         }
 
         /// <summary>
-        /// 
+        /// Get value of <typeparamref name="TOptionB"/> if value is present.
         /// </summary>
         /// <param name="ifNot"></param>
-        /// <returns></returns>
+        /// <returns>Value of <typeparamref name="TOptionB"/> if set; otherwise <paramref name="ifNot"/>.</returns>
         public TOptionB SecondOption(TOptionB ifNot) => this.IsSecond ? this.m_b : ifNot;
 
         /// <summary>
-        /// 
+        /// Get value of <typeparamref name="TOptionB"/> if value is present.
         /// </summary>
-        /// <param name="val"></param>
-        /// <returns></returns>
-        public bool IfSecondOption(out TOptionB val) {
+        /// <param name="val">The contained value.</param>
+        /// <returns>if second option is set, <see langword="true"/>; Otherwise <see langword="false"/>.</returns>
+        public bool IfSecondOption([NotNullWhen(true)] out TOptionB? val) {
             if (this.IsSecond) {
                 val = this.m_b;
                 return true;
@@ -242,18 +276,18 @@ namespace Battlegrounds.Functional {
 
 
         /// <summary>
-        /// 
+        /// Get value of <typeparamref name="TOptionC"/> if value is present.
         /// </summary>
         /// <param name="ifNot"></param>
-        /// <returns></returns>
+        /// <returns>Value of <typeparamref name="TOptionC"/> if set; otherwise <paramref name="ifNot"/>.</returns>
         public TOptionC ThirdOption(TOptionC ifNot) => this.IsThird ? this.m_c : ifNot;
 
         /// <summary>
-        /// 
+        /// Get value of <typeparamref name="TOptionC"/> if value is present.
         /// </summary>
-        /// <param name="val"></param>
-        /// <returns></returns>
-        public bool IfThirdOption(out TOptionC val) {
+        /// <param name="val">The contained value.</param>
+        /// <returns>if third option is set, <see langword="true"/>; Otherwise <see langword="false"/>.</returns>
+        public bool IfThirdOption([NotNullWhen(true)] out TOptionC? val) {
             if (this.IsThird) {
                 val = this.m_c;
                 return true;

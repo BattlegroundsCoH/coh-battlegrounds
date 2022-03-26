@@ -26,6 +26,11 @@
                 <Setter Property="FontSize" Value="14"/>
                 <Setter Property="FontFamily" Value="Open Sans"/>
             </Style>
+            <Style x:Key="SettingValue" TargetType="Label">
+                <Setter Property="Foreground" Value="#747c84"/>
+                <Setter Property="FontSize" Value="14"/>
+                <Setter Property="FontFamily" Value="Open Sans"/>
+            </Style>
             <Style x:Key="SettingSeperator" TargetType="Separator">
                 <Setter Property="Background" Value="#4e5963"/>
                 <Setter Property="Margin" Value="4"/>
@@ -43,8 +48,8 @@
             <ColumnDefinition Width="36"/>
             <ColumnDefinition Width="372"/>
         </Grid.ColumnDefinitions>
-        
-        <Label Content="Awesome Game Lobby"
+
+        <Label Content="{Binding LobbyTitle}"
                FontSize="28"
                Foreground="#ffffff"
                FontFamily="Open Sans"
@@ -72,18 +77,15 @@
                     <RowDefinition Height="6"/>
                     <RowDefinition Height="72"/>
                 </Grid.RowDefinitions>
-                <local:LobbyPlayerSlot Grid.Row="0"
-                                       SlotData="{Binding Allies.Slots, Converter={StaticResource ArrayIndexer}, ConverterParameter=0}"
-                                       CompanyItemsSource="{Binding AlliedCompanies}"/>
-                <local:LobbyPlayerSlot Grid.Row="2"
-                                       SlotData="{Binding Allies.Slots, Converter={StaticResource ArrayIndexer}, ConverterParameter=1}"
-                                       CompanyItemsSource="{Binding AlliedCompanies}"/>
-                <local:LobbyPlayerSlot Grid.Row="4"
-                                       SlotData="{Binding Allies.Slots, Converter={StaticResource ArrayIndexer}, ConverterParameter=2}"
-                                       CompanyItemsSource="{Binding AlliedCompanies}"/>
-                <local:LobbyPlayerSlot Grid.Row="6"
-                                       SlotData="{Binding Allies.Slots, Converter={StaticResource ArrayIndexer}, ConverterParameter=3}"
-                                       CompanyItemsSource="{Binding AlliedCompanies}"/>
+                <ContentPresenter Grid.Row="0"
+                                  Content="{Binding Allies.Slots, Converter={StaticResource ArrayIndexer}, ConverterParameter=0}"/>
+                <ContentPresenter Grid.Row="2"
+                                  Content="{Binding Allies.Slots, Converter={StaticResource ArrayIndexer}, ConverterParameter=1}"/>
+                <ContentPresenter Grid.Row="4"
+                                  Content="{Binding Allies.Slots, Converter={StaticResource ArrayIndexer}, ConverterParameter=2}"/>
+                <ContentPresenter Grid.Row="6"
+                                  Content="{Binding Allies.Slots, Converter={StaticResource ArrayIndexer}, ConverterParameter=3}"/>
+                
             </Grid>
             
             <!-- Axis -->
@@ -97,18 +99,14 @@
                     <RowDefinition Height="6"/>
                     <RowDefinition Height="72"/>
                 </Grid.RowDefinitions>
-                <local:LobbyPlayerSlot Grid.Row="0"
-                                       SlotData="{Binding Axis.Slots, Converter={StaticResource ArrayIndexer}, ConverterParameter=0}"
-                                       CompanyItemsSource="{Binding AxisCompanies}"/>
-                <local:LobbyPlayerSlot Grid.Row="2"
-                                       SlotData="{Binding Axis.Slots, Converter={StaticResource ArrayIndexer}, ConverterParameter=1}"
-                                       CompanyItemsSource="{Binding AxisCompanies}"/>
-                <local:LobbyPlayerSlot Grid.Row="4"
-                                       SlotData="{Binding Axis.Slots, Converter={StaticResource ArrayIndexer}, ConverterParameter=2}"
-                                       CompanyItemsSource="{Binding AxisCompanies}"/>
-                <local:LobbyPlayerSlot Grid.Row="6"
-                                       SlotData="{Binding Axis.Slots, Converter={StaticResource ArrayIndexer}, ConverterParameter=3}"
-                                       CompanyItemsSource="{Binding AxisCompanies}"/>
+                <ContentPresenter Grid.Row="0"
+                                  Content="{Binding Axis.Slots, Converter={StaticResource ArrayIndexer}, ConverterParameter=0}"/>
+                <ContentPresenter Grid.Row="2"
+                                  Content="{Binding Axis.Slots, Converter={StaticResource ArrayIndexer}, ConverterParameter=1}"/>
+                <ContentPresenter Grid.Row="4"
+                                  Content="{Binding Axis.Slots, Converter={StaticResource ArrayIndexer}, ConverterParameter=2}"/>
+                <ContentPresenter Grid.Row="6"
+                                  Content="{Binding Axis.Slots, Converter={StaticResource ArrayIndexer}, ConverterParameter=3}"/>
             </Grid>
         </Grid>
 
@@ -182,7 +180,8 @@
             <!-- Options -->
             <StackPanel Grid.Column="1"
                         Grid.Row="2">
-                <Label Content="MAP" Style="{StaticResource SettingLabel}"/>
+                <Label Content="{Binding ScenarioLabel, Converter={StaticResource LocaleConvertor}}" 
+                       Style="{StaticResource SettingLabel}"/>
                 <Separator Style="{StaticResource SettingSeperator}"/>
             </StackPanel>
             <Grid Grid.Column="2"
@@ -193,12 +192,15 @@
                           SelectedIndex="{Binding ScenarioSelection.CurrentIndex, Mode=TwoWay}"
                           Visibility="{Binding ScenarioSelection.IsDropdownVisible}"
                           Style="{StaticResource StandardBlueDropdown}"/>
-                <Label Visibility="{Binding ScenarioSelection.IsLabelVisible}"/>
+                <Label Visibility="{Binding ScenarioSelection.IsLabelVisible}"
+                       Content="{Binding ScenarioSelection.LabelContent}"
+                       Style="{StaticResource SettingValue}"/>
             </Grid>
 
             <StackPanel Grid.Column="1"
                         Grid.Row="3">
-                <Label Content="GAMEMODE" Style="{StaticResource SettingLabel}"/>
+                <Label Content="{Binding GamemodeLabel, Converter={StaticResource LocaleConvertor}}" 
+                       Style="{StaticResource SettingLabel}"/>
                 <Separator Style="{StaticResource SettingSeperator}"/>
             </StackPanel>
             <Grid Grid.Column="2"
@@ -209,12 +211,15 @@
                           SelectedIndex="{Binding GamemodeSelection.CurrentIndex, Mode=TwoWay}"
                           Visibility="{Binding GamemodeSelection.IsDropdownVisible}"
                           Style="{StaticResource StandardBlueDropdown}"/>
-                <Label Visibility="{Binding GamemodeSelection.IsLabelVisible}"/>
+                <Label Visibility="{Binding GamemodeSelection.IsLabelVisible}"
+                       Content="{Binding GamemodeSelection.LabelContent}"
+                       Style="{StaticResource SettingValue}"/>
             </Grid>
 
             <StackPanel Grid.Column="1"
                         Grid.Row="4">
-                <Label Content="SETTING" Style="{StaticResource SettingLabel}"/>
+                <Label Content="{Binding GamemodeOptionLabel, Converter={StaticResource LocaleConvertor}}" 
+                       Style="{StaticResource SettingLabel}"/>
                 <Separator Style="{StaticResource SettingSeperator}"/>
             </StackPanel>
             <Grid Grid.Column="2"
@@ -225,12 +230,15 @@
                           SelectedIndex="{Binding GamemodeOptionSelection.CurrentIndex, Mode=TwoWay}"
                           Visibility="{Binding GamemodeOptionSelection.IsDropdownVisible}"
                           Style="{StaticResource StandardBlueDropdown}"/>
-                <Label Visibility="{Binding GamemodeOptionSelection.IsLabelVisible}"/>
+                <Label Visibility="{Binding GamemodeOptionSelection.IsLabelVisible}"
+                       Content="{Binding GamemodeOptionSelection.LabelContent}"
+                       Style="{StaticResource SettingValue}"/>
             </Grid>
 
             <StackPanel Grid.Column="1"
                         Grid.Row="5">
-                <Label Content="DYNAMIC WEATHER" Style="{StaticResource SettingLabel}"/>
+                <Label Content="{Binding SupplyLabel, Converter={StaticResource LocaleConvertor}}"
+                       Style="{StaticResource SettingLabel}"/>
                 <Separator Style="{StaticResource SettingSeperator}"/>
             </StackPanel>
             <Grid Grid.Column="2"
@@ -241,12 +249,15 @@
                           SelectedIndex="{Binding WeatherSelection.CurrentIndex, Mode=TwoWay}"
                           Visibility="{Binding WeatherSelection.IsDropdownVisible}"
                           Style="{StaticResource StandardBlueDropdown}"/>
-                <Label Visibility="{Binding WeatherSelection.IsLabelVisible}"/>
+                <Label Visibility="{Binding WeatherSelection.IsLabelVisible}"
+                       Content="{Binding WeatherSelection.LabelContent}"
+                       Style="{StaticResource SettingValue}"/>
             </Grid>
 
             <StackPanel Grid.Column="1"
                         Grid.Row="6">
-                <Label Content="SUPPLY SYSTEM" Style="{StaticResource SettingLabel}"/>
+                <Label Content="{Binding WeatherLabel, Converter={StaticResource LocaleConvertor}}" 
+                       Style="{StaticResource SettingLabel}"/>
                 <Separator Style="{StaticResource SettingSeperator}"/>
             </StackPanel>
             <Grid Grid.Column="2"
@@ -257,12 +268,15 @@
                           SelectedIndex="{Binding SupplySystemSelection.CurrentIndex, Mode=TwoWay}"
                           Visibility="{Binding SupplySystemSelection.IsDropdownVisible}"
                           Style="{StaticResource StandardBlueDropdown}"/>
-                <Label Visibility="{Binding SupplySystemSelection.IsLabelVisible}"/>
+                <Label Visibility="{Binding SupplySystemSelection.IsLabelVisible}"
+                       Content="{Binding SupplySystemSelection.LabelContent}"
+                       Style="{StaticResource SettingValue}"/>
             </Grid>
 
             <StackPanel Grid.Column="1"
                         Grid.Row="7">
-                <Label Content="TUNING MOD" Style="{StaticResource SettingLabel}"/>
+                <Label Content="{Binding PackageLabel, Converter={StaticResource LocaleConvertor}}" 
+                       Style="{StaticResource SettingLabel}"/>
                 <Separator Style="{StaticResource SettingSeperator}"/>
             </StackPanel>
             <Grid Grid.Column="2"
@@ -273,7 +287,9 @@
                           SelectedIndex="{Binding ModPackageSelection.CurrentIndex, Mode=TwoWay}"
                           Visibility="{Binding ModPackageSelection.IsDropdownVisible}"
                           Style="{StaticResource StandardBlueDropdown}"/>
-                <Label Visibility="{Binding ModPackageSelection.IsLabelVisible}"/>
+                <Label Visibility="{Binding ModPackageSelection.IsLabelVisible}"
+                       Content="{Binding ModPackageSelection.LabelContent}"
+                       Style="{StaticResource SettingValue}"/>
             </Grid>
 
             <Button Grid.Column="1" 
@@ -282,6 +298,7 @@
                     Content="{Binding StartMatch.Text, Converter={StaticResource LocaleConvertor}}"
                     Command="{Binding StartMatch.Click}"
                     IsEnabled="{Binding StartMatch.Enabled}"
+                    ToolTip="{Binding StartMatch.Tooltip, Converter={StaticResource LocaleConvertor}}"
                     Style="{StaticResource StandardBlueButton}"/>
 
         </Grid>

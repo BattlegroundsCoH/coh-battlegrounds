@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
+using Battlegrounds.Game;
+using Battlegrounds.Game.DataCompany;
 using Battlegrounds.Game.Gameplay;
 using Battlegrounds.Networking.LobbySystem;
 
@@ -21,6 +24,7 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
             [Faction.British.Name] = new BitmapImage(new Uri("pack://application:,,,/coh2-battlegrounds;component/Resources/app/army_icons/FactionBRIT.png")),
             [Faction.OberkommandoWest.Name] = new BitmapImage(new Uri("pack://application:,,,/coh2-battlegrounds;component/Resources/app/army_icons/FactionOKW.png")),
             [Faction.Wehrmacht.Name] = new BitmapImage(new Uri("pack://application:,,,/coh2-battlegrounds;component/Resources/app/army_icons/FactionWEHR.png")),
+            ["?"] = new BitmapImage(new Uri("pack://application:,,,/coh2-battlegrounds;component/Resources/app/army_icons/FactionSOVIET.png")),
             [string.Empty] = new BitmapImage(new Uri("pack://application:,,,/coh2-battlegrounds;component/Resources/app/army_icons/FactionLOCKED.png")),
         };
 
@@ -30,39 +34,44 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
             [Faction.British.Name] = new BitmapImage(new Uri("pack://application:,,,/coh2-battlegrounds;component/Resources/app/army_icons/FactionBRITHighlighted.png")),
             [Faction.OberkommandoWest.Name] = new BitmapImage(new Uri("pack://application:,,,/coh2-battlegrounds;component/Resources/app/army_icons/FactionOKWHighlighted.png")),
             [Faction.Wehrmacht.Name] = new BitmapImage(new Uri("pack://application:,,,/coh2-battlegrounds;component/Resources/app/army_icons/FactionWEHRHighlighted.png")),
+            ["?"] = new BitmapImage(new Uri("pack://application:,,,/coh2-battlegrounds;component/Resources/app/army_icons/FactionSOVIETHighlighted.png")),
             [string.Empty] = new BitmapImage(new Uri("pack://application:,,,/coh2-battlegrounds;component/Resources/app/army_icons/FactionLOCKED.png")),
         };
 
-        public event PropertyChangedEventHandler PropertyChanged;
+        public event PropertyChangedEventHandler? PropertyChanged;
 
         private LobbyCompanyItem m_selfCompanySelected;
         private readonly LobbyTeam m_teamModel;
 
-        public LobbyAPIStructs.LobbySlot NetworkInterface { get; set; }
+        public LobbyAPIStructs.LobbySlot Interface { get; set; }
 
-        public string LeftDisplayString => this.NetworkInterface.State switch {
+        public string LeftDisplayString => this.Interface.State switch {
             0 => "Open",
-            1 => this.NetworkInterface.Occupant.DisplayName,
+            1 => this.GetDisplayString(),
             2 => "Locked",
             3 => "Disabled",
             _ => throw new NotImplementedException()
         };
 
-        public bool IsSelf => this.NetworkInterface.IsSelf();
+        public bool IsSelf => this.Interface.IsSelf();
 
-        public bool IsOpen => this.NetworkInterface.State is 0;
+        public bool IsOpen => this.Interface.State is 0;
 
-        public bool IsLocked => this.NetworkInterface.State is 2;
+        public bool IsOccupied => this.Interface.State is 1;
 
-        public bool IsDisabled => this.NetworkInterface.State is 3;
+        public bool IsLocked => this.Interface.State is 2;
 
-        public bool IsAIOccupant => this.NetworkInterface.IsAI();
+        public bool IsDisabled => this.Interface.State is 3;
+
+        public bool IsAIOccupant => this.Interface.IsAI();
 
         public Visibility IsSlotVisible => this.IsDisabled ? Visibility.Hidden : Visibility.Visible;
 
         public Visibility LeftIconVisibility => this.IsOpen ? Visibility.Hidden : Visibility.Visible;
 
-        public Visibility CompanyVisibility => !(this.IsOpen || this.IsLocked) ? Visibility.Visible : Visibility.Hidden;
+        public Visibility CompanyVisibility => (this.IsOccupied && (this.IsSelf || (this.IsHost && this.IsAIOccupant))) ? Visibility.Visible : Visibility.Hidden;
+
+        public Visibility CompanyDataVisibility => (this.IsOccupied && (!this.IsSelf || (!this.IsHost && this.IsAIOccupant))) ? Visibility.Visible : Visibility.Hidden;
 
         public int SelectedCompanyIndex { get; set; }
 
@@ -72,14 +81,25 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
 
         public LobbySlotContextMenu SlotContextMenu { get; }
 
-        public bool IsProxyInterface => this.NetworkInterface.API.IsHost;
+        public bool IsHost => this.Interface.API.IsHost;
+
+        public bool IsNotHost => !this.IsHost;
 
         public int TeamID => this.m_teamModel.Interface.TeamID;
+
+        public ObservableCollection<LobbyCompanyItem> AvailableSlotCompanies { get; set; }
+
+        public string ProxyCompanyName => this.SelectedCompany?.Name ?? string.Empty;
+
+        public CompanyType ProxyCompanyType => this.SelectedCompany?.Type ?? CompanyType.Unspecified;
 
         public LobbySlot(LobbyAPIStructs.LobbySlot teamSlot, LobbyTeam team) {
 
             // Store reference to network interface
-            this.NetworkInterface = teamSlot;
+            this.Interface = teamSlot;
+
+            // Set available companies
+            this.AvailableSlotCompanies = team.AvailableCompanies;
 
             // Store reference to lobby team
             this.m_teamModel = team;
@@ -110,11 +130,12 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
             }
 
             // Check if self
-            if (this.IsSelf || this.IsAIOccupant) {
+            if (this.IsSelf || (this.IsHost && this.IsAIOccupant)) {
 
                 // Update selected value
                 this.m_selfCompanySelected = val;
 
+                // If army, update
                 if (val.Army is not null) {
 
                     // Set slot faction
@@ -122,12 +143,9 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
 
                 }
 
-                if (this.IsAIOccupant) {
-                    this.NetworkInterface.API.SetAICompany(this.TeamID, this.NetworkInterface.SlotID, new());
-                } else {
-                    this.NetworkInterface.API.SetCompany(this.NetworkInterface.Occupant.MemberID, new());
-                }
-
+                // Set the company
+                this.Interface.API.SetCompany(this.TeamID, this.Interface.SlotID, this.m_selfCompanySelected.GetAPIObject());
+            
             }
 
         }
@@ -161,7 +179,13 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
                 if (this.CompanyVisibility is Visibility.Visible) {
                     this.PropertyChanged?.Invoke(this, new(nameof(this.SelectedCompanyIndex)));
                     if (this.LeftIcon is null || this.LeftIcon == FactionIcons[string.Empty]) {
-                        this.UpdateSlotFaction(this.NetworkInterface.Occupant.Company.Army);
+                        this.UpdateSlotFaction(this.Interface.Occupant.Company.Army);
+                    }
+                } else if (this.CompanyDataVisibility is Visibility.Visible) {
+                    this.PropertyChanged?.Invoke(this, new(nameof(this.ProxyCompanyName)));
+                    this.PropertyChanged?.Invoke(this, new(nameof(this.ProxyCompanyType)));
+                    if (this.LeftIcon is null || this.LeftIcon == FactionIcons[string.Empty]) {
+                        this.UpdateSlotFaction(this.Interface.Occupant.Company.Army);
                     }
                 }
             });
@@ -169,11 +193,16 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
 
         private void Lock() {
 
+            // Bail fast
+            if (this.IsNotHost) {
+                return;
+            }
+
             // Do async
             Task.Run(() => {
 
                 // Invoke API unlock slot function
-                this.NetworkInterface.API.LockSlot(this.TeamID, this.NetworkInterface.SlotID);
+                this.Interface.API.LockSlot(this.TeamID, this.Interface.SlotID);
 
                 // Refresh
                 this.RefreshVisuals();
@@ -184,16 +213,30 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
 
         private void Unlock() {
 
+            // Bail fast
+            if (this.IsNotHost) {
+                return;
+            }
+
+            // Do async
             Task.Run(() => {
 
                 // Invoke API unlock slot function
-                this.NetworkInterface.API.UnlockSlot(this.TeamID, this.NetworkInterface.SlotID);
+                this.Interface.API.UnlockSlot(this.TeamID, this.Interface.SlotID);
 
                 // Refresh
                 this.RefreshVisuals();
 
             });
 
+        }
+
+        private string GetDisplayString() { 
+            if (this.Interface.IsAI()) {
+                return ((AIDifficulty)this.Interface.Occupant.AILevel).GetIngameDisplayName();
+            } else {
+                return this.Interface.Occupant.DisplayName;
+            }
         }
 
     }

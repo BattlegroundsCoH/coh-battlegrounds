@@ -111,13 +111,13 @@ namespace Battlegrounds.Game.Database {
                 };
             }
             ModGuid modguid = __lookup.ContainsKey("ModGUID") ? ModGuid.FromGuid(__lookup["ModGUID"] as string) : ModGuid.BaseGame;
-            BlueprintUID pbgid = new BlueprintUID(__lookup.GetValueOrDefault("PBGID", 0ul), modguid);
-            return new(__lookup.GetValueOrDefault("Name", string.Empty), pbgid,
-                __lookup.GetValueOrDefault("OwnerType", UpgradeBlueprint.OwnerType.None),
-                __lookup.GetValueOrDefault("Display", new UIExtension()),
-                __lookup.GetValueOrDefault("Cost", new CostExtension()),
-                __lookup.GetValueOrDefault("Requirements", Array.Empty<RequirementExtension>()),
-                __lookup.GetValueOrDefault("SlotItems", Array.Empty<string>()));
+            BlueprintUID pbgid = new BlueprintUID(__lookup.GetCastValueOrDefault("PBGID", 0ul), modguid);
+            return new(__lookup.GetCastValueOrDefault("Name", string.Empty), pbgid,
+                __lookup.GetCastValueOrDefault("OwnerType", UpgradeBlueprint.OwnerType.None),
+                __lookup.GetCastValueOrDefault("Display", new UIExtension()),
+                __lookup.GetCastValueOrDefault("Cost", new CostExtension()),
+                __lookup.GetCastValueOrDefault("Requirements", Array.Empty<RequirementExtension>()),
+                __lookup.GetCastValueOrDefault("SlotItems", Array.Empty<string>()));
         }
 
         public override void Write(Utf8JsonWriter writer, UpgradeBlueprint value, JsonSerializerOptions options)

@@ -1,22 +1,28 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
+using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
 using Battlegrounds;
+using Battlegrounds.Compiler;
 using Battlegrounds.Functional;
 using Battlegrounds.Game.Database;
+using Battlegrounds.Game.DataCompany;
+using Battlegrounds.Game.Gameplay;
+using Battlegrounds.Game.Match.Play;
+using Battlegrounds.Locale;
 using Battlegrounds.Modding;
-using Battlegrounds.Networking;
 using Battlegrounds.Networking.LobbySystem;
+using Battlegrounds.Networking.Server;
 
 using BattlegroundsApp.Lobby.MatchHandling;
 using BattlegroundsApp.LocalData;
@@ -32,12 +38,20 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
 
         private static readonly ImageSource __mapNotFound = new BitmapImage(new Uri("pack://application:,,,/Resources/ingame/unknown_map.png"));
 
-        private readonly LobbyAPI m_handle;
-        private LobbyChatSpectatorModel m_chatModel;
-        private ModPackage m_package;
-        private bool m_hasSetDefaults;
+        private static readonly LocaleKey __playabilityAlliesInvalid = new("LobbyView_StartMatchAlliesInvalid");
+        private static readonly LocaleKey __playabilityAlliesNoPlayers = new("LobbyView_StartMatchAlliesNoPlayers");
+        private static readonly LocaleKey __playabilityAxisInvalid = new("LobbyView_StartMatchAxisInvalid");
+        private static readonly LocaleKey __playabilityAxisNoPlayers = new("LobbyView_StartMatchAxisNoPlayers");
 
-        public event PropertyChangedEventHandler PropertyChanged;
+        private readonly LobbyAPI m_handle;
+        private LobbyChatSpectatorModel? m_chatModel;
+        private ModPackage? m_package;
+        private bool m_hasSetDefaults;
+        private LobbyDropdownModel[] m_settings;
+
+        private bool m_hasDownloadedGamemode = false;
+
+        public event PropertyChangedEventHandler? PropertyChanged;
 
         public LobbyButtonModel EditCompany { get; }
 
@@ -45,7 +59,7 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
 
         public LobbyButtonModel StartMatch { get; }
 
-        public ImageSource SelectedMatchScenario { get; set; }
+        public ImageSource? SelectedMatchScenario { get; set; }
 
         public LobbyDropdownModel<LobbyScenarioItem> ScenarioSelection { get; }
 
@@ -63,20 +77,33 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
 
         public LobbyTeam Axis { get; }
 
-        public ObservableCollection<LobbyCompanyItem> AlliedCompanies { get; }
-
-        public ObservableCollection<LobbyCompanyItem> AxisCompanies { get; }
-
         public bool SingleInstanceOnly => false;
+
+        public LocaleKey ScenarioLabel { get; } = new("LobbyView_SettingScenario");
+
+        public LocaleKey GamemodeLabel { get; } = new("LobbyView_SettingGamemode");
+
+        public LocaleKey GamemodeOptionLabel { get; } = new("LobbyView_SettingOption");
+
+        public LocaleKey SupplyLabel { get; } = new("LobbyView_SettingSupply");
+
+        public LocaleKey WeatherLabel { get; } = new("LobbyView_SettingWeather");
+
+        public LocaleKey PackageLabel { get; } = new("LobbyView_SettingTuning");
+
+        public string LobbyTitle { get; }
 
         private LobbyModel(LobbyAPI handle, LobbyAPIStructs.LobbyTeam allies, LobbyAPIStructs.LobbyTeam axis) {
 
             // Set handler
             this.m_handle = handle;
 
-            // Init company lists
-            InitCompanyList(this.AlliedCompanies = new(), isAllied: true);
-            InitCompanyList(this.AxisCompanies = new(), isAllied: false);
+            // Set title
+            this.LobbyTitle = handle.Title;
+
+            // Create teams
+            this.Allies = new(allies);
+            this.Axis = new(axis);
 
             // Create edit company button
             this.EditCompany = new() {
@@ -107,7 +134,7 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
             ModManager.EachPackage(x => modPackages.Add(new(x)));
 
             // Create mod package dropdown
-            this.ModPackageSelection = new(true, this.m_handle.IsHost) {
+            this.ModPackageSelection = new(true, this.m_handle.IsHost, "selected_tuning") {
                 Items = new(modPackages),
                 OnSelectionChanged = this.OnPackageChanged
             };
@@ -118,7 +145,7 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
             }
 
             // Create scenario selection dropdown
-            this.ScenarioSelection = new(true, this.m_handle.IsHost) {
+            this.ScenarioSelection = new(true, this.m_handle.IsHost, "selected_map") {
                 Items = new(ScenarioList.GetList()
                     .Where(x => x.IsVisibleInLobby)
                     .Select(x => new LobbyScenarioItem(x))),
@@ -126,27 +153,33 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
             };
 
             // Create gamemode selection dropdown
-            this.GamemodeSelection = new(true, this.m_handle.IsHost) {
+            this.GamemodeSelection = new(true, this.m_handle.IsHost, "selected_wc") {
                 Items = new(),
                 OnSelectionChanged = this.OnGamemodeChanged
             };
 
             // Create gamemode option selection dropdown
-            this.GamemodeOptionSelection = new(true, this.m_handle.IsHost) {
+            this.GamemodeOptionSelection = new(true, this.m_handle.IsHost, "selected_wco") {
                 Items = new(),
                 OnSelectionChanged = this.OnGamemodeOptionChanged
             };
 
             // Create weather selection dropdown
-            this.WeatherSelection = new(true, this.m_handle.IsHost) {
+            this.WeatherSelection = new(true, this.m_handle.IsHost, "selected_daynight") {
                 Items = LobbyBinaryOptionItem.CreateCollection(),
                 OnSelectionChanged = this.OnWeatherChanged
             };
 
             // Create supply selection dropdown
-            this.SupplySystemSelection = new(true, this.m_handle.IsHost) {
+            this.SupplySystemSelection = new(true, this.m_handle.IsHost, "selected_supply") {
                 Items = LobbyBinaryOptionItem.CreateCollection(),
                 OnSelectionChanged = this.OnSupplyChanged
+            };
+
+            // Save setting dropdowns
+            this.m_settings = new LobbyDropdownModel[] {
+                this.ScenarioSelection, this.GamemodeSelection, this.GamemodeOptionSelection,
+                this.ModPackageSelection, this.WeatherSelection, this.SupplySystemSelection
             };
 
             // Init dropdown values (if host)
@@ -154,19 +187,225 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
                 this.ScenarioSelection.SetSelection(x => x.Scenario.RelativeFilename == BattlegroundsInstance.LastPlayedMap);
             }
 
-            // Create teams
-            this.Allies = new(allies) { AvailableCompanies = this.AlliedCompanies };
-            this.Axis = new(axis) { AvailableCompanies = this.AxisCompanies };
+            // Add handlers to remote updates and notifications
+            this.m_handle.OnLobbySelfUpdate += this.OnSelfChanged;
+            this.m_handle.OnLobbyTeamUpdate += this.OnTeamChanged;
+            this.m_handle.OnLobbyCompanyUpdate += this.OnCompanyChanged;
+            this.m_handle.OnLobbyMemberUpdate += this.OnMemberChanged;
+            this.m_handle.OnLobbySlotUpdate += this.OnSlotChanged;
+            this.m_handle.OnLobbyConnectionLost += this.OnConnectionLost;
+            this.m_handle.OnLobbyRequestCompany += this.OnCompanyRequested;
+            this.m_handle.OnLobbyNotifyGamemode += this.OnGamemodeReleased;
+            this.m_handle.OnLobbyNotifyResults += this.OnResultsReleased;
+            this.m_handle.OnLobbyLaunchGame += this.OnLaunchGame;
+            this.m_handle.OnLobbyBeginMatch += this.OnMatchBegin;
+            this.m_handle.OnLobbyCancelStartup += this.OnMatchStartupCancelled;
 
         }
 
-        private static void InitCompanyList(ObservableCollection<LobbyCompanyItem> container, bool isAllied) {
-            var companies = PlayerCompanies.FindAll(x => x.Army.IsAllied == isAllied);
-            if (companies.Count > 0) {
-                companies.ForEach(x => container.Add(new(x)));
-            } else {
-                container.Add(new(0));
+        private void OnMatchStartupCancelled(ulong cancelPlayerId) {
+
+            // TODO: Find user name from ID
+
+            // Inform user
+            if (this.m_chatModel is not null) {
+                this.m_chatModel.SystemMessage($"The match startup was cancelled", Colors.Gray);
             }
+
+            // Invoke on GUI
+            Application.Current.Dispatcher.Invoke(() => {
+
+                // Allow exit lobby
+                this.ExitLobby.Enabled = true;
+
+            });
+
+        }
+
+        private void OnMatchBegin() {
+
+            // Inform user
+            if (this.m_chatModel is not null) {
+                this.m_chatModel.SystemMessage($"The match is starting", Colors.Gray);
+            }
+
+            // Invoke on GUI
+            Application.Current.Dispatcher.Invoke(() => {
+
+                // Allow exit lobby
+                this.ExitLobby.Enabled = false;
+
+            });
+
+        }
+
+        private void OnLaunchGame() {
+
+            // Create overwatch strategy
+            var overwatch = new MemberOverwatchStrategy();
+
+            // Run task
+            Task.Run(async () => {
+
+                // Get time
+                DateTime time = DateTime.Now;
+
+                // Wait for gamemode
+                while (!this.m_hasDownloadedGamemode) {
+                    if ((DateTime.Now - time).TotalSeconds > 15.0) {
+                        if (this.m_chatModel is not null) {
+                            this.m_chatModel.SystemMessage($"Failed to download gamemode file!", Colors.Gray);
+                        }
+                        // TODO: Report to host
+                        return;
+                    }
+                    await Task.Delay(100);
+                }
+
+                // Inform user
+                if (this.m_chatModel is not null) {
+                    this.m_chatModel.SystemMessage($"Laucnhing game", Colors.Gray);
+                }
+
+                // Begin
+                overwatch.Launch();
+
+                // Wait for exit
+                overwatch.WaitForExit();
+
+                // set received to false (may need to do some checksum stuff here so clients can reconnect if needed)
+                this.m_hasDownloadedGamemode = false;
+
+                // TODO: Check for bugsplats etc. and report accordingly
+
+            });
+
+        }
+
+        private void OnResultsReleased(ServerAPI obj) {
+
+            // Instruct download
+            Task.Run(() => {
+                obj.DownloadCompany(this.m_handle.Self.ID, (status, data) => {
+
+                    // Check status
+                    if (status is DownloadResult.DOWNLOAD_SUCCESS) {
+
+                        // Load it
+                        var company = CompanySerializer.GetCompanyFromJson(Encoding.UTF8.GetString(data));
+
+                        // Save it
+                        PlayerCompanies.SaveCompany(company);
+
+                    } else {
+                        Trace.WriteLine($"Failed to download company results!", nameof(LobbyModel));
+                    }
+
+
+                    // Invoke on GUI - now allow to leave
+                    Application.Current.Dispatcher.Invoke(() => {
+
+                        // Allow exit lobby
+                        this.ExitLobby.Enabled = true;
+
+                    });
+
+
+                });
+            });
+
+        }
+
+        private void OnGamemodeReleased(ServerAPI obj) {
+
+            // Start background thread
+            Task.Run(() => {
+
+                // Log download operation
+                Trace.WriteLine("Starting download of gamemode.", nameof(LobbyModel));
+
+                // Download
+                obj.DownloadGamemode((status, data) => {
+
+                    if (status is DownloadResult.DOWNLOAD_SUCCESS) {
+
+                        // File sga to gamemode file
+                        File.WriteAllBytes(WinconditionCompiler.GetArchivePath(), data);
+
+                        // Set as true
+                        this.m_hasDownloadedGamemode = true;
+
+                        // Inform user
+                        if (this.m_chatModel is not null) {
+                            this.m_chatModel.SystemMessage($"Gamemode downloaded", Colors.Gray);
+                        }
+
+                    } else {
+
+                        // Inform user
+                        if (this.m_chatModel is not null) {
+                            this.m_chatModel.SystemMessage($"Failed to download gamemode", Colors.DarkRed);
+                        }
+
+                        Trace.WriteLine($"Failed to download gamemode! (E = {status})", nameof(LobbyModel));
+
+                    }
+
+                });
+
+            });
+
+        }
+
+        private void OnCompanyRequested(ServerAPI obj) {
+
+            // Log request
+            Trace.WriteLine("Received request to upload company file", nameof(LobbyModel));
+
+            // Get self
+            ulong selfid = this.m_handle.Self.ID;
+            var self = this.m_handle.Allies.GetSlotOfMember(selfid) ?? this.m_handle.Axis.GetSlotOfMember(selfid);
+            if (self is not null && self.Occupant is not null) {
+
+                // Make sure there's a company
+                if (self.Occupant.Company is null) {
+                    return;
+                }
+
+                // Get company name
+                string companyName = self.Occupant.Company.Name;
+
+                // Get company faction
+                Faction faction = Faction.FromName(self.Occupant.Company.Army);
+
+                // Get company json
+                string companyJson = CompanySerializer.GetCompanyAsJson(PlayerCompanies.FromNameAndFaction(companyName, faction), indent: false);
+                if (string.IsNullOrEmpty(companyJson)) {
+                    Trace.WriteLine($"Failed to upload company json file (Company '{companyName}' not found).", nameof(LobbyModel));
+                    return;
+                }
+
+                // Upload file
+                if (obj.UploadCompany(selfid, companyJson, (a,b) => Trace.WriteLine($"Upload company progress {a}/{b}", nameof(LobbyModel))) is not UploadResult.UPLOAD_SUCCESS) {
+                    Trace.WriteLine("Failed to upload company json file.", nameof(LobbyModel));
+                }
+
+            } else {
+
+                // Log request
+                Trace.WriteLine("Failed to find self-instance and cannot upload company file.", nameof(LobbyModel));
+
+            }
+
+        }
+
+        private void OnSelfChanged() {
+            Application.Current.Dispatcher.Invoke(() => {
+
+                // Eval match launchability
+                this.EvaluateMatchLaunchable();
+
+            });
         }
 
         private void EditSelfCompany() {
@@ -176,7 +415,7 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
         private void LeaveLobby() {
 
             // Show leave modal
-            App.ViewManager.GetModalControl().ShowModal(ModalDialog.CreateModal("Leave Lobby", "Are you sure you'd like to leave?", (sender, success, value) => {
+            App.ViewManager.GetModalControl()?.ShowModal(ModalDialog.CreateModal("Leave Lobby", "Are you sure you'd like to leave?", (sender, success, value) => {
                 if (success && value == ModalDialogResult.Confirm) {
 
                     // Leave lobby
@@ -193,19 +432,35 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
         private void BeginMatchSetup() {
 
             // If not host -> bail.
-            if (!this.m_handle.IsHost) {
+            if (!this.m_handle.IsHost)
                 return;
-            }
+
+            // Bail if no chat model
+            if (this.m_chatModel is null)
+                return;
+
+            // Bail if no package defined
+            if (this.m_package is null)
+                return; // TODO: Show error
+
+            // Disallow exit lobby
+            this.ExitLobby.Enabled = false;
+
+            // Set lobby status here
+            this.m_handle.SetLobbyState(LobbyAPIStructs.LobbyState.Starting);
 
             // Get play model
             var play = PlayModelFactory.GetModel(this.m_handle, this.m_chatModel);
 
             // prepare
-            play.Prepare(this.m_package, this.BeginMatch, this.CancelMatch);
+            play.Prepare(this.m_package, this.BeginMatch, x => this.EndMatch(x is IPlayModel y ? y : throw new ArgumentNullException()));
 
         }
 
         private void BeginMatch(IPlayModel model) {
+
+            // Set lobby status here
+            this.m_handle.SetLobbyState(LobbyAPIStructs.LobbyState.Playing);
 
             // Play match
             model.Play(this.EndMatch);
@@ -214,9 +469,11 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
 
         private void EndMatch(IPlayModel model) {
 
-        }
+            // Set lobby status here
+            this.m_handle.SetLobbyState(LobbyAPIStructs.LobbyState.InLobby);
 
-        private void CancelMatch(IPlayModel model) {
+            // Allow exit lobby
+            this.ExitLobby.Enabled = true;
 
         }
 
@@ -231,7 +488,7 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
             this.m_package = item.Package;
 
             // Update lobby
-            this.m_handle.SetLobbySetting("selected_tuning", item.Package.ID);
+            this.m_handle.SetLobbySetting(this.ModPackageSelection.DropdownID, item.Package.ID);
 
             // Return selected
             return next;
@@ -241,7 +498,7 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
         private int OnSupplyChanged(int current, int next, LobbyBinaryOptionItem item) {
 
             // Update lobby
-            this.m_handle.SetLobbySetting("selected_supply", item.IsOn ? "1" : "0");
+            this.m_handle.SetLobbySetting(this.SupplySystemSelection.DropdownID, item.IsOn ? "1" : "0");
 
             // Return selected
             return next;
@@ -251,17 +508,23 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
         private int OnWeatherChanged(int current, int next, LobbyBinaryOptionItem item) {
 
             // Update lobby
-            this.m_handle.SetLobbySetting("selected_daynight", item.IsOn ? "1" : "0");
+            this.m_handle.SetLobbySetting(this.WeatherSelection.DropdownID, item.IsOn ? "1" : "0");
 
             // Return selected
             return next;
 
         }
 
-        private void TrySetMapSource(Scenario scenario) {
+        private void TrySetMapSource(Scenario? scenario, [CallerMemberName] string caller = "") {
 
             // Set to default case
             this.SelectedMatchScenario = __mapNotFound;
+
+            // Check scenario
+            if (scenario is null) {
+                Trace.WriteLine($"Failed to set **null** scenario (Caller = {caller}).", nameof(LobbyModel));
+                return;
+            }
 
             // Get Path
             string fullpath = Path.GetFullPath($"bin\\gfx\\map_icons\\{scenario.RelativeFilename}_map.tga");
@@ -308,7 +571,7 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
                 this.UpdateGamemodeAndOption(item.Scenario);
 
                 // Update lobby
-                this.m_handle.SetLobbySetting("selected_map", item.Scenario.RelativeFilename);
+                this.m_handle.SetLobbySetting(this.ScenarioSelection.DropdownID, item.Scenario.RelativeFilename);
 
             }
 
@@ -318,6 +581,10 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
         }
 
         private void UpdateGamemodeAndOption(Scenario scenario) {
+
+            // Bail if no package defined
+            if (this.m_package is null)
+                return;
 
             // Get available gamemodes
             var guid = this.m_package.GamemodeGUID;
@@ -376,7 +643,7 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
             }
 
             // Update lobby
-            this.m_handle.SetLobbySetting("selected_wc", item.Gamemode.Name);
+            this.m_handle.SetLobbySetting(this.GamemodeSelection.DropdownID, item.Gamemode.Name);
 
             // Return selected
             return next;
@@ -386,7 +653,7 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
         private int OnGamemodeOptionChanged(int current, int next, LobbyGamemodeOptionItem item) {
 
             // Update lobby
-            this.m_handle.SetLobbySetting("selected_wco", item.Option.Value.ToString(CultureInfo.InvariantCulture));
+            this.m_handle.SetLobbySetting(this.GamemodeOptionSelection.DropdownID, item.Option.Value.ToString(CultureInfo.InvariantCulture));
 
             // Return selected
             return next;
@@ -394,6 +661,177 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
         }
 
         private void EvaluateMatchLaunchable() {
+
+            // Skip check if not host
+            if (!this.m_handle.IsHost) {
+                return;
+            }
+
+            // Check allies
+            var (x1, y1) = this.Allies.CanPlay();
+            bool allied = x1 && y1;
+
+            // Check axis
+            var (x2, y2) = this.Axis.CanPlay();
+            bool axis = x2 && y2;
+
+            // If both playable
+            if (allied && axis) {
+                this.StartMatch.Enabled = true;
+                this.StartMatch.Tooltip = null;
+            } else if (!allied) {
+                this.StartMatch.Enabled = false;
+                this.StartMatch.Tooltip = x1 ? __playabilityAlliesNoPlayers : __playabilityAlliesInvalid;
+            } else {
+                this.StartMatch.Enabled = false;
+                this.StartMatch.Tooltip = x2 ? __playabilityAxisNoPlayers : __playabilityAxisInvalid;
+            }
+
+
+        }
+
+        private void OnTeamChanged(LobbyAPIStructs.LobbyTeam team) {
+
+            // Refresh allies
+            if (team.TeamID == 0) {
+                this.Allies?.RefreshTeam(team);
+            }
+
+            // Refresh axis
+            if (team.TeamID == 1) {
+                this.Axis?.RefreshTeam(team);
+            }
+
+            // Trigger self change
+            if (this.m_handle.IsHost) {
+                this.OnSelfChanged(); // Trigger a playability check
+            }
+
+        }
+
+        private void OnSlotChanged(int teamID, LobbyAPIStructs.LobbySlot slot) {
+
+            // Get team
+            var team = teamID == 0 ? this.Allies : this.Axis;
+
+            // Trigger slot update
+            team.RefreshSlot(team.Slots[slot.SlotID], slot);
+
+            // Trigger self change
+            if (this.m_handle.IsHost) {
+                this.OnSelfChanged(); // Trigger a playability check
+            }
+
+        }
+
+        private void OnMemberChanged(int teamID, int slotID, LobbyAPIStructs.LobbyMember member) {
+
+            // Get team
+            var team = teamID == 0 ? this.Allies : this.Axis;
+
+            // Get slot
+            var slot = team.Slots[slotID];
+
+            // Set occupant and refresh
+            slot.Interface.Occupant = member;
+            slot.RefreshVisuals();
+
+            // Trigger self change
+            if (this.m_handle.IsHost) {
+                this.OnSelfChanged(); // Trigger a playability check
+            }
+
+        }
+
+        private void OnCompanyChanged(int teamID, int slotID, LobbyAPIStructs.LobbyCompany company) {
+
+            // Get team
+            var team = teamID == 0 ? this.Allies : this.Axis;
+
+            // Get slot
+            var slot = team.Slots[slotID];
+
+            // Verify there's an occupant
+            if (slot.Interface.Occupant is null) {
+                Trace.WriteLine("Failed to set company of null occupant - OnCompanyChanged", nameof(LobbyModel));
+                return;
+            }
+
+            // Set company and refresh
+            slot.Interface.Occupant.Company = company;
+            slot.RefreshCompany();
+
+            // Trigger self change
+            if (this.m_handle.IsHost) {
+                this.OnSelfChanged(); // Trigger a playability check
+            }
+
+        }
+
+        private void OnSettingChanged(string key, string value) {
+
+            // If host; do nothing
+            if (this.m_handle.IsHost) {
+                return;
+            }
+
+            // Invoke changes
+            Application.Current.Dispatcher.Invoke(() => { 
+                
+                // Loop over settings
+                for (int i = 0; i < this.m_settings.Length; i++) {
+                    if (this.m_settings[i].DropdownID == key) {
+
+                        // Set label value
+                        this.m_settings[i].LabelContent = this.GetRemoteSettingValue(key, value);
+                        
+                        // Update scenario preview if that is what was changed
+                        if (this.m_settings[i].DropdownID == this.ScenarioSelection.DropdownID) {
+                            this.TrySetMapSource(ScenarioSelection.Items.Select(x => x.Scenario).FirstOrDefault(x => x.RelativeFilename == value));
+                        }
+
+                        return;
+                    }
+                }
+
+                // Log missing k-v pair
+                Trace.WriteLine($"Failed to set setting '{key}' to '{value}' as setting dropdown was not defined.", nameof(LobbyModel));
+
+            });
+
+        }
+
+        private string GetRemoteSettingValue(string key, string value) => key switch {
+            "selected_map" => GameLocale.GetString(ScenarioList.ScenarioNameFromRelativeFilename(value)),
+            _ => value
+        };
+
+        private void OnConnectionLost(string reason) {
+
+            // Decide on title and desc
+            string modalTitle = reason switch {
+                "KICK" => "Kicked from lobby",
+                _ => "Connection lost"
+            };
+            string modalDesc = reason switch {
+                "KICK" => "You were kicked from the lobby by the host",
+                _ => "Connection to server was lost."
+            };
+
+            // Goto GUI thread and show connection lost.
+            Application.Current.Dispatcher.Invoke(() => {
+
+                // Show leave modal
+                App.ViewManager.GetModalControl()?.ShowModal(ModalDialog.CreateModal(modalTitle, modalDesc, (sender, success, value) => {
+                    if (success && value == ModalDialogResult.Confirm) {
+
+                        // Go back to browser view
+                        App.ViewManager.SetDisplay(AppDisplayState.LeftRight, typeof(LeftMenu), typeof(LobbyBrowserViewModel));
+
+                    }
+                }));
+
+            });
 
         }
 
@@ -413,7 +851,13 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
         public static LobbyModel CreateModelAsParticipant(LobbyAPI handler) {
 
             // Create model
-            LobbyModel model = new(handler, null, null);
+            LobbyModel model = new(handler, handler.Allies, handler.Axis);
+            model.m_handle.OnLobbySettingUpdate += model.OnSettingChanged;
+
+            // Update settings
+            foreach (var (k, v) in handler.Settings) {
+                model.OnSettingChanged(k, v);
+            }
 
             // Return model
             return model;

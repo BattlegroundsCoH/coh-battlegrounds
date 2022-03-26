@@ -2,6 +2,7 @@
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Windows;
 using System.Windows.Documents;
 using System.Windows.Input;
@@ -33,7 +34,7 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
         private readonly LocaleKey m_teamFilter;
         private readonly FontFamily m_font = new FontFamily("Open Sans");
 
-        public event PropertyChangedEventHandler PropertyChanged;
+        public event PropertyChangedEventHandler? PropertyChanged;
 
         public bool SingleInstanceOnly => false;
 
@@ -41,7 +42,7 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
 
         public ObservableCollection<string> Spectators { get; set; }
 
-        public FlowDocument MessageDocument { get; set; }
+        public FlowDocument? MessageDocument { get; set; }
 
         public LobbyDropdownModel<LobbyChannelModel> SendFilter { get; }
 
@@ -49,13 +50,14 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
 
         public EventCommand<KeyEventArgs> EnterKey { get; }
 
-        public string MessageContent { get; set; }
+        public string? MessageContent { get; set; }
 
         public LobbyChatSpectatorModel(LobbyAPI lobbyHandler) {
             
             // Set internal handler
             this.m_handle = lobbyHandler;
             this.m_handle.OnChatMessage += this.OnChatMessage;
+            this.m_handle.OnSystemMessage += this.OnSystemMessage;
 
             // Create locale keys
             this.m_allFilter = new("LobbyChat_FilterAll");
@@ -95,9 +97,31 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
             // Convert lobby message colour to System.Colour
             var colour = (Color)ColorConverter.ConvertFromString(msg.Colour);
 
-            // Display
-            this.NewMessage(msg.Sender, msg.Message, colour, msg.Timestamp, msg.Channel);
+            // Invoke dispatcher
+            Application.Current.Dispatcher.Invoke(() => {
 
+                // Display
+                this.NewMessage(msg.Sender.Trim(), msg.Message.Trim(), colour, msg.Timestamp, msg.Channel);
+
+            });
+
+        }
+
+        private void OnSystemMessage(ulong who, string name, string context) {
+            switch (context) {
+                case "JOIN":
+                    this.SystemMessage($"{name} joined the lobby", Colors.Yellow);
+                    break;
+                case "LEFT":
+                    this.SystemMessage($"{name} has left the lobby", Colors.Yellow);
+                    break;
+                case "KICK":
+                    this.SystemMessage($"{name} was kicked from the lobby", Colors.Yellow);
+                    break;
+                default:
+                    Trace.WriteLine($"Unknown context triggered by '{who}' ({name}) ctxt = {context}", nameof(LobbyChatSpectatorModel));
+                    break;
+            }
         }
 
         public void SendEnter(object sender, KeyEventArgs args) {
@@ -109,12 +133,15 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
             }
         }
 
-        public void Send(string content = null) {
+        public void Send(string? content = null) {
 
             // Set message content
             if (content is null) {
                 content = this.MessageContent;
             }
+
+            // Trim content
+            content = content?.Trim() ?? string.Empty;
 
             // Make sure there's actually content to send.
             if (string.IsNullOrWhiteSpace(content)) {
@@ -138,6 +165,8 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
                     this.m_handle.TeamChat(this.m_handle.Self.ID, content);
                     channel = "Team";
                     break;
+                default:
+                    break;
             }
 
             // Append message
@@ -154,7 +183,7 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
         public void NewMessage(string from, string msg, Color colour, string time, string channel) {
 
             // Create full message
-            var fullMessage = $"[{time}][{channel}]{from}: {msg}";
+            var fullMessage = $"[{time}][{channel}] {from}: {msg}";
 
             // Create paragraph to append
             Paragraph p = new() {
@@ -167,7 +196,7 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
             });
 
             // Add to message history
-            this.MessageDocument.Blocks.Add(p);
+            this.MessageDocument?.Blocks.Add(p);
 
         }
 
@@ -190,7 +219,7 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
                 });
 
                 // Add to message history
-                this.MessageDocument.Blocks.Add(p);
+                this.MessageDocument?.Blocks.Add(p);
 
             });
 

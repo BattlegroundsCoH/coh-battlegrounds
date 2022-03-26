@@ -26,18 +26,18 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
         public ICommand AddAIPlayer { get; set; }
 
         public Visibility LockVisibility
-            => !this.m_source.IsProxyInterface && this.m_source.IsOpen && !this.m_source.IsLocked ? Visibility.Visible : Visibility.Collapsed;
+            => this.m_source.IsHost && this.m_source.IsOpen && !this.m_source.IsLocked ? Visibility.Visible : Visibility.Collapsed;
 
         public Visibility OpenVisibility
-            => !this.m_source.IsProxyInterface && this.m_source.IsLocked ? Visibility.Visible : Visibility.Collapsed;
+            => this.m_source.IsHost && this.m_source.IsLocked ? Visibility.Visible : Visibility.Collapsed;
 
         public Visibility StateSelectorVisibility
             => (this.LockVisibility is Visibility.Visible || this.OpenVisibility is Visibility.Visible) ? Visibility.Visible : Visibility.Collapsed;
 
         public Visibility KickVisibility =>
-            !this.m_source.IsSelf && !this.m_source.IsProxyInterface && !this.m_source.IsOpen ? Visibility.Visible : Visibility.Collapsed;
+            !this.m_source.IsSelf && this.m_source.IsHost && !this.m_source.IsOpen ? Visibility.Visible : Visibility.Collapsed;
 
-        public Visibility AIOptionsVisibility => this.m_source.IsOpen && !this.m_source.IsProxyInterface ? Visibility.Visible : Visibility.Collapsed;
+        public Visibility AIOptionsVisibility => this.m_source.IsOpen && this.m_source.IsHost ? Visibility.Visible : Visibility.Collapsed;
 
         public LobbySlotContextMenu(LobbySlot slotSource) => this.m_source = slotSource;
 

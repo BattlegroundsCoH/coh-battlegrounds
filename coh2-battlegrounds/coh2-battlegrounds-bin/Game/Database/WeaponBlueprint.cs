@@ -198,24 +198,24 @@ namespace Battlegrounds.Game.Database {
                     _ => throw new NotImplementedException(prop)
                 };
             }
-            var cat = __lookup.GetValueOrDefault("Category", WeaponCategory.Undefined);
+            var cat = __lookup.GetCastValueOrDefault("Category", WeaponCategory.Undefined);
             var modguid = __lookup.ContainsKey("ModGUID") ? ModGuid.FromGuid(__lookup["ModGUID"] as string) : ModGuid.BaseGame;
-            var pbgid = new BlueprintUID(__lookup.GetValueOrDefault("PBGID", 0ul), modguid);
+            var pbgid = new BlueprintUID(__lookup.GetCastValueOrDefault("PBGID", 0ul), modguid);
             return new(
-                __lookup.GetValueOrDefault("Name", string.Empty), 
+                __lookup.GetCastValueOrDefault("Name", string.Empty), 
                 pbgid,
                 cat,
                 cat switch {
-                    WeaponCategory.Ballistic => __lookup.GetValueOrDefault("BalisticType", WeaponBallisticType.Invalid),
-                    WeaponCategory.SmallArms => __lookup.GetValueOrDefault("SmallArmsType", WeaponSmallArmsType.Invalid),
-                    WeaponCategory.Explosive => __lookup.GetValueOrDefault("ExplosiveType", WeaponExplosiveType.Invalid),
+                    WeaponCategory.Ballistic => __lookup.GetCastValueOrDefault("BalisticType", WeaponBallisticType.Invalid),
+                    WeaponCategory.SmallArms => __lookup.GetCastValueOrDefault("SmallArmsType", WeaponSmallArmsType.Invalid),
+                    WeaponCategory.Explosive => __lookup.GetCastValueOrDefault("ExplosiveType", WeaponExplosiveType.Invalid),
                     _ => null
                 },
-                __lookup.GetValueOrDefault("CallbackType", WeaponOnFireCallbackType.None),
-                __lookup.GetValueOrDefault("Damage", 0.0f),
-                __lookup.GetValueOrDefault("Range", 0.0f),
-                __lookup.GetValueOrDefault("MagazineSize", 0),
-                __lookup.GetValueOrDefault("FireRate", 0.0f));
+                __lookup.GetCastValueOrDefault("CallbackType", WeaponOnFireCallbackType.None),
+                __lookup.GetCastValueOrDefault("Damage", 0.0f),
+                __lookup.GetCastValueOrDefault("Range", 0.0f),
+                __lookup.GetCastValueOrDefault("MagazineSize", 0),
+                __lookup.GetCastValueOrDefault("FireRate", 0.0f));
         }
 
         private static WeaponOnFireCallbackType GetCallbackType(string val) {

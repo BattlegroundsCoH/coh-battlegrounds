@@ -317,26 +317,26 @@ namespace Battlegrounds.Game.Database {
                     _ => throw new NotImplementedException(prop)
                 };
             }
-            Faction fac = __lookup.GetValueOrDefault("Army", "NULL") is "NULL" ? null : Faction.FromName(__lookup.GetValueOrDefault("Army", "NULL"));
+            Faction fac = __lookup.GetCastValueOrDefault("Army", "NULL") is "NULL" ? null : Faction.FromName(__lookup.GetCastValueOrDefault("Army", "NULL"));
             ModGuid modguid = __lookup.ContainsKey("ModGUID") ? ModGuid.FromGuid(__lookup["ModGUID"] as string) : ModGuid.BaseGame;
-            BlueprintUID pbgid = new BlueprintUID(__lookup.GetValueOrDefault("PBGID", 0ul), modguid);
-            return new(__lookup.GetValueOrDefault("Name", string.Empty),
+            BlueprintUID pbgid = new BlueprintUID(__lookup.GetCastValueOrDefault("PBGID", 0ul), modguid);
+            return new(__lookup.GetCastValueOrDefault("Name", string.Empty),
                 pbgid,
                 fac,
-                __lookup.GetValueOrDefault("Display", new UIExtension()),
-                __lookup.GetValueOrDefault("SquadCost", new CostExtension()),
-                __lookup.GetValueOrDefault("Entities", new LoadoutExtension(Array.Empty<LoadoutExtension.Entry>())),
-                __lookup.GetValueOrDefault("Veterancy", new VeterancyExtension(Array.Empty<VeterancyExtension.Rank>())),
-                __lookup.GetValueOrDefault("Types", Array.Empty<string>()),
-                __lookup.GetValueOrDefault("Abilities", Array.Empty<string>()),
-                __lookup.GetValueOrDefault("Upgrades", Array.Empty<string>()),
-                __lookup.GetValueOrDefault("AppliedUpgrades", Array.Empty<string>()),
-                __lookup.GetValueOrDefault("UpgradeCapacity", 0),
-                __lookup.GetValueOrDefault("SlotPickupCapacity", 0),
-                __lookup.GetValueOrDefault("CanPickupItems", false),
-                __lookup.GetValueOrDefault("IsSyncWeapon", false),
-                __lookup.GetValueOrDefault("HasCrew", false),
-                __lookup.GetValueOrDefault("FemaleChance", 0.0f));
+                __lookup.GetCastValueOrDefault("Display", new UIExtension()),
+                __lookup.GetCastValueOrDefault("SquadCost", new CostExtension()),
+                __lookup.GetCastValueOrDefault("Entities", new LoadoutExtension(Array.Empty<LoadoutExtension.Entry>())),
+                __lookup.GetCastValueOrDefault("Veterancy", new VeterancyExtension(Array.Empty<VeterancyExtension.Rank>())),
+                __lookup.GetCastValueOrDefault("Types", Array.Empty<string>()),
+                __lookup.GetCastValueOrDefault("Abilities", Array.Empty<string>()),
+                __lookup.GetCastValueOrDefault("Upgrades", Array.Empty<string>()),
+                __lookup.GetCastValueOrDefault("AppliedUpgrades", Array.Empty<string>()),
+                __lookup.GetCastValueOrDefault("UpgradeCapacity", 0),
+                __lookup.GetCastValueOrDefault("SlotPickupCapacity", 0),
+                __lookup.GetCastValueOrDefault("CanPickupItems", false),
+                __lookup.GetCastValueOrDefault("IsSyncWeapon", false),
+                __lookup.GetCastValueOrDefault("HasCrew", false),
+                __lookup.GetCastValueOrDefault("FemaleChance", 0.0f));
         }
 
         public override void Write(Utf8JsonWriter writer, SquadBlueprint value, JsonSerializerOptions options) => writer.WriteStringValue(value.Name);

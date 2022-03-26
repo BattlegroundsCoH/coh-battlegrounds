@@ -1,5 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Diagnostics;
+using System.Text;
 
 using Battlegrounds.Networking.Server;
 
@@ -42,26 +43,26 @@ public class LobbyMatchAPI {
 
     private readonly ServerAPI m_api;
     private readonly LobbyAPI m_lobby;
-    private readonly int m_humans;
-
-    private readonly HashSet<ulong> m_gamemodeReceived;
-    private readonly HashSet<ulong> m_resultsReceived;
 
     public LobbyMatchAPI(LobbyAPI api) {
         
         // Set internal refs
         this.m_api = api.ServerHandle;
         this.m_lobby = api;
-        this.m_humans = (int)this.m_lobby.GetPlayerCount();
-
-        // Create hash sets
-        this.m_gamemodeReceived = new();
-        this.m_resultsReceived = new();
 
     }
 
-    public LobbyPlayerCompanyFile GetPlayerCompany(ulong playerID)
-            => new LobbyPlayerCompanyFile(playerID, this.m_lobby.Self.ID == playerID ? throw new NotImplementedException() : this.m_api.DownloadCompany(playerID));
+    public LobbyPlayerCompanyFile GetPlayerCompany(ulong playerID) {
+        string companyFile = string.Empty;
+        this.m_api.DownloadCompany(playerID, (status, data) => {
+            if (status is DownloadResult.DOWNLOAD_SUCCESS) {
+                companyFile = Encoding.UTF8.GetString(data);
+            } else {
+                Trace.WriteLine($"Failed to get company of player {playerID} ({status}).", nameof(LobbyMatchAPI));
+            }
+        }); // .DownloadCompany is a blocking call!
+        return new(playerID, companyFile);
+    }
 
     public bool HasAllPlayerCompanies() {
 
@@ -73,9 +74,25 @@ public class LobbyMatchAPI {
                 // Get slot at index
                 var slot = team.Slots[i];
 
+                // Flag if consider
+                var considerable = slot.IsOccupied && !slot.IsSelf() && !slot.IsAI();
+
                 // If occupied but no company file available, return false.
-                if (slot.State == 1 && !this.m_api.PlayerHasCompany(slot.Occupant.MemberID)) {
-                    return false;
+                if (considerable) {
+
+                    // Grab occupant
+                    var occupant = slot.Occupant;
+                    if (occupant is null) {
+                        return false;
+                    }
+
+                    // Flag
+                    bool hasCompany = this.m_api.PlayerHasCompany(occupant.MemberID);
+                    Trace.WriteLine($"Company Status of {occupant.MemberID} = {hasCompany}", nameof(LobbyMatchAPI));
+                    if (!hasCompany) {
+                        return false;
+                    }
+
                 }
 
             }
@@ -85,8 +102,15 @@ public class LobbyMatchAPI {
 
         }
 
+        // Get
+        var allies = All(this.m_lobby.Allies);
+        var axis = All(this.m_lobby.Axis);
+
+        // Log
+        Trace.WriteLine($"Has players uploaded company status [Allies = {allies}; Axis = {axis}]", nameof(LobbyMatchAPI));
+
         // Run 'All' on allies and axis team
-        return All(this.m_lobby.Allies) && All(this.m_lobby.Axis);
+        return allies && axis;
 
     }
 
@@ -97,9 +121,7 @@ public class LobbyMatchAPI {
             for (int i = 0; i < team.Slots.Length; i++) {
 
                 var slot = team.Slots[i];
-                if (slot.IsSelf())
-                    continue;
-                if (slot.IsAI())
+                if (slot.IsSelf() || slot.IsAI())
                     continue;
 
                 if (team.Slots[i].Occupant is LobbyAPIStructs.LobbyMember member) {
