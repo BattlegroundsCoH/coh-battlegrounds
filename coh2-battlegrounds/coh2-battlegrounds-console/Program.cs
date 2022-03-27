@@ -1,9 +1,11 @@
 ﻿using System;
+using System.Diagnostics;
 using System.IO;
 using System.Text.Json;
 using System.Threading;
 
 using Battlegrounds;
+using Battlegrounds.Game.Database;
 using Battlegrounds.Game.Database.Management;
 using Battlegrounds.Game.DataCompany;
 using Battlegrounds.Game.DataSource.Replay;
@@ -12,90 +14,37 @@ using Battlegrounds.Game.Match;
 using Battlegrounds.Game.Match.Data;
 using Battlegrounds.Gfx;
 using Battlegrounds.Modding;
+using Battlegrounds.Networking;
 
 namespace coh2_battlegrounds_console {
 
     class Program {
 
-        static bool recent_analysis;
-        static string recent_file = null;
-        static bool compile_json;
+        /// <summary>
+        /// Represents the GfxVerify flag command.
+        /// </summary>
+        class GfxVerify : Command {
+            
+            /// <summary>
+            /// Define path argument
+            /// </summary>
+            public static readonly Argument<string> PATH = new Argument<string>("-f", "Specifies the file to verify integrity of.", string.Empty);
 
-        static bool gfxcompile;
-        static string gfxcompilepath = null;
-        static string gfxpattern = null;
-        static int gfxversion = GfxMap.GfxBinaryVersion;
+            public GfxVerify() : base("gfxverify", "Verifies the integrity of a gfx file.", PATH) { }
 
-        static bool gfxverify;
+            public override void Execute(CommandArgumentList argumentList) {
 
-        static bool campaign_compile;
-        static string campaign_compile_file = null;
-
-        static bool extract_coh2_maps;
-
-        static bool do_test_companies;
-
-        static string output_path = null;
-
-        static ITuningMod tuningMod;
-
-        static void Main(string[] args) {
-
-            // Write args
-            Console.WriteLine(string.Join(' ', args));
-            ParseArguments(args);
-
-            if (recent_analysis) {
-                LoadBGAndProceed();
-                Console.WriteLine("Parsing latest replay file");
-                string target = ReplayMatchData.LATEST_REPLAY_FILE;
-                if (!string.IsNullOrEmpty(recent_file)) {
-                    if (File.Exists(recent_file)) {
-                        target = recent_file;
-                    }
-                }
-                ReplayFile replayFile = new ReplayFile(target);
-                Console.WriteLine($"Load Replay: {replayFile.LoadReplay()}");
-                Console.WriteLine($"Partial: {replayFile.IsPartial}");
-                if (compile_json) {
-                    Console.WriteLine("Compiling to json playback");
-                    ReplayMatchData playback = new ReplayMatchData(new NullSession());
-                    playback.SetReplayFile(replayFile);
-                    if (playback.ParseMatchData()) {
-                        JsonPlayback events = new JsonPlayback(playback);
-                        File.WriteAllText("playback.json", JsonSerializer.Serialize(events));
-                        Console.WriteLine("Saved to .json");
-                    } else {
-                        Console.WriteLine("Failed to compile to json...");
-                    }
-                }
-                Console.ReadLine();
-            } else if (campaign_compile) {
-                LoadBGAndProceed();
-                CampaignCompiler.Output = output_path;
-                CampaignCompiler.Compile(campaign_compile_file);
-            } else if (extract_coh2_maps) {
-                MapExtractor.Output = output_path;
-                MapExtractor.Extract();
-            } else if (do_test_companies) {
-
-                LoadBGAndProceed();
-
-                File.WriteAllText("26th_Rifle_Division.json", CompanySerializer.GetCompanyAsJson(CreateSovietCompany(), true));
-                File.WriteAllText("69th_panzer.json", CompanySerializer.GetCompanyAsJson(CreateGermanCompany(), true));
-
-            } else if (gfxcompile) {
-                GfxFolderCompiler.Compile(gfxcompilepath, output_path);
-            } else if (gfxverify) {
+                // Grab target path
+                var target = argumentList.GetValue(PATH);
 
                 try {
 
                     // Try read
-                    GfxMap map = GfxMap.FromBinary(File.OpenRead(gfxcompilepath));
+                    GfxMap map = GfxMap.FromBinary(File.OpenRead(target));
 
                     // Log details if read
                     if (map is null) {
-                        Console.WriteLine($"Failed to read {gfxcompilepath}");
+                        Console.WriteLine($"Failed to read {target}");
                         return;
                     }
 
@@ -112,7 +61,221 @@ namespace coh2_battlegrounds_console {
 
         }
 
+        class GfxCompile : Command {
+            
+            /// <summary>
+            /// 
+            /// </summary>
+            public static readonly Argument<string> DIR = new Argument<string>("-d", "Specifies the directory to compile.", string.Empty);
+            
+            /// <summary>
+            /// 
+            /// </summary>
+            public static readonly Argument<string> OUT = new Argument<string>("-o", "Specifies the name of the file to output gfx map to.", "gfx.dat");
+
+            /// <summary>
+            /// 
+            /// </summary>
+            public static readonly Argument<int> VER = new Argument<int>("-v", "Specifies the gfx version to target.", GfxMap.GfxBinaryVersion);
+
+            /// <summary>
+            /// 
+            /// </summary>
+            public static readonly Argument<string> REG = new Argument<string>("-r", "Specifies regex pattern to select specific files in folder to compile.", string.Empty);
+
+            public GfxCompile() : base("gfxdir", "Compiles directory gfx content into a gfx data file.", DIR, OUT, VER, REG) { }
+
+            public override void Execute(CommandArgumentList argumentList) 
+                => GfxFolderCompiler.Compile(argumentList.GetValue(DIR), argumentList.GetValue(OUT));
+
+        }
+
+        class TestCompanies : Command {
+
+            /// <summary>
+            /// 
+            /// </summary>
+            public static readonly Argument<bool> SOV = new Argument<bool>("-s", "Specifies the Soviet company should *NOT* be generated.", true);
+
+            /// <summary>
+            /// 
+            /// </summary>
+            public static readonly Argument<bool> GER = new Argument<bool>("-g", "Specifies the German company should *NOT* be generated.", true);
+
+            /// <summary>
+            /// 
+            /// </summary>
+            public static readonly Argument<bool> RAW = new Argument<bool>("-raw", "Specifies the output format should not be formatted.", true);
+
+            public TestCompanies() : base("company-test", "Compiles a German and Soviet test company using the most up-to-date version.", SOV, GER, RAW) { }
+
+            public override void Execute(CommandArgumentList argumentList) {
+
+                LoadBGAndProceed();
+
+                if (argumentList.GetValue(SOV))
+                    File.WriteAllText("26th_Rifle_Division.json", CompanySerializer.GetCompanyAsJson(CreateSovietCompany(), argumentList.GetValue(RAW)));
+
+                if (argumentList.GetValue(GER))
+                    File.WriteAllText("69th_panzer.json", CompanySerializer.GetCompanyAsJson(CreateGermanCompany(), argumentList.GetValue(RAW)));
+
+            }
+
+        }
+
+        class MapExtract : Command {
+
+            /// <summary>
+            /// Define path argument
+            /// </summary>
+            public static readonly Argument<string> PATH = new Argument<string>("-o", "Specifies output directory.", "archive_maps");
+
+            public MapExtract() : base("coh2-extract-maps", "Verifies the integrity of a gfx file.", PATH) { }
+
+            public override void Execute(CommandArgumentList argumentList) {
+
+                MapExtractor.Output = argumentList.GetValue(PATH);
+                MapExtractor.Extract();
+
+            }
+
+        }
+
+        class CampaignCompile : Command {
+
+            /// <summary>
+            /// Define path argument
+            /// </summary>
+            public static readonly Argument<string> PATH = new Argument<string>("-c", "Specifies the directory to compile", string.Empty);
+
+            /// <summary>
+            /// Define path argument
+            /// </summary>
+            public static readonly Argument<string> OUT = new Argument<string>("-o", "Specifies compiled campaign output file.", "campaign.camp");
+
+            public CampaignCompile() : base("campaign", "Verifies the integrity of a gfx file.", PATH, OUT) { }
+
+            public override void Execute(CommandArgumentList argumentList) {
+
+                LoadBGAndProceed();
+                CampaignCompiler.Output = argumentList.GetValue(PATH);
+                CampaignCompiler.Compile(argumentList.GetValue(OUT));
+
+            }
+
+        }
+
+        class ReplayAnalysis : Command {
+
+            /// <summary>
+            /// Define path argument
+            /// </summary>
+            public static readonly Argument<string> PATH = new Argument<string>("-playback", "Specifies the playback file to analyse.", ReplayMatchData.LATEST_REPLAY_FILE);
+
+            /// <summary>
+            /// 
+            /// </summary>
+            public static readonly Argument<bool> JSON = new Argument<bool>("-json", "Specifies the analysis should be saved to a json file.", false);
+
+            public ReplayAnalysis() : base("replay", "Runs an analysis of the most recent replay file (or otherwise specified file).", PATH, JSON) { }
+
+            public override void Execute(CommandArgumentList argumentList) {
+
+                var target = argumentList.GetValue(PATH);
+                var compile_json = argumentList.GetValue(JSON);
+
+                LoadBGAndProceed();
+
+                Console.WriteLine("Parsing latest replay file");
+                ReplayFile replayFile = new ReplayFile(target);
+                Console.WriteLine($"Load Replay: {replayFile.LoadReplay()}");
+                Console.WriteLine($"Partial: {replayFile.IsPartial}");
+                if (compile_json) {
+                    Console.WriteLine("Compiling to json playback");
+                    ReplayMatchData playback = new ReplayMatchData(new NullSession());
+                    playback.SetReplayFile(replayFile);
+                    if (playback.ParseMatchData()) {
+                        JsonPlayback events = new JsonPlayback(playback);
+                        File.WriteAllText("playback.json", JsonSerializer.Serialize(events));
+                        Console.WriteLine("Saved to replay analysis to playback.json");
+                    } else {
+                        Console.WriteLine("Failed to compile to json...");
+                    }
+                }
+
+            }
+
+        }
+
+        class ServerCheck : Command {
+
+            public ServerCheck() : base("server-check", "Will send a ping request to the server and time the response time.") { }
+
+            public override void Execute(CommandArgumentList argumentList) {
+                var watch = Stopwatch.StartNew();
+                var response = NetworkInterface.PingServer("194.37.80.249", 80);
+                watch.Stop();
+                Console.WriteLine($"Server response: {response} - ping: {watch.ElapsedMilliseconds}ms");
+            }
+
+        }
+
+        class Repl : Command {
+
+            public Repl() : base("repl", "The program will enter a repl mode and allow for various inputs.") { }
+
+            public override void Execute(CommandArgumentList argumentList) {
+                Console.Clear();
+                Console.WriteLine("====== Entered REPL Mode ======");
+                var defcolour = Console.ForegroundColor;
+                while (true) {
+                    Console.WriteLine();
+                    Console.Write(">> ");
+
+                    Console.ForegroundColor = ConsoleColor.Green;
+                    string[] input = (Console.ReadLine() ?? string.Empty).Split(' ');
+                    Console.ForegroundColor = defcolour;
+
+                    // Parse
+                    flags?.Parse(input);
+
+                }
+            }
+
+        }
+
+        static ITuningMod? tuningMod;
+
+        static Flags? flags;
+
+        static bool IsDatabaseUp = false;
+
+        static void Main(string[] args) {
+
+            // Write args
+            Console.WriteLine(string.Join(' ', args));
+
+            // Create flags parse and executor
+            flags = new();
+            flags.RegisterCommand<GfxVerify>();
+            flags.RegisterCommand<GfxCompile>();
+            flags.RegisterCommand<TestCompanies>();
+            flags.RegisterCommand<MapExtract>();
+            flags.RegisterCommand<CampaignCompile>();
+            flags.RegisterCommand<ReplayAnalysis>();
+            flags.RegisterCommand<ServerCheck>();
+            flags.RegisterCommand<Repl>();
+
+            // Parse (and dispatch)
+            flags.Parse(args);
+
+        }
+
         private static void LoadBGAndProceed() {
+
+            // Bail
+            if (IsDatabaseUp)
+                return;
 
             // Load BG
             BattlegroundsInstance.LoadInstance();
@@ -128,379 +291,345 @@ namespace coh2_battlegrounds_console {
                 Thread.Sleep(100);
             }
 
+            // Get package
             var package = ModManager.GetPackage("mod_bg");
             tuningMod = ModManager.GetMod<ITuningMod>(package.TuningGUID);
+
+            // Mark loaded
+            IsDatabaseUp = true;
 
         }
 
         private static Company CreateSovietCompany() {
 
+            // Do bail check
+            if (tuningMod is null)
+                throw new Exception("Tuning mod not defined!");
+
+            // Grab tuning mod GUID
+            var g = tuningMod.Guid;
+
             // Create a dummy company
-            CompanyBuilder companyBuilder = new CompanyBuilder().NewCompany(Faction.Soviet)
-                .ChangeName("26th Rifle Division")
-                .ChangeTuningMod(tuningMod.Guid);
-            UnitBuilder unitBuilder = new UnitBuilder();
+            CompanyBuilder bld =
+                CompanyBuilder.NewCompany("26th Rifle Division", CompanyType.Infantry, CompanyAvailabilityType.MultiplayerOnly, Faction.Soviet, g);
+
+            // Grab blueprints
+            var conscripts = BlueprintManager.FromBlueprintName<SquadBlueprint>("conscript_squad_bg");
+            var frontoviki = BlueprintManager.FromBlueprintName<SquadBlueprint>("frontoviki_squad_bg");
+            var busters = BlueprintManager.FromBlueprintName<SquadBlueprint>("tank_buster_bg");
+            var shocks = BlueprintManager.FromBlueprintName<SquadBlueprint>("shock_troops_bg");
+            var commissar = BlueprintManager.FromBlueprintName<SquadBlueprint>("commissar_squad_bg");
+            var maxim = BlueprintManager.FromBlueprintName<SquadBlueprint>("m1910_maxim_heavy_machine_gun_squad_bg");
+            var at = BlueprintManager.FromBlueprintName<SquadBlueprint>("m1942_zis-3_76mm_at_gun_squad_bg");
+            var mortar = BlueprintManager.FromBlueprintName<SquadBlueprint>("pm-82_41_mortar_squad_bg");
+            var m5 = BlueprintManager.FromBlueprintName<SquadBlueprint>("m5_halftrack_squad_bg");
+            var t3476 = BlueprintManager.FromBlueprintName<SquadBlueprint>("t_34_76_squad_bg");
+            var t3485 = BlueprintManager.FromBlueprintName<SquadBlueprint>("t_34_85_squad_bg");
+            var su85 = BlueprintManager.FromBlueprintName<SquadBlueprint>("su-85_bg");
+            var kv = BlueprintManager.FromBlueprintName<SquadBlueprint>("kv-1_bg");
 
             // Basic infantry
-            companyBuilder.AddAndCommitUnit(unitBuilder.SetBlueprint("conscript_squad_bg").SetVeterancyRank(1).AddUpgrade("ppsh-41_sub_machine_gun_upgrade_bg").SetDeploymentPhase(DeploymentPhase.PhaseInitial).GetAndReset());
-            companyBuilder.AddAndCommitUnit(unitBuilder.SetBlueprint("conscript_squad_bg").SetVeterancyRank(1).AddUpgrade("ppsh-41_sub_machine_gun_upgrade_bg").SetDeploymentPhase(DeploymentPhase.PhaseInitial).GetAndReset());
-            companyBuilder.AddAndCommitUnit(unitBuilder.SetBlueprint("conscript_squad_bg").SetVeterancyRank(2).AddUpgrade("dp-28_lmg_upgrade_bg").SetDeploymentPhase(DeploymentPhase.PhaseA).GetAndReset());
-            companyBuilder.AddAndCommitUnit(unitBuilder.SetBlueprint("conscript_squad_bg").SetVeterancyRank(2).AddUpgrade("dp-28_lmg_upgrade_bg").SetDeploymentPhase(DeploymentPhase.PhaseA).GetAndReset());
-            companyBuilder.AddAndCommitUnit(unitBuilder.SetBlueprint("conscript_squad_bg").SetVeterancyRank(4).AddUpgrade("ppsh-41_sub_machine_gun_upgrade_bg").SetDeploymentPhase(DeploymentPhase.PhaseA).GetAndReset());
-            companyBuilder.AddAndCommitUnit(unitBuilder.SetBlueprint("tank_buster_bg").SetVeterancyRank(2).SetDeploymentPhase(DeploymentPhase.PhaseA).GetAndReset());
-            companyBuilder.AddAndCommitUnit(unitBuilder.SetBlueprint("tank_buster_bg").SetVeterancyRank(3).SetDeploymentPhase(DeploymentPhase.PhaseA).GetAndReset());
-            companyBuilder.AddAndCommitUnit(unitBuilder.SetBlueprint("tank_buster_bg").SetVeterancyRank(3).SetDeploymentPhase(DeploymentPhase.PhaseA).GetAndReset());
-            companyBuilder.AddAndCommitUnit(unitBuilder.SetBlueprint("shock_troops_bg").SetVeterancyRank(4).SetDeploymentPhase(DeploymentPhase.PhaseA).GetAndReset());
-            companyBuilder.AddAndCommitUnit(unitBuilder.SetBlueprint("shock_troops_bg").SetVeterancyRank(3).SetDeploymentPhase(DeploymentPhase.PhaseA).GetAndReset());
-            companyBuilder.AddAndCommitUnit(unitBuilder.SetBlueprint("shock_troops_bg").SetVeterancyRank(5).SetDeploymentPhase(DeploymentPhase.PhaseA).GetAndReset());
-            companyBuilder.AddAndCommitUnit(unitBuilder.SetBlueprint("shock_troops_bg").SetVeterancyRank(2).SetDeploymentPhase(DeploymentPhase.PhaseB).GetAndReset());
-            companyBuilder.AddAndCommitUnit(unitBuilder.SetBlueprint("shock_troops_bg").SetVeterancyRank(2).SetDeploymentPhase(DeploymentPhase.PhaseB).GetAndReset());
-            companyBuilder.AddAndCommitUnit(unitBuilder.SetBlueprint("commissar_squad_bg").SetVeterancyRank(3).SetDeploymentPhase(DeploymentPhase.PhaseA).GetAndReset());
+            bld.AddUnit(UnitBuilder.NewUnit(conscripts).SetVeterancyRank(1).AddUpgrade("ppsh-41_sub_machine_gun_upgrade_bg").SetDeploymentPhase(DeploymentPhase.PhaseInitial))
+            .AddUnit(UnitBuilder.NewUnit(conscripts).SetVeterancyRank(1).AddUpgrade("ppsh-41_sub_machine_gun_upgrade_bg").SetDeploymentPhase(DeploymentPhase.PhaseInitial))
+            .AddUnit(UnitBuilder.NewUnit(conscripts).SetVeterancyRank(2).AddUpgrade("dp-28_lmg_upgrade_bg").SetDeploymentPhase(DeploymentPhase.PhaseA))
+            .AddUnit(UnitBuilder.NewUnit(conscripts).SetVeterancyRank(2).AddUpgrade("dp-28_lmg_upgrade_bg").SetDeploymentPhase(DeploymentPhase.PhaseA))
+            .AddUnit(UnitBuilder.NewUnit(conscripts).SetVeterancyRank(4).AddUpgrade("ppsh-41_sub_machine_gun_upgrade_bg").SetDeploymentPhase(DeploymentPhase.PhaseA))
+            .AddUnit(UnitBuilder.NewUnit(busters).SetVeterancyRank(2).SetDeploymentPhase(DeploymentPhase.PhaseA))
+            .AddUnit(UnitBuilder.NewUnit(busters).SetVeterancyRank(3).SetDeploymentPhase(DeploymentPhase.PhaseA))
+            .AddUnit(UnitBuilder.NewUnit(busters).SetVeterancyRank(3).SetDeploymentPhase(DeploymentPhase.PhaseA))
+            .AddUnit(UnitBuilder.NewUnit(shocks).SetVeterancyRank(4).SetDeploymentPhase(DeploymentPhase.PhaseA))
+            .AddUnit(UnitBuilder.NewUnit(shocks).SetVeterancyRank(3).SetDeploymentPhase(DeploymentPhase.PhaseA))
+            .AddUnit(UnitBuilder.NewUnit(shocks).SetVeterancyRank(5).SetDeploymentPhase(DeploymentPhase.PhaseA))
+            .AddUnit(UnitBuilder.NewUnit(shocks).SetVeterancyRank(2).SetDeploymentPhase(DeploymentPhase.PhaseB))
+            .AddUnit(UnitBuilder.NewUnit(shocks).SetVeterancyRank(2).SetDeploymentPhase(DeploymentPhase.PhaseB))
+            .AddUnit(UnitBuilder.NewUnit(commissar).SetVeterancyRank(3).SetDeploymentPhase(DeploymentPhase.PhaseA));
 
             // Transported Infantry
-            companyBuilder.AddAndCommitUnit(unitBuilder.SetBlueprint("conscript_squad_bg")
+            bld.AddUnit(UnitBuilder.NewUnit(conscripts)
                 .SetTransportBlueprint("zis_6_transport_truck_bg")
                 .SetDeploymentMethod(DeploymentMethod.DeployAndExit)
                 .SetDeploymentPhase(DeploymentPhase.PhaseA)
-                .GetAndReset());
-            companyBuilder.AddAndCommitUnit(unitBuilder.SetBlueprint("conscript_squad_bg")
+                )
+            .AddUnit(UnitBuilder.NewUnit(conscripts)
                 .SetTransportBlueprint("zis_6_transport_truck_bg")
                 .SetDeploymentMethod(DeploymentMethod.DeployAndExit)
                 .SetVeterancyRank(3)
                 .SetDeploymentPhase(DeploymentPhase.PhaseA)
-                .GetAndReset());
-            companyBuilder.AddAndCommitUnit(unitBuilder.SetBlueprint("conscript_squad_bg")
+                )
+            .AddUnit(UnitBuilder.NewUnit(conscripts)
                 .SetTransportBlueprint("zis_6_transport_truck_bg")
                 .SetDeploymentMethod(DeploymentMethod.DeployAndExit)
                 .SetVeterancyRank(4)
                 .AddUpgrade("ppsh-41_sub_machine_gun_upgrade_bg")
                 .SetDeploymentPhase(DeploymentPhase.PhaseA)
-                .GetAndReset());
-            companyBuilder.AddAndCommitUnit(unitBuilder.SetBlueprint("conscript_squad_bg")
+                )
+            .AddUnit(UnitBuilder.NewUnit(conscripts)
                 .SetTransportBlueprint("zis_6_transport_truck_bg")
                 .SetDeploymentMethod(DeploymentMethod.DeployAndExit)
                 .SetVeterancyRank(5)
                 .AddUpgrade("ppsh-41_sub_machine_gun_upgrade_bg")
                 .SetDeploymentPhase(DeploymentPhase.PhaseA)
-                .GetAndReset());
-            companyBuilder.AddAndCommitUnit(unitBuilder.SetBlueprint("frontoviki_squad_bg")
+                )
+            .AddUnit(UnitBuilder.NewUnit(frontoviki)
                 .SetTransportBlueprint("m5_halftrack_squad_bg")
                 .SetDeploymentMethod(DeploymentMethod.DeployAndExit)
                 .SetVeterancyRank(0)
                 .AddUpgrade("ppsh-41_sub_machine_gun_upgrade_bg")
                 .SetDeploymentPhase(DeploymentPhase.PhaseB)
-                .GetAndReset());
-            companyBuilder.AddAndCommitUnit(unitBuilder.SetBlueprint("frontoviki_squad_bg")
+                )
+            .AddUnit(UnitBuilder.NewUnit(frontoviki)
                 .SetTransportBlueprint("m5_halftrack_squad_bg")
                 .SetDeploymentMethod(DeploymentMethod.DeployAndExit)
                 .SetVeterancyRank(1)
                 .AddUpgrade("ppsh-41_sub_machine_gun_upgrade_bg")
                 .SetDeploymentPhase(DeploymentPhase.PhaseB)
-                .GetAndReset());
+                );
 
             // Support Weapons
-            companyBuilder.AddAndCommitUnit(unitBuilder.SetBlueprint("m1942_zis-3_76mm_at_gun_squad_bg")
+            bld.AddUnit(UnitBuilder.NewUnit(at)
                 .SetTransportBlueprint("zis_6_transport_truck_bg")
                 .SetDeploymentMethod(DeploymentMethod.DeployAndExit)
                 .SetDeploymentPhase(DeploymentPhase.PhaseA)
-                .GetAndReset());
-            companyBuilder.AddAndCommitUnit(unitBuilder.SetBlueprint("m1942_zis-3_76mm_at_gun_squad_bg")
+                )
+            .AddUnit(UnitBuilder.NewUnit(at)
                 .SetTransportBlueprint("zis_6_transport_truck_bg")
                 .SetDeploymentMethod(DeploymentMethod.DeployAndExit)
                 .SetDeploymentPhase(DeploymentPhase.PhaseA)
-                .GetAndReset());
-            companyBuilder.AddAndCommitUnit(unitBuilder.SetBlueprint("m1910_maxim_heavy_machine_gun_squad_bg")
+                )
+            .AddUnit(UnitBuilder.NewUnit(maxim)
                 .SetDeploymentPhase(DeploymentPhase.PhaseA)
-                .GetAndReset());
-            companyBuilder.AddAndCommitUnit(unitBuilder.SetBlueprint("m1910_maxim_heavy_machine_gun_squad_bg")
+                )
+            .AddUnit(UnitBuilder.NewUnit(maxim)
                 .SetDeploymentPhase(DeploymentPhase.PhaseA)
-                .GetAndReset());
-            companyBuilder.AddAndCommitUnit(unitBuilder.SetBlueprint("pm-82_41_mortar_squad_bg")
+                )
+            .AddUnit(UnitBuilder.NewUnit(mortar)
                 .SetVeterancyRank(2)
                 .SetDeploymentPhase(DeploymentPhase.PhaseA)
-                .GetAndReset());
-            companyBuilder.AddAndCommitUnit(unitBuilder.SetBlueprint("pm-82_41_mortar_squad_bg")
+                )
+            .AddUnit(UnitBuilder.NewUnit(mortar)
                 .SetVeterancyRank(2)
                 .SetDeploymentPhase(DeploymentPhase.PhaseA)
-                .GetAndReset());
+                );
 
             // Vehicles
-            companyBuilder.AddAndCommitUnit(unitBuilder.SetBlueprint("m5_halftrack_squad_bg")
+            bld.AddUnit(UnitBuilder.NewUnit(m5)
                 .SetVeterancyRank(1)
                 .SetDeploymentPhase(DeploymentPhase.PhaseA)
-                .GetAndReset());
-            companyBuilder.AddAndCommitUnit(unitBuilder.SetBlueprint("t_34_76_squad_bg")
+                )
+            .AddUnit(UnitBuilder.NewUnit(t3476)
                 .SetVeterancyRank(0)
                 .SetDeploymentPhase(DeploymentPhase.PhaseA)
-                .GetAndReset());
-            companyBuilder.AddAndCommitUnit(unitBuilder.SetBlueprint("t_34_76_squad_bg")
+                )
+            .AddUnit(UnitBuilder.NewUnit(t3476)
                 .SetVeterancyRank(0)
                 .SetDeploymentPhase(DeploymentPhase.PhaseA)
-                .GetAndReset());
-            companyBuilder.AddAndCommitUnit(unitBuilder.SetBlueprint("t_34_76_squad_bg")
+                )
+            .AddUnit(UnitBuilder.NewUnit(t3476)
                 .SetVeterancyRank(2)
                 .SetDeploymentPhase(DeploymentPhase.PhaseB)
-                .GetAndReset());
-            companyBuilder.AddAndCommitUnit(unitBuilder.SetBlueprint("su-85_bg")
+                )
+            .AddUnit(UnitBuilder.NewUnit(su85)
                 .SetVeterancyRank(1)
                 .SetDeploymentPhase(DeploymentPhase.PhaseB)
-                .GetAndReset());
-            companyBuilder.AddAndCommitUnit(unitBuilder.SetBlueprint("t_34_85_squad_bg")
+                )
+            .AddUnit(UnitBuilder.NewUnit(t3485)
                 .SetVeterancyRank(4)
                 .SetDeploymentPhase(DeploymentPhase.PhaseB)
-                .GetAndReset());
-            companyBuilder.AddAndCommitUnit(unitBuilder.SetBlueprint("t_34_85_squad_bg")
+                )
+            .AddUnit(UnitBuilder.NewUnit(t3485)
                 .SetVeterancyRank(5)
                 .SetDeploymentPhase(DeploymentPhase.PhaseC)
-                .GetAndReset());
-            companyBuilder.AddAndCommitUnit(unitBuilder.SetBlueprint("kv-1_bg")
+                )
+            .AddUnit(UnitBuilder.NewUnit(kv)
                 .SetVeterancyRank(2)
                 .SetDeploymentPhase(DeploymentPhase.PhaseB)
-                .GetAndReset());
-            companyBuilder.AddAndCommitUnit(unitBuilder.SetBlueprint("kv-1_bg")
+                )
+            .AddUnit(UnitBuilder.NewUnit(kv)
                 .SetVeterancyRank(2)
                 .SetDeploymentPhase(DeploymentPhase.PhaseC)
-                .GetAndReset());
-            companyBuilder.AddAndCommitUnit(unitBuilder.SetBlueprint("is-2_bg")
-                .SetVeterancyRank(3)
-                .SetDeploymentPhase(DeploymentPhase.PhaseC)
-                .GetAndReset());
+                );
 
             // Commit changes
-            companyBuilder.Commit();
-            return companyBuilder.Result;
+            return bld.Commit().Result;
         }
 
         private static Company CreateGermanCompany() {
 
+            // Do bail check
+            if (tuningMod is null)
+                throw new Exception("Tuning mod not defined!");
+
+            // Grab tuning mod GUID
+            var g = tuningMod.Guid;
+
             // Create a dummy company
-            CompanyBuilder companyBuilder = new CompanyBuilder().NewCompany(Faction.Wehrmacht)
-                .ChangeName("69th Panzer Regiment")
-                .ChangeTuningMod(tuningMod.Guid);
-            UnitBuilder unitBuilder = new UnitBuilder();
+            CompanyBuilder bld = CompanyBuilder.NewCompany("", CompanyType.Mechanized, CompanyAvailabilityType.MultiplayerOnly, Faction.Wehrmacht, g);
+
+            // Grab blueprints
+            var pioneers = BlueprintManager.FromBlueprintName<SquadBlueprint>("pioneer_squad_bg");
+            var sniper = BlueprintManager.FromBlueprintName<SquadBlueprint>("sniper_squad_bg");
+            var gren = BlueprintManager.FromBlueprintName<SquadBlueprint>("grenadier_squad_bg");
+            var pgren = BlueprintManager.FromBlueprintName<SquadBlueprint>("panzer_grenadier_squad_bg");
+            var pak = BlueprintManager.FromBlueprintName<SquadBlueprint>("pak40_75mm_at_gun_squad_bg");
+            var mg = BlueprintManager.FromBlueprintName<SquadBlueprint>("mg42_heavy_machine_gun_squad_bg");
+            var mortar = BlueprintManager.FromBlueprintName<SquadBlueprint>("mortar_team_81mm_bg");
+            var puma = BlueprintManager.FromBlueprintName<SquadBlueprint>("sdkfz_234_puma_ost_bg");
+            var panther = BlueprintManager.FromBlueprintName<SquadBlueprint>("panther_squad_bg");
+            var pziv = BlueprintManager.FromBlueprintName<SquadBlueprint>("panzer_iv_squad_bg");
+            var ostwind = BlueprintManager.FromBlueprintName<SquadBlueprint>("ostwind_squad_bg");
+            var tiger = BlueprintManager.FromBlueprintName<SquadBlueprint>("tiger_squad_bg");
+            var brumm = BlueprintManager.FromBlueprintName<SquadBlueprint>("brummbar_squad_bg");
 
             // Basic infantry
-            companyBuilder.AddAndCommitUnit(unitBuilder.SetBlueprint("pioneer_squad_bg").SetDeploymentPhase(DeploymentPhase.PhaseInitial).GetAndReset());
-            companyBuilder.AddAndCommitUnit(unitBuilder.SetBlueprint("pioneer_squad_bg").SetDeploymentPhase(DeploymentPhase.PhaseA).GetAndReset());
-            companyBuilder.AddAndCommitUnit(unitBuilder.SetBlueprint("pioneer_squad_bg").SetDeploymentPhase(DeploymentPhase.PhaseA).GetAndReset());
-            companyBuilder.AddAndCommitUnit(unitBuilder.SetBlueprint("pioneer_squad_bg").SetDeploymentPhase(DeploymentPhase.PhaseA).GetAndReset());
-            companyBuilder.AddAndCommitUnit(unitBuilder.SetBlueprint("sniper_squad_bg").SetDeploymentPhase(DeploymentPhase.PhaseInitial).GetAndReset());
-            companyBuilder.AddAndCommitUnit(unitBuilder.SetBlueprint("sniper_squad_bg").SetDeploymentPhase(DeploymentPhase.PhaseA).GetAndReset());
+            bld.AddUnit(UnitBuilder.NewUnit(pioneers).SetDeploymentPhase(DeploymentPhase.PhaseInitial))
+            .AddUnit(UnitBuilder.NewUnit(pioneers).SetDeploymentPhase(DeploymentPhase.PhaseA))
+            .AddUnit(UnitBuilder.NewUnit(pioneers).SetDeploymentPhase(DeploymentPhase.PhaseA))
+            .AddUnit(UnitBuilder.NewUnit(pioneers).SetDeploymentPhase(DeploymentPhase.PhaseA))
+            .AddUnit(UnitBuilder.NewUnit(sniper).SetDeploymentPhase(DeploymentPhase.PhaseInitial))
+            .AddUnit(UnitBuilder.NewUnit(sniper).SetDeploymentPhase(DeploymentPhase.PhaseA));
 
             // Transported Infantry
-            companyBuilder.AddAndCommitUnit(unitBuilder.SetBlueprint("grenadier_squad_bg")
+            bld.AddUnit(UnitBuilder.NewUnit(gren)
                 .SetTransportBlueprint("sdkfz_251_halftrack_squad_bg")
                 .SetDeploymentMethod(DeploymentMethod.DeployAndStay)
                 .SetDeploymentPhase(DeploymentPhase.PhaseA)
-                .GetAndReset());
-            companyBuilder.AddAndCommitUnit(unitBuilder.SetBlueprint("grenadier_squad_bg")
+                )
+            .AddUnit(UnitBuilder.NewUnit(gren)
                 .SetTransportBlueprint("sdkfz_251_halftrack_squad_bg")
                 .SetDeploymentMethod(DeploymentMethod.DeployAndStay)
                 .SetDeploymentPhase(DeploymentPhase.PhaseA)
-                .GetAndReset());
-            companyBuilder.AddAndCommitUnit(unitBuilder.SetBlueprint("grenadier_squad_bg")
+                )
+            .AddUnit(UnitBuilder.NewUnit(gren)
                 .SetTransportBlueprint("sdkfz_251_halftrack_squad_bg")
                 .SetDeploymentMethod(DeploymentMethod.DeployAndStay)
                 .SetDeploymentPhase(DeploymentPhase.PhaseA)
-                .GetAndReset());
-            companyBuilder.AddAndCommitUnit(unitBuilder.SetBlueprint("grenadier_squad_bg")
+                )
+            .AddUnit(UnitBuilder.NewUnit(gren)
                 .SetTransportBlueprint("sdkfz_251_halftrack_squad_bg")
                 .SetDeploymentMethod(DeploymentMethod.DeployAndStay)
                 .SetDeploymentPhase(DeploymentPhase.PhaseA)
-                .GetAndReset());
-
-            companyBuilder.AddAndCommitUnit(unitBuilder.SetBlueprint("grenadier_squad_bg")
+                )
+            .AddUnit(UnitBuilder.NewUnit(gren)
                 .SetTransportBlueprint("opel_blitz_transport_squad_bg")
                 .SetDeploymentMethod(DeploymentMethod.DeployAndExit)
                 .SetVeterancyRank(2)
                 .SetDeploymentPhase(DeploymentPhase.PhaseA)
-                .GetAndReset());
-            companyBuilder.AddAndCommitUnit(unitBuilder.SetBlueprint("grenadier_squad_bg")
+                )
+            .AddUnit(UnitBuilder.NewUnit(gren)
                 .SetTransportBlueprint("opel_blitz_transport_squad_bg")
                 .SetDeploymentMethod(DeploymentMethod.DeployAndExit)
                 .SetVeterancyRank(2)
                 .SetDeploymentPhase(DeploymentPhase.PhaseA)
-                .GetAndReset());
-            companyBuilder.AddAndCommitUnit(unitBuilder.SetBlueprint("grenadier_squad_bg")
+                )
+            .AddUnit(UnitBuilder.NewUnit(gren)
                 .SetTransportBlueprint("opel_blitz_transport_squad_bg")
                 .SetDeploymentMethod(DeploymentMethod.DeployAndExit)
                 .SetVeterancyRank(2)
                 .SetDeploymentPhase(DeploymentPhase.PhaseA)
-                .GetAndReset());
-            companyBuilder.AddAndCommitUnit(unitBuilder.SetBlueprint("grenadier_squad_bg")
+                )
+            .AddUnit(UnitBuilder.NewUnit(gren)
                 .SetTransportBlueprint("opel_blitz_transport_squad_bg")
                 .SetDeploymentMethod(DeploymentMethod.DeployAndExit)
                 .SetVeterancyRank(2)
                 .SetDeploymentPhase(DeploymentPhase.PhaseA)
-                .GetAndReset());
-
-            companyBuilder.AddAndCommitUnit(unitBuilder.SetBlueprint("panzer_grenadier_squad_bg")
+                )
+            .AddUnit(UnitBuilder.NewUnit(pgren)
                 .SetTransportBlueprint("opel_blitz_transport_squad_bg")
                 .SetDeploymentMethod(DeploymentMethod.DeployAndExit)
                 .SetVeterancyRank(3)
                 .SetDeploymentPhase(DeploymentPhase.PhaseA)
-                .GetAndReset());
-            companyBuilder.AddAndCommitUnit(unitBuilder.SetBlueprint("panzer_grenadier_squad_bg")
+                )
+            .AddUnit(UnitBuilder.NewUnit(pgren)
                 .SetTransportBlueprint("opel_blitz_transport_squad_bg")
                 .SetDeploymentMethod(DeploymentMethod.DeployAndExit)
                 .SetVeterancyRank(3)
                 .SetDeploymentPhase(DeploymentPhase.PhaseA)
-                .GetAndReset());
-            companyBuilder.AddAndCommitUnit(unitBuilder.SetBlueprint("panzer_grenadier_squad_bg")
+                )
+            .AddUnit(UnitBuilder.NewUnit(pgren)
                 .SetTransportBlueprint("opel_blitz_transport_squad_bg")
                 .SetDeploymentMethod(DeploymentMethod.DeployAndExit)
                 .SetVeterancyRank(3)
                 .SetDeploymentPhase(DeploymentPhase.PhaseA)
-                .GetAndReset());
+                );
 
             // Support Weapons
-            companyBuilder.AddAndCommitUnit(unitBuilder.SetBlueprint("pak40_75mm_at_gun_squad_bg")
+            bld.AddUnit(UnitBuilder.NewUnit(pak)
                 .SetTransportBlueprint("opel_blitz_transport_squad_bg")
                 .SetDeploymentMethod(DeploymentMethod.DeployAndExit)
                 .SetDeploymentPhase(DeploymentPhase.PhaseA)
-                .GetAndReset());
-            companyBuilder.AddAndCommitUnit(unitBuilder.SetBlueprint("pak40_75mm_at_gun_squad_bg")
+                )
+            .AddUnit(UnitBuilder.NewUnit(pak)
                 .SetTransportBlueprint("opel_blitz_transport_squad_bg")
                 .SetDeploymentMethod(DeploymentMethod.DeployAndExit)
                 .SetDeploymentPhase(DeploymentPhase.PhaseA)
-                .GetAndReset());
-            companyBuilder.AddAndCommitUnit(unitBuilder.SetBlueprint("pak40_75mm_at_gun_squad_bg")
+                )
+            .AddUnit(UnitBuilder.NewUnit(pak)
                 .SetTransportBlueprint("opel_blitz_transport_squad_bg")
                 .SetDeploymentMethod(DeploymentMethod.DeployAndExit)
                 .SetDeploymentPhase(DeploymentPhase.PhaseA)
-                .GetAndReset());
-            companyBuilder.AddAndCommitUnit(unitBuilder.SetBlueprint("mg42_heavy_machine_gun_squad_bg")
+                )
+            .AddUnit(UnitBuilder.NewUnit(mg)
                 .SetDeploymentPhase(DeploymentPhase.PhaseInitial)
-                .GetAndReset());
-            companyBuilder.AddAndCommitUnit(unitBuilder.SetBlueprint("mg42_heavy_machine_gun_squad_bg")
+                )
+            .AddUnit(UnitBuilder.NewUnit(mg)
                 .SetDeploymentPhase(DeploymentPhase.PhaseA)
-                .GetAndReset());
-            companyBuilder.AddAndCommitUnit(unitBuilder.SetBlueprint("mg42_heavy_machine_gun_squad_bg")
+                )
+            .AddUnit(UnitBuilder.NewUnit(mg)
                 .SetDeploymentPhase(DeploymentPhase.PhaseA)
-                .GetAndReset());
-            companyBuilder.AddAndCommitUnit(unitBuilder.SetBlueprint("mg42_heavy_machine_gun_squad_bg")
+                )
+            .AddUnit(UnitBuilder.NewUnit(mg)
                 .SetDeploymentPhase(DeploymentPhase.PhaseA)
-                .GetAndReset());
-
-            companyBuilder.AddAndCommitUnit(unitBuilder.SetBlueprint("mortar_team_81mm_bg").SetDeploymentPhase(DeploymentPhase.PhaseA).GetAndReset());
-            companyBuilder.AddAndCommitUnit(unitBuilder.SetBlueprint("mortar_team_81mm_bg").SetDeploymentPhase(DeploymentPhase.PhaseA).GetAndReset());
+                )
+            .AddUnit(UnitBuilder.NewUnit(mortar).SetDeploymentPhase(DeploymentPhase.PhaseA))
+            .AddUnit(UnitBuilder.NewUnit(mortar).SetDeploymentPhase(DeploymentPhase.PhaseA));
 
             // Vehicles
-            companyBuilder.AddAndCommitUnit(unitBuilder.SetBlueprint("sdkfz_234_puma_ost_bg")
+            bld.AddUnit(UnitBuilder.NewUnit(puma)
                 .SetVeterancyRank(1)
                 .SetDeploymentPhase(DeploymentPhase.PhaseA)
-                .GetAndReset());
-            companyBuilder.AddAndCommitUnit(unitBuilder.SetBlueprint("sdkfz_234_puma_ost_bg")
+                )
+            .AddUnit(UnitBuilder.NewUnit(puma)
                 .SetVeterancyRank(1)
                 .SetDeploymentPhase(DeploymentPhase.PhaseA)
-                .GetAndReset());
-
-            companyBuilder.AddAndCommitUnit(unitBuilder.SetBlueprint("panther_squad_bg")
+                )
+            .AddUnit(UnitBuilder.NewUnit(panther)
                 .SetVeterancyRank(1)
                 .SetDeploymentPhase(DeploymentPhase.PhaseA)
-                .GetAndReset());
-
-            companyBuilder.AddAndCommitUnit(unitBuilder.SetBlueprint("panzer_iv_squad_bg")
+                )
+            .AddUnit(UnitBuilder.NewUnit(pziv)
                 .SetDeploymentPhase(DeploymentPhase.PhaseA)
-                .GetAndReset());
-            companyBuilder.AddAndCommitUnit(unitBuilder.SetBlueprint("panzer_iv_squad_bg")
+                )
+            .AddUnit(UnitBuilder.NewUnit(pziv)
                 .SetDeploymentPhase(DeploymentPhase.PhaseA)
-                .GetAndReset());
-            companyBuilder.AddAndCommitUnit(unitBuilder.SetBlueprint("panzer_iv_squad_bg")
+                )
+            .AddUnit(UnitBuilder.NewUnit(pziv)
                 .SetDeploymentPhase(DeploymentPhase.PhaseA)
-                .GetAndReset());
-            companyBuilder.AddAndCommitUnit(unitBuilder.SetBlueprint("panzer_iv_squad_bg")
+                )
+            .AddUnit(UnitBuilder.NewUnit(pziv)
                 .SetDeploymentPhase(DeploymentPhase.PhaseA)
-                .GetAndReset());
-
-            companyBuilder.AddAndCommitUnit(unitBuilder.SetBlueprint("ostwind_squad_bg")
+                )
+            .AddUnit(UnitBuilder.NewUnit(ostwind)
                 .SetDeploymentPhase(DeploymentPhase.PhaseA)
-                .GetAndReset());
-            companyBuilder.AddAndCommitUnit(unitBuilder.SetBlueprint("ostwind_squad_bg")
+                )
+            .AddUnit(UnitBuilder.NewUnit(ostwind)
                 .SetDeploymentPhase(DeploymentPhase.PhaseA)
-                .GetAndReset());
-
-            companyBuilder.AddAndCommitUnit(unitBuilder.SetBlueprint("tiger_squad_bg")
+                )
+            .AddUnit(UnitBuilder.NewUnit(tiger)
                 .SetDeploymentPhase(DeploymentPhase.PhaseA)
-                .GetAndReset());
-            companyBuilder.AddAndCommitUnit(unitBuilder.SetBlueprint("tiger_squad_bg")
+                )
+            .AddUnit(UnitBuilder.NewUnit(tiger)
                 .SetDeploymentPhase(DeploymentPhase.PhaseA)
-                .GetAndReset());
-            companyBuilder.AddAndCommitUnit(unitBuilder.SetBlueprint("tiger_squad_bg")
+                )
+            .AddUnit(UnitBuilder.NewUnit(tiger)
                 .SetDeploymentPhase(DeploymentPhase.PhaseA)
-                .GetAndReset());
-
-            companyBuilder.AddAndCommitUnit(unitBuilder.SetBlueprint("brummbar_squad_bg")
+                )
+            .AddUnit(UnitBuilder.NewUnit(brumm)
                 .SetDeploymentPhase(DeploymentPhase.PhaseA)
                 .SetVeterancyRank(3)
-                .GetAndReset());
+                );
 
             // Commit changes
-            companyBuilder.Commit();
-            return companyBuilder.Result;
-        }
-
-        private static void ParseArguments(string[] args) {
-
-            for (int i = 0; i < args.Length; i++) {
-
-                if (args[i] is "-recent_analysis") {
-                    recent_analysis = true;
-                    if (i + 1 < args.Length) {
-                        if (args[i + 1][0] != '-') {
-                            recent_file = args[i + 1];
-                        }
-                    }
-                } else if (args[i] is "-json") {
-                    compile_json = true;
-                } else if (args[i] is "-campaign") {
-                    campaign_compile = true;
-                    if (i + 1 < args.Length) {
-                        campaign_compile_file = args[i + 1];
-                    } else {
-                        Console.WriteLine("Cannot compile campaign - none specified!");
-                        campaign_compile = false;
-                    }
-                } else if (args[i] is "-coh2-extract-maps") {
-                    extract_coh2_maps = true;
-                } else if (args[i] is "-test_companies") {
-                    do_test_companies = true;
-                } else if (args[i] is "-o") {
-                    if (i + 1 < args.Length) {
-                        output_path = args[i + 1];
-                    } else {
-                        Environment.Exit(-1);
-                    }
-                } else if (args[i] is "-gfxdir") {
-                    gfxcompile = true;
-                    if (i + 1 < args.Length) {
-                        gfxcompilepath = args[i + 1];
-                    } else {
-                        Environment.Exit(-1);
-                    }
-                } else if (args[i] is "-gfxverify") {
-                    gfxverify = true;
-                    if (i + 1 < args.Length) {
-                        gfxcompilepath = args[i + 1];
-                    } else {
-                        Environment.Exit(-1);
-                    }
-                } else if (args[i] is "-gfxv") {
-                    if (i + 1 < args.Length && int.TryParse(args[i+1], out int gv)) {
-                        gfxversion = gv;
-                    } else {
-                        Environment.Exit(-1);
-                    }
-                } else if (args[i] is "-gfxregex") {
-                    if (i + 1 < args.Length) {
-                        gfxpattern = args[i + 1];
-                    } else {
-                        Environment.Exit(-1);
-                    }
-                }
-
-            }
-
+            return bld.Commit().Result;
         }
 
     }

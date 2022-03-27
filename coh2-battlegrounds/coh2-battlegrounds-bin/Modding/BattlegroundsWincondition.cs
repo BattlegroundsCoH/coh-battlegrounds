@@ -1,5 +1,7 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 
+using Battlegrounds.Functional;
 using Battlegrounds.Game.DataSource;
 
 namespace Battlegrounds.Modding {
@@ -33,7 +35,10 @@ namespace Battlegrounds.Modding {
 
             // Loop over gamemodes
             this.Gamemodes = this.Package.Gamemodes.Select(x => {
-                IGamemodeOption[] options = (x.Options?.Length ?? 0) is 0 ? null : x.Options.Select(x => GetGamemodeOption(x, locale)).ToArray();
+                var options = x.Options switch {
+                    ModPackage.Gamemode.GamemodeOption[] y => y.Map(z => GetGamemodeOption(z, locale)),
+                    _ => Array.Empty<IGamemodeOption>()
+                };
                 UcsString name = UcsString.None;
                 UcsString desc = UcsString.None;
                 if (uint.TryParse(x.Display, out uint nameKey)) {
@@ -52,7 +57,9 @@ namespace Battlegrounds.Modding {
 
         }
 
-        private static IGamemodeOption GetGamemodeOption(ModPackage.Gamemode.GamemodeOption option, UcsFile loc) {
+        private static IGamemodeOption GetGamemodeOption(ModPackage.Gamemode.GamemodeOption option, UcsFile? loc) {
+            if (loc is null)
+                return new WinconditionOption(UcsString.CreateLocString(option.LocStr), option.Value);
             UcsString name = uint.TryParse(option.LocStr, out uint locKey) ? loc.GetRef(locKey) : UcsString.CreateLocString(option.LocStr);
             return new WinconditionOption(name, option.Value);
         }

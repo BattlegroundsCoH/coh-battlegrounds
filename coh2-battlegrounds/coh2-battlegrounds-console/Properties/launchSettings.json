@@ -2,7 +2,7 @@
   "profiles": {
     "coh2-battlegrounds-console": {
       "commandName": "Project",
-      "commandLineArgs": "-test_companies"
+      "commandLineArgs": "repl"
     }
   }
 }
