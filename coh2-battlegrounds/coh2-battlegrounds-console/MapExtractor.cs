@@ -11,9 +11,13 @@ namespace coh2_battlegrounds_console {
 
     public static class MapExtractor {
 
-        public static string Output { get; set; }
+        public static string? Output { get; set; }
 
         public static void Extract() {
+
+            if (string.IsNullOrWhiteSpace(Output)) {
+                return;
+            }
 
             string path = Pathfinder.GetOrFindCoHPath();
             string[] map_archives = {
@@ -21,7 +25,7 @@ namespace coh2_battlegrounds_console {
                 $"{path}CoH2\\Archives\\MPXP1Scenarios.sga",
             };
 
-            string extract = Path.GetFullPath("~tmp\\scen");
+            string extract = Path.GetFullPath(Output);
             if (Directory.Exists(extract)) {
                 Directory.Delete(extract, true);
             }

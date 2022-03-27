@@ -685,7 +685,20 @@
       "Position": 13
     },
     "Army": "soviet",
-    "Activation": ""
+    "Activation": "",
+    "Requirements": [
+      {
+        "RequirementType": "required_player_upgrade",
+        "RequirementReason": "usage_and_display",
+        "UIText": "0",
+        "RequirementProperties": {
+          "is_present": true,
+          "max_completed": 100,
+          "min_completed": 1,
+          "upgrade_name": "soviet_air_bombing_run_unlock"
+        }
+      }
+    ]
   },
   {
     "Name": "soviet_air_infantry_overwatch",
@@ -708,10 +721,23 @@
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
       "LocaleDescriptionShort": "0",
-      "Position": -1
+      "Position": 11
     },
     "Army": "soviet",
-    "Activation": ""
+    "Activation": "",
+    "Requirements": [
+      {
+        "RequirementType": "required_player_upgrade",
+        "RequirementReason": "usage_and_display",
+        "UIText": "0",
+        "RequirementProperties": {
+          "is_present": true,
+          "max_completed": 100,
+          "min_completed": 1,
+          "upgrade_name": "soviet_air_infantry_overwatch_unlock"
+        }
+      }
+    ]
   },
   {
     "Name": "soviet_air_recon",
@@ -777,7 +803,20 @@
       "Position": 11
     },
     "Army": "soviet",
-    "Activation": "targeted"
+    "Activation": "targeted",
+    "Requirements": [
+      {
+        "RequirementType": "required_player_upgrade",
+        "RequirementReason": "usage_and_display",
+        "UIText": "0",
+        "RequirementProperties": {
+          "is_present": true,
+          "max_completed": 100,
+          "min_completed": 1,
+          "upgrade_name": "soviet_air_recon_unlock"
+        }
+      }
+    ]
   },
   {
     "Name": "soviet_air_strafe",
@@ -807,7 +846,20 @@
       "Position": 12
     },
     "Army": "soviet",
-    "Activation": "targeted"
+    "Activation": "targeted",
+    "Requirements": [
+      {
+        "RequirementType": "required_player_upgrade",
+        "RequirementReason": "usage_and_display",
+        "UIText": "0",
+        "RequirementProperties": {
+          "is_present": true,
+          "max_completed": 100,
+          "min_completed": 1,
+          "upgrade_name": "soviet_air_strafe_unlock"
+        }
+      }
+    ]
   },
   {
     "Name": "soviet_air_vehicle_overwatch",
@@ -830,10 +882,23 @@
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
       "LocaleDescriptionShort": "0",
-      "Position": -1
+      "Position": 11
     },
     "Army": "soviet",
-    "Activation": ""
+    "Activation": "",
+    "Requirements": [
+      {
+        "RequirementType": "required_player_upgrade",
+        "RequirementReason": "usage_and_display",
+        "UIText": "0",
+        "RequirementProperties": {
+          "is_present": true,
+          "max_completed": 100,
+          "min_completed": 1,
+          "upgrade_name": "soviet_air_vehicle_overwatch_unlock"
+        }
+      }
+    ]
   },
   {
     "Name": "soviet_hunt_tarrget",
@@ -856,10 +921,23 @@
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
       "LocaleDescriptionShort": "0",
-      "Position": -1
+      "Position": 11
     },
     "Army": "soviet",
-    "Activation": ""
+    "Activation": "",
+    "Requirements": [
+      {
+        "RequirementType": "required_player_upgrade",
+        "RequirementReason": "usage_and_display",
+        "UIText": "0",
+        "RequirementProperties": {
+          "is_present": true,
+          "max_completed": 100,
+          "min_completed": 1,
+          "upgrade_name": "soviet_hunt_tarrget_unlock"
+        }
+      }
+    ]
   },
   {
     "Name": "soviet_artillery_fire",
@@ -882,10 +960,23 @@
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
       "LocaleDescriptionShort": "0",
-      "Position": -1
+      "Position": 11
     },
     "Army": "soviet",
-    "Activation": ""
+    "Activation": "",
+    "Requirements": [
+      {
+        "RequirementType": "required_player_upgrade",
+        "RequirementReason": "usage_and_display",
+        "UIText": "0",
+        "RequirementProperties": {
+          "is_present": true,
+          "max_completed": 100,
+          "min_completed": 1,
+          "upgrade_name": "soviet_artillery_fire_unlock"
+        }
+      }
+    ]
   },
   {
     "Name": "soviet_artillery_overwatch",
@@ -908,10 +999,23 @@
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
       "LocaleDescriptionShort": "0",
-      "Position": -1
+      "Position": 11
     },
     "Army": "soviet",
-    "Activation": ""
+    "Activation": "",
+    "Requirements": [
+      {
+        "RequirementType": "required_player_upgrade",
+        "RequirementReason": "usage_and_display",
+        "UIText": "0",
+        "RequirementProperties": {
+          "is_present": true,
+          "max_completed": 100,
+          "min_completed": 1,
+          "upgrade_name": "soviet_artillery_overwatch_unlock"
+        }
+      }
+    ]
   },
   {
     "Name": "soviet_artillery_propaganda",
@@ -934,10 +1038,23 @@
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
       "LocaleDescriptionShort": "0",
-      "Position": -1
+      "Position": 11
     },
     "Army": "soviet",
-    "Activation": ""
+    "Activation": "",
+    "Requirements": [
+      {
+        "RequirementType": "required_player_upgrade",
+        "RequirementReason": "usage_and_display",
+        "UIText": "0",
+        "RequirementProperties": {
+          "is_present": true,
+          "max_completed": 100,
+          "min_completed": 1,
+          "upgrade_name": "soviet_artillery_propaganda_unlock"
+        }
+      }
+    ]
   },
   {
     "Name": "soviet_artillery_regimental_barrage",
@@ -960,10 +1077,23 @@
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
       "LocaleDescriptionShort": "0",
-      "Position": -1
+      "Position": 11
     },
     "Army": "soviet",
-    "Activation": ""
+    "Activation": "",
+    "Requirements": [
+      {
+        "RequirementType": "required_player_upgrade",
+        "RequirementReason": "usage_and_display",
+        "UIText": "0",
+        "RequirementProperties": {
+          "is_present": true,
+          "max_completed": 100,
+          "min_completed": 1,
+          "upgrade_name": "soviet_artillery_regimental_barrage_unlock"
+        }
+      }
+    ]
   },
   {
     "Name": "anti_tank_grenade_bg",
@@ -1249,36 +1379,102 @@
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
       "LocaleDescriptionShort": "0",
-      "Position": -1
+      "Position": 11
     },
     "Army": "soviet",
-    "Activation": ""
+    "Activation": "",
+    "Requirements": [
+      {
+        "RequirementType": "required_player_upgrade",
+        "RequirementReason": "usage_and_display",
+        "UIText": "0",
+        "RequirementProperties": {
+          "is_present": true,
+          "max_completed": 100,
+          "min_completed": 1,
+          "upgrade_name": "soviet_offmap_b4_unlock"
+        }
+      }
+    ]
   },
   {
     "Name": "soviet_offmap_katyusha",
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
     "PBGID": 1073741853,
+    "Cost": {
+      "Munition": 80
+    },
     "Display": {
-      "LocaleName": "0",
-      "LocaleDescriptionLong": "0",
-      "LocaleDescriptionShort": "0",
-      "Position": -1
+      "LocaleName": "11006615",
+      "LocaleDescriptionLong": "11006749",
+      "LocaleDescriptionShort": "11039220",
+      "Icon": "Icons_commander_cmdr_soviet_fear_propaganda",
+      "Position": 60
     },
     "Army": "soviet",
-    "Activation": ""
+    "Activation": "targeted",
+    "Requirements": [
+      {
+        "RequirementType": "required_resource",
+        "RequirementReason": "usage",
+        "UIText": "11036635",
+        "RequirementProperties": {
+          "resource": null
+        }
+      },
+      {
+        "RequirementType": "required_player_upgrade",
+        "RequirementReason": "usage_and_display",
+        "UIText": "0",
+        "RequirementProperties": {
+          "is_present": true,
+          "max_completed": 100,
+          "min_completed": 1,
+          "upgrade_name": "fear_propaganda"
+        }
+      },
+      {
+        "RequirementType": "required_player_upgrade",
+        "RequirementReason": "usage",
+        "UIText": "11045365",
+        "RequirementProperties": {
+          "is_present": false,
+          "max_completed": 100,
+          "min_completed": 1,
+          "upgrade_name": "blizzard_active"
+        }
+      }
+    ]
   },
   {
     "Name": "soviet_offmap_katyusha_ui",
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
     "PBGID": 1073741873,
+    "Cost": {
+      "Munition": 70
+    },
     "Display": {
-      "LocaleName": "0",
-      "LocaleDescriptionLong": "0",
-      "LocaleDescriptionShort": "0",
-      "Position": -1
+      "LocaleName": "11006818",
+      "LocaleDescriptionLong": "11007516",
+      "LocaleDescriptionShort": "11007515",
+      "Icon": "Icons_abilities_ability_soviet_katyusha_rocket_barrage",
+      "Position": 11
     },
     "Army": "soviet",
-    "Activation": ""
+    "Activation": "targeted",
+    "Requirements": [
+      {
+        "RequirementType": "required_player_upgrade",
+        "RequirementReason": "usage_and_display",
+        "UIText": "0",
+        "RequirementProperties": {
+          "is_present": true,
+          "max_completed": 100,
+          "min_completed": 1,
+          "upgrade_name": "soviet_offmap_katyusha_unlock"
+        }
+      }
+    ]
   },
   {
     "Name": "soviet_offmap_ml_20",
@@ -1314,10 +1510,23 @@
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
       "LocaleDescriptionShort": "0",
-      "Position": -1
+      "Position": 11
     },
     "Army": "soviet",
-    "Activation": ""
+    "Activation": "",
+    "Requirements": [
+      {
+        "RequirementType": "required_player_upgrade",
+        "RequirementReason": "usage_and_display",
+        "UIText": "0",
+        "RequirementProperties": {
+          "is_present": true,
+          "max_completed": 100,
+          "min_completed": 1,
+          "upgrade_name": "soviet_offmap_ml_20_smoke_unlock"
+        }
+      }
+    ]
   },
   {
     "Name": "soviet_offmap_ml_20_ui",
@@ -1327,10 +1536,23 @@
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
       "LocaleDescriptionShort": "0",
-      "Position": -1
+      "Position": 11
     },
     "Army": "soviet",
-    "Activation": ""
+    "Activation": "",
+    "Requirements": [
+      {
+        "RequirementType": "required_player_upgrade",
+        "RequirementReason": "usage_and_display",
+        "UIText": "0",
+        "RequirementProperties": {
+          "is_present": true,
+          "max_completed": 100,
+          "min_completed": 1,
+          "upgrade_name": "soviet_offmap_ml_20_unlock"
+        }
+      }
+    ]
   },
   {
     "Name": "soviet_offmap_mortar",
@@ -1366,10 +1588,23 @@
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
       "LocaleDescriptionShort": "0",
-      "Position": -1
+      "Position": 11
     },
     "Army": "soviet",
-    "Activation": ""
+    "Activation": "",
+    "Requirements": [
+      {
+        "RequirementType": "required_player_upgrade",
+        "RequirementReason": "usage_and_display",
+        "UIText": "0",
+        "RequirementProperties": {
+          "is_present": true,
+          "max_completed": 100,
+          "min_completed": 1,
+          "upgrade_name": "soviet_offmap_mortar_smoke_unlock"
+        }
+      }
+    ]
   },
   {
     "Name": "soviet_offmap_mortar_ui",
@@ -1379,9 +1614,22 @@
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
       "LocaleDescriptionShort": "0",
-      "Position": -1
+      "Position": 11
     },
     "Army": "soviet",
-    "Activation": ""
+    "Activation": "",
+    "Requirements": [
+      {
+        "RequirementType": "required_player_upgrade",
+        "RequirementReason": "usage_and_display",
+        "UIText": "0",
+        "RequirementProperties": {
+          "is_present": true,
+          "max_completed": 100,
+          "min_completed": 1,
+          "upgrade_name": "soviet_offmap_mortar_unlock"
+        }
+      }
+    ]
   }
 ]

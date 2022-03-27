@@ -26,6 +26,7 @@ namespace CoH2XML2JSON {
         static string dirPath;
         static string instancesPath;
         static string modguid;
+        static string modname;
         static Dictionary<string, string> slotItemSymbols = new Dictionary<string, string>();
         static List<EBP> entities = new();
 
@@ -115,9 +116,14 @@ namespace CoH2XML2JSON {
             public string OutPath { get; set; } 
             public string InstancePath { get; set; }
             public string ModGuid { get; set; }
+            public string ModName { get; set; }
         }
 
         public static void Main(string[] args) {
+
+            bool doLastIgnoreInput = args.Length == 1 && args[0] == "-do_last";
+
+            Console.WriteLine(string.Join(" ", args));
 
             LastUse last = null;
             if (File.Exists("last.json")) {
@@ -127,13 +133,21 @@ namespace CoH2XML2JSON {
                 Console.WriteLine("Instance Directory: " + last.InstancePath);
                 Console.WriteLine("ModGUID: " + last.ModGuid);
                 Console.WriteLine();
-                Console.Write("(Y/N): ");
-                if (Console.ReadLine().ToLower() is not "y") {
-                    last = null;
-                } else {
+                if (doLastIgnoreInput) {
                     dirPath = last.OutPath;
                     modguid = last.ModGuid;
                     instancesPath = last.InstancePath;
+                    modname = last.ModName;
+                } else {
+                    Console.Write("(Y/N): ");
+                    if (Console.ReadLine().ToLower() is not "y") {
+                        last = null;
+                    } else {
+                        dirPath = last.OutPath;
+                        modguid = last.ModGuid;
+                        instancesPath = last.InstancePath;
+                        modname = last.ModName;
+                    }
                 }
             }
 
@@ -165,26 +179,35 @@ namespace CoH2XML2JSON {
                     modguid = string.Empty;
                 }
 
+                Console.Write("Mod Name (Leave empty for vanilla):");
+                modname = Console.ReadLine();
+                if (string.IsNullOrEmpty(modname)) {
+                    modname = "vcoh";
+                }
+
             }
 
-            LastUse lu = new() { InstancePath = instancesPath, ModGuid = modguid, OutPath = dirPath };
+            LastUse lu = new() { InstancePath = instancesPath, ModGuid = modguid, OutPath = dirPath, ModName = modname };
             File.WriteAllText("last.json", JsonSerializer.Serialize(lu));
 
-            GenericDatabase("abilities_database.json", "abilities", (doc, path, name) => new ABP(doc, modguid, name) { Army = GetFactionFromPath(path) });
-            GenericDatabase("entities_database.json", "ebps\\races", (doc, path, name) => {
+            GenericDatabase($"{modname}-abp-db.json", "abilities", (doc, path, name) => new ABP(doc, modguid, name) { Army = GetFactionFromPath(path) });
+            GenericDatabase($"{modname}-ebp-db.json", "ebps\\races", (doc, path, name) => {
                 var ebp = new EBP(doc, modguid, name) { Army = GetFactionFromPath(path) };
                 entities.Add(ebp);
                 return ebp;
             });
-            GenericDatabase("squads_database.json", "sbps\\races", (doc, path, name) => new SBP(doc, modguid, name, entities) { Army = GetFactionFromPath(path) });
-            GenericDatabase("criticals_database.json", "critical", (doc, path, name) => new Critical(doc, modguid, name));
-            GenericDatabase("slotitems_database.json", "slot_item", (doc, path, name) => new SlotItem(doc, modguid, name) { Army = GetFactionFromPath(path) });
-            GenericDatabase("upgrades_database.json", "upgrade", (doc, path, name) => new UBP(doc, modguid, name));
-            GenericDatabase("weapons_database.json", "weapon", (doc, path, name) => new WBP(doc, modguid, name, path));
+            GenericDatabase($"{modname}-sbp-db.json", "sbps\\races", (doc, path, name) => new SBP(doc, modguid, name, entities) { Army = GetFactionFromPath(path) });
+            GenericDatabase($"{modname}-cbp-db.json", "critical", (doc, path, name) => new Critical(doc, modguid, name));
+            GenericDatabase($"{modname}-ibp-db.json", "slot_item", (doc, path, name) => new SlotItem(doc, modguid, name) { Army = GetFactionFromPath(path) });
+            GenericDatabase($"{modname}-ubp-db.json", "upgrade", (doc, path, name) => new UBP(doc, modguid, name));
+            GenericDatabase($"{modname}-wbp-db.json", "weapon", (doc, path, name) => new WBP(doc, modguid, name, path));
 
             Console.WriteLine();
-            Console.WriteLine("Created databases - Press any key to exit");
-            Console.Read();
+
+            if (!doLastIgnoreInput) {
+                Console.WriteLine("Created databases - Press any key to exit");
+                Console.Read();
+            }
 
         }
 

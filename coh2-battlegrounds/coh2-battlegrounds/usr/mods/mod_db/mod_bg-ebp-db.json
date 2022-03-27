@@ -208,12 +208,12 @@
       "Symbol": ""
     },
     "Abilities": [
-      "soviet_air_bombing_run",
-      "soviet_air_infantry_overwatch",
-      "soviet_air_recon",
-      "soviet_air_strafe",
-      "soviet_air_vehicle_overwatch",
-      "soviet_hunt_tarrget"
+      "soviet_air_bombing_run_ui",
+      "soviet_air_infantry_overwatch_ui",
+      "soviet_air_recon_ui",
+      "soviet_air_strafe_ui",
+      "soviet_air_vehicle_overwatch_ui",
+      "soviet_hunt_tarrget_ui"
     ]
   },
   {
@@ -226,7 +226,19 @@
       "LocaleDescriptionLong": "0",
       "LocaleDescriptionShort": "0",
       "Symbol": ""
-    }
+    },
+    "Abilities": [
+      "soviet_artillery_fire_ui",
+      "soviet_artillery_overwatch_ui",
+      "soviet_artillery_propaganda_ui",
+      "soviet_artillery_regimental_barrage_ui",
+      "soviet_offmap_b4_ui",
+      "soviet_offmap_katyusha_ui",
+      "soviet_offmap_ml_20_smoke_ui",
+      "soviet_offmap_ml_20_ui",
+      "soviet_offmap_mortar_smoke_ui",
+      "soviet_offmap_mortar_ui"
+    ]
   },
   {
     "ModGUID": "142b113740474c82a60b0a428bd553d5",

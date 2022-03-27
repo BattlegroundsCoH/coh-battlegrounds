@@ -25,9 +25,6 @@ namespace coh2_battlegrounds_console {
         /// </summary>
         class GfxVerify : Command {
             
-            /// <summary>
-            /// Define path argument
-            /// </summary>
             public static readonly Argument<string> PATH = new Argument<string>("-f", "Specifies the file to verify integrity of.", string.Empty);
 
             public GfxVerify() : base("gfxverify", "Verifies the integrity of a gfx file.", PATH) { }
@@ -63,24 +60,9 @@ namespace coh2_battlegrounds_console {
 
         class GfxCompile : Command {
             
-            /// <summary>
-            /// 
-            /// </summary>
             public static readonly Argument<string> DIR = new Argument<string>("-d", "Specifies the directory to compile.", string.Empty);
-            
-            /// <summary>
-            /// 
-            /// </summary>
             public static readonly Argument<string> OUT = new Argument<string>("-o", "Specifies the name of the file to output gfx map to.", "gfx.dat");
-
-            /// <summary>
-            /// 
-            /// </summary>
             public static readonly Argument<int> VER = new Argument<int>("-v", "Specifies the gfx version to target.", GfxMap.GfxBinaryVersion);
-
-            /// <summary>
-            /// 
-            /// </summary>
             public static readonly Argument<string> REG = new Argument<string>("-r", "Specifies regex pattern to select specific files in folder to compile.", string.Empty);
 
             public GfxCompile() : base("gfxdir", "Compiles directory gfx content into a gfx data file.", DIR, OUT, VER, REG) { }
@@ -92,19 +74,8 @@ namespace coh2_battlegrounds_console {
 
         class TestCompanies : Command {
 
-            /// <summary>
-            /// 
-            /// </summary>
             public static readonly Argument<bool> SOV = new Argument<bool>("-s", "Specifies the Soviet company should *NOT* be generated.", true);
-
-            /// <summary>
-            /// 
-            /// </summary>
             public static readonly Argument<bool> GER = new Argument<bool>("-g", "Specifies the German company should *NOT* be generated.", true);
-
-            /// <summary>
-            /// 
-            /// </summary>
             public static readonly Argument<bool> RAW = new Argument<bool>("-raw", "Specifies the output format should not be formatted.", true);
 
             public TestCompanies() : base("company-test", "Compiles a German and Soviet test company using the most up-to-date version.", SOV, GER, RAW) { }
@@ -125,9 +96,6 @@ namespace coh2_battlegrounds_console {
 
         class MapExtract : Command {
 
-            /// <summary>
-            /// Define path argument
-            /// </summary>
             public static readonly Argument<string> PATH = new Argument<string>("-o", "Specifies output directory.", "archive_maps");
 
             public MapExtract() : base("coh2-extract-maps", "Verifies the integrity of a gfx file.", PATH) { }
@@ -143,14 +111,7 @@ namespace coh2_battlegrounds_console {
 
         class CampaignCompile : Command {
 
-            /// <summary>
-            /// Define path argument
-            /// </summary>
             public static readonly Argument<string> PATH = new Argument<string>("-c", "Specifies the directory to compile", string.Empty);
-
-            /// <summary>
-            /// Define path argument
-            /// </summary>
             public static readonly Argument<string> OUT = new Argument<string>("-o", "Specifies compiled campaign output file.", "campaign.camp");
 
             public CampaignCompile() : base("campaign", "Verifies the integrity of a gfx file.", PATH, OUT) { }
@@ -167,14 +128,7 @@ namespace coh2_battlegrounds_console {
 
         class ReplayAnalysis : Command {
 
-            /// <summary>
-            /// Define path argument
-            /// </summary>
             public static readonly Argument<string> PATH = new Argument<string>("-playback", "Specifies the playback file to analyse.", ReplayMatchData.LATEST_REPLAY_FILE);
-
-            /// <summary>
-            /// 
-            /// </summary>
             public static readonly Argument<bool> JSON = new Argument<bool>("-json", "Specifies the analysis should be saved to a json file.", false);
 
             public ReplayAnalysis() : base("replay", "Runs an analysis of the most recent replay file (or otherwise specified file).", PATH, JSON) { }
@@ -220,6 +174,103 @@ namespace coh2_battlegrounds_console {
 
         }
 
+        class Update : Command {
+            
+            public static readonly Argument<string> TARGET = new Argument<string>("-target", "Specifies the update target [db, checksum]", "db");
+
+            public static readonly Argument<string> MOD = new Argument<string>("-m", "Specifies the mod to update, applicable when target=db", "vcoh");
+
+            public static readonly Argument<string> TOOL = 
+                new Argument<string>("-t", "Specifies the full path to the tools folder", @"C:\Program Files (x86)\Steam\steamapps\common\Company of Heroes 2 Tools");
+
+            public Update() : base("update", "Will update specified elements of the source build.", TARGET, MOD, TOOL) { }
+
+            private ConsoleColor m_col;
+
+            public override void Execute(CommandArgumentList argumentList) {
+                this.m_col = Console.ForegroundColor;
+                switch (argumentList.GetValue(TARGET)) {
+                    case "db":
+                        this.UpdateDatabase(argumentList);
+                        break;
+                    case "checksum":
+                        break;
+                    default:
+                        Console.WriteLine("Undefined update target.");
+                        break;
+                }
+            }
+
+            private void Err(string msg) {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine(msg);
+                Console.ForegroundColor = this.m_col;
+            }
+
+            class LastUse {
+                public string OutPath { get; set; }
+                public string InstancePath { get; set; }
+                public string ModGuid { get; set; }
+                public string ModName { get; set; }
+            }
+
+            private void UpdateDatabase(CommandArgumentList args) {
+                
+                // Grab mod target
+                string mod = args.GetValue(MOD);
+
+                // Get path to xaml to json tool
+                string xmlreader = Path.GetFullPath("..\\..\\..\\..\\..\\db-tool\\bin\\debug\\net5.0\\CoH2XML2JSON.exe");
+
+                // Verify
+                if (!File.Exists(xmlreader)) {
+                    this.Err("Fatal Error: Failed to locate xml2json executable");
+                    return;
+                }
+
+                // Store recent
+                string recent = xmlreader.Replace("CoH2XML2JSON.exe", "last.json");
+
+                // Get input dir
+                string xmlinput = mod switch {
+                    "vcoh" => Path.GetFullPath(args.GetValue(TOOL) + @"\assets\data\attributes\instances"),
+                    "mod_bg" => Path.GetFullPath("E:\\coh2_battlegrounds\\coh2-battlegrounds-mod\\tuning_mod\\instances"),
+                    _ => throw new NotSupportedException()
+                };
+
+                // Get output dir
+                string jsonoutput = mod switch {
+                    "vcoh" => Path.GetFullPath("..\\..\\..\\..\\coh2-battlegrounds\\bg_common\\data"),
+                    "mod_bg" => Path.GetFullPath("..\\..\\..\\..\\coh2-battlegrounds\\usr\\mods\\mod_db"),
+                    _ => throw new NotSupportedException()
+                };
+
+                // Get GUID
+                string guid = mod switch {
+                    "vcoh" => "",
+                    "mod_bg" => "142b113740474c82a60b0a428bd553d5",
+                    _ => throw new NotSupportedException()
+                };
+
+                // Log
+                Console.WriteLine($"XML to Json converter: {xmlreader}");
+                Console.WriteLine($"XML input: {xmlinput}");
+                Console.WriteLine($"Json Out: {jsonoutput}");
+
+                // Save
+                File.WriteAllText(recent, JsonSerializer.Serialize(new LastUse() { InstancePath = xmlinput, ModGuid = guid, ModName = mod, OutPath = jsonoutput }));
+
+                // Invoke
+                var proc = Process.Start(new ProcessStartInfo(xmlreader, "-do_last") { WorkingDirectory = Path.GetDirectoryName(xmlreader)});
+                proc?.WaitForExit();
+                
+                Console.WriteLine();
+                Console.WriteLine(" -> Task DONE");
+
+            }
+
+        }
+
         class Repl : Command {
 
             public Repl() : base("repl", "The program will enter a repl mode and allow for various inputs.") { }
@@ -236,10 +287,20 @@ namespace coh2_battlegrounds_console {
                     string[] input = (Console.ReadLine() ?? string.Empty).Split(' ');
                     Console.ForegroundColor = defcolour;
 
+                    if (input.Length is 1) {
+                        if (input[0] is "exit")
+                            break;
+                        else if (input[0] is "clear") {
+                            Console.Clear();
+                            continue;
+                        }
+                    }
+
                     // Parse
                     flags?.Parse(input);
 
                 }
+                Console.WriteLine("====== Exited REPL Mode ======");
             }
 
         }
@@ -265,6 +326,9 @@ namespace coh2_battlegrounds_console {
             flags.RegisterCommand<ReplayAnalysis>();
             flags.RegisterCommand<ServerCheck>();
             flags.RegisterCommand<Repl>();
+#if DEBUG
+            flags.RegisterCommand<Update>();
+#endif
 
             // Parse (and dispatch)
             flags.Parse(args);

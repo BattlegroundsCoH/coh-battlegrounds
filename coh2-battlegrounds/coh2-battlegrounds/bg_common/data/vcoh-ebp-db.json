@@ -51,7 +51,8 @@
       "m1_81mm_mortar_team_smoke_mp",
       "m1_81mm_mortar_counter_barrage_mp"
     ],
-    "Health": 350
+    "Health": 350,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 2544,
@@ -105,7 +106,8 @@
       "m2_60mm_mortar_counter_barrage_mp",
       "grw34_81mm_victor_target_mortar_mp"
     ],
-    "Health": 350
+    "Health": 350,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 93420,
@@ -125,7 +127,8 @@
     "Hardpoints": [
       "mgnest_mg42t_dummy_mp"
     ],
-    "Health": 600
+    "Health": 600,
+    "UpgradeCapacity": 1
   },
   {
     "PBGID": 1558,
@@ -189,7 +192,8 @@
       "grw34_81mm_victor_target_mortar_mp",
       "grw34_81mm_incendiary_mortar_barrage_mp"
     ],
-    "Health": 350
+    "Health": 350,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 1560,
@@ -286,7 +290,8 @@
       "luger_p08_9mm_pistol_mp",
       "luger_p08_victor_target_flare_pistol_mp"
     ],
-    "Health": 80
+    "Health": 80,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 1642,
@@ -298,7 +303,6 @@
       "LocaleDescriptionShort": "0",
       "Symbol": "Icons_symbols_generic_ambient_symbol"
     },
-    "Cost": {},
     "Health": 200
   },
   {
@@ -311,7 +315,6 @@
       "LocaleDescriptionShort": "0",
       "Symbol": ""
     },
-    "Cost": {},
     "Health": 10
   },
   {
@@ -363,8 +366,8 @@
       "Symbol": "Icons_symbols_vehicle_soviet_dshk_38_50_cal_hmg_symbol"
     },
     "Cost": {
-      "Manpower": 625,
-      "FieldTime": 75
+      "Manpower": 62.5,
+      "FieldTime": 7.5
     },
     "Hardpoints": [
       "dshk_38_sokolov"
@@ -574,7 +577,7 @@
     },
     "Cost": {
       "Manpower": 105,
-      "FieldTime": 105
+      "FieldTime": 10.5
     },
     "Abilities": [
       "grw34_mortar_team_mortar_barrage_wg_mp",
@@ -591,7 +594,8 @@
       "grw34_81mm_mortar_counter_barrage_wg_mp",
       "grw34_81mm_victor_target_mortar_wg_mp"
     ],
-    "Health": 350
+    "Health": 350,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 15618,
@@ -632,7 +636,7 @@
     },
     "Cost": {
       "Manpower": 75,
-      "FieldTime": 75
+      "FieldTime": 7.5
     },
     "Abilities": [
       "mg34_phosphorus_rounds_mp",
@@ -647,8 +651,7 @@
     "PBGID": 14815,
     "Name": "aef_base_stamper",
     "Army": "aef",
-    "Display": {},
-    "Cost": {}
+    "Display": {}
   },
   {
     "PBGID": 2499,
@@ -668,7 +671,12 @@
     "Abilities": [
       "pm_airborne_dispatch_pathfinders"
     ],
-    "Health": 2000
+    "Health": 2000,
+    "Upgrades": [
+      "lieutenant_dispatched_upgrade_mp",
+      "platoon_command_unlock_mp"
+    ],
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 3316,
@@ -685,7 +693,8 @@
       "Fuel": 50,
       "FieldTime": 290
     },
-    "Health": 2000
+    "Health": 2000,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 2500,
@@ -703,7 +712,11 @@
       "Fuel": 90,
       "FieldTime": 290
     },
-    "Health": 2000
+    "Health": 2000,
+    "Upgrades": [
+      "major_dispatched_upgrade_mp"
+    ],
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 3315,
@@ -721,7 +734,8 @@
       "Fuel": 90,
       "FieldTime": 290
     },
-    "Health": 2000
+    "Health": 2000,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 2501,
@@ -742,7 +756,12 @@
     "Hardpoints": [
       "base_building_dummy_weapon_mp"
     ],
-    "Health": 1500
+    "Health": 1500,
+    "Upgrades": [
+      "captain_dispatched_upgrade_mp",
+      "company_command_unlock_mp"
+    ],
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 3317,
@@ -763,7 +782,8 @@
     "Hardpoints": [
       "base_building_dummy_weapon_mp"
     ],
-    "Health": 1500
+    "Health": 1500,
+    "UpgradeCapacity": 8
   },
   {
     "PBGID": 2502,
@@ -787,7 +807,12 @@
     "Hardpoints": [
       "base_building_dummy_weapon_mp"
     ],
-    "Health": 1500
+    "Health": 1500,
+    "Upgrades": [
+      "rifle_command_grenade_mp",
+      "weapon_rack_upgrade_mp"
+    ],
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 3318,
@@ -808,7 +833,8 @@
     "Hardpoints": [
       "base_building_dummy_weapon_mp"
     ],
-    "Health": 1500
+    "Health": 1500,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 3422,
@@ -820,7 +846,6 @@
       "LocaleDescriptionShort": "0",
       "Symbol": "Icons_symbols_generic_ambient_symbol"
     },
-    "Cost": {},
     "Health": 150
   },
   {
@@ -857,7 +882,6 @@
       "LocaleDescriptionShort": "0",
       "Symbol": ""
     },
-    "Cost": {},
     "Health": 50
   },
   {
@@ -874,7 +898,8 @@
     "Cost": {
       "FieldTime": 24
     },
-    "Health": 110
+    "Health": 110,
+    "UpgradeCapacity": 1
   },
   {
     "PBGID": 190821,
@@ -890,14 +915,14 @@
     "Cost": {
       "FieldTime": 24
     },
-    "Health": 110
+    "Health": 110,
+    "UpgradeCapacity": 1
   },
   {
     "PBGID": 14339,
     "Name": "aef_barracks",
     "Army": "aef",
     "Display": {},
-    "Cost": {},
     "Health": 600
   },
   {
@@ -905,7 +930,6 @@
     "Name": "aef_garrison",
     "Army": "aef",
     "Display": {},
-    "Cost": {},
     "Health": 600
   },
   {
@@ -919,7 +943,6 @@
       "Icon": "Icons_buildings_building_aef_mg_nest",
       "Symbol": "Icons_symbols_building_soviet_mg_nest_symbol"
     },
-    "Cost": {},
     "Hardpoints": [
       "m2hb_50cal_mp"
     ],
@@ -936,7 +959,6 @@
       "Icon": "Icons_buildings_building_aef_mg_nest",
       "Symbol": "Icons_symbols_building_soviet_mg_nest_symbol"
     },
-    "Cost": {},
     "Hardpoints": [
       "aef_base_m2hb_50cal_mp"
     ],
@@ -953,7 +975,6 @@
       "Icon": "Icons_buildings_building_aef_mg_nest",
       "Symbol": "Icons_symbols_building_soviet_mg_nest_symbol"
     },
-    "Cost": {},
     "Hardpoints": [
       "aef_base_m2hb_50cal_mp"
     ],
@@ -1013,7 +1034,8 @@
     "Cost": {
       "FieldTime": 90
     },
-    "Health": 500
+    "Health": 500,
+    "UpgradeCapacity": 1
   },
   {
     "PBGID": 16428,
@@ -1025,7 +1047,6 @@
       "LocaleDescriptionShort": "0",
       "Symbol": "Icons_symbols_generic_ambient_symbol"
     },
-    "Cost": {},
     "Health": 200
   },
   {
@@ -1038,7 +1059,6 @@
       "LocaleDescriptionShort": "0",
       "Symbol": "Icons_symbols_generic_ambient_symbol"
     },
-    "Cost": {},
     "Health": 200
   },
   {
@@ -1055,14 +1075,14 @@
     "Cost": {
       "FieldTime": 60
     },
-    "Health": 240
+    "Health": 240,
+    "UpgradeCapacity": 1
   },
   {
     "PBGID": 14340,
     "Name": "aef_storagebunker",
     "Army": "aef",
     "Display": {},
-    "Cost": {},
     "Health": 600
   },
   {
@@ -1070,7 +1090,6 @@
     "Name": "aef_supplytent",
     "Army": "aef",
     "Display": {},
-    "Cost": {},
     "Health": 600
   },
   {
@@ -1084,7 +1103,6 @@
       "Icon": "Icons_buildings_building_soviet_tank_traps",
       "Symbol": "Icons_symbols_building_soviet_tank_traps_symbol"
     },
-    "Cost": {},
     "Health": 110
   },
   {
@@ -1124,7 +1142,6 @@
     "Name": "aef_weapon_rack_default_mp",
     "Army": "aef",
     "Display": {},
-    "Cost": {},
     "Health": 600
   },
   {
@@ -1132,7 +1149,6 @@
     "Name": "aef_weapon_rack_m9_bazooka_mp",
     "Army": "aef",
     "Display": {},
-    "Cost": {},
     "Health": 600
   },
   {
@@ -1172,7 +1188,13 @@
       "Manpower": 150,
       "FieldTime": 60
     },
-    "Health": 600
+    "Health": 600,
+    "Upgrades": [
+      "bunker_mg42_addition_mp",
+      "bunker_medic_station_mp",
+      "bunker_command_mp"
+    ],
+    "UpgradeCapacity": 1
   },
   {
     "PBGID": 2516,
@@ -1185,8 +1207,8 @@
       "Icon": "Icons_buildings_building_german_bunker",
       "Symbol": "Icons_symbols_building_german_bunker_symbol"
     },
-    "Cost": {},
-    "Health": 600
+    "Health": 600,
+    "UpgradeCapacity": 1
   },
   {
     "PBGID": 2514,
@@ -1308,7 +1330,7 @@
       "Icon": "Icons_buildings_building_soviet_sandbags",
       "Symbol": "Icons_symbols_building_soviet_sandbags_symbol"
     },
-    "Cost": {}
+    "UpgradeCapacity": 1
   },
   {
     "PBGID": 14140,
@@ -1321,7 +1343,6 @@
       "Icon": "Icons_buildings_building_aef_bulldozer_barricade",
       "Symbol": "Icons_symbols_building_aef_bulldozer_barricade_symbol"
     },
-    "Cost": {},
     "Health": 800
   },
   {
@@ -1335,7 +1356,6 @@
       "Icon": "Icons_buildings_building_aef_bulldozer_barricade",
       "Symbol": "Icons_symbols_building_aef_bulldozer_barricade_symbol"
     },
-    "Cost": {},
     "Health": 800
   },
   {
@@ -1349,7 +1369,6 @@
       "Icon": "Icons_buildings_building_aef_bulldozer_barricade",
       "Symbol": "Icons_symbols_building_soviet_sandbags_symbol"
     },
-    "Cost": {},
     "Health": 800
   },
   {
@@ -1363,7 +1382,6 @@
       "Icon": "Icons_buildings_building_aef_bulldozer_barricade",
       "Symbol": "Icons_symbols_building_aef_bulldozer_barricade_symbol"
     },
-    "Cost": {},
     "Health": 800
   },
   {
@@ -1381,7 +1399,11 @@
       "Manpower": 250,
       "FieldTime": 80
     },
-    "Health": 500
+    "Health": 500,
+    "Upgrades": [
+      "territory_specialization_aid_station"
+    ],
+    "UpgradeCapacity": 1
   },
   {
     "PBGID": 15770,
@@ -1398,7 +1420,11 @@
       "Manpower": 250,
       "FieldTime": 80
     },
-    "Health": 500
+    "Health": 500,
+    "Upgrades": [
+      "territory_specialization_aid_station"
+    ],
+    "UpgradeCapacity": 1
   },
   {
     "PBGID": 15520,
@@ -1410,8 +1436,7 @@
       "LocaleDescriptionShort": "11065440",
       "Icon": "Icons_buildings_building_aef_rifle_weapon_rack_m9_bazooka",
       "Symbol": "Icons_symbols_building_aef_weapon_rack_m9_bazooka_symbol"
-    },
-    "Cost": {}
+    }
   },
   {
     "PBGID": 15521,
@@ -1423,8 +1448,7 @@
       "LocaleDescriptionShort": "11065448",
       "Icon": "Icons_buildings_building_aef_rifle_weapon_rack_m1918a2",
       "Symbol": "Icons_symbols_building_aef_weapon_rack_browning_symbol"
-    },
-    "Cost": {}
+    }
   },
   {
     "PBGID": 16288,
@@ -1436,8 +1460,7 @@
       "LocaleDescriptionShort": "11071021",
       "Icon": "Icons_buildings_building_aef_rifle_weapon_rack_m1919a6",
       "Symbol": "Icons_symbols_building_aef_weapon_rack_m1919a6_symbol"
-    },
-    "Cost": {}
+    }
   },
   {
     "PBGID": 16289,
@@ -1449,8 +1472,7 @@
       "LocaleDescriptionShort": "11071020",
       "Icon": "Icons_buildings_building_aef_rifle_weapon_rack_lmg_m1919",
       "Symbol": "Icons_symbols_building_aef_weapon_rack_browning_symbol"
-    },
-    "Cost": {}
+    }
   },
   {
     "PBGID": 15940,
@@ -1462,8 +1484,7 @@
       "LocaleDescriptionShort": "0",
       "Icon": "Icons_buildings_building_aef_weapon_rack_m9_bazooka",
       "Symbol": "Icons_symbols_building_aef_weapon_rack_m9_bazooka_symbol"
-    },
-    "Cost": {}
+    }
   },
   {
     "PBGID": 15939,
@@ -1475,8 +1496,7 @@
       "LocaleDescriptionShort": "0",
       "Icon": "Icons_upgrades_icon_upgrade_german_mg42_lmg",
       "Symbol": "Icons_symbols_building_aef_weapon_rack_browning_symbol"
-    },
-    "Cost": {}
+    }
   },
   {
     "PBGID": 16351,
@@ -1563,7 +1583,7 @@
     },
     "Cost": {
       "Manpower": 56,
-      "FieldTime": 54
+      "FieldTime": 5.4
     },
     "Abilities": [
       "army_item_global_cover_training",
@@ -1572,7 +1592,10 @@
     "Hardpoints": [
       "captain_m1_thompson_mp"
     ],
-    "Health": 80
+    "Health": 80,
+    "AppliedUpgrades": [
+      "ability_lock_out_captain_abilities"
+    ]
   },
   {
     "PBGID": 16092,
@@ -1597,7 +1620,10 @@
     "Hardpoints": [
       "paratrooper_m1_thompson_mp"
     ],
-    "Health": 80
+    "Health": 80,
+    "AppliedUpgrades": [
+      "ability_lock_out_captain_abilities"
+    ]
   },
   {
     "PBGID": 2523,
@@ -1612,7 +1638,7 @@
     },
     "Cost": {
       "Manpower": 56,
-      "FieldTime": 54
+      "FieldTime": 5.4
     },
     "Abilities": [
       "army_item_global_cover_training"
@@ -1620,7 +1646,10 @@
     "Hardpoints": [
       "captain_m1_thompson_mp"
     ],
-    "Health": 80
+    "Health": 80,
+    "AppliedUpgrades": [
+      "ability_lock_out_lieutenant_abilities"
+    ]
   },
   {
     "PBGID": 16089,
@@ -1645,7 +1674,10 @@
     "Hardpoints": [
       "captain_m1_thompson_mp"
     ],
-    "Health": 80
+    "Health": 80,
+    "AppliedUpgrades": [
+      "ability_lock_out_lieutenant_abilities"
+    ]
   },
   {
     "PBGID": 2524,
@@ -1708,7 +1740,7 @@
       "Symbol": "Icons_symbols_unit_soviet_shock_symbol"
     },
     "Cost": {
-      "Manpower": 566667,
+      "Manpower": 56.6667,
       "FieldTime": 6
     },
     "Abilities": [
@@ -1878,7 +1910,7 @@
     },
     "Cost": {
       "Manpower": 56,
-      "FieldTime": 54
+      "FieldTime": 5.4
     },
     "Abilities": [
       "heal_in_cover",
@@ -1887,7 +1919,8 @@
     "Hardpoints": [
       "m1_garand_rifle_rifleman_mp"
     ],
-    "Health": 80
+    "Health": 80,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 7560,
@@ -1911,7 +1944,8 @@
     "Hardpoints": [
       "m1_carbine_rear_echelon_mp"
     ],
-    "Health": 80
+    "Health": 80,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 174598,
@@ -1926,7 +1960,7 @@
     },
     "Cost": {
       "Manpower": 56,
-      "FieldTime": 56
+      "FieldTime": 5.6
     },
     "Abilities": [
       "blizzard_effect_deep_snow_camo",
@@ -1953,7 +1987,7 @@
     },
     "Cost": {
       "Manpower": 56,
-      "FieldTime": 54
+      "FieldTime": 5.4
     },
     "Abilities": [
       "blizzard_effect_deep_snow_camo",
@@ -1979,7 +2013,7 @@
     },
     "Cost": {
       "Manpower": 56,
-      "FieldTime": 54
+      "FieldTime": 5.4
     },
     "Abilities": [
       "blizzard_effect_deep_snow_camo",
@@ -2006,7 +2040,7 @@
     },
     "Cost": {
       "Manpower": 56,
-      "FieldTime": 56
+      "FieldTime": 5.6
     },
     "Abilities": [
       "mk2_fragmentation_grenade_mp",
@@ -2208,7 +2242,7 @@
     },
     "Cost": {
       "Manpower": 40,
-      "FieldTime": 45
+      "FieldTime": 4.5
     },
     "Abilities": [
       "blizzard_effect_deep_snow_camo",
@@ -2246,7 +2280,8 @@
       "m1_57mm_at_gun__mp",
       "m1_57mm_at_gun_vet_mp"
     ],
-    "Health": 350
+    "Health": 350,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 2547,
@@ -2301,7 +2336,8 @@
     "Drivers": [
       {
         "Army": "racebps\\aef",
-        "SBP": "vehicle_crew_squad_mp"
+        "SBP": "vehicle_crew_squad_mp",
+        "Capture": "dodge_wc51_50cal_squad_mp"
       }
     ],
     "Hardpoints": [
@@ -2314,7 +2350,11 @@
       "dodge_wc51_m1917_30cal_mp",
       "dodge_wc51_m1917_30cal_mp"
     ],
-    "Health": 240
+    "Health": 240,
+    "Upgrades": [
+      "wc51_top_gunner_mp"
+    ],
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 4331,
@@ -2339,10 +2379,12 @@
     "Drivers": [
       {
         "Army": "racebps\\aef",
-        "SBP": "usf_medic_squad_mp"
+        "SBP": "usf_medic_squad_mp",
+        "Capture": "dodge_wc51_ambulance_squad_mp"
       }
     ],
-    "Health": 160
+    "Health": 160,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 2549,
@@ -2367,7 +2409,8 @@
     "Drivers": [
       {
         "Army": "racebps\\aef",
-        "SBP": "vehicle_crew_squad_mp"
+        "SBP": "vehicle_crew_squad_mp",
+        "Capture": "dodge_wc51_squad_mp"
       }
     ],
     "Hardpoints": [
@@ -2379,7 +2422,8 @@
       "dodge_wc51_m1917_30cal_mp",
       "dodge_wc51_m1917_30cal_mp"
     ],
-    "Health": 160
+    "Health": 160,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 17031,
@@ -2404,7 +2448,8 @@
     "Drivers": [
       {
         "Army": "racebps\\aef",
-        "SBP": "pathfinder_squad_recon_mp"
+        "SBP": "pathfinder_squad_recon_mp",
+        "Capture": "dodge_wc51_squad_mp"
       }
     ],
     "Hardpoints": [
@@ -2415,7 +2460,8 @@
       "dodge_wc51_m1917_30cal_mp",
       "dodge_wc51_m1917_30cal_mp"
     ],
-    "Health": 160
+    "Health": 160,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 188767,
@@ -2444,14 +2490,16 @@
     "Drivers": [
       {
         "Army": "racebps\\aef",
-        "SBP": "vehicle_crew_squad_mp"
+        "SBP": "vehicle_crew_squad_mp",
+        "Capture": "m10_tank_destroyer_squad_british_mp"
       }
     ],
     "Hardpoints": [
       "m10_m5_3inch_gun_mp",
       "m10_m5_3inch_ap_gun_mp"
     ],
-    "Health": 560
+    "Health": 560,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 2550,
@@ -2479,14 +2527,16 @@
     "Drivers": [
       {
         "Army": "racebps\\aef",
-        "SBP": "vehicle_crew_squad_mp"
+        "SBP": "vehicle_crew_squad_mp",
+        "Capture": "m10_tank_destroyer_squad_mp"
       }
     ],
     "Hardpoints": [
       "m10_m5_3inch_gun_mp",
       "m10_m5_3inch_ap_gun_mp"
     ],
-    "Health": 560
+    "Health": 560,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 2551,
@@ -2515,13 +2565,18 @@
     "Drivers": [
       {
         "Army": "racebps\\aef",
-        "SBP": "vehicle_crew_squad_mp"
+        "SBP": "vehicle_crew_squad_mp",
+        "Capture": "m20_utility_car_squad_mp"
       }
     ],
     "Hardpoints": [
       "m20_utility_car_m2hb_50cal_mounted_mp"
     ],
-    "Health": 240
+    "Health": 240,
+    "Upgrades": [
+      "m20_side_skirts_mp"
+    ],
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 89408,
@@ -2550,7 +2605,8 @@
       "pershing_vehicle_hull_mp",
       "pershing_auto_crew_grenades_gunner"
     ],
-    "Health": 960
+    "Health": 960,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 2552,
@@ -2577,14 +2633,16 @@
     "Drivers": [
       {
         "Army": "racebps\\aef",
-        "SBP": "vehicle_crew_squad_mp"
+        "SBP": "vehicle_crew_squad_mp",
+        "Capture": "m36_tank_destroyer_squad_mp"
       }
     ],
     "Hardpoints": [
       "m36_m4_90mm_gun_mp",
       "m36_m4_90mm_ap_gun_mp"
     ],
-    "Health": 640
+    "Health": 640,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 2553,
@@ -2611,7 +2669,8 @@
     "Drivers": [
       {
         "Army": "racebps\\aef",
-        "SBP": "vehicle_crew_squad_mp"
+        "SBP": "vehicle_crew_squad_mp",
+        "Capture": "m15a1_aa_halftrack_squad_mp"
       }
     ],
     "Hardpoints": [
@@ -2620,7 +2679,8 @@
       "m15a1_aa_half_track_50cal_left_mp",
       "m15a1_aa_half_track_50cal_right_mp"
     ],
-    "Health": 320
+    "Health": 320,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 2554,
@@ -2650,7 +2710,8 @@
     "Drivers": [
       {
         "Army": "racebps\\aef",
-        "SBP": "vehicle_crew_squad_mp"
+        "SBP": "vehicle_crew_squad_mp",
+        "Capture": "m21_mortar_halftrack_squad_mp"
       }
     ],
     "Hardpoints": [
@@ -2660,7 +2721,8 @@
       "m1_81mm_mortar_short_delay_barrage_mp",
       "m1_81mm_mortar_smoke_barrage_mp"
     ],
-    "Health": 240
+    "Health": 240,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 16879,
@@ -2688,14 +2750,16 @@
     "Drivers": [
       {
         "Army": "racebps\\aef",
-        "SBP": "assault_engineer_squad_mp"
+        "SBP": "assault_engineer_squad_mp",
+        "Capture": "m3_halftrack_squad_assault_mp"
       }
     ],
     "Hardpoints": [
       "m3_halftrack_m2hb_50cal_mp",
       "halftrack_250_dummy"
     ],
-    "Health": 320
+    "Health": 320,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 174674,
@@ -2723,14 +2787,16 @@
     "Drivers": [
       {
         "Army": "racebps\\aef",
-        "SBP": "vehicle_crew_squad_mp"
+        "SBP": "vehicle_crew_squad_mp",
+        "Capture": "m3_halftrack_assault_mp"
       }
     ],
     "Hardpoints": [
       "m3_halftrack_m2hb_50cal_mp",
       "halftrack_250_dummy"
     ],
-    "Health": 320
+    "Health": 320,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 2555,
@@ -2755,14 +2821,19 @@
     "Drivers": [
       {
         "Army": "racebps\\aef",
-        "SBP": "vehicle_crew_squad_mp"
+        "SBP": "vehicle_crew_squad_mp",
+        "Capture": "m3_halftrack_squad_mp"
       }
     ],
     "Hardpoints": [
       "m3_halftrack_m2hb_50cal_mp",
       "halftrack_250_dummy"
     ],
-    "Health": 320
+    "Health": 320,
+    "Upgrades": [
+      "m3_repair_station_mp"
+    ],
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 3475,
@@ -2789,7 +2860,8 @@
     "Drivers": [
       {
         "Army": "racebps\\aef",
-        "SBP": "vehicle_crew_squad_mp"
+        "SBP": "vehicle_crew_squad_mp",
+        "Capture": "m4a3e8_sherman_easy_8_squad_mp"
       }
     ],
     "Hardpoints": [
@@ -2798,7 +2870,11 @@
       "sherman_m4a3_vehicle_hull_mp",
       "sherman_m3_2inch_mortar_smoke_mp"
     ],
-    "Health": 720
+    "Health": 720,
+    "Upgrades": [
+      "sherman_top_gunner_mp"
+    ],
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 12742901,
@@ -2827,7 +2903,8 @@
     "Drivers": [
       {
         "Army": "racebps\\aef",
-        "SBP": "vehicle_crew_squad_mp"
+        "SBP": "vehicle_crew_squad_mp",
+        "Capture": "m4a3_76mm_sherman_squad_commander_mp"
       }
     ],
     "Hardpoints": [
@@ -2837,7 +2914,11 @@
       "sherman_hull_gun_mp",
       "sherman_m3_2inch_mortar_smoke_mp"
     ],
-    "Health": 640
+    "Health": 640,
+    "Upgrades": [
+      "sherman_soviet_top_gunner"
+    ],
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 14807,
@@ -2863,7 +2944,8 @@
     "Drivers": [
       {
         "Army": "racebps\\aef",
-        "SBP": "vehicle_crew_squad_mp"
+        "SBP": "vehicle_crew_squad_mp",
+        "Capture": "m4a3_76mm_sherman_squad_mp"
       }
     ],
     "Hardpoints": [
@@ -2871,7 +2953,8 @@
       "sherman_m4a3_vehicle_hull_mp",
       "sherman_m3_2inch_mortar_smoke_mp"
     ],
-    "Health": 640
+    "Health": 640,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 15014,
@@ -2897,7 +2980,8 @@
     "Drivers": [
       {
         "Army": "racebps\\aef",
-        "SBP": "vehicle_crew_squad_mp"
+        "SBP": "vehicle_crew_squad_mp",
+        "Capture": "m4a3_76mm_sherman_bulldozer_squad_mp"
       }
     ],
     "Hardpoints": [
@@ -2905,7 +2989,11 @@
       "sherman_m4a3_coaxial_vehicle_turret_mp",
       "sherman_m3_2inch_mortar_smoke_mp"
     ],
-    "Health": 720
+    "Health": 720,
+    "Upgrades": [
+      "sherman_top_gunner_mp"
+    ],
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 2556,
@@ -2937,7 +3025,8 @@
     "Drivers": [
       {
         "Army": "racebps\\aef",
-        "SBP": "vehicle_crew_squad_mp"
+        "SBP": "vehicle_crew_squad_mp",
+        "Capture": "m4a3_sherman_squad_mp"
       }
     ],
     "Hardpoints": [
@@ -2947,7 +3036,12 @@
       "sherman_m4a3_vehicle_hull_mp",
       "sherman_m3_2inch_mortar_smoke_mp"
     ],
-    "Health": 640
+    "Health": 640,
+    "Upgrades": [
+      "sherman_top_gunner_mp",
+      "sherman_dozer_blade_mp"
+    ],
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 7561,
@@ -2975,7 +3069,8 @@
     "Drivers": [
       {
         "Army": "racebps\\aef",
-        "SBP": "vehicle_crew_squad_mp"
+        "SBP": "vehicle_crew_squad_mp",
+        "Capture": "m5a1_stuart_squad_mp"
       }
     ],
     "Hardpoints": [
@@ -2984,7 +3079,8 @@
       "m5a1_stuart_m1919a4_30_cal_coaxial_mp",
       "m5a1_stuart_m1919a4_30_cal_hull_mp"
     ],
-    "Health": 400
+    "Health": 400,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 99275,
@@ -3011,14 +3107,19 @@
     "Drivers": [
       {
         "Army": "racebps\\aef",
-        "SBP": "vehicle_crew_squad_mp"
+        "SBP": "vehicle_crew_squad_mp",
+        "Capture": "aef_halftrack_squad_mp"
       }
     ],
     "Hardpoints": [
       "m5_halftrack_m2hb_hmg_mp",
       "halftrack_250_dummy"
     ],
-    "Health": 320
+    "Health": 320,
+    "Upgrades": [
+      "usf_m5_halftrack_72k_aa_gun_package_mp"
+    ],
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 2558,
@@ -3049,7 +3150,8 @@
       "m7b1_priest_m2a1_105mm_creeping_barrage_mp",
       "m7b1_priest_m2a1_105mm_victor_target_mp"
     ],
-    "Health": 320
+    "Health": 320,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 2559,
@@ -3077,7 +3179,8 @@
     "Drivers": [
       {
         "Army": "racebps\\aef",
-        "SBP": "vehicle_crew_squad_mp"
+        "SBP": "vehicle_crew_squad_mp",
+        "Capture": "m8a1_hmc_squad_mp"
       }
     ],
     "Hardpoints": [
@@ -3086,7 +3189,8 @@
       "m8a1_hmc_m3_75mm_mp",
       "m8a1_hmc_m3_75mm_victor_target_mp"
     ],
-    "Health": 400
+    "Health": 400,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 2560,
@@ -3114,14 +3218,19 @@
     "Drivers": [
       {
         "Army": "racebps\\aef",
-        "SBP": "vehicle_crew_squad_mp"
+        "SBP": "vehicle_crew_squad_mp",
+        "Capture": "m8_greyhound_squad_mp"
       }
     ],
     "Hardpoints": [
       "m8_greyhound_m6_37mm_mp",
       "m8_greyhound_m1919a4_30cal_coaxial_mp"
     ],
-    "Health": 400
+    "Health": 400,
+    "Upgrades": [
+      "m8_top_gunner_mp"
+    ],
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 17679,
@@ -3380,14 +3489,14 @@
       "t34_calliope_rocket_mp",
       "sherman_m4a3_vehicle_hull_mp"
     ],
-    "Health": 400
+    "Health": 400,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 90733,
     "Name": "british_base_stamper",
     "Army": "british",
-    "Display": {},
-    "Cost": {}
+    "Display": {}
   },
   {
     "PBGID": 18776,
@@ -3401,7 +3510,7 @@
       "Symbol": "Icons_symbols_building_british_platoon_command_post_symbol"
     },
     "Cost": {
-      "FieldTime": 173
+      "FieldTime": 17.3
     },
     "Abilities": [
       "qf_25lb_coordinated_fire_base_mp",
@@ -3424,7 +3533,12 @@
       "qf_25lb_direct_barrage_shell_base_mp",
       "qf_25lb_howitzer_coordinated_fire_he_shell_base_overwatch_mp"
     ],
-    "Health": 1500
+    "Health": 1500,
+    "Upgrades": [
+      "platoon_aec_research_building_mp",
+      "platoon_bofors_research_building_mp"
+    ],
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 93729,
@@ -3440,7 +3554,12 @@
     "Cost": {
       "FieldTime": 25
     },
-    "Health": 1500
+    "Health": 1500,
+    "Upgrades": [
+      "platoon_aec_research_mp",
+      "platoon_bofors_research_mp"
+    ],
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 93545,
@@ -3470,7 +3589,7 @@
       "Symbol": "Icons_symbols_building_british_company_command_post_symbol"
     },
     "Cost": {
-      "FieldTime": 448
+      "FieldTime": 44.8
     },
     "Abilities": [
       "qf_25lb_coordinated_fire_base_2_mp",
@@ -3492,7 +3611,12 @@
       "qf_25lb_direct_barrage_shell_base_mp",
       "qf_25lb_howitzer_coordinated_fire_he_shell_base_overwatch_mp"
     ],
-    "Health": 2000
+    "Health": 2000,
+    "Upgrades": [
+      "company_hammer_building_mp",
+      "company_anvil_building_mp"
+    ],
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 93730,
@@ -3510,7 +3634,12 @@
       "Fuel": 115,
       "FieldTime": 35
     },
-    "Health": 2000
+    "Health": 2000,
+    "Upgrades": [
+      "company_hammer_mp",
+      "company_anvil_mp"
+    ],
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 93546,
@@ -3532,15 +3661,13 @@
     "PBGID": 12741846,
     "Name": "british_3inch_popcap_adder_mp",
     "Army": "british",
-    "Display": {},
-    "Cost": {}
+    "Display": {}
   },
   {
     "PBGID": 12741847,
     "Name": "british_3inch_popcap_display_mp",
     "Army": "british",
-    "Display": {},
-    "Cost": {}
+    "Display": {}
   },
   {
     "PBGID": 90281,
@@ -3560,7 +3687,8 @@
     "Hardpoints": [
       "bunker_vickers_hmg_mp"
     ],
-    "Health": 640
+    "Health": 640,
+    "UpgradeCapacity": 1
   },
   {
     "PBGID": 90750,
@@ -3576,7 +3704,8 @@
     "Cost": {
       "FieldTime": 60
     },
-    "Health": 110
+    "Health": 110,
+    "UpgradeCapacity": 1
   },
   {
     "PBGID": 89008,
@@ -3611,7 +3740,8 @@
     "Cost": {
       "FieldTime": 60
     },
-    "Health": 110
+    "Health": 110,
+    "UpgradeCapacity": 1
   },
   {
     "PBGID": 89155,
@@ -3627,7 +3757,8 @@
     "Cost": {
       "FieldTime": 36
     },
-    "Health": 110
+    "Health": 110,
+    "UpgradeCapacity": 1
   },
   {
     "PBGID": 90501,
@@ -3648,7 +3779,8 @@
     "Hardpoints": [
       "bofor_emplacement_40mm_autocannon"
     ],
-    "Health": 1000
+    "Health": 1000,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 100755,
@@ -3669,7 +3801,13 @@
       "forward_hq_retreat_point_mp",
       "qf_25lb_coordinated_fire_order_fwd_hq_mp"
     ],
-    "Health": 600
+    "Health": 600,
+    "Upgrades": [
+      "fwd_hq_retreat_mp",
+      "advanced_assembly_research_repair_mp",
+      "advanced_assembly_research_medics_mp"
+    ],
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 90699,
@@ -3690,7 +3828,14 @@
       "forward_hq_retreat_point_mp",
       "qf_25lb_coordinated_fire_order_fwd_hq_mp"
     ],
-    "Health": 600
+    "Health": 600,
+    "Upgrades": [
+      "fwd_hq_retreat_mp",
+      "advanced_assembly_research_repair_mp",
+      "advanced_assembly_research_medics_mp",
+      "forward_assembly_fhq"
+    ],
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 12741855,
@@ -3811,7 +3956,8 @@
     "Cost": {
       "FieldTime": 60
     },
-    "Health": 240
+    "Health": 240,
+    "UpgradeCapacity": 1
   },
   {
     "PBGID": 190802,
@@ -3827,7 +3973,8 @@
     "Cost": {
       "FieldTime": 60
     },
-    "Health": 240
+    "Health": 240,
+    "UpgradeCapacity": 1
   },
   {
     "PBGID": 88061,
@@ -3907,7 +4054,8 @@
       "17_pounder_atg_mp",
       "17_pounder_piercing_shot_mp"
     ],
-    "Health": 1
+    "Health": 1,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 100751,
@@ -3929,7 +4077,11 @@
       "blizzard_effect_deep_snow_camo",
       "emplacement_stand_fast_mp"
     ],
-    "Health": 900
+    "Health": 900,
+    "Upgrades": [
+      "improved_fortifcation_squad"
+    ],
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 94912,
@@ -3951,7 +4103,11 @@
       "blizzard_effect_deep_snow_camo",
       "emplacement_stand_fast_mp"
     ],
-    "Health": 900
+    "Health": 900,
+    "Upgrades": [
+      "improved_fortifcation_squad"
+    ],
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 19055,
@@ -3986,7 +4142,8 @@
       "qf_25lb_howitzer_counter_battery_he_shell_mp",
       "qf_25lb_howitzer_smoke_shell_mp"
     ],
-    "Health": 400
+    "Health": 400,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 89275,
@@ -4022,7 +4179,18 @@
       "brit_3_inch_mortar_1_barrage_10lb_he_victor_target_mp",
       "brit_3_inch_mortar_2_barrage_10lb_he_victor_target_mp"
     ],
-    "Health": 700
+    "Health": 700,
+    "Upgrades": [
+      "ability_lock_out_mortar_emplacement_slot_1_default_loaded",
+      "ability_lock_out_mortar_emplacement_slot_1_special_1_loaded",
+      "ability_lock_out_mortar_emplacement_slot_1_special_2_loaded",
+      "improved_fortifcation_squad"
+    ],
+    "AppliedUpgrades": [
+      "ability_lock_out_mortar_emplacement_slot_1_default_loaded",
+      "is_manned"
+    ],
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 100752,
@@ -4058,7 +4226,18 @@
       "brit_3_inch_mortar_1_barrage_10lb_he_victor_target_mp",
       "brit_3_inch_mortar_2_barrage_10lb_he_victor_target_mp"
     ],
-    "Health": 700
+    "Health": 700,
+    "Upgrades": [
+      "ability_lock_out_mortar_emplacement_slot_1_default_loaded",
+      "ability_lock_out_mortar_emplacement_slot_1_special_1_loaded",
+      "ability_lock_out_mortar_emplacement_slot_1_special_2_loaded",
+      "improved_fortifcation_squad"
+    ],
+    "AppliedUpgrades": [
+      "ability_lock_out_mortar_emplacement_slot_1_default_loaded",
+      "is_manned"
+    ],
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 100753,
@@ -4083,7 +4262,11 @@
     "Hardpoints": [
       "bofor_emplacement_40mm_autocannon"
     ],
-    "Health": 1000
+    "Health": 1000,
+    "Upgrades": [
+      "improved_fortifcation_squad"
+    ],
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 89026,
@@ -4108,7 +4291,11 @@
     "Hardpoints": [
       "bofor_emplacement_40mm_autocannon"
     ],
-    "Health": 1000
+    "Health": 1000,
+    "Upgrades": [
+      "improved_fortifcation_squad"
+    ],
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 89142,
@@ -4188,7 +4375,10 @@
     "Hardpoints": [
       "tommy_9mm_sten_gun_bodyguard_mp"
     ],
-    "Health": 80
+    "Health": 80,
+    "AppliedUpgrades": [
+      "ability_lock_out_captain_abilities"
+    ]
   },
   {
     "PBGID": 93100,
@@ -4211,7 +4401,10 @@
     "Hardpoints": [
       "brit_officer_pistol_mp"
     ],
-    "Health": 80
+    "Health": 80,
+    "AppliedUpgrades": [
+      "ability_lock_out_captain_abilities"
+    ]
   },
   {
     "PBGID": 101710,
@@ -4225,7 +4418,7 @@
     },
     "Cost": {
       "Manpower": 70,
-      "FieldTime": 725
+      "FieldTime": 7.25
     },
     "Abilities": [
       "blizzard_effect_deep_snow_camo"
@@ -4248,7 +4441,7 @@
     },
     "Cost": {
       "Manpower": 70,
-      "FieldTime": 725
+      "FieldTime": 7.25
     },
     "Abilities": [
       "blizzard_effect_deep_snow_camo"
@@ -4271,7 +4464,7 @@
     },
     "Cost": {
       "Manpower": 70,
-      "FieldTime": 85
+      "FieldTime": 8.5
     },
     "Abilities": [
       "blizzard_effect_deep_snow_camo",
@@ -4331,8 +4524,8 @@
       "Symbol": "Icons_symbols_unit_british_sappers_symbol"
     },
     "Cost": {
-      "Manpower": 525,
-      "FieldTime": 525
+      "Manpower": 52.5,
+      "FieldTime": 5.25
     },
     "Abilities": [
       "blizzard_effect_deep_snow_camo",
@@ -4341,7 +4534,8 @@
     "Hardpoints": [
       "engineer_sten_9mm_smg_mp"
     ],
-    "Health": 80
+    "Health": 80,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 93438,
@@ -4354,8 +4548,8 @@
       "Symbol": "Icons_symbols_unit_british_sappers_symbol"
     },
     "Cost": {
-      "Manpower": 575,
-      "FieldTime": 525
+      "Manpower": 57.5,
+      "FieldTime": 5.25
     },
     "Abilities": [
       "blizzard_effect_deep_snow_camo",
@@ -4365,7 +4559,8 @@
     "Hardpoints": [
       "engineer_sten_9mm_smg_mp"
     ],
-    "Health": 80
+    "Health": 80,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 17809,
@@ -4389,7 +4584,8 @@
     "Hardpoints": [
       "boys_at_rifle_sniper_mp"
     ],
-    "Health": 82
+    "Health": 82,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 200882,
@@ -4403,7 +4599,7 @@
       "Symbol": "Icons_symbols_at_section_symbol_3"
     },
     "Cost": {
-      "Manpower": 675,
+      "Manpower": 67.5,
       "FieldTime": 7
     },
     "Abilities": [
@@ -4427,7 +4623,7 @@
       "Symbol": "Icons_symbols_unit_british_tommy_with_tommy_symbol"
     },
     "Cost": {
-      "Manpower": 675,
+      "Manpower": 67.5,
       "FieldTime": 7
     },
     "Abilities": [
@@ -4566,7 +4762,7 @@
     },
     "Cost": {
       "Manpower": 45,
-      "FieldTime": 45
+      "FieldTime": 4.5
     },
     "Abilities": [
       "blizzard_effect_deep_snow_camo",
@@ -4590,7 +4786,7 @@
     },
     "Cost": {
       "Manpower": 45,
-      "FieldTime": 45
+      "FieldTime": 4.5
     },
     "Abilities": [
       "blizzard_effect_deep_snow_camo",
@@ -4614,7 +4810,7 @@
     },
     "Cost": {
       "Manpower": 45,
-      "FieldTime": 45
+      "FieldTime": 4.5
     },
     "Abilities": [
       "blizzard_effect_deep_snow_camo",
@@ -4673,7 +4869,8 @@
     "Hardpoints": [
       "brit_6_pounder_at_gun_mp"
     ],
-    "Health": 350
+    "Health": 350,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 90458,
@@ -4697,7 +4894,8 @@
       "brit_25lb_howitzer_disabled_gun_temp",
       "brit_25lb_howitzer_gun_temp"
     ],
-    "Health": 400
+    "Health": 400,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 89023,
@@ -4781,14 +4979,16 @@
     "Drivers": [
       {
         "Army": "racebps\\aef",
-        "SBP": "vehicle_crew_squad_mp"
+        "SBP": "vehicle_crew_squad_mp",
+        "Capture": "aec_armoured_car_squad_mp"
       }
     ],
     "Hardpoints": [
       "aec_75mm_ap_mp",
       "aec_coaxial_vehicle_turret_mp"
     ],
-    "Health": 400
+    "Health": 400,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 18978,
@@ -4817,7 +5017,8 @@
       "centaur_aa_mk2_twin_polsten_20mm_mp",
       "centaur_aa_mk2_twin_polsten_20mm_weapon_burst_mp"
     ],
-    "Health": 640
+    "Health": 640,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 17780,
@@ -4847,7 +5048,8 @@
       "churchill_mk7_coaxial_vehicle_turret_avre_mp",
       "churchill_mk7_vehicle_hull_mp"
     ],
-    "Health": 1080
+    "Health": 1080,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 17802,
@@ -4879,7 +5081,8 @@
       "churchill_mk7_coaxial_vehicle_turret_mp",
       "churchill_flamethrower_sweep_mp"
     ],
-    "Health": 1080
+    "Health": 1080,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 17781,
@@ -4914,7 +5117,8 @@
       "churchill_hull_defense_right_mp",
       "churchill_hull_defense_left_mp"
     ],
-    "Health": 1400
+    "Health": 1400,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 18918,
@@ -4950,7 +5154,8 @@
       "comet_auto_crew_grenades_gunner",
       "comet_auto_crew_grenades_driver"
     ],
-    "Health": 800
+    "Health": 800,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 18980,
@@ -4981,7 +5186,8 @@
       "cromwell_coaxial_vehicle_turret_mp",
       "cromwell_vehicle_hull_mp"
     ],
-    "Health": 640
+    "Health": 640,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 91548,
@@ -4994,7 +5200,6 @@
       "Icon": "Icons_vehicles_vehicle_british_airspeed_horsa_glider",
       "Symbol": "Icons_symbols_vehicle_british_airspeed_horsa_glider_symbol"
     },
-    "Cost": {},
     "Health": 400
   },
   {
@@ -5008,11 +5213,14 @@
       "Icon": "Icons_vehicles_vehicle_british_airspeed_horsa_glider",
       "Symbol": "Icons_symbols_vehicle_british_airspeed_horsa_glider_symbol"
     },
-    "Cost": {},
     "Abilities": [
       "forward_hq_retreat_point_glider_mp"
     ],
-    "Health": 400
+    "Health": 400,
+    "Upgrades": [
+      "fwd_hq_retreat_glider_mp"
+    ],
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 94168,
@@ -5128,14 +5336,16 @@
     "Drivers": [
       {
         "Army": "racebps\\aef",
-        "SBP": "vehicle_crew_squad_mp"
+        "SBP": "vehicle_crew_squad_mp",
+        "Capture": "m3_halftrack_squad__resupply_mp"
       }
     ],
     "Hardpoints": [
       "m3_halftrack_m2hb_50cal_mp",
       "halftrack_250_dummy"
     ],
-    "Health": 320
+    "Health": 320,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 188817,
@@ -5164,7 +5374,11 @@
       "m5_halftrack_m2hb_hmg_mp",
       "halftrack_250_dummy"
     ],
-    "Health": 320
+    "Health": 320,
+    "Upgrades": [
+      "m5_halftrack_72k_aa_gun_package_british_mp"
+    ],
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 93487,
@@ -5286,7 +5500,8 @@
       "sexton_spg_25_pounder_airburst_mp",
       "sexton_spg_25_pounder_creeping_mp"
     ],
-    "Health": 320
+    "Health": 320,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 17775,
@@ -5318,7 +5533,11 @@
       "sherman_firefly_rocket_left_mp",
       "sherman_firefly_rocket_right_mp"
     ],
-    "Health": 640
+    "Health": 640,
+    "Upgrades": [
+      "firefly_tulip_rocket"
+    ],
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 18719,
@@ -5348,7 +5567,12 @@
       "universal_carrier_bren_lmg_mp",
       "halftrack_250_dummy"
     ],
-    "Health": 240
+    "Health": 240,
+    "Upgrades": [
+      "universal_carrier_vickers_k_package_upgrade_mp",
+      "universal_carrier_wasp_package_upgrade_mp"
+    ],
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 93725,
@@ -5373,7 +5597,8 @@
     "Hardpoints": [
       "universal_carrier_bren_lmg_mp"
     ],
-    "Health": 200
+    "Health": 200,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 89018,
@@ -5397,7 +5622,8 @@
     "Drivers": [
       {
         "Army": "racebps\\aef",
-        "SBP": "vehicle_crew_squad_mp"
+        "SBP": "vehicle_crew_squad_mp",
+        "Capture": "m7b1_priest_squad_mp"
       }
     ],
     "Hardpoints": [
@@ -5405,7 +5631,8 @@
       "valentine_mortar",
       "m7b1_priest_m2hb_50cal_mounted_mp"
     ],
-    "Health": 320
+    "Health": 320,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 92684,
@@ -5436,7 +5663,8 @@
       "cromwell_coaxial_vehicle_turret_mp",
       "valentine_canister_smoke_mp"
     ],
-    "Health": 480
+    "Health": 480,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 1472,
@@ -5454,7 +5682,8 @@
       "Fuel": 40,
       "FieldTime": 80
     },
-    "Health": 1500
+    "Health": 1500,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 1473,
@@ -5475,7 +5704,8 @@
     "Hardpoints": [
       "base_building_dummy_weapon_mp"
     ],
-    "Health": 1500
+    "Health": 1500,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 1474,
@@ -5493,7 +5723,8 @@
       "Fuel": 50,
       "FieldTime": 100
     },
-    "Health": 1500
+    "Health": 1500,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 1475,
@@ -5514,14 +5745,14 @@
     "Hardpoints": [
       "base_building_dummy_weapon_mp"
     ],
-    "Health": 1500
+    "Health": 1500,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 85915,
     "Name": "german_base_stamper",
     "Army": "german",
-    "Display": {},
-    "Cost": {}
+    "Display": {}
   },
   {
     "PBGID": 1476,
@@ -5539,7 +5770,8 @@
       "Fuel": 40,
       "FieldTime": 48
     },
-    "Health": 2000
+    "Health": 2000,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 1477,
@@ -5556,7 +5788,8 @@
       "Manpower": 140,
       "FieldTime": 114
     },
-    "Health": 2000
+    "Health": 2000,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 1482,
@@ -5574,7 +5807,8 @@
       "Fuel": 100,
       "FieldTime": 50
     },
-    "Health": 2000
+    "Health": 2000,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 1483,
@@ -5591,7 +5825,8 @@
       "Manpower": 100,
       "FieldTime": 124
     },
-    "Health": 2000
+    "Health": 2000,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 1484,
@@ -5613,7 +5848,6 @@
     "Name": "german_250_sandbag_1",
     "Army": "german",
     "Display": {},
-    "Cost": {},
     "Health": 600
   },
   {
@@ -5621,7 +5855,6 @@
     "Name": "german_250_sandbag_2",
     "Army": "german",
     "Display": {},
-    "Cost": {},
     "Health": 600
   },
   {
@@ -5678,7 +5911,8 @@
     "Cost": {
       "FieldTime": 45
     },
-    "Health": 240
+    "Health": 240,
+    "UpgradeCapacity": 1
   },
   {
     "PBGID": 12741863,
@@ -5694,7 +5928,8 @@
     "Cost": {
       "FieldTime": 60
     },
-    "Health": 240
+    "Health": 240,
+    "UpgradeCapacity": 1
   },
   {
     "PBGID": 190813,
@@ -5710,7 +5945,8 @@
     "Cost": {
       "FieldTime": 60
     },
-    "Health": 240
+    "Health": 240,
+    "UpgradeCapacity": 1
   },
   {
     "PBGID": 190805,
@@ -5726,7 +5962,8 @@
     "Cost": {
       "FieldTime": 45
     },
-    "Health": 240
+    "Health": 240,
+    "UpgradeCapacity": 1
   },
   {
     "PBGID": 1491,
@@ -5756,8 +5993,7 @@
       "LocaleDescriptionLong": "0",
       "LocaleDescriptionShort": "0",
       "Symbol": "Icons_symbols_generic_ambient_symbol"
-    },
-    "Cost": {}
+    }
   },
   {
     "PBGID": 1493,
@@ -5768,8 +6004,7 @@
       "LocaleDescriptionLong": "0",
       "LocaleDescriptionShort": "0",
       "Symbol": "Icons_symbols_generic_ambient_symbol"
-    },
-    "Cost": {}
+    }
   },
   {
     "PBGID": 1494,
@@ -5798,7 +6033,6 @@
       "LocaleDescriptionShort": "0",
       "Symbol": "Icons_symbols_generic_ambient_symbol"
     },
-    "Cost": {},
     "Health": 120
   },
   {
@@ -5811,7 +6045,6 @@
       "LocaleDescriptionShort": "0",
       "Symbol": "Icons_symbols_generic_ambient_symbol"
     },
-    "Cost": {},
     "Health": 120
   },
   {
@@ -6017,7 +6250,6 @@
       "Icon": "Icons_abilities_ability_german_build_camouflage",
       "Symbol": ""
     },
-    "Cost": {},
     "Health": 220
   },
   {
@@ -6030,7 +6262,6 @@
       "LocaleDescriptionShort": "0",
       "Symbol": "Icons_symbols_generic_ambient_symbol"
     },
-    "Cost": {},
     "Health": 100
   },
   {
@@ -6043,7 +6274,6 @@
       "LocaleDescriptionShort": "0",
       "Symbol": "Icons_symbols_generic_ambient_symbol"
     },
-    "Cost": {},
     "Health": 70
   },
   {
@@ -6056,7 +6286,6 @@
       "LocaleDescriptionShort": "0",
       "Symbol": "Icons_symbols_generic_ambient_symbol"
     },
-    "Cost": {},
     "Health": 50
   },
   {
@@ -6069,7 +6298,6 @@
       "LocaleDescriptionShort": "0",
       "Symbol": "Icons_symbols_generic_ambient_symbol"
     },
-    "Cost": {},
     "Health": 50
   },
   {
@@ -6082,7 +6310,6 @@
       "LocaleDescriptionShort": "0",
       "Symbol": "Icons_symbols_generic_ambient_symbol"
     },
-    "Cost": {},
     "Health": 120
   },
   {
@@ -6169,7 +6396,8 @@
       "Manpower": 200,
       "FieldTime": 100
     },
-    "Health": 500
+    "Health": 500,
+    "UpgradeCapacity": 1
   },
   {
     "PBGID": 1512,
@@ -6186,7 +6414,8 @@
       "Manpower": 250,
       "FieldTime": 80
     },
-    "Health": 500
+    "Health": 500,
+    "UpgradeCapacity": 1
   },
   {
     "PBGID": 1513,
@@ -6203,7 +6432,8 @@
       "Manpower": 200,
       "FieldTime": 100
     },
-    "Health": 500
+    "Health": 500,
+    "UpgradeCapacity": 1
   },
   {
     "PBGID": 1514,
@@ -6220,7 +6450,8 @@
       "Manpower": 250,
       "FieldTime": 80
     },
-    "Health": 500
+    "Health": 500,
+    "UpgradeCapacity": 1
   },
   {
     "PBGID": 1515,
@@ -6376,7 +6607,8 @@
       "mg34_coaxial_generic",
       "mg34_hull"
     ],
-    "Health": 450
+    "Health": 450,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 2079,
@@ -6446,8 +6678,8 @@
       "Symbol": "Icons_symbols_unit_german_grenadier_symbol"
     },
     "Cost": {
-      "Manpower": 625,
-      "FieldTime": 75
+      "Manpower": 62.5,
+      "FieldTime": 7.5
     },
     "Abilities": [
       "grenadier_panzerfaust",
@@ -6658,7 +6890,8 @@
       "luger_p08_9mm_pistol_mp",
       "luger_p08_victor_target_flare_pistol_mp"
     ],
-    "Health": 80
+    "Health": 80,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 12742874,
@@ -6685,7 +6918,8 @@
       "grenadier_kar_98k_rifle_mp",
       "luger_p08_victor_target_flare_pistol_mp"
     ],
-    "Health": 80
+    "Health": 80,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 1529,
@@ -6790,8 +7024,8 @@
       "Symbol": ""
     },
     "Cost": {
-      "Manpower": 333333,
-      "FieldTime": 35
+      "Manpower": 33.3333,
+      "FieldTime": 3.5
     },
     "Abilities": [
       "blizzard_effect_deep_snow_camo",
@@ -6800,7 +7034,8 @@
     "Hardpoints": [
       "ostruppen_kar_98k_rifle_mp"
     ],
-    "Health": 80
+    "Health": 80,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 1533,
@@ -6970,8 +7205,8 @@
       "Symbol": ""
     },
     "Cost": {
-      "Manpower": 625,
-      "FieldTime": 75
+      "Manpower": 62.5,
+      "FieldTime": 7.5
     },
     "Abilities": [
       "heal_in_cover"
@@ -7022,7 +7257,8 @@
       "g43_sniper_sniper_mp",
       "g43_sniper_incendiary_mp"
     ],
-    "Health": 40
+    "Health": 40,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 1540,
@@ -7045,7 +7281,8 @@
     "Hardpoints": [
       "g43_sniper_sniper"
     ],
-    "Health": 80
+    "Health": 80,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 1541,
@@ -7071,7 +7308,8 @@
       "g43_sniper_sniper_mp",
       "g43_sniper_incendiary_mp"
     ],
-    "Health": 82
+    "Health": 82,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 2082,
@@ -7084,8 +7322,8 @@
       "Symbol": ""
     },
     "Cost": {
-      "Manpower": 675,
-      "FieldTime": 675
+      "Manpower": 67.5,
+      "FieldTime": 6.75
     },
     "Abilities": [
       "blizzard_effect_deep_snow_camo",
@@ -7133,7 +7371,7 @@
     },
     "Cost": {
       "Manpower": 45,
-      "FieldTime": 45
+      "FieldTime": 4.5
     },
     "Abilities": [
       "blizzard_effect_deep_snow_camo",
@@ -7179,7 +7417,7 @@
     },
     "Cost": {
       "Manpower": 45,
-      "FieldTime": 45
+      "FieldTime": 4.5
     },
     "Abilities": [
       "blizzard_effect_deep_snow_camo",
@@ -7270,7 +7508,7 @@
     },
     "Cost": {
       "Manpower": 45,
-      "FieldTime": 45
+      "FieldTime": 4.5
     },
     "Abilities": [
       "blizzard_effect_deep_snow_camo",
@@ -7316,7 +7554,7 @@
     },
     "Cost": {
       "Manpower": 45,
-      "FieldTime": 45
+      "FieldTime": 4.5
     },
     "Abilities": [
       "blizzard_effect_deep_snow_camo",
@@ -7349,7 +7587,8 @@
     "Hardpoints": [
       "75mm_pak_40"
     ],
-    "Health": 700
+    "Health": 700,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 1553,
@@ -7376,7 +7615,8 @@
       "75mm_pak_40_mp",
       "75mm_pak_40_ap_mp"
     ],
-    "Health": 350
+    "Health": 350,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 1554,
@@ -7456,7 +7696,8 @@
       "howitzer_105mm_gun",
       "howitzer_105mm_gun_precise"
     ],
-    "Health": 300
+    "Health": 300,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 1557,
@@ -7490,7 +7731,8 @@
       "howitzer_105mm_gun_vet3_mp",
       "howitzer_105mm_gun_direct_fire_mp"
     ],
-    "Health": 400
+    "Health": 400,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 2083,
@@ -7517,7 +7759,8 @@
       "mg34_coaxial_generic",
       "mg34_hull"
     ],
-    "Health": 450
+    "Health": 450,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 2084,
@@ -7535,7 +7778,8 @@
       "Fuel": 25,
       "FieldTime": 114
     },
-    "Health": 2000
+    "Health": 2000,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 1563,
@@ -7561,7 +7805,11 @@
     "Hardpoints": [
       "scout_car_mg34_pintle_generic"
     ],
-    "Health": 180
+    "Health": 180,
+    "Upgrades": [
+      "sdkfz_222_20mm_gun"
+    ],
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 1564,
@@ -7590,7 +7838,8 @@
     "Hardpoints": [
       "scout_car_mg34_pintle_generic_mp"
     ],
-    "Health": 320
+    "Health": 320,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 1565,
@@ -7616,7 +7865,8 @@
     "Hardpoints": [
       "brummbar_150mm"
     ],
-    "Health": 1000
+    "Health": 1000,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 1566,
@@ -7646,7 +7896,11 @@
       "brummbar_150mm_bunker_buster_mp",
       "brummbar_150mm_bunker_buster_scatter_mp"
     ],
-    "Health": 800
+    "Health": 800,
+    "Upgrades": [
+      "brummbar_top_gunner_mp"
+    ],
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 1567,
@@ -7673,7 +7927,8 @@
     "Hardpoints": [
       "elefant_88mm_gun"
     ],
-    "Health": 675
+    "Health": 675,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 1568,
@@ -7703,7 +7958,8 @@
       "elefant_88mm_gun_mp",
       "mg34_hull_mp"
     ],
-    "Health": 1040
+    "Health": 1040,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 1569,
@@ -7732,7 +7988,11 @@
       "halftrack_mg42_vehicle",
       "_halftrack_mg42_vehicle_rear"
     ],
-    "Health": 300
+    "Health": 300,
+    "Upgrades": [
+      "sdkfz_251_halftrack_flammpanzerwagen_upgrade"
+    ],
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 1570,
@@ -7766,7 +8026,11 @@
       "_halftrack_mg42_vehicle_rear_mp",
       "halftrack_250_dummy"
     ],
-    "Health": 320
+    "Health": 320,
+    "Upgrades": [
+      "sdkfz_251_halftrack_flammpanzerwagen_upgrade_mp"
+    ],
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 176862,
@@ -7796,7 +8060,8 @@
       "halftrack_250_mg42_vehicle_lockdown_mp",
       "halftrack_250_dummy"
     ],
-    "Health": 240
+    "Health": 240,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 3443,
@@ -7826,7 +8091,8 @@
       "halftrack_250_mg42_vehicle_lockdown_mp",
       "halftrack_250_dummy"
     ],
-    "Health": 240
+    "Health": 240,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 2085,
@@ -7856,7 +8122,8 @@
       "halftrack_250_mg42_vehicle_lockdown_mp",
       "halftrack_250_dummy"
     ],
-    "Health": 240
+    "Health": 240,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 1571,
@@ -7888,7 +8155,8 @@
       "grw34_81mm_incendiary_mortar_halftrack_barrage",
       "grw34_81mm_smoke_mortar_halftrack_barrage"
     ],
-    "Health": 300
+    "Health": 300,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 1572,
@@ -7926,7 +8194,8 @@
       "grw34_81mm_smoke_mortar_halftrack_barrage_mp",
       "grw34_81mm_mortar_halftrack_victor_target_mp"
     ],
-    "Health": 240
+    "Health": 240,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 2086,
@@ -7951,7 +8220,8 @@
     "Hardpoints": [
       "guard_troop_ptrs_41_mp"
     ],
-    "Health": 320
+    "Health": 320,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 1573,
@@ -7972,7 +8242,8 @@
       "supply_truck_lockdown",
       "opel_supply_territory_check"
     ],
-    "Health": 160
+    "Health": 160,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 1574,
@@ -8017,7 +8288,8 @@
       "ostwind_flak_43_37mm",
       "mg34_hull"
     ],
-    "Health": 675
+    "Health": 675,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 1576,
@@ -8045,7 +8317,8 @@
       "ostwind_flak_43_37mm_mp",
       "ostwind_mg34_hull_mp"
     ],
-    "Health": 640
+    "Health": 640,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 1577,
@@ -8072,7 +8345,8 @@
       "mg34_coaxial_generic",
       "mg34_hull"
     ],
-    "Health": 1000
+    "Health": 1000,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 1578,
@@ -8102,7 +8376,11 @@
       "generic_mg34_coaxial_mp",
       "generic_mg34_hull_mp"
     ],
-    "Health": 960
+    "Health": 960,
+    "Upgrades": [
+      "panther_top_gunner_mp"
+    ],
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 1585,
@@ -8131,7 +8409,8 @@
       "panzerwerfer_rockets_nofire",
       "panzerwerfer_rockets"
     ],
-    "Health": 125
+    "Health": 125,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 1586,
@@ -8165,7 +8444,8 @@
       "mg42_turret_mounted_panzerwerfer_mp",
       "panzerwerfer_counter_barrage_rockets_mp"
     ],
-    "Health": 160
+    "Health": 160,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 1863,
@@ -8193,7 +8473,8 @@
       "mg34_coaxial_generic_mp",
       "mg34_hull_mp"
     ],
-    "Health": 320
+    "Health": 320,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 1579,
@@ -8220,7 +8501,8 @@
       "generic_mg34_coaxial_mp",
       "generic_mg34_hull_mp"
     ],
-    "Health": 675
+    "Health": 675,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 1580,
@@ -8249,7 +8531,8 @@
       "generic_mg34_coaxial_mp",
       "generic_mg34_hull_mp"
     ],
-    "Health": 640
+    "Health": 640,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 1581,
@@ -8276,7 +8559,8 @@
       "generic_mg34_coaxial_mp",
       "generic_mg34_hull_mp"
     ],
-    "Health": 450
+    "Health": 450,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 1582,
@@ -8306,7 +8590,11 @@
       "generic_mg34_coaxial_mp",
       "generic_mg34_hull_mp"
     ],
-    "Health": 640
+    "Health": 640,
+    "Upgrades": [
+      "panzer_top_gunner_mp"
+    ],
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 1583,
@@ -8333,7 +8621,8 @@
       "generic_mg34_coaxial_mp",
       "generic_mg34_hull_mp"
     ],
-    "Health": 450
+    "Health": 450,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 1584,
@@ -8363,7 +8652,11 @@
       "generic_mg34_coaxial_mp",
       "generic_mg34_hull_mp"
     ],
-    "Health": 640
+    "Health": 640,
+    "Upgrades": [
+      "panzer_top_gunner_mp"
+    ],
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 188580,
@@ -8392,7 +8685,11 @@
       "generic_mg34_coaxial_mp",
       "generic_mg34_hull_mp"
     ],
-    "Health": 640
+    "Health": 640,
+    "Upgrades": [
+      "panzer_top_gunner_mp"
+    ],
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 16621,
@@ -8422,7 +8719,8 @@
       "puma_50mm_mp",
       "puma_mg42_mp"
     ],
-    "Health": 400
+    "Health": 400,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 1587,
@@ -8447,7 +8745,8 @@
     "Hardpoints": [
       "stug_75mm_short"
     ],
-    "Health": 450
+    "Health": 450,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 2087,
@@ -8474,7 +8773,8 @@
     "Hardpoints": [
       "stug_75mm_short_commander_mp"
     ],
-    "Health": 560
+    "Health": 560,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 1588,
@@ -8500,7 +8800,8 @@
     "Hardpoints": [
       "stug_75mm_short_mp"
     ],
-    "Health": 560
+    "Health": 560,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 1589,
@@ -8526,7 +8827,8 @@
     "Hardpoints": [
       "stug_75mm"
     ],
-    "Health": 450
+    "Health": 450,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 1590,
@@ -8555,7 +8857,11 @@
     "Hardpoints": [
       "stug_75mm_mp"
     ],
-    "Health": 560
+    "Health": 560,
+    "Upgrades": [
+      "stug_top_gunner_mp"
+    ],
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 2088,
@@ -8567,7 +8873,6 @@
       "LocaleDescriptionShort": "0",
       "Symbol": ""
     },
-    "Cost": {},
     "Health": 1000
   },
   {
@@ -8580,7 +8885,6 @@
       "LocaleDescriptionShort": "0",
       "Symbol": ""
     },
-    "Cost": {},
     "Health": 1000
   },
   {
@@ -9071,7 +9375,8 @@
       "mg34_coaxial_generic_tigerace_mp",
       "mg34_hull_mp"
     ],
-    "Health": 1280
+    "Health": 1280,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 1606,
@@ -9098,7 +9403,8 @@
       "mg34_coaxial_generic",
       "mg34_hull"
     ],
-    "Health": 1500
+    "Health": 1500,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 1607,
@@ -9128,7 +9434,11 @@
       "mg34_coaxial_generic_mp",
       "mg34_hull_mp"
     ],
-    "Health": 1040
+    "Health": 1040,
+    "Upgrades": [
+      "tiger_top_gunner_mp"
+    ],
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 1608,
@@ -9178,7 +9488,8 @@
       "mg34_coaxial_generic_mp",
       "mg34_hull_mp"
     ],
-    "Health": 1280
+    "Health": 1280,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 2562,
@@ -9318,7 +9629,8 @@
       "Fuel": 40,
       "FieldTime": 80
     },
-    "Health": 1500
+    "Health": 1500,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 1610,
@@ -9339,7 +9651,8 @@
     "Hardpoints": [
       "base_building_dummy_weapon_mp"
     ],
-    "Health": 1500
+    "Health": 1500,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 1617,
@@ -9357,7 +9670,8 @@
       "Fuel": 110,
       "FieldTime": 110
     },
-    "Health": 2000
+    "Health": 2000,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 1618,
@@ -9375,14 +9689,17 @@
       "Fuel": 85,
       "FieldTime": 170
     },
-    "Health": 2000
+    "Health": 2000,
+    "Upgrades": [
+      "mobilize_reserves_mp"
+    ],
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 85916,
     "Name": "soviet_base_stamper",
     "Army": "soviet",
-    "Display": {},
-    "Cost": {}
+    "Display": {}
   },
   {
     "PBGID": 1619,
@@ -9400,7 +9717,8 @@
       "Fuel": 100,
       "FieldTime": 54
     },
-    "Health": 2000
+    "Health": 2000,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 1620,
@@ -9418,7 +9736,8 @@
       "Fuel": 90,
       "FieldTime": 150
     },
-    "Health": 2000
+    "Health": 2000,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 1621,
@@ -9436,7 +9755,8 @@
       "Fuel": 50,
       "FieldTime": 100
     },
-    "Health": 1500
+    "Health": 1500,
+    "UpgradeCapacity": 8
   },
   {
     "PBGID": 1622,
@@ -9457,7 +9777,8 @@
     "Hardpoints": [
       "base_building_dummy_weapon_mp"
     ],
-    "Health": 1500
+    "Health": 1500,
+    "UpgradeCapacity": 8
   },
   {
     "PBGID": 2095,
@@ -9493,7 +9814,8 @@
     "Cost": {
       "FieldTime": 12
     },
-    "Health": 110
+    "Health": 110,
+    "UpgradeCapacity": 1
   },
   {
     "PBGID": 12741862,
@@ -9509,7 +9831,8 @@
     "Cost": {
       "FieldTime": 12
     },
-    "Health": 110
+    "Health": 110,
+    "UpgradeCapacity": 1
   },
   {
     "PBGID": 190815,
@@ -9525,7 +9848,8 @@
     "Cost": {
       "FieldTime": 12
     },
-    "Health": 110
+    "Health": 110,
+    "UpgradeCapacity": 1
   },
   {
     "PBGID": 1624,
@@ -9541,7 +9865,8 @@
     "Cost": {
       "FieldTime": 12
     },
-    "Health": 110
+    "Health": 110,
+    "UpgradeCapacity": 1
   },
   {
     "PBGID": 190801,
@@ -9557,7 +9882,8 @@
     "Cost": {
       "FieldTime": 12
     },
-    "Health": 110
+    "Health": 110,
+    "UpgradeCapacity": 1
   },
   {
     "PBGID": 1625,
@@ -9687,7 +10013,8 @@
     "Hardpoints": [
       "bunker_starting_position_dshk"
     ],
-    "Health": 600
+    "Health": 600,
+    "UpgradeCapacity": 1
   },
   {
     "PBGID": 1631,
@@ -9708,7 +10035,8 @@
     "Hardpoints": [
       "bunker_starting_position_dshk_mp"
     ],
-    "Health": 600
+    "Health": 600,
+    "UpgradeCapacity": 1
   },
   {
     "PBGID": 2097,
@@ -9758,7 +10086,8 @@
     "Cost": {
       "FieldTime": 80
     },
-    "Health": 240
+    "Health": 240,
+    "UpgradeCapacity": 1
   },
   {
     "PBGID": 14884,
@@ -9790,14 +10119,14 @@
     "Cost": {
       "FieldTime": 80
     },
-    "Health": 240
+    "Health": 240,
+    "UpgradeCapacity": 1
   },
   {
     "PBGID": 175011,
     "Name": "soviet_fhq_supply_props_mp",
     "Army": "soviet",
     "Display": {},
-    "Cost": {},
     "Health": 1
   },
   {
@@ -9816,7 +10145,8 @@
       "Fuel": 25,
       "FieldTime": 150
     },
-    "Health": 640
+    "Health": 640,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 1634,
@@ -9894,7 +10224,8 @@
       "Fuel": 15,
       "FieldTime": 90
     },
-    "Health": 240
+    "Health": 240,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 2099,
@@ -9926,7 +10257,8 @@
     "Cost": {
       "FieldTime": 30
     },
-    "Health": 2000
+    "Health": 2000,
+    "UpgradeCapacity": 1
   },
   {
     "PBGID": 1637,
@@ -9942,7 +10274,8 @@
     "Cost": {
       "FieldTime": 10
     },
-    "Health": 2000
+    "Health": 2000,
+    "UpgradeCapacity": 1
   },
   {
     "PBGID": 1638,
@@ -9959,7 +10292,8 @@
       "Manpower": 200,
       "FieldTime": 100
     },
-    "Health": 500
+    "Health": 500,
+    "UpgradeCapacity": 1
   },
   {
     "PBGID": 1639,
@@ -9976,7 +10310,8 @@
       "Manpower": 250,
       "FieldTime": 80
     },
-    "Health": 500
+    "Health": 500,
+    "UpgradeCapacity": 1
   },
   {
     "PBGID": 1640,
@@ -9993,7 +10328,8 @@
       "Manpower": 200,
       "FieldTime": 100
     },
-    "Health": 500
+    "Health": 500,
+    "UpgradeCapacity": 1
   },
   {
     "PBGID": 1641,
@@ -10010,7 +10346,8 @@
       "Manpower": 250,
       "FieldTime": 80
     },
-    "Health": 500
+    "Health": 500,
+    "UpgradeCapacity": 1
   },
   {
     "PBGID": 12742879,
@@ -10022,7 +10359,6 @@
       "LocaleDescriptionShort": "0",
       "Symbol": "Icons_symbols_generic_ambient_symbol"
     },
-    "Cost": {},
     "Health": 600
   },
   {
@@ -10035,7 +10371,6 @@
       "LocaleDescriptionShort": "0",
       "Symbol": "Icons_symbols_generic_ambient_symbol"
     },
-    "Cost": {},
     "Health": 600
   },
   {
@@ -10048,7 +10383,6 @@
       "LocaleDescriptionShort": "0",
       "Symbol": "Icons_symbols_generic_ambient_symbol"
     },
-    "Cost": {},
     "Health": 600
   },
   {
@@ -10061,7 +10395,6 @@
       "LocaleDescriptionShort": "0",
       "Symbol": "Icons_symbols_generic_ambient_symbol"
     },
-    "Cost": {},
     "Health": 600
   },
   {
@@ -10074,7 +10407,6 @@
       "LocaleDescriptionShort": "0",
       "Symbol": "Icons_symbols_generic_ambient_symbol"
     },
-    "Cost": {},
     "Health": 600
   },
   {
@@ -10087,7 +10419,6 @@
       "LocaleDescriptionShort": "0",
       "Symbol": "Icons_symbols_generic_ambient_symbol"
     },
-    "Cost": {},
     "Health": 600
   },
   {
@@ -10100,7 +10431,6 @@
       "LocaleDescriptionShort": "0",
       "Symbol": "Icons_symbols_generic_ambient_symbol"
     },
-    "Cost": {},
     "Health": 600
   },
   {
@@ -10113,7 +10443,6 @@
       "LocaleDescriptionShort": "0",
       "Symbol": "Icons_symbols_generic_ambient_symbol"
     },
-    "Cost": {},
     "Health": 600
   },
   {
@@ -10126,7 +10455,6 @@
       "LocaleDescriptionShort": "0",
       "Symbol": "Icons_symbols_generic_ambient_symbol"
     },
-    "Cost": {},
     "Health": 600
   },
   {
@@ -10139,7 +10467,6 @@
       "LocaleDescriptionShort": "0",
       "Symbol": "Icons_symbols_generic_ambient_symbol"
     },
-    "Cost": {},
     "Health": 600
   },
   {
@@ -10152,7 +10479,6 @@
       "LocaleDescriptionShort": "0",
       "Symbol": "Icons_symbols_generic_ambient_symbol"
     },
-    "Cost": {},
     "Health": 600
   },
   {
@@ -10165,7 +10491,6 @@
       "LocaleDescriptionShort": "0",
       "Symbol": "Icons_symbols_generic_ambient_symbol"
     },
-    "Cost": {},
     "Health": 600
   },
   {
@@ -10178,7 +10503,6 @@
       "LocaleDescriptionShort": "0",
       "Symbol": "Icons_symbols_generic_ambient_symbol"
     },
-    "Cost": {},
     "Health": 600
   },
   {
@@ -10191,7 +10515,6 @@
       "LocaleDescriptionShort": "0",
       "Symbol": "Icons_symbols_generic_ambient_symbol"
     },
-    "Cost": {},
     "Health": 600
   },
   {
@@ -10204,7 +10527,6 @@
       "LocaleDescriptionShort": "0",
       "Symbol": "Icons_symbols_generic_ambient_symbol"
     },
-    "Cost": {},
     "Health": 600
   },
   {
@@ -10217,7 +10539,6 @@
       "LocaleDescriptionShort": "0",
       "Symbol": "Icons_symbols_generic_ambient_symbol"
     },
-    "Cost": {},
     "Health": 600
   },
   {
@@ -10230,7 +10551,6 @@
       "LocaleDescriptionShort": "0",
       "Symbol": "Icons_symbols_generic_ambient_symbol"
     },
-    "Cost": {},
     "Health": 600
   },
   {
@@ -10243,7 +10563,6 @@
       "LocaleDescriptionShort": "0",
       "Symbol": "Icons_symbols_generic_ambient_symbol"
     },
-    "Cost": {},
     "Health": 600
   },
   {
@@ -10256,7 +10575,6 @@
       "LocaleDescriptionShort": "0",
       "Symbol": "Icons_symbols_generic_ambient_symbol"
     },
-    "Cost": {},
     "Health": 600
   },
   {
@@ -10269,7 +10587,6 @@
       "LocaleDescriptionShort": "0",
       "Symbol": "Icons_symbols_generic_ambient_symbol"
     },
-    "Cost": {},
     "Health": 600
   },
   {
@@ -10282,7 +10599,6 @@
       "LocaleDescriptionShort": "0",
       "Symbol": "Icons_symbols_generic_ambient_symbol"
     },
-    "Cost": {},
     "Health": 600
   },
   {
@@ -10295,7 +10611,6 @@
       "LocaleDescriptionShort": "0",
       "Symbol": "Icons_symbols_generic_ambient_symbol"
     },
-    "Cost": {},
     "Health": 600
   },
   {
@@ -10308,7 +10623,6 @@
       "LocaleDescriptionShort": "0",
       "Symbol": "Icons_symbols_generic_ambient_symbol"
     },
-    "Cost": {},
     "Health": 600
   },
   {
@@ -10321,7 +10635,6 @@
       "LocaleDescriptionShort": "0",
       "Symbol": "Icons_symbols_generic_ambient_symbol"
     },
-    "Cost": {},
     "Health": 600
   },
   {
@@ -10334,7 +10647,6 @@
       "LocaleDescriptionShort": "0",
       "Symbol": "Icons_symbols_generic_ambient_symbol"
     },
-    "Cost": {},
     "Health": 600
   },
   {
@@ -10347,7 +10659,6 @@
       "LocaleDescriptionShort": "0",
       "Symbol": "Icons_symbols_generic_ambient_symbol"
     },
-    "Cost": {},
     "Health": 600
   },
   {
@@ -10437,7 +10748,11 @@
     "Abilities": [
       "transfer_orders"
     ],
-    "Health": 1000
+    "Health": 1000,
+    "Upgrades": [
+      "hq_healing_aura"
+    ],
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 1648,
@@ -10535,7 +10850,7 @@
       "Symbol": "Icons_symbols_unit_soviet_conscript_01_symbol"
     },
     "Cost": {
-      "Manpower": 41667,
+      "Manpower": 41.667,
       "FieldTime": 5
     },
     "Abilities": [
@@ -10559,7 +10874,7 @@
       "Symbol": "Icons_symbols_unit_soviet_conscript_01_symbol"
     },
     "Cost": {
-      "Manpower": 41667,
+      "Manpower": 41.667,
       "FieldTime": 5
     },
     "Abilities": [
@@ -10583,7 +10898,7 @@
       "Symbol": "Icons_symbols_unit_soviet_conscript_02_symbol"
     },
     "Cost": {
-      "Manpower": 41667,
+      "Manpower": 41.667,
       "FieldTime": 5
     },
     "Abilities": [
@@ -10607,7 +10922,7 @@
       "Symbol": "Icons_symbols_unit_soviet_conscript_02_symbol"
     },
     "Cost": {
-      "Manpower": 41667,
+      "Manpower": 41.667,
       "FieldTime": 5
     },
     "Health": 10
@@ -10624,7 +10939,7 @@
       "Symbol": "Icons_symbols_unit_soviet_conscript_01_symbol"
     },
     "Cost": {
-      "Manpower": 41667,
+      "Manpower": 41.667,
       "FieldTime": 5
     },
     "Abilities": [
@@ -10647,7 +10962,7 @@
       "Symbol": "Icons_symbols_unit_soviet_conscript_01_symbol"
     },
     "Cost": {
-      "Manpower": 41667,
+      "Manpower": 41.667,
       "FieldTime": 5
     },
     "Abilities": [
@@ -10808,8 +11123,8 @@
       "Symbol": ""
     },
     "Cost": {
-      "Manpower": 425,
-      "FieldTime": 425
+      "Manpower": 42.5,
+      "FieldTime": 4.25
     },
     "Abilities": [
       "soviet_barbed_wire_cutting_ability_mp",
@@ -10902,7 +11217,7 @@
     },
     "Cost": {
       "Manpower": 55,
-      "FieldTime": 55
+      "FieldTime": 5.5
     },
     "Abilities": [
       "army_item_global_cover_training",
@@ -10929,7 +11244,7 @@
     },
     "Cost": {
       "Manpower": 55,
-      "FieldTime": 55
+      "FieldTime": 5.5
     },
     "Abilities": [
       "guards_throw_defensive_grenade_mp",
@@ -10956,7 +11271,7 @@
     },
     "Cost": {
       "Manpower": 55,
-      "FieldTime": 55
+      "FieldTime": 5.5
     },
     "Abilities": [
       "guards_throw_defensive_grenade_mp",
@@ -11007,7 +11322,7 @@
     },
     "Cost": {
       "Manpower": 50,
-      "FieldTime": 54
+      "FieldTime": 5.4
     },
     "Abilities": [
       "army_item_global_cover_training",
@@ -11058,7 +11373,7 @@
     },
     "Cost": {
       "Manpower": 60,
-      "FieldTime": 55
+      "FieldTime": 5.5
     },
     "Abilities": [
       "rg_42_anti_personnel_grenade_mp",
@@ -11085,7 +11400,6 @@
       "LocaleDescriptionShort": "0",
       "Symbol": ""
     },
-    "Cost": {},
     "Abilities": [
       "heal_in_cover"
     ],
@@ -11104,7 +11418,6 @@
       "LocaleDescriptionShort": "0",
       "Symbol": ""
     },
-    "Cost": {},
     "Abilities": [
       "commissar_shot_227",
       "commissar_shot_227_enemy",
@@ -11146,7 +11459,6 @@
       "LocaleDescriptionShort": "0",
       "Symbol": ""
     },
-    "Cost": {},
     "Abilities": [
       "commissar_shot_227",
       "heal_in_cover"
@@ -11361,7 +11673,7 @@
       "Symbol": "Icons_symbols_unit_soviet_partisan_anti_vehicle_symbol"
     },
     "Cost": {
-      "Manpower": 525,
+      "Manpower": 52.5,
       "FieldTime": 5
     },
     "Abilities": [
@@ -11385,7 +11697,7 @@
       "Symbol": "Icons_symbols_unit_soviet_partisan_anti_vehicle_symbol"
     },
     "Cost": {
-      "Manpower": 525,
+      "Manpower": 52.5,
       "FieldTime": 5
     },
     "Abilities": [
@@ -11410,7 +11722,7 @@
       "Symbol": "Icons_symbols_unit_soviet_partisan_anti_vehicle_symbol"
     },
     "Cost": {
-      "Manpower": 525,
+      "Manpower": 52.5,
       "FieldTime": 5
     },
     "Abilities": [
@@ -11435,7 +11747,7 @@
       "Symbol": "Icons_symbols_unit_soviet_partisan_anti_vehicle_symbol"
     },
     "Cost": {
-      "Manpower": 525,
+      "Manpower": 52.5,
       "FieldTime": 5
     },
     "Abilities": [
@@ -11670,8 +11982,8 @@
       "Symbol": ""
     },
     "Cost": {
-      "Manpower": 475,
-      "FieldTime": 475
+      "Manpower": 47.5,
+      "FieldTime": 4.75
     },
     "Abilities": [
       "rgd_33_partisan_grenade_mp",
@@ -11876,8 +12188,8 @@
       "Symbol": "Icons_symbols_unit_soviet_guards_symbol"
     },
     "Cost": {
-      "Manpower": 625,
-      "FieldTime": 75
+      "Manpower": 62.5,
+      "FieldTime": 7.5
     },
     "Abilities": [
       "guards_throw_defensive_grenade",
@@ -11901,8 +12213,8 @@
       "Symbol": "Icons_symbols_unit_soviet_guards_symbol"
     },
     "Cost": {
-      "Manpower": 625,
-      "FieldTime": 75
+      "Manpower": 62.5,
+      "FieldTime": 7.5
     },
     "Abilities": [
       "guards_throw_defensive_grenade_mp",
@@ -12413,7 +12725,8 @@
     "Hardpoints": [
       "zis3_76mm_m1942__at_gun_mp"
     ],
-    "Health": 350
+    "Health": 350,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 1737,
@@ -12439,7 +12752,8 @@
       "152mm_m-30_barrage_mp",
       "152mm_m-30_barrage_slow_mp"
     ],
-    "Health": 300
+    "Health": 300,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 1738,
@@ -12464,7 +12778,8 @@
       "203mm_b-4_barrage_mp",
       "203mm_b-4_barrage_slow_mp"
     ],
-    "Health": 300
+    "Health": 300,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 3188,
@@ -12494,7 +12809,8 @@
       "203mm_b-4_commander_precise_mp",
       "203mm_b-4_commander_victortarget_mp"
     ],
-    "Health": 400
+    "Health": 400,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 1739,
@@ -12519,7 +12835,8 @@
       "203mm_b-4_barrage_mp",
       "203mm_b-4_barrage_slow_mp"
     ],
-    "Health": 300
+    "Health": 300,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 1740,
@@ -12545,7 +12862,8 @@
       "152mm_m-30_barrage",
       "152mm_m-30_barrage_slow"
     ],
-    "Health": 300
+    "Health": 300,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 3189,
@@ -12576,7 +12894,8 @@
       "152mm_m-30_vet3_mp",
       "152mm_m-30_victortarget_mp"
     ],
-    "Health": 400
+    "Health": 400,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 188144,
@@ -12588,7 +12907,6 @@
       "LocaleDescriptionShort": "0",
       "Symbol": ""
     },
-    "Cost": {},
     "Health": 1000
   },
   {
@@ -12849,7 +13167,8 @@
       "coaxial_vehicle_turret",
       "coaxial_vehicle_turret_rear"
     ],
-    "Health": 1000
+    "Health": 1000,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 1751,
@@ -12880,7 +13199,11 @@
       "is2_coaxial_vehicle_turret_mp",
       "coaxial_vehicle_turret_rear_mp"
     ],
-    "Health": 1040
+    "Health": 1040,
+    "Upgrades": [
+      "is2_top_gunner_mp"
+    ],
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 1752,
@@ -12906,7 +13229,8 @@
     "Hardpoints": [
       "isu152_ml-20s_152mm_howitzer_gun"
     ],
-    "Health": 675
+    "Health": 675,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 1753,
@@ -12937,7 +13261,11 @@
       "isu152_ml-20s_152mm_howitzer_gun_mp",
       "isu152_ml-20s_152mm_howitzer_gun_piercing_shot_mp"
     ],
-    "Health": 1040
+    "Health": 1040,
+    "Upgrades": [
+      "isu152_top_gunner_mp"
+    ],
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 1754,
@@ -12965,7 +13293,8 @@
       "katyusha_bm_13_16_rocket",
       "katyusha_bm_13_16_precision_rocket"
     ],
-    "Health": 125
+    "Health": 125,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 3190,
@@ -12996,7 +13325,8 @@
       "katyusha_bm_13_16_precision_rocket_mp",
       "katyusha_bm_13_16_rocket_victortarget_mp"
     ],
-    "Health": 160
+    "Health": 160,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 1756,
@@ -13023,7 +13353,8 @@
       "coaxial_vehicle_turret_rear",
       "coaxial_vehicle_hull"
     ],
-    "Health": 675
+    "Health": 675,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 2109,
@@ -13055,7 +13386,8 @@
       "coaxial_vehicle_turret_rear_mp",
       "kv_coaxial_vehicle_hull_mp"
     ],
-    "Health": 800
+    "Health": 800,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 1757,
@@ -13085,7 +13417,8 @@
       "coaxial_vehicle_turret_rear_mp",
       "coaxial_vehicle_hull_mp"
     ],
-    "Health": 675
+    "Health": 675,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 2110,
@@ -13111,7 +13444,8 @@
       "coaxial_vehicle_turret_rear",
       "coaxial_vehicle_hull"
     ],
-    "Health": 675
+    "Health": 675,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 2111,
@@ -13142,7 +13476,8 @@
       "coaxial_vehicle_turret_rear_mp",
       "coaxial_vehicle_hull_mp"
     ],
-    "Health": 1040
+    "Health": 1040,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 2112,
@@ -13169,7 +13504,8 @@
       "coaxial_vehicle_turret_rear_mp",
       "coaxial_vehicle_hull_mp"
     ],
-    "Health": 1600
+    "Health": 1600,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 1758,
@@ -13198,7 +13534,8 @@
       "coaxial_vehicle_turret_rear",
       "coaxial_vehicle_hull"
     ],
-    "Health": 675
+    "Health": 675,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 1759,
@@ -13229,7 +13566,8 @@
       "coaxial_vehicle_turret_rear_mp",
       "coaxial_vehicle_hull_mp"
     ],
-    "Health": 960
+    "Health": 960,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 1760,
@@ -13254,7 +13592,8 @@
       "m3a1_scout_car_m2hb_hmg",
       "m3a1_scout_car_30cal_browning_m1919__machine_gun_rear"
     ],
-    "Health": 140
+    "Health": 140,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 1761,
@@ -13282,7 +13621,8 @@
       "m3a1_scout_car_30cal_browning_m1919__machine_gun_rear_mp",
       "halftrack_250_dummy"
     ],
-    "Health": 200
+    "Health": 200,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 1762,
@@ -13306,7 +13646,11 @@
     "Hardpoints": [
       "m5_halftrack_m2hb_hmg"
     ],
-    "Health": 300
+    "Health": 300,
+    "Upgrades": [
+      "m5_halftrack_72k_aa_gun_package"
+    ],
+    "UpgradeCapacity": 1
   },
   {
     "PBGID": 16657,
@@ -13334,7 +13678,11 @@
       "m5_halftrack_m2hb_hmg_mp",
       "halftrack_250_dummy"
     ],
-    "Health": 320
+    "Health": 320,
+    "Upgrades": [
+      "m5_halftrack_72k_aa_gun_package_mp"
+    ],
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 1763,
@@ -13362,7 +13710,11 @@
       "m5_halftrack_m2hb_hmg_mp",
       "halftrack_250_dummy"
     ],
-    "Health": 320
+    "Health": 320,
+    "Upgrades": [
+      "m5_halftrack_72k_aa_gun_package_mp"
+    ],
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 188042,
@@ -13428,7 +13780,6 @@
       "LocaleDescriptionShort": "0",
       "Symbol": ""
     },
-    "Cost": {},
     "Health": 1000
   },
   {
@@ -13477,7 +13828,11 @@
       "sherman_hull_gun_mp",
       "sherman_m3_2inch_mortar_smoke_mp"
     ],
-    "Health": 640
+    "Health": 640,
+    "Upgrades": [
+      "sherman_soviet_top_gunner"
+    ],
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 1764,
@@ -13612,7 +13967,8 @@
       "coaxial_vehicle_turret",
       "coaxial_vehicle_hull"
     ],
-    "Health": 675
+    "Health": 675,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 1769,
@@ -13643,7 +13999,8 @@
       "t34_76_85_coaxial_vehicle_turret_mp",
       "t34_76_85_coaxial_vehicle_hull_mp"
     ],
-    "Health": 640
+    "Health": 640,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 1770,
@@ -13670,7 +14027,8 @@
       "coaxial_vehicle_turret",
       "coaxial_vehicle_hull"
     ],
-    "Health": 675
+    "Health": 675,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 1771,
@@ -13701,7 +14059,8 @@
       "t34_76_85_coaxial_vehicle_turret_mp",
       "t34_76_85_coaxial_vehicle_hull_mp"
     ],
-    "Health": 800
+    "Health": 800,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 1772,
@@ -13726,7 +14085,8 @@
       "t70_m1938_45mm",
       "coaxial_vehicle_turret"
     ],
-    "Health": 450
+    "Health": 450,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 1773,
@@ -13756,7 +14116,8 @@
       "t70_m1938_45mm_mp",
       "t70_coaxial_vehicle_turret_mp"
     ],
-    "Health": 400
+    "Health": 400,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 1774,
@@ -13818,7 +14179,8 @@
     "Hardpoints": [
       "dummy_weapon_mp"
     ],
-    "Health": 200
+    "Health": 200,
+    "UpgradeCapacity": 1
   },
   {
     "PBGID": 1777,
@@ -13843,7 +14205,8 @@
     "Hardpoints": [
       "dummy_weapon_mp"
     ],
-    "Health": 200
+    "Health": 200,
+    "UpgradeCapacity": 1
   },
   {
     "PBGID": 2568,
@@ -13865,7 +14228,12 @@
       "base_building_retreat_point_mp",
       "sws_halftrack_forward_receivers"
     ],
-    "Health": 1920
+    "Health": 1920,
+    "Upgrades": [
+      "retreat_point_unlock_upgrade",
+      "medic_healing_mp"
+    ],
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 2569,
@@ -13891,7 +14259,11 @@
       "base_building_flak_20mm_flak38",
       "base_building_flak_20mm_flak38_aa_mp"
     ],
-    "Health": 1600
+    "Health": 1600,
+    "Upgrades": [
+      "panzer_authorization_upgrade_mp"
+    ],
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 2570,
@@ -13912,14 +14284,17 @@
     "Abilities": [
       "sws_halftrack_forward_receivers"
     ],
-    "Health": 1920
+    "Health": 1920,
+    "Upgrades": [
+      "repair_engineers_mp"
+    ],
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 85917,
     "Name": "west_german_base_stamper",
     "Army": "west_german",
-    "Display": {},
-    "Cost": {}
+    "Display": {}
   },
   {
     "PBGID": 14519,
@@ -13953,7 +14328,7 @@
     },
     "Cost": {
       "Manpower": 180,
-      "FieldTime": 75
+      "FieldTime": 7.5
     },
     "Abilities": [
       "blizzard_effect_deep_snow_camo",
@@ -13998,7 +14373,8 @@
     "Hardpoints": [
       "flak_emplacement_20mm"
     ],
-    "Health": 470
+    "Health": 470,
+    "UpgradeCapacity": 1
   },
   {
     "PBGID": 17000,
@@ -14011,7 +14387,6 @@
       "Icon": "Icons_buildings_building_west_german_flak_emplacement",
       "Symbol": "Icons_symbols_building_west_german_flak_emplacement_symbol"
     },
-    "Cost": {},
     "Hardpoints": [
       "flak_emplacement_base_20mm"
     ],
@@ -14064,7 +14439,8 @@
     "Cost": {
       "FieldTime": 36
     },
-    "Health": 200
+    "Health": 200,
+    "UpgradeCapacity": 1
   },
   {
     "PBGID": 190773,
@@ -14080,7 +14456,8 @@
     "Cost": {
       "FieldTime": 36
     },
-    "Health": 200
+    "Health": 200,
+    "UpgradeCapacity": 1
   },
   {
     "PBGID": 16439,
@@ -14096,7 +14473,8 @@
     "Cost": {
       "FieldTime": 24
     },
-    "Health": 200
+    "Health": 200,
+    "UpgradeCapacity": 1
   },
   {
     "PBGID": 14154,
@@ -14150,7 +14528,13 @@
       "Manpower": 150,
       "FieldTime": 60
     },
-    "Health": 600
+    "Health": 600,
+    "Upgrades": [
+      "bunker_mg42_addition_mp",
+      "bunker_medic_station_mp",
+      "bunker_command_mp"
+    ],
+    "UpgradeCapacity": 1
   },
   {
     "PBGID": 14492,
@@ -14166,7 +14550,8 @@
     "Cost": {
       "FieldTime": 36
     },
-    "Health": 110
+    "Health": 110,
+    "UpgradeCapacity": 1
   },
   {
     "PBGID": 16437,
@@ -14182,7 +14567,8 @@
     "Cost": {
       "FieldTime": 60
     },
-    "Health": 240
+    "Health": 240,
+    "UpgradeCapacity": 1
   },
   {
     "PBGID": 190738,
@@ -14198,7 +14584,8 @@
     "Cost": {
       "FieldTime": 60
     },
-    "Health": 240
+    "Health": 240,
+    "UpgradeCapacity": 1
   },
   {
     "PBGID": 89120,
@@ -14220,7 +14607,11 @@
       "building_self_destruct",
       "base_building_retreat_point_mp"
     ],
-    "Health": 1920
+    "Health": 1920,
+    "Upgrades": [
+      "retreat_point_unlock_upgrade"
+    ],
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 89118,
@@ -14244,7 +14635,8 @@
     "Hardpoints": [
       "base_building_flak_20mm_flak38"
     ],
-    "Health": 1600
+    "Health": 1600,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 89119,
@@ -14267,7 +14659,8 @@
       "building_switch_fuel",
       "building_switch_munitions"
     ],
-    "Health": 1920
+    "Health": 1920,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 2574,
@@ -14307,7 +14700,7 @@
     },
     "Cost": {
       "Manpower": 72,
-      "FieldTime": 95
+      "FieldTime": 9.5
     },
     "Abilities": [
       "blizzard_effect_deep_snow_camo",
@@ -14454,7 +14847,7 @@
     },
     "Cost": {
       "Manpower": 54,
-      "FieldTime": 48
+      "FieldTime": 4.8
     },
     "Abilities": [
       "blizzard_effect_deep_snow_camo",
@@ -14505,7 +14898,7 @@
     },
     "Cost": {
       "Manpower": 52,
-      "FieldTime": 48
+      "FieldTime": 4.8
     },
     "Abilities": [
       "blizzard_effect_deep_snow_camo",
@@ -14519,7 +14912,8 @@
     "Hardpoints": [
       "volksgrenadier_kar_98k_rifle_mp"
     ],
-    "Health": 80
+    "Health": 80,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 2580,
@@ -14533,7 +14927,7 @@
     },
     "Cost": {
       "Manpower": 44,
-      "FieldTime": 475
+      "FieldTime": 4.75
     },
     "Abilities": [
       "blizzard_effect_deep_snow_camo",
@@ -14580,7 +14974,7 @@
     },
     "Cost": {
       "Manpower": 65,
-      "FieldTime": 675
+      "FieldTime": 6.75
     },
     "Abilities": [
       "blizzard_effect_deep_snow_camo",
@@ -14604,7 +14998,7 @@
     },
     "Cost": {
       "Manpower": 65,
-      "FieldTime": 675
+      "FieldTime": 6.75
     },
     "Abilities": [
       "blizzard_effect_deep_snow_camo",
@@ -14628,7 +15022,7 @@
     },
     "Cost": {
       "Manpower": 44,
-      "FieldTime": 45
+      "FieldTime": 4.5
     },
     "Abilities": [
       "blizzard_effect_deep_snow_camo",
@@ -14652,7 +15046,7 @@
     },
     "Cost": {
       "Manpower": 44,
-      "FieldTime": 475
+      "FieldTime": 4.75
     },
     "Abilities": [
       "blizzard_effect_deep_snow_camo",
@@ -14676,7 +15070,7 @@
     },
     "Cost": {
       "Manpower": 45,
-      "FieldTime": 45
+      "FieldTime": 4.5
     },
     "Abilities": [
       "blizzard_effect_deep_snow_camo",
@@ -14735,7 +15129,8 @@
       "pak40_75mm_wg_mp",
       "pak40_critical_shot_wg_mp"
     ],
-    "Health": 350
+    "Health": 350,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 16771,
@@ -14779,7 +15174,7 @@
     },
     "Cost": {
       "Manpower": 70,
-      "FieldTime": 725
+      "FieldTime": 7.25
     },
     "Abilities": [
       "blizzard_effect_deep_snow_camo",
@@ -14789,7 +15184,8 @@
     "Hardpoints": [
       "raketenwerfer43_88mm_wg_mp"
     ],
-    "Health": 350
+    "Health": 350,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 105974,
@@ -14823,7 +15219,8 @@
       "howitzer_105mm_gun_vet3_mp",
       "howitzer_105mm_gun_direct_fire_mp"
     ],
-    "Health": 400
+    "Health": 400,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 2592,
@@ -14854,7 +15251,8 @@
       "le_ig_18_howitzer_75mm_barrage_smoke_mp",
       "le_ig_18_howitzer_75mm_incendiary_mp"
     ],
-    "Health": 350
+    "Health": 350,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 176135,
@@ -14885,7 +15283,11 @@
     "Hardpoints": [
       "scout_car_221_mg34_pintle_generic_mp"
     ],
-    "Health": 240
+    "Health": 240,
+    "Upgrades": [
+      "scout_car_221_radio_mp"
+    ],
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 89445,
@@ -14933,7 +15335,8 @@
       "sdkfz_251_17_flak_20mm_flak38_dummy_vet2",
       "sdkfz_251_17_flak_20mm_flak38"
     ],
-    "Health": 320
+    "Health": 320,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 2608,
@@ -14958,7 +15361,8 @@
     "Hardpoints": [
       "infrared_searchlight_mp"
     ],
-    "Health": 320
+    "Health": 320,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 14923,
@@ -14982,7 +15386,8 @@
     "Hardpoints": [
       "infrared_searchlight_sp"
     ],
-    "Health": 320
+    "Health": 320,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 17099,
@@ -15012,7 +15417,11 @@
       "halftrack_mg42_vehicle_mp",
       "_halftrack_mg42_vehicle_rear_mp"
     ],
-    "Health": 320
+    "Health": 320,
+    "Upgrades": [
+      "sdkfz_251_halftrack_flammpanzerwagen_upgrade_mp_2"
+    ],
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 2611,
@@ -15039,7 +15448,8 @@
       "walking_stuka_rockets_mp",
       "walking_stuka_napalm"
     ],
-    "Health": 160
+    "Health": 160,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 95056,
@@ -15065,7 +15475,11 @@
       "hetzer_keobe_flamethrower__mp",
       "halftrack_250_dummy"
     ],
-    "Health": 640
+    "Health": 640,
+    "Upgrades": [
+      "wg_hetzer_top_gunner_mp"
+    ],
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 2595,
@@ -15092,7 +15506,8 @@
     "Hardpoints": [
       "jagdpanzer_iv_pak_42_75mm_mp"
     ],
-    "Health": 640
+    "Health": 640,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 2596,
@@ -15122,7 +15537,11 @@
       "jagdtiger_pak_44_128mm_gun_supporting_fire_mp",
       "jagdtiger_mg34_hull_mp"
     ],
-    "Health": 1120
+    "Health": 1120,
+    "Upgrades": [
+      "jagdtiger_engine_improvements_i_mp"
+    ],
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 3254,
@@ -15151,7 +15570,11 @@
       "tiger_kwk43_88mm_mp",
       "generic_mg34_hull_mp"
     ],
-    "Health": 1280
+    "Health": 1280,
+    "Upgrades": [
+      "king_tiger_top_gunner_mp"
+    ],
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 2598,
@@ -15177,7 +15600,8 @@
       "kubelwagen_mg34_pintle_mp",
       "halftrack_250_dummy"
     ],
-    "Health": 192
+    "Health": 192,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 12742900,
@@ -15198,7 +15622,8 @@
     "Abilities": [
       "opel_heal_area"
     ],
-    "Health": 240
+    "Health": 240,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 17582,
@@ -15225,7 +15650,8 @@
       "ostwind_flak_43_37mm_mp",
       "mg34_hull_mp"
     ],
-    "Health": 640
+    "Health": 640,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 3386,
@@ -15254,7 +15680,11 @@
       "generic_mg34_coaxial_mp",
       "generic_mg34_hull_mp"
     ],
-    "Health": 960
+    "Health": 960,
+    "Upgrades": [
+      "wg_panther_top_gunner_mp"
+    ],
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 2602,
@@ -15283,7 +15713,11 @@
       "generic_mg34_coaxial_mp",
       "generic_mg34_hull_mp"
     ],
-    "Health": 960
+    "Health": 960,
+    "Upgrades": [
+      "wg_panther_top_gunner_mp"
+    ],
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 3255,
@@ -15313,7 +15747,8 @@
       "luchs_kwk38_20mm_mp",
       "mg34_coaxial_panzer2_mp"
     ],
-    "Health": 400
+    "Health": 400,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 2604,
@@ -15342,7 +15777,11 @@
       "generic_mg34_coaxial_mp",
       "generic_mg34_hull_mp"
     ],
-    "Health": 640
+    "Health": 640,
+    "Upgrades": [
+      "panzer_top_gunner_mp"
+    ],
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 15566,
@@ -15354,7 +15793,6 @@
       "LocaleDescriptionShort": "0",
       "Symbol": ""
     },
-    "Cost": {},
     "Health": 1000
   },
   {
@@ -15367,7 +15805,6 @@
       "LocaleDescriptionShort": "0",
       "Symbol": ""
     },
-    "Cost": {},
     "Hardpoints": [
       "stuka_strafe"
     ],
@@ -15418,7 +15855,8 @@
       "sdkfz_234_puma_kwk39_5cm_mp",
       "sdkfz_234_mg42_mp"
     ],
-    "Health": 400
+    "Health": 400,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 2614,
@@ -15446,7 +15884,8 @@
       "sturmtiger_nahvw_close_range_grenades",
       "halftrack_250_dummy"
     ],
-    "Health": 1280
+    "Health": 1280,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 2615,
@@ -15470,7 +15909,8 @@
     "Hardpoints": [
       "dummy_set_up"
     ],
-    "Health": 300
+    "Health": 300,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 14858,
@@ -15491,7 +15931,8 @@
     "Abilities": [
       "blizzard_effect_vehicle"
     ],
-    "Health": 320
+    "Health": 320,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 188751,
@@ -15521,28 +15962,29 @@
       "mg34_coaxial_generic_mp",
       "mg34_hull_mp"
     ],
-    "Health": 1040
+    "Health": 1040,
+    "Upgrades": [
+      "west_german_top_gunner_mp"
+    ],
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 2503,
     "Name": "replacement_armored_rifle_command_mp",
     "Army": "aef",
-    "Display": {},
-    "Cost": {}
+    "Display": {}
   },
   {
     "PBGID": 2504,
     "Name": "replacement_armor_command_mp",
     "Army": "aef",
-    "Display": {},
-    "Cost": {}
+    "Display": {}
   },
   {
     "PBGID": 2505,
     "Name": "replacement_company_weapons_pool_mp",
     "Army": "aef",
-    "Display": {},
-    "Cost": {}
+    "Display": {}
   },
   {
     "PBGID": 2510,
@@ -15559,7 +16001,8 @@
       "Fuel": 90,
       "FieldTime": 290
     },
-    "Health": 2000
+    "Health": 2000,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 2511,
@@ -15577,7 +16020,8 @@
       "Fuel": 90,
       "FieldTime": 290
     },
-    "Health": 2000
+    "Health": 2000,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 2512,
@@ -15595,7 +16039,8 @@
       "Fuel": 50,
       "FieldTime": 196
     },
-    "Health": 1500
+    "Health": 1500,
+    "UpgradeCapacity": 8
   },
   {
     "PBGID": 2513,
@@ -15613,7 +16058,8 @@
       "Fuel": 40,
       "FieldTime": 160
     },
-    "Health": 1500
+    "Health": 1500,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 4445,
@@ -15633,7 +16079,11 @@
     "Hardpoints": [
       "fighting_position_mg_dummy_mp"
     ],
-    "Health": 400
+    "Health": 400,
+    "Upgrades": [
+      "fighting_position_mg_addition_mp"
+    ],
+    "UpgradeCapacity": 1
   },
   {
     "PBGID": 16331,
@@ -15653,7 +16103,11 @@
     "Hardpoints": [
       "fighting_position_mg_dummy_mp"
     ],
-    "Health": 400
+    "Health": 400,
+    "Upgrades": [
+      "fighting_position_mg_addition_mp"
+    ],
+    "UpgradeCapacity": 1
   },
   {
     "PBGID": 190819,
@@ -15673,7 +16127,11 @@
     "Hardpoints": [
       "fighting_position_mg_dummy_mp"
     ],
-    "Health": 400
+    "Health": 400,
+    "Upgrades": [
+      "fighting_position_mg_addition_mp"
+    ],
+    "UpgradeCapacity": 1
   },
   {
     "PBGID": 190818,
@@ -15693,7 +16151,11 @@
     "Hardpoints": [
       "fighting_position_mg_dummy_mp"
     ],
-    "Health": 400
+    "Health": 400,
+    "Upgrades": [
+      "fighting_position_mg_addition_mp"
+    ],
+    "UpgradeCapacity": 1
   },
   {
     "PBGID": 18526,
@@ -15720,7 +16182,8 @@
     "Drivers": [
       {
         "Army": "racebps\\aef",
-        "SBP": "vehicle_crew_squad_mp"
+        "SBP": "vehicle_crew_squad_mp",
+        "Capture": "m4a3_sherman_squad_mp"
       }
     ],
     "Hardpoints": [
@@ -15730,7 +16193,11 @@
       "sherman_m4a3_vehicle_hull_mp",
       "sherman_m3_2inch_mortar_smoke_mp"
     ],
-    "Health": 640
+    "Health": 640,
+    "Upgrades": [
+      "sherman_top_gunner_mp"
+    ],
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 87331,
@@ -15794,7 +16261,8 @@
     "Cost": {
       "FieldTime": 90
     },
-    "Health": 500
+    "Health": 500,
+    "UpgradeCapacity": 1
   },
   {
     "PBGID": 190822,
@@ -15810,7 +16278,8 @@
     "Cost": {
       "FieldTime": 90
     },
-    "Health": 500
+    "Health": 500,
+    "UpgradeCapacity": 1
   },
   {
     "PBGID": 18723,
@@ -15895,7 +16364,10 @@
     "Hardpoints": [
       "m1911_45cal_pistol_mp"
     ],
-    "Health": 80
+    "Health": 80,
+    "AppliedUpgrades": [
+      "ability_lock_out_lieutenant_abilities"
+    ]
   },
   {
     "PBGID": 18856,
@@ -15958,7 +16430,8 @@
     "Drivers": [
       {
         "Army": "racebps\\aef",
-        "SBP": "vehicle_crew_squad_mp"
+        "SBP": "vehicle_crew_squad_mp",
+        "Capture": "dodge_wc51_50cal_squad_mp"
       }
     ],
     "Hardpoints": [
@@ -15970,7 +16443,8 @@
       "dodge_wc51_m1917_30cal_mp",
       "dodge_wc51_m1917_30cal_mp"
     ],
-    "Health": 160
+    "Health": 160,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 16465,
@@ -16015,8 +16489,7 @@
       "LocaleDescriptionLong": "0",
       "LocaleDescriptionShort": "0",
       "Symbol": ""
-    },
-    "Cost": {}
+    }
   },
   {
     "PBGID": 16540,
@@ -16201,7 +16674,15 @@
     "Abilities": [
       "brit_base_braced_static_mp"
     ],
-    "Health": 3000
+    "Health": 3000,
+    "Upgrades": [
+      "weapon_rack_unlock_mp",
+      "tommy_increased_squad_size_mp",
+      "tommy_mills_bomb_mp",
+      "tech_structure_1_mp",
+      "tech_structure_2_mp"
+    ],
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 93544,
@@ -16242,35 +16723,32 @@
       "25_pdr_set_piece_barrage_mp",
       "25_pdr_flare_barrage_mp"
     ],
-    "Health": 350
+    "Health": 350,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 2070,
     "Name": "tier1_marker",
     "Army": "german",
-    "Display": {},
-    "Cost": {}
+    "Display": {}
   },
   {
     "PBGID": 2071,
     "Name": "tier2_marker",
     "Army": "german",
-    "Display": {},
-    "Cost": {}
+    "Display": {}
   },
   {
     "PBGID": 2072,
     "Name": "tier3_marker",
     "Army": "german",
-    "Display": {},
-    "Cost": {}
+    "Display": {}
   },
   {
     "PBGID": 2073,
     "Name": "tier4_marker",
     "Army": "german",
-    "Display": {},
-    "Cost": {}
+    "Display": {}
   },
   {
     "PBGID": 1478,
@@ -16287,7 +16765,13 @@
       "Manpower": 500,
       "FieldTime": 90
     },
-    "Health": 3000
+    "Health": 3000,
+    "Upgrades": [
+      "battle_phase_2",
+      "battle_phase_3",
+      "battle_phase_4"
+    ],
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 1479,
@@ -16304,7 +16788,13 @@
       "Manpower": 500,
       "FieldTime": 90
     },
-    "Health": 3000
+    "Health": 3000,
+    "Upgrades": [
+      "battle_phase_2_mp",
+      "battle_phase_3_mp",
+      "battle_phase_4_mp"
+    ],
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 1480,
@@ -16360,7 +16850,8 @@
     "Hardpoints": [
       "bunker_mg42"
     ],
-    "Health": 600
+    "Health": 600,
+    "UpgradeCapacity": 1
   },
   {
     "PBGID": 1486,
@@ -16380,7 +16871,8 @@
     "Hardpoints": [
       "bunker_mg42_mp"
     ],
-    "Health": 640
+    "Health": 640,
+    "UpgradeCapacity": 1
   },
   {
     "PBGID": 1487,
@@ -16400,7 +16892,13 @@
     "Hardpoints": [
       "mgnest_mg42t_dummy"
     ],
-    "Health": 600
+    "Health": 600,
+    "Upgrades": [
+      "bunker_mg42_addition",
+      "bunker_medic_station",
+      "bunker_command"
+    ],
+    "UpgradeCapacity": 1
   },
   {
     "PBGID": 1488,
@@ -16420,7 +16918,13 @@
     "Hardpoints": [
       "mgnest_mg42t_dummy_mp"
     ],
-    "Health": 480
+    "Health": 480,
+    "Upgrades": [
+      "bunker_mg42_addition_mp",
+      "bunker_medic_station_mp",
+      "bunker_command_mp"
+    ],
+    "UpgradeCapacity": 1
   },
   {
     "PBGID": 2077,
@@ -16437,7 +16941,8 @@
       "Manpower": 150,
       "FieldTime": 60
     },
-    "Health": 600
+    "Health": 600,
+    "UpgradeCapacity": 1
   },
   {
     "PBGID": 190816,
@@ -16457,7 +16962,13 @@
     "Hardpoints": [
       "mgnest_mg42t_dummy_mp"
     ],
-    "Health": 480
+    "Health": 480,
+    "Upgrades": [
+      "bunker_mg42_addition_mp",
+      "bunker_medic_station_mp",
+      "bunker_command_mp"
+    ],
+    "UpgradeCapacity": 1
   },
   {
     "PBGID": 176711,
@@ -16478,7 +16989,8 @@
       "mgnest_mg42t_dummy_mp",
       "pillbox_mg42_mp"
     ],
-    "Health": 960
+    "Health": 960,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 176712,
@@ -16498,7 +17010,8 @@
     "Hardpoints": [
       "mgnest_mg42t_dummy_mp"
     ],
-    "Health": 960
+    "Health": 960,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 2078,
@@ -16518,7 +17031,8 @@
     "Hardpoints": [
       "mgnest_mg42t_dummy_mp"
     ],
-    "Health": 600
+    "Health": 600,
+    "UpgradeCapacity": 1
   },
   {
     "PBGID": 1611,
@@ -16538,7 +17052,12 @@
     "Abilities": [
       "transfer_orders"
     ],
-    "Health": 3000
+    "Health": 3000,
+    "Upgrades": [
+      "hq_healing_aura",
+      "hq_anti_tank_grenade"
+    ],
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 1612,
@@ -16555,7 +17074,8 @@
       "Manpower": 500,
       "FieldTime": 90
     },
-    "Health": 2000
+    "Health": 2000,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 1613,
@@ -16572,7 +17092,13 @@
       "Manpower": 500,
       "FieldTime": 90
     },
-    "Health": 3000
+    "Health": 3000,
+    "Upgrades": [
+      "hq_healing_aura_mp",
+      "hq_anti_tank_grenade_mp",
+      "hq_molotov_grenade_mp"
+    ],
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 1614,
@@ -16589,7 +17115,11 @@
       "Manpower": 400,
       "FieldTime": 90
     },
-    "Health": 3000
+    "Health": 3000,
+    "Upgrades": [
+      "hq_healing_aura"
+    ],
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 1615,
@@ -16712,7 +17242,8 @@
       "t34_kv1_m1940_f-34_76mm_",
       "coaxial_vehicle_hull"
     ],
-    "Health": 675
+    "Health": 675,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 174846,
@@ -16727,7 +17258,7 @@
     },
     "Cost": {
       "Manpower": 55,
-      "FieldTime": 55
+      "FieldTime": 5.5
     },
     "Abilities": [
       "guards_throw_defensive_grenade_mp",
@@ -16753,7 +17284,7 @@
     },
     "Cost": {
       "Manpower": 55,
-      "FieldTime": 55
+      "FieldTime": 5.5
     },
     "Abilities": [
       "army_item_global_cover_training",
@@ -16779,7 +17310,7 @@
     },
     "Cost": {
       "Manpower": 58,
-      "FieldTime": 55
+      "FieldTime": 5.5
     },
     "Abilities": [
       "guards_throw_defensive_grenade_mp",
@@ -16791,7 +17322,8 @@
     "Hardpoints": [
       "nagant_m1895_revolver_mp"
     ],
-    "Health": 80
+    "Health": 80,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 2571,
@@ -16808,7 +17340,8 @@
       "Manpower": 500,
       "FieldTime": 90
     },
-    "Health": 3000
+    "Health": 3000,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 3319,
@@ -16837,7 +17370,6 @@
       "LocaleDescriptionShort": "0",
       "Symbol": "Icons_symbols_generic_ambient_symbol"
     },
-    "Cost": {},
     "Health": 50
   },
   {
@@ -16850,7 +17382,6 @@
       "LocaleDescriptionShort": "0",
       "Symbol": "Icons_symbols_generic_ambient_symbol"
     },
-    "Cost": {},
     "Health": 50
   },
   {
@@ -16863,7 +17394,6 @@
       "LocaleDescriptionShort": "0",
       "Symbol": "Icons_symbols_generic_ambient_symbol"
     },
-    "Cost": {},
     "Health": 50
   },
   {
@@ -16876,7 +17406,6 @@
       "LocaleDescriptionShort": "0",
       "Symbol": "Icons_symbols_generic_ambient_symbol"
     },
-    "Cost": {},
     "Health": 150
   },
   {
@@ -16889,7 +17418,6 @@
       "LocaleDescriptionShort": "0",
       "Symbol": "Icons_symbols_generic_ambient_symbol"
     },
-    "Cost": {},
     "Health": 50
   },
   {
@@ -16902,7 +17430,6 @@
       "LocaleDescriptionShort": "0",
       "Symbol": "Icons_symbols_generic_ambient_symbol"
     },
-    "Cost": {},
     "Health": 50
   },
   {
@@ -16923,7 +17450,11 @@
     "Hardpoints": [
       "mgnest_mg42t_dummy_mp"
     ],
-    "Health": 480
+    "Health": 480,
+    "Upgrades": [
+      "bunker_mg42_addition_mp"
+    ],
+    "UpgradeCapacity": 1
   },
   {
     "PBGID": 190817,
@@ -16943,7 +17474,11 @@
     "Hardpoints": [
       "mgnest_mg42t_dummy_mp"
     ],
-    "Health": 480
+    "Health": 480,
+    "Upgrades": [
+      "bunker_mg42_addition_mp"
+    ],
+    "UpgradeCapacity": 1
   },
   {
     "PBGID": 2572,
@@ -16969,7 +17504,8 @@
       "howitzer_105mm_gun_he_minichallenge",
       "howitzer_105mm_gun_ap_minichallenge"
     ],
-    "Health": 350
+    "Health": 350,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 17822,
@@ -16996,7 +17532,8 @@
       "howitzer_105mm_long_range",
       "howitzer_105mm_gun_precise"
     ],
-    "Health": 300
+    "Health": 300,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 14171,
@@ -17023,7 +17560,11 @@
     "Hardpoints": [
       "scout_car_mg34_pintle_generic_mp"
     ],
-    "Health": 160
+    "Health": 160,
+    "Upgrades": [
+      "sdkfz_222_20mm_gun_mp"
+    ],
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 16931,
@@ -17043,6 +17584,10 @@
     "Hardpoints": [
       "fighting_position_mg_dummy_mp"
     ],
-    "Health": 400
+    "Health": 400,
+    "Upgrades": [
+      "fighting_position_mg_addition_mp"
+    ],
+    "UpgradeCapacity": 1
   }
 ]

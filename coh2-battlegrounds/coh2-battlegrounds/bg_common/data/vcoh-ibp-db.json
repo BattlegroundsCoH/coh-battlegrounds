@@ -1,6 +1,7 @@
 [
   {
     "Name": "dummy_slot_item",
+    "Army": "NULL",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -11,6 +12,7 @@
   {
     "PBGID": 187725,
     "Name": "dummy_slot_item_1",
+    "Army": "NULL",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -21,6 +23,7 @@
   {
     "PBGID": 1,
     "Name": "dummy_slot_item_quad",
+    "Army": "NULL",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -32,6 +35,7 @@
   {
     "PBGID": 92502,
     "Name": "aef_calliope_dummy_slot_item",
+    "Army": "aef",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -41,6 +45,7 @@
   {
     "PBGID": 16098,
     "Name": "aef_sherman_dummy_slot_item",
+    "Army": "aef",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -50,6 +55,7 @@
   {
     "PBGID": 18721,
     "Name": "aef_vehicle_enters_infantry_buff_applied",
+    "Army": "aef",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -59,6 +65,7 @@
   {
     "PBGID": 17720,
     "Name": "aef_white_phosphorous_mortar_ui_item",
+    "Army": "aef",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -68,6 +75,7 @@
   {
     "PBGID": 17722,
     "Name": "aef_white_phosphorous_shells_ui_item",
+    "Army": "aef",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -77,6 +85,7 @@
   {
     "PBGID": 85850,
     "Name": "aef_wrench_icon_slot_item",
+    "Army": "aef",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -87,6 +96,7 @@
   {
     "PBGID": 2691,
     "Name": "captain_garrison_item",
+    "Army": "aef",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -97,6 +107,7 @@
   {
     "PBGID": 2692,
     "Name": "lieutenant_garrison_item",
+    "Army": "aef",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -107,6 +118,7 @@
   {
     "PBGID": 3109,
     "Name": "light_at_mine_recently_hit_heavy_vehicle",
+    "Army": "aef",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -116,6 +128,7 @@
   {
     "PBGID": 3110,
     "Name": "light_at_mine_recently_hit_light_vehicle",
+    "Army": "aef",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -125,6 +138,7 @@
   {
     "PBGID": 16732,
     "Name": "m15a1_aa_mode_activated",
+    "Army": "aef",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -135,6 +149,7 @@
   {
     "PBGID": 16755,
     "Name": "m15a1_aa_mode_activated_left",
+    "Army": "aef",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -145,6 +160,7 @@
   {
     "PBGID": 16754,
     "Name": "m15a1_aa_mode_activated_main_gun",
+    "Army": "aef",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -155,6 +171,7 @@
   {
     "PBGID": 14579,
     "Name": "m8_greyhound_recon_activated",
+    "Army": "aef",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -164,6 +181,7 @@
   {
     "PBGID": 2693,
     "Name": "major_garrison_item",
+    "Army": "aef",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -174,6 +192,7 @@
   {
     "PBGID": 10741828,
     "Name": "medic_auto_heal_token",
+    "Army": "aef",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -183,6 +202,7 @@
   {
     "PBGID": 14551,
     "Name": "paradrop_reinforce_item",
+    "Army": "aef",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -192,6 +212,7 @@
   {
     "PBGID": 15571,
     "Name": "rear_echelon_rifle_grenade_activated",
+    "Army": "aef",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -201,6 +222,7 @@
   {
     "PBGID": 17151,
     "Name": "rear_echelon_rifle_volley_fire",
+    "Army": "aef",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -210,6 +232,7 @@
   {
     "PBGID": 16085,
     "Name": "sherman_battle_group_item_mp",
+    "Army": "aef",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -219,6 +242,7 @@
   {
     "PBGID": 12741842,
     "Name": "aec_tread_debuff_item_mp",
+    "Army": "british",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -228,6 +252,7 @@
   {
     "PBGID": 89403,
     "Name": "avre_reload_active",
+    "Army": "british",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -237,6 +262,7 @@
   {
     "PBGID": 92298,
     "Name": "bofors_hold_full",
+    "Army": "british",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -246,6 +272,7 @@
   {
     "PBGID": 89255,
     "Name": "bofors_suppressive_barrage_round_item_mp",
+    "Army": "british",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -256,6 +283,7 @@
   {
     "PBGID": 93741,
     "Name": "bofors_suppressive_barrage_round_item_victor_target_mp",
+    "Army": "british",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -266,6 +294,7 @@
   {
     "PBGID": 89252,
     "Name": "bofor_40mm_aa_mode_activated_main_gun",
+    "Army": "british",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -276,6 +305,7 @@
   {
     "PBGID": 92289,
     "Name": "brit_17_pounder_hold_full",
+    "Army": "british",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -285,6 +315,7 @@
   {
     "PBGID": 95103,
     "Name": "brit_command_vehicle_item",
+    "Army": "british",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -294,6 +325,7 @@
   {
     "PBGID": 92768,
     "Name": "brit_croc_dummy_slot_item",
+    "Army": "british",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -304,6 +336,7 @@
   {
     "PBGID": 92431,
     "Name": "brit_emplacement_braced",
+    "Army": "british",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -313,6 +346,7 @@
   {
     "PBGID": 95049,
     "Name": "brit_emplacement_hold_fire",
+    "Army": "british",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -322,6 +356,7 @@
   {
     "PBGID": 92807,
     "Name": "brit_firefly_tulip_slot_item",
+    "Army": "british",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -332,6 +367,7 @@
   {
     "PBGID": 95050,
     "Name": "brit_hold_the_line",
+    "Army": "british",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -341,6 +377,7 @@
   {
     "PBGID": 92300,
     "Name": "brit_mortar_pit_hold_full",
+    "Army": "british",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -350,6 +387,7 @@
   {
     "PBGID": 96295,
     "Name": "brit_reinforce_the_front",
+    "Army": "british",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -359,6 +397,7 @@
   {
     "PBGID": 89108,
     "Name": "brit_unit_lock_out_slot_item",
+    "Army": "british",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -368,6 +407,7 @@
   {
     "PBGID": 95034,
     "Name": "carrier_suppress_active",
+    "Army": "british",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -377,6 +417,7 @@
   {
     "PBGID": 89451,
     "Name": "centuar_aa_mode_activated_main_gun",
+    "Army": "british",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -387,6 +428,7 @@
   {
     "PBGID": 89426,
     "Name": "churuchill_support_negate",
+    "Army": "british",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -396,6 +438,7 @@
   {
     "PBGID": 100888,
     "Name": "dummy_fortified__slot_item",
+    "Army": "british",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -406,6 +449,7 @@
   {
     "PBGID": 92611,
     "Name": "fwd_hq_emplacement_support",
+    "Army": "british",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -415,6 +459,7 @@
   {
     "PBGID": 12741845,
     "Name": "hammer_vision_item_mp",
+    "Army": "british",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -424,6 +469,7 @@
   {
     "PBGID": 188847,
     "Name": "no77_wp_ui_item",
+    "Army": "british",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -433,6 +479,7 @@
   {
     "PBGID": 12741843,
     "Name": "stun_nade_critical_item_mp",
+    "Army": "british",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -442,6 +489,7 @@
   {
     "PBGID": 12741846,
     "Name": "tweapon_hold_fire_item_mp",
+    "Army": "british",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -451,6 +499,7 @@
   {
     "PBGID": 120,
     "Name": "ambush_camo_portrait_icon_item",
+    "Army": "german",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -460,6 +509,7 @@
   {
     "PBGID": 2,
     "Name": "ambush_camo_slot_item",
+    "Army": "german",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -469,6 +519,7 @@
   {
     "PBGID": 3,
     "Name": "ambush_camo_visual_item",
+    "Army": "german",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -479,6 +530,7 @@
   {
     "PBGID": 36,
     "Name": "hulldown_slot_item",
+    "Army": "german",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -488,6 +540,7 @@
   {
     "PBGID": 37,
     "Name": "opel_supply_slot_item",
+    "Army": "german",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -498,6 +551,7 @@
   {
     "PBGID": 188703,
     "Name": "spearhead_item_tiger",
+    "Army": "german",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -507,6 +561,7 @@
   {
     "PBGID": 64,
     "Name": "minesweeper",
+    "Army": "NULL",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -518,6 +573,7 @@
   {
     "PBGID": 14528,
     "Name": "west_german_minesweeper",
+    "Army": "german",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -529,6 +585,7 @@
   {
     "PBGID": 122,
     "Name": "engineer_salvage_kit_dummy",
+    "Army": "soviet",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -539,6 +596,7 @@
   {
     "PBGID": 89031,
     "Name": "self_repair_dummy_slot_item",
+    "Army": "soviet",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -548,6 +606,7 @@
   {
     "PBGID": 15763,
     "Name": "capture_intel_slotitem",
+    "Army": "NULL",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -559,6 +618,7 @@
   {
     "PBGID": 108,
     "Name": "commissar_shot_227",
+    "Army": "NULL",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -569,6 +629,7 @@
   {
     "PBGID": 109,
     "Name": "commissar_shot_227_enemy",
+    "Army": "NULL",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -579,6 +640,7 @@
   {
     "PBGID": 115,
     "Name": "soviet_flag",
+    "Army": "soviet",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -589,6 +651,7 @@
   {
     "PBGID": 2712,
     "Name": "armor_blitz_item",
+    "Army": "german",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -598,6 +661,7 @@
   {
     "PBGID": 2713,
     "Name": "assault_move_item",
+    "Army": "german",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -607,6 +671,7 @@
   {
     "PBGID": 17578,
     "Name": "command_panther_aura",
+    "Army": "german",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -616,6 +681,7 @@
   {
     "PBGID": 2714,
     "Name": "def_move_item",
+    "Army": "german",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -625,6 +691,7 @@
   {
     "PBGID": 12741841,
     "Name": "fallschirmjager_voice_item",
+    "Army": "german",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -634,6 +701,7 @@
   {
     "PBGID": 2718,
     "Name": "flak_halftrack_icon_item",
+    "Army": "german",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -644,6 +712,7 @@
   {
     "PBGID": 97065,
     "Name": "for_the_fatherland_active",
+    "Army": "german",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -653,6 +722,7 @@
   {
     "PBGID": 2719,
     "Name": "infrared_squad_setup",
+    "Army": "german",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -662,6 +732,7 @@
   {
     "PBGID": 16925,
     "Name": "panzerfuisilier_flare_mp",
+    "Army": "german",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -673,6 +744,7 @@
   {
     "PBGID": 97031,
     "Name": "recoup_active",
+    "Army": "german",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -682,6 +754,7 @@
   {
     "PBGID": 16962,
     "Name": "siphon_active",
+    "Army": "german",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -691,6 +764,7 @@
   {
     "PBGID": 2720,
     "Name": "spearhead_item",
+    "Army": "german",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -700,6 +774,7 @@
   {
     "PBGID": 2721,
     "Name": "stalk_item",
+    "Army": "german",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -709,6 +784,7 @@
   {
     "PBGID": 17039,
     "Name": "sturmtiger_reload_active",
+    "Army": "german",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -718,6 +794,7 @@
   {
     "PBGID": 2722,
     "Name": "support_squad_setup",
+    "Army": "german",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -727,6 +804,7 @@
   {
     "PBGID": 2723,
     "Name": "suppress_fire_item",
+    "Army": "german",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -738,6 +816,7 @@
   {
     "PBGID": 4479,
     "Name": "sws_lockdown_setup",
+    "Army": "german",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -747,6 +826,7 @@
   {
     "PBGID": 17721,
     "Name": "wg_blendkorper_smoke_ui_item",
+    "Army": "german",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -756,6 +836,7 @@
   {
     "PBGID": 17718,
     "Name": "wg_panzer_iv_armored_skirts",
+    "Army": "german",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -765,6 +846,7 @@
   {
     "PBGID": 4341,
     "Name": "m5_stuart_damage_engine_shot_slot_item_mp",
+    "Army": "aef",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -775,6 +857,7 @@
   {
     "PBGID": 4342,
     "Name": "m5_stuart_shell_shock_shot_slot_item_mp",
+    "Army": "aef",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -785,6 +868,7 @@
   {
     "PBGID": 4335,
     "Name": "m8_canister_shot_slot_item_mp",
+    "Army": "aef",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -795,6 +879,7 @@
   {
     "PBGID": 96518,
     "Name": "pershing_hvap_piercing_item_mp",
+    "Army": "aef",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -805,6 +890,7 @@
   {
     "PBGID": 188715,
     "Name": "sherman_smoke_shell_wp_shot_mp",
+    "Army": "aef",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -815,6 +901,7 @@
   {
     "PBGID": 15006,
     "Name": "assault_engineer_flamethrower",
+    "Army": "aef",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -827,6 +914,7 @@
   {
     "PBGID": 188046,
     "Name": "m17_rifle_grenade_slot_item_commander_mp",
+    "Army": "aef",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -839,6 +927,7 @@
   {
     "PBGID": 15568,
     "Name": "m17_rifle_grenade_slot_item_mp",
+    "Army": "aef",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -850,6 +939,7 @@
   {
     "PBGID": 15648,
     "Name": "m23_smoke_stream_grenade_anti_tank_item_mp",
+    "Army": "aef",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -860,6 +950,7 @@
   {
     "PBGID": 2705,
     "Name": "m23_smoke_stream_grenade_item_mp",
+    "Army": "aef",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -870,6 +961,7 @@
   {
     "PBGID": 14225,
     "Name": "paratrooper_mk2_grenade_mp",
+    "Army": "aef",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -880,6 +972,7 @@
   {
     "PBGID": 2707,
     "Name": "riflemen_mk2_grenade_mp",
+    "Army": "aef",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -890,6 +983,7 @@
   {
     "PBGID": 188707,
     "Name": "riflemen_molotov_mp",
+    "Army": "aef",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -900,6 +994,7 @@
   {
     "PBGID": 177709,
     "Name": "lieutenant_m1918_bar_mp",
+    "Army": "aef",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -912,6 +1007,7 @@
   {
     "PBGID": 17571,
     "Name": "m1919a6_lmg_icon_dummy",
+    "Army": "aef",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -922,6 +1018,7 @@
   {
     "PBGID": 16847,
     "Name": "m1c_garand",
+    "Army": "aef",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -934,6 +1031,7 @@
   {
     "PBGID": 17138,
     "Name": "m1c_pathfinder_garand",
+    "Army": "aef",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -945,6 +1043,7 @@
   {
     "PBGID": 12741854,
     "Name": "m2hb_pintle_mounted__wc51_mp",
+    "Army": "aef",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -957,6 +1056,7 @@
   {
     "PBGID": 14570,
     "Name": "m2hb_turret_mounted_m8_mp",
+    "Army": "aef",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -969,6 +1069,7 @@
   {
     "PBGID": 2708,
     "Name": "m2hb_turret_mounted_sherman_mp",
+    "Army": "aef",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -981,6 +1082,7 @@
   {
     "PBGID": 17467,
     "Name": "paratrooper_m1919a6_lmg_moving_no_prone_mp",
+    "Army": "aef",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -993,6 +1095,7 @@
   {
     "PBGID": 2709,
     "Name": "paratrooper_m1919a6_lmg_mp",
+    "Army": "aef",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -1005,6 +1108,7 @@
   {
     "PBGID": 15729,
     "Name": "paratrooper_thompson_dummy",
+    "Army": "aef",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -1017,6 +1121,7 @@
   {
     "PBGID": 16065,
     "Name": "paratrooper_thompson_mp",
+    "Army": "aef",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -1028,6 +1133,7 @@
   {
     "PBGID": 15183,
     "Name": "riflemen_30_cal",
+    "Army": "aef",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -1040,6 +1146,7 @@
   {
     "PBGID": 17143,
     "Name": "riflemen_flare",
+    "Army": "aef",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -1051,6 +1158,7 @@
   {
     "PBGID": 2710,
     "Name": "riflemen_m1918_bar_mp",
+    "Army": "aef",
     "Display": {
       "LocaleName": "11053151",
       "LocaleDescriptionLong": "11053149",
@@ -1063,6 +1171,7 @@
   {
     "PBGID": 89337,
     "Name": "aec_target_optics_slot_item_mp",
+    "Army": "british",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -1073,6 +1182,7 @@
   {
     "PBGID": 89338,
     "Name": "aec_target_turret_slot_item_mp",
+    "Army": "british",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -1083,6 +1193,7 @@
   {
     "PBGID": 89420,
     "Name": "avre_crew_shrapnel_grenade_slot_item_mp",
+    "Army": "british",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -1093,6 +1204,7 @@
   {
     "PBGID": 92714,
     "Name": "avre_spigot_mortar_mp",
+    "Army": "british",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -1103,6 +1215,7 @@
   {
     "PBGID": 92836,
     "Name": "avre_spigot_mortar_vet_3_mp",
+    "Army": "british",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -1113,6 +1226,7 @@
   {
     "PBGID": 93370,
     "Name": "aec_tread_shot_mp",
+    "Army": "british",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -1123,6 +1237,7 @@
   {
     "PBGID": 90308,
     "Name": "brit_17_pounder_piercing_shot_mp",
+    "Army": "british",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -1133,6 +1248,7 @@
   {
     "PBGID": 174755,
     "Name": "churchill_smoke_shell_shot_mp",
+    "Army": "british",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -1143,6 +1259,7 @@
   {
     "PBGID": 89440,
     "Name": "comet_smoke_shell_shot_mp",
+    "Army": "british",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -1153,6 +1270,7 @@
   {
     "PBGID": 92921,
     "Name": "comet_smoke_shell_wp_shot_mp",
+    "Army": "british",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -1163,6 +1281,7 @@
   {
     "PBGID": 94997,
     "Name": "tommy_flamethrower",
+    "Army": "british",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -1174,6 +1293,7 @@
   {
     "PBGID": 89210,
     "Name": "commando_n69_grenade_mp",
+    "Army": "british",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -1184,6 +1304,7 @@
   {
     "PBGID": 92378,
     "Name": "cover_smoke_grenade_item",
+    "Army": "british",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -1194,6 +1315,7 @@
   {
     "PBGID": 90716,
     "Name": "frwd_hq_smoke_marker_grenade_mp",
+    "Army": "british",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -1204,6 +1326,7 @@
   {
     "PBGID": 94913,
     "Name": "lee_enfield_rifle_grenade_slot_item_mp",
+    "Army": "british",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -1215,6 +1338,7 @@
   {
     "PBGID": 89562,
     "Name": "sapper_stun_grenade_mp",
+    "Army": "british",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -1225,6 +1349,7 @@
   {
     "PBGID": 200700,
     "Name": "smoke_barrage_marker_grenade_mp",
+    "Army": "british",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -1235,6 +1360,7 @@
   {
     "PBGID": 92952,
     "Name": "sniper_smoke_marker_grenade_mp",
+    "Army": "british",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -1245,6 +1371,7 @@
   {
     "PBGID": 90547,
     "Name": "tommy_officer_smoke_marker_grenade_mp",
+    "Army": "british",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -1255,6 +1382,7 @@
   {
     "PBGID": 93210,
     "Name": "valentine_smoke_marker_grenade_mp",
+    "Army": "british",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -1265,6 +1393,7 @@
   {
     "PBGID": 92904,
     "Name": "boys_sniper_rifle_item_mp",
+    "Army": "british",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -1275,6 +1404,7 @@
   {
     "PBGID": 92264,
     "Name": "bren_lmg_icon_dummy",
+    "Army": "british",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -1285,6 +1415,7 @@
   {
     "PBGID": 92286,
     "Name": "brit_17_pounder_flare_mp",
+    "Army": "british",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -1296,6 +1427,7 @@
   {
     "PBGID": 89170,
     "Name": "commando_bren_lmg_mp",
+    "Army": "british",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -1308,6 +1440,7 @@
   {
     "PBGID": 89156,
     "Name": "commando_de_lisle_carbine_mp",
+    "Army": "british",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -1319,6 +1452,7 @@
   {
     "PBGID": 89212,
     "Name": "commando_de_lisle_carbine_slot_mp",
+    "Army": "british",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -1331,6 +1465,7 @@
   {
     "PBGID": 89154,
     "Name": "commando_thompson_mp",
+    "Army": "british",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -1342,6 +1477,7 @@
   {
     "PBGID": 89211,
     "Name": "commando_thompson_slot_mp",
+    "Army": "british",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -1354,6 +1490,7 @@
   {
     "PBGID": 90354,
     "Name": "sapper_bren_light_machine_gun_mp",
+    "Army": "british",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -1366,6 +1503,7 @@
   {
     "PBGID": 93845,
     "Name": "sapper_vickers_k_light_machine_gun_mp",
+    "Army": "british",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -1377,6 +1515,7 @@
   {
     "PBGID": 88062,
     "Name": "tommy_bren_light_machine_gun_mp",
+    "Army": "british",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -1389,6 +1528,7 @@
   {
     "PBGID": 93136,
     "Name": "tommy_scoped_rifle_item_mp",
+    "Army": "british",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -1399,6 +1539,7 @@
   {
     "PBGID": 200688,
     "Name": "tommy_scoped_rifle_item_sniper_mp",
+    "Army": "british",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -1411,6 +1552,7 @@
   {
     "PBGID": 92443,
     "Name": "tommy_sten_smg",
+    "Army": "british",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -1423,6 +1565,7 @@
   {
     "PBGID": 89101,
     "Name": "universal_carrier_vickers_k_package_mp",
+    "Army": "british",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -1434,6 +1577,7 @@
   {
     "PBGID": 92480,
     "Name": "universal_carrier_vickers_mmg_suppressive_mp",
+    "Army": "british",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -1445,6 +1589,7 @@
   {
     "PBGID": 93850,
     "Name": "vickers_k_light_machine_gun_mp",
+    "Army": "british",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -1457,6 +1602,7 @@
   {
     "PBGID": 4,
     "Name": "panzerbusche_39",
+    "Army": "german",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -1469,6 +1615,7 @@
   {
     "PBGID": 5,
     "Name": "panzerbusche_39_mp",
+    "Army": "german",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -1481,6 +1628,7 @@
   {
     "PBGID": 6,
     "Name": "brummbar_critical_shot_mp",
+    "Army": "german",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -1491,6 +1639,7 @@
   {
     "PBGID": 7,
     "Name": "elefant_critical_shot_mp",
+    "Army": "german",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -1501,6 +1650,7 @@
   {
     "PBGID": 16,
     "Name": "pak40_critical_shot_mp",
+    "Army": "german",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -1511,6 +1661,7 @@
   {
     "PBGID": 17,
     "Name": "pak43_critical_shot_mp",
+    "Army": "german",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -1521,6 +1672,7 @@
   {
     "PBGID": 16865,
     "Name": "puma_critical_shot_mp",
+    "Army": "german",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -1531,6 +1683,7 @@
   {
     "PBGID": 18,
     "Name": "stug_critical_shot_mp",
+    "Army": "german",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -1541,6 +1694,7 @@
   {
     "PBGID": 19,
     "Name": "stug_elefant_pak40_pak43_brummbar_critical_shot",
+    "Army": "german",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -1551,6 +1705,7 @@
   {
     "PBGID": 20,
     "Name": "stug_elefant_pak40_pak43_brummbar_critical_shot_mp",
+    "Army": "german",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -1561,6 +1716,7 @@
   {
     "PBGID": 10741827,
     "Name": "stug_e_critical_shot_mp",
+    "Army": "german",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -1571,6 +1727,7 @@
   {
     "PBGID": 15497,
     "Name": "tiger_ace_critical_shot_mp",
+    "Army": "german",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -1581,6 +1738,7 @@
   {
     "PBGID": 28,
     "Name": "halftrack_flamethrower_left",
+    "Army": "german",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -1592,6 +1750,7 @@
   {
     "PBGID": 29,
     "Name": "halftrack_flamethrower_left_mp",
+    "Army": "german",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -1603,6 +1762,7 @@
   {
     "PBGID": 30,
     "Name": "halftrack_flamethrower_right",
+    "Army": "german",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -1614,6 +1774,7 @@
   {
     "PBGID": 31,
     "Name": "halftrack_flamethrower_right_mp",
+    "Army": "german",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -1625,6 +1786,7 @@
   {
     "PBGID": 32,
     "Name": "pioneer_flamethrower",
+    "Army": "german",
     "Display": {
       "LocaleName": "11046331",
       "LocaleDescriptionLong": "11046338",
@@ -1637,6 +1799,7 @@
   {
     "PBGID": 33,
     "Name": "pioneer_flamethrower_ability",
+    "Army": "german",
     "Display": {
       "LocaleName": "11046333",
       "LocaleDescriptionLong": "11046341",
@@ -1648,6 +1811,7 @@
   {
     "PBGID": 34,
     "Name": "pioneer_flamethrower_ability_mp",
+    "Army": "german",
     "Display": {
       "LocaleName": "11046332",
       "LocaleDescriptionLong": "11046340",
@@ -1659,6 +1823,7 @@
   {
     "PBGID": 35,
     "Name": "pioneer_flamethrower_mp",
+    "Army": "german",
     "Display": {
       "LocaleName": "11046330",
       "LocaleDescriptionLong": "11046346",
@@ -1671,6 +1836,7 @@
   {
     "PBGID": 14307,
     "Name": "urban_assault_flamethrower_mp",
+    "Army": "german",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -1683,6 +1849,7 @@
   {
     "PBGID": 12741850,
     "Name": "model_24_smoke_grenade_item_mp",
+    "Army": "german",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -1693,6 +1860,7 @@
   {
     "PBGID": 14311,
     "Name": "urban_assault_satchel_charge_item_mp",
+    "Army": "german",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -1703,6 +1871,7 @@
   {
     "PBGID": 38,
     "Name": "g43_sniper_incendiary_slot_item_mp",
+    "Army": "german",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -1714,6 +1883,7 @@
   {
     "PBGID": 39,
     "Name": "grenadier_mg42_lmg",
+    "Army": "german",
     "Display": {
       "LocaleName": "11046324",
       "LocaleDescriptionLong": "11046329",
@@ -1726,6 +1896,7 @@
   {
     "PBGID": 17458,
     "Name": "grenadier_mg42_lmg_moving_mp",
+    "Army": "german",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -1738,6 +1909,7 @@
   {
     "PBGID": 17466,
     "Name": "grenadier_mg42_lmg_moving_no_prone_mp",
+    "Army": "german",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -1750,6 +1922,7 @@
   {
     "PBGID": 40,
     "Name": "grenadier_mg42_lmg_mp",
+    "Army": "german",
     "Display": {
       "LocaleName": "11046325",
       "LocaleDescriptionLong": "11046328",
@@ -1762,6 +1935,7 @@
   {
     "PBGID": 41,
     "Name": "jaeger_g43_rifle_item",
+    "Army": "german",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -1772,8 +1946,22 @@
     "SlotSize": 1
   },
   {
+    "PBGID": 42,
+    "Name": "jaeger_g43_rifle_item_mp",
+    "Army": "german",
+    "Display": {
+      "LocaleName": "0",
+      "LocaleDescriptionLong": "0",
+      "LocaleDescriptionShort": "0",
+      "Icon": "Icons_weapons_weapon_gewehr43"
+    },
+    "WPB": "jaeger_g43_rifle_mp",
+    "SlotSize": 5
+  },
+  {
     "PBGID": 43,
     "Name": "jaeger_panzergren_g43_rifle_item_mp",
+    "Army": "german",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -1785,6 +1973,7 @@
   {
     "PBGID": 12741848,
     "Name": "jaeger_panzergren_g43_rifle_item_slot_mp",
+    "Army": "german",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -1797,6 +1986,7 @@
   {
     "PBGID": 44,
     "Name": "kar_98k_antitank_rifle_grenade_slot_item",
+    "Army": "german",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -1808,6 +1998,7 @@
   {
     "PBGID": 45,
     "Name": "kar_98k_antitank_rifle_grenade_slot_item_mp",
+    "Army": "german",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -1819,6 +2010,7 @@
   {
     "PBGID": 46,
     "Name": "kar_98k_rifle_grenade_slot_item",
+    "Army": "german",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -1830,6 +2022,7 @@
   {
     "PBGID": 47,
     "Name": "kar_98k_rifle_grenade_slot_item_mp",
+    "Army": "german",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -1841,6 +2034,7 @@
   {
     "PBGID": 48,
     "Name": "kar_98k_rifle_grenade_slot_item_tutorial",
+    "Army": "german",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -1852,6 +2046,7 @@
   {
     "PBGID": 49,
     "Name": "kwk_20mm_222_armored_car_mp",
+    "Army": "german",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -1863,6 +2058,7 @@
   {
     "PBGID": 50,
     "Name": "mg42_turret_mounted_brummbar",
+    "Army": "german",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -1875,6 +2071,7 @@
   {
     "PBGID": 51,
     "Name": "mg42_turret_mounted_brummbar_mp",
+    "Army": "german",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -1887,6 +2084,7 @@
   {
     "PBGID": 52,
     "Name": "mg42_turret_mounted_panther",
+    "Army": "german",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -1899,6 +2097,7 @@
   {
     "PBGID": 53,
     "Name": "mg42_turret_mounted_panther_mp",
+    "Army": "german",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -1911,6 +2110,7 @@
   {
     "PBGID": 54,
     "Name": "mg42_turret_mounted_pziv",
+    "Army": "german",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -1923,6 +2123,7 @@
   {
     "PBGID": 55,
     "Name": "mg42_turret_mounted_pziv_mp",
+    "Army": "german",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -1935,6 +2136,7 @@
   {
     "PBGID": 56,
     "Name": "mg42_turret_mounted_stugiv",
+    "Army": "german",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -1947,6 +2149,7 @@
   {
     "PBGID": 57,
     "Name": "mg42_turret_mounted_stugiv_mp",
+    "Army": "german",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -1959,6 +2162,7 @@
   {
     "PBGID": 58,
     "Name": "mg42_turret_mounted_tiger",
+    "Army": "german",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -1971,6 +2175,7 @@
   {
     "PBGID": 59,
     "Name": "mg42_turret_mounted_tiger_mp",
+    "Army": "german",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -1983,6 +2188,7 @@
   {
     "PBGID": 123,
     "Name": "mg42_turret_mounted_tiger_tow",
+    "Army": "german",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -1995,6 +2201,7 @@
   {
     "PBGID": 60,
     "Name": "panzer_grenadier_mp44_item",
+    "Army": "german",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -2007,6 +2214,7 @@
   {
     "PBGID": 61,
     "Name": "panzer_grenadier_mp44_item_mp",
+    "Army": "german",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -2018,6 +2226,7 @@
   {
     "PBGID": 137259,
     "Name": "panzer_grenadier_mp44_slot_item_holder_mp",
+    "Army": "german",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -2030,6 +2239,7 @@
   {
     "PBGID": 4402,
     "Name": "partisan_mg42_lmg_mp",
+    "Army": "german",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -2042,6 +2252,7 @@
   {
     "PBGID": 62,
     "Name": "sniper_rifle_item",
+    "Army": "german",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -2052,6 +2263,7 @@
   {
     "PBGID": 63,
     "Name": "sniper_rifle_item_mp",
+    "Army": "german",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -2060,8 +2272,22 @@
     }
   },
   {
+    "PBGID": 18390,
+    "Name": "stormtrooper_mp44_mp",
+    "Army": "german",
+    "Display": {
+      "LocaleName": "0",
+      "LocaleDescriptionLong": "0",
+      "LocaleDescriptionShort": "0",
+      "Icon": "Icons_weapons_weapon_mp44"
+    },
+    "WPB": "panzer_grenadier_mp44_smg_mp",
+    "SlotSize": 5
+  },
+  {
     "PBGID": 65,
     "Name": "kv-8_45mm_gun_item",
+    "Army": "soviet",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -2073,6 +2299,7 @@
   {
     "PBGID": 94087,
     "Name": "ptrs_41_anti_tank_rifle_conscript_mp",
+    "Army": "soviet",
     "Display": {
       "LocaleName": "11007680",
       "LocaleDescriptionLong": "11046313",
@@ -2085,6 +2312,7 @@
   {
     "PBGID": 12741847,
     "Name": "ptrs_41_anti_tank_rifle_conscript_no_slot_mp",
+    "Army": "soviet",
     "Display": {
       "LocaleName": "11007680",
       "LocaleDescriptionLong": "11046313",
@@ -2096,6 +2324,7 @@
   {
     "PBGID": 66,
     "Name": "ptrs_41_anti_tank_rifle_guard_troop",
+    "Army": "soviet",
     "Display": {
       "LocaleName": "11007680",
       "LocaleDescriptionLong": "11046312",
@@ -2108,6 +2337,7 @@
   {
     "PBGID": 16348,
     "Name": "ptrs_41_anti_tank_rifle_guard_troop_assault_mp",
+    "Army": "soviet",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -2119,6 +2349,7 @@
   {
     "PBGID": 67,
     "Name": "ptrs_41_anti_tank_rifle_guard_troop_mp",
+    "Army": "soviet",
     "Display": {
       "LocaleName": "11007680",
       "LocaleDescriptionLong": "11046313",
@@ -2131,6 +2362,7 @@
   {
     "PBGID": 4287,
     "Name": "ptrs_41_anti_tank_rifle_partisan_troop_mp",
+    "Army": "soviet",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -2143,6 +2375,7 @@
   {
     "PBGID": 10741831,
     "Name": "ptrs_41_anti_tank_rifle_penal_mp",
+    "Army": "soviet",
     "Display": {
       "LocaleName": "11007680",
       "LocaleDescriptionLong": "11046313",
@@ -2155,6 +2388,7 @@
   {
     "PBGID": 12741840,
     "Name": "is_fragmentation_shot_mp",
+    "Army": "soviet",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -2165,6 +2399,7 @@
   {
     "PBGID": 68,
     "Name": "at_76mm_he_round_item",
+    "Army": "soviet",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -2175,6 +2410,7 @@
   {
     "PBGID": 69,
     "Name": "at_76mm_he_round_item_mp",
+    "Army": "soviet",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -2185,6 +2421,7 @@
   {
     "PBGID": 70,
     "Name": "isu_piercing_shot_round_item",
+    "Army": "soviet",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -2195,6 +2432,7 @@
   {
     "PBGID": 71,
     "Name": "isu_piercing_shot_round_item_mp",
+    "Army": "soviet",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -2205,6 +2443,7 @@
   {
     "PBGID": 72,
     "Name": "su76m_he_round_item",
+    "Army": "soviet",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -2215,6 +2454,7 @@
   {
     "PBGID": 73,
     "Name": "su76m_he_round_item_mp",
+    "Army": "soviet",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -2225,6 +2465,7 @@
   {
     "PBGID": 74,
     "Name": "flamethrower_roks3_item",
+    "Army": "soviet",
     "Display": {
       "LocaleName": "11008981",
       "LocaleDescriptionLong": "11046274",
@@ -2237,6 +2478,7 @@
   {
     "PBGID": 75,
     "Name": "flamethrower_roks3_item_mp",
+    "Army": "soviet",
     "Display": {
       "LocaleName": "11008981",
       "LocaleDescriptionLong": "11046273",
@@ -2249,6 +2491,7 @@
   {
     "PBGID": 76,
     "Name": "kv-8_ato-41_flamethrower_item_mp",
+    "Army": "soviet",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -2260,6 +2503,7 @@
   {
     "PBGID": 77,
     "Name": "roks-2_flamethrower_item",
+    "Army": "soviet",
     "Display": {
       "LocaleName": "11008981",
       "LocaleDescriptionLong": "11046275",
@@ -2272,6 +2516,7 @@
   {
     "PBGID": 78,
     "Name": "roks-2_flamethrower_item_mp",
+    "Army": "soviet",
     "Display": {
       "LocaleName": "11008981",
       "LocaleDescriptionLong": "11046276",
@@ -2284,6 +2529,7 @@
   {
     "PBGID": 79,
     "Name": "conscript_molotov",
+    "Army": "soviet",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -2294,6 +2540,7 @@
   {
     "PBGID": 80,
     "Name": "conscript_molotov_mp",
+    "Army": "soviet",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -2304,6 +2551,7 @@
   {
     "PBGID": 12741844,
     "Name": "conscript_molotov_vet_mp",
+    "Army": "soviet",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -2314,6 +2562,7 @@
   {
     "PBGID": 10741833,
     "Name": "penal_troop_satchel_charge_item_at_mp",
+    "Army": "soviet",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -2324,6 +2573,7 @@
   {
     "PBGID": 10741837,
     "Name": "penal_troop_satchel_charge_item_at_skillshot_mp",
+    "Army": "soviet",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -2334,6 +2584,7 @@
   {
     "PBGID": 83,
     "Name": "penal_troop_satchel_charge_item_mp",
+    "Army": "soviet",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -2344,6 +2595,7 @@
   {
     "PBGID": 84,
     "Name": "rgd_1_smoke_grenade_item",
+    "Army": "soviet",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -2354,6 +2606,7 @@
   {
     "PBGID": 85,
     "Name": "rgd_1_smoke_grenade_item_mp",
+    "Army": "soviet",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -2364,6 +2617,7 @@
   {
     "PBGID": 86,
     "Name": "rgd_33_sleeved_grenade_item",
+    "Army": "soviet",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -2374,6 +2628,7 @@
   {
     "PBGID": 87,
     "Name": "rgd_33_sleeved_grenade_item_longtimer",
+    "Army": "soviet",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -2384,6 +2639,7 @@
   {
     "PBGID": 88,
     "Name": "rgd_33_sleeved_grenade_item_mp",
+    "Army": "soviet",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -2394,6 +2650,7 @@
   {
     "PBGID": 124,
     "Name": "rpg_40_anti_tank_grenade_mp",
+    "Army": "soviet",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -2405,6 +2662,7 @@
   {
     "PBGID": 89,
     "Name": "rpg_43_anti_tank_grenade",
+    "Army": "soviet",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -2416,6 +2674,7 @@
   {
     "PBGID": 90,
     "Name": "rpg_43_anti_tank_grenade_mp",
+    "Army": "soviet",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -2427,6 +2686,7 @@
   {
     "PBGID": 91,
     "Name": "shock_troop_rg_42_grenade",
+    "Army": "soviet",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -2437,6 +2697,7 @@
   {
     "PBGID": 93,
     "Name": "shock_troop_rg_42_grenade_mp",
+    "Army": "soviet",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -2447,6 +2708,7 @@
   {
     "PBGID": 94,
     "Name": "dp-28_light_machine_gun_package",
+    "Army": "soviet",
     "Display": {
       "LocaleName": "11007104",
       "LocaleDescriptionLong": "11046272",
@@ -2459,6 +2721,7 @@
   {
     "PBGID": 17457,
     "Name": "dp-28_light_machine_gun_package_moving_mp",
+    "Army": "soviet",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -2471,6 +2734,7 @@
   {
     "PBGID": 17465,
     "Name": "dp-28_light_machine_gun_package_moving_no_prone_mp",
+    "Army": "soviet",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -2483,6 +2747,7 @@
   {
     "PBGID": 95,
     "Name": "dp-28_light_machine_gun_package_mp",
+    "Army": "soviet",
     "Display": {
       "LocaleName": "11007104",
       "LocaleDescriptionLong": "11046271",
@@ -2495,6 +2760,7 @@
   {
     "PBGID": 96,
     "Name": "dshk38_turret_mounted_is2",
+    "Army": "soviet",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -2507,6 +2773,7 @@
   {
     "PBGID": 97,
     "Name": "dshk38_turret_mounted_is2_mp",
+    "Army": "soviet",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -2519,6 +2786,7 @@
   {
     "PBGID": 98,
     "Name": "dshk38_turret_mounted_isu152",
+    "Army": "soviet",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -2531,6 +2799,7 @@
   {
     "PBGID": 99,
     "Name": "dshk38_turret_mounted_isu152_mp",
+    "Army": "soviet",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -2543,6 +2812,7 @@
   {
     "PBGID": 16945,
     "Name": "guard_troop_assault_package",
+    "Army": "soviet",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -2553,6 +2823,7 @@
   {
     "PBGID": 100,
     "Name": "m01_conscript_mosin_nagant",
+    "Army": "soviet",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -2563,6 +2834,7 @@
   {
     "PBGID": 16717,
     "Name": "m2hb_50cal_sherman",
+    "Army": "soviet",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -2575,6 +2847,7 @@
   {
     "PBGID": 95353,
     "Name": "mortar_flare_mp",
+    "Army": "soviet",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -2586,6 +2859,7 @@
   {
     "PBGID": 101,
     "Name": "mosin_nagant_sniper_rifle_item",
+    "Army": "soviet",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -2597,6 +2871,7 @@
   {
     "PBGID": 102,
     "Name": "mosin_nagant_sniper_rifle_item_mp",
+    "Army": "soviet",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -2608,6 +2883,7 @@
   {
     "PBGID": 15854,
     "Name": "partisan_dp-28_light_machine_gun_package_mp",
+    "Army": "soviet",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -2620,6 +2896,7 @@
   {
     "PBGID": 103,
     "Name": "ppsh41_assault_package",
+    "Army": "soviet",
     "Display": {
       "LocaleName": "11046315",
       "LocaleDescriptionLong": "11046266",
@@ -2632,6 +2909,7 @@
   {
     "PBGID": 104,
     "Name": "ppsh41_assault_package_dummy_item_mp",
+    "Army": "soviet",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -2643,6 +2921,7 @@
   {
     "PBGID": 105,
     "Name": "ppsh41_assault_package_mp",
+    "Army": "soviet",
     "Display": {
       "LocaleName": "11046314",
       "LocaleDescriptionLong": "11046265",
@@ -2654,6 +2933,7 @@
   {
     "PBGID": 191057,
     "Name": "ppsh_ui",
+    "Army": "soviet",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -2665,6 +2945,7 @@
   {
     "PBGID": 106,
     "Name": "sniper_flare_mp",
+    "Army": "soviet",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -2676,6 +2957,7 @@
   {
     "PBGID": 107,
     "Name": "sniper_suppressive_volley_mp",
+    "Army": "soviet",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -2687,6 +2969,7 @@
   {
     "PBGID": 188028,
     "Name": "svt",
+    "Army": "soviet",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -2699,6 +2982,7 @@
   {
     "PBGID": 188030,
     "Name": "svt_no_slot_item",
+    "Army": "soviet",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -2710,6 +2994,7 @@
   {
     "PBGID": 188029,
     "Name": "svt_rifle_ui",
+    "Army": "soviet",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -2721,6 +3006,7 @@
   {
     "PBGID": 125,
     "Name": "tiger_flare_tow",
+    "Army": "soviet",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -2732,6 +3018,7 @@
   {
     "PBGID": 110,
     "Name": "flamethrower_roks3_accessory",
+    "Army": "NULL",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -2744,6 +3031,7 @@
   {
     "PBGID": 111,
     "Name": "flamethrower_roks3_fake",
+    "Army": "NULL",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -2756,6 +3044,7 @@
   {
     "PBGID": 114,
     "Name": "ground_attack_sniper_rifle_item",
+    "Army": "NULL",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -2767,6 +3056,7 @@
   {
     "PBGID": 14503,
     "Name": "boot_stomp",
+    "Army": "NULL",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -2777,6 +3067,7 @@
   {
     "PBGID": 14506,
     "Name": "double_sweep",
+    "Army": "NULL",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -2788,6 +3079,7 @@
   {
     "PBGID": 14264,
     "Name": "puma_aimed_shot_mp",
+    "Army": "german",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -2798,6 +3090,7 @@
   {
     "PBGID": 96987,
     "Name": "hetzer_flamethrower_item_mp",
+    "Army": "german",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -2809,6 +3102,7 @@
   {
     "PBGID": 17094,
     "Name": "satchel_charge_item_mp",
+    "Army": "german",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -2819,6 +3113,7 @@
   {
     "PBGID": 196593,
     "Name": "fallschirmjager_gewehr_42",
+    "Army": "german",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -2829,6 +3124,7 @@
   {
     "PBGID": 196789,
     "Name": "fallschirmjager_gewehr_42_dummy",
+    "Army": "german",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -2840,6 +3136,7 @@
   {
     "PBGID": 196783,
     "Name": "fallschirmjager_gewehr_42_slot",
+    "Army": "german",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -2852,6 +3149,7 @@
   {
     "PBGID": 17456,
     "Name": "generic_mg34_lmg_mp",
+    "Army": "german",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -2864,6 +3162,7 @@
   {
     "PBGID": 18743,
     "Name": "jaeger_light_recon_g43",
+    "Army": "german",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -2875,6 +3174,7 @@
   {
     "PBGID": 96082,
     "Name": "mg34_pintle_hetzer",
+    "Army": "german",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -2887,6 +3187,7 @@
   {
     "PBGID": 15575,
     "Name": "mg42_turret_mounted_king_tiger_mp",
+    "Army": "german",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -2899,6 +3200,7 @@
   {
     "PBGID": 17505,
     "Name": "mg42_turret_mounted_panther_wg_mp",
+    "Army": "german",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -2911,6 +3213,7 @@
   {
     "PBGID": 17468,
     "Name": "obersoldaten_mg34_lmg_moving_mp",
+    "Army": "german",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -2923,6 +3226,7 @@
   {
     "PBGID": 2727,
     "Name": "obersoldaten_mg34_lmg_moving_no_prone_mp",
+    "Army": "german",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -2935,6 +3239,7 @@
   {
     "PBGID": 15501,
     "Name": "obersoldaten_mp44_infared",
+    "Army": "german",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -2947,6 +3252,7 @@
   {
     "PBGID": 15601,
     "Name": "panzerfusilier_g43",
+    "Army": "german",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -2958,6 +3264,7 @@
   {
     "PBGID": 188747,
     "Name": "panzerfusilier_g43_slot_item",
+    "Army": "german",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -2970,6 +3277,7 @@
   {
     "PBGID": 176891,
     "Name": "stormtrooper_mp40_slot_item_dummy_mp",
+    "Army": "german",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -2980,6 +3288,7 @@
   {
     "PBGID": 12741856,
     "Name": "volksgrenadier_mp40_item_mp",
+    "Army": "german",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -2991,6 +3300,7 @@
   {
     "PBGID": 12741857,
     "Name": "volksgrenadier_mp40_item_slot_holder_mp",
+    "Army": "german",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -3003,6 +3313,7 @@
   {
     "PBGID": 105227,
     "Name": "volksgrenadier_mp44_item_mp",
+    "Army": "german",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -3015,6 +3326,7 @@
   {
     "PBGID": 12741858,
     "Name": "bazooka_dummy_slot_mp",
+    "Army": "aef",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -3025,6 +3337,7 @@
   {
     "PBGID": 2703,
     "Name": "bazooka_mp",
+    "Army": "aef",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -3037,6 +3350,7 @@
   {
     "PBGID": 12741855,
     "Name": "bazooka_paratrooper_mp",
+    "Army": "aef",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -3049,6 +3363,7 @@
   {
     "PBGID": 16612,
     "Name": "rifleman_at_rifle_grenade",
+    "Army": "aef",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -3060,6 +3375,7 @@
   {
     "PBGID": 89178,
     "Name": "boys_anti_tank_rifle_mp",
+    "Army": "british",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -3072,6 +3388,7 @@
   {
     "PBGID": 89162,
     "Name": "boys_anti_tank_rifle_sniper_mp",
+    "Army": "british",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -3083,6 +3400,7 @@
   {
     "PBGID": 89184,
     "Name": "brit_sniper_boys_anti_tank_critical_shot_mp",
+    "Army": "british",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -3093,6 +3411,7 @@
   {
     "PBGID": 87372,
     "Name": "piat_spigot_mortar_mp",
+    "Army": "british",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -3105,6 +3424,7 @@
   {
     "PBGID": 204515,
     "Name": "piat_spigot_mortar_tank_huner_mp",
+    "Army": "british",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -3117,6 +3437,7 @@
   {
     "PBGID": 89261,
     "Name": "land_mattress_25lb_rocket",
+    "Army": "british",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -3127,6 +3448,7 @@
   {
     "PBGID": 89260,
     "Name": "land_mattress_60lb_rocket",
+    "Army": "british",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -3137,6 +3459,7 @@
   {
     "PBGID": 89313,
     "Name": "land_mattress_empty",
+    "Army": "british",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -3147,6 +3470,7 @@
   {
     "PBGID": 89262,
     "Name": "land_mattress_phosphorus_rocket",
+    "Army": "british",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -3157,6 +3481,7 @@
   {
     "PBGID": 89264,
     "Name": "land_mattress_rocket_marker",
+    "Army": "british",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -3166,6 +3491,7 @@
   {
     "PBGID": 189018,
     "Name": "no77_wp_grenade",
+    "Army": "british",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -3177,6 +3503,7 @@
   {
     "PBGID": 89214,
     "Name": "tommy_gammon_bomb_heavy",
+    "Army": "british",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -3188,6 +3515,7 @@
   {
     "PBGID": 89213,
     "Name": "tommy_gammon_bomb_medium",
+    "Army": "british",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -3199,6 +3527,7 @@
   {
     "PBGID": 95732,
     "Name": "tommy_heat_grenade",
+    "Army": "british",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -3210,6 +3539,7 @@
   {
     "PBGID": 89208,
     "Name": "tommy_mills_bomb",
+    "Army": "british",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -3221,6 +3551,7 @@
   {
     "PBGID": 93195,
     "Name": "tommy_mills_bomb_assault",
+    "Army": "british",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -3232,6 +3563,7 @@
   {
     "PBGID": 8,
     "Name": "grenadier_panzerfaust",
+    "Army": "german",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -3243,6 +3575,7 @@
   {
     "PBGID": 9,
     "Name": "grenadier_panzerfaust_mp",
+    "Army": "german",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -3254,6 +3587,7 @@
   {
     "PBGID": 10,
     "Name": "panzershreck",
+    "Army": "german",
     "Display": {
       "LocaleName": "11006785",
       "LocaleDescriptionLong": "11046342",
@@ -3266,6 +3600,7 @@
   {
     "PBGID": 11,
     "Name": "panzershreck_mp",
+    "Army": "german",
     "Display": {
       "LocaleName": "11006785",
       "LocaleDescriptionLong": "11046343",
@@ -3278,6 +3613,7 @@
   {
     "PBGID": 12,
     "Name": "panzershreck_slot1",
+    "Army": "german",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -3290,6 +3626,7 @@
   {
     "PBGID": 13,
     "Name": "panzershreck_slot1_mp",
+    "Army": "german",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -3302,6 +3639,7 @@
   {
     "PBGID": 14,
     "Name": "panzershreck_slot2",
+    "Army": "german",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -3314,6 +3652,7 @@
   {
     "PBGID": 15,
     "Name": "panzershreck_slot2_mp",
+    "Army": "german",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -3326,6 +3665,7 @@
   {
     "PBGID": 121,
     "Name": "axis_assault_grenadier_grenade",
+    "Army": "german",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -3337,6 +3677,7 @@
   {
     "PBGID": 10741824,
     "Name": "axis_assault_grenadier_squad_grenade",
+    "Army": "german",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -3348,6 +3689,7 @@
   {
     "PBGID": 21,
     "Name": "axis_blinding_grenade",
+    "Army": "german",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -3359,6 +3701,7 @@
   {
     "PBGID": 22,
     "Name": "axis_blinding_grenade_mp",
+    "Army": "german",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -3370,6 +3713,7 @@
   {
     "PBGID": 23,
     "Name": "axis_panzer_grenadier_grenade",
+    "Army": "german",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -3381,6 +3725,7 @@
   {
     "PBGID": 24,
     "Name": "axis_panzer_grenadier_grenade_mp",
+    "Army": "german",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -3392,6 +3737,7 @@
   {
     "PBGID": 25,
     "Name": "axis_pg_grenade_campaign",
+    "Army": "german",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -3403,6 +3749,7 @@
   {
     "PBGID": 26,
     "Name": "axis_pg_grenade_campaign_mp",
+    "Army": "german",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -3414,6 +3761,7 @@
   {
     "PBGID": 27,
     "Name": "axis_pg_grenade_tutorial",
+    "Army": "german",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -3425,6 +3773,7 @@
   {
     "PBGID": 176895,
     "Name": "stormtrooper_fire_grenade_mp",
+    "Army": "german",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -3435,6 +3784,7 @@
   {
     "PBGID": 18973,
     "Name": "cavalry_at_satchel_item",
+    "Army": "aef",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -3445,6 +3795,7 @@
   {
     "PBGID": 16011,
     "Name": "riflemen_training_satchel_item",
+    "Army": "aef",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -3455,6 +3806,7 @@
   {
     "PBGID": 16873,
     "Name": "pm_aef_offensive_punch_item",
+    "Army": "aef",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -3464,6 +3816,7 @@
   {
     "PBGID": 18381,
     "Name": "pathfinders_sniper_item",
+    "Army": "aef",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -3474,6 +3827,7 @@
   {
     "PBGID": 16021,
     "Name": "riflemen_training_dummy_carbine",
+    "Army": "aef",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -3485,6 +3839,7 @@
   {
     "PBGID": 18865,
     "Name": "troop_support_dummy_medic",
+    "Army": "aef",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -3495,6 +3850,7 @@
   {
     "PBGID": 12741834,
     "Name": "hollow_charge_mp",
+    "Army": "german",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -3506,6 +3862,7 @@
   {
     "PBGID": 4338,
     "Name": "panzershreck_at_weapon_item",
+    "Army": "german",
     "Display": {
       "LocaleName": "11054819",
       "LocaleDescriptionLong": "11054821",
@@ -3518,6 +3875,7 @@
   {
     "PBGID": 2724,
     "Name": "volksgrenadier_panzerfaust_mp",
+    "Army": "german",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -3529,6 +3887,7 @@
   {
     "PBGID": 15244,
     "Name": "volksgrenadier_panzerfaust_vet_4_mp",
+    "Army": "german",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -3540,6 +3899,7 @@
   {
     "PBGID": 14159,
     "Name": "blendkorper_2h_smoke_grenade_item_mp",
+    "Army": "german",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -3550,6 +3910,7 @@
   {
     "PBGID": 15916,
     "Name": "panzerfusilier_at_rifle_grenade",
+    "Army": "german",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -3561,6 +3922,7 @@
   {
     "PBGID": 14319,
     "Name": "panzerfusilier_grenade",
+    "Army": "german",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -3572,6 +3934,7 @@
   {
     "PBGID": 15890,
     "Name": "pioneer_stun_grenade_mp",
+    "Army": "german",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -3582,6 +3945,7 @@
   {
     "PBGID": 98259,
     "Name": "volksgrenadier_fire_grenade_mp",
+    "Army": "german",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -3592,6 +3956,7 @@
   {
     "PBGID": 2726,
     "Name": "volksgrenadier_grenade_mp",
+    "Army": "german",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -3602,6 +3967,7 @@
   {
     "PBGID": 2725,
     "Name": "waffen_bundled_assault_grenade",
+    "Army": "german",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -3613,6 +3979,7 @@
   {
     "PBGID": 19453,
     "Name": "ranger_panzershreck_mp",
+    "Army": "aef",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -3625,6 +3992,7 @@
   {
     "PBGID": 17477,
     "Name": "tank_hunter_shock_bazooka_vet",
+    "Army": "aef",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -3636,6 +4004,7 @@
   {
     "PBGID": 112,
     "Name": "panzershreck_destroy_engine",
+    "Army": "german",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -3648,6 +4017,7 @@
   {
     "PBGID": 113,
     "Name": "m24_anti_tank_grenadier_grenade",
+    "Army": "german",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",

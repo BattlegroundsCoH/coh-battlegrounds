@@ -45,7 +45,11 @@
       "at_gun",
       "team_weapon"
     ],
-    "SlotPickupCapacity": 4
+    "SlotPickupCapacity": 4,
+    "UpgradeCapacity": -1,
+    "AppliedUpgrades": [
+      "is_manned"
+    ]
   },
   {
     "PBGID": 89127,
@@ -85,7 +89,8 @@
     ],
     "Types": [
       "british_unit"
-    ]
+    ],
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 89126,
@@ -125,7 +130,8 @@
     ],
     "Types": [
       "british_unit"
-    ]
+    ],
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 79,
@@ -138,7 +144,6 @@
       "Symbol": "",
       "Portrait": "Icons_portraits_vehicle_soviet_boat_s_portrait"
     },
-    "SquadCost": {},
     "Entities": [
       {
         "EBP": "boat_01_entity",
@@ -160,7 +165,11 @@
       }
     ],
     "Types": [],
-    "SlotPickupCapacity": 6
+    "SlotPickupCapacity": 6,
+    "UpgradeCapacity": -1,
+    "Upgrades": [
+      "m5_halftrack_72k_aa_gun_package"
+    ]
   },
   {
     "PBGID": 100,
@@ -200,7 +209,8 @@
       }
     ],
     "Types": [],
-    "SlotPickupCapacity": 2
+    "SlotPickupCapacity": 2,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 85914,
@@ -225,7 +235,6 @@
       }
     ],
     "Abilities": [
-      "vehicle_decrew_generic_mp",
       "blizzard_effect",
       "aef_repair_critical_mp",
       "aef_repair_ability_rear_echelon_mp",
@@ -256,7 +265,12 @@
       "aef_assault_engineers"
     ],
     "SlotPickupCapacity": 2,
-    "CanPickupItems": true
+    "CanPickupItems": true,
+    "UpgradeCapacity": -1,
+    "Upgrades": [
+      "assault_engineer_flamethrower",
+      "medic_add_squad_upg"
+    ]
   },
   {
     "PBGID": 2619,
@@ -281,7 +295,6 @@
       }
     ],
     "Abilities": [
-      "vehicle_decrew_generic_mp",
       "blizzard_effect",
       "aef_repair_critical_mp",
       "cover_specialization_hunker_down",
@@ -312,7 +325,12 @@
       "aef_assault_engineers"
     ],
     "SlotPickupCapacity": 2,
-    "CanPickupItems": true
+    "CanPickupItems": true,
+    "UpgradeCapacity": -1,
+    "Upgrades": [
+      "assault_engineer_flamethrower",
+      "troop_support_medics_upg"
+    ]
   },
   {
     "PBGID": 2620,
@@ -328,7 +346,7 @@
     },
     "SquadCost": {
       "Manpower": 280,
-      "FieldTime": 270
+      "FieldTime": 27
     },
     "Entities": [
       {
@@ -345,7 +363,6 @@
       }
     ],
     "Abilities": [
-      "vehicle_decrew_generic_mp",
       "blizzard_effect",
       "cover_specialization_hunker_down",
       "refuel_tank_sp",
@@ -373,7 +390,11 @@
       "infantry"
     ],
     "SlotPickupCapacity": 2,
-    "CanPickupItems": true
+    "CanPickupItems": true,
+    "UpgradeCapacity": 1,
+    "Upgrades": [
+      "lieutenant_bar_mp"
+    ]
   },
   {
     "PBGID": 2621,
@@ -389,7 +410,7 @@
     },
     "SquadCost": {
       "Manpower": 280,
-      "FieldTime": 270
+      "FieldTime": 27
     },
     "Entities": [
       {
@@ -402,7 +423,6 @@
       }
     ],
     "Abilities": [
-      "vehicle_decrew_generic_mp",
       "blizzard_effect",
       "cover_specialization_hunker_down",
       "refuel_tank_sp",
@@ -429,7 +449,11 @@
       "infantry"
     ],
     "SlotPickupCapacity": 2,
-    "CanPickupItems": true
+    "CanPickupItems": true,
+    "UpgradeCapacity": 1,
+    "Upgrades": [
+      "captain_bazooka_upgrade_mp"
+    ]
   },
   {
     "PBGID": 2627,
@@ -458,7 +482,6 @@
       }
     ],
     "Abilities": [
-      "vehicle_decrew_generic_mp",
       "blizzard_effect",
       "officer_retreat_point_mp",
       "major_quick_recon_run",
@@ -488,7 +511,8 @@
       "infantry"
     ],
     "SlotPickupCapacity": 2,
-    "CanPickupItems": true
+    "CanPickupItems": true,
+    "UpgradeCapacity": 1
   },
   {
     "PBGID": 17681,
@@ -503,7 +527,7 @@
       "Portrait": "Icons_portraits_unit_aef_paratrooper_s_portrait"
     },
     "SquadCost": {
-      "Manpower": 1700001,
+      "Manpower": 170.00009,
       "FieldTime": 18
     },
     "Entities": [
@@ -513,7 +537,6 @@
       }
     ],
     "Abilities": [
-      "vehicle_decrew_generic_mp",
       "blizzard_effect",
       "cover_specialization_hunker_down",
       "refuel_tank_sp"
@@ -538,7 +561,8 @@
       "aef_unit"
     ],
     "SlotPickupCapacity": 2,
-    "CanPickupItems": true
+    "CanPickupItems": true,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 2628,
@@ -553,7 +577,7 @@
       "Portrait": "Icons_portraits_unit_aef_paratrooper_s_portrait"
     },
     "SquadCost": {
-      "Manpower": 3400002,
+      "Manpower": 340.00018,
       "FieldTime": 36
     },
     "Entities": [
@@ -563,7 +587,6 @@
       }
     ],
     "Abilities": [
-      "vehicle_decrew_generic_mp",
       "blizzard_effect",
       "paratrooper_mk2_fragmentation_grenade_mp",
       "paratrooper_suppressing_fire_ability_mp",
@@ -593,7 +616,14 @@
       "aef_unit"
     ],
     "SlotPickupCapacity": 2,
-    "CanPickupItems": true
+    "CanPickupItems": true,
+    "UpgradeCapacity": -1,
+    "Upgrades": [
+      "paratrooper_thompson_sub_machine_gun_upgrade_mp",
+      "paratrooper_m1919a6_lmg_mp",
+      "troop_support_medics_upg",
+      "paratrooper_m1919a6_lmg_1_mp"
+    ]
   },
   {
     "PBGID": 15886,
@@ -608,7 +638,7 @@
       "Portrait": "Icons_portraits_unit_aef_paratrooper_s_portrait"
     },
     "SquadCost": {
-      "Manpower": 3400002,
+      "Manpower": 340.00018,
       "FieldTime": 36
     },
     "Entities": [
@@ -618,7 +648,6 @@
       }
     ],
     "Abilities": [
-      "vehicle_decrew_generic_mp",
       "blizzard_effect",
       "paratrooper_mk2_fragmentation_grenade_mp",
       "paratrooper_suppressing_fire_ability_mp",
@@ -649,7 +678,14 @@
       "aef_unit"
     ],
     "SlotPickupCapacity": 2,
-    "CanPickupItems": true
+    "CanPickupItems": true,
+    "UpgradeCapacity": -1,
+    "Upgrades": [
+      "paratrooper_m1919a6_lmg_mp",
+      "troop_support_medics_upg",
+      "paratrooper_m1919a6_lmg_1_mp",
+      "paratrooper_bazooka_upgrade_mp"
+    ]
   },
   {
     "PBGID": 2629,
@@ -674,7 +710,6 @@
       }
     ],
     "Abilities": [
-      "vehicle_decrew_generic_mp",
       "blizzard_effect",
       "pathfinder_in_cover_stationary_camouflage_mp",
       "pathfinder_plant_beacon",
@@ -703,7 +738,11 @@
       "aef_unit"
     ],
     "SlotPickupCapacity": 2,
-    "CanPickupItems": true
+    "CanPickupItems": true,
+    "UpgradeCapacity": -1,
+    "Upgrades": [
+      "troop_support_medics_upg"
+    ]
   },
   {
     "PBGID": 16404,
@@ -728,7 +767,6 @@
       }
     ],
     "Abilities": [
-      "vehicle_decrew_generic_mp",
       "blizzard_effect",
       "cmd_paratroopers_from_pathfinders",
       "pathfinder_in_cover_stationary_camouflage_mp",
@@ -759,7 +797,8 @@
       "aef_unit"
     ],
     "SlotPickupCapacity": 2,
-    "CanPickupItems": true
+    "CanPickupItems": true,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 98889,
@@ -784,7 +823,6 @@
       }
     ],
     "Abilities": [
-      "vehicle_decrew_generic_mp",
       "blizzard_effect",
       "elite_bazookas"
     ],
@@ -810,7 +848,11 @@
       "aef_assault_engineers"
     ],
     "SlotPickupCapacity": 3,
-    "CanPickupItems": true
+    "CanPickupItems": true,
+    "UpgradeCapacity": -1,
+    "Upgrades": [
+      "ranger_thompson_sub_machine_gun_upgrade_mp"
+    ]
   },
   {
     "PBGID": 18392,
@@ -835,7 +877,6 @@
       }
     ],
     "Abilities": [
-      "vehicle_decrew_generic_mp",
       "blizzard_effect",
       "cover_specialization_hunker_down",
       "bazooka_deploy_mp",
@@ -863,7 +904,8 @@
       "aef_assault_engineers"
     ],
     "SlotPickupCapacity": 2,
-    "CanPickupItems": true
+    "CanPickupItems": true,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 2630,
@@ -888,7 +930,6 @@
       }
     ],
     "Abilities": [
-      "vehicle_decrew_generic_mp",
       "blizzard_effect",
       "aef_repair_ability_rear_echelon_mp",
       "rear_echelon_volley_fire_ability_mp",
@@ -916,7 +957,14 @@
       "aef_unit"
     ],
     "SlotPickupCapacity": 2,
-    "CanPickupItems": true
+    "CanPickupItems": true,
+    "UpgradeCapacity": -1,
+    "Upgrades": [
+      "re_minesweeper_upgrade_mp",
+      "troop_support_medics_upg",
+      "riflemen_flamethrower",
+      "rear_echelon_grenade_launcher_commander_mp"
+    ]
   },
   {
     "PBGID": 174597,
@@ -932,7 +980,7 @@
     },
     "SquadCost": {
       "Manpower": 280,
-      "FieldTime": 280
+      "FieldTime": 28
     },
     "Entities": [
       {
@@ -941,7 +989,6 @@
       }
     ],
     "Abilities": [
-      "vehicle_decrew_generic_mp",
       "blizzard_effect",
       "cover_specialization_hunker_down",
       "refuel_tank_sp",
@@ -969,7 +1016,12 @@
       "aef_unit"
     ],
     "SlotPickupCapacity": 2,
-    "CanPickupItems": true
+    "CanPickupItems": true,
+    "UpgradeCapacity": -1,
+    "Upgrades": [
+      "cavalry_thompson_sub_machine_gun_upgrade_mp",
+      "troop_support_medics_upg"
+    ]
   },
   {
     "PBGID": 2631,
@@ -985,7 +1037,7 @@
     },
     "SquadCost": {
       "Manpower": 280,
-      "FieldTime": 280
+      "FieldTime": 28
     },
     "Entities": [
       {
@@ -994,7 +1046,6 @@
       }
     ],
     "Abilities": [
-      "vehicle_decrew_generic_mp",
       "blizzard_effect",
       "cover_specialization_hunker_down",
       "refuel_tank_sp",
@@ -1021,7 +1072,12 @@
       "aef_unit"
     ],
     "SlotPickupCapacity": 2,
-    "CanPickupItems": true
+    "CanPickupItems": true,
+    "UpgradeCapacity": -1,
+    "Upgrades": [
+      "riflemen_carbine_dispatch_upg",
+      "troop_support_medics_upg"
+    ]
   },
   {
     "PBGID": 17676,
@@ -1037,7 +1093,7 @@
     },
     "SquadCost": {
       "Manpower": 280,
-      "FieldTime": 280
+      "FieldTime": 28
     },
     "Entities": [
       {
@@ -1046,7 +1102,6 @@
       }
     ],
     "Abilities": [
-      "vehicle_decrew_generic_mp",
       "blizzard_effect",
       "cover_specialization_hunker_down",
       "refuel_tank_sp",
@@ -1073,7 +1128,11 @@
       "aef_unit"
     ],
     "SlotPickupCapacity": 2,
-    "CanPickupItems": true
+    "CanPickupItems": true,
+    "UpgradeCapacity": -1,
+    "Upgrades": [
+      "riflemen_carbine_dispatch_upg"
+    ]
   },
   {
     "PBGID": 16423,
@@ -1098,7 +1157,6 @@
       }
     ],
     "Abilities": [
-      "vehicle_decrew_medics_mp",
       "usf_medic_heal_mp",
       "medic_auto_heal",
       "cover_specialization_hunker_down",
@@ -1111,7 +1169,8 @@
       "aef_medics",
       "aef_unit"
     ],
-    "CanPickupItems": true
+    "CanPickupItems": true,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 2632,
@@ -1136,7 +1195,6 @@
       }
     ],
     "Abilities": [
-      "vehicle_decrew_generic_mp",
       "aef_repair_ability_vehicle_crew_mp",
       "blizzard_effect",
       "aef_repair_critical_mp",
@@ -1164,7 +1222,8 @@
       "aef_unit"
     ],
     "SlotPickupCapacity": 2,
-    "CanPickupItems": true
+    "CanPickupItems": true,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 16634,
@@ -1189,7 +1248,6 @@
       }
     ],
     "Abilities": [
-      "vehicle_decrew_m20_crew_mp",
       "aef_repair_ability_vehicle_crew_mp",
       "blizzard_effect",
       "aef_repair_critical_mp",
@@ -1219,7 +1277,11 @@
       "aef_vehicle_crew"
     ],
     "SlotPickupCapacity": 2,
-    "CanPickupItems": true
+    "CanPickupItems": true,
+    "UpgradeCapacity": -1,
+    "Upgrades": [
+      "vehicle_crew_thompson_sub_machine_gun_upgrade_mp"
+    ]
   },
   {
     "PBGID": 2633,
@@ -1244,7 +1306,6 @@
       }
     ],
     "Abilities": [
-      "vehicle_decrew_vehicle_crew_mp",
       "aef_repair_ability_vehicle_crew_mp",
       "blizzard_effect",
       "aef_repair_critical_mp",
@@ -1274,7 +1335,8 @@
       "aef_vehicle_crew"
     ],
     "SlotPickupCapacity": 2,
-    "CanPickupItems": true
+    "CanPickupItems": true,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 2623,
@@ -1330,7 +1392,14 @@
       "aef_unit",
       "team_weapon"
     ],
-    "CanPickupItems": true
+    "CanPickupItems": true,
+    "UpgradeCapacity": -1,
+    "Upgrades": [
+      "troop_support_medics_upg"
+    ],
+    "AppliedUpgrades": [
+      "is_manned"
+    ]
   },
   {
     "PBGID": 18341,
@@ -1383,7 +1452,14 @@
       "team_weapon",
       "aef_unit"
     ],
-    "CanPickupItems": true
+    "CanPickupItems": true,
+    "UpgradeCapacity": -1,
+    "Upgrades": [
+      "troop_support_medics_upg"
+    ],
+    "AppliedUpgrades": [
+      "is_manned"
+    ]
   },
   {
     "PBGID": 2637,
@@ -1436,7 +1512,11 @@
       "team_weapon",
       "aef_unit"
     ],
-    "CanPickupItems": true
+    "CanPickupItems": true,
+    "UpgradeCapacity": -1,
+    "AppliedUpgrades": [
+      "is_manned"
+    ]
   },
   {
     "PBGID": 2638,
@@ -1491,7 +1571,14 @@
       "aef_unit",
       "infantry"
     ],
-    "SlotPickupCapacity": 1
+    "SlotPickupCapacity": 1,
+    "UpgradeCapacity": -1,
+    "Upgrades": [
+      "troop_support_medics_upg"
+    ],
+    "AppliedUpgrades": [
+      "is_manned"
+    ]
   },
   {
     "PBGID": 2624,
@@ -1507,7 +1594,7 @@
     },
     "SquadCost": {
       "Manpower": 240,
-      "FieldTime": 188
+      "FieldTime": 26
     },
     "IsSyncWeapon": true,
     "Entities": [
@@ -1546,7 +1633,14 @@
       "aef_unit",
       "team_weapon"
     ],
-    "CanPickupItems": true
+    "CanPickupItems": true,
+    "UpgradeCapacity": -1,
+    "Upgrades": [
+      "troop_support_medics_upg"
+    ],
+    "AppliedUpgrades": [
+      "is_manned"
+    ]
   },
   {
     "PBGID": 2625,
@@ -1602,7 +1696,15 @@
       "aef_unit",
       "team_weapon"
     ],
-    "CanPickupItems": true
+    "CanPickupItems": true,
+    "UpgradeCapacity": -1,
+    "Upgrades": [
+      "troop_support_medics_upg",
+      "ambush_camou_package"
+    ],
+    "AppliedUpgrades": [
+      "is_manned"
+    ]
   },
   {
     "PBGID": 105149,
@@ -1618,7 +1720,7 @@
     },
     "SquadCost": {
       "Manpower": 220,
-      "FieldTime": 186
+      "FieldTime": 24
     },
     "IsSyncWeapon": true,
     "Entities": [
@@ -1657,7 +1759,14 @@
       "aef_unit",
       "team_weapon"
     ],
-    "CanPickupItems": true
+    "CanPickupItems": true,
+    "UpgradeCapacity": -1,
+    "Upgrades": [
+      "troop_support_medics_upg"
+    ],
+    "AppliedUpgrades": [
+      "is_manned"
+    ]
   },
   {
     "PBGID": 2626,
@@ -1673,7 +1782,7 @@
     },
     "SquadCost": {
       "Manpower": 220,
-      "FieldTime": 186
+      "FieldTime": 24
     },
     "IsSyncWeapon": true,
     "Entities": [
@@ -1712,7 +1821,14 @@
       "aef_unit",
       "team_weapon"
     ],
-    "CanPickupItems": true
+    "CanPickupItems": true,
+    "UpgradeCapacity": -1,
+    "Upgrades": [
+      "troop_support_medics_upg"
+    ],
+    "AppliedUpgrades": [
+      "is_manned"
+    ]
   },
   {
     "PBGID": 95105,
@@ -1728,7 +1844,7 @@
     },
     "SquadCost": {
       "Manpower": 220,
-      "FieldTime": 186
+      "FieldTime": 24
     },
     "IsSyncWeapon": true,
     "Entities": [
@@ -1767,7 +1883,14 @@
       "aef_unit",
       "team_weapon"
     ],
-    "CanPickupItems": true
+    "CanPickupItems": true,
+    "UpgradeCapacity": -1,
+    "Upgrades": [
+      "troop_support_medics_upg"
+    ],
+    "AppliedUpgrades": [
+      "is_manned"
+    ]
   },
   {
     "PBGID": 2634,
@@ -1785,6 +1908,7 @@
       "Manpower": 200,
       "FieldTime": 22
     },
+    "HasCrew": true,
     "Entities": [
       {
         "EBP": "dodge_wc51_50cal_mp",
@@ -1817,7 +1941,8 @@
       "vehicle",
       "aef_unit"
     ],
-    "SlotPickupCapacity": 1
+    "SlotPickupCapacity": 1,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 4330,
@@ -1836,6 +1961,7 @@
       "Fuel": 10,
       "FieldTime": 30
     },
+    "HasCrew": true,
     "Entities": [
       {
         "EBP": "dodge_wc51_ambulance_mp",
@@ -1851,7 +1977,8 @@
       "vehicle",
       "aef_unit"
     ],
-    "SlotPickupCapacity": 1
+    "SlotPickupCapacity": 1,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 15603,
@@ -1870,6 +1997,7 @@
       "Fuel": 10,
       "FieldTime": 30
     },
+    "HasCrew": true,
     "Entities": [
       {
         "EBP": "dodge_wc51_mp_pathfinders",
@@ -1899,7 +2027,8 @@
       "vehicle",
       "aef_unit"
     ],
-    "SlotPickupCapacity": 1
+    "SlotPickupCapacity": 1,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 2635,
@@ -1918,6 +2047,7 @@
       "Fuel": 10,
       "FieldTime": 30
     },
+    "HasCrew": true,
     "Entities": [
       {
         "EBP": "dodge_wc51_mp",
@@ -1947,7 +2077,8 @@
       "vehicle",
       "aef_unit"
     ],
-    "SlotPickupCapacity": 1
+    "SlotPickupCapacity": 1,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 2636,
@@ -1966,6 +2097,7 @@
       "Fuel": 80,
       "FieldTime": 45
     },
+    "HasCrew": true,
     "Entities": [
       {
         "EBP": "m10_tank_destroyer_mp",
@@ -1996,7 +2128,8 @@
       "heavy_vehicle",
       "aef_unit"
     ],
-    "SlotPickupCapacity": 2
+    "SlotPickupCapacity": 2,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 2639,
@@ -2015,6 +2148,7 @@
       "Fuel": 20,
       "FieldTime": 55
     },
+    "HasCrew": true,
     "Entities": [
       {
         "EBP": "m20_utility_car_mp",
@@ -2044,7 +2178,8 @@
       "vehicle",
       "aef_unit"
     ],
-    "SlotPickupCapacity": 2
+    "SlotPickupCapacity": 2,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 89406,
@@ -2094,7 +2229,8 @@
       "heavy_vehicle_icon",
       "aef_unit"
     ],
-    "SlotPickupCapacity": 3
+    "SlotPickupCapacity": 3,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 2640,
@@ -2113,6 +2249,7 @@
       "Fuel": 145,
       "FieldTime": 60
     },
+    "HasCrew": true,
     "Entities": [
       {
         "EBP": "m36_tank_destroyer_mp",
@@ -2144,7 +2281,8 @@
       "heavy_vehicle_icon",
       "aef_unit"
     ],
-    "SlotPickupCapacity": 3
+    "SlotPickupCapacity": 3,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 2641,
@@ -2163,6 +2301,7 @@
       "Fuel": 50,
       "FieldTime": 60
     },
+    "HasCrew": true,
     "Entities": [
       {
         "EBP": "m15a1_aa_halftrack_mp",
@@ -2192,7 +2331,8 @@
       "vehicle",
       "aef_unit"
     ],
-    "SlotPickupCapacity": 6
+    "SlotPickupCapacity": 6,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 2642,
@@ -2211,6 +2351,7 @@
       "Fuel": 30,
       "FieldTime": 40
     },
+    "HasCrew": true,
     "Entities": [
       {
         "EBP": "m21_mortar_halftrack_mp",
@@ -2241,7 +2382,8 @@
       "vehicle",
       "aef_unit"
     ],
-    "SlotPickupCapacity": 6
+    "SlotPickupCapacity": 6,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 174673,
@@ -2260,6 +2402,7 @@
       "Fuel": 30,
       "FieldTime": 35
     },
+    "HasCrew": true,
     "Entities": [
       {
         "EBP": "m3_halftrack_mechanized_assault_mp",
@@ -2290,7 +2433,8 @@
       "vehicle",
       "aef_unit"
     ],
-    "SlotPickupCapacity": 6
+    "SlotPickupCapacity": 6,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 16877,
@@ -2309,6 +2453,7 @@
       "Fuel": 30,
       "FieldTime": 35
     },
+    "HasCrew": true,
     "Entities": [
       {
         "EBP": "m3_halftrack_assault_mp",
@@ -2339,7 +2484,8 @@
       "vehicle",
       "aef_unit"
     ],
-    "SlotPickupCapacity": 6
+    "SlotPickupCapacity": 6,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 2643,
@@ -2358,6 +2504,7 @@
       "Fuel": 25,
       "FieldTime": 35
     },
+    "HasCrew": true,
     "Entities": [
       {
         "EBP": "m3_halftrack_mp",
@@ -2388,7 +2535,8 @@
       "vehicle",
       "aef_unit"
     ],
-    "SlotPickupCapacity": 6
+    "SlotPickupCapacity": 6,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 3477,
@@ -2407,6 +2555,7 @@
       "Fuel": 140,
       "FieldTime": 50
     },
+    "HasCrew": true,
     "Entities": [
       {
         "EBP": "m4a3e8_sherman_easy_8_mp",
@@ -2437,7 +2586,8 @@
       "heavy_vehicle",
       "aef_unit"
     ],
-    "SlotPickupCapacity": 2
+    "SlotPickupCapacity": 2,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 15015,
@@ -2456,6 +2606,7 @@
       "Fuel": 140,
       "FieldTime": 90
     },
+    "HasCrew": true,
     "Entities": [
       {
         "EBP": "m4a3_sherman_bulldozer_mp",
@@ -2488,7 +2639,8 @@
       "heavy_vehicle",
       "aef_unit"
     ],
-    "SlotPickupCapacity": 2
+    "SlotPickupCapacity": 2,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 12741831,
@@ -2507,6 +2659,7 @@
       "Fuel": 125,
       "FieldTime": 50
     },
+    "HasCrew": true,
     "Entities": [
       {
         "EBP": "m4a3_76mm_commander_mp",
@@ -2537,7 +2690,8 @@
       "heavy_vehicle",
       "aef_unit"
     ],
-    "SlotPickupCapacity": 2
+    "SlotPickupCapacity": 2,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 14808,
@@ -2556,6 +2710,7 @@
       "Fuel": 135,
       "FieldTime": 90
     },
+    "HasCrew": true,
     "Entities": [
       {
         "EBP": "m4a3_76mm_sherman_mp",
@@ -2586,7 +2741,8 @@
       "heavy_vehicle",
       "aef_unit"
     ],
-    "SlotPickupCapacity": 2
+    "SlotPickupCapacity": 2,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 2644,
@@ -2605,6 +2761,7 @@
       "Fuel": 110,
       "FieldTime": 55
     },
+    "HasCrew": true,
     "Entities": [
       {
         "EBP": "m4a3_sherman_mp",
@@ -2637,7 +2794,8 @@
       "heavy_vehicle",
       "aef_unit"
     ],
-    "SlotPickupCapacity": 2
+    "SlotPickupCapacity": 2,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 2645,
@@ -2656,6 +2814,7 @@
       "Fuel": 70,
       "FieldTime": 50
     },
+    "HasCrew": true,
     "Entities": [
       {
         "EBP": "m5a1_stuart_mp",
@@ -2685,7 +2844,8 @@
       "vehicle",
       "aef_unit"
     ],
-    "SlotPickupCapacity": 3
+    "SlotPickupCapacity": 3,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 97019,
@@ -2704,6 +2864,7 @@
       "Fuel": 30,
       "FieldTime": 30
     },
+    "HasCrew": true,
     "Entities": [
       {
         "EBP": "m5_halftrack_usf_mp",
@@ -2736,7 +2897,8 @@
       "vehicle",
       "aef_unit"
     ],
-    "SlotPickupCapacity": 6
+    "SlotPickupCapacity": 6,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 2646,
@@ -2785,7 +2947,8 @@
       "light_vehicle",
       "aef_unit"
     ],
-    "SlotPickupCapacity": 2
+    "SlotPickupCapacity": 2,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 2647,
@@ -2804,6 +2967,7 @@
       "Fuel": 75,
       "FieldTime": 50
     },
+    "HasCrew": true,
     "Entities": [
       {
         "EBP": "m8a1_hmc_mp",
@@ -2833,7 +2997,8 @@
       "vehicle",
       "aef_unit"
     ],
-    "SlotPickupCapacity": 3
+    "SlotPickupCapacity": 3,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 2648,
@@ -2852,6 +3017,7 @@
       "Fuel": 60,
       "FieldTime": 30
     },
+    "HasCrew": true,
     "Entities": [
       {
         "EBP": "m8_greyhound_mp",
@@ -2881,7 +3047,8 @@
       "vehicle",
       "aef_unit"
     ],
-    "SlotPickupCapacity": 2
+    "SlotPickupCapacity": 2,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 17678,
@@ -3225,7 +3392,8 @@
       "heavy_vehicle",
       "aef_unit"
     ],
-    "SlotPickupCapacity": 2
+    "SlotPickupCapacity": 2,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 101265,
@@ -3271,7 +3439,8 @@
       "team_weapon",
       "british_unit"
     ],
-    "SlotPickupCapacity": 4
+    "SlotPickupCapacity": 4,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 89230,
@@ -3309,7 +3478,8 @@
       "aef_unit",
       "infantry_not_team_weapon"
     ],
-    "CanPickupItems": true
+    "CanPickupItems": true,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 93511,
@@ -3364,7 +3534,8 @@
       "british_unit"
     ],
     "SlotPickupCapacity": 2,
-    "CanPickupItems": true
+    "CanPickupItems": true,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 93099,
@@ -3379,7 +3550,7 @@
       "Portrait": "Icons_portraits_unit_british_officer_s_portrait"
     },
     "SquadCost": {
-      "Manpower": 2775,
+      "Manpower": 345,
       "FieldTime": 32
     },
     "Entities": [
@@ -3418,7 +3589,8 @@
       "infantry"
     ],
     "SlotPickupCapacity": 2,
-    "CanPickupItems": true
+    "CanPickupItems": true,
+    "UpgradeCapacity": 1
   },
   {
     "PBGID": 17786,
@@ -3434,7 +3606,7 @@
     },
     "SquadCost": {
       "Manpower": 350,
-      "FieldTime": 3625
+      "FieldTime": 36.25
     },
     "Entities": [
       {
@@ -3471,7 +3643,8 @@
       "brits_commandos"
     ],
     "SlotPickupCapacity": 2,
-    "CanPickupItems": true
+    "CanPickupItems": true,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 93414,
@@ -3487,7 +3660,7 @@
     },
     "SquadCost": {
       "Manpower": 350,
-      "FieldTime": 425
+      "FieldTime": 42.5
     },
     "Entities": [
       {
@@ -3524,7 +3697,8 @@
       "brits_commandos"
     ],
     "SlotPickupCapacity": 2,
-    "CanPickupItems": true
+    "CanPickupItems": true,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 100830,
@@ -3540,7 +3714,7 @@
     },
     "SquadCost": {
       "Manpower": 210,
-      "FieldTime": 2175
+      "FieldTime": 21.75
     },
     "Entities": [
       {
@@ -3577,7 +3751,8 @@
       "brits_commandos"
     ],
     "SlotPickupCapacity": 2,
-    "CanPickupItems": true
+    "CanPickupItems": true,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 92880,
@@ -3592,8 +3767,8 @@
       "Portrait": "Icons_portraits_unit_british_engineer_s_portrait"
     },
     "SquadCost": {
-      "Manpower": 2100,
-      "FieldTime": 2100
+      "Manpower": 210,
+      "FieldTime": 21
     },
     "Entities": [
       {
@@ -3629,7 +3804,8 @@
       "brit_sapper"
     ],
     "SlotPickupCapacity": 2,
-    "CanPickupItems": true
+    "CanPickupItems": true,
+    "UpgradeCapacity": 2
   },
   {
     "PBGID": 17779,
@@ -3644,8 +3820,8 @@
       "Portrait": "Icons_portraits_unit_british_engineer_s_portrait"
     },
     "SquadCost": {
-      "Manpower": 2100,
-      "FieldTime": 2100
+      "Manpower": 210,
+      "FieldTime": 21
     },
     "Entities": [
       {
@@ -3683,7 +3859,13 @@
       "brit_sapper"
     ],
     "SlotPickupCapacity": 2,
-    "CanPickupItems": true
+    "CanPickupItems": true,
+    "UpgradeCapacity": -1,
+    "Upgrades": [
+      "sappers_minesweeper_upgrade_mp",
+      "sappers_heavy_squad_mp",
+      "sapper_flamethrower"
+    ]
   },
   {
     "PBGID": 93437,
@@ -3698,8 +3880,8 @@
       "Portrait": "Icons_portraits_unit_british_engineer_s_portrait"
     },
     "SquadCost": {
-      "Manpower": 2300,
-      "FieldTime": 2100
+      "Manpower": 230,
+      "FieldTime": 21
     },
     "Entities": [
       {
@@ -3738,7 +3920,11 @@
       "brit_sapper"
     ],
     "SlotPickupCapacity": 2,
-    "CanPickupItems": true
+    "CanPickupItems": true,
+    "UpgradeCapacity": -1,
+    "Upgrades": [
+      "sappers_heavy_squad_mp"
+    ]
   },
   {
     "PBGID": 17810,
@@ -3786,7 +3972,8 @@
       "infantry",
       "british_unit"
     ],
-    "CanPickupItems": true
+    "CanPickupItems": true,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 200885,
@@ -3801,7 +3988,7 @@
       "Portrait": "Icons_portraits_ais_s"
     },
     "SquadCost": {
-      "Manpower": 3375,
+      "Manpower": 337.5,
       "FieldTime": 35
     },
     "Entities": [
@@ -3838,7 +4025,11 @@
       "british_unit"
     ],
     "SlotPickupCapacity": 2,
-    "CanPickupItems": true
+    "CanPickupItems": true,
+    "UpgradeCapacity": -1,
+    "Upgrades": [
+      "tommy_assault_package_upgrade_mp"
+    ]
   },
   {
     "PBGID": 94996,
@@ -3853,7 +4044,7 @@
       "Portrait": "Icons_portraits_unit_british_tommy_s_portrait"
     },
     "SquadCost": {
-      "Manpower": 2700,
+      "Manpower": 270,
       "FieldTime": 28
     },
     "Entities": [
@@ -3891,7 +4082,12 @@
       "british_unit"
     ],
     "SlotPickupCapacity": 2,
-    "CanPickupItems": true
+    "CanPickupItems": true,
+    "UpgradeCapacity": -1,
+    "Upgrades": [
+      "tommy_medical_supplies",
+      "tommy_pyrotechnics_supplies"
+    ]
   },
   {
     "PBGID": 17793,
@@ -3906,7 +4102,7 @@
       "Portrait": "Icons_portraits_unit_british_tommy_s_portrait"
     },
     "SquadCost": {
-      "Manpower": 2700,
+      "Manpower": 270,
       "FieldTime": 28
     },
     "Entities": [
@@ -3946,7 +4142,12 @@
       "british_unit"
     ],
     "SlotPickupCapacity": 2,
-    "CanPickupItems": true
+    "CanPickupItems": true,
+    "UpgradeCapacity": -1,
+    "Upgrades": [
+      "tommy_medical_supplies",
+      "tommy_pyrotechnics_supplies"
+    ]
   },
   {
     "PBGID": 93235,
@@ -3997,7 +4198,8 @@
       "british_unit"
     ],
     "SlotPickupCapacity": 2,
-    "CanPickupItems": true
+    "CanPickupItems": true,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 95730,
@@ -4012,7 +4214,7 @@
       "Portrait": "Icons_portraits_unit_british_tommy_s_portrait"
     },
     "SquadCost": {
-      "Manpower": 3375,
+      "Manpower": 337.5,
       "FieldTime": 35
     },
     "Entities": [
@@ -4053,7 +4255,14 @@
       "british_unit"
     ],
     "SlotPickupCapacity": 2,
-    "CanPickupItems": true
+    "CanPickupItems": true,
+    "UpgradeCapacity": -1,
+    "Upgrades": [
+      "tommy_boys_at_piats"
+    ],
+    "AppliedUpgrades": [
+      "tommy_boys_at_rifles"
+    ]
   },
   {
     "PBGID": 89410,
@@ -4103,7 +4312,8 @@
       "aef_unit"
     ],
     "SlotPickupCapacity": 2,
-    "CanPickupItems": true
+    "CanPickupItems": true,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 17889,
@@ -4154,7 +4364,8 @@
       "aef_unit"
     ],
     "SlotPickupCapacity": 2,
-    "CanPickupItems": true
+    "CanPickupItems": true,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 100790,
@@ -4207,7 +4418,11 @@
       "at_gun",
       "team_weapon"
     ],
-    "SlotPickupCapacity": 4
+    "SlotPickupCapacity": 4,
+    "UpgradeCapacity": -1,
+    "AppliedUpgrades": [
+      "is_manned"
+    ]
   },
   {
     "PBGID": 19050,
@@ -4260,7 +4475,11 @@
       "at_gun",
       "team_weapon"
     ],
-    "SlotPickupCapacity": 4
+    "SlotPickupCapacity": 4,
+    "UpgradeCapacity": -1,
+    "AppliedUpgrades": [
+      "is_manned"
+    ]
   },
   {
     "PBGID": 18924,
@@ -4276,7 +4495,7 @@
     },
     "SquadCost": {
       "Manpower": 320,
-      "FieldTime": 190
+      "FieldTime": 28
     },
     "IsSyncWeapon": true,
     "Entities": [
@@ -4314,7 +4533,11 @@
       "german_team_weapons",
       "team_weapon"
     ],
-    "CanPickupItems": true
+    "CanPickupItems": true,
+    "UpgradeCapacity": -1,
+    "AppliedUpgrades": [
+      "is_manned"
+    ]
   },
   {
     "PBGID": 100791,
@@ -4361,7 +4584,11 @@
       "british_unit",
       "team_weapon"
     ],
-    "SlotPickupCapacity": 4
+    "SlotPickupCapacity": 4,
+    "UpgradeCapacity": -1,
+    "AppliedUpgrades": [
+      "is_manned"
+    ]
   },
   {
     "PBGID": 89027,
@@ -4408,7 +4635,11 @@
       "british_unit",
       "team_weapon"
     ],
-    "SlotPickupCapacity": 4
+    "SlotPickupCapacity": 4,
+    "UpgradeCapacity": -1,
+    "AppliedUpgrades": [
+      "is_manned"
+    ]
   },
   {
     "PBGID": 18929,
@@ -4424,7 +4655,7 @@
     },
     "SquadCost": {
       "Manpower": 260,
-      "FieldTime": 194
+      "FieldTime": 32
     },
     "IsSyncWeapon": true,
     "Entities": [
@@ -4465,7 +4696,14 @@
       "team_weapon",
       "infantry"
     ],
-    "CanPickupItems": true
+    "CanPickupItems": true,
+    "UpgradeCapacity": -1,
+    "Upgrades": [
+      "ambush_camou_package"
+    ],
+    "AppliedUpgrades": [
+      "is_manned"
+    ]
   },
   {
     "PBGID": 100960,
@@ -4514,7 +4752,8 @@
       "team_weapon",
       "british_unit"
     ],
-    "SlotPickupCapacity": 4
+    "SlotPickupCapacity": 4,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 19054,
@@ -4562,6 +4801,11 @@
       "british_unit",
       "artillery",
       "team_weapon"
+    ],
+    "UpgradeCapacity": -1,
+    "Upgrades": [
+      "qf_25lb_fire_support_mp",
+      "qf_25lb_tactical_support_mp"
     ]
   },
   {
@@ -4614,7 +4858,8 @@
       "british_unit",
       "artillery",
       "team_weapon"
-    ]
+    ],
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 89022,
@@ -4631,7 +4876,7 @@
     "SquadCost": {
       "Manpower": 300,
       "Fuel": 40,
-      "FieldTime": 201
+      "FieldTime": 39
     },
     "IsSyncWeapon": true,
     "Entities": [
@@ -4669,7 +4914,11 @@
       "",
       "infantry"
     ],
-    "SlotPickupCapacity": 10
+    "SlotPickupCapacity": 10,
+    "UpgradeCapacity": -1,
+    "AppliedUpgrades": [
+      "is_manned"
+    ]
   },
   {
     "PBGID": 188769,
@@ -4685,7 +4934,7 @@
     },
     "SquadCost": {
       "Manpower": 260,
-      "FieldTime": 188
+      "FieldTime": 26
     },
     "IsSyncWeapon": true,
     "Entities": [
@@ -4724,7 +4973,11 @@
       "aef_unit",
       "team_weapon"
     ],
-    "CanPickupItems": true
+    "CanPickupItems": true,
+    "UpgradeCapacity": -1,
+    "AppliedUpgrades": [
+      "is_manned"
+    ]
   },
   {
     "PBGID": 100789,
@@ -4773,7 +5026,8 @@
       "team_weapon",
       "british_unit"
     ],
-    "SlotPickupCapacity": 4
+    "SlotPickupCapacity": 4,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 18925,
@@ -4822,7 +5076,8 @@
       "team_weapon",
       "british_unit"
     ],
-    "SlotPickupCapacity": 4
+    "SlotPickupCapacity": 4,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 89256,
@@ -4841,6 +5096,7 @@
       "Fuel": 60,
       "FieldTime": 45
     },
+    "HasCrew": true,
     "Entities": [
       {
         "EBP": "aec_armoured_car_mp",
@@ -4871,7 +5127,8 @@
       "light_vehicle",
       "british_unit"
     ],
-    "SlotPickupCapacity": 2
+    "SlotPickupCapacity": 2,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 18979,
@@ -4920,7 +5177,8 @@
       "vehicle",
       "heavy_vehicle"
     ],
-    "SlotPickupCapacity": 2
+    "SlotPickupCapacity": 2,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 17782,
@@ -4970,7 +5228,8 @@
       "british_unit",
       "heavy_vehicle_icon"
     ],
-    "SlotPickupCapacity": 2
+    "SlotPickupCapacity": 2,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 17803,
@@ -5020,7 +5279,8 @@
       "british_unit",
       "heavy_vehicle_icon"
     ],
-    "SlotPickupCapacity": 2
+    "SlotPickupCapacity": 2,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 17783,
@@ -5070,7 +5330,8 @@
       "british_unit",
       "heavy_vehicle_icon"
     ],
-    "SlotPickupCapacity": 2
+    "SlotPickupCapacity": 2,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 18798,
@@ -5120,7 +5381,11 @@
       "british_unit",
       "heavy_vehicle_icon"
     ],
-    "SlotPickupCapacity": 2
+    "SlotPickupCapacity": 2,
+    "UpgradeCapacity": -1,
+    "Upgrades": [
+      "british_tank_commander"
+    ]
   },
   {
     "PBGID": 18981,
@@ -5170,7 +5435,11 @@
       "british_unit",
       "brit_cromwell"
     ],
-    "SlotPickupCapacity": 2
+    "SlotPickupCapacity": 2,
+    "UpgradeCapacity": -1,
+    "Upgrades": [
+      "british_tank_commander"
+    ]
   },
   {
     "PBGID": 91549,
@@ -5184,14 +5453,14 @@
       "Symbol": "Icons_symbols_vehicle_british_airspeed_horsa_glider_symbol",
       "Portrait": "Icons_portraits_vehicle_british_airspeed_horsa_glider_s_portrait"
     },
-    "SquadCost": {},
     "Entities": [
       {
         "EBP": "glider_commandos_only",
         "Count": 1
       }
     ],
-    "Types": []
+    "Types": [],
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 93455,
@@ -5205,14 +5474,14 @@
       "Symbol": "Icons_symbols_vehicle_british_airspeed_horsa_glider_symbol",
       "Portrait": "Icons_portraits_vehicle_british_airspeed_horsa_glider_hq_s_portrait"
     },
-    "SquadCost": {},
     "Entities": [
       {
         "EBP": "glider_headquarters",
         "Count": 1
       }
     ],
-    "Types": []
+    "Types": [],
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 12741826,
@@ -5346,6 +5615,7 @@
       "Fuel": 80,
       "FieldTime": 45
     },
+    "HasCrew": true,
     "Entities": [
       {
         "EBP": "m10_tank_destroyer_british_mp",
@@ -5376,7 +5646,8 @@
       "heavy_vehicle",
       "british_unit"
     ],
-    "SlotPickupCapacity": 2
+    "SlotPickupCapacity": 2,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 93897,
@@ -5395,6 +5666,7 @@
       "Fuel": 25,
       "FieldTime": 35
     },
+    "HasCrew": true,
     "Entities": [
       {
         "EBP": "m3_halftrack_resupply_mp",
@@ -5426,7 +5698,8 @@
       "aef_unit",
       ""
     ],
-    "SlotPickupCapacity": 6
+    "SlotPickupCapacity": 6,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 93410,
@@ -5484,7 +5757,6 @@
       "Symbol": "Icons_symbols_vehicle_german_stuka_symbol",
       "Portrait": "Icons_portraits_vehicle_german_stuka_s_portrait"
     },
-    "SquadCost": {},
     "Entities": [
       {
         "EBP": "cargo_plane_1",
@@ -5608,7 +5880,8 @@
       "british_unit",
       "heavy_vehicle_icon"
     ],
-    "SlotPickupCapacity": 2
+    "SlotPickupCapacity": 2,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 17776,
@@ -5657,7 +5930,11 @@
       "heavy_vehicle",
       "british_unit"
     ],
-    "SlotPickupCapacity": 2
+    "SlotPickupCapacity": 2,
+    "UpgradeCapacity": -1,
+    "Upgrades": [
+      "british_tank_commander"
+    ]
   },
   {
     "PBGID": 93724,
@@ -5707,7 +5984,8 @@
       "light_vehicle",
       "british_unit"
     ],
-    "SlotPickupCapacity": 2
+    "SlotPickupCapacity": 2,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 18786,
@@ -5754,7 +6032,8 @@
       "light_vehicle",
       "british_unit"
     ],
-    "SlotPickupCapacity": 2
+    "SlotPickupCapacity": 2,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 89017,
@@ -5773,6 +6052,7 @@
       "Fuel": 115,
       "FieldTime": 50
     },
+    "HasCrew": true,
     "Entities": [
       {
         "EBP": "valentine_mortar",
@@ -5803,7 +6083,8 @@
       "light_vehicle",
       "aef_unit"
     ],
-    "SlotPickupCapacity": 2
+    "SlotPickupCapacity": 2,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 93114,
@@ -5854,7 +6135,8 @@
       "heavy_vehicle",
       "british_unit"
     ],
-    "SlotPickupCapacity": 2
+    "SlotPickupCapacity": 2,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 188815,
@@ -5904,7 +6186,8 @@
       "light_vehicle",
       "vehicle"
     ],
-    "SlotPickupCapacity": 6
+    "SlotPickupCapacity": 6,
+    "UpgradeCapacity": -1
   },
   {
     "Name": "m01_mg42_heavy_machine_gun_squad_single",
@@ -5950,7 +6233,8 @@
       "mg42_hmg",
       "hmg"
     ],
-    "CanPickupItems": true
+    "CanPickupItems": true,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 1,
@@ -6064,7 +6348,8 @@
       }
     ],
     "Types": [],
-    "SlotPickupCapacity": 2
+    "SlotPickupCapacity": 2,
+    "UpgradeCapacity": 1
   },
   {
     "PBGID": 5,
@@ -6112,7 +6397,8 @@
       "fh18_howitzer",
       "artillery"
     ],
-    "SlotPickupCapacity": 1
+    "SlotPickupCapacity": 1,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 9,
@@ -6159,7 +6445,12 @@
       "medium_tank",
       "heavy_vehicle"
     ],
-    "SlotPickupCapacity": 2
+    "SlotPickupCapacity": 2,
+    "UpgradeCapacity": -1,
+    "Upgrades": [
+      "vehicles_optics",
+      "panzer_top_gunner"
+    ]
   },
   {
     "PBGID": 10,
@@ -6183,7 +6474,8 @@
       }
     ],
     "Types": [],
-    "SlotPickupCapacity": 2
+    "SlotPickupCapacity": 2,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 2210,
@@ -6235,7 +6527,11 @@
       "infantry"
     ],
     "SlotPickupCapacity": 2,
-    "CanPickupItems": true
+    "CanPickupItems": true,
+    "UpgradeCapacity": -1,
+    "Upgrades": [
+      "assault_grenadier_veteran_squad_leader_mp"
+    ]
   },
   {
     "PBGID": 11,
@@ -6250,8 +6546,8 @@
       "Portrait": "Icons_portraits_unit_german_grenadiers_s_portrait"
     },
     "SquadCost": {
-      "Manpower": 2500,
-      "FieldTime": 300
+      "Manpower": 250,
+      "FieldTime": 30
     },
     "Entities": [
       {
@@ -6287,7 +6583,13 @@
       "infantry"
     ],
     "SlotPickupCapacity": 4,
-    "CanPickupItems": true
+    "CanPickupItems": true,
+    "UpgradeCapacity": -1,
+    "Upgrades": [
+      "grenadier_mg42_lmg",
+      "light_infantry_package",
+      "ambush_camou_package"
+    ]
   },
   {
     "PBGID": 3444,
@@ -6341,7 +6643,11 @@
       "infantry"
     ],
     "SlotPickupCapacity": 2,
-    "CanPickupItems": true
+    "CanPickupItems": true,
+    "UpgradeCapacity": -1,
+    "Upgrades": [
+      "ambush_camou_package"
+    ]
   },
   {
     "PBGID": 12,
@@ -6395,7 +6701,14 @@
       "infantry"
     ],
     "SlotPickupCapacity": 2,
-    "CanPickupItems": true
+    "CanPickupItems": true,
+    "UpgradeCapacity": -1,
+    "Upgrades": [
+      "grenadier_mg42_lmg_mp",
+      "light_infantry_package",
+      "ambush_camou_package",
+      "grenadier_veteran_squad_leader_mp"
+    ]
   },
   {
     "PBGID": 13,
@@ -6438,7 +6751,11 @@
       "infantry"
     ],
     "SlotPickupCapacity": 4,
-    "CanPickupItems": true
+    "CanPickupItems": true,
+    "UpgradeCapacity": -1,
+    "Upgrades": [
+      "grenadier_mg42_lmg"
+    ]
   },
   {
     "PBGID": 14,
@@ -6489,7 +6806,11 @@
       "mg42_hmg",
       "hmg"
     ],
-    "CanPickupItems": true
+    "CanPickupItems": true,
+    "UpgradeCapacity": -1,
+    "Upgrades": [
+      "ambush_camou_package"
+    ]
   },
   {
     "PBGID": 15,
@@ -6505,7 +6826,7 @@
     },
     "SquadCost": {
       "Manpower": 260,
-      "FieldTime": 198
+      "FieldTime": 36
     },
     "IsSyncWeapon": true,
     "Entities": [
@@ -6547,7 +6868,14 @@
       "team_weapon",
       "infantry"
     ],
-    "CanPickupItems": true
+    "CanPickupItems": true,
+    "UpgradeCapacity": -1,
+    "Upgrades": [
+      "ambush_camou_package"
+    ],
+    "AppliedUpgrades": [
+      "is_manned"
+    ]
   },
   {
     "PBGID": 16,
@@ -6597,7 +6925,8 @@
       "81mm_german_mortar",
       "mortar"
     ],
-    "CanPickupItems": true
+    "CanPickupItems": true,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 17,
@@ -6613,7 +6942,7 @@
     },
     "SquadCost": {
       "Manpower": 240,
-      "FieldTime": 186
+      "FieldTime": 24
     },
     "IsSyncWeapon": true,
     "Entities": [
@@ -6653,7 +6982,14 @@
       "team_weapon",
       "infantry"
     ],
-    "CanPickupItems": true
+    "CanPickupItems": true,
+    "UpgradeCapacity": -1,
+    "Upgrades": [
+      "medic_add_squad_upg"
+    ],
+    "AppliedUpgrades": [
+      "is_manned"
+    ]
   },
   {
     "PBGID": 18,
@@ -6668,8 +7004,8 @@
       "Portrait": "Icons_portraits_unit_german_officer_s_portrait"
     },
     "SquadCost": {
-      "Manpower": 2125,
-      "FieldTime": 255
+      "Manpower": 437.5,
+      "FieldTime": 52.5
     },
     "Entities": [
       {
@@ -6702,7 +7038,8 @@
       "pz_grenadiers",
       "infantry"
     ],
-    "SlotPickupCapacity": 4
+    "SlotPickupCapacity": 4,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 19,
@@ -6758,7 +7095,8 @@
       "infantry"
     ],
     "SlotPickupCapacity": 1,
-    "CanPickupItems": true
+    "CanPickupItems": true,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 14270,
@@ -6783,7 +7121,8 @@
       }
     ],
     "Types": [],
-    "SlotPickupCapacity": 4
+    "SlotPickupCapacity": 4,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 12741828,
@@ -6838,7 +7177,8 @@
       "infantry"
     ],
     "SlotPickupCapacity": 1,
-    "CanPickupItems": true
+    "CanPickupItems": true,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 3120,
@@ -6891,7 +7231,8 @@
       "pz_grenadiers",
       "infantry"
     ],
-    "SlotPickupCapacity": 4
+    "SlotPickupCapacity": 4,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 20,
@@ -6930,7 +7271,8 @@
       }
     ],
     "Types": [],
-    "SlotPickupCapacity": 4
+    "SlotPickupCapacity": 4,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 21,
@@ -6972,7 +7314,8 @@
       }
     ],
     "Types": [],
-    "SlotPickupCapacity": 4
+    "SlotPickupCapacity": 4,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 22,
@@ -7019,7 +7362,8 @@
       "infantry"
     ],
     "SlotPickupCapacity": 6,
-    "CanPickupItems": true
+    "CanPickupItems": true,
+    "UpgradeCapacity": 1
   },
   {
     "PBGID": 23,
@@ -7034,8 +7378,8 @@
       "Portrait": "Icons_portraits_unit_german_ostruppen_s_portrait"
     },
     "SquadCost": {
-      "Manpower": 1999998,
-      "FieldTime": 210
+      "Manpower": 199.99982,
+      "FieldTime": 21
     },
     "Entities": [
       {
@@ -7069,7 +7413,11 @@
       "infantry"
     ],
     "SlotPickupCapacity": 1,
-    "CanPickupItems": true
+    "CanPickupItems": true,
+    "UpgradeCapacity": -1,
+    "Upgrades": [
+      "ostruppen_mg42_lmg_mp"
+    ]
   },
   {
     "PBGID": 16318,
@@ -7084,8 +7432,8 @@
       "Portrait": "Icons_portraits_unit_german_ostruppen_s_portrait"
     },
     "SquadCost": {
-      "Manpower": 1999998,
-      "FieldTime": 210
+      "Manpower": 199.99982,
+      "FieldTime": 21
     },
     "Entities": [
       {
@@ -7119,7 +7467,11 @@
       "infantry"
     ],
     "SlotPickupCapacity": 1,
-    "CanPickupItems": true
+    "CanPickupItems": true,
+    "UpgradeCapacity": -1,
+    "Upgrades": [
+      "ostruppen_mg42_lmg_mp"
+    ]
   },
   {
     "PBGID": 24,
@@ -7134,8 +7486,8 @@
       "Portrait": "Icons_portraits_unit_german_panzer_grenadiers_s_portrait"
     },
     "SquadCost": {
-      "Manpower": 2500,
-      "FieldTime": 300
+      "Manpower": 250,
+      "FieldTime": 30
     },
     "Entities": [
       {
@@ -7171,7 +7523,15 @@
       "infantry"
     ],
     "SlotPickupCapacity": 4,
-    "CanPickupItems": true
+    "CanPickupItems": true,
+    "UpgradeCapacity": -1,
+    "Upgrades": [
+      "panzer_grenadier_panzershreck_atw_item",
+      "light_infantry_package",
+      "ambush_camou_package",
+      "panzer_grenadier_panzershreck_atw_item_second",
+      "panzerbusche_39"
+    ]
   },
   {
     "PBGID": 25,
@@ -7228,7 +7588,16 @@
       "infantry"
     ],
     "SlotPickupCapacity": 2,
-    "CanPickupItems": true
+    "CanPickupItems": true,
+    "UpgradeCapacity": -1,
+    "Upgrades": [
+      "light_infantry_panzergren_package",
+      "ambush_camou_package",
+      "panzerbusche_39_mp",
+      "panzer_grenadier_panzershreck_atw_item_mp",
+      "panzer_grenadier_panzershreck_atw_item_1_schrek_mp",
+      "panzer_grenadier_support_package_mp"
+    ]
   },
   {
     "PBGID": 2211,
@@ -7280,7 +7649,12 @@
       "infantry"
     ],
     "SlotPickupCapacity": 2,
-    "CanPickupItems": true
+    "CanPickupItems": true,
+    "UpgradeCapacity": -1,
+    "Upgrades": [
+      "urban_assault_panzer_grenadiers_flamethrower_mp",
+      "urban_assault_armor_upgrade"
+    ]
   },
   {
     "PBGID": 2212,
@@ -7330,7 +7704,12 @@
       "infantry"
     ],
     "SlotPickupCapacity": 4,
-    "CanPickupItems": true
+    "CanPickupItems": true,
+    "UpgradeCapacity": -1,
+    "Upgrades": [
+      "pioneer_minesweeper",
+      "pioneer_flamethrower"
+    ]
   },
   {
     "PBGID": 26,
@@ -7377,7 +7756,12 @@
       "infantry"
     ],
     "SlotPickupCapacity": 2,
-    "CanPickupItems": true
+    "CanPickupItems": true,
+    "UpgradeCapacity": -1,
+    "Upgrades": [
+      "pioneer_minesweeper_mp",
+      "pioneer_flamethrower_mp"
+    ]
   },
   {
     "PBGID": 27,
@@ -7426,7 +7810,12 @@
       "infantry"
     ],
     "SlotPickupCapacity": 4,
-    "CanPickupItems": true
+    "CanPickupItems": true,
+    "UpgradeCapacity": -1,
+    "Upgrades": [
+      "pioneer_minesweeper",
+      "pioneer_flamethrower"
+    ]
   },
   {
     "PBGID": 28,
@@ -7479,7 +7868,14 @@
       "infantry"
     ],
     "SlotPickupCapacity": 2,
-    "CanPickupItems": true
+    "CanPickupItems": true,
+    "UpgradeCapacity": -1,
+    "Upgrades": [
+      "pioneer_minesweeper_mp",
+      "pioneer_flamethrower_mp",
+      "pioneer_veteran_squad_leader_mp",
+      "pioneer_breakthrough_package_mp"
+    ]
   },
   {
     "PBGID": 2270,
@@ -7528,7 +7924,12 @@
       "infantry"
     ],
     "SlotPickupCapacity": 4,
-    "CanPickupItems": true
+    "CanPickupItems": true,
+    "UpgradeCapacity": -1,
+    "Upgrades": [
+      "pioneer_minesweeper",
+      "pioneer_flamethrower"
+    ]
   },
   {
     "PBGID": 29,
@@ -7575,7 +7976,8 @@
       "infantry",
       "sniper_german"
     ],
-    "CanPickupItems": true
+    "CanPickupItems": true,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 30,
@@ -7624,7 +8026,8 @@
       "infantry",
       "sniper_german"
     ],
-    "CanPickupItems": true
+    "CanPickupItems": true,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 2213,
@@ -7639,8 +8042,8 @@
       "Portrait": "Icons_portraits_unit_german_jaeger_light_infantry_s_portrait"
     },
     "SquadCost": {
-      "Manpower": 2700,
-      "FieldTime": 2700
+      "Manpower": 270,
+      "FieldTime": 27
     },
     "Entities": [
       {
@@ -7682,7 +8085,14 @@
       "stormtrooper"
     ],
     "SlotPickupCapacity": 2,
-    "CanPickupItems": true
+    "CanPickupItems": true,
+    "UpgradeCapacity": -1,
+    "Upgrades": [
+      "stormtrooper_antitank_package_mp",
+      "stormtrooper_panzerschreck_mp",
+      "light_infantry_stormtrooper_package",
+      "stormtrooper_mp40_package_mp"
+    ]
   },
   {
     "PBGID": 31,
@@ -7730,7 +8140,8 @@
       "at_gun",
       "team_weapon"
     ],
-    "CanPickupItems": true
+    "CanPickupItems": true,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 32,
@@ -7746,7 +8157,7 @@
     },
     "SquadCost": {
       "Manpower": 320,
-      "FieldTime": 198
+      "FieldTime": 36
     },
     "IsSyncWeapon": true,
     "Entities": [
@@ -7784,7 +8195,11 @@
       "german_team_weapons",
       "team_weapon"
     ],
-    "CanPickupItems": true
+    "CanPickupItems": true,
+    "UpgradeCapacity": -1,
+    "AppliedUpgrades": [
+      "is_manned"
+    ]
   },
   {
     "PBGID": 33,
@@ -7831,7 +8246,8 @@
       "pak43_at_gun",
       "at_gun",
       "team_weapon"
-    ]
+    ],
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 34,
@@ -7848,7 +8264,7 @@
     "SquadCost": {
       "Manpower": 350,
       "Fuel": 45,
-      "FieldTime": 372
+      "FieldTime": 210
     },
     "IsSyncWeapon": true,
     "Entities": [
@@ -7884,7 +8300,8 @@
       "german_team_weapons",
       "team_weapon"
     ],
-    "SlotPickupCapacity": 1
+    "SlotPickupCapacity": 1,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 35,
@@ -7929,7 +8346,12 @@
       "heavy_vehicle",
       "heavy_vehicle_icon"
     ],
-    "SlotPickupCapacity": 2
+    "SlotPickupCapacity": 2,
+    "UpgradeCapacity": -1,
+    "Upgrades": [
+      "vehicles_optics",
+      "brummbar_top_gunner"
+    ]
   },
   {
     "PBGID": 36,
@@ -7978,7 +8400,11 @@
       "heavy_vehicle",
       "heavy_vehicle_icon"
     ],
-    "SlotPickupCapacity": 2
+    "SlotPickupCapacity": 2,
+    "UpgradeCapacity": -1,
+    "Upgrades": [
+      "vehicles_optics"
+    ]
   },
   {
     "PBGID": 37,
@@ -8023,7 +8449,11 @@
       "heavy_vehicle",
       "heavy_vehicle_icon"
     ],
-    "SlotPickupCapacity": 2
+    "SlotPickupCapacity": 2,
+    "UpgradeCapacity": -1,
+    "Upgrades": [
+      "vehicles_optics"
+    ]
   },
   {
     "PBGID": 38,
@@ -8072,7 +8502,11 @@
       "heavy_vehicle",
       "heavy_vehicle_icon"
     ],
-    "SlotPickupCapacity": 2
+    "SlotPickupCapacity": 2,
+    "UpgradeCapacity": -1,
+    "Upgrades": [
+      "vehicles_optics"
+    ]
   },
   {
     "PBGID": 176860,
@@ -8120,7 +8554,11 @@
       "light_vehicle",
       "vehicle"
     ],
-    "SlotPickupCapacity": 6
+    "SlotPickupCapacity": 6,
+    "UpgradeCapacity": -1,
+    "Upgrades": [
+      "vehicles_optics"
+    ]
   },
   {
     "PBGID": 3442,
@@ -8168,7 +8606,11 @@
       "light_vehicle",
       "vehicle"
     ],
-    "SlotPickupCapacity": 6
+    "SlotPickupCapacity": 6,
+    "UpgradeCapacity": -1,
+    "Upgrades": [
+      "vehicles_optics"
+    ]
   },
   {
     "PBGID": 2214,
@@ -8216,7 +8658,11 @@
       "light_vehicle",
       "vehicle"
     ],
-    "SlotPickupCapacity": 6
+    "SlotPickupCapacity": 6,
+    "UpgradeCapacity": -1,
+    "Upgrades": [
+      "vehicles_optics"
+    ]
   },
   {
     "PBGID": 14152,
@@ -8250,7 +8696,8 @@
       "light_vehicle",
       "vehicle"
     ],
-    "SlotPickupCapacity": 6
+    "SlotPickupCapacity": 6,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 39,
@@ -8293,7 +8740,8 @@
       }
     ],
     "Types": [],
-    "SlotPickupCapacity": 6
+    "SlotPickupCapacity": 6,
+    "UpgradeCapacity": 1
   },
   {
     "PBGID": 40,
@@ -8341,7 +8789,8 @@
       "light_vehicle",
       "vehicle"
     ],
-    "SlotPickupCapacity": 6
+    "SlotPickupCapacity": 6,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 2271,
@@ -8375,7 +8824,8 @@
       "light_vehicle",
       "vehicle"
     ],
-    "SlotPickupCapacity": 6
+    "SlotPickupCapacity": 6,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 41,
@@ -8418,7 +8868,8 @@
       "251_halftrack",
       "light_vehicle"
     ],
-    "SlotPickupCapacity": 6
+    "SlotPickupCapacity": 6,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 42,
@@ -8466,7 +8917,11 @@
       "light_vehicle",
       "vehicle"
     ],
-    "SlotPickupCapacity": 6
+    "SlotPickupCapacity": 6,
+    "UpgradeCapacity": -1,
+    "Upgrades": [
+      "vehicles_optics"
+    ]
   },
   {
     "PBGID": 43,
@@ -8517,7 +8972,8 @@
       "fh18_howitzer",
       "artillery",
       "team_weapon"
-    ]
+    ],
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 44,
@@ -8569,6 +9025,10 @@
       "fh18_howitzer",
       "artillery",
       "team_weapon"
+    ],
+    "UpgradeCapacity": -1,
+    "AppliedUpgrades": [
+      "is_manned"
     ]
   },
   {
@@ -8594,7 +9054,8 @@
       }
     ],
     "Types": [],
-    "SlotPickupCapacity": 2
+    "SlotPickupCapacity": 2,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 46,
@@ -8641,7 +9102,11 @@
       "medium_tank",
       "heavy_vehicle"
     ],
-    "SlotPickupCapacity": 2
+    "SlotPickupCapacity": 2,
+    "UpgradeCapacity": -1,
+    "Upgrades": [
+      "vehicles_optics"
+    ]
   },
   {
     "PBGID": 47,
@@ -8690,7 +9155,11 @@
       "vehicle",
       "heavy_vehicle"
     ],
-    "SlotPickupCapacity": 2
+    "SlotPickupCapacity": 2,
+    "UpgradeCapacity": -1,
+    "Upgrades": [
+      "vehicles_optics"
+    ]
   },
   {
     "PBGID": 48,
@@ -8738,7 +9207,12 @@
       "heavy_vehicle",
       "heavy_vehicle_icon"
     ],
-    "SlotPickupCapacity": 2
+    "SlotPickupCapacity": 2,
+    "UpgradeCapacity": -1,
+    "Upgrades": [
+      "vehicles_optics",
+      "panther_top_gunner"
+    ]
   },
   {
     "PBGID": 49,
@@ -8788,7 +9262,11 @@
       "heavy_vehicle",
       "heavy_vehicle_icon"
     ],
-    "SlotPickupCapacity": 2
+    "SlotPickupCapacity": 2,
+    "UpgradeCapacity": -1,
+    "Upgrades": [
+      "vehicles_optics"
+    ]
   },
   {
     "PBGID": 56,
@@ -8831,7 +9309,11 @@
       "panzerwerfer",
       "artillery"
     ],
-    "SlotPickupCapacity": 2
+    "SlotPickupCapacity": 2,
+    "UpgradeCapacity": -1,
+    "Upgrades": [
+      "vehicles_optics"
+    ]
   },
   {
     "PBGID": 57,
@@ -8878,7 +9360,11 @@
       "artillery",
       "vehicle"
     ],
-    "SlotPickupCapacity": 2
+    "SlotPickupCapacity": 2,
+    "UpgradeCapacity": -1,
+    "Upgrades": [
+      "vehicles_optics"
+    ]
   },
   {
     "PBGID": 188579,
@@ -8950,7 +9436,11 @@
       "heavy_vehicle",
       "wg_unit"
     ],
-    "SlotPickupCapacity": 2
+    "SlotPickupCapacity": 2,
+    "UpgradeCapacity": -1,
+    "Upgrades": [
+      "tank_commander"
+    ]
   },
   {
     "PBGID": 50,
@@ -8998,7 +9488,11 @@
       "heavy_vehicle",
       "panzer_command_tank"
     ],
-    "SlotPickupCapacity": 2
+    "SlotPickupCapacity": 2,
+    "UpgradeCapacity": -1,
+    "Upgrades": [
+      "vehicles_optics"
+    ]
   },
   {
     "PBGID": 51,
@@ -9049,7 +9543,11 @@
       "heavy_vehicle",
       "panzer_command_tank"
     ],
-    "SlotPickupCapacity": 2
+    "SlotPickupCapacity": 2,
+    "UpgradeCapacity": -1,
+    "Upgrades": [
+      "vehicles_optics"
+    ]
   },
   {
     "PBGID": 52,
@@ -9096,7 +9594,12 @@
       "medium_tank",
       "heavy_vehicle"
     ],
-    "SlotPickupCapacity": 2
+    "SlotPickupCapacity": 2,
+    "UpgradeCapacity": -1,
+    "Upgrades": [
+      "vehicles_optics",
+      "panzer_top_gunner"
+    ]
   },
   {
     "PBGID": 53,
@@ -9145,7 +9648,11 @@
       "vehicle",
       "heavy_vehicle"
     ],
-    "SlotPickupCapacity": 2
+    "SlotPickupCapacity": 2,
+    "UpgradeCapacity": -1,
+    "Upgrades": [
+      "vehicles_optics"
+    ]
   },
   {
     "PBGID": 54,
@@ -9194,7 +9701,12 @@
       "vehicle",
       "heavy_vehicle"
     ],
-    "SlotPickupCapacity": 2
+    "SlotPickupCapacity": 2,
+    "UpgradeCapacity": -1,
+    "Upgrades": [
+      "vehicles_optics",
+      "panzer_top_gunner_mp"
+    ]
   },
   {
     "PBGID": 55,
@@ -9243,7 +9755,11 @@
       "vehicle",
       "heavy_vehicle"
     ],
-    "SlotPickupCapacity": 2
+    "SlotPickupCapacity": 2,
+    "UpgradeCapacity": -1,
+    "Upgrades": [
+      "vehicles_optics"
+    ]
   },
   {
     "PBGID": 16620,
@@ -9290,7 +9806,11 @@
       "light_vehicle",
       "vehicle"
     ],
-    "SlotPickupCapacity": 2
+    "SlotPickupCapacity": 2,
+    "UpgradeCapacity": -1,
+    "Upgrades": [
+      "vehicles_optics"
+    ]
   },
   {
     "PBGID": 58,
@@ -9336,7 +9856,11 @@
       "222_armored_car",
       "light_vehicle"
     ],
-    "SlotPickupCapacity": 2
+    "SlotPickupCapacity": 2,
+    "UpgradeCapacity": 1,
+    "Upgrades": [
+      "vehicles_optics"
+    ]
   },
   {
     "PBGID": 59,
@@ -9383,7 +9907,11 @@
       "light_vehicle",
       "vehicle"
     ],
-    "SlotPickupCapacity": 2
+    "SlotPickupCapacity": 2,
+    "UpgradeCapacity": -1,
+    "Upgrades": [
+      "vehicles_optics"
+    ]
   },
   {
     "PBGID": 2217,
@@ -9432,7 +9960,11 @@
       "heavy_vehicle",
       "stugIIIE"
     ],
-    "SlotPickupCapacity": 2
+    "SlotPickupCapacity": 2,
+    "UpgradeCapacity": -1,
+    "Upgrades": [
+      "vehicles_optics"
+    ]
   },
   {
     "PBGID": 60,
@@ -9476,7 +10008,11 @@
       "assault_gun",
       "heavy_vehicle"
     ],
-    "SlotPickupCapacity": 2
+    "SlotPickupCapacity": 2,
+    "UpgradeCapacity": -1,
+    "Upgrades": [
+      "vehicles_optics"
+    ]
   },
   {
     "PBGID": 61,
@@ -9524,7 +10060,11 @@
       "vehicle",
       "heavy_vehicle"
     ],
-    "SlotPickupCapacity": 2
+    "SlotPickupCapacity": 2,
+    "UpgradeCapacity": -1,
+    "Upgrades": [
+      "vehicles_optics"
+    ]
   },
   {
     "PBGID": 62,
@@ -9568,7 +10108,12 @@
       "assault_gun",
       "heavy_vehicle"
     ],
-    "SlotPickupCapacity": 2
+    "SlotPickupCapacity": 2,
+    "UpgradeCapacity": -1,
+    "Upgrades": [
+      "vehicles_optics",
+      "stug_top_gunner"
+    ]
   },
   {
     "PBGID": 63,
@@ -9616,7 +10161,11 @@
       "vehicle",
       "heavy_vehicle"
     ],
-    "SlotPickupCapacity": 2
+    "SlotPickupCapacity": 2,
+    "UpgradeCapacity": -1,
+    "Upgrades": [
+      "vehicles_optics"
+    ]
   },
   {
     "PBGID": 2218,
@@ -9630,7 +10179,6 @@
       "Symbol": "Icons_symbols_vehicle_german_stuka_symbol",
       "Portrait": "Icons_portraits_vehicle_german_stuka_s_portrait"
     },
-    "SquadCost": {},
     "Entities": [
       {
         "EBP": "cargo_plane",
@@ -10196,7 +10744,11 @@
       "heavy_vehicle",
       "heavy_vehicle_icon"
     ],
-    "SlotPickupCapacity": 2
+    "SlotPickupCapacity": 2,
+    "UpgradeCapacity": -1,
+    "Upgrades": [
+      "vehicles_optics"
+    ]
   },
   {
     "PBGID": 76,
@@ -10244,7 +10796,12 @@
       "heavy_vehicle",
       "heavy_vehicle_icon"
     ],
-    "SlotPickupCapacity": 2
+    "SlotPickupCapacity": 2,
+    "UpgradeCapacity": -1,
+    "Upgrades": [
+      "tiger_top_gunner",
+      "vehicles_optics"
+    ]
   },
   {
     "PBGID": 77,
@@ -10294,7 +10851,11 @@
       "heavy_vehicle",
       "heavy_vehicle_icon"
     ],
-    "SlotPickupCapacity": 2
+    "SlotPickupCapacity": 2,
+    "UpgradeCapacity": -1,
+    "Upgrades": [
+      "vehicles_optics"
+    ]
   },
   {
     "PBGID": 78,
@@ -10325,7 +10886,8 @@
       "heavy_vehicle",
       "heavy_vehicle_icon"
     ],
-    "SlotPickupCapacity": 2
+    "SlotPickupCapacity": 2,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 2225,
@@ -10376,7 +10938,12 @@
       "heavy_vehicle",
       "heavy_vehicle_icon"
     ],
-    "SlotPickupCapacity": 2
+    "SlotPickupCapacity": 2,
+    "UpgradeCapacity": -1,
+    "Upgrades": [
+      "tiger_top_gunner_tow",
+      "vehicles_optics"
+    ]
   },
   {
     "PBGID": 2650,
@@ -10426,7 +10993,17 @@
       "rapid_conscription"
     ],
     "SlotPickupCapacity": 6,
-    "CanPickupItems": true
+    "CanPickupItems": true,
+    "UpgradeCapacity": -1,
+    "Upgrades": [
+      "conscript_assault_package_ingame"
+    ],
+    "AppliedUpgrades": [
+      "base_conscript_molotov_unlock_mp",
+      "base_conscript_oorah_unlock_mp",
+      "base_conscript_at_grenade_unlock_mp",
+      "base_conscript_repair_unlock_mp"
+    ]
   },
   {
     "PBGID": 2651,
@@ -10476,7 +11053,17 @@
       "rapid_conscription"
     ],
     "SlotPickupCapacity": 2,
-    "CanPickupItems": true
+    "CanPickupItems": true,
+    "UpgradeCapacity": -1,
+    "Upgrades": [
+      "conscript_assault_package_ingame"
+    ],
+    "AppliedUpgrades": [
+      "base_conscript_molotov_unlock_mp",
+      "base_conscript_oorah_unlock_mp",
+      "base_conscript_at_grenade_unlock_mp",
+      "base_conscript_repair_unlock_mp"
+    ]
   },
   {
     "PBGID": 14497,
@@ -10518,7 +11105,8 @@
       "infantry"
     ],
     "SlotPickupCapacity": 2,
-    "CanPickupItems": true
+    "CanPickupItems": true,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 2653,
@@ -10568,7 +11156,17 @@
       "rapid_conscription"
     ],
     "SlotPickupCapacity": 6,
-    "CanPickupItems": true
+    "CanPickupItems": true,
+    "UpgradeCapacity": -1,
+    "Upgrades": [
+      "conscript_assault_package_ingame"
+    ],
+    "AppliedUpgrades": [
+      "base_conscript_molotov_unlock_mp",
+      "base_conscript_oorah_unlock_mp",
+      "base_conscript_at_grenade_unlock_mp",
+      "base_conscript_repair_unlock_mp"
+    ]
   },
   {
     "PBGID": 80,
@@ -10583,7 +11181,7 @@
       "Portrait": "Icons_portraits_unit_soviet_conscript_s_portrait"
     },
     "SquadCost": {
-      "Manpower": 83334,
+      "Manpower": 83.334,
       "FieldTime": 10
     },
     "Entities": [
@@ -10607,7 +11205,7 @@
       "Portrait": "Icons_portraits_unit_soviet_conscript_s_portrait"
     },
     "SquadCost": {
-      "Manpower": 125001,
+      "Manpower": 125.001,
       "FieldTime": 15
     },
     "Entities": [
@@ -10637,7 +11235,8 @@
     ],
     "Types": [],
     "SlotPickupCapacity": 6,
-    "CanPickupItems": true
+    "CanPickupItems": true,
+    "UpgradeCapacity": 1
   },
   {
     "PBGID": 82,
@@ -10652,7 +11251,7 @@
       "Portrait": "Icons_portraits_unit_soviet_conscript_s_portrait"
     },
     "SquadCost": {
-      "Manpower": 208335,
+      "Manpower": 208.33499,
       "FieldTime": 25
     },
     "Entities": [
@@ -10686,7 +11285,8 @@
     ],
     "Types": [],
     "SlotPickupCapacity": 6,
-    "CanPickupItems": true
+    "CanPickupItems": true,
+    "UpgradeCapacity": 1
   },
   {
     "PBGID": 83,
@@ -10701,7 +11301,7 @@
       "Portrait": "Icons_portraits_unit_soviet_conscript_s_portrait"
     },
     "SquadCost": {
-      "Manpower": 41667,
+      "Manpower": 41.667,
       "FieldTime": 5
     },
     "Entities": [
@@ -10729,7 +11329,8 @@
     ],
     "Types": [],
     "SlotPickupCapacity": 6,
-    "CanPickupItems": true
+    "CanPickupItems": true,
+    "UpgradeCapacity": 1
   },
   {
     "PBGID": 84,
@@ -10823,7 +11424,8 @@
       }
     ],
     "Types": [],
-    "CanPickupItems": true
+    "CanPickupItems": true,
+    "UpgradeCapacity": 1
   },
   {
     "PBGID": 87,
@@ -10868,7 +11470,12 @@
     ],
     "Types": [],
     "SlotPickupCapacity": 11,
-    "CanPickupItems": true
+    "CanPickupItems": true,
+    "UpgradeCapacity": -1,
+    "Upgrades": [
+      "engineer_flamethrower",
+      "engineer_minesweeper"
+    ]
   },
   {
     "PBGID": 88,
@@ -10938,7 +11545,12 @@
     ],
     "Types": [],
     "SlotPickupCapacity": 4,
-    "CanPickupItems": true
+    "CanPickupItems": true,
+    "UpgradeCapacity": -1,
+    "Upgrades": [
+      "engineer_flamethrower",
+      "engineer_minesweeper"
+    ]
   },
   {
     "PBGID": 90,
@@ -10984,7 +11596,11 @@
       "penal_battalion"
     ],
     "SlotPickupCapacity": 6,
-    "CanPickupItems": true
+    "CanPickupItems": true,
+    "UpgradeCapacity": 1,
+    "Upgrades": [
+      "penal_battalion_flamethrower_package"
+    ]
   },
   {
     "PBGID": 91,
@@ -11027,7 +11643,12 @@
       "infantry"
     ],
     "SlotPickupCapacity": 6,
-    "CanPickupItems": true
+    "CanPickupItems": true,
+    "UpgradeCapacity": 1,
+    "Upgrades": [
+      "guard_dp-28_lmg_package",
+      "ptrs_41_at_rifle_package_guard_troop"
+    ]
   },
   {
     "PBGID": 92,
@@ -11073,7 +11694,8 @@
       }
     ],
     "Types": [],
-    "CanPickupItems": true
+    "CanPickupItems": true,
+    "UpgradeCapacity": 1
   },
   {
     "PBGID": 93,
@@ -11112,7 +11734,8 @@
       }
     ],
     "Types": [],
-    "CanPickupItems": true
+    "CanPickupItems": true,
+    "UpgradeCapacity": 1
   },
   {
     "PBGID": 94,
@@ -11156,7 +11779,8 @@
       }
     ],
     "Types": [],
-    "CanPickupItems": true
+    "CanPickupItems": true,
+    "UpgradeCapacity": 1
   },
   {
     "PBGID": 98,
@@ -11185,7 +11809,11 @@
       "shock_troops"
     ],
     "SlotPickupCapacity": 6,
-    "CanPickupItems": true
+    "CanPickupItems": true,
+    "UpgradeCapacity": 1,
+    "AppliedUpgrades": [
+      ""
+    ]
   },
   {
     "PBGID": 99,
@@ -11231,7 +11859,12 @@
       "infantry"
     ],
     "SlotPickupCapacity": 6,
-    "CanPickupItems": true
+    "CanPickupItems": true,
+    "UpgradeCapacity": 1,
+    "Upgrades": [
+      "guard_dp-28_lmg_package",
+      "ptrs_41_at_rifle_package_guard_troop"
+    ]
   },
   {
     "PBGID": 103,
@@ -11277,7 +11910,12 @@
     ],
     "Types": [],
     "SlotPickupCapacity": 4,
-    "CanPickupItems": true
+    "CanPickupItems": true,
+    "UpgradeCapacity": -1,
+    "Upgrades": [
+      "engineer_flamethrower",
+      "engineer_minesweeper"
+    ]
   },
   {
     "PBGID": 104,
@@ -11292,8 +11930,8 @@
       "Portrait": "Icons_portraits_unit_soviet_combat_engineer_s_portrait"
     },
     "SquadCost": {
-      "Manpower": 1700,
-      "FieldTime": 1700
+      "Manpower": 170,
+      "FieldTime": 17
     },
     "Entities": [
       {
@@ -11328,7 +11966,12 @@
       "mobile_infantry"
     ],
     "SlotPickupCapacity": 2,
-    "CanPickupItems": true
+    "CanPickupItems": true,
+    "UpgradeCapacity": -1,
+    "Upgrades": [
+      "engineer_flamethrower_mp",
+      "engineer_minesweeper_mp"
+    ]
   },
   {
     "PBGID": 105,
@@ -11381,7 +12024,11 @@
       "rapid_conscription"
     ],
     "SlotPickupCapacity": 6,
-    "CanPickupItems": true
+    "CanPickupItems": true,
+    "UpgradeCapacity": -1,
+    "Upgrades": [
+      "ppsh-41_sub_machine_gun_upgrade"
+    ]
   },
   {
     "PBGID": 106,
@@ -11432,7 +12079,11 @@
       "rapid_conscription"
     ],
     "SlotPickupCapacity": 2,
-    "CanPickupItems": true
+    "CanPickupItems": true,
+    "UpgradeCapacity": 1,
+    "Upgrades": [
+      "conscript_assault_package_ingame"
+    ]
   },
   {
     "PBGID": 107,
@@ -11486,7 +12137,13 @@
       "rapid_conscription"
     ],
     "SlotPickupCapacity": 6,
-    "CanPickupItems": true
+    "CanPickupItems": true,
+    "UpgradeCapacity": -1,
+    "AppliedUpgrades": [
+      "base_conscript_molotov_unlock",
+      "base_conscript_oorah_unlock",
+      "base_conscript_at_grenade_unlock"
+    ]
   },
   {
     "PBGID": 108,
@@ -11546,7 +12203,19 @@
       "mobile_infantry"
     ],
     "SlotPickupCapacity": 1,
-    "CanPickupItems": true
+    "CanPickupItems": true,
+    "UpgradeCapacity": -1,
+    "Upgrades": [
+      "conscript_assault_package_ingame",
+      "conscript_ptrs_package",
+      "mobilize_reserves_conscript"
+    ],
+    "AppliedUpgrades": [
+      "base_conscript_molotov_unlock_mp",
+      "base_conscript_oorah_unlock_mp",
+      "base_conscript_at_grenade_unlock_mp",
+      "base_conscript_repair_unlock_mp"
+    ]
   },
   {
     "PBGID": 14885,
@@ -11600,7 +12269,13 @@
       "rapid_conscription"
     ],
     "SlotPickupCapacity": 6,
-    "CanPickupItems": true
+    "CanPickupItems": true,
+    "UpgradeCapacity": -1,
+    "AppliedUpgrades": [
+      "base_conscript_molotov_unlock",
+      "base_conscript_oorah_unlock",
+      "base_conscript_at_grenade_unlock"
+    ]
   },
   {
     "PBGID": 109,
@@ -11615,8 +12290,8 @@
       "Portrait": "Icons_portraits_unit_soviet_maxim_hmg_s_portrait"
     },
     "SquadCost": {
-      "Manpower": 805,
-      "FieldTime": 93
+      "Manpower": 242.5,
+      "FieldTime": 25.5
     },
     "IsSyncWeapon": true,
     "Entities": [
@@ -11652,7 +12327,8 @@
       "rapid_conscription",
       "soviet_team_weapons"
     ],
-    "CanPickupItems": true
+    "CanPickupItems": true,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 110,
@@ -11710,7 +12386,14 @@
       "infantry",
       "DSHK"
     ],
-    "CanPickupItems": true
+    "CanPickupItems": true,
+    "UpgradeCapacity": -1,
+    "Upgrades": [
+      "ambush_camou_package"
+    ],
+    "AppliedUpgrades": [
+      "is_manned"
+    ]
   },
   {
     "PBGID": 111,
@@ -11762,7 +12445,8 @@
       "hmg",
       "rapid_conscription"
     ],
-    "CanPickupItems": true
+    "CanPickupItems": true,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 112,
@@ -11820,7 +12504,14 @@
       "team_weapon",
       "infantry"
     ],
-    "CanPickupItems": true
+    "CanPickupItems": true,
+    "UpgradeCapacity": -1,
+    "Upgrades": [
+      "ambush_camou_package"
+    ],
+    "AppliedUpgrades": [
+      "is_manned"
+    ]
   },
   {
     "PBGID": 113,
@@ -11871,7 +12562,8 @@
       "mortar",
       "rapid_conscription"
     ],
-    "CanPickupItems": true
+    "CanPickupItems": true,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 114,
@@ -11927,7 +12619,11 @@
       "team_weapon",
       "infantry"
     ],
-    "CanPickupItems": true
+    "CanPickupItems": true,
+    "UpgradeCapacity": -1,
+    "AppliedUpgrades": [
+      "is_manned"
+    ]
   },
   {
     "PBGID": 115,
@@ -11978,7 +12674,8 @@
       "mortar",
       "rapid_conscription"
     ],
-    "CanPickupItems": true
+    "CanPickupItems": true,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 116,
@@ -12034,7 +12731,11 @@
       "team_weapon",
       "infantry"
     ],
-    "CanPickupItems": true
+    "CanPickupItems": true,
+    "UpgradeCapacity": -1,
+    "AppliedUpgrades": [
+      "is_manned"
+    ]
   },
   {
     "PBGID": 2227,
@@ -12049,7 +12750,7 @@
       "Portrait": "Icons_portraits_unit_soviet_partisan_s_portrait"
     },
     "SquadCost": {
-      "Manpower": 2100,
+      "Manpower": 210,
       "FieldTime": 20
     },
     "Entities": [
@@ -12083,7 +12784,8 @@
       "mobile_infantry"
     ],
     "SlotPickupCapacity": 2,
-    "CanPickupItems": true
+    "CanPickupItems": true,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 2228,
@@ -12098,7 +12800,7 @@
       "Portrait": "Icons_portraits_unit_soviet_partisan_s_portrait"
     },
     "SquadCost": {
-      "Manpower": 2100,
+      "Manpower": 210,
       "FieldTime": 20
     },
     "Entities": [
@@ -12136,7 +12838,8 @@
       "partisan_AT"
     ],
     "SlotPickupCapacity": 2,
-    "CanPickupItems": true
+    "CanPickupItems": true,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 2229,
@@ -12151,7 +12854,7 @@
       "Portrait": "Icons_portraits_unit_soviet_partisan_s_portrait"
     },
     "SquadCost": {
-      "Manpower": 2100,
+      "Manpower": 210,
       "FieldTime": 20
     },
     "Entities": [
@@ -12186,7 +12889,8 @@
       "partisan_AT"
     ],
     "SlotPickupCapacity": 3,
-    "CanPickupItems": true
+    "CanPickupItems": true,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 2230,
@@ -12201,7 +12905,7 @@
       "Portrait": "Icons_portraits_unit_soviet_partisan_s_portrait"
     },
     "SquadCost": {
-      "Manpower": 2100,
+      "Manpower": 210,
       "FieldTime": 20
     },
     "Entities": [
@@ -12235,7 +12939,8 @@
       "mobile_infantry"
     ],
     "SlotPickupCapacity": 2,
-    "CanPickupItems": true
+    "CanPickupItems": true,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 2231,
@@ -12250,7 +12955,7 @@
       "Portrait": "Icons_portraits_unit_soviet_partisan_s_portrait"
     },
     "SquadCost": {
-      "Manpower": 2100,
+      "Manpower": 210,
       "FieldTime": 20
     },
     "Entities": [
@@ -12289,7 +12994,8 @@
       ""
     ],
     "SlotPickupCapacity": 1,
-    "CanPickupItems": true
+    "CanPickupItems": true,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 117,
@@ -12333,7 +13039,8 @@
       }
     ],
     "Types": [],
-    "CanPickupItems": true
+    "CanPickupItems": true,
+    "UpgradeCapacity": 1
   },
   {
     "PBGID": 118,
@@ -12380,7 +13087,8 @@
       }
     ],
     "Types": [],
-    "CanPickupItems": true
+    "CanPickupItems": true,
+    "UpgradeCapacity": 1
   },
   {
     "PBGID": 119,
@@ -12424,7 +13132,8 @@
     ],
     "Types": [],
     "SlotPickupCapacity": 2,
-    "CanPickupItems": true
+    "CanPickupItems": true,
+    "UpgradeCapacity": 1
   },
   {
     "PBGID": 120,
@@ -12468,7 +13177,8 @@
       }
     ],
     "Types": [],
-    "SlotPickupCapacity": 2
+    "SlotPickupCapacity": 2,
+    "UpgradeCapacity": 1
   },
   {
     "PBGID": 121,
@@ -12515,7 +13225,8 @@
       }
     ],
     "Types": [],
-    "CanPickupItems": true
+    "CanPickupItems": true,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 122,
@@ -12565,7 +13276,8 @@
       }
     ],
     "Types": [],
-    "CanPickupItems": true
+    "CanPickupItems": true,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 123,
@@ -12609,7 +13321,8 @@
       }
     ],
     "Types": [],
-    "CanPickupItems": true
+    "CanPickupItems": true,
+    "UpgradeCapacity": 1
   },
   {
     "PBGID": 124,
@@ -12658,7 +13371,8 @@
       }
     ],
     "Types": [],
-    "CanPickupItems": true
+    "CanPickupItems": true,
+    "UpgradeCapacity": 1
   },
   {
     "PBGID": 125,
@@ -12702,7 +13416,8 @@
     ],
     "Types": [],
     "SlotPickupCapacity": 2,
-    "CanPickupItems": true
+    "CanPickupItems": true,
+    "UpgradeCapacity": 1
   },
   {
     "PBGID": 126,
@@ -12746,7 +13461,8 @@
       }
     ],
     "Types": [],
-    "SlotPickupCapacity": 2
+    "SlotPickupCapacity": 2,
+    "UpgradeCapacity": 1
   },
   {
     "PBGID": 127,
@@ -12794,7 +13510,8 @@
       "mortar",
       "rapid_conscription"
     ],
-    "CanPickupItems": true
+    "CanPickupItems": true,
+    "UpgradeCapacity": 1
   },
   {
     "PBGID": 128,
@@ -12845,7 +13562,8 @@
       "mortar",
       "rapid_conscription"
     ],
-    "CanPickupItems": true
+    "CanPickupItems": true,
+    "UpgradeCapacity": 1
   },
   {
     "PBGID": 2232,
@@ -12891,7 +13609,8 @@
     ],
     "Types": [],
     "SlotPickupCapacity": 2,
-    "CanPickupItems": true
+    "CanPickupItems": true,
+    "UpgradeCapacity": 1
   },
   {
     "PBGID": 2233,
@@ -12937,7 +13656,14 @@
     ],
     "Types": [],
     "SlotPickupCapacity": 2,
-    "CanPickupItems": true
+    "CanPickupItems": true,
+    "UpgradeCapacity": 1,
+    "AppliedUpgrades": [
+      "base_conscript_molotov_unlock_mp",
+      "base_conscript_oorah_unlock_mp",
+      "base_conscript_at_grenade_unlock_mp",
+      "base_conscript_repair_unlock_mp"
+    ]
   },
   {
     "PBGID": 2234,
@@ -12984,7 +13710,8 @@
       }
     ],
     "Types": [],
-    "CanPickupItems": true
+    "CanPickupItems": true,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 2235,
@@ -13035,7 +13762,8 @@
       "mortar",
       "rapid_conscription"
     ],
-    "CanPickupItems": true
+    "CanPickupItems": true,
+    "UpgradeCapacity": 1
   },
   {
     "PBGID": 129,
@@ -13079,7 +13807,8 @@
       }
     ],
     "Types": [],
-    "SlotPickupCapacity": 2
+    "SlotPickupCapacity": 2,
+    "UpgradeCapacity": 1
   },
   {
     "PBGID": 130,
@@ -13094,8 +13823,8 @@
       "Portrait": "Icons_portraits_unit_soviet_partisan_s_portrait"
     },
     "SquadCost": {
-      "Manpower": 1900,
-      "FieldTime": 1900
+      "Manpower": 190,
+      "FieldTime": 19
     },
     "Entities": [
       {
@@ -13125,7 +13854,8 @@
       "irregulars",
       "rapid_conscription"
     ],
-    "SlotPickupCapacity": 2
+    "SlotPickupCapacity": 2,
+    "UpgradeCapacity": 1
   },
   {
     "PBGID": 131,
@@ -13173,7 +13903,8 @@
       }
     ],
     "Types": [],
-    "CanPickupItems": true
+    "CanPickupItems": true,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 132,
@@ -13222,7 +13953,8 @@
       "sniper_soviet",
       "rapid_conscription"
     ],
-    "CanPickupItems": true
+    "CanPickupItems": true,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 133,
@@ -13274,7 +14006,8 @@
       "sniper_soviet",
       "rapid_conscription"
     ],
-    "CanPickupItems": true
+    "CanPickupItems": true,
+    "UpgradeCapacity": 1
   },
   {
     "PBGID": 134,
@@ -13324,7 +14057,8 @@
       "rapid_conscription",
       "mobile_infantry"
     ],
-    "CanPickupItems": true
+    "CanPickupItems": true,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 135,
@@ -13338,7 +14072,6 @@
       "Symbol": "Icons_symbols_unit_soviet_officer_symbol",
       "Portrait": "Icons_portraits_unit_soviet_soviet_officer_s_portrait"
     },
-    "SquadCost": {},
     "Entities": [
       {
         "EBP": "commissar_227",
@@ -13347,7 +14080,8 @@
     ],
     "Types": [],
     "SlotPickupCapacity": 6,
-    "CanPickupItems": true
+    "CanPickupItems": true,
+    "UpgradeCapacity": 1
   },
   {
     "PBGID": 174848,
@@ -13363,7 +14097,7 @@
     },
     "SquadCost": {
       "Manpower": 415,
-      "FieldTime": 205
+      "FieldTime": 56.5
     },
     "Entities": [
       {
@@ -13404,7 +14138,8 @@
       "sov_officer"
     ],
     "SlotPickupCapacity": 2,
-    "CanPickupItems": true
+    "CanPickupItems": true,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 14458,
@@ -13453,7 +14188,8 @@
     ],
     "Types": [],
     "SlotPickupCapacity": 6,
-    "CanPickupItems": true
+    "CanPickupItems": true,
+    "UpgradeCapacity": 1
   },
   {
     "PBGID": 2236,
@@ -13483,7 +14219,8 @@
     ],
     "Types": [],
     "SlotPickupCapacity": 2,
-    "CanPickupItems": true
+    "CanPickupItems": true,
+    "UpgradeCapacity": 1
   },
   {
     "PBGID": 14207,
@@ -13517,7 +14254,8 @@
     ],
     "Types": [],
     "SlotPickupCapacity": 6,
-    "CanPickupItems": true
+    "CanPickupItems": true,
+    "UpgradeCapacity": 1
   },
   {
     "PBGID": 136,
@@ -13543,7 +14281,8 @@
     ],
     "Types": [],
     "SlotPickupCapacity": 6,
-    "CanPickupItems": true
+    "CanPickupItems": true,
+    "UpgradeCapacity": 1
   },
   {
     "PBGID": 137,
@@ -13572,7 +14311,8 @@
     ],
     "Types": [],
     "SlotPickupCapacity": 2,
-    "CanPickupItems": true
+    "CanPickupItems": true,
+    "UpgradeCapacity": 1
   },
   {
     "PBGID": 187994,
@@ -13588,7 +14328,7 @@
     },
     "SquadCost": {
       "Manpower": 330,
-      "FieldTime": 330
+      "FieldTime": 33
     },
     "Entities": [
       {
@@ -13626,7 +14366,13 @@
       "mobile_infantry"
     ],
     "SlotPickupCapacity": 3,
-    "CanPickupItems": true
+    "CanPickupItems": true,
+    "UpgradeCapacity": -1,
+    "Upgrades": [
+      "guard_airbourne_dp-28_lmg_package_mp",
+      "guard_dp-28_lmg_package_airbourne_1_mp",
+      "ppsh-41_sub_airbourne_upgrade_mp"
+    ]
   },
   {
     "PBGID": 138,
@@ -13675,7 +14421,13 @@
       "rapid_conscription"
     ],
     "SlotPickupCapacity": 6,
-    "CanPickupItems": true
+    "CanPickupItems": true,
+    "UpgradeCapacity": -1,
+    "Upgrades": [
+      "guard_dp-28_lmg_package",
+      "ptrs_41_at_rifle_package_guard_troop",
+      "ptrs_41_at_rifle_package_guard_troop_better_balanced"
+    ]
   },
   {
     "PBGID": 16658,
@@ -13691,7 +14443,7 @@
     },
     "SquadCost": {
       "Manpower": 330,
-      "FieldTime": 330
+      "FieldTime": 33
     },
     "Entities": [
       {
@@ -13725,7 +14477,8 @@
       "mobile_infantry"
     ],
     "SlotPickupCapacity": 2,
-    "CanPickupItems": true
+    "CanPickupItems": true,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 139,
@@ -13741,7 +14494,7 @@
     },
     "SquadCost": {
       "Manpower": 330,
-      "FieldTime": 330
+      "FieldTime": 33
     },
     "Entities": [
       {
@@ -13775,7 +14528,17 @@
       "mobile_infantry"
     ],
     "SlotPickupCapacity": 4,
-    "CanPickupItems": true
+    "CanPickupItems": true,
+    "UpgradeCapacity": -1,
+    "Upgrades": [
+      "guard_dp-28_lmg_package_mp",
+      "guard_dp-28_lmg_package_1_mp",
+      "guard_ptrs_package_1_mp",
+      "guard_ptrs_package_2_mp"
+    ],
+    "AppliedUpgrades": [
+      "ptrs_41_at_rifle_package_guard_troop_mp"
+    ]
   },
   {
     "PBGID": 140,
@@ -13826,7 +14589,11 @@
       "rapid_conscription"
     ],
     "SlotPickupCapacity": 6,
-    "CanPickupItems": true
+    "CanPickupItems": true,
+    "UpgradeCapacity": -1,
+    "Upgrades": [
+      "penal_battalion_flamethrower_package"
+    ]
   },
   {
     "PBGID": 141,
@@ -13842,7 +14609,7 @@
     },
     "SquadCost": {
       "Manpower": 300,
-      "FieldTime": 324
+      "FieldTime": 32.4
     },
     "Entities": [
       {
@@ -13879,7 +14646,12 @@
       "mobile_infantry"
     ],
     "SlotPickupCapacity": 2,
-    "CanPickupItems": true
+    "CanPickupItems": true,
+    "UpgradeCapacity": -1,
+    "Upgrades": [
+      "penal_ptrs_package_1_mp",
+      "penal_ptrs_package_2_mp"
+    ]
   },
   {
     "PBGID": 142,
@@ -13928,7 +14700,11 @@
       "rapid_conscription"
     ],
     "SlotPickupCapacity": 6,
-    "CanPickupItems": true
+    "CanPickupItems": true,
+    "UpgradeCapacity": -1,
+    "AppliedUpgrades": [
+      ""
+    ]
   },
   {
     "PBGID": 143,
@@ -13944,7 +14720,7 @@
     },
     "SquadCost": {
       "Manpower": 360,
-      "FieldTime": 330
+      "FieldTime": 33
     },
     "Entities": [
       {
@@ -13977,7 +14753,11 @@
       "mobile_infantry"
     ],
     "SlotPickupCapacity": 2,
-    "CanPickupItems": true
+    "CanPickupItems": true,
+    "UpgradeCapacity": -1,
+    "AppliedUpgrades": [
+      ""
+    ]
   },
   {
     "PBGID": 188143,
@@ -13991,7 +14771,6 @@
       "Symbol": "Icons_symbols_vehicle_german_stuka_symbol",
       "Portrait": "Icons_portraits_vehicle_german_stuka_s_portrait"
     },
-    "SquadCost": {},
     "Entities": [
       {
         "EBP": "cargo_plane_medical",
@@ -14375,7 +15154,11 @@
       "heavy_vehicle",
       "heavy_vehicle_icon"
     ],
-    "SlotPickupCapacity": 3
+    "SlotPickupCapacity": 3,
+    "UpgradeCapacity": -1,
+    "Upgrades": [
+      "is2_top_gunner"
+    ]
   },
   {
     "PBGID": 155,
@@ -14425,7 +15208,8 @@
       "heavy_vehicle",
       "heavy_vehicle_icon"
     ],
-    "SlotPickupCapacity": 3
+    "SlotPickupCapacity": 3,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 4235,
@@ -14476,7 +15260,11 @@
       "heavy_vehicle",
       "heavy_vehicle_icon"
     ],
-    "SlotPickupCapacity": 3
+    "SlotPickupCapacity": 3,
+    "UpgradeCapacity": -1,
+    "Upgrades": [
+      "is2_top_gunner_mp"
+    ]
   },
   {
     "PBGID": 156,
@@ -14525,7 +15313,11 @@
       "heavy_vehicle",
       "heavy_vehicle_icon"
     ],
-    "SlotPickupCapacity": 2
+    "SlotPickupCapacity": 2,
+    "UpgradeCapacity": -1,
+    "Upgrades": [
+      "isu152_top_gunner"
+    ]
   },
   {
     "PBGID": 157,
@@ -14577,7 +15369,8 @@
       "heavy_vehicle",
       "heavy_vehicle_icon"
     ],
-    "SlotPickupCapacity": 2
+    "SlotPickupCapacity": 2,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 158,
@@ -14624,7 +15417,8 @@
       "katyusha",
       "artillery"
     ],
-    "SlotPickupCapacity": 6
+    "SlotPickupCapacity": 6,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 159,
@@ -14674,7 +15468,8 @@
       "artillery",
       "vehicle"
     ],
-    "SlotPickupCapacity": 6
+    "SlotPickupCapacity": 6,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 160,
@@ -14722,7 +15517,8 @@
       "heavy_tank",
       "heavy_vehicle"
     ],
-    "SlotPickupCapacity": 3
+    "SlotPickupCapacity": 3,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 2238,
@@ -14771,7 +15567,8 @@
       "vehicle",
       "heavy_vehicle"
     ],
-    "SlotPickupCapacity": 3
+    "SlotPickupCapacity": 3,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 161,
@@ -14821,7 +15618,8 @@
       "vehicle",
       "heavy_vehicle"
     ],
-    "SlotPickupCapacity": 3
+    "SlotPickupCapacity": 3,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 162,
@@ -14865,7 +15663,8 @@
       "heavy_tank",
       "heavy_vehicle"
     ],
-    "SlotPickupCapacity": 3
+    "SlotPickupCapacity": 3,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 2239,
@@ -14914,7 +15713,8 @@
       "vehicle",
       "heavy_vehicle"
     ],
-    "SlotPickupCapacity": 3
+    "SlotPickupCapacity": 3,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 2240,
@@ -14964,7 +15764,8 @@
       "vehicle",
       "heavy_vehicle"
     ],
-    "SlotPickupCapacity": 3
+    "SlotPickupCapacity": 3,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 2241,
@@ -15014,7 +15815,8 @@
       "vehicle",
       "heavy_vehicle"
     ],
-    "SlotPickupCapacity": 3
+    "SlotPickupCapacity": 3,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 14466,
@@ -15064,7 +15866,8 @@
       "vehicle",
       "heavy_vehicle"
     ],
-    "SlotPickupCapacity": 3
+    "SlotPickupCapacity": 3,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 163,
@@ -15112,7 +15915,8 @@
       "heavy_tank",
       "heavy_vehicle"
     ],
-    "SlotPickupCapacity": 3
+    "SlotPickupCapacity": 3,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 164,
@@ -15162,7 +15966,8 @@
       "vehicle",
       "heavy_vehicle"
     ],
-    "SlotPickupCapacity": 3
+    "SlotPickupCapacity": 3,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 165,
@@ -15210,7 +16015,8 @@
     ],
     "Types": [
       "team_weapon"
-    ]
+    ],
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 3191,
@@ -15258,7 +16064,11 @@
       "team_weapon",
       "b4_howtizer"
     ],
-    "SlotPickupCapacity": 1
+    "SlotPickupCapacity": 1,
+    "UpgradeCapacity": -1,
+    "AppliedUpgrades": [
+      "is_manned"
+    ]
   },
   {
     "PBGID": 166,
@@ -15306,7 +16116,8 @@
     ],
     "Types": [
       "team_weapon"
-    ]
+    ],
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 167,
@@ -15356,7 +16167,8 @@
       "ml_20_howitzer",
       "artillery",
       "team_weapon"
-    ]
+    ],
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 3192,
@@ -15408,6 +16220,10 @@
       "ml_20_howitzer",
       "artillery",
       "team_weapon"
+    ],
+    "UpgradeCapacity": -1,
+    "AppliedUpgrades": [
+      "is_manned"
     ]
   },
   {
@@ -15456,7 +16272,8 @@
       "m3a1_scout_car",
       "light_vehicle"
     ],
-    "SlotPickupCapacity": 1
+    "SlotPickupCapacity": 1,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 170,
@@ -15506,7 +16323,8 @@
       "light_vehicle",
       "vehicle"
     ],
-    "SlotPickupCapacity": 1
+    "SlotPickupCapacity": 1,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 171,
@@ -15554,7 +16372,8 @@
       "m5_halftrack",
       "light_vehicle"
     ],
-    "SlotPickupCapacity": 6
+    "SlotPickupCapacity": 6,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 172,
@@ -15604,7 +16423,8 @@
       "light_vehicle",
       "vehicle"
     ],
-    "SlotPickupCapacity": 6
+    "SlotPickupCapacity": 6,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 16656,
@@ -15654,7 +16474,8 @@
       "light_vehicle",
       "vehicle"
     ],
-    "SlotPickupCapacity": 6
+    "SlotPickupCapacity": 6,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 188041,
@@ -15690,7 +16511,6 @@
       "Symbol": "Icons_symbols_vehicle_german_stuka_symbol",
       "Portrait": "Icons_portraits_vehicle_german_stuka_s_portrait"
     },
-    "SquadCost": {},
     "Entities": [
       {
         "EBP": "cargo_plane_soviet",
@@ -15711,7 +16531,6 @@
       "Symbol": "Icons_symbols_vehicle_soviet_il2_symbol",
       "Portrait": "Icons_portraits_vehicle_soviet_il2_sturmovik_aircraft_s_portrait"
     },
-    "SquadCost": {},
     "Entities": [
       {
         "EBP": "cargo_plane",
@@ -15766,7 +16585,8 @@
       "vehicle",
       "heavy_vehicle"
     ],
-    "SlotPickupCapacity": 2
+    "SlotPickupCapacity": 2,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 173,
@@ -15817,7 +16637,8 @@
       "at_gun",
       "team_weapon"
     ],
-    "CanPickupItems": true
+    "CanPickupItems": true,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 174,
@@ -15871,7 +16692,11 @@
       "soviet_team_weapons",
       "team_weapon"
     ],
-    "CanPickupItems": true
+    "CanPickupItems": true,
+    "UpgradeCapacity": -1,
+    "AppliedUpgrades": [
+      "is_manned"
+    ]
   },
   {
     "PBGID": 175,
@@ -15922,7 +16747,8 @@
       "at_gun",
       "team_weapon"
     ],
-    "CanPickupItems": true
+    "CanPickupItems": true,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 176,
@@ -15976,7 +16802,11 @@
       "soviet_team_weapons",
       "team_weapon"
     ],
-    "CanPickupItems": true
+    "CanPickupItems": true,
+    "UpgradeCapacity": -1,
+    "AppliedUpgrades": [
+      "is_manned"
+    ]
   },
   {
     "PBGID": 177,
@@ -16023,7 +16853,8 @@
       "su-85",
       "assault_gun"
     ],
-    "SlotPickupCapacity": 2
+    "SlotPickupCapacity": 2,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 178,
@@ -16073,7 +16904,8 @@
       "vehicle",
       "light_vehicle"
     ],
-    "SlotPickupCapacity": 2
+    "SlotPickupCapacity": 2,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 4234,
@@ -16123,7 +16955,8 @@
       "vehicle",
       "light_vehicle"
     ],
-    "SlotPickupCapacity": 2
+    "SlotPickupCapacity": 2,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 179,
@@ -16172,7 +17005,8 @@
       "assault_gun",
       "heavy_vehicle"
     ],
-    "SlotPickupCapacity": 2
+    "SlotPickupCapacity": 2,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 180,
@@ -16223,7 +17057,8 @@
       "vehicle",
       "heavy_vehicle"
     ],
-    "SlotPickupCapacity": 2
+    "SlotPickupCapacity": 2,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 181,
@@ -16273,7 +17108,8 @@
       "t-70m",
       "light_vehicle"
     ],
-    "SlotPickupCapacity": 3
+    "SlotPickupCapacity": 3,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 182,
@@ -16323,7 +17159,8 @@
       "light_vehicle",
       "vehicle"
     ],
-    "SlotPickupCapacity": 3
+    "SlotPickupCapacity": 3,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 183,
@@ -16372,7 +17209,8 @@
       "medium_tank",
       "heavy_vehicle"
     ],
-    "SlotPickupCapacity": 2
+    "SlotPickupCapacity": 2,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 184,
@@ -16423,7 +17261,8 @@
       "vehicle",
       "heavy_vehicle"
     ],
-    "SlotPickupCapacity": 2
+    "SlotPickupCapacity": 2,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 3478,
@@ -16474,7 +17313,8 @@
       "vehicle",
       "heavy_vehicle"
     ],
-    "SlotPickupCapacity": 2
+    "SlotPickupCapacity": 2,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 185,
@@ -16523,7 +17363,8 @@
       "medium_tank",
       "heavy_vehicle"
     ],
-    "SlotPickupCapacity": 2
+    "SlotPickupCapacity": 2,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 186,
@@ -16574,7 +17415,8 @@
       "vehicle",
       "heavy_vehicle"
     ],
-    "SlotPickupCapacity": 2
+    "SlotPickupCapacity": 2,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 187,
@@ -16606,7 +17448,8 @@
       "m5_halftrack",
       "light_vehicle"
     ],
-    "SlotPickupCapacity": 6
+    "SlotPickupCapacity": 6,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 188,
@@ -16640,7 +17483,8 @@
       "light_vehicle",
       "vehicle"
     ],
-    "SlotPickupCapacity": 6
+    "SlotPickupCapacity": 6,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 188017,
@@ -16748,7 +17592,13 @@
       "wg_unit"
     ],
     "SlotPickupCapacity": 2,
-    "CanPickupItems": true
+    "CanPickupItems": true,
+    "UpgradeCapacity": -1,
+    "Upgrades": [
+      "assault_pioneer_repair_upgrade",
+      "volks_flamethrower_mp",
+      "assault_pioneer_combat_upgrade"
+    ]
   },
   {
     "PBGID": 2657,
@@ -16764,7 +17614,7 @@
     },
     "SquadCost": {
       "Manpower": 288,
-      "FieldTime": 380
+      "FieldTime": 38
     },
     "Entities": [
       {
@@ -16807,7 +17657,11 @@
       "wg_unit"
     ],
     "SlotPickupCapacity": 2,
-    "CanPickupItems": true
+    "CanPickupItems": true,
+    "UpgradeCapacity": -1,
+    "Upgrades": [
+      "fallschirmjager_gewhr_42"
+    ]
   },
   {
     "PBGID": 2658,
@@ -16856,7 +17710,8 @@
       }
     ],
     "Types": [],
-    "SlotPickupCapacity": 2
+    "SlotPickupCapacity": 2,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 15190,
@@ -16918,7 +17773,8 @@
       "wg_unit"
     ],
     "SlotPickupCapacity": 2,
-    "CanPickupItems": true
+    "CanPickupItems": true,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 16743,
@@ -16981,7 +17837,13 @@
       "infantry"
     ],
     "SlotPickupCapacity": 2,
-    "CanPickupItems": true
+    "CanPickupItems": true,
+    "UpgradeCapacity": -1,
+    "Upgrades": [
+      "light_infantry_package",
+      "ambush_camou_package",
+      "light_infantry_sniper_g43_mp"
+    ]
   },
   {
     "PBGID": 2665,
@@ -17040,7 +17902,12 @@
       "wg_unit"
     ],
     "SlotPickupCapacity": 2,
-    "CanPickupItems": true
+    "CanPickupItems": true,
+    "UpgradeCapacity": -1,
+    "Upgrades": [
+      "waffen_infrared_stg44",
+      "waffen_mg34_lmg_mp"
+    ]
   },
   {
     "PBGID": 2663,
@@ -17056,7 +17923,7 @@
     },
     "SquadCost": {
       "Manpower": 270,
-      "FieldTime": 240
+      "FieldTime": 24
     },
     "Entities": [
       {
@@ -17098,7 +17965,13 @@
       "wg_unit"
     ],
     "SlotPickupCapacity": 2,
-    "CanPickupItems": true
+    "CanPickupItems": true,
+    "UpgradeCapacity": -1,
+    "Upgrades": [
+      "panzerfusilier_g43",
+      "panzerfusillier_panzershreck_atw_item_mp",
+      "panzerfusillier_panzershreck_atw_item_1_schrek_mp"
+    ]
   },
   {
     "PBGID": 17092,
@@ -17143,6 +18016,11 @@
     "Types": [
       "pz_grenadiers",
       "infantry"
+    ],
+    "UpgradeCapacity": -1,
+    "Upgrades": [
+      "light_infantry_package",
+      "ambush_camou_package"
     ]
   },
   {
@@ -17159,7 +18037,7 @@
     },
     "SquadCost": {
       "Manpower": 260,
-      "FieldTime": 240
+      "FieldTime": 24
     },
     "Entities": [
       {
@@ -17202,7 +18080,12 @@
       "wg_unit"
     ],
     "SlotPickupCapacity": 2,
-    "CanPickupItems": true
+    "CanPickupItems": true,
+    "UpgradeCapacity": -1,
+    "Upgrades": [
+      "volks_stg44_upgrade",
+      "volks_cqc_upgrade"
+    ]
   },
   {
     "PBGID": 2667,
@@ -17218,7 +18101,7 @@
     },
     "SquadCost": {
       "Manpower": 312,
-      "FieldTime": 1443
+      "FieldTime": 32.25
     },
     "IsSyncWeapon": true,
     "Entities": [
@@ -17265,7 +18148,11 @@
       "team_weapon",
       "wg_unit"
     ],
-    "SlotPickupCapacity": 2
+    "SlotPickupCapacity": 2,
+    "UpgradeCapacity": -1,
+    "AppliedUpgrades": [
+      "is_manned"
+    ]
   },
   {
     "PBGID": 2669,
@@ -17281,7 +18168,7 @@
     },
     "SquadCost": {
       "Manpower": 290,
-      "FieldTime": 3100
+      "FieldTime": 31
     },
     "IsSyncWeapon": true,
     "Entities": [
@@ -17341,7 +18228,11 @@
       "team_weapon",
       "wg_unit"
     ],
-    "CanPickupItems": true
+    "CanPickupItems": true,
+    "UpgradeCapacity": -1,
+    "AppliedUpgrades": [
+      "is_manned"
+    ]
   },
   {
     "PBGID": 15567,
@@ -17358,7 +18249,7 @@
     "SquadCost": {
       "Manpower": 220,
       "Fuel": 20,
-      "FieldTime": 1440
+      "FieldTime": 103.5
     },
     "IsSyncWeapon": true,
     "Entities": [
@@ -17379,7 +18270,11 @@
       "wg_unit",
       "team_weapon"
     ],
-    "CanPickupItems": true
+    "CanPickupItems": true,
+    "UpgradeCapacity": -1,
+    "AppliedUpgrades": [
+      "is_manned"
+    ]
   },
   {
     "PBGID": 16999,
@@ -17395,7 +18290,7 @@
     },
     "SquadCost": {
       "Manpower": 130,
-      "FieldTime": 1350
+      "FieldTime": 13.5
     },
     "IsSyncWeapon": true,
     "Entities": [
@@ -17416,7 +18311,11 @@
       "wg_unit",
       "team_weapon"
     ],
-    "SlotPickupCapacity": 1
+    "SlotPickupCapacity": 1,
+    "UpgradeCapacity": -1,
+    "AppliedUpgrades": [
+      "is_manned"
+    ]
   },
   {
     "PBGID": 2659,
@@ -17432,7 +18331,7 @@
     },
     "SquadCost": {
       "Manpower": 240,
-      "FieldTime": 240
+      "FieldTime": 24
     },
     "IsSyncWeapon": true,
     "Entities": [
@@ -17479,7 +18378,11 @@
       "infantry",
       "wg_unit"
     ],
-    "CanPickupItems": true
+    "CanPickupItems": true,
+    "UpgradeCapacity": -1,
+    "AppliedUpgrades": [
+      "is_manned"
+    ]
   },
   {
     "PBGID": 2681,
@@ -17495,7 +18398,7 @@
     },
     "SquadCost": {
       "Manpower": 270,
-      "FieldTime": 1924
+      "FieldTime": 43
     },
     "IsSyncWeapon": true,
     "Entities": [
@@ -17553,7 +18456,11 @@
       "team_weapon",
       "wg_unit"
     ],
-    "SlotPickupCapacity": 2
+    "SlotPickupCapacity": 2,
+    "UpgradeCapacity": -1,
+    "AppliedUpgrades": [
+      "is_manned"
+    ]
   },
   {
     "PBGID": 15617,
@@ -17569,7 +18476,7 @@
     },
     "SquadCost": {
       "Manpower": 250,
-      "FieldTime": 1906
+      "FieldTime": 25
     },
     "IsSyncWeapon": true,
     "Entities": [
@@ -17631,7 +18538,14 @@
       "team_weapon",
       "infantry"
     ],
-    "CanPickupItems": true
+    "CanPickupItems": true,
+    "UpgradeCapacity": -1,
+    "Upgrades": [
+      "ambush_camou_package"
+    ],
+    "AppliedUpgrades": [
+      "is_manned"
+    ]
   },
   {
     "PBGID": 2661,
@@ -17647,7 +18561,7 @@
     },
     "SquadCost": {
       "Manpower": 251,
-      "FieldTime": 255
+      "FieldTime": 25.5
     },
     "IsSyncWeapon": true,
     "Entities": [
@@ -17716,7 +18630,14 @@
       "infantry",
       "wg_unit"
     ],
-    "CanPickupItems": true
+    "CanPickupItems": true,
+    "UpgradeCapacity": -1,
+    "Upgrades": [
+      "ambush_camou_package"
+    ],
+    "AppliedUpgrades": [
+      "is_manned"
+    ]
   },
   {
     "PBGID": 16772,
@@ -17733,7 +18654,7 @@
     "SquadCost": {
       "Manpower": 350,
       "Fuel": 45,
-      "FieldTime": 372
+      "FieldTime": 210
     },
     "IsSyncWeapon": true,
     "Entities": [
@@ -17789,7 +18710,8 @@
       "german_team_weapons",
       "team_weapon"
     ],
-    "SlotPickupCapacity": 1
+    "SlotPickupCapacity": 1,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 89447,
@@ -17820,7 +18742,8 @@
       "222_armored_car",
       "light_vehicle",
       "vehicle"
-    ]
+    ],
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 16782,
@@ -17888,7 +18811,8 @@
       "light_vehicle",
       "vehicle"
     ],
-    "SlotPickupCapacity": 6
+    "SlotPickupCapacity": 6,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 2671,
@@ -17957,7 +18881,8 @@
       "vehicle",
       "wg_unit"
     ],
-    "SlotPickupCapacity": 6
+    "SlotPickupCapacity": 6,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 2672,
@@ -17996,7 +18921,8 @@
       "wg_unit",
       "infrared"
     ],
-    "SlotPickupCapacity": 6
+    "SlotPickupCapacity": 6,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 14924,
@@ -18032,7 +18958,8 @@
       "wg_unit",
       "infrared"
     ],
-    "SlotPickupCapacity": 6
+    "SlotPickupCapacity": 6,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 17097,
@@ -18080,7 +19007,11 @@
       "light_vehicle",
       "vehicle"
     ],
-    "SlotPickupCapacity": 6
+    "SlotPickupCapacity": 6,
+    "UpgradeCapacity": -1,
+    "Upgrades": [
+      "vehicles_optics"
+    ]
   },
   {
     "PBGID": 2675,
@@ -18151,7 +19082,8 @@
       "vehicle",
       "wg_unit"
     ],
-    "SlotPickupCapacity": 6
+    "SlotPickupCapacity": 6,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 95055,
@@ -18223,7 +19155,11 @@
       "wg_unit",
       "hetzer"
     ],
-    "SlotPickupCapacity": 2
+    "SlotPickupCapacity": 2,
+    "UpgradeCapacity": -1,
+    "Upgrades": [
+      "tank_commander"
+    ]
   },
   {
     "PBGID": 105973,
@@ -18283,6 +19219,10 @@
       "fh18_howitzer",
       "artillery",
       "team_weapon"
+    ],
+    "UpgradeCapacity": -1,
+    "AppliedUpgrades": [
+      "is_manned"
     ]
   },
   {
@@ -18354,7 +19294,8 @@
       "heavy_vehicle",
       "wg_unit"
     ],
-    "SlotPickupCapacity": 2
+    "SlotPickupCapacity": 2,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 2678,
@@ -18427,7 +19368,8 @@
       "wg_jagdtiger",
       "wg_unit"
     ],
-    "SlotPickupCapacity": 2
+    "SlotPickupCapacity": 2,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 16603,
@@ -18501,7 +19443,11 @@
       "heavy_vehicle_icon",
       "wg_unit"
     ],
-    "SlotPickupCapacity": 2
+    "SlotPickupCapacity": 2,
+    "UpgradeCapacity": -1,
+    "Upgrades": [
+      "king_tiger_top_gunner_mp"
+    ]
   },
   {
     "PBGID": 2679,
@@ -18574,7 +19520,11 @@
       "heavy_vehicle_icon",
       "wg_unit"
     ],
-    "SlotPickupCapacity": 2
+    "SlotPickupCapacity": 2,
+    "UpgradeCapacity": -1,
+    "Upgrades": [
+      "tank_commander"
+    ]
   },
   {
     "PBGID": 2680,
@@ -18642,7 +19592,8 @@
       "vehicle",
       "wg_unit"
     ],
-    "SlotPickupCapacity": 2
+    "SlotPickupCapacity": 2,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 12741830,
@@ -18674,7 +19625,8 @@
       "light_vehicle",
       "vehicle"
     ],
-    "SlotPickupCapacity": 6
+    "SlotPickupCapacity": 6,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 16747,
@@ -18743,7 +19695,11 @@
       "vehicle",
       "heavy_vehicle"
     ],
-    "SlotPickupCapacity": 2
+    "SlotPickupCapacity": 2,
+    "UpgradeCapacity": -1,
+    "Upgrades": [
+      "vehicles_optics"
+    ]
   },
   {
     "PBGID": 2683,
@@ -18816,7 +19772,11 @@
       "heavy_vehicle_icon",
       "wg_unit"
     ],
-    "SlotPickupCapacity": 2
+    "SlotPickupCapacity": 2,
+    "UpgradeCapacity": -1,
+    "Upgrades": [
+      "tank_commander"
+    ]
   },
   {
     "PBGID": 3385,
@@ -18887,7 +19847,11 @@
       "heavy_vehicle",
       "heavy_vehicle_icon"
     ],
-    "SlotPickupCapacity": 2
+    "SlotPickupCapacity": 2,
+    "UpgradeCapacity": -1,
+    "Upgrades": [
+      "vehicles_optics"
+    ]
   },
   {
     "PBGID": 2684,
@@ -18956,7 +19920,8 @@
       "vehicle",
       "wg_unit"
     ],
-    "SlotPickupCapacity": 3
+    "SlotPickupCapacity": 3,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 17079,
@@ -19028,7 +19993,11 @@
       "heavy_vehicle",
       "wg_unit"
     ],
-    "SlotPickupCapacity": 2
+    "SlotPickupCapacity": 2,
+    "UpgradeCapacity": -1,
+    "Upgrades": [
+      "tank_commander"
+    ]
   },
   {
     "PBGID": 15565,
@@ -19042,7 +20011,6 @@
       "Symbol": "Icons_symbols_vehicle_german_stuka_symbol",
       "Portrait": "Icons_portraits_vehicle_german_stuka_s_portrait"
     },
-    "SquadCost": {},
     "Entities": [
       {
         "EBP": "ju52_paratrooper_plane",
@@ -19063,7 +20031,6 @@
       "Symbol": "Icons_symbols_vehicle_german_stuka_symbol",
       "Portrait": "Icons_portraits_vehicle_german_stuka_s_portrait"
     },
-    "SquadCost": {},
     "Entities": [
       {
         "EBP": "ju52_paratrooper_plane",
@@ -19140,7 +20107,11 @@
       "vehicle",
       "wg_unit"
     ],
-    "SlotPickupCapacity": 2
+    "SlotPickupCapacity": 2,
+    "UpgradeCapacity": -1,
+    "Upgrades": [
+      "vehicles_optics"
+    ]
   },
   {
     "PBGID": 176136,
@@ -19208,7 +20179,11 @@
       "light_vehicle",
       "vehicle"
     ],
-    "SlotPickupCapacity": 2
+    "SlotPickupCapacity": 2,
+    "UpgradeCapacity": -1,
+    "Upgrades": [
+      "vehicles_optics"
+    ]
   },
   {
     "PBGID": 176680,
@@ -19305,7 +20280,8 @@
       "heavy_vehicle_icon",
       "wg_unit"
     ],
-    "SlotPickupCapacity": 2
+    "SlotPickupCapacity": 2,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 2689,
@@ -19344,7 +20320,8 @@
       "wg_unit",
       "sws_truck"
     ],
-    "SlotPickupCapacity": 6
+    "SlotPickupCapacity": 6,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 14859,
@@ -19378,7 +20355,8 @@
       "vehicle",
       "wg_unit"
     ],
-    "SlotPickupCapacity": 6
+    "SlotPickupCapacity": 6,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 188752,
@@ -19451,7 +20429,11 @@
       "heavy_vehicle",
       "heavy_vehicle_icon"
     ],
-    "SlotPickupCapacity": 2
+    "SlotPickupCapacity": 2,
+    "UpgradeCapacity": -1,
+    "Upgrades": [
+      "vehicles_optics"
+    ]
   },
   {
     "PBGID": 18525,
@@ -19470,6 +20452,7 @@
       "Fuel": 110,
       "FieldTime": 55
     },
+    "HasCrew": true,
     "Entities": [
       {
         "EBP": "m4a3_sherman_demo_burnout",
@@ -19500,7 +20483,8 @@
       "heavy_vehicle",
       "aef_unit"
     ],
-    "SlotPickupCapacity": 2
+    "SlotPickupCapacity": 2,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 16817,
@@ -19525,7 +20509,6 @@
       }
     ],
     "Abilities": [
-      "vehicle_decrew_generic_mp",
       "blizzard_effect",
       "riflemen_defensive",
       "cover_specialization_hunker_down",
@@ -19553,7 +20536,11 @@
       "aef_unit"
     ],
     "SlotPickupCapacity": 4,
-    "CanPickupItems": true
+    "CanPickupItems": true,
+    "UpgradeCapacity": -1,
+    "Upgrades": [
+      "cav_riflemen_stg_upg"
+    ]
   },
   {
     "PBGID": 14449,
@@ -19595,6 +20582,7 @@
       "Fuel": 25,
       "FieldTime": 35
     },
+    "HasCrew": true,
     "Entities": [
       {
         "EBP": "m3_halftrack_mp",
@@ -19624,7 +20612,8 @@
       "vehicle",
       "aef_unit"
     ],
-    "SlotPickupCapacity": 6
+    "SlotPickupCapacity": 6,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 16464,
@@ -19924,7 +20913,8 @@
       "aef_unit"
     ],
     "SlotPickupCapacity": 6,
-    "CanPickupItems": true
+    "CanPickupItems": true,
+    "UpgradeCapacity": 1
   },
   {
     "PBGID": 6,
@@ -19939,8 +20929,8 @@
       "Portrait": "Icons_portraits_unit_german_grenadiers_s_portrait"
     },
     "SquadCost": {
-      "Manpower": 1915,
-      "FieldTime": 229
+      "Manpower": 227.5,
+      "FieldTime": 26.5
     },
     "Entities": [
       {
@@ -19971,7 +20961,12 @@
       "infantry"
     ],
     "SlotPickupCapacity": 4,
-    "CanPickupItems": true
+    "CanPickupItems": true,
+    "UpgradeCapacity": 2,
+    "Upgrades": [
+      "grenadier_mg42_lmg",
+      "light_infantry_package"
+    ]
   },
   {
     "PBGID": 7,
@@ -20018,7 +21013,8 @@
     ],
     "Types": [],
     "SlotPickupCapacity": 6,
-    "CanPickupItems": true
+    "CanPickupItems": true,
+    "UpgradeCapacity": 1
   },
   {
     "PBGID": 8,
@@ -20033,8 +21029,8 @@
       "Portrait": "Icons_portraits_unit_german_panzer_grenadiers_s_portrait"
     },
     "SquadCost": {
-      "Manpower": 1915,
-      "FieldTime": 229
+      "Manpower": 227.5,
+      "FieldTime": 26.5
     },
     "Entities": [
       {
@@ -20065,7 +21061,12 @@
       "infantry"
     ],
     "SlotPickupCapacity": 4,
-    "CanPickupItems": true
+    "CanPickupItems": true,
+    "UpgradeCapacity": -1,
+    "Upgrades": [
+      "panzer_grenadier_panzershreck_atw_item",
+      "light_infantry_package"
+    ]
   },
   {
     "PBGID": 2216,
@@ -20112,7 +21113,8 @@
       "medium_tank",
       "heavy_vehicle"
     ],
-    "SlotPickupCapacity": 2
+    "SlotPickupCapacity": 2,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 95,
@@ -20141,7 +21143,11 @@
     ],
     "Types": [],
     "SlotPickupCapacity": 4,
-    "CanPickupItems": true
+    "CanPickupItems": true,
+    "UpgradeCapacity": 1,
+    "Upgrades": [
+      "engineer_flamethrower"
+    ]
   },
   {
     "PBGID": 96,
@@ -20167,7 +21173,8 @@
     ],
     "Types": [],
     "SlotPickupCapacity": 4,
-    "CanPickupItems": true
+    "CanPickupItems": true,
+    "UpgradeCapacity": 1
   },
   {
     "PBGID": 97,
@@ -20194,7 +21201,8 @@
     "FemaleChance": 0.5,
     "Types": [],
     "SlotPickupCapacity": 4,
-    "CanPickupItems": true
+    "CanPickupItems": true,
+    "UpgradeCapacity": 1
   },
   {
     "PBGID": 101,
@@ -20240,7 +21248,8 @@
       "t3476",
       "medium_tank"
     ],
-    "SlotPickupCapacity": 2
+    "SlotPickupCapacity": 2,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 102,
@@ -20280,7 +21289,8 @@
       }
     ],
     "Types": [],
-    "SlotPickupCapacity": 2
+    "SlotPickupCapacity": 2,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 2654,
@@ -20333,7 +21343,8 @@
       "artillery",
       "team_weapon"
     ],
-    "SlotPickupCapacity": 1
+    "SlotPickupCapacity": 1,
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 17821,
@@ -20384,7 +21395,8 @@
       "fh18_howitzer",
       "artillery",
       "team_weapon"
-    ]
+    ],
+    "UpgradeCapacity": -1
   },
   {
     "PBGID": 14172,
@@ -20417,6 +21429,10 @@
       "light_vehicle",
       "vehicle"
     ],
-    "SlotPickupCapacity": 2
+    "SlotPickupCapacity": 2,
+    "UpgradeCapacity": -1,
+    "Upgrades": [
+      "vehicles_optics"
+    ]
   }
 ]
