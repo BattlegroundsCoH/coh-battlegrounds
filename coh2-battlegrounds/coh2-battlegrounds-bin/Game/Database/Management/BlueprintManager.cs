@@ -129,8 +129,9 @@ public static class BlueprintManager {
         int loadCounter = 0;
 
         // Try also look in mod database
-        if (mod is not "vcoh" && Directory.Exists(DatabaseManager.ModDatabaseSource)) {
-            db_paths = db_paths.Concat(Directory.GetFiles(DatabaseManager.ModDatabaseSource, "*.xml"));
+        bool modFolder = Directory.Exists(DatabaseManager.ModDatabaseSource);
+        if (mod is not "vcoh" && modFolder) {
+            db_paths = db_paths.Concat(Directory.GetFiles(DatabaseManager.ModDatabaseSource, "*.json"));
         }
 
         // The mod-local pbgid

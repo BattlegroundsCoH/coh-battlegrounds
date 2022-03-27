@@ -4,12 +4,14 @@ using System.Diagnostics;
 using System.Windows;
 using System.Globalization;
 using System.Collections;
+using System.Threading.Tasks;
 using System.Diagnostics.CodeAnalysis;
 
 using Battlegrounds;
 using Battlegrounds.Networking;
 using Battlegrounds.Game.Database.Management;
 using Battlegrounds.Steam;
+using Battlegrounds.ErrorHandling;
 
 using BattlegroundsApp.LocalData;
 using BattlegroundsApp.Utilities;
@@ -17,8 +19,6 @@ using BattlegroundsApp.Resources;
 using BattlegroundsApp.MVVM;
 using BattlegroundsApp.MVVM.Models;
 using BattlegroundsApp.CompanyEditor.MVVM.Models;
-using System.Threading.Tasks;
-using Battlegrounds.ErrorHandling;
 
 namespace BattlegroundsApp {
 
@@ -108,6 +108,7 @@ namespace BattlegroundsApp {
             if (!File.Exists("checksum.txt"))
                 throw new FatalAppException();
 
+            // Run async
             Task.Run(() => {
 
                 // Grab self path
@@ -149,7 +150,7 @@ namespace BattlegroundsApp {
 
         }
 
-        private ulong ComputeDirectoryChecksum(ulong check, string dir) {
+        private static ulong ComputeDirectoryChecksum(ulong check, string dir) {
 
             if (dir.EndsWith("map_icons"))
                 return 0;
@@ -157,7 +158,7 @@ namespace BattlegroundsApp {
             string[] files = Directory.GetFiles(dir);
             ulong fileSum = 0;
             foreach (var f in files)
-                fileSum += this.ComputeChecksum(f);
+                fileSum += ComputeChecksum(f);
 
             ulong dsum = 0;
             string[] dirs = Directory.GetDirectories(dir);
@@ -168,7 +169,7 @@ namespace BattlegroundsApp {
 
         }
 
-        private ulong ComputeChecksum(string filepath) {
+        private static ulong ComputeChecksum(string filepath) {
 
             ulong check = 0;
             using var fs = File.OpenRead(filepath);

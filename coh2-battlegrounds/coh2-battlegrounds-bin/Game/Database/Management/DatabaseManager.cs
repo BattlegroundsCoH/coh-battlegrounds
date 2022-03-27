@@ -112,7 +112,7 @@ namespace Battlegrounds.Game.Database.Management {
                     "..\\..\\..\\..\\db-battlegrounds\\",
                     "..\\..\\..\\db-battlegrounds\\",
                     "db-battlegrounds\\",
-                    "bg_common\\data\\db\\", // should be the place for release builds!
+                    "bg_common\\data\\", // should be the place for release builds!
                     ModDatabaseSource, // should be the place for mods
                 };
             
