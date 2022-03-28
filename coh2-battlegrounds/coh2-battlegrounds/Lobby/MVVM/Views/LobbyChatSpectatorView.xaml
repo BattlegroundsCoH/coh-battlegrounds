@@ -22,38 +22,6 @@
             <Setter Property="BorderThickness" Value="0"/>
             <Setter Property="VerticalScrollBarVisibility" Value="Auto"/>
         </Style>
-        <Style x:Key="MessageBox" TargetType="TextBox">
-            <Setter Property="Background" Value="Transparent"/>
-            <Setter Property="BorderBrush" Value="#FFFFFF"/>
-            <Setter Property="BorderThickness" Value="0.5"/>
-            <Setter Property="Foreground" Value="#FFFFFF"/>
-            <Setter Property="Padding" Value="5,0,0,0"/>
-            <Setter Property="VerticalContentAlignment" Value="Center"/>
-            <Setter Property="CaretBrush" Value="#FFFFFF"/>
-            <Style.Resources>
-                <VisualBrush x:Key="CueBannerBrush" 
-                             AlignmentX="Left" 
-                             AlignmentY="Center" 
-                             Stretch="None">
-                    <VisualBrush.Visual>
-                        <Label Content="Enter message..." 
-                               Foreground="DarkGray" 
-                               FontStyle="Italic" />
-                    </VisualBrush.Visual>
-                </VisualBrush>
-            </Style.Resources>
-            <Style.Triggers>
-                <Trigger Property="Text" Value="">
-                    <Setter Property="Background" Value="{StaticResource CueBannerBrush}" />
-                </Trigger>
-                <Trigger Property="Text" Value="{x:Null}">
-                    <Setter Property="Background" Value="{StaticResource CueBannerBrush}" />
-                </Trigger>
-                <Trigger Property="IsMouseCaptured" Value="True">
-                    <Setter Property="BorderBrush" Value="#FFFFFF"/>
-                </Trigger>
-            </Style.Triggers>
-        </Style>
     </UserControl.Resources>
     <Grid>
         <Grid.Resources>
@@ -88,7 +56,7 @@
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
             <controls:BGTextbox Height="36" Grid.ColumnSpan="2"
-                     Style="{StaticResource MessageBox}"
+                     Style="{StaticResource StandardTextBox}"
                      Text="{Binding MessageContent, Mode=TwoWay}"
                      KeyDownEvent="{mvvm:EventBinding Handler=EnterKey}"/>
             <ComboBox Grid.Row="1" Width="132" Height="28" 

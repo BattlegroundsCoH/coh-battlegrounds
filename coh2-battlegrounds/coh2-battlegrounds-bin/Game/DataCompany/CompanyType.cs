@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Battlegrounds.Functional;
 using System.Linq;
 
 using Battlegrounds.Lua.Generator.RuntimeServices;
@@ -86,7 +87,7 @@ namespace Battlegrounds.Game.DataCompany {
     /// </summary>
     public static class CompanyTypeExtension {
 
-        public static List<CompanyType> CompanyTypes => Enum.GetValues<CompanyType>().ToList();
+        public static List<CompanyType> CompanyTypes => Enum.GetValues<CompanyType>().Except(CompanyType.Unspecified).ToList();
 
         /// <summary>
         /// 

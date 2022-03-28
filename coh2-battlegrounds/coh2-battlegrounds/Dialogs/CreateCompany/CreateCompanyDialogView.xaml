@@ -8,7 +8,7 @@
              xmlns:type="clr-namespace:Battlegrounds.Game.DataCompany;assembly=coh2-battlegrounds-bin"
              xmlns:converters="clr-namespace:BattlegroundsApp.Utilities.Converters"
              mc:Ignorable="d" 
-             d:DesignHeight="150" d:DesignWidth="250">
+             d:DesignHeight="250" d:DesignWidth="450">
     <Grid>
 
         <Grid.Resources>
@@ -36,26 +36,65 @@
         </Grid.ColumnDefinitions>
 
         <!-- Row 1 -->
-        <TextBlock Grid.Row="1" Grid.Column="1" Margin="2.5" Text="{Binding NameTextBlockText, Converter={StaticResource LocaleConvertor}}"/>
+        <TextBlock Grid.Row="1" 
+                   Grid.Column="1" 
+                   Margin="2.5" 
+                   Text="{Binding NameTextBlockText, Converter={StaticResource LocaleConvertor}}"/>
 
-        <TextBox x:Name="companyName" Text="{Binding CompanyName, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Grid.Row="1" Grid.Column="2" Margin="2.5" Width="100"/>
+        <TextBox x:Name="companyName" 
+                 Text="{Binding CompanyName, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" 
+                 Grid.Row="1" 
+                 Grid.Column="2" 
+                 Margin="2.5" 
+                 Width="100"/>
 
         <!-- Row 2 -->
-        <TextBlock Grid.Row="2" Grid.Column="1" Margin="2.5" Text="{Binding FactionTextBlockText, Converter={StaticResource LocaleConvertor}}"/>
+        <TextBlock Grid.Row="2" 
+                   Grid.Column="1" 
+                   Margin="2.5" 
+                   Text="{Binding FactionTextBlockText, Converter={StaticResource LocaleConvertor}}"/>
 
-        <ComboBox x:Name="companyFaction" Grid.Row="2" Grid.Column="2" Margin="2.5" ItemsSource="{Binding Source={x:Static factions:Faction.Factions}}" SelectedItem="{Binding CompanyFaction, Mode=TwoWay}"/>
+        <ComboBox x:Name="companyFaction" 
+                  Grid.Row="2" 
+                  Grid.Column="2" 
+                  Margin="2.5" 
+                  ItemsSource="{Binding Source={x:Static factions:Faction.Factions}}" 
+                  SelectedItem="{Binding CompanyFaction, Mode=TwoWay}"
+                  Style="{StaticResource StandardBlueDropdown}"/>
 
         <!-- Row 3 -->
-        <TextBlock Grid.Row="3" Grid.Column="1" Margin="2.5" Text="{Binding TypeTextBlockText, Converter={StaticResource LocaleConvertor}}"/>
+        <TextBlock Grid.Row="3" 
+                   Grid.Column="1" 
+                   Margin="2.5" 
+                   Text="{Binding TypeTextBlockText, Converter={StaticResource LocaleConvertor}}"/>
 
-        <ComboBox x:Name="companyType" Grid.Row="3" Grid.Column="2" Margin="2.5" ItemsSource="{Binding Source={x:Static type:CompanyTypeExtension.CompanyTypes}}" SelectedItem="{Binding CompanyType, Mode=TwoWay}"/>
+        <ComboBox x:Name="companyType" 
+                  Grid.Row="3" 
+                  Grid.Column="2" 
+                  Margin="2.5" 
+                  ItemsSource="{Binding Source={x:Static type:CompanyTypeExtension.CompanyTypes}}" 
+                  SelectedItem="{Binding CompanyType, Mode=TwoWay}"
+                  Style="{StaticResource StandardBlueDropdown}"/>
 
         <!-- Row 4 -->
-        <Button Grid.Row="4" Grid.Column="1" Margin="2.5" Content="{Binding CreateButtonContent, Converter={StaticResource LocaleConvertor}}" Width="75" IsEnabled="{Binding ElementName=companyName, Path=Text.Length, Mode=OneWay}"
-                Command="{Binding CreateCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}"/>
+        <Button Grid.Row="4" 
+                Grid.Column="1" 
+                Margin="2.5" 
+                Content="{Binding CreateButtonContent, Converter={StaticResource LocaleConvertor}}" 
+                Width="100" 
+                IsEnabled="{Binding ElementName=companyName, Path=Text.Length, Mode=OneWay}"
+                Command="{Binding CreateCommand}" 
+                CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}"
+                Style="{StaticResource StandardBlueLocButton }"/>
 
-        <Button Grid.Row="4" Grid.Column="2" Margin="2.5" Content="{Binding CancelButtonContent, Converter={StaticResource LocaleConvertor}}" Width="75"
-                Command="{Binding CancelCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}"/>
+        <Button Grid.Row="4" 
+                Grid.Column="2" 
+                Margin="2.5" 
+                Content="{Binding CancelButtonContent, Converter={StaticResource LocaleConvertor}}" 
+                Width="100"
+                Command="{Binding CancelCommand}" 
+                CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}"
+                Style="{StaticResource StandardBlueLocButton}"/>
 
     </Grid>
 </UserControl>

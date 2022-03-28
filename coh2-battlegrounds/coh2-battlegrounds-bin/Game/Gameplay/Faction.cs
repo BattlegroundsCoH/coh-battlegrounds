@@ -147,7 +147,7 @@ namespace Battlegrounds.Game.Gameplay {
         /// <summary>
         /// Get a list of all factions.
         /// </summary>
-        public static List<Faction> Factions => new() { Soviet, British, America, Wehrmacht, OberkommandoWest };
+        public static List<Faction> Factions => new() { Soviet, /*British, America, OberkommandoWest,*/ Wehrmacht };
 
         #endregion
 

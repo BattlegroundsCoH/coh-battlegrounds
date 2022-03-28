@@ -6,6 +6,7 @@ using BattlegroundsApp.Dialogs.CreateCompany;
 using BattlegroundsApp.Dialogs.RenameCopyDialog;
 using BattlegroundsApp.Dialogs.YesNo;
 using BattlegroundsApp.LocalData;
+using BattlegroundsApp.Modals;
 using BattlegroundsApp.MVVM;
 using BattlegroundsApp.Utilities;
 using System;
@@ -114,21 +115,29 @@ public class CompanyBrowserViewModel : IViewModel {
 
     public void CreateButton() {
 
+        // Grab mod GUID (TODO: Allow user to pick in modal dialog)
         ModGuid modGuid = ModManager.GetPackage("mod_bg").TuningGUID;
-        Trace.TraceWarning("There is currently no method of setting tuning pack. This should be fixed ASAP.");
 
-        if (CreateCompanyDialogViewModel.ShowCreateCompanyDialog(new LocaleKey("CompanyView_CreateCompanyDialog_Title"), out string companyName, out Faction companyFaction, out CompanyType companyType)
-            is CreateCompanyDialogResult.Create) {
-
-            CompanyBuilderViewModel companyBuilder = new CompanyBuilderViewModel(companyName, companyFaction, companyType, modGuid);
-
-            App.ViewManager.UpdateDisplay(AppDisplayTarget.Right, companyBuilder);
-
+        // Null check
+        if (App.ViewManager.GetModalControl() is not ModalControl mControl) {
+            return;
         }
 
-        //var model = new Modals.Dialogs.MVVM.Models.CreateCompanyDialogViewModel();
+        // Do modal
+        Modals.Dialogs.MVVM.Models.CreateCompanyDialogViewModel.ShowModal(mControl, (vm, resault) => {
+            
+            // Check return value
+            if (resault is not ModalDialogResult.Confirm) {
+                return;
+            }
 
-        //App.ViewManager.GetModalControl()?.ShowModal(model);
+            // Create view model
+            CompanyBuilderViewModel companyBuilder = new CompanyBuilderViewModel(vm.CompanyName, vm.CompanyFaction, vm.CompanyType, modGuid);
+
+            // Display it
+            App.ViewManager.UpdateDisplay(AppDisplayTarget.Right, companyBuilder);
+
+        });
 
     }
 
