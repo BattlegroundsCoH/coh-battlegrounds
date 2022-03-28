@@ -50,6 +50,7 @@
                   MouseDoubleClick="{mvvm:EventBinding Handler=JoinLobbyDirectly}"
                   Style="{StaticResource StandardBlueListViewStyle}"
                   ItemContainerStyle="{StaticResource StandardBlueListViewItem}"
+                  SelectionChanged="GameLobbyList_SelectionChanged"
                   >
             <ListView.View>
                 <GridView>

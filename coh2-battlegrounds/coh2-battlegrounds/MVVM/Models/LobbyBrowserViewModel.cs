@@ -66,7 +66,7 @@ namespace BattlegroundsApp.MVVM.Models {
             this.Refresh = new(new RelayCommand(this.RefreshButton), () => true);
 
             // Create join
-            this.Join = new(new RelayCommand(this.JoinButton), PlayerCompanies.HasCompanyForBothAlliances);
+            this.Join = new(new RelayCommand(this.JoinButton), this.CanJoinLobby);
 
             // Create host
             this.Host = new(new RelayCommand(this.HostButton), PlayerCompanies.HasCompanyForBothAlliances);
@@ -217,6 +217,9 @@ namespace BattlegroundsApp.MVVM.Models {
             }
 
         }
+
+        private bool CanJoinLobby()
+            => PlayerCompanies.HasCompanyForBothAlliances() && this.SelectedLobby is not null;
 
         private List<ServerLobby> GetLobbiesFromServer() {
             if (this.__useMockData) {
