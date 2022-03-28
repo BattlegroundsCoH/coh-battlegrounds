@@ -21,6 +21,8 @@
              xmlns:companyEditorModels="clr-namespace:BattlegroundsApp.CompanyEditor.MVVM.Models"
              xmlns:dashboardViews="clr-namespace:BattlegroundsApp.Dashboard.MVVM.Views"
              xmlns:dashboardModels="clr-namespace:BattlegroundsApp.Dashboard.MVVM.Models"
+             xmlns:dialogViews="clr-namespace:BattlegroundsApp.Modals.Dialogs.MVVM.Views"
+             xmlns:dialogModels="clr-namespace:BattlegroundsApp.Modals.Dialogs.MVVM.Models"
              xmlns:controls="clr-namespace:BattlegroundsApp.Controls"
              Startup="App_Startup"
              ShutdownMode="OnMainWindowClose">
@@ -103,6 +105,11 @@
         <!-- New AvailableSquad-View Models -->
         <DataTemplate DataType="{x:Type companyEditorModels:AvailableItemViewModel}">
             <companyEditorViews:AvailableItemView/>
+        </DataTemplate>
+        
+        <!-- New Dialogs -->
+        <DataTemplate DataType="{x:Type dialogModels:CreateCompanyDialogViewModel}">
+            <dialogViews:CreateCompanyDialogView/>
         </DataTemplate>
 
         <DataTemplate DataType="{x:Type lobbymodels:LobbyChatSpectatorModel}">

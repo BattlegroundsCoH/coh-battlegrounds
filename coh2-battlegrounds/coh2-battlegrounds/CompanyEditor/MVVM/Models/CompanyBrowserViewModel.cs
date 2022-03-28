@@ -117,7 +117,7 @@ public class CompanyBrowserViewModel : IViewModel {
         ModGuid modGuid = ModManager.GetPackage("mod_bg").TuningGUID;
         Trace.TraceWarning("There is currently no method of setting tuning pack. This should be fixed ASAP.");
 
-        if (CreateCompanyDialogViewModel.ShowCreateCompanyDialog(new LocaleKey("CompanyView_CreateCompanyDialog_Title"), out string companyName, out Faction companyFaction, out CompanyType companyType) 
+        if (CreateCompanyDialogViewModel.ShowCreateCompanyDialog(new LocaleKey("CompanyView_CreateCompanyDialog_Title"), out string companyName, out Faction companyFaction, out CompanyType companyType)
             is CreateCompanyDialogResult.Create) {
 
             CompanyBuilderViewModel companyBuilder = new CompanyBuilderViewModel(companyName, companyFaction, companyType, modGuid);
@@ -125,6 +125,10 @@ public class CompanyBrowserViewModel : IViewModel {
             App.ViewManager.UpdateDisplay(AppDisplayTarget.Right, companyBuilder);
 
         }
+
+        //var model = new Modals.Dialogs.MVVM.Models.CreateCompanyDialogViewModel();
+
+        //App.ViewManager.GetModalControl()?.ShowModal(model);
 
     }
 
