@@ -109,9 +109,8 @@
                 Margin="0,5,5,8" 
                 Width="128"
                 Command="{Binding Refresh.Click}"
-                Style="{StaticResource StandardBlueLocButton}">
-            GameBrowserView_Refresh
-        </Button>
+                Style="{StaticResource StandardBlueLocButton}"
+                Content="GameBrowserView_Refresh"/>
 
         <Button x:Name="hostGameButton" 
                 Grid.Row="3" 
@@ -120,9 +119,8 @@
                 Width="128"
                 Command="{Binding Host.Click}"
                 Style="{StaticResource StandardBlueLocButton}"
-                IsEnabled="{Binding Host.IsEnabled}">
-            GameBrowserView_Host_Game
-        </Button>
+                IsEnabled="{Binding Host.IsEnabled}"
+                Content="GameBrowserView_Host_Game"/>
 
         <Button x:Name="joinGameButton" 
                 Grid.Row="3" 
@@ -131,9 +129,8 @@
                 Width="128"
                 Command="{Binding Join.Click}"
                 IsEnabled="{Binding Join.IsEnabled}"
-                Style="{StaticResource StandardBlueLocButton}">
-            GameBrowserView_Join_Game
-        </Button>
-        
+                Style="{StaticResource StandardBlueLocButton}"
+                Content="GameBrowserView_Join_Game"/>
+
     </Grid>
 </UserControl>
