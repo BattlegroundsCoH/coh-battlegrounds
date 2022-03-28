@@ -24,10 +24,12 @@ namespace BattlegroundsApp.MVVM.Models {
         public bool IsEnabled => this.IsEnabledCheck();
 
         public event PropertyChangedEventHandler? PropertyChanged;
-        public void Update(object sender) => this.PropertyChanged?.Invoke(sender, new(nameof(IsEnabled)));
+        public void Update(object sender) {
+            this.PropertyChanged?.Invoke(sender, new("Join"));
+        }
     }
 
-    public class LobbyBrowserViewModel : IViewModel {
+    public class LobbyBrowserViewModel : IViewModel, INotifyPropertyChanged {
 
         private readonly bool __useMockData = false; // SET TO FALSE WHEN TESTING IS OVER
         private DateTime m_lastRefresh;
@@ -66,7 +68,7 @@ namespace BattlegroundsApp.MVVM.Models {
             this.Refresh = new(new RelayCommand(this.RefreshButton), () => true);
 
             // Create join
-            this.Join = new(new RelayCommand(this.JoinButton), this.CanJoinLobby);
+            this.Join = new(new RelayCommand(this.JoinButton), () => PlayerCompanies.HasCompanyForBothAlliances() && this.SelectedLobbyIndex is not -1);
 
             // Create host
             this.Host = new(new RelayCommand(this.HostButton), PlayerCompanies.HasCompanyForBothAlliances);
@@ -85,7 +87,17 @@ namespace BattlegroundsApp.MVVM.Models {
             this.PasswordListWiewHeader = new LocaleKey("GameBrowserView_Password");
             this.m_askpasswordkey = new LocaleKey("LobbyPasswordDialogView_Password_Title");
 
+            // Set selected index
+            this.SelectedLobbyIndex = -1;
+
         }
+
+        public event PropertyChangedEventHandler? PropertyChanged {
+            add => ((INotifyPropertyChanged)this.Join).PropertyChanged += value;
+            remove => ((INotifyPropertyChanged)this.Join).PropertyChanged -= value;
+        }
+
+        public void RefreshJoin() => this.Join.Update(this);
 
         public void RefreshButton() {
             if ((DateTime.Now - this.m_lastRefresh).TotalSeconds >= 2.5) {
@@ -218,7 +230,7 @@ namespace BattlegroundsApp.MVVM.Models {
 
         }
 
-        private bool CanJoinLobby()
+        public bool CanJoinLobby
             => PlayerCompanies.HasCompanyForBothAlliances() && this.SelectedLobby is not null;
 
         private List<ServerLobby> GetLobbiesFromServer() {
