@@ -164,64 +164,71 @@
         <Button x:Name="createCompanyButton"
                 Grid.Row="3"
                 Grid.Column="1"
-                Content="{Binding Create.Text, Converter={StaticResource LocaleConvertor}}"
+                Content="CompanyView_Create"
                 Margin="0,5,5,8"
                 Command="{Binding Create.Click}"
-                Style="{StaticResource MainButtonStyle}"/>
+                Style="{StaticResource StandardBlueLocButton}"
+                Width="100"/>
         
         <Button x:Name="editCompanyButton"
                 Grid.Row="3"
                 Grid.Column="2"
-                Content="{Binding Edit.Text, Converter={StaticResource LocaleConvertor}}"
+                Content="CompanyView_Edit"
                 Margin="5,5,5,8"
                 Command="{Binding Edit.Click}"
-                Style="{StaticResource MainButtonStyle}"
-                IsEnabled="{Binding ElementName=CompanyList, Path=SelectedItems.Count}"/>
+                Style="{StaticResource StandardBlueLocButton}"
+                IsEnabled="{Binding ElementName=CompanyList, Path=SelectedItems.Count}"
+                Width="100"/>
 
         <Button x:Name="renameCompanyButton"
                 Grid.Row="3"
                 Grid.Column="3"
-                Content="{Binding Rename.Text, Converter={StaticResource LocaleConvertor}}"
+                Content="CompanyView_Rename"
                 Margin="5,5,5,8"
                 Command="{Binding Rename.Click}"
-                Style="{StaticResource MainButtonStyle}"
-                IsEnabled="False"/>
+                Style="{StaticResource StandardBlueLocButton}"
+                IsEnabled="False"
+                Width="100"/>
 
         <Button x:Name="deleteCompanyButton"
                 Grid.Row="3"
                 Grid.Column="4"
-                Content="{Binding Delete.Text, Converter={StaticResource LocaleConvertor}}"
+                Content="CompanyView_Delete"
                 Margin="5,5,5,8"
                 Command="{Binding Delete.Click}"
-                Style="{StaticResource MainButtonStyle}"
-                IsEnabled="{Binding ElementName=CompanyList, Path=SelectedItems.Count}"/>
+                Style="{StaticResource StandardBlueLocButton}"
+                IsEnabled="{Binding ElementName=CompanyList, Path=SelectedItems.Count}"
+                Width="100"/>
 
         <Button x:Name="copyCompanyButton"
                 Grid.Row="3"
                 Grid.Column="5"
-                Content="{Binding Copy.Text, Converter={StaticResource LocaleConvertor}}"
+                Content="CompanyView_Copy"
                 Margin="5,5,5,8"
                 Command="{Binding Copy.Click}"
-                Style="{StaticResource MainButtonStyle}"
-                IsEnabled="False"/>
+                Style="{StaticResource StandardBlueLocButton}"
+                IsEnabled="False"
+                Width="100"/>
 
         <Button x:Name="exportCompanyButton"
                 Grid.Row="3"
                 Grid.Column="6"
-                Content="{Binding Export.Text, Converter={StaticResource LocaleConvertor}}"
+                Content="CompanyView_Export"
                 Margin="5,5,5,8"
                 Command="{Binding Export.Click}"
-                Style="{StaticResource MainButtonStyle}"
-                IsEnabled="False"/>
+                Style="{StaticResource StandardBlueLocButton}"
+                IsEnabled="False"
+                Width="100"/>
 
         <Button x:Name="importCompanyButton"
                 Grid.Row="3"
                 Grid.Column="7"
-                Content="{Binding Import.Text, Converter={StaticResource LocaleConvertor}}"
+                Content="CompanyView_Import"
                 Margin="5,5,15,8"
                 Command="{Binding Import.Click}"
-                Style="{StaticResource MainButtonStyle}"
-                IsEnabled="False"/>
+                Style="{StaticResource StandardBlueLocButton}"
+                IsEnabled="False"
+                Width="100"/>
 
     </Grid>
 </UserControl>

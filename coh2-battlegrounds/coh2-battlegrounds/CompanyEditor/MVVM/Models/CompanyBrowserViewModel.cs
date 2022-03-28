@@ -21,7 +21,6 @@ namespace BattlegroundsApp.CompanyEditor.MVVM.Models;
 
 public class CompanyBrowserButton {
     public ICommand Click { get; init; }
-    public LocaleKey Text { get; init; }
     public LocaleKey Tooltip { get; init; }
 }
 
@@ -41,7 +40,7 @@ public class CompanyBrowserViewModel : IViewModel {
 
     public CompanyBrowserButton Import { get; }
 
-    public BattlegroundsApp.MVVM.EventCommand EditCompanyDirectly { get; }
+    public EventCommand EditCompanyDirectly { get; }
 
     public ObservableCollection<Company> Companies { get; set; }
 
@@ -65,44 +64,37 @@ public class CompanyBrowserViewModel : IViewModel {
 
         // Create create
         this.Create = new() {
-            Click = new RelayCommand(this.CreateButton),
-            Text = new("CompanyView_Create")
+            Click = new RelayCommand(this.CreateButton)
         };
 
         // Create edit
         this.Edit = new() {
-            Click = new RelayCommand(this.EditButton),
-            Text = new("CompanyView_Edit")
+            Click = new RelayCommand(this.EditButton)
         };
 
         // Create rename
         this.Rename = new() {
-            Click = new RelayCommand(this.RenameButton),
-            Text = new("CompanyView_Rename")
+            Click = new RelayCommand(this.RenameButton)
         };
 
         // Create delete
         this.Delete = new() {
-            Click = new RelayCommand(this.DeleteButton),
-            Text = new("CompanyView_Delete")
+            Click = new RelayCommand(this.DeleteButton)
         };
 
         // Create copy
         this.Copy = new() {
-            Click = new RelayCommand(this.CopyButton),
-            Text = new("CompanyView_Copy")
+            Click = new RelayCommand(this.CopyButton)
         };
 
         // Create export
         this.Export = new() {
-            Click = new RelayCommand(this.ExportButton),
-            Text = new("CompanyView_Export")
+            Click = new RelayCommand(this.ExportButton)
         };
 
         // Create import
         this.Import = new() {
-            Click = new RelayCommand(this.ImportButton),
-            Text = new("CompanyView_Import")
+            Click = new RelayCommand(this.ImportButton)
         };
 
         // Create double-click
