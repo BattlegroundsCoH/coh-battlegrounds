@@ -3,6 +3,7 @@ using System.Windows.Input;
 
 using Battlegrounds.Locale;
 using BattlegroundsApp.CompanyEditor.MVVM.Models;
+using BattlegroundsApp.Dashboard.MVVM.Models;
 using BattlegroundsApp.Utilities;
 
 namespace BattlegroundsApp.MVVM.Models {
@@ -80,6 +81,8 @@ namespace BattlegroundsApp.MVVM.Models {
         }
 
         private void DashboardButton() {
+
+            App.ViewManager.UpdateDisplay<DashboardViewModel>(AppDisplayTarget.Right);
 
         }
 

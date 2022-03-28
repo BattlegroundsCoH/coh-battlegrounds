@@ -19,6 +19,7 @@ using BattlegroundsApp.Resources;
 using BattlegroundsApp.MVVM;
 using BattlegroundsApp.MVVM.Models;
 using BattlegroundsApp.CompanyEditor.MVVM.Models;
+using BattlegroundsApp.Dashboard.MVVM.Models;
 
 namespace BattlegroundsApp {
 
@@ -34,6 +35,7 @@ namespace BattlegroundsApp {
         private static Logger? __logger;
 
         private static LeftMenu? __lmenu;
+        private static DashboardViewModel? __dashboard;
         private static LobbyBrowserViewModel? __lobbyBrowser;
         private static CompanyBrowserViewModel? __companyBrowser;
 
@@ -83,15 +85,16 @@ namespace BattlegroundsApp {
 
             // Create initial left/right views
             __lmenu = new();
-            __lobbyBrowser = new();
+            __dashboard = new();
 
             // Create app view manager
             __viewManager = new(window);
-            __viewManager.SetDisplay(AppDisplayState.LeftRight, __lmenu, __lobbyBrowser); // TODO: Replace browser with dashboard when dashboard is implemented
+            __viewManager.SetDisplay(AppDisplayState.LeftRight, __lmenu, __dashboard);
 
             // Create other views that are directly accessible from LHS
             __companyBrowser = __viewManager.CreateDisplayIfNotFound<CompanyBrowserViewModel>(() => new()) ?? throw new Exception("Failed to create company browser view model!");
-          
+            __lobbyBrowser = __viewManager.CreateDisplayIfNotFound<LobbyBrowserViewModel>(() => new()) ?? throw new Exception("Failed to create lobby browser view model!");
+
             // Set as started
             IsStarted = true;
 

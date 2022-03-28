@@ -19,6 +19,8 @@
              xmlns:lobbymodels="clr-namespace:BattlegroundsApp.Lobby.MVVM.Models"
              xmlns:companyEditorViews="clr-namespace:BattlegroundsApp.CompanyEditor.MVVM.Views"
              xmlns:companyEditorModels="clr-namespace:BattlegroundsApp.CompanyEditor.MVVM.Models"
+             xmlns:dashboardViews="clr-namespace:BattlegroundsApp.Dashboard.MVVM.Views"
+             xmlns:dashboardModels="clr-namespace:BattlegroundsApp.Dashboard.MVVM.Models"
              xmlns:controls="clr-namespace:BattlegroundsApp.Controls"
              Startup="App_Startup"
              ShutdownMode="OnMainWindowClose">
@@ -59,6 +61,11 @@
         </DataTemplate>
         <DataTemplate DataType="{x:Type campaignModels:CampaignUnitReserveModel}">
             <campaignViews:CampaignUnitReserveView/>
+        </DataTemplate>
+        
+        <!-- New Dashboard-View Models -->
+        <DataTemplate DataType="{x:Type dashboardModels:DashboardViewModel}">
+            <dashboardViews:DashboardView/>
         </DataTemplate>
 
         <!-- New Lobby-View Models -->
