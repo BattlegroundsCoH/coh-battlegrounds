@@ -191,7 +191,6 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
             this.m_handle.OnLobbySelfUpdate += this.OnSelfChanged;
             this.m_handle.OnLobbyTeamUpdate += this.OnTeamChanged;
             this.m_handle.OnLobbyCompanyUpdate += this.OnCompanyChanged;
-            this.m_handle.OnLobbyMemberUpdate += this.OnMemberChanged;
             this.m_handle.OnLobbySlotUpdate += this.OnSlotChanged;
             this.m_handle.OnLobbyConnectionLost += this.OnConnectionLost;
             this.m_handle.OnLobbyRequestCompany += this.OnCompanyRequested;
@@ -378,8 +377,15 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
                 // Get company faction
                 Faction faction = Faction.FromName(self.Occupant.Company.Army);
 
+                // Get company
+                var company = PlayerCompanies.FromNameAndFaction(companyName, faction);
+                if (company is null) {
+                    Trace.WriteLine($"Failed to upload company json file (Company '{companyName}' not found).", nameof(LobbyModel));
+                    return;
+                }
+
                 // Get company json
-                string companyJson = CompanySerializer.GetCompanyAsJson(PlayerCompanies.FromNameAndFaction(companyName, faction), indent: false);
+                string companyJson = CompanySerializer.GetCompanyAsJson(company, indent: false);
                 if (string.IsNullOrEmpty(companyJson)) {
                     Trace.WriteLine($"Failed to upload company json file (Company '{companyName}' not found).", nameof(LobbyModel));
                     return;
@@ -716,25 +722,6 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
 
             // Trigger slot update
             team.RefreshSlot(team.Slots[slot.SlotID], slot);
-
-            // Trigger self change
-            if (this.m_handle.IsHost) {
-                this.OnSelfChanged(); // Trigger a playability check
-            }
-
-        }
-
-        private void OnMemberChanged(int teamID, int slotID, LobbyAPIStructs.LobbyMember member) {
-
-            // Get team
-            var team = teamID == 0 ? this.Allies : this.Axis;
-
-            // Get slot
-            var slot = team.Slots[slotID];
-
-            // Set occupant and refresh
-            slot.Interface.Occupant = member;
-            slot.RefreshVisuals();
 
             // Trigger self change
             if (this.m_handle.IsHost) {

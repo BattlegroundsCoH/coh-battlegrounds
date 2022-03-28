@@ -47,8 +47,8 @@ namespace Battlegrounds.Game.Database.Extensions {
             while (reader.Read() && reader.TokenType is not JsonTokenType.EndObject) {
                 string prop = reader.ReadProperty();
                 __lookup[prop] = prop switch {
-                    "RequirementType" or "UIText" => reader.GetString(),
-                    "RequirementReason" => GetRequirementReason(reader.GetString()),
+                    "RequirementType" or "UIText" => reader.GetString() ?? string.Empty,
+                    "RequirementReason" => GetRequirementReason(reader.GetString() ?? string.Empty),
                     "RequirementProperties" => ReadKeyValue(ref reader),
                     _ => throw new NotImplementedException(prop)
                 };
@@ -84,19 +84,19 @@ namespace Battlegrounds.Game.Database.Extensions {
                 _ => new RequirementExtension.NoRequirement(ui, reason)
             };
 
-        private static Dictionary<string, object> ReadKeyValue(ref Utf8JsonReader reader) {
-            Dictionary<string, object> __lookup = new();
+        private static Dictionary<string, object?> ReadKeyValue(ref Utf8JsonReader reader) {
+            Dictionary<string, object?> __lookup = new();
             while (reader.Read() && reader.TokenType is not JsonTokenType.EndObject) {
                 string prop = reader.ReadProperty();
-                __lookup[prop] = prop is "RequirementReason" ? GetRequirementReason(GetObject(ref reader) as string) : GetObject(ref reader);
+                __lookup[prop] = prop is "RequirementReason" ? GetRequirementReason(GetObject(ref reader) is string s ? s : string.Empty) : GetObject(ref reader);
             }
             return __lookup;
         }
 
-        private static object GetObject(ref Utf8JsonReader reader)
+        private static object? GetObject(ref Utf8JsonReader reader)
             => reader.TokenType switch {
                 JsonTokenType.False or JsonTokenType.True => reader.GetBoolean(),
-                JsonTokenType.String => reader.GetString(),
+                JsonTokenType.String => reader.GetString() ?? string.Empty,
                 JsonTokenType.Null => null,
                 JsonTokenType.Number => reader.GetSingle(),
                 JsonTokenType.StartArray => ReadArray(ref reader),
@@ -107,7 +107,9 @@ namespace Battlegrounds.Game.Database.Extensions {
         private static List<object> ReadArray(ref Utf8JsonReader reader) {
             List<object> list = new();
             while (reader.Read() && reader.TokenType is not JsonTokenType.EndArray) {
-                list.Add(GetObject(ref reader));
+                if (GetObject(ref reader) is object o) {
+                    list.Add(o);
+                }
             }
             return list;
         }
