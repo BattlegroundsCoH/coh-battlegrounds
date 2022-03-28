@@ -20,6 +20,7 @@ using BattlegroundsApp.MVVM;
 using BattlegroundsApp.MVVM.Models;
 using BattlegroundsApp.CompanyEditor.MVVM.Models;
 using BattlegroundsApp.Dashboard.MVVM.Models;
+using Battlegrounds.Verification;
 
 namespace BattlegroundsApp {
 
@@ -27,8 +28,6 @@ namespace BattlegroundsApp {
     /// Interaction logic for App.xaml
     /// </summary>
     public partial class App : Application {
-
-        private static ulong __integrityHash;
 
         private static AppViewManager? __viewManager;
         private static ResourceHandler? __handler;
@@ -38,10 +37,6 @@ namespace BattlegroundsApp {
         private static DashboardViewModel? __dashboard;
         private static LobbyBrowserViewModel? __lobbyBrowser;
         private static CompanyBrowserViewModel? __companyBrowser;
-
-        public static ulong IntegrityHash => __integrityHash;
-
-        public static string IntegrityHashString => $"0x{IntegrityHash:X}";
 
         [NotNull] // "never" null; and invalid operation is throw if it is...
         public static ResourceHandler ResourceHandler 
@@ -109,78 +104,10 @@ namespace BattlegroundsApp {
 
             // Burn if checksum is not available
             if (!File.Exists("checksum.txt"))
-                throw new FatalAppException();
+                throw new FatalAppException("No checksum file found!");
 
             // Run async
-            Task.Run(() => {
-
-                // Grab self path
-                string selfPath = Environment.ProcessPath ?? throw new FatalAppException();
-                string dllPath = Environment.ProcessPath.Replace(".exe", "-bin.dll");
-                string netPath = Environment.ProcessPath.Replace(".exe", "-networking.dll");
-
-                // If dll is not found -> bail
-                if (!File.Exists(dllPath))
-                    throw new FatalAppException();
-
-                // If net dll not found -> bail
-                if (!File.Exists(netPath))
-                    throw new FatalAppException();
-
-                // Check self
-                var selfCheck = ComputeChecksum(selfPath);
-                var binCheck = ComputeChecksum(dllPath) + selfCheck;
-                var netCheck = ComputeChecksum(netPath) + binCheck;
-
-                // Check common
-                __integrityHash = ComputeDirectoryChecksum(netCheck, "bg_common");
-
-                // Check validity
-                if (__integrityHash != Convert.ToUInt64(File.ReadAllText("checksum.txt"), 16)) {
-#if DEBUG
-                    Trace.WriteLine($"<DEBUG> Integrity check failed - UPDATE CHECKSUM.TXT (Checksum = {IntegrityHashString})", nameof(App));
-#else
-                    throw new FatalAppException($"Checksum integrity check failed. {IntegrityHashString}"); // Should not actually write this
-#endif
-                } else {
-
-                    // Log success
-                    Trace.WriteLine("Verified integrity of core files.", nameof(App));
-
-                }
-
-            });
-
-        }
-
-        private static ulong ComputeDirectoryChecksum(ulong check, string dir) {
-
-            if (dir.EndsWith("map_icons"))
-                return 0;
-
-            string[] files = Directory.GetFiles(dir);
-            ulong fileSum = 0;
-            foreach (var f in files)
-                fileSum += ComputeChecksum(f);
-
-            ulong dsum = 0;
-            string[] dirs = Directory.GetDirectories(dir);
-            foreach (var d in dirs)
-                dsum += ComputeDirectoryChecksum(0, d);
-
-            return check + dsum + fileSum;
-
-        }
-
-        private static ulong ComputeChecksum(string filepath) {
-
-            ulong check = 0;
-            using var fs = File.OpenRead(filepath);
-            while (fs.Position < fs.Length) {
-                check += (ulong)fs.ReadByte();
-            }
-
-            return check;
+            Task.Run(() => Integrity.CheckIntegrity(Environment.ProcessPath ?? throw new FatalAppException("Process path not found -> very fatal!")));
 
         }
 

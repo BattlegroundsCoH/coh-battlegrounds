@@ -15,6 +15,7 @@ using Battlegrounds.Game.Match.Data;
 using Battlegrounds.Gfx;
 using Battlegrounds.Modding;
 using Battlegrounds.Networking;
+using Battlegrounds.Verification;
 
 namespace coh2_battlegrounds_console {
 
@@ -194,6 +195,7 @@ namespace coh2_battlegrounds_console {
                         this.UpdateDatabase(argumentList);
                         break;
                     case "checksum":
+                        this.ComputeChecksum();
                         break;
                     default:
                         Console.WriteLine("Undefined update target.");
@@ -207,12 +209,7 @@ namespace coh2_battlegrounds_console {
                 Console.ForegroundColor = this.m_col;
             }
 
-            class LastUse {
-                public string OutPath { get; set; }
-                public string InstancePath { get; set; }
-                public string ModGuid { get; set; }
-                public string ModName { get; set; }
-            }
+            record LastUse(string OutPath, string InstancePath, string ModGuid, string ModName);
 
             private void UpdateDatabase(CommandArgumentList args) {
                 
@@ -258,7 +255,7 @@ namespace coh2_battlegrounds_console {
                 Console.WriteLine($"Json Out: {jsonoutput}");
 
                 // Save
-                File.WriteAllText(recent, JsonSerializer.Serialize(new LastUse() { InstancePath = xmlinput, ModGuid = guid, ModName = mod, OutPath = jsonoutput }));
+                File.WriteAllText(recent, JsonSerializer.Serialize(new LastUse(jsonoutput, xmlinput, guid, mod)));
 
                 // Invoke
                 var proc = Process.Start(new ProcessStartInfo(xmlreader, "-do_last") { WorkingDirectory = Path.GetDirectoryName(xmlreader)});
@@ -266,6 +263,40 @@ namespace coh2_battlegrounds_console {
                 
                 Console.WriteLine();
                 Console.WriteLine(" -> Task DONE");
+
+            }
+
+            private void ComputeChecksum() {
+
+                // Get full checksum path
+                string checksumPath = Path.GetFullPath("..\\..\\..\\..\\coh2-battlegrounds\\checksum.txt");
+
+                // Get path to release build
+                string releaseExe = Path.GetFullPath("..\\..\\..\\..\\coh2-battlegrounds\\bin\\Release\\net6.0-windows\\coh2-battlegrounds.exe");
+
+                // Log
+                Console.WriteLine($"Checksum file: {checksumPath}");
+                Console.WriteLine($"Release Build: {releaseExe}");
+
+                // Make sure release build exists
+                if (!File.Exists(releaseExe)) {
+                    Console.WriteLine("Release executable not found - aborting!");
+                    return;
+                }
+
+                // Compute hash
+                Integrity.CheckIntegrity(releaseExe);
+
+                // Log hash
+                Console.WriteLine($"Computed integrity hash as: {Integrity.IntegrityHashString}");
+                Console.WriteLine($"Saving integrity hash to checksum file.");
+
+                // Save
+                File.WriteAllText(checksumPath, Integrity.IntegrityHashString);
+                File.Copy(checksumPath, releaseExe.Replace("coh2-battlegrounds.exe", "checksum.txt"), true);
+
+                // Log
+                Console.WriteLine("Saved hash to checksum file(s).");
 
             }
 
