@@ -28,7 +28,7 @@ namespace BattlegroundsApp.MVVM.Views {
 
         private void GameLobbyList_SelectionChanged(object sender, SelectionChangedEventArgs e) {
             if (this.DataContext is LobbyBrowserViewModel vm) {
-                vm.Join.Update(sender);
+                vm.RefreshJoin();
             }
         }
 

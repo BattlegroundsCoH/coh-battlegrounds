@@ -56,8 +56,6 @@ namespace Battlegrounds.Networking.LobbySystem {
 
         public event Action<int, LobbySlot>? OnLobbySlotUpdate;
 
-        public event Action<int, int, LobbyMember>? OnLobbyMemberUpdate;
-
         public event Action<int, int, LobbyCompany>? OnLobbyCompanyUpdate;
 
         public event Action<string, string>? OnLobbySettingUpdate;
@@ -246,9 +244,6 @@ namespace Battlegrounds.Networking.LobbySystem {
 
                     // Trigger team update
                     this.OnLobbySlotUpdate?.Invoke((int)message.Who, newSlot);
-
-                    break;
-                case "Notify.Member":
 
                     break;
                 case "Notify.Setting":
