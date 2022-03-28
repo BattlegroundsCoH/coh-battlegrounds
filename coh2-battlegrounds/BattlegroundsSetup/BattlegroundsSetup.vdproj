@@ -15,7 +15,7 @@
     {
         "Entry"
         {
-        "MsmKey" = "8:_5C7B8E73B6FC44208EB10FE72357924F"
+        "MsmKey" = "8:_E782E3AC4AAC4DA498F07E0E97C0601E"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -44,6 +44,14 @@
             "PrerequisitesLocation" = "2:1"
             "Url" = "8:"
             "ComponentsUrl" = "8:"
+                "Items"
+                {
+                    "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:.NETFramework,Version=v4.7.2"
+                    {
+                    "Name" = "8:Microsoft .NET Framework 4.7.2 (x86 and x64)"
+                    "ProductCode" = "8:.NETFramework,Version=v4.7.2"
+                    }
+                }
             }
         }
         "Release"
@@ -68,6 +76,14 @@
             "PrerequisitesLocation" = "2:1"
             "Url" = "8:"
             "ComponentsUrl" = "8:"
+                "Items"
+                {
+                    "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:.NETFramework,Version=v4.7.2"
+                    {
+                    "Name" = "8:Microsoft .NET Framework 4.7.2 (x86 and x64)"
+                    "ProductCode" = "8:.NETFramework,Version=v4.7.2"
+                    }
+                }
             }
         }
     }
@@ -676,9 +692,9 @@
         }
         "ProjectOutput"
         {
-            "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_5C7B8E73B6FC44208EB10FE72357924F"
+            "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_E782E3AC4AAC4DA498F07E0E97C0601E"
             {
-            "SourcePath" = "8:..\\coh2-battlegrounds\\obj\\Release\\net6.0-windows\\coh2-battlegrounds.dll"
+            "SourcePath" = "8:..\\coh2-battlegrounds\\obj\\Release\\net6.0-windows\\apphost.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_82F6D47E61E14934ADE652696C284614"
@@ -697,35 +713,7 @@
             "IsolateTo" = "8:"
             "ProjectOutputGroupRegister" = "3:1"
             "OutputConfiguration" = "8:Release|Any CPU"
-            "OutputGroupCanonicalName" = "8:Built"
-            "OutputProjectGuid" = "8:{16FC939E-9E79-41C1-A52E-7731E750239C}"
-            "ShowKeyOutput" = "11:TRUE"
-                "ExcludeFilters"
-                {
-                }
-            }
-            "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_C9DAFA9D24EF4869BA62C923E560087A"
-            {
-            "SourcePath" = "8:"
-            "TargetName" = "8:"
-            "Tag" = "8:"
-            "Folder" = "8:_82F6D47E61E14934ADE652696C284614"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            "ProjectOutputGroupRegister" = "3:1"
-            "OutputConfiguration" = "8:Release|Any CPU"
-            "OutputGroupCanonicalName" = "8:ContentFiles"
+            "OutputGroupCanonicalName" = "8:PublishItems"
             "OutputProjectGuid" = "8:{16FC939E-9E79-41C1-A52E-7731E750239C}"
             "ShowKeyOutput" = "11:TRUE"
                 "ExcludeFilters"
