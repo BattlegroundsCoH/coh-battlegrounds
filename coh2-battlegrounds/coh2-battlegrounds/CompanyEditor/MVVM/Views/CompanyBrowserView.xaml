@@ -48,7 +48,7 @@
             FontSize="28"
             FontFamily="Open Sans"
             FontWeight="Bold"
-            Margin="15, 5, 0, 0"
+            Margin="15, 0, 0, 0"
             VerticalContentAlignment="Center"/>
 
         <!-- Row 1 -->

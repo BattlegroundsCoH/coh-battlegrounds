@@ -34,10 +34,9 @@
             FontSize="28"
             FontFamily="Open Sans"
             FontWeight="Bold"
-            Margin="15, 5, 0, 0"
-            VerticalContentAlignment="Center">
-            GameBrowserView_Title
-        </controls:LocLabel>
+            Margin="15, 0, 0, 0"
+            VerticalContentAlignment="Center"
+            LocKey="GameBrowserView_Title"/>
 
         <!-- Row 1 -->
         <ListView x:Name="GameLobbyList" 
