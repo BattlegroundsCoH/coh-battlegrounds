@@ -16,6 +16,7 @@ using BattlegroundsApp.Dialogs.HostGame;
 using BattlegroundsApp.Dialogs.LobbyPassword;
 using BattlegroundsApp.Lobby.MVVM.Models;
 using BattlegroundsApp.LocalData;
+using BattlegroundsApp.Modals;
 using BattlegroundsApp.Utilities;
 
 namespace BattlegroundsApp.MVVM.Models {
@@ -134,18 +135,28 @@ namespace BattlegroundsApp.MVVM.Models {
 
         public void HostButton() {
 
-            // Check if user actually wants to host.
-            if (HostGameDialogViewModel.ShowHostGameDialog(new LocaleKey("GameBrowserView_HostGameDialog_Title"), out string lobbyName, out string lobbyPwd) is HostGameDialogResult.Host) {
+            // Null check
+            if (App.ViewManager.GetModalControl() is not ModalControl mControl) {
+                return;
+            }
 
-                // Check for null
-                if (lobbyPwd is null) {
-                    lobbyPwd = string.Empty;
+            Modals.Dialogs.MVVM.Models.HostGameDialogViewModel.ShowModal(mControl, (vm, resault) => {
+
+                // Check return value
+                if (resault is not ModalDialogResult.Confirm) {
+                    return;
+                }
+
+                // Check for null pwd
+                if (vm.LobbyPassword is null) {
+                    vm.LobbyPassword = string.Empty;
                 }
 
                 // Create lobby
-                _ = Task.Run(() => LobbyUtil.HostLobby(NetworkInterface.APIObject, lobbyName, lobbyPwd, this.HostLobbyResponse));
+                _ = Task.Run(() => LobbyUtil.HostLobby(NetworkInterface.APIObject, vm.LobbyName, vm.LobbyPassword, this.HostLobbyResponse));
+                
 
-            }
+            });
 
         }
 
@@ -189,9 +200,24 @@ namespace BattlegroundsApp.MVVM.Models {
 
                 // If password, ask for it
                 if (lobby.HasPassword) {
-                    if (LobbyPasswordDialogViewModel.ShowLobbyPasswordDialog(this.m_askpasswordkey, out pswd) is LobbyPasswordDialogResult.Cancel) {
+
+                    // Null check
+                    if (App.ViewManager.GetModalControl() is not ModalControl mControl) {
                         return;
                     }
+
+                    // Do modal
+                    Modals.Dialogs.MVVM.Models.LobbyJoinDialogViewModel.ShowModal(mControl, (vm, resault) => {
+
+                        // Check return value
+                        if (resault is not ModalDialogResult.Confirm) {
+                            return;
+                        }
+
+                        pswd = vm.Password;
+
+                    });
+
                 }
 
                 _ = Task.Run(() => {

@@ -182,15 +182,25 @@ public class CompanyBrowserViewModel : IViewModel {
         if (this.SelectedCompany is null)
             return;
 
-        if (YesNoDialogViewModel.ShowYesNoDialog(new LocaleKey("CompanyView_YesNoDialog_Delete_Company_Title"), new LocaleKey("CompanyView_YesNoDialog_Delete_Company_Message"))
-            is YesNoDialogResult.Confirm) {
+        // Null check
+        if (App.ViewManager.GetModalControl() is not ModalControl mControl) {
+            return;
+        }
+
+        // Do modal
+        Modals.Dialogs.MVVM.Models.YesNoDialogViewModel.ShowModal(mControl, (vm, resault) => {
+
+            // Check return value
+            if (resault is not ModalDialogResult.Confirm) {
+                return;
+            }
 
             PlayerCompanies.DeleteCompany(SelectedCompany);
 
             UpdateCompanyList();
 
-        }
-    
+        }, "Delete Company", "This action can not be undone. Are you sure?");
+
     }
 
     public void CopyButton() {

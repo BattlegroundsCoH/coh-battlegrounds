@@ -107,10 +107,23 @@
             <companyEditorViews:AvailableItemView/>
         </DataTemplate>
         
-        <!-- New Dialogs -->
+        <!-- DIALOGS START -->
         <DataTemplate DataType="{x:Type dialogModels:CreateCompanyDialogViewModel}">
             <dialogViews:CreateCompanyDialogView/>
         </DataTemplate>
+
+        <DataTemplate DataType="{x:Type dialogModels:HostGameDialogViewModel}">
+            <dialogViews:HostGameDialogView/>
+        </DataTemplate>
+
+        <DataTemplate DataType="{x:Type dialogModels:YesNoDialogViewModel}">
+            <dialogViews:YesNoDialogView/>
+        </DataTemplate>
+
+        <DataTemplate DataType="{x:Type dialogModels:LobbyJoinDialogViewModel}">
+            <dialogViews:LobbyJoinDialogView/>
+        </DataTemplate>
+        <!-- DIALOGS END -->
 
         <DataTemplate DataType="{x:Type lobbymodels:LobbyChatSpectatorModel}">
             <lobbyviews:LobbyChatSpectatorView/>
