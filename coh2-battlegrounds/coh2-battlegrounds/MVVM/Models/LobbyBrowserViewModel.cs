@@ -135,19 +135,6 @@ namespace BattlegroundsApp.MVVM.Models {
 
         public void HostButton() {
 
-            // Check if user actually wants to host.
-            //if (HostGameDialogViewModel.ShowHostGameDialog(new LocaleKey("GameBrowserView_HostGameDialog_Title"), out string lobbyName, out string lobbyPwd) is HostGameDialogResult.Host) {
-
-            //    // Check for null
-            //    if (lobbyPwd is null) {
-            //        lobbyPwd = string.Empty;
-            //    }
-
-            //    // Create lobby
-            //    _ = Task.Run(() => LobbyUtil.HostLobby(NetworkInterface.APIObject, lobbyName, lobbyPwd, this.HostLobbyResponse));
-
-            //}
-
             // Null check
             if (App.ViewManager.GetModalControl() is not ModalControl mControl) {
                 return;
@@ -160,6 +147,13 @@ namespace BattlegroundsApp.MVVM.Models {
                     return;
                 }
 
+                // Check for null pwd
+                if (vm.LobbyPassword is null) {
+                    vm.LobbyPassword = string.Empty;
+                }
+
+                // Create lobby
+                _ = Task.Run(() => LobbyUtil.HostLobby(NetworkInterface.APIObject, vm.LobbyName, vm.LobbyPassword, this.HostLobbyResponse));
                 
 
             });
