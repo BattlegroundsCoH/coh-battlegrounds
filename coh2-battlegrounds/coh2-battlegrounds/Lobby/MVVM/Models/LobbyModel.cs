@@ -420,18 +420,26 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
 
         private void LeaveLobby() {
 
-            // Show leave modal
-            App.ViewManager.GetModalControl()?.ShowModal(ModalDialog.CreateModal("Leave Lobby", "Are you sure you'd like to leave?", (sender, success, value) => {
-                if (success && value == ModalDialogResult.Confirm) {
+            // Null check
+            if (App.ViewManager.GetModalControl() is not ModalControl mControl) {
+                return;
+            }
 
-                    // Leave lobby
-                    Task.Run(this.m_handle.Disconnect);
+            // Do modal
+            Modals.Dialogs.MVVM.Models.YesNoDialogViewModel.ShowModal(mControl, (vm, resault) => {
 
-                    // Go back to browser view
-                    App.ViewManager.SetDisplay(AppDisplayState.LeftRight, typeof(LeftMenu), typeof(LobbyBrowserViewModel));
-
+                // Check return value
+                if (resault is not ModalDialogResult.Confirm) {
+                    return;
                 }
-            }));
+
+                // Leave lobby
+                Task.Run(this.m_handle.Disconnect);
+
+                // Go back to browser view
+                App.ViewManager.SetDisplay(AppDisplayState.LeftRight, typeof(LeftMenu), typeof(LobbyBrowserViewModel));
+
+            }, "Leave Lobby", "Are you sure you'd like to leave?");
 
         }
 
