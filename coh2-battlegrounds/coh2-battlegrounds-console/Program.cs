@@ -231,9 +231,15 @@ namespace coh2_battlegrounds_console {
                 // Get input dir
                 string xmlinput = mod switch {
                     "vcoh" => Path.GetFullPath(args.GetValue(TOOL) + @"\assets\data\attributes\instances"),
-                    "mod_bg" => Path.GetFullPath("E:\\coh2_battlegrounds\\coh2-battlegrounds-mod\\tuning_mod\\instances"),
-                    _ => throw new NotSupportedException()
+                    "mod_bg" => Path.GetFullPath("..\\..\\..\\..\\..\\coh2-battlegrounds-mod\\tuning_mod\\instances"),
+                    _ => $"$DIR({mod})"
                 };
+
+                // Log and bail
+                if (!Directory.Exists(xmlinput)) {
+                    this.Err($"Fatal Error: Directory {xmlinput} not found for mod {mod}");
+                    return;
+                }
 
                 // Get output dir
                 string jsonoutput = mod switch {
