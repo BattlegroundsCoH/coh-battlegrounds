@@ -119,6 +119,10 @@
         <DataTemplate DataType="{x:Type dialogModels:YesNoDialogViewModel}">
             <dialogViews:YesNoDialogView/>
         </DataTemplate>
+
+        <DataTemplate DataType="{x:Type dialogModels:LobbyJoinDialogViewModel}">
+            <dialogViews:LobbyJoinDialogView/>
+        </DataTemplate>
         <!-- DIALOGS END -->
 
         <DataTemplate DataType="{x:Type lobbymodels:LobbyChatSpectatorModel}">
