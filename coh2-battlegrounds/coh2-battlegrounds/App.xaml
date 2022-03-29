@@ -115,6 +115,10 @@
         <DataTemplate DataType="{x:Type dialogModels:HostGameDialogViewModel}">
             <dialogViews:HostGameDialogView/>
         </DataTemplate>
+
+        <DataTemplate DataType="{x:Type dialogModels:YesNoDialogViewModel}">
+            <dialogViews:YesNoDialogView/>
+        </DataTemplate>
         <!-- DIALOGS END -->
 
         <DataTemplate DataType="{x:Type lobbymodels:LobbyChatSpectatorModel}">
