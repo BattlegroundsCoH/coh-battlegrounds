@@ -39,10 +39,24 @@
             LocKey="GameBrowserView_Title"/>
 
         <!-- Row 1 -->
-        <ListView x:Name="GameLobbyList" 
-                  Grid.Row="1" 
+        <Grid Grid.Row="1"
+              Grid.Column="0"
+              Grid.ColumnSpan="4">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="128"/>
+                <ColumnDefinition/>
+                <ColumnDefinition Width="128"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="32"/>
+                <RowDefinition Height="64"/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <ListView x:Name="GameLobbyList" 
+                  Grid.Row="0" 
+                  Grid.RowSpan="3"
                   Grid.Column="0" 
-                  Grid.ColumnSpan="4"
+                  Grid.ColumnSpan="3"
                   Margin="15, 7.5, 15, 2"
                   ItemsSource="{Binding Lobbies}"
                   SelectedIndex="{Binding SelectedLobbyIndex, Mode=TwoWay}"
@@ -51,51 +65,109 @@
                   Style="{StaticResource StandardBlueListViewStyle}"
                   ItemContainerStyle="{StaticResource StandardBlueListViewItem}"
                   SelectionChanged="GameLobbyList_SelectionChanged"
-                  >
-            <ListView.View>
-                <GridView>
-                    <GridViewColumn 
-                        Header="{Binding NameListWiewHeader, Converter={StaticResource LocaleConvertor}}" 
-                        Width="{Binding ElementName=firstColumnSize, Path=ActualWidth}" 
-                        DisplayMemberBinding="{Binding Name}"
-                        HeaderContainerStyle="{StaticResource StandardBlueGridViewHeader}"/>
-                    <GridViewColumn 
-                        Header="{Binding GamemodeListWiewHeader, Converter={StaticResource LocaleConvertor}}" 
-                        Width="156" 
-                        DisplayMemberBinding="{Binding TranslatedMode}"
-                        HeaderContainerStyle="{StaticResource StandardBlueGridViewHeader}"/>
-                    <GridViewColumn 
-                        Header="{Binding StateListWiewHeader, Converter={StaticResource LocaleConvertor}}" 
-                        Width="125" 
-                        DisplayMemberBinding="{Binding TranslatedState}"
-                        HeaderContainerStyle="{StaticResource StandardBlueGridViewHeader}"/>
-                    <GridViewColumn 
-                        Header="{Binding PlayersListWiewHeader, Converter={StaticResource LocaleConvertor}}" 
-                        Width="80" 
-                        DisplayMemberBinding="{Binding CapacityString}"
-                        HeaderContainerStyle="{StaticResource StandardBlueGridViewHeader}"/>
-                    <GridViewColumn 
-                        Header="{Binding PasswordListWiewHeader, Converter={StaticResource LocaleConvertor}}" 
-                        Width="80" 
-                        DisplayMemberBinding="{Binding HasPassword}"
-                        HeaderContainerStyle="{StaticResource StandardBlueGridViewHeader}"/>
-                </GridView>
-            </ListView.View>
-        </ListView>
-        <!-- Fuck WPF - Hack that makes the GridView column sizing make sense -->
-        <Grid Visibility="Hidden" 
-              Grid.Row="1" 
+                  ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                <ListView.Resources>
+                    <Style x:Key="LobbyLabel" TargetType="{x:Type Label}">
+                        <Setter Property="Foreground" Value="#d8dbde"/>
+                        <Setter Property="FontWeight" Value="DemiBold"/>
+                        <Setter Property="FontFamily" Value="Open Sans"/>
+                        <Setter Property="HorizontalAlignment" Value="Center"/>
+                    </Style>
+                </ListView.Resources>
+                <ListView.View>
+                    <GridView>
+                        <GridViewColumn 
+                            Header="{Binding NameListWiewHeader, Converter={StaticResource LocaleConvertor}}" 
+                            Width="{Binding ElementName=firstColumnSize, Path=ActualWidth}" 
+                            HeaderContainerStyle="{StaticResource StandardBlueGridViewHeader}">
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Label 
+                                        Content="{Binding Name}"
+                                        Style="{StaticResource LobbyLabel}"
+                                        HorizontalAlignment="Left"/>
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
+                        <GridViewColumn 
+                            Header="{Binding GamemodeListWiewHeader, Converter={StaticResource LocaleConvertor}}" 
+                            Width="194" 
+                            DisplayMemberBinding="{Binding TranslatedMode}"
+                            HeaderContainerStyle="{StaticResource StandardBlueGridViewHeader}">
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Label 
+                                        Content="{Binding TranslatedMode}"
+                                        Style="{StaticResource LobbyLabel}"/>
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
+                        <GridViewColumn 
+                            Header="{Binding StateListWiewHeader, Converter={StaticResource LocaleConvertor}}" 
+                            Width="125" 
+                            HeaderContainerStyle="{StaticResource StandardBlueGridViewHeader}">
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <controls:LocLabel 
+                                        LocKey="{Binding TranslatedState}"
+                                        Style="{StaticResource LobbyLabel}"/>
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
+                        <GridViewColumn 
+                            Header="{Binding PlayersListWiewHeader, Converter={StaticResource LocaleConvertor}}" 
+                            Width="72" 
+                            HeaderContainerStyle="{StaticResource StandardBlueGridViewHeader}">
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Label 
+                                        Content="{Binding CapacityString}"
+                                        Style="{StaticResource LobbyLabel}"/>
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
+                        <GridViewColumn 
+                            Header="{Binding PasswordListWiewHeader, Converter={StaticResource LocaleConvertor}}" 
+                            Width="72" 
+                            HeaderContainerStyle="{StaticResource StandardBlueGridViewHeader}">
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Label 
+                                        Content="{Binding HasPassword}"
+                                        Style="{StaticResource LobbyLabel}"/>
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
+                    </GridView>
+                </ListView.View>
+            </ListView>
+            <!-- Fuck WPF - Hack that makes the GridView column sizing make sense -->
+            <Grid Visibility="Hidden" 
+              Grid.Row="0"
+              Grid.RowSpan="3"
               Grid.Column="0"
-              Grid.ColumnSpan="4"
-              Margin="15, 7.5, 15, 2">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="156"/>
-                <ColumnDefinition Width="125"/>
-                <ColumnDefinition Width="80"/>
-                <ColumnDefinition Width="80"/>
-            </Grid.ColumnDefinitions>
-            <Grid x:Name="firstColumnSize"/>
+              Grid.ColumnSpan="3"
+              Margin="15">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="194"/>
+                    <ColumnDefinition Width="125"/>
+                    <ColumnDefinition Width="72"/>
+                    <ColumnDefinition Width="72"/>
+                </Grid.ColumnDefinitions>
+                <Grid x:Name="firstColumnSize"
+                      Grid.Column="0"/>
+            </Grid>
+            <controls:LocLabel
+                Grid.Column="1"
+                Grid.Row="1"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                Foreground="Gray"
+                FontFamily="Open Sans"
+                FontSize="14"
+                LocKey="{Binding InfoKey}"
+                Visibility="{Binding InfoKeyVisible}"/>
         </Grid>
 
         <!-- Row 2 -->

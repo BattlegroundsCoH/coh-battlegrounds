@@ -2421,6 +2421,13 @@
             Setup the network API.
             </summary>
         </member>
+        <member name="M:Battlegrounds.Networking.NetworkInterface.HasInternetConnection(System.Int32)">
+            <summary>
+            Determines if the local machine is connected to the internet (can connect to http://www.google.com ) at the time of the call.
+            </summary>
+            <param name="timeout">The amount of milliseconds to wait before declaring connection timed out.</param>
+            <returns>If internet connection was established <see langword="true"/> is returned; Otherwise <see langword="false"/>.</returns>
+        </member>
         <member name="M:Battlegrounds.Networking.NetworkInterface.GetBestAddress(System.Int32)">
             <summary>
             Get the best server address available.
@@ -3994,24 +4001,45 @@
         </member>
         <member name="T:Battlegrounds.Networking.Server.APIException">
             <summary>
-            
+            Represents errors casued when invoking the server API.
             </summary>
         </member>
         <member name="P:Battlegrounds.Networking.Server.APIException.API">
             <summary>
-            
+            The API call that caused this exception.
             </summary>
         </member>
         <member name="M:Battlegrounds.Networking.Server.APIException.#ctor(System.String,System.String)">
             <summary>
+            Initialise a new instance of the <see cref="T:Battlegrounds.Networking.Server.APIException"/> class with the causing API call and error message.
+            </summary>
+            <param name="apicall">API call that caused the exception.</param>
+            <param name="message">The error message associated with the exception.</param>
+        </member>
+        <member name="M:Battlegrounds.Networking.Server.APIException.#ctor(System.String,System.String,System.Exception)">
+            <summary>
+            Initialise a new instance of the <see cref="T:Battlegrounds.Networking.Server.APIException"/> class with the causing API call and error message. Including the inner exception that triggered this exception.
+            </summary>
+            <param name="apicall">API call that caused the exception.</param>
+            <param name="message">The error message associated with the exception.</param>
+            <param name="innerException">The inner exception that caused this exception.</param>
+        </member>
+        <member name="T:Battlegrounds.Networking.Server.APIConnectionException">
+            <summary>
+            Represents API connection errors.
+            </summary>
+        </member>
+        <member name="M:Battlegrounds.Networking.Server.APIConnectionException.#ctor(System.String,System.String,System.Exception)">
+            <summary>
             
             </summary>
-            <param name="apicall"></param>
-            <param name="message"></param>
+            <param name="apicall">API call that caused the exception.</param>
+            <param name="message">The error message associated with the exception.</param>
+            <param name="innerException">The inner exception that caused this exception.</param>
         </member>
         <member name="T:Battlegrounds.Networking.Server.UploadException">
             <summary>
-            
+            Represents API upload errors.
             </summary>
         </member>
         <member name="M:Battlegrounds.Networking.Server.UploadException.#ctor(System.String)">
@@ -4029,7 +4057,7 @@
         </member>
         <member name="T:Battlegrounds.Networking.Server.DownloadException">
             <summary>
-            
+            Represents API download errors.
             </summary>
         </member>
         <member name="M:Battlegrounds.Networking.Server.DownloadException.#ctor(System.String)">
@@ -4072,16 +4100,111 @@
             API instance for interacting with the server.
             </summary>
         </member>
+        <member name="T:Battlegrounds.Networking.Server.ServerAPI.PublicMessage">
+            <summary>
+            Represents a public message from developers regarding the project.
+            </summary>
+        </member>
+        <member name="P:Battlegrounds.Networking.Server.ServerAPI.PublicMessage.Message">
+            <summary>
+            Get the set of messages tied to specific languages.
+            </summary>
+            <remarks>
+            See <see cref="P:Battlegrounds.Networking.Server.ServerAPI.PublicMessage.DefaultMessage"/> if local language version is not available.
+            </remarks>
+        </member>
+        <member name="P:Battlegrounds.Networking.Server.ServerAPI.PublicMessage.DefaultMessage">
+            <summary>
+            Get the default message (english)
+            </summary>
+        </member>
+        <member name="P:Battlegrounds.Networking.Server.ServerAPI.PublicMessage.MessageType">
+            <summary>
+            Get the message type
+            </summary>
+        </member>
+        <member name="P:Battlegrounds.Networking.Server.ServerAPI.PublicMessage.MessagePriority">
+            <summary>
+            Get the message priority
+            </summary>
+        </member>
+        <member name="P:Battlegrounds.Networking.Server.ServerAPI.PublicMessage.StartTick">
+            <summary>
+            Get the start date tick
+            </summary>
+        </member>
+        <member name="P:Battlegrounds.Networking.Server.ServerAPI.PublicMessage.Start">
+            <summary>
+            Get the local time this message should start appearing from.
+            </summary>
+        </member>
+        <member name="P:Battlegrounds.Networking.Server.ServerAPI.PublicMessage.EndTick">
+            <summary>
+            Get the end date tick
+            </summary>
+        </member>
+        <member name="P:Battlegrounds.Networking.Server.ServerAPI.PublicMessage.End">
+            <summary>
+            Get the local time this message should no longer be displayed from.
+            </summary>
+        </member>
+        <member name="M:Battlegrounds.Networking.Server.ServerAPI.PublicMessage.#ctor(System.Collections.Generic.Dictionary{System.String,System.String},System.String,System.Int32,System.Int64,System.Int64)">
+            <summary>
+            Initialise a new <see cref="T:Battlegrounds.Networking.Server.ServerAPI.PublicMessage"/> instance with a message and meta data.
+            </summary>
+            <param name="Message">The localised messages.</param>
+            <param name="MessageType">The message type.</param>
+            <param name="MessagePriority">The message priority.</param>
+            <param name="StartTick">The start tick.</param>
+            <param name="EndTick">The end tick.</param>
+        </member>
+        <member name="T:Battlegrounds.Networking.Server.ServerAPI.LatestVersion">
+            <summary>
+            Represents the latest up-to-date version data from the server.
+            </summary>
+            <remarks>
+            Should be used to compare against own version.
+            </remarks>
+        </member>
+        <member name="P:Battlegrounds.Networking.Server.ServerAPI.LatestVersion.Branch">
+            <summary>
+            Get the name of the latest server branch.
+            </summary>
+        </member>
+        <member name="P:Battlegrounds.Networking.Server.ServerAPI.LatestVersion.Version">
+            <summary>
+            Get the numeric version (as a string).
+            </summary>
+        </member>
+        <member name="P:Battlegrounds.Networking.Server.ServerAPI.LatestVersion.VersionTitle">
+            <summary>
+            Get the title given to the version. (May be empty).
+            </summary>
+        </member>
+        <member name="M:Battlegrounds.Networking.Server.ServerAPI.LatestVersion.#ctor(System.String,System.String,System.String)">
+            <summary>
+            Initialise a new <see cref="T:Battlegrounds.Networking.Server.ServerAPI.LatestVersion"/> instance with branch, version and title.
+            </summary>
+            <param name="Branch">The latest version branch.</param>
+            <param name="Version">The numeric version representation.</param>
+            <param name="VersionTitle">The title of the version.</param>
+        </member>
         <member name="P:Battlegrounds.Networking.Server.ServerAPI.HasGUID">
             <summary>
             Get the a lobby GUID has been given to the server API to simplify method calls.
             </summary>
         </member>
-        <member name="M:Battlegrounds.Networking.Server.ServerAPI.#ctor(System.String)">
+        <member name="P:Battlegrounds.Networking.Server.ServerAPI.SafeMode">
+            <summary>
+            Get or set whether this <see cref="T:Battlegrounds.Networking.Server.ServerAPI"/> instance should behave in an exception safe mode.
+            </summary>
+        </member>
+        <member name="M:Battlegrounds.Networking.Server.ServerAPI.#ctor(System.String,System.Boolean)">
             <summary>
             Initialise a new server API client for targetted <paramref name="address"/>.
             </summary>
             <param name="address">The address of the API.</param>
+            <param name="safeMode">Should API calls cause exceptions or return default values.</param>
         </member>
         <member name="M:Battlegrounds.Networking.Server.ServerAPI.Ping">
             <summary>
@@ -4100,6 +4223,21 @@
             Get all currently active lobbies on the server.
             </summary>
             <returns>A list of all active lobbies.</returns>
+            <exception cref="T:Battlegrounds.Networking.Server.APIConnectionException"/>
+        </member>
+        <member name="M:Battlegrounds.Networking.Server.ServerAPI.GetPublicMessages">
+            <summary>
+            Get all public messages.
+            </summary>
+            <returns>A list of <see cref="T:Battlegrounds.Networking.Server.ServerAPI.PublicMessage"/> instances in unoredered form.</returns>
+            <exception cref="T:Battlegrounds.Networking.Server.APIConnectionException"></exception>
+        </member>
+        <member name="M:Battlegrounds.Networking.Server.ServerAPI.GetLatestVersionInfo">
+            <summary>
+            Get information object of latest version.
+            </summary>
+            <returns>A <see cref="T:Battlegrounds.Networking.Server.ServerAPI.LatestVersion"/> instance.</returns>
+            <exception cref="T:Battlegrounds.Networking.Server.APIConnectionException"></exception>
         </member>
         <member name="M:Battlegrounds.Networking.Server.ServerAPI.UploadResults(Battlegrounds.Networking.Server.ServerMatchResults)">
             <summary>

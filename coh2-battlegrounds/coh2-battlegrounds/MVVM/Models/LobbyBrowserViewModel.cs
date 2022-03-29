@@ -32,10 +32,11 @@ namespace BattlegroundsApp.MVVM.Models {
 
     public class LobbyBrowserViewModel : IViewModel, INotifyPropertyChanged {
 
+        private static readonly LocaleKey _noMatches = new LocaleKey("GameBrowserView_NoLobbies");
+        private static readonly LocaleKey _noConnection = new LocaleKey("GameBrowserView_NoConnection");
+
         private readonly bool __useMockData = false; // SET TO FALSE WHEN TESTING IS OVER
         private DateTime m_lastRefresh;
-
-        private readonly LocaleKey m_askpasswordkey;
 
         public LobbyBrowserButton Refresh { get; }
 
@@ -54,6 +55,10 @@ namespace BattlegroundsApp.MVVM.Models {
         public LocaleKey PlayersListWiewHeader { get; }
 
         public LocaleKey PasswordListWiewHeader { get; }
+
+        public LocaleKey? InfoKey { get; private set; }
+
+        public Visibility InfoKeyVisible { get; private set; }
 
         public EventCommand JoinLobbyDirectly { get; }
 
@@ -86,10 +91,20 @@ namespace BattlegroundsApp.MVVM.Models {
             this.StateListWiewHeader = new LocaleKey("GameBrowserView_State");
             this.PlayersListWiewHeader = new LocaleKey("GameBrowserView_Players");
             this.PasswordListWiewHeader = new LocaleKey("GameBrowserView_Password");
-            this.m_askpasswordkey = new LocaleKey("LobbyPasswordDialogView_Password_Title");
+            this.InfoKeyVisible = Visibility.Collapsed;
 
             // Set selected index
             this.SelectedLobbyIndex = -1;
+
+            // Check connection and update
+            Task.Run(() => {
+                Application.Current.Dispatcher.Invoke(() => {
+                    if (!NetworkInterface.HasInternetConnection()) {
+                        this.InfoKey = _noConnection;
+                        this.InfoKeyVisible = Visibility.Visible;
+                    }
+                });
+            });
 
         }
 
@@ -195,9 +210,6 @@ namespace BattlegroundsApp.MVVM.Models {
         public void JoinButton() {
             if (this.SelectedLobby is ServerLobby lobby) {
 
-                // Set password
-                string pswd = string.Empty;
-
                 // If password, ask for it
                 if (lobby.HasPassword) {
 
@@ -214,15 +226,19 @@ namespace BattlegroundsApp.MVVM.Models {
                             return;
                         }
 
-                        pswd = vm.Password;
+                        _ = Task.Run(() => {
+                            LobbyUtil.JoinLobby(NetworkInterface.APIObject, lobby, vm.Password, this.JoinLobbyResponse);
+                        });
 
                     });
 
-                }
+                } else {
 
-                _ = Task.Run(() => {
-                    LobbyUtil.JoinLobby(NetworkInterface.APIObject, lobby, pswd, this.JoinLobbyResponse);
-                });
+                    _ = Task.Run(() => {
+                        LobbyUtil.JoinLobby(NetworkInterface.APIObject, lobby, string.Empty, this.JoinLobbyResponse);
+                    });
+
+                }
 
             }
         }
@@ -285,7 +301,17 @@ namespace BattlegroundsApp.MVVM.Models {
                     },
                 };
             } else {
-                return NetworkInterface.APIObject.GetLobbies();
+                var lobbies = NetworkInterface.APIObject.GetLobbies();
+                if (lobbies.Count is 0) {
+                    Application.Current.Dispatcher.Invoke(() => {
+                        if (this.InfoKey == _noConnection) {
+                            return;
+                        }
+                        this.InfoKey = _noMatches;
+                        this.InfoKeyVisible = Visibility.Visible;
+                    });
+                }
+                return lobbies;
             }
         }
 

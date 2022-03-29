@@ -27,6 +27,7 @@ using Battlegrounds.Networking.Server;
 using BattlegroundsApp.Lobby.MatchHandling;
 using BattlegroundsApp.LocalData;
 using BattlegroundsApp.Modals;
+using BattlegroundsApp.Modals.Dialogs.MVVM.Models;
 using BattlegroundsApp.MVVM;
 using BattlegroundsApp.MVVM.Models;
 using BattlegroundsApp.Resources;
@@ -42,6 +43,9 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
         private static readonly LocaleKey __playabilityAlliesNoPlayers = new("LobbyView_StartMatchAlliesNoPlayers");
         private static readonly LocaleKey __playabilityAxisInvalid = new("LobbyView_StartMatchAxisInvalid");
         private static readonly LocaleKey __playabilityAxisNoPlayers = new("LobbyView_StartMatchAxisNoPlayers");
+
+        private static readonly LocaleKey __leaveTitle = new("LobbyView_DialogLeaveTitle");
+        private static readonly LocaleKey __leaveDesc = new("LobbyView_DialogLeaveDesc");
 
         private readonly LobbyAPI m_handle;
         private LobbyChatSpectatorModel? m_chatModel;
@@ -425,8 +429,12 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
                 return;
             }
 
+            // Lookup strings
+            string title = BattlegroundsInstance.Localize.GetString(__leaveTitle);
+            string desc = BattlegroundsInstance.Localize.GetString(__leaveDesc);
+
             // Do modal
-            Modals.Dialogs.MVVM.Models.YesNoDialogViewModel.ShowModal(mControl, (vm, resault) => {
+            YesNoDialogViewModel.ShowModal(mControl, (vm, resault) => {
 
                 // Check return value
                 if (resault is not ModalDialogResult.Confirm) {
@@ -439,7 +447,7 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
                 // Go back to browser view
                 App.ViewManager.SetDisplay(AppDisplayState.LeftRight, typeof(LeftMenu), typeof(LobbyBrowserViewModel));
 
-            }, "Leave Lobby", "Are you sure you'd like to leave?");
+            }, title, desc);
 
         }
 
@@ -803,15 +811,19 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
 
         private void OnConnectionLost(string reason) {
 
-            // Decide on title and desc
-            string modalTitle = reason switch {
-                "KICK" => "Kicked from lobby",
-                _ => "Connection lost"
-            };
-            string modalDesc = reason switch {
-                "KICK" => "You were kicked from the lobby by the host",
-                _ => "Connection to server was lost."
-            };
+            // Decide on title
+            string modalTitle = BattlegroundsInstance.Localize.GetString(reason switch {
+                "KICK" => "LobbyView_DialogKickTitle",
+                "CLOSED" => "LobbyView_DialogCloseTitle",
+                _ => "LobbyView_DialogLostTitle"
+            });
+
+            // Decide on desc
+            string modalDesc = BattlegroundsInstance.Localize.GetString(reason switch {
+                "KICK" => "LobbyView_DialogKickDesc",
+                "CLOSED" => "LobbyView_DialogCloseDesc",
+                _ => "LobbyView_DialogLostDesc"
+            });
 
             // Goto GUI thread and show connection lost.
             Application.Current.Dispatcher.Invoke(() => {
