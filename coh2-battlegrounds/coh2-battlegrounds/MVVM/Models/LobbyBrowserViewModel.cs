@@ -200,9 +200,24 @@ namespace BattlegroundsApp.MVVM.Models {
 
                 // If password, ask for it
                 if (lobby.HasPassword) {
-                    if (LobbyPasswordDialogViewModel.ShowLobbyPasswordDialog(this.m_askpasswordkey, out pswd) is LobbyPasswordDialogResult.Cancel) {
+
+                    // Null check
+                    if (App.ViewManager.GetModalControl() is not ModalControl mControl) {
                         return;
                     }
+
+                    // Do modal
+                    Modals.Dialogs.MVVM.Models.LobbyJoinDialogViewModel.ShowModal(mControl, (vm, resault) => {
+
+                        // Check return value
+                        if (resault is not ModalDialogResult.Confirm) {
+                            return;
+                        }
+
+                        pswd = vm.Password;
+
+                    });
+
                 }
 
                 _ = Task.Run(() => {
