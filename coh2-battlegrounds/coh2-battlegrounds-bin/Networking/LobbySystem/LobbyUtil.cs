@@ -33,9 +33,6 @@ namespace Battlegrounds.Networking.LobbySystem {
             // Get steam user
             var steamUser = BattlegroundsInstance.Steam.User;
 
-            // Log in with auth service
-            AuthService.Login(steamUser.ID, steamUser.Name);
-
             // Success flag
             bool success = false;
 
@@ -52,7 +49,7 @@ namespace Battlegrounds.Networking.LobbySystem {
                 };
 
                 // Establish connection
-                ServerConnection connection = ServerConnection.ConnectToServer(NetworkInterface.GetBestAddress(), 11000, intro, out ulong lobbyID);
+                ServerConnection? connection = ServerConnection.ConnectToServer(NetworkInterface.GetBestAddress(), 11000, intro, out ulong lobbyID);
                 if (connection is null) {
                     throw new ConnectionFailedException("Failed to establish TCP connection.");
                 }
@@ -102,9 +99,6 @@ namespace Battlegrounds.Networking.LobbySystem {
             // Get steam user
             var steamUser = BattlegroundsInstance.Steam.User;
 
-            // Log in with auth service
-            AuthService.Login(steamUser.ID, steamUser.Name);
-
             // Success flag
             bool success = false;
 
@@ -123,7 +117,7 @@ namespace Battlegrounds.Networking.LobbySystem {
                 };
 
                 // Establish TCP connection
-                ServerConnection connection = ServerConnection.ConnectToServer(NetworkInterface.GetBestAddress(), 11000, intro, out ulong lobbyID);
+                ServerConnection? connection = ServerConnection.ConnectToServer(NetworkInterface.GetBestAddress(), 11000, intro, out ulong lobbyID);
                 if (connection is null) {
                     throw new ConnectionFailedException("Failed to establish TCP connection.");
                 }
