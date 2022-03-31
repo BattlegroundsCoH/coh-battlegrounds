@@ -11,12 +11,36 @@ using Battlegrounds.Networking.Memory;
 using Battlegrounds.Networking.Server;
 using Battlegrounds.Steam;
 
-using static Battlegrounds.Networking.LobbySystem.LobbyAPIStructs;
 using Battlegrounds.ErrorHandling.CommonExceptions;
+using System.Text;
+
+using static Battlegrounds.Networking.LobbySystem.LobbyAPIStructs;
 
 namespace Battlegrounds.Networking.LobbySystem;
 
-public class LobbyAPI {
+/// <summary>
+/// 
+/// </summary>
+public delegate void LobbyMatchEventHandler();
+
+/// <summary>
+/// 
+/// </summary>
+/// <typeparam name="T"></typeparam>
+/// <param name="args"></param>
+public delegate void LobbyMatchEventHandler<T>(T args);
+
+/// <summary>
+/// 
+/// </summary>
+/// <param name="CancelID"></param>
+/// <param name="CancelName"></param>
+public record LobbyMatchStartupCancelledEventArgs(ulong CancelID, string CancelName);
+
+/// <summary>
+/// Class for interacting with the lobby logic on the server.
+/// </summary>
+public sealed class LobbyAPI {
 
     private static readonly TimeSpan __cacheTime = TimeSpan.FromSeconds(3.5);
     private static readonly TimeZoneInfo __thisTimezone = TimeZoneInfo.Local;
@@ -34,13 +58,13 @@ public class LobbyAPI {
 
     public bool IsHost => this.m_isHost;
 
-    public LobbyTeam Allies => this.m_allies.GetCachedValue(() => this.GetTeam(0, RefreshInternalReference: false));
+    public LobbyTeam? Allies => this.m_allies.GetCachedValue(() => this.GetTeam(0, RefreshInternalReference: false));
 
-    public LobbyTeam Axis => this.m_axis.GetCachedValue(() => this.GetTeam(1, RefreshInternalReference: false));
+    public LobbyTeam? Axis => this.m_axis.GetCachedValue(() => this.GetTeam(1, RefreshInternalReference: false));
 
-    public LobbyTeam Observers => this.m_obs.GetCachedValue(() => this.GetTeam(2, RefreshInternalReference: false));
+    public LobbyTeam? Observers => this.m_obs.GetCachedValue(() => this.GetTeam(2, RefreshInternalReference: false));
 
-    public Dictionary<string, string> Settings => this.m_settings.GetCachedValue(this.GetSettings);
+    public Dictionary<string, string>? Settings => this.m_settings.GetCachedValue(this.GetSettings);
 
     public ServerAPI ServerHandle { get; }
 
@@ -54,7 +78,7 @@ public class LobbyAPI {
 
     public event Action<LobbyTeam>? OnLobbyTeamUpdate;
 
-    public event Action<int, LobbySlot>? OnLobbySlotUpdate;
+    public event LobbyMatchEventHandler<LobbySlot>? OnLobbySlotUpdate;
 
     public event Action<int, int, LobbyCompany>? OnLobbyCompanyUpdate;
 
@@ -62,7 +86,7 @@ public class LobbyAPI {
 
     public event Action<string>? OnLobbyConnectionLost;
 
-    public event Action<ulong>? OnLobbyCancelStartup;
+    public event LobbyMatchEventHandler<LobbyMatchStartupCancelledEventArgs>? OnLobbyCancelStartup;
 
     public event Action? OnLobbyBeginMatch;
 
@@ -136,7 +160,7 @@ public class LobbyAPI {
 
     }
 
-    private LobbyTeam GetTeamInstanceByIndex(int tid) => tid switch {
+    private LobbyTeam? GetTeamInstanceByIndex(int tid) => tid switch {
         0 => this.m_allies.Value,
         1 => this.m_axis.Value,
         2 => this.m_obs.Value,
@@ -238,12 +262,16 @@ public class LobbyAPI {
                 break;
             case "Notify.Slot":
 
-                // This sends the whole team object
-                var newSlot = GoMarshal.JsonUnmarshal<LobbySlot>(message.Raw);
-                newSlot.SetAPI(this);
+                // Try get slot
+                if (GoMarshal.JsonUnmarshal<LobbySlot>(message.Raw) is LobbySlot newSlot) {
 
-                // Trigger team update
-                this.OnLobbySlotUpdate?.Invoke((int)message.Who, newSlot);
+                    // Set API
+                    newSlot.SetAPI(this);
+
+                    // Trigger slot update
+                    this.OnLobbySlotUpdate?.Invoke(newSlot);
+
+                }
 
                 break;
             case "Notify.Setting":
@@ -263,7 +291,7 @@ public class LobbyAPI {
                 break;
             case "Notify.Cancel":
                 this.OnLobbyCancelReceived?.Invoke();
-                this.OnLobbyCancelStartup?.Invoke(BitConvert(message.Raw, BitConverter.ToUInt64));
+                this.OnLobbyCancelStartup?.Invoke(new(sender, Encoding.UTF8.GetString(message.Raw)));
                 break;
             case "Notify.Launch":
                 this.OnLobbyLaunchGame?.Invoke();

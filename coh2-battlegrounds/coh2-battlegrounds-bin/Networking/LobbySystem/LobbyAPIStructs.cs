@@ -55,8 +55,10 @@ namespace Battlegrounds.Networking.LobbySystem {
         public class LobbySlot : IAPIObject {
 
             public int SlotID { get; set; }
+            public int TeamID { get; set; }
             public byte State { get; set; }
             public LobbyMember? Occupant { get; set; }
+            [JsonIgnore]
             public LobbyAPI? API { get; set; }
 
             [JsonIgnore]

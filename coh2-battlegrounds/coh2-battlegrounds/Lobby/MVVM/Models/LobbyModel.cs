@@ -206,13 +206,11 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
 
         }
 
-        private void OnMatchStartupCancelled(ulong cancelPlayerId) {
-
-            // TODO: Find user name from ID
+        private void OnMatchStartupCancelled(LobbyMatchStartupCancelledEventArgs e) {
 
             // Inform user
             if (this.m_chatModel is not null) {
-                this.m_chatModel.SystemMessage($"The match startup was cancelled", Colors.Gray);
+                this.m_chatModel.SystemMessage($"{e.CancelName} has cancelled the match.", Colors.Gray);
             }
 
             // Invoke on GUI
@@ -731,10 +729,10 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
 
         }
 
-        private void OnSlotChanged(int teamID, LobbyAPIStructs.LobbySlot slot) {
+        private void OnSlotChanged(LobbyAPIStructs.LobbySlot slot) {
 
             // Get team
-            var team = teamID == 0 ? this.Allies : this.Axis;
+            var team = slot.TeamID == 0 ? this.Allies : this.Axis;
 
             // Trigger slot update
             team.RefreshSlot(team.Slots[slot.SlotID], slot);

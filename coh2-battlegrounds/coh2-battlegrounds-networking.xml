@@ -1438,13 +1438,19 @@
             Get the title given to the version. (May be empty).
             </summary>
         </member>
-        <member name="M:Battlegrounds.Networking.Server.ServerAPI.LatestVersion.#ctor(System.String,System.String,System.String)">
+        <member name="P:Battlegrounds.Networking.Server.ServerAPI.LatestVersion.VersionChecksum">
+            <summary>
+            Get the checksum as string for the latest version.
+            </summary>
+        </member>
+        <member name="M:Battlegrounds.Networking.Server.ServerAPI.LatestVersion.#ctor(System.String,System.String,System.String,System.String)">
             <summary>
             Initialise a new <see cref="T:Battlegrounds.Networking.Server.ServerAPI.LatestVersion"/> instance with branch, version and title.
             </summary>
             <param name="Branch">The latest version branch.</param>
             <param name="Version">The numeric version representation.</param>
             <param name="VersionTitle">The title of the version.</param>
+            <param name="VersionChecksum">The checksum value as string.</param>
         </member>
         <member name="P:Battlegrounds.Networking.Server.ServerAPI.HasGUID">
             <summary>
