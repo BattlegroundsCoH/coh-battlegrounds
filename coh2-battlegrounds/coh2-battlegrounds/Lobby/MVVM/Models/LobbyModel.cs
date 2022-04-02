@@ -809,6 +809,11 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
 
         private void OnConnectionLost(string reason) {
 
+            // Null check
+            if (App.ViewManager.GetModalControl() is not ModalControl mControl) {
+                return;
+            }
+
             // Decide on title
             string modalTitle = BattlegroundsInstance.Localize.GetString(reason switch {
                 "KICK" => "LobbyView_DialogKickTitle",
@@ -826,15 +831,18 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
             // Goto GUI thread and show connection lost.
             Application.Current.Dispatcher.Invoke(() => {
 
-                // Show leave modal
-                App.ViewManager.GetModalControl()?.ShowModal(ModalDialog.CreateModal(modalTitle, modalDesc, (sender, success, value) => {
-                    if (success && value == ModalDialogResult.Confirm) {
+                // Do modal
+                OKDialogViewModel.ShowModal(mControl, (vm, resault) => {
 
-                        // Go back to browser view
-                        App.ViewManager.SetDisplay(AppDisplayState.LeftRight, typeof(LeftMenu), typeof(LobbyBrowserViewModel));
-
+                    // Check return value
+                    if (resault is not ModalDialogResult.Confirm) {
+                        return;
                     }
-                }));
+
+                    // Go back to browser view
+                    App.ViewManager.SetDisplay(AppDisplayState.LeftRight, typeof(LeftMenu), typeof(LobbyBrowserViewModel));
+
+                }, modalTitle, modalDesc);
 
             });
 

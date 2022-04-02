@@ -19,6 +19,7 @@
 				<instance_reference name="ability" value="abilities\soviet\modal_ability\artillery\offmap\soviet_offmap_ml_20_ui" mod="142b113740474c82a60b0a428bd553d5" />
 				<instance_reference name="ability" value="abilities\soviet\modal_ability\artillery\offmap\soviet_offmap_mortar_smoke_ui" mod="142b113740474c82a60b0a428bd553d5" />
 				<instance_reference name="ability" value="abilities\soviet\modal_ability\artillery\offmap\soviet_offmap_mortar_ui" mod="142b113740474c82a60b0a428bd553d5" />
+				<instance_reference name="ability" value="abilities\soviet\modal_ability\artillery\offmap\soviet_offmap_su-76_barrage_ui" mod="142b113740474c82a60b0a428bd553d5" />
 			</list>
 		</template_reference>
 		<template_reference name="exts" value="ebpextensions\ui_ext">

@@ -7,8 +7,8 @@
              xmlns:local="clr-namespace:BattlegroundsApp.Modals.Dialogs.MVVM.Views"
              xmlns:bindablepasswordbox="clr-namespace:BattlegroundsApp.Views.ViewComponent.BindablePasswordBox"
              mc:Ignorable="d" 
-             d:DesignHeight="250" d:DesignWidth="450" Background="#212d3a">
-    <Grid Width="450" Height="250">
+             d:DesignHeight="225" d:DesignWidth="450" Background="#212d3a">
+    <Grid Width="450" Height="225">
         
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>

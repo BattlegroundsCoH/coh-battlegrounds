@@ -742,7 +742,7 @@
     "PBGID": 1073741828,
     "Name": "colt_m1911_45_pistol_bg",
     "Range": 30,
-    "Damage": 75,
+    "Damage": 0.75,
     "MagazineSize": 7,
     "FireRate": 1,
     "Category": "smallarms",

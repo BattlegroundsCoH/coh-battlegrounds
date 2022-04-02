@@ -380,6 +380,7 @@ public class CompanyBuilderViewModel : IViewModel {
             this.CompanyUnitAbilities.Add(abilitySlot);
         } else {
             this.CompanyAbilities.Add(abilitySlot);
+            this.AbilityCapacity.Update(this);
         }
 
     }
