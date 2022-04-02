@@ -2,6 +2,7 @@
 using System.Linq;
 
 using Battlegrounds.Game.DataCompany;
+using Battlegrounds.Game.Match.Analyze;
 using Battlegrounds.Networking.LobbySystem;
 using Battlegrounds.Networking.Server;
 
@@ -28,17 +29,23 @@ namespace Battlegrounds.Game.Match.Finalizer {
                 return;
             }
 
+            // Get match data
+            if (this.m_matchData is not IAnalyzedMatch data) {
+                Trace.WriteLine("{Error} -- The match data is NULL and changes will therefore not be saved anywhere!", nameof(MultiplayerFinalizer));
+                return;
+            }
+
             // Get player results
             var playerFiles = this.m_companies.Where(x => x.Key.SteamID != BattlegroundsInstance.Steam.User.ID).Select(
-                x => new LobbyPlayerCompanyFile(x.Key.SteamID, CompanySerializer.GetCompanyAsJson(x.Value))).ToArray();
+                x => new LobbyPlayerCompanyFile(x.Key.SteamID, CompanySerializer.GetCompanyAsJson(x.Value, indent: false))).ToArray();
 
             // Get overall match results
             ServerMatchResults matchResults = new() {
-                Gamemode = this.m_matchData.Session.Gamemode.Name,
-                Map = this.m_matchData.Session.Scenario.RelativeFilename,
-                Option = this.m_matchData.Session.GamemodeOption,
-                Length = this.m_matchData.Length,
-                LengthTicks = this.m_matchData.Length.Ticks,
+                Gamemode = data.Session.Gamemode.Name,
+                Map = data.Session.Scenario.RelativeFilename,
+                Option = data.Session.GamemodeOption,
+                Length = data.Length,
+                LengthTicks = data.Length.Ticks,
             };
 
             // Inform members the results are available

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
@@ -17,20 +18,20 @@ namespace Battlegrounds.Game.DataCompany {
     /// </summary>
     public class CompanySerializer : JsonConverter<Company> {
 
-        public override Company Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options) {
+        public override Company? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options) {
 
             // Open object
             reader.Read();
 
             // Read company name (if not there, return null)
             string name = ReadProperty(ref reader, nameof(Company.Name));
-            if (name is null) {
+            if (string.IsNullOrEmpty(name)) {
                 return null;
             }
 
             // Read company army (if not there, return null)
             string army = ReadProperty(ref reader, nameof(Company.Army));
-            if (army is null) {
+            if (string.IsNullOrEmpty(army)) {
                 return null;
             }
 
@@ -47,7 +48,9 @@ namespace Battlegrounds.Game.DataCompany {
 
             // Create builder instance
             CompanyBuilder builder = CompanyBuilder.NewCompany(name, type, availability, Faction.FromName(army), guid);
-            builder.Statistics = ReadPropertyThroughSerialisation<CompanyStatistics>(ref reader, nameof(Company.Statistics));
+            if (ReadPropertyThroughSerialisation<CompanyStatistics>(ref reader, nameof(Company.Statistics)) is CompanyStatistics statistics) {
+                builder.Statistics = statistics;
+            }
 
             // Create helper dictionary
             var arrayTypes = new Dictionary<string, Type>() {
@@ -66,34 +69,48 @@ namespace Battlegrounds.Game.DataCompany {
                 var inputType = arrayTypes[property];
 
                 // Get data and set it
-                Array values = JsonSerializer.Deserialize(ref reader, inputType) as Array;
+                if (JsonSerializer.Deserialize(ref reader, inputType) is not Array values) {
+                    throw new InvalidDataException();
+                }
                 switch (property) {
                     case nameof(Company.Units):
                         for (int i = 0; i < values.Length; i++) {
-                            builder.AddUnit(UnitBuilder.EditUnit(values.GetValue(i) as Squad));
+                            builder.AddUnit(UnitBuilder.EditUnit(values.GetValue(i) as Squad ?? throw new InvalidDataException()));
                         }
                         break;
                     case nameof(Company.Abilities):
                         for (int i = 0; i < values.Length; i++) {
-                            builder.AddAbility(values.GetValue(i) as Ability);
+                            builder.AddAbility(values.GetValue(i) as Ability ?? throw new InvalidDataException());
                         }
                         break;
-                    default:
-                        //throw new NotImplementedException();
+                    case nameof(Company.Inventory):
+                        // TMP
+                        if (values.Length > 0)
+                            throw new NotImplementedException();
                         break;
+                    case nameof(Company.Upgrades):
+                        // TMP
+                        if (values.Length > 0)
+                            throw new NotImplementedException();
+                        break;
+                    case nameof(Company.Modifiers):
+                        // TMP
+                        if (values.Length > 0)
+                            throw new NotImplementedException();
+                        break;
+                    default:
+                        throw new InvalidDataException();
                 }
 
             }
 
-            // Commit
-            builder.Commit();
-
             // Verify checksum and return if success; otherwise throw checksum violation error
-            Company result = builder.Result;
+            Company result = builder.Commit().Result;
 
             // Verify checksum
             if (!result.VerifyChecksum(checksum)) {
                 Trace.WriteLine($"Warning - Company '{result.Name}' has been modified (0x{checksum:X} - 0x{result.Checksum:X}).", nameof(CompanySerializer));
+                File.WriteAllText("new_company_chcksm_err.json", GetCompanyAsJson(result));
                 throw new ChecksumViolationException(result.Checksum, checksum);
             }
 
@@ -103,12 +120,12 @@ namespace Battlegrounds.Game.DataCompany {
         }
 
         private static string ReadProperty(ref Utf8JsonReader reader, string property)
-            => reader.GetString() == property && reader.Read() ? reader.ReadProperty() : null;
+            => reader.GetString() == property && reader.Read() ? reader.ReadProperty() : string.Empty;
 
         private static ulong ReadChecksum(ref Utf8JsonReader reader, string property)
             => reader.GetString() == property && reader.Read() ? reader.ReadUlongProperty() : 0;
 
-        private static T ReadPropertyThroughSerialisation<T>(ref Utf8JsonReader reader, string property)
+        private static T? ReadPropertyThroughSerialisation<T>(ref Utf8JsonReader reader, string property)
             => reader.GetString() == property && reader.Read() ? JsonSerializer.Deserialize<T>(ref reader) : default;
 
         public override void Write(Utf8JsonWriter writer, Company value, JsonSerializerOptions options) {
@@ -171,7 +188,7 @@ namespace Battlegrounds.Game.DataCompany {
         /// </summary>
         /// <param name="rawJsonData">The raw json data to parse.</param>
         /// <returns>The company built from the <paramref name="rawJsonData"/>. Will be <see langword="null"/> if deserialization fails.</returns>
-        public static Company GetCompanyFromJson(string rawJsonData)
+        public static Company? GetCompanyFromJson(string rawJsonData)
             => JsonSerializer.Deserialize<Company>(rawJsonData);
 
     }

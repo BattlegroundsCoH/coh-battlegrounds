@@ -14,16 +14,16 @@ namespace Battlegrounds.Game.Match.Finalizer {
     public class SingleplayerFinalizer : IFinalizeStrategy {
 
         protected Dictionary<Player, Company> m_companies;
-        protected IAnalyzedMatch m_matchData;
+        protected IAnalyzedMatch? m_matchData;
 
         /// <summary>
         /// Get or set if finalizer should also notify AI company changes. Default value is <see langword="false"/>.
         /// </summary>
         public bool NotifyAI { get; set; }
 
-        public FinalizedCompanyHandler CompanyHandler { get; set; }
+        public FinalizedCompanyHandler CompanyHandler { get; set; } = x => { };
 
-        public SingleplayerFinalizer() => this.m_companies = null;
+        public SingleplayerFinalizer() => this.m_companies = new();
 
         public virtual void Finalize(IAnalyzedMatch analyzedMatch) {
 
@@ -147,7 +147,7 @@ namespace Battlegrounds.Game.Match.Finalizer {
 
         }
 
-        protected virtual Company GetLocalPlayerCompany() {
+        protected virtual Company? GetLocalPlayerCompany() {
             try {
                 ulong selfID = BattlegroundsInstance.Steam.User.ID;
                 return this.m_companies.FirstOrDefault(x => x.Key.SteamID == selfID).Value;

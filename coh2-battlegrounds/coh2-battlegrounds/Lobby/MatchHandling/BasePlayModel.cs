@@ -56,7 +56,17 @@ internal abstract class BasePlayModel {
 
         // Error if not set up
         if (this.m_startupStrategy is null) {
-            throw new InvalidOperationException("Failed to invoke 'BasePlayModel.BasePrepare'. Please make sure the startup strategy is set.");
+            throw new StartupException("Failed to invoke 'BasePlayModel.BasePrepare'. Please make sure the startup strategy is set.");
+        }
+
+        // Error if not set up
+        if (this.m_matchAnalyzer is null) {
+            throw new StartupException("Failed to invoke 'BasePlayModel.BasePrepare'. Please make sure the analyzer strategy is set.");
+        }
+
+        // Error if not set up
+        if (this.m_finalizeStrategy is null) {
+            throw new StartupException("Failed to invoke 'BasePlayModel.BasePrepare'. Please make sure the finalise strategy is set.");
         }
 
         // Create settings
@@ -109,16 +119,24 @@ internal abstract class BasePlayModel {
 
         // Get allies
         var allies = alliesLobby.Slots.Filter(x => x.State is 1)
-            .Map(x => x.Occupant).Map(x => CreateParticipantFromLobbyMember(x, ParticipantTeam.TEAM_ALLIES, totalCounter, alliesCounter));
+            .Map(x => x.Occupant)
+            .Map(x => x is null ? throw new StartupException("Invalid allied occupant") : CreateParticipantFromLobbyMember(x, ParticipantTeam.TEAM_ALLIES, totalCounter, alliesCounter));
 
         // Get axis
         var axis = axisLobby.Slots.Filter(x => x.State is 1)
-            .Map(x => x.Occupant).Map(x => CreateParticipantFromLobbyMember(x, ParticipantTeam.TEAM_AXIS, totalCounter, axisCounter));
+            .Map(x => x.Occupant)
+            .Map(x => x is null ? throw new StartupException("Invalid axis occupant") : CreateParticipantFromLobbyMember(x, ParticipantTeam.TEAM_AXIS, totalCounter, axisCounter));
+
+        // Get scenario
+        var scen = ScenarioList.FromFilename(scenario);
+        if (scen is null) {
+            throw new StartupException($"Failed to fetch scenario {scenario} from scenario list.");
+        }
 
         // Create info data
         this.m_info = new() {
             FillAI = false,
-            SelectedScenario = ScenarioList.FromFilename(scenario),
+            SelectedScenario = scen,
             SelectedGamemode = WinconditionList.GetGamemodeByName(package.GamemodeGUID, gamemode),
             SelectedGamemodeOption = gamemodeoption,
             IsOptionValue = true,
@@ -151,12 +169,12 @@ internal abstract class BasePlayModel {
 
     }
 
-    protected void HandleStartupCancel(IStartupStrategy sender, object caller, string reason) {
+    protected void HandleStartupCancel(IStartupStrategy sender, object? caller, string reason) {
         this.m_chat.SystemMessage(reason, Colors.Red);
         this.m_prepCancelHandler?.Invoke(this);
     }
 
-    protected void HandleStartupInformation(IStartupStrategy sender, object caller, string message)
+    protected void HandleStartupInformation(IStartupStrategy sender, object? caller, string message)
         => this.m_chat.SystemMessage(message, Colors.DarkGray);
 
     protected void OnCompanySerialized(Company company) {
@@ -164,8 +182,14 @@ internal abstract class BasePlayModel {
         // Run through a sanitizer
         try {
 
+            // Grab json representation of company
+            var companyJson = CompanySerializer.GetCompanyAsJson(company, indent: false);
+
             // Save the company (by literally converting it to and from json for checksum violation checks).
-            var selfCompany = CompanySerializer.GetCompanyFromJson(CompanySerializer.GetCompanyAsJson(company));
+            var selfCompany = CompanySerializer.GetCompanyFromJson(companyJson);
+            if (selfCompany is null) {
+                throw new OperationCanceledException($"Failed to deserialise {company.Name} (Sanitiser check failed!)");
+            }
 
             // Save the company
             PlayerCompanies.SaveCompany(selfCompany);
@@ -174,6 +198,11 @@ internal abstract class BasePlayModel {
 
             // Log checksum violation
             Trace.WriteLine(checksumViolation, nameof(SingleplayerModel));
+
+        } catch (OperationCanceledException cancelledException) {
+
+            // Log checksum violation
+            Trace.WriteLine(cancelledException, nameof(SingleplayerModel));
 
         }
 
