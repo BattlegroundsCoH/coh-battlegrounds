@@ -121,6 +121,259 @@
   },
   {
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741864,
+    "Name": "german_aerial_superiority_close_air_support_unlock",
+    "Display": {
+      "LocaleName": "0",
+      "LocaleDescriptionLong": "0",
+      "LocaleDescriptionShort": "0"
+    },
+    "OwnerType": "player"
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741865,
+    "Name": "german_aerial_superiority_strafing_run_unlock",
+    "Display": {
+      "LocaleName": "0",
+      "LocaleDescriptionLong": "0",
+      "LocaleDescriptionShort": "0"
+    },
+    "OwnerType": "player"
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741858,
+    "Name": "german_air_dropped_medical_supplies_unlock",
+    "Display": {
+      "LocaleName": "0",
+      "LocaleDescriptionLong": "0",
+      "LocaleDescriptionShort": "0"
+    },
+    "OwnerType": "player"
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741859,
+    "Name": "german_air_dropped_supplies_unlock",
+    "Display": {
+      "LocaleName": "0",
+      "LocaleDescriptionLong": "0",
+      "LocaleDescriptionShort": "0"
+    },
+    "OwnerType": "player"
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741856,
+    "Name": "german_air_recon_unlock",
+    "Display": {
+      "LocaleName": "0",
+      "LocaleDescriptionLong": "0",
+      "LocaleDescriptionShort": "0"
+    },
+    "OwnerType": "player"
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741857,
+    "Name": "german_bombing_run_unlock",
+    "Display": {
+      "LocaleName": "0",
+      "LocaleDescriptionLong": "0",
+      "LocaleDescriptionShort": "0"
+    },
+    "OwnerType": "player"
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741866,
+    "Name": "german_close_air_support_unlock",
+    "Display": {
+      "LocaleName": "0",
+      "LocaleDescriptionLong": "0",
+      "LocaleDescriptionShort": "0"
+    },
+    "OwnerType": "player"
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741867,
+    "Name": "german_fragmentation_bomb_unlock",
+    "Display": {
+      "LocaleName": "0",
+      "LocaleDescriptionLong": "0",
+      "LocaleDescriptionShort": "0"
+    },
+    "OwnerType": "player"
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741868,
+    "Name": "german_incendiary_bombs_unlock",
+    "Display": {
+      "LocaleName": "0",
+      "LocaleDescriptionLong": "0",
+      "LocaleDescriptionShort": "0"
+    },
+    "OwnerType": "player"
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741860,
+    "Name": "german_light_support_artillery_unlock",
+    "Display": {
+      "LocaleName": "0",
+      "LocaleDescriptionLong": "0",
+      "LocaleDescriptionShort": "0"
+    },
+    "OwnerType": "player"
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741875,
+    "Name": "german_offmap_halftrack_incendiary_mortar_barrage_unlock",
+    "Display": {
+      "LocaleName": "0",
+      "LocaleDescriptionLong": "0",
+      "LocaleDescriptionShort": "0"
+    },
+    "OwnerType": "player"
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741876,
+    "Name": "german_offmap_halftrack_mortar_barrage_unlock",
+    "Display": {
+      "LocaleName": "0",
+      "LocaleDescriptionLong": "0",
+      "LocaleDescriptionShort": "0"
+    },
+    "OwnerType": "player"
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741877,
+    "Name": "german_offmap_halftrack_smoke_barrage_unlock",
+    "Display": {
+      "LocaleName": "0",
+      "LocaleDescriptionLong": "0",
+      "LocaleDescriptionShort": "0"
+    },
+    "OwnerType": "player"
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741871,
+    "Name": "german_offmap_howitzer_105mm_barrage_unlock",
+    "Display": {
+      "LocaleName": "0",
+      "LocaleDescriptionLong": "0",
+      "LocaleDescriptionShort": "0"
+    },
+    "OwnerType": "player"
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741872,
+    "Name": "german_offmap_mortar_team_incendiary_barrage_unlock",
+    "Display": {
+      "LocaleName": "0",
+      "LocaleDescriptionLong": "0",
+      "LocaleDescriptionShort": "0"
+    },
+    "OwnerType": "player"
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741873,
+    "Name": "german_offmap_mortar_team_mortar_barrage_unlock",
+    "Display": {
+      "LocaleName": "0",
+      "LocaleDescriptionLong": "0",
+      "LocaleDescriptionShort": "0"
+    },
+    "OwnerType": "player"
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741874,
+    "Name": "german_offmap_mortar_team_smoke_barrage_unlock",
+    "Display": {
+      "LocaleName": "0",
+      "LocaleDescriptionLong": "0",
+      "LocaleDescriptionShort": "0"
+    },
+    "OwnerType": "player"
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741878,
+    "Name": "german_offmap_panzerwerfer_rocket_barrage_unlock",
+    "Display": {
+      "LocaleName": "0",
+      "LocaleDescriptionLong": "0",
+      "LocaleDescriptionShort": "0"
+    },
+    "OwnerType": "player"
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741861,
+    "Name": "german_railway_gun_artillery_unlock",
+    "Display": {
+      "LocaleName": "0",
+      "LocaleDescriptionLong": "0",
+      "LocaleDescriptionShort": "0"
+    },
+    "OwnerType": "player"
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741862,
+    "Name": "german_sector_artillery_unlock",
+    "Display": {
+      "LocaleName": "0",
+      "LocaleDescriptionLong": "0",
+      "LocaleDescriptionShort": "0"
+    },
+    "OwnerType": "player"
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741869,
+    "Name": "german_smoke_bomb_unlock",
+    "Display": {
+      "LocaleName": "0",
+      "LocaleDescriptionLong": "0",
+      "LocaleDescriptionShort": "0"
+    },
+    "OwnerType": "player"
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741870,
+    "Name": "german_strafing_run_unlock",
+    "Display": {
+      "LocaleName": "0",
+      "LocaleDescriptionLong": "0",
+      "LocaleDescriptionShort": "0"
+    },
+    "OwnerType": "player"
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741863,
+    "Name": "german_strategic_bombing_unlock",
+    "Display": {
+      "LocaleName": "0",
+      "LocaleDescriptionLong": "0",
+      "LocaleDescriptionShort": "0"
+    },
+    "OwnerType": "player"
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
     "PBGID": 1073741825,
     "Name": "dp-28_lmg_upgrade_bg",
     "Display": {
@@ -481,6 +734,17 @@
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
     "PBGID": 1073741854,
     "Name": "soviet_offmap_mortar_unlock",
+    "Display": {
+      "LocaleName": "0",
+      "LocaleDescriptionLong": "0",
+      "LocaleDescriptionShort": "0"
+    },
+    "OwnerType": "player"
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741879,
+    "Name": "soviet_offmap_su-76_barrage_unlock",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",

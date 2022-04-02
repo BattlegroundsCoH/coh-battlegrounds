@@ -9,7 +9,21 @@
       "LocaleDescriptionLong": "0",
       "LocaleDescriptionShort": "0",
       "Symbol": ""
-    }
+    },
+    "Abilities": [
+      "german_air_recon_ui",
+      "german_bombing_run_ui",
+      "german_aerial_superiority_close_air_support_ui",
+      "german_aerial_superiority_strafing_run_ui",
+      "german_air_dropped_medical_supplies_ui",
+      "german_air_dropped_supplies_ui",
+      "german_close_air_support_ui",
+      "german_fragmentation_bomb_ui",
+      "german_incendiary_bombs_ui",
+      "german_smoke_bomb_ui",
+      "german_strafing_run_ui",
+      "german_strategic_bombing_ui"
+    ]
   },
   {
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
@@ -21,7 +35,20 @@
       "LocaleDescriptionLong": "0",
       "LocaleDescriptionShort": "0",
       "Symbol": ""
-    }
+    },
+    "Abilities": [
+      "german_light_support_artillery_ui",
+      "german_railway_gun_artillery_ui",
+      "german_sector_artillery_ui",
+      "german_offmap_halftrack_incendiary_mortar_barrage_ui",
+      "german_offmap_halftrack_mortar_barrage_ui",
+      "german_offmap_halftrack_smoke_barrage_ui",
+      "german_offmap_howitzer_105mm_barrage_ui",
+      "german_offmap_mortar_team_incendiary_barrage_ui",
+      "german_offmap_mortar_team_mortar_barrage_ui",
+      "german_offmap_mortar_team_smoke_barrage_ui",
+      "german_offmap_panzerwerfer_rocket_barrage_ui"
+    ]
   },
   {
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
@@ -237,7 +264,8 @@
       "soviet_offmap_ml_20_smoke_ui",
       "soviet_offmap_ml_20_ui",
       "soviet_offmap_mortar_smoke_ui",
-      "soviet_offmap_mortar_ui"
+      "soviet_offmap_mortar_ui",
+      "soviet_offmap_su-76_barrage_ui"
     ]
   },
   {
