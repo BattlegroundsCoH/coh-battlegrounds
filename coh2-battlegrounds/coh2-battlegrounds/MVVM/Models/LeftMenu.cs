@@ -4,6 +4,8 @@ using System.Windows.Input;
 using Battlegrounds.Locale;
 using BattlegroundsApp.CompanyEditor.MVVM.Models;
 using BattlegroundsApp.Dashboard.MVVM.Models;
+using BattlegroundsApp.Modals;
+using BattlegroundsApp.Modals.Dialogs.MVVM.Models;
 using BattlegroundsApp.Utilities;
 
 namespace BattlegroundsApp.MVVM.Models {
@@ -118,8 +120,30 @@ namespace BattlegroundsApp.MVVM.Models {
 
         }
 
-        private void ExitButton() 
-            => Application.Current.Shutdown();
+        private void ExitButton() {
+
+            // Null check
+            if (App.ViewManager.GetModalControl() is not ModalControl mControl) {
+                return;
+            }
+
+            // Lookup strings
+            string title = "Exit";
+            string desc = "Are you sure you want to exit?";
+
+            // Do modal
+            YesNoDialogViewModel.ShowModal(mControl, (vm, resault) => {
+
+                // Check return value
+                if (resault is not ModalDialogResult.Confirm) {
+                    return;
+                }
+
+                Application.Current.Shutdown();
+
+            }, title, desc);
+
+        }
 
         public bool UnloadViewModel() => true;
 
