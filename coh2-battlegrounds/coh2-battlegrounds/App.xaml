@@ -24,6 +24,7 @@
              xmlns:dialogViews="clr-namespace:BattlegroundsApp.Modals.Dialogs.MVVM.Views"
              xmlns:dialogModels="clr-namespace:BattlegroundsApp.Modals.Dialogs.MVVM.Models"
              xmlns:controls="clr-namespace:BattlegroundsApp.Controls"
+             xmlns:bindablepasswordbox="clr-namespace:BattlegroundsApp.Views.ViewComponent.BindablePasswordBox"
              Startup="App_Startup"
              ShutdownMode="OnMainWindowClose">
     
@@ -967,12 +968,15 @@
         </Style>
 
         <Style x:Key="WaterMarkTextBox" TargetType="{x:Type TextBox}">
+            <Setter Property="Foreground" Value="#FFFFFF"/>
+            <Setter Property="BorderBrush" Value="#FFFFFF"/>
+            <Setter Property="CaretBrush" Value="#FFFFFF"/>
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="{x:Type TextBox}">
                         <Grid>
                             
-                            <Border Background="White"
+                            <Border Background="Transparent"
                                     BorderBrush="#FF7D8683" 
                                     BorderThickness="1"/>
                             
@@ -980,7 +984,7 @@
                                           Margin="5,0,0,0" 
                                           VerticalAlignment="Center" />
                             
-                            <Label Margin="5,0,0,0" 
+                            <Label Margin="05,0,0,0" 
                                    x:Name="WaterMarkLabel" 
                                    Content="{TemplateBinding Tag}" 
                                    VerticalAlignment="Center"
@@ -992,6 +996,46 @@
                             <MultiTrigger>
                                 <MultiTrigger.Conditions>
                                     <Condition Property="Text" Value=""/>
+                                </MultiTrigger.Conditions>
+                                <Setter Property="Visibility" TargetName="WaterMarkLabel" Value="Visible"/>
+                            </MultiTrigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter Property="Foreground" Value="DimGray"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="WaterMarkPwdBox" TargetType="{x:Type bindablepasswordbox:BindablePasswordBox}">
+            <Setter Property="Foreground" Value="#FFFFFF"/>
+            <Setter Property="BorderBrush" Value="#FFFFFF"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type bindablepasswordbox:BindablePasswordBox}">
+                        <Grid>
+
+                            <Border Background="Transparent"
+                                    BorderBrush="#FF7D8683" 
+                                    BorderThickness="1"/>
+
+                            <ScrollViewer x:Name="PART_ContentHost" 
+                                          Margin="5,0,0,0" 
+                                          VerticalAlignment="Center" />
+
+                            <Label Margin="5,0,0,0" 
+                                   x:Name="WaterMarkLabel" 
+                                   Content="{TemplateBinding Tag}" 
+                                   VerticalAlignment="Center"
+                                   Visibility="Collapsed" 
+                                   Foreground="Gray"/>
+
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <MultiTrigger>
+                                <MultiTrigger.Conditions>
+                                    <Condition Property="Password" Value=""/>
                                 </MultiTrigger.Conditions>
                                 <Setter Property="Visibility" TargetName="WaterMarkLabel" Value="Visible"/>
                             </MultiTrigger>

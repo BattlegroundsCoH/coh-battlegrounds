@@ -47,7 +47,8 @@
 
             <bindablepasswordbox:BindablePasswordBox 
                     Password="{Binding LobbyPassword, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" 
-                    Margin="0, 0, 0, 7"/>
+                    Margin="0, 0, 0, 7"
+                    Height="25"/>
 
             <Button Content="GameBrowserView_Host_Game"
                     Style="{StaticResource StandardBlueLocButton}"
