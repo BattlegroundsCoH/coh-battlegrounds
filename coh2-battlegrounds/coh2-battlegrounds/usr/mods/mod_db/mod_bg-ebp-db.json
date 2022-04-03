@@ -235,12 +235,7 @@
       "Symbol": ""
     },
     "Abilities": [
-      "soviet_air_bombing_run_ui",
-      "soviet_air_infantry_overwatch_ui",
-      "soviet_air_recon_ui",
-      "soviet_air_strafe_ui",
-      "soviet_air_vehicle_overwatch_ui",
-      "soviet_hunt_tarrget_ui"
+      "soviet_air_recon_ui"
     ]
   },
   {

@@ -1834,31 +1834,30 @@
     "Activation": "targeted"
   },
   {
-    "Name": "soviet_air_bombing_run",
+    "Name": "soviet_air_allied_air_supplies",
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
-    "PBGID": 1073741839,
+    "PBGID": 1073741938,
+    "Cost": {
+      "Munition": 100
+    },
     "Display": {
-      "LocaleName": "0",
-      "LocaleDescriptionLong": "0",
-      "LocaleDescriptionShort": "0",
-      "Position": -1
+      "LocaleName": "11072090",
+      "LocaleDescriptionLong": "11072089",
+      "LocaleDescriptionShort": "11072088",
+      "Icon": "Icons_commander_cmdr_soviet_allied_supply_drop",
+      "Position": 40
     },
     "Army": "soviet",
-    "Activation": ""
-  },
-  {
-    "Name": "soviet_air_bombing_run_ui",
-    "ModGUID": "142b113740474c82a60b0a428bd553d5",
-    "PBGID": 1073741864,
-    "Display": {
-      "LocaleName": "0",
-      "LocaleDescriptionLong": "0",
-      "LocaleDescriptionShort": "0",
-      "Position": 13
-    },
-    "Army": "soviet",
-    "Activation": "",
+    "Activation": "targeted",
     "Requirements": [
+      {
+        "RequirementType": "required_resource",
+        "RequirementReason": "usage",
+        "UIText": "11072091",
+        "RequirementProperties": {
+          "resource": null
+        }
+      },
       {
         "RequirementType": "required_player_upgrade",
         "RequirementReason": "usage_and_display",
@@ -1867,36 +1866,38 @@
           "is_present": true,
           "max_completed": 100,
           "min_completed": 1,
-          "upgrade_name": "soviet_air_bombing_run_unlock"
+          "upgrade_name": "allied_air_supplies"
+        }
+      },
+      {
+        "RequirementType": "required_player_upgrade",
+        "RequirementReason": "usage",
+        "UIText": "11053671",
+        "RequirementProperties": {
+          "is_present": false,
+          "max_completed": 100,
+          "min_completed": 1,
+          "upgrade_name": "blizzard_active"
         }
       }
     ]
   },
   {
-    "Name": "soviet_air_infantry_overwatch",
+    "Name": "soviet_air_allied_air_supplies_ui",
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
-    "PBGID": 1073741840,
-    "Display": {
-      "LocaleName": "0",
-      "LocaleDescriptionLong": "0",
-      "LocaleDescriptionShort": "0",
-      "Position": -1
+    "PBGID": 1073741939,
+    "Cost": {
+      "Munition": 5
     },
-    "Army": "soviet",
-    "Activation": ""
-  },
-  {
-    "Name": "soviet_air_infantry_overwatch_ui",
-    "ModGUID": "142b113740474c82a60b0a428bd553d5",
-    "PBGID": 1073741863,
     "Display": {
-      "LocaleName": "0",
-      "LocaleDescriptionLong": "0",
-      "LocaleDescriptionShort": "0",
+      "LocaleName": "11072090",
+      "LocaleDescriptionLong": "11072089",
+      "LocaleDescriptionShort": "11072088",
+      "Icon": "Icons_commander_cmdr_soviet_allied_supply_drop",
       "Position": 11
     },
     "Army": "soviet",
-    "Activation": "",
+    "Activation": "targeted",
     "Requirements": [
       {
         "RequirementType": "required_player_upgrade",
@@ -1906,7 +1907,402 @@
           "is_present": true,
           "max_completed": 100,
           "min_completed": 1,
-          "upgrade_name": "soviet_air_infantry_overwatch_unlock"
+          "upgrade_name": "soviet_air_allied_air_supplies_unlock"
+        }
+      }
+    ]
+  },
+  {
+    "Name": "soviet_air_anti_tank_bomb_strike",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741934,
+    "Cost": {
+      "Munition": 180
+    },
+    "Display": {
+      "LocaleName": "11053218",
+      "LocaleDescriptionLong": "11053219",
+      "LocaleDescriptionShort": "11053220",
+      "Icon": "Icons_commander_cmdr_soviet_at_bombing_run",
+      "Position": 100
+    },
+    "Army": "soviet",
+    "Activation": "targeted",
+    "Requirements": [
+      {
+        "RequirementType": "required_resource",
+        "RequirementReason": "usage",
+        "UIText": "11055772",
+        "RequirementProperties": {
+          "resource": null
+        }
+      },
+      {
+        "RequirementType": "required_player_upgrade",
+        "RequirementReason": "usage_and_display",
+        "UIText": "0",
+        "RequirementProperties": {
+          "is_present": true,
+          "max_completed": 100,
+          "min_completed": 1,
+          "upgrade_name": "il-2_anti_tank_bomb"
+        }
+      },
+      {
+        "RequirementType": "required_player_upgrade",
+        "RequirementReason": "usage",
+        "UIText": "0",
+        "RequirementProperties": {
+          "is_present": false,
+          "max_completed": 100,
+          "min_completed": 1,
+          "upgrade_name": "blizzard_active"
+        }
+      }
+    ]
+  },
+  {
+    "Name": "soviet_air_anti_tank_bomb_strike_ui",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741935,
+    "Cost": {
+      "Munition": 5
+    },
+    "Display": {
+      "LocaleName": "11053218",
+      "LocaleDescriptionLong": "11053219",
+      "LocaleDescriptionShort": "11053220",
+      "Icon": "Icons_commander_cmdr_soviet_at_bombing_run",
+      "Position": 11
+    },
+    "Army": "soviet",
+    "Activation": "targeted",
+    "Requirements": [
+      {
+        "RequirementType": "required_player_upgrade",
+        "RequirementReason": "usage_and_display",
+        "UIText": "0",
+        "RequirementProperties": {
+          "is_present": true,
+          "max_completed": 100,
+          "min_completed": 1,
+          "upgrade_name": "soviet_air_anti_tank_bomb_strike_unlock"
+        }
+      }
+    ]
+  },
+  {
+    "Name": "soviet_air_anti_tank_overwatch",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741936,
+    "Cost": {
+      "Munition": 200
+    },
+    "Display": {
+      "LocaleName": "11157929",
+      "LocaleDescriptionLong": "11157930",
+      "LocaleDescriptionShort": "11157931",
+      "Icon": "Icons_bob_abilities_at_overwatch",
+      "Position": 120
+    },
+    "Army": "soviet",
+    "Activation": "targeted",
+    "Requirements": [
+      {
+        "RequirementType": "required_resource",
+        "RequirementReason": "usage",
+        "UIText": "11072409",
+        "RequirementProperties": {
+          "resource": null
+        }
+      },
+      {
+        "RequirementType": "required_player_upgrade",
+        "RequirementReason": "usage_and_display",
+        "UIText": "0",
+        "RequirementProperties": {
+          "is_present": true,
+          "max_completed": 100,
+          "min_completed": 1,
+          "upgrade_name": "anti_tank_overwatch"
+        }
+      },
+      {
+        "RequirementType": "required_player_upgrade",
+        "RequirementReason": "usage",
+        "UIText": "11045365",
+        "RequirementProperties": {
+          "is_present": false,
+          "max_completed": 100,
+          "min_completed": 1,
+          "upgrade_name": "blizzard_active"
+        }
+      }
+    ]
+  },
+  {
+    "Name": "soviet_air_anti_tank_overwatch_ui",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741937,
+    "Cost": {
+      "Munition": 5
+    },
+    "Display": {
+      "LocaleName": "11157929",
+      "LocaleDescriptionLong": "11157930",
+      "LocaleDescriptionShort": "11157931",
+      "Icon": "Icons_bob_abilities_at_overwatch",
+      "Position": 11
+    },
+    "Army": "soviet",
+    "Activation": "targeted",
+    "Requirements": [
+      {
+        "RequirementType": "required_player_upgrade",
+        "RequirementReason": "usage_and_display",
+        "UIText": "0",
+        "RequirementProperties": {
+          "is_present": true,
+          "max_completed": 100,
+          "min_completed": 1,
+          "upgrade_name": "soviet_air_anti_tank_overwatch_unlock"
+        }
+      }
+    ]
+  },
+  {
+    "Name": "soviet_air_anti_tank_rockets",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741932,
+    "Cost": {
+      "Munition": 100
+    },
+    "Display": {
+      "LocaleName": "11053984",
+      "LocaleDescriptionLong": "11053985",
+      "LocaleDescriptionShort": "11053986",
+      "Icon": "Icons_abilities_il_2m_rocket_strike_new",
+      "Position": 90
+    },
+    "Army": "soviet",
+    "Activation": "targeted",
+    "Requirements": [
+      {
+        "RequirementType": "required_resource",
+        "RequirementReason": "usage",
+        "UIText": "11053983",
+        "RequirementProperties": {
+          "resource": null
+        }
+      },
+      {
+        "RequirementType": "required_player_upgrade",
+        "RequirementReason": "usage_and_display",
+        "UIText": "0",
+        "RequirementProperties": {
+          "is_present": true,
+          "max_completed": 100,
+          "min_completed": 1,
+          "upgrade_name": "il-2_sturmovik_rocket_run"
+        }
+      },
+      {
+        "RequirementType": "required_player_upgrade",
+        "RequirementReason": "usage",
+        "UIText": "11053982",
+        "RequirementProperties": {
+          "is_present": false,
+          "max_completed": 100,
+          "min_completed": 1,
+          "upgrade_name": "blizzard_active"
+        }
+      }
+    ]
+  },
+  {
+    "Name": "soviet_air_anti_tank_rockets_ui",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741933,
+    "Cost": {
+      "Munition": 5
+    },
+    "Display": {
+      "LocaleName": "11053984",
+      "LocaleDescriptionLong": "11053985",
+      "LocaleDescriptionShort": "11053986",
+      "Icon": "Icons_abilities_il_2m_rocket_strike_new",
+      "Position": 11
+    },
+    "Army": "soviet",
+    "Activation": "targeted",
+    "Requirements": [
+      {
+        "RequirementType": "required_player_upgrade",
+        "RequirementReason": "usage_and_display",
+        "UIText": "0",
+        "RequirementProperties": {
+          "is_present": true,
+          "max_completed": 100,
+          "min_completed": 1,
+          "upgrade_name": "soviet_air_anti_tank_rockets_unlock"
+        }
+      }
+    ]
+  },
+  {
+    "Name": "soviet_air_attack",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741928,
+    "Cost": {
+      "Munition": 180
+    },
+    "Display": {
+      "LocaleName": "11020684",
+      "LocaleDescriptionLong": "11020683",
+      "LocaleDescriptionShort": "11020682",
+      "Icon": "Icons_commander_cmdr_soviet_il2_sturmovik_attacks",
+      "Position": 90
+    },
+    "Army": "soviet",
+    "Activation": "targeted",
+    "Requirements": [
+      {
+        "RequirementType": "required_resource",
+        "RequirementReason": "usage",
+        "UIText": "11036633",
+        "RequirementProperties": {
+          "resource": null
+        }
+      },
+      {
+        "RequirementType": "required_player_upgrade",
+        "RequirementReason": "usage_and_display",
+        "UIText": "0",
+        "RequirementProperties": {
+          "is_present": true,
+          "max_completed": 100,
+          "min_completed": 1,
+          "upgrade_name": "il-2_sturmovik_attack"
+        }
+      },
+      {
+        "RequirementType": "required_player_upgrade",
+        "RequirementReason": "usage",
+        "UIText": "11045365",
+        "RequirementProperties": {
+          "is_present": false,
+          "max_completed": 100,
+          "min_completed": 1,
+          "upgrade_name": "blizzard_active"
+        }
+      }
+    ]
+  },
+  {
+    "Name": "soviet_air_attack_ui",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741929,
+    "Cost": {
+      "Munition": 5
+    },
+    "Display": {
+      "LocaleName": "11020684",
+      "LocaleDescriptionLong": "11020683",
+      "LocaleDescriptionShort": "11020682",
+      "Icon": "Icons_commander_cmdr_soviet_il2_sturmovik_attacks",
+      "Position": 11
+    },
+    "Army": "soviet",
+    "Activation": "targeted",
+    "Requirements": [
+      {
+        "RequirementType": "required_player_upgrade",
+        "RequirementReason": "usage_and_display",
+        "UIText": "0",
+        "RequirementProperties": {
+          "is_present": true,
+          "max_completed": 100,
+          "min_completed": 1,
+          "upgrade_name": "soviet_air_attack_unlock"
+        }
+      }
+    ]
+  },
+  {
+    "Name": "soviet_air_precision_bomb_strike",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741930,
+    "Cost": {
+      "Munition": 200
+    },
+    "Display": {
+      "LocaleName": "11007707",
+      "LocaleDescriptionLong": "11039223",
+      "LocaleDescriptionShort": "11039224",
+      "Icon": "Icons_commander_cmdr_soviet_il2_bombing_run",
+      "Position": 120
+    },
+    "Army": "soviet",
+    "Activation": "targeted",
+    "Requirements": [
+      {
+        "RequirementType": "required_resource",
+        "RequirementReason": "usage",
+        "UIText": "11036633",
+        "RequirementProperties": {
+          "resource": null
+        }
+      },
+      {
+        "RequirementType": "required_player_upgrade",
+        "RequirementReason": "usage_and_display",
+        "UIText": "0",
+        "RequirementProperties": {
+          "is_present": true,
+          "max_completed": 100,
+          "min_completed": 1,
+          "upgrade_name": "il-2_bomb_strike"
+        }
+      },
+      {
+        "RequirementType": "required_player_upgrade",
+        "RequirementReason": "usage",
+        "UIText": "11045365",
+        "RequirementProperties": {
+          "is_present": false,
+          "max_completed": 100,
+          "min_completed": 1,
+          "upgrade_name": "blizzard_active"
+        }
+      }
+    ]
+  },
+  {
+    "Name": "soviet_air_precision_bomb_strike_ui",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741931,
+    "Cost": {
+      "Munition": 5
+    },
+    "Display": {
+      "LocaleName": "11007707",
+      "LocaleDescriptionLong": "11039223",
+      "LocaleDescriptionShort": "11039224",
+      "Icon": "Icons_commander_cmdr_soviet_il2_bombing_run",
+      "Position": 11
+    },
+    "Army": "soviet",
+    "Activation": "targeted",
+    "Requirements": [
+      {
+        "RequirementType": "required_player_upgrade",
+        "RequirementReason": "usage_and_display",
+        "UIText": "0",
+        "RequirementProperties": {
+          "is_present": true,
+          "max_completed": 100,
+          "min_completed": 1,
+          "upgrade_name": "soviet_air_precision_bomb_strike_unlock"
         }
       }
     ]
@@ -1991,69 +2387,41 @@
     ]
   },
   {
-    "Name": "soviet_air_strafe",
+    "Name": "soviet_air_supression_strafe",
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
-    "PBGID": 1073741838,
-    "Display": {
-      "LocaleName": "0",
-      "LocaleDescriptionLong": "0",
-      "LocaleDescriptionShort": "0",
-      "Position": -1
-    },
-    "Army": "soviet",
-    "Activation": ""
-  },
-  {
-    "Name": "soviet_air_strafe_ui",
-    "ModGUID": "142b113740474c82a60b0a428bd553d5",
-    "PBGID": 1073741865,
+    "PBGID": 1073741926,
     "Cost": {
-      "Munition": 60
+      "Munition": 45
     },
     "Display": {
       "LocaleName": "11166408",
       "LocaleDescriptionLong": "11166407",
       "LocaleDescriptionShort": "11166406",
       "Icon": "Icons_abilities_ability_soviet_strafing_run",
-      "Position": 12
+      "Position": 34
     },
     "Army": "soviet",
     "Activation": "targeted",
     "Requirements": [
       {
-        "RequirementType": "required_player_upgrade",
-        "RequirementReason": "usage_and_display",
-        "UIText": "0",
+        "RequirementType": "required_squad_veterancy",
+        "RequirementReason": "usage",
+        "UIText": "11166405",
         "RequirementProperties": {
-          "is_present": true,
-          "max_completed": 100,
-          "min_completed": 1,
-          "upgrade_name": "soviet_air_strafe_unlock"
+          "veterancy_rank": 1
         }
       }
     ]
   },
   {
-    "Name": "soviet_air_vehicle_overwatch",
+    "Name": "soviet_air_supression_strafe_ui",
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
-    "PBGID": 1073741841,
+    "PBGID": 1073741927,
     "Display": {
-      "LocaleName": "0",
-      "LocaleDescriptionLong": "0",
-      "LocaleDescriptionShort": "0",
-      "Position": -1
-    },
-    "Army": "soviet",
-    "Activation": ""
-  },
-  {
-    "Name": "soviet_air_vehicle_overwatch_ui",
-    "ModGUID": "142b113740474c82a60b0a428bd553d5",
-    "PBGID": 1073741866,
-    "Display": {
-      "LocaleName": "0",
-      "LocaleDescriptionLong": "0",
-      "LocaleDescriptionShort": "0",
+      "LocaleName": "11166408",
+      "LocaleDescriptionLong": "11166407",
+      "LocaleDescriptionShort": "11166406",
+      "Icon": "Icons_abilities_ability_soviet_strafing_run",
       "Position": 11
     },
     "Army": "soviet",
@@ -2067,46 +2435,7 @@
           "is_present": true,
           "max_completed": 100,
           "min_completed": 1,
-          "upgrade_name": "soviet_air_vehicle_overwatch_unlock"
-        }
-      }
-    ]
-  },
-  {
-    "Name": "soviet_hunt_tarrget",
-    "ModGUID": "142b113740474c82a60b0a428bd553d5",
-    "PBGID": 1073741842,
-    "Display": {
-      "LocaleName": "0",
-      "LocaleDescriptionLong": "0",
-      "LocaleDescriptionShort": "0",
-      "Position": -1
-    },
-    "Army": "soviet",
-    "Activation": ""
-  },
-  {
-    "Name": "soviet_hunt_tarrget_ui",
-    "ModGUID": "142b113740474c82a60b0a428bd553d5",
-    "PBGID": 1073741867,
-    "Display": {
-      "LocaleName": "0",
-      "LocaleDescriptionLong": "0",
-      "LocaleDescriptionShort": "0",
-      "Position": 11
-    },
-    "Army": "soviet",
-    "Activation": "",
-    "Requirements": [
-      {
-        "RequirementType": "required_player_upgrade",
-        "RequirementReason": "usage_and_display",
-        "UIText": "0",
-        "RequirementProperties": {
-          "is_present": true,
-          "max_completed": 100,
-          "min_completed": 1,
-          "upgrade_name": "soviet_hunt_tarrget_unlock"
+          "upgrade_name": "soviet_air_supression_strafe_unlock"
         }
       }
     ]

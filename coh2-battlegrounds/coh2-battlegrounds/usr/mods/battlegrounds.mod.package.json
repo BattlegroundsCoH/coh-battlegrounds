@@ -97,14 +97,14 @@
             ],
             "Abilities": [
                 {
-                    "Blueprint": "soviet_air_bombing_run",
-                    "LockoutBlueprint": "soviet_air_bombing_run_unlock",
+                    "Blueprint": "soviet_air_allied_air_supplies",
+                    "LockoutBlueprint": "soviet_air_allied_air_supplies_unlock",
                     "AbilityCategory": "AirSupport",
                     "MaxUsePerMatch": 3
                 },
                 {
-                    "Blueprint": "soviet_air_infantry_overwatch",
-                    "LockoutBlueprint": "soviet_air_infantry_overwatch_unlock",
+                    "Blueprint": "soviet_air_anti_tank_bomb_strike",
+                    "LockoutBlueprint": "soviet_air_anti_tank_bomb_strike_unlock",
                     "AbilityCategory": "AirSupport",
                     "MaxUsePerMatch": 3
                 },
@@ -115,45 +115,33 @@
                     "MaxUsePerMatch": 3
                 },
                 {
-                    "Blueprint": "soviet_air_strafe",
-                    "LockoutBlueprint": "soviet_air_strafe_unlock",
+                    "Blueprint": "soviet_air_anti_tank_overwatch",
+                    "LockoutBlueprint": "soviet_air_anti_tank_overwatch_unlock",
                     "AbilityCategory": "AirSupport",
                     "MaxUsePerMatch": 3
                 },
                 {
-                    "Blueprint": "soviet_air_vehicle_overwatch",
-                    "LockoutBlueprint": "soviet_air_vehicle_overwatch_unlock",
+                    "Blueprint": "soviet_air_anti_tank_rockets",
+                    "LockoutBlueprint": "soviet_air_anti_tank_rockets_unlock",
                     "AbilityCategory": "AirSupport",
                     "MaxUsePerMatch": 3
                 },
                 {
-                    "Blueprint": "soviet_hunt_tarrget",
-                    "LockoutBlueprint": "soviet_hunt_tarrget",
+                    "Blueprint": "soviet_air_attack",
+                    "LockoutBlueprint": "soviet_air_attack_unlock",
                     "AbilityCategory": "AirSupport",
                     "MaxUsePerMatch": 3
                 },
                 {
-                    "Blueprint": "soviet_artillery_regimental_barrage",
-                    "LockoutBlueprint": "soviet_artillery_regimental_barrage_unlock",
-                    "AbilityCategory": "Artillery",
+                    "Blueprint": "soviet_air_precision_bomb_strike",
+                    "LockoutBlueprint": "soviet_air_precision_bomb_strike_unlock",
+                    "AbilityCategory": "AirSupport",
                     "MaxUsePerMatch": 3
                 },
                 {
-                    "Blueprint": "soviet_artillery_overwatch",
-                    "LockoutBlueprint": "soviet_artillery_overwatch_unlock",
-                    "AbilityCategory": "Artillery",
-                    "MaxUsePerMatch": 3
-                },
-                {
-                    "Blueprint": "soviet_artillery_fire",
-                    "LockoutBlueprint": "soviet_artillery_fire_unlock",
-                    "AbilityCategory": "Artillery",
-                    "MaxUsePerMatch": 3
-                },
-                {
-                    "Blueprint": "soviet_artillery_propaganda",
-                    "LockoutBlueprint": "soviet_artillery_propaganda_unlock",
-                    "AbilityCategory": "Artillery",
+                    "Blueprint": "soviet_air_supression_strafe",
+                    "LockoutBlueprint": "soviet_air_supression_strafe_unlock",
+                    "AbilityCategory": "AirSupport",
                     "MaxUsePerMatch": 3
                 }
             ],

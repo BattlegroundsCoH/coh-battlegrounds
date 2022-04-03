@@ -567,8 +567,8 @@
   },
   {
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
-    "PBGID": 1073741840,
-    "Name": "soviet_air_bombing_run_unlock",
+    "PBGID": 1073741886,
+    "Name": "soviet_air_allied_air_supplies_unlock",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -578,8 +578,52 @@
   },
   {
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
-    "PBGID": 1073741841,
-    "Name": "soviet_air_infantry_overwatch_unlock",
+    "PBGID": 1073741884,
+    "Name": "soviet_air_anti_tank_bomb_strike_unlock",
+    "Display": {
+      "LocaleName": "0",
+      "LocaleDescriptionLong": "0",
+      "LocaleDescriptionShort": "0"
+    },
+    "OwnerType": "player"
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741885,
+    "Name": "soviet_air_anti_tank_overwatch_unlock",
+    "Display": {
+      "LocaleName": "0",
+      "LocaleDescriptionLong": "0",
+      "LocaleDescriptionShort": "0"
+    },
+    "OwnerType": "player"
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741883,
+    "Name": "soviet_air_anti_tank_rockets_unlock",
+    "Display": {
+      "LocaleName": "0",
+      "LocaleDescriptionLong": "0",
+      "LocaleDescriptionShort": "0"
+    },
+    "OwnerType": "player"
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741881,
+    "Name": "soviet_air_attack_unlock",
+    "Display": {
+      "LocaleName": "0",
+      "LocaleDescriptionLong": "0",
+      "LocaleDescriptionShort": "0"
+    },
+    "OwnerType": "player"
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741882,
+    "Name": "soviet_air_precision_bomb_strike_unlock",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -600,19 +644,8 @@
   },
   {
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
-    "PBGID": 1073741843,
-    "Name": "soviet_air_strafe_unlock",
-    "Display": {
-      "LocaleName": "0",
-      "LocaleDescriptionLong": "0",
-      "LocaleDescriptionShort": "0"
-    },
-    "OwnerType": "player"
-  },
-  {
-    "ModGUID": "142b113740474c82a60b0a428bd553d5",
-    "PBGID": 1073741844,
-    "Name": "soviet_air_vehicle_overwatch_unlock",
+    "PBGID": 1073741880,
+    "Name": "soviet_air_supression_strafe_unlock",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
@@ -657,17 +690,6 @@
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
     "PBGID": 1073741846,
     "Name": "soviet_artillery_regimental_barrage_unlock",
-    "Display": {
-      "LocaleName": "0",
-      "LocaleDescriptionLong": "0",
-      "LocaleDescriptionShort": "0"
-    },
-    "OwnerType": "player"
-  },
-  {
-    "ModGUID": "142b113740474c82a60b0a428bd553d5",
-    "PBGID": 1073741845,
-    "Name": "soviet_hunt_tarrget_unlock",
     "Display": {
       "LocaleName": "0",
       "LocaleDescriptionLong": "0",
