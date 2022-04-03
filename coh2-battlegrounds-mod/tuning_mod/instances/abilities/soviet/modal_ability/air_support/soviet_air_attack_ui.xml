@@ -20,7 +20,7 @@
 			<float name="command" value="0" />
 			<float name="fuel" value="0" />
 			<float name="manpower" value="0" />
-			<float name="munition" value="60" />
+			<float name="munition" value="5" />
 			<float name="popcap" value="0" />
 		</group>
 		<string name="cursor_ghost_blueprint" value="" />
@@ -33,7 +33,7 @@
 		<bool name="engage_combat" value="False" />
 		<float name="entity_busy_time" value="0" />
 		<float name="facing_angle" value="5" />
-		<bool name="facing_ignore" value="False" />
+		<bool name="facing_ignore" value="True" />
 		<float name="final_close_in_distance" value="0" />
 		<bool name="fire_and_forget" value="False" />
 		<bool name="garrison_target" value="False" />
@@ -74,15 +74,15 @@
 			<string name="cursor_nonmodal_good" value="" />
 		</group>
 		<group name="ui_info">
-			<locstring name="extra_text" value="11166406" />
-			<locstring name="help_text" value="11166407" />
-			<string name="hotkey_name" value="Z" />
-			<icon name="icon_name" value="Icons_abilities_ability_soviet_strafing_run" />
+			<locstring name="extra_text" value="11020682" />
+			<locstring name="help_text" value="11020683" />
+			<string name="hotkey_name" value="strafing_run" />
+			<icon name="icon_name" value="Icons_commander_cmdr_soviet_il2_sturmovik_attacks" />
 			<string name="overlay_name" value="" />
 			<bool name="reveal_for_decryption" value="False" />
-			<locstring name="screen_name" value="11166408" />
+			<locstring name="screen_name" value="11020684" />
 			<icon name="icon_alternate_name" value="" />
-			<locstring name="brief_text" value="0" />
+			<locstring name="brief_text" value="11039232" />
 			<locstring name="help_text_alternate" value="0" />
 			<locstring name="screen_name_alternate" value="0" />
 			<locstring name="screen_name_short" value="0" />
@@ -98,11 +98,11 @@
 				<bool name="is_present" value="True" />
 				<float name="max_completed" value="100" />
 				<float name="min_completed" value="1" />
-				<instance_reference name="upgrade_name" value="upgrade\soviet\special_ability_unlocks\soviet_air_strafe_unlock" mod="142b113740474c82a60b0a428bd553d5" />
+				<instance_reference name="upgrade_name" value="upgrade\soviet\special_ability_unlocks\soviet_air_attack_unlock" mod="142b113740474c82a60b0a428bd553d5" />
 			</template_reference>
 		</list>
 		<enum name="ability_super" value="tp_airstrike" />
-		<int name="ui_position" value="12" />
+		<int name="ui_position" value="11" />
 		<bool name="ui_mini_map_capture" value="True" />
 		<bool name="facing_ignore_during_active" value="False" />
 		<instance_reference name="ui_range" value="ui_reticule\ability_range_default" />
@@ -134,5 +134,5 @@
 		<bool name="can_cast_outside_active_battle_field" value="False" />
 		<bool name="ability_super_event_cue" value="True" />
 	</group>
-	<uniqueid name="pbgid" value="1073741865" />
+	<uniqueid name="pbgid" value="1073741929" />
 </instance>
