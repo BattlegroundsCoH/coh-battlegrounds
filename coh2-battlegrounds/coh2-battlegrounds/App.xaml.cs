@@ -143,30 +143,33 @@ namespace BattlegroundsApp {
         }
 
         private static void GetSteamUserWithPermission(MainWindow window) {
-            if (window.AllowGetSteamUser()) {
-                Trace.WriteLine("No steam user was found - user has given permission to get steam user.", "App");
-                if (SteamInstance.IsSteamRunning()) {
-                    if (BattlegroundsInstance.Steam.GetSteamUser()) {
+            window.AllowGetSteamUser(x => {
+                if (x) {
+                    Trace.WriteLine("No steam user was found - user has given permission to get steam user.", "App");
+                    if (SteamInstance.IsSteamRunning()) {
+                        if (BattlegroundsInstance.Steam.GetSteamUser()) {
 
-                        // Log the found user
-                        Trace.WriteLine($"Found steam user: {BattlegroundsInstance.Steam.User.ID} \"{BattlegroundsInstance.Steam.User.Name}\"", "App");
+                            // Log the found user
+                            Trace.WriteLine($"Found steam user: {BattlegroundsInstance.Steam.User.ID} \"{BattlegroundsInstance.Steam.User.Name}\"", "App");
 
-                        // Save all changes
-                        BattlegroundsInstance.SaveInstance();
+                            // Save all changes
+                            BattlegroundsInstance.SaveInstance();
 
+                        } else {
+                            MessageBox.Show("Unable to detect the current Steam user!", "No steam user found!", MessageBoxButton.OK, MessageBoxImage.Error);
+                            Trace.WriteLine("Unable to detect the current Steam user.", "App");
+                            Environment.Exit(0);
+                        }
                     } else {
-                        MessageBox.Show("Unable to detect the current Steam user!", "No steam user found!", MessageBoxButton.OK, MessageBoxImage.Error);
-                        Trace.WriteLine("Unable to detect the current Steam user.", "App");
+                        MessageBox.Show("Unable to find a running instance of Steam. Please start Steam and try again.", "No steam instance running!", MessageBoxButton.OK, MessageBoxImage.Error);
+                        Trace.WriteLine("Unable to find a running instance of Steam.", "App");
                         Environment.Exit(0);
                     }
                 } else {
-                    MessageBox.Show("Unable to find a running instance of Steam. Please start Steam and try again.", "No steam instance running!", MessageBoxButton.OK, MessageBoxImage.Error);
-                    Trace.WriteLine("Unable to find a running instance of Steam.", "App");
                     Environment.Exit(0);
                 }
-            } else {
-                Environment.Exit(0);
-            }
+
+            });
         }
 
         private void MainWindow_Closed(object? sender, EventArgs e) {

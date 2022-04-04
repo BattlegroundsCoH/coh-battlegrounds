@@ -20,10 +20,10 @@ using System.Windows.Shapes;
 using System.Diagnostics;
 
 using BattlegroundsApp.Views;
-using BattlegroundsApp.Dialogs.YesNo;
 using Battlegrounds.Locale;
 using BattlegroundsApp.MVVM;
 using BattlegroundsApp.Modals;
+using BattlegroundsApp.Modals.Dialogs.MVVM.Models;
 
 namespace BattlegroundsApp {
 
@@ -122,13 +122,6 @@ namespace BattlegroundsApp {
         // Exit application
         private void Exit_Click(object sender, RoutedEventArgs e) {
 
-            var result = YesNoDialogViewModel.ShowYesNoDialog(new LocaleKey("MainWindow_YesNoDialog_Exit_Title"), new LocaleKey("MainWindow_YesNoDialog_Exit_Message"));
-
-            if (result == YesNoDialogResult.Confirm) {
-
-                this.Close();
-            }
-
         }
 
         // Hanlde view state change requests
@@ -156,8 +149,27 @@ namespace BattlegroundsApp {
         // Get the request handler
         public override StateChangeRequestHandler GetRequestHandler() => this.StateChangeRequest;
 
-        public bool AllowGetSteamUser()
-            => YesNoDialogViewModel.ShowYesNoDialog(new LocaleKey("MainWindow_YesNoDialog_No_Steam_User_Title"), new LocaleKey("MainWindow_YesNoDialog_No_Steam_User_Message")) == YesNoDialogResult.Confirm;
+        public void AllowGetSteamUser(Action<bool> callback) {
+
+            // Null check
+            if (App.ViewManager.GetModalControl() is not ModalControl mControl) {
+                callback.Invoke(false);
+                return;
+            }
+
+            // Lookup strings
+            string title = "MainWindow_YesNoDialog_No_Steam_User_Title";
+            string desc = "MainWindow_YesNoDialog_No_Steam_User_Message";
+
+            // Do modal
+            YesNoDialogViewModel.ShowModal(mControl, (vm, resault) => {
+
+                callback.Invoke(resault is not ModalDialogResult.Confirm);
+
+            }, title, desc);
+
+        }
+           
 
         protected override void OnContentRendered(EventArgs e) {
             base.OnContentRendered(e);
