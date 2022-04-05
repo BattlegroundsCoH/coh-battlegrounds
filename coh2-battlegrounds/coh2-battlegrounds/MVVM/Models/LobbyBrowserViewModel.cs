@@ -184,7 +184,11 @@ namespace BattlegroundsApp.MVVM.Models {
                 Trace.WriteLine("Succsefully hosted lobby.", nameof(LobbyBrowserViewModel));
 
                 // Create lobby models.
-                LobbyModel lobbyModel = LobbyModel.CreateModelAsHost(lobby);
+                var lobbyModel = LobbyModel.CreateModelAsHost(lobby);
+                if (lobbyModel is null) {
+                    throw new Exception("BAAAAAAD : FIX ASAP");
+                }
+
                 LobbyChatSpectatorModel chatMode = new(lobby);
                 lobbyModel.SetChatModel(chatMode);
 
@@ -251,7 +255,11 @@ namespace BattlegroundsApp.MVVM.Models {
                 Trace.WriteLine("Succsefully joined lobby.", nameof(LobbyBrowserViewModel));
 
                 // Create lobby models.
-                LobbyModel lobbyModel = LobbyModel.CreateModelAsParticipant(lobby);
+                var lobbyModel = LobbyModel.CreateModelAsParticipant(lobby);
+                if (lobbyModel is null) {
+                    throw new Exception("BAAAAAAD : FIX ASAP");
+                }
+
                 LobbyChatSpectatorModel chatMode = new(lobby);
                 lobbyModel.SetChatModel(chatMode);
 
@@ -301,8 +309,17 @@ namespace BattlegroundsApp.MVVM.Models {
                     },
                 };
             } else {
-                var lobbies = NetworkInterface.APIObject.GetLobbies();
-                if (lobbies.Count is 0) {
+                
+                // Get lobbies (if any)
+                List<ServerLobby> lobs;
+                if (NetworkInterface.APIObject is null) {
+                    lobs =  new();
+                } else {
+                    lobs = NetworkInterface.APIObject.GetLobbies();
+                }
+
+                // If none, show no matches found
+                if (lobs.Count is 0) {
                     Application.Current.Dispatcher.Invoke(() => {
                         if (this.InfoKey == _noConnection) {
                             return;
@@ -311,7 +328,10 @@ namespace BattlegroundsApp.MVVM.Models {
                         this.InfoKeyVisible = Visibility.Visible;
                     });
                 }
-                return lobbies;
+
+                // Return lobbies
+                return lobs;
+
             }
         }
 
