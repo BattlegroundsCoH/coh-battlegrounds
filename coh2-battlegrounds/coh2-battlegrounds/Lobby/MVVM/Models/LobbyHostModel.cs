@@ -14,7 +14,7 @@ using System.Windows.Media.Imaging;
 
 using Battlegrounds;
 using Battlegrounds.Compiler;
-using Battlegrounds.Functional;
+//using Battlegrounds.Functional;
 using Battlegrounds.Game.Database;
 using Battlegrounds.Game.DataCompany;
 using Battlegrounds.Game.Gameplay;
@@ -38,18 +38,27 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
     public class LobbyHostModel : LobbyModel, INotifyPropertyChanged {
 
         private ModPackage? m_package;
-        private bool m_hasSetDefaults;
 
         public event PropertyChangedEventHandler? PropertyChanged;
 
         public override LobbyButton StartMatchButton { get; }
+
+        public override LobbyDropdown<Scenario> MapDropdown { get; }
 
         public ImageSource? SelectedMatchScenario { get; set; }
 
         public LobbyHostModel(LobbyAPI handle, LobbyAPIStructs.LobbyTeam allies, LobbyAPIStructs.LobbyTeam axis) : base(handle, allies, axis) {
 
             // Init buttons
-            this.StartMatchButton = new(true, new(this.BeginMatchSetup));
+            this.StartMatchButton = new(true, new(this.BeginMatchSetup), Visibility.Visible);
+
+            // Get scenario list
+            var scenlist = ScenarioList.GetList()
+                .Where(x => x.IsVisibleInLobby)
+                .OrderBy(x => x.MaxPlayers);
+
+            // Init dropdowns 
+            this.MapDropdown = new(true, Visibility.Visible, new(scenlist), this.MapSelectionChanged);
 
             // Add handlers to remote updates and notifications
             /*this.m_handle.OnLobbySelfUpdate += this.OnSelfChanged;
@@ -63,6 +72,9 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
             this.m_handle.OnLobbyLaunchGame += this.OnLaunchGame;
             this.m_handle.OnLobbyBeginMatch += this.OnMatchBegin;
             this.m_handle.OnLobbyCancelStartup += this.OnMatchStartupCancelled;*/
+
+            // Set dropdown index
+            this.MapDropdown.Selected = 0;
 
         }
 
@@ -120,91 +132,18 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
 
         }
 
-        private void TrySetMapSource(Scenario? scenario, [CallerMemberName] string caller = "") {
+        private void MapSelectionChanged(int newIndex) {
 
-            // Set to default case
-            this.SelectedMatchScenario = __mapNotFound;
+            // Get scenario
+            var scen = this.MapDropdown.Items[newIndex];
 
-            // Check scenario
-            if (scenario is null) {
-                Trace.WriteLine($"Failed to set **null** scenario (Caller = {caller}).", nameof(LobbyHostModel));
-                return;
-            }
+            // Try get image
+            this.ScenarioPreview = this.TryGetMapSource(scen);
 
-            // Get Path
-            string fullpath = Path.GetFullPath($"bin\\gfx\\map_icons\\{scenario.RelativeFilename}_map.tga");
-
-            // Check if file exists
-            if (File.Exists(fullpath)) {
-                try {
-                    this.SelectedMatchScenario = TgaImageSource.TargaBitmapSourceFromFile(fullpath);
-                } catch (BadImageFormatException bife) {
-                    Trace.WriteLine(bife, nameof(this.TrySetMapSource));
-                }
-            } else {
-                fullpath = Path.GetFullPath($"usr\\mods\\map_icons\\{scenario.RelativeFilename}_map.tga");
-                if (File.Exists(fullpath)) {
-                    try {
-                        this.SelectedMatchScenario = TgaImageSource.TargaBitmapSourceFromFile(fullpath);
-                    } catch (BadImageFormatException bife) {
-                        Trace.WriteLine(bife, nameof(this.TrySetMapSource));
-                    }
-                } else {
-                    Trace.WriteLine($"Failed to locate file: {fullpath}", nameof(this.TrySetMapSource));
-                }
-            }
-
-            // Inform view the map selection was changed
-            this.PropertyChanged?.Invoke(this, new(nameof(this.SelectedMatchScenario)));
+            // Notify change
+            this.PropertyChanged?.Invoke(this, new(nameof(ScenarioPreview)));
 
         }
-
-        private void OnTeamChanged(LobbyAPIStructs.LobbyTeam team) {
-
-            // Refresh allies
-            if (team.TeamID == 0) {
-                //this.Allies?.RefreshTeam(team);
-            }
-
-            // Refresh axis
-            if (team.TeamID == 1) {
-                //this.Axis?.RefreshTeam(team);
-            }
-
-            // Trigger self change
-            if (this.m_handle.IsHost) {
-                this.OnSelfChanged(); // Trigger a playability check
-            }
-
-        }
-
-        private void OnSlotChanged(LobbyAPIStructs.LobbySlot slot) {
-
-            // Get team
-            var team = slot.TeamID == 0 ? this.Allies : this.Axis;
-
-            // Trigger slot update
-            //team.RefreshSlot(team.Slots[slot.SlotID], slot);
-
-            // Trigger self change
-            if (this.m_handle.IsHost) {
-                this.OnSelfChanged(); // Trigger a playability check
-            }
-
-        }
-
-        private void OnCompanyChanged(int teamID, int slotID, LobbyAPIStructs.LobbyCompany company) {
-
-        }
-
-        private void OnSettingChanged(string key, string value) {
-
-        }
-
-        private string GetRemoteSettingValue(string key, string value) => key switch {
-            "selected_map" => GameLocale.GetString(ScenarioList.ScenarioNameFromRelativeFilename(value)),
-            _ => value
-        };
 
     }
 

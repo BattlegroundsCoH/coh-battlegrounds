@@ -183,18 +183,23 @@ namespace BattlegroundsApp.MVVM.Models {
                 // Log success
                 Trace.WriteLine("Succsefully hosted lobby.", nameof(LobbyBrowserViewModel));
 
-                // Create lobby models.
-                var lobbyModel = LobbyModel.CreateModelAsHost(lobby);
-                if (lobbyModel is null) {
-                    throw new Exception("BAAAAAAD : FIX ASAP");
-                }
+                // Invoke on GUI
+                Application.Current.Dispatcher.Invoke(() => {
 
-                LobbyChatSpectatorModel chatMode = new(lobby);
-                lobbyModel.SetChatModel(chatMode);
+                    // Create lobby models.
+                    var lobbyModel = LobbyModel.CreateModelAsHost(lobby);
+                    if (lobbyModel is null) {
+                        throw new Exception("BAAAAAAD : FIX ASAP");
+                    }
 
-                // Display it
-                App.ViewManager.UpdateDisplay(AppDisplayTarget.Left, chatMode);
-                App.ViewManager.UpdateDisplay(AppDisplayTarget.Right, lobbyModel);
+                    LobbyChatSpectatorModel chatMode = new(lobby);
+                    lobbyModel.SetChatModel(chatMode);
+
+                    // Display it
+                    App.ViewManager.UpdateDisplay(AppDisplayTarget.Left, chatMode);
+                    App.ViewManager.UpdateDisplay(AppDisplayTarget.Right, lobbyModel);
+
+                });
 
             } else {
 

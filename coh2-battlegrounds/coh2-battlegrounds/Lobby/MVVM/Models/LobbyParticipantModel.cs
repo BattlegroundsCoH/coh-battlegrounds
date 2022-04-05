@@ -9,6 +9,7 @@ using System.Windows;
 using System.Windows.Media;
 
 using Battlegrounds.Compiler;
+using Battlegrounds.Game.Database;
 using Battlegrounds.Game.DataCompany;
 using Battlegrounds.Game.Gameplay;
 using Battlegrounds.Game.Match.Play;
@@ -25,7 +26,15 @@ public class LobbyParticipantModel : LobbyModel {
 
     public override LobbyButton StartMatchButton { get; }
 
+    public override LobbyDropdown<Scenario> MapDropdown { get; }
+
     public LobbyParticipantModel(LobbyAPI handle, LobbyAPIStructs.LobbyTeam allies, LobbyAPIStructs.LobbyTeam axis) : base(handle, allies, axis) {
+
+        // Define start match buttnn
+        this.StartMatchButton = new(false, new(() => { }), Visibility.Hidden);
+
+        // Init dropdowns 
+        this.MapDropdown = new(false, Visibility.Hidden, new(), x => { });
 
     }
 

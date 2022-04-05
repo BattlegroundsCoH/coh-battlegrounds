@@ -1,11 +1,16 @@
 ﻿using System;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Diagnostics;
+using System.IO;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
 using Battlegrounds;
+using Battlegrounds.Game.Database;
 using Battlegrounds.Locale;
 using Battlegrounds.Networking.LobbySystem;
 
@@ -13,15 +18,28 @@ using BattlegroundsApp.Modals;
 using BattlegroundsApp.Modals.Dialogs.MVVM.Models;
 using BattlegroundsApp.MVVM;
 using BattlegroundsApp.MVVM.Models;
+using BattlegroundsApp.Resources;
 using BattlegroundsApp.Utilities;
 
 namespace BattlegroundsApp.Lobby.MVVM.Models;
 
-public abstract class LobbyModel : IViewModel {
+public abstract class LobbyModel : IViewModel, INotifyPropertyChanged {
 
-    public record LobbyButton(bool IsEnabled, RelayCommand Click) : INotifyPropertyChanged {
+    public record LobbyButton(bool IsEnabled, RelayCommand Click, Visibility Visible) : INotifyPropertyChanged {
         public event PropertyChangedEventHandler? PropertyChanged;
         // TODO: Even change stuff...
+    }
+
+    public record LobbyDropdown<T>(bool IsEnabled, Visibility Visibility, ObservableCollection<T> Items, Action<int> SelectionChanged) : INotifyPropertyChanged {
+        private int m_selected;
+        public event PropertyChangedEventHandler? PropertyChanged;
+        public int Selected {
+            get => this.m_selected;
+            set {
+                this.m_selected = value;
+                this.SelectionChanged.Invoke(value);
+            }
+        }
     }
 
     protected static readonly ImageSource __mapNotFound = new BitmapImage(new Uri("pack://application:,,,/Resources/ingame/unknown_map.png"));
@@ -39,6 +57,8 @@ public abstract class LobbyModel : IViewModel {
 
     private bool m_hasLeft;
 
+    public event PropertyChangedEventHandler? PropertyChanged;
+
     public bool SingleInstanceOnly => false;
 
     public LobbyAPIStructs.LobbyTeam Allies { get; }
@@ -50,6 +70,10 @@ public abstract class LobbyModel : IViewModel {
     public LobbyButton EditCompanyButton { get; }
 
     public abstract LobbyButton StartMatchButton { get; }
+
+    public abstract LobbyDropdown<Scenario> MapDropdown { get; }
+
+    public ImageSource? ScenarioPreview { get; set; }
 
     public string LobbyTitle { get; }
 
@@ -65,10 +89,10 @@ public abstract class LobbyModel : IViewModel {
         this.Axis = axis;
 
         // Create exit button (always behave the same)
-        this.ExitButton = new(true, new(this.LeaveLobby));
+        this.ExitButton = new(true, new(this.LeaveLobby), Visibility.Visible);
 
         // Create edit company button (always behaves the same)
-        this.EditCompanyButton = new(false, new(this.EditCompany));
+        this.EditCompanyButton = new(false, new(this.EditCompany), Visibility.Visible);
 
         // Set title
         this.LobbyTitle = this.m_handle.Title;
@@ -160,6 +184,45 @@ public abstract class LobbyModel : IViewModel {
             }, modalTitle, modalDesc);
 
         });
+
+    }
+
+    protected BitmapSource? TryGetMapSource(Scenario? scenario, [CallerMemberName] string caller = "") {
+
+        // Set to default case
+        //this.SelectedMatchScenario = __mapNotFound;
+
+        // Check scenario
+        if (scenario is null) {
+            Trace.WriteLine($"Failed to set **null** scenario (Caller = {caller}).", nameof(LobbyHostModel));
+            return (BitmapSource?)__mapNotFound;
+        }
+
+        // Get Path
+        string fullpath = Path.GetFullPath($"bg_common\\gfx\\map_icons\\{scenario.RelativeFilename}_map.tga");
+
+        // Check if file exists
+        if (File.Exists(fullpath)) {
+            try {
+                return TgaImageSource.TargaBitmapSourceFromFile(fullpath);
+            } catch (BadImageFormatException bife) {
+                Trace.WriteLine(bife, nameof(this.TryGetMapSource));
+            }
+        } else {
+            fullpath = Path.GetFullPath($"usr\\mods\\map_icons\\{scenario.RelativeFilename}_map.tga");
+            if (File.Exists(fullpath)) {
+                try {
+                    return TgaImageSource.TargaBitmapSourceFromFile(fullpath);
+                } catch (BadImageFormatException bife) {
+                    Trace.WriteLine(bife, nameof(this.TryGetMapSource));
+                }
+            } else {
+                Trace.WriteLine($"Failed to locate file: {fullpath}", nameof(this.TryGetMapSource));
+            }
+        }
+
+        // Nothing found
+        return (BitmapSource?)__mapNotFound;
 
     }
 

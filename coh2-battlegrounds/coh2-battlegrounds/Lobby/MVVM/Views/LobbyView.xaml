@@ -166,7 +166,7 @@
                     Width="348"
                     Height="322"
                     Stretch="Fill"
-                    Source="{Binding SelectedMatchScenario}"/>
+                    Source="{Binding ScenarioPreview}"/>
                 <Image
                     Width="372"
                     Canvas.Top="6"
@@ -185,11 +185,11 @@
                   Grid.Row="2">
                 <ComboBox Height="32"
                           VerticalAlignment="Top"
-                          ItemsSource="{Binding ScenarioSelection.Items}"
-                          SelectedIndex="{Binding ScenarioSelection.CurrentIndex, Mode=TwoWay}"
-                          Visibility="{Binding ScenarioSelection.IsDropdownVisible}"
+                          ItemsSource="{Binding MapDropdown.Items}"
+                          SelectedIndex="{Binding MapDropdown.Selected, Mode=TwoWay}"
+                          Visibility="{Binding MapDropdown.Visible}"
                           Style="{StaticResource StandardBlueDropdown}"/>
-                <Label Visibility="{Binding ScenarioSelection.IsLabelVisible}"
+                <Label Visibility="Collapsed"
                        Content="{Binding ScenarioSelection.LabelContent}"
                        Style="{StaticResource SettingValue}"/>
             </Grid>
