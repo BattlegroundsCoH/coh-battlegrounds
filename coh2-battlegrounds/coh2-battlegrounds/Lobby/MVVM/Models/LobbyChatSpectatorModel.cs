@@ -44,9 +44,9 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
 
         public FlowDocument? MessageDocument { get; set; }
 
-        public LobbyDropdownModel<LobbyChannelModel> SendFilter { get; }
+        //public LobbyDropdownModel<LobbyChannelModel> SendFilter { get; }
 
-        public LobbyButtonModel SendMessage { get; }
+        //public LobbyButtonModel SendMessage { get; }
 
         public EventCommand<KeyEventArgs> EnterKey { get; }
 
@@ -64,12 +64,12 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
             this.m_teamFilter = new("LobbyChat_FilterTeam");
 
             // Create filter
-            this.SendFilter = new(false, lobbyHandler.IsHost) {
+            /*this.SendFilter = new(false, lobbyHandler.IsHost) {
                 Items = new() {
                     new(this.m_allFilter, 0),
                     new(this.m_teamFilter, 1)
                 }
-            };
+            };*/
 
             // Create chat history
             Application.Current.Dispatcher.Invoke(() => {
@@ -80,12 +80,12 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
             this.Spectators = new();
 
             // Create sendmessage button
-            this.SendMessage = new() {
+            /*this.SendMessage = new() {
                 Text = new("LobbyChat_Send"),
                 Enabled = true,
                 Visible = Visibility.Visible,
                 Click = new RelayCommand(() => this.Send())
-            };
+            };*/
 
             // Create enter key
             this.EnterKey = new EventCommand<KeyEventArgs>(this.SendEnter);
@@ -156,7 +156,7 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
             string timestamp = DateTime.Now.ToShortTimeString();
 
             // Send using broker
-            switch (this.SendFilter.CurrentIndex) {
+            switch (0) { // TOOD: Fix
                 case 0: // All
                     this.m_handle.GlobalChat(this.m_handle.Self.ID, content);
                     channel = "All";

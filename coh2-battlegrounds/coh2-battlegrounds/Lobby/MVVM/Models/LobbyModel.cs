@@ -51,49 +51,18 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
         private LobbyChatSpectatorModel? m_chatModel;
         private ModPackage? m_package;
         private bool m_hasSetDefaults;
-        private LobbyDropdownModel[] m_settings;
 
         private bool m_hasDownloadedGamemode = false;
 
         public event PropertyChangedEventHandler? PropertyChanged;
 
-        public LobbyButtonModel EditCompany { get; }
-
-        public LobbyButtonModel ExitLobby { get; }
-
-        public LobbyButtonModel StartMatch { get; }
-
         public ImageSource? SelectedMatchScenario { get; set; }
-
-        public LobbyDropdownModel<LobbyScenarioItem> ScenarioSelection { get; }
-
-        public LobbyDropdownModel<LobbyGamemodeItem> GamemodeSelection { get; }
-
-        public LobbyDropdownModel<LobbyGamemodeOptionItem> GamemodeOptionSelection { get; }
-
-        public LobbyDropdownModel<LobbyBinaryOptionItem> WeatherSelection { get; }
-
-        public LobbyDropdownModel<LobbyBinaryOptionItem> SupplySystemSelection { get; }
-
-        public LobbyDropdownModel<LobbyModPackageItem> ModPackageSelection { get; }
 
         public LobbyTeam Allies { get; }
 
         public LobbyTeam Axis { get; }
 
         public bool SingleInstanceOnly => false;
-
-        public LocaleKey ScenarioLabel { get; } = new("LobbyView_SettingScenario");
-
-        public LocaleKey GamemodeLabel { get; } = new("LobbyView_SettingGamemode");
-
-        public LocaleKey GamemodeOptionLabel { get; } = new("LobbyView_SettingOption");
-
-        public LocaleKey SupplyLabel { get; } = new("LobbyView_SettingSupply");
-
-        public LocaleKey WeatherLabel { get; } = new("LobbyView_SettingWeather");
-
-        public LocaleKey PackageLabel { get; } = new("LobbyView_SettingTuning");
 
         public string LobbyTitle { get; }
 
@@ -108,88 +77,6 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
             // Create teams
             this.Allies = new(allies);
             this.Axis = new(axis);
-
-            // Create edit company button
-            this.EditCompany = new() {
-                Click = new RelayCommand(this.EditSelfCompany),
-                Enabled = false,
-                Visible = Visibility.Visible,
-                Text = new("LobbyView_EditCompany")
-            };
-
-            // Create exit lobby button
-            this.ExitLobby = new() {
-                Click = new RelayCommand(this.LeaveLobby),
-                Enabled = false,
-                Visible = Visibility.Visible,
-                Text = new("LobbyView_LeaveLobby")
-            };
-
-            // Create start match button
-            this.StartMatch = new() {
-                Click = new RelayCommand(this.BeginMatchSetup),
-                Enabled = false,
-                Visible = Visibility.Visible,
-                Text = new("LobbyView_StartMatch")
-            };
-
-            // Create package list
-            List<LobbyModPackageItem> modPackages = new();
-            ModManager.EachPackage(x => modPackages.Add(new(x)));
-
-            // Create mod package dropdown
-            this.ModPackageSelection = new(true, this.m_handle.IsHost, "selected_tuning") {
-                Items = new(modPackages),
-                OnSelectionChanged = this.OnPackageChanged
-            };
-
-            // Set package here
-            if (this.m_handle.IsHost) {
-                this.m_package = this.ModPackageSelection.Items[0].Package;
-            }
-
-            // Create scenario selection dropdown
-            this.ScenarioSelection = new(true, this.m_handle.IsHost, "selected_map") {
-                Items = new(ScenarioList.GetList()
-                    .Where(x => x.IsVisibleInLobby)
-                    .Select(x => new LobbyScenarioItem(x))),
-                OnSelectionChanged = this.OnScenarioChanged
-            };
-
-            // Create gamemode selection dropdown
-            this.GamemodeSelection = new(true, this.m_handle.IsHost, "selected_wc") {
-                Items = new(),
-                OnSelectionChanged = this.OnGamemodeChanged
-            };
-
-            // Create gamemode option selection dropdown
-            this.GamemodeOptionSelection = new(true, this.m_handle.IsHost, "selected_wco") {
-                Items = new(),
-                OnSelectionChanged = this.OnGamemodeOptionChanged
-            };
-
-            // Create weather selection dropdown
-            this.WeatherSelection = new(true, this.m_handle.IsHost, "selected_daynight") {
-                Items = LobbyBinaryOptionItem.CreateCollection(),
-                OnSelectionChanged = this.OnWeatherChanged
-            };
-
-            // Create supply selection dropdown
-            this.SupplySystemSelection = new(true, this.m_handle.IsHost, "selected_supply") {
-                Items = LobbyBinaryOptionItem.CreateCollection(),
-                OnSelectionChanged = this.OnSupplyChanged
-            };
-
-            // Save setting dropdowns
-            this.m_settings = new LobbyDropdownModel[] {
-                this.ScenarioSelection, this.GamemodeSelection, this.GamemodeOptionSelection,
-                this.ModPackageSelection, this.WeatherSelection, this.SupplySystemSelection
-            };
-
-            // Init dropdown values (if host)
-            if (handle.IsHost) {
-                this.ScenarioSelection.SetSelection(x => x.Scenario.RelativeFilename == BattlegroundsInstance.LastPlayedMap);
-            }
 
             // Add handlers to remote updates and notifications
             this.m_handle.OnLobbySelfUpdate += this.OnSelfChanged;
@@ -217,7 +104,7 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
             Application.Current.Dispatcher.Invoke(() => {
 
                 // Allow exit lobby
-                this.ExitLobby.Enabled = true;
+                //this.ExitLobby.Enabled = true;
 
             });
 
@@ -234,7 +121,7 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
             Application.Current.Dispatcher.Invoke(() => {
 
                 // Allow exit lobby
-                this.ExitLobby.Enabled = false;
+                //this.ExitLobby.Enabled = false;
 
             });
 
@@ -307,7 +194,7 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
                     Application.Current.Dispatcher.Invoke(() => {
 
                         // Allow exit lobby
-                        this.ExitLobby.Enabled = true;
+                        //this.ExitLobby.Enabled = true;
 
                     });
 
@@ -410,14 +297,7 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
         private void OnSelfChanged() {
             Application.Current.Dispatcher.Invoke(() => {
 
-                // Eval match launchability
-                this.EvaluateMatchLaunchable();
-
             });
-        }
-
-        private void EditSelfCompany() {
-            Trace.WriteLine("Editing own company in lobby is currently not implemented!");
         }
 
         private void LeaveLobby() {
@@ -464,7 +344,7 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
                 return; // TODO: Show error
 
             // Disallow exit lobby
-            this.ExitLobby.Enabled = false;
+            //this.ExitLobby.Enabled = false;
 
             // Set lobby status here
             this.m_handle.SetLobbyState(LobbyAPIStructs.LobbyState.Starting);
@@ -493,45 +373,7 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
             this.m_handle.SetLobbyState(LobbyAPIStructs.LobbyState.InLobby);
 
             // Allow exit lobby
-            this.ExitLobby.Enabled = true;
-
-        }
-
-        private int OnPackageChanged(int current, int next, LobbyModPackageItem item) {
-
-            // Bail if item is null
-            if (item is null) {
-                return next;
-            }
-
-            // Set package
-            this.m_package = item.Package;
-
-            // Update lobby
-            this.m_handle.SetLobbySetting(this.ModPackageSelection.DropdownID, item.Package.ID);
-
-            // Return selected
-            return next;
-
-        }
-
-        private int OnSupplyChanged(int current, int next, LobbyBinaryOptionItem item) {
-
-            // Update lobby
-            this.m_handle.SetLobbySetting(this.SupplySystemSelection.DropdownID, item.IsOn ? "1" : "0");
-
-            // Return selected
-            return next;
-
-        }
-
-        private int OnWeatherChanged(int current, int next, LobbyBinaryOptionItem item) {
-
-            // Update lobby
-            this.m_handle.SetLobbySetting(this.WeatherSelection.DropdownID, item.IsOn ? "1" : "0");
-
-            // Return selected
-            return next;
+            //this.ExitLobby.Enabled = true;
 
         }
 
@@ -574,152 +416,16 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
 
         }
 
-        private int OnScenarioChanged(int current, int next, LobbyScenarioItem item) {
-
-            // If item is not null
-            if (item is not null) {
-
-                // Update team capacity and go back to previous selection if capacity change fails
-                if (!this.m_handle.SetTeamsCapacity(item.Scenario.MaxPlayers / 2)) {
-                    return current;
-                }
-
-                // Update map
-                _ = Application.Current.Dispatcher.BeginInvoke(() => this.TrySetMapSource(item.Scenario));
-
-                // Update gamemode (and option)
-                this.UpdateGamemodeAndOption(item.Scenario);
-
-                // Update lobby
-                this.m_handle.SetLobbySetting(this.ScenarioSelection.DropdownID, item.Scenario.RelativeFilename);
-
-            }
-
-            // Return selected value
-            return next;
-
-        }
-
-        private void UpdateGamemodeAndOption(Scenario scenario) {
-
-            // Bail if no package defined
-            if (this.m_package is null)
-                return;
-
-            // Get available gamemodes
-            var guid = this.m_package.GamemodeGUID;
-            List<LobbyGamemodeItem> available = (scenario.Gamemodes.Count > 0 ? WinconditionList.GetGamemodes(guid, scenario.Gamemodes) : WinconditionList.GetGamemodes(guid))
-                .Select(x => new LobbyGamemodeItem(x)).ToList();
-
-            // Update if there's any change in available gamemodes 
-            if (this.GamemodeSelection.Items.Count != available.Count || available.Any(x => !this.GamemodeSelection.Items.Contains(x))) {
-
-                // Clear current gamemode selection
-                this.GamemodeSelection.Items.Clear();
-                available.ForEach(x => this.GamemodeSelection.Items.Add(x));
-
-                // Set default if not set
-                if (!this.m_hasSetDefaults) {
-                    this.GamemodeSelection.SetSelection(x => x.Gamemode.Name == BattlegroundsInstance.LastPlayedGamemode);
-                } else {
-                    this.GamemodeSelection.SetSelection(_ => true);
-                }
-
-            }
-
-        }
-
-        private int OnGamemodeChanged(int current, int next, LobbyGamemodeItem item) {
-
-            // Get options
-            var options = item.Gamemode.Options;
-
-            // Clear available options
-            this.GamemodeOptionSelection.Items.Clear();
-
-            // Hide options
-            if (options is null || options.Length is 0) {
-
-                // Set options to hidden
-                this.GamemodeOptionSelection.IsVisible = false;
-
-            } else {
-
-                // Update options
-                _ = options.ForEach(x => this.GamemodeOptionSelection.Items.Add(new(x)));
-
-                // Set default
-                if (!this.m_hasSetDefaults) {
-                    this.GamemodeOptionSelection.SetSelection(x => x.Option.Value == BattlegroundsInstance.LastPlayedGamemodeSetting);
-                    this.m_hasSetDefaults = true;
-                } else {
-                    var defaultOption = item.Gamemode.Options[item.Gamemode.DefaultOptionIndex];
-                    this.GamemodeOptionSelection.SetSelection(x => x.Option == defaultOption);
-                }
-
-                // Set options to hidden
-                this.GamemodeOptionSelection.IsVisible = true;
-
-            }
-
-            // Update lobby
-            this.m_handle.SetLobbySetting(this.GamemodeSelection.DropdownID, item.Gamemode.Name);
-
-            // Return selected
-            return next;
-
-        }
-
-        private int OnGamemodeOptionChanged(int current, int next, LobbyGamemodeOptionItem item) {
-
-            // Update lobby
-            this.m_handle.SetLobbySetting(this.GamemodeOptionSelection.DropdownID, item.Option.Value.ToString(CultureInfo.InvariantCulture));
-
-            // Return selected
-            return next;
-
-        }
-
-        private void EvaluateMatchLaunchable() {
-
-            // Skip check if not host
-            if (!this.m_handle.IsHost) {
-                return;
-            }
-
-            // Check allies
-            var (x1, y1) = this.Allies.CanPlay();
-            bool allied = x1 && y1;
-
-            // Check axis
-            var (x2, y2) = this.Axis.CanPlay();
-            bool axis = x2 && y2;
-
-            // If both playable
-            if (allied && axis) {
-                this.StartMatch.Enabled = true;
-                this.StartMatch.Tooltip = null;
-            } else if (!allied) {
-                this.StartMatch.Enabled = false;
-                this.StartMatch.Tooltip = x1 ? __playabilityAlliesNoPlayers : __playabilityAlliesInvalid;
-            } else {
-                this.StartMatch.Enabled = false;
-                this.StartMatch.Tooltip = x2 ? __playabilityAxisNoPlayers : __playabilityAxisInvalid;
-            }
-
-
-        }
-
         private void OnTeamChanged(LobbyAPIStructs.LobbyTeam team) {
 
             // Refresh allies
             if (team.TeamID == 0) {
-                this.Allies?.RefreshTeam(team);
+                //this.Allies?.RefreshTeam(team);
             }
 
             // Refresh axis
             if (team.TeamID == 1) {
-                this.Axis?.RefreshTeam(team);
+                //this.Axis?.RefreshTeam(team);
             }
 
             // Trigger self change
@@ -735,7 +441,7 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
             var team = slot.TeamID == 0 ? this.Allies : this.Axis;
 
             // Trigger slot update
-            team.RefreshSlot(team.Slots[slot.SlotID], slot);
+            //team.RefreshSlot(team.Slots[slot.SlotID], slot);
 
             // Trigger self change
             if (this.m_handle.IsHost) {
@@ -746,59 +452,9 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
 
         private void OnCompanyChanged(int teamID, int slotID, LobbyAPIStructs.LobbyCompany company) {
 
-            // Get team
-            var team = teamID == 0 ? this.Allies : this.Axis;
-
-            // Get slot
-            var slot = team.Slots[slotID];
-
-            // Verify there's an occupant
-            if (slot.Interface.Occupant is null) {
-                Trace.WriteLine("Failed to set company of null occupant - OnCompanyChanged", nameof(LobbyModel));
-                return;
-            }
-
-            // Set company and refresh
-            slot.Interface.Occupant.Company = company;
-            slot.RefreshCompany();
-
-            // Trigger self change
-            if (this.m_handle.IsHost) {
-                this.OnSelfChanged(); // Trigger a playability check
-            }
-
         }
 
         private void OnSettingChanged(string key, string value) {
-
-            // If host; do nothing
-            if (this.m_handle.IsHost) {
-                return;
-            }
-
-            // Invoke changes
-            Application.Current.Dispatcher.Invoke(() => { 
-                
-                // Loop over settings
-                for (int i = 0; i < this.m_settings.Length; i++) {
-                    if (this.m_settings[i].DropdownID == key) {
-
-                        // Set label value
-                        this.m_settings[i].LabelContent = this.GetRemoteSettingValue(key, value);
-                        
-                        // Update scenario preview if that is what was changed
-                        if (this.m_settings[i].DropdownID == this.ScenarioSelection.DropdownID) {
-                            this.TrySetMapSource(ScenarioSelection.Items.Select(x => x.Scenario).FirstOrDefault(x => x.RelativeFilename == value));
-                        }
-
-                        return;
-                    }
-                }
-
-                // Log missing k-v pair
-                Trace.WriteLine($"Failed to set setting '{key}' to '{value}' as setting dropdown was not defined.", nameof(LobbyModel));
-
-            });
 
         }
 
