@@ -22,8 +22,6 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
 
     public abstract class LobbySlot : INotifyPropertyChanged {
 
-        public record LobbySlotCompany(string Name, double Rating, string CompanyType, bool IsAuto);
-
         protected static readonly Dictionary<string, ImageSource> FactionIcons = new() {
             [Faction.Soviet.Name] = new BitmapImage(new Uri("pack://application:,,,/coh2-battlegrounds;component/Resources/app/army_icons/FactionSOVIET.png")),
             [Faction.America.Name] = new BitmapImage(new Uri("pack://application:,,,/coh2-battlegrounds;component/Resources/app/army_icons/FactionAEF.png")),
@@ -56,7 +54,9 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
 
         public Visibility IsSlotVisible => this.Slot.State == 3 ? Visibility.Collapsed : Visibility.Visible;
 
-        public ImageSource LeftIcon { get; set; }
+        public ImageSource? LeftIcon { get; set; }
+
+        public ImageSource? LeftIconHover { get; set; }
 
         public LobbyTeam Team { get; }
 
@@ -66,7 +66,18 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
 
         public LobbyAPIStructs.LobbyCompany SelectedCompany => this.SelectableCompanies[0];
 
-        public abstract Visibility IsCompanySelectorVisible { get; }
+        public bool IsSelf => this.Slot.IsSelf();
+
+        public bool IsSlotMouseOver { get; set; }
+
+        public string LeftDisplayString => this.Slot.State switch {
+            0 => string.Empty,
+            1 => this.Slot.Occupant?.DisplayName ?? "FATAL ERROR",
+            2 => "Locked",
+            _ => string.Empty
+        };
+
+        public abstract Visibility IsCompanySelectorVisible { get; } // TODO: Disable if only one element can be picked.
 
         public Visibility IsCompanyInfoVisible => this.IsCompanySelectorVisible == Visibility.Visible ? Visibility.Collapsed : Visibility.Visible;
 
@@ -87,7 +98,7 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
             this.SelectableCompanies = new((teamSlot.TeamID == 0 ? AlliedCompanies : AxisCompanies).Select(FromCompany));
 
             // Set some defaults
-            this.LeftIcon = FactionIcons[string.Empty];
+            this.SetLeftIcon(FactionIcons[this.SelectedCompany.Army], FactionHoverIcons[this.SelectedCompany.Army]);
 
             // Get API
             if (teamSlot.API is LobbyAPI api) {
@@ -116,11 +127,24 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
                 this.m_slot = args;
 
                 // Update state
+                this.PropertyChanged?.Invoke(this, new(nameof(IsSelf)));
                 this.PropertyChanged?.Invoke(this, new(nameof(IsSlotVisible)));
                 this.PropertyChanged?.Invoke(this, new(nameof(IsCompanyInfoVisible)));
                 this.PropertyChanged?.Invoke(this, new(nameof(IsCompanySelectorVisible)));
 
             }
+        }
+
+        protected void SetLeftIcon(ImageSource normal, ImageSource hover) {
+            
+            // Set icons
+            this.LeftIcon = normal;
+            this.LeftIconHover = hover;
+            
+            // Do property changed
+            this.PropertyChanged?.Invoke(this, new(nameof(LeftIcon)));
+            this.PropertyChanged?.Invoke(this, new(nameof(LeftIconHover)));
+
         }
 
         protected abstract void OnLobbyCompanyChanged(int newValue);

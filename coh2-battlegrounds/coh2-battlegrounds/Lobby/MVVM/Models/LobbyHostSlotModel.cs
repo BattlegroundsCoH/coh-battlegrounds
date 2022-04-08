@@ -23,9 +23,8 @@ public class LobbyHostSlotModel : LobbySlot {
             return;
         }
         if (this.Slot.IsSelf() || this.Slot.IsAI()) {
-            var selected = this.SelectedCompany;
-            this.LeftIcon = FactionIcons[selected.Name];
-            this.Slot.API.SetCompany(this.Slot.TeamID, this.Slot.SlotID, selected);
+            this.SetLeftIcon(FactionIcons[this.SelectedCompany.Army], FactionHoverIcons[this.SelectedCompany.Army]);
+            this.Slot.API.SetCompany(this.Slot.TeamID, this.Slot.SlotID, this.SelectedCompany);
         }
     }
 
