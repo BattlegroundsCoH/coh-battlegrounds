@@ -65,6 +65,7 @@ namespace Battlegrounds.Networking.LobbySystem {
             [MemberNotNullWhen(true, nameof(Occupant))]
             public bool IsOccupied => this.State == 1;
 
+            [MemberNotNullWhen(true, nameof(API))]
             public bool IsSelf() {
                 if (this.API is null) {
                     return false;

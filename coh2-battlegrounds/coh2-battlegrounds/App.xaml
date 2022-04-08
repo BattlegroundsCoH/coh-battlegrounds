@@ -139,7 +139,10 @@
         <DataTemplate DataType="{x:Type lobbymodels:LobbyParticipantModel}">
             <lobbyviews:LobbyView/>
         </DataTemplate>
-        <DataTemplate DataType="{x:Type lobbymodels:LobbySlot}">
+        <DataTemplate DataType="{x:Type lobbymodels:LobbyHostSlotModel}">
+            <lobbyviews:LobbyPlayerSlot/>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type lobbymodels:LobbyParticipantSlotModel}">
             <lobbyviews:LobbyPlayerSlot/>
         </DataTemplate>
 

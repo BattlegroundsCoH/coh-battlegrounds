@@ -61,10 +61,6 @@ public abstract class LobbyModel : IViewModel, INotifyPropertyChanged {
 
     public bool SingleInstanceOnly => false;
 
-    public LobbyAPIStructs.LobbyTeam Allies { get; }
-
-    public LobbyAPIStructs.LobbyTeam Axis { get; }
-
     public LobbyButton ExitButton { get; }
 
     public LobbyButton EditCompanyButton { get; }
@@ -77,6 +73,10 @@ public abstract class LobbyModel : IViewModel, INotifyPropertyChanged {
 
     public string LobbyTitle { get; }
 
+    public LobbyTeam Allies { get; }
+
+    public LobbyTeam Axis { get; }
+
     public bool UnloadViewModel() => true;
 
     public LobbyModel(LobbyAPI api, LobbyAPIStructs.LobbyTeam allies, LobbyAPIStructs.LobbyTeam axis) {
@@ -85,8 +85,8 @@ public abstract class LobbyModel : IViewModel, INotifyPropertyChanged {
         this.m_handle = api;
 
         // Set teams
-        this.Allies = allies;
-        this.Axis = axis;
+        this.Allies = new(api, allies);
+        this.Axis = new(api, axis);
 
         // Create exit button (always behave the same)
         this.ExitButton = new(true, new(this.LeaveLobby), Visibility.Visible);
@@ -188,9 +188,6 @@ public abstract class LobbyModel : IViewModel, INotifyPropertyChanged {
     }
 
     protected BitmapSource? TryGetMapSource(Scenario? scenario, [CallerMemberName] string caller = "") {
-
-        // Set to default case
-        //this.SelectedMatchScenario = __mapNotFound;
 
         // Check scenario
         if (scenario is null) {

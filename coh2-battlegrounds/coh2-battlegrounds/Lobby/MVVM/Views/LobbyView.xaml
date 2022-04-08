@@ -78,13 +78,13 @@
                     <RowDefinition Height="72"/>
                 </Grid.RowDefinitions>
                 <ContentPresenter Grid.Row="0"
-                                  Content="{Binding Allies.Slots, Converter={StaticResource ArrayIndexer}, ConverterParameter=0}"/>
+                                  Content="{Binding Allies.Slot1}"/>
                 <ContentPresenter Grid.Row="2"
-                                  Content="{Binding Allies.Slots, Converter={StaticResource ArrayIndexer}, ConverterParameter=1}"/>
+                                  Content="{Binding Allies.Slot2}"/>
                 <ContentPresenter Grid.Row="4"
-                                  Content="{Binding Allies.Slots, Converter={StaticResource ArrayIndexer}, ConverterParameter=2}"/>
+                                  Content="{Binding Allies.Slot3}"/>
                 <ContentPresenter Grid.Row="6"
-                                  Content="{Binding Allies.Slots, Converter={StaticResource ArrayIndexer}, ConverterParameter=3}"/>
+                                  Content="{Binding Allies.Slot4}"/>
                 
             </Grid>
             
@@ -100,13 +100,13 @@
                     <RowDefinition Height="72"/>
                 </Grid.RowDefinitions>
                 <ContentPresenter Grid.Row="0"
-                                  Content="{Binding Axis.Slots, Converter={StaticResource ArrayIndexer}, ConverterParameter=0}"/>
+                                  Content="{Binding Axis.Slot1}"/>
                 <ContentPresenter Grid.Row="2"
-                                  Content="{Binding Axis.Slots, Converter={StaticResource ArrayIndexer}, ConverterParameter=1}"/>
+                                  Content="{Binding Axis.Slot2}"/>
                 <ContentPresenter Grid.Row="4"
-                                  Content="{Binding Axis.Slots, Converter={StaticResource ArrayIndexer}, ConverterParameter=2}"/>
+                                  Content="{Binding Axis.Slot3}"/>
                 <ContentPresenter Grid.Row="6"
-                                  Content="{Binding Axis.Slots, Converter={StaticResource ArrayIndexer}, ConverterParameter=3}"/>
+                                  Content="{Binding Axis.Slot4}"/>
             </Grid>
         </Grid>
 

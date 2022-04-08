@@ -71,7 +71,6 @@
                HorizontalAlignment="Left"
                Stretch="Uniform"
                Grid.ColumnSpan="2"
-               Visibility="{Binding LeftIconVisibility}"
                Source="{Binding LeftIcon}"/>
 
         <Label Grid.Column="2"
@@ -81,14 +80,13 @@
                VerticalAlignment="Center"/>
 
         <ComboBox Grid.Column="5"
-                  ItemsSource="{Binding AvailableSlotCompanies}"
-                  Visibility="{Binding CompanyVisibility}"
+                  ItemsSource="{Binding SelectableCompanies}"
+                  Visibility="{Binding IsCompanySelectorVisible}"
                   Style="{StaticResource SlotCompanySelection}"
-                  SelectedIndex="{Binding SelectedCompanyIndex, Mode=TwoWay}"
-                  SelectedItem="{Binding SelectedCompany, Mode=OneWayToSource}"/>
+                  SelectedIndex="{Binding SelectedCompanyIndex, Mode=TwoWay}"/>
 
         <Grid Grid.Column="5"
-              Visibility="{Binding CompanyDataVisibility}">
+              Visibility="{Binding IsCompanyInfoVisible}">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition/>
                 <ColumnDefinition Width="18"/>
