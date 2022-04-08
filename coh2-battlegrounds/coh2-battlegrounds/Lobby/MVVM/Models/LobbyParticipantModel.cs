@@ -13,6 +13,7 @@ using Battlegrounds.Game.Database;
 using Battlegrounds.Game.DataCompany;
 using Battlegrounds.Game.Gameplay;
 using Battlegrounds.Game.Match.Play;
+using Battlegrounds.Modding;
 using Battlegrounds.Networking.LobbySystem;
 using Battlegrounds.Networking.Server;
 
@@ -28,6 +29,16 @@ public class LobbyParticipantModel : LobbyModel {
 
     public override LobbyDropdown<Scenario> MapDropdown { get; }
 
+    public override LobbyDropdown<IGamemode> GamemodeDropdown { get; }
+
+    public override LobbyDropdown<IGamemodeOption> GamemodeOptionDropdown { get; }
+
+    public override LobbyDropdown<OnOffOption> WeatherDropdown { get; }
+
+    public override LobbyDropdown<OnOffOption> SupplySystemDropdown { get; }
+
+    public override LobbyDropdown<ModPackage> ModPackageDropdown { get; }
+
     public LobbyParticipantModel(LobbyAPI handle, LobbyAPIStructs.LobbyTeam allies, LobbyAPIStructs.LobbyTeam axis) : base(handle, allies, axis) {
 
         // Define start match buttnn
@@ -35,6 +46,11 @@ public class LobbyParticipantModel : LobbyModel {
 
         // Init dropdowns 
         this.MapDropdown = new(false, Visibility.Hidden, new(), x => { });
+        this.GamemodeDropdown = new(false, Visibility.Hidden, new(), x => { });
+        this.GamemodeOptionDropdown = new(false, Visibility.Hidden, new(), x => { });
+        this.WeatherDropdown = new(false, Visibility.Hidden, new(), x => { });
+        this.SupplySystemDropdown = new(false, Visibility.Hidden, new(), x => { });
+        this.ModPackageDropdown = new(false, Visibility.Hidden, new(), x => { });
 
     }
 
