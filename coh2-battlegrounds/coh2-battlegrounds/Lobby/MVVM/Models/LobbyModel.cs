@@ -12,6 +12,7 @@ using System.Windows.Media.Imaging;
 using Battlegrounds;
 using Battlegrounds.Game.Database;
 using Battlegrounds.Locale;
+using Battlegrounds.Modding;
 using Battlegrounds.Networking.LobbySystem;
 
 using BattlegroundsApp.Modals;
@@ -30,14 +31,30 @@ public abstract class LobbyModel : IViewModel, INotifyPropertyChanged {
         // TODO: Even change stuff...
     }
 
-    public record LobbyDropdown<T>(bool IsEnabled, Visibility Visibility, ObservableCollection<T> Items, Action<int> SelectionChanged) : INotifyPropertyChanged {
+    public record OnOffOption(bool IsOn) {
+        // TODO: Localize this :)
+        public override string ToString() => IsOn ? "On" : "Off";
+    }
+
+    public record LobbyDropdown<T>(bool IsEnabled, Visibility visibility, ObservableCollection<T> Items, Action<int> SelectionChanged) : INotifyPropertyChanged {
         private int m_selected;
+        private Visibility m_visibility = visibility;
         public event PropertyChangedEventHandler? PropertyChanged;
+        private void OnPropertyChanged(string propertyName)
+            => this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         public int Selected {
             get => this.m_selected;
             set {
                 this.m_selected = value;
                 this.SelectionChanged.Invoke(value);
+                OnPropertyChanged(nameof(Selected));
+            }
+        }
+        public Visibility Visibility { 
+            get => this.m_visibility;
+            set { 
+                this.m_visibility = value;
+                OnPropertyChanged(nameof(Visibility));
             }
         }
     }
@@ -68,6 +85,16 @@ public abstract class LobbyModel : IViewModel, INotifyPropertyChanged {
     public abstract LobbyButton StartMatchButton { get; }
 
     public abstract LobbyDropdown<Scenario> MapDropdown { get; }
+
+    public abstract LobbyDropdown<IGamemode> GamemodeDropdown { get; }
+
+    public abstract LobbyDropdown<IGamemodeOption> GamemodeOptionDropdown { get; }
+
+    public abstract LobbyDropdown<OnOffOption> WeatherDropdown { get; }
+
+    public abstract LobbyDropdown<OnOffOption> SupplySystemDropdown { get; }
+
+    public abstract LobbyDropdown<ModPackage> ModPackageDropdown { get; }
 
     public ImageSource? ScenarioPreview { get; set; }
 
