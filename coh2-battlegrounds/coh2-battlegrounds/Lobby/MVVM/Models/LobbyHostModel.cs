@@ -45,7 +45,7 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
 
         public override LobbyButton StartMatchButton { get; }
 
-        public override LobbyDropdown<ScenarioOption> MapDropdown { get; }
+        public override LobbyDropdown<ScenOp> MapDropdown { get; }
 
         public override LobbyDropdown<IGamemode> GamemodeDropdown { get; }
 
@@ -68,7 +68,7 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
             var _scenlist = ScenarioList.GetList()
                 .Where(x => x.IsVisibleInLobby)
                 .OrderBy(x => x.MaxPlayers);
-            var scenlist = new List<ScenarioOption>(_scenlist.Select(x => new ScenarioOption(x)));
+            var scenlist = new List<ScenOp>(_scenlist.Select(x => new ScenOp(x)));
 
             // Get & set tunning list
             var tunlist = new List<ModPackageOption>();

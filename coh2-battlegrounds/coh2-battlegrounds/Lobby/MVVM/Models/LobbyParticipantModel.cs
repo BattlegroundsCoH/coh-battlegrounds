@@ -27,7 +27,7 @@ public class LobbyParticipantModel : LobbyModel {
 
     public override LobbyButton StartMatchButton { get; }
 
-    public override LobbyDropdown<ScenarioOption> MapDropdown { get; }
+    public override LobbyDropdown<ScenOp> MapDropdown { get; }
 
     public override LobbyDropdown<IGamemode> GamemodeDropdown { get; }
 

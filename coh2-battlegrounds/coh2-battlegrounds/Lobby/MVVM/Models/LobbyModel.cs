@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -32,17 +33,13 @@ public abstract class LobbyModel : IViewModel, INotifyPropertyChanged {
         // TODO: Even change stuff...
     }
 
-    public record ScenarioOption(Scenario Scenario) {
-        private string m_display = Scenario.Name;
-        public override string ToString() {
-
-            if (Scenario.Name.StartsWith("$", false, CultureInfo.InvariantCulture) && uint.TryParse(Scenario.Name[1..], out uint key)) {
-                m_display = GameLocale.GetString(key);
-            }
-
-            return m_display;
-
-        }
+    public record ScenOp(Scenario Scenario) {
+        private static readonly Dictionary<string, string> _cachedNames = new();
+        private string GetDisplay()
+            => this.Scenario.Name.StartsWith("$", false, CultureInfo.InvariantCulture) && uint.TryParse(this.Scenario.Name[1..], out uint key) ? 
+            GameLocale.GetString(key) : this.Scenario.Name;
+        public override string ToString()
+            => _cachedNames.TryGetValue(Scenario.Name, out string? s) ? (s ?? Scenario.Name) : (_cachedNames[this.Scenario.Name] = GetDisplay());
     }
 
     public record OnOffOption(bool IsOn) {
@@ -55,25 +52,23 @@ public abstract class LobbyModel : IViewModel, INotifyPropertyChanged {
         public override string ToString() => m_display;
     }
 
-    public record LobbyDropdown<T>(bool IsEnabled, Visibility visibility, ObservableCollection<T> Items, Action<int> SelectionChanged) : INotifyPropertyChanged {
+    public record LobbyDropdown<T>(bool IsEnabled, Visibility Visibility, ObservableCollection<T> Items, Action<int> SelectionChanged) : INotifyPropertyChanged {
         private int m_selected;
-        private Visibility m_visibility = visibility;
+        private Visibility m_visibility = Visibility;
         public event PropertyChangedEventHandler? PropertyChanged;
-        private void OnPropertyChanged(string propertyName)
-            => this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         public int Selected {
             get => this.m_selected;
             set {
                 this.m_selected = value;
                 this.SelectionChanged.Invoke(value);
-                OnPropertyChanged(nameof(Selected));
+                this.PropertyChanged?.Invoke(this, new(nameof(Selected)));
             }
         }
         public Visibility Visibility { 
             get => this.m_visibility;
             set { 
                 this.m_visibility = value;
-                OnPropertyChanged(nameof(Visibility));
+                this.PropertyChanged?.Invoke(this, new(nameof(Visibility)));
             }
         }
     }
@@ -103,7 +98,7 @@ public abstract class LobbyModel : IViewModel, INotifyPropertyChanged {
 
     public abstract LobbyButton StartMatchButton { get; }
 
-    public abstract LobbyDropdown<ScenarioOption> MapDropdown { get; }
+    public abstract LobbyDropdown<ScenOp> MapDropdown { get; }
 
     public abstract LobbyDropdown<IGamemode> GamemodeDropdown { get; }
 

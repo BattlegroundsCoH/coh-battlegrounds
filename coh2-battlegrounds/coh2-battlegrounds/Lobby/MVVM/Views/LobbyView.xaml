@@ -187,7 +187,7 @@
                           VerticalAlignment="Top"
                           ItemsSource="{Binding MapDropdown.Items}"
                           SelectedIndex="{Binding MapDropdown.Selected, Mode=TwoWay}"
-                          Visibility="{Binding MapDropdown.Visible}"
+                          Visibility="{Binding MapDropdown.Visibility}"
                           IsEnabled="{Binding MapDropdown.IsEnabled}"
                           Style="{StaticResource StandardBlueDropdown}"/>
                 <Label Visibility="Collapsed"
