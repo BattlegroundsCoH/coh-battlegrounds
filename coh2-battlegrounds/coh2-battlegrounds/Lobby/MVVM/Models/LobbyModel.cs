@@ -2,6 +2,7 @@
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Globalization;
 using System.IO;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
@@ -31,9 +32,27 @@ public abstract class LobbyModel : IViewModel, INotifyPropertyChanged {
         // TODO: Even change stuff...
     }
 
+    public record ScenarioOption(Scenario Scenario) {
+        private string m_display = Scenario.Name;
+        public override string ToString() {
+
+            if (Scenario.Name.StartsWith("$", false, CultureInfo.InvariantCulture) && uint.TryParse(Scenario.Name[1..], out uint key)) {
+                m_display = GameLocale.GetString(key);
+            }
+
+            return m_display;
+
+        }
+    }
+
     public record OnOffOption(bool IsOn) {
         // TODO: Localize this :)
         public override string ToString() => IsOn ? "On" : "Off";
+    }
+
+    public record ModPackageOption(ModPackage ModPackage) {
+        private string m_display = ModPackage.PackageName;
+        public override string ToString() => m_display;
     }
 
     public record LobbyDropdown<T>(bool IsEnabled, Visibility visibility, ObservableCollection<T> Items, Action<int> SelectionChanged) : INotifyPropertyChanged {
@@ -84,7 +103,7 @@ public abstract class LobbyModel : IViewModel, INotifyPropertyChanged {
 
     public abstract LobbyButton StartMatchButton { get; }
 
-    public abstract LobbyDropdown<Scenario> MapDropdown { get; }
+    public abstract LobbyDropdown<ScenarioOption> MapDropdown { get; }
 
     public abstract LobbyDropdown<IGamemode> GamemodeDropdown { get; }
 
@@ -94,7 +113,7 @@ public abstract class LobbyModel : IViewModel, INotifyPropertyChanged {
 
     public abstract LobbyDropdown<OnOffOption> SupplySystemDropdown { get; }
 
-    public abstract LobbyDropdown<ModPackage> ModPackageDropdown { get; }
+    public abstract LobbyDropdown<ModPackageOption> ModPackageDropdown { get; }
 
     public ImageSource? ScenarioPreview { get; set; }
 
