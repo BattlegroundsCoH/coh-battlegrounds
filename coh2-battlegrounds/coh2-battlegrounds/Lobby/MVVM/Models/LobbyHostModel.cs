@@ -45,7 +45,7 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
 
         public override LobbyButton StartMatchButton { get; }
 
-        public override LobbyDropdown<Scenario> MapDropdown { get; }
+        public override LobbyDropdown<ScenarioOption> MapDropdown { get; }
 
         public override LobbyDropdown<IGamemode> GamemodeDropdown { get; }
 
@@ -55,7 +55,7 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
 
         public override LobbyDropdown<OnOffOption> SupplySystemDropdown { get; }
 
-        public override LobbyDropdown<ModPackage> ModPackageDropdown { get; }
+        public override LobbyDropdown<ModPackageOption> ModPackageDropdown { get; }
 
         public ImageSource? SelectedMatchScenario { get; set; }
 
@@ -65,17 +65,18 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
             this.StartMatchButton = new(true, new(this.BeginMatchSetup), Visibility.Visible);
 
             // Get scenario list
-            var scenlist = ScenarioList.GetList()
+            var _scenlist = ScenarioList.GetList()
                 .Where(x => x.IsVisibleInLobby)
                 .OrderBy(x => x.MaxPlayers);
+            var scenlist = new List<ScenarioOption>(_scenlist.Select(x => new ScenarioOption(x)));
 
             // Get & set tunning list
-            var tunlist = new List<ModPackage>();
-            ModManager.EachPackage(x => tunlist.Add(x));
+            var tunlist = new List<ModPackageOption>();
+            ModManager.EachPackage(x => tunlist.Add(new ModPackageOption(x)));
 
             this.ModPackageDropdown = new(true, Visibility.Visible, new(tunlist), this.ModPackageSelectionChanged);
 
-            this.m_package = this.ModPackageDropdown.Items[0];
+            this.m_package = this.ModPackageDropdown.Items[0].ModPackage;
 
             // Get On & Off collection
             ObservableCollection<OnOffOption> onOfflist = new(new[] { new OnOffOption(true), new OnOffOption(false) });
@@ -162,7 +163,7 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
         private void MapSelectionChanged(int newIndex) {
 
             // Get scenario
-            var scen = this.MapDropdown.Items[newIndex];
+            var scen = this.MapDropdown.Items[newIndex].Scenario;
 
             // Try get image
             this.ScenarioPreview = this.TryGetMapSource(scen);
@@ -240,10 +241,10 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
         private void ModPackageSelectionChanged(int newIndex) {
 
             // Set package
-            this.m_package = this.ModPackageDropdown.Items[newIndex];
+            this.m_package = this.ModPackageDropdown.Items[newIndex].ModPackage;
 
             // Update lobby
-            this.m_handle.SetLobbySetting("selected_tuning", this.ModPackageDropdown.Items[newIndex].ID);
+            this.m_handle.SetLobbySetting("selected_tuning", this.ModPackageDropdown.Items[newIndex].ModPackage.ID);
 
         }
 

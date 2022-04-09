@@ -27,7 +27,7 @@ public class LobbyParticipantModel : LobbyModel {
 
     public override LobbyButton StartMatchButton { get; }
 
-    public override LobbyDropdown<Scenario> MapDropdown { get; }
+    public override LobbyDropdown<ScenarioOption> MapDropdown { get; }
 
     public override LobbyDropdown<IGamemode> GamemodeDropdown { get; }
 
@@ -37,7 +37,7 @@ public class LobbyParticipantModel : LobbyModel {
 
     public override LobbyDropdown<OnOffOption> SupplySystemDropdown { get; }
 
-    public override LobbyDropdown<ModPackage> ModPackageDropdown { get; }
+    public override LobbyDropdown<ModPackageOption> ModPackageDropdown { get; }
 
     public LobbyParticipantModel(LobbyAPI handle, LobbyAPIStructs.LobbyTeam allies, LobbyAPIStructs.LobbyTeam axis) : base(handle, allies, axis) {
 
