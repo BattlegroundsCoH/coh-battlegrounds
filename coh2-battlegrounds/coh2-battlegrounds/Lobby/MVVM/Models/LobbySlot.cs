@@ -71,7 +71,7 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
         public bool IsSlotMouseOver { get; set; }
 
         public string LeftDisplayString => this.Slot.State switch {
-            0 => string.Empty,
+            0 => "Open",
             1 => this.Slot.Occupant?.DisplayName ?? "FATAL ERROR",
             2 => "Locked",
             _ => string.Empty
@@ -97,14 +97,37 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
             this.m_slot = teamSlot;
             this.SelectableCompanies = new((teamSlot.TeamID == 0 ? AlliedCompanies : AxisCompanies).Select(FromCompany));
 
-            // Set some defaults
-            this.SetLeftIcon(FactionIcons[this.SelectedCompany.Army], FactionHoverIcons[this.SelectedCompany.Army]);
+            // Do initial view
+            this.InitInitialView();
 
             // Get API
             if (teamSlot.API is LobbyAPI api) {
                 api.OnLobbySlotUpdate += this.OnLobbySlotUpdate;
             } else {
                 Trace.WriteLine("Invalid lobby API given -- slot wont update properly!!!", nameof(LobbySlot));
+            }
+
+        }
+
+        private void InitInitialView() {
+
+            // Set icons
+            if (this.m_slot.IsOccupied) {
+
+                // Set some defaults
+                this.SetLeftIcon(FactionIcons[this.SelectedCompany.Army], FactionHoverIcons[this.SelectedCompany.Army]);
+
+            } else if (this.m_slot.State == 0) {
+
+                // Hide
+                this.SetLeftIcon(null, null);
+
+
+            } else {
+
+                // Show lock
+                this.SetLeftIcon(FactionIcons[string.Empty], FactionHoverIcons[string.Empty]);
+
             }
 
         }
@@ -135,7 +158,7 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
             }
         }
 
-        protected void SetLeftIcon(ImageSource normal, ImageSource hover) {
+        protected void SetLeftIcon(ImageSource? normal, ImageSource? hover) {
             
             // Set icons
             this.LeftIcon = normal;

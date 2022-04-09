@@ -4,14 +4,6 @@
                     xmlns:converters="clr-namespace:BattlegroundsApp.Utilities.Converters">
     <Style x:Key="SlotGridStyle" TargetType="{x:Type Grid}">
         <Setter Property="Background" Value="#212d3a"/>
-        <Style.Triggers>
-            <DataTrigger Binding="{Binding IsSelf}" Value="True">
-                <Setter Property="Background" Value="#334252"/>
-            </DataTrigger>
-            <Trigger Property="IsMouseOver" Value="True">
-                <Setter Property="Background" Value="#334252"/>
-            </Trigger>
-        </Style.Triggers>
     </Style>
     <Style x:Key="SlotNameStyle" TargetType="{x:Type Label}">
         <Setter Property="Foreground" Value="#FFFFFF"/>
@@ -54,7 +46,7 @@
                 <ColumnDefinition Width="18"/>
                 <ColumnDefinition Width="16"/>
             </Grid.ColumnDefinitions>
-            <Image Source="{Binding Type, Converter={StaticResource TypeIconConverter}}"
+            <Image Source="{Binding Specialisation, Converter={StaticResource TypeIconConverter}}"
                    Grid.Column="2"
                    Width="18"
                    Height="18"
@@ -96,7 +88,7 @@
                                     HorizontalAlignment="Left"
                                     VerticalAlignment="Center"
                                     Grid.Column="3"/>
-                          <Image Source="{Binding Type, Converter={StaticResource TypeIconConverter}}"
+                        <Image Source="{Binding Specialisation, Converter={StaticResource TypeIconConverter}}"
                                  Grid.Column="5"/>
                     </Grid>
                     <ControlTemplate.Triggers>

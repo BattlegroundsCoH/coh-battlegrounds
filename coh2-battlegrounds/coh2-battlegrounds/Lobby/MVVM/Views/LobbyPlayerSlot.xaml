@@ -66,13 +66,30 @@
 
         <Grid Grid.Column="1" 
               Grid.ColumnSpan="5"
-              Style="{StaticResource SlotGridStyle}"
-              x:Name="BackGrid"/>
+              x:Name="BackGrid">
+            <Grid.Style>
+                <Style TargetType="Grid" BasedOn="{StaticResource SlotGridStyle}">
+                    <Style.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="Background" Value="#334252"/>
+                        </Trigger>
+                        <DataTrigger Binding="{Binding IsMouseOver, ElementName=LeftIco}"
+                                     Value="True">
+                            <Setter Property="Background" Value="#334252"/>
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding IsSelf}" Value="true">
+                            <Setter Property="Background" Value="#334252"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Grid.Style>
+        </Grid>
 
         <Image Width="72"
                HorizontalAlignment="Left"
                Stretch="Uniform"
-               Grid.ColumnSpan="2">
+               Grid.ColumnSpan="2"
+               x:Name="LeftIco">
             <Image.Style>
                 <Style TargetType="Image">
                     <Setter Property="Source" Value="{Binding LeftIcon}"/>
@@ -80,6 +97,13 @@
                         <Trigger Property="IsMouseOver" Value="True">
                             <Setter Property="Source" Value="{Binding LeftIconHover}"/>
                         </Trigger>
+                        <DataTrigger Binding="{Binding IsMouseOver, ElementName=BackGrid}"
+                                     Value="True">
+                            <Setter Property="Source" Value="{Binding LeftIconHover}"/>
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding IsSelf}" Value="true">
+                            <Setter Property="Source" Value="{Binding LeftIconHover}"/>
+                        </DataTrigger>
                     </Style.Triggers>
                 </Style>
             </Image.Style>
