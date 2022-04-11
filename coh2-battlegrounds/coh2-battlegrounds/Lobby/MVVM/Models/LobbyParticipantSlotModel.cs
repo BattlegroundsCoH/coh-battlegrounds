@@ -15,13 +15,13 @@ public class LobbyParticipantSlotModel : LobbySlot {
     public override Visibility IsCompanySelectorVisible => this.Slot.IsSelf() ? Visibility.Visible : Visibility.Collapsed;
 
     public LobbyParticipantSlotModel(LobbyAPIStructs.LobbySlot teamSlot, LobbyTeam team) : base(teamSlot, team) {
-        this.ContextMenu = new LobbyHostContextMenu(teamSlot.API);
+        this.ContextMenu = new LobbyParticipantContextMenu(teamSlot.API ?? throw new Exception("Expected valid lobbyAPI isntance!"));
     }
 
     protected override void OnLobbyCompanyChanged(int newValue) {
         if (this.Slot.API is null) {
             return;
         }
-        throw new NotImplementedException();
+        //throw new NotImplementedException();
     }
 }
