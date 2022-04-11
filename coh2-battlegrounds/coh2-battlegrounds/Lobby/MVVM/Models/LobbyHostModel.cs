@@ -165,6 +165,9 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
             // Get scenario
             var scen = this.MapDropdown.Items[newIndex].Scenario;
 
+            // Update label
+            this.MapDropdown.LabelContent = scen.Name;
+
             // Try get image
             this.ScenarioPreview = this.TryGetMapSource(scen);
 
@@ -200,6 +203,8 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
 
                 // TODO: Set gamemode option that was last selected
                 this.GamemodeOptionDropdown.Selected = 0;
+                // Update label
+                this.GamemodeOptionDropdown.LabelContent = this.GamemodeOptionDropdown.Items[0].Title;
 
                 // Set visibility to visible
                 this.GamemodeOptionDropdown.Visibility = Visibility.Visible;
@@ -224,7 +229,10 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
 
         }
 
-        private void WeatherSelectionChanged(int newIndex) { 
+        private void WeatherSelectionChanged(int newIndex) {
+
+            // Update label
+            this.WeatherDropdown.LabelContent = this.WeatherDropdown.Items[newIndex].IsOn.ToString();
         
             // Update lobby
             this.m_handle.SetLobbySetting("selected_daynight", this.WeatherDropdown.Items[newIndex].IsOn ? "1" : "0");
@@ -232,6 +240,9 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
         }
 
         private void SupplySystemSelectionChanged(int newIndex) {
+
+            // Update label
+            this.SupplySystemDropdown.LabelContent = this.SupplySystemDropdown.Items[newIndex].IsOn.ToString();
 
             // Update lobby
             this.m_handle.SetLobbySetting("selected_supply", this.SupplySystemDropdown.Items[newIndex].IsOn ? "1" : "0");
@@ -242,6 +253,9 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
 
             // Set package
             this.m_package = this.ModPackageDropdown.Items[newIndex].ModPackage;
+
+            // Update label
+            this.ModPackageDropdown.LabelContent = this.ModPackageDropdown.Items[newIndex].ModPackage.PackageName;
 
             // Update lobby
             this.m_handle.SetLobbySetting("selected_tuning", this.ModPackageDropdown.Items[newIndex].ModPackage.ID);
@@ -269,6 +283,9 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
 
                 // TODO: Set gamemode that was last selected
                 this.GamemodeDropdown.Selected = 0;
+
+                // Update label
+                this.GamemodeDropdown.LabelContent = this.GamemodeDropdown.Items[0].Name;
 
             }
 

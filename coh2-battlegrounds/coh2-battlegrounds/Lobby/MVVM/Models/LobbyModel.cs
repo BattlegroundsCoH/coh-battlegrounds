@@ -52,10 +52,14 @@ public abstract class LobbyModel : IViewModel, INotifyPropertyChanged {
         public override string ToString() => m_display;
     }
 
-    public record LobbyDropdown<T>(bool IsEnabled, Visibility Visibility, ObservableCollection<T> Items, Action<int> SelectionChanged) : INotifyPropertyChanged {
+    public record LobbyDropdown<T>(bool IsEnabled, Visibility IsVisible, ObservableCollection<T> Items, Action<int> SelectionChanged) : INotifyPropertyChanged {
+
         private int m_selected;
-        private Visibility m_visibility = Visibility;
+        private Visibility m_visibility = IsVisible;
+        private string m_label;
+
         public event PropertyChangedEventHandler? PropertyChanged;
+
         public int Selected {
             get => this.m_selected;
             set {
@@ -64,6 +68,7 @@ public abstract class LobbyModel : IViewModel, INotifyPropertyChanged {
                 this.PropertyChanged?.Invoke(this, new(nameof(Selected)));
             }
         }
+
         public Visibility Visibility { 
             get => this.m_visibility;
             set { 
@@ -71,6 +76,25 @@ public abstract class LobbyModel : IViewModel, INotifyPropertyChanged {
                 this.PropertyChanged?.Invoke(this, new(nameof(Visibility)));
             }
         }
+
+        public Visibility ShouldShow => IsVisible;
+
+        public string LabelContent {
+            get => this.m_label;
+            set {
+                this.m_label = value;
+                this.PropertyChanged?.Invoke(this, new(nameof(LabelContent)));
+            }
+        }
+
+        public Visibility LabelVisibility { 
+            get => (this.ShouldShow is Visibility.Visible) ? Visibility.Collapsed : Visibility.Visible;
+            set {
+                this.LabelVisibility = value;
+                this.PropertyChanged?.Invoke(this, new(nameof(LabelVisibility)));
+            }
+        } 
+
     }
 
     protected static readonly ImageSource __mapNotFound = new BitmapImage(new Uri("pack://application:,,,/Resources/ingame/unknown_map.png"));

@@ -190,8 +190,8 @@
                           Visibility="{Binding MapDropdown.Visibility}"
                           IsEnabled="{Binding MapDropdown.IsEnabled}"
                           Style="{StaticResource StandardBlueDropdown}"/>
-                <Label Visibility="Collapsed"
-                       Content="{Binding ScenarioSelection.LabelContent}"
+                <Label Visibility="{Binding MapDropdown.LabelVisibility}"
+                       Content="{Binding MapDropdown.LabelContent}"
                        Style="{StaticResource SettingValue}"/>
             </Grid>
 
@@ -207,11 +207,11 @@
                           VerticalAlignment="Top"
                           ItemsSource="{Binding GamemodeDropdown.Items}"
                           SelectedIndex="{Binding GamemodeDropdown.Selected, Mode=TwoWay}"
-                          Visibility="{Binding GamemodeDropdown.Visible}"
+                          Visibility="{Binding GamemodeDropdown.Visibility}"
                           IsEnabled="{Binding GamemodeDropdown.IsEnabled}"
                           Style="{StaticResource StandardBlueDropdown}"/>
-                <Label Visibility="Collapsed"
-                       Content="{Binding GamemodeSelection.LabelContent}"
+                <Label Visibility="{Binding GamemodeDropdown.LabelVisibility}"
+                       Content="{Binding GamemodeDropdown.LabelContent}"
                        Style="{StaticResource SettingValue}"/>
             </Grid>
 
@@ -230,8 +230,8 @@
                           Visibility="{Binding GamemodeOptionDropdown.Visibility}"
                           IsEnabled="{Binding GamemodeOptionDropdown.IsEnabled}"
                           Style="{StaticResource StandardBlueDropdown}"/>
-                <Label Visibility="Collapsed"
-                       Content="{Binding GamemodeOptionSelection.LabelContent}"
+                <Label Visibility="{Binding GamemodeOptionDropdown.LabelVisibility}"
+                       Content="{Binding GamemodeOptionDropdown.LabelContent}"
                        Style="{StaticResource SettingValue}"/>
             </Grid>
 
@@ -247,11 +247,11 @@
                           VerticalAlignment="Top"
                           ItemsSource="{Binding WeatherDropdown.Items}"
                           SelectedIndex="{Binding WeatherDropdown.Selected, Mode=TwoWay}"
-                          Visibility="{Binding WeatherDropdown.Visible}"
+                          Visibility="{Binding WeatherDropdown.Visibility}"
                           IsEnabled="{Binding WeatherDropdown.IsEnabled}"
                           Style="{StaticResource StandardBlueDropdown}"/>
-                <Label Visibility="Collapsed"
-                       Content="{Binding WeatherSelection.LabelContent}"
+                <Label Visibility="{Binding WeatherDropdown.LabelVisibility}"
+                       Content="{Binding WeatherDropdown.LabelContent}"
                        Style="{StaticResource SettingValue}"/>
             </Grid>
 
@@ -267,11 +267,11 @@
                           VerticalAlignment="Top"
                           ItemsSource="{Binding SupplySystemDropdown.Items}"
                           SelectedIndex="{Binding SupplySystemDropdown.Selected, Mode=TwoWay}"
-                          Visibility="{Binding SupplySystemDropdown.Visible}"
+                          Visibility="{Binding SupplySystemDropdown.Visibility}"
                           IsEnabled="{Binding SupplySystemDropdown.IsEnabled}"
                           Style="{StaticResource StandardBlueDropdown}"/>
-                <Label Visibility="Collapsed"
-                       Content="{Binding SupplySystemSelection.LabelContent}"
+                <Label Visibility="{Binding SupplySystemDropdown.LabelVisibility}"
+                       Content="{Binding SupplySystemDropdown.LabelContent}"
                        Style="{StaticResource SettingValue}"/>
             </Grid>
 
@@ -287,11 +287,11 @@
                           VerticalAlignment="Top"
                           ItemsSource="{Binding ModPackageDropdown.Items}"
                           SelectedIndex="{Binding ModPackageDropdown.Selected, Mode=TwoWay}"
-                          Visibility="{Binding ModPackageDropdown.Visible}"
+                          Visibility="{Binding ModPackageDropdown.Visibility}"
                           IsEnabled="{Binding ModPackageDropdown.IsEnabled}"
                           Style="{StaticResource StandardBlueDropdown}"/>
-                <Label Visibility="Collapsed"
-                       Content="{Binding ModPackageSelection.LabelContent}"
+                <Label Visibility="{Binding ModPackageDropdown.LabelVisibility}"
+                       Content="{Binding ModPackageDropdown.LabelContent}"
                        Style="{StaticResource SettingValue}"/>
             </Grid>
 
