@@ -152,6 +152,9 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
                     // Update internal repr.
                     this.m_slot = args;
 
+                    // Update init view
+                    this.InitInitialView();
+
                     // Update state
                     this.PropertyChanged?.Invoke(this, new(nameof(IsSelf)));
                     this.PropertyChanged?.Invoke(this, new(nameof(IsSlotVisible)));

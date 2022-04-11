@@ -23,42 +23,45 @@
         <Grid.ContextMenu>
             <ContextMenu Style="{StaticResource LobbySlotContextMenu}"
                          Name="SlotContextMenuObj">
-                <MenuItem Header="Show Playercard"
-                          Command="{Binding SlotContextMenu.ShowPlayerCard}"
+                <MenuItem Header="{Binding ContextMenu.ShowPlayercard.Title}"
+                          Command="{Binding ContextMenu.ShowPlayercard.Click}"
                           Style="{StaticResource LobbySlotContextMenuItem}"/>
-                <Separator Visibility="{Binding SlotContextMenu.KickVisibility, Delay=100}"/>
-                <MenuItem Header="Kick Player"
-                          Visibility="{Binding SlotContextMenu.KickVisibility, Delay=100}"
-                          Command="{Binding SlotContextMenu.KickOccupant}"
+                <MenuItem Header="{Binding ContextMenu.KickPlayer.Title}"
+                          Visibility="{Binding ContextMenu.KickPlayer.Visibility, Delay=100}"
+                          Command="{Binding ContextMenu.KickPlayer.Click}"
                           Style="{StaticResource LobbySlotContextMenuItem}"/>
-                <Separator Visibility="{Binding SlotContextMenu.StateSelectorVisibility, Delay=5}"/>
-                <MenuItem Header="Lock Slot"
-                          Visibility="{Binding SlotContextMenu.LockVisibility, Delay=100}"
-                          Command="{Binding SlotContextMenu.LockSlot}"
+                <Separator/>
+                <MenuItem Header="{Binding ContextMenu.LockSlot.Title}"
+                          Visibility="{Binding ContextMenu.LockSlot.Visibility, Delay=100}"
+                          Command="{Binding ContextMenu.LockSlot.Click}"
                           Style="{StaticResource LobbySlotContextMenuItem}"/>
-                <MenuItem Header="Open Slot"
-                          Visibility="{Binding SlotContextMenu.OpenVisibility, Delay=100}"
-                          Command="{Binding SlotContextMenu.UnlockSlot}"
+                <MenuItem Header="{Binding ContextMenu.UnlockSlot.Title}"
+                          Visibility="{Binding ContextMenu.UnlockSlot.Visibility, Delay=100}"
+                          Command="{Binding ContextMenu.UnlockSlot.Click}"
                           Style="{StaticResource LobbySlotContextMenuItem}"/>
-                <Separator Visibility="{Binding SlotContextMenu.AIOptionsVisibility, Delay=100}"/>
-                <MenuItem Header="Add Easy AI"
-                          Visibility="{Binding SlotContextMenu.AIOptionsVisibility, Delay=100}"
-                          Command="{Binding SlotContextMenu.AddAIPlayer}"
+                <MenuItem Header="{Binding ContextMenu.MoveToSlot.Title}"
+                          Visibility="{Binding ContextMenu.MoveToSlot.Visibility, Delay=100}"
+                          Command="{Binding ContextMenu.MoveToSlot.Click}"
+                          Style="{StaticResource LobbySlotContextMenuItem}"/>
+                <Separator Visibility="{Binding ContextMenu.LastSepVisible, Delay=100}"/>
+                <MenuItem Header="{Binding ContextMenu.AddEasyAI.Title}"
+                          Visibility="{Binding ContextMenu.AddEasyAI.Visibility, Delay=100}"
+                          Command="{Binding ContextMenu.AddEasyAI.Click}"
                           CommandParameter="1"
                           Style="{StaticResource LobbySlotContextMenuItem}"/>
-                <MenuItem Header="Add Standard AI"
-                          Visibility="{Binding SlotContextMenu.AIOptionsVisibility, Delay=100}"
-                          Command="{Binding SlotContextMenu.AddAIPlayer}"
+                <MenuItem Header="{Binding ContextMenu.AddStandardAI.Title}"
+                          Visibility="{Binding ContextMenu.AddStandardAI.Visibility, Delay=100}"
+                          Command="{Binding ContextMenu.AddStandardAI.Click}"
                           CommandParameter="2"
                           Style="{StaticResource LobbySlotContextMenuItem}"/>
-                <MenuItem Header="Add Hard AI"
-                          Visibility="{Binding SlotContextMenu.AIOptionsVisibility, Delay=100}"
-                          Command="{Binding SlotContextMenu.AddAIPlayer}"
+                <MenuItem Header="{Binding ContextMenu.AddHardAI.Title}"
+                          Visibility="{Binding ContextMenu.AddHardAI.Visibility, Delay=100}"
+                          Command="{Binding ContextMenu.AddHardAI.Click}"
                           CommandParameter="3"
                           Style="{StaticResource LobbySlotContextMenuItem}"/>
-                <MenuItem Header="Add Expert AI"
-                          Visibility="{Binding SlotContextMenu.AIOptionsVisibility, Delay=100}"
-                          Command="{Binding SlotContextMenu.AddAIPlayer}"
+                <MenuItem Header="{Binding ContextMenu.AddExpertAI.Title}"
+                          Visibility="{Binding ContextMenu.AddExpertAI.Visibility, Delay=100}"
+                          Command="{Binding ContextMenu.AddExpertAI.Click}"
                           CommandParameter="4"
                           Style="{StaticResource LobbySlotContextMenuItem}"/>
             </ContextMenu>

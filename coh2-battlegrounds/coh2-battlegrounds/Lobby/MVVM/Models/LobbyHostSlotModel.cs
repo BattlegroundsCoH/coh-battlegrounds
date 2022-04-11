@@ -15,7 +15,7 @@ public class LobbyHostSlotModel : LobbySlot {
     public override LobbyContextMenu ContextMenu { get; }
 
     public LobbyHostSlotModel(LobbyAPIStructs.LobbySlot teamSlot, LobbyTeam team) : base(teamSlot, team) {
-        this.ContextMenu = new LobbyHostContextMenu(teamSlot.API ?? throw new Exception("Expected lobby API instance but found none!"));
+        this.ContextMenu = new LobbyHostContextMenu(teamSlot.API ?? throw new Exception("Expected lobby API instance but found none!"), this);
     }
 
     protected override void OnLobbyCompanyChanged(int newValue) {
