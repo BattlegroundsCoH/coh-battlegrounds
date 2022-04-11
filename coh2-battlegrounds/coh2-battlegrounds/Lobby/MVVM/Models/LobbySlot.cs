@@ -66,6 +66,8 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
 
         public LobbyAPIStructs.LobbyCompany SelectedCompany => this.SelectableCompanies[0];
 
+        public abstract LobbyContextMenu ContextMenu { get; }
+
         public bool IsSelf => this.Slot.IsSelf();
 
         public bool IsSlotMouseOver { get; set; }
@@ -144,18 +146,20 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
             };
 
         private void OnLobbySlotUpdate(LobbyAPIStructs.LobbySlot args) {
-            if (args.TeamID == this.Team.Team.TeamID && args.SlotID == this.m_slot.SlotID) {
+            Application.Current.Dispatcher.Invoke(() => {
+                if (args.TeamID == this.Team.Team.TeamID && args.SlotID == this.m_slot.SlotID) {
 
-                // Update internal repr.
-                this.m_slot = args;
+                    // Update internal repr.
+                    this.m_slot = args;
 
-                // Update state
-                this.PropertyChanged?.Invoke(this, new(nameof(IsSelf)));
-                this.PropertyChanged?.Invoke(this, new(nameof(IsSlotVisible)));
-                this.PropertyChanged?.Invoke(this, new(nameof(IsCompanyInfoVisible)));
-                this.PropertyChanged?.Invoke(this, new(nameof(IsCompanySelectorVisible)));
+                    // Update state
+                    this.PropertyChanged?.Invoke(this, new(nameof(IsSelf)));
+                    this.PropertyChanged?.Invoke(this, new(nameof(IsSlotVisible)));
+                    this.PropertyChanged?.Invoke(this, new(nameof(IsCompanyInfoVisible)));
+                    this.PropertyChanged?.Invoke(this, new(nameof(IsCompanySelectorVisible)));
 
-            }
+                }
+            });
         }
 
         protected void SetLeftIcon(ImageSource? normal, ImageSource? hover) {

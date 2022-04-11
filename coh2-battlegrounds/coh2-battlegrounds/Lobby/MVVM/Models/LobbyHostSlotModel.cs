@@ -12,10 +12,10 @@ public class LobbyHostSlotModel : LobbySlot {
 
     public override Visibility IsCompanySelectorVisible => this.Slot.IsSelf() || this.Slot.IsAI() ? Visibility.Visible : Visibility.Collapsed;
 
+    public override LobbyContextMenu ContextMenu { get; }
+
     public LobbyHostSlotModel(LobbyAPIStructs.LobbySlot teamSlot, LobbyTeam team) : base(teamSlot, team) {
-    
-
-
+        this.ContextMenu = new LobbyHostContextMenu(teamSlot.API ?? throw new Exception("Expected lobby API instance but found none!"));
     }
 
     protected override void OnLobbyCompanyChanged(int newValue) {
