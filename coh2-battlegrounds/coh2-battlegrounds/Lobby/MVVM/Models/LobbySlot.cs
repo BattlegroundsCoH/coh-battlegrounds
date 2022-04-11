@@ -145,7 +145,7 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
                 Strength = (float)x.Rating
             };
 
-        private void OnLobbySlotUpdate(LobbyAPIStructs.LobbySlot args) {
+        public void OnLobbySlotUpdate(LobbyAPIStructs.LobbySlot args) {
             Application.Current.Dispatcher.Invoke(() => {
                 if (args.TeamID == this.Team.Team.TeamID && args.SlotID == this.m_slot.SlotID) {
 
@@ -154,6 +154,9 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
 
                     // Update init view
                     this.InitInitialView();
+
+                    // Update context menu
+                    this.ContextMenu.RefreshMenu();
 
                     // Update state
                     this.PropertyChanged?.Invoke(this, new(nameof(IsSelf)));
@@ -174,6 +177,7 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
             // Do property changed
             this.PropertyChanged?.Invoke(this, new(nameof(LeftIcon)));
             this.PropertyChanged?.Invoke(this, new(nameof(LeftIconHover)));
+            this.PropertyChanged?.Invoke(this, new(nameof(LeftDisplayString)));
 
         }
 

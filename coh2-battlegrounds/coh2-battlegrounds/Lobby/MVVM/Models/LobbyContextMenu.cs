@@ -32,11 +32,13 @@ public abstract class LobbyContextMenu {
             get => this.EnabledTest();
             set {
                 this.PropertyChanged?.Invoke(this, new(nameof(Enabled)));
+                this.PropertyChanged?.Invoke(this, new(nameof(Visibility)));
             }
         }
         public Visibility Visibility {
             get => this.VisibilityTest(this);
             set {
+                this.PropertyChanged?.Invoke(this, new(nameof(Enabled)));
                 this.PropertyChanged?.Invoke(this, new(nameof(Visibility)));
             }
         }
@@ -91,5 +93,20 @@ public abstract class LobbyContextMenu {
 
     protected void MoveSelfToSlotAction()
         => this.Handle.MoveSlot(this.Handle.Self.ID, this.TeamId, this.SlotId);
+
+    public void RefreshMenu() {
+        
+        // Trigger a refresh on all these
+        this.ShowPlayercard.Enabled = true;
+        this.KickPlayer.Enabled = true;
+        this.LockSlot.Enabled = true;
+        this.UnlockSlot.Enabled = true;
+        this.MoveToSlot.Enabled = true;
+        this.AddEasyAI.Enabled = true;
+        this.AddExpertAI.Enabled = true;
+        this.AddStandardAI.Enabled = true;
+        this.AddHardAI.Enabled = true;
+
+    }
 
 }

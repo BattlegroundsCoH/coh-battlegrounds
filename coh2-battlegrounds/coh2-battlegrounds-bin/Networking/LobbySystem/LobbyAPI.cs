@@ -248,20 +248,24 @@ public sealed class LobbyAPI {
                 break;
             case "Notify.Team":
 
-                // This sends the whole team object
-                var newTeam = GoMarshal.JsonUnmarshal<LobbyTeam>(message.Raw);
-                newTeam.SetAPI(this);
+                // Try get team
+                if (GoMarshal.JsonUnmarshal<LobbyTeam>(message.Raw) is LobbyTeam newTeam) {
 
-                // Trigger team update
-                this.OnLobbyTeamUpdate?.Invoke(newTeam);
+                    // Set API
+                    newTeam.SetAPI(this);
 
-                // And refresh self teams
-                if (newTeam.TeamID == 0) {
-                    this.m_allies = newTeam;
-                } else if (newTeam.TeamID == 1) {
-                    this.m_axis = newTeam;
-                } else {
-                    this.m_obs = newTeam;
+                    // Refresh self teams
+                    if (newTeam.TeamID == 0) {
+                        this.m_allies = newTeam;
+                    } else if (newTeam.TeamID == 1) {
+                        this.m_axis = newTeam;
+                    } else {
+                        this.m_obs = newTeam;
+                    }
+
+                    // Trigger team update
+                    this.OnLobbyTeamUpdate?.Invoke(newTeam);
+
                 }
 
                 break;
