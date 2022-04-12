@@ -15,19 +15,13 @@ namespace Battlegrounds.Modding {
     /// </summary>
     public static class ModManager {
 
-        private static List<ModPackage> __packages;
-        private static Dictionary<ModGuid, IGameMod> __mods;
+        private static readonly List<ModPackage> __packages = new();
+        private static readonly Dictionary<ModGuid, IGameMod> __mods = new();
 
         /// <summary>
         /// Initialise the <see cref="ModManager"/> and load available <see cref="ModPackage"/> elements.
         /// </summary>
         public static void Init() {
-
-            // Create packages
-            __packages = new();
-
-            // Create mods
-            __mods = new();
 
             // Create wincondition list
             WinconditionList.CreateDatabase();
@@ -44,7 +38,12 @@ namespace Battlegrounds.Modding {
                 try {
 
                     // Read the mod package
-                    ModPackage package = JsonSerializer.Deserialize<ModPackage>(File.ReadAllText(packageFilepath));
+                    ModPackage? package = JsonSerializer.Deserialize<ModPackage>(File.ReadAllText(packageFilepath));
+                    if (package is null) {
+                        Trace.WriteLine($"Failed to load mod package '{packageFilepath}' (Error reading file).", nameof(ModManager));
+                        continue;
+                    }
+
                     if (__packages.Any(x => x.ID == package.ID)) {
                         Trace.WriteLine($"Failed to load mod package '{package.ID}' (Duplicate ID entry).", nameof(ModManager));
                         continue;
@@ -106,7 +105,7 @@ namespace Battlegrounds.Modding {
         /// </summary>
         /// <param name="packageID">The ID to use to identify the <see cref="ModPackage"/>.</param>
         /// <returns>The <see cref="ModPackage"/> associated with <paramref name="packageID"/>.</returns>
-        public static ModPackage GetPackage(string packageID)
+        public static ModPackage? GetPackage(string packageID)
             => __packages.FirstOrDefault(x => x.ID == packageID);
 
         /// <summary>
@@ -122,7 +121,7 @@ namespace Battlegrounds.Modding {
         /// <typeparam name="TMod">The specifc <see cref="IGameMod"/> type to get.</typeparam>
         /// <param name="guid">The GUID of the mod to fetch.</param>
         /// <returns>The <see cref="IGameMod"/> instance associated with the <paramref name="guid"/>.</returns>
-        public static TMod GetMod<TMod>(ModGuid guid) where TMod : class, IGameMod
+        public static TMod? GetMod<TMod>(ModGuid guid) where TMod : class, IGameMod
             => __mods[guid] as TMod;
 
         /// <summary>
@@ -130,7 +129,7 @@ namespace Battlegrounds.Modding {
         /// </summary>
         /// <param name="guid">The <see cref="ModGuid"/> to get <see cref="ModPackage"/> from.</param>
         /// <returns>The <see cref="ModPackage"/> associated with the submod associated <paramref name="guid"/>.</returns>
-        public static ModPackage GetPackageFromGuid(ModGuid guid)
+        public static ModPackage? GetPackageFromGuid(ModGuid guid)
             => __packages.FirstOrDefault(x => x.TuningGUID == guid || x.GamemodeGUID == guid || x.AssetGUID == guid);
 
     }
