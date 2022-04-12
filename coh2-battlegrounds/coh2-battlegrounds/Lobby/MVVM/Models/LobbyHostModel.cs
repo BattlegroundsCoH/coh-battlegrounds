@@ -108,6 +108,11 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
             // Set dropdown index, cascade effect
             this.MapDropdown.Selected = 0;
 
+            // Set opt-in settings
+            this.WeatherDropdown.Selected = 0;
+            this.SupplySystemDropdown.Selected = 0;
+            this.ModPackageDropdown.Selected = 0;
+
         }
 
         public void RefreshPlayability() {
@@ -230,6 +235,9 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
 
                 // Set visibility to hidden
                 this.GamemodeOptionDropdown.Visibility = Visibility.Hidden;
+
+                // Set setting to empty (Hidden)
+                this.m_handle.SetLobbySetting("selected_wco", string.Empty);
 
             } else {
 
