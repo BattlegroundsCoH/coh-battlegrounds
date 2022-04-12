@@ -42,12 +42,12 @@ public class LobbyParticipantModel : LobbyModel {
         this.StartMatchButton = new("", new(() => { }), Visibility.Hidden) { IsEnabled = false };
 
         // Init dropdowns 
-        this.MapDropdown = new(false, Visibility.Hidden, new(), x => { });
-        this.GamemodeDropdown = new(false, Visibility.Hidden, new(), x => { });
-        this.GamemodeOptionDropdown = new(false, Visibility.Hidden, new(), x => { });
-        this.WeatherDropdown = new(false, Visibility.Hidden, new(), x => { });
-        this.SupplySystemDropdown = new(false, Visibility.Hidden, new(), x => { });
-        this.ModPackageDropdown = new(false, Visibility.Hidden, new(), x => { });
+        this.MapDropdown = new(false, Visibility.Hidden, new(), x => { }) { LabelContent = handle.Settings["selected_map"].ToString() };
+        this.GamemodeDropdown = new(false, Visibility.Hidden, new(), x => { }) { LabelContent = handle.Settings["selected_wc"].ToString() };
+        this.GamemodeOptionDropdown = new(false, Visibility.Hidden, new(), x => { }) { LabelContent = handle.Settings["selected_wco"].ToString() };
+        this.WeatherDropdown = new(false, Visibility.Hidden, new(), x => { }) { LabelContent = (handle.Settings["selected_daynight"].ToString() is "1") ? "On" : "Off" };
+        this.SupplySystemDropdown = new(false, Visibility.Hidden, new(), x => { }) { LabelContent = (handle.Settings["selected_supply"].ToString() is "1") ? "On" : "Off" };
+        this.ModPackageDropdown = new(false, Visibility.Hidden, new(), x => { }) { LabelContent = handle.Settings["selected_tuning"].ToString() };
 
         handle.OnLobbySettingUpdate += this.OnLobbyChange;
 
