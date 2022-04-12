@@ -78,13 +78,13 @@
                     <RowDefinition Height="72"/>
                 </Grid.RowDefinitions>
                 <ContentPresenter Grid.Row="0"
-                                  Content="{Binding Allies.Slots, Converter={StaticResource ArrayIndexer}, ConverterParameter=0}"/>
+                                  Content="{Binding Allies.Slot1}"/>
                 <ContentPresenter Grid.Row="2"
-                                  Content="{Binding Allies.Slots, Converter={StaticResource ArrayIndexer}, ConverterParameter=1}"/>
+                                  Content="{Binding Allies.Slot2}"/>
                 <ContentPresenter Grid.Row="4"
-                                  Content="{Binding Allies.Slots, Converter={StaticResource ArrayIndexer}, ConverterParameter=2}"/>
+                                  Content="{Binding Allies.Slot3}"/>
                 <ContentPresenter Grid.Row="6"
-                                  Content="{Binding Allies.Slots, Converter={StaticResource ArrayIndexer}, ConverterParameter=3}"/>
+                                  Content="{Binding Allies.Slot4}"/>
                 
             </Grid>
             
@@ -100,13 +100,13 @@
                     <RowDefinition Height="72"/>
                 </Grid.RowDefinitions>
                 <ContentPresenter Grid.Row="0"
-                                  Content="{Binding Axis.Slots, Converter={StaticResource ArrayIndexer}, ConverterParameter=0}"/>
+                                  Content="{Binding Axis.Slot1}"/>
                 <ContentPresenter Grid.Row="2"
-                                  Content="{Binding Axis.Slots, Converter={StaticResource ArrayIndexer}, ConverterParameter=1}"/>
+                                  Content="{Binding Axis.Slot2}"/>
                 <ContentPresenter Grid.Row="4"
-                                  Content="{Binding Axis.Slots, Converter={StaticResource ArrayIndexer}, ConverterParameter=2}"/>
+                                  Content="{Binding Axis.Slot3}"/>
                 <ContentPresenter Grid.Row="6"
-                                  Content="{Binding Axis.Slots, Converter={StaticResource ArrayIndexer}, ConverterParameter=3}"/>
+                                  Content="{Binding Axis.Slot4}"/>
             </Grid>
         </Grid>
 
@@ -135,9 +135,9 @@
                     Margin="2,0,8,2"
                     VerticalContentAlignment="Center"
                     HorizontalContentAlignment="Center"
-                    Content="{Binding EditCompany.Text, Converter={StaticResource LocaleConvertor}}"
-                    Command="{Binding EditCompany.Click}"
-                    ToolTip="{Binding EditCompany.Tooltip}"
+                    Content="{Binding EditCompanyButton.Title}"
+                    Command="{Binding EditCompanyButton.Click}"
+                    IsEnabled="{Binding EditCompanyButton.IsEnabled}"
                     Background="#334252"
                     Foreground="#FFFFFF"
                     HoverColour="#536375"
@@ -149,9 +149,8 @@
                     Margin="8,0,2,2"
                     VerticalContentAlignment="Center"
                     HorizontalContentAlignment="Center"
-                    Content="{Binding ExitLobby.Text, Converter={StaticResource LocaleConvertor}}"
-                    Command="{Binding ExitLobby.Click}"
-                    ToolTip="{Binding ExitLobby.Tooltip}"
+                    Content="{Binding ExitButton.Title}"
+                    Command="{Binding ExitButton.Click}"
                     Background="#582222"
                     Foreground="#FFFFFF"
                     HoverColour="#a23333"
@@ -169,7 +168,7 @@
                     Width="348"
                     Height="322"
                     Stretch="Fill"
-                    Source="{Binding SelectedMatchScenario}"/>
+                    Source="{Binding ScenarioPreview}"/>
                 <Image
                     Width="372"
                     Canvas.Top="6"
@@ -180,26 +179,27 @@
             <!-- Options -->
             <StackPanel Grid.Column="1"
                         Grid.Row="2">
-                <Label Content="{Binding ScenarioLabel, Converter={StaticResource LocaleConvertor}}" 
-                       Style="{StaticResource SettingLabel}"/>
+                <controls:LocLabel LocKey="LobbyView_SettingScenario" 
+                                   Style="{StaticResource SettingLabel}"/>
                 <Separator Style="{StaticResource SettingSeperator}"/>
             </StackPanel>
             <Grid Grid.Column="2"
                   Grid.Row="2">
                 <ComboBox Height="32"
                           VerticalAlignment="Top"
-                          ItemsSource="{Binding ScenarioSelection.Items}"
-                          SelectedIndex="{Binding ScenarioSelection.CurrentIndex, Mode=TwoWay}"
-                          Visibility="{Binding ScenarioSelection.IsDropdownVisible}"
+                          ItemsSource="{Binding MapDropdown.Items}"
+                          SelectedIndex="{Binding MapDropdown.Selected, Mode=TwoWay}"
+                          Visibility="{Binding MapDropdown.Visibility}"
+                          IsEnabled="{Binding MapDropdown.IsEnabled}"
                           Style="{StaticResource StandardBlueDropdown}"/>
-                <Label Visibility="{Binding ScenarioSelection.IsLabelVisible}"
-                       Content="{Binding ScenarioSelection.LabelContent}"
+                <Label Visibility="{Binding MapDropdown.LabelVisibility}"
+                       Content="{Binding MapDropdown.LabelContent}"
                        Style="{StaticResource SettingValue}"/>
             </Grid>
 
             <StackPanel Grid.Column="1"
                         Grid.Row="3">
-                <Label Content="{Binding GamemodeLabel, Converter={StaticResource LocaleConvertor}}" 
+                <controls:LocLabel LocKey="LobbyView_SettingGamemode" 
                        Style="{StaticResource SettingLabel}"/>
                 <Separator Style="{StaticResource SettingSeperator}"/>
             </StackPanel>
@@ -207,18 +207,19 @@
                   Grid.Row="3">
                 <ComboBox Height="32"
                           VerticalAlignment="Top"
-                          ItemsSource="{Binding GamemodeSelection.Items}"
-                          SelectedIndex="{Binding GamemodeSelection.CurrentIndex, Mode=TwoWay}"
-                          Visibility="{Binding GamemodeSelection.IsDropdownVisible}"
+                          ItemsSource="{Binding GamemodeDropdown.Items}"
+                          SelectedIndex="{Binding GamemodeDropdown.Selected, Mode=TwoWay}"
+                          Visibility="{Binding GamemodeDropdown.Visibility}"
+                          IsEnabled="{Binding GamemodeDropdown.IsEnabled}"
                           Style="{StaticResource StandardBlueDropdown}"/>
-                <Label Visibility="{Binding GamemodeSelection.IsLabelVisible}"
-                       Content="{Binding GamemodeSelection.LabelContent}"
+                <Label Visibility="{Binding GamemodeDropdown.LabelVisibility}"
+                       Content="{Binding GamemodeDropdown.LabelContent}"
                        Style="{StaticResource SettingValue}"/>
             </Grid>
 
             <StackPanel Grid.Column="1"
                         Grid.Row="4">
-                <Label Content="{Binding GamemodeOptionLabel, Converter={StaticResource LocaleConvertor}}" 
+                <controls:LocLabel LocKey="LobbyView_SettingOption" 
                        Style="{StaticResource SettingLabel}"/>
                 <Separator Style="{StaticResource SettingSeperator}"/>
             </StackPanel>
@@ -226,18 +227,19 @@
                   Grid.Row="4">
                 <ComboBox Height="32"
                           VerticalAlignment="Top"
-                          ItemsSource="{Binding GamemodeOptionSelection.Items}"
-                          SelectedIndex="{Binding GamemodeOptionSelection.CurrentIndex, Mode=TwoWay}"
-                          Visibility="{Binding GamemodeOptionSelection.IsDropdownVisible}"
+                          ItemsSource="{Binding GamemodeOptionDropdown.Items}"
+                          SelectedIndex="{Binding GamemodeOptionDropdown.Selected, Mode=TwoWay}"
+                          Visibility="{Binding GamemodeOptionDropdown.Visibility}"
+                          IsEnabled="{Binding GamemodeOptionDropdown.IsEnabled}"
                           Style="{StaticResource StandardBlueDropdown}"/>
-                <Label Visibility="{Binding GamemodeOptionSelection.IsLabelVisible}"
-                       Content="{Binding GamemodeOptionSelection.LabelContent}"
+                <Label Visibility="{Binding GamemodeOptionDropdown.LabelVisibility}"
+                       Content="{Binding GamemodeOptionDropdown.LabelContent}"
                        Style="{StaticResource SettingValue}"/>
             </Grid>
 
             <StackPanel Grid.Column="1"
                         Grid.Row="5">
-                <Label Content="{Binding SupplyLabel, Converter={StaticResource LocaleConvertor}}"
+                <controls:LocLabel LocKey="LobbyView_SettingWeather"
                        Style="{StaticResource SettingLabel}"/>
                 <Separator Style="{StaticResource SettingSeperator}"/>
             </StackPanel>
@@ -245,37 +247,39 @@
                   Grid.Row="5">
                 <ComboBox Height="32"
                           VerticalAlignment="Top"
-                          ItemsSource="{Binding WeatherSelection.Items}"
-                          SelectedIndex="{Binding WeatherSelection.CurrentIndex, Mode=TwoWay}"
-                          Visibility="{Binding WeatherSelection.IsDropdownVisible}"
+                          ItemsSource="{Binding WeatherDropdown.Items}"
+                          SelectedIndex="{Binding WeatherDropdown.Selected, Mode=TwoWay}"
+                          Visibility="{Binding WeatherDropdown.Visibility}"
+                          IsEnabled="{Binding WeatherDropdown.IsEnabled}"
                           Style="{StaticResource StandardBlueDropdown}"/>
-                <Label Visibility="{Binding WeatherSelection.IsLabelVisible}"
-                       Content="{Binding WeatherSelection.LabelContent}"
+                <Label Visibility="{Binding WeatherDropdown.LabelVisibility}"
+                       Content="{Binding WeatherDropdown.LabelContent}"
                        Style="{StaticResource SettingValue}"/>
             </Grid>
 
             <StackPanel Grid.Column="1"
                         Grid.Row="6">
-                <Label Content="{Binding WeatherLabel, Converter={StaticResource LocaleConvertor}}" 
-                       Style="{StaticResource SettingLabel}"/>
+                <controls:LocLabel LocKey="LobbyView_SettingSupply" 
+                                   Style="{StaticResource SettingLabel}"/>
                 <Separator Style="{StaticResource SettingSeperator}"/>
             </StackPanel>
             <Grid Grid.Column="2"
                   Grid.Row="6">
                 <ComboBox Height="32"
                           VerticalAlignment="Top"
-                          ItemsSource="{Binding SupplySystemSelection.Items}"
-                          SelectedIndex="{Binding SupplySystemSelection.CurrentIndex, Mode=TwoWay}"
-                          Visibility="{Binding SupplySystemSelection.IsDropdownVisible}"
+                          ItemsSource="{Binding SupplySystemDropdown.Items}"
+                          SelectedIndex="{Binding SupplySystemDropdown.Selected, Mode=TwoWay}"
+                          Visibility="{Binding SupplySystemDropdown.Visibility}"
+                          IsEnabled="{Binding SupplySystemDropdown.IsEnabled}"
                           Style="{StaticResource StandardBlueDropdown}"/>
-                <Label Visibility="{Binding SupplySystemSelection.IsLabelVisible}"
-                       Content="{Binding SupplySystemSelection.LabelContent}"
+                <Label Visibility="{Binding SupplySystemDropdown.LabelVisibility}"
+                       Content="{Binding SupplySystemDropdown.LabelContent}"
                        Style="{StaticResource SettingValue}"/>
             </Grid>
 
             <StackPanel Grid.Column="1"
                         Grid.Row="7">
-                <Label Content="{Binding PackageLabel, Converter={StaticResource LocaleConvertor}}" 
+                <controls:LocLabel LocKey="LobbyView_SettingTuning" 
                        Style="{StaticResource SettingLabel}"/>
                 <Separator Style="{StaticResource SettingSeperator}"/>
             </StackPanel>
@@ -283,22 +287,22 @@
                   Grid.Row="7">
                 <ComboBox Height="32"
                           VerticalAlignment="Top"
-                          ItemsSource="{Binding ModPackageSelection.Items}"
-                          SelectedIndex="{Binding ModPackageSelection.CurrentIndex, Mode=TwoWay}"
-                          Visibility="{Binding ModPackageSelection.IsDropdownVisible}"
+                          ItemsSource="{Binding ModPackageDropdown.Items}"
+                          SelectedIndex="{Binding ModPackageDropdown.Selected, Mode=TwoWay}"
+                          Visibility="{Binding ModPackageDropdown.Visibility}"
+                          IsEnabled="{Binding ModPackageDropdown.IsEnabled}"
                           Style="{StaticResource StandardBlueDropdown}"/>
-                <Label Visibility="{Binding ModPackageSelection.IsLabelVisible}"
-                       Content="{Binding ModPackageSelection.LabelContent}"
+                <Label Visibility="{Binding ModPackageDropdown.LabelVisibility}"
+                       Content="{Binding ModPackageDropdown.LabelContent}"
                        Style="{StaticResource SettingValue}"/>
             </Grid>
 
             <Button Grid.Column="1" 
                     Grid.Row="9"
                     Grid.ColumnSpan="2"
-                    Content="{Binding StartMatch.Text, Converter={StaticResource LocaleConvertor}}"
-                    Command="{Binding StartMatch.Click}"
-                    IsEnabled="{Binding StartMatch.Enabled}"
-                    ToolTip="{Binding StartMatch.Tooltip, Converter={StaticResource LocaleConvertor}}"
+                    Content="{Binding StartMatchButton.Title}"
+                    Command="{Binding StartMatchButton.Click}"
+                    IsEnabled="{Binding StartMatchButton.IsEnabled}"
                     Style="{StaticResource StandardBlueButton}"/>
 
         </Grid>

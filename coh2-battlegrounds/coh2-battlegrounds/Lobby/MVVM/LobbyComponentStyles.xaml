@@ -4,14 +4,6 @@
                     xmlns:converters="clr-namespace:BattlegroundsApp.Utilities.Converters">
     <Style x:Key="SlotGridStyle" TargetType="{x:Type Grid}">
         <Setter Property="Background" Value="#212d3a"/>
-        <Style.Triggers>
-            <DataTrigger Binding="{Binding IsSelf}" Value="True">
-                <Setter Property="Background" Value="#334252"/>
-            </DataTrigger>
-            <Trigger Property="IsMouseOver" Value="True">
-                <Setter Property="Background" Value="#334252"/>
-            </Trigger>
-        </Style.Triggers>
     </Style>
     <Style x:Key="SlotNameStyle" TargetType="{x:Type Label}">
         <Setter Property="Foreground" Value="#FFFFFF"/>
@@ -54,7 +46,7 @@
                 <ColumnDefinition Width="18"/>
                 <ColumnDefinition Width="16"/>
             </Grid.ColumnDefinitions>
-            <Image Source="{Binding Type, Converter={StaticResource TypeIconConverter}}"
+            <Image Source="{Binding Specialisation, Converter={StaticResource TypeIconConverter}}"
                    Grid.Column="2"
                    Width="18"
                    Height="18"
@@ -69,44 +61,35 @@
                        Grid.Column="0"/>
         </Grid>
     </DataTemplate>
-    <DataTemplate x:Key="SlotCompanySelectionItemContainer">
-        <Grid Height="36">
-            <Grid.Resources>
-                <converters:StringToFactionIconConverter x:Key="FactionIconConverter"/>
-                <converters:StringToCompanyTypeIconConverter x:Key="TypeIconConverter"/>
-            </Grid.Resources>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="4"/>
-                <ColumnDefinition Width="32"/>
-                <ColumnDefinition Width="8"/>
-                <ColumnDefinition/>
-                <ColumnDefinition Width="6"/>
-                <ColumnDefinition Width="24"/>
-                <ColumnDefinition Width="8"/>
-            </Grid.ColumnDefinitions>
-            <Image Source="{Binding Army, Converter={StaticResource FactionIconConverter}}"
-                   Grid.Column="1"
-                   IsHitTestVisible="False"/>
-            <TextBlock Text="{Binding Name}"
-                       Foreground="#FFFFFF"
-                       FontSize="14"
-                       FontFamily="Open Sans"
-                       HorizontalAlignment="Left"
-                       VerticalAlignment="Center"
-                       Grid.Column="3"
-                       IsHitTestVisible="False"/>
-            <Image Source="{Binding Type, Converter={StaticResource TypeIconConverter}}"
-                   Grid.Column="5"
-                   IsHitTestVisible="False"/>
-        </Grid>
-    </DataTemplate>
     <Style x:Key="SlotCompanySelectionItem" TargetType="{x:Type ComboBoxItem}">
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type ComboBoxItem}">
                     <Grid x:Name="Container">
-                        <ContentPresenter ContentTemplate="{StaticResource SlotCompanySelectionItemContainer}"
-                                          Content="{Binding}"/>
+                        <Grid.Resources>
+                            <converters:StringToFactionIconConverter x:Key="FactionIconConverter"/>
+                            <converters:StringToCompanyTypeIconConverter x:Key="TypeIconConverter"/>
+                        </Grid.Resources>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="4"/>
+                            <ColumnDefinition Width="32"/>
+                            <ColumnDefinition Width="8"/>
+                            <ColumnDefinition/>
+                            <ColumnDefinition Width="6"/>
+                            <ColumnDefinition Width="24"/>
+                            <ColumnDefinition Width="8"/>
+                        </Grid.ColumnDefinitions>
+                        <Image Source="{Binding Army, Converter={StaticResource FactionIconConverter}}"
+                               Grid.Column="1"/>
+                         <TextBlock Text="{Binding Name}"
+                                    Foreground="#FFFFFF"
+                                    FontSize="14"
+                                    FontFamily="Open Sans"
+                                    HorizontalAlignment="Left"
+                                    VerticalAlignment="Center"
+                                    Grid.Column="3"/>
+                        <Image Source="{Binding Specialisation, Converter={StaticResource TypeIconConverter}}"
+                                 Grid.Column="5"/>
                     </Grid>
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsSelected" Value="True">
@@ -138,13 +121,13 @@
                                           Style="{StaticResource SlotCompanySelectionArrow}"
                                           IsTriggered="{Binding IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}"/>
                         <Popup x:Name="Popup"
-                                   Placement="Bottom"
-                                   IsOpen="{TemplateBinding IsDropDownOpen}"
-                                   Width="{Binding ActualWidth, RelativeSource={RelativeSource TemplatedParent}}"
-                                   PopupAnimation="Slide">
+                               Placement="Bottom"
+                               IsOpen="{TemplateBinding IsDropDownOpen}"
+                               Width="{Binding ActualWidth, RelativeSource={RelativeSource TemplatedParent}}"
+                               PopupAnimation="Slide">
                             <Border Background="#536375" BorderBrush="#212d3a" BorderThickness="1">
                                 <ScrollViewer Background="#536375" Style="{StaticResource StandardBlueDropdownScrollViewer}">
-                                    <StackPanel IsItemsHost="True"/>
+                                    <StackPanel IsItemsHost="True" KeyboardNavigation.DirectionalNavigation="Contained"/>
                                 </ScrollViewer>
                             </Border>
                         </Popup>

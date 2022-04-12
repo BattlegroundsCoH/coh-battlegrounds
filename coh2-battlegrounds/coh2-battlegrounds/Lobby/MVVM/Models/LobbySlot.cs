@@ -2,23 +2,28 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Diagnostics;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
+using Battlegrounds;
+using Battlegrounds.Functional;
 using Battlegrounds.Game;
 using Battlegrounds.Game.DataCompany;
 using Battlegrounds.Game.Gameplay;
 using Battlegrounds.Networking.LobbySystem;
 
+using BattlegroundsApp.LocalData;
 using BattlegroundsApp.Utilities;
 
 namespace BattlegroundsApp.Lobby.MVVM.Models {
 
-    public class LobbySlot : INotifyPropertyChanged {
+    public abstract class LobbySlot : INotifyPropertyChanged {
 
-        private static readonly Dictionary<string, ImageSource> FactionIcons = new() {
+        protected static readonly Dictionary<string, ImageSource> FactionIcons = new() {
             [Faction.Soviet.Name] = new BitmapImage(new Uri("pack://application:,,,/coh2-battlegrounds;component/Resources/app/army_icons/FactionSOVIET.png")),
             [Faction.America.Name] = new BitmapImage(new Uri("pack://application:,,,/coh2-battlegrounds;component/Resources/app/army_icons/FactionAEF.png")),
             [Faction.British.Name] = new BitmapImage(new Uri("pack://application:,,,/coh2-battlegrounds;component/Resources/app/army_icons/FactionBRIT.png")),
@@ -28,7 +33,7 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
             [string.Empty] = new BitmapImage(new Uri("pack://application:,,,/coh2-battlegrounds;component/Resources/app/army_icons/FactionLOCKED.png")),
         };
 
-        private static readonly Dictionary<string, ImageSource> FactionHoverIcons = new() {
+        protected static readonly Dictionary<string, ImageSource> FactionHoverIcons = new() {
             [Faction.Soviet.Name] = new BitmapImage(new Uri("pack://application:,,,/coh2-battlegrounds;component/Resources/app/army_icons/FactionSOVIETHighlighted.png")),
             [Faction.America.Name] = new BitmapImage(new Uri("pack://application:,,,/coh2-battlegrounds;component/Resources/app/army_icons/FactionAEFHighlighted.png")),
             [Faction.British.Name] = new BitmapImage(new Uri("pack://application:,,,/coh2-battlegrounds;component/Resources/app/army_icons/FactionBRITHighlighted.png")),
@@ -38,206 +43,183 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
             [string.Empty] = new BitmapImage(new Uri("pack://application:,,,/coh2-battlegrounds;component/Resources/app/army_icons/FactionLOCKED.png")),
         };
 
+        protected static readonly List<Company> AlliedCompanies = PlayerCompanies.FindAll(x => x.Army.IsAllied);
+        protected static readonly List<Company> AxisCompanies = PlayerCompanies.FindAll(x => x.Army.IsAxis);
+
+        private static readonly Func<string> LOCSTR_SLOT_OPEN = () => BattlegroundsInstance.Localize.GetString("TeamPlayerCard_Open_Slot");
+        private static readonly Func<string> LOCSTR_SLOT_LOCKED = () => BattlegroundsInstance.Localize.GetString("TeamPlayerCard_Locked_Slot");
+
+        protected static readonly LobbyAPIStructs.LobbyCompany DummyCompany = new() { Army = "soviet", IsNone = true, Name = "None", Specialisation = "", Strength = 0 };
+
         public event PropertyChangedEventHandler? PropertyChanged;
 
-        private LobbyCompanyItem m_selfCompanySelected;
-        private readonly LobbyTeam m_teamModel;
+        protected LobbyAPIStructs.LobbySlot m_slot;
 
-        public LobbyAPIStructs.LobbySlot Interface { get; set; }
+        private int m_selectedCompany;
 
-        public string LeftDisplayString => this.Interface.State switch {
-            0 => "Open",
-            1 => this.GetDisplayString(),
-            2 => "Locked",
-            3 => "Disabled",
-            _ => throw new NotImplementedException()
+        public LobbyAPI Handle { get; }
+
+        public Visibility IsSlotVisible => this.Slot.State == 3 ? Visibility.Collapsed : Visibility.Visible;
+
+        public ImageSource? LeftIcon { get; set; }
+
+        public ImageSource? LeftIconHover { get; set; }
+
+        public LobbyTeam Team { get; }
+
+        public LobbyAPIStructs.LobbySlot Slot => this.m_slot;
+
+        public ObservableCollection<LobbyAPIStructs.LobbyCompany> SelectableCompanies { get; }
+
+        public LobbyAPIStructs.LobbyCompany SelectedCompany 
+            => this.SelectedCompanyIndex >= 0 ? this.SelectableCompanies[this.SelectedCompanyIndex] : DummyCompany;
+
+        public abstract LobbyContextMenu ContextMenu { get; }
+
+        public bool IsSelf => this.Slot.IsSelf();
+
+        public bool IsSlotMouseOver { get; set; }
+
+        public string LeftDisplayString => this.Slot.State switch {
+            0 => LOCSTR_SLOT_OPEN(),
+            1 => this.Slot.Occupant?.DisplayName ?? "FATAL ERROR",
+            2 => LOCSTR_SLOT_LOCKED(),
+            _ => string.Empty
         };
 
-        public bool IsSelf => this.Interface.IsSelf();
+        public abstract Visibility IsCompanySelectorVisible { get; } // TODO: Disable if only one element can be picked.
 
-        public bool IsOpen => this.Interface.State is 0;
+        public Visibility IsCompanyInfoVisible 
+            => this.IsCompanySelectorVisible == Visibility.Collapsed && this.Slot.IsOccupied ? Visibility.Visible : Visibility.Collapsed;
 
-        public bool IsOccupied => this.Interface.State is 1;
-
-        public bool IsLocked => this.Interface.State is 2;
-
-        public bool IsDisabled => this.Interface.State is 3;
-
-        public bool IsAIOccupant => this.Interface.IsAI();
-
-        public Visibility IsSlotVisible => this.IsDisabled ? Visibility.Hidden : Visibility.Visible;
-
-        public Visibility LeftIconVisibility => this.IsOpen ? Visibility.Hidden : Visibility.Visible;
-
-        public Visibility CompanyVisibility => (this.IsOccupied && (this.IsSelf || (this.IsHost && this.IsAIOccupant))) ? Visibility.Visible : Visibility.Hidden;
-
-        public Visibility CompanyDataVisibility => (this.IsOccupied && (!this.IsSelf || (!this.IsHost && this.IsAIOccupant))) ? Visibility.Visible : Visibility.Hidden;
-
-        public int SelectedCompanyIndex { get; set; }
-
-        public ImageSource LeftIcon { get; set; }
-
-        public LobbyCompanyItem SelectedCompany { get => this.m_selfCompanySelected; set => this.OnCompanySelectionChanged(value); }
-
-        public LobbySlotContextMenu SlotContextMenu { get; }
-
-        public bool IsHost => this.Interface.API.IsHost;
-
-        public bool IsNotHost => !this.IsHost;
-
-        public int TeamID => this.m_teamModel.Interface.TeamID;
-
-        public ObservableCollection<LobbyCompanyItem> AvailableSlotCompanies { get; set; }
-
-        public string ProxyCompanyName => this.SelectedCompany?.Name ?? string.Empty;
-
-        public CompanyType ProxyCompanyType => this.SelectedCompany?.Type ?? CompanyType.Unspecified;
+        public int SelectedCompanyIndex {
+            get => this.m_selectedCompany;
+            set {
+                this.m_selectedCompany = value;
+                this.OnLobbyCompanyChanged(value);
+                this.PropertyChanged?.Invoke(this, new(nameof(LeftIcon)));
+                this.PropertyChanged?.Invoke(this, new(nameof(SelectedCompanyIndex)));
+            }
+        }
 
         public LobbySlot(LobbyAPIStructs.LobbySlot teamSlot, LobbyTeam team) {
 
-            // Store reference to network interface
-            this.Interface = teamSlot;
+            // Set values
+            this.Team = team;
+            this.Handle = teamSlot.API ?? throw new Exception("Expected valid API handle but got none!");
+            this.m_slot = teamSlot;
 
-            // Set available companies
-            this.AvailableSlotCompanies = team.AvailableCompanies;
+            // Check if self or AI, then set contents
+            this.SelectableCompanies = new() { teamSlot.Occupant is null ? DummyCompany : teamSlot.Occupant.Company ?? DummyCompany };
 
-            // Store reference to lobby team
-            this.m_teamModel = team;
+            // Do initial view
+            this.RefreshCompanyInfo();
 
-            // If local machine
-            if (this.IsSelf) {
-                this.SelectedCompanyIndex = 0;
-            } else if (this.IsLocked) {
-                this.UpdateSlotFaction(string.Empty);
+            // Get API
+            if (teamSlot.API is LobbyAPI api) {
+                api.OnLobbySlotUpdate += this.OnLobbySlotUpdate;
+            } else {
+                Trace.WriteLine("Invalid lobby API given -- slot wont update properly!!!", nameof(LobbySlot));
             }
 
-            // Create context menu
-            this.SlotContextMenu = new(this) {
-                ShowPlayerCard = new TargettedRelayCommand<LobbySlot>(this, this.m_teamModel.ShowPlayercard),
-                KickOccupant = new TargettedRelayCommand<LobbySlot>(this, this.m_teamModel.KickOccupant),
-                LockSlot = new RelayCommand(this.Lock),
-                UnlockSlot = new RelayCommand(this.Unlock),
-                AddAIPlayer = new TargettedRelayCommand<LobbySlot, string>(this, this.m_teamModel.AddAIPlayer)
+        }
+
+        protected void RefreshCompanyInfo() {
+            
+            // Invoke view-specific code
+            this.RefreshCompanyView();
+
+            // Trigger LHS icon refresh
+            this.RefreshLHSIcon();
+
+        }
+
+        protected abstract void RefreshCompanyView();
+
+        protected void RefreshLHSIcon() {
+
+            // Set icons
+            if (this.m_slot.IsOccupied && this.SelectedCompanyIndex >= 0) {
+
+                // Set some defaults
+                this.SetLeftDisplay(FactionIcons[this.SelectedCompany.Army], FactionHoverIcons[this.SelectedCompany.Army]);
+
+            } else if (this.m_slot.State == 0) {
+
+                // Hide
+                this.SetLeftDisplay(null, null);
+
+            } else {
+
+                // Show lock
+                this.SetLeftDisplay(FactionIcons[string.Empty], FactionHoverIcons[string.Empty]);
+
+            }
+
+        }
+
+        protected LobbyAPIStructs.LobbyCompany FromCompany(Company x)
+            => new LobbyAPIStructs.LobbyCompany() {
+                API = Slot.API ?? throw new Exception("API should always be set on company!"),
+                Army = x.Army.Name,
+                IsAuto = false,
+                IsNone = false,
+                Name = x.Name,
+                Specialisation = x.Type.ToString(),
+                Strength = (float)x.Rating
             };
 
-        }
+        public void OnLobbySlotUpdate(LobbyAPIStructs.LobbySlot args) {
+            Application.Current.Dispatcher.Invoke(() => {
+                if (args.TeamID == this.Team.Team.TeamID && args.SlotID == this.m_slot.SlotID) {
 
-        private void OnCompanySelectionChanged(LobbyCompanyItem val) {
+                    // Update internal repr.
+                    this.m_slot = args;
 
-            // Bail if value is null
-            if (val is null) {
-                return;
-            }
+                    // Update init view
+                    this.RefreshCompanyInfo();
 
-            // Check if self
-            if (this.IsSelf || (this.IsHost && this.IsAIOccupant)) {
+                    // Update context menu
+                    this.ContextMenu.RefreshMenu();
 
-                // Update selected value
-                this.m_selfCompanySelected = val;
-
-                // If army, update
-                if (val.Army is not null) {
-
-                    // Set slot faction
-                    this.UpdateSlotFaction(val.Army.Name);
+                    // Update state
+                    this.PropertyChanged?.Invoke(this, new(nameof(IsSelf)));
+                    this.PropertyChanged?.Invoke(this, new(nameof(IsSlotVisible)));
+                    this.PropertyChanged?.Invoke(this, new(nameof(IsCompanyInfoVisible)));
+                    this.PropertyChanged?.Invoke(this, new(nameof(IsCompanySelectorVisible)));
 
                 }
+            });
+        }
 
-                // Set the company
-                this.Interface.API.SetCompany(this.TeamID, this.Interface.SlotID, this.m_selfCompanySelected.GetAPIObject());
+        protected void SetLeftDisplay(ImageSource? normal, ImageSource? hover) {
             
-            }
+            // Set icons
+            this.LeftIcon = normal;
+            this.LeftIconHover = hover;
+            
+            // Do property changed
+            this.PropertyChanged?.Invoke(this, new(nameof(LeftIcon)));
+            this.PropertyChanged?.Invoke(this, new(nameof(LeftIconHover)));
+            this.PropertyChanged?.Invoke(this, new(nameof(LeftDisplayString)));
 
         }
 
-        public void UpdateSlotFaction(string faction)
-            => this.UpdateSlotLeftIcon(this.IsSelf ? FactionHoverIcons[faction] : FactionIcons[faction]);
+        protected void SetCompany() {
 
-        private void UpdateSlotLeftIcon(ImageSource img) {
-            Application.Current.Dispatcher.Invoke(() => {
-                this.LeftIcon = img;
-                this.PropertyChanged?.Invoke(this, new(nameof(this.LeftIcon)));
-            });
-        }
-
-        public void RefreshVisuals() {
-            Application.Current.Dispatcher.Invoke(() => {
-                this.PropertyChanged?.Invoke(this, new(nameof(this.IsSlotVisible)));
-                if (this.IsSlotVisible is Visibility.Visible) {
-                    this.RefreshCompany();
-                    this.PropertyChanged?.Invoke(this, new(nameof(this.LeftIcon)));
-                    this.PropertyChanged?.Invoke(this, new(nameof(this.LeftIconVisibility)));
-                    this.PropertyChanged?.Invoke(this, new(nameof(this.LeftDisplayString)));
-                }
-                this.SlotContextMenu.RefreshAvailability();
-            });
-        }
-
-        public void RefreshCompany() {
-            Application.Current.Dispatcher.Invoke(() => {
-                this.PropertyChanged?.Invoke(this, new(nameof(this.CompanyVisibility)));
-                if (this.CompanyVisibility is Visibility.Visible) {
-                    this.PropertyChanged?.Invoke(this, new(nameof(this.SelectedCompanyIndex)));
-                    if (this.LeftIcon is null || this.LeftIcon == FactionIcons[string.Empty]) {
-                        this.UpdateSlotFaction(this.Interface.Occupant.Company.Army);
-                    }
-                } else if (this.CompanyDataVisibility is Visibility.Visible) {
-                    this.PropertyChanged?.Invoke(this, new(nameof(this.ProxyCompanyName)));
-                    this.PropertyChanged?.Invoke(this, new(nameof(this.ProxyCompanyType)));
-                    if (this.LeftIcon is null || this.LeftIcon == FactionIcons[string.Empty]) {
-                        this.UpdateSlotFaction(this.Interface.Occupant.Company.Army);
-                    }
-                }
-            });
-        }
-
-        private void Lock() {
-
-            // Bail fast
-            if (this.IsNotHost) {
-                return;
-            }
-
-            // Do async
-            Task.Run(() => {
-
-                // Invoke API unlock slot function
-                this.Interface.API.LockSlot(this.TeamID, this.Interface.SlotID);
-
-                // Refresh
-                this.RefreshVisuals();
-
-            });
+            // Update company view
+            this.RefreshLHSIcon();
+            
+            // Notify lobby
+            this.Handle.SetCompany(this.Slot.TeamID, this.Slot.SlotID, this.SelectedCompany);
 
         }
 
-        private void Unlock() {
+        protected abstract void OnLobbyCompanyChanged(int newValue);
 
-            // Bail fast
-            if (this.IsNotHost) {
-                return;
-            }
+        public abstract void OnLobbyCompanyChanged(LobbyAPIStructs.LobbyCompany company);
 
-            // Do async
-            Task.Run(() => {
-
-                // Invoke API unlock slot function
-                this.Interface.API.UnlockSlot(this.TeamID, this.Interface.SlotID);
-
-                // Refresh
-                this.RefreshVisuals();
-
-            });
-
-        }
-
-        private string GetDisplayString() { 
-            if (this.Interface.IsAI()) {
-                return ((AIDifficulty)this.Interface.Occupant.AILevel).GetIngameDisplayName();
-            } else {
-                return this.Interface.Occupant.DisplayName;
-            }
-        }
+        protected void NotifyProperty(PropertyChangedEventArgs e) => this.PropertyChanged?.Invoke(this, e);
 
     }
 

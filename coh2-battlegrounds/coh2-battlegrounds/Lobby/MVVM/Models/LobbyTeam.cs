@@ -1,154 +1,133 @@
-﻿using System.Collections.ObjectModel;
-using System.Globalization;
-using System.Windows;
-using System.Threading.Tasks;
+﻿using System.Windows;
 
-using Battlegrounds.Game;
 using Battlegrounds.Networking.LobbySystem;
-using BattlegroundsApp.LocalData;
 
-namespace BattlegroundsApp.Lobby.MVVM.Models {
+namespace BattlegroundsApp.Lobby.MVVM.Models;
 
-    public class LobbyTeam {
+public class LobbyTeam {
 
-        private LobbyAPIStructs.LobbyTeam m_interface;
+    private LobbyAPIStructs.LobbyTeam m_team;
 
-        public LobbySlot[] Slots { get; }
+    public LobbySlot Slot1 { get; }
 
-        public ObservableCollection<LobbyCompanyItem> AvailableCompanies { get; }
+    public LobbySlot Slot2 { get; }
 
-        public LobbyAPIStructs.LobbyTeam Interface => this.m_interface;
+    public LobbySlot Slot3 { get; }
 
-        public LobbyTeam(LobbyAPIStructs.LobbyTeam lobbyTeam) {
+    public LobbySlot Slot4 { get; }
 
-            // Store team
-            this.m_interface = lobbyTeam;
+    public LobbyAPIStructs.LobbyTeam Team => this.m_team;
 
-            // Store available companies
-            InitCompanyList(this.AvailableCompanies = new(), isAllied: lobbyTeam.TeamID == 0);
+    public LobbyModel Lobby { get; }
 
-            // Define slot models
-            this.Slots = new LobbySlot[4] {
-                new(lobbyTeam?.Slots[0], this),
-                new(lobbyTeam?.Slots[1], this),
-                new(lobbyTeam?.Slots[2], this),
-                new(lobbyTeam?.Slots[3], this),
-            };
+    public LobbyTeam(LobbyAPI lobbyAPI, LobbyAPIStructs.LobbyTeam lobbyTeam, LobbyModel model) {
+       
+        // Set team isntance
+        this.m_team = lobbyTeam;
 
+        // Set lobby instance
+        this.Lobby = model;
+
+        // Create models
+        if (lobbyAPI.IsHost) {
+            this.Slot1 = new LobbyHostSlotModel(lobbyTeam.Slots[0], this);
+            this.Slot2 = new LobbyHostSlotModel(lobbyTeam.Slots[1], this);
+            this.Slot3 = new LobbyHostSlotModel(lobbyTeam.Slots[2], this);
+            this.Slot4 = new LobbyHostSlotModel(lobbyTeam.Slots[3], this);
+        } else {
+            this.Slot1 = new LobbyParticipantSlotModel(lobbyTeam.Slots[0], this);
+            this.Slot2 = new LobbyParticipantSlotModel(lobbyTeam.Slots[1], this);
+            this.Slot3 = new LobbyParticipantSlotModel(lobbyTeam.Slots[2], this);
+            this.Slot4 = new LobbyParticipantSlotModel(lobbyTeam.Slots[3], this);
         }
 
-        private static void InitCompanyList(ObservableCollection<LobbyCompanyItem> container, bool isAllied) {
-            var companies = PlayerCompanies.FindAll(x => x.Army.IsAllied == isAllied);
-            if (companies.Count > 0) {
-                companies.ForEach(x => container.Add(new(x)));
-            } else {
-                container.Add(new(0));
+        // Subscribe to team changes
+        lobbyAPI.OnLobbyTeamUpdate += this.OnLobbyTeamUpdated;
+
+    }
+
+    public void OnTeamMemberCompanyUpdated(int sid, LobbyAPIStructs.LobbyCompany company) {
+        
+        // Try set in slot
+        this.Team.Slots[sid].TrySetCompany(company);
+        
+        // Enter GUI thread and update
+        Application.Current.Dispatcher.Invoke(() => {
+
+            // Trigger update
+            switch (sid) {
+                case 0:
+                    this.Slot1.OnLobbyCompanyChanged(company); break;
+                case 1:
+                    this.Slot2.OnLobbyCompanyChanged(company); break;
+                case 2:
+                    this.Slot3.OnLobbyCompanyChanged(company); break;
+                case 3:
+                    this.Slot4.OnLobbyCompanyChanged(company); break;
+                default:
+                    break;
             }
-        }
 
-        public void RefreshTeam(LobbyAPIStructs.LobbyTeam team) {
-            
-            // Set new interface
-            this.m_interface = team;
-
-            // Loop over slots and update
-            for (int i = 0; i < team.Slots.Length; i++) {
-                this.RefreshSlot(this.Slots[i], team.Slots[i]);
+            // Recheck playability
+            if (this.Lobby is LobbyHostModel hostModel) {
+                hostModel.RefreshPlayability();
             }
 
-        }
+        });
 
-        public void RefreshSlot(LobbySlot slot, LobbyAPIStructs.LobbySlot interfaceObject) {
+    }
 
-            // Update interface object
-            slot.Interface = interfaceObject;
+    private void OnLobbyTeamUpdated(LobbyAPIStructs.LobbyTeam obj) {
 
-            // Triger refresh
-            slot.RefreshVisuals();
+        // Only trigger on self
+        if (obj.TeamID == this.Team.TeamID) {
 
-        }
+            // Update self ref
+            this.m_team = obj;
 
-        public void ShowPlayercard(LobbySlot slot) {
+            // Update slots
+            this.Slot1.OnLobbySlotUpdate(obj.Slots[0]);
+            this.Slot2.OnLobbySlotUpdate(obj.Slots[1]);
+            this.Slot3.OnLobbySlotUpdate(obj.Slots[2]);
+            this.Slot4.OnLobbySlotUpdate(obj.Slots[3]);
 
-        }
-
-        public void KickOccupant(LobbySlot slot) {
-
-            // Run async so we dont block stuff
-            Task.Run(() => {
-
-                // Remove Participant
-                slot.Interface.API.RemoveOccupant(this.Interface.TeamID, slot.Interface.SlotID);
-
-                Application.Current.Dispatcher.Invoke(() => {
-
-                    // Trigger refresh on slot
-                    slot.RefreshVisuals();
-
-                });
-
+            // Enter GUI thread and update
+            Application.Current.Dispatcher.Invoke(() => {
+                if (this.Lobby is LobbyHostModel hostModel) {
+                    hostModel.RefreshPlayability();
+                }
             });
 
         }
+    }
 
-        private LobbyCompanyItem GetDefaultCompany(int team) {
+    public (bool, bool) CanPlay() {
 
-            // Fetch all of specified faction
-            var available = PlayerCompanies.FindAll(x => (x.Army.IsAllied ? 0 : 1) == team);
+        // Grab slots
+        var slots = this.Team.Slots;
 
-            // If any available
-            if (available.Count > 0) {
-                return new LobbyCompanyItem(available[0]);
-            } else {
-                return new LobbyCompanyItem(LobbyCompanyItem.COMPANY_AUTO);
-            }
+        // flag
+        bool flag1 = false; // any valid player
+        bool flag2 = true; // No invalid players
 
-        }
-
-        public void AddAIPlayer(LobbySlot slot, string param) {
-
-            // Get AI Difficulty
-            AIDifficulty diff = (AIDifficulty)byte.Parse(param, CultureInfo.InvariantCulture);
-
-            // Get company
-            var company = GetDefaultCompany(slot.TeamID);
-
-            // Run async so we dont block stuff
-            Task.Run(() => {
-
-                // Create AI
-                this.Interface.API.AddAI(this.Interface.TeamID, slot.Interface.SlotID, (int)diff, company.GetAPIObject());
-
-            });
-
-        }
-
-        public (bool, bool) CanPlay() {
-
-            // Get slots in interface
-            var slots = this.m_interface.Slots;
-
-            // flag
-            bool flag1 = false; // any valid player
-            bool flag2 = true; // No invalid players
-
-            // Loop over slots and check if any valid
-            for (int i = 0; i < slots.Length; i++) {
-                if (slots[i].IsOccupied) {
-                    flag1 = true;
-                    if (slots[i].Occupant.Company?.IsNone ?? true) {
-                        flag2 = false;
-                    } else {
-                        flag2 = flag2 && true;
-                    }
+        // Loop over slots and check if any valid
+        for (int i = 0; i < slots.Length; i++) {
+            if (slots[i].IsOccupied) {
+                if (slots[i].Occupant is not LobbyAPIStructs.LobbyMember mem) {
+                    continue; // Some werid err
+                }
+                flag1 |= true;
+                if (mem.Company?.IsNone ?? true) {
+                    flag2 = false;
+                } else {
+                    flag2 &= true;
                 }
             }
-
-            // Return if both flags yielded true
-            return (flag1, flag2);
-
         }
 
+        // Return flags
+        return (flag1, flag2);
+    
     }
 
 }

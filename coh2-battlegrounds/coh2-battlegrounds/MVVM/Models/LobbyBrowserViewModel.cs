@@ -183,14 +183,23 @@ namespace BattlegroundsApp.MVVM.Models {
                 // Log success
                 Trace.WriteLine("Succsefully hosted lobby.", nameof(LobbyBrowserViewModel));
 
-                // Create lobby models.
-                LobbyModel lobbyModel = LobbyModel.CreateModelAsHost(lobby);
-                LobbyChatSpectatorModel chatMode = new(lobby);
-                lobbyModel.SetChatModel(chatMode);
+                // Invoke on GUI
+                Application.Current.Dispatcher.Invoke(() => {
 
-                // Display it
-                App.ViewManager.UpdateDisplay(AppDisplayTarget.Left, chatMode);
-                App.ViewManager.UpdateDisplay(AppDisplayTarget.Right, lobbyModel);
+                    // Create lobby models.
+                    var lobbyModel = LobbyModel.CreateModelAsHost(lobby);
+                    if (lobbyModel is null) {
+                        throw new Exception("BAAAAAAD : FIX ASAP");
+                    }
+
+                    LobbyChatSpectatorModel chatMode = new(lobby);
+                    lobbyModel.SetChatModel(chatMode);
+
+                    // Display it
+                    App.ViewManager.UpdateDisplay(AppDisplayTarget.Left, chatMode);
+                    App.ViewManager.UpdateDisplay(AppDisplayTarget.Right, lobbyModel);
+
+                });
 
             } else {
 
@@ -247,18 +256,26 @@ namespace BattlegroundsApp.MVVM.Models {
             
             if (joined && lobby is not null) {
 
-                // Log success
-                Trace.WriteLine("Succsefully joined lobby.", nameof(LobbyBrowserViewModel));
+                // Ensure this now runs on the GUI thread
+                Application.Current.Dispatcher.Invoke(() => {
 
-                // Create lobby models.
-                LobbyModel lobbyModel = LobbyModel.CreateModelAsParticipant(lobby);
-                LobbyChatSpectatorModel chatMode = new(lobby);
-                lobbyModel.SetChatModel(chatMode);
+                    // Log success
+                    Trace.WriteLine("Succsefully joined lobby.", nameof(LobbyBrowserViewModel));
 
-                // Display it
-                App.ViewManager.UpdateDisplay(AppDisplayTarget.Left, chatMode);
-                App.ViewManager.UpdateDisplay(AppDisplayTarget.Right, lobbyModel);
+                    // Create lobby models.
+                    var lobbyModel = LobbyModel.CreateModelAsParticipant(lobby);
+                    if (lobbyModel is null) {
+                        throw new Exception("BAAAAAAD : FIX ASAP");
+                    }
 
+                    LobbyChatSpectatorModel chatMode = new(lobby);
+                    lobbyModel.SetChatModel(chatMode);
+
+                    // Display it
+                    App.ViewManager.UpdateDisplay(AppDisplayTarget.Left, chatMode);
+                    App.ViewManager.UpdateDisplay(AppDisplayTarget.Right, lobbyModel);
+
+                });
 
             } else {
 
@@ -301,8 +318,17 @@ namespace BattlegroundsApp.MVVM.Models {
                     },
                 };
             } else {
-                var lobbies = NetworkInterface.APIObject.GetLobbies();
-                if (lobbies.Count is 0) {
+                
+                // Get lobbies (if any)
+                List<ServerLobby> lobs;
+                if (NetworkInterface.APIObject is null) {
+                    lobs =  new();
+                } else {
+                    lobs = NetworkInterface.APIObject.GetLobbies();
+                }
+
+                // If none, show no matches found
+                if (lobs.Count is 0) {
                     Application.Current.Dispatcher.Invoke(() => {
                         if (this.InfoKey == _noConnection) {
                             return;
@@ -311,7 +337,10 @@ namespace BattlegroundsApp.MVVM.Models {
                         this.InfoKeyVisible = Visibility.Visible;
                     });
                 }
-                return lobbies;
+
+                // Return lobbies
+                return lobs;
+
             }
         }
 

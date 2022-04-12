@@ -7,7 +7,6 @@ using Battlegrounds.ErrorHandling.Networking;
 using Battlegrounds.Functional;
 using Battlegrounds.Networking.Communication.Golang;
 using Battlegrounds.Networking.Communication.Connections;
-using Battlegrounds.Networking.Memory;
 using Battlegrounds.Networking.Server;
 using Battlegrounds.Steam;
 
@@ -49,22 +48,22 @@ public sealed class LobbyAPI {
     private readonly bool m_isHost;
     private volatile uint m_cidcntr;
 
-    private readonly ObjectCache<LobbyTeam> m_allies;
-    private readonly ObjectCache<LobbyTeam> m_axis;
-    private readonly ObjectCache<LobbyTeam> m_obs;
-    private readonly ObjectCache<Dictionary<string, string>> m_settings;
+    private LobbyTeam m_allies;
+    private LobbyTeam m_axis;
+    private LobbyTeam m_obs;
+    private readonly Dictionary<string, string> m_settings;
 
     public string Title { get; }
 
     public bool IsHost => this.m_isHost;
 
-    public LobbyTeam? Allies => this.m_allies.GetCachedValue(() => this.GetTeam(0, RefreshInternalReference: false));
+    public LobbyTeam Allies => this.m_allies;
 
-    public LobbyTeam? Axis => this.m_axis.GetCachedValue(() => this.GetTeam(1, RefreshInternalReference: false));
+    public LobbyTeam Axis => this.m_axis;
 
-    public LobbyTeam? Observers => this.m_obs.GetCachedValue(() => this.GetTeam(2, RefreshInternalReference: false));
+    public LobbyTeam Observers => this.m_obs;
 
-    public Dictionary<string, string>? Settings => this.m_settings.GetCachedValue(this.GetSettings);
+    public Dictionary<string, string> Settings => this.m_settings;
 
     public ServerAPI ServerHandle { get; }
 
@@ -141,10 +140,10 @@ public sealed class LobbyAPI {
             remoteLobby.Teams.ForEach(x => x.SetAPI(this));
 
             // Create team data
-            this.m_allies = new(remoteLobby.Teams[0], __cacheTime);
-            this.m_axis = new(remoteLobby.Teams[1], __cacheTime);
-            this.m_obs = new(remoteLobby.Teams[2], __cacheTime);
-            this.m_settings = new(remoteLobby.Settings, __cacheTime);
+            this.m_allies = remoteLobby.Teams[0];
+            this.m_axis = remoteLobby.Teams[1];
+            this.m_obs = remoteLobby.Teams[2];
+            this.m_settings = remoteLobby.Settings;
 
             // Register connection lost
             this.m_connection.OnConnectionLost += _ => {
@@ -161,9 +160,9 @@ public sealed class LobbyAPI {
     }
 
     private LobbyTeam? GetTeamInstanceByIndex(int tid) => tid switch {
-        0 => this.m_allies.Value,
-        1 => this.m_axis.Value,
-        2 => this.m_obs.Value,
+        0 => this.m_allies,
+        1 => this.m_axis,
+        2 => this.m_obs,
         _ => throw new IndexOutOfRangeException($"Team ID '{tid}' is out of bounds.")
     };
 
@@ -195,16 +194,19 @@ public sealed class LobbyAPI {
         switch (message.StrMsg) {
             case "Message":
 
-                // Unmarshal
-                LobbyMessage lobbyMessage = GoMarshal.JsonUnmarshal<LobbyMessage>(message.Raw);
-                var serverZone = TimeZoneInfo.FindSystemTimeZoneById(lobbyMessage.Timezone);
+                if (GoMarshal.JsonUnmarshal<LobbyMessage>(message.Raw) is LobbyMessage lobbyMessage) {
 
-                // Create timestamp
-                var datetime = FromTimestamp(lobbyMessage.Timestamp) + (__thisTimezone.BaseUtcOffset - serverZone.BaseUtcOffset);
-                lobbyMessage.Timestamp = $"{datetime.Hour}:{datetime.Minute}";
+                    // Get serverzone
+                    var serverZone = TimeZoneInfo.FindSystemTimeZoneById(lobbyMessage.Timezone);
 
-                // Trigger event
-                this.OnChatMessage?.Invoke(lobbyMessage);
+                    // Create timestamp
+                    var datetime = FromTimestamp(lobbyMessage.Timestamp) + (__thisTimezone.BaseUtcOffset - serverZone.BaseUtcOffset);
+                    lobbyMessage.Timestamp = $"{datetime.Hour}:{datetime.Minute}";
+
+                    // Trigger event
+                    this.OnChatMessage?.Invoke(lobbyMessage);
+
+                }
 
                 break;
             case "Notify.Company":
@@ -237,26 +239,33 @@ public sealed class LobbyAPI {
                     Specialisation = companyCall.Arguments[7]
                 };
 
+                // Set company API
+                company.SetAPI(this);
+
                 // Invoke handler
                 this.OnLobbyCompanyUpdate?.Invoke(tid, sid, company);
 
                 break;
             case "Notify.Team":
 
-                // This sends the whole team object
-                var newTeam = GoMarshal.JsonUnmarshal<LobbyTeam>(message.Raw);
-                newTeam.SetAPI(this);
+                // Try get team
+                if (GoMarshal.JsonUnmarshal<LobbyTeam>(message.Raw) is LobbyTeam newTeam) {
 
-                // Trigger team update
-                this.OnLobbyTeamUpdate?.Invoke(newTeam);
+                    // Set API
+                    newTeam.SetAPI(this);
 
-                // And refresh self teams
-                if (newTeam.TeamID == 0) {
-                    this.m_allies.SetCachedValue(newTeam);
-                } else if (newTeam.TeamID == 1) {
-                    this.m_axis.SetCachedValue(newTeam);
-                } else {
-                    this.m_obs.SetCachedValue(newTeam);
+                    // Refresh self teams
+                    if (newTeam.TeamID == 0) {
+                        this.m_allies = newTeam;
+                    } else if (newTeam.TeamID == 1) {
+                        this.m_axis = newTeam;
+                    } else {
+                        this.m_obs = newTeam;
+                    }
+
+                    // Trigger team update
+                    this.OnLobbyTeamUpdate?.Invoke(newTeam);
+
                 }
 
                 break;
@@ -342,13 +351,13 @@ public sealed class LobbyAPI {
         if (RefreshInternalReference) {
             switch (tid) {
                 case 0:
-                    this.m_allies.SetCachedValue(team);
+                    this.m_allies = team;
                     break;
                 case 1:
-                    this.m_axis.SetCachedValue(team);
+                    this.m_axis = team;
                     break;
                 case 2:
-                    this.m_obs.SetCachedValue(team);
+                    this.m_obs = team;
                     break;
                 default:
                     break;
@@ -403,14 +412,14 @@ public sealed class LobbyAPI {
         RemoteVoidCall("AddAI", tid, sid, difficulty, EncBool(company.IsAuto), EncBool(company.IsNone), company.Name, company.Army, company.Strength, company.Specialisation);
 
         // Update team
-        var t = tid == 0 ? this.m_allies : this.m_axis;
-        t.Value.Slots[sid].Occupant = new() {
+        /*var t = tid == 0 ? this.m_allies : this.m_axis;
+        t.Slots[sid].Occupant = new() {
             AILevel = difficulty,
             Company = company,
             Role = 3,
             API = this
         };
-        t.Value.Slots[sid].State = 1;
+        t.Slots[sid].State = 1;*/
 
         // Trigger self update
         this.OnLobbySelfUpdate?.Invoke();
@@ -423,9 +432,9 @@ public sealed class LobbyAPI {
         this.RemoteVoidCall("RemoveOccupant", tid, sid);
 
         // Clear slot
-        var t = tid == 0 ? this.m_allies : this.m_axis;
-        t.Value.Slots[sid].Occupant = null;
-        t.Value.Slots[sid].State = 0;
+        //var t = tid == 0 ? this.m_allies : this.m_axis;
+        //t.Slots[sid].Occupant = null;
+        //t.Slots[sid].State = 0;
 
         // Update self
         this.OnLobbySelfUpdate?.Invoke();

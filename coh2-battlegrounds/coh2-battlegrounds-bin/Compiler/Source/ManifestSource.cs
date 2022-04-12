@@ -12,7 +12,7 @@ namespace Battlegrounds.Compiler.Source {
 
     public class ManifestSource : IWinconditionSource {
 
-        private static readonly ObjectCache ServerFiles = new(TimeSpan.FromMinutes(15));
+        //private static readonly ObjectCache ServerFiles = new(TimeSpan.FromMinutes(15));
 
         private ServerAPI m_api;
 
@@ -22,12 +22,12 @@ namespace Battlegrounds.Compiler.Source {
             this.m_api = serverAPI;
 
             // Cache
-            var result = ServerFiles.GetCachedValue(this.GetCachedFiles) as Dictionary<string, List<WinconditionSourceFile>>;
+            /*var result = ServerFiles.GetCachedValue(this.GetCachedFiles) as Dictionary<string, List<WinconditionSourceFile>>;
             if (result["scar"].Count > 0) {
                 Trace.WriteLine("Successfully downloaded the gamemode files", nameof(ManifestSource));
             } else {
                 Trace.WriteLine("Failed to download the gamemode files", nameof(ManifestSource));
-            }
+            }*/
 
         }
 
@@ -65,23 +65,17 @@ namespace Battlegrounds.Compiler.Source {
 
         }
 
-        public WinconditionSourceFile GetInfoFile(IGamemode mod)
-            => (ServerFiles.GetCachedValue(this.GetCachedFiles) as Dictionary<string, List<WinconditionSourceFile>>)["info"].FirstOrDefault(x => x.Path.EndsWith(".info"));
+        public WinconditionSourceFile GetInfoFile(IGamemode mod) => null;
 
-        public WinconditionSourceFile[] GetLocaleFiles()
-            => (ServerFiles.GetCachedValue(this.GetCachedFiles) as Dictionary<string, List<WinconditionSourceFile>>)["locale"].ToArray();
+        public WinconditionSourceFile[] GetLocaleFiles() => null;
 
-        public WinconditionSourceFile GetModGraphic()
-            => (ServerFiles.GetCachedValue(this.GetCachedFiles) as Dictionary<string, List<WinconditionSourceFile>>)["info"].FirstOrDefault(x => x.Path.EndsWith(".dds"));
+        public WinconditionSourceFile GetModGraphic() => null;
 
-        public WinconditionSourceFile[] GetScarFiles()
-            => (ServerFiles.GetCachedValue(this.GetCachedFiles) as Dictionary<string, List<WinconditionSourceFile>>)["scar"].ToArray();
+        public WinconditionSourceFile[] GetScarFiles() => null;
 
-        public WinconditionSourceFile[] GetUIFiles(IGamemode mod)
-            => (ServerFiles.GetCachedValue(this.GetCachedFiles) as Dictionary<string, List<WinconditionSourceFile>>)["gfx"].ToArray();
+        public WinconditionSourceFile[] GetUIFiles(IGamemode mod) => null;
 
-        public WinconditionSourceFile[] GetWinFiles()
-            => (ServerFiles.GetCachedValue(this.GetCachedFiles) as Dictionary<string, List<WinconditionSourceFile>>)["win"].ToArray();
+        public WinconditionSourceFile[] GetWinFiles() => null;
 
     }
 

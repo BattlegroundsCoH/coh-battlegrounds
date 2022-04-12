@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Text.Json.Serialization;
 
@@ -58,6 +59,7 @@ namespace Battlegrounds.Networking.LobbySystem {
             public int TeamID { get; set; }
             public byte State { get; set; }
             public LobbyMember? Occupant { get; set; }
+
             [JsonIgnore]
             public LobbyAPI? API { get; set; }
 
@@ -65,6 +67,7 @@ namespace Battlegrounds.Networking.LobbySystem {
             [MemberNotNullWhen(true, nameof(Occupant))]
             public bool IsOccupied => this.State == 1;
 
+            [MemberNotNullWhen(true, nameof(API))]
             public bool IsSelf() {
                 if (this.API is null) {
                     return false;
@@ -80,6 +83,12 @@ namespace Battlegrounds.Networking.LobbySystem {
                     return mem.Role == 3;
                 }
                 return false;
+            }
+
+            public void TrySetCompany(LobbyCompany company) {
+                if (this.IsOccupied) {
+                    this.Occupant.Company = company;
+                }
             }
 
             [MemberNotNull(nameof(API))]

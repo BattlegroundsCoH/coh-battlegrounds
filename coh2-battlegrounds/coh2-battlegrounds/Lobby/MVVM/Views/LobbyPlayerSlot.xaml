@@ -12,7 +12,8 @@
     <UserControl.Resources>
         <ResourceDictionary Source="pack://application:,,,/coh2-battlegrounds;component/Lobby/MVVM/LobbyComponentStyles.xaml"/>
     </UserControl.Resources>
-    <Grid x:Name="rootObj" Visibility="{Binding IsSlotVisible}">
+    <Grid x:Name="rootObj" 
+          Visibility="{Binding IsSlotVisible}">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="28"/>
             <ColumnDefinition Width="44"/>
@@ -22,42 +23,45 @@
         <Grid.ContextMenu>
             <ContextMenu Style="{StaticResource LobbySlotContextMenu}"
                          Name="SlotContextMenuObj">
-                <MenuItem Header="Show Playercard"
-                          Command="{Binding SlotContextMenu.ShowPlayerCard}"
+                <MenuItem Header="{Binding ContextMenu.ShowPlayercard.Title}"
+                          Command="{Binding ContextMenu.ShowPlayercard.Click}"
                           Style="{StaticResource LobbySlotContextMenuItem}"/>
-                <Separator Visibility="{Binding SlotContextMenu.KickVisibility, Delay=100}"/>
-                <MenuItem Header="Kick Player"
-                          Visibility="{Binding SlotContextMenu.KickVisibility, Delay=100}"
-                          Command="{Binding SlotContextMenu.KickOccupant}"
+                <MenuItem Header="{Binding ContextMenu.KickPlayer.Title}"
+                          Visibility="{Binding ContextMenu.KickPlayer.Visibility, Delay=100}"
+                          Command="{Binding ContextMenu.KickPlayer.Click}"
                           Style="{StaticResource LobbySlotContextMenuItem}"/>
-                <Separator Visibility="{Binding SlotContextMenu.StateSelectorVisibility, Delay=5}"/>
-                <MenuItem Header="Lock Slot"
-                          Visibility="{Binding SlotContextMenu.LockVisibility, Delay=100}"
-                          Command="{Binding SlotContextMenu.LockSlot}"
+                <Separator/>
+                <MenuItem Header="{Binding ContextMenu.LockSlot.Title}"
+                          Visibility="{Binding ContextMenu.LockSlot.Visibility, Delay=100}"
+                          Command="{Binding ContextMenu.LockSlot.Click}"
                           Style="{StaticResource LobbySlotContextMenuItem}"/>
-                <MenuItem Header="Open Slot"
-                          Visibility="{Binding SlotContextMenu.OpenVisibility, Delay=100}"
-                          Command="{Binding SlotContextMenu.UnlockSlot}"
+                <MenuItem Header="{Binding ContextMenu.UnlockSlot.Title}"
+                          Visibility="{Binding ContextMenu.UnlockSlot.Visibility, Delay=100}"
+                          Command="{Binding ContextMenu.UnlockSlot.Click}"
                           Style="{StaticResource LobbySlotContextMenuItem}"/>
-                <Separator Visibility="{Binding SlotContextMenu.AIOptionsVisibility, Delay=100}"/>
-                <MenuItem Header="Add Easy AI"
-                          Visibility="{Binding SlotContextMenu.AIOptionsVisibility, Delay=100}"
-                          Command="{Binding SlotContextMenu.AddAIPlayer}"
+                <MenuItem Header="{Binding ContextMenu.MoveToSlot.Title}"
+                          Visibility="{Binding ContextMenu.MoveToSlot.Visibility, Delay=100}"
+                          Command="{Binding ContextMenu.MoveToSlot.Click}"
+                          Style="{StaticResource LobbySlotContextMenuItem}"/>
+                <Separator Visibility="{Binding ContextMenu.LastSepVisible, Delay=100}"/>
+                <MenuItem Header="{Binding ContextMenu.AddEasyAI.Title}"
+                          Visibility="{Binding ContextMenu.AddEasyAI.Visibility, Delay=100}"
+                          Command="{Binding ContextMenu.AddEasyAI.Click}"
                           CommandParameter="1"
                           Style="{StaticResource LobbySlotContextMenuItem}"/>
-                <MenuItem Header="Add Standard AI"
-                          Visibility="{Binding SlotContextMenu.AIOptionsVisibility, Delay=100}"
-                          Command="{Binding SlotContextMenu.AddAIPlayer}"
+                <MenuItem Header="{Binding ContextMenu.AddStandardAI.Title}"
+                          Visibility="{Binding ContextMenu.AddStandardAI.Visibility, Delay=100}"
+                          Command="{Binding ContextMenu.AddStandardAI.Click}"
                           CommandParameter="2"
                           Style="{StaticResource LobbySlotContextMenuItem}"/>
-                <MenuItem Header="Add Hard AI"
-                          Visibility="{Binding SlotContextMenu.AIOptionsVisibility, Delay=100}"
-                          Command="{Binding SlotContextMenu.AddAIPlayer}"
+                <MenuItem Header="{Binding ContextMenu.AddHardAI.Title}"
+                          Visibility="{Binding ContextMenu.AddHardAI.Visibility, Delay=100}"
+                          Command="{Binding ContextMenu.AddHardAI.Click}"
                           CommandParameter="3"
                           Style="{StaticResource LobbySlotContextMenuItem}"/>
-                <MenuItem Header="Add Expert AI"
-                          Visibility="{Binding SlotContextMenu.AIOptionsVisibility, Delay=100}"
-                          Command="{Binding SlotContextMenu.AddAIPlayer}"
+                <MenuItem Header="{Binding ContextMenu.AddExpertAI.Title}"
+                          Visibility="{Binding ContextMenu.AddExpertAI.Visibility, Delay=100}"
+                          Command="{Binding ContextMenu.AddExpertAI.Click}"
                           CommandParameter="4"
                           Style="{StaticResource LobbySlotContextMenuItem}"/>
             </ContextMenu>
@@ -65,14 +69,48 @@
 
         <Grid Grid.Column="1" 
               Grid.ColumnSpan="5"
-              Style="{StaticResource SlotGridStyle}"/>
+              x:Name="BackGrid">
+            <Grid.Style>
+                <Style TargetType="Grid" BasedOn="{StaticResource SlotGridStyle}">
+                    <Style.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="Background" Value="#334252"/>
+                        </Trigger>
+                        <DataTrigger Binding="{Binding IsMouseOver, ElementName=LeftIco}"
+                                     Value="True">
+                            <Setter Property="Background" Value="#334252"/>
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding IsSelf}" Value="true">
+                            <Setter Property="Background" Value="#334252"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Grid.Style>
+        </Grid>
 
         <Image Width="72"
                HorizontalAlignment="Left"
                Stretch="Uniform"
                Grid.ColumnSpan="2"
-               Visibility="{Binding LeftIconVisibility}"
-               Source="{Binding LeftIcon}"/>
+               x:Name="LeftIco">
+            <Image.Style>
+                <Style TargetType="Image">
+                    <Setter Property="Source" Value="{Binding LeftIcon}"/>
+                    <Style.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="Source" Value="{Binding LeftIconHover}"/>
+                        </Trigger>
+                        <DataTrigger Binding="{Binding IsMouseOver, ElementName=BackGrid}"
+                                     Value="True">
+                            <Setter Property="Source" Value="{Binding LeftIconHover}"/>
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding IsSelf}" Value="true">
+                            <Setter Property="Source" Value="{Binding LeftIconHover}"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Image.Style>
+        </Image>
 
         <Label Grid.Column="2"
                IsHitTestVisible="False"
@@ -81,14 +119,15 @@
                VerticalAlignment="Center"/>
 
         <ComboBox Grid.Column="5"
-                  ItemsSource="{Binding AvailableSlotCompanies}"
-                  Visibility="{Binding CompanyVisibility}"
+                  ItemsSource="{Binding SelectableCompanies}"
+                  Visibility="{Binding IsCompanySelectorVisible}"
                   Style="{StaticResource SlotCompanySelection}"
-                  SelectedIndex="{Binding SelectedCompanyIndex, Mode=TwoWay}"
-                  SelectedItem="{Binding SelectedCompany, Mode=OneWayToSource}"/>
+                  SelectedIndex="{Binding SelectedCompanyIndex, Mode=TwoWay}">
+        </ComboBox>
 
         <Grid Grid.Column="5"
-              Visibility="{Binding CompanyDataVisibility}">
+              Visibility="{Binding IsCompanyInfoVisible}"
+              Margin="0,2.5,15,0">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition/>
                 <ColumnDefinition Width="18"/>
@@ -97,19 +136,20 @@
                 <converters:StringToFactionIconConverter x:Key="FactionIconConverter"/>
                 <converters:StringToCompanyTypeIconConverter x:Key="TypeIconConverter"/>
             </Grid.Resources>
-            <Image Source="{Binding ProxyCompanyType, Converter={StaticResource TypeIconConverter}}"
-                   Grid.Column="2"
-                   Width="18"
-                   Height="18"
-                   VerticalAlignment="Center"
-                   HorizontalAlignment="Center"/>
-            <TextBlock Text="{Binding ProxyCompanyName}"
+            <TextBlock Text="{Binding SelectedCompany.Name}"
                        Foreground="#FFFFFF"
                        FontSize="20"
                        FontFamily="Open Sans"
                        HorizontalAlignment="Right"
                        VerticalAlignment="Center"
-                       Grid.Column="0"/>
+                       Grid.Column="0"
+                       Margin="15"/>
+            <Image Source="{Binding SelectedCompany.Specialisation, Converter={StaticResource TypeIconConverter}}"
+                   Grid.Column="2"
+                   Width="18"
+                   Height="18"
+                   VerticalAlignment="Center"
+                   HorizontalAlignment="Center"/>
         </Grid>
 
     </Grid>
