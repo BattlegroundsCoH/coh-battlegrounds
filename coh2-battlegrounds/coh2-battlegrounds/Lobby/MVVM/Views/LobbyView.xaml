@@ -179,7 +179,7 @@
             <!-- Options -->
             <StackPanel Grid.Column="1"
                         Grid.Row="2">
-                <controls:LocLabel Content="LobbyView_SettingScenario" 
+                <controls:LocLabel LocKey="LobbyView_SettingScenario" 
                                    Style="{StaticResource SettingLabel}"/>
                 <Separator Style="{StaticResource SettingSeperator}"/>
             </StackPanel>
@@ -199,7 +199,7 @@
 
             <StackPanel Grid.Column="1"
                         Grid.Row="3">
-                <controls:LocLabel Content="LobbyView_SettingGamemode" 
+                <controls:LocLabel LocKey="LobbyView_SettingGamemode" 
                        Style="{StaticResource SettingLabel}"/>
                 <Separator Style="{StaticResource SettingSeperator}"/>
             </StackPanel>
@@ -219,7 +219,7 @@
 
             <StackPanel Grid.Column="1"
                         Grid.Row="4">
-                <controls:LocLabel Content="LobbyView_SettingOption" 
+                <controls:LocLabel LocKey="LobbyView_SettingOption" 
                        Style="{StaticResource SettingLabel}"/>
                 <Separator Style="{StaticResource SettingSeperator}"/>
             </StackPanel>
@@ -239,7 +239,7 @@
 
             <StackPanel Grid.Column="1"
                         Grid.Row="5">
-                <controls:LocLabel Content="LobbyView_SettingSupply"
+                <controls:LocLabel LocKey="LobbyView_SettingWeather"
                        Style="{StaticResource SettingLabel}"/>
                 <Separator Style="{StaticResource SettingSeperator}"/>
             </StackPanel>
@@ -259,7 +259,7 @@
 
             <StackPanel Grid.Column="1"
                         Grid.Row="6">
-                <controls:LocLabel Content="LobbyView_SettingWeather" 
+                <controls:LocLabel LocKey="LobbyView_SettingSupply" 
                                    Style="{StaticResource SettingLabel}"/>
                 <Separator Style="{StaticResource SettingSeperator}"/>
             </StackPanel>
@@ -279,7 +279,7 @@
 
             <StackPanel Grid.Column="1"
                         Grid.Row="7">
-                <controls:LocLabel Content="LobbyView_SettingTuning" 
+                <controls:LocLabel LocKey="LobbyView_SettingTuning" 
                        Style="{StaticResource SettingLabel}"/>
                 <Separator Style="{StaticResource SettingSeperator}"/>
             </StackPanel>

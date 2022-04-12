@@ -198,10 +198,15 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
 
         }
 
-        private void MapSelectionChanged(int newIndex) {
+        private void MapSelectionChanged(int newIndex, int oldIndex) {
 
             // Get scenario
             var scen = this.MapDropdown.Items[newIndex].Scenario;
+
+            if (!this.m_handle.SetTeamsCapacity(scen.MaxPlayers / 2)) {
+                this.MapDropdown.Selected = oldIndex;
+                return;
+            }
 
             // Update label
             this.MapDropdown.LabelContent = scen.Name;
@@ -218,11 +223,9 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
             // Update lobby
             this.m_handle.SetLobbySetting("selected_map", scen.RelativeFilename);
 
-            // TODO: Update slots
-
         }
 
-        private void GamemodeSelectionChanged(int newIndex) {
+        private void GamemodeSelectionChanged(int newIndex, int oldIndex) {
 
             // Get gamemode options
             var options = this.GamemodeDropdown.Items[newIndex].Options;
@@ -259,7 +262,7 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
 
         }
 
-        private void GamemodeOptionSelectionChanged(int newIndex) {
+        private void GamemodeOptionSelectionChanged(int newIndex, int oldIndex) {
 
             // Bail
             if (newIndex == -1) {
@@ -272,7 +275,7 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
 
         }
 
-        private void WeatherSelectionChanged(int newIndex) {
+        private void WeatherSelectionChanged(int newIndex, int oldIndex) {
 
             // Update label
             this.WeatherDropdown.LabelContent = this.WeatherDropdown.Items[newIndex].IsOn.ToString();
@@ -282,7 +285,7 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
 
         }
 
-        private void SupplySystemSelectionChanged(int newIndex) {
+        private void SupplySystemSelectionChanged(int newIndex, int oldIndex) {
 
             // Update label
             this.SupplySystemDropdown.LabelContent = this.SupplySystemDropdown.Items[newIndex].IsOn.ToString();
@@ -292,7 +295,7 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
 
         }
 
-        private void ModPackageSelectionChanged(int newIndex) {
+        private void ModPackageSelectionChanged(int newIndex, int oldIndex) {
 
             // Set package
             this.m_package = this.ModPackageDropdown.Items[newIndex].ModPackage;
