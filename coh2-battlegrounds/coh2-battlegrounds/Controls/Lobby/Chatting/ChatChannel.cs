@@ -1,7 +1,7 @@
 ﻿using System.Windows.Media;
 
 namespace BattlegroundsApp.Controls.Lobby.Chatting {
-    
+
     /// <summary>
     /// Represents a channel of chat in a <see cref="ChatView"/>.
     /// </summary>

@@ -2,9 +2,11 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>net5.0</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
     <RootNamespace>coh2_battlegrounds_console</RootNamespace>
     <LangVersion>preview</LangVersion>
+    <Nullable>enable</Nullable>
+    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
   </PropertyGroup>
 
   <ItemGroup>
@@ -13,6 +15,12 @@
 
   <ItemGroup>
     <ProjectReference Include="..\coh2-battlegrounds-bin\coh2-battlegrounds-bin.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="coh2-battlegrounds-networking">
+      <HintPath>..\coh2-battlegrounds-networking.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
 </Project>

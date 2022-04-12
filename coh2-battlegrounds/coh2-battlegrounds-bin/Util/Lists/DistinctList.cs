@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 
 namespace Battlegrounds.Util.Lists {
-    
+
     /// <summary>
     /// List of distinct indexable elements. Extends <see cref="List{T}"/>.
     /// </summary>

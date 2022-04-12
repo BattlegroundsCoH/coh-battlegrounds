@@ -21,9 +21,10 @@ using BattlegroundsApp.Dialogs.NewCampaign;
 using BattlegroundsApp.Models.Campaigns;
 using BattlegroundsApp.Views.CampaignViews;
 using Battlegrounds.Campaigns.API;
+using Battlegrounds.Locale;
 
 namespace BattlegroundsApp.Views {
-    
+
     /// <summary>
     /// Interaction logic for CampaignView.xaml
     /// </summary>
@@ -36,11 +37,11 @@ namespace BattlegroundsApp.Views {
         public MainWindow MainWindow { get; set; }
 
         public CampaignBrowserView() {
-            
+
             InitializeComponent();
-            
+
             this.CanContinueCampaign = false;
-            
+
             this.m_actualState = null;
 
         }
@@ -59,12 +60,12 @@ namespace BattlegroundsApp.Views {
 
         }
 
-        public override void StateOnLostFocus() { 
-        
+        public override void StateOnLostFocus() {
+
         }
 
         private void ContinueCampaignButton_Click(object sender, RoutedEventArgs e) {
-            
+
             // Hide Left Panel
             MainWindow.ShowLeftPanel(false);
 
@@ -77,7 +78,7 @@ namespace BattlegroundsApp.Views {
         private void NewCampaignButton_Click(object sender, RoutedEventArgs e) {
 
             //Show dialog and retrieve data
-            var state = NewCampaignDialogViewModel.ShowHostGameDialog("Begin New Campaign", out NewCampaignData campaignData, PlayerCampaigns.CampaignPackages.ToArray());
+            var state = NewCampaignDialogViewModel.ShowHostGameDialog(new LocaleKey("CampaignBrowser_NewCampaignDiloag_Title"), out NewCampaignData campaignData, PlayerCampaigns.CampaignPackages.ToArray());
             if (state != NewCampaignDialogResult.Cancel && campaignData.CampaignToLoad is not null) {
 
                 // Hide the left panel
@@ -93,7 +94,7 @@ namespace BattlegroundsApp.Views {
                 } else if (state == NewCampaignDialogResult.NewSingleplayer) {
 
                     // Create start args
-                    CampaignStartData startData = new CampaignStartData() { 
+                    CampaignStartData startData = new CampaignStartData() {
                         HumanAlliesPlayers = campaignData.CampaignHostSide.IsAllied ? 1 : 0,
                         HumanAxisPlayers = campaignData.CampaignHostSide.IsAxis ? 1 : 0
                     };

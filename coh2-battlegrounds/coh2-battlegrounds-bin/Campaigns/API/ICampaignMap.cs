@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+
 using Battlegrounds.Campaigns.Organisations;
 using Battlegrounds.Game.Database;
 using Battlegrounds.Lua;
 
 namespace Battlegrounds.Campaigns.API {
-    
+
     /// <summary>
     /// Interface for handling map-related behaviour for campaigns.
     /// </summary>
@@ -75,7 +76,7 @@ namespace Battlegrounds.Campaigns.API {
         /// <param name="predicate"></param>
         /// <returns></returns>
         List<ICampaignMapNode> GetNodeNeighbours(ICampaignMapNode mapNode, Predicate<ICampaignMapNode> predicate);
-        
+
         /// <summary>
         /// 
         /// </summary>

@@ -5,7 +5,7 @@ using Battlegrounds.Game.Match.Data;
 using Battlegrounds.Game.Match.Finalizer;
 using Battlegrounds.Game.Match.Play;
 using Battlegrounds.Game.Match.Startup;
-using Battlegrounds.Networking.Lobby;
+using Battlegrounds.Networking.LobbySystem;
 
 namespace Battlegrounds.Game.Match.Composite {
 
@@ -17,23 +17,23 @@ namespace Battlegrounds.Game.Match.Composite {
         private bool m_isStarted;
         private bool m_isCancelled;
         private bool m_hasSuccessAnalysis;
-        private LobbyHandler m_lobby;
-        private IPlayStrategy m_playStrategyResult;
-        private IAnalyzedMatch m_analyzedMatch;
+        private readonly LobbyAPI m_lobby;
+        private IPlayStrategy? m_playStrategyResult;
+        private IAnalyzedMatch? m_analyzedMatch;
 
         public bool HasStarted => this.m_isStarted;
 
         public bool IsCancelled => this.m_isCancelled;
 
-        public IPlayStrategy PlayObject => this.m_playStrategyResult;
+        public IPlayStrategy? PlayObject => this.m_playStrategyResult;
 
-        public IAnalyzedMatch MatchAnalysis => this.m_analyzedMatch;
+        public IAnalyzedMatch? MatchAnalysis => this.m_analyzedMatch;
 
         public bool AnalysisSuccess => this.m_hasSuccessAnalysis;
 
-        public event AnalysisCancelledHandler AnalysisCancelled;
+        public event AnalysisCancelledHandler? AnalysisCancelled;
 
-        public MultiplayerSession(LobbyHandler lobby) {
+        public MultiplayerSession(LobbyAPI lobby) {
             this.m_isCancelled = false;
             this.m_isStarted = false;
             this.m_lobby = lobby;
@@ -47,9 +47,6 @@ namespace Battlegrounds.Game.Match.Composite {
 
             // Local method for play
             void ManagedLobbyPlayer() {
-
-                // Start context
-                this.m_lobby.MatchContext = this.m_lobby.Lobby.StartMatch();
 
                 // Begin
                 if (!startupStrategy.OnBegin(this.m_lobby)) {
@@ -100,7 +97,7 @@ namespace Battlegrounds.Game.Match.Composite {
                     this.m_isStarted = true;
 
                 } else {
-                    
+
                     // Trigger on cancelled
                     startupStrategy.OnCancel(this.m_lobby, "Preparation was cancelled.");
 
@@ -114,7 +111,7 @@ namespace Battlegrounds.Game.Match.Composite {
         }
 
         private void StartupStrategy_StartupCancelled(IStartupStrategy sender, object caller, string reason) => this.m_isCancelled = true;
-        
+
         public void Analyze(IAnalyzeStrategy strategy, IMatchData matchResults) {
 
             // Set to false

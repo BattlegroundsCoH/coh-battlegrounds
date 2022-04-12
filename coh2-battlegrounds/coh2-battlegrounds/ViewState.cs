@@ -2,6 +2,8 @@
 using System.Windows.Controls;
 using System.Windows.Threading;
 
+using BattlegroundsApp.Modals;
+
 namespace BattlegroundsApp {
 
     /// <summary>
@@ -14,7 +16,7 @@ namespace BattlegroundsApp {
     /// <summary>
     /// Rapresents a state in the <see cref="ViewStateMachine"/>. Inherits from <see cref="UserControl"/> and <see cref="IState"/>. Abstract class.
     /// </summary>
-    public abstract class ViewState : UserControl, IState {
+    public abstract class ViewState : ModalControl, IState {
 
         /// <summary>
         /// Gets or sets the method for handling state change requests.

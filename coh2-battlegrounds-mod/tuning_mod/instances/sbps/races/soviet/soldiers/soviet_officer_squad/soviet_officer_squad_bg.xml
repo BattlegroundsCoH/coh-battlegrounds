@@ -155,18 +155,18 @@
 			<bool name="support_weapons_to_flanks" value="True" />
 		</template_reference>
 		<template_reference name="squadexts" value="sbpextensions\squad_item_slot_ext">
-			<bool name="can_pick_up" value="True" />
-			<float name="num_slots" value="2" />
+			<bool name="can_pick_up" value="False" />
+			<float name="num_slots" value="0" />
 		</template_reference>
 		<template_reference name="squadexts" value="sbpextensions\squad_loadout_ext">
 			<list name="unit_list">
 				<group name="loadout_data">
 					<float name="num" value="1" />
-					<instance_reference name="type" value="ebps\races\soviet\soldiers\commissar\commissar_bg" mod="142b113740474c82a60b0a428bd553d5" />
+					<instance_reference name="type" value="ebps\races\soviet\soldiers\commissar\officer_bg" mod="142b113740474c82a60b0a428bd553d5" />
 				</group>
 				<group name="loadout_data">
 					<float name="num" value="3" />
-					<instance_reference name="type" value="ebps\races\soviet\soldiers\conscript_soldier\conscript_soldier_bg" mod="142b113740474c82a60b0a428bd553d5" />
+					<instance_reference name="type" value="ebps\races\soviet\soldiers\conscript_soldier\conscript_soldier_guard_bg" mod="142b113740474c82a60b0a428bd553d5" />
 				</group>
 			</list>
 			<float name="squad_female_chance" value="0" />

@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Windows;
@@ -6,9 +7,10 @@ using System.Windows.Controls;
 using System.Windows.Markup;
 
 using Battlegrounds.Functional;
+using Battlegrounds.Locale;
 
 namespace BattlegroundsApp.Controls.Lobby.Components {
-    
+
     /// <summary>
     /// Interaction logic for LobbyDropdown.xaml
     /// </summary>
@@ -18,7 +20,7 @@ namespace BattlegroundsApp.Controls.Lobby.Components {
         private IEnumerable m_itemSource;
         private object m_setSelectedValue;
 
-        public static readonly DependencyProperty DescriptionProperty = DependencyProperty.Register(nameof(Description), typeof(string), typeof(LobbyDropdown));
+        public static readonly DependencyProperty DescriptionProperty = DependencyProperty.Register(nameof(Description), typeof(object), typeof(LobbyDropdown));
 
         public static readonly DependencyProperty DescriptionWidthProperty = DependencyProperty.Register(nameof(DescriptionWidth), typeof(double), typeof(LobbyDropdown));
 
@@ -28,9 +30,9 @@ namespace BattlegroundsApp.Controls.Lobby.Components {
 
         public static readonly DependencyProperty OtherSelectedItemProperty = DependencyProperty.Register(nameof(OtherSelectedItem), typeof(object), typeof(LobbyDropdown));
 
-        public new static readonly DependencyProperty SelectedItemProperty = DependencyProperty.Register(nameof(SelectedItem), typeof(object), typeof(LobbyDropdown));
+        public static new readonly DependencyProperty SelectedItemProperty = DependencyProperty.Register(nameof(SelectedItem), typeof(object), typeof(LobbyDropdown));
 
-        public new static readonly DependencyProperty SelectedIndexProperty = DependencyProperty.Register(nameof(SelectedIndex), typeof(int), typeof(LobbyDropdown));
+        public static new readonly DependencyProperty SelectedIndexProperty = DependencyProperty.Register(nameof(SelectedIndex), typeof(int), typeof(LobbyDropdown));
 
         /// <summary>
         /// Get the <see cref="ItemCollection"/> used to generate the conents of the <see cref="LobbyDropdown"/>. Default is an empty collection.
@@ -48,9 +50,9 @@ namespace BattlegroundsApp.Controls.Lobby.Components {
         /// <summary>
         /// Get or set the description of the <see cref="LobbyDropdown"/>.
         /// </summary>
-        public string Description {
-            get => this.GetValue(DescriptionProperty) as string; 
-            set => this.SetValue(DescriptionProperty, value); 
+        public object Description {
+            get => this.GetValue(DescriptionProperty) as LocaleKey;
+            set => this.SetValue(DescriptionProperty, value);
         }
 
         public double DescriptionWidth {
@@ -125,15 +127,11 @@ namespace BattlegroundsApp.Controls.Lobby.Components {
             this.SelfOptions.ItemsSource = source;
         }
 
-        private object GetSelectedValue() {
-            if (this.State is SelfState) {
-                return this.SelfOptions.SelectedItem;
-            } else if (this.State is OtherState) {
-                return this.m_setSelectedValue;
-            } else {
-                return "Unknown";
-            }
-        }
+        private object GetSelectedValue() => this.State switch {
+            SelfState => this.SelfOptions.SelectedItem,
+            OtherState => this.m_setSelectedValue,
+            _ => this.SelfOptions.Items.Count > 0 ? this.SelfOptions.Items[this.SelectedIndex] : "Unknown"
+        };
 
         private void SetSelectedValue(object value) {
 
@@ -183,6 +181,15 @@ namespace BattlegroundsApp.Controls.Lobby.Components {
                 cntr++;
             }
             return cntr;
+        }
+
+        public void SelectFirstOrDefault(Predicate<object> p) {
+            for (int i = 0; i < this.Items.Count; i++) {
+                if (p(this.Items[i])) {
+                    this.SelectedIndex = i;
+                    break;
+                }
+            }
         }
 
     }

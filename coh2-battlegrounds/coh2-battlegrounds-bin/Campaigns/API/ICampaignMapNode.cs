@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+
 using Battlegrounds.Util.Lists;
 
 namespace Battlegrounds.Campaigns.API {

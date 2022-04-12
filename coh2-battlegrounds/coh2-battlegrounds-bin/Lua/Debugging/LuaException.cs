@@ -1,7 +1,7 @@
 ﻿using System;
 
 namespace Battlegrounds.Lua.Debugging {
-    
+
     /// <summary>
     /// Represents errors that occur while handling Lua-related code.
     /// </summary>

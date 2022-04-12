@@ -1,18 +1,17 @@
 ﻿using Battlegrounds.Game.Database.Management;
-using Battlegrounds.Game.Scar;
-using Battlegrounds.Json;
+using Battlegrounds.Modding;
 
 namespace Battlegrounds.Game.Database {
-    
+
     /// <summary>
-    /// Represents a <see cref="Blueprint"/> for the behaviour of instances within Company of Heroes 2. Implements <see cref="IJsonObject"/>. Implements <see cref="IScarValue"/>.
+    /// Represents a <see cref="Blueprint"/> for the behaviour of instances within Company of Heroes 2. Implements <see cref="IScarValue"/>.
     /// </summary>
-    public class Blueprint : IJsonObject, IScarValue {
-    
+    public abstract class Blueprint {
+
         /// <summary>
         /// The unique PropertyBagGroupdID assigned to this blueprint.
         /// </summary>
-        public ulong PBGID { get; set; }
+        public abstract BlueprintUID PBGID { get; }
 
         /// <summary>
         /// The unique PropertyBagGroupID assigned to this blueprint at load-time.
@@ -22,31 +21,12 @@ namespace Battlegrounds.Game.Database {
         /// <summary>
         /// The name of the <see cref="Blueprint"/> file in the game files (See the instances folder in the mod tools).
         /// </summary>
-        public string Name { get; set; }
+        public abstract string Name { get; }
 
         /// <summary>
         /// The type of <see cref="Blueprint"/>.
         /// </summary>
-        public BlueprintType BlueprintType { get; set; }
-
-        /// <summary>
-        /// The unique mod GUID associated with this <see cref="Blueprint"/>. Empty if vanilla blueprint.
-        /// </summary>
-        public string ModGUID { get; set; }
-
-        /// <summary>
-        /// Convert the <see cref="Blueprint"/> to its Json reference value.
-        /// </summary>
-        /// <returns>The string representation of the <see cref="Blueprint"/> json reference value.</returns>
-        public string ToJsonReference() => this.ToString();
-
-        public virtual string ToScar() { 
-            if (this.ModGUID.CompareTo(string.Empty) == 0) {
-                return $"\"{this.Name}\"";
-            } else {
-                return $"\"{this.ModGUID.Replace("-", "")}:{this.Name}\"";
-            }
-        }
+        public abstract BlueprintType BlueprintType { get; }
 
         /// <summary>
         /// Returns a string that represents the current object.
@@ -54,15 +34,27 @@ namespace Battlegrounds.Game.Database {
         /// <returns>A string that represents the current object.</returns>
         public override string ToString() => $"{this.BlueprintType}:{this.Name}";
 
-        public override bool Equals(object obj) { 
+        public override bool Equals(object obj) {
             if (obj is Blueprint bp && this != null) {
-                return bp.BlueprintType == this.BlueprintType && bp.PBGID == this.PBGID && bp.ModGUID.CompareTo(this.ModGUID) == 0;
+                return bp.BlueprintType == this.BlueprintType && bp.PBGID == this.PBGID;
             } else {
                 return false;
             }
         }
 
-        public override int GetHashCode() => this.ModGUID.GetHashCode() + this.ModPBGID;
+        /// <summary>
+        /// Get the scar name of the blueprint.
+        /// </summary>
+        /// <returns>The name of the blueprint for scar context.</returns>
+        public string GetScarName() {
+            if (this.PBGID.Mod == ModGuid.BaseGame) {
+                return this.Name;
+            } else {
+                return $"{this.PBGID.Mod.GUID}:{this.Name}";
+            }
+        }
+
+        public override int GetHashCode() => this.PBGID.GetHashCode();
 
     }
 

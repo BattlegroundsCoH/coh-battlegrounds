@@ -9,17 +9,17 @@ bg_settings = {
 	},
 	gamemode = "Victory Points",
 	gameoptions = {
-		gamemode_setting = 50,
+		gamemode_setting = 30,
 	},
 	team_setup = {
 		["allies"] = {
 			{
 				display_name = "CoDiEx", steam_index = "76561198003529969",
-				ai_value = 0, id = 0,
+				ai_value = 0, id = 0, uid = 0
 			},
 		},
 		["axis"] = {
-			{ display_name = "AI - Hard", ai_value = 3, id = 0, },
+			{ display_name = "AI - Hard", ai_value = 3, id = 0, uid = 1 },
 		},
 	},
 };
@@ -1385,53 +1385,6 @@ bg_companies = {
 				cost = {
 					manpower = 150.00,
 					fieldtime = 15.00,
-				},
-				upgrades = {
-				},
-				slot_items = {
-				},
-				modifiers = {
-				},
-				spawned = false,
-			},
-			{
-				bp_name = "142b113740474c82a60b0a428bd553d5:sniper_squad_bg",
-				company_id = 10,
-				symbol = "Icons_symbols_unit_german_sniper_symbol",
-				category = "infantry",
-				phase = -1,
-				veterancy_rank = 4,
-				veterancy_progress = 0.00,
-				special = true,
-				cost = {
-					manpower = 360.00,
-					fieldtime = 15.00,
-				},
-				upgrades = {
-				},
-				slot_items = {
-				},
-				modifiers = {
-				},
-				spawned = false,
-			},
-			{
-				bp_name = "142b113740474c82a60b0a428bd553d5:sniper_squad_bg",
-				company_id = 40,
-				symbol = "Icons_symbols_unit_german_sniper_symbol",
-				category = "infantry",
-				phase = -1,
-				veterancy_rank = 5,
-				veterancy_progress = 0.00,
-				special = true,
-				transport = {
-					sbp = "142b113740474c82a60b0a428bd553d5:opel_blitz_transport_squad_bg",
-					symbol = "Icons_symbols_vehicle_german_opel_blitz_symbol",
-					mode = 2,
-				},
-				cost = {
-					manpower = 555.00,
-					fieldtime = 24.75,
 				},
 				upgrades = {
 				},

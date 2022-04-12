@@ -1,5 +1,5 @@
 ﻿namespace Battlegrounds.Game {
-    
+
     /// <summary>
     /// Represents a DLC tied to Company of Heroes 2
     /// </summary>
@@ -14,12 +14,12 @@
             /// Faction that unlocks and army
             /// </summary>
             Faction,
-            
+
             /// <summary>
             /// Vehicle Skin
             /// </summary>
             Skin,
-            
+
             /// <summary>
             /// Ingame commander
             /// </summary>

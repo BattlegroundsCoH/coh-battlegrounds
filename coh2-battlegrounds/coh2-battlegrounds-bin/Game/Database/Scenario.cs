@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Text.Json.Serialization;
+
 using Battlegrounds.Functional;
-using Battlegrounds.Game.Gameplay;
-using Battlegrounds.Json;
 using Battlegrounds.Lua;
 
 namespace Battlegrounds.Game.Database {
@@ -12,17 +12,17 @@ namespace Battlegrounds.Game.Database {
     /// The theatre of war a scenario is taking place in.
     /// </summary>
     public enum ScenarioTheatre {
-        
+
         /// <summary>
         /// Axis vs Soviets
         /// </summary>
         EasternFront,
-        
+
         /// <summary>
         /// Axis vs UKF & USF
         /// </summary>
         WesternFront,
-        
+
         /// <summary>
         /// Axis vs Allies (Germany)
         /// </summary>
@@ -33,7 +33,7 @@ namespace Battlegrounds.Game.Database {
     /// <summary>
     /// Represents a scenario. Implements <see cref="IJsonObject"/>. This class cannot be inherited.
     /// </summary>
-    public sealed class Scenario : IJsonObject {
+    public sealed class Scenario {
 
         public const string INVALID_SGA = "INVALID SGA";
 
@@ -65,7 +65,6 @@ namespace Battlegrounds.Game.Database {
         /// <summary>
         /// The <see cref="ScenarioTheatre"/> this map takes place in.
         /// </summary>
-        [JsonEnum(typeof(ScenarioTheatre))]
         public ScenarioTheatre Theatre { get; set; }
 
         /// <summary>
@@ -81,20 +80,25 @@ namespace Battlegrounds.Game.Database {
         /// <summary>
         /// Get if the <see cref="Scenario"/> is a workshop map.
         /// </summary>
-        [JsonIgnore]
-        public bool IsWorkshopMap => this.SgaName != "MPScenarios" && this.SgaName != "MPXP1Scenarios";
+        public bool IsWorkshopMap => this.SgaName is not "MPScenarios" and not "MPXP1Scenarios";
 
         /// <summary>
         /// The <see cref="Wincondition"/> instances designed for this <see cref="Scenario"/>. Empty list means all <see cref="Wincondition"/> instances can be used.
         /// </summary>
-        [JsonReference] 
-        public List<Wincondition> Gamemodes { get; set; }
+        public List<string> Gamemodes { get; set; }
+
+        /// <summary>
+        /// Get if the scenario has a valid info or options file.
+        /// </summary>
+        [JsonIgnore]
+        public bool HasValidInfoOrOptionsFile { get; }
 
         public string ToJsonReference() => this.RelativeFilename;
 
         public Scenario() {
             this.SgaName = INVALID_SGA;
-            this.Gamemodes = new List<Wincondition>();
+            this.Gamemodes = new List<string>();
+            this.HasValidInfoOrOptionsFile = true; // Under the assumption it's being set
         }
 
         /// <summary>
@@ -116,14 +120,18 @@ namespace Battlegrounds.Game.Database {
             }
 
             this.RelativeFilename = Path.GetFileNameWithoutExtension(infofile);
-            this.Gamemodes = new List<Wincondition>();
+            this.Gamemodes = new();
             this.SgaName = string.Empty;
 
-            LuaState scenarioState = new LuaState();
-            LuaVM.DoFile(scenarioState, infofile);
-            LuaVM.DoFile(scenarioState, optionsfile);
+            LuaState scenarioState = new();
+            _ = LuaVM.DoFile(scenarioState, infofile);
+            _ = LuaVM.DoFile(scenarioState, optionsfile);
 
-            LuaTable headerInfo = scenarioState._G["HeaderInfo"] as LuaTable;
+            // Get header info (and if false, bail)
+            if (scenarioState._G["HeaderInfo"] is not LuaTable headerInfo) {
+                return;
+            }
+
             this.Name = headerInfo["scenarioname"].Str();
             this.Description = headerInfo["scenariodescription"].Str();
             this.MaxPlayers = (byte)(headerInfo["maxplayers"] as LuaNumber);
@@ -131,17 +139,15 @@ namespace Battlegrounds.Game.Database {
             int battlefront = (int)(LuaNumber)headerInfo["scenario_battlefront"].IfTrue(x => x is LuaNumber).ThenDo(x => x as LuaNumber).OrDefaultTo(() => new LuaNumber(2));
             this.Theatre = battlefront == 2 ? ScenarioTheatre.EasternFront : battlefront == 5 ? ScenarioTheatre.WesternFront : ScenarioTheatre.SharedFront;
 
-#pragma warning disable IDE0019 // Use pattern matching
-            LuaTable skins = headerInfo["default_skins"] as LuaTable;
-#pragma warning restore IDE0019 // Use pattern matching
-
             // Get the skins table (apperantly both are accepted...)
-            if (skins == null) {
+            if (headerInfo["default_skins"] is not LuaTable skins) {
                 skins = headerInfo["default_skin"] as LuaTable;
             }
 
             this.IsWintermap = skins?.Contains("winter") ?? false;
             this.IsVisibleInLobby = (scenarioState._G["visible_in_lobby"] as LuaBool)?.IsTrue ?? true;
+
+            this.HasValidInfoOrOptionsFile = true;
 
         }
 

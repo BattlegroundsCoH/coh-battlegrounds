@@ -1,0 +1,68 @@
+<instance description="" template="critical">
+	<group name="critical_bag">
+		<group name="critical_indicators">
+			<enum name="indicator_01" value="" />
+			<enum name="indicator_02" value="" />
+			<enum name="indicator_03" value="" />
+		</group>
+		<string name="description" value="" />
+		<bool name="is_unique" value="True" />
+		<group name="kicker_message">
+			<locstring name="message" value="66" mod="142b113740474c82a60b0a428bd553d5" />
+			<float name="message_colour_a" value="255" />
+			<float name="message_colour_b" value="0" />
+			<float name="message_colour_g" value="0" />
+			<float name="message_colour_r" value="255" />
+			<float name="message_seconds" value="1" />
+			<float name="offset_x" value="0" />
+			<float name="offset_y" value="0" />
+		</group>
+		<enum name="target" value="tp_entity" />
+		<list name="actions">
+			<template_reference name="action" value="action\cancel_forced_attack">
+				<uniqueid name="id" value="1073744930" />
+				<enum name="stop_command" value="attack_stop" />
+			</template_reference>
+			<template_reference name="action" value="action\force_reload_action">
+				<int name="hardpoint_index" value="1" />
+				<uniqueid name="id" value="1073744931" />
+			</template_reference>
+			<template_reference name="action" value="action\delay">
+				<float name="delay" value="1" />
+				<float name="delay_min" value="0" />
+				<bool name="progress_bar" value="False" />
+				<bool name="randomize" value="False" />
+				<list name="delayed_actions">
+					<template_reference name="action" value="action\apply_modifiers_action">
+						<float name="duration" value="0" />
+						<bool name="permanent" value="False" />
+						<list name="modifiers">
+							<template_reference name="modifier" value="modifiers\shoot_enable_modifier">
+								<enum name="application_type" value="apply_to_entity" />
+								<bool name="exclusive" value="False" />
+								<string name="modifier_id" value="" />
+								<string name="target_type_name" value="hardpoint_1" />
+								<enum name="usage_type" value="enable" />
+								<float name="value" value="-1" />
+								<instance_reference name="tooltip" value="modifier_tooltip\shoot_enable_modifier" />
+							</template_reference>
+						</list>
+						<uniqueid name="id" value="1073744934" />
+					</template_reference>
+				</list>
+				<uniqueid name="id" value="1073744933" />
+				<bool name="can_prevent_refund" value="True" />
+			</template_reference>
+		</list>
+		<list name="requirements">
+		</list>
+		<template_reference name="ui_info" value="tables\ui_info">
+			<locstring name="screen_name" value="67" mod="142b113740474c82a60b0a428bd553d5" />
+			<locstring name="help_text" value="68" mod="142b113740474c82a60b0a428bd553d5" />
+			<icon name="icon_name" value="Icons_criticals_killed_loader" />
+			<string name="hotkey_name" value="" />
+		</template_reference>
+		<bool name="repairable" value="False" />
+	</group>
+	<uniqueid name="pbgid" value="1073741823" />
+</instance>

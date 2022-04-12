@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Battlegrounds.Locale;
+using System;
 using System.ComponentModel;
 
 namespace BattlegroundsApp.Dialogs.Service {
@@ -7,7 +8,7 @@ namespace BattlegroundsApp.Dialogs.Service {
 
         public T Result { get; }
 
-        public string Title { get; set; }
+        public LocaleKey Title { get; set; }
 
         public T DialogCloseDefault { get; set; }
 
@@ -25,7 +26,7 @@ namespace BattlegroundsApp.Dialogs.Service {
         public virtual T ShowDialog() {
 
             DialogWindow window = new DialogWindow {
-                Title = this.Title,
+                Title = Battlegrounds.BattlegroundsInstance.Localize.GetString(this.Title),
                 DataContext = this,
             };
 
@@ -37,7 +38,7 @@ namespace BattlegroundsApp.Dialogs.Service {
 
         }
 
-        public virtual void OnPropertyChanged(string propertyName) 
+        public virtual void OnPropertyChanged(string propertyName)
             => this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 
     }

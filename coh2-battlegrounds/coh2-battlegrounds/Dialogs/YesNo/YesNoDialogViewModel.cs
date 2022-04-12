@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using Battlegrounds.Locale;
 using BattlegroundsApp.Dialogs.Service;
 using BattlegroundsApp.Utilities;
 using BattlegroundsApp.ViewModels;
@@ -17,9 +18,15 @@ namespace BattlegroundsApp.Dialogs.YesNo {
 
         public ICommand ConfirmCommand { get; set; }
         public ICommand CancelCommand { get; set; }
-        public string Message { get; set; }
+        public LocaleKey Message { get; set; }
+        public LocaleKey ConfirmButtonContent { get; }
+        public LocaleKey CancelButtonContent { get; }
 
-        private YesNoDialogViewModel(string title, string message) {
+        private YesNoDialogViewModel(LocaleKey title, LocaleKey message) {
+
+            // Define locales
+            ConfirmButtonContent = new LocaleKey("YesNoDialogView_Confirm");
+            CancelButtonContent = new LocaleKey("YesNoDialogView_Cancel");
 
             Title = title;
             Message = message;
@@ -29,7 +36,7 @@ namespace BattlegroundsApp.Dialogs.YesNo {
 
         }
 
-        public static YesNoDialogResult ShowYesNoDialog(string title, string message) {
+        public static YesNoDialogResult ShowYesNoDialog(LocaleKey title, LocaleKey message) {
             var dialog = new YesNoDialogViewModel(title, message);
             return dialog.ShowDialog();
         }

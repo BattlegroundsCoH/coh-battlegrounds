@@ -1,10 +1,11 @@
 ﻿using System.Diagnostics;
 using System.IO;
+
 using Battlegrounds.Modding;
 using Battlegrounds.Networking.Server;
 
 namespace Battlegrounds.Compiler.Source {
-    
+
     public static class WinconditionSourceFinder {
 
         private static bool HasLocalCopy(out string path) {
@@ -19,13 +20,13 @@ namespace Battlegrounds.Compiler.Source {
                         path = $"..\\{path}";
                     }
                 } while (top < 11);
-            } catch {}
+            } catch { }
             return false;
         }
 
         private static bool HasManifest() => File.Exists(BattlegroundsInstance.GetRelativePath(BattlegroundsPaths.BINARY_FOLDER, "scripts.manifest"));
 
-        public static IWinconditionSource GetSource(IWinconditionMod wincondition, ServerAPI serverAPI) {
+        public static IWinconditionSource GetSource(IGamemode wincondition, ServerAPI serverAPI) {
 
             // TODO: Checkup on the wincondition
 

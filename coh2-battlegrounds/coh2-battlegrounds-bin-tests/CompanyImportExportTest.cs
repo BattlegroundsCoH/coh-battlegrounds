@@ -1,9 +1,10 @@
 ﻿using Battlegrounds.Game.Database.Management;
 using Battlegrounds.Game.DataCompany;
+
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace coh2_battlegrounds_bin_tests {
-    
+
     [TestClass]
     public class CompanyImportExportTest {
 

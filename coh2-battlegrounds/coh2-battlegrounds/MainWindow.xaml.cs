@@ -20,7 +20,10 @@ using System.Windows.Shapes;
 using System.Diagnostics;
 
 using BattlegroundsApp.Views;
-using BattlegroundsApp.Dialogs.YesNo;
+using Battlegrounds.Locale;
+using BattlegroundsApp.MVVM;
+using BattlegroundsApp.Modals;
+using BattlegroundsApp.Modals.Dialogs.MVVM.Models;
 
 namespace BattlegroundsApp {
 
@@ -31,6 +34,10 @@ namespace BattlegroundsApp {
     /// </summary>
     public partial class MainWindow : CoreAppWindow {
 
+        private AppDisplayState m_displayState;
+
+        public AppDisplayState DisplayState => this.m_displayState;
+
         public const string GAMEBROWSERSTATE = "GAMEBROWSERVIEW";
         public const string CAMPAIGNBORWSESTATE = "CAMPAIGNVIEW";
         public const string COMPANYSTATE = "COMPANYBUILDERVIEW";
@@ -40,13 +47,13 @@ namespace BattlegroundsApp {
         private bool m_isReady;
         private Button[] m_leftPanelButtons;
 
-        public string DashboardButtonContent { get; }
-        public string NewsButtonContent { get; }
-        public string CompanyBuilderButtonContent { get; }
-        public string CampaignButtonContent { get; }
-        public string GameBrowserButtonContent { get; }
-        public string SettingsButtonContent { get; }
-        public string ExitButtonContent { get; }
+        public LocaleKey DashboardButtonContent { get; }
+        public LocaleKey NewsButtonContent { get; }
+        public LocaleKey CompanyBuilderButtonContent { get; }
+        public LocaleKey CampaignButtonContent { get; }
+        public LocaleKey GameBrowserButtonContent { get; }
+        public LocaleKey SettingsButtonContent { get; }
+        public LocaleKey ExitButtonContent { get; }
 
         private Dictionary<string, ViewState> m_constStates; // lookup table for all states that don't need initialization.
 
@@ -60,25 +67,28 @@ namespace BattlegroundsApp {
             // Initialize components etc...
             InitializeComponent();
 
+            // Set self display state
+            this.m_displayState = AppDisplayState.LeftRight;
+
             // Define left panels buttons
             this.m_leftPanelButtons = new Button[] {
-                DashboardButton,
+                /*DashboardButton,
                 NewsButton,
                 CompanyBuilderButton,
                 CampaignButton,
                 GameBrowserButton,
                 SettingsButton,
-                ExitButton
+                ExitButton*/
             };
 
             // Define locales
-            DashboardButtonContent = "Dashboard";
-            NewsButtonContent = "News";
-            CompanyBuilderButtonContent = "Company Builder";
-            CampaignButtonContent = "Campaign";
-            GameBrowserButtonContent = "Game Browser";
-            SettingsButtonContent = "Settings";
-            ExitButtonContent = "Exit";
+            DashboardButtonContent = new LocaleKey("MainWindow_Dashboard");
+            NewsButtonContent = new LocaleKey("MainWindow_News");
+            CompanyBuilderButtonContent = new LocaleKey("MainWindow_Company_Builder");
+            CampaignButtonContent = new LocaleKey("MainWindow_Campaign");
+            GameBrowserButtonContent = new LocaleKey("MainWindow_Game_Browser");
+            SettingsButtonContent = new LocaleKey("MainWindow_Settings");
+            ExitButtonContent = new LocaleKey("MainWindow_Exit");
 
             // Create all the views that can be created at startup
             this.m_constStates = new Dictionary<string, ViewState> {
@@ -112,13 +122,6 @@ namespace BattlegroundsApp {
         // Exit application
         private void Exit_Click(object sender, RoutedEventArgs e) {
 
-            var result = YesNoDialogViewModel.ShowYesNoDialog("Exit", "Are you sure?");
-
-            if (result == YesNoDialogResult.Confirm) {
-
-                this.Close();
-            }
-
         }
 
         // Hanlde view state change requests
@@ -146,14 +149,71 @@ namespace BattlegroundsApp {
         // Get the request handler
         public override StateChangeRequestHandler GetRequestHandler() => this.StateChangeRequest;
 
-        public bool AllowGetSteamUser()
-            => YesNoDialogViewModel.ShowYesNoDialog("No Steam User Found", "No Steam user was found on startup. Would you like to have the application find the local Steam user?") == YesNoDialogResult.Confirm;
+        public void AllowGetSteamUser(Action<bool> callback) {
+
+            // Null check
+            if (App.ViewManager.GetModalControl() is not ModalControl mControl) {
+                callback.Invoke(false);
+                return;
+            }
+
+            // Lookup strings
+            string title = "MainWindow_YesNoDialog_No_Steam_User_Title";
+            string desc = "MainWindow_YesNoDialog_No_Steam_User_Message";
+
+            // Do modal
+            YesNoDialogViewModel.ShowModal(mControl, (vm, resault) => {
+
+                callback.Invoke(resault is not ModalDialogResult.Confirm);
+
+            }, title, desc);
+
+        }
+           
 
         protected override void OnContentRendered(EventArgs e) {
             base.OnContentRendered(e);
             if (!this.m_isReady) {
                 this.Ready?.Invoke(this);
                 this.m_isReady = true;
+            }
+        }
+
+        public void SetLeftPanel(object lhs) {
+            if (this.m_displayState != AppDisplayState.LeftRight) {
+                this.SetDisplayState(AppDisplayState.LeftRight);
+            }
+            this.Dispatcher.Invoke(() => {
+                this.LeftContent.Content = lhs;
+            });
+        }
+
+        public void SetRightPanel(object rhs) {
+            if (this.m_displayState != AppDisplayState.LeftRight) {
+                this.SetDisplayState(AppDisplayState.LeftRight);
+            }
+            this.Dispatcher.Invoke(() => {
+                this.RightContent.Content = rhs;
+            });
+        }
+
+        public void SetFull(object full) {
+            if (this.m_displayState != AppDisplayState.Full) {
+                this.SetDisplayState(AppDisplayState.Full);
+            }
+            this.Dispatcher.Invoke(() => {
+                this.LeftContent.Content = full;
+            });
+        }
+
+        private void SetDisplayState(AppDisplayState state) {
+            switch (state) {
+                case AppDisplayState.LeftRight:
+                    break;
+                case AppDisplayState.Full:
+                    break;
+                default:
+                    break;
             }
         }
 
@@ -167,14 +227,14 @@ namespace BattlegroundsApp {
                 bttn.Visibility = vs;
             }
             if (show) {
-                this.AppContent.SetValue(Grid.ColumnProperty, 2);
-                this.AppContent.SetValue(Grid.ColumnSpanProperty, 7);
+                //this.AppContent.SetValue(Grid.ColumnProperty, 2);
+                //this.AppContent.SetValue(Grid.ColumnSpanProperty, 7);
             } else {
-                this.AppContent.SetValue(Grid.ColumnProperty, 1);
-                this.AppContent.SetValue(Grid.ColumnSpanProperty, 8);
+                //this.AppContent.SetValue(Grid.ColumnProperty, 1);
+                //this.AppContent.SetValue(Grid.ColumnSpanProperty, 8);
             }
         }
 
-    }   
+    }
 
 }

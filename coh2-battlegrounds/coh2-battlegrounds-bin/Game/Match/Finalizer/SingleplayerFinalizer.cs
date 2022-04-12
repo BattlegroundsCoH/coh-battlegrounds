@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
+
 using Battlegrounds.Game.DataCompany;
 using Battlegrounds.Game.Gameplay;
 using Battlegrounds.Game.Match.Analyze;
@@ -12,18 +14,16 @@ namespace Battlegrounds.Game.Match.Finalizer {
     public class SingleplayerFinalizer : IFinalizeStrategy {
 
         protected Dictionary<Player, Company> m_companies;
-        protected IAnalyzedMatch m_matchData;
+        protected IAnalyzedMatch? m_matchData;
 
         /// <summary>
         /// Get or set if finalizer should also notify AI company changes. Default value is <see langword="false"/>.
         /// </summary>
-        public bool NotifyAI { get; set; } = false;
+        public bool NotifyAI { get; set; }
 
-        public FinalizedCompanyHandler CompanyHandler { get; set; }
+        public FinalizedCompanyHandler CompanyHandler { get; set; } = x => { };
 
-        public SingleplayerFinalizer() {
-            this.m_companies = null;
-        }
+        public SingleplayerFinalizer() => this.m_companies = new();
 
         public virtual void Finalize(IAnalyzedMatch analyzedMatch) {
 
@@ -36,6 +36,9 @@ namespace Battlegrounds.Game.Match.Finalizer {
             // Get the units
             var units = analyzedMatch.Units;
 
+            // Get the items
+            var items = analyzedMatch.Items;
+
             // Get the players
             var players = analyzedMatch.Players;
 
@@ -43,23 +46,23 @@ namespace Battlegrounds.Game.Match.Finalizer {
             this.m_companies = new();
 
             // Assign player companies
-            foreach (Player player in players) {
+            foreach (var player in players) {
                 var company = session.GetPlayerCompany(player.SteamID);
                 if (company is not null) {
                     if (analyzedMatch.IsWinner(player)) {
-                        company.UpdateStatistics(x => { x.TotalMatchWinCount++; return x; });
+                        company.UpdateStatistics(x => { x.TotalMatchWinCount++; x.TotalMatchCount++; return x; });
                     } else {
-                        company.UpdateStatistics(x => { x.TotalMatchLossCount++; return x; });
+                        company.UpdateStatistics(x => { x.TotalMatchLossCount++; x.TotalMatchCount++; return x; });
                     }
                     this.m_companies.Add(player, company);
                 } else {
-                    Trace.WriteLine($"Failed to find a company for {player.SteamID} ({player.Name})", "SingleplayerFinalizer");
+                    Trace.WriteLine($"Failed to find a company for {player.SteamID} ({player.Name})", nameof(SingleplayerFinalizer));
                     // TODO: Handle
                 }
             }
 
             // Run through all units
-            foreach (UnitStatus status in units) {
+            foreach (var status in units) {
 
                 // Ignore AI player data
                 if (status.PlayerOwner.IsAIPlayer || this.NotifyAI) {
@@ -70,7 +73,7 @@ namespace Battlegrounds.Game.Match.Finalizer {
                 var company = this.m_companies[status.PlayerOwner];
 
                 // Get the squad
-                Squad squad = company.GetSquadByIndex(status.UnitID);
+                var squad = company.GetSquadByIndex(status.UnitID);
 
                 // If the unit is dead, remove it.
                 if (status.IsDead) {
@@ -81,25 +84,40 @@ namespace Battlegrounds.Game.Match.Finalizer {
                     }
 
                     // Update losses
-                    company.UpdateStatistics(x => UpdateLosses(x, !squad.SBP.IsVehicle, 0)); // TODO: Get proper loss sizes
+                    company.UpdateStatistics(x => UpdateLosses(x, !squad.SBP.Types.IsVehicle, 0)); // TODO: Get proper loss sizes
 
                 } else {
 
                     // Update veterancy
                     if (status.VetChange >= 0) {
                         squad.IncreaseVeterancy(status.VetChange, status.VetExperience);
+                        Trace.WriteLine($"Unit ID '{status.UnitID}' from '{company.Name}' gained '{status.VetExperience}'.", nameof(SingleplayerFinalizer));
                     }
 
                     // Update combat time
                     squad.IncreaseCombatTime(status.CombatTime);
 
-                    // TODO: Apply pickups
+                    // Picked up any items?
+                    if (status.CapturedSlotItems.Count > 0) {
+                        foreach (var item in status.CapturedSlotItems) {
+                            squad.AddSlotItem(item);
+                        }
+                    }
 
                 }
 
             }
 
-            // TODO: Save captured items etc.
+            // Loop over captured items
+            foreach (var item in items) {
+
+                // Get the relevant company
+                var company = this.m_companies[item.PlayerOwner];
+
+                // Add to captured items
+                company.AddInventoryItem(item.Blueprint);
+
+            }
 
         }
 
@@ -116,7 +134,8 @@ namespace Battlegrounds.Game.Match.Finalizer {
 
             // Make sure we log this unfortunate event
             if (this.CompanyHandler is null) {
-                Trace.WriteLine("{Warning} -- The company handler is NULL and changes will therefore not be handled further!", "SingleplayerFinalizer");
+                Trace.WriteLine("{Warning} -- The company handler is NULL and changes will therefore not be handled further!", nameof(SingleplayerFinalizer));
+                return;
             }
 
             // Loop through all companies and save
@@ -126,6 +145,15 @@ namespace Battlegrounds.Game.Match.Finalizer {
                 }
             }
 
+        }
+
+        protected virtual Company? GetLocalPlayerCompany() {
+            try {
+                ulong selfID = BattlegroundsInstance.Steam.User.ID;
+                return this.m_companies.FirstOrDefault(x => x.Key.SteamID == selfID).Value;
+            } catch {
+                return null;
+            }
         }
 
     }

@@ -21,7 +21,7 @@ namespace Battlegrounds.Lua {
         public override string Str() => this.m_bool ? "true" : "false";
 
         public override int GetHashCode() => this.m_bool.GetHashCode();
-        
+
         public override LuaType GetLuaType() => LuaType.LUA_BOOL;
 
         public override string ToString() => this.Str();

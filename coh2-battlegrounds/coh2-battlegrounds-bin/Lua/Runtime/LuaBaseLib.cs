@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Text;
+
 using Battlegrounds.Lua.Debugging;
 
 namespace Battlegrounds.Lua.Runtime {
@@ -224,7 +225,7 @@ namespace Battlegrounds.Lua.Runtime {
         /// </summary>
         /// <param name="lState">The <see cref="LuaState"/> to import functionality into</param>
         public static void ImportLuaBase(LuaState lState) {
-            
+
             // Register basic functions
             lState.RegisterFunction("print", Print);
             lState.RegisterFunction("error", Error);

@@ -1,0 +1,3711 @@
+[
+  {
+    "Name": "bg_deploy_destination",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741824,
+    "Display": {
+      "LocaleName": "$142b113740474c82a60b0a428bd553d5:1",
+      "LocaleDescriptionLong": "$142b113740474c82a60b0a428bd553d5:13",
+      "LocaleDescriptionShort": "$142b113740474c82a60b0a428bd553d5:14",
+      "Icon": "Icons_buildings_building_common_radio_tower",
+      "Position": 22
+    },
+    "Army": "NULL",
+    "Activation": "targeted"
+  },
+  {
+    "Name": "bg_withdraw_unit",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741823,
+    "Display": {
+      "LocaleName": "11036222",
+      "LocaleDescriptionLong": "11036223",
+      "LocaleDescriptionShort": "11050157",
+      "Icon": "Icons_abilities_ability_soviet_transfer_orders",
+      "Position": 21
+    },
+    "Army": "NULL",
+    "Activation": "targeted"
+  },
+  {
+    "Name": "transport_heavy_vehicle_bg",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741826,
+    "Display": {
+      "LocaleName": "$142b113740474c82a60b0a428bd553d5:18",
+      "LocaleDescriptionLong": "$142b113740474c82a60b0a428bd553d5:19",
+      "LocaleDescriptionShort": "$142b113740474c82a60b0a428bd553d5:20",
+      "Icon": "Icons_tooltips_pick_up_item",
+      "Position": 21
+    },
+    "Army": "NULL",
+    "Activation": "targeted",
+    "Requirements": [
+      {
+        "RequirementType": "required_all_in_list",
+        "RequirementReason": "usage",
+        "UIText": "11043026",
+        "RequirementProperties": {
+          "requirements": null
+        }
+      },
+      {
+        "RequirementType": "required_not",
+        "RequirementReason": "usage_and_display",
+        "UIText": "0",
+        "RequirementProperties": {
+          "requirement_table": [
+            {
+              "RequirementType": "required_squad_upgrade",
+              "RequirementReason": "usage",
+              "UIText": "0",
+              "RequirementProperties": {
+                "include_queued": false,
+                "is_present": true,
+                "upgrade_name": "is_towing"
+              }
+            }
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "Name": "detach_tow_bg",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741827,
+    "Display": {
+      "LocaleName": "$142b113740474c82a60b0a428bd553d5:21",
+      "LocaleDescriptionLong": "$142b113740474c82a60b0a428bd553d5:23",
+      "LocaleDescriptionShort": "$142b113740474c82a60b0a428bd553d5:22",
+      "Icon": "Icons_abilities_ability_german_lockdown_enable",
+      "Position": 21
+    },
+    "Army": "NULL",
+    "Activation": "timed",
+    "Requirements": [
+      {
+        "RequirementType": "required_in_state",
+        "RequirementReason": "usage",
+        "UIText": "0",
+        "RequirementProperties": {
+          "garrisoned": false,
+          "healed": false,
+          "in_combat_since": 0,
+          "injured": false,
+          "leader": false,
+          "not_moving": true,
+          "not_retreating": false,
+          "pinned": false,
+          "suppressed": false,
+          "camouflaged": false
+        }
+      },
+      {
+        "RequirementType": "required_not",
+        "RequirementReason": "usage",
+        "UIText": "0",
+        "RequirementProperties": {
+          "requirement_table": [
+            {
+              "RequirementType": "required_in_state",
+              "RequirementReason": "usage",
+              "UIText": "0",
+              "RequirementProperties": {
+                "garrisoned": false,
+                "healed": false,
+                "in_combat_since": 10,
+                "injured": false,
+                "leader": false,
+                "not_moving": false,
+                "not_retreating": false,
+                "pinned": false,
+                "suppressed": false,
+                "camouflaged": false
+              }
+            }
+          ]
+        }
+      },
+      {
+        "RequirementType": "required_squad_upgrade",
+        "RequirementReason": "usage_and_display",
+        "UIText": "0",
+        "RequirementProperties": {
+          "include_queued": false,
+          "is_present": true,
+          "upgrade_name": "is_towing"
+        }
+      }
+    ]
+  },
+  {
+    "Name": "detach_weapon_tow_bg",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741847,
+    "Display": {
+      "LocaleName": "$142b113740474c82a60b0a428bd553d5:48",
+      "LocaleDescriptionLong": "$142b113740474c82a60b0a428bd553d5:49",
+      "LocaleDescriptionShort": "$142b113740474c82a60b0a428bd553d5:50",
+      "Icon": "Icons_commands_icon_command_cancel",
+      "Position": 21
+    },
+    "Army": "NULL",
+    "Activation": "timed",
+    "Requirements": [
+      {
+        "RequirementType": "required_squad_upgrade",
+        "RequirementReason": "usage_and_display",
+        "UIText": "0",
+        "RequirementProperties": {
+          "include_queued": false,
+          "is_present": true,
+          "upgrade_name": "is_towed"
+        }
+      }
+    ]
+  },
+  {
+    "Name": "vehicle_abandon_vehicle_bg",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741834,
+    "Display": {
+      "LocaleName": "11072165",
+      "LocaleDescriptionLong": "11072161",
+      "LocaleDescriptionShort": "11072163",
+      "Icon": "Icons_abilities_ability_aef_abandon_vehicle",
+      "Position": 24
+    },
+    "Army": "NULL",
+    "Activation": "timed",
+    "Requirements": [
+      {
+        "RequirementType": "required_interactive_stage",
+        "RequirementReason": "usage",
+        "UIText": "11072159",
+        "RequirementProperties": {}
+      },
+      {
+        "RequirementType": "required_slot_item",
+        "RequirementReason": "usage",
+        "UIText": "11073169",
+        "RequirementProperties": {
+          "check_item_on_entity": false,
+          "display_requirement": true,
+          "max_owned": 0,
+          "min_owned": 0,
+          "slot_item": "sturmtiger_reload_active"
+        }
+      }
+    ]
+  },
+  {
+    "Name": "vehicle_decrew_vehicle_crew_bg",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741825,
+    "Display": {
+      "LocaleName": "11072165",
+      "LocaleDescriptionLong": "11072161",
+      "LocaleDescriptionShort": "11072163",
+      "Icon": "Icons_abilities_ability_aef_abandon_vehicle",
+      "Position": 24
+    },
+    "Army": "NULL",
+    "Activation": "timed",
+    "Requirements": [
+      {
+        "RequirementType": "required_interactive_stage",
+        "RequirementReason": "usage",
+        "UIText": "11072159",
+        "RequirementProperties": {}
+      },
+      {
+        "RequirementType": "required_slot_item",
+        "RequirementReason": "usage",
+        "UIText": "11073169",
+        "RequirementProperties": {
+          "check_item_on_entity": false,
+          "display_requirement": true,
+          "max_owned": 0,
+          "min_owned": 0,
+          "slot_item": "sturmtiger_reload_active"
+        }
+      }
+    ]
+  },
+  {
+    "Name": "german_mortar_fire_flares_ability_bg",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741843,
+    "Cost": {
+      "Munition": 30
+    },
+    "Display": {
+      "LocaleName": "11007411",
+      "LocaleDescriptionLong": "11007409",
+      "LocaleDescriptionShort": "11039272",
+      "Icon": "Icons_abilities_ability_soviet_flare",
+      "Position": 33
+    },
+    "Army": "german",
+    "Activation": "targeted",
+    "Requirements": [
+      {
+        "RequirementType": "required_not",
+        "RequirementReason": "usage",
+        "UIText": "11050319",
+        "RequirementProperties": {
+          "requirement_table": [
+            {
+              "RequirementType": "required_in_state",
+              "RequirementReason": "usage",
+              "UIText": "0",
+              "RequirementProperties": {
+                "garrisoned": false,
+                "healed": false,
+                "in_combat_since": -1,
+                "injured": false,
+                "leader": false,
+                "not_moving": false,
+                "not_retreating": false,
+                "pinned": true,
+                "suppressed": false,
+                "camouflaged": false
+              }
+            }
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "Name": "button_vehicle_bg",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741861,
+    "Cost": {
+      "Munition": 40
+    },
+    "Display": {
+      "LocaleName": "11007797",
+      "LocaleDescriptionLong": "11007798",
+      "LocaleDescriptionShort": "11039262",
+      "Icon": "Icons_abilities_ability_soviet_button_vehicle",
+      "Position": 33
+    },
+    "Army": "soviet",
+    "Activation": "targeted"
+  },
+  {
+    "Name": "inspire_unit_bg",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741860,
+    "Display": {
+      "LocaleName": "11030555",
+      "LocaleDescriptionLong": "11030556",
+      "LocaleDescriptionShort": "11039267",
+      "Icon": "Icons_abilities_ability_soviet_merge",
+      "Position": 23
+    },
+    "Army": "soviet",
+    "Activation": "targeted",
+    "Requirements": [
+      {
+        "RequirementType": "required_none",
+        "RequirementReason": "usage",
+        "UIText": "0",
+        "RequirementProperties": {}
+      },
+      {
+        "RequirementType": "required_squad_upgrade",
+        "RequirementReason": "usage",
+        "UIText": "11042896",
+        "RequirementProperties": {
+          "include_queued": false,
+          "is_present": false,
+          "upgrade_name": "evasive_tactics_is_on"
+        }
+      },
+      {
+        "RequirementType": "required_not",
+        "RequirementReason": "usage",
+        "UIText": "11050319",
+        "RequirementProperties": {
+          "requirement_table": [
+            {
+              "RequirementType": "required_in_state",
+              "RequirementReason": "usage",
+              "UIText": "0",
+              "RequirementProperties": {
+                "garrisoned": false,
+                "healed": false,
+                "in_combat_since": -1,
+                "injured": false,
+                "leader": false,
+                "not_moving": false,
+                "not_retreating": false,
+                "pinned": true,
+                "suppressed": false,
+                "camouflaged": false
+              }
+            }
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "Name": "merge_ability_bg",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741835,
+    "Display": {
+      "LocaleName": "11030555",
+      "LocaleDescriptionLong": "11030556",
+      "LocaleDescriptionShort": "11039267",
+      "Icon": "Icons_abilities_ability_soviet_merge",
+      "Position": 23
+    },
+    "Army": "soviet",
+    "Activation": "targeted",
+    "Requirements": [
+      {
+        "RequirementType": "required_none",
+        "RequirementReason": "usage",
+        "UIText": "0",
+        "RequirementProperties": {}
+      },
+      {
+        "RequirementType": "required_squad_upgrade",
+        "RequirementReason": "usage",
+        "UIText": "11042896",
+        "RequirementProperties": {
+          "include_queued": false,
+          "is_present": false,
+          "upgrade_name": "evasive_tactics_is_on"
+        }
+      },
+      {
+        "RequirementType": "required_not",
+        "RequirementReason": "usage",
+        "UIText": "11050319",
+        "RequirementProperties": {
+          "requirement_table": [
+            {
+              "RequirementType": "required_in_state",
+              "RequirementReason": "usage",
+              "UIText": "0",
+              "RequirementProperties": {
+                "garrisoned": false,
+                "healed": false,
+                "in_combat_since": -1,
+                "injured": false,
+                "leader": false,
+                "not_moving": false,
+                "not_retreating": false,
+                "pinned": true,
+                "suppressed": false,
+                "camouflaged": false
+              }
+            }
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "Name": "conscript_oorah_bg",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741833,
+    "Cost": {
+      "Munition": 15
+    },
+    "Display": {
+      "LocaleName": "11007722",
+      "LocaleDescriptionLong": "11007723",
+      "LocaleDescriptionShort": "11039281",
+      "Icon": "Icons_abilities_ability_soviet_oorah",
+      "Position": 33
+    },
+    "Army": "soviet",
+    "Activation": "timed",
+    "Requirements": [
+      {
+        "RequirementType": "required_all_in_list",
+        "RequirementReason": "usage",
+        "UIText": "0",
+        "RequirementProperties": {
+          "requirements": null
+        }
+      }
+    ]
+  },
+  {
+    "Name": "political_speech_bg",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741859,
+    "Cost": {
+      "Munition": 15
+    },
+    "Display": {
+      "LocaleName": "11007722",
+      "LocaleDescriptionLong": "11007723",
+      "LocaleDescriptionShort": "11039281",
+      "Icon": "Icons_abilities_ability_soviet_oorah",
+      "Position": 32
+    },
+    "Army": "soviet",
+    "Activation": "timed",
+    "Requirements": [
+      {
+        "RequirementType": "required_all_in_list",
+        "RequirementReason": "usage",
+        "UIText": "0",
+        "RequirementProperties": {
+          "requirements": null
+        }
+      }
+    ]
+  },
+  {
+    "Name": "grenadier_panzerfaust_bg",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741846,
+    "Cost": {
+      "Munition": 25
+    },
+    "Display": {
+      "LocaleName": "11007164",
+      "LocaleDescriptionLong": "11007163",
+      "LocaleDescriptionShort": "11039177",
+      "Icon": "Icons_abilities_ability_german_panzerfaust",
+      "Position": 31
+    },
+    "Army": "german",
+    "Activation": "targeted",
+    "Requirements": [
+      {
+        "RequirementType": "required_not",
+        "RequirementReason": "usage",
+        "UIText": "11050319",
+        "RequirementProperties": {
+          "requirement_table": [
+            {
+              "RequirementType": "required_in_state",
+              "RequirementReason": "usage",
+              "UIText": "0",
+              "RequirementProperties": {
+                "garrisoned": false,
+                "healed": false,
+                "in_combat_since": -1,
+                "injured": false,
+                "leader": false,
+                "not_moving": false,
+                "not_retreating": false,
+                "pinned": true,
+                "suppressed": false,
+                "camouflaged": false
+              }
+            }
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "Name": "grenadier_rifle_grenade_ability_bg",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741845,
+    "Cost": {
+      "Munition": 30
+    },
+    "Display": {
+      "LocaleName": "11009042",
+      "LocaleDescriptionLong": "11009043",
+      "LocaleDescriptionShort": "11038417",
+      "Icon": "Icons_abilities_ability_german_rifle_grenade_shot",
+      "Position": 32
+    },
+    "Army": "german",
+    "Activation": "targeted",
+    "Requirements": [
+      {
+        "RequirementType": "required_not",
+        "RequirementReason": "usage_and_display",
+        "UIText": "0",
+        "RequirementProperties": {
+          "requirement_table": [
+            {
+              "RequirementType": "required_in_cover",
+              "RequirementReason": "usage_and_display",
+              "UIText": "0",
+              "RequirementProperties": {
+                "cover_type_table": {
+                  "cover_type_01": "tp_trench",
+                  "cover_type_02": "",
+                  "cover_type_03": "",
+                  "cover_type_04": "",
+                  "cover_type_05": "",
+                  "cover_type_06": ""
+                }
+              }
+            }
+          ]
+        }
+      },
+      {
+        "RequirementType": "required_not",
+        "RequirementReason": "usage",
+        "UIText": "11050319",
+        "RequirementProperties": {
+          "requirement_table": [
+            {
+              "RequirementType": "required_in_state",
+              "RequirementReason": "usage",
+              "UIText": "0",
+              "RequirementProperties": {
+                "garrisoned": false,
+                "healed": false,
+                "in_combat_since": -1,
+                "injured": false,
+                "leader": false,
+                "not_moving": false,
+                "not_retreating": false,
+                "pinned": true,
+                "suppressed": false,
+                "camouflaged": false
+              }
+            }
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "Name": "german_aerial_superiority_close_air_support",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741894,
+    "Cost": {
+      "Munition": 110
+    },
+    "Display": {
+      "LocaleName": "11063617",
+      "LocaleDescriptionLong": "11053632",
+      "LocaleDescriptionShort": "11053631",
+      "Icon": "Icons_commander_cmdr_german_stuka_close_air_support",
+      "Position": 100
+    },
+    "Army": "german",
+    "Activation": "targeted",
+    "Requirements": [
+      {
+        "RequirementType": "required_resource",
+        "RequirementReason": "usage",
+        "UIText": "11063610",
+        "RequirementProperties": {
+          "resource": null
+        }
+      },
+      {
+        "RequirementType": "required_player_upgrade",
+        "RequirementReason": "usage_and_display",
+        "UIText": "0",
+        "RequirementProperties": {
+          "is_present": true,
+          "max_completed": 100,
+          "min_completed": 1,
+          "upgrade_name": "aerial_superiority_stuka_close_air_support"
+        }
+      },
+      {
+        "RequirementType": "required_player_upgrade",
+        "RequirementReason": "usage",
+        "UIText": "11053668",
+        "RequirementProperties": {
+          "is_present": false,
+          "max_completed": 100,
+          "min_completed": 1,
+          "upgrade_name": "blizzard_active"
+        }
+      }
+    ]
+  },
+  {
+    "Name": "german_aerial_superiority_close_air_support_ui",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741895,
+    "Cost": {
+      "Munition": 110
+    },
+    "Display": {
+      "LocaleName": "11063617",
+      "LocaleDescriptionLong": "11053632",
+      "LocaleDescriptionShort": "11053631",
+      "Icon": "Icons_commander_cmdr_german_stuka_close_air_support",
+      "Position": 100
+    },
+    "Army": "german",
+    "Activation": "targeted",
+    "Requirements": [
+      {
+        "RequirementType": "required_player_upgrade",
+        "RequirementReason": "usage",
+        "UIText": "0",
+        "RequirementProperties": {
+          "is_present": true,
+          "max_completed": 100,
+          "min_completed": 1,
+          "upgrade_name": "german_aerial_superiority_close_air_support_unlock"
+        }
+      }
+    ]
+  },
+  {
+    "Name": "german_aerial_superiority_strafing_run",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741896,
+    "Cost": {
+      "Munition": 60
+    },
+    "Display": {
+      "LocaleName": "11063625",
+      "LocaleDescriptionLong": "11053642",
+      "LocaleDescriptionShort": "11053641",
+      "Icon": "Icons_commander_cmdr_german_suppression_strafe",
+      "Position": 60
+    },
+    "Army": "german",
+    "Activation": "targeted",
+    "Requirements": [
+      {
+        "RequirementType": "required_resource",
+        "RequirementReason": "usage",
+        "UIText": "11063613",
+        "RequirementProperties": {
+          "resource": null
+        }
+      },
+      {
+        "RequirementType": "required_player_upgrade",
+        "RequirementReason": "usage_and_display",
+        "UIText": "0",
+        "RequirementProperties": {
+          "is_present": true,
+          "max_completed": 100,
+          "min_completed": 1,
+          "upgrade_name": "aerial_superiority_stuka_strafe"
+        }
+      },
+      {
+        "RequirementType": "required_player_upgrade",
+        "RequirementReason": "usage",
+        "UIText": "11053671",
+        "RequirementProperties": {
+          "is_present": false,
+          "max_completed": 100,
+          "min_completed": 1,
+          "upgrade_name": "blizzard_active"
+        }
+      }
+    ]
+  },
+  {
+    "Name": "german_aerial_superiority_strafing_run_ui",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741897,
+    "Cost": {
+      "Munition": 60
+    },
+    "Display": {
+      "LocaleName": "11063625",
+      "LocaleDescriptionLong": "11053642",
+      "LocaleDescriptionShort": "11053641",
+      "Icon": "Icons_commander_cmdr_german_suppression_strafe",
+      "Position": 60
+    },
+    "Army": "german",
+    "Activation": "targeted",
+    "Requirements": [
+      {
+        "RequirementType": "required_player_upgrade",
+        "RequirementReason": "usage",
+        "UIText": "0",
+        "RequirementProperties": {
+          "is_present": true,
+          "max_completed": 100,
+          "min_completed": 1,
+          "upgrade_name": "german_aerial_superiority_strafing_run_unlock"
+        }
+      }
+    ]
+  },
+  {
+    "Name": "german_air_dropped_medical_supplies",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741882,
+    "Cost": {
+      "Munition": 30
+    },
+    "Display": {
+      "LocaleName": "11051646",
+      "LocaleDescriptionLong": "11168742",
+      "LocaleDescriptionShort": "11168743",
+      "Icon": "Icons_commander_cmdr_german_air_dropped_medical_supplies"
+    },
+    "Army": "german",
+    "Activation": "targeted",
+    "Requirements": [
+      {
+        "RequirementType": "required_player_upgrade",
+        "RequirementReason": "usage_and_display",
+        "UIText": "0",
+        "RequirementProperties": {
+          "is_present": true,
+          "max_completed": 100,
+          "min_completed": 1,
+          "upgrade_name": "air_drop_medical_supplies"
+        }
+      },
+      {
+        "RequirementType": "required_player_upgrade",
+        "RequirementReason": "usage",
+        "UIText": "11045365",
+        "RequirementProperties": {
+          "is_present": false,
+          "max_completed": 100,
+          "min_completed": 1,
+          "upgrade_name": "blizzard_active"
+        }
+      }
+    ]
+  },
+  {
+    "Name": "german_air_dropped_medical_supplies_ui",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741883,
+    "Cost": {
+      "Munition": 30
+    },
+    "Display": {
+      "LocaleName": "11051646",
+      "LocaleDescriptionLong": "11168742",
+      "LocaleDescriptionShort": "11168743",
+      "Icon": "Icons_commander_cmdr_german_air_dropped_medical_supplies"
+    },
+    "Army": "german",
+    "Activation": "targeted",
+    "Requirements": [
+      {
+        "RequirementType": "required_player_upgrade",
+        "RequirementReason": "usage",
+        "UIText": "0",
+        "RequirementProperties": {
+          "is_present": true,
+          "max_completed": 100,
+          "min_completed": 1,
+          "upgrade_name": "german_air_dropped_medical_supplies_unlock"
+        }
+      }
+    ]
+  },
+  {
+    "Name": "german_air_dropped_supplies",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741884,
+    "Cost": {
+      "Manpower": 400
+    },
+    "Display": {
+      "LocaleName": "11145701",
+      "LocaleDescriptionLong": "11145490",
+      "LocaleDescriptionShort": "11145693",
+      "Icon": "Icons_abilities_ost_air_drop",
+      "Position": 30
+    },
+    "Army": "german",
+    "Activation": "targeted",
+    "Requirements": [
+      {
+        "RequirementType": "required_resource",
+        "RequirementReason": "usage",
+        "UIText": "11171609",
+        "RequirementProperties": {
+          "resource": null
+        }
+      },
+      {
+        "RequirementType": "required_player_upgrade",
+        "RequirementReason": "usage_and_display",
+        "UIText": "0",
+        "RequirementProperties": {
+          "is_present": true,
+          "max_completed": 100,
+          "min_completed": 1,
+          "upgrade_name": "air_drop_weapon_resupply"
+        }
+      },
+      {
+        "RequirementType": "required_player_upgrade",
+        "RequirementReason": "usage",
+        "UIText": "11045365",
+        "RequirementProperties": {
+          "is_present": false,
+          "max_completed": 100,
+          "min_completed": 1,
+          "upgrade_name": "blizzard_active"
+        }
+      }
+    ]
+  },
+  {
+    "Name": "german_air_dropped_supplies_ui",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741885,
+    "Cost": {
+      "Manpower": 400
+    },
+    "Display": {
+      "LocaleName": "11145701",
+      "LocaleDescriptionLong": "11145490",
+      "LocaleDescriptionShort": "11145693",
+      "Icon": "Icons_abilities_ost_air_drop",
+      "Position": 30
+    },
+    "Army": "german",
+    "Activation": "targeted",
+    "Requirements": [
+      {
+        "RequirementType": "required_player_upgrade",
+        "RequirementReason": "usage_and_display",
+        "UIText": "0",
+        "RequirementProperties": {
+          "is_present": true,
+          "max_completed": 100,
+          "min_completed": 1,
+          "upgrade_name": "german_air_dropped_supplies_unlock"
+        }
+      }
+    ]
+  },
+  {
+    "Name": "german_air_recon",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741878,
+    "Cost": {
+      "Munition": 60
+    },
+    "Display": {
+      "LocaleName": "11032119",
+      "LocaleDescriptionLong": "11032120",
+      "LocaleDescriptionShort": "11039126",
+      "Icon": "Icons_commander_cmdr_german_air_recon",
+      "Position": 40
+    },
+    "Army": "german",
+    "Activation": "targeted",
+    "Requirements": [
+      {
+        "RequirementType": "required_resource",
+        "RequirementReason": "usage",
+        "UIText": "11037862",
+        "RequirementProperties": {
+          "resource": null
+        }
+      },
+      {
+        "RequirementType": "required_player_upgrade",
+        "RequirementReason": "usage_and_display",
+        "UIText": "0",
+        "RequirementProperties": {
+          "is_present": true,
+          "max_completed": 100,
+          "min_completed": 1,
+          "upgrade_name": "recon_plane"
+        }
+      },
+      {
+        "RequirementType": "required_player_upgrade",
+        "RequirementReason": "usage",
+        "UIText": "11045365",
+        "RequirementProperties": {
+          "is_present": false,
+          "max_completed": 100,
+          "min_completed": 1,
+          "upgrade_name": "blizzard_active"
+        }
+      }
+    ]
+  },
+  {
+    "Name": "german_air_recon_ui",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741879,
+    "Cost": {
+      "Munition": 5
+    },
+    "Display": {
+      "LocaleName": "11032119",
+      "LocaleDescriptionLong": "11032120",
+      "LocaleDescriptionShort": "11039126",
+      "Icon": "Icons_commander_cmdr_german_air_recon",
+      "Position": 11
+    },
+    "Army": "german",
+    "Activation": "targeted",
+    "Requirements": [
+      {
+        "RequirementType": "required_player_upgrade",
+        "RequirementReason": "usage",
+        "UIText": "0",
+        "RequirementProperties": {
+          "is_present": true,
+          "max_completed": 100,
+          "min_completed": 1,
+          "upgrade_name": "german_air_recon_unlock"
+        }
+      }
+    ]
+  },
+  {
+    "Name": "german_bombing_run",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741880,
+    "Cost": {
+      "Munition": 200
+    },
+    "Display": {
+      "LocaleName": "11045665",
+      "LocaleDescriptionLong": "11009006",
+      "LocaleDescriptionShort": "11039125",
+      "Icon": "Icons_commander_cmdr_german_stuka_bomb_strike",
+      "Position": 110
+    },
+    "Army": "german",
+    "Activation": "targeted",
+    "Requirements": [
+      {
+        "RequirementType": "required_resource",
+        "RequirementReason": "usage",
+        "UIText": "11009090",
+        "RequirementProperties": {
+          "resource": null
+        }
+      },
+      {
+        "RequirementType": "required_player_upgrade",
+        "RequirementReason": "usage_and_display",
+        "UIText": "0",
+        "RequirementProperties": {
+          "is_present": true,
+          "max_completed": 100,
+          "min_completed": 1,
+          "upgrade_name": "stuka_bombing_run_upgrade"
+        }
+      },
+      {
+        "RequirementType": "required_player_upgrade",
+        "RequirementReason": "usage",
+        "UIText": "11045365",
+        "RequirementProperties": {
+          "is_present": false,
+          "max_completed": 100,
+          "min_completed": 1,
+          "upgrade_name": "blizzard_active"
+        }
+      }
+    ]
+  },
+  {
+    "Name": "german_bombing_run_ui",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741881,
+    "Display": {
+      "LocaleName": "11045665",
+      "LocaleDescriptionLong": "11009006",
+      "LocaleDescriptionShort": "11039125",
+      "Icon": "Icons_commander_cmdr_german_stuka_bomb_strike",
+      "Position": 12
+    },
+    "Army": "german",
+    "Activation": "",
+    "Requirements": [
+      {
+        "RequirementType": "required_player_upgrade",
+        "RequirementReason": "usage",
+        "UIText": "0",
+        "RequirementProperties": {
+          "is_present": true,
+          "max_completed": 100,
+          "min_completed": 1,
+          "upgrade_name": "german_bombing_run_unlock"
+        }
+      }
+    ]
+  },
+  {
+    "Name": "german_close_air_support",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741898,
+    "Cost": {
+      "Munition": 200
+    },
+    "Display": {
+      "LocaleName": "11031932",
+      "LocaleDescriptionLong": "11031933",
+      "LocaleDescriptionShort": "11106041",
+      "Icon": "Icons_commander_cmdr_german_stuka_close_air_support",
+      "Position": 120
+    },
+    "Army": "german",
+    "Activation": "targeted",
+    "Requirements": [
+      {
+        "RequirementType": "required_resource",
+        "RequirementReason": "usage",
+        "UIText": "11031934",
+        "RequirementProperties": {
+          "resource": null
+        }
+      },
+      {
+        "RequirementType": "required_player_upgrade",
+        "RequirementReason": "usage_and_display",
+        "UIText": "0",
+        "RequirementProperties": {
+          "is_present": true,
+          "max_completed": 100,
+          "min_completed": 1,
+          "upgrade_name": "stuka_close_air_support"
+        }
+      },
+      {
+        "RequirementType": "required_player_upgrade",
+        "RequirementReason": "usage",
+        "UIText": "11045365",
+        "RequirementProperties": {
+          "is_present": false,
+          "max_completed": 100,
+          "min_completed": 1,
+          "upgrade_name": "blizzard_active"
+        }
+      }
+    ]
+  },
+  {
+    "Name": "german_close_air_support_ui",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741899,
+    "Cost": {
+      "Munition": 200
+    },
+    "Display": {
+      "LocaleName": "11031932",
+      "LocaleDescriptionLong": "11031933",
+      "LocaleDescriptionShort": "11106041",
+      "Icon": "Icons_commander_cmdr_german_stuka_close_air_support",
+      "Position": 120
+    },
+    "Army": "german",
+    "Activation": "targeted",
+    "Requirements": [
+      {
+        "RequirementType": "required_player_upgrade",
+        "RequirementReason": "usage",
+        "UIText": "0",
+        "RequirementProperties": {
+          "is_present": true,
+          "max_completed": 100,
+          "min_completed": 1,
+          "upgrade_name": "german_close_air_support_unlock"
+        }
+      }
+    ]
+  },
+  {
+    "Name": "german_fragmentation_bomb",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741900,
+    "Cost": {
+      "Munition": 180
+    },
+    "Display": {
+      "LocaleName": "11025903",
+      "LocaleDescriptionLong": "11025904",
+      "LocaleDescriptionShort": "11039124",
+      "Icon": "Icons_commander_cmdr_german_fragmentation_bomb",
+      "Position": 100
+    },
+    "Army": "german",
+    "Activation": "targeted",
+    "Requirements": [
+      {
+        "RequirementType": "required_resource",
+        "RequirementReason": "usage",
+        "UIText": "11036655",
+        "RequirementProperties": {
+          "resource": null
+        }
+      },
+      {
+        "RequirementType": "required_player_upgrade",
+        "RequirementReason": "usage_and_display",
+        "UIText": "0",
+        "RequirementProperties": {
+          "is_present": true,
+          "max_completed": 100,
+          "min_completed": 1,
+          "upgrade_name": "stuka_fragmentation_bomb"
+        }
+      },
+      {
+        "RequirementType": "required_player_upgrade",
+        "RequirementReason": "usage",
+        "UIText": "11045365",
+        "RequirementProperties": {
+          "is_present": false,
+          "max_completed": 100,
+          "min_completed": 1,
+          "upgrade_name": "blizzard_active"
+        }
+      }
+    ]
+  },
+  {
+    "Name": "german_fragmentation_bomb_ui",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741901,
+    "Cost": {
+      "Munition": 180
+    },
+    "Display": {
+      "LocaleName": "11025903",
+      "LocaleDescriptionLong": "11025904",
+      "LocaleDescriptionShort": "11039124",
+      "Icon": "Icons_commander_cmdr_german_fragmentation_bomb",
+      "Position": 100
+    },
+    "Army": "german",
+    "Activation": "targeted",
+    "Requirements": [
+      {
+        "RequirementType": "required_player_upgrade",
+        "RequirementReason": "usage",
+        "UIText": "0",
+        "RequirementProperties": {
+          "is_present": true,
+          "max_completed": 100,
+          "min_completed": 1,
+          "upgrade_name": "german_fragmentation_bomb_unlock"
+        }
+      }
+    ]
+  },
+  {
+    "Name": "german_incendiary_bombs",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741902,
+    "Cost": {
+      "Munition": 120
+    },
+    "Display": {
+      "LocaleName": "11052829",
+      "LocaleDescriptionLong": "11052830",
+      "LocaleDescriptionShort": "11052831",
+      "Icon": "Icons_commander_cmdr_german_stuka_incendiary_bomb_strike",
+      "Position": 60
+    },
+    "Army": "german",
+    "Activation": "targeted",
+    "Requirements": [
+      {
+        "RequirementType": "required_resource",
+        "RequirementReason": "usage",
+        "UIText": "11054514",
+        "RequirementProperties": {
+          "resource": null
+        }
+      },
+      {
+        "RequirementType": "required_player_upgrade",
+        "RequirementReason": "usage_and_display",
+        "UIText": "0",
+        "RequirementProperties": {
+          "is_present": true,
+          "max_completed": 100,
+          "min_completed": 1,
+          "upgrade_name": "stuka_flame_strike"
+        }
+      },
+      {
+        "RequirementType": "required_player_upgrade",
+        "RequirementReason": "usage",
+        "UIText": "11045365",
+        "RequirementProperties": {
+          "is_present": false,
+          "max_completed": 100,
+          "min_completed": 1,
+          "upgrade_name": "blizzard_active"
+        }
+      }
+    ]
+  },
+  {
+    "Name": "german_incendiary_bombs_ui",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741903,
+    "Cost": {
+      "Munition": 120
+    },
+    "Display": {
+      "LocaleName": "11052829",
+      "LocaleDescriptionLong": "11052830",
+      "LocaleDescriptionShort": "11052831",
+      "Icon": "Icons_commander_cmdr_german_stuka_incendiary_bomb_strike",
+      "Position": 60
+    },
+    "Army": "german",
+    "Activation": "targeted",
+    "Requirements": [
+      {
+        "RequirementType": "required_player_upgrade",
+        "RequirementReason": "usage",
+        "UIText": "0",
+        "RequirementProperties": {
+          "is_present": true,
+          "max_completed": 100,
+          "min_completed": 1,
+          "upgrade_name": "german_incendiary_bombs_unlock"
+        }
+      }
+    ]
+  },
+  {
+    "Name": "german_smoke_bomb",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741904,
+    "Cost": {
+      "Munition": 40
+    },
+    "Display": {
+      "LocaleName": "11025905",
+      "LocaleDescriptionLong": "11025906",
+      "LocaleDescriptionShort": "11039119",
+      "Icon": "Icons_commander_cmdr_german_stuka_smoke_bomb",
+      "Position": 40
+    },
+    "Army": "german",
+    "Activation": "targeted",
+    "Requirements": [
+      {
+        "RequirementType": "required_resource",
+        "RequirementReason": "usage",
+        "UIText": "11025998",
+        "RequirementProperties": {
+          "resource": null
+        }
+      },
+      {
+        "RequirementType": "required_player_upgrade",
+        "RequirementReason": "usage_and_display",
+        "UIText": "0",
+        "RequirementProperties": {
+          "is_present": true,
+          "max_completed": 100,
+          "min_completed": 1,
+          "upgrade_name": "stuka_smoke_bomb"
+        }
+      },
+      {
+        "RequirementType": "required_player_upgrade",
+        "RequirementReason": "usage",
+        "UIText": "11045365",
+        "RequirementProperties": {
+          "is_present": false,
+          "max_completed": 100,
+          "min_completed": 1,
+          "upgrade_name": "blizzard_active"
+        }
+      }
+    ]
+  },
+  {
+    "Name": "german_smoke_bomb_ui",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741905,
+    "Cost": {
+      "Munition": 40
+    },
+    "Display": {
+      "LocaleName": "11025905",
+      "LocaleDescriptionLong": "11025906",
+      "LocaleDescriptionShort": "11039119",
+      "Icon": "Icons_commander_cmdr_german_stuka_smoke_bomb",
+      "Position": 40
+    },
+    "Army": "german",
+    "Activation": "targeted",
+    "Requirements": [
+      {
+        "RequirementType": "required_player_upgrade",
+        "RequirementReason": "usage",
+        "UIText": "0",
+        "RequirementProperties": {
+          "is_present": true,
+          "max_completed": 100,
+          "min_completed": 1,
+          "upgrade_name": "german_smoke_bomb_unlock"
+        }
+      }
+    ]
+  },
+  {
+    "Name": "german_strafing_run",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741906,
+    "Cost": {
+      "Munition": 150
+    },
+    "Display": {
+      "LocaleName": "11025907",
+      "LocaleDescriptionLong": "11025908",
+      "LocaleDescriptionShort": "11039117",
+      "Icon": "Icons_commander_cmdr_german_suppression_strafe",
+      "Position": 60
+    },
+    "Army": "german",
+    "Activation": "targeted",
+    "Requirements": [
+      {
+        "RequirementType": "required_resource",
+        "RequirementReason": "usage",
+        "UIText": "11025999",
+        "RequirementProperties": {
+          "resource": null
+        }
+      },
+      {
+        "RequirementType": "required_player_upgrade",
+        "RequirementReason": "usage_and_display",
+        "UIText": "0",
+        "RequirementProperties": {
+          "is_present": true,
+          "max_completed": 100,
+          "min_completed": 1,
+          "upgrade_name": "stuka_strafe"
+        }
+      },
+      {
+        "RequirementType": "required_player_upgrade",
+        "RequirementReason": "usage",
+        "UIText": "11045365",
+        "RequirementProperties": {
+          "is_present": false,
+          "max_completed": 100,
+          "min_completed": 1,
+          "upgrade_name": "blizzard_active"
+        }
+      }
+    ]
+  },
+  {
+    "Name": "german_strafing_run_ui",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741907,
+    "Cost": {
+      "Munition": 150
+    },
+    "Display": {
+      "LocaleName": "11025907",
+      "LocaleDescriptionLong": "11025908",
+      "LocaleDescriptionShort": "11039117",
+      "Icon": "Icons_commander_cmdr_german_suppression_strafe",
+      "Position": 60
+    },
+    "Army": "german",
+    "Activation": "targeted",
+    "Requirements": [
+      {
+        "RequirementType": "required_player_upgrade",
+        "RequirementReason": "usage",
+        "UIText": "0",
+        "RequirementProperties": {
+          "is_present": true,
+          "max_completed": 100,
+          "min_completed": 1,
+          "upgrade_name": "german_strafing_run_unlock"
+        }
+      }
+    ]
+  },
+  {
+    "Name": "german_strategic_bombing",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741892,
+    "Cost": {
+      "Munition": 300
+    },
+    "Display": {
+      "LocaleName": "11052719",
+      "LocaleDescriptionLong": "11052718",
+      "LocaleDescriptionShort": "11052720",
+      "Icon": "Icons_commander_cmdr_german_strategic_bombing",
+      "Position": 120
+    },
+    "Army": "german",
+    "Activation": "targeted",
+    "Requirements": [
+      {
+        "RequirementType": "required_resource",
+        "RequirementReason": "usage",
+        "UIText": "11052738",
+        "RequirementProperties": {
+          "resource": null
+        }
+      },
+      {
+        "RequirementType": "required_player_upgrade",
+        "RequirementReason": "usage_and_display",
+        "UIText": "0",
+        "RequirementProperties": {
+          "is_present": true,
+          "max_completed": 100,
+          "min_completed": 1,
+          "upgrade_name": "strategic_bombing"
+        }
+      },
+      {
+        "RequirementType": "required_player_upgrade",
+        "RequirementReason": "usage",
+        "UIText": "11045365",
+        "RequirementProperties": {
+          "is_present": false,
+          "max_completed": 100,
+          "min_completed": 1,
+          "upgrade_name": "blizzard_active"
+        }
+      }
+    ]
+  },
+  {
+    "Name": "german_strategic_bombing_ui",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741893,
+    "Cost": {
+      "Munition": 300
+    },
+    "Display": {
+      "LocaleName": "11052719",
+      "LocaleDescriptionLong": "11052718",
+      "LocaleDescriptionShort": "11052720",
+      "Icon": "Icons_commander_cmdr_german_strategic_bombing",
+      "Position": 120
+    },
+    "Army": "german",
+    "Activation": "targeted",
+    "Requirements": [
+      {
+        "RequirementType": "required_player_upgrade",
+        "RequirementReason": "usage",
+        "UIText": "0",
+        "RequirementProperties": {
+          "is_present": true,
+          "max_completed": 100,
+          "min_completed": 1,
+          "upgrade_name": "german_strategic_bombing_unlock"
+        }
+      }
+    ]
+  },
+  {
+    "Name": "german_light_support_artillery",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741886,
+    "Cost": {
+      "Munition": 100
+    },
+    "Display": {
+      "LocaleName": "11025895",
+      "LocaleDescriptionLong": "11025896",
+      "LocaleDescriptionShort": "11039111",
+      "Icon": "Icons_commander_cmdr_german_light_artillery_support",
+      "Position": 80
+    },
+    "Army": "german",
+    "Activation": "targeted",
+    "Requirements": [
+      {
+        "RequirementType": "required_resource",
+        "RequirementReason": "usage",
+        "UIText": "11036654",
+        "RequirementProperties": {
+          "resource": null
+        }
+      },
+      {
+        "RequirementType": "required_player_upgrade",
+        "RequirementReason": "usage_and_display",
+        "UIText": "0",
+        "RequirementProperties": {
+          "is_present": true,
+          "max_completed": 100,
+          "min_completed": 1,
+          "upgrade_name": "light_artillery_support"
+        }
+      },
+      {
+        "RequirementType": "required_player_upgrade",
+        "RequirementReason": "usage",
+        "UIText": "11045365",
+        "RequirementProperties": {
+          "is_present": false,
+          "max_completed": 100,
+          "min_completed": 1,
+          "upgrade_name": "blizzard_active"
+        }
+      }
+    ]
+  },
+  {
+    "Name": "german_light_support_artillery_ui",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741887,
+    "Cost": {
+      "Munition": 100
+    },
+    "Display": {
+      "LocaleName": "11025895",
+      "LocaleDescriptionLong": "11025896",
+      "LocaleDescriptionShort": "11039111",
+      "Icon": "Icons_commander_cmdr_german_light_artillery_support",
+      "Position": 80
+    },
+    "Army": "german",
+    "Activation": "targeted",
+    "Requirements": [
+      {
+        "RequirementType": "required_player_upgrade",
+        "RequirementReason": "usage",
+        "UIText": "0",
+        "RequirementProperties": {
+          "is_present": true,
+          "max_completed": 100,
+          "min_completed": 1,
+          "upgrade_name": "german_light_support_artillery_unlock"
+        }
+      }
+    ]
+  },
+  {
+    "Name": "german_railway_gun_artillery",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741888,
+    "Cost": {
+      "Munition": 200
+    },
+    "Display": {
+      "LocaleName": "11025899",
+      "LocaleDescriptionLong": "11025900",
+      "LocaleDescriptionShort": "11039113",
+      "Icon": "Icons_commander_cmdr_german_off_map_dora_support",
+      "Position": 120
+    },
+    "Army": "german",
+    "Activation": "targeted",
+    "Requirements": [
+      {
+        "RequirementType": "required_resource",
+        "RequirementReason": "usage",
+        "UIText": "11036652",
+        "RequirementProperties": {
+          "resource": null
+        }
+      },
+      {
+        "RequirementType": "required_player_upgrade",
+        "RequirementReason": "usage_and_display",
+        "UIText": "0",
+        "RequirementProperties": {
+          "is_present": true,
+          "max_completed": 100,
+          "min_completed": 1,
+          "upgrade_name": "railway_artillery_support"
+        }
+      },
+      {
+        "RequirementType": "required_player_upgrade",
+        "RequirementReason": "usage",
+        "UIText": "11045365",
+        "RequirementProperties": {
+          "is_present": false,
+          "max_completed": 100,
+          "min_completed": 1,
+          "upgrade_name": "blizzard_active"
+        }
+      }
+    ]
+  },
+  {
+    "Name": "german_railway_gun_artillery_ui",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741889,
+    "Cost": {
+      "Munition": 200
+    },
+    "Display": {
+      "LocaleName": "11025899",
+      "LocaleDescriptionLong": "11025900",
+      "LocaleDescriptionShort": "11039113",
+      "Icon": "Icons_commander_cmdr_german_off_map_dora_support",
+      "Position": 120
+    },
+    "Army": "german",
+    "Activation": "targeted",
+    "Requirements": [
+      {
+        "RequirementType": "required_player_upgrade",
+        "RequirementReason": "usage",
+        "UIText": "0",
+        "RequirementProperties": {
+          "is_present": true,
+          "max_completed": 100,
+          "min_completed": 1,
+          "upgrade_name": "german_railway_gun_artillery_unlock"
+        }
+      }
+    ]
+  },
+  {
+    "Name": "german_sector_artillery",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741890,
+    "Cost": {
+      "Munition": 200
+    },
+    "Display": {
+      "LocaleName": "11025901",
+      "LocaleDescriptionLong": "11025902",
+      "LocaleDescriptionShort": "11039116",
+      "Icon": "Icons_commander_cmdr_german_sector_artillery",
+      "Position": 120
+    },
+    "Army": "german",
+    "Activation": "targeted",
+    "Requirements": [
+      {
+        "RequirementType": "required_resource",
+        "RequirementReason": "usage",
+        "UIText": "11025996",
+        "RequirementProperties": {
+          "resource": null
+        }
+      },
+      {
+        "RequirementType": "required_player_upgrade",
+        "RequirementReason": "usage_and_display",
+        "UIText": "0",
+        "RequirementProperties": {
+          "is_present": true,
+          "max_completed": 100,
+          "min_completed": 1,
+          "upgrade_name": "sector_artillery"
+        }
+      },
+      {
+        "RequirementType": "required_player_upgrade",
+        "RequirementReason": "usage",
+        "UIText": "11045365",
+        "RequirementProperties": {
+          "is_present": false,
+          "max_completed": 100,
+          "min_completed": 1,
+          "upgrade_name": "blizzard_active"
+        }
+      }
+    ]
+  },
+  {
+    "Name": "german_sector_artillery_ui",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741891,
+    "Cost": {
+      "Munition": 200
+    },
+    "Display": {
+      "LocaleName": "11025901",
+      "LocaleDescriptionLong": "11025902",
+      "LocaleDescriptionShort": "11039116",
+      "Icon": "Icons_commander_cmdr_german_sector_artillery",
+      "Position": 120
+    },
+    "Army": "german",
+    "Activation": "targeted",
+    "Requirements": [
+      {
+        "RequirementType": "required_player_upgrade",
+        "RequirementReason": "usage",
+        "UIText": "0",
+        "RequirementProperties": {
+          "is_present": true,
+          "max_completed": 100,
+          "min_completed": 1,
+          "upgrade_name": "blizzard_active"
+        }
+      }
+    ]
+  },
+  {
+    "Name": "panzer_grenadier_bundled_grenade_bg",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741844,
+    "Cost": {
+      "Munition": 35
+    },
+    "Display": {
+      "LocaleName": "11007182",
+      "LocaleDescriptionLong": "11007183",
+      "LocaleDescriptionShort": "11039147",
+      "Icon": "Icons_abilities_ability_german_bundled_grenade",
+      "Position": 31
+    },
+    "Army": "german",
+    "Activation": "targeted",
+    "Requirements": [
+      {
+        "RequirementType": "required_not",
+        "RequirementReason": "usage_and_display",
+        "UIText": "0",
+        "RequirementProperties": {
+          "requirement_table": [
+            {
+              "RequirementType": "required_in_cover",
+              "RequirementReason": "usage_and_display",
+              "UIText": "0",
+              "RequirementProperties": {
+                "cover_type_table": {
+                  "cover_type_01": "tp_trench",
+                  "cover_type_02": "",
+                  "cover_type_03": "",
+                  "cover_type_04": "",
+                  "cover_type_05": "",
+                  "cover_type_06": ""
+                }
+              }
+            }
+          ]
+        }
+      },
+      {
+        "RequirementType": "required_not",
+        "RequirementReason": "usage",
+        "UIText": "11050319",
+        "RequirementProperties": {
+          "requirement_table": [
+            {
+              "RequirementType": "required_in_state",
+              "RequirementReason": "usage",
+              "UIText": "0",
+              "RequirementProperties": {
+                "garrisoned": false,
+                "healed": false,
+                "in_combat_since": -1,
+                "injured": false,
+                "leader": false,
+                "not_moving": false,
+                "not_retreating": false,
+                "pinned": true,
+                "suppressed": false,
+                "camouflaged": false
+              }
+            }
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "Name": "soviet_paratrooper_setpos",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741836,
+    "Display": {
+      "LocaleName": "$142b113740474c82a60b0a428bd553d5:46",
+      "LocaleDescriptionLong": "0",
+      "LocaleDescriptionShort": "0",
+      "Position": 11
+    },
+    "Army": "soviet",
+    "Activation": "targeted"
+  },
+  {
+    "Name": "soviet_air_allied_air_supplies",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741938,
+    "Cost": {
+      "Munition": 100
+    },
+    "Display": {
+      "LocaleName": "11072090",
+      "LocaleDescriptionLong": "11072089",
+      "LocaleDescriptionShort": "11072088",
+      "Icon": "Icons_commander_cmdr_soviet_allied_supply_drop",
+      "Position": 40
+    },
+    "Army": "soviet",
+    "Activation": "targeted",
+    "Requirements": [
+      {
+        "RequirementType": "required_resource",
+        "RequirementReason": "usage",
+        "UIText": "11072091",
+        "RequirementProperties": {
+          "resource": null
+        }
+      },
+      {
+        "RequirementType": "required_player_upgrade",
+        "RequirementReason": "usage_and_display",
+        "UIText": "0",
+        "RequirementProperties": {
+          "is_present": true,
+          "max_completed": 100,
+          "min_completed": 1,
+          "upgrade_name": "allied_air_supplies"
+        }
+      },
+      {
+        "RequirementType": "required_player_upgrade",
+        "RequirementReason": "usage",
+        "UIText": "11053671",
+        "RequirementProperties": {
+          "is_present": false,
+          "max_completed": 100,
+          "min_completed": 1,
+          "upgrade_name": "blizzard_active"
+        }
+      }
+    ]
+  },
+  {
+    "Name": "soviet_air_allied_air_supplies_ui",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741939,
+    "Cost": {
+      "Munition": 5
+    },
+    "Display": {
+      "LocaleName": "11072090",
+      "LocaleDescriptionLong": "11072089",
+      "LocaleDescriptionShort": "11072088",
+      "Icon": "Icons_commander_cmdr_soviet_allied_supply_drop",
+      "Position": 11
+    },
+    "Army": "soviet",
+    "Activation": "targeted",
+    "Requirements": [
+      {
+        "RequirementType": "required_player_upgrade",
+        "RequirementReason": "usage_and_display",
+        "UIText": "0",
+        "RequirementProperties": {
+          "is_present": true,
+          "max_completed": 100,
+          "min_completed": 1,
+          "upgrade_name": "soviet_air_allied_air_supplies_unlock"
+        }
+      }
+    ]
+  },
+  {
+    "Name": "soviet_air_anti_tank_bomb_strike",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741934,
+    "Cost": {
+      "Munition": 180
+    },
+    "Display": {
+      "LocaleName": "11053218",
+      "LocaleDescriptionLong": "11053219",
+      "LocaleDescriptionShort": "11053220",
+      "Icon": "Icons_commander_cmdr_soviet_at_bombing_run",
+      "Position": 100
+    },
+    "Army": "soviet",
+    "Activation": "targeted",
+    "Requirements": [
+      {
+        "RequirementType": "required_resource",
+        "RequirementReason": "usage",
+        "UIText": "11055772",
+        "RequirementProperties": {
+          "resource": null
+        }
+      },
+      {
+        "RequirementType": "required_player_upgrade",
+        "RequirementReason": "usage_and_display",
+        "UIText": "0",
+        "RequirementProperties": {
+          "is_present": true,
+          "max_completed": 100,
+          "min_completed": 1,
+          "upgrade_name": "il-2_anti_tank_bomb"
+        }
+      },
+      {
+        "RequirementType": "required_player_upgrade",
+        "RequirementReason": "usage",
+        "UIText": "0",
+        "RequirementProperties": {
+          "is_present": false,
+          "max_completed": 100,
+          "min_completed": 1,
+          "upgrade_name": "blizzard_active"
+        }
+      }
+    ]
+  },
+  {
+    "Name": "soviet_air_anti_tank_bomb_strike_ui",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741935,
+    "Cost": {
+      "Munition": 5
+    },
+    "Display": {
+      "LocaleName": "11053218",
+      "LocaleDescriptionLong": "11053219",
+      "LocaleDescriptionShort": "11053220",
+      "Icon": "Icons_commander_cmdr_soviet_at_bombing_run",
+      "Position": 11
+    },
+    "Army": "soviet",
+    "Activation": "targeted",
+    "Requirements": [
+      {
+        "RequirementType": "required_player_upgrade",
+        "RequirementReason": "usage_and_display",
+        "UIText": "0",
+        "RequirementProperties": {
+          "is_present": true,
+          "max_completed": 100,
+          "min_completed": 1,
+          "upgrade_name": "soviet_air_anti_tank_bomb_strike_unlock"
+        }
+      }
+    ]
+  },
+  {
+    "Name": "soviet_air_anti_tank_overwatch",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741936,
+    "Cost": {
+      "Munition": 200
+    },
+    "Display": {
+      "LocaleName": "11157929",
+      "LocaleDescriptionLong": "11157930",
+      "LocaleDescriptionShort": "11157931",
+      "Icon": "Icons_bob_abilities_at_overwatch",
+      "Position": 120
+    },
+    "Army": "soviet",
+    "Activation": "targeted",
+    "Requirements": [
+      {
+        "RequirementType": "required_resource",
+        "RequirementReason": "usage",
+        "UIText": "11072409",
+        "RequirementProperties": {
+          "resource": null
+        }
+      },
+      {
+        "RequirementType": "required_player_upgrade",
+        "RequirementReason": "usage_and_display",
+        "UIText": "0",
+        "RequirementProperties": {
+          "is_present": true,
+          "max_completed": 100,
+          "min_completed": 1,
+          "upgrade_name": "anti_tank_overwatch"
+        }
+      },
+      {
+        "RequirementType": "required_player_upgrade",
+        "RequirementReason": "usage",
+        "UIText": "11045365",
+        "RequirementProperties": {
+          "is_present": false,
+          "max_completed": 100,
+          "min_completed": 1,
+          "upgrade_name": "blizzard_active"
+        }
+      }
+    ]
+  },
+  {
+    "Name": "soviet_air_anti_tank_overwatch_ui",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741937,
+    "Cost": {
+      "Munition": 5
+    },
+    "Display": {
+      "LocaleName": "11157929",
+      "LocaleDescriptionLong": "11157930",
+      "LocaleDescriptionShort": "11157931",
+      "Icon": "Icons_bob_abilities_at_overwatch",
+      "Position": 11
+    },
+    "Army": "soviet",
+    "Activation": "targeted",
+    "Requirements": [
+      {
+        "RequirementType": "required_player_upgrade",
+        "RequirementReason": "usage_and_display",
+        "UIText": "0",
+        "RequirementProperties": {
+          "is_present": true,
+          "max_completed": 100,
+          "min_completed": 1,
+          "upgrade_name": "soviet_air_anti_tank_overwatch_unlock"
+        }
+      }
+    ]
+  },
+  {
+    "Name": "soviet_air_anti_tank_rockets",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741932,
+    "Cost": {
+      "Munition": 100
+    },
+    "Display": {
+      "LocaleName": "11053984",
+      "LocaleDescriptionLong": "11053985",
+      "LocaleDescriptionShort": "11053986",
+      "Icon": "Icons_abilities_il_2m_rocket_strike_new",
+      "Position": 90
+    },
+    "Army": "soviet",
+    "Activation": "targeted",
+    "Requirements": [
+      {
+        "RequirementType": "required_resource",
+        "RequirementReason": "usage",
+        "UIText": "11053983",
+        "RequirementProperties": {
+          "resource": null
+        }
+      },
+      {
+        "RequirementType": "required_player_upgrade",
+        "RequirementReason": "usage_and_display",
+        "UIText": "0",
+        "RequirementProperties": {
+          "is_present": true,
+          "max_completed": 100,
+          "min_completed": 1,
+          "upgrade_name": "il-2_sturmovik_rocket_run"
+        }
+      },
+      {
+        "RequirementType": "required_player_upgrade",
+        "RequirementReason": "usage",
+        "UIText": "11053982",
+        "RequirementProperties": {
+          "is_present": false,
+          "max_completed": 100,
+          "min_completed": 1,
+          "upgrade_name": "blizzard_active"
+        }
+      }
+    ]
+  },
+  {
+    "Name": "soviet_air_anti_tank_rockets_ui",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741933,
+    "Cost": {
+      "Munition": 5
+    },
+    "Display": {
+      "LocaleName": "11053984",
+      "LocaleDescriptionLong": "11053985",
+      "LocaleDescriptionShort": "11053986",
+      "Icon": "Icons_abilities_il_2m_rocket_strike_new",
+      "Position": 11
+    },
+    "Army": "soviet",
+    "Activation": "targeted",
+    "Requirements": [
+      {
+        "RequirementType": "required_player_upgrade",
+        "RequirementReason": "usage_and_display",
+        "UIText": "0",
+        "RequirementProperties": {
+          "is_present": true,
+          "max_completed": 100,
+          "min_completed": 1,
+          "upgrade_name": "soviet_air_anti_tank_rockets_unlock"
+        }
+      }
+    ]
+  },
+  {
+    "Name": "soviet_air_attack",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741928,
+    "Cost": {
+      "Munition": 180
+    },
+    "Display": {
+      "LocaleName": "11020684",
+      "LocaleDescriptionLong": "11020683",
+      "LocaleDescriptionShort": "11020682",
+      "Icon": "Icons_commander_cmdr_soviet_il2_sturmovik_attacks",
+      "Position": 90
+    },
+    "Army": "soviet",
+    "Activation": "targeted",
+    "Requirements": [
+      {
+        "RequirementType": "required_resource",
+        "RequirementReason": "usage",
+        "UIText": "11036633",
+        "RequirementProperties": {
+          "resource": null
+        }
+      },
+      {
+        "RequirementType": "required_player_upgrade",
+        "RequirementReason": "usage_and_display",
+        "UIText": "0",
+        "RequirementProperties": {
+          "is_present": true,
+          "max_completed": 100,
+          "min_completed": 1,
+          "upgrade_name": "il-2_sturmovik_attack"
+        }
+      },
+      {
+        "RequirementType": "required_player_upgrade",
+        "RequirementReason": "usage",
+        "UIText": "11045365",
+        "RequirementProperties": {
+          "is_present": false,
+          "max_completed": 100,
+          "min_completed": 1,
+          "upgrade_name": "blizzard_active"
+        }
+      }
+    ]
+  },
+  {
+    "Name": "soviet_air_attack_ui",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741929,
+    "Cost": {
+      "Munition": 5
+    },
+    "Display": {
+      "LocaleName": "11020684",
+      "LocaleDescriptionLong": "11020683",
+      "LocaleDescriptionShort": "11020682",
+      "Icon": "Icons_commander_cmdr_soviet_il2_sturmovik_attacks",
+      "Position": 11
+    },
+    "Army": "soviet",
+    "Activation": "targeted",
+    "Requirements": [
+      {
+        "RequirementType": "required_player_upgrade",
+        "RequirementReason": "usage_and_display",
+        "UIText": "0",
+        "RequirementProperties": {
+          "is_present": true,
+          "max_completed": 100,
+          "min_completed": 1,
+          "upgrade_name": "soviet_air_attack_unlock"
+        }
+      }
+    ]
+  },
+  {
+    "Name": "soviet_air_precision_bomb_strike",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741930,
+    "Cost": {
+      "Munition": 200
+    },
+    "Display": {
+      "LocaleName": "11007707",
+      "LocaleDescriptionLong": "11039223",
+      "LocaleDescriptionShort": "11039224",
+      "Icon": "Icons_commander_cmdr_soviet_il2_bombing_run",
+      "Position": 120
+    },
+    "Army": "soviet",
+    "Activation": "targeted",
+    "Requirements": [
+      {
+        "RequirementType": "required_resource",
+        "RequirementReason": "usage",
+        "UIText": "11036633",
+        "RequirementProperties": {
+          "resource": null
+        }
+      },
+      {
+        "RequirementType": "required_player_upgrade",
+        "RequirementReason": "usage_and_display",
+        "UIText": "0",
+        "RequirementProperties": {
+          "is_present": true,
+          "max_completed": 100,
+          "min_completed": 1,
+          "upgrade_name": "il-2_bomb_strike"
+        }
+      },
+      {
+        "RequirementType": "required_player_upgrade",
+        "RequirementReason": "usage",
+        "UIText": "11045365",
+        "RequirementProperties": {
+          "is_present": false,
+          "max_completed": 100,
+          "min_completed": 1,
+          "upgrade_name": "blizzard_active"
+        }
+      }
+    ]
+  },
+  {
+    "Name": "soviet_air_precision_bomb_strike_ui",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741931,
+    "Cost": {
+      "Munition": 5
+    },
+    "Display": {
+      "LocaleName": "11007707",
+      "LocaleDescriptionLong": "11039223",
+      "LocaleDescriptionShort": "11039224",
+      "Icon": "Icons_commander_cmdr_soviet_il2_bombing_run",
+      "Position": 11
+    },
+    "Army": "soviet",
+    "Activation": "targeted",
+    "Requirements": [
+      {
+        "RequirementType": "required_player_upgrade",
+        "RequirementReason": "usage_and_display",
+        "UIText": "0",
+        "RequirementProperties": {
+          "is_present": true,
+          "max_completed": 100,
+          "min_completed": 1,
+          "upgrade_name": "soviet_air_precision_bomb_strike_unlock"
+        }
+      }
+    ]
+  },
+  {
+    "Name": "soviet_air_recon",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741837,
+    "Cost": {
+      "Munition": 60
+    },
+    "Display": {
+      "LocaleName": "11010489",
+      "LocaleDescriptionLong": "11010488",
+      "LocaleDescriptionShort": "11039226",
+      "Icon": "Icons_commander_cmdr_soviet_il2_recon_plane",
+      "Position": 40
+    },
+    "Army": "soviet",
+    "Activation": "targeted",
+    "Requirements": [
+      {
+        "RequirementType": "required_resource",
+        "RequirementReason": "usage",
+        "UIText": "11010485",
+        "RequirementProperties": {
+          "resource": null
+        }
+      },
+      {
+        "RequirementType": "required_player_upgrade",
+        "RequirementReason": "usage_and_display",
+        "UIText": "0",
+        "RequirementProperties": {
+          "is_present": true,
+          "max_completed": 100,
+          "min_completed": 1,
+          "upgrade_name": "il-2_recon"
+        }
+      },
+      {
+        "RequirementType": "required_player_upgrade",
+        "RequirementReason": "usage",
+        "UIText": "11045365",
+        "RequirementProperties": {
+          "is_present": false,
+          "max_completed": 100,
+          "min_completed": 1,
+          "upgrade_name": "blizzard_active"
+        }
+      }
+    ]
+  },
+  {
+    "Name": "soviet_air_recon_ui",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741862,
+    "Cost": {
+      "Munition": 5
+    },
+    "Display": {
+      "LocaleName": "11010489",
+      "LocaleDescriptionLong": "11010488",
+      "LocaleDescriptionShort": "11039226",
+      "Icon": "Icons_commander_cmdr_soviet_il2_recon_plane",
+      "Position": 11
+    },
+    "Army": "soviet",
+    "Activation": "targeted",
+    "Requirements": [
+      {
+        "RequirementType": "required_player_upgrade",
+        "RequirementReason": "usage_and_display",
+        "UIText": "0",
+        "RequirementProperties": {
+          "is_present": true,
+          "max_completed": 100,
+          "min_completed": 1,
+          "upgrade_name": "soviet_air_recon_unlock"
+        }
+      }
+    ]
+  },
+  {
+    "Name": "soviet_air_supression_strafe",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741926,
+    "Cost": {
+      "Munition": 45
+    },
+    "Display": {
+      "LocaleName": "11166408",
+      "LocaleDescriptionLong": "11166407",
+      "LocaleDescriptionShort": "11166406",
+      "Icon": "Icons_abilities_ability_soviet_strafing_run",
+      "Position": 34
+    },
+    "Army": "soviet",
+    "Activation": "targeted",
+    "Requirements": [
+      {
+        "RequirementType": "required_squad_veterancy",
+        "RequirementReason": "usage",
+        "UIText": "11166405",
+        "RequirementProperties": {
+          "veterancy_rank": 1
+        }
+      }
+    ]
+  },
+  {
+    "Name": "soviet_air_supression_strafe_ui",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741927,
+    "Display": {
+      "LocaleName": "11166408",
+      "LocaleDescriptionLong": "11166407",
+      "LocaleDescriptionShort": "11166406",
+      "Icon": "Icons_abilities_ability_soviet_strafing_run",
+      "Position": 11
+    },
+    "Army": "soviet",
+    "Activation": "",
+    "Requirements": [
+      {
+        "RequirementType": "required_player_upgrade",
+        "RequirementReason": "usage_and_display",
+        "UIText": "0",
+        "RequirementProperties": {
+          "is_present": true,
+          "max_completed": 100,
+          "min_completed": 1,
+          "upgrade_name": "soviet_air_supression_strafe_unlock"
+        }
+      }
+    ]
+  },
+  {
+    "Name": "soviet_artillery_fire",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741852,
+    "Display": {
+      "LocaleName": "0",
+      "LocaleDescriptionLong": "0",
+      "LocaleDescriptionShort": "0",
+      "Position": -1
+    },
+    "Army": "soviet",
+    "Activation": ""
+  },
+  {
+    "Name": "soviet_artillery_fire_ui",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741868,
+    "Display": {
+      "LocaleName": "0",
+      "LocaleDescriptionLong": "0",
+      "LocaleDescriptionShort": "0",
+      "Position": 11
+    },
+    "Army": "soviet",
+    "Activation": "",
+    "Requirements": [
+      {
+        "RequirementType": "required_player_upgrade",
+        "RequirementReason": "usage_and_display",
+        "UIText": "0",
+        "RequirementProperties": {
+          "is_present": true,
+          "max_completed": 100,
+          "min_completed": 1,
+          "upgrade_name": "soviet_artillery_fire_unlock"
+        }
+      }
+    ]
+  },
+  {
+    "Name": "soviet_artillery_overwatch",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741850,
+    "Display": {
+      "LocaleName": "0",
+      "LocaleDescriptionLong": "0",
+      "LocaleDescriptionShort": "0",
+      "Position": -1
+    },
+    "Army": "soviet",
+    "Activation": ""
+  },
+  {
+    "Name": "soviet_artillery_overwatch_ui",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741869,
+    "Display": {
+      "LocaleName": "0",
+      "LocaleDescriptionLong": "0",
+      "LocaleDescriptionShort": "0",
+      "Position": 11
+    },
+    "Army": "soviet",
+    "Activation": "",
+    "Requirements": [
+      {
+        "RequirementType": "required_player_upgrade",
+        "RequirementReason": "usage_and_display",
+        "UIText": "0",
+        "RequirementProperties": {
+          "is_present": true,
+          "max_completed": 100,
+          "min_completed": 1,
+          "upgrade_name": "soviet_artillery_overwatch_unlock"
+        }
+      }
+    ]
+  },
+  {
+    "Name": "soviet_artillery_propaganda",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741851,
+    "Display": {
+      "LocaleName": "0",
+      "LocaleDescriptionLong": "0",
+      "LocaleDescriptionShort": "0",
+      "Position": -1
+    },
+    "Army": "soviet",
+    "Activation": ""
+  },
+  {
+    "Name": "soviet_artillery_propaganda_ui",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741870,
+    "Display": {
+      "LocaleName": "0",
+      "LocaleDescriptionLong": "0",
+      "LocaleDescriptionShort": "0",
+      "Position": 11
+    },
+    "Army": "soviet",
+    "Activation": "",
+    "Requirements": [
+      {
+        "RequirementType": "required_player_upgrade",
+        "RequirementReason": "usage_and_display",
+        "UIText": "0",
+        "RequirementProperties": {
+          "is_present": true,
+          "max_completed": 100,
+          "min_completed": 1,
+          "upgrade_name": "soviet_artillery_propaganda_unlock"
+        }
+      }
+    ]
+  },
+  {
+    "Name": "soviet_artillery_regimental_barrage",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741849,
+    "Display": {
+      "LocaleName": "0",
+      "LocaleDescriptionLong": "0",
+      "LocaleDescriptionShort": "0",
+      "Position": -1
+    },
+    "Army": "soviet",
+    "Activation": ""
+  },
+  {
+    "Name": "soviet_artillery_regimental_barrage_ui",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741871,
+    "Display": {
+      "LocaleName": "0",
+      "LocaleDescriptionLong": "0",
+      "LocaleDescriptionShort": "0",
+      "Position": 11
+    },
+    "Army": "soviet",
+    "Activation": "",
+    "Requirements": [
+      {
+        "RequirementType": "required_player_upgrade",
+        "RequirementReason": "usage_and_display",
+        "UIText": "0",
+        "RequirementProperties": {
+          "is_present": true,
+          "max_completed": 100,
+          "min_completed": 1,
+          "upgrade_name": "soviet_artillery_regimental_barrage_unlock"
+        }
+      }
+    ]
+  },
+  {
+    "Name": "anti_tank_grenade_bg",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741831,
+    "Cost": {
+      "Munition": 25
+    },
+    "Display": {
+      "LocaleName": "11025826",
+      "LocaleDescriptionLong": "11025827",
+      "LocaleDescriptionShort": "11038229",
+      "Icon": "Icons_abilities_ability_soviet_rpg_43_at_grenade",
+      "Position": 33
+    },
+    "Army": "soviet",
+    "Activation": "targeted",
+    "Requirements": [
+      {
+        "RequirementType": "required_not",
+        "RequirementReason": "usage",
+        "UIText": "11050319",
+        "RequirementProperties": {
+          "requirement_table": [
+            {
+              "RequirementType": "required_in_state",
+              "RequirementReason": "usage",
+              "UIText": "0",
+              "RequirementProperties": {
+                "garrisoned": false,
+                "healed": false,
+                "in_combat_since": -1,
+                "injured": false,
+                "leader": false,
+                "not_moving": false,
+                "not_retreating": false,
+                "pinned": true,
+                "suppressed": false,
+                "camouflaged": false
+              }
+            }
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "Name": "conscript_molotov_cocktail_bg",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741828,
+    "Cost": {
+      "Munition": 20
+    },
+    "Display": {
+      "LocaleName": "11006607",
+      "LocaleDescriptionLong": "11006747",
+      "LocaleDescriptionShort": "11038231",
+      "Icon": "Icons_abilities_ability_soviet_molotov_cocktail",
+      "Position": 31
+    },
+    "Army": "soviet",
+    "Activation": "targeted",
+    "Requirements": [
+      {
+        "RequirementType": "required_not",
+        "RequirementReason": "usage",
+        "UIText": "11050319",
+        "RequirementProperties": {
+          "requirement_table": [
+            {
+              "RequirementType": "required_in_state",
+              "RequirementReason": "usage",
+              "UIText": "0",
+              "RequirementProperties": {
+                "garrisoned": false,
+                "healed": false,
+                "in_combat_since": -1,
+                "injured": false,
+                "leader": false,
+                "not_moving": false,
+                "not_retreating": false,
+                "pinned": true,
+                "suppressed": false,
+                "camouflaged": false
+              }
+            }
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "Name": "rgd_1_smoke_grenade_bg",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741829,
+    "Cost": {
+      "Munition": 15
+    },
+    "Display": {
+      "LocaleName": "11032146",
+      "LocaleDescriptionLong": "11032147",
+      "LocaleDescriptionShort": "11039253",
+      "Icon": "Icons_abilities_ability_soviet_rgd_1_smoke_grenade",
+      "Position": 32
+    },
+    "Army": "soviet",
+    "Activation": "targeted",
+    "Requirements": [
+      {
+        "RequirementType": "required_not",
+        "RequirementReason": "usage",
+        "UIText": "11050319",
+        "RequirementProperties": {
+          "requirement_table": [
+            {
+              "RequirementType": "required_in_state",
+              "RequirementReason": "usage",
+              "UIText": "0",
+              "RequirementProperties": {
+                "garrisoned": false,
+                "healed": false,
+                "in_combat_since": -1,
+                "injured": false,
+                "leader": false,
+                "not_moving": false,
+                "not_retreating": false,
+                "pinned": true,
+                "suppressed": false,
+                "camouflaged": false
+              }
+            }
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "Name": "rg_42_anti_personnel_grenade_bg",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741830,
+    "Cost": {
+      "Munition": 30
+    },
+    "Display": {
+      "LocaleName": "11008244",
+      "LocaleDescriptionLong": "11008245",
+      "LocaleDescriptionShort": "11008246",
+      "Icon": "Icons_abilities_ability_soviet_rg_42_grenade",
+      "Position": 31
+    },
+    "Army": "soviet",
+    "Activation": "targeted",
+    "Requirements": [
+      {
+        "RequirementType": "required_not",
+        "RequirementReason": "usage",
+        "UIText": "11050319",
+        "RequirementProperties": {
+          "requirement_table": [
+            {
+              "RequirementType": "required_in_state",
+              "RequirementReason": "usage",
+              "UIText": "0",
+              "RequirementProperties": {
+                "garrisoned": false,
+                "healed": false,
+                "in_combat_since": -1,
+                "injured": false,
+                "leader": false,
+                "not_moving": false,
+                "not_retreating": false,
+                "pinned": true,
+                "suppressed": false,
+                "camouflaged": false
+              }
+            }
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "Name": "satchel_charge_throw_ability_bg",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741832,
+    "Cost": {
+      "Munition": 45
+    },
+    "Display": {
+      "LocaleName": "11145736",
+      "LocaleDescriptionLong": "11140709",
+      "LocaleDescriptionShort": "11145593",
+      "Icon": "Icons_abilities_ability_soviet_satchel_charge",
+      "Position": 31
+    },
+    "Army": "soviet",
+    "Activation": "targeted",
+    "Requirements": [
+      {
+        "RequirementType": "required_not",
+        "RequirementReason": "usage",
+        "UIText": "11050319",
+        "RequirementProperties": {
+          "requirement_table": [
+            {
+              "RequirementType": "required_in_state",
+              "RequirementReason": "usage",
+              "UIText": "0",
+              "RequirementProperties": {
+                "garrisoned": false,
+                "healed": false,
+                "in_combat_since": -1,
+                "injured": false,
+                "leader": false,
+                "not_moving": false,
+                "not_retreating": false,
+                "pinned": true,
+                "suppressed": false,
+                "camouflaged": false
+              }
+            }
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "Name": "german_offmap_halftrack_incendiary_mortar_barrage",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741916,
+    "Cost": {
+      "Munition": 35
+    },
+    "Display": {
+      "LocaleName": "11009081",
+      "LocaleDescriptionLong": "11171554",
+      "LocaleDescriptionShort": "11039167",
+      "Icon": "Icons_abilities_ability_german_incendiary_barrage_new",
+      "Position": 33
+    },
+    "Army": "german",
+    "Activation": "targeted",
+    "Requirements": [
+      {
+        "RequirementType": "required_entity_upgrade",
+        "RequirementReason": "usage",
+        "UIText": "11044749",
+        "RequirementProperties": {
+          "is_present": false,
+          "upgrade_name": "mortar_counter_barrage_mp",
+          "include_queued": false
+        }
+      },
+      {
+        "RequirementType": "required_critical",
+        "RequirementReason": "usage",
+        "UIText": "11037027",
+        "RequirementProperties": {
+          "critical_name": "vehicle_destroy_maingun",
+          "is_present": false
+        }
+      }
+    ]
+  },
+  {
+    "Name": "german_offmap_halftrack_incendiary_mortar_barrage_ui",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741917,
+    "Cost": {
+      "Munition": 35
+    },
+    "Display": {
+      "LocaleName": "11009081",
+      "LocaleDescriptionLong": "11171554",
+      "LocaleDescriptionShort": "11039167",
+      "Icon": "Icons_abilities_ability_german_incendiary_barrage_new",
+      "Position": 33
+    },
+    "Army": "german",
+    "Activation": "targeted",
+    "Requirements": [
+      {
+        "RequirementType": "required_player_upgrade",
+        "RequirementReason": "usage",
+        "UIText": "0",
+        "RequirementProperties": {
+          "is_present": true,
+          "max_completed": 100,
+          "min_completed": 1,
+          "upgrade_name": "german_offmap_halftrack_incendiary_mortar_barrage_unlock"
+        }
+      }
+    ]
+  },
+  {
+    "Name": "german_offmap_halftrack_mortar_barrage",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741918,
+    "Display": {
+      "LocaleName": "11009026",
+      "LocaleDescriptionLong": "11009027",
+      "LocaleDescriptionShort": "11039157",
+      "Icon": "Icons_abilities_ability_soviet_slow_firing",
+      "Position": 31
+    },
+    "Army": "german",
+    "Activation": "targeted",
+    "Requirements": [
+      {
+        "RequirementType": "required_entity_upgrade",
+        "RequirementReason": "usage",
+        "UIText": "11044749",
+        "RequirementProperties": {
+          "is_present": false,
+          "upgrade_name": "mortar_counter_barrage_mp",
+          "include_queued": false
+        }
+      },
+      {
+        "RequirementType": "required_critical",
+        "RequirementReason": "usage",
+        "UIText": "11037027",
+        "RequirementProperties": {
+          "critical_name": "vehicle_destroy_maingun",
+          "is_present": false
+        }
+      }
+    ]
+  },
+  {
+    "Name": "german_offmap_halftrack_mortar_barrage_ui",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741919,
+    "Display": {
+      "LocaleName": "11009026",
+      "LocaleDescriptionLong": "11009027",
+      "LocaleDescriptionShort": "11039157",
+      "Icon": "Icons_abilities_ability_soviet_slow_firing",
+      "Position": 31
+    },
+    "Army": "german",
+    "Activation": "targeted",
+    "Requirements": [
+      {
+        "RequirementType": "required_player_upgrade",
+        "RequirementReason": "usage",
+        "UIText": "0",
+        "RequirementProperties": {
+          "is_present": true,
+          "max_completed": 100,
+          "min_completed": 1,
+          "upgrade_name": "german_offmap_halftrack_mortar_barrage_unlock"
+        }
+      }
+    ]
+  },
+  {
+    "Name": "german_offmap_halftrack_smoke_barrage",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741920,
+    "Display": {
+      "LocaleName": "11009083",
+      "LocaleDescriptionLong": "11009084",
+      "LocaleDescriptionShort": "11039159",
+      "Icon": "Icons_abilities_ability_german_smoke_mortar",
+      "Position": 32
+    },
+    "Army": "german",
+    "Activation": "targeted",
+    "Requirements": [
+      {
+        "RequirementType": "required_entity_upgrade",
+        "RequirementReason": "usage",
+        "UIText": "11044749",
+        "RequirementProperties": {
+          "is_present": false,
+          "upgrade_name": "mortar_counter_barrage_mp",
+          "include_queued": false
+        }
+      },
+      {
+        "RequirementType": "required_critical",
+        "RequirementReason": "usage",
+        "UIText": "11037027",
+        "RequirementProperties": {
+          "critical_name": "vehicle_destroy_maingun",
+          "is_present": false
+        }
+      }
+    ]
+  },
+  {
+    "Name": "german_offmap_halftrack_smoke_barrage_ui",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741921,
+    "Display": {
+      "LocaleName": "11009083",
+      "LocaleDescriptionLong": "11009084",
+      "LocaleDescriptionShort": "11039159",
+      "Icon": "Icons_abilities_ability_german_smoke_mortar",
+      "Position": 32
+    },
+    "Army": "german",
+    "Activation": "targeted",
+    "Requirements": [
+      {
+        "RequirementType": "required_player_upgrade",
+        "RequirementReason": "usage",
+        "UIText": "0",
+        "RequirementProperties": {
+          "is_present": true,
+          "max_completed": 100,
+          "min_completed": 1,
+          "upgrade_name": "german_offmap_halftrack_smoke_barrage_unlock"
+        }
+      }
+    ]
+  },
+  {
+    "Name": "german_offmap_howitzer_105mm_barrage",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741908,
+    "Display": {
+      "LocaleName": "11009069",
+      "LocaleDescriptionLong": "11009070",
+      "LocaleDescriptionShort": "11038534",
+      "Icon": "Icons_abilities_ability_german_howitzer_barrage",
+      "Position": 31
+    },
+    "Army": "german",
+    "Activation": "targeted",
+    "Requirements": [
+      {
+        "RequirementType": "required_entity_upgrade",
+        "RequirementReason": "usage",
+        "UIText": "11042869",
+        "RequirementProperties": {
+          "is_present": false,
+          "upgrade_name": "mortar_counter_barrage_mp",
+          "include_queued": false
+        }
+      },
+      {
+        "RequirementType": "required_not",
+        "RequirementReason": "usage_and_display",
+        "UIText": "0",
+        "RequirementProperties": {
+          "requirement_table": [
+            {
+              "RequirementType": "required_squad_veterancy",
+              "RequirementReason": "usage",
+              "UIText": "0",
+              "RequirementProperties": {
+                "veterancy_rank": 3
+              }
+            }
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "Name": "german_offmap_howitzer_105mm_barrage_ui",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741909,
+    "Display": {
+      "LocaleName": "11009069",
+      "LocaleDescriptionLong": "11009070",
+      "LocaleDescriptionShort": "11038534",
+      "Icon": "Icons_abilities_ability_german_howitzer_barrage",
+      "Position": 31
+    },
+    "Army": "german",
+    "Activation": "targeted",
+    "Requirements": [
+      {
+        "RequirementType": "required_player_upgrade",
+        "RequirementReason": "usage",
+        "UIText": "0",
+        "RequirementProperties": {
+          "is_present": true,
+          "max_completed": 100,
+          "min_completed": 1,
+          "upgrade_name": "german_offmap_howitzer_105mm_barrage_unlock"
+        }
+      }
+    ]
+  },
+  {
+    "Name": "german_offmap_mortar_team_incendiary_barrage",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741910,
+    "Cost": {
+      "Munition": 45
+    },
+    "Display": {
+      "LocaleName": "11053143",
+      "LocaleDescriptionLong": "11053141",
+      "LocaleDescriptionShort": "11053142",
+      "Icon": "Icons_abilities_ability_german_incendiary_barrage",
+      "Position": 21
+    },
+    "Army": "german",
+    "Activation": "targeted",
+    "Requirements": [
+      {
+        "RequirementType": "required_entity_upgrade",
+        "RequirementReason": "usage",
+        "UIText": "0",
+        "RequirementProperties": {
+          "is_present": false,
+          "upgrade_name": "mortar_counter_barrage_mp",
+          "include_queued": false
+        }
+      },
+      {
+        "RequirementType": "required_player_upgrade",
+        "RequirementReason": "usage_and_display",
+        "UIText": "0",
+        "RequirementProperties": {
+          "is_present": true,
+          "max_completed": 100,
+          "min_completed": 1,
+          "upgrade_name": "mortar_incendiary_barrage"
+        }
+      },
+      {
+        "RequirementType": "required_resource",
+        "RequirementReason": "usage",
+        "UIText": "11054993",
+        "RequirementProperties": {
+          "resource": null
+        }
+      }
+    ]
+  },
+  {
+    "Name": "german_offmap_mortar_team_incendiary_barrage_ui",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741911,
+    "Cost": {
+      "Munition": 45
+    },
+    "Display": {
+      "LocaleName": "11053143",
+      "LocaleDescriptionLong": "11053141",
+      "LocaleDescriptionShort": "11053142",
+      "Icon": "Icons_abilities_ability_german_incendiary_barrage",
+      "Position": 21
+    },
+    "Army": "german",
+    "Activation": "targeted",
+    "Requirements": [
+      {
+        "RequirementType": "required_player_upgrade",
+        "RequirementReason": "usage_and_display",
+        "UIText": "0",
+        "RequirementProperties": {
+          "is_present": true,
+          "max_completed": 100,
+          "min_completed": 1,
+          "upgrade_name": "german_offmap_mortar_team_incendiary_barrage_unlock"
+        }
+      }
+    ]
+  },
+  {
+    "Name": "german_offmap_mortar_team_mortar_barrage",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741912,
+    "Display": {
+      "LocaleName": "11007501",
+      "LocaleDescriptionLong": "11007502",
+      "LocaleDescriptionShort": "11039164",
+      "Icon": "Icons_abilities_ability_soviet_slow_firing",
+      "Position": 31
+    },
+    "Army": "german",
+    "Activation": "targeted",
+    "Requirements": [
+      {
+        "RequirementType": "required_entity_upgrade",
+        "RequirementReason": "usage",
+        "UIText": "11044749",
+        "RequirementProperties": {
+          "is_present": false,
+          "upgrade_name": "mortar_counter_barrage_mp",
+          "include_queued": false
+        }
+      }
+    ]
+  },
+  {
+    "Name": "german_offmap_mortar_team_mortar_barrage_ui",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741913,
+    "Display": {
+      "LocaleName": "11007501",
+      "LocaleDescriptionLong": "11007502",
+      "LocaleDescriptionShort": "11039164",
+      "Icon": "Icons_abilities_ability_soviet_slow_firing",
+      "Position": 31
+    },
+    "Army": "german",
+    "Activation": "targeted",
+    "Requirements": [
+      {
+        "RequirementType": "required_player_upgrade",
+        "RequirementReason": "usage",
+        "UIText": "0",
+        "RequirementProperties": {
+          "is_present": true,
+          "max_completed": 100,
+          "min_completed": 1,
+          "upgrade_name": "german_offmap_mortar_team_mortar_barrage_unlock"
+        }
+      }
+    ]
+  },
+  {
+    "Name": "german_offmap_mortar_team_smoke_barrage",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741914,
+    "Display": {
+      "LocaleName": "11007533",
+      "LocaleDescriptionLong": "11007534",
+      "LocaleDescriptionShort": "11039161",
+      "Icon": "Icons_abilities_ability_german_smoke_mortar",
+      "Position": 32
+    },
+    "Army": "german",
+    "Activation": "targeted",
+    "Requirements": [
+      {
+        "RequirementType": "required_entity_upgrade",
+        "RequirementReason": "usage",
+        "UIText": "11044749",
+        "RequirementProperties": {
+          "is_present": false,
+          "upgrade_name": "mortar_counter_barrage_mp",
+          "include_queued": false
+        }
+      }
+    ]
+  },
+  {
+    "Name": "german_offmap_mortar_team_smoke_barrage_ui",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741915,
+    "Display": {
+      "LocaleName": "11007533",
+      "LocaleDescriptionLong": "11007534",
+      "LocaleDescriptionShort": "11039161",
+      "Icon": "Icons_abilities_ability_german_smoke_mortar",
+      "Position": 32
+    },
+    "Army": "german",
+    "Activation": "targeted",
+    "Requirements": [
+      {
+        "RequirementType": "required_player_upgrade",
+        "RequirementReason": "usage",
+        "UIText": "0",
+        "RequirementProperties": {
+          "is_present": true,
+          "max_completed": 100,
+          "min_completed": 1,
+          "upgrade_name": "german_offmap_mortar_team_smoke_barrage_unlock"
+        }
+      }
+    ]
+  },
+  {
+    "Name": "german_offmap_panzerwerfer_rocket_barrage",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741922,
+    "Display": {
+      "LocaleName": "11007846",
+      "LocaleDescriptionLong": "11007847",
+      "LocaleDescriptionShort": "11038532",
+      "Icon": "Icons_abilities_ability_german_rocket_barrage",
+      "Position": 31
+    },
+    "Army": "german",
+    "Activation": "targeted",
+    "Requirements": [
+      {
+        "RequirementType": "required_critical",
+        "RequirementReason": "usage",
+        "UIText": "11037027",
+        "RequirementProperties": {
+          "critical_name": "vehicle_destroy_maingun",
+          "is_present": false
+        }
+      },
+      {
+        "RequirementType": "required_entity_upgrade",
+        "RequirementReason": "usage",
+        "UIText": "11044749",
+        "RequirementProperties": {
+          "is_present": false,
+          "upgrade_name": "mortar_counter_barrage_mp",
+          "include_queued": false
+        }
+      },
+      {
+        "RequirementType": "required_critical",
+        "RequirementReason": "usage",
+        "UIText": "11050180",
+        "RequirementProperties": {
+          "critical_name": "vehicle_gunner_injured",
+          "is_present": false
+        }
+      }
+    ]
+  },
+  {
+    "Name": "german_offmap_panzerwerfer_rocket_barrage_ui",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741923,
+    "Display": {
+      "LocaleName": "11007846",
+      "LocaleDescriptionLong": "11007847",
+      "LocaleDescriptionShort": "11038532",
+      "Icon": "Icons_abilities_ability_german_rocket_barrage",
+      "Position": 31
+    },
+    "Army": "german",
+    "Activation": "targeted",
+    "Requirements": [
+      {
+        "RequirementType": "required_player_upgrade",
+        "RequirementReason": "usage",
+        "UIText": "0",
+        "RequirementProperties": {
+          "is_present": true,
+          "max_completed": 100,
+          "min_completed": 1,
+          "upgrade_name": "german_offmap_panzerwerfer_rocket_barrage_unlock"
+        }
+      }
+    ]
+  },
+  {
+    "Name": "at_76mm_he_barrage_ability_bg",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741848,
+    "Cost": {
+      "Munition": 35
+    },
+    "Display": {
+      "LocaleName": "11007466",
+      "LocaleDescriptionLong": "11007483",
+      "LocaleDescriptionShort": "11038386",
+      "Icon": "Icons_abilities_ability_soviet_high_explosive_rounds",
+      "Position": 31
+    },
+    "Army": "soviet",
+    "Activation": "targeted",
+    "Requirements": [
+      {
+        "RequirementType": "required_not",
+        "RequirementReason": "usage",
+        "UIText": "$142b113740474c82a60b0a428bd553d5:55",
+        "RequirementProperties": {
+          "requirement_table": [
+            {
+              "RequirementType": "required_squad_upgrade",
+              "RequirementReason": "usage",
+              "UIText": "0",
+              "RequirementProperties": {
+                "include_queued": false,
+                "is_present": true,
+                "upgrade_name": "is_towed"
+              }
+            }
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "Name": "soviet_offmap_b4",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741858,
+    "Display": {
+      "LocaleName": "0",
+      "LocaleDescriptionLong": "0",
+      "LocaleDescriptionShort": "0",
+      "Position": -1
+    },
+    "Army": "soviet",
+    "Activation": ""
+  },
+  {
+    "Name": "soviet_offmap_b4_ui",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741872,
+    "Display": {
+      "LocaleName": "0",
+      "LocaleDescriptionLong": "0",
+      "LocaleDescriptionShort": "0",
+      "Position": 11
+    },
+    "Army": "soviet",
+    "Activation": "",
+    "Requirements": [
+      {
+        "RequirementType": "required_player_upgrade",
+        "RequirementReason": "usage_and_display",
+        "UIText": "0",
+        "RequirementProperties": {
+          "is_present": true,
+          "max_completed": 100,
+          "min_completed": 1,
+          "upgrade_name": "soviet_offmap_b4_unlock"
+        }
+      }
+    ]
+  },
+  {
+    "Name": "soviet_offmap_katyusha",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741853,
+    "Cost": {
+      "Munition": 80
+    },
+    "Display": {
+      "LocaleName": "11006615",
+      "LocaleDescriptionLong": "11006749",
+      "LocaleDescriptionShort": "11039220",
+      "Icon": "Icons_commander_cmdr_soviet_fear_propaganda",
+      "Position": 60
+    },
+    "Army": "soviet",
+    "Activation": "targeted",
+    "Requirements": [
+      {
+        "RequirementType": "required_resource",
+        "RequirementReason": "usage",
+        "UIText": "11036635",
+        "RequirementProperties": {
+          "resource": null
+        }
+      },
+      {
+        "RequirementType": "required_player_upgrade",
+        "RequirementReason": "usage_and_display",
+        "UIText": "0",
+        "RequirementProperties": {
+          "is_present": true,
+          "max_completed": 100,
+          "min_completed": 1,
+          "upgrade_name": "fear_propaganda"
+        }
+      },
+      {
+        "RequirementType": "required_player_upgrade",
+        "RequirementReason": "usage",
+        "UIText": "11045365",
+        "RequirementProperties": {
+          "is_present": false,
+          "max_completed": 100,
+          "min_completed": 1,
+          "upgrade_name": "blizzard_active"
+        }
+      }
+    ]
+  },
+  {
+    "Name": "soviet_offmap_katyusha_ui",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741873,
+    "Cost": {
+      "Munition": 70
+    },
+    "Display": {
+      "LocaleName": "11006818",
+      "LocaleDescriptionLong": "11007516",
+      "LocaleDescriptionShort": "11007515",
+      "Icon": "Icons_abilities_ability_soviet_katyusha_rocket_barrage",
+      "Position": 11
+    },
+    "Army": "soviet",
+    "Activation": "targeted",
+    "Requirements": [
+      {
+        "RequirementType": "required_player_upgrade",
+        "RequirementReason": "usage_and_display",
+        "UIText": "0",
+        "RequirementProperties": {
+          "is_present": true,
+          "max_completed": 100,
+          "min_completed": 1,
+          "upgrade_name": "soviet_offmap_katyusha_unlock"
+        }
+      }
+    ]
+  },
+  {
+    "Name": "soviet_offmap_ml_20",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741856,
+    "Display": {
+      "LocaleName": "0",
+      "LocaleDescriptionLong": "0",
+      "LocaleDescriptionShort": "0",
+      "Position": -1
+    },
+    "Army": "soviet",
+    "Activation": ""
+  },
+  {
+    "Name": "soviet_offmap_ml_20_smoke",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741857,
+    "Display": {
+      "LocaleName": "0",
+      "LocaleDescriptionLong": "0",
+      "LocaleDescriptionShort": "0",
+      "Position": -1
+    },
+    "Army": "soviet",
+    "Activation": ""
+  },
+  {
+    "Name": "soviet_offmap_ml_20_smoke_ui",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741875,
+    "Display": {
+      "LocaleName": "0",
+      "LocaleDescriptionLong": "0",
+      "LocaleDescriptionShort": "0",
+      "Position": 11
+    },
+    "Army": "soviet",
+    "Activation": "",
+    "Requirements": [
+      {
+        "RequirementType": "required_player_upgrade",
+        "RequirementReason": "usage_and_display",
+        "UIText": "0",
+        "RequirementProperties": {
+          "is_present": true,
+          "max_completed": 100,
+          "min_completed": 1,
+          "upgrade_name": "soviet_offmap_ml_20_smoke_unlock"
+        }
+      }
+    ]
+  },
+  {
+    "Name": "soviet_offmap_ml_20_ui",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741874,
+    "Display": {
+      "LocaleName": "0",
+      "LocaleDescriptionLong": "0",
+      "LocaleDescriptionShort": "0",
+      "Position": 11
+    },
+    "Army": "soviet",
+    "Activation": "",
+    "Requirements": [
+      {
+        "RequirementType": "required_player_upgrade",
+        "RequirementReason": "usage_and_display",
+        "UIText": "0",
+        "RequirementProperties": {
+          "is_present": true,
+          "max_completed": 100,
+          "min_completed": 1,
+          "upgrade_name": "soviet_offmap_ml_20_unlock"
+        }
+      }
+    ]
+  },
+  {
+    "Name": "soviet_offmap_mortar",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741854,
+    "Display": {
+      "LocaleName": "0",
+      "LocaleDescriptionLong": "0",
+      "LocaleDescriptionShort": "0",
+      "Position": -1
+    },
+    "Army": "soviet",
+    "Activation": ""
+  },
+  {
+    "Name": "soviet_offmap_mortar_smoke",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741855,
+    "Display": {
+      "LocaleName": "0",
+      "LocaleDescriptionLong": "0",
+      "LocaleDescriptionShort": "0",
+      "Position": -1
+    },
+    "Army": "soviet",
+    "Activation": ""
+  },
+  {
+    "Name": "soviet_offmap_mortar_smoke_ui",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741877,
+    "Display": {
+      "LocaleName": "0",
+      "LocaleDescriptionLong": "0",
+      "LocaleDescriptionShort": "0",
+      "Position": 11
+    },
+    "Army": "soviet",
+    "Activation": "",
+    "Requirements": [
+      {
+        "RequirementType": "required_player_upgrade",
+        "RequirementReason": "usage_and_display",
+        "UIText": "0",
+        "RequirementProperties": {
+          "is_present": true,
+          "max_completed": 100,
+          "min_completed": 1,
+          "upgrade_name": "soviet_offmap_mortar_smoke_unlock"
+        }
+      }
+    ]
+  },
+  {
+    "Name": "soviet_offmap_mortar_ui",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741876,
+    "Display": {
+      "LocaleName": "0",
+      "LocaleDescriptionLong": "0",
+      "LocaleDescriptionShort": "0",
+      "Position": 11
+    },
+    "Army": "soviet",
+    "Activation": "",
+    "Requirements": [
+      {
+        "RequirementType": "required_player_upgrade",
+        "RequirementReason": "usage_and_display",
+        "UIText": "0",
+        "RequirementProperties": {
+          "is_present": true,
+          "max_completed": 100,
+          "min_completed": 1,
+          "upgrade_name": "soviet_offmap_mortar_unlock"
+        }
+      }
+    ]
+  },
+  {
+    "Name": "soviet_offmap_su-76_barrage",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741924,
+    "Cost": {
+      "Munition": 35
+    },
+    "Display": {
+      "LocaleName": "11007081",
+      "LocaleDescriptionLong": "11007517",
+      "LocaleDescriptionShort": "11007518",
+      "Icon": "Icons_abilities_ability_soviet_artillery_barrage",
+      "Position": 31
+    },
+    "Army": "soviet",
+    "Activation": "targeted",
+    "Requirements": [
+      {
+        "RequirementType": "required_critical",
+        "RequirementReason": "usage",
+        "UIText": "11037027",
+        "RequirementProperties": {
+          "critical_name": "vehicle_destroy_maingun",
+          "is_present": false
+        }
+      }
+    ]
+  },
+  {
+    "Name": "soviet_offmap_su-76_barrage_ui",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741925,
+    "Cost": {
+      "Munition": 35
+    },
+    "Display": {
+      "LocaleName": "11007081",
+      "LocaleDescriptionLong": "11007517",
+      "LocaleDescriptionShort": "11007518",
+      "Icon": "Icons_abilities_ability_soviet_artillery_barrage",
+      "Position": 31
+    },
+    "Army": "soviet",
+    "Activation": "targeted",
+    "Requirements": [
+      {
+        "RequirementType": "required_player_upgrade",
+        "RequirementReason": "usage",
+        "UIText": "0",
+        "RequirementProperties": {
+          "is_present": true,
+          "max_completed": 100,
+          "min_completed": 1,
+          "upgrade_name": "soviet_offmap_su-76_barrage_unlock"
+        }
+      }
+    ]
+  }
+]

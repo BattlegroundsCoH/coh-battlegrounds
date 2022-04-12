@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+
 using Battlegrounds.Modding;
 using Battlegrounds.Networking.Memory;
 using Battlegrounds.Networking.Server;
@@ -11,7 +12,7 @@ namespace Battlegrounds.Compiler.Source {
 
     public class ManifestSource : IWinconditionSource {
 
-        private static readonly ObjectCache ServerFiles = new(TimeSpan.FromMinutes(15));
+        //private static readonly ObjectCache ServerFiles = new(TimeSpan.FromMinutes(15));
 
         private ServerAPI m_api;
 
@@ -21,19 +22,19 @@ namespace Battlegrounds.Compiler.Source {
             this.m_api = serverAPI;
 
             // Cache
-            var result = ServerFiles.GetCachedValue(this.GetCachedFiles) as Dictionary<string, List<WinconditionSourceFile>>;
+            /*var result = ServerFiles.GetCachedValue(this.GetCachedFiles) as Dictionary<string, List<WinconditionSourceFile>>;
             if (result["scar"].Count > 0) {
                 Trace.WriteLine("Successfully downloaded the gamemode files", nameof(ManifestSource));
             } else {
                 Trace.WriteLine("Failed to download the gamemode files", nameof(ManifestSource));
-            }
+            }*/
 
         }
 
         private Dictionary<string, List<WinconditionSourceFile>> GetCachedFiles() {
 
             // Create dictionary to store categorised files in.
-            Dictionary<string, List<WinconditionSourceFile>> sourceFiles = new() { 
+            Dictionary<string, List<WinconditionSourceFile>> sourceFiles = new() {
                 ["scar"] = new(),
                 ["info"] = new(),
                 ["locale"] = new(),
@@ -42,7 +43,7 @@ namespace Battlegrounds.Compiler.Source {
             };
 
             // Download the files
-            var files = this.m_api.DownloadGamemodeFiles();
+            /*var files = this.m_api.DownloadGamemodeFiles();
             for (int i = 0; i < files.Length; i++) {
 
                 // If scar file, add to scar entry
@@ -58,29 +59,23 @@ namespace Battlegrounds.Compiler.Source {
                     sourceFiles["gfx"].Add(new WinconditionSourceFile(files[i].filepath, files[i].filedata));
                 }
 
-            }
+            }*/
 
             return sourceFiles;
 
         }
 
-        public WinconditionSourceFile GetInfoFile(IWinconditionMod mod) 
-            => (ServerFiles.GetCachedValue(this.GetCachedFiles) as Dictionary<string, List<WinconditionSourceFile>>)["info"].FirstOrDefault(x => x.path.EndsWith(".info"));
+        public WinconditionSourceFile GetInfoFile(IGamemode mod) => null;
 
-        public WinconditionSourceFile[] GetLocaleFiles()
-            => (ServerFiles.GetCachedValue(this.GetCachedFiles) as Dictionary<string, List<WinconditionSourceFile>>)["locale"].ToArray();
+        public WinconditionSourceFile[] GetLocaleFiles() => null;
 
-        public WinconditionSourceFile GetModGraphic()
-            => (ServerFiles.GetCachedValue(this.GetCachedFiles) as Dictionary<string, List<WinconditionSourceFile>>)["info"].FirstOrDefault(x => x.path.EndsWith(".dds"));
+        public WinconditionSourceFile GetModGraphic() => null;
 
-        public WinconditionSourceFile[] GetScarFiles() 
-            => (ServerFiles.GetCachedValue(this.GetCachedFiles) as Dictionary<string, List<WinconditionSourceFile>>)["scar"].ToArray();
+        public WinconditionSourceFile[] GetScarFiles() => null;
 
-        public WinconditionSourceFile[] GetUIFiles(IWinconditionMod mod)
-            => (ServerFiles.GetCachedValue(this.GetCachedFiles) as Dictionary<string, List<WinconditionSourceFile>>)["gfx"].ToArray();
+        public WinconditionSourceFile[] GetUIFiles(IGamemode mod) => null;
 
-        public WinconditionSourceFile[] GetWinFiles()
-            => (ServerFiles.GetCachedValue(this.GetCachedFiles) as Dictionary<string, List<WinconditionSourceFile>>)["win"].ToArray();
+        public WinconditionSourceFile[] GetWinFiles() => null;
 
     }
 

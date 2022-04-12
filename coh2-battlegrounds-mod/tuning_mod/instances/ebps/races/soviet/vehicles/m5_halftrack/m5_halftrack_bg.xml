@@ -1095,7 +1095,6 @@
 			<bool name="must_be_in_supply" value="False" />
 			<float name="number_of_standard_slots" value="-1" />
 			<list name="standard_upgrades">
-				<instance_reference name="upgrade" value="upgrade\soviet\items\m5_halftrack_72k_aa_gun_package_mp" />
 			</list>
 		</template_reference>
 		<template_reference name="exts" value="ebpextensions\hold_ext">

@@ -4,7 +4,7 @@ using System.IO;
 using System.Text;
 
 namespace Battlegrounds.Util {
-    
+
     /// <summary>
     /// Extension class for extending the utilities of <see cref="BinaryReader"/>
     /// </summary>
@@ -24,7 +24,7 @@ namespace Battlegrounds.Util {
         /// <param name="reader">The stream to read string from</param>
         /// <param name="length"></param>
         /// <returns>The read string</returns>
-        public static string ReadASCIIString(this BinaryReader reader, int length) 
+        public static string ReadASCIIString(this BinaryReader reader, int length)
             => Encoding.ASCII.GetString(reader.ReadBytes(length));
 
         /// <summary>

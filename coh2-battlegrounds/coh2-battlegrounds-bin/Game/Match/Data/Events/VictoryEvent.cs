@@ -6,7 +6,7 @@ namespace Battlegrounds.Game.Match.Data.Events {
     /// <see cref="IMatchEvent"/> implementation for the event of a victory.
     /// </summary>
     public class VictoryEvent : IMatchEvent {
-        
+
         public char Identifier => 'V';
         public uint Uid { get; }
 

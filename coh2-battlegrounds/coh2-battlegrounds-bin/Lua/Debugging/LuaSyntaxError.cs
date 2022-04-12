@@ -1,12 +1,12 @@
 ﻿using Battlegrounds.Lua.Parsing;
 
 namespace Battlegrounds.Lua.Debugging {
-    
+
     /// <summary>
     /// Represents errors that occured while verifying Lua code syntax.
     /// </summary>
     public class LuaSyntaxError : LuaException {
-    
+
         /// <summary>
         /// Get the position of the syntax error
         /// </summary>

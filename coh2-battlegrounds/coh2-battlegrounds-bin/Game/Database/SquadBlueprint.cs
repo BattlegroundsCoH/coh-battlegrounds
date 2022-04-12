@@ -1,129 +1,345 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json;
+using System.Text.Json.Serialization;
+
 using Battlegrounds.Functional;
+using Battlegrounds.Game.Database.Extensions;
+using Battlegrounds.Game.Database.Management;
 using Battlegrounds.Game.Gameplay;
-using Battlegrounds.Json;
+using Battlegrounds.Modding;
 
 namespace Battlegrounds.Game.Database {
-    
+
     /// <summary>
-    /// Representation of a <see cref="Blueprint"/> with <see cref="Squad"/> specific values. Inherits from <see cref="Blueprint"/>. This class cannot be inheritted.
+    /// Enum describing the category of a <see cref="SquadBlueprint"/>.
     /// </summary>
-    public sealed class SquadBlueprint : Blueprint {
+    public enum SquadCategory {
+        
+        /// <summary>
+        /// Infantry category.
+        /// </summary>
+        Infantry,
     
         /// <summary>
-        /// The UI symbol used in-game to show unit type
+        /// Support weapon/vehicle category (aka team weapon).
         /// </summary>
-        public string Symbol { get; set; }
+        Support,
 
         /// <summary>
-        /// The UI icon of the squad
+        /// Vehicle category.
         /// </summary>
-        public string Icon { get; set; }
+        Vehicle
+    
+    }
+
+    /// <summary>
+    /// Representation of a <see cref="Blueprint"/> with <see cref="Squad"/> specific values. Inherits from <see cref="Blueprint"/>. This class cannot be inherited.
+    /// </summary>
+    [JsonConverter(typeof(SquadBlueprintConverter))]
+    public sealed class SquadBlueprint : Blueprint, IUIBlueprint {
 
         /// <summary>
-        /// The army the <see cref="SquadBlueprint"/> can be used by.
+        /// Get the unique PropertyBagGroupdID assigned to this blueprint.
         /// </summary>
-        public string Army { get; set; }
+        public override BlueprintUID PBGID { get; }
 
         /// <summary>
-        /// The localized string ID for the display name of the <see cref="SquadBlueprint"/>.
+        /// Get the blueprint type (Is <see cref="BlueprintType.SBP"/>).
         /// </summary>
-        public string LocaleName { get; set; }
+        public override BlueprintType BlueprintType => BlueprintType.SBP;
 
         /// <summary>
-        /// The localized string ID for the description of the <see cref="SquadBlueprint"/>.
+        /// Get the name of the <see cref="SquadBlueprint"/> instance.
         /// </summary>
-        public string LocaleDescription { get; set; }
+        public override string Name { get; }
 
         /// <summary>
-        /// The base <see cref="Gameplay.Cost"/> to field instances of the <see cref="SquadBlueprint"/>.
+        /// Get the army the <see cref="SquadBlueprint"/> can be used by.
         /// </summary>
-        public Cost Cost { get; set; }
+        public Faction Army { get; }
+
+        /// <summary>
+        /// Get the UI extension.
+        /// </summary>
+        public UIExtension UI { get; }
+
+        /// <summary>
+        /// The base <see cref="CostExtension"/> to field instances of the <see cref="SquadBlueprint"/>.
+        /// </summary>
+        public CostExtension Cost { get; }
+
+        /// <summary>
+        /// Get the veterancy extension.
+        /// </summary>
+        public VeterancyExtension Veterancy { get; }
+
+        /// <summary>
+        /// Get the loadout extension.
+        /// </summary>
+        public LoadoutExtension Loadout { get; }
 
         /// <summary>
         /// Does the squad the bluperint is for, require a crew.
         /// </summary>
-        public bool HasCrew { get; set; }
+        public bool HasCrew { get; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public bool IsTeamWeapon { get; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public bool CanPickupItems { get; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public int PickupCapacity { get; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public string[] Abilities { get; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public string[] Upgrades { get; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public string[] AppliedUpgrades { get; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public int UpgradeCapacity { get; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public float FemaleSquadChance { get; }
 
         /// <summary>
         /// Array of types bound to the <see cref="SquadBlueprint"/>.
         /// </summary>
-        public HashSet<string> Types { get; set; }
+        public TypeList Types { get; }
 
         /// <summary>
-        /// Can the <see cref="SquadBlueprint"/> be considered a heavy artillery piece.
+        /// 
         /// </summary>
-        [JsonIgnore] public bool IsHeavyArtillery 
-            => this.Types.ToArray().ContainsWithout("team_weapon", "wg_team_weapons", "mortar", "hmg"); // 'wg_team_weapons' is to block the raketenwerfer be considered a heavy artillery piece
+        public SquadCategory Category => GetCategory(this.Types);
 
         /// <summary>
-        /// Can the <see cref="SquadBlueprint"/> be considered an anti-tank gun.
+        /// 
         /// </summary>
-        [JsonIgnore] public bool IsAntiTank => this.Types.Contains("at_gun");
+        /// <param name="name"></param>
+        /// <param name="pbgid"></param>
+        /// <param name="faction"></param>
+        /// <param name="ui"></param>
+        /// <param name="cost"></param>
+        /// <param name="loadout"></param>
+        /// <param name="veterancy"></param>
+        /// <param name="types"></param>
+        /// <param name="abilities"></param>
+        /// <param name="slotCapacity"></param>
+        /// <param name="canPickup"></param>
+        /// <param name="isTeamWpn"></param>
+        /// <param name="femaleChance"></param>
+        public SquadBlueprint(string name, BlueprintUID pbgid, Faction faction,
+            UIExtension ui, CostExtension cost, LoadoutExtension loadout, VeterancyExtension veterancy,
+            string[] types, string[] abilities, string[] upgrades, string[] appliedUpgrades,
+            int upgradeCapacity, int slotCapacity, bool canPickup, bool isTeamWpn, bool hasCrew, float femaleChance) {
+
+            // Set properties
+            this.Name = name;
+            this.PBGID = pbgid;
+            this.UI = ui;
+            this.Cost = cost;
+            this.Army = faction;
+            this.IsTeamWeapon = isTeamWpn;
+            this.Types = new(types, isTeamWpn);
+            this.Loadout = loadout;
+            this.Veterancy = veterancy;
+            this.PickupCapacity = slotCapacity;
+            this.CanPickupItems = canPickup;
+            this.Abilities = abilities;
+            this.FemaleSquadChance = femaleChance;
+            this.HasCrew = hasCrew;
+            this.Upgrades = upgrades;
+            this.AppliedUpgrades = appliedUpgrades;
+            this.UpgradeCapacity = upgradeCapacity;
+
+        }
 
         /// <summary>
-        /// Can the <see cref="SquadBlueprint"/> be considered infantry.
+        /// Get the <see cref="SquadBlueprint"/> that is the crew of the <see cref="SquadBlueprint"/>
         /// </summary>
-        [JsonIgnore] public bool IsInfantry => this.Types.Contains("infantry") && !IsTeamWeapon;
+        /// <param name="faction">The faction to get crew SBP from.</param>
+        /// <returns>The crew <see cref="SquadBlueprint"/>. If not found for <paramref name="faction"/>, the default crew is returned.</returns>
+        public SquadBlueprint GetCrewBlueprint(Faction faction = null) {
+
+            // Make sure there's actually a crew to get
+            if (!this.HasCrew) {
+                return null;
+            }
+
+            // Loop over entities in loadout
+            for (int i = 0; i < this.Loadout.Count; i++) {
+                var e = this.Loadout.GetEntity(i);
+                if (e.Drivers is DriverExtension drivers) {
+                    return faction is null ? drivers.GetSquad(this.Army) : drivers.GetSquad(faction);
+                }
+            }
+
+            // No driver was found
+            return null;
+
+        }
 
         /// <summary>
-        /// Can the <see cref="SquadBlueprint"/> be considered a team weapon.
+        /// 
         /// </summary>
-        [JsonIgnore] public bool IsTeamWeapon => this.Types.Contains("team_weapon") || this.Types.Contains("250_mortar_halftrack");
+        /// <param name="getEntityAbilities"></param>
+        /// <returns></returns>
+        public string[] GetAbilities(bool getEntityAbilities) {
+
+            // If not get entity abilities, return this ability list and be done
+            if (!getEntityAbilities) {
+                return this.Abilities;
+            }
+
+            // Select all entity abilities
+            string[] ebpabps = this.Loadout.SelectMany(x => BlueprintManager.FromBlueprintName<EntityBlueprint>(x.EntityBlueprint)?.Abilities ?? Array.Empty<string>());
+
+            // Return union
+            return ebpabps.Union(this.Abilities).ToArray();
+
+        }
 
         /// <summary>
-        /// Can the <see cref="SquadBlueprint"/> be considered a vehicle (not a tank).
+        /// 
         /// </summary>
-        [JsonIgnore] public bool IsVehicle 
-            => ((!IsArmour && this.Types.Contains("vehicle")) || this.Types.Contains("light_vehicle")) && !this.Types.Contains("250_mortar_halftrack"); // Remove the change of mortar vehicles in this category
+        /// <param name="getEntityUpgrades"></param>
+        /// <param name="getAppliedUpgrades"></param>
+        /// <returns></returns>
+        public string[] GetUpgrades(bool getEntityUpgrades, bool getAppliedUpgrades) {
+
+            // If not get entity abilities, return this ability list and be done
+            if (!getEntityUpgrades) {
+                return getAppliedUpgrades ? this.Upgrades.Union(this.AppliedUpgrades).ToArray() : this.Upgrades;
+            }
+
+            // Select all entity upgrades
+            string[] ebpubps = this.Loadout.SelectMany(
+                x => (BlueprintManager.FromBlueprintName<EntityBlueprint>(x.EntityBlueprint)?.Upgrades ?? Array.Empty<string>())
+                .Union(getAppliedUpgrades ? BlueprintManager.FromBlueprintName<EntityBlueprint>(x.EntityBlueprint)?.AppliedUpgrades ?? Array.Empty<string>()
+                : Array.Empty<string>()).ToArray());
+
+            // Return union
+            return ebpubps.Union(this.Upgrades).Union(getAppliedUpgrades ? this.AppliedUpgrades : Array.Empty<string>()).ToArray();
+
+        }
 
         /// <summary>
-        /// Can the <see cref="SquadBlueprint"/> be considered a tank.
+        /// 
         /// </summary>
-        [JsonIgnore] public bool IsArmour => this.Types.Contains("vehicle") && !this.Types.Contains("light_vehicle") && !IsHeavyArmour;
+        /// <returns></returns>
+        public EntityBlueprint GetVehicleBlueprint() {
+
+            // Get type
+            if (!(this.Types.IsVehicle || this.Types.IsTransportVehicle || this.Types.IsArmour || this.Types.IsHeavyArmour)) {
+                return null;
+            }
+
+            // Get ebps
+            var ebps = this.Loadout.Select(x => BlueprintManager.FromBlueprintName<EntityBlueprint>(x.EntityBlueprint)).ToArray();
+
+            // Return the first blueprint
+            if (ebps.Length is 1) {
+                return ebps[0];
+            }
+
+            // Return null
+            return null; // TODO: Check ebp types (if ever added to database tool)
+
+        }
 
         /// <summary>
-        /// Can the <see cref="SquadBlueprint"/> be considered a heavy tank.
+        /// 
         /// </summary>
-        [JsonIgnore] public bool IsHeavyArmour => this.Types.Contains("heavy_tank");
+        /// <param name="types"></param>
+        /// <returns></returns>
+        public static SquadCategory GetCategory(TypeList types) {
+            if (types.IsAntiTank || types.IsHeavyArtillery || types.Contains("mortar") || types.Contains("hmg")) {
+                return SquadCategory.Support;
+            } else if (types.Contains("vehicle")) {
+                return SquadCategory.Vehicle;
+            }
+            return SquadCategory.Infantry;
+        }
 
-        /// <summary>
-        /// Can the <see cref="SquadBlueprint"/> be considered a vehicle crew.
-        /// </summary>
-        [JsonIgnore] public bool IsVehicleCrew => this.Types.Contains("aef_vehicle_crew");
+    }
 
-        /// <summary>
-        /// Can the <see cref="SquadBlueprint"/> be considered a special (elite) infantry.
-        /// </summary>
-        [JsonIgnore] public bool IsSpecialInfantry 
-            => this.Types.Contains("guard_troops") || this.Types.Contains("shock_troops") || this.Types.Contains("stormtrooper");
+    /// <summary>
+    /// 
+    /// </summary>
+    public class SquadBlueprintConverter : JsonConverter<SquadBlueprint> {
 
-        /// <summary>
-        /// Can the <see cref="SquadBlueprint"/> be considered to be an officer unit.
-        /// </summary>
-        [JsonIgnore] public bool IsOfficer => this.Types.Contains("sov_officer");
+        public override SquadBlueprint Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options) {
+            Dictionary<string, object> __lookup = new();
+            while (reader.Read() && reader.TokenType is not JsonTokenType.EndObject) {
+                string prop = reader.ReadProperty();
+                __lookup[prop] = prop switch {
+                    "SquadCost" => CostExtension.FromJson(ref reader),
+                    "Display" => UIExtension.FromJson(ref reader),
+                    "Entities" => LoadoutExtension.FromJson(ref reader),
+                    "Veterancy" => VeterancyExtension.FromJson(ref reader),
+                    "PBGID" => reader.GetUInt64(),
+                    "Name" => reader.GetString(),
+                    "Army" => reader.GetString(),
+                    "ModGUID" => reader.GetString(),
+                    "IsSyncWeapon" => reader.GetBoolean(),
+                    "Abilities" => reader.GetStringArray(),
+                    "Types" => reader.GetStringArray(),
+                    "SlotPickupCapacity" => reader.GetInt32(),
+                    "CanPickupItems" => reader.GetBoolean(),
+                    "FemaleChance" => reader.GetSingle(),
+                    "HasCrew" => reader.GetBoolean(),
+                    "UpgradeCapacity" => reader.GetInt32(),
+                    "Upgrades" => reader.GetStringArray(),
+                    "AppliedUpgrades" => reader.GetStringArray(),
+                    _ => throw new NotImplementedException(prop)
+                };
+            }
+            Faction fac = __lookup.GetCastValueOrDefault("Army", "NULL") is "NULL" ? null : Faction.FromName(__lookup.GetCastValueOrDefault("Army", "NULL"));
+            ModGuid modguid = __lookup.ContainsKey("ModGUID") ? ModGuid.FromGuid(__lookup["ModGUID"] as string) : ModGuid.BaseGame;
+            BlueprintUID pbgid = new BlueprintUID(__lookup.GetCastValueOrDefault("PBGID", 0ul), modguid);
+            return new(__lookup.GetCastValueOrDefault("Name", string.Empty),
+                pbgid,
+                fac,
+                __lookup.GetCastValueOrDefault("Display", new UIExtension()),
+                __lookup.GetCastValueOrDefault("SquadCost", new CostExtension()),
+                __lookup.GetCastValueOrDefault("Entities", new LoadoutExtension(Array.Empty<LoadoutExtension.Entry>())),
+                __lookup.GetCastValueOrDefault("Veterancy", new VeterancyExtension(Array.Empty<VeterancyExtension.Rank>())),
+                __lookup.GetCastValueOrDefault("Types", Array.Empty<string>()),
+                __lookup.GetCastValueOrDefault("Abilities", Array.Empty<string>()),
+                __lookup.GetCastValueOrDefault("Upgrades", Array.Empty<string>()),
+                __lookup.GetCastValueOrDefault("AppliedUpgrades", Array.Empty<string>()),
+                __lookup.GetCastValueOrDefault("UpgradeCapacity", 0),
+                __lookup.GetCastValueOrDefault("SlotPickupCapacity", 0),
+                __lookup.GetCastValueOrDefault("CanPickupItems", false),
+                __lookup.GetCastValueOrDefault("IsSyncWeapon", false),
+                __lookup.GetCastValueOrDefault("HasCrew", false),
+                __lookup.GetCastValueOrDefault("FemaleChance", 0.0f));
+        }
 
-        /// <summary>
-        /// Can the <see cref="SquadBlueprint"/> be considered to be a command unit.
-        /// </summary>
-        [JsonIgnore] public bool IsCommandUnit => IsOfficer || this.Types.Contains("command_panzer");
-
-        /// <summary>
-        /// Can the <see cref="SquadBlueprint"/> be considered to be artillery.
-        /// </summary>
-        [JsonIgnore] public bool IsArtillery => this.Types.Contains("artillery");
-
-        /// <summary>
-        /// Can the <see cref="SquadBlueprint"/> be considered a sniper unit.
-        /// </summary>
-        [JsonIgnore] public bool IsSniper => this.Types.Contains("sniper_soviet") || this.Types.Contains("sniper_german");
-
-        /// <summary>
-        /// Can the <see cref="SquadBlueprint"/> be considered a transport unit.
-        /// </summary>
-        [JsonIgnore] public bool IsTransportVehicle => this.Types.Contains("m5_halftrack") || this.Types.Contains("m3a1_scout_car") || this.Types.Contains("251_halftrack");
+        public override void Write(Utf8JsonWriter writer, SquadBlueprint value, JsonSerializerOptions options) => writer.WriteStringValue(value.Name);
 
     }
 

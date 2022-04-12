@@ -1,11 +1,16 @@
-﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net5.0-windows</TargetFramework>
+    <TargetFramework>net6.0-windows</TargetFramework>
     <RootNamespace>BattlegroundsApp</RootNamespace>
     <UseWPF>true</UseWPF>
     <LangVersion>preview</LangVersion>
+    <AnalysisLevel>5.0</AnalysisLevel>
+    <Nullable>enable</Nullable>
+    <ProduceReferenceAssembly>False</ProduceReferenceAssembly>
+    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+    <ApplicationIcon>coh2-battlegrounds.ico</ApplicationIcon>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -15,6 +20,54 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Resources\ingame\ability_icons\**" />
+    <Compile Remove="Resources\ingame\item_icons\**" />
+    <Compile Remove="Resources\ingame\symbol_icons\**" />
+    <Compile Remove="Resources\ingame\unit_icons\**" />
+    <Compile Remove="Resources\ingame\upgrade_icons\**" />
+    <EmbeddedResource Remove="Resources\ingame\ability_icons\**" />
+    <EmbeddedResource Remove="Resources\ingame\item_icons\**" />
+    <EmbeddedResource Remove="Resources\ingame\symbol_icons\**" />
+    <EmbeddedResource Remove="Resources\ingame\unit_icons\**" />
+    <EmbeddedResource Remove="Resources\ingame\upgrade_icons\**" />
+    <None Remove="Resources\ingame\ability_icons\**" />
+    <None Remove="Resources\ingame\item_icons\**" />
+    <None Remove="Resources\ingame\symbol_icons\**" />
+    <None Remove="Resources\ingame\unit_icons\**" />
+    <None Remove="Resources\ingame\upgrade_icons\**" />
+    <Page Remove="Resources\ingame\ability_icons\**" />
+    <Page Remove="Resources\ingame\item_icons\**" />
+    <Page Remove="Resources\ingame\symbol_icons\**" />
+    <Page Remove="Resources\ingame\unit_icons\**" />
+    <Page Remove="Resources\ingame\upgrade_icons\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="Resources\app\army_icons\FactionAEF.png" />
+    <None Remove="Resources\app\army_icons\FactionAEFHighlighted.png" />
+    <None Remove="Resources\app\army_icons\FactionBRIT.png" />
+    <None Remove="Resources\app\army_icons\FactionBRITHighlighted.png" />
+    <None Remove="Resources\app\army_icons\FactionLOCKED.png" />
+    <None Remove="Resources\app\army_icons\FactionOKW.png" />
+    <None Remove="Resources\app\army_icons\FactionOKWHighlighted.png" />
+    <None Remove="Resources\app\army_icons\FactionSOVIET.png" />
+    <None Remove="Resources\app\army_icons\FactionSOVIETHighlighted.png" />
+    <None Remove="Resources\app\army_icons\FactionWEHR.png" />
+    <None Remove="Resources\app\army_icons\FactionWEHRHighlighted.png" />
+    <None Remove="Resources\app\checkmark.png" />
+    <None Remove="Resources\app\checkmark_not.png" />
+    <None Remove="Resources\app\company_types\ct_airborne.png" />
+    <None Remove="Resources\app\company_types\ct_armoured.png" />
+    <None Remove="Resources\app\company_types\ct_artillery.png" />
+    <None Remove="Resources\app\company_types\ct_engineer.png" />
+    <None Remove="Resources\app\company_types\ct_infantry.png" />
+    <None Remove="Resources\app\company_types\ct_mechanized.png" />
+    <None Remove="Resources\app\company_types\ct_motorized.png" />
+    <None Remove="Resources\app\company_types\ct_td.png" />
+    <None Remove="Resources\app\company_types\ct_unspecified.png" />
+    <None Remove="Resources\app\icon_bkg.png" />
+    <None Remove="Resources\app\LobbySettingMap.png" />
+    <None Remove="Resources\app\logo_main.png" />
     <None Remove="Resources\app\padlock_locked.png" />
     <None Remove="Resources\app\padlock_open.png" />
     <None Remove="Resources\campaign\icon_attrition.png" />
@@ -28,6 +81,7 @@
     <None Remove="Resources\campaign\obj_main.png" />
     <None Remove="Resources\campaign\obj_secondary.png" />
     <None Remove="Resources\campaign\obj_star.png" />
+    <None Remove="Resources\ingame\ability_icons.dat" />
     <None Remove="Resources\ingame\aef.png" />
     <None Remove="Resources\ingame\application\app_background.png" />
     <None Remove="Resources\ingame\application\app_button.png" />
@@ -37,200 +91,74 @@
     <None Remove="Resources\ingame\application\app_logo1.png" />
     <None Remove="Resources\ingame\application\app_logo2.png" />
     <None Remove="Resources\ingame\british.png" />
+    <None Remove="Resources\ingame\deploy_icons.dat" />
     <None Remove="Resources\ingame\german.png" />
+    <None Remove="Resources\ingame\item_icons.dat" />
+    <None Remove="Resources\ingame\no_icon.png" />
+    <None Remove="Resources\ingame\phase_icons.dat" />
+    <None Remove="Resources\ingame\portraits.dat" />
+    <None Remove="Resources\ingame\remove_item.png" />
+    <None Remove="Resources\ingame\resource_icons\botb_fuel.png" />
+    <None Remove="Resources\ingame\resource_icons\botb_manpower.png" />
+    <None Remove="Resources\ingame\resource_icons\botb_munitions.png" />
     <None Remove="Resources\ingame\soviet.png" />
+    <None Remove="Resources\ingame\symbol_icons.dat" />
     <None Remove="Resources\ingame\test_unit_ veterancy.png" />
     <None Remove="Resources\ingame\test_unit_icon.png" />
+    <None Remove="Resources\ingame\test_unit_portrait.png" />
     <None Remove="Resources\ingame\test_unit_transport.png" />
     <None Remove="Resources\ingame\test_unit_veterancy.png" />
-    <None Remove="Resources\ingame\unit_icons\Icons_units_unit_aef_assault_engineers.png" />
-    <None Remove="Resources\ingame\unit_icons\Icons_units_unit_aef_cavalry_riflemen.png" />
-    <None Remove="Resources\ingame\unit_icons\Icons_units_unit_aef_medic.png" />
-    <None Remove="Resources\ingame\unit_icons\Icons_units_unit_aef_mg_crew.png" />
-    <None Remove="Resources\ingame\unit_icons\Icons_units_unit_aef_mortar_crew.png" />
-    <None Remove="Resources\ingame\unit_icons\Icons_units_unit_aef_officer_captain.png" />
-    <None Remove="Resources\ingame\unit_icons\Icons_units_unit_aef_officer_lieutenant.png" />
-    <None Remove="Resources\ingame\unit_icons\Icons_units_unit_aef_officer_major.png" />
-    <None Remove="Resources\ingame\unit_icons\Icons_units_unit_aef_paratroopers.png" />
-    <None Remove="Resources\ingame\unit_icons\Icons_units_unit_aef_pathfinders.png" />
-    <None Remove="Resources\ingame\unit_icons\Icons_units_unit_aef_pathfinders_i_and_r.png" />
-    <None Remove="Resources\ingame\unit_icons\Icons_units_unit_aef_ranger.png" />
-    <None Remove="Resources\ingame\unit_icons\Icons_units_unit_aef_rear_echelon_troops.png" />
-    <None Remove="Resources\ingame\unit_icons\Icons_units_unit_aef_riflemen.png" />
-    <None Remove="Resources\ingame\unit_icons\Icons_units_unit_aef_vehicle_crew.png" />
-    <None Remove="Resources\ingame\unit_icons\Icons_units_unit_axis_stormtrooper.png" />
-    <None Remove="Resources\ingame\unit_icons\Icons_units_unit_british_airlanding_officer.png" />
-    <None Remove="Resources\ingame\unit_icons\Icons_units_unit_british_commando.png" />
-    <None Remove="Resources\ingame\unit_icons\Icons_units_unit_british_commando_from_building.png" />
-    <None Remove="Resources\ingame\unit_icons\Icons_units_unit_british_demolitions_engineer.png" />
-    <None Remove="Resources\ingame\unit_icons\Icons_units_unit_british_engineer.png" />
-    <None Remove="Resources\ingame\unit_icons\Icons_units_unit_british_engineer_recovery.png" />
-    <None Remove="Resources\ingame\unit_icons\Icons_units_unit_british_forward_observation_officer.png" />
-    <None Remove="Resources\ingame\unit_icons\Icons_units_unit_british_medic.png" />
-    <None Remove="Resources\ingame\unit_icons\Icons_units_unit_british_officer.png" />
-    <None Remove="Resources\ingame\unit_icons\Icons_units_unit_british_sniper.png" />
-    <None Remove="Resources\ingame\unit_icons\Icons_units_unit_british_tommy_recon.png" />
-    <None Remove="Resources\ingame\unit_icons\Icons_units_unit_british_tommy_with_tommy.png" />
-    <None Remove="Resources\ingame\unit_icons\Icons_units_unit_british_vehicle_crew.png" />
-    <None Remove="Resources\ingame\unit_icons\Icons_units_unit_british_vickers_hmg.png" />
-    <None Remove="Resources\ingame\unit_icons\Icons_units_unit_german_assault_grenadier.png" />
-    <None Remove="Resources\ingame\unit_icons\Icons_units_unit_german_granatwerfer_34_mortar.png" />
-    <None Remove="Resources\ingame\unit_icons\Icons_units_unit_german_grenadier.png" />
-    <None Remove="Resources\ingame\unit_icons\Icons_units_unit_german_jaeger_light_infantry.png" />
-    <None Remove="Resources\ingame\unit_icons\Icons_units_unit_german_m1910_hmg.png" />
-    <None Remove="Resources\ingame\unit_icons\Icons_units_unit_german_medic.png" />
-    <None Remove="Resources\ingame\unit_icons\Icons_units_unit_german_officer.png" />
-    <None Remove="Resources\ingame\unit_icons\Icons_units_unit_german_ostruppen.png" />
-    <None Remove="Resources\ingame\unit_icons\Icons_units_unit_german_panzer_grenadier.png" />
-    <None Remove="Resources\ingame\unit_icons\Icons_units_unit_german_pioneer.png" />
-    <None Remove="Resources\ingame\unit_icons\Icons_units_unit_german_sniper.png" />
-    <None Remove="Resources\ingame\unit_icons\Icons_units_unit_german_stormtroopers.png" />
-    <None Remove="Resources\ingame\unit_icons\Icons_units_unit_german_stormtroopers_from_building.png" />
-    <None Remove="Resources\ingame\unit_icons\Icons_units_unit_german_urban_assault_panzer_grenadier.png" />
-    <None Remove="Resources\ingame\unit_icons\Icons_units_unit_soviet_ania.png" />
-    <None Remove="Resources\ingame\unit_icons\Icons_units_unit_soviet_conscript_01.png" />
-    <None Remove="Resources\ingame\unit_icons\Icons_units_unit_soviet_conscript_02.png" />
-    <None Remove="Resources\ingame\unit_icons\Icons_units_unit_soviet_conscript_03.png" />
-    <None Remove="Resources\ingame\unit_icons\Icons_units_unit_soviet_engineer.png" />
-    <None Remove="Resources\ingame\unit_icons\Icons_units_unit_soviet_frontviki.png" />
-    <None Remove="Resources\ingame\unit_icons\Icons_units_unit_soviet_guards.png" />
-    <None Remove="Resources\ingame\unit_icons\Icons_units_unit_soviet_mg.png" />
-    <None Remove="Resources\ingame\unit_icons\Icons_units_unit_soviet_mortar.png" />
-    <None Remove="Resources\ingame\unit_icons\Icons_units_unit_soviet_officer.png" />
-    <None Remove="Resources\ingame\unit_icons\Icons_units_unit_soviet_partisan.png" />
-    <None Remove="Resources\ingame\unit_icons\Icons_units_unit_soviet_partisan_anti_infantry.png" />
-    <None Remove="Resources\ingame\unit_icons\Icons_units_unit_soviet_partisan_anti_vehicle.png" />
-    <None Remove="Resources\ingame\unit_icons\Icons_units_unit_soviet_partisan_anti_vehicle_from_building.png" />
-    <None Remove="Resources\ingame\unit_icons\Icons_units_unit_soviet_partisan_from_building.png" />
-    <None Remove="Resources\ingame\unit_icons\Icons_units_unit_soviet_partisan_mg.png" />
-    <None Remove="Resources\ingame\unit_icons\Icons_units_unit_soviet_partisan_mortar.png" />
-    <None Remove="Resources\ingame\unit_icons\Icons_units_unit_soviet_penal_battalion.png" />
-    <None Remove="Resources\ingame\unit_icons\Icons_units_unit_soviet_shock.png" />
-    <None Remove="Resources\ingame\unit_icons\Icons_units_unit_soviet_sniper.png" />
-    <None Remove="Resources\ingame\unit_icons\Icons_units_unit_west_german_fallschirmjager.png" />
-    <None Remove="Resources\ingame\unit_icons\Icons_units_unit_west_german_fallschirmjager_from_building.png" />
-    <None Remove="Resources\ingame\unit_icons\Icons_units_unit_west_german_jaeger_light_infantry.png" />
-    <None Remove="Resources\ingame\unit_icons\Icons_units_unit_west_german_jaeger_light_infantry_from_building.png" />
-    <None Remove="Resources\ingame\unit_icons\Icons_units_unit_west_german_mg34_hmg.png" />
-    <None Remove="Resources\ingame\unit_icons\Icons_units_unit_west_german_panzerfusilier.png" />
-    <None Remove="Resources\ingame\unit_icons\Icons_units_unit_west_german_sturmpioneers.png" />
-    <None Remove="Resources\ingame\unit_icons\Icons_units_unit_west_german_terror_officer.png" />
-    <None Remove="Resources\ingame\unit_icons\Icons_units_unit_west_german_waffen_honor_guard.png" />
-    <None Remove="Resources\ingame\unit_icons\Icons_vehicles_vehicle_aef_57mm_at_gun.png" />
-    <None Remove="Resources\ingame\unit_icons\Icons_vehicles_vehicle_aef_browning_m2_50cal_hmg.png" />
-    <None Remove="Resources\ingame\unit_icons\Icons_vehicles_vehicle_aef_calliope.png" />
-    <None Remove="Resources\ingame\unit_icons\Icons_vehicles_vehicle_aef_halftrack_m15a1_aa.png" />
-    <None Remove="Resources\ingame\unit_icons\Icons_vehicles_vehicle_aef_halftrack_m21_mortar.png" />
-    <None Remove="Resources\ingame\unit_icons\Icons_vehicles_vehicle_aef_halftrack_m3.png" />
-    <None Remove="Resources\ingame\unit_icons\Icons_vehicles_vehicle_aef_m10_tank_destroyer.png" />
-    <None Remove="Resources\ingame\unit_icons\Icons_vehicles_vehicle_aef_m20_utility_car.png" />
-    <None Remove="Resources\ingame\unit_icons\Icons_vehicles_vehicle_aef_m26_pershing.png" />
-    <None Remove="Resources\ingame\unit_icons\Icons_vehicles_vehicle_aef_m2_60mm_mortar.png" />
-    <None Remove="Resources\ingame\unit_icons\Icons_vehicles_vehicle_aef_m36_jackson.png" />
-    <None Remove="Resources\ingame\unit_icons\Icons_vehicles_vehicle_aef_m4a3e8_sherman.png" />
-    <None Remove="Resources\ingame\unit_icons\Icons_vehicles_vehicle_aef_m4a3_sherman.png" />
-    <None Remove="Resources\ingame\unit_icons\Icons_vehicles_vehicle_aef_m4a3_sherman_76mm.png" />
-    <None Remove="Resources\ingame\unit_icons\Icons_vehicles_vehicle_aef_m4a3_sherman_bulldozer.png" />
-    <None Remove="Resources\ingame\unit_icons\Icons_vehicles_vehicle_aef_m5a1_stuart.png" />
-    <None Remove="Resources\ingame\unit_icons\Icons_vehicles_vehicle_aef_m7b1_priest.png" />
-    <None Remove="Resources\ingame\unit_icons\Icons_vehicles_vehicle_aef_m8a1_hmc.png" />
-    <None Remove="Resources\ingame\unit_icons\Icons_vehicles_vehicle_aef_m8_greyhound.png" />
-    <None Remove="Resources\ingame\unit_icons\Icons_vehicles_vehicle_aef_p47_thunderbolt.png" />
-    <None Remove="Resources\ingame\unit_icons\Icons_vehicles_vehicle_aef_pack_howitzer.png" />
-    <None Remove="Resources\ingame\unit_icons\Icons_vehicles_vehicle_aef_wc51_50cal.png" />
-    <None Remove="Resources\ingame\unit_icons\Icons_vehicles_vehicle_aef_wc51_ambulance.png" />
-    <None Remove="Resources\ingame\unit_icons\Icons_vehicles_vehicle_british_6_pounder_at_gun.png" />
-    <None Remove="Resources\ingame\unit_icons\Icons_vehicles_vehicle_british_airspeed_horsa_glider.png" />
-    <None Remove="Resources\ingame\unit_icons\Icons_vehicles_vehicle_british_airspeed_horsa_glider_hq.png" />
-    <None Remove="Resources\ingame\unit_icons\Icons_vehicles_vehicle_british_bren_carrier.png" />
-    <None Remove="Resources\ingame\unit_icons\Icons_vehicles_vehicle_british_centaur_aa.png" />
-    <None Remove="Resources\ingame\unit_icons\Icons_vehicles_vehicle_british_churchill.png" />
-    <None Remove="Resources\ingame\unit_icons\Icons_vehicles_vehicle_british_churchill_avre.png" />
-    <None Remove="Resources\ingame\unit_icons\Icons_vehicles_vehicle_british_churchill_crocodile.png" />
-    <None Remove="Resources\ingame\unit_icons\Icons_vehicles_vehicle_british_comet.png" />
-    <None Remove="Resources\ingame\unit_icons\Icons_vehicles_vehicle_british_cromwell.png" />
-    <None Remove="Resources\ingame\unit_icons\Icons_vehicles_vehicle_british_hadrian_glider.png" />
-    <None Remove="Resources\ingame\unit_icons\Icons_vehicles_vehicle_british_hawker_typhoon.png" />
-    <None Remove="Resources\ingame\unit_icons\Icons_vehicles_vehicle_british_land_mattress.png" />
-    <None Remove="Resources\ingame\unit_icons\Icons_vehicles_vehicle_british_mkiii_armored_car.png" />
-    <None Remove="Resources\ingame\unit_icons\Icons_vehicles_vehicle_british_sexton.png" />
-    <None Remove="Resources\ingame\unit_icons\Icons_vehicles_vehicle_british_sherman_firefly.png" />
-    <None Remove="Resources\ingame\unit_icons\Icons_vehicles_vehicle_british_valentine.png" />
-    <None Remove="Resources\ingame\unit_icons\Icons_vehicles_vehicle_british_vickers_hmg.png" />
-    <None Remove="Resources\ingame\unit_icons\Icons_vehicles_vehicle_german_222_armored_car.png" />
-    <None Remove="Resources\ingame\unit_icons\Icons_vehicles_vehicle_german_250_halftrack.png" />
-    <None Remove="Resources\ingame\unit_icons\Icons_vehicles_vehicle_german_251_halftrack.png" />
-    <None Remove="Resources\ingame\unit_icons\Icons_vehicles_vehicle_german_251_mortar_halftrack.png" />
-    <None Remove="Resources\ingame\unit_icons\Icons_vehicles_vehicle_german_elefant_tank_destroyer.png" />
-    <None Remove="Resources\ingame\unit_icons\Icons_vehicles_vehicle_german_goliath.png" />
-    <None Remove="Resources\ingame\unit_icons\Icons_vehicles_vehicle_german_howitzer.png" />
-    <None Remove="Resources\ingame\unit_icons\Icons_vehicles_vehicle_german_m3a1_armored_personnel_carrier.png" />
-    <None Remove="Resources\ingame\unit_icons\Icons_vehicles_vehicle_german_opel_blitz.png" />
-    <None Remove="Resources\ingame\unit_icons\Icons_vehicles_vehicle_german_ostwind_flak_panzer.png" />
-    <None Remove="Resources\ingame\unit_icons\Icons_vehicles_vehicle_german_pak_40_75mm_at_gun.png" />
-    <None Remove="Resources\ingame\unit_icons\Icons_vehicles_vehicle_german_pak_43_at_gun.png" />
-    <None Remove="Resources\ingame\unit_icons\Icons_vehicles_vehicle_german_panther.png" />
-    <None Remove="Resources\ingame\unit_icons\Icons_vehicles_vehicle_german_panzerwerfer.png" />
-    <None Remove="Resources\ingame\unit_icons\Icons_vehicles_vehicle_german_panzer_iv.png" />
-    <None Remove="Resources\ingame\unit_icons\Icons_vehicles_vehicle_german_panzer_iv_command_tank.png" />
-    <None Remove="Resources\ingame\unit_icons\Icons_vehicles_vehicle_german_panzer_iv_f1.png" />
-    <None Remove="Resources\ingame\unit_icons\Icons_vehicles_vehicle_german_stug_iii_e.png" />
-    <None Remove="Resources\ingame\unit_icons\Icons_vehicles_vehicle_german_stug_iii_g.png" />
-    <None Remove="Resources\ingame\unit_icons\Icons_vehicles_vehicle_german_stuka.png" />
-    <None Remove="Resources\ingame\unit_icons\Icons_vehicles_vehicle_german_sturmpanzer.png" />
-    <None Remove="Resources\ingame\unit_icons\Icons_vehicles_vehicle_german_tiger.png" />
-    <None Remove="Resources\ingame\unit_icons\Icons_vehicles_vehicle_german_tiger_ace.png" />
-    <None Remove="Resources\ingame\unit_icons\Icons_vehicles_vehicle_soviet_120mm_mortar.png" />
-    <None Remove="Resources\ingame\unit_icons\Icons_vehicles_vehicle_soviet_82mm_mortar.png" />
-    <None Remove="Resources\ingame\unit_icons\Icons_vehicles_vehicle_soviet_b4_artillery_gun.png" />
-    <None Remove="Resources\ingame\unit_icons\Icons_vehicles_vehicle_soviet_dshk_38_50_cal_hmg.png" />
-    <None Remove="Resources\ingame\unit_icons\Icons_vehicles_vehicle_soviet_il2.png" />
-    <None Remove="Resources\ingame\unit_icons\Icons_vehicles_vehicle_soviet_is2.png" />
-    <None Remove="Resources\ingame\unit_icons\Icons_vehicles_vehicle_soviet_isu152.png" />
-    <None Remove="Resources\ingame\unit_icons\Icons_vehicles_vehicle_soviet_katyush_rocket_truck.png" />
-    <None Remove="Resources\ingame\unit_icons\Icons_vehicles_vehicle_soviet_kv1_heavy_tank.png" />
-    <None Remove="Resources\ingame\unit_icons\Icons_vehicles_vehicle_soviet_kv2_heavy_tank.png" />
-    <None Remove="Resources\ingame\unit_icons\Icons_vehicles_vehicle_soviet_kv8.png" />
-    <None Remove="Resources\ingame\unit_icons\Icons_vehicles_vehicle_soviet_m1942_76mm_at_gun.png" />
-    <None Remove="Resources\ingame\unit_icons\Icons_vehicles_vehicle_soviet_m1942_at_gun.png" />
-    <None Remove="Resources\ingame\unit_icons\Icons_vehicles_vehicle_soviet_m3a1_armored_personnel_carrier.png" />
-    <None Remove="Resources\ingame\unit_icons\Icons_vehicles_vehicle_soviet_m5_halftrack.png" />
-    <None Remove="Resources\ingame\unit_icons\Icons_vehicles_vehicle_soviet_mg.png" />
-    <None Remove="Resources\ingame\unit_icons\Icons_vehicles_vehicle_soviet_ml20_artillery_gun.png" />
-    <None Remove="Resources\ingame\unit_icons\Icons_vehicles_vehicle_soviet_su6_truck.png" />
-    <None Remove="Resources\ingame\unit_icons\Icons_vehicles_vehicle_soviet_su76m_assault_gun.png" />
-    <None Remove="Resources\ingame\unit_icons\Icons_vehicles_vehicle_soviet_su85_tank_destroyer.png" />
-    <None Remove="Resources\ingame\unit_icons\Icons_vehicles_vehicle_soviet_t34_76_heavy_tank.png" />
-    <None Remove="Resources\ingame\unit_icons\Icons_vehicles_vehicle_soviet_t34_85.png" />
-    <None Remove="Resources\ingame\unit_icons\Icons_vehicles_vehicle_soviet_t70m_light_tank.png" />
-    <None Remove="Resources\ingame\unit_icons\Icons_vehicles_vehicle_west_german_234_puma_armored_car.png" />
-    <None Remove="Resources\ingame\unit_icons\Icons_vehicles_vehicle_west_german_flammpanzer_38_hetzer.png" />
-    <None Remove="Resources\ingame\unit_icons\Icons_vehicles_vehicle_west_german_halftrack_251_flak.png" />
-    <None Remove="Resources\ingame\unit_icons\Icons_vehicles_vehicle_west_german_halftrack_251_infrared.png" />
-    <None Remove="Resources\ingame\unit_icons\Icons_vehicles_vehicle_west_german_halftrack_251_walking_stuka.png" />
-    <None Remove="Resources\ingame\unit_icons\Icons_vehicles_vehicle_west_german_halftrack_sws.png" />
-    <None Remove="Resources\ingame\unit_icons\Icons_vehicles_vehicle_west_german_hetzer.png" />
-    <None Remove="Resources\ingame\unit_icons\Icons_vehicles_vehicle_west_german_ig18_infantry_support_gun.png" />
-    <None Remove="Resources\ingame\unit_icons\Icons_vehicles_vehicle_west_german_jagdpanzer.png" />
-    <None Remove="Resources\ingame\unit_icons\Icons_vehicles_vehicle_west_german_jagdtiger.png" />
-    <None Remove="Resources\ingame\unit_icons\Icons_vehicles_vehicle_west_german_king_tiger.png" />
-    <None Remove="Resources\ingame\unit_icons\Icons_vehicles_vehicle_west_german_kubelwagen.png" />
-    <None Remove="Resources\ingame\unit_icons\Icons_vehicles_vehicle_west_german_panther.png" />
-    <None Remove="Resources\ingame\unit_icons\Icons_vehicles_vehicle_west_german_panther_command_tank.png" />
-    <None Remove="Resources\ingame\unit_icons\Icons_vehicles_vehicle_west_german_panzer_ii_luchs.png" />
-    <None Remove="Resources\ingame\unit_icons\Icons_vehicles_vehicle_west_german_panzer_iv.png" />
-    <None Remove="Resources\ingame\unit_icons\Icons_vehicles_vehicle_west_german_raketenwerfer_43_at_gun.png" />
-    <None Remove="Resources\ingame\unit_icons\Icons_vehicles_vehicle_west_german_sturmtiger.png" />
+    <None Remove="Resources\ingame\unit_icons.dat" />
     <None Remove="Resources\ingame\unknown_map.png" />
+    <None Remove="Resources\ingame\upgrade_icons.dat" />
+    <None Remove="Resources\ingame\vet\vstar1.png" />
+    <None Remove="Resources\ingame\vet\vstar2.png" />
+    <None Remove="Resources\ingame\vet\vstar3.png" />
+    <None Remove="Resources\ingame\vet\vstar4.png" />
+    <None Remove="Resources\ingame\vet\vstar5.png" />
+    <None Remove="Resources\ingame\vet\vstar_no.png" />
+    <None Remove="Resources\ingame\vet\vstar_yes.png" />
     <None Remove="Resources\ingame\west_german.png" />
   </ItemGroup>
 
   <ItemGroup>
+    <Content Include="coh2-battlegrounds.ico">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Resources\app\army_icons\FactionAEF.png" />
+    <Resource Include="Resources\app\army_icons\FactionAEFHighlighted.png" />
+    <Resource Include="Resources\app\army_icons\FactionBRIT.png" />
+    <Resource Include="Resources\app\army_icons\FactionBRITHighlighted.png" />
+    <Resource Include="Resources\app\army_icons\FactionLOCKED.png" />
+    <Resource Include="Resources\app\army_icons\FactionOKW.png" />
+    <Resource Include="Resources\app\army_icons\FactionOKWHighlighted.png" />
+    <Resource Include="Resources\app\army_icons\FactionSOVIET.png" />
+    <Resource Include="Resources\app\army_icons\FactionSOVIETHighlighted.png" />
+    <Resource Include="Resources\app\army_icons\FactionWEHR.png" />
+    <Resource Include="Resources\app\army_icons\FactionWEHRHighlighted.png" />
+    <Resource Include="Resources\app\checkmark.png" />
+    <Resource Include="Resources\app\checkmark_not.png" />
+    <Resource Include="Resources\app\company_types\ct_airborne.png" />
+    <Resource Include="Resources\app\company_types\ct_armoured.png" />
+    <Resource Include="Resources\app\company_types\ct_artillery.png" />
+    <Resource Include="Resources\app\company_types\ct_engineer.png" />
+    <Resource Include="Resources\app\company_types\ct_infantry.png" />
+    <Resource Include="Resources\app\company_types\ct_mechanized.png" />
+    <Resource Include="Resources\app\company_types\ct_motorized.png" />
+    <Resource Include="Resources\app\company_types\ct_td.png" />
+    <Resource Include="Resources\app\company_types\ct_unspecified.png" />
+    <Resource Include="Resources\app\icon_bkg.png" />
+    <Resource Include="Resources\app\LobbySettingMap.png" />
+    <Resource Include="Resources\app\logo_main.png" />
     <Resource Include="Resources\app\padlock_locked.png" />
     <Resource Include="Resources\app\padlock_open.png" />
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="SharpVectors" Version="1.7.6" />
     <PackageReference Include="System.Diagnostics.Contracts" Version="4.3.0" />
   </ItemGroup>
 
@@ -256,6 +184,7 @@
     <Resource Include="Resources\campaign\obj_main.png" />
     <Resource Include="Resources\campaign\obj_secondary.png" />
     <Resource Include="Resources\campaign\obj_star.png" />
+    <Resource Include="Resources\ingame\ability_icons.dat" />
     <Resource Include="Resources\ingame\aef.png" />
     <Resource Include="Resources\ingame\application\app_background.png" />
     <Resource Include="Resources\ingame\application\app_button.png" />
@@ -265,191 +194,543 @@
     <Resource Include="Resources\ingame\application\app_logo1.png" />
     <Resource Include="Resources\ingame\application\app_logo2.png" />
     <Resource Include="Resources\ingame\british.png" />
+    <Resource Include="Resources\ingame\deploy_icons.dat" />
     <Resource Include="Resources\ingame\german.png" />
+    <Resource Include="Resources\ingame\item_icons.dat" />
+    <Resource Include="Resources\ingame\no_icon.png" />
+    <Resource Include="Resources\ingame\phase_icons.dat" />
+    <Resource Include="Resources\ingame\portraits.dat" />
+    <Resource Include="Resources\ingame\remove_item.png" />
+    <Resource Include="Resources\ingame\resource_icons\botb_fuel.png" />
+    <Resource Include="Resources\ingame\resource_icons\botb_manpower.png" />
+    <Resource Include="Resources\ingame\resource_icons\botb_munitions.png" />
     <Resource Include="Resources\ingame\soviet.png" />
+    <Resource Include="Resources\ingame\symbol_icons.dat" />
     <Resource Include="Resources\ingame\test_unit_icon.png" />
+    <Resource Include="Resources\ingame\test_unit_portrait.png" />
     <Resource Include="Resources\ingame\test_unit_transport.png" />
     <Resource Include="Resources\ingame\test_unit_veterancy.png" />
-    <Resource Include="Resources\ingame\unit_icons\Icons_units_unit_aef_assault_engineers.png" />
-    <Resource Include="Resources\ingame\unit_icons\Icons_units_unit_aef_cavalry_riflemen.png" />
-    <Resource Include="Resources\ingame\unit_icons\Icons_units_unit_aef_medic.png" />
-    <Resource Include="Resources\ingame\unit_icons\Icons_units_unit_aef_mg_crew.png" />
-    <Resource Include="Resources\ingame\unit_icons\Icons_units_unit_aef_mortar_crew.png" />
-    <Resource Include="Resources\ingame\unit_icons\Icons_units_unit_aef_officer_captain.png" />
-    <Resource Include="Resources\ingame\unit_icons\Icons_units_unit_aef_officer_lieutenant.png" />
-    <Resource Include="Resources\ingame\unit_icons\Icons_units_unit_aef_officer_major.png" />
-    <Resource Include="Resources\ingame\unit_icons\Icons_units_unit_aef_paratroopers.png" />
-    <Resource Include="Resources\ingame\unit_icons\Icons_units_unit_aef_pathfinders.png" />
-    <Resource Include="Resources\ingame\unit_icons\Icons_units_unit_aef_pathfinders_i_and_r.png" />
-    <Resource Include="Resources\ingame\unit_icons\Icons_units_unit_aef_ranger.png" />
-    <Resource Include="Resources\ingame\unit_icons\Icons_units_unit_aef_rear_echelon_troops.png" />
-    <Resource Include="Resources\ingame\unit_icons\Icons_units_unit_aef_riflemen.png" />
-    <Resource Include="Resources\ingame\unit_icons\Icons_units_unit_aef_vehicle_crew.png" />
-    <Resource Include="Resources\ingame\unit_icons\Icons_units_unit_axis_stormtrooper.png" />
-    <Resource Include="Resources\ingame\unit_icons\Icons_units_unit_british_airlanding_officer.png" />
-    <Resource Include="Resources\ingame\unit_icons\Icons_units_unit_british_commando.png" />
-    <Resource Include="Resources\ingame\unit_icons\Icons_units_unit_british_commando_from_building.png" />
-    <Resource Include="Resources\ingame\unit_icons\Icons_units_unit_british_demolitions_engineer.png" />
-    <Resource Include="Resources\ingame\unit_icons\Icons_units_unit_british_engineer.png" />
-    <Resource Include="Resources\ingame\unit_icons\Icons_units_unit_british_engineer_recovery.png" />
-    <Resource Include="Resources\ingame\unit_icons\Icons_units_unit_british_forward_observation_officer.png" />
-    <Resource Include="Resources\ingame\unit_icons\Icons_units_unit_british_medic.png" />
-    <Resource Include="Resources\ingame\unit_icons\Icons_units_unit_british_officer.png" />
-    <Resource Include="Resources\ingame\unit_icons\Icons_units_unit_british_sniper.png" />
-    <Resource Include="Resources\ingame\unit_icons\Icons_units_unit_british_tommy_recon.png" />
-    <Resource Include="Resources\ingame\unit_icons\Icons_units_unit_british_tommy_with_tommy.png" />
-    <Resource Include="Resources\ingame\unit_icons\Icons_units_unit_british_vehicle_crew.png" />
-    <Resource Include="Resources\ingame\unit_icons\Icons_units_unit_british_vickers_hmg.png" />
-    <Resource Include="Resources\ingame\unit_icons\Icons_units_unit_german_assault_grenadier.png" />
-    <Resource Include="Resources\ingame\unit_icons\Icons_units_unit_german_granatwerfer_34_mortar.png" />
-    <Resource Include="Resources\ingame\unit_icons\Icons_units_unit_german_grenadier.png" />
-    <Resource Include="Resources\ingame\unit_icons\Icons_units_unit_german_jaeger_light_infantry.png" />
-    <Resource Include="Resources\ingame\unit_icons\Icons_units_unit_german_m1910_hmg.png" />
-    <Resource Include="Resources\ingame\unit_icons\Icons_units_unit_german_medic.png" />
-    <Resource Include="Resources\ingame\unit_icons\Icons_units_unit_german_officer.png" />
-    <Resource Include="Resources\ingame\unit_icons\Icons_units_unit_german_ostruppen.png" />
-    <Resource Include="Resources\ingame\unit_icons\Icons_units_unit_german_panzer_grenadier.png" />
-    <Resource Include="Resources\ingame\unit_icons\Icons_units_unit_german_pioneer.png" />
-    <Resource Include="Resources\ingame\unit_icons\Icons_units_unit_german_sniper.png" />
-    <Resource Include="Resources\ingame\unit_icons\Icons_units_unit_german_stormtroopers.png" />
-    <Resource Include="Resources\ingame\unit_icons\Icons_units_unit_german_stormtroopers_from_building.png" />
-    <Resource Include="Resources\ingame\unit_icons\Icons_units_unit_german_urban_assault_panzer_grenadier.png" />
-    <Resource Include="Resources\ingame\unit_icons\Icons_units_unit_soviet_ania.png" />
-    <Resource Include="Resources\ingame\unit_icons\Icons_units_unit_soviet_conscript_01.png" />
-    <Resource Include="Resources\ingame\unit_icons\Icons_units_unit_soviet_conscript_02.png" />
-    <Resource Include="Resources\ingame\unit_icons\Icons_units_unit_soviet_conscript_03.png" />
-    <Resource Include="Resources\ingame\unit_icons\Icons_units_unit_soviet_engineer.png" />
-    <Resource Include="Resources\ingame\unit_icons\Icons_units_unit_soviet_frontviki.png" />
-    <Resource Include="Resources\ingame\unit_icons\Icons_units_unit_soviet_guards.png" />
-    <Resource Include="Resources\ingame\unit_icons\Icons_units_unit_soviet_mg.png" />
-    <Resource Include="Resources\ingame\unit_icons\Icons_units_unit_soviet_mortar.png" />
-    <Resource Include="Resources\ingame\unit_icons\Icons_units_unit_soviet_officer.png" />
-    <Resource Include="Resources\ingame\unit_icons\Icons_units_unit_soviet_partisan.png" />
-    <Resource Include="Resources\ingame\unit_icons\Icons_units_unit_soviet_partisan_anti_infantry.png" />
-    <Resource Include="Resources\ingame\unit_icons\Icons_units_unit_soviet_partisan_anti_vehicle.png" />
-    <Resource Include="Resources\ingame\unit_icons\Icons_units_unit_soviet_partisan_anti_vehicle_from_building.png" />
-    <Resource Include="Resources\ingame\unit_icons\Icons_units_unit_soviet_partisan_from_building.png" />
-    <Resource Include="Resources\ingame\unit_icons\Icons_units_unit_soviet_partisan_mg.png" />
-    <Resource Include="Resources\ingame\unit_icons\Icons_units_unit_soviet_partisan_mortar.png" />
-    <Resource Include="Resources\ingame\unit_icons\Icons_units_unit_soviet_penal_battalion.png" />
-    <Resource Include="Resources\ingame\unit_icons\Icons_units_unit_soviet_shock.png" />
-    <Resource Include="Resources\ingame\unit_icons\Icons_units_unit_soviet_sniper.png" />
-    <Resource Include="Resources\ingame\unit_icons\Icons_units_unit_west_german_fallschirmjager.png" />
-    <Resource Include="Resources\ingame\unit_icons\Icons_units_unit_west_german_fallschirmjager_from_building.png" />
-    <Resource Include="Resources\ingame\unit_icons\Icons_units_unit_west_german_jaeger_light_infantry.png" />
-    <Resource Include="Resources\ingame\unit_icons\Icons_units_unit_west_german_jaeger_light_infantry_from_building.png" />
-    <Resource Include="Resources\ingame\unit_icons\Icons_units_unit_west_german_mg34_hmg.png" />
-    <Resource Include="Resources\ingame\unit_icons\Icons_units_unit_west_german_panzerfusilier.png" />
-    <Resource Include="Resources\ingame\unit_icons\Icons_units_unit_west_german_sturmpioneers.png" />
-    <Resource Include="Resources\ingame\unit_icons\Icons_units_unit_west_german_terror_officer.png" />
-    <Resource Include="Resources\ingame\unit_icons\Icons_units_unit_west_german_waffen_honor_guard.png" />
-    <Resource Include="Resources\ingame\unit_icons\Icons_vehicles_vehicle_aef_57mm_at_gun.png" />
-    <Resource Include="Resources\ingame\unit_icons\Icons_vehicles_vehicle_aef_browning_m2_50cal_hmg.png" />
-    <Resource Include="Resources\ingame\unit_icons\Icons_vehicles_vehicle_aef_calliope.png" />
-    <Resource Include="Resources\ingame\unit_icons\Icons_vehicles_vehicle_aef_halftrack_m15a1_aa.png" />
-    <Resource Include="Resources\ingame\unit_icons\Icons_vehicles_vehicle_aef_halftrack_m21_mortar.png" />
-    <Resource Include="Resources\ingame\unit_icons\Icons_vehicles_vehicle_aef_halftrack_m3.png" />
-    <Resource Include="Resources\ingame\unit_icons\Icons_vehicles_vehicle_aef_m10_tank_destroyer.png" />
-    <Resource Include="Resources\ingame\unit_icons\Icons_vehicles_vehicle_aef_m20_utility_car.png" />
-    <Resource Include="Resources\ingame\unit_icons\Icons_vehicles_vehicle_aef_m26_pershing.png" />
-    <Resource Include="Resources\ingame\unit_icons\Icons_vehicles_vehicle_aef_m2_60mm_mortar.png" />
-    <Resource Include="Resources\ingame\unit_icons\Icons_vehicles_vehicle_aef_m36_jackson.png" />
-    <Resource Include="Resources\ingame\unit_icons\Icons_vehicles_vehicle_aef_m4a3e8_sherman.png" />
-    <Resource Include="Resources\ingame\unit_icons\Icons_vehicles_vehicle_aef_m4a3_sherman.png" />
-    <Resource Include="Resources\ingame\unit_icons\Icons_vehicles_vehicle_aef_m4a3_sherman_76mm.png" />
-    <Resource Include="Resources\ingame\unit_icons\Icons_vehicles_vehicle_aef_m4a3_sherman_bulldozer.png" />
-    <Resource Include="Resources\ingame\unit_icons\Icons_vehicles_vehicle_aef_m5a1_stuart.png" />
-    <Resource Include="Resources\ingame\unit_icons\Icons_vehicles_vehicle_aef_m7b1_priest.png" />
-    <Resource Include="Resources\ingame\unit_icons\Icons_vehicles_vehicle_aef_m8a1_hmc.png" />
-    <Resource Include="Resources\ingame\unit_icons\Icons_vehicles_vehicle_aef_m8_greyhound.png" />
-    <Resource Include="Resources\ingame\unit_icons\Icons_vehicles_vehicle_aef_p47_thunderbolt.png" />
-    <Resource Include="Resources\ingame\unit_icons\Icons_vehicles_vehicle_aef_pack_howitzer.png" />
-    <Resource Include="Resources\ingame\unit_icons\Icons_vehicles_vehicle_aef_wc51_50cal.png" />
-    <Resource Include="Resources\ingame\unit_icons\Icons_vehicles_vehicle_aef_wc51_ambulance.png" />
-    <Resource Include="Resources\ingame\unit_icons\Icons_vehicles_vehicle_british_6_pounder_at_gun.png" />
-    <Resource Include="Resources\ingame\unit_icons\Icons_vehicles_vehicle_british_airspeed_horsa_glider.png" />
-    <Resource Include="Resources\ingame\unit_icons\Icons_vehicles_vehicle_british_airspeed_horsa_glider_hq.png" />
-    <Resource Include="Resources\ingame\unit_icons\Icons_vehicles_vehicle_british_bren_carrier.png" />
-    <Resource Include="Resources\ingame\unit_icons\Icons_vehicles_vehicle_british_centaur_aa.png" />
-    <Resource Include="Resources\ingame\unit_icons\Icons_vehicles_vehicle_british_churchill.png" />
-    <Resource Include="Resources\ingame\unit_icons\Icons_vehicles_vehicle_british_churchill_avre.png" />
-    <Resource Include="Resources\ingame\unit_icons\Icons_vehicles_vehicle_british_churchill_crocodile.png" />
-    <Resource Include="Resources\ingame\unit_icons\Icons_vehicles_vehicle_british_comet.png" />
-    <Resource Include="Resources\ingame\unit_icons\Icons_vehicles_vehicle_british_cromwell.png" />
-    <Resource Include="Resources\ingame\unit_icons\Icons_vehicles_vehicle_british_hadrian_glider.png" />
-    <Resource Include="Resources\ingame\unit_icons\Icons_vehicles_vehicle_british_hawker_typhoon.png" />
-    <Resource Include="Resources\ingame\unit_icons\Icons_vehicles_vehicle_british_land_mattress.png" />
-    <Resource Include="Resources\ingame\unit_icons\Icons_vehicles_vehicle_british_mkiii_armored_car.png" />
-    <Resource Include="Resources\ingame\unit_icons\Icons_vehicles_vehicle_british_sexton.png" />
-    <Resource Include="Resources\ingame\unit_icons\Icons_vehicles_vehicle_british_sherman_firefly.png" />
-    <Resource Include="Resources\ingame\unit_icons\Icons_vehicles_vehicle_british_valentine.png" />
-    <Resource Include="Resources\ingame\unit_icons\Icons_vehicles_vehicle_british_vickers_hmg.png" />
-    <Resource Include="Resources\ingame\unit_icons\Icons_vehicles_vehicle_german_222_armored_car.png" />
-    <Resource Include="Resources\ingame\unit_icons\Icons_vehicles_vehicle_german_250_halftrack.png" />
-    <Resource Include="Resources\ingame\unit_icons\Icons_vehicles_vehicle_german_251_halftrack.png" />
-    <Resource Include="Resources\ingame\unit_icons\Icons_vehicles_vehicle_german_251_mortar_halftrack.png" />
-    <Resource Include="Resources\ingame\unit_icons\Icons_vehicles_vehicle_german_elefant_tank_destroyer.png" />
-    <Resource Include="Resources\ingame\unit_icons\Icons_vehicles_vehicle_german_goliath.png" />
-    <Resource Include="Resources\ingame\unit_icons\Icons_vehicles_vehicle_german_howitzer.png" />
-    <Resource Include="Resources\ingame\unit_icons\Icons_vehicles_vehicle_german_m3a1_armored_personnel_carrier.png" />
-    <Resource Include="Resources\ingame\unit_icons\Icons_vehicles_vehicle_german_opel_blitz.png" />
-    <Resource Include="Resources\ingame\unit_icons\Icons_vehicles_vehicle_german_ostwind_flak_panzer.png" />
-    <Resource Include="Resources\ingame\unit_icons\Icons_vehicles_vehicle_german_pak_40_75mm_at_gun.png" />
-    <Resource Include="Resources\ingame\unit_icons\Icons_vehicles_vehicle_german_pak_43_at_gun.png" />
-    <Resource Include="Resources\ingame\unit_icons\Icons_vehicles_vehicle_german_panther.png" />
-    <Resource Include="Resources\ingame\unit_icons\Icons_vehicles_vehicle_german_panzerwerfer.png" />
-    <Resource Include="Resources\ingame\unit_icons\Icons_vehicles_vehicle_german_panzer_iv.png" />
-    <Resource Include="Resources\ingame\unit_icons\Icons_vehicles_vehicle_german_panzer_iv_command_tank.png" />
-    <Resource Include="Resources\ingame\unit_icons\Icons_vehicles_vehicle_german_panzer_iv_f1.png" />
-    <Resource Include="Resources\ingame\unit_icons\Icons_vehicles_vehicle_german_stug_iii_e.png" />
-    <Resource Include="Resources\ingame\unit_icons\Icons_vehicles_vehicle_german_stug_iii_g.png" />
-    <Resource Include="Resources\ingame\unit_icons\Icons_vehicles_vehicle_german_stuka.png" />
-    <Resource Include="Resources\ingame\unit_icons\Icons_vehicles_vehicle_german_sturmpanzer.png" />
-    <Resource Include="Resources\ingame\unit_icons\Icons_vehicles_vehicle_german_tiger.png" />
-    <Resource Include="Resources\ingame\unit_icons\Icons_vehicles_vehicle_german_tiger_ace.png" />
-    <Resource Include="Resources\ingame\unit_icons\Icons_vehicles_vehicle_soviet_120mm_mortar.png" />
-    <Resource Include="Resources\ingame\unit_icons\Icons_vehicles_vehicle_soviet_82mm_mortar.png" />
-    <Resource Include="Resources\ingame\unit_icons\Icons_vehicles_vehicle_soviet_b4_artillery_gun.png" />
-    <Resource Include="Resources\ingame\unit_icons\Icons_vehicles_vehicle_soviet_dshk_38_50_cal_hmg.png" />
-    <Resource Include="Resources\ingame\unit_icons\Icons_vehicles_vehicle_soviet_il2.png" />
-    <Resource Include="Resources\ingame\unit_icons\Icons_vehicles_vehicle_soviet_is2.png" />
-    <Resource Include="Resources\ingame\unit_icons\Icons_vehicles_vehicle_soviet_isu152.png" />
-    <Resource Include="Resources\ingame\unit_icons\Icons_vehicles_vehicle_soviet_katyush_rocket_truck.png" />
-    <Resource Include="Resources\ingame\unit_icons\Icons_vehicles_vehicle_soviet_kv1_heavy_tank.png" />
-    <Resource Include="Resources\ingame\unit_icons\Icons_vehicles_vehicle_soviet_kv2_heavy_tank.png" />
-    <Resource Include="Resources\ingame\unit_icons\Icons_vehicles_vehicle_soviet_kv8.png" />
-    <Resource Include="Resources\ingame\unit_icons\Icons_vehicles_vehicle_soviet_m1942_76mm_at_gun.png" />
-    <Resource Include="Resources\ingame\unit_icons\Icons_vehicles_vehicle_soviet_m1942_at_gun.png" />
-    <Resource Include="Resources\ingame\unit_icons\Icons_vehicles_vehicle_soviet_m3a1_armored_personnel_carrier.png" />
-    <Resource Include="Resources\ingame\unit_icons\Icons_vehicles_vehicle_soviet_m5_halftrack.png" />
-    <Resource Include="Resources\ingame\unit_icons\Icons_vehicles_vehicle_soviet_mg.png" />
-    <Resource Include="Resources\ingame\unit_icons\Icons_vehicles_vehicle_soviet_ml20_artillery_gun.png" />
-    <Resource Include="Resources\ingame\unit_icons\Icons_vehicles_vehicle_soviet_su6_truck.png" />
-    <Resource Include="Resources\ingame\unit_icons\Icons_vehicles_vehicle_soviet_su76m_assault_gun.png" />
-    <Resource Include="Resources\ingame\unit_icons\Icons_vehicles_vehicle_soviet_su85_tank_destroyer.png" />
-    <Resource Include="Resources\ingame\unit_icons\Icons_vehicles_vehicle_soviet_t34_76_heavy_tank.png" />
-    <Resource Include="Resources\ingame\unit_icons\Icons_vehicles_vehicle_soviet_t34_85.png" />
-    <Resource Include="Resources\ingame\unit_icons\Icons_vehicles_vehicle_soviet_t70m_light_tank.png" />
-    <Resource Include="Resources\ingame\unit_icons\Icons_vehicles_vehicle_west_german_234_puma_armored_car.png" />
-    <Resource Include="Resources\ingame\unit_icons\Icons_vehicles_vehicle_west_german_flammpanzer_38_hetzer.png" />
-    <Resource Include="Resources\ingame\unit_icons\Icons_vehicles_vehicle_west_german_halftrack_251_flak.png" />
-    <Resource Include="Resources\ingame\unit_icons\Icons_vehicles_vehicle_west_german_halftrack_251_infrared.png" />
-    <Resource Include="Resources\ingame\unit_icons\Icons_vehicles_vehicle_west_german_halftrack_251_walking_stuka.png" />
-    <Resource Include="Resources\ingame\unit_icons\Icons_vehicles_vehicle_west_german_halftrack_sws.png" />
-    <Resource Include="Resources\ingame\unit_icons\Icons_vehicles_vehicle_west_german_hetzer.png" />
-    <Resource Include="Resources\ingame\unit_icons\Icons_vehicles_vehicle_west_german_ig18_infantry_support_gun.png" />
-    <Resource Include="Resources\ingame\unit_icons\Icons_vehicles_vehicle_west_german_jagdpanzer.png" />
-    <Resource Include="Resources\ingame\unit_icons\Icons_vehicles_vehicle_west_german_jagdtiger.png" />
-    <Resource Include="Resources\ingame\unit_icons\Icons_vehicles_vehicle_west_german_king_tiger.png" />
-    <Resource Include="Resources\ingame\unit_icons\Icons_vehicles_vehicle_west_german_kubelwagen.png" />
-    <Resource Include="Resources\ingame\unit_icons\Icons_vehicles_vehicle_west_german_panther.png" />
-    <Resource Include="Resources\ingame\unit_icons\Icons_vehicles_vehicle_west_german_panther_command_tank.png" />
-    <Resource Include="Resources\ingame\unit_icons\Icons_vehicles_vehicle_west_german_panzer_ii_luchs.png" />
-    <Resource Include="Resources\ingame\unit_icons\Icons_vehicles_vehicle_west_german_panzer_iv.png" />
-    <Resource Include="Resources\ingame\unit_icons\Icons_vehicles_vehicle_west_german_raketenwerfer_43_at_gun.png" />
-    <Resource Include="Resources\ingame\unit_icons\Icons_vehicles_vehicle_west_german_sturmtiger.png" />
+    <Resource Include="Resources\ingame\unit_icons.dat" />
     <Resource Include="Resources\ingame\unknown_map.png" />
+    <Resource Include="Resources\ingame\upgrade_icons.dat" />
+    <Resource Include="Resources\ingame\vet\vstar1.png" />
+    <Resource Include="Resources\ingame\vet\vstar2.png" />
+    <Resource Include="Resources\ingame\vet\vstar3.png" />
+    <Resource Include="Resources\ingame\vet\vstar4.png" />
+    <Resource Include="Resources\ingame\vet\vstar5.png" />
+    <Resource Include="Resources\ingame\vet\vstar_no.png" />
+    <Resource Include="Resources\ingame\vet\vstar_yes.png" />
     <Resource Include="Resources\ingame\west_german.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="bg_common\campaigns\sov_ost_stalingrad.dat">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\coh2_battlegrounds_wincondition_preview.dds">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\data\vcoh-abp-db.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\data\vcoh-cbp-db.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\data\vcoh-ebp-db.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\data\vcoh-ibp-db.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\data\vcoh-map-db.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\data\vcoh-sbp-db.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\data\vcoh-ubp-db.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\data\vcoh-wbp-db.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\6a0a13b89555402ca75b85dc30f5cb04.gfx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\6a0a13b89555402ca75b85dc30f5cb04_I20.dds">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\6a0a13b89555402ca75b85dc30f5cb04_I3.dds">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\%282-4%29_compound_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\2-4_langres_winter_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\2p_angoville_farms_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\2p_arnhem_checkpoint_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\2p_bayeux_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\2p_bryansk_forest_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\2p_caen_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\2p_cheneux_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\2p_coh2_resistance_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\2p_crossing_in_the_woods_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\2p_divide_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\2p_don_river_v2_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\2p_faymonville_approach_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\2p_halbe_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\2p_karelia_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\2p_kholodnaya_ferma_battlefield_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\2p_kholodnaya_ferma_spring_frontline_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\2p_la_gleize_breakout_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\2p_minsk_pocket_frontline_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\2p_novgorodoutskirts_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\2p_road_to_kharkov_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\2p_road_to_ligneuville_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\2p_semois_winter_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\2p_sturzdorf_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\2p_wiltz_summit_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\2_4_tereklines_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\4p_across_the_rhine_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\4p_another_city_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\4p_baugnez_outskirts_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\4p_belgorod_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\4p_bystraya_voda_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\4p_coh2_okariver_frontline_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\4p_crossing_in_the_woods_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\4p_dreux_scout_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\4p_dusseldorf_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\4p_ecliptic_fields_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\4p_einhoven_country_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\4p_elst_outskirts_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\4p_ettelbruck_station_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\4p_fields_of_winnekendonk_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\4p_gelsenkirchen_refinery_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\4p_heidelberg_crossings_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\4p_hurtgen_forest_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\4p_kholodnaya_ferma_battlefield_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\4p_lisores_river_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\4p_minsk_pocket_frontline_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\4p_moscow_outskirts_fall_frontline_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\4p_moscow_outskirts_frontline_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\4p_noville_encirclement_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\4p_poltawa_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\4p_pripyat_sector_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\4p_prypiat_battlefield_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\4p_prypiat_winter_frontline_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\4p_pump_station_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\4p_rails_and_metal_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\4p_road_to_kharkov_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\4p_rothe_erde_station_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\4p_rzhev_frontline_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\4p_rzhev_summer_frontline_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\4p_schilberg_outskirts_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\4p_semois_attrition_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\4p_semois_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\4p_semois_winter_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\4p_trois_pont_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\4p_vaux_farmlands_attrition_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\4p_vaux_farmlands_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\4_6_lemberg_fall_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\4_6_rostov_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\6p_across_the_rhine_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\6p_angermuende_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\6p_anklet_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\6p_bulligen_spearhead_2_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\6p_coh2_pavlov_s_house_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\6p_esch_sur_sure_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\6p_ettelbruck_station_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\6p_fields_of_winnekendonk_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\6p_general_mud_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\6p_hill_331_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\6p_hill_400_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\6p_lazenrath_ambush_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\6p_montherme_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\6p_mudroad311_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\6p_mud_valley_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\6p_port_of_hamburg_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\6p_rzhev_frontline_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\6p_swamps_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\6_8_brody_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\8p_achelous_river_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\8p_angermuende_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\8p_anklet_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\8p_coh2_city_17_spring_frontline_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\8p_coh2_city_17_winter_battlefield_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\8p_coh2_thesteppes_frontline_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\8p_essen_steelworks_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\8p_general_mud_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\8p_hill_400_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\8p_lazenrath_ambush_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\8p_la_gleize_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\8p_lienne_forest_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\8p_lienne_forest_winter_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\8p_lorch_assault_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\8p_montargis_region_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\8p_narva_v2_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\8p_nordwind_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\8p_port_of_hamburg_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\8p_redball_express_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\8p_sittard_2_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\8p_tank_factory_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\8p_tundra_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\8p_west_wall_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\8p_whiteball_express_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\amilly_fields_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\anotherstalingrad_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\aod_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\bacon_mirage_round2_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\bialystok_market_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\bocage_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\crossroadswx_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\crossroads_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\deutz_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\german_industry_test_map_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\hamlet_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\highwaybaku_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\ladoga_karelia_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\langres_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\lost_glider_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\market_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\mill_road_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\nexus_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\operation_plunder_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\operation_queen_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\overgrowth_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\ploiesti_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\ponaryforest_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\rechnaya_pereprava_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\refinery_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\roadtoarnhem_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\southern_alblasserwaard_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\specialtest_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\stadtschutt_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\vilshanka_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\volga_timber_yard_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\wolfheze_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\wolfs_lair_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\locale\english.loc">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="checksum.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="usr\mods\battlegrounds.mod.package.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="usr\mods\bg\locale\english\english.gamemode.ucs">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="usr\mods\bg\locale\english\english.tuning.ucs">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="usr\mods\mod_db\mod_bg-abp-db.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="usr\mods\mod_db\mod_bg-cbp-db.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="usr\mods\mod_db\mod_bg-ebp-db.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="usr\mods\mod_db\mod_bg-ibp-db.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="usr\mods\mod_db\mod_bg-sbp-db.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="usr\mods\mod_db\mod_bg-ubp-db.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="usr\mods\mod_db\mod_bg-wbp-db.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>

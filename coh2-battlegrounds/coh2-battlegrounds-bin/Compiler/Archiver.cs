@@ -3,10 +3,10 @@ using System.Diagnostics;
 using System.Threading;
 
 namespace Battlegrounds.Compiler {
-    
+
     public static class Archiver {
 
-        public static bool Archive(string archdef, string relativepath, string output) 
+        public static bool Archive(string archdef, string relativepath, string output)
             => RunArchiver($" -c \"{archdef}\" -a \"{output}\" -v -r \"{relativepath}\\\"", null);
 
         public static bool Extract(string arcfile, string outpath)

@@ -9,7 +9,7 @@ using Battlegrounds.Lua.Runtime;
 using static Battlegrounds.Lua.LuaNil;
 
 namespace Battlegrounds.Lua {
-    
+
     /// <summary>
     /// Type data management class for <see cref="LuaUserObject"/> instances.
     /// </summary>
@@ -93,7 +93,7 @@ namespace Battlegrounds.Lua {
         /// <exception cref="LuaRuntimeError"/>
         /// <returns>The <see cref="LuaClosure"/> that best represents the specified settings in the <paramref name="method"/> object.</returns>
         public static LuaClosure CreateFunction(LuaUserObjectType objectType, Method method, LuaTable typeTable) {
-            
+
             // The delegate to invoke
             LuaCSharpFuncDelegate funcDelegate = null;
 

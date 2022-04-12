@@ -28,7 +28,7 @@ namespace Battlegrounds.Online.Services {
     /// 
     /// </summary>
     public static class SyncService {
-    
+
         /// <summary>
         /// Timeout object marking whether a <see cref="SyncService"/> "wait" method timed out.
         /// </summary>

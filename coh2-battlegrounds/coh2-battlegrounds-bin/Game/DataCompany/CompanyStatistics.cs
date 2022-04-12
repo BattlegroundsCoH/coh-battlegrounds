@@ -1,19 +1,25 @@
 ﻿using System;
-using Battlegrounds.Json;
+using System.Text.Json;
+using System.Text.Json.Serialization;
+
+using Battlegrounds.Verification;
 
 namespace Battlegrounds.Game.DataCompany {
 
     /// <summary>
-    /// 
+    /// Class representing the win and loss statistics of a company.
     /// </summary>
-    public class CompanyStatistics : IJsonObject, ICloneable {
+    public class CompanyStatistics : ICloneable, IChecksumPropertyItem {
 
         #region Win/Lose counts
 
+        [ChecksumProperty]
         public ulong TotalMatchCount { get; set; }
 
+        [ChecksumProperty]
         public ulong TotalMatchLossCount { get; set; }
 
+        [ChecksumProperty]
         public ulong TotalMatchWinCount { get; set; }
 
         [JsonIgnore]
@@ -26,18 +32,18 @@ namespace Battlegrounds.Game.DataCompany {
 
         #region Unit loss counts
 
+        [ChecksumProperty]
         public ulong TotalInfantryLosses { get; set; }
 
+        [ChecksumProperty]
         public ulong TotalVehicleLosses { get; set; }
 
         [JsonIgnore]
         public ulong TotalLosses => this.TotalInfantryLosses + this.TotalVehicleLosses;
 
-        public object Clone() => JsonParser.ParseString<CompanyStatistics>(this.SerializeAsJson());
-
         #endregion
 
-        public string ToJsonReference() => "";
+        public object Clone() => JsonSerializer.Deserialize<CompanyStatistics>(JsonSerializer.Serialize(this));
 
     }
 

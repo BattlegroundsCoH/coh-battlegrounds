@@ -4,7 +4,7 @@ using System.Linq;
 using static Battlegrounds.Lua.LuaNil;
 
 namespace Battlegrounds.Lua.Runtime {
-    
+
     /// <summary>
     /// Represents the stack of <see cref="LuaValue"/> objects. Can dynamically increase in size and offers various push/pop functionality.
     /// </summary>
@@ -72,7 +72,7 @@ namespace Battlegrounds.Lua.Runtime {
         public LuaValue[] Pop(int count) {
             int i = 0;
             LuaValue[] vals = new LuaValue[count];
-            while(this.m_topPtr > 0) {
+            while (this.m_topPtr > 0) {
                 vals[i] = this.m_stack[--this.m_topPtr];
                 i++;
             }
@@ -132,7 +132,7 @@ namespace Battlegrounds.Lua.Runtime {
         /// </summary>
         /// <param name="topFirst">Top-element should be the first element in returned string.</param>
         /// <returns>The converted string of <see cref="LuaValue"/> string representations.</returns>
-        public string ToString(bool topFirst) 
+        public string ToString(bool topFirst)
             => string.Join(", ", this.ToArray(topFirst).Select(x => x.Str()));
 
         /// <summary>

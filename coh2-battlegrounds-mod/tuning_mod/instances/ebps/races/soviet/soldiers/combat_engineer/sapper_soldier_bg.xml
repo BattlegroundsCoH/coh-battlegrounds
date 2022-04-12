@@ -42,11 +42,11 @@
 					<float name="action" value="0" />
 					<float name="command" value="0" />
 					<float name="fuel" value="0" />
-					<float name="manpower" value="42.5" />
+					<float name="manpower" value="65" />
 					<float name="munition" value="0" />
 					<float name="popcap" value="0" />
 				</group>
-				<float name="time_seconds" value="4.25" />
+				<float name="time_seconds" value="2.5" />
 			</group>
 		</template_reference>
 		<template_reference name="exts" value="ebpextensions\health_ext">
@@ -424,7 +424,7 @@
 								<float name="z" value="0" />
 							</group>
 							<enum name="type" value="default" />
-							<instance_reference name="weapon" value="weapon\soviet\small_arms\single_fire\rifle\penal_troops_svt_rifle_mp" />
+							<instance_reference name="weapon" value="weapon\soviet\small_arms\single_fire\rifle\svt_rifle_bg" mod="142b113740474c82a60b0a428bd553d5" />
 						</group>
 					</list>
 					<bool name="receives_attack_commands" value="False" />

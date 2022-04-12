@@ -594,7 +594,7 @@ namespace Battlegrounds.Lua {
                 return null;
 
             } else {
-                
+
                 // Return result
                 return chunk;
 

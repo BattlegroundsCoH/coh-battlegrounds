@@ -150,7 +150,7 @@ function BG_DeploySquad(player, unit_id)
     if not unit_data.spawned then
 
         -- Get position data
-        local gotopos = _bg_playerData[playerRefID].last_callin_point or Player_GetStartingPosition(player);
+        local gotopos = _bg_playerData[playerRefID]:GetCallInDestination();
         local spawnfrom = Player_GetNearestMapEntry(player, gotopos);
 
         -- Call in the unit
@@ -171,10 +171,23 @@ function BG_DeploySquad(player, unit_id)
         end
 
         -- Broadcast that a unit was spawned
-        Battlegrounds_LogEvent(nil, BG_EVENT_ONDEPLOY, unit_data.company_id);
+        Battlegrounds_LogEvent(nil, BG_EVENT_ONDEPLOY, unit_data.company_id, player);
 
         -- Add events
         Rule_AddSquadEvent(BG_OnSquadDeath, squad, GE_SquadKilled);
+        if crewSquad ~= nil then
+            Rule_AddSquadEvent(BG_OnSquadDeath, crewSquad, GE_SquadKilled);
+        end
+
+        -- Invoke additional hooks
+        if __bgapi_spawncallbacks ~= nil then
+            for _, func in pairs(__bgapi_spawncallbacks) do
+                func(player, squad, unit_data);
+                if crewSquad ~= nil then
+                    func(player, crewSquad, unit_data.crew);
+                end
+            end
+        end
 
         -- Was it the local player who spawned this unit?
         if player == Game_GetLocalPlayer() then
@@ -235,7 +248,7 @@ function BG_CallInUnit(unit_data, player, gotopos, spawnfrom)
                 Command_SquadPos(player, sg_transport_temp, SCMD_Move, gotopos, false);
 
                 -- Tow-transport from off-map
-                Battlegrounds_TowFromOffmap(transportSquad, squad);
+                Battlegrounds_TowFromOffmap(transportSquad, squad, BG_ExitTransport);
 
                 -- If deploy and exit - tell squad to exit once squad is deployed.
                 if unit_data.transport.mode == 1 then
@@ -278,9 +291,6 @@ function BG_CallInUnit(unit_data, player, gotopos, spawnfrom)
             -- Apply company data
             BG_ApplyCompanyData(player, crewSquad, temp_crew, unit_data.crew);
 
-            -- Add death registry
-            Rule_AddSquadEvent(BG_OnSquadDeath, crewSquad, GE_SquadKilled);
-
         end
 
     end
@@ -295,9 +305,9 @@ end
 
 function BG_ApplyCompanyData(player, squad, tempGroup, data)
 
-    -- Apply veterancy rank
+    -- Apply veterancy rank (This seems to be redundant tbh)
     if (data.veterancy_rank > 0) then
-        Squad_IncreaseVeterancyRank(squad, data.veterancy_rank, true );
+        --Squad_IncreaseVeterancyRank(squad, data.veterancy_rank, true );
     end
 
     -- Apply veterancy progress
@@ -339,7 +349,7 @@ function BG_OnSquadDeath(squad)
     local playerRefID = BG_GetPlayerID(playerOwner);
     local id = Squad_GetGameID(squad);
 
-    -- If not found - dont do anything. (This might be an AI unit) TODO: Also allow for keeping track of AI units, in case of campaigns etc.
+    -- If not found - dont do anything. (This might be an AI unit)
     if _bg_playerData[playerRefID] == nil then
         return;
     end
@@ -385,8 +395,13 @@ function BG_RegisterSquadDeath(playerData, companyID)
         return;
     end
 
+    -- Make sure we don't accidentally kill a squad that was successfully withdrawn or wasnt spawned at the time of this event
+    if not companySquad.spawned then
+        return;
+    end
+
     -- Broadcast that the unit was killed
-    Battlegrounds_LogEvent(nil, BG_EVENT_ONDEATH, companyID);
+    Battlegrounds_LogEvent(nil, BG_EVENT_ONDEATH, companyID, playerData.player);
 
     -- Add to player's loss list
     local lData = {
@@ -462,7 +477,7 @@ function BG_RecallCompanySquad(unit_data, squadID, companyID, playerData, reset)
         unit_data.veterancy_rank = unit_data.veterancy_rank + vet_rank_diff;
         unit_data.veterancy_progress = vet_rank_progress;
     end
-    Battlegrounds_LogEvent(nil, BG_EVENT_ONRETREAT, companyID .. "," .. vet_rank_diff .. "," .. vet_rank_progress);
+    Battlegrounds_LogEvent(nil, BG_EVENT_ONRETREAT, companyID .. "," .. vet_rank_diff .. "," .. vet_rank_progress, playerData.player);
     unit_data.spawned = false;
     unit_data.transport = nil; -- We no longer allow this unit to be brought in with transport (Infinite transports would be possible here).
     unit_data.isRecallDelayed = true;
@@ -476,6 +491,11 @@ function BG_RecallCompanySquad(unit_data, squadID, companyID, playerData, reset)
     if (playerData.player == Game_GetLocalPlayer()) then
         BG_RefreshCompanyView();
     end
+end
+
+function BG_OnItemCaptured(entity, capturer) -- TODO: Write a better handler here for tracking who captured team weapons, since vehicle captures seem to work a bit different.
+    local captureSquadID = Entity_GetSquad(entity);
+    --PrintOnScreen(Squad_GetGameID(captureSquadID) .. " - " .. Squad_GetGameID(capturer));
 end
 
 function BG_HandleCapturedEquipment(playerData, gameID, squadID, bpName)
@@ -513,16 +533,11 @@ end
 
 function BG_SaveCapturedItem(player, blueprint, type, bptype)
 
-    -- Only broadcast from local player
-    if player == Game_GetLocalPlayer() then
-
         -- Generate message
         local capture_message = "T["..blueprint..","..type..","..bptype.."]";
 
         -- Broadcast event
-        Battlegrounds_LogEvent(nil, BG_EVENT_ONCAPTURE, capture_message);
-
-    end
+        Battlegrounds_LogEvent(nil, BG_EVENT_ONCAPTURE, capture_message, player);
 
 end
 
@@ -551,9 +566,15 @@ function BG_DeployAndExit(group, deployPos)
                 local pos = Player_GetNearestMapEntry(Util_GetPlayerOwner(group), Util_GetPosition(group));
                 SGroup_MoveAndDespawn(group, pos);
             end
-        end, nil, group, deployPos, 2.5, nil, 4 );
+        end, nil, group, deployPos, 7.5, nil, 1 ); -- TODO: Add cleanup for this (So we don't slow down the game)
     end
 
+end
+
+function BG_ExitTransport(transport, safeTransport)
+    local group = SGroup_FromSquad(transport);
+    local pos = Player_GetNearestMapEntry(Util_GetPlayerOwner(group), Util_GetPosition(group));
+    SGroup_MoveAndDespawn(group, pos);
 end
 
 function BG_CollectSquadSlotItems(squad)
@@ -583,7 +604,7 @@ function BG_SaveSlotItems(unit_data, squad)
     local items = BG_CollectSquadSlotItems(squad);
     local new_items = bg_set:diff(items, bg_set:select(unit_data.slot_items, function(e) return e.bp; end));
     for i = 1, #new_items do
-        Battlegrounds_LogEvent(nil, BG_EVENT_ONITEM, unit_data.company_id..","..new_items[i]);
+        Battlegrounds_LogEvent(nil, BG_EVENT_ONITEM, unit_data.company_id..","..new_items[i], Squad_GetPlayerOwner(squad));
     end
     local last_pickup = nil;
     local slot_items = {};

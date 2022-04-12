@@ -2,13 +2,14 @@
 using System.Collections.Generic;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+
 using Battlegrounds.Campaigns.Controller;
 using Battlegrounds.Functional;
 using Battlegrounds.Gfx;
 using Battlegrounds.Locale;
 
 namespace BattlegroundsApp.Views.CampaignViews.Models {
-    
+
     /// <summary>
     /// Context class for keeping track of resources.
     /// </summary>

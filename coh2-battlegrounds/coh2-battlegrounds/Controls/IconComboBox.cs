@@ -8,7 +8,32 @@ using System.Windows.Controls.Primitives;
 
 namespace BattlegroundsApp.Controls {
 
-    public delegate void SelectedItemChangedHandler(object sender, IconComboBoxItem newItem);
+    /// <summary>
+    /// 
+    /// </summary>
+    public class IconComboBoxSelectedChangedEventArgs : EventArgs {
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public IconComboBoxItem Item { get; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="item"></param>
+        public IconComboBoxSelectedChangedEventArgs(IconComboBoxItem item) {
+            this.Item = item;
+        }
+
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="newItem"></param>
+    public delegate void SelectedItemChangedHandler(object sender, IconComboBoxSelectedChangedEventArgs newItem);
 
     public class IconComboBox : UserControl {
 
@@ -95,20 +120,24 @@ namespace BattlegroundsApp.Controls {
             if (index < 0) {
                 throw new ArgumentOutOfRangeException(nameof(index), $"The index given is out of range (is: {index})");
             }
-            this.m_imageControl.Source = this.m_items[index].Icon;
-            this.m_selectedIndex = index;
-            this.SelectionChangedMethod(index, false);
+            if (this.m_items.Count > 0) {
+                this.m_imageControl.Source = this.m_items[index].Icon;
+                this.m_selectedIndex = index;
+                this.SelectionChangedMethod(index, false);
+            }
         }
 
         private void SelectionChangedMethod(int index, bool update = true) {
             if (this.EnableEvents) {
-                this.SelectionChanged?.Invoke(this, this.m_items[index]);
+                this.SelectionChanged?.Invoke(this, new(this.m_items[index]));
             }
             if (update) {
                 this.SetSelectedIndex(index);
             }
             this.m_popup.IsOpen = false;
         }
+
+        protected override void OnLostFocus(RoutedEventArgs e) => this.m_popup.IsOpen = false;
 
     }
 

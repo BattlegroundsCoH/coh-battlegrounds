@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 
+using Battlegrounds.Functional;
 using Battlegrounds.Game.DataSource;
 using Battlegrounds.Modding;
 
@@ -15,13 +17,13 @@ namespace BattlegroundsApp.Resources {
         private static Dictionary<ModGuid, UcsFile> ModLocales;
 
         static GameLocale() {
-            
+
             // Determine language to use
             string language = Battlegrounds.BattlegroundsInstance.Localize.Language.ToString();
             if (language == "Default") {
                 language = "English";
             }
-            
+
             // Load VCoh Locale
             string localePath = Path.Combine(Battlegrounds.Pathfinder.GetOrFindCoHPath(), $"CoH2\\Locale\\{language}\\RelicCoH2.{language}.ucs");
             if (File.Exists(localePath)) {
@@ -31,18 +33,20 @@ namespace BattlegroundsApp.Resources {
             // Create dictionary for mod locales
             ModLocales = new Dictionary<ModGuid, UcsFile>();
 
-        }
+            // Load Mod Locales
+            ModManager.EachPackage(x => {
+                x.LocaleFiles.ForEach(y => {
+                    if (y.GetLocale(x.ID, language) is UcsFile ucs) {
+                        ModLocales.Add(y.ModType switch {
+                            ModType.Asset => x.AssetGUID,
+                            ModType.Gamemode => x.GamemodeGUID,
+                            ModType.Tuning => x.TuningGUID,
+                            _ => throw new NotImplementedException()
+                        }, ucs);
+                    }
+                });
+            });
 
-        public static bool LoadModLocale(ModGuid modguid, string fullLocalePath) {
-            if (ModLocales.ContainsKey(modguid)) {
-                return true;
-            }
-            if (File.Exists(fullLocalePath)) {
-                ModLocales.Add(modguid, UcsFile.LoadFromFile(fullLocalePath));
-                return true;
-            } else {
-                return false;
-            }
         }
 
         public static string GetString(uint key) => LocaleFile[key];
@@ -52,16 +56,11 @@ namespace BattlegroundsApp.Resources {
                 locStr = locStr[1..];
                 int j = locStr.IndexOf(':');
                 if (j > 0) {
-                    if (uint.TryParse(locStr[j..], out uint modLocID)) {
+                    string numeric = locStr[(j + 1)..];
+                    if (uint.TryParse(numeric, out uint modLocID)) {
                         ModGuid guid = ModGuid.FromGuid(locStr[0..j]);
                         if (guid.IsValid) {
-                            if (ModLocales.TryGetValue(guid, out UcsFile modUCS)) {
-                                return modUCS[modLocID];
-                            } else {
-                                return $"Unregistered GUID '{locStr[0..j]}'";
-                            }
-                        } else {
-                            return $"Invalid GUID '{locStr}' (ModID = '{locStr[0..j]}')";
+                            return ModLocales.TryGetValue(guid, out UcsFile modUCS) ? modUCS[modLocID] : $"Unregistered GUID '{locStr[0..j]}'";
                         }
                     } else {
                         return locStr;
@@ -69,12 +68,9 @@ namespace BattlegroundsApp.Resources {
                 } else {
                     return GetString(locStr);
                 }
+                return $"Invalid GUID '{locStr}' (ModID = '{locStr[0..j]}')";
             } else {
-                if (uint.TryParse(locStr, out uint locID)) {
-                    return GetString(locID);
-                } else {
-                    return locStr;
-                }
+                return uint.TryParse(locStr, out uint locID) ? GetString(locID) : locStr;
             }
         }
 

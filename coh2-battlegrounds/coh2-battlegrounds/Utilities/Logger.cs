@@ -26,7 +26,7 @@ namespace BattlegroundsApp.Utilities {
         public Logger() {
             FileStream file = Open();
             if (file is not null) {
-                if (file.Length > 1024 * 128) { // Delete if file exceeds 128 MB
+                if (file.Length > 1024 * 1024 * 8) { // Delete if file exceeds 8 MB (1024 * 1024 = 1MB)
                     file.Close();
                     File.Delete(OUT_PATH);
                     file = Open();
@@ -39,7 +39,11 @@ namespace BattlegroundsApp.Utilities {
             }
         }
 
-        public override void Write(string message) => this.m_writer?.Write(message);
+        public override void Write(string message) {
+            try {
+                this.m_writer?.Write(message);
+            } catch (ObjectDisposedException) { }
+        }
 
         public override void WriteLine(string message) => this.Write($"[{DateTime.Now.ToLongTimeString()}] {message}{Environment.NewLine}");
 

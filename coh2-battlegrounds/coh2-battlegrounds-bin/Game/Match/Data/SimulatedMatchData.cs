@@ -36,7 +36,7 @@ namespace Battlegrounds.Game.Match.Data {
         public void CreatePlayer(Player player) => this.m_players.Add(player);
 
         public void AddEvent(TimeSpan timeStamp, IMatchEvent matchEvent) {
-            
+
             // Update length
             if (timeStamp > this.m_length) {
                 this.m_length = timeStamp;

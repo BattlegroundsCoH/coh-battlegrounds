@@ -1,7 +1,7 @@
 ﻿using System;
 
 namespace Battlegrounds.Util.Coroutines {
-    
+
     /// <summary>
     /// Interface for coroutine dispatching handler.
     /// </summary>

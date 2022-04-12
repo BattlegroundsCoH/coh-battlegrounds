@@ -1,0 +1,32 @@
+[
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741823,
+    "Name": "_bg_out_of_ammo",
+    "Display": {
+      "LocaleName": "$142b113740474c82a60b0a428bd553d5:67",
+      "LocaleDescriptionLong": "$142b113740474c82a60b0a428bd553d5:68",
+      "Icon": "Icons_criticals_killed_loader"
+    }
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741824,
+    "Name": "_bg_out_of_ammo_tw",
+    "Display": {
+      "LocaleName": "$142b113740474c82a60b0a428bd553d5:67",
+      "LocaleDescriptionLong": "$142b113740474c82a60b0a428bd553d5:68",
+      "Icon": "Icons_criticals_killed_loader"
+    }
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741825,
+    "Name": "_bg_out_of_fuel",
+    "Display": {
+      "LocaleName": "$142b113740474c82a60b0a428bd553d5:69",
+      "LocaleDescriptionLong": "$142b113740474c82a60b0a428bd553d5:70",
+      "Icon": "Icons_criticals_killed_driver"
+    }
+  }
+]

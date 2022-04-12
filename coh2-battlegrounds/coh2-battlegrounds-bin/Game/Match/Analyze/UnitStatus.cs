@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+
 using Battlegrounds.Game.Database;
 using Battlegrounds.Game.Gameplay;
 
 namespace Battlegrounds.Game.Match.Analyze {
-    
+
     public class UnitStatus { // Maybe convert into an interface in the future
 
         public Player PlayerOwner { get; }
@@ -58,12 +59,14 @@ namespace Battlegrounds.Game.Match.Analyze {
         }
 
         public bool Callback(TimeSpan stamp, byte vChange, float xp) {
-            if (!this.IsDead && this.IsDeployed && !this.IsWithdrawn && xp >= this.VetExperience) {
+            if (this.IsDeployed && !this.IsWithdrawn && xp >= this.VetExperience) {
                 this.IsDeployed = false;
                 this.IsWithdrawn = true;
                 this.VetChange = vChange;
                 this.VetExperience = xp;
-                this.LastSeen = stamp;
+                if (!this.IsDead) {
+                    this.LastSeen = stamp;
+                }
                 return true;
             } else {
                 return false;

@@ -11,9 +11,10 @@ _bg_aiData = {};
 import("WinConditions/auxiliary_scripts/shared_constants.scar") -- Must always be imported first
 import("WinConditions/auxiliary_scripts/shared_util.scar"); -- Then this (Contains several useful utility functions)
 import("WinConditions/auxiliary_scripts/shared_lookups.scar");
-import("WinConditions/auxiliary_scripts/session.scar");
+import("WinConditions/auxiliary_scripts/session.scar"); -- This file may contain overrides to the constants file (Which is why it must be imported AFTER constants)
 import("WinConditions/auxiliary_scripts/shared_sessionloader.scar");
 import("WinConditions/auxiliary_scripts/shared_units.scar");
+import("WinConditions/auxiliary_scripts/shared_abilities.scar");
 import("WinConditions/auxiliary_scripts/shared_ai.scar");
 import("WinConditions/auxiliary_scripts/api_ui.scar");
 import("WinConditions/auxiliary_scripts/client_companyui.scar");
@@ -63,18 +64,30 @@ function BG_Init()
         return;
     end
 
+    -- Setup map data
+    BG_PrepareMapdata();
+
     -- Activate the unit system
     BG_HookUnitSystem();
 
     -- Properly set up win condition data
     BG_SetupWincondition();
 
+    -- Setup optional BG systems
+    BG_SetupWeatherAndSupply();
+
     -- Create the UI
     UI_AddSetupFunction(function()
         BG_CreateCallInUI(Game_GetLocalPlayer()); -- Call-in / Deploy UI
         BG_CreateAndDisplayMultiplayerActionsScreenOverride(Game_GetLocalPlayer()); -- Game actions (Vote on withdraw, Surrender)
+        if BGSupply_SetupUI ~= nil then -- Make the supply UI check here (TODO: Add more dynamic hook function for this)
+            BGSupply_SetupUI();
+        end
         --_endgame_test(); -- DISABLE WHEN DONE
     end);
+
+    -- Init AE functions for BG
+    BGAE_Init();
 
     -- Add overrides to victory
     Rule_AddOneShot(BG_OverrideGameEndingFunctionCalls, 1);
@@ -161,7 +174,7 @@ function _endgame_test()
 end
 
 function BG_FixUI()
-    -- Hide the CP meter (Perhaps display company name and statistics here...)
+    -- Hide the CP meter
     UI_SetAbilityCardVisibility(true);
     UI_SetCPMeterVisibility(false);
     UI_SetAllowLoadAndSave(false);
@@ -176,6 +189,9 @@ function BG_VerifyMatch()
     if (name ~= bg_settings.map and name ~= "bg_testmap") then -- "bg_testmap" can always be played.
         return BG_LocString(1);
     end
+
+    -- Set a global flag if testmap
+    bg_isDebugMap = name == "bg_testmap";
 
     -- Verify upgrade
     if not pcall(BP_GetUpgradeBlueprint, bg_settings.tuning_mod.mod_verify_upg) then
@@ -219,13 +235,13 @@ function BG_OverrideGameEndingFunctionCalls()
         -- Stop the fighting
         BG_StopAll();
 
-        -- Collect end of match data (vet rank, progress etc)
-        BG_CollectEndofMatchData();
-
         -- Broadcast victory for each player
         if Player_GetTeam(Game_GetLocalPlayer()) == team then
             Battlegrounds_LogEvent(nil, BG_EVENT_ONVICTORY, BG_GetPlayerData(Game_GetLocalPlayer()).steamID);
         end
+
+        -- Collect end of match data (vet rank, progress etc)
+        BG_CollectEndofMatchData();
 
         -- Get the local player
         local locPlayer = Game_GetLocalPlayer();
@@ -371,7 +387,7 @@ function BG_CollectEndofMatchData()
                 unit_message = unit_message..","..Squad_GetVeterancyExperience(squad);
 
                 -- Broadcast the change
-                Battlegrounds_LogEvent(nil, BG_EVENT_ONRETREAT, unit_message);
+                Battlegrounds_LogEvent(nil, BG_EVENT_ONRETREAT, unit_message, _bg_playerData[i].player);
 
                 -- Save new slot items
                 local lastPickup = BG_SaveSlotItems(initial, squad);
@@ -412,6 +428,26 @@ function BG_GameBroadcastMessageReceived(sender, messageType, message)
         UI_TeamEventCue(sender, Util_CreateLocString("** Unit Cancelled **"), Util_CreateLocString("PlayerName has cancelled the deployment of ''."));
     elseif messageType == _bg_message_type_player_surrender then
         BG_PlayerSurrender(sender);
+    elseif messageType == _bg_message_type_player_ability then
+
+        -- Parse cmd
+        local data = Str_CmdParse(message);
+
+        -- Get origin coordinates
+        local x1 = tonumber(data[2]);
+        local y1 = tonumber(data[3]);
+        local z1 = tonumber(data[4]);
+        local o = World_Pos(x1, y1, z1);
+
+        -- Get facing coordinates
+        local x2 = tonumber(data[2]);
+        local y2 = tonumber(data[3]);
+        local z2 = tonumber(data[4]);
+        local f = World_Pos(x2, y2, z2);
+
+        -- Trigger ability
+        BGAE_TriggerAbillityFromStringData(sender, data[1], o, f);
+
     elseif messageType == _bg_message_type_team_request_withdraw then
         BG_WithdrawVoteSequence(sender);
     elseif messageType == _bg_message_type_team_vote_yes_withdraw then
@@ -475,6 +511,12 @@ function BG_OnEnterNewPhase()
     else
         Util_MissionTitle(BG_LocString(17), 3, 8, 2 );
     end
+    for i=1, World_GetPlayerCount() do
+        local p = World_GetPlayerAt(i);
+        if p == Game_GetLocalPlayer() then
+            BG_RefreshCompanyView(); -- Refresh the company view
+        end
+    end
 end
 
 function BG_UpdatePlayerStats(refID)
@@ -490,7 +532,22 @@ function BG_SetCallinPoint(executer, target)
     if scartype(executer) == ST_PLAYER then
         local pid = BG_GetPlayerID(executer);
         _bg_playerData[pid].last_callin_point = target;
+        _bg_playerData[pid].last_callin_time = 0;
     end
+end
+
+function BG_GetCallInPoint(self) -- The intention of this function is to avoid telling units to deploy to the exact same position if within a 15s time interval
+    if self.last_callin_point == nil then
+        return Player_GetStartingPosition(self.player);
+    end
+    local t = World_GetGameTime();
+    local p = self.last_callin_point;
+    local d = t - (self.last_callin_time or 0);
+    if d < 15.0 then -- if less than 15s before last call-in, 
+        p = Util_GetRandomPosition(p, d + 10);
+    end
+    self.last_callin_time = t; -- Update call in time
+    return p;
 end
 
 function BG_ParadopNext(executer, target)
@@ -499,4 +556,18 @@ function BG_ParadopNext(executer, target)
         local pid = BG_GetPlayerID(player);
         -- TODO: Implement
     end
+end
+
+function BGAPI_AddUnitSpawnedCallback(callback)
+    if __bgapi_spawncallbacks == nil then
+        __bgapi_spawncallbacks = {};
+    end
+    table.insert( __bgapi_spawncallbacks, callback );
+end
+
+function BGAPI_AddUnitRemovedCallback(callback)
+    if __bgapi_removecallbacks == nil then
+        __bgapi_removecallbacks = {};
+    end
+    table.insert( __bgapi_removecallbacks, callback );
 end

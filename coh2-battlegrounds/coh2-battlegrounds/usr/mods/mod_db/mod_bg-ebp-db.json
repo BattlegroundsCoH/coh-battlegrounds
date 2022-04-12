@@ -1,0 +1,3330 @@
+[
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741920,
+    "Name": "german_air_support",
+    "Army": "german",
+    "Display": {
+      "LocaleName": "0",
+      "LocaleDescriptionLong": "0",
+      "LocaleDescriptionShort": "0",
+      "Symbol": ""
+    },
+    "Abilities": [
+      "german_air_recon_ui",
+      "german_bombing_run_ui",
+      "german_aerial_superiority_close_air_support_ui",
+      "german_aerial_superiority_strafing_run_ui",
+      "german_air_dropped_medical_supplies_ui",
+      "german_air_dropped_supplies_ui",
+      "german_close_air_support_ui",
+      "german_fragmentation_bomb_ui",
+      "german_incendiary_bombs_ui",
+      "german_smoke_bomb_ui",
+      "german_strafing_run_ui",
+      "german_strategic_bombing_ui"
+    ]
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741921,
+    "Name": "german_artillery",
+    "Army": "german",
+    "Display": {
+      "LocaleName": "0",
+      "LocaleDescriptionLong": "0",
+      "LocaleDescriptionShort": "0",
+      "Symbol": ""
+    },
+    "Abilities": [
+      "german_light_support_artillery_ui",
+      "german_railway_gun_artillery_ui",
+      "german_sector_artillery_ui",
+      "german_offmap_halftrack_incendiary_mortar_barrage_ui",
+      "german_offmap_halftrack_mortar_barrage_ui",
+      "german_offmap_halftrack_smoke_barrage_ui",
+      "german_offmap_howitzer_105mm_barrage_ui",
+      "german_offmap_mortar_team_incendiary_barrage_ui",
+      "german_offmap_mortar_team_mortar_barrage_ui",
+      "german_offmap_mortar_team_smoke_barrage_ui",
+      "german_offmap_panzerwerfer_rocket_barrage_ui"
+    ]
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741922,
+    "Name": "german_paradrop",
+    "Army": "german",
+    "Display": {
+      "LocaleName": "0",
+      "LocaleDescriptionLong": "0",
+      "LocaleDescriptionShort": "0",
+      "Symbol": ""
+    }
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741886,
+    "Name": "granatewerfer_34_81mm_mortar_bg",
+    "Army": "german",
+    "Display": {
+      "LocaleName": "2153101",
+      "LocaleDescriptionLong": "2153100",
+      "LocaleDescriptionShort": "11044779",
+      "Icon": "Icons_buildings_building_german_grw34_mortar",
+      "Symbol": "Icons_symbols_unit_german_granatwerfer_34_mortar_symbol"
+    },
+    "Cost": {
+      "Manpower": 60,
+      "FieldTime": 6
+    },
+    "Abilities": [
+      "mortar_team_mortar_barrage_mp",
+      "mortar_team_smoke_barrage_mp",
+      "mortar_counter_barrage_weapon_mp",
+      "mortar_team_mortar_victortarget_barrage_mp",
+      "blizzard_effect_deep_snow_camo",
+      "mortar_counter_barrage_attack_mp",
+      "mortar_team_incendiary_barrage_mp",
+      "team_weapon_suppression_stun_mp",
+      "mortar_veterancy_3_mp",
+      "german_mortar_fire_flares_ability_bg"
+    ],
+    "Hardpoints": [
+      "grw34_81mm_mortar_mp",
+      "grw34_81mm_mortar_barrage_mp",
+      "grw34_81mm_mortar_team_smoke_mp",
+      "grw34_81mm_mortar_counter_barrage_mp",
+      "grw34_81mm_victor_target_mortar_mp",
+      "grw34_81mm_incendiary_mortar_barrage_mp",
+      "pm41_82mm_mortar_flare_mp"
+    ],
+    "Health": 350,
+    "UpgradeCapacity": -1
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741887,
+    "Name": "howitzer_105mm_le_fh18_bg",
+    "Army": "german",
+    "Display": {
+      "LocaleName": "11026031",
+      "LocaleDescriptionLong": "11026032",
+      "LocaleDescriptionShort": "11043014",
+      "Icon": "Icons_vehicles_vehicle_german_howitzer",
+      "Symbol": "Icons_symbols_vehicle_german_howitzer_symbol"
+    },
+    "Cost": {
+      "Manpower": 160,
+      "Fuel": 50,
+      "FieldTime": 240
+    },
+    "Abilities": [
+      "howitzer_105mm_barrage_ability_mp",
+      "howitzer_105mm_barrage_vet3_ability_mp",
+      "howitzer_105mm_victortarget_barrage_ability_mp",
+      "howitzer_counter_barrage_mp",
+      "howitzer_counter_barrage_attack_mp",
+      "howitzer_105mm_barrage_ability_direct_fire_mp"
+    ],
+    "Hardpoints": [
+      "howitzer_105mm_disabled_gun_mp",
+      "howitzer_105mm_gun_mp",
+      "howitzer_105mm_gun_counter_barrage_mp",
+      "howitzer_105mm_victor_target_gun_mp",
+      "howitzer_105mm_gun_vet3_mp",
+      "howitzer_105mm_gun_direct_fire_mp"
+    ],
+    "Health": 400,
+    "UpgradeCapacity": -1
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741885,
+    "Name": "mg42_hmg_bg",
+    "Army": "german",
+    "Display": {
+      "LocaleName": "2153001",
+      "LocaleDescriptionLong": "2153000",
+      "LocaleDescriptionShort": "11044782",
+      "Icon": "Icons_upgrades_icon_upgrade_german_mg42",
+      "Symbol": ""
+    },
+    "Cost": {
+      "Manpower": 80,
+      "FieldTime": 18
+    },
+    "Abilities": [
+      "mg42_phosphorus_rounds_mp",
+      "blizzard_effect_deep_snow_camo",
+      "team_weapon_suppression_stun_mp",
+      "mg_42_34_veterancy_mp"
+    ],
+    "Hardpoints": [
+      "hmg_team_mg42_mp"
+    ],
+    "Health": 350
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741889,
+    "Name": "pak40_75mm_at_gun_bg",
+    "Army": "german",
+    "Display": {
+      "LocaleName": "11043016",
+      "LocaleDescriptionLong": "11044776",
+      "LocaleDescriptionShort": "11044777",
+      "Icon": "Icons_vehicles_vehicle_german_pak_40_75mm_at_gun",
+      "Symbol": "Icons_symbols_vehicle_german_pak_40_75mm_at_gun_symbol"
+    },
+    "Cost": {
+      "Manpower": 140,
+      "FieldTime": 18
+    },
+    "Abilities": [
+      "pak40_target_weak_point_mp",
+      "blizzard_effect_deep_snow_camo",
+      "okw_ratken_vehicle_hold_fire_mp",
+      "usf_hold_fire_mp"
+    ],
+    "Hardpoints": [
+      "75mm_pak_40_mp",
+      "75mm_pak_40_ap_mp"
+    ],
+    "Health": 350,
+    "UpgradeCapacity": -1
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741888,
+    "Name": "pak43_88mm_at_gun_bg",
+    "Army": "german",
+    "Display": {
+      "LocaleName": "11011328",
+      "LocaleDescriptionLong": "11011327",
+      "LocaleDescriptionShort": "11047622",
+      "Icon": "Icons_commander_cmdr_german_pak_43_at_gun",
+      "Symbol": "Icons_symbols_cmdr_german_pak_43_at_gun_symbol"
+    },
+    "Cost": {
+      "Manpower": 170,
+      "Fuel": 45,
+      "FieldTime": 192
+    },
+    "Abilities": [
+      "pak43_target_weak_point_mp",
+      "blizzard_effect_deep_snow_camo",
+      "usf_hold_fire_mp",
+      "scuttle_pak43_timed"
+    ],
+    "Hardpoints": [
+      "pak43_88mm_atg_mp",
+      "pak43_88mm_atg_ap_mp"
+    ],
+    "Health": 470
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741917,
+    "Name": "soviet_air_support",
+    "Army": "soviet",
+    "Display": {
+      "LocaleName": "$142b113740474c82a60b0a428bd553d5:44",
+      "LocaleDescriptionLong": "0",
+      "LocaleDescriptionShort": "0",
+      "Symbol": ""
+    },
+    "Abilities": [
+      "soviet_air_recon_ui"
+    ]
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741918,
+    "Name": "soviet_artillery",
+    "Army": "soviet",
+    "Display": {
+      "LocaleName": "$142b113740474c82a60b0a428bd553d5:43",
+      "LocaleDescriptionLong": "0",
+      "LocaleDescriptionShort": "0",
+      "Symbol": ""
+    },
+    "Abilities": [
+      "soviet_artillery_fire_ui",
+      "soviet_artillery_overwatch_ui",
+      "soviet_artillery_propaganda_ui",
+      "soviet_artillery_regimental_barrage_ui",
+      "soviet_offmap_b4_ui",
+      "soviet_offmap_katyusha_ui",
+      "soviet_offmap_ml_20_smoke_ui",
+      "soviet_offmap_ml_20_ui",
+      "soviet_offmap_mortar_smoke_ui",
+      "soviet_offmap_mortar_ui",
+      "soviet_offmap_su-76_barrage_ui"
+    ]
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741919,
+    "Name": "soviet_paradrop",
+    "Army": "soviet",
+    "Display": {
+      "LocaleName": "$142b113740474c82a60b0a428bd553d5:45",
+      "LocaleDescriptionLong": "0",
+      "LocaleDescriptionShort": "0",
+      "Symbol": ""
+    }
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741860,
+    "Name": "dhsk_38_machine_gun_bg",
+    "Army": "soviet",
+    "Display": {
+      "LocaleName": "11041983",
+      "LocaleDescriptionLong": "11044783",
+      "LocaleDescriptionShort": "11044784",
+      "Icon": "Icons_vehicles_vehicle_soviet_dshk_38_50_cal_hmg",
+      "Symbol": "Icons_symbols_vehicle_soviet_dshk_38_50_cal_hmg_symbol"
+    },
+    "Cost": {
+      "Manpower": 130,
+      "Munition": 60,
+      "FieldTime": 10
+    },
+    "Abilities": [
+      "blizzard_effect_deep_snow_camo",
+      "dshk_armor_piercing"
+    ],
+    "Hardpoints": [
+      "dshk_38_sokolov_bg"
+    ],
+    "Health": 350
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741861,
+    "Name": "hm-120_38_mortar_bg",
+    "Army": "soviet",
+    "Display": {
+      "LocaleName": "11041985",
+      "LocaleDescriptionLong": "11044785",
+      "LocaleDescriptionShort": "11044787",
+      "Icon": "Icons_vehicles_vehicle_soviet_120mm_mortar",
+      "Symbol": "Icons_symbols_unit_soviet_mortar_symbol"
+    },
+    "Cost": {
+      "Manpower": 160,
+      "FieldTime": 30
+    },
+    "Abilities": [
+      "sync_mortar_barrage_120mm_mp",
+      "smoke_120mm_mortar_barrage_mp",
+      "mortar_fire_flares_ability_120mm_mp",
+      "blizzard_effect_deep_snow_camo",
+      "sync_mortar_barrage_120mm_victortarget_mp",
+      "mortar_veterancy_3_mp"
+    ],
+    "Hardpoints": [
+      "hm_38_120mm_mortar_bg",
+      "hm_38_120mm_mortar_barrage_bg",
+      "hm_38_120mm_mortar_smoke_bg",
+      "hm_38_120mm_mortar_flares_bg"
+    ],
+    "Health": 350
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741862,
+    "Name": "m1910_maxim_heavy_machine_gun_bg",
+    "Army": "soviet",
+    "Display": {
+      "LocaleName": "11007106",
+      "LocaleDescriptionLong": "11007105",
+      "LocaleDescriptionShort": "11044788",
+      "Icon": "Icons_vehicles_vehicle_soviet_mg",
+      "Symbol": "Icons_symbols_unit_soviet_mg_symbol"
+    },
+    "Cost": {
+      "Manpower": 100,
+      "Munition": 30,
+      "FieldTime": 10
+    },
+    "Abilities": [
+      "blizzard_effect_deep_snow_camo",
+      "maxim_sustained_fire_mp"
+    ],
+    "Hardpoints": [
+      "maxim_m1910_hmg_bg"
+    ],
+    "Health": 350
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741863,
+    "Name": "pm41_82mm_mortar_bg",
+    "Army": "soviet",
+    "Display": {
+      "LocaleName": "11041987",
+      "LocaleDescriptionLong": "11044786",
+      "LocaleDescriptionShort": "11044789",
+      "Icon": "Icons_vehicles_vehicle_soviet_82mm_mortar",
+      "Symbol": "Icons_symbols_unit_soviet_mortar_symbol"
+    },
+    "Cost": {
+      "Manpower": 60,
+      "FieldTime": 6
+    },
+    "Abilities": [
+      "sync_mortar_barrage_mp",
+      "smoke_sync_mortar_barrage_mp",
+      "mortar_fire_flares_ability_mp",
+      "blizzard_effect_deep_snow_camo",
+      "sync_mortar_barrage_victortarget_mp",
+      "team_weapon_suppression_stun_mp",
+      "mortar_veterancy_3_mp"
+    ],
+    "Hardpoints": [
+      "pm41_82mm_mortar_bg",
+      "pm41_82mm_mortar_barrage_bg",
+      "pm41_82mm_mortar_smoke_bg",
+      "pm41_82mm_mortar_flare_bg"
+    ],
+    "Health": 350
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741871,
+    "Name": "grenadiers_bg",
+    "Army": "german",
+    "Display": {
+      "LocaleName": "0",
+      "LocaleDescriptionLong": "0",
+      "LocaleDescriptionShort": "0",
+      "Icon": "Icons_units_unit_german_grenadier",
+      "Symbol": "Icons_symbols_unit_german_grenadier_symbol"
+    },
+    "Cost": {
+      "Manpower": 60,
+      "FieldTime": 6
+    },
+    "Abilities": [
+      "blinding_grenade",
+      "blizzard_effect_deep_snow_camo",
+      "army_item_global_cover_training",
+      "grenadier_antitank_rifle_grenade_ability_mp",
+      "heal_in_cover",
+      "grenadier_panzerfaust_bg"
+    ],
+    "Hardpoints": [
+      "grenadier_kar_98k_rifle_mp"
+    ],
+    "Health": 80
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741872,
+    "Name": "artillery_officer_bg",
+    "Army": "german",
+    "Display": {
+      "LocaleName": "0",
+      "LocaleDescriptionLong": "0",
+      "LocaleDescriptionShort": "0",
+      "Icon": "Icons_units_unit_german_grenadier",
+      "Symbol": "Icons_symbols_unit_german_grenadier_symbol"
+    },
+    "Cost": {
+      "Manpower": 60,
+      "FieldTime": 6
+    },
+    "Abilities": [
+      "blizzard_effect_deep_snow_camo",
+      "army_item_global_cover_training",
+      "assault_officer_victor_target",
+      "heal_in_cover"
+    ],
+    "Hardpoints": [
+      "luger_p08_9mm_pistol_mp",
+      "luger_p08_victor_target_flare_pistol_mp"
+    ],
+    "Health": 80,
+    "UpgradeCapacity": -1
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741873,
+    "Name": "luftwaffe_officer_bg",
+    "Army": "german",
+    "Display": {
+      "LocaleName": "0",
+      "LocaleDescriptionLong": "0",
+      "LocaleDescriptionShort": "0",
+      "Icon": "Icons_units_unit_german_grenadier",
+      "Symbol": "Icons_symbols_unit_german_grenadier_symbol"
+    },
+    "Cost": {
+      "Manpower": 180,
+      "FieldTime": 18
+    },
+    "Abilities": [
+      "blizzard_effect_deep_snow_camo",
+      "army_item_global_cover_training"
+    ],
+    "Hardpoints": [
+      "luger_p08_9mm_pistol_mp",
+      "luger_p08_victor_target_flare_pistol_mp"
+    ],
+    "Health": 80,
+    "UpgradeCapacity": -1
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741874,
+    "Name": "ostruppen_soldier_bg",
+    "Army": "german",
+    "Display": {
+      "LocaleName": "0",
+      "LocaleDescriptionLong": "0",
+      "LocaleDescriptionShort": "0",
+      "Symbol": ""
+    },
+    "Cost": {
+      "Manpower": 33.3333,
+      "FieldTime": 3.5
+    },
+    "Abilities": [
+      "blizzard_effect_deep_snow_camo",
+      "heal_in_cover"
+    ],
+    "Hardpoints": [
+      "ostruppen_kar_98k_rifle_mp"
+    ],
+    "Health": 80,
+    "UpgradeCapacity": -1
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741875,
+    "Name": "panzer_grenadiers_bg",
+    "Army": "german",
+    "Display": {
+      "LocaleName": "0",
+      "LocaleDescriptionLong": "0",
+      "LocaleDescriptionShort": "0",
+      "Symbol": ""
+    },
+    "Cost": {
+      "Manpower": 85,
+      "FieldTime": 7
+    },
+    "Abilities": [
+      "blinding_grenade",
+      "blizzard_effect_deep_snow_camo",
+      "army_item_global_cover_training",
+      "heal_in_cover"
+    ],
+    "Hardpoints": [
+      "panzer_grenadier_mp44_smg_mp"
+    ],
+    "Health": 80
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741876,
+    "Name": "pioneer_bg",
+    "Army": "german",
+    "Display": {
+      "LocaleName": "0",
+      "LocaleDescriptionLong": "0",
+      "LocaleDescriptionShort": "0",
+      "Icon": "Icons_symbols_unit_german_pioneer_symbol",
+      "Symbol": ""
+    },
+    "Cost": {
+      "Manpower": 50,
+      "FieldTime": 5
+    },
+    "Abilities": [
+      "pioneer_barbed_wire_cutting_ability_mp",
+      "blizzard_effect_deep_snow_camo",
+      "army_item_global_cover_training",
+      "heal_in_cover"
+    ],
+    "Hardpoints": [
+      "eg_pioneer_mp40_smg_mp"
+    ],
+    "Health": 80
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741883,
+    "Name": "sniper_soldier_bg",
+    "Army": "german",
+    "Display": {
+      "LocaleName": "0",
+      "LocaleDescriptionLong": "0",
+      "LocaleDescriptionShort": "0",
+      "Icon": "Icons_units_unit_german_sniper",
+      "Symbol": "Icons_symbols_unit_german_sniper_symbol"
+    },
+    "Cost": {
+      "Manpower": 360,
+      "FieldTime": 36
+    },
+    "Abilities": [
+      "blizzard_effect_deep_snow_camo",
+      "army_item_global_cover_training",
+      "heal_in_cover"
+    ],
+    "Hardpoints": [
+      "g43_sniper_sniper_mp",
+      "g43_sniper_incendiary_mp"
+    ],
+    "Health": 82,
+    "UpgradeCapacity": -1
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741915,
+    "Name": "luftwaffe_ground_forces_bg",
+    "Army": "german",
+    "Display": {
+      "LocaleName": "0",
+      "LocaleDescriptionLong": "0",
+      "LocaleDescriptionShort": "0",
+      "Symbol": ""
+    },
+    "Cost": {
+      "Manpower": 67.5,
+      "FieldTime": 6.75
+    },
+    "Abilities": [
+      "blizzard_effect_deep_snow_camo",
+      "army_item_global_cover_training",
+      "heal_in_cover",
+      "model_24_smoke_grenade_mp"
+    ],
+    "Hardpoints": [
+      "grenadier_kar_98k_rifle_mp",
+      "stormtrooper_mp40_smg_mp"
+    ],
+    "Health": 80
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741882,
+    "Name": "stormtroopers_bg",
+    "Army": "german",
+    "Display": {
+      "LocaleName": "0",
+      "LocaleDescriptionLong": "0",
+      "LocaleDescriptionShort": "0",
+      "Symbol": ""
+    },
+    "Cost": {
+      "Manpower": 67.5,
+      "FieldTime": 6.75
+    },
+    "Abilities": [
+      "blizzard_effect_deep_snow_camo",
+      "army_item_global_cover_training",
+      "heal_in_cover",
+      "model_24_smoke_grenade_mp"
+    ],
+    "Hardpoints": [
+      "grenadier_kar_98k_rifle_mp",
+      "stormtrooper_mp40_smg_mp"
+    ],
+    "Health": 80
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741912,
+    "Name": "tankhunter_bg",
+    "Army": "german",
+    "Display": {
+      "LocaleName": "0",
+      "LocaleDescriptionLong": "0",
+      "LocaleDescriptionShort": "0",
+      "Symbol": ""
+    },
+    "Cost": {
+      "Manpower": 67.5,
+      "FieldTime": 6.75
+    },
+    "Abilities": [
+      "blizzard_effect_deep_snow_camo",
+      "army_item_global_cover_training",
+      "heal_in_cover",
+      "model_24_smoke_grenade_mp"
+    ],
+    "Hardpoints": [
+      "grenadier_kar_98k_rifle_mp",
+      "stormtrooper_mp40_smg_mp"
+    ],
+    "Health": 80
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741913,
+    "Name": "tankhunter_rifle_bg",
+    "Army": "german",
+    "Display": {
+      "LocaleName": "0",
+      "LocaleDescriptionLong": "0",
+      "LocaleDescriptionShort": "0",
+      "Symbol": ""
+    },
+    "Cost": {
+      "Manpower": 67.5,
+      "FieldTime": 6.75
+    },
+    "Abilities": [
+      "blizzard_effect_deep_snow_camo",
+      "army_item_global_cover_training",
+      "heal_in_cover",
+      "model_24_smoke_grenade_mp"
+    ],
+    "Hardpoints": [
+      "panzerbusche_39_mp"
+    ],
+    "Health": 80
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741884,
+    "Name": "german_vehicle_crew_mp",
+    "Army": "german",
+    "Display": {
+      "LocaleName": "0",
+      "LocaleDescriptionLong": "0",
+      "LocaleDescriptionShort": "0",
+      "Icon": "Icons_symbols_unit_german_pioneer_symbol",
+      "Symbol": ""
+    },
+    "Cost": {
+      "Manpower": 50,
+      "FieldTime": 5
+    },
+    "Abilities": [
+      "pioneer_barbed_wire_cutting_ability_mp",
+      "blizzard_effect_deep_snow_camo",
+      "army_item_global_cover_training",
+      "heal_in_cover"
+    ],
+    "Hardpoints": [
+      "eg_pioneer_mp40_smg_mp"
+    ],
+    "Health": 80
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741878,
+    "Name": "atgun88_crew_bg",
+    "Army": "german",
+    "Display": {
+      "LocaleName": "0",
+      "LocaleDescriptionLong": "0",
+      "LocaleDescriptionShort": "0",
+      "Symbol": ""
+    },
+    "Cost": {
+      "Manpower": 45,
+      "FieldTime": 4.5
+    },
+    "Abilities": [
+      "blizzard_effect_deep_snow_camo",
+      "army_item_global_cover_training",
+      "heal_in_cover"
+    ],
+    "Hardpoints": [
+      "weapon_crew_\u0026_pioneer_mp40_smg_mp"
+    ],
+    "Health": 80
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741877,
+    "Name": "atgun_crew_bg",
+    "Army": "german",
+    "Display": {
+      "LocaleName": "0",
+      "LocaleDescriptionLong": "0",
+      "LocaleDescriptionShort": "0",
+      "Symbol": ""
+    },
+    "Cost": {
+      "Manpower": 45,
+      "FieldTime": 4.5
+    },
+    "Abilities": [
+      "blizzard_effect_deep_snow_camo",
+      "army_item_global_cover_training",
+      "heal_in_cover"
+    ],
+    "Hardpoints": [
+      "weapon_crew_\u0026_pioneer_mp40_smg_mp"
+    ],
+    "Health": 80
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741879,
+    "Name": "howitzer_crew_bg",
+    "Army": "german",
+    "Display": {
+      "LocaleName": "0",
+      "LocaleDescriptionLong": "0",
+      "LocaleDescriptionShort": "0",
+      "Symbol": ""
+    },
+    "Cost": {
+      "Manpower": 60,
+      "FieldTime": 6
+    },
+    "Abilities": [
+      "blizzard_effect_deep_snow_camo",
+      "heal_in_cover"
+    ],
+    "Hardpoints": [
+      "weapon_crew_\u0026_pioneer_mp40_smg_mp"
+    ],
+    "Health": 80
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741880,
+    "Name": "mg_crew_bg",
+    "Army": "german",
+    "Display": {
+      "LocaleName": "0",
+      "LocaleDescriptionLong": "0",
+      "LocaleDescriptionShort": "0",
+      "Symbol": ""
+    },
+    "Cost": {
+      "Manpower": 45,
+      "FieldTime": 4.5
+    },
+    "Abilities": [
+      "blizzard_effect_deep_snow_camo",
+      "army_item_global_cover_training",
+      "heal_in_cover"
+    ],
+    "Hardpoints": [
+      "weapon_crew_\u0026_pioneer_mp40_smg_mp"
+    ],
+    "Health": 80
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741881,
+    "Name": "mortar_crew_bg",
+    "Army": "german",
+    "Display": {
+      "LocaleName": "0",
+      "LocaleDescriptionLong": "0",
+      "LocaleDescriptionShort": "0",
+      "Symbol": ""
+    },
+    "Cost": {
+      "Manpower": 45,
+      "FieldTime": 4.5
+    },
+    "Abilities": [
+      "blizzard_effect_deep_snow_camo",
+      "army_item_global_cover_training",
+      "heal_in_cover"
+    ],
+    "Hardpoints": [
+      "weapon_crew_\u0026_pioneer_mp40_smg_mp"
+    ],
+    "Health": 80
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741892,
+    "Name": "brummbar_sturmpanzer_iv_sdkfz_166_bg",
+    "Army": "german",
+    "Display": {
+      "LocaleName": "11038244",
+      "LocaleDescriptionLong": "11038242",
+      "LocaleDescriptionShort": "11049089",
+      "Icon": "Icons_vehicles_vehicle_german_sturmpanzer",
+      "Symbol": "Icons_symbols_vehicle_german_sturmpanzer_symbol"
+    },
+    "Cost": {
+      "Manpower": 420,
+      "Fuel": 150,
+      "FieldTime": 55
+    },
+    "Abilities": [
+      "panzer_defensive_smoke",
+      "german_hulldown_disable",
+      "brummbar_bunker_buster_mp",
+      "blizzard_effect_vehicle",
+      "usf_hold_fire_mp"
+    ],
+    "Drivers": [
+      {
+        "Army": "racebps\\german",
+        "SBP": "german_tank_crew_bg",
+        "Capture": "brummbar_squad_bg"
+      }
+    ],
+    "Hardpoints": [
+      "brummbar_150mm_mp",
+      "brummbar_150mm_bunker_buster_mp",
+      "brummbar_150mm_bunker_buster_scatter_mp"
+    ],
+    "Health": 800,
+    "Upgrades": [
+      "brummbar_top_gunner_mp"
+    ],
+    "UpgradeCapacity": -1
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741893,
+    "Name": "elefant_sdkfz_184_bg",
+    "Army": "german",
+    "Display": {
+      "LocaleName": "11038248",
+      "LocaleDescriptionLong": "11038246",
+      "LocaleDescriptionShort": "11049093",
+      "Icon": "Icons_vehicles_vehicle_german_elefant_tank_destroyer",
+      "Symbol": "Icons_symbols_vehicle_german_elefant_tank_destroyer_symbol"
+    },
+    "Cost": {
+      "Manpower": 720,
+      "Fuel": 245,
+      "FieldTime": 60
+    },
+    "Abilities": [
+      "panzer_defensive_smoke",
+      "german_hulldown_disable",
+      "elefant_critical_shots_mp",
+      "blizzard_effect_vehicle",
+      "wehr_vehicle_hold_fire_mp",
+      "usf_hold_fire_mp"
+    ],
+    "Drivers": [
+      {
+        "Army": "racebps\\german",
+        "SBP": "german_tank_crew_bg",
+        "Capture": "elefant_tank_destroyer_squad_bg"
+      }
+    ],
+    "Hardpoints": [
+      "elefant_88mm_gun_mp",
+      "mg34_hull_mp"
+    ],
+    "Health": 1040,
+    "UpgradeCapacity": -1
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741897,
+    "Name": "opel_blitz_supply_truck_bg",
+    "Army": "german",
+    "Display": {
+      "LocaleName": "2141650",
+      "LocaleDescriptionLong": "11038258",
+      "LocaleDescriptionShort": "11049098",
+      "Icon": "Icons_vehicles_cargo_truck",
+      "Symbol": "Icons_symbols_vehicle_german_opel_blitz_symbol"
+    },
+    "Cost": {
+      "Manpower": 300,
+      "FieldTime": 20
+    },
+    "Abilities": [
+      "supply_truck_lockdown",
+      "opel_supply_territory_check"
+    ],
+    "Drivers": [
+      {
+        "Army": "racebps\\german",
+        "SBP": "german_vehicle_driver_bg",
+        "Capture": "opel_blitz_supply_squad_bg"
+      }
+    ],
+    "Health": 160,
+    "UpgradeCapacity": -1
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741898,
+    "Name": "opel_blitz_transport_truck_bg",
+    "Army": "german",
+    "Display": {
+      "LocaleName": "2141650",
+      "LocaleDescriptionLong": "11038258",
+      "LocaleDescriptionShort": "11049098",
+      "Icon": "Icons_vehicles_cargo_truck",
+      "Symbol": "Icons_symbols_vehicle_german_opel_blitz_symbol"
+    },
+    "Cost": {
+      "Manpower": 300,
+      "FieldTime": 20
+    },
+    "Abilities": [
+      "supply_truck_lockdown",
+      "opel_supply_territory_check"
+    ],
+    "Drivers": [
+      {
+        "Army": "racebps\\german",
+        "SBP": "german_vehicle_driver_bg",
+        "Capture": "opel_blitz_transport_squad_bg"
+      }
+    ],
+    "Health": 160,
+    "UpgradeCapacity": -1
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741899,
+    "Name": "ostwind_flak_panzer_bg",
+    "Army": "german",
+    "Display": {
+      "LocaleName": "11043063",
+      "LocaleDescriptionLong": "11038256",
+      "LocaleDescriptionShort": "11049101",
+      "Icon": "Icons_vehicles_vehicle_german_ostwind_flak_panzer",
+      "Symbol": "Icons_symbols_vehicle_german_ostwind_flak_panzer_symbol"
+    },
+    "Cost": {
+      "Manpower": 300,
+      "Fuel": 100,
+      "FieldTime": 45
+    },
+    "Abilities": [
+      "panzer_defensive_smoke",
+      "german_hulldown_disable",
+      "blizzard_effect_vehicle",
+      "usf_hold_fire_mp"
+    ],
+    "Drivers": [
+      {
+        "Army": "racebps\\german",
+        "SBP": "german_tank_crew_bg",
+        "Capture": "ostwind_squad_bg"
+      }
+    ],
+    "Hardpoints": [
+      "ostwind_flak_43_37mm_mp",
+      "ostwind_mg34_hull_mp"
+    ],
+    "Health": 640,
+    "UpgradeCapacity": -1
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741900,
+    "Name": "panther_sdkfz_171_bg",
+    "Army": "german",
+    "Display": {
+      "LocaleName": "11038324",
+      "LocaleDescriptionLong": "11038262",
+      "LocaleDescriptionShort": "11049103",
+      "Icon": "Icons_vehicles_vehicle_german_panther",
+      "Symbol": "Icons_symbols_vehicle_german_panther_symbol"
+    },
+    "Cost": {
+      "Manpower": 490,
+      "Fuel": 185,
+      "FieldTime": 60
+    },
+    "Abilities": [
+      "panzer_defensive_smoke",
+      "german_hulldown_disable",
+      "blizzard_effect_vehicle",
+      "wehr_vehicle_hold_fire_mp",
+      "usf_hold_fire_mp"
+    ],
+    "Drivers": [
+      {
+        "Army": "racebps\\german",
+        "SBP": "german_tank_crew_bg",
+        "Capture": "panther_squad_bg"
+      }
+    ],
+    "Hardpoints": [
+      "panther_75mm_mp",
+      "generic_mg34_coaxial_mp",
+      "generic_mg34_hull_mp"
+    ],
+    "Health": 960,
+    "Upgrades": [
+      "panther_top_gunner_mp"
+    ],
+    "UpgradeCapacity": -1
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741910,
+    "Name": "panther_sdkfz_171_command_bg",
+    "Army": "german",
+    "Display": {
+      "LocaleName": "11038324",
+      "LocaleDescriptionLong": "11038262",
+      "LocaleDescriptionShort": "11049103",
+      "Icon": "Icons_vehicles_vehicle_german_panther",
+      "Symbol": "Icons_symbols_vehicle_german_panther_symbol"
+    },
+    "Cost": {
+      "Manpower": 490,
+      "Fuel": 185,
+      "FieldTime": 60
+    },
+    "Abilities": [
+      "panzer_defensive_smoke",
+      "german_hulldown_disable",
+      "blizzard_effect_vehicle",
+      "wehr_vehicle_hold_fire_mp",
+      "usf_hold_fire_mp"
+    ],
+    "Drivers": [
+      {
+        "Army": "racebps\\german",
+        "SBP": "german_tank_crew_bg",
+        "Capture": "panther_command_squad_bg"
+      }
+    ],
+    "Hardpoints": [
+      "panther_75mm_mp",
+      "generic_mg34_coaxial_mp",
+      "generic_mg34_hull_mp"
+    ],
+    "Health": 960,
+    "Upgrades": [
+      "panther_top_gunner_mp"
+    ],
+    "UpgradeCapacity": -1
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741904,
+    "Name": "panzerwerfer_sdkfz_4_1_bg",
+    "Army": "german",
+    "Display": {
+      "LocaleName": "11038330",
+      "LocaleDescriptionLong": "11038268",
+      "LocaleDescriptionShort": "11049109",
+      "Icon": "Icons_vehicles_vehicle_german_panzerwerfer",
+      "Symbol": "Icons_symbols_vehicle_german_panzerwerfer_symbol"
+    },
+    "Cost": {
+      "Manpower": 360,
+      "Fuel": 85,
+      "FieldTime": 45
+    },
+    "Abilities": [
+      "panzerwerfer_rocket_barrage_mp",
+      "panzer_defensive_smoke",
+      "german_hulldown_disable",
+      "panzerwerfer_rocket_victortarget_barrage_mp",
+      "blizzard_effect_vehicle",
+      "panzerwerfer_counter_barrage_mp",
+      "panzerwerfer_counter_barrage_attack_mp"
+    ],
+    "Drivers": [
+      {
+        "Army": "racebps\\german",
+        "SBP": "german_tank_crew_bg",
+        "Capture": "panzerwerfer_squad_bg"
+      }
+    ],
+    "Hardpoints": [
+      "panzerwerfer_rockets_nofire_mp",
+      "panzerwerfer_rockets_mp",
+      "panzerwerfer_victor_target_rockets_mp",
+      "mg42_turret_mounted_panzerwerfer_mp",
+      "panzerwerfer_counter_barrage_rockets_mp"
+    ],
+    "Health": 160,
+    "UpgradeCapacity": -1
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741901,
+    "Name": "panzer_iv_commander_sdkfz_161_bg",
+    "Army": "german",
+    "Display": {
+      "LocaleName": "11038326",
+      "LocaleDescriptionLong": "11038264",
+      "LocaleDescriptionShort": "11049105",
+      "Icon": "Icons_vehicles_vehicle_german_panzer_iv_command_tank",
+      "Symbol": "Icons_symbols_vehicle_german_panzer_iv_command_tank_symbol"
+    },
+    "Cost": {
+      "Manpower": 360,
+      "Fuel": 100,
+      "FieldTime": 55
+    },
+    "Abilities": [
+      "panzer_defensive_smoke",
+      "german_hulldown_disable",
+      "blizzard_effect_vehicle",
+      "usf_hold_fire_mp"
+    ],
+    "Drivers": [
+      {
+        "Army": "racebps\\german",
+        "SBP": "german_tank_crew_bg",
+        "Capture": "panzer_iv_command_squad_bg"
+      }
+    ],
+    "Hardpoints": [
+      "panzer_4_75mm_short_mp",
+      "generic_mg34_coaxial_mp",
+      "generic_mg34_hull_mp"
+    ],
+    "Health": 640,
+    "UpgradeCapacity": -1
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741902,
+    "Name": "panzer_iv_sdkfz_161_bg",
+    "Army": "german",
+    "Display": {
+      "LocaleName": "11038328",
+      "LocaleDescriptionLong": "11038266",
+      "LocaleDescriptionShort": "11049107",
+      "Icon": "Icons_vehicles_vehicle_german_panzer_iv",
+      "Symbol": "Icons_symbols_vehicle_german_panzer_iv_symbol"
+    },
+    "Cost": {
+      "Manpower": 350,
+      "Fuel": 120,
+      "FieldTime": 50
+    },
+    "Abilities": [
+      "panzer_defensive_smoke",
+      "german_hulldown_disable",
+      "blizzard_effect_vehicle",
+      "wehr_vehicle_hold_fire_mp",
+      "usf_hold_fire_mp"
+    ],
+    "Drivers": [
+      {
+        "Army": "racebps\\german",
+        "SBP": "german_tank_crew_bg",
+        "Capture": "panzer_iv_squad_bg"
+      }
+    ],
+    "Hardpoints": [
+      "panzer_4_75mm_mp",
+      "generic_mg34_coaxial_mp",
+      "generic_mg34_hull_mp"
+    ],
+    "Health": 640,
+    "Upgrades": [
+      "panzer_top_gunner_mp"
+    ],
+    "UpgradeCapacity": -1
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741925,
+    "Name": "panzer_iv_sdkfz_161_bg_test_decrewed",
+    "Army": "german",
+    "Display": {
+      "LocaleName": "11038328",
+      "LocaleDescriptionLong": "11038266",
+      "LocaleDescriptionShort": "11049107",
+      "Icon": "Icons_vehicles_vehicle_german_panzer_iv",
+      "Symbol": "Icons_symbols_vehicle_german_panzer_iv_symbol"
+    },
+    "Cost": {
+      "Manpower": 350,
+      "Fuel": 120,
+      "FieldTime": 50
+    },
+    "Abilities": [
+      "panzer_defensive_smoke",
+      "german_hulldown_disable",
+      "blizzard_effect_vehicle",
+      "wehr_vehicle_hold_fire_mp",
+      "usf_hold_fire_mp"
+    ],
+    "Drivers": [
+      {
+        "Army": "racebps\\german",
+        "SBP": "german_tank_crew_bg",
+        "Capture": "panzer_iv_squad_bg"
+      }
+    ],
+    "Hardpoints": [
+      "panzer_4_75mm_mp",
+      "generic_mg34_coaxial_mp",
+      "generic_mg34_hull_mp"
+    ],
+    "Health": 640,
+    "Upgrades": [
+      "panzer_top_gunner_mp"
+    ],
+    "UpgradeCapacity": -1
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741903,
+    "Name": "panzer_iv_sdkfz_ausf1_bg",
+    "Army": "german",
+    "Display": {
+      "LocaleName": "11048702",
+      "LocaleDescriptionLong": "11038266",
+      "LocaleDescriptionShort": "11049107",
+      "Icon": "Icons_vehicles_vehicle_german_panzer_iv_f1",
+      "Symbol": "Icons_symbols_vehicle_german_panzer_iv_f1_symbol"
+    },
+    "Cost": {
+      "Manpower": 480,
+      "Fuel": 120,
+      "FieldTime": 55
+    },
+    "Abilities": [
+      "panzer_defensive_smoke",
+      "german_hulldown_disable",
+      "blizzard_effect_vehicle",
+      "wehr_vehicle_hold_fire_mp",
+      "usf_hold_fire_mp"
+    ],
+    "Drivers": [
+      {
+        "Army": "racebps\\german",
+        "SBP": "german_tank_crew_bg",
+        "Capture": "panzer_iv_stubby_squad_bg"
+      }
+    ],
+    "Hardpoints": [
+      "panzer_4_75mm_short_mp",
+      "generic_mg34_coaxial_mp",
+      "generic_mg34_hull_mp"
+    ],
+    "Health": 640,
+    "Upgrades": [
+      "panzer_top_gunner_mp"
+    ],
+    "UpgradeCapacity": -1
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741890,
+    "Name": "armored_car_sdkfz_221_bg",
+    "Army": "german",
+    "Display": {
+      "LocaleName": "11038240",
+      "LocaleDescriptionLong": "11038237",
+      "LocaleDescriptionShort": "11049091",
+      "Icon": "Icons_vehicles_vehicle_german_222_armored_car",
+      "Symbol": "Icons_symbols_vehicle_german_222_armored_car_symbol"
+    },
+    "Cost": {
+      "Manpower": 200,
+      "Fuel": 30,
+      "FieldTime": 30
+    },
+    "Abilities": [
+      "panzer_defensive_smoke",
+      "german_hulldown_disable",
+      "blizzard_effect_vehicle",
+      "scout_car_halftrack_infantry_awareness_mp",
+      "wehr_vehicle_hold_fire_mp",
+      "usf_hold_fire_mp"
+    ],
+    "Drivers": [
+      {
+        "Army": "racebps\\german",
+        "SBP": "german_vehicle_crew_bg",
+        "Capture": "sdkfz_221_bg"
+      }
+    ],
+    "Hardpoints": [
+      "scout_car_mg34_pintle_generic_mp"
+    ],
+    "Health": 320,
+    "UpgradeCapacity": -1
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741911,
+    "Name": "armored_car_sdkfz_221_command_bg",
+    "Army": "german",
+    "Display": {
+      "LocaleName": "11038240",
+      "LocaleDescriptionLong": "11038237",
+      "LocaleDescriptionShort": "11049091",
+      "Icon": "Icons_vehicles_vehicle_german_222_armored_car",
+      "Symbol": "Icons_symbols_vehicle_german_222_armored_car_symbol"
+    },
+    "Cost": {
+      "Manpower": 200,
+      "Fuel": 30,
+      "FieldTime": 30
+    },
+    "Abilities": [
+      "panzer_defensive_smoke",
+      "german_hulldown_disable",
+      "blizzard_effect_vehicle",
+      "scout_car_halftrack_infantry_awareness_mp",
+      "wehr_vehicle_hold_fire_mp",
+      "usf_hold_fire_mp"
+    ],
+    "Drivers": [
+      {
+        "Army": "racebps\\german",
+        "SBP": "german_vehicle_crew_bg",
+        "Capture": "sdkfz_221_command_bg"
+      }
+    ],
+    "Hardpoints": [
+      "scout_car_mg34_pintle_generic_mp"
+    ],
+    "Health": 320,
+    "UpgradeCapacity": -1
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741891,
+    "Name": "armored_car_sdkfz_222_bg",
+    "Army": "german",
+    "Display": {
+      "LocaleName": "11038240",
+      "LocaleDescriptionLong": "11038237",
+      "LocaleDescriptionShort": "11049091",
+      "Icon": "Icons_vehicles_vehicle_german_222_armored_car",
+      "Symbol": "Icons_symbols_vehicle_german_222_armored_car_symbol"
+    },
+    "Cost": {
+      "Manpower": 200,
+      "Fuel": 30,
+      "FieldTime": 30
+    },
+    "Abilities": [
+      "panzer_defensive_smoke",
+      "german_hulldown_disable",
+      "blizzard_effect_vehicle",
+      "scout_car_halftrack_infantry_awareness_mp",
+      "wehr_vehicle_hold_fire_mp",
+      "usf_hold_fire_mp"
+    ],
+    "Drivers": [
+      {
+        "Army": "racebps\\german",
+        "SBP": "german_vehicle_crew_bg",
+        "Capture": "sdkfz_222_bg"
+      }
+    ],
+    "Hardpoints": [
+      "scout_car_mg34_pintle_generic_mp"
+    ],
+    "Health": 320,
+    "UpgradeCapacity": -1
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741896,
+    "Name": "halftrack_sdkfz_250_bg",
+    "Army": "german",
+    "Display": {
+      "LocaleName": "11053278",
+      "LocaleDescriptionLong": "11053282",
+      "LocaleDescriptionShort": "11053280",
+      "Icon": "Icons_vehicles_vehicle_german_250_halftrack",
+      "Symbol": "Icons_symbols_vehicle_german_251_mortar_halftrack_symbol"
+    },
+    "Cost": {
+      "Manpower": 210,
+      "Fuel": 20,
+      "FieldTime": 40
+    },
+    "Abilities": [
+      "german_hulldown_disable",
+      "blizzard_effect_vehicle",
+      "halftrack_250_lockdown_mp",
+      "handbrake_mode_new_mp",
+      "usf_hold_fire_mp"
+    ],
+    "Hardpoints": [
+      "halftrack_250_mg42_vehicle_mp",
+      "halftrack_250_mg42_vehicle_lockdown_mp",
+      "halftrack_250_dummy"
+    ],
+    "Health": 240,
+    "UpgradeCapacity": -1
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741894,
+    "Name": "halftrack_sdkfz_251_bg",
+    "Army": "german",
+    "Display": {
+      "LocaleName": "11038252",
+      "LocaleDescriptionLong": "11038250",
+      "LocaleDescriptionShort": "11049095",
+      "Icon": "Icons_vehicles_vehicle_german_251_halftrack",
+      "Symbol": "Icons_symbols_vehicle_german_251_halftrack_symbol"
+    },
+    "Cost": {
+      "Manpower": 200,
+      "Fuel": 30,
+      "FieldTime": 30
+    },
+    "Abilities": [
+      "panzer_defensive_smoke",
+      "german_hulldown_disable",
+      "lay_heavy_at_mine",
+      "blizzard_effect_vehicle",
+      "handbrake_mode_new_mp",
+      "observation_flare_artillery",
+      "lay_schu_mine",
+      "healing_251"
+    ],
+    "Hardpoints": [
+      "halftrack_flammenwerfer_fake_mp",
+      "halftrack_mg42_vehicle_mp",
+      "_halftrack_mg42_vehicle_rear_mp",
+      "halftrack_250_dummy"
+    ],
+    "Health": 320,
+    "Upgrades": [
+      "sdkfz_251_halftrack_flammpanzerwagen_upgrade_mp"
+    ],
+    "UpgradeCapacity": -1
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741895,
+    "Name": "mortar_light_halftrack_250_7_bg",
+    "Army": "german",
+    "Display": {
+      "LocaleName": "11025917",
+      "LocaleDescriptionLong": "11038254",
+      "LocaleDescriptionShort": "11049097",
+      "Icon": "Icons_vehicles_vehicle_german_251_mortar_halftrack",
+      "Symbol": "Icons_symbols_vehicle_german_251_mortar_halftrack_symbol"
+    },
+    "Cost": {
+      "Manpower": 200,
+      "Fuel": 30,
+      "FieldTime": 40
+    },
+    "Abilities": [
+      "halftrack_mortar_barrage_mp",
+      "halftrack_incendiary_mortar_barrage_mp",
+      "halftrack_smoke_barrage_mp",
+      "german_hulldown_disable",
+      "halftrack_mortar_victortarget_barrage_mp",
+      "blizzard_effect_vehicle",
+      "mortar_counter_barrage_weapon_mp",
+      "mortar_counter_barrage_attack_mp",
+      "panzer_defensive_smoke",
+      "mortar_veterancy_3_mp"
+    ],
+    "Hardpoints": [
+      "grw34_81mm_mortar_halftrack_mp",
+      "grw34_81mm_mortar_halftrack_barrage_mp",
+      "grw34_81mm_incendiary_mortar_halftrack_barrage_mp",
+      "grw34_81mm_mortar_halftrack_counter_barrage_mp",
+      "grw34_81mm_smoke_mortar_halftrack_barrage_mp",
+      "grw34_81mm_mortar_halftrack_victor_target_mp"
+    ],
+    "Health": 240,
+    "UpgradeCapacity": -1
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741905,
+    "Name": "puma_234_armoured_car_ostheer_bg",
+    "Army": "german",
+    "Display": {
+      "LocaleName": "11072076",
+      "LocaleDescriptionLong": "11072075",
+      "LocaleDescriptionShort": "11072074",
+      "Icon": "Icons_vehicles_vehicle_west_german_234_puma_armored_car",
+      "Symbol": "Icons_symbols_vehicle_west_german_234_puma_armored_car_symbol"
+    },
+    "Cost": {
+      "Manpower": 270,
+      "Fuel": 70,
+      "FieldTime": 40
+    },
+    "Abilities": [
+      "panzer_defensive_smoke",
+      "german_hulldown_disable",
+      "blizzard_effect_vehicle",
+      "puma_aimed_shot_mp",
+      "wehr_vehicle_hold_fire_mp",
+      "usf_hold_fire_mp"
+    ],
+    "Drivers": [
+      {
+        "Army": "racebps\\german",
+        "SBP": "german_vehicle_crew_bg",
+        "Capture": "sdkfz_234_puma_ost_bg"
+      }
+    ],
+    "Hardpoints": [
+      "puma_50mm_mp",
+      "puma_mg42_mp"
+    ],
+    "Health": 400,
+    "UpgradeCapacity": -1
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741906,
+    "Name": "stug_iii_e_sdkfz_141_1_bg",
+    "Army": "german",
+    "Display": {
+      "LocaleName": "11038332",
+      "LocaleDescriptionLong": "11038270",
+      "LocaleDescriptionShort": "11049111",
+      "Icon": "Icons_vehicles_vehicle_german_stug_iii_e",
+      "Symbol": "Icons_symbols_vehicle_german_stug_iii_e_symbol"
+    },
+    "Cost": {
+      "Manpower": 320,
+      "Fuel": 25,
+      "FieldTime": 40
+    },
+    "Abilities": [
+      "stug_elefant_pak40_pak43_brummbar_critical_shots_mp",
+      "blizzard_effect_vehicle",
+      "german_hulldown_disable"
+    ],
+    "Drivers": [
+      {
+        "Army": "racebps\\german",
+        "SBP": "german_tank_crew_bg",
+        "Capture": "stug_iii_e_squad_bg"
+      }
+    ],
+    "Hardpoints": [
+      "stug_75mm_short_mp"
+    ],
+    "Health": 560,
+    "UpgradeCapacity": -1
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741907,
+    "Name": "stug_iii_g_sdkfz_141_1_bg",
+    "Army": "german",
+    "Display": {
+      "LocaleName": "11038333",
+      "LocaleDescriptionLong": "11038272",
+      "LocaleDescriptionShort": "11049113",
+      "Icon": "Icons_vehicles_vehicle_german_stug_iii_g",
+      "Symbol": "Icons_symbols_vehicle_german_stug_iii_g_symbol"
+    },
+    "Cost": {
+      "Manpower": 280,
+      "Fuel": 90,
+      "FieldTime": 50
+    },
+    "Abilities": [
+      "panzer_defensive_smoke",
+      "german_hulldown_disable",
+      "stug_puma_critical_shots_mp",
+      "blizzard_effect_vehicle",
+      "wehr_vehicle_hold_fire_mp",
+      "usf_hold_fire_mp"
+    ],
+    "Drivers": [
+      {
+        "Army": "racebps\\german",
+        "SBP": "german_tank_crew_bg",
+        "Capture": "stug_iii_squad_bg"
+      }
+    ],
+    "Hardpoints": [
+      "stug_75mm_mp"
+    ],
+    "Health": 560,
+    "Upgrades": [
+      "stug_top_gunner_mp"
+    ],
+    "UpgradeCapacity": -1
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741908,
+    "Name": "tiger_sdkfz_181_bg",
+    "Army": "german",
+    "Display": {
+      "LocaleName": "2142250",
+      "LocaleDescriptionLong": "11038287",
+      "LocaleDescriptionShort": "11049129",
+      "Icon": "Icons_vehicles_vehicle_german_tiger",
+      "Symbol": "Icons_symbols_vehicle_german_tiger_symbol"
+    },
+    "Cost": {
+      "Manpower": 640,
+      "Fuel": 230,
+      "FieldTime": 70
+    },
+    "Abilities": [
+      "panzer_defensive_smoke",
+      "german_hulldown_disable",
+      "blizzard_effect_vehicle",
+      "wehr_vehicle_hold_fire_mp",
+      "usf_hold_fire_mp"
+    ],
+    "Drivers": [
+      {
+        "Army": "racebps\\german",
+        "SBP": "german_tank_crew_bg",
+        "Capture": "tiger_squad_bg"
+      }
+    ],
+    "Hardpoints": [
+      "tiger_kwk36_88mm_mp",
+      "mg34_coaxial_generic_mp",
+      "mg34_hull_mp"
+    ],
+    "Health": 1040,
+    "Upgrades": [
+      "tiger_top_gunner_mp"
+    ],
+    "UpgradeCapacity": -1
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741909,
+    "Name": "tiger_sdkfz_181_command_bg",
+    "Army": "german",
+    "Display": {
+      "LocaleName": "2142250",
+      "LocaleDescriptionLong": "11038287",
+      "LocaleDescriptionShort": "11049129",
+      "Icon": "Icons_vehicles_vehicle_german_tiger",
+      "Symbol": "Icons_symbols_vehicle_german_tiger_symbol"
+    },
+    "Cost": {
+      "Manpower": 640,
+      "Fuel": 230,
+      "FieldTime": 70
+    },
+    "Abilities": [
+      "panzer_defensive_smoke",
+      "german_hulldown_disable",
+      "blizzard_effect_vehicle",
+      "wehr_vehicle_hold_fire_mp",
+      "usf_hold_fire_mp"
+    ],
+    "Drivers": [
+      {
+        "Army": "racebps\\german",
+        "SBP": "german_tank_crew_bg",
+        "Capture": "tiger_command_squad_bg"
+      }
+    ],
+    "Hardpoints": [
+      "tiger_kwk36_88mm_mp",
+      "mg34_coaxial_generic_mp",
+      "mg34_hull_mp"
+    ],
+    "Health": 1040,
+    "Upgrades": [
+      "tiger_top_gunner_mp"
+    ],
+    "UpgradeCapacity": -1
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741844,
+    "Name": "combat_engineer_bg",
+    "Army": "soviet",
+    "Display": {
+      "LocaleName": "11045410",
+      "LocaleDescriptionLong": "11007039",
+      "LocaleDescriptionShort": "0",
+      "Symbol": ""
+    },
+    "Cost": {
+      "Manpower": 42.5,
+      "FieldTime": 4.25
+    },
+    "Abilities": [
+      "soviet_barbed_wire_cutting_ability_mp",
+      "blizzard_effect_deep_snow_camo",
+      "army_item_global_cover_training",
+      "engineer_salvage_wreck",
+      "heal_in_cover",
+      "scorched_earth_policy_trap_mp",
+      "engineer_booby_trap"
+    ],
+    "Hardpoints": [
+      "mosin_nagant_rifle_bg"
+    ],
+    "Health": 80
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741846,
+    "Name": "sapper_soldier_bg",
+    "Army": "soviet",
+    "Display": {
+      "LocaleName": "11045410",
+      "LocaleDescriptionLong": "11007039",
+      "LocaleDescriptionShort": "0",
+      "Symbol": ""
+    },
+    "Cost": {
+      "Manpower": 65,
+      "FieldTime": 2.5
+    },
+    "Abilities": [
+      "soviet_barbed_wire_cutting_ability_mp",
+      "blizzard_effect_deep_snow_camo",
+      "army_item_global_cover_training",
+      "engineer_salvage_wreck",
+      "heal_in_cover",
+      "scorched_earth_policy_trap_mp",
+      "engineer_booby_trap"
+    ],
+    "Hardpoints": [
+      "svt_rifle_bg"
+    ],
+    "Health": 80
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741849,
+    "Name": "guard_troops_bg",
+    "Army": "soviet",
+    "Display": {
+      "LocaleName": "0",
+      "LocaleDescriptionLong": "0",
+      "LocaleDescriptionShort": "0",
+      "Icon": "Icons_units_unit_soviet_guards",
+      "Symbol": "Icons_symbols_unit_soviet_guards_symbol"
+    },
+    "Cost": {
+      "Manpower": 55,
+      "FieldTime": 5.5
+    },
+    "Abilities": [
+      "guards_throw_defensive_grenade_mp",
+      "button_vehicle_bg",
+      "army_item_global_cover_training",
+      "army_item_soviet_not_gonna_die_like_this",
+      "blizzard_effect_deep_snow_camo",
+      "heal_in_cover"
+    ],
+    "Hardpoints": [
+      "mosin_nagant_rifle_bg"
+    ],
+    "Health": 80
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741850,
+    "Name": "penal_battalion_troops_bg",
+    "Army": "soviet",
+    "Display": {
+      "LocaleName": "0",
+      "LocaleDescriptionLong": "0",
+      "LocaleDescriptionShort": "0",
+      "Symbol": ""
+    },
+    "Cost": {
+      "Manpower": 50,
+      "FieldTime": 5.4
+    },
+    "Abilities": [
+      "army_item_global_cover_training",
+      "blizzard_effect_deep_snow_camo",
+      "heal_in_cover"
+    ],
+    "Hardpoints": [
+      "mosin_nagant_rifle_bg",
+      "shock troops_ppsh-41_sub_machine_gun_mp"
+    ],
+    "Health": 80
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741851,
+    "Name": "shock_troops_bg",
+    "Army": "soviet",
+    "Display": {
+      "LocaleName": "0",
+      "LocaleDescriptionLong": "11007041",
+      "LocaleDescriptionShort": "0",
+      "Icon": "Icons_units_unit_soviet_shock",
+      "Symbol": "Icons_symbols_unit_soviet_shock_symbol"
+    },
+    "Cost": {
+      "Manpower": 60,
+      "FieldTime": 5.5
+    },
+    "Abilities": [
+      "rg_42_anti_personnel_grenade_mp",
+      "rgd_1_smoke_grenade_mp",
+      "army_item_global_cover_training",
+      "army_item_soviet_not_gonna_die_like_this",
+      "blizzard_effect_deep_snow_camo",
+      "heal_in_cover"
+    ],
+    "Hardpoints": [
+      "shock troops_ppsh-41_sub_machine_gun_mp",
+      "shock troops_ppsh-41_sub_machine_gun_mp",
+      "ppsh-41_sub_machine_gun_bg"
+    ],
+    "Health": 80
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741847,
+    "Name": "commissar_bg",
+    "Army": "soviet",
+    "Display": {
+      "LocaleName": "0",
+      "LocaleDescriptionLong": "0",
+      "LocaleDescriptionShort": "0",
+      "Symbol": ""
+    },
+    "Cost": {
+      "Manpower": 40
+    },
+    "Abilities": [
+      "blizzard_effect_deep_snow_camo",
+      "heal_in_cover",
+      "political_speech_bg"
+    ],
+    "Hardpoints": [
+      "nagant_m1895_revolver_bg"
+    ],
+    "Health": 80
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741848,
+    "Name": "nkvd_bg",
+    "Army": "soviet",
+    "Display": {
+      "LocaleName": "0",
+      "LocaleDescriptionLong": "0",
+      "LocaleDescriptionShort": "0",
+      "Symbol": ""
+    },
+    "Cost": {
+      "Manpower": 60
+    },
+    "Abilities": [
+      "blizzard_effect_deep_snow_camo",
+      "heal_in_cover"
+    ],
+    "Hardpoints": [
+      "ppsh-41_sub_machine_gun_bg"
+    ],
+    "Health": 80
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741867,
+    "Name": "nkvd_leader_bg",
+    "Army": "soviet",
+    "Display": {
+      "LocaleName": "0",
+      "LocaleDescriptionLong": "0",
+      "LocaleDescriptionShort": "0",
+      "Symbol": ""
+    },
+    "Cost": {
+      "Manpower": 120
+    },
+    "Abilities": [
+      "blizzard_effect_deep_snow_camo",
+      "heal_in_cover"
+    ],
+    "Hardpoints": [
+      "nagant_m1895_revolver_bg"
+    ],
+    "Health": 80
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741926,
+    "Name": "officer_bg",
+    "Army": "soviet",
+    "Display": {
+      "LocaleName": "0",
+      "LocaleDescriptionLong": "0",
+      "LocaleDescriptionShort": "0",
+      "Symbol": ""
+    },
+    "Cost": {
+      "Manpower": 40
+    },
+    "Abilities": [
+      "blizzard_effect_deep_snow_camo",
+      "heal_in_cover",
+      "inspire_unit_bg"
+    ],
+    "Hardpoints": [
+      "nagant_m1895_revolver_bg"
+    ],
+    "Health": 80
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741823,
+    "Name": "conscript_soldier_bg",
+    "Army": "soviet",
+    "Display": {
+      "LocaleName": "0",
+      "LocaleDescriptionLong": "11007040",
+      "LocaleDescriptionShort": "0",
+      "Icon": "Icons_units_unit_soviet_conscript_02",
+      "Symbol": "Icons_symbols_unit_soviet_conscript_02_symbol"
+    },
+    "Cost": {
+      "Manpower": 40,
+      "FieldTime": 4
+    },
+    "Abilities": [
+      "conscript_molotov_cocktail_bg",
+      "blizzard_effect_deep_snow_camo",
+      "army_item_global_cover_training",
+      "heal_in_cover"
+    ],
+    "Hardpoints": [
+      "mosin_nagant_rifle_bg"
+    ],
+    "Health": 80
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741927,
+    "Name": "conscript_soldier_guard_bg",
+    "Army": "soviet",
+    "Display": {
+      "LocaleName": "0",
+      "LocaleDescriptionLong": "11007040",
+      "LocaleDescriptionShort": "0",
+      "Icon": "Icons_units_unit_soviet_conscript_02",
+      "Symbol": "Icons_symbols_unit_soviet_conscript_02_symbol"
+    },
+    "Cost": {
+      "Manpower": 40,
+      "FieldTime": 4
+    },
+    "Abilities": [
+      "blizzard_effect_deep_snow_camo",
+      "army_item_global_cover_training",
+      "heal_in_cover"
+    ],
+    "Hardpoints": [
+      "ppsh-41_sub_machine_gun_bg"
+    ],
+    "Health": 80
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741845,
+    "Name": "frontovik_bg",
+    "Army": "soviet",
+    "Display": {
+      "LocaleName": "0",
+      "LocaleDescriptionLong": "11007040",
+      "LocaleDescriptionShort": "0",
+      "Icon": "Icons_units_unit_soviet_conscript_02",
+      "Symbol": "Icons_symbols_unit_soviet_conscript_02_symbol"
+    },
+    "Cost": {
+      "Manpower": 50,
+      "FieldTime": 4
+    },
+    "Abilities": [
+      "rg_42_anti_personnel_grenade_bg",
+      "blizzard_effect_deep_snow_camo",
+      "army_item_global_cover_training",
+      "rgd_1_smoke_grenade_bg",
+      "heal_in_cover"
+    ],
+    "Hardpoints": [
+      "svt_rifle_bg"
+    ],
+    "Health": 80
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741866,
+    "Name": "tank_buster_soldier_bg",
+    "Army": "soviet",
+    "Display": {
+      "LocaleName": "0",
+      "LocaleDescriptionLong": "11007040",
+      "LocaleDescriptionShort": "0",
+      "Icon": "Icons_units_unit_soviet_conscript_02",
+      "Symbol": "Icons_symbols_unit_soviet_conscript_02_symbol"
+    },
+    "Cost": {
+      "Manpower": 40,
+      "FieldTime": 4
+    },
+    "Abilities": [
+      "blizzard_effect_deep_snow_camo",
+      "army_item_global_cover_training",
+      "anti_tank_grenade_bg",
+      "heal_in_cover",
+      "rgd_1_smoke_grenade_bg"
+    ],
+    "Hardpoints": [
+      "ppsh-41_sub_machine_gun_bg"
+    ],
+    "Health": 80
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741916,
+    "Name": "tank_buster_soldier_ptrs_bg",
+    "Army": "soviet",
+    "Display": {
+      "LocaleName": "0",
+      "LocaleDescriptionLong": "11007040",
+      "LocaleDescriptionShort": "0",
+      "Icon": "Icons_units_unit_soviet_conscript_02",
+      "Symbol": "Icons_symbols_unit_soviet_conscript_02_symbol"
+    },
+    "Cost": {
+      "Manpower": 60,
+      "FieldTime": 4
+    },
+    "Abilities": [
+      "blizzard_effect_deep_snow_camo",
+      "army_item_global_cover_training",
+      "anti_tank_grenade_bg",
+      "heal_in_cover",
+      "rgd_1_smoke_grenade_bg"
+    ],
+    "Hardpoints": [
+      "ptrs_41_bg"
+    ],
+    "Health": 80
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741853,
+    "Name": "recon_bg",
+    "Army": "soviet",
+    "Display": {
+      "LocaleName": "2198050",
+      "LocaleDescriptionLong": "11007042",
+      "LocaleDescriptionShort": "0",
+      "Symbol": ""
+    },
+    "Cost": {
+      "Manpower": 360,
+      "FieldTime": 36
+    },
+    "Abilities": [
+      "sniper_fire_flares_ability_mp",
+      "blizzard_effect_deep_snow_camo",
+      "army_item_global_cover_training",
+      "heal_in_cover"
+    ],
+    "Hardpoints": [
+      "mosin_nagant_sniper_rifle_bg"
+    ],
+    "Health": 82
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741852,
+    "Name": "sniper_bg",
+    "Army": "soviet",
+    "Display": {
+      "LocaleName": "2198050",
+      "LocaleDescriptionLong": "11007042",
+      "LocaleDescriptionShort": "0",
+      "Symbol": ""
+    },
+    "Cost": {
+      "Manpower": 360,
+      "FieldTime": 36
+    },
+    "Abilities": [
+      "sniper_fire_flares_ability_mp",
+      "blizzard_effect_deep_snow_camo",
+      "army_item_global_cover_training",
+      "heal_in_cover"
+    ],
+    "Hardpoints": [
+      "mosin_nagant_sniper_rifle_bg"
+    ],
+    "Health": 82
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741923,
+    "Name": "tank_crew_male_bg",
+    "Army": "soviet",
+    "Display": {
+      "LocaleName": "11045410",
+      "LocaleDescriptionLong": "11007039",
+      "LocaleDescriptionShort": "0",
+      "Symbol": ""
+    },
+    "Cost": {
+      "Manpower": 42.5,
+      "FieldTime": 4.25
+    },
+    "Abilities": [
+      "soviet_barbed_wire_cutting_ability_mp",
+      "blizzard_effect_deep_snow_camo",
+      "army_item_global_cover_training",
+      "engineer_salvage_wreck",
+      "heal_in_cover",
+      "scorched_earth_policy_trap_mp",
+      "engineer_booby_trap"
+    ],
+    "Hardpoints": [
+      "colt_m1911_45_pistol_bg"
+    ],
+    "Health": 80
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741829,
+    "Name": "vehicle_crew_male_bg",
+    "Army": "soviet",
+    "Display": {
+      "LocaleName": "11045410",
+      "LocaleDescriptionLong": "11007039",
+      "LocaleDescriptionShort": "0",
+      "Symbol": ""
+    },
+    "Cost": {
+      "Manpower": 42.5,
+      "FieldTime": 4.25
+    },
+    "Abilities": [
+      "soviet_barbed_wire_cutting_ability_mp",
+      "blizzard_effect_deep_snow_camo",
+      "army_item_global_cover_training",
+      "engineer_salvage_wreck",
+      "heal_in_cover",
+      "scorched_earth_policy_trap_mp",
+      "engineer_booby_trap"
+    ],
+    "Hardpoints": [
+      "colt_m1911_45_pistol_bg"
+    ],
+    "Health": 80
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741855,
+    "Name": "atgunzis_crew_bg",
+    "Army": "soviet",
+    "Display": {
+      "LocaleName": "0",
+      "LocaleDescriptionLong": "0",
+      "LocaleDescriptionShort": "0",
+      "Symbol": ""
+    },
+    "Cost": {
+      "Manpower": 30,
+      "FieldTime": 3
+    },
+    "Abilities": [
+      "blizzard_effect_deep_snow_camo",
+      "army_item_global_cover_training",
+      "heal_in_cover"
+    ],
+    "Hardpoints": [
+      "mosin_nagant_rifle_bg"
+    ],
+    "Health": 80
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741857,
+    "Name": "dshk_weapon_crew_bg",
+    "Army": "soviet",
+    "Display": {
+      "LocaleName": "0",
+      "LocaleDescriptionLong": "0",
+      "LocaleDescriptionShort": "0",
+      "Symbol": ""
+    },
+    "Cost": {
+      "Manpower": 40,
+      "FieldTime": 3
+    },
+    "Abilities": [
+      "blizzard_effect_deep_snow_camo",
+      "army_item_global_cover_training",
+      "heal_in_cover"
+    ],
+    "Hardpoints": [
+      "mosin_nagant_rifle_bg"
+    ],
+    "Health": 80
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741843,
+    "Name": "howitzer_crew_soviet_bg",
+    "Army": "soviet",
+    "Display": {
+      "LocaleName": "0",
+      "LocaleDescriptionLong": "0",
+      "LocaleDescriptionShort": "0",
+      "Symbol": ""
+    },
+    "Cost": {
+      "Manpower": 60,
+      "FieldTime": 6
+    },
+    "Abilities": [
+      "blizzard_effect_deep_snow_camo",
+      "heal_in_cover"
+    ],
+    "Hardpoints": [
+      "mosin_nagant_rifle_bg"
+    ],
+    "Health": 80
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741856,
+    "Name": "maxim_weapon_crew_bg",
+    "Army": "soviet",
+    "Display": {
+      "LocaleName": "0",
+      "LocaleDescriptionLong": "0",
+      "LocaleDescriptionShort": "0",
+      "Symbol": ""
+    },
+    "Cost": {
+      "Manpower": 40,
+      "FieldTime": 3
+    },
+    "Abilities": [
+      "blizzard_effect_deep_snow_camo",
+      "army_item_global_cover_training",
+      "heal_in_cover"
+    ],
+    "Hardpoints": [
+      "mosin_nagant_rifle_bg"
+    ],
+    "Health": 80
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741858,
+    "Name": "mortar_120mm_weapon_crew_bg",
+    "Army": "soviet",
+    "Display": {
+      "LocaleName": "0",
+      "LocaleDescriptionLong": "0",
+      "LocaleDescriptionShort": "0",
+      "Symbol": ""
+    },
+    "Cost": {
+      "Manpower": 30,
+      "FieldTime": 3
+    },
+    "Abilities": [
+      "blizzard_effect_deep_snow_camo",
+      "army_item_global_cover_training",
+      "heal_in_cover"
+    ],
+    "Hardpoints": [
+      "mosin_nagant_rifle_bg"
+    ],
+    "Health": 80
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741854,
+    "Name": "mortar_weapon_crew_bg",
+    "Army": "soviet",
+    "Display": {
+      "LocaleName": "0",
+      "LocaleDescriptionLong": "0",
+      "LocaleDescriptionShort": "0",
+      "Symbol": ""
+    },
+    "Cost": {
+      "Manpower": 30,
+      "FieldTime": 3
+    },
+    "Abilities": [
+      "blizzard_effect_deep_snow_camo",
+      "army_item_global_cover_training",
+      "heal_in_cover"
+    ],
+    "Hardpoints": [
+      "mosin_nagant_rifle_bg"
+    ],
+    "Health": 80
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741930,
+    "Name": "soviet_weapon_crew_bg",
+    "Army": "soviet",
+    "Display": {
+      "LocaleName": "0",
+      "LocaleDescriptionLong": "0",
+      "LocaleDescriptionShort": "0",
+      "Symbol": ""
+    },
+    "Cost": {
+      "Manpower": 30,
+      "FieldTime": 3
+    },
+    "Abilities": [
+      "blizzard_effect_deep_snow_camo",
+      "army_item_global_cover_training",
+      "heal_in_cover"
+    ],
+    "Hardpoints": [
+      "mosin_nagant_rifle_bg"
+    ],
+    "Health": 80
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741864,
+    "Name": "m1937_53-k_45mm_at_gun_bg",
+    "Army": "soviet",
+    "Display": {
+      "LocaleName": "11041977",
+      "LocaleDescriptionLong": "11044798",
+      "LocaleDescriptionShort": "11044801",
+      "Icon": "Icons_vehicles_vehicle_soviet_m1942_at_gun",
+      "Symbol": "Icons_symbols_vehicle_soviet_m1942_at_gun_symbol"
+    },
+    "Cost": {
+      "Manpower": 20,
+      "FieldTime": 2
+    },
+    "Abilities": [
+      "blizzard_effect_deep_snow_camo",
+      "okw_ratken_vehicle_hold_fire_mp",
+      "usf_hold_fire_mp",
+      "anti_tank_45mm_ammo_switch_ap_shell_mp",
+      "anti_tank_45mm_ammo_switch_cannister_shell_mp"
+    ],
+    "Hardpoints": [
+      "53k_45mm_m1937_at_gun_bg",
+      "53k_45mm_m1937_at_gun_canister_bg"
+    ],
+    "Health": 230
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741865,
+    "Name": "m1942_76mm_divisional_gun_zis-3_bg",
+    "Army": "soviet",
+    "Display": {
+      "LocaleName": "11041979",
+      "LocaleDescriptionLong": "11044796",
+      "LocaleDescriptionShort": "11044803",
+      "Icon": "Icons_vehicles_vehicle_soviet_m1942_76mm_at_gun",
+      "Symbol": "Icons_symbols_vehicle_soviet_m1942_76mm_at_gun_symbol"
+    },
+    "Cost": {
+      "Manpower": 140,
+      "FieldTime": 18
+    },
+    "Abilities": [
+      "at_76mm_he_barrage_ability_bg",
+      "blizzard_effect_deep_snow_camo",
+      "okw_ratken_vehicle_hold_fire_mp",
+      "usf_hold_fire_mp"
+    ],
+    "Hardpoints": [
+      "zis3_76mm_m1942__at_gun_bg"
+    ],
+    "Health": 350,
+    "UpgradeCapacity": -1
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741842,
+    "Name": "m1931_203mm_b-4_howitzer_artillery_bg",
+    "Army": "soviet",
+    "Display": {
+      "LocaleName": "11035152",
+      "LocaleDescriptionLong": "11047596",
+      "LocaleDescriptionShort": "11047598",
+      "Icon": "Icons_vehicles_vehicle_soviet_b4_artillery_gun",
+      "Symbol": "Icons_symbols_vehicle_soviet_b4_artillery_gun_symbol"
+    },
+    "Cost": {
+      "Manpower": 300,
+      "FieldTime": 30
+    },
+    "Abilities": [
+      "b4_203mm_barrage_mp"
+    ],
+    "Hardpoints": [
+      "203mm_b-4_mp",
+      "203mm_b-4_barrage_mp",
+      "203mm_b-4_barrage_slow_mp"
+    ],
+    "Health": 300,
+    "UpgradeCapacity": -1
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741859,
+    "Name": "m1937_152mm_ml_20_artillery_bg",
+    "Army": "soviet",
+    "Display": {
+      "LocaleName": "11008238",
+      "LocaleDescriptionLong": "11031931",
+      "LocaleDescriptionShort": "11042783",
+      "Icon": "Icons_vehicles_vehicle_soviet_ml20_artillery_gun",
+      "Symbol": "Icons_symbols_vehicle_soviet_ml20_artillery_gun_symbol"
+    },
+    "Cost": {
+      "Manpower": 160,
+      "Fuel": 50,
+      "FieldTime": 240
+    },
+    "Abilities": [
+      "ml_20_152mm_barrage_ability_mp",
+      "ml_20_152mm_barrage_ability_vet_1_mp",
+      "ml_20_152mm_barrage_ability_vet3_mp",
+      "ml_20_152mm_barrage_ability_victortarget_mp"
+    ],
+    "Hardpoints": [
+      "152mm_m-30_disabled_mp",
+      "152mm_m-30_mp",
+      "152mm_m-30_precision_mp",
+      "152mm_m-30_vet3_mp",
+      "152mm_m-30_victortarget_mp"
+    ],
+    "Health": 400,
+    "UpgradeCapacity": -1
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741870,
+    "Name": "churchill_lend_lease_mp",
+    "Army": "soviet",
+    "Display": {
+      "LocaleName": "11077621",
+      "LocaleDescriptionLong": "11077620",
+      "LocaleDescriptionShort": "11077619",
+      "Icon": "Icons_vehicles_vehicle_british_churchill",
+      "Symbol": "Icons_symbols_vehicle_british_churchill_symbol"
+    },
+    "Cost": {
+      "Manpower": 490,
+      "Fuel": 165,
+      "FieldTime": 60
+    },
+    "Abilities": [
+      "blizzard_effect_vehicle",
+      "churchill_inf_support_smoke",
+      "churchill_crew_grenade_targeted",
+      "command_vehicle_plane",
+      "brit_vehicle_hold_fire_mp",
+      "usf_hold_fire_mp",
+      "brit_vehicle_crew_repair_mp"
+    ],
+    "Drivers": [
+      {
+        "Army": "racebps\\soviet",
+        "SBP": "soviet_male_vehicle_crew_bg",
+        "Capture": "churchill_lend_lease_squad_bg"
+      }
+    ],
+    "Hardpoints": [
+      "churchill_mk7_75mm_mp",
+      "churchill_mk7_coaxial_vehicle_turret_mp",
+      "churchill_mk7_vehicle_hull_mp",
+      "churchill_crew_grenades",
+      "churchill_hull_defense_right_mp",
+      "churchill_hull_defense_left_mp"
+    ],
+    "Health": 1400,
+    "UpgradeCapacity": -1
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741841,
+    "Name": "is-2_heavy_tank_bg",
+    "Army": "soviet",
+    "Display": {
+      "LocaleName": "11038336",
+      "LocaleDescriptionLong": "11038299",
+      "LocaleDescriptionShort": "11049060",
+      "Icon": "Icons_vehicles_vehicle_soviet_is2",
+      "Symbol": "Icons_symbols_vehicle_soviet_is2_symbol"
+    },
+    "Cost": {
+      "Manpower": 640,
+      "Fuel": 230,
+      "FieldTime": 70
+    },
+    "Abilities": [
+      "german_hulldown_disable",
+      "blizzard_effect_vehicle",
+      "sov_vehicle_hold_fire_mp",
+      "usf_hold_fire_mp",
+      "tank_ambush_mp",
+      "is2_fragmentation_he_mp"
+    ],
+    "Drivers": [
+      {
+        "Army": "racebps\\soviet",
+        "SBP": "soviet_male_vehicle_crew_bg",
+        "Capture": "is-2_bg"
+      }
+    ],
+    "Hardpoints": [
+      "is2_d25t_122mm_mp",
+      "is2_coaxial_vehicle_turret_mp",
+      "coaxial_vehicle_turret_rear_mp"
+    ],
+    "Health": 1040,
+    "Upgrades": [
+      "is2_top_gunner_mp"
+    ],
+    "UpgradeCapacity": -1
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741840,
+    "Name": "isu_152_spg_bg",
+    "Army": "soviet",
+    "Display": {
+      "LocaleName": "11038338",
+      "LocaleDescriptionLong": "11038301",
+      "LocaleDescriptionShort": "11049063",
+      "Icon": "Icons_vehicles_vehicle_soviet_isu152",
+      "Symbol": "Icons_symbols_vehicle_soviet_isu152_symbol"
+    },
+    "Cost": {
+      "Manpower": 680,
+      "Fuel": 260,
+      "FieldTime": 64
+    },
+    "Abilities": [
+      "german_hulldown_disable",
+      "blizzard_effect_vehicle",
+      "sov_vehicle_hold_fire_mp",
+      "isu152_ammo_switch_he_shell_mp",
+      "isu152_ammo_switch_ap_shell_mp",
+      "usf_hold_fire_mp"
+    ],
+    "Drivers": [
+      {
+        "Army": "racebps\\soviet",
+        "SBP": "soviet_male_vehicle_crew_bg",
+        "Capture": "isu-152_bg"
+      }
+    ],
+    "Hardpoints": [
+      "isu152_ml-20s_152mm_armor_piercing_mp",
+      "isu152_ml-20s_152mm_howitzer_gun_mp",
+      "isu152_ml-20s_152mm_howitzer_gun_piercing_shot_mp"
+    ],
+    "Health": 1040,
+    "Upgrades": [
+      "isu152_top_gunner_mp"
+    ],
+    "UpgradeCapacity": -1
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741839,
+    "Name": "katyusha_bm-13n_bg",
+    "Army": "soviet",
+    "Display": {
+      "LocaleName": "11038340",
+      "LocaleDescriptionLong": "11038303",
+      "LocaleDescriptionShort": "11049065",
+      "Icon": "Icons_vehicles_vehicle_soviet_katyush_rocket_truck",
+      "Symbol": "Icons_symbols_vehicle_soviet_katyush_rocket_truck_symbol"
+    },
+    "Cost": {
+      "Manpower": 360,
+      "Fuel": 85,
+      "FieldTime": 50
+    },
+    "Abilities": [
+      "kaytusha_rocket_truck_barrage_mp",
+      "german_hulldown_disable",
+      "blizzard_effect_vehicle",
+      "kaytusha_rocket_truck_barrage_victortarget_mp",
+      "katushya_creeping_barrage_mp"
+    ],
+    "Drivers": [
+      {
+        "Army": "racebps\\soviet",
+        "SBP": "soviet_male_vehicle_2_crew_bg",
+        "Capture": "katyusha_rocket_truck_bg"
+      }
+    ],
+    "Hardpoints": [
+      "katyusha_bm_13_16_rocket_no_fire_mp",
+      "katyusha_bm_13_16_rocket_mp",
+      "katyusha_bm_13_16_precision_rocket_mp",
+      "katyusha_bm_13_16_rocket_victortarget_mp"
+    ],
+    "Health": 160,
+    "UpgradeCapacity": -1
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741838,
+    "Name": "kv-1_bg",
+    "Army": "soviet",
+    "Display": {
+      "LocaleName": "11007078",
+      "LocaleDescriptionLong": "11038305",
+      "LocaleDescriptionShort": "11049067",
+      "Icon": "Icons_vehicles_vehicle_soviet_kv1_heavy_tank",
+      "Symbol": "Icons_symbols_vehicle_soviet_kv1_heavy_tank_symbol"
+    },
+    "Cost": {
+      "Manpower": 600,
+      "Fuel": 75,
+      "FieldTime": 60
+    },
+    "Abilities": [
+      "german_hulldown_disable",
+      "blizzard_effect_vehicle",
+      "sov_vehicle_hold_fire_mp",
+      "usf_hold_fire_mp"
+    ],
+    "Drivers": [
+      {
+        "Army": "racebps\\soviet",
+        "SBP": "soviet_male_vehicle_crew_bg",
+        "Capture": "kv-1_bg"
+      }
+    ],
+    "Hardpoints": [
+      "t34_kv1_m1940_f-34_76mm_bg",
+      "coaxial_vehicle_turret_mp",
+      "coaxial_vehicle_turret_rear_mp",
+      "coaxial_vehicle_hull_mp"
+    ],
+    "Health": 675,
+    "UpgradeCapacity": -1
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741837,
+    "Name": "kv-2_bg",
+    "Army": "soviet",
+    "Display": {
+      "LocaleName": "11050858",
+      "LocaleDescriptionLong": "0",
+      "LocaleDescriptionShort": "11049068",
+      "Icon": "Icons_vehicles_vehicle_soviet_kv2_heavy_tank",
+      "Symbol": "Icons_symbols_vehicle_soviet_kv2_heavy_tank_symbol"
+    },
+    "Cost": {
+      "Manpower": 630,
+      "Fuel": 230,
+      "FieldTime": 60
+    },
+    "Abilities": [
+      "german_hulldown_disable",
+      "blizzard_effect_vehicle",
+      "kv-2_seige_mode",
+      "usf_hold_fire_mp",
+      "sov_vehicle_hold_fire_mp"
+    ],
+    "Drivers": [
+      {
+        "Army": "racebps\\soviet",
+        "SBP": "soviet_male_vehicle_crew_bg",
+        "Capture": "kv-2_bg"
+      }
+    ],
+    "Hardpoints": [
+      "kv2_m10_152mm_bg",
+      "kv2_m10_152mm_indirect",
+      "coaxial_vehicle_turret_rear_mp",
+      "coaxial_vehicle_hull_mp"
+    ],
+    "Health": 1040,
+    "UpgradeCapacity": -1
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741836,
+    "Name": "kv-8_bg",
+    "Army": "soviet",
+    "Display": {
+      "LocaleName": "11038342",
+      "LocaleDescriptionLong": "11038307",
+      "LocaleDescriptionShort": "11049069",
+      "Icon": "Icons_vehicles_vehicle_soviet_kv8_flame",
+      "Symbol": "Icons_symbols_vehicle_soviet_kv8_symbol"
+    },
+    "Cost": {
+      "Manpower": 390,
+      "Fuel": 145,
+      "FieldTime": 55
+    },
+    "Abilities": [
+      "german_hulldown_disable",
+      "kv-8_flame_45mm_toggle_mp",
+      "blizzard_effect_vehicle",
+      "usf_hold_fire_mp",
+      "sov_vehicle_hold_fire_mp"
+    ],
+    "Drivers": [
+      {
+        "Army": "racebps\\soviet",
+        "SBP": "soviet_male_vehicle_crew_bg",
+        "Capture": "kv-8_bg"
+      }
+    ],
+    "Hardpoints": [
+      "kv8_ato-41_flamethrower_bg",
+      "kv-8_45mm_bg",
+      "coaxial_vehicle_turret_rear_mp",
+      "coaxial_vehicle_hull_mp"
+    ],
+    "Health": 960,
+    "UpgradeCapacity": -1
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741835,
+    "Name": "m3a1_scout_car_bg",
+    "Army": "soviet",
+    "Display": {
+      "LocaleName": "11038344",
+      "LocaleDescriptionLong": "11038309",
+      "LocaleDescriptionShort": "11049071",
+      "Icon": "Icons_vehicles_vehicle_soviet_m3a1_armored_personnel_carrier",
+      "Symbol": "Icons_symbols_vehicle_soviet_m3a1_armored_personnel_carrier_symbol"
+    },
+    "Cost": {
+      "Manpower": 190,
+      "Fuel": 15,
+      "FieldTime": 30
+    },
+    "Abilities": [
+      "german_hulldown_disable",
+      "blizzard_effect_vehicle",
+      "handbrake_mode_new_mp"
+    ],
+    "Drivers": [
+      {
+        "Army": "racebps\\soviet",
+        "SBP": "soviet_male_vehicle_2_crew_bg",
+        "Capture": "m3a1_scout_car_squad_bg"
+      }
+    ],
+    "Hardpoints": [
+      "m3a1_scout_car_m2hb_hmg_mp",
+      "m3a1_scout_car_30cal_browning_m1919__machine_gun_rear_mp",
+      "halftrack_250_dummy"
+    ],
+    "Health": 200,
+    "UpgradeCapacity": -1
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741834,
+    "Name": "m5_halftrack_bg",
+    "Army": "soviet",
+    "Display": {
+      "LocaleName": "11038346",
+      "LocaleDescriptionLong": "11038311",
+      "LocaleDescriptionShort": "11049073",
+      "Icon": "Icons_vehicles_vehicle_soviet_m5_halftrack",
+      "Symbol": "Icons_symbols_vehicle_soviet_m5_halftrack_symbol"
+    },
+    "Cost": {
+      "Manpower": 240,
+      "Fuel": 30,
+      "FieldTime": 30
+    },
+    "Abilities": [
+      "german_hulldown_disable",
+      "blizzard_effect_vehicle",
+      "handbrake_mode_new_mp",
+      "usf_hold_fire_mp"
+    ],
+    "Drivers": [
+      {
+        "Army": "racebps\\soviet",
+        "SBP": "soviet_male_vehicle_2_crew_bg",
+        "Capture": "m5_halftrack_squad_bg"
+      }
+    ],
+    "Hardpoints": [
+      "m5_halftrack_m2hb_hmg_mp",
+      "halftrack_250_dummy"
+    ],
+    "Health": 320,
+    "UpgradeCapacity": -1
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741929,
+    "Name": "m5_halftrack_quad_bg",
+    "Army": "soviet",
+    "Display": {
+      "LocaleName": "11038346",
+      "LocaleDescriptionLong": "11038311",
+      "LocaleDescriptionShort": "11049073",
+      "Icon": "Icons_vehicles_vehicle_soviet_m5_halftrack",
+      "Symbol": "Icons_symbols_vehicle_soviet_m5_halftrack_symbol"
+    },
+    "Cost": {
+      "Manpower": 240,
+      "Fuel": 30,
+      "FieldTime": 30
+    },
+    "Abilities": [
+      "german_hulldown_disable",
+      "blizzard_effect_vehicle",
+      "handbrake_mode_new_mp",
+      "usf_hold_fire_mp"
+    ],
+    "Drivers": [
+      {
+        "Army": "racebps\\soviet",
+        "SBP": "soviet_male_vehicle_2_crew_bg",
+        "Capture": "m5_halftrack_squad_bg"
+      }
+    ],
+    "Hardpoints": [
+      "m5_halftrack_quad_50_cal_m2hb_mp",
+      "m5_halftrack_quad_50_cal_m2hb_mp",
+      "m5_halftrack_m2hb_hmg_mp",
+      "halftrack_250_dummy"
+    ],
+    "Health": 320,
+    "UpgradeCapacity": -1
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741833,
+    "Name": "sherman_76mm_lend_lease_bg",
+    "Army": "soviet",
+    "Display": {
+      "LocaleName": "11075083",
+      "LocaleDescriptionLong": "11075081",
+      "LocaleDescriptionShort": "11075082",
+      "Icon": "Icons_vehicles_vehicle_aef_m4a3_sherman_76mm",
+      "Symbol": "Icons_symbols_vehicle_aef_m4a3_sherman_76mm_symbol"
+    },
+    "Cost": {
+      "Manpower": 380,
+      "Fuel": 125,
+      "FieldTime": 50
+    },
+    "Abilities": [
+      "blizzard_effect_vehicle",
+      "usf_vehicle_hold_fire_mp",
+      "usf_hold_fire_mp",
+      "sherman_76mm_ammo_switch_ap_shell_mp",
+      "sherman_76mm_ammo_switch_hvap_shell_mp",
+      "smoke_sherman_76_mm_mortar_barrage_mp"
+    ],
+    "Drivers": [
+      {
+        "Army": "racebps\\soviet",
+        "SBP": "soviet_male_vehicle_crew_bg",
+        "Capture": "76mm_sherman_lend_lease_bg"
+      }
+    ],
+    "Hardpoints": [
+      "sherman_76mm_gun_bg",
+      "sherman_76mm_hvap_gun_bg",
+      "m4c_sherman_coaxil_turret_bg",
+      "m4c_sherman_hull_gun_bg",
+      "sherman_m3_2inch_mortar_smoke_mp"
+    ],
+    "Health": 640,
+    "Upgrades": [
+      "sherman_soviet_top_gunner_bg"
+    ],
+    "UpgradeCapacity": 1
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741832,
+    "Name": "su_76m_bg",
+    "Army": "soviet",
+    "Display": {
+      "LocaleName": "11038348",
+      "LocaleDescriptionLong": "11038313",
+      "LocaleDescriptionShort": "11049075",
+      "Icon": "Icons_vehicles_vehicle_soviet_su76m_assault_gun",
+      "Symbol": "Icons_symbols_vehicle_soviet_su76m_assault_gun_symbol"
+    },
+    "Cost": {
+      "Manpower": 280,
+      "Fuel": 75,
+      "FieldTime": 45
+    },
+    "Abilities": [
+      "su-76_barrage_ability_mp",
+      "german_hulldown_disable",
+      "blizzard_effect_vehicle",
+      "sov_vehicle_hold_fire_mp",
+      "usf_hold_fire_mp",
+      "tank_ambush_mp"
+    ],
+    "Drivers": [
+      {
+        "Army": "racebps\\soviet",
+        "SBP": "soviet_male_vehicle_crew_bg",
+        "Capture": "su-76m_bg"
+      }
+    ],
+    "Hardpoints": [
+      "su76_76mm_zis-3sh_gun_bg"
+    ],
+    "Health": 400
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741831,
+    "Name": "su_85_bg",
+    "Army": "soviet",
+    "Display": {
+      "LocaleName": "11006720",
+      "LocaleDescriptionLong": "11038315",
+      "LocaleDescriptionShort": "11049077",
+      "Icon": "Icons_vehicles_vehicle_soviet_su85_tank_destroyer",
+      "Symbol": "Icons_symbols_vehicle_soviet_su85_tank_destroyer_symbol"
+    },
+    "Cost": {
+      "Manpower": 350,
+      "Fuel": 130,
+      "FieldTime": 50
+    },
+    "Abilities": [
+      "cone_los_toggle_ability_mp",
+      "german_hulldown_disable",
+      "blizzard_effect_vehicle",
+      "sov_vehicle_hold_fire_mp",
+      "usf_hold_fire_mp",
+      "tank_ambush_mp"
+    ],
+    "Drivers": [
+      {
+        "Army": "racebps\\soviet",
+        "SBP": "soviet_male_vehicle_crew_bg",
+        "Capture": "su-85_bg"
+      }
+    ],
+    "Hardpoints": [
+      "su85_d5t_85mm__bg"
+    ],
+    "Health": 640
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741924,
+    "Name": "ot_34_76_bg",
+    "Army": "soviet",
+    "Display": {
+      "LocaleName": "11038350",
+      "LocaleDescriptionLong": "11048086",
+      "LocaleDescriptionShort": "11049079",
+      "Icon": "Icons_vehicles_vehicle_soviet_t34_76_heavy_tank",
+      "Symbol": "Icons_symbols_vehicle_soviet_t34_76_heavy_tank_symbol"
+    },
+    "Cost": {
+      "Manpower": 300,
+      "Fuel": 100,
+      "FieldTime": 50
+    },
+    "Abilities": [
+      "t-34_ramming_ability_mp",
+      "german_hulldown_disable",
+      "blizzard_effect_vehicle",
+      "sov_vehicle_hold_fire_mp",
+      "usf_hold_fire_mp",
+      "tank_ambush_mp"
+    ],
+    "Drivers": [
+      {
+        "Army": "racebps\\soviet",
+        "SBP": "soviet_male_vehicle_crew_bg",
+        "Capture": "t_34_76_squad_bg"
+      }
+    ],
+    "Hardpoints": [
+      "ot-34_ato-41_flamethrower_mp",
+      "ot-34_coaxial_vehicle_turret_bg"
+    ],
+    "Health": 640,
+    "UpgradeCapacity": -1
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741825,
+    "Name": "t_34_76_bg",
+    "Army": "soviet",
+    "Display": {
+      "LocaleName": "11038350",
+      "LocaleDescriptionLong": "11048086",
+      "LocaleDescriptionShort": "11049079",
+      "Icon": "Icons_vehicles_vehicle_soviet_t34_76_heavy_tank",
+      "Symbol": "Icons_symbols_vehicle_soviet_t34_76_heavy_tank_symbol"
+    },
+    "Cost": {
+      "Manpower": 300,
+      "Fuel": 100,
+      "FieldTime": 50
+    },
+    "Abilities": [
+      "t-34_ramming_ability_mp",
+      "german_hulldown_disable",
+      "blizzard_effect_vehicle",
+      "sov_vehicle_hold_fire_mp",
+      "usf_hold_fire_mp",
+      "tank_ambush_mp"
+    ],
+    "Drivers": [
+      {
+        "Army": "racebps\\soviet",
+        "SBP": "soviet_male_vehicle_crew_bg",
+        "Capture": "t_34_76_squad_bg"
+      }
+    ],
+    "Hardpoints": [
+      "t34_76mm_bg",
+      "t34_76_85_coaxial_vehicle_turret_bg",
+      "t34_76_85_coaxial_vehicle_hull_bg"
+    ],
+    "Health": 640,
+    "UpgradeCapacity": -1
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741826,
+    "Name": "t_34_85_bg",
+    "Army": "soviet",
+    "Display": {
+      "LocaleName": "11048080",
+      "LocaleDescriptionLong": "11048084",
+      "LocaleDescriptionShort": "11049081",
+      "Icon": "Icons_vehicles_vehicle_soviet_t34_76_heavy_tank",
+      "Symbol": "Icons_symbols_vehicle_soviet_t34_76_heavy_tank_symbol"
+    },
+    "Cost": {
+      "Manpower": 380,
+      "Fuel": 130,
+      "FieldTime": 45
+    },
+    "Abilities": [
+      "t-34_ramming_ability_mp",
+      "german_hulldown_disable",
+      "blizzard_effect_vehicle",
+      "sov_vehicle_hold_fire_mp",
+      "usf_hold_fire_mp",
+      "tank_ambush_mp"
+    ],
+    "Drivers": [
+      {
+        "Army": "racebps\\soviet",
+        "SBP": "soviet_male_vehicle_crew_bg",
+        "Capture": "t_34_85_squad_bg"
+      }
+    ],
+    "Hardpoints": [
+      "t34_85_zis-s-53_85mm_t34_bg",
+      "t34_76_85_coaxial_vehicle_turret_bg",
+      "t34_76_85_coaxial_vehicle_hull_bg"
+    ],
+    "Health": 800,
+    "UpgradeCapacity": -1
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741830,
+    "Name": "t_70m_bg",
+    "Army": "soviet",
+    "Display": {
+      "LocaleName": "11038225",
+      "LocaleDescriptionLong": "11038226",
+      "LocaleDescriptionShort": "11049083",
+      "Icon": "Icons_vehicles_vehicle_soviet_t70m_light_tank",
+      "Symbol": "Icons_symbols_vehicle_soviet_t70m_light_tank_symbol"
+    },
+    "Cost": {
+      "Manpower": 260,
+      "Fuel": 70,
+      "FieldTime": 40
+    },
+    "Abilities": [
+      "german_hulldown_disable",
+      "blizzard_effect_vehicle",
+      "sov_vehicle_hold_fire_mp",
+      "usf_hold_fire_mp",
+      "vehicle_recon_toggle_mp",
+      "tank_ambush_mp"
+    ],
+    "Drivers": [
+      {
+        "Army": "racebps\\soviet",
+        "SBP": "soviet_male_vehicle_2_crew_bg",
+        "Capture": "t-70m_bg"
+      }
+    ],
+    "Hardpoints": [
+      "t70_m1938_45mm_bg",
+      "t70_coaxial_vehicle_turret_mp"
+    ],
+    "Health": 400,
+    "UpgradeCapacity": -1
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741868,
+    "Name": "valentine_bg",
+    "Army": "soviet",
+    "Display": {
+      "LocaleName": "11095126",
+      "LocaleDescriptionLong": "11095125",
+      "LocaleDescriptionShort": "11077951",
+      "Icon": "Icons_vehicles_vehicle_british_valentine",
+      "Symbol": "Icons_symbols_vehicle_british_valentine_symbol"
+    },
+    "Cost": {
+      "Manpower": 300,
+      "Fuel": 80,
+      "FieldTime": 60
+    },
+    "Abilities": [
+      "blizzard_effect_vehicle",
+      "valentine_smoke_barrage_mp",
+      "brit_vehicle_hold_fire_mp",
+      "command_vehicle_plane",
+      "usf_hold_fire_mp",
+      "brit_vehicle_crew_repair_mp"
+    ],
+    "Drivers": [
+      {
+        "Army": "racebps\\soviet",
+        "SBP": "soviet_male_vehicle_2_crew_bg",
+        "Capture": "valentine_lend_lease_bg"
+      }
+    ],
+    "Hardpoints": [
+      "valentine_75mm_mp",
+      "cromwell_coaxial_vehicle_turret_mp",
+      "valentine_canister_smoke_mp"
+    ],
+    "Health": 480,
+    "UpgradeCapacity": -1
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741869,
+    "Name": "valentine_command_bg",
+    "Army": "soviet",
+    "Display": {
+      "LocaleName": "11095126",
+      "LocaleDescriptionLong": "11095125",
+      "LocaleDescriptionShort": "11077951",
+      "Icon": "Icons_vehicles_vehicle_british_valentine",
+      "Symbol": "Icons_symbols_vehicle_british_valentine_symbol"
+    },
+    "Cost": {
+      "Manpower": 300,
+      "Fuel": 80,
+      "FieldTime": 60
+    },
+    "Abilities": [
+      "blizzard_effect_vehicle",
+      "valentine_smoke_barrage_mp",
+      "brit_vehicle_hold_fire_mp",
+      "command_vehicle_plane",
+      "usf_hold_fire_mp",
+      "brit_vehicle_crew_repair_mp"
+    ],
+    "Drivers": [
+      {
+        "Army": "racebps\\soviet",
+        "SBP": "soviet_male_vehicle_crew_bg",
+        "Capture": "valentine_lend_lease_command_bg"
+      }
+    ],
+    "Hardpoints": [
+      "valentine_75mm_mp",
+      "cromwell_coaxial_vehicle_turret_mp",
+      "valentine_canister_smoke_mp"
+    ],
+    "Health": 480,
+    "UpgradeCapacity": -1
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741824,
+    "Name": "zis_6_transport_bg",
+    "Army": "soviet",
+    "Display": {
+      "LocaleName": "11048639",
+      "LocaleDescriptionLong": "0",
+      "LocaleDescriptionShort": "11049087",
+      "Icon": "Icons_vehicles_vehicle_soviet_su6_truck",
+      "Symbol": "Icons_symbols_vehicle_soviet_su6_truck_symbol"
+    },
+    "Cost": {
+      "Manpower": 120,
+      "Fuel": 30,
+      "FieldTime": 30
+    },
+    "Abilities": [
+      "german_hulldown_disable",
+      "blizzard_effect_vehicle"
+    ],
+    "Drivers": [
+      {
+        "Army": "racebps\\soviet",
+        "SBP": "soviet_male_vehicle_driver_bg",
+        "Capture": "zis_6_transport_truck_bg"
+      }
+    ],
+    "Hardpoints": [
+      "dummy_weapon_mp"
+    ],
+    "Health": 200,
+    "UpgradeCapacity": 1
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1479,
+    "Name": "german_hq_mp",
+    "Army": "german",
+    "Display": {
+      "LocaleName": "2099301",
+      "LocaleDescriptionLong": "2099300",
+      "LocaleDescriptionShort": "11041840",
+      "Icon": "Icons_buildings_building_german_hq",
+      "Symbol": "Icons_symbols_building_german_hq_symbol"
+    },
+    "Cost": {
+      "Manpower": 500,
+      "FieldTime": 90
+    },
+    "Health": 3000,
+    "Upgrades": [
+      "battle_phase_2_mp",
+      "battle_phase_3_mp",
+      "battle_phase_4_mp"
+    ],
+    "UpgradeCapacity": -1
+  }
+]

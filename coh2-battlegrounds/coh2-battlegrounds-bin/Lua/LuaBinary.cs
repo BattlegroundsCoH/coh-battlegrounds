@@ -9,7 +9,7 @@ using Battlegrounds.Util.Lists;
 using Battlegrounds.Functional;
 
 namespace Battlegrounds.Lua {
-    
+
     /// <summary>
     /// Static utility class for converting Lua data to and from binary.
     /// </summary>
@@ -49,7 +49,7 @@ namespace Battlegrounds.Lua {
             if (encoding is null) {
                 encoding = Encoding.ASCII;
             }
-            
+
             DistinctList<LuaValue> values = new DistinctList<LuaValue>();
             List<LuaBinIns> instructions = new List<LuaBinIns>();
 
@@ -208,7 +208,7 @@ namespace Battlegrounds.Lua {
             _ => throw new Exception()
         };
 
-        private static void BinaryCode(LuaBinIns instruction, BinaryWriter writer) 
+        private static void BinaryCode(LuaBinIns instruction, BinaryWriter writer)
             => writer.Write(
                 instruction switch {
                     LuaPush push => (new byte[] { PUSH, }).Concat(BitConverter.GetBytes(push.Index)).ToArray(),

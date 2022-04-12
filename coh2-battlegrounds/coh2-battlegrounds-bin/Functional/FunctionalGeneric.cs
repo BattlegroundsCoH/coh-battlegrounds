@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 
 namespace Battlegrounds.Functional {
-    
+
     /// <summary>
     /// Static helper class for working with generic collections.
     /// </summary>
@@ -26,7 +26,7 @@ namespace Battlegrounds.Functional {
         /// <param name="random">The <see cref="System.Random"/> instance to use when selecting random <typeparamref name="T"/>.</param>
         /// <returns>A random <typeparamref name="T"/> from the <paramref name="enumerable"/>.</returns>
         public static T Random<T>(this IEnumerable<T> enumerable, Random random) {
-            int i = enumerable.Any() ? random.Next(0, enumerable.Count()) : - 1;
+            int i = enumerable.Any() ? random.Next(0, enumerable.Count()) : -1;
             return (i >= 0) ? enumerable.ElementAt(i) : default;
         }
 

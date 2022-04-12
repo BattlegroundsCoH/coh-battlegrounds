@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using Battlegrounds.Locale;
 using BattlegroundsApp.Dialogs.Service;
 using BattlegroundsApp.Utilities;
 using BattlegroundsApp.ViewModels;
@@ -30,16 +31,26 @@ namespace BattlegroundsApp.Dialogs.LobbyPassword {
             }
         }
 
-        private LobbyPasswordDialogViewModel(string title) {
+        public LocaleKey PasswordTextBlockText { get; }
+        public LocaleKey JoinButtonContent { get; }
+        public LocaleKey CancelButtonContent { get; }
+
+        private LobbyPasswordDialogViewModel(LocaleKey title) {
 
             Title = title;
+
+            // Define locales
+            PasswordTextBlockText = new LocaleKey("LobbyPasswordDialogView_Password");
+            JoinButtonContent = new LocaleKey("LobbyPasswordDialogView_Button_Join");
+            CancelButtonContent = new LocaleKey("LobbyPasswordDialogView_Button_Cancel");
+
             JoinCommand = new RelayCommand<DialogWindow>(Join);
             CandelCommand = new RelayCommand<DialogWindow>(Cancel);
             DialogCloseDefault = LobbyPasswordDialogResult.Cancel;
 
         }
 
-        public static LobbyPasswordDialogResult ShowLobbyPasswordDialog(string title, out string password) {
+        public static LobbyPasswordDialogResult ShowLobbyPasswordDialog(LocaleKey title, out string password) {
             var dialog = new LobbyPasswordDialogViewModel(title);
             var result = dialog.ShowDialog();
             password = dialog.Password;

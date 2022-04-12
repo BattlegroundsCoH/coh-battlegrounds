@@ -1,5 +1,5 @@
 ﻿namespace Battlegrounds.Util.Coroutines {
-    
+
     /// <summary>
     /// Abstract class representing an instruction to evaluate while yielding.
     /// </summary>

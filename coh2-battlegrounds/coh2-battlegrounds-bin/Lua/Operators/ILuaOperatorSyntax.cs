@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+
 using Battlegrounds.Lua.Parsing;
 
 namespace Battlegrounds.Lua.Operators {
-    
+
     /// <summary>
     /// Interface for handling the syntax of Lua operators.
     /// </summary>

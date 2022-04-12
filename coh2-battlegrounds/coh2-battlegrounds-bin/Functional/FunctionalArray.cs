@@ -1,13 +1,14 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Battlegrounds.Functional {
-    
+
     /// <summary>
     /// Functional helper functions for arrays.
     /// </summary>
     public static class FunctionalArray {
-    
+
         /// <summary>
         /// Loop through each element in an array and execute a function that can mutate the element.
         /// </summary>
@@ -30,7 +31,7 @@ namespace Battlegrounds.Functional {
         /// <param name="array">The array to run method on.</param>
         /// <param name="act">The function to run on each element.</param>
         /// <returns>Returns the given array.</returns>
-        public static T[] ForEach<T>(this T[]array, Action<T> act) {
+        public static T[] ForEach<T>(this T[] array, Action<T> act) {
             for (int i = 0; i < array.Length; i++) {
                 act(array[i]);
             }
@@ -38,19 +39,51 @@ namespace Battlegrounds.Functional {
         }
 
         /// <summary>
-        /// Convert an array of type <typeparamref name="U"/> into an array of type <typeparamref name="V"/> through a converter.
+        /// Filter all elements in <paramref name="array"/> such that only elements matching the <paramref name="filter"/> predicate 
+        /// are returned in a new array.
+        /// </summary>
+        /// <typeparam name="T">The type the elements in the array are of.</typeparam>
+        /// <param name="array">The array to filter elements from.</param>
+        /// <param name="filter">The filter predicate method.</param>
+        /// <returns>A new array of elements from <paramref name="array"/> matching the <paramref name="filter"/> predicate.</returns>
+        public static T[] Filter<T>(this T[] array, Predicate<T> filter) {
+            List<T> list = new(array.Length);
+            for (int i = 0; i < array.Length; i++) {
+                if (filter(array[i])) {
+                    list.Add(array[i]);
+                }
+            }
+            return list.ToArray();
+        }
+
+        /// <summary>
+        /// Maps an array of type <typeparamref name="U"/> into an array of type <typeparamref name="V"/> through a mapping function.
         /// </summary>
         /// <typeparam name="U">The original type of the array.</typeparam>
         /// <typeparam name="V">The new type of the array.</typeparam>
-        /// <param name="array">The array to convert.</param>
-        /// <param name="func">The conversion method to convert a single element from <typeparamref name="U"/> to <typeparamref name="V"/>.</param>
+        /// <param name="array">The array to map over.</param>
+        /// <param name="func">The map funcion to map a single element from <typeparamref name="U"/> to <typeparamref name="V"/>.</param>
         /// <returns>An array consisting of elements of type <typeparamref name="V"/>.</returns>
-        public static V[] Convert<U, V>(this U[] array, Func<U, V> func) {
+        public static V[] Map<U, V>(this U[] array, Func<U, V> func) {
             V[] result = new V[array.Length];
             for (int i = 0; i < array.Length; i++) {
                 result[i] = func(array[i]);
             }
             return result;
+        }
+
+        /// <summary>
+        /// Flattens a jagged array into one continous array. Elements will preserve the order of the arrays.
+        /// </summary>
+        /// <typeparam name="T">The type the elements in the array are of.</typeparam>
+        /// <param name="array">The jagged array to flatten.</param>
+        /// <returns>A new array of a single dimension.</returns>
+        public static T[] Flatten<T>(this T[][] array) {
+            List<T> ts= new List<T>();
+            for (int i = 0; i < array.Length; i++) {
+                ts.AddRange(array[i]);
+            }
+            return ts.ToArray();
         }
 
         /// <summary>
@@ -62,17 +95,24 @@ namespace Battlegrounds.Functional {
         /// <param name="array">The <typeparamref name="U"/> array to convert.</param>
         /// <param name="func">The conversion method to convert a single element from <typeparamref name="U"/> to an array of type <typeparamref name="V"/>.</param>
         /// <returns>An array consisting of elements of type <typeparamref name="V"/>.</returns>
-        public static V[] ConvertAndMerge<U, V>(this U[] array, Func<U, V[]> func) {
-            V[][] non_merged = array.Convert(func);
-            int len = non_merged.Aggregate(0, (a, b) => a + b.Length);
-            V[] merged = new V[len];
-            int i = 0;
-            foreach (var a in non_merged) {
-                for (int j = 0; j < a.Length; j++) {
-                    merged[i++] = a[j];
+        public static V[] MapAndFlatten<U, V>(this U[] array, Func<U, V[]> func) {
+            return array.Map(func).Flatten();
+        }
+
+        /// <summary>
+        /// Check if any element in <paramref name="array"/> is a match for <paramref name="predicate"/>.
+        /// </summary>
+        /// <typeparam name="T">The type the elements in the array are of.</typeparam>
+        /// <param name="array"></param>
+        /// <param name="predicate"></param>
+        /// <returns></returns>
+        public static bool Any<T>(this T[] array, Predicate<T> predicate) {
+            for (int i = 0; i < array.Length; i++) {
+                if (predicate(array[i])) {
+                    return true;
                 }
             }
-            return merged;
+            return false;
         }
 
         /// <summary>
@@ -84,7 +124,7 @@ namespace Battlegrounds.Functional {
         /// <param name="except">The elments that cannot be contained within the array.</param>
         /// <returns>If element is found and no instances from the except array is found, <see langword="true"/> is returned. Otherwise <see langword="false"/>.</returns>
         /// <exception cref="ArgumentNullException"/>
-        public static bool ContainsWithout<T>(this T[] array, T elem, params T[] except) 
+        public static bool ContainsWithout<T>(this T[] array, T elem, params T[] except)
             => array.Contains(elem) && !array.Any(x => except.Contains(x));
 
         /// <summary>
@@ -115,6 +155,77 @@ namespace Battlegrounds.Functional {
             Array.Copy(array, buffer, array.Length);
             buffer[^1] = element;
             return buffer;
+        }
+
+        /// <summary>
+        /// Concatenate two arrays.
+        /// </summary>
+        /// <typeparam name="T">The type of the array.</typeparam>
+        /// <param name="array">The source array</param>
+        /// <param name="other">The array to concatenate with.</param>
+        /// <returns>A new array where the first elements are from <paramref name="array"/> and the last elements are from <paramref name="other"/>.</returns>
+        public static T[] Concat<T>(this T[] array, T[] other) {
+            T[] buffer = new T[array.Length + other.Length];
+            Array.Copy(array, buffer, array.Length);
+            Array.Copy(other, 0, buffer, array.Length, other.Length);
+            return buffer;
+        }
+
+        /// <summary>
+        /// Pick a random element from array.
+        /// </summary>
+        /// <typeparam name="T">The type the elements in the array are of.</typeparam>
+        /// <param name="array">The array to pick element from</param>
+        /// <param name="min">Smallest index in array to pick from.</param>
+        /// <param name="max">Largest index in array to pick from.</param>
+        /// <returns>A uniformly picked element from <paramref name="array"/>.</returns>
+        public static T Random<T>(this T[] array, int min = 0, int max = int.MaxValue)
+            => Random(array, BattlegroundsInstance.RNG);
+
+        /// <summary>
+        /// Pick a random element from array.
+        /// </summary>
+        /// <typeparam name="T">The type the elements in the array are of.</typeparam>
+        /// <param name="array">The array to pick element from</param>
+        /// <param name="random">The <see cref="System.Random"/> instance to get random index from.</param>
+        /// <param name="min">Smallest index in array to pick from.</param>
+        /// <param name="max">Largest index in array to pick from.</param>
+        /// <returns>A uniformly picked element from <paramref name="array"/>.</returns>
+        public static T Random<T>(this T[] array, Random random, int min = 0, int max = int.MaxValue) {
+            
+            // Check range
+            if (min < 0)
+                throw new ArgumentOutOfRangeException(nameof(min), min, "Given minimum value cannot be smaller than 0.");
+
+            // Update max
+            max = max is int.MinValue ? array.Length : max;
+
+            // Check range
+            if (max > array.Length)
+                throw new ArgumentOutOfRangeException(nameof(max), max, "Given maximum value cannot be greater than array length.");
+
+            // Get index
+            int i = random.Next(min, max);
+
+            // Return 
+            return array[i];
+        
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="array"></param>
+        /// <param name="element"></param>
+        /// <returns></returns>
+        public static T[] Except<T>(this T[] array, T element) {
+            int i = array.IndexOf(x => x?.Equals(element) ?? false);
+            if (i == -1)
+                return array;
+            var before = array[0..i];
+            var after = array[(i+1)..];
+            return before.Concat(after).ToArray();
         }
 
     }

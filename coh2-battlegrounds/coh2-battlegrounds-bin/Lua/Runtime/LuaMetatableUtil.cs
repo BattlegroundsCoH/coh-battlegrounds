@@ -1,7 +1,7 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 
 namespace Battlegrounds.Lua.Runtime {
-    
+
     /// <summary>
     /// Utility class for handling metatables.
     /// </summary>

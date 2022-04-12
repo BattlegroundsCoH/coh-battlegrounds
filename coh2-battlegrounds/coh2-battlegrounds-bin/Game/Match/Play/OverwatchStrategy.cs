@@ -7,10 +7,11 @@ namespace Battlegrounds.Game.Match.Play {
     /// </summary>
     public sealed class OverwatchStrategy : IPlayStrategy {
 
+        private readonly ISession m_session;
+
         private bool m_hasLaunched;
         private int m_procResponse;
-        private ISession m_session;
-        private IMatchData m_matchData;
+        private IMatchData? m_matchData;
 
         public ISession Session => this.m_session;
 
@@ -32,14 +33,14 @@ namespace Battlegrounds.Game.Match.Play {
             !SessionUtility.GotBugsplat().Result &&
             !SessionUtility.GotFatalScarError() &&
             SessionUtility.HasPlayback();
-        
-        public void Launch() { 
-            if (!this.IsLaunched) {                
+
+        public void Launch() {
+            if (!this.IsLaunched) {
                 this.m_hasLaunched = CoH2Launcher.Launch();
             }
         }
 
-        public void WaitForExit() { 
+        public void WaitForExit() {
             if (this.IsLaunched) {
                 this.m_procResponse = CoH2Launcher.WatchProcess();
             }

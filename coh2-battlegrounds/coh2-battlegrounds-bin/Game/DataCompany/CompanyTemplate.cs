@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+
 using Battlegrounds.Functional;
 using Battlegrounds.Game.Database.Management;
 using Battlegrounds.Game.Gameplay;
@@ -9,11 +11,11 @@ using Battlegrounds.Util;
 using Battlegrounds.Verification;
 
 namespace Battlegrounds.Game.DataCompany {
-    
+
     /// <summary>
     /// Readonly class representing a template for generating a <see cref="Company"/> instance.
     /// </summary>
-    public sealed class CompanyTemplate : IChecksumItem {
+    public sealed class CompanyTemplate {
 
         private struct CompanyUnit {
             public ushort PBGID { get; init; }
@@ -54,7 +56,7 @@ namespace Battlegrounds.Game.DataCompany {
         public string GetChecksum() => this.ToString().Aggregate((uint)0, (a, b) => a + b + (b % (a + 1))).ToString("X8");
 
         public bool VerifyChecksum() {
-            
+
             // Backup and reset checksum
             string checksum = this.m_checksum;
             this.m_checksum = string.Empty;
@@ -83,7 +85,7 @@ namespace Battlegrounds.Game.DataCompany {
 
             // Get valid non-zero chunks
             sb.Append(StringCompression.CompressString($"{string.Join('-', this.m_units.Where(x => x.FILLED).Select(x => x.Collapse()))}<{this.m_checksum}>"));
-            
+
             // Return in string
             return sb.ToString();
 
@@ -115,10 +117,10 @@ namespace Battlegrounds.Game.DataCompany {
             };
 
             // Get unit enumerator and add all units (in a basic format).
-            var unitEnumerator = company.Units.GetEnumerator();
+            var unitEnumerator = company.Units.GetEnumerator() as IEnumerator<Squad>;
             for (int i = 0; i < Company.MAX_SIZE; i++) {
                 if (unitEnumerator.MoveNext()) {
-                    template.m_units[i] = new CompanyUnit() { 
+                    template.m_units[i] = new CompanyUnit() {
                         FILLED = true,
                         PBGID = unitEnumerator.Current.Blueprint.ModPBGID,
                         TPBGID = (unitEnumerator.Current.SupportBlueprint is not null) ? unitEnumerator.Current.SupportBlueprint.ModPBGID : BlueprintManager.InvalidLocalBlueprint,
@@ -191,10 +193,10 @@ namespace Battlegrounds.Game.DataCompany {
                     }
                 }
 
-                // Verify checksum
-                if (!template.VerifyChecksum()) {
-                    throw new ChecksumViolationException();
-                }
+                //// Verify checksum
+                //if (!template.VerifyChecksum()) {
+                //    throw new ChecksumViolationException(template.m_checksum, "0");
+                //}
 
                 // Return template
                 return template;
@@ -227,15 +229,15 @@ namespace Battlegrounds.Game.DataCompany {
 
             // Create Units
             for (int i = 0; i < template.m_units.Length; i++) {
-                if (template.m_units[i].FILLED) {
+                /*if (template.m_units[i].FILLED) {
                     UnitBuilder unit = new UnitBuilder()
                         .SetModGUID(template.m_guid)
                         .SetBlueprint(template.m_units[i].PBGID)
                         .SetDeploymentPhase((DeploymentPhase)template.m_units[i].PHASE)
                         .IfTrue(x => template.m_units[i].TPBGID != BlueprintManager.InvalidLocalBlueprint).Then(x => x.SetTransportBlueprint(template.m_units[i].TPBGID))
                         .SetDeploymentMethod((DeploymentMethod)template.m_units[i].DMODE);
-                    builder.AddUnit(unit);
-                }
+                    builder.AddAndCommitUnit(unit);
+                }*/
             }
 
             // Commit changes and get result
@@ -243,7 +245,7 @@ namespace Battlegrounds.Game.DataCompany {
 
         }
 
-        private static (char, string)[] ArmyEncodingDic = new (char, string)[] {
+        private static readonly (char, string)[] ArmyEncodingDic = new (char, string)[] {
             ('A', Faction.America.Name),
             ('U', Faction.British.Name),
             ('O', Faction.OberkommandoWest.Name),
@@ -269,6 +271,8 @@ namespace Battlegrounds.Game.DataCompany {
             }
         }
 
+        public bool VerifyChecksum(string checksum) => throw new NotImplementedException();
+        public void CalculateChecksum() => throw new NotImplementedException();
     }
 
 }

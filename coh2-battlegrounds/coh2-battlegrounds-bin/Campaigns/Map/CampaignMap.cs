@@ -2,13 +2,14 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+
 using Battlegrounds.Campaigns.API;
 using Battlegrounds.Campaigns.Organisations;
 using Battlegrounds.Game.Database;
 using Battlegrounds.Lua;
 
 namespace Battlegrounds.Campaigns.Map {
-    
+
     /// <summary>
     /// 
     /// </summary>
@@ -33,7 +34,7 @@ namespace Battlegrounds.Campaigns.Map {
 
             // Store raw image data
             this.RawImageData = mapData.RawImageData;
-            
+
             // Store lua map def table
             this.MapDef = mapData.Data;
 
@@ -93,7 +94,7 @@ namespace Battlegrounds.Campaigns.Map {
 
         public bool SpawnFormationAt(string nodeIdentifier, ICampaignFormation formation) {
             if (this.FromName(nodeIdentifier) is ICampaignMapNode node) {
-                
+
                 if (node.CanMoveTo(formation)) {
                     formation.SetNodeLocation(node);
                     return true;
@@ -135,11 +136,11 @@ namespace Battlegrounds.Campaigns.Map {
         }
 
         private List<ICampaignMapNode> Dijkstra(ICampaignMapNode from, ICampaignMapNode end, ICampaignFormation formation) {
-            
+
             HashSet<ICampaignMapNode> nodes = new HashSet<ICampaignMapNode>();
             Dictionary<ICampaignMapNode, float> distance = new Dictionary<ICampaignMapNode, float>();
             Dictionary<ICampaignMapNode, ICampaignMapNode> prev = new Dictionary<ICampaignMapNode, ICampaignMapNode>();
-            
+
             foreach (ICampaignMapNode node in this.m_nodes) {
                 distance[node] = float.PositiveInfinity;
                 prev[node] = null;

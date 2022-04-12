@@ -7,6 +7,24 @@
         mc:Ignorable="d"
         SizeToContent="WidthAndHeight"
         WindowStartupLocation="CenterScreen"
-        Title="{Binding Title}" Height="250" Width="250">
-    <ContentControl x:Name="ContentPresenter" Content="{Binding}"/>
+        ResizeMode="NoResize"
+        MinHeight="175" MinWidth="450">
+    <Grid VerticalAlignment="Stretch" HorizontalAlignment="Stretch"> 
+        <!--
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="auto"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        -->
+        
+        <ContentControl x:Name="ContentPresenter" VerticalAlignment="Center" HorizontalAlignment="Center" Content="{Binding}"/>
+        
+    </Grid>
 </Window>

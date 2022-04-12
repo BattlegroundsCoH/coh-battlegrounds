@@ -9,6 +9,17 @@
 		</template_reference>
 		<template_reference name="exts" value="ebpextensions\ability_ext">
 			<list name="abilities">
+				<instance_reference name="ability" value="abilities\soviet\modal_ability\artillery\soviet_artillery_fire_ui" mod="142b113740474c82a60b0a428bd553d5" />
+				<instance_reference name="ability" value="abilities\soviet\modal_ability\artillery\soviet_artillery_overwatch_ui" mod="142b113740474c82a60b0a428bd553d5" />
+				<instance_reference name="ability" value="abilities\soviet\modal_ability\artillery\soviet_artillery_propaganda_ui" mod="142b113740474c82a60b0a428bd553d5" />
+				<instance_reference name="ability" value="abilities\soviet\modal_ability\artillery\soviet_artillery_regimental_barrage_ui" mod="142b113740474c82a60b0a428bd553d5" />
+				<instance_reference name="ability" value="abilities\soviet\modal_ability\artillery\offmap\soviet_offmap_b4_ui" mod="142b113740474c82a60b0a428bd553d5" />
+				<instance_reference name="ability" value="abilities\soviet\modal_ability\artillery\offmap\soviet_offmap_katyusha_ui" mod="142b113740474c82a60b0a428bd553d5" />
+				<instance_reference name="ability" value="abilities\soviet\modal_ability\artillery\offmap\soviet_offmap_ml_20_smoke_ui" mod="142b113740474c82a60b0a428bd553d5" />
+				<instance_reference name="ability" value="abilities\soviet\modal_ability\artillery\offmap\soviet_offmap_ml_20_ui" mod="142b113740474c82a60b0a428bd553d5" />
+				<instance_reference name="ability" value="abilities\soviet\modal_ability\artillery\offmap\soviet_offmap_mortar_smoke_ui" mod="142b113740474c82a60b0a428bd553d5" />
+				<instance_reference name="ability" value="abilities\soviet\modal_ability\artillery\offmap\soviet_offmap_mortar_ui" mod="142b113740474c82a60b0a428bd553d5" />
+				<instance_reference name="ability" value="abilities\soviet\modal_ability\artillery\offmap\soviet_offmap_su-76_barrage_ui" mod="142b113740474c82a60b0a428bd553d5" />
 			</list>
 		</template_reference>
 		<template_reference name="exts" value="ebpextensions\ui_ext">
@@ -132,6 +143,73 @@
 			<bool name="snap_to_terrain" value="True" />
 			<bool name="ignore_impass" value="True" />
 			<bool name="lock_to_impass" value="True" />
+		</template_reference>
+		<template_reference name="exts" value="ebpextensions\construction_ext">
+			<bool name="automatic_fit_on_placement" value="False" />
+			<bool name="can_set_facing" value="False" />
+			<float name="cancel_refund_percentage" value="0" />
+			<bool name="check_terrain" value="False" />
+			<string name="construction_state_name" value="build_shovel_sandbag_state" />
+			<float name="construction_transition_time" value="1.36667" />
+			<bool name="force_construction" value="True" />
+			<float name="max_engineers" value="8" />
+			<bool name="must_be_in_command_territory" value="False" />
+			<bool name="must_be_in_line_of_sight" value="False" />
+			<bool name="must_be_in_supply_territory" value="False" />
+			<bool name="must_be_in_territory" value="True" />
+			<bool name="must_be_on" value="False" />
+			<bool name="must_not_be_in_walkable_surfaces" value="False" />
+			<instance_reference name="on_construction_squad" value="" />
+			<float name="orientation" value="0" />
+			<enum name="placement_type" value="tp_structure" />
+			<bool name="prefer_spots_on_side_with_leader" value="False" />
+			<bool name="query_abilities_for_range_ui" value="False" />
+			<bool name="query_construction_actions_for_range_ui" value="False" />
+			<bool name="query_upgrade_actions_for_range_ui" value="False" />
+			<bool name="random_rotation" value="False" />
+			<float name="replace_ghost_distance" value="0" />
+			<float name="spacing_distance" value="0" />
+			<bool name="self_construct" value="True" />
+			<list name="on_construction_actions">
+			</list>
+			<list name="materials">
+			</list>
+			<group name="field_placement_info">
+				<instance_reference name="border_entity" value="" />
+				<instance_reference name="replace_entity" value="" />
+				<int name="replace_count" value="0" />
+				<float name="replace_retry_distance" value="0" />
+			</group>
+			<instance_reference name="placement_valid" value="ui_rectangle\construction_placement_valid" />
+			<instance_reference name="placement_invalid" value="ui_rectangle\construction_placement_invalid" />
+			<instance_reference name="ui_range" value="ui_reticule\construction_range_hq" />
+			<float name="ui_range_radius" value="1" />
+			<instance_reference name="ui_setfacing" value="" />
+			<bool name="query_weapon_for_range_ui" value="False" />
+			<bool name="squad_ignore_pathfinding" value="False" />
+			<bool name="must_not_be_in_command_territory" value="False" />
+		</template_reference>
+		<template_reference name="exts" value="ebpextensions\hit_object_ext">
+			<instance_reference name="hit_material" value="hit_material\dirt" />
+			<bool name="hit_non_neutral" value="False" />
+			<float name="hit_percentage" value="0" />
+			<bool name="pass_through" value="True" />
+			<group name="projectile_pass_through">
+				<bool name="tp_artillery" value="True" />
+				<bool name="tp_artillery_inf" value="True" />
+				<bool name="tp_artillery_overwatch" value="True" />
+				<bool name="tp_homing" value="True" />
+				<bool name="tp_homing_inf" value="True" />
+				<bool name="tp_sticky" value="True" />
+				<bool name="tp_throw" value="True" />
+			</group>
+		</template_reference>
+		<template_reference name="exts" value="ebpextensions\impass_ext">
+			<bool name="cant_build" value="False" />
+			<bool name="heavy_crush" value="False" />
+			<bool name="land" value="False" />
+			<bool name="light_crush" value="False" />
+			<bool name="medium_crush" value="False" />
 		</template_reference>
 	</list>
 	<uniqueid name="pbgid" value="1073741918" />

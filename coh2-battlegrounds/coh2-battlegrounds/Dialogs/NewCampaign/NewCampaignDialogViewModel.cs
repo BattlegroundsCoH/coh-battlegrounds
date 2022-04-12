@@ -2,16 +2,18 @@
 using System.Linq;
 using System.Windows.Input;
 using System.Windows.Media;
+
 using Battlegrounds;
 using Battlegrounds.Campaigns;
 using Battlegrounds.Game.Gameplay;
+using Battlegrounds.Locale;
 using BattlegroundsApp.Dialogs.Service;
 using BattlegroundsApp.Models.Campaigns;
 using BattlegroundsApp.Resources;
 using BattlegroundsApp.Utilities;
 
 namespace BattlegroundsApp.Dialogs.NewCampaign {
-    
+
     public enum NewCampaignDialogResult {
         Cancel,
         NewSingleplayer,
@@ -20,7 +22,7 @@ namespace BattlegroundsApp.Dialogs.NewCampaign {
 
     #region Option Classes
     public abstract class NewCampaignDialogViewSelectionOption { public abstract CampaignPackage GetPackage(); }
-    
+
     public class NewCampaignDialogViewSelectedNone : NewCampaignDialogViewSelectionOption {
         public override CampaignPackage GetPackage() => null;
         public override string ToString() => "None Available";
@@ -55,14 +57,13 @@ namespace BattlegroundsApp.Dialogs.NewCampaign {
         int m_selectedCampaignIndex;
 
         public ICommand CancelCommand { get; }
-
         public ICommand BeginCommand { get; }
 
         public NewCampaignData CampaignData { get; private set; }
 
         public int SelectedCampaignIndex {
             get => this.m_selectedCampaignIndex;
-            set { 
+            set {
                 this.m_selectedCampaignIndex = value;
                 this.SelectedCampaignChanged(value);
             }
@@ -77,15 +78,34 @@ namespace BattlegroundsApp.Dialogs.NewCampaign {
         public ImageSource SelectedCampaignImageSource { get; set; }
 
         public List<NewCampaignDialogViewSelectionOption> Campaigns { get; }
-
         public List<NewCampaignDialogViewSelectedMode> AvailableModes { get; }
-
         public List<NewCampaignDialogViewSelectedArmy> AvailableArmies { get; }
 
-        private NewCampaignDialogViewModel(string title, CampaignPackage[] campaigns) {
+        public LocaleKey CampaignLabelContent { get; }
+        public LocaleKey SideLabelContent { get; }
+        public LocaleKey DifficultyLabelContent { get; }
+        public LocaleKey EasyDifficultyComboBoxItemContent { get; }
+        public LocaleKey MediumDifficultyComboBoxItemContent { get; }
+        public LocaleKey HardDifficultyComboBoxItemContent { get; }
+        public LocaleKey ModeLabelContent { get; }
+        public LocaleKey CancelButtonContent { get; }
+        public LocaleKey BeginButtonContent {  get; } 
+
+        private NewCampaignDialogViewModel(LocaleKey title, CampaignPackage[] campaigns) {
 
             // Set title
             this.Title = title;
+
+            // Define locales
+            CampaignLabelContent = new LocaleKey("NewCampaignDialogView_Campaign");
+            SideLabelContent = new LocaleKey("NewCampaignDialogView_Side");
+            DifficultyLabelContent = new LocaleKey("NewCampaignDialogView_Difficulty");
+            EasyDifficultyComboBoxItemContent = new LocaleKey("NewCampaignDialogView_Difficulty_Easy");
+            MediumDifficultyComboBoxItemContent = new LocaleKey("NewCampaignDialogView_Difficulty_Medium");
+            HardDifficultyComboBoxItemContent = new LocaleKey("NewCampaignDialogView_Difficulty_Hard");
+            ModeLabelContent = new LocaleKey("NewCampaignDialogView_Mode");
+            CancelButtonContent = new LocaleKey("NewCampaignDialogView_Button_Cancel");
+            BeginButtonContent = new LocaleKey("NewCampaignDialogView_Button_Begin");
 
             // Init available list
             this.AvailableModes = new List<NewCampaignDialogViewSelectedMode>();
@@ -128,19 +148,19 @@ namespace BattlegroundsApp.Dialogs.NewCampaign {
 
         private void SelectedCampaignChanged(int newValue) {
             if (this.Campaigns[newValue].GetPackage() is CampaignPackage package) {
-                
+
                 this.SelectedCampaignImageSource = PngImageSource.FromMemory(package.MapData.RawImageData);
-                
+
                 this.AvailableModes.Clear();
                 this.AvailableModes.AddRange(package.CampaignModes.Select(x => new NewCampaignDialogViewSelectedMode(x)));
-                
+
                 this.AvailableArmies.Clear();
                 this.AvailableArmies.AddRange(package.CampaignArmies.Select(x => new NewCampaignDialogViewSelectedArmy(x.Army)));
 
             }
         }
 
-        public static NewCampaignDialogResult ShowHostGameDialog(string title, out NewCampaignData campaignData, params CampaignPackage[] campaigns) {
+        public static NewCampaignDialogResult ShowHostGameDialog(LocaleKey title, out NewCampaignData campaignData, params CampaignPackage[] campaigns) {
             var dialog = new NewCampaignDialogViewModel(title, campaigns);
             var result = dialog.ShowDialog();
             campaignData = dialog.CampaignData;

@@ -49,7 +49,7 @@ namespace Battlegrounds.Game.Match.Startup {
             this.OnFeedback(null, "Compiling gamemode");
 
             // Create server API instance
-            var serverAPI = new ServerAPI(NetworkingInstance.GetBestAddress());
+            var serverAPI = new ServerAPI(NetworkInterface.GetBestAddress());
 
             // Compile session
             bool result = SessionUtility.CompileSession(compiler, this.m_collectedSession, serverAPI);

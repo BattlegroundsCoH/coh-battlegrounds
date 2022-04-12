@@ -132,7 +132,7 @@ function BG_CreateCompanyView()
     bg_call_ui:add(bg_companyView);
 
     -- And we'll hide it
-    --BG_HideCompanyView(); -- When not being debugged...
+    BG_HideCompanyView(); -- When not being debugged...
 
 end
 
@@ -312,13 +312,18 @@ function BG_CreateUnitcard(unit, yoffset)
         xPositiveOffset = xPositiveOffset + 38;
     end
 
+    -- Display manpower
     if (unit.cost.manpower ~= nil and unit.cost.manpower > 0) then
         xPositiveOffset = BG_CreateCost("ModIcons_6a0a13b89555402ca75b85dc30f5cb04_manpower_24x24", xPositiveOffset, 6, unit.cost.manpower, cardPanel);
     end
 
+    -- Display munitions
     if (unit.cost.munitions ~= nil and unit.cost.munitions > 0) then
         xPositiveOffset = BG_CreateCost("ModIcons_6a0a13b89555402ca75b85dc30f5cb04_munitions_24x24", xPositiveOffset, 6, unit.cost.munitions, cardPanel);
-    elseif (unit.cost.fuel ~= nil and unit.cost.fuel > 0) then
+    end
+    
+    -- Display fuel
+    if (unit.cost.fuel ~= nil and unit.cost.fuel > 0) then
         xPositiveOffset = BG_CreateCost("ModIcons_6a0a13b89555402ca75b85dc30f5cb04_fuel_24x24", xPositiveOffset, 6, unit.cost.fuel, cardPanel);
     end
 
@@ -367,11 +372,11 @@ function BG_CreateCost(iconName, x, y, price, owner)
 
     local cost = Label(Util_CreateLocString(price));
     cost:setBounds(x, y, 46, 28);
-    cost:setFontSize(14.0);
+    cost:setFontSize(12.0);
     cost:setColor(Color.White);
     owner:add(cost);
 
-    x = x + 40;
+    x = x + 28;
 
     return x;
 

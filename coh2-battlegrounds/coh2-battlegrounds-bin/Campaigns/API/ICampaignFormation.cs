@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+
 using Battlegrounds.Campaigns.Organisations;
 using Battlegrounds.Lua;
 
@@ -46,7 +47,7 @@ namespace Battlegrounds.Campaigns.API {
         /// </remarks>
         [LuaUserobjectProperty]
         CampaignArmyTeam Team { get; }
-        
+
         /// <summary>
         /// 
         /// </summary>
@@ -122,7 +123,7 @@ namespace Battlegrounds.Campaigns.API {
         /// Updates destination and decrements available move distance by 1.
         /// </summary>
         void MoveToDestination();
-        
+
         /// <summary>
         /// 
         /// </summary>

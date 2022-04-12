@@ -1,0 +1,13 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:dropArea="clr-namespace:BattlegroundsApp.Controls.DropArea">
+    <Style TargetType="dropArea:DropArea">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="dropArea:DropArea">
+                    <ContentPresenter Content="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=ControlContent}"/>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+</ResourceDictionary>

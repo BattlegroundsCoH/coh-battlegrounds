@@ -1,7 +1,7 @@
 ﻿using Battlegrounds.Lua.Runtime;
 
 namespace Battlegrounds.Lua {
-    
+
     /// <summary>
     /// Closure value type for Lua. Extends <see cref="LuaValue"/>.
     /// </summary>

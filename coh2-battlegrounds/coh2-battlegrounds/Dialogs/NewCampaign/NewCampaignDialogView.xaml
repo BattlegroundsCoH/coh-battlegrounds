@@ -5,9 +5,16 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:BattlegroundsApp.Dialogs.NewCampaign" 
              xmlns:utilities="clr-namespace:BattlegroundsApp.Utilities"
+             xmlns:converters="clr-namespace:BattlegroundsApp.Utilities.Converters"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="820">
     <Grid>
+
+        <Grid.Resources>
+            <!-- LocaleConverter -->
+            <converters:LocaleKeyToStringConverter x:Key="LocaleConvertor"/>
+        </Grid.Resources>
+
         <Grid.ColumnDefinitions>
             <ColumnDefinition MinWidth="160" MaxWidth="160"/>
             <ColumnDefinition MinWidth="200" MaxWidth="200"/>
@@ -24,30 +31,32 @@
         </Grid.RowDefinitions>
 
         <!-- 1st Setting -->
-        <Label Grid.Row="1" Grid.Column="0">Campaign: </Label>
+        <Label Grid.Row="1" Grid.Column="0" Content="{Binding CampaignLabelContent, Converter={StaticResource LocaleConvertor}}"/>
         <ComboBox Grid.Row="1" Grid.Column="1" 
                   ItemsSource="{Binding Campaigns}"
-                  SelectedIndex="{Binding SelectedCampaignIndex}"
-                  >
+                  SelectedIndex="{Binding SelectedCampaignIndex}">
         </ComboBox>
         
         <!-- 2nd Setting -->
-        <Label Grid.Row="2" Grid.Column="0">Side:</Label>
+        <Label Grid.Row="2" Grid.Column="0" Content="{Binding SideLabelContent, Converter={StaticResource LocaleConvertor}}"/>
         <ComboBox Grid.Row="2" Grid.Column="1" 
                   SelectedIndex="{Binding SelectedCampaignSide}"
                   ItemsSource="{Binding AvailableArmies}"/>
 
         <!-- 3rd Setting -->
-        <Label Grid.Row="3" Grid.Column="0">Difficulty:</Label>
+        <Label Grid.Row="3" Grid.Column="0" Content="{Binding DifficultyLabelContent, Converter={StaticResource LocaleConvertor}}"/>
         <ComboBox Grid.Row="3" Grid.Column="1" 
                   SelectedIndex="{Binding SelectedCampaignDifficulty}">
-            <ComboBoxItem>Easy</ComboBoxItem> <!-- Easy-Standard AI -->
-            <ComboBoxItem>Medium</ComboBoxItem> <!-- Hard-Expert AI -->
-            <ComboBoxItem>Hard</ComboBoxItem> <!-- Expert AI + Bonuses -->
+            <!-- Easy-Standard AI -->
+            <ComboBoxItem Content="{Binding EasyDifficultyComboBoxItemContent, Converter={StaticResource LocaleConvertor}}"/>
+            <!-- Hard-Expert AI -->
+            <ComboBoxItem Content="{Binding MediumDifficultyComboBoxItemContent, Converter={StaticResource LocaleConvertor}}"/>
+            <!-- Expert AI + Bonuses -->
+            <ComboBoxItem Content="{Binding HardDifficultyComboBoxItemContent, Converter={StaticResource LocaleConvertor}}"/>
         </ComboBox>
 
         <!-- 4th Setting -->
-        <Label Grid.Row="4" Grid.Column="0">Mode:</Label>
+        <Label Grid.Row="4" Grid.Column="0" Content="{Binding ModeLabelContent, Converter={StaticResource LocaleConvertor}}"/>
         <ComboBox Grid.Row="4" Grid.Column="1" 
                   ItemsSource="{Binding AvailableModes}"
                   SelectedIndex="{Binding SelectedCampaignMode}">
@@ -58,16 +67,12 @@
         </Border>
         
         <!-- Cancel Button -->
-        <Button Grid.Column="0" Grid.Row="6" Margin="7.5" Name="CancelButton" 
-                Command="{Binding CancelCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}">
-            Cancel
-        </Button>
+        <Button Grid.Column="0" Grid.Row="6" Margin="7.5" Name="CancelButton" Content="{Binding CancelButtonContent, Converter={StaticResource LocaleConvertor}}"
+                Command="{Binding CancelCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}"/>
 
         <!-- Begin button -->
-        <Button Grid.Column="1" Grid.Row="6" Margin="7.5" Name="BeginButton" 
-                Command="{Binding BeginCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}">
-            Begin
-        </Button>
-
+        <Button Grid.Column="1" Grid.Row="6" Margin="7.5" Name="BeginButton" Content="{Binding BeginButtonContent, Converter={StaticResource LocaleConvertor}}"
+                Command="{Binding BeginCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}"/>
+        
     </Grid>
 </UserControl>

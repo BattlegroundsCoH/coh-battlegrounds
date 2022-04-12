@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
+
 using Battlegrounds.Compiler;
 using Battlegrounds.Compiler.Source;
 using Battlegrounds.Game.Gameplay;
@@ -9,7 +10,7 @@ using Battlegrounds.Modding;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace coh2_battlegrounds_bin_tests {
-    
+
     [TestClass]
     public class LocalSourceTest {
 
@@ -36,52 +37,52 @@ namespace coh2_battlegrounds_bin_tests {
         [TestMethod]
         public void CanGetInfo() {
             var info = this.ls.GetInfoFile(this.gamemode);
-            Assert.AreEqual(info.path, $"info\\{this.gamemode.Guid}.info");
+            Assert.AreEqual(info.Path, $"info\\{this.gamemode.Guid}.info");
         }
 
         [TestMethod]
         public void CanGetScarFiles() {
             var files = this.ls.GetScarFiles();
             Assert.IsTrue(files.Length > 0);
-            Assert.IsTrue(files.Any(x => x.path.Contains("coh2_battlegrounds.scar")));
-            Assert.IsTrue(files.Any(x => x.path.Contains("auxiliary_scripts\\shared_handler.scar")));
-            Assert.IsTrue(files.Any(x => x.path.Contains("auxiliary_scripts\\client_overrideui.scar")));
-            Assert.IsTrue(files.Any(x => x.path.Contains("auxiliary_scripts\\client_companyui.scar")));
-            Assert.IsTrue(files.Any(x => x.path.Contains("auxiliary_scripts\\api_ui.scar")));
-            Assert.IsTrue(files.Any(x => x.path.Contains("auxiliary_scripts\\shared_sessionloader.scar")));
-            Assert.IsTrue(files.Any(x => x.path.Contains("auxiliary_scripts\\shared_units.scar")));
-            Assert.IsTrue(files.Any(x => x.path.Contains("auxiliary_scripts\\shared_util.scar")));
-            Assert.IsTrue(files.Any(x => x.path.Contains("ui_api\\button.scar")));
-            Assert.IsTrue(!files.Any(x => x.path.Contains("auxiliary_scripts\\session.scar")));
+            Assert.IsTrue(files.Any(x => x.Path.Contains("coh2_battlegrounds.scar")));
+            Assert.IsTrue(files.Any(x => x.Path.Contains("auxiliary_scripts\\shared_handler.scar")));
+            Assert.IsTrue(files.Any(x => x.Path.Contains("auxiliary_scripts\\client_overrideui.scar")));
+            Assert.IsTrue(files.Any(x => x.Path.Contains("auxiliary_scripts\\client_companyui.scar")));
+            Assert.IsTrue(files.Any(x => x.Path.Contains("auxiliary_scripts\\api_ui.scar")));
+            Assert.IsTrue(files.Any(x => x.Path.Contains("auxiliary_scripts\\shared_sessionloader.scar")));
+            Assert.IsTrue(files.Any(x => x.Path.Contains("auxiliary_scripts\\shared_units.scar")));
+            Assert.IsTrue(files.Any(x => x.Path.Contains("auxiliary_scripts\\shared_util.scar")));
+            Assert.IsTrue(files.Any(x => x.Path.Contains("ui_api\\button.scar")));
+            Assert.IsTrue(!files.Any(x => x.Path.Contains("auxiliary_scripts\\session.scar")));
         }
 
         [TestMethod]
         public void CanGetEnglishLocaleFile() {
             var files = this.ls.GetLocaleFiles();
             Assert.IsTrue(files.Length > 0);
-            Assert.IsTrue(files.Any(x => x.path.Contains("english.ucs"))); // only really interested in the english file to verify it works (Add more tests for other locale files)
+            Assert.IsTrue(files.Any(x => x.Path.Contains("english.ucs"))); // only really interested in the english file to verify it works (Add more tests for other locale files)
         }
 
         [TestMethod]
         public void CanGetWinFiles() {
             var files = this.ls.GetWinFiles();
             Assert.IsTrue(files.Length > 0);
-            Assert.IsTrue(files.Any(x => x.path.Contains("coh2_battlegrounds.win")));
+            Assert.IsTrue(files.Any(x => x.Path.Contains("coh2_battlegrounds.win")));
         }
 
         [TestMethod]
         public void CanGetModGraphic() {
             var graphic = this.ls.GetModGraphic();
-            Assert.IsTrue(graphic.path.EndsWith("info\\coh2_battlegrounds_wincondition_preview.dds"));
-            Assert.IsTrue(graphic.contents.Length > 0);
+            Assert.IsTrue(graphic.Path.EndsWith("info\\coh2_battlegrounds_wincondition_preview.dds"));
+            Assert.IsTrue(graphic.Contents.Length > 0);
         }
 
         [TestMethod]
         public void CanGetModUI() {
             var files = this.ls.GetUIFiles(this.gamemode);
             Assert.IsTrue(files.Length > 0);
-            Assert.IsTrue(files.Any(x => x.path.EndsWith(".gfx")));
-            Assert.IsTrue(files.Any(x => x.path.EndsWith(".dds")));
+            Assert.IsTrue(files.Any(x => x.Path.EndsWith(".gfx")));
+            Assert.IsTrue(files.Any(x => x.Path.EndsWith(".dds")));
         }
 
         [TestMethod]

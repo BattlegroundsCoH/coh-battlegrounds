@@ -2,11 +2,12 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+
 using Battlegrounds.Campaigns.API;
 using Battlegrounds.Functional;
 
 namespace BattlegroundsApp.Views.CampaignViews.Models {
-    
+
     public class CampaignUnitSelectionModel {
 
         private ICampaignSelectable m_selectedNode;

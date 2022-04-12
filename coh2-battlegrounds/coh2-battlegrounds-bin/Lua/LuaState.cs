@@ -13,7 +13,7 @@ using Battlegrounds.Lua.Parsing;
 using static Battlegrounds.Lua.LuaNil;
 
 namespace Battlegrounds.Lua {
-    
+
     /// <summary>
     /// Basic C# implementation of the C-type lua_State for Lua.
     /// </summary>
@@ -77,7 +77,7 @@ namespace Battlegrounds.Lua {
         /// Create new <see cref="LuaState"/> with <see cref="_G"/> initialized.
         /// </summary>
         public LuaState(params string[] libraries) {
-            
+
             // Create _G table
             this._G = new LuaTable(this);
             this._G["_G"] = this._G; // Assign _G to self
@@ -119,7 +119,7 @@ namespace Battlegrounds.Lua {
         /// <param name="type">The managed type to get Lua userobject type for.</param>
         /// <returns>The registered <see cref="LuaUserObjectType"/> representing <paramref name="type"/>.</returns>
         /// <exception cref="LuaException"/>
-        public LuaUserObjectType GetUsertype(Type type) { 
+        public LuaUserObjectType GetUsertype(Type type) {
             if (this.m_userTypes.TryGetValue(type, out LuaUserObjectType objType)) {
                 return objType;
             } else {
@@ -164,7 +164,7 @@ namespace Battlegrounds.Lua {
         /// </summary>
         /// <param name="name">The name of the function to register.</param>
         /// <param name="sharpFuncDelegate">The <see cref="LuaCSharpFuncDelegate"/> delegate to use as function.</param>
-        public void RegisterFunction(string name, LuaCSharpFuncDelegate sharpFuncDelegate) 
+        public void RegisterFunction(string name, LuaCSharpFuncDelegate sharpFuncDelegate)
             => this._G[name] = new LuaClosure(new LuaFunction(sharpFuncDelegate));
 
         /// <summary>
@@ -176,7 +176,7 @@ namespace Battlegrounds.Lua {
         /// <param name="name">The name of the function to register.</param>
         /// <param name="action">The void <see cref="Action{T1, T2}"/> to invoke when the function is called by Lua.</param>
         public void RegisterFunction(string name, Action<LuaState, LuaStack> action)
-            => this._G[name] = new LuaClosure(new LuaFunction((a,b) => {
+            => this._G[name] = new LuaClosure(new LuaFunction((a, b) => {
                 action(a, b);
                 b.Push(Nil);
                 return 1;
@@ -191,7 +191,7 @@ namespace Battlegrounds.Lua {
         /// </remarks>
         /// <param name="type">The managed type to register.</param>
         public void RegisterUserdata(Type type) {
-            
+
             // Ignore if already registered
             if (this.IsUserObject(type)) {
                 return;
@@ -204,7 +204,7 @@ namespace Battlegrounds.Lua {
             var managedProperties = type.GetProperties(BindingFlags.Public | BindingFlags.Instance)
                 .Where(x => x.GetCustomAttribute<LuaUserobjectPropertyAttribute>() is not null && x.GetMethod is not null)
                 .Select(x => new LuaUserObjectType.Property(x.Name, x.GetCustomAttribute<LuaUserobjectPropertyAttribute>(), x));
-            
+
             // Create type
             LuaUserObjectType objType = new LuaUserObjectType(type);
             objType.Methods.AddRange(managedMethods);

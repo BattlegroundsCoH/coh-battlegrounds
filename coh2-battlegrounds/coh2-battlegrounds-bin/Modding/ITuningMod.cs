@@ -4,7 +4,7 @@
     /// Interface for a tuning mod. Extension of the <see cref="IGameMod"/> interface.
     /// </summary>
     public interface ITuningMod : IGameMod {
-    
+
         /// <summary>
         /// Get the blueprint name of the tuning verification upgrade.
         /// </summary>
@@ -19,6 +19,11 @@
         /// Get the upgrade blueprint name to apply when towing.
         /// </summary>
         public string TowingUpgrade { get; }
+
+        /// <summary>
+        /// Get if the towing functionality is enabled for this mod.
+        /// </summary>
+        public bool IsTowingEnabled { get; }
 
     }
 

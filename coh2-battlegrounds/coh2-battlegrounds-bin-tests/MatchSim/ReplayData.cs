@@ -5,14 +5,16 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+
 using Battlegrounds.Game.DataSource.Replay;
 using Battlegrounds.Game.Match;
 using Battlegrounds.Game.Match.Analyze;
 using Battlegrounds.Game.Match.Data;
+
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace coh2_battlegrounds_bin_tests.MatchSim {
-    
+
     [TestClass]
     public class ReplayData {
 
@@ -42,7 +44,7 @@ namespace coh2_battlegrounds_bin_tests.MatchSim {
         public void IsAnalyzable() {
             var matchdata = GetIdCheckPlayback();
             analyzeStrategy.OnPrepare(null, matchdata);
-            analyzeStrategy.OnAnalyze(null);            ;
+            analyzeStrategy.OnAnalyze(null); ;
             Assert.IsTrue(analyzeStrategy.OnCleanup(null) is not NullAnalysis);
         }
 

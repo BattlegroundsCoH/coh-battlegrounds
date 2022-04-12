@@ -3,6 +3,8 @@ using System.Diagnostics;
 using System.IO;
 using System.Threading.Tasks;
 
+using Battlegrounds.Modding;
+
 namespace Battlegrounds.Game.Database.Management {
 
     /// <summary>
@@ -17,14 +19,18 @@ namespace Battlegrounds.Game.Database.Management {
     /// </summary>
     public static class DatabaseManager {
 
-        private static bool m_databasesLoaded = false;
+        private static bool __databasesLoaded = false;
+        private static string __databaseFoundPath = string.Empty;
 
-        private static string m_databaseFoundPath = null;
+        /// <summary>
+        /// Get the path of the mod database folder
+        /// </summary>
+        public static readonly string ModDatabaseSource = "usr\\mods\\mod_db\\";
 
         /// <summary>
         /// Has the databases been loaded.
         /// </summary>
-        public static bool DatabaseLoaded => m_databasesLoaded;
+        public static bool DatabaseLoaded => __databasesLoaded;
 
         /// <summary>
         /// Load all databases in a non-interupting manner.
@@ -32,11 +38,11 @@ namespace Battlegrounds.Game.Database.Management {
         public static async void LoadAllDatabases(DatabaseLoadedCallbackHandler onDatabaseLoaded) {
 
             // There's no need to do this twice
-            if (m_databasesLoaded) {
+            if (__databasesLoaded) {
                 return;
             }
 
-            Console.WriteLine($"Database path: \"{SolveDatabasepath()}\"");
+            Trace.WriteLine($"Database path: \"{SolveDatabasepath()}\"", nameof(DatabaseManager));
 
             int loaded = 0;
             int failed = 0;
@@ -49,10 +55,13 @@ namespace Battlegrounds.Game.Database.Management {
                 // Wait for additional blueprint loaded
                 await Task.Run(() => {
 
-                    // Load the battlegrounds DB
-                    BlueprintManager.LoadDatabaseWithMod("battlegrounds", BattlegroundsInstance.BattleGroundsTuningMod.Guid.ToString());
-
-                    // TODO: Load more here if needed
+                    // Run through each mod package and load their database
+                    ModManager.EachPackage(x => {
+                        Stopwatch stopwatch = Stopwatch.StartNew();
+                        BlueprintManager.LoadDatabaseWithMod(x.ID, x.TuningGUID.GUID);
+                        stopwatch.Stop();
+                        Trace.WriteLine($"Loaded database for package '{x.PackageName}' in {stopwatch.Elapsed.TotalSeconds:0.000}s.", nameof(BlueprintManager));
+                    });
 
                 });
 
@@ -60,7 +69,7 @@ namespace Battlegrounds.Game.Database.Management {
                 loaded++;
 
             } catch (Exception e) {
-                Console.WriteLine($"Failed to load database: Blueprints [{e.Message}]");
+                Trace.WriteLine($"Failed to load database: Blueprints [{e.Message}]", nameof(DatabaseManager));
                 failed++;
             }
 
@@ -73,16 +82,12 @@ namespace Battlegrounds.Game.Database.Management {
                 loaded++;
 
             } catch (Exception e) {
-                Console.WriteLine($"Failed to load database: Scenarios [{e.Message}]");
+                Trace.WriteLine($"Failed to load database: Scenarios [{e.Message}]", nameof(DatabaseManager));
                 failed++;
             }
 
-            // Create the win condition list (less troublesome)
-            await Task.Run(WinconditionList.CreateAndLoadDatabase);
-            loaded++;
-
-            // Set database loaded
-            m_databasesLoaded = true;
+            // Set database loaded flag
+            __databasesLoaded = true;
 
             // Invoke the callback
             onDatabaseLoaded?.Invoke(loaded, failed);
@@ -94,27 +99,37 @@ namespace Battlegrounds.Game.Database.Management {
         /// </summary>
         /// <returns>The first valid database path found or the empty string if no path is found.</returns>
         public static string SolveDatabasepath() {
-            if (m_databaseFoundPath != null) {
-                return m_databaseFoundPath;
-            } else {
-                string[] testPaths = new string[] {
+            
+            // Bail fast if already solved
+            if (!string.IsNullOrEmpty(__databaseFoundPath)) {
+                return __databaseFoundPath;
+            }
+
+            // Define paths to test existance of.
+            string[] testPaths = new string[] {
                     "..\\..\\..\\..\\..\\..\\db-battlegrounds\\",
                     "..\\..\\..\\..\\..\\db-battlegrounds\\",
                     "..\\..\\..\\..\\db-battlegrounds\\",
                     "..\\..\\..\\db-battlegrounds\\",
                     "db-battlegrounds\\",
-                    "bin\\data\\json-db\\", // should be the place for release builds!
+                    "bg_common\\data\\", // should be the place for release builds!
+                    ModDatabaseSource, // should be the place for mods
                 };
-                foreach (string path in testPaths) {
-                    if (Directory.Exists(path)) {
-                        m_databaseFoundPath = Path.GetFullPath(path);
-                        return m_databaseFoundPath;
-                    }
+            
+            // Do exist check, return first
+            foreach (string path in testPaths) {
+                if (Directory.Exists(path)) {
+                    __databaseFoundPath = Path.GetFullPath(path);
+                    return __databaseFoundPath;
                 }
-                m_databaseFoundPath = string.Empty;
-                Trace.WriteLine("Failed to find any valid path to the database folder. Please verify install path.", "DatabaseManager");
-                return m_databaseFoundPath;
             }
+
+            // Log failure
+            Trace.WriteLine("Failed to find any valid path to the database folder. Please verify install path.", nameof(DatabaseManager));
+
+            // Return none
+            return __databaseFoundPath;
+
         }
 
     }

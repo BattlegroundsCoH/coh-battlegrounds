@@ -1,17 +1,18 @@
-﻿using System.Windows;
+﻿using Battlegrounds.Locale;
+using System.Windows;
 using System.Windows.Markup;
 
 namespace BattlegroundsApp.Controls.Lobby.Components {
-    
+
     /// <summary>
     /// Interaction logic for LobbyButton.xaml
     /// </summary>
     [ContentProperty("Text")]
     public partial class LobbyButton : LobbyControl {
 
-        public static readonly DependencyProperty TextProperty = DependencyProperty.Register("Text", typeof(string), typeof(LobbyButton));
+        public static readonly DependencyProperty TextProperty = DependencyProperty.Register("Text", typeof(object), typeof(LobbyButton));
 
-        public static readonly DependencyProperty OptionalTextProperty = DependencyProperty.Register("OptionalText", typeof(string), typeof(LobbyButton));
+        public static readonly DependencyProperty OptionalTextProperty = DependencyProperty.Register("OptionalText", typeof(object), typeof(LobbyButton));
 
         public static readonly DependencyProperty IsHostOnlyProperty = DependencyProperty.Register("IsHostOnly", typeof(bool), typeof(LobbyButton));
 
@@ -23,16 +24,16 @@ namespace BattlegroundsApp.Controls.Lobby.Components {
         /// <summary>
         /// Get or set the text that is displayed on the <see cref="LobbyButton"/> while in the <see cref="SelfState"/>.
         /// </summary>
-        public string Text {
-            get => this.GetValue(TextProperty) as string;
+        public object Text {
+            get => this.GetValue(TextProperty) as LocaleKey;
             set => this.SetValue(TextProperty, value);
         }
 
         /// <summary>
         /// Get or set the text that is displayed instead of the <see cref="LobbyButton"/> while in the <see cref="OtherState"/>.
         /// </summary>
-        public string OptionalText {
-            get => this.GetValue(OptionalTextProperty) as string;
+        public object OptionalText {
+            get => this.GetValue(OptionalTextProperty) as LocaleKey;
             set => this.SetValue(OptionalTextProperty, value);
         }
 

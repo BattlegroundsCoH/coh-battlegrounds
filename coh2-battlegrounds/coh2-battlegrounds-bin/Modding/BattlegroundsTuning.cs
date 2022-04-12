@@ -5,15 +5,30 @@
     /// </summary>
     public sealed class BattlegroundsTuning : ITuningMod {
 
-        public ModGuid Guid => ModGuid.FromGuid("142b113740474c82a60b0a428bd553d5");
+        public ModGuid Guid { get; }
 
-        public string Name => "Battlegrounds";
+        public string Name { get; }
 
-        public string VerificationUpgrade => "bg_verify";
+        public string VerificationUpgrade { get; }
 
-        public string TowUpgrade => "is_towed";
+        public string TowUpgrade { get; }
 
-        public string TowingUpgrade => "is_towing";
+        public string TowingUpgrade { get; }
+
+        public ModPackage Package { get; }
+
+        public bool IsTowingEnabled => true;
+
+        public ModType GameModeType => ModType.Tuning;
+
+        public BattlegroundsTuning(ModPackage package) {
+            this.Guid = package.TuningGUID;
+            this.Name = "Battlegrounds";
+            this.VerificationUpgrade = package.VerificationUpgrade;
+            this.TowUpgrade = package.IsTowedUpgrade;
+            this.TowingUpgrade = package.IsTowingUpgrade;
+            this.Package = package;
+        }
 
     }
 

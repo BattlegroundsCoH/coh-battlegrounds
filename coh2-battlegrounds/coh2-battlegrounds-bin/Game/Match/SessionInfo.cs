@@ -2,7 +2,7 @@
 using Battlegrounds.Modding;
 
 namespace Battlegrounds.Game.Match {
-    
+
     /// <summary>
     /// Info struct used by a <see cref="Session"/> instance to infer information.
     /// </summary>
@@ -11,7 +11,7 @@ namespace Battlegrounds.Game.Match {
         /// <summary>
         /// The selected game mode.
         /// </summary>
-        public IWinconditionMod SelectedGamemode { get; set; }
+        public IGamemode SelectedGamemode { get; set; }
 
         /// <summary>
         /// The selected tuning mod to play with.
@@ -52,6 +52,16 @@ namespace Battlegrounds.Game.Match {
         /// The default difficulty to give the AI being filled in.
         /// </summary>
         public AIDifficulty DefaultDifficulty { get; set; }
+
+        /// <summary>
+        /// Get or set if the day/night system should be enabled.
+        /// </summary>
+        public bool EnableDayNightCycle { get; set; }
+
+        /// <summary>
+        /// Get or set if the supply system should be enabled.
+        /// </summary>
+        public bool EnableSupply { get; set; }
 
     }
 

@@ -155,8 +155,8 @@
 			<bool name="support_weapons_to_flanks" value="True" />
 		</template_reference>
 		<template_reference name="squadexts" value="sbpextensions\squad_item_slot_ext">
-			<bool name="can_pick_up" value="True" />
-			<float name="num_slots" value="2" />
+			<bool name="can_pick_up" value="False" />
+			<float name="num_slots" value="0" />
 		</template_reference>
 		<template_reference name="squadexts" value="sbpextensions\squad_loadout_ext">
 			<list name="unit_list">
@@ -166,7 +166,7 @@
 				</group>
 				<group name="loadout_data">
 					<float name="num" value="3" />
-					<instance_reference name="type" value="ebps\races\soviet\soldiers\conscript_soldier\conscript_soldier_bg" mod="142b113740474c82a60b0a428bd553d5" />
+					<instance_reference name="type" value="ebps\races\soviet\soldiers\conscript_soldier\conscript_soldier_guard_bg" mod="142b113740474c82a60b0a428bd553d5" />
 				</group>
 			</list>
 			<float name="squad_female_chance" value="0" />
@@ -404,12 +404,6 @@
 		</template_reference>
 		<template_reference name="squadexts" value="sbpextensions\squad_action_apply_ext">
 			<list name="actions">
-				<template_reference name="action" value="action\upgrade_add">
-					<bool name="apply_to_entities_in_squad" value="False" />
-					<bool name="trigger_publish_event" value="False" />
-					<instance_reference name="upgrade" value="upgrade\max_vet" />
-					<uniqueid name="id" value="1073742423" />
-				</template_reference>
 			</list>
 			<list name="squad_entity_actions">
 			</list>

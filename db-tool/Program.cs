@@ -1,22 +1,36 @@
 ﻿using System;
 using System.Xml;
 using System.IO;
-using System.Linq;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
+using System.Text.Json;
+using System.Globalization;
 
 namespace CoH2XML2JSON {
-    class Program {
+
+    public delegate T BlueprintFactory<T>(XmlDocument document, string path, string name) where T : BP;
+
+    public class Program {
+
+        // Define the culture to use when parsing numbers etc.
+        public static readonly CultureInfo FormatCulture = CultureInfo.GetCultureInfo("en-US");
+
+        public static float GetFloat(string value) => float.Parse(value, FormatCulture);
+
+        static readonly JsonSerializerOptions serializerOptions = new() { 
+            WriteIndented = true, 
+            IgnoreReadOnlyFields = false,
+            IgnoreReadOnlyProperties = false,
+            DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingDefault
+        };
 
         static string dirPath;
         static string instancesPath;
         static string modguid;
-        static Dictionary<string, (float, float, float, float)> entityCost = new Dictionary<string, (float, float, float, float)>();
-        static Dictionary<string, bool> entityCrewed = new Dictionary<string, bool>();
+        static string modname;
         static Dictionary<string, string> slotItemSymbols = new Dictionary<string, string>();
+        static List<EBP> entities = new();
 
-        static string[] racebps = new string[] {
+        public static readonly string[] racebps = new string[] {
             "racebps\\soviet",
             "racebps\\aef",
             "racebps\\british",
@@ -24,828 +38,179 @@ namespace CoH2XML2JSON {
             "racebps\\west_german",
         };
 
-        private static void CreateSbpsDatabase()
-        {
-            string fileName = dirPath + @"\sbps_database.json";
+        private static string GetFactionFromPath(string path) {
+            int rid = path.IndexOf("races");
+            string army = path;
+            if (rid != -1) {
+                army = path.Substring(rid + 6, path.Length - rid - 6).Split("\\")[0];
+            } else {
+                for (int i = 0; i < racebps.Length; i++) {
+                    string k = racebps[i][8..];
+                    if (path.Contains(k)) {
+                        return k;
+                    }
+                }
+                army = "NULL";
+            }
+            if (army == "soviets") {
+                army = "soviet";
+            } else if (army == "brits") {
+                army = "british";
+            }
+            return army;
+        }
 
-            try
-            {
-                if (File.Exists(fileName))
-                {
+        public static void GenericDatabase<T>(string dbname, string lookpath, BlueprintFactory<T> instanceCreator) where T : BP {
+
+            // Get destination
+            string fileName = Path.Combine(dirPath, dbname);
+
+            try {
+
+                // If file already exists, delete it.
+                if (File.Exists(fileName)) {
                     File.Delete(fileName);
                 }
 
-                if (!Directory.Exists(instancesPath + @"\sbps"))
-                {
-                    Console.WriteLine("ERROR: \"sbps\" folder not found!");
-                }
-                else
-                {
-                    int filesToProcces = Directory.GetFiles(instancesPath + @"\sbps", "*.xml", SearchOption.AllDirectories).Length;
-                    int proccessedFiles = 0;
+                // Get folder to search and read .xml files from
+                string searchDir = Path.Combine(instancesPath, lookpath);
 
-                    using (FileStream fs = File.OpenWrite(fileName))
-                    {
-                        using (StreamWriter sw = new StreamWriter(fs))
-                        {
-                            sw.WriteLine("[");
-                            foreach (string path in Directory.GetFiles(instancesPath + @"\sbps", "*xml", SearchOption.AllDirectories))
-                            {
-                                XmlDocument document = new XmlDocument();
-                                document.Load(path);
+                // Make sure there's a folder to read
+                if (!Directory.Exists(searchDir)) {
+                    
+                    Console.WriteLine($"INFO: \"{lookpath}\" folder not found - the database creaton will be skipped.");
 
-                                string jsdbType = "Battlegrounds.Game.Database.SquadBlueprint";
+                } else {
 
-                                XmlElement e_pbgid = document["instance"]["uniqueid"];
-                                string pbgid = e_pbgid.GetAttribute("value");
+                    var files = Directory.GetFiles(searchDir, "*.xml", SearchOption.AllDirectories);
+                    List<T> bps = new();
 
-                                string name = path.Substring(path.LastIndexOf(@"\") + 1);
-                                name = name.Remove(name.Length - 4);
+                    foreach (string path in files) {
 
-                                string localeName = "";
-                                string localeDescription = "";
-                                string icon = "";
-                                string symbol = "";
+                        XmlDocument document = new XmlDocument();
+                        document.Load(path);
 
-                                if (document.SelectSingleNode(@"//template_reference[@name='squadexts'] [@value='sbpextensions\squad_ui_ext']") != null)
-                                {
-                                    XmlElement e_localeName = document.SelectSingleNode("//locstring[@name='screen_name']") as XmlElement;
-                                    localeName = e_localeName.GetAttribute("value");
+                        string name = path[(path.LastIndexOf(@"\") + 1)..^4];
+                        T bp = instanceCreator(document, path, name);
+                        string sbpsJson = JsonSerializer.Serialize(bp, serializerOptions);
 
-                                    XmlElement e_localeDescription = document.SelectSingleNode("//locstring[@name='help_text']") as XmlElement;
-                                    localeDescription = e_localeDescription.GetAttribute("value");
+                        bps.Add(bp);
 
-                                    XmlElement e_icon = document.SelectSingleNode("//icon[@name='icon_name']") as XmlElement;
-                                    icon = e_icon.GetAttribute("value");
-
-                                    XmlElement e_symbol = document.SelectSingleNode("//icon[@name='symbol_icon_name']") as XmlElement;
-                                    symbol = e_symbol.GetAttribute("value");
-                                }
-
-                                string army = path.Substring(path.IndexOf("races") + 6, path.Length - path.IndexOf("races") - 6).Split("\\")[0];
-                                if (army == "soviets") {
-                                    army = "soviet";
-                                } else if (army == "brits") {
-                                    army = "british";
-                                }
-
-                                List<string> squadTypeData = new List<string>();
-
-                                if (document.SelectSingleNode(@"//template_reference[@name='squadexts'] [@value='sbpextensions\squad_type_ext']") is XmlNode squadTypeList) {
-                                    XmlNode typeList = squadTypeList.SelectSingleNode(@"//list[@name='squad_type_list']");
-                                    foreach (XmlNode type in typeList) {
-                                        squadTypeData.Add(type.Attributes["value"].Value);
-                                    }
-                                }
-
-                                string costJsdbType = "Battlegrounds.Game.Gameplay.Cost";
-
-                                List<string> entities = new List<string>();
-                                List<float> numOfEntities = new List<float>();
-                                XmlNodeList e_entities = document.SelectNodes("//instance_reference[@name='type']");
-                                XmlNodeList e_numOfentities = document.SelectNodes("//float[@name='num']");
-                                foreach (XmlNode entity in e_entities)
-                                {
-                                    string entityName = entity.Attributes["value"].Value;
-                                    entities.Add(entityName.Substring(entityName.LastIndexOf(@"\") + 1));
-                                }
-                                foreach (XmlNode num in e_numOfentities)
-                                {
-                                    numOfEntities.Add(SafeParse(num.Attributes["value"].Value));
-                                }
-
-                                var squad = entities.Zip(numOfEntities, (k, v) => ( k, v ));
-
-                                string costManpower = "0";
-                                string costMunition = "0";
-                                string costFuel = "0";
-                                string costFieldTime = "0";
-                                string hasCrew = "False";
-
-                                foreach (var s in squad)
-                                {
-                                    if (entityCost.TryGetValue(s.Item1, out (float,float,float,float) costTuple)) { 
-                                        // Safer way of getting the value (in case the specific ebp has not been loaded).
-                                        // The other method was also correct but would throw KeyNotFound exceptions if ebp wasn't in the lookup table.
-
-                                        costManpower = ((costTuple.Item1) * s.Item2).ToString();
-                                        costMunition = ((costTuple.Item2) * s.Item2).ToString();
-                                        costFuel = ((costTuple.Item3) * s.Item2).ToString();
-                                        if ((Math.Ceiling(((costTuple.Item4) * s.Item2) * 0.06)) < 15) {
-                                            costFieldTime = "15";
-                                        } else {
-                                            costFieldTime = (Math.Ceiling(((costTuple.Item4) * s.Item2) * 0.06)).ToString();
-                                        }
-
-                                    }
-                                    if (entityCrewed.TryGetValue(s.Item1, out bool crew)) {
-                                        hasCrew = crew.ToString();
-                                    }
-                                }
-
-                                dynamic sbps = new JObject();
-                                sbps.jsdbtype = jsdbType;
-                                sbps.PBGID = pbgid;
-                                sbps.ModGUID = modguid;
-                                sbps.Name = name;
-                                sbps.LocaleName = localeName;
-                                sbps.LocaleDescription = localeDescription;
-                                sbps.Army = army;
-                                sbps.Icon = icon;
-                                sbps.Symbol = symbol;
-                                sbps.Cost = new JObject();
-                                sbps.Cost.jsdbtype = costJsdbType;
-                                sbps.Cost.Manpower = costManpower;
-                                sbps.Cost.Munition = costMunition;
-                                sbps.Cost.Fuel = costFuel;
-                                sbps.Cost.FieldTime = costFieldTime;
-                                sbps.HasCrew = hasCrew;
-                                sbps.Types = new JArray(squadTypeData);
-
-                                string sbpsJson = JsonConvert.SerializeObject(sbps, Newtonsoft.Json.Formatting.Indented);
-
-                                proccessedFiles++;
-
-                                if (proccessedFiles < filesToProcces)
-                                {
-                                    sw.WriteLine(sbpsJson + ",");
-                                } else
-                                {
-                                    sw.WriteLine(sbpsJson);
-                                }
-
-                            }
-                            sw.WriteLine("]");
-                        }
                     }
 
-                    Console.WriteLine("Sbps database created with " + proccessedFiles.ToString() + "/" + filesToProcces.ToString() + " items added!");
+                    File.WriteAllText(fileName, JsonSerializer.Serialize(bps.ToArray(), serializerOptions));
+                    Console.WriteLine($"Created database: {fileName}");
+
                 }
-            } catch (Exception e)
-            {
+            } catch (Exception e) {
+                
+                // Log error and wait for user to exit
                 Console.WriteLine(e.ToString());
                 Console.ReadLine();
+
             }
+
         }
 
-        private static void CreateEbpsDatabase()
-        {
-            string fileName = dirPath + @"\ebps_database.json";
+        public class LastUse {
+            public string OutPath { get; set; } 
+            public string InstancePath { get; set; }
+            public string ModGuid { get; set; }
+            public string ModName { get; set; }
+        }
 
-            try
-            {
-                if (File.Exists(fileName))
-                {
-                    File.Delete(fileName);
-                }
+        public static void Main(string[] args) {
 
-                if (!Directory.Exists(instancesPath + @"\ebps"))
-                {
-                    Console.WriteLine("ERROR: \"ebps\" folder not found!");
-                }
-                else
-                {
-                    int filesToProcces = Directory.GetFiles(instancesPath + @"\ebps\races", "*.xml", SearchOption.AllDirectories).Length;
-                    int proccessedFiles = 0;
+            bool doLastIgnoreInput = args.Length == 1 && args[0] == "-do_last";
 
-                    using (FileStream fs = File.Create(fileName))
-                    {
-                        using (StreamWriter sw = new StreamWriter(fs))
-                        {
-                            sw.WriteLine("[");
-                            foreach (string path in Directory.GetFiles(instancesPath + @"\ebps\races", "*xml", SearchOption.AllDirectories))
-                            {
-                                XmlDocument document = new XmlDocument();
-                                document.Load(path);
+            Console.WriteLine(string.Join(" ", args));
 
-                                string jsdbType = "Battlegrounds.Game.Database.EntityBlueprint";
-
-                                XmlElement e_pbgid = document["instance"]["uniqueid"];
-                                string pbgid = e_pbgid.GetAttribute("value");
-
-                                string name = path.Substring(path.LastIndexOf(@"\") + 1);
-                                name = name.Remove(name.Length - 4);
-
-                                string localeName = "";
-                                string localeDescription = "";
-                                string icon = "";
-                                string symbol = "";
-
-                                if (document.SelectSingleNode(@"//template_reference[@name='exts'] [@value='ebpextensions\ui_ext']") != null)
-                                {
-                                    XmlElement e_localeName = document.SelectSingleNode("//locstring[@name='screen_name']") as XmlElement;
-                                    localeName = e_localeName.GetAttribute("value");
-
-                                    XmlElement e_localeDescription = document.SelectSingleNode("//locstring[@name='help_text']") as XmlElement;
-                                    localeDescription = e_localeDescription.GetAttribute("value");
-
-                                    XmlElement e_icon = document.SelectSingleNode("//icon[@name='icon_name']") as XmlElement;
-                                    icon = e_icon.GetAttribute("value");
-
-                                    XmlElement e_symbol = document.SelectSingleNode("//icon[@name='symbol_icon_name']") as XmlElement;
-                                    symbol = e_symbol.GetAttribute("value");
-                                }
-
-                                string army = path.Substring(path.IndexOf("races") + 6, path.Length - path.IndexOf("races") - 6).Split("\\")[0];
-                                if (army == "soviets")
-                                {
-                                    army = army.Replace("soviets", "soviet");
-                                }
-                                else if (army == "brits")
-                                {
-                                    army = army.Replace("brits", "british");
-                                }
-
-                                string costJsdbType = "Battlegrounds.Game.Gameplay.Cost";
-
-                                string costManpower = "0";
-                                string costMunition = "0";
-                                string costFuel = "0";
-                                string costTime = "0";
-
-                                if (document.SelectSingleNode(@"//template_reference[@name='exts'] [@value='ebpextensions\cost_ext']") != null)
-                                {
-                                    XmlElement e_manpower = document.SelectSingleNode("//float[@name='manpower']") as XmlElement;
-                                    costManpower = e_manpower.GetAttribute("value");
-
-                                    XmlElement e_munition = document.SelectSingleNode("//float[@name='munition']") as XmlElement;
-                                    costMunition = e_munition.GetAttribute("value");
-
-                                    XmlElement e_fuel = document.SelectSingleNode("//float[@name='fuel']") as XmlElement;
-                                    costFuel = e_fuel.GetAttribute("value");
-
-                                    XmlElement e_time = document.SelectSingleNode("//float[@name='time_seconds']") as XmlElement;
-                                    costTime = e_time.GetAttribute("value");
-                                }
-
-                                entityCost.Add(name, (SafeParse(costManpower), SafeParse(costMunition), SafeParse(costFuel), SafeParse(costTime)));
-
-                                if (document.SelectSingleNode(@"//template_reference[@name='exts'] [@value='ebpextensions\recrewable_ext']") is XmlNode recrewNode) {
-
-                                    bool any = false;
-
-                                    for (int i = 0; i < racebps.Length; i++) {
-                                        if (racebps[i].Contains(army)) {
-                                            if (recrewNode.SelectSingleNode($@"//instance_reference[@name='ext_key'] [@value='{racebps[i]}']") is XmlNode instRef) {
-                                                if (instRef.SelectSingleNode($@"//instance_reference[@name='driver_squad_blueprint']") is XmlNode driverBp) {
-                                                    if (driverBp.Attributes["value"].Value.CompareTo(string.Empty) != 0) {
-                                                        entityCrewed.Add(name, true);
-                                                        any = true;
-                                                        break;
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
-
-                                    if (!any) {
-                                        entityCrewed.Add(name, false);
-                                    }
-
-                                } else {
-                                    entityCrewed.Add(name, false);
-                                }
-
-                                dynamic ebps = new JObject();
-                                ebps.jsdbtype = jsdbType;
-                                ebps.PBGID = pbgid;
-                                ebps.ModGUID = modguid;
-                                ebps.Name = name;
-                                ebps.LocaleName = localeName;
-                                ebps.LocaleDescription = localeDescription;
-                                ebps.Army = army;
-                                ebps.Icon = icon;
-                                ebps.Symbol = symbol;
-                                ebps.Cost = new JObject();
-                                ebps.Cost.jsdbtype = costJsdbType;
-                                ebps.Cost.Manpower = costManpower;
-                                ebps.Cost.Munition = costMunition;
-                                ebps.Cost.Fuel = costFuel;
-                                ebps.Cost.BuildTime = costTime;
-
-                                string ebpsJson = JsonConvert.SerializeObject(ebps, Newtonsoft.Json.Formatting.Indented);
-
-                                proccessedFiles++;
-
-                                if (proccessedFiles < filesToProcces)
-                                {
-                                    sw.WriteLine(ebpsJson + ",");
-                                }
-                                else
-                                {
-                                    sw.WriteLine(ebpsJson);
-                                }
-
-                            }
-                            sw.WriteLine("]");
-                        }
+            LastUse last = null;
+            if (File.Exists("last.json")) {
+                last = JsonSerializer.Deserialize<LastUse>(File.ReadAllText("last.json"));
+                Console.WriteLine("Use settings from last execution?");
+                Console.WriteLine("Output Directory: " + last.OutPath);
+                Console.WriteLine("Instance Directory: " + last.InstancePath);
+                Console.WriteLine("ModGUID: " + last.ModGuid);
+                Console.WriteLine();
+                if (doLastIgnoreInput) {
+                    dirPath = last.OutPath;
+                    modguid = last.ModGuid;
+                    instancesPath = last.InstancePath;
+                    modname = last.ModName;
+                } else {
+                    Console.Write("(Y/N): ");
+                    if (Console.ReadLine().ToLower() is not "y") {
+                        last = null;
+                    } else {
+                        dirPath = last.OutPath;
+                        modguid = last.ModGuid;
+                        instancesPath = last.InstancePath;
+                        modname = last.ModName;
                     }
-
-                    Console.WriteLine("Ebps database created with " + proccessedFiles.ToString() + "/" + filesToProcces.ToString() + " items added!");
                 }
             }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.ToString());
-                Console.ReadLine();
-            }
-        }
 
-        private static void CreateCriticalDatabase()
-        {
-            string fileName = dirPath + @"\critical_database.json";
-
-            try
-            {
-                if (File.Exists(fileName))
-                {
-                    File.Delete(fileName);
-                }
-
-                if (!Directory.Exists(instancesPath + @"\critical"))
-                {
-                    Console.WriteLine("ERROR: \"critical\" folder not found!");
-                }
-                else
-                {
-                    int filesToProcces = Directory.GetFiles(instancesPath + @"\critical", "*.xml", SearchOption.AllDirectories).Length;
-                    int proccessedFiles = 0;
-
-                    using (FileStream fs = File.Create(fileName))
-                    {
-                        using (StreamWriter sw = new StreamWriter(fs))
-                        {
-                            sw.WriteLine("[");
-                            foreach (string path in Directory.GetFiles(instancesPath + @"\critical", "*xml", SearchOption.AllDirectories))
-                            {
-                                XmlDocument document = new XmlDocument();
-                                document.Load(path);
-
-                                string jsdbType = "Battlegrounds.Game.Database.CriticalBlueprint";
-
-                                XmlElement e_pbgid = document["instance"]["uniqueid"];
-                                string pbgid = e_pbgid.GetAttribute("value");
-
-                                string name = path.Substring(path.LastIndexOf(@"\") + 1);
-                                name = name.Remove(name.Length - 4);
-
-                                string localeName = "";
-                                string localeDescription = "";
-                                string icon = "";
-
-                                if (document.SelectSingleNode(@"//template_reference[@name='ui_info'] [@value='tables\ui_info']") != null)
-                                {
-                                    XmlElement e_localeName = document.SelectSingleNode("//locstring[@name='screen_name']") as XmlElement;
-                                    localeName = e_localeName.GetAttribute("value");
-
-                                    XmlElement e_localeDescription = document.SelectSingleNode("//locstring[@name='help_text']") as XmlElement;
-                                    localeDescription = e_localeDescription.GetAttribute("value");
-
-                                    XmlElement e_icon = document.SelectSingleNode("//icon[@name='icon_name']") as XmlElement;
-                                    icon = e_icon.GetAttribute("value");
-                                }
-
-                                dynamic critical = new JObject();
-                                critical.jsdbtype = jsdbType;
-                                critical.PBGID = pbgid;
-                                critical.ModGUID = modguid;
-                                critical.Name = name;
-                                critical.LocaleName = localeName;
-                                critical.LocaleDescription = localeDescription;
-                                critical.Icon = icon;
-
-                                string criticalJson = JsonConvert.SerializeObject(critical, Newtonsoft.Json.Formatting.Indented);
-
-                                proccessedFiles++;
-
-                                if (proccessedFiles < filesToProcces)
-                                {
-                                    sw.WriteLine(criticalJson + ",");
-                                }
-                                else
-                                {
-                                    sw.WriteLine(criticalJson);
-                                }
-
-                            }
-                            sw.WriteLine("]");
-                        }
-                    }
-
-                    Console.WriteLine("Critical database created with " + proccessedFiles.ToString() + "/" + filesToProcces.ToString() + " items added!");
-                }
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.ToString());
-                Console.ReadLine();
-            }
-        }
-
-        private static void CreateSlotItemDatabase()
-        {
-            string fileName = dirPath + @"\slot_item_database.json";
-
-            try
-            {
-                if (File.Exists(fileName))
-                {
-                    File.Delete(fileName);
-                }
-
-                if (!Directory.Exists(instancesPath + @"\slot_item"))
-                {
-                    Console.WriteLine("ERROR: \"slot_item\" folder not found!");
-                }
-                else
-                {
-                    int filesToProcces = Directory.GetFiles(instancesPath + @"\slot_item", "*.xml", SearchOption.AllDirectories).Length;
-                    int proccessedFiles = 0;
-
-                    using (FileStream fs = File.Create(fileName))
-                    {
-                        using (StreamWriter sw = new StreamWriter(fs))
-                        {
-                            sw.WriteLine("[");
-                            foreach (string path in Directory.GetFiles(instancesPath + @"\slot_item", "*xml", SearchOption.AllDirectories))
-                            {
-                                XmlDocument document = new XmlDocument();
-                                document.Load(path);
-
-                                string jsdbType = "Battlegrounds.Game.Database.SlotItemBlueprint";
-
-                                XmlElement e_pbgid = document["instance"]["uniqueid"];
-                                string pbgid = e_pbgid.GetAttribute("value");
-
-                                string name = path.Substring(path.LastIndexOf(@"\") + 1);
-                                name = name.Remove(name.Length - 4);
-
-                                string localeName = "";
-                                string localeDescription = "";
-                                string icon = "";
-
-                                if (document.SelectSingleNode(@"//group[@name='ui_info']") != null)
-                                {
-                                    XmlElement e_localeName = document.SelectSingleNode("//locstring[@name='screen_name']") as XmlElement;
-                                    localeName = e_localeName.GetAttribute("value");
-
-                                    XmlElement e_localeDescription = document.SelectSingleNode("//locstring[@name='help_text']") as XmlElement;
-                                    localeDescription = e_localeDescription.GetAttribute("value");
-
-                                    XmlElement e_icon = document.SelectSingleNode("//icon[@name='icon_name']") as XmlElement;
-                                    icon = e_icon.GetAttribute("value");
-                                }
-
-                                dynamic slotItem = new JObject();
-                                slotItem.jsdbtype = jsdbType;
-                                slotItem.PBGID = pbgid;
-                                slotItem.ModGUID = modguid;
-                                slotItem.Name = name;
-                                slotItem.LocaleName = localeName;
-                                slotItem.LocaleDescription = localeDescription;
-                                slotItem.Icon = icon;
-
-                                slotItemSymbols.Add(name, icon);
-
-                                string slotItemJson = JsonConvert.SerializeObject(slotItem, Newtonsoft.Json.Formatting.Indented);
-
-                                proccessedFiles++;
-
-                                if (proccessedFiles < filesToProcces)
-                                {
-                                    sw.WriteLine(slotItemJson + ",");
-                                }
-                                else
-                                {
-                                    sw.WriteLine(slotItemJson);
-                                }
-
-                            }
-                            sw.WriteLine("]");
-                        }
-                    }
-
-                    Console.WriteLine("Slot item database created with " + proccessedFiles.ToString() + "/" + filesToProcces.ToString() + " items added!");
-                }
-
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.ToString());
-                Console.ReadLine();
-            }
-        }
-
-        private static void CreateUpgradeDatabase()
-        {
-            string fileName = dirPath + @"\upgrade_database.json";
-
-            try
-            {
-                if (File.Exists(fileName))
-                {
-                    File.Delete(fileName);
-                }
-
-                if (!Directory.Exists(instancesPath + @"\upgrade"))
-                {
-                    Console.WriteLine("ERROR: \"upgrade\" folder not found!");
-                }
-                else
-                {
-                    int filesToProcces = Directory.GetFiles(instancesPath + @"\upgrade", "*.xml", SearchOption.AllDirectories).Length;
-                    int proccessedFiles = 0;
-
-                    using (FileStream fs = File.Create(fileName))
-                    {
-                        using (StreamWriter sw = new StreamWriter(fs))
-                        {
-                            sw.WriteLine("[");
-                            foreach (string path in Directory.GetFiles(instancesPath + @"\upgrade", "*xml", SearchOption.AllDirectories))
-                            {
-                                XmlDocument document = new XmlDocument();
-                                document.Load(path);
-
-                                string jsdbType = "Battlegrounds.Game.Database.UpgradeBlueprint";
-
-                                XmlElement e_pbgid = document["instance"]["uniqueid"];
-                                string pbgid = e_pbgid.GetAttribute("value");
-
-                                string name = path.Substring(path.LastIndexOf(@"\") + 1);
-                                name = name.Remove(name.Length - 4);
-
-                                string localeName = "";
-                                string localeDescription = "";
-                                string icon = "";
-
-                                if (document.SelectSingleNode(@"//group[@name='ui_info']") != null)
-                                {
-                                    XmlElement e_localeName = document.SelectSingleNode("//locstring[@name='screen_name']") as XmlElement;
-                                    localeName = e_localeName.GetAttribute("value");
-
-                                    XmlElement e_localeDescription = document.SelectSingleNode("//locstring[@name='help_text']") as XmlElement;
-                                    localeDescription = e_localeDescription.GetAttribute("value");
-
-                                    XmlElement e_icon = document.SelectSingleNode("//icon[@name='icon_name']") as XmlElement;
-                                    icon = e_icon.GetAttribute("value");
-                                }
-
-                                string costJsdbType = "Battlegrounds.Game.Gameplay.Cost";
-
-                                string costManpower = "0";
-                                string costMunition = "0";
-                                string costFuel = "0";
-
-                                if (document.SelectSingleNode(@"//group[@name='time_cost']") != null)
-                                {
-                                    XmlElement e_manpower = document.SelectSingleNode("//float[@name='manpower']") as XmlElement;
-                                    costManpower = e_manpower.GetAttribute("value");
-
-                                    XmlElement e_munition = document.SelectSingleNode("//float[@name='munition']") as XmlElement;
-                                    costMunition = e_munition.GetAttribute("value");
-
-                                    XmlElement e_fuel = document.SelectSingleNode("//float[@name='fuel']") as XmlElement;
-                                    costFuel = e_fuel.GetAttribute("value");
-                                }
-
-                                List<string> slotItems = new List<string>();
-                                XmlNodeList e_slotItems = document.SelectNodes("//instance_reference[@name='slot_item']");
-                                foreach (XmlNode slotItem in e_slotItems)
-                                {
-                                    slotItems.Add(Path.GetFileNameWithoutExtension(slotItem.Attributes["value"].Value));
-                                }
-                                IEnumerable<string> uniqueSlotItems = slotItems.Distinct<string>();
-
-                                dynamic upgrade = new JObject();
-                                upgrade.jsdbtype = jsdbType;
-                                upgrade.PBGID = pbgid;
-                                upgrade.ModGUID = modguid;
-                                upgrade.Name = name;
-                                upgrade.LocaleName = localeName;
-                                upgrade.LocaleDescription = localeDescription;
-                                upgrade.Icon = icon;
-                                upgrade.Cost = new JObject();
-                                upgrade.Cost.jsdbtype = costJsdbType;
-                                upgrade.Cost.Manpower = costManpower;
-                                upgrade.Cost.Munition = costMunition;
-                                upgrade.Cost.Fuel = costFuel;
-                                upgrade.SlotItems = new JArray(uniqueSlotItems);
-
-                                if (slotItems.FirstOrDefault() is string item) {
-                                    if (slotItemSymbols.TryGetValue(item, out string itemSymbol)) {
-                                        upgrade.Symbol = itemSymbol;
-                                    }
-                                }
-
-                                string upgradeJson = JsonConvert.SerializeObject(upgrade, Newtonsoft.Json.Formatting.Indented);
-
-                                proccessedFiles++;
-
-                                if (proccessedFiles < filesToProcces)
-                                {
-                                    sw.WriteLine(upgradeJson + ",");
-                                }
-                                else
-                                {
-                                    sw.WriteLine(upgradeJson);
-                                }
-
-                            }
-                            sw.WriteLine("]");
-                        }
-                    }
-
-                    Console.WriteLine("Upgrade database created with " + proccessedFiles.ToString() + "/" + filesToProcces.ToString() + " items added!");
-                }
-
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.ToString());
-                Console.ReadLine();
-            }
-        }
-
-        private static void CreateAbilityDatabase()
-        {
-            string fileName = dirPath + @"\abilities_database.json";
-
-            try
-            {
-                if (File.Exists(fileName))
-                {
-                    File.Delete(fileName);
-                }
-
-                if (!Directory.Exists(instancesPath + @"\abilities"))
-                {
-                    Console.WriteLine("ERROR: \"abilities\" folder not found!");
-                }
-                else
-                {
-                    int filesToProcces = Directory.GetFiles(instancesPath + @"\abilities", "*.xml", SearchOption.AllDirectories).Length;
-                    int proccessedFiles = 0;
-
-                    using (FileStream fs = File.Create(fileName))
-                    {
-                        using (StreamWriter sw = new StreamWriter(fs))
-                        {
-                            sw.WriteLine("[");
-                            foreach (string path in Directory.GetFiles(instancesPath + @"\abilities", "*xml", SearchOption.AllDirectories))
-                            {
-                                XmlDocument document = new XmlDocument();
-                                document.Load(path);
-
-                                string jsdbType = "Battlegrounds.Game.Database.AbilityBlueprint";
-
-                                XmlElement e_pbgid = document["instance"]["uniqueid"];
-                                string pbgid = e_pbgid.GetAttribute("value");
-
-                                string name = path.Substring(path.LastIndexOf(@"\") + 1);
-                                name = name.Remove(name.Length - 4);
-
-                                string localeName = "";
-                                string localeDescription = "";
-                                string icon = "";
-
-                                if (document.SelectSingleNode(@"//group[@name='ui_info']") != null)
-                                {
-                                    XmlElement e_localeName = document.SelectSingleNode("//locstring[@name='screen_name']") as XmlElement;
-                                    localeName = e_localeName.GetAttribute("value");
-
-                                    XmlElement e_localeDescription = document.SelectSingleNode("//locstring[@name='help_text']") as XmlElement;
-                                    localeDescription = e_localeDescription.GetAttribute("value");
-
-                                    XmlElement e_icon = document.SelectSingleNode("//icon[@name='icon_name']") as XmlElement;
-                                    icon = e_icon.GetAttribute("value");
-                                }
-
-                                string army = path.Substring(path.IndexOf("abilities") + 10, path.Length - path.IndexOf("abilities") - 10).Split("\\")[0];
-                                if (army == "soviets")
-                                {
-                                    army = army.Replace("soviets", "soviet");
-                                }
-                                else if (army == "brits")
-                                {
-                                    army = army.Replace("brits", "british");
-                                }
-
-                                string costJsdbType = "Battlegrounds.Game.Gameplay.Cost";
-
-                                string costManpower = "0";
-                                string costMunition = "0";
-                                string costFuel = "0";
-
-                                if (document.SelectSingleNode(@"//group[@name='cost']") != null)
-                                {
-                                    XmlElement e_manpower = document.SelectSingleNode("//float[@name='manpower']") as XmlElement;
-                                    costManpower = e_manpower.GetAttribute("value");
-
-                                    XmlElement e_munition = document.SelectSingleNode("//float[@name='munition']") as XmlElement;
-                                    costMunition = e_munition.GetAttribute("value");
-
-                                    XmlElement e_fuel = document.SelectSingleNode("//float[@name='fuel']") as XmlElement;
-                                    costFuel = e_fuel.GetAttribute("value");
-                                }
-
-                                dynamic ability = new JObject();
-                                ability.jsdbtype = jsdbType;
-                                ability.PBGID = pbgid;
-                                ability.ModGUID = modguid;
-                                ability.Name = name;
-                                ability.LocaleName = localeName;
-                                ability.LocaleDescription = localeDescription;
-                                ability.Army = army;
-                                ability.Icon = icon;
-                                ability.Cost = new JObject();
-                                ability.Cost.jsdbtype = costJsdbType;
-                                ability.Cost.Manpower = costManpower;
-                                ability.Cost.Munition = costMunition;
-                                ability.Cost.Fuel = costFuel;
-
-                                string abilityJson = JsonConvert.SerializeObject(ability, Newtonsoft.Json.Formatting.Indented);
-
-                                proccessedFiles++;
-
-                                if (proccessedFiles < filesToProcces)
-                                {
-                                    sw.WriteLine(abilityJson + ",");
-                                }
-                                else
-                                {
-                                    sw.WriteLine(abilityJson);
-                                }
-
-                            }
-                            sw.WriteLine("]");
-                        }
-                    }
-
-                    Console.WriteLine("Abilities database created with " + proccessedFiles.ToString() + "/" + filesToProcces.ToString() + " items added!");
-                }
-
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.ToString());
-                Console.ReadLine();
-            }
-        }
-
-        public static float SafeParse(string value)
-        {
-            if (float.TryParse(value, out float valueFloat))
-            {
-                return valueFloat;
-            } else
-            {
-                return 0.0f;
-            }
-        }
-
-        static void Main(string[] args)
-        {
-            Console.WriteLine("Set path where you want the files to be created to: ");
-            dirPath = Console.ReadLine();
-
-            while (!Directory.Exists(dirPath))
-            {
-                if (dirPath.CompareTo(string.Empty) == 0) { // Because I'm lazy - this is a quick method to simply use the directory of the .exe
-                    Console.WriteLine($"Using: {Environment.CurrentDirectory}");
-                    dirPath = Environment.CurrentDirectory;
-                    break;
-                }
-                Console.WriteLine("Invalid path! Try again: ");
+            if (last is null) {
+                Console.Write("Set path where you want the files to be created to: ");
                 dirPath = Console.ReadLine();
-            }
 
-            Console.WriteLine("Set path to your \"instances\" folder: ");
-            instancesPath = Console.ReadLine();
+                while (!Directory.Exists(dirPath)) {
+                    if (string.IsNullOrEmpty(dirPath)) { // Because I'm lazy - this is a quick method to simply use the directory of the .exe
+                        Console.WriteLine($"Using: {Environment.CurrentDirectory}");
+                        dirPath = Environment.CurrentDirectory;
+                        break;
+                    }
+                    Console.WriteLine("Invalid path! Try again: ");
+                    dirPath = Console.ReadLine();
+                }
 
-            while (!Directory.Exists(instancesPath) && !instancesPath.EndsWith(@"\instances"))
-            {
-                Console.WriteLine("Invalid path! Try again: ");
+                Console.Write("Set path to your \"instances\" folder: ");
                 instancesPath = Console.ReadLine();
+
+                while (!Directory.Exists(instancesPath) && !instancesPath.EndsWith(@"\instances")) {
+                    Console.WriteLine("Invalid path! Try again: ");
+                    instancesPath = Console.ReadLine();
+                }
+
+                Console.Write("Mod GUID (Leave empty if not desired/available):");
+                modguid = Console.ReadLine().Replace("-", "");
+                if (modguid.Length != 32) {
+                    modguid = string.Empty;
+                }
+
+                Console.Write("Mod Name (Leave empty for vanilla):");
+                modname = Console.ReadLine();
+                if (string.IsNullOrEmpty(modname)) {
+                    modname = "vcoh";
+                }
+
             }
 
-            Console.WriteLine("Mod GUID (Leave empty if not desired/available):");
-            modguid = Console.ReadLine().Replace("-", "");
-            if (modguid.Length != 32) {
-                modguid = string.Empty;
-            }
+            LastUse lu = new() { InstancePath = instancesPath, ModGuid = modguid, OutPath = dirPath, ModName = modname };
+            File.WriteAllText("last.json", JsonSerializer.Serialize(lu));
+
+            GenericDatabase($"{modname}-abp-db.json", "abilities", (doc, path, name) => new ABP(doc, modguid, name) { Army = GetFactionFromPath(path) });
+            GenericDatabase($"{modname}-ebp-db.json", "ebps\\races", (doc, path, name) => {
+                var ebp = new EBP(doc, modguid, name) { Army = GetFactionFromPath(path) };
+                entities.Add(ebp);
+                return ebp;
+            });
+            GenericDatabase($"{modname}-sbp-db.json", "sbps\\races", (doc, path, name) => new SBP(doc, modguid, name, entities) { Army = GetFactionFromPath(path) });
+            GenericDatabase($"{modname}-cbp-db.json", "critical", (doc, path, name) => new Critical(doc, modguid, name));
+            GenericDatabase($"{modname}-ibp-db.json", "slot_item", (doc, path, name) => new SlotItem(doc, modguid, name) { Army = GetFactionFromPath(path) });
+            GenericDatabase($"{modname}-ubp-db.json", "upgrade", (doc, path, name) => new UBP(doc, modguid, name));
+            GenericDatabase($"{modname}-wbp-db.json", "weapon", (doc, path, name) => new WBP(doc, modguid, name, path));
 
             Console.WriteLine();
 
-            CreateAbilityDatabase();
-            CreateEbpsDatabase();
-            CreateSbpsDatabase();
-            CreateCriticalDatabase();
-            CreateSlotItemDatabase();
-            CreateUpgradeDatabase();
-
-            Console.WriteLine("Created databases - Press any key to exit");
-            Console.Read();
+            if (!doLastIgnoreInput) {
+                Console.WriteLine("Created databases - Press any key to exit");
+                Console.Read();
+            }
 
         }
+
     }
+
 }

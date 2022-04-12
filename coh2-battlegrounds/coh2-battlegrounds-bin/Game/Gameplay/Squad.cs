@@ -2,11 +2,14 @@
 using System.Linq;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Text.Json.Serialization;
 
 using Battlegrounds.Game.Database;
-using Battlegrounds.Game.Database.Management;
-using Battlegrounds.Json;
+using Battlegrounds.Game.Database.Extensions;
+using Battlegrounds.Game.Gameplay.DataConverters;
 using Battlegrounds.Functional;
+using Battlegrounds.Verification;
+using Battlegrounds.Lua.Generator.RuntimeServices;
 
 namespace Battlegrounds.Game.Gameplay {
 
@@ -77,147 +80,120 @@ namespace Battlegrounds.Game.Gameplay {
     /// <summary>
     /// Representation of a Squad. Implements <see cref="IJsonObject"/>.
     /// </summary>
-    public class Squad : IJsonObject {
-
-        #region Private Fields
+    [JsonConverter(typeof(SquadWriter.SquadJson))]
+    [LuaConverter(typeof(SquadWriter.SquadLua))]
+    public class Squad : IChecksumPropertyItem {
 
         private byte m_veterancyRank;
         private float m_veterancyProgress;
 
+        private string m_customName;
         private bool m_isCrewSquad;
         private DeploymentMethod m_deployMode;
         private DeploymentPhase m_deployPhase;
         private Squad m_crewSquad;
         private Blueprint m_deployBp;
 
-        private HashSet<Blueprint> m_upgrades;
-        private HashSet<Blueprint> m_slotItems;
-        private HashSet<Modifier> m_modifiers;
+        private readonly HashSet<Blueprint> m_upgrades;
+        private readonly HashSet<Blueprint> m_slotItems;
+        private readonly HashSet<Modifier> m_modifiers;
 
         private TimeSpan m_combatTime;
-
-        #endregion
 
         /// <summary>
         /// The unique squad ID used to identify the <see cref="Squad"/>.
         /// </summary>
+        [ChecksumProperty]
         public ushort SquadID { get; }
 
         /// <summary>
         /// The player who (currently) owns the <see cref="Squad"/>.
         /// </summary>
-        [JsonIgnore]
         public Player PlayerOwner { get; }
 
         /// <summary>
         /// The (crew if squad is a vehicle) <see cref="Database.Blueprint"/> the <see cref="Squad"/> is a type of.
         /// </summary>
-        [JsonReference(typeof(BlueprintManager))]
-        [JsonIgnoreIfNull]
+        [ChecksumProperty]
         public Blueprint Blueprint { get; }
 
         /// <summary>
         /// The squad or entity <see cref="Database.Blueprint"/> to support this squad.
         /// </summary>
-        [JsonBackingField(nameof(m_deployBp))]
-        [JsonReference(typeof(BlueprintManager))]
-        [JsonIgnoreIfNull]
+        [ChecksumProperty]
         public Blueprint SupportBlueprint => this.m_deployBp;
 
         /// <summary>
         /// The method to use when deploying a <see cref="Squad"/>.
         /// </summary>
-        [JsonBackingField(nameof(m_deployMode))]
-        [JsonIgnoreIfValue(DeploymentMethod.None)]
-        [JsonEnum(typeof(DeploymentMethod))]
+        [ChecksumProperty]
         public DeploymentMethod DeploymentMethod => this.m_deployMode;
 
         /// <summary>
         /// The phase in which a squad can be deployed.
         /// </summary>
-        [JsonBackingField(nameof(m_deployPhase))]
-        [JsonIgnoreIfValue(DeploymentPhase.PhaseNone)]
-        [JsonEnum(typeof(DeploymentPhase))]
+        [ChecksumProperty]
         public DeploymentPhase DeploymentPhase => this.m_deployPhase;
+
+        /// <summary>
+        /// Get the custom name of the squad. This is null if no name is defined.
+        /// </summary>
+        [ChecksumProperty]
+        public string CustomName => this.m_customName;
 
         /// <summary>
         /// The squad data for the crew.
         /// </summary>
-        [JsonBackingField(nameof(m_crewSquad))]
-        [JsonIgnoreIfNull]
+        [ChecksumProperty]
         public Squad Crew => this.m_crewSquad;
 
         /// <summary>
         /// Is the <see cref="Squad"/> the crew for another <see cref="Squad"/> instance.
         /// </summary>
-        [JsonBackingField(nameof(m_isCrewSquad))]
-        [JsonIgnoreIfValue(false)]
+        [ChecksumProperty]
         public bool IsCrew => this.m_isCrewSquad;
 
         /// <summary>
         /// The <see cref="Blueprint"/> in a <see cref="SquadBlueprint"/> form.
         /// </summary>
         /// <exception cref="InvalidCastException"/>
-        [JsonIgnore]
         public SquadBlueprint SBP => this.Blueprint as SquadBlueprint;
 
         /// <summary>
         /// The achieved veterancy rank of a <see cref="Squad"/>.
         /// </summary>
-        [JsonBackingField(nameof(m_veterancyRank))]
-        [JsonIgnoreIfValue((byte)0)]
+        [ChecksumProperty]
         public byte VeterancyRank => this.m_veterancyRank;
 
         /// <summary>
         /// The current veterancy progress of a <see cref="Squad"/>.
         /// </summary>
-        [JsonBackingField(nameof(m_veterancyProgress))]
-        [JsonIgnoreIfValue(0.0f)]
+        [ChecksumProperty]
         public float VeterancyProgress => this.m_veterancyProgress;
 
         /// <summary>
         /// The current upgrades applied to a <see cref="Squad"/>.
         /// </summary>
-        [JsonBackingField(nameof(m_upgrades))]
-        [JsonReference(typeof(BlueprintManager))]
-        [JsonIgnoreIfEmpty]
+        [ChecksumProperty(IsCollection = true)]
         public ImmutableHashSet<Blueprint> Upgrades => this.m_upgrades.ToImmutableHashSet();
 
         /// <summary>
         /// The current slot items carried by the <see cref="Squad"/>.
         /// </summary>
-        [JsonBackingField(nameof(m_slotItems))]
-        [JsonReference(typeof(BlueprintManager))]
-        [JsonIgnoreIfEmpty]
+        [ChecksumProperty(IsCollection = true)]
         public ImmutableHashSet<Blueprint> SlotItems => this.m_slotItems.ToImmutableHashSet();
 
         /// <summary>
         /// Get the current modifiers applied to the <see cref="Squad"/>.
         /// </summary>
-        [JsonBackingField(nameof(m_modifiers))]
-        [JsonIgnoreIfEmpty]
+        [ChecksumProperty(IsCollection = true)]
         public ImmutableHashSet<Modifier> Modifiers => this.m_modifiers.ToImmutableHashSet();
 
         /// <summary>
         /// Get the total amount of time the <see cref="Squad"/> has been in combat.
         /// </summary>
-        [JsonBackingField(nameof(m_combatTime))]
+        [ChecksumProperty]
         public TimeSpan CombatTime => this.m_combatTime;
-
-        /// <summary>
-        /// Create a basic <see cref="Squad"/> instance without any identifying values.
-        /// </summary>
-        public Squad() {
-            this.SquadID = 0;
-            this.PlayerOwner = null;
-            this.Blueprint = null;
-            this.m_slotItems = new HashSet<Blueprint>();
-            this.m_upgrades = new HashSet<Blueprint>();
-            this.m_modifiers = new HashSet<Modifier>();
-            this.m_deployMode = DeploymentMethod.None;
-            this.m_deployPhase = DeploymentPhase.PhaseNone;
-            this.m_crewSquad = null;
-        }
 
         /// <summary>
         /// Create new <see cref="Squad"/> instance with a unique squad ID, a <see cref="Player"/> owner and a <see cref="Database.Blueprint"/>.
@@ -235,6 +211,7 @@ namespace Battlegrounds.Game.Gameplay {
             this.m_deployMode = DeploymentMethod.None;
             this.m_deployPhase = DeploymentPhase.PhaseNone;
             this.m_crewSquad = null;
+            this.m_customName = string.Empty;
         }
 
         /// <summary>
@@ -299,7 +276,7 @@ namespace Battlegrounds.Game.Gameplay {
         /// Add an <see cref="UpgradeBlueprint"/> to the <see cref="Squad"/> if it doesn't already have the upgrade.
         /// </summary>
         /// <param name="upgradeBlueprint">The <see cref="UpgradeBlueprint"/> to add to squad's internal list of upgrades.</param>
-        public void AddUpgradeIfNotFound(UpgradeBlueprint upgradeBlueprint) 
+        public void AddUpgradeIfNotFound(UpgradeBlueprint upgradeBlueprint)
             => this.m_upgrades.Contains(upgradeBlueprint).IfFalse().Then(() => this.m_upgrades.Add(upgradeBlueprint));
 
         /// <summary>
@@ -318,7 +295,7 @@ namespace Battlegrounds.Game.Gameplay {
         /// 
         /// </summary>
         /// <param name="modifierName"></param>
-        public void RemoveModifier(string modifierName) => this.m_modifiers.RemoveWhere(x => x.Name.CompareTo(modifierName) == 0);
+        public void RemoveModifier(string modifierName) => this.m_modifiers.RemoveWhere(x => x.Name == modifierName);
 
         /// <summary>
         /// Increase the amount of combat time the <see cref="Squad"/> has had.
@@ -328,24 +305,32 @@ namespace Battlegrounds.Game.Gameplay {
             => this.m_combatTime += time;
 
         /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="time"></param>
+        public void SetCombatTime(TimeSpan time)
+            => this.m_combatTime = time;
+
+        /// <summary>
+        /// Set the custom name of the squad.
+        /// </summary>
+        /// <param name="customName">The custom name to set. A null value disable the custom name.</param>
+        public void SetName(string customName)
+            => this.m_customName = customName;
+
+        /// <summary>
         /// Calculate the actual cost of a <see cref="Squad"/>.
         /// </summary>
         /// <returns>The cost of the squad.</returns>
-        /// <exception cref="NullReferenceException"/>
-        public Cost GetCost() {
+        public CostExtension GetCost() 
+            => ComputeFullCost(this.SBP.Cost, this.VeterancyRank, this.m_upgrades.Select(x => x as UpgradeBlueprint), this.m_deployBp as SquadBlueprint, this.DeploymentMethod);
 
-            Cost c = new Cost(SBP.Cost.Manpower, SBP.Cost.Munitions, SBP.Cost.Fuel, SBP.Cost.FieldTime);
-            c = this.m_upgrades.Select(x => (x as UpgradeBlueprint).Cost).Aggregate(c, (a, b) => a + b);
-
-            if (this.m_deployBp is SquadBlueprint sbp) {
-                c += sbp.Cost * (this.DeploymentMethod == DeploymentMethod.DeployAndExit ? 0.25f : 0.65f);
-            }
-
-            // TODO: More here
-
-            return c;
-
-        }
+        /// <summary>
+        /// Get the display name of the squad.
+        /// </summary>
+        /// <returns>If squad has a custom display name, it is returned; Otherwise the <see cref="SquadBlueprint.UI"/> screen name is returned.</returns>
+        public string GetName()
+            => string.IsNullOrEmpty(this.m_customName) ? this.SBP.UI.ScreenName : this.m_customName;
 
         /// <summary>
         /// Get the category the squad belongs to. This may change depending on certain parameters.
@@ -356,7 +341,7 @@ namespace Battlegrounds.Game.Gameplay {
 
             if (simplified) {
 
-                if (this.SBP.IsAntiTank || this.SBP.IsHeavyArtillery || this.SBP.Types.Contains("mortar") || this.SBP.Types.Contains("hmg")) {
+                if (this.SBP.Types.IsAntiTank || this.SBP.Types.IsHeavyArtillery || this.SBP.Types.Contains("mortar") || this.SBP.Types.Contains("hmg")) {
                     return "team_weapon";
                 } else if (this.SBP.Types.Contains("vehicle")) {
                     return "vehicle";
@@ -371,34 +356,46 @@ namespace Battlegrounds.Game.Gameplay {
         }
 
         /// <summary>
+        /// Returns a string that represents the current object.
+        /// </summary>
+        /// <returns>A string that represents the current object.</returns>
+        public override string ToString() => $"{this.SBP.Name}${this.SquadID}";
+
+        /// <summary>
         /// 
         /// </summary>
-        /// <param name="squad"></param>
-        [Obsolete("Please use designed set methods instead of this method.")]
-        public void ApplyBattlefieldSquad(Squad squad) {
+        /// <param name="initialCost"></param>
+        /// <param name="rank"></param>
+        /// <param name="upgrades"></param>
+        /// <param name="transport"></param>
+        /// <param name="deploymentMethod"></param>
+        /// <returns></returns>
+        public static CostExtension ComputeFullCost(CostExtension initialCost, byte rank, IEnumerable<UpgradeBlueprint> upgrades, SquadBlueprint transport, DeploymentMethod deploymentMethod) {
 
-            // Set the squad veterancy
-            this.SetVeterancy(squad.VeterancyRank, squad.VeterancyProgress);
+            CostExtension c = new(initialCost.Manpower, initialCost.Munitions, initialCost.Fuel, initialCost.FieldTime);
+            c = upgrades.Select(x => x.Cost).Aggregate(c, (a, b) => a + b);
 
-            // Update squad data
-            this.m_upgrades = squad.m_upgrades;
-            this.m_slotItems = squad.m_slotItems;
-            this.m_modifiers = squad.m_modifiers;
+            if (transport is SquadBlueprint sbp) {
+                c += sbp.Cost * GetDeployMethodTransportCostModifier(deploymentMethod);
+            }
+
+            // TODO: More here
+
+            return c;
 
         }
 
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="method"></param>
         /// <returns></returns>
-        public string ToJsonReference() => this.SquadID.ToString();
+        public static float GetDeployMethodTransportCostModifier(DeploymentMethod method) => method switch {
+            DeploymentMethod.DeployAndExit => 0.25f,
+            DeploymentMethod.DeployAndStay => 0.65f,
+            _ => 0.0f
+        };
 
-        /// <summary>
-        /// Returns a string that represents the current object.
-        /// </summary>
-        /// <returns>A string that represents the current object.</returns>
-        public override string ToString() => $"{this.SBP.Name}${this.SquadID}";
-        
     }
 
 }

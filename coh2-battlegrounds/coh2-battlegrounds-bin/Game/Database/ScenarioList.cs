@@ -4,21 +4,23 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Text.Json;
 
 using Battlegrounds.Functional;
 using Battlegrounds.Compiler;
-using Battlegrounds.Json;
 using Battlegrounds.Game.Database.Management;
 using Battlegrounds.Lua.Debugging;
+using System.Globalization;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Battlegrounds.Game.Database {
-    
+
     /// <summary>
     /// A list of all available scenarios that can be played.
     /// </summary>
     public static class ScenarioList {
 
-        private static Dictionary<string, Scenario> __scenarios;
+        private static Dictionary<string, Scenario>? __scenarios;
 
         /// <summary>
         /// Create and load a basic list of scenarios.
@@ -26,43 +28,23 @@ namespace Battlegrounds.Game.Database {
         public static void LoadList() {
 
             // Create the dictionary
-            __scenarios = new Dictionary<string, Scenario>();
+            __scenarios = new();
 
             try {
 
-                if (JsonParser.Parse($"{DatabaseManager.SolveDatabasepath()}vcoh-map-db.json").FirstOrDefault() is ScenarioRecord record) {
-
-                    foreach (IJsonElement jsonElement in record.Scenarios) {
-
-                        if (jsonElement is Scenario scenario) {
-                            if (!__scenarios.TryAdd(Path.GetFileNameWithoutExtension(scenario.RelativeFilename), scenario)) {
-                                Trace.WriteLine($"Failed to add duplicate vcoh scenario '{scenario.RelativeFilename}'", "ScenarioList::LoadList");
-                            }
-                        }
-
+                string rawJsonDb = $"{DatabaseManager.SolveDatabasepath()}vcoh-map-db.json";
+                LoadWorkshopScenarioDatabase(rawJsonDb).ForEach(x => {
+                    if (!__scenarios.TryAdd(Path.GetFileNameWithoutExtension(x.RelativeFilename), x)) {
+                        Trace.WriteLine($"Failed to add duplicate vcoh scenario '{x.RelativeFilename}'", "ScenarioList::LoadList");
                     }
+                });
 
-                } else {
-
-                    throw new InvalidDataException("The ScenarioList database was set-up incorrectly!");
-
-                }
-
-                try {
-                    Task.Run(HandleWorkshopFiles);
-                } catch (Exception e) {
-                    Trace.WriteLine(e);
-                }
+                _ = Task.Run(HandleWorkshopFiles);
 
             } catch (Exception e) {
                 Trace.WriteLine(e);
             }
 
-        }
-
-        public record ScenarioRecord(List<Scenario> Scenarios) : IJsonObject {
-            public string ToJsonReference() => throw new NotImplementedException();
-            public ScenarioRecord() : this(new List<Scenario>()) { }
         }
 
         private static void HandleWorkshopFiles() {
@@ -79,11 +61,8 @@ namespace Battlegrounds.Game.Database {
             // If more than 0, update the database
             if (newWorkshopEntries > 0) {
 
-                // Get the record
-                IJsonObject rec = new ScenarioRecord(workshopScenarios);
-
                 // Save database
-                File.WriteAllText(workshop_dbpath, rec.Serialize());
+                File.WriteAllText(workshop_dbpath, JsonSerializer.Serialize(workshopScenarios));
 
                 // Log how many new workship maps were added
                 Trace.WriteLine($"Added {newWorkshopEntries} workshop maps.");
@@ -98,21 +77,11 @@ namespace Battlegrounds.Game.Database {
 
         private static List<Scenario> LoadWorkshopScenarioDatabase(string workshop_dbpath) {
 
-            List<Scenario> workshopScenarios = new List<Scenario>();
+            List<Scenario> workshopScenarios = new();
             if (File.Exists(workshop_dbpath)) {
-                if (JsonParser.Parse(workshop_dbpath).FirstOrDefault() is ScenarioRecord array) {
-                    foreach (IJsonElement jsonElement in array.Scenarios) {
-
-                        if (jsonElement is Scenario scenario) {
-                            workshopScenarios.Add(scenario);
-                        }
-
-                    }
-                } else {
-
-                    throw new InvalidDataException("The ScenarioList database was set-up incorrectly!");
-
-                }
+                string rawJson = File.ReadAllText(workshop_dbpath);
+                var scenarios = JsonSerializer.Deserialize<Scenario[]?>(rawJson);
+                scenarios?.ForEach(x => workshopScenarios.Add(x));
             }
 
             return workshopScenarios;
@@ -129,6 +98,12 @@ namespace Battlegrounds.Game.Database {
         }
 
         private static void LoadNewWorkshopScenarios(List<Scenario> workshopScenarios, out int newWorkshopEntries) {
+
+            // Bail if no scenario list
+            if (__scenarios is null) {
+                newWorkshopEntries = 0;
+                return;
+            }
 
             // Set new entry counter
             newWorkshopEntries = 0;
@@ -148,14 +123,14 @@ namespace Battlegrounds.Game.Database {
 
             // If the directory for map icons doesn't exist, create it
             if (!Directory.Exists($"usr\\mods\\map_icons")) {
-                Directory.CreateDirectory($"usr\\mods\\map_icons");
+                _ = Directory.CreateDirectory($"usr\\mods\\map_icons");
             }
 
             // Loop through all the .sga files in the subscriptions folder
             for (int i = 0; i < files.Length; i++) {
 
                 string sga = Path.GetFileNameWithoutExtension(files[i]);
-                if (!__scenarios.Any(x => x.Value.SgaName.CompareTo(sga) == 0) && !workshopScenarios.Any(x => x.SgaName.CompareTo(sga) == 0)) {
+                if (!__scenarios.Any(x => x.Value.SgaName == sga) && !workshopScenarios.Any(x => x.SgaName == sga)) {
 
                     if (!Archiver.Extract(files[i], "~tmp\\~workshop-extract")) {
                         Trace.WriteLine($"Failed to extraxt workshop scenario {sga}.");
@@ -199,20 +174,20 @@ namespace Battlegrounds.Game.Database {
 
         }
 
-        public static Scenario GetScenarioFromDirectory(string scenarioDirectoryPath, string sga = "MPScenarios.sga", string mmSavePath = "bin\\gfx\\map_icons\\") {
+        public static Scenario? GetScenarioFromDirectory(string scenarioDirectoryPath, string sga = "MPScenarios.sga", string mmSavePath = "bin\\gfx\\map_icons\\") {
 
             // If valid scenario path
             if (Directory.Exists(scenarioDirectoryPath)) {
 
                 // Create minimap save path if not found
                 if (!Directory.Exists(mmSavePath)) {
-                    Directory.CreateDirectory(mmSavePath);
+                    _ = Directory.CreateDirectory(mmSavePath);
                 }
 
                 // Get scenario files
                 string[] scenarioFiles = Directory.GetFiles(scenarioDirectoryPath);
-                string info = scenarioFiles.FirstOrDefault(x => x.EndsWith(".info"));
-                string opt = scenarioFiles.FirstOrDefault(x => x.EndsWith(".options"));
+                string? info = scenarioFiles.FirstOrDefault(x => x.EndsWith(".info", false, CultureInfo.InvariantCulture));
+                string? opt = scenarioFiles.FirstOrDefault(x => x.EndsWith(".options", false, CultureInfo.InvariantCulture));
 
                 // Make sure there's actually a info file
                 if (string.IsNullOrEmpty(info)) {
@@ -225,7 +200,7 @@ namespace Battlegrounds.Game.Database {
                 }
 
                 // Define scenario variable
-                Scenario scen = null;
+                Scenario? scen = null;
 
                 try {
 
@@ -235,7 +210,8 @@ namespace Battlegrounds.Game.Database {
                     };
 
                     // Find the index of the minimap
-                    int minimapFile = scenarioFiles.IndexOf(x => x.EndsWith("_preview.tga")).IfTrue(x => x == -1).Then(x => scenarioFiles.IndexOf(x => x.EndsWith("_mm.tga")));
+                    int minimapFile = scenarioFiles.IndexOf(x => x.EndsWith("_preview.tga", false, CultureInfo.InvariantCulture))
+                        .IfTrue(x => x == -1).Then(x => scenarioFiles.IndexOf(x => x.EndsWith("_mm.tga", false, CultureInfo.InvariantCulture)));
 
                     // Make sure it's a valid index
                     if (minimapFile != -1) {
@@ -272,6 +248,12 @@ namespace Battlegrounds.Game.Database {
         /// <param name="scenario">The new scenario to add.</param>
         /// <returns>Will return true if the <see cref="Scenario"/> was added. Otherwise false - <see cref="Scenario"/> already exists.</returns>
         public static bool AddScenario(Scenario scenario) {
+            
+            // Make sure we have something to add scenario to
+            if (__scenarios is null)
+                return false;
+
+            // Try add scenario
             string relpath = Path.GetFileNameWithoutExtension(scenario.RelativeFilename);
             if (!__scenarios.ContainsKey(relpath)) {
                 __scenarios.Add(relpath, scenario);
@@ -279,6 +261,7 @@ namespace Battlegrounds.Game.Database {
             } else {
                 return false;
             }
+
         }
 
         /// <summary>
@@ -288,14 +271,27 @@ namespace Battlegrounds.Game.Database {
         /// <returns>The found scenario. If no matching scenario is found, an exception is thrown.</returns>
         /// <exception cref="ArgumentNullException"/>
         /// <exception cref="KeyNotFoundException"/>
-        public static Scenario FromFilename(string filename) => __scenarios[filename];
+        public static Scenario? FromFilename(string filename) => __scenarios is not null ? __scenarios[filename] : null;
 
         /// <summary>
         /// 
         /// </summary>
         /// <param name="filename"></param>
         /// <returns></returns>
-        public static Scenario FromRelativeFilename(string filename) => __scenarios.FirstOrDefault(x => x.Value.RelativeFilename == filename).Value;
+        public static Scenario? FromRelativeFilename(string filename) => __scenarios?.FirstOrDefault(x => x.Value.RelativeFilename == filename).Value;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="filename"></param>
+        /// <returns></returns>
+        public static string ScenarioNameFromRelativeFilename(string filename) {
+            if (FromRelativeFilename(filename) is Scenario scen) {
+                return scen.Name;
+            } else {
+                return filename;
+            }
+        }
 
         /// <summary>
         /// 
@@ -303,7 +299,11 @@ namespace Battlegrounds.Game.Database {
         /// <param name="identifier"></param>
         /// <param name="scenario"></param>
         /// <returns></returns>
-        public static bool TryFindScenario(string identifier, out Scenario scenario) {
+        public static bool TryFindScenario(string identifier, [NotNullWhen(true)] out Scenario? scenario) {
+            scenario = null;
+            if (__scenarios is null) {
+                return false;
+            }
             if (__scenarios.ContainsKey(identifier)) {
                 scenario = __scenarios[identifier];
                 return true;
@@ -313,7 +313,7 @@ namespace Battlegrounds.Game.Database {
             }
         }
 
-        public static List<Scenario> GetList() => __scenarios.Values.ToList();
+        public static List<Scenario> GetList() => __scenarios?.Values.Where(x => x.HasValidInfoOrOptionsFile).ToList() ?? new();
 
     }
 

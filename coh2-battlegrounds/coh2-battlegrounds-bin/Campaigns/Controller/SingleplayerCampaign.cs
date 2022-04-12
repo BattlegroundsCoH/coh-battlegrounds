@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+
 using Battlegrounds.Campaigns.AI;
 using Battlegrounds.Campaigns.API;
 using Battlegrounds.Campaigns.Map;
@@ -24,6 +25,7 @@ using Battlegrounds.Game.Match.Startup;
 using Battlegrounds.Gfx;
 using Battlegrounds.Locale;
 using Battlegrounds.Lua;
+using Battlegrounds.Modding;
 using Battlegrounds.Util.Coroutines;
 using Battlegrounds.Util.Lists;
 
@@ -583,14 +585,14 @@ namespace Battlegrounds.Campaigns.Controller {
                 formations[i].Regiments.ForEach(x => {
                     x.FirstCompany().Units.ForEach(u => {
                         double priority = 0.05;
-                        if (u.SBP.IsAntiTank) {
+                        if (u.SBP.Types.IsAntiTank) {
                             priority += isDefence ? 0.7 : 0.2;
-                        } else if (u.SBP.IsInfantry) {
+                        } else if (u.SBP.Types.IsInfantry) {
                             priority += isDefence ? 0.8 : 0.6;
-                        } else if (u.SBP.IsVehicle) {
+                        } else if (u.SBP.Types.IsVehicle) {
                             priority += isDefence ? 0.3 : 0.5;
                         }
-                        if (u.SBP.IsCommandUnit) {
+                        if (u.SBP.Types.IsCommandUnit) {
                             priority = 1.0;
                         }
                         squads.Add(u, priority);
@@ -602,16 +604,17 @@ namespace Battlegrounds.Campaigns.Controller {
         }
 
         private static SessionInfo GetSessionFromEngagementData(CampaignEngagementData data) {
-            SessionParticipant[] CreateTeam(bool isAttacker, List<Squad>[] companies, SessionParticipantTeam team) {
+            byte uidPlayerIndex = 0;
+            SessionParticipant[] CreateTeam(bool isAttacker, List<Squad>[] companies, ParticipantTeam team) {
                 SessionParticipant[] participants = new SessionParticipant[companies.Length];
                 var diffs = isAttacker ? data.attackingDifficulties : data.defendingDifficulties;
                 for (int i = 0; i < companies.Length; i++) {
                     var company = ICampaignController.GetCompanyFromEngagementData(data, isAttacker, i);
                     if (diffs[i] == AIDifficulty.Human) {
                         var usr = BattlegroundsInstance.Steam.User;
-                        participants[i] = new SessionParticipant(usr.Name, usr.ID, company, team, (byte)i);
+                        participants[i] = new SessionParticipant(usr.Name, usr.ID, company, team, (byte)i, uidPlayerIndex++);
                     } else {
-                        participants[i] = new SessionParticipant(diffs[i], company, team, (byte)i);
+                        participants[i] = new SessionParticipant(diffs[i], company, team, (byte)i, uidPlayerIndex++);
                     }
                 }
                 return participants;
@@ -619,14 +622,14 @@ namespace Battlegrounds.Campaigns.Controller {
             bool areAlliesAttacking = data.attackers == CampaignArmyTeam.TEAM_ALLIES;
             SessionInfo info = new SessionInfo() {
                 SelectedScenario = data.scenario,
-                SelectedGamemode = WinconditionList.GetWinconditionByName(WinconditionList.VictoryPoints), // TODO: Set according to CampaignEngagementData
+                SelectedGamemode = WinconditionList.GetGamemodeByName(ModManager.GetPackage("mod_bg").GamemodeGUID, "vp"), // TODO: Set according to CampaignEngagementData
                 SelectedGamemodeOption = 50, // TODO: Set according to CampaignEngagementData
-                SelectedTuningMod = BattlegroundsInstance.BattleGroundsTuningMod,
+                SelectedTuningMod = ModManager.GetMod<ITuningMod>(ModManager.GetPackage("mod_bg").TuningGUID),
                 DefaultDifficulty = AIDifficulty.AI_Hard,
                 FillAI = false,
                 IsOptionValue = true, // TODO: Set according to CampaignEngagementData
-                Allies = CreateTeam(areAlliesAttacking, areAlliesAttacking ? data.attackingCompanyUnits : data.defendingCompanyUnits, SessionParticipantTeam.TEAM_ALLIES),
-                Axis = CreateTeam(!areAlliesAttacking, !areAlliesAttacking ? data.attackingCompanyUnits : data.defendingCompanyUnits, SessionParticipantTeam.TEAM_AXIS)
+                Allies = CreateTeam(areAlliesAttacking, areAlliesAttacking ? data.attackingCompanyUnits : data.defendingCompanyUnits, ParticipantTeam.TEAM_ALLIES),
+                Axis = CreateTeam(!areAlliesAttacking, !areAlliesAttacking ? data.attackingCompanyUnits : data.defendingCompanyUnits, ParticipantTeam.TEAM_AXIS)
             };
             return info;
         }

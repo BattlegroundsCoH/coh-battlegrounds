@@ -5,32 +5,33 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:BattlegroundsApp.Views"
              xmlns:bg="clr-namespace:BattlegroundsApp"
-             mc:Ignorable="d" Background="White"
+             xmlns:converters="clr-namespace:BattlegroundsApp.Utilities.Converters"
+             mc:Ignorable="d" Background="#273441"
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
 
+        <Grid.Resources>
+            <!-- LocaleConverter -->
+            <converters:LocaleKeyToStringConverter x:Key="LocaleConvertor"/>
+        </Grid.Resources>
+
         <Grid.RowDefinitions>
-            <RowDefinition Height="auto"/>
-            <RowDefinition Height="auto"/>
-            <RowDefinition Height="auto"/>
-            <RowDefinition Height="auto"/>
-            <RowDefinition Height="auto"/>
-            <RowDefinition Height="auto"/>
             <RowDefinition Height="*"/>
+            <RowDefinition Height="36"/>
         </Grid.RowDefinitions>
 
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="auto"/>
-            <ColumnDefinition Width="auto"/>
-            <ColumnDefinition Width="auto"/>
-            <ColumnDefinition Width="auto"/>
-            <ColumnDefinition Width="auto"/>
-            <ColumnDefinition Width="auto"/>
             <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="auto"/>
+            <ColumnDefinition Width="auto"/>
+            <ColumnDefinition Width="auto"/>
         </Grid.ColumnDefinitions>
 
         <!-- Row 0 -->
-        <ListView x:Name="GameLobbyList" Grid.Row="0" Grid.Column="0" Grid.RowSpan="5" Grid.ColumnSpan="5" Height="400" Width="800">
+        <ListView x:Name="GameLobbyList" Grid.Row="0" Grid.Column="0" 
+                  Grid.ColumnSpan="4"
+                  >
+            <!-- Style="{StaticResource ListViewStyle}" -->
             <ListView.View>
                 <GridView>
                     <GridView.ColumnHeaderContainerStyle>
@@ -38,59 +39,29 @@
                             <Setter Property="IsHitTestVisible" Value="False"/>
                         </Style>
                     </GridView.ColumnHeaderContainerStyle>
-                    <GridViewColumn Header="Name" Width="320" DisplayMemberBinding="{Binding Name}"/>
-                    <GridViewColumn Header="Gamemode" Width="175" DisplayMemberBinding="{Binding TranslatedMode}"/>
-                    <GridViewColumn Header="State" Width="125" DisplayMemberBinding="{Binding TranslatedState}"/>
-                    <GridViewColumn Header="Players" Width="100" DisplayMemberBinding="{Binding CapacityString}"/>
-                    <GridViewColumn Header="Password" Width="80" DisplayMemberBinding="{Binding HasPassword}"/>
+                    <GridViewColumn Header="{Binding NameListWiewHeader, Converter={StaticResource LocaleConvertor}}" Width="320" DisplayMemberBinding="{Binding Name}"/>
+                    <GridViewColumn Header="{Binding GamemodeListWiewHeader, Converter={StaticResource LocaleConvertor}}" Width="175" DisplayMemberBinding="{Binding TranslatedMode}"/>
+                    <GridViewColumn Header="{Binding StateListWiewHeader, Converter={StaticResource LocaleConvertor}}" Width="125" DisplayMemberBinding="{Binding TranslatedState}"/>
+                    <GridViewColumn Header="{Binding PlayersListWiewHeader, Converter={StaticResource LocaleConvertor}}" Width="100" DisplayMemberBinding="{Binding CapacityString}"/>
+                    <GridViewColumn Header="{Binding PasswordListWiewHeader, Converter={StaticResource LocaleConvertor}}" Width="80" DisplayMemberBinding="{Binding HasPassword}"/>
                 </GridView>
             </ListView.View>
         </ListView>
 
         <!-- Row 1 -->
+        <Button x:Name="refreshLobbyListButton" Grid.Row="5" 
+                Grid.Column="1" 
+                Content="{Binding RefreshButtonContent, Converter={StaticResource LocaleConvertor}}" 
+                Margin="0,5,0,0" Click="RefreshLobbyList_Click"
+                Style="{StaticResource MainButtonStyle}"/>
 
-        <!-- Row 2 -->
+        <Button x:Name="hostGameButton" Grid.Row="5" Grid.Column="2" Content="{Binding HostGameButtonContent, Converter={StaticResource LocaleConvertor}}" Margin="5,5,0,0"
+                Command="{Binding HostGameCommand}"
+                Style="{StaticResource MainButtonStyle}"/>
 
-        <!-- Row 3 -->
-
-        <!-- Row 4 -->
-
-        <!-- Row 5 -->
-        <Button x:Name="refreshLobbyListButton" Grid.Row="5" Grid.Column="2" Content="Refresh" Margin="0,5,0,0" Click="RefreshLobbyList_Click">
-            <Button.Style>
-                <Style TargetType="{x:Type Button}">
-                    <Style.Triggers>
-                        <EventTrigger RoutedEvent="Button.Click">
-                            <EventTrigger.Actions>
-                                <BeginStoryboard>
-                                    <Storyboard>
-                                        <BooleanAnimationUsingKeyFrames Storyboard.TargetProperty="IsEnabled">
-                                            <DiscreteBooleanKeyFrame KeyTime="00:00:00" Value="False"/>
-                                            <DiscreteBooleanKeyFrame KeyTime="00:00:10" Value="True"/>
-                                        </BooleanAnimationUsingKeyFrames>
-                                    </Storyboard>
-                                </BeginStoryboard>
-                            </EventTrigger.Actions>
-                        </EventTrigger>
-                    </Style.Triggers>
-                </Style>
-            </Button.Style>
-        </Button>
-
-        <Button x:Name="hostGameButton" Grid.Row="5" Grid.Column="3" Content="Host Game" Margin="5,5,0,0"
-                Command="{Binding HostGameCommand}"/>
-
-        <Button x:Name="joinGameButton" Grid.Row="5" Grid.Column="4" Content="Join Game" Margin="5,5,0,0" Click="JoinLobby_Click">
-            <Button.Style>
-                <Style TargetType="{x:Type Button}">
-                    <Style.Triggers>
-                        <DataTrigger Binding="{Binding SelectedItem, ElementName=GameLobbyList}" Value="{x:Null}">
-                            <Setter Property="IsEnabled" Value="False"/>
-                        </DataTrigger>
-                    </Style.Triggers>
-                </Style>
-            </Button.Style>
-        </Button>
+        <Button x:Name="joinGameButton" Grid.Row="5" Grid.Column="3" Content="{Binding JoinGameButtonContent, Converter={StaticResource LocaleConvertor}}" Margin="5,5,0,0" 
+                Click="JoinLobby_Click"
+                Style="{StaticResource MainButtonStyle}"/>
 
     </Grid>
 </bg:ViewState>

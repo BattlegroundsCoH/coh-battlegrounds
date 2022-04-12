@@ -4,9 +4,15 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:BattlegroundsApp.Dialogs.RenameCopyDialog"
+             xmlns:converters="clr-namespace:BattlegroundsApp.Utilities.Converters"
              mc:Ignorable="d" 
              d:DesignHeight="150" d:DesignWidth="250">
     <Grid>
+
+        <Grid.Resources>
+            <!-- LocaleConverter -->
+            <converters:LocaleKeyToStringConverter x:Key="LocaleConvertor"/>
+        </Grid.Resources>
 
         <Grid.RowDefinitions>
             <RowDefinition Height="20"/>
@@ -27,15 +33,15 @@
         </Grid.ColumnDefinitions>
 
         <!-- Row 1 -->
-        <TextBlock Grid.Row="1" Grid.Column="1" Text="Company Name:"/>
+        <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding CompanyNameTextBlockText, Converter={StaticResource LocaleConvertor}}"/>
 
         <!-- Row 2 -->
         <TextBox x:Name="companyName" Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2" Width="200" Text="{Binding CompanyName, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
 
         <!-- Row 3 -->
-        <Button Grid.Row="3" Grid.Column="1" Content="{Binding ButtonName}" Width="75" IsEnabled="{Binding ElementName=companyName, Path=Text.Length, Mode=OneWay}"
+        <Button Grid.Row="3" Grid.Column="1" Content="{Binding RenameCopyButtonContent, Converter={StaticResource LocaleConvertor}}" Width="75" IsEnabled="{Binding ElementName=companyName, Path=Text.Length, Mode=OneWay}"
                 Command="{Binding RenameCopyCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}"/>
-        <Button Grid.Row="3" Grid.Column="2" Content="Cancel" Width="75"
+        <Button Grid.Row="3" Grid.Column="2" Content="{Binding CancelButtonContent, Converter={StaticResource LocaleConvertor}}" Width="75"
                 Command="{Binding CancelCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}"/>
 
     </Grid>

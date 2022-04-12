@@ -1,15 +1,18 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Text;
 using System.Threading.Tasks;
 
 using Battlegrounds.Compiler;
 using Battlegrounds.Compiler.Source;
+using Battlegrounds.Functional;
 using Battlegrounds.Game.Match.Data;
 using Battlegrounds.Networking.Server;
 
 namespace Battlegrounds.Game.Match {
-    
+
     /// <summary>
     /// Static utility class for working with <see cref="Session"/> data.
     /// </summary>
@@ -19,24 +22,43 @@ namespace Battlegrounds.Game.Match {
         /// Fully compile a <see cref="Session"/> into a .sga file using a concrete <see cref="ISessionCompiler"/> instance.
         /// </summary>
         /// <param name="compiler">The <see cref="ISessionCompiler"/> compiler to use when compiling session data.</param>
-        /// <param name="session">The <see cref="Session"/> instance to compile</param>
-        /// <returns>Will return <see langword="true"/> if <see cref="Session"/> was compiled into a .sga file. Otherwise <see langword="false"/>.</returns>
-        public static bool CompileSession(ISessionCompiler compiler, Session session, ServerAPI serverAPI) {
+        /// <param name="session">The <see cref="ISession"/> instance to compile</param>
+        /// <returns>Will return <see langword="true"/> if <see cref="ISession"/> was compiled into a .sga file. Otherwise <see langword="false"/>.</returns>
+        public static bool CompileSession(ISessionCompiler compiler, ISession session, ServerAPI serverAPI) {
 
             // Get the scar file
             string sessionScarFile = BattlegroundsInstance.GetRelativePath(BattlegroundsPaths.SESSION_FOLDER, "session.scar");
+
+            // Conatiner for additional files to include
+            List<WinconditionSourceFile> includeFiles = new();
 
             // Try the following
             try {
 
                 // Log compiler
-                Trace.WriteLine($"Compiling \"{sessionScarFile}\" into a .sga archive using a '{compiler}' compiler", "SessionCompiler");
-
-                // Compile the session
-                string luaSessionOutput = compiler.CompileSession(session);
+                Trace.WriteLine($"Compiling \"{sessionScarFile}\" into scar file useing '{compiler.GetType().Name}'", nameof(SessionUtility));
 
                 // Write contents to session.scar
-                File.WriteAllText(sessionScarFile, luaSessionOutput);
+                File.WriteAllText(sessionScarFile, compiler.CompileSession(session));
+
+                // If supply system exists
+                if (session.Settings.GetCastValueOrDefault("sypply_system", false) is true) {
+
+                    // Get the supply file
+                    string sessionSupplyScarFile = BattlegroundsInstance.GetRelativePath(BattlegroundsPaths.SESSION_FOLDER, "session_supply.scar");
+
+                    // Log compiler
+                    Trace.WriteLine($"Compiling \"{sessionSupplyScarFile}\" into a scar file using '{compiler.GetType().Name}'", nameof(SessionUtility));
+
+#if DEBUG
+                    // Write contents to session_supply.scar
+                    File.WriteAllText(sessionSupplyScarFile, compiler.CompileSupplyData(session));
+#endif
+
+                    // Add supply file to include files
+                    includeFiles.Add(new("auxiliary_scripts\\session_supply.scar", Encoding.UTF8.GetBytes(compiler.CompileSupplyData(session))));
+
+                }
 
             } catch {
 
@@ -51,21 +73,24 @@ namespace Battlegrounds.Game.Match {
             // log the source finder type
             Trace.WriteLine($"Using {sourceFinder} as wincondition code source", "SessionCompiler");
 
+            // Get the input directory
+            var buildFolder = BattlegroundsInstance.GetRelativePath(BattlegroundsPaths.BUILD_FOLDER, string.Empty);
+
             // Return the result of the win condition compilation
-            return WinconditionCompiler.CompileToSga(BattlegroundsInstance.GetRelativePath(BattlegroundsPaths.BUILD_FOLDER, string.Empty), sessionScarFile, session.Gamemode, sourceFinder);
+            return WinconditionCompiler.CompileToSga(buildFolder, sessionScarFile, session.Gamemode, sourceFinder, includeFiles.ToArray());
 
         }
 
+        public static readonly string LogFilePath = $"{Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)}\\my games\\company of heroes 2\\warnings.log";
+
         /// <summary>
-        /// 
+        /// Check the latest log if any fatal scar error occured.
         /// </summary>
-        /// <returns></returns>
+        /// <returns><see langword="true"/> if a fatal scar error was detected; Otherwise <see langword="false"/>.</returns>
         public static bool GotFatalScarError() {
 
-            string logPath = $"{Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)}\\my games\\company of heroes 2\\warnings.log";
-
-            if (File.Exists(logPath)) {
-                if (File.ReadAllText(logPath).Contains("GameObj::OnFatalScarError:")) {
+            if (File.Exists(LogFilePath)) {
+                if (File.ReadAllText(LogFilePath).Contains("GameObj::OnFatalScarError:")) {
                     return true;
                 }
             }
@@ -78,6 +103,22 @@ namespace Battlegrounds.Game.Match {
         /// 
         /// </summary>
         /// <returns></returns>
+        public static bool WasAnyMatchPlayed() {
+
+            if (File.Exists(LogFilePath)) {
+                if (File.ReadAllText(LogFilePath).Contains("GameObj::OnFatalScarError:")) {
+                    return true;
+                }
+            }
+
+            return false;
+
+        }
+
+        /// <summary>
+        /// Check if a bugsplat occured.
+        /// </summary>
+        /// <returns><see langword="true"/> if a bug splat was detected; Otherwise <see langword="false"/>.</returns>
         public static async Task<bool> GotBugsplat() {
 
             int count = 0;

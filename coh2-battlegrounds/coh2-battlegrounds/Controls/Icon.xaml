@@ -1,0 +1,27 @@
+﻿<UserControl x:Class="BattlegroundsApp.Controls.Icon"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:BattlegroundsApp.Controls"
+             mc:Ignorable="d" 
+             d:DesignHeight="64" d:DesignWidth="64">
+    <Canvas Width="{Binding DimensionCanvasWidth}" Height="{Binding DimensionCanvasWidth}">
+        <Image Source="pack://application:,,,/Resources/app/icon_bkg.png"
+               Width="{Binding DimensionCanvasWidth}" 
+               Height="{Binding DimensionCanvasWidth}" 
+               Canvas.Bottom="0" 
+               Canvas.Left="0"/>
+        <Image Source="{Binding Source}"
+               Width="{Binding DimensionWidth}" 
+               Height="{Binding DimensionWidth}" 
+               Canvas.Top="{Binding DimensionMargin}" 
+               Canvas.Left="{Binding DimensionMargin}"/>
+        <Rectangle Fill="{Binding MaskColour}" 
+                   Width="{Binding DimensionWidth}" 
+                   Height="{Binding DimensionWidth}"
+                   Canvas.Left="{Binding DimensionMargin}" 
+                   Canvas.Top="{Binding DimensionMargin}"
+                   Opacity="{Binding MaskOpacity}"/>
+    </Canvas>
+</UserControl>

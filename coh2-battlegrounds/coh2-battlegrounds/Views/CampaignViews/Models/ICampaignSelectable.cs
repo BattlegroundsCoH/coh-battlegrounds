@@ -1,7 +1,7 @@
 ﻿using System.Windows.Media;
 
 namespace BattlegroundsApp.Views.CampaignViews.Models {
-    
+
     public interface ICampaignSelectable {
 
         string Title { get; }

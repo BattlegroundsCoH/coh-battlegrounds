@@ -1,10 +1,11 @@
 ﻿using System.Linq;
 using System.Windows.Input;
 using System.Windows.Media;
+
 using Battlegrounds.Campaigns.Organisations;
 
 namespace BattlegroundsApp.Views.CampaignViews.Models {
-    
+
     public class CampaignUnitReserveModel : ICampaignSelectable {
 
         public Division Reserve { get; }
@@ -36,7 +37,7 @@ namespace BattlegroundsApp.Views.CampaignViews.Models {
 
         }
 
-        public CampaignSelectableInfoSection[] GetInfoSections() 
+        public CampaignSelectableInfoSection[] GetInfoSections()
             => CampaignUnitFormationModel.GetUnitData(this.Reserve.Regiments.Where(x => !x.IsDeployed), this.ResourceContext).ToArray();
 
     }

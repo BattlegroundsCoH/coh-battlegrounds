@@ -1,9 +1,17 @@
-﻿namespace Battlegrounds.Game.Match.Data {
-    
+﻿using System;
+using System.Globalization;
+
+namespace Battlegrounds.Game.Match.Data {
+
     /// <summary>
     /// Interface for an ingame event.
     /// </summary>
     public interface IMatchEvent {
+
+        /// <summary>
+        /// Get the default number format in use by the game.
+        /// </summary>
+        public static readonly IFormatProvider NumberFormat = CultureInfo.GetCultureInfo("en-US");
 
         /// <summary>
         /// Get the single uppercase letter used to identify event type.

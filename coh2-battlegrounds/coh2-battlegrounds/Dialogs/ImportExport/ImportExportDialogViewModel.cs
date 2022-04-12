@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
+using Battlegrounds.Locale;
 using BattlegroundsApp.Dialogs.Service;
 using BattlegroundsApp.Utilities;
 using BattlegroundsApp.ViewModels;
@@ -22,11 +23,12 @@ namespace BattlegroundsApp.Dialogs.ImportExport {
 
         public ICommand ImportExportCommand { get; set; }
         public ICommand CancelCommand { get; set; }
-        public string ButtonName { get; set; }
+        public LocaleKey ImportExportButtonContent { get; set; }
+        public LocaleKey CancelButtonContent { get; }
         public ImportExportDialogType Type { get; set; }
 
         private string _companyString;
-        public string CompanyString { 
+        public string CompanyString {
             get {
                 return _companyString;
             }
@@ -37,26 +39,30 @@ namespace BattlegroundsApp.Dialogs.ImportExport {
             }
         }
 
-        private ImportExportDialogViewModel(ImportExportDialogType type, string title) {
+        private ImportExportDialogViewModel(ImportExportDialogType type, LocaleKey title) {
 
             Title = title;
+
+            // Define locales
+            CancelButtonContent = new LocaleKey("ImportExportDialogView_Button_Cancel");
+
             CancelCommand = new RelayCommand<DialogWindow>(Cancel);
-            ButtonName = (type == ImportExportDialogType.Import) ? "Import" : "Copy";
+            ImportExportButtonContent = (type == ImportExportDialogType.Import) ? new LocaleKey("ImportExportDialogView_Button_Import") : new LocaleKey("ImportExportDialogView_Button_Copy");
             ImportExportCommand = (type == ImportExportDialogType.Import) ? new RelayCommand<DialogWindow>(Import) : new RelayCommand<DialogWindow>(Export);
             Type = (type == ImportExportDialogType.Import) ? ImportExportDialogType.Import : ImportExportDialogType.Export;
             DialogCloseDefault = ImportExportDialogResult.Cancel;
 
         }
 
-        private ImportExportDialogViewModel(ImportExportDialogType type, string title, string companyString) : this(type, title) { this.CompanyString = companyString; }
+        private ImportExportDialogViewModel(ImportExportDialogType type, LocaleKey title, string companyString) : this(type, title) { this.CompanyString = companyString; }
 
-        public static ImportExportDialogResult ShowImportDialog(string title, out string companyString) {
+        public static ImportExportDialogResult ShowImportDialog(LocaleKey title, out string companyString) {
             var dialog = new ImportExportDialogViewModel(ImportExportDialogType.Import, title);
             var result = dialog.ShowDialog();
             companyString = dialog.CompanyString;
             return result;
         }
-        public static ImportExportDialogResult ShowExportDialog(string title, string companyString) {
+        public static ImportExportDialogResult ShowExportDialog(LocaleKey title, string companyString) {
             var dialog = new ImportExportDialogViewModel(ImportExportDialogType.Export, title, companyString);
             return dialog.ShowDialog();
         }

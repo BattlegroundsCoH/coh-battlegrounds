@@ -1,8 +1,9 @@
 ﻿using Battlegrounds.Lua.Parsing;
+
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace coh2_battlegrounds_bin_tests.LuaLib {
-    
+
     public static class LuaTestUtility {
 
         public static void VerifyTupleOrder(LuaExpressionList tuple, params string[] expr) {

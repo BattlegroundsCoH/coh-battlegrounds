@@ -1,0 +1,162 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:controls="clr-namespace:BattlegroundsApp.Controls"
+                    xmlns:converters="clr-namespace:BattlegroundsApp.Utilities.Converters">
+    <Style x:Key="SlotGridStyle" TargetType="{x:Type Grid}">
+        <Setter Property="Background" Value="#212d3a"/>
+    </Style>
+    <Style x:Key="SlotNameStyle" TargetType="{x:Type Label}">
+        <Setter Property="Foreground" Value="#FFFFFF"/>
+        <Setter Property="FontFamily" Value="Open Sans"/>
+        <Setter Property="FontSize" Value="24"/>
+    </Style>
+    <Style x:Key="SlotCompanyNameStyle" TargetType="{x:Type Label}">
+        <Setter Property="Foreground" Value="#FFFFFF"/>
+        <Setter Property="FontFamily" Value="Open Sans"/>
+        <Setter Property="FontSize" Value="20"/>
+    </Style>
+    <Style x:Key="SlotCompanySelectionArrow" TargetType="{x:Type controls:TriggerButton}">
+        <Setter Property="OverridesDefaultStyle" Value="True"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type controls:TriggerButton}">
+                    <Grid x:Name="ToggleGrid">
+                        <Grid.Resources>
+                            <ResourceDictionary x:Name="LobbyIcons" Source="pack://application:,,,/coh2-battlegrounds;component/Resources/app/LobbyIcons.xaml"/>
+                        </Grid.Resources>
+                        <Image x:Name="Arrow" Source="{StaticResource ArrowDropdownDrawingImage}"/>
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="False">
+                            <Setter TargetName="Arrow" Property="Opacity" Value="0.5"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <DataTemplate x:Key="SlotcompanyCurrentlySelectedItem">
+        <Grid>
+            <Grid.Resources>
+                <converters:StringToCompanyTypeIconConverter x:Key="TypeIconConverter"/>
+            </Grid.Resources>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition Width="16"/>
+                <ColumnDefinition Width="18"/>
+                <ColumnDefinition Width="16"/>
+            </Grid.ColumnDefinitions>
+            <Image Source="{Binding Specialisation, Converter={StaticResource TypeIconConverter}}"
+                   Grid.Column="2"
+                   Width="18"
+                   Height="18"
+                   VerticalAlignment="Center"
+                   HorizontalAlignment="Center"/>
+            <TextBlock Text="{Binding Name}"
+                       Foreground="#FFFFFF"
+                       FontSize="20"
+                       FontFamily="Open Sans"
+                       HorizontalAlignment="Right"
+                       VerticalAlignment="Center"
+                       Grid.Column="0"/>
+        </Grid>
+    </DataTemplate>
+    <Style x:Key="SlotCompanySelectionItem" TargetType="{x:Type ComboBoxItem}">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ComboBoxItem}">
+                    <Grid x:Name="Container">
+                        <Grid.Resources>
+                            <converters:StringToFactionIconConverter x:Key="FactionIconConverter"/>
+                            <converters:StringToCompanyTypeIconConverter x:Key="TypeIconConverter"/>
+                        </Grid.Resources>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="4"/>
+                            <ColumnDefinition Width="32"/>
+                            <ColumnDefinition Width="8"/>
+                            <ColumnDefinition/>
+                            <ColumnDefinition Width="6"/>
+                            <ColumnDefinition Width="24"/>
+                            <ColumnDefinition Width="8"/>
+                        </Grid.ColumnDefinitions>
+                        <Image Source="{Binding Army, Converter={StaticResource FactionIconConverter}}"
+                               Grid.Column="1"/>
+                         <TextBlock Text="{Binding Name}"
+                                    Foreground="#FFFFFF"
+                                    FontSize="14"
+                                    FontFamily="Open Sans"
+                                    HorizontalAlignment="Left"
+                                    VerticalAlignment="Center"
+                                    Grid.Column="3"/>
+                        <Image Source="{Binding Specialisation, Converter={StaticResource TypeIconConverter}}"
+                                 Grid.Column="5"/>
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsSelected" Value="True">
+                            <Setter TargetName="Container" Property="Background" Value="#334252"/>
+                        </Trigger>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="Container" Property="Background" Value="#273441"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <Style x:Key="SlotCompanySelection" TargetType="{x:Type ComboBox}">
+        <Setter Property="OverridesDefaultStyle" Value="True"/>
+        <Setter Property="ItemContainerStyle" Value="{StaticResource SlotCompanySelectionItem}"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ComboBox}">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition Width="36"/>
+                        </Grid.ColumnDefinitions>
+                        <ContentPresenter Grid.Column="0"
+                                          ContentTemplate="{StaticResource SlotcompanyCurrentlySelectedItem}"
+                                          Content="{TemplateBinding SelectedItem}"/>
+                        <controls:TriggerButton Grid.Column="1"
+                                          Style="{StaticResource SlotCompanySelectionArrow}"
+                                          IsTriggered="{Binding IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}"/>
+                        <Popup x:Name="Popup"
+                               Placement="Bottom"
+                               IsOpen="{TemplateBinding IsDropDownOpen}"
+                               Width="{Binding ActualWidth, RelativeSource={RelativeSource TemplatedParent}}"
+                               PopupAnimation="Slide">
+                            <Border Background="#536375" BorderBrush="#212d3a" BorderThickness="1">
+                                <ScrollViewer Background="#536375" Style="{StaticResource StandardBlueDropdownScrollViewer}">
+                                    <StackPanel IsItemsHost="True" KeyboardNavigation.DirectionalNavigation="Contained"/>
+                                </ScrollViewer>
+                            </Border>
+                        </Popup>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <Style x:Key="LobbySlotContextMenuItem" TargetType="{x:Type MenuItem}">
+        <Setter Property="Foreground" Value="#FFFFFF"/>
+        <Setter Property="FontFamily" Value="Open Sans"/>
+    </Style>
+    <Style x:Key="LobbySlotContextMenu" TargetType="{x:Type ContextMenu}">
+        <Setter Property="SnapsToDevicePixels" Value="True"/>
+        <Setter Property="OverridesDefaultStyle" Value="True"/>
+        <Setter Property="Grid.IsSharedSizeScope" Value="true"/>
+        <Setter Property="HasDropShadow" Value="True"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ContextMenu}">
+                    <Border x:Name="Border"
+                            Background="#273441"
+                            BorderBrush="#212d3a"
+                            BorderThickness="1">
+                        <StackPanel IsItemsHost="True"
+                                    KeyboardNavigation.DirectionalNavigation="Cycle" />
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+</ResourceDictionary>

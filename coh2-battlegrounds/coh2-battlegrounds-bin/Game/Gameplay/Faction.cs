@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 
 namespace Battlegrounds.Game.Gameplay {
 
@@ -19,6 +20,11 @@ namespace Battlegrounds.Game.Gameplay {
         public string Name { get; }
 
         /// <summary>
+        /// Get the racebps path.
+        /// </summary>
+        public string RbpPath { get; }
+
+        /// <summary>
         /// Is this <see cref="Faction"/> an allied faction.
         /// </summary>
         public bool IsAllied { get; }
@@ -26,16 +32,18 @@ namespace Battlegrounds.Game.Gameplay {
         /// <summary>
         /// Is this <see cref="Faction"/> an axis faction.
         /// </summary>
-        public bool IsAxis => !IsAllied;
+        public bool IsAxis => !this.IsAllied;
 
         /// <summary>
         /// The required <see cref="DLCPack"/> to be able to play with this <see cref="Faction"/>.
         /// </summary>
         public DLCPack RequiredDLC { get; }
 
-        private Faction(byte id, string name, bool isAllied, DLCPack requiredDLC) { // Private constructor, we can't have custom armies, doesn't make sense to allow them then.
+        private Faction(byte id, string name, string rbppath, bool isAllied, DLCPack requiredDLC) {
+            // Private constructor, we can't have custom armies, doesn't make sense to allow them then.
             this.UID = id;
             this.Name = name;
+            this.RbpPath = rbppath;
             this.IsAllied = isAllied;
             this.RequiredDLC = requiredDLC;
         }
@@ -52,38 +60,36 @@ namespace Battlegrounds.Game.Gameplay {
 
         public static explicit operator Faction(string name) => FromName(name);
 
-        private static readonly Faction base_soviet = new Faction(0, "soviet", true, DLCPack.Base);
-        private static readonly Faction base_wehrmacht = new Faction(1, "german", false, DLCPack.Base);
-
-        private static readonly Faction wfa_aef = new Faction(2, "aef", true, DLCPack.WesternFrontArmiesUSA);
-        private static readonly Faction wfa_okw = new Faction(3, "west_german", false, DLCPack.WesternFrontArmiesOKW);
-
-        private static readonly Faction dlc_ukf = new Faction(4, "british", true, DLCPack.UKF);
+        public const string FactionStrSoviet = "soviet";
+        public const string FactionStrAmerican = "aef";
+        public const string FactionStrBritish = "british";
+        public const string FactionStrGerman = "german";
+        public const string FactionStrOKW = "west_german";
 
         /// <summary>
         /// The Soviet faction.
         /// </summary>
-        public static Faction Soviet => base_soviet;
+        public static readonly Faction Soviet = new(0, FactionStrSoviet, "racebps\\soviet", true, DLCPack.Base);
 
         /// <summary>
         /// The Wehrmacht (Ostheer) faction.
         /// </summary>
-        public static Faction Wehrmacht => base_wehrmacht;
+        public static readonly Faction Wehrmacht = new(1, FactionStrGerman, "racebps\\german", false, DLCPack.Base);
 
         /// <summary>
         /// The US Forces faction.
         /// </summary>
-        public static Faction America => wfa_aef;
+        public static readonly Faction America = new(2, FactionStrAmerican, "racebps\\aef", true, DLCPack.WesternFrontArmiesUSA);
 
         /// <summary>
         /// The Oberkommando West faction.
         /// </summary>
-        public static Faction OberkommandoWest => wfa_okw;
+        public static readonly Faction OberkommandoWest = new(3, FactionStrOKW, "racebps\\west_german", false, DLCPack.WesternFrontArmiesOKW);
 
         /// <summary>
         /// The United Kingdom faction.
         /// </summary>
-        public static Faction British => dlc_ukf;
+        public static readonly Faction British = new(4, FactionStrBritish, "racebps\\british", true, DLCPack.UKF);
 
         /// <summary>
         /// Get if some faction is an allied faction.
@@ -91,7 +97,7 @@ namespace Battlegrounds.Game.Gameplay {
         /// <param name="factionName">The name of the faction to check.</param>
         /// <returns>Will return <see langword="true"/> if <paramref name="factionName"/> is not "german" and not "west_german". Otherwise <see langword="false"/.></returns>
         public static bool IsAlliedFaction(string factionName)
-            => factionName != "german" && factionName != "west_german";
+            => factionName is not "german" and not "west_german";
 
         /// <summary>
         /// Get a <see cref="Faction"/> by its <see cref="string"/> name identifier.
@@ -99,12 +105,12 @@ namespace Battlegrounds.Game.Gameplay {
         /// <param name="name">The <see cref="string"/> faction name to find.</param>
         /// <returns>One of the five factions or null.</returns>
         public static Faction FromName(string name) {
-            return (name.ToLower()) switch {
-                "soviet" => base_soviet,
-                "german" => base_wehrmacht,
-                "usa" or "aef" => wfa_aef,
-                "okw" or "west_german" => wfa_okw,
-                "ukf" or "british" => dlc_ukf,
+            return name.ToLower(CultureInfo.InvariantCulture) switch {
+                FactionStrSoviet => Soviet,
+                FactionStrGerman => Wehrmacht,
+                "usa" or FactionStrAmerican => America,
+                "okw" or FactionStrOKW => OberkommandoWest,
+                "ukf" or FactionStrBritish => British,
                 _ => null,
             };
         }
@@ -126,9 +132,8 @@ namespace Battlegrounds.Game.Gameplay {
                 return America;
             } else if (faction == Wehrmacht) {
                 return Soviet;
-            } else {
-                throw new ArgumentException("Unknown or custom faction - Not allowed!");
             }
+            throw new ArgumentException("Unknown or custom faction - Not allowed!");
         }
 
         /// <summary>
@@ -140,13 +145,9 @@ namespace Battlegrounds.Game.Gameplay {
         public static bool AreSameTeam(Faction left, Faction right) => left.IsAllied == right.IsAllied || left.IsAxis == right.IsAxis;
 
         /// <summary>
-        /// 
+        /// Get a list of all factions.
         /// </summary>
-        /// <param name="jsonReference"></param>
-        /// <returns></returns>
-        public static object JsonDereference(string jsonReference) => FromName(jsonReference);
-
-        public static List<Faction> Factions => new List<Faction> { Soviet, British, America, Wehrmacht, OberkommandoWest };
+        public static List<Faction> Factions => new() { Soviet, /*British, America, OberkommandoWest,*/ Wehrmacht };
 
         #endregion
 

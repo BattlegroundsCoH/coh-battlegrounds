@@ -5,12 +5,12 @@
     /// </summary>
     public class LuaString : LuaValue {
 
-        private string m_internalStringValue;
+        private readonly string m_internalStringValue;
 
         /// <summary>
         /// Represents the empty <see cref="LuaString"/>. This is a read-only field.
         /// </summary>
-        public static readonly LuaString Empty = new LuaString(string.Empty);
+        public static readonly LuaString Empty = new(string.Empty);
 
         /// <summary>
         /// Get the length of the string.
@@ -27,21 +27,9 @@
         /// Get numeric value of the string.
         /// </summary>
         /// <returns>If string represents a numeric value, a <see cref="LuaNumber"/> value of that numeric; Otherwise, <see cref="LuaNil"/>.</returns>
-        public LuaValue Num() {
-            if (double.TryParse(this.m_internalStringValue, out double n)) {
-                return new LuaNumber(n);
-            } else {
-                return LuaNil.Nil;
-            }
-        }
+        public LuaValue Num() => double.TryParse(this.m_internalStringValue, out double n) ? new LuaNumber(n) : LuaNil.Nil;
 
-        public override bool Equals(LuaValue value) {
-            if (value is LuaString s) {
-                return s.m_internalStringValue.CompareTo(this.m_internalStringValue) == 0;
-            } else {
-                return false;
-            }
-        }
+        public override bool Equals(LuaValue value) => value is LuaString s && s.m_internalStringValue == this.m_internalStringValue;
 
         public override bool Equals(object obj) => obj is LuaValue v ? this.Equals(v) : base.Equals(obj);
 
@@ -50,7 +38,7 @@
         public override int GetHashCode() => this.m_internalStringValue.GetHashCode();
 
         public override string ToString() => this.m_internalStringValue;
-        
+
         public override LuaType GetLuaType() => LuaType.LUA_STRING;
 
     }

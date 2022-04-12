@@ -6,7 +6,7 @@ namespace Battlegrounds.Campaigns.Models {
     /// Represents a player in a singleplayer campaign.
     /// </summary>
     public class SingleCampaignPlayer : ICampaignPlayer {
-        
+
         public ICampaignTeam Team { get; }
 
         /// <summary>

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+
 using Battlegrounds.Game.Database;
 using Battlegrounds.Game.Database.Management;
 using Battlegrounds.Game.Gameplay;
@@ -7,10 +8,32 @@ using Battlegrounds.Game.Gameplay;
 namespace Battlegrounds.Game.Match.Data.Events {
 
     /// <summary>
+    /// Enum representing the type of object that is captured.
+    /// </summary>
+    public enum CaptureEventType {
+
+        /// <summary>
+        /// The captured object is currently unknown.
+        /// </summary>
+        UNKNOWN = 0,
+
+        /// <summary>
+        /// The captured type was a vehicle.
+        /// </summary>
+        VEHICLE,
+
+        /// <summary>
+        /// The captured type was a weapon.
+        /// </summary>
+        WEAPON
+
+    }
+
+    /// <summary>
     /// <see cref="IMatchEvent"/> implementation for the event of equipment being captured.
     /// </summary>
     public class CaptureEvent : IMatchEvent {
-        
+
         public char Identifier => 'T';
 
         public uint Uid { get; }
@@ -26,9 +49,9 @@ namespace Battlegrounds.Game.Match.Data.Events {
         public BlueprintType CapturedBlueprintType { get; }
 
         /// <summary>
-        /// Get the capture type (1 = captured vehicle, 2 = captured weapon/equipment)
+        /// Get the capture type this event represents.
         /// </summary>
-        public int CaptureType { get; }
+        public CaptureEventType CaptureType { get; }
 
         /// <summary>
         /// Get the <see cref="Blueprint"/> that was captured.
@@ -42,20 +65,35 @@ namespace Battlegrounds.Game.Match.Data.Events {
         /// <param name="player">The <see cref="Player"/> that captured the equipment.</param>
         /// <exception cref="ArgumentException"/>
         public CaptureEvent(uint id, string[] values, Player player) {
+
+            // Set id
             this.Uid = id;
+
+            // Verify input size
             if (values.Length == 3) {
+
+                // Set the player capturing the event.
                 this.CapturingPlayer = player;
+
+                // Parse capture event type
                 if (int.TryParse(values[1], out int capType)) {
-                    this.CaptureType = capType;
+                    this.CaptureType = (CaptureEventType)capType;
                 } else {
-                    this.CaptureType = 1;
-                    Trace.WriteLine($"Failed to parse '{values[1]}' as capture event - setting to 1 by default.", "CaptureEvent");
+                    this.CaptureType = CaptureEventType.UNKNOWN;
+                    Trace.WriteLine($"Failed to parse '{values[1]}' as capture event - setting to 0 by default.", nameof(CaptureEvent));
                 }
+
+                // Set properties
                 this.CapturedBlueprintType = Enum.Parse<BlueprintType>(values[2]);
                 this.CapturedBlueprint = BlueprintManager.FromBlueprintName(values[0], this.CapturedBlueprintType); // This may fail (return null).
+
             } else {
-                throw new ArgumentException("Argument was not of valid size.", nameof(values));
+
+                // Throw argument out of range exception
+                throw new ArgumentOutOfRangeException(nameof(values), values.Length, "Argument was not of valid size. Expected 3 elements in array.");
+
             }
+
         }
 
     }

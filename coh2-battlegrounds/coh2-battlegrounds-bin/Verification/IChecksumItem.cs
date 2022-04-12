@@ -3,19 +3,24 @@
     /// <summary>
     /// Interface for calculating a checksum for a C# data object.
     /// </summary>
-    public interface IChecksumItem {
+    public interface IChecksumItem : IChecksumPropertyItem {
 
         /// <summary>
-        /// Get the complete checksum in string format.
+        /// Get the calculated checksum
         /// </summary>
-        /// <returns>The string representation of the checksum.</returns>
-        public string GetChecksum();
+        ulong Checksum { get; }
 
         /// <summary>
-        /// Verify the checksum.
+        /// Verify the checksum of the object by generating the checksum and comparing with <paramref name="checksum"/>.
         /// </summary>
-        /// <returns>true if the checksum is valid.</returns>
-        public bool VerifyChecksum();
+        /// <param name="checksum">The checksum value to compare against.</param>
+        /// <returns><see langword="true"/> if the checksum is valid; Otherwise <see langword="false"/>.</returns>
+        public bool VerifyChecksum(ulong checksum);
+
+        /// <summary>
+        /// Trigger a recalculation of the checksum value of the object.
+        /// </summary>
+        void CalculateChecksum();
 
     }
 

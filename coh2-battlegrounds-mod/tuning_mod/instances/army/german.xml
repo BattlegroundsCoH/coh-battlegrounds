@@ -54,8 +54,8 @@
 			<float name="action" value="0" />
 			<float name="command" value="0" />
 			<float name="fuel" value="20" />
-			<float name="manpower" value="420" />
-			<float name="munition" value="0" />
+			<float name="manpower" value="50" />
+			<float name="munition" value="30" />
 			<float name="popcap" value="0" />
 		</group>
 		<list name="start_actions">
@@ -191,12 +191,12 @@
 		<group name="resource_max_cap">
 			<template_reference name="resource" value="tables\resource_table">
 				<float name="action" value="-1" />
-				<float name="command" value="32" />
-				<float name="fuel" value="-1" />
-				<float name="manpower" value="-1" />
-				<float name="munition" value="-1" />
-				<float name="soviet_progression" value="-1" />
-				<float name="soviet_227" value="-1" />
+				<float name="command" value="16" />
+				<float name="fuel" value="2000" />
+				<float name="manpower" value="2000" />
+				<float name="munition" value="2000" />
+				<float name="soviet_progression" value="100" />
+				<float name="soviet_227" value="100" />
 				<float name="popcap" value="-1" />
 			</template_reference>
 		</group>

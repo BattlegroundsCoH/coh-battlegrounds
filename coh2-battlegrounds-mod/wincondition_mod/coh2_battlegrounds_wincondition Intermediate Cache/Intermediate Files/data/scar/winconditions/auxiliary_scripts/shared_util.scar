@@ -102,7 +102,7 @@ vec3funcs = { -- Add additional mutable functions --> Less copy and assignment o
     dot = function(self, other)
         return self.x * other.x + self.y * other.y + self.z * other.z;
     end,
-    cross = function(self, other)
+    cross = function(self)
         local cx = self.y * other.z - self.z * other.y;
         local cy = self.z * other.x - self.x * other.z;
         local cz = self.x * other.y - self.y * other.x;
@@ -249,6 +249,15 @@ end
 
 function Squad_Surrender(squad)
     -- TODO: Implement
+end
+
+function Squad_RemoveCritical(squad, critical)
+    for i=0, Squad_Count(squad) - 1 do
+        local e = Squad_EntityAt(squad, i);
+        if Entity_HasCritical(e, critical) then
+            Entity_RemoveCritical(e, critical);
+        end
+    end
 end
 
 ------------------------------------------------------------
@@ -500,9 +509,17 @@ function Battlegrounds_LogEvent(msgtype, type, value, player)
     if player == nil then
         player = Game_GetLocalPlayer();
     end
-    local pdata = BG_GetPlayerData(player);
-    local str = type .. "[" .. value .. "]#".._bg_logid.."@" .. pdata.steamID;
+    local pstr = BG_GetPlayerData(player);
+    if pstr ~= nil then
+        --pstr = tostring(pstr.uid);
+        pstr = pstr.steamID; --TEMP: Removed for new uid system
+    elseif pstr == nil and AI_IsAIPlayer(player) then
+        local index = BGAI_GetAIPlayerID(player);
+        pstr = "ai".._bg_aiData[index].steamID .. "_" .._bg_aiData[index].ttype;
+    else
+        return; -- Should probably be a fatal error instead.
+    end
+    local str = type .. "[" .. value .. "]#".._bg_logid.."@" .. pstr;
     _bg_logid = _bg_logid + 1;
-    PrintOnScreen(str);
     Game_SendMessage(msgtype, str);
 end

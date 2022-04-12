@@ -1,10 +1,11 @@
 ﻿using System.Collections.Generic;
+
 using Battlegrounds.Campaigns.API;
 using Battlegrounds.Campaigns.Organisations;
 using Battlegrounds.Util.Lists;
 
 namespace Battlegrounds.Campaigns.Models {
-    
+
     /// <summary>
     /// Represents a team in a singleplayer campaign context.
     /// </summary>

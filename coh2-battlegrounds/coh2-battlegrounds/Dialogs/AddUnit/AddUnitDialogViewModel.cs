@@ -4,7 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
+
 using Battlegrounds.Game.Database;
+using Battlegrounds.Locale;
 using BattlegroundsApp.Dialogs.Service;
 using BattlegroundsApp.Utilities;
 
@@ -19,7 +21,7 @@ namespace BattlegroundsApp.Dialogs.AddUnit {
         public ICommand CancelCommand { get; set; }
 
         private SquadBlueprint _selectedUnit;
-        public SquadBlueprint SelectedUnit { 
+        public SquadBlueprint SelectedUnit {
             get {
                 return this._selectedUnit;
             }
@@ -32,7 +34,7 @@ namespace BattlegroundsApp.Dialogs.AddUnit {
 
         public List<SquadBlueprint> UnitList { get; set; }
 
-        private AddUnitDialogViewModel(string title, List<SquadBlueprint> unitList) {
+        private AddUnitDialogViewModel(LocaleKey title, List<SquadBlueprint> unitList) {
 
             Title = title;
             AddCommand = new RelayCommand<DialogWindow>(Add);
@@ -42,7 +44,7 @@ namespace BattlegroundsApp.Dialogs.AddUnit {
 
         }
 
-        public static AddUnitDialogResult ShowAddUnitDialog(string title, List<SquadBlueprint> unitList, out SquadBlueprint unit) {
+        public static AddUnitDialogResult ShowAddUnitDialog(LocaleKey title, List<SquadBlueprint> unitList, out SquadBlueprint unit) {
             var dialog = new AddUnitDialogViewModel(title, unitList);
             var result = dialog.ShowDialog();
             unit = dialog.SelectedUnit;

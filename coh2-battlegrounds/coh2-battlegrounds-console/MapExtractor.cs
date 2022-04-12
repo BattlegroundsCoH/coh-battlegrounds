@@ -1,19 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Text.Json;
 
 using Battlegrounds;
 using Battlegrounds.Compiler;
 using Battlegrounds.Game.Database;
-using Battlegrounds.Json;
 
 namespace coh2_battlegrounds_console {
-    
+
     public static class MapExtractor {
 
-        public static string Output { get; set; }
+        public static string? Output { get; set; }
 
         public static void Extract() {
+
+            if (string.IsNullOrWhiteSpace(Output)) {
+                return;
+            }
 
             string path = Pathfinder.GetOrFindCoHPath();
             string[] map_archives = {
@@ -21,14 +25,14 @@ namespace coh2_battlegrounds_console {
                 $"{path}CoH2\\Archives\\MPXP1Scenarios.sga",
             };
 
-            string extract = Path.GetFullPath("~tmp\\scen");
+            string extract = Path.GetFullPath(Output);
             if (Directory.Exists(extract)) {
                 Directory.Delete(extract, true);
             }
 
-            Directory.CreateDirectory(extract);
+            _ = Directory.CreateDirectory(extract);
 
-            List<Scenario> scenarios = new List<Scenario>();
+            List<Scenario> scenarios = new();
 
             foreach (string archive in map_archives) {
 
@@ -47,7 +51,7 @@ namespace coh2_battlegrounds_console {
                         $"{extract}\\scenarios\\pm\\",
                     };
 
-                    List<string> dirs = new List<string>();
+                    List<string> dirs = new();
 
                     foreach (string look in lookIn) {
                         if (Directory.Exists(look)) {
@@ -78,11 +82,8 @@ namespace coh2_battlegrounds_console {
 
             }
 
-            // Get the record
-            IJsonObject rec = new ScenarioList.ScenarioRecord(scenarios);
-
             // Save database
-            File.WriteAllText("vcoh-map-db.json", rec.Serialize());
+            File.WriteAllText("vcoh-map-db.json", JsonSerializer.Serialize(scenarios));
 
         }
 

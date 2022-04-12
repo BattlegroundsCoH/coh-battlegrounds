@@ -2,6 +2,10 @@
 <display:MovieClip xmlns:fx='http://ns.adobe.com/mxml/2009' xmlns:display='flash.display.*'>
 	<fx:Script>
 		<![CDATA[
+		[Embed(source='E:/coh2_battlegrounds/coh2-battlegrounds-mod/wincondition_mod/art/ammo_bar.png')]
+		public static var ammo_bar:Class;
+		[Embed(source='E:/coh2_battlegrounds/coh2-battlegrounds-mod/wincondition_mod/art/ammo_bar_frame.png')]
+		public static var ammo_bar_frame:Class;
 		[Embed(source='E:/coh2_battlegrounds/coh2-battlegrounds-mod/wincondition_mod/art/button_background.png')]
 		public static var button_background:Class;
 		[Embed(source='E:/coh2_battlegrounds/coh2-battlegrounds-mod/wincondition_mod/art/button_inf.png')]
@@ -22,6 +26,10 @@
 		public static var company_page_bkg:Class;
 		[Embed(source='E:/coh2_battlegrounds/coh2-battlegrounds-mod/wincondition_mod/art/fuel_24x24.png')]
 		public static var fuel_24x24:Class;
+		[Embed(source='E:/coh2_battlegrounds/coh2-battlegrounds-mod/wincondition_mod/art/fuel_bar.png')]
+		public static var fuel_bar:Class;
+		[Embed(source='E:/coh2_battlegrounds/coh2-battlegrounds-mod/wincondition_mod/art/fuel_bar_frame.png')]
+		public static var fuel_bar_frame:Class;
 		[Embed(source='E:/coh2_battlegrounds/coh2-battlegrounds-mod/wincondition_mod/art/gameover_background.png')]
 		public static var gameover_background:Class;
 		[Embed(source='E:/coh2_battlegrounds/coh2-battlegrounds-mod/wincondition_mod/art/gameover_close_button.png')]
