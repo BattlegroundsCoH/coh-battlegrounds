@@ -68,7 +68,7 @@ public abstract class LobbyModel : IViewModel, INotifyPropertyChanged {
         public override string ToString() => this.ModPackage.PackageName;
     }
 
-    public record LobbyDropdown<T>(bool IsEnabled, Visibility IsVisible, ObservableCollection<T> Items, Action<int> SelectionChanged) : INotifyPropertyChanged {
+    public record LobbyDropdown<T>(bool IsEnabled, Visibility IsVisible, ObservableCollection<T> Items, Action<int, int> SelectionChanged) : INotifyPropertyChanged {
 
         private int m_selected;
         private Visibility m_visibility = IsVisible;
@@ -79,8 +79,9 @@ public abstract class LobbyModel : IViewModel, INotifyPropertyChanged {
         public int Selected {
             get => this.m_selected;
             set {
+                int old = this.m_selected;
                 this.m_selected = value;
-                this.SelectionChanged.Invoke(value);
+                this.SelectionChanged.Invoke(value, old);
                 this.PropertyChanged?.Invoke(this, new(nameof(Selected)));
             }
         }
