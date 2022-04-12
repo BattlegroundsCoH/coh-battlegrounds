@@ -71,7 +71,8 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
 
         public ObservableCollection<LobbyAPIStructs.LobbyCompany> SelectableCompanies { get; }
 
-        public LobbyAPIStructs.LobbyCompany SelectedCompany => this.SelectableCompanies[this.SelectedCompanyIndex];
+        public LobbyAPIStructs.LobbyCompany SelectedCompany 
+            => this.SelectedCompanyIndex >= 0 ? this.SelectableCompanies[this.SelectedCompanyIndex] : DummyCompany;
 
         public abstract LobbyContextMenu ContextMenu { get; }
 
@@ -109,7 +110,7 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
             this.m_slot = teamSlot;
 
             // Check if self or AI, then set contents
-            this.SelectableCompanies = new() { teamSlot.Occupant is null ? DummyCompany : teamSlot.Occupant.Company };
+            this.SelectableCompanies = new() { teamSlot.Occupant is null ? DummyCompany : teamSlot.Occupant.Company ?? DummyCompany };
 
             // Do initial view
             this.RefreshCompanyInfo();

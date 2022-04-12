@@ -49,13 +49,6 @@ public class LobbyParticipantSlotModel : LobbySlot {
                 this.NotifyProperty(new(nameof(this.SelectedCompany)));
             }
 
-        } else {
-
-            if (this.SelectableCompanies.Count > 0) {
-                // Notify selection changed (possible)
-                this.NotifyProperty(new(nameof(this.SelectedCompany)));
-            }
-
         }
 
     }
