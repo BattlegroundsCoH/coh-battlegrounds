@@ -204,7 +204,12 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
             var scen = this.MapDropdown.Items[newIndex].Scenario;
 
             if (!this.m_handle.SetTeamsCapacity(scen.MaxPlayers / 2)) {
-                this.MapDropdown.Selected = oldIndex;
+                Task.Run(() => {
+                    Task.Delay(1);
+                    Application.Current.Dispatcher.Invoke(() => {
+                        this.MapDropdown.Selected = oldIndex;
+                    });
+                });
                 return;
             }
 

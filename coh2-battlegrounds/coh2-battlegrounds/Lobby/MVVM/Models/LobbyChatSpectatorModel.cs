@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -7,12 +8,13 @@ using System.Windows;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
-
+using Battlegrounds;
 using Battlegrounds.Locale;
 using Battlegrounds.Networking.LobbySystem;
 
 using BattlegroundsApp.Controls;
 using BattlegroundsApp.MVVM;
+using BattlegroundsApp.Utilities;
 
 namespace BattlegroundsApp.Lobby.MVVM.Models {
 
@@ -27,6 +29,19 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
     }
 
     public class LobbyChatSpectatorModel : IViewModel, INotifyPropertyChanged {
+
+        public record ChatButton(string Title, RelayCommand Click);
+        public record ChatFilterDropdown(ObservableCollection<LobbyChannelModel> Channels) {
+            private int m_currentIndex;
+            public int CurrentIndex {
+                get => m_currentIndex;
+                set {
+                    this.m_currentIndex = value;
+                }
+            }
+        }
+
+        private static readonly Func<string> LOCSTR_SEND = () => BattlegroundsInstance.Localize.GetString("LobbyChat_Send");
 
         private readonly LobbyAPI m_handle;
         private readonly LocaleKey m_allFilter;
@@ -43,9 +58,9 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
 
         public FlowDocument? MessageDocument { get; set; }
 
-        //public LobbyDropdownModel<LobbyChannelModel> SendFilter { get; }
+        public ChatFilterDropdown SendFilter { get; }
 
-        //public LobbyButtonModel SendMessage { get; }
+        public ChatButton SendMessage { get; }
 
         public EventCommand<KeyEventArgs> EnterKey { get; }
 
@@ -63,12 +78,7 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
             this.m_teamFilter = new("LobbyChat_FilterTeam");
 
             // Create filter
-            /*this.SendFilter = new(false, lobbyHandler.IsHost) {
-                Items = new() {
-                    new(this.m_allFilter, 0),
-                    new(this.m_teamFilter, 1)
-                }
-            };*/
+            this.SendFilter = new(new(new List<LobbyChannelModel> { new(this.m_allFilter, 0), new(this.m_teamFilter, 1)}));
 
             // Create chat history
             Application.Current.Dispatcher.Invoke(() => {
@@ -79,12 +89,7 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
             this.Spectators = new();
 
             // Create sendmessage button
-            /*this.SendMessage = new() {
-                Text = new("LobbyChat_Send"),
-                Enabled = true,
-                Visible = Visibility.Visible,
-                Click = new RelayCommand(() => this.Send())
-            };*/
+            this.SendMessage = new(LOCSTR_SEND(), new(() => this.Send()));
 
             // Create enter key
             this.EnterKey = new EventCommand<KeyEventArgs>(this.SendEnter);
@@ -155,7 +160,7 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
             string timestamp = DateTime.Now.ToShortTimeString();
 
             // Send using broker
-            switch (0) { // TOOD: Fix
+            switch (this.SendFilter.CurrentIndex) {
                 case 0: // All
                     this.m_handle.GlobalChat(this.m_handle.Self.ID, content);
                     channel = "All";
