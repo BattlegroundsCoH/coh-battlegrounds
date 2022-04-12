@@ -52,6 +52,8 @@ public class LobbyParticipantModel : LobbyModel {
         this.SupplySystemDropdown = new(false, Visibility.Hidden, new(), x => { });
         this.ModPackageDropdown = new(false, Visibility.Hidden, new(), x => { });
 
+        handle.OnLobbySettingUpdate += this.OnLobbyChange;
+
     }
 
     private void OnMatchStartupCancelled(LobbyMatchStartupCancelledEventArgs e) {
@@ -253,6 +255,70 @@ public class LobbyParticipantModel : LobbyModel {
 
         }
 
+    }
+
+    private void OnLobbyChange(string settingKey, string settingValue) {
+
+        switch (settingKey) {
+            case "selected_map":
+                this.OnScenarioChange(settingValue);
+                break;
+            case "selected_wc":
+                this.OnGamemodeChange(settingValue);
+                break;
+            case "selected_wco":
+                this.OnGamemodeOptionChanage(settingValue);
+                break;
+            case "selected_daynight":
+                this.OnWeatherSettingChange(settingValue);
+                break;
+            case "selected_supply":
+                this.OnSupplySettingChange(settingValue);
+                break;
+            case "selected_tuning":
+                this.OnModPackageChange(settingValue);
+                break;
+            default:
+                Trace.WriteLine($"Unexpected setting key: {settingKey}");
+                break;
+        }
+
+    }
+
+    private void OnScenarioChange(string scenario) {
+
+        this.MapDropdown.LabelContent = scenario;
+
+    }
+
+    private void OnGamemodeChange(string gamemode) {
+
+        this.GamemodeDropdown.LabelContent = gamemode;
+
+    }
+
+    private void OnGamemodeOptionChanage(string gamomodeOption) {
+
+        this.GamemodeOptionDropdown.LabelContent = gamomodeOption;
+
+    }
+
+    private void OnWeatherSettingChange(string weatherSetting) { 
+        
+        this.WeatherDropdown.LabelContent = (weatherSetting is "1") ? "On" : "Off";
+
+    }
+
+    private void OnSupplySettingChange(string supplySetting) { 
+
+        this.SupplySystemDropdown.LabelContent = (supplySetting is "1") ? "On" : "Off";
+    
+    }
+
+    private void OnModPackageChange(string modPackage) { 
+
+        this.ModPackageDropdown.LabelContent = modPackage;
+    
     }
 
 }
