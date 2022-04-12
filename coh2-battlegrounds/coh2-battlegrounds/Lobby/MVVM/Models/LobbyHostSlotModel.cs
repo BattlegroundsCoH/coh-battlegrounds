@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Linq;
 using System.Windows;
 
@@ -60,6 +61,7 @@ public class LobbyHostSlotModel : LobbySlot {
             return;
         }
         if (this.IsControllable && newValue >= 0) {
+            Trace.WriteLine($"setting selected company to {this.SelectedCompany.Name}");
             this.SetCompany();
         }
     }
