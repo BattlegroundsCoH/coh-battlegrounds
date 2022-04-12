@@ -1,15 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media;
 
 using Battlegrounds.Compiler;
-using Battlegrounds.Game.Database;
 using Battlegrounds.Game.DataCompany;
 using Battlegrounds.Game.Gameplay;
 using Battlegrounds.Game.Match.Play;
@@ -42,7 +39,7 @@ public class LobbyParticipantModel : LobbyModel {
     public LobbyParticipantModel(LobbyAPI handle, LobbyAPIStructs.LobbyTeam allies, LobbyAPIStructs.LobbyTeam axis) : base(handle, allies, axis) {
 
         // Define start match buttnn
-        this.StartMatchButton = new(new(() => { }), Visibility.Hidden) { IsEnabled = false };
+        this.StartMatchButton = new("", new(() => { }), Visibility.Hidden) { IsEnabled = false };
 
         // Init dropdowns 
         this.MapDropdown = new(false, Visibility.Hidden, new(), x => { });

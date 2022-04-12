@@ -1,5 +1,4 @@
-﻿using System;
-using System.Windows;
+﻿using System.Windows;
 
 using Battlegrounds.Networking.LobbySystem;
 
@@ -47,17 +46,36 @@ public class LobbyTeam {
 
     }
 
-    // FP damages the mind
-    private static readonly Func<Action, int> Unit = x => { x(); return 0; };
+    public void OnTeamMemberCompanyUpdated(int sid, LobbyAPIStructs.LobbyCompany company) {
+        
+        // Try set in slot
+        this.Team.Slots[sid].TrySetCompany(company);
+        
+        // Enter GUI thread and update
+        Application.Current.Dispatcher.Invoke(() => {
 
-    public void OnTeamMemberCompanyUpdated(int sid, LobbyAPIStructs.LobbyCompany company)
-        => Application.Current.Dispatcher.Invoke(() => sid switch {
-            0 => Unit(() => this.Slot1.OnLobbyCompanyChanged(company)),
-            1 => Unit(() => this.Slot2.OnLobbyCompanyChanged(company)),
-            2 => Unit(() => this.Slot3.OnLobbyCompanyChanged(company)),
-            3 => Unit(() => this.Slot4.OnLobbyCompanyChanged(company)),
-            _ => Unit(() => { })
+            // Trigger update
+            switch (sid) {
+                case 0:
+                    this.Slot1.OnLobbyCompanyChanged(company); break;
+                case 1:
+                    this.Slot2.OnLobbyCompanyChanged(company); break;
+                case 2:
+                    this.Slot3.OnLobbyCompanyChanged(company); break;
+                case 3:
+                    this.Slot4.OnLobbyCompanyChanged(company); break;
+                default:
+                    break;
+            }
+
+            // Recheck playability
+            if (this.Lobby is LobbyHostModel hostModel) {
+                hostModel.RefreshPlayability();
+            }
+
         });
+
+    }
 
     private void OnLobbyTeamUpdated(LobbyAPIStructs.LobbyTeam obj) {
 
@@ -84,7 +102,32 @@ public class LobbyTeam {
     }
 
     public (bool, bool) CanPlay() {
-        return (false, false);
+
+        // Grab slots
+        var slots = this.Team.Slots;
+
+        // flag
+        bool flag1 = false; // any valid player
+        bool flag2 = true; // No invalid players
+
+        // Loop over slots and check if any valid
+        for (int i = 0; i < slots.Length; i++) {
+            if (slots[i].IsOccupied) {
+                if (slots[i].Occupant is not LobbyAPIStructs.LobbyMember mem) {
+                    continue; // Some werid err
+                }
+                flag1 |= true;
+                if (mem.Company?.IsNone ?? true) {
+                    flag2 = false;
+                } else {
+                    flag2 &= true;
+                }
+            }
+        }
+
+        // Return flags
+        return (flag1, flag2);
+    
     }
 
 }

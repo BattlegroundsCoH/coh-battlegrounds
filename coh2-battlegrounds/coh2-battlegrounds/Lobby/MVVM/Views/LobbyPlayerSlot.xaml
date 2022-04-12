@@ -143,15 +143,13 @@
                        HorizontalAlignment="Right"
                        VerticalAlignment="Center"
                        Grid.Column="0"
-                       Margin="15"
-              Visibility="{Binding IsCompanyInfoVisible}"/>
+                       Margin="15"/>
             <Image Source="{Binding SelectedCompany.Specialisation, Converter={StaticResource TypeIconConverter}}"
                    Grid.Column="2"
                    Width="18"
                    Height="18"
                    VerticalAlignment="Center"
-                   HorizontalAlignment="Center"
-              Visibility="{Binding IsCompanyInfoVisible}"/>
+                   HorizontalAlignment="Center"/>
         </Grid>
 
     </Grid>

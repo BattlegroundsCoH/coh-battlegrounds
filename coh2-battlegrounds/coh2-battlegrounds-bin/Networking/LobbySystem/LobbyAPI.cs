@@ -242,6 +242,9 @@ public sealed class LobbyAPI {
                     Specialisation = companyCall.Arguments[7]
                 };
 
+                // Set company API
+                company.SetAPI(this);
+
                 // Invoke handler
                 this.OnLobbyCompanyUpdate?.Invoke(tid, sid, company);
 

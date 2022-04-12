@@ -43,6 +43,7 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
         private static readonly string __playabilityAlliesNoPlayers = BattlegroundsInstance.Localize.GetString("LobbyView_StartMatchAlliesNoPlayers");
         private static readonly string __playabilityAxisInvalid = BattlegroundsInstance.Localize.GetString("LobbyView_StartMatchAxisInvalid");
         private static readonly string __playabilityAxisNoPlayers = BattlegroundsInstance.Localize.GetString("LobbyView_StartMatchAxisNoPlayers");
+        protected static readonly Func<string> LOCSTR_START = () => BattlegroundsInstance.Localize.GetString("LobbyView_StartMatch");
 
         private ModPackage? m_package;
 
@@ -65,7 +66,7 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
         public LobbyHostModel(LobbyAPI handle, LobbyAPIStructs.LobbyTeam allies, LobbyAPIStructs.LobbyTeam axis) : base(handle, allies, axis) {
 
             // Init buttons
-            this.StartMatchButton = new(new(this.BeginMatchSetup), Visibility.Visible);
+            this.StartMatchButton = new(LOCSTR_START(), new(this.BeginMatchSetup), Visibility.Visible);
 
             // Get scenario list
             var _scenlist = ScenarioList.GetList()
@@ -211,6 +212,8 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
 
             // Update lobby
             this.m_handle.SetLobbySetting("selected_map", scen.RelativeFilename);
+
+            // TODO: Update slots
 
         }
 

@@ -135,6 +135,7 @@
                     Margin="2,0,8,2"
                     VerticalContentAlignment="Center"
                     HorizontalContentAlignment="Center"
+                    Content="{Binding EditCompanyButton.Title}"
                     Command="{Binding EditCompanyButton.Click}"
                     IsEnabled="{Binding EditCompanyButton.IsEnabled}"
                     Background="#334252"
@@ -148,6 +149,7 @@
                     Margin="8,0,2,2"
                     VerticalContentAlignment="Center"
                     HorizontalContentAlignment="Center"
+                    Content="{Binding ExitButton.Title}"
                     Command="{Binding ExitButton.Click}"
                     Background="#582222"
                     Foreground="#FFFFFF"
@@ -298,6 +300,7 @@
             <Button Grid.Column="1" 
                     Grid.Row="9"
                     Grid.ColumnSpan="2"
+                    Content="{Binding StartMatchButton.Title}"
                     Command="{Binding StartMatchButton.Click}"
                     IsEnabled="{Binding StartMatchButton.IsEnabled}"
                     Style="{StaticResource StandardBlueButton}"/>

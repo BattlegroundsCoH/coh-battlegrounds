@@ -28,9 +28,9 @@ namespace BattlegroundsApp.Lobby.MVVM.Models;
 
 public abstract class LobbyModel : IViewModel, INotifyPropertyChanged {
 
-    public record LobbyButton(bool IsEnabled, RelayCommand Click, Visibility Visible, string Tooltip);
+    public record LobbyButton(string Title, bool IsEnabled, RelayCommand Click, Visibility Visible, string Tooltip);
 
-    public record LobbyMutButton(RelayCommand Click, Visibility Visible) : INotifyPropertyChanged {
+    public record LobbyMutButton(string Title, RelayCommand Click, Visibility Visible) : INotifyPropertyChanged {
         private bool m_isEnabled;
         private string? m_tooltip;
         public event PropertyChangedEventHandler? PropertyChanged;
@@ -65,8 +65,7 @@ public abstract class LobbyModel : IViewModel, INotifyPropertyChanged {
     }
 
     public record ModPackageOption(ModPackage ModPackage) {
-        private string m_display = ModPackage.PackageName;
-        public override string ToString() => m_display;
+        public override string ToString() => this.ModPackage.PackageName;
     }
 
     public record LobbyDropdown<T>(bool IsEnabled, Visibility IsVisible, ObservableCollection<T> Items, Action<int> SelectionChanged) : INotifyPropertyChanged {
@@ -119,6 +118,9 @@ public abstract class LobbyModel : IViewModel, INotifyPropertyChanged {
     protected static readonly LocaleKey __leaveTitle = new("LobbyView_DialogLeaveTitle");
     protected static readonly LocaleKey __leaveDesc = new("LobbyView_DialogLeaveDesc");
 
+    protected static readonly Func<string> LOCSTR_EXIT = () => BattlegroundsInstance.Localize.GetString("LobbyView_LeaveLobby");
+    protected static readonly Func<string> LOCSTR_EDIT = () => BattlegroundsInstance.Localize.GetString("LobbyView_EditCompany");
+
     protected readonly LobbyAPI m_handle;
     protected LobbyChatSpectatorModel? m_chatModel;
 
@@ -166,10 +168,10 @@ public abstract class LobbyModel : IViewModel, INotifyPropertyChanged {
         this.Axis = new(api, axis, this);
 
         // Create exit button (always behave the same)
-        this.ExitButton = new(true, new(this.LeaveLobby), Visibility.Visible, "");
+        this.ExitButton = new(LOCSTR_EXIT(), true, new(this.LeaveLobby), Visibility.Visible, "");
 
         // Create edit company button (always behaves the same)
-        this.EditCompanyButton = new(false, new(this.EditCompany), Visibility.Visible, "");
+        this.EditCompanyButton = new(LOCSTR_EDIT(), false, new(this.EditCompany), Visibility.Visible, "");
 
         // Set title
         this.LobbyTitle = this.m_handle.Title;
@@ -302,12 +304,15 @@ public abstract class LobbyModel : IViewModel, INotifyPropertyChanged {
     }
 
     private void OnCompanyUpdated(int tid, int sid, LobbyAPIStructs.LobbyCompany company) {
-        
+
+        // Log company update
+        Trace.WriteLine($"Updating company {company.Name} @ {tid}:{sid}");
+
         // Bail if outside accepted tids
         if (tid is < 0 or > 1) {
             return;
         }
-        
+
         // Get team and notify of company change
         var team = tid == 0 ? this.Allies : this.Axis;
         team.OnTeamMemberCompanyUpdated(sid, company);
