@@ -109,7 +109,7 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
             this.m_slot = teamSlot;
 
             // Check if self or AI, then set contents
-            this.SelectableCompanies = new() { DummyCompany };
+            this.SelectableCompanies = new() { teamSlot.Occupant is null ? DummyCompany : teamSlot.Occupant.Company };
 
             // Do initial view
             this.RefreshCompanyInfo();
