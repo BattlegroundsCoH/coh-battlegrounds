@@ -62,7 +62,7 @@
             <ComboBox Grid.Row="1" Width="132" Height="28" 
                       HorizontalAlignment="Left"
                       Style="{StaticResource StandardBlueDropdown}"
-                      ItemsSource="{Binding SendFilter.Items}"
+                      ItemsSource="{Binding SendFilter.Channels}"
                       HorizontalContentAlignment="Center"
                       SelectedIndex="{Binding SendFilter.CurrentIndex, Mode=TwoWay}">
             </ComboBox>
@@ -73,9 +73,8 @@
                                  Foreground="#FFFFFF"
                                  HoverColour="#536375"
                                  HorizontalContentAlignment="Center"
-                                 Content="{Binding SendMessage.Text, Converter={StaticResource LocaleConvertor}}"
+                                 Content="{Binding SendMessage.Title, Converter={StaticResource LocaleConvertor}}"
                                  Command="{Binding SendMessage.Click}"
-                                 ToolTip="{Binding SendMessage.Tooltip}"
                                  ImageSource="{StaticResource SendMessageDrawingImage}"
                                  ImageHeight="24"
                                  ImageWidth="24"/>
