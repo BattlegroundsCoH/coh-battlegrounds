@@ -7,7 +7,6 @@ using Battlegrounds.ErrorHandling.Networking;
 using Battlegrounds.Functional;
 using Battlegrounds.Networking.Communication.Golang;
 using Battlegrounds.Networking.Communication.Connections;
-using Battlegrounds.Networking.Memory;
 using Battlegrounds.Networking.Server;
 using Battlegrounds.Steam;
 
@@ -49,15 +48,10 @@ public sealed class LobbyAPI {
     private readonly bool m_isHost;
     private volatile uint m_cidcntr;
 
-    //private readonly ObjectCache<LobbyTeam> m_allies;
-    //private readonly ObjectCache<LobbyTeam> m_axis;
-    //private readonly ObjectCache<LobbyTeam> m_obs;
-    //private readonly ObjectCache<Dictionary<string, string>> m_settings;
-
     private LobbyTeam m_allies;
     private LobbyTeam m_axis;
     private LobbyTeam m_obs;
-    private Dictionary<string, string> m_settings;
+    private readonly Dictionary<string, string> m_settings;
 
     public string Title { get; }
 
@@ -69,7 +63,7 @@ public sealed class LobbyAPI {
 
     public LobbyTeam Observers => this.m_obs;
 
-    public Dictionary<string, string>? Settings => this.m_settings;
+    public Dictionary<string, string> Settings => this.m_settings;
 
     public ServerAPI ServerHandle { get; }
 
@@ -200,16 +194,19 @@ public sealed class LobbyAPI {
         switch (message.StrMsg) {
             case "Message":
 
-                // Unmarshal
-                LobbyMessage lobbyMessage = GoMarshal.JsonUnmarshal<LobbyMessage>(message.Raw);
-                var serverZone = TimeZoneInfo.FindSystemTimeZoneById(lobbyMessage.Timezone);
+                if (GoMarshal.JsonUnmarshal<LobbyMessage>(message.Raw) is LobbyMessage lobbyMessage) {
 
-                // Create timestamp
-                var datetime = FromTimestamp(lobbyMessage.Timestamp) + (__thisTimezone.BaseUtcOffset - serverZone.BaseUtcOffset);
-                lobbyMessage.Timestamp = $"{datetime.Hour}:{datetime.Minute}";
+                    // Get serverzone
+                    var serverZone = TimeZoneInfo.FindSystemTimeZoneById(lobbyMessage.Timezone);
 
-                // Trigger event
-                this.OnChatMessage?.Invoke(lobbyMessage);
+                    // Create timestamp
+                    var datetime = FromTimestamp(lobbyMessage.Timestamp) + (__thisTimezone.BaseUtcOffset - serverZone.BaseUtcOffset);
+                    lobbyMessage.Timestamp = $"{datetime.Hour}:{datetime.Minute}";
+
+                    // Trigger event
+                    this.OnChatMessage?.Invoke(lobbyMessage);
+
+                }
 
                 break;
             case "Notify.Company":

@@ -72,6 +72,7 @@ public class LobbyHostSlotModel : LobbySlot {
             return;
         }
         this.SelectableCompanies.ClearTo(company);
+        this.SelectedCompanyIndex = 0;
         this.RefreshLHSIcon();
     }
 
