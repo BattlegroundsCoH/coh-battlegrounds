@@ -37,13 +37,16 @@ using BattlegroundsApp.Utilities;
 
 namespace BattlegroundsApp.Lobby.MVVM.Models {
 
-    public class LobbyHostModel : LobbyModel, INotifyPropertyChanged {
+    public class LobbyHostModel : LobbyModel {
+        
+        private static readonly string __playabilityAlliesInvalid = BattlegroundsInstance.Localize.GetString("LobbyView_StartMatchAlliesInvalid");
+        private static readonly string __playabilityAlliesNoPlayers = BattlegroundsInstance.Localize.GetString("LobbyView_StartMatchAlliesNoPlayers");
+        private static readonly string __playabilityAxisInvalid = BattlegroundsInstance.Localize.GetString("LobbyView_StartMatchAxisInvalid");
+        private static readonly string __playabilityAxisNoPlayers = BattlegroundsInstance.Localize.GetString("LobbyView_StartMatchAxisNoPlayers");
 
         private ModPackage? m_package;
 
-        public event PropertyChangedEventHandler? PropertyChanged;
-
-        public override LobbyButton StartMatchButton { get; }
+        public override LobbyMutButton StartMatchButton { get; }
 
         public override LobbyDropdown<ScenOp> MapDropdown { get; }
 
@@ -62,7 +65,7 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
         public LobbyHostModel(LobbyAPI handle, LobbyAPIStructs.LobbyTeam allies, LobbyAPIStructs.LobbyTeam axis) : base(handle, allies, axis) {
 
             // Init buttons
-            this.StartMatchButton = new(true, new(this.BeginMatchSetup), Visibility.Visible);
+            this.StartMatchButton = new(new(this.BeginMatchSetup), Visibility.Visible);
 
             // Get scenario list
             var _scenlist = ScenarioList.GetList()
@@ -101,8 +104,37 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
             this.m_handle.OnLobbyBeginMatch += this.OnMatchBegin;
             this.m_handle.OnLobbyCancelStartup += this.OnMatchStartupCancelled;*/
 
-            // Set dropdown index
+            // Set dropdown index, cascade effect
             this.MapDropdown.Selected = 0;
+
+        }
+
+        public void RefreshPlayability() {
+
+            // Skip check if not host
+            if (!this.m_handle.IsHost) {
+                return;
+            }
+
+            // Check allies
+            var (x1, y1) = this.Allies.CanPlay();
+            bool allied = x1 && y1;
+
+            // Check axis
+            var (x2, y2) = this.Axis.CanPlay();
+            bool axis = x2 && y2;
+
+            // If both playable
+            if (allied && axis) {
+                this.StartMatchButton.IsEnabled = true;
+                this.StartMatchButton.Tooltip = null;
+            } else if (!allied) {
+                this.StartMatchButton.IsEnabled = false;
+                this.StartMatchButton.Tooltip = x1 ? __playabilityAlliesNoPlayers : __playabilityAlliesInvalid;
+            } else {
+                this.StartMatchButton.IsEnabled = false;
+                this.StartMatchButton.Tooltip = x2 ? __playabilityAxisNoPlayers : __playabilityAxisInvalid;
+            }
 
         }
 
@@ -175,7 +207,7 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
             this.UpdateGamemodeAndOptionsSelection(scen);
 
             // Notify change
-            this.PropertyChanged?.Invoke(this, new(nameof(ScenarioPreview)));
+            this.NotifyProperty(nameof(ScenarioPreview));
 
             // Update lobby
             this.m_handle.SetLobbySetting("selected_map", scen.RelativeFilename);

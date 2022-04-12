@@ -19,11 +19,16 @@ public class LobbyTeam {
 
     public LobbyAPIStructs.LobbyTeam Team => this.m_team;
 
-    public LobbyTeam(LobbyAPI lobbyAPI, LobbyAPIStructs.LobbyTeam lobbyTeam) {
+    public LobbyModel Lobby { get; }
+
+    public LobbyTeam(LobbyAPI lobbyAPI, LobbyAPIStructs.LobbyTeam lobbyTeam, LobbyModel model) {
        
         // Set team isntance
         this.m_team = lobbyTeam;
-        
+
+        // Set lobby instance
+        this.Lobby = model;
+
         // Create models
         if (lobbyAPI.IsHost) {
             this.Slot1 = new LobbyHostSlotModel(lobbyTeam.Slots[0], this);
@@ -70,10 +75,16 @@ public class LobbyTeam {
 
             // Enter GUI thread and update
             Application.Current.Dispatcher.Invoke(() => {
-                // TODO: Update something
+                if (this.Lobby is LobbyHostModel hostModel) {
+                    hostModel.RefreshPlayability();
+                }
             });
 
         }
+    }
+
+    public (bool, bool) CanPlay() {
+        return (false, false);
     }
 
 }

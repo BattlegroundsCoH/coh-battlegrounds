@@ -25,7 +25,7 @@ public class LobbyParticipantModel : LobbyModel {
 
     private bool m_hasDownloadedGamemode = false;
 
-    public override LobbyButton StartMatchButton { get; }
+    public override LobbyMutButton StartMatchButton { get; }
 
     public override LobbyDropdown<ScenOp> MapDropdown { get; }
 
@@ -42,7 +42,7 @@ public class LobbyParticipantModel : LobbyModel {
     public LobbyParticipantModel(LobbyAPI handle, LobbyAPIStructs.LobbyTeam allies, LobbyAPIStructs.LobbyTeam axis) : base(handle, allies, axis) {
 
         // Define start match buttnn
-        this.StartMatchButton = new(false, new(() => { }), Visibility.Hidden);
+        this.StartMatchButton = new(new(() => { }), Visibility.Hidden) { IsEnabled = false };
 
         // Init dropdowns 
         this.MapDropdown = new(false, Visibility.Hidden, new(), x => { });

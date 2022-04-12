@@ -28,9 +28,26 @@ namespace BattlegroundsApp.Lobby.MVVM.Models;
 
 public abstract class LobbyModel : IViewModel, INotifyPropertyChanged {
 
-    public record LobbyButton(bool IsEnabled, RelayCommand Click, Visibility Visible) : INotifyPropertyChanged {
+    public record LobbyButton(bool IsEnabled, RelayCommand Click, Visibility Visible, string Tooltip);
+
+    public record LobbyMutButton(RelayCommand Click, Visibility Visible) : INotifyPropertyChanged {
+        private bool m_isEnabled;
+        private string? m_tooltip;
         public event PropertyChangedEventHandler? PropertyChanged;
-        // TODO: Even change stuff...
+        public bool IsEnabled {
+            get => this.m_isEnabled;
+            set {
+                this.m_isEnabled = value;
+                this.PropertyChanged?.Invoke(this, new(nameof(IsEnabled)));
+            }
+        }
+        public string? Tooltip {
+            get => this.m_tooltip;
+            set {
+                this.m_tooltip = value;
+                this.PropertyChanged?.Invoke(this, new(nameof(Tooltip)));
+            }
+        }
     }
 
     public record ScenOp(Scenario Scenario) {
@@ -56,7 +73,7 @@ public abstract class LobbyModel : IViewModel, INotifyPropertyChanged {
 
         private int m_selected;
         private Visibility m_visibility = IsVisible;
-        private string m_label;
+        private string m_label = "";
 
         public event PropertyChangedEventHandler? PropertyChanged;
 
@@ -99,11 +116,6 @@ public abstract class LobbyModel : IViewModel, INotifyPropertyChanged {
 
     protected static readonly ImageSource __mapNotFound = new BitmapImage(new Uri("pack://application:,,,/Resources/ingame/unknown_map.png"));
 
-    protected static readonly LocaleKey __playabilityAlliesInvalid = new("LobbyView_StartMatchAlliesInvalid");
-    protected static readonly LocaleKey __playabilityAlliesNoPlayers = new("LobbyView_StartMatchAlliesNoPlayers");
-    protected static readonly LocaleKey __playabilityAxisInvalid = new("LobbyView_StartMatchAxisInvalid");
-    protected static readonly LocaleKey __playabilityAxisNoPlayers = new("LobbyView_StartMatchAxisNoPlayers");
-
     protected static readonly LocaleKey __leaveTitle = new("LobbyView_DialogLeaveTitle");
     protected static readonly LocaleKey __leaveDesc = new("LobbyView_DialogLeaveDesc");
 
@@ -120,7 +132,7 @@ public abstract class LobbyModel : IViewModel, INotifyPropertyChanged {
 
     public LobbyButton EditCompanyButton { get; }
 
-    public abstract LobbyButton StartMatchButton { get; }
+    public abstract LobbyMutButton StartMatchButton { get; }
 
     public abstract LobbyDropdown<ScenOp> MapDropdown { get; }
 
@@ -150,14 +162,14 @@ public abstract class LobbyModel : IViewModel, INotifyPropertyChanged {
         this.m_handle = api;
 
         // Set teams
-        this.Allies = new(api, allies);
-        this.Axis = new(api, axis);
+        this.Allies = new(api, allies, this);
+        this.Axis = new(api, axis, this);
 
         // Create exit button (always behave the same)
-        this.ExitButton = new(true, new(this.LeaveLobby), Visibility.Visible);
+        this.ExitButton = new(true, new(this.LeaveLobby), Visibility.Visible, "");
 
         // Create edit company button (always behaves the same)
-        this.EditCompanyButton = new(false, new(this.EditCompany), Visibility.Visible);
+        this.EditCompanyButton = new(false, new(this.EditCompany), Visibility.Visible, "");
 
         // Set title
         this.LobbyTitle = this.m_handle.Title;
@@ -301,6 +313,8 @@ public abstract class LobbyModel : IViewModel, INotifyPropertyChanged {
         team.OnTeamMemberCompanyUpdated(sid, company);
 
     }
+
+    protected void NotifyProperty(string property) => this.PropertyChanged?.Invoke(this, new(property));
 
     public static LobbyModel? CreateModelAsHost(LobbyAPI handler) {
 
