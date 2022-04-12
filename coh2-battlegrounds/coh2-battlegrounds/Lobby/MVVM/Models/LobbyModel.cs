@@ -164,6 +164,7 @@ public abstract class LobbyModel : IViewModel, INotifyPropertyChanged {
         
         // Subscribe to common events
         this.m_handle.OnLobbyConnectionLost += this.OnConnectionLost;
+        this.m_handle.OnLobbyCompanyUpdate += this.OnCompanyUpdated;
 
     }
 
@@ -285,6 +286,19 @@ public abstract class LobbyModel : IViewModel, INotifyPropertyChanged {
 
         // Nothing found
         return (BitmapSource?)__mapNotFound;
+
+    }
+
+    private void OnCompanyUpdated(int tid, int sid, LobbyAPIStructs.LobbyCompany company) {
+        
+        // Bail if outside accepted tids
+        if (tid is < 0 or > 1) {
+            return;
+        }
+        
+        // Get team and notify of company change
+        var team = tid == 0 ? this.Allies : this.Axis;
+        team.OnTeamMemberCompanyUpdated(sid, company);
 
     }
 

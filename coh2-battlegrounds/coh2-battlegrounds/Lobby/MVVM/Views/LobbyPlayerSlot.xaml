@@ -126,7 +126,8 @@
         </ComboBox>
 
         <Grid Grid.Column="5"
-              Visibility="{Binding IsCompanyInfoVisible}">
+              Visibility="{Binding IsCompanyInfoVisible}"
+              Margin="0,2.5,15,0">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition/>
                 <ColumnDefinition Width="18"/>
@@ -135,19 +136,22 @@
                 <converters:StringToFactionIconConverter x:Key="FactionIconConverter"/>
                 <converters:StringToCompanyTypeIconConverter x:Key="TypeIconConverter"/>
             </Grid.Resources>
-            <Image Source="{Binding ProxyCompanyType, Converter={StaticResource TypeIconConverter}}"
-                   Grid.Column="2"
-                   Width="18"
-                   Height="18"
-                   VerticalAlignment="Center"
-                   HorizontalAlignment="Center"/>
-            <TextBlock Text="{Binding ProxyCompanyName}"
+            <TextBlock Text="{Binding SelectedCompany.Name}"
                        Foreground="#FFFFFF"
                        FontSize="20"
                        FontFamily="Open Sans"
                        HorizontalAlignment="Right"
                        VerticalAlignment="Center"
-                       Grid.Column="0"/>
+                       Grid.Column="0"
+                       Margin="15"
+              Visibility="{Binding IsCompanyInfoVisible}"/>
+            <Image Source="{Binding SelectedCompany.Specialisation, Converter={StaticResource TypeIconConverter}}"
+                   Grid.Column="2"
+                   Width="18"
+                   Height="18"
+                   VerticalAlignment="Center"
+                   HorizontalAlignment="Center"
+              Visibility="{Binding IsCompanyInfoVisible}"/>
         </Grid>
 
     </Grid>

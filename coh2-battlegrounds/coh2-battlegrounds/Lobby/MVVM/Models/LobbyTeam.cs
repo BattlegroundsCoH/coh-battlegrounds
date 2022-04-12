@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System;
+using System.Windows;
 
 using Battlegrounds.Networking.LobbySystem;
 
@@ -40,6 +41,18 @@ public class LobbyTeam {
         lobbyAPI.OnLobbyTeamUpdate += this.OnLobbyTeamUpdated;
 
     }
+
+    // FP damages the mind
+    private static readonly Func<Action, int> Unit = x => { x(); return 0; };
+
+    public void OnTeamMemberCompanyUpdated(int sid, LobbyAPIStructs.LobbyCompany company)
+        => Application.Current.Dispatcher.Invoke(() => sid switch {
+            0 => Unit(() => this.Slot1.OnLobbyCompanyChanged(company)),
+            1 => Unit(() => this.Slot2.OnLobbyCompanyChanged(company)),
+            2 => Unit(() => this.Slot3.OnLobbyCompanyChanged(company)),
+            3 => Unit(() => this.Slot4.OnLobbyCompanyChanged(company)),
+            _ => Unit(() => { })
+        });
 
     private void OnLobbyTeamUpdated(LobbyAPIStructs.LobbyTeam obj) {
 
