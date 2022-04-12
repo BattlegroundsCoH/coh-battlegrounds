@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Globalization;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
@@ -7,6 +8,7 @@ using System.Windows;
 using System.Windows.Media;
 
 using Battlegrounds.Compiler;
+using Battlegrounds.Game.Database;
 using Battlegrounds.Game.DataCompany;
 using Battlegrounds.Game.Gameplay;
 using Battlegrounds.Game.Match.Play;
@@ -15,12 +17,15 @@ using Battlegrounds.Networking.LobbySystem;
 using Battlegrounds.Networking.Server;
 
 using BattlegroundsApp.LocalData;
+using BattlegroundsApp.Resources;
 
 namespace BattlegroundsApp.Lobby.MVVM.Models;
 
 public class LobbyParticipantModel : LobbyModel {
 
     private bool m_hasDownloadedGamemode = false;
+
+    private ModPackage? m_package;
 
     public override LobbyMutButton StartMatchButton { get; }
 
@@ -42,14 +47,18 @@ public class LobbyParticipantModel : LobbyModel {
         this.StartMatchButton = new("", new(() => { }), Visibility.Hidden) { IsEnabled = false };
 
         // Init dropdowns 
-        this.MapDropdown = new(false, Visibility.Hidden, new(), x => { }) { LabelContent = handle.Settings["selected_map"].ToString() };
-        this.GamemodeDropdown = new(false, Visibility.Hidden, new(), x => { }) { LabelContent = handle.Settings["selected_wc"].ToString() };
-        this.GamemodeOptionDropdown = new(false, Visibility.Hidden, new(), x => { }) { LabelContent = handle.Settings["selected_wco"].ToString() };
-        this.WeatherDropdown = new(false, Visibility.Hidden, new(), x => { }) { LabelContent = (handle.Settings["selected_daynight"].ToString() is "1") ? "On" : "Off" };
-        this.SupplySystemDropdown = new(false, Visibility.Hidden, new(), x => { }) { LabelContent = (handle.Settings["selected_supply"].ToString() is "1") ? "On" : "Off" };
-        this.ModPackageDropdown = new(false, Visibility.Hidden, new(), x => { }) { LabelContent = handle.Settings["selected_tuning"].ToString() };
+        this.MapDropdown = new(false, Visibility.Hidden, new(), x => { });
+        this.GamemodeDropdown = new(false, Visibility.Hidden, new(), x => { });
+        this.GamemodeOptionDropdown = new(false, Visibility.Hidden, new(), x => { }) { LabelContent = handle.Settings["selected_wco"] };
+        this.WeatherDropdown = new(false, Visibility.Hidden, new(), x => { }) { LabelContent = (handle.Settings["selected_daynight"] is "1") ? "On" : "Off" };
+        this.SupplySystemDropdown = new(false, Visibility.Hidden, new(), x => { }) { LabelContent = (handle.Settings["selected_supply"] is "1") ? "On" : "Off" };
+        this.ModPackageDropdown = new(false, Visibility.Hidden, new(), x => { });
 
         handle.OnLobbySettingUpdate += this.OnLobbyChange;
+
+        this.OnModPackageChange(handle.Settings["selected_tuning"]);
+        this.OnScenarioChange(handle.Settings["selected_map"]);
+        this.OnGamemodeChange(handle.Settings["selected_wc"]);
 
     }
 
@@ -282,20 +291,46 @@ public class LobbyParticipantModel : LobbyModel {
 
     }
 
-    private void OnScenarioChange(string scenario) {
+    private void OnScenarioChange(string map) {
 
-        this.MapDropdown.LabelContent = scenario;
+        Application.Current.Dispatcher.Invoke(() => {
+
+            if (ScenarioList.FromRelativeFilename(map) is not Scenario scenario) {
+                this.MapDropdown.LabelContent = map;
+                this.ScenarioPreview = this.TryGetMapSource(null);
+                this.NotifyProperty(nameof(ScenarioPreview));
+                return;
+            }
+
+            this.MapDropdown.LabelContent = scenario.Name.StartsWith("$", false, CultureInfo.InvariantCulture) && uint.TryParse(scenario.Name[1..], out uint key) ?
+                                            GameLocale.GetString(key) : scenario.Name;
+
+            this.ScenarioPreview = this.TryGetMapSource(scenario);
+
+            this.NotifyProperty(nameof(ScenarioPreview));
+
+        });
 
     }
 
     private void OnGamemodeChange(string gamemode) {
 
-        this.GamemodeDropdown.LabelContent = gamemode;
+        if (m_package is null) {
+            return;
+        }
+
+        if (WinconditionList.GetGamemodeByName(m_package.GamemodeGUID, gamemode) is not IGamemode wincondition) {
+            this.GamemodeDropdown.LabelContent = gamemode;
+            return;
+        }
+
+        this.GamemodeDropdown.LabelContent = wincondition.ToString();
 
     }
 
     private void OnGamemodeOptionChanage(string gamomodeOption) {
 
+        // TODO: Lookup the option and set its string properly
         this.GamemodeOptionDropdown.LabelContent = gamomodeOption;
 
     }
@@ -312,9 +347,15 @@ public class LobbyParticipantModel : LobbyModel {
     
     }
 
-    private void OnModPackageChange(string modPackage) { 
+    private void OnModPackageChange(string modPackage) {
 
-        this.ModPackageDropdown.LabelContent = modPackage;
+        if (ModManager.GetPackage(modPackage) is not ModPackage tunning) {
+            this.ModPackageDropdown.LabelContent = modPackage;
+            return;
+        }
+
+        this.m_package = tunning;
+        this.ModPackageDropdown.LabelContent = tunning.PackageName;
     
     }
 
