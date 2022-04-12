@@ -62,8 +62,7 @@ Additionally, you must fullfill the following:
 
 ## Community
 
-The mod has an official website at: <`<Website Link>`>
-And you can join our Discord [here](https://discord.gg/n26gXsk5R5)
+The mod has an [official website](https://cohbattlegrounds.com/), and you can join our Discord [here](https://discord.gg/n26gXsk5R5)
 
 ---
 
