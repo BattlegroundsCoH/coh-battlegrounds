@@ -9,7 +9,7 @@ using BattlegroundsApp.Utilities;
 
 namespace BattlegroundsApp.Lobby.MVVM.Models;
 
-public abstract class LobbyContextMenu {
+public abstract class LobbyContextMenu : INotifyPropertyChanged {
 
     protected static readonly Func<bool> NeverTrue = () => false;
     protected static readonly Func<LobbyContextAction, Visibility> NeverVisible = _ => Visibility.Collapsed;
@@ -25,6 +25,8 @@ public abstract class LobbyContextMenu {
     protected static readonly Func<string> LOCSTR_STANDARDAI = () => BattlegroundsInstance.Localize.GetString("TeamPlayerCard_Menu_Item_Add_Standard_Ai");
     protected static readonly Func<string> LOCSTR_HARDAI = () => BattlegroundsInstance.Localize.GetString("TeamPlayerCard_Menu_Item_Add_Hard_Ai");
     protected static readonly Func<string> LOCSTR_EXPERTAI = () => BattlegroundsInstance.Localize.GetString("TeamPlayerCard_Menu_Item_Add_Expert_Ai");
+
+    public event PropertyChangedEventHandler? PropertyChanged;
 
     public record LobbyContextAction(string Title, RelayCommand Click, Func<bool> EnabledTest, Func<LobbyContextAction, Visibility> VisibilityTest) : INotifyPropertyChanged {
         public event PropertyChangedEventHandler? PropertyChanged;
@@ -106,6 +108,9 @@ public abstract class LobbyContextMenu {
         this.AddExpertAI.Enabled = true;
         this.AddStandardAI.Enabled = true;
         this.AddHardAI.Enabled = true;
+
+        // Refresh last sep
+        this.PropertyChanged?.Invoke(this, new(nameof(LastSepVisible)));
 
     }
 

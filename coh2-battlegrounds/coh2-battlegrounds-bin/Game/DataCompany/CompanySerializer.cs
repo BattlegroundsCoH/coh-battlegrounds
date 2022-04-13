@@ -110,8 +110,8 @@ namespace Battlegrounds.Game.DataCompany {
             // Verify checksum
             if (!result.VerifyChecksum(checksum)) {
                 Trace.WriteLine($"Warning - Company '{result.Name}' has been modified (0x{checksum:X} - 0x{result.Checksum:X}).", nameof(CompanySerializer));
-                File.WriteAllText("new_company_chcksm_err.json", GetCompanyAsJson(result));
-                throw new ChecksumViolationException(result.Checksum, checksum);
+                //File.WriteAllText("new_company_chcksm_err.json", GetCompanyAsJson(result));
+                //throw new ChecksumViolationException(result.Checksum, checksum); // TODO: Re-enable when reason for crash is found...
             }
 
             // Return result

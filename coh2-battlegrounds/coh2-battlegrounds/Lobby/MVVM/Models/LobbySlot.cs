@@ -82,7 +82,7 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
 
         public string LeftDisplayString => this.Slot.State switch {
             0 => LOCSTR_SLOT_OPEN(),
-            1 => this.Slot.Occupant?.DisplayName ?? "FATAL ERROR",
+            1 => this.Slot.IsOccupied ? GetOccupantName(this.Slot.Occupant) : "ERROR",
             2 => LOCSTR_SLOT_LOCKED(),
             _ => string.Empty
         };
@@ -214,6 +214,11 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
             this.Handle.SetCompany(this.Slot.TeamID, this.Slot.SlotID, this.SelectedCompany);
 
         }
+
+        protected string GetOccupantName(LobbyAPIStructs.LobbyMember mem) => mem.Role switch {
+            3 => BattlegroundsInstance.Localize.GetEnum((AIDifficulty)mem.AILevel),
+            _ => mem.DisplayName
+        };
 
         protected abstract void OnLobbyCompanyChanged(int newValue);
 

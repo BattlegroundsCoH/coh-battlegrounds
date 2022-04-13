@@ -97,7 +97,6 @@ namespace BattlegroundsApp {
             this.MainWindow = window;
             this.MainWindow.Show();
 
-
         }
 
         private void VerifyIntegrity() {

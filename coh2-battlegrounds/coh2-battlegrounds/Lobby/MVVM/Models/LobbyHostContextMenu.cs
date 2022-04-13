@@ -28,7 +28,7 @@ public class LobbyHostContextMenu : LobbyContextMenu {
         this.KickPlayer = new(LOCSTR_KICKPLAYER(), new(this.KickOccupant), () => !this.Slot.IsSelf && this.Slot.Slot.IsOccupied, VisibleIfEnabled);
 
         // Slot state
-        this.LockSlot = new(LOCSTR_LOCK_SLOT(), new(this.LockSlotAction), () => !this.Slot.Slot.IsOccupied, VisibleIfEnabled);
+        this.LockSlot = new(LOCSTR_LOCK_SLOT(), new(this.LockSlotAction), () => this.Slot.Slot.State == 0, VisibleIfEnabled);
         this.UnlockSlot = new(LOCSTR_UNLOCK_SLOT(), new(this.UnlockSlotAction), () => this.Slot.Slot.State == 2, VisibleIfEnabled);
 
         // AI stuff

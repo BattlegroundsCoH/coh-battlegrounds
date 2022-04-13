@@ -73,6 +73,23 @@ namespace Battlegrounds.Functional {
         }
 
         /// <summary>
+        /// Takes all values in input array and returns a new array consisting of all non-null values from input.
+        /// </summary>
+        /// <typeparam name="V">The element type in array-</typeparam>
+        /// <param name="array">The array to pick non-null values from.</param>
+        /// <returns>A new array consisting of only non-null values</returns>
+        public static V[] NotNull<V>(this V?[] array) {
+            V[] res = new V[array.Length];
+            int j = 0;
+            for (int i = 0; i < res.Length; i++) { 
+                if (array[i] is V v) {
+                    res[j++] = v;
+                }
+            }
+            return res[..j];
+        }
+
+        /// <summary>
         /// Flattens a jagged array into one continous array. Elements will preserve the order of the arrays.
         /// </summary>
         /// <typeparam name="T">The type the elements in the array are of.</typeparam>

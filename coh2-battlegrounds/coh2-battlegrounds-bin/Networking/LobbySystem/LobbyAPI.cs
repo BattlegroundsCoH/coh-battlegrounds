@@ -408,21 +408,11 @@ public sealed class LobbyAPI {
             throw new InvokePermissionAccessDeniedException("Cannot invoke remote method that requires host-privellige");
         }
 
+        // Get invariant strength
+        var inv = company.Strength.ToString(CultureInfo.InvariantCulture);
+
         // Call AI
-        RemoteVoidCall("AddAI", tid, sid, difficulty, EncBool(company.IsAuto), EncBool(company.IsNone), company.Name, company.Army, company.Strength, company.Specialisation);
-
-        // Update team
-        /*var t = tid == 0 ? this.m_allies : this.m_axis;
-        t.Slots[sid].Occupant = new() {
-            AILevel = difficulty,
-            Company = company,
-            Role = 3,
-            API = this
-        };
-        t.Slots[sid].State = 1;*/
-
-        // Trigger self update
-        this.OnLobbySelfUpdate?.Invoke();
+        RemoteVoidCall("AddAI", tid, sid, difficulty, EncBool(company.IsAuto), EncBool(company.IsNone), company.Name, company.Army, inv, company.Specialisation);
 
     }
 
@@ -430,14 +420,6 @@ public sealed class LobbyAPI {
         
         // Trigger remote call
         this.RemoteVoidCall("RemoveOccupant", tid, sid);
-
-        // Clear slot
-        //var t = tid == 0 ? this.m_allies : this.m_axis;
-        //t.Slots[sid].Occupant = null;
-        //t.Slots[sid].State = 0;
-
-        // Update self
-        this.OnLobbySelfUpdate?.Invoke();
 
     }
 
@@ -542,7 +524,7 @@ public sealed class LobbyAPI {
         // Create message
         Message msg = new Message() {
             CID = this.m_cidcntr++,
-            Content = GoMarshal.JsonMarshal(new RemoteCallMessage() { Method = method, Arguments = args.Map(x => x.ToString()) }),
+            Content = GoMarshal.JsonMarshal(new RemoteCallMessage() { Method = method, Arguments = args.Map(x => x.ToString()).NotNull() }),
             Mode = MessageMode.BrokerCall,
             Sender = this.m_connection.SelfID,
             Target = 0
@@ -581,7 +563,7 @@ public sealed class LobbyAPI {
         // Create message
         Message msg = new Message() {
             CID = this.m_cidcntr++,
-            Content = GoMarshal.JsonMarshal(new RemoteCallMessage() { Method = method, Arguments = args.Map(x => x.ToString()) }),
+            Content = GoMarshal.JsonMarshal(new RemoteCallMessage() { Method = method, Arguments = args.Map(x => x.ToString()).NotNull() }),
             Mode = MessageMode.BrokerCall,
             Sender = this.m_connection.SelfID,
             Target = 0
@@ -593,4 +575,3 @@ public sealed class LobbyAPI {
     }
 
 }
-

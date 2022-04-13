@@ -49,12 +49,12 @@ public class CompanyBuilder : IBuilder<Company> {
     }
 
     public sealed record RemoveAbilityAction(Ability Ability) : IEditAction<BuildableCompany> {
-        private Ability m_removedAbility; // cache ability incase we need to undo this
+        private Ability? m_removedAbility; // cache ability incase we need to undo this
         public BuildableCompany Apply(BuildableCompany target) => target with {
             Abilities = target.Abilities.Except(this.m_removedAbility = target.Abilities.First(x => x == Ability))
         };
         public BuildableCompany Undo(BuildableCompany target) => target with {
-            Abilities = target.Abilities.Append(this.m_removedAbility)
+            Abilities = this.m_removedAbility is null ? target.Abilities : target.Abilities.Append(this.m_removedAbility)
         };
     }
 
@@ -68,7 +68,7 @@ public class CompanyBuilder : IBuilder<Company> {
     }
 
     public sealed record RenameAction(string Name) : IEditAction<BuildableCompany> {
-        private string m_prevName;
+        private string m_prevName = "";
         public BuildableCompany Apply(BuildableCompany target) => target with {
             Name = this.Name.And(() => this.m_prevName = target.Name)
         };
@@ -97,7 +97,7 @@ public class CompanyBuilder : IBuilder<Company> {
         };
     }
 
-    private Company m_companyResult;
+    private Company? m_companyResult;
     private BuildableCompany m_target;
 
     private readonly Stack<IEditAction<BuildableCompany>> m_actions;
@@ -124,7 +124,7 @@ public class CompanyBuilder : IBuilder<Company> {
     /// <remarks>
     /// Is <see langword="null"/> if no call to <see cref="Commit"/> have been made.
     /// </remarks>
-    public Company Result => this.m_companyResult;
+    public Company Result => this.m_companyResult ?? throw new InvalidOperationException("To obtain build result, Commit must have been invoked at least once first.");
 
     /// <summary>
     /// 
@@ -406,11 +406,20 @@ public class CompanyBuilder : IBuilder<Company> {
     /// <returns>Array of blueprints for transport use.</returns>
     public SquadBlueprint[] GetTransports(bool isTow) {
 
-        // Grab faction data
-        var data = ModManager.GetPackageFromGuid(this.m_target.ModGuid).FactionSettings[this.m_target.Faction];
+        if (ModManager.GetPackageFromGuid(this.m_target.ModGuid) is ModPackage package) {
 
-        // Return based on boolean flag
-        return (isTow ? data.TowTransports : data.Transports).Map(x => BlueprintManager.FromBlueprintName<SquadBlueprint>(x));
+            // Grab faction data
+            var data = package.FactionSettings[this.m_target.Faction];
+
+            // Return based on boolean flag
+            return (isTow ? data.TowTransports : data.Transports).Map(x => BlueprintManager.FromBlueprintName<SquadBlueprint>(x));
+
+        } else {
+
+            // Return nothing
+            return Array.Empty<SquadBlueprint>();
+
+        }
 
     }
 
@@ -424,14 +433,14 @@ public class CompanyBuilder : IBuilder<Company> {
     /// <returns>
     /// The calling <see cref="CompanyBuilder"/> instance.
     /// </returns>
-    [MemberNotNull(nameof(Result), nameof(m_companyResult))]
-    public virtual IBuilder<Company> Commit(object arg = null) {
+    [MemberNotNull(nameof(m_companyResult))]
+    public virtual IBuilder<Company> Commit(object? arg = null) {
 
         // Update company fluff
         var company = new Company(this.m_target.Faction);
         company.SetType(this.m_target.Type);
         company.SetAvailability(this.AvailabilityType);
-        company.SetAppVersion(Assembly.GetExecutingAssembly().GetName().Version.ToString());
+        company.SetAppVersion(Assembly.GetExecutingAssembly().GetName().Version?.ToString() ?? "0.0.0.0");
         company.Name = this.m_target.Name;
         company.TuningGUID = this.m_target.ModGuid;
         company.UpdateStatistics(_ => this.Statistics);
@@ -460,7 +469,7 @@ public class CompanyBuilder : IBuilder<Company> {
     /// </summary>
     /// <param name="name"></param>
     /// <returns></returns>
-    public virtual bool HasAbility(string blueprint) => this.m_companyResult.Abilities.Any(x => x.ABP.Name == blueprint);
+    public virtual bool HasAbility(string blueprint) => this.m_target.Abilities.Any(x => x.ABP.Name == blueprint);
 
     /// <summary>
     /// Get if the company under construction has a squad with specified <paramref name="blueprint"/>.
@@ -486,9 +495,10 @@ public class CompanyBuilder : IBuilder<Company> {
     /// </summary>
     /// <param name="action"></param>
     public virtual void EachAbility(Action<Ability, bool> action) {
-        var package = ModManager.GetPackageFromGuid(this.m_target.ModGuid);
-        _ = Company.GetSpecialUnitAbilities(this.m_target.Faction, package, this.m_target.Units.Map(x => x.Blueprint).Distinct()).ForEach(x => action(x, true));
-        _ = this.m_target.Abilities.ForEach(x => action(x, false));
+        if (ModManager.GetPackageFromGuid(this.m_target.ModGuid) is ModPackage package) {
+            Company.GetSpecialUnitAbilities(this.m_target.Faction, package, this.m_target.Units.Map(x => x.Blueprint).Distinct()).ForEach(x => action(x, true));
+            this.m_target.Abilities.ForEach(x => action(x, false));
+        }
     }
 
     /// <summary>

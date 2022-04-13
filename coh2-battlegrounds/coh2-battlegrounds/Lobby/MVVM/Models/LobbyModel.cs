@@ -107,7 +107,7 @@ public abstract class LobbyModel : IViewModel, INotifyPropertyChanged {
         public Visibility LabelVisibility { 
             get => (this.ShouldShow is Visibility.Visible) ? Visibility.Collapsed : Visibility.Visible;
             set {
-                this.LabelVisibility = value;
+                //this.LabelVisibility = value;
                 this.PropertyChanged?.Invoke(this, new(nameof(LabelVisibility)));
             }
         } 
