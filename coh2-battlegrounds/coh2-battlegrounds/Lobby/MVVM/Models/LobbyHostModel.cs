@@ -144,12 +144,6 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
 
         }
 
-        private void OnSelfChanged() {
-            Application.Current.Dispatcher.Invoke(() => {
-
-            });
-        }
-
         private void BeginMatchSetup() {
 
             // If not host -> bail.

@@ -12,8 +12,6 @@ using Battlegrounds.Networking;
 using Battlegrounds.Networking.LobbySystem;
 using Battlegrounds.Networking.Server;
 
-using BattlegroundsApp.Dialogs.HostGame;
-using BattlegroundsApp.Dialogs.LobbyPassword;
 using BattlegroundsApp.Lobby.MVVM.Models;
 using BattlegroundsApp.LocalData;
 using BattlegroundsApp.Modals;
@@ -91,19 +89,20 @@ namespace BattlegroundsApp.MVVM.Models {
             this.StateListWiewHeader = new LocaleKey("GameBrowserView_State");
             this.PlayersListWiewHeader = new LocaleKey("GameBrowserView_Players");
             this.PasswordListWiewHeader = new LocaleKey("GameBrowserView_Password");
-            this.InfoKeyVisible = Visibility.Collapsed;
+            this.InfoKey = _noMatches;
+            this.InfoKeyVisible = Visibility.Visible;
 
             // Set selected index
             this.SelectedLobbyIndex = -1;
 
             // Check connection and update
             Task.Run(() => {
-                Application.Current.Dispatcher.Invoke(() => {
-                    if (!NetworkInterface.HasInternetConnection()) {
+                if (!NetworkInterface.HasInternetConnection()) {
+                    Application.Current.Dispatcher.Invoke(() => {
                         this.InfoKey = _noConnection;
                         this.InfoKeyVisible = Visibility.Visible;
-                    }
-                });
+                    });
+                }
             });
 
         }
@@ -155,6 +154,12 @@ namespace BattlegroundsApp.MVVM.Models {
                 return;
             }
 
+            // Ensure the interface object is set
+            if (NetworkInterface.APIObject is null) {
+                return;
+            }
+
+            // Show modal
             Modals.Dialogs.MVVM.Models.HostGameDialogViewModel.ShowModal(mControl, (vm, resault) => {
 
                 // Check return value
@@ -217,6 +222,12 @@ namespace BattlegroundsApp.MVVM.Models {
             => this.JoinButton();
 
         public void JoinButton() {
+
+            // Ensure the interface object is set
+            if (NetworkInterface.APIObject is null) {
+                return;
+            }
+
             if (this.SelectedLobby is ServerLobby lobby) {
 
                 // If password, ask for it
@@ -335,6 +346,10 @@ namespace BattlegroundsApp.MVVM.Models {
                         }
                         this.InfoKey = _noMatches;
                         this.InfoKeyVisible = Visibility.Visible;
+                    });
+                } else {
+                    Application.Current.Dispatcher.Invoke(() => {
+                        this.InfoKeyVisible = Visibility.Collapsed;
                     });
                 }
 
