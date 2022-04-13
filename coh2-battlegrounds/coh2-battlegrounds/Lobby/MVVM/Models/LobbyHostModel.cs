@@ -169,6 +169,12 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
             // Set lobby status here
             this.m_handle.SetLobbyState(LobbyAPIStructs.LobbyState.InLobby);
 
+            // Re-enable
+            Application.Current.Dispatcher.Invoke(() => {
+                this.StartMatchButton.IsEnabled = true;
+                this.StartMatchButton.Title = LOCSTR_START();
+            });
+
         }
 
         private void MapSelectionChanged(int newIndex, int oldIndex) {

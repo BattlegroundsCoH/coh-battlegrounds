@@ -44,6 +44,11 @@ public class LobbyParticipantSlotModel : LobbySlot {
             // Notify index
             this.SelectedCompanyIndex = 0;
 
+            // Set self company
+            if (this.m_slot.Occupant is LobbyAPIStructs.LobbyMember mem) {
+                mem.Company = this.SelectedCompany;
+            }
+
             // Trigger notify if only one selectable
             if (this.SelectableCompanies.Count is 1) {
                 this.NotifyProperty(new(nameof(this.SelectedCompany)));
@@ -57,7 +62,7 @@ public class LobbyParticipantSlotModel : LobbySlot {
         if (this.Slot.API is null) {
             return;
         }
-        if (this.Slot.IsSelf()) {
+        if (this.IsSelf) {
             this.SetCompany();
         }
     }
@@ -66,7 +71,7 @@ public class LobbyParticipantSlotModel : LobbySlot {
         if (this.Slot.API is null) {
             return;
         }
-        if (this.Slot.IsSelf()) {
+        if (this.IsSelf) {
             return;
         }
         this.SelectableCompanies.ClearTo(company);
