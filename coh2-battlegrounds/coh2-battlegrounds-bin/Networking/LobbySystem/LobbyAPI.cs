@@ -292,10 +292,16 @@ public sealed class LobbyAPI {
 
                     // Get serverzone
                     var serverZone = TimeZoneInfo.FindSystemTimeZoneById(lobbyMessage.Timezone);
+                    bool isDaylightSaving = TimeZoneInfo.Local.IsDaylightSavingTime(DateTime.Parse(lobbyMessage.Timestamp));
 
                     // Create timestamp
                     var datetime = FromTimestamp(lobbyMessage.Timestamp) + (__thisTimezone.BaseUtcOffset - serverZone.BaseUtcOffset);
-                    lobbyMessage.Timestamp = $"{datetime.Hour}:{datetime.Minute}";
+
+                    if (isDaylightSaving) {
+                        datetime = datetime.AddHours(1);
+                    }
+
+                    lobbyMessage.Timestamp = $"{datetime.Hour:00}:{datetime.Minute:00}";
 
                     // Trigger event
                     this.OnChatMessage?.Invoke(lobbyMessage);
