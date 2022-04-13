@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Text;
+
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
@@ -10,38 +12,57 @@ using Battlegrounds.Networking.Communication.Connections;
 using Battlegrounds.Networking.Server;
 using Battlegrounds.Steam;
 
-using Battlegrounds.ErrorHandling.CommonExceptions;
-using System.Text;
-
 using static Battlegrounds.Networking.LobbySystem.LobbyAPIStructs;
 
 namespace Battlegrounds.Networking.LobbySystem;
 
 /// <summary>
-/// 
+/// Event handler for <see cref="LobbyAPI"/> events.
 /// </summary>
-public delegate void LobbyMatchEventHandler();
+public delegate void LobbyEventHandler();
 
 /// <summary>
-/// 
+/// Event handler for <see cref="LobbyAPI"/> events with an argument object.
 /// </summary>
-/// <typeparam name="T"></typeparam>
-/// <param name="args"></param>
-public delegate void LobbyMatchEventHandler<T>(T args);
+/// <typeparam name="T">The argument object type.</typeparam>
+/// <param name="args">The arguments to pass aling to the handler.</param>
+public delegate void LobbyEventHandler<T>(T args);
 
 /// <summary>
-/// 
+/// Event arguments to a startup cancelled event.
 /// </summary>
-/// <param name="CancelID"></param>
-/// <param name="CancelName"></param>
-public record LobbyMatchStartupCancelledEventArgs(ulong CancelID, string CancelName);
+/// <param name="CancelId">The ID of the user who cancelled the startup.</param>
+/// <param name="CancelName">The name of the user who cancelled the startup.</param>
+public record LobbyMatchStartupCancelledEventArgs(ulong CancelId, string CancelName);
+
+/// <summary>
+/// Event arguments to the settings changed event.
+/// </summary>
+/// <param name="SettingsKey">The setting that was changed.</param>
+/// <param name="SettingsValue">The new value of the setting.</param>
+public record LobbySettingsChangedEventArgs(string SettingsKey, string SettingsValue);
+
+/// <summary>
+/// Event arguments to the system message event.
+/// </summary>
+/// <param name="MemberId">The ID of the user who caused the message.</param>
+/// <param name="SystemMessage">The message to display.</param>
+/// <param name="SystemContext">The context of the system message.</param>
+public record LobbySystemMessageEventArgs(ulong MemberId, string SystemMessage, string SystemContext);
+
+/// <summary>
+/// Event arguments for the company changed event.
+/// </summary>
+/// <param name="TeamId">The team of the changed company.</param>
+/// <param name="SlotId">The slot of the changed company.</param>
+/// <param name="Company">The new company.</param>
+public record LobbyCompanyChangedEventArgs(int TeamId, int SlotId, LobbyCompany Company);
 
 /// <summary>
 /// Class for interacting with the lobby logic on the server.
 /// </summary>
 public sealed class LobbyAPI {
 
-    private static readonly TimeSpan __cacheTime = TimeSpan.FromSeconds(3.5);
     private static readonly TimeZoneInfo __thisTimezone = TimeZoneInfo.Local;
 
     private readonly ServerConnection m_connection;
@@ -53,52 +74,120 @@ public sealed class LobbyAPI {
     private LobbyTeam m_obs;
     private readonly Dictionary<string, string> m_settings;
 
+    /// <summary>
+    /// Get the title of the joined lobby.
+    /// </summary>
     public string Title { get; }
 
+    /// <summary>
+    /// Get if the API should act with host privilege.
+    /// </summary>
     public bool IsHost => this.m_isHost;
 
+    /// <summary>
+    /// Get the allied team.
+    /// </summary>
     public LobbyTeam Allies => this.m_allies;
 
+    /// <summary>
+    /// Get the axis team.
+    /// </summary>
     public LobbyTeam Axis => this.m_axis;
 
+    /// <summary>
+    /// Get the observer team.
+    /// </summary>
     public LobbyTeam Observers => this.m_obs;
 
+    /// <summary>
+    /// Get (or set) the settings of the lobby.
+    /// </summary>
     public Dictionary<string, string> Settings => this.m_settings;
 
+    /// <summary>
+    /// Get the handle to the <see cref="ServerAPI"/> instance.
+    /// </summary>
     public ServerAPI ServerHandle { get; }
 
+    /// <summary>
+    /// Get the self-user instance.
+    /// </summary>
     public SteamUser Self { get; }
 
-    public event Action<LobbyMessage>? OnChatMessage;
+    /// <summary>
+    /// Event triggered when a lobby chat message is received.
+    /// </summary>
+    public event LobbyEventHandler<LobbyMessage>? OnChatMessage;
 
-    public event Action<ulong, string, string>? OnSystemMessage;
+    /// <summary>
+    /// Event triggered when the system announces a message.
+    /// </summary>
+    public event LobbyEventHandler<LobbySystemMessageEventArgs>? OnSystemMessage;
 
-    public event Action? OnLobbySelfUpdate;
+    /// <summary>
+    /// Event triggered when a lobby team instance is changed.
+    /// </summary>
+    public event LobbyEventHandler<LobbyTeam>? OnLobbyTeamUpdate;
 
-    public event Action<LobbyTeam>? OnLobbyTeamUpdate;
+    /// <summary>
+    /// Event triggered when a lobby slot isntance is changed.
+    /// </summary>
+    public event LobbyEventHandler<LobbySlot>? OnLobbySlotUpdate;
 
-    public event LobbyMatchEventHandler<LobbySlot>? OnLobbySlotUpdate;
+    /// <summary>
+    /// Event triggered when a lobby company is changed.
+    /// </summary>
+    public event LobbyEventHandler<LobbyCompanyChangedEventArgs>? OnLobbyCompanyUpdate;
 
-    public event Action<int, int, LobbyCompany>? OnLobbyCompanyUpdate;
+    /// <summary>
+    /// Event triggered when the lobby settings have been changed.
+    /// </summary>
+    public event LobbyEventHandler<LobbySettingsChangedEventArgs>? OnLobbySettingUpdate;
 
-    public event Action<string, string>? OnLobbySettingUpdate;
+    /// <summary>
+    /// Event triggered when the connection to the lobby was lost.
+    /// </summary>
+    public event LobbyEventHandler<string>? OnLobbyConnectionLost;
 
-    public event Action<string>? OnLobbyConnectionLost;
+    /// <summary>
+    /// Event triggered when the match startup has been cancelled.
+    /// </summary>
+    public event LobbyEventHandler<LobbyMatchStartupCancelledEventArgs>? OnLobbyCancelStartup;
 
-    public event LobbyMatchEventHandler<LobbyMatchStartupCancelledEventArgs>? OnLobbyCancelStartup;
+    /// <summary>
+    /// Event triggered when the host has pressed the "begin match" button.
+    /// </summary>
+    public event LobbyEventHandler? OnLobbyBeginMatch;
 
-    public event Action? OnLobbyBeginMatch;
+    /// <summary>
+    /// Event triggered when the game should be launched.
+    /// </summary>
+    public event LobbyEventHandler? OnLobbyLaunchGame;
 
-    public event Action? OnLobbyLaunchGame;
+    /// <summary>
+    /// Event triggered when the lobby has sent a request for the local machine's company file.
+    /// </summary>
+    public event LobbyEventHandler<ServerAPI>? OnLobbyRequestCompany;
 
-    public event Action<ServerAPI>? OnLobbyRequestCompany;
+    /// <summary>
+    /// Event triggered when the lobby has been asked to notify the local machine the gamemode is ready for download.
+    /// </summary>
+    public event LobbyEventHandler<ServerAPI>? OnLobbyNotifyGamemode;
 
-    public event Action<ServerAPI>? OnLobbyNotifyGamemode;
+    /// <summary>
+    /// Event triggered when the lobby has been asked to notify the local machine the results of the latest match are available.
+    /// </summary>
+    public event LobbyEventHandler<ServerAPI>? OnLobbyNotifyResults;
 
-    public event Action<ServerAPI>? OnLobbyNotifyResults;
-
-    private Action? OnLobbyCancelReceived;
-
+    /// <summary>
+    /// Initialises a new <see cref="LobbyAPI"/> instance that is connected along a <see cref="ServerConnection"/> to a lobby.
+    /// </summary>
+    /// <param name="isHost">Flag marking if host. This is for local checking, the server verifies this independently.</param>
+    /// <param name="title">The title of the lobby that was joined or hosted.</param>
+    /// <param name="self">The <see cref="SteamUser"/> instance that represents the local machine.</param>
+    /// <param name="connection">The connection that connects the local machine to the server.</param>
+    /// <param name="serverAPI">The API object that performs HTTP API calls to the server.</param>
+    /// <exception cref="Exception"></exception>
     public LobbyAPI(bool isHost, string title, SteamUser self, ServerConnection connection, ServerAPI serverAPI) {
 
         // Store ref to server handle
@@ -179,14 +268,14 @@ public sealed class LobbyAPI {
             if (message.Who == this.m_connection.SelfID) {
                 this.OnLobbyConnectionLost?.Invoke(message.Kick ? "KICK" : "CLOSED");
             } else {
-                this.OnSystemMessage?.Invoke(message.Who, message.StrMsg, message.Kick ? "KICK" : "LEFT");
+                this.OnSystemMessage?.Invoke(new(message.Who, message.StrMsg, message.Kick ? "KICK" : "LEFT"));
             }
             return;
         }
 
         // If join, handle
         if (message.MessageType is ContentMessgeType.Join) {
-            this.OnSystemMessage?.Invoke(message.Who, message.StrMsg, "JOIN");
+            this.OnSystemMessage?.Invoke(new(message.Who, message.StrMsg, "JOIN"));
             return;
         }
 
@@ -243,7 +332,7 @@ public sealed class LobbyAPI {
                 company.SetAPI(this);
 
                 // Invoke handler
-                this.OnLobbyCompanyUpdate?.Invoke(tid, sid, company);
+                this.OnLobbyCompanyUpdate?.Invoke(new(tid, sid, company));
 
                 break;
             case "Notify.Team":
@@ -292,14 +381,13 @@ public sealed class LobbyAPI {
                 var (settingKey, settingValue) = settingCall.Decode<string, string>();
 
                 // Notify
-                this.OnLobbySettingUpdate?.Invoke(settingKey, settingValue);
+                this.OnLobbySettingUpdate?.Invoke(new(settingKey, settingValue));
 
                 break;
             case "Notify.Start":
                 this.OnLobbyBeginMatch?.Invoke();
                 break;
             case "Notify.Cancel":
-                this.OnLobbyCancelReceived?.Invoke();
                 this.OnLobbyCancelStartup?.Invoke(new(sender, Encoding.UTF8.GetString(message.Raw)));
                 break;
             case "Notify.Launch":
@@ -328,61 +416,29 @@ public sealed class LobbyAPI {
         return DateTime.Today.AddHours(h).AddMinutes(m);
     }
 
+    /// <summary>
+    /// Disconnects the local machine from the lobby.
+    /// </summary>
     public void Disconnect() {
         this.m_connection.Shutdown();
     }
 
-    public LobbyTeam GetTeam(int tid, bool RefreshInternalReference = true) {
-
-        // Assert range
-        if (tid is < 0 or > 2)
-            throw new ArgumentOutOfRangeException(nameof(tid), tid, $"Team ID must be in range 0 <= tid <= 2");
-
-        // Get team
-        var team = this.RemoteCall<LobbyTeam>("GetTeam", tid);
-        if (team is null) {
-            throw new ObjectNotFoundException("Failed to find lobby team instance.");
-        }
-        
-        // Invoke team update
-        this.OnLobbyTeamUpdate?.Invoke(team);
-
-        // Update private field
-        if (RefreshInternalReference) {
-            switch (tid) {
-                case 0:
-                    this.m_allies = team;
-                    break;
-                case 1:
-                    this.m_axis = team;
-                    break;
-                case 2:
-                    this.m_obs = team;
-                    break;
-                default:
-                    break;
-            }
-        }
-
-        // Return team
-        return team;
-
-    }
-
-    public LobbyMember GetLobbyMember(ulong mid)
-        => this.RemoteCall<LobbyMember>("GetLobbyMember", mid) ?? throw new ObjectNotFoundException("Failed to get valid lobby member instance.");
-
-    public LobbyCompany GetCompany(ulong mid)
-        => this.RemoteCall<LobbyCompany>("GetCompany", mid) ?? throw new ObjectNotFoundException("Failed to get valid company instance.");
-
-    public Dictionary<string, string> GetSettings()
-        => this.RemoteCall<Dictionary<string, string>>("GetSettings") ?? new Dictionary<string, string>();
-
+    /// <summary>
+    /// Gets the amount of players in the lobby.
+    /// </summary>
+    /// <param name="humansOnly">Only cound human players.</param>
+    /// <returns>The mount of players, and if the <paramref name="humansOnly"/> flag is not set, also the amount of AI players.</returns>
     public uint GetPlayerCount(bool humansOnly = false)
         => this.RemoteCall<uint>("GetPlayerCount", EncBool(humansOnly));
 
     private static string EncBool(bool b) => b ? "1" : "0";
 
+    /// <summary>
+    /// Set the company of the specified slot.
+    /// </summary>
+    /// <param name="tid">The team ID to set company for. In the range 0 &#x2264; T &#x2264; 1</param>
+    /// <param name="sid">The slot ID in the range 0 &#x2264; S &#x2264; 4</param>
+    /// <param name="company">The company to set.</param>
     public void SetCompany(int tid, int sid, LobbyCompany company) {
 
         // Convert to str
@@ -394,13 +450,27 @@ public sealed class LobbyAPI {
         this.RemoteVoidCall("SetCompany", tid, sid, auto, none, company.Name, company.Army, strength, company.Specialisation);
 
         // Trigger self update
-        this.OnLobbyCompanyUpdate?.Invoke(tid, sid, company);
+        this.OnLobbyCompanyUpdate?.Invoke(new(tid, sid, company)); // This might need to be removed!
 
     }
 
+    /// <summary>
+    /// Moves a member to specified team and slot.
+    /// </summary>
+    /// <param name="mid">The ID of the member that is moving.</param>
+    /// <param name="tid">The team ID containing the slot being move to. Accepts values in the range 0 &#x2264; T &#x2264; 2</param>
+    /// <param name="sid">The slot ID in the range 0 &#x2264; S &#x2264; 4 that the member should move to.</param>
     public void MoveSlot(ulong mid, int tid, int sid)
         => this.RemoteVoidCall("MoveSlot", mid, tid, sid);
 
+    /// <summary>
+    /// Add an AI player to the specified slow.
+    /// </summary>
+    /// <param name="tid">The ID of the team to add AI to. Accepts values in the range 0 &#x2264; T &#x2264; 1</param>
+    /// <param name="sid">The slot ID in the range 0 &#x2264; S &#x2264; 4</param>
+    /// <param name="difficulty">The AI difficulty level (integer representation of <see cref="AIDifficulty"/>)</param>
+    /// <param name="company">The company initially given to the AI.</param>
+    /// <exception cref="InvokePermissionAccessDeniedException"></exception>
     public void AddAI(int tid, int sid, int difficulty, LobbyCompany company) {
     
         // Make sure we can
@@ -416,31 +486,73 @@ public sealed class LobbyAPI {
 
     }
 
+    /// <summary>
+    /// Removes an occupant from the lobby.
+    /// </summary>
+    /// <param name="tid">The team ID containing the occupant to be removed. Accepts values in the range 0 &#x2264; T &#x2264; 2</param>
+    /// <param name="sid">The slot ID in the range 0 &#x2264; S &#x2264; 4</param>
+    /// <exception cref="InvokePermissionAccessDeniedException"></exception>
     public void RemoveOccupant(int tid, int sid) {
-        
+
+        // Make sure we can
+        if (!this.m_isHost) {
+            throw new InvokePermissionAccessDeniedException("Cannot invoke remote method that requires host-privellige");
+        }
+
         // Trigger remote call
         this.RemoteVoidCall("RemoveOccupant", tid, sid);
 
     }
 
+    /// <summary>
+    /// Locks the unlocked slot at specified position.
+    /// </summary>
+    /// <param name="tid">The team ID containing the slot to be locked. Accepts values in the range 0 &#x2264; T &#x2264; 1</param>
+    /// <param name="sid">The slot ID in the range 0 &#x2264; S &#x2264; 4</param>
     public void LockSlot(int tid, int sid)
         => this.RemoteVoidCall("LockSlot", tid, sid);
 
+    /// <summary>
+    /// Unlocks the locked slot at specified position.
+    /// </summary>
+    /// <param name="tid">The team ID containing the slot to be unlocked. Accepts values in the range 0 &#x2264; T &#x2264; 1</param>
+    /// <param name="sid">The slot ID in the range 0 &#x2264; S &#x2264; 4</param>
     public void UnlockSlot(int tid, int sid)
         => this.RemoteVoidCall("UnlockSlot", tid, sid);
 
+    /// <summary>
+    /// Send a message along the (lobby) global chat.
+    /// </summary>
+    /// <param name="mid">The ID of the member sending the chat message.</param>
+    /// <param name="msg">The message to send.</param>
     public void GlobalChat(ulong mid, string msg)
         => this.RemoteVoidCall("GlobalChat", mid, msg);
 
+    /// <summary>
+    /// Send a message along the designated team chat.
+    /// </summary>
+    /// <param name="mid">The ID of the member sending the chat message.</param>
+    /// <param name="msg">The message to send.</param>
     public void TeamChat(ulong mid, string msg)
         => this.RemoteVoidCall("TeamChat", mid, msg);
 
+    /// <summary>
+    /// Set the lobby setting.
+    /// </summary>
+    /// <param name="setting">The name of the setting being set.</param>
+    /// <param name="value">The value of the setting being set.</param>
     public void SetLobbySetting(string setting, string value) {
         if (this.m_isHost) {
+            this.m_settings[setting] = value; // Apply locally, just in case
             this.RemoteVoidCall("SetLobbySetting", setting, value);
         }
     }
 
+    /// <summary>
+    /// Set the lobby state.
+    /// </summary>
+    /// <param name="state">The new state.</param>
+    /// <exception cref="ArgumentException"></exception>
     public void SetLobbyState(LobbyState state) {
         if (this.m_isHost) {
             this.RemoteVoidCall("SetLobbyState", state switch {
@@ -453,31 +565,42 @@ public sealed class LobbyAPI {
         }
     }
 
+    /// <summary>
+    /// Set the capacity of axis and allied teams.
+    /// </summary>
+    /// <param name="newCapacity">The new capacity of the teams, where accpeted values are in the range 0 &#x2264; <b>C</b> &#x2264; 4</param>
+    /// <returns>If new capacity was set, <see langword="true"/>; Otherwise <see langword="false"/>.</returns>
     public bool SetTeamsCapacity(int newCapacity) {
+        
+        // Input sanity check
+        if (newCapacity is < 0 or > 4) {
+            return false;
+        }
+
         if (this.m_isHost) {                
             return this.RemoteCall<bool>("SetTeamsCapacity", newCapacity);
         }
         return true;
     }
 
+    /// <summary>
+    /// Start the match following the startup grace period.
+    /// </summary>
+    /// <param name="cancelTime">The amount of seconds the server will wait before sending back a response if the match should continue.</param>
+    /// <returns>If match received server OK, <see langword="true"/>; Otherwise <see langword="false"/>.</returns>
     public bool StartMatch(double cancelTime) {
 
         // Send start match command
-        this.RemoteVoidCall("StartMatch");
+        bool wasCancelled = this.RemoteCall<bool>("StartMatch", cancelTime);
 
-        // Flag marking whether the match was cancelled by others
-        bool wasCancelled = false;
-
-        // Set cancel listener
-        this.OnLobbyCancelReceived = () => wasCancelled = true;
-
-        // TODO: Wait for remote input (5s)
-
-        // Return false
-        return !wasCancelled;
+        // Return if someone cancelled the match 
+        return wasCancelled;
 
     }
 
+    /// <summary>
+    /// This will halt the ongoing match startup process.
+    /// </summary>
     public void CancelMatch() {
 
         // Send cancel match command
@@ -485,12 +608,19 @@ public sealed class LobbyAPI {
 
     }
 
+    /// <summary>
+    /// This will ask all participants to launch their game.
+    /// </summary>
     public void LaunchMatch() {
         if (this.m_isHost) {
             this.RemoteVoidCall("LaunchGame");
         }
     }
 
+    /// <summary>
+    /// This will request the company file of all specified members.
+    /// </summary>
+    /// <param name="members">The list of members to fetch ID from. If list is empty, all participant companies will be requested.</param>
     public void RequestCompanyFile(params ulong[] members) {
         if (members.Length == 0) {
             members = this.Allies.Slots.Concat(this.Axis.Slots).Filter(x => x.IsOccupied && !x.IsSelf()).Map(x => x.Occupant?.MemberID ?? 0);
@@ -500,16 +630,52 @@ public sealed class LobbyAPI {
         }
     }
 
+    /// <summary>
+    /// This will notify all participants the gamemode is ready for download on the server.
+    /// </summary>
     public void ReleaseGamemode() {
         if (this.m_isHost) {
             this.RemoteVoidCall("ReleaseGamemode");
         }
     }
 
+    /// <summary>
+    /// This will inform all participants that their updated company files are now available for download.
+    /// </summary>
     public void ReleaseResults() {
         if (this.m_isHost) {
             this.RemoteVoidCall("ReleaseResults");
         }
+    }
+
+    /// <summary>
+    /// This will halt the ongoing match for all participants.
+    /// </summary>
+    public void HaltMatch() {
+        if (this.m_isHost) {
+            this.RemoteVoidCall("HaltMatch");
+        }
+    }
+
+    /// <summary>
+    /// Notifies the host of an error that was encounted by the calling participant.
+    /// </summary>
+    /// <param name="errorType">The type of error that was encountered.</param>
+    /// <param name="errorMessage">The associated message with the error.</param>
+    public void NotifyError(string errorType, string errorMessage) {
+
+        // Create message
+        Message msg = new Message() {
+            CID = this.m_cidcntr++,
+            Content = GoMarshal.JsonMarshal(new RemoteCallMessage() { Method = "NotifyHostError", Arguments = new[] { errorType, errorMessage } }),
+            Mode = MessageMode.BrokerCall,
+            Sender = this.m_connection.SelfID,
+            Target = 0
+        };
+
+        // Send but ignore response
+        this.m_connection.SendMessage(msg);
+
     }
 
     private static T BitConvert<T>(byte[] raw, Func<byte[], int, T> func) {

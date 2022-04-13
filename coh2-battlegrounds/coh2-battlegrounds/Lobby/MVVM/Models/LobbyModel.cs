@@ -13,10 +13,14 @@ using System.Windows.Media.Imaging;
 
 using Battlegrounds;
 using Battlegrounds.Game.Database;
+using Battlegrounds.Game.DataCompany;
+using Battlegrounds.Game.Gameplay;
 using Battlegrounds.Locale;
 using Battlegrounds.Modding;
 using Battlegrounds.Networking.LobbySystem;
+using Battlegrounds.Networking.Server;
 
+using BattlegroundsApp.LocalData;
 using BattlegroundsApp.Modals;
 using BattlegroundsApp.Modals.Dialogs.MVVM.Models;
 using BattlegroundsApp.MVVM;
@@ -180,6 +184,8 @@ public abstract class LobbyModel : IViewModel, INotifyPropertyChanged {
         // Subscribe to common events
         this.m_handle.OnLobbyConnectionLost += this.OnConnectionLost;
         this.m_handle.OnLobbyCompanyUpdate += this.OnCompanyUpdated;
+        this.m_handle.OnLobbyCancelStartup += this.OnMatchStartupCancelled;
+        this.m_handle.OnLobbyRequestCompany += this.OnCompanyRequested;
 
     }
 
@@ -220,6 +226,72 @@ public abstract class LobbyModel : IViewModel, INotifyPropertyChanged {
 
     protected void EditCompany() {
         // TODO: Implement me :D
+    }
+
+    private void OnCompanyRequested(ServerAPI obj) {
+
+        // Log request
+        Trace.WriteLine("Received request to upload company file", nameof(LobbyHostModel));
+
+        // Get self
+        ulong selfid = this.m_handle.Self.ID;
+        var self = this.m_handle.Allies.GetSlotOfMember(selfid) ?? this.m_handle.Axis.GetSlotOfMember(selfid);
+        if (self is not null && self.Occupant is not null) {
+
+            // Make sure there's a company
+            if (self.Occupant.Company is null) {
+                return;
+            }
+
+            // Get company name
+            string companyName = self.Occupant.Company.Name;
+
+            // Get company faction
+            Faction faction = Faction.FromName(self.Occupant.Company.Army);
+
+            // Get company
+            var company = PlayerCompanies.FromNameAndFaction(companyName, faction);
+            if (company is null) {
+                Trace.WriteLine($"Failed to upload company json file (Company '{companyName}' not found).", nameof(LobbyHostModel));
+                return;
+            }
+
+            // Get company json
+            string companyJson = CompanySerializer.GetCompanyAsJson(company, indent: false);
+            if (string.IsNullOrEmpty(companyJson)) {
+                Trace.WriteLine($"Failed to upload company json file (Company '{companyName}' not found).", nameof(LobbyHostModel));
+                return;
+            }
+
+            // Upload file
+            if (obj.UploadCompany(selfid, companyJson, (a, b) => Trace.WriteLine($"Upload company progress {a}/{b}", nameof(LobbyHostModel))) is not UploadResult.UPLOAD_SUCCESS) {
+                Trace.WriteLine("Failed to upload company json file.", nameof(LobbyHostModel));
+            }
+
+        } else {
+
+            // Log request
+            Trace.WriteLine("Failed to find self-instance and cannot upload company file.", nameof(LobbyHostModel));
+
+        }
+
+    }
+
+    private void OnMatchStartupCancelled(LobbyMatchStartupCancelledEventArgs e) {
+
+        // Inform user
+        if (this.m_chatModel is not null) {
+            this.m_chatModel.SystemMessage($"{e.CancelName} has cancelled the match.", Colors.Gray);
+        }
+
+        // Invoke on GUI
+        Application.Current.Dispatcher.Invoke(() => {
+
+            // Allow exit lobby
+            //this.ExitLobby.Enabled = true;
+
+        });
+
     }
 
     private void OnConnectionLost(string reason) {
@@ -304,19 +376,16 @@ public abstract class LobbyModel : IViewModel, INotifyPropertyChanged {
 
     }
 
-    private void OnCompanyUpdated(int tid, int sid, LobbyAPIStructs.LobbyCompany company) {
-
-        // Log company update
-        Trace.WriteLine($"Updating company {company.Name} @ {tid}:{sid}");
+    private void OnCompanyUpdated(LobbyCompanyChangedEventArgs e) {
 
         // Bail if outside accepted tids
-        if (tid is < 0 or > 1) {
+        if (e.TeamId is < 0 or > 1) {
             return;
         }
 
         // Get team and notify of company change
-        var team = tid == 0 ? this.Allies : this.Axis;
-        team.OnTeamMemberCompanyUpdated(sid, company);
+        var team = e.TeamId == 0 ? this.Allies : this.Axis;
+        team.OnTeamMemberCompanyUpdated(e.SlotId, e.Company);
 
     }
 

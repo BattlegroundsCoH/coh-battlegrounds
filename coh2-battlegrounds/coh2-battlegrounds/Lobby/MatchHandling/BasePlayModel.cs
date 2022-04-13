@@ -93,7 +93,7 @@ internal abstract class BasePlayModel {
     protected void CreateMatchInfo(ModPackage package) {
 
         // Get settings (most up-to-date)
-        var settings = this.m_handle.GetSettings();
+        var settings = this.m_handle.Settings;
 
         // Collect settings
         string scenario = settings.GetValueOrDefault("selected_map", string.Empty);
@@ -114,8 +114,8 @@ internal abstract class BasePlayModel {
         ValRef<byte> axisCounter = 0;
 
         // Get teams (most up-to-date)
-        var alliesLobby = this.m_handle.GetTeam(0);
-        var axisLobby = this.m_handle.GetTeam(1);
+        var alliesLobby = this.m_handle.Allies;
+        var axisLobby = this.m_handle.Axis;
 
         // Get allies
         var allies = alliesLobby.Slots.Filter(x => x.State is 1)

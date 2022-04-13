@@ -78,8 +78,10 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
             var tunlist = new List<ModPackageOption>();
             ModManager.EachPackage(x => tunlist.Add(new ModPackageOption(x)));
 
+            // Init mod package dropdown
             this.ModPackageDropdown = new(true, Visibility.Visible, new(tunlist), this.ModPackageSelectionChanged);
 
+            // Set default package
             this.m_package = this.ModPackageDropdown.Items[0].ModPackage;
 
             // Get On & Off collection
@@ -91,19 +93,6 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
             this.GamemodeOptionDropdown = new(true, Visibility.Visible, new(), this.GamemodeOptionSelectionChanged);
             this.WeatherDropdown = new(true, Visibility.Visible, onOfflist, this.WeatherSelectionChanged);
             this.SupplySystemDropdown = new(true, Visibility.Visible, onOfflist, this.SupplySystemSelectionChanged);
-
-            // Add handlers to remote updates and notifications
-            /*this.m_handle.OnLobbySelfUpdate += this.OnSelfChanged;
-            this.m_handle.OnLobbyTeamUpdate += this.OnTeamChanged;
-            this.m_handle.OnLobbyCompanyUpdate += this.OnCompanyChanged;
-            this.m_handle.OnLobbySlotUpdate += this.OnSlotChanged;
-            this.m_handle.OnLobbyConnectionLost += this.OnConnectionLost;
-            this.m_handle.OnLobbyRequestCompany += this.OnCompanyRequested;
-            this.m_handle.OnLobbyNotifyGamemode += this.OnGamemodeReleased;
-            this.m_handle.OnLobbyNotifyResults += this.OnResultsReleased;
-            this.m_handle.OnLobbyLaunchGame += this.OnLaunchGame;
-            this.m_handle.OnLobbyBeginMatch += this.OnMatchBegin;
-            this.m_handle.OnLobbyCancelStartup += this.OnMatchStartupCancelled;*/
 
             // Set dropdown index, cascade effect
             this.MapDropdown.Selected = 0;

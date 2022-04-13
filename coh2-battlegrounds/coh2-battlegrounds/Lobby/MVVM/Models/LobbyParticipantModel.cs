@@ -54,28 +54,17 @@ public class LobbyParticipantModel : LobbyModel {
         this.SupplySystemDropdown = new(false, Visibility.Hidden, new(), (x, y) => { }) { LabelContent = (handle.Settings["selected_supply"] is "1") ? "On" : "Off" };
         this.ModPackageDropdown = new(false, Visibility.Hidden, new(), (x, y) => { });
 
+        // Subscribe to lobby events
         handle.OnLobbySettingUpdate += this.OnLobbyChange;
+        handle.OnLobbyNotifyGamemode += this.OnGamemodeReleased;
+        handle.OnLobbyNotifyResults += this.OnResultsReleased;
+        handle.OnLobbyBeginMatch += this.OnMatchBegin;
+        handle.OnLobbyLaunchGame += this.OnLaunchGame;
 
+        // Trigger initial view
         this.OnModPackageChange(handle.Settings["selected_tuning"]);
         this.OnScenarioChange(handle.Settings["selected_map"]);
         this.OnGamemodeChange(handle.Settings["selected_wc"]);
-
-    }
-
-    private void OnMatchStartupCancelled(LobbyMatchStartupCancelledEventArgs e) {
-
-        // Inform user
-        if (this.m_chatModel is not null) {
-            this.m_chatModel.SystemMessage($"{e.CancelName} has cancelled the match.", Colors.Gray);
-        }
-
-        // Invoke on GUI
-        Application.Current.Dispatcher.Invoke(() => {
-
-            // Allow exit lobby
-            //this.ExitLobby.Enabled = true;
-
-        });
 
     }
 
@@ -148,11 +137,24 @@ public class LobbyParticipantModel : LobbyModel {
                 // Check status
                 if (status is DownloadResult.DOWNLOAD_SUCCESS) {
 
-                    // Load it
-                    var company = CompanySerializer.GetCompanyFromJson(Encoding.UTF8.GetString(data));
+                    // Make sure data aint null
+                    if (data is null) {
+                        this.m_chatModel?.SystemMessage($"Failed to download company results!", Colors.DarkRed);
+                        return;
+                    }
 
-                    // Save it
-                    PlayerCompanies.SaveCompany(company);
+                    // Load it
+                    if (CompanySerializer.GetCompanyFromJson(Encoding.UTF8.GetString(data)) is Company company) {
+
+                        // Save it
+                        PlayerCompanies.SaveCompany(company);
+
+                    } else {
+
+                        // Log
+                        this.m_chatModel?.SystemMessage($"Failed to download valid company results!", Colors.DarkRed);
+
+                    }
 
                 } else {
                     Trace.WriteLine($"Failed to download company results!", nameof(LobbyHostModel));
@@ -186,6 +188,12 @@ public class LobbyParticipantModel : LobbyModel {
 
                 if (status is DownloadResult.DOWNLOAD_SUCCESS) {
 
+                    // Make sure data aint null
+                    if (data is null) {
+                        this.m_chatModel?.SystemMessage($"Failed to download gamemode", Colors.DarkRed);
+                        return;
+                    }
+
                     // File sga to gamemode file
                     File.WriteAllBytes(WinconditionCompiler.GetArchivePath(), data);
 
@@ -193,17 +201,14 @@ public class LobbyParticipantModel : LobbyModel {
                     this.m_hasDownloadedGamemode = true;
 
                     // Inform user
-                    if (this.m_chatModel is not null) {
-                        this.m_chatModel.SystemMessage($"Gamemode downloaded", Colors.Gray);
-                    }
+                    this.m_chatModel?.SystemMessage($"Gamemode downloaded", Colors.Gray);
 
                 } else {
 
                     // Inform user
-                    if (this.m_chatModel is not null) {
-                        this.m_chatModel.SystemMessage($"Failed to download gamemode", Colors.DarkRed);
-                    }
+                    this.m_chatModel?.SystemMessage($"Failed to download gamemode", Colors.DarkRed);
 
+                    // Log
                     Trace.WriteLine($"Failed to download gamemode! (E = {status})", nameof(LobbyHostModel));
 
                 }
@@ -214,78 +219,29 @@ public class LobbyParticipantModel : LobbyModel {
 
     }
 
-    private void OnCompanyRequested(ServerAPI obj) {
+    private void OnLobbyChange(LobbySettingsChangedEventArgs e) {
 
-        // Log request
-        Trace.WriteLine("Received request to upload company file", nameof(LobbyHostModel));
-
-        // Get self
-        ulong selfid = this.m_handle.Self.ID;
-        var self = this.m_handle.Allies.GetSlotOfMember(selfid) ?? this.m_handle.Axis.GetSlotOfMember(selfid);
-        if (self is not null && self.Occupant is not null) {
-
-            // Make sure there's a company
-            if (self.Occupant.Company is null) {
-                return;
-            }
-
-            // Get company name
-            string companyName = self.Occupant.Company.Name;
-
-            // Get company faction
-            Faction faction = Faction.FromName(self.Occupant.Company.Army);
-
-            // Get company
-            var company = PlayerCompanies.FromNameAndFaction(companyName, faction);
-            if (company is null) {
-                Trace.WriteLine($"Failed to upload company json file (Company '{companyName}' not found).", nameof(LobbyHostModel));
-                return;
-            }
-
-            // Get company json
-            string companyJson = CompanySerializer.GetCompanyAsJson(company, indent: false);
-            if (string.IsNullOrEmpty(companyJson)) {
-                Trace.WriteLine($"Failed to upload company json file (Company '{companyName}' not found).", nameof(LobbyHostModel));
-                return;
-            }
-
-            // Upload file
-            if (obj.UploadCompany(selfid, companyJson, (a, b) => Trace.WriteLine($"Upload company progress {a}/{b}", nameof(LobbyHostModel))) is not UploadResult.UPLOAD_SUCCESS) {
-                Trace.WriteLine("Failed to upload company json file.", nameof(LobbyHostModel));
-            }
-
-        } else {
-
-            // Log request
-            Trace.WriteLine("Failed to find self-instance and cannot upload company file.", nameof(LobbyHostModel));
-
-        }
-
-    }
-
-    private void OnLobbyChange(string settingKey, string settingValue) {
-
-        switch (settingKey) {
+        switch (e.SettingsKey) {
             case "selected_map":
-                this.OnScenarioChange(settingValue);
+                this.OnScenarioChange(e.SettingsValue);
                 break;
             case "selected_wc":
-                this.OnGamemodeChange(settingValue);
+                this.OnGamemodeChange(e.SettingsValue);
                 break;
             case "selected_wco":
-                this.OnGamemodeOptionChanage(settingValue);
+                this.OnGamemodeOptionChanage(e.SettingsValue);
                 break;
             case "selected_daynight":
-                this.OnWeatherSettingChange(settingValue);
+                this.OnWeatherSettingChange(e.SettingsValue);
                 break;
             case "selected_supply":
-                this.OnSupplySettingChange(settingValue);
+                this.OnSupplySettingChange(e.SettingsValue);
                 break;
             case "selected_tuning":
-                this.OnModPackageChange(settingValue);
+                this.OnModPackageChange(e.SettingsValue);
                 break;
             default:
-                Trace.WriteLine($"Unexpected setting key: {settingKey}");
+                Trace.WriteLine($"Unexpected setting key: {e.SettingsKey}", nameof(LobbyParticipantModel));
                 break;
         }
 
@@ -324,7 +280,7 @@ public class LobbyParticipantModel : LobbyModel {
             return;
         }
 
-        this.GamemodeDropdown.LabelContent = wincondition.ToString();
+        this.GamemodeDropdown.LabelContent = wincondition.ToString() ?? "Unknown Wincondition";
 
     }
 

@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
-using System.Diagnostics.CodeAnalysis;
 using System.Windows;
 using System.Windows.Documents;
 using System.Windows.Input;
@@ -25,7 +24,7 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
             this.Display = display;
             this.ChannelID = cid;
         }
-        public override string ToString() => Battlegrounds.BattlegroundsInstance.Localize.GetString(this.Display);
+        public override string ToString() => BattlegroundsInstance.Localize.GetString(this.Display);
     }
 
     public class LobbyChatSpectatorModel : IViewModel, INotifyPropertyChanged {
@@ -111,19 +110,19 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
 
         }
 
-        private void OnSystemMessage(ulong who, string name, string context) {
-            switch (context) {
+        private void OnSystemMessage(LobbySystemMessageEventArgs e) {
+            switch (e.SystemContext) {
                 case "JOIN":
-                    this.SystemMessage($"{name} joined the lobby", Colors.Yellow);
+                    this.SystemMessage($"{e.SystemMessage} joined the lobby", Colors.Yellow);
                     break;
                 case "LEFT":
-                    this.SystemMessage($"{name} has left the lobby", Colors.Yellow);
+                    this.SystemMessage($"{e.SystemMessage} has left the lobby", Colors.Yellow);
                     break;
                 case "KICK":
-                    this.SystemMessage($"{name} was kicked from the lobby", Colors.Yellow);
+                    this.SystemMessage($"{e.SystemMessage} was kicked from the lobby", Colors.Yellow);
                     break;
                 default:
-                    Trace.WriteLine($"Unknown context triggered by '{who}' ({name}) ctxt = {context}", nameof(LobbyChatSpectatorModel));
+                    Trace.WriteLine($"Unknown context triggered by '{e.MemberId}' ({e.SystemMessage}) ctxt = {e.SystemContext}", nameof(LobbyChatSpectatorModel));
                     break;
             }
         }
