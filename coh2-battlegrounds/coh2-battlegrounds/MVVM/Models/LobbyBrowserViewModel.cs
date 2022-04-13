@@ -24,7 +24,7 @@ namespace BattlegroundsApp.MVVM.Models {
 
         public event PropertyChangedEventHandler? PropertyChanged;
         public void Update(object sender) {
-            this.PropertyChanged?.Invoke(sender, new("Join"));
+            this.PropertyChanged?.Invoke(this, new("Join"));
         }
     }
 
@@ -101,16 +101,14 @@ namespace BattlegroundsApp.MVVM.Models {
                     Application.Current.Dispatcher.Invoke(() => {
                         this.InfoKey = _noConnection;
                         this.InfoKeyVisible = Visibility.Visible;
+                        this.PropertyChanged?.Invoke(this, new(nameof(InfoKeyVisible)));
                     });
                 }
             });
 
         }
 
-        public event PropertyChangedEventHandler? PropertyChanged {
-            add => ((INotifyPropertyChanged)this.Join).PropertyChanged += value;
-            remove => ((INotifyPropertyChanged)this.Join).PropertyChanged -= value;
-        }
+        public event PropertyChangedEventHandler? PropertyChanged;
 
         public void RefreshJoin() => this.Join.Update(this);
 
@@ -140,7 +138,23 @@ namespace BattlegroundsApp.MVVM.Models {
 
                 // update lobbies
                 Application.Current.Dispatcher.Invoke(() => {
+                    
+                    // Set flag
+                    if (lobbies.Count == 0) {
+                        this.InfoKey = _noMatches;
+                        this.InfoKeyVisible = Visibility.Visible;
+                    } else {
+                        this.InfoKey = null;
+                        this.InfoKeyVisible = Visibility.Collapsed;
+                    }
+
+                    // Notify change
+                    this.PropertyChanged?.Invoke(this, new(nameof(InfoKey)));
+                    this.PropertyChanged?.Invoke(this, new(nameof(InfoKeyVisible)));
+
+                    // Add all lobbies
                     lobbies.ForEach(this.Lobbies.Add);
+
                 });
 
             });
@@ -336,21 +350,6 @@ namespace BattlegroundsApp.MVVM.Models {
                     lobs =  new();
                 } else {
                     lobs = NetworkInterface.APIObject.GetLobbies();
-                }
-
-                // If none, show no matches found
-                if (lobs.Count is 0) {
-                    Application.Current.Dispatcher.Invoke(() => {
-                        if (this.InfoKey == _noConnection) {
-                            return;
-                        }
-                        this.InfoKey = _noMatches;
-                        this.InfoKeyVisible = Visibility.Visible;
-                    });
-                } else {
-                    Application.Current.Dispatcher.Invoke(() => {
-                        this.InfoKeyVisible = Visibility.Collapsed;
-                    });
                 }
 
                 // Return lobbies
