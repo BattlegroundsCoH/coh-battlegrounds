@@ -23,8 +23,6 @@ namespace BattlegroundsApp.Lobby.MVVM.Models;
 
 public class LobbyParticipantModel : LobbyModel {
 
-    private static readonly Func<string> LOCSTR_WAIT = () => BattlegroundsInstance.Localize.GetString("LobbyView_WaitMatch");
-
     private bool m_hasDownloadedGamemode = false;
 
     private ModPackage? m_package;
