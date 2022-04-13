@@ -39,7 +39,7 @@ namespace coh2_battlegrounds_bin_tests {
             // Tell BG to load itself
             if (DatabaseManager.DatabaseLoaded is false) {
                 bool canContinue = false;
-                Environment.CurrentDirectory = @"E:\coh2_battlegrounds\coh2-battlegrounds\coh2-battlegrounds\bin\Debug\net5.0-windows";
+                Environment.CurrentDirectory = @"E:\coh2_battlegrounds\coh2-battlegrounds\coh2-battlegrounds\bin\Debug\net6.0-windows";
                 BattlegroundsInstance.LoadInstance();
                 DatabaseManager.LoadAllDatabases((a, b) => canContinue = true);
                 while (!canContinue) {

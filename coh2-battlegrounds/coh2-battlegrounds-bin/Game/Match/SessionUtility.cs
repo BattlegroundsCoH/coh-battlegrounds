@@ -76,8 +76,11 @@ namespace Battlegrounds.Game.Match {
             // Get the input directory
             var buildFolder = BattlegroundsInstance.GetRelativePath(BattlegroundsPaths.BUILD_FOLDER, string.Empty);
 
+            // Get the locale compiler
+            var locCompiler = new LocaleCompiler();
+
             // Return the result of the win condition compilation
-            return WinconditionCompiler.CompileToSga(buildFolder, sessionScarFile, session.Gamemode, sourceFinder, includeFiles.ToArray());
+            return WinconditionCompiler.CompileToSga(buildFolder, sessionScarFile, session.Gamemode, sourceFinder, locCompiler, includeFiles.ToArray());
 
         }
 

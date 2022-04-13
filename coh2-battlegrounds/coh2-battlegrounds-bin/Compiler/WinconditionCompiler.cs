@@ -37,7 +37,7 @@ namespace Battlegrounds.Compiler {
         /// <param name="source">The wincondition source file locator.</param>
         /// <param name="includeFiles">Additional files to include in the gamemode.</param>
         /// <returns>True of the archive file was created sucessfully. False if any error occured.</returns>
-        public static bool CompileToSga(string workdir, string sessionFile, IGamemode wincondition, IWinconditionSource source, params WinconditionSourceFile[] includeFiles) {
+        public static bool CompileToSga(string workdir, string sessionFile, IGamemode wincondition, IWinconditionSource source, LocaleCompiler locCompiler, params WinconditionSourceFile[] includeFiles) {
 
             // Verify is win condition source is valid
             if (source is null) {
@@ -118,10 +118,14 @@ namespace Battlegrounds.Compiler {
 
             // Add and compile locale files
             foreach (var file in localeFiles) {
-                // TODO: Add locale injector here
-                if (!AddFile(archiveDef, string.Empty, workdir, file, true, Encoding.Unicode)) {
-                    return false;
-                }
+
+                // Grab path and log
+                string abspath = Path.GetFullPath(workdir + file.Path.Replace("/", "\\"));
+                Trace.WriteLine($"Adding locale file [ABS] <{abspath}>", nameof(WinconditionCompiler));
+
+                // Translate the locale file
+                locCompiler.TranslateLocale(file.Contents, abspath);
+
             }
 
             // Add end TOC

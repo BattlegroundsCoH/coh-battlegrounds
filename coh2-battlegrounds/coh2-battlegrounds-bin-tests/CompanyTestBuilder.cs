@@ -160,18 +160,18 @@ namespace coh2_battlegrounds_bin_tests {
 
         public static Company CreateAdvancedGermanCompany() {
 
-            // Create a dummy company
-            CompanyBuilder companyBuilder = new CompanyBuilder().NewCompany(Faction.Wehrmacht)
-                .ChangeName("29th Panzer Regiment")
-                .ChangeTuningMod("142b113740474c82a60b0a428bd553d5");
-            UnitBuilder unitBuilder = new UnitBuilder();
+            // Grab mod guid
+            var guid = ModGuid.FromGuid("142b113740474c82a60b0a428bd553d5");
 
+            // Create a dummy company
+            CompanyBuilder companyBuilder
+                = CompanyBuilder.NewCompany("29th Panzer Regiment", CompanyType.Motorized, CompanyAvailabilityType.MultiplayerOnly, Faction.Wehrmacht, guid);
 
             // Basic infantry
-            companyBuilder.AddAndCommitUnit(unitBuilder.SetBlueprint("grenadier_squad_bg").SetDeploymentPhase(DeploymentPhase.PhaseInitial).GetAndReset());
-            companyBuilder.AddAndCommitUnit(unitBuilder.SetBlueprint("grenadier_squad_bg").SetDeploymentPhase(DeploymentPhase.PhaseInitial).GetAndReset());
-            companyBuilder.AddAndCommitUnit(unitBuilder.SetBlueprint("grenadier_squad_bg").SetDeploymentPhase(DeploymentPhase.PhaseInitial).GetAndReset());
-            companyBuilder.AddAndCommitUnit(unitBuilder.SetBlueprint("grenadier_squad_bg").SetDeploymentPhase(DeploymentPhase.PhaseA).GetAndReset());
+            companyBuilder.AddUnit(UnitBuilder.NewUnit("grenadier_squad_bg", guid).SetDeploymentPhase(DeploymentPhase.PhaseInitial));
+            companyBuilder.AddUnit(UnitBuilder.NewUnit("grenadier_squad_bg", guid).SetDeploymentPhase(DeploymentPhase.PhaseInitial));
+            companyBuilder.AddUnit(UnitBuilder.NewUnit("grenadier_squad_bg", guid).SetDeploymentPhase(DeploymentPhase.PhaseInitial));
+            companyBuilder.AddUnit(UnitBuilder.NewUnit("grenadier_squad_bg", guid).SetDeploymentPhase(DeploymentPhase.PhaseA));
 
             // Commit changes
             companyBuilder.Commit();

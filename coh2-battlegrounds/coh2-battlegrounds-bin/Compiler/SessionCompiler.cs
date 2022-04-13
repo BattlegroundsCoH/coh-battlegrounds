@@ -20,7 +20,7 @@ namespace Battlegrounds.Compiler {
     /// </summary>
     public class SessionCompiler : ISessionCompiler {
 
-        private ICompanyCompiler m_companyCompiler;
+        private ICompanyCompiler? m_companyCompiler;
 
         /// <summary>
         /// Create a new <see cref="SessionCompiler{T}"/> instance.
