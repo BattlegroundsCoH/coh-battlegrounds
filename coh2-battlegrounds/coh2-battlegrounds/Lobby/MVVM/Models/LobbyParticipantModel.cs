@@ -89,6 +89,17 @@ public class LobbyParticipantModel : LobbyModel {
 
     private void OnLaunchGame() {
 
+        // Invoke on GUI
+        Application.Current.Dispatcher.Invoke(() => {
+
+            // Reset text
+            this.StartMatchButton.Title = LOCSTR_PLAYING();
+
+            // Re-enable
+            this.StartMatchButton.IsEnabled = false;
+
+        });
+
         // Create overwatch strategy
         var overwatch = new MemberOverwatchStrategy();
 

@@ -152,10 +152,10 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
             Application.Current.Dispatcher.Invoke(() => {
 
                 // Reset text
-                this.StartMatchButton.Title = LOCSTR_START();
+                this.StartMatchButton.Title = LOCSTR_PLAYING();
 
                 // Re-enable
-                this.StartMatchButton.IsEnabled = true;
+                this.StartMatchButton.IsEnabled = false;
 
             });
 
