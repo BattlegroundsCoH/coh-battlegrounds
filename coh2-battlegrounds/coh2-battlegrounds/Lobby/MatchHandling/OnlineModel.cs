@@ -60,14 +60,14 @@ internal class OnlineModel : BasePlayModel, IPlayModel {
 
         // Set on complete handler
         this.m_controller.Complete += m => GameCompleteHandler(m, matchOver);
-        this.m_controller.Error += (o, r) => GameErrorHandler(o, r, matchOver);
+        this.m_controller.Error += (o, r) => GameErrorHandler(r, matchOver);
 
         // Begin match
         this.m_controller.Control();
 
     }
 
-    private void GameErrorHandler(object o, string r, PlayOverHandler matchOver) {
+    private void GameErrorHandler(string r, PlayOverHandler matchOver) {
 
         // Log error
         this.m_chat.SystemMessage($"Match Error - {r}", Colors.Red);

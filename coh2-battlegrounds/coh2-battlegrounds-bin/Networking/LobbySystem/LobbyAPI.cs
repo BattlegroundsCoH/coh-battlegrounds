@@ -591,7 +591,7 @@ public sealed class LobbyAPI {
     public bool StartMatch(double cancelTime) {
 
         // Send start match command
-        bool wasCancelled = this.RemoteCall<bool>("StartMatch", cancelTime);
+        bool wasCancelled = this.RemoteCallWithTime<bool>("StartMatch", new object[] { cancelTime }, TimeSpan.FromSeconds(cancelTime + 1));
 
         // Return if someone cancelled the match 
         return wasCancelled;
@@ -685,7 +685,10 @@ public sealed class LobbyAPI {
         return func(raw, 0);
     }
 
-    private T? RemoteCall<T>(string method, params object[] args) {
+    private T? RemoteCall<T>(string method, params object[] args)
+        => this.RemoteCallWithTime<T>(method, args);
+
+    private T? RemoteCallWithTime<T>(string method, object[] args, TimeSpan? waitTime = null) {
         
         // Create message
         Message msg = new Message() {
@@ -697,7 +700,7 @@ public sealed class LobbyAPI {
         };
 
         // Send and await response
-        if (this.m_connection.SendAndAwaitReply(msg) is ContentMessage response) {
+        if (this.m_connection.SendAndAwaitReply(msg, waitTime) is ContentMessage response) {
             if (response.MessageType == ContentMessgeType.Error) {
                 string e = response.StrMsg is null ? "Received error message from server with no description" : response.StrMsg;
                 throw new Exception(e);
