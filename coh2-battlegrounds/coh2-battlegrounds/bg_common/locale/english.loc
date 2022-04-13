@@ -144,6 +144,8 @@ english:
  LobbyView_EditCompany: "EDIT COMPANY"
  LobbyView_LeaveLobby: "LEAVE LOBBY"
  LobbyView_StartMatch: "START MATCH"
+ LobbyView_WaitMatch: "WAITING FOR HOST"
+ LobbyView_CancelMatch: "CANCEL MATCH ({0}S)"
  LobbyView_StartMatchAlliesInvalid: "There is one or more players on the allied team with an invalid company selected."
  LobbyView_StartMatchAlliesNoPlayers: "There are no players on the allied team."
  LobbyView_StartMatchAxisInvalid: "There is one or more players on the axis team with an invalid company selected."

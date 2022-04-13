@@ -1,39 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Diagnostics;
 using System.Globalization;
-using System.IO;
 using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
 
 using Battlegrounds;
-using Battlegrounds.Compiler;
 using Battlegrounds.Functional;
-//using Battlegrounds.Functional;
 using Battlegrounds.Game.Database;
-using Battlegrounds.Game.DataCompany;
-using Battlegrounds.Game.Gameplay;
-using Battlegrounds.Game.Match.Play;
-using Battlegrounds.Locale;
 using Battlegrounds.Modding;
 using Battlegrounds.Networking.LobbySystem;
-using Battlegrounds.Networking.Server;
 
 using BattlegroundsApp.Lobby.MatchHandling;
-using BattlegroundsApp.LocalData;
-using BattlegroundsApp.Modals;
-using BattlegroundsApp.Modals.Dialogs.MVVM.Models;
-using BattlegroundsApp.MVVM;
-using BattlegroundsApp.MVVM.Models;
-using BattlegroundsApp.Resources;
-using BattlegroundsApp.Utilities;
 
 namespace BattlegroundsApp.Lobby.MVVM.Models {
 
@@ -43,7 +23,6 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
         private static readonly string __playabilityAlliesNoPlayers = BattlegroundsInstance.Localize.GetString("LobbyView_StartMatchAlliesNoPlayers");
         private static readonly string __playabilityAxisInvalid = BattlegroundsInstance.Localize.GetString("LobbyView_StartMatchAxisInvalid");
         private static readonly string __playabilityAxisNoPlayers = BattlegroundsInstance.Localize.GetString("LobbyView_StartMatchAxisNoPlayers");
-        protected static readonly Func<string> LOCSTR_START = () => BattlegroundsInstance.Localize.GetString("LobbyView_StartMatch");
 
         private ModPackage? m_package;
 
@@ -66,7 +45,7 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
         public LobbyHostModel(LobbyAPI handle, LobbyAPIStructs.LobbyTeam allies, LobbyAPIStructs.LobbyTeam axis) : base(handle, allies, axis) {
 
             // Init buttons
-            this.StartMatchButton = new(LOCSTR_START(), new(this.BeginMatchSetup), Visibility.Visible);
+            this.StartMatchButton = new(new(() => this.m_isStarting.IfFalse().Then(this.BeginMatchSetup).Else(this.CancelMatch)), Visibility.Visible) { Title = LOCSTR_START() };
 
             // Get scenario list
             var _scenlist = ScenarioList.GetList()
@@ -147,8 +126,8 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
             if (this.m_package is null)
                 return; // TODO: Show error
 
-            // Disallow exit lobby
-            //this.ExitLobby.Enabled = false;
+            // Set starting flag
+            this.m_isStarting = true;
 
             // Set lobby status here
             this.m_handle.SetLobbyState(LobbyAPIStructs.LobbyState.Starting);
@@ -166,6 +145,20 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
             // Set lobby status here
             this.m_handle.SetLobbyState(LobbyAPIStructs.LobbyState.Playing);
 
+            // Set is starting to false
+            this.m_isStarting = false;
+
+            // Allow start match again
+            Application.Current.Dispatcher.Invoke(() => {
+
+                // Reset text
+                this.StartMatchButton.Title = LOCSTR_START();
+
+                // Re-enable
+                this.StartMatchButton.IsEnabled = true;
+
+            });
+
             // Play match
             model.Play(this.EndMatch);
 
@@ -175,9 +168,6 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
 
             // Set lobby status here
             this.m_handle.SetLobbyState(LobbyAPIStructs.LobbyState.InLobby);
-
-            // Allow exit lobby
-            //this.ExitLobby.Enabled = true;
 
         }
 

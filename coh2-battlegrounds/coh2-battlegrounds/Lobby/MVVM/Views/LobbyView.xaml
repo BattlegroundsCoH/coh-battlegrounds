@@ -303,6 +303,7 @@
                     Content="{Binding StartMatchButton.Title}"
                     Command="{Binding StartMatchButton.Click}"
                     IsEnabled="{Binding StartMatchButton.IsEnabled}"
+                    ToolTip="{Binding StartMatchButton.Tooltip}"
                     Style="{StaticResource StandardBlueButton}"/>
 
         </Grid>

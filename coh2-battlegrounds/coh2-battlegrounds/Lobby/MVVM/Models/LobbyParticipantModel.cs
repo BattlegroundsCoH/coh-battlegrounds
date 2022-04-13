@@ -7,10 +7,10 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media;
 
+using Battlegrounds;
 using Battlegrounds.Compiler;
 using Battlegrounds.Game.Database;
 using Battlegrounds.Game.DataCompany;
-using Battlegrounds.Game.Gameplay;
 using Battlegrounds.Game.Match.Play;
 using Battlegrounds.Modding;
 using Battlegrounds.Networking.LobbySystem;
@@ -22,6 +22,8 @@ using BattlegroundsApp.Resources;
 namespace BattlegroundsApp.Lobby.MVVM.Models;
 
 public class LobbyParticipantModel : LobbyModel {
+
+    private static readonly Func<string> LOCSTR_WAIT = () => BattlegroundsInstance.Localize.GetString("LobbyView_WaitMatch");
 
     private bool m_hasDownloadedGamemode = false;
 
@@ -44,7 +46,7 @@ public class LobbyParticipantModel : LobbyModel {
     public LobbyParticipantModel(LobbyAPI handle, LobbyAPIStructs.LobbyTeam allies, LobbyAPIStructs.LobbyTeam axis) : base(handle, allies, axis) {
 
         // Define start match buttnn
-        this.StartMatchButton = new("", new(() => { }), Visibility.Hidden) { IsEnabled = false };
+        this.StartMatchButton = new(new(this.CancelMatch), Visibility.Hidden) { Title = LOCSTR_WAIT(), IsEnabled = false };
 
         // Init dropdowns 
         this.MapDropdown = new(false, Visibility.Hidden, new(), (x,y) => { });
@@ -78,8 +80,8 @@ public class LobbyParticipantModel : LobbyModel {
         // Invoke on GUI
         Application.Current.Dispatcher.Invoke(() => {
 
-            // Allow exit lobby
-            //this.ExitLobby.Enabled = false;
+            // Update cancel button
+            this.StartMatchButton.IsEnabled = true;
 
         });
 

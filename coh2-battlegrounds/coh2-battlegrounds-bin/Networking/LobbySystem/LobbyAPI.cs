@@ -180,6 +180,11 @@ public sealed class LobbyAPI {
     public event LobbyEventHandler<ServerAPI>? OnLobbyNotifyResults;
 
     /// <summary>
+    /// Event triggered when the server has sent a countdown event.
+    /// </summary>
+    public event LobbyEventHandler<int>? OnLobbyCountdown;
+
+    /// <summary>
     /// Initialises a new <see cref="LobbyAPI"/> instance that is connected along a <see cref="ServerConnection"/> to a lobby.
     /// </summary>
     /// <param name="isHost">Flag marking if host. This is for local checking, the server verifies this independently.</param>
@@ -401,6 +406,9 @@ public sealed class LobbyAPI {
                 break;
             case "Notify.Results":
                 this.OnLobbyNotifyResults?.Invoke(this.ServerHandle);
+                break;
+            case "Notify.Countdown":
+                this.OnLobbyCountdown?.Invoke(message.RemoteAction);
                 break;
             default:
                 Trace.WriteLine($"Unsupported API event: {message.StrMsg}", nameof(LobbyAPI));

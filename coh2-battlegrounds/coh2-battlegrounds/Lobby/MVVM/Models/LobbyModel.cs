@@ -34,9 +34,10 @@ public abstract class LobbyModel : IViewModel, INotifyPropertyChanged {
 
     public record LobbyButton(string Title, bool IsEnabled, RelayCommand Click, Visibility Visible, string Tooltip);
 
-    public record LobbyMutButton(string Title, RelayCommand Click, Visibility Visible) : INotifyPropertyChanged {
+    public record LobbyMutButton(RelayCommand Click, Visibility Visible) : INotifyPropertyChanged {
         private bool m_isEnabled;
         private string? m_tooltip;
+        private string? m_title;
         public event PropertyChangedEventHandler? PropertyChanged;
         public bool IsEnabled {
             get => this.m_isEnabled;
@@ -50,6 +51,13 @@ public abstract class LobbyModel : IViewModel, INotifyPropertyChanged {
             set {
                 this.m_tooltip = value;
                 this.PropertyChanged?.Invoke(this, new(nameof(Tooltip)));
+            }
+        }
+        public string? Title {
+            get => this.m_title;
+            set {
+                this.m_title = value;
+                this.PropertyChanged?.Invoke(this, new(nameof(Title)));
             }
         }
     }
@@ -125,11 +133,14 @@ public abstract class LobbyModel : IViewModel, INotifyPropertyChanged {
 
     protected static readonly Func<string> LOCSTR_EXIT = () => BattlegroundsInstance.Localize.GetString("LobbyView_LeaveLobby");
     protected static readonly Func<string> LOCSTR_EDIT = () => BattlegroundsInstance.Localize.GetString("LobbyView_EditCompany");
+    protected static readonly Func<string> LOCSTR_START = () => BattlegroundsInstance.Localize.GetString("LobbyView_StartMatch");
+    protected static readonly Func<string, string> LOCSTR_CANCEL = x => BattlegroundsInstance.Localize.GetString("LobbyView_CancelMatch", x);
 
     protected readonly LobbyAPI m_handle;
     protected LobbyChatSpectatorModel? m_chatModel;
 
     private bool m_hasLeft;
+    protected bool m_isStarting;
 
     public event PropertyChangedEventHandler? PropertyChanged;
 
@@ -186,11 +197,30 @@ public abstract class LobbyModel : IViewModel, INotifyPropertyChanged {
         this.m_handle.OnLobbyCompanyUpdate += this.OnCompanyUpdated;
         this.m_handle.OnLobbyCancelStartup += this.OnMatchStartupCancelled;
         this.m_handle.OnLobbyRequestCompany += this.OnCompanyRequested;
+        this.m_handle.OnLobbyCountdown += this.OnCountdownNotify;
 
     }
 
     public void SetChatModel(LobbyChatSpectatorModel chatModel)
         => this.m_chatModel = chatModel;
+
+    protected void CancelMatch() {
+        if (this.StartMatchButton.IsEnabled) {
+            this.m_handle.CancelMatch();
+            this.m_isStarting = false;
+        }
+    }
+
+    protected void OnCountdownNotify(int second) {
+        // Invoke on GUI
+        Application.Current.Dispatcher.Invoke(() => {
+            // Update cancel button text
+            this.StartMatchButton.Title = LOCSTR_CANCEL(second.ToString());
+            if (second < 1) {
+                this.StartMatchButton.IsEnabled = false;
+            }
+        });
+    }
 
     protected void LeaveLobby() {
 
@@ -284,11 +314,17 @@ public abstract class LobbyModel : IViewModel, INotifyPropertyChanged {
             this.m_chatModel.SystemMessage($"{e.CancelName} has cancelled the match.", Colors.Gray);
         }
 
+        // Set OK
+        this.m_isStarting = false;
+
         // Invoke on GUI
         Application.Current.Dispatcher.Invoke(() => {
 
-            // Allow exit lobby
-            //this.ExitLobby.Enabled = true;
+            // Allow start match again
+            if (this is LobbyHostModel) {
+                this.StartMatchButton.IsEnabled = true;
+                this.StartMatchButton.Title = LOCSTR_START();
+            }
 
         });
 
