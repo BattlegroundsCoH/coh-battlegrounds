@@ -136,6 +136,7 @@ public abstract class LobbyModel : IViewModel, INotifyPropertyChanged {
     protected static readonly Func<string> LOCSTR_START = () => BattlegroundsInstance.Localize.GetString("LobbyView_StartMatch");
     protected static readonly Func<string> LOCSTR_PLAYING = () => BattlegroundsInstance.Localize.GetString("LobbyView_PLAYING");
     protected static readonly Func<string, string> LOCSTR_CANCEL = x => BattlegroundsInstance.Localize.GetString("LobbyView_CancelMatch", x);
+    protected static readonly Func<string> LOCSTR_WAIT = () => BattlegroundsInstance.Localize.GetString("LobbyView_WaitMatch");
 
     protected readonly LobbyAPI m_handle;
     protected LobbyChatSpectatorModel? m_chatModel;
@@ -209,6 +210,10 @@ public abstract class LobbyModel : IViewModel, INotifyPropertyChanged {
         if (this.StartMatchButton.IsEnabled) {
             this.m_handle.CancelMatch();
             this.m_isStarting = false;
+            if (this is LobbyParticipantModel model) {
+                model.StartMatchButton.Title = LOCSTR_WAIT();
+                model.StartMatchButton.IsEnabled = false;
+            }
         }
     }
 
