@@ -1,0 +1,573 @@
+------------------------------------------------------------------------------------
+-- Important Global Variables
+------------------------------------------------------------------------------------
+
+_bg_playerData = {};
+_bg_aiData = {};
+
+------------------------------------------------------------------------------------
+-- Imports
+------------------------------------------------------------------------------------
+import("WinConditions/auxiliary_scripts/shared_constants.scar") -- Must always be imported first
+import("WinConditions/auxiliary_scripts/shared_util.scar"); -- Then this (Contains several useful utility functions)
+import("WinConditions/auxiliary_scripts/shared_lookups.scar");
+import("WinConditions/auxiliary_scripts/session.scar"); -- This file may contain overrides to the constants file (Which is why it must be imported AFTER constants)
+import("WinConditions/auxiliary_scripts/shared_sessionloader.scar");
+import("WinConditions/auxiliary_scripts/shared_units.scar");
+import("WinConditions/auxiliary_scripts/shared_abilities.scar");
+import("WinConditions/auxiliary_scripts/shared_ai.scar");
+import("WinConditions/auxiliary_scripts/api_ui.scar");
+import("WinConditions/auxiliary_scripts/client_companyui.scar");
+import("WinConditions/auxiliary_scripts/client_overrideui.scar");
+import("WinConditions/auxiliary_scripts/system_tow.scar");
+
+------------------------------------------------------------------------------------
+-- Script Code
+------------------------------------------------------------------------------------
+function BG_Init()
+
+    -- Load important session data
+    local sessionLoadError = BG_LoadSessionData();
+    if sessionLoadError ~= true then
+        BG_CreateAndShowMatchError(sessionLoadError);
+        return;
+    end
+
+    if g_towdebug then
+        Rule_AddOneShot(_tow_test, 1);
+    end
+
+    -- Load the player companies
+    local companyError = BG_LoadCompanies();
+
+    -- Check to see if a company error was found
+    if companyError ~= true then
+        BG_CreateAndShowMatchError(BG_LocString(12), companyError);
+        return;
+    end
+
+    -- Load the AI data
+    local aiCompanyError = BG_LoadAIData();
+
+    -- Load the company data
+    if aiCompanyError ~= true then
+        BG_CreateAndShowMatchError(BG_LocString(12), aiCompanyError);
+        return;
+    end
+
+    -- Verify match validity
+    local matchValidity = BG_VerifyMatch();
+
+    -- Did the match validifier fail?
+    if matchValidity ~= true then
+        BG_CreateAndShowMatchError(BG_LocString(12), matchValidity);
+        return;
+    end
+
+    -- Setup map data
+    BG_PrepareMapdata();
+
+    -- Activate the unit system
+    BG_HookUnitSystem();
+
+    -- Properly set up win condition data
+    BG_SetupWincondition();
+
+    -- Setup optional BG systems
+    BG_SetupWeatherAndSupply();
+
+    -- Create the UI
+    UI_AddSetupFunction(function()
+        BG_CreateCallInUI(Game_GetLocalPlayer()); -- Call-in / Deploy UI
+        BG_CreateAndDisplayMultiplayerActionsScreenOverride(Game_GetLocalPlayer()); -- Game actions (Vote on withdraw, Surrender)
+        if BGSupply_SetupUI ~= nil then -- Make the supply UI check here (TODO: Add more dynamic hook function for this)
+            BGSupply_SetupUI();
+        end
+        --_endgame_test(); -- DISABLE WHEN DONE
+    end);
+
+    -- Init AE functions for BG
+    BGAE_Init();
+
+    -- Add overrides to victory
+    Rule_AddOneShot(BG_OverrideGameEndingFunctionCalls, 1);
+
+    -- Fix some UI stuff
+    Rule_AddOneShot(BG_FixUI, 1);
+
+    -- Call in all initial squads
+    Rule_AddOneShot(BG_CallInInitials, 1);
+
+    -- Add phase update
+    Rule_AddInterval(BG_PhaseUpdate, 1);
+
+    -- Add the broadcast event callback
+    Rule_AddGlobalEvent(BG_GameBroadcastMessageReceived, GE_BroadcastMessage);
+
+end
+
+function _endgame_test()
+
+    _bg_playerData[BG_GetPlayerID(Game_GetLocalPlayer())].lossData = {
+        {
+            company_id = 100,
+            symbol = "Icons_symbols_unit_soviet_conscript_02_symbol",
+            rank = 5,
+            item_symbol = "Icons_weapons_weapon_pps",
+        },
+        {
+            company_id = 101,
+            symbol = "Icons_symbols_unit_soviet_conscript_02_symbol",
+            rank = 3,
+        },
+        {
+            company_id = 102,
+            symbol = "Icons_symbols_unit_soviet_conscript_02_symbol",
+            rank = 0,
+            item_symbol = "Icons_weapons_weapon_pps",
+        },
+        {
+            company_id = 103,
+            symbol = "Icons_symbols_unit_soviet_conscript_02_symbol",
+            rank = 5,
+            item_symbol = "Icons_weapons_weapon_pps",
+        },
+        {
+            company_id = 104,
+            symbol = "Icons_symbols_unit_soviet_conscript_02_symbol",
+            rank = 4,
+            item_symbol = "Icons_weapons_weapon_pps",
+        },
+        {
+            company_id = 105,
+            symbol = "Icons_symbols_unit_soviet_conscript_02_symbol",
+            rank = 1,
+            item_symbol = "Icons_weapons_weapon_pps",
+        },
+        {
+            company_id = 106,
+            symbol = "Icons_symbols_unit_soviet_conscript_02_symbol",
+            rank = 2,
+        },
+    };
+    _bg_playerData[BG_GetPlayerID(Game_GetLocalPlayer())].gainsData = {
+        {
+            type = 3,
+            symbol = "Icons_symbols_unit_soviet_conscript_02_symbol",
+            rank = 4, -- Starting rank
+            now = 5,
+            item_symbol = "Icons_weapons_weapon_pps",
+        },
+        {
+            type = 2,
+            symbol = "Icons_symbols_unit_soviet_conscript_02_symbol",
+            item_symbol = "Icons_weapons_weapon_panzerschreck",
+        },
+        {
+            type = 1,
+            symbol = "Icons_symbols_vehicle_german_panzer_iv_symbol",
+        }
+    }
+
+    BG_CreateAndDisplayGameOverScreenOverride(Game_GetLocalPlayer(), BG_SaveAndExit);
+
+end
+
+function BG_FixUI()
+    -- Hide the CP meter
+    UI_SetAbilityCardVisibility(true);
+    UI_SetCPMeterVisibility(false);
+    UI_SetAllowLoadAndSave(false);
+end
+
+Scar_AddInit(BG_Init);
+
+function BG_VerifyMatch()
+
+    -- Get the scenario name
+    local name = Stats_GetScenarioName();
+    if (name ~= bg_settings.map and name ~= "bg_testmap") then -- "bg_testmap" can always be played.
+        return BG_LocString(1);
+    end
+
+    -- Set a global flag if testmap
+    bg_isDebugMap = name == "bg_testmap";
+
+    -- Verify upgrade
+    if not pcall(BP_GetUpgradeBlueprint, bg_settings.tuning_mod.mod_verify_upg) then
+        return BG_LocString(2);
+    end
+
+    -- Broadcast the GUID
+    Battlegrounds_LogEvent(nil, BG_EVENT_ONVERIFY, bg_settings.session_guid);
+
+    -- Return true, match verified
+    return true;
+
+end
+
+function BG_GetPlayerID(player)
+    for i=1, #_bg_playerData do
+        if _bg_playerData[i].player == player then
+            return i;
+        end
+    end
+    return -1;
+end
+
+function BG_GetPlayerData(player)
+    local id = BG_GetPlayerID(player);
+    if id >= 0 then
+        return _bg_playerData[id];
+    else
+        return nil;
+    end
+end
+
+function BG_OverrideGameEndingFunctionCalls()
+
+    -- Create a backup "pointer" just in case
+    BG_WorldSetTeamWin = World_SetTeamWin;
+
+    -- Override the game function (Any call to this)
+    World_SetTeamWin = function(team)
+
+        -- Stop the fighting
+        BG_StopAll();
+
+        -- Broadcast victory for each player
+        if Player_GetTeam(Game_GetLocalPlayer()) == team then
+            Battlegrounds_LogEvent(nil, BG_EVENT_ONVICTORY, BG_GetPlayerData(Game_GetLocalPlayer()).steamID);
+        end
+
+        -- Collect end of match data (vet rank, progress etc)
+        BG_CollectEndofMatchData();
+
+        -- Get the local player
+        local locPlayer = Game_GetLocalPlayer();
+
+        -- Create and display gameover message
+        BG_CreateAndDisplayGameOverScreenOverride(locPlayer, BG_SaveAndExit, Player_GetTeam(locPlayer) == team);
+
+    end
+
+end
+
+function BG_StopAll()
+
+    -- Set global flag
+    _bg_matchStopped = true;
+
+    -- TODO: Force-stop fighting
+
+end
+
+function BG_SaveAndExit()
+
+    -- Try this (Don't know what it actually does)
+    World_SetGameOver();
+
+    -- Make sure it's not a replay. (Would otherwise also close the game)
+    if not World_IsReplay() then
+
+        -- Quit the game (No rematches --> Let the app handle the rest)
+        Game_QuitApp();
+
+    end
+
+end
+
+function BG_PlayerSurrender(player)
+
+    -- Get the ref ID
+    local refID = BG_GetPlayerID(player);
+
+    -- Broadcast this player is surrendering.
+    Battlegrounds_LogEvent(nil, BG_EVENT_ONSURRENDER, _bg_playerData[refID].name);
+
+    -- Calculate the surrender count
+    local surrenderCountMax = math.ceil(Player_GetSquadCount(player) * 0.15);
+
+    -- Surrender squads
+    Player_LoopSquadsWhile(player, function(s, i, max)
+        if Squad_IsPinned(s) or Squad_IsSuppressed(s) or Squad_IsUnderAttack(s, 5) then
+            Squad_Surrender(s);
+            surrenderCountMax = surrenderCountMax - 1;
+        else
+            if max - i <= surrenderCountMax then
+                Squad_Surrender(s);
+                surrenderCountMax = surrenderCountMax - 1;
+            end
+        end
+    end,
+    function()
+        return surrenderCountMax > 0;
+    end);
+
+    -- If local player, we display game-over screen
+    if player == Game_GetLocalPlayer() then
+        BG_CreateAndDisplayGameOverScreenOverride(Game_GetLocalPlayer(), BG_SaveAndExit);
+    end
+
+end
+
+function BG_WithdrawVoteSequence(playerTrigger)
+
+    if (World_GetPlayerCount() == 2) then
+        BG_ShowYesNoDialog(LOC("Confirm Action"), LOC("Are you sure you'd like to withdraw from the battle?"), LOC("Yes"), LOC("Withdraw from battle."), function(t)
+            BG_TeamWithdraw(playerTrigger);
+        end, LOC("No"), LOC("Cancel withdrawal."), function(t)
+        end);
+        return;
+    end
+
+    -- Get withdrawing team index
+    local withdrawTeamID = Player_GetTeam(playerTrigger);
+
+    -- Set votes
+    _bg_custom.team_voting[withdrawTeamID] = {
+        yes = 1,
+        no = 0,
+    };
+
+    -- Get vote from all players
+    Team_ForEachPlayer(withdrawTeamID, function(Player)
+        if player == Game_GetLocalPlayer() and player ~= playerTrigger then
+            BG_ShowYesNoDialog(LOC("Withdraw from battle?"), LOC("Vote yes or no to withdrawing from battle."), LOC("Yes"), LOC("Vote yes to begin withdrawing from battle."), function(t)
+                --Game_SendMessage(_bg_message_type_team_vote_yes_withdraw, "");
+            end, LOC("No"), LOC("Vote no and stop the team's withdrawal from battle."), function(t)
+                --Game_SendMessage(_bg_message_type_team_vote_no_withdraw, "");
+            end);
+        end
+    end);
+
+end
+
+function BG_TeamWithdraw(player)
+
+    -- The "objective" of the game changes --> The team must withdraw as many units as possible within 2-3 minutes
+
+    -- TODO: Tell other team this team is withdrawing
+
+end
+
+function BG_CollectEndofMatchData()
+
+    -- Loop through all the players
+    for i=1, #_bg_playerData do
+
+        -- For all deployed units
+        for squadID, company_id in pairs(_bg_playerData[i].deployed) do
+
+            -- Make sure the unit is available
+            if ((company_id or -1) >= 0 and Squad_IsValid(squadID)) then
+
+                -- Get the actual squad
+                local squad = Squad_FromWorldID(squadID);
+                local squadVetRank = Squad_GetVeterancyRank(squad);
+
+                -- Get the initial unit
+                local initial = BG_FindSquadInCompany(i, company_id);
+
+                -- If the veterancy rank has increased
+                if initial.veterancy_rank < squadVetRank then
+                    local gData = {
+                        type = 3,
+                        symbol = initial.symbol,
+                        rank = initial.veterancy_rank, -- Starting rank
+                        now = squadVetRank,
+                        item_symbol = BG_GetUnitItemIcon(initial),
+                    };
+                    table.insert(_bg_playerData[i].gainsData, gData);
+                end
+
+                -- Compose the unit message (The message to save)
+                local unit_message = tostring(company_id);
+                unit_message = unit_message..","..tostring(squadVetRank - initial.veterancy_rank);
+                unit_message = unit_message..","..Squad_GetVeterancyExperience(squad);
+
+                -- Broadcast the change
+                Battlegrounds_LogEvent(nil, BG_EVENT_ONRETREAT, unit_message, _bg_playerData[i].player);
+
+                -- Save new slot items
+                local lastPickup = BG_SaveSlotItems(initial, squad);
+                if lastPickup ~= nil then
+                    local gData = {
+                        type = 2,
+                        symbol = initial.symbol,
+                        item_symbol = BG_FindItemIcon(lastPickup),
+                    };
+                    table.insert(_bg_playerData[i].gainsData, gData);
+                end
+
+            elseif company_id == _bg_unitID_RecrewRecapture and Squad_IsValid(squadID) then -- Captured equipment
+
+                -- Get the actual squad
+                local squad = Squad_FromWorldID(squadID);
+
+                -- Handle the captured equipment (shared_units.scar)
+                BG_HandleCapturedEquipment(_bg_playerData[i], squadID, squad, BP_GetName(Squad_GetBlueprint(squad)));
+
+            end
+
+        end
+
+    end
+
+end
+
+function BG_GameBroadcastMessageReceived(sender, messageType, message)
+    if messageType == _bg_message_type_player_deploy then
+        BG_DeploySquad(sender, tonumber(message));
+    elseif messageType == _bg_message_type_player_resource then
+        local resources = Str_CmdParse(message);
+        Player_ChangeResources(sender, resources[1], resources[2], resources[3]);
+    elseif messageType == _bg_message_type_player_request_deploy then
+        UI_TeamEventCue(sender, Util_CreateLocString("** Unit Request **"), Util_CreateLocString("PlayerName has requested '' for deployment."));
+    elseif messageType == _bg_message_type_player_cancel_deploy then
+        UI_TeamEventCue(sender, Util_CreateLocString("** Unit Cancelled **"), Util_CreateLocString("PlayerName has cancelled the deployment of ''."));
+    elseif messageType == _bg_message_type_player_surrender then
+        BG_PlayerSurrender(sender);
+    elseif messageType == _bg_message_type_player_ability then
+
+        -- Parse cmd
+        local data = Str_CmdParse(message);
+
+        -- Get origin coordinates
+        local x1 = tonumber(data[2]);
+        local y1 = tonumber(data[3]);
+        local z1 = tonumber(data[4]);
+        local o = World_Pos(x1, y1, z1);
+
+        -- Get facing coordinates
+        local x2 = tonumber(data[2]);
+        local y2 = tonumber(data[3]);
+        local z2 = tonumber(data[4]);
+        local f = World_Pos(x2, y2, z2);
+
+        -- Trigger ability
+        BGAE_TriggerAbillityFromStringData(sender, data[1], o, f);
+
+    elseif messageType == _bg_message_type_team_request_withdraw then
+        BG_WithdrawVoteSequence(sender);
+    elseif messageType == _bg_message_type_team_vote_yes_withdraw then
+        _bg_custom.team_voting[t].yes = _bg_custom.team_voting[t].yes + 1
+        local tsize = Team_GetSize(Player_GetTeam(sender));
+        if _bg_custom.team_voting[t].yes >= tsize then
+            BG_TeamWithdraw(sender);
+        elseif _bg_custom.team_voting[t].yes + _bg_custom.team_voting[t].no >= tsize then
+            _bg_custom.team_voting[t] = nil;
+            -- TODO: Tell other team we're withdrawing
+        end
+    elseif messageType == _bg_message_type_team_vote_no_withdraw then
+        _bg_custom.team_voting[t].no = _bg_custom.team_voting[t].no + 1
+        if _bg_custom.team_voting[t].yes + _bg_custom.team_voting[t].no >= tsize then
+            _bg_custom.team_voting[t] = nil;
+            -- TODO: Tell other team we're not withdrawing
+        end
+    end
+end
+
+function BG_CallInInitials()
+
+    for i=1, #_bg_playerData do
+
+        for k,v in pairs(_bg_playerData[i].company.units) do
+            if v.phase == 0 then
+                BG_DeploySquad(_bg_playerData[i].player, v.company_id);
+            end
+        end
+
+    end
+
+end
+
+function BG_PhaseUpdate()
+
+    if _bg_custom.phase_current < 3 then
+
+        if not _bg_custom.phase_pasued then
+
+            _bg_custom.phase_time_left = _bg_custom.phase_time_left - 1;
+
+            if _bg_custom.phase_time_left <= 0 then
+                _bg_custom.phase_current = _bg_custom.phase_current + 1;
+                _bg_custom.phase_time = _bg_custom.phase_time * 1.2;
+                _bg_custom.phase_time_left = _bg_custom.phase_time;
+                BG_OnEnterNewPhase();
+            end
+
+        end
+
+    else
+        Rule_RemoveMe();
+    end
+
+end
+
+function BG_OnEnterNewPhase()
+    if _bg_custom.phase_current == 2 then -- Could do more messages here (Within context of the player's sitution)
+        Util_MissionTitle(BG_LocString(16), 3, 8, 2 );
+    else
+        Util_MissionTitle(BG_LocString(17), 3, 8, 2 );
+    end
+    for i=1, World_GetPlayerCount() do
+        local p = World_GetPlayerAt(i);
+        if p == Game_GetLocalPlayer() then
+            BG_RefreshCompanyView(); -- Refresh the company view
+        end
+    end
+end
+
+function BG_UpdatePlayerStats(refID)
+    _bg_playerData[refID].total_kills = Stats_KillsTotal(_bg_playerData[refID].player);
+    _bg_playerData[refID].total_loss = Stats_InfantryLost(_bg_playerData[refID].player);
+    _bg_playerData[refID].total_vloss = Stats_VehiclesLost(_bg_playerData[refID].player);
+    if _bg_playerData[refID].total_deployed == nil then
+        _bg_playerData[refID].total_deployed = 0;
+    end
+end
+
+function BG_SetCallinPoint(executer, target)
+    if scartype(executer) == ST_PLAYER then
+        local pid = BG_GetPlayerID(executer);
+        _bg_playerData[pid].last_callin_point = target;
+        _bg_playerData[pid].last_callin_time = 0;
+    end
+end
+
+function BG_GetCallInPoint(self) -- The intention of this function is to avoid telling units to deploy to the exact same position if within a 15s time interval
+    if self.last_callin_point == nil then
+        return Player_GetStartingPosition(self.player);
+    end
+    local t = World_GetGameTime();
+    local p = self.last_callin_point;
+    local d = t - (self.last_callin_time or 0);
+    if d < 15.0 then -- if less than 15s before last call-in, 
+        p = Util_GetRandomPosition(p, d + 10);
+    end
+    self.last_callin_time = t; -- Update call in time
+    return p;
+end
+
+function BG_ParadopNext(executer, target)
+    local player = Util_GetPlayerOwner(executer);
+    if scartype(target) == ST_SCARPOS then
+        local pid = BG_GetPlayerID(player);
+        -- TODO: Implement
+    end
+end
+
+function BGAPI_AddUnitSpawnedCallback(callback)
+    if __bgapi_spawncallbacks == nil then
+        __bgapi_spawncallbacks = {};
+    end
+    table.insert( __bgapi_spawncallbacks, callback );
+end
+
+function BGAPI_AddUnitRemovedCallback(callback)
+    if __bgapi_removecallbacks == nil then
+        __bgapi_removecallbacks = {};
+    end
+    table.insert( __bgapi_removecallbacks, callback );
+end

@@ -1,0 +1,136 @@
+------------------------------------------------------------------------------------
+-- Imports
+------------------------------------------------------------------------------------
+import("ScarUtil.scar")
+import("Fatalities/Fatalities.scar")
+import("Prototype/WorldEntityCollector.scar")
+import("Prototype/SpecialAEFunctions.scar")
+import("PrintOnScreen.scar")
+
+-- Battlegrounds file(s)
+import("WinConditions/auxiliary_scripts/shared_handler.scar") -- This will handle most if not all of "external" data processing and import useful utility functions.
+
+------------------------------------------------------------------------------------
+-- "Attrition" Check
+------------------------------------------------------------------------------------
+function Battlegrounds_CheckPlayerValidity(player)
+
+    local tableCheck = nil;
+
+    if Player_IsHuman(player) then
+
+        local refID = BG_GetPlayerID(player);
+        tableCheck = _bg_playerData[refID].company.units;
+
+    else
+
+        local refID = BGAI_GetAIPlayerID(player);
+        tableCheck = _bg_aiData[refID].company.units;
+
+    end
+
+    if tableCheck == nil then
+        return false;
+    end
+
+    for k, v in pairs(tableCheck) do
+        if not v.spawned then -- Can player still call in something?
+            return true;
+        end
+    end
+
+    if Player_GetSquadCount(player) == 0 then -- Has player called in everything and lost everything?
+        return false;
+    else
+        return true;
+    end
+
+end
+
+function Battlegrounds_PlayerLose(player)
+    if not AI_IsEnabled(player) then
+        _bg_custom.dead_players[Player_GetID(player)] = true;
+        Player_CallLocal(player, function(p)
+            if BG_CreateAndDisplayGameOverScreenOverride ~= nil then
+                BG_CreateAndDisplayGameOverScreenOverride(p, BG_SaveAndExit);
+            else
+                World_SetPlayerLose(p);
+            end
+        end);
+    end
+end
+
+function Battlegrounds_PlayerIsAlive(player)
+    return _bg_custom.dead_players[Player_GetID(player)] ~= true;
+end
+
+function Battlegrounds_TotalAnnihilation(teamIndex)
+
+    -- Get the winning team
+    local winningTeam = Team_GetOppositeTeam(teamIndex);
+
+    -- For each player on the winning team
+    World_SetTeamWin(winningTeam);
+
+end
+
+function Battlegrounds_check_periodically()
+
+    for i = 1, World_GetPlayerCount() do
+        local player = World_GetPlayerAt(i);
+        if Battlegrounds_PlayerIsAlive(player) then
+            if not Battlegrounds_CheckPlayerValidity(player) then
+
+                -- Get player team
+                local t = Player_GetTeam(player);
+
+                -- Subtract player from team counter
+                _bg_custom.teams[t] = _bg_custom.teams[t] - 1;
+
+                -- Set player to having lost
+                Battlegrounds_PlayerLose(player);
+
+            end
+        end
+    end
+
+    for k,v in pairs(_bg_custom.teams) do
+        if v == 0 then
+            Battlegrounds_TotalAnnihilation(k);
+        end
+    end
+
+end
+
+function Battlegrounds_OnGamemodeInit()
+
+    if _bg_custom == nil then
+        _bg_custom = {
+            dead_players = {},
+            teams = {},
+        };
+    end
+
+    for i = 1, World_GetPlayerCount() do
+        local p = World_GetPlayerAt(i);
+        local t = Player_GetTeam(p);
+        _bg_custom.teams[t] = (_bg_custom.teams[t] or 0) + 1;
+    end
+
+    Rule_AddInterval(Battlegrounds_check_periodically, 5);
+
+end
+
+Scar_AddInit(Battlegrounds_OnGamemodeInit);
+
+------------------------------------------------------------------------------------
+-- Breakthrough Code
+------------------------------------------------------------------------------------
+
+------------------------------------------------------------------------------------
+-- Encirclement (Break out) Code
+------------------------------------------------------------------------------------
+
+------------------------------------------------------------------------------------
+-- Air Assault Code
+------------------------------------------------------------------------------------

@@ -1,0 +1,17 @@
+Panel = Class(Control, function(self)
+    Control._constructor(self);
+    Panel._count = Panel._count + 1;
+    self._name = "p" .. Panel._count;
+end)
+Panel._count = 0;
+function Panel:onAdd(path)
+	Control.onAdd(self, path);
+	UI_PanelAdd(path, self._name, self._x, self._y);
+	self:setColor();
+	for i,_child in ipairs(self._children) do
+		_child:onAdd(self._path);
+	end
+end
+function Panel:Release()
+    UI_ControlRemove(self._path);
+end

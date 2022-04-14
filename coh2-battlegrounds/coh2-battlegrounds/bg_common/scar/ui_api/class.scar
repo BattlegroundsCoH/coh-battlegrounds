@@ -1,0 +1,33 @@
+function Class(superClass, constructor)
+	local class = {};
+	if superClass then
+		for k,v in pairs(superClass) do
+			class[k] = v;
+		end
+		class._superClass = superClass;
+	end
+	class.__index = class;
+	local metatable = {};
+	function metatable:__call(...)
+		local instance = {};
+		setmetatable(instance, class);
+		if class._constructor then
+			class._constructor(instance, ...);
+		end
+		return instance;
+	end
+	class._constructor = constructor;
+	function class:isA(otherClass)
+        local mt = getmetatable(self);
+        while mt
+		do
+            if mt == otherClass then
+				return true;
+			end
+            mt = mt._superClass;
+        end
+        return false;
+    end
+	setmetatable(class, metatable);
+	return class;
+end
