@@ -44,9 +44,11 @@
                        TextAlignment="Center"
                        FontSize="14"/>
 
-            <Button Content="Confirm"
+            <Button Content="OKDialogView_OK"
                     Style="{StaticResource StandardBlueLocButton}"
-                    Command="{Binding OKCommand}" Margin="0, 7, 0, 0"/>
+                    Command="{Binding OKCommand}" 
+                    Width="100"
+                    Margin="0, 7, 0, 0"/>
 
         </StackPanel>
 
