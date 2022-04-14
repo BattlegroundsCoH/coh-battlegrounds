@@ -39,7 +39,7 @@
 					<Dependencies />
 					<Description>Some dope description</Description>
 					<Hidden>false</Hidden>
-					<Name>Battlegrounds</Name>
+					<Name>CoH2: Battlegrounds</Name>
 				</d2p1:anyType>
 				<d2p1:anyType i:type="BurnFile">
 					<BurnSettings i:type="GenericImageToGenericDDSBurnSettings">
@@ -58,7 +58,7 @@
 					<RelativeName>coh2_battlegrounds_tuning_preview.tga</RelativeName>
 				</d2p1:anyType>
 			</Children>
-			<IsExpanded>false</IsExpanded>
+			<IsExpanded>true</IsExpanded>
 		</d2p1:anyType>
 		<d2p1:anyType i:type="TableOfContents">
 			<Alias>Data</Alias>
@@ -74,7 +74,7 @@
 					<Name>ui</Name>
 				</d2p1:anyType>
 			</Children>
-			<IsExpanded>false</IsExpanded>
+			<IsExpanded>true</IsExpanded>
 		</d2p1:anyType>
 	</Children>
 	<Guid>142b1137-4047-4c82-a60b-0a428bd553d5</Guid>
