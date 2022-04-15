@@ -174,8 +174,8 @@ public class LobbyParticipantModel : LobbyModel {
                 // Invoke on GUI - now allow to leave
                 Application.Current.Dispatcher.Invoke(() => {
 
-                    // Allow exit lobby
-                    //this.ExitLobby.Enabled = true;
+                    // Reset text
+                    this.StartMatchButton.Title = LOCSTR_WAIT();
 
                 });
 

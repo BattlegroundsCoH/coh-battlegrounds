@@ -32,7 +32,7 @@ public class AbilitySlotViewModel : IViewModel {
 
     public AbilitySlotViewModelEvent RemoveClick { get; }
 
-    public Visibility RemoveButtonVisibility { get; set; }
+    public bool IsRemovable { get; set; } = true;
 
     public bool SingleInstanceOnly => false; // This will allow us to override
 
@@ -63,7 +63,7 @@ public class AbilitySlotViewModel : IViewModel {
         }
 
         // Update remove button
-        // TODO
+        this.IsRemovable = false;
 
         // Update symbol
         this.AbilitySymbol = sbp.UI.Symbol;
