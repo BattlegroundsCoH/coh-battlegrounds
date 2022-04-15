@@ -224,6 +224,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="bg_common\bg_wc\locale\english\english.ucs">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="bg_common\campaigns\sov_ost_stalingrad.dat">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -698,85 +701,85 @@
     <None Update="bg_common\locale\english.loc">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="bg_common\scar\auxiliary_scripts\api_ui.scar">
+    <None Update="bg_common\bg_wc\auxiliary_scripts\api_ui.scar">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="bg_common\scar\auxiliary_scripts\client_companyui.scar">
+    <None Update="bg_common\bg_wc\auxiliary_scripts\client_companyui.scar">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="bg_common\scar\auxiliary_scripts\client_overrideui.scar">
+    <None Update="bg_common\bg_wc\auxiliary_scripts\client_overrideui.scar">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="bg_common\scar\auxiliary_scripts\session.scar">
+    <None Update="bg_common\bg_wc\auxiliary_scripts\session.scar">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="bg_common\scar\auxiliary_scripts\shared_abilities.scar">
+    <None Update="bg_common\bg_wc\auxiliary_scripts\shared_abilities.scar">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="bg_common\scar\auxiliary_scripts\shared_ai.scar">
+    <None Update="bg_common\bg_wc\auxiliary_scripts\shared_ai.scar">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="bg_common\scar\auxiliary_scripts\shared_constants.scar">
+    <None Update="bg_common\bg_wc\auxiliary_scripts\shared_constants.scar">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="bg_common\scar\auxiliary_scripts\shared_handler.scar">
+    <None Update="bg_common\bg_wc\auxiliary_scripts\shared_handler.scar">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="bg_common\scar\auxiliary_scripts\shared_lookups.scar">
+    <None Update="bg_common\bg_wc\auxiliary_scripts\shared_lookups.scar">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="bg_common\scar\auxiliary_scripts\shared_sessionloader.scar">
+    <None Update="bg_common\bg_wc\auxiliary_scripts\shared_sessionloader.scar">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="bg_common\scar\auxiliary_scripts\shared_units.scar">
+    <None Update="bg_common\bg_wc\auxiliary_scripts\shared_units.scar">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="bg_common\scar\auxiliary_scripts\shared_util.scar">
+    <None Update="bg_common\bg_wc\auxiliary_scripts\shared_util.scar">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="bg_common\scar\auxiliary_scripts\system_tow.scar">
+    <None Update="bg_common\bg_wc\auxiliary_scripts\system_tow.scar">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="bg_common\scar\coh2_battlegrounds.scar">
+    <None Update="bg_common\bg_wc\coh2_battlegrounds.scar">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="bg_common\scar\coh2_battlegrounds.win">
+    <None Update="bg_common\bg_wc\coh2_battlegrounds.win">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="bg_common\scar\coh2_battlegrounds_supply.scar">
+    <None Update="bg_common\bg_wc\coh2_battlegrounds_supply.scar">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="bg_common\scar\coh2_battlegrounds_supply_ui.scar">
+    <None Update="bg_common\bg_wc\coh2_battlegrounds_supply_ui.scar">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="bg_common\scar\coh2_battlegrounds_weather.scar">
+    <None Update="bg_common\bg_wc\coh2_battlegrounds_weather.scar">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="bg_common\scar\ui_api\button.scar">
+    <None Update="bg_common\bg_wc\ui_api\button.scar">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="bg_common\scar\ui_api\class.scar">
+    <None Update="bg_common\bg_wc\ui_api\class.scar">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="bg_common\scar\ui_api\color.scar">
+    <None Update="bg_common\bg_wc\ui_api\color.scar">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="bg_common\scar\ui_api\control.scar">
+    <None Update="bg_common\bg_wc\ui_api\control.scar">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="bg_common\scar\ui_api\icon.scar">
+    <None Update="bg_common\bg_wc\ui_api\icon.scar">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="bg_common\scar\ui_api\label.scar">
+    <None Update="bg_common\bg_wc\ui_api\label.scar">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="bg_common\scar\ui_api\panel.scar">
+    <None Update="bg_common\bg_wc\ui_api\panel.scar">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="bg_common\scar\ui_api\rootpanel.scar">
+    <None Update="bg_common\bg_wc\ui_api\rootpanel.scar">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="bg_common\scar\ui_api\statusindicator.scar">
+    <None Update="bg_common\bg_wc\ui_api\statusindicator.scar">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="checksum.txt">
@@ -815,7 +818,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="bg_common\scar\" />
+    <Folder Include="bg_common\bg_wc\" />
   </ItemGroup>
 
 </Project>

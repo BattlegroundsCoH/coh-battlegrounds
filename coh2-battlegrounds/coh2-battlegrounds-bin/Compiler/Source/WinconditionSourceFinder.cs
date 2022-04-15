@@ -23,7 +23,7 @@ namespace Battlegrounds.Compiler.Source {
                 } while (top < 11);
             } catch { }
 #endif
-            path = BattlegroundsInstance.GetRelativePath(BattlegroundsPaths.BINARY_FOLDER, "scar\\");
+            path = BattlegroundsInstance.GetRelativePath(BattlegroundsPaths.BINARY_FOLDER, "bg_wc\\");
             return Directory.Exists(path);
         }
 
