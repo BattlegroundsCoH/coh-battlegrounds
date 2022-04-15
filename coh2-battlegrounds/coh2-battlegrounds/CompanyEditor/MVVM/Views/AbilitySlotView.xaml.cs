@@ -31,7 +31,10 @@ public partial class AbilitySlotView : UserControl {
         base.OnMouseEnter(e);
         this.Background = VIEW_HOVER;
         this.IconElement.IsSelected = true;
-        this.RemoveButton.Visibility = Visibility.Visible;
+        if (this.DataContext is AbilitySlotViewModel viewModel && viewModel.IsRemovable) {
+            this.RemoveButton.Visibility = Visibility.Visible;
+            this.RemoveButton.IsEnabled = true;
+        }
     }
 
     protected override void OnMouseLeave(MouseEventArgs e) {
@@ -39,6 +42,7 @@ public partial class AbilitySlotView : UserControl {
         this.Background = VIEW_DEFAULT;
         this.IconElement.IsSelected = false;
         this.RemoveButton.Visibility = Visibility.Collapsed;
+        this.RemoveButton.IsEnabled = false;
     }
 
     protected override void OnMouseDown(MouseButtonEventArgs e) {
