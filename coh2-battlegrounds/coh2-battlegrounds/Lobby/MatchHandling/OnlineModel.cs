@@ -75,6 +75,9 @@ internal class OnlineModel : BasePlayModel, IPlayModel {
         // Log error
         this.m_chat.SystemMessage($"Match Error - {r}", Colors.Red);
 
+        // Notify participants of error
+        this.m_handle.HaltMatch("MatchError", "");
+
         // Invoke over event in lobby model.
         Application.Current.Dispatcher.Invoke(() => {
             matchOver.Invoke(this);

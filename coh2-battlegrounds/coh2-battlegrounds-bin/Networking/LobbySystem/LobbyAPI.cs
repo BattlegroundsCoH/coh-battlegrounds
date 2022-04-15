@@ -59,6 +59,13 @@ public record LobbySystemMessageEventArgs(ulong MemberId, string SystemMessage, 
 public record LobbyCompanyChangedEventArgs(int TeamId, int SlotId, LobbyCompany Company);
 
 /// <summary>
+/// Event arguments for match the event a match is halted.
+/// </summary>
+/// <param name="Type">The type of halt (Where in the match process we were halted, and the severity)</param>
+/// <param name="Reason">The reason given for the halt.</param>
+public record LobbyMatchHaltedEventArgs(string Type, string Reason);
+
+/// <summary>
 /// Class for interacting with the lobby logic on the server.
 /// </summary>
 public sealed class LobbyAPI {
@@ -187,7 +194,7 @@ public sealed class LobbyAPI {
     /// <summary>
     /// Event triggered when the host has sent a lobby halt message
     /// </summary>
-    public event LobbyEventHandler<string>? OnLobbyMatchHalt;
+    public event LobbyEventHandler<LobbyMatchHaltedEventArgs>? OnLobbyMatchHalt;
 
     /// <summary>
     /// Initialises a new <see cref="LobbyAPI"/> instance that is connected along a <see cref="ServerConnection"/> to a lobby.
@@ -427,7 +434,7 @@ public sealed class LobbyAPI {
                 var haltCall = GoMarshal.JsonUnmarshal<RemoteCallMessage>(message.Raw);
 
                 // Invoke event
-                this.OnLobbyMatchHalt?.Invoke(haltCall.Arguments[0]);
+                this.OnLobbyMatchHalt?.Invoke(new(haltCall.Arguments[0], haltCall.Arguments[1]));
 
                 break;
             default:
@@ -679,10 +686,11 @@ public sealed class LobbyAPI {
     /// <summary>
     /// This will halt the ongoing match for all participants.
     /// </summary>
+    /// <param name="haltType">The type of halt</param>
     /// <param name="haltReason">The reason for halting</param>
-    public void HaltMatch(string haltReason) {
+    public void HaltMatch(string haltType, string haltReason) {
         if (this.m_isHost) {
-            this.RemoteVoidCall("HaltMatch", haltReason);
+            this.RemoteVoidCall("HaltMatch", haltType, haltReason);
         }
     }
 
