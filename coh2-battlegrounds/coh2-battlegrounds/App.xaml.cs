@@ -12,6 +12,8 @@ using Battlegrounds.Networking;
 using Battlegrounds.Game.Database.Management;
 using Battlegrounds.Steam;
 using Battlegrounds.ErrorHandling;
+using Battlegrounds.Verification;
+using Battlegrounds.Functional;
 
 using BattlegroundsApp.LocalData;
 using BattlegroundsApp.Utilities;
@@ -20,7 +22,6 @@ using BattlegroundsApp.MVVM;
 using BattlegroundsApp.MVVM.Models;
 using BattlegroundsApp.CompanyEditor.MVVM.Models;
 using BattlegroundsApp.Dashboard.MVVM.Models;
-using Battlegrounds.Verification;
 
 namespace BattlegroundsApp {
 
@@ -38,11 +39,9 @@ namespace BattlegroundsApp {
         private static LobbyBrowserViewModel? __lobbyBrowser;
         private static CompanyBrowserViewModel? __companyBrowser;
 
-        [NotNull] // "never" null; and invalid operation is throw if it is...
         public static ResourceHandler ResourceHandler 
             => IsStarted ? __handler : throw new InvalidOperationException("Cannot get resource handler before application window has initialised.");
 
-        [NotNull] // "never" null; and invalid operation is throw if it is...
         public static AppViewManager ViewManager 
             => IsStarted ? __viewManager : throw new InvalidOperationException("Cannot get view manager before application window has initialised.");
 
@@ -52,11 +51,25 @@ namespace BattlegroundsApp {
         [MemberNotNull(nameof(__viewManager), nameof(__logger), nameof(__handler))]
         private void App_Startup(object sender, StartupEventArgs e) {
 
+            // Check args
+            if (e.Args.Length > 0) {
+                if (e.Args.Any(x => x is "-report-error")) {
+                    ErrorReporter err = new();
+                    err.Show();
+#pragma warning disable CS8774 // Member must have a non-null value when exiting. (We disable this in this very specific scenario!)
+                    return;
+#pragma warning restore CS8774 // Member must have a non-null value when exiting.
+                }
+            }
+
             // Setup logger
             __logger = new();
 
+            // Attach fatal exception logger
+            AppDomain.CurrentDomain.UnhandledException += this.OnUnhandledException;
+
             // Verify
-            this.VerifyIntegrity();
+            VerifyIntegrity();
 
             // Setup resource handler
             __handler = new();
@@ -99,7 +112,7 @@ namespace BattlegroundsApp {
 
         }
 
-        private void VerifyIntegrity() {
+        private static void VerifyIntegrity() {
 
             // Burn if checksum is not available
             if (!File.Exists("checksum.txt"))
@@ -226,6 +239,33 @@ namespace BattlegroundsApp {
             // Load all installed and active campaigns
             PlayerCampaigns.GetInstalledCampaigns();
             PlayerCampaigns.LoadActiveCampaigns();
+
+        }
+
+        private void OnUnhandledException(object sender, UnhandledExceptionEventArgs e) {
+
+            // Update
+            if (sender is null)
+                sender = "<<NULL>>";
+
+            // Log exception
+            Trace.WriteLine($"\n\n\n\t*** FATAL APP EXIT ***\n\nException trigger:\n{sender}\n\nException Info:\n{e.ExceptionObject}\n");
+
+            // Try launch self in error mode
+            try {
+                string ppath = Environment.ProcessPath ?? "";
+                if (!string.IsNullOrEmpty(ppath)) {
+                    ProcessStartInfo pinfo = new(ppath, "-report-error");
+                    if (Process.Start(pinfo) is null) {
+                        Trace.WriteLine("Failed to open error reporter...");
+                    }
+                }
+            } catch {
+                Trace.WriteLine("Failed to launch self in error mode!");
+            }
+
+            // Close logger with exit code
+            __logger?.SaveAndClose(int.MaxValue);
 
         }
 

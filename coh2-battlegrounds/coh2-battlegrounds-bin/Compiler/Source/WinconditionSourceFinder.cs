@@ -9,7 +9,8 @@ namespace Battlegrounds.Compiler.Source {
     public static class WinconditionSourceFinder {
 
         private static bool HasLocalCopy(out string path) {
-            int top = 0;
+#if DEBUG
+            int top = 0; // try find debug folder before using local distribution
             path = "coh2-battlegrounds-mod\\wincondition_mod\\";
             try {
                 do {
@@ -21,7 +22,9 @@ namespace Battlegrounds.Compiler.Source {
                     }
                 } while (top < 11);
             } catch { }
-            return false;
+#endif
+            path = BattlegroundsInstance.GetRelativePath(BattlegroundsPaths.BINARY_FOLDER, "scar\\");
+            return Directory.Exists(path);
         }
 
         private static bool HasManifest() => File.Exists(BattlegroundsInstance.GetRelativePath(BattlegroundsPaths.BINARY_FOLDER, "scripts.manifest"));

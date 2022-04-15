@@ -608,7 +608,7 @@ public sealed class LobbyAPI {
         bool wasCancelled = this.RemoteCallWithTime<bool>("StartMatch", new object[] { cancelTime }, TimeSpan.FromSeconds(cancelTime + 1));
 
         // Return if someone cancelled the match 
-        return wasCancelled;
+        return !wasCancelled;
 
     }
 

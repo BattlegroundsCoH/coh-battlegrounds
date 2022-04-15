@@ -1,0 +1,100 @@
+﻿<Window x:Class="BattlegroundsApp.ErrorReporter"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:BattlegroundsApp"
+        mc:Ignorable="d"
+        Title="Battlegrounds App Crash" 
+        Height="560" 
+        Width="460"
+        WindowStartupLocation="CenterScreen"
+        Background="#212d3a"
+        WindowStyle="SingleBorderWindow"
+        ResizeMode="CanMinimize">
+    <Grid Margin="0,10,0,0">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="70"/>
+            <ColumnDefinition/>
+            <ColumnDefinition Width="70"/>
+        </Grid.ColumnDefinitions>
+        <StackPanel
+               Grid.Column="1">
+            <!-- Header -->
+            <Label Content="Fatal Crash Detected"
+               Foreground="White"
+               FontFamily="Open Sans"
+               FontWeight="Bold"
+               FontSize="18"
+               HorizontalAlignment="Center"/>
+            <!-- Message -->
+            <TextBlock TextWrapping="Wrap"
+                       Foreground="White"
+                       FontStyle="Italic"
+                       FontSize="13">
+                <Run>
+                    The Battlegrounds Launcher has crashed while in use and we do
+                    apologise for this.
+                </Run>
+                <LineBreak/>
+                <LineBreak/>
+                <Run FontStyle="Normal">
+                    The launcher managed to collect some information about the crash
+                    and we could use it to debug and fix the crash so it will not
+                    happen again. However, this requires you sending it
+                    to us. The form below allows you to send a direct report
+                    to us with a customised message describing the actions taken 
+                    before the crash (you can leave it empty).
+                </Run>
+                <LineBreak/>
+                <LineBreak/>
+                <Run FontStyle="Normal">
+                    If you have any additional questions, feel free to reach out
+                    to us on:              
+                </Run>
+                <LineBreak/>
+                <LineBreak/>
+                <Run>Mail: </Run>
+                <Hyperlink>coh2.mod.battlegrounds@gmail.com</Hyperlink>
+                <LineBreak/>
+                <Run>Discord: </Run>
+                <Hyperlink>https://discord.com/invite/Hr7yTbSv25</Hyperlink>
+                <LineBreak/>
+            </TextBlock>
+            <StackPanel>
+                <Label Content="Crash Description:"
+                       Foreground="White"
+                       FontFamily="Open Sans"
+                       FontWeight="DemiBold"
+                       FontStyle="Italic"
+                       Margin="5,5,0,0"/>
+                <RichTextBox Height="90"
+                             Background="#334252"
+                             BorderBrush="#4a545f" Margin="7.5"
+                             Foreground="White"
+                             x:Name="AdditionalInfo"/>
+                <StackPanel Orientation="Horizontal"
+                            HorizontalAlignment="Center">
+                    <Button Style="{StaticResource StandardRedButton}"
+                            Width="140"
+                            Height="28"
+                            Margin="7.5"
+                            x:Name="Cancel"
+                            Click="Cancel_Click">
+                        Close
+                    </Button>
+                    <Button Style="{StaticResource StandardGreenButton}"
+                            Width="140"
+                            Height="28"
+                            Margin="7.5"
+                            x:Name="Send"
+                            Click="Send_Click">
+                        Send Report
+                    </Button>
+                </StackPanel>
+            </StackPanel>
+            
+        </StackPanel>
+        
+    </Grid>
+</Window>

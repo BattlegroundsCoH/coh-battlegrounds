@@ -1,0 +1,260 @@
+---------------------------------------------------------------------------
+-- UI API
+-- Credits: Eliw00d
+-- https://github.com/eliw00d/ui-control-api
+---------------------------------------------------------------------------
+import("WinConditions/ui_api/class.scar");
+import("WinConditions/ui_api/color.scar");
+import("WinConditions/ui_api/control.scar");
+import("WinConditions/ui_api/panel.scar");
+import("WinConditions/ui_api/rootpanel.scar");
+import("WinConditions/ui_api/button.scar");
+import("WinConditions/ui_api/icon.scar");
+import("WinConditions/ui_api/label.scar");
+
+---------------------------------------------------------------------------
+-- UI API - Helper functions
+-- Developed by CoDiEx & Ragnar
+-- Credits for implementation of 'UI_AddSetupFunction': Janne252
+---------------------------------------------------------------------------
+gui_inits = {};
+gui_issetup = false;
+gui_oninitfuncname = "__UI_IS_SETUP________";
+function UI_AddSetupFunction(func)
+	if gui_issetup then
+		func();
+		return;
+	end
+	table.insert(gui_inits, func);
+	if _G[gui_oninitfuncname] == nil then
+		_G[gui_oninitfuncname] = function()
+			if UI_GetViewportWidth() > 1 and UI_GetViewportHeight() > 1 then
+				UI_GetScreenWidth = UI_GetViewportWidth;
+				UI_GetScreenHeight = UI_GetViewportHeight;
+				gui_issetup = true;
+				for i=1, #gui_inits do
+					gui_inits[i]();
+				end
+				Rule_Remove(_G[gui_oninitfuncname]);
+				--Rule_Add(__UI_CalcMouseScreenPosition);
+			end
+		end
+		Rule_Add(_G[gui_oninitfuncname]);
+	end
+end
+
+__ui_posmetatable = {
+	__add = function(l, r)
+		return UI_Pos2D(l.x + r.x, l.y + r.y);
+	end
+}
+
+function UI_Pos2D(_x, _y)
+	return setmetatable({ x = _x, y = _y }, __ui_posmetatable);
+end
+
+function UI_GetPosition(_x, _y)
+	local w = UI_GetScreenWidth(); -- Width
+	local h = UI_GetScreenHeight(); -- Height
+	local x = (_x / 1920) * w;
+	local y = h - _y;
+	--if (p.y < 0) then
+	--	p.y = 0;
+	--end
+	return UI_Pos2D(x, y);
+end
+
+function UI_UnpackPosition(p)
+	return p.x, p.y;
+end
+
+-- Returns the position relative to bottom right [W,H]
+function UI_BottomRight(_x, _y)
+	return UI_Pos2D(UI_GetScreenWidth() - _x, UI_GetScreenHeight() - _y);
+end
+
+-- Returns the position relative to bottom left [0,H]
+function UI_BottomLeft(_x, _y)
+	return UI_Pos2D(_x, UI_GetScreenHeight() - _y);
+end
+
+-- Returns the position relative to top right [W,0]
+function UI_TopRight(_x, _y)
+	return UI_Pos2D(UI_GetScreenWidth() - _x, _y);
+end
+
+-- Returns the position relative to top left [0, 0]
+function UI_TopLeft(_x, _y)
+	return UI_Pos2D(0, 0);
+end
+
+-- Returns the position of the centre of the screen
+function UI_Centre(_x, _y)
+	return UI_Pos2D((UI_GetScreenWidth() / 2.0) + _x, (UI_GetScreenHeight() / 2.0) + _y);
+end
+
+function UI_TeamEventCue(player, title, description, iconPath, soundPath)
+	if (iconPath == nil) then
+		iconPath = ""
+	end
+	if soundPath == nil then
+		soundPath = "General_alert";
+	end
+	Player_CallLocal(Game_GetLocalPlayer(), function(locPlayer)
+		if (Player_GetTeam(player) == Player_GetTeam(locPlayer)) then
+			UI_CreateEventCue(iconPath, soundPath, title, description, nil, true );
+		end
+	end);
+end
+
+function UI_CentreAlignWidth(obj_width, container_width)
+	return (container_width / 2.0) - (obj_width / 2.0);
+end
+
+function UI_CentreAlignHeight(obj_height, container_height)
+	return (container_height / 2.0) - (obj_height / 2.0);
+end
+
+function UI_CentreAlign(...)
+	local dim_x = 0;
+	local dim_y = 0;
+	local con_x = 0;
+	local con_y = 0;
+	if #args == 2 then
+		dim_x = args[1].width;
+		dim_y = args[1].height;
+		con_x = args[2].width;
+		con_y = args[2].height;
+	elseif #args == 4 then
+		dim_x = args[1];
+		dim_y = args[2];
+		con_x = args[3];
+		con_y = args[4];
+	else
+		fatal("Unexpected number of arguments. Expected 2 (object dimension, container dimension) or 4 (dim_x, dim_y, con_x, con_y");
+	end
+	return UI_CentreAlignWidth(dim_x, con_x), UI_CentreAlignHeight(dim_y, con_y);
+end
+
+BGUI_CLICK_DELAY = 0.75;
+
+function UI_ButtonCheck(bttnID)
+	if Timer_Exists(bttnID) then
+		if Timer_GetRemaining(bttnID) > 0 then
+			return false;
+		else
+			Timer_Start(bttnID, BGUI_CLICK_DELAY);
+			return true;
+		end
+	else
+		Timer_Start(bttnID, BGUI_CLICK_DELAY);
+		return true;
+	end
+end
+
+function BG_GetVStar(rank)
+    return "ModIcons_6a0a13b89555402ca75b85dc30f5cb04_vstar" .. rank;
+end
+
+function BG_GetUnitItemIcon(unitData)
+	if (#unitData.upgrades > 1 or #unitData.slot_items > 1 or (#unitData.upgrades >= 1 and #unitData.slot_items >= 1)) then
+        -- TODO: Set wpn_symbol to the mixed weapons icon
+    elseif (#unitData.upgrades == 1 and #unitData.slot_items == 0) then
+        return unitData.upgrades[1].symbol;
+    elseif (#unitData.upgrades == 0 and #unitData.slot_items == 1) then
+        return unitData.slot_items[1].symbol;
+    end
+end
+
+function BGUI_HideAll()
+
+	if bg_call_ui ~= nil then
+		bg_call_ui:setPos(-9999, -9999);
+	end
+
+	if bg_overrideui ~= nil then
+		bg_overrideui:setPos(-9999, -9999);
+	end
+
+	if bg_gameoverscreen ~= nil then
+		bg_gameoverscreen:setPos(-9999, -9999);
+	end
+
+end
+
+__bguiDestroyWarning = function()
+	if _bg_ae_warning ~= nil then
+		UI_TitleDestroy(_bg_ae_warning);
+	end
+end
+
+function BGUI_ShowWarning(locstr, time)
+	if scartype(locstr) == ST_STRING then
+		localstr = LOC(localstr);
+	end
+	if time == nil or time < 0 then
+		time = 3
+	end
+	_bg_ae_warning = UIWarning_Show(locstr);
+	if Rule_Exists(__bguiDestroyWarning) then
+		Rule_Remove(__bguiDestroyWarning);
+	end
+	Rule_AddOneShot(__bguiDestroyWarning, time)
+end
+
+---------------------------------------------------------------------------
+-- UI API - 3D --> 2D
+-- Developed by CoDiEx
+---------------------------------------------------------------------------
+__proj_matrix = {};
+
+function Matrix_GetProjection()
+	if __proj_matrix == nil then
+		local zn = Camera_GetTuningValue(TV_ClipNear);
+		local zf = Camera_GetTuningValue(TV_ClipFar);
+		local q = zf / (zf - zn);
+		__proj_matrix = {
+			{ UI_GetScreenWidth(), 0, 0, 0 },
+			{ 0, UI_GetScreenHeight(), 0, 0},
+			{ 0, 0, q, 1 },
+			{ 0, 0, -q * zn, 0}
+		}
+	end
+	return __proj_matrix;
+end
+
+function Matrix_GetView()
+	local v = vec3funcs;
+	local eye = Camera_GetCurrentTargetPos();
+	local up = { 0, 1, 0 };
+	local at = { 0, 0, 0 };
+	local z = v.unit(v.sub(eye, at));
+	local x = v.unit(v.cross(up, z));
+	local y = v.cross(z, x);
+	return {
+		{ x.x, y.x, z.x, 0 },
+		{ x.y, y.y, z.y, 0 },
+		{ x.z, y.z, z.z, 0 },
+		{ -v.dot(x, eye), -v.dot(y, eye), -v.dot(z, eye), 1 },
+	}
+end
+
+function Matrix_Mul(u, v)
+
+end
+
+function Matrix_MulVec(m, v)
+
+end
+
+function UI_GetCursorPosition()
+	local worldpos = Misc_GetMouseOnTerrain();
+	local view = Matrix_GetView();
+	local proj = Matrix_GetProjection();
+	local viewProjMatrix = Matrix_Mul(proj, view);
+	local pos = Matrix_MulVec(viewProjMatrix, worldpos);
+	return {
+		x = pos.x,
+		y = pos.y
+	}
+end

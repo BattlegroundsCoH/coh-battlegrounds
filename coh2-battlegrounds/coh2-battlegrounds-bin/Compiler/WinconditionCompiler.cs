@@ -126,6 +126,9 @@ namespace Battlegrounds.Compiler {
                 // Translate the locale file
                 locCompiler.TranslateLocale(file.Contents, abspath);
 
+                // Append win condition file to locale section.
+                archiveDef.AppendLine($"\t{abspath}");
+
             }
 
             // Add end TOC

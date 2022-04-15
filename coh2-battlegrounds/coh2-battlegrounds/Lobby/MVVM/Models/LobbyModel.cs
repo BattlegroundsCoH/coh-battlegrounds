@@ -134,7 +134,10 @@ public abstract class LobbyModel : IViewModel, INotifyPropertyChanged {
     protected static readonly Func<string> LOCSTR_EXIT = () => BattlegroundsInstance.Localize.GetString("LobbyView_LeaveLobby");
     protected static readonly Func<string> LOCSTR_EDIT = () => BattlegroundsInstance.Localize.GetString("LobbyView_EditCompany");
     protected static readonly Func<string> LOCSTR_START = () => BattlegroundsInstance.Localize.GetString("LobbyView_StartMatch");
+    protected static readonly Func<string> LOCSTR_PLAYING = () => BattlegroundsInstance.Localize.GetString("LobbyView_PLAYING");
+    protected static readonly Func<string> LOCSTR_PREPARING = () => BattlegroundsInstance.Localize.GetString("LobbyView_PREPARING");
     protected static readonly Func<string, string> LOCSTR_CANCEL = x => BattlegroundsInstance.Localize.GetString("LobbyView_CancelMatch", x);
+    protected static readonly Func<string> LOCSTR_WAIT = () => BattlegroundsInstance.Localize.GetString("LobbyView_WaitMatch");
 
     protected readonly LobbyAPI m_handle;
     protected LobbyChatSpectatorModel? m_chatModel;
@@ -208,16 +211,26 @@ public abstract class LobbyModel : IViewModel, INotifyPropertyChanged {
         if (this.StartMatchButton.IsEnabled) {
             this.m_handle.CancelMatch();
             this.m_isStarting = false;
+            if (this is LobbyParticipantModel model) {
+                model.StartMatchButton.Title = LOCSTR_WAIT();
+                model.StartMatchButton.IsEnabled = false;
+            }
         }
     }
 
     protected void OnCountdownNotify(int second) {
+        if (!this.m_isStarting) {
+            return; // just bail
+        }
         // Invoke on GUI
         Application.Current.Dispatcher.Invoke(() => {
             // Update cancel button text
-            this.StartMatchButton.Title = LOCSTR_CANCEL(second.ToString());
             if (second < 1) {
+                this.StartMatchButton.Title = LOCSTR_PREPARING();
                 this.StartMatchButton.IsEnabled = false;
+            } else {
+                this.StartMatchButton.IsEnabled = true;
+                this.StartMatchButton.Title = LOCSTR_CANCEL(second.ToString());
             }
         });
     }

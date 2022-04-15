@@ -152,10 +152,10 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
             Application.Current.Dispatcher.Invoke(() => {
 
                 // Reset text
-                this.StartMatchButton.Title = LOCSTR_START();
+                this.StartMatchButton.Title = LOCSTR_PLAYING();
 
                 // Re-enable
-                this.StartMatchButton.IsEnabled = true;
+                this.StartMatchButton.IsEnabled = false;
 
             });
 
@@ -168,6 +168,12 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
 
             // Set lobby status here
             this.m_handle.SetLobbyState(LobbyAPIStructs.LobbyState.InLobby);
+
+            // Re-enable
+            Application.Current.Dispatcher.Invoke(() => {
+                this.StartMatchButton.IsEnabled = true;
+                this.StartMatchButton.Title = LOCSTR_START();
+            });
 
         }
 

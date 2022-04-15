@@ -7,7 +7,6 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media;
 
-using Battlegrounds;
 using Battlegrounds.Compiler;
 using Battlegrounds.Game.Database;
 using Battlegrounds.Game.DataCompany;
@@ -22,8 +21,6 @@ using BattlegroundsApp.Resources;
 namespace BattlegroundsApp.Lobby.MVVM.Models;
 
 public class LobbyParticipantModel : LobbyModel {
-
-    private static readonly Func<string> LOCSTR_WAIT = () => BattlegroundsInstance.Localize.GetString("LobbyView_WaitMatch");
 
     private bool m_hasDownloadedGamemode = false;
 
@@ -88,6 +85,17 @@ public class LobbyParticipantModel : LobbyModel {
     }
 
     private void OnLaunchGame() {
+
+        // Invoke on GUI
+        Application.Current.Dispatcher.Invoke(() => {
+
+            // Reset text
+            this.StartMatchButton.Title = LOCSTR_PLAYING();
+
+            // Re-enable
+            this.StartMatchButton.IsEnabled = false;
+
+        });
 
         // Create overwatch strategy
         var overwatch = new MemberOverwatchStrategy();
