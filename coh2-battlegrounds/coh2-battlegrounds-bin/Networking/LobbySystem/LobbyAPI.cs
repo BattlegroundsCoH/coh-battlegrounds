@@ -185,6 +185,11 @@ public sealed class LobbyAPI {
     public event LobbyEventHandler<int>? OnLobbyCountdown;
 
     /// <summary>
+    /// Event triggered when the host has sent a lobby halt message
+    /// </summary>
+    public event LobbyEventHandler<string>? OnLobbyMatchHalt;
+
+    /// <summary>
     /// Initialises a new <see cref="LobbyAPI"/> instance that is connected along a <see cref="ServerConnection"/> to a lobby.
     /// </summary>
     /// <param name="isHost">Flag marking if host. This is for local checking, the server verifies this independently.</param>
@@ -415,6 +420,15 @@ public sealed class LobbyAPI {
                 break;
             case "Notify.Countdown":
                 this.OnLobbyCountdown?.Invoke(message.RemoteAction);
+                break;
+            case "Notify.HaltMatch":
+
+                // Get call
+                var haltCall = GoMarshal.JsonUnmarshal<RemoteCallMessage>(message.Raw);
+
+                // Invoke event
+                this.OnLobbyMatchHalt?.Invoke(haltCall.Arguments[0]);
+
                 break;
             default:
                 Trace.WriteLine($"Unsupported API event: {message.StrMsg}", nameof(LobbyAPI));
@@ -665,9 +679,10 @@ public sealed class LobbyAPI {
     /// <summary>
     /// This will halt the ongoing match for all participants.
     /// </summary>
-    public void HaltMatch() {
+    /// <param name="haltReason">The reason for halting</param>
+    public void HaltMatch(string haltReason) {
         if (this.m_isHost) {
-            this.RemoteVoidCall("HaltMatch");
+            this.RemoteVoidCall("HaltMatch", haltReason);
         }
     }
 
