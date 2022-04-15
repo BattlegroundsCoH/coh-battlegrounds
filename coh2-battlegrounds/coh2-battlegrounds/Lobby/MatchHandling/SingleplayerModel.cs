@@ -46,7 +46,7 @@ internal class SingleplayerModel : BasePlayModel, IPlayModel {
 
     }
 
-    public void Play(PlayOverHandler matchOver) {
+    public void Play(GameStartupHandler? startupHandler, PlayOverHandler matchOver) {
 
         // Ensure controller exists
         if (this.m_controller is null)
