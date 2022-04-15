@@ -224,9 +224,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="bg_common\bg_wc\locale\english\english.ucs">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
     <None Update="bg_common\campaigns\sov_ost_stalingrad.dat">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

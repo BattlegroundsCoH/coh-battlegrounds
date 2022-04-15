@@ -8,7 +8,7 @@ namespace Battlegrounds.Compiler.Source {
 
         public WinconditionSourceFile GetInfoFile(IGamemode mod) => null;
 
-        public WinconditionSourceFile[] GetLocaleFiles() => Array.Empty<WinconditionSourceFile>();
+        public WinconditionSourceFile[] GetLocaleFiles(string? path) => Array.Empty<WinconditionSourceFile>();
 
         public WinconditionSourceFile GetModGraphic() => null;
 

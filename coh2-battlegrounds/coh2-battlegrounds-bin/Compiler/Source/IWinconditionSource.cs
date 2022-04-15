@@ -23,7 +23,7 @@ namespace Battlegrounds.Compiler.Source {
         /// Get all locale files
         /// </summary>
         /// <returns>Array of all locale files</returns>
-        WinconditionSourceFile[] GetLocaleFiles();
+        WinconditionSourceFile[] GetLocaleFiles(string? modpath);
 
         /// <summary>
         /// Get all ingame UI files (in .dds format).
