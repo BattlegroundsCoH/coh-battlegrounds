@@ -1,13 +1,14 @@
 ﻿using System;
 using System.IO;
 using System.Text;
+using System.Linq;
 using System.Diagnostics;
 using System.Globalization;
 
 using Battlegrounds.Util;
 using Battlegrounds.Compiler.Source;
 using Battlegrounds.Modding;
-using System.Linq;
+using Battlegrounds.Functional;
 
 namespace Battlegrounds.Compiler {
 
@@ -45,10 +46,13 @@ namespace Battlegrounds.Compiler {
                 return false;
             }
 
+            // Try grab mod package
+            //var modPackage = ModManager.GetPackageFromGuid(wincondition.Guid);
+
             // Get the files
             var scarFiles = source.GetScarFiles().Union(includeFiles.Where(x => x.Path.EndsWith(".scar", StringComparison.InvariantCulture)));
             var winFiles = source.GetWinFiles();
-            var localeFiles = source.GetLocaleFiles();
+            var localeFiles = source.GetLocaleFiles("");
             var uiFiles = source.GetUIFiles(wincondition);
             var infoFile = source.GetInfoFile(wincondition);
             var modiconFile = source.GetModGraphic();

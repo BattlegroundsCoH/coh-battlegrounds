@@ -52,7 +52,7 @@ internal class OnlineModel : BasePlayModel, IPlayModel {
 
     }
 
-    public void Play(PlayOverHandler matchOver) {
+    public void Play(GameStartupHandler? startupHandler, PlayOverHandler matchOver) {
 
         // Ensure controller exists
         if (this.m_controller is null)
@@ -61,6 +61,9 @@ internal class OnlineModel : BasePlayModel, IPlayModel {
         // Set on complete handler
         this.m_controller.Complete += m => GameCompleteHandler(m, matchOver);
         this.m_controller.Error += (o, r) => GameErrorHandler(r, matchOver);
+
+        // Invoke startup handler
+        startupHandler?.Invoke();
 
         // Begin match
         this.m_controller.Control();
@@ -71,6 +74,9 @@ internal class OnlineModel : BasePlayModel, IPlayModel {
 
         // Log error
         this.m_chat.SystemMessage($"Match Error - {r}", Colors.Red);
+
+        // Notify participants of error
+        this.m_handle.HaltMatch("MatchError", r);
 
         // Invoke over event in lobby model.
         Application.Current.Dispatcher.Invoke(() => {

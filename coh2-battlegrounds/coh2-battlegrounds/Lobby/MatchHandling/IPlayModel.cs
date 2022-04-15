@@ -8,10 +8,12 @@ delegate void PrepareOverHandler(IPlayModel model);
 
 delegate void PlayOverHandler(IPlayModel model);
 
+delegate void GameStartupHandler();
+
 internal interface IPlayModel {
 
     void Prepare(ModPackage modPackage, PrepareOverHandler prepareOver, PrepareCancelHandler prepareCancel);
 
-    void Play(PlayOverHandler matchOver);
+    void Play(GameStartupHandler? startupHandler, PlayOverHandler matchOver);
 
 }

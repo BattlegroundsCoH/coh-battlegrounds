@@ -145,22 +145,18 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
             // Set lobby status here
             this.m_handle.SetLobbyState(LobbyAPIStructs.LobbyState.Playing);
 
-            // Set is starting to false
-            this.m_isStarting = false;
-
-            // Allow start match again
-            Application.Current.Dispatcher.Invoke(() => {
-
-                // Reset text
-                this.StartMatchButton.Title = LOCSTR_PLAYING();
-
-                // Re-enable
-                this.StartMatchButton.IsEnabled = false;
-
-            });
-
             // Play match
-            model.Play(this.EndMatch);
+            model.Play(this.GameLaunching, this.EndMatch);
+
+        }
+
+        private void GameLaunching() {
+
+            // Notify
+            Application.Current.Dispatcher.Invoke(() => {
+                this.StartMatchButton.IsEnabled = false;
+                this.StartMatchButton.Title = LOCSTR_PLAYING();
+            });
 
         }
 

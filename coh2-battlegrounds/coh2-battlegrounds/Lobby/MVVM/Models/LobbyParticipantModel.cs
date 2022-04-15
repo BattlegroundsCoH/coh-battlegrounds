@@ -69,6 +69,9 @@ public class LobbyParticipantModel : LobbyModel {
 
     private void OnMatchBegin() {
 
+        // Set starting flag
+        this.m_isStarting = true;
+
         // Inform user
         if (this.m_chatModel is not null) {
             this.m_chatModel.SystemMessage($"The match is starting", Colors.Gray);
@@ -182,6 +185,11 @@ public class LobbyParticipantModel : LobbyModel {
 
             });
         });
+
+        // Inform user
+        if (this.m_chatModel is not null) {
+            this.m_chatModel.SystemMessage($"Match results saved.", Colors.Gray);
+        }
 
     }
 

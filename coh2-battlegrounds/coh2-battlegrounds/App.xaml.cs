@@ -127,11 +127,16 @@ namespace BattlegroundsApp {
 
             // Verify we have a user
             if (!BattlegroundsInstance.Steam.HasUser) {
-                GetSteamUserWithPermission(window); // We don't so try and get one
-            }
 
-            // Set network user
-            NetworkInterface.SelfIdentifier = BattlegroundsInstance.Steam.User.ID;
+                // We don't so try and get one
+                GetSteamUserWithPermission(window); 
+
+            } else {
+
+                // Set network user
+                NetworkInterface.SelfIdentifier = BattlegroundsInstance.Steam.User.ID;
+
+            }
 
             // Trigger discord setup
             this.SetupDiscord();
@@ -163,6 +168,9 @@ namespace BattlegroundsApp {
 
                             // Log the found user
                             Trace.WriteLine($"Found steam user: {BattlegroundsInstance.Steam.User.ID} \"{BattlegroundsInstance.Steam.User.Name}\"", "App");
+
+                            // Set network user
+                            NetworkInterface.SelfIdentifier = BattlegroundsInstance.Steam.User.ID;
 
                             // Save all changes
                             BattlegroundsInstance.SaveInstance();
