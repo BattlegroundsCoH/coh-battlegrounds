@@ -138,8 +138,8 @@ namespace BattlegroundsApp {
         }
 
         // Get the current state from identifier
-        public ViewState GetState(string stateIdentifier) {
-            if (this.m_constStates.TryGetValue(stateIdentifier, out ViewState state)) {
+        public ViewState? GetState(string stateIdentifier) {
+            if (this.m_constStates.TryGetValue(stateIdentifier, out ViewState? state)) {
                 return state;
             } else {
                 return null;
@@ -158,19 +158,18 @@ namespace BattlegroundsApp {
             }
 
             // Lookup strings
-            string title = "MainWindow_YesNoDialog_No_Steam_User_Title";
-            string desc = "MainWindow_YesNoDialog_No_Steam_User_Message";
+            string title = BattlegroundsInstance.Localize.GetString("MainWindow_YesNoDialog_No_Steam_User_Title");
+            string desc = BattlegroundsInstance.Localize.GetString("MainWindow_YesNoDialog_No_Steam_User_Message");
 
             // Do modal
             YesNoDialogViewModel.ShowModal(mControl, (vm, resault) => {
 
-                callback.Invoke(resault is not ModalDialogResult.Confirm);
+                callback.Invoke(resault is ModalDialogResult.Confirm);
 
             }, title, desc);
 
         }
-           
-
+        
         protected override void OnContentRendered(EventArgs e) {
             base.OnContentRendered(e);
             if (!this.m_isReady) {
