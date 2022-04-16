@@ -1,5 +1,4 @@
 ﻿using Battlegrounds.Modding;
-using Battlegrounds.Networking.Communication.Connections;
 
 namespace BattlegroundsApp.Lobby.MatchHandling;
 
