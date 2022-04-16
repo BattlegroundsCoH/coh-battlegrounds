@@ -296,8 +296,13 @@ namespace Battlegrounds.Game.Match.Startup {
 
         public override bool OnWaitForAllToSignal(object caller) { // Wait for all players to signal they've launched
 
+            // Get lobby
+            if (caller is not LobbyAPI lobby) {
+                return false;
+            }
+
             // Return true -> All players have launched
-            return true;
+            return lobby.ConductPoll("gamemode_check", 5);
 
         }
 

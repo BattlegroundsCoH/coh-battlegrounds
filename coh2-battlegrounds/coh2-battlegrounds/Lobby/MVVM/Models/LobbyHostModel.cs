@@ -132,17 +132,34 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
             if (this.m_package is null)
                 return; // TODO: Show error
 
-            // Set starting flag
-            this.m_isStarting = true;
+            // Bail if not ready
+            if (!this.IsReady()) {
+                // TODO: Inform user
+                return;
+            }
 
-            // Set lobby status here
-            this.m_handle.SetLobbyState(LobbyAPIStructs.LobbyState.Starting);
+            // Do on a worker thread
+            Task.Run(() => {
 
-            // Get play model
-            var play = PlayModelFactory.GetModel(this.m_handle, this.m_chatModel, this.UploadGamemodeCallback);
+                // Get status from other participants
+                if (!this.m_handle.ConductPoll("ready_check", 1.5)) {
+                    Trace.WriteLine("Someone didn't report back positively!", nameof(LobbyHostModel));
+                    return;
+                }
 
-            // prepare
-            play.Prepare(this.m_package, this.BeginMatch, x => this.EndMatch(x is IPlayModel y ? y : throw new ArgumentNullException()));
+                // Set starting flag
+                this.m_isStarting = true;
+
+                // Set lobby status here
+                this.m_handle.SetLobbyState(LobbyAPIStructs.LobbyState.Starting);
+
+                // Get play model
+                var play = PlayModelFactory.GetModel(this.m_handle, this.m_chatModel, this.UploadGamemodeCallback);
+
+                // prepare
+                play.Prepare(this.m_package, this.BeginMatch, x => this.EndMatch(x is IPlayModel y ? y : throw new ArgumentNullException()));
+
+            });
 
         }
 

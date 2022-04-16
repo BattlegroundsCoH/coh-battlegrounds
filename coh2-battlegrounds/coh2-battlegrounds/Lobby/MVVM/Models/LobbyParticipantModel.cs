@@ -219,6 +219,9 @@ public class LobbyParticipantModel : LobbyModel {
                     // Set as true
                     this.m_hasDownloadedGamemode = true;
 
+                    // Respond with download flag
+                    this.m_handle.RespondPoll("gamemode_check", true);
+
                     // Inform user
                     this.m_chatModel?.SystemMessage($"Gamemode downloaded", Colors.Gray);
 
@@ -226,6 +229,9 @@ public class LobbyParticipantModel : LobbyModel {
 
                     // Inform user
                     this.m_chatModel?.SystemMessage($"Failed to download gamemode", Colors.DarkRed);
+
+                    // Respond with download flag
+                    this.m_handle.RespondPoll("gamemode_check", false);
 
                     // Log
                     Trace.WriteLine($"Failed to download gamemode! (E = {status})", nameof(LobbyHostModel));
@@ -273,11 +279,13 @@ public class LobbyParticipantModel : LobbyModel {
 
         if (pollType is "ready_check") {
 
+            // Respond with is ready
+            this.m_handle.RespondPoll("ready_check", this.IsReady());
 
+        } else if (pollType is "gamomode_check") { // ignored for now
 
-        } else if (pollType is "gamomode_check") {
-
-
+            // Respond with download flag
+            //this.m_handle.RespondPoll("gamemode_check", this.m_hasDownloadedGamemode);
 
         } else {
 

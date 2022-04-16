@@ -440,6 +440,10 @@ public abstract class LobbyModel : IViewModel, INotifyPropertyChanged {
 
     protected void NotifyProperty(string property) => this.PropertyChanged?.Invoke(this, new(property));
 
+    protected bool IsReady() {
+        return false;
+    }
+
     public static LobbyModel? CreateModelAsHost(LobbyAPI handler) {
 
         // Check allies
