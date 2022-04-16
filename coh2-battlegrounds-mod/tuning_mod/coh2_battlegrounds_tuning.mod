@@ -37,7 +37,70 @@
 			<Children>
 				<d2p1:anyType i:type="BurnModInfo">
 					<Dependencies />
-					<Description>Some dope description</Description>
+					<Description>[h1][b]THIS IS NOT A STAND ALONE MOD[/b][/h1]
+Please follow the guides bellow to properly install and play this mod.
+
+[h1]Requirements[/h1]
+[list]
+[*] An up-to-date distribution of the .NET Framework (If you're on Windows 10, it is pre-installed).
+[*] A stable internet connection (You will presently experience the best application performance if situated in the EU).
+[*] No directory read/write restrictions on you Company of Heroes 2 Playback folder.
+[/list]
+
+[h1]Install Guide[/h1]
+[olist]
+[*] Subscribe to this mod
+[*] Visit our [url=https://cohbattlegrounds.com/]website[/url] and download the installation client
+[*] Follow the installation instructions
+[*] You are all setup and ready to play
+[/olist]
+
+You can watch visual guide [url=https://www.youtube.com/watch?v=Sg14jNbBb-8]here[/url] or visit our [url=https://cohbattlegrounds.com/guides]website.[/url]
+
+[h1]How To Play[/h1]
+[olist]
+[*] Launch Company of Heroes 2: Battlegrounds Mod Launcher
+[*] Navigate to [i]Company Builder[/i], create/edit your company and save it
+[*] Navigate to [i]Game Browser[/i], host/join a lobby
+[*] Set up your lobby to your preference or wait for the host to set the lobby up
+[*] Click the [i]Start Match[/i] button and wait for Company of Heroes 2 to launch (do [b]NOT[/b] close the Company of Heroes 2: Battlegrounds Mod Launcher)
+[*] Recreate your lobby (Allies on the left side; Axis on the right side; [b]All[/b] settings must match to count as valid match!)
+[*] Playout your match
+[*] Wait for match analysis
+[/olist]
+
+You can watch visual guide [url=https://www.youtube.com/watch?v=Sg14jNbBb-8]here[/url] or visit our [url=https://cohbattlegrounds.com/guides]website.[/url]
+
+[h1]Features[/h1]
+The mod offers several new features to the game - as it completely overhauls the way an ingame match is played. The biggest feature of the mod is unit persistency. If a unit gains veterancy or pick up dropped weapons, they'll keep that level of veterancy or obtained item for the next match. If the unit is killed - they're lost forever. Adding an extra layer of strategy to the match. Is calling in a specific unit worth the risk?
+
+The list of features include:
+[list]
+[*] Unit persistency
+[*] Enhanced unit design
+[*] Towing of Heavy Team Weapons
+[*] New gamemodes
+[*] New balance dynamics
+[*] New Soviet faction design
+[*] New Wehrmacht faction design
+[*] And more...
+[/list]
+
+[code]DISCLAIMER: [b]ONLY[/b] the Soviet and the Wehrmacht factions are curently playable.[/code]
+
+[h1]Important Links[/h1]
+[list]
+[*] [url=https://discord.com/invite/Hr7yTbSv25]Discord[/url]
+[*] [url=https://cohbattlegrounds.com/]Website[/url]
+[*] [url=https://github.com/JustCodiex/coh2-battlegrounds#readme]Github[/url]
+[/list]
+
+[h1]Final Note[/h1]
+For more information join our [url=https://discord.com/invite/Hr7yTbSv25]Discord[/url] or read about our mod [url=https://github.com/JustCodiex/coh2-battlegrounds#readme]here.[/url] 
+We hope you will have as much fun as we had making this. 
+
+See you on the battlegrounds,
+[i]Battlegrounds Development Team[/i]</Description>
 					<Hidden>false</Hidden>
 					<Name>CoH2: Battlegrounds</Name>
 				</d2p1:anyType>
@@ -64,13 +127,8 @@
 			<Alias>Data</Alias>
 			<Children>
 				<d2p1:anyType i:type="Folder">
-					<Children>
-						<d2p1:anyType i:type="BurnIcons">
-							<PackSize>1024</PackSize>
-							<RelativeName>art</RelativeName>
-						</d2p1:anyType>
-					</Children>
-					<IsExpanded>false</IsExpanded>
+					<Children />
+					<IsExpanded>true</IsExpanded>
 					<Name>ui</Name>
 				</d2p1:anyType>
 			</Children>
