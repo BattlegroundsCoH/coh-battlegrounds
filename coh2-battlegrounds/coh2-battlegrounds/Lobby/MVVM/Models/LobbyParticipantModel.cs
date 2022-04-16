@@ -64,6 +64,7 @@ public class LobbyParticipantModel : LobbyModel {
         handle.OnLobbyLaunchGame += this.OnLaunchGame;
         handle.OnLobbyMatchError += this.OnMatchInfo;
         handle.OnLobbyMatchInfo += this.OnMatchInfo;
+        handle.OnPoll += this.OnPoll;
 
         // Trigger initial view
         this.OnModPackageChange(handle.Settings["selected_tuning"]);
@@ -263,6 +264,24 @@ public class LobbyParticipantModel : LobbyModel {
                 this.m_chatModel?.SystemMessage($"{e.Reason}", Colors.DarkGray);
 
             }
+
+        }
+
+    }
+
+    private void OnPoll(string pollType) {
+
+        if (pollType is "ready_check") {
+
+
+
+        } else if (pollType is "gamomode_check") {
+
+
+
+        } else {
+
+            Trace.WriteLine($"OnPoll has recieved {pollType} that doesn't match anything.");
 
         }
 

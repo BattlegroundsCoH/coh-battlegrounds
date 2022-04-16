@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Text;
+using System.Linq;
 
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -201,6 +202,11 @@ public sealed class LobbyAPI {
     /// Event triggered when the host has sent information regarding the match.
     /// </summary>
     public event LobbyEventHandler<LobbyMatchInfoEventArgs>? OnLobbyMatchInfo;
+
+    /// <summary>
+    /// Event triggerd when the participants report their ready status.
+    /// </summary>
+    public event LobbyEventHandler<string>? OnPoll;
 
     /// <summary>
     /// Event triggered when the host has sent a lobby halt message
@@ -458,6 +464,15 @@ public sealed class LobbyAPI {
 
                 // Invoke event
                 this.OnLobbyMatchInfo?.Invoke(new(false, infoMatchCall.Arguments[0], infoMatchCall.Arguments[1]));
+
+                break;
+            case "Notify.Poll":
+
+                // Get call
+                var pollCall = GoMarshal.JsonUnmarshal<RemoteCallMessage>(message.Raw);
+
+                // Invoke event
+                this.OnPoll?.Invoke(new(pollCall.Arguments[0]));
 
                 break;
             default:
@@ -745,6 +760,24 @@ public sealed class LobbyAPI {
 
         // Send but ignore response
         this.m_connection.SendMessage(msg);
+
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="pollType">The type of poll we are conducting</param>
+    /// <param name="cancelTime">The amount of seconds the server will wait before sending back a response if the match should continue.</param>
+    /// <returns>If match received server OK, <see langword="true"/>; Otherwise <see langword="false"/>.</returns>
+    public bool ConductPoll(string pollType, double cancelTime = 3) {
+
+        if (this.RemoteCallWithTime<LobbyPoll>("PollInfo", new object[] { pollType }, TimeSpan.FromSeconds(cancelTime + 1)) is LobbyPoll poll) {
+
+            return poll.Responses.All(x => x.Value);
+
+        }
+        
+        return false;
 
     }
 
