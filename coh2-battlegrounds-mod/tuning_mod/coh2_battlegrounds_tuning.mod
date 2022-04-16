@@ -40,6 +40,13 @@
 					<Description>[h1][b]THIS IS NOT A STAND ALONE MOD[/b][/h1]
 Please follow the guides bellow to properly install and play this mod.
 
+[h1]Requirements[/h1]
+[list]
+[*] An up-to-date distribution of the .NET Framework (If you're on Windows 10, it is pre-installed).
+[*] A stable internet connection (You will presently experience the best application performance if situated in the EU).
+[*] No directory read/write restrictions on you Company of Heroes 2 Playback folder.
+[/list]
+
 [h1]Install Guide[/h1]
 [olist]
 [*] Subscribe to this mod
@@ -89,9 +96,10 @@ The list of features include:
 [/list]
 
 [h1]Final Note[/h1]
+For more information join our [url=https://discord.com/invite/Hr7yTbSv25]Discord[/url] or read about our mod [url=https://github.com/JustCodiex/coh2-battlegrounds#readme]here.[/url] 
 We hope you will have as much fun as we had making this. 
 
-See you in the battlegrounds
+See you on the battlegrounds,
 [i]Battlegrounds Development Team[/i]</Description>
 					<Hidden>false</Hidden>
 					<Name>CoH2: Battlegrounds</Name>
