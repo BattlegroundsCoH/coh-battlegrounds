@@ -8,6 +8,7 @@ using Battlegrounds.Game.Match.Finalizer;
 using Battlegrounds.Game.Match.Play.Factory;
 using Battlegrounds.Game.Match.Startup;
 using Battlegrounds.Modding;
+using Battlegrounds.Networking.Communication.Connections;
 using Battlegrounds.Networking.LobbySystem;
 
 using BattlegroundsApp.Lobby.MVVM.Models;
@@ -16,13 +17,13 @@ namespace BattlegroundsApp.Lobby.MatchHandling;
 
 internal class OnlineModel : BasePlayModel, IPlayModel {
 
-    public OnlineModel(LobbyAPI handler, LobbyChatSpectatorModel lobbyChat) : base(handler, lobbyChat) {
+    public OnlineModel(LobbyAPI handler, LobbyChatSpectatorModel lobbyChat, UploadProgressCallbackHandler callbackHandler) : base(handler, lobbyChat) {
 
         // Startup strategy
         this.m_startupStrategy = new OnlineStartupStrategy {
             LocalCompanyCollector = () => this.m_selfCompany,
             SessionInfoCollector = () => this.m_info,
-            GamemodeUploadProgress = this.UploadProgressCallback,
+            GamemodeUploadProgress = callbackHandler,
             PlayStrategyFactory = new OverwatchStrategyFactory(),
         };
 

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
@@ -138,10 +139,7 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
             this.m_handle.SetLobbyState(LobbyAPIStructs.LobbyState.Starting);
 
             // Get play model
-            var play = PlayModelFactory.GetModel(this.m_handle, this.m_chatModel);
-            if (play is OnlineModel) {
-                play.UploadProgressCallback = this.UploadGamemodeCallback;
-            }
+            var play = PlayModelFactory.GetModel(this.m_handle, this.m_chatModel, this.UploadGamemodeCallback);
 
             // prepare
             play.Prepare(this.m_package, this.BeginMatch, x => this.EndMatch(x is IPlayModel y ? y : throw new ArgumentNullException()));
@@ -161,11 +159,15 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
         private void UploadGamemodeCallback(int curr, int exp, bool cancelled) {
 
             // Calculate percentage
-            int p = (int)Math.Max(100, (curr / (double)exp * 100.0));
+            int p = Math.Min(100, (int)(curr / (double)exp * 100.0));
 
             // Update visually
             Application.Current.Dispatcher.Invoke(() => {
-                this.StartMatchButton.Title = LOCSTR_GAMEMODEUPLOAD(p);
+                if (p == 100) {
+                    this.StartMatchButton.Title = LOCSTR_PLAYING();
+                } else {
+                    this.StartMatchButton.Title = LOCSTR_GAMEMODEUPLOAD(p);
+                }
             });
 
         }

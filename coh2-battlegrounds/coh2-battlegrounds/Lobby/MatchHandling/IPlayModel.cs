@@ -13,8 +13,6 @@ delegate void GameStartupHandler();
 
 internal interface IPlayModel {
 
-    UploadProgressCallbackHandler? UploadProgressCallback { get; set; }
-
     void Prepare(ModPackage modPackage, PrepareOverHandler prepareOver, PrepareCancelHandler prepareCancel);
 
     void Play(GameStartupHandler? startupHandler, PlayOverHandler matchOver);

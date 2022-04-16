@@ -45,9 +45,6 @@ internal abstract class BasePlayModel {
     // handlers for cancel/error cases
     private PrepareCancelHandler? m_prepCancelHandler;
 
-    // Callback on upload
-    public UploadProgressCallbackHandler? UploadProgressCallback { get; set; }
-
     public BasePlayModel(LobbyAPI handler, LobbyChatSpectatorModel lobbyChat) {
 
         // Set base stuff
@@ -175,6 +172,7 @@ internal abstract class BasePlayModel {
 
     protected void HandleStartupCancel(IStartupStrategy sender, object? caller, string reason) {
         this.m_chat.SystemMessage(reason, Colors.Red);
+        this.m_handle.NotifyError("startup", reason);
         this.m_prepCancelHandler?.Invoke(this);
     }
 

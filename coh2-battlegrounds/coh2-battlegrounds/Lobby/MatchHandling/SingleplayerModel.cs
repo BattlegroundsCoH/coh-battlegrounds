@@ -76,11 +76,8 @@ internal class SingleplayerModel : BasePlayModel, IPlayModel {
     private void GameCompleteHandler(IAnalyzedMatch match, PlayOverHandler handler) {
 
         // do stuff with match?
-        if (match.IsFinalizableMatch) {
-            this.m_chat.SystemMessage("Match over - Invalid match.", Colors.DarkGray);
-        } else {
-            this.m_chat.SystemMessage("Match over - Match saved.", Colors.DarkGray);
-        }
+        //if (match.IsFinalizableMatch) {
+        this.m_chat.SystemMessage("Match over - Match saved.", Colors.DarkGray);
 
         // Invoke over event in lobby model.
         Application.Current.Dispatcher.Invoke(() => {

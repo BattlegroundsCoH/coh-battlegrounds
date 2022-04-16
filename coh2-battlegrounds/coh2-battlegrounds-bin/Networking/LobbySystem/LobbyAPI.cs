@@ -732,7 +732,7 @@ public sealed class LobbyAPI {
     public void NotifyError(string errorType, string errorMessage) {
 
         // Determine method
-        var method = this.m_isHost ? "Notify.ErrorMatch" : "NotifyHostError";
+        var method = this.m_isHost ? "ErrorMatch" : "NotifyHostError";
 
         // Create message
         Message msg = new Message() {
