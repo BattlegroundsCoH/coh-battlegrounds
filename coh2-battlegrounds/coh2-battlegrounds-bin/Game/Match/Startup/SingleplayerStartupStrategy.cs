@@ -48,11 +48,8 @@ namespace Battlegrounds.Game.Match.Startup {
             // Log state
             this.OnFeedback(null, "Compiling gamemode");
 
-            // Create server API instance
-            var serverAPI = new ServerAPI(NetworkInterface.GetBestAddress());
-
             // Compile session
-            bool result = SessionUtility.CompileSession(compiler, this.m_collectedSession, serverAPI);
+            bool result = SessionUtility.CompileSession(compiler, this.m_collectedSession);
 
             // Log result
             if (result) {

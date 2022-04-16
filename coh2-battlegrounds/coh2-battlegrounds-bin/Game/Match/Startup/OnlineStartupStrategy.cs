@@ -9,6 +9,7 @@ using Battlegrounds.Compiler;
 using Battlegrounds.Game.DataCompany;
 using Battlegrounds.Game.Match.Play;
 using Battlegrounds.Networking;
+using Battlegrounds.Networking.Communication.Connections;
 using Battlegrounds.Networking.LobbySystem;
 using Battlegrounds.Networking.Server;
 
@@ -25,9 +26,9 @@ namespace Battlegrounds.Game.Match.Startup {
         public uint StopMatchSeconds { get; set; } = 5;
 
         /// <summary>
-        /// Get or set boolean flag whether the host has cancelled the match.
+        /// Get or set the gamemode upload progress callback handler.
         /// </summary>
-        public bool CancelledByHost { get; set; } = false;
+        public UploadProgressCallbackHandler? GamemodeUploadProgress { get; set; }
 
         private List<Company>? m_playerCompanies;
         private SessionInfo m_sessionInfo;
@@ -45,7 +46,7 @@ namespace Battlegrounds.Game.Match.Startup {
             }
 
             // Return result
-            return lobby.StartMatch(this.StopMatchSeconds) && !this.CancelledByHost;
+            return lobby.StartMatch(this.StopMatchSeconds);
 
         }
 
@@ -120,14 +121,18 @@ namespace Battlegrounds.Game.Match.Startup {
                 try {
 
                     // Read in the company file and add to list.
-                    Company company = CompanySerializer.GetCompanyFromJson(x.playerCompanyData);
-                    company.Owner = x.playerID.ToString();
+                    if (CompanySerializer.GetCompanyFromJson(x.playerCompanyData) is Company company) {
+                        company.Owner = x.playerID.ToString();
 
-                    // Register company
-                    this.m_playerCompanies.Add(company);
+                        // Register company
+                        this.m_playerCompanies.Add(company);
 
-                    // Log
-                    Trace.WriteLine($"Downloaded company from user {x.playerID} titled '{company.Name}'", nameof(OnlineStartupStrategy));
+                        // Log
+                        Trace.WriteLine($"Downloaded company from user {x.playerID} titled '{company.Name}'", nameof(OnlineStartupStrategy));
+
+                    } else {
+                        throw new Exception("Invalid company data received.");
+                    }
 
                 } catch (Exception e) {
 
@@ -223,7 +228,7 @@ namespace Battlegrounds.Game.Match.Startup {
             this.OnFeedback(caller, "Compiling match data into gamemode.");
 
             // Compile session
-            if (!SessionUtility.CompileSession(compiler, this.m_session, NetworkInterface.APIObject)) {
+            if (!SessionUtility.CompileSession(compiler, this.m_session)) {
                 return false;
             }
 
@@ -231,11 +236,11 @@ namespace Battlegrounds.Game.Match.Startup {
             this.OnFeedback(caller, "Gamemode has been compiled and is being uploaded");
 
             // Return true
-            return UploadGamemode(lobby);
+            return this.UploadGamemode(lobby);
 
         }
 
-        private static bool UploadGamemode(LobbyAPI api) {
+        private bool UploadGamemode(LobbyAPI api) {
 
             // Get path to win condition
             string sgapath = $"{Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)}\\my games\\Company of Heroes 2\\mods\\gamemode\\subscriptions\\coh2_battlegrounds_wincondition.sga";
@@ -247,7 +252,7 @@ namespace Battlegrounds.Game.Match.Startup {
                 byte[] gamemode = File.ReadAllBytes(sgapath);
 
                 // Upload gamemode
-                if (api.ServerHandle.UploadGamemode(gamemode, (a, b) => Trace.WriteLine($"Gamemode upload: {a}/{b}", nameof(OnlineStartupStrategy))) == UploadResult.UPLOAD_SUCCESS) {
+                if (api.UploadGamemodeFile(gamemode, this.GamemodeUploadCallback)) {
 
                     // Instruct players to download gamemode
                     api.ReleaseGamemode();
@@ -257,14 +262,24 @@ namespace Battlegrounds.Game.Match.Startup {
 
                 }
 
-            } 
+            }
 
             // Failed to compile correctly
             return false;
 
         }
 
-        public override bool OnWaitForStart(object caller) { // Wait for all players to notify they've downloaded and installed the gamemode.
+        private void GamemodeUploadCallback(int current, int expected, bool isCancelled) {
+            
+            // Internally log
+            Trace.WriteLine($"Gamemode upload: {current}/{expected}", nameof(OnlineStartupStrategy));
+            
+            // Propogate call to custom handler
+            this.GamemodeUploadProgress?.Invoke(current, expected, isCancelled);
+
+        }
+
+        public override bool OnWaitForStart(object caller) { // TODO: Wait for all players to notify they've downloaded and installed the gamemode.
 
             // Get lobby
             if (caller is not LobbyAPI lobby) {
