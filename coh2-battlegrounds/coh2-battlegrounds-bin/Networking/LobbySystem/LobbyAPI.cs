@@ -757,6 +757,14 @@ public sealed class LobbyAPI {
     public bool UploadGamemodeFile(byte[] contents, UploadProgressCallbackHandler? callbackHandler)
         => this.m_connection.SendFile(contents, 0, this.m_cidcntr++, callbackHandler);
 
+    /// <summary>
+    /// Responds to a poll with specified <paramref name="pollVote"/>.
+    /// </summary>
+    /// <param name="pollId">The ID of the poll being responded to</param>
+    /// <param name="pollVote">flag setting if vote is a yes or a no.</param>
+    public void RespondPoll(string pollId, bool pollVote)
+        => this.RemoteVoidCall("PollRespond", pollId, EncBool(pollVote));
+
     private static T BitConvert<T>(byte[] raw, Func<byte[], int, T> func) {
         if (BitConverter.IsLittleEndian) {
             Array.Reverse(raw);
