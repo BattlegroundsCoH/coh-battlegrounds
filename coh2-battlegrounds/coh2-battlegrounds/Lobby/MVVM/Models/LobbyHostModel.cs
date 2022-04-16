@@ -24,6 +24,8 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
         private static readonly string __playabilityAxisInvalid = BattlegroundsInstance.Localize.GetString("LobbyView_StartMatchAxisInvalid");
         private static readonly string __playabilityAxisNoPlayers = BattlegroundsInstance.Localize.GetString("LobbyView_StartMatchAxisNoPlayers");
 
+        protected static readonly Func<int, string> LOCSTR_GAMEMODEUPLOAD = x => BattlegroundsInstance.Localize.GetString("LobbyView_UploadGamemode", x);
+
         private ModPackage? m_package;
 
         public override LobbyMutButton StartMatchButton { get; }
@@ -81,6 +83,9 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
             this.SupplySystemDropdown.Selected = 0;
             this.ModPackageDropdown.Selected = 0;
 
+            // Set lobby status
+            this.m_handle.SetLobbyState(LobbyAPIStructs.LobbyState.InLobby);
+
         }
 
         public void RefreshPlayability() {
@@ -134,6 +139,9 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
 
             // Get play model
             var play = PlayModelFactory.GetModel(this.m_handle, this.m_chatModel);
+            if (play is OnlineModel) {
+                play.UploadProgressCallback = this.UploadGamemodeCallback;
+            }
 
             // prepare
             play.Prepare(this.m_package, this.BeginMatch, x => this.EndMatch(x is IPlayModel y ? y : throw new ArgumentNullException()));
@@ -147,6 +155,18 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
 
             // Play match
             model.Play(this.GameLaunching, this.EndMatch);
+
+        }
+
+        private void UploadGamemodeCallback(int curr, int exp, bool cancelled) {
+
+            // Calculate percentage
+            int p = (int)Math.Max(100, (curr / (double)exp * 100.0));
+
+            // Update visually
+            Application.Current.Dispatcher.Invoke(() => {
+                this.StartMatchButton.Title = LOCSTR_GAMEMODEUPLOAD(p);
+            });
 
         }
 

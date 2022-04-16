@@ -59,7 +59,8 @@ public class LobbyParticipantModel : LobbyModel {
         handle.OnLobbyNotifyResults += this.OnResultsReleased;
         handle.OnLobbyBeginMatch += this.OnMatchBegin;
         handle.OnLobbyLaunchGame += this.OnLaunchGame;
-        handle.OnLobbyMatchHalt += this.OnMatchHalt;
+        handle.OnLobbyMatchError += this.OnMatchInfo;
+        handle.OnLobbyMatchInfo += this.OnMatchInfo;
 
         // Trigger initial view
         this.OnModPackageChange(handle.Settings["selected_tuning"]);
@@ -238,9 +239,21 @@ public class LobbyParticipantModel : LobbyModel {
 
     }
 
-    private void OnMatchHalt(LobbyMatchHaltedEventArgs e) {
-        //Log error
-        this.m_chatModel.SystemMessage($"Match Error - {e.Type}", Colors.Red);
+    private void OnMatchInfo(LobbyMatchInfoEventArgs e) {
+
+        // Check if error
+        if (e.IsError) {
+
+            //Log error
+            this.m_chatModel?.SystemMessage($"Match Error - {e.Reason}", Colors.Red);
+
+        } else {
+
+            //Log info
+            this.m_chatModel?.SystemMessage($"{e.Reason}", Colors.DarkGray);
+
+        }
+
     }
 
     private void OnLobbyChange(LobbySettingsChangedEventArgs e) {

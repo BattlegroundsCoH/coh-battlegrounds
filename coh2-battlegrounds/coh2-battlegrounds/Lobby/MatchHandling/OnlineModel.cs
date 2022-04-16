@@ -22,6 +22,7 @@ internal class OnlineModel : BasePlayModel, IPlayModel {
         this.m_startupStrategy = new OnlineStartupStrategy {
             LocalCompanyCollector = () => this.m_selfCompany,
             SessionInfoCollector = () => this.m_info,
+            GamemodeUploadProgress = this.UploadProgressCallback,
             PlayStrategyFactory = new OverwatchStrategyFactory(),
         };
 

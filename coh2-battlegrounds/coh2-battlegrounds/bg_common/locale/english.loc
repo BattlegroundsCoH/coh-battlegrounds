@@ -146,6 +146,7 @@ english:
  LobbyView_StartMatch: "START MATCH"
  LobbyView_WaitMatch: "WAITING FOR HOST"
  LobbyView_CancelMatch: "CANCEL MATCH ({0}s)"
+ LobbyView_UploadGamemode: "UPLOADING ({0}%)"
  LobbyView_PLAYING: "PLAYING"
  LobbyView_PREPARING: "COLLECTING INFO"
  LobbyView_StartMatchAlliesInvalid: "There is one or more players on the allied team with an invalid company selected."
