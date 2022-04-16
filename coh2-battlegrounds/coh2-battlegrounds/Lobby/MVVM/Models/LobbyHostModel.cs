@@ -161,6 +161,9 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
             // Calculate percentage
             int p = Math.Min(100, (int)(curr / (double)exp * 100.0));
 
+            // Notify users of upload status
+            this.m_handle.NotifyMatch("upload_status", p.ToString());
+
             // Update visually
             Application.Current.Dispatcher.Invoke(() => {
                 if (p == 100) {
