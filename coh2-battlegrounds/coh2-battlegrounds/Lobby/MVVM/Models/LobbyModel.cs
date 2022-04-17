@@ -179,8 +179,6 @@ public abstract class LobbyModel : IViewModel, INotifyPropertyChanged {
 
     public LobbyTeam Axis { get; }
 
-    public bool UnloadViewModel() => true;
-
     public LobbyModel(LobbyAPI api, LobbyAPIStructs.LobbyTeam allies, LobbyAPIStructs.LobbyTeam axis) {
 
         // Set basics
@@ -206,6 +204,12 @@ public abstract class LobbyModel : IViewModel, INotifyPropertyChanged {
         this.m_handle.OnLobbyRequestCompany += this.OnCompanyRequested;
         this.m_handle.OnLobbyCountdown += this.OnCountdownNotify;
 
+    }
+
+    public bool UnloadViewModel() => true;
+
+    public void Swapback() {
+        // TODO: Do stuff
     }
 
     public void SetChatModel(LobbyChatSpectatorModel chatModel)
@@ -501,10 +505,6 @@ public abstract class LobbyModel : IViewModel, INotifyPropertyChanged {
         // Return model
         return model;
 
-    }
-
-    public void Swapback() {
-        // TODO: Do stuff
     }
 
 }
