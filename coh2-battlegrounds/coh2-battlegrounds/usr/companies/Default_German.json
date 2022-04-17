@@ -1,0 +1,330 @@
+{
+  "Name": "Default German",
+  "Army": "german",
+  "TuningGUID": "142b113740474c82a60b0a428bd553d5",
+  "AppVersion": "1.0.0.0",
+  "Checksum": 230609,
+  "Type": "Infantry",
+  "AvailabilityType": "MultiplayerOnly",
+  "Statistics": {
+    "TotalMatchCount": 0,
+    "TotalMatchLossCount": 0,
+    "TotalMatchWinCount": 0,
+    "TotalInfantryLosses": 0,
+    "TotalVehicleLosses": 0
+  },
+  "Units": [
+    {
+      "SquadID": 0,
+      "SBP": "pioneer_squad_bg",
+      "Mod": "142b113740474c82a60b0a428bd553d5",
+      "DeploymentPhase": "PhaseInitial"
+    },
+    {
+      "SquadID": 1,
+      "SBP": "pioneer_squad_bg",
+      "Mod": "142b113740474c82a60b0a428bd553d5",
+      "DeploymentPhase": "PhaseA"
+    },
+    {
+      "SquadID": 2,
+      "SBP": "pioneer_squad_bg",
+      "Mod": "142b113740474c82a60b0a428bd553d5",
+      "DeploymentPhase": "PhaseA"
+    },
+    {
+      "SquadID": 3,
+      "SBP": "grenadier_squad_bg",
+      "Mod": "142b113740474c82a60b0a428bd553d5",
+      "DeploymentPhase": "PhaseInitial",
+      "SupportBlueprint": "opel_blitz_transport_squad_bg",
+      "DeploymentMethod": "DeployAndExit"
+    },
+    {
+      "SquadID": 4,
+      "SBP": "grenadier_squad_bg",
+      "Mod": "142b113740474c82a60b0a428bd553d5",
+      "DeploymentPhase": "PhaseInitial"
+    },
+    {
+      "SquadID": 5,
+      "SBP": "grenadier_squad_bg",
+      "Mod": "142b113740474c82a60b0a428bd553d5",
+      "DeploymentPhase": "PhaseA"
+    },
+    {
+      "SquadID": 6,
+      "SBP": "grenadier_squad_bg",
+      "Mod": "142b113740474c82a60b0a428bd553d5",
+      "DeploymentPhase": "PhaseA"
+    },
+    {
+      "SquadID": 7,
+      "SBP": "panzer_grenadier_squad_bg",
+      "Mod": "142b113740474c82a60b0a428bd553d5",
+      "DeploymentPhase": "PhaseA"
+    },
+    {
+      "SquadID": 8,
+      "SBP": "panzer_grenadier_squad_bg",
+      "Mod": "142b113740474c82a60b0a428bd553d5",
+      "DeploymentPhase": "PhaseA"
+    },
+    {
+      "SquadID": 9,
+      "SBP": "panzer_grenadier_squad_bg",
+      "Mod": "142b113740474c82a60b0a428bd553d5",
+      "DeploymentPhase": "PhaseA"
+    },
+    {
+      "SquadID": 10,
+      "SBP": "panzer_grenadier_squad_bg",
+      "Mod": "142b113740474c82a60b0a428bd553d5",
+      "DeploymentPhase": "PhaseA"
+    },
+    {
+      "SquadID": 11,
+      "SBP": "stormtrooper_squad_bg",
+      "Mod": "142b113740474c82a60b0a428bd553d5",
+      "DeploymentPhase": "PhaseA"
+    },
+    {
+      "SquadID": 12,
+      "SBP": "stormtrooper_squad_bg",
+      "Mod": "142b113740474c82a60b0a428bd553d5",
+      "DeploymentPhase": "PhaseA"
+    },
+    {
+      "SquadID": 13,
+      "SBP": "sniper_squad_bg",
+      "Mod": "142b113740474c82a60b0a428bd553d5",
+      "DeploymentPhase": "PhaseA"
+    },
+    {
+      "SquadID": 14,
+      "SBP": "sniper_squad_bg",
+      "Mod": "142b113740474c82a60b0a428bd553d5",
+      "DeploymentPhase": "PhaseA"
+    },
+    {
+      "SquadID": 15,
+      "SBP": "assault_grenadier_squad_bg",
+      "Mod": "142b113740474c82a60b0a428bd553d5",
+      "DeploymentPhase": "PhaseA"
+    },
+    {
+      "SquadID": 16,
+      "SBP": "assault_grenadier_squad_bg",
+      "Mod": "142b113740474c82a60b0a428bd553d5",
+      "DeploymentPhase": "PhaseA"
+    },
+    {
+      "SquadID": 17,
+      "SBP": "luftwaffe_officer_squad_bg",
+      "Mod": "142b113740474c82a60b0a428bd553d5",
+      "DeploymentPhase": "PhaseA"
+    },
+    {
+      "SquadID": 18,
+      "SBP": "ost_tankhunter_squad_bg",
+      "Mod": "142b113740474c82a60b0a428bd553d5",
+      "DeploymentPhase": "PhaseA"
+    },
+    {
+      "SquadID": 19,
+      "SBP": "ost_tankhunter_squad_bg",
+      "Mod": "142b113740474c82a60b0a428bd553d5",
+      "DeploymentPhase": "PhaseA"
+    },
+    {
+      "SquadID": 20,
+      "SBP": "mg42_heavy_machine_gun_squad_bg",
+      "Mod": "142b113740474c82a60b0a428bd553d5",
+      "DeploymentPhase": "PhaseInitial"
+    },
+    {
+      "SquadID": 21,
+      "SBP": "mg42_heavy_machine_gun_squad_bg",
+      "Mod": "142b113740474c82a60b0a428bd553d5",
+      "DeploymentPhase": "PhaseA"
+    },
+    {
+      "SquadID": 22,
+      "SBP": "mg42_heavy_machine_gun_squad_bg",
+      "Mod": "142b113740474c82a60b0a428bd553d5",
+      "DeploymentPhase": "PhaseA"
+    },
+    {
+      "SquadID": 23,
+      "SBP": "mg42_heavy_machine_gun_squad_bg",
+      "Mod": "142b113740474c82a60b0a428bd553d5",
+      "DeploymentPhase": "PhaseA"
+    },
+    {
+      "SquadID": 24,
+      "SBP": "mortar_team_81mm_bg",
+      "Mod": "142b113740474c82a60b0a428bd553d5",
+      "DeploymentPhase": "PhaseA"
+    },
+    {
+      "SquadID": 25,
+      "SBP": "mortar_team_81mm_bg",
+      "Mod": "142b113740474c82a60b0a428bd553d5",
+      "DeploymentPhase": "PhaseA"
+    },
+    {
+      "SquadID": 26,
+      "SBP": "pak40_75mm_at_gun_squad_bg",
+      "Mod": "142b113740474c82a60b0a428bd553d5",
+      "DeploymentPhase": "PhaseInitial"
+    },
+    {
+      "SquadID": 27,
+      "SBP": "pak40_75mm_at_gun_squad_bg",
+      "Mod": "142b113740474c82a60b0a428bd553d5",
+      "DeploymentPhase": "PhaseA"
+    },
+    {
+      "SquadID": 28,
+      "SBP": "pak40_75mm_at_gun_squad_bg",
+      "Mod": "142b113740474c82a60b0a428bd553d5",
+      "DeploymentPhase": "PhaseA"
+    },
+    {
+      "SquadID": 29,
+      "SBP": "pak40_75mm_at_gun_squad_bg",
+      "Mod": "142b113740474c82a60b0a428bd553d5",
+      "DeploymentPhase": "PhaseA"
+    },
+    {
+      "SquadID": 30,
+      "SBP": "pak40_75mm_at_gun_squad_bg",
+      "Mod": "142b113740474c82a60b0a428bd553d5",
+      "DeploymentPhase": "PhaseA"
+    },
+    {
+      "SquadID": 31,
+      "SBP": "pak43_88mm_at_gun_squad_bg",
+      "Mod": "142b113740474c82a60b0a428bd553d5",
+      "DeploymentPhase": "PhaseA"
+    },
+    {
+      "SquadID": 32,
+      "SBP": "howitzer_105mm_le_fh18_artillery_bg",
+      "Mod": "142b113740474c82a60b0a428bd553d5",
+      "DeploymentPhase": "PhaseA"
+    },
+    {
+      "SquadID": 33,
+      "SBP": "howitzer_105mm_le_fh18_artillery_bg",
+      "Mod": "142b113740474c82a60b0a428bd553d5",
+      "DeploymentPhase": "PhaseA"
+    },
+    {
+      "SquadID": 34,
+      "SBP": "ostwind_squad_bg",
+      "Mod": "142b113740474c82a60b0a428bd553d5",
+      "DeploymentPhase": "PhaseA",
+      "Crew": {
+        "SquadID": 35,
+        "SBP": "german_tank_crew_bg",
+        "Mod": "142b113740474c82a60b0a428bd553d5"
+      }
+    },
+    {
+      "SquadID": 35,
+      "SBP": "panzerwerfer_squad_bg",
+      "Mod": "142b113740474c82a60b0a428bd553d5",
+      "DeploymentPhase": "PhaseA",
+      "Crew": {
+        "SquadID": 36,
+        "SBP": "german_tank_crew_bg",
+        "Mod": "142b113740474c82a60b0a428bd553d5"
+      }
+    },
+    {
+      "SquadID": 36,
+      "SBP": "panzer_iv_squad_bg",
+      "Mod": "142b113740474c82a60b0a428bd553d5",
+      "DeploymentPhase": "PhaseA",
+      "Crew": {
+        "SquadID": 37,
+        "SBP": "german_tank_crew_bg",
+        "Mod": "142b113740474c82a60b0a428bd553d5"
+      }
+    },
+    {
+      "SquadID": 37,
+      "SBP": "panzer_iv_squad_bg",
+      "Mod": "142b113740474c82a60b0a428bd553d5",
+      "DeploymentPhase": "PhaseA",
+      "Crew": {
+        "SquadID": 38,
+        "SBP": "german_tank_crew_bg",
+        "Mod": "142b113740474c82a60b0a428bd553d5"
+      }
+    },
+    {
+      "SquadID": 38,
+      "SBP": "sdkfz_234_puma_ost_bg",
+      "Mod": "142b113740474c82a60b0a428bd553d5",
+      "DeploymentPhase": "PhaseA",
+      "Crew": {
+        "SquadID": 39,
+        "SBP": "german_vehicle_crew_bg",
+        "Mod": "142b113740474c82a60b0a428bd553d5"
+      }
+    },
+    {
+      "SquadID": 39,
+      "SBP": "tiger_command_squad_bg",
+      "Mod": "142b113740474c82a60b0a428bd553d5",
+      "DeploymentPhase": "PhaseA",
+      "Crew": {
+        "SquadID": 40,
+        "SBP": "german_tank_crew_bg",
+        "Mod": "142b113740474c82a60b0a428bd553d5"
+      }
+    }
+  ],
+  "Abilities": [
+    {
+      "ABP": "142b113740474c82a60b0a428bd553d5:german_air_recon",
+      "UnlockUpgrade": "142b113740474c82a60b0a428bd553d5:german_air_recon_unlock",
+      "GrantingBlueprints": [],
+      "Category": 3,
+      "MaxUse": 3
+    },
+    {
+      "ABP": "142b113740474c82a60b0a428bd553d5:german_bombing_run",
+      "UnlockUpgrade": "142b113740474c82a60b0a428bd553d5:german_bombing_run_unlock",
+      "GrantingBlueprints": [],
+      "Category": 3,
+      "MaxUse": 3
+    },
+    {
+      "ABP": "142b113740474c82a60b0a428bd553d5:german_aerial_superiority_strafing_run",
+      "UnlockUpgrade": "142b113740474c82a60b0a428bd553d5:german_aerial_superiority_strafing_run_unlock",
+      "GrantingBlueprints": [],
+      "Category": 3,
+      "MaxUse": 3
+    },
+    {
+      "ABP": "142b113740474c82a60b0a428bd553d5:german_aerial_superiority_close_air_support",
+      "UnlockUpgrade": "142b113740474c82a60b0a428bd553d5:german_aerial_superiority_close_air_support_unlock",
+      "GrantingBlueprints": [],
+      "Category": 3,
+      "MaxUse": 3
+    },
+    {
+      "ABP": "142b113740474c82a60b0a428bd553d5:german_sector_artillery",
+      "UnlockUpgrade": "142b113740474c82a60b0a428bd553d5:german_sector_artillery_unlock",
+      "GrantingBlueprints": [],
+      "Category": 2,
+      "MaxUse": 3
+    }
+  ],
+  "Inventory": [],
+  "Upgrades": [],
+  "Modifiers": []
+}

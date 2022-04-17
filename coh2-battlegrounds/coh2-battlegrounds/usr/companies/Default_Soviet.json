@@ -1,0 +1,335 @@
+{
+  "Name": "Default Soviet",
+  "Army": "soviet",
+  "TuningGUID": "142b113740474c82a60b0a428bd553d5",
+  "AppVersion": "1.0.0.0",
+  "Checksum": 230965,
+  "Type": "Infantry",
+  "AvailabilityType": "MultiplayerOnly",
+  "Statistics": {
+    "TotalMatchCount": 0,
+    "TotalMatchLossCount": 0,
+    "TotalMatchWinCount": 0,
+    "TotalInfantryLosses": 0,
+    "TotalVehicleLosses": 0
+  },
+  "Units": [
+    {
+      "SquadID": 0,
+      "SBP": "combat_engineer_squad_bg",
+      "Mod": "142b113740474c82a60b0a428bd553d5",
+      "DeploymentPhase": "PhaseA"
+    },
+    {
+      "SquadID": 1,
+      "SBP": "combat_engineer_squad_bg",
+      "Mod": "142b113740474c82a60b0a428bd553d5",
+      "DeploymentPhase": "PhaseA"
+    },
+    {
+      "SquadID": 2,
+      "SBP": "combat_engineer_squad_bg",
+      "Mod": "142b113740474c82a60b0a428bd553d5",
+      "DeploymentPhase": "PhaseInitial"
+    },
+    {
+      "SquadID": 3,
+      "SBP": "combat_engineer_squad_bg",
+      "Mod": "142b113740474c82a60b0a428bd553d5",
+      "DeploymentPhase": "PhaseA"
+    },
+    {
+      "SquadID": 4,
+      "SBP": "conscript_squad_bg",
+      "Mod": "142b113740474c82a60b0a428bd553d5",
+      "DeploymentPhase": "PhaseInitial",
+      "SupportBlueprint": "zis_6_transport_truck_bg",
+      "DeploymentMethod": "DeployAndExit",
+      "Upgrades": [
+        "dp-28_lmg_upgrade_bg"
+      ]
+    },
+    {
+      "SquadID": 5,
+      "SBP": "conscript_squad_bg",
+      "Mod": "142b113740474c82a60b0a428bd553d5",
+      "DeploymentPhase": "PhaseA"
+    },
+    {
+      "SquadID": 6,
+      "SBP": "conscript_squad_bg",
+      "Mod": "142b113740474c82a60b0a428bd553d5",
+      "DeploymentPhase": "PhaseA"
+    },
+    {
+      "SquadID": 7,
+      "SBP": "conscript_squad_bg",
+      "Mod": "142b113740474c82a60b0a428bd553d5",
+      "DeploymentPhase": "PhaseInitial"
+    },
+    {
+      "SquadID": 8,
+      "SBP": "conscript_squad_bg",
+      "Mod": "142b113740474c82a60b0a428bd553d5",
+      "DeploymentPhase": "PhaseA"
+    },
+    {
+      "SquadID": 9,
+      "SBP": "penal_battalion_bg",
+      "Mod": "142b113740474c82a60b0a428bd553d5",
+      "DeploymentPhase": "PhaseA"
+    },
+    {
+      "SquadID": 10,
+      "SBP": "penal_battalion_bg",
+      "Mod": "142b113740474c82a60b0a428bd553d5",
+      "DeploymentPhase": "PhaseA"
+    },
+    {
+      "SquadID": 11,
+      "SBP": "penal_battalion_bg",
+      "Mod": "142b113740474c82a60b0a428bd553d5",
+      "DeploymentPhase": "PhaseA"
+    },
+    {
+      "SquadID": 12,
+      "SBP": "penal_battalion_bg",
+      "Mod": "142b113740474c82a60b0a428bd553d5",
+      "DeploymentPhase": "PhaseA"
+    },
+    {
+      "SquadID": 13,
+      "SBP": "guards_troops_bg",
+      "Mod": "142b113740474c82a60b0a428bd553d5",
+      "DeploymentPhase": "PhaseA"
+    },
+    {
+      "SquadID": 14,
+      "SBP": "guards_troops_bg",
+      "Mod": "142b113740474c82a60b0a428bd553d5",
+      "DeploymentPhase": "PhaseA"
+    },
+    {
+      "SquadID": 15,
+      "SBP": "guards_troops_bg",
+      "Mod": "142b113740474c82a60b0a428bd553d5",
+      "DeploymentPhase": "PhaseA"
+    },
+    {
+      "SquadID": 16,
+      "SBP": "shock_troops_bg",
+      "Mod": "142b113740474c82a60b0a428bd553d5",
+      "DeploymentPhase": "PhaseA"
+    },
+    {
+      "SquadID": 17,
+      "SBP": "shock_troops_bg",
+      "Mod": "142b113740474c82a60b0a428bd553d5",
+      "DeploymentPhase": "PhaseA"
+    },
+    {
+      "SquadID": 18,
+      "SBP": "sniper_team_bg",
+      "Mod": "142b113740474c82a60b0a428bd553d5",
+      "DeploymentPhase": "PhaseA"
+    },
+    {
+      "SquadID": 19,
+      "SBP": "sniper_team_bg",
+      "Mod": "142b113740474c82a60b0a428bd553d5",
+      "DeploymentPhase": "PhaseA"
+    },
+    {
+      "SquadID": 20,
+      "SBP": "m1910_maxim_heavy_machine_gun_squad_bg",
+      "Mod": "142b113740474c82a60b0a428bd553d5",
+      "DeploymentPhase": "PhaseInitial"
+    },
+    {
+      "SquadID": 21,
+      "SBP": "m1910_maxim_heavy_machine_gun_squad_bg",
+      "Mod": "142b113740474c82a60b0a428bd553d5",
+      "DeploymentPhase": "PhaseA"
+    },
+    {
+      "SquadID": 22,
+      "SBP": "m1910_maxim_heavy_machine_gun_squad_bg",
+      "Mod": "142b113740474c82a60b0a428bd553d5",
+      "DeploymentPhase": "PhaseA"
+    },
+    {
+      "SquadID": 23,
+      "SBP": "dshk_38_hmg_squad_bg",
+      "Mod": "142b113740474c82a60b0a428bd553d5",
+      "DeploymentPhase": "PhaseA"
+    },
+    {
+      "SquadID": 24,
+      "SBP": "dshk_38_hmg_squad_bg",
+      "Mod": "142b113740474c82a60b0a428bd553d5",
+      "DeploymentPhase": "PhaseA"
+    },
+    {
+      "SquadID": 25,
+      "SBP": "pm-82_41_mortar_squad_bg",
+      "Mod": "142b113740474c82a60b0a428bd553d5",
+      "DeploymentPhase": "PhaseA"
+    },
+    {
+      "SquadID": 26,
+      "SBP": "pm-82_41_mortar_squad_bg",
+      "Mod": "142b113740474c82a60b0a428bd553d5",
+      "DeploymentPhase": "PhaseA"
+    },
+    {
+      "SquadID": 27,
+      "SBP": "hm-120_38_mortar_squad_bg",
+      "Mod": "142b113740474c82a60b0a428bd553d5",
+      "DeploymentPhase": "PhaseA"
+    },
+    {
+      "SquadID": 28,
+      "SBP": "m1942_zis-3_76mm_at_gun_squad_bg",
+      "Mod": "142b113740474c82a60b0a428bd553d5",
+      "DeploymentPhase": "PhaseInitial",
+      "SupportBlueprint": "zis_6_transport_truck_bg",
+      "DeploymentMethod": "DeployAndExit"
+    },
+    {
+      "SquadID": 29,
+      "SBP": "m1942_zis-3_76mm_at_gun_squad_bg",
+      "Mod": "142b113740474c82a60b0a428bd553d5",
+      "DeploymentPhase": "PhaseA"
+    },
+    {
+      "SquadID": 30,
+      "SBP": "m1942_zis-3_76mm_at_gun_squad_bg",
+      "Mod": "142b113740474c82a60b0a428bd553d5",
+      "DeploymentPhase": "PhaseA"
+    },
+    {
+      "SquadID": 31,
+      "SBP": "m1937_53-k_45mm_at_gun_squad_bg",
+      "Mod": "142b113740474c82a60b0a428bd553d5",
+      "DeploymentPhase": "PhaseA"
+    },
+    {
+      "SquadID": 32,
+      "SBP": "m1937_152mm_ml_20_artillery_bg",
+      "Mod": "142b113740474c82a60b0a428bd553d5",
+      "DeploymentPhase": "PhaseA"
+    },
+    {
+      "SquadID": 33,
+      "SBP": "m1937_152mm_ml_20_artillery_bg",
+      "Mod": "142b113740474c82a60b0a428bd553d5",
+      "DeploymentPhase": "PhaseA"
+    },
+    {
+      "SquadID": 34,
+      "SBP": "t_34_76_squad_bg",
+      "Mod": "142b113740474c82a60b0a428bd553d5",
+      "DeploymentPhase": "PhaseA",
+      "Crew": {
+        "SquadID": 35,
+        "SBP": "soviet_male_vehicle_crew_bg",
+        "Mod": "142b113740474c82a60b0a428bd553d5"
+      }
+    },
+    {
+      "SquadID": 35,
+      "SBP": "t_34_76_squad_bg",
+      "Mod": "142b113740474c82a60b0a428bd553d5",
+      "DeploymentPhase": "PhaseA",
+      "Crew": {
+        "SquadID": 36,
+        "SBP": "soviet_male_vehicle_crew_bg",
+        "Mod": "142b113740474c82a60b0a428bd553d5"
+      }
+    },
+    {
+      "SquadID": 36,
+      "SBP": "t_34_85_squad_bg",
+      "Mod": "142b113740474c82a60b0a428bd553d5",
+      "DeploymentPhase": "PhaseA",
+      "Crew": {
+        "SquadID": 37,
+        "SBP": "soviet_male_vehicle_crew_bg",
+        "Mod": "142b113740474c82a60b0a428bd553d5"
+      }
+    },
+    {
+      "SquadID": 37,
+      "SBP": "t_34_85_squad_bg",
+      "Mod": "142b113740474c82a60b0a428bd553d5",
+      "DeploymentPhase": "PhaseA",
+      "Crew": {
+        "SquadID": 38,
+        "SBP": "soviet_male_vehicle_crew_bg",
+        "Mod": "142b113740474c82a60b0a428bd553d5"
+      }
+    },
+    {
+      "SquadID": 38,
+      "SBP": "su-85_bg",
+      "Mod": "142b113740474c82a60b0a428bd553d5",
+      "DeploymentPhase": "PhaseA",
+      "Crew": {
+        "SquadID": 39,
+        "SBP": "soviet_male_vehicle_crew_bg",
+        "Mod": "142b113740474c82a60b0a428bd553d5"
+      }
+    },
+    {
+      "SquadID": 39,
+      "SBP": "is-2_bg",
+      "Mod": "142b113740474c82a60b0a428bd553d5",
+      "DeploymentPhase": "PhaseA",
+      "Crew": {
+        "SquadID": 40,
+        "SBP": "soviet_male_vehicle_crew_bg",
+        "Mod": "142b113740474c82a60b0a428bd553d5"
+      }
+    }
+  ],
+  "Abilities": [
+    {
+      "ABP": "142b113740474c82a60b0a428bd553d5:soviet_air_recon",
+      "UnlockUpgrade": "142b113740474c82a60b0a428bd553d5:soviet_air_recon_unlock",
+      "GrantingBlueprints": [],
+      "Category": 3,
+      "MaxUse": 3
+    },
+    {
+      "ABP": "142b113740474c82a60b0a428bd553d5:soviet_air_anti_tank_overwatch",
+      "UnlockUpgrade": "142b113740474c82a60b0a428bd553d5:soviet_air_anti_tank_overwatch_unlock",
+      "GrantingBlueprints": [],
+      "Category": 3,
+      "MaxUse": 3
+    },
+    {
+      "ABP": "142b113740474c82a60b0a428bd553d5:soviet_air_allied_air_supplies",
+      "UnlockUpgrade": "142b113740474c82a60b0a428bd553d5:soviet_air_allied_air_supplies_unlock",
+      "GrantingBlueprints": [],
+      "Category": 3,
+      "MaxUse": 3
+    },
+    {
+      "ABP": "142b113740474c82a60b0a428bd553d5:soviet_air_precision_bomb_strike",
+      "UnlockUpgrade": "142b113740474c82a60b0a428bd553d5:soviet_air_precision_bomb_strike_unlock",
+      "GrantingBlueprints": [],
+      "Category": 3,
+      "MaxUse": 3
+    },
+    {
+      "ABP": "142b113740474c82a60b0a428bd553d5:soviet_air_supression_strafe",
+      "UnlockUpgrade": "142b113740474c82a60b0a428bd553d5:soviet_air_supression_strafe_unlock",
+      "GrantingBlueprints": [],
+      "Category": 3,
+      "MaxUse": 3
+    }
+  ],
+  "Inventory": [],
+  "Upgrades": [],
+  "Modifiers": []
+}
