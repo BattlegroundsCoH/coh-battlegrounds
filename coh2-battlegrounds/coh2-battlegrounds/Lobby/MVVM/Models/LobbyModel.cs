@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
 using Battlegrounds;
+using Battlegrounds.Game;
 using Battlegrounds.Game.Database;
 using Battlegrounds.Game.DataCompany;
 using Battlegrounds.Game.Gameplay;
@@ -19,6 +20,7 @@ using Battlegrounds.Locale;
 using Battlegrounds.Modding;
 using Battlegrounds.Networking.LobbySystem;
 using Battlegrounds.Networking.Server;
+using Battlegrounds.Steam;
 
 using BattlegroundsApp.LocalData;
 using BattlegroundsApp.Modals;
@@ -441,7 +443,22 @@ public abstract class LobbyModel : IViewModel, INotifyPropertyChanged {
     protected void NotifyProperty(string property) => this.PropertyChanged?.Invoke(this, new(property));
 
     protected bool IsReady() {
+        
+        // If not steam is running
+        if (!SteamInstance.IsSteamRunning) {
+            this.m_chatModel?.SystemMessage("You must be logged into Steam!", Colors.Yellow);
+            return false;
+        }
+
+        // Make sure CoH2 is not running
+        if (CoH2Launcher.IsRunning()) {
+            this.m_chatModel?.SystemMessage("You must exit Company of Heroes 2!", Colors.Yellow);
+            return false;
+        }
+
+        // Return true
         return true;
+
     }
 
     public static LobbyModel? CreateModelAsHost(LobbyAPI handler) {
