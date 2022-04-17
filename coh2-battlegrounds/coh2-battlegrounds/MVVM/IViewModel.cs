@@ -4,7 +4,11 @@
 
         bool SingleInstanceOnly { get; }
 
+        bool KeepAlive { get; }
+
         bool UnloadViewModel();
+
+        void Swapback();
 
     }
 

@@ -38,6 +38,8 @@ namespace BattlegroundsApp.MVVM.Models {
         private readonly bool __useMockData = false; // SET TO FALSE WHEN TESTING IS OVER
         private DateTime m_lastRefresh;
 
+        public bool KeepAlive => true;
+
         public LobbyBrowserButton Refresh { get; }
 
         public LobbyBrowserButton Join { get; }
@@ -374,6 +376,10 @@ namespace BattlegroundsApp.MVVM.Models {
         }
 
         public bool UnloadViewModel() => true;
+
+        public void Swapback() {
+            this.RefreshLobbies();
+        }
 
     }
 

@@ -153,7 +153,7 @@ namespace Battlegrounds.Networking.LobbySystem {
 
         public class LobbyPoll {
             public Dictionary<ulong, bool> Responses { get; set; }
-            public UInt32 ResponseId { get; set; }
+            public uint ResponseId { get; set; }
             public string PollId { get; set; }
         }
 

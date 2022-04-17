@@ -27,6 +27,8 @@ namespace BattlegroundsApp.MVVM.Models {
         public LeftMenuButton Settings { get; }
         public LeftMenuButton Exit { get; }
 
+        public bool KeepAlive => true;
+
         public bool SingleInstanceOnly => true;
 
         public LeftMenu() {
@@ -127,6 +129,10 @@ namespace BattlegroundsApp.MVVM.Models {
         }
 
         public bool UnloadViewModel() => true;
+
+        public void Swapback() {
+            // TODO: Do stuff
+        }
 
     }
 

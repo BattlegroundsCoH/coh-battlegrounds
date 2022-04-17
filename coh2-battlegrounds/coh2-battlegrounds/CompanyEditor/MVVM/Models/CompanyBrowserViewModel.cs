@@ -59,6 +59,8 @@ public class CompanyBrowserViewModel : IViewModel {
 
     public bool SingleInstanceOnly => true;
 
+    public bool KeepAlive => true;
+
     public CompanyBrowserViewModel() {
 
         // TODO: Change the LOCALE strings names to 'CompanyBrowserView_...'
@@ -252,5 +254,9 @@ public class CompanyBrowserViewModel : IViewModel {
     }
 
     public bool UnloadViewModel() => true;
+
+    public void Swapback() {
+
+    }
 
 }

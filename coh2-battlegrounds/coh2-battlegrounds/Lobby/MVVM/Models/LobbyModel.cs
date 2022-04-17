@@ -151,6 +151,8 @@ public abstract class LobbyModel : IViewModel, INotifyPropertyChanged {
 
     public bool SingleInstanceOnly => false;
 
+    public bool KeepAlive => true;
+
     public LobbyButton ExitButton { get; }
 
     public LobbyButton EditCompanyButton { get; }
@@ -499,6 +501,10 @@ public abstract class LobbyModel : IViewModel, INotifyPropertyChanged {
         // Return model
         return model;
 
+    }
+
+    public void Swapback() {
+        // TODO: Do stuff
     }
 
 }
