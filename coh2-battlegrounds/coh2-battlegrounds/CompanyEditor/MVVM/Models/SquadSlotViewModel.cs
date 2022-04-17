@@ -59,6 +59,8 @@ public class SquadSlotViewModel : IViewModel, INotifyPropertyChanged {
 
     public bool SingleInstanceOnly => false; // This will allow us to override
 
+    public bool KeepAlive => false;
+
     public SquadSlotViewModelEvent Click { get; }
 
     public SquadSlotViewModelEvent RemoveClick { get; }
@@ -119,5 +121,9 @@ public class SquadSlotViewModel : IViewModel, INotifyPropertyChanged {
     }
 
     public bool UnloadViewModel() => true;
+
+    public void Swapback() {
+
+    }
 
 }

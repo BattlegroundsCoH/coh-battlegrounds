@@ -29,6 +29,8 @@ public record CompanyBuilderButton(ICommand Click, LocaleKey? Text, LocaleKey? T
 
 public class CompanyBuilderViewModel : IViewModel {
 
+    public bool KeepAlive => false;
+
     public CompanyBuilderButton Save { get; }
 
     public CompanyBuilderButton Reset { get; }
@@ -653,5 +655,9 @@ public class CompanyBuilderViewModel : IViewModel {
     }
 
     public bool UnloadViewModel() => true;
+
+    public void Swapback() {
+
+    }
 
 }

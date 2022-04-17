@@ -2,100 +2,116 @@
 using System.Text;
 using System.Threading;
 
-namespace Battlegrounds.Game {
+namespace Battlegrounds.Game;
+
+/// <summary>
+/// Static class for launching Company of Heroes 2 with the proper set of arguments.
+/// </summary>
+public static class CoH2Launcher {
 
     /// <summary>
-    /// Static class for launching Company of Heroes 2 with the proper set of arguments.
+    /// Const ID for marking process as having run to completion
     /// </summary>
-    public static class CoH2Launcher {
+    public const int PROCESS_OK = 0;
 
-        /// <summary>
-        /// Const ID for marking process as having run to completion
-        /// </summary>
-        public const int PROCESS_OK = 0;
+    /// <summary>
+    /// Const ID for marking process not found
+    /// </summary>
+    public const int PROCESS_NOT_FOUND = 1;
 
-        /// <summary>
-        /// Const ID for marking process not found
-        /// </summary>
-        public const int PROCESS_NOT_FOUND = 1;
+    /// <summary>
+    /// The steam app ID for Company of Heroes 2.
+    /// </summary>
+    public const string GameAppID = "231430";
 
-        /// <summary>
-        /// The steam app ID for Company of Heroes 2.
-        /// </summary>
-        public const string GameAppID = "231430";
+    /// <summary>
+    /// Launch Company of Heroes 2 through Steam
+    /// </summary>
+    public static bool Launch() {
 
-        /// <summary>
-        /// Launch Company of Heroes 2 through Steam
-        /// </summary>
-        public static bool Launch() {
+        // Create argument(s) - more can be given later if needed
+        StringBuilder commandline = new StringBuilder();
+        commandline.Append($"-applaunch {GameAppID} ");
 
-            StringBuilder commandline = new StringBuilder();
-            commandline.Append($"-applaunch {GameAppID} ");
+        // Start the process
+        ProcessStartInfo startInfo = new ProcessStartInfo {
+            FileName = Pathfinder.GetOrFindSteamPath(),
+            Arguments = commandline.ToString()
+        };
 
-            ProcessStartInfo startInfo = new ProcessStartInfo {
-                FileName = Pathfinder.GetOrFindSteamPath(),
-                Arguments = commandline.ToString()
-            };
+        // Try start it
+        try {
+            Process.Start(startInfo);
+        } catch {
 
-            try {
-                Process.Start(startInfo);
-            } catch {
-                return false;
-            }
-
-            return true;
+            // if err, return false
+            return false;
 
         }
 
-        /// <summary>
-        /// Watch the RelicCoH2.exe process
-        /// </summary>
-        /// <returns>Integer value representing the result of the operation (0 = OK, 1 = Not found)</returns>
-        public static int WatchProcess() {
-
-            // The attempts counter
-            int attemps = 0;
-
-            // The processes
-            Process[] processes = System.Array.Empty<Process>();
-
-            // While we havent found it and there are still attempts to make
-            while (attemps < 1000) {
-
-                // Try and find it
-                processes = Process.GetProcessesByName("RelicCoH2");
-
-                // If found - break
-                if (processes.Length > 0) {
-                    break;
-                }
-
-                // Wait 5ms
-                Thread.Sleep(5);
-
-                // Increase attempts so it's not an endless loop
-                attemps++;
-
-            }
-
-            // None found?
-            if (processes.Length == 0) {
-                return PROCESS_NOT_FOUND;
-            }
-
-            // Get the process
-            Process coh2Process = processes[0];
-
-            // Wait for exit
-            coh2Process.WaitForExit();
-
-            // Wait 0.5s
-            Thread.Sleep(500);
-
-            return PROCESS_OK;
-
-        }
+        // Return true -> is started
+        return true;
 
     }
+
+    /// <summary>
+    /// Watch the RelicCoH2.exe process
+    /// </summary>
+    /// <returns>Integer value representing the result of the operation (0 = OK, 1 = Not found)</returns>
+    public static int WatchProcess() {
+
+        // The attempts counter
+        int attemps = 0;
+
+        // The processes
+        Process? proc;
+
+        // While we havent found it and there are still attempts to make
+        do {
+
+            // Try get proc
+            proc = GetCoH2Process();
+
+            // Wait 5ms
+            Thread.Sleep(5);
+
+            // Increase attempts so it's not an endless loop
+            attemps++;
+
+        } while (attemps < 1000 && proc is null);
+
+        // None found?
+        if (proc is null) {
+            return PROCESS_NOT_FOUND;
+        }
+
+        // Wait for exit
+        proc.WaitForExit();
+
+        // Return OK
+        return PROCESS_OK;
+
+    }
+
+    private static Process? GetCoH2Process() {
+
+        // Try and find it
+        var processes = Process.GetProcessesByName("RelicCoH2");
+
+        // If found - break
+        if (processes.Length > 0) {
+            return processes[0];
+        }
+
+        // None found -> return null
+        return null;
+
+    }
+
+    /// <summary>
+    /// Get if Company of Heroes 2 is running.
+    /// </summary>
+    /// <returns>If the game is running then <see langword="true"/>; Otherwise <see langword="false"/>.</returns>
+    public static bool IsRunning() => GetCoH2Process() is not null;
 
 }

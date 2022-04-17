@@ -163,7 +163,7 @@ namespace BattlegroundsApp {
             window.AllowGetSteamUser(x => {
                 if (x) {
                     Trace.WriteLine("No steam user was found - user has given permission to get steam user.", "App");
-                    if (SteamInstance.IsSteamRunning()) {
+                    if (SteamInstance.IsSteamRunning) {
                         if (BattlegroundsInstance.Steam.GetSteamUser()) {
 
                             // Log the found user

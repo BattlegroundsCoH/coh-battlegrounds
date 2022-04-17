@@ -24,7 +24,7 @@ namespace Battlegrounds.Game.Match {
         /// <param name="compiler">The <see cref="ISessionCompiler"/> compiler to use when compiling session data.</param>
         /// <param name="session">The <see cref="ISession"/> instance to compile</param>
         /// <returns>Will return <see langword="true"/> if <see cref="ISession"/> was compiled into a .sga file. Otherwise <see langword="false"/>.</returns>
-        public static bool CompileSession(ISessionCompiler compiler, ISession session, ServerAPI serverAPI) {
+        public static bool CompileSession(ISessionCompiler compiler, ISession session) {
 
             // Get the scar file
             string sessionScarFile = BattlegroundsInstance.GetRelativePath(BattlegroundsPaths.SESSION_FOLDER, "session.scar");
@@ -68,7 +68,7 @@ namespace Battlegrounds.Game.Match {
             }
 
             // Get the gamemode source code finder
-            var sourceFinder = WinconditionSourceFinder.GetSource(session.Gamemode, serverAPI);
+            var sourceFinder = WinconditionSourceFinder.GetSource(session.Gamemode);
 
             // log the source finder type
             Trace.WriteLine($"Using {sourceFinder} as wincondition code source", "SessionCompiler");

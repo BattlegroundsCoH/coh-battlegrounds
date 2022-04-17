@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media;
-
+using Battlegrounds;
 using Battlegrounds.Compiler;
 using Battlegrounds.Game.Database;
 using Battlegrounds.Game.DataCompany;
@@ -40,6 +40,9 @@ public class LobbyParticipantModel : LobbyModel {
 
     public override LobbyDropdown<ModPackageOption> ModPackageDropdown { get; }
 
+    private readonly Func<string, string> LOCSTR_DOWNLOAD = x => BattlegroundsInstance.Localize.GetString("LobbyView_DownloadGamemode", x); 
+
+
     public LobbyParticipantModel(LobbyAPI handle, LobbyAPIStructs.LobbyTeam allies, LobbyAPIStructs.LobbyTeam axis) : base(handle, allies, axis) {
 
         // Define start match buttnn
@@ -59,6 +62,9 @@ public class LobbyParticipantModel : LobbyModel {
         handle.OnLobbyNotifyResults += this.OnResultsReleased;
         handle.OnLobbyBeginMatch += this.OnMatchBegin;
         handle.OnLobbyLaunchGame += this.OnLaunchGame;
+        handle.OnLobbyMatchError += this.OnMatchInfo;
+        handle.OnLobbyMatchInfo += this.OnMatchInfo;
+        handle.OnPoll += this.OnPoll;
 
         // Trigger initial view
         this.OnModPackageChange(handle.Settings["selected_tuning"]);
@@ -119,11 +125,6 @@ public class LobbyParticipantModel : LobbyModel {
                     return;
                 }
                 await Task.Delay(100);
-            }
-
-            // Inform user
-            if (this.m_chatModel is not null) {
-                this.m_chatModel.SystemMessage($"Laucnhing game", Colors.Gray);
             }
 
             // Begin
@@ -218,6 +219,9 @@ public class LobbyParticipantModel : LobbyModel {
                     // Set as true
                     this.m_hasDownloadedGamemode = true;
 
+                    // Respond with download flag
+                    this.m_handle.RespondPoll("gamemode_check", true);
+
                     // Inform user
                     this.m_chatModel?.SystemMessage($"Gamemode downloaded", Colors.Gray);
 
@@ -225,6 +229,9 @@ public class LobbyParticipantModel : LobbyModel {
 
                     // Inform user
                     this.m_chatModel?.SystemMessage($"Failed to download gamemode", Colors.DarkRed);
+
+                    // Respond with download flag
+                    this.m_handle.RespondPoll("gamemode_check", false);
 
                     // Log
                     Trace.WriteLine($"Failed to download gamemode! (E = {status})", nameof(LobbyHostModel));
@@ -234,6 +241,57 @@ public class LobbyParticipantModel : LobbyModel {
             });
 
         });
+
+    }
+
+    private void OnMatchInfo(LobbyMatchInfoEventArgs e) {
+
+        // Check if error
+        if (e.IsError) {
+
+            //Log error
+            this.m_chatModel?.SystemMessage($"Match Error - {e.Reason}", Colors.Red);
+            Application.Current.Dispatcher.Invoke(() => {
+
+                this.StartMatchButton.Title = LOCSTR_WAIT();
+                this.StartMatchButton.IsEnabled = false;
+
+            });
+
+        } else {
+
+            if (e.Type is "upload_status") {
+
+                this.StartMatchButton.Title = LOCSTR_DOWNLOAD(e.Reason);
+
+            } else {
+
+                //Log info
+                this.m_chatModel?.SystemMessage($"{e.Reason}", Colors.DarkGray);
+
+            }
+
+        }
+
+    }
+
+    private void OnPoll(string pollType) {
+
+        if (pollType is "ready_check") {
+
+            // Respond with is ready
+            this.m_handle.RespondPoll("ready_check", this.IsReady());
+
+        } else if (pollType is "gamomode_check") { // ignored for now
+
+            // Respond with download flag
+            //this.m_handle.RespondPoll("gamemode_check", this.m_hasDownloadedGamemode);
+
+        } else {
+
+            Trace.WriteLine($"OnPoll has recieved {pollType} that doesn't match anything.");
+
+        }
 
     }
 

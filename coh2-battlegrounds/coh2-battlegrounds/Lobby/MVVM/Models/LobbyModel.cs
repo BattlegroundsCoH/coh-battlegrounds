@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
 using Battlegrounds;
+using Battlegrounds.Game;
 using Battlegrounds.Game.Database;
 using Battlegrounds.Game.DataCompany;
 using Battlegrounds.Game.Gameplay;
@@ -19,6 +20,7 @@ using Battlegrounds.Locale;
 using Battlegrounds.Modding;
 using Battlegrounds.Networking.LobbySystem;
 using Battlegrounds.Networking.Server;
+using Battlegrounds.Steam;
 
 using BattlegroundsApp.LocalData;
 using BattlegroundsApp.Modals;
@@ -136,8 +138,8 @@ public abstract class LobbyModel : IViewModel, INotifyPropertyChanged {
     protected static readonly Func<string> LOCSTR_START = () => BattlegroundsInstance.Localize.GetString("LobbyView_StartMatch");
     protected static readonly Func<string> LOCSTR_PLAYING = () => BattlegroundsInstance.Localize.GetString("LobbyView_PLAYING");
     protected static readonly Func<string> LOCSTR_PREPARING = () => BattlegroundsInstance.Localize.GetString("LobbyView_PREPARING");
-    protected static readonly Func<string, string> LOCSTR_CANCEL = x => BattlegroundsInstance.Localize.GetString("LobbyView_CancelMatch", x);
     protected static readonly Func<string> LOCSTR_WAIT = () => BattlegroundsInstance.Localize.GetString("LobbyView_WaitMatch");
+    protected static readonly Func<string, string> LOCSTR_CANCEL = x => BattlegroundsInstance.Localize.GetString("LobbyView_CancelMatch", x);
 
     protected readonly LobbyAPI m_handle;
     protected LobbyChatSpectatorModel? m_chatModel;
@@ -148,6 +150,8 @@ public abstract class LobbyModel : IViewModel, INotifyPropertyChanged {
     public event PropertyChangedEventHandler? PropertyChanged;
 
     public bool SingleInstanceOnly => false;
+
+    public bool KeepAlive => true;
 
     public LobbyButton ExitButton { get; }
 
@@ -175,8 +179,6 @@ public abstract class LobbyModel : IViewModel, INotifyPropertyChanged {
 
     public LobbyTeam Axis { get; }
 
-    public bool UnloadViewModel() => true;
-
     public LobbyModel(LobbyAPI api, LobbyAPIStructs.LobbyTeam allies, LobbyAPIStructs.LobbyTeam axis) {
 
         // Set basics
@@ -202,6 +204,12 @@ public abstract class LobbyModel : IViewModel, INotifyPropertyChanged {
         this.m_handle.OnLobbyRequestCompany += this.OnCompanyRequested;
         this.m_handle.OnLobbyCountdown += this.OnCountdownNotify;
 
+    }
+
+    public bool UnloadViewModel() => true;
+
+    public void Swapback() {
+        // TODO: Do stuff
     }
 
     public void SetChatModel(LobbyChatSpectatorModel chatModel)
@@ -439,6 +447,25 @@ public abstract class LobbyModel : IViewModel, INotifyPropertyChanged {
     }
 
     protected void NotifyProperty(string property) => this.PropertyChanged?.Invoke(this, new(property));
+
+    protected bool IsReady() {
+        
+        // If not steam is running
+        if (!SteamInstance.IsSteamRunning) {
+            this.m_chatModel?.SystemMessage("You must be logged into Steam!", Colors.Yellow);
+            return false;
+        }
+
+        // Make sure CoH2 is not running
+        if (CoH2Launcher.IsRunning()) {
+            this.m_chatModel?.SystemMessage("You must exit Company of Heroes 2!", Colors.Yellow);
+            return false;
+        }
+
+        // Return true
+        return true;
+
+    }
 
     public static LobbyModel? CreateModelAsHost(LobbyAPI handler) {
 

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Text;
+using System.Linq;
 
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -61,9 +62,10 @@ public record LobbyCompanyChangedEventArgs(int TeamId, int SlotId, LobbyCompany 
 /// <summary>
 /// Event arguments for match the event a match is halted.
 /// </summary>
+/// <param name="IsError">Flag marking whether the infor is an error or general information.</param>
 /// <param name="Type">The type of halt (Where in the match process we were halted, and the severity)</param>
 /// <param name="Reason">The reason given for the halt.</param>
-public record LobbyMatchHaltedEventArgs(string Type, string Reason);
+public record LobbyMatchInfoEventArgs(bool IsError, string Type, string Reason);
 
 /// <summary>
 /// Class for interacting with the lobby logic on the server.
@@ -192,9 +194,24 @@ public sealed class LobbyAPI {
     public event LobbyEventHandler<int>? OnLobbyCountdown;
 
     /// <summary>
+    /// Event triggered when the host has sent error information regarding the match.
+    /// </summary>
+    public event LobbyEventHandler<LobbyMatchInfoEventArgs>? OnLobbyMatchError;
+
+    /// <summary>
+    /// Event triggered when the host has sent information regarding the match.
+    /// </summary>
+    public event LobbyEventHandler<LobbyMatchInfoEventArgs>? OnLobbyMatchInfo;
+
+    /// <summary>
+    /// Event triggerd when the participants report their ready status.
+    /// </summary>
+    public event LobbyEventHandler<string>? OnPoll;
+
+    /// <summary>
     /// Event triggered when the host has sent a lobby halt message
     /// </summary>
-    public event LobbyEventHandler<LobbyMatchHaltedEventArgs>? OnLobbyMatchHalt;
+    public event LobbyEventHandler? OnLobbyMatchHalt;
 
     /// <summary>
     /// Initialises a new <see cref="LobbyAPI"/> instance that is connected along a <see cref="ServerConnection"/> to a lobby.
@@ -429,12 +446,33 @@ public sealed class LobbyAPI {
                 this.OnLobbyCountdown?.Invoke(message.RemoteAction);
                 break;
             case "Notify.HaltMatch":
+                this.OnLobbyMatchHalt?.Invoke();
+                break;
+            case "Notify.ErrorMatch":
 
                 // Get call
-                var haltCall = GoMarshal.JsonUnmarshal<RemoteCallMessage>(message.Raw);
+                var errMatchCall = GoMarshal.JsonUnmarshal<RemoteCallMessage>(message.Raw);
 
                 // Invoke event
-                this.OnLobbyMatchHalt?.Invoke(new(haltCall.Arguments[0], haltCall.Arguments[1]));
+                this.OnLobbyMatchError?.Invoke(new(true, errMatchCall.Arguments[0], errMatchCall.Arguments[1]));
+
+                break;
+            case "Notify.InfoMatch":
+
+                // Get call
+                var infoMatchCall = GoMarshal.JsonUnmarshal<RemoteCallMessage>(message.Raw);
+
+                // Invoke event
+                this.OnLobbyMatchInfo?.Invoke(new(false, infoMatchCall.Arguments[0], infoMatchCall.Arguments[1]));
+
+                break;
+            case "Notify.Poll":
+
+                // Get call
+                var pollCall = GoMarshal.JsonUnmarshal<RemoteCallMessage>(message.Raw);
+
+                // Invoke event
+                this.OnPoll?.Invoke(new(pollCall.Arguments[0]));
 
                 break;
             default:
@@ -686,25 +724,35 @@ public sealed class LobbyAPI {
     /// <summary>
     /// This will halt the ongoing match for all participants.
     /// </summary>
-    /// <param name="haltType">The type of halt</param>
-    /// <param name="haltReason">The reason for halting</param>
-    public void HaltMatch(string haltType, string haltReason) {
+    public void HaltMatch() {
         if (this.m_isHost) {
-            this.RemoteVoidCall("HaltMatch", haltType, haltReason);
+            this.RemoteVoidCall("HaltMatch");
         }
     }
 
     /// <summary>
-    /// Notifies the host of an error that was encounted by the calling participant.
+    /// This will notify participants of match status.
+    /// </summary>
+    public void NotifyMatch(string infoType, string infoMessage) {
+        if (this.m_isHost) {
+            this.RemoteVoidCall("InfoMatch", infoType, infoMessage);
+        }
+    }
+
+    /// <summary>
+    /// Notifies the lobby of an error that was encounted by the caller.
     /// </summary>
     /// <param name="errorType">The type of error that was encountered.</param>
     /// <param name="errorMessage">The associated message with the error.</param>
     public void NotifyError(string errorType, string errorMessage) {
 
+        // Determine method
+        var method = this.m_isHost ? "ErrorMatch" : "NotifyHostError";
+
         // Create message
         Message msg = new Message() {
             CID = this.m_cidcntr++,
-            Content = GoMarshal.JsonMarshal(new RemoteCallMessage() { Method = "NotifyHostError", Arguments = new[] { errorType, errorMessage } }),
+            Content = GoMarshal.JsonMarshal(new RemoteCallMessage() { Method = method, Arguments = new[] { errorType, errorMessage } }),
             Mode = MessageMode.BrokerCall,
             Sender = this.m_connection.SelfID,
             Target = 0
@@ -714,6 +762,41 @@ public sealed class LobbyAPI {
         this.m_connection.SendMessage(msg);
 
     }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="pollType">The type of poll we are conducting</param>
+    /// <param name="cancelTime">The amount of seconds the server will wait before sending back a response if the match should continue.</param>
+    /// <returns>If match received server OK, <see langword="true"/>; Otherwise <see langword="false"/>.</returns>
+    public bool ConductPoll(string pollType, double cancelTime = 3) {
+
+        if (this.RemoteCallWithTime<LobbyPoll>("PollInfo", new object[] { pollType }, TimeSpan.FromSeconds(cancelTime + 1)) is LobbyPoll poll) {
+
+            return poll.Responses.All(x => x.Value);
+
+        }
+        
+        return false;
+
+    }
+
+    /// <summary>
+    /// Uploads the gamemode file contents to the server along the underlying TCP connection.
+    /// </summary>
+    /// <param name="contents">The .sga archive file contents.</param>
+    /// <param name="callbackHandler">The callback that is triggered whenever a chunk is sent.</param>
+    /// <returns><see langword="true"/> if file was uploaded; Otherwise <see langword="false"/>.</returns>
+    public bool UploadGamemodeFile(byte[] contents, UploadProgressCallbackHandler? callbackHandler)
+        => this.m_connection.SendFile(contents, 0, this.m_cidcntr++, callbackHandler);
+
+    /// <summary>
+    /// Responds to a poll with specified <paramref name="pollVote"/>.
+    /// </summary>
+    /// <param name="pollId">The ID of the poll being responded to</param>
+    /// <param name="pollVote">flag setting if vote is a yes or a no.</param>
+    public void RespondPoll(string pollId, bool pollVote)
+        => this.RemoteVoidCall("PollRespond", pollId, EncBool(pollVote));
 
     private static T BitConvert<T>(byte[] raw, Func<byte[], int, T> func) {
         if (BitConverter.IsLittleEndian) {

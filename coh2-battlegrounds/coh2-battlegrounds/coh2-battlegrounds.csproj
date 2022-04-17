@@ -782,6 +782,12 @@
     <None Update="checksum.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Update="usr\companies\Default_German.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="usr\companies\Default_Soviet.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="usr\mods\battlegrounds.mod.package.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -816,6 +822,7 @@
 
   <ItemGroup>
     <Folder Include="bg_common\bg_wc\" />
+    <Folder Include="usr\companies\" />
   </ItemGroup>
 
 </Project>

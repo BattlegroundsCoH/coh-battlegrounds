@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 
+using Battlegrounds;
 using Battlegrounds.Locale;
 using Battlegrounds.Networking;
 using Battlegrounds.Networking.LobbySystem;
@@ -15,6 +16,7 @@ using Battlegrounds.Networking.Server;
 using BattlegroundsApp.Lobby.MVVM.Models;
 using BattlegroundsApp.LocalData;
 using BattlegroundsApp.Modals;
+using BattlegroundsApp.Modals.Dialogs.MVVM.Models;
 using BattlegroundsApp.Utilities;
 
 namespace BattlegroundsApp.MVVM.Models {
@@ -35,6 +37,8 @@ namespace BattlegroundsApp.MVVM.Models {
 
         private readonly bool __useMockData = false; // SET TO FALSE WHEN TESTING IS OVER
         private DateTime m_lastRefresh;
+
+        public bool KeepAlive => true;
 
         public LobbyBrowserButton Refresh { get; }
 
@@ -173,8 +177,14 @@ namespace BattlegroundsApp.MVVM.Models {
                 return;
             }
 
+            // Ensure steam user is verified
+            if (!BattlegroundsInstance.Steam.HasVerifiedUser && !BattlegroundsInstance.Steam.GetSteamUser()) {
+                Trace.WriteLine("Failed to verify steam user in attempt to join game.", nameof(LobbyBrowserViewModel));
+                return;
+            }
+
             // Show modal
-            Modals.Dialogs.MVVM.Models.HostGameDialogViewModel.ShowModal(mControl, (vm, resault) => {
+            HostGameDialogViewModel.ShowModal(mControl, (vm, resault) => {
 
                 // Check return value
                 if (resault is not ModalDialogResult.Confirm) {
@@ -242,6 +252,13 @@ namespace BattlegroundsApp.MVVM.Models {
                 return;
             }
 
+            // Ensure steam user is verified
+            if (!BattlegroundsInstance.Steam.HasVerifiedUser && !BattlegroundsInstance.Steam.GetSteamUser()) {
+                Trace.WriteLine("Failed to verify steam user in attempt to join game.", nameof(LobbyBrowserViewModel));
+                return;
+            }
+
+            // Get selected lobby
             if (this.SelectedLobby is ServerLobby lobby) {
 
                 // If password, ask for it
@@ -253,7 +270,7 @@ namespace BattlegroundsApp.MVVM.Models {
                     }
 
                     // Do modal
-                    Modals.Dialogs.MVVM.Models.LobbyJoinDialogViewModel.ShowModal(mControl, (vm, resault) => {
+                    LobbyJoinDialogViewModel.ShowModal(mControl, (vm, resault) => {
 
                         // Check return value
                         if (resault is not ModalDialogResult.Confirm) {
@@ -359,6 +376,10 @@ namespace BattlegroundsApp.MVVM.Models {
         }
 
         public bool UnloadViewModel() => true;
+
+        public void Swapback() {
+            this.RefreshLobbies();
+        }
 
     }
 

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
@@ -23,6 +24,8 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
         private static readonly string __playabilityAlliesNoPlayers = BattlegroundsInstance.Localize.GetString("LobbyView_StartMatchAlliesNoPlayers");
         private static readonly string __playabilityAxisInvalid = BattlegroundsInstance.Localize.GetString("LobbyView_StartMatchAxisInvalid");
         private static readonly string __playabilityAxisNoPlayers = BattlegroundsInstance.Localize.GetString("LobbyView_StartMatchAxisNoPlayers");
+
+        protected static readonly Func<int, string> LOCSTR_GAMEMODEUPLOAD = x => BattlegroundsInstance.Localize.GetString("LobbyView_UploadGamemode", x);
 
         private ModPackage? m_package;
 
@@ -81,6 +84,9 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
             this.SupplySystemDropdown.Selected = 0;
             this.ModPackageDropdown.Selected = 0;
 
+            // Set lobby status
+            this.m_handle.SetLobbyState(LobbyAPIStructs.LobbyState.InLobby);
+
         }
 
         public void RefreshPlayability() {
@@ -126,17 +132,34 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
             if (this.m_package is null)
                 return; // TODO: Show error
 
-            // Set starting flag
-            this.m_isStarting = true;
+            // Bail if not ready
+            if (!this.IsReady()) {
+                // TODO: Inform user
+                return;
+            }
 
-            // Set lobby status here
-            this.m_handle.SetLobbyState(LobbyAPIStructs.LobbyState.Starting);
+            // Do on a worker thread
+            Task.Run(() => {
 
-            // Get play model
-            var play = PlayModelFactory.GetModel(this.m_handle, this.m_chatModel);
+                // Get status from other participants
+                if (!this.m_handle.ConductPoll("ready_check", 1.5)) {
+                    Trace.WriteLine("Someone didn't report back positively!", nameof(LobbyHostModel));
+                    return;
+                }
 
-            // prepare
-            play.Prepare(this.m_package, this.BeginMatch, x => this.EndMatch(x is IPlayModel y ? y : throw new ArgumentNullException()));
+                // Set starting flag
+                this.m_isStarting = true;
+
+                // Set lobby status here
+                this.m_handle.SetLobbyState(LobbyAPIStructs.LobbyState.Starting);
+
+                // Get play model
+                var play = PlayModelFactory.GetModel(this.m_handle, this.m_chatModel, this.UploadGamemodeCallback);
+
+                // prepare
+                play.Prepare(this.m_package, this.BeginMatch, x => this.EndMatch(x is IPlayModel y ? y : throw new ArgumentNullException()));
+
+            });
 
         }
 
@@ -147,6 +170,25 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
 
             // Play match
             model.Play(this.GameLaunching, this.EndMatch);
+
+        }
+
+        private void UploadGamemodeCallback(int curr, int exp, bool cancelled) {
+
+            // Calculate percentage
+            int p = Math.Min(100, (int)(curr / (double)exp * 100.0));
+
+            // Notify users of upload status
+            this.m_handle.NotifyMatch("upload_status", p.ToString());
+
+            // Update visually
+            Application.Current.Dispatcher.Invoke(() => {
+                if (p == 100) {
+                    this.StartMatchButton.Title = LOCSTR_PLAYING();
+                } else {
+                    this.StartMatchButton.Title = LOCSTR_GAMEMODEUPLOAD(p);
+                }
+            });
 
         }
 

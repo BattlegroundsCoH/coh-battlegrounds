@@ -31,7 +31,7 @@ public static class WinconditionSourceFinder {
         }
     }
 
-    public static IWinconditionSource GetSource(IGamemode wincondition, ServerAPI serverAPI) {
+    public static IWinconditionSource GetSource(IGamemode wincondition) {
 
         if (GetLocalSource() is IWinconditionSource src) {
             return src;

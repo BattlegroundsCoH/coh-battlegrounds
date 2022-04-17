@@ -14,7 +14,7 @@ public delegate void AvailableItemViewModelEvent(object sender, AvailableItemVie
 
 public delegate bool IsBlueprintAvailableHandler(Blueprint blueprint);
 
-public class AvailableItemViewModel : IViewModel, INotifyPropertyChanged {
+public class AvailableItemViewModel : INotifyPropertyChanged {
 
     public string ItemName { get; }
 
@@ -69,7 +69,5 @@ public class AvailableItemViewModel : IViewModel, INotifyPropertyChanged {
     public void Refresh() {
         this.PropertyChanged?.Invoke(this.Move, new(nameof(CanAdd)));
     }
-
-    public bool UnloadViewModel() => true;
 
 }

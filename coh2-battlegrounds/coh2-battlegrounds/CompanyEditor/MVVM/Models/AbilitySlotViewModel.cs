@@ -16,7 +16,7 @@ namespace BattlegroundsApp.CompanyEditor.MVVM.Models;
 
 public delegate void AbilitySlotViewModelEvent(object sender, AbilitySlotViewModel slotViewModel);
 
-public class AbilitySlotViewModel : IViewModel {
+public class AbilitySlotViewModel {
 
     public string AbilityName { get; set; }
 
@@ -69,7 +69,5 @@ public class AbilitySlotViewModel : IViewModel {
         this.AbilitySymbol = sbp.UI.Symbol;
 
     }
-
-    public bool UnloadViewModel() => true;
 
 }

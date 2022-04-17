@@ -13,6 +13,7 @@ using Battlegrounds.Game.Match.Composite;
 using Battlegrounds.Game.Match.Finalizer;
 using Battlegrounds.Game.Match.Startup;
 using Battlegrounds.Modding;
+using Battlegrounds.Networking.Communication.Connections;
 using Battlegrounds.Networking.LobbySystem;
 using Battlegrounds.Util;
 using Battlegrounds.Verification;
@@ -171,11 +172,14 @@ internal abstract class BasePlayModel {
 
     protected void HandleStartupCancel(IStartupStrategy sender, object? caller, string reason) {
         this.m_chat.SystemMessage(reason, Colors.Red);
+        this.m_handle.NotifyError("startup", reason);
         this.m_prepCancelHandler?.Invoke(this);
     }
 
-    protected void HandleStartupInformation(IStartupStrategy sender, object? caller, string message)
-        => this.m_chat.SystemMessage(message, Colors.DarkGray);
+    protected void HandleStartupInformation(IStartupStrategy sender, object? caller, string message) {
+        this.m_chat.SystemMessage(message, Colors.DarkGray);
+        this.m_handle.NotifyMatch("startup", message);
+    }
 
     protected void OnCompanySerialized(Company company) {
 

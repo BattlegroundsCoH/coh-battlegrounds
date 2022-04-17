@@ -8,6 +8,7 @@ using Battlegrounds.Game.Match.Finalizer;
 using Battlegrounds.Game.Match.Play.Factory;
 using Battlegrounds.Game.Match.Startup;
 using Battlegrounds.Modding;
+using Battlegrounds.Networking.Communication.Connections;
 using Battlegrounds.Networking.LobbySystem;
 
 using BattlegroundsApp.Lobby.MVVM.Models;
@@ -16,12 +17,13 @@ namespace BattlegroundsApp.Lobby.MatchHandling;
 
 internal class OnlineModel : BasePlayModel, IPlayModel {
 
-    public OnlineModel(LobbyAPI handler, LobbyChatSpectatorModel lobbyChat) : base(handler, lobbyChat) {
+    public OnlineModel(LobbyAPI handler, LobbyChatSpectatorModel lobbyChat, UploadProgressCallbackHandler callbackHandler) : base(handler, lobbyChat) {
 
         // Startup strategy
         this.m_startupStrategy = new OnlineStartupStrategy {
             LocalCompanyCollector = () => this.m_selfCompany,
             SessionInfoCollector = () => this.m_info,
+            GamemodeUploadProgress = callbackHandler,
             PlayStrategyFactory = new OverwatchStrategyFactory(),
         };
 
@@ -76,7 +78,7 @@ internal class OnlineModel : BasePlayModel, IPlayModel {
         this.m_chat.SystemMessage($"Match Error - {r}", Colors.Red);
 
         // Notify participants of error
-        this.m_handle.HaltMatch("MatchError", r);
+        this.m_handle.NotifyError("MatchError", r);
 
         // Invoke over event in lobby model.
         Application.Current.Dispatcher.Invoke(() => {
