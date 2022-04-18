@@ -1043,12 +1043,13 @@
             </Setter>
         </Style>
 
-        <Style x:Key="WaterMarkPwdBox" TargetType="{x:Type bindablepasswordbox:BindablePasswordBox}">
+        <Style x:Key="WaterMarkPwdBox" TargetType="{x:Type PasswordBox}">
             <Setter Property="Foreground" Value="#FFFFFF"/>
             <Setter Property="BorderBrush" Value="#FFFFFF"/>
+            <Setter Property="CaretBrush" Value="#FFFFFF"/>
             <Setter Property="Template">
                 <Setter.Value>
-                    <ControlTemplate TargetType="{x:Type bindablepasswordbox:BindablePasswordBox}">
+                    <ControlTemplate TargetType="{x:Type PasswordBox}">
                         <Grid>
 
                             <Border Background="Transparent"
@@ -1063,17 +1064,11 @@
                                    x:Name="WaterMarkLabel" 
                                    Content="{TemplateBinding Tag}" 
                                    VerticalAlignment="Center"
-                                   Visibility="Collapsed" 
+                                   Visibility="Visible" 
                                    Foreground="Gray"/>
 
                         </Grid>
                         <ControlTemplate.Triggers>
-                            <MultiTrigger>
-                                <MultiTrigger.Conditions>
-                                    <Condition Property="Password" Value=""/>
-                                </MultiTrigger.Conditions>
-                                <Setter Property="Visibility" TargetName="WaterMarkLabel" Value="Visible"/>
-                            </MultiTrigger>
                             <Trigger Property="IsEnabled" Value="False">
                                 <Setter Property="Foreground" Value="DimGray"/>
                             </Trigger>

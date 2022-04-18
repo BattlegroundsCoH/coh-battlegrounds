@@ -45,10 +45,11 @@
                      Height="25"
                      x:Name="lobbyName"/>
 
-            <bindablepasswordbox:BindablePasswordBox 
-                    Password="{Binding LobbyPassword, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" 
-                    Margin="0, 0, 0, 7"
-                    Height="25"/>
+            <PasswordBox Margin="0, 0, 0, 7"
+                         Height="25"
+                         PasswordChanged="OnPasswordChanged"
+                         Style="{StaticResource WaterMarkPwdBox}"
+                         Tag="Password (Optional)"/>
 
             <Button Content="GameBrowserView_Host_Game"
                     Style="{StaticResource StandardBlueLocButton}"
