@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BattlegroundsApp.Modals.Dialogs.MVVM.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -21,6 +22,12 @@ public partial class LobbyJoinDialogView : Modal {
 
     public LobbyJoinDialogView() {
         InitializeComponent();
+    }
+
+    private void OnPasswordChanged(object sender, RoutedEventArgs e) {
+        if (this.DataContext is LobbyJoinDialogViewModel vm) {
+            vm.Password = ((PasswordBox)sender).Password;
+        }
     }
 
 }
