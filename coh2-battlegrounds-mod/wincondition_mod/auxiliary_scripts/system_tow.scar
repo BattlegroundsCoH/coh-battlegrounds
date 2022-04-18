@@ -120,6 +120,10 @@ function Battlegrounds_GetTOWProfile(towEntityID, transportSquadID)
 end
 
 function Battlegrounds_TowAttach(executer, target, offset, detatchCallback)
+    if target == nil then
+        -- Note, at the moment this disallows towing of world entities
+        return
+    end
     local syncwpn = Squad_GetSyncWeapon(target);
     local profile = {};
     if offset == nil then
