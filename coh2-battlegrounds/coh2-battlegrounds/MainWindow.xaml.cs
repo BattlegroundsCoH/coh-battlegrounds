@@ -1,29 +1,13 @@
-﻿using Battlegrounds;
-using Battlegrounds.Online.Services;
-using Battlegrounds.Steam;
-using Battlegrounds.Game.Database;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using System.Diagnostics;
+﻿using System;
 
-using BattlegroundsApp.Views;
-using Battlegrounds.Locale;
+using Battlegrounds;
+
 using BattlegroundsApp.MVVM;
 using BattlegroundsApp.Modals;
 using BattlegroundsApp.Modals.Dialogs.MVVM.Models;
+using System.ComponentModel;
+using BattlegroundsApp.Lobby.MVVM.Models;
+using BattlegroundsApp.CompanyEditor.MVVM.Models;
 
 namespace BattlegroundsApp {
 
@@ -47,7 +31,7 @@ namespace BattlegroundsApp {
             this.m_isReady = false;
 
             // Initialize components etc...
-            InitializeComponent();
+            this.InitializeComponent();
 
             // Set self display state
             this.m_displayState = AppDisplayState.LeftRight;
@@ -117,7 +101,32 @@ namespace BattlegroundsApp {
         /// </summary>
         /// <param name="show">Show the left-side panel</param>
         [Obsolete]
-        public void ShowLeftPanel(bool show) {
+        public void ShowLeftPanel(bool show) {}
+
+        private void CoreAppWindow_Closing(object sender, CancelEventArgs e) {
+
+            // Get current rhs
+            if (this.RightContent.Content is LobbyModel lobby) {
+                e.Cancel = true;
+                YesNoDialogViewModel.ShowModal(this.ModalView, (_, res) => {
+                    if (res is ModalDialogResult.Confirm) {
+                        this.RightContent.Content = null;
+                        Environment.Exit(0);
+                    }
+                }, "Leave Lobby?", "Are you sure you want to leave the lobby?");
+                return;
+            } else if (this.RightContent.Content is CompanyBuilderViewModel cb) {
+                if (cb.HasChanges) {
+                    e.Cancel = true;
+                    YesNoDialogViewModel.ShowModal(this.ModalView, (_, res) => {
+                        if (res is ModalDialogResult.Confirm) {
+                            this.RightContent.Content = null;
+                            Environment.Exit(0);
+                        }
+                    }, "Unsaved Changes", "You have unsaved changes that will be lost if you exit now.");
+                }
+            }
+
         }
 
     }

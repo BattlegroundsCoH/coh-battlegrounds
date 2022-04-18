@@ -4,16 +4,14 @@ using System.Windows.Input;
 using Battlegrounds.Locale;
 using BattlegroundsApp.CompanyEditor.MVVM.Models;
 using BattlegroundsApp.Dashboard.MVVM.Models;
-using BattlegroundsApp.Modals;
-using BattlegroundsApp.Modals.Dialogs.MVVM.Models;
 using BattlegroundsApp.Utilities;
 
 namespace BattlegroundsApp.MVVM.Models {
     
     public class LeftMenuButton {
-        public ICommand Click { get; init; }
-        public LocaleKey Text { get; init; }
-        public LocaleKey Tooltip { get; init; }
+        public ICommand? Click { get; init; }
+        public LocaleKey? Text { get; init; }
+        public LocaleKey? Tooltip { get; init; }
         public bool Enabled { get; init; }
     }
 
@@ -97,10 +95,11 @@ namespace BattlegroundsApp.MVVM.Models {
         private void BuilderButton() {
 
             // Get browser
-            var browser = App.ViewManager.UpdateDisplay<CompanyBrowserViewModel>(AppDisplayTarget.Right);
-
-            // Trigger list refresh
-            browser.UpdateCompanyList();
+            App.ViewManager.UpdateDisplay<CompanyBrowserViewModel>(AppDisplayTarget.Right, browser => {
+                if (browser is CompanyBrowserViewModel vm) {
+                    vm.UpdateCompanyList();
+                }
+            });
 
         }
 
@@ -111,10 +110,11 @@ namespace BattlegroundsApp.MVVM.Models {
         private void MatchFinderButton() {
 
             // Set RHS to lobby browser
-            var browser = App.ViewManager.UpdateDisplay<LobbyBrowserViewModel>(AppDisplayTarget.Right);
-
-            // Triger lobby refresh
-            browser.RefreshLobbies();
+            App.ViewManager.UpdateDisplay<LobbyBrowserViewModel>(AppDisplayTarget.Right, browser => {
+                if (browser is LobbyBrowserViewModel vm) {
+                    vm.RefreshLobbies();
+                }
+            });
 
         }
 
@@ -124,11 +124,12 @@ namespace BattlegroundsApp.MVVM.Models {
 
         private void ExitButton() {
 
-            Application.Current.Shutdown();
+            // Ask main window to close -> this will shut down the application.
+            Application.Current.MainWindow.Close();
 
         }
 
-        public bool UnloadViewModel() => true;
+        public void UnloadViewModel(OnModelClosed closeCallback) => closeCallback(false);
 
         public void Swapback() {
             // TODO: Do stuff

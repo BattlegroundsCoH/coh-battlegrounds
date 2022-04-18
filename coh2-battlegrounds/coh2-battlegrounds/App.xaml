@@ -280,6 +280,35 @@
             </Setter>
         </Style>
 
+        <Style x:Key="StandardRedLocButton" TargetType="{x:Type Button}">
+            <Setter Property="SnapsToDevicePixels" Value="True"/>
+            <Setter Property="UseLayoutRounding" Value="True"/>
+            <Setter Property="Foreground" Value="#FFFFFF"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Button}">
+                        <Grid x:Name="Gridbackground" Background="#873737">
+                            <controls:LocLabel
+                                LocKey="{Binding Content, RelativeSource={RelativeSource TemplatedParent}}"
+                                Foreground="White"
+                                FontSize="18"
+                                FontFamily="Open Sans"
+                                VerticalAlignment="Center"
+                                HorizontalAlignment="Center"/>
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="Gridbackground" Property="Background" Value="#ad4a4a"/>
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter Property="Opacity" Value="0.65"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
         <Style x:Key="StandardGreenButton" TargetType="{x:Type Button}">
             <Setter Property="SnapsToDevicePixels" Value="True"/>
             <Setter Property="UseLayoutRounding" Value="True"/>

@@ -18,6 +18,8 @@ using Battlegrounds.Modding;
 
 using BattlegroundsApp.Controls.CompanyBuilderControls;
 using BattlegroundsApp.LocalData;
+using BattlegroundsApp.Modals;
+using BattlegroundsApp.Modals.Dialogs.MVVM.Models;
 using BattlegroundsApp.MVVM;
 using BattlegroundsApp.Utilities;
 
@@ -27,6 +29,12 @@ public delegate void CompanyBuilderViewModelEvent(object sender, CompanyBuilderV
 
 public record CompanyBuilderButton(ICommand Click, LocaleKey? Text, LocaleKey? Tooltip);
 
+public record CompanyBuilderButton2(ICommand Click, LocaleKey? Tooltip, Func<Visibility> VisibleFetcher) {
+    public Visibility Visibility {
+        get => this.VisibleFetcher();
+    }
+}
+
 public class CompanyBuilderViewModel : IViewModel {
 
     public bool KeepAlive => false;
@@ -35,11 +43,14 @@ public class CompanyBuilderViewModel : IViewModel {
 
     public CompanyBuilderButton Reset { get; }
 
-    public CompanyBuilderButton Back { get; }
+    public CompanyBuilderButton2 Back { get; }
 
     public bool SingleInstanceOnly => false; // This will allow us to override
 
+    public bool HasChanges => this.Builder.IsChanged;
+
     private readonly ModPackage m_activeModPackage;
+    private readonly CompanyBuilder? m_builder;
 
     private readonly List<SquadBlueprint> m_availableSquads;
     private readonly List<SquadBlueprint> m_availableCrews;
@@ -61,7 +72,7 @@ public class CompanyBuilderViewModel : IViewModel {
     public ObservableCollection<AbilitySlotViewModel> CompanyUnitAbilities { get; set; }
     public ObservableCollection<EquipmentSlot> CompanyEquipment { get; set; }
 
-    public CompanyBuilder Builder { get; }
+    public CompanyBuilder Builder => this.m_builder ?? throw new Exception("Expected a valid instance of a company builder but found none (Invalid call tree!)");
 
     public CompanyStatistics Statistics { get; }
     public string CompanyName { get; }
@@ -101,7 +112,9 @@ public class CompanyBuilderViewModel : IViewModel {
 
     public CapacityValue VehicleCapacity { get; }
 
-    private CompanyBuilderViewModel() {
+    public IViewModel? ReturnTo { get; set; }
+
+    private CompanyBuilderViewModel(ModGuid guid) {
 
         // Create save
         this.Save = new(new RelayCommand(this.SaveButton), null, null);
@@ -110,13 +123,14 @@ public class CompanyBuilderViewModel : IViewModel {
         this.Reset = new(new RelayCommand(this.ResetButton), null, null);
 
         // Create back
-        this.Back = new(new RelayCommand(this.BackButton), null, null);
+        this.Back = new(new RelayCommand(this.BackButton), null, () => this.ReturnTo is null ? Visibility.Collapsed : Visibility.Visible);
 
         // Define basic values
         this.CompanyFaction = Faction.Soviet;
         this.CompanyGUID = ModGuid.BaseGame;
         this.CompanyName = string.Empty;
         this.CompanyType = string.Empty;
+        this.Statistics = new();
 
         // Define locales
         this.CompanyMatchHistoryLabelContent = new LocaleKey("CompanyBuilder_CompanyMatchHistory");
@@ -164,20 +178,20 @@ public class CompanyBuilderViewModel : IViewModel {
         this.SupportCapacity = new CapacityValue(0, 0, () => this.Builder?.SupportCount ?? 0);
         this.VehicleCapacity = new CapacityValue(0, 0, () => this.Builder?.VehicleCount ?? 0);
 
+        // Set fields
+        this.m_activeModPackage = ModManager.GetPackageFromGuid(guid) ?? throw new Exception("Attempt to create company builder vm without a valid mod package");
+
     }
 
-    public CompanyBuilderViewModel(Company company) : this() {
+    public CompanyBuilderViewModel(Company company) : this(company.TuningGUID) {
 
         // Set company information
-        this.Builder = CompanyBuilder.EditCompany(company);
+        this.m_builder = CompanyBuilder.EditCompany(company);
         this.Statistics = company.Statistics;
         this.CompanyName = company.Name;
         this.CompanyFaction = company.Army;
         this.CompanyGUID = company.TuningGUID;
         this.CompanyType = company.Type.ToString();
-
-        // Set fields
-        this.m_activeModPackage = ModManager.GetPackageFromGuid(company.TuningGUID);
 
         // Load database and display
         this.LoadFactionDatabase();
@@ -188,18 +202,14 @@ public class CompanyBuilderViewModel : IViewModel {
 
     }
 
-    public CompanyBuilderViewModel(string companyName, Faction faction, CompanyType type, ModGuid modGuid) : this() {
+    public CompanyBuilderViewModel(string companyName, Faction faction, CompanyType type, ModGuid modGuid) : this(modGuid) {
 
         // Set properties
-        this.Builder = CompanyBuilder.NewCompany(companyName, type, CompanyAvailabilityType.MultiplayerOnly, faction, modGuid);
-        this.Statistics = new();
+        this.m_builder = CompanyBuilder.NewCompany(companyName, type, CompanyAvailabilityType.MultiplayerOnly, faction, modGuid);
         this.CompanyName = companyName;
         this.CompanyFaction = faction;
         this.CompanyGUID = modGuid;
         this.CompanyType = type.ToString();
-
-        // Set fields
-        this.m_activeModPackage = ModManager.GetPackageFromGuid(modGuid);
 
         // Load database and display
         this.LoadFactionDatabase();
@@ -243,11 +253,20 @@ public class CompanyBuilderViewModel : IViewModel {
 
     public void BackButton() {
 
+        // Bail if returnto is not valid (but this somehow was clicked)
+        if (this.ReturnTo is null) {
+            return;
+        }
+
+        // Check if any changes were applied
         if (this.Builder.IsChanged) {
 
             // Await response
 
         }
+
+        // Then goback
+        App.ViewManager.UpdateDisplay(AppDisplayTarget.Right, new(this.ReturnTo));
 
     }
 
@@ -654,7 +673,19 @@ public class CompanyBuilderViewModel : IViewModel {
 
     }
 
-    public bool UnloadViewModel() => true;
+    public void UnloadViewModel(OnModelClosed closeCallback) {
+        if (this.HasChanges) {
+            if (App.ViewManager.GetRightsideModalControl() is not ModalControl mc) {
+                closeCallback(false);
+                return;
+            }
+            YesNoDialogViewModel.ShowModal(mc, (_, res) => {
+                closeCallback(res is ModalDialogResult.Cancel);
+            }, "Unsaved Changes", "You have unsaved changes that will be lost if you leave the company builder. Are you sure you want to leave?");
+        } else {
+            closeCallback(false);
+        }
+    }
 
     public void Swapback() {
 

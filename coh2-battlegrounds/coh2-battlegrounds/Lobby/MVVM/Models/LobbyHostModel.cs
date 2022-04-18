@@ -87,6 +87,11 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
             // Set lobby status
             this.m_handle.SetLobbyState(LobbyAPIStructs.LobbyState.InLobby);
 
+            // Inform others
+            if (this.TryGetSelf() is LobbyAPIStructs.LobbySlot self && self.Occupant is not null) {
+                this.m_handle.MemberState(self.Occupant.MemberID, self.TeamID, self.SlotID, LobbyAPIStructs.LobbyMemberState.Waiting);
+            }
+
         }
 
         public void RefreshPlayability() {

@@ -12,7 +12,8 @@ public class DashboardViewModel : IViewModel {
 
     public bool KeepAlive => true;
 
-    public bool UnloadViewModel() => true;
+    public void UnloadViewModel(OnModelClosed closeCallback) => closeCallback(false);
+
     public void Swapback() {
 
     }

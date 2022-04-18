@@ -253,7 +253,7 @@ public class CompanyBrowserViewModel : IViewModel {
 
     }
 
-    public bool UnloadViewModel() => true;
+    public void UnloadViewModel(OnModelClosed closeCallback) => closeCallback(false);
 
     public void Swapback() {
 

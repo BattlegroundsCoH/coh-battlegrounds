@@ -98,8 +98,6 @@ public class LobbyTeam {
                 }
             });
 
-
-
         }
     }
 
@@ -118,7 +116,7 @@ public class LobbyTeam {
                 if (slots[i].Occupant is not LobbyAPIStructs.LobbyMember mem) {
                     continue; // Some werid err
                 }
-                flag1 |= true;
+                flag1 |= mem.State is LobbyAPIStructs.LobbyMemberState.Waiting;
                 if (mem.Company?.IsNone ?? true) {
                     flag2 = false;
                 } else {

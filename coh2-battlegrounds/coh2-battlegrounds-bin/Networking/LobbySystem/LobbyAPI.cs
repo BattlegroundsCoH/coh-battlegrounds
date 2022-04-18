@@ -406,6 +406,16 @@ public sealed class LobbyAPI {
                     // Set API
                     newSlot.SetAPI(this);
 
+                    // Update slot on team
+                    switch (newSlot.TeamID) {
+                        case 0:
+                            this.m_allies.Slots[newSlot.SlotID] = newSlot;
+                            break;
+                        case 1:
+                            this.m_axis.Slots[newSlot.SlotID] = newSlot;
+                            break;
+                    }
+
                     // Trigger slot update
                     this.OnLobbySlotUpdate?.Invoke(newSlot);
 
@@ -535,6 +545,16 @@ public sealed class LobbyAPI {
     /// <param name="sid">The slot ID in the range 0 &#x2264; S &#x2264; 4 that the member should move to.</param>
     public void MoveSlot(ulong mid, int tid, int sid)
         => this.RemoteVoidCall("MoveSlot", mid, tid, sid);
+
+    /// <summary>
+    /// Updates the state of a lobby member.
+    /// </summary>
+    /// <param name="mid">The ID of the member that is moving.</param>
+    /// <param name="tid">The team ID containing the slot being move to. Accepts values in the range 0 &#x2264; T &#x2264; 2</param>
+    /// <param name="sid">The slot ID in the range 0 &#x2264; S &#x2264; 4 that the member should move to.</param>
+    /// <param name="state">The new state of the member.</param>
+    public void MemberState(ulong mid, int tid, int sid, LobbyMemberState state)
+        => this.RemoteVoidCall("MemberState", mid, tid, sid, (byte)state);
 
     /// <summary>
     /// Add an AI player to the specified slow.
@@ -764,24 +784,6 @@ public sealed class LobbyAPI {
     }
 
     /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="pollType">The type of poll we are conducting</param>
-    /// <param name="cancelTime">The amount of seconds the server will wait before sending back a response if the match should continue.</param>
-    /// <returns>If match received server OK, <see langword="true"/>; Otherwise <see langword="false"/>.</returns>
-    public bool ConductPoll(string pollType, double cancelTime = 3) {
-
-        if (this.RemoteCallWithTime<LobbyPoll>("PollInfo", new object[] { pollType }, TimeSpan.FromSeconds(cancelTime + 1)) is LobbyPoll poll) {
-
-            return poll.Responses.All(x => x.Value);
-
-        }
-        
-        return false;
-
-    }
-
-    /// <summary>
     /// Uploads the gamemode file contents to the server along the underlying TCP connection.
     /// </summary>
     /// <param name="contents">The .sga archive file contents.</param>
@@ -789,6 +791,30 @@ public sealed class LobbyAPI {
     /// <returns><see langword="true"/> if file was uploaded; Otherwise <see langword="false"/>.</returns>
     public bool UploadGamemodeFile(byte[] contents, UploadProgressCallbackHandler? callbackHandler)
         => this.m_connection.SendFile(contents, 0, this.m_cidcntr++, callbackHandler);
+
+    /// <summary>
+    /// Conducts a simple yes/no poll across the server.
+    /// </summary>
+    /// <param name="pollType">The type of poll we are conducting</param>
+    /// <param name="cancelTime">The amount of seconds the server will wait before sending back a response if the match should continue.</param>
+    /// <returns>If match received server OK, <see langword="true"/>; Otherwise <see langword="false"/>.</returns>
+    public LobbyPollResults ConductPoll(string pollType, double pollTime = 3) {
+
+        // Conduct poll with expecnded time
+        if (this.RemoteCallWithTime<LobbyPoll>("PollInfo", new object[] { pollType }, TimeSpan.FromSeconds(pollTime + 1)) is LobbyPoll poll) {
+
+            // Count yays
+            byte y = (byte)poll.Responses.Aggregate(0, (a, b) => a + (b.Value ? 1 : 0));
+
+            // return poll result (nays computed based on yays)
+            return new(y, (byte)(poll.Responses.Count - y), false);
+
+        }
+
+        // Return timed out
+        return new(0,0,true);
+
+    }
 
     /// <summary>
     /// Responds to a poll with specified <paramref name="pollVote"/>.
