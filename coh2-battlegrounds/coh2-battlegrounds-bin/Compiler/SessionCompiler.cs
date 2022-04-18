@@ -79,7 +79,7 @@ namespace Battlegrounds.Compiler {
             => $"{guid.GUID}:{blueprint}";
 
         private static string GetCompanyUsername(ISessionParticipant participant)
-            => participant.IsHuman ? participant.GetName() : $"AIPlayer#{participant.PlayerIndexOnTeam}";
+            => participant.IsHuman ? participant.GetName() : $"AIPlayer#{participant.PlayerIndexOnTeam-1}";
 
         private KeyValuePair<string, Dictionary<string, object>> GetCompany(ISessionParticipant x)
             => new(GetCompanyUsername(x), this.m_companyCompiler.CompileToLua(x.SelectedCompany, !x.IsHuman, x.PlayerIndexOnTeam));

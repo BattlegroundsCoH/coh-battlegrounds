@@ -36,7 +36,7 @@ namespace Battlegrounds.Game.Match {
             try {
 
                 // Log compiler
-                Trace.WriteLine($"Compiling \"{sessionScarFile}\" into scar file useing '{compiler.GetType().Name}'", nameof(SessionUtility));
+                Trace.WriteLine($"Compiling \"{sessionScarFile}\" into scar file using '{compiler.GetType().Name}'", nameof(SessionUtility));
 
                 // Write contents to session.scar
                 File.WriteAllText(sessionScarFile, compiler.CompileSession(session));
@@ -60,7 +60,10 @@ namespace Battlegrounds.Game.Match {
 
                 }
 
-            } catch {
+            } catch (Exception e) {
+
+                // Log
+                Trace.WriteLine(e, nameof(SessionUtility));
 
                 // Any error ==> return false
                 return false;

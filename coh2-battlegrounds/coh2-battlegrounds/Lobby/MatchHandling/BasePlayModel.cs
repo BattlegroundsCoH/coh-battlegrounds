@@ -153,9 +153,11 @@ internal abstract class BasePlayModel {
     protected SessionParticipant CreateParticipantFromLobbyMember(LobbyAPIStructs.LobbyMember participant, ParticipantTeam team, ValRef<byte> count, ValRef<byte> index) {
         
         // Update indicies
-        byte tIndex = index.Change(x => x++);
-        byte pIndex = count.Change(x => x++);
-        
+        byte tIndex = index.Change(x => ++x);
+        byte pIndex = count.Change(x => ++x);
+
+        Trace.WriteLine($"{participant.MemberID}: t:{tIndex} p:{pIndex}");
+
         // Add participant based on role
         if (participant.Role is 3) {
             var aiCompany = participant.Company;
