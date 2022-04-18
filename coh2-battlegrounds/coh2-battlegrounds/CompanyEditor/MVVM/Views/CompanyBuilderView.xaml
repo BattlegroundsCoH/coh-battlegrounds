@@ -44,7 +44,7 @@
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="auto"/>
             <ColumnDefinition Width="8"/>
-            <ColumnDefinition Width="auto"/>
+            <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
         <!-- Row 0 :: Company Name & Type -->
@@ -68,6 +68,19 @@
 
             </TextBlock>
         </StackPanel>
+
+        <!-- Row 0 :: Return/Back -->
+        <Button x:Name="returnLobbyButton" 
+                    Content="CompanyBuilder_Return" 
+                    Width="150"
+                    Height="35"
+                    Style="{StaticResource StandardRedLocButton}" 
+                    Margin="10,0,18,0"
+                    Grid.Row="0"
+                Grid.Column="2"
+                HorizontalAlignment="Right"
+                    Visibility="{Binding Back.Visibility}"
+                    Command="{Binding Back.Click}"/>
 
         <!-- Row 1 :: Company Overview -->
         <TabControl Grid.Row="1"
@@ -440,10 +453,10 @@
 
             <Button x:Name="saveButton" 
                     Content="CompanyBuilder_Save" 
-                    Width="105"
+                    Width="150"
                     Height="35"
                     Style="{StaticResource StandardBlueLocButton}" 
-                    Margin="10,0,0,0"
+                    Margin="10,0,18,0"
                     Command="{Binding Save.Click}"/>
 
         </StackPanel>
@@ -457,7 +470,7 @@
                       Margin="10, 0, 0, 0"
                       Visibility="{Binding AvailableItemsVisibility}">
             
-            <StackPanel>
+            <StackPanel HorizontalAlignment="Right">
                 <StackPanel.Resources>
                     <Style TargetType="{x:Type views:AvailableItemView}">
                         <Setter Property="Margin" Value="0, 5, 0, 0"/>

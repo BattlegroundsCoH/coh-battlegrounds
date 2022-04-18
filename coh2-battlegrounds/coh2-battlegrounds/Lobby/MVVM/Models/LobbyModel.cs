@@ -22,6 +22,7 @@ using Battlegrounds.Networking.LobbySystem;
 using Battlegrounds.Networking.Server;
 using Battlegrounds.Steam;
 
+using BattlegroundsApp.CompanyEditor.MVVM.Models;
 using BattlegroundsApp.LocalData;
 using BattlegroundsApp.Modals;
 using BattlegroundsApp.Modals.Dialogs.MVVM.Models;
@@ -206,10 +207,44 @@ public abstract class LobbyModel : IViewModel, INotifyPropertyChanged {
 
     }
 
-    public bool UnloadViewModel() => true;
+    public void UnloadViewModel(OnModelClosed closeCallback) {
+        
+        // Destroy this isntance (to avoid annoying stuff, like trying to reconnect to an existing one...)
+        App.ViewManager.DestroyView(this);
+
+        // use default here, since we cannot exit unless exit lobby button is pressed or hard exit
+        closeCallback(false);
+
+    }
 
     public void Swapback() {
-        // TODO: Do stuff
+
+        if (this.TryGetSelf() is LobbyAPIStructs.LobbySlot self && self.Occupant is not null) {
+            Task.Run(() => this.m_handle.MemberState(self.Occupant.MemberID, self.TeamID, self.SlotID, LobbyAPIStructs.LobbyMemberState.Waiting));
+        }
+
+    }
+
+    protected void EditCompany() {
+
+        // Try get company
+        if (this.TryGetSelectedCompany(out var _) is Company company) {
+
+            // Create company builder
+            var builder = new CompanyBuilderViewModel(company) {
+                ReturnTo = this
+            };
+
+            // Set RHS
+            App.ViewManager.UpdateDisplay(AppDisplayTarget.Right, builder);
+
+            // Inform others
+            if (this.TryGetSelf() is LobbyAPIStructs.LobbySlot self && self.Occupant is not null) {
+                Task.Run(() => this.m_handle.MemberState(self.Occupant.MemberID, self.TeamID, self.SlotID, LobbyAPIStructs.LobbyMemberState.EditCompany));
+            }
+
+        }
+
     }
 
     public void SetChatModel(LobbyChatSpectatorModel chatModel)
@@ -275,23 +310,25 @@ public abstract class LobbyModel : IViewModel, INotifyPropertyChanged {
 
     }
 
-    protected void EditCompany() {
-        // TODO: Implement me :D
-    }
-
-    private void OnCompanyRequested(ServerAPI obj) {
-
-        // Log request
-        Trace.WriteLine("Received request to upload company file", nameof(LobbyHostModel));
+    protected LobbyAPIStructs.LobbySlot? TryGetSelf() {
 
         // Get self
-        ulong selfid = this.m_handle.Self.ID;
-        var self = this.m_handle.Allies.GetSlotOfMember(selfid) ?? this.m_handle.Axis.GetSlotOfMember(selfid);
+        var selfid = this.m_handle.Self.ID;
+        return this.m_handle.Allies.GetSlotOfMember(selfid) ?? this.m_handle.Axis.GetSlotOfMember(selfid);
+
+    }
+
+    protected Company? TryGetSelectedCompany(out ulong selfid) {
+
+        var self = TryGetSelf();
         if (self is not null && self.Occupant is not null) {
+
+            // Set selfid
+            selfid = self.Occupant.MemberID;
 
             // Make sure there's a company
             if (self.Occupant.Company is null) {
-                return;
+                return null;
             }
 
             // Get company name
@@ -303,14 +340,33 @@ public abstract class LobbyModel : IViewModel, INotifyPropertyChanged {
             // Get company
             var company = PlayerCompanies.FromNameAndFaction(companyName, faction);
             if (company is null) {
-                Trace.WriteLine($"Failed to upload company json file (Company '{companyName}' not found).", nameof(LobbyHostModel));
-                return;
+                Trace.WriteLine($"Failed to fetch company json file (Company '{companyName}' not found).", nameof(LobbyHostModel));
+                return null;
             }
+
+            // Return the found company
+            return company;
+
+        }
+
+        // Return nothing
+        selfid = 0;
+        return null;
+
+    }
+
+    private void OnCompanyRequested(ServerAPI obj) {
+
+        // Log request
+        Trace.WriteLine("Received request to upload company file", nameof(LobbyHostModel));
+
+        // Try get
+        if (this.TryGetSelectedCompany(out ulong selfid) is Company company) {
 
             // Get company json
             string companyJson = CompanySerializer.GetCompanyAsJson(company, indent: false);
             if (string.IsNullOrEmpty(companyJson)) {
-                Trace.WriteLine($"Failed to upload company json file (Company '{companyName}' not found).", nameof(LobbyHostModel));
+                Trace.WriteLine($"Failed to upload company json file (Company '{company.Name}' not found).", nameof(LobbyHostModel));
                 return;
             }
 

@@ -55,7 +55,7 @@ public class LobbyMatchAPI {
     public LobbyPlayerCompanyFile GetPlayerCompany(ulong playerID) {
         string companyFile = string.Empty;
         this.m_api.DownloadCompany(playerID, (status, data) => {
-            if (status is DownloadResult.DOWNLOAD_SUCCESS) {
+            if (status is DownloadResult.DOWNLOAD_SUCCESS && data is not null) {
                 companyFile = Encoding.UTF8.GetString(data);
             } else {
                 Trace.WriteLine($"Failed to get company of player {playerID} ({status}).", nameof(LobbyMatchAPI));

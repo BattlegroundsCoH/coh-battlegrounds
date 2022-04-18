@@ -44,6 +44,7 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
 
         private static readonly Func<string> LOCSTR_SLOT_OPEN = () => BattlegroundsInstance.Localize.GetString("TeamPlayerCard_Open_Slot");
         private static readonly Func<string> LOCSTR_SLOT_LOCKED = () => BattlegroundsInstance.Localize.GetString("TeamPlayerCard_Locked_Slot");
+        private static readonly Func<string> LOCSTR_SLOT_JOINING = () => BattlegroundsInstance.Localize.GetString("TeamPlayerCard_Joining_Slot");
 
         protected static readonly LobbyAPIStructs.LobbyCompany DummyCompany = new() { Army = "soviet", IsNone = true, Name = "None", Specialisation = "", Strength = 0 };
 
@@ -211,9 +212,9 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
 
         }
 
-        protected string GetOccupantName(LobbyAPIStructs.LobbyMember mem) => mem.Role switch {
+        protected static string GetOccupantName(LobbyAPIStructs.LobbyMember mem) => mem.Role switch {
             3 => BattlegroundsInstance.Localize.GetEnum((AIDifficulty)mem.AILevel),
-            _ => mem.DisplayName
+            _ => mem.State is LobbyAPIStructs.LobbyMemberState.Joining ? LOCSTR_SLOT_JOINING() : mem.DisplayName
         };
 
         protected abstract void OnLobbyCompanyChanged(int newValue);

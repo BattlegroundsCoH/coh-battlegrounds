@@ -230,7 +230,7 @@ public class LobbyChatSpectatorModel : IViewModel, INotifyPropertyChanged {
 
     }
 
-    public bool UnloadViewModel() => true;
+    public void UnloadViewModel(OnModelClosed closeCallback) => closeCallback(false);
 
     public void Swapback() {
 

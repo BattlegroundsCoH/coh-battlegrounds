@@ -217,13 +217,15 @@ end
 ------------------------------------------------------------
 
 function Squad_GetSyncWeapon(squad)
+    if squad == nil then
+        return nil
+    end
     for i=0, Squad_Count(squad) - 1 do
         local e = Squad_EntityAt(squad, i);
         if (Entity_IsSyncWeapon(e)) then
             return e;
         end
     end
-    return nil;
 end
 
 function Squad_GetSyncWeaponBlueprint(squad)

@@ -11,7 +11,8 @@
                      WindowStartupLocation="CenterScreen" 
                      WindowStyle="SingleBorderWindow" 
                      MinHeight="850" MinWidth="1400"
-                     Background="#212d3a">
+                     Background="#212d3a"
+                     Closing="CoreAppWindow_Closing">
     <local:CoreAppWindow.Resources>
         <!-- LocaleConverter -->
         <localeConvertor:LocaleKeyToStringConverter x:Key="LocaleConvertor"/>

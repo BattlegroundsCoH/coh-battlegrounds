@@ -137,7 +137,6 @@
                     HorizontalContentAlignment="Center"
                     Content="{Binding EditCompanyButton.Title}"
                     Command="{Binding EditCompanyButton.Click}"
-                    IsEnabled="{Binding EditCompanyButton.IsEnabled}"
                     Background="#334252"
                     Foreground="#FFFFFF"
                     HoverColour="#536375"

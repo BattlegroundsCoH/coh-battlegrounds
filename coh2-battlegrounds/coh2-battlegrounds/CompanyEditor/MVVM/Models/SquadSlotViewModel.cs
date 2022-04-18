@@ -120,7 +120,7 @@ public class SquadSlotViewModel : IViewModel, INotifyPropertyChanged {
 
     }
 
-    public bool UnloadViewModel() => true;
+    public void UnloadViewModel(OnModelClosed closeCallback) => closeCallback(false);
 
     public void Swapback() {
 
