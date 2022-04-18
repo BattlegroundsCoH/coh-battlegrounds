@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BattlegroundsApp.Modals.Dialogs.MVVM.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -23,4 +24,9 @@ public partial class HostGameDialogView : Modal {
         InitializeComponent();
     }
 
+    private void OnPasswordChanged(object sender, RoutedEventArgs e) {
+        if (this.DataContext is HostGameDialogViewModel vm) {
+            vm.LobbyPassword = ((PasswordBox)sender).Password;
+        }
+    }
 }
