@@ -2,7 +2,7 @@
 	<group name="aura_bag">
 		<list name="actions">
 			<template_reference name="action" value="action\heal_action">
-				<float name="amount" value="0.5" />
+				<float name="amount" value="1" />
 				<group name="target_info">
 					<template_reference name="target_info" value="type_ability_target_type\has_any_in_list">
 						<list name="target_infos">

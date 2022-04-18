@@ -777,7 +777,7 @@
 								<float name="z" value="0.2" />
 							</group>
 							<enum name="type" value="default" />
-							<instance_reference name="weapon" value="weapon\axis\ballistic_weapon\tank_gun\elefant_88mm_gun_mp" />
+							<instance_reference name="weapon" value="weapon\axis\ballistic_weapon\tank_gun\elefant_88mm_gun_bg" mod="142b113740474c82a60b0a428bd553d5" />
 						</group>
 						<group name="weapon">
 							<group name="heading">

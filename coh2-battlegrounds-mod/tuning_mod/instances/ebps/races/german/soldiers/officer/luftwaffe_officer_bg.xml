@@ -459,7 +459,7 @@
 								<float name="z" value="0" />
 							</group>
 							<enum name="type" value="default" />
-							<instance_reference name="weapon" value="weapon\axis\small_arms\single_fire\pistol\luger_p08_9mm_pistol_mp" />
+							<instance_reference name="weapon" value="weapon\axis\small_arms\single_fire\pistol\luger_p08_9mm_pistol_bg" mod="142b113740474c82a60b0a428bd553d5" />
 						</group>
 					</list>
 					<bool name="receives_attack_commands" value="False" />

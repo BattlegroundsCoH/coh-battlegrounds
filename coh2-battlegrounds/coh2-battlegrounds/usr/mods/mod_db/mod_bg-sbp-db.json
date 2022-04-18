@@ -2570,7 +2570,7 @@
         "Count": 1
       }
     ],
-    "FemaleChance": 0.05,
+    "FemaleChance": 0.5,
     "Abilities": [
       "blizzard_effect",
       "tank_vet_point_capture_ability_mp",
@@ -2685,7 +2685,7 @@
         "Count": 1
       }
     ],
-    "FemaleChance": 0.05,
+    "FemaleChance": 0.5,
     "Abilities": [
       "su76_su85_zis3_53k_isu152_infantry_tracking_mp",
       "blizzard_effect",
@@ -2739,7 +2739,7 @@
         "Count": 1
       }
     ],
-    "FemaleChance": 0.05,
+    "FemaleChance": 0.5,
     "Abilities": [
       "blizzard_effect",
       "t70_vet_point_capture_ability_mp",
@@ -2792,7 +2792,7 @@
         "Count": 1
       }
     ],
-    "FemaleChance": 0.05,
+    "FemaleChance": 0.5,
     "Abilities": [
       "blizzard_effect",
       "tank_vet_point_capture_ability_mp",
@@ -4253,7 +4253,7 @@
         "Count": 3
       }
     ],
-    "FemaleChance": 0.05,
+    "FemaleChance": 0.5,
     "Abilities": [
       "sniper_hold_fire_mp",
       "blizzard_effect",
@@ -4305,7 +4305,7 @@
         "Count": 2
       }
     ],
-    "FemaleChance": 0.05,
+    "FemaleChance": 0.5,
     "Abilities": [
       "sniper_hold_fire_mp",
       "blizzard_effect",
