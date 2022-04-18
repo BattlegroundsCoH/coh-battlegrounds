@@ -167,7 +167,7 @@ english:
  LobbyView_DialogLostDesc: "You have lost connection to the server."
  LobbyView_DialogCloseTitle: "Kicked From Lobby"
  LobbyView_DialogCloseDesc: "The lobby was closed by the host and all participants have been kicked."
- LobbyView_DialogLeaveTitle: "Leave Lobby?"
+ LobbyView_DialogLeaveTitle: "Leave Lobby"
  LobbyView_DialogLeaveDesc: "Are you sure you would like to leave the lobby?"
  LobbyChat_Send: "Send"
  LobbyChat_FilterAll: "To: All"
