@@ -14,6 +14,7 @@ using Battlegrounds.Networking.Server;
 using Battlegrounds.Steam;
 
 using static Battlegrounds.Networking.LobbySystem.LobbyAPIStructs;
+using System.Threading;
 
 namespace Battlegrounds.Networking.LobbySystem;
 
@@ -230,7 +231,7 @@ public sealed class LobbyAPI {
         // Set internal refs
         this.m_connection = connection;
         this.m_isHost = isHost;
-        this.m_cidcntr = 100;
+        this.m_cidcntr = 1000;
 
         // Store self (id)
         this.Self = self;
@@ -250,35 +251,50 @@ public sealed class LobbyAPI {
             Target = 0
         };
 
-        // Make pull lobby request
-        ContentMessage? reply = this.m_connection.SendAndAwaitReply(msg);
-        if (reply is ContentMessage response && GoMarshal.JsonUnmarshal<LobbyRemote>(response.Raw) is LobbyRemote remoteLobby) {
+        // #1 reason why we should create the API instance on a separate thread
+        for (int i = 0; i < 5; i++) {
 
-            // Make sure teams are valid
-            if (remoteLobby.Teams is null || remoteLobby.Teams.Any(x => x is null)) {
-                throw new Exception("Received **NULL** team data.");
+            // Make pull lobby request
+            ContentMessage? reply = this.m_connection.SendAndAwaitReply(msg);
+            if (reply is ContentMessage response && GoMarshal.JsonUnmarshal<LobbyRemote>(response.Raw) is LobbyRemote remoteLobby) {
+
+                // Make sure teams are valid
+                if (remoteLobby.Teams is null || remoteLobby.Teams.Any(x => x is null)) {
+                    throw new Exception("Received **NULL** team data.");
+                }
+
+                // Set API on team objects
+                remoteLobby.Teams.ForEach(x => x.SetAPI(this));
+
+                // Create team data
+                this.m_allies = remoteLobby.Teams[0];
+                this.m_axis = remoteLobby.Teams[1];
+                this.m_obs = remoteLobby.Teams[2];
+                this.m_settings = remoteLobby.Settings;
+
+                // Register connection lost
+                this.m_connection.OnConnectionLost += _ => {
+                    this.OnLobbyConnectionLost?.Invoke("LOST");
+                };
+
+                // Return all OK
+                return;
+
             }
 
-            // Set API on team objects
-            remoteLobby.Teams.ForEach(x => x.SetAPI(this));
+            // Sleep
+            Thread.Sleep(50);
 
-            // Create team data
-            this.m_allies = remoteLobby.Teams[0];
-            this.m_axis = remoteLobby.Teams[1];
-            this.m_obs = remoteLobby.Teams[2];
-            this.m_settings = remoteLobby.Settings;
-
-            // Register connection lost
-            this.m_connection.OnConnectionLost += _ => {
-                this.OnLobbyConnectionLost?.Invoke("LOST");
-            };
-
-        } else {
-
-            // Throw exception -> Failed to fully connect.
-            throw new Exception("Failed to retrieve light-lobby version.");
+            // Log
+            Trace.WriteLine("Resending request to get light-lobby version...", nameof(LobbyAPI));
 
         }
+
+        // Disconnect
+        this.Disconnect();
+
+        // Throw exception -> Failed to fully connect.
+        throw new Exception("Failed to retrieve light-lobby version.");
 
     }
 
