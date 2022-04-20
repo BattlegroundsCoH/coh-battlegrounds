@@ -702,6 +702,7 @@
 				<instance_reference name="ability" value="abilities\global\cold\blizzard_effect" />
 				<instance_reference name="ability" value="abilities\soviet\toggle_ability\commander_ability\at_gun_ambush_tactics" />
 				<instance_reference name="ability" value="abilities\soviet\toggle_ability\commander_ability\at_gun_ambush_tactics" />
+				<instance_reference name="ability" value="abilities\battlegrounds_generic\timed_ability\detach_weapon_tow_bg" mod="142b113740474c82a60b0a428bd553d5" />
 			</list>
 			<bool name="allow_targeted_abilities_whilst_moving" value="False" />
 		</template_reference>

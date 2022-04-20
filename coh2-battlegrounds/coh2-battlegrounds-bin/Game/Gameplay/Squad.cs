@@ -323,7 +323,8 @@ namespace Battlegrounds.Game.Gameplay {
         /// </summary>
         /// <returns>The cost of the squad.</returns>
         public CostExtension GetCost() 
-            => ComputeFullCost(this.SBP.Cost, this.VeterancyRank, this.m_upgrades.Select(x => x as UpgradeBlueprint), this.m_deployBp as SquadBlueprint, this.DeploymentMethod);
+            => ComputeFullCost(this.SBP.Cost, this.VeterancyRank, this.m_upgrades.Select(x => x as UpgradeBlueprint), this.m_deployBp as SquadBlueprint, 
+                this.DeploymentMethod, this.DeploymentPhase, this.SBP.Category);
 
         /// <summary>
         /// Get the display name of the squad.
@@ -369,18 +370,25 @@ namespace Battlegrounds.Game.Gameplay {
         /// <param name="upgrades"></param>
         /// <param name="transport"></param>
         /// <param name="deploymentMethod"></param>
+        /// <param name="phase"></param>
+        /// <param name="category"></param>
         /// <returns></returns>
-        public static CostExtension ComputeFullCost(CostExtension initialCost, byte rank, IEnumerable<UpgradeBlueprint> upgrades, SquadBlueprint transport, DeploymentMethod deploymentMethod) {
+        public static CostExtension ComputeFullCost(CostExtension initialCost, 
+            byte rank, IEnumerable<UpgradeBlueprint> upgrades, SquadBlueprint transport, DeploymentMethod deploymentMethod, DeploymentPhase phase, SquadCategory category) {
 
+            // Get base cost and add upgrade costs
             CostExtension c = new(initialCost.Manpower, initialCost.Munitions, initialCost.Fuel, initialCost.FieldTime);
             c = upgrades.Select(x => x.Cost).Aggregate(c, (a, b) => a + b);
 
+            // Add deploy method factor
             if (transport is SquadBlueprint sbp) {
                 c += sbp.Cost * GetDeployMethodTransportCostModifier(deploymentMethod);
             }
 
-            // TODO: More here
+            // Subtract phase mod
+            c *= (1.0f - GetDeployPhaseCostModifier(phase, category));
 
+            // Return cost
             return c;
 
         }
@@ -393,6 +401,26 @@ namespace Battlegrounds.Game.Gameplay {
         public static float GetDeployMethodTransportCostModifier(DeploymentMethod method) => method switch {
             DeploymentMethod.DeployAndExit => 0.25f,
             DeploymentMethod.DeployAndStay => 0.65f,
+            _ => 0.0f
+        };
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="phase"></param>
+        /// <param name="category"></param>
+        /// <returns></returns>
+        public static float GetDeployPhaseCostModifier(DeploymentPhase phase, SquadCategory category) => phase switch {
+            DeploymentPhase.PhaseB => category switch {
+                SquadCategory.Vehicle => 0.025f,
+                SquadCategory.Support => 0.04f,
+                _ => 0.05f
+            },
+            DeploymentPhase.PhaseC => category switch {
+                SquadCategory.Vehicle => 0.04f,
+                SquadCategory.Support => 0.06f,
+                _ => 0.075f
+            },
             _ => 0.0f
         };
 

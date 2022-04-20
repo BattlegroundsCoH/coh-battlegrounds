@@ -1,9 +1,9 @@
-<instance description="standard german infantry unit&#xA;Multiplayer Clone." template="ebps">
+<instance description="2nd tier german infantry unit&#xA;Multiplayer Clone." template="ebps">
 	<list name="extensions">
 		<template_reference name="exts" value="ebpextensions\entity_blueprint_ext">
 			<string name="alternate_sua" value="armies\common\base\commonhuman\commonhuman" />
 			<bool name="always_revealed_in_fow" value="False" />
-			<file name="animator" value="armies\german\soldiers\grenadier\grenadier" />
+			<file name="animator" value="armies\german\soldiers\panzer_grenadier\panzer_grenadier" />
 			<bool name="is_visible_in_game" value="True" />
 			<float name="precise_size" value="-1" />
 		</template_reference>
@@ -18,13 +18,33 @@
 				<instance_reference name="ability" value="abilities\german\modal_ability\commander_ability\blinding_grenade" />
 				<instance_reference name="ability" value="abilities\global\cold\blizzard_effect_deep_snow_camo" />
 				<instance_reference name="ability" value="abilities\global\army_item_abilities\army_item_global_cover_training" />
-				<instance_reference name="ability" value="abilities\german\modal_ability\accessory_weapons\grenadier_antitank_rifle_grenade_ability_mp" />
 				<instance_reference name="ability" value="abilities\global\custom_commander\heal_in_cover" />
-				<instance_reference name="ability" value="abilities\german\modal_ability\accessory_weapons\grenadier_panzerfaust_bg" mod="142b113740474c82a60b0a428bd553d5" />
 			</list>
 		</template_reference>
 		<template_reference name="exts" value="ebpextensions\action_apply_ext">
 			<list name="actions">
+				<template_reference name="action" value="action\change_target_action">
+					<list name="actions">
+						<template_reference name="action" value="action\apply_modifiers_action">
+							<float name="duration" value="0" />
+							<bool name="permanent" value="False" />
+							<list name="modifiers">
+								<template_reference name="modifier" value="modifiers\entity_veterency_experience_modifier">
+									<enum name="application_type" value="apply_to_squad" />
+									<bool name="exclusive" value="True" />
+									<string name="modifier_id" value="xp_discount" />
+									<string name="target_type_name" value="" />
+									<enum name="usage_type" value="multiply_add" />
+									<float name="value" value="-0.2" />
+									<instance_reference name="tooltip" value="modifier_tooltip\blank_tooltip" />
+								</template_reference>
+							</list>
+							<uniqueid name="id" value="1073745522" />
+						</template_reference>
+					</list>
+					<enum name="change_target_type" value="squad" />
+					<uniqueid name="id" value="1073745523" />
+				</template_reference>
 			</list>
 		</template_reference>
 		<template_reference name="exts" value="ebpextensions\cost_ext">
@@ -33,11 +53,11 @@
 					<float name="action" value="0" />
 					<float name="command" value="0" />
 					<float name="fuel" value="0" />
-					<float name="manpower" value="52" />
+					<float name="manpower" value="90" />
 					<float name="munition" value="0" />
 					<float name="popcap" value="0" />
 				</group>
-				<float name="time_seconds" value="6" />
+				<float name="time_seconds" value="7" />
 			</group>
 		</template_reference>
 		<template_reference name="exts" value="ebpextensions\health_ext">
@@ -66,7 +86,7 @@
 			</list>
 			<float name="armor" value="1" />
 			<float name="rear_armor" value="0" />
-			<float name="target_size" value="0.91" />
+			<float name="target_size" value="0.8" />
 			<bool name="dies_from_broken_ice" value="True" />
 			<list name="criticals">
 				<group name="critical_group">
@@ -94,7 +114,7 @@
 					<float name="max_health_percentage" value="0.5" />
 					<list name="critical_info">
 						<group name="info">
-							<float name="weight" value="95" />
+							<float name="weight" value="90" />
 							<enum_table name="applicable_weapons">
 								<bool name="small_arms" value="False" />
 								<bool name="flame" value="True" />
@@ -195,7 +215,7 @@
 							<enum name="apply_on" value="penetrate" />
 						</group>
 						<group name="info">
-							<float name="weight" value="25" />
+							<float name="weight" value="10" />
 							<enum_table name="applicable_weapons">
 								<bool name="small_arms" value="True" />
 								<bool name="flame" value="True" />
@@ -278,11 +298,11 @@
 			<group name="unit_type_list">
 				<enum name="unit_type00" value="infantry" />
 				<enum name="unit_type01" value="" />
-				<enum name="unit_type02" value="grenadiers" />
-				<enum name="unit_type03" value="infantry_rifle" />
-				<enum name="unit_type04" value="german_infantry" />
+				<enum name="unit_type02" value="panzer_grenadier" />
+				<enum name="unit_type03" value="german_infantry" />
+				<enum name="unit_type04" value="" />
 				<enum name="unit_type05" value="mp_unit" />
-				<enum name="unit_type06" value="" />
+				<enum name="unit_type06" value="infantry_elite" />
 				<enum name="unit_type07" value="" />
 				<enum name="unit_type08" value="" />
 				<enum name="unit_type09" value="" />
@@ -304,7 +324,7 @@
 			<bool name="has_speech_code" value="True" />
 			<locstring name="help_text" value="0" />
 			<string name="hotkey_name" value="" />
-			<icon name="icon_name" value="Icons_units_unit_german_grenadier" />
+			<icon name="icon_name" value="" />
 			<enum name="kill_type" value="infantry" />
 			<float name="minimap_color_a" value="255" />
 			<float name="minimap_color_b" value="255" />
@@ -322,17 +342,17 @@
 			<enum name="selection_type" value="squad_select" />
 			<bool name="sloppy_selectable" value="True" />
 			<group name="speaker">
-				<string name="code_1" value="gr" />
+				<string name="code_1" value="hp" />
 				<string name="code_2" value="xs" />
 				<string name="code_3" value="" />
 			</group>
 			<group name="speech_code_2">
-				<string name="code_1" value="gr" />
+				<string name="code_1" value="hp" />
 				<string name="code_2" value="in" />
 				<string name="code_3" value="" />
 			</group>
 			<group name="speech_code_3">
-				<string name="code_1" value="gre" />
+				<string name="code_1" value="hpg" />
 				<string name="code_2" value="inf" />
 				<string name="code_3" value="" />
 			</group>
@@ -347,8 +367,8 @@
 			<icon name="minimap_icon" value="" />
 			<icon name="portrait_icon_winter" value="" />
 			<group name="speaker_alt">
-				<string name="code_1" value="gre" />
-				<string name="code_2" value="inf" />
+				<string name="code_1" value="" />
+				<string name="code_2" value="" />
 				<string name="code_3" value="" />
 			</group>
 			<float name="minimap_icon_scale" value="1" />
@@ -363,7 +383,7 @@
 			<locstring name="help_text_world" value="0" />
 			<locstring name="extra_text_world" value="0" />
 			<enum name="map_rotation_type_override" value="no_override" />
-			<icon name="symbol_icon_name" value="Icons_symbols_unit_german_grenadier_symbol" />
+			<icon name="symbol_icon_name" value="" />
 			<enum name="occlusion_state" value="can_be_occluded" />
 			<enum name="decorator_visibility" value="default" />
 			<string name="decorator_marker_name" value="Marker_FX_UI" />
@@ -415,7 +435,7 @@
 								<float name="z" value="0" />
 							</group>
 							<enum name="type" value="default" />
-							<instance_reference name="weapon" value="weapon\axis\small_arms\single_fire\rifle\grenadier_kar_98k_rifle_bg" mod="142b113740474c82a60b0a428bd553d5" />
+							<instance_reference name="weapon" value="weapon\axis\small_arms\machine_gun\sub_machine_gun\panzer_grenadier_mp44_smg_bg" mod="142b113740474c82a60b0a428bd553d5" />
 						</group>
 					</list>
 					<bool name="receives_attack_commands" value="False" />
@@ -480,7 +500,7 @@
 						<bool name="fire_and_forget" value="True" />
 						<bool name="is_terrain_only" value="False" />
 						<bool name="allies_only" value="False" />
-						<uniqueid name="id" value="1073743707" />
+						<uniqueid name="id" value="1073745524" />
 					</template_reference>
 					<template_reference name="action" value="action\requirement_action">
 						<bool name="check_self" value="False" />
@@ -503,10 +523,10 @@
 								<bool name="apply_to_entities_in_squad" value="False" />
 								<bool name="trigger_publish_event" value="False" />
 								<instance_reference name="upgrade" value="upgrade\german\commander\ability\can_camouflage" />
-								<uniqueid name="id" value="1073743708" />
+								<uniqueid name="id" value="1073745525" />
 							</template_reference>
 						</list>
-						<uniqueid name="id" value="1073743709" />
+						<uniqueid name="id" value="1073745526" />
 						<bool name="fire_and_forget_non_global" value="False" />
 						<template_reference name="ui_help_text" value="tables\help_text_phrase">
 							<int name="phrase_order" value="0" />
@@ -529,7 +549,7 @@
 						<bool name="fire_and_forget" value="True" />
 						<bool name="is_terrain_only" value="False" />
 						<bool name="allies_only" value="False" />
-						<uniqueid name="id" value="1073743710" />
+						<uniqueid name="id" value="1073745527" />
 					</template_reference>
 					<template_reference name="action" value="action\requirement_action">
 						<bool name="check_self" value="False" />
@@ -552,10 +572,10 @@
 								<bool name="apply_to_entities_in_squad" value="False" />
 								<bool name="trigger_publish_event" value="False" />
 								<instance_reference name="upgrade" value="upgrade\german\commander\ability\can_camouflage" />
-								<uniqueid name="id" value="1073743711" />
+								<uniqueid name="id" value="1073745528" />
 							</template_reference>
 						</list>
-						<uniqueid name="id" value="1073743712" />
+						<uniqueid name="id" value="1073745529" />
 						<bool name="fire_and_forget_non_global" value="False" />
 						<template_reference name="ui_help_text" value="tables\help_text_phrase">
 							<int name="phrase_order" value="0" />
@@ -578,7 +598,7 @@
 						<bool name="fire_and_forget" value="True" />
 						<bool name="is_terrain_only" value="False" />
 						<bool name="allies_only" value="False" />
-						<uniqueid name="id" value="1073743713" />
+						<uniqueid name="id" value="1073745530" />
 					</template_reference>
 				</list>
 			</group>
@@ -596,7 +616,7 @@
 						<bool name="fire_and_forget" value="True" />
 						<bool name="is_terrain_only" value="False" />
 						<bool name="allies_only" value="False" />
-						<uniqueid name="id" value="1073743714" />
+						<uniqueid name="id" value="1073745531" />
 					</template_reference>
 				</list>
 			</group>
@@ -614,7 +634,7 @@
 						<bool name="fire_and_forget" value="True" />
 						<bool name="is_terrain_only" value="False" />
 						<bool name="allies_only" value="False" />
-						<uniqueid name="id" value="1073743715" />
+						<uniqueid name="id" value="1073745532" />
 					</template_reference>
 				</list>
 			</group>
@@ -642,7 +662,7 @@
 						<bool name="fire_and_forget" value="True" />
 						<bool name="is_terrain_only" value="False" />
 						<bool name="allies_only" value="False" />
-						<uniqueid name="id" value="1073743716" />
+						<uniqueid name="id" value="1073745533" />
 					</template_reference>
 				</list>
 			</group>
@@ -709,10 +729,10 @@
 								<bool name="apply_to_entities_in_squad" value="False" />
 								<bool name="trigger_publish_event" value="False" />
 								<instance_reference name="upgrade" value="upgrade\german\commander\ability\can_camouflage" />
-								<uniqueid name="id" value="1073743717" />
+								<uniqueid name="id" value="1073745534" />
 							</template_reference>
 						</list>
-						<uniqueid name="id" value="1073743718" />
+						<uniqueid name="id" value="1073745535" />
 						<bool name="fire_and_forget_non_global" value="False" />
 						<template_reference name="ui_help_text" value="tables\help_text_phrase">
 							<int name="phrase_order" value="0" />
@@ -750,10 +770,10 @@
 								<bool name="apply_to_entities_in_squad" value="False" />
 								<bool name="trigger_publish_event" value="False" />
 								<instance_reference name="upgrade" value="upgrade\german\commander\ability\can_camouflage" />
-								<uniqueid name="id" value="1073743719" />
+								<uniqueid name="id" value="1073745536" />
 							</template_reference>
 						</list>
-						<uniqueid name="id" value="1073743720" />
+						<uniqueid name="id" value="1073745537" />
 						<bool name="fire_and_forget_non_global" value="False" />
 						<template_reference name="ui_help_text" value="tables\help_text_phrase">
 							<int name="phrase_order" value="0" />
@@ -815,7 +835,7 @@
 							<float name="deceleration_multiplier" value="0.3" />
 							<float name="pathfinding_size_x" value="0" />
 							<float name="pathfinding_size_y" value="0" />
-							<uniqueid name="id" value="1073743721" />
+							<uniqueid name="id" value="1073745538" />
 						</template_reference>
 						<template_reference name="action" value="action\apply_modifiers_action">
 							<float name="duration" value="1" />
@@ -831,10 +851,10 @@
 									<instance_reference name="tooltip" value="modifier_tooltip\speed_maximum_modifier" />
 								</template_reference>
 							</list>
-							<uniqueid name="id" value="1073743722" />
+							<uniqueid name="id" value="1073745539" />
 						</template_reference>
 					</list>
-					<uniqueid name="id" value="1073743723" />
+					<uniqueid name="id" value="1073745540" />
 				</template_reference>
 			</list>
 		</template_reference>
@@ -914,7 +934,7 @@
 													<bool name="retrigger" value="False" />
 													<string name="state_machine_name" value="ability_attack_buff_state" />
 													<string name="undo_action_state_name" value="off" />
-													<uniqueid name="id" value="1073743724" />
+													<uniqueid name="id" value="1073745541" />
 												</template_reference>
 												<template_reference name="action" value="action\requirement_action">
 													<bool name="check_self" value="False" />
@@ -942,13 +962,13 @@
 																<template_reference name="action" value="action\slot_item_add">
 																	<instance_reference name="slot_item" value="slot_item\german\ambush_camo_portrait_icon_item" />
 																	<bool name="permanent" value="False" />
-																	<uniqueid name="id" value="1073743725" />
+																	<uniqueid name="id" value="1073745542" />
 																</template_reference>
 															</list>
-															<uniqueid name="id" value="1073743726" />
+															<uniqueid name="id" value="1073745543" />
 														</template_reference>
 													</list>
-													<uniqueid name="id" value="1073743727" />
+													<uniqueid name="id" value="1073745544" />
 													<bool name="fire_and_forget_non_global" value="False" />
 													<template_reference name="ui_help_text" value="tables\help_text_phrase">
 														<int name="phrase_order" value="0" />
@@ -969,13 +989,13 @@
 															<instance_reference name="tooltip" value="modifier_tooltip\accuracy_weapon_modifier" />
 														</template_reference>
 													</list>
-													<uniqueid name="id" value="1073743728" />
+													<uniqueid name="id" value="1073745545" />
 												</template_reference>
 											</list>
-											<uniqueid name="id" value="1073743729" />
+											<uniqueid name="id" value="1073745546" />
 										</template_reference>
 									</list>
-									<uniqueid name="id" value="1073743730" />
+									<uniqueid name="id" value="1073745547" />
 									<bool name="fire_and_forget_non_global" value="False" />
 									<template_reference name="ui_help_text" value="tables\help_text_phrase">
 										<int name="phrase_order" value="0" />
@@ -984,10 +1004,10 @@
 								</template_reference>
 							</list>
 							<enum name="change_target_type" value="squad" />
-							<uniqueid name="id" value="1073743731" />
+							<uniqueid name="id" value="1073745548" />
 						</template_reference>
 					</list>
-					<uniqueid name="id" value="1073743732" />
+					<uniqueid name="id" value="1073745549" />
 				</template_reference>
 			</list>
 		</template_reference>
@@ -1005,5 +1025,5 @@
 			</list>
 		</template_reference>
 	</list>
-	<uniqueid name="pbgid" value="1073741871" />
+	<uniqueid name="pbgid" value="1073741931" />
 </instance>

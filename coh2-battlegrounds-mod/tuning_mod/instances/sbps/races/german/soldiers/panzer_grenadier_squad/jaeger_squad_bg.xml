@@ -162,7 +162,7 @@
 			<list name="unit_list">
 				<group name="loadout_data">
 					<float name="num" value="4" />
-					<instance_reference name="type" value="ebps\races\german\soldiers\panzer_grenadiers\panzer_grenadiers_mp" />
+					<instance_reference name="type" value="ebps\races\german\soldiers\panzer_grenadiers\jaegers_bg" mod="142b113740474c82a60b0a428bd553d5" />
 				</group>
 			</list>
 			<float name="squad_female_chance" value="0" />

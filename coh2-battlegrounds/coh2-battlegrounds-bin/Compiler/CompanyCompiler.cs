@@ -193,11 +193,11 @@ namespace Battlegrounds.Compiler {
 
             builder.AppendLine($"cost = {{");
             builder.IncreaseIndent();
-            builder.AppendLine($"manpower = {fCost.Manpower:0.00},");
+            builder.AppendLine($"manpower = {(int)Math.Ceiling(fCost.Manpower)},");
             if (squad.SBP.Cost.Munitions > 0) {
-                builder.AppendLine($"munitions = {fCost.Munitions:0.00},");
+                builder.AppendLine($"munitions = {(int)Math.Ceiling(fCost.Munitions)},");
             } else if (squad.SBP.Cost.Fuel > 0) {
-                builder.AppendLine($"fuel = {fCost.Fuel:0.00},");
+                builder.AppendLine($"fuel = {(int)Math.Ceiling(fCost.Fuel)},");
             }
             builder.AppendLine($"fieldtime = {fCost.FieldTime:0.00},");
             builder.DecreaseIndent();
