@@ -38,12 +38,13 @@
                     HorizontalAlignment="Center"
                     Width="200">
 
-            <bindablepasswordbox:BindablePasswordBox 
-                    Password="{Binding Password, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" 
-                    Margin="0, 0, 0, 7"
-                    x:Name="password"/>
+            <PasswordBox Margin="0, 0, 0, 7"
+                         Height="25"
+                         PasswordChanged="OnPasswordChanged"
+                         Style="{StaticResource WaterMarkPwdBox}"
+                         Tag="Password"/>
 
-            <Button Content="Join"
+            <Button Content="LobbyPasswordDialogView_Button_Join"
                     Style="{StaticResource StandardBlueLocButton}"
                     Margin="0, 7, 0, 0"
                     Command="{Binding JoinCommand}"

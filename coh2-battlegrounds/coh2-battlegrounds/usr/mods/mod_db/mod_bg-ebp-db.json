@@ -320,7 +320,7 @@
     "Abilities": [
       "sync_mortar_barrage_120mm_mp",
       "smoke_120mm_mortar_barrage_mp",
-      "mortar_fire_flares_ability_120mm_mp",
+      "mortar_fire_flares_ability_120mm_bg",
       "blizzard_effect_deep_snow_camo",
       "sync_mortar_barrage_120mm_victortarget_mp",
       "mortar_veterancy_3_mp"
@@ -378,7 +378,7 @@
     "Abilities": [
       "sync_mortar_barrage_mp",
       "smoke_sync_mortar_barrage_mp",
-      "mortar_fire_flares_ability_mp",
+      "mortar_fire_flares_ability_bg",
       "blizzard_effect_deep_snow_camo",
       "sync_mortar_barrage_victortarget_mp",
       "team_weapon_suppression_stun_mp",
@@ -417,7 +417,7 @@
       "grenadier_panzerfaust_bg"
     ],
     "Hardpoints": [
-      "grenadier_kar_98k_rifle_mp"
+      "grenadier_kar_98k_rifle_bg"
     ],
     "Health": 80
   },
@@ -444,7 +444,7 @@
       "heal_in_cover"
     ],
     "Hardpoints": [
-      "luger_p08_9mm_pistol_mp",
+      "luger_p08_9mm_pistol_bg",
       "luger_p08_victor_target_flare_pistol_mp"
     ],
     "Health": 80,
@@ -471,7 +471,7 @@
       "army_item_global_cover_training"
     ],
     "Hardpoints": [
-      "luger_p08_9mm_pistol_mp",
+      "luger_p08_9mm_pistol_bg",
       "luger_p08_victor_target_flare_pistol_mp"
     ],
     "Health": 80,
@@ -497,7 +497,7 @@
       "heal_in_cover"
     ],
     "Hardpoints": [
-      "ostruppen_kar_98k_rifle_mp"
+      "grenadier_kar_98k_rifle_bg"
     ],
     "Health": 80,
     "UpgradeCapacity": -1
@@ -524,7 +524,7 @@
       "heal_in_cover"
     ],
     "Hardpoints": [
-      "panzer_grenadier_mp44_smg_mp"
+      "panzer_grenadier_mp44_smg_bg"
     ],
     "Health": 80
   },
@@ -551,7 +551,7 @@
       "heal_in_cover"
     ],
     "Hardpoints": [
-      "eg_pioneer_mp40_smg_mp"
+      "panzer_grenadier_mp40_smg_bg"
     ],
     "Health": 80
   },
@@ -577,7 +577,7 @@
       "heal_in_cover"
     ],
     "Hardpoints": [
-      "g43_sniper_sniper_mp",
+      "g43_sniper_sniper_bg",
       "g43_sniper_incendiary_mp"
     ],
     "Health": 82,
@@ -605,7 +605,7 @@
       "model_24_smoke_grenade_mp"
     ],
     "Hardpoints": [
-      "grenadier_kar_98k_rifle_mp",
+      "grenadier_kar_98k_rifle_bg",
       "stormtrooper_mp40_smg_mp"
     ],
     "Health": 80
@@ -632,7 +632,7 @@
       "model_24_smoke_grenade_mp"
     ],
     "Hardpoints": [
-      "grenadier_kar_98k_rifle_mp",
+      "grenadier_kar_98k_rifle_bg",
       "stormtrooper_mp40_smg_mp"
     ],
     "Health": 80
@@ -659,7 +659,7 @@
       "model_24_smoke_grenade_mp"
     ],
     "Hardpoints": [
-      "grenadier_kar_98k_rifle_mp",
+      "grenadier_kar_98k_rifle_bg",
       "stormtrooper_mp40_smg_mp"
     ],
     "Health": 80
@@ -686,7 +686,7 @@
       "model_24_smoke_grenade_mp"
     ],
     "Hardpoints": [
-      "panzerbusche_39_mp"
+      "panzerbusche_39_bg"
     ],
     "Health": 80
   },
@@ -713,7 +713,7 @@
       "heal_in_cover"
     ],
     "Hardpoints": [
-      "eg_pioneer_mp40_smg_mp"
+      "panzer_grenadier_mp40_smg_bg"
     ],
     "Health": 80
   },
@@ -873,7 +873,7 @@
       }
     ],
     "Hardpoints": [
-      "brummbar_150mm_mp",
+      "brummbar_150mm_bg",
       "brummbar_150mm_bunker_buster_mp",
       "brummbar_150mm_bunker_buster_scatter_mp"
     ],
@@ -916,7 +916,7 @@
       }
     ],
     "Hardpoints": [
-      "elefant_88mm_gun_mp",
+      "elefant_88mm_gun_bg",
       "mg34_hull_mp"
     ],
     "Health": 1040,
@@ -1013,7 +1013,7 @@
       }
     ],
     "Hardpoints": [
-      "ostwind_flak_43_37mm_mp",
+      "ostwind_flak_43_37mm_bg",
       "ostwind_mg34_hull_mp"
     ],
     "Health": 640,
@@ -1051,7 +1051,7 @@
       }
     ],
     "Hardpoints": [
-      "panther_75mm_mp",
+      "panther_75mm_bg",
       "generic_mg34_coaxial_mp",
       "generic_mg34_hull_mp"
     ],
@@ -1093,7 +1093,7 @@
       }
     ],
     "Hardpoints": [
-      "panther_75mm_mp",
+      "panther_75mm_bg",
       "generic_mg34_coaxial_mp",
       "generic_mg34_hull_mp"
     ],
@@ -1177,7 +1177,7 @@
       }
     ],
     "Hardpoints": [
-      "panzer_4_75mm_short_mp",
+      "panzer_4_75mm_short_bg",
       "generic_mg34_coaxial_mp",
       "generic_mg34_hull_mp"
     ],
@@ -1216,7 +1216,7 @@
       }
     ],
     "Hardpoints": [
-      "panzer_4_75mm_mp",
+      "panzer_4_75mm_bg",
       "generic_mg34_coaxial_mp",
       "generic_mg34_hull_mp"
     ],
@@ -1300,7 +1300,7 @@
       }
     ],
     "Hardpoints": [
-      "panzer_4_75mm_short_mp",
+      "panzer_4_75mm_short_bg",
       "generic_mg34_coaxial_mp",
       "generic_mg34_hull_mp"
     ],
@@ -1604,7 +1604,7 @@
       }
     ],
     "Hardpoints": [
-      "stug_75mm_short_mp"
+      "stug_75mm_short_bg"
     ],
     "Health": 560,
     "UpgradeCapacity": -1
@@ -1642,7 +1642,7 @@
       }
     ],
     "Hardpoints": [
-      "stug_75mm_mp"
+      "stug_75mm_bg"
     ],
     "Health": 560,
     "Upgrades": [
@@ -1682,7 +1682,7 @@
       }
     ],
     "Hardpoints": [
-      "tiger_kwk36_88mm_mp",
+      "tiger_kwk36_88mm_bg",
       "mg34_coaxial_generic_mp",
       "mg34_hull_mp"
     ],

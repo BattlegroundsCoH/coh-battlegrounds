@@ -412,6 +412,96 @@
     ]
   },
   {
+    "Name": "mortar_fire_flares_ability_120mm_bg",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741941,
+    "Cost": {
+      "Munition": 30
+    },
+    "Display": {
+      "LocaleName": "11007411",
+      "LocaleDescriptionLong": "11007409",
+      "LocaleDescriptionShort": "11039272",
+      "Icon": "Icons_abilities_ability_soviet_flare",
+      "Position": 34
+    },
+    "Army": "soviet",
+    "Activation": "targeted",
+    "Requirements": [
+      {
+        "RequirementType": "required_not",
+        "RequirementReason": "usage",
+        "UIText": "11050319",
+        "RequirementProperties": {
+          "requirement_table": [
+            {
+              "RequirementType": "required_in_state",
+              "RequirementReason": "usage",
+              "UIText": "0",
+              "RequirementProperties": {
+                "garrisoned": false,
+                "healed": false,
+                "in_combat_since": -1,
+                "injured": false,
+                "leader": false,
+                "not_moving": false,
+                "not_retreating": false,
+                "pinned": true,
+                "suppressed": false,
+                "camouflaged": false
+              }
+            }
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "Name": "mortar_fire_flares_ability_bg",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741940,
+    "Cost": {
+      "Munition": 30
+    },
+    "Display": {
+      "LocaleName": "11007411",
+      "LocaleDescriptionLong": "11007409",
+      "LocaleDescriptionShort": "11039272",
+      "Icon": "Icons_abilities_ability_soviet_flare",
+      "Position": 34
+    },
+    "Army": "soviet",
+    "Activation": "targeted",
+    "Requirements": [
+      {
+        "RequirementType": "required_not",
+        "RequirementReason": "usage",
+        "UIText": "11050319",
+        "RequirementProperties": {
+          "requirement_table": [
+            {
+              "RequirementType": "required_in_state",
+              "RequirementReason": "usage",
+              "UIText": "0",
+              "RequirementProperties": {
+                "garrisoned": false,
+                "healed": false,
+                "in_combat_since": -1,
+                "injured": false,
+                "leader": false,
+                "not_moving": false,
+                "not_retreating": false,
+                "pinned": true,
+                "suppressed": false,
+                "camouflaged": false
+              }
+            }
+          ]
+        }
+      }
+    ]
+  },
+  {
     "Name": "conscript_oorah_bg",
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
     "PBGID": 1073741833,

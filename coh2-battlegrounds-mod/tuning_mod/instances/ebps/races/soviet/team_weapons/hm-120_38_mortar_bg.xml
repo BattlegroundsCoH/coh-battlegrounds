@@ -187,7 +187,7 @@
 			<list name="abilities">
 				<instance_reference name="ability" value="abilities\soviet\modal_ability\artillery\mortar_barrage_ability\sync_mortar_barrage_120mm_mp" />
 				<instance_reference name="ability" value="abilities\soviet\modal_ability\artillery\mortar_barrage_ability\smoke_120mm_mortar_barrage_mp" />
-				<instance_reference name="ability" value="abilities\soviet\modal_ability\mortar_fire_flares_ability_120mm_mp" />
+				<instance_reference name="ability" value="abilities\soviet\modal_ability\mortar_fire_flares_ability_120mm_bg" mod="142b113740474c82a60b0a428bd553d5" />
 				<instance_reference name="ability" value="abilities\global\cold\blizzard_effect_deep_snow_camo" />
 				<instance_reference name="ability" value="abilities\soviet\modal_ability\artillery\mortar_barrage_ability\sync_mortar_barrage_120mm_victortarget_mp" />
 				<instance_reference name="ability" value="abilities\german\timed_ability\mortar_veterancy_3_mp" />

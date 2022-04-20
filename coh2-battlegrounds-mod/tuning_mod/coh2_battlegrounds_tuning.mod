@@ -10,11 +10,11 @@
 							<RelativeName>coh2_battlegrounds_tuning_attributes.xml</RelativeName>
 						</d2p1:anyType>
 					</Children>
-					<IsExpanded>false</IsExpanded>
+					<IsExpanded>true</IsExpanded>
 					<Name>attrib</Name>
 				</d2p1:anyType>
 			</Children>
-			<IsExpanded>false</IsExpanded>
+			<IsExpanded>true</IsExpanded>
 		</d2p1:anyType>
 		<d2p1:anyType i:type="TableOfContents">
 			<Alias>Locale</Alias>
@@ -30,7 +30,7 @@
 					<Name>english</Name>
 				</d2p1:anyType>
 			</Children>
-			<IsExpanded>false</IsExpanded>
+			<IsExpanded>true</IsExpanded>
 		</d2p1:anyType>
 		<d2p1:anyType i:type="TableOfContents">
 			<Alias>Info</Alias>
@@ -38,13 +38,13 @@
 				<d2p1:anyType i:type="BurnModInfo">
 					<Dependencies />
 					<Description>[h1][b]THIS IS NOT A STAND ALONE MOD[/b][/h1]
-Please follow the guides bellow to properly install and play this mod.
+Please follow the guides below to properly install and play this mod.
 
 [h1]Requirements[/h1]
 [list]
 [*] An up-to-date distribution of the .NET Framework (If you're on Windows 10, it is pre-installed).
 [*] A stable internet connection (You will presently experience the best application performance if situated in the EU).
-[*] No directory read/write restrictions on you Company of Heroes 2 Playback folder.
+[*] No directory read/write restrictions on your Company of Heroes 2 Playback folder.
 [/list]
 
 [h1]Install Guide[/h1]
@@ -52,7 +52,7 @@ Please follow the guides bellow to properly install and play this mod.
 [*] Subscribe to this mod
 [*] Visit our [url=https://cohbattlegrounds.com/]website[/url] and download the installation client
 [*] Follow the installation instructions
-[*] You are all setup and ready to play
+[*] You are all set up and ready to play
 [/olist]
 
 You can watch visual guide [url=https://www.youtube.com/watch?v=Sg14jNbBb-8]here[/url] or visit our [url=https://cohbattlegrounds.com/guides]website.[/url]
@@ -60,11 +60,11 @@ You can watch visual guide [url=https://www.youtube.com/watch?v=Sg14jNbBb-8]here
 [h1]How To Play[/h1]
 [olist]
 [*] Launch Company of Heroes 2: Battlegrounds Mod Launcher
-[*] Navigate to [i]Company Builder[/i], create/edit your company and save it
+[*] Navigate to [i]Company Builder[/i], create/edit your company, and save it
 [*] Navigate to [i]Game Browser[/i], host/join a lobby
 [*] Set up your lobby to your preference or wait for the host to set the lobby up
 [*] Click the [i]Start Match[/i] button and wait for Company of Heroes 2 to launch (do [b]NOT[/b] close the Company of Heroes 2: Battlegrounds Mod Launcher)
-[*] Recreate your lobby (Allies on the left side; Axis on the right side; [b]All[/b] settings must match to count as valid match!)
+[*] Recreate your lobby (Allies on the left side; Axis on the right side; [b]All[/b] settings must match to count as a valid match!)
 [*] Playout your match
 [*] Wait for match analysis
 [/olist]
@@ -72,9 +72,9 @@ You can watch visual guide [url=https://www.youtube.com/watch?v=Sg14jNbBb-8]here
 You can watch visual guide [url=https://www.youtube.com/watch?v=Sg14jNbBb-8]here[/url] or visit our [url=https://cohbattlegrounds.com/guides]website.[/url]
 
 [h1]Features[/h1]
-The mod offers several new features to the game - as it completely overhauls the way an ingame match is played. The biggest feature of the mod is unit persistency. If a unit gains veterancy or pick up dropped weapons, they'll keep that level of veterancy or obtained item for the next match. If the unit is killed - they're lost forever. Adding an extra layer of strategy to the match. Is calling in a specific unit worth the risk?
+The mod offers several new features to the game - as it completely overhauls the way an in-game match is played. The biggest feature of the mod is unit persistency. If a unit gains veterancy or picks up dropped weapons, they'll keep that level of veterancy or obtained item for the next match. If the unit is killed - they're lost forever. Adding an extra layer of strategy to the match. Is calling in a specific unit worth the risk?
 
-The list of features include:
+The list of features includes:
 [list]
 [*] Unit persistency
 [*] Enhanced unit design
@@ -97,7 +97,7 @@ The list of features include:
 
 [h1]Final Note[/h1]
 For more information join our [url=https://discord.com/invite/Hr7yTbSv25]Discord[/url] or read about our mod [url=https://github.com/JustCodiex/coh2-battlegrounds#readme]here.[/url] 
-We hope you will have as much fun as we had making this. 
+We hope you will have as much fun as we had making it. 
 
 See you on the battlegrounds,
 [i]Battlegrounds Development Team[/i]</Description>
