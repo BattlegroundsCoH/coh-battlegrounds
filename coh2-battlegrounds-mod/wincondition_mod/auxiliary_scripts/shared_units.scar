@@ -1,36 +1,4 @@
-function BG_HookUnitSystem()
-
-    -- Call every tick...
-    Rule_AddInterval(BG_UpdateUnitCounts, 0.35);
-
-end
-
-function BG_UpdateUnitCounts()
-
-    -- Loop through all players
-    for i=1, #_bg_playerData do
-
-        -- Get the new units (if any)
-        local unitset = bg_set:from_sgroup(Player_GetSquads(_bg_playerData[i].player));
-        local newunits = bg_set:diff(unitset, _bg_playerData[i].squads);
-
-        -- Apply updates if needed
-        if (#newunits > 0) then
-
-            -- Add new squads
-            for j=1, #newunits do
-                BG_SolveNewUnit(_bg_playerData[i], newunits[j]);
-            end
-
-            -- Update set
-            _bg_playerData[i].squads = unitset;
-
-        end
-
-    end
-
-end
-
+-- TODO: Call this when a new unit is discovered
 function BG_SolveNewUnit(playerData, sid)
 
     -- Retrieve basic data
@@ -91,6 +59,8 @@ function BG_SolveNewUnit(playerData, sid)
 
 end
 
+-- Fetches the first squad in company that is not dead (for the given player)
+-- Returns the squad ID and the unit's company ID
 function BG_FindFirstNonDeadSquadInCompany(playerRefID)
     for squadID, companyID in pairs(_bg_playerData[playerRefID].deployed) do
         if not Squad_IsValid(squadID) or Squad_Count(Squad_FromWorldID(squadID)) == 0 then
@@ -391,9 +361,8 @@ function BG_RegisterSquadDeath(playerData, companyID)
     -- Get the company squad
     local companySquad = BG_FindSquadInCompanyData(playerData.company.units, companyID);
 
-    -- If we fail to get the company squad data - it might be because of some debug issue
+    -- If we fail to get the company squad data
     if companySquad == nil then
-        -- TODO: if not in debug broadcast an error event
         return;
     end
 

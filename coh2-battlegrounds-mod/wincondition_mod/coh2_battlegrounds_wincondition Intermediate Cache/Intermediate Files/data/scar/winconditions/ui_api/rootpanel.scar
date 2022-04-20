@@ -1,4 +1,0 @@
-RootPanel = Class(Panel, function(self)
-        Panel._constructor(self);
-        self:onAdd("");
-end)

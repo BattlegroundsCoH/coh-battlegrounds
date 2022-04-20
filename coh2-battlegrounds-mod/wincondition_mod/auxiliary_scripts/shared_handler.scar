@@ -33,10 +33,6 @@ function BG_Init()
         return;
     end
 
-    if g_towdebug then
-        Rule_AddOneShot(_tow_test, 1);
-    end
-
     -- Load the player companies
     local companyError = BG_LoadCompanies();
 
@@ -102,73 +98,6 @@ function BG_Init()
 
     -- Add the broadcast event callback
     Rule_AddGlobalEvent(BG_GameBroadcastMessageReceived, GE_BroadcastMessage);
-
-end
-
-function _endgame_test()
-
-    _bg_playerData[BG_GetPlayerID(Game_GetLocalPlayer())].lossData = {
-        {
-            company_id = 100,
-            symbol = "Icons_symbols_unit_soviet_conscript_02_symbol",
-            rank = 5,
-            item_symbol = "Icons_weapons_weapon_pps",
-        },
-        {
-            company_id = 101,
-            symbol = "Icons_symbols_unit_soviet_conscript_02_symbol",
-            rank = 3,
-        },
-        {
-            company_id = 102,
-            symbol = "Icons_symbols_unit_soviet_conscript_02_symbol",
-            rank = 0,
-            item_symbol = "Icons_weapons_weapon_pps",
-        },
-        {
-            company_id = 103,
-            symbol = "Icons_symbols_unit_soviet_conscript_02_symbol",
-            rank = 5,
-            item_symbol = "Icons_weapons_weapon_pps",
-        },
-        {
-            company_id = 104,
-            symbol = "Icons_symbols_unit_soviet_conscript_02_symbol",
-            rank = 4,
-            item_symbol = "Icons_weapons_weapon_pps",
-        },
-        {
-            company_id = 105,
-            symbol = "Icons_symbols_unit_soviet_conscript_02_symbol",
-            rank = 1,
-            item_symbol = "Icons_weapons_weapon_pps",
-        },
-        {
-            company_id = 106,
-            symbol = "Icons_symbols_unit_soviet_conscript_02_symbol",
-            rank = 2,
-        },
-    };
-    _bg_playerData[BG_GetPlayerID(Game_GetLocalPlayer())].gainsData = {
-        {
-            type = 3,
-            symbol = "Icons_symbols_unit_soviet_conscript_02_symbol",
-            rank = 4, -- Starting rank
-            now = 5,
-            item_symbol = "Icons_weapons_weapon_pps",
-        },
-        {
-            type = 2,
-            symbol = "Icons_symbols_unit_soviet_conscript_02_symbol",
-            item_symbol = "Icons_weapons_weapon_panzerschreck",
-        },
-        {
-            type = 1,
-            symbol = "Icons_symbols_vehicle_german_panzer_iv_symbol",
-        }
-    }
-
-    BG_CreateAndDisplayGameOverScreenOverride(Game_GetLocalPlayer(), BG_SaveAndExit);
 
 end
 
