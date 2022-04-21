@@ -46,39 +46,6 @@
                     "Value":1000
                 }
             ]
-        },
-        {
-            "ID": "bg_domination",
-            "Display": "34",
-            "DisplayDesc": "35",
-            "DefaultOption": 2,
-            "Files": [],
-            "Options": [
-                {
-                    "LocStr": "0",
-                    "Value": 250
-                },
-                {
-                    "LocStr": "0",
-                    "Value": 500
-                },
-                {
-                    "LocStr": "0",
-                    "Value": 750
-                },
-                {
-                    "LocStr": "0",
-                    "Value": 1000
-                },
-                {
-                    "LocStr": "0",
-                    "Value": 1250
-                },
-                {
-                    "LocStr": "0",
-                    "Value": 1500
-                }
-            ]
         }
     ],
     "CustomOptions": [],
