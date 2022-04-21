@@ -1,0 +1,65 @@
+name = "battlegrounds_vp"
+scar_file = "data:scar/winconditions/coh2_battlegrounds.scar"
+fe_name = "Battlegrounds - Gamemode"
+fe_priority = 1
+score_display = vp_ticker
+show_time = true
+requires_vp_ticker = false
+permitted_categories = skin_pack + vehicle_decal
+starting_building_replacements = {
+    {
+        original = "default_mp",
+        starting_buildings = {
+	        {
+                race = "german",
+                building = "142b113740474c82a60b0a428bd553d5:territory_point_invisible_command",
+                starting_squads = {},
+            },
+	        {
+                race = "west_german",
+                building = "142b113740474c82a60b0a428bd553d5:territory_point_invisible_command",
+                starting_squads = {},
+            },
+	        {
+                race = "british",
+                building = "142b113740474c82a60b0a428bd553d5:territory_point_invisible_command",
+                starting_squads = {},
+            },
+	        {
+                race = "aef",
+		        building = "142b113740474c82a60b0a428bd553d5:territory_point_invisible_command",
+		        starting_squads = {},
+            },
+            {
+                race = "soviet",
+		        building = "142b113740474c82a60b0a428bd553d5:territory_point_invisible_command",
+		        starting_squads = {},
+            },
+        },
+    },
+    {
+        original = "bunker",
+        starting_buildings = {
+	        {
+                race = "german",
+                building = "",
+            },
+	        {
+                race = "west_german",
+                building = "",
+            },
+	        {
+                race = "british",
+                building = "",
+            },
+	        {
+                race = "aef",
+		        building = "",
+            },
+            {
+                race = "soviet",
+		        building = "",
+            },
+        },
+    }
+}

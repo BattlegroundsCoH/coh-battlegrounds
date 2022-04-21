@@ -1,0 +1,56 @@
+Label = Class(Control, function(self, text)
+    Control._constructor(self);
+    Label._count = Label._count + 1;
+    self._name = "1" .. Label._count;
+    self._horizontalAlignment = LAH_Justify;
+	self._verticalAlignment = LAV_None;
+	self._isBolded = false;
+	self._isItalicized = false;
+	self._fontSize = 12;
+	self._text = text or Loc_Empty();
+end)
+Label._count = 0;
+function Label:getHorizontalAlignment()
+    return self._horizontalAlignment;
+end
+function Label:setHorizontalAlignment(horizontalAlignment)
+	self._horizontalAlignment = horizontalAlignment;
+end
+function Label:getVerticalAlignment()
+	return self._verticalAlignment;
+end
+function Label:setVerticalAlignment(verticalAlignment)
+	self._verticalAlignment = verticalAlignment;
+end
+function Label:isBolded()
+	return self._isBolded;
+end
+function Label:setBolded(isBolded)
+    self._isBolded = isBolded;
+end
+function Label:isItalicized()
+	return self._isItalicized;
+end
+function Label:setItalicized(isItalicized)
+	self._isItalicized = isItalicized;
+end
+function Label:getFontSize()
+	return self._fontSize;
+end
+function Label:setFontSize(fontSize)
+	self._fontSize = fontSize;
+end
+function Label:getText()
+	return self._text;
+end
+function Label:setText(text)
+	self._text = text;
+	if self._path ~= "" then
+		UI_LabelSetText(self._path, self._text);
+	end
+end
+function Label:onAdd(path)
+	Control.onAdd(self, path);
+	UI_LabelAdd(path, self._name, self._x, self._y, self._width, self._height, self._horizontalAlignment, self._verticalAlignment, self._isBolded, self._isItalicized, self._fontSize, self._text);
+	self:setColor();
+end

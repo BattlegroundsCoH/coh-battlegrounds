@@ -1,0 +1,623 @@
+-- TODO: Call this when a new unit is discovered
+function BG_SolveNewUnit(playerData, sid)
+
+    -- Retrieve basic data
+    local squad = Squad_FromWorldID(sid);
+
+    -- Is this squad not one we've deployed?
+    if playerData.deployed[sid] == nil then
+
+        -- If vehicle
+        if Squad_IsVehicleSquad(squad) then
+
+            -- Get the driver squad
+            local driver = Squad_GetVehicleMobileDriverSquad(squad);
+
+            -- If there's a driver squad
+            if driver ~= nil then
+
+                -- Get the driver squad ID
+                local driverID = Squad_GetGameID(driver);
+                local vehicleBlueprint = BP_GetName(Squad_GetBlueprint(squad));
+
+                -- Update
+                if playerData.deployed[driverID] ~= nil then
+                    local vehicle_company_id = BG_FindVehicleFromCrewInCompany(playerData, playerData.deployed[driverID]);
+                    if vehicle_company_id == nil or vehicleBlueprint ~= BG_FindSquadInCompany(playerData.selfID, vehicle_company_id).bp_name then -- twas captured - add to capture table
+                        playerData.captured[sid] = { bp = vehicleBlueprint, tp = "SBP" }; -- Add to captured equipment
+                        playerData.tempcrews[sid] = driverID; -- Mark driver squad ID as temporary crew (and point to the captured squad)
+                        playerData.deployed[sid] = _bg_unitID_RecrewRecapture; -- Mark vehicle as being a recrew or recapture case
+                        Rule_AddSquadEvent(BG_OnSquadDeath, squad, GE_SquadKilled); -- Add on death event for squad
+                    end -- else the crew (most likely) recrewed its old vehicle.
+                else
+                    playerData.deployed[sid] = _bg_unitID_NoIdea; -- Mark it as no idea (just so we don't go over this case every time this function is called)
+                end
+
+            else  -- otherwise there's no mobile driver squad ==> unit lost - nothing reasonable we can really do...
+                playerData.deployed[sid] = _bg_unitID_NoIdea; -- Mark it as no idea (just so we don't go over this case every time this function is called)
+            end
+
+        elseif Squad_HasTeamWeapon(squad) then -- if team weapon
+
+            -- Find a potential "invalid" squad that could have captured this (and save ptr to it so it's not lost).
+            local firstAvailableSquad, company_id = BG_FindFirstNonDeadSquadInCompany(playerData.selfID);
+
+            if firstAvailableSquad ~= nil and (company_id or -1) >= 0 then -- Some squad is no longer valid - and most likely the squad capturing this
+                playerData.tempcrews[sid] = firstAvailableSquad; -- Create pointer such that we can regain this unit later.
+            end
+
+            -- Mark team weapon as captured
+            playerData.deployed[sid] = _bg_unitID_RecrewRecapture;
+            playerData.captured[sid] = { bp = BP_GetName(Squad_GetBlueprint(squad)), tp = "SBP" }
+
+            -- Add on death event for squad
+            Rule_AddSquadEvent(BG_OnSquadDeath, squad, GE_SquadKilled);
+
+        end
+
+    end
+
+end
+
+-- Fetches the first squad in company that is not dead (for the given player)
+-- Returns the squad ID and the unit's company ID
+function BG_FindFirstNonDeadSquadInCompany(playerRefID)
+    for squadID, companyID in pairs(_bg_playerData[playerRefID].deployed) do
+        if not Squad_IsValid(squadID) or Squad_Count(Squad_FromWorldID(squadID)) == 0 then
+            return squadID, companyID;
+        end
+    end
+    return nil, nil;
+end
+
+function BG_FindSquadInCompany(playerID, unitID)
+    return BG_FindSquadInCompanyData(_bg_playerData[playerID].company.units, unitID);
+end
+
+function BG_FindSquadInCompanyData(data, unitID)
+    for _, this in pairs(data) do
+        if this.company_id == unitID then
+            return this;
+        end
+    end
+    return nil;
+end
+
+function BG_FindVehicleFromCrewInCompany(playerData, crewID)
+    for _, v in ipairs(playerData.company.units) do
+        if v.crew ~= nil then
+            if v.crew.company_id == crewID then
+                return v.company_id;
+            end
+        end
+    end
+    return nil;
+end
+
+function BG_GetTempCrewPtr(playerData, squadID)
+    local v = playerData.tempcrews[squadID];
+    if v ~= nil then
+        return playerData.deployed[v];
+    else
+        return nil;
+    end
+end
+
+function BG_DeploySquad(player, unit_id)
+
+    -- Get the player reference id
+    local playerRefID = BG_GetPlayerID(player);
+
+    -- Get unit data
+    local unit_data = BG_FindSquadInCompany(playerRefID, unit_id);
+
+    -- Not a valid unit to spawn
+    if unit_data == nil then
+        return;
+    end
+
+    -- Make sure we don't spawn in something twice
+    if not unit_data.spawned then
+
+        -- Get position data
+        local gotopos = _bg_playerData[playerRefID]:GetCallInDestination();
+        local spawnfrom = Player_GetNearestMapEntry(player, gotopos);
+
+        -- Call in the unit
+        local squad, crewSquad, transportSquad = BG_CallInUnit(unit_data, player, gotopos, spawnfrom);
+
+        -- Register the unit
+        _bg_playerData[playerRefID].deployed[Squad_GetGameID(squad)] = unit_data.company_id;
+        _bg_playerData[playerRefID].total_deployed = _bg_playerData[playerRefID].total_deployed + 1;
+
+        -- Register the transport squad (if any)
+        if transportSquad ~= nil then
+            _bg_playerData[playerRefID].deployed[Squad_GetGameID(transportSquad)] = _bg_unitID_TransportIgnore;
+        end
+
+        -- Register the crew (if any)
+        if crewSquad ~= nil then
+            _bg_playerData[playerRefID].deployed[Squad_GetGameID(crewSquad)] = unit_data.crew.company_id;
+        end
+
+        -- Broadcast that a unit was spawned
+        Battlegrounds_LogEvent(nil, BG_EVENT_ONDEPLOY, unit_data.company_id, player);
+
+        -- Add events
+        Rule_AddSquadEvent(BG_OnSquadDeath, squad, GE_SquadKilled);
+        if crewSquad ~= nil then
+            Rule_AddSquadEvent(BG_OnSquadDeath, crewSquad, GE_SquadKilled);
+        end
+
+        -- Invoke additional hooks
+        if __bgapi_spawncallbacks ~= nil then
+            for _, func in pairs(__bgapi_spawncallbacks) do
+                func(player, squad, unit_data);
+                if crewSquad ~= nil then
+                    func(player, crewSquad, unit_data.crew);
+                end
+            end
+        end
+
+        -- Was it the local player who spawned this unit?
+        if player == Game_GetLocalPlayer() then
+            BG_RefreshCompanyView();
+        end
+
+    end
+
+end
+
+function BG_CallInUnit(unit_data, player, gotopos, spawnfrom)
+
+    -- Don't call in unit if the match has stopped
+    if _bg_matchStopped == true then
+        return;
+    end
+
+    -- Create the squad
+    local squad = Squad_CreateAndSpawnToward(BP_GetSquadBlueprint(unit_data.bp_name), player, 0, spawnfrom, gotopos );
+    local sg_temp = SGroup_FromSquad(squad);
+
+    -- The transport squad
+    local transportSquad = nil;
+
+    -- Was a transport method specified?
+    if unit_data.transport ~= nil then
+
+        -- One of the 'deploy with land transport' methods
+        if (unit_data.transport.mode == 1 or unit_data.transport.mode == 2)  then
+
+            -- Create transport squad
+            transportSquad = Squad_CreateAndSpawnToward(BP_GetSquadBlueprint(unit_data.transport.sbp), player, 0, spawnfrom, gotopos );
+            local sg_transport_temp = SGroup_FromSquad(transportSquad, "sg_transport_temp" .. unit_data.company_id);
+            SGroup_Add(sg_transport_temp, transportSquad);
+
+            -- Gotta lock the transport in case of AI (We don't want it taking over and screwing up something).
+            if AI_IsEnabled(player) then
+                AI_LockSquad(player, transportSquad);
+            end
+
+            -- If not a tow-squad (standard infantry)
+            if unit_data.transport.tow == nil or unit_data.transport.tow == false then
+
+                -- Garrison the squad
+                Cmd_Garrison(sg_temp, sg_transport_temp, true, false, true);
+
+                -- Tell transport to go to position and drop of squad
+                Command_SquadPos(player, sg_transport_temp, SCMD_UnloadSquads, gotopos, false);
+
+                -- If deploy and exit - tell squad to exit once squad is deployed.
+                if unit_data.transport.mode == 1 then
+                    BG_DeployAndExit(sg_transport_temp, nil);
+                end
+
+            else
+
+                -- Command to move
+                Command_SquadPos(player, sg_transport_temp, SCMD_Move, gotopos, false);
+
+                -- Tow-transport from off-map
+                Battlegrounds_TowFromOffmap(transportSquad, squad, BG_ExitTransport);
+
+                -- If deploy and exit - tell squad to exit once squad is deployed.
+                if unit_data.transport.mode == 1 then
+                    BG_DeployAndExit(sg_transport_temp, gotopos);
+                end
+
+            end
+
+        else
+
+            -- TODO: Implement
+
+        end
+
+    else
+
+        -- Give move order
+        Command_SquadPos(player, sg_temp, SCMD_Move, gotopos, false )
+
+    end
+
+    -- Apply company data
+    BG_ApplyCompanyData(player, squad, sg_temp, unit_data);
+
+    -- The crew squad
+    local crewSquad = nil;
+
+    -- If crew is valid
+    if unit_data.crew ~= nil then
+
+        -- Get the driver squad
+        local crewSquad = Squad_GetVehicleMobileDriverSquad(squad);
+
+        -- Make sure we got the driver squad
+        if crewSquad ~= nil then
+
+            -- Create temporary crew
+            local temp_crew = SGroup_FromSquad(crewSquad, "sg_crew_temp" .. unit_data.company_id);
+
+            -- Apply company data
+            BG_ApplyCompanyData(player, crewSquad, temp_crew, unit_data.crew);
+
+        end
+
+    end
+
+    -- Mark spawned
+    unit_data.spawned = true;
+
+    -- Return the squad
+    return squad, crewSquad, transportSquad;
+
+end
+
+function BG_ApplyCompanyData(player, squad, tempGroup, data)
+
+    -- Apply veterancy progress
+    if (data.veterancy_progress > 0) then
+        Squad_IncreaseVeterancyExperience(squad, data.veterancy_progress, true, true );
+    end
+
+    -- Add upgrades
+    for i=1, #data.upgrades do
+        Command_SquadUpgrade(player, tempGroup, BP_GetUpgradeBlueprint(data.upgrades[i].bp), true, false );
+    end
+
+    -- Add slot_items
+    for i=1, #data.slot_items do
+        if data.slot_items[i].bp ~= nil then
+            Squad_GiveSlotItem(squad, BP_GetSlotItemBlueprint(data.slot_items[i].bp) );
+            if data.slot_items[i].base == nil then
+                data.slot_items[i].base = true;
+            end
+        end
+    end
+
+    -- Add modifiers
+    for i=1, #data.modifiers do
+        BG_ApplyUnitModifier(squad, data.modifiers[i]);
+    end
+
+end
+
+function BG_ApplyUnitModifier(squad, modifierData)
+    local mod = Modifier_Create( MAT_Squad, modifierData.modifierName, modifierData.applyMethod, false, modifierData.value, nil);
+    Modifier_ApplyToSquad(mod, squad);
+end
+
+function BG_OnSquadDeath(squad)
+
+    -- Define locals
+    local playerOwner, playerRefID
+    local id = Squad_GetGameID(squad)
+
+    -- Check if world owned, then get required info
+    if World_OwnsSquad(squad) then
+        playerOwner, playerRefID = BG_GetOwnerFromSquadId(squad);
+    else
+        playerOwner = Squad_GetPlayerOwner(squad);
+        playerRefID = BG_GetPlayerID(playerOwner);
+    end
+
+    -- If not found - dont do anything. (Not a unit we are tracking)
+    if _bg_playerData[playerRefID] == nil then
+        return;
+    end
+
+    -- Make sure it's a valid unit
+    if _bg_playerData[playerRefID].deployed[id] ~= nil then
+
+        -- Register squad death
+        BG_RegisterSquadDeath(_bg_playerData[playerRefID], _bg_playerData[playerRefID].deployed[id]);
+
+    elseif _bg_playerData[playerRefID].deployed[id] == _bg_unitID_RecrewRecapture then
+
+        -- Register driver squad death
+        BG_RegisterSquadDeath(_bg_playerData[playerRefID], BG_GetTempCrewPtr(_bg_playerData[playerRefID], id));
+
+        -- Clear the captured identifier (because we lost it before we managed to withdraw or save it)
+        _bg_playerData[playerRefID].captured[id] = nil;
+
+    else
+
+        -- ???
+
+    end
+
+    -- Remove from deployed list
+    _bg_playerData[playerRefID].deployed[id] = nil;
+
+end
+
+function BG_RegisterSquadDeath(playerData, companyID)
+
+    -- Make sure the company ID is valid (otherwise there's not going to be a valid squad to register death for)
+    if companyID == nil then
+        return;
+    end
+
+    -- Get the company squad
+    local companySquad = BG_FindSquadInCompanyData(playerData.company.units, companyID);
+
+    -- If we fail to get the company squad data
+    if companySquad == nil then
+        return;
+    end
+
+    -- Make sure we don't accidentally kill a squad that was successfully withdrawn or wasnt spawned at the time of this event
+    if not companySquad.spawned then
+        return;
+    end
+
+    -- Broadcast that the unit was killed
+    Battlegrounds_LogEvent(nil, BG_EVENT_ONDEATH, companyID, playerData.player);
+
+    -- Add to player's loss list
+    local lData = {
+        company_id = companyID,
+        rank = companySquad.veterancy_rank,
+        symbol = companySquad.symbol,
+        item_symbol = BG_GetUnitItemIcon(companySquad),
+    };
+
+    -- Register loss
+    table.insert(playerData.lossData, lData);
+
+end
+
+function BGAE_RecallSquad(executer, target)
+    if scartype(executer) == ST_PLAYER and scartype(target) == ST_SQUAD then
+        local pid = BG_GetPlayerID(executer);
+        BG_RecallSquad(pid, target);
+    end
+end
+
+_recallCounter = 0;
+
+function BG_RecallSquad(playerID, squadID)
+    if (playerID ~= -1 and squadID ~= nil) then
+        local exit_pos = Player_GetNearestMapEntry(_bg_playerData[playerID].player, Util_GetPosition(squadID));
+        local gameID = Squad_GetGameID(squadID);
+        local companyID = _bg_playerData[playerID].deployed[gameID];
+        if (companyID ~= nil) then
+            local sg_temp = SGroup_FromSquad(squadID, "sg_recall_temp" .. companyID .._recallCounter);
+            _recallCounter = _recallCounter + 1;
+            SGroup_SetSelectable(sg_temp, false);
+            SGroup_EnableUIDecorator(sg_temp, false);
+            SGroup_MoveAndDespawn(sg_temp, exit_pos, function(group)
+                local resetStats = false;
+                if companyID == _bg_unitID_RecrewRecapture then
+                    if _bg_playerData[playerID].captured[gameID] ~= nil then
+                        BG_HandleCapturedEquipment(_bg_playerData[playerID], gameID, squadID);
+                    end
+                    companyID = BG_GetTempCrewPtr(_bg_playerData[playerID], gameID); -- Then recall the driver squad
+                    if companyID ~= nil then
+                        local vehicleID = BG_FindVehicleFromCrewInCompany(_bg_playerData[playerID], companyID);
+                        if vehicleID ~= nil then
+                            companyID = vehicleID; -- Swap ID to the vehicle (Allow player to call in a new and fresh vehicle)
+                            resetStats = true; -- The case here being the driver squad managed to survive but the vehicle itself was destroyed
+                        end
+                    else
+                        return; -- Nothing we can do -- no company unit to save
+                    end
+                elseif companyID == _bg_unitID_TransportIgnore then
+                    return
+                end
+                local unit_data = BG_FindSquadInCompany(playerID, companyID);
+                if unit_data ~= nil then
+                    BG_RecallCompanySquad(unit_data, squadID, companyID, _bg_playerData[playerID], resetStats);
+                end
+            end);
+        end
+    end
+end
+
+function BG_RecallCompanySquad(unit_data, squadID, companyID, playerData, reset)
+    if reset == nil then reset = false end
+    local vet_rank_diff = 0;
+    local vet_rank_progress = 0;
+    if reset then
+        vet_rank_diff = -Squad_GetVeterancyRank(squadID);
+        unit_data.veterancy_rank = 0;
+        unit_data.veterancy_progress = 0;
+    else
+        vet_rank_diff = unit_data.veterancy_rank - Squad_GetVeterancyRank(squadID);
+        vet_rank_progress = Squad_GetVeterancyExperience(squadID);
+        unit_data.veterancy_rank = unit_data.veterancy_rank + vet_rank_diff;
+        unit_data.veterancy_progress = vet_rank_progress;
+    end
+    Battlegrounds_LogEvent(nil, BG_EVENT_ONRETREAT, companyID .. "," .. vet_rank_diff .. "," .. vet_rank_progress, playerData.player);
+    unit_data.spawned = false;
+    unit_data.transport = nil; -- We no longer allow this unit to be brought in with transport (Infinite transports would be possible here).
+    unit_data.isRecallDelayed = true;
+    unit_data.recall_wait_time_max = 40;
+    unit_data.recall_wait_time = 40;
+    if Squad_IsVehicleSquad(squadID) then
+        -- TODO: Redo above - but for the crew instead.
+    else
+        BG_SaveSlotItems(unit_data, squadID);
+    end
+    if (playerData.player == Game_GetLocalPlayer()) then
+        BG_RefreshCompanyView();
+    end
+end
+
+function BG_OnItemCaptured(entity, capturer) -- TODO: Write a better handler here for tracking who captured team weapons, since vehicle captures seem to work a bit different.
+    local captureSquadID = Entity_GetSquad(entity);
+    --PrintOnScreen(Squad_GetGameID(captureSquadID) .. " - " .. Squad_GetGameID(capturer));
+end
+
+function BG_HandleCapturedEquipment(playerData, gameID, squadID, bpName)
+
+    -- Get the save data
+    local bpSave = playerData.captured[gameID].bp;
+    local captureType = 1;
+    local bpType = playerData.captured[gameID].tp;
+
+    -- Fix blueprint name
+    if bpName == nil then
+        bpName = bpSave;
+    end
+
+    -- Is it not a vehicle (then handle slightly differently)
+    if not Squad_IsVehicleSquad(squadID) then
+        captureType = 2;
+        bpType = "EBP";
+        bpSave = BP_GetName(Squad_GetSyncWeaponBlueprint(squadID));
+    end
+
+    -- Create gains data
+    local cData = {
+        type = 1, -- Captured equipment
+        symbol = BG_FindCapturedIcon(bpName),
+    };
+
+    -- Add to the gains data
+    table.insert(playerData.gainsData, cData);
+
+    -- Save the captured item
+    BG_SaveCapturedItem(playerData.player, bpSave, captureType, bpType);
+
+end
+
+function BG_SaveCapturedItem(player, blueprint, type, bptype)
+
+        -- Generate message
+        local capture_message = "T["..blueprint..","..type..","..bptype.."]";
+
+        -- Broadcast event
+        Battlegrounds_LogEvent(nil, BG_EVENT_ONCAPTURE, capture_message, player);
+
+end
+
+function BG_SurrenderSquad(squad)
+
+end
+
+function BG_DeployAndExit(group, deployPos)
+
+    -- Hide the unit as much as possible - Should note, we can't easily exit a vehicle - we may need to add a "oh sh*t gotta get outta here mechanic"
+    SGroup_SetSelectable(group, false);
+    SGroup_EnableUIDecorator(group, false);
+
+    -- Depending on method we use different events (When emptied or reached destination)
+    if deployPos == nil then
+        Event_IsHoldingAny(function()
+            if SGroup_Count(group) > 0 then
+                local pos = Player_GetNearestMapEntry(Util_GetPlayerOwner(group), Util_GetPosition(group));
+                SGroup_MoveAndDespawn(group, pos);
+            end
+        end, nil, group, true, 0.5)
+    else
+        Event_Proximity(function()
+            if SGroup_Count(group) > 0 then
+                Battlegrounds_TowDetachFromWeaponAE(SGroup_GetSpawnedSquadAt(group, 1)); -- Detatch and get rid of the squad.
+                local pos = Player_GetNearestMapEntry(Util_GetPlayerOwner(group), Util_GetPosition(group));
+                SGroup_MoveAndDespawn(group, pos);
+            end
+        end, nil, group, deployPos, 7.5, nil, 1 ); -- TODO: Add cleanup for this (So we don't slow down the game)
+    end
+
+end
+
+function BG_ExitTransport(transport, safeTransport)
+    local group = SGroup_FromSquad(transport);
+    local pos = Player_GetNearestMapEntry(Util_GetPlayerOwner(group), Util_GetPosition(group));
+    SGroup_MoveAndDespawn(group, pos);
+end
+
+function BG_CollectSquadSlotItems(squad)
+    local set = {};
+    for i=1, Squad_GetSlotItemCount(squad) do
+        local bp = BP_GetName(Squad_GetSlotItemAt(squad, i));
+        if bg_db.slot_items[bp] ~= nil then -- make sure we know about this slot item
+            local ignore = false;
+            for _, v in pairs(bg_db.slot_items[bp].ignore_if) do
+                if Squad_HasUpgrade(squad, BP_GetUpgradeBlueprint(v)) then
+                    ignore = true;
+                    break;
+                end
+            end
+            if not ignore then
+                table.insert(set, bp);
+            end
+        end
+    end
+    return set;
+end
+
+function BG_SaveSlotItems(unit_data, squad)
+    if Squad_IsVehicleSquad(squad) then -- We won't be checking slot items of vehicles (as they can't pick up any)
+        return nil;
+    end
+    local items = BG_CollectSquadSlotItems(squad);
+    local new_items = bg_set:diff(items, bg_set:select(unit_data.slot_items, function(e) return e.bp; end));
+    for i = 1, #new_items do
+        Battlegrounds_LogEvent(nil, BG_EVENT_ONITEM, unit_data.company_id..","..new_items[i], Squad_GetPlayerOwner(squad));
+    end
+    local last_pickup = nil;
+    local slot_items = {};
+    for i=1, #items do
+        local isBaseItem = Table_ContainsAny(unit_data.slot_items, function(v)
+            if v.bp == items[i] and v.base == true then -- This will not trigger properly if two of the same items are picked up (But won't really matter in the end)
+                return true;
+            else
+                return false;
+            end
+        end);
+        table.insert(slot_items, { bp=items[i], symbol=BG_FindItemIcon(items[i]), base=isBaseItem });
+        if not isBaseItem then
+            last_pickup = items[i];
+        end
+    end
+    unit_data.slot_items = slot_items;
+    return last_pickup;
+end
+
+function BG_GetDeployedCountOfUnitType(player, blueprint)
+    if scartype(blueprint) == ST_PBG then
+        blueprint = BP_GetName(blueprint);
+    end
+    local data = BG_GetPlayerData(player);
+    local cntr = 0;
+    for _, v in pairs(data.deployed) do
+        if data.company.units[v] ~= nil and data.company.units[v].bp_name == blueprint then
+            cntr = cntr + 1;
+        end
+    end
+    return cntr;
+end
+
+-- Returns the player owner and player BG ID of the squad owner
+-- Returns nil, nil if unit owner is not found.
+function BG_GetOwnerFromSquadId(squadid)
+    for k, v in pairs(_bg_playerData) do
+        for q, _ in pairs(v.deployed) do
+            if q == squadid then
+                return v.player, k
+            end
+        end
+    end
+end

@@ -1,0 +1,274 @@
+function BG_LoadSessionData()
+
+    local j = 1;
+    local k = 1;
+
+    -- Create player data (for relevant players)
+    for i = 1, World_GetPlayerCount() do
+        local player = World_GetPlayerAt(i);
+        local race = Player_GetRaceName(player);
+        if not AI_IsAIPlayer(player) then -- Make sure it's a player
+            _bg_playerData[j] = {};
+            _bg_playerData[j].player = player;
+            _bg_playerData[j].selfID = j;
+            _bg_playerData[j].name = Player_GetDisplayName(player)[1];
+            _bg_playerData[j].playerID = Player_GetID(player);
+            _bg_playerData[j].race = race;
+            _bg_playerData[j].total_deployed = 0;
+            _bg_playerData[j].deployed = {};
+            _bg_playerData[j].captured = {};
+            _bg_playerData[j].tempcrews = {};
+            _bg_playerData[j].gainsData = {};
+            _bg_playerData[j].lossData = {};
+            _bg_playerData[j].GetCallInDestination = BG_GetCallInPoint;
+            _bg_playerData[j].teamStr = BG_GetTeamString(_bg_playerData[j].race);
+            local isVerified, steamID = BG_VerifyPlayer(_bg_playerData[j].name, _bg_playerData[j].teamStr, false);
+            if not isVerified then
+                return BG_LocStringFormat(9, Player_GetDisplayName(player));
+            else
+                _bg_playerData[j].steamID = steamID;
+            end
+            j = j + 1;
+        else
+            _bg_aiData[k] = {};
+            _bg_aiData[k].player = player;
+            _bg_aiData[k].name = Player_GetDisplayName(player)[1];
+            _bg_aiData[k].playerID = Player_GetID(player);
+            _bg_aiData[k].race = race;
+            _bg_aiData[k].teamStr = BG_GetTeamString(_bg_aiData[k].race);
+            _bg_aiData[k].deployed = {};
+            _bg_aiData[k].encountered = {};
+            local result, diff, pos = BG_VerifyPlayer(_bg_aiData[k].name, _bg_aiData[k].teamStr, true);
+            if not result then
+                return BG_LocString(10);
+            else
+                _bg_aiData[k].difficulty = diff;
+                _bg_aiData[k].aiIndex = pos;
+            end
+            BGAI_RegisterAIPlayer(k, player);
+            k = k + 1;
+        end
+        BG_SpawnAbilityEntities(player, race);
+        Player_SetPopCapOverride(player, 260);
+    end
+
+    -- Fix towing upgrade
+    if bg_db.towing_upgrade ~= nil and scartype(bg_db.towing_upgrade) == ST_STRING then
+        bg_db.towing_upgrade = BP_GetUpgradeBlueprint(bg_db.towing_upgrade);
+    end
+
+    -- Fix towing upgrade
+    if bg_db.towed_upgrade ~= nil and scartype(bg_db.towed_upgrade) == ST_STRING then
+        bg_db.towed_upgrade = BP_GetUpgradeBlueprint(bg_db.towed_upgrade);
+    end
+
+    return true;
+
+end
+
+function BG_GetTeamString(race)
+    if race == "german" or race == "west_german" then
+        return "axis";
+    else
+        return "allies";
+    end
+end
+
+function BG_VerifyPlayer(name, side, isAI)
+    for _, this in pairs(bg_settings.team_setup[side]) do
+        if not isAI then
+            if this.display_name == name and this.ai_value == 0 then
+                -- We have no definitive method of verifying this - but we'll make the assumption that right here it is correct.
+                -- We could make this more secure with faction data and enforcing fixed team positions
+                return true, this.steam_index;
+            end
+        elseif this.ai_value ~= 0 then
+            return true, this.ai_value, this.id;
+        end
+    end
+    return false;
+end
+
+function BG_SetupWincondition()
+
+    -- Get local variable
+    local mode = bg_settings.gamemode;
+
+    -- Is Victory Points?
+    if mode == "Victory Points" or mode == "bg_vp" then
+
+        -- Import the VP ticker code
+        import("Prototype/VPTickerWin-Annihilate_Functions.scar")
+
+        -- Override this function
+        Setup_GetWinConditionOption = function()
+            return bg_settings.gameoptions.gamemode_setting;
+        end
+
+        -- Call the set globals
+        SetGlobals();
+
+        -- Call the OnInit
+        VPTicker_OnInit();
+
+    end -- Add more gamemodes here!
+
+end
+
+function BG_SetupWeatherAndSupply()
+
+    -- If the day/night cycle is enabled, import the file
+    if bg_settings.gameoptions.day_night_cycle == true then
+        import("WinConditions/coh2_battlegrounds_weather.scar");
+    end
+
+    -- If the supply system is enabled, import the file
+    if bg_settings.gameoptions.sypply_system == true then
+        import("WinConditions/coh2_battlegrounds_supply_ui.scar");
+        import("WinConditions/coh2_battlegrounds_supply.scar");
+    end
+
+    -- Make sure the supply system is defined
+    if BGSupply_Setup ~= nil then        
+        -- Invoke setup
+        BGSupply_Setup();
+    end
+
+    -- Invoke the weather setup (if defined)
+    if BGWeather_Setup ~= nil then
+        BGWeather_Setup();
+    end
+
+end
+
+function BG_PrepareMapdata()
+
+    -- Trigger map entry point collector
+    BG_UTIL_collect_map_entries();
+
+    -- Spawn dummy vehicle
+    local mkr_dummy = "bgtest_vehicle";
+    if bg_isDebugMap and Marker_Exists(mkr_dummy, "") then
+        local dummypos = Marker_GetPosition(Marker_FromName(mkr_dummy, ""));
+        local eid = Entity_CreateENV(BP_GetEntityBlueprint(_bg_tuning_guid .. ":panzer_iv_sdkfz_161_bg_test_decrewed"), dummypos, dummypos);
+        Entity_Spawn(eid);
+    end
+
+    -- Spawn dummy team_weapon
+    mkr_dummy = "bgtest_weapon";
+    if bg_isDebugMap and Marker_Exists(mkr_dummy, "") then
+        local dummypos = Marker_GetPosition(Marker_FromName(mkr_dummy, ""));
+        local eid = Entity_CreateENV(BP_GetEntityBlueprint(_bg_tuning_guid .. ":pak40_75mm_at_gun_bg"), dummypos, dummypos);
+        Entity_Spawn(eid);
+    end
+
+    for i = 0, World_GetNumEntities() - 1 do
+        local entity = World_GetEntity(i);
+        local ebp = Entity_GetBlueprint(entity);
+        if Entity_IsVehicle(entity) and not Entity_IsBuilding(entity) then
+            --Entity_SetRecrewable(entity, bg_isDebugMap); -- Set crewable if debug map OTHERWISE, set to false
+        end
+    end
+
+end
+
+function BG_LoadCompanies()
+
+    -- Make sure the player count is matching
+    if #_bg_playerData ~= bg_settings.playercount then
+        return BG_LocString(4);
+    end
+
+    -- Run through all players and set this up
+    for i = 1, #_bg_playerData do
+
+        -- TODO: Remake this so it's based on the found steam ID
+
+        -- Make sure the player is valid
+        if bg_companies[_bg_playerData[i].name] == nil then
+            return BG_LocStringFormat(5, _bg_playerData[i].name);
+        else
+
+            -- "Copy" the company data
+            _bg_playerData[i].company = bg_companies[_bg_playerData[i].name];
+
+            -- Make sure they've picked the correct faction
+            if Player_GetRaceName(_bg_playerData[i].player) ~= _bg_playerData[i].company.army then
+                return BG_LocString(6, _bg_playerData[i].name, Player_GetRaceName(_bg_playerData[i].player), _bg_playerData[i].company.army);
+            end
+
+        end
+
+    end
+
+    return true;
+
+end
+
+function BG_LoadAIData()
+
+    local counters = {
+        ["allies"] = 0,
+        ["axis"] = 0,
+    }
+
+    for _, ai in pairs(_bg_aiData) do
+
+        local side = ai.teamStr;
+
+        for k,v in pairs(bg_companies) do
+            if k == "AIPlayer#" ..tostring(counters[side]) then
+                ai.company = v;
+                ai.steamID = counters[side];
+                ai.ttype = side;
+                counters[side] = counters[side] + 1;
+                break;
+            end
+        end
+
+        if ai.company == nil then
+            return BG_LocString(11);
+        end
+
+    end
+
+    return true;
+
+end
+
+function BG_FindItemIcon(item)
+    for k,v in pairs(bg_db.slot_items) do
+        if k == item then
+            return v.icon;
+        end
+    end
+    return "ModIcons_6a0a13b89555402ca75b85dc30f5cb04_unknown_item";
+end
+
+function BG_FindCapturedIcon(item) -- For vehicles, team weapons etc...
+    return "ModIcons_6a0a13b89555402ca75b85dc30f5cb04_unknown_item";
+end
+
+_bg_saentity = {
+    "_air_support",
+    "_artillery",
+    "_paradrop",
+};
+
+function BG_GetFactionAbilityEntityBlueprint(race, type)
+    return BP_GetEntityBlueprint(bg_settings.tuning_mod.mod_guid ..":" .. race .. _bg_saentity[type]);
+end
+
+function BG_SpawnAbilityEntities(player, race)
+    local air_e = Entity_CreateAndSpawn(player, BG_GetFactionAbilityEntityBlueprint(race, 1));
+    local art_e = Entity_CreateAndSpawn(player, BG_GetFactionAbilityEntityBlueprint(race, 2));
+    local par_e = Entity_CreateAndSpawn(player, BG_GetFactionAbilityEntityBlueprint(race, 3));
+    if Player_IsHuman(player) then
+        local pid = BG_GetPlayerID(player);
+        _bg_playerData[pid].special_ability_entities = {
+            ["air_support"] = air_e,
+            ["artillery_support"] = art_e,
+            ["air_reinforcements"] = par_e,
+        };
+    end
+end

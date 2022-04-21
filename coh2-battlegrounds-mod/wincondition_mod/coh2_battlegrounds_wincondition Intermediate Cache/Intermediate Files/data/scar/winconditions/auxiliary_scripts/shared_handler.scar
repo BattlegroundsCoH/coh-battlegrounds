@@ -64,7 +64,7 @@ function BG_Init()
     BG_PrepareMapdata();
 
     -- Activate the unit system
-    --BG_HookUnitSystem();
+    BG_HookUnitSystem();
 
     -- Properly set up win condition data
     BG_SetupWincondition();

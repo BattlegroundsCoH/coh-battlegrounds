@@ -455,7 +455,8 @@ function BG_UnitCardCancelClicked(tag)
     end
 end
 
-function BG_UpdateLocalCompanyUIValues(player)
+function BG_UpdateCompanyUIValues()
+    Player_CallLocal(Game_GetLocalPlayer(), function(player)
 
         -- The player ID
         local refPlayerID = BG_GetPlayerID(player);
@@ -492,10 +493,7 @@ function BG_UpdateLocalCompanyUIValues(player)
         -- Update the company button
         BG_UpdateCompanyButtonView(_bg_playerData[refPlayerID].player, _bg_playerData[refPlayerID].company.name);
 
-end
-
-function BG_UpdateCompanyUIValues()
-    Player_CallLocal(Game_GetLocalPlayer(), BG_UpdateLocalCompanyUIValues)
+    end)
 end
 
 function BG_GetDeploytimeBar(unit)
