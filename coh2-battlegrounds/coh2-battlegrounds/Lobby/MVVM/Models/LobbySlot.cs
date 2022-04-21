@@ -39,8 +39,8 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
             [string.Empty] = new BitmapImage(new Uri("pack://application:,,,/coh2-battlegrounds;component/Resources/app/army_icons/FactionLOCKED.png")),
         };
 
-        protected static readonly List<Company> AlliedCompanies = PlayerCompanies.FindAll(x => x.Army.IsAllied);
-        protected static readonly List<Company> AxisCompanies = PlayerCompanies.FindAll(x => x.Army.IsAxis);
+        protected static readonly Func<List<Company>> AlliedCompanies = () => PlayerCompanies.FindAll(x => x.Army.IsAllied);
+        protected static readonly Func<List<Company>> AxisCompanies = () => PlayerCompanies.FindAll(x => x.Army.IsAxis);
 
         private static readonly Func<string> LOCSTR_SLOT_OPEN = () => BattlegroundsInstance.Localize.GetString("TeamPlayerCard_Open_Slot");
         private static readonly Func<string> LOCSTR_SLOT_LOCKED = () => BattlegroundsInstance.Localize.GetString("TeamPlayerCard_Locked_Slot");

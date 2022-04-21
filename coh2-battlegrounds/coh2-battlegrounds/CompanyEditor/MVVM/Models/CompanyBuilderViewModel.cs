@@ -674,7 +674,6 @@ public class CompanyBuilderViewModel : IViewModel {
     }
 
     public void UnloadViewModel(OnModelClosed closeCallback) {
-        PlayerCompanies.LoadAll();
         App.ViewManager.DestroyView(this);
         if (this.HasChanges) {
             if (App.ViewManager.GetRightsideModalControl() is not ModalControl mc) {
