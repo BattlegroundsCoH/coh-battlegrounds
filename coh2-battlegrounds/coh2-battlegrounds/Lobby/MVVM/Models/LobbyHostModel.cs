@@ -84,6 +84,10 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
             this.SupplySystemDropdown.Selected = 0;
             this.ModPackageDropdown.Selected = 0;
 
+            // Subscribe to events
+            this.m_handle.OnLobbyTeamUpdate += this.OnTeamUpdated;
+            this.m_handle.OnLobbySlotUpdate += this.OnSlotUpdated;
+
             // Set lobby status
             this.m_handle.SetLobbyState(LobbyAPIStructs.LobbyState.InLobby);
 
@@ -92,6 +96,18 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
                 this.m_handle.MemberState(self.Occupant.MemberID, self.TeamID, self.SlotID, LobbyAPIStructs.LobbyMemberState.Waiting);
             }
 
+        }
+
+        private void OnSlotUpdated(LobbyAPIStructs.LobbySlot args) {
+            Application.Current.Dispatcher.Invoke(() => {
+                this.RefreshPlayability();
+            });
+        }
+
+        private void OnTeamUpdated(LobbyAPIStructs.LobbyTeam args) {
+            Application.Current.Dispatcher.Invoke(() => {
+                this.RefreshPlayability();
+            });
         }
 
         public void RefreshPlayability() {
