@@ -108,7 +108,7 @@ See you on the battlegrounds,
 					<BurnSettings i:type="GenericImageToGenericDDSBurnSettings">
 						<AlphaEdge>false</AlphaEdge>
 						<BlackBorder>false</BlackBorder>
-						<CompressTextures>true</CompressTextures>
+						<CompressTextures>false</CompressTextures>
 						<FlipImage>false</FlipImage>
 						<ForceFormat>false</ForceFormat>
 						<Metadata i:nil="true" />

@@ -71,6 +71,11 @@ public class LobbyParticipantModel : LobbyModel {
         this.OnScenarioChange(handle.Settings["selected_map"]);
         this.OnGamemodeChange(handle.Settings["selected_wc"]);
 
+        // Inform others
+        if (this.TryGetSelf() is LobbyAPIStructs.LobbySlot self && self.Occupant is not null) {
+            this.m_handle.MemberState(self.Occupant.MemberID, self.TeamID, self.SlotID, LobbyAPIStructs.LobbyMemberState.Waiting);
+        }
+
     }
 
     private void OnMatchBegin() {

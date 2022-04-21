@@ -91,8 +91,8 @@ namespace Battlegrounds.Game.Gameplay {
         private bool m_isCrewSquad;
         private DeploymentMethod m_deployMode;
         private DeploymentPhase m_deployPhase;
-        private Squad m_crewSquad;
-        private Blueprint m_deployBp;
+        private Squad? m_crewSquad;
+        private Blueprint? m_deployBp;
 
         private readonly HashSet<Blueprint> m_upgrades;
         private readonly HashSet<Blueprint> m_slotItems;
@@ -109,7 +109,7 @@ namespace Battlegrounds.Game.Gameplay {
         /// <summary>
         /// The player who (currently) owns the <see cref="Squad"/>.
         /// </summary>
-        public Player PlayerOwner { get; }
+        public Player? PlayerOwner { get; }
 
         /// <summary>
         /// The (crew if squad is a vehicle) <see cref="Database.Blueprint"/> the <see cref="Squad"/> is a type of.
@@ -121,7 +121,7 @@ namespace Battlegrounds.Game.Gameplay {
         /// The squad or entity <see cref="Database.Blueprint"/> to support this squad.
         /// </summary>
         [ChecksumProperty]
-        public Blueprint SupportBlueprint => this.m_deployBp;
+        public Blueprint? SupportBlueprint => this.m_deployBp;
 
         /// <summary>
         /// The method to use when deploying a <see cref="Squad"/>.
@@ -145,7 +145,7 @@ namespace Battlegrounds.Game.Gameplay {
         /// The squad data for the crew.
         /// </summary>
         [ChecksumProperty]
-        public Squad Crew => this.m_crewSquad;
+        public Squad? Crew => this.m_crewSquad;
 
         /// <summary>
         /// Is the <see cref="Squad"/> the crew for another <see cref="Squad"/> instance.
@@ -157,7 +157,7 @@ namespace Battlegrounds.Game.Gameplay {
         /// The <see cref="Blueprint"/> in a <see cref="SquadBlueprint"/> form.
         /// </summary>
         /// <exception cref="InvalidCastException"/>
-        public SquadBlueprint SBP => this.Blueprint as SquadBlueprint;
+        public SquadBlueprint SBP => this.Blueprint as SquadBlueprint ?? throw new Exception("Expected squad blueprint but found none!");
 
         /// <summary>
         /// The achieved veterancy rank of a <see cref="Squad"/>.
@@ -201,7 +201,7 @@ namespace Battlegrounds.Game.Gameplay {
         /// <param name="squadID">The unique squad ID used to identify the squad</param>
         /// <param name="owner">The <see cref="Player"/> who owns the squad</param>
         /// <param name="squadBlueprint">The <see cref="Database.Blueprint"/> the squad is an instance of</param>
-        public Squad(ushort squadID, Player owner, Blueprint squadBlueprint) {
+        public Squad(ushort squadID, Player? owner, Blueprint squadBlueprint) {
             this.SquadID = squadID;
             this.PlayerOwner = owner;
             this.Blueprint = squadBlueprint;
@@ -323,7 +323,9 @@ namespace Battlegrounds.Game.Gameplay {
         /// </summary>
         /// <returns>The cost of the squad.</returns>
         public CostExtension GetCost() 
-            => ComputeFullCost(this.SBP.Cost, this.VeterancyRank, this.m_upgrades.Select(x => x as UpgradeBlueprint), this.m_deployBp as SquadBlueprint, this.DeploymentMethod);
+            => ComputeFullCost(this.SBP.Cost, this.VeterancyRank, this.m_upgrades.Select(x => x as UpgradeBlueprint ?? throw new Exception("Expected upgrade but found null.")), 
+                this.m_deployBp as SquadBlueprint, 
+                this.DeploymentMethod, this.DeploymentPhase, this.SBP.Category);
 
         /// <summary>
         /// Get the display name of the squad.
@@ -369,18 +371,25 @@ namespace Battlegrounds.Game.Gameplay {
         /// <param name="upgrades"></param>
         /// <param name="transport"></param>
         /// <param name="deploymentMethod"></param>
+        /// <param name="phase"></param>
+        /// <param name="category"></param>
         /// <returns></returns>
-        public static CostExtension ComputeFullCost(CostExtension initialCost, byte rank, IEnumerable<UpgradeBlueprint> upgrades, SquadBlueprint transport, DeploymentMethod deploymentMethod) {
+        public static CostExtension ComputeFullCost(CostExtension initialCost, 
+            byte rank, IEnumerable<UpgradeBlueprint> upgrades, SquadBlueprint? transport, DeploymentMethod deploymentMethod, DeploymentPhase phase, SquadCategory category) {
 
+            // Get base cost and add upgrade costs
             CostExtension c = new(initialCost.Manpower, initialCost.Munitions, initialCost.Fuel, initialCost.FieldTime);
             c = upgrades.Select(x => x.Cost).Aggregate(c, (a, b) => a + b);
 
+            // Add deploy method factor
             if (transport is SquadBlueprint sbp) {
                 c += sbp.Cost * GetDeployMethodTransportCostModifier(deploymentMethod);
             }
 
-            // TODO: More here
+            // Subtract phase mod
+            c *= (1.0f - GetDeployPhaseCostModifier(phase, category));
 
+            // Return cost
             return c;
 
         }
@@ -393,6 +402,26 @@ namespace Battlegrounds.Game.Gameplay {
         public static float GetDeployMethodTransportCostModifier(DeploymentMethod method) => method switch {
             DeploymentMethod.DeployAndExit => 0.25f,
             DeploymentMethod.DeployAndStay => 0.65f,
+            _ => 0.0f
+        };
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="phase"></param>
+        /// <param name="category"></param>
+        /// <returns></returns>
+        public static float GetDeployPhaseCostModifier(DeploymentPhase phase, SquadCategory category) => phase switch {
+            DeploymentPhase.PhaseB => category switch {
+                SquadCategory.Vehicle => 0.025f,
+                SquadCategory.Support => 0.04f,
+                _ => 0.05f
+            },
+            DeploymentPhase.PhaseC => category switch {
+                SquadCategory.Vehicle => 0.04f,
+                SquadCategory.Support => 0.06f,
+                _ => 0.075f
+            },
             _ => 0.0f
         };
 

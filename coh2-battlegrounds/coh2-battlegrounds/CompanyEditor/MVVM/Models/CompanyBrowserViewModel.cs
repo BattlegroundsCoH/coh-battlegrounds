@@ -203,6 +203,8 @@ public class CompanyBrowserViewModel : IViewModel {
 
         }, "Delete Company", "This action can not be undone. Are you sure?");
 
+        PlayerCompanies.LoadAll();
+
     }
 
     public void CopyButton() {

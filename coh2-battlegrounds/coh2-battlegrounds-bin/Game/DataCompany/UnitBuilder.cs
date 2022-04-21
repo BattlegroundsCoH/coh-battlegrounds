@@ -525,7 +525,7 @@ namespace Battlegrounds.Game.DataCompany {
         /// </summary>
         /// <returns></returns>
         public CostExtension GetCost()
-            => Squad.ComputeFullCost(this.Blueprint.Cost, this.Rank, this.Upgrades, this.Transport, this.DeployMethod);
+            => Squad.ComputeFullCost(this.Blueprint.Cost, this.Rank, this.Upgrades, this.Transport, this.DeployMethod, this.Phase, this.Blueprint.Category);
 
         /// <summary>
         /// 

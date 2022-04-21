@@ -34,7 +34,7 @@ public class LobbyParticipantSlotModel : LobbySlot {
             this.SelectableCompanies.ClearTo(DummyCompany);
 
             // Add all companies
-            (this.Slot.TeamID == 0 ? AlliedCompanies : AxisCompanies).Select(FromCompany).ForEach(this.SelectableCompanies.Add);
+            (this.Slot.TeamID == 0 ? AlliedCompanies() : AxisCompanies()).Select(FromCompany).ForEach(this.SelectableCompanies.Add);
 
             // Remove dummy
             if (this.SelectableCompanies.Contains(DummyCompany)) {
