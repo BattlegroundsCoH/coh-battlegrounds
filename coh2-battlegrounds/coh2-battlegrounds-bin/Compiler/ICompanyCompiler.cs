@@ -25,8 +25,9 @@ namespace Battlegrounds.Compiler {
         /// <param name="company">The company to compile into lua string.</param>
         /// <param name="indexOnTeam">The index of the player on their team. (Should only be used for AI).</param>
         /// <param name="isAIPlayer">Is this an AI player company</param>
+        /// <param name="customNames">List of custom names.</param>
         /// <returns>A formatted object ready to be converted into Lua source code.</returns>
-        Dictionary<string, object> CompileToLua(Company company, bool isAIPlayer, byte indexOnTeam);
+        Dictionary<string, object> CompileToLua(Company company, bool isAIPlayer, byte indexOnTeam, IList<string> customNames);
 
     }
 

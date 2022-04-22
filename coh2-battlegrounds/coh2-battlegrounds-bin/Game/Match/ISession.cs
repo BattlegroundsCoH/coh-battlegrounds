@@ -48,6 +48,11 @@ namespace Battlegrounds.Game.Match {
         IDictionary<string, object> Settings { get; }
 
         /// <summary>
+        /// Get the list of custom names that are defined for this session
+        /// </summary>
+        IList<string> Names { get; }
+
+        /// <summary>
         /// Get all participants in the session.
         /// </summary>
         /// <returns>Array of participants in the session.</returns>

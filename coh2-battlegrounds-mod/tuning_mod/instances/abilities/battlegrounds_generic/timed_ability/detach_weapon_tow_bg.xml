@@ -2,14 +2,14 @@
 	<group name="ability_bag">
 		<group name="action_list">
 			<list name="end_self_actions">
-				<template_reference name="action" value="action\scar_function_call">
-					<string name="function_name" value="Battlegrounds_TowDetachFromTransportAE" />
-					<uniqueid name="id" value="1073744566" />
-				</template_reference>
 			</list>
 			<list name="end_target_actions">
 			</list>
 			<list name="start_self_actions">
+				<template_reference name="action" value="action\scar_function_call">
+					<string name="function_name" value="Battlegrounds_TowDetachFromTransportAE" />
+					<uniqueid name="id" value="1073745574" />
+				</template_reference>
 			</list>
 			<list name="start_target_actions">
 			</list>

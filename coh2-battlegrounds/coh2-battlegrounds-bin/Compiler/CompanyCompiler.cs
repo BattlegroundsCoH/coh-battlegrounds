@@ -29,7 +29,7 @@ namespace Battlegrounds.Compiler {
         /// <param name="isAIPlayer">Is this an AI player company</param>
         /// <param name="indent">The indentation level to use when compiling lua.</param>
         /// <returns>A formatted (and correct) lua table string containing all <see cref="Company"/> data for in-game use.</returns>
-        public virtual string CompileToLua(Company company, bool isAIPlayer, byte indexOnTeam, int indent = 1) {
+        public virtual string CompileToLua(Company company, bool isAIPlayer, byte indexOnTeam, int indent=1) {
 
             TxtBuilder lua = new TxtBuilder();
 
@@ -87,11 +87,19 @@ namespace Battlegrounds.Compiler {
 
         }
 
-        public Dictionary<string, object> CompileToLua(Company company, bool isAIPlayer, byte indexOnTeam) {
+        public Dictionary<string, object> CompileToLua(Company company, bool isAIPlayer, byte indexOnTeam, IList<string> customNames) {
 
             // Grab units
             var units = company.Units;
             Array.Sort(units, (a, b) => this.CompareUnit(a, b));
+
+            // Set unit names
+            for (int i = 0; i < units.Length; i++) {
+                int j = customNames.IndexOf(units[i].CustomName);
+                if (j != -1) {
+                    units[i] = UnitBuilder.EditUnit(units[i]).SetCustomName($"bg_custom_name_{(j+1):000}").Commit(units[i].SquadID).Result;
+                }
+            }
 
             // Get unit abilities
             var uabps = company.GetSpecialUnitAbilities();
@@ -159,11 +167,11 @@ namespace Battlegrounds.Compiler {
             }
 
             // Write the support blueprint - if any
-            if (squad.SupportBlueprint != null) {
+            if (squad.SupportBlueprint is SquadBlueprint supportBP) {
                 builder.AppendLine("transport = {");
                 builder.IncreaseIndent();
                 //builder.AppendLine($"sbp = {squad.SupportBlueprint.ToScar()},");
-                builder.AppendLine($"symbol = \"{(squad.SupportBlueprint as SquadBlueprint).UI.Symbol}\",");
+                builder.AppendLine($"symbol = \"{supportBP.UI.Symbol}\",");
                 builder.AppendLine($"mode = {(int)squad.DeploymentMethod},");
                 if (squad.DeploymentMethod != DeploymentMethod.None && (squad.SBP.Types.IsHeavyArtillery || (!squad.SBP.Types.IsHeavyArtillery && squad.SBP.Types.IsAntiTank))) {
                     builder.AppendLine("tow = true,");

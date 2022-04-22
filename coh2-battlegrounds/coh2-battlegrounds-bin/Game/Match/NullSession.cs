@@ -23,11 +23,15 @@ namespace Battlegrounds.Game.Match {
 
         public IGamemode Gamemode => new Wincondition("Unknown Gamemode", new Guid());
 
-        public ITuningMod TuningMod => ModManager.GetMod<ITuningMod>(ModManager.GetPackage("mod_bg").TuningGUID);
+        public ITuningMod TuningMod 
+            => ModManager.GetMod<ITuningMod>(ModManager.GetPackage("mod_bg")?.TuningGUID ?? throw new Exception("Invalid tuning GUID set for mod_bg")) 
+            ?? throw new Exception("Not tuning mod found for mod_bg");
 
         public string GamemodeOption => "0";
 
         public IDictionary<string, object> Settings => throw new NotSupportedException();
+
+        public IList<string> Names => new List<string>();
 
         public NullSession() { this.AllowPersistency = false; }
 
@@ -41,8 +45,8 @@ namespace Battlegrounds.Game.Match {
         /// <param name="steamID">The Steam ID of the player.</param>
         /// <param name="builder">The builder function</param>
         public void CreateCompany(ulong steamID, Faction army, string companyName, Func<CompanyBuilder, CompanyBuilder> builder) {
-            CompanyBuilder bld = new();
-            this.m_dummyCompanies[steamID] = builder(bld.NewCompany(army).ChangeName(companyName).ChangeTuningMod(this.TuningMod.Guid)).Commit().Result;
+            CompanyBuilder bld = CompanyBuilder.NewCompany(companyName, CompanyType.Unspecified, CompanyAvailabilityType.AnyMode, army, ModGuid.FromGuid(""));
+            this.m_dummyCompanies[steamID] = bld.Commit().Result;
         }
 
         public ISessionParticipant[] GetParticipants() => throw new NotSupportedException();

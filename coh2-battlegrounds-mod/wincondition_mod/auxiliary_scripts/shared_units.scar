@@ -2,7 +2,10 @@
 function BG_SolveNewUnit(playerData, sid)
 
     -- Retrieve basic data
-    local squad = Squad_FromWorldID(sid);
+    local squad = sid
+    if scartype(sid) == ST_NUMBER then
+        squad = Squad_FromWorldID(sid);
+    end
 
     -- Is this squad not one we've deployed?
     if playerData.deployed[sid] == nil then
@@ -199,7 +202,7 @@ function BG_CallInUnit(unit_data, player, gotopos, spawnfrom)
             end
 
             -- If not a tow-squad (standard infantry)
-            if unit_data.transport.tow == nil or unit_data.transport.tow == false then
+            if not unit_data.transport.tow then
 
                 -- Garrison the squad
                 Cmd_Garrison(sg_temp, sg_transport_temp, true, false, true);
@@ -298,6 +301,11 @@ function BG_ApplyCompanyData(player, squad, tempGroup, data)
     -- Add modifiers
     for i=1, #data.modifiers do
         BG_ApplyUnitModifier(squad, data.modifiers[i]);
+    end
+
+    -- Add name upgrade (if any)
+    if data.name then
+        Command_SquadUpgrade(player, tempGroup, BP_GetUpgradeBlueprint(_bg_tuning_guid .. ":" .. data.name), true, false);
     end
 
 end

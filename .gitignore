@@ -350,6 +350,7 @@ BurnInfoCache.xml
 # Other files types we wish to ignore
 *.psd
 
+*Intermediate Cache/
 Intermediate Files/[Aa]ttrib/
 db-battlegrounds/workshop-map-db.json
 coh2-battlegrounds-mod/tuning_mod/locale/english/english.ucs
