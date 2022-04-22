@@ -394,6 +394,35 @@
   },
   {
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741932,
+    "Name": "assault_grenadiers_bg",
+    "Army": "german",
+    "Display": {
+      "LocaleName": "0",
+      "LocaleDescriptionLong": "0",
+      "LocaleDescriptionShort": "0",
+      "Icon": "Icons_units_unit_german_grenadier",
+      "Symbol": "Icons_symbols_unit_german_grenadier_symbol"
+    },
+    "Cost": {
+      "Manpower": 56,
+      "FieldTime": 6
+    },
+    "Abilities": [
+      "blinding_grenade",
+      "blizzard_effect_deep_snow_camo",
+      "army_item_global_cover_training",
+      "grenadier_antitank_rifle_grenade_ability_mp",
+      "assault_grenadier_grenade",
+      "heal_in_cover"
+    ],
+    "Hardpoints": [
+      "panzer_grenadier_mp40_smg_bg"
+    ],
+    "Health": 80
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
     "PBGID": 1073741871,
     "Name": "grenadiers_bg",
     "Army": "german",
@@ -405,7 +434,7 @@
       "Symbol": "Icons_symbols_unit_german_grenadier_symbol"
     },
     "Cost": {
-      "Manpower": 60,
+      "Manpower": 52,
       "FieldTime": 6
     },
     "Abilities": [
@@ -504,6 +533,32 @@
   },
   {
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741931,
+    "Name": "jaegers_bg",
+    "Army": "german",
+    "Display": {
+      "LocaleName": "0",
+      "LocaleDescriptionLong": "0",
+      "LocaleDescriptionShort": "0",
+      "Symbol": ""
+    },
+    "Cost": {
+      "Manpower": 90,
+      "FieldTime": 7
+    },
+    "Abilities": [
+      "blinding_grenade",
+      "blizzard_effect_deep_snow_camo",
+      "army_item_global_cover_training",
+      "heal_in_cover"
+    ],
+    "Hardpoints": [
+      "panzer_grenadier_mp44_smg_bg"
+    ],
+    "Health": 80
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
     "PBGID": 1073741875,
     "Name": "panzer_grenadiers_bg",
     "Army": "german",
@@ -514,7 +569,7 @@
       "Symbol": ""
     },
     "Cost": {
-      "Manpower": 85,
+      "Manpower": 80,
       "FieldTime": 7
     },
     "Abilities": [
@@ -2115,13 +2170,13 @@
     "Name": "recon_bg",
     "Army": "soviet",
     "Display": {
-      "LocaleName": "2198050",
+      "LocaleName": "$142b113740474c82a60b0a428bd553d5:76",
       "LocaleDescriptionLong": "11007042",
       "LocaleDescriptionShort": "0",
       "Symbol": ""
     },
     "Cost": {
-      "Manpower": 360,
+      "Manpower": 120,
       "FieldTime": 36
     },
     "Abilities": [
@@ -2147,7 +2202,7 @@
       "Symbol": ""
     },
     "Cost": {
-      "Manpower": 360,
+      "Manpower": 240,
       "FieldTime": 36
     },
     "Abilities": [
@@ -2593,7 +2648,7 @@
     ],
     "Health": 1040,
     "Upgrades": [
-      "is2_top_gunner_mp"
+      "is2_top_gunner_bg"
     ],
     "UpgradeCapacity": -1
   },
