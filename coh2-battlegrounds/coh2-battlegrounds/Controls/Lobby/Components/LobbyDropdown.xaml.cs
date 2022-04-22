@@ -50,7 +50,7 @@ namespace BattlegroundsApp.Controls.Lobby.Components {
         /// <summary>
         /// Get or set the description of the <see cref="LobbyDropdown"/>.
         /// </summary>
-        public object Description {
+        public object? Description {
             get => this.GetValue(DescriptionProperty) as LocaleKey;
             set => this.SetValue(DescriptionProperty, value);
         }
