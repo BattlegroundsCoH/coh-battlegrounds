@@ -30,7 +30,7 @@ function BG_CreateCallInUI(player)
     BG_CreateCompanyView();
 
     -- Create Special Company abilities selector
-    BG_CreateCompanyAbilityView(_bg_playerData[bgPlayerID].company);
+    --BG_CreateCompanyAbilityView(_bg_playerData[bgPlayerID].company);
 
     -- Add a function update deployment
     Rule_AddInterval(BG_UpdateCompanyUIValues, _BG_UI_UpdateInterval);
