@@ -262,7 +262,7 @@ function __BgUpdateTOW()
             end
             Battlegrounds_TOWPosUpdate(data.tow_transport, data.tow_target, data.tow_offset, data.delta);
             if data.tow_state ~= nil then
-                --Entity_SetAnimatorState(data.tow_target, data.tow_state.name, data.tow_state.value);
+                Entity_SetAnimatorState(data.tow_target, data.tow_state.name, data.tow_state.value);
             end
             if Squad_HasActiveCommand(data.tow_target_squad) then
                 local owner = Util_GetPlayerOwner(data.tow_target_squad);
