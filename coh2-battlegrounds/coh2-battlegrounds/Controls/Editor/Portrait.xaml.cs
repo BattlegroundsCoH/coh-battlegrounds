@@ -1,18 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+
+using Battlegrounds.Functional;
 
 namespace BattlegroundsApp.Controls.Editor;
 
@@ -43,12 +34,12 @@ public partial class Portrait : UserControl {
         = DependencyProperty.Register(nameof(PortraitName), typeof(string), typeof(Portrait), new FrameworkPropertyMetadata(
             string.Empty,
             FrameworkPropertyMetadataOptions.AffectsRender,
-            (a, b) => (a as Portrait).PortraitName = b.NewValue as string));
+            (a, b) => a.Cast<Portrait>(p => p.PortraitName = b.NewValue as string)));
 
     /// <summary>
     /// Get or set portrait name to display
     /// </summary>
-    public string PortraitName {
+    public string? PortraitName {
         get => this.GetValue(PortraitNameProperty) as string;
         set {
             this.SetValue(PortraitNameProperty, value);
@@ -63,12 +54,12 @@ public partial class Portrait : UserControl {
         = DependencyProperty.Register(nameof(SymbolName), typeof(string), typeof(Portrait), new FrameworkPropertyMetadata(
             string.Empty,
             FrameworkPropertyMetadataOptions.AffectsRender,
-            (a, b) => (a as Portrait).SymbolName = b.NewValue as string));
+            (a, b) => a.Cast<Portrait>(p => p.SymbolName = b.NewValue as string)));
 
     /// <summary>
     /// Get or set name of symbol to display
     /// </summary>
-    public string SymbolName {
+    public string? SymbolName {
         get => this.GetValue(SymbolNameProperty) as string;
         set {
             this.SetValue(SymbolNameProperty, value);
@@ -85,7 +76,7 @@ public partial class Portrait : UserControl {
     /// <summary>
     /// Get the colour of the mask.
     /// </summary>
-    public Brush MaskColour {
+    public Brush? MaskColour {
         get => this.GetValue(MaskColourProperty) as Brush;
         set {
             this.SetValue(MaskColourProperty, value);
@@ -97,7 +88,8 @@ public partial class Portrait : UserControl {
     /// Identifies the <see cref="IsSelected"/> property.
     /// </summary>
     public static readonly DependencyProperty IsSelectedProperty = 
-        DependencyProperty.Register(nameof(IsSelected), typeof(bool), typeof(Portrait), new PropertyMetadata(false, (a,b) => (a as Portrait).IsSelected = (bool)b.NewValue));
+        DependencyProperty.Register(nameof(IsSelected), typeof(bool), typeof(Portrait), 
+            new PropertyMetadata(false, (a,b) => a.Cast<Portrait>(p => p.IsSelected = (bool)b.NewValue)));
 
     public bool IsSelected {
         get => (bool)this.GetValue(IsSelectedProperty);
@@ -113,10 +105,10 @@ public partial class Portrait : UserControl {
     }
 
     private void TrySetPortrait()
-        => TrySet(PortraitImage, PORTRAIT_SOURCE, PortraitName);
+        => TrySet(PortraitImage, PORTRAIT_SOURCE, PortraitName ?? string.Empty);
 
     private void TrySetIcon()
-        => TrySet(SymbolImage, SYMBOL_SOURCE, SymbolName);
+        => TrySet(SymbolImage, SYMBOL_SOURCE, SymbolName ?? string.Empty);
 
     private static void TrySet(Image img, string source, string name) {
 

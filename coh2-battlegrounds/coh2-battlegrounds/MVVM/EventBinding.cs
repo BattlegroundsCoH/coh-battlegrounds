@@ -4,6 +4,7 @@ using System.Reflection.Emit;
 using System.Windows;
 using System.Windows.Markup;
 
+using Battlegrounds.ErrorHandling.CommonExceptions;
 using Battlegrounds.Functional;
 
 namespace BattlegroundsApp.MVVM {
@@ -16,9 +17,9 @@ namespace BattlegroundsApp.MVVM {
         /// <summary>
         /// Get or set the name of the property to bind handler to.
         /// </summary>
-        public string Handler { get; set; }
+        public string Handler { get; set; } = string.Empty;
 
-        public override object ProvideValue(IServiceProvider serviceProvider) {
+        public override object? ProvideValue(IServiceProvider serviceProvider) {
 
             // Get target provider
             if (serviceProvider.GetService(typeof(IProvideValueTarget)) is not IProvideValueTarget targetProvider) {
@@ -39,7 +40,7 @@ namespace BattlegroundsApp.MVVM {
                 }
 
                 // Get invoke method
-                var invoke = eventType.GetMethod("Invoke");
+                var invoke = eventType.GetMethod("Invoke") ?? throw new ObjectNotFoundException("Method 'Invoke' not found");
 
                 // Return method
                 return this.CreateDelegate(eventType, invoke.ReturnType, invoke.GetParameters().Map(x => x.ParameterType));
@@ -54,7 +55,7 @@ namespace BattlegroundsApp.MVVM {
 
                 // Grab delegate data
                 var delegateType = methodParams[1].ParameterType;
-                var invoke = delegateType.GetMethod("Invoke");
+                var invoke = delegateType.GetMethod("Invoke") ?? throw new ObjectNotFoundException("Method 'Invoke' not found");
 
                 // Grab delegate
                 var del = this.CreateDelegate(delegateType, invoke.ReturnType, invoke.GetParameters().Map(x => x.ParameterType));
@@ -89,11 +90,11 @@ namespace BattlegroundsApp.MVVM {
 
         }
 
-        private static readonly MethodInfo Exec = typeof(EventBinding).GetMethod(nameof(ExecuteEvent));
+        private static readonly MethodInfo Exec = 
+            typeof(EventBinding).GetMethod(nameof(ExecuteEvent)) ?? throw new ObjectNotFoundException($"Method '{nameof(ExecuteEvent)}' not found");
 
         public static void ExecuteEvent(object sender, object eventArgs, string handler) {
-            FrameworkElement senderFrameworkElement = sender as FrameworkElement;
-            object dataContext = GetDataContext(senderFrameworkElement);
+            object? dataContext = GetDataContext(sender as FrameworkElement);
             if (dataContext is not null) {
                 var propType = dataContext.GetType().GetProperty(handler, BindingFlags.Public | BindingFlags.Instance);
                 if (propType?.GetValue(dataContext) is EventCommand cmd) {
@@ -102,8 +103,12 @@ namespace BattlegroundsApp.MVVM {
             }
         }
 
-        private static object GetDataContext(FrameworkElement element)
-            => element.DataContext is object source ? source : GetDataContext(element.Parent as FrameworkElement);
+        private static object? GetDataContext(FrameworkElement? element) {
+            if (element is FrameworkElement e) {
+                return e.DataContext is object src ? src : GetDataContext(element.Parent as FrameworkElement);
+            }
+            return null; 
+        }
 
     }
 

@@ -70,7 +70,7 @@ public class CompanyBuilderViewModel : IViewModel {
 
     public ObservableCollection<AbilitySlotViewModel> CompanyAbilities { get; set; }
     public ObservableCollection<AbilitySlotViewModel> CompanyUnitAbilities { get; set; }
-    public ObservableCollection<EquipmentSlot> CompanyEquipment { get; set; }
+    //public ObservableCollection<EquipmentSlot> CompanyEquipment { get; set; }
 
     public CompanyBuilder Builder => this.m_builder ?? throw new Exception("Expected a valid instance of a company builder but found none (Invalid call tree!)");
 
@@ -150,7 +150,7 @@ public class CompanyBuilderViewModel : IViewModel {
         this.CompanyVehicleSquads = new();
         this.CompanyAbilities = new();
         this.CompanyUnitAbilities = new();
-        this.CompanyEquipment = new();
+        //this.CompanyEquipment = new();
         this.AvailableItems = new();
 
         // Define list
@@ -339,7 +339,7 @@ public class CompanyBuilderViewModel : IViewModel {
         this.CompanyVehicleSquads.Clear();
         this.CompanyAbilities.Clear();
         this.CompanyUnitAbilities.Clear();
-        this.CompanyEquipment.Clear();
+        //this.CompanyEquipment.Clear();
 
         // Add all units
         this.Builder.EachUnit(this.AddUnitToDisplay, x => (int)x.Phase);
@@ -409,11 +409,11 @@ public class CompanyBuilderViewModel : IViewModel {
     private void AddEquipmentToDisplay(Blueprint blueprint) {
 
         // Create display
-        EquipmentSlot equipmentSlot = new(blueprint);
-        equipmentSlot.OnRemove += this.OnEquipmentRemoveClicked;
-        equipmentSlot.OnEquipped += this.EquipItem;
+        //EquipmentSlot equipmentSlot = new(blueprint);
+        //equipmentSlot.OnRemove += this.OnEquipmentRemoveClicked;
+        //equipmentSlot.OnEquipped += this.EquipItem;
 
-        this.CompanyEquipment.Add(equipmentSlot);
+        //this.CompanyEquipment.Add(equipmentSlot);
 
     }
 
@@ -613,13 +613,13 @@ public class CompanyBuilderViewModel : IViewModel {
 
     }
 
-    private void OnEquipmentRemoveClicked(EquipmentSlot equipmentSlot) { 
+    /*private void OnEquipmentRemoveClicked(EquipmentSlot equipmentSlot) { 
     
     }
 
     private void EquipItem(EquipmentSlot equipmentSlot, SquadBlueprint sbp) { 
     
-    }
+    }*/
 
     private void RefreshAbilityDisplay() {
 

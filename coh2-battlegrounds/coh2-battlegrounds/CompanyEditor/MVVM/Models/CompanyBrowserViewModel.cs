@@ -21,8 +21,8 @@ using System.Windows.Input;
 namespace BattlegroundsApp.CompanyEditor.MVVM.Models;
 
 public class CompanyBrowserButton {
-    public ICommand Click { get; init; }
-    public LocaleKey Tooltip { get; init; }
+    public ICommand? Click { get; init; }
+    public LocaleKey? Tooltip { get; init; }
 }
 
 public class CompanyBrowserViewModel : IViewModel {
@@ -55,7 +55,7 @@ public class CompanyBrowserViewModel : IViewModel {
 
     public LocaleKey CountryListViewHeader { get; }
 
-    public Company SelectedCompany { get; set; }
+    public Company? SelectedCompany { get; set; }
 
     public bool SingleInstanceOnly => true;
 
@@ -118,7 +118,7 @@ public class CompanyBrowserViewModel : IViewModel {
     public void CreateButton() {
 
         // Grab mod GUID (TODO: Allow user to pick in modal dialog)
-        ModGuid modGuid = ModManager.GetPackage("mod_bg").TuningGUID;
+        ModGuid modGuid = ModManager.GetPackage("mod_bg")?.TuningGUID ?? throw new Exception("Failed to find tuning GUID for mod package 'mod_bg'");
 
         // Null check
         if (App.ViewManager.GetModalControl() is not ModalControl mControl) {
