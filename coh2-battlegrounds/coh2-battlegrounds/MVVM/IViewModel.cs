@@ -24,7 +24,7 @@ public interface IViewModel {
     /// Notify the view model it's being unloaded.
     /// </summary>
     /// <param name="onClosed">Callback to be invoked when done unloading</param>
-    void UnloadViewModel(OnModelClosed onClosed);
+    void UnloadViewModel(OnModelClosed onClosed, bool requestDestroyed);
 
     /// <summary>
     /// Notify the view model we've switched back to it.

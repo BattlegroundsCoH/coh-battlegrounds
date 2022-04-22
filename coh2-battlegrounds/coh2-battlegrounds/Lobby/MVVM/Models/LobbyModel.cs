@@ -207,10 +207,13 @@ public abstract class LobbyModel : IViewModel, INotifyPropertyChanged {
 
     }
 
-    public void UnloadViewModel(OnModelClosed closeCallback) {
-        
-        // Destroy this isntance (to avoid annoying stuff, like trying to reconnect to an existing one...)
-        App.ViewManager.DestroyView(this);
+    public void UnloadViewModel(OnModelClosed closeCallback, bool requestDestroyed) {
+
+        // Check if a destroy command is requested.
+        if (requestDestroyed) {
+            // Destroy this isntance (to avoid annoying stuff, like trying to reconnect to an existing one...)
+            App.ViewManager.DestroyView(this);
+        }
 
         // use default here, since we cannot exit unless exit lobby button is pressed or hard exit
         closeCallback(false);
@@ -236,7 +239,7 @@ public abstract class LobbyModel : IViewModel, INotifyPropertyChanged {
             };
 
             // Set RHS
-            App.ViewManager.UpdateDisplay(AppDisplayTarget.Right, builder);
+            App.ViewManager.UpdateDisplay(AppDisplayTarget.Right, builder, false);
 
             // Inform others
             if (this.TryGetSelf() is LobbyAPIStructs.LobbySlot self && self.Occupant is not null) {

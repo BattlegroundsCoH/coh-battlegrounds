@@ -673,7 +673,7 @@ public class CompanyBuilderViewModel : IViewModel {
 
     }
 
-    public void UnloadViewModel(OnModelClosed closeCallback) {
+    public void UnloadViewModel(OnModelClosed closeCallback, bool destroy) {
         App.ViewManager.DestroyView(this);
         if (this.HasChanges) {
             if (App.ViewManager.GetRightsideModalControl() is not ModalControl mc) {

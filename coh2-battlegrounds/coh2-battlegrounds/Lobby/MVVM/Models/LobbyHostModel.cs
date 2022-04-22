@@ -98,13 +98,15 @@ namespace BattlegroundsApp.Lobby.MVVM.Models {
 
         }
 
-        private void OnSlotUpdated(LobbyAPIStructs.LobbySlot args) {
+        private async void OnSlotUpdated(LobbyAPIStructs.LobbySlot args) {
+            await Task.Delay(100);
             Application.Current.Dispatcher.Invoke(() => {
                 this.RefreshPlayability();
             });
         }
 
-        private void OnTeamUpdated(LobbyAPIStructs.LobbyTeam args) {
+        private async void OnTeamUpdated(LobbyAPIStructs.LobbyTeam args) {
+            await Task.Delay(100);
             Application.Current.Dispatcher.Invoke(() => {
                 this.RefreshPlayability();
             });
